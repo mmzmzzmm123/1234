@@ -75,6 +75,14 @@
             {{ `${scope.row.startDate} 至 ${scope.row.endDate}` }}
           </template>
         </el-table-column>
+        <el-table-column label="发送" align="center">
+          <template slot-scope="scope">
+            <el-switch
+              v-model="!!scope.row.sendFlag"
+              @change="(val) => handleOnSendChange(val, scope.row)"
+            />
+          </template>
+        </el-table-column>
         <el-table-column label="操作" align="center" width="160">
           <template slot-scope="scope">
             <el-button
@@ -197,6 +205,7 @@ export default {
           }
           return str;
         }, "");
+        // console.log(response.data);
         this.copyValue =
           window.location.origin.replace("manage", "sign") +
           "/recipes/detail/" +
@@ -313,6 +322,26 @@ export default {
           //   message: "已取消删除",
           // });
         });
+    },
+    handleOnSendChange(val, data) {
+      // console.log({ val, data });
+      const { id } = data;
+      if (data.reviewStatus === 2) {
+        updateRecipesPlan({
+          id,
+          sendFlag: val ? 1 : 0,
+        }).then((res) => {
+          if (res.code === 200) {
+            this.$message.success(res.msg);
+            const tarPlan = this.planList.find((obj) => obj.id === id);
+            if (tarPlan) {
+              tarPlan.sendFlag = val ? 1 : 0;
+            }
+          }
+        });
+      } else {
+        this.$message.error("未审核的食谱不能发送");
+      }
     },
   },
 };

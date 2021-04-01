@@ -242,304 +242,310 @@
 </template>
 
 <script>
+import { getFile, signContract } from "@/api/custom/contract";
+import { digitUppercase, validatorIDCard } from "../../../utils/ruoyi";
+import dayjs from "dayjs";
 
-  import {getFile, signContract} from "@/api/custom/contract";
-  import {digitUppercase, validatorIDCard} from "../../../utils/ruoyi";
-  import dayjs from 'dayjs';
+export default {
+  name: "sign",
+  data() {
+    const checkSignName = (rule, value, callback) => {
+      if (!value) {
+        return callback(new Error("姓名不能为空"));
+      }
+      callback();
+    };
 
-  export default {
-    name: 'sign',
-    data() {
-
-      const checkSignName = (rule, value, callback) => {
-        if (!value) {
-          return callback(new Error('姓名不能为空'))
+    const checkPhone = (rule, value, callback) => {
+      const phoneReg = /^1[3|4|5|6|7|8|9][0-9]{9}$/;
+      const hkPhoneReg = /^(5|6|8|9)\d{7}$/;
+      if (!value) {
+        return callback(new Error("电话号码不能为空"));
+      }
+      setTimeout(() => {
+        // Number.isInteger是es6验证数字是否为整数的方法,实际输入的数字总是识别成字符串
+        // 所以在前面加了一个+实现隐式转换
+        if (!Number.isInteger(+value)) {
+          callback(new Error("请输入数字值"));
+        } else {
+          if (phoneReg.test(value) || hkPhoneReg.test(value)) {
+            callback();
+          } else {
+            callback(new Error("电话号码格式不正确"));
+          }
         }
+      }, 100);
+    };
+
+    const checkcusId = (rule, value, callback) => {
+      if (!value) {
         callback();
+        //return callback(new Error('证件号码不能为空'))
       }
-
-      const checkPhone = (rule, value, callback) => {
-        const phoneReg = /^1[3|4|5|6|7|8|9][0-9]{9}$/
-        const hkPhoneReg = /^(5|6|8|9)\d{7}$/
-        if (!value) {
-          return callback(new Error('电话号码不能为空'))
-        }
-        setTimeout(() => {
-          // Number.isInteger是es6验证数字是否为整数的方法,实际输入的数字总是识别成字符串
-          // 所以在前面加了一个+实现隐式转换
-          if (!Number.isInteger(+value)) {
-            callback(new Error('请输入数字值'))
-          } else {
-            if (phoneReg.test(value) || hkPhoneReg.test(value)) {
-              callback()
-            } else {
-              callback(new Error('电话号码格式不正确'))
-            }
-          }
-        }, 100)
-      }
-
-      const checkcusId = (rule, value, callback) => {
-        if (!value) {
+      setTimeout(() => {
+        const { code, msg } = validatorIDCard(value, this.idType);
+        if (code === 1) {
           callback();
-          //return callback(new Error('证件号码不能为空'))
+        } else {
+          return callback(new Error(msg));
         }
-        setTimeout(() => {
-          const {code, msg} = validatorIDCard(value, this.idType);
-          if (code === 1) {
-            callback()
-          } else {
-            return callback(new Error(msg))
-          }
-        }, 100)
-      }
+      }, 100);
+    };
 
-      return {
-        show: false,
-        form: {},
-        read: false,
-        dialogVisible: false,
-        idType: 1,
-        idTypeOptions: [
-          {label: '身份证', value: 1},
-          {label: '港澳身份证', value: 2},
-          {label: '台湾身份证', value: 3},
-          {label: '护照', value: 4},
-          {label: '军官证', value: 5},
+    return {
+      show: false,
+      form: {},
+      read: false,
+      dialogVisible: false,
+      idType: 1,
+      idTypeOptions: [
+        { label: "身份证", value: 1 },
+        { label: "港澳身份证", value: 2 },
+        { label: "台湾身份证", value: 3 },
+        { label: "护照", value: 4 },
+        { label: "军官证", value: 5 },
+      ],
+      serveTimeIdOption: [
+        { label: "7天", value: 7 },
+        { label: "1个月", value: 30 },
+        { label: "2个月", value: 60 },
+        { label: "3个月", value: 90 },
+        { label: "4个月", value: 120 },
+        { label: "5个月", value: 150 },
+        { label: "6个月", value: 180 },
+        { label: "7个月", value: 210 },
+        { label: "8个月", value: 240 },
+        { label: "9个月", value: 270 },
+        { label: "10个月", value: 300 },
+        { label: "11个月", value: 330 },
+        { label: "12个月", value: 360 },
+        { label: "13个月", value: 390 },
+        { label: "14个月", value: 420 },
+        { label: "15个月", value: 450 },
+        { label: "16个月", value: 480 },
+        { label: "17个月", value: 510 },
+        { label: "18个月", value: 540 },
+      ],
+      rules: {
+        signName: [
+          { required: true, trigger: "blur", validator: checkSignName },
         ],
-        serveTimeIdOption: [
-          {label: '7天', value: 7},
-          {label: '1个月', value: 30},
-          {label: '2个月', value: 60},
-          {label: '3个月', value: 90},
-          {label: '4个月', value: 120},
-          {label: '5个月', value: 150},
-          {label: '6个月', value: 180},
-          {label: '7个月', value: 210},
-          {label: '8个月', value: 240},
-          {label: '9个月', value: 270},
-          {label: '10个月', value: 300},
-          {label: '11个月', value: 330},
-          {label: '12个月', value: 360},
-          {label: '13个月', value: 390},
-          {label: '14个月', value: 420},
-          {label: '15个月', value: 450},
-          {label: '16个月', value: 480},
-          {label: '17个月', value: 510},
-          {label: '18个月', value: 540},
+        phone: [{ required: true, trigger: "blur", validator: checkPhone }],
+        cusId: [{ required: false, trigger: "blur", validator: checkcusId }],
+      },
+      titleArray: [
+        "营养减脂服务合同",
+        "月经不调调理指导服务合同",
+        "多囊卵巢综合症调理指导服务合同",
+        "备孕营养调理指导服务合同",
+        "产后调理服务合同",
+        "高血压调理服务合同",
+        "高血糖调理服务合同",
+        "高血脂调理服务合同",
+        "高尿酸服务合同",
+        "营养性贫血服务合同",
+        "消化系统管理服务合同",
+        "心脑血管系统服务合同",
+      ],
+      //需要提交的提交报告内容
+      reportcontentArray: [
+        "",
+        "女性激素六项、促卵泡激素（FSH）、促黄体生成素（LH）、雌二醇(E2)、 睾酮（T）、孕酮(PRO)、垂体泌乳素(PRL)。 ",
+        "女性激素六项、促卵泡激素（FSH）、促黄体生成素（LH）、雌二醇(E2)、 睾酮（T）、孕酮(PRO)、垂体泌乳素(PRL)、子宫附件彩超。 ",
+        "男性激素六项、女性激素六项、衣原体抗原、优生五项、AMH（抗缪勒管激素）、 抗精子抗体、抗子宫内膜抗体、抗卵巢抗体、血常规（五分类）、贫血三项。 ",
+        "（遵医嘱检查）。",
+        "血脂四项、颈动脉彩超、血压（BP）、同型半胱氨酸（HCY）。 ",
+        "血糖、糖化血红蛋白(GHB)、胰岛素测定(INS)、C肽、肾功能三项、眼底检 查、同型半胱氨酸（HCY）。 ",
+        "血脂四项、血压（BP）、颈动脉彩超、同型半胱氨酸（HCY）。",
+        "肾功能三项、双肾彩超、尿常规、尿微量白蛋白定量。 ",
+        "贫血三项、血常规（五分类）、肝功能五项、双肾彩超。 ",
+        "碳13呼气试验、胃功能三项、G-17（胃泌素17）。 ",
+        "血脂四项、血压（BP）、同型半胱氨酸（HCY）、心脏彩超、心功能三项、 颈动脉彩超。 ",
+      ],
+      //可改善效果
+      changeContentArray: [
+        "",
+        "平衡女性性激素分泌 改善痛经、月经紊乱等症状 改善气色、 延缓衰老。",
+        "平衡体内激素、增强自身免疫力 减轻体重、改善月经紊乱。 ",
+        "改善双方体质，改善妇科问题，增加受孕几率 预防妊娠糖尿病及孕期高血压。 ",
+        "改善乳汁质量、合理控制体重、改善缺钙、脱发等症状 ，预 防骨质疏松。",
+        "调节血压，保护心、脑、肝、肾器官 改善头晕，头痛，疲劳 等症状 预防中风、粥样动脉硬化、血栓性疾病等心脑血管疾病 ",
+        "减少生活饮食习惯血糖升高的诱因 ，改 善血糖水平。预防营养失衡 ，提升机体抵抗力。保护肾脏、泌尿系统、视网 膜、心脑血管",
+        "改善代谢紊乱、提升精力 降低血液粘稠 保护肝脏及心脑血管 ",
+        "提高代谢功能，降低尿酸指标 保护肾脏、胰岛、心脑血管 预 防痛风、肾脏、心脑血管疾病。 ",
+        "提升体能及免疫力，改善头痛、头晕、精神状差、易困倦、 消化不良等贫血症状，改善心慌、胸闷，提升睡眠质量",
+        "改善消化能力，改善胃溃疡、胃肠炎等胃肠道疾病症状，降 低胃肠道肿瘤患病风险。 ",
+        "1.预防高血压导致心肌梗死、脑梗死、微动脉肿瘤等疾病；2. 改善血液粘稠，预防因血黏度迅速升高，造成心脑供血不足引发的冠心病、高 血压、脑血栓等心脑血管疾病；3.改善血管组织新陈代谢；4.降低饮酒对心脑血管的伤害；5.降低其他慢病或因素对心脑血管的伤害，如糖尿病、肥胖、胰 岛素抵抗、年龄增长、性别（男性发病高于女性）、种族、遗传等 。",
+      ],
+      //预期效果
+      anticipateResultArray: [
+        [],
+        [
+          "1个月，气色明显改善，经期前后腰腹坠胀明显减轻!",
+          "2个月，经期逐渐规律!",
+          "3个月，掌握自身营养规律，经期恢复正常周期；持续营养方案，激素分泌稳 定，延缓衰老，更显年轻态!",
         ],
-        rules: {
-          signName: [
-            {required: true, trigger: "blur", validator: checkSignName}
-          ],
-          phone: [
-            {required: true, trigger: "blur", validator: checkPhone}
-          ],
-          cusId: [
-            {required: false, trigger: "blur", validator: checkcusId}
-          ]
-        },
-        titleArray:[
-          "营养减脂服务合同","月经不调调理指导服务合同","多囊卵巢综合症调理指导服务合同","备孕营养调理指导服务合同","产后调理服务合同",
-          "高血压调理服务合同","高血糖调理服务合同","高血脂调理服务合同","高尿酸服务合同","营养性贫血服务合同","消化系统管理服务合同",
-          "心脑血管系统服务合同"
+        [
+          "第1周期，体重减轻，肤色逐步变浅，情绪趋于稳定!",
+          "第2 周期，经期规律稳定!",
+          "第3周期，体重持续降低，经期恢复正常。激素分泌稳定，延缓衰老，更显年 轻态!",
         ],
-        //需要提交的提交报告内容
-        reportcontentArray:[
-          "",
-          "女性激素六项、促卵泡激素（FSH）、促黄体生成素（LH）、雌二醇(E2)、 睾酮（T）、孕酮(PRO)、垂体泌乳素(PRL)。 ",
-          "女性激素六项、促卵泡激素（FSH）、促黄体生成素（LH）、雌二醇(E2)、 睾酮（T）、孕酮(PRO)、垂体泌乳素(PRL)、子宫附件彩超。 ",
-          "男性激素六项、女性激素六项、衣原体抗原、优生五项、AMH（抗缪勒管激素）、 抗精子抗体、抗子宫内膜抗体、抗卵巢抗体、血常规（五分类）、贫血三项。 ",
-          "（遵医嘱检查）。",
-          "血脂四项、颈动脉彩超、血压（BP）、同型半胱氨酸（HCY）。 ",
-          "血糖、糖化血红蛋白(GHB)、胰岛素测定(INS)、C肽、肾功能三项、眼底检 查、同型半胱氨酸（HCY）。 ",
-          "血脂四项、血压（BP）、颈动脉彩超、同型半胱氨酸（HCY）。",
-          "肾功能三项、双肾彩超、尿常规、尿微量白蛋白定量。 ",
-          "贫血三项、血常规（五分类）、肝功能五项、双肾彩超。 ",
-          "碳13呼气试验、胃功能三项、G-17（胃泌素17）。 ",
-          "血脂四项、血压（BP）、同型半胱氨酸（HCY）、心脏彩超、心功能三项、 颈动脉彩超。 "
+        [
+          "1-3个月，双方体质得到明显改善，女性妇科炎症得到缓解，男性体力得到提升， 疲惫感降低。",
+          "4-6个月，女性卵巢功能得到改善，卵子质量，精子活力得到提升，提高受孕几率。",
         ],
-        //可改善效果
-        changeContentArray:[
-          "",
-          "平衡女性性激素分泌 改善痛经、月经紊乱等症状 改善气色、 延缓衰老。",
-          "平衡体内激素、增强自身免疫力 减轻体重、改善月经紊乱。 ",
-          "改善双方体质，改善妇科问题，增加受孕几率 预防妊娠糖尿病及孕期高血压。 ",
-          "改善乳汁质量、合理控制体重、改善缺钙、脱发等症状 ，预 防骨质疏松。",
-          "调节血压，保护心、脑、肝、肾器官 改善头晕，头痛，疲劳 等症状 预防中风、粥样动脉硬化、血栓性疾病等心脑血管疾病 ",
-          "减少生活饮食习惯血糖升高的诱因 ，改 善血糖水平。预防营养失衡 ，提升机体抵抗力。保护肾脏、泌尿系统、视网 膜、心脑血管",
-          "改善代谢紊乱、提升精力 降低血液粘稠 保护肝脏及心脑血管 ",
-          "提高代谢功能，降低尿酸指标 保护肾脏、胰岛、心脑血管 预 防痛风、肾脏、心脑血管疾病。 ",
-          "提升体能及免疫力，改善头痛、头晕、精神状差、易困倦、 消化不良等贫血症状，改善心慌、胸闷，提升睡眠质量",
-          "改善消化能力，改善胃溃疡、胃肠炎等胃肠道疾病症状，降 低胃肠道肿瘤患病风险。 ",
-          "1.预防高血压导致心肌梗死、脑梗死、微动脉肿瘤等疾病；2. 改善血液粘稠，预防因血黏度迅速升高，造成心脑供血不足引发的冠心病、高 血压、脑血栓等心脑血管疾病；3.改善血管组织新陈代谢；4.降低饮酒对心脑血管的伤害；5.降低其他慢病或因素对心脑血管的伤害，如糖尿病、肥胖、胰 岛素抵抗、年龄增长、性别（男性发病高于女性）、种族、遗传等 。",
+        [
+          "1个月，体重明显降低，产后水肿消失，稳定产奶量，减缓 产后抽筋，睡眠障碍；",
+          "2个月，脱发减少,体重持续降低 ",
         ],
-        //预期效果
-        anticipateResultArray:[
-          [],
-          [
-            "1个月，气色明显改善，经期前后腰腹坠胀明显减轻!",
-            "2个月，经期逐渐规律!",
-            "3个月，掌握自身营养规律，经期恢复正常周期；持续营养方案，激素分泌稳 定，延缓衰老，更显年轻态!"
-          ],
-          [
-            "第1周期，体重减轻，肤色逐步变浅，情绪趋于稳定!",
-            "第2 周期，经期规律稳定!",
-            "第3周期，体重持续降低，经期恢复正常。激素分泌稳定，延缓衰老，更显年 轻态!"
-          ],[
-            "1-3个月，双方体质得到明显改善，女性妇科炎症得到缓解，男性体力得到提升， 疲惫感降低。",
-            "4-6个月，女性卵巢功能得到改善，卵子质量，精子活力得到提升，提高受孕几率。"
-          ],[
-            "1个月，体重明显降低，产后水肿消失，稳定产奶量，减缓 产后抽筋，睡眠障碍；",
-            "2个月，脱发减少,体重持续降低 ",
-          ],
-          [
-            "1个月，高血压引起的头晕，颈项僵直得到明显缓解；",
-            "2个月，不易疲劳，体感更轻松； ",
-            "3个月，稳定血压。持续健康饮食方案，能够有效帮助避免心脑肾并发症。 "
-          ],
-          [
-            "第1周期，血糖趋于稳定，缓解多饮，多食，多尿的症状；",
-            "第2周期，血糖进一步下降，末梢循环增快，自身抵抗力得到明显提升； ",
-            "第3周期，小便变清澈，泡沫减少，血糖进一步稳定。持续营养方案，能够减少多 种并发症的产生。"
-          ],
-          [
-            "1个月，头晕减少，体重降低； ",
-            "2个月，肢体麻木得到缓解；",
-            "3个月，血液粘稠度降低。坚持营养方案，延缓血管硬化，病程发展。"
-          ],
-          [
-            "1个月，减少关节肿胀酸痛；",
-            "2个月，帮助避免痛风急性发作；",
-            "3个月，尿酸得到控制，指数降低。"
-          ],
-          [
-            "1个月，消化功能得到改善，食欲得到增加，贫血性水肿得 到缓解； ",
-            "2个月，头晕，头痛得到缓解，精神状态得到明显改善，疲惫感减少；",
-            "3个月，睡眠质量得到明显提升，不易惊醒。"
-          ],
-          [
-            "1个月，消化能力得到改善，胃酸、胃胀得到缓解；",
-            "2个月， 饭前，饭后疼痛感减轻，反酸、嗳气等症状得到明显缓解；",
-            "3个月，消化功能得到明显改善，排便趋向正常。坚持营养方案，胃肠免疫功能到持续养护，幽 门螺旋杆菌感染率降低，避免胃肠道肿瘤的出现。"
-          ],
-          [
-            "2个月，血压得到明显稳定，心慌、气短等症状得到缓解； ",
-            "4个月，心动力得到提升，脑供血供氧得到改善，头脑轻松，昏沉感降低；",
-            "6 个月，心脑血管功能得到改善，降低心脑血管疾病急性发作的几率。"
-          ],
+        [
+          "1个月，高血压引起的头晕，颈项僵直得到明显缓解；",
+          "2个月，不易疲劳，体感更轻松； ",
+          "3个月，稳定血压。持续健康饮食方案，能够有效帮助避免心脑肾并发症。 ",
         ],
-        //调理意义
-        significanceArray:[
-          "",
-          "提示女性体内激素水平是否正常 ",
-          "提示女性体内激素水平是否正常，更清晰的观察子宫、卵巢、 盆腔等生殖器是否有病变发生。",
-          "提示男性体内激素水平是否正常、提示女性体内激素水平是否正常、 阳性结果结合临床可确定沙眼衣原体感染、阴性时不能完全排除、可用细胞培养 法确定,妊娠早期感染可引起流产、死胎、胎儿畸形等.显示女性卵巢内含有的原 始卵泡的数量和质量、是反映女性生育能力的一个重要指标、检测男女生育能力、 检测女性生育能力,通过检测血液细胞的计数及不同种类细胞、成分的分类来反映 身体状况，如：贫血、感染、血液系统疾病、物理化学因素损伤等、提示贫血类 型。 ",
-          "",
-          "用于评估受检者的脂肪代谢水平及血脂代谢紊乱评价、动脉粥 样硬化性疾病危险性预测和营养学评价。了解颈部大动脉有无异常(如斑块、 硬化、狭窄)。可以清楚自己的血压情况，对起居，饮食，用药，保健等等都 有重要的指导作用。用于冠心病、动脉硬化、心梗、脑梗等的早期预警。",
-          "用于评估受检者的脂肪代谢水平及血脂代谢紊乱评价、动脉粥样硬化性疾病危险性预测和营养学评价。可以清楚自己的血 压情况，对起居，饮食，用药，保健等等都有重要的指导作用。了解颈部大动 脉有无异常(如斑块、硬化、狭窄)。用于冠心病、动脉硬化、心梗、脑梗等的 早期预警。",
-          "用于评估受检者的脂肪代谢水平及血脂代谢紊乱评价、动脉粥 样硬化性疾病危险性预测和营养学评价。可以清楚自己的血压情况，对起居， 饮食，用药，保健等等都有重要的指导作用。解颈部大动脉有无异常(如斑块、 硬化、狭窄)。用于冠心病、动脉硬化、心梗、脑梗等的早期预警。 ",
-          "主要用于了解肾功能异常，痛风，尿酸偏高等。更清晰的检查 肾癌、游走肾等是否异常病变发生。可提示有无泌尿系统疾患：如急、慢性肾 炎，肾盂肾炎，膀胱炎，尿道炎，肾病综合征，狼疮性肾炎，血红蛋白尿，肾 梗塞、肾小管重金属盐及药物导致急性肾小管坏死，肾或膀胱肿瘤以及有无尿 糖等。微量白蛋白尿是指在尿中出现微量白蛋白。白蛋白是一种血液中的正常 蛋白质，但在生理条件下尿液中仅出现极少量白蛋白。微量白蛋白尿反映肾脏 异常渗漏蛋白质。 ",
-          "提示贫血类型。通过检测血液细胞的计数及不同种类细胞、成 分的分类来反映身体状况，如：贫血、感染、血液系统疾病、物理化学因素损 伤等。提示肝胆系统疾病。更清晰的检查肾癌、游走肾等是否异常病变发生 ",
-          "查看胃部是否有病变，通过吹气了解胃内有无幽门螺旋杆菌感 染，此感染与胃炎、消化性溃疡、胃癌等发病有密切关系。 可用于胃癌、胃 溃疡、萎缩性胃炎的初筛。1、胃泌素17（ G-17）由胃窦G细胞分泌，具有促 进胃酸分泌、胃肠道粘膜生长及调节食管括约肌等作用，高G-17分泌在胃癌发 展过程中起重要促进作用。 2、G-17可以直接评估胃窦部粘膜的健康状况和间接反映胃体部粘膜的健康状 况，同时可反映胃酸水平的高低，从而对胃部疾病风险进行有效评估。",
-          "用于评估受检者的脂肪代谢水平及血脂代谢紊乱评价、动脉粥 样硬化性疾病危险性预测和营养学评价。可以清楚自己的血压情况，对起居， 饮食，用药，保健等等都有重要的指导作用。用于冠心病、动脉硬化、 心梗、脑梗等的早期预警。心血管疾病的重要诊断方法。动态显示心腔内结构、 心脏的搏动和血液流动，对先天性心脏病、心肌病、冠心病、心肌梗塞并发症 及肺心病有较大的诊断价值。用于心肌梗塞、心肌炎、皮肌炎等的辅助诊断。 了解颈部大动脉有无异常(如斑块、硬化、狭窄)。 "
-        ]
-
-    }
+        [
+          "第1周期，血糖趋于稳定，缓解多饮，多食，多尿的症状；",
+          "第2周期，血糖进一步下降，末梢循环增快，自身抵抗力得到明显提升； ",
+          "第3周期，小便变清澈，泡沫减少，血糖进一步稳定。持续营养方案，能够减少多 种并发症的产生。",
+        ],
+        [
+          "1个月，头晕减少，体重降低； ",
+          "2个月，肢体麻木得到缓解；",
+          "3个月，血液粘稠度降低。坚持营养方案，延缓血管硬化，病程发展。",
+        ],
+        [
+          "1个月，减少关节肿胀酸痛；",
+          "2个月，帮助避免痛风急性发作；",
+          "3个月，尿酸得到控制，指数降低。",
+        ],
+        [
+          "1个月，消化功能得到改善，食欲得到增加，贫血性水肿得 到缓解； ",
+          "2个月，头晕，头痛得到缓解，精神状态得到明显改善，疲惫感减少；",
+          "3个月，睡眠质量得到明显提升，不易惊醒。",
+        ],
+        [
+          "1个月，消化能力得到改善，胃酸、胃胀得到缓解；",
+          "2个月， 饭前，饭后疼痛感减轻，反酸、嗳气等症状得到明显缓解；",
+          "3个月，消化功能得到明显改善，排便趋向正常。坚持营养方案，胃肠免疫功能到持续养护，幽 门螺旋杆菌感染率降低，避免胃肠道肿瘤的出现。",
+        ],
+        [
+          "2个月，血压得到明显稳定，心慌、气短等症状得到缓解； ",
+          "4个月，心动力得到提升，脑供血供氧得到改善，头脑轻松，昏沉感降低；",
+          "6 个月，心脑血管功能得到改善，降低心脑血管疾病急性发作的几率。",
+        ],
+      ],
+      //调理意义
+      significanceArray: [
+        "",
+        "提示女性体内激素水平是否正常 ",
+        "提示女性体内激素水平是否正常，更清晰的观察子宫、卵巢、 盆腔等生殖器是否有病变发生。",
+        "提示男性体内激素水平是否正常、提示女性体内激素水平是否正常、 阳性结果结合临床可确定沙眼衣原体感染、阴性时不能完全排除、可用细胞培养 法确定,妊娠早期感染可引起流产、死胎、胎儿畸形等.显示女性卵巢内含有的原 始卵泡的数量和质量、是反映女性生育能力的一个重要指标、检测男女生育能力、 检测女性生育能力,通过检测血液细胞的计数及不同种类细胞、成分的分类来反映 身体状况，如：贫血、感染、血液系统疾病、物理化学因素损伤等、提示贫血类 型。 ",
+        "",
+        "用于评估受检者的脂肪代谢水平及血脂代谢紊乱评价、动脉粥 样硬化性疾病危险性预测和营养学评价。了解颈部大动脉有无异常(如斑块、 硬化、狭窄)。可以清楚自己的血压情况，对起居，饮食，用药，保健等等都 有重要的指导作用。用于冠心病、动脉硬化、心梗、脑梗等的早期预警。",
+        "用于评估受检者的脂肪代谢水平及血脂代谢紊乱评价、动脉粥样硬化性疾病危险性预测和营养学评价。可以清楚自己的血 压情况，对起居，饮食，用药，保健等等都有重要的指导作用。了解颈部大动 脉有无异常(如斑块、硬化、狭窄)。用于冠心病、动脉硬化、心梗、脑梗等的 早期预警。",
+        "用于评估受检者的脂肪代谢水平及血脂代谢紊乱评价、动脉粥 样硬化性疾病危险性预测和营养学评价。可以清楚自己的血压情况，对起居， 饮食，用药，保健等等都有重要的指导作用。解颈部大动脉有无异常(如斑块、 硬化、狭窄)。用于冠心病、动脉硬化、心梗、脑梗等的早期预警。 ",
+        "主要用于了解肾功能异常，痛风，尿酸偏高等。更清晰的检查 肾癌、游走肾等是否异常病变发生。可提示有无泌尿系统疾患：如急、慢性肾 炎，肾盂肾炎，膀胱炎，尿道炎，肾病综合征，狼疮性肾炎，血红蛋白尿，肾 梗塞、肾小管重金属盐及药物导致急性肾小管坏死，肾或膀胱肿瘤以及有无尿 糖等。微量白蛋白尿是指在尿中出现微量白蛋白。白蛋白是一种血液中的正常 蛋白质，但在生理条件下尿液中仅出现极少量白蛋白。微量白蛋白尿反映肾脏 异常渗漏蛋白质。 ",
+        "提示贫血类型。通过检测血液细胞的计数及不同种类细胞、成 分的分类来反映身体状况，如：贫血、感染、血液系统疾病、物理化学因素损 伤等。提示肝胆系统疾病。更清晰的检查肾癌、游走肾等是否异常病变发生 ",
+        "查看胃部是否有病变，通过吹气了解胃内有无幽门螺旋杆菌感 染，此感染与胃炎、消化性溃疡、胃癌等发病有密切关系。 可用于胃癌、胃 溃疡、萎缩性胃炎的初筛。1、胃泌素17（ G-17）由胃窦G细胞分泌，具有促 进胃酸分泌、胃肠道粘膜生长及调节食管括约肌等作用，高G-17分泌在胃癌发 展过程中起重要促进作用。 2、G-17可以直接评估胃窦部粘膜的健康状况和间接反映胃体部粘膜的健康状 况，同时可反映胃酸水平的高低，从而对胃部疾病风险进行有效评估。",
+        "用于评估受检者的脂肪代谢水平及血脂代谢紊乱评价、动脉粥 样硬化性疾病危险性预测和营养学评价。可以清楚自己的血压情况，对起居， 饮食，用药，保健等等都有重要的指导作用。用于冠心病、动脉硬化、 心梗、脑梗等的早期预警。心血管疾病的重要诊断方法。动态显示心腔内结构、 心脏的搏动和血液流动，对先天性心脏病、心肌病、冠心病、心肌梗塞并发症 及肺心病有较大的诊断价值。用于心肌梗塞、心肌炎、皮肌炎等的辅助诊断。 了解颈部大动脉有无异常(如斑块、硬化、狭窄)。 ",
+      ],
+    };
+  },
+  mounted() {
+    document.title = this.$route.meta.title;
+  },
+  created() {
+    this.getContract();
+  },
+  methods: {
+    getContract() {
+      const { pathname } = window.location;
+      const id = pathname.substring(pathname.lastIndexOf("/") + 1);
+      // console.log(id)
+      getFile(id).then((result) => {
+        if (result.url) {
+          // this.$router.push(result.url);
+          window.location.href = `${window.location.origin}${result.url}`;
+        } else if (result.data) {
+          this.form = result.data;
+          this.form.amount = parseInt(result.data.amount);
+          this.form.amountUpper = digitUppercase(this.form.amount);
+          this.form.serveTimeStr = this.serveTimeIdOption.find(
+            (obj) => obj.value === parseInt(result.data.serveTime)
+          ).label;
+          this.form.expireTime = dayjs()
+            .add(this.form.serveTime / 30, "month")
+            .format("YYYY-MM-DD");
+          this.show = true;
+        }
+      });
     },
-    mounted() {
-      document.title = this.$route.meta.title
+    submitForm() {
+      this.$refs["form"].validate((valid) => {
+        if (valid) {
+          signContract(this.form).then((result) => {
+            if (result.code === 200) {
+              window.location.href = window.location.origin + result.url;
+            }
+          });
+        }
+      });
     },
-    created() {
-      this.getContract();
+    handleRadioChange(val) {
+      this.read = val;
     },
-    methods: {
-      getContract() {
-        const {pathname} = window.location;
-        const id = pathname.substring(pathname.lastIndexOf('/') + 1);
-        // console.log(id)
-        getFile(id).then(result => {
-          if (result.url) {
-            this.$router.push(result.url);
-          } else if (result.data) {
-            this.form = result.data;
-            this.form.amount = parseInt(result.data.amount);
-            this.form.amountUpper = digitUppercase(this.form.amount);
-            this.form.serveTimeStr = this.serveTimeIdOption.find(obj => obj.value === parseInt(result.data.serveTime)).label;
-            this.form.expireTime = dayjs().add(this.form.serveTime/30, 'month').format('YYYY-MM-DD');
-            this.show = true;
-          }
-        })
-      },
-      submitForm() {
-        this.$refs["form"].validate(valid => {
-          if (valid) {
-            signContract(this.form).then(result => {
-              if (result.code === 200) {
-                window.location.href = window.location.origin + result.url;
-              }
-            });
-          }
-        })
-      },
-      handleRadioChange(val) {
-        this.read = val;
-      },
-      handleConfirm() {
-        this.dialogVisible = false;
-        this.read = true;
-      },
-
-    }
-  }
+    handleConfirm() {
+      this.dialogVisible = false;
+      this.read = true;
+    },
+  },
+};
 </script>
 
 <style lang="scss" scoped>
-  .sign-contract-container {
-    font-family: Helvetica Neue, Helvetica, Arial, Microsoft Yahei, Hiragino Sans GB, Heiti SC, WenQuanYi Micro Hei, sans-serif;
-    padding: 32px;
-    /*background-color: rgb(240, 242, 245);*/
-    position: relative;
+.sign-contract-container {
+  font-family: Helvetica Neue, Helvetica, Arial, Microsoft Yahei,
+    Hiragino Sans GB, Heiti SC, WenQuanYi Micro Hei, sans-serif;
+  padding: 32px;
+  /*background-color: rgb(240, 242, 245);*/
+  position: relative;
 
-    .contract-title {
-      text-align: center;
-      font-size: 20px;
-      margin-bottom: 32px;
-    }
+  .contract-title {
+    text-align: center;
+    font-size: 20px;
+    margin-bottom: 32px;
+  }
 
+  .detail {
+    color: #0066cc;
+    cursor: pointer;
+    font-size: 14px;
+  }
 
-    .detail {
-      color: #0066cc;
-      cursor: pointer;
-      font-size: 14px;
-    }
-
-    .contract_dialog {
-
-
-      .dialog-detail {
-        height: 60vh;
-        margin-top: -12px;
-        margin-bottom: -12px;
-        overflow: auto;
-      }
-    }
-
-    .line-rule {
-      margin: 4px 0;
-      line-height: 18px;
-    }
-
-    .chart-wrapper {
-      background: #fff;
-      padding: 16px 16px 0;
-      margin-bottom: 32px;
+  .contract_dialog {
+    .dialog-detail {
+      height: 60vh;
+      margin-top: -12px;
+      margin-bottom: -12px;
+      overflow: auto;
     }
   }
 
-  @media (max-width: 1024px) {
-    .chart-wrapper {
-      padding: 8px;
-    }
+  .line-rule {
+    margin: 4px 0;
+    line-height: 18px;
   }
+
+  .chart-wrapper {
+    background: #fff;
+    padding: 16px 16px 0;
+    margin-bottom: 32px;
+  }
+}
+
+@media (max-width: 1024px) {
+  .chart-wrapper {
+    padding: 8px;
+  }
+}
 </style>

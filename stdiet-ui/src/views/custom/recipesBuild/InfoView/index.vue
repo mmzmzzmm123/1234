@@ -26,6 +26,9 @@
           <DailyAnalyzeCom v-else />
         </div>
       </el-tab-pane>
+      <el-tab-pane label="快捷列表" name="3">
+
+      </el-tab-pane>
     </el-tabs>
   </div>
 </template>

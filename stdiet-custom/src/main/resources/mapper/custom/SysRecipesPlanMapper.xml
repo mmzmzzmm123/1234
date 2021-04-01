@@ -37,7 +37,7 @@
 
 
     <sql id="selectSysRecipesPlanVo">
-        select id, order_id, cus_id, start_date, end_date, start_num_day, end_num_day, recipes_id, send_flag, send_time, pause_date, create_time, create_by, update_time, update_by, del_flag, review_status from sys_recipes_plan
+        select id, order_id, cus_id, out_id, start_date, end_date, start_num_day, end_num_day, recipes_id, send_flag, send_time, pause_date, create_time, create_by, update_time, update_by, del_flag, review_status from sys_recipes_plan
     </sql>
 
     <select id="selectSysRecipesPlanList" parameterType="SysRecipesPlan" resultMap="SysRecipesPlanResult">
@@ -221,7 +221,7 @@
 
     <!--  根据cusId查询食谱计划-->
     <select id="selectPlanListByCusId" parameterType="Long" resultMap="SysRecipesPlanResult">
-        select id, out_id, start_date, end_date, start_num_day, end_num_day, recipes_id, review_status from sys_recipes_plan
+        <include refid="selectSysRecipesPlanVo"/>
         where cus_id=#{cusId} and del_flag = 0 order by id asc
     </select>
 
@@ -241,7 +241,7 @@
 
     <!--  通过outId查询食谱计划简要-->
     <select id="selectRecipesPlanListInfo" resultMap="SysRecipesPlanListInfoResult">
-        select id, start_date, end_date, start_num_day, end_num_day, recipes_id from sys_recipes_plan where out_id=#{outId} and del_flag = 0 and review_status = 2
+        select id, start_date, end_date, start_num_day, end_num_day, recipes_id from sys_recipes_plan where out_id=#{outId} and del_flag = 0 and review_status = 2 and send_flag = 1
     </select>
 
     <resultMap type="SysRecipesDaily" id="SysRecipesResult">
