@@ -21,10 +21,10 @@ export default {
       editing: false,
     };
   },
-  props: ["value"],
+  props: ["value", "disabled"],
   methods: {
     handleOnClick(e) {
-      if (!this.editing) {
+      if (!this.editing && !this.disabled) {
         this.editing = true;
         this.$nextTick(() => {
           this.$refs["inputRef"].focus();

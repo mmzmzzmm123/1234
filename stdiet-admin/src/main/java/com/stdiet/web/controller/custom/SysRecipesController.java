@@ -10,6 +10,8 @@ import com.stdiet.custom.service.ISysRecipesService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/custom/recipes")
 public class SysRecipesController extends BaseController {
@@ -37,6 +39,11 @@ public class SysRecipesController extends BaseController {
         } else {
             return AjaxResult.error();
         }
+    }
+
+    @PostMapping(value = "/menu/replace")
+    public AjaxResult replaceMenu(@RequestBody List<SysRecipesDailyDishes> dishes) {
+        return AjaxResult.success(sysRecipesService.replaceDishes(dishes));
     }
 
     /**

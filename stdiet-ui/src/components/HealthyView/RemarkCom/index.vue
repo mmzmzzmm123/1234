@@ -45,7 +45,7 @@ export default {
   },
   watch: {
     value(val) {
-      console.log(val);
+      // console.log(val);
       this.nData = val;
     },
     nData(val) {

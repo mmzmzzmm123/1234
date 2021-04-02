@@ -37,3 +37,11 @@ export function deleteDishesApi(id) {
     method: "delete"
   });
 }
+
+export function replaceMenuApi(data) {
+  return request({
+    url: "/custom/recipes/menu/replace",
+    method: "post",
+    data
+  });
+}

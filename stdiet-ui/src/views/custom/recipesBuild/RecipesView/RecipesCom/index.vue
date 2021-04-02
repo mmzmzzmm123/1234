@@ -9,33 +9,80 @@
       size="mini"
       header-row-class-name="recipes_header"
       :cell-class-name="cellClassName"
-      :style="`outline: ${currentDay === num ? '1px solid #d53950' : 'none'}`"
+      :style="`outline: ${
+        currentDay === num && !preview ? '1px solid #d53950' : 'none'
+      }`"
     >
       <el-table-column prop="type" :width="80" align="center">
         <template slot="header">
-          <div class="pointer_style" @click="handleOnResetCurrentDay">
-            {{ `第${numDay}天` }}
-          </div>
-        </template>
-        <template slot-scope="scope">
           <el-popover
-            placement="top"
+            placement="right"
+            :open-delay="200"
             trigger="hover"
-            :title="typeFormatter(scope.row)"
+            :title="`第${numDay}天`"
+            :disabled="preview"
           >
             <div>
               <el-button
                 size="mini"
                 type="primary"
-                @click="handleOnMenuTypeClick(scope.row)"
-                >添加
+                icon="el-icon-position"
+                @click="handleOnMenuCopyClick"
+              >
+                添加快捷
               </el-button>
               <el-button
                 size="mini"
                 type="primary"
-                @click="handleOnPaste(scope.row.type)"
-                v-if="canCopyMenuTypes.includes(scope.row.type)"
-                >粘贴</el-button
+                icon="el-icon-refresh"
+                v-if="shouldPasteShow('0')"
+                @click="handleOnMenuPasteClick"
+                >快捷替换</el-button
+              >
+              <div v-else-if="curShortCutObj.type" style="margin-top: 8px">
+                <el-button
+                  icon="el-icon-right"
+                  size="mini"
+                  type="primary"
+                  v-for="item in curShortCutObj.type"
+                  :key="item"
+                  @click="handleOnShortCutMenuAdd(item)"
+                  >{{ menuTypeDict[item] }}</el-button
+                >
+              </div>
+            </div>
+            <div
+              class="pointer_style"
+              @click="handleOnResetCurrentDay"
+              slot="reference"
+            >
+              {{ `第${numDay}天` }}
+            </div>
+          </el-popover>
+        </template>
+        <template slot-scope="scope">
+          <el-popover
+            placement="top"
+            trigger="hover"
+            :open-delay="200"
+            :title="typeFormatter(scope.row)"
+            :disabled="preview"
+          >
+            <div>
+              <el-button
+                size="mini"
+                type="primary"
+                icon="el-icon-plus"
+                @click="handleOnMenuTypeClick(scope.row)"
+                >添加菜品
+              </el-button>
+              <el-button
+                size="mini"
+                type="primary"
+                icon="el-icon-position"
+                @click="handleOnShortCutMenuAdd(scope.row.type)"
+                v-if="shouldPasteShow(scope.row.type)"
+                >快捷添加</el-button
               >
             </div>
             <div
@@ -52,7 +99,13 @@
           <div class="pointer_style" @click="handleOnAdd">菜品</div>
         </template>
         <template slot-scope="scope">
-          <el-popover placement="right" trigger="hover" :title="scope.row.name">
+          <el-popover
+            placement="right"
+            :open-delay="200"
+            trigger="hover"
+            :title="scope.row.name"
+            :disabled="preview"
+          >
             <div>
               <div style="margin-bottom: 8px">
                 <el-button
@@ -62,7 +115,7 @@
                   class="fun_button"
                   @click="handleOnReplace(scope.row)"
                 >
-                  替换
+                  替换菜品
                 </el-button>
                 <el-button
                   type="danger"
@@ -71,18 +124,18 @@
                   class="fun_button"
                   @click="handleOnDelete(scope.row)"
                 >
-                  删除
+                  删除菜品
                 </el-button>
               </div>
-              <div>
+              <div style="margin-bottom: 8px">
                 <el-button
                   type="primary"
                   size="mini"
-                  icon="el-icon-document-copy"
+                  icon="el-icon-position"
                   class="fun_button"
                   @click="handleOnCopy(scope.row)"
                 >
-                  复制
+                  添加快捷
                 </el-button>
                 <el-button
                   type="primary"
@@ -92,6 +145,18 @@
                   @click="handleOnSetting(scope.row)"
                 >
                   修改餐类
+                </el-button>
+              </div>
+              <div>
+                <el-button
+                  type="primary"
+                  size="mini"
+                  icon="el-icon-refresh"
+                  class="fun_button"
+                  v-if="shouldPasteShow(scope.row.type)"
+                  @click="handleOnShortCutReplace(scope.row)"
+                >
+                  快捷替换
                 </el-button>
               </div>
             </div>
@@ -115,8 +180,10 @@
           <el-popover
             v-else
             placement="right"
+            :open-delay="200"
             trigger="hover"
             :title="scope.row.igdName"
+            :disabled="preview"
           >
             <el-button
               type="danger"
@@ -137,6 +204,7 @@
           <EditableUnit
             :weight="scope.row.cusWeight"
             :unit="scope.row.cusUnit"
+            :disabled="preview"
             @onChange="(val) => handleOnCustomUnitChange(scope.row, val)"
           />
         </template>
@@ -145,6 +213,7 @@
         <template slot-scope="scope">
           <EditableText
             :value="scope.row.weight"
+            :disabled="preview"
             @onChange="(val) => handleOnWeightChange(scope.row, val)"
           />
         </template>
@@ -154,6 +223,7 @@
         prop="proteinRatio"
         :width="60"
         align="center"
+        v-if="!preview"
       >
         <template slot="header">
           <div class="pointer_style">
@@ -167,6 +237,7 @@
         prop="fatRatio"
         :width="60"
         align="center"
+        v-if="!preview"
       >
         <template slot="header">
           <div class="pointer_style">
@@ -180,6 +251,7 @@
         prop="carbonRatio"
         :width="60"
         align="center"
+        v-if="!preview"
       >
         <template slot="header">
           <div class="pointer_style">
@@ -194,6 +266,7 @@
         :width="60"
         align="center"
         :formatter="nutriFormatter"
+        v-if="!preview"
       >
         <template slot="header">
           <div class="pointer_style">
@@ -208,6 +281,7 @@
         :width="60"
         align="center"
         :formatter="nutriFormatter"
+        v-if="!preview"
       >
         <template slot="header">
           <div class="pointer_style">
@@ -222,6 +296,7 @@
         :width="60"
         align="center"
         :formatter="nutriFormatter"
+        v-if="!preview"
       >
         <template slot="header">
           <div class="pointer_style">
@@ -230,8 +305,8 @@
           </div>
         </template>
       </el-table-column>
-      <el-table-column label="做法" prop="methods" />
-      <el-table-column label="备注" prop="remark">
+      <el-table-column label="做法" prop="methods" v-if="!preview" />
+      <el-table-column label="备注" prop="remark" v-if="!preview">
         <template slot-scope="scope">
           <div
             v-if="!scope.row.remark"
@@ -276,13 +351,15 @@ import DishesSettingDialog from "./DishesSettingDialog";
 import VueScrollTo from "vue-scrollto";
 import RemarkDialog from "./RemarkDialog";
 import { processMenuData } from "./utils";
+import { addShortCut } from "@/utils/shortCutUtils";
+import { messageTypes } from "@/utils";
 
 export default {
   name: "RecipesCom",
   props: {
     data: {
       type: Object,
-      default: [],
+      default: {},
       required: true,
     },
     name: {
@@ -297,6 +374,10 @@ export default {
       type: Number,
       default: 0,
     },
+    preview: {
+      type: Boolean,
+      default: false,
+    },
   },
   components: {
     EditableText,
@@ -309,7 +390,16 @@ export default {
     // console.log(this.data);
   },
   data() {
-    return {};
+    return {
+      menuTypeDict: {
+        1: "早餐",
+        2: "早加餐",
+        3: "午餐",
+        4: "午加餐",
+        5: "晚餐",
+        6: "晚加餐",
+      },
+    };
   },
   computed: {
     notIds() {
@@ -327,15 +417,70 @@ export default {
     ...mapGetters(["typeDict"]),
     ...mapState([
       "currentDay",
-      "copyData",
+      // "copyData",
       "fontSize",
-      "canCopyMenuTypes",
+      // "canCopyMenuTypes",
       "recipesId",
       "notRecIgds",
       "avoidFoodIds",
+      "curShortCutObj",
+      "healthyData",
+      "templateInfo",
     ]),
   },
   methods: {
+    handleOnShortCutReplace(data) {
+      this.updateDishes({
+        num: this.num,
+        data: {
+          ...this.curShortCutObj.data,
+          type: data.type,
+          id: data.id,
+        },
+        actionType: "replace",
+      }).catch((err) => {
+        this.$message.error(err);
+      });
+    },
+    handleOnShortCutMenuAdd(type) {
+      const data = {
+        ...JSON.parse(JSON.stringify(this.curShortCutObj.data)),
+        type,
+      };
+      if (!this.recipesId) {
+        // 未生成食谱时拷贝
+        data.id = new Date().getTime();
+      }
+      this.addDishes({
+        num: this.num,
+        data,
+      }).catch((err) => {
+        this.$message.error(err);
+      });
+    },
+    handleOnMenuPasteClick() {
+      if (!this.curShortCutObj || !this.curShortCutObj.data.dishes) {
+        this.$message.error("快捷对象错误");
+        return;
+      }
+      const { id } = this.data;
+      this.replaceMenu({
+        num: this.num,
+        data: {
+          numDay: this.numDay,
+          id,
+          dishes: this.curShortCutObj.data.dishes.map((obj) => ({
+            ...obj,
+            id: id + obj.id,
+          })),
+        },
+      });
+    },
+    shouldPasteShow(type) {
+      return (
+        this.curShortCutObj.type && this.curShortCutObj.type.includes(type)
+      );
+    },
     cellClassName({ row, column, rowIndex, columnIndex }) {
       // console.log({ row, column, rowIndex, columnIndex });
       if (!columnIndex) {
@@ -349,6 +494,9 @@ export default {
       }
     },
     handleParentClick(e) {
+      if (this.preview) {
+        return;
+      }
       // 校验某天
       this.setCurrentDay({ currentDay: this.num });
     },
@@ -370,6 +518,9 @@ export default {
       return ((row.weight / 100) * row[col.property]).toFixed(1);
     },
     handleOnResetCurrentDay(e) {
+      if (this.preview) {
+        return;
+      }
       e.stopPropagation();
       // 取消高亮
       this.resetCurrentDay({ currentDay: this.num });
@@ -379,6 +530,9 @@ export default {
     },
     handleOnAdd() {
       // console.log(this.num);
+      if (this.preview) {
+        return;
+      }
       this.$refs.drawerRef.showDrawer({});
     },
     handleOnReplace(data) {
@@ -398,25 +552,25 @@ export default {
           this.$message.error(err);
         });
     },
-    handleOnPaste(type) {
-      // console.log(this.copyData);
-      if (this.copyData) {
-        const data = {
-          ...JSON.parse(JSON.stringify(this.copyData)),
-          type,
-        };
-        if (!this.recipesId) {
-          // 未生成食谱时拷贝
-          data.id = new Date().getTime();
-        }
-        this.addDishes({
-          num: this.num,
-          data,
-        }).catch((err) => {
-          this.$message.error(err);
-        });
-      }
-    },
+    // handleOnPaste(type) {
+    //   // console.log(this.copyData);
+    //   if (this.copyData) {
+    //     const data = {
+    //       ...JSON.parse(JSON.stringify(this.copyData)),
+    //       type,
+    //     };
+    //     if (!this.recipesId) {
+    //       // 未生成食谱时拷贝
+    //       data.id = new Date().getTime();
+    //     }
+    //     this.addDishes({
+    //       num: this.num,
+    //       data,
+    //     }).catch((err) => {
+    //       this.$message.error(err);
+    //     });
+    //   }
+    // },
     handleOnWeightChange(data, weight) {
       // console.log({ data, weight });
       this.updateDishes({
@@ -507,12 +661,38 @@ export default {
         this.$message.error(err);
       });
     },
+    handleOnMenuCopyClick() {
+      // console.log({
+      //   numDay: this.numDay,
+      //   data: this.data,
+      //   healthyData: this.healthyData,
+      //   templateInfo: this.templateInfo,
+      // });
+      const name = `${
+        this.healthyData ? this.healthyData.name : this.templateInfo.name
+      }-第${this.numDay}天`;
+      addShortCut({
+        name,
+        id: new Date().getTime(),
+        type: ["0"],
+        data: this.data,
+      }).then(() => {
+        this.$message.success("添加成功");
+        window.postMessage(
+          {
+            type: messageTypes.UPDATE_SHORTCUT,
+          },
+          "*"
+        );
+      });
+    },
     ...mapActions([
       "updateDishes",
       "addDishes",
       "deleteDishes",
       "replaceDishes",
       "setCopyData",
+      "replaceMenu",
     ]),
     ...mapMutations(["setCurrentDay", "resetCurrentDay"]),
   },

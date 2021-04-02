@@ -4,6 +4,7 @@ import com.stdiet.custom.domain.SysRecipes;
 import com.stdiet.custom.domain.SysRecipesDaily;
 import com.stdiet.custom.domain.SysRecipesDailyDishes;
 
+import java.sql.Array;
 import java.util.List;
 
 public interface ISysRecipesService {
@@ -19,5 +20,7 @@ public interface ISysRecipesService {
     public int addDishes(SysRecipesDailyDishes sysRecipesDaily);
 
     public int deleteDishes(Long id);
+
+    public Long[] replaceDishes(List<SysRecipesDailyDishes> sysRecipesDailyDishes);
 
 }

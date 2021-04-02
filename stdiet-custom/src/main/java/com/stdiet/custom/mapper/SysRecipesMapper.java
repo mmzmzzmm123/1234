@@ -26,5 +26,7 @@ public interface SysRecipesMapper {
 
     public int deleteDishes(Long id);
 
+    public int deleteMenu(Long id);
+
     public List<SysRecipesDailyDishes> selectDishesByMenuId(Long id);
 }

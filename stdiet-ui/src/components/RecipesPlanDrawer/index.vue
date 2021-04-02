@@ -75,7 +75,7 @@
             {{ `${scope.row.startDate} 至 ${scope.row.endDate}` }}
           </template>
         </el-table-column>
-        <el-table-column label="发送" align="center">
+        <el-table-column label="发送" align="center" width="80">
           <template slot-scope="scope">
             <el-switch
               v-model="!!scope.row.sendFlag"
