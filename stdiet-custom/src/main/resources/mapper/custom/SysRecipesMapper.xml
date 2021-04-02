@@ -116,6 +116,11 @@
         delete from sys_customer_menu_dishes where id = #{id}
     </delete>
 
+    <!-- 删除整天食谱 -->
+    <delete id="deleteMenu" parameterType="Long">
+        delete from sys_customer_menu_dishes where menu_id = #{id}
+    </delete>
+
     <!--    查询已有食谱天数-->
     <select id="getNumDayByCusId" parameterType="Long" resultType="Integer">
         select count(*) from sys_customer_daily_menu where cus_id = #{id}
@@ -141,7 +146,7 @@
     </insert>
 
     <!--    新增菜单对应菜品-->
-    <insert id="bashAddDishes" >
+    <insert id="bashAddDishes" useGeneratedKeys="true" keyProperty="id">
         insert into sys_customer_menu_dishes (menu_id, type, dishes_id, remark, detail) values
         <foreach collection="list" separator="," item="item" index="index">
             (#{item.menuId}, #{item.type}, #{item.dishesId}, #{item.remark}, #{item.detail, jdbcType=OTHER, typeHandler=com.stdiet.custom.typehandler.ArrayJsonHandler})

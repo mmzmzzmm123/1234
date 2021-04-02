@@ -5,12 +5,15 @@ import {
   updateDishesDetailApi,
   addDishesApi,
   deleteDishesApi,
-  addRecipesApi
+  addRecipesApi,
+  replaceMenuApi
 } from "@/api/custom/recipes";
 import { getDishesMenuTypes } from "@/api/custom/dishes";
 import { getRecipesTemplateDetail } from "@/api/custom/recipesTemplate";
 import { getRecipesPlan, updateRecipesPlan } from "@/api/custom/recipesPlan";
 import { getDicts } from "@/api/system/dict/data";
+import { addShortCut } from "@/utils/shortCutUtils";
+import { messageTypes } from "@/utils";
 
 const oriState = {
   cusId: undefined,
@@ -31,8 +34,10 @@ const oriState = {
   endNum: 0,
   reviewStatus: 0,
   templateInfo: undefined,
-  copyData: undefined,
-  canCopyMenuTypes: [],
+  //
+  // copyData: undefined,
+  // canCopyMenuTypes: [],
+  //
   fontSize: parseInt(localStorage.getItem("fontSize")) || 12,
   dishBigClassOptions: [],
   dishSmallClassOptions: [],
@@ -40,7 +45,9 @@ const oriState = {
   leftShow: false,
   notRecIgds: [],
   avoidFoodIds: [],
-  igdTypeOptions: []
+  igdTypeOptions: [],
+  //
+  curShortCutObj: {}
 };
 
 const mutations = {
@@ -112,6 +119,9 @@ const mutations = {
   },
   setNotRecIgds(state, payload) {
     state.notRecIgds = payload.data;
+  },
+  setCurShortCutObj(state, payload) {
+    state.curShortCutObj = payload.data;
   },
   setDate(state, payload) {
     state.startDate = payload.startDate;
@@ -461,6 +471,45 @@ const actions = {
       commit("deleteSomeDayDishes", payload);
     }
   },
+  async replaceMenu({ commit, state }, payload) {
+    const rData = JSON.parse(JSON.stringify(state.recipesData));
+    if (state.recipesId) {
+      const tarData = {
+        ...payload.data,
+        dishes: payload.data.dishes.map(obj => ({
+          ...obj,
+          id: -1
+        }))
+      };
+      const menuData = payload.data.dishes.map(dObj => ({
+        menuId: payload.data.id,
+        dishesId: dObj.dishesId,
+        type: dObj.type,
+        remark: dObj.remark,
+        detail: dObj.igdList.map(igd => ({
+          id: igd.id,
+          weight: igd.weight,
+          cus_unit: igd.cusUnit,
+          cus_weight: igd.cusWeight
+        }))
+      }));
+      const result = await replaceMenuApi(menuData);
+      if (result.code === 200) {
+        result.data.forEach((id, idx) => {
+          tarData.dishes[idx].id = id;
+        });
+        rData[payload.num] = tarData;
+        commit("updateStateData", {
+          recipesData: rData
+        });
+      }
+    } else {
+      rData[payload.num] = payload.data;
+      commit("updateStateData", {
+        recipesData: rData
+      });
+    }
+  },
   async deleteMenu({ commit }, payload) {},
   async setCopyData({ commit, state }, payload) {
     return new Promise(async (res, rej) => {
@@ -470,16 +519,29 @@ const actions = {
       if (tarDishes) {
         const response = await getDishesMenuTypes(tarDishes.dishesId);
         if (response.code === 200) {
-          commit("updateStateData", {
-            copyData: tarDishes,
-            canCopyMenuTypes: response.data.type.split(",")
+          // commit("updateStateData", {
+          //   copyData: tarDishes,
+          //   canCopyMenuTypes: type
+          // });
+          addShortCut({
+            id: new Date().getTime(),
+            name: tarDishes.name,
+            type: response.data.type.split(",").sort(),
+            data: tarDishes
+          }).then(() => {
+            window.postMessage(
+              {
+                type: messageTypes.UPDATE_SHORTCUT
+              },
+              "*"
+            );
           });
-          res("复制成功");
+          res("添加成功");
         } else {
-          rej("复制失败");
+          rej("添加失败");
         }
       } else {
-        rej("复制失败");
+        rej("添加失败");
       }
     });
   }

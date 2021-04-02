@@ -27,7 +27,7 @@
         </div>
       </el-tab-pane>
       <el-tab-pane label="快捷列表" name="3">
-
+        <ShortCutCom />
       </el-tab-pane>
     </el-tabs>
   </div>
@@ -40,6 +40,7 @@ import HealthyView from "@/components/HealthyView";
 import BodySignView from "@/components/BodySignView";
 import WeaklyAnalyzeCom from "./WeaklyAnalyzeCom";
 import DailyAnalyzeCom from "./DailyAnalyzeCom";
+import ShortCutCom from "./ShortCutCom";
 export default {
   name: "InfoView",
   data() {
@@ -52,6 +53,7 @@ export default {
     TemplateInfoView,
     WeaklyAnalyzeCom,
     DailyAnalyzeCom,
+    ShortCutCom,
   },
   computed: {
     max() {

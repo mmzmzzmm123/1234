@@ -52,7 +52,7 @@ export default {
   },
   methods: {
     showDialog(data, healthy, type) {
-      console.log(healthy)
+      // console.log(healthy)
       this.data = data;
       this.type = type;
       this.title = "修改" + `「${data.name}」` + "备注";
