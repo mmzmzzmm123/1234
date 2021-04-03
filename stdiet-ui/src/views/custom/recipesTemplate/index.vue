@@ -200,6 +200,7 @@ export default {
         { dictValue: 0, dictLabel: "未制作" },
         { dictValue: 1, dictLabel: "未审核" },
         { dictValue: 2, dictLabel: "已审核" },
+        { dictValue: 3, dictLabel: "制作中" },
       ],
       // 查询参数
       queryParams: {

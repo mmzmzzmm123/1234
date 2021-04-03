@@ -40,7 +40,7 @@ import { createNamespacedHelpers } from "vuex";
 const { mapState, mapGetters } = createNamespacedHelpers("recipes");
 export default {
   name: "EditableUnit",
-  props: ["weight", "unit"],
+  props: ["weight", "unit", "disabled"],
   mounted() {
     window.addEventListener("click", this.handleOnWindowClick);
   },
@@ -56,7 +56,7 @@ export default {
   },
   methods: {
     handleOnClick(e) {
-      if (!this.editing) {
+      if (!this.editing && !this.disabled) {
         setTimeout(() => {
           this.editing = true;
         }, 0);

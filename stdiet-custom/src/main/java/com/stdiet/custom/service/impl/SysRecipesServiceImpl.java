@@ -1,6 +1,5 @@
 package com.stdiet.custom.service.impl;
 
-import com.stdiet.common.utils.StringUtils;
 import com.stdiet.custom.domain.SysRecipes;
 import com.stdiet.custom.domain.SysRecipesDaily;
 import com.stdiet.custom.domain.SysRecipesDailyDishes;
@@ -62,6 +61,7 @@ public class SysRecipesServiceImpl implements ISysRecipesService {
         return rows;
     }
 
+
     @Override
     public List<SysRecipes> selectSysRecipesByRecipesId(Long id) {
         return sysRecipesMapper.selectSysRecipesByRecipesId(id);
@@ -85,5 +85,21 @@ public class SysRecipesServiceImpl implements ISysRecipesService {
     @Override
     public int deleteDishes(Long id) {
         return sysRecipesMapper.deleteDishes(id);
+    }
+
+    @Override
+    public Long[] replaceDishes(List<SysRecipesDailyDishes> sysRecipesDailyDishes) {
+        // 删除原有
+        sysRecipesMapper.deleteMenu(sysRecipesDailyDishes.get(0).getMenuId());
+        // 插入新的
+        int row = sysRecipesMapper.bashAddDishes(sysRecipesDailyDishes);
+        if (row > 0) {
+            Long[] ids = new Long[sysRecipesDailyDishes.size()];
+            for (int i = 0; i < sysRecipesDailyDishes.size(); i++) {
+                ids[i] = sysRecipesDailyDishes.get(i).getId();
+            }
+            return ids;
+        }
+        return null;
     }
 }

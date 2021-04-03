@@ -194,7 +194,7 @@ export default {
           }
           if (idx === res.rows.length - 1) {
             arr.forEach((obj) => {
-              console.log({ obj });
+              // console.log({ obj });
               if (obj.children) {
                 obj.amount = obj.children.reduce(
                   (a, c) => a + (c.afterSaleCommissOrder === 0 ? c.amount : 0),
@@ -205,7 +205,7 @@ export default {
           }
           return arr;
         }, []);
-        console.log(this.orderList);
+        // console.log(this.orderList);
         this.loading = false;
       });
     },
