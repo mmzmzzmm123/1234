@@ -109,6 +109,14 @@
                 @click="handleOnDeleteClick(scope.row)"
                 >删除</el-button
               >
+              <el-button
+                size="mini"
+                type="text"
+                icon="el-icon-edit"
+                @click="handleOnReplaceRecordClick(scope.row)"
+                v-hasPermi="['custom:orderNutritionistReplaceRecord:list']"
+              >更换记录</el-button
+              >
             </template>
           </el-table-column>
         </el-table>
@@ -121,6 +129,8 @@
     <edit-order-dialog ref="cusEditOrderDialogRef" />
 
     <order-detail ref="orderDetailRef" />
+    <!-- 订单营养师、售后更换记录 -->
+    <nutritionistReplaceRecord ref="replaceRecordRef"></nutritionistReplaceRecord>
   </div>
 </template>
 <script>
@@ -128,6 +138,7 @@ import { listOrder, delOrder } from "@/api/custom/order";
 import OrderEdit from "@/components/OrderEdit";
 import OrderAdd from "@/components/OrderAdd";
 import OrderDetail from "@/components/OrderDetail";
+import NutritionistReplaceRecord from "@/components/OrderNutritionistReplaceRecord";
 import { mapGetters } from "vuex";
 import { checkPermi } from "@/utils/permission";
 
@@ -137,6 +148,7 @@ export default {
     "edit-order-dialog": OrderEdit,
     "order-detail": OrderDetail,
     "create-order-dialog": OrderAdd,
+    "nutritionistReplaceRecord": NutritionistReplaceRecord
   },
   data() {
     return {
@@ -222,6 +234,9 @@ export default {
       this.$refs.cusEditOrderDialogRef.showDialog(data, () => {
         this.fetchOrderList(this.data.id);
       });
+    },
+    handleOnReplaceRecordClick(data) {
+      this.$refs.replaceRecordRef.showDialog(data);
     },
     handleOnDeleteClick(data) {
       const orderIds = data.orderId || this.ids;
