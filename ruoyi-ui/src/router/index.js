@@ -149,6 +149,7 @@ export const constantRoutes = [
       title: '书签管理',icon:'user',
       requireAuth: false,
     },
+    hidden: true,
     children: [
       {
         path: '/content',

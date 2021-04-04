@@ -1,7 +1,7 @@
 <template>
   <div class="login">
     <el-form ref="loginForm" :model="loginForm" :rules="loginRules" class="login-form">
-      <h3 class="title">若依后台管理系统</h3>
+      <h3 class="title">藏趣云</h3>
       <el-form-item prop="username">
         <el-input v-model="loginForm.username" type="text" auto-complete="off" placeholder="账号">
           <svg-icon slot="prefix" icon-class="user" class="el-input__icon input-icon" />
@@ -48,7 +48,7 @@
     </el-form>
     <!--  底部  -->
     <div class="el-login-footer">
-      <span>Copyright © 2018-2019 ruoyi.vip All Rights Reserved.</span>
+      <span>Copyright © 2020-2021 CQY All Rights Reserved.</span>
     </div>
   </div>
 </template>
@@ -65,8 +65,8 @@ export default {
       codeUrl: "",
       cookiePassword: "",
       loginForm: {
-        username: "admin",
-        password: "admin123",
+        username: "",
+        password: "",
         rememberMe: false,
         code: "",
         uuid: ""
@@ -129,7 +129,7 @@ export default {
           this.$store
             .dispatch("Login", this.loginForm)
             .then(() => {
-              this.$router.push({ path: this.redirect || "/" });
+              this.$router.push({ path: this.redirect || "/content" });
             })
             .catch(() => {
               this.loading = false;
@@ -148,7 +148,7 @@ export default {
   justify-content: center;
   align-items: center;
   height: 100%;
-  background-image: url("../assets/image/login-background.jpg");
+  background-image: url("../assets/image/2043428.jpg");
   background-size: cover;
 }
 .title {
@@ -173,6 +173,7 @@ export default {
     width: 14px;
     margin-left: 2px;
   }
+  opacity: 0.8;
 }
 .login-tip {
   font-size: 13px;

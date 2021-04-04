@@ -13,7 +13,7 @@
       <br/>
       <svg-icon icon-class="notebook_1" />
       <br/>
-      <svg-icon icon-class="notebook_2" />
+      <svg-icon icon-class="tool" style="width: 50px;height: 50px" />
     </div>
 
 

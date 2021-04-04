@@ -44,14 +44,14 @@ public class SqBookmarkController extends BaseController
     private ISqBookmarkService sqBookmarkService;
 
 
-    /**
-     * 测试通用mapper
-     */
-    @GetMapping("/selectByID")
-    public TableDataInfo selectByID( Long userID) {
-        List<SqBookmark> list = sqBookmarkService.selectByID(userID);
-        return getDataTable(list);
-    }
+//    /**
+//     * 测试通用mapper
+//     */
+//    @GetMapping("/selectByID")
+//    public TableDataInfo selectByID( Long userID) {
+//        List<SqBookmark> list = sqBookmarkService.selectByID(userID);
+//        return getDataTable(list);
+//    }
 
     /**
      * 通过url 查询用户 是否已经添加了此书签
@@ -60,6 +60,7 @@ public class SqBookmarkController extends BaseController
      * @return
      */
     @GetMapping("/selectByUrlUserID")
+    @PreAuthorize("@ss.hasPermi('bookmark:bookmark:common:url')")
     public AjaxResult selectByUrlUserID(String url) {
         SysUser sysUser=getAuthUser();
         startPage();
@@ -76,7 +77,7 @@ public class SqBookmarkController extends BaseController
      * @return
      */
     @GetMapping("/selectBymenuIdUserID")
-    @PreAuthorize("@ss.hasPermi('bookmark:bookmark:list')")
+    @PreAuthorize("@ss.hasPermi('bookmark:bookmark:common:listsousou')")
     public TableDataInfo selectBymenuIdUserID(Long menuId,Integer sort,String sousuo) {
         SysUser sysUser=getAuthUser();
         startPage();
@@ -88,7 +89,7 @@ public class SqBookmarkController extends BaseController
      * @return
      */
     @GetMapping("/selectBydelete")
-    @PreAuthorize("@ss.hasPermi('bookmark:bookmark:list')")
+    @PreAuthorize("@ss.hasPermi('bookmark:bookmark:common:recycle')")
     public TableDataInfo selectBydelete() {
         SysUser sysUser=getAuthUser();
         startPage();
@@ -101,7 +102,7 @@ public class SqBookmarkController extends BaseController
      * @return
      */
     @GetMapping("/selectByUseridList")
-    @PreAuthorize("@ss.hasPermi('bookmark:bookmark:list')")
+    @PreAuthorize("@ss.hasPermi('bookmark:bookmark:common:list')")
     public TableDataInfo selectByUseridList() {
         SysUser sysUser=getAuthUser();
         startPage();
@@ -148,32 +149,33 @@ public class SqBookmarkController extends BaseController
     /**
      * 新增书签管理
      */
-    @PreAuthorize("@ss.hasPermi('bookmark:bookmark:add')")
+    @PreAuthorize("@ss.hasPermi('bookmark:bookmark:common:add')")
     @Log(title = "书签管理", businessType = BusinessType.INSERT)
     @PostMapping
     public AjaxResult add(@RequestBody SqBookmark sqBookmark)
     {
         SysUser sysUser=getAuthUser();
         sqBookmark.setUserid(sysUser.getUserId());
-
         return toAjax(sqBookmarkService.insertSqBookmark(sqBookmark));
     }
 
     /**
      * 修改书签管理
      */
-    @PreAuthorize("@ss.hasPermi('bookmark:bookmark:edit')")
+    @PreAuthorize("@ss.hasPermi('bookmark:bookmark:common:edit')")
     @Log(title = "书签管理", businessType = BusinessType.UPDATE)
     @PutMapping
     public AjaxResult edit(@RequestBody SqBookmark sqBookmark)
     {
+        SysUser sysUser=getAuthUser();
+        sqBookmark.setUserid(sysUser.getUserId());
         return toAjax(sqBookmarkService.updateSqBookmark(sqBookmark));
     }
 
     /**
      * 删除书签管理
      */
-    @PreAuthorize("@ss.hasPermi('bookmark:bookmark:remove')")
+    @PreAuthorize("@ss.hasPermi('bookmark:bookmark:common:remove')")
     @Log(title = "书签管理", businessType = BusinessType.DELETE)
 	@DeleteMapping("/{bookmarkIds}")
     public AjaxResult remove(@PathVariable Long[] bookmarkIds)

@@ -43,6 +43,7 @@ public class SqMenuController extends BaseController
      */
 
     @GetMapping("/selectMenuByUserID")
+    @PreAuthorize("@ss.hasPermi('bookmark:menu:common:list')")
     public AjaxResult selecByUserID()
     {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
@@ -54,6 +55,7 @@ public class SqMenuController extends BaseController
      * 功能描述:根据MenuId 查询子目录
      */
     @GetMapping("/listByMenuId/{menuId}")
+    @PreAuthorize("@ss.hasPermi('bookmark:menu:common:menuidlist')")
     public AjaxResult listByMenuId(@PathVariable("menuId") Long menuId)
     {
         List<SqMenu> list = sqMenuService.listByMenuId(getAuthUser().getUserId(),menuId);
@@ -63,14 +65,9 @@ public class SqMenuController extends BaseController
      * 功能描述:根据MenuId 查询子目录
      */
     @PostMapping("/listByMenuIdP")
+    @PreAuthorize("@ss.hasPermi('bookmark:menu:common:menuidlist')")
     public AjaxResult listByMenuIdP(@RequestParam("menuId") Long menuId)
     {
-//        try {
-//            Thread.sleep(50000);
-//        } catch (InterruptedException e) {
-//            e.printStackTrace();
-//        }
-
         List<SqMenu> list = sqMenuService.listByMenuId(getAuthUser().getUserId(),menuId);
         return AjaxResult.success(list);
     }
@@ -79,6 +76,7 @@ public class SqMenuController extends BaseController
      * 查询MenuID单个书签信息
      */
     @GetMapping("/selectByMenuId")
+    @PreAuthorize("@ss.hasPermi('bookmark:menu:common:menuid')")
     public AjaxResult list(@RequestParam("menuId") Long menuId)
     {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
@@ -91,6 +89,8 @@ public class SqMenuController extends BaseController
         List<SqMenu> list = sqMenuService.selectSqMenuList(sqMenu);
         return AjaxResult.success(list);
     }
+
+
 
     /**
      * 查询书签菜单列表
@@ -129,7 +129,7 @@ public class SqMenuController extends BaseController
     /**
      * 新增书签菜单
      */
-    @PreAuthorize("@ss.hasPermi('bookmark:menu:add')")
+    @PreAuthorize("@ss.hasPermi('bookmark:menu:common:add')")
     @Log(title = "书签菜单", businessType = BusinessType.INSERT)
     @PostMapping
     public AjaxResult add(@RequestBody SqMenu sqMenu)
@@ -142,7 +142,7 @@ public class SqMenuController extends BaseController
     /**
      * 修改书签菜单
      */
-    @PreAuthorize("@ss.hasPermi('bookmark:menu:edit')")
+    @PreAuthorize("@ss.hasPermi('bookmark:menu:common:edit')")
     @Log(title = "书签菜单", businessType = BusinessType.UPDATE)
     @PutMapping
     public AjaxResult edit(@RequestBody SqMenu sqMenu)
@@ -184,7 +184,7 @@ public class SqMenuController extends BaseController
     /**
      * 删除书签菜单
      */
-
+    @PreAuthorize("@ss.hasPermi('bookmark:menu:common:remove')")
     @Log(title = "书签菜单", businessType = BusinessType.DELETE)
 	@DeleteMapping("/delete/{menuId}")
     public AjaxResult remove(@PathVariable Long menuId)

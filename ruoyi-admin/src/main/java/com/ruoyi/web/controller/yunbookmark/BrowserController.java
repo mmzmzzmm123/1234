@@ -52,7 +52,7 @@ public class BrowserController extends BaseController {
 
 
     @RequestMapping("/import")
-    @PreAuthorize("@ss.hasPermi('bookmark:bookmark:list')")
+    @PreAuthorize("@ss.hasPermi('bookmark:browser:export')")
     public AjaxResult importCollect(@RequestParam("htmlFile") MultipartFile htmlFile){
         logger.debug("开始上传状态是:");
         SysUser sysUser=getAuthUser();
@@ -88,33 +88,33 @@ public class BrowserController extends BaseController {
 
 
 
-    /**
-     * 导入收藏文章
-     */
-    public void importHtml(Map<String, String> map,Long menuID,Long userId){
-        for(Entry<String, String> entry : map.entrySet()){
-            try {
-                //获取URL后查询最新的URL信息
-                Map<String, String> result = ImportHtml.getCollectFromUrl(entry.getKey());
-                SqBookmark sqBookmark =new SqBookmark();
-                sqBookmark.setUserid(userId);
-                sqBookmark.setTitle(entry.getValue());
-                sqBookmark.setUrl(entry.getKey());
-                sqBookmark.setUrls(ImportHtml.Urlutils(new URL(entry.getKey())));
-                if(StringUtils.isBlank(result.get("description"))){
-                    sqBookmark.setDescription(entry.getValue());
-                }else{
-                    sqBookmark.setDescription(result.get("description"));
-                }
-                sqBookmark.setMenuId(menuID);
-                sqBookmark.setCreateTime(new Date());
-                iSqBookmarkService.insertSqBookmark(sqBookmark);
-            } catch (Exception e) {
-                logger.error("导入存储异常：",e);
-            }
-        }
-
-    }
+//    /**
+//     * 导入收藏文章
+//     */
+//    public void importHtml(Map<String, String> map,Long menuID,Long userId){
+//        for(Entry<String, String> entry : map.entrySet()){
+//            try {
+//                //获取URL后查询最新的URL信息
+//                Map<String, String> result = ImportHtml.getCollectFromUrl(entry.getKey());
+//                SqBookmark sqBookmark =new SqBookmark();
+//                sqBookmark.setUserid(userId);
+//                sqBookmark.setTitle(entry.getValue());
+//                sqBookmark.setUrl(entry.getKey());
+//                sqBookmark.setUrls(ImportHtml.Urlutils(new URL(entry.getKey())));
+//                if(StringUtils.isBlank(result.get("description"))){
+//                    sqBookmark.setDescription(entry.getValue());
+//                }else{
+//                    sqBookmark.setDescription(result.get("description"));
+//                }
+//                sqBookmark.setMenuId(menuID);
+//                sqBookmark.setCreateTime(new Date());
+//                iSqBookmarkService.insertSqBookmark(sqBookmark);
+//            } catch (Exception e) {
+//                logger.error("导入存储异常：",e);
+//            }
+//        }
+//
+//    }
 
 
 

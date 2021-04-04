@@ -32,7 +32,7 @@
             <div class="aside-title" @click="gorecycle"><i class="el-icon-delete-solid" style="color: red"></i><span>垃圾桶</span></div>
             <div class="aside-title" @click="importHtml"><i class="el-icon-s-platform"></i><span>导入书签</span></div>
             <div class="aside-title"><i class="el-icon-s-comment"></i><span>意见反馈</span></div>
-            <div class="aside-title" @click="ceshi"><i class="el-icon-s-comment"></i><span>测试页面</span></div>
+<!--            <div class="aside-title" @click="ceshi"><i class="el-icon-s-comment"></i><span>测试页面</span></div>-->
 <!--            <div class="aside-title" @click="NqEdit"><i class="el-icon-s-comment"></i><span>NqQuillEdit编辑器</span></div>-->
             <div class="aside-title " style="margin-bottom: 100px" @click="gotool"><i class="el-icon-s-grid"></i><span>工具箱</span></div>
 
