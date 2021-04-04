@@ -117,8 +117,8 @@
         :formatter="classFormat"
       />
       <el-table-column label="评估内容" align="center" prop="connent" :formatter="dayFlowFormat"/>
-      <el-table-column label="内容分数" align="center" prop="score" />
-      <el-table-column label="班级所得平均分" align="center" prop="classavg" />
+      <!-- <el-table-column label="内容分数" align="center" prop="score" />
+      <el-table-column label="班级所得平均分" align="center" prop="classavg" /> -->
       <el-table-column label="评估时间" align="center" prop="starttime" />
       <!-- <el-table-column label="创建人" align="center" prop="createUserid" /> -->
       <el-table-column

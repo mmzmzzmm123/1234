@@ -6,7 +6,7 @@
       :inline="true"
       label-width="70px"
     >
-      <el-form-item label="所属计划" prop="planid">
+      <!-- <el-form-item label="所属计划" prop="planid">
         <el-select v-model="queryParams.planid" placeholder="请选择评估计划">
           <el-option
             v-for="dict in dayflowassessmentplanOptions"
@@ -15,8 +15,18 @@
             :value="dict.id"
           ></el-option>
         </el-select>
+      </el-form-item> -->
+      <el-form-item label="学年学期" prop="xnxq">
+        <el-select v-model="queryParams.xnxq" placeholder="请选择学年学期">
+          <el-option
+            v-for="dict in xnxqOptions"
+            :key="dict.dictValue"
+            :label="dict.dictLabel"
+            :value="dict.dictValue"
+          />
+        </el-select>
       </el-form-item>
-      <el-form-item label="班级编号" prop="classid">
+      <el-form-item label="班级名称" prop="classid">
         <el-select
           v-model="queryParams.classid"
           clearable
@@ -30,16 +40,6 @@
             :value="dict.bjbh"
           ></el-option>
         </el-select>
-      </el-form-item>
-      <el-form-item label="学年学期" prop="xnxq">
-        <el-select v-model="queryParams.xnxq" placeholder="请选择学年学期">
-            <el-option
-              v-for="dict in xnxqOptions"
-              :key="dict.dictValue"
-              :label="dict.dictLabel"
-              :value="dict.dictValue"
-            />
-          </el-select>
       </el-form-item>
       <el-form-item>
         <el-button
@@ -55,30 +55,71 @@
       </el-form-item>
     </el-form>
 
+ <div class="mb8 btn-list">
+      <el-button
+        type="primary"
+        icon="el-icon-plus"
+        size="mini"
+        @click="handleAdd"
+        v-hasPermi="['benyi:dayflowassessment:add']"
+        >评估</el-button
+      >
+    </div>
+
     <el-table
       v-loading="loading"
       :data="dayflowassessmentList"
       @selection-change="handleSelectionChange"
     >
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="所属计划" align="center" prop="planid" :formatter="planFormat"/>
+      <!-- <el-table-column label="所属计划" align="center" prop="planid" :formatter="planFormat"/> -->
+      <el-table-column
+        label="学年学期"
+        align="center"
+        prop="xnxq"
+        :formatter="xnxqFormat"
+      />
       <el-table-column
         label="班级名称"
         align="center"
         prop="classid"
         :formatter="classFormat"
       />
-      <el-table-column label="班级平均分" align="center" prop="classdf" />
-      <el-table-column label="主班教师" align="center" prop="bzbh" :formatter="bzbhFormat" />
-      <el-table-column label="配班教师" align="center" prop="pbbh" :formatter="pbbhFormat"/>
-      <el-table-column label="助理教师" align="center" prop="zlbh" :formatter="zlbhFormat"/>
-      <el-table-column label="学年学期" align="center" prop="xnxq" :formatter="xnxqFormat"/>
-      <el-table-column label="评估标准" align="center" prop="bzid" :formatter="dayFlowFormat"/>
-      <el-table-column label="标准满分" align="center" prop="bzmf" />
+      <!-- <el-table-column label="班级平均分" align="center" prop="classdf" /> -->
+      <!-- <el-table-column
+        label="主班教师"
+        align="center"
+        prop="bzbh"
+        :formatter="bzbhFormat"
+      />
+      <el-table-column
+        label="配班教师"
+        align="center"
+        prop="pbbh"
+        :formatter="pbbhFormat"
+      />
+      <el-table-column
+        label="助理教师"
+        align="center"
+        prop="zlbh"
+        :formatter="zlbhFormat"
+      /> -->
+       <el-table-column
+        label="评估对象"
+        align="center"
+        prop="pgdx"
+        :formatter="pgdxFormat"
+      />
+      <el-table-column
+        label="评估环节"
+        align="center"
+        prop="bzid"
+        :formatter="dayFlowFormat"
+      />
+      <el-table-column label="环节满分" align="center" prop="bzmf" />
       <el-table-column label="扣分值" align="center" prop="kfz" />
       <!-- <el-table-column label="扣分次数" align="center" prop="kfcs" /> -->
       <el-table-column label="最终得分" align="center" prop="zzdf" />
-      <el-table-column label="评估对象" align="center" prop="pgdx" :formatter="pgdxFormat"/>
       <el-table-column
         label="操作"
         align="center"
@@ -112,128 +153,6 @@
       :limit.sync="queryParams.pageSize"
       @pagination="getList"
     />
-
-    <!-- 添加或修改幼儿园一日流程评估对话框 -->
-    <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
-      <el-form ref="form" :model="form" :rules="rules" label-width="120px">
-        <el-form-item label="所属计划" prop="planid">
-          <el-select
-            v-model="form.planid"
-            filterable
-            placeholder="请选择评估计划"
-          >
-            <el-option
-              v-for="dict in dayflowassessmentplanOptions"
-              :key="dict.id"
-              :label="dict.name"
-              :value="dict.id"
-            ></el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item label="班级编号" prop="classid">
-          <el-select
-            v-model="form.classid"
-            filterable
-            size="small"
-            placeholder="请选择班级"
-          >
-            <el-option
-              v-for="dict in classOptions"
-              :key="dict.bjbh"
-              :label="dict.bjmc"
-              :value="dict.bjbh"
-            ></el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item label="主班教师" prop="bzbh">
-          <el-select
-            v-model="form.bzbh"
-            filterable
-            placeholder="请选择主班教师"
-          >
-            <el-option
-              v-for="item in zbjsOptions"
-              :key="item.userId"
-              :label="item.nickName"
-              :value="item.userId"
-              :disabled="item.status == 1"
-            ></el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item label="配班教师" prop="pbbh">
-          <el-select
-            v-model="form.pbbh"
-            filterable
-            placeholder="请选择配班教师"
-          >
-            <el-option
-              v-for="item in pbjsOptions"
-              :key="item.userId"
-              :label="item.nickName"
-              :value="item.userId"
-              :disabled="item.status == 1"
-            ></el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item label="助理教师" prop="zlbh">
-          <el-select
-            v-model="form.zlbh"
-            filterable
-            placeholder="请选择助理教师"
-          >
-            <el-option
-              v-for="item in zljsOptions"
-              :key="item.userId"
-              :label="item.nickName"
-              :value="item.userId"
-              :disabled="item.status == 1"
-            ></el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item label="评估学年学期" prop="xnxq">
-          <el-select v-model="form.xnxq" placeholder="请选择学年学期">
-            <el-option
-              v-for="dict in xnxqOptions"
-              :key="dict.dictValue"
-              :label="dict.dictLabel"
-              :value="dict.dictValue"
-            />
-          </el-select>
-        </el-form-item>
-        <el-form-item label="评估标准编号" prop="bzid">
-          <el-input v-model="form.bzid" placeholder="请输入评估标准编号" />
-        </el-form-item>
-        <el-form-item label="扣分值" prop="kfz">
-          <el-input v-model="form.kfz" placeholder="请输入扣分值" />
-        </el-form-item>
-        <!-- <el-form-item label="扣分次数" prop="kfcs">
-          <el-input v-model="form.kfcs" placeholder="请输入扣分次数" />
-        </el-form-item> -->
-        <el-form-item label="评估对象" prop="pgdx">
-          <el-select
-            v-model="form.pgdx"
-            filterable
-            clearable
-            placeholder="请选择当时教师"
-          >
-            <el-option
-              v-for="item in userOptions"
-              :key="item.userId"
-              :label="item.nickName"
-              :value="item.userId"
-              :disabled="item.status == 1"
-            ></el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item label="执行人" prop="createUserid">
-          <el-input v-model="form.createUserid" placeholder="请输入执行人" />
-        </el-form-item>
-      </el-form>
-      <div slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="submitForm">确 定</el-button>
-        <el-button @click="cancel">取 消</el-button>
-      </div>
-    </el-dialog>
   </div>
 </template>
 
@@ -241,11 +160,13 @@
 import {
   listDayflowassessment,
   getDayflowassessment,
-  delDayflowassessment,
   addDayflowassessment,
   updateDayflowassessment,
 } from "@/api/benyi/dayflowassessment";
-import { listDayflowassessmentplan, getDayflowassessmentplan, } from "@/api/benyi/dayflowassessmentplan";
+import {
+  listDayflowassessmentplan,
+  getDayflowassessmentplan,
+} from "@/api/benyi/dayflowassessmentplan";
 import { listClass } from "@/api/system/class";
 import { getUsersByRoleId } from "@/api/system/user";
 import { listUser } from "@/api/system/user";
@@ -268,7 +189,7 @@ export default {
       // 幼儿园一日流程评估表格数据
       dayflowassessmentList: [],
       // 一日流程评估计划数据
-      dayflowassessmentplanOptions: [],
+      // dayflowassessmentplanOptions: [],
       // 班级
       classOptions: [],
       //主班教师角色用户
@@ -321,7 +242,7 @@ export default {
     this.getClassList();
     this.getUserList();
     this.getDayFlowList();
-    this.getDayflowassessmentplan();
+    // this.getDayflowassessmentplan();
     //获取主班教师角色用户列表
     getUsersByRoleId().then((response) => {
       this.zbjsOptions = response.zbjs;
@@ -344,11 +265,11 @@ export default {
       });
     },
     /** 查询一日流程评估计划列表 */
-    getDayflowassessmentplan() {
-      listDayflowassessmentplan(null).then((response) => {
-        this.dayflowassessmentplanOptions = response.rows;
-      });
-    },
+    // getDayflowassessmentplan() {
+    //   listDayflowassessmentplan(null).then((response) => {
+    //     this.dayflowassessmentplanOptions = response.rows;
+    //   });
+    // },
     // 获取班级列表
     getClassList() {
       listClass(null).then((response) => {
@@ -373,11 +294,9 @@ export default {
     },
     /** 查询用户列表 */
     getUserList() {
-      listUser(null).then(
-        (response) => {
-          this.userOptions = response.rows;
-        }
-      );
+      listUser(null).then((response) => {
+        this.userOptions = response.rows;
+      });
     },
     // 教师字典翻译
     bzbhFormat(row, column) {
@@ -428,17 +347,17 @@ export default {
       return actions.join("");
     },
     // 计划字典翻译
-    planFormat(row, column) {
-      var actions = [];
-      var datas = this.dayflowassessmentplanOptions;
-      Object.keys(datas).map((key) => {
-        if (datas[key].id == "" + row.planid) {
-          actions.push(datas[key].name);
-          return false;
-        }
-      });
-      return actions.join("");
-    },
+    // planFormat(row, column) {
+    //   var actions = [];
+    //   var datas = this.dayflowassessmentplanOptions;
+    //   Object.keys(datas).map((key) => {
+    //     if (datas[key].id == "" + row.planid) {
+    //       actions.push(datas[key].name);
+    //       return false;
+    //     }
+    //   });
+    //   return actions.join("");
+    // },
     /** 查询一日流程列表 */
     getDayFlowList() {
       listDetail(null).then((response) => {
@@ -564,27 +483,6 @@ export default {
           }
         }
       });
-    },
-    /** 删除按钮操作 */
-    handleDelete(row) {
-      const ids = row.id || this.ids;
-      this.$confirm(
-        '是否确认删除幼儿园一日流程评估编号为"' + ids + '"的数据项?',
-        "警告",
-        {
-          confirmButtonText: "确定",
-          cancelButtonText: "取消",
-          type: "warning",
-        }
-      )
-        .then(function () {
-          return delDayflowassessment(ids);
-        })
-        .then(() => {
-          this.getList();
-          this.msgSuccess("删除成功");
-        })
-        .catch(function () {});
     },
   },
 };
