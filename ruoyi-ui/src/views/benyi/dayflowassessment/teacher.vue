@@ -1,15 +1,54 @@
 <template>
   <div class="app-container">
-    <div class="flex align-center justify-between student-main-title">
-      <p class="title flex align-center">
-        <span>幼儿园：{{ deptFormat(deptId) }} </span>
-        <span>行为人：{{ teacherFormat(teacherName)  }} </span>
-        <span>班级：{{ classFormat(classid) }} </span>
-        <span>学期：{{ xnxqFormat(xnxq) }} </span>
-        <span>班长：{{ teacherFormat(zbjsxm) }} </span>
-        <span>配班教师：{{ teacherFormat(pbjs) }} </span>
-        <span>助理教师：{{ teacherFormat(zljs) }} </span>
-      </p>
+    <el-form ref="form" :model="form" :rules="rules" label-width="90px">
+      <el-row :gutter="10">
+        <el-col :xs="24" :ms="12" :md="5">
+          <el-form-item label="班级名称" prop="classid">
+            <el-select
+              v-model="form.classid"
+              size="small"
+              placeholder="请选择班级"
+            >
+              <el-option
+                v-for="dict in classOptions"
+                :key="dict.bjbh"
+                :label="dict.bjmc"
+                :value="dict.bjbh"
+              ></el-option>
+            </el-select>
+          </el-form-item>
+        </el-col>
+        <el-col :xs="24" :ms="12" :md="5">
+          <el-form-item label="评估对象" prop="pgdx">
+            <el-select
+              v-model="form.pgdx"
+              size="small"
+              placeholder="请选择评估对象"
+            >
+              <el-option
+                v-for="dict in pgdxOptions"
+                :key="dict.userId"
+                :label="dict.nickName"
+                :value="dict.userId"
+              ></el-option>
+            </el-select>
+          </el-form-item>
+        </el-col>
+        <el-col :xs="24" :ms="12" :md="5">
+          <el-form-item label="评估内容" prop="bzid">
+            <el-select v-model="form.bzid" placeholder="请选择评估内容">
+              <el-option
+                v-for="dict in detailOptions"
+                :key="dict.id"
+                :label="dict.name"
+                :value="dict.id"
+              ></el-option>
+            </el-select>
+          </el-form-item>
+        </el-col>
+      </el-row>
+    </el-form>
+    <div class="mb8 btn-list">
       <el-button
         type="primary"
         icon="el-icon-s-data"
@@ -38,15 +77,19 @@
           :key="itemBz.id"
         >
           <p class="checkbox-item flex align-center">
-            <el-checkbox-group v-model="checkList">
-              <el-checkbox :label="itemBz.id" :key="itemBz.id"
+            <el-row v-model="checkList">
+              <div :label="itemBz.id" :key="itemBz.id"
                 >{{ itemBz.standardTitle }}分值: {{ itemBz.score }}分
-              </el-checkbox>
-            </el-checkbox-group>
+                <el-input-number
+                  v-model="num"
+                  :precision="1"
+                  :step="0.1"
+                  :min="-itemBz.score"
+                  :max="itemBz.score"
+                ></el-input-number
+              ></div>
+            </el-row>
           </p>
-          <div class="check-info" v-if="itemBz.score">
-            <!-- {{ itemBz.score }} -->
-          </div>
         </div>
       </div>
     </el-tabs>
@@ -61,9 +104,10 @@ import {
   updateDayflowassessment,
 } from "@/api/benyi/dayflowassessment";
 import { listDayflowtask } from "@/api/benyi/dayflow/dayflowtask";
+import { listDetail, getDetail } from "@/api/benyi/dayflow/dayflowmanger";
 import { listStandard } from "@/api/benyi/dayflow/biaozhun/standard";
 import { listDept, getDept } from "@/api/system/dept";
-import { listClass } from "@/api/system/class";
+import { listClass, getUserList } from "@/api/system/class";
 import { listUser } from "@/api/system/user";
 
 export default {
@@ -71,18 +115,8 @@ export default {
 
   data() {
     return {
-      teacherName: "",
-      planid: "",
-      xnxq: "",
-      classid: "",
-      zbjsxm: "",
-      pbjs: "",
-      zljs: "",
-      deptId: "",
-      bzmf: "",
-      kfz: "",
-      classdf: "",
-      assessmentsCode: "",
+      num: 0,
+      dayflowassessmentId: null,
       // 遮罩层
       loading: true,
       // 选中数组
@@ -94,14 +128,12 @@ export default {
       dayflowtaskList: [],
       // 根据任务查询到名下标准
       dayflowstandardList: [],
-      // 学校列表
-      deptOptions: [],
       //班级
       classOptions: [],
-      // 所有教师
-      userOptions: [],
-      // 学年学期
-      xnxqOptions: [],
+      //评估对象
+      pgdxOptions: [],
+      // 一日流程表格数据
+      detailOptions: [],
       // 表单参数
       form: {},
       // 查询一日流程任务
@@ -123,52 +155,43 @@ export default {
       activeName: "一日流程评估",
       checked: false,
       checkList: [],
+      // 表单参数
+      form: {},
+      // 表单校验
+      rules: {
+        classid: [{ required: true, message: "班级不能为空", trigger: "blur" }],
+        pgdx: [
+          { required: true, message: "评估对象不能为空", trigger: "blur" },
+        ],
+        bzid: [
+          { required: true, message: "评估内容不能为空", trigger: "blur" },
+        ],
+      },
     };
   },
   created() {
     // this.getList();
     const dayflowassessmentId = this.$route.params && this.$route.params.id;
-    this.dayflowassessmentId = dayflowassessmentId;
-    this.getDayflowassessmentContent(dayflowassessmentId);
-    this.getDeptList();  
+    // this.dayflowassessmentId = dayflowassessmentId;
     this.getClassList();
-    this.getUserList();
-    this.getDicts("sys_xnxq").then((response) => {
-      this.xnxqOptions = response.data;
-    });
+    this.getDayFlowList();
+  },
+  watch: {
+    "form.classid": function (val) {
+      this.getUserListByBjbh(val);
+    },
+    "form.bzid": function (val) {
+      this.dayflowassessmentId = val;
+      this.queryParams_detail.detailId = val;
+      this.getTaskList();
+    },
   },
   methods: {
-    getDayflowassessmentContent(dayflowassessmentId) {
-      getDayflowassessment(dayflowassessmentId).then((response) => {
-        if (response.code == "200") {
-          this.teacherName = response.data.pgdx;
-          this.xnxq = response.data.xnxq;
-          this.classid = response.data.classid;
-          this.bzmf = response.data.bzmf;
-          this.kfz = response.data.kfz;
-          this.zbjsxm = response.data.bzbh;
-          this.pbjs = response.data.pbbh;
-          this.zljs = response.data.zlbh;
-          this.deptId = response.data.deptId;
-          this.planid = response.data.planid;
-          this.classdf = response.data.classdf;
-          this.queryParams_detail.detailId = response.data.bzid;
-          this.assessmentsCode = response.data.code;
-          this.getTaskList();
-        }
+    /** 查询一日流程列表 */
+    getDayFlowList() {
+      listDetail(null).then((response) => {
+        this.detailOptions = response.rows;
       });
-    },
-    // 学校字典翻译
-    deptFormat(deptId) {
-      var actions = [];
-      var datas = this.deptOptions;
-      Object.keys(datas).map((key) => {
-        if (datas[key].deptId == "" + deptId) {
-          actions.push(datas[key].deptName);
-          return false;
-        }
-      });
-      return actions.join("");
     },
     // 班级字典翻译
     classFormat(classid) {
@@ -182,40 +205,16 @@ export default {
       });
       return actions.join("");
     },
-    // 教师字典翻译
-    teacherFormat(val) {
-      var actions = [];
-      var datas = this.userOptions;
-      Object.keys(datas).map((key) => {
-        if (datas[key].userId == "" + val) {
-          actions.push(datas[key].nickName);
-          return false;
-        }
-      });
-      return actions.join("");
-    },
-    // 学年学期类型--字典状态字典翻译
-    xnxqFormat(xnxq) {
-      return this.selectDictLabel(this.xnxqOptions, xnxq);
-    },
-    /** 查询用户列表 */
-    getUserList() {
-      listUser(null).then(
-        (response) => {
-          this.userOptions = response.rows;
-        }
-      );
-    },
-    /** 查询幼儿园机构列表 */
-    getDeptList() {
-      listDept(null).then(response => {
-        this.deptOptions = response.data;
-      });
-    },
     //班级列表
     getClassList() {
       listClass(null).then((response) => {
         this.classOptions = response.rows;
+      });
+    },
+    //班级列表
+    getUserListByBjbh(val) {
+      getUserList(val).then((response) => {
+        this.pgdxOptions = response.rows;
       });
     },
     /** 查询一日流程任务列表 */
@@ -227,7 +226,35 @@ export default {
         this.dayflowstandardList = response.rows;
       });
     },
-
+    // 表单重置
+    reset() {
+      this.form = {
+        id: undefined,
+        planid: undefined,
+        deptId: undefined,
+        classid: undefined,
+        bzbh: undefined,
+        bzxm: undefined,
+        pbbh: undefined,
+        pbxm: undefined,
+        zlbh: undefined,
+        zlxm: undefined,
+        xnxq: undefined,
+        bzid: undefined,
+        bzmf: undefined,
+        kfz: undefined,
+        kfcs: undefined,
+        zzdf: undefined,
+        classdf: undefined,
+        items: undefined,
+        values: undefined,
+        pgdx: undefined,
+        pgdxxm: undefined,
+        createUserid: undefined,
+        createTime: undefined,
+      };
+      this.resetForm("form");
+    },
     /** 提交按钮 */
     submitForm: function () {
       this.$confirm("确认评估数据?评估后数据不能取消", "警告", {
@@ -255,8 +282,8 @@ export default {
               updateDayflowassessment(this.form).then((response) => {
                 if (response.code === 200) {
                   this.msgSuccess("评估成功");
-                  this.$router.go(-1)
-                  this.$store.dispatch('tagsView/delView', this.$route)
+                  this.$router.go(-1);
+                  this.$store.dispatch("tagsView/delView", this.$route);
                   // this.$router.push({
                   //   path:
                   //     "/benyi/dayflowassessment",

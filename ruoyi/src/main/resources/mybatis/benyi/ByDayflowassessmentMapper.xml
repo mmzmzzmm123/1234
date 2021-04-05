@@ -21,14 +21,17 @@
         <result property="zzdf" column="zzdf"/>
         <result property="kfz" column="kfz"/>
         <result property="classdf" column="classdf"/>
+        <result property="items" column="items"/>
+        <result property="values" column="values"/>
         <result property="kfcs" column="kfcs"/>
         <result property="pgdx" column="pgdx"/>
+        <result property="pgdxxm" column="pgdxxm"/>
         <result property="createUserid" column="create_userid"/>
         <result property="createTime" column="create_time"/>
     </resultMap>
 
     <sql id="selectByDayflowassessmentVo">
-        select id, planid, dept_id, classid, classdf, bzbh, bzxm, pbbh, pbxm, zlbh, zlxm, bzmf, zzdf, xnxq, bzid, kfz, kfcs, pgdx, create_userid, create_time from by_dayflowassessment
+        select id, planid, dept_id, classid, bzbh, bzxm, pbbh, pbxm, zlbh, zlxm, xnxq, bzid, bzmf, kfz, kfcs, zzdf, classdf, items, 'values', pgdx, pgdxxm, create_userid, create_time from by_dayflowassessment
     </sql>
 
     <select id="selectByDayflowassessmentList" parameterType="ByDayflowassessment"
@@ -77,10 +80,13 @@
             <if test="bzid != null ">bzid,</if>
             <if test="kfz != null ">kfz,</if>
             <if test="classdf != null ">classdf,</if>
+            <if test="items != null  and items != ''">items,</if>
+            <if test="values != null  and values != ''">values,</if>
             <if test="bzmf != null ">bzmf,</if>
             <if test="zzdf != null ">zzdf,</if>
             <if test="kfcs != null ">kfcs,</if>
             <if test="pgdx != null ">pgdx,</if>
+            <if test="pgdxxm != null ">pgdxxm,</if>
             <if test="createUserid != null ">create_userid,</if>
             <if test="createTime != null ">create_time,</if>
         </trim>
@@ -98,10 +104,13 @@
             <if test="bzid != null ">#{bzid},</if>
             <if test="kfz != null ">#{kfz},</if>
             <if test="classdf != null ">#{classdf},</if>
+            <if test="items != null  and items != ''">#{items},</if>
+            <if test="values != null  and values != ''">#{values},</if>
             <if test="bzmf != null ">#{bzmf},</if>
             <if test="zzdf != null ">#{zzdf},</if>
             <if test="kfcs != null ">#{kfcs},</if>
             <if test="pgdx != null ">#{pgdx},</if>
+            <if test="pgdxxm != null ">#{pgdxxm},</if>
             <if test="createUserid != null ">#{createUserid},</if>
             <if test="createTime != null ">#{createTime},</if>
         </trim>
@@ -123,10 +132,13 @@
             <if test="bzid != null ">bzid = #{bzid},</if>
             <if test="kfz != null ">kfz = #{kfz},</if>
             <if test="classdf != null ">classdf = #{classdf},</if>
+            <if test="items != null  and items != ''">items = #{items},</if>
+            <if test="values != null  and values != ''">values = #{values},</if>
             <if test="bzmf != null ">bzmf = #{bzmf},</if>
             <if test="zzdf != null ">zzdf = #{zzdf},</if>
             <if test="kfcs != null ">kfcs = #{kfcs},</if>
             <if test="pgdx != null ">pgdx = #{pgdx},</if>
+            <if test="pgdxxm != null ">pgdxxm = #{pgdxxm},</if>
             <if test="createUserid != null ">create_userid = #{createUserid},</if>
             <if test="createTime != null ">create_time = #{createTime},</if>
         </trim>

@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.project.benyi.mapper.ByDayflowassessmentitemMapper">
+
+    <resultMap type="ByDayflowassessmentitem" id="ByDayflowassessmentitemResult">
+        <result property="id" column="id"/>
+        <result property="pid" column="pid"/>
+        <result property="item" column="item"/>
+        <result property="value" column="value"/>
+        <result property="remark" column="remark"/>
+        <result property="createTime" column="create_time"/>
+    </resultMap>
+
+    <sql id="selectByDayflowassessmentitemVo">
+        select id, pid, item, value, remark, create_time from by_dayflowassessmentitem
+    </sql>
+
+    <select id="selectByDayflowassessmentitemList" parameterType="ByDayflowassessmentitem"
+            resultMap="ByDayflowassessmentitemResult">
+        <include refid="selectByDayflowassessmentitemVo"/>
+        <where>
+            <if test="pid != null ">and pid = #{pid}</if>
+            <if test="item != null ">and item = #{item}</if>
+            <if test="value != null ">and value = #{value}</if>
+        </where>
+    </select>
+
+    <select id="selectByDayflowassessmentitemById" parameterType="Long" resultMap="ByDayflowassessmentitemResult">
+        <include refid="selectByDayflowassessmentitemVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertByDayflowassessmentitem" parameterType="ByDayflowassessmentitem" useGeneratedKeys="true"
+            keyProperty="id">
+        insert into by_dayflowassessmentitem
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="pid != null ">pid,</if>
+            <if test="item != null ">item,</if>
+            <if test="value != null ">value,</if>
+            <if test="remark != null  and remark != ''">remark,</if>
+            <if test="createTime != null ">create_time,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="pid != null ">#{pid},</if>
+            <if test="item != null ">#{item},</if>
+            <if test="value != null ">#{value},</if>
+            <if test="remark != null  and remark != ''">#{remark},</if>
+            <if test="createTime != null ">#{createTime},</if>
+        </trim>
+    </insert>
+
+    <update id="updateByDayflowassessmentitem" parameterType="ByDayflowassessmentitem">
+        update by_dayflowassessmentitem
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="pid != null ">pid = #{pid},</if>
+            <if test="item != null ">item = #{item},</if>
+            <if test="value != null ">value = #{value},</if>
+            <if test="remark != null  and remark != ''">remark = #{remark},</if>
+            <if test="createTime != null ">create_time = #{createTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteByDayflowassessmentitemById" parameterType="Long">
+        delete from by_dayflowassessmentitem where id = #{id}
+    </delete>
+
+    <delete id="deleteByDayflowassessmentitemByIds" parameterType="String">
+        delete from by_dayflowassessmentitem where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+</mapper>

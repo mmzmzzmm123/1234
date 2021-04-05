@@ -55,7 +55,7 @@
       </el-form-item>
     </el-form>
 
- <div class="mb8 btn-list">
+    <div class="mb8 btn-list">
       <el-button
         type="primary"
         icon="el-icon-plus"
@@ -104,7 +104,7 @@
         prop="zlbh"
         :formatter="zlbhFormat"
       /> -->
-       <el-table-column
+      <el-table-column
         label="评估对象"
         align="center"
         prop="pgdx"
@@ -117,7 +117,7 @@
         :formatter="dayFlowFormat"
       />
       <el-table-column label="环节满分" align="center" prop="bzmf" />
-      <el-table-column label="扣分值" align="center" prop="kfz" />
+      <!-- <el-table-column label="扣分值" align="center" prop="kfz" /> -->
       <!-- <el-table-column label="扣分次数" align="center" prop="kfcs" /> -->
       <el-table-column label="最终得分" align="center" prop="zzdf" />
       <el-table-column
@@ -443,6 +443,9 @@ export default {
     handleAssessment(row) {
       const id = row.id;
       this.$router.push({ path: "/benyi/dayflowassessment/teacher/" + id });
+    },
+    handleAdd() {
+      this.$router.push({ path: "/benyi/dayflowassessment/teacher/0"});
     },
     /** 修改按钮操作 */
     handleUpdate(row) {

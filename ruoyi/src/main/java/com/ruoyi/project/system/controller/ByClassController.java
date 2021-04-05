@@ -1,5 +1,6 @@
 package com.ruoyi.project.system.controller;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
@@ -8,6 +9,8 @@ import com.ruoyi.common.utils.SecurityUtils;
 import com.ruoyi.project.benyi.domain.ByChild;
 import com.ruoyi.project.benyi.service.IByChildService;
 import com.ruoyi.project.common.SchoolCommon;
+import com.ruoyi.project.system.domain.SysUser;
+import com.ruoyi.project.system.service.ISysUserService;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -26,6 +29,7 @@ import com.ruoyi.framework.web.controller.BaseController;
 import com.ruoyi.framework.web.domain.AjaxResult;
 import com.ruoyi.common.utils.poi.ExcelUtil;
 import com.ruoyi.framework.web.page.TableDataInfo;
+import sun.tools.jconsole.JConsole;
 
 /**
  * 班级信息Controller
@@ -42,6 +46,8 @@ public class ByClassController extends BaseController {
     private SchoolCommon schoolCommon;
     @Autowired
     private IByChildService byChildService;
+    @Autowired
+    private ISysUserService userService;
 
 
     /**
@@ -248,6 +254,29 @@ public class ByClassController extends BaseController {
     public TableDataInfo checklist(ByClass byClass) {
         startPage();
         List<ByClass> list = byClassService.selectststicstSchoolList(byClass);
+        return getDataTable(list);
+    }
+
+    /**
+     * 根据班级编号查询教师列表
+     */
+    @GetMapping("/getUserList/{bjbh}")
+    public TableDataInfo getUserList(@PathVariable String bjbh) {
+        ByClass byClass = byClassService.selectByClassById(bjbh);
+        List<SysUser> list = new ArrayList<>();
+        if (byClass.getZbjs() != null) {
+            SysUser sysUser = userService.selectUserById(byClass.getZbjs());
+            list.add(sysUser);
+        }
+        if (byClass.getPbjs() != null) {
+            SysUser sysUser = userService.selectUserById(byClass.getPbjs());
+            list.add(sysUser);
+        }
+        if (byClass.getZljs() != null) {
+            SysUser sysUser = userService.selectUserById(byClass.getZljs());
+            list.add(sysUser);
+        }
+
         return getDataTable(list);
     }
 

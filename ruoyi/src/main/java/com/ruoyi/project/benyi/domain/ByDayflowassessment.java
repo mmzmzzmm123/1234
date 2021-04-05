@@ -27,8 +27,6 @@ public class ByDayflowassessment extends BaseEntity {
     @Excel(name = "所属计划")
     private Long planid;
 
-    private String items;
-
     /**
      * 学校编号
      */
@@ -108,6 +106,18 @@ public class ByDayflowassessment extends BaseEntity {
     private Double classdf;
 
     /**
+     * 评估对象记录
+     */
+    @Excel(name = "评估对象记录")
+    private String items;
+
+    /**
+     * 评估对象记录值
+     */
+    @Excel(name = "评估对象记录值")
+    private String values;
+
+    /**
      * 扣分次数
      */
     @Excel(name = "扣分次数")
@@ -124,6 +134,12 @@ public class ByDayflowassessment extends BaseEntity {
      */
     @Excel(name = "评估对象")
     private Long pgdx;
+
+    /**
+     * 评估对象姓名
+     */
+    @Excel(name = "评估对象姓名")
+    private String pgdxxm;
 
     /**
      * 执行人
@@ -243,12 +259,28 @@ public class ByDayflowassessment extends BaseEntity {
         return kfcs;
     }
 
+    public void setValues(String values) {
+        this.values = values;
+    }
+
+    public String getValues() {
+        return values;
+    }
+
     public void setPgdx(Long pgdx) {
         this.pgdx = pgdx;
     }
 
     public Long getPgdx() {
         return pgdx;
+    }
+
+    public void setPgdxxm(String pgdxxm) {
+        this.pgdxxm = pgdxxm;
+    }
+
+    public String getPgdxxm() {
+        return pgdxxm;
     }
 
     public void setCreateUserid(Long createUserid) {
@@ -279,8 +311,10 @@ public class ByDayflowassessment extends BaseEntity {
                 .append("kfcs", getKfcs())
                 .append("bzmf", getBzmf())
                 .append("zzdf", getZzdf())
-                .append("pgdx", getPgdx())
                 .append("items", getItems())
+                .append("values", getValues())
+                .append("pgdx", getPgdx())
+                .append("pgdxxm", getPgdxxm())
                 .append("createUserid", getCreateUserid())
                 .append("createTime", getCreateTime())
                 .toString();

@@ -68,3 +68,11 @@ export function listClassCheck(query) {
         params: query
     })
 }
+
+// 根据班级编号查询教师列表
+export function getUserList(bjbh) {
+    return request({
+        url: '/system/class/getUserList/' + bjbh,
+        method: 'get'
+    })
+}
