@@ -16,6 +16,9 @@ import org.springframework.stereotype.Service;
 import com.ruoyi.bookmark.mapper.SqMenuMapper;
 import com.ruoyi.bookmark.domain.SqMenu;
 import com.ruoyi.bookmark.service.ISqMenuService;
+import org.springframework.transaction.interceptor.TransactionAspectSupport;
+import org.springframework.transaction.support.TransactionSynchronization;
+import org.springframework.transaction.support.TransactionSynchronizationManager;
 
 /**
  * 书签菜单Service业务层处理
@@ -135,6 +138,34 @@ public class SqMenuServiceImpl implements ISqMenuService
             String  menuUplinkSeries = addMenuUplinkSeries(sqMenu.getMenuId());
             sqMenuMapper.updateSqMenu(new SqMenu(sqMenu.getMenuId(),menuUplinkSeries));
         }
+        return i;
+    }
+    /**
+     * 新增书签菜单 测试事务
+     *
+     * @param sqMenu 书签菜单
+     * @return 结果
+     */
+    @Override
+    public int insertSqMenu2 (SqMenu sqMenu)throws Exception
+    {
+       sqMenu.setCreateTime(DateUtils.getNowDate());
+       sqMenu.setMenuName("AAAAAAAAAAAAAAA");
+       int i = sqMenuMapper.insertSqMenu(sqMenu);
+       if (i>0){
+           System.out.println("添加成功了");
+//           int a = 9/0; //模拟异常
+           TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();//强制事务回滚
+       }
+        sqMenu.setUserId(2L);
+        sqMenuMapper.insertSqMenu(sqMenu);
+
+        TransactionSynchronizationManager.registerSynchronization(new TransactionSynchronization() {
+            @Override
+            public void afterCommit() {
+                System.out.println("事务已经提交了 后增强!!!!");
+            }
+        });
         return i;
     }
 

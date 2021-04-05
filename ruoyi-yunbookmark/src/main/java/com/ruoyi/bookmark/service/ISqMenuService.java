@@ -3,6 +3,7 @@ package com.ruoyi.bookmark.service;
 import java.util.List;
 import com.ruoyi.bookmark.domain.SqMenu;
 import org.omg.CORBA.INTERNAL;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * 书签菜单Service接口
@@ -80,6 +81,15 @@ public interface ISqMenuService
      * @return 结果
      */
     public int insertSqMenu(SqMenu sqMenu);
+
+    /**
+     * 新增书签菜单 测试事务
+     *
+     * @param sqMenu 书签菜单
+     * @return 结果
+     */
+    @Transactional
+    public int insertSqMenu2(SqMenu sqMenu)throws Exception;
 
     /**
      * 修改书签菜单

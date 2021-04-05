@@ -4,9 +4,16 @@ import com.ruoyi.bookmark.domain.SqBookmark;
 import com.ruoyi.bookmark.domain.SqMenu;
 import com.ruoyi.bookmark.mapper.SqBookmarkMapper;
 import com.ruoyi.bookmark.mapper.SqMenuMapper;
+import com.ruoyi.bookmark.service.ISqMenuService;
+import com.ruoyi.bookmark.service.impl.SqMenuServiceImpl;
+import org.apache.ibatis.session.ExecutorType;
+import org.apache.ibatis.session.SqlSession;
 import org.apache.velocity.runtime.directive.Foreach;
 import org.junit.Test;
+import org.mybatis.spring.SqlSessionTemplate;
+import org.omg.PortableServer.THREAD_POLICY_ID;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -22,7 +29,11 @@ public class SqMenuTest extends BaseSpringBootTest{
     @Autowired
     SqMenuMapper sqMenuMapper;
     @Autowired
+    private ISqMenuService iSqMenuService;
+    @Autowired
     SqBookmarkMapper sqBookmarkMapper;
+    @Autowired
+    SqlSessionTemplate sqlSessionTemplate;
     @Test
     public void addMenuUplinkSeries() {
 
@@ -106,6 +117,29 @@ public class SqMenuTest extends BaseSpringBootTest{
         }
 
     }
+    //测试mybatis的事务
+    @Test
+    public void test4() throws Exception {
+        SqMenu sqMenu1 = new SqMenu();
+        sqMenu1.setUserId(2L);
+        sqMenu1.setMenuName("AAAAAAAAA");
+        int count =  iSqMenuService.insertSqMenu2(sqMenu1);
+        }
 
-
+    //批量插入
+    @Test
+    public void testInsertBatch2() throws Exception {
+        long start = System.currentTimeMillis();
+        SqlSession sqlSession = sqlSessionTemplate.getSqlSessionFactory().openSession(ExecutorType.BATCH, false);//跟上述sql区别
+        SqMenuMapper mapper = sqlSession.getMapper(SqMenuMapper.class);
+        for (int i = 0; i < 10; i++) {
+            SqMenu sqMenu1 = new SqMenu();
+            sqMenu1.setUserId(2L);
+            sqMenu1.setMenuName("AAAAAAAAA"+i);
+            mapper.insertSqMenu(sqMenu1);
+        }
+        sqlSession.commit();
+        long end = System.currentTimeMillis();
+        System.out.println("---------------" + (start - end) + "---------------");
+    }
 }
