@@ -480,7 +480,7 @@
 
     <!-- 根据客户ID查询该客户下所有订单 -->
     <select id="getAllOrderByCusId" parameterType="Long" resultMap="SysOrderResult">
-        select * from sys_order where del_flag = 0 and cus_id = #{cusId} order by order_id asc
+        select * from sys_order where del_flag = 0 and cus_id = #{cusId} order by order_time asc
     </select>
 
 </mapper>
