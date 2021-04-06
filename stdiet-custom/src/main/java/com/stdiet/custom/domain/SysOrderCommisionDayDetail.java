@@ -83,4 +83,10 @@ public class SysOrderCommisionDayDetail extends BaseEntity {
 
     //该笔订单对应提成比例
     private Float commissionRate;
+
+    //售后
+    private Long afterSaleId;
+
+    //营养师
+    private Long nutritionistId;
 }

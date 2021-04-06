@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.stdiet.custom.mapper.SysOrderNutritionistReplaceRecordMapper">
+
+    <resultMap type="SysOrderNutritionistReplaceRecord" id="SysOrderNutritionistReplaceRecordResult">
+        <result property="id"    column="id"    />
+        <result property="orderId"    column="order_id"    />
+        <result property="nutritionistId"    column="nutritionist_id"    />
+        <result property="afterSaleId"    column="after_sale_id"    />
+        <result property="startTime"    column="start_time"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="delFlag"    column="del_flag"    />
+
+        <!-- 非持久化字段 -->
+        <result property="afterSale"    column="after_sale"    />
+        <result property="nutritionist"    column="nutritionist"    />
+    </resultMap>
+
+
+    <sql id="selectSysOrderNutritionistReplaceRecordVo">
+        select o.id, o.order_id, o.nutritionist_id, o.after_sale_id, o.start_time, o.create_time, o.create_by,
+        su_sale.nick_name as after_sale, su_nutritionist.nick_name as nutritionist
+        from sys_order_nutritionist_replace_record o
+        left join sys_user su_sale on su_sale.user_id = o.after_sale_id and su_sale.del_flag = 0
+        left join sys_user su_nutritionist on su_nutritionist.user_id = o.nutritionist_id and su_nutritionist.del_flag = 0
+    </sql>
+
+    <select id="selectSysOrderNutritionistReplaceRecordList" parameterType="SysOrderNutritionistReplaceRecord" resultMap="SysOrderNutritionistReplaceRecordResult">
+        <include refid="selectSysOrderNutritionistReplaceRecordVo"/>
+        where o.del_flag = 0 and o.order_id = #{orderId}
+    </select>
+
+    <select id="selectSysOrderNutritionistReplaceRecordById" parameterType="Long" resultMap="SysOrderNutritionistReplaceRecordResult">
+        <include refid="selectSysOrderNutritionistReplaceRecordVo"/>
+        where o.id = #{id} and o.del_flag = 0
+    </select>
+
+    <insert id="insertSysOrderNutritionistReplaceRecord" parameterType="SysOrderNutritionistReplaceRecord">
+        insert into sys_order_nutritionist_replace_record
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="orderId != null">order_id,</if>
+            <if test="nutritionistId != null">nutritionist_id,</if>
+            <if test="afterSaleId != null">after_sale_id,</if>
+            <if test="startTime != null">start_time,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="delFlag != null">del_flag,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="orderId != null">#{orderId},</if>
+            <if test="nutritionistId != null">#{nutritionistId},</if>
+            <if test="afterSaleId != null">#{afterSaleId},</if>
+            <if test="startTime != null">#{startTime},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="delFlag != null">#{delFlag},</if>
+        </trim>
+    </insert>
+
+    <update id="updateSysOrderNutritionistReplaceRecord" parameterType="SysOrderNutritionistReplaceRecord">
+        update sys_order_nutritionist_replace_record
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="orderId != null">order_id = #{orderId},</if>
+            <if test="nutritionistId != null">nutritionist_id = #{nutritionistId},</if>
+            <if test="afterSaleId != null">after_sale_id = #{afterSaleId},</if>
+            <if test="startTime != null">start_time = #{startTime},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="delFlag != null">del_flag = #{delFlag},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <update id="deleteSysOrderNutritionistReplaceRecordById" parameterType="Long">
+        update sys_order_nutritionist_replace_record set del_flag = 1 where id = #{id}
+    </update>
+
+    <update id="deleteSysOrderNutritionistReplaceRecordByIds" parameterType="String">
+        update sys_order_nutritionist_replace_record set del_flag = 1 where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </update>
+
+    <select id="getSysOrderReplaceRecordByOrderId" parameterType="Long" resultMap="SysOrderNutritionistReplaceRecordResult">
+        select id, order_id, nutritionist_id, after_sale_id, start_time, create_time, create_by from sys_order_nutritionist_replace_record
+        where del_flag = 0
+        <if test="orderId != null">
+            and order_id = #{orderId}
+        </if>
+        order by id asc
+    </select>
+
+</mapper>

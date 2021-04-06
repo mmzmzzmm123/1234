@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSONArray;
 import com.stdiet.common.core.domain.AjaxResult;
 import com.stdiet.common.utils.DateUtils;
 import com.stdiet.common.utils.StringUtils;
+import com.stdiet.common.utils.bean.ObjectUtils;
 import com.stdiet.custom.domain.*;
 import com.stdiet.custom.dto.request.SysOrderCommision;
 import com.stdiet.custom.dto.response.EveryMonthTotalAmount;
@@ -11,7 +12,9 @@ import com.stdiet.custom.mapper.SysCommisionMapper;
 import com.stdiet.custom.mapper.SysOrderMapper;
 import com.stdiet.custom.mapper.SysOrderPauseMapper;
 import com.stdiet.custom.service.ISysCommissionDayService;
+import com.stdiet.custom.service.ISysOrderNutritionistReplaceRecordService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cglib.core.Local;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -32,6 +35,9 @@ public class SysCommissionDayServiceImpl implements ISysCommissionDayService {
     @Autowired
     private SysOrderPauseMapper sysOrderPauseMapper;
 
+    @Autowired
+    private ISysOrderNutritionistReplaceRecordService sysOrderNutritionistReplaceRecordService;
+
     @Override
     public List<SysCommissionDayDetail> calculateCommissionByDay(SysCommision sysCommision){
         List<SysCommissionDayDetail> result = new ArrayList<>();
@@ -44,7 +50,8 @@ public class SysCommissionDayServiceImpl implements ISysCommissionDayService {
         total.setTotalNotSentCommissionAmount(new BigDecimal(0));
         total.setNextMonthCommission(new BigDecimal(0));
         if(list != null && list.size() > 0){
-            Map<Long, List<SysOrderCommisionDayDetail>> orderDetailMap = getOrderByList(sysCommision);
+            sysCommision.setUserId(null);  //由于存在售后、营养师更换问题，不能根据营养师或售后查询订单
+            Map<Long, List<SysOrderCommisionDayDetail>> orderDetailMap = getOrderByList(sysCommision, true);
             SysCommissionDayDetail sysCommissionDayDetail = null;
             for(SysCommision commision : list){
                 sysCommissionDayDetail = new SysCommissionDayDetail();
@@ -52,7 +59,6 @@ public class SysCommissionDayServiceImpl implements ISysCommissionDayService {
                 sysCommissionDayDetail.setNickName(commision.getUserName());
                 sysCommissionDayDetail.setPostId(commision.getPostId());
                 sysCommissionDayDetail.setPostName(commision.getPostName());
-
                 dealServerOrderCommissionDetail(sysCommision, orderDetailMap.get(sysCommissionDayDetail.getUserId()), sysCommissionDayDetail);
                 result.add(sysCommissionDayDetail);
                 //统计所以用户总提成、已发放提成、未发放提成
@@ -69,7 +75,7 @@ public class SysCommissionDayServiceImpl implements ISysCommissionDayService {
     }
 
     /**
-     * 根据订单计算该笔订单的服务到期时间
+     * 根据订单计算该笔订单的服务到期时间(开始时间按照食谱开始时间，不能按照提成计算开始时间)
      * @param sysOrder 订单对象
      * @return
      */
@@ -77,7 +83,7 @@ public class SysCommissionDayServiceImpl implements ISysCommissionDayService {
     public LocalDate getServerEndDate(SysOrder sysOrder){
         LocalDate serverEndDate = null;
         if(sysOrder != null && sysOrder.getStartTime() != null){
-            //服务开始时间(客户建档时间)
+            //服务开始时间，食谱开始时间
             LocalDate serverStartDate = DateUtils.dateToLocalDate(sysOrder.getStartTime());
             //订单总服务月数
             int serverMonth = sysOrder.getServeTimeId() != null ? sysOrder.getServeTimeId().intValue()/30 : 0;
@@ -115,7 +121,7 @@ public class SysCommissionDayServiceImpl implements ISysCommissionDayService {
             return result;
         }
         //分页查询2021年1月份之后所有订单
-        Map<Long, List<SysOrderCommisionDayDetail>> orderUserMap = getOrderByList(sysCommision);
+        Map<Long, List<SysOrderCommisionDayDetail>> orderUserMap = getOrderByList(sysCommision, false);
         if(orderUserMap == null || !orderUserMap.containsKey(sysCommision.getUserId())){
             return result;
         }
@@ -350,10 +356,18 @@ public class SysCommissionDayServiceImpl implements ISysCommissionDayService {
 
     /**
      * 查询2021年1月份之后所有订单，对订单进行处理，得出每笔订单的相关信息
-     * */
-    public Map<Long, List<SysOrderCommisionDayDetail>> getOrderByList(SysCommision sysCommision){
+     * @param sysCommision 是否
+     * @param cutOrderFlag 是否根据售后、营养师更换记录进行订单切割计算提成
+     * @return
+     */
+    public Map<Long, List<SysOrderCommisionDayDetail>> getOrderByList(SysCommision sysCommision, boolean cutOrderFlag){
         //查询2021年1月份之后所有订单
         List<SysOrder> orderList = sysOrderMapper.selectSimpleOrderMessage(sysCommision);
+        Map<Long, List<SysOrderNutritionistReplaceRecord>> replaceRecordMap = null;
+        if(cutOrderFlag){
+            //查询所有订单营养师、售后转移记录
+            replaceRecordMap = dealNutritionistReplaceRecord(sysOrderNutritionistReplaceRecordService.getSysOrderReplaceRecordByOrderId(null));
+        }
         //整理出每个用户对应的订单List
         Map<Long, List<SysOrderCommisionDayDetail>> userOrderResultMap = new HashMap<>();
         for (SysOrder sysOrder : orderList) {
@@ -364,16 +378,174 @@ public class SysCommissionDayServiceImpl implements ISysCommissionDayService {
                 //System.out.println("客户："+ sysOrder.getCustomer() +",营养师："+sysOrder.getNutritionist() + ",售后" + sysOrder.getAfterSale());
                 continue;
             }
-            //对每笔订单进行处理，统计出该比订单在每年每月对应的服务天数、金额、暂停天数等
-            SysOrderCommisionDayDetail sysOrderCommisionDayDetail = statisticsOrderMessage(sysOrder, sysCommision.getServerScopeStartTime(), sysCommision.getServerScopeEndTime());
-            if(sysOrder.getAfterSaleId() != null && sysOrder.getAfterSaleId() > 0L){
-                addUserOrderResultMap(sysOrder.getAfterSaleId(), sysOrderCommisionDayDetail, userOrderResultMap);
+            List<SysOrderCommisionDayDetail> orderCommisionDayDetailList = null;
+            //将服务结束时间设置为空，因为提成的结束时间需要重新计算
+            sysOrder.setServerEndTime(null);
+            //判断是否存在营养师、售后更换记录
+            if(cutOrderFlag && replaceRecordMap.containsKey(sysOrder.getOrderId()) && replaceRecordMap.get(sysOrder.getOrderId()).size() > 0){
+                //将订单根据更换记录切割成多个订单
+                SysOrderCommisionDayDetail sysOrderCommisionDayDetail = statisticsOrderMessage(sysOrder, sysCommision.getServerScopeStartTime(), sysCommision.getServerScopeEndTime());
+                orderCommisionDayDetailList = cutOrderByReplaceRecord(sysOrder, sysCommision, sysOrderCommisionDayDetail, replaceRecordMap.get(sysOrder.getOrderId()));
+            }else{
+                 SysOrderCommisionDayDetail commisionDetail = statisticsOrderMessage(sysOrder, sysCommision.getServerScopeStartTime(), sysCommision.getServerScopeEndTime());
+                 orderCommisionDayDetailList = new ArrayList<>();
+                 orderCommisionDayDetailList.add(commisionDetail);
             }
-            if(sysOrder.getNutritionistId() != null && sysOrder.getNutritionistId() > 0L){
-                addUserOrderResultMap(sysOrder.getNutritionistId(), sysOrderCommisionDayDetail, userOrderResultMap);
+            if(orderCommisionDayDetailList != null){
+                for (SysOrderCommisionDayDetail detail : orderCommisionDayDetailList) {
+                    if(detail.getAfterSaleId() != null && detail.getAfterSaleId() > 0L){
+                        addUserOrderResultMap(detail.getAfterSaleId(), detail, userOrderResultMap);
+                    }
+                    if(detail.getNutritionistId() != null && detail.getNutritionistId() > 0L){
+                        addUserOrderResultMap(detail.getNutritionistId(), detail, userOrderResultMap);
+                    }
+                }
             }
         }
         return userOrderResultMap;
+    }
+
+    /**
+     * 对于存在售后、营养师更换的订单进行订单切割
+     * @param sysOrder
+     * @param sysCommision
+     * @param sysOrderCommisionDayDetail
+     * @param replaceRecordList
+     * @return
+     */
+    public List<SysOrderCommisionDayDetail> cutOrderByReplaceRecord(SysOrder sysOrder, SysCommision sysCommision, SysOrderCommisionDayDetail sysOrderCommisionDayDetail, List<SysOrderNutritionistReplaceRecord> replaceRecordList){
+        List<SysOrderCommisionDayDetail> sysOrderCommisionDayDetailList = new ArrayList<>();
+
+        List<SysOrderNutritionistReplaceRecord> nutritionistRecord = new ArrayList<>();
+        List<SysOrderNutritionistReplaceRecord> afterSaleRecord = new ArrayList<>();
+
+        //售后和营养师分类
+        for (SysOrderNutritionistReplaceRecord sysOrderRecord : replaceRecordList) {
+            if (sysOrderRecord.getNutritionistId() != null && sysOrderRecord.getNutritionistId().longValue() > 0) {
+                nutritionistRecord.add(sysOrderRecord);
+            }
+            if (sysOrderRecord.getAfterSaleId() != null && sysOrderRecord.getAfterSaleId().longValue() > 0) {
+                afterSaleRecord.add(sysOrderRecord);
+            }
+        }
+
+        //原始订单数据
+        Long orderNutritionistId = sysOrder.getNutritionistId();
+        Long orderAfterSaleId = sysOrder.getAfterSaleId();
+        LocalDate serverStartDate = sysOrderCommisionDayDetail.getServerStartDate();
+        LocalDate serverEndDate = sysOrderCommisionDayDetail.getServerEndDate();
+
+
+        //营养师、售后记录不能都为0
+        if(nutritionistRecord.size() == 0){
+            sysOrder.setCommissStartTime(DateUtils.localDateToDate(serverStartDate));
+            sysOrder.setServerEndTime(DateUtils.localDateToDate(serverEndDate));
+            sysOrder.setAfterSaleId(null);
+            sysOrderCommisionDayDetailList.add(statisticsOrderMessage(sysOrder, sysCommision.getServerScopeStartTime(), sysCommision.getServerScopeEndTime()));
+        }
+        if(afterSaleRecord.size() == 0){
+            sysOrder.setCommissStartTime(DateUtils.localDateToDate(serverStartDate));
+            sysOrder.setServerEndTime(DateUtils.localDateToDate(serverEndDate));
+            sysOrder.setNutritionistId(null);
+            sysOrderCommisionDayDetailList.add(statisticsOrderMessage(sysOrder, sysCommision.getServerScopeStartTime(), sysCommision.getServerScopeEndTime()));
+        }
+
+        Map<String, SysOrderCommisionDayDetail> existMap = new HashMap<>();
+        for(int i = 0; i < 2; i++){
+            List<SysOrderNutritionistReplaceRecord> nutritAfterSaleRecord = i == 0 ? nutritionistRecord : afterSaleRecord;
+
+            if(nutritAfterSaleRecord.size() > 0){
+                //第一天更换记录的开始时间
+                LocalDate firstRecordStartTime = DateUtils.dateToLocalDate(nutritAfterSaleRecord.get(0).getStartTime());
+                if(ChronoUnit.DAYS.between(firstRecordStartTime, serverEndDate) < 0){
+                    firstRecordStartTime = serverEndDate;
+                }
+                //更换的开始时间大于实际订单开始时间，则需要截断时间生成一个新订单
+                if(ChronoUnit.DAYS.between(serverStartDate, firstRecordStartTime) > 0){
+                    sysOrder.setCommissStartTime(DateUtils.localDateToDate(serverStartDate));
+                    sysOrder.setServerEndTime(DateUtils.localDateToDate(firstRecordStartTime.minusDays(1)));
+                    sysOrder.setNutritionistId(i == 0 ? orderNutritionistId : null);
+                    sysOrder.setAfterSaleId(i == 1 ? orderAfterSaleId : null);
+                    //需要设置金额、服务时长、赠送时长
+                    sysOrder.setServeTimeId(ChronoUnit.DAYS.between(DateUtils.dateToLocalDate(sysOrder.getCommissStartTime()), DateUtils.dateToLocalDate(sysOrder.getServerEndTime()))+1);
+                    sysOrder.setAmount(getMoney(sysOrderCommisionDayDetail.getDayMoney().doubleValue() * sysOrder.getServeTimeId()));
+                    sysOrder.setGiveServeDay(0);
+                    sysOrderCommisionDayDetailList.add(statisticsOrderMessage(sysOrder, sysCommision.getServerScopeStartTime(), sysCommision.getServerScopeEndTime()));
+                }
+                for (int index = 0; index < nutritAfterSaleRecord.size(); index++) {
+                    SysOrderNutritionistReplaceRecord record  = nutritAfterSaleRecord.get(index);
+
+                    LocalDate recordStartTime = DateUtils.dateToLocalDate(record.getStartTime());
+                    if(ChronoUnit.DAYS.between(recordStartTime, serverStartDate) > 0){
+                        recordStartTime = serverStartDate;
+                    }
+                    if((i == 0 && record.getNutritionistId() == null) || (i == 1 && record.getAfterSaleId() == null)
+                            || ChronoUnit.DAYS.between(recordStartTime, serverEndDate) < 0){
+                        continue;
+                    }
+                    //获取下一个记录的开始时间，如果不存在则直接取服务结束时间
+                    LocalDate nextRecordStartTime = nutritAfterSaleRecord.size() > index+1 ? DateUtils.dateToLocalDate(nutritAfterSaleRecord.get(index+1).getStartTime()) : null;
+                    if(nextRecordStartTime == null || ChronoUnit.DAYS.between(recordStartTime, serverEndDate) < 0){
+                        nextRecordStartTime = serverEndDate;
+                    }
+                    if(ChronoUnit.DAYS.between(recordStartTime, nextRecordStartTime) <= 0){
+                        continue;
+                    }
+                    sysOrder.setCommissStartTime(DateUtils.localDateToDate(recordStartTime));
+                    sysOrder.setServerEndTime(DateUtils.localDateToDate(nextRecordStartTime.minusDays(1)));
+                    sysOrder.setNutritionistId(i == 0 ? record.getNutritionistId() : null);
+                    sysOrder.setAfterSaleId(i == 1 ? record.getAfterSaleId() : null);
+                    //需要设置金额、服务时长、赠送时长
+                    sysOrder.setServeTimeId(ChronoUnit.DAYS.between(DateUtils.dateToLocalDate(sysOrder.getCommissStartTime()), DateUtils.dateToLocalDate(sysOrder.getServerEndTime()))+1);
+                    sysOrder.setAmount(getMoney(sysOrderCommisionDayDetail.getDayMoney().doubleValue() * sysOrder.getServeTimeId()));
+                    sysOrder.setGiveServeDay(0);
+
+                    //判断是否已存在相同时间范围的记录
+                    String key = DateUtils.dateTime(sysOrder.getCommissStartTime()) + DateUtils.dateTime(sysOrder.getServerEndTime());
+                    if(existMap.containsKey(key)){
+                        try{
+                            SysOrderCommisionDayDetail newSysOrderCommisionDayDetail = ObjectUtils.getObjectByObject(existMap.get(key), SysOrderCommisionDayDetail.class);
+                            newSysOrderCommisionDayDetail.setNutritionistId(i == 0 ? record.getNutritionistId() : null);
+                            newSysOrderCommisionDayDetail.setAfterSaleId(i == 1 ? record.getAfterSaleId() : null);
+                            sysOrderCommisionDayDetailList.add(newSysOrderCommisionDayDetail);
+                        }catch (Exception e){
+                            e.printStackTrace();
+                        }
+                    }else{
+                        existMap.put(key, statisticsOrderMessage(sysOrder, sysCommision.getServerScopeStartTime(), sysCommision.getServerScopeEndTime()));
+                        sysOrderCommisionDayDetailList.add(existMap.get(key));
+                    }
+                }
+            }
+        }
+        for (SysOrderCommisionDayDetail c : sysOrderCommisionDayDetailList) {
+            System.out.println(c.getOrderId() + "-" + c.getNutritionistId() + "-" + c.getAfterSaleId() + "-"+
+                    DateUtils.localDateToString(c.getServerStartDate(),"yyyy-MM-dd") + "-" +
+                    DateUtils.localDateToString(c.getServerEndDate(),"yyyy-MM-dd") +
+                    "-" + c.getDayMoney().doubleValue() + "-" + c.getOrderAmount().doubleValue());
+        }
+        return sysOrderCommisionDayDetailList;
+    }
+
+    /**
+     * 处理订单的营养师、售后更换记录，以订单ID为单位整理
+     * @param list
+     * @return
+     */
+    public Map<Long, List<SysOrderNutritionistReplaceRecord>> dealNutritionistReplaceRecord(List<SysOrderNutritionistReplaceRecord> list){
+        Map<Long, List<SysOrderNutritionistReplaceRecord>> orderReplaceRecordMap = new HashMap<>();
+        if(list != null && list.size() > 0){
+            for (SysOrderNutritionistReplaceRecord record : list) {
+                if(orderReplaceRecordMap.containsKey(record.getOrderId())){
+                    orderReplaceRecordMap.get(record.getOrderId()).add(record);
+                }else{
+                    List<SysOrderNutritionistReplaceRecord> recordList = new ArrayList<>();
+                    recordList.add(record);
+                    orderReplaceRecordMap.put(record.getOrderId(), recordList);
+                }
+            }
+        }
+        return orderReplaceRecordMap;
     }
 
     /**
@@ -402,7 +574,7 @@ public class SysCommissionDayServiceImpl implements ISysCommissionDayService {
         //赠送时长
         int giveDay = sysOrder.getGiveServeDay().intValue();
         //服务到期时间（加赠送时间，不加暂停时间）
-        LocalDate serverEndDate = serverStartDate.plusMonths(serverMonth).plusDays(giveDay+serverSmallDay);
+        LocalDate serverEndDate = sysOrder.getServerEndTime() == null ? serverStartDate.plusMonths(serverMonth).plusDays(giveDay+serverSmallDay) : DateUtils.dateToLocalDate(sysOrder.getServerEndTime());
         //订单金额
         BigDecimal orderAmount = sysOrder.getAmount();
         //查询暂停列表
@@ -415,7 +587,7 @@ public class SysCommissionDayServiceImpl implements ISysCommissionDayService {
         //该笔订单暂停总天数
         int pauseTotalDay = getTotalByMap(everyYearMonthPauseDay);
         //服务到期时间加上暂停时间
-        serverEndDate = serverEndDate.plusDays(pauseTotalDay);
+        serverEndDate = sysOrder.getServerEndTime() == null ? serverEndDate.plusDays(pauseTotalDay) : serverEndDate;
         //计算每年每月服务天数
         Map<String, Integer> everyYearMonthServerDay = getEveryYearMonthDayCount(serverStartDate, serverEndDate, everyYearMonthPauseDay);
         //服务总天数
@@ -440,6 +612,8 @@ public class SysCommissionDayServiceImpl implements ISysCommissionDayService {
         sysOrderCommisionDayDetail.setEveryYearMonthPauseDay(everyYearMonthPauseDay);
         sysOrderCommisionDayDetail.setEveryYearMonthServerDay(everyYearMonthServerDay);
         sysOrderCommisionDayDetail.setEveryYearMonthServerMoney(everyYearMonthServerMoney);
+        sysOrderCommisionDayDetail.setAfterSaleId(sysOrder.getAfterSaleId());
+        sysOrderCommisionDayDetail.setNutritionistId(sysOrder.getNutritionistId());
 
         if(StringUtils.isNotEmpty(serverScopeStartTime) && StringUtils.isNotEmpty(serverScopeEndTime)){
             LocalDate realStartTime = DateUtils.stringToLocalDate(serverScopeStartTime, "yyyy-MM-dd");

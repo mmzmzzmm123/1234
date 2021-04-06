@@ -137,13 +137,13 @@ public class SysRecipesPlanServiceImpl implements ISysRecipesPlanService {
                     for(SysOrder sysOrder : customerOrderList){
                         //订单为空、金额小于0、订单未审核不进行食谱生成、更新，只对2021年开始的订单进行食谱计划生成，判断订单金额、开始时间、结束时间，为空则直接返回，不重新生成食谱计划
                         if (sysOrder == null || !sysOrder.getReviewStatus().equals("yes") || sysOrder.getAmount().floatValue() <= 0 || sysOrder.getStartTime() == null || sysOrder.getServerEndTime() == null) {
-                            return;
+                            continue;
                         }
                         //判断是否提成单，拆分单中的副单，体验单,定金单
                         if(sysOrder.getAfterSaleCommissOrder().intValue() == 1 || ("1".equals(sysOrder.getOrderType()) && sysOrder.getMainOrderId().intValue() != 0) ||
                                 "2".equals(sysOrder.getOrderType()) || "1".equals(sysOrder.getOrderMoneyType())){
                             System.out.println("---------------------"+sysOrder.getOrderId()+"不生成食谱------------------------");
-                            return;
+                            continue;
                         }
                         //判断是否已存在食谱计划
                         SysRecipesPlan queryParam = new SysRecipesPlan();
