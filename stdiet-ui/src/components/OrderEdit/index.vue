@@ -271,11 +271,11 @@ export default {
       if (!this.form.orderTime) {
         return callback(new Error("请先选择成交时间"));
       }
-      if (
+      /*if (
         dayjs(this.form.startTime).diff(dayjs(this.form.orderTime), "day") < 0
       ) {
         return callback(new Error("开始时间不能先于成交时间"));
-      }
+      }*/
       callback();
     };
     const checkOrderTime = (rule, value, callback) => {

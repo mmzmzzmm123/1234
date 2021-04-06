@@ -305,7 +305,7 @@ public class SysOrderServiceImpl implements ISysOrderService {
                     continue;
                 }
                 //判断前一个订单的结束时间是否大于第二个订单的
-                if(lastServerEndTime != null && ChronoUnit.DAYS.between(lastServerEndTime, DateUtils.dateToLocalDate(sysOrder.getStartTime())) != 1){
+                if(lastServerEndTime != null && ChronoUnit.DAYS.between(lastServerEndTime, DateUtils.dateToLocalDate(sysOrder.getStartTime())) <= 0){
                     newStartTime = lastServerEndTime.plusDays(1);
                     //本月第一天
                     LocalDate monthStart = LocalDate.now().with(TemporalAdjusters.firstDayOfMonth());
