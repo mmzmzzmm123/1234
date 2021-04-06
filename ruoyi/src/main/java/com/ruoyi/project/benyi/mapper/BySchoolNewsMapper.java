@@ -28,6 +28,14 @@ public interface BySchoolNewsMapper
     public List<BySchoolNews> selectBySchoolNewsList(BySchoolNews bySchoolNews);
 
     /**
+     * 查询新闻中心列表
+     *
+     * @param bySchoolNews 新闻中心
+     * @return 新闻中心集合
+     */
+    public List<BySchoolNews> selectAllBySchoolNewsList(BySchoolNews bySchoolNews);
+
+    /**
      * 新增新闻中心
      *
      * @param bySchoolNews 新闻中心

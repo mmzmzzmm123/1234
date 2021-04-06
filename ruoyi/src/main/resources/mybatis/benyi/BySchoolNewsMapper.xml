@@ -19,10 +19,11 @@
         <result property="ischeck" column="ischeck"/>
         <result property="checkuserid" column="checkuserid"/>
         <result property="checkTime" column="check_time"/>
+        <result property="istb" column="istb"/>
     </resultMap>
 
     <sql id="selectBySchoolNewsVo">
-        select d.id, d.title, d.imgurl, d.abstractcontent, d.type, d.content, d.isdel, d.createuserid, d.create_time, d.dept_id, d.istop, d.ischeck, d.checkuserid, d.check_time from by_school_news d
+        select d.id, d.title, d.imgurl, d.abstractcontent, d.type, d.content, d.isdel, d.createuserid, d.create_time, d.dept_id, d.istop, d.ischeck, d.checkuserid, d.check_time, d.istb from by_school_news d
     </sql>
 
     <select id="selectBySchoolNewsList" parameterType="BySchoolNews" resultMap="BySchoolNewsResult">
@@ -40,9 +41,29 @@
             <if test="ischeck != null  and ischeck != ''">and d.ischeck = #{ischeck}</if>
             <if test="checkuserid != null ">and d.checkuserid = #{checkuserid}</if>
             <if test="checkTime != null ">and d.check_time = #{checkTime}</if>
+            <if test="istb != null and istb != ''">and d.istb = #{istb}</if>
         </where>
         <!-- 数据范围过滤 -->
         ${dataScope}
+    </select>
+
+    <select id="selectAllBySchoolNewsList" parameterType="BySchoolNews" resultMap="BySchoolNewsResult">
+        <include refid="selectBySchoolNewsVo"/>
+        <where>
+            d.isdel = 'N'
+            <if test="title != null  and title != ''">and d.title like concat('%', #{title}, '%')</if>
+            <if test="imgurl != null  and imgurl != ''">and d.imgurl = #{imgurl}</if>
+            <if test="abstractcontent != null  and abstractcontent != ''">and d.abstractcontent = #{abstractcontent}</if>
+            <if test="type != null  and type != ''">and d.type = #{type}</if>
+            <if test="content != null  and content != ''">and d.content = #{content}</if>
+            <if test="createuserid != null ">and d.createuserid = #{createuserid}</if>
+            <if test="deptId != null ">and d.dept_id = #{deptId}</if>
+            <if test="istop != null  and istop != ''">and d.istop = #{istop}</if>
+            <if test="ischeck != null  and ischeck != ''">and d.ischeck = #{ischeck}</if>
+            <if test="checkuserid != null ">and d.checkuserid = #{checkuserid}</if>
+            <if test="checkTime != null ">and d.check_time = #{checkTime}</if>
+            <if test="istb != null and istb != ''">and d.istb = #{istb}</if>
+        </where>
     </select>
 
     <select id="selectBySchoolNewsById" parameterType="Long" resultMap="BySchoolNewsResult">
@@ -100,6 +121,7 @@
             <if test="ischeck != null  and ischeck != ''">ischeck = #{ischeck},</if>
             <if test="checkuserid != null ">checkuserid = #{checkuserid},</if>
             <if test="checkTime != null ">check_time = #{checkTime},</if>
+            <if test="istb != null  and istb != ''">istb = #{istb},</if>
         </trim>
         where id = #{id}
     </update>

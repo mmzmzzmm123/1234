@@ -102,6 +102,8 @@ public class BySchoolNews extends BaseEntity {
     @Excel(name = "审核时间", width = 30, dateFormat = "yyyy-MM-dd")
     private Date checkTime;
 
+    private String istb;
+
     public void setId(Long id) {
         this.id = id;
     }
@@ -206,6 +208,14 @@ public class BySchoolNews extends BaseEntity {
         return checkTime;
     }
 
+    public String getIstb() {
+        return istb;
+    }
+
+    public void setIstb(String istb) {
+        this.istb = istb;
+    }
+
     @Override
     public String toString() {
         return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE)
@@ -223,6 +233,7 @@ public class BySchoolNews extends BaseEntity {
                 .append("ischeck", getIscheck())
                 .append("checkuserid", getCheckuserid())
                 .append("checkTime", getCheckTime())
+                .append("istb", getIstb())
                 .toString();
     }
 

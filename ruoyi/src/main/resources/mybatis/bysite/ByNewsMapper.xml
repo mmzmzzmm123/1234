@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.project.bysite.mapper.ByNewsMapper">
+
+    <resultMap type="ByNews" id="ByNewsResult">
+        <result property="id" column="id"/>
+        <result property="title" column="title"/>
+        <result property="imgurl" column="imgurl"/>
+        <result property="type" column="type"/>
+        <result property="content" column="content"/>
+        <result property="createuserid" column="createuserid"/>
+        <result property="isthirdparty" column="isthirdparty"/>
+        <result property="url" column="url"/>
+        <result property="isrelease" column="isrelease"/>
+        <result property="isdel" column="isdel"/>
+        <result property="createTime" column="create_time"/>
+        <result property="abstractcontent" column="abstractcontent"/>
+        <result property="schoolid" column="schoolid"/>
+    </resultMap>
+
+    <sql id="selectByNewsVo">
+        select id, title, imgurl, type, content, createuserid, isthirdparty, url, isrelease, isdel, create_time, abstractcontent, schoolid from by_news
+    </sql>
+
+    <select id="selectByNewsList" parameterType="ByNews" resultMap="ByNewsResult">
+        <include refid="selectByNewsVo"/>
+        <where>
+            <if test="title != null  and title != ''">and title = #{title}</if>
+            <if test="imgurl != null  and imgurl != ''">and imgurl = #{imgurl}</if>
+            <if test="type != null  and type != ''">and type = #{type}</if>
+            <if test="content != null  and content != ''">and content = #{content}</if>
+            <if test="createuserid != null ">and createuserid = #{createuserid}</if>
+            <if test="isthirdparty != null  and isthirdparty != ''">and isthirdparty = #{isthirdparty}</if>
+            <if test="url != null  and url != ''">and url = #{url}</if>
+            <if test="isrelease != null  and isrelease != ''">and isrelease = #{isrelease}</if>
+            <if test="isdel != null  and isdel != ''">and isdel = #{isdel}</if>
+            <if test="abstractcontent != null  and abstractcontent != ''">and abstractcontent = #{abstractcontent}</if>
+        </where>
+        order by create_time desc
+    </select>
+
+    <select id="selectByNewsById" parameterType="Long" resultMap="ByNewsResult">
+        <include refid="selectByNewsVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertByNews" parameterType="ByNews" useGeneratedKeys="true" keyProperty="id">
+        insert into by_news
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="title != null  and title != ''">title,</if>
+            <if test="imgurl != null  and imgurl != ''">imgurl,</if>
+            <if test="type != null  and type != ''">type,</if>
+            <if test="content != null  and content != ''">content,</if>
+            <if test="createuserid != null ">createuserid,</if>
+            <if test="isthirdparty != null  and isthirdparty != ''">isthirdparty,</if>
+            <if test="url != null  and url != ''">url,</if>
+            <if test="isrelease != null  and isrelease != ''">isrelease,</if>
+            <if test="isdel != null  and isdel != ''">isdel,</if>
+            <if test="createTime != null ">create_time,</if>
+            <if test="abstractcontent != null  and abstractcontent != ''">abstractcontent,</if>
+            <if test="schoolid != null ">schoolid,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="title != null  and title != ''">#{title},</if>
+            <if test="imgurl != null  and imgurl != ''">#{imgurl},</if>
+            <if test="type != null  and type != ''">#{type},</if>
+            <if test="content != null  and content != ''">#{content},</if>
+            <if test="createuserid != null ">#{createuserid},</if>
+            <if test="isthirdparty != null  and isthirdparty != ''">#{isthirdparty},</if>
+            <if test="url != null  and url != ''">#{url},</if>
+            <if test="isrelease != null  and isrelease != ''">#{isrelease},</if>
+            <if test="isdel != null  and isdel != ''">#{isdel},</if>
+            <if test="createTime != null ">#{createTime},</if>
+            <if test="abstractcontent != null  and abstractcontent != ''">#{abstractcontent},</if>
+            <if test="schoolid != null ">#{schoolid},</if>
+        </trim>
+    </insert>
+
+    <update id="updateByNews" parameterType="ByNews">
+        update by_news
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="title != null  and title != ''">title = #{title},</if>
+            <if test="imgurl != null  and imgurl != ''">imgurl = #{imgurl},</if>
+            <if test="type != null  and type != ''">type = #{type},</if>
+            <if test="content != null  and content != ''">content = #{content},</if>
+            <if test="createuserid != null ">createuserid = #{createuserid},</if>
+            <if test="isthirdparty != null  and isthirdparty != ''">isthirdparty = #{isthirdparty},</if>
+            <if test="url != null  and url != ''">url = #{url},</if>
+            <if test="isrelease != null  and isrelease != ''">isrelease = #{isrelease},</if>
+            <if test="isdel != null  and isdel != ''">isdel = #{isdel},</if>
+            <if test="createTime != null ">create_time = #{createTime},</if>
+            <if test="abstractcontent != null  and abstractcontent != ''">abstractcontent = #{abstractcontent},</if>
+            <if test="schoolid != null ">schoolid = #{schoolid},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteByNewsById" parameterType="Long">
+        delete from by_news where id = #{id}
+    </delete>
+
+    <delete id="deleteByNewsByIds" parameterType="String">
+        delete from by_news where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+</mapper>

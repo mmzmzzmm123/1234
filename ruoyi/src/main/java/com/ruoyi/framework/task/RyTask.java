@@ -1,5 +1,9 @@
 package com.ruoyi.framework.task;
 
+import com.ruoyi.project.benyi.domain.BySchoolNews;
+import com.ruoyi.project.benyi.service.IBySchoolNewsService;
+import com.ruoyi.project.bysite.domain.ByNews;
+import com.ruoyi.project.bysite.service.IByNewsService;
 import com.ruoyi.project.common.SchoolCommon;
 import com.ruoyi.project.system.domain.BySchool;
 import com.ruoyi.project.system.domain.SysDept;
@@ -30,6 +34,10 @@ public class RyTask {
     private ISysDeptService deptService;
     @Autowired
     private ISysUserService userService;
+    @Autowired
+    private IBySchoolNewsService iBySchoolNewsService;
+    @Autowired
+    private IByNewsService iByNewsService;
 
     public void ryMultipleParams(String s, Boolean b, Long l, Double d, Integer i) {
         System.out.println(StringUtils.format("执行多参方法： 字符串类型{}，布尔类型{}，长整型{}，浮点型{}，整形{}", s, b, l, d, i));
@@ -71,6 +79,35 @@ public class RyTask {
                         bySchoolModel.setStatus("1");
                         bySchoolService.updateBySchool(bySchoolModel);
                     }
+                }
+            }
+        } else if (params.equals("hyxd")) {
+            System.out.println("1111");
+            BySchoolNews bySchoolNews = new BySchoolNews();
+            bySchoolNews.setIscheck("1");
+            bySchoolNews.setIsdel("N");
+            bySchoolNews.setIstb("0");
+            List<BySchoolNews> list = iBySchoolNewsService.selectAllBySchoolNewsList(bySchoolNews);
+            if (list != null && list.size() > 0) {
+                ByNews byNews = null;
+                BySchoolNews newBySchoolNews = null;
+                for (int i = 0; i < list.size(); i++) {
+                    byNews = new ByNews();
+                    byNews.setTitle(list.get(i).getTitle());
+                    byNews.setType("03");//会员心得
+                    byNews.setContent(list.get(i).getContent());
+                    byNews.setIsthirdparty("N");
+                    byNews.setIsrelease("Y");
+                    byNews.setIsdel("0");
+                    byNews.setSchoolid(list.get(i).getDeptId());
+                    byNews.setCreateTime(list.get(i).getCreateTime());
+                    byNews.setAbstractcontent(list.get(i).getAbstractcontent());
+
+                    iByNewsService.insertByNews(byNews);
+                    newBySchoolNews = new BySchoolNews();
+                    newBySchoolNews.setId(list.get(i).getId());
+                    newBySchoolNews.setIstb("1");
+                    iBySchoolNewsService.updateBySchoolNews(newBySchoolNews);
                 }
             }
         }

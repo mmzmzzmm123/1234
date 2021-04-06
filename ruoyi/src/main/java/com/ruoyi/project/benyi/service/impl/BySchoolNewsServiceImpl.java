@@ -47,6 +47,18 @@ public class BySchoolNewsServiceImpl implements IBySchoolNewsService
     }
 
     /**
+     * 查询新闻中心列表
+     *
+     * @param bySchoolNews 新闻中心
+     * @return 新闻中心
+     */
+    @Override
+    public List<BySchoolNews> selectAllBySchoolNewsList(BySchoolNews bySchoolNews)
+    {
+        return bySchoolNewsMapper.selectAllBySchoolNewsList(bySchoolNews);
+    }
+
+    /**
      * 新增新闻中心
      *
      * @param bySchoolNews 新闻中心
