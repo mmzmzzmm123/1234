@@ -50,8 +50,13 @@
             />
             <!-- 菜品预览 -->
             <el-table border :data="scope.row.data.igdList" v-else size="mini">
-              <el-table-column align="center" label="食材" prop="name" />
-              <el-table-column align="center" label="分量估算">
+              <el-table-column
+                align="center"
+                label="食材"
+                prop="name"
+                width="100"
+              />
+              <el-table-column align="center" label="分量估算" width="100">
                 <template slot-scope="scope">
                   <span>{{
                     `${cusWeightDict[scope.row.cusWeight]}${
@@ -60,7 +65,12 @@
                   }}</span>
                 </template>
               </el-table-column>
-              <el-table-column align="center" label="重量(g)" prop="weight" />
+              <el-table-column
+                align="center"
+                label="重量(g)"
+                prop="weight"
+                width="100"
+              />
             </el-table>
             <el-button type="text" size="mini" slot="reference">预览</el-button>
           </el-popover>
@@ -68,7 +78,11 @@
       </el-table-column>
       <el-table-column label="操作" :width="60" align="center">
         <template slot-scope="scope">
-          <el-button type="text" size="mini" @click="handleOnDelete(scope.row)">
+          <el-button
+            type="text"
+            size="mini"
+            @click="handleOnDelete(scope.row)"
+          >
             删除
           </el-button>
         </template>
@@ -129,18 +143,24 @@ export default {
     messageListener(e) {
       const { data } = e;
       if (data.type === messageTypes.UPDATE_SHORTCUT) {
-        this.getList();
+        this.getList(data.setCurrent);
       }
     },
-    getList() {
+    getList(setCurrent) {
       getShortCut().then((data) => {
         this.dataList = data;
         // console.log(this.dataList);
+        if (setCurrent) {
+          this.$refs.shortCutTable.setCurrentRow(data[0]);
+        }
       });
     },
     handleOnDelete(data) {
       removeShortCut(data.id).then((res) => {
         this.getList();
+        if (this.curShortCutObj.id === data.id) {
+          this.setCurShortCutObj({});
+        }
       });
     },
     handleOnCurrentChange(data) {

@@ -242,9 +242,9 @@ const actions = {
     if (recipesDataResult.code === 200) {
       const { endNum, startNum, recipesId } = state;
       // 计算
-      let length = endNum - startNum;
+      const length = endNum - startNum;
       recipesData = recipesDataResult.data.reduce((outArr, dayData, idx) => {
-        if (!recipesId || length >= idx) {
+        if (length >= idx) {
           outArr.push({
             id: dayData.id,
             numDay: !recipesId ? startNum + idx : dayData.numDay,
@@ -531,7 +531,8 @@ const actions = {
           }).then(() => {
             window.postMessage(
               {
-                type: messageTypes.UPDATE_SHORTCUT
+                type: messageTypes.UPDATE_SHORTCUT,
+                setCurrent: true
               },
               "*"
             );
