@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSONArray;
 import com.stdiet.common.core.domain.AjaxResult;
 import com.stdiet.common.utils.DateUtils;
 import com.stdiet.common.utils.StringUtils;
+import com.stdiet.common.utils.bean.ObjectUtils;
 import com.stdiet.custom.domain.*;
 import com.stdiet.custom.dto.request.SysOrderCommision;
 import com.stdiet.custom.dto.response.EveryMonthTotalAmount;
@@ -58,9 +59,6 @@ public class SysCommissionDayServiceImpl implements ISysCommissionDayService {
                 sysCommissionDayDetail.setNickName(commision.getUserName());
                 sysCommissionDayDetail.setPostId(commision.getPostId());
                 sysCommissionDayDetail.setPostName(commision.getPostName());
-                if(orderDetailMap.get(sysCommissionDayDetail.getUserId()) != null && orderDetailMap.get(sysCommissionDayDetail.getUserId()).size() > 0){
-                    System.out.println(sysCommissionDayDetail.getUserId());
-                }
                 dealServerOrderCommissionDetail(sysCommision, orderDetailMap.get(sysCommissionDayDetail.getUserId()), sysCommissionDayDetail);
                 result.add(sysCommissionDayDetail);
                 //统计所以用户总提成、已发放提成、未发放提成
@@ -474,9 +472,9 @@ public class SysCommissionDayServiceImpl implements ISysCommissionDayService {
                     sysOrder.setGiveServeDay(0);
                     sysOrderCommisionDayDetailList.add(statisticsOrderMessage(sysOrder, sysCommision.getServerScopeStartTime(), sysCommision.getServerScopeEndTime()));
                 }
-                int index = 0;
-                for (SysOrderNutritionistReplaceRecord record : nutritAfterSaleRecord) {
-                    index++;
+                for (int index = 0; index < nutritAfterSaleRecord.size(); index++) {
+                    SysOrderNutritionistReplaceRecord record  = nutritAfterSaleRecord.get(index);
+
                     LocalDate recordStartTime = DateUtils.dateToLocalDate(record.getStartTime());
                     if(ChronoUnit.DAYS.between(recordStartTime, serverStartDate) > 0){
                         recordStartTime = serverStartDate;
@@ -486,7 +484,7 @@ public class SysCommissionDayServiceImpl implements ISysCommissionDayService {
                         continue;
                     }
                     //获取下一个记录的开始时间，如果不存在则直接取服务结束时间
-                    LocalDate nextRecordStartTime = replaceRecordList.size() > index ? DateUtils.dateToLocalDate(replaceRecordList.get(index).getStartTime()) : null;
+                    LocalDate nextRecordStartTime = nutritAfterSaleRecord.size() > index+1 ? DateUtils.dateToLocalDate(nutritAfterSaleRecord.get(index+1).getStartTime()) : null;
                     if(nextRecordStartTime == null || ChronoUnit.DAYS.between(recordStartTime, serverEndDate) < 0){
                         nextRecordStartTime = serverEndDate;
                     }
@@ -505,7 +503,14 @@ public class SysCommissionDayServiceImpl implements ISysCommissionDayService {
                     //判断是否已存在相同时间范围的记录
                     String key = DateUtils.dateTime(sysOrder.getCommissStartTime()) + DateUtils.dateTime(sysOrder.getServerEndTime());
                     if(existMap.containsKey(key)){
-                        sysOrderCommisionDayDetailList.add(existMap.get(key));
+                        try{
+                            SysOrderCommisionDayDetail newSysOrderCommisionDayDetail = ObjectUtils.getObjectByObject(existMap.get(key), SysOrderCommisionDayDetail.class);
+                            newSysOrderCommisionDayDetail.setNutritionistId(i == 0 ? record.getNutritionistId() : null);
+                            newSysOrderCommisionDayDetail.setAfterSaleId(i == 1 ? record.getAfterSaleId() : null);
+                            sysOrderCommisionDayDetailList.add(newSysOrderCommisionDayDetail);
+                        }catch (Exception e){
+                            e.printStackTrace();
+                        }
                     }else{
                         existMap.put(key, statisticsOrderMessage(sysOrder, sysCommision.getServerScopeStartTime(), sysCommision.getServerScopeEndTime()));
                         sysOrderCommisionDayDetailList.add(existMap.get(key));
