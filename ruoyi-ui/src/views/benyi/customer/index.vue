@@ -96,7 +96,7 @@
         v-hasPermi="['benyi:customer:add']"
         >新增</el-button
       >
-      <el-button
+      <!-- <el-button
         type="success"
         icon="el-icon-edit"
         size="mini"
@@ -113,7 +113,7 @@
         @click="handleDelete"
         v-hasPermi="['benyi:customer:remove']"
         >删除</el-button
-      >
+      > -->
       <el-button
         type="warning"
         icon="el-icon-download"
@@ -128,7 +128,7 @@
         size="mini"
         :disabled="single"
         @click="handleUpdate_fp"
-        v-hasPermi="['benyi:customer:edit']"
+        v-hasPermi="['benyi:customer:fenpei']"
         >分配</el-button
       >
     </div>
@@ -225,9 +225,18 @@
           <el-button
             size="mini"
             type="text"
+            icon="el-icon-check"
+            @click="handleCheck(scope.row)"
+            v-hasPermi="['benyi:customer:edit']"
+            >详情</el-button
+          >
+          <el-button
+            size="mini"
+            type="text"
             icon="el-icon-edit"
             @click="handleUpdate(scope.row)"
             v-hasPermi="['benyi:customer:edit']"
+            v-show="isShow(scope.row)"
             >修改</el-button
           >
           <el-button
@@ -236,6 +245,7 @@
             icon="el-icon-delete"
             @click="handleDelete(scope.row)"
             v-hasPermi="['benyi:customer:remove']"
+            v-show="isShow(scope.row)"
             >删除</el-button
           >
         </template>
@@ -366,6 +376,125 @@
       </div>
     </el-dialog>
 
+    <!-- 详情页--客户关系管理对话框 -->
+    <el-dialog :title="title" :visible.sync="open_check" append-to-body>
+      <el-form ref="form" :model="form" label-width="100px">
+        <el-row :gutter="15">
+          <el-col :span="12">
+            <el-form-item label="客户姓名" prop="name">
+              <el-input v-model="form.name" placeholder="请输入姓名" :disabled="true" />
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="园所名称" prop="schoolname">
+              <el-input
+                v-model="form.schoolname"
+                placeholder="请输入园所名称"
+                :disabled="true"
+              />
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="园所人数" prop="rs">
+              <el-input-number v-model="form.rs" placeholder="请输入园所人数" :disabled="true"/>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="身份" prop="sflx">
+              <el-select v-model="form.sflx" placeholder="请选择身份" :disabled="true">
+                <el-option
+                  v-for="dict in gxOptions"
+                  :key="dict.dictValue"
+                  :label="dict.dictLabel"
+                  :value="dict.dictValue"
+                ></el-option>
+              </el-select>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="联系电话" prop="lxdh">
+              <el-input v-model="form.lxdh" placeholder="请输入联系电话" :disabled="true"/>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="微信号" prop="wx">
+              <el-input v-model="form.wx" placeholder="请输入微信号" :disabled="true"/>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="抖音号" prop="dy">
+              <el-input v-model="form.dy" placeholder="请输入抖音号" :disabled="true"/>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="其他联系方式" prop="qt">
+              <el-input v-model="form.qt" placeholder="请输入其他联系方式" :disabled="true"/>
+            </el-form-item>
+          </el-col>
+          <el-col :span="24">
+            <el-form-item label="所在省" prop="sheng">
+              <v-distpicker
+                v-model="form.sheng"
+                :placeholders="placeholders"
+                :province="diglogForm.province"
+                :city="diglogForm.city"
+                :area="diglogForm.area"
+                @selected="onSelected"
+                :disabled="true"
+              ></v-distpicker>
+              <el-input v-model="form.shengid" v-if="false" />
+              <el-input v-model="form.shiid" v-if="false" />
+              <el-input v-model="form.quxianid" v-if="false" />
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="客户来源" prop="khly">
+              <el-select v-model="form.khly" placeholder="请选择客户来源" :disabled="true">
+                <el-option
+                  v-for="dict in lyOptions"
+                  :key="dict.dictValue"
+                  :label="dict.dictLabel"
+                  :value="dict.dictValue"
+                ></el-option>
+              </el-select>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="消费项目" prop="xfxm">
+              <el-input v-model="form.xfxm" placeholder="请输入消费项目" :disabled="true" />
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="消费价值" prop="xfjz" >
+              <el-input-number
+                v-model="form.xfjz"
+                placeholder="请输入消费价值"
+                :disabled="true"
+              />
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="备注" prop="bz">
+              <el-input v-model="form.bz" placeholder="请输入备注" :disabled="true"/>
+            </el-form-item>
+          </el-col>
+          <el-col :span="24">
+            <el-form-item label="转换跟进" prop="zhgj">
+              <el-input
+                v-model="form.zhgj"
+                type="textarea"
+                placeholder="请输入内容"
+              />
+            </el-form-item>
+          </el-col>
+        </el-row>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button type="primary" @click="submitForm">确 定</el-button>
+        <el-button @click="cancel">取 消</el-button>
+      </div>
+    </el-dialog>
+
     <!-- 添加或修改本一-客户关系管理对话框 -->
     <el-dialog :title="title" :visible.sync="open_fp" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="100px">
@@ -404,6 +533,7 @@ import {
 import { listUser, getUserOnlyByRoleId } from "@/api/system/user";
 //导入省市区三级联动库
 import VDistpicker from "v-distpicker";
+import { getUserProfile } from "@/api/system/user";
 export default {
   name: "Customer",
   data() {
@@ -418,6 +548,8 @@ export default {
         city: null,
         area: null
       },
+      // 登录者id
+      loginuser: undefined,
       // 遮罩层
       loading: true,
       // 选中数组
@@ -437,6 +569,7 @@ export default {
       // 是否显示弹出层
       open: false,
       open_fp: false,
+      open_check: false,
       gxOptions: [],
       lyOptions: [],
       roleId: 108,
@@ -514,6 +647,7 @@ export default {
     });
     this.getUserList();
     this.getUsersByRole();
+    this.getUser();
   },
   components: {
     //省市区三级联动全局组件
@@ -543,6 +677,12 @@ export default {
     getUsersByRole() {
       getUserOnlyByRoleId(this.roleId).then((response) => {
         this.customerUserOptions = response.data;
+      });
+    },
+    // 获取用户id
+    getUser() {
+      getUserProfile().then(response => {
+        this.loginuser = response.data.userId;
       });
     },
     // 通过roleid查询的教师字典翻译
@@ -577,7 +717,7 @@ export default {
     lyFormat(row, column) {
       return this.selectDictLabel(this.lyOptions, row.khly);
     },
-    /** 查询本一-客户关系管理列表 */
+    /** 查询本一-客户关系管理列表*/
     getList() {
       this.loading = true;
       listCustomer(this.queryParams).then((response) => {
@@ -586,11 +726,22 @@ export default {
         this.loading = false;
       });
     },
+    // 是否显示
+    isShow(row) {
+      if (row.fpid == this.loginuser) {
+        return true;
+      } else if(row.createUserid == this.loginuser) {
+        return true;
+      }else {
+        return false;
+      }
+    },
     
     // 取消按钮
     cancel() {
       this.open = false;
       this.open_fp = false;
+      this.open_check = false;
       this.reset();
     },
     // 表单重置
@@ -658,6 +809,16 @@ export default {
         this.form = response.data;
         this.open = true;
         this.title = "修改本一-客户关系管理";
+      });
+    },
+    /** 修改按钮操作 */
+    handleCheck(row) {
+      this.reset();
+      const id = row.id || this.ids;
+      getCustomer(id).then((response) => {
+        this.form = response.data;
+        this.open_check = true;
+        this.title = "客户关系管理详情页";
       });
     },
     /** 修改按钮操作 */
@@ -738,7 +899,6 @@ export default {
     },
     //所在省市区触发联动方法
     onSelected(data) {
-      //console.log(data);
       if (
         data.province.code == undefined ||
         data.city.code == undefined ||

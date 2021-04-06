@@ -43,7 +43,6 @@ public class ByCustomerController extends BaseController {
     @PreAuthorize("@ss.hasPermi('benyi:customer:list')")
     @GetMapping("/list")
     public TableDataInfo list(ByCustomer byCustomer) {
-        byCustomer.setCreateUserid(SecurityUtils.getLoginUser().getUser().getUserId());
         startPage();
         List<ByCustomer> list = byCustomerService.selectByCustomerList(byCustomer);
         return getDataTable(list);
