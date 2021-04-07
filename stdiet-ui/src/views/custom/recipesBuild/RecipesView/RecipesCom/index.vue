@@ -59,7 +59,8 @@
               @click="handleOnResetCurrentDay"
               slot="reference"
             >
-              {{ `第${numDay}天` }}
+              <div class="cus_name_hide" :id="`cus_name_${num}`">{{ name }}</div>
+              <div>{{ `第${numDay}天` }}</div>
             </div>
           </el-popover>
         </template>
@@ -791,5 +792,9 @@ export default {
 .warning_heightlight {
   background: #d66969;
   color: blue;
+}
+
+.cus_name_hide {
+  display: none;
 }
 </style>

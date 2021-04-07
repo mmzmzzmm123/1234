@@ -311,6 +311,7 @@ const actions = {
     const { recipesData, cusId, planId } = state;
     const params = {
       cusId: payload.cusId !== undefined ? payload.cusId : cusId,
+      reviewStatus: payload.reviewStatus,
       planId: payload.planId || planId,
       menus: recipesData.map((menu, idx) => ({
         numDay: menu.numDay,
