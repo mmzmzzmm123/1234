@@ -13,5 +13,7 @@ public class SysRecipes {
 
     private Long planId;
 
+    private int reviewStatus;
+
     private List<SysRecipesDaily> menus;
 }
