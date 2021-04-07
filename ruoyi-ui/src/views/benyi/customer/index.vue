@@ -178,7 +178,7 @@
       />
       <el-table-column label="所在省" align="center" prop="sheng" />
       <el-table-column label="所在市" align="center" prop="shi" />
-      <el-table-column label="所在区县" align="center" prop="shi" />
+      <el-table-column label="所在区县" align="center" prop="quxian" />
       <el-table-column
         label="消费项目"
         align="center"
@@ -201,7 +201,12 @@
       />
       <el-table-column label="录入时间" align="center" prop="createTime" />
       <el-table-column label="过保时间" align="center" prop="gbtime" />
-      <el-table-column label="已分配给" align="center" prop="fpid" :formatter="userByRoleFormat" />
+      <el-table-column
+        label="已分配给"
+        align="center"
+        prop="fpid"
+        :formatter="userByRoleFormat"
+      />
       <el-table-column
         label="转换跟进"
         show-overflow-tooltip
@@ -322,7 +327,9 @@
                 :province="diglogForm.province"
                 :city="diglogForm.city"
                 :area="diglogForm.area"
-                @selected="onSelected"
+                @province="onChangeProvince"
+                @city="onChangeCity"
+                @area="onChangeArea"
               ></v-distpicker>
               <el-input v-model="form.shengid" v-if="false" />
               <el-input v-model="form.shiid" v-if="false" />
@@ -382,7 +389,11 @@
         <el-row :gutter="15">
           <el-col :span="12">
             <el-form-item label="客户姓名" prop="name">
-              <el-input v-model="form.name" placeholder="请输入姓名" :disabled="true" />
+              <el-input
+                v-model="form.name"
+                placeholder="请输入姓名"
+                :disabled="true"
+              />
             </el-form-item>
           </el-col>
           <el-col :span="12">
@@ -396,12 +407,20 @@
           </el-col>
           <el-col :span="12">
             <el-form-item label="园所人数" prop="rs">
-              <el-input-number v-model="form.rs" placeholder="请输入园所人数" :disabled="true"/>
+              <el-input-number
+                v-model="form.rs"
+                placeholder="请输入园所人数"
+                :disabled="true"
+              />
             </el-form-item>
           </el-col>
           <el-col :span="12">
             <el-form-item label="身份" prop="sflx">
-              <el-select v-model="form.sflx" placeholder="请选择身份" :disabled="true">
+              <el-select
+                v-model="form.sflx"
+                placeholder="请选择身份"
+                :disabled="true"
+              >
                 <el-option
                   v-for="dict in gxOptions"
                   :key="dict.dictValue"
@@ -413,22 +432,38 @@
           </el-col>
           <el-col :span="12">
             <el-form-item label="联系电话" prop="lxdh">
-              <el-input v-model="form.lxdh" placeholder="请输入联系电话" :disabled="true"/>
+              <el-input
+                v-model="form.lxdh"
+                placeholder="请输入联系电话"
+                :disabled="true"
+              />
             </el-form-item>
           </el-col>
           <el-col :span="12">
             <el-form-item label="微信号" prop="wx">
-              <el-input v-model="form.wx" placeholder="请输入微信号" :disabled="true"/>
+              <el-input
+                v-model="form.wx"
+                placeholder="请输入微信号"
+                :disabled="true"
+              />
             </el-form-item>
           </el-col>
           <el-col :span="12">
             <el-form-item label="抖音号" prop="dy">
-              <el-input v-model="form.dy" placeholder="请输入抖音号" :disabled="true"/>
+              <el-input
+                v-model="form.dy"
+                placeholder="请输入抖音号"
+                :disabled="true"
+              />
             </el-form-item>
           </el-col>
           <el-col :span="12">
             <el-form-item label="其他联系方式" prop="qt">
-              <el-input v-model="form.qt" placeholder="请输入其他联系方式" :disabled="true"/>
+              <el-input
+                v-model="form.qt"
+                placeholder="请输入其他联系方式"
+                :disabled="true"
+              />
             </el-form-item>
           </el-col>
           <el-col :span="24">
@@ -439,7 +474,6 @@
                 :province="diglogForm.province"
                 :city="diglogForm.city"
                 :area="diglogForm.area"
-                @selected="onSelected"
                 :disabled="true"
               ></v-distpicker>
               <el-input v-model="form.shengid" v-if="false" />
@@ -449,7 +483,11 @@
           </el-col>
           <el-col :span="12">
             <el-form-item label="客户来源" prop="khly">
-              <el-select v-model="form.khly" placeholder="请选择客户来源" :disabled="true">
+              <el-select
+                v-model="form.khly"
+                placeholder="请选择客户来源"
+                :disabled="true"
+              >
                 <el-option
                   v-for="dict in lyOptions"
                   :key="dict.dictValue"
@@ -461,11 +499,15 @@
           </el-col>
           <el-col :span="12">
             <el-form-item label="消费项目" prop="xfxm">
-              <el-input v-model="form.xfxm" placeholder="请输入消费项目" :disabled="true" />
+              <el-input
+                v-model="form.xfxm"
+                placeholder="请输入消费项目"
+                :disabled="true"
+              />
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item label="消费价值" prop="xfjz" >
+            <el-form-item label="消费价值" prop="xfjz">
               <el-input-number
                 v-model="form.xfjz"
                 placeholder="请输入消费价值"
@@ -475,7 +517,11 @@
           </el-col>
           <el-col :span="12">
             <el-form-item label="备注" prop="bz">
-              <el-input v-model="form.bz" placeholder="请输入备注" :disabled="true"/>
+              <el-input
+                v-model="form.bz"
+                placeholder="请输入备注"
+                :disabled="true"
+              />
             </el-form-item>
           </el-col>
           <el-col :span="24">
@@ -501,7 +547,10 @@
         <el-row :gutter="15">
           <el-col :span="12">
             <el-form-item label="分配给" prop="fpid">
-              <el-select v-model="form.fpid" placeholder="请选择分配给哪个管理员">
+              <el-select
+                v-model="form.fpid"
+                placeholder="请选择分配给哪个管理员"
+              >
                 <el-option
                   v-for="dict in customerUserOptions"
                   :key="dict.userId"
@@ -541,12 +590,12 @@ export default {
       placeholders: {
         province: "请选择省",
         city: "请选择市",
-        area: "请选择区"
+        area: "请选择区",
       },
       diglogForm: {
         province: null,
         city: null,
-        area: null
+        area: null,
       },
       // 登录者id
       loginuser: undefined,
@@ -585,8 +634,6 @@ export default {
         // 每页大小
         pageSize: 50,
       },
-
-      
 
       // 查询参数
       queryParams: {
@@ -651,7 +698,7 @@ export default {
   },
   components: {
     //省市区三级联动全局组件
-    VDistpicker
+    VDistpicker,
   },
   methods: {
     //排序
@@ -681,7 +728,7 @@ export default {
     },
     // 获取用户id
     getUser() {
-      getUserProfile().then(response => {
+      getUserProfile().then((response) => {
         this.loginuser = response.data.userId;
       });
     },
@@ -730,13 +777,13 @@ export default {
     isShow(row) {
       if (row.fpid == this.loginuser) {
         return true;
-      } else if(row.createUserid == this.loginuser) {
+      } else if (row.createUserid == this.loginuser) {
         return true;
-      }else {
+      } else {
         return false;
       }
     },
-    
+
     // 取消按钮
     cancel() {
       this.open = false;
@@ -807,6 +854,22 @@ export default {
       const id = row.id || this.ids;
       getCustomer(id).then((response) => {
         this.form = response.data;
+        if (response.data.sheng == null) {
+          this.diglogForm.province = "";
+        } else {
+          this.diglogForm.province = response.data.sheng;
+        }
+        if (response.data.shi == null) {
+          this.diglogForm.city = "";
+        } else {
+          this.diglogForm.city = response.data.shi;
+        }
+        if (response.data.quxian == null) {
+          this.diglogForm.area = "";
+        } else {
+          this.diglogForm.area = response.data.quxian;
+        }
+
         this.open = true;
         this.title = "修改本一-客户关系管理";
       });
@@ -817,6 +880,21 @@ export default {
       const id = row.id || this.ids;
       getCustomer(id).then((response) => {
         this.form = response.data;
+         if (response.data.sheng == null) {
+          this.diglogForm.province = "";
+        } else {
+          this.diglogForm.province = response.data.sheng;
+        }
+        if (response.data.shi == null) {
+          this.diglogForm.city = "";
+        } else {
+          this.diglogForm.city = response.data.shi;
+        }
+        if (response.data.quxian == null) {
+          this.diglogForm.area = "";
+        } else {
+          this.diglogForm.area = response.data.quxian;
+        }
         this.open_check = true;
         this.title = "客户关系管理详情页";
       });
@@ -827,9 +905,24 @@ export default {
       const id = row.id || this.ids;
       getCustomer(id).then((response) => {
         this.form = response.data;
-        this.diglogForm.province = response.data.sheng;
-        this.diglogForm.city = response.data.shi;
-        this.diglogForm.area = response.data.quxian;
+        // this.diglogForm.province = response.data.sheng;
+        // this.diglogForm.city = response.data.shi;
+        // this.diglogForm.area = response.data.quxian;
+         if (response.data.sheng == null) {
+          this.diglogForm.province = "";
+        } else {
+          this.diglogForm.province = response.data.sheng;
+        }
+        if (response.data.shi == null) {
+          this.diglogForm.city = "";
+        } else {
+          this.diglogForm.city = response.data.shi;
+        }
+        if (response.data.quxian == null) {
+          this.diglogForm.area = "";
+        } else {
+          this.diglogForm.area = response.data.quxian;
+        }
         this.open_fp = true;
         this.title = "分配客户";
       });
@@ -898,22 +991,54 @@ export default {
         .catch(function () {});
     },
     //所在省市区触发联动方法
-    onSelected(data) {
-      if (
-        data.province.code == undefined ||
-        data.city.code == undefined ||
-        data.area.code == undefined
-      ) {
+    // onSelected(data) {
+    //   console.log(data);
+    //   if (
+    //     data.province.code == undefined ||
+    //     data.city.code == undefined ||
+    //     data.area.code == undefined
+    //   ) {
+    //     this.form.sheng = undefined;
+    //   } else {
+    //     console.log(data);
+    //     this.form.sheng = data.province.value;
+    //     this.form.shengid = data.province.code;
+    //     this.form.shi = data.city.value;
+    //     this.form.shiid = data.city.code;
+    //     this.form.quxian = data.area.value;
+    //     this.form.quxianid = data.area.code;
+    //   }
+    // },
+    onChangeProvince(data) {
+      //console.log(data);
+      if (data.code == undefined) {
         this.form.sheng = undefined;
       } else {
-        this.form.sheng = data.province.value;
-        this.form.shengid = data.province.code;
-        this.form.shi = data.city.value;
-        this.form.shiid = data.city.code;
-        this.form.quxian = data.area.value;
-        this.form.quxianid = data.area.code;
+        //console.log(data);
+        this.form.sheng = data.value;
+        this.form.shengid = data.code;
       }
-    }
+    },
+    onChangeCity(data) {
+      //console.log(data);
+      if (data.code == undefined) {
+        this.form.shi = undefined;
+      } else {
+        //console.log(data);
+        this.form.shi = data.value;
+        this.form.shiid = data.code;
+      }
+    },
+    onChangeArea(data) {
+      //console.log(data);
+      if (data.code == undefined) {
+        this.form.quxian = undefined;
+      } else {
+        //console.log(data);
+        this.form.quxian = data.value;
+        this.form.quxianid = data.code;
+      }
+    },
   },
 };
 </script>
