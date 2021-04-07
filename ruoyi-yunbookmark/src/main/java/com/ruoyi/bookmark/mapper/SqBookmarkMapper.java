@@ -93,4 +93,12 @@ public interface SqBookmarkMapper extends MyMapper<SqBookmark>
      * @return 结果
      */
     public int countBookMakeByMenuId(Long menuId);
+    /**
+     *  刪除重复的书签
+     */
+    public int bookmarkDeleteRepetition(Long userId);
+    /**
+     *  获取重复的标签
+     */
+    List<SqBookmark> bookmarkRepetition(Long userId);
 }

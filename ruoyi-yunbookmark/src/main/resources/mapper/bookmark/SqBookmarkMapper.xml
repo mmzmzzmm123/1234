@@ -15,6 +15,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="label"    column="label"    />
         <result property="menuId"    column="menu_id"    />
         <result property="zcount"    column="zcount"    />
+        <result property="bookmarkStar"    column="bookmark_star"    />
         <result property="idelete"    column="idelete"    />
         <result property="start"    column="start"    />
         <result property="createTime"    column="create_time"    />
@@ -30,7 +31,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </resultMap>
 
     <sql id="selectSqBookmarkVo">
-        select bookmark_id, userid, title, url, urls, description, image, Label, menu_id, zcount, IDelete, Start, create_time from sq_bookmark
+        select bookmark_id, userid, title, url, urls, description, image, Label, menu_id, zcount, IDelete, Start, create_time,bookmark_star from sq_bookmark
     </sql>
 
     <select id="selectSqBookmarkList" parameterType="SqBookmark" resultMap="SqBookmarkResult">
@@ -114,6 +115,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         delete from sq_bookmark where bookmark_id = #{bookmarkId}
     </delete>
 
+    <delete id="bookmarkDeleteRepetition" parameterType="Long">
+        DELETE FROM sq_bookmark WHERE bookmark_id NOT IN ( SELECT dt.bookmark_id FROM(
+		SELECT min(bookmark_id) AS bookmark_id FROM sq_bookmark WHERE IDelete = 0 AND userid = #{userId} GROUP BY url ) dt)
+    </delete>
+
     <delete id="deleteSqBookmarkByIds" parameterType="String">
         delete from sq_bookmark where bookmark_id in
         <foreach item="bookmarkId" collection="array" open="(" separator="," close=")">
@@ -129,6 +135,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <select id="countBookMakeByMenuId" parameterType="Long" resultType="java.lang.Integer">
         select count(*) FROM sq_bookmark where menu_id =#{menuId}
     </select>
+
+    <select id="bookmarkRepetition" parameterType="Long" resultMap="SqBookmarkResult">
+        SELECT * FROM sq_bookmark WHERE url in (SELECT url FROM sq_bookmark WHERE userid = #{userId} GROUP BY url HAVING COUNT(url)>1) AND userid = #{userId}  ORDER BY url
+    </select>
+
 
     <select id="selectBymenuIdUserID" parameterType="SqBookmark"  resultMap="SqBookmarkResult">
         <include refid="selectSqBookmarkVo"/>

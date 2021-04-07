@@ -1,6 +1,8 @@
 package com.ruoyi.bookmark.domain;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import lombok.Data;
+import lombok.ToString;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import com.ruoyi.common.annotation.Excel;
@@ -19,6 +21,7 @@ import java.util.Map;
  * @GeneratedValue让通用mapper在执行insert操作之后将自动生成的主键值回写到当前实体对象对应的属性当中
  */
 @Table(name="sq_bookmark")
+@Data
 public class SqBookmark
 {
     private static final long serialVersionUID = 1L;
@@ -60,7 +63,7 @@ public class SqBookmark
 
     /** 标签 */
     @Excel(name = "标签")
-    @Column(name = "Label")
+    @Column(name = "label")
     private String label;
 
     /** 分类ID */
@@ -83,6 +86,10 @@ public class SqBookmark
     @Column(name = "Start")
     private Integer start;
 
+    /** 0非星标 1星标 */
+    @Column(name = "bookmark_star")
+    private Integer bookmarkStar;
+
     /** 创建时间 */
     @Excel(name = "创建时间")
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
@@ -94,155 +101,6 @@ public class SqBookmark
 
     private List<Map<String,Object>> sqTags;
 
-    public Long getParentId() {
-        return parentId;
-    }
 
-    public void setParentId(Long parentId) {
-        this.parentId = parentId;
-    }
 
-    public List<Map<String, Object>> getSqTags() {
-        return sqTags;
-    }
-
-    public void setSqTags(List<Map<String, Object>> sqTags) {
-        this.sqTags = sqTags;
-    }
-
-    public Date getCreateTime() {
-        return createTime;
-    }
-
-    public void setCreateTime(Date createTime) {
-        this.createTime = createTime;
-    }
-
-    public void setBookmarkId(Long bookmarkId)
-    {
-        this.bookmarkId = bookmarkId;
-    }
-
-    public Long getBookmarkId()
-    {
-        return bookmarkId;
-    }
-    public void setUserid(Long userid)
-    {
-        this.userid = userid;
-    }
-
-    public Long getUserid()
-    {
-        return userid;
-    }
-    public void setTitle(String title)
-    {
-        this.title = title;
-    }
-
-    public String getTitle()
-    {
-        return title;
-    }
-    public void setUrl(String url)
-    {
-        this.url = url;
-    }
-
-    public String getUrl()
-    {
-        return url;
-    }
-    public void setUrls(String urls)
-    {
-        this.urls = urls;
-    }
-
-    public String getUrls()
-    {
-        return urls;
-    }
-    public void setDescription(String description)
-    {
-        this.description = description;
-    }
-
-    public String getDescription()
-    {
-        return description;
-    }
-    public void setImage(String image)
-    {
-        this.image = image;
-    }
-
-    public String getImage()
-    {
-        return image;
-    }
-    public void setLabel(String label)
-    {
-        this.label = label;
-    }
-
-    public String getLabel()
-    {
-        return label;
-    }
-    public void setMenuId(Long menuId)
-    {
-        this.menuId = menuId;
-    }
-
-    public Long getMenuId()
-    {
-        return menuId;
-    }
-    public void setZcount(Long zcount)
-    {
-        this.zcount = zcount;
-    }
-
-    public Long getZcount()
-    {
-        return zcount;
-    }
-    public void setIdelete(Integer idelete)
-    {
-        this.idelete = idelete;
-    }
-
-    public Integer getIdelete()
-    {
-        return idelete;
-    }
-    public void setStart(Integer start)
-    {
-        this.start = start;
-    }
-
-    public Integer getStart()
-    {
-        return start;
-    }
-
-    @Override
-    public String toString() {
-        return new ToStringBuilder(this,ToStringStyle.MULTI_LINE_STYLE)
-            .append("bookmarkId", getBookmarkId())
-            .append("userid", getUserid())
-            .append("title", getTitle())
-            .append("url", getUrl())
-            .append("urls", getUrls())
-            .append("description", getDescription())
-            .append("image", getImage())
-            .append("label", getLabel())
-            .append("menuId", getMenuId())
-            .append("zcount", getZcount())
-            .append("idelete", getIdelete())
-            .append("start", getStart())
-            .append("createTime", getCreateTime())
-            .toString();
-    }
 }

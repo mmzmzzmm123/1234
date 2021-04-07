@@ -53,6 +53,34 @@ public class SqBookmarkController extends BaseController
 //        return getDataTable(list);
 //    }
 
+
+    /**
+     *  删除重复的书签
+     */
+    @GetMapping("/bookmarkDeleteRepetition")
+    @PreAuthorize("@ss.hasPermi('bookmark:bookmark:common:deleterepetition')")
+    public AjaxResult bookmarkDeleteRepetition() {
+        return AjaxResult.success(sqBookmarkService.bookmarkDeleteRepetition(getAuthUser().getUserId()));
+    }
+    /**
+     *获取所有重复的书签
+     */
+    @GetMapping("/bookmarkRepetition")
+    @PreAuthorize("@ss.hasPermi('bookmark:bookmark:common:listrepetition')")
+    public AjaxResult bookmarkRepetition() {
+        startPage();
+        List<SqBookmark> list = sqBookmarkService.bookmarkRepetition(getAuthUser().getUserId());
+        return AjaxResult.success(list);
+    }
+    /**
+     * 书签设置星标 取消星标
+     */
+    @GetMapping("/updateBookmarkStarById")
+    public AjaxResult updateBookmarkStarById(String bookmarkId,int bookmarkStr) {
+        return toAjax(sqBookmarkService.updateBookmarkStarById(getAuthUser().getUserId(),bookmarkId,bookmarkStr));
+
+    }
+
     /**
      * 通过url 查询用户 是否已经添加了此书签
      *
@@ -62,9 +90,8 @@ public class SqBookmarkController extends BaseController
     @GetMapping("/selectByUrlUserID")
     @PreAuthorize("@ss.hasPermi('bookmark:bookmark:common:url')")
     public AjaxResult selectByUrlUserID(String url) {
-        SysUser sysUser=getAuthUser();
         startPage();
-        List<SqBookmark> list = sqBookmarkService.selectByUrlUserID(url,sysUser.getUserId());
+        List<SqBookmark> list = sqBookmarkService.selectByUrlUserID(url,getAuthUser().getUserId());
         if (list!=null&&!list.isEmpty()){
             return AjaxResult.success(list.get(0));
         }
@@ -79,9 +106,8 @@ public class SqBookmarkController extends BaseController
     @GetMapping("/selectBymenuIdUserID")
     @PreAuthorize("@ss.hasPermi('bookmark:bookmark:common:listsousou')")
     public TableDataInfo selectBymenuIdUserID(Long menuId,Integer sort,String sousuo) {
-        SysUser sysUser=getAuthUser();
         startPage();
-        List<SqBookmark> list = sqBookmarkService.selectBymenuIdUserID(menuId,sysUser.getUserId(),sort,sousuo);
+        List<SqBookmark> list = sqBookmarkService.selectBymenuIdUserID(menuId,getAuthUser().getUserId(),sort,sousuo);
         return getDataTable(list);
     }
     /**
@@ -91,9 +117,8 @@ public class SqBookmarkController extends BaseController
     @GetMapping("/selectBydelete")
     @PreAuthorize("@ss.hasPermi('bookmark:bookmark:common:recycle')")
     public TableDataInfo selectBydelete() {
-        SysUser sysUser=getAuthUser();
         startPage();
-        List<SqBookmark> list = sqBookmarkService.selectBydelete(sysUser.getUserId());
+        List<SqBookmark> list = sqBookmarkService.selectBydelete(getAuthUser().getUserId());
         return getDataTable(list);
     }
 
@@ -104,9 +129,8 @@ public class SqBookmarkController extends BaseController
     @GetMapping("/selectByUseridList")
     @PreAuthorize("@ss.hasPermi('bookmark:bookmark:common:list')")
     public TableDataInfo selectByUseridList() {
-        SysUser sysUser=getAuthUser();
         startPage();
-        List<SqBookmark> list = sqBookmarkService.selectByUseridList(sysUser.getUserId());
+        List<SqBookmark> list = sqBookmarkService.selectByUseridList(getAuthUser().getUserId());
         return getDataTable(list);
     }
 
@@ -154,8 +178,7 @@ public class SqBookmarkController extends BaseController
     @PostMapping
     public AjaxResult add(@RequestBody SqBookmark sqBookmark)
     {
-        SysUser sysUser=getAuthUser();
-        sqBookmark.setUserid(sysUser.getUserId());
+        sqBookmark.setUserid(getAuthUser().getUserId());
         return toAjax(sqBookmarkService.insertSqBookmark(sqBookmark));
     }
 
@@ -167,8 +190,7 @@ public class SqBookmarkController extends BaseController
     @PutMapping
     public AjaxResult edit(@RequestBody SqBookmark sqBookmark)
     {
-        SysUser sysUser=getAuthUser();
-        sqBookmark.setUserid(sysUser.getUserId());
+        sqBookmark.setUserid(getAuthUser().getUserId());
         return toAjax(sqBookmarkService.updateSqBookmark(sqBookmark));
     }
 

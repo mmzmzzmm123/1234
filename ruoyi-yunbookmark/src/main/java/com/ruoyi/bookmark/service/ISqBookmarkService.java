@@ -120,4 +120,25 @@ public interface ISqBookmarkService
      * @return
      */
     void addALLBookMarkByHtml(List<HtmlName> list,Long userID);
+
+
+    /**
+     * 书签设置星标 取消星标
+     *
+     * @param bookmarkStr 0不是星标 1是星标
+     * @param bookmarkId
+     * @param userId
+     * @return
+     */
+    int updateBookmarkStarById(Long userId, String bookmarkId, int bookmarkStr);
+    /**
+     * 删除重复的书签
+     *
+     */
+    int bookmarkDeleteRepetition(Long userId);
+    /**
+     *获取所有重复的书签
+     *
+     * */
+    List<SqBookmark> bookmarkRepetition(Long userId);
 }

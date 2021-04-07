@@ -95,3 +95,121 @@ ul.ztree.zTreeDragUL {margin:0; padding:0; position:absolute; width:auto; height
 	padding:0;
 	background:none;
 }*/
+
+
+
+
+
+
+
+
+
+
+
+
+
+/*自定义美化*/
+
+.sayncIoc{
+  margin-top:-2px;
+  background:url(https://up.raindrop.io/collection/templates/social-media-logos-6/47social.png) 0 0 no-repeat;
+  background-position:center;
+  background-size:21px 21px;
+  border-radius: 50%;
+}
+.ztree li ul {
+  margin: 0;
+  padding: 0
+}
+
+.ztree li {
+  line-height: 32px
+}
+
+.ztree li a {
+  width: 200px;
+  height: 32px;
+  padding-top: 0px;
+  font-size: 14px;
+  width: 100%
+}
+
+.ztree li a:hover {
+  text-decoration: none;
+  background-color: #E5E5E5;
+}
+
+.ztree li a span.button.switch {
+  vertical-align: middle
+}
+
+.ztree.showIcon li a span.button.switch {
+  visibility: visible
+}
+
+.ztree li a.curSelectedNode {
+  background-color: #E5E5E5;
+  border: 0;
+  height: 32px;
+}
+
+.ztree li span {
+  line-height: 32px;
+}
+
+.ztree li span.button {
+  margin-top: 0px;
+  margin-left: 2px;
+  width: 20px;
+  height: 20px;
+}
+
+.ztree li span.button.switch {
+  width: 20px;
+  height: 20px;
+}
+
+/*.ztree li a.level0 span {font-size: 100%;font-weight: bold}*/
+.ztree li span.noline_open {
+  background-image: url("../ztree/bottom.png");
+}
+.ztree li span.ico_loading {
+  background-image: url("../ztree/loading.gif");
+  /*margin-right:2px; background:url(../ztree/loading.gif) no-repeat scroll 0 0 transparent; vertical-align:top; *vertical-align:middle*/
+}
+
+
+.ztree li span.button.switch.level0 {
+  width: 20px;
+  height: 20px
+}
+
+.ztree li span.button.switch.level1 {
+  width: 20px;
+  height: 20px
+}
+
+.ztree li span.button.noline_open {
+  background-position: 0 0;
+}
+
+.ztree li span.button.noline_close {
+  background-position: 0 0;
+  background-image: url("../ztree/right.png");
+}
+
+/*.ztree li span.button.noline_open.level0 {background-position: 0 0;}*/
+/*.ztree li span.button.noline_close.level0 {background-position:-18px 0;}*/
+
+
+.ztree li span.button.ico_close {
+  vertical-align: middle
+}
+
+.ztree li span.button.ico_open {
+  vertical-align: middle
+}
+
+.ztree li span.button.ico_docu {
+  vertical-align: middle
+}

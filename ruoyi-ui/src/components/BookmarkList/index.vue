@@ -42,7 +42,8 @@
 
       <!--编辑  -->
       <div class="editAllBookMark"  v-show="seen&&bm.bookmarkId==current">
-        <el-button type="info" plain size="mini" icon="el-icon-share" ></el-button>
+          <el-button type="info" style="color: #1112ff" plain size="mini" icon="el-icon-star-off" ></el-button>
+          <el-button type="info" plain size="mini" icon="el-icon-share" ></el-button>
           <el-button type="info" plain size="mini" icon="el-icon-edit" @click.stop="handleUpdate(bm.bookmarkId)"></el-button>
           <el-button type="danger" plain size="mini" icon="el-icon-delete" @click.stop="handleDelete(bm.bookmarkId)"></el-button>
 

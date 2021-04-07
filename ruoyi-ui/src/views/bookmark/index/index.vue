@@ -17,10 +17,13 @@
           </el-header>
 
           <div class="main-right">
+<!--            <svg-icon icon-class="tool" class="svgicon"/>-->
 
-            <div class="aside-title" @click="goBookmarkList"><i class="el-icon-s-tools"></i><span>最新书签</span></div>
-<!--            <div class="aside-title"><i class="el-icon-help"></i><span>发现</span></div>-->
-<!--            <div class="aside-title"><i class="el-icon-s-platform"></i><span>任意门</span></div>-->
+             <div class="aside-title"><i class="el-icon-s-management"></i><span>发现</span></div>
+            <div class="aside-title" @click="goBookmarkList"><i class="el-icon-s-tools"></i><span>最新</span></div>
+            <div class="aside-title"><i class="el-icon-star-on"></i><span>星标</span></div>
+            <div class="aside-title"><i class="el-icon-help"></i><span>稍后看</span></div>
+            <div class="aside-title"><i class="el-icon-s-platform"></i><span>任意门</span></div>
             <div class="aside-title"><i class="el-icon-message-solid"></i><span>收件箱</span></div>
             <div class="reminder">我的收藏 <svg-icon icon-class="sx" style="margin-left:5px" @click="refreshNode"/></div>
             <div class="areaTree">
@@ -998,7 +1001,7 @@
 
   }
 </script>
-<style >
+<style scoped>
 
 
   body {
@@ -1006,109 +1009,6 @@
     font-family: "Merriweather", "Open Sans", "Microsoft Jhenghei", "Microsoft Yahei", sans-serif;
   }
 
-.sayncIoc{
-  margin-top:-2px;
-  background:url(https://up.raindrop.io/collection/templates/social-media-logos-6/47social.png) 0 0 no-repeat;
-  background-position:center;
-  background-size:21px 21px;
-  border-radius: 50%;
-}
-  .ztree li ul {
-    margin: 0;
-    padding: 0
-  }
-
-  .ztree li {
-    line-height: 32px
-  }
-
-  .ztree li a {
-    width: 200px;
-    height: 32px;
-    padding-top: 0px;
-    font-size: 14px;
-    width: 100%
-  }
-
-  .ztree li a:hover {
-    text-decoration: none;
-    background-color: #E5E5E5;
-  }
-
-  .ztree li a span.button.switch {
-    vertical-align: middle
-  }
-
-  .ztree.showIcon li a span.button.switch {
-    visibility: visible
-  }
-
-  .ztree li a.curSelectedNode {
-    background-color: #E5E5E5;
-    border: 0;
-    height: 32px;
-  }
-
-  .ztree li span {
-    line-height: 32px;
-  }
-
-  .ztree li span.button {
-    margin-top: 0px;
-    margin-left: 2px;
-    width: 20px;
-    height: 20px;
-  }
-
-  .ztree li span.button.switch {
-    width: 20px;
-    height: 20px;
-  }
-
-  /*.ztree li a.level0 span {font-size: 100%;font-weight: bold}*/
-  .ztree li span.noline_open {
-    background-image: url("../ztree/bottom.png");
-  }
-  .ztree li span.ico_loading {
-    background-image: url("../ztree/loading.gif");
-    /*margin-right:2px; background:url(../ztree/loading.gif) no-repeat scroll 0 0 transparent; vertical-align:top; *vertical-align:middle*/
-  }
-
-
-  .ztree li span.button.switch.level0 {
-    width: 20px;
-    height: 20px
-  }
-
-  .ztree li span.button.switch.level1 {
-    width: 20px;
-    height: 20px
-  }
-
-  .ztree li span.button.noline_open {
-    background-position: 0 0;
-  }
-
-  .ztree li span.button.noline_close {
-    background-position: 0 0;
-    background-image: url("../ztree/right.png");
-  }
-
-  /*.ztree li span.button.noline_open.level0 {background-position: 0 0;}*/
-  /*.ztree li span.button.noline_close.level0 {background-position:-18px 0;}*/
-
-
-  .ztree li span.button.ico_close {
-    vertical-align: middle
-  }
-
-  .ztree li span.button.ico_open {
-    vertical-align: middle
-  }
-
-  .ztree li span.button.ico_docu {
-    vertical-align: middle
-  }
 
 
   .ztr {
@@ -1193,6 +1093,12 @@
   .aside-title i {
     margin-left: 26px;
     font-size: 20px;
+    margin-right: 11px;
+    vertical-align: middle;
+  }
+  .svgicon{
+    margin-left: 26px;
+    font-size: 18px;
     margin-right: 11px;
     vertical-align: middle;
   }
