@@ -27,6 +27,30 @@ public class WxLogInfo implements Serializable {
 
     private String defecation;
 
+    /** 情绪 */
+    private String emotion;
+
+    /** 食谱之外的食物 */
+    private String slyEatFood;
+
+    /** 是否便秘（Y是 N否） */
+    private String constipation;
+
+    /** 早餐照片 */
+    private String breakfastImages;
+
+    /** 午餐照片 */
+    private String lunchImages;
+
+    /** 午餐照片 */
+    private String dinnerImages;
+
+    /** 加餐照片 */
+    private String extraMealImages;
+
+    /** 体型对比照 */
+    private String bodyImages;
+
     public String getDate() {
         return date;
     }
@@ -99,7 +123,69 @@ public class WxLogInfo implements Serializable {
         this.sleepTime = sleepTime;
     }
 
+    public String getEmotion() {
+        return emotion;
+    }
 
+    public void setEmotion(String emotion) {
+        this.emotion = emotion;
+    }
+
+    public String getSlyEatFood() {
+        return slyEatFood;
+    }
+
+    public void setSlyEatFood(String slyEatFood) {
+        this.slyEatFood = slyEatFood;
+    }
+
+    public String getConstipation() {
+        return constipation;
+    }
+
+    public void setConstipation(String constipation) {
+        this.constipation = constipation == "Y" ? "是" : "否";
+    }
+
+    public String getBreakfastImages() {
+        return breakfastImages;
+    }
+
+    public void setBreakfastImages(String breakfastImages) {
+        this.breakfastImages = breakfastImages;
+    }
+
+    public String getLunchImages() {
+        return lunchImages;
+    }
+
+    public void setLunchImages(String lunchImages) {
+        this.lunchImages = lunchImages;
+    }
+
+    public String getDinnerImages() {
+        return dinnerImages;
+    }
+
+    public void setDinnerImages(String dinnerImages) {
+        this.dinnerImages = dinnerImages;
+    }
+
+    public String getExtraMealImages() {
+        return extraMealImages;
+    }
+
+    public void setExtraMealImages(String extraMealImages) {
+        this.extraMealImages = extraMealImages;
+    }
+
+    public String getBodyImages() {
+        return bodyImages;
+    }
+
+    public void setBodyImages(String bodyImages) {
+        this.bodyImages = bodyImages;
+    }
 
     @Override
     public String toString() {
