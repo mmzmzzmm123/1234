@@ -39,7 +39,10 @@
                 @click="handleOnMenuPasteClick"
                 >快捷替换</el-button
               >
-              <div v-else-if="curShortCutObj.type" style="margin-top: 8px">
+              <div
+                v-else-if="curShortCutObj && curShortCutObj.type"
+                style="margin-top: 8px"
+              >
                 <el-button
                   icon="el-icon-right"
                   size="mini"
@@ -56,7 +59,8 @@
               @click="handleOnResetCurrentDay"
               slot="reference"
             >
-              {{ `第${numDay}天` }}
+              <div class="cus_name_hide" :id="`cus_name_${num}`">{{ name }}</div>
+              <div>{{ `第${numDay}天` }}</div>
             </div>
           </el-popover>
         </template>
@@ -411,6 +415,13 @@ export default {
       }
       const mData = processMenuData(this.data.dishes);
       // console.log(mData);
+      // mData.forEach((obj, idx) =>
+      //   console.log({
+      //     num: this.num,
+      //     type: obj.type,
+      //     idx: idx + 1,
+      //   })
+      // );
 
       return mData;
     },
@@ -478,7 +489,9 @@ export default {
     },
     shouldPasteShow(type) {
       return (
-        this.curShortCutObj.type && this.curShortCutObj.type.includes(type)
+        this.curShortCutObj &&
+        this.curShortCutObj.type &&
+        this.curShortCutObj.type.includes(type)
       );
     },
     cellClassName({ row, column, rowIndex, columnIndex }) {
@@ -779,5 +792,9 @@ export default {
 .warning_heightlight {
   background: #d66969;
   color: blue;
+}
+
+.cus_name_hide {
+  display: none;
 }
 </style>

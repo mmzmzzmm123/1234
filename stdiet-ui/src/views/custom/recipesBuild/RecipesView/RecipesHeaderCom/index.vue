@@ -146,6 +146,7 @@ export default {
     },
     handleOnSave() {
       this.saveRecipes({
+        reviewStatus: 3, // 制作中
         callback: (query) => {
           // console.log(query);
           let path = "/recipes/build/" + query.name + "/" + query.planId;
@@ -175,6 +176,7 @@ export default {
           this.saveRecipes({
             cusId: 0,
             planId,
+            reviewStatus: 2, // 已审核
             callback: () => {
               this.$message.success(`另存为模板「${form.name}」成功`);
               this.loading = false;
@@ -227,6 +229,12 @@ export default {
           this.downloading = false;
           return;
         }
+        Array.from({ length: this.recipesData.length }).forEach((_, idx) => {
+          const tmpElm = document.getElementById(`cus_name_${idx}`);
+          if (tmpElm) {
+            tmpElm.classList = [];
+          }
+        });
         recipesDom.style.overflow = "visible";
         html2canvans(recipesDom, {
           scale: 1.5,
@@ -242,6 +250,13 @@ export default {
 
           centerContentDom.style.overflow = "auto";
           recipesDom.style.overflow = "auto";
+
+          Array.from({ length: this.recipesData.length }).forEach((_, idx) => {
+            const tmpElm = document.getElementById(`cus_name_${idx}`);
+            if (tmpElm) {
+              tmpElm.classList = ["cus_name_hide"];
+            }
+          });
 
           this.downloading = false;
           this.$message.success("食谱导出成功");
