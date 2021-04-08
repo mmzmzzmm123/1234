@@ -459,7 +459,7 @@ export const constantRoutes = [{
         component: Layout,
         hidden: true,
         children: [{
-            path: 'teacher/:id(\\d+)',
+            path: 'teacher',
             component: () =>
                 import ('@/views/benyi/dayflowassessment/teacher'),
             name: 'dayflowassessmentteacher',

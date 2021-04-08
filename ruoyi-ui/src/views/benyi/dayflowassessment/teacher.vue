@@ -34,18 +34,6 @@
             </el-select>
           </el-form-item>
         </el-col>
-        <el-col :xs="24" :ms="12" :md="5">
-          <el-form-item label="评估内容" prop="bzid">
-            <el-select v-model="form.bzid" placeholder="请选择评估内容">
-              <el-option
-                v-for="dict in detailOptions"
-                :key="dict.id"
-                :label="dict.name"
-                :value="dict.id"
-              ></el-option>
-            </el-select>
-          </el-form-item>
-        </el-col>
       </el-row>
     </el-form>
     <div class="mb8 btn-list">
@@ -60,38 +48,47 @@
       >
     </div>
     <el-tabs v-model="activeName" type="card">
-      <div
-        class="block"
-        v-for="itemTask in dayflowtaskList"
-        :key="itemTask.code"
+      <el-tab-pane
+        v-for="item in detailOptions"
+        :key="item.id"
+        :label="item.name"
+        :name="item.name"
       >
-        <h2 class="block-item-title flex align-center">
-          {{ itemTask.taskLable }}
-        </h2>
-
         <div
-          class="checkbox-content"
-          v-for="itemBz in dayflowstandardList.filter(
-            (p) => p.taskCode == itemTask.code
+          class="block"
+          v-for="itemTask in dayflowtaskList.filter(
+            (p) => p.detailId == item.id
           )"
-          :key="itemBz.id"
+          :key="itemTask.code"
         >
-          <p class="checkbox-item flex align-center">
-            <el-row v-model="checkList">
-              <div :label="itemBz.id" :key="itemBz.id"
-                >{{ itemBz.standardTitle }}分值: {{ itemBz.score }}分
-                <el-input-number
-                  v-model="num"
-                  :precision="1"
-                  :step="0.1"
-                  :min="-itemBz.score"
-                  :max="itemBz.score"
-                ></el-input-number
-              ></div>
-            </el-row>
-          </p>
+          <h2 class="block-item-title flex align-center">
+            {{ itemTask.taskLable }}
+          </h2>
+          <div
+            class="checkbox-content"
+            v-for="(itemBz, index) in dayflowstandardList.filter(
+              (p) => p.taskCode == itemTask.code
+            )"
+            :key="itemBz.id"
+          >
+            <div class="checkbox-item flex align-center justify-between" :class="{'line': index !== 0}">
+                <p class="left-info">
+                  {{ itemBz.standardTitle }}
+                </p>
+                <div class="right-number flex align-center justify-end">
+                  <span>分值: {{ itemBz.score }}分</span>
+                  <el-input-number
+                    class="number-input"
+                    v-model="itemBz.mrz"
+                    :precision="2"
+                    :step="0.1"
+                    :max="itemBz.score"
+                  ></el-input-number>
+                </div>
+            </div>
+          </div>
         </div>
-      </div>
+      </el-tab-pane>
     </el-tabs>
   </div>
 </template>
@@ -115,15 +112,8 @@ export default {
 
   data() {
     return {
-      num: 0,
-      dayflowassessmentId: null,
       // 遮罩层
       loading: true,
-      // 选中数组
-      ids: [],
-      // 评估内容表格数据
-      assessmentcontentList: [],
-
       // 根据一日流程id查到的名下任务列表
       dayflowtaskList: [],
       // 根据任务查询到名下标准
@@ -152,37 +142,27 @@ export default {
         scope: undefined,
         sort: undefined,
       },
-      activeName: "一日流程评估",
-      checked: false,
-      checkList: [],
-      // 表单参数
-      form: {},
+      activeName: "早间接待",
       // 表单校验
       rules: {
         classid: [{ required: true, message: "班级不能为空", trigger: "blur" }],
         pgdx: [
           { required: true, message: "评估对象不能为空", trigger: "blur" },
         ],
-        bzid: [
-          { required: true, message: "评估内容不能为空", trigger: "blur" },
-        ],
       },
     };
   },
   created() {
-    // this.getList();
-    const dayflowassessmentId = this.$route.params && this.$route.params.id;
-    // this.dayflowassessmentId = dayflowassessmentId;
     this.getClassList();
     this.getDayFlowList();
+    this.getTaskList();
   },
   watch: {
     "form.classid": function (val) {
       this.getUserListByBjbh(val);
+      this.getTaskList();
     },
-    "form.bzid": function (val) {
-      this.dayflowassessmentId = val;
-      this.queryParams_detail.detailId = val;
+    "form.pgdx": function (val) {
       this.getTaskList();
     },
   },
@@ -219,7 +199,7 @@ export default {
     },
     /** 查询一日流程任务列表 */
     getTaskList() {
-      listDayflowtask(this.queryParams_detail).then((response) => {
+      listDayflowtask(null).then((response) => {
         this.dayflowtaskList = response.rows;
       });
       listStandard(null).then((response) => {
@@ -257,43 +237,11 @@ export default {
     },
     /** 提交按钮 */
     submitForm: function () {
-      this.$confirm("确认评估数据?评估后数据不能取消", "警告", {
-        confirmButtonText: "确定",
-        cancelButtonText: "取消",
-        type: "warning",
-        callback: (action) => {
-          if (action === "confirm") {
-            var items = "";
-            this.checkList.forEach((item) => {
-              //当全选被选中的时候，循环遍历源数据，把数据的每一项加入到默认选中的数组去
-              items = items + item + ",";
-            });
-            if (this.checkList.length == 0) {
-              this.msgError("请至少选择一项数据");
-            } else {
-              this.form.id = this.dayflowassessmentId;
-              // this.form.classid = this.classid;
-              this.form.items = items;
-              this.form.pgdx = this.teacherName;
-              this.form.bzbh = this.zbjsxm;
-              this.form.planid = this.planid;
-              this.form.kfz = this.kfz;
-              this.form.bzmf = this.bzmf;
-              updateDayflowassessment(this.form).then((response) => {
-                if (response.code === 200) {
-                  this.msgSuccess("评估成功");
-                  this.$router.go(-1);
-                  this.$store.dispatch("tagsView/delView", this.$route);
-                  // this.$router.push({
-                  //   path:
-                  //     "/benyi/dayflowassessment",
-                  // });
-                }
-              });
-            }
-          } else {
-          }
-        },
+      console.log(this.dayflowstandardList);
+      this.$refs["form"].validate((valid) => {
+        if (valid) {
+          
+        }
       });
     },
   },
@@ -324,9 +272,14 @@ div {
     // }
   }
 }
+.number-input {
+  width: 120px;
+}
+
 .block {
   padding: 10px;
   color: #333;
+  
   .block-item-title {
     padding: 10px 0;
     margin: 0;
@@ -340,7 +293,19 @@ div {
       background: #1890ff;
     }
   }
-
+  .checkbox-item {
+    padding: 6px 0;
+    &.line {
+      border-top: 1px solid #dadada;
+    }
+    .left-info {
+      line-height: 22px;
+    }
+    .right-number {
+      flex: 0 0 205px;
+    }
+  }
+  
   .block-content {
     border-radius: 5px;
     padding: 10px;
@@ -361,6 +326,7 @@ div {
     .checkbox-item {
       font-size: 14px;
       line-height: 22px;
+      
     }
     .check-info {
       padding-left: 24px;

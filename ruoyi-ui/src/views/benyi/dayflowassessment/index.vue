@@ -445,7 +445,7 @@ export default {
       this.$router.push({ path: "/benyi/dayflowassessment/teacher/" + id });
     },
     handleAdd() {
-      this.$router.push({ path: "/benyi/dayflowassessment/teacher/0"});
+      this.$router.push({ path: "/benyi/dayflowassessment/teacher"});
     },
     /** 修改按钮操作 */
     handleUpdate(row) {

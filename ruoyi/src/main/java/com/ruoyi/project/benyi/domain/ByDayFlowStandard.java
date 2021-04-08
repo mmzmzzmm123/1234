@@ -74,6 +74,8 @@ public class ByDayFlowStandard extends BaseEntity {
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date updatetime;
 
+    private String mrz;
+
     public void setId(Long id) {
         this.id = id;
     }
@@ -146,6 +148,14 @@ public class ByDayFlowStandard extends BaseEntity {
         this.updatetime = updatetime;
     }
 
+    public String getMrz() {
+        return mrz;
+    }
+
+    public void setMrz(String mrz) {
+        this.mrz = mrz;
+    }
+
     @Override
     public String toString() {
         return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE)
@@ -159,6 +169,7 @@ public class ByDayFlowStandard extends BaseEntity {
                 .append("updateuser", getUpdateuser())
                 .append("updatetime", getUpdatetime())
                 .append("score", getScore())
+                .append("mrz", getMrz())
                 .toString();
     }
 
