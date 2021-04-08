@@ -4,8 +4,11 @@ import com.itextpdf.io.util.DateTimeUtil;
 import com.stdiet.common.core.controller.BaseController;
 import com.stdiet.common.core.domain.AjaxResult;
 import com.stdiet.common.core.page.TableDataInfo;
+import com.stdiet.common.exception.file.FileNameLengthLimitExceededException;
 import com.stdiet.common.utils.DateUtils;
 import com.stdiet.common.utils.StringUtils;
+import com.stdiet.common.utils.file.FileUploadUtils;
+import com.stdiet.common.utils.file.MimeTypeUtils;
 import com.stdiet.common.utils.oss.AliyunOSSUtils;
 import com.stdiet.common.utils.sign.AesUtils;
 import com.stdiet.custom.domain.*;
@@ -16,7 +19,9 @@ import com.stdiet.custom.service.ISysOrderService;
 import com.stdiet.custom.service.ISysWxUserInfoService;
 import com.stdiet.custom.service.ISysWxUserLogService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
@@ -176,6 +181,36 @@ public class WechatAppletController extends BaseController {
     private void dealIdEnc(List<CustomerCaseResponse> list){
         for (CustomerCaseResponse cus : list) {
             cus.setId(AesUtils.encrypt(cus.getId()+"", null));
+        }
+    }
+
+    /**
+     * 上传文件到OSS返回URL
+     */
+    @PostMapping(value = "/uploadFile/{prefix}")
+    public AjaxResult uploadFile(@RequestParam("file") MultipartFile file, @PathVariable String prefix) throws Exception {
+        try {
+            if (file == null) {
+                return AjaxResult.error("文件不存在");
+            }
+            int fileNameLength = file.getOriginalFilename().length();
+            if (fileNameLength > FileUploadUtils.DEFAULT_FILE_NAME_LENGTH) {
+                throw new FileNameLengthLimitExceededException(FileUploadUtils.DEFAULT_FILE_NAME_LENGTH);
+            }
+            FileUploadUtils.assertAllowed(file, MimeTypeUtils.DEFAULT_ALLOWED_EXTENSION);
+
+            String fileUrl = AliyunOSSUtils.uploadFileInputSteam(prefix + '/', DateUtils.getDate() + "/" + file.getOriginalFilename(), file);
+
+            AjaxResult ajax = null;
+            if (StringUtils.isNotEmpty(fileUrl)) {
+                ajax = AjaxResult.success();
+                ajax.put("fileUrl", fileUrl);
+            } else {
+                ajax = AjaxResult.error("文件上传失败");
+            }
+            return ajax;
+        } catch (Exception e) {
+            return AjaxResult.error("文件上传失败");
         }
     }
 }

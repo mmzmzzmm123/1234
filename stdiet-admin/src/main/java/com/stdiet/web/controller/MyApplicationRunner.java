@@ -28,8 +28,16 @@ public class MyApplicationRunner implements ApplicationRunner {
 
     @Override
     public void run(ApplicationArguments args) throws Exception {
-        /*System.out.println("项目启动调用方法");
-        List<String> phoneList = sysWxUserLogMapper.getAllSysWxUserLogPhone();
+        System.out.println("项目启动调用方法");
+    }
+
+
+
+    /**
+     * 从微信用户表中查询openid更新到用户打卡日志表中
+     */
+    public void dealWxUserLog(){
+        /*List<String> phoneList = sysWxUserLogMapper.getAllSysWxUserLogPhone();
         SysWxUserLog sysWxUserLog = new SysWxUserLog();
         if(phoneList.size() > 0){
             for (String phone : phoneList) {
@@ -44,6 +52,5 @@ public class MyApplicationRunner implements ApplicationRunner {
                 }
             }
         }*/
-
     }
 }

@@ -2,6 +2,7 @@ package com.stdiet.custom.service.impl;
 
 import java.util.List;
 import com.stdiet.common.utils.DateUtils;
+import com.stdiet.common.utils.SecurityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.stdiet.custom.mapper.SysOrderNutritionistReplaceRecordMapper;
@@ -54,6 +55,7 @@ public class SysOrderNutritionistReplaceRecordServiceImpl implements ISysOrderNu
     public int insertSysOrderNutritionistReplaceRecord(SysOrderNutritionistReplaceRecord sysOrderNutritionistReplaceRecord)
     {
         sysOrderNutritionistReplaceRecord.setCreateTime(DateUtils.getNowDate());
+        sysOrderNutritionistReplaceRecord.setCreateBy(SecurityUtils.getLoginUser().getUser().getUserId()+"");
         return sysOrderNutritionistReplaceRecordMapper.insertSysOrderNutritionistReplaceRecord(sysOrderNutritionistReplaceRecord);
     }
 
@@ -67,6 +69,7 @@ public class SysOrderNutritionistReplaceRecordServiceImpl implements ISysOrderNu
     public int updateSysOrderNutritionistReplaceRecord(SysOrderNutritionistReplaceRecord sysOrderNutritionistReplaceRecord)
     {
         sysOrderNutritionistReplaceRecord.setUpdateTime(DateUtils.getNowDate());
+        sysOrderNutritionistReplaceRecord.setUpdateBy(SecurityUtils.getLoginUser().getUser().getUserId()+"");
         return sysOrderNutritionistReplaceRecordMapper.updateSysOrderNutritionistReplaceRecord(sysOrderNutritionistReplaceRecord);
     }
 

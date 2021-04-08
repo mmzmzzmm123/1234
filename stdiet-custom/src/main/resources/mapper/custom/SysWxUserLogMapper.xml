@@ -25,6 +25,14 @@
         <result property="updateBy" column="update_by"/>
         <result property="updateTime" column="update_time"/>
         <result property="remark" column="remark"/>
+        <result property="emotion"    column="emotion"    />
+        <result property="slyEatFood"    column="sly_eat_food"    />
+        <result property="constipation"    column="constipation"    />
+        <result property="breakfastImages"    column="breakfast_images"    />
+        <result property="lunchImages"    column="lunch_images"    />
+        <result property="dinnerImages"    column="dinner_images"    />
+        <result property="extraMealImages"    column="extra_meal_images"    />
+        <result property="bodyImages"    column="body_images"    />
         <!-- 非持久字段 -->
         <result property="customerName" column="customer_name"></result>
         <!-- 营养师 -->
@@ -41,10 +49,20 @@
         <result property="defecation" column="defecation"/>
         <result property="water" column="water"/>
         <result property="date" column="log_time"/>
+        <result property="emotion"    column="emotion"    />
+        <result property="slyEatFood"    column="sly_eat_food"    />
+        <result property="constipation"    column="constipation"    />
+        <result property="breakfastImages"    column="breakfast_images"    />
+        <result property="lunchImages"    column="lunch_images"    />
+        <result property="dinnerImages"    column="dinner_images"    />
+        <result property="extraMealImages"    column="extra_meal_images"    />
+        <result property="bodyImages"    column="body_images"    />
     </resultMap>
 
     <sql id="selectSysWxUserLogVo">
-        select id,openid, weight, appid, phone, log_time, sleep_time, wakeup_time, sport, avatar_url, diet, insomnia, defecation, water, create_by, create_time, update_by, update_time, remark from sys_wx_user_log
+        select id,openid, weight, appid, phone, log_time, sleep_time, wakeup_time, sport, avatar_url, diet, insomnia, defecation, water, create_by, create_time, update_by, update_time, remark,
+         emotion,sly_eat_food,constipation,breakfast_images,lunch_images,dinner_images,extra_meal_images,body_images
+         from sys_wx_user_log
     </sql>
 
     <select id="checkWxLogInfoCount" parameterType="String" resultType="Integer">
@@ -112,6 +130,14 @@
             <if test="updateBy != null">update_by,</if>
             <if test="updateTime != null">update_time,</if>
             <if test="remark != null">remark,</if>
+            <if test="emotion != null">emotion,</if>
+            <if test="slyEatFood != null">sly_eat_food,</if>
+            <if test="constipation != null">constipation,</if>
+            <if test="breakfastImages != null">breakfast_images,</if>
+            <if test="lunchImages != null">lunch_images,</if>
+            <if test="dinnerImages != null">dinner_images,</if>
+            <if test="extraMealImages != null">extra_meal_images,</if>
+            <if test="bodyImages != null">body_images,</if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="openid != null">#{openid},</if>
@@ -132,6 +158,14 @@
             <if test="updateBy != null">#{updateBy},</if>
             <if test="updateTime != null">#{updateTime},</if>
             <if test="remark != null">#{remark},</if>
+            <if test="emotion != null">#{emotion},</if>
+            <if test="slyEatFood != null">#{slyEatFood},</if>
+            <if test="constipation != null">#{constipation},</if>
+            <if test="breakfastImages != null">#{breakfastImages},</if>
+            <if test="lunchImages != null">#{lunchImages},</if>
+            <if test="dinnerImages != null">#{dinnerImages},</if>
+            <if test="extraMealImages != null">#{extraMealImages},</if>
+            <if test="bodyImages != null">#{bodyImages},</if>
         </trim>
     </insert>
 
@@ -156,6 +190,14 @@
             <if test="updateBy != null">update_by = #{updateBy},</if>
             <if test="updateTime != null">update_time = #{updateTime},</if>
             <if test="remark != null">remark = #{remark},</if>
+            <if test="emotion != null">emotion = #{emotion},</if>
+            <if test="slyEatFood != null">sly_eat_food = #{slyEatFood},</if>
+            <if test="constipation != null">constipation = #{constipation},</if>
+            <if test="breakfastImages != null">breakfast_images = #{breakfastImages},</if>
+            <if test="lunchImages != null">lunch_images = #{lunchImages},</if>
+            <if test="dinnerImages != null">dinner_images = #{dinnerImages},</if>
+            <if test="extraMealImages != null">extra_meal_images = #{extraMealImages},</if>
+            <if test="bodyImages != null">body_images = #{bodyImages},</if>
         </trim>
         where id = #{id}
     </update>
@@ -173,7 +215,8 @@
 
     <!-- 根据openid和手机号查询对应打卡记录 -->
     <select id="getWxLogInfoList" parameterType="SysWxUserLog" resultMap="WxLogInfo">
-        SELECT wxlog.weight,wxlog.log_time,wxlog.sleep_time, wxlog.wakeup_time,wxlog.defecation, wxlog.water, wxlog.insomnia,wxlog.sport,wxlog.diet
+        SELECT wxlog.weight,wxlog.log_time,wxlog.sleep_time, wxlog.wakeup_time,wxlog.defecation, wxlog.water, wxlog.insomnia,wxlog.sport,wxlog.diet,
+        wxlog.emotion,wxlog.sly_eat_food,wxlog.constipation,wxlog.breakfast_images,wxlog.lunch_images,wxlog.dinner_images,wxlog.extra_meal_images,wxlog.body_images
         FROM sys_wx_user_log wxlog left join sys_wx_user_info wxinfo on wxinfo.openid  = wxlog.openid
         where wxinfo.openid = #{openid} or wxinfo.phone = #{phone}
         order by wxlog.log_time desc

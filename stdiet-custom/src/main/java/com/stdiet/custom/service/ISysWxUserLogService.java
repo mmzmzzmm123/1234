@@ -5,6 +5,7 @@ import java.util.List;
 import com.stdiet.custom.domain.SysWxUserInfo;
 import com.stdiet.custom.domain.SysWxUserLog;
 import com.stdiet.custom.page.WxLogInfo;
+import org.springframework.web.multipart.MultipartFile;
 
 /**
  * 微信用户记录Service接口
@@ -78,5 +79,12 @@ public interface ISysWxUserLogService
      * @return
      */
     SysWxUserLog selectSysWxUserLogByDateAndOpenId(SysWxUserLog sysWxUserLog);
+
+    /**
+     * 上传打卡日志中照片
+     * @param sysWxUserLog
+     * @return
+     */
+    SysWxUserLog uploadLogImage(SysWxUserLog sysWxUserLog);
 
 }

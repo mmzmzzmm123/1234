@@ -2,7 +2,12 @@ package com.stdiet.custom.service.impl;
 
 import java.util.List;
 
+import com.stdiet.common.config.AliyunOSSConfig;
+import com.stdiet.common.exception.file.FileNameLengthLimitExceededException;
 import com.stdiet.common.utils.DateUtils;
+import com.stdiet.common.utils.file.FileUploadUtils;
+import com.stdiet.common.utils.file.MimeTypeUtils;
+import com.stdiet.common.utils.oss.AliyunOSSUtils;
 import com.stdiet.custom.domain.SysWxUserInfo;
 import com.stdiet.custom.page.WxLogInfo;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +15,7 @@ import org.springframework.stereotype.Service;
 import com.stdiet.custom.mapper.SysWxUserLogMapper;
 import com.stdiet.custom.domain.SysWxUserLog;
 import com.stdiet.custom.service.ISysWxUserLogService;
+import org.springframework.web.multipart.MultipartFile;
 
 /**
  * 微信用户记录Service业务层处理

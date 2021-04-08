@@ -8,6 +8,7 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import com.stdiet.common.annotation.Excel;
 import com.stdiet.common.core.domain.BaseEntity;
+import org.springframework.web.multipart.MultipartFile;
 
 /**
  * 微信用户记录对象 sys_wx_user_log
@@ -86,4 +87,36 @@ public class SysWxUserLog extends BaseEntity
      */
     @Excel(name = "营养师")
     private String nutritionist;
+
+    /** 情绪 */
+    @Excel(name = "情绪")
+    private String emotion;
+
+    /** 食谱之外的食物 */
+    @Excel(name = "食谱之外的食物")
+    private String slyEatFood;
+
+    /** 是否便秘（Y是 N否） */
+    @Excel(name = "是否便秘", readConverterExp = "Y=是,N=否")
+    private String constipation;
+
+    /** 早餐照片 */
+    @Excel(name = "早餐照片")
+    private String breakfastImages;
+
+    /** 午餐照片 */
+    @Excel(name = "午餐照片")
+    private String lunchImages;
+
+    /** 午餐照片 */
+    @Excel(name = "午餐照片")
+    private String dinnerImages;
+
+    /** 加餐照片 */
+    @Excel(name = "加餐照片")
+    private String extraMealImages;
+
+    /** 体型对比照 */
+    @Excel(name = "体型对比照")
+    private String bodyImages;
 }
