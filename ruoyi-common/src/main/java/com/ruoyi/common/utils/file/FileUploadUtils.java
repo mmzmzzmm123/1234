@@ -1,8 +1,10 @@
 package com.ruoyi.common.utils.file;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import org.apache.commons.io.FilenameUtils;
+import org.apache.commons.io.IOUtils;
 import org.springframework.web.multipart.MultipartFile;
 import com.ruoyi.common.config.RuoYiConfig;
 import com.ruoyi.common.constant.Constants;
@@ -111,7 +113,7 @@ public class FileUploadUtils
         String fileName = extractFilename(file);
 
         File desc = getAbsoluteFile(baseDir, fileName);
-        file.transferTo(desc);
+        IOUtils.copy(file.getInputStream(), new FileOutputStream(desc));
         String pathFileName = getPathFileName(baseDir, fileName);
         return pathFileName;
     }
