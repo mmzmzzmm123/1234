@@ -80,11 +80,4 @@ public interface ISysWxUserLogService
      */
     SysWxUserLog selectSysWxUserLogByDateAndOpenId(SysWxUserLog sysWxUserLog);
 
-    /**
-     * 上传打卡日志中照片
-     * @param sysWxUserLog
-     * @return
-     */
-    SysWxUserLog uploadLogImage(SysWxUserLog sysWxUserLog);
-
 }
