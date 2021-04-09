@@ -16,10 +16,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 public class AliyunOSSUtils {
 
@@ -272,6 +269,34 @@ public class AliyunOSSUtils {
         ossClient.shutdown();
 
         return downUrlList;
+    }
+
+    /**
+     *
+     * @param fileUrlList
+     * @return
+     */
+    public static Map<String, List<String>> generatePresignedUrl(Map<String, List<String>> fileUrlList){
+        Map<String, List<String>> downUrlMap = new HashMap<>();
+
+        // 创建OSSClient实例。
+        OSS ossClient = getOssClient();
+
+        Date expiration = new Date(System.currentTimeMillis() + expire);
+
+        for (String key : fileUrlList.keySet()) {
+            List<String> urlList = fileUrlList.get(key);
+            List<String> downList = new ArrayList<>();
+            for (String fileUrl : urlList) {
+                downList.add(ossClient.generatePresignedUrl(AliyunOSSConfig.Buckets, getObjectName(fileUrl), expiration).toString());
+            }
+            downUrlMap.put(key, downList);
+        }
+
+        // 关闭OSSClient。
+        ossClient.shutdown();
+
+        return downUrlMap;
     }
 
     /**

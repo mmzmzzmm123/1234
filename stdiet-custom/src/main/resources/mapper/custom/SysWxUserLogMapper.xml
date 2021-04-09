@@ -37,6 +37,7 @@
         <result property="customerName" column="customer_name"></result>
         <!-- 营养师 -->
         <result property="nutritionist" column="nutritionist"></result>
+        <result property="afterNutritionist" column="after_nutritionist"></result>
     </resultMap>
 
     <resultMap type="com.stdiet.custom.page.WxLogInfo" id="WxLogInfo">
@@ -72,18 +73,26 @@
     <!-- 后台查询 -->
     <select id="selectSysWxUserLogList" parameterType="SysWxUserLog" resultMap="SysWxUserLogResult">
         SELECT wxlog.id,wxinfo.appid,wxinfo.openid,wxinfo.avatar_url,wxinfo.phone,wxlog.weight,wxlog.log_time,wxlog.sleep_time, wxlog.wakeup_time,wxlog.defecation, wxlog.water, wxlog.insomnia,wxlog.sport,wxlog.diet,wxlog.remark,
-        sc.name as customer_name, su.nick_name as nutritionist
+        wxlog.emotion,wxlog.sly_eat_food,wxlog.constipation,wxlog.breakfast_images,wxlog.lunch_images,wxlog.dinner_images,wxlog.extra_meal_images,wxlog.body_images,
+        sc.name as customer_name, su.nick_name as nutritionist, su_atferSale.nick_name as after_nutritionist
         FROM sys_wx_user_log wxlog
         left join sys_wx_user_info wxinfo on wxinfo.openid  = wxlog.openid
         left join sys_customer sc on sc.phone = wxinfo.phone and sc.del_flag = 0
         left join sys_user su on su.user_id = sc.main_dietitian and su.del_flag = '0'
+        left join sys_user su_atferSale on su_atferSale.user_id = sc.after_dietitian and su_atferSale.del_flag = '0'
         where wxinfo.phone is not null
+        <if test="id != null">
+            and wxlog.id = #{id}
+        </if>
         <if test="phone != null and phone != ''">and (sc.name like concat('%',#{phone},'%') or wxinfo.phone like  concat('%',#{phone},'%') )</if>
         <if test="appid != null">
             and wxinfo.appid = #{appid}
         </if>
         <if test="nutritionistId != null">
             and su.user_id = #{nutritionistId}
+        </if>
+        <if test="afterNutritionistId != null">
+            and su_atferSale.user_id = #{afterNutritionistId}
         </if>
         order by wxlog.create_time desc
     </select>

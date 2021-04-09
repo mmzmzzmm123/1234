@@ -7,7 +7,7 @@
       v-show="showSearch"
       label-width="68px"
     >
-      <el-form-item label="微信应用" prop="appid">
+      <!--<el-form-item label="微信应用" prop="appid">
         <el-select
           v-model="queryParams.appid"
           placeholder="请选择微信应用"
@@ -21,7 +21,7 @@
             :value="dict.dictValue"
           />
         </el-select>
-      </el-form-item>
+      </el-form-item>-->
       <el-form-item label="客户信息" prop="phone">
         <el-input
           v-model="queryParams.phone"
@@ -41,6 +41,17 @@
           />
         </el-select>
       </el-form-item>
+      <el-form-item label="售后" prop="afterNutritionistId">
+        <el-select v-model="queryParams.afterNutritionistId" clearable filterable placeholder="请选择">
+          <el-option
+            v-for="dict in afterSaleIdOptions.slice(1)"
+            :key="dict.dictValue"
+            :label="dict.dictLabel"
+            :value="parseInt(dict.dictValue)" 
+          />
+        </el-select>
+      </el-form-item>
+      
       <el-form-item>
         <el-button
           type="cyan"
@@ -109,32 +120,16 @@
       :data="wxUserLogList"
       @selection-change="handleSelectionChange"
     >
-      <el-table-column label="用户头像" align="center" prop="avatarUrl">
+      <!--<el-table-column label="用户头像" align="center" prop="avatarUrl">
         <template slot-scope="scope">
           <el-image
             :src="scope.row.avatarUrl"
             style="width: 32px; height: 32px; border-radius: 50%"
           />
         </template>
-      </el-table-column>
+      </el-table-column>-->
       <!--      <el-table-column type="selection" width="55" align="center" />-->
       <!--      <el-table-column label="微信openid" align="center" prop="openid" />-->
-      <el-table-column label="当天体重" align="center" prop="weight">
-        <template slot-scope="scope">
-          <span>{{ `${scope.row.weight} 斤` }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column
-        label="微信应用"
-        align="center"
-        prop="appid"
-        width="120"
-        :formatter="appidFormat"
-      />
-      <el-table-column label="姓名" align="center" prop="customerName" />
-
-      <el-table-column label="手机号" align="center" prop="phone" width="180" />
-      <el-table-column label="营养师" align="center" prop="nutritionist" />
       <el-table-column
         label="打卡日期"
         align="center"
@@ -145,15 +140,31 @@
           <span>{{ parseTime(scope.row.logTime, "{y}-{m}-{d}") }}</span>
         </template>
       </el-table-column>
+      <el-table-column label="姓名" align="center" prop="customerName" />
+      <el-table-column label="当天体重" align="center" prop="weight">
+        <template slot-scope="scope">
+          <span>{{ `${scope.row.weight} 斤` }}</span>
+        </template>
+      </el-table-column>
+      <!--<el-table-column
+        label="微信应用"
+        align="center"
+        prop="appid"
+        width="120"
+        :formatter="appidFormat"
+      />-->
+      
+      <!--<el-table-column label="手机号" align="center" prop="phone" width="180" />-->
+      <el-table-column label="营养师" align="center" prop="nutritionist" />
+      <el-table-column label="售后" align="center" prop="afterNutritionist" />
+      
+      
       <el-table-column
         label="睡觉时间"
         align="center"
         prop="sleepTime"
         width="120"
       >
-        <!--                <template slot-scope="scope">-->
-        <!--                  <span>{{ parseTime(scope.row.sleepTime, '{y}-{m}-{d}') }}</span>-->
-        <!--                </template>-->
       </el-table-column>
       <el-table-column
         label="起床时间"
@@ -161,9 +172,6 @@
         prop="wakeupTime"
         width="120"
       >
-        <!--        <template slot-scope="scope">-->
-        <!--          <span>{{ parseTime(scope.row.wakeupTime, '{y}-{m}-{d}') }}</span>-->
-        <!--        </template>-->
       </el-table-column>
       <el-table-column
         label="运动锻炼"
@@ -172,11 +180,32 @@
         :formatter="sportFormat"
       />
       <el-table-column
+        label="情绪"
+        align="center"
+        prop="emotion"
+        width="160"
+      >
+      <template slot-scope="scope">
+          <AutoHideMessage :maxLength="4" :data="scope.row.emotion"></AutoHideMessage>
+      </template>
+      </el-table-column>
+
+      <el-table-column
         label="按食谱"
         align="center"
         prop="diet"
         :formatter="dietFormat"
       />
+      <el-table-column
+        label="其他食物"
+        align="center"
+        prop="slyEatFood"
+         width="160"
+      >
+      <template slot-scope="scope">
+          <AutoHideMessage :maxLength="4" :data="scope.row.slyEatFood"></AutoHideMessage>
+      </template>
+      </el-table-column>
       <el-table-column
         label="熬夜失眠"
         align="center"
@@ -188,6 +217,12 @@
         align="center"
         prop="defecation"
         :formatter="defecationFormat"
+      />
+      <el-table-column
+        label="便秘"
+        align="center"
+        prop="constipation"
+        :formatter="constipationFormat"
       />
       <el-table-column label="饮水量" align="center" prop="water">
         <template slot-scope="scope">
@@ -203,11 +238,18 @@
           <el-button
             size="mini"
             type="text"
+            @click="showPunchLogDetail(scope.row)"
+            v-hasPermi="['custom:wxUserLog:query']"
+            >详情
+          </el-button>
+          <!--<el-button
+            size="mini"
+            type="text"
             icon="el-icon-edit"
             @click="handleUpdate(scope.row)"
             v-hasPermi="['custom:wxUserLog:edit']"
             >修改
-          </el-button>
+          </el-button>-->
           <el-button
             size="mini"
             type="text"
@@ -357,6 +399,8 @@
         <el-button @click="cancel">取 消</el-button>
       </div>
     </el-dialog>
+
+    <PunchLogDetail ref="punchLogDetailRef"></PunchLogDetail>
   </div>
 </template>
 
@@ -370,7 +414,8 @@ import {
   updateWxUserLog,
 } from "@/api/custom/wxUserLog";
 import { mapGetters } from "vuex";
-
+import PunchLogDetail from "@/components/PunchLog/PunchLogDetail";
+import AutoHideMessage from "@/components/AutoHideMessage";
 export default {
   name: "WxUserLog",
   data() {
@@ -409,7 +454,8 @@ export default {
         pageSize: 10,
         appid: null,
         phone: null,
-        nutritionistId: null
+        nutritionistId: null,
+        afterNutritionistId: null
       },
       // 表单参数
       form: {},
@@ -421,6 +467,9 @@ export default {
         },
       },
     };
+  },
+  components:{
+    PunchLogDetail,AutoHideMessage
   },
   created() {
     this.getList();
@@ -477,6 +526,10 @@ export default {
     // 排便情况字典翻译
     defecationFormat(row, column) {
       return this.selectDictLabel(this.defecationOptions, row.defecation);
+    },
+    // 便秘情况字典翻译
+    constipationFormat(row, column) {
+      return this.selectDictLabel(this.defecationOptions, row.constipation);
     },
     // 取消按钮
     cancel() {
@@ -589,6 +642,9 @@ export default {
           this.msgSuccess("删除成功");
         })
         .catch(function () {});
+    },
+    showPunchLogDetail(data){
+        this.$refs.punchLogDetailRef.showDialog(data);
     },
     /** 导出按钮操作 */
     handleExport() {

@@ -36,9 +36,9 @@ export function updateWxUserLog(data) {
 }
 
 // 删除微信用户记录
-export function delWxUserLog(openid) {
+export function delWxUserLog(id) {
   return request({
-    url: '/custom/wxUserLog/' + openid,
+    url: '/custom/wxUserLog/' + id,
     method: 'delete'
   })
 }
@@ -49,5 +49,14 @@ export function exportWxUserLog(query) {
     url: '/custom/wxUserLog/export',
     method: 'get',
     params: query
+  })
+}
+
+// 根据ID查询打卡日志详情
+export function getPunchLogDetail(id) {
+  return request({
+    url: '/custom/wxUserLog/getPunchLogDetail/' + id,
+    method: 'get',
+    params: {}
   })
 }

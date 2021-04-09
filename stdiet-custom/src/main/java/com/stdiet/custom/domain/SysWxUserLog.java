@@ -2,13 +2,13 @@ package com.stdiet.custom.domain;
 
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.List;
+import java.util.Map;
+
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
-import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
 import com.stdiet.common.annotation.Excel;
 import com.stdiet.common.core.domain.BaseEntity;
-import org.springframework.web.multipart.MultipartFile;
 
 /**
  * 微信用户记录对象 sys_wx_user_log
@@ -119,4 +119,14 @@ public class SysWxUserLog extends BaseEntity
     /** 体型对比照 */
     @Excel(name = "体型对比照")
     private String bodyImages;
+
+    //售后营养师ID
+    private Long afterNutritionistId;
+
+    //售后营养师
+    @Excel(name = "售后营养师")
+    private String afterNutritionist;
+
+    //图片预览路径
+    private Map<String, List<String>> imagesUrl;
 }
