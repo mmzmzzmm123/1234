@@ -9,6 +9,15 @@ export function listStandard(query) {
     })
 }
 
+// 查询一日流程标准列表
+export function listStandardAssessment(query) {
+    return request({
+        url: '/benyi/dayflow/biaozhun/standard/listassessment',
+        method: 'get',
+        params: query
+    })
+}
+
 // 查询一日流程标准详细
 export function getStandard(sid) {
     return request({

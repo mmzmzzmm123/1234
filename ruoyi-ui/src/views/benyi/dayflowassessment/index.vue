@@ -319,7 +319,7 @@ export default {
     },
     handleAssessment(row) {
       const id = row.id;
-      this.$router.push({ path: "/benyi/dayflowassessment/teacher/" + id });
+      this.$router.push({ path: "/benyi/dayflowassessments/details/" + id });
     },
     handleAdd() {
       this.$router.push({ path: "/benyi/dayflowassessment/teacher" });

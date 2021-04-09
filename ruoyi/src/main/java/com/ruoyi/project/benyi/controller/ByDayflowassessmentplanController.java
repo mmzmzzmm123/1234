@@ -100,76 +100,8 @@ public class ByDayflowassessmentplanController extends BaseController {
         byDayflowassessmentplan.setDeptId(SecurityUtils.getLoginUser().getUser().getDeptId());
         byDayflowassessmentplan.setCreateUserid(SecurityUtils.getLoginUser().getUser().getUserId());
         byDayflowassessmentplan.setName(byClassService.selectByClassById(classId).getBjmc() + "-" + sysDictDataService.selectDictLabel(dict_type, dict_value) + "-" + byDayFlowDetailService.selectByDayFlowDetailById(connentId).getName() + "-" + "评估计划");
-        if (byClassService.selectByClassById(classId).getZbjs() == null &&
-                byClassService.selectByClassById(classId).getPbjs() == null &&
-                byClassService.selectByClassById(classId).getZljs() == null) {
-            return AjaxResult.error("当前班级下没有教师，无法创建评估计划");
-        }
         int iCount = byDayflowassessmentplanService.insertByDayflowassessmentplan(byDayflowassessmentplan);
-        if (iCount > 0) {
-            // 判断班级下是否有老师
-            Long zbjsNew = byClassService.selectByClassById(classId).getZbjs();
-            Long pbjsNew = byClassService.selectByClassById(classId).getPbjs();
-            Long zljsNew = byClassService.selectByClassById(classId).getZljs();
-            ByDayflowassessment byDayflowassessment = null;
-            if (zbjsNew != null) {
-                byDayflowassessment = new ByDayflowassessment();
-                byDayflowassessment.setPlanid(byDayflowassessmentplan.getId());
-                byDayflowassessment.setCreateUserid(SecurityUtils.getLoginUser().getUser().getUserId());
-                byDayflowassessment.setDeptId(byDayflowassessmentplan.getDeptId());
-                byDayflowassessment.setBzbh(zbjsNew);
-                byDayflowassessment.setPgdx(zbjsNew);
-                byDayflowassessment.setBzmf(byDayflowassessmentplan.getScore());
-                byDayflowassessment.setClassid(classId);
-                byDayflowassessment.setXnxq(byDayflowassessmentplan.getXnxq());
-                byDayflowassessment.setBzid(Long.parseLong(byDayflowassessmentplan.getConnent()));
-                if (pbjsNew != null) {
-                    byDayflowassessment.setPbbh(pbjsNew);
-                }
-                if (zljsNew != null) {
-                    byDayflowassessment.setZlbh(zljsNew);
-                }
-                byDayflowassessmentService.insertByDayflowassessment(byDayflowassessment);
-            }
-            if (pbjsNew != null) {
-                byDayflowassessment = new ByDayflowassessment();
-                byDayflowassessment.setPlanid(byDayflowassessmentplan.getId());
-                byDayflowassessment.setCreateUserid(SecurityUtils.getLoginUser().getUser().getUserId());
-                byDayflowassessment.setDeptId(byDayflowassessmentplan.getDeptId());
-                byDayflowassessment.setPbbh(pbjsNew);
-                byDayflowassessment.setPgdx(pbjsNew);
-                byDayflowassessment.setBzmf(byDayflowassessmentplan.getScore());
-                byDayflowassessment.setClassid(classId);
-                byDayflowassessment.setXnxq(byDayflowassessmentplan.getXnxq());
-                byDayflowassessment.setBzid(Long.parseLong(byDayflowassessmentplan.getConnent()));
-                if (zbjsNew != null) {
-                    byDayflowassessment.setBzbh(zbjsNew);
-                }
-                if (zljsNew != null) {
-                    byDayflowassessment.setZlbh(zljsNew);
-                }
-                byDayflowassessmentService.insertByDayflowassessment(byDayflowassessment);
-            }
-            if (zljsNew != null) {
-                byDayflowassessment = new ByDayflowassessment();
-                byDayflowassessment.setPlanid(byDayflowassessmentplan.getId());
-                byDayflowassessment.setCreateUserid(SecurityUtils.getLoginUser().getUser().getUserId());
-                byDayflowassessment.setDeptId(byDayflowassessmentplan.getDeptId());
-                byDayflowassessment.setZlbh(zljsNew);
-                byDayflowassessment.setPgdx(zljsNew);
-                byDayflowassessment.setBzmf(byDayflowassessmentplan.getScore());
-                byDayflowassessment.setClassid(classId);
-                byDayflowassessment.setXnxq(byDayflowassessmentplan.getXnxq());
-                byDayflowassessment.setBzid(Long.parseLong(byDayflowassessmentplan.getConnent()));
-                if (pbjsNew != null) {
-                    byDayflowassessment.setPbbh(pbjsNew);
-                }
-                if (zbjsNew != null) {
-                    byDayflowassessment.setBzbh(zbjsNew);
-                }
-                byDayflowassessmentService.insertByDayflowassessment(byDayflowassessment);
-            }
-        }
+
         return toAjax(iCount);
     }
 

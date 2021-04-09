@@ -15,6 +15,7 @@
         <result property="createtime" column="createtime"/>
         <result property="updateuser" column="updateuser"/>
         <result property="updatetime" column="updatetime"/>
+        <result property="mrz" column="mrz"/>
     </resultMap>
 
     <sql id="selectByDayFlowStandardVo">
@@ -35,6 +36,11 @@
             <if test="updateuser != null ">and updateuser = #{updateuser}</if>
             <if test="updatetime != null ">and updatetime = #{updatetime}</if>
         </where>
+    </select>
+
+    <select id="selectByDayFlowStandardListAssessment" parameterType="ByDayFlowStandard" resultMap="ByDayFlowStandardResult">
+        select a.id, a.task_code, a.standard_title, a.score, a.standard_sort, a.createuser, a.createtime, a.updateuser, a.updatetime,b.value as mrz from by_day_flow_standard a
+        left join (select * from by_dayflowassessmentitem where pid=#{id}) b on a.id=b.item
     </select>
 
     <select id="selectByDayFlowStandardById" parameterType="Long" resultMap="ByDayFlowStandardResult">

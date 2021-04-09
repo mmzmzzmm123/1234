@@ -85,6 +85,8 @@ public class ByDayflowassessmentController extends BaseController {
         byDayflowassessment.setDeptId(SecurityUtils.getLoginUser().getUser().getDeptId());
         byDayflowassessment.setCreateUserid(SecurityUtils.getLoginUser().getUser().getUserId());
         byDayflowassessment.setXnxq(schoolCommon.getCurrentXnXq());
+        //获取总得分
+        byDayflowassessment.setZzdf(GetDf(byDayflowassessment.getList()));
         int iRows = byDayflowassessmentService.insertByDayflowassessment(byDayflowassessment);
 
         List<ByDayFlowStandard> list = byDayflowassessment.getList();
@@ -108,6 +110,22 @@ public class ByDayflowassessmentController extends BaseController {
         }
 
         return toAjax(iRows);
+    }
+
+    public Double GetDf(List<ByDayFlowStandard> list) {
+        Double df = (double) 0;
+        if (list != null && list.size() > 0) {
+            for (int i = 0; i < list.size(); i++) {
+                String mrz = list.get(i).getMrz();
+                if (mrz != "0" && !schoolCommon.isStringEmpty(mrz)) {
+                    Double dMrz = Double.valueOf(mrz);
+                    if (dMrz != 0) {
+                        df = df + dMrz;
+                    }
+                }
+            }
+        }
+        return df;
     }
 
     /**

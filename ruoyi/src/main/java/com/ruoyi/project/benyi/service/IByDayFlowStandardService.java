@@ -28,6 +28,15 @@ public interface IByDayFlowStandardService
     public List<ByDayFlowStandard> selectByDayFlowStandardList(ByDayFlowStandard byDayFlowStandard);
 
     /**
+     * 查询一日流程标准列表
+     *
+     * @param byDayFlowStandard 一日流程标准
+     * @return 一日流程标准集合
+     */
+    public List<ByDayFlowStandard> selectByDayFlowStandardListAssessment(ByDayFlowStandard byDayFlowStandard);
+
+
+    /**
      * 新增一日流程标准
      * 
      * @param byDayFlowStandard 一日流程标准

@@ -464,6 +464,21 @@ export const constantRoutes = [{
                 import ('@/views/benyi/dayflowassessment/teacher'),
             name: 'dayflowassessmentteacher',
             meta: {
+                title: '一日流程评估',
+                icon: ''
+            }
+        }]
+    },
+    {
+        path: '/benyi/dayflowassessments',
+        component: Layout,
+        hidden: true,
+        children: [{
+            path: 'details/:id(\\d+)',
+            component: () =>
+                import ('@/views/benyi/dayflowassessment/details'),
+            name: 'dayflowassessmentteacherdetails',
+            meta: {
                 title: '一日流程评估详情',
                 icon: ''
             }

@@ -48,6 +48,13 @@ public class ByDayFlowStandardController extends BaseController
         return getDataTable(list);
     }
 
+    @GetMapping("/listassessment")
+    public TableDataInfo listassessment(ByDayFlowStandard byDayFlowStandard)
+    {
+        List<ByDayFlowStandard> list = byDayFlowStandardService.selectByDayFlowStandardListAssessment(byDayFlowStandard);
+        return getDataTable(list);
+    }
+
     /**
      * 导出一日流程标准列表
      */
