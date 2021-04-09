@@ -1,10 +1,14 @@
 import request from "@/utils/request";
 
-export function listRecipesTemplate(query) {
+export function listRecipesTemplate(data) {
   return request({
     url: "/recipes/template/list",
-    method: "get",
-    params: query
+    method: "post",
+    params: {
+      pageSize: data.pageSize,
+      pageNum: data.pageNum
+    },
+    data
   });
 }
 

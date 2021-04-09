@@ -12,6 +12,7 @@
           placeholder="请输入客户姓名或手机号"
           clearable
           size="small"
+          @keyup.enter.native="handleQuery"
         />
       </el-form-item>
       <el-form-item label="日期" prop="planStartDateScope">

@@ -269,7 +269,9 @@ export default {
     /** 查询食谱计划列表 */
     getList() {
       this.loading = true;
-      listRecipesTemplate(this.queryParams).then((response) => {
+      const params = JSON.parse(JSON.stringify(this.queryParams));
+      params.keys = params.name ? params.name.split(" ") : null;
+      listRecipesTemplate(params).then((response) => {
         this.recipesTemplateList = response.rows;
         this.total = response.total;
         this.loading = false;
