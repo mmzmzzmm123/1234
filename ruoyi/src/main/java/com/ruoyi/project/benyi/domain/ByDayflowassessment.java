@@ -147,6 +147,8 @@ public class ByDayflowassessment extends BaseEntity {
     @Excel(name = "执行人")
     private Long createUserid;
 
+    private List<ByDayFlowStandard> list;
+
     public void setId(Long id) {
         this.id = id;
     }
@@ -291,6 +293,14 @@ public class ByDayflowassessment extends BaseEntity {
         return createUserid;
     }
 
+    public List<ByDayFlowStandard> getList() {
+        return list;
+    }
+
+    public void setList(List<ByDayFlowStandard> list) {
+        this.list = list;
+    }
+
     @Override
     public String toString() {
         return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE)
@@ -317,6 +327,7 @@ public class ByDayflowassessment extends BaseEntity {
                 .append("pgdxxm", getPgdxxm())
                 .append("createUserid", getCreateUserid())
                 .append("createTime", getCreateTime())
+                .append("list",getList())
                 .toString();
     }
 

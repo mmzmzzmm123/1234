@@ -52,6 +52,14 @@ public interface ByDayflowassessmentitemMapper {
     public int deleteByDayflowassessmentitemById(Long id);
 
     /**
+     * 删除幼儿园一日流程评估得分项
+     *
+     * @param pId 幼儿园一日流程评估得分项ID
+     * @return 结果
+     */
+    public int deleteByDayflowassessmentitemByPid(Long pId);
+
+    /**
      * 批量删除幼儿园一日流程评估得分项
      *
      * @param ids 需要删除的数据ID

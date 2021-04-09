@@ -1,5 +1,5 @@
 <template>
-  <div class="app-container">
+  <div class="app-container" v-loading="loading">
     <el-form ref="form" :model="form" :rules="rules" label-width="90px">
       <el-row :gutter="10">
         <el-col :xs="24" :ms="12" :md="5">
@@ -71,20 +71,23 @@
             )"
             :key="itemBz.id"
           >
-            <div class="checkbox-item flex align-center justify-between" :class="{'line': index !== 0}">
-                <p class="left-info">
-                  {{ itemBz.standardTitle }}
-                </p>
-                <div class="right-number flex align-center justify-end">
-                  <span>分值: {{ itemBz.score }}分</span>
-                  <el-input-number
-                    class="number-input"
-                    v-model="itemBz.mrz"
-                    :precision="2"
-                    :step="0.1"
-                    :max="itemBz.score"
-                  ></el-input-number>
-                </div>
+            <div
+              class="checkbox-item flex align-center justify-between"
+              :class="{ line: index !== 0 }"
+            >
+              <p class="left-info">
+                {{ itemBz.standardTitle }}
+              </p>
+              <div class="right-number flex align-center justify-end">
+                <span>分值: {{ itemBz.score }}分</span>
+                <el-input-number
+                  class="number-input"
+                  v-model="itemBz.mrz"
+                  :precision="2"
+                  :step="0.1"
+                  :max="itemBz.score"
+                ></el-input-number>
+              </div>
             </div>
           </div>
         </div>
@@ -96,9 +99,7 @@
 import {
   listDayflowassessment,
   getDayflowassessment,
-  delDayflowassessment,
   addDayflowassessment,
-  updateDayflowassessment,
 } from "@/api/benyi/dayflowassessment";
 import { listDayflowtask } from "@/api/benyi/dayflow/dayflowtask";
 import { listDetail, getDetail } from "@/api/benyi/dayflow/dayflowmanger";
@@ -113,7 +114,7 @@ export default {
   data() {
     return {
       // 遮罩层
-      loading: true,
+      loading: false,
       // 根据一日流程id查到的名下任务列表
       dayflowtaskList: [],
       // 根据任务查询到名下标准
@@ -232,15 +233,33 @@ export default {
         pgdxxm: undefined,
         createUserid: undefined,
         createTime: undefined,
+        list: [],
       };
       this.resetForm("form");
     },
     /** 提交按钮 */
     submitForm: function () {
-      console.log(this.dayflowstandardList);
+      //console.log(this.dayflowstandardList);
       this.$refs["form"].validate((valid) => {
         if (valid) {
-          
+          // console.log(this.form);
+          this.$confirm("确认提交评估数据?评估后数据不能取消", "警告", {
+            confirmButtonText: "确定",
+            cancelButtonText: "取消",
+            type: "warning",
+            callback: (action) => {
+              if (action === "confirm") {
+                this.loading = true;
+                this.form.list = this.dayflowstandardList;
+                addDayflowassessment(this.form).then((response) => {
+                  if (response.code === 200) {
+                    this.msgSuccess("评估成功");
+                    this.loading = false;
+                  }
+                });
+              }
+            },
+          });
         }
       });
     },
@@ -279,7 +298,7 @@ div {
 .block {
   padding: 10px;
   color: #333;
-  
+
   .block-item-title {
     padding: 10px 0;
     margin: 0;
@@ -305,7 +324,7 @@ div {
       flex: 0 0 205px;
     }
   }
-  
+
   .block-content {
     border-radius: 5px;
     padding: 10px;
@@ -326,7 +345,6 @@ div {
     .checkbox-item {
       font-size: 14px;
       line-height: 22px;
-      
     }
     .check-info {
       padding-left: 24px;

@@ -58,4 +58,12 @@ public interface IByDayflowassessmentitemService {
      * @return 结果
      */
     public int deleteByDayflowassessmentitemById(Long id);
+
+    /**
+     * 删除幼儿园一日流程评估得分项
+     *
+     * @param pId 幼儿园一日流程评估得分项ID
+     * @return 结果
+     */
+    public int deleteByDayflowassessmentitemByPid(Long pId);
 }

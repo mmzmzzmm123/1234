@@ -110,16 +110,23 @@
         prop="pgdx"
         :formatter="pgdxFormat"
       />
-      <el-table-column
+      <!-- <el-table-column
         label="评估环节"
         align="center"
         prop="bzid"
         :formatter="dayFlowFormat"
       />
-      <el-table-column label="环节满分" align="center" prop="bzmf" />
+      <el-table-column label="环节满分" align="center" prop="bzmf" /> -->
       <!-- <el-table-column label="扣分值" align="center" prop="kfz" /> -->
       <!-- <el-table-column label="扣分次数" align="center" prop="kfcs" /> -->
       <el-table-column label="最终得分" align="center" prop="zzdf" />
+      <el-table-column
+        label="评估人"
+        align="center"
+        prop="createUserid"
+        :formatter="createUserFormat"
+      />
+      <el-table-column label="评估时间" align="center" prop="createTime" />
       <el-table-column
         label="操作"
         align="center"
@@ -129,19 +136,19 @@
           <el-button
             size="mini"
             type="text"
-            icon="el-icon-edit"
+            icon="el-icon-view"
             @click="handleAssessment(scope.row)"
-            v-hasPermi="['benyi:dayflowassessment:edit']"
-            >评估</el-button
+            v-hasPermi="['benyi:dayflowassessment:query']"
+            >详情</el-button
           >
-          <!-- <el-button
+          <el-button
             size="mini"
             type="text"
             icon="el-icon-delete"
             @click="handleDelete(scope.row)"
             v-hasPermi="['benyi:dayflowassessment:remove']"
             >删除</el-button
-          > -->
+          >
         </template>
       </el-table-column>
     </el-table>
@@ -160,15 +167,13 @@
 import {
   listDayflowassessment,
   getDayflowassessment,
-  addDayflowassessment,
-  updateDayflowassessment,
+  delDayflowassessment,
 } from "@/api/benyi/dayflowassessment";
 import {
   listDayflowassessmentplan,
   getDayflowassessmentplan,
 } from "@/api/benyi/dayflowassessmentplan";
 import { listClass } from "@/api/system/class";
-import { getUsersByRoleId } from "@/api/system/user";
 import { listUser } from "@/api/system/user";
 import { listDetail, getDetail } from "@/api/benyi/dayflow/dayflowmanger";
 
@@ -188,26 +193,12 @@ export default {
       total: 0,
       // 幼儿园一日流程评估表格数据
       dayflowassessmentList: [],
-      // 一日流程评估计划数据
-      // dayflowassessmentplanOptions: [],
       // 班级
       classOptions: [],
-      //主班教师角色用户
-      zbjsOptions: [],
-      //配班教师角色用户
-      pbjsOptions: [],
-      //助理教师角色用户
-      zljsOptions: [],
       // 学年学期
       xnxqOptions: [],
       // 所有教师
       userOptions: [],
-      // 一日流程表格数据
-      detailOptions: [],
-      // 弹出层标题
-      title: "",
-      // 是否显示弹出层
-      open: false,
       // 查询参数
       queryParams: {
         pageNum: 1,
@@ -233,22 +224,12 @@ export default {
       },
       // 表单参数
       form: {},
-      // 表单校验
-      rules: {},
     };
   },
   created() {
     this.getList();
     this.getClassList();
     this.getUserList();
-    this.getDayFlowList();
-    // this.getDayflowassessmentplan();
-    //获取主班教师角色用户列表
-    getUsersByRoleId().then((response) => {
-      this.zbjsOptions = response.zbjs;
-      this.pbjsOptions = response.pbjs;
-      this.zljsOptions = response.zljs;
-    });
     // 获取学年学期
     this.getDicts("sys_xnxq").then((response) => {
       this.xnxqOptions = response.data;
@@ -264,12 +245,6 @@ export default {
         this.loading = false;
       });
     },
-    /** 查询一日流程评估计划列表 */
-    // getDayflowassessmentplan() {
-    //   listDayflowassessmentplan(null).then((response) => {
-    //     this.dayflowassessmentplanOptions = response.rows;
-    //   });
-    // },
     // 获取班级列表
     getClassList() {
       listClass(null).then((response) => {
@@ -299,42 +274,6 @@ export default {
       });
     },
     // 教师字典翻译
-    bzbhFormat(row, column) {
-      var actions = [];
-      var datas = this.zbjsOptions;
-      Object.keys(datas).map((key) => {
-        if (datas[key].userId == "" + row.bzbh) {
-          actions.push(datas[key].nickName);
-          return false;
-        }
-      });
-      return actions.join("");
-    },
-    // 教师字典翻译
-    pbbhFormat(row, column) {
-      var actions = [];
-      var datas = this.pbjsOptions;
-      Object.keys(datas).map((key) => {
-        if (datas[key].userId == "" + row.pbbh) {
-          actions.push(datas[key].nickName);
-          return false;
-        }
-      });
-      return actions.join("");
-    },
-    // 教师字典翻译
-    zlbhFormat(row, column) {
-      var actions = [];
-      var datas = this.zljsOptions;
-      Object.keys(datas).map((key) => {
-        if (datas[key].userId == "" + row.zlbh) {
-          actions.push(datas[key].nickName);
-          return false;
-        }
-      });
-      return actions.join("");
-    },
-    // 教师字典翻译
     pgdxFormat(row, column) {
       var actions = [];
       var datas = this.userOptions;
@@ -346,32 +285,13 @@ export default {
       });
       return actions.join("");
     },
-    // 计划字典翻译
-    // planFormat(row, column) {
-    //   var actions = [];
-    //   var datas = this.dayflowassessmentplanOptions;
-    //   Object.keys(datas).map((key) => {
-    //     if (datas[key].id == "" + row.planid) {
-    //       actions.push(datas[key].name);
-    //       return false;
-    //     }
-    //   });
-    //   return actions.join("");
-    // },
-    /** 查询一日流程列表 */
-    getDayFlowList() {
-      listDetail(null).then((response) => {
-        this.detailOptions = response.rows;
-      });
-    },
-    // 一日流程内容字典翻译
-    dayFlowFormat(row, column) {
-      // return this.selectDictLabel(this.classOptions, row.classid);
+    // 教师字典翻译
+    createUserFormat(row, column) {
       var actions = [];
-      var datas = this.detailOptions;
+      var datas = this.userOptions;
       Object.keys(datas).map((key) => {
-        if (datas[key].id + "" == "" + row.bzid) {
-          actions.push(datas[key].name);
+        if (datas[key].userId == "" + row.createUserid) {
+          actions.push(datas[key].nickName);
           return false;
         }
       });
@@ -380,37 +300,6 @@ export default {
     // 学年学期类型--字典状态字典翻译
     xnxqFormat(row, column) {
       return this.selectDictLabel(this.xnxqOptions, row.xnxq);
-    },
-    // 取消按钮
-    cancel() {
-      this.open = false;
-      this.reset();
-    },
-    // 表单重置
-    reset() {
-      this.form = {
-        id: undefined,
-        planid: undefined,
-        deptId: undefined,
-        classid: undefined,
-        bzbh: undefined,
-        bzxm: undefined,
-        pbbh: undefined,
-        pbxm: undefined,
-        zlbh: undefined,
-        zlxm: undefined,
-        xnxq: undefined,
-        bzid: undefined,
-        kfz: undefined,
-        bzmf: undefined,
-        zzdf: undefined,
-        kfcs: undefined,
-        pgdx: undefined,
-        classdf: undefined,
-        createUserid: undefined,
-        createTime: undefined,
-      };
-      this.resetForm("form");
     },
     /** 搜索按钮操作 */
     handleQuery() {
@@ -428,64 +317,29 @@ export default {
       this.single = selection.length != 1;
       this.multiple = !selection.length;
     },
-    /** 新增按钮操作 */
-    handleAdd() {
-      this.reset();
-      this.open = true;
-      this.title = "添加幼儿园一日流程评估";
-      //获取主班教师角色用户列表
-      getUsersByRoleId().then((response) => {
-        this.zbjsOptions = response.zbjs;
-        this.pbjsOptions = response.pbjs;
-        this.zljsOptions = response.zljs;
-      });
-    },
     handleAssessment(row) {
       const id = row.id;
       this.$router.push({ path: "/benyi/dayflowassessment/teacher/" + id });
     },
     handleAdd() {
-      this.$router.push({ path: "/benyi/dayflowassessment/teacher"});
+      this.$router.push({ path: "/benyi/dayflowassessment/teacher" });
     },
-    /** 修改按钮操作 */
-    handleUpdate(row) {
-      this.reset();
-      const id = row.id || this.ids;
-      getDayflowassessment(id).then((response) => {
-        this.form = response.data;
-        this.open = true;
-        this.title = "修改幼儿园一日流程评估";
-        //获取主班教师角色用户列表
-        getUsersByRoleId().then((response) => {
-          this.zbjsOptions = response.zbjs;
-          this.pbjsOptions = response.pbjs;
-          this.zljsOptions = response.zljs;
-        });
-      });
-    },
-    /** 提交按钮 */
-    submitForm: function () {
-      this.$refs["form"].validate((valid) => {
-        if (valid) {
-          if (this.form.id != undefined) {
-            updateDayflowassessment(this.form).then((response) => {
-              if (response.code === 200) {
-                this.msgSuccess("修改成功");
-                this.open = false;
-                this.getList();
-              }
-            });
-          } else {
-            addDayflowassessment(this.form).then((response) => {
-              if (response.code === 200) {
-                this.msgSuccess("新增成功");
-                this.open = false;
-                this.getList();
-              }
-            });
-          }
-        }
-      });
+    /** 删除按钮操作 */
+    handleDelete(row) {
+      const ids = row.id || this.ids;
+      this.$confirm("是否确认删除当前班级的评估数据?", "警告", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning",
+      })
+        .then(function () {
+          return delDayflowassessment(ids);
+        })
+        .then(() => {
+          this.getList();
+          this.msgSuccess("删除成功");
+        })
+        .catch(function () {});
     },
   },
 };

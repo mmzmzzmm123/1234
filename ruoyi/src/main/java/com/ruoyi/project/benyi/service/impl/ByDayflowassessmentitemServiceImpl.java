@@ -86,4 +86,15 @@ public class ByDayflowassessmentitemServiceImpl implements IByDayflowassessmenti
     public int deleteByDayflowassessmentitemById(Long id) {
         return byDayflowassessmentitemMapper.deleteByDayflowassessmentitemById(id);
     }
+
+    /**
+     * 删除幼儿园一日流程评估得分项
+     *
+     * @param pId 幼儿园一日流程评估得分项ID
+     * @return 结果
+     */
+    @Override
+    public int deleteByDayflowassessmentitemByPid(Long pId) {
+        return byDayflowassessmentitemMapper.deleteByDayflowassessmentitemByPid(pId);
+    }
 }

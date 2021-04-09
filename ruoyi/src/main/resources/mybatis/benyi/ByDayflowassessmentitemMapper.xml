@@ -67,6 +67,10 @@
         delete from by_dayflowassessmentitem where id = #{id}
     </delete>
 
+    <delete id="deleteByDayflowassessmentitemByPid" parameterType="Long">
+        delete from by_dayflowassessmentitem where pid = #{pid}
+    </delete>
+
     <delete id="deleteByDayflowassessmentitemByIds" parameterType="String">
         delete from by_dayflowassessmentitem where id in
         <foreach item="id" collection="array" open="(" separator="," close=")">
