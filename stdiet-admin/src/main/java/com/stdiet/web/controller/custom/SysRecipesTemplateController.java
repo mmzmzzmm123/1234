@@ -29,8 +29,8 @@ public class SysRecipesTemplateController extends BaseController {
      * 查询
      */
     @PreAuthorize("@ss.hasPermi('recipes:template:list')")
-    @GetMapping("/list")
-    public TableDataInfo list(SysRecipesTemplate sysRecipesTemplate) {
+    @PostMapping("/list")
+    public TableDataInfo list(@RequestBody SysRecipesTemplate sysRecipesTemplate) {
         startPage();
         List<SysRecipesTemplate> list = iSysRecipesTemplateService.selectRecipesTemplateListByCondition(sysRecipesTemplate);
         return getDataTable(list);

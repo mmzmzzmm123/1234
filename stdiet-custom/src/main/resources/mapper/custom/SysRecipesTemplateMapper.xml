@@ -31,7 +31,11 @@
         left join sys_user su_nutritionist on su_nutritionist.user_id = srt.nutritionist_id and su_nutritionist.del_flag = 0
         left join sys_user su_nutritionist_assis on su_nutritionist_assis.user_id = srt.nutri_assis_id and su_nutritionist_assis.del_flag = 0
         where srt.del_flag = 0
-        <if test="name != null  and name != ''">and srt.name like concat('%', #{name}, '%') or srt.remark like concat('%', #{name}, '%')</if>
+        <if test="keys != null">and
+            <foreach collection="keys" item="key" separator="and" open="(" close=")">
+                srt.name like concat('%', #{key}, '%') or srt.remark like concat('%', #{key}, '%')
+            </foreach>
+        </if>
         <if test="nutriAssisId != null ">and srt.nutri_assis_id = #{nutriAssisId}</if>
         <if test="nutritionistId != null ">and srt.nutritionist_id = #{nutritionistId}</if>
         <if test="reviewStatus != null ">and srp.review_status = #{reviewStatus}</if>

@@ -1,7 +1,7 @@
 <template>
   <div class="template_view_wrapper">
     <div class="header">
-      <div style="fontWeight: bold">选择模板</div>
+      <div style="fontweight: bold">选择模板</div>
       <el-button size="mini" @click="handleOnBackClick">返回</el-button>
     </div>
     <div class="content">
@@ -131,7 +131,9 @@ export default {
     },
     getList() {
       this.loading = true;
-      listRecipesTemplate(this.queryParams).then((res) => {
+      const params = JSON.parse(JSON.stringify(this.queryParams));
+      params.keys = (params.name || "").split(" ");
+      listRecipesTemplate(params).then((res) => {
         if (res.code === 200) {
           this.dataList = res.rows;
           this.total = res.total;

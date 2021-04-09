@@ -10,6 +10,7 @@
             clearable
             size="small"
             prefix-icon="el-icon-search"
+            @keyup.enter.native="handleQuery"
             style="margin-bottom: 20px"
           />
         </div>
