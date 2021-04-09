@@ -74,8 +74,8 @@ public class SqBookmarkServiceImpl implements ISqBookmarkService
      * @return 书签管理
      */
     @Override
-    public List<SqBookmark> selectBymenuIdUserID(Long menuID, Long userID,Integer sort,String sousou) {
-        return sqBookmarkMapper.selectBymenuIdUserID(menuID,userID, sort,sousou);
+    public List<SqBookmark> selectBymenuIdUserID(Long menuID, Long userID,Integer sort,String sousou,Integer bookmarkStar,Integer start) {
+        return sqBookmarkMapper.selectBymenuIdUserID(menuID,userID, sort,sousou,bookmarkStar,start);
     }
 
     /**
@@ -328,6 +328,8 @@ public class SqBookmarkServiceImpl implements ISqBookmarkService
         List<HtmlName> listMenu= list.stream().filter(m-> m.getState().equals("0")).collect(Collectors.toList());
         //id排序 防止已添加的父id漏修改 id升序
         listMenu.sort(Comparator.comparing(HtmlName::getId));
+        //顶级目录ID
+        Long k = null;
         //1.添加目录
         for (HtmlName h : listMenu) {
             String id=h.getId();
@@ -335,7 +337,7 @@ public class SqBookmarkServiceImpl implements ISqBookmarkService
             SqMenu sqMenu = new SqMenu(userID,h.getTitle(),Long.valueOf(h.getParentId()), Const.MenuIocURL);
             int countId =  sqMenuMapper.insertSqMenu(sqMenu);
             if(countId!=0){
-                Long k=Long.valueOf(sqMenu.getMenuId().toString());
+                k=Long.valueOf(sqMenu.getMenuId().toString());
                 //批量修改对应的父目录id
                 listMenu = ImportHtml.listFilter(listMenu,k,id);
                 //批量修改对应的书签id
@@ -343,28 +345,32 @@ public class SqBookmarkServiceImpl implements ISqBookmarkService
             }
         }
         //2.添加书签
-        for (HtmlName h : list) {
-            if (!h.getState().equals("0")&&h.getState().equals(Const.BOOKMARK_STATE_FLAG)) {
-                SqBookmark sqBookmark =new SqBookmark();
-                sqBookmark.setUserid(userID);
-                sqBookmark.setTitle(h.getTitle());
-                sqBookmark.setUrl(h.getUrl());
-                try {
+        try {
+            for (HtmlName h : list) {
+                if (!h.getState().equals("0") && h.getState().equals(Const.BOOKMARK_STATE_FLAG)) {
+                    SqBookmark sqBookmark = new SqBookmark();
+                    sqBookmark.setUserid(userID);
+                    sqBookmark.setTitle(StringUtils.substring(h.getTitle(), 0, 30));
+                    sqBookmark.setUrl(h.getUrl());
                     sqBookmark.setUrls(ImportHtml.Urlutils(new URL(h.getUrl())));
-                } catch (MalformedURLException e) {
-                    e.printStackTrace();
-                    logger.info("导入书签,获取host出错!");
+
+                    if (StringUtils.isBlank(h.getDescription())) {
+                        sqBookmark.setDescription(StringUtils.substring(h.getTitle(), 0, 30));
+                    } else {
+                        sqBookmark.setDescription(StringUtils.substring(h.getDescription(), 0, 40));
+                    }
+                    sqBookmark.setMenuId(Long.valueOf(h.getParentId()));
+                    sqBookmark.setCreateTime(new Date());
+                    sqBookmarkMapper.insertSqBookmark(sqBookmark);
                 }
-                if(StringUtils.isBlank(h.getDescription())){
-                    sqBookmark.setDescription(h.getTitle());
-                }else{
-                    sqBookmark.setDescription(h.getDescription());
-                }
-                sqBookmark.setMenuId(Long.valueOf(h.getParentId()));
-                sqBookmark.setCreateTime(new Date());
-                sqBookmarkMapper.insertSqBookmark(sqBookmark);
             }
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+            logger.info("导入书签,获取出错!");
         }
+
+        //3.开始计算目录的结构 和 目录的书签数量
+            bookmarkMenuCount(userID,k);
 
     }
 
@@ -385,6 +391,35 @@ public class SqBookmarkServiceImpl implements ISqBookmarkService
     @Override
     public List<SqBookmark> bookmarkRepetition(Long userId) {
         return sqBookmarkMapper.bookmarkRepetition(userId);
+    }
+    @Override
+    public void bookmarkMenuCount(Long userId,Long menuId){
+        SqMenu sqMenu2 = new SqMenu();
+        sqMenu2.setUserId(userId);
+//        sqMenu2.setParentId(menuId);
+        List<SqMenu> sqs = sqMenuMapper.select(sqMenu2);
+        for (SqMenu s : sqs) {
+            SqMenu sq = new SqMenu();
+            sq.setParentId(s.getMenuId());
+            List<SqMenu> lists = sqMenuMapper.select(sq);
+            if (lists!=null&&!lists.isEmpty())
+            {
+                int count = sqBookmarkMapper.countBookMakeByMenuId(s.getMenuId());
+                SqMenu sqMenu = new SqMenu();
+                sqMenu.setMenuId(s.getMenuId());
+                sqMenu.setSubordinate(1);
+                sqMenu.setBookmarkCount(count);
+                sqMenuMapper.updateSqMenu(sqMenu);
+            }else{
+                int count = sqBookmarkMapper.countBookMakeByMenuId(s.getMenuId());
+                SqMenu sqMenu = new SqMenu();
+                sqMenu.setMenuId(s.getMenuId());
+                sqMenu.setSubordinate(0);
+                sqMenu.setBookmarkCount(count);
+                sqMenuMapper.updateSqMenu(sqMenu);
+            }
+
+        }
     }
 
 

@@ -1,7 +1,7 @@
 <template >
   <div class="main">
 
-    <div class="index-top"></div>
+<!--    <div class="index-top"></div>-->
 
 <!--    &lt;!&ndash;github&ndash;&gt;-->
 <!--    <a @click="zreaZtree" class="github-corner" target="_blank" title="Follow me on GitHub" aria-label="Follow me on GitHub">-->
@@ -11,29 +11,37 @@
 <!--      </svg>-->
 <!--    </a>-->
 
-
-
     <div class="sousou">
 <!--      //搜索-->
-      <div style="width: 50%;height: 200px;margin: 0 auto;margin-top: 19%">
-        <div >
-          <div class="choice-top notcopy" v-for="iconlist in iconlist">
-            <el-tooltip  :visible-arrow="visiblearro" :enterable="enterable" class="item"  effect="dark" :content="iconlist.title" placement="top" >
-            <div @click="sendEventDataTop($event)" :data-icon="iconlist.icon"><img  :ng-src="'https://favicon.lucq.fun/?url='+iconlist.icon" err-src="./images/default.ico"  ng-click="detailBookmark(bookmark);$event.stopPropagation()" :src="'https://favicon.lucq.fun/?url='+iconlist.icon"  ></div>
-            </el-tooltip>
-          </div>
+      <div style="width: 700px;">
+<!--        <div >-->
+<!--          <div class="choice-top notcopy" v-for="iconlist in iconlist">-->
+<!--            <el-tooltip  :visible-arrow="visiblearro" :enterable="enterable" class="item"  effect="dark" :content="iconlist.title" placement="top" >-->
+<!--            <div @click="sendEventDataTop($event)" :data-icon="iconlist.icon"><img  :ng-src="'https://favicon.lucq.fun/?url='+iconlist.icon" err-src="./images/default.ico"  ng-click="detailBookmark(bookmark);$event.stopPropagation()" :src="'https://favicon.lucq.fun/?url='+iconlist.icon"  ></div>-->
+<!--            </el-tooltip>-->
+<!--          </div>-->
 
-        </div>
+<!--        </div>-->
 
         <div style="margin-top: 15px;">
           <el-input placeholder="百度一下" v-model="sousou" class="sousoucss notcopy" ref="sousouref">
             <img @click="IsCord()"  slot="prefix"  :src="sousouicon" style="width: 20px;height: 20px;position: absolute;top: 50%;margin-top: -10px;">
-              <el-button   slot="append" icon="el-icon-search"  circle @click="getUrl"></el-button>
+             <el-button  type="primary" slot="append" icon="el-icon-search" style="width: 80px"  @click="getUrl"></el-button>
           </el-input>
         </div>
 
+
+
+
+
+
+
+
+
+
+
         <transition name="el-zoom-in-top">
-            <el-card class="box-card notcopy" v-show="isSousouCard" style="width: 100%;opacity: 0.7;margin-top: 10px;height:200px;overflow:auto">
+            <el-card class="box-card notcopy" v-show="isSousouCard" style="width: 100%;opacity: 0.7;margin-top: 10px;height:250px;overflow:auto">
 
               <div class="choice" v-for="iconlist in iconlist" >
             <div  @click="sendEventData($event)" :data-icon="iconlist.icon"><img err-src="https://favicon.lucq.fun/?url=https://www.5118.com/"  class="sousouicon"  :ng-src="'https://favicon.lucq.fun/?url='+iconlist.icon"  :src="'https://favicon.lucq.fun/?url='+iconlist.icon"  ><span>{{iconlist.title}}</span></div>
@@ -159,13 +167,28 @@
   }
 </script>
 <style scoped>
-  body{
+
+
+
+
+  .main{
     font-family: "Helvetica Neue",Helvetica,"PingFang SC","Hiragino Sans GB","Microsoft YaHei","微软雅黑",Arial,sans-serif;
-    /*background-image: url("https://s1.ax1x.com/2020/08/11/aOHstP.jpg");*/
-    background-repeat: no-repeat;
-    background-size: 100% 100%;
+    display: flex;
+    justify-content: center;
+    /*align-items: center;*/
+    padding-top: 20%;
+    height: 100%;
+    background-color: #f7f7f7;
+    background-image: url("https://s1.ax1x.com/2020/08/11/aOHstP.jpg");
+    background-size: cover;
   }
 
+  /*.sousou{*/
+  /*  display: flex;*/
+  /*  flex-direction: row;  !* 子元素横向排列 *!*/
+  /*  justify-content: center; !* 相对父元素水平居中 *!*/
+  /*  align-items: center; !*  子元素相对父元素垂直居中 *!*/
+  /*}*/
 
   .sousoucss{
     opacity: 0.6;
@@ -216,7 +239,7 @@
     margin-right: 1px;
   }
   .choice div:hover{
-    color: #1c84c6;
+    color: #1f1f1f;
 
   }
 /**顶部*/

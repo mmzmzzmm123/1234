@@ -55,6 +55,11 @@ export const constantRoutes = [
         component: (resolve) => require(['@/views/redirect'], resolve)
       }
     ]
+  }
+  ,{
+    path: '/daohang',
+    component: resolve => require(['../views/bookmark/menu/index.vue'], resolve),
+    hidden: true
   },
   {
     path: '/login',
@@ -206,6 +211,16 @@ export const constantRoutes = [
           requireAuth: true,//加该字段,表示进入这个路由是需要登录的true
         },
       }
+      ,
+      {
+        path: '/profile',
+        name: 'Profile',
+        component: (resolve) => require(['@/views/system/user/profile/index'], resolve),
+        meta: {
+          title: '个人中心', icon: 'user',
+          requireAuth: true,
+        }
+      },
     ],
 
   },

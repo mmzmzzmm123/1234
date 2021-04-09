@@ -22,7 +22,7 @@ public interface SqBookmarkMapper extends MyMapper<SqBookmark>
      * @param userID 用户ID
      * @return 书签管理
      */
-    public List<SqBookmark> selectBymenuIdUserID(@Param("menuID") Long menuID, @Param("userID") Long userID,@Param("sort")Integer sort,@Param("sousuo") String sousuo);
+    public List<SqBookmark> selectBymenuIdUserID(@Param("menuID") Long menuID, @Param("userID") Long userID,@Param("sort")Integer sort,@Param("sousuo") String sousuo,@Param("bookmarkStar") Integer bookmarkStar,@Param("start") Integer start);
 
     /**
      * 查询书签管理

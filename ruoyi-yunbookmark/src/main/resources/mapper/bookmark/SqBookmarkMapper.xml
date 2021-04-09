@@ -145,6 +145,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <include refid="selectSqBookmarkVo"/>
         where   userid=#{userID}
         <if test="sousuo == null  or sousuo == ''"> and menu_id = #{menuID}</if>
+        <if test="bookmarkStar != null  and bookmarkStar != ''"> and bookmark_star = #{bookmarkStar}</if>
+        <if test="start != null  and start != ''"> and start = #{start}</if>
         <if test="sousuo != null  and sousuo != ''"> and title like concat('%', #{sousuo}, '%')</if>
         order by
         <choose>

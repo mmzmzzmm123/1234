@@ -4,6 +4,7 @@ import com.ruoyi.bookmark.domain.SqBookmark;
 import com.ruoyi.bookmark.domain.SqMenu;
 import com.ruoyi.bookmark.mapper.SqBookmarkMapper;
 import com.ruoyi.bookmark.mapper.SqMenuMapper;
+import com.ruoyi.bookmark.service.ISqBookmarkService;
 import com.ruoyi.bookmark.service.ISqMenuService;
 import com.ruoyi.bookmark.service.impl.SqMenuServiceImpl;
 import org.apache.ibatis.session.ExecutorType;
@@ -30,6 +31,8 @@ public class SqMenuTest extends BaseSpringBootTest{
     SqMenuMapper sqMenuMapper;
     @Autowired
     private ISqMenuService iSqMenuService;
+    @Autowired
+    private ISqBookmarkService iSqBookmarkService;
     @Autowired
     SqBookmarkMapper sqBookmarkMapper;
     @Autowired
@@ -87,6 +90,7 @@ public class SqMenuTest extends BaseSpringBootTest{
 
     /**
      * 初始化是否有下级目录 subordinate 0无下级 1有下级
+     * 批量计算新的目录下书签数量
      *
      * @param
      * @return
@@ -94,6 +98,17 @@ public class SqMenuTest extends BaseSpringBootTest{
 
     @Test
     public void test3() {
+        iSqBookmarkService.bookmarkMenuCount(1L,442L);
+
+    }
+    /**
+     * 初始化是否有下级目录 subordinate 0无下级 1有下级
+     *
+     * @param
+     * @return
+     */
+    @Test
+    public void test7() {
         SqMenu sqMenu2 = new SqMenu();
         sqMenu2.setUserId(1L);
         List<SqMenu> sqs = sqMenuMapper.select(sqMenu2);
@@ -117,6 +132,11 @@ public class SqMenuTest extends BaseSpringBootTest{
         }
 
     }
+
+
+
+
+
     //测试mybatis的事务
     @Test
     public void test4() throws Exception {

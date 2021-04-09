@@ -24,9 +24,11 @@ public interface ISqBookmarkService
      * @param userID 用户ID
      * @param sort 排序方式
      * @param sousou 搜索
+     * @param bookmarkStar 0非星标 1星标
+     * @param start 书签状态
      * @return 书签管理
      */
-    public List<SqBookmark> selectBymenuIdUserID(Long menuID,Long userID,Integer sort,String sousou);
+    public List<SqBookmark> selectBymenuIdUserID(Long menuID,Long userID,Integer sort,String sousou,Integer bookmarkStar,Integer start);
 
 
 
@@ -141,4 +143,9 @@ public interface ISqBookmarkService
      *
      * */
     List<SqBookmark> bookmarkRepetition(Long userId);
+
+    /**
+     *  重新计算目录下的书签数量和 目录的结构
+     */
+    public void bookmarkMenuCount(Long userId,Long menuId);
 }

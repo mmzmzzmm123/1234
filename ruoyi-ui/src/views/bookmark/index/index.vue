@@ -37,7 +37,8 @@
             <div class="aside-title"><i class="el-icon-s-comment"></i><span>意见反馈</span></div>
 <!--            <div class="aside-title" @click="ceshi"><i class="el-icon-s-comment"></i><span>测试页面</span></div>-->
 <!--            <div class="aside-title" @click="NqEdit"><i class="el-icon-s-comment"></i><span>NqQuillEdit编辑器</span></div>-->
-            <div class="aside-title " style="margin-bottom: 100px" @click="gotool"><i class="el-icon-s-grid"></i><span>工具箱</span></div>
+            <div class="aside-title "  @click="gotool"><i class="el-icon-s-grid"></i><span>工具箱</span></div>
+            <div class="aside-title " style="margin-bottom: 100px" @click="goUser"><i class="el-icon-s-custom"></i><span>个人中心</span></div>
 
           </div>
 
@@ -905,6 +906,13 @@
         var that = this;
         that.$router.push({
           path: "/tool",
+        })
+      },
+      /** 个人中心**/
+      goUser() {
+        var that = this;
+        that.$router.push({
+          path: "/profile",
         })
       },
       editBookmark: function (e) {

@@ -34,27 +34,21 @@
             </el-dropdown-menu>
           </el-dropdown>
         </div>
-
-
         <div class="header-list">
-<!--          <el-dropdown trigger="click" size="small" :hide-on-click="false">-->
-<!--              <span class="el-dropdown-link">-->
+          <el-dropdown trigger="click" size="small" :hide-on-click="false">
+              <span class="el-dropdown-link">
            <el-avatar :size="28"
                       src="https://up.raindrop.io/collection/templates/social-media-logos-6/97social.png"></el-avatar>
-<!--              </span>-->
-<!--            <el-dropdown-menu slot="dropdown" class="sq-dropdown">-->
-<!--              <el-dropdown-item class="filter-item" icon="el-icon-plus" command="a">外观显示</el-dropdown-item>-->
-<!--              <el-dropdown-item class="filter-item" icon="el-icon-plus" command="b">用户中心</el-dropdown-item>-->
-<!--              <el-dropdown-item class="filter-item" icon="el-icon-plus" command="d">建议反馈</el-dropdown-item>-->
-<!--              <el-dropdown-item class="filter-item" icon="el-icon-plus" command="e">退出登录</el-dropdown-item>-->
-<!--            </el-dropdown-menu>-->
-<!--          </el-dropdown>-->
+              </span>
+            <el-dropdown-menu slot="dropdown" class="sq-dropdown">
+              <el-dropdown-item class="filter-item" icon="el-icon-plus" command="a">外观显示</el-dropdown-item>
+              <el-dropdown-item class="filter-item" icon="el-icon-plus" command="b">用户中心</el-dropdown-item>
+              <el-dropdown-item class="filter-item" icon="el-icon-plus" command="d">建议反馈</el-dropdown-item>
+              <el-dropdown-item class="filter-item" icon="el-icon-plus" command="e">退出登录</el-dropdown-item>
+            </el-dropdown-menu>
+          </el-dropdown>
         </div>
       </el-header>
-
-
-
-
 
 
           <div class="filter-tbar">
@@ -62,14 +56,12 @@
               <div  :class="['classification',property=='0'?' classification-click':'']" @click="showopen(0)"><span>网页</span></div>
               <div :class="['classification',property=='1'?' classification-click':'']" @click="showopen(1)"><span>文本</span></div>
               <div :class="['classification',property=='2'?' classification-click':'']" @click="showopen(2)"><span>其他</span></div>
-              <!--        <div class="classification" @click="showopen(3)"><span>其他</span></div>-->
             </div>
             <div class="setUpThe">
               <div class="filter-content">
                 <el-dropdown trigger="hover" size="small" @command="handleCommand">
                   <div class="el-dropdown-link dropdownList">
                     <i class="el-icon-document-checked "></i>
-<!--                    <span>排序</span>-->
                   </div>
                   <el-dropdown-menu slot="dropdown" class="filter-sort-dropdown">
                     <el-dropdown-item class="filter-item" command="0"><i class="el-icon-bottom"></i>按时间排序(正)
@@ -88,7 +80,6 @@
                 <el-dropdown trigger="hover" size="small">
                   <div class="el-dropdown-link dropdownList">
                     <i class="el-icon-tickets "></i>
-<!--                    <span>列表</span>-->
                   </div>
                   <el-dropdown-menu slot="dropdown" class="filter-sort-dropdown">
                     <el-dropdown-item class="filter-item"><i class="el-icon-bottom"></i>按时间排序(正)</el-dropdown-item>
@@ -100,19 +91,7 @@
                 </el-dropdown>
 
               </div>
-              <!--        <div class="filter-content">-->
-              <!--          <el-dropdown trigger="hover" size="small">-->
-              <!--            <div class="el-dropdown-link dropdownList">-->
-              <!--              <i class="el-icon-setting "></i> <span>设置</span>-->
-              <!--            </div>-->
-              <!--            <el-dropdown-menu slot="dropdown" class="filter-sort-dropdown">-->
-              <!--              <el-dropdown-item class="filter-item"><i class="el-icon-bottom"></i>编辑</el-dropdown-item>-->
-              <!--              <el-dropdown-item class="filter-item"><i class="el-icon-bottom"></i>批量处理</el-dropdown-item>-->
-              <!--              <el-dropdown-item class="filter-item"><i class="el-icon-bottom"></i>排序</el-dropdown-item>-->
-              <!--              <el-dropdown-item class="filter-item"><i class="el-icon-bottom"></i>按网站A-Z排序</el-dropdown-item>-->
-              <!--            </el-dropdown-menu>-->
-              <!--          </el-dropdown>-->
-              <!--        </div>-->
+
             </div>
           </div>
 
@@ -130,73 +109,9 @@
             </div>
           </div>
 
-          <!--    默认展示-->
-<!--          <div class="bookmarklist" :style="datalist" infinite-scroll-distance="10" v-loading="loading"-->
-<!--               v-if="showbookmark"-->
-<!--               v-infinite-scroll="load"-->
-<!--               infinite-scroll-disabled="disabled" style="overflow:auto;" infinite-scroll-immediate="false">-->
-<!--            <el-row>-->
-<!--              &lt;!&ndash;        <hr class="bookamrk-hr" v-if="!queryParams.sousuo!=''"/>&ndash;&gt;-->
-<!--              <el-col :span="24" v-for="bm in bookmarkList">-->
-<!--                <div class="editBookamrk ">-->
-<!--                  <div class="editlist">-->
-<!--                    <div>-->
-<!--                      <el-button plain size="small" @click="handleUpdate(bm.bookmarkId)">修改</el-button>-->
-<!--                    </div>-->
-<!--                    <div>-->
-<!--                      <el-button plain size="small" @click="handleDelete(bm.bookmarkId)">删除</el-button>-->
-<!--                    </div>-->
-<!--                    <div>-->
-<!--                      <el-button plain size="small">笔记</el-button>-->
-<!--                    </div>-->
-<!--                    <div>-->
-<!--                      <el-button plain size="small">分享</el-button>-->
-<!--                    </div>-->
-<!--                  </div>-->
-<!--                </div>-->
 
-
-<!--                <div class="bookmark " :data-id="bm.id" @click="windowurl(bm.url,bm.bookmarkId)">-->
-<!--                  <p class="bookmark-title" v-if="highlighted"><span v-html="highLight(bm.title,queryParams.sousuo)"/>-->
-<!--                  </p>-->
-<!--                  <p class="bookmark-title" v-if="!highlighted">{{bm.title}}</p>-->
-<!--                  <div class="">-->
-<!--                    <p class="description" v-if="highlighted"><span-->
-<!--                      v-html="highLight(bm.description,queryParams.sousuo)"/>-->
-<!--                    </p>-->
-<!--                    <p class="description" v-if="!highlighted">{{bm.description}}</p>-->
-<!--                  </div>-->
-<!--                  <div class="info-wrap">-->
-<!--                    <div class="info">-->
-<!--                      <div class="bookmark-icon">-->
-<!--                        &lt;!&ndash;                    <img :err-src='bm.icon'   :ng-src="bm.icon"  :src="bm.icon"  />&ndash;&gt;-->
-<!--                        <img :ng-src="'https://favicon.lucq.fun/?url=http://'+bm.urls"-->
-<!--                             :src="'https://favicon.lucq.fun/?url=http://'+bm.urls"-->
-<!--                             onerror="this.src='data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQEAYAAABPYyMiAAAABGdBTUEAALGPC/xhBQAAAAFzUkdCAK7OHOkAAAAgY0hSTQAAeiYAAICEAAD6AAAAgOgAAHUwAADqYAAAOpgAABdwnLpRPAAAAAZiS0dEAAAAAAAA+UO7fwAAAAlwSFlzAAAASAAAAEgARslrPgAAAmVJREFUSMftlG1IU2EUx8+5jRHzg+5OiD64WTBBjSY5ZybUJMaMiIUICUKFIGmoIIogYWKFBmtDxN1tBKIWvlS6SR+iLFDBXqSMgmzbvQ7fkAjcINmQ5u7pQwyCiOvWx/p/fPj9/5znnPM8AP+VolRTjjHhTlmZipzEk9GYao4sVaMYxXp62NgIdpLBCuLP05mZZHOYZA3p5KgMjBcUwCmw4PfVVYiBGmbW1zMzOU4QCgtTvdAeRESEyNZyJbx+dDTjVv/9YFSjSScnfabsbPYMF+AbxsYS3F5TfwPZAacpMNfUBEAljK24mMJwlLIUClTAdfwok9FXWBTtc3Phzqv7c/RWa8KnrHZM8VltbRjC92AxGkEPRpSJInjJQPpIBJoZC6nn50M19dM5J/v6/lhRxgXXDX9Qp1POcmHh2sTEQbfbvVmrUCTbr4RPaeMe8Q0eTyI36VkrW50mftjrPWCyDn9oSUuTdj4Y/1Qpl7NdzkNC98iIqsIxHdQVFaU8eWW1U1guLy1lr3Acr3O7pXi227EhDLpcCZ8UL/kK8LIYjxtDIRhEP8xGIlI8bcAKvY3FGB/zYvf81pYUL/0PvGTKoTUvjzbgCx5ZWlJq3a5lQa1Ge3yTWnp64ASYqVcUoXn3Jtja2/EpRtHj89FF8Tb25ufDOwCo8/lSL0BF/eDPzcVXeA7WDAa6J9rES1VVdJqx41JHBwCE8BgA3JU9B+3AACziMwjv7MAaPQb/wgIAnP2rDpCWtpkncjm+Ro34bWgo3FkX0O6bnARARCT6hSR6YzazXa7DfLyigo7TNtObxNb/s/oB7V8JFvW/8IQAAAAldEVYdGRhdGU6Y3JlYXRlADIwMjAtMDItMDJUMTg6MTE6NTgrMDg6MDCoc6tpAAAAJXRFWHRkYXRlOm1vZGlmeQAyMDIwLTAyLTAyVDE4OjExOjU4KzA4OjAw2S4T1QAAAGd0RVh0c3ZnOmJhc2UtdXJpAGZpbGU6Ly8vaG9tZS9hZG1pbi9pY29uLWZvbnQvdG1wL2ljb25fNWhyOG55Nmo1bWMvamluZ2RpYW5hbmxpX2tvbmd3dWppYW94aW5nX3Nob3VjYW5nLnN2Z4/vilwAAAAASUVORK5CYII='"-->
-<!--                             alt="" ng-show="bm.urls">-->
-<!--                      </div>-->
-<!--                      <div class="bookmark-official">{{bm.urls}}&nbsp;·&nbsp;</div>-->
-<!--                      <div class="bookmark-time">{{bm.createTime|changeTime}}</div>-->
-<!--                      <div class="bookmark-time" v-for="t in bm.sqTags">-->
-<!--                        <el-tag class="bookmark-list-tag" data-bookmarkId="t.bookmarkId" data-tagId="t.tagId"-->
-<!--                                size="mini">-->
-<!--                          {{t.name}}-->
-<!--                        </el-tag>-->
-
-<!--                      </div>-->
-
-
-<!--                    </div>-->
-<!--                  </div>-->
-<!--                </div>-->
-<!--              </el-col>-->
-
-<!--            </el-row>-->
-<!--            <p v-if="listloading" class="listhint"><i class="el-icon-loading"></i>加载中...</p>-->
-<!--            <p v-if="listnoMore" class="listhint">没有更多了</p>-->
-<!--          </div>-->
 <!--              三窗口展示-->
-        <div class="bookmarklist" :style="datalist"  infinite-scroll-distance="10" v-loading="loading" v-if="showbookmark"
+        <div class="bookmarklist" :style="datalist"  infinite-scroll-distance="10" v-loading="loading" v-if="!showimg"
              v-infinite-scroll="load"
              infinite-scroll-disabled="disabled" style="overflow:auto;" infinite-scroll-immediate="false">
     <BookmarkOne @on-windowurl="windowurl" @on-handleUpdate="handleUpdate" @on-handleDelete="handleDelete" :key="property" :property="property"  :highlighted="highlighted" :sousuo="sousuo"  :listloading="listloading" :loading="loading" :bookmarkList="bookmarkList"></BookmarkOne>
@@ -349,7 +264,6 @@
         // 是否显示弹出层
         open: false,
         busy: false,
-        showbookmark: true,
         showimg: false,
         loading: false,
         iframeLoading:false,
@@ -511,7 +425,7 @@
 
     },
     mounted() {
-      this.closeIsMain()
+      this.closeIsMain();
 
     },
     methods: {
@@ -833,7 +747,7 @@
             this.bookmarkList = response.rows;
             this.total = response.total;
             this.loading = false;
-            this.showimg=response.rows==0?true:false;
+            this.showimg=response.total==0?true:false;
             this.listloading = false
           } else {
             this.showimg = true;

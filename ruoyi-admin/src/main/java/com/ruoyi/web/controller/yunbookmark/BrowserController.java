@@ -54,7 +54,8 @@ public class BrowserController extends BaseController {
     @RequestMapping("/import")
     @PreAuthorize("@ss.hasPermi('bookmark:browser:export')")
     public AjaxResult importCollect(@RequestParam("htmlFile") MultipartFile htmlFile){
-        logger.debug("开始上传状态是:");
+        long startTime = System.currentTimeMillis();
+        logger.info("开始上传状态是:"+ startTime );
         SysUser sysUser=getAuthUser();
         Long userID= sysUser.getUserId();
         //防止重复上传
@@ -83,7 +84,14 @@ public class BrowserController extends BaseController {
         catch (Exception e) {
             logger.error("导入html异常:",e);
         }
+
+        long endTime = System.currentTimeMillis();
+
+        float seconds = (endTime - startTime) / 1000F;
+        logger.info("导入用时:"+ Float.toString(seconds) );
+
         return AjaxResult.success("导入成功");
+
     }
 
 

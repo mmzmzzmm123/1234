@@ -1,5 +1,9 @@
 <template>
   <div >
+
+
+    <Bkhead></Bkhead>
+
     <div style="width:360px;height:260px;margin: 0 auto;margin-top: 40px">
       <el-upload
         ref="upload"
@@ -59,11 +63,13 @@
 </template>
 
 <script >
-
+ import Bkhead from "../../../components/Bkhead";
  import { getToken } from "@/utils/auth";
   export default {
     name: "",
-
+    components: {
+      Bkhead
+    },
     data() {
       return {
         // 用户导入参数

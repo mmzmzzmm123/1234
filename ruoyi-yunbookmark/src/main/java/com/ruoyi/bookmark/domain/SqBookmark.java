@@ -22,6 +22,7 @@ import java.util.Map;
  */
 @Table(name="sq_bookmark")
 @Data
+@ToString
 public class SqBookmark
 {
     private static final long serialVersionUID = 1L;
@@ -83,7 +84,7 @@ public class SqBookmark
 
     /** 0公开显示 1隐藏显示 2好友显示 3稍后再看 */
     @Excel(name = "0公开显示 1隐藏显示 2好友显示 3稍后再看")
-    @Column(name = "Start")
+    @Column(name = "start")
     private Integer start;
 
     /** 0非星标 1星标 */

@@ -1,8 +1,7 @@
 <template>
   <div>
-
 <!--    STYLE="position: relative"-->
-    <div v-for="bm in bookmarkList"  class="bookmark"   @click="winurl(bm.noteId,bm.tiymceUeditor,bm.bookmarkId,bm.url)" @mouseover="enter(bm.bookmarkId)" @mouseleave="leave()" >
+    <div v-for="bm in bookmarkList"  class="bookmark"    @click="winurl(bm.noteId,bm.tiymceUeditor,bm.bookmarkId,bm.url)" @mouseover="enter(bm.bookmarkId)" @mouseleave="leave()" >
       <div class="bookmark-item" >
          <span class="bookmark-title" v-if="highlighted" v-html="highLight(bm.title,sousuo)"/>
 
@@ -204,7 +203,6 @@
   .bookmark-item {
     display: flex;
     height: 24px;
-    /* font-size: 13px; */
     overflow: hidden;
   }
 
