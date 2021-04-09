@@ -13,12 +13,12 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import com.ruoyi.common.utils.StringUtils;
 import org.springframework.transaction.annotation.Transactional;
-import ${packageName}.domain.${subClassName};
+import ${packageName}.entity.${subClassName};
 #end
-import ${packageName}.mapper.${ClassName}Mapper;
-import ${packageName}.domain.${ClassName};
+import ${packageName}.dao.${ClassName}DAO;
+import ${packageName}.entity.${ClassName};
 import ${packageName}.service.I${ClassName}Service;
-
+import ${packageName}.entity.${ClassName}Example;
 /**
  * ${functionName}Service业务层处理
  * 
@@ -29,7 +29,7 @@ import ${packageName}.service.I${ClassName}Service;
 public class ${ClassName}ServiceImpl implements I${ClassName}Service 
 {
     @Autowired
-    private ${ClassName}Mapper ${className}Mapper;
+    private ${ClassName}DAO ${className}DAO;
 
     /**
      * 查询${functionName}
@@ -40,7 +40,7 @@ public class ${ClassName}ServiceImpl implements I${ClassName}Service
     @Override
     public ${ClassName} select${ClassName}ById(${pkColumn.javaType} ${pkColumn.javaField})
     {
-        return ${className}Mapper.select${ClassName}ById(${pkColumn.javaField});
+        return ${className}DAO.selectByPrimaryKey(${pkColumn.javaField});
     }
 
     /**
@@ -52,7 +52,8 @@ public class ${ClassName}ServiceImpl implements I${ClassName}Service
     @Override
     public List<${ClassName}> select${ClassName}List(${ClassName} ${className})
     {
-        return ${className}Mapper.select${ClassName}List(${className});
+        ${ClassName}Example example = new ${ClassName}Example();
+        return ${className}DAO.selectByExample(example);
     }
 
     /**
@@ -73,11 +74,11 @@ public class ${ClassName}ServiceImpl implements I${ClassName}Service
 #end
 #end
 #if($table.sub)
-        int rows = ${className}Mapper.insert${ClassName}(${className});
+        int rows = ${className}DAO.insert${ClassName}(${className});
         insert${subClassName}(${className});
         return rows;
 #else
-        return ${className}Mapper.insert${ClassName}(${className});
+        return ${className}DAO.insert(${className});
 #end
     }
 
@@ -99,10 +100,10 @@ public class ${ClassName}ServiceImpl implements I${ClassName}Service
 #end
 #end
 #if($table.sub)
-        ${className}Mapper.delete${subClassName}By${subTableFkClassName}(${className}.get${pkColumn.capJavaField}());
+        ${className}DAO.delete${subClassName}By${subTableFkClassName}(${className}.get${pkColumn.capJavaField}());
         insert${subClassName}(${className});
 #end
-        return ${className}Mapper.update${ClassName}(${className});
+        return ${className}DAO.updateByPrimaryKeySelective(${className});
     }
 
     /**
@@ -118,9 +119,9 @@ public class ${ClassName}ServiceImpl implements I${ClassName}Service
     public int delete${ClassName}ByIds(${pkColumn.javaType}[] ${pkColumn.javaField}s)
     {
 #if($table.sub)
-        ${className}Mapper.delete${subClassName}By${subTableFkClassName}s(${pkColumn.javaField}s);
+        ${className}DAO.delete${subClassName}By${subTableFkClassName}s(${pkColumn.javaField}s);
 #end
-        return ${className}Mapper.delete${ClassName}ByIds(${pkColumn.javaField}s);
+        return ${className}DAO.batchDelete(${pkColumn.javaField}s);
     }
 
     /**
@@ -133,9 +134,9 @@ public class ${ClassName}ServiceImpl implements I${ClassName}Service
     public int delete${ClassName}ById(${pkColumn.javaType} ${pkColumn.javaField})
     {
 #if($table.sub)
-        ${className}Mapper.delete${subClassName}By${subTableFkClassName}(${pkColumn.javaField});
+        ${className}DAO.delete${subClassName}By${subTableFkClassName}(${pkColumn.javaField});
 #end
-        return ${className}Mapper.delete${ClassName}ById(${pkColumn.javaField});
+        return ${className}DAO.deleteByPrimaryKey(${pkColumn.javaField});
     }
 #if($table.sub)
 
@@ -158,7 +159,7 @@ public class ${ClassName}ServiceImpl implements I${ClassName}Service
             }
             if (list.size() > 0)
             {
-                ${className}Mapper.batch${subClassName}(list);
+                ${className}DAO.batch${subClassName}(list);
             }
         }
     }
