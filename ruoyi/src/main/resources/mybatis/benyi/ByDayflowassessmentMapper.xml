@@ -31,37 +31,38 @@
     </resultMap>
 
     <sql id="selectByDayflowassessmentVo">
-        select id, planid, dept_id, classid, bzbh, bzxm, pbbh, pbxm, zlbh, zlxm, xnxq, bzid, bzmf, kfz, kfcs, zzdf, classdf, items, 'values', pgdx, pgdxxm, create_userid, create_time from by_dayflowassessment
+        select d.id, d.planid, d.dept_id, d.classid, d.bzbh, d.bzxm, d.pbbh, d.pbxm, d.zlbh, d.zlxm, d.xnxq, d.bzid, d.bzmf, d.kfz, d.kfcs, d.zzdf, d.classdf, d.items, d.values, d.pgdx, d.pgdxxm, d.create_userid, d.create_time from by_dayflowassessment d
     </sql>
 
     <select id="selectByDayflowassessmentList" parameterType="ByDayflowassessment"
             resultMap="ByDayflowassessmentResult">
         <include refid="selectByDayflowassessmentVo"/>
         <where>
-            <if test="planid != null ">and planid = #{planid}</if>
-            <if test="deptId != null ">and dept_id = #{deptId}</if>
-            <if test="classid != null  and classid != ''">and classid = #{classid}</if>
-            <if test="bzbh != null ">and bzbh = #{bzbh}</if>
-            <if test="bzxm != null  and bzxm != ''">and bzxm = #{bzxm}</if>
-            <if test="pbbh != null ">and pbbh = #{pbbh}</if>
-            <if test="pbxm != null  and pbxm != ''">and pbxm = #{pbxm}</if>
-            <if test="zlbh != null ">and zlbh = #{zlbh}</if>
-            <if test="zlxm != null  and zlxm != ''">and zlxm = #{zlxm}</if>
-            <if test="xnxq != null  and xnxq != ''">and xnxq = #{xnxq}</if>
-            <if test="bzid != null ">and bzid = #{bzid}</if>
-            <if test="kfz != null ">and kfz = #{kfz}</if>
-            <if test="classdf != null ">and classdf = #{classdf}</if>
-            <if test="bzmf != null ">and bzmf = #{bzmf}</if>
-            <if test="zzdf != null ">and zzdf = #{zzdf}</if>
-            <if test="kfcs != null ">and kfcs = #{kfcs}</if>
-            <if test="pgdx != null ">and pgdx = #{pgdx}</if>
-            <if test="createUserid != null ">and create_userid = #{createUserid}</if>
+            <if test="planid != null ">and d.planid = #{planid}</if>
+            <if test="classid != null  and classid != ''">and d.classid = #{classid}</if>
+            <if test="bzbh != null ">and d.bzbh = #{bzbh}</if>
+            <if test="bzxm != null  and bzxm != ''">and d.bzxm = #{bzxm}</if>
+            <if test="pbbh != null ">and d.pbbh = #{pbbh}</if>
+            <if test="pbxm != null  and pbxm != ''">and d.pbxm = #{pbxm}</if>
+            <if test="zlbh != null ">and d.zlbh = #{zlbh}</if>
+            <if test="zlxm != null  and zlxm != ''">and d.zlxm = #{zlxm}</if>
+            <if test="xnxq != null  and xnxq != ''">and d.xnxq = #{xnxq}</if>
+            <if test="bzid != null ">and d.bzid = #{bzid}</if>
+            <if test="kfz != null ">and d.kfz = #{kfz}</if>
+            <if test="classdf != null ">and d.classdf = #{classdf}</if>
+            <if test="bzmf != null ">and d.bzmf = #{bzmf}</if>
+            <if test="zzdf != null ">and d.zzdf = #{zzdf}</if>
+            <if test="kfcs != null ">and d.kfcs = #{kfcs}</if>
+            <if test="pgdx != null ">and d.pgdx = #{pgdx}</if>
+            <if test="createUserid != null ">and d.create_userid = #{createUserid}</if>
+            <!-- 数据范围过滤 -->
+            ${dataScope}
         </where>
     </select>
 
     <select id="selectByDayflowassessmentById" parameterType="Long" resultMap="ByDayflowassessmentResult">
         <include refid="selectByDayflowassessmentVo"/>
-        where id = #{id}
+        where d.id = #{id}
     </select>
 
     <insert id="insertByDayflowassessment" parameterType="ByDayflowassessment" useGeneratedKeys="true" keyProperty="id">

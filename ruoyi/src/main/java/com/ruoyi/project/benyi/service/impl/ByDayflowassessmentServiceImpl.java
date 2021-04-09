@@ -3,6 +3,7 @@ package com.ruoyi.project.benyi.service.impl;
 import java.util.List;
 
 import com.ruoyi.common.utils.DateUtils;
+import com.ruoyi.framework.aspectj.lang.annotation.DataScope;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.ruoyi.project.benyi.mapper.ByDayflowassessmentMapper;
@@ -38,6 +39,7 @@ public class ByDayflowassessmentServiceImpl implements IByDayflowassessmentServi
      * @return 幼儿园一日流程评估
      */
     @Override
+    @DataScope(deptAlias = "d")
     public List<ByDayflowassessment> selectByDayflowassessmentList(ByDayflowassessment byDayflowassessment) {
         return byDayflowassessmentMapper.selectByDayflowassessmentList(byDayflowassessment);
     }

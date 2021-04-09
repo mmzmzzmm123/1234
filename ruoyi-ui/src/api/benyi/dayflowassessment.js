@@ -9,6 +9,15 @@ export function listDayflowassessment(query) {
   });
 }
 
+// 查询幼儿园一日流程评估列表
+export function listDayflowassessmentmyself(query) {
+  return request({
+    url: "/benyi/dayflowassessment/listmyself",
+    method: "get",
+    params: query
+  });
+}
+
 // 查询幼儿园一日流程评估详细
 export function getDayflowassessment(id) {
   return request({

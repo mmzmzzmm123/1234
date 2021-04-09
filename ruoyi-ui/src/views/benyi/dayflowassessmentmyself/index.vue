@@ -1,70 +1,5 @@
 <template>
   <div class="app-container">
-    <el-form
-      :model="queryParams"
-      ref="queryForm"
-      :inline="true"
-      label-width="70px"
-    >
-      <!-- <el-form-item label="所属计划" prop="planid">
-        <el-select v-model="queryParams.planid" placeholder="请选择评估计划">
-          <el-option
-            v-for="dict in dayflowassessmentplanOptions"
-            :key="dict.id"
-            :label="dict.name"
-            :value="dict.id"
-          ></el-option>
-        </el-select>
-      </el-form-item> -->
-      <el-form-item label="学年学期" prop="xnxq">
-        <el-select v-model="queryParams.xnxq" placeholder="请选择学年学期">
-          <el-option
-            v-for="dict in xnxqOptions"
-            :key="dict.dictValue"
-            :label="dict.dictLabel"
-            :value="dict.dictValue"
-          />
-        </el-select>
-      </el-form-item>
-      <el-form-item label="班级名称" prop="classid">
-        <el-select
-          v-model="queryParams.classid"
-          clearable
-          size="small"
-          placeholder="请选择班级"
-        >
-          <el-option
-            v-for="dict in classOptions"
-            :key="dict.bjbh"
-            :label="dict.bjmc"
-            :value="dict.bjbh"
-          ></el-option>
-        </el-select>
-      </el-form-item>
-      <el-form-item>
-        <el-button
-          type="primary"
-          icon="el-icon-search"
-          size="mini"
-          @click="handleQuery"
-          >搜索</el-button
-        >
-        <el-button icon="el-icon-refresh" size="mini" @click="resetQuery"
-          >重置</el-button
-        >
-      </el-form-item>
-    </el-form>
-
-    <div class="mb8 btn-list">
-      <el-button
-        type="primary"
-        icon="el-icon-plus"
-        size="mini"
-        @click="handleAdd"
-        v-hasPermi="['benyi:dayflowassessment:add']"
-        >评估</el-button
-      >
-    </div>
 
     <el-table
       v-loading="loading"
@@ -165,9 +100,7 @@
 
 <script>
 import {
-  listDayflowassessment,
-  getDayflowassessment,
-  delDayflowassessment,
+  listDayflowassessmentmyself
 } from "@/api/benyi/dayflowassessment";
 import { listClass } from "@/api/system/class";
 import { listUser } from "@/api/system/user";
@@ -235,7 +168,7 @@ export default {
     /** 查询幼儿园一日流程评估列表 */
     getList() {
       this.loading = true;
-      listDayflowassessment(this.queryParams).then((response) => {
+      listDayflowassessmentmyself(this.queryParams).then((response) => {
         this.dayflowassessmentList = response.rows;
         this.total = response.total;
         this.loading = false;
@@ -316,26 +249,6 @@ export default {
     handleAssessment(row) {
       const id = row.id;
       this.$router.push({ path: "/benyi/dayflowassessments/details/" + id });
-    },
-    handleAdd() {
-      this.$router.push({ path: "/benyi/dayflowassessment/teacher" });
-    },
-    /** 删除按钮操作 */
-    handleDelete(row) {
-      const ids = row.id || this.ids;
-      this.$confirm("是否确认删除当前班级的评估数据?", "警告", {
-        confirmButtonText: "确定",
-        cancelButtonText: "取消",
-        type: "warning",
-      })
-        .then(function () {
-          return delDayflowassessment(ids);
-        })
-        .then(() => {
-          this.getList();
-          this.msgSuccess("删除成功");
-        })
-        .catch(function () {});
     },
   },
 };
