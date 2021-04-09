@@ -4,7 +4,10 @@ export function listRecipesTemplate(data) {
   return request({
     url: "/recipes/template/list",
     method: "post",
-    // params: query
+    params: {
+      pageSize: data.pageSize,
+      pageNum: data.pageNum
+    },
     data
   });
 }
