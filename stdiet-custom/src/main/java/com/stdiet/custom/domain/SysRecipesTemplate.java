@@ -36,4 +36,6 @@ public class SysRecipesTemplate {
     Long recipesId;
 
     Integer reviewStatus;
+
+    String[] keys;
 }
