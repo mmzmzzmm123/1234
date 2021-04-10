@@ -74,7 +74,9 @@ export default {
   },
   methods: {
     handleOnHide() {
-      this.$emit("onConfirm", { remark: this.nData });
+      if (this.nData !== null && this.nData !== undefined) {
+        this.$emit("onConfirm", { remark: this.nData });
+      }
     },
   },
 };
