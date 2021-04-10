@@ -25,13 +25,25 @@
       <div v-for="mObj in obj.values" :key="mObj.id">
         <div class="dishes_item">
           <div
-            v-if="!mObj.methods && !mObj.remark && !mObj.igdList"
+            v-if="mObj.igdList.length === 1"
             class="simple_dishes"
+            @click="
+              mObj.remark || mObj.methods ? handleOnDetailClick(mObj) : null
+            "
           >
-            <span>{{ mObj.name }}</span>
+            <span
+              >{{ mObj.igdList[0].name }}
+              <em
+                v-if="mObj.remark || mObj.methods"
+                class="el-icon-collection-tag"
+                style="color: #ababab; margin-left: 8px"
+              />
+            </span>
             <span class="weight_style">
-              <span style="margin-right: 20px">{{ mObj.cusStr }}</span>
-              <span>{{ mObj.weight }}克</span>
+              <span style="margin-right: 20px">{{
+                mObj.igdList[0].cusStr
+              }}</span>
+              <span>{{ mObj.igdList[0].weight }}克</span>
             </span>
           </div>
           <div v-else class="complex_dishes" @click="handleOnDetailClick(mObj)">
@@ -82,24 +94,24 @@ export default {
         if (!obj[cur.type]) {
           obj[cur.type] = [];
         }
-        let tarMenu = cur;
-        if (
-          !tarMenu.methods &&
-          !tarMenu.remark &&
-          tarMenu.igdList.length === 1
-        ) {
-          tarMenu = tarMenu.igdList[0];
-          tarMenu.cusStr = `${this.cusWeightDict[tarMenu.cusWeight] || ""}${
-            this.cusUnitDict[tarMenu.cusUnit] || ""
+        // let tarMenu = cur;
+        // if (
+        //   !tarMenu.methods &&
+        //   !tarMenu.remark &&
+        //   tarMenu.igdList.length === 1
+        // ) {
+        //   tarMenu = tarMenu.igdList[0];
+        //   tarMenu.cusStr = `${this.cusWeightDict[tarMenu.cusWeight] || ""}${
+        //     this.cusUnitDict[tarMenu.cusUnit] || ""
+        //   }`;
+        // } else {
+        cur.igdList.forEach((igd) => {
+          igd.cusStr = `${this.cusWeightDict[igd.cusWeight] || ""}${
+            this.cusUnitDict[igd.cusUnit] || ""
           }`;
-        } else {
-          tarMenu.igdList.forEach((igd) => {
-            igd.cusStr = `${this.cusWeightDict[igd.cusWeight] || ""}${
-              this.cusUnitDict[igd.cusUnit] || ""
-            }`;
-          });
-        }
-        obj[cur.type].push(tarMenu);
+        });
+        // }
+        obj[cur.type].push(cur);
         return obj;
       }, {});
       const mMenus = Object.keys(mData).map((type) => ({
@@ -107,7 +119,7 @@ export default {
         typeName: this.menuTypeDict[type],
         values: mData[type],
       }));
-      // console.log(mMenus);
+      console.log(mMenus);
       return mMenus;
     },
     ...mapState(["cusUnitDict", "cusWeightDict", "menuTypeDict"]),

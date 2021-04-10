@@ -7,7 +7,6 @@
         class="icon_btn"
         @click="handleOnPlanClick"
       />
-      <!-- <img :src="logo" style="width: auto; height: 32px" alt="logo" /> -->
       <span>{{ curDate }}</span>
       <el-button
         icon="el-icon-user"
