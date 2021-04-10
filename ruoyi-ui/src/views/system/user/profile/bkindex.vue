@@ -1,7 +1,7 @@
 <template>
-  <div class="app-container">
-    <el-row :gutter="20">
-      <el-col :span="6" :xs="24">
+  <div class="app-container ">
+    <el-row :gutter="20" >
+      <el-col :xs="24" :sm="{span: 16, push: 4}" :md="{span: 14, push: 5}"  :xl="{span: 10, push: 7}"  >
         <el-card class="box-card">
           <div slot="header" class="clearfix">
             <span>个人信息</span>
@@ -38,9 +38,8 @@
             </ul>
           </div>
         </el-card>
-      </el-col>
-      <el-col :span="18" :xs="24">
-        <el-card>
+
+        <el-card style="margin-top: 8px">
           <div slot="header" class="clearfix">
             <span>基本资料</span>
           </div>
@@ -54,38 +53,41 @@
           </el-tabs>
         </el-card>
       </el-col>
+
     </el-row>
   </div>
 </template>
 
 <script>
-import userAvatar from "./userAvatar";
-import userInfo from "./userInfo";
-import resetPwd from "./resetPwd";
-import { getUserProfile } from "@/api/system/user";
+  import userAvatar from "./userAvatar";
+  import userInfo from "./userInfo";
+  import resetPwd from "./resetPwd";
+  import { getUserProfile } from "@/api/system/user";
 
-export default {
-  name: "Profile",
-  components: { userAvatar, userInfo, resetPwd },
-  data() {
-    return {
-      user: {},
-      roleGroup: {},
-      postGroup: {},
-      activeTab: "userinfo"
-    };
-  },
-  created() {
-    this.getUser();
-  },
-  methods: {
-    getUser() {
-      getUserProfile().then(response => {
-        this.user = response.data;
-        this.roleGroup = response.roleGroup;
-        this.postGroup = response.postGroup;
-      });
+  export default {
+    name: "Profile",
+    components: { userAvatar, userInfo, resetPwd },
+    data() {
+      return {
+        user: {},
+        roleGroup: {},
+        postGroup: {},
+        activeTab: "userinfo"
+      };
+    },
+    created() {
+      this.getUser();
+    },
+    methods: {
+      getUser() {
+        getUserProfile().then(response => {
+          this.user = response.data;
+          this.roleGroup = response.roleGroup;
+          this.postGroup = response.postGroup;
+        });
+      }
     }
-  }
-};
+  };
 </script>
+
+

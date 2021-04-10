@@ -57,9 +57,37 @@ export const constantRoutes = [
     ]
   }
   ,{
+    path: '/bkuser',
+    component: resolve => require(['../views/bookmark/bkuser/index.vue'], resolve),
+    hidden: true,
+    children:[
+      {
+        path: '/bkindex',
+        component: resolve => require(['../views/system/user/profile/bkindex.vue'], resolve),
+        hidden: true,
+        meta:{
+          title: '个人中心',icon:'user',
+          requireAuth: true,//加该字段,表示进入这个路由是需要登录的true
+        },
+      }
+      ,
+      {
+        path: '/importHtml',
+        name: 'importHtml',
+        component: resolve => require(['../views/bookmark/common/ImportHtml.vue'], resolve),
+        hidden: true,
+        meta:{
+          title: '导入书签',icon:'user',
+          requireAuth: true,//加该字段,表示进入这个路由是需要登录的true
+        },
+      }
+
+    ]
+  }
+  ,{
     path: '/daohang',
     component: resolve => require(['../views/bookmark/menu/index.vue'], resolve),
-    hidden: true
+    hidden: true,
   },
   {
     path: '/login',
@@ -184,14 +212,6 @@ export const constantRoutes = [
         component: resolve => require(['../views/bookmark/common/userTagAll.vue'], resolve),
         meta:{
           title: '用户标签',icon:'user',
-          requireAuth: true,//加该字段,表示进入这个路由是需要登录的true
-        },
-      },{
-        path: '/importHtml',
-        name: 'importHtml',
-        component: resolve => require(['../views/bookmark/common/ImportHtml.vue'], resolve),
-        meta:{
-          title: '导入书签',icon:'user',
           requireAuth: true,//加该字段,表示进入这个路由是需要登录的true
         },
       },{

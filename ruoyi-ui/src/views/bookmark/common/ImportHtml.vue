@@ -2,7 +2,7 @@
   <div >
 
 
-    <Bkhead></Bkhead>
+
 
     <div style="width:360px;height:260px;margin: 0 auto;margin-top: 40px">
       <el-upload

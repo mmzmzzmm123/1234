@@ -5,6 +5,7 @@
       <transition name="el-zoom-in-left">
         <el-aside :style="asideHeight" v-show="isShowZtree" class="transition-box left isaside"
                   style="overflow-x:hidden;overflow-y: hidden;">
+
           <el-header class="aside-logo ">
             <!--        <img src="https://s1.ax1x.com/2020/08/15/dACqUO.png"/>-->
             <div class="logoname">
@@ -13,110 +14,56 @@
             <div class="logoright ">
               <i class="el-icon-plus mdui-ripple"/>
             </div>
-
           </el-header>
+
+
 
           <div class="main-right">
 <!--            <svg-icon icon-class="tool" class="svgicon"/>-->
-
-             <div class="aside-title"><i class="el-icon-s-management"></i><span>发现</span></div>
-            <div class="aside-title" @click="goBookmarkList"><i class="el-icon-s-tools"></i><span>最新</span></div>
+<!--             <div class="aside-title"><i class="el-icon-s-management"></i><span>发现</span></div>-->
+            <div class="aside-title" @click="goRouter(8)"><i class="el-icon-s-tools"></i><span>最新</span></div>
             <div class="aside-title"><i class="el-icon-star-on"></i><span>星标</span></div>
             <div class="aside-title"><i class="el-icon-help"></i><span>稍后看</span></div>
-            <div class="aside-title"><i class="el-icon-s-platform"></i><span>任意门</span></div>
-            <div class="aside-title"><i class="el-icon-message-solid"></i><span>收件箱</span></div>
+<!--            <div class="aside-title"><i class="el-icon-s-platform"></i><span>任意门</span></div>-->
+<!--            <div class="aside-title"><i class="el-icon-message-solid"></i><span>收件箱</span></div>-->
             <div class="reminder">我的收藏 <svg-icon icon-class="sx" style="margin-left:5px" @click="refreshNode"/></div>
             <div class="areaTree">
               <ul id="treeDemo" class="ztree"></ul>
             </div>
             <div class="reminder" >工具箱</div>
-            <div class="aside-title"><i class="el-icon-s-flag" style="color: #569cd5"></i><span>RSS订阅</span></div>
-            <div class="aside-title" @click="goUserTagAll"><i class="el-icon-s-management"></i><span>标签管理</span></div>
-            <div class="aside-title" @click="gorecycle"><i class="el-icon-delete-solid" style="color: red"></i><span>垃圾桶</span></div>
-            <div class="aside-title" @click="importHtml"><i class="el-icon-s-platform"></i><span>导入书签</span></div>
+<!--            <div class="aside-title"><i class="el-icon-s-flag" style="color: #569cd5"></i><span>RSS订阅</span></div>-->
+            <div class="aside-title" @click="goRouter(7)"><i class="el-icon-s-management"></i><span>标签管理</span></div>
+            <div class="aside-title" @click="goRouter(6)"><i class="el-icon-delete-solid" style="color: red"></i><span>垃圾桶</span></div>
+<!--            <div class="aside-title" @click="goRouter(5)"><i class="el-icon-s-platform"></i><span>导入书签</span></div>-->
             <div class="aside-title"><i class="el-icon-s-comment"></i><span>意见反馈</span></div>
 <!--            <div class="aside-title" @click="ceshi"><i class="el-icon-s-comment"></i><span>测试页面</span></div>-->
-<!--            <div class="aside-title" @click="NqEdit"><i class="el-icon-s-comment"></i><span>NqQuillEdit编辑器</span></div>-->
-            <div class="aside-title "  @click="gotool"><i class="el-icon-s-grid"></i><span>工具箱</span></div>
-            <div class="aside-title " style="margin-bottom: 100px" @click="goUser"><i class="el-icon-s-custom"></i><span>个人中心</span></div>
+            <div class="aside-title" @click="goRouter(2)"><i class="el-icon-s-platform"></i><span>小工具</span></div>
+            <div class="aside-title " style="margin-bottom: 100px"  @click="goRouter(9)"><i class="el-icon-s-grid"></i><span>更多设置</span></div>
 
           </div>
 
-
-<!--          <div class="tabBar">-->
-<!--            <div class=""-->
-<!--                 style="width: 100%;height: 30px;background-color: #cacaca;float: left;text-align: center;line-height: 30px">-->
-<!--              <i class="el-icon-folder-checked"></i>-->
-<!--              <span>新的收藏集</span>-->
-<!--            </div>-->
-
-<!--            <div class="tabBarList" >-->
-<!--              <div><i class="el-icon-folder-checked"></i></div>-->
-<!--              <div><i class="el-icon-folder-checked"></i></div>-->
-<!--              <div><i class="el-icon-s-tools"></i></div>-->
-<!--            </div>-->
-
-<!--          </div>-->
-
-
         </el-aside>
-
-
-<!--              <el-footer class="aside-navigation">-->
-<!--              </el-footer>-->
-
-
       </transition>
 
-      <div class="isresize" style="cursor:w-resize">
 
+
+
+
+      <div class="isresize" style="cursor:w-resize">
       </div>
-      <!--    <el-drawer-->
-      <!--      title="我是标题"-->
-      <!--      :visible.sync="drawer"-->
-      <!--      :direction="direction"-->
-      <!--      :modal-append-to-body="drawerS"-->
-      <!--      :append-to-body="isShowZtree"-->
-      <!--    >-->
-      <!--      <span>我来啦!</span>-->
-      <!--    </el-drawer>-->
+
 
 
       <!--    <el-button @click="isShowZtree = !isShowZtree">Click Me</el-button>-->
-
-
       <el-container class="mid">
-
         <el-main class="bookmarkmain">
-
           <router-view :key="$route.query.t"></router-view>
-
-
         </el-main>
-
-
       </el-container>
-<!--      <el-aside class="mianUrl">-->
-<!--        <el-header class="mianUrl-top" style="height: 50px">-->
-<!--          <div class="mianUrl-top-left">-->
-<!--            <i class="el-icon-folder-delete"></i>-->
-<!--            <i class="el-icon-rank"></i>-->
-<!--          </div>-->
-<!--          <div class="mianUrl-top-right">-->
-<!--            <i class="el-icon-edit-outline"></i>-->
-<!--            <i class="el-icon-position"></i>-->
-<!--          </div>-->
-<!--        </el-header>-->
-<!--        <div class="mianUrl-botoom">-->
-<!--          <iframe class="openurl" :src="gourl"/>-->
 
-<!--        </div>-->
-<!--      </el-aside>-->
 
 
     </el-container>
-
-
     <!--  编辑弹窗-->
     <el-dialog :title="title" :visible.sync="open" width="500px" class="menuedit" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
@@ -124,7 +71,6 @@
           <div class="labelname">菜单名称</div>
           <el-input class="custom-input" v-model="form.menuName" placeholder="请输入菜单名称"/>
         </el-form-item>
-
         <el-form-item prop="menuIcon">
           <div class="labelname">菜单图标</div>
           <br/>
@@ -135,20 +81,16 @@
           <div class="labelname">上级菜单</div>
           <treeselect class="menutreeselect" v-model="form.parentId" :options="menuOptions" :normalizer="normalizer"/>
         </el-form-item>
-
 <!--        <el-form-item prop="menuOrder">-->
 <!--          <div class="labelname">排序(小到大)</div>-->
 <!--          <br/>-->
 <!--          <el-input-number v-model="form.menuOrder" placeholder="计数器"></el-input-number>-->
 <!--        </el-form-item>-->
-
-
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button type="danger" style="background-color: #ff6c70"  @click="deleteMmenu(form.menuId)">删除</el-button>
         <el-button type="primary" style="background-color: #09b1b9"  @click="submitForm">确定</el-button>
         <el-button  @click="cancel">取消</el-button>
-
       </div>
 
     </el-dialog>
@@ -232,9 +174,7 @@
 <!--    </el-dialog>-->
     <!--背景特效-->
     <canvas id="evanyou"></canvas>
-
   </div>
-
 
 </template>
 <script src="http://libs.baidu.com/jquery/2.0.0/jquery.min.js"></script>
@@ -247,9 +187,7 @@
   import {listMenu, getMenu, delMenu, addMenu, updateMenu, exportMenu} from "@/api/bookmark/menu";
   import Treeselect from "@riophae/vue-treeselect";
   import "@riophae/vue-treeselect/dist/vue-treeselect.css";
-  // import "../ztree/jquery-1.4.4.min.js"
   import "../ztree/jquery.ztree.core.js"
-  // import "../ztree/demo.css"
   import "../ztree/zTreeStyle.css"
   import "../ztree/jquery.ztree.exedit.js"
   import {listMenuByUserId,listByMenuId} from "@/api/bookmark/menu";
@@ -784,10 +722,6 @@
 
       addHoverDom: function (treeId, treeNode) {
         var confCount = $("." + treeNode.tId + "_sz").length;
-        // console.log("进入addHoverDom:统计"+treeNode.tId+"_sz 的数量:"+confCount);
-        // console.log("进入addHoverDom:treeId"+treeNode.tId+"_sz 的数量:"+confCount);
-        // console.log("进入addHoverDom:统计"+treeNode.tId+"_sz 的数量:"+confCount);
-        // console.log("进入addHoverDom:统计"+treeNode.bookmarkCount+"_sz 的数量:"+confCount);
         if (confCount > 0) return;
         $("." + treeNode.tId + "_sz").unbind().remove();
         $("." + treeNode.tId + "_count").unbind().remove();
@@ -882,38 +816,77 @@
         that.isShowZtree = !that.isShowZtree;
 
       },
-      /**跳转导入页面**/
-      importHtml: function () {
-        this.$router.push({
-          path: "/importHtml",
-        })
-
-      }, /**跳转测试页面**/
-      ceshi: function () {
-        this.$router.push({
-          path: "/ceshi",
-        })
-
-      },
-      /**跳转NqQuillEdit测试页面**/
-      NqEdit: function () {
-        this.$router.push({
-          path: "/nqEdit",
-        })
-      },
-      /** 工具箱**/
-      gotool() {
+      goRouter: function (e) {
+        var flag=e;
         var that = this;
-        that.$router.push({
-          path: "/tool",
-        })
-      },
-      /** 个人中心**/
-      goUser() {
-        var that = this;
-        that.$router.push({
-          path: "/profile",
-        })
+        switch (flag) {
+          case 1:
+            that.$router.push({
+              path: "/profile",
+            })
+            break;
+          case 2:
+            //工具箱
+            that.$router.push({
+              path: "/tool",
+            })
+            break;
+          case 3:
+            // 跳转NqQuillEdit测试页面
+            that.$router.push({
+              path: "/nqEdit",
+            })
+            break;
+          case 4:
+            //跳转测试页面
+            that.$router.push({
+              path: "/ceshi",
+            })
+            break;
+          case 5:
+            //导入页面
+            that.$router.push({
+              path: "/importHtml",
+            })
+            break;
+          case 6:
+            //回收站
+            that.$router.push({
+              path: "/content",
+              query: {
+                menuId: 'RECYCLE'
+              }
+            })
+            break;
+          case 7:
+            //用户标签
+            that.$router.push({
+              path: "/userTagAll",
+            })
+            break;
+          case 8:
+            //全部书签
+            that.$router.push({
+              path: "/content",
+              query: {
+                menuId: 'BOOKMARK'
+              }
+            })
+            break;
+          case 9:
+            //个人中心
+            that.$router.push({
+              path: "/bkindex",
+            })
+            break;
+          default:
+            that.$router.push({
+              path: "/content",
+              query: {
+                menuId: 'BOOKMARK'
+              }
+            })
+        }
       },
       editBookmark: function (e) {
         this.reset();
@@ -927,7 +900,6 @@
           this.title = "修改书签菜单";
         });
 
-
         //阻止冒泡事件
         if (e && e.stopPropagation)
         //因此它支持W3C的stopPropagation()方法
@@ -940,19 +912,16 @@
 
       //删除书签目录
       deleteMmenu(menuId) {
-
         this.$confirm('是否删除此目录菜单?', '提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
           type: 'warning'
         }).then(() => {
           delMenu(menuId).then(response => {
-            // if(){}
             this.$message({
               type: 'success',
               message: '删除成功!'
             });
-
             this.open = false;
             // this.refreshParentNode();
           });
@@ -962,40 +931,7 @@
             message: '已取消删除'
           });
         });
-
-
       },
-      // 全部书签
-      goBookmarkList() {
-        var that = this;
-        that.$router.push({
-          path: "/content",
-          query: {
-            menuId: 'BOOKMARK'
-          }
-        })
-
-      },
-
-      /** 回收站**/
-      gorecycle() {
-        var that = this;
-        that.$router.push({
-          path: "/content",
-          query: {
-            menuId: 'RECYCLE'
-          }
-        })
-      },
-      /** 用户书签**/
-      goUserTagAll() {
-        var that = this;
-        that.$router.push({
-          path: "/userTagAll",
-        })
-      },
-
-
 
     },
 
@@ -1005,7 +941,6 @@
     handleCommand(command) {
       this.$message('click on item ' + command);
     },
-
 
   }
 </script>
@@ -1426,13 +1361,6 @@
   }
 
 
-
-
-
-  /*.mid{*/
-  /*  min-width: 400px!important;*/
-  /*  max-width: 400px;*/
-  /*}*/
 
 
 </style>
