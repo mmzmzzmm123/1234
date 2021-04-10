@@ -1,5 +1,20 @@
 <template>
+  <div>
+    <el-upload
+      :action="uploadUrl"
+      :on-success="handleUploadSuccess"
+      :before-upload="handleBeforeUpload"
+      :on-error="handleUploadError"
+      name="file"
+      :show-file-list="false"
+      :headers="headers"
+      style="display: none;"
+      ref='upload'
+      v-if='this.uploadUrl'
+    >
+    </el-upload>
     <div class="editor" ref="editor" :style="styles"></div>
+  </div>
 </template>
 
 <script>
@@ -30,7 +45,13 @@ export default {
     readOnly: {
       type: Boolean,
       default: false,
+    },
+    /* 上传地址 */
+    uploadUrl: {
+      type: String,
+      default: '',
     }
+
   },
   data() {
     return {
@@ -95,6 +116,26 @@ export default {
     init() {
       const editor = this.$refs.editor;
       this.Quill = new Quill(editor, this.options);
+      // 如果设置了上传地址则自定义图片和视频的上传事件
+      if (this.uploadUrl) {
+        let toolbar = this.Quill.getModule('toolbar');
+        toolbar.addHandler('image', (value) => {
+          this.uploadType = 'image';
+          if (value) {
+            this.$refs.upload.$children[0].$refs.input.click();
+          } else {
+            this.quill.format('image', false);
+          }
+        });
+        toolbar.addHandler('video', () => {
+          this.uploadType = 'video';
+          if (value) {
+            this.$refs.upload.$children[0].$refs.input.click();
+          } else {
+            this.quill.format('video', false);
+          }
+        });
+      }
       this.Quill.pasteHTML(this.currentValue);
       this.Quill.on("text-change", (delta, oldDelta, source) => {
         const html = this.$refs.editor.children[0].innerHTML;
@@ -113,6 +154,36 @@ export default {
       this.Quill.on("editor-change", (eventName, ...args) => {
         this.$emit("on-editor-change", eventName, ...args);
       });
+    },
+    handleUploadSuccess(res) {
+      if (res.code === 200) {
+        //获取光标位置
+        let index = this.Quill.getSelection().index;
+        //插入资源
+        this.Quill.insertEmbed(index, this.uploadType, res.url);
+        //移动光标到资源后面
+        this.Quill.setSelection(index + 1);
+      } else {
+        this.$message({
+          type: "error",
+          message: "上传失败",
+        });
+      }
+      this.loading.close();
+    },
+    handleBeforeUpload() {
+      this.loading = this.$loading({
+        lock: true,
+        text: "上传中",
+        background: "rgba(0, 0, 0, 0.7)",
+      });
+    },
+    handleUploadError() {
+      this.$message({
+        type: "error",
+        message: "上传失败",
+      });
+      this.loading.close();
     },
   },
 };
