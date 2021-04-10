@@ -4,7 +4,6 @@
     :title="title"
     width="80%"
     top="30%"
-    :close-on-click-modal="false"
     class="dishes_detail_dialog_wrapper"
   >
     <section class="section_zone">

@@ -18,7 +18,7 @@
     <el-card v-for="obj in menus" :key="obj.type" style="margin-top: 12px">
       <div slot="header">
         <div class="header_style">
-          <span>{{ obj.typeName }}</span>
+          <span style="font-weight: bold">{{ obj.typeName }}</span>
           <span class="time">{{ menuTypeTimeDict[obj.type] }}</span>
         </div>
       </div>
@@ -27,16 +27,16 @@
           <div
             v-if="mObj.igdList.length === 1"
             class="simple_dishes"
-            @click="
-              mObj.remark || mObj.methods ? handleOnDetailClick(mObj) : null
-            "
+            @click="handleOnDetailClick(mObj)"
           >
-            <span
-              >{{ mObj.igdList[0].name }}
+            <span>
+              <span>
+                {{ mObj.igdList[0].name }}
+              </span>
               <em
                 v-if="mObj.remark || mObj.methods"
                 class="el-icon-collection-tag"
-                style="color: #ababab; margin-left: 8px"
+                style="color: #1890ff; margin-left: 8px"
               />
             </span>
             <span class="weight_style">
@@ -46,9 +46,26 @@
               <span>{{ mObj.igdList[0].weight }}克</span>
             </span>
           </div>
-          <div v-else class="complex_dishes" @click="handleOnDetailClick(mObj)">
-            <span>{{ mObj.name }}</span>
-            <em class="el-icon-arrow-right" />
+          <div v-else style="padding: 8px 0" @click="handleOnDetailClick(mObj)">
+            <span>
+              <span style="color: #1890ff">{{ mObj.name }}</span>
+              <em
+                class="el-icon-collection-tag"
+                style="color: #1890ff; margin-left: 8px"
+              />
+            </span>
+            <div
+              class="simple_dishes"
+              style="margin-left: 16px; height: 30px"
+              v-for="igd in mObj.igdList"
+              :key="igd.id"
+            >
+              <span>{{ igd.name }} </span>
+              <span class="weight_style">
+                <span style="margin-right: 20px">{{ igd.cusStr }}</span>
+                <span>{{ igd.weight }}克</span>
+              </span>
+            </div>
           </div>
         </div>
       </div>
@@ -126,7 +143,9 @@ export default {
   },
   methods: {
     handleOnDetailClick(data) {
-      this.$refs["detailDialogRef"].showDialog(data);
+      if (data.remark || data.methods) {
+        this.$refs["detailDialogRef"].showDialog(data);
+      }
     },
     handleOnShoppingPlanClick() {
       this.$refs["shoppingPlanRef"].showDrawer({
@@ -179,7 +198,6 @@ export default {
   }
 
   .dishes_item {
-    height: 38px;
     padding: 0 8px;
     border-bottom: 1px solid #dfe6ec;
 
@@ -190,12 +208,13 @@ export default {
 
     .simple_dishes {
       display: flex;
-      height: 100%;
+      height: 38px;
       align-items: center;
       justify-content: space-between;
 
       .weight_style {
         width: 40%;
+
         display: flex;
         align-items: center;
         justify-content: space-between;
@@ -203,10 +222,9 @@ export default {
     }
 
     .complex_dishes {
-      display: flex;
-      height: 100%;
-      align-items: center;
-      justify-content: space-between;
+      // display: flex;
+      // align-items: center;
+      // justify-content: space-between;
     }
   }
 }
