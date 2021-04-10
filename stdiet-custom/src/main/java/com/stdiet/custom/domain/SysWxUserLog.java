@@ -73,6 +73,9 @@ public class SysWxUserLog extends BaseEntity
     @JsonFormat(pattern = "yyyy-MM-dd")
     private Date logTime;
 
+    //客户ID
+    private Long customerId;
+
     /**
      * 非持久化字段，客户姓名
      */

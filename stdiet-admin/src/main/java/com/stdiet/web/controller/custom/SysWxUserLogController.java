@@ -6,6 +6,7 @@ import com.stdiet.common.core.controller.BaseController;
 import com.stdiet.common.core.domain.AjaxResult;
 import com.stdiet.common.core.page.TableDataInfo;
 import com.stdiet.common.enums.BusinessType;
+import com.stdiet.common.utils.DateUtils;
 import com.stdiet.common.utils.StringUtils;
 import com.stdiet.common.utils.oss.AliyunOSSUtils;
 import com.stdiet.common.utils.poi.ExcelUtil;
@@ -107,7 +108,7 @@ public class SysWxUserLogController extends BaseController {
         if( sysWxUserLog != null && StringUtils.isNotEmpty(sysWxUserLog.getOpenid())){
             SysWxUserLog dateLog = sysWxUserLogService.selectSysWxUserLogByDateAndOpenId(sysWxUserLog);
             if(dateLog != null && dateLog.getId().intValue() != sysWxUserLog.getId().intValue()){
-                return AjaxResult.error("今日该用户已打卡，无法重复打卡");
+                return AjaxResult.error("该用户在"+ DateUtils.dateTime(sysWxUserLog.getLogTime())+"已打卡，无法重复打卡");
             }
             return toAjax(sysWxUserLogService.updateSysWxUserLog(sysWxUserLog));
         }else{
@@ -188,5 +189,15 @@ public class SysWxUserLogController extends BaseController {
         Map<String,List<String>> downUrlList = AliyunOSSUtils.generatePresignedUrl(imageUrlMap);
         sysWxUserLog.setImagesUrl(downUrlList);
         return AjaxResult.success(sysWxUserLog);
+    }
+
+    /**
+     * 根据客户ID查询对应打卡体重数据
+     */
+    @PreAuthorize("@ss.hasPermi('custom:wxUserLog:list')")
+    @GetMapping("/getAllPunchLogByCustomerId")
+    public AjaxResult getAllPunchLogByCustomerId(SysWxUserLog sysWxUserLog) {
+        List<SysWxUserLog> list = sysWxUserLogService.getWxUserLogListByCustomerId(sysWxUserLog);
+        return AjaxResult.success(list);
     }
 }

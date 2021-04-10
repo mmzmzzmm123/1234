@@ -19,6 +19,11 @@ import { getDicts } from "@/api/system/dict/data";
 import { getConfigKey } from "@/api/system/config";
 import VueScrollTo from "vue-scrollto";
 import VueResource from "vue-resource"
+import HighchartsVue from 'highcharts-vue'
+import Highcharts from 'highcharts'
+//图片导出模块
+import exportingInit from 'highcharts/modules/exporting'
+exportingInit(Highcharts)
 
 import {
   addDateRange,
@@ -69,6 +74,7 @@ Vue.component("Pagination", Pagination);
 Vue.component("RightToolbar", RightToolbar);
 
 Vue.use(permission);
+Vue.use(HighchartsVue);
 
 /**
  * If you don't want to use mock-server

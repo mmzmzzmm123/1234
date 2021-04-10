@@ -236,9 +236,26 @@
         </template>
       </el-table-column>
       <el-table-column
+        label="打卡记录"
+        align="center"
+        v-hasPermi="['custom:wxUserLog:list']"
+      >
+        <template slot-scope="scope">
+          <el-button
+            size="mini"
+            type="text"
+            @click="handleClickCustomerPunchLog(scope.row)"
+            >详情
+          </el-button>
+        </template>
+      </el-table-column>
+
+
+      <el-table-column
         label="操作"
         align="center"
         fixed="right"
+        width="120"
         class-name="small-padding fixed-width"
       >
         <template slot-scope="scope">
@@ -375,6 +392,8 @@
     <heatStatisticsDrawer ref="heatStatisticsRef"></heatStatisticsDrawer>
     <!-- 食谱计划抽屉 -->
     <RecipesPlanDrawer ref="recipesPlanDrawerRef" />
+    <!-- 客户打卡记录 -->
+    <CustomerPunchLogDrawer ref="customerPunchLogDrawerRef"></CustomerPunchLogDrawer>
   </div>
 </template>
 
@@ -394,6 +413,7 @@ import PhysicalSignsDialog from "@/components/PhysicalSignsDialog";
 import ContractDrawer from "@/components/ContractDrawer";
 import HeatStatisticsDrawer from "@/components/HeatStatisticsDrawer";
 import RecipesPlanDrawer from "@/components/RecipesPlanDrawer";
+import CustomerPunchLogDrawer  from "@/components/PunchLog/CustomerPunchLog";
 import { mapGetters } from "vuex";
 
 export default {
@@ -404,6 +424,7 @@ export default {
     "contract-drawer": ContractDrawer,
     heatStatisticsDrawer: HeatStatisticsDrawer,
     RecipesPlanDrawer,
+    CustomerPunchLogDrawer
   },
   data() {
     const userId = store.getters && store.getters.userId;
@@ -552,6 +573,10 @@ export default {
     handleClickHeatStatistics(row) {
       this.$refs["heatStatisticsRef"].showDrawer(row);
     },
+    handleClickCustomerPunchLog(row) {
+      this.$refs["customerPunchLogDrawerRef"].showDrawer(row);
+    },
+    
     // 取消按钮
     cancel() {
       this.open = false;
