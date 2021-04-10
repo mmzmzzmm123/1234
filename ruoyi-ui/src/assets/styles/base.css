@@ -8,6 +8,7 @@
     font-size: 22px!important;
   }
 
+
 }
 
 
@@ -19,6 +20,11 @@
 
   .sousouright-icon{
     margin-right: 18px;
+  }
+
+  /*个人中心的导航点击*/
+  .head-tag-button{
+    width: 60%!important;
   }
 }
 
@@ -42,6 +48,11 @@
 
 /* ipad >>> xs*/
 @media screen and (max-width: 768px) {
+
+  /*个人中心的导航点击*/
+  .head-tag-button{
+    width: 95%!important;
+  }
 
     .transition-box{
       display: none;

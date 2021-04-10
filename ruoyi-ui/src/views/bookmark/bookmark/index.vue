@@ -37,6 +37,7 @@
         <div class="header-list">
           <el-dropdown trigger="click" size="small" :hide-on-click="false">
               <span class="el-dropdown-link">
+
            <el-avatar :size="28"
                       src="https://up.raindrop.io/collection/templates/social-media-logos-6/97social.png"></el-avatar>
               </span>
@@ -225,6 +226,7 @@
 <script>
 
   import {listMenuByUserId} from "@/api/bookmark/menu";
+  import { getUserProfile } from "@/api/system/user";
   import Treeselect from "@riophae/vue-treeselect";
   import BookmarkOne from "../../../components/BookmarkList";
   import TinyMceEdit from "../common/nqEdit";
@@ -354,6 +356,7 @@
 
         Ueditor:undefined,//点击的编辑器文章id
         noteId:undefined, //点击的noteId
+        user:'',//登陆的用户信息
 
 
 
@@ -422,6 +425,8 @@
       window.addEventListener('resize', this.getHeight);
       this.getHeight()
 
+      //获取当前的用户信息
+      this.getUser();
 
     },
     mounted() {
@@ -429,6 +434,14 @@
 
     },
     methods: {
+
+      getUser() {
+        getUserProfile().then(response => {
+          this.user = response.data;
+          this.roleGroup = response.roleGroup;
+          this.postGroup = response.postGroup;
+        });
+      },
       closeIsMain(){
         this.asideHeight.width="100%!important"
         this.isMain=false;
@@ -855,6 +868,8 @@
             that.noteId=noteId; //点击的noteId
             break;
           default:
+            /**网页新窗口打开*/
+            window.open(url);
         }
 
 

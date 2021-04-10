@@ -63,21 +63,60 @@ export const constantRoutes = [
     children:[
       {
         path: '/bkindex',
-        component: resolve => require(['../views/system/user/profile/bkindex.vue'], resolve),
+        component: resolve => require(['../views/bookmark/bkuser/tool/bkindex.vue'], resolve),
         hidden: true,
         meta:{
           title: '个人中心',icon:'user',
           requireAuth: true,//加该字段,表示进入这个路由是需要登录的true
         },
-      }
-      ,
+      },
       {
         path: '/importHtml',
         name: 'importHtml',
-        component: resolve => require(['../views/bookmark/common/ImportHtml.vue'], resolve),
+        component: resolve => require(['../views/bookmark/bkuser/tool/ImportHtml.vue'], resolve),
         hidden: true,
         meta:{
           title: '导入书签',icon:'user',
+          requireAuth: true,//加该字段,表示进入这个路由是需要登录的true
+        },
+      },
+      {
+        path: '/issueLog',
+        name: 'issueLog',
+        component: resolve => require(['../views/bookmark/bkuser/tool/issueLog.vue'], resolve),
+        hidden: true,
+        meta:{
+          title: '更新日志',icon:'user',
+          requireAuth: true,//加该字段,表示进入这个路由是需要登录的true
+        },
+      },
+      {
+        path: '/aboutUs',
+        name: 'aboutUs',
+        component: resolve => require(['../views/bookmark/bkuser/tool/aboutUs.vue'], resolve),
+        hidden: true,
+        meta:{
+          title: '导入书签',icon:'user',
+          requireAuth: true,//加该字段,表示进入这个路由是需要登录的true
+        },
+      },
+      {
+        path: '/exportHtml',
+        name: 'exportHtml',
+        component: resolve => require(['../views/bookmark/bkuser/tool/exportHtml.vue'], resolve),
+        hidden: true,
+        meta:{
+          title: '备份导出',icon:'user',
+          requireAuth: true,//加该字段,表示进入这个路由是需要登录的true
+        },
+      },
+      {
+        path: '/userSettings',
+        name: 'userSettings',
+        component: resolve => require(['../views/bookmark/bkuser/tool/userSettings.vue'], resolve),
+        hidden: true,
+        meta:{
+          title: '用户系统设置',icon:'user',
           requireAuth: true,//加该字段,表示进入这个路由是需要登录的true
         },
       }

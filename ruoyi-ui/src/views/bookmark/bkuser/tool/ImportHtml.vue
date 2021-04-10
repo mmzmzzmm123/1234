@@ -42,7 +42,8 @@
 
 
 
-
+    <el-row  >
+      <el-col :xs="{span: 22, push: 1}" :sm="{span: 16, push: 4}" :md="{span: 16, push: 4}"  :xl="{span: 12, push: 6}"  >
     <div class="text">
       <ul>
         <li>注意事项</li>
@@ -56,6 +57,8 @@
         <li>4、支持浏览器的目录结构,本站目录支持无限级别分类</li>
       </ul>
     </div>
+      </el-col>
+    </el-row>
 
 
   </div>
@@ -63,7 +66,7 @@
 </template>
 
 <script >
- import Bkhead from "../../../components/Bkhead";
+ import Bkhead from "../../../../components/Bkhead/index";
  import { getToken } from "@/utils/auth";
   export default {
     name: "",
@@ -123,9 +126,8 @@
   .text{
     border: #cecece 1px solid;
     border-radius: 10px;
-    margin: 20px;
     background-color: #fafcff;
-    margin-top:  30px;
+    margin-top:  40px;
   }
 
   .structure {
@@ -139,17 +141,12 @@
   .Import el-button {
     width: 200px;
   }
-  ul{
-    margin-left: 5px;
-  }
+
    li{
     list-style:none;
   }
-  .main{
 
-  }
-  .upload-demo{
-  }
+
   .title {
     color: red;
     width: 360px;

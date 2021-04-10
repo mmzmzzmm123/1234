@@ -1,6 +1,6 @@
 package com.ruoyi.note.domain;
 
-import org.springframework.data.mongodb.core.mapping.Document;
+//import org.springframework.data.mongodb.core.mapping.Document;
 
 import javax.persistence.Id;
 import java.io.Serializable;
@@ -10,7 +10,7 @@ import java.io.Serializable;
  * @Date: 2020/10/08 19:07
  * 功能描述:
  */
-@Document(collection = "NoteContent")
+//@Document(collection = "NoteContent")
 public class NoteContentMgDb implements Serializable {
 
     @Id

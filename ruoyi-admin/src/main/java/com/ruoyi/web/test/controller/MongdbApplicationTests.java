@@ -5,7 +5,7 @@ import com.ruoyi.common.constant.Constants;
 import com.ruoyi.common.core.redis.RedisCache;
 import com.ruoyi.note.domain.NoteContentMgDb;
 import com.ruoyi.note.service.INoteRepositoryService;
-import org.bson.types.ObjectId;
+//import org.bson.types.ObjectId;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -36,43 +36,43 @@ public class MongdbApplicationTests  extends BaseSpringBootTest{
     /**
      * 查询所有信息
      */
-    @Test
-    public void findAll() {
-        List<NoteContentMgDb> all = noteRepositoryService.findAll();
-        System.out.println(all.size());
-    }
+//    @Test
+//    public void findAll() {
+//        List<NoteContentMgDb> all = noteRepositoryService.findAll();
+//        System.out.println(all.size());
+//    }
 
     /**
      * 新增信息
      */
-    @Test
-    public void save() {
-        NoteContentMgDb noteContentMgDb = new NoteContentMgDb();
-        noteContentMgDb.setId(15108230363503104L);
-        noteContentMgDb.setNoteContent("宋人头");
-        noteRepositoryService.save(noteContentMgDb);
-    }
+//    @Test
+//    public void save() {
+//        NoteContentMgDb noteContentMgDb = new NoteContentMgDb();
+//        noteContentMgDb.setId(15108230363503104L);
+//        noteContentMgDb.setNoteContent("宋人头");
+//        noteRepositoryService.save(noteContentMgDb);
+//    }
 
 
     /**
      * 修改信息
      */
-    @Test
-    public void update() {
-        NoteContentMgDb noteContentMgDb = new NoteContentMgDb();
-//        noteContentMgDb.setId(2L);
-        noteContentMgDb.setNoteContent("吴很帅");
-        noteRepositoryService.update(noteContentMgDb);
-    }
+//    @Test
+//    public void update() {
+//        NoteContentMgDb noteContentMgDb = new NoteContentMgDb();
+////        noteContentMgDb.setId(2L);
+//        noteContentMgDb.setNoteContent("吴很帅");
+//        noteRepositoryService.update(noteContentMgDb);
+//    }
 
     /**
      * 删除信息
      */
-    @Test
-    public void delete() {
-        noteRepositoryService.delete(3);
-    }
-
+//    @Test
+//    public void delete() {
+//        noteRepositoryService.delete(3);
+//    }
+//
 
 
 
@@ -102,37 +102,37 @@ public class MongdbApplicationTests  extends BaseSpringBootTest{
      * @param
      * @return
      */
-    @Test
-    public void redisToMgDB(){
-        //模糊查询 获取所有的key
-        Collection<String> listNote= redisCache.keys(Constants.NM_NOTE_CONTENT+"*");
-        for(String str:listNote){
-            //文章UUID
-            String mgDbContentUUID=str.replace(Constants.NM_NOTE_CONTENT,"");
-            System.out.println("str:"+str);
-            //文章
-            String redisContent= redisCache.getCacheObject(str).toString();
-            //查询mongoDb  存在就修改 不存在就新增
-            List<NoteContentMgDb> listMgDbContent =  noteRepositoryService.findById(mgDbContentUUID);
-            if (listMgDbContent!=null&&!listMgDbContent.isEmpty()){
-                //修改
-                NoteContentMgDb noteContentMgDb = new NoteContentMgDb();
-                noteContentMgDb.setId(Long.valueOf(mgDbContentUUID));
-                noteContentMgDb.setNoteContent(redisContent);
-                noteRepositoryService.update(noteContentMgDb);
-            }else {
-                //新增
-                NoteContentMgDb noteContentMgDb = new NoteContentMgDb();
-                noteContentMgDb.setId(Long.valueOf(mgDbContentUUID));
-                noteContentMgDb.setNoteContent(redisContent);
-                noteRepositoryService.save(noteContentMgDb);
-            }
-            //删除对应缓存
-            //redisCache.deleteObject(str);
-        }
-
-
-    }
+//    @Test
+//    public void redisToMgDB(){
+//        //模糊查询 获取所有的key
+//        Collection<String> listNote= redisCache.keys(Constants.NM_NOTE_CONTENT+"*");
+//        for(String str:listNote){
+//            //文章UUID
+//            String mgDbContentUUID=str.replace(Constants.NM_NOTE_CONTENT,"");
+//            System.out.println("str:"+str);
+//            //文章
+//            String redisContent= redisCache.getCacheObject(str).toString();
+//            //查询mongoDb  存在就修改 不存在就新增
+//            List<NoteContentMgDb> listMgDbContent =  noteRepositoryService.findById(mgDbContentUUID);
+//            if (listMgDbContent!=null&&!listMgDbContent.isEmpty()){
+//                //修改
+//                NoteContentMgDb noteContentMgDb = new NoteContentMgDb();
+//                noteContentMgDb.setId(Long.valueOf(mgDbContentUUID));
+//                noteContentMgDb.setNoteContent(redisContent);
+//                noteRepositoryService.update(noteContentMgDb);
+//            }else {
+//                //新增
+//                NoteContentMgDb noteContentMgDb = new NoteContentMgDb();
+//                noteContentMgDb.setId(Long.valueOf(mgDbContentUUID));
+//                noteContentMgDb.setNoteContent(redisContent);
+//                noteRepositoryService.save(noteContentMgDb);
+//            }
+//            //删除对应缓存
+//            //redisCache.deleteObject(str);
+//        }
+//
+//
+//    }
 
 
 

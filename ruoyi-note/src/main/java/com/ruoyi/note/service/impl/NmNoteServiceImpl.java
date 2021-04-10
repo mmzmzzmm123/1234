@@ -6,10 +6,10 @@ import java.util.Map;
 
 import cn.hutool.core.date.DateUtil;
 import com.github.wujun234.uid.UidGenerator;
-import com.mongodb.BasicDBObject;
-import com.mongodb.DBObject;
-import com.mongodb.client.MongoCollection;
-import com.mongodb.client.MongoCursor;
+//import com.mongodb.BasicDBObject;
+//import com.mongodb.DBObject;
+//import com.mongodb.client.MongoCollection;
+//import com.mongodb.client.MongoCursor;
 import com.ruoyi.common.constant.Constants;
 import com.ruoyi.common.core.redis.RedisCache;
 import com.ruoyi.common.utils.DateUtils;
@@ -18,7 +18,7 @@ import com.ruoyi.note.domain.NoteContentMgDb;
 import com.ruoyi.note.service.INmNoteContentService;
 import com.ruoyi.note.service.INoteRepositoryService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.mongodb.core.mapping.Document;
+//import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.stereotype.Service;
 import com.ruoyi.note.mapper.NmNoteMapper;
 import com.ruoyi.note.domain.NmNote;
@@ -167,31 +167,31 @@ public class NmNoteServiceImpl implements INmNoteService {
      */
     @Override
     public void redisToMongonDB() {
-        //模糊查询 获取所有的key
-        Collection<String> listNote= redisCache.keys(Constants.NM_NOTE_CONTENT+"*");
-        for(String str:listNote){
-            //文章UUID
-            String mgDbContentUUID=str.replace(Constants.NM_NOTE_CONTENT,"");
-            //文章
-            String redisContent= redisCache.getCacheObject(str).toString();
-            //查询mongoDb  存在就修改 不存在就新增
-            List<NoteContentMgDb> listMgDbContent =  noteRepositoryService.findById(mgDbContentUUID);
-            if (listMgDbContent!=null&&!listMgDbContent.isEmpty()){
-                //修改
-                NoteContentMgDb noteContentMgDb = new NoteContentMgDb();
-                noteContentMgDb.setId(Long.valueOf(mgDbContentUUID));
-                noteContentMgDb.setNoteContent(redisContent);
-                noteRepositoryService.update(noteContentMgDb);
-            }else {
-                //新增
-                NoteContentMgDb noteContentMgDb = new NoteContentMgDb();
-                noteContentMgDb.setId(Long.valueOf(mgDbContentUUID));
-                noteContentMgDb.setNoteContent(redisContent);
-                noteRepositoryService.save(noteContentMgDb);
-            }
-            //删除对应缓存
-            redisCache.deleteObject(str);
-        }
+//        //模糊查询 获取所有的key
+//        Collection<String> listNote= redisCache.keys(Constants.NM_NOTE_CONTENT+"*");
+//        for(String str:listNote){
+//            //文章UUID
+//            String mgDbContentUUID=str.replace(Constants.NM_NOTE_CONTENT,"");
+//            //文章
+//            String redisContent= redisCache.getCacheObject(str).toString();
+//            //查询mongoDb  存在就修改 不存在就新增
+//            List<NoteContentMgDb> listMgDbContent =  noteRepositoryService.findById(mgDbContentUUID);
+//            if (listMgDbContent!=null&&!listMgDbContent.isEmpty()){
+//                //修改
+//                NoteContentMgDb noteContentMgDb = new NoteContentMgDb();
+//                noteContentMgDb.setId(Long.valueOf(mgDbContentUUID));
+//                noteContentMgDb.setNoteContent(redisContent);
+//                noteRepositoryService.update(noteContentMgDb);
+//            }else {
+//                //新增
+//                NoteContentMgDb noteContentMgDb = new NoteContentMgDb();
+//                noteContentMgDb.setId(Long.valueOf(mgDbContentUUID));
+//                noteContentMgDb.setNoteContent(redisContent);
+//                noteRepositoryService.save(noteContentMgDb);
+//            }
+//            //删除对应缓存
+//            redisCache.deleteObject(str);
+//        }
 
     }
 

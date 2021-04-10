@@ -16,25 +16,33 @@
                 <div class="pull-right">{{ user.userName }}</div>
               </li>
               <li class="list-group-item">
-                <svg-icon icon-class="phone" />手机号码
+                <svg-icon icon-class="phone" />绑定手机
                 <div class="pull-right">{{ user.phonenumber }}</div>
               </li>
               <li class="list-group-item">
-                <svg-icon icon-class="email" />用户邮箱
+                <svg-icon icon-class="email" />绑定邮箱
                 <div class="pull-right">{{ user.email }}</div>
               </li>
               <li class="list-group-item">
-                <svg-icon icon-class="tree" />所属部门
-                <div class="pull-right" v-if="user.dept">{{ user.dept.deptName }} / {{ postGroup }}</div>
-              </li>
-              <li class="list-group-item">
-                <svg-icon icon-class="peoples" />所属角色
+                <svg-icon icon-class="peoples" />身份角色
                 <div class="pull-right">{{ roleGroup }}</div>
               </li>
               <li class="list-group-item">
-                <svg-icon icon-class="date" />创建日期
+                <svg-icon icon-class="date" />注册日期
                 <div class="pull-right">{{ user.createTime }}</div>
               </li>
+<!--              <li class="list-group-item">-->
+<!--                <svg-icon icon-class="date" />上次登陆时间-->
+<!--                <div class="pull-right">{{ user.login_date }}</div>-->
+<!--              </li>-->
+<!--              <li class="list-group-item">-->
+<!--                <svg-icon icon-class="date" />上次登陆IP-->
+<!--                <div class="pull-right">{{ user.login_ip }}</div>-->
+<!--              </li>-->
+<!--              <li class="list-group-item">-->
+<!--                <svg-icon icon-class="date" />登陆账号-->
+<!--                <div class="pull-right">{{ user.user_name }}</div>-->
+<!--              </li>-->
             </ul>
           </div>
         </el-card>
@@ -59,9 +67,9 @@
 </template>
 
 <script>
-  import userAvatar from "./userAvatar";
-  import userInfo from "./userInfo";
-  import resetPwd from "./resetPwd";
+  import userAvatar from "../../../system/user/profile/userAvatar";
+  import userInfo from "../../../system/user/profile/userInfo";
+  import resetPwd from "../../../system/user/profile/resetPwd";
   import { getUserProfile } from "@/api/system/user";
 
   export default {

@@ -71,13 +71,6 @@
         </div>
 
 
-
-
-
-
-
-
-
       </div>
 
 
@@ -94,7 +87,15 @@
         data: function () {
             return {}
         },
-        methods: {}
+        methods: {
+
+        },
+      mounted() {
+        document.querySelector('body').setAttribute('style', 'background-color:#f6f5f4')
+      },
+      beforeDestroy() {
+        document.querySelector('body').removeAttribute('style')
+      }
     }
 </script>
 <style scoped>
