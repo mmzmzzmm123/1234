@@ -58,6 +58,18 @@ public class ByDayflowassessmentController extends BaseController {
      * 查询幼儿园一日流程评估列表
      */
     @PreAuthorize("@ss.hasPermi('benyi:dayflowassessment:list')")
+    @GetMapping("/listpjf")
+    public TableDataInfo listpjf(ByDayflowassessment byDayflowassessment) {
+        byDayflowassessment.setDeptId(SecurityUtils.getLoginUser().getUser().getDeptId());
+        startPage();
+        List<ByDayflowassessment> list = byDayflowassessmentService.selectByDayflowassessmentPjf(byDayflowassessment);
+        return getDataTable(list);
+    }
+
+    /**
+     * 查询幼儿园一日流程评估列表
+     */
+    @PreAuthorize("@ss.hasPermi('benyi:dayflowassessment:list')")
     @GetMapping("/listmyself")
     public TableDataInfo listmyself(ByDayflowassessment byDayflowassessment) {
         byDayflowassessment.setPgdx(SecurityUtils.getLoginUser().getUser().getUserId());

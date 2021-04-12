@@ -28,6 +28,22 @@
         <result property="pgdxxm" column="pgdxxm"/>
         <result property="createUserid" column="create_userid"/>
         <result property="createTime" column="create_time"/>
+        <result property="bjpjf" column="bjpjf"/>
+        <result property="zjjdpjf" column="zjjdpjf"/>
+        <result property="ycpjf" column="ycpjf"/>
+        <result property="zjzqpjf" column="zjzqpjf"/>
+        <result property="fzjxpjf" column="fzjxpjf"/>
+        <result property="dxsjpjf" column="dxsjpjf"/>
+        <result property="rcxsyspjf" column="rcxsyspjf"/>
+        <result property="hdgdpjf" column="hdgdpjf"/>
+        <result property="hwhdpjf" column="hwhdpjf"/>
+        <result property="wspjf" column="wspjf"/>
+        <result property="lyzjpjf" column="lyzjpjf"/>
+        <result property="aqpjf" column="aqpjf"/>
+        <result property="zyhdpjf" column="zyhdpjf"/>
+        <result property="gzyjlyspjf" column="gzyjlyspjf"/>
+        <result property="wxkcpjf" column="wxkcpjf"/>
+        <result property="qkcpjf" column="qkcpjf"/>
     </resultMap>
 
     <sql id="selectByDayflowassessmentVo">
@@ -57,12 +73,37 @@
             <if test="createUserid != null ">and d.create_userid = #{createUserid}</if>
             <!-- 数据范围过滤 -->
             ${dataScope}
+            order by d.classid
         </where>
     </select>
 
     <select id="selectByDayflowassessmentById" parameterType="Long" resultMap="ByDayflowassessmentResult">
         <include refid="selectByDayflowassessmentVo"/>
         where d.id = #{id}
+    </select>
+
+    <select id="selectByDayflowassessmentPjz" parameterType="Long" resultMap="ByDayflowassessmentResult">
+        select t.classid,t.ny,avg(t.zzdf) as bjpjf,avg(t.zjjd) as zjjdpjf,avg(t.yc) as ycpjf,avg(t.zjzq) as zjzqpjf,avg(t.fzjx) as fzjxpjf,avg(t.dxsj) as dxsjpjf,avg(t.rcxsys) as rcxsyspjf,avg(t.hdgd) as hdgdpjf,avg(t.hwhd) as hwhdpjf,avg(t.ws) as wspjf,avg(t.lyzj) as lyzjpjf,avg(t.aq) as aqpjf,avg(t.zyhd) as zyhdpjf,avg(t.gzyjlys) as gzyjlyspjf,avg(t.wxkc) as wxkcpjf,avg(t.qkc) as qkcpjf from (
+select a.classid,a.zzdf,a.create_time,date_format(a.create_time,'%Y-%m') as 'ny',
+(select sum(b.value) from by_dayflowassessmentitem b where a.id=b.pid and b.item in (select id from by_day_flow where name='早间接待')) as zjjd,
+(select sum(b.value) from by_dayflowassessmentitem b where a.id=b.pid and b.item in (select id from by_day_flow where name='用餐')) as yc,
+(select sum(b.value) from by_dayflowassessmentitem b where a.id=b.pid and b.item in (select id from by_day_flow where name='早间坐圈')) as zjzq,
+(select sum(b.value) from by_dayflowassessmentitem b where a.id=b.pid and b.item in (select id from by_day_flow where name='分组教学')) as fzjx,
+(select sum(b.value) from by_dayflowassessmentitem b where a.id=b.pid and b.item in (select id from by_day_flow where name='点心时间')) as dxsj,
+(select sum(b.value) from by_dayflowassessmentitem b where a.id=b.pid and b.item in (select id from by_day_flow where name='如厕洗手饮水')) as rcxsys,
+(select sum(b.value) from by_dayflowassessmentitem b where a.id=b.pid and b.item in (select id from by_day_flow where name='活动过渡')) as hdgd,
+(select sum(b.value) from by_dayflowassessmentitem b where a.id=b.pid and b.item in (select id from by_day_flow where name='户外活动')) as hwhd,
+(select sum(b.value) from by_dayflowassessmentitem b where a.id=b.pid and b.item in (select id from by_day_flow where name='午睡')) as ws,
+(select sum(b.value) from by_dayflowassessmentitem b where a.id=b.pid and b.item in (select id from by_day_flow where name='离园再见')) as lyzj,
+(select sum(b.value) from by_dayflowassessmentitem b where a.id=b.pid and b.item in (select id from by_day_flow where name='安全')) as aq,
+(select sum(b.value) from by_dayflowassessmentitem b where a.id=b.pid and b.item in (select id from by_day_flow where name='自由活动')) as zyhd,
+(select sum(b.value) from by_dayflowassessmentitem b where a.id=b.pid and b.item in (select id from by_day_flow where name='规则与纪律约束')) as gzyjlys,
+(select sum(b.value) from by_dayflowassessmentitem b where a.id=b.pid and b.item in (select id from by_day_flow where name='微型课程')) as wxkc,
+(select sum(b.value) from by_dayflowassessmentitem b where a.id=b.pid and b.item in (select id from by_day_flow where name='潜课程')) as qkc
+from by_dayflowassessment a
+where a.dept_id=#{deptId}
+) t
+group by t.classid,t.ny
     </select>
 
     <insert id="insertByDayflowassessment" parameterType="ByDayflowassessment" useGeneratedKeys="true" keyProperty="id">

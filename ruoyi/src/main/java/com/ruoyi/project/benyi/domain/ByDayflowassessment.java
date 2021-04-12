@@ -147,6 +147,152 @@ public class ByDayflowassessment extends BaseEntity {
     @Excel(name = "执行人")
     private Long createUserid;
 
+
+    public Double getBjpjf() {
+        return bjpjf;
+    }
+
+    public void setBjpjf(Double bjpjf) {
+        this.bjpjf = bjpjf;
+    }
+
+    public Double getZjjdpjf() {
+        return zjjdpjf;
+    }
+
+    public void setZjjdpjf(Double zjjdpjf) {
+        this.zjjdpjf = zjjdpjf;
+    }
+
+    public Double getYcpjf() {
+        return ycpjf;
+    }
+
+    public void setYcpjf(Double ycpjf) {
+        this.ycpjf = ycpjf;
+    }
+
+    public Double getZjzqpjf() {
+        return zjzqpjf;
+    }
+
+    public void setZjzqpjf(Double zjzqpjf) {
+        this.zjzqpjf = zjzqpjf;
+    }
+
+    public Double getFzjxpjf() {
+        return fzjxpjf;
+    }
+
+    public void setFzjxpjf(Double fzjxpjf) {
+        this.fzjxpjf = fzjxpjf;
+    }
+
+    public Double getDxsjpjf() {
+        return dxsjpjf;
+    }
+
+    public void setDxsjpjf(Double dxsjpjf) {
+        this.dxsjpjf = dxsjpjf;
+    }
+
+    public Double getRcxsyspjf() {
+        return rcxsyspjf;
+    }
+
+    public void setRcxsyspjf(Double rcxsyspjf) {
+        this.rcxsyspjf = rcxsyspjf;
+    }
+
+    public Double getHdgdpjf() {
+        return hdgdpjf;
+    }
+
+    public void setHdgdpjf(Double hdgdpjf) {
+        this.hdgdpjf = hdgdpjf;
+    }
+
+    public Double getHwhdpjf() {
+        return hwhdpjf;
+    }
+
+    public void setHwhdpjf(Double hwhdpjf) {
+        this.hwhdpjf = hwhdpjf;
+    }
+
+    public Double getWspjf() {
+        return wspjf;
+    }
+
+    public void setWspjf(Double wspjf) {
+        this.wspjf = wspjf;
+    }
+
+    public Double getLyzjpjf() {
+        return lyzjpjf;
+    }
+
+    public void setLyzjpjf(Double lyzjpjf) {
+        this.lyzjpjf = lyzjpjf;
+    }
+
+    public Double getAqpjf() {
+        return aqpjf;
+    }
+
+    public void setAqpjf(Double aqpjf) {
+        this.aqpjf = aqpjf;
+    }
+
+    public Double getZyhdpjf() {
+        return zyhdpjf;
+    }
+
+    public void setZyhdpjf(Double zyhdpjf) {
+        this.zyhdpjf = zyhdpjf;
+    }
+
+    public Double getGzyjlyspjf() {
+        return gzyjlyspjf;
+    }
+
+    public void setGzyjlyspjf(Double gzyjlyspjf) {
+        this.gzyjlyspjf = gzyjlyspjf;
+    }
+
+    public Double getWxkcpjf() {
+        return wxkcpjf;
+    }
+
+    public void setWxkcpjf(Double wxkcpjf) {
+        this.wxkcpjf = wxkcpjf;
+    }
+
+    public Double getQkcpjf() {
+        return qkcpjf;
+    }
+
+    public void setQkcpjf(Double qkcpjf) {
+        this.qkcpjf = qkcpjf;
+    }
+
+    private Double bjpjf;
+    private Double zjjdpjf;
+    private Double ycpjf;
+    private Double zjzqpjf;
+    private Double fzjxpjf;
+    private Double dxsjpjf;
+    private Double rcxsyspjf;
+    private Double hdgdpjf;
+    private Double hwhdpjf;
+    private Double wspjf;
+    private Double lyzjpjf;
+    private Double aqpjf;
+    private Double zyhdpjf;
+    private Double gzyjlyspjf;
+    private Double wxkcpjf;
+    private Double qkcpjf;
+
     private List<ByDayFlowStandard> list;
 
     public void setId(Long id) {
@@ -327,7 +473,23 @@ public class ByDayflowassessment extends BaseEntity {
                 .append("pgdxxm", getPgdxxm())
                 .append("createUserid", getCreateUserid())
                 .append("createTime", getCreateTime())
-                .append("list",getList())
+                .append("list", getList())
+                .append("bjpjf", getBjpjf())
+                .append("zjjdpjf", getZjjdpjf())
+                .append("ycpjf", getYcpjf())
+                .append("zjzqpjf", getZjzqpjf())
+                .append("fzjxpjf", getFzjxpjf())
+                .append("dxsjpjf", getDxsjpjf())
+                .append("rcxsyspjf", getRcxsyspjf())
+                .append("hdgdpjf", getHdgdpjf())
+                .append("hwhdpjf", getHwhdpjf())
+                .append("wspjf", getWspjf())
+                .append("lyzjpjf", getLyzjpjf())
+                .append("aqpjf", getAqpjf())
+                .append("zyhdpjf", getZyhdpjf())
+                .append("gzyjlyspjf", getGzyjlyspjf())
+                .append("wxkcpjf", getWxkcpjf())
+                .append("qkcpjf", getQkcpjf())
                 .toString();
     }
 
