@@ -82,7 +82,7 @@
         where d.id = #{id}
     </select>
 
-    <select id="selectByDayflowassessmentPjz" parameterType="Long" resultMap="ByDayflowassessmentResult">
+    <select id="selectByDayflowassessmentPjf" parameterType="Long" resultMap="ByDayflowassessmentResult">
         select t.classid,t.ny,avg(t.zzdf) as bjpjf,avg(t.zjjd) as zjjdpjf,avg(t.yc) as ycpjf,avg(t.zjzq) as zjzqpjf,avg(t.fzjx) as fzjxpjf,avg(t.dxsj) as dxsjpjf,avg(t.rcxsys) as rcxsyspjf,avg(t.hdgd) as hdgdpjf,avg(t.hwhd) as hwhdpjf,avg(t.ws) as wspjf,avg(t.lyzj) as lyzjpjf,avg(t.aq) as aqpjf,avg(t.zyhd) as zyhdpjf,avg(t.gzyjlys) as gzyjlyspjf,avg(t.wxkc) as wxkcpjf,avg(t.qkc) as qkcpjf from (
 select a.classid,a.zzdf,a.create_time,date_format(a.create_time,'%Y-%m') as 'ny',
 (select sum(b.value) from by_dayflowassessmentitem b where a.id=b.pid and b.item in (select id from by_day_flow where name='早间接待')) as zjjd,
