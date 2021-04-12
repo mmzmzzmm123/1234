@@ -3,6 +3,7 @@ package com.ruoyi.generator.plugin;
 import com.itfsw.mybatis.generator.plugins.utils.FormatTools;
 import com.itfsw.mybatis.generator.plugins.utils.JavaElementGeneratorTools;
 import com.itfsw.mybatis.generator.plugins.utils.XmlElementGeneratorTools;
+import org.mybatis.generator.api.IntrospectedColumn;
 import org.mybatis.generator.api.IntrospectedTable;
 import org.mybatis.generator.api.dom.java.*;
 import org.mybatis.generator.api.dom.xml.*;
@@ -29,14 +30,12 @@ public class BatchDeletePlugin extends AbstractClassPlugin {
     @Override
     public boolean clientGenerated(Interface interfaze, TopLevelClass topLevelClass, IntrospectedTable introspectedTable) {
         // 1. batchInsert
-        FullyQualifiedJavaType listType = FullyQualifiedJavaType.getNewArrayListInstance();
-        FullyQualifiedJavaType pkFullyQualifiedJavaType = introspectedTable.getPrimaryKeyColumns().get(0).getFullyQualifiedJavaType();
-        listType.addTypeArgument(introspectedTable.getRules().calculateAllFieldsClass());
+        FullyQualifiedJavaType listType = FullyQualifiedJavaType.getNewListInstance();
         Method mBatchDelete = JavaElementGeneratorTools.generateMethod(
                 METHOD_BATCH_INSERT,
                 JavaVisibility.DEFAULT,
                 FullyQualifiedJavaType.getIntInstance(),
-                new Parameter(pkFullyQualifiedJavaType, "ids", "@Param(\"ids\")")
+                new Parameter(listType, "ids", "@Param(\"ids\")")
 
         );
         commentGenerator.addGeneralMethodComment(mBatchDelete, introspectedTable);
@@ -60,29 +59,24 @@ public class BatchDeletePlugin extends AbstractClassPlugin {
         // 1. batchInsert
         XmlElement batchDeleteEle = new XmlElement("delete");
         batchDeleteEle.addAttribute(new Attribute("id", METHOD_BATCH_INSERT));
+        IntrospectedColumn pkColumn = introspectedTable.getPrimaryKeyColumns().get(0);
         // 参数类型
         batchDeleteEle.addAttribute(new Attribute("parameterType", "String"));
         // 添加注释(!!!必须添加注释，overwrite覆盖生成时，@see XmlFileMergerJaxp.isGeneratedNode会去判断注释中是否存在OLD_ELEMENT_TAGS中的一点，例子：@mbg.generated)
         commentGenerator.addComment(batchDeleteEle);
 
-        // 使用JDBC的getGenereatedKeys方法获取主键并赋值到keyProperty设置的领域模型属性中。所以只支持MYSQL和SQLServer
-        XmlElementGeneratorTools.useGeneratedKeys(batchDeleteEle, introspectedTable);
-
-        batchDeleteEle.addElement(new TextElement("delete from " + introspectedTable.getFullyQualifiedTableNameAtRuntime() + " where "+ introspectedTable.getPrimaryKeyColumns().get(0).getActualColumnName()+" in"));
+        batchDeleteEle.addElement(new TextElement("delete from " + introspectedTable.getFullyQualifiedTableNameAtRuntime() + " where " + pkColumn.getActualColumnName() + " in"));
 
         // 添加foreach节点
         XmlElement foreachElement = new XmlElement("foreach");
-        foreachElement.addAttribute(new Attribute("collection", "array"));
+        foreachElement.addAttribute(new Attribute("collection", "list"));
         foreachElement.addAttribute(new Attribute("item", "id"));
         foreachElement.addAttribute(new Attribute("separator", ","));
 
-//        foreachElement.addElement(element);
+        foreachElement.addElement(new TextElement("#{id}"));
 
         batchDeleteEle.addElement(foreachElement);
 
-        for (Element element : XmlElementGeneratorTools.generateValues(ListUtilities.removeIdentityAndGeneratedAlwaysColumns(introspectedTable.getAllColumns()), "id.")) {
-            foreachElement.addElement(element);
-        }
 
         // values 构建
         document.getRootElement().addElement(batchDeleteEle);
