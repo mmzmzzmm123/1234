@@ -38,6 +38,9 @@ public class SysCommissionDayServiceImpl implements ISysCommissionDayService {
     @Autowired
     private ISysOrderNutritionistReplaceRecordService sysOrderNutritionistReplaceRecordService;
 
+    //2021-04-13开始使用新的算法计算服务结束日期，直接加上对应天数
+    public static final LocalDate newVersionServerDateStartDate = DateUtils.stringToLocalDate("2021-04-13", "yyyy-MM-dd");
+
     @Override
     public List<SysCommissionDayDetail> calculateCommissionByDay(SysCommision sysCommision){
         List<SysCommissionDayDetail> result = new ArrayList<>();
@@ -85,14 +88,10 @@ public class SysCommissionDayServiceImpl implements ISysCommissionDayService {
         if(sysOrder != null && sysOrder.getStartTime() != null){
             //服务开始时间，食谱开始时间
             LocalDate serverStartDate = DateUtils.dateToLocalDate(sysOrder.getStartTime());
-            //订单总服务月数
-            int serverMonth = sysOrder.getServeTimeId() != null ? sysOrder.getServeTimeId().intValue()/30 : 0;
-            //服务天数(不满一个月的零头)
-            int serverSmallDay = sysOrder.getServeTimeId().intValue()%30 - (serverMonth > 0 ? 0 : 1);
-            //赠送时长
-            int giveDay = sysOrder.getGiveServeDay() != null ? sysOrder.getGiveServeDay().intValue() : 0;
-            //服务到期时间（加赠送时间，不加暂停时间）
-            serverEndDate = serverStartDate.plusMonths(serverMonth).plusDays(giveDay+serverSmallDay);
+
+            //计算基础服务到期时间（不包含暂停）
+            serverEndDate = getBaseServerEndDate(sysOrder);
+
             List<SysOrderPause> pausesList = new ArrayList<>();
             if(sysOrder.getOrderId() != null){
                 SysOrderPause sysOrderPause = new SysOrderPause();
@@ -106,6 +105,36 @@ public class SysCommissionDayServiceImpl implements ISysCommissionDayService {
             int pauseTotalDay = getTotalByMap(everyYearMonthPauseDay);
             //服务到期时间加上暂停时间
             serverEndDate = serverEndDate.plusDays(pauseTotalDay);
+        }
+        return serverEndDate;
+    }
+
+    /**
+     * 计算基础服务到期时间，食谱计划、提成计算服务到期时间共用方法（不包含暂停）
+     * @param sysOrder
+     * @return
+     */
+    public LocalDate getBaseServerEndDate(SysOrder sysOrder){
+        LocalDate serverEndDate = null;
+        //服务开始时间，食谱开始时间
+        LocalDate serverStartDate = DateUtils.dateToLocalDate(sysOrder.getStartTime());
+        //成交时间
+        LocalDate orderDate = DateUtils.dateToLocalDate(sysOrder.getOrderTime());
+        //大于界限时间
+        if(ChronoUnit.DAYS.between(newVersionServerDateStartDate, orderDate) >= 0){
+            //订单总服务天数
+            long serverDay = sysOrder.getServeTimeId() != null ? sysOrder.getServeTimeId() : 0L;
+            serverDay += sysOrder.getGiveServeDay() != null ? sysOrder.getGiveServeDay().intValue() : 0;
+            serverEndDate = serverStartDate.plusDays(serverDay - 1);
+        }else{
+            //订单总服务月数
+            int serverMonth = sysOrder.getServeTimeId() != null ? sysOrder.getServeTimeId().intValue()/30 : 0;
+            //服务天数(不满一个月的零头)
+            int serverSmallDay = sysOrder.getServeTimeId().intValue()%30 - (serverMonth > 0 ? 0 : 1);
+            //赠送时长
+            int giveDay = sysOrder.getGiveServeDay() != null ? sysOrder.getGiveServeDay().intValue() : 0;
+            //服务到期时间（加赠送时间，不加暂停时间）
+            serverEndDate = serverStartDate.plusMonths(serverMonth).plusDays(giveDay+serverSmallDay);
         }
         return serverEndDate;
     }
@@ -570,11 +599,11 @@ public class SysCommissionDayServiceImpl implements ISysCommissionDayService {
         //订单总服务月数
         int serverMonth = sysOrder.getServeTimeId().intValue()/30;
         //服务天数(不满一个月的零头)
-        int serverSmallDay = sysOrder.getServeTimeId().intValue()%30 - (serverMonth > 0 ? 0 : 1);
+        //int serverSmallDay = sysOrder.getServeTimeId().intValue()%30 - (serverMonth > 0 ? 0 : 1);
         //赠送时长
         int giveDay = sysOrder.getGiveServeDay().intValue();
         //服务到期时间（加赠送时间，不加暂停时间）
-        LocalDate serverEndDate = sysOrder.getServerEndTime() == null ? serverStartDate.plusMonths(serverMonth).plusDays(giveDay+serverSmallDay) : DateUtils.dateToLocalDate(sysOrder.getServerEndTime());
+        LocalDate serverEndDate = sysOrder.getServerEndTime() == null ? getBaseServerEndDate(sysOrder) : DateUtils.dateToLocalDate(sysOrder.getServerEndTime());
         //订单金额
         BigDecimal orderAmount = sysOrder.getAmount();
         //查询暂停列表
