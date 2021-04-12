@@ -100,8 +100,8 @@ public class FileUploadUtils
             throws FileSizeLimitExceededException, IOException, FileNameLengthLimitExceededException,
             InvalidExtensionException
     {
-        int fileNamelength = file.getOriginalFilename().length();
-        if (fileNamelength > FileUploadUtils.DEFAULT_FILE_NAME_LENGTH)
+        int fileNameLength = file.getOriginalFilename().length();
+        if (fileNameLength > FileUploadUtils.DEFAULT_FILE_NAME_LENGTH)
         {
             throw new FileNameLengthLimitExceededException(FileUploadUtils.DEFAULT_FILE_NAME_LENGTH);
         }
@@ -110,8 +110,8 @@ public class FileUploadUtils
 
         String fileName = extractFilename(file);
 
-        File desc = getAbsoluteFile(baseDir, fileName);
-        file.transferTo(desc);
+        File dest = getAbsoluteFile(baseDir, fileName);
+        file.transferTo(dest);
         String pathFileName = getPathFileName(baseDir, fileName);
         return pathFileName;
     }
@@ -121,9 +121,8 @@ public class FileUploadUtils
      */
     public static final String extractFilename(MultipartFile file)
     {
-        String fileName = file.getOriginalFilename();
         String extension = getExtension(file);
-        fileName = DateUtils.datePath() + "/" + IdUtils.fastUUID() + "." + extension;
+        String fileName = DateUtils.datePath() + "/" + IdUtils.fastUUID() + "." + extension;
         return fileName;
     }
 
