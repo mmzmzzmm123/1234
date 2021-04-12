@@ -52,6 +52,20 @@
         </el-select>
       </el-form-item>
       
+      <el-form-item label="打卡日期" prop="logTimeScope" style="margin-left:15px">
+        <el-date-picker
+                v-model="logTimeScope"
+                type="daterange"
+                range-separator="至"
+                start-placeholder="打卡开始日期"
+                end-placeholder="打卡结束日期"
+                format="yyyy-MM-dd"
+                value-format="yyyy-MM-dd"
+                :picker-options="logTimePickerOptions"
+              >
+        </el-date-picker>
+      </el-form-item>
+
       <el-form-item>
         <el-button
           type="cyan"
@@ -233,6 +247,7 @@
         label="操作"
         align="center"
         class-name="small-padding fixed-width"
+        width="140"
       >
         <template slot-scope="scope">
           <el-button
@@ -242,14 +257,14 @@
             v-hasPermi="['custom:wxUserLog:query']"
             >详情
           </el-button>
-          <!--<el-button
+          <el-button
             size="mini"
             type="text"
             icon="el-icon-edit"
             @click="handleUpdate(scope.row)"
             v-hasPermi="['custom:wxUserLog:edit']"
             >修改
-          </el-button>-->
+          </el-button>
           <el-button
             size="mini"
             type="text"
@@ -270,136 +285,9 @@
       @pagination="getList"
     />
 
-    <!-- 添加或修改微信用户记录对话框 -->
-    <el-dialog :title="title" :visible.sync="open" width="600px" append-to-body>
-      <el-row :gutter="15">
-        <el-form ref="form" :model="form" :rules="rules" label-width="80px">
-          <el-col :span="12">
-            <el-form-item label="体重" prop="weight">
-              <el-input v-model="form.weight" placeholder="请输入体重" />
-            </el-form-item>
-          </el-col>
-
-          <el-col :span="12">
-            <el-form-item label="打卡日期" prop="logTime">
-              <el-date-picker
-                clearable
-                size="small"
-                style="width: 200px"
-                v-model="form.logTime"
-                type="date"
-                value-format="yyyy-MM-dd"
-                :picker-options="logTimePickerOptions"
-                placeholder="选择睡觉时间"
-              >
-              </el-date-picker>
-            </el-form-item>
-          </el-col>
-          <el-col :span="12">
-            <el-form-item label="睡觉时间" prop="sleepTime">
-              <el-time-select
-                clearable
-                size="small"
-                style="width: 200px"
-                v-model="form.sleepTime"
-                :picker-options="{
-                  start: '00:00',
-                  step: '00:15',
-                  end: '23:45',
-                }"
-                placeholder="选择睡觉时间"
-              >
-              </el-time-select>
-            </el-form-item>
-          </el-col>
-          <el-col :span="12">
-            <el-form-item label="起床时间" prop="wakeupTime">
-              <el-time-select
-                clearable
-                size="small"
-                style="width: 200px"
-                v-model="form.wakeupTime"
-                :picker-options="{
-                  start: '00:00',
-                  step: '00:15',
-                  end: '23:45',
-                }"
-                placeholder="选择睡觉时间"
-              >
-              </el-time-select>
-            </el-form-item>
-          </el-col>
-          <el-col :span="12">
-            <el-form-item label="运动锻炼" prop="sport">
-              <el-select v-model="form.sport" placeholder="请选择运动情况">
-                <el-option
-                  v-for="dict in sportOptions"
-                  :key="dict.dictValue"
-                  :label="dict.dictLabel"
-                  :value="dict.dictValue"
-                ></el-option>
-              </el-select>
-            </el-form-item>
-          </el-col>
-          <el-col :span="12">
-            <el-form-item label="按食谱" prop="diet">
-              <el-select v-model="form.diet" placeholder="请选择饮食情况">
-                <el-option
-                  v-for="dict in dietOptions"
-                  :key="dict.dictValue"
-                  :label="dict.dictLabel"
-                  :value="dict.dictValue"
-                ></el-option>
-              </el-select>
-            </el-form-item>
-          </el-col>
-          <el-col :span="12">
-            <el-form-item label="熬夜失眠" prop="insomnia">
-              <el-select v-model="form.insomnia" placeholder="请选择熬夜失眠">
-                <el-option
-                  v-for="dict in insomniaOptions"
-                  :key="dict.dictValue"
-                  :label="dict.dictLabel"
-                  :value="dict.dictValue"
-                ></el-option>
-              </el-select>
-            </el-form-item>
-          </el-col>
-          <el-col :span="12">
-            <el-form-item label="起床排便" prop="defecation">
-              <el-select v-model="form.defecation" placeholder="请选择排便情况">
-                <el-option
-                  v-for="dict in defecationOptions"
-                  :key="dict.dictValue"
-                  :label="dict.dictLabel"
-                  :value="dict.dictValue"
-                ></el-option>
-              </el-select>
-            </el-form-item>
-          </el-col>
-          <el-col>
-            <el-form-item label="饮水量" prop="water">
-              <el-input v-model="form.water" placeholder="请输入饮水量" />
-            </el-form-item>
-          </el-col>
-
-          <el-col>
-            <el-form-item label="备注" prop="remark">
-              <el-input
-                v-model="form.remark"
-                type="textarea"
-                placeholder="请输入内容"
-              />
-            </el-form-item>
-          </el-col>
-        </el-form>
-      </el-row>
-      <div slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="submitForm">确 定</el-button>
-        <el-button @click="cancel">取 消</el-button>
-      </div>
-    </el-dialog>
-
+    <!-- 编辑 -->
+    <PunchLogEdit ref="punchLogEditRef"></PunchLogEdit>
+    <!-- 详情 -->
     <PunchLogDetail ref="punchLogDetailRef"></PunchLogDetail>
   </div>
 </template>
@@ -415,7 +303,9 @@ import {
 } from "@/api/custom/wxUserLog";
 import { mapGetters } from "vuex";
 import PunchLogDetail from "@/components/PunchLog/PunchLogDetail";
+import PunchLogEdit from "@/components/PunchLog/PunchLogEdit";
 import AutoHideMessage from "@/components/AutoHideMessage";
+import dayjs from "dayjs";
 export default {
   name: "WxUserLog",
   data() {
@@ -463,13 +353,14 @@ export default {
       rules: {},
       logTimePickerOptions: {
         disabledDate(time) {
-          return time.getTime() > Date.now();
+          return time.getTime() > dayjs()
         },
       },
+      logTimeScope: null
     };
   },
   components:{
-    PunchLogDetail,AutoHideMessage
+    PunchLogDetail,AutoHideMessage,PunchLogEdit
   },
   created() {
     this.getList();
@@ -500,7 +391,9 @@ export default {
   methods: {
     /** 查询微信用户记录列表 */
     getList() {
-      this.loading = true;
+      this.loading = true; 
+      this.queryParams.beginTime = this.logTimeScope && this.logTimeScope.length > 0 ? this.logTimeScope[0] : null;
+      this.queryParams.endTime = this.logTimeScope && this.logTimeScope.length > 0 ? this.logTimeScope[1] : null;
       listWxUserLog(this.queryParams).then((response) => {
         this.wxUserLogList = response.rows;
         this.total = response.total;
@@ -573,6 +466,7 @@ export default {
     /** 重置按钮操作 */
     resetQuery() {
       this.resetForm("queryForm");
+      this.logTimeScope = null;
       this.handleQuery();
     },
     // 多选框选中数据
@@ -589,12 +483,8 @@ export default {
     },
     /** 修改按钮操作 */
     handleUpdate(row) {
-      this.reset();
-      const id = row.id || this.ids;
-      getWxUserLog(id).then((response) => {
-        this.form = response.data;
-        this.open = true;
-        this.title = "修改微信用户记录";
+      this.$refs.punchLogEditRef.showDialog(row, () => {
+          this.getList();
       });
     },
     /** 提交按钮 */
@@ -626,7 +516,7 @@ export default {
     handleDelete(row) {
       const ids = row.id || this.ids;
       this.$confirm(
-        '是否确认删除微信用户记录编号为"' + ids + '"的数据项?',
+        '是否确认删除该用户的打卡记录?',
         "警告",
         {
           confirmButtonText: "确定",

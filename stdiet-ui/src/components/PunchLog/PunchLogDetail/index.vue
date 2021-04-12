@@ -27,7 +27,7 @@
             <TableDetailMessage :data="punchLogDetail"></TableDetailMessage>
             <h3>二、图片信息</h3>
             <div style="height: 400px; overflow: auto">
-              <div>
+              <div v-if="punchLog != null && punchLog.imagesUrl.breakfastImages.length > 0">
                 <h4>早餐</h4>
                 <div>
                   <el-image v-for="(item, index) in punchLog.imagesUrl.breakfastImages" title="点击大图预览" :key="index"
@@ -37,7 +37,7 @@
                   </el-image>
                 </div>
               </div>
-              <div>
+              <div v-if="punchLog != null && punchLog.imagesUrl.lunchImages.length > 0">
                 <h4>午餐</h4>
                 <div>
                   <el-image v-for="(item, index) in punchLog.imagesUrl.lunchImages" title="点击大图预览" :key="index"
@@ -47,7 +47,7 @@
                   </el-image>
                 </div>
               </div>
-              <div>
+              <div v-if="punchLog != null && punchLog.imagesUrl.dinnerImages.length > 0">
                 <h4>晚餐</h4>
                 <div>
                   <el-image v-for="(item, index) in punchLog.imagesUrl.dinnerImages" title="点击大图预览" :key="index"
@@ -57,7 +57,7 @@
                   </el-image>
                 </div>
               </div>
-              <div>
+              <div  v-if="punchLog != null && punchLog.imagesUrl.extraMealImages.length > 0">
                 <h4>加餐</h4>
                 <div>
                   <el-image v-for="(item, index) in punchLog.imagesUrl.extraMealImages" title="点击大图预览" :key="index"
@@ -67,7 +67,7 @@
                   </el-image>
                 </div>
               </div>
-              <div>
+              <div v-if="punchLog != null && punchLog.imagesUrl.bodyImages.length > 0">
                 <h4>体型对比照</h4>
                 <div>
                   <el-image v-for="(item, index) in punchLog.imagesUrl.bodyImages" title="点击大图预览" :key="index"
@@ -105,7 +105,7 @@ export default {
       punchTitleData: [
         ["姓名", "体重(斤)","饮水量(ml)"],
         ["睡觉时间", "起床时间","运动锻炼"],
-        ["情绪","按食谱进食","食谱外食物"],
+        ["情绪","按食谱进食","其他食物"],
         ["熬夜失眠", "起床排便","是否便秘"]
       ],
       //打卡详情的属性名称，与标题对应，按竖显示
@@ -175,6 +175,7 @@ export default {
     onClosed() {
       this.data = null;
       this.punchLog = null,
+      this.imageUrl = [],
       this.punchLogDetail = []
     }
   },

@@ -124,4 +124,13 @@ public class SysWxUserLogServiceImpl implements ISysWxUserLogService {
         return sysWxUserLogMapper.selectSysWxUserLogByDateAndOpenId(sysWxUserLog);
     }
 
+    /**
+     * 根据客户ID查询对应打卡体重数据
+     * @param sysWxUserLog
+     * @return
+     */
+    public List<SysWxUserLog> getWxUserLogListByCustomerId(SysWxUserLog sysWxUserLog){
+        return sysWxUserLogMapper.getWxUserLogListByCustomerId(sysWxUserLog);
+    }
+
 }

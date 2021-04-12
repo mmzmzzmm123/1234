@@ -84,6 +84,9 @@
         <if test="id != null">
             and wxlog.id = #{id}
         </if>
+        <if test="customerId != null">
+            and sc.id = #{customerId}
+        </if>
         <if test="phone != null and phone != ''">and (sc.name like concat('%',#{phone},'%') or wxinfo.phone like  concat('%',#{phone},'%') )</if>
         <if test="appid != null">
             and wxinfo.appid = #{appid}
@@ -94,7 +97,9 @@
         <if test="afterNutritionistId != null">
             and su_atferSale.user_id = #{afterNutritionistId}
         </if>
-        order by wxlog.create_time desc
+        <if test="beginTime != null and beginTime != ''">and date_format(wxlog.log_time,'%y%m%d') &gt;= date_format(#{beginTime},'%y%m%d')</if>
+        <if test="endTime != null and endTime != ''">and date_format(wxlog.log_time,'%y%m%d') &lt;= date_format(#{endTime},'%y%m%d')</if>
+        order by wxlog.log_time desc
     </select>
 
     <select id="selectWxLogInfoList" parameterType="SysWxUserLog" resultMap="WxLogInfo">
@@ -249,6 +254,17 @@
                 ) AS s ORDER BY s.log_time DESC
             ) ss
         ) sss GROUP BY yearMonth,day_cha LIMIT 2
+    </select>
+
+    <!-- 后台根据用户ID查询该用户的打卡体重 -->
+    <select id="getWxUserLogListByCustomerId" parameterType="SysWxUserLog" resultMap="SysWxUserLogResult">
+        SELECT wxlog.id,wxlog.log_time,wxlog.weight FROM sys_wx_user_log wxlog
+        left join sys_wx_user_info wxinfo on wxinfo.openid  = wxlog.openid
+        left join sys_customer sc on sc.phone = wxinfo.phone and sc.del_flag = 0
+        where wxinfo.phone is not null and sc.id = #{customerId}
+        <if test="beginTime != null and beginTime != ''">and date_format(wxlog.log_time,'%y%m%d') &gt;= date_format(#{beginTime},'%y%m%d')</if>
+        <if test="endTime != null and endTime != ''">and date_format(wxlog.log_time,'%y%m%d') &lt;= date_format(#{endTime},'%y%m%d')</if>
+        order by wxlog.log_time asc
     </select>
 
 </mapper>

@@ -80,4 +80,11 @@ public interface ISysWxUserLogService
      */
     SysWxUserLog selectSysWxUserLogByDateAndOpenId(SysWxUserLog sysWxUserLog);
 
+    /**
+     * 根据客户ID查询对应打卡体重数据
+     * @param sysWxUserLog
+     * @return
+     */
+    List<SysWxUserLog> getWxUserLogListByCustomerId(SysWxUserLog sysWxUserLog);
+
 }

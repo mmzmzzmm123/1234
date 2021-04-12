@@ -60,3 +60,14 @@ export function getPunchLogDetail(id) {
     params: {}
   })
 }
+
+// 根据用户ID查询打卡日志详情
+export function getAllPunchLogByCustomerId(query) {
+  return request({
+    url: '/custom/wxUserLog/getAllPunchLogByCustomerId',
+    method: 'get',
+    params: query
+  })
+}
+
+
