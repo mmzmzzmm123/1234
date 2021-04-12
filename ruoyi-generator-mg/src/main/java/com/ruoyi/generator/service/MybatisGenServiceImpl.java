@@ -18,6 +18,8 @@ import com.ruoyi.generator.util.VelocityUtils;
 import org.apache.velocity.Template;
 import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.Velocity;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -31,6 +33,8 @@ import java.util.List;
 
 @Service
 public class MybatisGenServiceImpl {
+    private static final Logger log = LoggerFactory.getLogger(MybatisGenServiceImpl.class);
+
     @Autowired
     private GenTableServiceImpl genTableService;
     @Autowired
@@ -73,14 +77,16 @@ public class MybatisGenServiceImpl {
     }
 
     public void genMybatis(GenTable genTable) {
-        //todo
-//        String rootPath = GenTableServiceImpl.getGenBasePath(genTable);
-        URL resource = MybatisGenServiceImpl.class.getClassLoader().getResource("./");
-        String rootPath = new File(resource.getFile()).getParentFile().getParent();
-        //todo:测试临时
-        genTable.setGenPath(rootPath+"/src");
+        String rootPath = GenTableServiceImpl.getGenBasePath(genTable);
+        try {
+            FileUtils.forceMkdir(new File(rootPath + "\\src\\main\\java\\"));
+        } catch (IOException e) {
+            log.error("创建目录异常", e);
+        }
+//        URL resource = MybatisGenServiceImpl.class.getClassLoader().getResource("./");
+//        String rootPath = new File(resource.getFile()).getParentFile().getParent();
         // 配置项目路径
-        MyBatisCodeGenerator generator = MyBatisCodeGenerator.create(rootPath, "com.slabbridge.core");
+        MyBatisCodeGenerator generator = MyBatisCodeGenerator.create(rootPath, genTable.getPackageName());
         String jdbcDriver = "";
         String jdbcUrl = "";
         String jdbcUser = "";
