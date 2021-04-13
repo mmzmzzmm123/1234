@@ -5,7 +5,7 @@
       :close-on-press-escape="false"
       :visible.sync="visible"
       @closed="handleOnClosed"
-      size="40%"
+      size="50%"
     >
       <div class="app-container order_drawer_wrapper">
         <div class="header">
@@ -60,7 +60,8 @@
             prop="orderTypeName"
             align="center"
             width="160"
-          ></el-table-column>
+          />
+          <el-table-column label="成交金额" prop="amount" align="center" />
           <el-table-column label="成交时间" prop="orderTime" align="center"
             ><template slot-scope="scope">
               <div v-for="time in scope.row.orderTime.split(' ')" :key="time">
@@ -68,11 +69,7 @@
               </div>
             </template>
           </el-table-column>
-          <el-table-column
-            label="成交金额"
-            prop="amount"
-            align="center"
-          ></el-table-column>
+          <el-table-column label="开始日期" prop="startTime" align="center" />
           <el-table-column label="服务时长" prop="serveTime" align="center" />
           <el-table-column label="操作" align="center" width="120px">
             <template slot-scope="scope">
@@ -115,7 +112,7 @@
                 icon="el-icon-edit"
                 @click="handleOnReplaceRecordClick(scope.row)"
                 v-hasPermi="['custom:orderNutritionistReplaceRecord:list']"
-              >更换记录</el-button
+                >更换记录</el-button
               >
             </template>
           </el-table-column>
@@ -130,7 +127,9 @@
 
     <order-detail ref="orderDetailRef" />
     <!-- 订单营养师、售后更换记录 -->
-    <nutritionistReplaceRecord ref="replaceRecordRef"></nutritionistReplaceRecord>
+    <nutritionistReplaceRecord
+      ref="replaceRecordRef"
+    ></nutritionistReplaceRecord>
   </div>
 </template>
 <script>
@@ -148,7 +147,7 @@ export default {
     "edit-order-dialog": OrderEdit,
     "order-detail": OrderDetail,
     "create-order-dialog": OrderAdd,
-    "nutritionistReplaceRecord": NutritionistReplaceRecord
+    nutritionistReplaceRecord: NutritionistReplaceRecord,
   },
   data() {
     return {
