@@ -8,15 +8,15 @@
   >
     <div style="margin-top: -20px;">
         <div
-          style="float: right;  "
-          
+          style="float: right;  margin-bottom:10px"
         >
          
-         <!--<el-button
+         <el-button 
+            v-hasPermi="['custom:wxUserLog:query']"
             type="primary"
             plain
-            >评分</el-button
-          >-->
+            >打卡点评</el-button
+          >
           
           
         </div>
@@ -84,7 +84,7 @@
 </template>
 <script>
 import {
-  getPunchLogDetail
+  getPunchLogDetail,commentPunchContent
 } from "@/api/custom/wxUserLog";
 import TableDetailMessage from "@/components/TableDetailMessage";
 

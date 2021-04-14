@@ -123,6 +123,25 @@ public class SysWxUserLog extends BaseEntity
     @Excel(name = "体型对比照")
     private String bodyImages;
 
+    /** 服务建议 */
+    @Excel(name = "服务建议")
+    private String suggest;
+
+    /** 目标体重 */
+    @Excel(name = "目标体重")
+    private BigDecimal targetWeight;
+
+    /** 执行评分，五分制 */
+    @Excel(name = "执行评分，五分制")
+    private BigDecimal executionScore;
+
+    /** 点评 */
+    @Excel(name = "点评")
+    private String comment;
+
+    /** 删除标识 0未删除 1已删除 */
+    private Long delFlag;
+
     //售后营养师ID
     private Long afterNutritionistId;
 

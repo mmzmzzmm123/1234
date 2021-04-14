@@ -200,4 +200,13 @@ public class SysWxUserLogController extends BaseController {
         List<SysWxUserLog> list = sysWxUserLogService.getWxUserLogListByCustomerId(sysWxUserLog);
         return AjaxResult.success(list);
     }
+
+    /**
+     * 点评客户打卡内容
+     */
+    @PreAuthorize("@ss.hasPermi('custom:wxUserLog:query')")
+    @PostMapping("/commentPunchContent")
+    public AjaxResult commentPunchContent(@RequestBody SysWxUserLog sysWxUserLog) {
+        return toAjax(sysWxUserLogService.updateSysWxUserLog(sysWxUserLog));
+    }
 }

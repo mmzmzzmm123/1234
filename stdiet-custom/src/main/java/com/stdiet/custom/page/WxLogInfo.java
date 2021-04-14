@@ -1,10 +1,12 @@
 package com.stdiet.custom.page;
 
+import com.stdiet.common.annotation.Excel;
 import com.stdiet.common.utils.DateUtils;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.List;
 
 public class WxLogInfo implements Serializable {
     private static final long serialVersionUID = 1L;
@@ -50,6 +52,28 @@ public class WxLogInfo implements Serializable {
 
     /** 体型对比照 */
     private String bodyImages;
+
+    /** 服务建议 */
+    private String suggest;
+
+    /** 目标体重 */
+    private BigDecimal targetWeight;
+
+    /** 执行评分，五分制 */
+    private BigDecimal executionScore;
+
+    /** 点评 */
+    private String comment;
+
+    private List<String> breakfastImagesUrl;
+
+    private List<String> lunchImagesUrl;
+
+    private List<String> dinnerImagesUrl;
+
+    private List<String> extraMealImagesUrl;
+
+    private List<String> bodyImagesUrl;
 
     public String getDate() {
         return date;
@@ -185,6 +209,78 @@ public class WxLogInfo implements Serializable {
 
     public void setBodyImages(String bodyImages) {
         this.bodyImages = bodyImages;
+    }
+
+    public String getSuggest() {
+        return suggest;
+    }
+
+    public void setSuggest(String suggest) {
+        this.suggest = suggest;
+    }
+
+    public BigDecimal getTargetWeight() {
+        return targetWeight;
+    }
+
+    public void setTargetWeight(BigDecimal targetWeight) {
+        this.targetWeight = targetWeight;
+    }
+
+    public BigDecimal getExecutionScore() {
+        return executionScore;
+    }
+
+    public void setExecutionScore(BigDecimal executionScore) {
+        this.executionScore = executionScore;
+    }
+
+    public String getComment() {
+        return comment;
+    }
+
+    public void setComment(String comment) {
+        this.comment = comment;
+    }
+
+    public List<String> getBreakfastImagesUrl() {
+        return breakfastImagesUrl;
+    }
+
+    public void setBreakfastImagesUrl(List<String> breakfastImagesUrl) {
+        this.breakfastImagesUrl = breakfastImagesUrl;
+    }
+
+    public List<String> getLunchImagesUrl() {
+        return lunchImagesUrl;
+    }
+
+    public void setLunchImagesUrl(List<String> lunchImagesUrl) {
+        this.lunchImagesUrl = lunchImagesUrl;
+    }
+
+    public List<String> getDinnerImagesUrl() {
+        return dinnerImagesUrl;
+    }
+
+    public void setDinnerImagesUrl(List<String> dinnerImagesUrl) {
+        this.dinnerImagesUrl = dinnerImagesUrl;
+    }
+
+    public List<String> getExtraMealImagesUrl() {
+        return extraMealImagesUrl;
+    }
+
+    public void setExtraMealImagesUrl(List<String> extraMealImagesUrl) {
+        this.extraMealImagesUrl = extraMealImagesUrl;
+    }
+
+    public List<String> getBodyImagesUrl() {
+        return bodyImagesUrl;
+    }
+
+    public void setBodyImagesUrl(List<String> bodyImagesUrl) {
+        this.bodyImagesUrl = bodyImagesUrl;
     }
 
     @Override

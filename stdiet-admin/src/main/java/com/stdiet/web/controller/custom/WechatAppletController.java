@@ -131,6 +131,35 @@ public class WechatAppletController extends BaseController {
                     isPunch = true;
                 }
             }
+
+            for (WxLogInfo wxLogInfo : list) {
+                Map<String, List<String>> imageUrlMap = new HashMap<>();
+
+                List<String> breakfastImagesUrlList = StringUtils.isNotEmpty(wxLogInfo.getBreakfastImages()) ? Arrays.asList(wxLogInfo.getBreakfastImages().split("\\|")) : new ArrayList<>();
+                imageUrlMap.put("breakfastImages", breakfastImagesUrlList);
+
+                List<String> lunchImagesUrlList = StringUtils.isNotEmpty(sysWxUserLog.getLunchImages()) ? Arrays.asList(sysWxUserLog.getLunchImages().split("\\|")) : new ArrayList<>();
+                imageUrlMap.put("lunchImages", lunchImagesUrlList);
+
+                List<String> dinnerImagesUrlList = StringUtils.isNotEmpty(sysWxUserLog.getDinnerImages()) ? Arrays.asList(sysWxUserLog.getDinnerImages().split("\\|")) : new ArrayList<>();
+                imageUrlMap.put("dinnerImages", dinnerImagesUrlList);
+
+                List<String> extraMealImagesUrlList = StringUtils.isNotEmpty(sysWxUserLog.getExtraMealImages()) ? Arrays.asList(sysWxUserLog.getExtraMealImages().split("\\|")) : new ArrayList<>();
+                imageUrlMap.put("extraMealImages", extraMealImagesUrlList);
+
+                List<String> bodyImagesUrlList = StringUtils.isNotEmpty(sysWxUserLog.getBodyImages()) ? Arrays.asList(sysWxUserLog.getBodyImages().split("\\|")) : new ArrayList<>();
+                imageUrlMap.put("bodyImages", bodyImagesUrlList );
+
+                //生成预览链接
+                Map<String,List<String>> downUrlList = AliyunOSSUtils.generatePresignedUrl(imageUrlMap);
+
+                wxLogInfo.setBreakfastImagesUrl(downUrlList.get("breakfastImages"));
+                wxLogInfo.setLunchImagesUrl(downUrlList.get("lunchImages"));
+                wxLogInfo.setDinnerImagesUrl(downUrlList.get("dinnerImages"));
+                wxLogInfo.setExtraMealImagesUrl(downUrlList.get("extraMealImages"));
+                wxLogInfo.setBodyImagesUrl(downUrlList.get("bodyImages"));
+            }
+
             Collections.reverse(list);
             TableDataInfo tableDataInfo = getDataTable(list);
             result.put("isPunch", isPunch);
