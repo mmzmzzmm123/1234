@@ -217,6 +217,30 @@ public class TsbzJdcxController extends BaseController {
     }
 
     /**
+     * 修改基地区级审核
+     */
+    @PreAuthorize("@ss.hasPermi('jxjs:jdcx:edit')")
+    @Log(title = "基地区级审核", businessType = BusinessType.UPDATE)
+    @PostMapping("/ms/{ids}")
+    public AjaxResult ms(@RequestBody TsbzJdcx tsbzJdcx, @PathVariable Long[] ids) {
+        int iCount = 0;
+        if (ids.length > 0) {
+            for (int i = 0; i < ids.length; i++) {
+                Long id = ids[i];
+                tsbzJdcx.setId(id);
+                iCount = iCount + tsbzJdcxService.updateTsbzJdcx(tsbzJdcx);
+            }
+            if(iCount>0){
+                return toAjax(iCount);
+            }else{
+                return AjaxResult.error("执行失败");
+            }
+        } else {
+            return AjaxResult.error("参数错误");
+        }
+    }
+
+    /**
      * 批量区级审核
      */
     @PreAuthorize("@ss.hasPermi('jxjs:jdcx:edit')")

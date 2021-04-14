@@ -303,7 +303,7 @@
 import {
   listJdcx,
   getJdcx,
-  updateJdcx,
+  updateJdcxMs,
   exportJdcx,
   importMsTemplate,
 } from "@/api/jxjs/jdcx";
@@ -547,18 +547,24 @@ export default {
     // 多选框选中数据
     handleSelectionChange(selection) {
       this.ids = selection.map((item) => item.id);
-      this.single = selection.length !== 1;
+      this.single = selection.length < 1;
       this.multiple = !selection.length;
     },
     /** 修改按钮操作 */
     handleUpdate(row) {
       this.reset();
       const id = row.id || this.ids;
-      getJdcx(id).then((response) => {
-        this.form = response.data;
-        this.open = true;
-        this.title = "面试结果审核";
-      });
+      if (row.id != null) {
+        this.ids = [];
+        this.ids.push(row.id);
+      }
+      // getJdcx(id).then((response) => {
+      //   this.form = response.data;
+      //   this.open = true;
+      //   this.title = "面试结果审核";
+      // });
+      this.open = true;
+      this.title = "面试结果审核";
     },
     /** 评价等级操作 */
     handlePjdj(row) {
@@ -575,14 +581,26 @@ export default {
       this.$refs["form"].validate((valid) => {
         if (valid) {
           this.form.dqzt = "9";
-          if (this.form.id != null) {
-            updateJdcx(this.form).then((response) => {
+          // if (this.form.id != null) {
+          //   updateJdcx(this.form).then((response) => {
+          //     if (response.code === 200) {
+          //       this.msgSuccess("录取成功");
+          //       this.open = false;
+          //       this.getList();
+          //     }
+          //   });
+          // }
+          const ids = this.ids;
+          if (ids.length > 0) {
+            updateJdcxMs(this.form, ids).then((response) => {
               if (response.code === 200) {
                 this.msgSuccess("录取成功");
                 this.open = false;
                 this.getList();
               }
             });
+          } else {
+            this.msgError("请选择要录取的名单");
           }
         }
       });

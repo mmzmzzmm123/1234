@@ -247,7 +247,7 @@ import {
   getJdcx,
   delJdcx,
   addJdcx,
-  updateJdcx,
+  updateJdcxMs,
   exportJdcx,
   importTemplate,
 } from "@/api/jxjs/jdcx";
@@ -502,31 +502,49 @@ export default {
     // 多选框选中数据
     handleSelectionChange(selection) {
       this.ids = selection.map((item) => item.id);
-      this.single = selection.length !== 1;
+      this.single = selection.length < 1;
       this.multiple = !selection.length;
     },
     /** 修改按钮操作 */
     handleUpdate(row) {
       this.reset();
       const id = row.id || this.ids;
-      getJdcx(id).then((response) => {
-        this.form = response.data;
-        this.open = true;
-        this.title = "面试确认";
-      });
+      if (row.id != null) {
+        this.ids = [];
+        this.ids.push(row.id);
+      }
+      this.open = true;
+      this.title = "面试确认";
+      // getJdcx(id).then((response) => {
+      //   this.form = response.data;
+      //   this.open = true;
+      //   this.title = "面试确认";
+      // });
     },
     /** 提交按钮 */
     submitForm() {
       this.$refs["form"].validate((valid) => {
         if (valid) {
-          if (this.form.id != null) {
-            updateJdcx(this.form).then((response) => {
+          // if (this.form.id != null) {
+          //   updateJdcx(this.form).then((response) => {
+          //     if (response.code === 200) {
+          //       this.msgSuccess("修改成功");
+          //       this.open = false;
+          //       this.getList();
+          //     }
+          //   });
+          // }
+          const ids = this.ids;
+          if (ids.length > 0) {
+            updateJdcxMs(this.form, ids).then((response) => {
               if (response.code === 200) {
-                this.msgSuccess("修改成功");
+                this.msgSuccess("确认面试成功");
                 this.open = false;
                 this.getList();
               }
             });
+          } else {
+            this.msgError("请选择要确认面试名单");
           }
         }
       });

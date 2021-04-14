@@ -35,6 +35,15 @@ export function updateJdcx(data) {
     })
 }
 
+// 修改基地区级审核
+export function updateJdcxMs(data,id) {
+    return request({
+        url: '/jxjs/jdcx/ms/'+id,
+        method: 'post',
+        data: data
+    })
+}
+
 // 删除基地区级审核
 export function delJdcx(id) {
     return request({
