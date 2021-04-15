@@ -1,9 +1,12 @@
 package com.stdiet.custom.mapper;
 
+import java.util.Date;
 import java.util.List;
 import com.stdiet.custom.domain.SysRecipesPlan;
 import com.stdiet.custom.domain.SysRecipesPlanListInfo;
 import org.apache.ibatis.annotations.Param;
+
+import javax.xml.crypto.Data;
 
 /**
  * 食谱计划Mapper接口
@@ -87,7 +90,7 @@ public interface SysRecipesPlanMapper
      * @param customerId
      * @return
      */
-    SysRecipesPlan getLastDayRecipesPlan(@Param("customerId")Long customerId, @Param("orderId")Long orderId);
+    SysRecipesPlan getLastDayRecipesPlan(@Param("customerId")Long customerId, @Param("orderTime") Date orderTime);
 
     /**
      * 根据订单ID查询食谱计划
