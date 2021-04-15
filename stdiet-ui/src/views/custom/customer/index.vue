@@ -526,7 +526,7 @@ export default {
       this.fansChannelOptions = response.data;
     });
     this.getDicts("cus_account").then((response) => {
-      if (this.userRemark && this.userRemark.includes("|")) {
+      if (this.isPartner) {
         const accRange = this.userRemark.split("|");
         this.accountIdOptions = accRange.reduce((arr, accId) => {
           const tarObj = response.data.find((obj) => obj.dictValue === accId);
@@ -542,6 +542,9 @@ export default {
     this.getList();
   },
   computed: {
+    isPartner() {
+      return this.roles && this.roles.includes("partner");
+    },
     ...mapGetters([
       // 售前字典
       "preSaleIdOptions",
@@ -553,6 +556,8 @@ export default {
       "nutriAssisIdOptions",
       //
       "userRemark",
+      //
+      "roles",
     ]),
   },
   methods: {

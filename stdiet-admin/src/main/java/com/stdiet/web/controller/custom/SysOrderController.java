@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
 import java.net.URLDecoder;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -49,12 +50,17 @@ public class SysOrderController extends OrderBaseController {
     public OrderTableDataInfo list(SysOrder sysOrder) {
         startPage();
         dealOrderType(sysOrder);
-        String remark = SecurityUtils.getLoginUser().getUser().getRemark();
-        if (StringUtils.isNotEmpty(remark) && remark.contains("|") && StringUtils.isEmpty(sysOrder.getAccount())) {
-            sysOrder.setAccRange(remark.split("\\|"));
+        List<SysOrder> list = new ArrayList<>();
+        if (SecurityUtils.getLoginUser().getUser().getRoles().get(0).getRoleKey().equals("partner")) {
+            String remark = SecurityUtils.getLoginUser().getUser().getRemark();
+            if (StringUtils.isEmpty(remark)) {
+                return getOrderDataTable(list, new BigDecimal(0));
+            } else if (remark.contains("|") && StringUtils.isEmpty(sysOrder.getAccount())) {
+                sysOrder.setAccRange(remark.split("\\|"));
+            }
         }
 
-        List<SysOrder> list = sysOrderService.selectSysOrderList(sysOrder);
+        list = sysOrderService.selectSysOrderList(sysOrder);
         List<SysUser> userList = userService.selectAllUser();
         BigDecimal totalAmount = sysOrderService.selectAllOrderAmount(sysOrder);
         if (totalAmount == null) {

@@ -3,6 +3,7 @@ package com.stdiet.web.controller.custom;
 import com.stdiet.common.annotation.Log;
 import com.stdiet.common.core.controller.BaseController;
 import com.stdiet.common.core.domain.AjaxResult;
+import com.stdiet.common.core.domain.entity.SysUser;
 import com.stdiet.common.core.page.TableDataInfo;
 import com.stdiet.common.enums.BusinessType;
 import com.stdiet.common.utils.SecurityUtils;
@@ -15,10 +16,10 @@ import com.stdiet.custom.service.ISysCustomerHealthyService;
 import com.stdiet.custom.service.ISysCustomerPhysicalSignsService;
 import com.stdiet.custom.service.ISysCustomerService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.SecurityConfig;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -46,11 +47,16 @@ public class SysCustomerController extends BaseController {
     @GetMapping("/list")
     public TableDataInfo list(SysCustomer sysCustomer) {
         startPage();
-        String remark = SecurityUtils.getLoginUser().getUser().getRemark();
-        if (StringUtils.isNotEmpty(remark) && remark.contains("|") && sysCustomer.getChannelId() == null) {
-            sysCustomer.setChannels(remark.split("\\|"));
+        List<SysCustomer> list = new ArrayList<>();
+        if (SecurityUtils.getLoginUser().getUser().getRoles().get(0).getRoleKey().equals("partner")) {
+            String remark = SecurityUtils.getLoginUser().getUser().getRemark();
+            if (StringUtils.isEmpty(remark)) {
+                return getDataTable(list);
+            } else if (remark.contains("|") && sysCustomer.getChannelId() == null) {
+                sysCustomer.setChannels(remark.split("\\|"));
+            }
         }
-        List<SysCustomer> list = sysCustomerService.selectSysCustomerList(sysCustomer);
+        list = sysCustomerService.selectSysCustomerList(sysCustomer);
         if (list != null && list.size() > 0) {
             for (SysCustomer sysCus : list) {
                 if (StringUtils.isNotEmpty(sysCus.getPhone())) {
