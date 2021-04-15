@@ -154,4 +154,11 @@
         </foreach>
     </delete>
 
+    <delete id="deleteTsbzJyykhrwByPids" parameterType="String">
+        delete from tsbz_jyykhrw where parent_id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
 </mapper>

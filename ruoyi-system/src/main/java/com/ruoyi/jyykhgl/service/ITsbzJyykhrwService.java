@@ -66,4 +66,12 @@ public interface ITsbzJyykhrwService {
      * @return 结果
      */
     public int deleteTsbzJyykhrwById(Long id);
+
+    /**
+     * 批量删除教研员考核任务
+     *
+     * @param ids 需要删除的数据ID
+     * @return 结果
+     */
+    public int deleteTsbzJyykhrwByPids(Long[] ids);
 }

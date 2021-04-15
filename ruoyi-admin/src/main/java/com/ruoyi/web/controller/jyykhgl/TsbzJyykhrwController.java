@@ -106,6 +106,7 @@ public class TsbzJyykhrwController extends BaseController {
     @Log(title = "教研员考核任务", businessType = BusinessType.DELETE)
     @DeleteMapping("/{ids}")
     public AjaxResult remove(@PathVariable Long[] ids) {
+        tsbzJyykhrwService.deleteTsbzJyykhrwByPids(ids);
         return toAjax(tsbzJyykhrwService.deleteTsbzJyykhrwByIds(ids));
     }
 

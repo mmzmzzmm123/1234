@@ -91,6 +91,17 @@ public class TsbzJyykhrwServiceImpl implements ITsbzJyykhrwService {
     }
 
     /**
+     * 批量删除教研员考核任务
+     *
+     * @param ids 需要删除的数据ID
+     * @return 结果
+     */
+    @Override
+    public int deleteTsbzJyykhrwByPids(Long[] ids) {
+        return tsbzJyykhrwMapper.deleteTsbzJyykhrwByPids(ids);
+    }
+
+    /**
      * 删除教研员考核任务信息
      *
      * @param id 教研员考核任务ID
