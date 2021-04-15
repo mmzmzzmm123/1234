@@ -19,7 +19,7 @@
             />
           </el-form-item>
         </el-col>
-        <el-col :span="6">
+        <el-col :span="6" v-if="!isPartner">
           <el-form-item label="收款方式" prop="payTypeId">
             <el-select
               v-model="queryParams.payTypeId"
@@ -37,10 +37,10 @@
           </el-form-item>
         </el-col>
         <el-col :span="6">
-          <el-form-item label="收款账号" prop="accountId">
+          <el-form-item label="进粉渠道" prop="accountId">
             <el-select
               v-model="queryParams.accountId"
-              placeholder="请选择账号"
+              placeholder="请选择渠道"
               clearable
               size="small"
             >
@@ -70,7 +70,7 @@
             </el-select>
           </el-form-item>
         </el-col>
-        <el-col :span="6">
+        <el-col :span="6" v-if="!isPartner">
           <el-form-item label="销售" prop="preSaleId">
             <el-select
               v-model="queryParams.preSaleId"
@@ -88,7 +88,7 @@
             </el-select>
           </el-form-item>
         </el-col>
-        <el-col :span="6">
+        <el-col :span="6" v-if="!isPartner">
           <el-form-item label="售后" prop="afterSaleId">
             <el-select
               v-model="queryParams.afterSaleId"
@@ -106,7 +106,7 @@
             </el-select>
           </el-form-item>
         </el-col>
-        <el-col :span="6">
+        <el-col :span="6" v-if="!isPartner">
           <el-form-item label="主营养师" prop="nutritionistId">
             <el-select
               v-model="queryParams.nutritionistId"
@@ -124,7 +124,7 @@
             </el-select>
           </el-form-item>
         </el-col>
-        <el-col :span="6">
+        <el-col :span="6" v-if="!isPartner">
           <el-form-item
             label="营养师助理"
             prop="nutriAssisId"
@@ -147,7 +147,7 @@
             </el-select>
           </el-form-item>
         </el-col>
-        <el-col :span="6">
+        <el-col :span="6" v-if="!isPartner">
           <el-form-item label="策划" prop="plannerId">
             <el-select
               v-model="queryParams.plannerId"
@@ -165,7 +165,7 @@
             </el-select>
           </el-form-item>
         </el-col>
-        <el-col :span="6">
+        <el-col :span="6" v-if="!isPartner">
           <el-form-item label="策划助理" prop="plannerAssisId">
             <el-select
               v-model="queryParams.plannerAssisId"
@@ -183,7 +183,7 @@
             </el-select>
           </el-form-item>
         </el-col>
-        <el-col :span="6">
+        <el-col :span="6" v-if="!isPartner">
           <el-form-item label="运营" prop="operatorId">
             <el-select
               v-model="queryParams.operatorId"
@@ -201,7 +201,7 @@
             </el-select>
           </el-form-item>
         </el-col>
-        <el-col :span="6">
+        <el-col :span="6" v-if="!isPartner">
           <el-form-item label="运营助理" prop="operatorAssisId">
             <el-select
               v-model="queryParams.operatorAssisId"
@@ -235,7 +235,7 @@
             </el-select>
           </el-form-item>
         </el-col>
-        <el-col :span="6">
+        <el-col :span="6" v-if="!isPartner">
           <el-form-item label="订单金额" prop="amountFlag">
             <el-select
               v-model="queryParams.amountFlag"
@@ -356,7 +356,7 @@
         </template>
       </el-table-column>
       <el-table-column
-        label="收款账号"
+        label="进粉渠道"
         align="center"
         prop="account"
         width="90"
@@ -586,6 +586,9 @@ export default {
     isMobile() {
       return this.device === "mobile";
     },
+    isPartner() {
+      return this.userRemark && this.userRemark.includes("|");
+    },
     ...mapGetters([
       // 售前字典
       "preSaleIdOptions",
@@ -606,6 +609,8 @@ export default {
       //
       "userId",
       //
+      "userRemark",
+      //
       "device",
     ]),
   },
@@ -615,7 +620,18 @@ export default {
       this.payTypeIdOptions = response.data;
     });
     this.getDicts("cus_account").then((response) => {
-      this.accountIdOptions = response.data;
+      if (this.userRemark && this.userRemark.includes("|")) {
+        const accRange = this.userRemark.split("|");
+        this.accountIdOptions = accRange.reduce((arr, accId) => {
+          const tarObj = response.data.find((obj) => obj.dictValue === accId);
+          if (tarObj) {
+            arr.push(tarObj);
+          }
+          return arr;
+        }, []);
+      } else {
+        this.accountIdOptions = response.data;
+      }
     });
     this.getDicts("cus_serve_time").then((response) => {
       this.serveTimeIdOption = response.data;
