@@ -33,6 +33,7 @@ import java.util.*;
 @RestController
 @RequestMapping("/custom/wxUserLog")
 public class SysWxUserLogController extends BaseController {
+
     @Autowired
     private ISysWxUserLogService sysWxUserLogService;
 

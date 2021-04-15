@@ -15,6 +15,7 @@
             v-hasPermi="['custom:wxUserLog:query']"
             type="primary"
             plain
+            @click="clickComment()"
             >打卡点评</el-button
           >
           
@@ -26,12 +27,12 @@
             <h3>一、基础信息</h3>
             <TableDetailMessage :data="punchLogDetail"></TableDetailMessage>
             <h3>二、图片信息</h3>
-            <div style="height: 400px; overflow: auto">
+            <div style="height: 370px; overflow: auto">
               <div v-if="punchLog != null && punchLog.imagesUrl.breakfastImages.length > 0">
                 <h4>早餐</h4>
                 <div>
                   <el-image v-for="(item, index) in punchLog.imagesUrl.breakfastImages" title="点击大图预览" :key="index"
-                  style="width: 300px; height: 380px"
+                  style="width: 300px; height: 300px"
                   :src="item"
                   :preview-src-list="imageUrl">
                   </el-image>
@@ -41,7 +42,7 @@
                 <h4>午餐</h4>
                 <div>
                   <el-image v-for="(item, index) in punchLog.imagesUrl.lunchImages" title="点击大图预览" :key="index"
-                  style="width: 300px; height: 400px"
+                  style="width: 300px; height: 300px"
                   :src="item"
                   :preview-src-list="imageUrl">
                   </el-image>
@@ -51,7 +52,7 @@
                 <h4>晚餐</h4>
                 <div>
                   <el-image v-for="(item, index) in punchLog.imagesUrl.dinnerImages" title="点击大图预览" :key="index"
-                  style="width: 300px; height: 400px"
+                  style="width: 300px; height: 300px"
                   :src="item"
                   :preview-src-list="imageUrl">
                   </el-image>
@@ -61,7 +62,7 @@
                 <h4>加餐</h4>
                 <div>
                   <el-image v-for="(item, index) in punchLog.imagesUrl.extraMealImages" title="点击大图预览" :key="index"
-                  style="width: 300px; height: 400px"
+                  style="width: 300px; height: 300px"
                   :src="item"
                   :preview-src-list="imageUrl">
                   </el-image>
@@ -71,7 +72,7 @@
                 <h4>体型对比照</h4>
                 <div>
                   <el-image v-for="(item, index) in punchLog.imagesUrl.bodyImages" title="点击大图预览" :key="index"
-                  style="width: 300px; height: 400px"
+                  style="width: 300px; height: 300px"
                   :src="item"
                   :preview-src-list="imageUrl">
                   </el-image>
@@ -79,8 +80,40 @@
               </div>
             </div>
         </div>
-    </div>  
+    </div> 
+
+    <el-dialog :visible.sync="commentVisible" :title="commentTitle" width="500px" append-to-body @closed="commentClosed">
+        <el-form ref="form" :model="commentForm" :rules="commentRules" label-position="top" label-width="100px">
+            <el-form-item label="打卡评分" prop="executionScore" >
+              <el-rate
+              v-model="commentForm.executionScore"
+              show-score
+              allow-half
+              text-color="#ff9900"
+              >
+            </el-rate>
+            </el-form-item>
+          
+          <el-form-item label="点评内容" prop="comment" >
+            
+            <el-input
+              type="textarea"
+              :rows="4"
+              maxlength="200"
+              show-word-limit
+              placeholder="请输入点评内容"
+              v-model="commentForm.comment">
+            </el-input>
+          </el-form-item>
+        </el-form>
+        <div slot="footer" class="dialog-footer" >
+          <el-button type="primary" @click="commentSubmit()">确 定</el-button>
+          <el-button @click="commentClosed()">取 消</el-button>
+        </div>
+    </el-dialog>
   </el-dialog>
+
+
 </template>
 <script>
 import {
@@ -106,15 +139,26 @@ export default {
         ["姓名", "体重(斤)","饮水量(ml)"],
         ["睡觉时间", "起床时间","运动锻炼"],
         ["情绪","按食谱进食","其他食物"],
-        ["熬夜失眠", "起床排便","是否便秘"]
+        ["熬夜失眠", "起床排便","是否便秘"],
+        ["服务建议", "评分","点评内容"]
       ],
       //打卡详情的属性名称，与标题对应，按竖显示
       punchValueData: [
         ["customerName","weight","water"],
         ["sleepTime", "wakeupTime","sport"],
         ["emotion", "diet","slyEatFood"],
-        ["insomnia","defecation", "constipation"]
+        ["insomnia","defecation", "constipation"],
+        ["remark","executionScore","comment"],
       ],
+
+      commentVisible: false,
+      commentTitle: "",
+      commentForm:{
+
+      },
+      commentRules:{},
+      scoreArray:[0.5,1,1.5,2,2.5,3,3.5,4,4.5,5]
+
     };
   },
   methods: {
@@ -152,6 +196,8 @@ export default {
           res.data.insomnia = res.data.insomnia === "Y" ? "是" : "否";
           res.data.defecation = res.data.defecation === "Y" ? "是" : "否";
           res.data.constipation = res.data.constipation === "Y" ? "是" : "否";
+          res.data.isScore = res.data.executionScore == null ? "否" : "是";
+          this.punchLogDetail = [];
           for (let i = 0; i < this.punchTitleData.length; i++) {
             this.punchLogDetail.push({
               attr_name_one: this.punchTitleData[i][0],
@@ -177,6 +223,35 @@ export default {
       this.punchLog = null,
       this.imageUrl = [],
       this.punchLogDetail = []
+    },
+    clickComment(){
+      console.log(this.punchLog.executionScore);
+        this.commentForm = {
+          id: this.punchLog.id,
+          comment: this.punchLog.comment,
+          executionScore: this.punchLog.executionScore == null ? 0 : this.punchLog.executionScore,
+        }
+        this.commentTitle = "点评「"+this.punchLog.customerName+" "+ this.punchLog.logTime +"」打卡";
+        this.commentVisible = true;
+        
+    },
+    commentClosed(){
+       this.commentVisible = false;
+    },
+    commentSubmit(){
+      /*if(this.commentForm.executionScore == null || this.commentForm.executionScore == 0){
+          this.msgError("评分不能为0");
+          return;
+      }*/
+      commentPunchContent(this.commentForm).then((res) => {
+          if(res.code == 200){
+            this.msgSuccess("点评成功");
+            this.commentVisible = false;
+            this.getPunchLogById();
+          }else{
+            this.msgSuccess("点评失败");
+          }
+      });
     }
   },
 };

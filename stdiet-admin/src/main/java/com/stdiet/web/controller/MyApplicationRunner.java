@@ -10,6 +10,7 @@ import com.stdiet.custom.mapper.SysNutritionQuestionMapper;
 import com.stdiet.custom.mapper.SysWxUserInfoMapper;
 import com.stdiet.custom.mapper.SysWxUserLogMapper;
 import com.stdiet.custom.service.ISysNutritionQuestionService;
+import com.stdiet.custom.service.ISysWxUserLogService;
 import com.stdiet.custom.utils.LuceneIndexUtils;
 import com.stdiet.framework.web.domain.server.Sys;
 import org.apache.lucene.document.Document;
@@ -37,6 +38,9 @@ public class MyApplicationRunner implements ApplicationRunner {
     @Autowired
     private ISysNutritionQuestionService sysNutritionQuestionService;
 
+    @Autowired
+    private ISysWxUserLogService sysWxUserLogService;
+
     @Override
     public void run(ApplicationArguments args) throws Exception {
         System.out.println("项目启动调用方法");
@@ -46,7 +50,6 @@ public class MyApplicationRunner implements ApplicationRunner {
         sysNutritionQuestion.setContent("少熬夜，少暴饮暴食");
         sysNutritionQuestion.setKey("猝死");
         sysNutritionQuestionService.insertSysNutritionQuestion(sysNutritionQuestion);*/
-
 
     }
 

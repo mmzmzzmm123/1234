@@ -197,7 +197,7 @@
         label="情绪"
         align="center"
         prop="emotion"
-        width="160"
+        width="120"
       >
       <template slot-scope="scope">
           <AutoHideMessage :maxLength="4" :data="scope.row.emotion"></AutoHideMessage>
@@ -214,7 +214,7 @@
         label="其他食物"
         align="center"
         prop="slyEatFood"
-         width="160"
+         width="120"
       >
       <template slot-scope="scope">
           <AutoHideMessage :maxLength="4" :data="scope.row.slyEatFood"></AutoHideMessage>
@@ -241,6 +241,15 @@
       <el-table-column label="饮水量" align="center" prop="water">
         <template slot-scope="scope">
           <span>{{ `${scope.row.water} ml` }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="是否点评" align="center" prop="executionScore">
+        <template slot-scope="scope">
+          <el-tag
+            :type="scope.row.executionScore == null ? 'danger' : 'success'"
+          >
+            {{ scope.row.executionScore == null ? "未点评" : "已点评" }}
+          </el-tag>
         </template>
       </el-table-column>
       <el-table-column
