@@ -587,7 +587,7 @@ export default {
       return this.device === "mobile";
     },
     isPartner() {
-      return this.userRemark && this.userRemark.includes("|");
+      return this.roles && this.roles.includes("partner");
     },
     ...mapGetters([
       // 售前字典
@@ -611,6 +611,8 @@ export default {
       //
       "userRemark",
       //
+      "roles",
+      //
       "device",
     ]),
   },
@@ -620,7 +622,7 @@ export default {
       this.payTypeIdOptions = response.data;
     });
     this.getDicts("cus_account").then((response) => {
-      if (this.userRemark && this.userRemark.includes("|")) {
+      if (this.isPartner) {
         const accRange = this.userRemark.split("|");
         this.accountIdOptions = accRange.reduce((arr, accId) => {
           const tarObj = response.data.find((obj) => obj.dictValue === accId);
