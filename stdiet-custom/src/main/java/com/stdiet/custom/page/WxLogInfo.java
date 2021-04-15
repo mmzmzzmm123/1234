@@ -11,6 +11,8 @@ import java.util.List;
 public class WxLogInfo implements Serializable {
     private static final long serialVersionUID = 1L;
 
+    private Long id;
+
     private String date;
 
     private Long water;
@@ -291,6 +293,14 @@ public class WxLogInfo implements Serializable {
 
     public void setRemark(String remark) {
         this.remark = remark;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     @Override
