@@ -7,37 +7,20 @@
       v-show="showSearch"
       label-width="70px"
     >
-      <!-- <el-form-item label="名称" prop="rwmc">
-        <el-input
-          v-model="queryParams.rwmc"
-          placeholder="请输入名称"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item> -->
-      <el-form-item label="任务类型" prop="rwlx">
-        <el-select
-          v-model="queryParams.rwlx"
-          size="small"
-          placeholder="请选择任务类型"
-        >
+      <el-form-item label="考核学年" prop="xn">
+        <el-select v-model="queryParams.xn" placeholder="请选择学年">
           <el-option
-            v-for="dict in rwlxOptions"
+            v-for="dict in xnOptions"
             :key="dict.dictValue"
             :label="dict.dictLabel"
             :value="dict.dictValue"
           ></el-option>
         </el-select>
       </el-form-item>
-      <el-form-item label="任务内容" prop="rwnr">
-        <el-select
-          v-model="queryParams.rwnr"
-          size="small"
-          placeholder="请选择任务内容"
-        >
+      <el-form-item label="考核学期" prop="xq">
+        <el-select v-model="queryParams.xq" placeholder="请选择学期">
           <el-option
-            v-for="dict in rwnrOptions"
+            v-for="dict in xqOptions"
             :key="dict.dictValue"
             :label="dict.dictLabel"
             :value="dict.dictValue"
@@ -77,41 +60,28 @@
     <el-table v-loading="loading" :data="jyykhrwList">
       <!-- <el-table-column type="selection" width="55" align="center" /> -->
       <!-- <el-table-column label="编号" align="center" prop="id" /> -->
+      <el-table-column type="selection" width="55" align="center" />
+      <!-- <el-table-column label="编号" align="center" prop="id" /> -->
+      <el-table-column
+        label="考核学年"
+        align="center"
+        prop="xn"
+        :formatter="xnFormat"
+      />
+      <el-table-column
+        label="考核学期"
+        align="center"
+        prop="xq"
+        :formatter="xqFormat"
+      />
       <el-table-column label="任务名称" align="center" prop="rwmc" />
-      <el-table-column
-        label="任务类型"
-        align="center"
-        prop="rwlx"
-        :formatter="xrlxFormat"
-      />
-      <el-table-column
-        label="任务内容"
-        align="center"
-        prop="rwnr"
-        :formatter="rwnrFormat"
-      />
       <el-table-column
         label="考核部门"
         align="center"
         prop="khbm"
         :formatter="khbmFormat"
       />
-      <el-table-column label="考核周期" align="center" prop="khzq" />
-      <el-table-column label="数量要求" align="center" prop="slyq" />
-      <el-table-column
-        label="是否必选"
-        align="center"
-        prop="fsbx"
-        :formatter="typeFormat"
-      />
-      <!-- <el-table-column label="是否删除" align="center" prop="isdel" /> -->
       <el-table-column label="任务说明" align="center" prop="rwsm" />
-      <el-table-column
-        label="完成数量"
-        align="center"
-        prop="wcsl"
-        :formatter="wcslFormat"
-      />
       <el-table-column
         label="操作"
         align="center"
@@ -139,89 +109,48 @@
     />
 
     <!-- 添加或修改教研员考核任务对话框 -->
-    <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
-      <el-form ref="form" :model="form" :rules="rules" label-width="80px">
-        <!-- <el-form-item label="名称" prop="rwmc">
-          <el-input v-model="form.rwmc" placeholder="请输入名称" />
-        </el-form-item> -->
-        <el-form-item label="任务类型" prop="rwlx">
-          <el-select
-            v-model="form.rwlx"
-            disabled="“true”"
-            placeholder="请选择任务类型"
-          >
-            <el-option
-              v-for="dict in rwlxOptions"
-              :key="dict.dictValue"
-              :label="dict.dictLabel"
-              :value="dict.dictValue"
-            ></el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item label="任务内容" prop="rwnr">
-          <el-select
-            v-model="form.rwnr"
-            disabled="“true”"
-            placeholder="请选择任务内容"
-          >
-            <el-option
-              v-for="dict in rwnrOptions"
-              :key="dict.dictValue"
-              :label="dict.dictLabel"
-              :value="dict.dictValue"
-            ></el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item label="考核部门" prop="khbm">
-          <el-select
-            v-model="form.khbm"
-            disabled="“true”"
-            placeholder="请选择考核部门"
-          >
-            <el-option
-              v-for="dict in khbmOptions"
-              :key="dict.dictValue"
-              :label="dict.dictLabel"
-              :value="dict.dictValue"
-            ></el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item label="考核周期" prop="khzq">
-          <el-input
-            v-model="form.khzq"
-            disabled="“true”"
-            placeholder="请输入考核周期"
-          />
-        </el-form-item>
-        <el-form-item label="数量要求" prop="slyq">
-          <el-input
-            v-model="form.slyq"
-            disabled="“true”"
-            placeholder="请输入数量要求"
-          />
-        </el-form-item>
-        <el-form-item label="是否必选" prop="fsbx">
-          <el-radio-group v-model="form.fsbx" disabled="“true”">
-            <el-radio
-              v-for="dict in typeOptions"
-              :key="dict.dictValue"
-              :label="dict.dictValue"
-              >{{ dict.dictLabel }}</el-radio
+    <el-dialog
+      :title="title"
+      :visible.sync="open"
+      width="1024px"
+      append-to-body
+    >
+      <el-table :data="jyykhrwDetailsList">
+        <el-table-column
+          label="任务类型"
+          align="center"
+          prop="rwlx"
+          :formatter="xrlxFormat"
+        />
+        <el-table-column
+          label="任务内容"
+          align="center"
+          prop="rwnr"
+          :formatter="rwnrFormat"
+        />
+        <el-table-column
+          label="考核周期"
+          align="center"
+          prop="khzqkssj"
+          width="180"
+        >
+          <template slot-scope="scope">
+            <span
+              >{{ parseTime(scope.row.khzqkssj, "{y}/{m}/{d}") }} -
+              {{ parseTime(scope.row.khzqjssj, "{y}/{m}/{d}") }}</span
             >
-          </el-radio-group>
-        </el-form-item>
-        <!-- <el-form-item label="是否删除" prop="isdel">
-          <el-input v-model="form.isdel" placeholder="请输入是否删除" />
-        </el-form-item> -->
-        <el-form-item label="任务说明" prop="rwsm">
-          <el-input
-            v-model="form.rwsm"
-            disabled="“true”"
-            type="textarea"
-            placeholder="请输入内容"
-          />
-        </el-form-item>
-      </el-form>
+          </template>
+        </el-table-column>
+        <el-table-column label="数量要求" align="center" prop="slyq" />
+        <el-table-column
+          label="是否必选"
+          align="center"
+          prop="fsbx"
+          :formatter="typeFormat"
+        />
+        <!-- <el-table-column label="是否删除" align="center" prop="isdel" /> -->
+        <el-table-column label="任务说明" align="center" prop="rwsm" />
+      </el-table>
       <div slot="footer" class="dialog-footer">
         <el-button @click="cancel">取 消</el-button>
       </div>
@@ -267,6 +196,7 @@ export default {
       wcqltotal: 0,
       // 教研员考核任务表格数据
       jyykhrwList: [],
+      jyykhrwDetailsList: [],
       // 弹出层标题
       title: "",
       // 是否显示弹出层
@@ -279,6 +209,10 @@ export default {
       khbmOptions: [],
       //是否必选
       typeOptions: [],
+      //学年
+      xnOptions: [],
+      //学期
+      xqOptions: [],
       // 查询参数
       queryParams: {
         pageNum: 1,
@@ -292,6 +226,15 @@ export default {
         fsbx: null,
         isdel: null,
         rwsm: null,
+        khzqkssj: null,
+        khzqjssj: null,
+        parentId: null,
+        xn: null,
+        xq: null,
+      },
+      // 查询参数
+      queryDetailsParams: {
+        parentId: null,
       },
       queryParams_fid: {
         rwid: null,
@@ -304,6 +247,12 @@ export default {
   },
   created() {
     this.getList();
+    this.getDicts("sys_gbxn").then((response) => {
+      this.xnOptions = response.data;
+    });
+    this.getDicts("sys_dm_xq").then((response) => {
+      this.xqOptions = response.data;
+    });
     this.getDicts("sys_dm_jyykhrwlx").then((response) => {
       this.rwlxOptions = response.data;
     });
@@ -318,6 +267,14 @@ export default {
     });
   },
   methods: {
+    // 学年字典翻译
+    xnFormat(row, column) {
+      return this.selectDictLabel(this.xnOptions, row.xn);
+    },
+    // 学期字典翻译
+    xqFormat(row, column) {
+      return this.selectDictLabel(this.xqOptions, row.xq);
+    },
     // 任务类型字典翻译
     xrlxFormat(row, column) {
       return this.selectDictLabel(this.rwlxOptions, row.rwlx);
@@ -423,27 +380,14 @@ export default {
         this.loading = false;
       });
     },
+    getDetailsList() {
+      listJyykhrw(this.queryDetailsParams).then((response) => {
+        this.jyykhrwDetailsList = response.rows;
+      });
+    },
     // 取消按钮
     cancel() {
       this.open = false;
-      this.reset();
-    },
-    // 表单重置
-    reset() {
-      this.form = {
-        id: null,
-        rwmc: null,
-        rwlx: null,
-        rwnr: null,
-        khbm: null,
-        khzq: null,
-        slyq: null,
-        fsbx: null,
-        isdel: null,
-        createTime: null,
-        rwsm: null,
-      };
-      this.resetForm("form");
     },
     /** 搜索按钮操作 */
     handleQuery() {
@@ -457,13 +401,11 @@ export default {
     },
     /** 查看按钮操作 */
     handleView(row) {
-      this.reset();
       const id = row.id;
-      getJyykhrw(id).then((response) => {
-        this.form = response.data;
-        this.open = true;
-        this.title = "查看教研员考核任务";
-      });
+      this.queryDetailsParams.parentId = id;
+      this.open = true;
+      this.title = "查看教研员考核任务";
+      this.getDetailsList();
     },
   },
 };
