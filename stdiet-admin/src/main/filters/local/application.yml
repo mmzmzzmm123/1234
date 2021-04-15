@@ -19,7 +19,7 @@ stdiet:
 # 开发环境配置
 server:
   # 服务器的HTTP端口，默认为8080
-  port: 8090
+  port: 8091
   servlet:
     # 应用的访问路径
     context-path: /
@@ -183,4 +183,8 @@ aliyun:
     EndPoint: https://oss-cn-shenzhen.aliyuncs.com
     #案例文件夹路径
     casePrefix: case/
+
+lucene:
+  index:
+    nutritionQuestion: D:\develop\LuceneIndex\nutritionQuestion
 

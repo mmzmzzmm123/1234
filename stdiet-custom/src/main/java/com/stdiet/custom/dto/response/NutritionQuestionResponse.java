@@ -11,7 +11,7 @@ public class NutritionQuestionResponse implements Serializable {
     private static final long serialVersionUID = 1L;
 
     /** $column.columnComment */
-    private Long id;
+    private String id;
 
     /** 标题 */
     @Excel(name = "标题")

@@ -63,9 +63,11 @@
     </select>
 
     <!-- 根据用户ID查询是否存在该用户该订单之前的最后一条食谱 -->
-    <select id="getLastDayRecipesPlan"  resultMap="SysRecipesPlanResult" parameterType="Long">
-        <include refid="selectSysRecipesPlanVo"/>
-        where cus_id = #{customerId} and del_flag = 0 and #{orderId} > order_id order by end_num_day DESC limit 1
+    <select id="getLastDayRecipesPlan"  resultMap="SysRecipesPlanResult">
+        select srp.*
+        from sys_recipes_plan srp
+        left join sys_order so on so.order_id = srp.order_id and so.del_flag = 0
+        where srp.cus_id = #{customerId} and srp.del_flag = 0 and #{orderTime} > so.order_time order by srp.end_num_day DESC limit 1
     </select>
 
     <insert id="insertSysRecipesPlan" parameterType="SysRecipesPlan" useGeneratedKeys="true" keyProperty="id">

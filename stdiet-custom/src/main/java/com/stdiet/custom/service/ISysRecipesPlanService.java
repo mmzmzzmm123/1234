@@ -1,5 +1,6 @@
 package com.stdiet.custom.service;
 
+import java.util.Date;
 import java.util.List;
 
 import com.stdiet.custom.domain.SysRecipesPlan;
@@ -102,7 +103,7 @@ public interface ISysRecipesPlanService
      * @param customerId
      * @return
      */
-    SysRecipesPlan getLastDayRecipesPlan(Long customerId, Long orderId);
+    SysRecipesPlan getLastDayRecipesPlan(Long customerId,  Date orderTime);
 
     /**
      * 通过outId查询食谱计划简要

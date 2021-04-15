@@ -229,7 +229,7 @@ public class SysRecipesPlanServiceImpl implements ISysRecipesPlanService {
      */
     private List<SysRecipesPlan> generatePlan(SysOrder sysOrder, LocalDate serverStartDate, LocalDate serverEndDate, List<SysOrderPause> pauseList) {
         //查询在上一个订单最后一条食谱计划
-        SysRecipesPlan beforeOrderLastPlan = getLastDayRecipesPlan(sysOrder.getCusId(), sysOrder.getOrderId());
+        SysRecipesPlan beforeOrderLastPlan = getLastDayRecipesPlan(sysOrder.getCusId(), sysOrder.getOrderTime());
         int startNumDay = 0;
         //之前是否存在食谱
         if(beforeOrderLastPlan != null){
@@ -409,11 +409,10 @@ public class SysRecipesPlanServiceImpl implements ISysRecipesPlanService {
     /**
      * 根据客户ID查询最后一天食谱计划
      * @param customerId 客户ID
-     * @param orderId 不属于该订单ID的食谱
      * @return
      */
-    public SysRecipesPlan getLastDayRecipesPlan(Long customerId, Long orderId){
-        return sysRecipesPlanMapper.getLastDayRecipesPlan(customerId, orderId);
+    public SysRecipesPlan getLastDayRecipesPlan(Long customerId, Date orderTime){
+        return sysRecipesPlanMapper.getLastDayRecipesPlan(customerId, orderTime);
     }
 
     @Override

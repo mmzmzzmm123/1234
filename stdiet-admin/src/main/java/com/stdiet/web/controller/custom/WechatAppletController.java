@@ -14,10 +14,7 @@ import com.stdiet.common.utils.sign.AesUtils;
 import com.stdiet.custom.domain.*;
 import com.stdiet.custom.dto.response.CustomerCaseResponse;
 import com.stdiet.custom.page.WxLogInfo;
-import com.stdiet.custom.service.ISysCustomerCaseService;
-import com.stdiet.custom.service.ISysOrderService;
-import com.stdiet.custom.service.ISysWxUserInfoService;
-import com.stdiet.custom.service.ISysWxUserLogService;
+import com.stdiet.custom.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -46,6 +43,9 @@ public class WechatAppletController extends BaseController {
 
     @Autowired
     private ISysOrderService sysOrderService;
+
+    @Autowired
+    private ISysNutritionQuestionService sysNutritionQuestionService;
 
     /**
      * 查询微信小程序中展示的客户案例
@@ -282,5 +282,14 @@ public class WechatAppletController extends BaseController {
         } catch (Exception e) {
             return AjaxResult.error("文件上传失败");
         }
+    }
+
+    /**
+     * 获取微信用户记录详细信息
+     */
+    @GetMapping(value = "/getNutritionQuestionList")
+    public AjaxResult getNutritionQuestionList(SysNutritionQuestion sysNutritionQuestion, @RequestParam(value = "pageNum", defaultValue = "1") int pageNum,  @RequestParam(value = "pageSize", defaultValue = "10")int pageSize) {
+        Map<String,Object> result = sysNutritionQuestionService.getNutritionQuestionListByKey(sysNutritionQuestion, pageNum, pageSize);
+        return AjaxResult.success(result);
     }
 }
