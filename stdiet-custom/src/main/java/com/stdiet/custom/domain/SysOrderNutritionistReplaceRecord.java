@@ -25,12 +25,13 @@ public class SysOrderNutritionistReplaceRecord extends BaseEntity
     private Long orderId;
 
     /** 更换的营养师ID */
-    @Excel(name = "更换的营养师ID")
     private Long nutritionistId;
 
     /** 更换的售后ID */
-    @Excel(name = "更换的售后ID")
     private Long afterSaleId;
+
+    /** 更换的售后ID */
+    private Long nutriAssisId;
 
     /** 开始时间 */
     @JsonFormat(pattern = "yyyy-MM-dd")
@@ -41,8 +42,15 @@ public class SysOrderNutritionistReplaceRecord extends BaseEntity
     private Integer delFlag;
 
     // 售后
+    @Excel(name = "售后")
     private String afterSale;
 
     //营养师
+    @Excel(name = "营养师")
     private String nutritionist;
+
+    @Excel(name = "营养师助理")
+    private String nutriAssis;
+
+
 }
