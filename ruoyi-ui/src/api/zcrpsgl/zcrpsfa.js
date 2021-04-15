@@ -64,3 +64,24 @@ export function stopStatusZcrpsfa(id) {
     }
   })
 }
+
+// 查询基地校列表
+export function listJdx() {
+  return request({
+    url: '/jxjs/jdx/list',
+    method: 'get'
+  })
+}
+
+
+// 回显基地类型
+export function selectJdtype(datas, value) {
+  var actions = [];
+  Object.keys(datas).some((key) => {
+    if (datas[key].id == ('' + value)) {
+      actions.push(datas[key].jdxmc);
+      return true;
+    }
+  })
+  return actions.join('');
+}

@@ -13,7 +13,12 @@
 
       <el-form-item label="方案类型" prop="jdtype">
         <el-select v-model="queryParams.jdtype" placeholder="请选择方案类型" clearable size="small">
-          <el-option label="请选择字典生成" value="" />
+          <el-option
+            v-for="dict in jdtypeOptions"
+            :key="dict.id"
+            :label="dict.jdxmc"
+            :value="dict.id"
+          ></el-option>
         </el-select>
       </el-form-item>
 
@@ -60,7 +65,7 @@
     <el-table v-loading="loading" :data="zcrpsfaList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
       <el-table-column label="方案名称" align="center" prop="name" />
-      <el-table-column label="基地类型" align="center" prop="jdtype" />
+      <el-table-column label="基地类型" align="center" prop="jdtype" :formatter="jdtypeFormat"/>
       <el-table-column label="当前状态" align="center" prop="status" :formatter="statusFormat"/>
       <el-table-column label="报名时间" align="center" prop="starttime" width="180">
         <template slot-scope="scope">
@@ -132,7 +137,12 @@
         </el-form-item>
         <el-form-item label="基地类型" prop="jdtype">
           <el-select v-model="form.jdtype" placeholder="请选择基地类型">
-            <el-option label="请选择字典生成" value="" />
+            <el-option
+              v-for="dict in jdtypeOptions"
+              :key="dict.id"
+              :label="dict.jdxmc"
+              :value="dict.id"
+            ></el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="报名时间" prop="starttime">
@@ -161,7 +171,7 @@
 </template>
 
 <script>
-import { listZcrpsfa, getZcrpsfa, delZcrpsfa, addZcrpsfa, updateZcrpsfa, exportZcrpsfa,openStatusZcrpsfa,stopStatusZcrpsfa } from "@/api/zcrpsgl/zcrpsfa";
+import { listZcrpsfa, getZcrpsfa, delZcrpsfa, addZcrpsfa, updateZcrpsfa, exportZcrpsfa,openStatusZcrpsfa,stopStatusZcrpsfa,listJdx,selectJdtype } from "@/api/zcrpsgl/zcrpsfa";
 
 export default {
   name: "Zcrpsfa",
@@ -181,6 +191,10 @@ export default {
       total: 0,
       // 评审方案(主持人评审管理-评审方案)表格数据
       zcrpsfaList: [],
+      //当前状态--数据字典
+      statusOptions: [],
+      //基地类型--数据字典
+      jdtypeOptions:[],
       // 弹出层标题
       title: "",
       // 是否显示弹出层
@@ -208,6 +222,9 @@ export default {
     this.getDicts("sys_dm_zcrfadqzt").then(response => {
       this.statusOptions = response.data;
     });
+    listJdx().then(response => {
+      this.jdtypeOptions = response.rows;
+    });
   },
   methods: {
     /** 查询评审方案(主持人评审管理-评审方案)列表 */
@@ -220,9 +237,14 @@ export default {
       });
     },
 
-    // 字典翻译
+    // 字典翻译--当前状态
     statusFormat(row, column) {
       return this.selectDictLabel(this.statusOptions, row.status);
+    },
+
+    // 字典翻译--基地类型
+    jdtypeFormat(row, column) {
+      return selectJdtype(this.jdtypeOptions, row.jdtype);
     },
     // 取消按钮
     cancel() {
