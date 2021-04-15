@@ -26,14 +26,15 @@ public class ViewPlugin extends PluginAdapter {
     }
 
     @Override
-    public boolean clientGenerated(Interface interfaze, TopLevelClass topLevelClass, IntrospectedTable introspectedTable) {
+    public boolean clientGenerated(Interface interfaze, TopLevelClass topLevelClass,
+                                   IntrospectedTable introspectedTable) {
         if (introspectedTable.getTableType().equalsIgnoreCase("VIEW")) {
             interfaze.getMethods().removeIf(method -> {
                 String name = method.getName().toLowerCase();
-                if (name.indexOf("insert") > -1
-                        || name.indexOf("update") > -1
-                        || name.indexOf("delete") > -1) {
-                    log.warn("视图表={} 删除方法={}", introspectedTable.getFullyQualifiedTableNameAtRuntime(), method.getName());
+                if (name.indexOf("insert") > -1 || name.indexOf("update") > -1
+                    || name.indexOf("delete") > -1) {
+                    log.warn("视图表={} 删除方法={}",
+                        introspectedTable.getFullyQualifiedTableNameAtRuntime(), method.getName());
                     return true;
                 }
                 return false;
@@ -48,10 +49,10 @@ public class ViewPlugin extends PluginAdapter {
             document.getRootElement().getElements().removeIf(element -> {
                 if (element instanceof XmlElement) {
                     String name = ((XmlElement) element).getName();
-                    if (name.indexOf("insert") > -1
-                            || name.indexOf("update") > -1
-                            || name.indexOf("delete") > -1) {
-                        log.warn("视图表={} 删除xml节点={}", introspectedTable.getFullyQualifiedTableNameAtRuntime(), name);
+                    if (name.indexOf("insert") > -1 || name.indexOf("update") > -1
+                        || name.indexOf("delete") > -1) {
+                        log.warn("视图表={} 删除xml节点={}",
+                            introspectedTable.getFullyQualifiedTableNameAtRuntime(), name);
                         return true;
                     }
                 }
@@ -60,4 +61,5 @@ public class ViewPlugin extends PluginAdapter {
         }
         return true;
     }
+
 }

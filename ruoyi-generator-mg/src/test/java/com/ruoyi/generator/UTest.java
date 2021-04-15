@@ -15,6 +15,7 @@ import java.net.URL;
 import java.text.MessageFormat;
 
 public class UTest {
+
     @Test
     public void test() {
         String str = MessageFormat.format("delete {} from {}", 1, 2);
@@ -28,23 +29,22 @@ public class UTest {
         URL resource = UTest.class.getClassLoader().getResource("./");
         String rootPath = new File(resource.getFile()).getParentFile().getParent();
 
-        //目录没有，会不生成
-//        rootPath = "D:\\tmp\\0320\\src\\";
-//        FileUtils.forceMkdir(new File(rootPath + "\\src\\main\\java\\"));
+        // 目录没有，会不生成
+        // rootPath = "D:\\tmp\\0320\\src\\";
+        // FileUtils.forceMkdir(new File(rootPath + "\\src\\main\\java\\"));
 
         // 配置项目路径
-        MyBatisCodeGenerator generator = MyBatisCodeGenerator.create(rootPath, "com.slabbridge.core");
+        MyBatisCodeGenerator generator = MyBatisCodeGenerator.create(rootPath,
+            "com.slabbridge.core");
         // 配置数据库
         generator.setJdbcConnection("com.mysql.jdbc.Driver",
-                "jdbc:mysql://120.25.66.56:3306/ed?useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=true&serverTimezone=GMT%2B8",
-                "ed",
-                "F7Pd3c7s9HS6EZAWmCm6",
-                KeyValue.create("nullCatalogMeansCurrent", "true"));
+            "jdbc:mysql://120.25.66.56:3306/ed?useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=true&serverTimezone=GMT%2B8",
+            "ed", "F7Pd3c7s9HS6EZAWmCm6", KeyValue.create("nullCatalogMeansCurrent", "true"));
         // 配置插件
         // 扩展dao插件
         generator.addPlugin(DaoClassGeneratePlugin.class);
         // 业务逻辑插件
-//        generator.addPlugin(ManagerInterfaceClassGeneratePlugin.class);
+        // generator.addPlugin(ManagerInterfaceClassGeneratePlugin.class);
 
         // 配置表
         // 自动增长主键模版
@@ -56,4 +56,5 @@ public class UTest {
         generator.createDefaultTable("el_enterprise_info", "EnterpriseInfo", "id");
         generator.generate();
     }
+
 }

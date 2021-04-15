@@ -25,7 +25,6 @@ public class SourceCodeBackupPlugin extends AbstractClassPlugin {
         String sourcePath = context.getProperty(Backup.CODE_SOURCE_PATH);
         String targetPath = context.getProperty(Backup.CODE_TARGET_PATH);
 
-
         Validate.isTrue(StringUtils.isNotEmpty(sourcePath), "源码备份配置-来源为null");
         Validate.isTrue(StringUtils.isNotEmpty(targetPath), "源码备份配置-目标为null");
 
@@ -45,7 +44,6 @@ public class SourceCodeBackupPlugin extends AbstractClassPlugin {
             log.error("备份源码文件异常", e);
         }
     }
-
 
     private void copy(File source, File target) throws IOException {
         if (!target.exists()) {
@@ -68,4 +66,5 @@ public class SourceCodeBackupPlugin extends AbstractClassPlugin {
             }
         }
     }
+
 }

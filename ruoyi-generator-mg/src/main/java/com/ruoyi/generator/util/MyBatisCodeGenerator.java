@@ -16,14 +16,17 @@ import java.util.List;
 import java.util.Map;
 
 public class MyBatisCodeGenerator {
-    private Logger log = LoggerFactory.getLogger(MyBatisCodeGenerator.class);
+
+    private Logger              log         = LoggerFactory.getLogger(MyBatisCodeGenerator.class);
 
     // 根目录
-    private String rootPath;
+    private String              rootPath;
+
     // 根包名
-    private String rootPackage;
+    private String              rootPackage;
+
     // 上下文
-    private Context context;
+    private Context             context;
 
     private Map<String, String> transferMap = Maps.newHashMap();
 
@@ -54,27 +57,28 @@ public class MyBatisCodeGenerator {
         context.addProperty(Constant.TARGET_CONTROLLER, rootPackage + ".controller");
         context.addProperty(Constant.OVERRIDE, "false");
         // 备份配置
-        context.addProperty(Constant.Backup.SQL_TARGET_PATH, rootPath + "/src/test/resources/mybatis-code-generator/backups/sql");
+        context.addProperty(Constant.Backup.SQL_TARGET_PATH,
+            rootPath + "/src/test/resources/mybatis-code-generator/backups/sql");
         context.addProperty(Constant.Backup.CODE_SOURCE_PATH, rootPath + "/src/main/java");
-        context.addProperty(Constant.Backup.CODE_TARGET_PATH, rootPath + "/target/code-generator/backups");
-
+        context.addProperty(Constant.Backup.CODE_TARGET_PATH,
+            rootPath + "/target/code-generator/backups");
 
         // 注解生成
-        //todo
-//        setCommentGenerator(CustomizedCommentGenerator.class);
+        // todo
+        // setCommentGenerator(CustomizedCommentGenerator.class);
         // java type映射
-        setJavaTypeResolver(DefaultJavaTypeResolverImpl.class, KeyValue.create("forceBigDecimals", "false"));
+        setJavaTypeResolver(DefaultJavaTypeResolverImpl.class,
+            KeyValue.create("forceBigDecimals", "false"));
         // entity生成配置
         setJavaModelGenerator(context.getProperty(Constant.TARGET_ENTITY),
-                context.getProperty(Constant.TARGET_PROJECT),
-                KeyValue.create("trimStrings", "true"), KeyValue.create("constructorBased", "false"));
+            context.getProperty(Constant.TARGET_PROJECT), KeyValue.create("trimStrings", "true"),
+            KeyValue.create("constructorBased", "false"));
         // sql生成配置
-        setSqlMapGenerator(context.getProperty(Constant.TARGET_MAPPER), context.getProperty(Constant.TARGET_PROJECT));
+        setSqlMapGenerator(context.getProperty(Constant.TARGET_MAPPER),
+            context.getProperty(Constant.TARGET_PROJECT));
         // dao生成配置
-        setJavaClientGenerator("XMLMAPPER",
-                null,
-                context.getProperty(Constant.TARGET_MAPPER),
-                context.getProperty(Constant.TARGET_PROJECT));
+        setJavaClientGenerator("XMLMAPPER", null, context.getProperty(Constant.TARGET_MAPPER),
+            context.getProperty(Constant.TARGET_PROJECT));
 
         // 默认插件
         // 添加删除原有xml插件
@@ -95,13 +99,14 @@ public class MyBatisCodeGenerator {
         addPlugin(SerializableInterfacePlugin.class);
         // 生成SQL文件
         addPlugin(GeneratorSqlPlugin.class);
-        //批量删除
+        // 批量删除
         addPlugin(BatchDeletePlugin.class);
-        //todo: 备份原始文件
-//        addPlugin(SourceCodeBackupPlugin.class);
+        // todo: 备份原始文件
+        // addPlugin(SourceCodeBackupPlugin.class);
         // 逻辑删除插件
         addPlugin(LogicalDeletePlugin.class, KeyValue.create("logicalDeleteColumn", "is_deleted"),
-                KeyValue.create("logicalDeleteValue", "1"), KeyValue.create("logicalUnDeleteValue", "0"));
+            KeyValue.create("logicalDeleteValue", "1"),
+            KeyValue.create("logicalUnDeleteValue", "0"));
         // 分页
         addPlugin(LimitPlugin.class);
         // 解决mysql delete 取别名语法不支持bug
@@ -121,7 +126,8 @@ public class MyBatisCodeGenerator {
         return configuration;
     }
 
-    public TableConfiguration createDefaultTable(String tableName, String objectName, String idColumn,
+    public TableConfiguration createDefaultTable(String tableName, String objectName,
+                                                 String idColumn,
                                                  KeyValue<String, String>... keyValues) {
         TableConfiguration configuration = createTable();
         configuration.setTableName(tableName);
@@ -135,7 +141,8 @@ public class MyBatisCodeGenerator {
         return configuration;
     }
 
-    public TableConfiguration createDefaultTable(String tableName, String objectName, GeneratedKey generatedKey,
+    public TableConfiguration createDefaultTable(String tableName, String objectName,
+                                                 GeneratedKey generatedKey,
                                                  KeyValue<String, String>... keyValues) {
         TableConfiguration configuration = createTable();
         configuration.setTableName(tableName);
@@ -218,8 +225,10 @@ public class MyBatisCodeGenerator {
         return this;
     }
 
-    public MyBatisCodeGenerator setJavaClientGenerator(String configurationType, String implementationPackage,
-                                                       String targetPackage, String targetProject, KeyValue<String, String>... keyValues) {
+    public MyBatisCodeGenerator setJavaClientGenerator(String configurationType,
+                                                       String implementationPackage,
+                                                       String targetPackage, String targetProject,
+                                                       KeyValue<String, String>... keyValues) {
         JavaClientGeneratorConfiguration configuration = new JavaClientGeneratorConfiguration();
         configuration.setConfigurationType(configurationType);
         configuration.setImplementationPackage(implementationPackage);
@@ -235,7 +244,8 @@ public class MyBatisCodeGenerator {
         return this;
     }
 
-    private void setTypedProperty(TypedPropertyHolder typedPropertyHolder, Class<?> commentGeneratorClass,
+    private void setTypedProperty(TypedPropertyHolder typedPropertyHolder,
+                                  Class<?> commentGeneratorClass,
                                   KeyValue<String, String>... keyValues) {
         typedPropertyHolder.setConfigurationType(commentGeneratorClass.getTypeName());
         setProperty(typedPropertyHolder, keyValues);
@@ -247,8 +257,9 @@ public class MyBatisCodeGenerator {
         }
     }
 
-    public MyBatisCodeGenerator setJdbcConnection(String driverClass, String connectionURL, String userId,
-                                                  String password, KeyValue<String, String>... keyValues) {
+    public MyBatisCodeGenerator setJdbcConnection(String driverClass, String connectionURL,
+                                                  String userId, String password,
+                                                  KeyValue<String, String>... keyValues) {
         JDBCConnectionConfiguration configuration = new JDBCConnectionConfiguration();
         configuration.setDriverClass(driverClass);
         configuration.setConnectionURL(connectionURL);
@@ -259,18 +270,20 @@ public class MyBatisCodeGenerator {
         return this;
     }
 
-    public void generate(ShellCallback shellCallback, List<String> warnings, ProgressCallback callback) {
+    public void generate(ShellCallback shellCallback, List<String> warnings,
+                         ProgressCallback callback) {
         try {
             // 默认db规范检查
-            //todo:去掉检查
-//            addPlugin(DBTableStandardCheckPlugin.class);
+            // todo:去掉检查
+            // addPlugin(DBTableStandardCheckPlugin.class);
             // 视图处理
             addPlugin(ViewPlugin.class);
 
             Configuration configuration = new Configuration();
             configuration.addContext(context);
 
-            MyBatisGenerator myBatisGenerator = new MyBatisGenerator(configuration, shellCallback, warnings);
+            MyBatisGenerator myBatisGenerator = new MyBatisGenerator(configuration, shellCallback,
+                warnings);
             log.warn("生成配置\r\n{}", configuration.toDocument().getFormattedContent());
             myBatisGenerator.generate(null);
             log.info("生成MyBatis结束");
@@ -304,11 +317,13 @@ public class MyBatisCodeGenerator {
         @Override
         public File getDirectory(String targetProject, String targetPackage) throws ShellException {
             if (transferMap.containsKey(targetPackage)) {
-                return super.getDirectory(transferMap.get(targetPackage) + targetProject, targetPackage);
+                return super.getDirectory(transferMap.get(targetPackage) + targetProject,
+                    targetPackage);
             } else {
                 return super.getDirectory(targetProject, targetPackage);
             }
         }
 
     }
+
 }

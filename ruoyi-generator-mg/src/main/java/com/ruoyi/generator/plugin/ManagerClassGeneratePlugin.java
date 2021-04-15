@@ -14,44 +14,51 @@ import java.util.List;
 
 public class ManagerClassGeneratePlugin extends AbstractClassPlugin {
 
-	private Logger log = LoggerFactory.getLogger(ManagerClassGeneratePlugin.class);
+    private Logger log = LoggerFactory.getLogger(ManagerClassGeneratePlugin.class);
 
     @Override
     public List<GeneratedJavaFile> contextGenerateAdditionalJavaFiles(IntrospectedTable introspectedTable) {
         List<GeneratedJavaFile> list = Lists.newArrayList();
-        
+
         FullyQualifiedJavaType daoInterfaceType;
         if (introspectedTable.getTableConfiguration().getProperties().containsKey(DAO_INTERFACE)) {
-        	 GeneratedJavaFile daoInterface = (GeneratedJavaFile) introspectedTable.getTableConfiguration().getProperties().get(DAO_INTERFACE);
-        	 daoInterfaceType = daoInterface.getCompilationUnit().getType();
+            GeneratedJavaFile daoInterface = (GeneratedJavaFile) introspectedTable
+                .getTableConfiguration().getProperties().get(DAO_INTERFACE);
+            daoInterfaceType = daoInterface.getCompilationUnit().getType();
         } else {
-        	daoInterfaceType = new FullyQualifiedJavaType(introspectedTable.getMyBatis3JavaMapperType());
+            daoInterfaceType = new FullyQualifiedJavaType(
+                introspectedTable.getMyBatis3JavaMapperType());
         }
-        
+
         GeneratedJavaFile manager = generateManager(introspectedTable, daoInterfaceType);
         introspectedTable.getTableConfiguration().getProperties().put(MANAGER_CLASS, manager);
-        
+
         if (!existClass(manager)) {
-			list.add(manager);
-			log.info("创建Manager Java文件={}/{}.{}", manager.getTargetProject(), manager.getTargetPackage(), manager.getFileName());
-		} else if (isOverride(introspectedTable)) {
-			list.add(manager);
-			log.info("覆盖Manager Java文件={}/{}.{}", manager.getTargetProject(), manager.getTargetPackage(), manager.getFileName());
-		} else {
-			log.info("跳过Manager Java文件={}/{}.{}", manager.getTargetProject(), manager.getTargetPackage(), manager.getFileName());
-		}
+            list.add(manager);
+            log.info("创建Manager Java文件={}/{}.{}", manager.getTargetProject(),
+                manager.getTargetPackage(), manager.getFileName());
+        } else if (isOverride(introspectedTable)) {
+            list.add(manager);
+            log.info("覆盖Manager Java文件={}/{}.{}", manager.getTargetProject(),
+                manager.getTargetPackage(), manager.getFileName());
+        } else {
+            log.info("跳过Manager Java文件={}/{}.{}", manager.getTargetProject(),
+                manager.getTargetPackage(), manager.getFileName());
+        }
 
         return list;
     }
-    
-    private String getDaoTypeName(IntrospectedTable introspectedTable) {
-		FullyQualifiedJavaType entityType = new FullyQualifiedJavaType(introspectedTable.getBaseRecordType());
-		return String.format("%s.%s%s", getProperty(introspectedTable, TARGET_MANAGER, null), entityType.getShortName(),
-				getProperty(introspectedTable, SUFFIX_MANAGER, "Manager"));
-	}
 
-    private GeneratedJavaFile generateManager(IntrospectedTable introspectedTable, FullyQualifiedJavaType daoInterfaceType) {
-        String classPath =getDaoTypeName(introspectedTable);
+    private String getDaoTypeName(IntrospectedTable introspectedTable) {
+        FullyQualifiedJavaType entityType = new FullyQualifiedJavaType(
+            introspectedTable.getBaseRecordType());
+        return String.format("%s.%s%s", getProperty(introspectedTable, TARGET_MANAGER, null),
+            entityType.getShortName(), getProperty(introspectedTable, SUFFIX_MANAGER, "Manager"));
+    }
+
+    private GeneratedJavaFile generateManager(IntrospectedTable introspectedTable,
+                                              FullyQualifiedJavaType daoInterfaceType) {
+        String classPath = getDaoTypeName(introspectedTable);
 
         TopLevelClass topLevelClass = buildTopLevelClass(classPath);
 

@@ -44,17 +44,20 @@ import com.ruoyi.generator.util.VelocityUtils;
  */
 @Service
 public class GenTableServiceImpl implements IGenTableService {
-    private static final Logger log = LoggerFactory.getLogger(GenTableServiceImpl.class);
+
+    private static final Logger   log = LoggerFactory.getLogger(GenTableServiceImpl.class);
+
     @Autowired
-    private GenTableMapper genTableMapper;
+    private GenTableMapper        genTableMapper;
+
     @Autowired
-    private GenTableColumnMapper genTableColumnMapper;
+    private GenTableColumnMapper  genTableColumnMapper;
+
     @Autowired
     private MybatisGenServiceImpl mybatisGenService;
 
     /**
      * 查询业务信息
-     *
      * @param id 业务ID
      * @return 业务信息
      */
@@ -67,7 +70,6 @@ public class GenTableServiceImpl implements IGenTableService {
 
     /**
      * 查询业务列表
-     *
      * @param genTable 业务信息
      * @return 业务集合
      */
@@ -78,7 +80,6 @@ public class GenTableServiceImpl implements IGenTableService {
 
     /**
      * 查询据库列表
-     *
      * @param genTable 业务信息
      * @return 数据库表集合
      */
@@ -89,7 +90,6 @@ public class GenTableServiceImpl implements IGenTableService {
 
     /**
      * 查询据库列表
-     *
      * @param tableNames 表名称组
      * @return 数据库表集合
      */
@@ -100,7 +100,6 @@ public class GenTableServiceImpl implements IGenTableService {
 
     /**
      * 查询所有表信息
-     *
      * @return 表信息集合
      */
     @Override
@@ -110,7 +109,6 @@ public class GenTableServiceImpl implements IGenTableService {
 
     /**
      * 修改业务
-     *
      * @param genTable 业务信息
      * @return 结果
      */
@@ -129,7 +127,6 @@ public class GenTableServiceImpl implements IGenTableService {
 
     /**
      * 删除业务对象
-     *
      * @param tableIds 需要删除的数据ID
      * @return 结果
      */
@@ -142,7 +139,6 @@ public class GenTableServiceImpl implements IGenTableService {
 
     /**
      * 导入表结构
-     *
      * @param tableList 导入表列表
      */
     @Override
@@ -156,7 +152,8 @@ public class GenTableServiceImpl implements IGenTableService {
                 int row = genTableMapper.insertGenTable(table);
                 if (row > 0) {
                     // 保存列信息
-                    List<GenTableColumn> genTableColumns = genTableColumnMapper.selectDbTableColumnsByName(tableName);
+                    List<GenTableColumn> genTableColumns = genTableColumnMapper
+                        .selectDbTableColumnsByName(tableName);
                     for (GenTableColumn column : genTableColumns) {
                         GenUtils.initColumnField(column, table);
                         genTableColumnMapper.insertGenTableColumn(column);
@@ -170,7 +167,6 @@ public class GenTableServiceImpl implements IGenTableService {
 
     /**
      * 预览代码
-     *
      * @param tableId 表编号
      * @return 预览数据列表
      */
@@ -201,7 +197,6 @@ public class GenTableServiceImpl implements IGenTableService {
 
     /**
      * 生成代码（下载方式）
-     *
      * @param tableName 表名称
      * @return 数据
      */
@@ -216,7 +211,6 @@ public class GenTableServiceImpl implements IGenTableService {
 
     /**
      * 生成代码（自定义路径）
-     *
      * @param tableName 表名称
      */
     @Override
@@ -226,7 +220,6 @@ public class GenTableServiceImpl implements IGenTableService {
 
     /**
      * 同步数据库
-     *
      * @param tableName 表名称
      */
     @Override
@@ -234,13 +227,16 @@ public class GenTableServiceImpl implements IGenTableService {
     public void synchDb(String tableName) {
         GenTable table = genTableMapper.selectGenTableByName(tableName);
         List<GenTableColumn> tableColumns = table.getColumns();
-        List<String> tableColumnNames = tableColumns.stream().map(GenTableColumn::getColumnName).collect(Collectors.toList());
+        List<String> tableColumnNames = tableColumns.stream().map(GenTableColumn::getColumnName)
+            .collect(Collectors.toList());
 
-        List<GenTableColumn> dbTableColumns = genTableColumnMapper.selectDbTableColumnsByName(tableName);
+        List<GenTableColumn> dbTableColumns = genTableColumnMapper
+            .selectDbTableColumnsByName(tableName);
         if (StringUtils.isEmpty(dbTableColumns)) {
             throw new CustomException("同步数据失败，原表结构不存在");
         }
-        List<String> dbTableColumnNames = dbTableColumns.stream().map(GenTableColumn::getColumnName).collect(Collectors.toList());
+        List<String> dbTableColumnNames = dbTableColumns.stream().map(GenTableColumn::getColumnName)
+            .collect(Collectors.toList());
 
         dbTableColumns.forEach(column -> {
             if (!tableColumnNames.contains(column.getColumnName())) {
@@ -249,7 +245,9 @@ public class GenTableServiceImpl implements IGenTableService {
             }
         });
 
-        List<GenTableColumn> delColumns = tableColumns.stream().filter(column -> !dbTableColumnNames.contains(column.getColumnName())).collect(Collectors.toList());
+        List<GenTableColumn> delColumns = tableColumns.stream()
+            .filter(column -> !dbTableColumnNames.contains(column.getColumnName()))
+            .collect(Collectors.toList());
         if (StringUtils.isNotEmpty(delColumns)) {
             genTableColumnMapper.deleteGenTableColumns(delColumns);
         }
@@ -257,7 +255,6 @@ public class GenTableServiceImpl implements IGenTableService {
 
     /**
      * 批量生成代码（下载方式）
-     *
      * @param tableNames 表数组
      * @return 数据
      */
@@ -309,7 +306,6 @@ public class GenTableServiceImpl implements IGenTableService {
 
     /**
      * 修改保存参数校验
-     *
      * @param genTable 业务信息
      */
     @Override
@@ -335,7 +331,6 @@ public class GenTableServiceImpl implements IGenTableService {
 
     /**
      * 设置主键列信息
-     *
      * @param table 业务表信息
      */
     public void setPkColumn(GenTable table) {
@@ -363,7 +358,6 @@ public class GenTableServiceImpl implements IGenTableService {
 
     /**
      * 设置主子表信息
-     *
      * @param table 业务表信息
      */
     public void setSubTable(GenTable table) {
@@ -375,7 +369,6 @@ public class GenTableServiceImpl implements IGenTableService {
 
     /**
      * 设置代码生成其他选项值
-     *
      * @param genTable 设置后的生成对象
      */
     public void setTableFromOptions(GenTable genTable) {
@@ -397,22 +390,22 @@ public class GenTableServiceImpl implements IGenTableService {
 
     /**
      * 获取代码生成地址
-     *
-     * @param table    业务表信息
+     * @param table 业务表信息
      * @param template 模板文件路径
      * @return 生成地址
      */
     public static String getGenPath(GenTable table, String template) {
         String genPath = table.getGenPath();
         if (StringUtils.equals(genPath, "/")) {
-            return System.getProperty("user.dir") + File.separator + "src" + File.separator + VelocityUtils.getFileName(template, table);
+            return System.getProperty("user.dir") + File.separator + "src" + File.separator
+                   + VelocityUtils.getFileName(template, table);
         }
-        return genPath + File.separator + "src" + File.separator + VelocityUtils.getFileName(template, table);
+        return genPath + File.separator + "src" + File.separator
+               + VelocityUtils.getFileName(template, table);
     }
 
     /**
      * 获取基本路径
-     *
      * @param table
      * @return
      */
@@ -423,4 +416,5 @@ public class GenTableServiceImpl implements IGenTableService {
         }
         return genPath + File.separator;
     }
+
 }

@@ -37,8 +37,9 @@ import com.ruoyi.generator.service.IGenTableService;
 @RestController
 @RequestMapping("/tool/gen")
 public class GenController extends BaseController {
+
     @Autowired
-    private IGenTableService genTableService;
+    private IGenTableService       genTableService;
 
     @Autowired
     private IGenTableColumnService genTableColumnService;
@@ -46,7 +47,7 @@ public class GenController extends BaseController {
     /**
      * 查询代码生成列表
      */
-//    @PreAuthorize("@ss.hasPermi('tool:gen:list')")
+    // @PreAuthorize("@ss.hasPermi('tool:gen:list')")
     @GetMapping("/list")
     public TableDataInfo genList(GenTable genTable) {
         startPage();
@@ -57,12 +58,13 @@ public class GenController extends BaseController {
     /**
      * 修改代码生成业务
      */
-//    @PreAuthorize("@ss.hasPermi('tool:gen:query')")
+    // @PreAuthorize("@ss.hasPermi('tool:gen:query')")
     @GetMapping(value = "/{talbleId}")
     public AjaxResult getInfo(@PathVariable Long talbleId) {
         GenTable table = genTableService.selectGenTableById(talbleId);
         List<GenTable> tables = genTableService.selectGenTableAll();
-        List<GenTableColumn> list = genTableColumnService.selectGenTableColumnListByTableId(talbleId);
+        List<GenTableColumn> list = genTableColumnService
+            .selectGenTableColumnListByTableId(talbleId);
         Map<String, Object> map = new HashMap<String, Object>();
         map.put("info", table);
         map.put("rows", list);
@@ -73,7 +75,7 @@ public class GenController extends BaseController {
     /**
      * 查询数据库列表
      */
-//    @PreAuthorize("@ss.hasPermi('tool:gen:list')")
+    // @PreAuthorize("@ss.hasPermi('tool:gen:list')")
     @GetMapping("/db/list")
     public TableDataInfo dataList(GenTable genTable) {
         startPage();
@@ -84,11 +86,12 @@ public class GenController extends BaseController {
     /**
      * 查询数据表字段列表
      */
-//    @PreAuthorize("@ss.hasPermi('tool:gen:list')")
+    // @PreAuthorize("@ss.hasPermi('tool:gen:list')")
     @GetMapping(value = "/column/{talbleId}")
     public TableDataInfo columnList(Long tableId) {
         TableDataInfo dataInfo = new TableDataInfo();
-        List<GenTableColumn> list = genTableColumnService.selectGenTableColumnListByTableId(tableId);
+        List<GenTableColumn> list = genTableColumnService
+            .selectGenTableColumnListByTableId(tableId);
         dataInfo.setRows(list);
         dataInfo.setTotal(list.size());
         return dataInfo;
@@ -97,7 +100,7 @@ public class GenController extends BaseController {
     /**
      * 导入表结构（保存）
      */
-//    @PreAuthorize("@ss.hasPermi('tool:gen:list')")
+    // @PreAuthorize("@ss.hasPermi('tool:gen:list')")
     @Log(title = "代码生成", businessType = BusinessType.IMPORT)
     @PostMapping("/importTable")
     public AjaxResult importTableSave(String tables) {
@@ -111,7 +114,7 @@ public class GenController extends BaseController {
     /**
      * 修改保存代码生成业务
      */
-//    @PreAuthorize("@ss.hasPermi('tool:gen:edit')")
+    // @PreAuthorize("@ss.hasPermi('tool:gen:edit')")
     @Log(title = "代码生成", businessType = BusinessType.UPDATE)
     @PutMapping
     public AjaxResult editSave(@Validated @RequestBody GenTable genTable) {
@@ -123,7 +126,7 @@ public class GenController extends BaseController {
     /**
      * 删除代码生成
      */
-//    @PreAuthorize("@ss.hasPermi('tool:gen:remove')")
+    // @PreAuthorize("@ss.hasPermi('tool:gen:remove')")
     @Log(title = "代码生成", businessType = BusinessType.DELETE)
     @DeleteMapping("/{tableIds}")
     public AjaxResult remove(@PathVariable Long[] tableIds) {
@@ -134,7 +137,7 @@ public class GenController extends BaseController {
     /**
      * 预览代码
      */
-//    @PreAuthorize("@ss.hasPermi('tool:gen:preview')")
+    // @PreAuthorize("@ss.hasPermi('tool:gen:preview')")
     @GetMapping("/preview/{tableId}")
     public AjaxResult preview(@PathVariable("tableId") Long tableId) throws IOException {
         Map<String, String> dataMap = genTableService.previewCode(tableId);
@@ -144,10 +147,11 @@ public class GenController extends BaseController {
     /**
      * 生成代码（下载方式）
      */
-//    @PreAuthorize("@ss.hasPermi('tool:gen:code')")
+    // @PreAuthorize("@ss.hasPermi('tool:gen:code')")
     @Log(title = "代码生成", businessType = BusinessType.GENCODE)
     @GetMapping("/download/{tableName}")
-    public void download(HttpServletResponse response, @PathVariable("tableName") String tableName) throws IOException {
+    public void download(HttpServletResponse response,
+                         @PathVariable("tableName") String tableName) throws IOException {
         byte[] data = genTableService.downloadCode(tableName);
         genCode(response, data);
     }
@@ -155,7 +159,7 @@ public class GenController extends BaseController {
     /**
      * 生成代码（自定义路径）
      */
-//    @PreAuthorize("@ss.hasPermi('tool:gen:code')")
+    // @PreAuthorize("@ss.hasPermi('tool:gen:code')")
     @Log(title = "代码生成", businessType = BusinessType.GENCODE)
     @GetMapping("/genCode/{tableName}")
     public AjaxResult genCode(@PathVariable("tableName") String tableName) {
@@ -166,7 +170,7 @@ public class GenController extends BaseController {
     /**
      * 同步数据库
      */
-//    @PreAuthorize("@ss.hasPermi('tool:gen:edit')")
+    // @PreAuthorize("@ss.hasPermi('tool:gen:edit')")
     @Log(title = "代码生成", businessType = BusinessType.UPDATE)
     @GetMapping("/synchDb/{tableName}")
     public AjaxResult synchDb(@PathVariable("tableName") String tableName) {
@@ -177,7 +181,7 @@ public class GenController extends BaseController {
     /**
      * 批量生成代码
      */
-//    @PreAuthorize("@ss.hasPermi('tool:gen:code')")
+    // @PreAuthorize("@ss.hasPermi('tool:gen:code')")
     @Log(title = "代码生成", businessType = BusinessType.GENCODE)
     @GetMapping("/batchGenCode")
     public void batchGenCode(HttpServletResponse response, String tables) throws IOException {
@@ -198,4 +202,5 @@ public class GenController extends BaseController {
         response.setContentType("application/octet-stream; charset=UTF-8");
         IOUtils.write(data, response.getOutputStream());
     }
+
 }

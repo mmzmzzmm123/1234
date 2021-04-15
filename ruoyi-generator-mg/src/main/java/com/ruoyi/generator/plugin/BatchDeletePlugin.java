@@ -15,27 +15,28 @@ import org.slf4j.LoggerFactory;
  * 批量删除
  */
 public class BatchDeletePlugin extends AbstractClassPlugin {
-    private Logger log = LoggerFactory.getLogger(AbstractClassPlugin.class);
+
+    private Logger             log                 = LoggerFactory
+        .getLogger(AbstractClassPlugin.class);
+
     public static final String METHOD_BATCH_INSERT = "batchDelete";
 
     /**
-     * Java Client Methods 生成
-     * 具体执行顺序 http://www.mybatis.org/generator/reference/pluggingIn.html
-     *
+     * Java Client Methods 生成 具体执行顺序
+     * http://www.mybatis.org/generator/reference/pluggingIn.html
      * @param interfaze
      * @param topLevelClass
      * @param introspectedTable
      * @return
      */
     @Override
-    public boolean clientGenerated(Interface interfaze, TopLevelClass topLevelClass, IntrospectedTable introspectedTable) {
+    public boolean clientGenerated(Interface interfaze, TopLevelClass topLevelClass,
+                                   IntrospectedTable introspectedTable) {
         // 1. batchInsert
         FullyQualifiedJavaType listType = FullyQualifiedJavaType.getNewListInstance();
-        Method mBatchDelete = JavaElementGeneratorTools.generateMethod(
-                METHOD_BATCH_INSERT,
-                JavaVisibility.DEFAULT,
-                FullyQualifiedJavaType.getIntInstance(),
-                new Parameter(listType, "ids", "@Param(\"ids\")")
+        Method mBatchDelete = JavaElementGeneratorTools.generateMethod(METHOD_BATCH_INSERT,
+            JavaVisibility.DEFAULT, FullyQualifiedJavaType.getIntInstance(),
+            new Parameter(listType, "ids", "@Param(\"ids\")")
 
         );
         commentGenerator.addGeneralMethodComment(mBatchDelete, introspectedTable);
@@ -47,9 +48,8 @@ public class BatchDeletePlugin extends AbstractClassPlugin {
     }
 
     /**
-     * SQL Map Methods 生成
-     * 具体执行顺序 http://www.mybatis.org/generator/reference/pluggingIn.html
-     *
+     * SQL Map Methods 生成 具体执行顺序
+     * http://www.mybatis.org/generator/reference/pluggingIn.html
      * @param document
      * @param introspectedTable
      * @return
@@ -62,10 +62,13 @@ public class BatchDeletePlugin extends AbstractClassPlugin {
         IntrospectedColumn pkColumn = introspectedTable.getPrimaryKeyColumns().get(0);
         // 参数类型
         batchDeleteEle.addAttribute(new Attribute("parameterType", "String"));
-        // 添加注释(!!!必须添加注释，overwrite覆盖生成时，@see XmlFileMergerJaxp.isGeneratedNode会去判断注释中是否存在OLD_ELEMENT_TAGS中的一点，例子：@mbg.generated)
+        // 添加注释(!!!必须添加注释，overwrite覆盖生成时，@see
+        // XmlFileMergerJaxp.isGeneratedNode会去判断注释中是否存在OLD_ELEMENT_TAGS中的一点，例子：@mbg.generated)
         commentGenerator.addComment(batchDeleteEle);
 
-        batchDeleteEle.addElement(new TextElement("delete from " + introspectedTable.getFullyQualifiedTableNameAtRuntime() + " where " + pkColumn.getActualColumnName() + " in"));
+        batchDeleteEle.addElement(
+            new TextElement("delete from " + introspectedTable.getFullyQualifiedTableNameAtRuntime()
+                            + " where " + pkColumn.getActualColumnName() + " in"));
 
         // 添加foreach节点
         XmlElement foreachElement = new XmlElement("foreach");
@@ -77,10 +80,10 @@ public class BatchDeletePlugin extends AbstractClassPlugin {
 
         batchDeleteEle.addElement(foreachElement);
 
-
         // values 构建
         document.getRootElement().addElement(batchDeleteEle);
-        log.debug("(批量插入插件):" + introspectedTable.getMyBatis3XmlMapperFileName() + "增加batchDelete实现方法。");
+        log.debug(
+            "(批量插入插件):" + introspectedTable.getMyBatis3XmlMapperFileName() + "增加batchDelete实现方法。");
 
         return true;
     }

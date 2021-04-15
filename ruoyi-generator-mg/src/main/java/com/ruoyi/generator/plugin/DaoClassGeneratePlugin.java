@@ -32,26 +32,32 @@ public class DaoClassGeneratePlugin extends AbstractClassPlugin {
 
         if (!existClass(daoInterface)) {
             list.add(daoInterface);
-            log.info("创建DAO Java文件={}/{}.{}", daoInterface.getTargetProject(), daoInterface.getTargetPackage(), daoInterface.getFileName());
+            log.info("创建DAO Java文件={}/{}.{}", daoInterface.getTargetProject(),
+                daoInterface.getTargetPackage(), daoInterface.getFileName());
         } else if (isOverride(introspectedTable)) {
             list.add(daoInterface);
-            log.info("覆盖DAO Java文件={}/{}.{}", daoInterface.getTargetProject(), daoInterface.getTargetPackage(), daoInterface.getFileName());
+            log.info("覆盖DAO Java文件={}/{}.{}", daoInterface.getTargetProject(),
+                daoInterface.getTargetPackage(), daoInterface.getFileName());
         } else {
-            log.info("跳过DAO Java文件={}/{}.{}", daoInterface.getTargetProject(), daoInterface.getTargetPackage(), daoInterface.getFileName());
+            log.info("跳过DAO Java文件={}/{}.{}", daoInterface.getTargetProject(),
+                daoInterface.getTargetPackage(), daoInterface.getFileName());
         }
 
         return list;
     }
 
     private String getDaoTypeName(IntrospectedTable introspectedTable) {
-        FullyQualifiedJavaType entityType = new FullyQualifiedJavaType(introspectedTable.getBaseRecordType());
-        return String.format("%s.%s%s", getProperty(introspectedTable, Constant.TARGET_DAO, null), entityType.getShortName(),
-                getProperty(introspectedTable, Constant.SUFFIX_DAO, "DAO"));
+        FullyQualifiedJavaType entityType = new FullyQualifiedJavaType(
+            introspectedTable.getBaseRecordType());
+        return String.format("%s.%s%s", getProperty(introspectedTable, Constant.TARGET_DAO, null),
+            entityType.getShortName(), getProperty(introspectedTable, Constant.SUFFIX_DAO, "DAO"));
     }
 
     private String getDaoXmlName(IntrospectedTable introspectedTable) {
-        FullyQualifiedJavaType entityType = new FullyQualifiedJavaType(introspectedTable.getBaseRecordType());
-        return String.format("%s%s.xml", entityType.getShortName(), getProperty(introspectedTable, Constant.SUFFIX_DAO, "DAO"));
+        FullyQualifiedJavaType entityType = new FullyQualifiedJavaType(
+            introspectedTable.getBaseRecordType());
+        return String.format("%s%s.xml", entityType.getShortName(),
+            getProperty(introspectedTable, Constant.SUFFIX_DAO, "DAO"));
     }
 
     private GeneratedJavaFile generateDaoInterface(IntrospectedTable introspectedTable) {
@@ -60,7 +66,7 @@ public class DaoClassGeneratePlugin extends AbstractClassPlugin {
         Interface _interface = buildInterface(classPath);
         // 继承mybatis生成的dao
         FullyQualifiedJavaType superInterface = new FullyQualifiedJavaType(
-                introspectedTable.getMyBatis3JavaMapperType());
+            introspectedTable.getMyBatis3JavaMapperType());
         _interface.addImportedType(superInterface);
         _interface.addSuperInterface(superInterface);
 
@@ -77,15 +83,15 @@ public class DaoClassGeneratePlugin extends AbstractClassPlugin {
         GeneratedXmlFile daoXmlFile = generateDaoXml(introspectedTable);
         if (!existClass(daoXmlFile)) {
             xmls.add(daoXmlFile);
-            log.info("创建XML文件={}/{}.{}", daoXmlFile.getTargetProject(), daoXmlFile.getTargetPackage(),
-                    daoXmlFile.getFileName());
+            log.info("创建XML文件={}/{}.{}", daoXmlFile.getTargetProject(),
+                daoXmlFile.getTargetPackage(), daoXmlFile.getFileName());
         } else if (isOverride(introspectedTable)) {
             xmls.add(daoXmlFile);
-            log.info("覆盖XML文件={}/{}.{}", daoXmlFile.getTargetProject(), daoXmlFile.getTargetPackage(),
-                    daoXmlFile.getFileName());
+            log.info("覆盖XML文件={}/{}.{}", daoXmlFile.getTargetProject(),
+                daoXmlFile.getTargetPackage(), daoXmlFile.getFileName());
         } else {
-            log.info("跳过XML文件={}/{}.{}", daoXmlFile.getTargetProject(), daoXmlFile.getTargetPackage(),
-                    daoXmlFile.getFileName());
+            log.info("跳过XML文件={}/{}.{}", daoXmlFile.getTargetProject(),
+                daoXmlFile.getTargetPackage(), daoXmlFile.getFileName());
         }
 
         return xmls;
@@ -98,7 +104,7 @@ public class DaoClassGeneratePlugin extends AbstractClassPlugin {
         rootElement.addAttribute(new Attribute("namespace", classPath));
 
         Document document = new Document(XmlConstants.MYBATIS3_MAPPER_PUBLIC_ID,
-                XmlConstants.MYBATIS3_MAPPER_SYSTEM_ID);
+            XmlConstants.MYBATIS3_MAPPER_SYSTEM_ID);
         document.setRootElement(rootElement);
 
         String fileName = getDaoXmlName(introspectedTable);
@@ -122,19 +128,21 @@ public class DaoClassGeneratePlugin extends AbstractClassPlugin {
             }
         }
         log.info("修改{}.{} =>标签【namespace】={}", introspectedTable.getMyBatis3XmlMapperPackage(),
-                introspectedTable.getMyBatis3XmlMapperFileName(), classPath);
+            introspectedTable.getMyBatis3XmlMapperFileName(), classPath);
         return super.sqlMapDocumentGenerated(document, introspectedTable);
     }
 
     @Override
-    public boolean sqlMapInsertSelectiveElementGenerated(XmlElement element, IntrospectedTable introspectedTable) {
-//        updateKeyColumn(element.getAttributes());
+    public boolean sqlMapInsertSelectiveElementGenerated(XmlElement element,
+                                                         IntrospectedTable introspectedTable) {
+        // updateKeyColumn(element.getAttributes());
         return true;
     }
 
     @Override
-    public boolean sqlMapInsertElementGenerated(XmlElement element, IntrospectedTable introspectedTable) {
-//        updateKeyColumn(element.getAttributes());
+    public boolean sqlMapInsertElementGenerated(XmlElement element,
+                                                IntrospectedTable introspectedTable) {
+        // updateKeyColumn(element.getAttributes());
         return true;
     }
 

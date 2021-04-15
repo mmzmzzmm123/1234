@@ -30,11 +30,12 @@ import java.util.Map;
 
 public abstract class AbstractClassPlugin extends PluginAdapter implements Constant {
 
-    private Logger log = LoggerFactory.getLogger(AbstractClassPlugin.class);
+    private Logger             log           = LoggerFactory.getLogger(AbstractClassPlugin.class);
 
-    protected final String MANAGER_CLASS = "ManagerClass";
+    protected final String     MANAGER_CLASS = "ManagerClass";
 
-    protected final String DAO_INTERFACE = "DaoInterface";
+    protected final String     DAO_INTERFACE = "DaoInterface";
+
     protected CommentGenerator commentGenerator;
 
     @Override
@@ -44,7 +45,6 @@ public abstract class AbstractClassPlugin extends PluginAdapter implements Const
 
     /**
      * Set the context under which this plugin is running.
-     *
      * @param context the new context
      */
     @Override
@@ -60,7 +60,8 @@ public abstract class AbstractClassPlugin extends PluginAdapter implements Const
         if (cfg == null || cfg.getProperty(CommentPlugin.PRO_TEMPLATE) == null) {
             commentGenerator = context.getCommentGenerator();
         } else {
-            TemplateCommentGenerator templateCommentGenerator = new TemplateCommentGenerator(context, cfg.getProperty(CommentPlugin.PRO_TEMPLATE));
+            TemplateCommentGenerator templateCommentGenerator = new TemplateCommentGenerator(
+                context, cfg.getProperty(CommentPlugin.PRO_TEMPLATE));
 
             // ITFSW 插件使用的注释生成器
             commentGenerator = templateCommentGenerator;
@@ -87,8 +88,8 @@ public abstract class AbstractClassPlugin extends PluginAdapter implements Const
         return configuration;
     }
 
-    protected void generatedFile(Template template, String targetPath, Map<String, Object> root)
-            throws TemplateException, IOException {
+    protected void generatedFile(Template template, String targetPath,
+                                 Map<String, Object> root) throws TemplateException, IOException {
         File targetFile = new File(targetPath);
         if (!targetFile.getParentFile().exists()) {
             targetFile.getParentFile().mkdirs();
@@ -108,18 +109,20 @@ public abstract class AbstractClassPlugin extends PluginAdapter implements Const
 
     protected GeneratedJavaFile buildGeneratedJavaFile(IntrospectedTable introspectedTable,
                                                        CompilationUnit compilationUnit) {
-        return new GeneratedJavaFile(compilationUnit, getTargetProject(introspectedTable), context.getJavaFormatter());
+        return new GeneratedJavaFile(compilationUnit, getTargetProject(introspectedTable),
+            context.getJavaFormatter());
     }
 
-    protected GeneratedXmlFile buildGeneratedXmlFile(IntrospectedTable introspectedTable, Document document,
-                                                     String fileName) {
-        return new GeneratedXmlFile(document, fileName, getProperty(introspectedTable, TARGET_DAO, null),
-                getTargetProject(introspectedTable), false, context.getXmlFormatter());
+    protected GeneratedXmlFile buildGeneratedXmlFile(IntrospectedTable introspectedTable,
+                                                     Document document, String fileName) {
+        return new GeneratedXmlFile(document, fileName,
+            getProperty(introspectedTable, TARGET_DAO, null), getTargetProject(introspectedTable),
+            false, context.getXmlFormatter());
     }
 
     protected String getTargetProject(IntrospectedTable introspectedTable) {
         return getProperty(introspectedTable, TARGET_PROJECT,
-                context.getJavaClientGeneratorConfiguration().getTargetProject());
+            context.getJavaClientGeneratorConfiguration().getTargetProject());
     }
 
     protected TopLevelClass buildTopLevelClass(String classPath) {
@@ -139,18 +142,21 @@ public abstract class AbstractClassPlugin extends PluginAdapter implements Const
     }
 
     protected boolean isOverride(IntrospectedTable introspectedTable) {
-        return Boolean.parseBoolean(getProperty(introspectedTable, OVERRIDE, Boolean.TRUE.toString()));
+        return Boolean
+            .parseBoolean(getProperty(introspectedTable, OVERRIDE, Boolean.TRUE.toString()));
     }
 
     protected boolean existClass(GeneratedFile file) {
-        return new File(String.format("%s/%s/%s", file.getTargetProject(), file.getTargetPackage().replaceAll("[.]", "/"),
-                file.getFileName())).exists();
+        return new File(String.format("%s/%s/%s", file.getTargetProject(),
+            file.getTargetPackage().replaceAll("[.]", "/"), file.getFileName())).exists();
     }
 
-    protected String getProperty(IntrospectedTable introspectedTable, String key, String defaultValue) {
+    protected String getProperty(IntrospectedTable introspectedTable, String key,
+                                 String defaultValue) {
         // table 配置优先获取
         if (introspectedTable.getTableConfiguration().getProperties().containsKey(key)) {
-            return StringUtils.trimToNull(introspectedTable.getTableConfiguration().getProperty(key));
+            return StringUtils
+                .trimToNull(introspectedTable.getTableConfiguration().getProperty(key));
             // 插件配置
         } else if (properties.containsKey(key)) {
             return StringUtils.trimToNull(properties.getProperty(key));

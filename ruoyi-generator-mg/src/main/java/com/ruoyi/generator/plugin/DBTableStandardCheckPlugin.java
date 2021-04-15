@@ -11,12 +11,13 @@ import java.util.List;
 
 public class DBTableStandardCheckPlugin extends AbstractClassPlugin {
 
-    private Logger log = LoggerFactory.getLogger(DBTableStandardCheckPlugin.class);
+    private Logger   log     = LoggerFactory.getLogger(DBTableStandardCheckPlugin.class);
 
-    private String[] columns = {"isDeleted", "createdBy", "createdAt", "updatedBy", "updatedAt"};
+    private String[] columns = { "isDeleted", "createdBy", "createdAt", "updatedBy", "updatedAt" };
 
     @Override
-    public boolean modelBaseRecordClassGenerated(TopLevelClass topLevelClass, IntrospectedTable introspectedTable) {
+    public boolean modelBaseRecordClassGenerated(TopLevelClass topLevelClass,
+                                                 IntrospectedTable introspectedTable) {
         if (introspectedTable.getTableType().equalsIgnoreCase("VIEW")) {
             log.warn("视图表={} 忽略规范检查", introspectedTable.getFullyQualifiedTableNameAtRuntime());
             return true;
@@ -38,7 +39,7 @@ public class DBTableStandardCheckPlugin extends AbstractClassPlugin {
         }
 
         Validate.isTrue(!unsetColumns.isEmpty(), "表={},需要按照规范设置以下字段【{}】，未设置字段={}",
-                introspectedTable.getFullyQualifiedTableNameAtRuntime(), columns, unsetColumns);
+            introspectedTable.getFullyQualifiedTableNameAtRuntime(), columns, unsetColumns);
 
         log.info("数据表规范检查完毕");
         return true;
