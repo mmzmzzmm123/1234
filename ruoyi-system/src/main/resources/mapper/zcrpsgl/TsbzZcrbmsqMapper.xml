@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.zcrpsgl.mapper.TsbzZcrbmsqMapper">
+    
+    <resultMap type="TsbzZcrbmsq" id="TsbzZcrbmsqResult">
+        <result property="id"    column="id"    />
+        <result property="faid"    column="faid"    />
+        <result property="zjzid"    column="zjzid"    />
+        <result property="name"    column="name"    />
+        <result property="jxbh"    column="jxbh"    />
+        <result property="xb"    column="xb"    />
+        <result property="csrq"    column="csrq"    />
+        <result property="xd"    column="xd"    />
+        <result property="xk"    column="xk"    />
+        <result property="dwmc"    column="dwmc"    />
+        <result property="dwdz"    column="dwdz"    />
+        <result property="jdtype"    column="jdtype"    />
+        <result property="sf"    column="sf"    />
+        <result property="phone"    column="phone"    />
+        <result property="email"    column="Email"    />
+        <result property="dwfzr"    column="dwfzr"    />
+        <result property="dwfzrphone"    column="dwfzrphone"    />
+        <result property="scfapath"    column="scfapath"    />
+        <result property="scfaname"    column="scfaname"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="createUser"    column="create_user"    />
+    </resultMap>
+
+    <sql id="selectTsbzZcrbmsqVo">
+        select id, faid, zjzid, name, jxbh, xb, csrq, xd, xk, dwmc, dwdz, jdtype, sf, phone, Email, dwfzr, dwfzrphone, scfapath, scfaname, create_time, create_user from tsbz_zcrbmsq
+    </sql>
+
+    <select id="selectTsbzZcrbmsqList" parameterType="TsbzZcrbmsq" resultMap="TsbzZcrbmsqResult">
+        <include refid="selectTsbzZcrbmsqVo"/>
+        <where>  
+            <if test="faid != null "> and faid = #{faid}</if>
+            <if test="zjzid != null  and zjzid != ''"> and zjzid = #{zjzid}</if>
+            <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
+            <if test="jxbh != null  and jxbh != ''"> and jxbh = #{jxbh}</if>
+            <if test="xb != null  and xb != ''"> and xb = #{xb}</if>
+            <if test="csrq != null "> and csrq = #{csrq}</if>
+            <if test="xd != null  and xd != ''"> and xd = #{xd}</if>
+            <if test="xk != null  and xk != ''"> and xk = #{xk}</if>
+            <if test="dwmc != null  and dwmc != ''"> and dwmc = #{dwmc}</if>
+            <if test="dwdz != null  and dwdz != ''"> and dwdz = #{dwdz}</if>
+            <if test="jdtype != null  and jdtype != ''"> and jdtype = #{jdtype}</if>
+            <if test="sf != null  and sf != ''"> and sf = #{sf}</if>
+            <if test="phone != null  and phone != ''"> and phone = #{phone}</if>
+            <if test="email != null  and email != ''"> and Email = #{email}</if>
+            <if test="dwfzr != null  and dwfzr != ''"> and dwfzr = #{dwfzr}</if>
+            <if test="dwfzrphone != null  and dwfzrphone != ''"> and dwfzrphone = #{dwfzrphone}</if>
+            <if test="scfapath != null  and scfapath != ''"> and scfapath = #{scfapath}</if>
+            <if test="scfaname != null  and scfaname != ''"> and scfaname like concat('%', #{scfaname}, '%')</if>
+            <if test="createUser != null "> and create_user = #{createUser}</if>
+        </where>
+    </select>
+    
+    <select id="selectTsbzZcrbmsqById" parameterType="Long" resultMap="TsbzZcrbmsqResult">
+        <include refid="selectTsbzZcrbmsqVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertTsbzZcrbmsq" parameterType="TsbzZcrbmsq">
+        insert into tsbz_zcrbmsq
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="faid != null">faid,</if>
+            <if test="zjzid != null">zjzid,</if>
+            <if test="name != null">name,</if>
+            <if test="jxbh != null">jxbh,</if>
+            <if test="xb != null">xb,</if>
+            <if test="csrq != null">csrq,</if>
+            <if test="xd != null">xd,</if>
+            <if test="xk != null">xk,</if>
+            <if test="dwmc != null">dwmc,</if>
+            <if test="dwdz != null">dwdz,</if>
+            <if test="jdtype != null">jdtype,</if>
+            <if test="sf != null">sf,</if>
+            <if test="phone != null">phone,</if>
+            <if test="email != null">Email,</if>
+            <if test="dwfzr != null">dwfzr,</if>
+            <if test="dwfzrphone != null">dwfzrphone,</if>
+            <if test="scfapath != null">scfapath,</if>
+            <if test="scfaname != null">scfaname,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="createUser != null">create_user,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="faid != null">#{faid},</if>
+            <if test="zjzid != null">#{zjzid},</if>
+            <if test="name != null">#{name},</if>
+            <if test="jxbh != null">#{jxbh},</if>
+            <if test="xb != null">#{xb},</if>
+            <if test="csrq != null">#{csrq},</if>
+            <if test="xd != null">#{xd},</if>
+            <if test="xk != null">#{xk},</if>
+            <if test="dwmc != null">#{dwmc},</if>
+            <if test="dwdz != null">#{dwdz},</if>
+            <if test="jdtype != null">#{jdtype},</if>
+            <if test="sf != null">#{sf},</if>
+            <if test="phone != null">#{phone},</if>
+            <if test="email != null">#{email},</if>
+            <if test="dwfzr != null">#{dwfzr},</if>
+            <if test="dwfzrphone != null">#{dwfzrphone},</if>
+            <if test="scfapath != null">#{scfapath},</if>
+            <if test="scfaname != null">#{scfaname},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="createUser != null">#{createUser},</if>
+         </trim>
+    </insert>
+
+    <update id="updateTsbzZcrbmsq" parameterType="TsbzZcrbmsq">
+        update tsbz_zcrbmsq
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="faid != null">faid = #{faid},</if>
+            <if test="zjzid != null">zjzid = #{zjzid},</if>
+            <if test="name != null">name = #{name},</if>
+            <if test="jxbh != null">jxbh = #{jxbh},</if>
+            <if test="xb != null">xb = #{xb},</if>
+            <if test="csrq != null">csrq = #{csrq},</if>
+            <if test="xd != null">xd = #{xd},</if>
+            <if test="xk != null">xk = #{xk},</if>
+            <if test="dwmc != null">dwmc = #{dwmc},</if>
+            <if test="dwdz != null">dwdz = #{dwdz},</if>
+            <if test="jdtype != null">jdtype = #{jdtype},</if>
+            <if test="sf != null">sf = #{sf},</if>
+            <if test="phone != null">phone = #{phone},</if>
+            <if test="email != null">Email = #{email},</if>
+            <if test="dwfzr != null">dwfzr = #{dwfzr},</if>
+            <if test="dwfzrphone != null">dwfzrphone = #{dwfzrphone},</if>
+            <if test="scfapath != null">scfapath = #{scfapath},</if>
+            <if test="scfaname != null">scfaname = #{scfaname},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="createUser != null">create_user = #{createUser},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteTsbzZcrbmsqById" parameterType="Long">
+        delete from tsbz_zcrbmsq where id = #{id}
+    </delete>
+
+    <delete id="deleteTsbzZcrbmsqByIds" parameterType="String">
+        delete from tsbz_zcrbmsq where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+</mapper>
