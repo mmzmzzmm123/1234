@@ -7,11 +7,13 @@ import java.util.Map;
 
 import com.stdiet.common.utils.DateUtils;
 import com.stdiet.common.utils.reflect.ReflectUtils;
+import com.stdiet.custom.dto.response.NutritionQuestionResponse;
 import com.stdiet.custom.utils.LuceneIndexUtils;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
 import org.apache.lucene.document.TextField;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import com.stdiet.custom.mapper.SysNutritionQuestionMapper;
 import com.stdiet.custom.domain.SysNutritionQuestion;
@@ -29,7 +31,8 @@ public class SysNutritionQuestionServiceImpl implements ISysNutritionQuestionSer
     @Autowired
     private SysNutritionQuestionMapper sysNutritionQuestionMapper;
 
-    public static final String index_path = "D:\\develop\\LuceneIndex\\nutritionQuestion";
+    @Value("${lucene.index.nutritionQuestion}")
+    public String index_path;
     //private static final String index_path = "";
 
     //建立索引的字段名称
@@ -85,7 +88,10 @@ public class SysNutritionQuestionServiceImpl implements ISysNutritionQuestionSer
     public int updateSysNutritionQuestion(SysNutritionQuestion sysNutritionQuestion)
     {
         sysNutritionQuestion.setUpdateTime(DateUtils.getNowDate());
-        return sysNutritionQuestionMapper.updateSysNutritionQuestion(sysNutritionQuestion);
+        if(sysNutritionQuestionMapper.updateSysNutritionQuestion(sysNutritionQuestion) > 0){
+            return updateNutritionQuestionIndex(sysNutritionQuestion) ? 1 : 0;
+        }
+        return 0;
     }
 
     /**
@@ -97,7 +103,17 @@ public class SysNutritionQuestionServiceImpl implements ISysNutritionQuestionSer
     @Override
     public int deleteSysNutritionQuestionByIds(Long[] ids)
     {
-        return sysNutritionQuestionMapper.deleteSysNutritionQuestionByIds(ids);
+        if(sysNutritionQuestionMapper.deleteSysNutritionQuestionByIds(ids) > 0){
+            //建立索引
+            LuceneIndexUtils luceneIndexUtils = LuceneIndexUtils.getLuceneIndexUtils(index_path);
+            try {
+                return luceneIndexUtils.deleteOneByPrimaryIds(ids) ? 1 : 0;
+            }catch (Exception e){
+                e.printStackTrace();
+                return 0;
+            }
+        }
+        return 0;
     }
 
     /**
@@ -109,7 +125,17 @@ public class SysNutritionQuestionServiceImpl implements ISysNutritionQuestionSer
     @Override
     public int deleteSysNutritionQuestionById(Long id)
     {
-        return sysNutritionQuestionMapper.deleteSysNutritionQuestionById(id);
+        if(sysNutritionQuestionMapper.deleteSysNutritionQuestionById(id) > 0){
+            try {
+                //建立索引
+                LuceneIndexUtils luceneIndexUtils = LuceneIndexUtils.getLuceneIndexUtils(index_path);
+                return luceneIndexUtils.deleteOneByPrimaryKey(id) ? 1 : 0;
+            }catch (Exception e){
+                e.printStackTrace();
+                return 0;
+            }
+        }
+        return 0;
     }
 
     /**
@@ -119,17 +145,56 @@ public class SysNutritionQuestionServiceImpl implements ISysNutritionQuestionSer
     @Override
     public Map<String, Object> getNutritionQuestionListByKey(SysNutritionQuestion sysNutritionQuestion, int pageNum, int pageSize){
         //return sysNutritionQuestionMapper.getNutritionQuestionListByKey(sysNutritionQuestion);
+        Map<String, Object> result = new HashMap<>();
+        int total = 0;
+        List<NutritionQuestionResponse> nutritionQuestionResponsesList = new ArrayList<>();
         try{
             //建立索引
             LuceneIndexUtils luceneIndexUtils = LuceneIndexUtils.getLuceneIndexUtils(index_path);
-            return luceneIndexUtils.queryByKeyword(sysNutritionQuestion.getKey(), index_field_array, pageNum, pageSize);
+            Map<String, Object> indexMap = luceneIndexUtils.queryByKeyword(sysNutritionQuestion.getKey(), index_field_array, pageNum, pageSize);
+            total = (int)indexMap.get("total");
+            List<Document> documentList = (List<Document>)indexMap.get("data");
+            if(documentList != null && documentList.size() > 0){
+                for (Document document : documentList) {
+                    nutritionQuestionResponsesList.add(documentToNutritionQuestion(document));
+                }
+            }
         }catch (Exception e){
             e.printStackTrace();
         }
-        Map<String, Object> result = new HashMap<>();
-        result.put("total", 0);
-        result.put("data", new ArrayList<>());
+        result.put("total", total);
+        result.put("data", nutritionQuestionResponsesList);
         return result;
+    }
+
+    /**
+     * 重新生成知识问答索引
+     * @return
+     */
+    public boolean regenerateNutritionQuestionIndex(){
+        int pageSize = 1000;
+        int total = sysNutritionQuestionMapper.getNutritionQuestionCount();
+        try {
+            //建立索引
+            LuceneIndexUtils luceneIndexUtils = LuceneIndexUtils.getLuceneIndexUtils(index_path);
+            if(luceneIndexUtils.deleteAllIndex()){
+                if(total > 0){
+                    //总页数
+                    int totalPage = total/pageSize + (total%pageSize > 0 ? 1 : 0);
+                    int start = 0;
+                    for(int i = 1; i <= totalPage; i++){
+                        start = (i-1) * pageSize;
+                        List<SysNutritionQuestion> list = sysNutritionQuestionMapper.getNutritionQuestionListByPage(start,pageSize);
+                        luceneIndexUtils.addIndexs(nutritionQuestionToDocument(list));
+                    }
+                }
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+            return false;
+        }
+        return false;
+
     }
 
     /**
@@ -141,14 +206,62 @@ public class SysNutritionQuestionServiceImpl implements ISysNutritionQuestionSer
         try{
             //建立索引
             LuceneIndexUtils luceneIndexUtils = LuceneIndexUtils.getLuceneIndexUtils(index_path);
-            Document document = new Document();
-            for (String fieldName : index_field_array) {
-                document.add(new TextField(fieldName, ReflectUtils.getFieldValue(sysNutritionQuestion, fieldName)+"", Field.Store.YES));
-            }
+            Document document = nutritionQuestionToDocument(sysNutritionQuestion);
             return luceneIndexUtils.addIndexOne(document);
         }catch (Exception e){
             e.printStackTrace();
             return false;
         }
+    }
+
+    /**
+     * 更新索引
+     * @param sysNutritionQuestion
+     * @return
+     */
+    private boolean updateNutritionQuestionIndex(SysNutritionQuestion sysNutritionQuestion){
+        try{
+            //建立索引
+            LuceneIndexUtils luceneIndexUtils = LuceneIndexUtils.getLuceneIndexUtils(index_path);
+            Document document = nutritionQuestionToDocument(sysNutritionQuestion);
+            return luceneIndexUtils.updateByPrimaryId(sysNutritionQuestion.getId(), document);
+        }catch (Exception e){
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+
+    /**
+     * document转为NutritionQuestionResponse
+     * @param document
+     * @return
+     */
+    private NutritionQuestionResponse documentToNutritionQuestion(Document document){
+        NutritionQuestionResponse nutritionQuestionResponse = new NutritionQuestionResponse();
+        for (String fieldName : index_field_array) {
+            ReflectUtils.setFieldValue(nutritionQuestionResponse, fieldName, document.get(fieldName));
+        }
+        return nutritionQuestionResponse;
+    }
+
+    private Document nutritionQuestionToDocument(SysNutritionQuestion sysNutritionQuestion){
+        Document document = new Document();
+        for (String fieldName : index_field_array) {
+            document.add(new TextField(fieldName, ReflectUtils.getFieldValue(sysNutritionQuestion, fieldName)+"", Field.Store.YES));
+        }
+        return document;
+    }
+
+    private List<Document> nutritionQuestionToDocument(List<SysNutritionQuestion> sysNutritionQuestionList){
+        List<Document> result = new ArrayList<>();
+        for (SysNutritionQuestion sysNutritionQuestion : sysNutritionQuestionList) {
+            Document document = new Document();
+            for (String fieldName : index_field_array) {
+                document.add(new TextField(fieldName, ReflectUtils.getFieldValue(sysNutritionQuestion, fieldName)+"", Field.Store.YES));
+            }
+            result.add(document);
+        }
+        return result;
     }
 }

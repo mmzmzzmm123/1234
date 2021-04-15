@@ -2,6 +2,7 @@ package com.stdiet.custom.mapper;
 
 import java.util.List;
 import com.stdiet.custom.domain.SysNutritionQuestion;
+import org.apache.ibatis.annotations.Param;
 
 /**
  * 营养知识小问答Mapper接口
@@ -64,4 +65,18 @@ public interface SysNutritionQuestionMapper
      * @return
      */
     public List<String> getNutritionQuestionListByKey(SysNutritionQuestion sysNutritionQuestion);
+
+    /**
+     * 查询总数
+     * @return
+     */
+    public int getNutritionQuestionCount();
+
+    /**
+     * 分页查询
+     * @param start
+     * @param pageSize
+     * @return
+     */
+    public List<SysNutritionQuestion> getNutritionQuestionListByPage(@Param("start")int start, @Param("pageSize")int pageSize);
 }

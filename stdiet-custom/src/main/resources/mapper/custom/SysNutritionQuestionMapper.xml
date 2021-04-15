@@ -111,4 +111,15 @@
         order by id desc
     </select>
 
+    <!-- 查询总数 -->
+    <select id="getNutritionQuestionCount" resultType="int">
+      select count(id) from sys_nutrition_question where del_flag = 0
+    </select>
+
+
+    <!-- 分页查询-->
+    <select id="getNutritionQuestionListByPage" resultMap="SysNutritionQuestionResult">
+      select * from sys_nutrition_question where del_flag = 0 order by id asc limit #{start},#{pageSize}
+    </select>
+
 </mapper>

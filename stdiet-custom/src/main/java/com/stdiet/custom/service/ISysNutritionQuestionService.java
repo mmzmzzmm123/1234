@@ -67,4 +67,10 @@ public interface ISysNutritionQuestionService
      */
     public Map<String, Object> getNutritionQuestionListByKey(SysNutritionQuestion sysNutritionQuestion, int pageNum, int pageSize);
 
+    /**
+     * 重新生成知识问答索引
+     * @return
+     */
+    public boolean regenerateNutritionQuestionIndex();
+
 }

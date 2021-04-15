@@ -1,7 +1,6 @@
 package com.stdiet.custom.utils;
 
 import com.stdiet.common.utils.StringUtils;
-import com.stdiet.custom.service.impl.SysNutritionQuestionServiceImpl;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.index.*;
 import org.apache.lucene.queryparser.classic.MultiFieldQueryParser;
@@ -61,7 +60,7 @@ public class LuceneIndexUtils {
      * @return
      * @throws IOException
      */
-    public int addIndexs(ArrayList<Document> documents) throws IOException {
+    public int addIndexs(List<Document> documents) throws IOException {
 
         //流 读取索引库 加装工具
         indexWriter = new IndexWriter(directory,config);
@@ -143,12 +142,12 @@ public class LuceneIndexUtils {
      * @return
      * @throws IOException
      */
-    public boolean deleteOne(Term term) throws IOException {
-
+    public boolean deleteOneByPrimaryKey(Long id) throws IOException {
 
         //流 读取索引库 加装工具
         indexWriter = new IndexWriter(directory,config);
 
+        TermQuery term = new TermQuery(new Term(default_primary_key, id+""));
         try {
             indexWriter.deleteDocuments(term);
             indexWriter.commit();
@@ -164,6 +163,34 @@ public class LuceneIndexUtils {
     }
 
     /**
+     * 删除索引库中一条数据
+     * @param term
+     * @return
+     * @throws IOException
+     */
+    public boolean deleteOneByPrimaryIds(Long[] ids) throws IOException {
+
+        //流 读取索引库 加装工具
+        indexWriter = new IndexWriter(directory,config);
+
+        try {
+            for (Long id : ids) {
+                TermQuery term = new TermQuery(new Term(default_primary_key, id+""));
+                indexWriter.deleteDocuments(term);
+                indexWriter.commit();
+            }
+            return true;
+        }catch (Exception e){
+            e.printStackTrace();
+            indexWriter.rollback();
+            return false;
+        }finally {
+            indexWriter.close();
+            indexWriter= null;
+        }
+    }
+
+    /**
      * 修改索引库中一条数据
      * 注意：此处修改为  根据查找条件修改  如果有则修改 没有则新添 多条则修改一条（索引库的底层其实做法是 先删除，后修改- -）
      * @param term
@@ -171,14 +198,14 @@ public class LuceneIndexUtils {
      * @return
      * @throws IOException
      */
-    public boolean updateOne(Term term, Document document) throws IOException {
+    public boolean updateByPrimaryId(Long id, Document document) throws IOException {
 
         try {
 
             //流 读取索引库 加装工具
             indexWriter = new IndexWriter(directory,config);
 
-            indexWriter.updateDocument(term,document);
+            indexWriter.updateDocument(new Term(default_primary_key, id+""),document);
             indexWriter.commit();
             return true;
         }catch (Exception e){
@@ -280,40 +307,5 @@ public class LuceneIndexUtils {
         }
     }
 
-
-
-    public static void main(String[] args) throws IOException {
-        try{
-            LuceneIndexUtils luceneIndexUtils = LuceneIndexUtils.getLuceneIndexUtils(SysNutritionQuestionServiceImpl.index_path);
-            /*for (int i = 1 ; i < 100; i++){
-                Document document = new Document();
-                document.add(new TextField("id",i+"", Field.Store.YES));
-                document.add(new TextField("title","什么食物是脂肪杀手？", Field.Store.YES));
-                document.add(new TextField("content","黄瓜", Field.Store.YES));
-                document.add(new TextField("key","脂肪|杀手|食物", Field.Store.YES));
-                luceneIndexUtils.addIndexOne(document);
-
-            }*/
-            /*Document document = new Document();
-            document.add(new TextField("id","1", Field.Store.YES));
-            document.add(new TextField("title","什么食物是脂肪杀手？", Field.Store.YES));
-            document.add(new TextField("content","黄瓜", Field.Store.YES));
-            document.add(new TextField("key","脂肪|杀手|食物", Field.Store.YES));
-            luceneIndexUtils.addIndexOne(document);*/
-
-            String[] columns = {"key","content","title"};
-            Map<String,Object> map = luceneIndexUtils.queryByKeyword("猝死", SysNutritionQuestionServiceImpl.index_field_array, 1,10);
-
-            System.out.println(Long.parseLong(map.get("total").toString()));
-
-            for(Document document : (List<Document>)map.get("data")){
-                System.out.println(document.get("id")+"-"+document.get("key"));
-            }
-
-            //LuceneIndexUtils.printAnalysisResult("什么食物是脂肪杀手？");
-        }catch (Exception e){
-            e.printStackTrace();
-        }
-    }
 
 }

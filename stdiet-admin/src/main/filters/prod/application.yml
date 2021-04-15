@@ -182,3 +182,7 @@ aliyun:
     EndPoint: https://oss-cn-shenzhen.aliyuncs.com
     #案例文件夹路径
     casePrefix: case/
+
+lucene:
+  index:
+    nutritionQuestion: /home/api/manage.shengtangdiet.com/uploadPath/nutritionQuestion
