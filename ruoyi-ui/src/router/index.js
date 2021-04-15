@@ -243,6 +243,22 @@ export const constantRoutes = [{
             }
         }]
     },
+     // 填充教研员考核方案
+     {
+        path: "/jyykhgl",
+        component: Layout,
+        hidden: true,
+        children: [{
+            path: "jyykhrw/child/:id",
+            component: resolve =>
+                require(["@/views/jyykhgl/jyykhrw/child"], resolve),
+            name: "jyykhrwchild",
+            meta: {
+                title: "教研员考核任务子项",
+                icon: ""
+            }
+        }]
+    },
     {
         path: "/job",
         component: Layout,

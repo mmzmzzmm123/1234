@@ -20,10 +20,15 @@
         <result property="rwsm" column="rwsm"/>
         <result property="deptId" column="dept_id"/>
         <result property="wcsl" column="wcsl"/>
+        <result property="khzqkssj"    column="khzqkssj"    />
+        <result property="khzqjssj"    column="khzqjssj"    />
+        <result property="parentId"    column="parent_id"    />
+        <result property="xn"    column="xn"    />
+        <result property="xq"    column="xq"    />
     </resultMap>
 
     <sql id="selectTsbzJyykhrwVo">
-        select u.id, u.rwmc, u.rwlx, u.rwnr, u.khbm, u.khzq, u.slyq, u.fsbx, u.isdel, u.create_time, u.rwsm, u.dept_id from tsbz_jyykhrw u
+        select u.id, u.rwmc, u.rwlx, u.rwnr, u.khbm, u.khzq, u.slyq, u.fsbx, u.isdel, u.create_time, u.rwsm, u.dept_id, u.khzqkssj, u.khzqjssj, u.parent_id, u.xn, u.xq from tsbz_jyykhrw u
         left join sys_dept d on u.dept_id = d.dept_id
     </sql>
 
@@ -38,6 +43,12 @@
         <if test="slyq != null  and slyq != ''">and u.slyq = #{slyq}</if>
         <if test="fsbx != null  and fsbx != ''">and u.fsbx = #{fsbx}</if>
         <if test="rwsm != null  and rwsm != ''">and u.rwsm = #{rwsm}</if>
+        <if test="khzqkssj != null "> and u.khzqkssj = #{khzqkssj}</if>
+        <if test="khzqjssj != null "> and u.khzqjssj = #{khzqjssj}</if>
+        <if test="parentId != null "> and u.parent_id = #{parentId}</if>
+        <if test="parentId == null "> and u.parent_id is null</if>
+        <if test="xn != null  and xn != ''"> and u.xn = #{xn}</if>
+        <if test="xq != null  and xq != ''"> and u.xq = #{xq}</if>
 
         <!-- 数据范围过滤 -->
         ${params.dataScope}
@@ -45,7 +56,7 @@
 
     <select id="selectTsbzJyykhrwById" parameterType="Long" resultMap="TsbzJyykhrwResult">
         <include refid="selectTsbzJyykhrwVo"/>
-        where id = #{id}
+        where u.id = #{id}
     </select>
 
     <select id="selectTsbzJyykhrwStatistics" parameterType="TsbzJyykhrw" resultMap="TsbzJyykhrwResult">
@@ -83,6 +94,11 @@
             <if test="createTime != null">create_time,</if>
             <if test="rwsm != null">rwsm,</if>
             <if test="deptId != null">dept_id,</if>
+            <if test="khzqkssj != null">khzqkssj,</if>
+            <if test="khzqjssj != null">khzqjssj,</if>
+            <if test="parentId != null">parent_id,</if>
+            <if test="xn != null">xn,</if>
+            <if test="xq != null">xq,</if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="rwmc != null">#{rwmc},</if>
@@ -96,6 +112,11 @@
             <if test="createTime != null">#{createTime},</if>
             <if test="rwsm != null">#{rwsm},</if>
             <if test="deptId != null">#{deptId},</if>
+            <if test="khzqkssj != null">#{khzqkssj},</if>
+            <if test="khzqjssj != null">#{khzqjssj},</if>
+            <if test="parentId != null">#{parentId},</if>
+            <if test="xn != null">#{xn},</if>
+            <if test="xq != null">#{xq},</if>
         </trim>
     </insert>
 
@@ -113,6 +134,11 @@
             <if test="createTime != null">create_time = #{createTime},</if>
             <if test="rwsm != null">rwsm = #{rwsm},</if>
             <if test="deptId != null">dept_id = #{deptId},</if>
+            <if test="khzqkssj != null">khzqkssj = #{khzqkssj},</if>
+            <if test="khzqjssj != null">khzqjssj = #{khzqjssj},</if>
+            <if test="parentId != null">parent_id = #{parentId},</if>
+            <if test="xn != null">xn = #{xn},</if>
+            <if test="xq != null">xq = #{xq},</if>
         </trim>
         where id = #{id}
     </update>

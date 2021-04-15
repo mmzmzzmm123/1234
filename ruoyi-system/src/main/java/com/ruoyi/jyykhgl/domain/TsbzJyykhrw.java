@@ -1,9 +1,12 @@
 package com.ruoyi.jyykhgl.domain;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import com.ruoyi.common.annotation.Excel;
 import com.ruoyi.common.core.domain.BaseEntity;
+
+import java.util.Date;
 
 /**
  * 教研员考核任务对象 tsbz_jyykhrw
@@ -84,6 +87,32 @@ public class TsbzJyykhrw extends BaseEntity {
     private String nickName;
 
     private String wcsl;
+
+    /**
+     * 考核周期开始时间
+     */
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    @Excel(name = "考核周期开始时间", width = 30, dateFormat = "yyyy-MM-dd")
+    private Date khzqkssj;
+
+    /**
+     * 考核周期结束时间
+     */
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    @Excel(name = "考核周期结束时间", width = 30, dateFormat = "yyyy-MM-dd")
+    private Date khzqjssj;
+
+    /** 父id */
+    @Excel(name = "父id")
+    private Long parentId;
+
+    /** 学年 */
+    @Excel(name = "学年")
+    private String xn;
+
+    /** 学期 */
+    @Excel(name = "学期")
+    private String xq;
 
     public void setId(Long id) {
         this.id = id;
@@ -197,6 +226,50 @@ public class TsbzJyykhrw extends BaseEntity {
         this.wcsl = wcsl;
     }
 
+    public void setKhzqkssj(Date khzqkssj) {
+        this.khzqkssj = khzqkssj;
+    }
+
+    public Date getKhzqkssj() {
+        return khzqkssj;
+    }
+
+    public void setKhzqjssj(Date khzqjssj) {
+        this.khzqjssj = khzqjssj;
+    }
+
+    public Date getKhzqjssj() {
+        return khzqjssj;
+    }
+
+    public void setParentId(Long parentId)
+    {
+        this.parentId = parentId;
+    }
+
+    public Long getParentId()
+    {
+        return parentId;
+    }
+    public void setXn(String xn)
+    {
+        this.xn = xn;
+    }
+
+    public String getXn()
+    {
+        return xn;
+    }
+    public void setXq(String xq)
+    {
+        this.xq = xq;
+    }
+
+    public String getXq()
+    {
+        return xq;
+    }
+
     @Override
     public String toString() {
         return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE)
@@ -215,6 +288,11 @@ public class TsbzJyykhrw extends BaseEntity {
                 .append("userId", getUserId())
                 .append("nickName", getNickName())
                 .append("wcsl", getWcsl())
+                .append("khzqkssj", getKhzqkssj())
+                .append("khzqjssj", getKhzqjssj())
+                .append("parentId", getParentId())
+                .append("xn", getXn())
+                .append("xq", getXq())
                 .toString();
     }
 }
