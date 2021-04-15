@@ -11,100 +11,97 @@ import java.util.List;
 
 public class ManagerInterfaceClassGeneratePlugin extends AbstractClassPlugin {
 
-    private Logger log = LoggerFactory.getLogger(ManagerInterfaceClassGeneratePlugin.class);
+	private Logger log = LoggerFactory.getLogger(ManagerInterfaceClassGeneratePlugin.class);
 
-    @Override
-    public List<GeneratedJavaFile> contextGenerateAdditionalJavaFiles(IntrospectedTable introspectedTable) {
-        List<GeneratedJavaFile> list = Lists.newArrayList();
+	@Override
+	public List<GeneratedJavaFile> contextGenerateAdditionalJavaFiles(IntrospectedTable introspectedTable) {
+		List<GeneratedJavaFile> list = Lists.newArrayList();
 
-        FullyQualifiedJavaType daoInterfaceType;
-        if (introspectedTable.getTableConfiguration().getProperties().containsKey(DAO_INTERFACE)) {
-            GeneratedJavaFile daoInterface = (GeneratedJavaFile) introspectedTable
-                .getTableConfiguration().getProperties().get(DAO_INTERFACE);
-            daoInterfaceType = daoInterface.getCompilationUnit().getType();
-        } else {
-            daoInterfaceType = new FullyQualifiedJavaType(
-                introspectedTable.getMyBatis3JavaMapperType());
-        }
+		FullyQualifiedJavaType daoInterfaceType;
+		if (introspectedTable.getTableConfiguration().getProperties().containsKey(DAO_INTERFACE)) {
+			GeneratedJavaFile daoInterface = (GeneratedJavaFile) introspectedTable.getTableConfiguration()
+					.getProperties().get(DAO_INTERFACE);
+			daoInterfaceType = daoInterface.getCompilationUnit().getType();
+		}
+		else {
+			daoInterfaceType = new FullyQualifiedJavaType(introspectedTable.getMyBatis3JavaMapperType());
+		}
 
-        GeneratedJavaFile _interface = generateManagerInterface(introspectedTable);
-        GeneratedJavaFile manager = generateManager(introspectedTable, _interface,
-            daoInterfaceType);
-        introspectedTable.getTableConfiguration().getProperties().put(MANAGER_CLASS, _interface);
+		GeneratedJavaFile _interface = generateManagerInterface(introspectedTable);
+		GeneratedJavaFile manager = generateManager(introspectedTable, _interface, daoInterfaceType);
+		introspectedTable.getTableConfiguration().getProperties().put(MANAGER_CLASS, _interface);
 
-        if (!existClass(_interface)) {
-            list.add(_interface);
-            list.add(manager);
-            log.info("创建Manager Java文件={}/{}.{}", _interface.getTargetProject(),
-                _interface.getTargetPackage(), _interface.getFileName());
-            log.info("创建ManagerImpl Java文件={}/{}.{}", manager.getTargetProject(),
-                manager.getTargetPackage(), manager.getFileName());
-        } else if (isOverride(introspectedTable)) {
-            list.add(_interface);
-            list.add(manager);
-            log.info("覆盖Manager Java文件={}/{}.{}", _interface.getTargetProject(),
-                _interface.getTargetPackage(), _interface.getFileName());
-            log.info("覆盖ManagerImpl Java文件={}/{}.{}", manager.getTargetProject(),
-                manager.getTargetPackage(), manager.getFileName());
-        } else {
-            log.info("跳过Manager Java文件={}/{}.{}", _interface.getTargetProject(),
-                _interface.getTargetPackage(), _interface.getFileName());
-            log.info("跳过Manager Java文件={}/{}.{}", manager.getTargetProject(),
-                manager.getTargetPackage(), manager.getFileName());
-        }
+		if (!existClass(_interface)) {
+			list.add(_interface);
+			list.add(manager);
+			log.info("创建Manager Java文件={}/{}.{}", _interface.getTargetProject(), _interface.getTargetPackage(),
+					_interface.getFileName());
+			log.info("创建ManagerImpl Java文件={}/{}.{}", manager.getTargetProject(), manager.getTargetPackage(),
+					manager.getFileName());
+		}
+		else if (isOverride(introspectedTable)) {
+			list.add(_interface);
+			list.add(manager);
+			log.info("覆盖Manager Java文件={}/{}.{}", _interface.getTargetProject(), _interface.getTargetPackage(),
+					_interface.getFileName());
+			log.info("覆盖ManagerImpl Java文件={}/{}.{}", manager.getTargetProject(), manager.getTargetPackage(),
+					manager.getFileName());
+		}
+		else {
+			log.info("跳过Manager Java文件={}/{}.{}", _interface.getTargetProject(), _interface.getTargetPackage(),
+					_interface.getFileName());
+			log.info("跳过Manager Java文件={}/{}.{}", manager.getTargetProject(), manager.getTargetPackage(),
+					manager.getFileName());
+		}
 
-        return list;
-    }
+		return list;
+	}
 
-    private String getDaoTypeName(IntrospectedTable introspectedTable) {
-        FullyQualifiedJavaType entityType = new FullyQualifiedJavaType(
-            introspectedTable.getBaseRecordType());
-        return String.format("%s.%s%s", getProperty(introspectedTable, TARGET_MANAGER, null),
-            entityType.getShortName(), getProperty(introspectedTable, SUFFIX_MANAGER, "Manager"));
-    }
+	private String getDaoTypeName(IntrospectedTable introspectedTable) {
+		FullyQualifiedJavaType entityType = new FullyQualifiedJavaType(introspectedTable.getBaseRecordType());
+		return String.format("%s.%s%s", getProperty(introspectedTable, TARGET_MANAGER, null), entityType.getShortName(),
+				getProperty(introspectedTable, SUFFIX_MANAGER, "Manager"));
+	}
 
-    private String getImplDaoTypeName(IntrospectedTable introspectedTable) {
-        FullyQualifiedJavaType entityType = new FullyQualifiedJavaType(
-            introspectedTable.getBaseRecordType());
-        return String.format("%s.impl.%s%s", getProperty(introspectedTable, TARGET_MANAGER, null),
-            entityType.getShortName(),
-            getProperty(introspectedTable, SUFFIX_MANAGER, "ManagerImpl"));
-    }
+	private String getImplDaoTypeName(IntrospectedTable introspectedTable) {
+		FullyQualifiedJavaType entityType = new FullyQualifiedJavaType(introspectedTable.getBaseRecordType());
+		return String.format("%s.impl.%s%s", getProperty(introspectedTable, TARGET_MANAGER, null),
+				entityType.getShortName(), getProperty(introspectedTable, SUFFIX_MANAGER, "ManagerImpl"));
+	}
 
-    private GeneratedJavaFile generateManagerInterface(IntrospectedTable introspectedTable) {
-        String classPath = getDaoTypeName(introspectedTable);
+	private GeneratedJavaFile generateManagerInterface(IntrospectedTable introspectedTable) {
+		String classPath = getDaoTypeName(introspectedTable);
 
-        Interface _interface = buildInterface(classPath);
+		Interface _interface = buildInterface(classPath);
 
-        return buildGeneratedJavaFile(introspectedTable, _interface);
-    }
+		return buildGeneratedJavaFile(introspectedTable, _interface);
+	}
 
-    private GeneratedJavaFile generateManager(IntrospectedTable introspectedTable,
-                                              GeneratedJavaFile _interface,
-                                              FullyQualifiedJavaType daoInterfaceType) {
-        String classPath = getImplDaoTypeName(introspectedTable);
+	private GeneratedJavaFile generateManager(IntrospectedTable introspectedTable, GeneratedJavaFile _interface,
+			FullyQualifiedJavaType daoInterfaceType) {
+		String classPath = getImplDaoTypeName(introspectedTable);
 
-        TopLevelClass topLevelClass = buildTopLevelClass(classPath);
-        // 接口
-        topLevelClass.addImportedType(_interface.getCompilationUnit().getType());
-        topLevelClass.addSuperInterface(_interface.getCompilationUnit().getType());
+		TopLevelClass topLevelClass = buildTopLevelClass(classPath);
+		// 接口
+		topLevelClass.addImportedType(_interface.getCompilationUnit().getType());
+		topLevelClass.addSuperInterface(_interface.getCompilationUnit().getType());
 
-        topLevelClass.addImportedType("org.springframework.stereotype.Service");
-        topLevelClass.addAnnotation("@Service");
+		topLevelClass.addImportedType("org.springframework.stereotype.Service");
+		topLevelClass.addAnnotation("@Service");
 
-        topLevelClass.addImportedType("org.springframework.beans.factory.annotation.Autowired");
+		topLevelClass.addImportedType("org.springframework.beans.factory.annotation.Autowired");
 
-        topLevelClass.addImportedType(daoInterfaceType);
+		topLevelClass.addImportedType(daoInterfaceType);
 
-        Field daoField = new Field();
-        daoField.addAnnotation("@Autowired");
-        daoField.setName("dao");
-        daoField.setType(daoInterfaceType);
-        daoField.setVisibility(JavaVisibility.PRIVATE);
+		Field daoField = new Field();
+		daoField.addAnnotation("@Autowired");
+		daoField.setName("dao");
+		daoField.setType(daoInterfaceType);
+		daoField.setVisibility(JavaVisibility.PRIVATE);
 
-        topLevelClass.addField(daoField);
+		topLevelClass.addField(daoField);
 
-        return buildGeneratedJavaFile(introspectedTable, topLevelClass);
-    }
+		return buildGeneratedJavaFile(introspectedTable, topLevelClass);
+	}
 
 }

@@ -5,12 +5,11 @@ import org.mybatis.generator.internal.types.JavaTypeResolverDefaultImpl;
 
 import java.sql.Types;
 
-public class DefaultJavaTypeResolverImpl extends JavaTypeResolverDefaultImpl
-                                         implements JavaTypeResolver {
+public class DefaultJavaTypeResolverImpl extends JavaTypeResolverDefaultImpl implements JavaTypeResolver {
 
-    public DefaultJavaTypeResolverImpl() {
-        super();
-        super.typeMap.put(Types.SMALLINT, super.typeMap.get(Types.INTEGER));
-    }
+	public DefaultJavaTypeResolverImpl() {
+		super();
+		super.typeMap.put(Types.SMALLINT, super.typeMap.get(Types.INTEGER));
+	}
 
 }

@@ -11,31 +11,27 @@ import org.mybatis.generator.api.dom.java.TopLevelClass;
  */
 public class SerializableInterfacePlugin extends AbstractClassPlugin {
 
-    private FullyQualifiedJavaType serializableType      = new FullyQualifiedJavaType(
-        "java.io.Serializable");
+	private FullyQualifiedJavaType serializableType = new FullyQualifiedJavaType("java.io.Serializable");
 
-    private Field                  serialVersionUIDField = new Field() {
-                                                             {
-                                                                 setVisibility(
-                                                                     JavaVisibility.PRIVATE);
-                                                                 setStatic(true);
-                                                                 setFinal(true);
-                                                                 setType(new FullyQualifiedJavaType(
-                                                                     "long"));
-                                                                 setName("serialVersionUID");
-                                                                 setInitializationString("1L");
-                                                             }
-                                                         };
+	private Field serialVersionUIDField = new Field() {
+		{
+			setVisibility(JavaVisibility.PRIVATE);
+			setStatic(true);
+			setFinal(true);
+			setType(new FullyQualifiedJavaType("long"));
+			setName("serialVersionUID");
+			setInitializationString("1L");
+		}
+	};
 
-    @Override
-    public boolean modelBaseRecordClassGenerated(TopLevelClass topLevelClass,
-                                                 IntrospectedTable introspectedTable) {
-        topLevelClass.addImportedType(serializableType);
-        topLevelClass.addSuperInterface(serializableType);
-        topLevelClass.addField(serialVersionUIDField);
+	@Override
+	public boolean modelBaseRecordClassGenerated(TopLevelClass topLevelClass, IntrospectedTable introspectedTable) {
+		topLevelClass.addImportedType(serializableType);
+		topLevelClass.addSuperInterface(serializableType);
+		topLevelClass.addField(serialVersionUIDField);
 
-        // private static final long serialVersionUID = 1L;
-        return super.modelBaseRecordClassGenerated(topLevelClass, introspectedTable);
-    }
+		// private static final long serialVersionUID = 1L;
+		return super.modelBaseRecordClassGenerated(topLevelClass, introspectedTable);
+	}
 
 }
