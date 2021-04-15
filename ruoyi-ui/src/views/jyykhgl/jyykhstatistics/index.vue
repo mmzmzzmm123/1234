@@ -55,7 +55,7 @@
     <el-table v-loading="loading" :data="jyykhrwList">
       <!-- <el-table-column type="selection" width="55" align="center" /> -->
       <!-- <el-table-column label="编号" align="center" prop="id" /> -->
-      <el-table-column label="任务名称" align="center" prop="rwmc" />
+      <!-- <el-table-column label="任务名称" align="center" prop="rwmc" /> -->
       <el-table-column
         label="任务类型"
         align="center"
@@ -83,11 +83,7 @@
         prop="fsbx"
         :formatter="typeFormat"
       /> -->
-      <el-table-column
-        label="总体完成情况"
-        align="center"
-        prop="wcsl"
-      />
+      <el-table-column label="总体完成情况" align="center" prop="wcsl" />
       <el-table-column
         label="操作"
         align="center"
@@ -171,6 +167,11 @@ export default {
         fsbx: null,
         isdel: null,
         rwsm: null,
+        khzqkssj: null,
+        khzqjssj: null,
+        parentId: null,
+        xn: null,
+        xq: null,
       },
       queryParams_fid: {
         rwid: null,
@@ -254,6 +255,7 @@ export default {
     /** 搜索按钮操作 */
     handleQuery() {
       this.queryParams.pageNum = 1;
+      this.queryParams.parentId = this.queryParams.rwid;
       this.getList();
     },
     /** 重置按钮操作 */

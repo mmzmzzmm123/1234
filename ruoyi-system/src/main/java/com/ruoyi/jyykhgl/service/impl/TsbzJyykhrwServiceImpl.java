@@ -57,6 +57,17 @@ public class TsbzJyykhrwServiceImpl implements ITsbzJyykhrwService {
     }
 
     /**
+     * 查询教研员考核任务列表
+     *
+     * @param tsbzJyykhrw 教研员考核任务
+     * @return 教研员考核任务集合
+     */
+    @Override
+    public List<TsbzJyykhrw> selectTsbzJyykhrwBmWcqkStatistics(TsbzJyykhrw tsbzJyykhrw){
+        return tsbzJyykhrwMapper.selectTsbzJyykhrwBmWcqkStatistics(tsbzJyykhrw);
+    }
+
+    /**
      * 新增教研员考核任务
      *
      * @param tsbzJyykhrw 教研员考核任务

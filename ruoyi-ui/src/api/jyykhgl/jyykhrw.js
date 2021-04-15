@@ -18,6 +18,15 @@ export function listJyykhrwstatistics(query) {
   })
 }
 
+// 查询教研员考核任务列表
+export function listJyykhrwbmwcqkstatistics(query) {
+  return request({
+    url: '/jyykhgl/jyykhrw/bmcsqkstatistics',
+    method: 'get',
+    params: query
+  })
+}
+
 // 查询教研员考核任务详细
 export function getJyykhrw(id) {
   return request({

@@ -25,6 +25,10 @@
         <result property="parentId"    column="parent_id"    />
         <result property="xn"    column="xn"    />
         <result property="xq"    column="xq"    />
+        <result property="bmrs"    column="bmrs"    />
+        <result property="wcrs"    column="wcrs"    />
+        <result property="rwsl"    column="rwsl"    />
+        <result property="wcslpjz"    column="wcslpjz"    />
     </resultMap>
 
     <sql id="selectTsbzJyykhrwVo">
@@ -75,9 +79,20 @@
         <if test="slyq != null  and slyq != ''">and u.slyq = #{slyq}</if>
         <if test="fsbx != null  and fsbx != ''">and u.fsbx = #{fsbx}</if>
         <if test="rwsm != null  and rwsm != ''">and u.rwsm = #{rwsm}</if>
+        <if test="parentId != null "> and u.parent_id = #{parentId}</if>
+        <if test="parentId == null "> and u.parent_id is not null</if>
 
         <!-- 数据范围过滤 -->
         ${params.dataScope}
+    </select>
+
+    <select id="selectTsbzJyykhrwBmWcqkStatistics" parameterType="TsbzJyykhrw" resultMap="TsbzJyykhrwResult">
+        select a.xn,a.xq,a.rwmc,a.khbm,
+(select count(*) from sys_user b where b.dept_id=a.khbm) bmrs,
+(select count(*) from tsbz_jyykhpjjg d where d.rwid=a.id) wcrs,
+(select count(*) from tsbz_jyykhrw c where c.parent_id=a.id) rwsl,
+(SELECT count(*) from v_jyykhrwtj e where e.rwid=a.id) wcslpjz
+ from tsbz_jyykhrw a where a.parent_id is null
     </select>
 
     <insert id="insertTsbzJyykhrw" parameterType="TsbzJyykhrw" useGeneratedKeys="true" keyProperty="id">

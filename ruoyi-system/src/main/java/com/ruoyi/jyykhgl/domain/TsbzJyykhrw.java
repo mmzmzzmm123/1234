@@ -102,17 +102,60 @@ public class TsbzJyykhrw extends BaseEntity {
     @Excel(name = "考核周期结束时间", width = 30, dateFormat = "yyyy-MM-dd")
     private Date khzqjssj;
 
-    /** 父id */
+    /**
+     * 父id
+     */
     @Excel(name = "父id")
     private Long parentId;
 
-    /** 学年 */
+    /**
+     * 学年
+     */
     @Excel(name = "学年")
     private String xn;
 
-    /** 学期 */
+    /**
+     * 学期
+     */
     @Excel(name = "学期")
     private String xq;
+
+    public Long getBmrs() {
+        return bmrs;
+    }
+
+    public void setBmrs(Long bmrs) {
+        this.bmrs = bmrs;
+    }
+
+    public Long getWcrs() {
+        return wcrs;
+    }
+
+    public void setWcrs(Long wcrs) {
+        this.wcrs = wcrs;
+    }
+
+    public Long getRwsl() {
+        return rwsl;
+    }
+
+    public void setRwsl(Long rwsl) {
+        this.rwsl = rwsl;
+    }
+
+    public Long getWcslpjz() {
+        return wcslpjz;
+    }
+
+    public void setWcslpjz(Long wcslpjz) {
+        this.wcslpjz = wcslpjz;
+    }
+
+    private Long bmrs;
+    private Long wcrs;
+    private Long rwsl;
+    private Long wcslpjz;
 
     public void setId(Long id) {
         this.id = id;
@@ -242,31 +285,27 @@ public class TsbzJyykhrw extends BaseEntity {
         return khzqjssj;
     }
 
-    public void setParentId(Long parentId)
-    {
+    public void setParentId(Long parentId) {
         this.parentId = parentId;
     }
 
-    public Long getParentId()
-    {
+    public Long getParentId() {
         return parentId;
     }
-    public void setXn(String xn)
-    {
+
+    public void setXn(String xn) {
         this.xn = xn;
     }
 
-    public String getXn()
-    {
+    public String getXn() {
         return xn;
     }
-    public void setXq(String xq)
-    {
+
+    public void setXq(String xq) {
         this.xq = xq;
     }
 
-    public String getXq()
-    {
+    public String getXq() {
         return xq;
     }
 
@@ -293,6 +332,10 @@ public class TsbzJyykhrw extends BaseEntity {
                 .append("parentId", getParentId())
                 .append("xn", getXn())
                 .append("xq", getXq())
+                .append("bmrs", getBmrs())
+                .append("wcrs", getWcrs())
+                .append("rwsl", getRwsl())
+                .append("wcslpjz", getWcslpjz())
                 .toString();
     }
 }

@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.jyykhgl.mapper.TsbzJyykhpjjgMapper">
+
+    <resultMap type="TsbzJyykhpjjg" id="TsbzJyykhpjjgResult">
+        <result property="id" column="id"/>
+        <result property="rwid" column="rwid"/>
+        <result property="khryid" column="khryid"/>
+        <result property="pjzt" column="pjzt"/>
+        <result property="remark" column="remark"/>
+        <result property="pjjg" column="pjjg"/>
+        <result property="createTime" column="create_time"/>
+    </resultMap>
+
+    <sql id="selectTsbzJyykhpjjgVo">
+        select id, rwid, khryid, pjzt, remark, pjjg, create_time from tsbz_jyykhpjjg
+    </sql>
+
+    <select id="selectTsbzJyykhpjjgList" parameterType="TsbzJyykhpjjg" resultMap="TsbzJyykhpjjgResult">
+        <include refid="selectTsbzJyykhpjjgVo"/>
+        <where>
+            <if test="rwid != null ">and rwid = #{rwid}</if>
+            <if test="khryid != null ">and khryid = #{khryid}</if>
+            <if test="pjzt != null  and pjzt != ''">and pjzt = #{pjzt}</if>
+            <if test="pjjg != null  and pjjg != ''">and pjjg = #{pjjg}</if>
+        </where>
+    </select>
+
+    <select id="selectTsbzJyykhpjjgById" parameterType="Long" resultMap="TsbzJyykhpjjgResult">
+        <include refid="selectTsbzJyykhpjjgVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertTsbzJyykhpjjg" parameterType="TsbzJyykhpjjg" useGeneratedKeys="true" keyProperty="id">
+        insert into tsbz_jyykhpjjg
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="rwid != null">rwid,</if>
+            <if test="khryid != null">khryid,</if>
+            <if test="pjzt != null">pjzt,</if>
+            <if test="remark != null">remark,</if>
+            <if test="pjjg != null">pjjg,</if>
+            <if test="createTime != null">create_time,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="rwid != null">#{rwid},</if>
+            <if test="khryid != null">#{khryid},</if>
+            <if test="pjzt != null">#{pjzt},</if>
+            <if test="remark != null">#{remark},</if>
+            <if test="pjjg != null">#{pjjg},</if>
+            <if test="createTime != null">#{createTime},</if>
+        </trim>
+    </insert>
+
+    <update id="updateTsbzJyykhpjjg" parameterType="TsbzJyykhpjjg">
+        update tsbz_jyykhpjjg
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="rwid != null">rwid = #{rwid},</if>
+            <if test="khryid != null">khryid = #{khryid},</if>
+            <if test="pjzt != null">pjzt = #{pjzt},</if>
+            <if test="remark != null">remark = #{remark},</if>
+            <if test="pjjg != null">pjjg = #{pjjg},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteTsbzJyykhpjjgById" parameterType="Long">
+        delete from tsbz_jyykhpjjg where id = #{id}
+    </delete>
+
+    <delete id="deleteTsbzJyykhpjjgByIds" parameterType="String">
+        delete from tsbz_jyykhpjjg where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+</mapper>

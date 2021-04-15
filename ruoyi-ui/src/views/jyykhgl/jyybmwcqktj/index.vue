@@ -53,41 +53,19 @@
     </el-row>
 
     <el-table v-loading="loading" :data="jyykhrwList">
-      <!-- <el-table-column type="selection" width="55" align="center" /> -->
-      <!-- <el-table-column label="编号" align="center" prop="id" /> -->
+      <el-table-column label="考核学年" align="center" prop="xn" :formatter="xnFormat" />
+      <el-table-column label="考核学期" align="center" prop="xq" :formatter="xqFormat" />
       <el-table-column label="任务名称" align="center" prop="rwmc" />
-      <el-table-column
-        label="任务类型"
-        align="center"
-        prop="rwlx"
-        :formatter="xrlxFormat"
-      />
-      <el-table-column
-        label="任务内容"
-        align="center"
-        prop="rwnr"
-        :formatter="rwnrFormat"
-      />
       <el-table-column
         label="考核部门"
         align="center"
         prop="khbm"
         :formatter="khbmFormat"
       />
-      <el-table-column label="考核人员" align="center" prop="nickName" />
-      <!-- <el-table-column label="考核周期" align="center" prop="khzq" /> -->
-      <!-- <el-table-column label="数量要求" align="center" prop="slyq" /> -->
-      <!-- <el-table-column
-        label="是否必选"
-        align="center"
-        prop="fsbx"
-        :formatter="typeFormat"
-      /> -->
-      <el-table-column
-        label="总体完成情况"
-        align="center"
-        prop="wcsl"
-      />
+      <el-table-column label="部门人数" align="center" prop="bmrs" />
+      <el-table-column label="完成人员人数" align="center" prop="wcrs" />
+      <el-table-column label="应完成任务数量" align="center" prop="rwsl" />
+      <el-table-column label="平均完成情况" align="center" prop="wcslpjz" />
       <el-table-column
         label="操作"
         align="center"
@@ -100,7 +78,7 @@
             icon="el-icon-view"
             @click="handleView(scope.row)"
             v-hasPermi="['jyykhgl:jyykhrw:edit']"
-            >查看</el-button
+            >未完成人员名单</el-button
           >
         </template>
       </el-table-column>
@@ -119,7 +97,7 @@
 <script>
 import {
   listJyykhrw,
-  listJyykhrwstatistics,
+  listJyykhrwbmwcqkstatistics,
   getJyykhrw,
   exportJyykhrw,
 } from "@/api/jyykhgl/jyykhrw";
@@ -158,6 +136,10 @@ export default {
       khbmOptions: [],
       //是否必选
       typeOptions: [],
+      //学年
+      xnOptions: [],
+      //学期
+      xqOptions: [],
       // 查询参数
       queryParams: {
         pageNum: 1,
@@ -171,6 +153,11 @@ export default {
         fsbx: null,
         isdel: null,
         rwsm: null,
+        khzqkssj: null,
+        khzqjssj: null,
+        parentId: null,
+        xn: null,
+        xq: null,
       },
       queryParams_fid: {
         rwid: null,
@@ -196,8 +183,22 @@ export default {
     this.getDicts("sys_yes_no").then((response) => {
       this.typeOptions = response.data;
     });
+    this.getDicts("sys_gbxn").then((response) => {
+      this.xnOptions = response.data;
+    });
+    this.getDicts("sys_dm_xq").then((response) => {
+      this.xqOptions = response.data;
+    });
   },
   methods: {
+    // 学年字典翻译
+    xnFormat(row, column) {
+      return this.selectDictLabel(this.xnOptions, row.xn);
+    },
+    // 学期字典翻译
+    xqFormat(row, column) {
+      return this.selectDictLabel(this.xqOptions, row.xq);
+    },
     // 任务类型字典翻译
     xrlxFormat(row, column) {
       return this.selectDictLabel(this.rwlxOptions, row.rwlx);
@@ -223,33 +224,11 @@ export default {
     },
     getTableList() {
       this.loading = true;
-      listJyykhrwstatistics(this.queryParams).then((response) => {
+      listJyykhrwbmwcqkstatistics(this.queryParams).then((response) => {
         this.jyykhrwList = response.rows;
         this.total = response.total;
         this.loading = false;
       });
-    },
-    // 取消按钮
-    cancel() {
-      this.open = false;
-      this.reset();
-    },
-    // 表单重置
-    reset() {
-      this.form = {
-        id: null,
-        rwmc: null,
-        rwlx: null,
-        rwnr: null,
-        khbm: null,
-        khzq: null,
-        slyq: null,
-        fsbx: null,
-        isdel: null,
-        createTime: null,
-        rwsm: null,
-      };
-      this.resetForm("form");
     },
     /** 搜索按钮操作 */
     handleQuery() {
