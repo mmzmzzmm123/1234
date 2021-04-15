@@ -188,6 +188,7 @@ public class SysNutritionQuestionServiceImpl implements ISysNutritionQuestionSer
                         luceneIndexUtils.addIndexs(nutritionQuestionToDocument(list));
                     }
                 }
+                return true;
             }
         }catch (Exception e){
             e.printStackTrace();

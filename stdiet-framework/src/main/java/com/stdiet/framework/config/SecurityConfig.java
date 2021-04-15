@@ -104,7 +104,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                         "/wx/**",
                         "/wap/**",
                         "/investigate/**",
-                        "/common/customerUploadFile"
+                        "/common/customerUploadFile",
+                        "/custom/nutritionQuestion/regenerateNutritionQuestionIndex"
                         ).anonymous()
                 .antMatchers(
                         HttpMethod.GET,

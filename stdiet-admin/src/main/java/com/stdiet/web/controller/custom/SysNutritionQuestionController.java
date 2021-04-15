@@ -100,4 +100,14 @@ public class SysNutritionQuestionController extends BaseController
     {
         return toAjax(sysNutritionQuestionService.deleteSysNutritionQuestionByIds(ids));
     }
+
+    /**
+     * 重新生成知识问答索引
+     */
+    @Log(title = "重新生成知识问答索引", businessType = BusinessType.UPDATE)
+    @GetMapping("/regenerateNutritionQuestionIndex")
+    public AjaxResult regenerateNutritionQuestionIndex()
+    {
+        return toAjax(sysNutritionQuestionService.regenerateNutritionQuestionIndex() ? 1 : 0);
+    }
 }
