@@ -29,6 +29,8 @@ public class WxLogInfo implements Serializable {
 
     private String defecation;
 
+    private String remark;
+
     /** 情绪 */
     private String emotion;
 
@@ -281,6 +283,14 @@ public class WxLogInfo implements Serializable {
 
     public void setBodyImagesUrl(List<String> bodyImagesUrl) {
         this.bodyImagesUrl = bodyImagesUrl;
+    }
+
+    public String getRemark() {
+        return remark;
+    }
+
+    public void setRemark(String remark) {
+        this.remark = remark;
     }
 
     @Override

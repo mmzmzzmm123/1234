@@ -58,6 +58,7 @@
         <result property="emotion"    column="emotion"    />
         <result property="slyEatFood"    column="sly_eat_food"    />
         <result property="constipation"    column="constipation"    />
+        <result property="remark" column="remark"></result>
         <result property="breakfastImages"    column="breakfast_images"    />
         <result property="lunchImages"    column="lunch_images"    />
         <result property="dinnerImages"    column="dinner_images"    />

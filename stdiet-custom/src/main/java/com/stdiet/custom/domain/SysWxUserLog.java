@@ -76,6 +76,9 @@ public class SysWxUserLog extends BaseEntity
     //客户ID
     private Long customerId;
 
+    //建议
+    private String remark;
+
     /**
      * 非持久化字段，客户姓名
      */
