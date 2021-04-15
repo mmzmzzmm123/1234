@@ -131,6 +131,7 @@ export default {
       visible: false,
       title: "",
       data: null,
+      callback: null,
       punchLog: null,  
       imageUrl: [],
       punchLogDetail: [],
@@ -157,8 +158,8 @@ export default {
 
       },
       commentRules:{},
-      scoreArray:[0.5,1,1.5,2,2.5,3,3.5,4,4.5,5]
-
+      scoreArray:[0.5,1,1.5,2,2.5,3,3.5,4,4.5,5],
+      commentFlag: false, //是否更新了点评
     };
   },
   methods: {
@@ -181,8 +182,10 @@ export default {
         return "background:#ffffff;";
       }
     },
-    showDialog(data) {
+    showDialog(data, callback) {
       this.data = data;
+      this.callback = callback;
+      this.commentFlag = false;
       this.title = `「${data.customerName}`+" "+`${data.logTime}」打卡记录`;
       this.getPunchLogById();
     },
@@ -220,12 +223,14 @@ export default {
     },
     onClosed() {
       this.data = null;
-      this.punchLog = null,
-      this.imageUrl = [],
-      this.punchLogDetail = []
+      this.callback = null;
+      this.punchLog = null;
+      this.imageUrl = [];
+      this.punchLogDetail = [];
+
     },
     clickComment(){
-      console.log(this.punchLog.executionScore);
+      //console.log(this.punchLog.executionScore);
         this.commentForm = {
           id: this.punchLog.id,
           comment: this.punchLog.comment,
@@ -248,6 +253,8 @@ export default {
             this.msgSuccess("点评成功");
             this.commentVisible = false;
             this.getPunchLogById();
+            this.commentFlag = true;
+            this.callback && this.callback();
           }else{
             this.msgSuccess("点评失败");
           }

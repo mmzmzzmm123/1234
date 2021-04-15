@@ -543,7 +543,9 @@ export default {
         .catch(function () {});
     },
     showPunchLogDetail(data){
-        this.$refs.punchLogDetailRef.showDialog(data);
+        this.$refs.punchLogDetailRef.showDialog(data,() => {
+          this.getList();
+      });
     },
     /** 导出按钮操作 */
     handleExport() {
