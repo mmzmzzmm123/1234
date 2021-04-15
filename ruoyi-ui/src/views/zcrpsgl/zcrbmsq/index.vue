@@ -342,7 +342,7 @@
               <el-input v-model="form_add.jxbh" placeholder="请输入进修编号" />
             </el-form-item>
           </el-col>
-          
+
           <el-col :span="12">
             <el-form-item label="出生日期" prop="csrq">
               <el-date-picker
@@ -433,7 +433,7 @@
               </el-select>
             </el-form-item>
           </el-col>
-          
+
           <el-col :span="12">
             <el-form-item label="电话" prop="phone">
               <el-input v-model="form_add.phone" placeholder="请输入电话" />
@@ -479,7 +479,7 @@
         </el-row>
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="submitForm">确 定</el-button>
+        <el-button type="primary" @click="submitForm_add">确 定</el-button>
         <el-button @click="cancel">取 消</el-button>
       </div>
     </el-dialog>
@@ -499,6 +499,14 @@ import {
   listJdx,
   selectJdtype,
 } from "@/api/zcrpsgl/zcrpsfa";
+import {
+  listZcrbmsq,
+  getZcrbmsq,
+  delZcrbmsq,
+  addZcrbmsq,
+  updateZcrbmsq,
+  exportZcrbmsq,
+} from "@/api/zcrpsgl/zcrbmsq";
 
 export default {
   name: "Zcrpsfa",
@@ -718,6 +726,20 @@ export default {
               }
             });
           }
+        }
+      });
+    },
+    /** 提交按钮 */
+    submitForm_add() {
+      this.$refs["form_add"].validate((valid) => {
+        if (valid) {
+          addZcrbmsq(this.form_add).then((response) => {
+            if (response.code === 200) {
+              this.msgSuccess("新增成功");
+              this.open_add = false;
+              this.getList();
+            }
+          });
         }
       });
     },
