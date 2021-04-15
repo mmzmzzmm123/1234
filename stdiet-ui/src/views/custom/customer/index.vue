@@ -16,11 +16,20 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-
-      <el-form-item label="进粉渠道" prop="fansChannel">
+      <!-- <el-form-item label="进粉方式" prop="fansChannel">
         <el-select v-model="queryParams.fansChannel" placeholder="请选择">
           <el-option
             v-for="dict in fansChannelOptions"
+            :key="dict.dictValue"
+            :label="dict.dictLabel"
+            :value="parseInt(dict.dictValue)"
+          />
+        </el-select>
+      </el-form-item> -->
+      <el-form-item label="进粉渠道" prop="channelId">
+        <el-select v-model="queryParams.channelId" placeholder="请选择">
+          <el-option
+            v-for="dict in accountIdOptions"
             :key="dict.dictValue"
             :label="dict.dictLabel"
             :value="parseInt(dict.dictValue)"
@@ -132,13 +141,18 @@
           <span>{{ parseTime(scope.row.fansTime, "{y}-{m}-{d}") }}</span>
         </template>
       </el-table-column>
-      <el-table-column
-        label="进粉渠道"
+      <!-- <el-table-column
+        label="进粉方式"
         align="center"
         prop="fansChannel"
         :formatter="fansChannelFormat"
-      >
-      </el-table-column>
+      /> -->
+      <el-table-column
+        label="进粉渠道"
+        align="center"
+        prop="channelId"
+        :formatter="channelFormat"
+      />
       <el-table-column label="客户姓名" align="center" prop="name" />
       <el-table-column label="手机号" align="center" prop="phone" />
       <el-table-column
@@ -249,7 +263,6 @@
           </el-button>
         </template>
       </el-table-column>
-
 
       <el-table-column
         label="操作"
@@ -363,10 +376,10 @@
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item label="进粉渠道" prop="fansChannel">
-              <el-select v-model="form.fansChannel" placeholder="请选择">
+            <el-form-item label="进粉渠道" prop="channelId">
+              <el-select v-model="form.channelId" placeholder="请选择">
                 <el-option
-                  v-for="dict in fansChannelOptions"
+                  v-for="dict in accountIdOptions"
                   :key="dict.dictValue"
                   :label="dict.dictLabel"
                   :value="parseInt(dict.dictValue)"
@@ -393,7 +406,9 @@
     <!-- 食谱计划抽屉 -->
     <RecipesPlanDrawer ref="recipesPlanDrawerRef" />
     <!-- 客户打卡记录 -->
-    <CustomerPunchLogDrawer ref="customerPunchLogDrawerRef"></CustomerPunchLogDrawer>
+    <CustomerPunchLogDrawer
+      ref="customerPunchLogDrawerRef"
+    ></CustomerPunchLogDrawer>
   </div>
 </template>
 
@@ -413,7 +428,7 @@ import PhysicalSignsDialog from "@/components/PhysicalSignsDialog";
 import ContractDrawer from "@/components/ContractDrawer";
 import HeatStatisticsDrawer from "@/components/HeatStatisticsDrawer";
 import RecipesPlanDrawer from "@/components/RecipesPlanDrawer";
-import CustomerPunchLogDrawer  from "@/components/PunchLog/CustomerPunchLog";
+import CustomerPunchLogDrawer from "@/components/PunchLog/CustomerPunchLog";
 import { mapGetters } from "vuex";
 
 export default {
@@ -424,7 +439,7 @@ export default {
     "contract-drawer": ContractDrawer,
     heatStatisticsDrawer: HeatStatisticsDrawer,
     RecipesPlanDrawer,
-    CustomerPunchLogDrawer
+    CustomerPunchLogDrawer,
   },
   data() {
     const userId = store.getters && store.getters.userId;
@@ -446,6 +461,8 @@ export default {
       customerCenterList: [],
       //
       fansChannelOptions: [],
+      //
+      accountIdOptions: [],
       // 弹出层标题
       title: "",
       // 是否显示弹出层
@@ -493,6 +510,9 @@ export default {
         fansTime: [
           { required: true, message: "进粉时间不能为空", trigger: "blur" },
         ],
+        channelId: [
+          { required: true, message: "进粉渠道不能为空", trigger: "blur" },
+        ],
       },
       fanPickerOptions: {
         disabledDate(time) {
@@ -504,6 +524,20 @@ export default {
   created() {
     this.getDicts("customer_fans_channel").then((response) => {
       this.fansChannelOptions = response.data;
+    });
+    this.getDicts("cus_account").then((response) => {
+      if (this.userRemark && this.userRemark.includes("|")) {
+        const accRange = this.userRemark.split("|");
+        this.accountIdOptions = accRange.reduce((arr, accId) => {
+          const tarObj = response.data.find((obj) => obj.dictValue === accId);
+          if (tarObj) {
+            arr.push(tarObj);
+          }
+          return arr;
+        }, []);
+      } else {
+        this.accountIdOptions = response.data;
+      }
     });
     this.getList();
   },
@@ -517,6 +551,8 @@ export default {
       "nutritionistIdOptions",
       // 助理营养师字典
       "nutriAssisIdOptions",
+      //
+      "userRemark",
     ]),
   },
   methods: {
@@ -554,6 +590,9 @@ export default {
     fansChannelFormat(row, column) {
       return this.selectDictLabel(this.fansChannelOptions, row.fansChannel);
     },
+    channelFormat(row, column) {
+      return this.selectDictLabel(this.accountIdOptions, row.channelId);
+    },
     handleOnOrderClick(row) {
       this.$refs["cusOrderDrawerRef"].showDrawer(row);
     },
@@ -576,7 +615,7 @@ export default {
     handleClickCustomerPunchLog(row) {
       this.$refs["customerPunchLogDrawerRef"].showDrawer(row);
     },
-    
+
     // 取消按钮
     cancel() {
       this.open = false;
