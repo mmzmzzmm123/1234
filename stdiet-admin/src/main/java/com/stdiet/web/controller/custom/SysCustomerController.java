@@ -5,6 +5,7 @@ import com.stdiet.common.core.controller.BaseController;
 import com.stdiet.common.core.domain.AjaxResult;
 import com.stdiet.common.core.page.TableDataInfo;
 import com.stdiet.common.enums.BusinessType;
+import com.stdiet.common.utils.SecurityUtils;
 import com.stdiet.common.utils.StringUtils;
 import com.stdiet.common.utils.poi.ExcelUtil;
 import com.stdiet.common.utils.sign.AesUtils;
@@ -14,6 +15,7 @@ import com.stdiet.custom.service.ISysCustomerHealthyService;
 import com.stdiet.custom.service.ISysCustomerPhysicalSignsService;
 import com.stdiet.custom.service.ISysCustomerService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.SecurityConfig;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
@@ -44,6 +46,10 @@ public class SysCustomerController extends BaseController {
     @GetMapping("/list")
     public TableDataInfo list(SysCustomer sysCustomer) {
         startPage();
+        String remark = SecurityUtils.getLoginUser().getUser().getRemark();
+        if (StringUtils.isNotEmpty(remark) && remark.contains("|") && sysCustomer.getChannelId() == null) {
+            sysCustomer.setChannels(remark.split("\\|"));
+        }
         List<SysCustomer> list = sysCustomerService.selectSysCustomerList(sysCustomer);
         if (list != null && list.size() > 0) {
             for (SysCustomer sysCus : list) {
