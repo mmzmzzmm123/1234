@@ -87,4 +87,11 @@ public interface ISysWxUserLogService
      */
     List<SysWxUserLog> getWxUserLogListByCustomerId(SysWxUserLog sysWxUserLog);
 
+    /**
+     * 根据ID查询打卡详情
+     * @param sysWxUserLog
+     * @return
+     */
+    WxLogInfo getWxLogInfoDetailById(SysWxUserLog sysWxUserLog);
+
 }

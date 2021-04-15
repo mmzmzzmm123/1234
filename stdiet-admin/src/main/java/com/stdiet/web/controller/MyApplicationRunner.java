@@ -2,11 +2,20 @@ package com.stdiet.web.controller;
 
 import com.stdiet.common.config.AliyunOSSConfig;
 import com.stdiet.common.utils.oss.AliyunOSSUtils;
+import com.stdiet.custom.domain.SysNutritionQuestion;
 import com.stdiet.custom.domain.SysWxUserInfo;
 import com.stdiet.custom.domain.SysWxUserLog;
 import com.stdiet.custom.mapper.SysCustomerPhysicalSignsMapper;
+import com.stdiet.custom.mapper.SysNutritionQuestionMapper;
 import com.stdiet.custom.mapper.SysWxUserInfoMapper;
 import com.stdiet.custom.mapper.SysWxUserLogMapper;
+import com.stdiet.custom.service.ISysNutritionQuestionService;
+import com.stdiet.custom.service.ISysWxUserLogService;
+import com.stdiet.custom.utils.LuceneIndexUtils;
+import com.stdiet.framework.web.domain.server.Sys;
+import org.apache.lucene.document.Document;
+import org.apache.lucene.document.Field;
+import org.apache.lucene.document.TextField;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
@@ -26,9 +35,22 @@ public class MyApplicationRunner implements ApplicationRunner {
     @Autowired
     private SysWxUserInfoMapper sysWxUserInfoMapper;
 
+    @Autowired
+    private ISysNutritionQuestionService sysNutritionQuestionService;
+
+    @Autowired
+    private ISysWxUserLogService sysWxUserLogService;
+
     @Override
     public void run(ApplicationArguments args) throws Exception {
         System.out.println("项目启动调用方法");
+
+        /*SysNutritionQuestion sysNutritionQuestion = new SysNutritionQuestion();
+        sysNutritionQuestion.setTitle("如何防止猝死");
+        sysNutritionQuestion.setContent("少熬夜，少暴饮暴食");
+        sysNutritionQuestion.setKey("猝死");
+        sysNutritionQuestionService.insertSysNutritionQuestion(sysNutritionQuestion);*/
+
     }
 
 

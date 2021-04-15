@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.stdiet.custom.mapper.SysNutritionQuestionMapper">
+
+    <resultMap type="SysNutritionQuestion" id="SysNutritionQuestionResult">
+        <result property="id"    column="id"    />
+        <result property="title"    column="title"    />
+        <result property="content"    column="content"    />
+        <result property="key"    column="key"    />
+        <result property="titleContentIndex"    column="title_content_index"    />
+        <result property="showFlag"    column="show_flag"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="delFlag"    column="del_flag"    />
+    </resultMap>
+
+    <!-- 部分字段resultMap -->
+    <resultMap type="com.stdiet.custom.dto.response.NutritionQuestionResponse" id="SysNutritionQuestionResultExtended">
+        <result property="id"    column="id"    />
+        <result property="title"    column="title"    />
+        <result property="content"    column="content"    />
+        <result property="key"    column="key"    />
+        <result property="titleContentIndex"    column="title_content_index"    />
+    </resultMap>
+
+    <sql id="selectSysNutritionQuestionVo">
+        select id, title, content, `key`, title_content_index, show_flag, create_time, create_by, update_time, update_by, del_flag from sys_nutrition_question
+    </sql>
+
+    <select id="selectSysNutritionQuestionList" parameterType="SysNutritionQuestion" resultMap="SysNutritionQuestionResult">
+        <include refid="selectSysNutritionQuestionVo"/> where del_flag = 0
+        <if test="title != null  and title != ''"> and title = #{title}</if>
+        <if test="content != null  and content != ''"> and content = #{content}</if>
+        <if test="key != null  and key != ''"> and `key` = #{key}</if>
+        <if test="titleContentIndex != null  and titleContentIndex != ''"> and title_content_index = #{titleContentIndex}</if>
+        <if test="showFlag != null "> and show_flag = #{showFlag}</if>
+    </select>
+
+    <select id="selectSysNutritionQuestionById" parameterType="Long" resultMap="SysNutritionQuestionResult">
+        <include refid="selectSysNutritionQuestionVo"/>
+        where id = #{id} and del_flag = 0
+    </select>
+
+    <insert id="insertSysNutritionQuestion" parameterType="SysNutritionQuestion" useGeneratedKeys="true" keyProperty="id">
+        insert into sys_nutrition_question
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="title != null">title,</if>
+            <if test="content != null">content,</if>
+            <if test="key != null and key != ''">`key`,</if>
+            <if test="titleContentIndex != null">title_content_index,</if>
+            <if test="showFlag != null">show_flag,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="delFlag != null">del_flag,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="title != null">#{title},</if>
+            <if test="content != null">#{content},</if>
+            <if test="key != null and key != ''">#{key},</if>
+            <if test="titleContentIndex != null">#{titleContentIndex},</if>
+            <if test="showFlag != null">#{showFlag},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="delFlag != null">#{delFlag},</if>
+        </trim>
+    </insert>
+
+    <update id="updateSysNutritionQuestion" parameterType="SysNutritionQuestion">
+        update sys_nutrition_question
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="title != null">title = #{title},</if>
+            <if test="content != null">content = #{content},</if>
+            <if test="key != null and key != ''">`key` = #{key},</if>
+            <if test="titleContentIndex != null">title_content_index = #{titleContentIndex},</if>
+            <if test="showFlag != null">show_flag = #{showFlag},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="delFlag != null">del_flag = #{delFlag},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <update id="deleteSysNutritionQuestionById" parameterType="Long">
+        update sys_nutrition_question set del_flag = 1 where id = #{id}
+    </update>
+
+    <update id="deleteSysNutritionQuestionByIds" parameterType="String">
+        update sys_nutrition_question set del_flag = 1 where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </update>
+
+    <!-- 根据关键词查询对应知识问题 -->
+    <select id="getNutritionQuestionListByKey" parameterType="SysNutritionQuestion" resultMap="SysNutritionQuestionResultExtended">
+        select id, title, `key`, content where del_flag = 0
+        <if test="showFlag != null "> and show_flag = #{showFlag}</if>
+        <if test="key != null and key != ''">
+          and (title like CONCAT('%',#{key},'%') or key like CONCAT('%',#{key},'%') or titleContentIndex like CONCAT('%',#{key},'%'))
+        </if>
+        order by id desc
+    </select>
+
+</mapper>

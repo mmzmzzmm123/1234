@@ -133,4 +133,13 @@ public class SysWxUserLogServiceImpl implements ISysWxUserLogService {
         return sysWxUserLogMapper.getWxUserLogListByCustomerId(sysWxUserLog);
     }
 
+    /**
+     * 根据ID查询打卡详情
+     * @param sysWxUserLog
+     * @return
+     */
+    public WxLogInfo getWxLogInfoDetailById(SysWxUserLog sysWxUserLog){
+        return sysWxUserLogMapper.getWxLogInfoDetailById(sysWxUserLog);
+    }
+
 }

@@ -70,4 +70,16 @@ export function getAllPunchLogByCustomerId(query) {
   })
 }
 
+// 点评打卡
+export function commentPunchContent(data) {
+  return request({
+    url: '/custom/wxUserLog/commentPunchContent',
+    method: 'post',
+    data: data
+  })
+}
+
+
+
+
 

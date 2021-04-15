@@ -33,6 +33,11 @@
         <result property="dinnerImages"    column="dinner_images"    />
         <result property="extraMealImages"    column="extra_meal_images"    />
         <result property="bodyImages"    column="body_images"    />
+        <result property="suggest"    column="suggest"    />
+        <result property="targetWeight"    column="target_weight"    />
+        <result property="executionScore"    column="execution_score"    />
+        <result property="comment"    column="comment"    />
+        <result property="delFlag"    column="del_flag"    />
         <!-- 非持久字段 -->
         <result property="customerName" column="customer_name"></result>
         <!-- 营养师 -->
@@ -41,6 +46,7 @@
     </resultMap>
 
     <resultMap type="com.stdiet.custom.page.WxLogInfo" id="WxLogInfo">
+        <result property="id"    column="id"    />
         <result property="weight" column="weight"/>
         <result property="sleepTime" column="sleep_time"/>
         <result property="wakeupTime" column="wakeup_time"/>
@@ -53,34 +59,39 @@
         <result property="emotion"    column="emotion"    />
         <result property="slyEatFood"    column="sly_eat_food"    />
         <result property="constipation"    column="constipation"    />
+        <result property="remark" column="remark"></result>
         <result property="breakfastImages"    column="breakfast_images"    />
         <result property="lunchImages"    column="lunch_images"    />
         <result property="dinnerImages"    column="dinner_images"    />
         <result property="extraMealImages"    column="extra_meal_images"    />
         <result property="bodyImages"    column="body_images"    />
+        <result property="suggest"    column="suggest"    />
+        <result property="targetWeight"    column="target_weight"    />
+        <result property="executionScore"    column="execution_score"    />
+        <result property="comment"    column="comment"    />
     </resultMap>
 
     <sql id="selectSysWxUserLogVo">
         select id,openid, weight, appid, phone, log_time, sleep_time, wakeup_time, sport, avatar_url, diet, insomnia, defecation, water, create_by, create_time, update_by, update_time, remark,
-         emotion,sly_eat_food,constipation,breakfast_images,lunch_images,dinner_images,extra_meal_images,body_images
+         emotion,sly_eat_food,constipation,breakfast_images,lunch_images,dinner_images,extra_meal_images,body_images,suggest,execution_score,comment
          from sys_wx_user_log
     </sql>
 
     <select id="checkWxLogInfoCount" parameterType="String" resultType="Integer">
-        select count(*) from sys_wx_user_log where to_days(log_time) = to_days(now()) and openid = #{openid}
+        select count(*) from sys_wx_user_log where to_days(log_time) = to_days(now()) and openid = #{openid} and del_flag = 0
     </select>
 
     <!-- 后台查询 -->
     <select id="selectSysWxUserLogList" parameterType="SysWxUserLog" resultMap="SysWxUserLogResult">
         SELECT wxlog.id,wxinfo.appid,wxinfo.openid,wxinfo.avatar_url,wxinfo.phone,wxlog.weight,wxlog.log_time,wxlog.sleep_time, wxlog.wakeup_time,wxlog.defecation, wxlog.water, wxlog.insomnia,wxlog.sport,wxlog.diet,wxlog.remark,
         wxlog.emotion,wxlog.sly_eat_food,wxlog.constipation,wxlog.breakfast_images,wxlog.lunch_images,wxlog.dinner_images,wxlog.extra_meal_images,wxlog.body_images,
-        sc.name as customer_name, su.nick_name as nutritionist, su_atferSale.nick_name as after_nutritionist
+        wxlog.suggest,wxlog.execution_score,wxlog.comment,sc.name as customer_name, su.nick_name as nutritionist, su_atferSale.nick_name as after_nutritionist
         FROM sys_wx_user_log wxlog
         left join sys_wx_user_info wxinfo on wxinfo.openid  = wxlog.openid
         left join sys_customer sc on sc.phone = wxinfo.phone and sc.del_flag = 0
         left join sys_user su on su.user_id = sc.main_dietitian and su.del_flag = '0'
         left join sys_user su_atferSale on su_atferSale.user_id = sc.after_dietitian and su_atferSale.del_flag = '0'
-        where wxinfo.phone is not null
+        where wxlog.del_flag = 0 and wxinfo.phone is not null
         <if test="id != null">
             and wxlog.id = #{id}
         </if>
@@ -103,24 +114,22 @@
     </select>
 
     <select id="selectWxLogInfoList" parameterType="SysWxUserLog" resultMap="WxLogInfo">
-        SELECT * FROM sys_wx_user_log log
-        <where>
-            <choose>
-                <when test="phone == null or phone == ''">
-                    (SELECT phone FROM sys_wx_user_info WHERE openid = #{openid}) = log.phone
-                </when>
-                <otherwise>
-                    <if test="openid != null  and openid != ''">and openid = #{openid}</if>
-                    <if test="phone != null  and phone != ''">or phone = #{phone}</if>
-                </otherwise>
-            </choose>
-        </where>
+        SELECT * FROM sys_wx_user_log log where log.del_flag = 0
+        <choose>
+            <when test="phone == null or phone == ''">
+                (SELECT phone FROM sys_wx_user_info WHERE openid = #{openid}) = log.phone
+            </when>
+            <otherwise>
+                <if test="openid != null  and openid != ''">and openid = #{openid}</if>
+                <if test="phone != null  and phone != ''">or phone = #{phone}</if>
+            </otherwise>
+        </choose>
         order by log_time asc
     </select>
 
     <select id="selectSysWxUserLogById" parameterType="String" resultMap="SysWxUserLogResult">
         <include refid="selectSysWxUserLogVo"/>
-        where id = #{id}
+        where id = #{id} and del_flag = 0
     </select>
 
     <insert id="insertSysWxUserLog" parameterType="SysWxUserLog">
@@ -152,6 +161,11 @@
             <if test="dinnerImages != null">dinner_images,</if>
             <if test="extraMealImages != null">extra_meal_images,</if>
             <if test="bodyImages != null">body_images,</if>
+            <if test="suggest != null">suggest,</if>
+            <if test="targetWeight != null">target_weight,</if>
+            <if test="executionScore != null">execution_score,</if>
+            <if test="comment != null">comment,</if>
+            <if test="delFlag != null">del_flag,</if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="openid != null">#{openid},</if>
@@ -180,6 +194,11 @@
             <if test="dinnerImages != null">#{dinnerImages},</if>
             <if test="extraMealImages != null">#{extraMealImages},</if>
             <if test="bodyImages != null">#{bodyImages},</if>
+            <if test="suggest != null">suggest = #{suggest},</if>
+            <if test="targetWeight != null">target_weight = #{targetWeight},</if>
+            <if test="executionScore != null">execution_score = #{executionScore},</if>
+            <if test="comment != null">comment = #{comment},</if>
+            <if test="delFlag != null">del_flag = #{delFlag},</if>
         </trim>
     </insert>
 
@@ -212,32 +231,38 @@
             <if test="dinnerImages != null">dinner_images = #{dinnerImages},</if>
             <if test="extraMealImages != null">extra_meal_images = #{extraMealImages},</if>
             <if test="bodyImages != null">body_images = #{bodyImages},</if>
+            <if test="suggest != null">suggest = #{suggest},</if>
+            <if test="targetWeight != null">target_weight = #{targetWeight},</if>
+            <if test="executionScore != null">execution_score = #{executionScore},</if>
+            <if test="comment != null">comment = #{comment},</if>
+            <if test="delFlag != null">del_flag = #{delFlag},</if>
         </trim>
         where id = #{id}
     </update>
 
-    <delete id="deleteSysWxUserLogById" parameterType="Long">
-        delete from sys_wx_user_log where id = #{id}
-    </delete>
+    <update id="deleteSysWxUserLogById" parameterType="Long">
+        update sys_wx_user_log set del_flag = 1 where id = #{id}
+    </update>
 
-    <delete id="deleteSysWxUserLogByIds" parameterType="String">
-        delete from sys_wx_user_log where id in
+    <update id="deleteSysWxUserLogByIds" parameterType="String">
+        update sys_wx_user_log set del_flag = 1  where id in
         <foreach item="id" collection="array" open="(" separator="," close=")">
             #{id}
         </foreach>
-    </delete>
+    </update>
 
     <!-- 根据openid和手机号查询对应打卡记录 -->
     <select id="getWxLogInfoList" parameterType="SysWxUserLog" resultMap="WxLogInfo">
-        SELECT wxlog.weight,wxlog.log_time,wxlog.sleep_time, wxlog.wakeup_time,wxlog.defecation, wxlog.water, wxlog.insomnia,wxlog.sport,wxlog.diet,
+        SELECT wxlog.id,wxlog.weight,wxlog.log_time,wxlog.sleep_time, wxlog.wakeup_time,wxlog.defecation, wxlog.water, wxlog.insomnia,wxlog.sport,wxlog.diet,
         wxlog.emotion,wxlog.sly_eat_food,wxlog.constipation,wxlog.breakfast_images,wxlog.lunch_images,wxlog.dinner_images,wxlog.extra_meal_images,wxlog.body_images
+        ,wxlog.remark,wxlog.execution_score,wxlog.comment
         FROM sys_wx_user_log wxlog left join sys_wx_user_info wxinfo on wxinfo.openid  = wxlog.openid
-        where wxinfo.openid = #{openid} or wxinfo.phone = #{phone}
+        where wxlog.del_flag = 0 and (wxinfo.openid = #{openid} or wxinfo.phone = #{phone})
         order by wxlog.log_time desc
     </select>
 
     <select id="selectSysWxUserLogByDateAndOpenId"  parameterType="SysWxUserLog" resultMap="SysWxUserLogResult">
-        select id from sys_wx_user_log where to_days(log_time) = to_days(#{logTime}) and openid = #{openid} limit 1
+        select id from sys_wx_user_log where del_flag = 0 and to_days(log_time) = to_days(#{logTime}) and openid = #{openid} limit 1
     </select>
 
     <!-- 根据手机号和openid查询打卡连续天数，只查询前两条 -->
@@ -250,7 +275,7 @@
                 (
                     SELECT log_time,CONCAT(YEAR(log_time),'-',MONTH(log_time)) AS yearMonth,DAY(log_time) AS days
                     FROM sys_wx_user_log wxlog left join sys_wx_user_info wxinfo on wxinfo.openid  = wxlog.openid
-                    where wxinfo.openid = #{openid} or wxinfo.phone = #{phone}
+                    where wxlog.del_flag = 0 and wxinfo.openid = #{openid} or wxinfo.phone = #{phone}
                 ) AS s ORDER BY s.log_time DESC
             ) ss
         ) sss GROUP BY yearMonth,day_cha LIMIT 2
@@ -261,10 +286,20 @@
         SELECT wxlog.id,wxlog.log_time,wxlog.weight FROM sys_wx_user_log wxlog
         left join sys_wx_user_info wxinfo on wxinfo.openid  = wxlog.openid
         left join sys_customer sc on sc.phone = wxinfo.phone and sc.del_flag = 0
-        where wxinfo.phone is not null and sc.id = #{customerId}
+        where wxlog.del_flag = 0 and wxinfo.phone is not null and sc.id = #{customerId}
         <if test="beginTime != null and beginTime != ''">and date_format(wxlog.log_time,'%y%m%d') &gt;= date_format(#{beginTime},'%y%m%d')</if>
         <if test="endTime != null and endTime != ''">and date_format(wxlog.log_time,'%y%m%d') &lt;= date_format(#{endTime},'%y%m%d')</if>
         order by wxlog.log_time asc
+    </select>
+
+    <!-- 根据openid和手机号查询对应打卡记录 -->
+    <select id="getWxLogInfoDetailById" parameterType="SysWxUserLog" resultMap="WxLogInfo">
+        SELECT wxlog.id,wxlog.weight,wxlog.log_time,wxlog.sleep_time, wxlog.wakeup_time,wxlog.defecation, wxlog.water, wxlog.insomnia,wxlog.sport,wxlog.diet,
+        wxlog.emotion,wxlog.sly_eat_food,wxlog.constipation,wxlog.breakfast_images,wxlog.lunch_images,wxlog.dinner_images,wxlog.extra_meal_images,wxlog.body_images
+        ,wxlog.remark,wxlog.execution_score,wxlog.comment
+        FROM sys_wx_user_log wxlog left join sys_wx_user_info wxinfo on wxinfo.openid  = wxlog.openid
+        where wxlog.del_flag = 0 and wxlog.id = #{id}
+        order by wxlog.log_time desc
     </select>
 
 </mapper>
