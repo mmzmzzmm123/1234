@@ -108,4 +108,31 @@ public class TsbzJyykhrwController extends BaseController {
     public AjaxResult remove(@PathVariable Long[] ids) {
         return toAjax(tsbzJyykhrwService.deleteTsbzJyykhrwByIds(ids));
     }
+
+    /**
+     * 新增教研员考核任务
+     */
+    @PreAuthorize("@ss.hasPermi('jyykhgl:jyykhrw:add')")
+    @Log(title = "教研员考核任务", businessType = BusinessType.INSERT)
+    @PostMapping("/copy/{id}")
+    public AjaxResult copy(@PathVariable Long id) {
+        TsbzJyykhrw tsbzJyykhrw = tsbzJyykhrwService.selectTsbzJyykhrwById(id);
+        TsbzJyykhrw tsbzJyykhrwNew = new TsbzJyykhrw();
+        tsbzJyykhrwNew.setParentId(id);
+        List<TsbzJyykhrw> list = tsbzJyykhrwService.selectTsbzJyykhrwList(tsbzJyykhrwNew);
+        int iCount = 0;
+        iCount = tsbzJyykhrwService.insertTsbzJyykhrw(tsbzJyykhrw);
+        if (iCount > 0) {
+            TsbzJyykhrw tsbzJyykhrwChild = null;
+            for (int i = 0; i < list.size(); i++) {
+                tsbzJyykhrwChild = new TsbzJyykhrw();
+                tsbzJyykhrwChild = list.get(i);
+                tsbzJyykhrwChild.setParentId(tsbzJyykhrw.getId());
+                iCount = iCount + tsbzJyykhrwService.insertTsbzJyykhrw(tsbzJyykhrwChild);
+            }
+        }
+
+        return toAjax(iCount);
+
+    }
 }

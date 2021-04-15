@@ -52,6 +52,14 @@ export function delJyykhrw(id) {
   })
 }
 
+// 拷贝教研员考核任务
+export function copyJyykhrw(id) {
+  return request({
+    url: '/jyykhgl/jyykhrw/copy/' + id,
+    method: 'post'
+  })
+}
+
 // 导出教研员考核任务
 export function exportJyykhrw(query) {
   return request({

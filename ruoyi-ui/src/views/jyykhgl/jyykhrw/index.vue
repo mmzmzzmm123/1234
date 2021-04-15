@@ -151,7 +151,7 @@
             size="mini"
             type="text"
             icon="el-icon-document-copy"
-            @click="handleUpdate(scope.row)"
+            @click="handleCopy(scope.row)"
             v-hasPermi="['jyykhgl:jyykhrw:edit']"
             >复制</el-button
           >
@@ -216,7 +216,7 @@ import {
   delJyykhrw,
   addJyykhrw,
   updateJyykhrw,
-  exportJyykhrw,
+  copyJyykhrw,
 } from "@/api/jyykhgl/jyykhrw";
 
 export default {
@@ -425,6 +425,27 @@ export default {
         .then(() => {
           this.getList();
           this.msgSuccess("删除成功");
+        })
+        .catch(function () {});
+    },
+     /** 复制按钮操作 */
+    handleCopy(row) {
+      const ids = row.id;
+      this.$confirm(
+        '是否确认复制教研员考核任务的数据项?',
+        "警告",
+        {
+          confirmButtonText: "确定",
+          cancelButtonText: "取消",
+          type: "warning",
+        }
+      )
+        .then(function () {
+          return copyJyykhrw(ids);
+        })
+        .then(() => {
+          this.getList();
+          this.msgSuccess("复制成功");
         })
         .catch(function () {});
     },
