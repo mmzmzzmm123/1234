@@ -1,4 +1,4 @@
-package com.ruoyi.framework.service;
+package com.bamboo.framework.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 

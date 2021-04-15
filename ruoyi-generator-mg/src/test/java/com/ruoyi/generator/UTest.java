@@ -29,8 +29,8 @@ public class UTest {
         String rootPath = new File(resource.getFile()).getParentFile().getParent();
 
         //目录没有，会不生成
-        //        FileUtils.forceMkdir(new File("D:\\tmp\\0320" + "\\src\\main\\java\\"));
-//        String rootPath = "D:\\tmp\\0320";
+//        rootPath = "D:\\tmp\\0320\\src\\";
+//        FileUtils.forceMkdir(new File(rootPath + "\\src\\main\\java\\"));
 
         // 配置项目路径
         MyBatisCodeGenerator generator = MyBatisCodeGenerator.create(rootPath, "com.slabbridge.core");
@@ -44,7 +44,7 @@ public class UTest {
         // 扩展dao插件
         generator.addPlugin(DaoClassGeneratePlugin.class);
         // 业务逻辑插件
-        generator.addPlugin(ManagerInterfaceClassGeneratePlugin.class);
+//        generator.addPlugin(ManagerInterfaceClassGeneratePlugin.class);
 
         // 配置表
         // 自动增长主键模版

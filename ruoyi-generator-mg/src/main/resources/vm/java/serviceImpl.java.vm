@@ -2,168 +2,161 @@ package ${packageName}.service.impl;
 
 import java.util.List;
 import java.util.Arrays;
-import com.ruoyi.generator.service.BaseService;
-#foreach ($column in $columns)
-#if($column.javaField == 'createTime' || $column.javaField == 'updateTime')
-import com.ruoyi.common.utils.DateUtils;
-#break
-#end
-#end
-import org.springframework.stereotype.Service;
-#if($table.sub)
-import java.util.ArrayList;
 
-import com.ruoyi.common.utils.StringUtils;
-import org.springframework.transaction.annotation.Transactional;
-import ${packageName}.entity.${subClassName};
-#end
+import com.bamboo.framework.service.BaseService;
+    #foreach ($column in $columns)
+        #if($column.javaField == 'createTime' || $column.javaField == 'updateTime')
+        import com.ruoyi.common.utils.DateUtils;
+            #break
+        #end
+    #end
+import org.springframework.stereotype.Service;
+    #if($table.sub)
+    import java.util.ArrayList;
+
+    import com.ruoyi.common.utils.StringUtils;
+    import org.springframework.transaction.annotation.Transactional;
+    import ${packageName}.entity.${subClassName};
+    #end
 import ${packageName}.dao.${ClassName}DAO;
 import ${packageName}.entity.${ClassName};
 import ${packageName}.service.I${ClassName}Service;
 import ${packageName}.entity.${ClassName}Example;
+
 /**
  * ${functionName}Service业务层处理
- * 
+ *
  * @author ${author}
  * @date ${datetime}
  */
 @Service
-public class ${ClassName}ServiceImpl extends BaseService<${ClassName}DAO> implements I${ClassName}Service
-{
+public class ${ClassName}ServiceImpl extends BaseService<${ClassName}DAO> implements I${ClassName}Service {
     /**
      * 查询${functionName}
-     * 
+     *
      * @param ${pkColumn.javaField} ${functionName}ID
      * @return ${functionName}
      */
     @Override
-    public ${ClassName} select${ClassName}ById(${pkColumn.javaType} ${pkColumn.javaField})
-    {
+    public ${ClassName} select${ClassName}ById(${pkColumn.javaType} ${pkColumn.javaField}) {
         return baseDAO.selectByPrimaryKey(${pkColumn.javaField});
     }
 
     /**
      * 查询${functionName}列表
-     * 
+     *
      * @param ${className} ${functionName}
      * @return ${functionName}
      */
     @Override
-    public List<${ClassName}> select${ClassName}List(${ClassName} ${className})
-    {
+    public List<${ClassName}> select${ClassName}List(${ClassName} ${className}) {
         ${ClassName}Example example = new ${ClassName}Example();
         return baseDAO.selectByExample(example);
     }
 
     /**
      * 新增${functionName}
-     * 
+     *
      * @param ${className} ${functionName}
      * @return 结果
      */
-#if($table.sub)
+    #if($table.sub)
     @Transactional
-#end
-    @Override
-    public int insert${ClassName}(${ClassName} ${className})
-    {
-#foreach ($column in $columns)
-#if($column.javaField == 'createTime')
+    #end
+@Override
+    public int insert${ClassName}(${ClassName} ${className}) {
+        #foreach ($column in $columns)
+            #if($column.javaField == 'createTime')
         ${className}.setCreateTime(DateUtils.getNowDate());
-#end
-#end
-#if($table.sub)
+            #end
+        #end
+        #if($table.sub)
         int rows = baseDAO.insert${ClassName}(${className});
         insert${subClassName}(${className});
         return rows;
-#else
-        return baseDAO.insert(${className});
-#end
+        #else
+return baseDAO.insert(${className});
+        #end
     }
 
     /**
      * 修改${functionName}
-     * 
+     *
      * @param ${className} ${functionName}
      * @return 结果
      */
-#if($table.sub)
+    #if($table.sub)
     @Transactional
-#end
-    @Override
-    public int update${ClassName}(${ClassName} ${className})
-    {
-#foreach ($column in $columns)
-#if($column.javaField == 'updateTime')
+    #end
+@Override
+    public int update${ClassName}(${ClassName} ${className}) {
+        #foreach ($column in $columns)
+            #if($column.javaField == 'updateTime')
         ${className}.setUpdateTime(DateUtils.getNowDate());
-#end
-#end
-#if($table.sub)
+            #end
+        #end
+        #if($table.sub)
         baseDAO.delete${subClassName}By${subTableFkClassName}(${className}.get${pkColumn.capJavaField}());
         insert${subClassName}(${className});
-#end
-        return baseDAO.updateByPrimaryKeySelective(${className});
+        #end
+return baseDAO.updateByPrimaryKeySelective(${className});
     }
 
     /**
      * 批量删除${functionName}
-     * 
+     *
      * @param ${pkColumn.javaField}s 需要删除的${functionName}ID
      * @return 结果
      */
-#if($table.sub)
+    #if($table.sub)
     @Transactional
-#end
-    @Override
-    public int delete${ClassName}ByIds(${pkColumn.javaType}[] ${pkColumn.javaField}s)
-    {
-        if(null == ${pkColumn.javaField}s || ${pkColumn.javaField}s.length == 0){
+    #end
+@Override
+    public int delete${ClassName}ByIds(${pkColumn.javaType}[] ${pkColumn.javaField}s) {
+        if (null == ${pkColumn.javaField}s || ${pkColumn.javaField}s.length == 0) {
             return 0;
         }
-#if($table.sub)
+        #if($table.sub)
         baseDAO.delete${subClassName}By${subTableFkClassName}s(${pkColumn.javaField}s);
-#end
-        return baseDAO.batchDelete(Arrays.asList(${pkColumn.javaField}s));
+        #end
+return baseDAO.batchDelete(Arrays.asList(${pkColumn.javaField}s));
     }
 
     /**
      * 删除${functionName}信息
-     * 
+     *
      * @param ${pkColumn.javaField} ${functionName}ID
      * @return 结果
      */
     @Override
-    public int delete${ClassName}ById(${pkColumn.javaType} ${pkColumn.javaField})
-    {
-#if($table.sub)
+    public int delete${ClassName}ById(${pkColumn.javaType} ${pkColumn.javaField}) {
+        #if($table.sub)
         baseDAO.delete${subClassName}By${subTableFkClassName}(${pkColumn.javaField});
-#end
-        return baseDAO.deleteByPrimaryKey(${pkColumn.javaField});
+        #end
+return baseDAO.deleteByPrimaryKey(${pkColumn.javaField});
     }
-#if($table.sub)
+    #if($table.sub)
 
     /**
      * 新增${subTable.functionName}信息
-     * 
+     *
      * @param ${className} ${functionName}对象
      */
-    public void insert${subClassName}(${ClassName} ${className})
-    {
+    public void insert${subClassName}(${ClassName} ${className}) {
         List<${subClassName}> ${subclassName}List = ${className}.get${subClassName}List();
         Long ${pkColumn.javaField} = ${className}.get${pkColumn.capJavaField}();
-        if (StringUtils.isNotNull(${subclassName}List))
-        {
+        if (StringUtils.isNotNull(${subclassName}List)) {
             List<${subClassName}> list = new ArrayList<${subClassName}>();
-            for (${subClassName} ${subclassName} : ${subclassName}List)
+            for (${subClassName} ${subclassName} :${subclassName}List)
             {
                 ${subclassName}.set${subTableFkClassName}(${pkColumn.javaField});
                 list.add(${subclassName});
             }
-            if (list.size() > 0)
-            {
+            if (list.size() > 0) {
                 baseDAO.batch${subClassName}(list);
             }
         }
     }
-#end
+    #end
+
 }

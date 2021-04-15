@@ -108,7 +108,8 @@ public class MybatisGenServiceImpl {
         // 扩展dao插件
         generator.addPlugin(DaoClassGeneratePlugin.class);
         // 业务逻辑插件
-        generator.addPlugin(ManagerInterfaceClassGeneratePlugin.class);
+        //todo
+//        generator.addPlugin(ManagerInterfaceClassGeneratePlugin.class);
         //设置表
         //todo:多张表的处理
         generator.createDefaultTable(genTable.getTableName(), genTable.getClassName(), "id");
