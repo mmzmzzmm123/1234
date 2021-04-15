@@ -36,7 +36,7 @@
           />
         </el-select>
       </el-form-item>
-      <el-form-item label="营养师" prop="mainDietitian">
+      <el-form-item label="营养师" prop="mainDietitian" v-if="!isPartner">
         <el-select v-model="queryParams.mainDietitian" placeholder="请选择">
           <el-option
             v-for="dict in nutritionistIdOptions"
@@ -46,7 +46,11 @@
           />
         </el-select>
       </el-form-item>
-      <el-form-item label="营养师助理" prop="assistantDietitian">
+      <el-form-item
+        label="营养师助理"
+        prop="assistantDietitian"
+        v-if="!isPartner"
+      >
         <el-select
           v-model="queryParams.assistantDietitian"
           placeholder="请选择"
@@ -59,7 +63,7 @@
           />
         </el-select>
       </el-form-item>
-      <el-form-item label="销售人员" prop="salesman">
+      <el-form-item label="销售人员" prop="salesman" v-if="!isPartner">
         <el-select v-model="queryParams.salesman" placeholder="请选择">
           <el-option
             v-for="dict in preSaleIdOptions"
@@ -69,7 +73,7 @@
           />
         </el-select>
       </el-form-item>
-      <el-form-item label="售后营养师" prop="afterDietitian">
+      <el-form-item label="售后营养师" prop="afterDietitian" v-if="!isPartner">
         <el-select v-model="queryParams.afterDietitian" placeholder="请选择">
           <el-option
             v-for="dict in afterSaleIdOptions"
@@ -270,6 +274,7 @@
         fixed="right"
         width="120"
         class-name="small-padding fixed-width"
+        v-if="!isPartner"
       >
         <template slot-scope="scope">
           <el-button
