@@ -37,6 +37,8 @@ public class SysNutritionQuestionServiceImpl implements ISysNutritionQuestionSer
 
     //建立索引的字段名称
     public static final String[] index_field_array = {"id", "title", "content", "key"};
+    //查询字段
+    public static final String[] index_select_field_array = {"title", "content", "key"};
 
     /**
      * 查询营养知识小问答
@@ -151,7 +153,7 @@ public class SysNutritionQuestionServiceImpl implements ISysNutritionQuestionSer
         try{
             //建立索引
             LuceneIndexUtils luceneIndexUtils = LuceneIndexUtils.getLuceneIndexUtils(index_path);
-            Map<String, Object> indexMap = luceneIndexUtils.queryByKeyword(sysNutritionQuestion.getKey(), index_field_array, pageNum, pageSize);
+            Map<String, Object> indexMap = luceneIndexUtils.queryByKeyword(sysNutritionQuestion.getKey(), index_select_field_array, pageNum, pageSize);
             total = (int)indexMap.get("total");
             List<Document> documentList = (List<Document>)indexMap.get("data");
             if(documentList != null && documentList.size() > 0){

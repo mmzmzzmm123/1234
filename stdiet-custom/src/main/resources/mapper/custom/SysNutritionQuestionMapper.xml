@@ -33,11 +33,6 @@
 
     <select id="selectSysNutritionQuestionList" parameterType="SysNutritionQuestion" resultMap="SysNutritionQuestionResult">
         <include refid="selectSysNutritionQuestionVo"/> where del_flag = 0
-        <if test="title != null  and title != ''"> and title = #{title}</if>
-        <if test="content != null  and content != ''"> and content = #{content}</if>
-        <if test="key != null  and key != ''"> and `key` = #{key}</if>
-        <if test="titleContentIndex != null  and titleContentIndex != ''"> and title_content_index = #{titleContentIndex}</if>
-        <if test="showFlag != null "> and show_flag = #{showFlag}</if>
     </select>
 
     <select id="selectSysNutritionQuestionById" parameterType="Long" resultMap="SysNutritionQuestionResult">

@@ -1,16 +1,11 @@
 package com.stdiet.custom.controller;
 
 import java.util.List;
+
+import org.aspectj.weaver.loadtime.Aj;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import com.stdiet.common.annotation.Log;
 import com.stdiet.common.core.controller.BaseController;
 import com.stdiet.common.core.domain.AjaxResult;
@@ -38,11 +33,10 @@ public class SysNutritionQuestionController extends BaseController
      */
     @PreAuthorize("@ss.hasPermi('custom:nutritionQuestion:list')")
     @GetMapping("/list")
-    public TableDataInfo list(SysNutritionQuestion sysNutritionQuestion)
+    public AjaxResult list(SysNutritionQuestion sysNutritionQuestion, @RequestParam(value = "pageNum", defaultValue = "1") int pageNum, @RequestParam(value = "pageSize", defaultValue = "10")int pageSize)
     {
-        startPage();
-        List<SysNutritionQuestion> list = sysNutritionQuestionService.selectSysNutritionQuestionList(sysNutritionQuestion);
-        return getDataTable(list);
+        //startPage()
+        return AjaxResult.success(sysNutritionQuestionService.getNutritionQuestionListByKey(sysNutritionQuestion, pageNum, pageSize));
     }
 
     /**
