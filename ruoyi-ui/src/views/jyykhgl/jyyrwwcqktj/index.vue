@@ -62,10 +62,12 @@
         prop="khbm"
         :formatter="khbmFormat"
       />
-      <el-table-column label="部门人数" align="center" prop="bmrs" />
-      <el-table-column label="完成人员人数" align="center" prop="wcrs" />
-      <el-table-column label="应完成任务数量" align="center" prop="rwsl" />
-      <el-table-column label="平均完成情况" align="center" prop="wcslpjz" />
+      <el-table-column label="计划总结" align="center" prop="bmrs" />
+      <el-table-column label="教研活动" align="center" prop="wcrs" />
+      <el-table-column label="队伍建设" align="center" prop="rwsl" />
+      <el-table-column label="集体调研" align="center" prop="wcslpjz" />
+      <el-table-column label="服务基层" align="center" prop="wcslpjz" />
+      <el-table-column label="个人研修" align="center" prop="wcslpjz" />
     </el-table>
 
     <pagination
