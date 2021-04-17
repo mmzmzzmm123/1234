@@ -19,7 +19,7 @@ stdiet:
 # 开发环境配置
 server:
   # 服务器的HTTP端口，默认为8080
-  port: 8091
+  port: 8090
   servlet:
     # 应用的访问路径
     context-path: /
@@ -186,5 +186,6 @@ aliyun:
 
 lucene:
   index:
-    nutritionQuestion: D:\develop\LuceneIndex\nutritionQuestion
+#    nutritionQuestion: D:\develop\LuceneIndex\nutritionQuestion
+    nutritionQuestion: /Users/wonder/Documents/Workspaces/java/ShengtangManage/running/uploadPath/nutritionQuestion
 
