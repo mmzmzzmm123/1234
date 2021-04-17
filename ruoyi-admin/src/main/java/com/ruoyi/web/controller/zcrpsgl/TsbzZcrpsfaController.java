@@ -5,6 +5,7 @@ import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.core.page.TableDataInfo;
 import com.ruoyi.common.enums.BusinessType;
+import com.ruoyi.common.utils.SecurityUtils;
 import com.ruoyi.common.utils.poi.ExcelUtil;
 import com.ruoyi.zcrpsgl.domain.TsbzZcrpsfa;
 import com.ruoyi.zcrpsgl.service.ITsbzZcrpsfaService;
@@ -70,6 +71,7 @@ public class TsbzZcrpsfaController extends BaseController
     @PostMapping
     public AjaxResult add(@RequestBody TsbzZcrpsfa tsbzZcrpsfa)
     {
+        tsbzZcrpsfa.setCreateUserid(SecurityUtils.getLoginUser().getUser().getUserId());
         return toAjax(tsbzZcrpsfaService.insertTsbzZcrpsfa(tsbzZcrpsfa));
     }
 
