@@ -66,18 +66,26 @@
         <AutoHideMessage :data="scope.row.title == null ? '' : (scope.row.title+'')" :maxLength="10"/>
         </template>
       </el-table-column>
-      <el-table-column label="内容" align="center" prop="content" >
-        <template slot-scope="scope">
-        <AutoHideMessage :data="scope.row.content == null ? '' : (scope.row.content+'')" :maxLength="10"/>
-        </template>
-      </el-table-column>
       <el-table-column label="关键词" align="center" prop="key" >
         <template slot-scope="scope">
         <AutoHideMessage :data="scope.row.key == null ? '' : (scope.row.key+'')" :maxLength="10"/>
         </template>
       </el-table-column>
+      <el-table-column label="内容" align="center" prop="content" >
+        <template slot-scope="scope">
+          <el-button
+            size="mini"
+            type="text"
+            @click="clickPreviewQuestion(scope.row)"
+          >预览</el-button>
+        <!--<AutoHideMessage :data="scope.row.content == null ? '' : (scope.row.content+'')" :maxLength="10"/>-->
+        </template>
+      </el-table-column>
+      
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
+          
+          
           <el-button
             size="mini"
             type="text"
@@ -105,15 +113,35 @@
     />
 
     <!-- 添加或修改营养知识小问答对话框 -->
-    <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
+    <el-dialog :title="title" :visible.sync="open" width="800px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
         <el-form-item label="标题" prop="title">
           <el-input v-model="form.title" placeholder="请输入标题" />
         </el-form-item>
-        <!--<el-form-item label="内容">
-          <editor v-model="form.content" :min-height="192"/>
-        </el-form-item>-->
-        <el-form-item label="内容" prop="content" >
+        <el-form-item label="关键词" prop="keyArray">
+          <el-select
+            v-model="form.keyArray"
+            multiple
+            filterable
+            clearable
+            allow-create
+            default-first-option
+            placeholder="请创建案例关键词，按回车创建，最多5个"
+            style="width: 100%"
+          >
+            <el-option
+              v-for="dict in keyOptions"
+              :key="dict.dictValue"
+              :label="dict.dictLabel"
+              :value="dict.dictValue"
+            >
+            </el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="内容" prop="content">
+          <Editor :value="form.content" :isClear="isClear" @change="questionContentChange"></Editor>
+        </el-form-item>
+        <!--<el-form-item label="内容" prop="content" >
             <el-input
               type="textarea"
               :rows="4"
@@ -122,27 +150,8 @@
               placeholder="请输入内容"
               v-model="form.content">
             </el-input>
-          </el-form-item>
-          <el-form-item label="关键词" prop="keyArray">
-            <el-select
-              v-model="form.keyArray"
-              multiple
-              filterable
-              clearable
-              allow-create
-              default-first-option
-              placeholder="请创建案例关键词，按回车创建，最多5个"
-              style="width: 100%"
-            >
-              <el-option
-                v-for="dict in keyOptions"
-                :key="dict.dictValue"
-                :label="dict.dictLabel"
-                :value="dict.dictValue"
-              >
-              </el-option>
-            </el-select>
-          </el-form-item>
+          </el-form-item>-->
+
        <!-- <el-form-item label="关键词" prop="key">
           <el-input v-model="form.key" placeholder="请输入关键词" />
         </el-form-item>-->
@@ -153,12 +162,17 @@
         <el-button @click="cancel">取 消</el-button>
       </div>
     </el-dialog>
+
+    <el-dialog :title="previewQuestion.title" :visible.sync="previewOpen" width="800px" append-to-body>
+        <div style="height: 600px; overflow: auto" v-html="previewQuestion.content">
+        </div>
+    </el-dialog>
   </div>
 </template>
 
 <script>
 import { listNutritionQuestion, getNutritionQuestion, delNutritionQuestion, addNutritionQuestion, updateNutritionQuestion, exportNutritionQuestion } from "@/api/custom/nutritionQuestion";
-import Editor from '@/components/Editor';
+import Editor from '@/components/Wangeditor';
   import AutoHideMessage from "@/components/AutoHideMessage";
 export default {
   name: "NutritionQuestion",
@@ -200,7 +214,13 @@ export default {
           { required: true, message: "内容不能为空", trigger: "blur" },
         ]
       },
-      keyOptions:[]
+      keyOptions:[],
+      isClear: false,
+      previewOpen: false,
+      previewQuestion: {
+        title: "",
+        content: ""
+      }
     };
   },
   created() {
@@ -232,6 +252,10 @@ export default {
       };
       this.resetForm("form");
     },
+    questionContentChange(content){
+        console.log(content);
+        this.form.content = content;
+    },
     /** 搜索按钮操作 */
     handleQuery() {
       this.queryParams.pageNum = 1;
@@ -248,8 +272,14 @@ export default {
       this.single = selection.length!==1
       this.multiple = !selection.length
     },
+    clickPreviewQuestion(row){
+      this.previewQuestion.title = row.title;
+      this.previewQuestion.content = row.content;
+      this.previewOpen = true;
+    },
     /** 新增按钮操作 */
     handleAdd() {
+      //this.isClear = true;
       this.reset();
       this.open = true;
       this.title = "添加营养小知识";

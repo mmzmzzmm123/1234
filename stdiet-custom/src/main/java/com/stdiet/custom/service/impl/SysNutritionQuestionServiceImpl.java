@@ -33,7 +33,6 @@ public class SysNutritionQuestionServiceImpl implements ISysNutritionQuestionSer
 
     @Value("${lucene.index.nutritionQuestion}")
     public String index_path;
-    //private static final String index_path = "";
 
     //建立索引的字段名称
     public static final String[] index_field_array = {"id", "title", "content", "key"};
