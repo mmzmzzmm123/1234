@@ -83,6 +83,7 @@
             size="mini"
             type="text"
             icon="el-icon-edit"
+            v-if="scope.row.status=='1'?false:true"
             @click="handleOpenStatus(scope.row)"
             v-hasPermi="['zcrpsgl:zcrpsfa:openstatus']"
           >启用</el-button>
@@ -91,6 +92,7 @@
             type="text"
             icon="el-icon-edit"
             @click="handleStopStatus(scope.row)"
+            v-if="scope.row.status=='0'?false:true"
             v-hasPermi="['zcrpsgl:zcrpsfa:stopstatus']"
           >停止</el-button>
           <el-button
