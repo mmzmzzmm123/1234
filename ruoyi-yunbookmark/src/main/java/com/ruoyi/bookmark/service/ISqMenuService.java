@@ -127,7 +127,7 @@ public interface ISqMenuService
 
 
    /**
-    *防止重复点击上传文件
+    *防止重复点击
     *
     * @param  state 表示某个功能
     * @param  userID 用户ID
@@ -183,4 +183,16 @@ public interface ISqMenuService
      * @return
      */
     List<SqMenu> listByMenuId(Long userId, Long menuId);
+
+    /**
+     *
+     * 显示l时间内 只能访问i次
+     *
+     * @param phoneRegister 功能标识符
+     * @param userId 用户id
+     * @param time 时间单位秒
+     * @param i 次数
+     * @return
+     */
+    Boolean countRepetition(String phoneRegister, Long userId, long time, int i);
 }

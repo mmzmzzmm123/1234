@@ -2,11 +2,14 @@ package com.ruoyi.bookmark.service.impl;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 
+import cn.hutool.core.date.DateUtil;
+import com.ruoyi.common.core.redis.RedisKey;
 import com.ruoyi.common.core.redis.RedisUtil;
 import com.ruoyi.common.utils.DateUtils;
 import com.sun.org.apache.bcel.internal.generic.IF_ACMPEQ;
@@ -221,14 +224,14 @@ public class SqMenuServiceImpl implements ISqMenuService
      */
     @Override
     public Long noRepetition(String state, Long userID, Long time) {
-      String key = "BookMark:"+state+":"+userID.toString();
-      String str = redisUtil.get(key);
-      if (str==null){
-          redisUtil.setEx(key,"0",time,TimeUnit.SECONDS);
-          return 0L;
-      }else{
-          return  redisUtil.getExpire(key);
-      }
+        String key = RedisKey.BOOKMARK + state + RedisKey.CONNECTOR + userID.toString();
+        String str = redisUtil.get(key);
+        if (str == null) {
+            redisUtil.setEx(key, "0", time, TimeUnit.SECONDS);//秒
+            return 0L;
+        } else {
+            return redisUtil.getExpire(key);
+        }
     }
 
     /**
@@ -328,6 +331,33 @@ public class SqMenuServiceImpl implements ISqMenuService
     @Override
     public List<SqMenu> listByMenuId(Long userId, Long parentId) {
         return sqMenuMapper.selectSqMenuList(new SqMenu(parentId,userId));
+    }
+
+
+    @Override
+    public Boolean countRepetition(String state, Long userId, long time, int i) {
+
+        String key = RedisKey.BOOKMARK + state + RedisKey.CONNECTOR + userId.toString();
+        Long count = redisUtil.lLen(key);
+        if (count.intValue() < i) {
+            //插入到尾部
+            redisUtil.lRightPush(key, String.valueOf(DateUtil.date(System.currentTimeMillis()).getTime()));
+            redisUtil.expire(key, time, TimeUnit.SECONDS); //设置过期时间(秒)
+        } else {
+            //获取最新第一条 判断是否满足规定时间内的访问次数
+            String indexTime = redisUtil.lIndex(key, 0);
+
+            if (TimeUnit.MILLISECONDS.toSeconds(DateUtil.date(System.currentTimeMillis()).getTime() - Long.valueOf(indexTime)) < time) // 触发10min内请求大于3次，提醒，“请求过多，请稍后再试。”
+            {
+                return false;
+            } else {
+                //将当前时间戳插入List头部
+                redisUtil.lLeftPush(key, String.valueOf(DateUtil.date(System.currentTimeMillis()).getTime()));
+                redisUtil.lTrim(key, 0, i - 1); //剪切 0 到i个数
+                redisUtil.expire(key, time, TimeUnit.SECONDS); //设置过期时间(秒)
+            }
+        }
+        return true;
     }
 
 }

@@ -80,18 +80,21 @@
     </div>
 </template>
 <script>
+
     export default {
         name: 'areaTree',
-        components: {},
+        components: {
+        },
 
         data: function () {
-            return {}
+            return {
+            }
         },
         methods: {
 
         },
       mounted() {
-        document.querySelector('body').setAttribute('style', 'background-color:#f6f5f4')
+        document.querySelector('body').setAttribute('style', 'background-color:#f4f5f9')
       },
       beforeDestroy() {
         document.querySelector('body').removeAttribute('style')

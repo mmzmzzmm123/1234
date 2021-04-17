@@ -3,9 +3,7 @@ package com.ruoyi.common.utils.bookmarkhtml;
 import org.springframework.stereotype.Component;
 
 /**
- * @Auther: Wang
- * @Date: 2020/08/22 23:03
- * 功能描述:
+ * 常量类
  */
 @Component
 public class Const {
@@ -35,13 +33,10 @@ public class Const {
     //导入书签html功能
     public static String IMPORTHTML= "IMPORT_HTML";
 
+    //手机号发送验证码
+    public static String PHONE_REGISTER= "phone_register";
 
 
-
-//	  @Autowired(required = true)
-//	  public void setBasePath(@Value("${favorites.base.path}")String basePath) {
-//		  Const.BASE_PATH = basePath;
-//	  }
 
 
 }

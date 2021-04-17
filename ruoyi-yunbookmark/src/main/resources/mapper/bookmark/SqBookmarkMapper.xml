@@ -102,14 +102,20 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="zcount != null">zcount = #{zcount},</if>
             <if test="idelete != null">idelete = #{idelete},</if>
             <if test="start != null">start = #{start},</if>
+            <if test="bookmarkStar != null">bookmark_star = #{bookmarkStar},</if>
             <if test="createTime != null">create_time = #{createTime},</if>
         </trim>
         where bookmark_id = #{bookmarkId}
     </update>
 
+    <update id="updateSqBookmarkByStar" parameterType="SqBookmark">
+       update sq_bookmark SET bookmark_star = #{bookmarkStar} where bookmark_id = #{bookmarkId} and userid = #{userId}
+    </update>
+
     <update id="updateSqBookmarkBymenuId" parameterType="Long">
         update sq_bookmark set IDelete = 1 where menu_id = #{menuId}
     </update>
+
 
     <delete id="deleteSqBookmarkById" parameterType="Long">
         delete from sq_bookmark where bookmark_id = #{bookmarkId}
@@ -145,7 +151,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <include refid="selectSqBookmarkVo"/>
         where   userid=#{userID}
         <if test="sousuo == null  or sousuo == ''"> and menu_id = #{menuID}</if>
-        <if test="bookmarkStar != null  and bookmarkStar != ''"> and bookmark_star = #{bookmarkStar}</if>
+
         <if test="start != null  and start != ''"> and start = #{start}</if>
         <if test="sousuo != null  and sousuo != ''"> and title like concat('%', #{sousuo}, '%')</if>
         order by

@@ -21,9 +21,10 @@
           <div class="main-right">
 <!--            <svg-icon icon-class="tool" class="svgicon"/>-->
 <!--             <div class="aside-title"><i class="el-icon-s-management"></i><span>发现</span></div>-->
-            <div class="aside-title" @click="goRouter(8)"><i class="el-icon-s-tools"></i><span>最新</span></div>
-            <div class="aside-title"><i class="el-icon-star-on"></i><span>星标</span></div>
-            <div class="aside-title"><i class="el-icon-help"></i><span>稍后看</span></div>
+            <div class="aside-title" @click="goRouter(8)"><i class="el-icon-folder"></i><span>最新</span></div>
+            <div class="aside-title"><i class="el-icon-star-off"></i><span>星标</span></div>
+            <div class="aside-title"><i class="el-icon-reading"></i><span>稍后看</span></div>
+            <div class="aside-title"><i class="el-icon-view"></i><span>发现</span></div>
 <!--            <div class="aside-title"><i class="el-icon-s-platform"></i><span>任意门</span></div>-->
 <!--            <div class="aside-title"><i class="el-icon-message-solid"></i><span>收件箱</span></div>-->
             <div class="reminder">我的收藏 <svg-icon icon-class="sx" style="margin-left:5px" @click="refreshNode"/></div>
@@ -32,13 +33,13 @@
             </div>
             <div class="reminder" >工具箱</div>
 <!--            <div class="aside-title"><i class="el-icon-s-flag" style="color: #569cd5"></i><span>RSS订阅</span></div>-->
-            <div class="aside-title" @click="goRouter(7)"><i class="el-icon-s-management"></i><span>标签管理</span></div>
-            <div class="aside-title" @click="goRouter(6)"><i class="el-icon-delete-solid" style="color: red"></i><span>垃圾桶</span></div>
+            <div class="aside-title" @click="goRouter(7)"><i class="el-icon-collection"></i><span>标签管理</span></div>
+            <div class="aside-title" @click="goRouter(6)"><i class="el-icon-delete" ></i><span>垃圾桶</span></div>
 <!--            <div class="aside-title" @click="goRouter(5)"><i class="el-icon-s-platform"></i><span>导入书签</span></div>-->
-            <div class="aside-title"><i class="el-icon-s-comment"></i><span>意见反馈</span></div>
+            <div class="aside-title"><i class="el-icon-chat-dot-square"></i><span>意见反馈</span></div>
 <!--            <div class="aside-title" @click="ceshi"><i class="el-icon-s-comment"></i><span>测试页面</span></div>-->
-            <div class="aside-title" @click="goRouter(2)"><i class="el-icon-s-platform"></i><span>小工具</span></div>
-            <div class="aside-title " style="margin-bottom: 100px"  @click="goRouter(9)"><i class="el-icon-s-grid"></i><span>更多设置</span></div>
+            <div class="aside-title" @click="goRouter(2)"><i class="el-icon-suitcase"></i><span>小工具</span></div>
+            <div class="aside-title " style="margin-bottom: 100px"  @click="goRouter(9)"><i class="el-icon-setting"></i><span>更多设置</span></div>
 
           </div>
 
@@ -74,7 +75,7 @@
     </el-container>
     <!--  编辑弹窗-->
     <el-dialog :title="title" :visible.sync="open" width="500px" class="menuedit" append-to-body>
-      <el-form ref="form" :model="form" :rules="rules" label-width="80px">
+      <el-form ref="form" :model="form" :rules="rules" >
         <el-form-item prop="menuName">
           <div class="labelname">菜单名称</div>
           <el-input class="custom-input" v-model="form.menuName" placeholder="请输入菜单名称"/>

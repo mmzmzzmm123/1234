@@ -57,6 +57,15 @@ public interface SqBookmarkMapper extends MyMapper<SqBookmark>
     public int updateSqBookmark(SqBookmark sqBookmark);
 
     /**
+     * 设置书签的星标
+     *
+     * @param bookmarkId
+     * @param userId
+     * @return 结果
+     */
+    public int updateSqBookmarkByStar(@Param("bookmarkId") Long bookmarkId,@Param("userId")Long userId,@Param("bookmarkStar") Integer bookmarkStar);
+
+    /**
      * 删除书签管理
      *
      * @param bookmarkId 书签管理ID

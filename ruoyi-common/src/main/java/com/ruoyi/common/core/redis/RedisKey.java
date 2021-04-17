@@ -8,4 +8,8 @@ package com.ruoyi.common.core.redis;
 public class RedisKey {
 
     public static final String USER_FOLLOW ="USER:FOLLOW:";
+
+    public static final String BOOKMARK ="bookMark:";
+
+    public static final String CONNECTOR =":";
 }

@@ -375,12 +375,8 @@ public class SqBookmarkServiceImpl implements ISqBookmarkService
     }
 
     @Override
-    public int updateBookmarkStarById(Long userId, String bookmarkId, int bookmarkStr) {
-        SqBookmark sqBookmark =new SqBookmark();
-        sqBookmark.setBookmarkId(Long.valueOf(bookmarkId));
-        sqBookmark.setUserid(userId);
-        sqBookmark.setBookmarkStar(bookmarkStr==1?1:0);
-        return sqBookmarkMapper.updateSqBookmark(sqBookmark);
+    public int updateBookmarkStarById(Long userId, Long bookmarkId, Integer bookmarkStr) {
+        return sqBookmarkMapper.updateSqBookmarkByStar(bookmarkId,userId,bookmarkStr==1?1:0);
     }
 
     @Override

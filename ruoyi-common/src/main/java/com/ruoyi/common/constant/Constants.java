@@ -66,6 +66,10 @@ public class Constants
      * 验证码有效期（分钟）
      */
     public static final Integer CAPTCHA_EXPIRATION = 2;
+    /**
+     * 手机号验证码有效期（分钟）
+     */
+    public static final Integer CAPTCHA_PHONE_EXPIRATION = 2;
 
     /**
      * 令牌

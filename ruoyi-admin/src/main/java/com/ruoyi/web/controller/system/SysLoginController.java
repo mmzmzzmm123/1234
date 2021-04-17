@@ -39,6 +39,25 @@ public class SysLoginController
     @Autowired
     private TokenService tokenService;
 
+
+    /**
+     * 注册方法
+     *
+     * @param loginBody 注册信息
+     * @return 结果
+     */
+    @PostMapping("/registerUser")
+    public AjaxResult registerUser(@RequestBody LoginBody loginBody)
+    {
+        AjaxResult ajax = AjaxResult.success();
+        // 生成令牌
+        String token = loginService.registerUser(loginBody.getUsername(), loginBody.getPassword(), loginBody.getCode(),
+                loginBody.getUuid(),loginBody.getEmail(),loginBody.getPhone());
+        ajax.put(Constants.TOKEN, token);
+        return ajax;
+    }
+
+
     /**
      * 登录方法
      *

@@ -167,6 +167,17 @@
 <!--            <artifactId>spring-boot-starter-data-mongodb</artifactId>-->
 <!--            <version>2.3.4.RELEASE</version>-->
 <!--        </dependency>-->
+        <!-- 阿里云验证码使用SDK -->
+        <dependency>
+            <groupId>com.aliyun</groupId>
+            <artifactId>aliyun-java-sdk-core</artifactId>
+            <version>4.5.18</version>
+        </dependency>
+        <dependency>
+            <groupId>com.aliyun</groupId>
+            <artifactId>aliyun-java-sdk-dysmsapi</artifactId>
+            <version>2.1.0</version>
+        </dependency>
 
 
 

@@ -17,8 +17,8 @@
         </div>
 
         <div class="sousouright-icon">
-          <el-badge :value="5" :max="99" class="item"><i class="el-icon-message-solid" style="font-size: 17px;"></i>
-          </el-badge>
+          <inform></inform>
+
         </div>
 
         <div class="sousouright-iconadd">
@@ -224,7 +224,7 @@
 </template>
 
 <script>
-
+  import inform from '../common/inform.vue'
   import {listMenuByUserId} from "@/api/bookmark/menu";
   import { getUserProfile } from "@/api/system/user";
   import Treeselect from "@riophae/vue-treeselect";
@@ -250,7 +250,7 @@
 
   export default {
     components: {
-      format, Treeselect,BookmarkOne,TinyMceEdit
+      format, Treeselect,BookmarkOne,TinyMceEdit,inform
     },
 
     data: function () {

@@ -1,6 +1,17 @@
 import request from '@/utils/request'
 
 
+
+//书签设置星标 取消星标
+export function updateBookmarkStarById(query) {
+  return request({
+    url: '/bookmark/bookmark/updateBookmarkStarById',
+    method: 'get',
+    params: query
+  })
+}
+
+
 export function selectBymenuIdUserID(query) {
   return request({
     url: '/bookmark/bookmark/selectBymenuIdUserID',

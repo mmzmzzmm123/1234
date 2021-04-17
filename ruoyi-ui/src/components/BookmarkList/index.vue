@@ -30,22 +30,22 @@
           </div>
           <div class="bookmark-official">{{bm.urls}}&nbsp;·&nbsp;</div>
           <div class="bookmark-time">{{bm.createTime|changeTime}}</div>
+          <div class="bookmark-time">{{bm.bookmarkStar}}</div>
           <div class="bookmark-time" v-for="t in bm.sqTags" v-if="false">
-            <el-tag class="bookmark-list-tag" data-bookmarkId="t.bookmarkId" data-tagId="t.tagId"
-                    size="mini">
-              {{t.name}}
-            </el-tag>
+<!--            <el-tag class="bookmark-list-tag" data-bookmarkId="t.bookmarkId" data-tagId="t.tagId"-->
+<!--                    size="mini">-->
+<!--              {{t.name}}-->
+<!--            </el-tag>-->
           </div>
         </div>
       </div>
 
       <!--编辑  -->
       <div class="editAllBookMark"  v-show="seen&&bm.bookmarkId==current">
-          <el-button type="info" style="color: #1112ff" plain size="mini" icon="el-icon-star-off" ></el-button>
+          <el-button slot="reference" @click.stop="updateStarById(bm.bookmarkId,bm.bookmarkStar)"  type="info" v-bind:class="{ activeClass: bm.bookmarkStar ==1  }"   plain size="mini" icon="el-icon-star-off"></el-button>
           <el-button type="info" plain size="mini" icon="el-icon-share" ></el-button>
           <el-button type="info" plain size="mini" icon="el-icon-edit" @click.stop="handleUpdate(bm.bookmarkId)"></el-button>
           <el-button type="danger" plain size="mini" icon="el-icon-delete" @click.stop="handleDelete(bm.bookmarkId)"></el-button>
-
           <div style="width: 10px"></div>
       </div>
     </div>
@@ -54,9 +54,10 @@
 </template>
 <script>
   import {format} from 'timeago.js';
+  import {updateBookmarkStarById} from '@/api/bookmark/bookmark';
 
   export default {
-    components: {format},
+    components: {format,updateBookmarkStarById},
     props: {
       bookmarkList: Array,
       property: null,
@@ -85,6 +86,7 @@
       // that.Ueditor = that.$route.query.Ueditor;
 
     },
+
     filters: {
       //timeago.js插件
       //计算时间，类似于几分钟前，几小时前，几天前等
@@ -106,6 +108,20 @@
       /**删除书签**/
       handleDelete:function(bookmarkId) {
       this.$emit('on-handleDelete', bookmarkId);
+      },
+      /** 星标 **/
+      updateStarById:function(bookmarkId,bookmarkStar){
+        console.log("bookmarkStar:"+bookmarkStar)
+        var param={
+          bookmarkId:bookmarkId,
+          bookmarkStr:bookmarkStar==0?1:0
+        }
+        console.log("bookmarkStar2:"+param.bookmarkStar)
+        updateBookmarkStarById(param).then(response => {
+          if (response.code === 200) {
+            this.msgSuccess("设置成功");
+          }
+        });
       },
       /**渲染模式**/
       showView(e) {
@@ -199,6 +215,9 @@
   }
 </script>
 <style scoped>
+  .activeClass{
+    color: red;
+  }
 
   .bookmark-item {
     display: flex;

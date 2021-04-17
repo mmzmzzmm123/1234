@@ -132,7 +132,7 @@ public interface ISqBookmarkService
      * @param userId
      * @return
      */
-    int updateBookmarkStarById(Long userId, String bookmarkId, int bookmarkStr);
+    int updateBookmarkStarById(Long userId, Long bookmarkId, Integer bookmarkStr);
     /**
      * 删除重复的书签
      *

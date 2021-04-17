@@ -76,9 +76,8 @@ public class SqBookmarkController extends BaseController
      * 书签设置星标 取消星标
      */
     @GetMapping("/updateBookmarkStarById")
-    public AjaxResult updateBookmarkStarById(String bookmarkId,int bookmarkStr) {
+    public AjaxResult updateBookmarkStarById(Long bookmarkId,Integer bookmarkStr) {
         return toAjax(sqBookmarkService.updateBookmarkStarById(getAuthUser().getUserId(),bookmarkId,bookmarkStr));
-
     }
 
     /**

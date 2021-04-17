@@ -7,6 +7,7 @@ import com.ruoyi.bookmark.mapper.SqMenuMapper;
 import com.ruoyi.bookmark.service.ISqBookmarkService;
 import com.ruoyi.bookmark.service.ISqMenuService;
 import com.ruoyi.bookmark.service.impl.SqMenuServiceImpl;
+import com.ruoyi.common.utils.bookmarkhtml.Const;
 import org.apache.ibatis.session.ExecutorType;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.velocity.runtime.directive.Foreach;
@@ -162,4 +163,7 @@ public class SqMenuTest extends BaseSpringBootTest{
         long end = System.currentTimeMillis();
         System.out.println("---------------" + (start - end) + "---------------");
     }
+
+
+
 }

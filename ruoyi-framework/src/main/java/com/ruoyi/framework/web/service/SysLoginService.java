@@ -1,11 +1,16 @@
 package com.ruoyi.framework.web.service;
 
 import javax.annotation.Resource;
+
+import cn.hutool.core.date.DateUtil;
+import com.ruoyi.common.core.domain.entity.SysUser;
+import com.ruoyi.system.service.ISysUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Component;
 import com.ruoyi.common.constant.Constants;
 import com.ruoyi.common.core.domain.model.LoginUser;
@@ -35,9 +40,14 @@ public class SysLoginService
     @Autowired
     private RedisCache redisCache;
 
+    @Autowired
+    private ISysUserService sysUserService;
+
+
+
     /**
      * 登录验证
-     * 
+     *
      * @param username 用户名
      * @param password 密码
      * @param code 验证码
@@ -84,5 +94,45 @@ public class SysLoginService
         LoginUser loginUser = (LoginUser) authentication.getPrincipal();
         // 生成token
         return tokenService.createToken(loginUser);
+    }
+
+    /**
+     * 注册账号
+     *
+     * @param username 用户名
+     * @param password 密码
+     * @param code 验证码
+     * @param uuid 唯一标识
+     * @param email 邮箱
+     * @param phone 手机号
+     * @return 结果
+     */
+    public String registerUser(String username, String password, String code, String uuid, String email, String phone) {
+
+        int usernameCount = sysUserService.countUserByUserName(username);
+        if (usernameCount != 0) {
+            return username + "登陆账号已经存在,请更换!";
+        }
+        int phoneCount = sysUserService.countUserByPhone(phone);
+        if (phoneCount != 0) {
+            return phone + "手机账号已经存在,请更换!";
+        }
+
+
+        //验证传入的手机号和验证码是否匹配
+
+
+
+
+
+        //加密信息存入数据库
+        SysUser user = new SysUser();
+        user.setUserName(username);
+        user.setPassword(password);
+        user.setDeptId(100L);
+        user.setNickName(username);
+        user.setCreateTime(DateUtil.date(System.currentTimeMillis()));
+        user.setUpdateBy("admin");
+        return sysUserService.insertUser(user)!=0?Constants.LOGIN_SUCCESS:Constants.LOGIN_FAIL;
     }
 }
