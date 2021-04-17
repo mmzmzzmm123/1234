@@ -53,8 +53,12 @@
           </el-form-item>
         </el-col>
         <el-col :span="8">
-          <el-form-item label="收款账号" prop="accountId">
-            <el-select v-model="form.accountId" placeholder="请选择">
+          <el-form-item label="进粉渠道" prop="accountId">
+            <el-select
+              v-model="form.accountId"
+              placeholder="请选择"
+              @change="handleOnChanelIdChange"
+            >
               <el-option
                 v-for="dict in accountIdOptions"
                 :key="dict.dictValue"
@@ -157,10 +161,7 @@
         </el-col>
         <el-col :span="8" v-show="orderRateOptionsShow">
           <el-form-item label="拆分比例" prop="nutritionistRate">
-            <el-select
-              v-model="form.nutritionistRate"
-              placeholder="请选择"
-            >
+            <el-select v-model="form.nutritionistRate" placeholder="请选择">
               <el-option
                 v-for="dict in orderRateOptions"
                 :key="dict.dictValue"
@@ -672,12 +673,15 @@ export default {
     handleOrderTypeChange() {
       // console.log(this.form.orderTypeList);
     },
+    handleOnChanelIdChange(val) {
+      this.initPlanningAndOperation();
+    },
   },
   watch: {
     // 监听收款账号的变化
-    "form.accountId": function (newVal, oldVal) {
-      this.initPlanningAndOperation();
-    },
+    // "form.accountId": function (newVal, oldVal) {
+    //   this.initPlanningAndOperation();
+    // },
     "form.orderTypeList": function (newVal, oldVal) {
       //判断订单类型是否选择了二开
       if (newVal[1] == 1) {
@@ -697,11 +701,11 @@ export default {
       }
       //判断是否选择了体验单
       if (newVal[0] == 2) {
-         this.afterNutiShow = false;
-         this.form.onSaleId = parseInt(this.onSaleIdOptions[1].dictValue);
-         this.form.serveTimeId = 7;
-         this.form.conditioningProjectId = 12;
-      }else{
+        this.afterNutiShow = false;
+        this.form.onSaleId = parseInt(this.onSaleIdOptions[1].dictValue);
+        this.form.serveTimeId = 7;
+        this.form.conditioningProjectId = 12;
+      } else {
         this.form.onSaleId = null;
         this.form.serveTimeId = 90;
         this.afterNutiShow = true;
