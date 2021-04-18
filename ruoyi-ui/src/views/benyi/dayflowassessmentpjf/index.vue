@@ -1,6 +1,39 @@
 <template>
   <div class="app-container">
 
+<el-form
+      :model="queryParams"
+      ref="queryForm"
+      :inline="true"
+      label-width="70px"
+    >  
+      <el-form-item label="选择月份" prop="createTime">
+        <el-date-picker
+          clearable
+          size="small"
+          style="width: 200px"
+          v-model="queryParams.createTime"
+          type="month"
+          value-format="yyyy-MM-dd"
+          placeholder="选择月份"
+        >
+        </el-date-picker>
+      </el-form-item>
+      
+      <el-form-item>
+        <el-button
+          type="primary"
+          icon="el-icon-search"
+          size="mini"
+          @click="handleQuery"
+          >搜索</el-button
+        >
+        <el-button icon="el-icon-refresh" size="mini" @click="resetQuery"
+          >重置</el-button
+        >
+      </el-form-item>
+    </el-form>
+
     <el-table
       v-loading="loading"
       :data="dayflowassessmentList"
@@ -14,7 +47,7 @@
         prop="classid"
         :formatter="classFormat"
       />
-      <el-table-column label="班级综合平均分" align="center" prop="bjpjf" />
+      <el-table-column label="班级综合平均分1" align="center" prop="bjpjf" />
       <el-table-column label="早间接待" align="center" prop="zjjdpjf" />
       <el-table-column label="用餐" align="center" prop="ycpjf" />
       <el-table-column label="早间坐圈" align="center" prop="zjzqpjf" />
@@ -88,6 +121,7 @@ export default {
         pgdx: undefined,
         classdf: undefined,
         createUserid: undefined,
+        createTime: undefined
       },
       // 表单参数
       form: {},
