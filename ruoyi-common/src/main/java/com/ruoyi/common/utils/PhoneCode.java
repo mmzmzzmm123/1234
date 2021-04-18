@@ -10,6 +10,7 @@ import com.aliyuncs.http.MethodType;
 import com.aliyuncs.profile.DefaultProfile;
 import com.aliyuncs.profile.IClientProfile;
 import com.ruoyi.common.constant.Constants;
+import com.ruoyi.common.core.redis.RedisKey;
 import com.ruoyi.common.core.redis.RedisUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -37,6 +38,7 @@ public class PhoneCode {
      */
     public static Boolean getPhonemsg(String phone) {
 
+        String key = RedisKey.BOOKMARK + RedisKey.REGISTER + phone;
         // 短信验证---阿里
         // 设置超时时间-可自行调整
         System.setProperty(PhoneDeploy.defaultConnectTimeout, PhoneDeploy.Timeout);
@@ -83,16 +85,16 @@ public class PhoneCode {
             if (sendSmsResponse.getCode() != null && sendSmsResponse.getCode().equals("OK")) {
                 // 请求成功
                 RedisUtil redisUtil =   new RedisUtil();
-                redisUtil.setEx(phone,code,Constants.CAPTCHA_PHONE_EXPIRATION, TimeUnit.MINUTES);
+                redisUtil.setEx(key,code,Constants.CAPTCHA_PHONE_EXPIRATION, TimeUnit.MINUTES);
                 return true;
             } else {
                 // 验证码失败 如果验证码出错，会输出错误码告诉你具体原因
-                logger.info("手机号:" + code + " 时间"+DateUtil.now()+" 发送失败!!错误日志:"+sendSmsResponse.getCode());
+                logger.info("手机号:" + phone + " 时间"+DateUtil.now()+" 发送失败!!错误日志:"+sendSmsResponse.getCode());
                 return false;
             }
         } catch (ClientException e) {
             e.printStackTrace();
-            logger.info("手机号:" + code + " 时间"+DateUtil.now()+" 发送失败!!");
+            logger.info("手机号:" + phone + " 时间"+DateUtil.now()+" 发送失败!!");
             return false;
         }
     }

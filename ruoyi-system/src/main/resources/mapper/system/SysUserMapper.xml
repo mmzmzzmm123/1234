@@ -87,16 +87,16 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	</select>
 
 	<select id="selectUserByEmail" parameterType="String" resultType="int">
-		SELECT count(*) where email = #{email}
+		SELECT count(*) from sys_user where email = #{email}
 	</select>
 
 
 	<select id="countUserByUserName" parameterType="String" resultType="int">
-		SELECT count(*) where user_name = #{userName}
+		SELECT count(*) from sys_user where user_name = #{userName}
 	</select>
 
 	<select id="countUserByPhone" parameterType="String" resultType="int">
-		SELECT count(*) where phonenumber = #{phone}
+		SELECT count(*) from sys_user where phonenumber = #{phone}
 	</select>
 
 

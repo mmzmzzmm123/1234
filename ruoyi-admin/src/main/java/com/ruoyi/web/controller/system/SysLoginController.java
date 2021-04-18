@@ -2,6 +2,11 @@ package com.ruoyi.web.controller.system;
 
 import java.util.List;
 import java.util.Set;
+
+import com.ruoyi.common.constant.HttpStatus;
+import com.ruoyi.common.core.domain.model.RegisterBody;
+import com.ruoyi.common.core.redis.RedisKey;
+import com.ruoyi.system.service.ISysUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -39,21 +44,32 @@ public class SysLoginController
     @Autowired
     private TokenService tokenService;
 
+    @Autowired
+    private ISysUserService userService;
 
     /**
      * 注册方法
      *
-     * @param loginBody 注册信息
+     * @param registerBody 注册信息
      * @return 结果
      */
     @PostMapping("/registerUser")
-    public AjaxResult registerUser(@RequestBody LoginBody loginBody)
-    {
+    public AjaxResult registerUser(@RequestBody RegisterBody registerBody) {
+
         AjaxResult ajax = AjaxResult.success();
-        // 生成令牌
-        String token = loginService.registerUser(loginBody.getUsername(), loginBody.getPassword(), loginBody.getCode(),
-                loginBody.getUuid(),loginBody.getEmail(),loginBody.getPhone());
-        ajax.put(Constants.TOKEN, token);
+
+        String msg = loginService.registerUser(registerBody.getUsername(), registerBody.getPassword(), registerBody.getPhoneCode(),
+                registerBody.getUuid(), registerBody.getEmail(), registerBody.getPhone());
+
+        if (Constants.LOGIN_SUCCESS.equals(msg)) {
+            ajax.put("msg", "注册成功,请前往登陆!");
+        } else if (Constants.LOGIN_FAIL.equals(msg)) {
+            ajax.put("code", HttpStatus.ERROR);
+            ajax.put("msg", "注册失败，系统错误，请稍后再尝试!");
+        } else {
+            ajax.put("code", HttpStatus.ERROR);
+            ajax.put("msg", msg);
+        }
         return ajax;
     }
 

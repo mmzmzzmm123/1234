@@ -1,7 +1,7 @@
 <template>
   <div class="login">
     <el-form ref="loginForm" :model="loginForm" :rules="loginRules" class="login-form">
-      <h3 class="title">藏趣云</h3>
+      <h3 class="title">{{h3}}</h3>
       <el-form-item prop="username">
         <el-input v-model="loginForm.username" type="text" auto-complete="off" placeholder="账号">
           <svg-icon slot="prefix" icon-class="user" class="el-input__icon input-icon" />
@@ -18,7 +18,40 @@
           <svg-icon slot="prefix" icon-class="password" class="el-input__icon input-icon" />
         </el-input>
       </el-form-item>
-      <el-form-item prop="code">
+
+
+      <el-form-item prop="phone" v-if="!loginFlag">
+        <el-input
+          v-model="loginForm.phone"
+          auto-complete="off"
+          placeholder="手机号码"
+          style="width: 100%"
+          @keyup.enter.native="handleLogin"
+        >
+          <svg-icon slot="prefix" icon-class="phone" class="el-input__icon input-icon" />
+        </el-input>
+      </el-form-item>
+
+      <el-form-item prop="phoneCode" v-if="!loginFlag">
+        <el-input
+          v-model="loginForm.phoneCode"
+          type="text"
+          auto-complete="off"
+          placeholder="验证码"
+          style="width: 65%"
+          @keyup.enter.native="handleLogin"
+        >
+          <svg-icon slot="prefix" icon-class="validCode"  class="el-input__icon input-icon" />
+        </el-input>
+
+        <el-button  v-show="verShow"  @click="handleClick()">获取验证码</el-button>
+        <el-button  :disabled="!verShow" style="width: 30%" v-show="!verShow" @click="handleClick()">{{timer}}</el-button>
+      </el-form-item>
+
+
+
+
+      <el-form-item prop="code" v-if="loginFlag">
         <el-input
           v-model="loginForm.code"
           auto-complete="off"
@@ -33,6 +66,7 @@
         </div>
       </el-form-item>
       <el-checkbox v-model="loginForm.rememberMe" style="margin:0px 0px 25px 0px;">记住密码</el-checkbox>
+      <a class="register" @click="switchLogin">{{switchLoginText}}>></a>
       <el-form-item style="width:100%;">
         <el-button
           :loading="loading"
@@ -41,8 +75,8 @@
           style="width:100%;"
           @click.native.prevent="handleLogin"
         >
-          <span v-if="!loading">登 录</span>
-          <span v-else>登 录 中...</span>
+          <span v-if="!loading">{{loginButton}}</span>
+          <span v-else>{{loginButtonMeg}}</span>
         </el-button>
       </el-form-item>
     </el-form>
@@ -54,7 +88,7 @@
 </template>
 
 <script>
-import { getCodeImg } from "@/api/login";
+import { getCodeImg,getregisterUser } from "@/api/login";
 import Cookies from "js-cookie";
 import { encrypt, decrypt } from '@/utils/jsencrypt'
 
@@ -62,12 +96,21 @@ export default {
   name: "Login",
   data() {
     return {
+      loginFlag:true,//默认是登陆页面
+      h3: "藏趣云",
+      loginButton:"登 录",
+      loginButtonMeg:"登 录 中...",
+      switchLoginText:"前往注册",
       codeUrl: "",
       cookiePassword: "",
+      verShow:true,//是否倒计时
+      timer:60, //短信验证码
       loginForm: {
         username: "",
         password: "",
         rememberMe: false,
+        phone:"",
+        phoneCode:"",
         code: "",
         uuid: ""
       },
@@ -79,6 +122,20 @@ export default {
           { required: true, trigger: "blur", message: "密码不能为空" }
         ],
         code: [{ required: true, trigger: "change", message: "验证码不能为空" }]
+      },
+      registerRules: {
+        username: [
+          { required: true, trigger: "blur", message: "用户名不能为空" }
+        ],
+        password: [
+          { required: true, trigger: "blur", message: "密码不能为空" }
+        ],
+        phone: [
+          {required: true, trigger: "blur", message: "手机号不能为空"}
+         ],
+        phoneCode: [
+          {required: true, trigger: "change", message: "手机验证码不能为空"}
+         ]
       },
       loading: false,
       redirect: undefined
@@ -103,6 +160,41 @@ export default {
         this.loginForm.uuid = res.uuid;
       });
     },
+    //发送验证码
+    handleClick(){
+      var phone=this.loginForm.phone;
+      if (phone==null||phone==undefined||phone==''||phone.length!=11||!(/^1[34578]\d{9}$/.test(phone))){
+        this.$message.error('手机号格式错误，请重填!');
+        return false;
+      }
+      //发送验证码
+      this.getPhoneCode();
+      var _this=this;
+      _this.verShow = false;
+      var auth_timer = setInterval(()=>{
+        _this.timer--;
+        if(this.timer<=0){
+          _this.verShow = true;
+          _this.timer=60
+          clearInterval(auth_timer)
+        }
+      },1000)
+    },
+    getPhoneCode() {
+      var phone=this.loginForm.phone;
+      getregisterUser(phone).then(res => {
+        if (res.code==200){
+          this.$message({
+            message: res.msg,
+            type: 'success'
+          });
+        }if (res.code==500) {
+          this.$message.error(res.msg);
+        }else{
+          this.$message.error('系统错误，短信发送失败，请稍后再试!');
+        }
+      }).catch((e) => {});;
+    },
     getCookie() {
       const username = Cookies.get("username");
       const password = Cookies.get("password");
@@ -114,6 +206,16 @@ export default {
       };
     },
     handleLogin() {
+
+      if (this.loginFlag){
+        this.loginUser();
+      } else{
+        this.register();
+      }
+
+    },
+    //登陆
+    loginUser() {
       this.$refs.loginForm.validate(valid => {
         if (valid) {
           this.loading = true;
@@ -137,12 +239,60 @@ export default {
             });
         }
       });
+    },
+    //注册
+    register(){
+  this.$refs.loginForm.validate(valid => {
+    if (valid) {
+      this.loading = true;
+      this.$store
+        .dispatch("register", this.loginForm)
+        .then(res => {
+          if(res.code == 200){
+            this.$message({
+              message: res.msg,
+              type: 'success'
+            });
+          }else {
+            this.$message.error(res.msg);
+          }
+          this.loading = false;//注册加载中...
+        })
+        .catch(() => {
+          this.loading = false;
+        });
+    }
+  });
+
+    },
+    //切换状态
+    switchLogin(){
+      this.loginFlag=this.loginFlag?false:true;
+      this.h3 = this.loginFlag?"藏趣云":"用户注册";
+      this.loginButton = this.loginFlag?"登 录":"注册";
+      this.loginButtonMeg = this.loginFlag?"登 录 中...":"注 册 中...";
+      this.switchLoginText = this.loginFlag?"前往注册":"返回登陆";
+
+      this.$message({
+        message: this.loginFlag?"返回登陆":"前往注册",
+        type: 'warning'
+      });
     }
   }
 };
 </script>
 
 <style rel="stylesheet/scss" lang="scss">
+
+  .register{
+    float: right;color: #6a6a6a;
+    font-size: 14px;
+  }
+  .register:hover{
+    color: #7a6df0;
+    font-weight: 600;
+  }
+
 .login {
   display: flex;
   justify-content: center;

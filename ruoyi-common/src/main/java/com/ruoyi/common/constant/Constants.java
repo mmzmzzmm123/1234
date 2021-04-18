@@ -69,7 +69,7 @@ public class Constants
     /**
      * 手机号验证码有效期（分钟）
      */
-    public static final Integer CAPTCHA_PHONE_EXPIRATION = 2;
+    public static final Integer CAPTCHA_PHONE_EXPIRATION = 15;
 
     /**
      * 令牌

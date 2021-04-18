@@ -38,3 +38,32 @@ export function getCodeImg() {
     method: 'get'
   })
 }
+
+
+// 注册账号方法
+export function registerUser(username, password, phone, phoneCode) {
+  const data = {
+    username,
+    password,
+    phone,
+    phoneCode
+  }
+  return request({
+    url: '/registerUser',
+    method: 'post',
+    data: data
+  })
+}
+
+
+// 获取手机号验证码注册
+export function getregisterUser(phone) {
+  var query={
+    phone:phone
+  }
+  return request({
+    url: '/registerPhoneCode',
+    method: 'get',
+    params:query
+  })
+}

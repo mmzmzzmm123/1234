@@ -335,9 +335,9 @@ public class SqMenuServiceImpl implements ISqMenuService
 
 
     @Override
-    public Boolean countRepetition(String state, Long userId, long time, int i) {
+    public Boolean countRepetition(String state, Long flag, long time, int i) {
 
-        String key = RedisKey.BOOKMARK + state + RedisKey.CONNECTOR + userId.toString();
+        String key = RedisKey.BOOKMARK + state + RedisKey.CONNECTOR + flag.toString();
         Long count = redisUtil.lLen(key);
         if (count.intValue() < i) {
             //插入到尾部

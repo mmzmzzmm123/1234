@@ -186,13 +186,13 @@ public interface ISqMenuService
 
     /**
      *
-     * 显示l时间内 只能访问i次
+     * 通用 工具类 显示l时间内 只能访问i次
      *
      * @param phoneRegister 功能标识符
-     * @param userId 用户id
+     * @param flag 用户id或者uid 等唯一标识符
      * @param time 时间单位秒
      * @param i 次数
      * @return
      */
-    Boolean countRepetition(String phoneRegister, Long userId, long time, int i);
+    Boolean countRepetition(String phoneRegister, Long flag, long time, int i);
 }

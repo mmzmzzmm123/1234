@@ -12,4 +12,6 @@ public class RedisKey {
     public static final String BOOKMARK ="bookMark:";
 
     public static final String CONNECTOR =":";
+
+    public static final String REGISTER ="register:";
 }

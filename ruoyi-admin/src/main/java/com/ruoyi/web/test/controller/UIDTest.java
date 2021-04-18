@@ -4,6 +4,7 @@ import cn.hutool.core.date.DateUtil;
 import com.github.wujun234.uid.UidGenerator;
 import com.ruoyi.bookmark.service.ISqMenuService;
 import com.ruoyi.common.core.redis.RedisUtil;
+import com.ruoyi.common.utils.SecurityUtils;
 import com.ruoyi.common.utils.bookmarkhtml.Const;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,12 +26,9 @@ public class UIDTest extends BaseSpringBootTest{
     private UidGenerator cachedUidGenerator;
     @Autowired
     private ISqMenuService iSqMenuService;
-    @Autowired
-    private RedisUtil redisUtil;
 
     @Test
     public void testSerialGenerate() {
-        // Generate UID
         long cachedUidGeneratoruid = cachedUidGenerator.getUID();
         long defaultUidGeneratoruid = defaultUidGenerator.getUID(); //用这个
 
@@ -38,11 +36,6 @@ public class UIDTest extends BaseSpringBootTest{
         System.out.println("cachedUidGeneratoruid解密:"+cachedUidGenerator.parseUID(cachedUidGeneratoruid));
         System.out.println("defaultUidGeneratoruid:"+defaultUidGeneratoruid);
         System.out.println("defaultUidGeneratoruid解密:"+cachedUidGenerator.parseUID(defaultUidGeneratoruid));
-
-        // Parse UID into [Timestamp, WorkerId, Sequence]
-        // {"UID":"450795408770","timestamp":"2019-02-20 14:55:39","workerId":"27","sequence":"2"}
-//        System.out.println(cachedUidGenerator.parseUID(uid));
-
     }
     @Test
     public void dateTest(){
@@ -61,6 +54,28 @@ public class UIDTest extends BaseSpringBootTest{
         }else{
             System.out.println("访问请求失败了!");
         }
+    }
+
+
+    //密码加密
+    @Test
+    public void rest3(){
+        String newPassword = "admin123";
+        String password =SecurityUtils.encryptPassword(newPassword);
+        System.out.println(password);
+    }
+
+
+
+    //密码加密对比
+    @Test
+    public void rest4(){
+        String newPassword = "2654430977wh";
+       if( SecurityUtils.matchesPassword(newPassword, "$2a$10$zAx2lmzBNwmL.nFqfLmps.CsrSblAPtMvy29Ns9fwzeq8hIoKLT72")){ //newPassword 密码 password加密的后密码
+           System.out.println("密码相同!");
+        }else{
+           System.out.println("密码不相同!");
+       }
     }
 
 

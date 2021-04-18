@@ -4,6 +4,10 @@ import javax.annotation.Resource;
 
 import cn.hutool.core.date.DateUtil;
 import com.ruoyi.common.core.domain.entity.SysUser;
+import com.ruoyi.common.core.redis.RedisKey;
+import com.ruoyi.common.core.redis.RedisUtil;
+import com.ruoyi.common.utils.SecurityUtils;
+import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.system.service.ISysUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -39,6 +43,9 @@ public class SysLoginService
 
     @Autowired
     private RedisCache redisCache;
+
+    @Autowired
+    private RedisUtil redisUtil;
 
     @Autowired
     private ISysUserService sysUserService;
@@ -101,36 +108,42 @@ public class SysLoginService
      *
      * @param username 用户名
      * @param password 密码
-     * @param code 验证码
+     * @param phone 手机号
+     * @param phoneCode 手机号验证码
      * @param uuid 唯一标识
      * @param email 邮箱
-     * @param phone 手机号
      * @return 结果
      */
-    public String registerUser(String username, String password, String code, String uuid, String email, String phone) {
+    public String registerUser(String username, String password, String phoneCode, String uuid, String email, String phone) {
 
         int usernameCount = sysUserService.countUserByUserName(username);
         if (usernameCount != 0) {
-            return username + "登陆账号已经存在,请更换!";
+            return username + "登陆账号已经被使用,请更换!";
         }
         int phoneCount = sysUserService.countUserByPhone(phone);
         if (phoneCount != 0) {
-            return phone + "手机账号已经存在,请更换!";
+            return phone + "手机账号已经被使用,请更换!";
         }
 
-
-        //验证传入的手机号和验证码是否匹配
-
-
-
-
-
+//        String key = RedisKey.BOOKMARK + RedisKey.REGISTER + phone;
+//        //验证传入的手机号和验证码是否匹配
+//        String redisPhoneCode = redisUtil.get(key);
+//        if (StringUtils.isEmpty(redisPhoneCode)){
+//            return  "验证码已经过期!";
+//        }
+//        if (!redisPhoneCode.equals(phoneCode)){
+//            return  "验证码错误!";
+//        }else {
+//            //验证码正确 删除验证码 不可重复使用
+//            redisUtil.delete(key);
+//        }
         //加密信息存入数据库
         SysUser user = new SysUser();
         user.setUserName(username);
-        user.setPassword(password);
+        user.setPassword(SecurityUtils.encryptPassword(password));
         user.setDeptId(100L);
         user.setNickName(username);
+        user.setPhonenumber(phone);
         user.setCreateTime(DateUtil.date(System.currentTimeMillis()));
         user.setUpdateBy("admin");
         return sysUserService.insertUser(user)!=0?Constants.LOGIN_SUCCESS:Constants.LOGIN_FAIL;

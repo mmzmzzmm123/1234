@@ -117,7 +117,7 @@ public interface SysUserMapper
      */
     public int selectUserByEmail(String email);
     /**
-     * 查询登陆名称是否唯一
+     * 查询登陆账号是否唯一
      *
      * @param userName 用户名
      * @return 用户对象信息
