@@ -85,7 +85,7 @@
                   v-model="itemBz.mrz"
                   :precision="2"
                   :step="0.1"
-                  :max="itemBz.score"
+                  :max="0"
                 ></el-input-number>
               </div>
             </div>

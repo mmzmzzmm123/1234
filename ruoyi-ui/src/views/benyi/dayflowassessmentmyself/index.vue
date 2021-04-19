@@ -1,66 +1,86 @@
 <template>
   <div class="app-container">
-
-    <el-table
-      v-loading="loading"
-      :data="dayflowassessmentList"
-      @selection-change="handleSelectionChange"
+    <el-form
+      :model="queryParams"
+      ref="queryForm"
+      :inline="true"
+      label-width="70px"
     >
-      <el-table-column type="selection" width="55" align="center" />
-      <!-- <el-table-column label="所属计划" align="center" prop="planid" :formatter="planFormat"/> -->
+      <el-form-item label="评估时间">
+        <el-date-picker
+          v-model="dateRange"
+          size="small"
+          class="my-date-picker"
+          value-format="yyyy-MM-dd"
+          type="daterange"
+          range-separator="-"
+          start-placeholder="开始日期"
+          end-placeholder="结束日期"
+        ></el-date-picker>
+      </el-form-item>
+      <el-form-item>
+        <el-button
+          type="primary"
+          icon="el-icon-search"
+          size="mini"
+          @click="handleQuery"
+          >搜索</el-button
+        >
+        <el-button icon="el-icon-refresh" size="mini" @click="resetQuery"
+          >重置</el-button
+        >
+      </el-form-item>
+    </el-form>
+
+    <el-table v-loading="loading" border :data="dayflowassessmentList">
       <el-table-column
         label="学年学期"
         align="center"
+        fixed
         prop="xnxq"
         :formatter="xnxqFormat"
       />
       <el-table-column
         label="班级名称"
         align="center"
+        fixed
         prop="classid"
         :formatter="classFormat"
       />
-      <!-- <el-table-column label="班级平均分" align="center" prop="classdf" /> -->
-      <!-- <el-table-column
-        label="主班教师"
-        align="center"
-        prop="bzbh"
-        :formatter="bzbhFormat"
-      />
-      <el-table-column
-        label="配班教师"
-        align="center"
-        prop="pbbh"
-        :formatter="pbbhFormat"
-      />
-      <el-table-column
-        label="助理教师"
-        align="center"
-        prop="zlbh"
-        :formatter="zlbhFormat"
-      /> -->
       <el-table-column
         label="评估对象"
         align="center"
+        fixed
         prop="pgdx"
         :formatter="pgdxFormat"
       />
-      <!-- <el-table-column
-        label="评估环节"
-        align="center"
-        prop="bzid"
-        :formatter="dayFlowFormat"
-      />
-      <el-table-column label="环节满分" align="center" prop="bzmf" /> -->
-      <!-- <el-table-column label="扣分值" align="center" prop="kfz" /> -->
-      <!-- <el-table-column label="扣分次数" align="center" prop="kfcs" /> -->
-      <el-table-column label="最终得分" align="center" prop="zzdf" />
       <el-table-column
         label="评估人"
         align="center"
+        fixed
         prop="createUserid"
         :formatter="createUserFormat"
       />
+      <el-table-column label="最终得分" align="center" prop="zzdf" />
+      <el-table-column label="早间接待" align="center" prop="zjjdpjf" />
+      <el-table-column label="用餐" align="center" prop="ycpjf" />
+      <el-table-column label="早间坐圈" align="center" prop="zjzqpjf" />
+      <el-table-column label="分组教学" align="center" prop="fzjxpjf" />
+      <el-table-column label="点心时间" align="center" prop="dxsjpjf" />
+      <el-table-column label="如厕洗手饮水" align="center" prop="rcxsyspjf" />
+      <el-table-column label="活动过渡" align="center" prop="hdgdpjf" />
+      <el-table-column label="户外活动" align="center" prop="hwhdpjf" />
+      <el-table-column label="午睡" align="center" prop="wspjf" />
+      <el-table-column label="离园再见" align="center" prop="lyzjpjf" />
+      <el-table-column label="安全" align="center" prop="aqpjf" />
+      <el-table-column label="自由活动" align="center" prop="zyhdpjf" />
+      <el-table-column
+        label="规则与纪律约束"
+        align="center"
+        prop="gzyjlyspjf"
+      />
+      <el-table-column label="微型课程" align="center" prop="wxkcpjf" />
+      <el-table-column label="潜课程" align="center" prop="qkcpjf" />
       <el-table-column label="评估时间" align="center" prop="createTime" />
       <el-table-column
         label="操作"
@@ -99,9 +119,7 @@
 </template>
 
 <script>
-import {
-  listDayflowassessmentmyself
-} from "@/api/benyi/dayflowassessment";
+import { listDayflowassessmentmyself } from "@/api/benyi/dayflowassessment";
 import { listClass } from "@/api/system/class";
 import { listUser } from "@/api/system/user";
 import { listDetail, getDetail } from "@/api/benyi/dayflow/dayflowmanger";
@@ -128,6 +146,8 @@ export default {
       xnxqOptions: [],
       // 所有教师
       userOptions: [],
+      // 日期范围
+      dateRange: [],
       // 查询参数
       queryParams: {
         pageNum: 1,
@@ -239,12 +259,6 @@ export default {
     resetQuery() {
       this.resetForm("queryForm");
       this.handleQuery();
-    },
-    // 多选框选中数据
-    handleSelectionChange(selection) {
-      this.ids = selection.map((item) => item.id);
-      this.single = selection.length != 1;
-      this.multiple = !selection.length;
     },
     handleAssessment(row) {
       const id = row.id;

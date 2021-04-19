@@ -47,7 +47,23 @@
     </resultMap>
 
     <sql id="selectByDayflowassessmentVo">
-        select d.id, d.planid, d.dept_id, d.classid, d.bzbh, d.bzxm, d.pbbh, d.pbxm, d.zlbh, d.zlxm, d.xnxq, d.bzid, d.bzmf, d.kfz, d.kfcs, d.zzdf, d.classdf, d.items, d.values, d.pgdx, d.pgdxxm, d.create_userid, d.create_time from by_dayflowassessment d
+        select d.id, d.planid, d.dept_id, d.classid, d.bzbh, d.bzxm, d.pbbh, d.pbxm, d.zlbh, d.zlxm, d.xnxq, d.bzid, d.bzmf, d.kfz, d.kfcs, d.zzdf, d.classdf, d.items, d.values, d.pgdx, d.pgdxxm, d.create_userid, d.create_time,
+         (select sum(b.value) from by_dayflowassessmentitem b where d.id=b.pid and b.item in (select id from by_day_flow where name='早间接待')) as zjjdpjf,
+(select sum(b.value) from by_dayflowassessmentitem b where d.id=b.pid and b.item in (select id from by_day_flow where name='用餐')) as ycpjf,
+(select sum(b.value) from by_dayflowassessmentitem b where d.id=b.pid and b.item in (select id from by_day_flow where name='早间坐圈')) as zjzqpjf,
+(select sum(b.value) from by_dayflowassessmentitem b where d.id=b.pid and b.item in (select id from by_day_flow where name='分组教学')) as fzjxpjf,
+(select sum(b.value) from by_dayflowassessmentitem b where d.id=b.pid and b.item in (select id from by_day_flow where name='点心时间')) as dxsjpjf,
+(select sum(b.value) from by_dayflowassessmentitem b where d.id=b.pid and b.item in (select id from by_day_flow where name='如厕洗手饮水')) as rcxsyspjf,
+(select sum(b.value) from by_dayflowassessmentitem b where d.id=b.pid and b.item in (select id from by_day_flow where name='活动过渡')) as hdgdpjf,
+(select sum(b.value) from by_dayflowassessmentitem b where d.id=b.pid and b.item in (select id from by_day_flow where name='户外活动')) as hwhdpjf,
+(select sum(b.value) from by_dayflowassessmentitem b where d.id=b.pid and b.item in (select id from by_day_flow where name='午睡')) as wspjf,
+(select sum(b.value) from by_dayflowassessmentitem b where d.id=b.pid and b.item in (select id from by_day_flow where name='离园再见')) as lyzjpjf,
+(select sum(b.value) from by_dayflowassessmentitem b where d.id=b.pid and b.item in (select id from by_day_flow where name='安全')) as aqpjf,
+(select sum(b.value) from by_dayflowassessmentitem b where d.id=b.pid and b.item in (select id from by_day_flow where name='自由活动')) as zyhdpjf,
+(select sum(b.value) from by_dayflowassessmentitem b where d.id=b.pid and b.item in (select id from by_day_flow where name='规则与纪律约束')) as gzyjlyspjf,
+(select sum(b.value) from by_dayflowassessmentitem b where d.id=b.pid and b.item in (select id from by_day_flow where name='微型课程')) as wxkcpjf,
+(select sum(b.value) from by_dayflowassessmentitem b where d.id=b.pid and b.item in (select id from by_day_flow where name='潜课程')) as qkcpjf
+         from by_dayflowassessment d
     </sql>
 
     <select id="selectByDayflowassessmentList" parameterType="ByDayflowassessment"
