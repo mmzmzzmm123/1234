@@ -1,5 +1,6 @@
 package com.ruoyi.project.benyi.domain;
 
+import com.ruoyi.project.system.domain.ByClass;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import com.ruoyi.framework.aspectj.lang.annotation.Excel;
@@ -301,6 +302,8 @@ public class ByDayflowassessment extends BaseEntity {
 
     private List<ByDayFlowStandard> list;
 
+    private ByClass byClass;
+
     public void setId(Long id) {
         this.id = id;
     }
@@ -453,6 +456,14 @@ public class ByDayflowassessment extends BaseEntity {
         this.list = list;
     }
 
+    public ByClass getByClass() {
+        return byClass;
+    }
+
+    public void setByClass(ByClass byClass) {
+        this.byClass = byClass;
+    }
+
     @Override
     public String toString() {
         return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE)
@@ -496,6 +507,7 @@ public class ByDayflowassessment extends BaseEntity {
                 .append("gzyjlyspjf", getGzyjlyspjf())
                 .append("wxkcpjf", getWxkcpjf())
                 .append("qkcpjf", getQkcpjf())
+                .append("byClass", getByClass())
                 .toString();
     }
 

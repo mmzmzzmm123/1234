@@ -44,10 +44,30 @@
         <result property="gzyjlyspjf" column="gzyjlyspjf"/>
         <result property="wxkcpjf" column="wxkcpjf"/>
         <result property="qkcpjf" column="qkcpjf"/>
+        <association property="byClass" column="classid" javaType="ByClass" resultMap="ByClassResult"/>
+    </resultMap>
+
+    <resultMap type="ByClass" id="ByClassResult">
+        <result property="bjbh" column="bjbh"/>
+        <result property="deptId" column="dept_id"/>
+        <result property="bjtype" column="bjtype"/>
+        <result property="bhxh" column="bhxh"/>
+        <result property="xn" column="xn"/>
+        <result property="bjmc" column="bjmc"/>
+        <result property="bjrych" column="bjrych"/>
+        <result property="jbny" column="jbny"/>
+        <result property="zbjs" column="zbjs"/>
+        <result property="zbjsxm" column="zbjsxm"/>
+        <result property="pbjs" column="pbjs"/>
+        <result property="pbjsxm" column="pbjsxm"/>
+        <result property="zljs" column="zljs"/>
+        <result property="zljsxm" column="zljsxm"/>
+        <result property="isdel" column="isdel"/>
+        <result property="createtime" column="createtime"/>
     </resultMap>
 
     <sql id="selectByDayflowassessmentVo">
-        select d.id, d.planid, d.dept_id, d.classid, d.bzbh, d.bzxm, d.pbbh, d.pbxm, d.zlbh, d.zlxm, d.xnxq, d.bzid, d.bzmf, d.kfz, d.kfcs, d.zzdf, d.classdf, d.items, d.values, d.pgdx, d.pgdxxm, d.create_userid, d.create_time,
+        select d.id, d.planid, d.dept_id, d.classid, e.bjmc, d.bzbh, d.bzxm, d.pbbh, d.pbxm, d.zlbh, d.zlxm, d.xnxq, d.bzid, d.bzmf, d.kfz, d.kfcs, d.zzdf, d.classdf, d.items, d.values, d.pgdx, d.pgdxxm, d.create_userid, d.create_time,
          (select sum(b.value) from by_dayflowassessmentitem b where d.id=b.pid and b.item in (select id from by_day_flow where name='早间接待')) as zjjdpjf,
 (select sum(b.value) from by_dayflowassessmentitem b where d.id=b.pid and b.item in (select id from by_day_flow where name='用餐')) as ycpjf,
 (select sum(b.value) from by_dayflowassessmentitem b where d.id=b.pid and b.item in (select id from by_day_flow where name='早间坐圈')) as zjzqpjf,
@@ -63,7 +83,7 @@
 (select sum(b.value) from by_dayflowassessmentitem b where d.id=b.pid and b.item in (select id from by_day_flow where name='规则与纪律约束')) as gzyjlyspjf,
 (select sum(b.value) from by_dayflowassessmentitem b where d.id=b.pid and b.item in (select id from by_day_flow where name='微型课程')) as wxkcpjf,
 (select sum(b.value) from by_dayflowassessmentitem b where d.id=b.pid and b.item in (select id from by_day_flow where name='潜课程')) as qkcpjf
-         from by_dayflowassessment d
+         from by_dayflowassessment d left join by_class e on d.classid=e.bjbh
     </sql>
 
     <select id="selectByDayflowassessmentList" parameterType="ByDayflowassessment"
@@ -99,7 +119,7 @@
     </select>
 
     <select id="selectByDayflowassessmentPjf" parameterType="ByDayflowassessment" resultMap="ByDayflowassessmentResult">
-        select t.classid,t.ny,avg(t.zzdf) as bjpjf,avg(t.zjjd) as zjjdpjf,avg(t.yc) as ycpjf,avg(t.zjzq) as zjzqpjf,avg(t.fzjx) as fzjxpjf,avg(t.dxsj) as dxsjpjf,avg(t.rcxsys) as rcxsyspjf,avg(t.hdgd) as hdgdpjf,avg(t.hwhd) as hwhdpjf,avg(t.ws) as wspjf,avg(t.lyzj) as lyzjpjf,avg(t.aq) as aqpjf,avg(t.zyhd) as zyhdpjf,avg(t.gzyjlys) as gzyjlyspjf,avg(t.wxkc) as wxkcpjf,avg(t.qkc) as qkcpjf from (
+        select t.classid,e.bjmc,t.ny,avg(t.zzdf) as bjpjf,avg(t.zjjd) as zjjdpjf,avg(t.yc) as ycpjf,avg(t.zjzq) as zjzqpjf,avg(t.fzjx) as fzjxpjf,avg(t.dxsj) as dxsjpjf,avg(t.rcxsys) as rcxsyspjf,avg(t.hdgd) as hdgdpjf,avg(t.hwhd) as hwhdpjf,avg(t.ws) as wspjf,avg(t.lyzj) as lyzjpjf,avg(t.aq) as aqpjf,avg(t.zyhd) as zyhdpjf,avg(t.gzyjlys) as gzyjlyspjf,avg(t.wxkc) as wxkcpjf,avg(t.qkc) as qkcpjf from (
 select a.classid,a.zzdf,a.create_time,date_format(a.create_time,'%Y-%m') as 'ny',
 (select sum(b.value) from by_dayflowassessmentitem b where a.id=b.pid and b.item in (select id from by_day_flow where name='早间接待')) as zjjd,
 (select sum(b.value) from by_dayflowassessmentitem b where a.id=b.pid and b.item in (select id from by_day_flow where name='用餐')) as yc,
@@ -120,7 +140,7 @@ from by_dayflowassessment a
 where a.dept_id=#{deptId}
         <if test="createTime != null ">and date_format(create_time,'%Y-%m') = date_format(#{createTime},'%Y-%m')</if>
 
-) t
+) t left join by_class e on e.bjbh=t.classid
 group by t.classid,t.ny
     </select>
 

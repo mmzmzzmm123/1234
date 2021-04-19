@@ -70,15 +70,22 @@
       :limit.sync="queryParams.pageSize"
       @pagination="getList"
     />
+    <div class="chart-wrapper">
+      <line-chart />
+    </div>
   </div>
 </template>
 
 <script>
+import LineChart from "../../dashboard/LineChartBjyrlcpjpjf";
 import { listDayflowassessmentPjf } from "@/api/benyi/dayflowassessment";
 import { listClass } from "@/api/system/class";
 
 export default {
   name: "Dayflowassessment",
+  components: {
+    LineChart,
+  },
   data() {
     return {
       // 遮罩层

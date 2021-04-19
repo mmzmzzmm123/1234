@@ -276,7 +276,7 @@ public class ByChildHealthCheck extends BaseEntity {
                 .append("createtime", getCreatetime())
                 .append("createuser", getCreateuser())
                 .append("byChild", getByChild())
-                .append("byClass", getByChild())
+                .append("byClass", getByClass())
                 .toString();
     }
 
