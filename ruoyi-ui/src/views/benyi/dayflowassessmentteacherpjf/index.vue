@@ -6,30 +6,32 @@
       :inline="true"
       label-width="70px"
     >
-      <el-form-item label="学年学期" prop="xnxq">
-        <el-select v-model="queryParams.xnxq" placeholder="请选择学年学期">
-          <el-option
-            v-for="dict in xnxqOptions"
-            :key="dict.dictValue"
-            :label="dict.dictLabel"
-            :value="dict.dictValue"
-          />
-        </el-select>
-      </el-form-item>
-      <el-form-item label="班级名称" prop="classid">
+      <el-form-item label="教师姓名" prop="classid">
         <el-select
           v-model="queryParams.classid"
           clearable
           size="small"
-          placeholder="请选择班级"
+          placeholder="请选择教师"
         >
           <el-option
-            v-for="dict in classOptions"
-            :key="dict.bjbh"
-            :label="dict.bjmc"
-            :value="dict.bjbh"
+            v-for="dict in userOptions"
+            :key="dict.userId"
+            :label="dict.nickName"
+            :value="dict.userId"
           ></el-option>
         </el-select>
+      </el-form-item>
+      <el-form-item label="评估时间">
+        <el-date-picker
+          v-model="dateRange"
+          size="small"
+          class="my-date-picker"
+          value-format="yyyy-MM-dd"
+          type="daterange"
+          range-separator="-"
+          start-placeholder="开始日期"
+          end-placeholder="结束日期"
+        ></el-date-picker>
       </el-form-item>
       <el-form-item>
         <el-button
@@ -115,6 +117,8 @@ export default {
       classOptions: [],
       // 学年学期
       xnxqOptions: [],
+      // 日期范围
+      dateRange: [],
       // 所有教师
       userOptions: [],
       // 查询参数

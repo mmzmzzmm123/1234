@@ -1,12 +1,11 @@
 <template>
   <div class="app-container">
-
-<el-form
+    <el-form
       :model="queryParams"
       ref="queryForm"
       :inline="true"
       label-width="70px"
-    >  
+    >
       <el-form-item label="选择月份" prop="createTime">
         <el-date-picker
           clearable
@@ -19,7 +18,7 @@
         >
         </el-date-picker>
       </el-form-item>
-      
+
       <el-form-item>
         <el-button
           type="primary"
@@ -34,20 +33,15 @@
       </el-form-item>
     </el-form>
 
-    <el-table
-      v-loading="loading"
-      :data="dayflowassessmentList"
-      @selection-change="handleSelectionChange"
-    >
-      <el-table-column type="selection" width="55" align="center" />
-      <!-- <el-table-column label="所属计划" align="center" prop="planid" :formatter="planFormat"/> -->
+    <el-table v-loading="loading" border :data="dayflowassessmentList">
       <el-table-column
         label="班级名称"
         align="center"
+        fixed
         prop="classid"
         :formatter="classFormat"
       />
-      <el-table-column label="班级综合平均分1" align="center" prop="bjpjf" />
+      <el-table-column label="班级综合平均分" align="center" prop="bjpjf" />
       <el-table-column label="早间接待" align="center" prop="zjjdpjf" />
       <el-table-column label="用餐" align="center" prop="ycpjf" />
       <el-table-column label="早间坐圈" align="center" prop="zjzqpjf" />
@@ -60,7 +54,11 @@
       <el-table-column label="离园再见" align="center" prop="lyzjpjf" />
       <el-table-column label="安全" align="center" prop="aqpjf" />
       <el-table-column label="自由活动" align="center" prop="zyhdpjf" />
-      <el-table-column label="规则与纪律约束" align="center" prop="gzyjlyspjf" />
+      <el-table-column
+        label="规则与纪律约束"
+        align="center"
+        prop="gzyjlyspjf"
+      />
       <el-table-column label="微型课程" align="center" prop="wxkcpjf" />
       <el-table-column label="潜课程" align="center" prop="qkcpjf" />
     </el-table>
@@ -76,9 +74,7 @@
 </template>
 
 <script>
-import {
-  listDayflowassessmentPjf
-} from "@/api/benyi/dayflowassessment";
+import { listDayflowassessmentPjf } from "@/api/benyi/dayflowassessment";
 import { listClass } from "@/api/system/class";
 
 export default {
@@ -121,7 +117,7 @@ export default {
         pgdx: undefined,
         classdf: undefined,
         createUserid: undefined,
-        createTime: undefined
+        createTime: undefined,
       },
       // 表单参数
       form: {},
@@ -168,12 +164,6 @@ export default {
     resetQuery() {
       this.resetForm("queryForm");
       this.handleQuery();
-    },
-    // 多选框选中数据
-    handleSelectionChange(selection) {
-      this.ids = selection.map((item) => item.id);
-      this.single = selection.length != 1;
-      this.multiple = !selection.length;
     },
   },
 };
