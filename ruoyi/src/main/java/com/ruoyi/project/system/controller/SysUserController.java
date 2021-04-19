@@ -74,6 +74,23 @@ public class SysUserController extends BaseController {
         return getDataTable(list);
     }
 
+    @GetMapping("/lrrlist")
+    public TableDataInfo lrrlist(SysUser user) {
+        int l1=103;
+        user.setDeptId(Long.valueOf(l1));
+        List<SysUser> list = userService.selectUserList(user);
+
+        int l2=105;
+        user.setDeptId(Long.valueOf(l2));
+        list.addAll(userService.selectUserList(user));
+
+        int l3=107;
+        user.setDeptId(Long.valueOf(l3));
+        list.addAll(userService.selectUserList(user));
+
+        return getDataTable(list);
+    }
+
     @Log(title = "用户管理", businessType = BusinessType.EXPORT)
     @PreAuthorize("@ss.hasPermi('system:user:export')")
     @GetMapping("/export")

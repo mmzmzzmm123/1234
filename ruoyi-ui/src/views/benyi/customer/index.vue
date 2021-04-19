@@ -70,6 +70,21 @@
             </el-select>
           </el-form-item>
         </el-col>
+        <el-col :xs="24" :ms="12" :md="5">
+          <el-form-item label="录入人" prop="createUserid">
+            <el-select
+              v-model="queryParams.createUserid"
+              placeholder="请选择录入人"
+            >
+              <el-option
+                v-for="dict in lrrOptions"
+                :key="dict.userId"
+                :label="dict.nickName"
+                :value="dict.userId"
+              ></el-option>
+            </el-select>
+          </el-form-item>
+        </el-col>
         <el-col :xs="24" :ms="12" :md="4">
           <el-form-item class="no-margin">
             <el-button
@@ -579,10 +594,14 @@ import {
   updateCustomer,
   exportCustomer,
 } from "@/api/benyi/customer";
-import { listUser, getUserOnlyByRoleId } from "@/api/system/user";
+import {
+  listUser,
+  listlrrUser,
+  getUserOnlyByRoleId,
+  getUserProfile,
+} from "@/api/system/user";
 //导入省市区三级联动库
 import VDistpicker from "v-distpicker";
-import { getUserProfile } from "@/api/system/user";
 export default {
   name: "Customer",
   data() {
@@ -626,7 +645,7 @@ export default {
       customerUserOptions: [],
       // 用户选项
       userOptions: [],
-
+      lrrOptions: [],
       // 查询参数
       queryParams: {
         // 当前页
@@ -695,6 +714,7 @@ export default {
     this.getUserList();
     this.getUsersByRole();
     this.getUser();
+    this.getLrrList();
   },
   components: {
     //省市区三级联动全局组件
@@ -718,6 +738,12 @@ export default {
     getUserList() {
       listUser(null).then((response) => {
         this.userOptions = response.rows;
+      });
+    },
+    /** 查询用户列表 */
+    getLrrList() {
+      listlrrUser(null).then((response) => {
+        this.lrrOptions = response.rows;
       });
     },
     /** 根据roleid查询用户列表 */
@@ -880,7 +906,7 @@ export default {
       const id = row.id || this.ids;
       getCustomer(id).then((response) => {
         this.form = response.data;
-         if (response.data.sheng == null) {
+        if (response.data.sheng == null) {
           this.diglogForm.province = "";
         } else {
           this.diglogForm.province = response.data.sheng;
@@ -908,7 +934,7 @@ export default {
         // this.diglogForm.province = response.data.sheng;
         // this.diglogForm.city = response.data.shi;
         // this.diglogForm.area = response.data.quxian;
-         if (response.data.sheng == null) {
+        if (response.data.sheng == null) {
           this.diglogForm.province = "";
         } else {
           this.diglogForm.province = response.data.sheng;
