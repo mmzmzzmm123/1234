@@ -20,6 +20,10 @@ export function getProcessMenuData(menuData) {
           if (igdData.id > 0) {
             const tarDetail = cur.detail.find(obj => obj.id === igdData.id);
 
+            if (tarDetail && tarDetail.weight === -1) {
+              return igdArr;
+            }
+
             igdArr.push({
               id: igdData.id,
               name: igdData.name,
