@@ -212,6 +212,7 @@ export default {
       this.$refs.cusCreateOrderDialogRef.showDialog(
         {
           customer: this.data.name,
+          accountId: this.data.channelId,
           cusId: this.data.id,
           preSaleId: this.data.salesman,
           afterSaleId: this.data.afterDietitian,

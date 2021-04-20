@@ -134,6 +134,8 @@ public class SysOrder extends BaseEntity {
     @Excel(name = "账号")
     private String account;
 
+    private String[] accRange;
+
     /**
      * 策划
      */

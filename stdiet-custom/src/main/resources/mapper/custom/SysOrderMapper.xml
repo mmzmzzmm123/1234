@@ -41,14 +41,14 @@
         <result property="serverEndTime" column="server_end_time"/>
         <result property="becomeFanTime" column="become_fan_time"/>
 
-        <result property="onSaleId"    column="on_sale_id"    />
-        <result property="orderType"    column="order_type"    />
-        <result property="orderCountType"    column="order_count_type"    />
-        <result property="orderMoneyType"    column="order_money_type"    />
-        <result property="mainOrderId"    column="main_order_id"    />
-        <result property="afterSaleCommissOrder"    column="after_sale_commiss_order"    />
-        <result property="commissStartTime"    column="commiss_start_time"    />
-        <result property="delFlag"    column="del_flag"    />
+        <result property="onSaleId" column="on_sale_id"/>
+        <result property="orderType" column="order_type"/>
+        <result property="orderCountType" column="order_count_type"/>
+        <result property="orderMoneyType" column="order_money_type"/>
+        <result property="mainOrderId" column="main_order_id"/>
+        <result property="afterSaleCommissOrder" column="after_sale_commiss_order"/>
+        <result property="commissStartTime" column="commiss_start_time"/>
+        <result property="delFlag" column="del_flag"/>
 
         <!-- 非持久化字段 -->
         <result property="afterSale" column="afterSale_name"></result><!-- 售后名称  -->
@@ -73,7 +73,7 @@
     <sql id="searchOrderType">
         <if test="searchOrderTypeArray != null">
             <trim prefix="AND (" suffix=")" suffixOverrides="or">
-                <foreach collection="searchOrderTypeArray"  separator="or" item="typeArray" index="i">
+                <foreach collection="searchOrderTypeArray" separator="or" item="typeArray" index="i">
                     (
                     <foreach collection="typeArray" separator="and" item="type" index="j">
                         <if test="j == 0">
@@ -99,8 +99,14 @@
             <if test="customer != null  and customer != ''">
                 and (customer like concat('%',#{customer},'%') or phone like concat('%',#{customer},'%'))
             </if>
+            <if test="accRange != null">
+                and account_id in
+                <foreach collection="accRange" separator="," item="acc" open="(" close=")" >
+                    #{acc}
+                </foreach>
+            </if>
             <if test="cusId != null  and cusId != ''">and cus_id = #{cusId}</if>
-           <!-- <if test="phone != null  and phone != ''">and phone = #{phone}</if>-->
+            <!-- <if test="phone != null  and phone != ''">and phone = #{phone}</if>-->
             <if test="status != null ">and status = #{status}</if>
             <if test="payTypeId != null ">and pay_type_id = #{payTypeId}</if>
             <if test="preSaleId != null ">and pre_sale_id = #{preSaleId}</if>
@@ -113,8 +119,12 @@
             <if test="operatorId != null ">and operator_id = #{operatorId}</if>
             <if test="operatorAssisId != null ">and operator_assis_id = #{operatorAssisId}</if>
             <if test="recommender != null  and recommender != ''">and recommender = #{recommender}</if>
-            <if test="beginTime != null and beginTime != ''">and date_format(order_time,'%y%m%d') &gt;= date_format(#{beginTime},'%y%m%d')</if>
-            <if test="endTime != null and endTime != ''">and date_format(order_time,'%y%m%d') &lt;= date_format(#{endTime},'%y%m%d')</if>
+            <if test="beginTime != null and beginTime != ''">and date_format(order_time,'%y%m%d') &gt;=
+                date_format(#{beginTime},'%y%m%d')
+            </if>
+            <if test="endTime != null and endTime != ''">and date_format(order_time,'%y%m%d') &lt;=
+                date_format(#{endTime},'%y%m%d')
+            </if>
             <if test="serveTimeId != null ">and serve_time_id = #{serveTimeId}</if>
             <if test="reviewStatus != null ">and review_status = #{reviewStatus}</if>
             <if test="amountFlag != null">
@@ -141,7 +151,13 @@
             <if test="customer != null  and customer != ''">
                 and (sc.name like concat('%',#{customer},'%') or sc.phone like concat('%',#{customer},'%'))
             </if>
-             <if test="cusId != null  and cusId != ''">and cus_id = #{cusId}</if>
+            <if test="accRange != null">
+                and account_id in
+                <foreach collection="accRange" separator="," item="acc" open="(" close=")">
+                    #{acc}
+                </foreach>
+            </if>
+            <if test="cusId != null  and cusId != ''">and cus_id = #{cusId}</if>
             <if test="phone != null  and phone != ''">and sc.phone = #{phone}</if>
             <if test="status != null ">and status = #{status}</if>
             <if test="payTypeId != null ">and pay_type_id = #{payTypeId}</if>
@@ -155,8 +171,12 @@
             <if test="operatorId != null ">and operator_id = #{operatorId}</if>
             <if test="operatorAssisId != null ">and operator_assis_id = #{operatorAssisId}</if>
             <if test="recommender != null  and recommender != ''">and recommender = #{recommender}</if>
-            <if test="beginTime != null and beginTime != ''">and date_format(order_time,'%y%m%d') &gt;= date_format(#{beginTime},'%y%m%d')</if>
-            <if test="endTime != null and endTime != ''">and date_format(order_time,'%y%m%d') &lt;= date_format(#{endTime},'%y%m%d')</if>
+            <if test="beginTime != null and beginTime != ''">and date_format(order_time,'%y%m%d') &gt;=
+                date_format(#{beginTime},'%y%m%d')
+            </if>
+            <if test="endTime != null and endTime != ''">and date_format(order_time,'%y%m%d') &lt;=
+                date_format(#{endTime},'%y%m%d')
+            </if>
             <if test="serveTimeId != null ">and serve_time_id = #{serveTimeId}</if>
             <if test="reviewStatus != null ">and review_status = #{reviewStatus}</if>
             <if test="amountFlag != null">
@@ -319,10 +339,10 @@
     </delete>
 
     <delete id="deleteSysOrderByIds" parameterType="String">
-<!--        delete from sys_order where order_id in-->
-<!--        <foreach item="orderId" collection="array" open="(" separator="," close=")">-->
-<!--            #{orderId}-->
-<!--        </foreach>-->
+        <!--        delete from sys_order where order_id in-->
+        <!--        <foreach item="orderId" collection="array" open="(" separator="," close=")">-->
+        <!--            #{orderId}-->
+        <!--        </foreach>-->
     </delete>
 
     <resultMap type="SysOrder" id="SysOrderResultExtended">
@@ -362,14 +382,14 @@
         <result property="serverEndTime" column="server_end_time"/>
         <result property="becomeFanTime" column="become_fan_time"/>
 
-        <result property="onSaleId"    column="on_sale_id"    />
-        <result property="orderType"    column="order_type"    />
-        <result property="orderCountType"    column="order_count_type"    />
-        <result property="orderMoneyType"    column="order_money_type"    />
-        <result property="mainOrderId"    column="main_order_id"    />
-        <result property="afterSaleCommissOrder"    column="after_sale_commiss_order"    />
-        <result property="commissStartTime"    column="commiss_start_time"    />
-        <result property="delFlag"    column="del_flag"    />
+        <result property="onSaleId" column="on_sale_id"/>
+        <result property="orderType" column="order_type"/>
+        <result property="orderCountType" column="order_count_type"/>
+        <result property="orderMoneyType" column="order_money_type"/>
+        <result property="mainOrderId" column="main_order_id"/>
+        <result property="afterSaleCommissOrder" column="after_sale_commiss_order"/>
+        <result property="commissStartTime" column="commiss_start_time"/>
+        <result property="delFlag" column="del_flag"/>
 
         <!-- 非持久化字段 -->
         <result property="afterSale" column="afterSale_name"></result><!-- 售后名称  -->
@@ -378,17 +398,17 @@
     </resultMap>
 
     <resultMap type="SysOrderPause" id="SysOrderPauseResult">
-        <result property="id"    column="id"    />
-        <result property="orderId"    column="order_id"    />
-        <result property="pauseStartDate"    column="pause_start_date"    />
-        <result property="pauseEndDate"    column="pause_end_date"    />
-        <result property="reason"    column="reason"    />
-        <result property="remarks"    column="remarks"    />
-        <result property="createTime"    column="create_time"    />
-        <result property="createBy"    column="create_by"    />
-        <result property="updateTime"    column="update_time"    />
-        <result property="updateBy"    column="update_by"    />
-        <result property="delFlag"    column="del_flag"    />
+        <result property="id" column="id"/>
+        <result property="orderId" column="order_id"/>
+        <result property="pauseStartDate" column="pause_start_date"/>
+        <result property="pauseEndDate" column="pause_end_date"/>
+        <result property="reason" column="reason"/>
+        <result property="remarks" column="remarks"/>
+        <result property="createTime" column="create_time"/>
+        <result property="createBy" column="create_by"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="updateBy" column="update_by"/>
+        <result property="delFlag" column="del_flag"/>
     </resultMap>
 
     <select id="getOrderPauseByOrderId" parameterType="Long" resultMap="SysOrderPauseResult">
@@ -398,34 +418,15 @@
 
     <!-- 查询2021年开始的已审核的订单信息（用于计算提成,请勿随意改动） -->
     <select id="selectSimpleOrderMessage" resultMap="SysOrderResultExtended" parameterType="SysCommision">
-      select o.order_id,o.order_time,o.commiss_start_time,o.server_end_time,o.customer,o.review_status,o.amount,o.serve_time_id,o.give_serve_day,o.after_sale_id,su_sale.nick_name as afterSale_name,o.nutritionist_id,su_nutritionist.nick_name as nutritionist_name
-      from sys_order o
-      left join sys_user su_sale on su_sale.user_id = o.after_sale_id and su_sale.del_flag = 0
-      left join sys_user su_nutritionist on su_nutritionist.user_id = o.nutritionist_id and su_nutritionist.del_flag = 0
-      where o.order_time >= '2021-01-01' and o.del_flag = 0 and (su_sale.user_id is not null OR su_nutritionist.user_id is not null)
-      and o.amount is not null
-        <if test="reviewStatus != null and reviewStatus != ''">
-            and review_status = #{reviewStatus}
-        </if>
-      <if test="userId != null"><!-- 限于营养师、售后不可能同一个的情况下 -->
-          and (su_sale.user_id = #{userId} or su_nutritionist.user_id = #{userId})
-      </if>
-      <if test="endTime != null and endTime != ''">
-          AND DATE_FORMAT(o.order_time,'%Y-%m-%d') &lt;= #{endTime}
-      </if>
-        <if test="serverScopeEndTime != null and serverScopeEndTime != ''">
-            AND  #{serverScopeEndTime} >= DATE_FORMAT(o.commiss_start_time,'%Y-%m-%d')
-        </if>
-      order by o.order_time desc
-    </select>
-
-    <!-- 查询2021年开始的已审核的订单信息的总条数（用于计算提成,请勿随意改动） -->
-    <select id="selectSimpleOrderMessageCount" resultType="int" parameterType="SysCommision">
-        select count(o.order_id) as orderCount
+        select
+        o.order_id,o.order_time,o.commiss_start_time,o.server_end_time,o.customer,o.review_status,o.amount,o.serve_time_id,o.give_serve_day,o.after_sale_id,su_sale.nick_name
+        as afterSale_name,o.nutritionist_id,su_nutritionist.nick_name as nutritionist_name
         from sys_order o
         left join sys_user su_sale on su_sale.user_id = o.after_sale_id and su_sale.del_flag = 0
-        left join sys_user su_nutritionist on su_nutritionist.user_id = o.nutritionist_id and su_nutritionist.del_flag = 0
-        where o.order_time >= '2021-01-01' and o.del_flag = 0 and (su_sale.user_id is not null OR su_nutritionist.user_id is not null)
+        left join sys_user su_nutritionist on su_nutritionist.user_id = o.nutritionist_id and su_nutritionist.del_flag =
+        0
+        where o.order_time >= '2021-01-01' and o.del_flag = 0 and (su_sale.user_id is not null OR
+        su_nutritionist.user_id is not null)
         and o.amount is not null
         <if test="reviewStatus != null and reviewStatus != ''">
             and review_status = #{reviewStatus}
@@ -437,31 +438,59 @@
             AND DATE_FORMAT(o.order_time,'%Y-%m-%d') &lt;= #{endTime}
         </if>
         <if test="serverScopeEndTime != null and serverScopeEndTime != ''">
-            AND  #{serverScopeEndTime} >= DATE_FORMAT(o.commiss_start_time,'%Y-%m-%d')
+            AND #{serverScopeEndTime} >= DATE_FORMAT(o.commiss_start_time,'%Y-%m-%d')
+        </if>
+        order by o.order_time desc
+    </select>
+
+    <!-- 查询2021年开始的已审核的订单信息的总条数（用于计算提成,请勿随意改动） -->
+    <select id="selectSimpleOrderMessageCount" resultType="int" parameterType="SysCommision">
+        select count(o.order_id) as orderCount
+        from sys_order o
+        left join sys_user su_sale on su_sale.user_id = o.after_sale_id and su_sale.del_flag = 0
+        left join sys_user su_nutritionist on su_nutritionist.user_id = o.nutritionist_id and su_nutritionist.del_flag =
+        0
+        where o.order_time >= '2021-01-01' and o.del_flag = 0 and (su_sale.user_id is not null OR
+        su_nutritionist.user_id is not null)
+        and o.amount is not null
+        <if test="reviewStatus != null and reviewStatus != ''">
+            and review_status = #{reviewStatus}
+        </if>
+        <if test="userId != null"><!-- 限于营养师、售后不可能同一个的情况下 -->
+            and (su_sale.user_id = #{userId} or su_nutritionist.user_id = #{userId})
+        </if>
+        <if test="endTime != null and endTime != ''">
+            AND DATE_FORMAT(o.order_time,'%Y-%m-%d') &lt;= #{endTime}
+        </if>
+        <if test="serverScopeEndTime != null and serverScopeEndTime != ''">
+            AND #{serverScopeEndTime} >= DATE_FORMAT(o.commiss_start_time,'%Y-%m-%d')
         </if>
         order by o.order_time desc
     </select>
 
     <!-- 查询售后、营养师的每个月服务总金额 -->
-    <select id="getTotalAmountByUserId" parameterType="SysCommision" resultType="com.stdiet.custom.dto.response.EveryMonthTotalAmount">
+    <select id="getTotalAmountByUserId" parameterType="SysCommision"
+            resultType="com.stdiet.custom.dto.response.EveryMonthTotalAmount">
         SELECT s.yearMonth,SUM(s.amount) AS totalAmount FROM
         (
-          SELECT CONCAT(YEAR(o.order_time),'',MONTH(o.order_time)) AS yearMonth,o.amount
-          FROM sys_order o
-          LEFT JOIN sys_user su_sale ON su_sale.user_id = o.after_sale_id AND su_sale.del_flag = 0
-          LEFT JOIN sys_user su_nutritionist ON su_nutritionist.user_id = o.nutritionist_id AND su_nutritionist.del_flag = 0
-          where o.order_time >= '2021-01-01' and o.del_flag = 0 and (su_sale.user_id is not null OR su_nutritionist.user_id is not null)
-          and o.amount is not null
-          <if test="reviewStatus != null and reviewStatus != ''">
+        SELECT CONCAT(YEAR(o.order_time),'',MONTH(o.order_time)) AS yearMonth,o.amount
+        FROM sys_order o
+        LEFT JOIN sys_user su_sale ON su_sale.user_id = o.after_sale_id AND su_sale.del_flag = 0
+        LEFT JOIN sys_user su_nutritionist ON su_nutritionist.user_id = o.nutritionist_id AND su_nutritionist.del_flag =
+        0
+        where o.order_time >= '2021-01-01' and o.del_flag = 0 and (su_sale.user_id is not null OR
+        su_nutritionist.user_id is not null)
+        and o.amount is not null
+        <if test="reviewStatus != null and reviewStatus != ''">
             and o.review_status = #{reviewStatus}
-          </if>
-          <if test="userId != null"><!-- 限于营养师、售后不可能同一个的情况下 -->
+        </if>
+        <if test="userId != null"><!-- 限于营养师、售后不可能同一个的情况下 -->
             and (su_sale.user_id = #{userId} or su_nutritionist.user_id = #{userId})
-          </if>
-          <if test="endTime != null and endTime != ''">
+        </if>
+        <if test="endTime != null and endTime != ''">
             AND DATE_FORMAT(o.order_time,'%Y-%m-%d') &lt;= #{endTime}
-          </if>
-          ORDER BY o.order_time ASC
+        </if>
+        ORDER BY o.order_time ASC
         ) s
         GROUP BY s.yearMonth
     </select>

@@ -97,4 +97,9 @@ public class SysCustomer extends BaseEntity
     /** 体征数据，非持久化字段 */
     private SysCustomerPhysicalSigns sign;
 
+    @Excel(name = "进粉渠道")
+    private Long channelId;
+
+    private String[] channels;
+
 }

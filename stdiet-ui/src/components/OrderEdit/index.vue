@@ -11,7 +11,11 @@
       <el-form ref="form" :model="form" :rules="rules" label-width="90px">
         <el-col :span="16">
           <el-form-item label="订单类型" prop="orderTypeName">
-            <el-input v-model="form.orderTypeName" placeholder="" :disabled="true"/>
+            <el-input
+              v-model="form.orderTypeName"
+              placeholder=""
+              :disabled="true"
+            />
           </el-form-item>
         </el-col>
         <el-col :span="8">
@@ -32,8 +36,12 @@
           </el-form-item>
         </el-col>
         <el-col :span="8">
-          <el-form-item label="收款账号" prop="accountId">
-            <el-select v-model="form.accountId" placeholder="请选择">
+          <el-form-item label="进粉渠道" prop="accountId">
+            <el-select
+              v-model="form.accountId"
+              placeholder="请选择"
+              @change="handleOnChannelIdChange"
+            >
               <el-option
                 v-for="dict in accountIdOptions"
                 :key="dict.dictValue"
@@ -389,7 +397,7 @@ export default {
       //是否显示售后、营养师、营养师助理
       afterSaleNutriAssShow: true,
       //是否显示策划、策划助理、运营、运营助理
-      planOperatorShow: true
+      planOperatorShow: true,
     };
   },
   created() {
@@ -571,9 +579,9 @@ export default {
       this.resetForm("form");
       // console.log("--"+obj.orderType);
       this.onSaleShow = this.form.orderType == "2";
-      this.afterSaleNutriAssShow = this.form.orderType != "2" && this.form.afterSaleCommissOrder == 0;
+      this.afterSaleNutriAssShow =
+        this.form.orderType != "2" && this.form.afterSaleCommissOrder == 0;
       this.planOperatorShow = this.form.afterSaleCommissOrder == 0;
-
     },
     handleOnClosed() {
       this.reset();
@@ -609,13 +617,17 @@ export default {
         };
       }
     },
+    handleOnChannelIdChange(val) {
+      console.log(val);
+      this.initPlanningAndOperation();
+    },
   },
   watch: {
     // 监听收款账号的变化
-    "form.accountId": function (newVal, oldVal) {
-      // console.log("updte");
-      this.initPlanningAndOperation();
-    },
+    // "form.accountId": function (newVal, oldVal) {
+    //   // console.log("updte");
+    //   this.initPlanningAndOperation();
+    // },
   },
 };
 </script>
