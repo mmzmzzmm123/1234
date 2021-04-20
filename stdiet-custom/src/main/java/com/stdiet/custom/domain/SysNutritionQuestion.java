@@ -18,6 +18,8 @@ public class SysNutritionQuestion extends BaseEntity
     /** $column.columnComment */
     private Long id;
 
+    private Long[] ids;
+
     /** 标题 */
     @Excel(name = "标题")
     private String title;

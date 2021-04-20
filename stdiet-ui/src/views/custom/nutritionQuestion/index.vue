@@ -7,9 +7,20 @@
           placeholder="请输入关键词"
           clearable
           size="small"
-          @keyup.enter.native="handleQuery"
         />
       </el-form-item>
+      <el-form-item label="展示状态" prop="showFlag">
+        <el-select
+          v-model="queryParams.showFlag"
+          placeholder="请选择展示状态"
+          clearable
+          size="small"
+        >
+          <el-option key="0" label="不展示" value="0"/>
+          <el-option key="1" label="展示" value="1"/>
+        </el-select>
+      </el-form-item>
+
      
       <el-form-item>
         <el-button type="cyan" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
@@ -81,6 +92,18 @@
         <!--<AutoHideMessage :data="scope.row.content == null ? '' : (scope.row.content+'')" :maxLength="10"/>-->
         </template>
       </el-table-column>
+      <el-table-column label="小程序展示状态" align="center" prop="wxShow" >
+        <template slot-scope="scope">
+        <el-switch
+                v-model="scope.row.wxShow"
+                active-text="展示"
+                inactive-text="不展示"
+                @change="handleWxShow($event, scope.row)"
+                >
+              </el-switch>
+        </template>
+      </el-table-column>
+      
       
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
@@ -141,20 +164,16 @@
         <el-form-item label="内容" prop="content">
           <Editor :value="form.content" :isClear="isClear" @change="questionContentChange"></Editor>
         </el-form-item>
-        <!--<el-form-item label="内容" prop="content" >
-            <el-input
-              type="textarea"
-              :rows="4"
-              maxlength="1000"
-              show-word-limit
-              placeholder="请输入内容"
-              v-model="form.content">
-            </el-input>
-          </el-form-item>-->
 
-       <!-- <el-form-item label="关键词" prop="key">
-          <el-input v-model="form.key" placeholder="请输入关键词" />
-        </el-form-item>-->
+         <el-form-item label="展示状态" prop="wxShow">
+              <el-switch
+                v-model="form.wxShow"
+                active-text="小程序展示"
+                inactive-text="小程序不展示">
+              </el-switch>
+              <div>提示：请保证内容正确再展示到小程序</div>
+          </el-form-item>    
+       
        
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -171,7 +190,7 @@
 </template>
 
 <script>
-import { listNutritionQuestion, getNutritionQuestion, delNutritionQuestion, addNutritionQuestion, updateNutritionQuestion, exportNutritionQuestion } from "@/api/custom/nutritionQuestion";
+import { listNutritionQuestion, getNutritionQuestion, delNutritionQuestion, addNutritionQuestion, updateNutritionQuestion, exportNutritionQuestion,updateWxShow } from "@/api/custom/nutritionQuestion";
 import Editor from '@/components/Wangeditor';
   import AutoHideMessage from "@/components/AutoHideMessage";
 export default {
@@ -201,7 +220,8 @@ export default {
       queryParams: {
         pageNum: 1,
         pageSize: 10,
-        key: null
+        key: null,
+        showFlag: null
       },
       // 表单参数
       form: {},
@@ -231,6 +251,9 @@ export default {
     getList() {
       this.loading = true;
       listNutritionQuestion(this.queryParams).then(response => {
+        response.data.data.forEach(element => {
+          element.wxShow = element.showFlag == 1 ? true : false;
+        });
         this.nutritionQuestionList = response.data.data;
         this.total = response.data.total;
         this.loading = false;
@@ -248,7 +271,9 @@ export default {
         title: null,
         content: null,
         key: null,
-        keyArray: []
+        keyArray: [],
+        wxShow: false,
+        showFlag: 0
       };
       this.resetForm("form");
     },
@@ -263,6 +288,11 @@ export default {
     },
     /** 重置按钮操作 */
     resetQuery() {
+      this.queryParams = {
+        pageNum: 1,
+        pageSize: 10,
+        key: ""
+      }
       this.resetForm("queryForm");
       this.handleQuery();
     },
@@ -294,7 +324,9 @@ export default {
           title: response.data.title,
           content: response.data.content,
           key: response.data.key,
-          keyArray: response.data.key.split(",")
+          keyArray: (response.data.key != null && response.data.key.trim() != '' ) ? response.data.key.split(",") : null,
+          showFlag: response.data.showFlag,
+          wxShow: response.data.showFlag == 1 ? true : false
         }
         //this.form.keyArray = response.data.key.split(","),
         this.open = true;
@@ -311,6 +343,7 @@ export default {
             return;
           }
           this.form.key = this.form.keyArray.join(",");
+          this.form.showFlag = this.form.wxShow ? 1 : 0;
           if (this.form.id != null) {
             updateNutritionQuestion(this.form).then(response => {
               if (response.code === 200) {
@@ -357,6 +390,13 @@ export default {
         }).then(response => {
           this.download(response.msg);
         }).catch(function() {});
+    },
+    handleWxShow(newWxshow, row){
+      let param = {
+        id: row.id,
+        showFlag: newWxshow ? 1 : 0
+      };
+      updateWxShow(param);
     }
   }
 };

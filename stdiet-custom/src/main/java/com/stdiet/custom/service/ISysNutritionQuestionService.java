@@ -73,4 +73,12 @@ public interface ISysNutritionQuestionService
      */
     public boolean regenerateNutritionQuestionIndex();
 
+    /**
+     * 更新微信展示状态
+     * @param wxShow 是否展示  0不展示 1展示
+     * @param ids id数组
+     * @return
+     */
+    public int updateWxShowByIds(Integer wxShow,  Long[] ids);
+
 }

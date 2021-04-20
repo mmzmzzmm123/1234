@@ -51,3 +51,12 @@ export function exportNutritionQuestion(query) {
     params: query
   })
 }
+
+//更新营养知识小问答的展示状态
+export function updateWxShow(data){
+  return request({
+    url: '/custom/nutritionQuestion/updateWxShow',
+    method: 'get',
+    params: data
+  })
+}

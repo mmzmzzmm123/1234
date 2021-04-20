@@ -26,29 +26,39 @@ import java.util.Map;
 public class LuceneIndexUtils {
 
     //分词器
-    private IKAnalyzer analyzer = null;
+    public static IKAnalyzer analyzer = null;
+    //分词器工具
+    private static IndexWriterConfig config = null;
     //索引库
     private Directory directory = null;
-    //分词器工具
-    private IndexWriterConfig config = null;
     //流
     private IndexWriter indexWriter= null;
+    //获得读取对象
+    private IndexSearcher indexSearcher = null;
 
     public static final String default_primary_key = "id";
 
-    public static final Integer max_select_count = 1000;
+    public static final Integer max_select_count = 10000;
+
+    static{
+        //分词器
+        analyzer = new IKAnalyzer();
+        //使用智能分词
+        analyzer.setUseSmart(true);
+        //工具装配分词器
+        config = new IndexWriterConfig(Version.LUCENE_44, analyzer);
+
+    }
 
     public static LuceneIndexUtils getLuceneIndexUtils(String indexPath){
         LuceneIndexUtils luceneIndexUtils = new LuceneIndexUtils();
         try {
-            //分词器
-            luceneIndexUtils.analyzer = new IKAnalyzer();
-            //使用智能分词
-            luceneIndexUtils.analyzer.setUseSmart(true);
             //索引库
             luceneIndexUtils.directory = FSDirectory.open(new File(indexPath));
-            //工具装配分词器
-            luceneIndexUtils.config = new IndexWriterConfig(Version.LUCENE_44, luceneIndexUtils.analyzer);
+            //读索引库流
+            IndexReader reader = DirectoryReader.open(luceneIndexUtils.directory);
+            //获得读取对象
+            luceneIndexUtils.indexSearcher = new IndexSearcher(reader);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -220,34 +230,21 @@ public class LuceneIndexUtils {
 
     /**
      * 查询索引库的数据（根据输入关键字）
-     * @param keyword
      * @return
      * @throws Exception
      */
-    public Map<String, Object> queryByKeyword(String keyword, String[] columns, int pageNum, int pageSize) throws Exception {
+    public Map<String, Object> queryByKeyword(BooleanQuery query, Boolean boostSort, int pageNum, int pageSize) throws Exception {
         Map<String, Object> result = new HashMap<>();
 
-        //指定读取索引库的列数据
-        //String[] columns = {"articleId","articleName","articleImage","articleContent"};
-
-        //装配
-        MultiFieldQueryParser queryParser = new MultiFieldQueryParser(Version.LUCENE_44, columns, analyzer);
-
-        //解析输入关键字
-        Query query = StringUtils.isEmpty(keyword) ? new WildcardQuery(new Term(default_primary_key, "*")) : queryParser.parse(keyword);
-
-        //读索引库流
-        IndexReader reader = DirectoryReader.open(directory);
-
-        //获得读取对象
-        IndexSearcher indexSearcher = new IndexSearcher(reader);
-
         //排序
-        SortField sortField = new SortField(default_primary_key, SortField.Type.INT, true);
-        Sort sort = new Sort(sortField);
+        Sort sort = null;
+        if(boostSort == null || !boostSort){
+            SortField sortField = new SortField(default_primary_key, SortField.Type.INT, true);
+            sort = new Sort(sortField);
+        }
 
         //装配解析结果 指定读取量级
-        TopDocs search = indexSearcher.search(query, max_select_count, sort);
+        TopDocs search = sort == null ? indexSearcher.search(query, max_select_count) : indexSearcher.search(query, max_select_count, sort);
 
         //获得数据地址数组
         ScoreDoc[] scoreDocs = search.scoreDocs;
@@ -265,6 +262,7 @@ public class LuceneIndexUtils {
                 end = scoreDocs.length;
             }
             for (int i = start; i < end; i++) {
+                //System.out.println(scoreDocs[i].score);
                 //进集合 装配
                 list.add(indexSearcher.doc(scoreDocs[i].doc));
             }

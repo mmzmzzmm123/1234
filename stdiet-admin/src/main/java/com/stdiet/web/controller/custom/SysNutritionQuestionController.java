@@ -2,6 +2,9 @@ package com.stdiet.custom.controller;
 
 import java.util.List;
 
+import com.stdiet.common.utils.StringUtils;
+import com.stdiet.custom.domain.SysCustomerCase;
+import org.apache.ibatis.annotations.Param;
 import org.aspectj.weaver.loadtime.Aj;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -103,5 +106,20 @@ public class SysNutritionQuestionController extends BaseController
     public AjaxResult regenerateNutritionQuestionIndex()
     {
         return toAjax(sysNutritionQuestionService.regenerateNutritionQuestionIndex() ? 1 : 0);
+    }
+
+    /**
+     * 修改营养小知识是否微信展示状态
+     */
+    @PreAuthorize("@ss.hasPermi('custom:nutritionQuestion:edit')")
+    @Log(title = "微信展示状态修改", businessType = BusinessType.UPDATE)
+    @GetMapping("/updateWxShow")
+    public AjaxResult updateWxShow(@RequestParam("id")String id, @RequestParam("showFlag")Integer showFlag)
+    {
+        if(StringUtils.isEmpty(id) || showFlag == null){
+            return AjaxResult.error();
+        }
+        Long[] ids = {Long.parseLong(id)};
+        return toAjax(sysNutritionQuestionService.updateWxShowByIds(showFlag, ids));
     }
 }

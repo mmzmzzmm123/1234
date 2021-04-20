@@ -1,7 +1,10 @@
 package com.stdiet.web.controller;
 
 import com.stdiet.common.config.AliyunOSSConfig;
+import com.stdiet.common.core.domain.entity.SysUser;
+import com.stdiet.common.utils.StringUtils;
 import com.stdiet.common.utils.oss.AliyunOSSUtils;
+import com.stdiet.common.utils.poi.ExcelUtil;
 import com.stdiet.custom.domain.SysNutritionQuestion;
 import com.stdiet.custom.domain.SysWxUserInfo;
 import com.stdiet.custom.domain.SysWxUserLog;
@@ -23,6 +26,7 @@ import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.util.List;
 
 @Component
@@ -38,19 +42,13 @@ public class MyApplicationRunner implements ApplicationRunner {
     @Autowired
     private ISysNutritionQuestionService sysNutritionQuestionService;
 
-    @Autowired
-    private ISysWxUserLogService sysWxUserLogService;
+
 
     @Override
     public void run(ApplicationArguments args) throws Exception {
-        System.out.println("项目启动调用方法");
+        System.out.println("--------------项目启动调用方法开始----------");
 
-        /*SysNutritionQuestion sysNutritionQuestion = new SysNutritionQuestion();
-        sysNutritionQuestion.setTitle("如何防止猝死");
-        sysNutritionQuestion.setContent("少熬夜，少暴饮暴食");
-        sysNutritionQuestion.setKey("猝死");
-        sysNutritionQuestionService.insertSysNutritionQuestion(sysNutritionQuestion);*/
-
+        System.out.println("--------------项目启动调用方法结束-------------");
     }
 
 
@@ -74,5 +72,37 @@ public class MyApplicationRunner implements ApplicationRunner {
                 }
             }
         }*/
+    }
+
+    /**
+     * 导入营养小知识方法
+     * @param path
+     */
+    public void importNutritionQuestion(String path){
+        try{
+            int count = 0;
+            ExcelUtil<SysNutritionQuestion> util = new ExcelUtil<SysNutritionQuestion>(SysNutritionQuestion.class);
+            File file = new File(path);
+            List<SysNutritionQuestion> questionList = util.importExcel(new FileInputStream(file));
+            System.out.println(questionList.size());
+            for (SysNutritionQuestion sysNutritionQuestion : questionList) {
+                //System.out.println(sysNutritionQuestion);
+                if(StringUtils.isNotEmpty(sysNutritionQuestion.getTitle())
+                    && StringUtils.isNotEmpty(sysNutritionQuestion.getContent())){
+                    //System.out.println(sysNutritionQuestion.getTitle() + "\n");
+                    sysNutritionQuestion.setShowFlag(1);
+                    if(sysNutritionQuestionService.insertSysNutritionQuestion(sysNutritionQuestion) > 0){
+                        count++;
+                        Thread.sleep(100);
+                        System.out.println(count);
+                    }
+
+                }
+            }
+            System.out.println("结束："+count);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
     }
 }
