@@ -282,7 +282,8 @@ export default {
       },
       // 查询参数
       queryParams_khrw: {
-        rwlx: "08",
+        // rwlx: "08",
+         parentId: null,
       },
       // 表单参数
       form: {},

@@ -273,7 +273,8 @@ export default {
       },
       // 查询参数
       queryParams_khrw: {
-        rwlx: "03",
+        // rwlx: "03",
+         parentId: null,
       },
       // 表单参数
       form: {},
