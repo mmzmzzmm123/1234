@@ -65,7 +65,7 @@ public class SysWxFanStatisticsController extends BaseController
     public AjaxResult export(SysWxFanStatistics sysWxFanStatistics)
     {
         sysWxFanStatistics.setSortFlag(1);
-        List<SysWxFanStatistics> list = sysWxFanStatisticsService.selectSysWxFanStatisticsList(sysWxFanStatistics);
+        List<SysWxFanStatistics> list = sysWxFanStatisticsService.exportStatisticsList(sysWxFanStatistics);
         List<ExportFanStatisticsResponse> responsesList = new ArrayList<>();
         ExportFanStatisticsResponse exportFanStatisticsResponse = null;
         int groupId = 0;
@@ -83,6 +83,7 @@ public class SysWxFanStatisticsController extends BaseController
             exportFanStatisticsResponse.setAccount(sysWxFan.getAccount());
             exportFanStatisticsResponse.setSaleName(sysWxFan.getUserName());
             exportFanStatisticsResponse.setWxAccount(sysWxFan.getWxAccount());
+            exportFanStatisticsResponse.setWxPhone(sysWxFan.getWxPhone());
             exportFanStatisticsResponse.setFanNum(sysWxFan.getFanNum());
             responsesList.add(exportFanStatisticsResponse);
             totalFanNum += exportFanStatisticsResponse.getFanNum().intValue();

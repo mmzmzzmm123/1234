@@ -43,6 +43,9 @@ public class SysWxFanStatistics extends BaseEntity
     @Excel(name = "微信号")
     private String wxAccount;
 
+    @Excel(name = "微信绑定手机号")
+    private String wxPhone;
+
     /** 进粉时间 */
     @JsonFormat(pattern = "yyyy-MM-dd")
     @Excel(name = "进粉时间", width = 30, dateFormat = "yyyy-MM-dd")

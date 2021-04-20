@@ -21,6 +21,7 @@
         <result property="account" column="account"></result>
         <result property="saleGroup" column="sale_group"></result>
         <result property="wxNickName" column="wx_nick_name"></result>
+        <result property="wxPhone" column="wx_phone"></result>
         <result property="wxAccount" column="wx_account"></result>
     </resultMap>
 
@@ -54,6 +55,20 @@
            order by swd.sale_group_id asc,swd.user_id asc
         </if>
 
+    </select>
+
+    <select id="exportStatisticsList" parameterType="SysWxFanStatistics" resultMap="SysWxFanStatisticsResult">
+        SELECT sale_group_id, su.nick_name AS user_name, cn.dict_label AS account,  wsa.wx_account, wsa.wx_phone, IF(ISNULL(wfs.fan_num),0,wfs.fan_num) AS fan_num FROM sys_wx_distribution wd
+        LEFT JOIN (
+            SELECT wx_id, fan_num FROM sys_wx_fan_statistics
+            <if test="fanStartTime != null and fanEndTime != null">
+                WHERE fan_time >= #{fanStartTime} AND #{fanEndTime} >= fan_time
+            </if>
+        ) AS wfs ON wd.wechat_account = wfs.wx_id
+        LEFT JOIN (SELECT id, wx_account, wx_phone FROM sys_wx_sale_account) AS wsa ON wd.wechat_account = wsa.id
+        LEFT JOIN (SELECT dict_label, dict_value FROM sys_dict_data WHERE dict_type = 'fan_channel') AS cn ON cn.dict_value = wd.account_id
+        LEFT JOIN sys_user AS su ON su.user_id = wd.user_id
+        ORDER BY wd.sale_group_id, wd.user_id ASC
     </select>
 
     <!-- 查询总进粉数量 -->

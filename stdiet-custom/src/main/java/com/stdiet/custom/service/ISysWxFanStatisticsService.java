@@ -82,4 +82,6 @@ public interface ISysWxFanStatisticsService
      * @return
      */
     public int selectFanNumCount(SysWxFanStatistics sysWxFanStatistics);
+
+    List<SysWxFanStatistics> exportStatisticsList(SysWxFanStatistics sysWxFanStatistics);
 }

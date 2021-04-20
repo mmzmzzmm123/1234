@@ -88,7 +88,7 @@ export default {
     if (planPauseRes.code === 200) {
       this.pauseDays = planPauseRes.data.reduce((arr, cur) => {
         let startDate = cur.pauseStartDate;
-        while (dayjs(startDate) <= dayjs(cur.pauseEndDate)) {
+        while (dayjs(startDate) < dayjs(cur.pauseEndDate)) {
           arr.push(startDate);
           startDate = dayjs(startDate).add(1, "days").format("YYYY-MM-DD");
         }

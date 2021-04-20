@@ -22,6 +22,10 @@ public class ExportFanStatisticsResponse {
     @Excel(name = "微信号")
     private String wxAccount;
 
+    //手机号
+    @Excel(name = "手机号")
+    private String wxPhone;
+
     //进粉量、
     @Excel(name = "进粉量")
     private Integer fanNum;
