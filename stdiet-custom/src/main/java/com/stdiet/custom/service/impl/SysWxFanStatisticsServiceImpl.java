@@ -144,4 +144,9 @@ public class SysWxFanStatisticsServiceImpl implements ISysWxFanStatisticsService
     public int selectFanNumCount(SysWxFanStatistics sysWxFanStatistics){
         return sysWxFanStatisticsMapper.selectFanNumCount(sysWxFanStatistics);
     }
+
+    @Override
+    public List<SysWxFanStatistics> exportStatisticsList(SysWxFanStatistics sysWxFanStatistics) {
+        return sysWxFanStatisticsMapper.exportStatisticsList(sysWxFanStatistics);
+    }
 }

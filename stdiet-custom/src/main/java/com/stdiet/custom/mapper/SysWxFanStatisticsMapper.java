@@ -1,7 +1,8 @@
 package com.stdiet.custom.mapper;
 
-import java.util.List;
 import com.stdiet.custom.domain.SysWxFanStatistics;
+
+import java.util.List;
 
 /**
  * 进粉统计Mapper接口
@@ -9,8 +10,7 @@ import com.stdiet.custom.domain.SysWxFanStatistics;
  * @author xiezhijun
  * @date 2021-02-03
  */
-public interface SysWxFanStatisticsMapper
-{
+public interface SysWxFanStatisticsMapper {
     /**
      * 查询进粉统计
      *
@@ -66,8 +66,11 @@ public interface SysWxFanStatisticsMapper
 
     /**
      * 查询总进粉数量
+     *
      * @param sysWxFanStatistics
      * @return
      */
     public int selectFanNumCount(SysWxFanStatistics sysWxFanStatistics);
+
+    public List<SysWxFanStatistics> exportStatisticsList(SysWxFanStatistics sysWxFanStatistics);
 }
