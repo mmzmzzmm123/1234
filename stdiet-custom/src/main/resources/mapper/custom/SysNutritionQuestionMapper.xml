@@ -24,7 +24,9 @@
         <result property="title"    column="title"    />
         <result property="content"    column="content"    />
         <result property="key"    column="key"    />
-        <result property="titleContentIndex"    column="title_content_index"    />
+        <result property="key"    column="key"    />
+        <result property="showFlag"    column="show_flag"    />
+        <result property="createTime"    column="create_time"    />
     </resultMap>
 
     <sql id="selectSysNutritionQuestionVo">
@@ -98,7 +100,7 @@
 
     <!-- 根据关键词查询对应知识问题 -->
     <select id="getNutritionQuestionListByKey" parameterType="SysNutritionQuestion" resultMap="SysNutritionQuestionResultExtended">
-        select id, title, `key`, content where del_flag = 0
+        select id, title, `key`, content, show_flag, create_time where del_flag = 0
         <if test="showFlag != null "> and show_flag = #{showFlag}</if>
         <if test="key != null and key != ''">
           and (title like CONCAT('%',#{key},'%') or key like CONCAT('%',#{key},'%') or titleContentIndex like CONCAT('%',#{key},'%'))
@@ -116,5 +118,15 @@
     <select id="getNutritionQuestionListByPage" resultMap="SysNutritionQuestionResult">
       select * from sys_nutrition_question where del_flag = 0 order by id asc limit #{start},#{pageSize}
     </select>
+
+
+    <update id="updateWxShowByIds">
+        update sys_nutrition_question set show_flag = #{wxShow} where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </update>
+
+
 
 </mapper>

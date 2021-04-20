@@ -285,10 +285,11 @@ public class WechatAppletController extends BaseController {
     }
 
     /**
-     * 获取微信用户记录详细信息
+     * 获取小程序展示的营养小知识列表
      */
     @GetMapping(value = "/getNutritionQuestionList")
     public AjaxResult getNutritionQuestionList(SysNutritionQuestion sysNutritionQuestion, @RequestParam(value = "pageNum", defaultValue = "1") int pageNum,  @RequestParam(value = "pageSize", defaultValue = "10")int pageSize) {
+        sysNutritionQuestion.setShowFlag(1);
         Map<String,Object> result = sysNutritionQuestionService.getNutritionQuestionListByKey(sysNutritionQuestion, pageNum, pageSize);
         return AjaxResult.success(result);
     }

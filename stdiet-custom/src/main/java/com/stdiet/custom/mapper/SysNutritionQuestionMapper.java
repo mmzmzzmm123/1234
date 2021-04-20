@@ -79,4 +79,12 @@ public interface SysNutritionQuestionMapper
      * @return
      */
     public List<SysNutritionQuestion> getNutritionQuestionListByPage(@Param("start")int start, @Param("pageSize")int pageSize);
+
+    /**
+     * 更新微信展示状态
+     * @param wxShow 是否展示  0不展示 1展示
+     * @param ids id数组
+     * @return
+     */
+    public int updateWxShowByIds(@Param("wxShow")Integer wxShow, @Param("array") Long[] ids);
 }
