@@ -47,6 +47,7 @@ public class ByThemeController extends BaseController {
     /**
      * 获取部门下拉树列表
      */
+    @Log(title = "主题整合学习", businessType = BusinessType.QUERY)
     @GetMapping("/treeselect")
     public AjaxResult treeselect(ByTheme byTheme) {
         List<ByTheme> byThemeDetails = byThemeService.selectByThemeListTree(byTheme);

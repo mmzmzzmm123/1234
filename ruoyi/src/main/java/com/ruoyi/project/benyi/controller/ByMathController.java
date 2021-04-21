@@ -68,6 +68,7 @@ public class ByMathController extends BaseController {
     /**
      * 获取部门下拉树列表
      */
+    @Log(title = "游戏数学学习", businessType = BusinessType.QUERY)
     @GetMapping("/treeselect")
     public AjaxResult treeselect(ByMath byMath) {
         List<ByMath> byMathDetails = byMathService.selectByMathListTree(byMath);

@@ -74,6 +74,7 @@ public class ByDayFlowDetailController extends BaseController
     /**
      * 获取部门下拉树列表
      */
+    @Log(title = "一日流程学习", businessType = BusinessType.QUERY)
     @GetMapping("/treeselect")
     public AjaxResult treeselect(ByDayFlowDetail byDayFlowDetail) {
         List<ByDayFlowDetail> byDayFlowDetails = byDayFlowDetailService.selectByDayFlowDetailListTree(byDayFlowDetail);
