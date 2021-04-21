@@ -22,7 +22,7 @@
     </resultMap>
 
     <sql id="selectSysWxSaleAccountVo">
-        select id, wx_nick_name, wx_account, wx_phone, wx_code_url, remark, wx_type, create_time, create_by, update_time, update_by, del_flag from sys_wx_sale_account
+        select id, wx_nick_name, wx_account, wx_phone, wx_code_url, remark, wx_type, create_time, create_by, update_time, update_by, del_flag, status, use_count from sys_wx_sale_account
     </sql>
 
     <select id="selectSysWxSaleAccountList" parameterType="SysWxSaleAccount" resultMap="SysWxSaleAccountResult">
