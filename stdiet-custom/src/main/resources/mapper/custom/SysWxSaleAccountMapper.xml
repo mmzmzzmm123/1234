@@ -5,18 +5,20 @@
 <mapper namespace="com.stdiet.custom.mapper.SysWxSaleAccountMapper">
 
     <resultMap type="SysWxSaleAccount" id="SysWxSaleAccountResult">
-        <result property="id"    column="id"    />
-        <result property="wxNickName"    column="wx_nick_name"    />
-        <result property="wxAccount"    column="wx_account"    />
-        <result property="wxPhone"    column="wx_phone"    />
-        <result property="wxCodeUrl"    column="wx_code_url"    />
-        <result property="remark"    column="remark"    />
-        <result property="wxType"    column="wx_type"    />
-        <result property="createTime"    column="create_time"    />
-        <result property="createBy"    column="create_by"    />
-        <result property="updateTime"    column="update_time"    />
-        <result property="updateBy"    column="update_by"    />
-        <result property="delFlag"    column="del_flag"    />
+        <result property="id" column="id"/>
+        <result property="wxNickName" column="wx_nick_name"/>
+        <result property="wxAccount" column="wx_account"/>
+        <result property="wxPhone" column="wx_phone"/>
+        <result property="wxCodeUrl" column="wx_code_url"/>
+        <result property="remark" column="remark"/>
+        <result property="wxType" column="wx_type"/>
+        <result property="createTime" column="create_time"/>
+        <result property="createBy" column="create_by"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="updateBy" column="update_by"/>
+        <result property="delFlag" column="del_flag"/>
+        <result property="status" column="status"/>
+        <result property="useCount" column="use_count"/>
     </resultMap>
 
     <sql id="selectSysWxSaleAccountVo">
@@ -24,10 +26,11 @@
     </sql>
 
     <select id="selectSysWxSaleAccountList" parameterType="SysWxSaleAccount" resultMap="SysWxSaleAccountResult">
-        <include refid="selectSysWxSaleAccountVo"/> where del_flag = 0
-        <if test="wxNickName != null  and wxNickName != ''"> and wx_nick_name like concat('%', #{wxNickName}, '%')</if>
-        <if test="wxAccount != null  and wxAccount != ''"> and wx_account like concat('%', #{wxAccount}, '%')</if>
-        <if test="wxPhone != null  and wxPhone != ''"> and wx_phone like concat('%', #{wxPhone}, '%')</if>
+        <include refid="selectSysWxSaleAccountVo"/>
+        where del_flag = 0
+        <if test="wxNickName != null  and wxNickName != ''">and wx_nick_name like concat('%', #{wxNickName}, '%')</if>
+        <if test="wxAccount != null  and wxAccount != ''">and wx_account like concat('%', #{wxAccount}, '%')</if>
+        <if test="wxPhone != null  and wxPhone != ''">and wx_phone like concat('%', #{wxPhone}, '%')</if>
         order by id desc
     </select>
 
@@ -80,6 +83,8 @@
             <if test="updateTime != null">update_time = #{updateTime},</if>
             <if test="updateBy != null">update_by = #{updateBy},</if>
             <if test="delFlag != null">del_flag = #{delFlag},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="useCount != null">use_count = #{useCount},</if>
         </trim>
         where id = #{id}
     </update>
@@ -96,10 +101,37 @@
     </update>
 
     <select id="selectWxAccountByAccountOrPhone" parameterType="SysWxSaleAccount" resultMap="SysWxSaleAccountResult">
-        <include refid="selectSysWxSaleAccountVo"/> where del_flag = 0
-        <if test="wxAccount != null  and wxAccount != ''"> and wx_account = #{wxAccount}</if>
-        <if test="wxPhone != null  and wxPhone != ''"> and wx_phone = #{wxPhone} </if>
+        <include refid="selectSysWxSaleAccountVo"/>
+        where del_flag = 0
+        <if test="wxAccount != null  and wxAccount != ''">and wx_account = #{wxAccount}</if>
+        <if test="wxPhone != null  and wxPhone != ''">and wx_phone = #{wxPhone}</if>
         limit 1
     </select>
+
+    <select id="selectWxAdId" resultType="String" parameterType="SysWxSaleAccount" resultMap="SysWxSaleAccountResult">
+        SELECT * FROM sys_wx_sale_account WHERE status = 0 ORDER BY use_count ASC LIMIT 1
+    </select>
+
+    <insert id="insertWxAdLog" parameterType="SysWxAdLog" useGeneratedKeys="true" keyProperty="id">
+        insert into sys_wx_ad_logs
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="userId != null">user_id,</if>
+            <if test="ip != null">ip,</if>
+            <if test="userAgent != null">user_agent,</if>
+            <if test="channelId != null">channel_id,</if>
+            <if test="wxId != null">wx_id,</if>
+            <if test="type != null">type,</if>
+            <if test="date != null">date,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="userId != null">#{userId},</if>
+            <if test="ip != null">#{ip},</if>
+            <if test="userAgent != null">#{userAgent},</if>
+            <if test="channelId != null">#{channelId},</if>
+            <if test="wxId != null">#{wxId},</if>
+            <if test="type != null">#{type},</if>
+            <if test="date != null">#{date},</if>
+        </trim>
+    </insert>
 
 </mapper>

@@ -123,4 +123,5 @@
         lEFT JOIN sys_wx_sale_account swsa ON swsa.id = swd.wechat_account and swsa.del_flag = 0
         where swd.del_flag = 0 and swd.user_id = #{userId} order by swd.id asc
     </select>
+
 </mapper>

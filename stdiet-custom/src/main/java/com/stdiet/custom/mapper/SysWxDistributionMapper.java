@@ -1,6 +1,8 @@
 package com.stdiet.custom.mapper;
 
 import java.util.List;
+
+import com.stdiet.custom.domain.SysWxAdLog;
 import com.stdiet.custom.domain.SysWxDistribution;
 import org.apache.ibatis.annotations.Param;
 
@@ -73,4 +75,5 @@ public interface SysWxDistributionMapper
      * @return
      */
     List<SysWxDistribution> selectDistributionWxByUserId(@Param("userId")Long userId);
+
 }

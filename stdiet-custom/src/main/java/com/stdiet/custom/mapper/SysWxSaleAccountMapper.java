@@ -1,6 +1,8 @@
 package com.stdiet.custom.mapper;
 
 import java.util.List;
+
+import com.stdiet.custom.domain.SysWxAdLog;
 import com.stdiet.custom.domain.SysWxSaleAccount;
 
 /**
@@ -65,4 +67,8 @@ public interface SysWxSaleAccountMapper
      * @return
      */
     SysWxSaleAccount selectWxAccountByAccountOrPhone(SysWxSaleAccount sysWxSaleAccount);
+
+    SysWxSaleAccount selectWxAdId();
+
+    int insertWxAdLog(SysWxAdLog sysWxAdLog);
 }
