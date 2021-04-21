@@ -1,6 +1,8 @@
 package com.stdiet.custom.service;
 
 import java.util.List;
+
+import com.stdiet.custom.domain.SysWxAdLog;
 import com.stdiet.custom.domain.SysWxDistribution;
 
 /**
@@ -72,4 +74,5 @@ public interface ISysWxDistributionService
      * @return
      */
     List<SysWxDistribution> selectDistributionWxByUserId(Long userId);
+
 }

@@ -1,13 +1,15 @@
 package com.stdiet.custom.service.impl;
 
-import java.util.List;
 import com.stdiet.common.utils.DateUtils;
 import com.stdiet.common.utils.StringUtils;
+import com.stdiet.custom.domain.SysWxAdLog;
+import com.stdiet.custom.domain.SysWxSaleAccount;
+import com.stdiet.custom.mapper.SysWxSaleAccountMapper;
+import com.stdiet.custom.service.ISysWxSaleAccountService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import com.stdiet.custom.mapper.SysWxSaleAccountMapper;
-import com.stdiet.custom.domain.SysWxSaleAccount;
-import com.stdiet.custom.service.ISysWxSaleAccountService;
+
+import java.util.List;
 
 /**
  * 微信账号Service业务层处理
@@ -16,8 +18,7 @@ import com.stdiet.custom.service.ISysWxSaleAccountService;
  * @date 2021-02-03
  */
 @Service
-public class SysWxSaleAccountServiceImpl implements ISysWxSaleAccountService
-{
+public class SysWxSaleAccountServiceImpl implements ISysWxSaleAccountService {
     @Autowired
     private SysWxSaleAccountMapper sysWxSaleAccountMapper;
 
@@ -28,8 +29,7 @@ public class SysWxSaleAccountServiceImpl implements ISysWxSaleAccountService
      * @return 微信账号
      */
     @Override
-    public SysWxSaleAccount selectSysWxSaleAccountById(Long id)
-    {
+    public SysWxSaleAccount selectSysWxSaleAccountById(Long id) {
         return sysWxSaleAccountMapper.selectSysWxSaleAccountById(id);
     }
 
@@ -40,8 +40,7 @@ public class SysWxSaleAccountServiceImpl implements ISysWxSaleAccountService
      * @return 微信账号
      */
     @Override
-    public List<SysWxSaleAccount> selectSysWxSaleAccountList(SysWxSaleAccount sysWxSaleAccount)
-    {
+    public List<SysWxSaleAccount> selectSysWxSaleAccountList(SysWxSaleAccount sysWxSaleAccount) {
         return sysWxSaleAccountMapper.selectSysWxSaleAccountList(sysWxSaleAccount);
     }
 
@@ -52,8 +51,7 @@ public class SysWxSaleAccountServiceImpl implements ISysWxSaleAccountService
      * @return 结果
      */
     @Override
-    public int insertSysWxSaleAccount(SysWxSaleAccount sysWxSaleAccount)
-    {
+    public int insertSysWxSaleAccount(SysWxSaleAccount sysWxSaleAccount) {
         sysWxSaleAccount.setCreateTime(DateUtils.getNowDate());
         return sysWxSaleAccountMapper.insertSysWxSaleAccount(sysWxSaleAccount);
     }
@@ -65,8 +63,7 @@ public class SysWxSaleAccountServiceImpl implements ISysWxSaleAccountService
      * @return 结果
      */
     @Override
-    public int updateSysWxSaleAccount(SysWxSaleAccount sysWxSaleAccount)
-    {
+    public int updateSysWxSaleAccount(SysWxSaleAccount sysWxSaleAccount) {
         sysWxSaleAccount.setUpdateTime(DateUtils.getNowDate());
         return sysWxSaleAccountMapper.updateSysWxSaleAccount(sysWxSaleAccount);
     }
@@ -78,8 +75,7 @@ public class SysWxSaleAccountServiceImpl implements ISysWxSaleAccountService
      * @return 结果
      */
     @Override
-    public int deleteSysWxSaleAccountByIds(Long[] ids)
-    {
+    public int deleteSysWxSaleAccountByIds(Long[] ids) {
         return sysWxSaleAccountMapper.deleteSysWxSaleAccountByIds(ids);
     }
 
@@ -90,25 +86,46 @@ public class SysWxSaleAccountServiceImpl implements ISysWxSaleAccountService
      * @return 结果
      */
     @Override
-    public int deleteSysWxSaleAccountById(Long id)
-    {
+    public int deleteSysWxSaleAccountById(Long id) {
         return sysWxSaleAccountMapper.deleteSysWxSaleAccountById(id);
     }
 
     /**
      * 根据微信号或手机号查询是否已存在
+     *
      * @param accountOrPhone 手机号或微信号
-     * @param type 0微信号 1手机号
+     * @param type           0微信号 1手机号
      * @return
      */
     @Override
-    public SysWxSaleAccount selectWxAccountByAccountOrPhone(String accountOrPhone, int type){
+    public SysWxSaleAccount selectWxAccountByAccountOrPhone(String accountOrPhone, int type) {
         SysWxSaleAccount param = new SysWxSaleAccount();
-        if(type == 0){
+        if (type == 0) {
             param.setWxAccount(accountOrPhone);
-        }else{
+        } else {
             param.setWxPhone(accountOrPhone);
         }
         return sysWxSaleAccountMapper.selectWxAccountByAccountOrPhone(param);
+    }
+
+    @Override
+    public String getWxAdId(SysWxAdLog sysWxAdLog) {
+        SysWxSaleAccount sysWxSaleAccount = sysWxSaleAccountMapper.selectWxAdId();
+        if (StringUtils.isNotNull(sysWxSaleAccount)) {
+            sysWxSaleAccount.setUseCount(sysWxSaleAccount.getUseCount() + 1);
+            int rows = sysWxSaleAccountMapper.updateSysWxSaleAccount(sysWxSaleAccount);
+            if (rows > 0) {
+                String wxId = sysWxSaleAccount.getWxAccount();
+                sysWxAdLog.setWxId(wxId);
+                logWxAd(sysWxAdLog);
+                return wxId;
+            }
+        }
+        return null;
+    }
+
+    @Override
+    public Integer logWxAd(SysWxAdLog sysWxAdLog) {
+        return sysWxSaleAccountMapper.insertWxAdLog(sysWxAdLog);
     }
 }

@@ -1,6 +1,8 @@
 package com.stdiet.custom.service;
 
 import java.util.List;
+
+import com.stdiet.custom.domain.SysWxAdLog;
 import com.stdiet.custom.domain.SysWxSaleAccount;
 
 /**
@@ -66,4 +68,8 @@ public interface ISysWxSaleAccountService
      * @return
      */
     SysWxSaleAccount selectWxAccountByAccountOrPhone(String accountOrPhone, int type);
+
+    String getWxAdId(SysWxAdLog sysWxAdLog);
+
+    Integer logWxAd(SysWxAdLog sysWxAdLog);
 }

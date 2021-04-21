@@ -2,18 +2,22 @@ package com.stdiet.web.controller.custom;
 
 import com.stdiet.common.core.controller.BaseController;
 import com.stdiet.common.core.domain.AjaxResult;
+import com.stdiet.common.utils.DateUtils;
 import com.stdiet.custom.domain.SysOrderPause;
+import com.stdiet.custom.domain.SysWxAdLog;
 import com.stdiet.custom.service.ISysOrderPauseService;
 import com.stdiet.custom.service.ISysRecipesService;
 import com.stdiet.custom.service.ISysWapServices;
+import com.stdiet.custom.service.ISysWxSaleAccountService;
+import com.stdiet.custom.utils.HttpRequestUtils;
 import com.stdiet.system.service.ISysDictTypeService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/wap")
@@ -29,6 +33,9 @@ public class SysWapController extends BaseController {
 
     @Autowired
     ISysOrderPauseService iSysOrderPauseService;
+
+    @Autowired
+    ISysWxSaleAccountService iSysWxSaleAccountService;
 
     /**
      * 客户食谱详情
@@ -100,4 +107,36 @@ public class SysWapController extends BaseController {
 //    public void qrcodeRediredt(String group, HttpServletRequest request, HttpServletResponse response) throws IOException {
 //        response.sendRedirect("https://weibo.com/u/1913360251");
 //    }
+
+    @GetMapping(value = "/wxid")
+    public AjaxResult getWxId(@RequestParam String cid, @RequestParam String uid, @RequestHeader("User-Agent") String userAgent, HttpServletRequest request) {
+        SysWxAdLog sysWxAdLog = new SysWxAdLog();
+        sysWxAdLog.setUserId(uid);
+        sysWxAdLog.setIp(HttpRequestUtils.getIpAddr(request));
+        sysWxAdLog.setChannelId(cid);
+        sysWxAdLog.setUserAgent(userAgent);
+        sysWxAdLog.setType(0);
+        sysWxAdLog.setDate(DateUtils.getNowDate());
+
+        Map<String, String> result = new HashMap<>();
+        String wxId = iSysWxSaleAccountService.getWxAdId(sysWxAdLog);
+        result.put("id", wxId);
+
+        return AjaxResult.success(result);
+    }
+
+    @GetMapping(value = "/wxid/st")
+    public AjaxResult logActived(@RequestParam String cid, @RequestParam String uid, @RequestParam String wxid, @RequestHeader("User-Agent") String userAgent, HttpServletRequest request) {
+        SysWxAdLog sysWxAdLog = new SysWxAdLog();
+        sysWxAdLog.setUserId(uid);
+        sysWxAdLog.setIp(HttpRequestUtils.getIpAddr(request));
+        sysWxAdLog.setWxId(wxid);
+        sysWxAdLog.setChannelId(cid);
+        sysWxAdLog.setUserAgent(userAgent);
+        sysWxAdLog.setType(1);
+        sysWxAdLog.setDate(DateUtils.getNowDate());
+
+        return toAjax(iSysWxSaleAccountService.logWxAd(sysWxAdLog));
+    }
+
 }

@@ -2,6 +2,7 @@ package com.stdiet.custom.service.impl;
 
 import java.util.List;
 import com.stdiet.common.utils.DateUtils;
+import com.stdiet.custom.domain.SysWxAdLog;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.stdiet.custom.mapper.SysWxDistributionMapper;
@@ -112,4 +113,5 @@ public class SysWxDistributionServiceImpl implements ISysWxDistributionService
     public List<SysWxDistribution> selectDistributionWxByUserId(Long userId){
         return sysWxDistributionMapper.selectDistributionWxByUserId(userId);
     }
+
 }
