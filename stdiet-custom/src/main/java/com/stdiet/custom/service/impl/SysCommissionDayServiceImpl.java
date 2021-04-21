@@ -116,7 +116,7 @@ public class SysCommissionDayServiceImpl implements ISysCommissionDayService {
      */
     public LocalDate getBaseServerEndDate(SysOrder sysOrder){
         LocalDate serverEndDate = null;
-        //服务开始时间，食谱开始时间
+        //服务开始时间，食谱开始时间或提成计算开始时间
         LocalDate serverStartDate = DateUtils.dateToLocalDate(sysOrder.getStartTime());
         //成交时间
         LocalDate orderDate = DateUtils.dateToLocalDate(sysOrder.getOrderTime());
@@ -596,6 +596,8 @@ public class SysCommissionDayServiceImpl implements ISysCommissionDayService {
     public SysOrderCommisionDayDetail statisticsOrderMessage(SysOrder sysOrder, String serverScopeStartTime, String serverScopeEndTime){
         //提成计算开始时间（与食谱计划开始时间可能不同）
         LocalDate serverStartDate = DateUtils.dateToLocalDate(sysOrder.getCommissStartTime());
+        //提成计算需要按照提成计算开始时间
+        sysOrder.setStartTime(sysOrder.getCommissStartTime());
         //订单总服务月数
         int serverMonth = sysOrder.getServeTimeId().intValue()/30;
         //服务天数(不满一个月的零头)
