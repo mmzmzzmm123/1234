@@ -10,83 +10,6 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="性别" prop="xb">
-        <el-select v-model="queryParams.xb" placeholder="请选择性别" clearable size="small">
-          <el-option
-            v-for="dict in xbOptions"
-            :key="dict.dictValue"
-            :label="dict.dictLabel"
-            :value="dict.dictValue"
-          />
-        </el-select>
-      </el-form-item>
-      <el-form-item label="年龄" prop="age">
-        <el-input
-          v-model="queryParams.age"
-          placeholder="请输入年龄"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="学历" prop="xl">
-        <el-select v-model="queryParams.xl" placeholder="请选择学历" clearable size="small">
-          <el-option
-            v-for="dict in xlOptions"
-            :key="dict.dictValue"
-            :label="dict.dictLabel"
-            :value="dict.dictValue"
-          />
-        </el-select>
-      </el-form-item>
-      <el-form-item label="职称" prop="zc">
-        <el-select v-model="queryParams.zc" placeholder="请选择职称" clearable size="small">
-          <el-option
-            v-for="dict in zcOptions"
-            :key="dict.dictValue"
-            :label="dict.dictLabel"
-            :value="dict.dictValue"
-          />
-        </el-select>
-      </el-form-item>
-      <el-form-item label="专长" prop="zhch">
-        <el-select v-model="queryParams.zhch" placeholder="请选择专长" clearable size="small">
-          <el-option
-            v-for="dict in zhchOptions"
-            :key="dict.dictValue"
-            :label="dict.dictLabel"
-            :value="dict.dictValue"
-          />
-        </el-select>
-      </el-form-item>
-      <el-form-item label="单位" prop="dw">
-        <el-input
-          v-model="queryParams.dw"
-          placeholder="请输入单位"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="分工" prop="fg">
-        <el-select v-model="queryParams.fg" placeholder="请选择分工" clearable size="small">
-          <el-option
-            v-for="dict in fgOptions"
-            :key="dict.dictValue"
-            :label="dict.dictLabel"
-            :value="dict.dictValue"
-          />
-        </el-select>
-      </el-form-item>
-      <el-form-item label="创建人" prop="createUserid">
-        <el-input
-          v-model="queryParams.createUserid"
-          placeholder="请输入创建人"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
       <el-form-item>
         <el-button type="cyan" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
         <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
@@ -123,21 +46,11 @@
           v-hasPermi="['zcrpsgl:zcrzjzmd:remove']"
         >删除</el-button>
       </el-col>
-      <el-col :span="1.5">
-        <el-button
-          type="warning"
-          icon="el-icon-download"
-          size="mini"
-          @click="handleExport"
-          v-hasPermi="['zcrpsgl:zcrzjzmd:export']"
-        >导出</el-button>
-      </el-col>
 	  <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
     </el-row>
 
     <el-table v-loading="loading" :data="zcrzjzmdList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="编号" align="center" prop="id" />
       <el-table-column label="姓名" align="center" prop="name" />
       <el-table-column label="性别" align="center" prop="xb" :formatter="xbFormat" />
       <el-table-column label="年龄" align="center" prop="age" />
@@ -146,7 +59,6 @@
       <el-table-column label="专长" align="center" prop="zhch" :formatter="zhchFormat" />
       <el-table-column label="单位" align="center" prop="dw" />
       <el-table-column label="分工" align="center" prop="fg" :formatter="fgFormat" />
-      <el-table-column label="创建人" align="center" prop="createUserid" />
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button
@@ -192,7 +104,11 @@
           </el-select>
         </el-form-item>
         <el-form-item label="年龄" prop="age">
-          <el-input v-model="form.age" placeholder="请输入年龄" />
+          <el-input-number
+            v-model="form.age"
+            controls-position="right"
+            :min="0"
+          />
         </el-form-item>
         <el-form-item label="学历" prop="xl">
           <el-select v-model="form.xl" placeholder="请选择学历">
@@ -236,9 +152,6 @@
               :value="dict.dictValue"
             ></el-option>
           </el-select>
-        </el-form-item>
-        <el-form-item label="创建人" prop="createUserid">
-          <el-input v-model="form.createUserid" placeholder="请输入创建人" />
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -364,7 +277,7 @@ export default {
         id: null,
         name: null,
         xb: null,
-        age: null,
+        age: 0,
         xl: null,
         zc: null,
         zhch: null,

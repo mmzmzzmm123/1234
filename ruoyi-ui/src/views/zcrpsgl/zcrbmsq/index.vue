@@ -156,7 +156,7 @@
       <el-table-column type="selection" width="55" align="center" />
       <el-table-column label="方案编号" align="center" prop="faid"  :formatter="faFormat"/>
       <el-table-column label="基地类型" align="center" prop="jdtype" :formatter="jdtypeFormat" />
-      <el-table-column label="专家组id" align="center" prop="zjzid" />
+      <el-table-column label="专家组" align="center" prop="zjzid" :formatter="zjzFormat" />
       <el-table-column label="姓名" align="center" prop="name" />
       <el-table-column label="进修编号" align="center" prop="jxbh" />
       <el-table-column label="性别" align="center" prop="xb" :formatter="xbFormat" />
@@ -248,7 +248,24 @@
               <el-input v-model="form.jxbh" placeholder="请输入进修编号" />
             </el-form-item>
           </el-col>
-
+          <el-col :span="12">
+            <el-form-item label="专家组" prop="zjzid">
+              <el-select
+                v-model="form.zjzid"
+                multiple
+                placeholder="请选择专家"
+                clearable
+                size="small"
+              >
+                <el-option
+                  v-for="dict in zjzOptions"
+                  :key="dict.id"
+                  :label="dict.name"
+                  :value="dict.id"
+                ></el-option>
+              </el-select>
+            </el-form-item>
+          </el-col>
           <el-col :span="12">
             <el-form-item label="出生日期" prop="csrq">
               <el-date-picker
@@ -262,6 +279,8 @@
               >
               </el-date-picker>
             </el-form-item>
+          </el-col>
+          <el-col :span="12"> 
             <el-form-item label="学段" prop="xd">
               <el-select
                 v-model="form.xd"
@@ -489,6 +508,8 @@ import {
   listJdx,
   selectJdtype,
 } from "@/api/zcrpsgl/zcrpsfa";
+import { listZcrzjzmd, getZcrzjzmd } from "@/api/zcrpsgl/zcrzjzmd";
+import { getUserProfile } from "@/api/system/user";
 
 export default {
   name: "Zcrbmsq",
@@ -521,8 +542,12 @@ export default {
       sfOptions: [],
       // 评审方案(主持人评审管理-评审方案)表格数据
       zcrpsfaList: [],
+      // 专家组信息名单
+      zjzOptions: [],
       // 主持人评审方案
       zcrpsfaOptions: [],
+      // 获取登录人信息
+      user: [],
       // 方案数组
       faArray: [],
       // 弹出层标题
@@ -554,6 +579,10 @@ export default {
         scfaname: null,
         createUser: null,
       },
+      // 查询参数
+      queryParams_zjz: {
+        createUserid: null,
+      },
       // 表单参数
       form: {},
       // 表单校验
@@ -563,6 +592,7 @@ export default {
   created() {
     this.getList();
     this.getPsfaList();
+    this.getUser();
     this.getDicts("sys_dm_zcrfadqzt").then((response) => {
       this.statusOptions = response.data;
     });
@@ -662,6 +692,31 @@ export default {
           return true;
         }
     },
+    getUser() {
+      getUserProfile().then(response => {
+        this.user = response.data;
+        this.queryParams_zjz.createUserid = this.user.userId;
+        this.getZjzmdList();
+      });
+    },
+    // 专家组字典翻译
+    zjzFormat(row, column) {
+      var actions = [];
+      var datas = this.zjzOptions;
+      Object.keys(datas).map((key) => {
+        if (datas[key].id == "" + row.id) {
+          actions.push(datas[key].name);
+          return false;
+        }
+      });
+      return actions.join("");
+    },
+    /** 查看按钮操作 */
+    getZjzmdList() {
+      listZcrzjzmd(this.queryParams_zjz).then((response) => {
+        this.zjzOptions = response.rows;
+      });
+    },
     // 取消按钮
     cancel() {
       this.open = false;
@@ -730,6 +785,17 @@ export default {
       const id = row.id || this.ids;
       getZcrbmsq(id).then((response) => {
         this.form = response.data;
+        // 将字符串转换成数组，此时是字符串数组
+        var arrIntZjz = [];
+        if (null != row.zjzid && "" != row.zjzid) {
+          var arrString = row.zjzid.split(',');
+          // 将字符串数组的每一项转换成Number，生成一个新的数组
+          for (var arrInt in arrString) {
+            arrIntZjz.push(parseInt(arrString[arrInt]));            
+          }
+        }
+        // 将新的Number数组，绑定到select空间的v-model上
+        this.form.zjzid = arrIntZjz;
         this.open = true;
         this.title = "修改主持人报名申请";
       });
@@ -739,6 +805,11 @@ export default {
       this.$refs["form"].validate((valid) => {
         if (valid) {
           if (this.form.id != null) {
+            let zjzArr = [];
+            for (let i = 0; i < this.form.zjzid.length; i++) {
+              zjzArr.push(this.form.zjzid[i]);
+            } 
+            this.form.zjzid = zjzArr.join();
             updateZcrbmsq(this.form).then((response) => {
               if (response.code === 200) {
                 this.msgSuccess("修改成功");
@@ -747,6 +818,11 @@ export default {
               }
             });
           } else {
+            let zjzArr = [];
+            for (let i = 0; i < this.form.zjzid.length; i++) {
+              zjzArr.push(this.form.zjzid[i]);
+            } 
+            this.form.zjzid = zjzArr.join();
             addZcrbmsq(this.form).then((response) => {
               if (response.code === 200) {
                 this.msgSuccess("报名成功");
