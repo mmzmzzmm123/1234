@@ -154,17 +154,42 @@
       @selection-change="handleSelectionChange"
     >
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="方案编号" align="center" prop="faid"  :formatter="faFormat"/>
-      <el-table-column label="基地类型" align="center" prop="jdtype" :formatter="jdtypeFormat" />
+      <el-table-column
+        label="方案编号"
+        align="center"
+        prop="faid"
+        :formatter="faFormat"
+      />
+      <el-table-column
+        label="基地类型"
+        align="center"
+        prop="jdtype"
+        :formatter="jdtypeFormat"
+      />
       <el-table-column label="专家组" align="center" prop="zjz" />
       <el-table-column label="姓名" align="center" prop="name" />
       <el-table-column label="进修编号" align="center" prop="jxbh" />
-      <el-table-column label="性别" align="center" prop="xb" :formatter="xbFormat" />
-      <el-table-column label="学段" align="center" prop="xd"  :formatter="xdFormat"/>
-      <el-table-column label="学科" align="center" prop="xk" :formatter="xkFormat"/>
+      <el-table-column
+        label="性别"
+        align="center"
+        prop="xb"
+        :formatter="xbFormat"
+      />
+      <el-table-column
+        label="学段"
+        align="center"
+        prop="xd"
+        :formatter="xdFormat"
+      />
+      <el-table-column
+        label="学科"
+        align="center"
+        prop="xk"
+        :formatter="xkFormat"
+      />
       <el-table-column label="单位名称" align="center" prop="dwmc" />
       <el-table-column label="单位地址" align="center" prop="dwdz" />
-      
+
       <el-table-column label="上传方案名称" align="center" prop="scfaname" />
       <el-table-column
         label="操作"
@@ -280,7 +305,7 @@
               </el-date-picker>
             </el-form-item>
           </el-col>
-          <el-col :span="12"> 
+          <el-col :span="12">
             <el-form-item label="学段" prop="xd">
               <el-select
                 v-model="form.xd"
@@ -371,10 +396,7 @@
           </el-col>
           <el-col :span="12">
             <el-form-item label="单位负责人" prop="dwfzr">
-              <el-input
-                v-model="form.dwfzr"
-                placeholder="请输入单位负责人"
-              />
+              <el-input v-model="form.dwfzr" placeholder="请输入单位负责人" />
             </el-form-item>
           </el-col>
           <el-col :span="12">
@@ -386,19 +408,23 @@
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item label="上传方案路径" prop="scfapath">
-              <el-input
-                v-model="form.scfapath"
-                placeholder="请输入上传方案路径"
-              />
-            </el-form-item>
-          </el-col>
-          <el-col :span="12">
-            <el-form-item label="上传方案名称" prop="scfaname">
-              <el-input
-                v-model="form.scfaname"
-                placeholder="请输入上传方案名称"
-              />
+            <el-form-item label="上传文件" prop="scfapath">
+              <el-input v-model="form.scfaname" v-if="false" />
+              <el-input v-model="form.scfapath" v-if="false" />
+              <el-upload
+                class="upload-demo"
+                :action="uploadFileUrl"
+                :headers="headers"
+                :on-preview="handlePreview"
+                :on-remove="handleRemove"
+                :before-remove="beforeRemove"
+                :limit="1"
+                :on-exceed="handleExceed"
+                :file-list="fileList"
+                :on-success="handleAvatarSuccess"
+              >
+                <el-button size="small" type="primary">选择文件</el-button>
+              </el-upload>
             </el-form-item>
           </el-col>
         </el-row>
@@ -483,7 +509,6 @@
         <el-button @click="cancel">取 消</el-button>
       </div>
     </el-dialog>
-
   </div>
 </template>
 
@@ -510,6 +535,7 @@ import {
 } from "@/api/zcrpsgl/zcrpsfa";
 import { listZcrzjzmd, getZcrzjzmd } from "@/api/zcrpsgl/zcrzjzmd";
 import { getUserProfile } from "@/api/system/user";
+import { getToken } from "@/utils/auth";
 
 export default {
   name: "Zcrbmsq",
@@ -546,6 +572,8 @@ export default {
       zjzOptions: [],
       // 主持人评审方案
       zcrpsfaOptions: [],
+      // 上传文件list
+      fileList: [],
       // 获取登录人信息
       user: [],
       // 方案数组
@@ -588,6 +616,10 @@ export default {
       form: {},
       // 表单校验
       rules: {},
+      uploadFileUrl: process.env.VUE_APP_BASE_API + "/common/upload", // 上传的图片服务器地址
+      headers: {
+        Authorization: "Bearer " + getToken(),
+      },
     };
   },
   created() {
@@ -680,25 +712,60 @@ export default {
     // 数组传参
     popArray() {
       for (let index = 0; index < this.zcrbmsqList.length; index++) {
-          this.faArray.push(this.zcrbmsqList[index].faid);
-      } 
+        this.faArray.push(this.zcrbmsqList[index].faid);
+      }
       return this.faArray;
     },
-    
+
     //设置是否可用
     isShow(row) {
       if (this.faArray.includes(row.id)) {
-          return false;
-        }else {
-          return true;
-        }
+        return false;
+      } else {
+        return true;
+      }
     },
+    // 获取登录用户id
     getUser() {
-      getUserProfile().then(response => {
+      getUserProfile().then((response) => {
         this.user = response.data;
         this.queryParams_zjz.createUserid = this.user.userId;
         this.getZjzmdList();
       });
+    },
+
+    // 文件上传
+    handlePreview(file) {
+      //console.log(file);
+    },
+    // 文件上传移除
+    handleRemove(file, fileList) {
+      //console.log(file, fileList);
+      if (file.response.code == "200") {
+        this.form.scfapath = "";
+      }
+    },
+    // 文件上传 弹窗
+    beforeRemove(file, fileList) {
+      return this.$confirm(`确定移除 ${file.name}？`);
+    },
+    // 文件上传  限制
+    handleExceed(files, fileList) {
+      this.$message.warning(
+        `当前限制选择 1 个文件，本次选择了 ${files.length} 个文件，共选择了 ${
+          files.length + fileList.length
+        } 个文件`
+      );
+    },
+    // 文件上传 成功钩子
+    handleAvatarSuccess(res, file) {
+      // console.log(res, file);
+      if (res.code == "200") {
+        this.form.scfapath = res.fileName;
+        this.form.scfaname = file.name;
+      } else {
+        this.msgError(res.msg);
+      }
     },
 
     /** 查看按钮操作 */
@@ -740,6 +807,7 @@ export default {
         zjz: null,
       };
       this.resetForm("form");
+      this.fileList = [];
     },
     /** 搜索按钮操作 */
     handleQuery() {
@@ -779,16 +847,20 @@ export default {
         // 将字符串转换成数组，此时是字符串数组
         var arrIntZjz = [];
         if (null != row.zjzid && "" != row.zjzid) {
-          var arrString = row.zjzid.split(',');
+          var arrString = row.zjzid.split(",");
           // 将字符串数组的每一项转换成Number，生成一个新的数组
           for (var arrInt in arrString) {
-            arrIntZjz.push(parseInt(arrString[arrInt]));            
+            arrIntZjz.push(parseInt(arrString[arrInt]));
           }
         }
         // 将新的Number数组，绑定到select空间的v-model上
         this.form.zjzid = arrIntZjz;
         this.open = true;
         this.title = "修改主持人报名申请";
+        this.fileList.push({
+          name: response.data.scfaname,
+          url: response.data.scfapath,
+        });
       });
     },
     /** 提交按钮 */
@@ -799,7 +871,7 @@ export default {
             let zjzArr = [];
             for (let i = 0; i < this.form.zjzid.length; i++) {
               zjzArr.push(this.form.zjzid[i]);
-            } 
+            }
             this.form.zjzid = zjzArr.join();
             updateZcrbmsq(this.form).then((response) => {
               if (response.code === 200) {
@@ -812,7 +884,7 @@ export default {
             let zjzArr = [];
             for (let i = 0; i < this.form.zjzid.length; i++) {
               zjzArr.push(this.form.zjzid[i]);
-            } 
+            }
             this.form.zjzid = zjzArr.join();
             addZcrbmsq(this.form).then((response) => {
               if (response.code === 200) {
