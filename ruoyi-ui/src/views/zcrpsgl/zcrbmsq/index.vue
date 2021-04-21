@@ -156,7 +156,7 @@
       <el-table-column type="selection" width="55" align="center" />
       <el-table-column label="方案编号" align="center" prop="faid"  :formatter="faFormat"/>
       <el-table-column label="基地类型" align="center" prop="jdtype" :formatter="jdtypeFormat" />
-      <el-table-column label="专家组" align="center" prop="zjzid" :formatter="zjzFormat" />
+      <el-table-column label="专家组" align="center" prop="zjz" />
       <el-table-column label="姓名" align="center" prop="name" />
       <el-table-column label="进修编号" align="center" prop="jxbh" />
       <el-table-column label="性别" align="center" prop="xb" :formatter="xbFormat" />
@@ -578,6 +578,7 @@ export default {
         scfapath: null,
         scfaname: null,
         createUser: null,
+        zjz: null,
       },
       // 查询参数
       queryParams_zjz: {
@@ -699,18 +700,7 @@ export default {
         this.getZjzmdList();
       });
     },
-    // 专家组字典翻译
-    zjzFormat(row, column) {
-      var actions = [];
-      var datas = this.zjzOptions;
-      Object.keys(datas).map((key) => {
-        if (datas[key].id == "" + row.id) {
-          actions.push(datas[key].name);
-          return false;
-        }
-      });
-      return actions.join("");
-    },
+
     /** 查看按钮操作 */
     getZjzmdList() {
       listZcrzjzmd(this.queryParams_zjz).then((response) => {
@@ -747,6 +737,7 @@ export default {
         scfaname: null,
         createTime: null,
         createUser: null,
+        zjz: null,
       };
       this.resetForm("form");
     },

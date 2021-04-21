@@ -2,6 +2,7 @@ package com.ruoyi.zcrpsgl.mapper;
 
 import java.util.List;
 import com.ruoyi.zcrpsgl.domain.TsbzZcrzjzmd;
+import org.apache.ibatis.annotations.Param;
 
 /**
  * 主持人报名专家组名单Mapper接口

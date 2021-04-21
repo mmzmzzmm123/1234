@@ -28,6 +28,18 @@ public class TsbzZcrbmsq extends BaseEntity
     @Excel(name = "专家组id")
     private String zjzid;
 
+
+    public String getZjz() {
+        return zjz;
+    }
+
+    public void setZjz(String zjz) {
+        this.zjz = zjz;
+    }
+
+    private String zjz;
+
+
     /** 姓名 */
     @Excel(name = "姓名")
     private String name;
@@ -284,6 +296,7 @@ public class TsbzZcrbmsq extends BaseEntity
             .append("id", getId())
             .append("faid", getFaid())
             .append("zjzid", getZjzid())
+            .append("zjz", getZjzid())
             .append("name", getName())
             .append("jxbh", getJxbh())
             .append("xb", getXb())

@@ -29,7 +29,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </resultMap>
 
     <sql id="selectTsbzZcrbmsqVo">
-        select id, faid, zjzid, name, jxbh, xb, csrq, xd, xk, dwmc, dwdz, jdtype, sf, phone, Email, dwfzr, dwfzrphone, scfapath, scfaname, create_time, create_user from tsbz_zcrbmsq
+        select a.id, a.zjzid, a.faid, a.name, a.jxbh, a.xb, a.csrq, a.xd, a.xk, a.dwmc, a.dwdz, a.jdtype, a.sf, a.phone, a.Email, a.dwfzr, a.dwfzrphone, a.scfapath, a.scfaname, a.create_time, a.create_user, (select group_concat(name separator ',') from tsbz_zcrzjzmd where find_in_set(id,a.zjzid)) as zjz
+        from tsbz_zcrbmsq a
     </sql>
 
     <select id="selectTsbzZcrbmsqList" parameterType="TsbzZcrbmsq" resultMap="TsbzZcrbmsqResult">
