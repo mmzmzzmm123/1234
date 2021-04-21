@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.zcrpsgl.mapper.TsbzZcrzjzmdMapper">
+    
+    <resultMap type="TsbzZcrzjzmd" id="TsbzZcrzjzmdResult">
+        <result property="id"    column="id"    />
+        <result property="name"    column="name"    />
+        <result property="xb"    column="xb"    />
+        <result property="age"    column="age"    />
+        <result property="xl"    column="xl"    />
+        <result property="zc"    column="zc"    />
+        <result property="zhch"    column="zhch"    />
+        <result property="dw"    column="dw"    />
+        <result property="fg"    column="fg"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="createUserid"    column="create_userid"    />
+    </resultMap>
+
+    <sql id="selectTsbzZcrzjzmdVo">
+        select id, name, xb, age, xl, zc, zhch, dw, fg, create_time, create_userid from tsbz_zcrzjzmd
+    </sql>
+
+    <select id="selectTsbzZcrzjzmdList" parameterType="TsbzZcrzjzmd" resultMap="TsbzZcrzjzmdResult">
+        <include refid="selectTsbzZcrzjzmdVo"/>
+        <where>  
+            <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
+            <if test="xb != null  and xb != ''"> and xb = #{xb}</if>
+            <if test="age != null "> and age = #{age}</if>
+            <if test="xl != null  and xl != ''"> and xl = #{xl}</if>
+            <if test="zc != null  and zc != ''"> and zc = #{zc}</if>
+            <if test="zhch != null  and zhch != ''"> and zhch = #{zhch}</if>
+            <if test="dw != null  and dw != ''"> and dw = #{dw}</if>
+            <if test="fg != null  and fg != ''"> and fg = #{fg}</if>
+            <if test="createUserid != null "> and create_userid = #{createUserid}</if>
+        </where>
+    </select>
+    
+    <select id="selectTsbzZcrzjzmdById" parameterType="Long" resultMap="TsbzZcrzjzmdResult">
+        <include refid="selectTsbzZcrzjzmdVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertTsbzZcrzjzmd" parameterType="TsbzZcrzjzmd" useGeneratedKeys="true" keyProperty="id">
+        insert into tsbz_zcrzjzmd
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="name != null">name,</if>
+            <if test="xb != null">xb,</if>
+            <if test="age != null">age,</if>
+            <if test="xl != null">xl,</if>
+            <if test="zc != null">zc,</if>
+            <if test="zhch != null">zhch,</if>
+            <if test="dw != null">dw,</if>
+            <if test="fg != null">fg,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="createUserid != null">create_userid,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="name != null">#{name},</if>
+            <if test="xb != null">#{xb},</if>
+            <if test="age != null">#{age},</if>
+            <if test="xl != null">#{xl},</if>
+            <if test="zc != null">#{zc},</if>
+            <if test="zhch != null">#{zhch},</if>
+            <if test="dw != null">#{dw},</if>
+            <if test="fg != null">#{fg},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="createUserid != null">#{createUserid},</if>
+         </trim>
+    </insert>
+
+    <update id="updateTsbzZcrzjzmd" parameterType="TsbzZcrzjzmd">
+        update tsbz_zcrzjzmd
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="name != null">name = #{name},</if>
+            <if test="xb != null">xb = #{xb},</if>
+            <if test="age != null">age = #{age},</if>
+            <if test="xl != null">xl = #{xl},</if>
+            <if test="zc != null">zc = #{zc},</if>
+            <if test="zhch != null">zhch = #{zhch},</if>
+            <if test="dw != null">dw = #{dw},</if>
+            <if test="fg != null">fg = #{fg},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="createUserid != null">create_userid = #{createUserid},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteTsbzZcrzjzmdById" parameterType="Long">
+        delete from tsbz_zcrzjzmd where id = #{id}
+    </delete>
+
+    <delete id="deleteTsbzZcrzjzmdByIds" parameterType="String">
+        delete from tsbz_zcrzjzmd where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+</mapper>
