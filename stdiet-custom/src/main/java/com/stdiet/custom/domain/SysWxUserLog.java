@@ -106,6 +106,10 @@ public class SysWxUserLog extends BaseEntity
     @Excel(name = "是否便秘", readConverterExp = "Y=是,N=否")
     private String constipation;
 
+    /** 食材描述 */
+    @Excel(name = "食材描述")
+    private String ingredientDescribe;
+
     /** 早餐照片 */
     @Excel(name = "早餐照片")
     private String breakfastImages;

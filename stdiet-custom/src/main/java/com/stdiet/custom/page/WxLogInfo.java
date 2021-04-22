@@ -5,6 +5,7 @@ import com.stdiet.common.utils.DateUtils;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -42,6 +43,12 @@ public class WxLogInfo implements Serializable {
     /** 是否便秘（Y是 N否） */
     private String constipation;
 
+    /** 食材描述 */
+    private String ingredientDescribe;
+
+    //全部食材照片
+    private String allImages;
+
     /** 早餐照片 */
     private String breakfastImages;
 
@@ -68,6 +75,8 @@ public class WxLogInfo implements Serializable {
 
     /** 点评 */
     private String comment;
+
+    private List<String> allImagesUrl;
 
     private List<String> breakfastImagesUrl;
 
@@ -301,6 +310,30 @@ public class WxLogInfo implements Serializable {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public String getIngredientDescribe() {
+        return ingredientDescribe;
+    }
+
+    public void setIngredientDescribe(String ingredientDescribe) {
+        this.ingredientDescribe = ingredientDescribe;
+    }
+
+    public List<String> getAllImagesUrl() {
+        return this.allImagesUrl;
+    }
+
+    public void setAllImagesUrl(List<String> allImagesUrl) {
+        this.allImagesUrl = allImagesUrl;
+    }
+
+    public String getAllImages() {
+        return this.allImages;
+    }
+
+    public void setAllImages(String allImages) {
+        this.allImages = allImages;
     }
 
     @Override

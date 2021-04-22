@@ -132,32 +132,8 @@ public class WechatAppletController extends BaseController {
                 }
             }
 
-            /*for (WxLogInfo wxLogInfo : list) {
-                Map<String, List<String>> imageUrlMap = new HashMap<>();
-
-                List<String> breakfastImagesUrlList = StringUtils.isNotEmpty(wxLogInfo.getBreakfastImages()) ? Arrays.asList(wxLogInfo.getBreakfastImages().split("\\|")) : new ArrayList<>();
-                imageUrlMap.put("breakfastImages", breakfastImagesUrlList);
-
-                List<String> lunchImagesUrlList = StringUtils.isNotEmpty(sysWxUserLog.getLunchImages()) ? Arrays.asList(sysWxUserLog.getLunchImages().split("\\|")) : new ArrayList<>();
-                imageUrlMap.put("lunchImages", lunchImagesUrlList);
-
-                List<String> dinnerImagesUrlList = StringUtils.isNotEmpty(sysWxUserLog.getDinnerImages()) ? Arrays.asList(sysWxUserLog.getDinnerImages().split("\\|")) : new ArrayList<>();
-                imageUrlMap.put("dinnerImages", dinnerImagesUrlList);
-
-                List<String> extraMealImagesUrlList = StringUtils.isNotEmpty(sysWxUserLog.getExtraMealImages()) ? Arrays.asList(sysWxUserLog.getExtraMealImages().split("\\|")) : new ArrayList<>();
-                imageUrlMap.put("extraMealImages", extraMealImagesUrlList);
-
-                List<String> bodyImagesUrlList = StringUtils.isNotEmpty(sysWxUserLog.getBodyImages()) ? Arrays.asList(sysWxUserLog.getBodyImages().split("\\|")) : new ArrayList<>();
-                imageUrlMap.put("bodyImages", bodyImagesUrlList );
-
-                //生成预览链接
-                Map<String,List<String>> downUrlList = AliyunOSSUtils.generatePresignedUrl(imageUrlMap);
-
-                wxLogInfo.setBreakfastImagesUrl(downUrlList.get("breakfastImages"));
-                wxLogInfo.setLunchImagesUrl(downUrlList.get("lunchImages"));
-                wxLogInfo.setDinnerImagesUrl(downUrlList.get("dinnerImages"));
-                wxLogInfo.setExtraMealImagesUrl(downUrlList.get("extraMealImages"));
-                wxLogInfo.setBodyImagesUrl(downUrlList.get("bodyImages"));
+            /*for (WxLogInfo log : list) {
+                log.setId(AesUtils.encrypt(log.getId()+"", null));
             }*/
 
             Collections.reverse(list);
@@ -177,7 +153,10 @@ public class WechatAppletController extends BaseController {
      */
     @GetMapping(value = "/checkNowPunchLog/{openid}")
     public AjaxResult checkNowPunchLog(@PathVariable String openid) {
-        int count = StringUtils.isEmpty(openid) ? 0 : sysWxUserLogService.checkWxLogInfoCount(openid);
+        SysWxUserLog sysWxUserLog = new SysWxUserLog();
+        sysWxUserLog.setOpenid(openid);
+        sysWxUserLog.setLogTime(new Date());
+        int count = StringUtils.isEmpty(openid) ? 0 : sysWxUserLogService.checkWxLogInfoCount(sysWxUserLog);
         return AjaxResult.success(count);
     }
 
@@ -191,16 +170,25 @@ public class WechatAppletController extends BaseController {
         // 查询微信用户
         SysWxUserInfo userInfo = StringUtils.isEmpty(sysWxUserLog.getOpenid()) ? null : sysWxUserInfoService.selectSysWxUserInfoById(sysWxUserLog.getOpenid());
         if (userInfo == null || StringUtils.isEmpty(userInfo.getPhone())) {
-            return AjaxResult.error("不存在客户");
+            return AjaxResult.error("打卡失败");
         }
-        //查询今日是否已打卡
-        int count = sysWxUserLogService.checkWxLogInfoCount(sysWxUserLog.getOpenid());
-        if(count > 0){
-            return AjaxResult.error("今日已打卡，不可重复打卡");
+        if(sysWxUserLog.getId() == null){
+            //查询今日是否已打卡
+            if(sysWxUserLog.getLogTime() == null){
+                sysWxUserLog.setLogTime(new Date());
+            }
+            int count = sysWxUserLogService.checkWxLogInfoCount(sysWxUserLog);
+            if(count > 0){
+                return AjaxResult.error("今日已打卡，不可重复打卡");
+            }
+            return toAjax(sysWxUserLogService.insertSysWxUserLog(sysWxUserLog));
+        }else{
+            return toAjax(sysWxUserLogService.updateSysWxUserLog(sysWxUserLog));
         }
-        sysWxUserLog.setLogTime(DateTimeUtil.getCurrentTimeDate());
-        return toAjax(sysWxUserLogService.insertSysWxUserLog(sysWxUserLog));
+
     }
+
+    public static final String[] imageName = {"breakfastImages", "lunchImages", "dinnerImages", "extraMealImages", "bodyImages"};
 
     /**
      * 获取微信用户记录详细信息
@@ -217,28 +205,40 @@ public class WechatAppletController extends BaseController {
         }
         Map<String, List<String>> imageUrlMap = new HashMap<>();
         List<String> breakfastImagesUrlList = StringUtils.isNotEmpty(sysWxUserLog.getBreakfastImages()) ? Arrays.asList(sysWxUserLog.getBreakfastImages().split("\\|")) : new ArrayList<>();
-        imageUrlMap.put("breakfastImages", breakfastImagesUrlList);
+        imageUrlMap.put(imageName[0], breakfastImagesUrlList);
 
         List<String> lunchImagesUrlList = StringUtils.isNotEmpty(sysWxUserLog.getLunchImages()) ? Arrays.asList(sysWxUserLog.getLunchImages().split("\\|")) : new ArrayList<>();
-        imageUrlMap.put("lunchImages", lunchImagesUrlList);
+        imageUrlMap.put(imageName[1], lunchImagesUrlList);
 
         List<String> dinnerImagesUrlList = StringUtils.isNotEmpty(sysWxUserLog.getDinnerImages()) ? Arrays.asList(sysWxUserLog.getDinnerImages().split("\\|")) : new ArrayList<>();
-        imageUrlMap.put("dinnerImages", dinnerImagesUrlList);
+        imageUrlMap.put(imageName[2], dinnerImagesUrlList);
 
         List<String> extraMealImagesUrlList = StringUtils.isNotEmpty(sysWxUserLog.getExtraMealImages()) ? Arrays.asList(sysWxUserLog.getExtraMealImages().split("\\|")) : new ArrayList<>();
-        imageUrlMap.put("extraMealImages", extraMealImagesUrlList);
+        imageUrlMap.put(imageName[3], extraMealImagesUrlList);
 
         List<String> bodyImagesUrlList = StringUtils.isNotEmpty(sysWxUserLog.getBodyImages()) ? Arrays.asList(sysWxUserLog.getBodyImages().split("\\|")) : new ArrayList<>();
-        imageUrlMap.put("bodyImages", bodyImagesUrlList );
+        imageUrlMap.put(imageName[4], bodyImagesUrlList );
 
         //生成预览链接
         Map<String,List<String>> downUrlList = AliyunOSSUtils.generatePresignedUrl(imageUrlMap);
 
-        sysWxUserLog.setBreakfastImagesUrl(downUrlList.get("breakfastImages"));
-        sysWxUserLog.setLunchImagesUrl(downUrlList.get("lunchImages"));
-        sysWxUserLog.setDinnerImagesUrl(downUrlList.get("dinnerImages"));
-        sysWxUserLog.setExtraMealImagesUrl(downUrlList.get("extraMealImages"));
-        sysWxUserLog.setBodyImagesUrl(downUrlList.get("bodyImages"));
+        sysWxUserLog.setBreakfastImagesUrl(downUrlList.get(imageName[0]));
+        sysWxUserLog.setLunchImagesUrl(downUrlList.get(imageName[1]));
+        sysWxUserLog.setDinnerImagesUrl(downUrlList.get(imageName[2]));
+        sysWxUserLog.setExtraMealImagesUrl(downUrlList.get(imageName[3]));
+        sysWxUserLog.setBodyImagesUrl(downUrlList.get(imageName[4]));
+
+        List<String> allImagesList = new ArrayList<>();
+        List<String> allUrlList = new ArrayList<>();
+
+        for (String key : imageName) {
+            if(!"bodyImages".equals(key)){
+                allUrlList.addAll(downUrlList.get(key));
+                allImagesList.addAll(imageUrlMap.get(key));
+            }
+        }
+        sysWxUserLog.setAllImagesUrl(allUrlList);
+        sysWxUserLog.setAllImages(StringUtils.join(allImagesList, "|"));
 
         return AjaxResult.success(sysWxUserLog);
     }
