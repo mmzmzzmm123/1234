@@ -248,6 +248,7 @@ public class SysUserController extends BaseController {
         user.setEmail(user.getUserName() + "@benyi.com");
         user.setCreateBy(SecurityUtils.getUsername());
         user.setPassword(SecurityUtils.encryptPassword(user.getPassword()));
+        user.setPw(user.getPassword());
         int bl = userService.insertUser(user);
         if (bl > 0) {
             ByTeacherJbxx byTeacherJbxx = new ByTeacherJbxx();

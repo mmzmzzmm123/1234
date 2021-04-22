@@ -19,17 +19,21 @@ export default {
   },
   methods: {
     wxLogin() {
-      if(getToken()){
-          this.$router.push({ path: "/index?code="+this.code });
-          return;
+      if (getToken()) {
+        this.$router.push({ path: "/index?code=" + this.code });
+        return;
       }
       if (this.code != "" && this.code != null) {
         //console.log("zhixing");
         wxlogin(this.code).then((res) => {
           console.log(res);
           if (res.code == "200") {
-            setToken(res.token);
-            this.$router.push({ path: "/index" });
+            if (res.token == "") {
+                this.$router.push({ path: "/login" });
+            } else {
+              setToken(res.token);
+              this.$router.push({ path: "/index" });
+            }
           }
         });
       }

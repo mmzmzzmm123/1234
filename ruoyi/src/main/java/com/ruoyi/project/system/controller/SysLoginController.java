@@ -99,10 +99,10 @@ public class SysLoginController {
             if (sysUser != null) {
                 token = loginService.wxlogin(sysUser.getUserName(), sysUser.getPw());
             } else {
-                return AjaxResult.error("登录失败");
+                 ajax.put("msg","登录失败");
             }
         } catch (Exception e) {
-            return AjaxResult.error("登录失败");
+            ajax.put("msg","登录失败");
         }
         ajax.put(Constants.TOKEN, token);
         return ajax;
