@@ -102,4 +102,53 @@ public class SysLoginService {
         // 生成token
         return tokenService.createToken(loginUser);
     }
+
+    /**
+     * 登录验证
+     *
+     * @param username 用户名
+     * @param password 密码
+     * @return 结果
+     */
+    public String wxlogin(String username, String password) {
+        // 用户验证
+        Authentication authentication = null;
+        try {
+            // 该方法会去调用UserDetailsServiceImpl.loadUserByUsername
+            authentication = authenticationManager
+                    .authenticate(new UsernamePasswordAuthenticationToken(username, password));
+        } catch (Exception e) {
+            if (e instanceof BadCredentialsException) {
+                AsyncManager.me().execute(AsyncFactory.recordLogininfor(username, Constants.LOGIN_FAIL, MessageUtils.message("user.password.not.match")));
+                throw new UserPasswordNotMatchException();
+            } else {
+                AsyncManager.me().execute(AsyncFactory.recordLogininfor(username, Constants.LOGIN_FAIL, e.getMessage()));
+                throw new CustomException(e.getMessage());
+            }
+        }
+
+        Collection<String> keys = redisCache.keys(Constants.LOGIN_TOKEN_KEY + "*");
+        List<SysUserOnline> userOnlineList = new ArrayList<SysUserOnline>();
+        for (String key : keys) {
+            try {
+                LoginUser user = redisCache.getCacheObject(key);
+                if (StringUtils.isNotEmpty(username) && StringUtils.isNotNull(user.getUser())) {
+                    if (StringUtils.equals(username, user.getUsername())) {
+                        //存在已经登录用户，抛出异常
+//                    CustomException alreadyLoginExcep = new CustomException("该账号已在别处登陆", HttpStatus.ALREADY_LOGIN);
+//                    alreadyLoginExcep.setObj(username);
+//                    throw alreadyLoginExcep;
+                        redisCache.deleteObject(key);
+                    }
+                }
+            } catch (Exception e) {
+            }
+        }
+
+        AsyncManager.me().execute(AsyncFactory.recordLogininfor(username, Constants.LOGIN_SUCCESS, MessageUtils.message("user.login.success")));
+        LoginUser loginUser = (LoginUser) authentication.getPrincipal();
+        // 生成token
+        return tokenService.createToken(loginUser);
+    }
+
 }

@@ -52,6 +52,14 @@ public interface ISysUserService
     public SysUser selectUserById(Long userId);
 
     /**
+     * 通过用户ID查询用户
+     *
+     * @param openId 用户ID
+     * @return 用户对象信息
+     */
+    public SysUser selectUserByWxId(String openId);
+
+    /**
      * 根据roleId查询用户列表
      *
      * @param sysUser 用户信息
@@ -137,6 +145,14 @@ public interface ISysUserService
      * @return 结果
      */
     public int updateUserStatus(SysUser user);
+
+    /**
+     * 修改用户状态
+     *
+     * @param user 用户信息
+     * @return 结果
+     */
+    public int updateUserWx(SysUser user);
 
     /**
      * 修改用户基本信息

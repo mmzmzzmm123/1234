@@ -3,11 +3,15 @@ package com.ruoyi.project.system.controller;
 import java.util.Date;
 import java.util.List;
 
+import com.alibaba.fastjson.JSONObject;
+import com.ruoyi.common.utils.http.HttpUtils;
 import com.ruoyi.project.common.SchoolCommon;
 import com.ruoyi.project.system.domain.ByTeacherJbxx;
 import com.ruoyi.project.system.domain.SysDept;
 import com.ruoyi.project.system.service.*;
+import org.aspectj.weaver.loadtime.Aj;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -41,6 +45,16 @@ import com.ruoyi.project.system.domain.SysUser;
 @RestController
 @RequestMapping("/system/user")
 public class SysUserController extends BaseController {
+
+    @Value("${wx.appid}")
+    private String appid;
+
+    @Value("${wx.secret}")
+    private String secret;
+
+    @Value("${wx.domain}")
+    private String domain;
+
     @Autowired
     private ISysUserService userService;
 
@@ -76,15 +90,15 @@ public class SysUserController extends BaseController {
 
     @GetMapping("/lrrlist")
     public TableDataInfo lrrlist(SysUser user) {
-        int l1=103;
+        int l1 = 103;
         user.setDeptId(Long.valueOf(l1));
         List<SysUser> list = userService.selectUserList(user);
 
-        int l2=105;
+        int l2 = 105;
         user.setDeptId(Long.valueOf(l2));
         list.addAll(userService.selectUserList(user));
 
-        int l3=107;
+        int l3 = 107;
         user.setDeptId(Long.valueOf(l3));
         list.addAll(userService.selectUserList(user));
 
@@ -263,18 +277,18 @@ public class SysUserController extends BaseController {
         }
 
         //先判断前端的roleids是否有变化
-        boolean isPd=true;
+        boolean isPd = true;
         if (schoolCommon.isSchool() == true) {
             List<Integer> roleIdsOld = roleService.selectYeyRoleListByUserId(user.getUserId());
-            if(roleIdsOld!=null&&roleIdsOld.size()>0){
-                for (int i=0;i<roleIdsOld.size();i++){
-                    if(roleIdsOld.get(i)==100){
-                        isPd=false;
+            if (roleIdsOld != null && roleIdsOld.size() > 0) {
+                for (int i = 0; i < roleIdsOld.size(); i++) {
+                    if (roleIdsOld.get(i) == 100) {
+                        isPd = false;
                     }
                 }
             }
         }
-        if(isPd){
+        if (isPd) {
             //判断当前学校有多少个幼儿园管理员 需求至多3个幼儿园管理员
             Long[] roleIds = user.getRoleIds();
             int iCount = 0;
@@ -329,4 +343,52 @@ public class SysUserController extends BaseController {
         user.setUpdateBy(SecurityUtils.getUsername());
         return toAjax(userService.updateUserStatus(user));
     }
+
+    @Log(title = "用户管理-绑定微信", businessType = BusinessType.UPDATE)
+    @PostMapping("/bindwx/{code}")
+    public AjaxResult bindWx(@PathVariable String code) {
+
+        String url = domain;
+        String parmas = "appid=" + appid + "&secret=" + secret + "&code=" + code + "&grant_type=authorization_code";
+        System.out.println(parmas);
+        String strResult = HttpUtils.sendGet(url, parmas);
+        JSONObject jsonObject = JSONObject.parseObject(strResult);
+        try {
+            String openId = jsonObject.get("openid").toString();
+            System.out.println(openId);
+            //首先判断当前用户是否绑定微信
+            SysUser sysUser = userService.selectUserById(SecurityUtils.getLoginUser().getUser().getUserId());
+            if (schoolCommon.isStringEmpty(sysUser.getOpenId())) {
+                //其次查询当前微信是否被绑定
+                SysUser sysUserNew = new SysUser();
+                sysUserNew.setOpenId(openId);
+                List<SysUser> list = userService.selectUserList(sysUserNew);
+                if (list != null && list.size() > 0) {
+                    return AjaxResult.error("当前微信已绑定其他账号");
+                } else {
+                    //绑定
+                    sysUser.setOpenId(openId);
+                    int iCount = userService.updateUserWx(sysUser);
+                    return AjaxResult.success(iCount);
+                }
+            } else {
+                return AjaxResult.error("当前账户已绑定微信");
+            }
+        } catch (Exception e) {
+            return AjaxResult.error("获取信息失败");
+        }
+
+    }
+
+    @GetMapping("/isbindwx")
+    public AjaxResult isbindWx() {
+        //首先判断当前用户是否绑定微信
+        SysUser sysUser = userService.selectUserById(SecurityUtils.getLoginUser().getUser().getUserId());
+        if (schoolCommon.isStringEmpty(sysUser.getOpenId())) {
+            return AjaxResult.success("1");
+        } else {
+            return AjaxResult.success("0");
+        }
+    }
+
 }

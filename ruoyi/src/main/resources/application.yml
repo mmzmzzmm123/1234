@@ -129,3 +129,9 @@ file:
 #  domain: https://files.benyiedu.com/
   domain: http://video.benyiedu.com/
   bucket: bywebfile
+
+#wx
+wx:
+  appid: wx0370c4756118456a
+  secret: f57143e81f3c95b0d909d91b3116cc82
+  domain: https://api.weixin.qq.com/sns/oauth2/access_token

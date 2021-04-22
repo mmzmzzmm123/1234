@@ -104,6 +104,17 @@ public class SysUserServiceImpl implements ISysUserService {
     }
 
     /**
+     * 通过用户ID查询用户
+     *
+     * @param openId 用户ID
+     * @return 用户对象信息
+     */
+    @Override
+    public SysUser selectUserByWxId(String openId) {
+        return userMapper.selectUserByWxId(openId);
+    }
+
+    /**
      * 根据roleId查询用户列表
      *
      * @param user 用户信息
@@ -124,7 +135,6 @@ public class SysUserServiceImpl implements ISysUserService {
     public List<SysUser> selectUserOnlyByRoleId(Long roleId) {
         return userMapper.selectUserOnlyByRoleId(roleId);
     }
-
 
 
     /**
@@ -277,6 +287,17 @@ public class SysUserServiceImpl implements ISysUserService {
     @Override
     public int updateUserStatus(SysUser user) {
         return userMapper.updateUser(user);
+    }
+
+    /**
+     * 修改用户状态
+     *
+     * @param user 用户信息
+     * @return 结果
+     */
+    @Override
+    public int updateUserWx(SysUser user) {
+        return userMapper.updateUserWx(user);
     }
 
     /**

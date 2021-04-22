@@ -42,6 +42,12 @@ export const constantRoutes = [{
         hidden: true
     },
     {
+        path: '/wxlogin',
+        component: () =>
+            import ('@/views/wxlogin'),
+        hidden: true
+    },
+    {
         path: '/404',
         component: () =>
             import ('@/views/error/404'),
@@ -154,6 +160,22 @@ export const constantRoutes = [{
         }]
     },
     {
+        path: '/user/bind',
+        component: Layout,
+        hidden: true,
+        redirect: 'noredirect',
+        children: [{
+            path: 'wx',
+            component: () =>
+                import ('@/views/system/user/wx/index'),
+            name: 'Wx',
+            meta: {
+                title: '绑定微信',
+                icon: ''
+            }
+        }]
+    },
+    {
         path: '/user/change',
         component: Layout,
         hidden: true,
@@ -165,7 +187,7 @@ export const constantRoutes = [{
             name: 'Changedept',
             meta: {
                 title: '切换岗位',
-                icon: 'user'
+                icon: ''
             }
         }]
     },

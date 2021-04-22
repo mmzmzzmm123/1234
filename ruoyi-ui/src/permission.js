@@ -22,7 +22,7 @@ NProgress.configure({
 })
 
 //const whiteList = ['/login', '/auth-redirect', '/bind', '/register']
-const whiteList = ['/login', '/experience/apply/', '/experience/result/', '/experience/content/', '/benyi_child/child_preserve']
+const whiteList = ['/login','/wxlogin', '/experience/apply/', '/experience/result/', '/experience/content/', '/benyi_child/child_preserve']
 
 router.beforeEach((to, from, next) => {
     NProgress.start()

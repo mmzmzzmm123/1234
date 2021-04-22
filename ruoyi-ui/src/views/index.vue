@@ -55,6 +55,7 @@ import RaddarChart from "./dashboard/RaddarChart";
 import PieChart from "./dashboard/PieChart";
 import BarChart from "./dashboard/BarChart";
 import LineChart from "./dashboard/LineChart";
+import { bindwx, isbindwx, wxlogin } from "@/api/system/user";
 //import { getSchoolCalendars } from "@/api/benyi/schoolcalendar";
 //备用进行班级园历显示操作import { getSchoolCalendarsClass } from "@/api/benyi/schoolcalendarclass";
 
@@ -69,6 +70,7 @@ export default {
   },
   data() {
     return {
+      code: "",
       calendarData: [],
       value: new Date(),
       // 查询参数
@@ -77,9 +79,31 @@ export default {
     };
   },
   created() {
+    this.code = this.$route.query.code;
+    //console.log(this.code);
+    this.bindWxInfo();
     //this.getSchoolCalendarList();
   },
   methods: {
+    async bindWxInfo() {
+      await isbindwx().then((res) => {
+        if (this.code != "" && this.code != null && res.msg == "1") {
+          //console.log("绑定微信");
+          this.$confirm("当前账号要绑定微信登录吗？", "警告", {
+            confirmButtonText: "确定",
+            cancelButtonText: "取消",
+            type: "warning",
+          })
+            .then(() => {
+              return bindwx(this.code);
+            })
+            .then(() => {
+              this.msgSuccess("绑定成功");
+            })
+            .catch(function () {});
+        }
+      });
+    },
     /** 查询园历列表 */
     // getSchoolCalendarList() {
     //   getSchoolCalendars(this.queryParams).then(response => {
