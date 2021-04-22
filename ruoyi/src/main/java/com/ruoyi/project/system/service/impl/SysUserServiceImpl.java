@@ -341,8 +341,8 @@ public class SysUserServiceImpl implements ISysUserService {
      * @return 结果
      */
     @Override
-    public int resetUserPwd(String userName, String password) {
-        return userMapper.resetUserPwd(userName, password);
+    public int resetUserPwd(String userName, String password, String pw) {
+        return userMapper.resetUserPwd(userName, password, pw);
     }
 
     /**

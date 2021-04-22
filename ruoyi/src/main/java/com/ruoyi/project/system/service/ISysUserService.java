@@ -186,7 +186,7 @@ public interface ISysUserService
      * @param password 密码
      * @return 结果
      */
-    public int resetUserPwd(String userName, String password);
+    public int resetUserPwd(String userName, String password,String pw);
 
     /**
      * 通过用户ID删除用户

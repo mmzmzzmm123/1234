@@ -224,7 +224,7 @@
             <if test="updateBy != null and updateBy != ''">update_by = #{updateBy},</if>
             <if test="remark != null">remark = #{remark},</if>
             <if test="openId != null and openId != ''">open_id = #{openId},</if>
-            <if test="pw != null and pw != ''">open_id = #{pw},</if>
+            <if test="pw != null and pw != ''">pw = #{pw},</if>
             update_time = sysdate()
         </set>
         where user_id = #{userId}
@@ -243,7 +243,7 @@
 	</update>
 
     <update id="resetUserPwd" parameterType="SysUser">
- 		update sys_user set password = #{password},pw=#{pw} where user_name = #{userName}
+ 		update sys_user set password = #{password},pw= #{pw} where user_name = #{userName}
 	</update>
 
     <delete id="deleteUserById" parameterType="Long">

@@ -4,10 +4,10 @@
       <el-input v-model="user.nickName" />
     </el-form-item> 
     <el-form-item label="手机号码" prop="phonenumber">
-      <el-input v-model="user.phonenumber" maxlength="11" />
+      <el-input v-model="user.phonenumber" :disabled="true" maxlength="11" />
     </el-form-item>
     <el-form-item label="邮箱" prop="email">
-      <el-input v-model="user.email" maxlength="50" />
+      <el-input v-model="user.email" :disabled="true" maxlength="50" />
     </el-form-item>
     <el-form-item label="性别">
       <el-radio-group v-model="user.sex">
