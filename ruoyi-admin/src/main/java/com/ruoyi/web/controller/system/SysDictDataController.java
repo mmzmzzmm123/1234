@@ -2,6 +2,8 @@ package com.ruoyi.web.controller.system;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
@@ -13,6 +15,8 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import com.google.common.collect.Maps;
 import com.ruoyi.common.annotation.Log;
 import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.domain.AjaxResult;
@@ -81,6 +85,24 @@ public class SysDictDataController extends BaseController
             data = new ArrayList<SysDictData>();
         }
         return AjaxResult.success(data);
+    }
+    
+    /**
+     * 根据字典类型查询字典数据信息
+     */
+    @PostMapping(value = "/types")
+    public AjaxResult dictTypes(@RequestBody List<String> dictTypeList)
+    {
+    	Map<String, List<SysDictData>> resultMap = Maps.newHashMap();
+    	for (String dictType : dictTypeList) {
+    		List<SysDictData> data = dictTypeService.selectDictDataByType(dictType);
+            if (StringUtils.isNull(data))
+            {
+                data = new ArrayList<SysDictData>();
+            }
+            resultMap.put((String)dictType,data);
+		}
+        return AjaxResult.success(resultMap);
     }
 
     /**

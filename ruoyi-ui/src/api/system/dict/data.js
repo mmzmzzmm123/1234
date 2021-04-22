@@ -17,6 +17,15 @@ export function getData(dictCode) {
   })
 }
 
+// 根据字典类型查询字典数据信息,批量
+export function getDictsMap(data) {
+  return request({
+    url: '/system/dict/data/types',
+    method: 'post',
+    data: data
+  })
+}
+
 // 根据字典类型查询字典数据信息
 export function getDicts(dictType) {
   return request({
