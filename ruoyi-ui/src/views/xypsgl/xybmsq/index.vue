@@ -1,13 +1,29 @@
 <template>
   <div class="app-container">
-    <el-form :model="queryParams" ref="queryForm" :inline="true" v-show="showSearch" label-width="68px">
+    <el-form
+      :model="queryParams"
+      ref="queryForm"
+      :inline="true"
+      v-show="showSearch"
+      label-width="68px"
+    >
       <el-form-item label="方案编号" prop="faid">
-        <el-select v-model="queryParams.faid" placeholder="请选择方案编号" clearable size="small">
+        <el-select
+          v-model="queryParams.faid"
+          placeholder="请选择方案编号"
+          clearable
+          size="small"
+        >
           <el-option label="请选择字典生成" value="" />
         </el-select>
       </el-form-item>
       <el-form-item label="报名基地" prop="jdid">
-        <el-select v-model="queryParams.jdid" placeholder="请选择报名基地id" clearable size="small">
+        <el-select
+          v-model="queryParams.jdid"
+          placeholder="请选择报名基地id"
+          clearable
+          size="small"
+        >
           <el-option label="请选择字典生成" value="" />
         </el-select>
       </el-form-item>
@@ -21,7 +37,12 @@
         />
       </el-form-item>
       <el-form-item label="基地类别" prop="jdtype">
-        <el-select v-model="queryParams.jdtype" placeholder="请选择基地类别" clearable size="small">
+        <el-select
+          v-model="queryParams.jdtype"
+          placeholder="请选择基地类别"
+          clearable
+          size="small"
+        >
           <el-option
             v-for="dict in jdtypeOptions"
             :key="dict.dictValue"
@@ -31,8 +52,16 @@
         </el-select>
       </el-form-item>
       <el-form-item>
-        <el-button type="cyan" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
-        <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
+        <el-button
+          type="cyan"
+          icon="el-icon-search"
+          size="mini"
+          @click="handleQuery"
+          >搜索</el-button
+        >
+        <el-button icon="el-icon-refresh" size="mini" @click="resetQuery"
+          >重置</el-button
+        >
       </el-form-item>
     </el-form>
 
@@ -44,7 +73,8 @@
           size="mini"
           @click="handleAdd"
           v-hasPermi="['xypsgl:xybmsq:add']"
-        >新增</el-button>
+          >新增</el-button
+        >
       </el-col>
       <el-col :span="1.5">
         <el-button
@@ -54,7 +84,8 @@
           :disabled="single"
           @click="handleUpdate"
           v-hasPermi="['xypsgl:xybmsq:edit']"
-        >修改</el-button>
+          >修改</el-button
+        >
       </el-col>
       <el-col :span="1.5">
         <el-button
@@ -64,47 +95,141 @@
           :disabled="multiple"
           @click="handleDelete"
           v-hasPermi="['xypsgl:xybmsq:remove']"
-        >删除</el-button>
+          >删除</el-button
+        >
       </el-col>
-	  <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
+      <right-toolbar
+        :showSearch.sync="showSearch"
+        @queryTable="getList"
+      ></right-toolbar>
     </el-row>
 
-    <el-table v-loading="loading" :data="xybmsqList" @selection-change="handleSelectionChange">
-      <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="方案编号" align="center" prop="faid" />
-      <el-table-column label="报名基地" align="center" prop="jdid" />
-      <el-table-column label="姓名" align="center" prop="name" />
-      <el-table-column label="进修编号" align="center" prop="jxbh" />
-      <el-table-column label="学段" align="center" prop="xd" :formatter="xdFormat" />
-      <el-table-column label="学科" align="center" prop="xk" :formatter="xkFormat" />
-      <el-table-column label="基地类别" align="center" prop="jdtype" :formatter="jdtypeFormat" />
-      <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
-        <template slot-scope="scope">
-          <el-button
-            size="mini"
-            type="text"
-            icon="el-icon-edit"
-            @click="handleUpdate(scope.row)"
-            v-hasPermi="['xypsgl:xybmsq:edit']"
-          >修改</el-button>
-          <el-button
-            size="mini"
-            type="text"
-            icon="el-icon-delete"
-            @click="handleDelete(scope.row)"
-            v-hasPermi="['xypsgl:xybmsq:remove']"
-          >删除</el-button>
-        </template>
-      </el-table-column>
-    </el-table>
-    
-    <pagination
-      v-show="total>0"
-      :total="total"
-      :page.sync="queryParams.pageNum"
-      :limit.sync="queryParams.pageSize"
-      @pagination="getList"
-    />
+    <el-tabs v-model="activeName" @tab-click="handleChangeTab">
+      <!-- 基地报名tab -->
+      <el-tab-pane label="基地列表" name="jdlb">
+        <el-table v-loading="loading" :data="zcrjdcjList">
+          <el-table-column type="selection" width="55" align="center" />
+          <el-table-column label="基地名称" align="center" prop="name" />
+          <el-table-column label="主持人" align="center" prop="zcrid" :formatter="ZcrFormat" />
+          <el-table-column
+            label="基地类型"
+            align="center"
+            prop="jdtype"
+            :formatter="jdtypeFormat"
+          />
+          <el-table-column label="招生名额" align="center" prop="zsme" />
+          <el-table-column
+            label="报名开始时间"
+            align="center"
+            prop="starttime"
+            width="180"
+          >
+            <template slot-scope="scope">
+              <span>{{ parseTime(scope.row.starttime, "{y}-{m}-{d}") }}</span>
+            </template>
+          </el-table-column>
+          <el-table-column
+            label="报名结束时间"
+            align="center"
+            prop="endtime"
+            width="180"
+          >
+            <template slot-scope="scope">
+              <span>{{ parseTime(scope.row.endtime, "{y}-{m}-{d}") }}</span>
+            </template>
+          </el-table-column>
+          <el-table-column
+            label="操作"
+            align="center"
+            class-name="small-padding fixed-width"
+          >
+            <template slot-scope="scope">
+              <el-button
+                size="mini"
+                type="text"
+                icon="el-icon-edit"
+                @click="handleUpdate(scope.row)"
+                v-hasPermi="['zcrpsgl:zcrjdcj:edit']"
+                >报名</el-button
+              >
+              <el-button
+                size="mini"
+                type="text"
+                icon="el-icon-delete"
+                @click="handleCheck_jd(scope.row)"
+                v-hasPermi="['zcrpsgl:zcrjdcj:edit']"
+                >查看</el-button
+              >
+            </template>
+          </el-table-column>
+        </el-table>
+      </el-tab-pane>
+
+      <!-- 我的报名tab -->
+      <el-tab-pane label="我的报名" name="wdbm">
+        <el-table
+          v-loading="loading"
+          :data="xybmsqList"
+          @selection-change="handleSelectionChange"
+        >
+          <el-table-column type="selection" width="55" align="center" />
+          <el-table-column label="方案编号" align="center" prop="faid" />
+          <el-table-column label="报名基地" align="center" prop="jdid" />
+          <el-table-column label="姓名" align="center" prop="name" />
+          <el-table-column label="进修编号" align="center" prop="jxbh" />
+          <el-table-column
+            label="学段"
+            align="center"
+            prop="xd"
+            :formatter="xdFormat"
+          />
+          <el-table-column
+            label="学科"
+            align="center"
+            prop="xk"
+            :formatter="xkFormat"
+          />
+          <el-table-column
+            label="基地类别"
+            align="center"
+            prop="jdtype"
+            :formatter="jdtypeFormat"
+          />
+          <el-table-column
+            label="操作"
+            align="center"
+            class-name="small-padding fixed-width"
+          >
+            <template slot-scope="scope">
+              <el-button
+                size="mini"
+                type="text"
+                icon="el-icon-edit"
+                @click="handleUpdate(scope.row)"
+                v-hasPermi="['xypsgl:xybmsq:edit']"
+                >修改</el-button
+              >
+              <el-button
+                size="mini"
+                type="text"
+                icon="el-icon-delete"
+                @click="handleDelete(scope.row)"
+                v-hasPermi="['xypsgl:xybmsq:remove']"
+                >删除</el-button
+              >
+            </template>
+          </el-table-column>
+        </el-table>
+
+        <pagination
+          v-show="total > 0"
+          :total="total"
+          :page.sync="queryParams.pageNum"
+          :limit.sync="queryParams.pageSize"
+          @pagination="getList"
+        />
+      </el-tab-pane>
+    </el-tabs>
 
     <!-- 添加或修改学员报名申请对话框 -->
     <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
@@ -136,11 +261,15 @@
           </el-select>
         </el-form-item>
         <el-form-item label="出生日期" prop="csrq">
-          <el-date-picker clearable size="small" style="width: 200px"
+          <el-date-picker
+            clearable
+            size="small"
+            style="width: 200px"
             v-model="form.csrq"
             type="date"
             value-format="yyyy-MM-dd"
-            placeholder="选择出生日期">
+            placeholder="选择出生日期"
+          >
           </el-date-picker>
         </el-form-item>
         <el-form-item label="学段" prop="xd">
@@ -215,12 +344,32 @@
 </template>
 
 <script>
-import { listXybmsq, getXybmsq, delXybmsq, addXybmsq, updateXybmsq, exportXybmsq } from "@/api/xypsgl/xybmsq";
+import {
+  listXybmsq,
+  getXybmsq,
+  delXybmsq,
+  addXybmsq,
+  updateXybmsq,
+  exportXybmsq,
+} from "@/api/xypsgl/xybmsq";
+import {
+  listZcrjdcj,
+  getZcrjdcj,
+  delZcrjdcj,
+  addZcrjdcj,
+  updateZcrjdcj,
+  exportZcrjdcj,
+} from "@/api/zcrpsgl/zcrjdcj";
+import {
+  listZcrbmsq,
+  getZcrbmsq,
+} from "@/api/zcrpsgl/zcrbmsq";
 
 export default {
   name: "Xybmsq",
   data() {
     return {
+      activeName: "jdlb",
       // 遮罩层
       loading: true,
       // 选中数组
@@ -251,6 +400,10 @@ export default {
       jdtypeOptions: [],
       // 身份字典
       sfOptions: [],
+      // 主持人基地表格数据
+      zcrjdcjList: [],
+      // 主持人选项
+      zcrOptions: [],
       // 查询参数
       queryParams: {
         pageNum: 1,
@@ -270,33 +423,33 @@ export default {
         sf: null,
         phone: null,
         email: null,
-        createUser: null
+        createUser: null,
       },
       // 表单参数
       form: {},
       // 表单校验
-      rules: {
-      }
+      rules: {},
     };
   },
   created() {
     this.getList();
-    this.getDicts("sys_user_sex").then(response => {
+    this.getZcrList();
+    this.getDicts("sys_user_sex").then((response) => {
       this.xbOptions = response.data;
     });
-    this.getDicts("sys_dm_rjxd").then(response => {
+    this.getDicts("sys_dm_rjxd").then((response) => {
       this.xdOptions = response.data;
     });
-    this.getDicts("sys_dm_rjxk").then(response => {
+    this.getDicts("sys_dm_rjxk").then((response) => {
       this.xkOptions = response.data;
     });
-    this.getDicts("sys_dm_zcrzjzzc").then(response => {
+    this.getDicts("sys_dm_zcrzjzzc").then((response) => {
       this.zcOptions = response.data;
     });
-    this.getDicts("sys_dm_zcrjdtype").then(response => {
+    this.getDicts("sys_dm_zcrjdtype").then((response) => {
       this.jdtypeOptions = response.data;
     });
-    this.getDicts("sys_dm_zcrsf").then(response => {
+    this.getDicts("sys_dm_zcrsf").then((response) => {
       this.sfOptions = response.data;
     });
   },
@@ -304,10 +457,48 @@ export default {
     /** 查询学员报名申请列表 */
     getList() {
       this.loading = true;
-      listXybmsq(this.queryParams).then(response => {
+      listXybmsq(this.queryParams).then((response) => {
         this.xybmsqList = response.rows;
         this.total = response.total;
+        this.getJdList();
         this.loading = false;
+      });
+    },
+    /** 查询主持人基地列表 */
+    getJdList() {
+      this.loading = true;
+      listZcrjdcj(null).then((response) => {
+        this.zcrjdcjList = response.rows;
+        this.loading = false;
+      });
+    },
+    /** 查询主持人报名申请列表 */
+    getZcrList() {
+      listZcrbmsq(null).then((response) => {
+        this.zcrOptions = response.rows;
+        console.log(response.rows);
+      });
+    },
+    // 主持人字典翻译
+    ZcrFormat(row, column) {
+      var actions = [];
+      var datas = this.zcrOptions;
+      Object.keys(datas).map((key) => {
+        if (datas[key].id == "" + row.zcrid) {
+          actions.push(datas[key].name);
+          return false;
+        }
+      });
+      return actions.join("");
+    },
+    // 查看基地按钮操作
+    handleCheck_jd(row) {
+      this.reset();
+      const id = row.id || this.ids
+      getZcrjdcj(id).then(response => {
+        this.form = response.data;
+        this.open = true;
+        this.title = "修改主持人基地";
       });
     },
     // 性别字典翻译
@@ -334,6 +525,9 @@ export default {
     sfFormat(row, column) {
       return this.selectDictLabel(this.sfOptions, row.sf);
     },
+    // 切换tab
+    handleChangeTab(tab, event) {
+    },
     // 取消按钮
     cancel() {
       this.open = false;
@@ -359,7 +553,7 @@ export default {
         phone: null,
         email: null,
         createTime: null,
-        createUser: null
+        createUser: null,
       };
       this.resetForm("form");
     },
@@ -375,9 +569,9 @@ export default {
     },
     // 多选框选中数据
     handleSelectionChange(selection) {
-      this.ids = selection.map(item => item.id)
-      this.single = selection.length!==1
-      this.multiple = !selection.length
+      this.ids = selection.map((item) => item.id);
+      this.single = selection.length !== 1;
+      this.multiple = !selection.length;
     },
     /** 新增按钮操作 */
     handleAdd() {
@@ -388,8 +582,8 @@ export default {
     /** 修改按钮操作 */
     handleUpdate(row) {
       this.reset();
-      const id = row.id || this.ids
-      getXybmsq(id).then(response => {
+      const id = row.id || this.ids;
+      getXybmsq(id).then((response) => {
         this.form = response.data;
         this.open = true;
         this.title = "修改学员报名申请";
@@ -397,10 +591,10 @@ export default {
     },
     /** 提交按钮 */
     submitForm() {
-      this.$refs["form"].validate(valid => {
+      this.$refs["form"].validate((valid) => {
         if (valid) {
           if (this.form.id != null) {
-            updateXybmsq(this.form).then(response => {
+            updateXybmsq(this.form).then((response) => {
               if (response.code === 200) {
                 this.msgSuccess("修改成功");
                 this.open = false;
@@ -408,7 +602,7 @@ export default {
               }
             });
           } else {
-            addXybmsq(this.form).then(response => {
+            addXybmsq(this.form).then((response) => {
               if (response.code === 200) {
                 this.msgSuccess("新增成功");
                 this.open = false;
@@ -422,30 +616,40 @@ export default {
     /** 删除按钮操作 */
     handleDelete(row) {
       const ids = row.id || this.ids;
-      this.$confirm('是否确认删除学员报名申请编号为"' + ids + '"的数据项?', "警告", {
+      this.$confirm(
+        '是否确认删除学员报名申请编号为"' + ids + '"的数据项?',
+        "警告",
+        {
           confirmButtonText: "确定",
           cancelButtonText: "取消",
-          type: "warning"
-        }).then(function() {
+          type: "warning",
+        }
+      )
+        .then(function () {
           return delXybmsq(ids);
-        }).then(() => {
+        })
+        .then(() => {
           this.getList();
           this.msgSuccess("删除成功");
-        }).catch(function() {});
+        })
+        .catch(function () {});
     },
     /** 导出按钮操作 */
     handleExport() {
       const queryParams = this.queryParams;
-      this.$confirm('是否确认导出所有学员报名申请数据项?', "警告", {
-          confirmButtonText: "确定",
-          cancelButtonText: "取消",
-          type: "warning"
-        }).then(function() {
+      this.$confirm("是否确认导出所有学员报名申请数据项?", "警告", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning",
+      })
+        .then(function () {
           return exportXybmsq(queryParams);
-        }).then(response => {
+        })
+        .then((response) => {
           this.download(response.msg);
-        }).catch(function() {});
-    }
-  }
+        })
+        .catch(function () {});
+    },
+  },
 };
 </script>
