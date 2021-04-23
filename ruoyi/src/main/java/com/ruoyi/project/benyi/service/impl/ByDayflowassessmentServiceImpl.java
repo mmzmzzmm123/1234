@@ -56,6 +56,18 @@ public class ByDayflowassessmentServiceImpl implements IByDayflowassessmentServi
     }
 
     /**
+     * 查询幼儿园一日流程评估列表
+     *
+     * @param byDayflowassessment 幼儿园一日流程评估
+     * @return 幼儿园一日流程评估集合
+     */
+    @Override
+    public List<ByDayflowassessment> selectByDayflowassessmentTeacherPjf(ByDayflowassessment byDayflowassessment) {
+        return byDayflowassessmentMapper.selectByDayflowassessmentTeacherPjf(byDayflowassessment);
+    }
+
+
+    /**
      * 新增幼儿园一日流程评估
      *
      * @param byDayflowassessment 幼儿园一日流程评估

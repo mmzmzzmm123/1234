@@ -3,114 +3,88 @@
     <el-form
       :model="queryParams"
       ref="queryForm"
-      :inline="true"
       label-width="70px"
     >
-      <el-form-item label="新闻类型" prop="type">
-        <el-select
-          v-model="queryParams.type"
-          placeholder="请选择类型"
-          clearable
-          size="small"
-        >
-          <el-option
-            v-for="dict in typeOptions"
-            :key="dict.dictValue"
-            :label="dict.dictLabel"
-            :value="dict.dictValue"
-          />
-        </el-select>
-      </el-form-item>
-      <el-form-item label="新闻标题" prop="title">
-        <el-input
-          v-model="queryParams.title"
-          type="text"
-          placeholder="请输入新闻标题"
-        />
-      </el-form-item>
-      <el-form-item>
-        <el-button
-          type="primary"
-          icon="el-icon-search"
-          size="mini"
-          @click="handleQuery"
-          >搜索</el-button
-        >
-        <el-button icon="el-icon-refresh" size="mini" @click="resetQuery"
-          >重置</el-button
-        >
-      </el-form-item>
+      <el-row :gutter="10">
+        <el-col :xs="24" :ms="12" :md="5">
+          <el-form-item label="新闻类型" prop="type">
+            <el-select
+              v-model="queryParams.type"
+              placeholder="请选择类型"
+              clearable
+              size="small"
+            >
+              <el-option
+                v-for="dict in typeOptions"
+                :key="dict.dictValue"
+                :label="dict.dictLabel"
+                :value="dict.dictValue"
+              />
+            </el-select>
+          </el-form-item>
+        </el-col>
+        <el-col :xs="24" :ms="12" :md="5">
+          <el-form-item label="新闻标题" prop="title">
+            <el-input
+              v-model="queryParams.title"
+              type="text"
+              placeholder="请输入新闻标题"
+            />
+          </el-form-item>
+        </el-col>
+        <el-col :xs="24" :ms="12" :md="5">
+          <el-form-item>
+            <el-button
+              type="primary"
+              icon="el-icon-search"
+              size="mini"
+              @click="handleQuery"
+              >搜索</el-button
+            >
+            <el-button icon="el-icon-refresh" size="mini" @click="resetQuery"
+              >重置</el-button
+            >
+          </el-form-item>
+        </el-col>
+      </el-row>
     </el-form>
 
-    <el-row :gutter="10" class="mb8">
-      <el-col :span="1.5">
-        <el-button
-          type="primary"
-          icon="el-icon-plus"
-          size="mini"
-          @click="handleAdd"
-          v-hasPermi="['benyi:news:add']"
-          >新增</el-button
-        >
-      </el-col>
-      <!-- <el-col :span="1.5">
-        <el-button
-          type="success"
-          icon="el-icon-edit"
-          size="mini"
-          :disabled="single"
-          @click="handleUpdate"
-          v-hasPermi="['benyi:news:edit']"
-          >修改</el-button
-        >
-      </el-col> -->
-      <el-col :span="1.5">
-        <el-button
-          type="danger"
-          icon="el-icon-delete"
-          size="mini"
-          :disabled="multiple"
-          @click="handleDelete"
-          v-hasPermi="['benyi:news:remove']"
-          >删除</el-button
-        >
-      </el-col>
-      <!-- <el-col :span="1.5">
-        <el-button
-          type="warning"
-          icon="el-icon-download"
-          size="mini"
-          @click="handleExport"
-          v-hasPermi="['benyi:news:export']"
-          >导出</el-button
-        >
-      </el-col> -->
-    </el-row>
+    <div class="mb8 btn-list">
+      <el-button
+        type="primary"
+        icon="el-icon-plus"
+        size="mini"
+        @click="handleAdd"
+        v-hasPermi="['benyi:news:add']"
+        >新增</el-button
+      >
+
+      <el-button
+        type="danger"
+        icon="el-icon-delete"
+        size="mini"
+        :disabled="multiple"
+        @click="handleDelete"
+        v-hasPermi="['benyi:news:remove']"
+        >删除</el-button
+      >
+    </div>
 
     <el-table
       v-loading="loading"
+      border
       :data="newsList"
       @selection-change="handleSelectionChange"
     >
       <el-table-column type="selection" width="55" align="center" />
       <!-- <el-table-column label="编号" align="center" prop="id" /> -->
-      <el-table-column label="新闻标题" align="center" prop="title" />
+      <el-table-column fixed label="新闻标题" align="center" prop="title" />
       <el-table-column
         label="新闻类型"
         align="center"
         prop="type"
         :formatter="typeFormat"
       />
-      <!-- <el-table-column
-        label="内容"
-        align="center"
-        prop="content"
-        :show-overflow-tooltip="true"
-      >
-        <template slot-scope="scope">
-          <div class="ql-editor" v-html="scope.row.content"></div>
-        </template>
-      </el-table-column> -->
       <el-table-column
         label="所属学校"
         align="center"
@@ -127,16 +101,17 @@
         label="审核时间"
         align="center"
         prop="checkTime"
-        width="180"
       >
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.checkTime, "{y}-{m}-{d}") }}</span>
         </template>
       </el-table-column>
       <el-table-column
+        fixed="right"
         label="操作"
         align="center"
-        class-name="small-padding fixed-width"
+        width="60"
+        class-name="small-padding fixed-width edit-btns"
       >
         <template slot-scope="scope">
           <el-button
@@ -175,9 +150,13 @@
       width="1024px"
       append-to-body
     >
-      <el-form ref="form" :model="form" :rules="rules" label-width="120px">
+      <el-form ref="form" :model="form" :rules="rules" label-width="110px">
         <el-form-item label="新闻标题" prop="title">
-          <el-input v-model="form.title" type="text" placeholder="请输入新闻标题" />
+          <el-input
+            v-model="form.title"
+            type="text"
+            placeholder="请输入新闻标题"
+          />
         </el-form-item>
         <!-- <el-form-item label="类型">
           <el-select v-model="form.type" placeholder="请选择类型">
@@ -448,15 +427,11 @@ export default {
     /** 删除按钮操作 */
     handleDelete(row) {
       const ids = row.id || this.ids;
-      this.$confirm(
-        '是否确认删除选中的新闻中心数据项?',
-        "警告",
-        {
-          confirmButtonText: "确定",
-          cancelButtonText: "取消",
-          type: "warning",
-        }
-      )
+      this.$confirm("是否确认删除选中的新闻中心数据项?", "警告", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning",
+      })
         .then(function () {
           return delNews(ids);
         })
@@ -486,3 +461,20 @@ export default {
 };
 </script>
 
+<style lang="scss" scoped>
+.el-select {
+  width: 100%;
+}
+.my-date-picker {
+  width: 100%;
+}
+.edit-btns {
+  .el-button {
+    display: block;
+    margin: 0 auto;
+  }
+}
+.no-margin ::v-deep.el-form-item__content {
+  margin: 0 !important;
+}
+</style>

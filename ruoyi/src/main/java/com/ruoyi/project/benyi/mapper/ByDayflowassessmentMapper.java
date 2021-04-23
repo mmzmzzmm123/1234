@@ -36,6 +36,15 @@ public interface ByDayflowassessmentMapper {
     public List<ByDayflowassessment> selectByDayflowassessmentPjf(ByDayflowassessment byDayflowassessment);
 
     /**
+     * 查询幼儿园一日流程评估列表
+     *
+     * @param byDayflowassessment 幼儿园一日流程评估
+     * @return 幼儿园一日流程评估集合
+     */
+    public List<ByDayflowassessment> selectByDayflowassessmentTeacherPjf(ByDayflowassessment byDayflowassessment);
+
+
+    /**
      * 新增幼儿园一日流程评估
      *
      * @param byDayflowassessment 幼儿园一日流程评估

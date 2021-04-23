@@ -1,109 +1,109 @@
 <template>
   <div class="app-container">
-    <el-form
-      :model="queryParams"
-      ref="queryForm"
-      :inline="true"
-      label-width="70px"
-    >
-      <el-form-item label="学年学期" prop="xnxq">
-        <el-select
-          v-model="queryParams.xnxq"
-          placeholder="请选择学年学期"
-          clearable
-          size="small"
-        >
-          <el-option
-            v-for="dict in xnxqOptions"
-            :key="dict.dictValue"
-            :label="dict.dictLabel"
-            :value="dict.dictValue"
-          />
-        </el-select>
-      </el-form-item>
-      <el-form-item label="评估月份" prop="month">
-        <el-date-picker
-          clearable
-          size="small"
-          style="width: 200px"
-          v-model="queryParams.month"
-          type="month"
-          value-format="yyyy-MM-dd"
-          placeholder="选择评估月份"
-        >
-        </el-date-picker>
-      </el-form-item>
-      <el-form-item label="评估班级" prop="classid">
-        <el-select
-          v-model="queryParams.classid"
-          clearable
-          size="small"
-          placeholder="请选择班级"
-        >
-          <el-option
-            v-for="dict in classOptions"
-            :key="dict.bjbh"
-            :label="dict.bjmc"
-            :value="dict.bjbh"
-          ></el-option>
-        </el-select>
-      </el-form-item>
-      <el-form-item>
-        <el-button
-          type="primary"
-          icon="el-icon-search"
-          size="mini"
-          @click="handleQuery"
-          >搜索</el-button
-        >
-        <el-button icon="el-icon-refresh" size="mini" @click="resetQuery"
-          >重置</el-button
-        >
-      </el-form-item>
+    <el-form :model="queryParams" ref="queryForm" label-width="70px">
+      <el-row :gutter="10">
+        <el-col :xs="24" :ms="12" :md="5">
+          <el-form-item label="学年学期" prop="xnxq">
+            <el-select
+              v-model="queryParams.xnxq"
+              placeholder="请选择学年学期"
+              clearable
+              size="small"
+            >
+              <el-option
+                v-for="dict in xnxqOptions"
+                :key="dict.dictValue"
+                :label="dict.dictLabel"
+                :value="dict.dictValue"
+              />
+            </el-select>
+          </el-form-item>
+        </el-col>
+        <el-col :xs="24" :ms="12" :md="5">
+          <el-form-item label="评估月份" prop="month">
+            <el-date-picker
+              clearable
+              size="small"
+              v-model="queryParams.month"
+              type="month"
+              class="my-date-picker"
+              value-format="yyyy-MM-dd"
+              placeholder="选择评估月份"
+            >
+            </el-date-picker>
+          </el-form-item>
+        </el-col>
+        <el-col :xs="24" :ms="12" :md="5">
+          <el-form-item label="评估班级" prop="classid">
+            <el-select
+              v-model="queryParams.classid"
+              clearable
+              size="small"
+              placeholder="请选择班级"
+            >
+              <el-option
+                v-for="dict in classOptions"
+                :key="dict.bjbh"
+                :label="dict.bjmc"
+                :value="dict.bjbh"
+              ></el-option>
+            </el-select>
+          </el-form-item>
+        </el-col>
+        <el-col :xs="24" :ms="12" :md="5">
+          <el-form-item>
+            <el-button
+              type="primary"
+              icon="el-icon-search"
+              size="mini"
+              @click="handleQuery"
+              >搜索</el-button
+            >
+            <el-button icon="el-icon-refresh" size="mini" @click="resetQuery"
+              >重置</el-button
+            >
+          </el-form-item>
+        </el-col>
+      </el-row>
     </el-form>
 
-    <el-row :gutter="10" class="mb8">
-      <el-col :span="1.5">
-        <el-button
-          type="primary"
-          icon="el-icon-plus"
-          size="mini"
-          @click="handleAdd"
-          v-hasPermi="['benyi:dayflowassessmentplan:add']"
-          >新增</el-button
-        >
-      </el-col>
-      <el-col :span="1.5">
-        <el-button
-          type="success"
-          icon="el-icon-edit"
-          size="mini"
-          :disabled="single"
-          @click="handleUpdate"
-          v-hasPermi="['benyi:dayflowassessmentplan:edit']"
-          >修改</el-button
-        >
-      </el-col>
-      <el-col :span="1.5">
-        <el-button
-          type="danger"
-          icon="el-icon-delete"
-          size="mini"
-          :disabled="multiple"
-          @click="handleDelete"
-          v-hasPermi="['benyi:dayflowassessmentplan:remove']"
-          >删除</el-button
-        >
-      </el-col>
-    </el-row>
+    <div class="mb8 btn-list">
+      <el-button
+        type="primary"
+        icon="el-icon-plus"
+        size="mini"
+        @click="handleAdd"
+        v-hasPermi="['benyi:dayflowassessmentplan:add']"
+        >新增</el-button
+      >
+      <el-button
+        type="success"
+        icon="el-icon-edit"
+        size="mini"
+        :disabled="single"
+        @click="handleUpdate"
+        v-hasPermi="['benyi:dayflowassessmentplan:edit']"
+        >修改</el-button
+      >
+      <el-button
+        type="danger"
+        icon="el-icon-delete"
+        size="mini"
+        :disabled="multiple"
+        @click="handleDelete"
+        v-hasPermi="['benyi:dayflowassessmentplan:remove']"
+        >删除</el-button
+      >
+    </div>
 
     <el-table
       v-loading="loading"
+      border
       :data="dayflowassessmentplanList"
       @selection-change="handleSelectionChange"
     >
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="计划名称" align="center" prop="name" />
+      <el-table-column label="计划名称" fixed align="center" prop="name" />
       <el-table-column
         label="评估学年学期"
         align="center"
@@ -116,15 +116,22 @@
         prop="classid"
         :formatter="classFormat"
       />
-      <el-table-column label="评估内容" align="center" prop="connent" :formatter="dayFlowFormat"/>
+      <el-table-column
+        label="评估内容"
+        align="center"
+        prop="connent"
+        :formatter="dayFlowFormat"
+      />
       <!-- <el-table-column label="内容分数" align="center" prop="score" />
       <el-table-column label="班级所得平均分" align="center" prop="classavg" /> -->
       <el-table-column label="评估时间" align="center" prop="starttime" />
       <!-- <el-table-column label="创建人" align="center" prop="createUserid" /> -->
       <el-table-column
+        fixed="right"
         label="操作"
         align="center"
-        class-name="small-padding fixed-width"
+        width="60"
+        class-name="small-padding fixed-width edit-btns"
       >
         <template slot-scope="scope">
           <el-button
@@ -179,7 +186,11 @@
           </el-select>
         </el-form-item>
         <el-form-item label="评估内容" prop="connent">
-          <el-select v-model="form.connent" placeholder="请选择评估内容" @change="handleChange">
+          <el-select
+            v-model="form.connent"
+            placeholder="请选择评估内容"
+            @change="handleChange"
+          >
             <el-option
               v-for="dict in detailOptions"
               :key="dict.id"

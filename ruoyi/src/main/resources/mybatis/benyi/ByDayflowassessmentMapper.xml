@@ -144,6 +144,37 @@ where a.dept_id=#{deptId}
 group by t.classid,t.ny
     </select>
 
+    <select id="selectByDayflowassessmentTeacherPjf" parameterType="ByDayflowassessment" resultMap="ByDayflowassessmentResult">
+        select t.pgdx,e.nick_name as pgdxxm,avg(t.zzdf) as bjpjf,avg(t.zjjd) as zjjdpjf,avg(t.yc) as ycpjf,avg(t.zjzq) as zjzqpjf,avg(t.fzjx) as fzjxpjf,avg(t.dxsj) as dxsjpjf,avg(t.rcxsys) as rcxsyspjf,avg(t.hdgd) as hdgdpjf,avg(t.hwhd) as hwhdpjf,avg(t.ws) as wspjf,avg(t.lyzj) as lyzjpjf,avg(t.aq) as aqpjf,avg(t.zyhd) as zyhdpjf,avg(t.gzyjlys) as gzyjlyspjf,avg(t.wxkc) as wxkcpjf,avg(t.qkc) as qkcpjf from (
+select a.pgdx,a.zzdf,a.create_time,
+(select sum(b.value) from by_dayflowassessmentitem b where a.id=b.pid and b.item in (select id from by_day_flow where name='早间接待')) as zjjd,
+(select sum(b.value) from by_dayflowassessmentitem b where a.id=b.pid and b.item in (select id from by_day_flow where name='用餐')) as yc,
+(select sum(b.value) from by_dayflowassessmentitem b where a.id=b.pid and b.item in (select id from by_day_flow where name='早间坐圈')) as zjzq,
+(select sum(b.value) from by_dayflowassessmentitem b where a.id=b.pid and b.item in (select id from by_day_flow where name='分组教学')) as fzjx,
+(select sum(b.value) from by_dayflowassessmentitem b where a.id=b.pid and b.item in (select id from by_day_flow where name='点心时间')) as dxsj,
+(select sum(b.value) from by_dayflowassessmentitem b where a.id=b.pid and b.item in (select id from by_day_flow where name='如厕洗手饮水')) as rcxsys,
+(select sum(b.value) from by_dayflowassessmentitem b where a.id=b.pid and b.item in (select id from by_day_flow where name='活动过渡')) as hdgd,
+(select sum(b.value) from by_dayflowassessmentitem b where a.id=b.pid and b.item in (select id from by_day_flow where name='户外活动')) as hwhd,
+(select sum(b.value) from by_dayflowassessmentitem b where a.id=b.pid and b.item in (select id from by_day_flow where name='午睡')) as ws,
+(select sum(b.value) from by_dayflowassessmentitem b where a.id=b.pid and b.item in (select id from by_day_flow where name='离园再见')) as lyzj,
+(select sum(b.value) from by_dayflowassessmentitem b where a.id=b.pid and b.item in (select id from by_day_flow where name='安全')) as aq,
+(select sum(b.value) from by_dayflowassessmentitem b where a.id=b.pid and b.item in (select id from by_day_flow where name='自由活动')) as zyhd,
+(select sum(b.value) from by_dayflowassessmentitem b where a.id=b.pid and b.item in (select id from by_day_flow where name='规则与纪律约束')) as gzyjlys,
+(select sum(b.value) from by_dayflowassessmentitem b where a.id=b.pid and b.item in (select id from by_day_flow where name='微型课程')) as wxkc,
+(select sum(b.value) from by_dayflowassessmentitem b where a.id=b.pid and b.item in (select id from by_day_flow where name='潜课程')) as qkc
+from by_dayflowassessment a
+where a.dept_id=#{deptId}
+        <if test="pgdx != null ">and a.pgdx = #{pgdx}</if>
+        <if test="beginTime != null and beginTime != ''"><!-- 开始时间检索 -->
+            AND date_format(a.create_time,'%y%m%d') &gt;= date_format(#{beginTime},'%y%m%d')
+        </if>
+        <if test="endTime != null and endTime != ''"><!-- 结束时间检索 -->
+            AND date_format(a.create_time,'%y%m%d') &lt;= date_format(#{endTime},'%y%m%d')
+        </if>
+) t left join sys_user e on e.user_id=t.pgdx
+group by t.pgdx
+    </select>
+
     <insert id="insertByDayflowassessment" parameterType="ByDayflowassessment" useGeneratedKeys="true" keyProperty="id">
         insert into by_dayflowassessment
         <trim prefix="(" suffix=")" suffixOverrides=",">

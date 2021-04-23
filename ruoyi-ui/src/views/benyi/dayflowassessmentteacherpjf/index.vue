@@ -6,9 +6,9 @@
       :inline="true"
       label-width="70px"
     >
-      <el-form-item label="教师姓名" prop="classid">
+      <el-form-item label="教师姓名" prop="pgdx">
         <el-select
-          v-model="queryParams.classid"
+          v-model="queryParams.pgdx"
           clearable
           size="small"
           placeholder="请选择教师"
@@ -51,11 +51,10 @@
       <el-table-column
         label="评估对象"
         align="center"
-        prop="pgdx"
+        prop="pgdxxm"
         fixed
-        :formatter="pgdxFormat"
       />
-      <el-table-column label="最终得分" align="center" prop="zzdf" />
+      <el-table-column label="最终得分" align="center" prop="bjpjf" />
       <el-table-column label="早间接待" align="center" prop="zjjdpjf" />
       <el-table-column label="用餐" align="center" prop="ycpjf" />
       <el-table-column label="早间坐圈" align="center" prop="zjzqpjf" />
@@ -89,9 +88,7 @@
 
 <script>
 import {
-  listDayflowassessment,
-  getDayflowassessment,
-  delDayflowassessment,
+  listDayflowassessmentTeacherAvg,
 } from "@/api/benyi/dayflowassessment";
 import { listClass } from "@/api/system/class";
 import { listUser } from "@/api/system/user";
@@ -161,7 +158,7 @@ export default {
     /** 查询幼儿园一日流程评估列表 */
     getList() {
       this.loading = true;
-      listDayflowassessment(this.queryParams).then((response) => {
+      listDayflowassessmentTeacherAvg(this.addDateRange(this.queryParams, this.dateRange)).then((response) => {
         this.dayflowassessmentList = response.rows;
         this.total = response.total;
         this.loading = false;
@@ -185,43 +182,11 @@ export default {
       });
       return actions.join("");
     },
-    // 学年学期类型--字典状态字典翻译
-    xnxqFormat(row, column) {
-      return this.selectDictLabel(this.xnxqOptions, row.xnxq);
-    },
     /** 查询用户列表 */
     getUserList() {
       listUser(null).then((response) => {
         this.userOptions = response.rows;
       });
-    },
-    // 教师字典翻译
-    pgdxFormat(row, column) {
-      var actions = [];
-      var datas = this.userOptions;
-      Object.keys(datas).map((key) => {
-        if (datas[key].userId == "" + row.pgdx) {
-          actions.push(datas[key].nickName);
-          return false;
-        }
-      });
-      return actions.join("");
-    },
-    // 教师字典翻译
-    createUserFormat(row, column) {
-      var actions = [];
-      var datas = this.userOptions;
-      Object.keys(datas).map((key) => {
-        if (datas[key].userId == "" + row.createUserid) {
-          actions.push(datas[key].nickName);
-          return false;
-        }
-      });
-      return actions.join("");
-    },
-    // 学年学期类型--字典状态字典翻译
-    xnxqFormat(row, column) {
-      return this.selectDictLabel(this.xnxqOptions, row.xnxq);
     },
     /** 搜索按钮操作 */
     handleQuery() {
@@ -230,6 +195,7 @@ export default {
     },
     /** 重置按钮操作 */
     resetQuery() {
+      this.dateRange = [];
       this.resetForm("queryForm");
       this.handleQuery();
     },

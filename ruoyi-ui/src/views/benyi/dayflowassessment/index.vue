@@ -1,58 +1,51 @@
 <template>
   <div class="app-container">
-    <el-form
-      :model="queryParams"
-      ref="queryForm"
-      :inline="true"
-      label-width="70px"
-    >
-      <!-- <el-form-item label="所属计划" prop="planid">
-        <el-select v-model="queryParams.planid" placeholder="请选择评估计划">
-          <el-option
-            v-for="dict in dayflowassessmentplanOptions"
-            :key="dict.id"
-            :label="dict.name"
-            :value="dict.id"
-          ></el-option>
-        </el-select>
-      </el-form-item> -->
-      <el-form-item label="学年学期" prop="xnxq">
-        <el-select v-model="queryParams.xnxq" placeholder="请选择学年学期">
-          <el-option
-            v-for="dict in xnxqOptions"
-            :key="dict.dictValue"
-            :label="dict.dictLabel"
-            :value="dict.dictValue"
-          />
-        </el-select>
-      </el-form-item>
-      <el-form-item label="班级名称" prop="classid">
-        <el-select
-          v-model="queryParams.classid"
-          clearable
-          size="small"
-          placeholder="请选择班级"
-        >
-          <el-option
-            v-for="dict in classOptions"
-            :key="dict.bjbh"
-            :label="dict.bjmc"
-            :value="dict.bjbh"
-          ></el-option>
-        </el-select>
-      </el-form-item>
-      <el-form-item>
-        <el-button
-          type="primary"
-          icon="el-icon-search"
-          size="mini"
-          @click="handleQuery"
-          >搜索</el-button
-        >
-        <el-button icon="el-icon-refresh" size="mini" @click="resetQuery"
-          >重置</el-button
-        >
-      </el-form-item>
+    <el-form :model="queryParams" ref="queryForm" label-width="70px">
+      <el-row :gutter="10">
+        <el-col :xs="24" :ms="12" :md="5">
+          <el-form-item label="学年学期" prop="xnxq">
+            <el-select v-model="queryParams.xnxq" placeholder="请选择学年学期">
+              <el-option
+                v-for="dict in xnxqOptions"
+                :key="dict.dictValue"
+                :label="dict.dictLabel"
+                :value="dict.dictValue"
+              />
+            </el-select>
+          </el-form-item>
+        </el-col>
+        <el-col :xs="24" :ms="12" :md="5">
+          <el-form-item label="班级名称" prop="classid">
+            <el-select
+              v-model="queryParams.classid"
+              clearable
+              size="small"
+              placeholder="请选择班级"
+            >
+              <el-option
+                v-for="dict in classOptions"
+                :key="dict.bjbh"
+                :label="dict.bjmc"
+                :value="dict.bjbh"
+              ></el-option>
+            </el-select>
+          </el-form-item>
+        </el-col>
+        <el-col :xs="24" :ms="12" :md="5">
+          <el-form-item>
+            <el-button
+              type="primary"
+              icon="el-icon-search"
+              size="mini"
+              @click="handleQuery"
+              >搜索</el-button
+            >
+            <el-button icon="el-icon-refresh" size="mini" @click="resetQuery"
+              >重置</el-button
+            >
+          </el-form-item>
+        </el-col>
+      </el-row>
     </el-form>
 
     <div class="mb8 btn-list">
@@ -68,6 +61,7 @@
 
     <el-table
       v-loading="loading"
+      border
       :data="dayflowassessmentList"
       @selection-change="handleSelectionChange"
     >
@@ -75,6 +69,7 @@
       <!-- <el-table-column label="所属计划" align="center" prop="planid" :formatter="planFormat"/> -->
       <el-table-column
         label="学年学期"
+        fixed
         align="center"
         prop="xnxq"
         :formatter="xnxqFormat"
@@ -85,40 +80,12 @@
         prop="classid"
         :formatter="classFormat"
       />
-      <!-- <el-table-column label="班级平均分" align="center" prop="classdf" /> -->
-      <!-- <el-table-column
-        label="主班教师"
-        align="center"
-        prop="bzbh"
-        :formatter="bzbhFormat"
-      />
-      <el-table-column
-        label="配班教师"
-        align="center"
-        prop="pbbh"
-        :formatter="pbbhFormat"
-      />
-      <el-table-column
-        label="助理教师"
-        align="center"
-        prop="zlbh"
-        :formatter="zlbhFormat"
-      /> -->
       <el-table-column
         label="评估对象"
         align="center"
         prop="pgdx"
         :formatter="pgdxFormat"
       />
-      <!-- <el-table-column
-        label="评估环节"
-        align="center"
-        prop="bzid"
-        :formatter="dayFlowFormat"
-      />
-      <el-table-column label="环节满分" align="center" prop="bzmf" /> -->
-      <!-- <el-table-column label="扣分值" align="center" prop="kfz" /> -->
-      <!-- <el-table-column label="扣分次数" align="center" prop="kfcs" /> -->
       <el-table-column label="最终得分" align="center" prop="zzdf" />
       <el-table-column
         label="评估人"
@@ -128,9 +95,11 @@
       />
       <el-table-column label="评估时间" align="center" prop="createTime" />
       <el-table-column
+        fixed="right"
         label="操作"
         align="center"
-        class-name="small-padding fixed-width"
+        width="60"
+        class-name="small-padding fixed-width edit-btns"
       >
         <template slot-scope="scope">
           <el-button
@@ -340,3 +309,20 @@ export default {
   },
 };
 </script>
+<style lang="scss" scoped>
+.el-select {
+  width: 100%;
+}
+.my-date-picker {
+  width: 100%;
+}
+.edit-btns {
+  .el-button {
+    display: block;
+    margin: 0 auto;
+  }
+}
+.no-margin ::v-deep.el-form-item__content {
+  margin: 0 !important;
+}
+</style>

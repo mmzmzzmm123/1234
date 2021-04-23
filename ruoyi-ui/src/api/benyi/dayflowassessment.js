@@ -27,6 +27,15 @@ export function listDayflowassessmentPjf(query) {
   });
 }
 
+// 查询幼儿园一日流程评估列表 教师平均分
+export function listDayflowassessmentTeacherAvg(query) {
+  return request({
+    url: "/benyi/dayflowassessment/listteacheravg",
+    method: "get",
+    params: query
+  });
+}
+
 // 查询幼儿园一日流程评估详细
 export function getDayflowassessment(id) {
   return request({
