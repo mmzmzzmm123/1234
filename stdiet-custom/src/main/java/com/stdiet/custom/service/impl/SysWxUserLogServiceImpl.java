@@ -102,8 +102,8 @@ public class SysWxUserLogServiceImpl implements ISysWxUserLogService {
     }
 
     @Override
-    public int checkWxLogInfoCount(String openid) {
-        return sysWxUserLogMapper.checkWxLogInfoCount(openid);
+    public int checkWxLogInfoCount(SysWxUserLog sysWxUserLog) {
+        return sysWxUserLogMapper.checkWxLogInfoCount(sysWxUserLog);
     }
 
     /**

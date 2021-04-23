@@ -28,6 +28,7 @@
         <result property="emotion"    column="emotion"    />
         <result property="slyEatFood"    column="sly_eat_food"    />
         <result property="constipation"    column="constipation"    />
+        <result property="ingredientDescribe"    column="ingredient_describe"    />
         <result property="breakfastImages"    column="breakfast_images"    />
         <result property="lunchImages"    column="lunch_images"    />
         <result property="dinnerImages"    column="dinner_images"    />
@@ -60,6 +61,7 @@
         <result property="slyEatFood"    column="sly_eat_food"    />
         <result property="constipation"    column="constipation"    />
         <result property="remark" column="remark"></result>
+        <result property="ingredientDescribe"    column="ingredient_describe"    />
         <result property="breakfastImages"    column="breakfast_images"    />
         <result property="lunchImages"    column="lunch_images"    />
         <result property="dinnerImages"    column="dinner_images"    />
@@ -73,18 +75,18 @@
 
     <sql id="selectSysWxUserLogVo">
         select id,openid, weight, appid, phone, log_time, sleep_time, wakeup_time, sport, avatar_url, diet, insomnia, defecation, water, create_by, create_time, update_by, update_time, remark,
-         emotion,sly_eat_food,constipation,breakfast_images,lunch_images,dinner_images,extra_meal_images,body_images,suggest,execution_score,comment
+         emotion,sly_eat_food,constipation,ingredient_describe,breakfast_images,lunch_images,dinner_images,extra_meal_images,body_images,suggest,execution_score,comment
          from sys_wx_user_log
     </sql>
 
-    <select id="checkWxLogInfoCount" parameterType="String" resultType="Integer">
-        select count(*) from sys_wx_user_log where to_days(log_time) = to_days(now()) and openid = #{openid} and del_flag = 0
+    <select id="checkWxLogInfoCount" parameterType="SysWxUserLog" resultType="Integer">
+        select count(*) from sys_wx_user_log where to_days(log_time) = to_days(#{logTime}) and openid = #{openid} and del_flag = 0
     </select>
 
     <!-- 后台查询 -->
     <select id="selectSysWxUserLogList" parameterType="SysWxUserLog" resultMap="SysWxUserLogResult">
         SELECT wxlog.id,wxinfo.appid,wxinfo.openid,wxinfo.avatar_url,wxinfo.phone,wxlog.weight,wxlog.log_time,wxlog.sleep_time, wxlog.wakeup_time,wxlog.defecation, wxlog.water, wxlog.insomnia,wxlog.sport,wxlog.diet,wxlog.remark,
-        wxlog.emotion,wxlog.sly_eat_food,wxlog.constipation,wxlog.breakfast_images,wxlog.lunch_images,wxlog.dinner_images,wxlog.extra_meal_images,wxlog.body_images,
+        wxlog.emotion,wxlog.sly_eat_food,wxlog.constipation,wxlog.ingredient_describe,wxlog.breakfast_images,wxlog.lunch_images,wxlog.dinner_images,wxlog.extra_meal_images,wxlog.body_images,
         wxlog.suggest,wxlog.execution_score,wxlog.comment,sc.name as customer_name, su.nick_name as nutritionist, su_atferSale.nick_name as after_nutritionist
         FROM sys_wx_user_log wxlog
         left join sys_wx_user_info wxinfo on wxinfo.openid  = wxlog.openid
@@ -156,6 +158,7 @@
             <if test="emotion != null">emotion,</if>
             <if test="slyEatFood != null">sly_eat_food,</if>
             <if test="constipation != null">constipation,</if>
+            <if test="ingredientDescribe != null">ingredient_describe,</if>
             <if test="breakfastImages != null">breakfast_images,</if>
             <if test="lunchImages != null">lunch_images,</if>
             <if test="dinnerImages != null">dinner_images,</if>
@@ -189,6 +192,7 @@
             <if test="emotion != null">#{emotion},</if>
             <if test="slyEatFood != null">#{slyEatFood},</if>
             <if test="constipation != null">#{constipation},</if>
+            <if test="ingredientDescribe != null">#{ingredientDescribe},</if>
             <if test="breakfastImages != null">#{breakfastImages},</if>
             <if test="lunchImages != null">#{lunchImages},</if>
             <if test="dinnerImages != null">#{dinnerImages},</if>
@@ -226,6 +230,7 @@
             <if test="emotion != null">emotion = #{emotion},</if>
             <if test="slyEatFood != null">sly_eat_food = #{slyEatFood},</if>
             <if test="constipation != null">constipation = #{constipation},</if>
+            <if test="ingredientDescribe != null">ingredient_describe = #{ingredientDescribe},</if>
             <if test="breakfastImages != null">breakfast_images = #{breakfastImages},</if>
             <if test="lunchImages != null">lunch_images = #{lunchImages},</if>
             <if test="dinnerImages != null">dinner_images = #{dinnerImages},</if>
@@ -254,7 +259,7 @@
     <!-- 根据openid和手机号查询对应打卡记录 -->
     <select id="getWxLogInfoList" parameterType="SysWxUserLog" resultMap="WxLogInfo">
         SELECT wxlog.id,wxlog.weight,wxlog.log_time,wxlog.sleep_time, wxlog.wakeup_time,wxlog.defecation, wxlog.water, wxlog.insomnia,wxlog.sport,wxlog.diet,
-        wxlog.emotion,wxlog.sly_eat_food,wxlog.constipation,wxlog.breakfast_images,wxlog.lunch_images,wxlog.dinner_images,wxlog.extra_meal_images,wxlog.body_images
+        wxlog.emotion,wxlog.sly_eat_food,wxlog.constipation,wxlog.ingredient_describe,wxlog.breakfast_images,wxlog.lunch_images,wxlog.dinner_images,wxlog.extra_meal_images,wxlog.body_images
         ,wxlog.remark,wxlog.execution_score,wxlog.comment
         FROM sys_wx_user_log wxlog left join sys_wx_user_info wxinfo on wxinfo.openid  = wxlog.openid
         where wxlog.del_flag = 0 and (wxinfo.openid = #{openid} or wxinfo.phone = #{phone})
@@ -295,7 +300,7 @@
     <!-- 根据openid和手机号查询对应打卡记录 -->
     <select id="getWxLogInfoDetailById" parameterType="SysWxUserLog" resultMap="WxLogInfo">
         SELECT wxlog.id,wxlog.weight,wxlog.log_time,wxlog.sleep_time, wxlog.wakeup_time,wxlog.defecation, wxlog.water, wxlog.insomnia,wxlog.sport,wxlog.diet,
-        wxlog.emotion,wxlog.sly_eat_food,wxlog.constipation,wxlog.breakfast_images,wxlog.lunch_images,wxlog.dinner_images,wxlog.extra_meal_images,wxlog.body_images
+        wxlog.emotion,wxlog.sly_eat_food,wxlog.constipation,wxlog.ingredient_describe,wxlog.breakfast_images,wxlog.lunch_images,wxlog.dinner_images,wxlog.extra_meal_images,wxlog.body_images
         ,wxlog.remark,wxlog.execution_score,wxlog.comment
         FROM sys_wx_user_log wxlog left join sys_wx_user_info wxinfo on wxinfo.openid  = wxlog.openid
         where wxlog.del_flag = 0 and wxlog.id = #{id}

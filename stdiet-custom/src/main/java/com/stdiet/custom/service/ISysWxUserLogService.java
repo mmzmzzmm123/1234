@@ -65,7 +65,7 @@ public interface ISysWxUserLogService
      */
     public int deleteSysWxUserLogById(Long id);
 
-    public int checkWxLogInfoCount(String openid);
+    public int checkWxLogInfoCount(SysWxUserLog sysWxUserLog);
 
     /**
      * 根据openid和手机号查询打卡记录

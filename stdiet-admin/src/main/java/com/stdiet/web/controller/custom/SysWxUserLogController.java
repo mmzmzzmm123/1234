@@ -149,7 +149,10 @@ public class SysWxUserLogController extends BaseController {
 
     @GetMapping(value = "/wx/logs/check/{openid}")
     public AjaxResult checkLog(@PathVariable String openid) {
-        int count = sysWxUserLogService.checkWxLogInfoCount(openid);
+        SysWxUserLog sysWxUserLog = new SysWxUserLog();
+        sysWxUserLog.setLogTime(new Date());
+        sysWxUserLog.setOpenid(openid);
+        int count = sysWxUserLogService.checkWxLogInfoCount(sysWxUserLog);
         return AjaxResult.success(count);
     }
 

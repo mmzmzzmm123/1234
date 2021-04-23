@@ -26,19 +26,41 @@
           
             <h3>一、基础信息</h3>
             <TableDetailMessage :data="punchLogDetail"></TableDetailMessage>
-            <h3>二、图片信息</h3>
+            <h3>二、食物以及对比照信息</h3>
             <div style="height: 370px; overflow: auto">
-              <div v-if="punchLog != null && punchLog.imagesUrl.breakfastImages.length > 0">
-                <h4>早餐</h4>
+              <div v-if="punchLog != null && punchLog.ingredientDescribe != null && punchLog.ingredientDescribe != ''">
+                <h4>食物描述</h4>
+                <div>
+                  {{punchLog.ingredientDescribe}}
+                </div>
+              </div>
+              <div v-if="punchLog != null && (punchLog.imagesUrl.breakfastImages.length > 0 || punchLog.imagesUrl.lunchImages.length > 0 || punchLog.imagesUrl.dinnerImages.length > 0
+                || punchLog.imagesUrl.extraMealImages.length > 0)">
+                <h4>食物照片</h4>
                 <div>
                   <el-image v-for="(item, index) in punchLog.imagesUrl.breakfastImages" title="点击大图预览" :key="index"
                   style="width: 300px; height: 300px"
                   :src="item"
                   :preview-src-list="imageUrl">
                   </el-image>
+                   <el-image v-for="(item, index) in punchLog.imagesUrl.lunchImages" title="点击大图预览" :key="index"
+                  style="width: 300px; height: 300px"
+                  :src="item"
+                  :preview-src-list="imageUrl">
+                  </el-image>
+                  <el-image v-for="(item, index) in punchLog.imagesUrl.dinnerImages" title="点击大图预览" :key="index"
+                  style="width: 300px; height: 300px"
+                  :src="item"
+                  :preview-src-list="imageUrl">
+                  </el-image>
+                  <el-image v-for="(item, index) in punchLog.imagesUrl.extraMealImages" title="点击大图预览" :key="index"
+                  style="width: 300px; height: 300px"
+                  :src="item"
+                  :preview-src-list="imageUrl">
+                  </el-image>
                 </div>
               </div>
-              <div v-if="punchLog != null && punchLog.imagesUrl.lunchImages.length > 0">
+              <!--<div v-if="punchLog != null && punchLog.imagesUrl.lunchImages.length > 0">
                 <h4>午餐</h4>
                 <div>
                   <el-image v-for="(item, index) in punchLog.imagesUrl.lunchImages" title="点击大图预览" :key="index"
@@ -67,7 +89,7 @@
                   :preview-src-list="imageUrl">
                   </el-image>
                 </div>
-              </div>
+              </div>-->
               <div v-if="punchLog != null && punchLog.imagesUrl.bodyImages.length > 0">
                 <h4>体型对比照</h4>
                 <div>
