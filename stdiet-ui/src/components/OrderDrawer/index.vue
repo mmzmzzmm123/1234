@@ -33,6 +33,7 @@
           :data="orderList"
           v-loading="loading"
           row-key="orderId"
+          height="700"
           default-expand-all
           :tree-props="{ children: 'children', hasChildren: 'hasChildren' }"
         >
