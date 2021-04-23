@@ -4,6 +4,7 @@ import com.itextpdf.io.util.DateTimeUtil;
 import com.stdiet.common.core.controller.BaseController;
 import com.stdiet.common.core.domain.AjaxResult;
 import com.stdiet.common.core.page.TableDataInfo;
+import com.stdiet.common.enums.BusinessType;
 import com.stdiet.common.exception.file.FileNameLengthLimitExceededException;
 import com.stdiet.common.utils.DateUtils;
 import com.stdiet.common.utils.StringUtils;
@@ -46,6 +47,9 @@ public class WechatAppletController extends BaseController {
 
     @Autowired
     private ISysNutritionQuestionService sysNutritionQuestionService;
+
+    @Autowired
+    private ISysAskNutritionQuestionService sysAskNutritionQuestionService;
 
     /**
      * 查询微信小程序中展示的客户案例
@@ -292,5 +296,17 @@ public class WechatAppletController extends BaseController {
         sysNutritionQuestion.setShowFlag(1);
         Map<String,Object> result = sysNutritionQuestionService.getNutritionQuestionListByKey(sysNutritionQuestion, pageNum, pageSize);
         return AjaxResult.success(result);
+    }
+
+    /**
+     * 新增营养小知识提问
+     */
+    @PostMapping("/addAskNutritionQuestion")
+    public AjaxResult addAskNutritionQuestion(@RequestBody SysAskNutritionQuestion sysAskNutritionQuestion)
+    {
+        if(StringUtils.isEmpty(sysAskNutritionQuestion.getOpenid()) || StringUtils.isEmpty(sysAskNutritionQuestion.getQuestion())){
+            return AjaxResult.error("添加失败");
+        }
+        return toAjax(sysAskNutritionQuestionService.insertSysAskNutritionQuestion(sysAskNutritionQuestion));
     }
 }
