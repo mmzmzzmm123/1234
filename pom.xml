@@ -238,6 +238,12 @@
             <version>${dysnmsapi.version}</version>
         </dependency>
 
+        <dependency>
+            <groupId>org.ssssssss</groupId>
+            <artifactId>magic-api-spring-boot-starter</artifactId>
+            <version>1.0.2</version>
+        </dependency>
+
     </dependencies>
     </dependencyManagement>
 
@@ -252,8 +258,6 @@
         <module>ruoyi-tool</module>
     </modules>
     <packaging>pom</packaging>
-
-
 
 
     <build>
