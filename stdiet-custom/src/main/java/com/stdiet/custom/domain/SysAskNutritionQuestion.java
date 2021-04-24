@@ -26,9 +26,13 @@ public class SysAskNutritionQuestion extends BaseEntity
     @Excel(name = "问题内容")
     private String question;
 
-    /** 是否已回答，0未回答，1已回答 */
-    @Excel(name = "是否已回答，0未回答，1已回答")
+    /** 问题状态，0未回答 1已回答  2已关闭 */
+    @Excel(name = "问题状态")
     private Integer replyFlag;
+
+    /** 解答之后对应的营养知识ID */
+    @Excel(name = "解答之后对应的营养知识ID")
+    private Long nutritionQuestionId;
 
     /** 删除标识 0未删除 1已删除 */
     private Integer delFlag;

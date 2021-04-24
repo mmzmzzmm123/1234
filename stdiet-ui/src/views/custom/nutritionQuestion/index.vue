@@ -58,6 +58,14 @@
           v-hasPermi="['custom:nutritionQuestion:remove']"
         >删除</el-button>
       </el-col>
+      <el-col :span="1.5">
+        <el-button
+          type="primary"
+          size="mini"
+          @click="handleAskQuestion"
+          v-hasPermi="['custom:askQuestion:list']"
+        >问题解答</el-button>
+      </el-col>
       <!--<el-col :span="1.5">
         <el-button
           type="warning"
@@ -136,7 +144,7 @@
     />
 
     <!-- 添加或修改营养知识小问答对话框 -->
-    <el-dialog :title="title" :visible.sync="open" width="800px" append-to-body>
+    <!--<el-dialog :title="title" :visible.sync="open" width="800px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
         <el-form-item label="标题" prop="title">
           <el-input v-model="form.title" placeholder="请输入标题" />
@@ -180,22 +188,34 @@
         <el-button type="primary" @click="submitForm">确 定</el-button>
         <el-button @click="cancel">取 消</el-button>
       </div>
-    </el-dialog>
+    </el-dialog>-->
+
+    <!-- 编辑添加营养知识问答 -->
+    <EditOrAddQuestion ref="editOrAddQuestionRef"></EditOrAddQuestion>
 
     <el-dialog :title="previewQuestion.title" :visible.sync="previewOpen" width="800px" append-to-body>
         <div style="height: 600px; overflow: auto" v-html="previewQuestion.content">
         </div>
     </el-dialog>
+
+    <el-dialog title="用户提问列表" :visible.sync="askQuestionOpen" width="1000px" append-to-body>
+        <AskQuestion ref="askQuestionListRef" @refreshList="getList"></AskQuestion>
+    </el-dialog>
+
+    
   </div>
 </template>
 
 <script>
 import { listNutritionQuestion, getNutritionQuestion, delNutritionQuestion, addNutritionQuestion, updateNutritionQuestion, exportNutritionQuestion,updateWxShow } from "@/api/custom/nutritionQuestion";
 import Editor from '@/components/Wangeditor';
-  import AutoHideMessage from "@/components/AutoHideMessage";
+import AutoHideMessage from "@/components/AutoHideMessage";
+import AskQuestion from "../askQuestion";
+import EditOrAddQuestion from "@/components/NutrtionQuestion/EditOrAddQuestion";
+
 export default {
   name: "NutritionQuestion",
-  components: { Editor,AutoHideMessage },
+  components: { Editor,AutoHideMessage,AskQuestion,EditOrAddQuestion },
   data() {
     return {
       // 遮罩层
@@ -240,7 +260,8 @@ export default {
       previewQuestion: {
         title: "",
         content: ""
-      }
+      },
+      askQuestionOpen: false
     };
   },
   created() {
@@ -278,7 +299,7 @@ export default {
       this.resetForm("form");
     },
     questionContentChange(content){
-        console.log(content);
+        //console.log(content);
         this.form.content = content;
     },
     /** 搜索按钮操作 */
@@ -310,9 +331,13 @@ export default {
     /** 新增按钮操作 */
     handleAdd() {
       //this.isClear = true;
+      //this.reset();
+      //this.open = true;
+      //this.title = "添加营养小知识";
       this.reset();
-      this.open = true;
-      this.title = "添加营养小知识";
+      this.$refs.editOrAddQuestionRef.showDialog(this.form, () => {
+          this.getList();
+      });
     },
     /** 修改按钮操作 */
     handleUpdate(row) {
@@ -324,13 +349,16 @@ export default {
           title: response.data.title,
           content: response.data.content,
           key: response.data.key,
-          keyArray: (response.data.key != null && response.data.key.trim() != '' ) ? response.data.key.split(",") : null,
+          keyArray: (response.data.key != null && response.data.key.trim() != '' ) ? response.data.key.split(",") : [],
           showFlag: response.data.showFlag,
           wxShow: response.data.showFlag == 1 ? true : false
         }
         //this.form.keyArray = response.data.key.split(","),
-        this.open = true;
-        this.title = "修改营养小知识";
+        //this.open = true;
+        //this.title = "修改营养小知识";
+        this.$refs.editOrAddQuestionRef.showDialog(this.form, () => {
+          this.getList();
+        });
       });
     },
     /** 提交按钮 */
@@ -397,6 +425,13 @@ export default {
         showFlag: newWxshow ? 1 : 0
       };
       updateWxShow(param);
+    },
+    handleAskQuestion(){
+      this.askQuestionOpen = true;
+      //this.$refs.askQuestionListRef.init();
+    },
+    onClosedAskQuestion(){
+       console.log(this.$refs.askQuestionListRef.isUpdateFlag);
     }
   }
 };

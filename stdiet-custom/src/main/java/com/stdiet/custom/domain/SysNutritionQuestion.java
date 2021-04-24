@@ -42,4 +42,7 @@ public class SysNutritionQuestion extends BaseEntity
 
     /** 删除标识 0未删除 1已删除 */
     private Integer delFlag;
+
+    //解答问题对应的ID
+    private Long askQuestionId;
 }

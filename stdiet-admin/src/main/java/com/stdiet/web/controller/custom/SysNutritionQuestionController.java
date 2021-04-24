@@ -3,7 +3,9 @@ package com.stdiet.custom.controller;
 import java.util.List;
 
 import com.stdiet.common.utils.StringUtils;
+import com.stdiet.custom.domain.SysAskNutritionQuestion;
 import com.stdiet.custom.domain.SysCustomerCase;
+import com.stdiet.custom.service.ISysAskNutritionQuestionService;
 import org.apache.ibatis.annotations.Param;
 import org.aspectj.weaver.loadtime.Aj;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -30,6 +32,9 @@ public class SysNutritionQuestionController extends BaseController
 {
     @Autowired
     private ISysNutritionQuestionService sysNutritionQuestionService;
+
+    @Autowired
+    private ISysAskNutritionQuestionService sysAskNutritionQuestionService;
 
     /**
      * 查询营养知识小问答列表
@@ -73,7 +78,16 @@ public class SysNutritionQuestionController extends BaseController
     @PostMapping
     public AjaxResult add(@RequestBody SysNutritionQuestion sysNutritionQuestion)
     {
-        return toAjax(sysNutritionQuestionService.insertSysNutritionQuestion(sysNutritionQuestion));
+        int row = sysNutritionQuestionService.insertSysNutritionQuestion(sysNutritionQuestion);
+        if(row > 0 && sysNutritionQuestion.getAskQuestionId() != null && sysNutritionQuestion.getAskQuestionId().longValue() > 0){
+            //如果携带了提问ID，则需要将该提问问题状态更改为已解答
+            SysAskNutritionQuestion sysAskNutritionQuestion = new SysAskNutritionQuestion();
+            sysAskNutritionQuestion.setId(sysNutritionQuestion.getAskQuestionId());
+            sysAskNutritionQuestion.setReplyFlag(1);
+            sysAskNutritionQuestion.setNutritionQuestionId(sysNutritionQuestion.getId());
+            row = sysAskNutritionQuestionService.updateSysAskNutritionQuestion(sysAskNutritionQuestion);
+        }
+        return toAjax(row);
     }
 
     /**
