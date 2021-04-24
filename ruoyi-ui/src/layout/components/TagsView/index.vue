@@ -122,8 +122,8 @@ export default {
       }
     },
     addTags() {
-      const { name } = this.$route
-      if (name) {
+        const {name, meta: {affix = true}} = this.$route
+        if (name && affix) {
         this.$store.dispatch('tagsView/addView', this.$route)
       }
       return false
