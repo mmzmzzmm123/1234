@@ -9,6 +9,7 @@
         <result property="openid"    column="openid"    />
         <result property="question"    column="question"    />
         <result property="replyFlag"    column="reply_flag"    />
+        <result property="nutritionQuestionId"    column="nutrition_question_id"    />
         <result property="createTime"    column="create_time"    />
         <result property="createBy"    column="create_by"    />
         <result property="updateTime"    column="update_time"    />
@@ -40,6 +41,7 @@
             <if test="openid != null">openid,</if>
             <if test="question != null">question,</if>
             <if test="replyFlag != null">reply_flag,</if>
+            <if test="nutritionQuestionId != null">nutrition_question_id,</if>
             <if test="createTime != null">create_time,</if>
             <if test="createBy != null">create_by,</if>
             <if test="updateTime != null">update_time,</if>
@@ -50,6 +52,7 @@
             <if test="openid != null">#{openid},</if>
             <if test="question != null">#{question},</if>
             <if test="replyFlag != null">#{replyFlag},</if>
+            <if test="nutritionQuestionId != null">#{nutritionQuestionId},</if>
             <if test="createTime != null">#{createTime},</if>
             <if test="createBy != null">#{createBy},</if>
             <if test="updateTime != null">#{updateTime},</if>
@@ -64,6 +67,7 @@
             <if test="openid != null">openid = #{openid},</if>
             <if test="question != null">question = #{question},</if>
             <if test="replyFlag != null">reply_flag = #{replyFlag},</if>
+            <if test="nutritionQuestionId != null">nutrition_question_id = #{nutritionQuestionId},</if>
             <if test="createTime != null">create_time = #{createTime},</if>
             <if test="createBy != null">create_by = #{createBy},</if>
             <if test="updateTime != null">update_time = #{updateTime},</if>
