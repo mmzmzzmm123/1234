@@ -39,22 +39,22 @@
                 <h4>食物照片</h4>
                 <div>
                   <el-image v-for="(item, index) in punchLog.imagesUrl.breakfastImages" title="点击大图预览" :key="index"
-                  style="width: 300px; height: 300px"
+                  class="food_image_first"
                   :src="item"
                   :preview-src-list="imageUrl">
                   </el-image>
                    <el-image v-for="(item, index) in punchLog.imagesUrl.lunchImages" title="点击大图预览" :key="index"
-                  style="width: 300px; height: 300px"
+                  class="food_image"
                   :src="item"
                   :preview-src-list="imageUrl">
                   </el-image>
                   <el-image v-for="(item, index) in punchLog.imagesUrl.dinnerImages" title="点击大图预览" :key="index"
-                  style="width: 300px; height: 300px"
+                  class="food_image"
                   :src="item"
                   :preview-src-list="imageUrl">
                   </el-image>
                   <el-image v-for="(item, index) in punchLog.imagesUrl.extraMealImages" title="点击大图预览" :key="index"
-                  style="width: 300px; height: 300px"
+                  class="food_image"
                   :src="item"
                   :preview-src-list="imageUrl">
                   </el-image>
@@ -288,4 +288,14 @@ export default {
 
 <style lang="scss" scoped>
 
+    .food_image_first{
+      width: 300px;
+      height: 300px;
+    }
+
+    .food_image{
+      width: 300px;
+      height: 300px;
+      margin-left:10px
+    }
 </style>
