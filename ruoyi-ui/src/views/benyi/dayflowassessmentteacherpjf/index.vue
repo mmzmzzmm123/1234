@@ -99,6 +99,7 @@ export default {
   },
   data() {
     return {
+      //是否重新加载组件
       isRouterAlive: true,
       // 遮罩层
       loading: true,
