@@ -116,7 +116,7 @@
             type="text"
             icon="el-icon-caret-right"
             @click="handleRun(scope.row)"
-            v-hasPermi="['monitor:job:changeStatus']"
+            v-hasPermi="['monitor:job:run']"
           >执行一次</el-button>
           <el-button
             size="mini"
