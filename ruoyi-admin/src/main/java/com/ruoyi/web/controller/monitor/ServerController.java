@@ -7,9 +7,10 @@ import org.springframework.web.bind.annotation.RestController;
 import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.framework.web.domain.Server;
 
+
 /**
  * 服务器监控
- * 
+ *
  * @author ruoyi
  */
 @RestController

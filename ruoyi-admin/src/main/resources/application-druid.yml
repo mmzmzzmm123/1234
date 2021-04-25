@@ -6,9 +6,9 @@ spring:
         druid:
             # 主库数据源
             master:
-                url: jdbc:mysql://localhost:3306/ry-vue?useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=true&serverTimezone=GMT%2B8
-                username: root
-                password: password
+                url: jdbc:mysql://rm-bp1tulbjvh0li8b36eo.mysql.rds.aliyuncs.com:3306/ry?useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=true&serverTimezone=GMT%2B8
+                username: ruoyi
+                password: ye0li0feng
             # 从库数据源
             slave:
                 # 从数据源开关/默认关闭
@@ -55,3 +55,27 @@ spring:
                 wall:
                     config:
                         multi-statement-allow: true
+
+#配置web页面入口
+#配置文件存储位置。当以classpath开头时，为只读模式
+magic-api:
+    web: /magic/web
+    resource:
+        location: /data/magic-api
+    page-config:
+        page: current
+    # swagger-config:
+        # 资源名称
+        # name: MagicAPI
+        # 资源描述
+        # description: MagicAPI v1.0 接口文档
+        # 资源位置
+        # location: /v2/api-docs/magic-api/swagger2.json
+        # 文档版本
+        # version: 1.0
+        # 文档标题
+        # title: MagicAPI v1.0 接口文档
+
+
+properties:
+    excludedUri: /doc.html,/error,/magic/web/*,/v2/api-docs/magic-api/swagger2.json,/swagger-ui.html

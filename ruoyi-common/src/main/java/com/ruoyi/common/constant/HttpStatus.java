@@ -86,4 +86,9 @@ public class HttpStatus
      * 接口未实现
      */
     public static final int NOT_IMPLEMENTED = 501;
+
+    /**
+     * 接口太频繁操作
+     */
+    public static final int FREQUENT_OPERATION = 530;
 }

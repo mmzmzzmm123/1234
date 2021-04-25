@@ -17,8 +17,8 @@ ruoyi:
 
 # 开发环境配置
 server:
-  # 服务器的HTTP端口，默认为8080
-  port: 8080
+  # 服务器的HTTP端口，默认为8181
+  port: 8181
   servlet:
     # 应用的访问路径
     context-path: /
@@ -65,7 +65,7 @@ spring:
     # 数据库索引
     database: 0
     # 密码
-    password: 
+    password: 123456
     # 连接超时时间
     timeout: 10s
     lettuce:
@@ -78,6 +78,14 @@ spring:
         max-active: 8
         # #连接池最大阻塞等待时间（使用负值表示没有限制）
         max-wait: -1ms
+    database: 0
+    jedis:
+      pool:
+        max-active: 20
+        max-idle: 10
+        max-wait: 50
+        m-idle: 20
+
 
 # token配置
 token:
@@ -119,3 +127,28 @@ xss:
   excludes: /system/notice/*
   # 匹配链接
   urlPatterns: /system/*,/monitor/*,/tool/*
+
+
+aliyun:
+  cdn:
+      image: http://us-west.imagecdn.yesoulchina.com
+      video: http://us-west.videocdn.yesoulchina.com
+  oss:
+      endpoint:
+          img: http://oss-us-west-1.aliyuncs.com
+      bucket:
+          image: us-west-image-yesoulchina-com
+          video: us-west-video-yesoulchina-com
+      access:
+          key:
+              id: LTAI4Fywxx3qicFXx42x3bnc
+              secret: ut9qeihGe71K6btLj8YecbsWhRj9o5
+      dir:
+          imgage: /test/courses/user-photo/
+
+# sms
+sms:
+  isopen: 1
+
+accessKeyId: LTAIvKtJWk3zZ3kI
+accessKeySecret: ONWTotCTp9y8MIkRjgNLx2QiL375T5
