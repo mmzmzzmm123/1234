@@ -65,7 +65,7 @@ export default {
     async getClassList() {
       await listDayflowassessmentTeacherAvg(this.queryParams).then(
         (response) => {
-          console.log(this.queryParams);
+          //console.log(this.queryParams);
           var items = [];
           var childcounts = [];
           response.rows.forEach((element) => {

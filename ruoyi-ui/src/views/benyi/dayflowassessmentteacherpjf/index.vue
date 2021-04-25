@@ -47,28 +47,28 @@
       </el-form-item>
     </el-form>
 
-    <el-table v-loading="loading" border :data="dayflowassessmentList">
+    <el-table v-loading="loading" border :default-sort = "{prop: 'bjpjf', order: 'descending'}" :data="dayflowassessmentList">
       <el-table-column label="评估对象" align="center" prop="pgdxxm" fixed />
-      <el-table-column label="最终得分" align="center" prop="bjpjf" />
-      <el-table-column label="早间接待" align="center" prop="zjjdpjf" />
-      <el-table-column label="用餐" align="center" prop="ycpjf" />
-      <el-table-column label="早间坐圈" align="center" prop="zjzqpjf" />
-      <el-table-column label="分组教学" align="center" prop="fzjxpjf" />
-      <el-table-column label="点心时间" align="center" prop="dxsjpjf" />
-      <el-table-column label="如厕洗手饮水" align="center" prop="rcxsyspjf" />
-      <el-table-column label="活动过渡" align="center" prop="hdgdpjf" />
-      <el-table-column label="户外活动" align="center" prop="hwhdpjf" />
-      <el-table-column label="午睡" align="center" prop="wspjf" />
-      <el-table-column label="离园再见" align="center" prop="lyzjpjf" />
-      <el-table-column label="安全" align="center" prop="aqpjf" />
-      <el-table-column label="自由活动" align="center" prop="zyhdpjf" />
+      <el-table-column label="最终得分" align="center" prop="bjpjf" sortable width="110"/>
+      <el-table-column label="早间接待" align="center" prop="zjjdpjf" sortable width="110"/>
+      <el-table-column label="用餐" align="center" prop="ycpjf" sortable width="80"/>
+      <el-table-column label="早间坐圈" align="center" prop="zjzqpjf" sortable width="110"/>
+      <el-table-column label="分组教学" align="center" prop="fzjxpjf" sortable width="110"/>
+      <el-table-column label="点心时间" align="center" prop="dxsjpjf" sortable width="110"/>
+      <el-table-column label="如厕洗手饮水" align="center" prop="rcxsyspjf" sortable width="130"/>
+      <el-table-column label="活动过渡" align="center" prop="hdgdpjf" sortable width="110"/>
+      <el-table-column label="户外活动" align="center" prop="hwhdpjf" sortable width="110"/>
+      <el-table-column label="午睡" align="center" prop="wspjf" sortable width="80"/>
+      <el-table-column label="离园再见" align="center" prop="lyzjpjf" sortable width="110"/>
+      <el-table-column label="安全" align="center" prop="aqpjf" sortable width="80"/>
+      <el-table-column label="自由活动" align="center" prop="zyhdpjf" sortable width="110"/>
       <el-table-column
         label="规则与纪律约束"
         align="center"
-        prop="gzyjlyspjf"
+        prop="gzyjlyspjf" sortable width="140"
       />
-      <el-table-column label="微型课程" align="center" prop="wxkcpjf" />
-      <el-table-column label="潜课程" align="center" prop="qkcpjf" />
+      <el-table-column label="微型课程" align="center" prop="wxkcpjf" sortable width="110"/>
+      <el-table-column label="潜课程" align="center" prop="qkcpjf" sortable width="100"/>
     </el-table>
 
     <pagination

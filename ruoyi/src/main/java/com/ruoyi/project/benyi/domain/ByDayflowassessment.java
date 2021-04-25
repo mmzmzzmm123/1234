@@ -149,11 +149,11 @@ public class ByDayflowassessment extends BaseEntity {
     @Excel(name = "执行人")
     private Long createUserid;
 
-    /**
-     * 创建时间
-     */
-    @Excel(name = "创建时间")
-    private Date createTime;
+//    /**
+//     * 创建时间
+//     */
+//    @Excel(name = "创建时间")
+//    private Date createTime;
 
     public Double getBjpjf() {
         return bjpjf;

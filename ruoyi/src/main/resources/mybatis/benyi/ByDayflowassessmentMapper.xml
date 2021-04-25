@@ -107,6 +107,12 @@
             <if test="kfcs != null ">and d.kfcs = #{kfcs}</if>
             <if test="pgdx != null ">and d.pgdx = #{pgdx}</if>
             <if test="createUserid != null ">and d.create_userid = #{createUserid}</if>
+            <if test="beginTime != null and beginTime != ''"><!-- 开始时间检索 -->
+                AND date_format(d.create_time,'%y%m%d') &gt;= date_format(#{beginTime},'%y%m%d')
+            </if>
+            <if test="endTime != null and endTime != ''"><!-- 结束时间检索 -->
+                AND date_format(d.create_time,'%y%m%d') &lt;= date_format(#{endTime},'%y%m%d')
+            </if>
             <!-- 数据范围过滤 -->
             ${dataScope}
             order by d.classid

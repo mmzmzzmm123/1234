@@ -61,27 +61,93 @@
         prop="createUserid"
         :formatter="createUserFormat"
       />
-      <el-table-column label="最终得分" align="center" prop="zzdf" />
-      <el-table-column label="早间接待" align="center" prop="zjjdpjf" />
-      <el-table-column label="用餐" align="center" prop="ycpjf" />
-      <el-table-column label="早间坐圈" align="center" prop="zjzqpjf" />
-      <el-table-column label="分组教学" align="center" prop="fzjxpjf" />
-      <el-table-column label="点心时间" align="center" prop="dxsjpjf" />
-      <el-table-column label="如厕洗手饮水" align="center" prop="rcxsyspjf" />
-      <el-table-column label="活动过渡" align="center" prop="hdgdpjf" />
-      <el-table-column label="户外活动" align="center" prop="hwhdpjf" />
-      <el-table-column label="午睡" align="center" prop="wspjf" />
-      <el-table-column label="离园再见" align="center" prop="lyzjpjf" />
-      <el-table-column label="安全" align="center" prop="aqpjf" />
-      <el-table-column label="自由活动" align="center" prop="zyhdpjf" />
+      <el-table-column
+        label="最终得分"
+        align="center"
+        prop="zzdf"
+        width="110"
+      />
+      <el-table-column
+        label="早间接待"
+        align="center"
+        prop="zjjdpjf"
+        width="110"
+      />
+      <el-table-column label="用餐" align="center" prop="ycpjf" width="80" />
+      <el-table-column
+        label="早间坐圈"
+        align="center"
+        prop="zjzqpjf"
+        width="110"
+      />
+      <el-table-column
+        label="分组教学"
+        align="center"
+        prop="fzjxpjf"
+        width="110"
+      />
+      <el-table-column
+        label="点心时间"
+        align="center"
+        prop="dxsjpjf"
+        width="110"
+      />
+      <el-table-column
+        label="如厕洗手饮水"
+        align="center"
+        prop="rcxsyspjf"
+        width="130"
+      />
+      <el-table-column
+        label="活动过渡"
+        align="center"
+        prop="hdgdpjf"
+        width="110"
+      />
+      <el-table-column
+        label="户外活动"
+        align="center"
+        prop="hwhdpjf"
+        width="110"
+      />
+      <el-table-column label="午睡" align="center" prop="wspjf" width="80" />
+      <el-table-column
+        label="离园再见"
+        align="center"
+        prop="lyzjpjf"
+        width="110"
+      />
+      <el-table-column label="安全" align="center" prop="aqpjf" width="80" />
+      <el-table-column
+        label="自由活动"
+        align="center"
+        prop="zyhdpjf"
+        width="110"
+      />
       <el-table-column
         label="规则与纪律约束"
         align="center"
         prop="gzyjlyspjf"
+        width="140"
       />
-      <el-table-column label="微型课程" align="center" prop="wxkcpjf" />
-      <el-table-column label="潜课程" align="center" prop="qkcpjf" />
-      <el-table-column label="评估时间" align="center" prop="createTime" />
+      <el-table-column
+        label="微型课程"
+        align="center"
+        prop="wxkcpjf"
+        width="110"
+      />
+      <el-table-column
+        label="潜课程"
+        align="center"
+        prop="qkcpjf"
+        width="100"
+      />
+      <el-table-column
+        label="评估时间"
+        align="center"
+        prop="createTime"
+        width="180"
+      />
       <el-table-column
         label="操作"
         align="center"
@@ -188,7 +254,9 @@ export default {
     /** 查询幼儿园一日流程评估列表 */
     getList() {
       this.loading = true;
-      listDayflowassessmentmyself(this.queryParams).then((response) => {
+      listDayflowassessmentmyself(
+        this.addDateRange(this.queryParams, this.dateRange)
+      ).then((response) => {
         this.dayflowassessmentList = response.rows;
         this.total = response.total;
         this.loading = false;
@@ -258,6 +326,7 @@ export default {
     /** 重置按钮操作 */
     resetQuery() {
       this.resetForm("queryForm");
+      this.dateRange = [];
       this.handleQuery();
     },
     handleAssessment(row) {
