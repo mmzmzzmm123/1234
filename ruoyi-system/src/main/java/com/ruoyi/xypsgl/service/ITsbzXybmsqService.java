@@ -27,6 +27,9 @@ public interface ITsbzXybmsqService
      */
     public List<TsbzXybmsq> selectTsbzXybmsqList(TsbzXybmsq tsbzXybmsq);
 
+    // 查询已经报名人数
+    public int selectCountYibaoming(TsbzXybmsq tsbzXybmsq);
+
     /**
      * 新增学员报名申请
      * 

@@ -44,6 +44,12 @@ public class TsbzXybmsqServiceImpl implements ITsbzXybmsqService
         return tsbzXybmsqMapper.selectTsbzXybmsqList(tsbzXybmsq);
     }
 
+    // 查询已报名人数
+    @Override
+    public int selectCountYibaoming(TsbzXybmsq tsbzXybmsq) {
+        return tsbzXybmsqMapper.selectCountYibaoming(tsbzXybmsq);
+    }
+
     /**
      * 新增学员报名申请
      * 

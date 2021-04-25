@@ -7,16 +7,6 @@
       v-show="showSearch"
       label-width="68px"
     >
-      <el-form-item label="方案编号" prop="faid">
-        <el-select
-          v-model="queryParams.faid"
-          placeholder="请选择方案编号"
-          clearable
-          size="small"
-        >
-          <el-option label="请选择字典生成" value="" />
-        </el-select>
-      </el-form-item>
       <el-form-item label="报名基地" prop="jdid">
         <el-select
           v-model="queryParams.jdid"
@@ -66,7 +56,7 @@
     </el-form>
 
     <el-row :gutter="10" class="mb8">
-      <el-col :span="1.5">
+      <!-- <el-col :span="1.5">
         <el-button
           type="primary"
           icon="el-icon-plus"
@@ -97,7 +87,7 @@
           v-hasPermi="['xypsgl:xybmsq:remove']"
           >删除</el-button
         >
-      </el-col>
+      </el-col> -->
       <right-toolbar
         :showSearch.sync="showSearch"
         @queryTable="getList"
@@ -110,7 +100,12 @@
         <el-table v-loading="loading" :data="zcrjdcjList">
           <el-table-column type="selection" width="55" align="center" />
           <el-table-column label="基地名称" align="center" prop="name" />
-          <el-table-column label="主持人" align="center" prop="zcrid" :formatter="ZcrFormat" />
+          <el-table-column
+            label="主持人"
+            align="center"
+            prop="zcrid"
+            :formatter="ZcrFormat"
+          />
           <el-table-column
             label="基地类型"
             align="center"
@@ -148,8 +143,9 @@
                 size="mini"
                 type="text"
                 icon="el-icon-edit"
-                @click="handleUpdate(scope.row)"
-                v-hasPermi="['zcrpsgl:zcrjdcj:edit']"
+                @click="handleAdd(scope.row)"
+                v-show="isShow_bm(scope.row)"
+                v-hasPermi="['zcrpsgl:xybmsq:edit']"
                 >报名</el-button
               >
               <el-button
@@ -173,8 +169,12 @@
           @selection-change="handleSelectionChange"
         >
           <el-table-column type="selection" width="55" align="center" />
-          <el-table-column label="方案编号" align="center" prop="faid" />
-          <el-table-column label="报名基地" align="center" prop="jdid" />
+          <el-table-column
+            label="报名基地"
+            align="center"
+            prop="jdid"
+            :formatter="JdFormat"
+          />
           <el-table-column label="姓名" align="center" prop="name" />
           <el-table-column label="进修编号" align="center" prop="jxbh" />
           <el-table-column
@@ -234,14 +234,24 @@
     <!-- 添加或修改学员报名申请对话框 -->
     <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="120px">
-        <el-form-item label="方案编号" prop="faid">
-          <el-select v-model="form.faid" placeholder="请选择方案编号">
-            <el-option label="请选择字典生成" value="" />
-          </el-select>
-        </el-form-item>
         <el-form-item label="报名基地" prop="jdid">
           <el-select v-model="form.jdid" placeholder="请选择报名基地id">
-            <el-option label="请选择字典生成" value="" />
+            <el-option
+              v-for="dict in zcrjdcjList"
+              :key="dict.id"
+              :label="dict.name"
+              :value="dict.id"
+            ></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="基地类别" prop="jdtype">
+          <el-select v-model="form.jdtype" placeholder="请选择基地类别">
+            <el-option
+              v-for="dict in jdtypeOptions"
+              :key="dict.dictValue"
+              :label="dict.dictLabel"
+              :value="dict.dictValue"
+            ></el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="姓名" prop="name">
@@ -308,16 +318,7 @@
         <el-form-item label="单位地址" prop="dwdz">
           <el-input v-model="form.dwdz" placeholder="请输入单位地址" />
         </el-form-item>
-        <el-form-item label="基地类别" prop="jdtype">
-          <el-select v-model="form.jdtype" placeholder="请选择基地类别">
-            <el-option
-              v-for="dict in jdtypeOptions"
-              :key="dict.dictValue"
-              :label="dict.dictLabel"
-              :value="dict.dictValue"
-            ></el-option>
-          </el-select>
-        </el-form-item>
+
         <el-form-item label="身份" prop="sf">
           <el-select v-model="form.sf" placeholder="请选择身份">
             <el-option
@@ -360,10 +361,7 @@ import {
   updateZcrjdcj,
   exportZcrjdcj,
 } from "@/api/zcrpsgl/zcrjdcj";
-import {
-  listZcrbmsq,
-  getZcrbmsq,
-} from "@/api/zcrpsgl/zcrbmsq";
+import { listZcrbmsq, getZcrbmsq } from "@/api/zcrpsgl/zcrbmsq";
 
 export default {
   name: "Xybmsq",
@@ -404,6 +402,8 @@ export default {
       zcrjdcjList: [],
       // 主持人选项
       zcrOptions: [],
+      // 当前报名人数
+      dqybm: undefined,
       // 查询参数
       queryParams: {
         pageNum: 1,
@@ -424,6 +424,14 @@ export default {
         phone: null,
         email: null,
         createUser: null,
+        xxshstatus: null,
+        xxshjy: null,
+        qjshstatus: null,
+        qjshjy: null,
+      },
+      // 查询报名名额参数
+      queryParams_bm: {
+        jdid: null,
       },
       // 表单参数
       form: {},
@@ -476,7 +484,6 @@ export default {
     getZcrList() {
       listZcrbmsq(null).then((response) => {
         this.zcrOptions = response.rows;
-        console.log(response.rows);
       });
     },
     // 主持人字典翻译
@@ -491,15 +498,39 @@ export default {
       });
       return actions.join("");
     },
+    // 基地字典翻译
+    JdFormat(row, column) {
+      var actions = [];
+      var datas = this.zcrjdcjList;
+      Object.keys(datas).map((key) => {
+        if (datas[key].id == "" + row.jdid) {
+          actions.push(datas[key].name);
+          return false;
+        }
+      });
+      return actions.join("");
+    },
     // 查看基地按钮操作
     handleCheck_jd(row) {
       this.reset();
-      const id = row.id || this.ids
-      getZcrjdcj(id).then(response => {
+      const id = row.id || this.ids;
+      getZcrjdcj(id).then((response) => {
         this.form = response.data;
         this.open = true;
         this.title = "修改主持人基地";
       });
+    },
+    // 报名是否显示
+    isShow_bm(row) {
+      this.queryParams_bm.jdid = row.id;
+      listZcrjdcj(this.queryParams_bm).then((response) => {
+        this.dqybm = response.rows.length;
+      });
+      if (this.dqybm < row.zsme) {
+        return true;
+      } else {
+        return false;
+      }
     },
     // 性别字典翻译
     xbFormat(row, column) {
@@ -526,8 +557,7 @@ export default {
       return this.selectDictLabel(this.sfOptions, row.sf);
     },
     // 切换tab
-    handleChangeTab(tab, event) {
-    },
+    handleChangeTab(tab, event) {},
     // 取消按钮
     cancel() {
       this.open = false;
@@ -554,6 +584,10 @@ export default {
         email: null,
         createTime: null,
         createUser: null,
+        xxshstatus: null,
+        xxshjy: null,
+        qjshstatus: null,
+        qjshjy: null,
       };
       this.resetForm("form");
     },
@@ -574,10 +608,15 @@ export default {
       this.multiple = !selection.length;
     },
     /** 新增按钮操作 */
-    handleAdd() {
+    handleAdd(row) {
       this.reset();
-      this.open = true;
-      this.title = "添加学员报名申请";
+      const id = row.id || this.ids;
+      this.form.jdid = id;
+      getZcrjdcj(id).then((response) => {
+        this.form.jdtype = response.data.jdtype;
+        this.open = true;
+        this.title = "基地报名";
+      });
     },
     /** 修改按钮操作 */
     handleUpdate(row) {
@@ -631,22 +670,6 @@ export default {
         .then(() => {
           this.getList();
           this.msgSuccess("删除成功");
-        })
-        .catch(function () {});
-    },
-    /** 导出按钮操作 */
-    handleExport() {
-      const queryParams = this.queryParams;
-      this.$confirm("是否确认导出所有学员报名申请数据项?", "警告", {
-        confirmButtonText: "确定",
-        cancelButtonText: "取消",
-        type: "warning",
-      })
-        .then(function () {
-          return exportXybmsq(queryParams);
-        })
-        .then((response) => {
-          this.download(response.msg);
         })
         .catch(function () {});
     },

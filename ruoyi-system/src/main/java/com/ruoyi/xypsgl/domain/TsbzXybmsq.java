@@ -85,6 +85,20 @@ public class TsbzXybmsq extends BaseEntity
     @Excel(name = "创建人")
     private Long createUser;
 
+    // 学校审核状态
+    private String xxshstatus;
+
+    // 学校审核建议
+    private String xxshjy;
+
+    // 区级审核状态
+    private String qjshstatus;
+
+
+
+    // 区级审核建议
+    private String qjshjy;
+
     public void setId(Long id) 
     {
         this.id = id;
@@ -239,6 +253,38 @@ public class TsbzXybmsq extends BaseEntity
         return createUser;
     }
 
+    public String getXxshstatus() {
+        return xxshstatus;
+    }
+
+    public void setXxshstatus(String xxshstatus) {
+        this.xxshstatus = xxshstatus;
+    }
+
+    public String getXxshjy() {
+        return xxshjy;
+    }
+
+    public void setXxshjy(String xxshjy) {
+        this.xxshjy = xxshjy;
+    }
+
+    public String getQjshstatus() {
+        return qjshstatus;
+    }
+
+    public void setQjshstatus(String qjshstatus) {
+        this.qjshstatus = qjshstatus;
+    }
+
+    public String getQjshjy() {
+        return qjshjy;
+    }
+
+    public void setQjshjy(String qjshjy) {
+        this.qjshjy = qjshjy;
+    }
+
     @Override
     public String toString() {
         return new ToStringBuilder(this,ToStringStyle.MULTI_LINE_STYLE)
@@ -260,6 +306,10 @@ public class TsbzXybmsq extends BaseEntity
             .append("email", getEmail())
             .append("createTime", getCreateTime())
             .append("createUser", getCreateUser())
+            .append("xxshstatus", getXxshstatus())
+            .append("xxshjy", getXxshjy())
+            .append("qjshstatus", getQjshstatus())
+            .append("qjshjy", getQjshjy())
             .toString();
     }
 }

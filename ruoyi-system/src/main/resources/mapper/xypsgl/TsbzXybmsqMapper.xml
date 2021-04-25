@@ -23,10 +23,14 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="email"    column="Email"    />
         <result property="createTime"    column="create_time"    />
         <result property="createUser"    column="create_user"    />
+        <result property="xxshstatus"    column="xxshstatus"    />
+        <result property="xxshjy"    column="xxshjy"    />
+        <result property="qjshstatus"    column="qjshstatus"    />
+        <result property="qjshjy"    column="qjshjy"    />
     </resultMap>
 
     <sql id="selectTsbzXybmsqVo">
-        select id, faid, jdid, name, jxbh, xb, csrq, xd, xk, zc, dwmc, dwdz, jdtype, sf, phone, Email, create_time, create_user from tsbz_xybmsq
+        select id, faid, jdid, name, jxbh, xb, csrq, xd, xk, zc, dwmc, dwdz, jdtype, sf, phone, Email, create_time, create_user, xxshstatus, xxshjy, qjshstatus, qjshjy from tsbz_xybmsq
     </sql>
 
     <select id="selectTsbzXybmsqList" parameterType="TsbzXybmsq" resultMap="TsbzXybmsqResult">
@@ -47,13 +51,24 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="sf != null  and sf != ''"> and sf = #{sf}</if>
             <if test="phone != null  and phone != ''"> and phone = #{phone}</if>
             <if test="email != null  and email != ''"> and Email = #{email}</if>
+            <if test="xxshstatus != null  and xxshstatus != ''"> and xxshstatus = #{xxshstatus}</if>
+            <if test="xxshjy != null  and xxshjy != ''"> and xxshjy = #{xxshjy}</if>
+            <if test="qjshstatus != null  and qjshstatus != ''"> and qjshstatus = #{qjshstatus}</if>
+            <if test="qjshjy != null  and qjshjy != ''"> and qjshjy = #{qjshjy}</if>
             <if test="createUser != null "> and create_user = #{createUser}</if>
         </where>
     </select>
-    
+
     <select id="selectTsbzXybmsqById" parameterType="Long" resultMap="TsbzXybmsqResult">
         <include refid="selectTsbzXybmsqVo"/>
         where id = #{id}
+    </select>
+
+    <select id="selectCountYibaoming" parameterType="TsbzXybmsq" resultMap="TsbzXybmsqResult">
+        select count(1) from tsbz_xybmsq
+        <where>
+            <if test="jdid != null "> and jdid = #{jdid}</if>
+        </where>
     </select>
         
     <insert id="insertTsbzXybmsq" parameterType="TsbzXybmsq" useGeneratedKeys="true" keyProperty="id">
@@ -74,6 +89,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="sf != null">sf,</if>
             <if test="phone != null">phone,</if>
             <if test="email != null">Email,</if>
+            <if test="xxshstatus != null">xxshstatus,</if>
+            <if test="xxshjy != null">xxshjy,</if>
+            <if test="qjshstatus != null">qjshstatus,</if>
+            <if test="qjshjy != null">qjshjy,</if>
             <if test="createTime != null">create_time,</if>
             <if test="createUser != null">create_user,</if>
          </trim>
@@ -93,6 +112,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="sf != null">#{sf},</if>
             <if test="phone != null">#{phone},</if>
             <if test="email != null">#{email},</if>
+            <if test="xxshstatus != null">#{xxshstatus},</if>
+            <if test="xxshjy != null">#{xxshjy},</if>
+            <if test="qjshstatus != null">#{qjshstatus},</if>
+            <if test="qjshjy != null">#{qjshjy},</if>
             <if test="createTime != null">#{createTime},</if>
             <if test="createUser != null">#{createUser},</if>
          </trim>
@@ -116,6 +139,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="sf != null">sf = #{sf},</if>
             <if test="phone != null">phone = #{phone},</if>
             <if test="email != null">Email = #{email},</if>
+            <if test="xxshstatus != null">xxshstatus = #{xxshstatus},</if>
+            <if test="xxshjy != null">xxshjy = #{xxshjy},</if>
+            <if test="qjshstatus != null">qjshstatus = #{qjshstatus},</if>
+            <if test="qjshjy != null">qjshjy = #{qjshjy},</if>
             <if test="createTime != null">create_time = #{createTime},</if>
             <if test="createUser != null">create_user = #{createUser},</if>
         </trim>
