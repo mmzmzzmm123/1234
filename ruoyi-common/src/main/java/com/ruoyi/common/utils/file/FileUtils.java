@@ -1,7 +1,5 @@
 package com.ruoyi.common.utils.file;
 
-import org.apache.commons.lang3.StringUtils;
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -17,7 +15,7 @@ import com.ruoyi.common.utils.StringUtils;
 
 /**
  * 文件处理工具类
- * 
+ *
  * @author ruoyi
  */
 public class FileUtils extends org.apache.commons.io.FileUtils
@@ -26,7 +24,7 @@ public class FileUtils extends org.apache.commons.io.FileUtils
 
     /**
      * 输出指定文件的byte数组
-     * 
+     *
      * @param filePath 文件路径
      * @param os 输出流
      * @return
@@ -82,7 +80,7 @@ public class FileUtils extends org.apache.commons.io.FileUtils
 
     /**
      * 删除文件
-     * 
+     *
      * @param filePath 文件
      * @return
      */
@@ -101,7 +99,7 @@ public class FileUtils extends org.apache.commons.io.FileUtils
 
     /**
      * 文件名称验证
-     * 
+     *
      * @param filename 文件名称
      * @return true 正常 false 非法
      */
@@ -112,7 +110,7 @@ public class FileUtils extends org.apache.commons.io.FileUtils
 
     /**
      * 检查文件是否可下载
-     * 
+     *
      * @param resource 需要下载的文件
      * @return true 正常 false 非法
      */
@@ -136,7 +134,7 @@ public class FileUtils extends org.apache.commons.io.FileUtils
 
     /**
      * 下载文件名重新编码
-     * 
+     *
      * @param request 请求对象
      * @param fileName 文件名
      * @return 编码后的文件名
@@ -169,16 +167,37 @@ public class FileUtils extends org.apache.commons.io.FileUtils
         return filename;
     }
 
-    public static String getFileFormatWithDot(String fileName, String contentType) {
-        String fileFormat = "";
-        if (StringUtils.isNotBlank(fileName)) {
-            fileFormat = fileName.substring(fileName.lastIndexOf("."));
-        }
+    /**
+     * 下载文件名重新编码
+     *
+     * @param response 响应对象
+     * @param realFileName 真实文件名
+     * @return
+     */
+    public static void setAttachmentResponseHeader(HttpServletResponse response, String realFileName) throws UnsupportedEncodingException
+    {
+        String percentEncodedFileName = percentEncode(realFileName);
 
-        if (StringUtils.isBlank(fileFormat) && StringUtils.isNotBlank(contentType)) {
-            fileFormat = fileName.substring(fileName.lastIndexOf("/"));
-        }
+        StringBuilder contentDispositionValue = new StringBuilder();
+        contentDispositionValue.append("attachment; filename=")
+                .append(percentEncodedFileName)
+                .append(";")
+                .append("filename*=")
+                .append("utf-8''")
+                .append(percentEncodedFileName);
 
-        return fileFormat;
+        response.setHeader("Content-disposition", contentDispositionValue.toString());
+    }
+
+    /**
+     * 百分号编码工具方法
+     *
+     * @param s 需要百分号编码的字符串
+     * @return 百分号编码后的字符串
+     */
+    public static String percentEncode(String s) throws UnsupportedEncodingException
+    {
+        String encode = URLEncoder.encode(s, StandardCharsets.UTF_8.toString());
+        return encode.replaceAll("\\+", "%20");
     }
 }
