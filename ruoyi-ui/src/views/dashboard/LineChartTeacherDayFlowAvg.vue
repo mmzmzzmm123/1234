@@ -6,7 +6,7 @@
 import echarts from "echarts";
 require("echarts/theme/macarons"); // echarts theme
 import resize from "./mixins/resize";
-import { listDayflowassessmentPjf } from "@/api/benyi/dayflowassessment";
+import { listDayflowassessmentTeacherAvg } from "@/api/benyi/dayflowassessment";
 
 export default {
   mixins: [resize],
@@ -63,18 +63,20 @@ export default {
   methods: {
     /** 查询班级信息列表 */
     async getClassList() {
-      await listDayflowassessmentPjf(this.queryParams).then((response) => {
-        //console.log(response.rows);
-        var items = [];
-        var childcounts = [];
-        response.rows.forEach((element) => {
-          items.push(element.byClass.bjmc);
-          childcounts.push(element.bjpjf);
-        });
-        this.classOptions = items;
-        this.expectedData = childcounts;
-        // console.log(this.classOptions);
-      });
+      await listDayflowassessmentTeacherAvg(this.queryParams).then(
+        (response) => {
+          console.log(this.queryParams);
+          var items = [];
+          var childcounts = [];
+          response.rows.forEach((element) => {
+            items.push(element.pgdxxm);
+            childcounts.push(element.bjpjf);
+          });
+          this.classOptions = items;
+          this.expectedData = childcounts;
+          // console.log(this.classOptions);
+        }
+      );
       this.initChart();
     },
     initChart() {
@@ -84,7 +86,7 @@ export default {
     setOptions() {
       this.chart.setOption({
         title: {
-          text: "一日流程评估班级平均分",
+          text: "一日流程评估教师平均分",
         },
         xAxis: {
           data: this.classOptions,
@@ -117,7 +119,7 @@ export default {
         },
         series: [
           {
-            name: "班级平均分",
+            name: "教师平均分",
             itemStyle: {
               normal: {
                 color: "#FF005A",

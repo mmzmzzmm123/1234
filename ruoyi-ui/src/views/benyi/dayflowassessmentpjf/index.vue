@@ -71,7 +71,7 @@
       @pagination="getList"
     />
     <div class="chart-wrapper">
-      <line-chart />
+      <line-chart :queryParams="queryParams" v-if="isRouterAlive" />
     </div>
   </div>
 </template>
@@ -82,12 +82,14 @@ import { listDayflowassessmentPjf } from "@/api/benyi/dayflowassessment";
 import { listClass } from "@/api/system/class";
 
 export default {
-  name: "Dayflowassessment",
+  name: "DayflowassessmentClassAvg",
   components: {
     LineChart,
   },
   data() {
     return {
+      //是否重新加载组件
+      isRouterAlive: true,
       // 遮罩层
       loading: true,
       // 选中数组
@@ -166,6 +168,8 @@ export default {
     handleQuery() {
       this.queryParams.pageNum = 1;
       this.getList();
+      this.isRouterAlive = false;
+      this.$nextTick(() => (this.isRouterAlive = true));
     },
     /** 重置按钮操作 */
     resetQuery() {

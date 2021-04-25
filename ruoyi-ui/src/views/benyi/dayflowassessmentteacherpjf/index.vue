@@ -48,12 +48,7 @@
     </el-form>
 
     <el-table v-loading="loading" border :data="dayflowassessmentList">
-      <el-table-column
-        label="评估对象"
-        align="center"
-        prop="pgdxxm"
-        fixed
-      />
+      <el-table-column label="评估对象" align="center" prop="pgdxxm" fixed />
       <el-table-column label="最终得分" align="center" prop="bjpjf" />
       <el-table-column label="早间接待" align="center" prop="zjjdpjf" />
       <el-table-column label="用餐" align="center" prop="ycpjf" />
@@ -83,21 +78,28 @@
       :limit.sync="queryParams.pageSize"
       @pagination="getList"
     />
+
+    <div class="chart-wrapper">
+      <line-chart :queryParams="queryParams" v-if="isRouterAlive" />
+    </div>
   </div>
 </template>
 
 <script>
-import {
-  listDayflowassessmentTeacherAvg,
-} from "@/api/benyi/dayflowassessment";
+import LineChart from "../../dashboard/LineChartTeacherDayFlowAvg";
+import { listDayflowassessmentTeacherAvg } from "@/api/benyi/dayflowassessment";
 import { listClass } from "@/api/system/class";
 import { listUser } from "@/api/system/user";
 import { listDetail, getDetail } from "@/api/benyi/dayflow/dayflowmanger";
 
 export default {
-  name: "Dayflowassessment",
+  name: "DayflowassessmentTeacherDayFlowAvg",
+  components: {
+    LineChart,
+  },
   data() {
     return {
+      isRouterAlive: true,
       // 遮罩层
       loading: true,
       // 选中数组
@@ -158,7 +160,9 @@ export default {
     /** 查询幼儿园一日流程评估列表 */
     getList() {
       this.loading = true;
-      listDayflowassessmentTeacherAvg(this.addDateRange(this.queryParams, this.dateRange)).then((response) => {
+      listDayflowassessmentTeacherAvg(
+        this.addDateRange(this.queryParams, this.dateRange)
+      ).then((response) => {
         this.dayflowassessmentList = response.rows;
         this.total = response.total;
         this.loading = false;
@@ -192,6 +196,8 @@ export default {
     handleQuery() {
       this.queryParams.pageNum = 1;
       this.getList();
+      this.isRouterAlive = false;
+      this.$nextTick(() => (this.isRouterAlive = true));
     },
     /** 重置按钮操作 */
     resetQuery() {
