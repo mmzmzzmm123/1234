@@ -158,8 +158,9 @@ public class SysMenuServiceImpl implements ISysMenuService
                 router.setRedirect("noRedirect");
                 router.setChildren(buildMenus(cMenus));
             }
-            else if (isMeunFrame(menu))
+            else if (isMenuFrame(menu))
             {
+                router.setMeta(null);
                 List<RouterVo> childrenList = new ArrayList<RouterVo>();
                 RouterVo children = new RouterVo();
                 children.setPath(menu.getPath());
@@ -321,7 +322,7 @@ public class SysMenuServiceImpl implements ISysMenuService
     {
         String routerName = StringUtils.capitalize(menu.getPath());
         // 非外链并且是一级目录（类型为目录）
-        if (isMeunFrame(menu))
+        if (isMenuFrame(menu))
         {
             routerName = StringUtils.EMPTY;
         }
@@ -344,7 +345,7 @@ public class SysMenuServiceImpl implements ISysMenuService
             routerPath = "/" + menu.getPath();
         }
         // 非外链并且是一级目录（类型为菜单）
-        else if (isMeunFrame(menu))
+        else if (isMenuFrame(menu))
         {
             routerPath = "/";
         }
@@ -360,9 +361,13 @@ public class SysMenuServiceImpl implements ISysMenuService
     public String getComponent(SysMenu menu)
     {
         String component = UserConstants.LAYOUT;
-        if (StringUtils.isNotEmpty(menu.getComponent()) && !isMeunFrame(menu))
+        if (StringUtils.isNotEmpty(menu.getComponent()) && !isMenuFrame(menu))
         {
             component = menu.getComponent();
+        }
+        else if (StringUtils.isEmpty(menu.getComponent()) && isParentView(menu))
+        {
+            component = UserConstants.PARENT_VIEW;
         }
         return component;
     }
@@ -373,10 +378,21 @@ public class SysMenuServiceImpl implements ISysMenuService
      * @param menu 菜单信息
      * @return 结果
      */
-    public boolean isMeunFrame(SysMenu menu)
+    public boolean isMenuFrame(SysMenu menu)
     {
         return menu.getParentId().intValue() == 0 && UserConstants.TYPE_MENU.equals(menu.getMenuType())
                 && menu.getIsFrame().equals(UserConstants.NO_FRAME);
+    }
+
+    /**
+     * 是否为parent_view组件
+     * 
+     * @param menu 菜单信息
+     * @return 结果
+     */
+    public boolean isParentView(SysMenu menu)
+    {
+        return menu.getParentId().intValue() != 0 && UserConstants.TYPE_DIR.equals(menu.getMenuType());
     }
 
     /**

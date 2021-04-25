@@ -17,7 +17,7 @@ import java.util.Map;
  */
 @RestController
 @RequestMapping("/monitor/server")
-public class ServerController extends BaseController
+public class ServerController
 {
     @PreAuthorize("@ss.hasPermi('monitor:server:list')")
     @GetMapping()

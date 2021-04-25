@@ -1,6 +1,8 @@
 package com.ruoyi.framework.aspectj;
 
 import java.lang.reflect.Method;
+import java.util.Collection;
+import java.util.Iterator;
 import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -14,6 +16,7 @@ import org.aspectj.lang.reflect.MethodSignature;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.HandlerMapping;
 import com.alibaba.fastjson.JSON;
@@ -210,8 +213,32 @@ public class LogAspect
      * @param o 对象信息。
      * @return 如果是需要过滤的对象，则返回true；否则返回false。
      */
+    @SuppressWarnings("rawtypes")
     public boolean isFilterObject(final Object o)
     {
-        return o instanceof MultipartFile || o instanceof HttpServletRequest || o instanceof HttpServletResponse;
+        Class<?> clazz = o.getClass();
+        if (clazz.isArray())
+        {
+            return clazz.getComponentType().isAssignableFrom(MultipartFile.class);
+        }
+        else if (Collection.class.isAssignableFrom(clazz))
+        {
+            Collection collection = (Collection) o;
+            for (Iterator iter = collection.iterator(); iter.hasNext();)
+            {
+                return iter.next() instanceof MultipartFile;
+            }
+        }
+        else if (Map.class.isAssignableFrom(clazz))
+        {
+            Map map = (Map) o;
+            for (Iterator iter = map.entrySet().iterator(); iter.hasNext();)
+            {
+                Map.Entry entry = (Map.Entry) iter.next();
+                return entry.getValue() instanceof MultipartFile;
+            }
+        }
+        return o instanceof MultipartFile || o instanceof HttpServletRequest || o instanceof HttpServletResponse
+                || o instanceof BindingResult;
     }
 }

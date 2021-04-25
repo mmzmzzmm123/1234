@@ -2,9 +2,19 @@ module.exports = {
   title: '后台管理系统',
 
   /**
+   * 侧边栏主题 深色主题theme-dark，浅色主题theme-light
+   */
+  sideTheme: 'theme-dark',
+
+  /**
    * 是否系统布局配置
    */
   showSettings: false,
+
+  /**
+   * 是否显示顶部导航
+   */
+  topNav: false,
 
   /**
    * 是否显示 tagsView
