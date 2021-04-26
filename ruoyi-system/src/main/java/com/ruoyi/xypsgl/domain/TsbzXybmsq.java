@@ -94,6 +94,9 @@ public class TsbzXybmsq extends BaseEntity
     // 区级审核状态
     private String qjshstatus;
 
+    // 已经报名人数
+    private Integer countYbm;
+
 
 
     // 区级审核建议
@@ -310,6 +313,15 @@ public class TsbzXybmsq extends BaseEntity
             .append("xxshjy", getXxshjy())
             .append("qjshstatus", getQjshstatus())
             .append("qjshjy", getQjshjy())
+            .append("countYbm", getCountYbm())
             .toString();
+    }
+
+    public Integer getCountYbm() {
+        return countYbm;
+    }
+
+    public void setCountYbm(Integer countYbm) {
+        this.countYbm = countYbm;
     }
 }

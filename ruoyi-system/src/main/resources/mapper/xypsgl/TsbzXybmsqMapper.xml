@@ -65,10 +65,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </select>
 
     <select id="selectCountYibaoming" parameterType="TsbzXybmsq" resultMap="TsbzXybmsqResult">
-        select count(1) from tsbz_xybmsq
-        <where>
-            <if test="jdid != null "> and jdid = #{jdid}</if>
-        </where>
+        select count(*) as countYbm from tsbz_xybmsq
+        where jdid = #{jdid}
     </select>
         
     <insert id="insertTsbzXybmsq" parameterType="TsbzXybmsq" useGeneratedKeys="true" keyProperty="id">

@@ -20,7 +20,7 @@ public interface TsbzXybmsqMapper
     public TsbzXybmsq selectTsbzXybmsqById(Long id);
 
     // 查询已经报名的人数
-    public int selectCountYibaoming (TsbzXybmsq tsbzXybmsq);
+    public TsbzXybmsq selectCountYibaoming (TsbzXybmsq tsbzXybmsq);
 
     /**
      * 查询学员报名申请列表

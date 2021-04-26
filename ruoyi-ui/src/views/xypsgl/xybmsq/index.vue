@@ -235,7 +235,7 @@
     <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="120px">
         <el-form-item label="报名基地" prop="jdid">
-          <el-select v-model="form.jdid" placeholder="请选择报名基地id">
+          <el-select v-model="form.jdid" placeholder="请选择报名基地id" :disabled="true">
             <el-option
               v-for="dict in zcrjdcjList"
               :key="dict.id"
@@ -245,7 +245,7 @@
           </el-select>
         </el-form-item>
         <el-form-item label="基地类别" prop="jdtype">
-          <el-select v-model="form.jdtype" placeholder="请选择基地类别">
+          <el-select v-model="form.jdtype" placeholder="请选择基地类别" :disabled="true">
             <el-option
               v-for="dict in jdtypeOptions"
               :key="dict.dictValue"
@@ -523,7 +523,7 @@ export default {
     // 报名是否显示
     isShow_bm(row) {
       this.queryParams_bm.jdid = row.id;
-      listZcrjdcj(this.queryParams_bm).then((response) => {
+      listXybmsq(this.queryParams_bm).then((response) => {
         this.dqybm = response.rows.length;
       });
       if (this.dqybm < row.zsme) {

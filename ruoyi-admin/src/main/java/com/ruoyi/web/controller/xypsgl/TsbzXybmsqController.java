@@ -4,6 +4,8 @@ import java.util.Date;
 import java.util.List;
 
 import com.ruoyi.common.utils.SecurityUtils;
+import com.ruoyi.web.controller.zcrpsgl.TsbzZcrjdcjController;
+import com.ruoyi.zcrpsgl.service.ITsbzZcrjdcjService;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -35,6 +37,8 @@ public class TsbzXybmsqController extends BaseController
 {
     @Autowired
     private ITsbzXybmsqService tsbzXybmsqService;
+    @Autowired
+    private ITsbzZcrjdcjService tsbzZcrjdcjService;
 
     /**
      * 查询学员报名申请列表
@@ -79,9 +83,21 @@ public class TsbzXybmsqController extends BaseController
     @PostMapping
     public AjaxResult add(@RequestBody TsbzXybmsq tsbzXybmsq)
     {
-        tsbzXybmsq.setCreateUser(SecurityUtils.getLoginUser().getUser().getUserId());
-        tsbzXybmsq.setCreateTime(new Date());
-        return toAjax(tsbzXybmsqService.insertTsbzXybmsq(tsbzXybmsq));
+        AjaxResult ajax = AjaxResult.success();
+        // 获取基地招生名额
+        int countZsme = tsbzZcrjdcjService.selectTsbzZcrjdcjById(tsbzXybmsq.getJdid()).getZsme();
+        TsbzXybmsq tsbzXybmsq1 = new TsbzXybmsq();
+        tsbzXybmsq1.setJdid(tsbzXybmsq.getJdid());
+        // 获取已经报名的老师
+        int countYbm = tsbzXybmsqService.selectCountYibaoming(tsbzXybmsq1).getCountYbm();
+        if (countYbm < countZsme) {
+            tsbzXybmsq.setCreateUser(SecurityUtils.getLoginUser().getUser().getUserId());
+            tsbzXybmsq.setCreateTime(new Date());
+            tsbzXybmsqService.insertTsbzXybmsq(tsbzXybmsq);
+            return ajax;
+        } else {
+            return AjaxResult.error("当前基地名额已满,无法继续报名");
+        }
     }
 
     /**

@@ -46,7 +46,7 @@ public class TsbzXybmsqServiceImpl implements ITsbzXybmsqService
 
     // 查询已报名人数
     @Override
-    public int selectCountYibaoming(TsbzXybmsq tsbzXybmsq) {
+    public TsbzXybmsq selectCountYibaoming(TsbzXybmsq tsbzXybmsq) {
         return tsbzXybmsqMapper.selectCountYibaoming(tsbzXybmsq);
     }
 
