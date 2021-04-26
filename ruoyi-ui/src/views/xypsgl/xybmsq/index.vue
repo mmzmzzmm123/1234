@@ -148,14 +148,6 @@
                 v-hasPermi="['zcrpsgl:xybmsq:edit']"
                 >报名</el-button
               >
-              <el-button
-                size="mini"
-                type="text"
-                icon="el-icon-delete"
-                @click="handleCheck_jd(scope.row)"
-                v-hasPermi="['zcrpsgl:zcrjdcj:edit']"
-                >查看</el-button
-              >
             </template>
           </el-table-column>
         </el-table>
@@ -509,16 +501,6 @@ export default {
         }
       });
       return actions.join("");
-    },
-    // 查看基地按钮操作
-    handleCheck_jd(row) {
-      this.reset();
-      const id = row.id || this.ids;
-      getZcrjdcj(id).then((response) => {
-        this.form = response.data;
-        this.open = true;
-        this.title = "修改主持人基地";
-      });
     },
     // 报名是否显示
     isShow_bm(row) {

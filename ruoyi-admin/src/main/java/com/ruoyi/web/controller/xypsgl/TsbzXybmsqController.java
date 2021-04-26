@@ -84,19 +84,27 @@ public class TsbzXybmsqController extends BaseController
     public AjaxResult add(@RequestBody TsbzXybmsq tsbzXybmsq)
     {
         AjaxResult ajax = AjaxResult.success();
+
         // 获取基地招生名额
         int countZsme = tsbzZcrjdcjService.selectTsbzZcrjdcjById(tsbzXybmsq.getJdid()).getZsme();
         TsbzXybmsq tsbzXybmsq1 = new TsbzXybmsq();
         tsbzXybmsq1.setJdid(tsbzXybmsq.getJdid());
-        // 获取已经报名的老师
-        int countYbm = tsbzXybmsqService.selectCountYibaoming(tsbzXybmsq1).getCountYbm();
-        if (countYbm < countZsme) {
-            tsbzXybmsq.setCreateUser(SecurityUtils.getLoginUser().getUser().getUserId());
-            tsbzXybmsq.setCreateTime(new Date());
-            tsbzXybmsqService.insertTsbzXybmsq(tsbzXybmsq);
-            return ajax;
+        tsbzXybmsq1.setCreateUser(SecurityUtils.getLoginUser().getUser().getUserId());
+        // 先判断是否此用户已经报名此基地
+        if (tsbzXybmsqService.selectTsbzXybmsqList(tsbzXybmsq1).size() > 0) {
+            return AjaxResult.error("您已报名次基地,无法再次报名");
         } else {
-            return AjaxResult.error("当前基地名额已满,无法继续报名");
+            // 获取已经报名的老师
+            int countYbm = tsbzXybmsqService.selectCountYibaoming(tsbzXybmsq1).getCountYbm();
+            // 判断是否有名额
+            if (countYbm < countZsme) {
+                tsbzXybmsq.setCreateUser(SecurityUtils.getLoginUser().getUser().getUserId());
+                tsbzXybmsq.setCreateTime(new Date());
+                tsbzXybmsqService.insertTsbzXybmsq(tsbzXybmsq);
+                return ajax;
+            } else {
+                return AjaxResult.error("当前基地名额已满,无法继续报名");
+            }
         }
     }
 
