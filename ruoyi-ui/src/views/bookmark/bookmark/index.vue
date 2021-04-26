@@ -239,7 +239,8 @@
     delBookmark,
     addBookmark,
     updateBookmark,
-    exportBookmark
+    exportBookmark,
+    listByUserAndPolymerization
   } from "@/api/bookmark/bookmark";
   import {
     selectBymenuNote,
@@ -286,6 +287,8 @@
           sqTags: [],
           sort: 0,
           sousuo: '',
+          type:'',
+          bkOrderBy:'',
         },
         inputVisible: false, //标签
         inputValue: '', //标签
@@ -407,14 +410,17 @@
         this.sousuo=sousuo
       }
 
+      console.log("routedata："+routedata)
+      if (routedata == 'newest'||routedata == 'asterisk'||routedata == 'seeYouLater'||routedata == 'recycle') {
+        that.queryParams.menuId=null;
 
-      if (routedata == 'BOOKMARK') {
+        this.listByUserAndPolymerization(routedata);
         //全部书签
-        this.getBookmarkList();
-
-      } else if (routedata == 'RECYCLE') {
-        //回收站
-        this.getrecycleList();
+        // this.getBookmarkList();
+      //
+      // } else if (routedata == 'RECYCLE') {
+      //   //回收站
+      //   this.getrecycleList();
 
       } else {
         //根据menuId查询
@@ -426,7 +432,7 @@
       this.getHeight()
 
       //获取当前的用户信息
-      this.getUser();
+      // this.getUser();
 
     },
     mounted() {
@@ -539,8 +545,9 @@
         if (index > -1) {
           if (this.form.sqTags[index].tagId < 0) {
             this.form.sqTags.splice(index, 1);
+          }else{
+            this.form.sqTags[index].name = "TAGDELETE";
           }
-          this.form.sqTags[index].name = "TAGDELETE";
         }
         console.log(this.form.sqTags);
       },
@@ -552,12 +559,13 @@
       },
 
       handleInputConfirm() {
+
         let inputValue = this.inputValue;
         if (inputValue) {
           this.tagcount = this.tagcount - 1;
           //添加
           var updatetag = {name: inputValue, bookmarkId: this.form.bookmarkId, tagId: this.tagcount};
-
+          console.log("updatetag")
           this.form.sqTags.push(updatetag);
         }
         this.inputVisible = false;
@@ -581,6 +589,9 @@
         const ibookmarkId = bookmarkId || this.ids
         getBookmark(ibookmarkId).then(response => {
           this.form = response.data;
+          if(this.form.sqTags==null){
+            this.form.sqTags=[];
+          }
           this.open = true;
           this.title = "书签编辑管理";
         });
@@ -629,7 +640,7 @@
         this.open = false;
         this.reset();
       },
-      // 表单重置
+      // 统一的表单重置
       reset() {
         this.form = {
           bookmarkId: undefined,
@@ -712,6 +723,27 @@
             }
         });
       },
+      /** 最新 星标 回收站 稍后看**/
+      listByUserAndPolymerization(str) {
+        console.log(" 最新 星标 回收站 稍后看");
+        this.loading = true;
+        this.queryParams.type=str;
+        this.queryParams.bkOrderBy="";
+        listByUserAndPolymerization(this.queryParams).then(response => {
+            if (response.code == 200) {
+              this.bookmarkList = this.bookmarkList.concat(response.rows);
+              this.total = response.total;
+              this.listloading = false
+              this.loading = false;
+              console.log("请求完毕" + this.queryParams.pageNum)
+            } else {
+              //出错了加载完毕了 禁止滚动
+              this.noMore = true;
+              this.listloading = false
+              this.loading = false;
+            }
+        });
+      },
       /**根据条件查询*/
       getBypropertyList(e){
         switch(e) {
@@ -775,12 +807,14 @@
       getListConcat(){
         var that=this;
         this.loading = true;
-        if(this.queryParams.menuId=='BOOKMARK'){
-          //全部书签
-          this.getBookmarkList();
-        }else if (this.queryParams.menuId == 'RECYCLE') {
-          //回收站书签
-          this.getrecycleList();
+        var routedata = this.queryParams.menuId;
+        if(routedata == 'newest'||routedata == 'asterisk'||routedata == 'seeYouLater'||routedata == 'recycle'){
+          this.listByUserAndPolymerization(routedata);
+        //   //全部书签
+        //   this.getBookmarkList();
+        // }else if (this.queryParams.menuId == 'RECYCLE') {
+        //   //回收站书签
+        //   this.getrecycleList();
         }else{
           //查看目录下的书签
           this.getlistByMenuId();

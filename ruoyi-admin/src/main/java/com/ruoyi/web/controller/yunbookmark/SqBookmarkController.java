@@ -44,16 +44,6 @@ public class SqBookmarkController extends BaseController
     private ISqBookmarkService sqBookmarkService;
 
 
-//    /**
-//     * 测试通用mapper
-//     */
-//    @GetMapping("/selectByID")
-//    public TableDataInfo selectByID( Long userID) {
-//        List<SqBookmark> list = sqBookmarkService.selectByID(userID);
-//        return getDataTable(list);
-//    }
-
-
     /**
      *  删除重复的书签
      */
@@ -130,6 +120,19 @@ public class SqBookmarkController extends BaseController
     public TableDataInfo selectByUseridList() {
         startPage();
         List<SqBookmark> list = sqBookmarkService.selectByUseridList(getAuthUser().getUserId());
+        return getDataTable(list);
+    }
+
+    /**
+     * 查询书签管理列表 聚合>> 星标 稍后看 最新书签
+     */
+//    @PreAuthorize("@ss.hasPermi('bookmark:bookmark:list')")
+    @GetMapping("/listByUserAndPolymerization")
+    public TableDataInfo listByUserAndPolymerization(SqBookmark sqBookmark)
+    {
+        sqBookmark.setUserid(getAuthUser().getUserId());
+        startPage();
+        List<SqBookmark> list = sqBookmarkService.listByUserAndPolymerization(sqBookmark);
         return getDataTable(list);
     }
 

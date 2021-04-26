@@ -20,46 +20,99 @@
 
           <div class="main-right">
 <!--            <svg-icon icon-class="tool" class="svgicon"/>-->
-<!--             <div class="aside-title"><i class="el-icon-s-management"></i><span>发现</span></div>-->
             <div class="aside-title" @click="goRouter(8)"><i class="el-icon-folder"></i><span>最新</span></div>
-            <div class="aside-title"><i class="el-icon-star-off"></i><span>星标</span></div>
-            <div class="aside-title"><i class="el-icon-reading"></i><span>稍后看</span></div>
+            <div class="aside-title" @click="goRouter(9)"><i class="el-icon-star-off"></i><span>星标</span></div>
+            <div class="aside-title" @click="goRouter(10)"><i class="el-icon-reading"></i><span>稍后看</span></div>
             <div class="aside-title"><i class="el-icon-view"></i><span>发现</span></div>
-<!--            <div class="aside-title"><i class="el-icon-s-platform"></i><span>任意门</span></div>-->
-<!--            <div class="aside-title"><i class="el-icon-message-solid"></i><span>收件箱</span></div>-->
-            <div class="reminder">我的收藏 <svg-icon icon-class="sx" style="margin-left:5px" @click="refreshNode"/></div>
-            <div class="areaTree">
+            <div class="aside-title"><i class="el-icon-message"></i><span>收件箱</span></div>
+
+
+            <div class="aside-titleB"  @mouseenter="eidtMenuText=!eidtMenuText" @mouseleave="eidtMenuText=!eidtMenuText">
+              <i @click="menuListShowCk" :class="menuListShow ? 'el-icon-caret-bottom aside-titleB_childi_one':'el-icon-caret-right aside-titleB_childi_one'"   ></i>
+              <i class="el-icon-folder-opened aside-titleB_childi_two"></i>
+              <span >我的收藏</span>
+              <div style="margin-left: 40%" v-show="eidtMenuText">
+                <i class="el-icon-search" style="font-size: 19px;margin-left: 5px;margin-top: 7px" @click="searchBkMenuCk"></i>
+                <i class="el-icon-folder-add" style="font-size: 19px;margin-left: 5px;margin-top: 7px" @click="addBkMenuCk"></i>
+              </div>
+            </div>
+
+
+<!--            <div class="reminder" style="display: flex;">-->
+<!--              <span  @click="menuListShowCk">我的收藏</span>-->
+<!--              <div style="margin-left: 55%">-->
+<!--&lt;!&ndash;              <i class="el-icon-refresh" style="font-size: 19px;margin-left: 5px;margin-top: 7px" @click="refreshNode"></i>&ndash;&gt;-->
+<!--              <i class="el-icon-search" style="font-size: 19px;margin-left: 5px;margin-top: 7px" @click="searchBkMenuCk"></i>-->
+<!--              <i class="el-icon-folder-add" style="font-size: 19px;margin-left: 5px;margin-top: 7px" @click="addBkMenuCk"></i>-->
+<!--              </div>-->
+<!--            </div>-->
+
+
+            <div style="display: flex;justify-items: center;align-items: center">
+              <el-input
+                v-if="!addBkMenu"
+                placeholder="输入收藏夹名字"
+                v-model="input4"
+                size="mini"
+                style="width: 80%;margin-left: 5%"
+              >
+                <i slot="prefix" class="el-input__icon el-icon-circle-plus-outline"></i>
+              </el-input>
+              <i v-if="!addBkMenu" @click="addBkMenuCk" class="el-icon-close" style="font-size: 25px;margin-left: 5px;margin-bottom: 2px"></i>
+            </div>
+
+            <div style="display: flex;justify-items: center;align-items: center">
+              <el-input
+                v-if="!searchBkMenu"
+                placeholder="搜索目录"
+                v-model="input4"
+                size="mini"
+                style="width: 80%;margin-left: 5%"
+              >
+                <i slot="prefix" class="el-icon-search" style="margin-left: 5px"></i>
+              </el-input>
+              <i v-if="!searchBkMenu" @click="searchBkMenuCk" class="el-icon-close" style="font-size: 25px;margin-left: 5px;margin-bottom: 2px"></i>
+            </div>
+<!--            <transition name="el-zoom-in-top">-->
+            <!-- 目录-->
+            <div class="areaTree" v-show="menuListShow">
               <ul id="treeDemo" class="ztree"></ul>
             </div>
-            <div class="reminder" >工具箱</div>
+<!--            </transition>-->
+
+<!--            <div class="reminder" STYLE="">工具箱</div>-->
+
+            <div class="aside-titleB"  @mouseenter="eidtTAGText=!eidtTAGText" @mouseleave="eidtTAGText=!eidtTAGText">
+              <i @click="tagListShowCk" :class="tagListShow ? 'el-icon-caret-bottom aside-titleB_childi_one':'el-icon-caret-right aside-titleB_childi_one'"   ></i>
+              <i class="el-icon-price-tag aside-titleB_childi_two"></i>
+            <span >工具箱</span>
+              <div style="margin-left: 40%" v-show="eidtTAGText">
+                <i class="el-icon-search" style="font-size: 19px;margin-left: 5px;margin-top: 7px" @click="searchBkTagCk"></i>
+                <i class="el-icon-folder-add" style="font-size: 19px;margin-left: 5px;margin-top: 7px" @click="addBkTagCk"></i>
+              </div>
+            </div>
+
+
+
 <!--            <div class="aside-title"><i class="el-icon-s-flag" style="color: #569cd5"></i><span>RSS订阅</span></div>-->
             <div class="aside-title" @click="goRouter(7)"><i class="el-icon-collection"></i><span>标签管理</span></div>
             <div class="aside-title" @click="goRouter(6)"><i class="el-icon-delete" ></i><span>垃圾桶</span></div>
-<!--            <div class="aside-title" @click="goRouter(5)"><i class="el-icon-s-platform"></i><span>导入书签</span></div>-->
             <div class="aside-title"><i class="el-icon-chat-dot-square"></i><span>意见反馈</span></div>
-<!--            <div class="aside-title" @click="ceshi"><i class="el-icon-s-comment"></i><span>测试页面</span></div>-->
             <div class="aside-title" @click="goRouter(2)"><i class="el-icon-suitcase"></i><span>小工具</span></div>
-            <div class="aside-title " style="margin-bottom: 100px"  @click="goRouter(9)"><i class="el-icon-setting"></i><span>更多设置</span></div>
+            <div class="aside-title " style="margin-bottom: 100px"  @click="goRouter(11)"><i class="el-icon-setting"></i><span>更多设置</span></div>
 
           </div>
 
-          <div class="block">
-            <span class="demonstration">默认 Hover 指示器触发</span>
-            <el-carousel height="150px">
-              <el-carousel-item v-for="item in 4" :key="item">
-                <h3 class="small">{{ item }}</h3>
-              </el-carousel-item>
-            </el-carousel>
-          </div>
+
         </el-aside>
       </transition>
 
 
 
 
-
-      <div class="isresize" style="cursor:w-resize">
-      </div>
+      <!-- 拖拽 -->
+<!--      <div class="isresize" style="cursor:w-resize">-->
+<!--      </div>-->
 
 
 
@@ -90,97 +143,17 @@
           <div class="labelname">上级菜单</div>
           <treeselect class="menutreeselect" v-model="form.parentId" :options="menuOptions" :normalizer="normalizer"/>
         </el-form-item>
-<!--        <el-form-item prop="menuOrder">-->
-<!--          <div class="labelname">排序(小到大)</div>-->
-<!--          <br/>-->
-<!--          <el-input-number v-model="form.menuOrder" placeholder="计数器"></el-input-number>-->
-<!--        </el-form-item>-->
+
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button type="danger" style="background-color: #ff6c70"  @click="deleteMmenu(form.menuId)">删除</el-button>
-        <el-button type="primary" style="background-color: #09b1b9"  @click="submitForm">确定</el-button>
+        <el-button type="danger"  @click="deleteMmenu(form.menuId)">删除</el-button>
+        <el-button type="primary"   @click="submitForm">确定</el-button>
         <el-button  @click="cancel">取消</el-button>
       </div>
 
     </el-dialog>
 
 
-<!--    &lt;!&ndash; 添加链接&ndash;&gt;-->
-<!--    &lt;!&ndash; 添加或修改书签管理对话框 &ndash;&gt;-->
-<!--    <el-dialog title="添加连接" :visible.sync="addopen" width="500px" append-to-body>-->
-<!--      <el-form ref="form" :model="form" :rules="rules" label-width="80px">-->
-<!--        <el-form-item label="书签地址" prop="url">-->
-<!--          <el-input v-model="form.url" placeholder="请输入书签地址"/>-->
-<!--        </el-form-item>-->
-<!--        <el-form-item label="书签标题" prop="title">-->
-<!--          <el-input v-model="form.title" placeholder="请输入书签标题"/>-->
-<!--        </el-form-item>-->
-<!--        <el-form-item label="书签描述" prop="description">-->
-<!--          <el-input v-model="form.description" type="textarea" placeholder="请输入书签描述"-->
-<!--                    :autosize="{minRows: 3, maxRows:4}" :style="{width: '100%'}"></el-input>-->
-<!--        </el-form-item>-->
-
-<!--        <el-form-item prop="parentId">-->
-<!--          <div class="labelname">分类菜单</div>-->
-<!--          <treeselect class="menutreeselect" v-model="form.menuId" :options="menuOptions" :normalizer="normalizer"/>-->
-<!--        </el-form-item>-->
-
-<!--        <el-form-item label="书签标签" prop="label">-->
-<!--          <el-tag-->
-<!--            class="bookmarktag"-->
-<!--            v-for="tag in sqTags"-->
-<!--            :key="tag.tagId"-->
-<!--            closable-->
-<!--            type="success"-->
-<!--            :disable-transitions="false"-->
-<!--            @close="taghandleClose(tag.tagId)"-->
-<!--            v-if="tag.name!='TAGDELETE'"-->
-<!--          >-->
-<!--            {{tag.name}}-->
-<!--          </el-tag>-->
-<!--          <el-input-->
-<!--            class="input-new-tag"-->
-<!--            v-if="inputVisible"-->
-<!--            v-model="inputValue"-->
-<!--            ref="saveTagInput"-->
-<!--            size="small"-->
-<!--            @keyup.enter.native="handleInputConfirm"-->
-<!--            @blur="handleInputConfirm"-->
-<!--          >-->
-<!--          </el-input>-->
-<!--          <el-button v-else class="button-new-tag" size="small" @click="showInput">+ 新增标签</el-button>-->
-
-<!--        </el-form-item>-->
-
-<!--        &lt;!&ndash;        <el-form-item label="所属目录" prop="menuId">&ndash;&gt;-->
-<!--        &lt;!&ndash;          <el-input v-model="form.menuId" placeholder="请选择上级目录" />&ndash;&gt;-->
-<!--        &lt;!&ndash;        </el-form-item>&ndash;&gt;-->
-
-
-<!--        &lt;!&ndash;        0公开显示 1隐藏显示 2好友显示&ndash;&gt;-->
-<!--        <el-form-item label="选择状态" prop="start">-->
-<!--          <el-radio-group v-model="form.start" size="medium">-->
-<!--            <el-radio v-for="(item, index) in bookmarkstatus" :key="index" :label="item.value"-->
-<!--                      :disabled="item.disabled">{{item.name}}-->
-<!--            </el-radio>-->
-<!--          </el-radio-group>-->
-<!--        </el-form-item>-->
-<!--        &lt;!&ndash;           1.未读稍后再看 2 已读 2.續看&ndash;&gt;-->
-<!--        <el-form-item label="选择类型" prop="type">-->
-<!--          <el-radio-group v-model="form.type" size="medium">-->
-<!--            <el-radio v-for="(item, index) in bookmarktype" :key="index" :label="item.value"-->
-<!--                      :disabled="item.disabled">{{item.name}}-->
-<!--            </el-radio>-->
-<!--          </el-radio-group>-->
-<!--        </el-form-item>-->
-
-
-<!--      </el-form>-->
-<!--      <div slot="footer" class="dialog-footer">-->
-<!--        <el-button type="primary" @click="addbookmark">确 定</el-button>-->
-<!--        <el-button @click="bookmarkcancel">取 消</el-button>-->
-<!--      </div>-->
-<!--    </el-dialog>-->
     <!--背景特效-->
     <canvas id="evanyou"></canvas>
   </div>
@@ -209,6 +182,17 @@
 
     data: function () {
       return {
+        addBkMenu:true,//添加书签目录
+        searchBkMenu:true,//搜索目录
+        menuListShow:true,//目录list
+        eidtMenuText:false,//我的收藏
+
+        addBkTAG:true,//添加书TAG
+        searchBkTAG:true,//搜索TAG
+        tagListShow:false,//TAGlist
+        eidtTAGText:false,//我的TAG
+
+
         queryParams: {
           userId: undefined,
           menuName: undefined,
@@ -366,6 +350,45 @@
     },
 
     methods: {
+      /**添加书签目录**/
+      addBkMenuCk(){
+        this.addBkMenu = this.addBkMenu?false:true;
+        this.searchBkMenu = true;
+        this.menuListShow = true;
+      },
+      /**搜索书签目录**/
+      searchBkMenuCk(){
+        this.searchBkMenu = this.searchBkMenu?false:true;
+        this.addBkMenu = true;
+        this.menuListShow = true;
+      },
+      /**搜索书签目录**/
+      menuListShowCk(){
+        this.menuListShow = this.menuListShow?false:true;
+        this.addBkMenu = true;
+        this.searchBkMenu = true;
+      },
+
+
+      /**添加书签目录**/
+      addBkTagCk(){
+        this.addBkTAG = this.addBkTAG?false:true;
+        this.searchBkTAG = true;
+        this.tagListShow = true;
+      },
+      /**搜索书签目录**/
+      searchBkTagCk(){
+        this.searchBkMenu = this.searchBkTAG?false:true;
+        this.addBkTAG = true;
+        this.tagListShow = true;
+      },
+      /**搜索书签目录**/
+      tagListShowCk(){
+        this.tagListShow = this.tagListShow?false:true;
+        this.addBkTAG = true;
+        this.searchBkTAG = true;
+      },
+
       /**图片失败显示**/
       errorHandler() {
         return true
@@ -863,7 +886,7 @@
             that.$router.push({
               path: "/content",
               query: {
-                menuId: 'RECYCLE'
+                menuId: 'recycle'
               }
             })
             break;
@@ -874,16 +897,37 @@
             })
             break;
           case 8:
-            //全部书签
+            //全部最新书签
             that.$router.push({
               path: "/content",
               query: {
-                menuId: 'BOOKMARK'
+                menuId: 'newest',
+                t:Date.now(),
               }
             })
             break;
           case 9:
-            //个人中心
+            //星标
+            that.$router.push({
+              path: "/content",
+              query: {
+                menuId: 'asterisk',
+                t:Date.now(),
+              }
+            })
+            break;
+          case 10:
+            //稍后看
+            that.$router.push({
+              path: "/content",
+              query: {
+                menuId: 'seeYouLater',
+                t:Date.now(),
+              }
+            })
+            break;
+          case 11:
+            //用户中心
             that.$router.push({
               path: "/bkindex",
             })
@@ -892,7 +936,8 @@
             that.$router.push({
               path: "/content",
               query: {
-                menuId: 'BOOKMARK'
+                menuId: 'newest',
+                t:Date.now(),
               }
             })
         }
@@ -1033,13 +1078,40 @@
   /*.isaside{*/
   /*  cursor:w-resize*/
   /*}*/
+  .aside-titleB{
+    display: flex;
+    height: 32px;
+    align-items: center;
+    justify-items: center;
+  }
+  .aside-titleB:hover {
+    background-color: #e8e8e8;
+  }
+/**第一个元素**/
+  .aside-titleB_childi_one{
+    margin-left: 5px;
+    font-size: 15px;
+    margin-right: 11px;
+    vertical-align: middle;
+  }
+  /**第二个元素**/
+  .aside-titleB_childi_two{
+    margin-left: -4px;
+    font-size: 20px;
+    margin-right: 11px;
+    vertical-align: middle;
+  }
+  .aside-titleB span{
+    font-size: 14px;
+  }
+
 
   .aside-title {
     height: 32px;
   }
 
   .aside-title:hover {
-    background-color: #c5c5c5;
+    background-color: #e8e8e8;
   }
 
   .aside-title i {
@@ -1097,7 +1169,7 @@
     opacity: 0.7;
     font-size: 14px !important;
     font-weight: 500 !important;
-    margin-left: 27px !important;
+    margin-left: 27px ;
 
   }
 

@@ -271,7 +271,7 @@ export default {
       this.h3 = this.loginFlag?"藏趣云":"用户注册";
       this.loginButton = this.loginFlag?"登 录":"注册";
       this.loginButtonMeg = this.loginFlag?"登 录 中...":"注 册 中...";
-      this.switchLoginText = this.loginFlag?"前往注册":"返回登陆";
+      this.switchLoginText = this.loginFlag?"账号注册":"账号登陆";
 
       this.$message({
         message: this.loginFlag?"返回登陆":"前往注册",

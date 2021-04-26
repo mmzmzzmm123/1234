@@ -148,4 +148,26 @@ public interface ISqBookmarkService
      *  重新计算目录下的书签数量和 目录的结构
      */
     public void bookmarkMenuCount(Long userId,Long menuId);
+
+    /**
+     * @Description: 导出书签文件html功能
+     *
+     * @param  userId
+     * @return StringBuilder
+     * @Date
+     * @author: wanghao
+     *
+     */
+    StringBuilder exportToHtml(Long userId);
+
+    /**
+     * @Description: 查询书签管理列表 聚合>> 星标 稍后看 最新书签
+     *
+     * @param
+     * @return
+     * @Date
+     * @author: wanghao
+     *
+     */
+    List<SqBookmark> listByUserAndPolymerization(SqBookmark sqBookmark);
 }

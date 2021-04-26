@@ -16,22 +16,22 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="menuId"    column="menu_id"    />
         <result property="zcount"    column="zcount"    />
         <result property="bookmarkStar"    column="bookmark_star"    />
+        <result property="tagNameAll"    column="tag_name_all"    />
         <result property="idelete"    column="idelete"    />
         <result property="start"    column="start"    />
         <result property="createTime"    column="create_time"    />
+        <result property="seeYouLater"    column="see_you_later"    />
 <!--        <collection property="sqTags"-->
 <!--                    javaType="java.util.ArrayList"-->
 <!--                    ofType="java.util.Map"-->
 <!--                    select="com.ruoyi.bookmark.mapper.SqBookmarkTagMapper.selectSqTaListById"-->
 <!--                    column="bookmark_id">-->
-
-
 <!--        </collection>-->
 
     </resultMap>
 
     <sql id="selectSqBookmarkVo">
-        select bookmark_id, userid, title, url, urls, description, image, Label, menu_id, zcount, IDelete, Start, create_time,bookmark_star from sq_bookmark
+        select bookmark_id, userid, title, url, urls, description, image, Label, menu_id, zcount, IDelete, Start, create_time,bookmark_star,tag_name_all from sq_bookmark
     </sql>
 
     <select id="selectSqBookmarkList" parameterType="SqBookmark" resultMap="SqBookmarkResult">
@@ -70,6 +70,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="zcount != null">zcount,</if>
             <if test="idelete != null">idelete,</if>
             <if test="start != null">start,</if>
+            <if test="tagNameAll != null">tag_name_all,</if>
             <if test="createTime != null">create_time,</if>
          </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
@@ -84,6 +85,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="zcount != null">#{zcount},</if>
             <if test="idelete != null">#{idelete},</if>
             <if test="start != null">#{start},</if>
+            <if test="tagNameAll != null">#{tagNameAll},</if>
             <if test="createTime != null">#{createTime},</if>
          </trim>
     </insert>
@@ -102,6 +104,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="zcount != null">zcount = #{zcount},</if>
             <if test="idelete != null">idelete = #{idelete},</if>
             <if test="start != null">start = #{start},</if>
+            <if test="tagNameAll != null">tag_name_all = #{tagNameAll},</if>
             <if test="bookmarkStar != null">bookmark_star = #{bookmarkStar},</if>
             <if test="createTime != null">create_time = #{createTime},</if>
         </trim>
@@ -172,5 +175,36 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
                 create_time desc
             </otherwise>
         </choose>
+    </select>
+
+
+
+
+    <select id="listByUserAndPolymerization" parameterType="SqBookmark" resultMap="SqBookmarkResult">
+        <include refid="selectSqBookmarkVo"/>
+        <where>
+            <if test="userid != null "> and userid = #{userid}</if>
+            <if test="idelete != null "> and idelete = #{idelete}</if>
+            <if test="bookmarkStar != null "> and bookmark_star = #{bookmarkStar}</if>
+            <if test="seeYouLater != null "> and see_you_later = #{seeYouLater}</if>
+            order by
+            <choose>
+                <when test="sort == 0">
+                    create_time desc
+                </when>
+                <when test="sort == 1">
+                    create_time asc
+                </when>
+                <when test="sort == 2">
+                    CONVERT(title USING GBK) asc
+                </when>
+                <when test="sort == 3">
+                    CONVERT(title USING GBK) desc
+                </when>
+                <otherwise>
+                    create_time desc
+                </otherwise>
+            </choose>
+        </where>
     </select>
 </mapper>

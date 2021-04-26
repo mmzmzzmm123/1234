@@ -127,7 +127,7 @@ public class SqTagServiceImpl implements ISqTagService
         }else {
            //不存在 >>创建 返回ID
            sqTagMapper.insertSqTag(sqTag);
-           logger.debug("传入的新标签 tagid="+sqTag.getId());
+//           logger.debug("传入的新标签 tagid="+sqTag.getId());
           map.put("tagId",sqTag.getId());
         }
         return map;

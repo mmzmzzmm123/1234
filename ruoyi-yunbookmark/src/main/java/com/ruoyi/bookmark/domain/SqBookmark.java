@@ -96,9 +96,23 @@ public class SqBookmark
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date createTime;
 
+    /**tag名称串**/
+    @Column(name = "tag_name_all")
+    private String tagNameAll;
+
+    /**是否稍后读 0不是 1是**/
+    @Column(name = "see_you_later")
+    private Integer seeYouLater;
+
     @Transient
     private Long parentId;
 
+    /** 书签的类型 星标 稍后看 最新书签 **/
+    @Transient
+    private String type;
+    /** 排序的方式 **/
+    @Transient
+    private String sort;
 
     private List<Map<String,Object>> sqTags;
 

@@ -37,6 +37,24 @@ public class Const {
     public static String PHONE_REGISTER= "phone_register";
 
 
+    //最新书签
+    public static String NEWEST = "newest";
+    //星标
+    public static String ASTERISK = "asterisk";
+    //稍后看
+    public static String SEEYOULATER = "seeYouLater";
+    //回收站
+    public static String RECYCLE = "recycle";
+
+
+
+
+    //是否书签删除状态 0 未删除 1表示删除
+    public static int BKDELETE = 0;
+
+    public static int BKNOTDELETE = 1;
+
+
 
 
 }

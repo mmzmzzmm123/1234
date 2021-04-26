@@ -2,18 +2,16 @@ package com.ruoyi.web.controller.yunbookmark;
 
 
 
-import com.ruoyi.bookmark.domain.SqBookmark;
-import com.ruoyi.bookmark.domain.SqMenu;
+
+import cn.hutool.core.date.DateUtil;
 import com.ruoyi.bookmark.service.ISqBookmarkService;
 import com.ruoyi.bookmark.service.ISqMenuService;
 import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.core.domain.entity.SysUser;
-import com.ruoyi.common.core.redis.RedisUtil;
 import com.ruoyi.common.utils.bookmarkhtml.Const;
 import com.ruoyi.common.utils.bookmarkhtml.HtmlName;
 import com.ruoyi.common.utils.bookmarkhtml.ImportHtml;
-import com.ruoyi.common.utils.StringUtils;
 import org.jsoup.HttpStatusException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,13 +23,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 import javax.net.ssl.SSLHandshakeException;
-import java.net.URL;
-import java.util.Comparator;
+import javax.servlet.http.HttpServletResponse;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.stream.Collectors;
 
 
 /**
@@ -50,9 +45,9 @@ public class BrowserController extends BaseController {
     @Autowired
     private ISqBookmarkService iSqBookmarkService;
 
-
+    //导入
     @RequestMapping("/import")
-    @PreAuthorize("@ss.hasPermi('bookmark:browser:export')")
+    @PreAuthorize("@ss.hasPermi('bookmark:browser:import')")
     public AjaxResult importCollect(@RequestParam("htmlFile") MultipartFile htmlFile){
         long startTime = System.currentTimeMillis();
         logger.info("开始上传状态是:"+ startTime );
@@ -88,7 +83,7 @@ public class BrowserController extends BaseController {
         long endTime = System.currentTimeMillis();
 
         float seconds = (endTime - startTime) / 1000F;
-        logger.info("导入用时:"+ Float.toString(seconds) );
+        logger.info("导入用时:"+ seconds +"秒");
 
         return AjaxResult.success("导入成功");
 
@@ -96,34 +91,31 @@ public class BrowserController extends BaseController {
 
 
 
-//    /**
-//     * 导入收藏文章
-//     */
-//    public void importHtml(Map<String, String> map,Long menuID,Long userId){
-//        for(Entry<String, String> entry : map.entrySet()){
-//            try {
-//                //获取URL后查询最新的URL信息
-//                Map<String, String> result = ImportHtml.getCollectFromUrl(entry.getKey());
-//                SqBookmark sqBookmark =new SqBookmark();
-//                sqBookmark.setUserid(userId);
-//                sqBookmark.setTitle(entry.getValue());
-//                sqBookmark.setUrl(entry.getKey());
-//                sqBookmark.setUrls(ImportHtml.Urlutils(new URL(entry.getKey())));
-//                if(StringUtils.isBlank(result.get("description"))){
-//                    sqBookmark.setDescription(entry.getValue());
-//                }else{
-//                    sqBookmark.setDescription(result.get("description"));
-//                }
-//                sqBookmark.setMenuId(menuID);
-//                sqBookmark.setCreateTime(new Date());
-//                iSqBookmarkService.insertSqBookmark(sqBookmark);
-//            } catch (Exception e) {
-//                logger.error("导入存储异常：",e);
-//            }
-//        }
-//
-//    }
+    /**
+     *  导出全部书签
+     */
+    @RequestMapping("/export")
+//    @PreAuthorize("@ss.hasPermi('bookmark:browser:export')")
+    public void exportCollect(HttpServletResponse response) {
+        long startTime = System.currentTimeMillis();
+        logger.info("导出书签:" + startTime + "用户ID:" + getAuthUser().getUserId());
+        try {
+            String fileName = "cqy_" + DateUtil.now() + ".html";
+            StringBuilder sb = iSqBookmarkService.exportToHtml(getAuthUser().getUserId());
+            response.setContentType("application/octet-stream;charset=UTF-8");
+            response.setHeader("Access-Control-Expose-Headers", "content-disposition"); //Access-Control-Expose-Headers 让前端可以取Content-Disposition
+            response.setHeader("content-disposition", "attachment;filename=" + fileName);
+            response.setHeader("Pargam", "no-cache");
+            response.setHeader("Cache-Control", "no-cache");
+            response.getWriter().print(sb);
+        } catch (Exception e) {
+            logger.error("异常：", e);
+        }
 
+        long endTime = System.currentTimeMillis();
+        float seconds = (endTime - startTime) / 1000F;
+        logger.info("导出用时:" + seconds+"秒");
+    }
 
 
 }

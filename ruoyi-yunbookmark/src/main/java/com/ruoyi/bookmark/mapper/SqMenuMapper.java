@@ -1,6 +1,8 @@
 package com.ruoyi.bookmark.mapper;
 
 import java.util.List;
+
+import com.ruoyi.bookmark.domain.SqBookmark;
 import com.ruoyi.bookmark.domain.SqMenu;
 import com.ruoyi.common.mybatisMapper.MyMapper;
 import org.apache.ibatis.annotations.Param;
@@ -126,6 +128,7 @@ public interface SqMenuMapper extends MyMapper<SqMenu>
      * @return
      */
     public int countByMenuUplinkSeriesAndMenu(@Param("menuUplinkSeries")String menuUplinkSeries, @Param("menuId")Long menuId);
+
 
 
 }

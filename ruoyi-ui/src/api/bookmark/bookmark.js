@@ -36,6 +36,14 @@ export function selectByUseridList(query) {
     params: query
   })
 }
+//用户 最新书签 星标 稍后读
+export function listByUserAndPolymerization(query) {
+  return request({
+    url: '/bookmark/bookmark/listByUserAndPolymerization',
+    method: 'get',
+    params: query
+  })
+}
 
 
 
@@ -88,5 +96,12 @@ export function exportBookmark(query) {
     url: '/bookmark/bookmark/export',
     method: 'get',
     params: query
+  })
+}
+// 导出用户个人的书签HTML
+export function exportBookmarkHTML() {
+  return request({
+    url: '/IO/export',
+    method: 'post',
   })
 }

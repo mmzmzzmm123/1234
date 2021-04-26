@@ -110,4 +110,14 @@ public interface SqBookmarkMapper extends MyMapper<SqBookmark>
      *  获取重复的标签
      */
     List<SqBookmark> bookmarkRepetition(Long userId);
+
+    /**
+     * @Description: 查询 最新 稍后读 星标
+     *
+     * @param
+     * @return
+     * @author: wanghao
+     *
+     */
+    List<SqBookmark> listByUserAndPolymerization(SqBookmark sqBookmark);
 }

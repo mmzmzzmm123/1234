@@ -9,6 +9,8 @@ import com.ruoyi.common.core.redis.RedisUtil;
 import com.ruoyi.common.utils.SecurityUtils;
 import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.system.service.ISysUserService;
+import com.ruoyi.system.service.impl.SysUserServiceImpl;
+import com.sun.org.apache.bcel.internal.generic.NEW;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -26,6 +28,7 @@ import com.ruoyi.common.exception.user.UserPasswordNotMatchException;
 import com.ruoyi.common.utils.MessageUtils;
 import com.ruoyi.framework.manager.AsyncManager;
 import com.ruoyi.framework.manager.factory.AsyncFactory;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * 登录校验方法
@@ -141,11 +144,35 @@ public class SysLoginService
         SysUser user = new SysUser();
         user.setUserName(username);
         user.setPassword(SecurityUtils.encryptPassword(password));
-        user.setDeptId(100L);
+        user.setDeptId(110L);
         user.setNickName(username);
         user.setPhonenumber(phone);
         user.setCreateTime(DateUtil.date(System.currentTimeMillis()));
         user.setUpdateBy("admin");
-        return sysUserService.insertUser(user)!=0?Constants.LOGIN_SUCCESS:Constants.LOGIN_FAIL;
+        user.setSex("2");
+        user.setStatus("0");
+        user.setPostIds(new Long[]{4L});
+        user.setRoleIds(new Long[]{2L});//角色
+        user.setAvatar("/profile/avatar/2020/11/01/8a354c2d-1b5a-475e-a9aa-04cb4a769323.jpeg");
+        user.setUpdateTime(DateUtil.date(System.currentTimeMillis()));
+        return addUser(user);
+    }
+
+    /**
+     * 注册账号
+     *
+     * @param user 用户信息
+     * @return 结果
+     */
+    @Transactional
+    public String addUser(SysUser user){
+
+      int row = sysUserService.insertUser(user);
+        SysUserServiceImpl sysUserService = new SysUserServiceImpl();
+        //新增用户岗位关联
+        sysUserService.insertUserPost(user);
+        // 新增用户与角色管理
+        sysUserService.insertUserRole(user);
+      return row!=0?Constants.LOGIN_SUCCESS:Constants.LOGIN_FAIL;
     }
 }

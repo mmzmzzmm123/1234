@@ -1310,7 +1310,7 @@
       },
       // style='margin-top:-2px'
       makeDOMNodeLine: function (html, setting, node) {
-        html.push("<span id='", node.tId, consts.id.SWITCH, "' title='' class='", view.makeNodeLineClass(setting, node), "' treeNode", consts.id.SWITCH, "></span>");
+        html.push("<span id='", node.tId, consts.id.SWITCH, "' title='' style='margin-left: 20px' class='", view.makeNodeLineClass(setting, node), "' treeNode", consts.id.SWITCH, "></span>");
       },
       makeDOMNodeMainAfter: function (html, setting, node) {
         html.push("</li>");
