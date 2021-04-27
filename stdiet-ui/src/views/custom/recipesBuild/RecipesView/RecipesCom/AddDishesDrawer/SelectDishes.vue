@@ -160,6 +160,7 @@ export default {
         pageSize: 10,
         name: null,
         type: null,
+        igdName: null,
         smallClass: null,
         bigClass: null,
         reviewStatus: "yes",
@@ -254,6 +255,7 @@ export default {
       this.getList({});
     },
     resetQuery() {
+      this.clean();
       this.resetForm("queryForm");
       this.dishClassQueryParam = [];
       this.handleQuery();
