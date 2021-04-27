@@ -95,4 +95,6 @@ public class SysDishes {
 
     private String physical;
 
+    private String igdName;
+
 }

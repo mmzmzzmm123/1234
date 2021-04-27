@@ -376,7 +376,11 @@
             </el-form-item>
           </el-col>
           <el-col :span="8">
-            <el-form-item label="审核状态" prop="reviewStatus">
+            <el-form-item
+              label="审核状态"
+              prop="reviewStatus"
+              v-hasPermi="['custom:ingredient:review']"
+            >
               <el-select
                 style="position: absolute"
                 v-model="form.reviewStatus"

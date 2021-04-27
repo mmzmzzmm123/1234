@@ -53,6 +53,9 @@
             <if test="physical != null and physical != ''">
                 and id in(SELECT DISTINCT(dishes_id) FROM sys_dishes_rec WHERE physical_signs_id = #{physical})
             </if>
+            <if test="igdName != null and igdName != ''">
+                and id in(SELECT DISTINCT(dishes_id) FROM sys_dishes_ingredient WHERE name like concat('%', #{igdName}, '%'))
+            </if>
             <if test="bigClass != null">and big_class = #{bigClass}</if>
             <if test="smallClass != null">and small_class = #{smallClass}</if>
             <if test="reviewStatus != null  and type != ''">and review_status = #{reviewStatus}</if>

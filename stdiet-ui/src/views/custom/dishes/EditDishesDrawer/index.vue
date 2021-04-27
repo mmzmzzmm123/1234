@@ -16,7 +16,11 @@
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item label="审核状态" prop="reviewStatus">
+            <el-form-item
+              label="审核状态"
+              prop="reviewStatus"
+              v-hasPermi="['custom:dishes:review']"
+            >
               <el-select
                 v-model="form.reviewStatus"
                 placeholder="请选择审核状态"
