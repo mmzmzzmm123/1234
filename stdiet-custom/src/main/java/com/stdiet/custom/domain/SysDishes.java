@@ -89,4 +89,10 @@ public class SysDishes {
 
     private Integer[] dishClass;
 
+    private Long[] notRecIds;
+
+    private Long[] recIds;
+
+    private String physical;
+
 }

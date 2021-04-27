@@ -1,23 +1,22 @@
 package com.stdiet.custom.mapper;
 
-import java.lang.reflect.Array;
-import java.util.ArrayList;
-import java.util.List;
 import com.stdiet.custom.domain.SysDishes;
 import com.stdiet.custom.domain.SysDishesIngredient;
-import com.stdiet.custom.domain.SysIngredient;
+import com.stdiet.custom.domain.SysPhysicalSignsObj;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 菜品Mapper接口
- * 
+ *
  * @author wonder
  * @date 2020-12-28
  */
-public interface SysDishesMapper 
-{
+public interface SysDishesMapper {
     /**
      * 查询菜品
-     * 
+     *
      * @param id 菜品ID
      * @return 菜品
      */
@@ -27,7 +26,7 @@ public interface SysDishesMapper
 
     /**
      * 查询菜品列表
-     * 
+     *
      * @param sysDishes 菜品
      * @return 菜品集合
      */
@@ -35,7 +34,7 @@ public interface SysDishesMapper
 
     /**
      * 新增菜品
-     * 
+     *
      * @param sysDishes 菜品
      * @return 结果
      */
@@ -43,7 +42,7 @@ public interface SysDishesMapper
 
     /**
      * 修改菜品
-     * 
+     *
      * @param sysDishes 菜品
      * @return 结果
      */
@@ -51,7 +50,7 @@ public interface SysDishesMapper
 
     /**
      * 删除菜品
-     * 
+     *
      * @param id 菜品ID
      * @return 结果
      */
@@ -59,7 +58,7 @@ public interface SysDishesMapper
 
     /**
      * 批量删除菜品
-     * 
+     *
      * @param ids 需要删除的数据ID
      * @return 结果
      */
@@ -72,4 +71,13 @@ public interface SysDishesMapper
     public int bashInsertDishesIngredent(List<SysDishesIngredient> sysDishesIngredients);
 
     String getDishesMenuTypeById(Long id);
+
+    int batchInsertDishesRec(List<SysPhysicalSignsObj> sysPhysicalSignsObj);
+
+    int batchInsertDishesNotRec(List<SysPhysicalSignsObj> sysPhysicalSignsObj);
+
+    int deleteDishesRecByDishesId(Long dishesId);
+
+    int deleteDishesNotRecByDishesId(Long dishesId);
+
 }

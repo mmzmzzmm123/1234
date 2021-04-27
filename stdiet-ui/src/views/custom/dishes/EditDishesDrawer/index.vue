@@ -149,7 +149,10 @@
                 </el-table-column>
                 <el-table-column label="操作" align="center">
                   <template slot-scope="scope">
-                    <el-button type="text" size="mini" @click="handleOnDelete(scope.row)"
+                    <el-button
+                      type="text"
+                      size="mini"
+                      @click="handleOnDelete(scope.row)"
                       >删除</el-button
                     >
                   </template>
@@ -252,6 +255,8 @@ export default {
       //
       selRec: [],
       selNotRec: [],
+      selRecIds: [],
+      selNotRecIds: [],
     };
   },
   props: [
@@ -265,24 +270,41 @@ export default {
     "form.igdList": function (val) {
       const selRec = [];
       const selNotRec = [];
+      const selRecIds = [];
+      const selNotRecIds = [];
       val.forEach((obj) => {
         if (obj.rec) {
-          obj.rec.split(",").forEach((rec) => {
-            if (!selRec.includes(rec)) {
-              selRec.push(rec);
-            }
-          });
+          obj.rec
+            .split(",")
+            .forEach((rec) => !selRec.includes(rec) && selRec.push(rec));
         }
         if (obj.notRec) {
-          obj.notRec.split(",").forEach((notRec) => {
-            if (!selNotRec.includes(notRec)) {
-              selNotRec.push(notRec);
-            }
-          });
+          obj.notRec
+            .split(",")
+            .forEach(
+              (notRec) => !selNotRec.includes(notRec) && selNotRec.push(notRec)
+            );
+        }
+        if (obj.recIdsStr) {
+          obj.recIdsStr
+            .split(",")
+            .forEach(
+              (recId) => !selRecIds.includes(recId) && selRecIds.push(recId)
+            );
+        }
+        if (obj.notRecIdsStr) {
+          obj.notRecIdsStr
+            .split(",")
+            .forEach(
+              (notRecId) =>
+                !selNotRecIds.includes(notRecId) && selNotRecIds.push(notRecId)
+            );
         }
       });
       this.selRec = selRec;
       this.selNotRec = selNotRec;
+      this.selRecIds = selRecIds;
+      this.selNotRecIds = selNotRecIds;
     },
 
     showNotRec() {
@@ -362,6 +384,8 @@ export default {
           const data = JSON.parse(JSON.stringify(this.form));
           // console.log({ data });
           data.type = data.type.join(",");
+          data.recIds = this.selRecIds;
+          data.notRecIds = this.selNotRecIds;
           if (data.id != null) {
             updateDishes(data).then((response) => {
               if (response.code === 200) {
