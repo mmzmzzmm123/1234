@@ -67,7 +67,7 @@
 
     <select id="selectTsbzJxjsjbxxListnotjdx" parameterType="TsbzJxjsjbxx" resultMap="TsbzJxjsjbxxResult">
         <include refid="selectTsbzJxjsjbxxVo"/>
-        where jdxid is null
+        where (jdxid is null or jdxid = '')
         <if test="otherid != null  and otherid != ''">and otherid = #{otherid}</if>
         <if test="name != null  and name != ''">and name like concat('%', #{name}, '%')</if>
         <if test="jxbh != null  and jxbh != ''">and jxbh = #{jxbh}</if>
@@ -93,8 +93,10 @@
     </select>
 
     <select id="selectTsbzJxjsjbxxListnotjdcx" parameterType="TsbzJxjsjbxx" resultMap="TsbzJxjsjbxxResult">
-        select id, otherid, name, jxbh, xb, csrq, email, phone, yzbm, zzmm, mz, prdwid, prdwmc, jdxid, rjxd, rjxk, rjnj, byyx, xl, xw, sfsfs, lqnf, create_time
-        from tsbz_jxjsjbxx where id not in (select jsid from tsbz_jdcx t1 left join tsbz_jxzxpxfa t2 on t1.faid=t2.id where faid=#{faid} and t2.nf=#{nf})
+        select id, otherid, name, jxbh, xb, csrq, email, phone, yzbm, zzmm, mz, prdwid, prdwmc, jdxid, rjxd, rjxk, rjnj,
+        byyx, xl, xw, sfsfs, lqnf, create_time
+        from tsbz_jxjsjbxx where id not in (select jsid from tsbz_jdcx t1 left join tsbz_jxzxpxfa t2 on t1.faid=t2.id
+        where faid=#{faid} and t2.nf=#{nf})
         <if test="id != null  and id != ''">and id = #{id}</if>
         <if test="otherid != null  and otherid != ''">and otherid = #{otherid}</if>
         <if test="name != null  and name != ''">and name like concat('%', #{name}, '%')</if>
@@ -108,7 +110,7 @@
         <if test="mz != null  and mz != ''">and mz = #{mz}</if>
         <if test="prdwid != null  and prdwid != ''">and prdwid = #{prdwid}</if>
         <if test="prdwmc != null  and prdwmc != ''">and prdwmc = #{prdwmc}</if>
-        <if test="jdxid != null  and jdxid != ''"> and jdxid = #{jdxid}</if>
+        <if test="jdxid != null  and jdxid != ''">and jdxid = #{jdxid}</if>
         <if test="rjxd != null  and rjxd != ''">and rjxd = #{rjxd}</if>
         <if test="rjxk != null  and rjxk != ''">and rjxk = #{rjxk}</if>
         <if test="rjnj != null  and rjnj != ''">and rjnj = #{rjnj}</if>

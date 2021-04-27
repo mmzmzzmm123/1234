@@ -50,7 +50,7 @@
             <if test="townid != null  and townid != ''">and townid = #{townid}</if>
             <if test="villageid != null  and villageid != ''">and villageid = #{villageid}</if>
             <if test="jyjxxdm != null  and jyjxxdm != ''">and jyjxxdm = #{jyjxxdm}</if>
-            <if test="xxmc != null  and xxmc != ''">and xxmc = #{xxmc}</if>
+            <if test="xxmc != null  and xxmc != ''">and xxmc like concat('%', #{xxmc}, '%')</if>
             <if test="xxywmc != null  and xxywmc != ''">and xxywmc = #{xxywmc}</if>
             <if test="xxdz != null  and xxdz != ''">and xxdz = #{xxdz}</if>
             <if test="xxxz != null  and xxxz != ''">and xxxz = #{xxxz}</if>
