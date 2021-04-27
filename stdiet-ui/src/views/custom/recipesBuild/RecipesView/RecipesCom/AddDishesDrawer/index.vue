@@ -7,7 +7,7 @@
     :wrapperClosable="false"
     class="add_dishes_drawer_wrapper"
     direction="ltr"
-    size="40%"
+    size="45%"
   >
     <div class="content_wrapper">
       <div class="content_detail">

@@ -8,7 +8,7 @@
         label-width="68px"
         @submit.native.prevent
       >
-        <el-col :span="6">
+        <el-col :span="5">
           <el-form-item label="菜品名称" prop="name">
             <el-input
               v-model="queryParams.name"
@@ -19,7 +19,18 @@
             />
           </el-form-item>
         </el-col>
-        <el-col :span="6">
+        <el-col :span="5">
+          <el-form-item label="包含食材" prop="physical">
+            <el-input
+              v-model="queryParams.igdName"
+              placeholder="请输入食材名称"
+              clearable
+              size="mini"
+              @keyup.enter.native="handleQuery"
+            />
+          </el-form-item>
+        </el-col>
+        <el-col :span="5">
           <el-form-item label="菜品种类" prop="dishClass">
             <el-cascader
               filterable
@@ -33,7 +44,7 @@
             ></el-cascader>
           </el-form-item>
         </el-col>
-        <el-col :span="6">
+        <el-col :span="4">
           <el-form-item label="菜品类型" prop="type">
             <el-select
               :disabled="lockType"
@@ -52,7 +63,7 @@
             </el-select>
           </el-form-item>
         </el-col>
-        <el-col :span="6">
+        <el-col :span="5">
           <el-form-item label="推荐体征" prop="physical">
             <el-cascader
               :disabled="lockType"
@@ -92,10 +103,7 @@
       <el-table-column label="菜品名称" align="center" prop="name" />
       <el-table-column label="菜品种类" align="center" prop="bigClass">
         <template slot-scope="scope">
-          <AutoHideMessage
-            :data="dishClassFormat(scope.row)"
-            :maxLength="10"
-          />
+          <AutoHideMessage :data="dishClassFormat(scope.row)" :maxLength="10" />
         </template>
       </el-table-column>
       <el-table-column label="菜品类型" align="center" prop="type">
@@ -232,6 +240,7 @@ export default {
         pageSize: 10,
         name: null,
         type: null,
+        igdName: null,
         reviewStatus: "yes",
       };
       this.dishesList = [];
