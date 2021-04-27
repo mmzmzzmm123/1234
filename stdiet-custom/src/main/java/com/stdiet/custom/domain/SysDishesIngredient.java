@@ -31,5 +31,8 @@ public class SysDishesIngredient extends SysIngredient {
 
     private String cus_weight;
 
+    private String recIdsStr;
+
+    private String notRecIdsStr;
 
 }

@@ -21,6 +21,7 @@
         <!-- 非持久化字段 -->
         <result property="bigClassName" column="bigClassName"/>
         <result property="smallClassName" column="smallClassName"/>
+        <association property="igdList" column="id" select="selectSysIngreditentsById"/>
     </resultMap>
 
     <resultMap type="SysDishesIngredient" id="SysDishesIngredientResult">
@@ -32,7 +33,9 @@
         <result property="carbonRatio" column="carbon_ratio"/>
         <result property="area" column="area"/>
         <result property="rec" column="rec"/>
+        <result property="recIdsStr" column="rec_ids"/>
         <result property="notRec" column="not_rec"/>
+        <result property="notRecIdsStr" column="not_rec_ids"/>
         <result property="cusWeight" column="cus_weight"/>
         <result property="cusUnit" column="cus_unit"/>
         <result property="weight" column="weight"/>
@@ -47,6 +50,9 @@
         <where>
             <if test="name != null  and name != ''">and name like concat('%', #{name}, '%')</if>
             <if test="type != null  and type != ''">and FIND_IN_SET(#{type}, type)</if>
+            <if test="physical != null and physical != ''">
+                and id in(SELECT DISTINCT(dishes_id) FROM sys_dishes_rec WHERE physical_signs_id = #{physical})
+            </if>
             <if test="bigClass != null">and big_class = #{bigClass}</if>
             <if test="smallClass != null">and small_class = #{smallClass}</if>
             <if test="reviewStatus != null  and type != ''">and review_status = #{reviewStatus}</if>
@@ -63,17 +69,17 @@
             WHERE dishes_id = #{id}
         ) dishes
         LEFT JOIN (
-            SELECT id, name, type, protein_ratio, fat_ratio, carbon_ratio, area, not_rec, rec
+            SELECT id, name, type, protein_ratio, fat_ratio, carbon_ratio, area, not_rec, not_rec_ids, rec, rec_ids
             FROM sys_ingredient igd
             LEFT JOIN (
-                SELECT ingredient_id as id, GROUP_CONCAT(name SEPARATOR ',') not_rec FROM(
+                SELECT ingredient_id as id, GROUP_CONCAT(name SEPARATOR ',') not_rec, GROUP_CONCAT(notRec.id SEPARATOR ',') not_rec_ids FROM(
                     SELECT physical_signs_id as id, ingredient_id
                     FROM sys_ingredient_not_rec
                 ) notRec JOIN sys_physical_signs phy USING(id)
                 GROUP BY id
             ) notRecT USING(id)
             LEFT JOIN (
-                SELECT ingredient_id as id, GROUP_CONCAT(name SEPARATOR ',') rec FROM(
+                SELECT ingredient_id as id, GROUP_CONCAT(name SEPARATOR ',') rec, GROUP_CONCAT(rec.id SEPARATOR ',') rec_ids FROM(
                     SELECT physical_signs_id as id, ingredient_id
                     FROM sys_ingredient_rec
                 ) rec JOIN sys_physical_signs phy USING(id)
@@ -174,5 +180,28 @@
     <select id="getDishesMenuTypeById" parameterType="Long" resultType="String">
         select type from sys_dishes where id=#{id}
     </select>
+
+    <!--    推荐，不推荐-->
+    <insert id="batchInsertDishesRec">
+        insert into sys_dishes_rec(dishes_id, physical_signs_id) values
+        <foreach collection="list" separator="," item="item" index="index">
+            (#{item.targetId},#{item.physicalSignsId})
+        </foreach>
+    </insert>
+
+    <insert id="batchInsertDishesNotRec">
+        insert into sys_dishes_not_rec(dishes_id, physical_signs_id) values
+        <foreach collection="list" separator="," item="item" index="index">
+            (#{item.targetId},#{item.physicalSignsId})
+        </foreach>
+    </insert>
+
+    <delete id="deleteDishesRecByDishesId" parameterType="Long">
+        delete from sys_dishes_rec where dishes_id=#{dishesId}
+    </delete>
+
+    <delete id="deleteDishesNotRecByDishesId" parameterType="Long">
+        delete from sys_dishes_not_rec where dishes_id=#{dishesId}
+    </delete>
 
 </mapper>

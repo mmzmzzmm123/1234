@@ -101,7 +101,6 @@ public class SysIngredient {
      */
     private String remark;
 
-
     private Long[] recIds;
 
     private Long[] notRecIds;

@@ -37,16 +37,7 @@ public class SysDishesController extends BaseController {
     @GetMapping("/list")
     public TableDataInfo list(SysDishes sysDishes) {
         startPage();
-        List<SysDishes> list = sysDishesService.selectSysDishesList(sysDishes);
-        for (SysDishes dishes : list) {
-            List<SysDishesIngredient> ingredients = sysDishesService.selectSysIngreditentsById(dishes.getId());
-            if (StringUtils.isNull(ingredients)) {
-                dishes.setIgdList(new ArrayList<>());
-            } else {
-                dishes.setIgdList(ingredients);
-            }
-        }
-        return getDataTable(list);
+        return getDataTable(sysDishesService.selectSysDishesList(sysDishes));
     }
 
     /**

@@ -52,6 +52,20 @@
             </el-select>
           </el-form-item>
         </el-col>
+        <el-col :span="6">
+          <el-form-item label="推荐体征" prop="physical">
+            <el-cascader
+              :disabled="lockType"
+              v-model="queryParams.physical"
+              placeholder="请选择推荐体征"
+              clearable
+              :options="physicalSignsOptions"
+              size="mini"
+              width="120px"
+              @change="handleOnPhysicalSignsChange"
+            />
+          </el-form-item>
+        </el-col>
         <el-form-item>
           <el-button
             type="cyan"
@@ -71,7 +85,7 @@
       v-loading="loading"
       size="mini"
       :data="dishesList"
-      height="600"
+      height="550"
       highlight-current-row
       @current-change="handleCurrentChange"
     >
@@ -141,6 +155,7 @@ export default {
         smallClass: null,
         bigClass: null,
         reviewStatus: "yes",
+        physical: null,
       },
       //菜品种类查询参数
       dishClassQueryParam: [],
@@ -155,6 +170,7 @@ export default {
       "typeOptions",
       "dishBigClassOptions",
       "dishSmallClassOptions",
+      "physicalSignsOptions",
     ]),
     ...mapGetters(["dishClassOptions"]),
   },
@@ -174,7 +190,13 @@ export default {
         this.queryParams.smallClass = null;
       }
       this.loading = true;
-      listDishes(this.queryParams).then((result) => {
+      const qParams = {
+        ...this.queryParams,
+      };
+      if (this.queryParams.physical) {
+        qParams.physical = this.queryParams.physical[1];
+      }
+      listDishes(qParams).then((result) => {
         this.dishesList = result.rows.map((d) => {
           const recTags = [],
             notRecTags = [];
@@ -248,6 +270,10 @@ export default {
         return bigClassName + "/" + smallClassName;
       }
       return "";
+    },
+    handleOnPhysicalSignsChange(val) {
+      const [typeId, id] = val;
+      console.log(val);
     },
   },
 };

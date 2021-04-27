@@ -2,8 +2,7 @@ package com.stdiet.custom.mapper;
 
 import com.stdiet.custom.domain.SysIngredentFile;
 import com.stdiet.custom.domain.SysIngredient;
-import com.stdiet.custom.domain.SysIngredientNotRec;
-import com.stdiet.custom.domain.SysIngredientRec;
+import com.stdiet.custom.domain.SysPhysicalSignsObj;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
@@ -63,9 +62,9 @@ public interface SysIngredientMapper {
      */
 //    int deleteSysIngredientByIds(Long[] ids);
 
-    int batchIngredientRec(List<SysIngredientRec> ingredientRecList);
+    int batchIngredientRec(List<SysPhysicalSignsObj> ingredientRecList);
 
-    int batchIngredientNotRec(List<SysIngredientNotRec> ingredientNotRecList);
+    int batchIngredientNotRec(List<SysPhysicalSignsObj> ingredientNotRecList);
 
     int deleteIngredientRecByIngredientId(Long recId);
 

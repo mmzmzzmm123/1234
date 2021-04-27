@@ -6,8 +6,7 @@ import com.stdiet.common.utils.StringUtils;
 import com.stdiet.common.utils.oss.AliyunOSSUtils;
 import com.stdiet.custom.domain.SysIngredentFile;
 import com.stdiet.custom.domain.SysIngredient;
-import com.stdiet.custom.domain.SysIngredientNotRec;
-import com.stdiet.custom.domain.SysIngredientRec;
+import com.stdiet.custom.domain.SysPhysicalSignsObj;
 import com.stdiet.custom.mapper.SysIngredientMapper;
 import com.stdiet.custom.service.ISysIngredientService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -96,11 +95,11 @@ public class SysIngredientServiceImpl implements ISysIngredientService {
     public void insertRecommand(SysIngredient ingredient) {
         Long[] recIds = ingredient.getRecIds();
         if (StringUtils.isNotNull(recIds)) {
-            List<SysIngredientRec> list = new ArrayList<SysIngredientRec>();
+            List<SysPhysicalSignsObj> list = new ArrayList<SysPhysicalSignsObj>();
             for (Long recId : recIds) {
-                SysIngredientRec rec = new SysIngredientRec();
-                rec.setIngredientId(ingredient.getId());
-                rec.setRecommandId(recId);
+                SysPhysicalSignsObj rec = new SysPhysicalSignsObj();
+                rec.setTargetId(ingredient.getId());
+                rec.setPhysicalSignsId(recId);
                 list.add(rec);
             }
             if (list.size() > 0) {
@@ -117,11 +116,11 @@ public class SysIngredientServiceImpl implements ISysIngredientService {
     public void insertNotRecommand(SysIngredient ingredient) {
         Long[] notRecIds = ingredient.getNotRecIds();
         if (StringUtils.isNotNull(notRecIds)) {
-            List<SysIngredientNotRec> list = new ArrayList<SysIngredientNotRec>();
+            List<SysPhysicalSignsObj> list = new ArrayList<SysPhysicalSignsObj>();
             for (Long recId : notRecIds) {
-                SysIngredientNotRec notRec = new SysIngredientNotRec();
-                notRec.setIngredientId(ingredient.getId());
-                notRec.setRecommandId(recId);
+                SysPhysicalSignsObj notRec = new SysPhysicalSignsObj();
+                notRec.setTargetId(ingredient.getId());
+                notRec.setPhysicalSignsId(recId);
                 list.add(notRec);
             }
             if (list.size() > 0) {
@@ -160,12 +159,16 @@ public class SysIngredientServiceImpl implements ISysIngredientService {
     public int updateSysIngredient(SysIngredient sysIngredient) {
         sysIngredient.setUpdateTime(DateUtils.getNowDate());
         Long ingredientId = sysIngredient.getId();
+        //
         sysIngredientMapper.deleteIngredientNotRecByIngredientId(ingredientId);
         insertNotRecommand(sysIngredient);
+        //
         sysIngredientMapper.deleteIngredientRecByIngredientId(ingredientId);
         insertRecommand(sysIngredient);
+        //
         sysIngredientMapper.deleteIngredientImageById(ingredientId);
         insertImageFiles(sysIngredient);
+        //
         return sysIngredientMapper.updateSysIngredient(sysIngredient);
     }
 
