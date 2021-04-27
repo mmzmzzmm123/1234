@@ -81,4 +81,11 @@ public interface ISysCustomerService
 
     Map<String,Object> getPhysicalSignsByOutId(String id);
 
+    /**
+     * 根据openid查询客户信息
+     * @param openid
+     * @return
+     */
+    SysCustomer getCustomerByOpenId(String openid);
+
 }

@@ -168,4 +168,13 @@ public class SysCustomerServiceImpl implements ISysCustomerService {
     public Map<String, Object> getPhysicalSignsByOutId(String id) {
         return null;
     }
+
+    /**
+     * 根据openid查询客户信息
+     * @param openid
+     * @return
+     */
+    public SysCustomer getCustomerByOpenId(String openid){
+        return sysCustomerMapper.getCustomerByOpenId(openid);
+    }
 }

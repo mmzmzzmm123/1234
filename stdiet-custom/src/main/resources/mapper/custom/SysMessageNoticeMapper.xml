@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.stdiet.custom.mapper.SysMessageNoticeMapper">
+
+    <resultMap type="SysMessageNotice" id="SysMessageNoticeResult">
+        <result property="id"    column="id"    />
+        <result property="messageProperty"    column="message_property"    />
+        <result property="messageCustomer"    column="message_customer"    />
+        <result property="messageType"    column="message_type"    />
+        <result property="messageTitle"    column="message_title"    />
+        <result property="messageContent"    column="message_content"    />
+        <result property="readType"    column="read_type"    />
+        <result property="messageKey"    column="message_key"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="delFlag"    column="del_flag"    />
+    </resultMap>
+
+    <resultMap type="com.stdiet.custom.dto.response.MessageNoticeResponse" id="SysMessageNoticeResponse">
+        <result property="id"    column="id"    />
+        <result property="messageProperty"    column="message_property"    />
+        <result property="messageCustomer"    column="message_customer"    />
+        <result property="messageType"    column="message_type"    />
+        <result property="messageTitle"    column="message_title"    />
+        <result property="messageContent"    column="message_content"    />
+        <result property="readType"    column="read_type"    />
+        <result property="messageKey"    column="message_key"    />
+        <result property="createTime"    column="create_time"    />
+    </resultMap>
+
+    <sql id="selectSysMessageNoticeVo">
+        id, message_property, message_customer, message_type, message_title, message_content, read_type, message_key, create_time, create_by, update_time, update_by, del_flag
+    </sql>
+
+    <select id="selectSysMessageNoticeList" parameterType="SysMessageNotice" resultMap="SysMessageNoticeResult">
+        select
+        <include refid="selectSysMessageNoticeVo"/>
+        from sys_message_notice
+        where del_flag = 0
+    </select>
+
+    <select id="selectSysMessageNoticeById" parameterType="Long" resultMap="SysMessageNoticeResult">
+        select
+        <include refid="selectSysMessageNoticeVo"/>
+        from sys_message_notice
+        where id = #{id} and del_flag = 0 order by id desc
+    </select>
+
+    <insert id="insertSysMessageNotice" parameterType="SysMessageNotice">
+        insert into sys_message_notice
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="messageProperty != null">message_property,</if>
+            <if test="messageCustomer != null">message_customer,</if>
+            <if test="messageType != null">message_type,</if>
+            <if test="messageTitle != null">message_title,</if>
+            <if test="messageContent != null">message_content,</if>
+            <if test="readType != null">read_type,</if>
+            <if test="messageKey != null">message_key,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="delFlag != null">del_flag,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="messageProperty != null">#{messageProperty},</if>
+            <if test="messageCustomer != null">#{messageCustomer},</if>
+            <if test="messageType != null">#{messageType},</if>
+            <if test="messageTitle != null">#{messageTitle},</if>
+            <if test="messageContent != null">#{messageContent},</if>
+            <if test="readType != null">#{readType},</if>
+            <if test="messageKey != null">#{messageKey},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="delFlag != null">#{delFlag},</if>
+        </trim>
+    </insert>
+
+    <update id="updateSysMessageNotice" parameterType="SysMessageNotice">
+        update sys_message_notice
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="messageProperty != null">message_property = #{messageProperty},</if>
+            <if test="messageCustomer != null">message_customer = #{messageCustomer},</if>
+            <if test="messageType != null">message_type = #{messageType},</if>
+            <if test="messageTitle != null">message_title = #{messageTitle},</if>
+            <if test="messageContent != null">message_content = #{messageContent},</if>
+            <if test="readType != null">read_type = #{readType},</if>
+            <if test="messageKey != null">message_key = #{messageKey},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="delFlag != null">del_flag = #{delFlag},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <update id="deleteSysMessageNoticeById" parameterType="Long">
+        update sys_message_notice set del_flag = 1 where id = #{id}
+    </update>
+
+    <update id="deleteSysMessageNoticeByIds" parameterType="String">
+        update sys_message_notice set del_flag = 1 where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </update>
+
+    <!-- 根据客户ID获取用户的消息 -->
+    <select id="getCustomerMessage" parameterType="SysMessageNotice" resultMap="SysMessageNoticeResponse">
+        select
+        smn.id, smn.message_property, smn.message_customer, smn.message_type, smn.message_title, smn.message_content, smn.read_type, smn.message_key, smn.create_time
+        from sys_message_notice smn
+        where smn.del_flag = 0  and (smn.message_property = 0 or smn.message_customer = #{messageCustomer})
+        <if test="readType != null">
+           and smn.read_type = #{readType}
+        </if>
+        <if test="messageType != null">
+            and smn.message_type = #{messageType}
+        </if>
+        order by smn.id desc
+    </select>
+
+    <!-- 根据客户ID获取用户的消息数量 -->
+    <select id="getCustomerMessageCount" parameterType="SysMessageNotice" resultType="int">
+        select count(smn.id)
+        from sys_message_notice smn
+        where smn.del_flag = 0  and (smn.message_property = 0 or smn.message_customer = #{messageCustomer})
+        <if test="readType != null">
+            and smn.read_type = #{readType}
+        </if>
+        <if test="messageType != null">
+            and smn.message_type = #{messageType}
+        </if>
+    </select>
+</mapper>
