@@ -95,7 +95,7 @@
           <AutoHideMessage
             :data="dishClassFormat(scope.row)"
             :maxLength="10"
-          ></AutoHideMessage>
+          />
         </template>
       </el-table-column>
       <el-table-column label="菜品类型" align="center" prop="type">
