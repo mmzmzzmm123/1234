@@ -149,14 +149,14 @@
     <insert id="batchIngredientRec">
         insert into sys_ingredient_rec(ingredient_id, physical_signs_id) values
         <foreach collection="list" separator="," item="item" index="index">
-            (#{item.ingredientId},#{item.recommandId})
+            (#{item.targetId},#{item.physicalSignsId})
         </foreach>
     </insert>
 
     <insert id="batchIngredientNotRec">
         insert into sys_ingredient_not_rec(ingredient_id, physical_signs_id) values
         <foreach collection="list" separator="," item="item" index="index">
-            (#{item.ingredientId},#{item.notRecommandId})
+            (#{item.targetId},#{item.physicalSignsId})
         </foreach>
     </insert>
 

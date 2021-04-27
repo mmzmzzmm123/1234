@@ -137,7 +137,11 @@
           <autohideinfo :data="scope.row.notRecTags" />
         </template>
       </el-table-column>
-      <el-table-column label="做法" align="center" prop="methods" />
+      <el-table-column label="做法" align="center" prop="methods">
+        <template slot-scope="scope">
+          <auto-hide-message :data="scope.row.methods" :maxLength="20" />
+        </template>
+      </el-table-column>
       <el-table-column
         label="操作"
         align="center"
@@ -188,12 +192,14 @@
 <script>
 import { delDishes, exportDishes, listDishes } from "@/api/custom/dishes";
 import AutoHideInfo from "@/components/AutoHideInfo";
+import AutoHideMessage from "@/components/AutoHideMessage";
 import EditDishesDrawer from "./EditDishesDrawer";
 
 export default {
   name: "Dishes",
   components: {
     autohideinfo: AutoHideInfo,
+    AutoHideMessage,
     EditDishesDrawer,
   },
   data() {
@@ -374,7 +380,7 @@ export default {
     },
     /** 删除按钮操作 */
     handleDelete(row) {
-      this.$confirm('是否确认删除菜品「' + row.name + '」的数据项?', "警告", {
+      this.$confirm("是否确认删除菜品「" + row.name + "」的数据项?", "警告", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
         type: "warning",

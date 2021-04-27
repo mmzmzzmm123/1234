@@ -5,27 +5,30 @@
 <mapper namespace="com.stdiet.custom.mapper.SysPhysicalSignsMapper">
 
     <resultMap type="SysPhysicalSigns" id="SysPhysicalSignsResult">
-        <result property="id"    column="id"    />
-        <result property="name"    column="name"    />
-        <result property="typeId"    column="type_id"    />
-        <result property="remark"    column="remark"    />
+        <result property="id" column="id"/>
+        <result property="name" column="name"/>
+        <result property="typeId" column="type_id"/>
+        <result property="typeName" column="type_name"/>
+        <result property="remark" column="remark"/>
     </resultMap>
 
     <sql id="selectSysPhysicalSignsVo">
-        select id, name, type_id, remark from sys_physical_signs
+        SELECT name, id, sdd.dict_label AS type_name, type_id FROM sys_physical_signs
+        LEFT JOIN (SELECT * FROM sys_dict_data WHERE dict_type = 'cus_signs_type') AS sdd ON sdd.dict_value = type_id
     </sql>
 
     <select id="selectSysPhysicalSignsList" parameterType="SysPhysicalSigns" resultMap="SysPhysicalSignsResult">
         <include refid="selectSysPhysicalSignsVo"/>
         <where>
-            <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
-            <if test="typeId != null "> and type_id = #{typeId}</if>
+            <if test="name != null  and name != ''">and name like concat('%', #{name}, '%')</if>
+            <if test="typeId != null ">and type_id = #{typeId}</if>
         </where>
+        ORDER BY type_id ASC
     </select>
 
     <select id="selectSysPhysicalSignsById" parameterType="Long" resultMap="SysPhysicalSignsResult">
         <include refid="selectSysPhysicalSignsVo"/>
-        where id = #{id}
+        where sps.id = #{id}
     </select>
 
     <insert id="insertSysPhysicalSigns" parameterType="SysPhysicalSigns" useGeneratedKeys="true" keyProperty="id">
@@ -62,5 +65,6 @@
             #{id}
         </foreach>
     </delete>
+
 
 </mapper>

@@ -2,8 +2,7 @@ package com.stdiet.custom.service.impl;
 
 import com.stdiet.common.utils.DateUtils;
 import com.stdiet.common.utils.StringUtils;
-import com.stdiet.custom.domain.SysDishes;
-import com.stdiet.custom.domain.SysDishesIngredient;
+import com.stdiet.custom.domain.*;
 import com.stdiet.custom.mapper.SysDishesMapper;
 import com.stdiet.custom.service.ISysDishesService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -71,6 +70,10 @@ public class SysDishesServiceImpl implements ISysDishesService {
         sysDishes.setCreateTime(DateUtils.getNowDate());
         int rows = sysDishesMapper.insertSysDishes(sysDishes);
         //
+        insertRecommand(sysDishes);
+        //
+        insertNotRecommand(sysDishes);
+        //
         insertDishesIngredient(sysDishes);
         return rows;
     }
@@ -96,9 +99,59 @@ public class SysDishesServiceImpl implements ISysDishesService {
     public int updateSysDishes(SysDishes sysDishes) {
         sysDishes.setUpdateTime(DateUtils.getNowDate());
         Long dishesId = sysDishes.getId();
+        //
+        sysDishesMapper.deleteDishesRecByDishesId(dishesId);
+        insertRecommand(sysDishes);
+        //
+        sysDishesMapper.deleteDishesNotRecByDishesId(dishesId);
+        insertNotRecommand(sysDishes);
+        //
         sysDishesMapper.deleteIngredientById(dishesId);
         insertDishesIngredient(sysDishes);
+        //
         return sysDishesMapper.updateSysDishes(sysDishes);
+    }
+
+    /**
+     * 新增推荐标签
+     *
+     * @param sysDishes
+     */
+    public void insertRecommand(SysDishes sysDishes) {
+        Long[] recIds = sysDishes.getRecIds();
+        if (StringUtils.isNotNull(recIds)) {
+            List<SysPhysicalSignsObj> list = new ArrayList<>();
+            for (Long recId : recIds) {
+                SysPhysicalSignsObj rec = new SysPhysicalSignsObj();
+                rec.setTargetId(sysDishes.getId());
+                rec.setPhysicalSignsId(recId);
+                list.add(rec);
+            }
+            if (list.size() > 0) {
+                sysDishesMapper.batchInsertDishesRec(list);
+            }
+        }
+    }
+
+    /**
+     * 新增不推荐标签
+     *
+     * @param sysDishes
+     */
+    public void insertNotRecommand(SysDishes sysDishes) {
+        Long[] notRecIds = sysDishes.getNotRecIds();
+        if (StringUtils.isNotNull(notRecIds)) {
+            List<SysPhysicalSignsObj> list = new ArrayList<>();
+            for (Long recId : notRecIds) {
+                SysPhysicalSignsObj notRec = new SysPhysicalSignsObj();
+                notRec.setTargetId(sysDishes.getId());
+                notRec.setPhysicalSignsId(recId);
+                list.add(notRec);
+            }
+            if (list.size() > 0) {
+                sysDishesMapper.batchInsertDishesNotRec(list);
+            }
+        }
     }
 
     /**
@@ -129,4 +182,5 @@ public class SysDishesServiceImpl implements ISysDishesService {
     public String getDishesMenuTypeById(Long id) {
         return sysDishesMapper.getDishesMenuTypeById(id);
     }
+
 }

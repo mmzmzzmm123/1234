@@ -4,6 +4,7 @@ import java.util.List;
 import com.stdiet.custom.domain.SysDishes;
 import com.stdiet.custom.domain.SysDishesIngredient;
 import com.stdiet.custom.domain.SysIngredient;
+import com.stdiet.custom.domain.SysPhysicalSignsObj;
 
 /**
  * 菜品Service接口
@@ -64,4 +65,5 @@ public interface ISysDishesService
     public int deleteSysDishesById(Long id);
 
     public String getDishesMenuTypeById(Long id);
+
 }

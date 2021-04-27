@@ -14,6 +14,7 @@ import { getRecipesPlan, updateRecipesPlan } from "@/api/custom/recipesPlan";
 import { getDicts } from "@/api/system/dict/data";
 import { addShortCut } from "@/utils/shortCutUtils";
 import { messageTypes } from "@/utils";
+import { listPhysicalSigns } from "@/api/custom/physicalSigns";
 
 const oriState = {
   cusId: undefined,
@@ -46,6 +47,7 @@ const oriState = {
   notRecIgds: [],
   avoidFoodIds: [],
   igdTypeOptions: [],
+  physicalSignsOptions: [],
   //
   curShortCutObj: {}
 };
@@ -174,6 +176,31 @@ const actions = {
     });
     getDicts("cus_ing_type").then(response => {
       commit("updateStateData", { igdTypeOptions: response.data });
+    });
+    listPhysicalSigns().then(response => {
+      commit("updateStateData", {
+        physicalSignsOptions: response.rows.reduce((arr, cur) => {
+          const tarTypeObj = arr.find(obj => obj.value === cur.typeId);
+          if (!tarTypeObj) {
+            arr.push({
+              value: cur.typeId,
+              label: cur.typeName,
+              children: [
+                {
+                  value: cur.id,
+                  label: cur.name
+                }
+              ]
+            });
+          } else {
+            tarTypeObj.children.push({
+              value: cur.id,
+              label: cur.name
+            });
+          }
+          return arr;
+        }, [])
+      });
     });
 
     return new Promise((res, rej) => {

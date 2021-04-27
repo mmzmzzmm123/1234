@@ -8,7 +8,7 @@
         label-width="68px"
         @submit.native.prevent
       >
-        <el-col :span="6">
+        <el-col :span="5">
           <el-form-item label="菜品名称" prop="name">
             <el-input
               v-model="queryParams.name"
@@ -19,7 +19,18 @@
             />
           </el-form-item>
         </el-col>
-        <el-col :span="6">
+        <el-col :span="5">
+          <el-form-item label="包含食材" prop="physical">
+            <el-input
+              v-model="queryParams.igdName"
+              placeholder="请输入食材名称"
+              clearable
+              size="mini"
+              @keyup.enter.native="handleQuery"
+            />
+          </el-form-item>
+        </el-col>
+        <el-col :span="5">
           <el-form-item label="菜品种类" prop="dishClass">
             <el-cascader
               filterable
@@ -33,7 +44,7 @@
             ></el-cascader>
           </el-form-item>
         </el-col>
-        <el-col :span="6">
+        <el-col :span="4">
           <el-form-item label="菜品类型" prop="type">
             <el-select
               :disabled="lockType"
@@ -50,6 +61,20 @@
                 :value="dict.dictValue"
               />
             </el-select>
+          </el-form-item>
+        </el-col>
+        <el-col :span="5">
+          <el-form-item label="推荐体征" prop="physical">
+            <el-cascader
+              :disabled="lockType"
+              v-model="queryParams.physical"
+              placeholder="请选择推荐体征"
+              clearable
+              :options="physicalSignsOptions"
+              size="mini"
+              width="120px"
+              @change="handleOnPhysicalSignsChange"
+            />
           </el-form-item>
         </el-col>
         <el-form-item>
@@ -71,17 +96,14 @@
       v-loading="loading"
       size="mini"
       :data="dishesList"
-      height="600"
+      height="550"
       highlight-current-row
       @current-change="handleCurrentChange"
     >
       <el-table-column label="菜品名称" align="center" prop="name" />
       <el-table-column label="菜品种类" align="center" prop="bigClass">
         <template slot-scope="scope">
-          <AutoHideMessage
-            :data="dishClassFormat(scope.row)"
-            :maxLength="10"
-          ></AutoHideMessage>
+          <AutoHideMessage :data="dishClassFormat(scope.row)" :maxLength="10" />
         </template>
       </el-table-column>
       <el-table-column label="菜品类型" align="center" prop="type">
@@ -138,9 +160,11 @@ export default {
         pageSize: 10,
         name: null,
         type: null,
+        igdName: null,
         smallClass: null,
         bigClass: null,
         reviewStatus: "yes",
+        physical: null,
       },
       //菜品种类查询参数
       dishClassQueryParam: [],
@@ -155,6 +179,7 @@ export default {
       "typeOptions",
       "dishBigClassOptions",
       "dishSmallClassOptions",
+      "physicalSignsOptions",
     ]),
     ...mapGetters(["dishClassOptions"]),
   },
@@ -174,7 +199,13 @@ export default {
         this.queryParams.smallClass = null;
       }
       this.loading = true;
-      listDishes(this.queryParams).then((result) => {
+      const qParams = {
+        ...this.queryParams,
+      };
+      if (this.queryParams.physical) {
+        qParams.physical = this.queryParams.physical[1];
+      }
+      listDishes(qParams).then((result) => {
         this.dishesList = result.rows.map((d) => {
           const recTags = [],
             notRecTags = [];
@@ -210,6 +241,7 @@ export default {
         pageSize: 10,
         name: null,
         type: null,
+        igdName: null,
         reviewStatus: "yes",
       };
       this.dishesList = [];
@@ -223,6 +255,7 @@ export default {
       this.getList({});
     },
     resetQuery() {
+      this.clean();
       this.resetForm("queryForm");
       this.dishClassQueryParam = [];
       this.handleQuery();
@@ -248,6 +281,10 @@ export default {
         return bigClassName + "/" + smallClassName;
       }
       return "";
+    },
+    handleOnPhysicalSignsChange(val) {
+      const [typeId, id] = val;
+      console.log(val);
     },
   },
 };
