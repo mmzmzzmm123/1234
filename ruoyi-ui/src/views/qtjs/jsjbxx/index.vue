@@ -183,7 +183,7 @@
     <!-- 添加或修改教师基本信息对话框 -->
     <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
-        <el-form-item label="其他系统教师编号" prop="jsid">
+        <el-form-item label="其他系统编号" prop="jsid">
           <el-input v-model="form.jsid" placeholder="请输入其他系统教师编号" />
         </el-form-item>
         <el-form-item label="教师姓名" prop="jsxm">
@@ -219,6 +219,51 @@
             />
           </el-select>
         </el-form-item>
+        <el-form-item label="任教学段" prop="xd">
+        <el-select
+          v-model="form.xd"
+          placeholder="请选择任教学段"
+          clearable
+          size="small"
+        >
+          <el-option
+            v-for="dict in xdOptions"
+            :key="dict.dictValue"
+            :label="dict.dictLabel"
+            :value="dict.dictValue"
+          />
+        </el-select>
+      </el-form-item>
+      <el-form-item label="任教学科" prop="xk">
+        <el-select
+          v-model="form.xk"
+          placeholder="请选择任教学科"
+          clearable
+          size="small"
+        >
+          <el-option
+            v-for="dict in xkOptions"
+            :key="dict.dictValue"
+            :label="dict.dictLabel"
+            :value="dict.dictValue"
+          />
+        </el-select>
+      </el-form-item>
+      <el-form-item label="学历" prop="xl">
+        <el-select
+          v-model="form.xl"
+          placeholder="请选择学历"
+          clearable
+          size="small"
+        >
+          <el-option
+            v-for="dict in xlOptions"
+            :key="dict.dictValue"
+            :label="dict.dictLabel"
+            :value="dict.dictValue"
+          />
+        </el-select>
+      </el-form-item>
         <el-form-item label="教师档案号" prop="dabh">
           <el-input v-model="form.dabh" placeholder="请输入教师档案号" />
         </el-form-item>
@@ -308,6 +353,12 @@ export default {
       xbOptions: [],
       //学校
       deptOptions: [],
+      // 学段
+      xdOptions: [],
+      // 学科
+      xkOptions: [],
+      // 学历
+      xlOptions: [],
       // 查询参数
       queryParams: {
         pageNum: 1,
@@ -328,6 +379,9 @@ export default {
         zyry: null,
         tzb: null,
         zks: null,
+        xd: null,
+        xk: null,
+        xl: null,
       },
       // 表单参数
       form: {},
@@ -357,6 +411,15 @@ export default {
     this.getDicts("sys_user_sex").then((response) => {
       this.xbOptions = response.data;
     });
+    this.getDicts("sys_dm_rjxd").then((response) => {
+      this.xdOptions = response.data;
+    });
+    this.getDicts("sys_dm_rjxk").then((response) => {
+      this.xkOptions = response.data;
+    });
+    this.getDicts("sys_dm_xl").then((response) => {
+      this.xlOptions = response.data;
+    });
   },
   methods: {
     //获取基地校列表
@@ -369,11 +432,24 @@ export default {
     xbFormat(row, column) {
       return this.selectDictLabel(this.xbOptions, row.xb);
     },
+    // 学段字典翻译
+    xdFormat(row, column) {
+      return this.selectDictLabel(this.xdOptions, row.rjxd);
+    },
+    // 学科字典翻译
+    xkFormat(row, column) {
+      return this.selectDictLabel(this.xkOptions, row.rjxk);
+    },
+    // 学历字典翻译
+    xlFormat(row, column) {
+      return this.selectDictLabel(this.xlOptions, row.xl);
+    },
     /** 查询教师基本信息列表 */
     getList() {
       this.loading = true;
       listJsjbxx(this.queryParams).then((response) => {
         this.jsjbxxList = response.rows;
+        console.log(this.jsjbxxList);
         this.total = response.total;
         this.loading = false;
       });
@@ -404,6 +480,9 @@ export default {
         tzb: null,
         zks: null,
         createTime: null,
+        xd: null,
+        xk: null,
+        xl: null,
       };
       this.resetForm("form");
     },

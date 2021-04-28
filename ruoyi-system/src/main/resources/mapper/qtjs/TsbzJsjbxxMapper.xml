@@ -22,6 +22,9 @@
         <result property="zyry" column="zyry"/>
         <result property="tzb" column="tzb"/>
         <result property="zks" column="zks"/>
+        <result property="xd" column="xd"/>
+        <result property="xk" column="xk"/>
+        <result property="xl" column="xl"/>
         <result property="createTime" column="create_time"/>
         <association property="tsbzXxjbxx" column="deptid" javaType="TsbzXxjbxx" resultMap="TsbzXxjbxxResult"/>
     </resultMap>
@@ -61,7 +64,7 @@
     </resultMap>
 
     <sql id="selectTsbzJsjbxxVo">
-        select a.id, a.jsid, a.jsxm, a.xb, a.deptid, a.dabh, a.zjlx, a.zjhm, a.bzzt, a.gwzt, a.gwlx, a.csrq, a.rjnx, a.zc, a.zyry, a.tzb, a.zks, a.create_time,b.xxdm, b.countyid, b.townid, b.villageid, b.jyjxxdm, b.xxmc, b.xxywmc, b.xxdz, b.xxxz, b.dzzfzr, b.jxny, b.xxbbm, b.xxlbm, b.szdqlbm, b.szdjjsxm, b.szdmzsxm, b.rxnl, b.zjxyym, b.fjxyym, b.zsqy, b.yzbm, b.lxdh, b.czdh, b.dzxx, b.zydz, b.zzjgdm, b.lsyg, b.dqxn, b.dqxq from tsbz_jsjbxx a
+        select a.id, a.jsid, a.jsxm, a.xb, a.xd,a.xk,a.xl, a.deptid, a.dabh, a.zjlx, a.zjhm, a.bzzt, a.gwzt, a.gwlx, a.csrq, a.rjnx, a.zc, a.zyry, a.tzb, a.zks, a.create_time,b.xxdm, b.countyid, b.townid, b.villageid, b.jyjxxdm, b.xxmc, b.xxywmc, b.xxdz, b.xxxz, b.dzzfzr, b.jxny, b.xxbbm, b.xxlbm, b.szdqlbm, b.szdjjsxm, b.szdmzsxm, b.rxnl, b.zjxyym, b.fjxyym, b.zsqy, b.yzbm, b.lxdh, b.czdh, b.dzxx, b.zydz, b.zzjgdm, b.lsyg, b.dqxn, b.dqxq from tsbz_jsjbxx a
         left join tsbz_xxjbxx b on a.deptid=b.id
     </sql>
 
@@ -84,6 +87,9 @@
             <if test="zyry != null  and zyry != ''">and a.zyry = #{zyry}</if>
             <if test="tzb != null  and tzb != ''">and a.tzb = #{tzb}</if>
             <if test="zks != null  and zks != ''">and a.zks = #{zks}</if>
+            <if test="xd != null  and xd != ''">and a.xd = #{xd}</if>
+            <if test="xk != null  and xk != ''">and a.xk = #{xk}</if>
+            <if test="xl != null  and xl != ''">and a.xl = #{xl}</if>
         </where>
     </select>
 
@@ -112,6 +118,9 @@
             <if test="zyry != null">zyry,</if>
             <if test="tzb != null">tzb,</if>
             <if test="zks != null">zks,</if>
+            <if test="xd != null">xd,</if>
+            <if test="xk != null">xk,</if>
+            <if test="xl != null">xl,</if>
             <if test="createTime != null">create_time,</if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
@@ -132,6 +141,9 @@
             <if test="zyry != null">#{zyry},</if>
             <if test="tzb != null">#{tzb},</if>
             <if test="zks != null">#{zks},</if>
+            <if test="xd != null">#{xd},</if>
+            <if test="xk != null">#{xk},</if>
+            <if test="xl != null">#{xl},</if>
             <if test="createTime != null">#{createTime},</if>
         </trim>
     </insert>
@@ -155,6 +167,9 @@
             <if test="zyry != null">zyry = #{zyry},</if>
             <if test="tzb != null">tzb = #{tzb},</if>
             <if test="zks != null">zks = #{zks},</if>
+            <if test="xd != null">xd = #{xd},</if>
+            <if test="xk != null">xk = #{xk},</if>
+            <if test="xl != null">xl = #{xl},</if>
             <if test="createTime != null">create_time = #{createTime},</if>
         </trim>
         where id = #{id}

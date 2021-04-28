@@ -28,6 +28,11 @@ public class TsbzXybmsq extends BaseEntity
     @Excel(name = "报名基地id")
     private Long jdid;
 
+
+
+    // 教师id
+    private Long jsid;
+
     /** 姓名 */
     @Excel(name = "姓名")
     private String name;
@@ -288,12 +293,21 @@ public class TsbzXybmsq extends BaseEntity
         this.qjshjy = qjshjy;
     }
 
+    public Long getJsid() {
+        return jsid;
+    }
+
+    public void setJsid(Long jsid) {
+        this.jsid = jsid;
+    }
+
     @Override
     public String toString() {
         return new ToStringBuilder(this,ToStringStyle.MULTI_LINE_STYLE)
             .append("id", getId())
             .append("faid", getFaid())
             .append("jdid", getJdid())
+            .append("jsid", getJsid())
             .append("name", getName())
             .append("jxbh", getJxbh())
             .append("xb", getXb())

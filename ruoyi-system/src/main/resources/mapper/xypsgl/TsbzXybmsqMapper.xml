@@ -8,19 +8,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="id"    column="id"    />
         <result property="faid"    column="faid"    />
         <result property="jdid"    column="jdid"    />
-        <result property="name"    column="name"    />
-        <result property="jxbh"    column="jxbh"    />
-        <result property="xb"    column="xb"    />
-        <result property="csrq"    column="csrq"    />
-        <result property="xd"    column="xd"    />
-        <result property="xk"    column="xk"    />
-        <result property="zc"    column="zc"    />
-        <result property="dwmc"    column="dwmc"    />
-        <result property="dwdz"    column="dwdz"    />
+        <result property="jsid"    column="jsid"    />
         <result property="jdtype"    column="jdtype"    />
         <result property="sf"    column="sf"    />
-        <result property="phone"    column="phone"    />
-        <result property="email"    column="Email"    />
         <result property="createTime"    column="create_time"    />
         <result property="createUser"    column="create_user"    />
         <result property="xxshstatus"    column="xxshstatus"    />
@@ -30,43 +20,37 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </resultMap>
 
     <sql id="selectTsbzXybmsqVo">
-        select id, faid, jdid, name, jxbh, xb, csrq, xd, xk, zc, dwmc, dwdz, jdtype, sf, phone, Email, create_time, create_user, xxshstatus, xxshjy, qjshstatus, qjshjy from tsbz_xybmsq
+        select a.id, a.faid, a.jdid, a.jsid, b.jsxm as name, b.dabh as jxbh, b.xb as xb, b.csrq as csrq, b.xd as xd, b.xk as xk, b.zc as zc, c.xxmc as dwmc, c.xxdz as dwdz, d.email as email, d.phonenumber as phone, a.jdtype, a.sf, a.create_time, a.create_user, a.xxshstatus, a.xxshjy, a.qjshstatus, a.qjshjy
+        from tsbz_xybmsq a
+        left join tsbz_jsjbxx b on a.jsid=b.id
+        left join tsbz_xxjbxx c on b.deptid=c.xxdm
+        left join sys_user d on d.user_name=b.dabh
     </sql>
 
     <select id="selectTsbzXybmsqList" parameterType="TsbzXybmsq" resultMap="TsbzXybmsqResult">
         <include refid="selectTsbzXybmsqVo"/>
         <where>  
-            <if test="faid != null "> and faid = #{faid}</if>
-            <if test="jdid != null "> and jdid = #{jdid}</if>
-            <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
-            <if test="jxbh != null  and jxbh != ''"> and jxbh = #{jxbh}</if>
-            <if test="xb != null  and xb != ''"> and xb = #{xb}</if>
-            <if test="csrq != null "> and csrq = #{csrq}</if>
-            <if test="xd != null  and xd != ''"> and xd = #{xd}</if>
-            <if test="xk != null  and xk != ''"> and xk = #{xk}</if>
-            <if test="zc != null  and zc != ''"> and zc = #{zc}</if>
-            <if test="dwmc != null  and dwmc != ''"> and dwmc = #{dwmc}</if>
-            <if test="dwdz != null  and dwdz != ''"> and dwdz = #{dwdz}</if>
-            <if test="jdtype != null  and jdtype != ''"> and jdtype = #{jdtype}</if>
-            <if test="sf != null  and sf != ''"> and sf = #{sf}</if>
-            <if test="phone != null  and phone != ''"> and phone = #{phone}</if>
-            <if test="email != null  and email != ''"> and Email = #{email}</if>
-            <if test="xxshstatus != null  and xxshstatus != ''"> and xxshstatus = #{xxshstatus}</if>
-            <if test="xxshjy != null  and xxshjy != ''"> and xxshjy = #{xxshjy}</if>
-            <if test="qjshstatus != null  and qjshstatus != ''"> and qjshstatus = #{qjshstatus}</if>
-            <if test="qjshjy != null  and qjshjy != ''"> and qjshjy = #{qjshjy}</if>
-            <if test="createUser != null "> and create_user = #{createUser}</if>
+            <if test="faid != null "> and a.faid = #{faid}</if>
+            <if test="jdid != null "> and a.jdid = #{jdid}</if>
+            <if test="jsid != null "> and a.jsid = #{jsid}</if>
+            <if test="jdtype != null  and jdtype != ''"> and a.jdtype = #{jdtype}</if>
+            <if test="sf != null  and sf != ''"> and a.sf = #{sf}</if>
+            <if test="xxshstatus != null  and xxshstatus != ''"> and a.xxshstatus = #{xxshstatus}</if>
+            <if test="xxshjy != null  and xxshjy != ''"> and a.xxshjy = #{xxshjy}</if>
+            <if test="qjshstatus != null  and qjshstatus != ''"> and a.qjshstatus = #{qjshstatus}</if>
+            <if test="qjshjy != null  and qjshjy != ''"> and a.qjshjy = #{qjshjy}</if>
+            <if test="createUser != null "> and a.create_user = #{createUser}</if>
         </where>
     </select>
 
     <select id="selectTsbzXybmsqById" parameterType="Long" resultMap="TsbzXybmsqResult">
         <include refid="selectTsbzXybmsqVo"/>
-        where id = #{id}
+        where a.id = #{id}
     </select>
 
     <select id="selectCountYibaoming" parameterType="TsbzXybmsq" resultMap="TsbzXybmsqResult">
         select count(*) as countYbm from tsbz_xybmsq
-        where jdid = #{jdid}
+        where a.jdid = #{jdid}
     </select>
         
     <insert id="insertTsbzXybmsq" parameterType="TsbzXybmsq" useGeneratedKeys="true" keyProperty="id">
@@ -74,19 +58,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="faid != null">faid,</if>
             <if test="jdid != null">jdid,</if>
-            <if test="name != null">name,</if>
-            <if test="jxbh != null">jxbh,</if>
-            <if test="xb != null">xb,</if>
-            <if test="csrq != null">csrq,</if>
-            <if test="xd != null">xd,</if>
-            <if test="xk != null">xk,</if>
-            <if test="zc != null">zc,</if>
-            <if test="dwmc != null">dwmc,</if>
-            <if test="dwdz != null">dwdz,</if>
+            <if test="jsid != null">jsid,</if>
             <if test="jdtype != null">jdtype,</if>
             <if test="sf != null">sf,</if>
-            <if test="phone != null">phone,</if>
-            <if test="email != null">Email,</if>
             <if test="xxshstatus != null">xxshstatus,</if>
             <if test="xxshjy != null">xxshjy,</if>
             <if test="qjshstatus != null">qjshstatus,</if>
@@ -97,19 +71,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="faid != null">#{faid},</if>
             <if test="jdid != null">#{jdid},</if>
-            <if test="name != null">#{name},</if>
-            <if test="jxbh != null">#{jxbh},</if>
-            <if test="xb != null">#{xb},</if>
-            <if test="csrq != null">#{csrq},</if>
-            <if test="xd != null">#{xd},</if>
-            <if test="xk != null">#{xk},</if>
-            <if test="zc != null">#{zc},</if>
-            <if test="dwmc != null">#{dwmc},</if>
-            <if test="dwdz != null">#{dwdz},</if>
+            <if test="jsid != null">#{jsid},</if>
             <if test="jdtype != null">#{jdtype},</if>
             <if test="sf != null">#{sf},</if>
-            <if test="phone != null">#{phone},</if>
-            <if test="email != null">#{email},</if>
             <if test="xxshstatus != null">#{xxshstatus},</if>
             <if test="xxshjy != null">#{xxshjy},</if>
             <if test="qjshstatus != null">#{qjshstatus},</if>
@@ -124,19 +88,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <trim prefix="SET" suffixOverrides=",">
             <if test="faid != null">faid = #{faid},</if>
             <if test="jdid != null">jdid = #{jdid},</if>
-            <if test="name != null">name = #{name},</if>
-            <if test="jxbh != null">jxbh = #{jxbh},</if>
-            <if test="xb != null">xb = #{xb},</if>
-            <if test="csrq != null">csrq = #{csrq},</if>
-            <if test="xd != null">xd = #{xd},</if>
-            <if test="xk != null">xk = #{xk},</if>
-            <if test="zc != null">zc = #{zc},</if>
-            <if test="dwmc != null">dwmc = #{dwmc},</if>
-            <if test="dwdz != null">dwdz = #{dwdz},</if>
+            <if test="jsid != null">jsid = #{jsid},</if>
             <if test="jdtype != null">jdtype = #{jdtype},</if>
             <if test="sf != null">sf = #{sf},</if>
-            <if test="phone != null">phone = #{phone},</if>
-            <if test="email != null">Email = #{email},</if>
             <if test="xxshstatus != null">xxshstatus = #{xxshstatus},</if>
             <if test="xxshjy != null">xxshjy = #{xxshjy},</if>
             <if test="qjshstatus != null">qjshstatus = #{qjshstatus},</if>
@@ -144,7 +98,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="createTime != null">create_time = #{createTime},</if>
             <if test="createUser != null">create_user = #{createUser},</if>
         </trim>
-        where id = #{id}
+        where a.id = #{id}
     </update>
 
     <delete id="deleteTsbzXybmsqById" parameterType="Long">

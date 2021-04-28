@@ -89,7 +89,8 @@ public class TsbzXybmsqController extends BaseController
         int countZsme = tsbzZcrjdcjService.selectTsbzZcrjdcjById(tsbzXybmsq.getJdid()).getZsme();
         TsbzXybmsq tsbzXybmsq1 = new TsbzXybmsq();
         tsbzXybmsq1.setJdid(tsbzXybmsq.getJdid());
-        tsbzXybmsq1.setCreateUser(SecurityUtils.getLoginUser().getUser().getUserId());
+        tsbzXybmsq1.setJsid(tsbzXybmsq.getJsid());
+        System.out.print("AAAAAAAAAAAAAAAAAAAAAA");
         // 先判断是否此用户已经报名此基地
         if (tsbzXybmsqService.selectTsbzXybmsqList(tsbzXybmsq1).size() > 0) {
             return AjaxResult.error("您已报名次基地,无法再次报名");

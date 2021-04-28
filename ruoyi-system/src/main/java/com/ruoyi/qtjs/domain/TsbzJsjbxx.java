@@ -119,6 +119,49 @@ public class TsbzJsjbxx extends BaseEntity {
     @Excel(name = "周课时")
     private String zks;
 
+    public String getXk() {
+        return xk;
+    }
+
+    public void setXk(String xk) {
+        this.xk = xk;
+    }
+
+    public String getXd() {
+        return xd;
+    }
+
+    public void setXd(String xd) {
+        this.xd = xd;
+    }
+
+    public String getXl() {
+        return xl;
+    }
+
+    public void setXl(String xl) {
+        this.xl = xl;
+    }
+
+    public String getDwdz() {
+        return dwdz;
+    }
+
+    public void setDwdz(String dwdz) {
+        this.dwdz = dwdz;
+    }
+
+    // 任教学科
+    private String xk;
+    // 任教学段
+    private String xd;
+    // 学历
+    private String xl;
+    // 单位地址
+    private String dwdz;
+
+
+
     public TsbzXxjbxx getTsbzXxjbxx() {
         return tsbzXxjbxx;
     }
@@ -287,6 +330,10 @@ public class TsbzJsjbxx extends BaseEntity {
                 .append("zks", getZks())
                 .append("createTime", getCreateTime())
                 .append("tsbzXxjbxx",getTsbzXxjbxx())
+                .append("xd", getXd())
+                .append("xk", getXk())
+                .append("xl", getXl())
+                .append("dwdz", getDwdz())
                 .toString();
     }
 }

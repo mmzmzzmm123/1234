@@ -44,7 +44,7 @@ public class TsbzJsjbxxController extends BaseController {
     /**
      * 查询教师基本信息列表
      */
-    @PreAuthorize("@ss.hasPermi('qtjs:jsjbxx:list')")
+    @PreAuthorize("@ss.hasPermi('qtjs:jsjbxx:list')" + "||@ss.hasPermi('xypsgl:xybmsq:list')" + "||@ss.hasPermi('xypsgl:xybmsq:query')")
     @GetMapping("/list")
     public TableDataInfo list(TsbzJsjbxx tsbzJsjbxx) {
         startPage();
@@ -67,7 +67,7 @@ public class TsbzJsjbxxController extends BaseController {
     /**
      * 获取教师基本信息详细信息
      */
-    @PreAuthorize("@ss.hasPermi('qtjs:jsjbxx:query')")
+    @PreAuthorize("@ss.hasPermi('qtjs:jsjbxx:query')" + "||@ss.hasPermi('xypsgl:xybmsq:edit')" + "||@ss.hasPermi('xypsgl:xybmsq:query')")
     @GetMapping(value = "/{id}")
     public AjaxResult getInfo(@PathVariable("id") String id) {
         return AjaxResult.success(tsbzJsjbxxService.selectTsbzJsjbxxById(id));
