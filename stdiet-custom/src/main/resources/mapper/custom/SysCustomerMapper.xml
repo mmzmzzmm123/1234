@@ -156,6 +156,12 @@
         where phone = #{phone} and del_flag = 0
     </select>
 
+    <!-- 根据openId查询客户 -->
+    <select id="getCustomerByOpenId" parameterType="String" resultMap="SysCustomerResult">
+        select sc.id from sys_customer sc
+        left join sys_wx_user_info wu on wu.phone = sc.phone
+        where wu.openid = #{openid} and sc.del_flag = 0 order by sc.id desc limit 1
+    </select>
 
 
 </mapper>

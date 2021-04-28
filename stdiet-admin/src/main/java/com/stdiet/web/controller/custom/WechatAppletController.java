@@ -14,8 +14,10 @@ import com.stdiet.common.utils.oss.AliyunOSSUtils;
 import com.stdiet.common.utils.sign.AesUtils;
 import com.stdiet.custom.domain.*;
 import com.stdiet.custom.dto.response.CustomerCaseResponse;
+import com.stdiet.custom.dto.response.MessageNoticeResponse;
 import com.stdiet.custom.page.WxLogInfo;
 import com.stdiet.custom.service.*;
+import org.aspectj.weaver.loadtime.Aj;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -50,6 +52,12 @@ public class WechatAppletController extends BaseController {
 
     @Autowired
     private ISysAskNutritionQuestionService sysAskNutritionQuestionService;
+
+    @Autowired
+    private ISysMessageNoticeService sysMessageNoticeService;
+
+    @Autowired
+    private ISysCustomerService sysCustomerService;
 
     /**
      * 查询微信小程序中展示的客户案例
@@ -89,7 +97,7 @@ public class WechatAppletController extends BaseController {
     }
 
     /**
-     * 同步客户信息，返回订单数量
+     * 同步客户信息
      * @param sysWxUserInfo
      * @return
      */
@@ -106,7 +114,17 @@ public class WechatAppletController extends BaseController {
         }else{
             sysWxUserInfoService.insertSysWxUserInfo(sysWxUserInfo);
         }
-        return AjaxResult.success();
+        Map<String,Object> result = new HashMap<>();
+        //根据手机号查询返回用户加密ID
+        SysCustomer customer = sysCustomerService.getCustomerByPhone(sysWxUserInfo.getPhone());
+        result.put("customerId", customer != null ? AesUtils.encrypt(customer.getId()+"", null) : null);
+        //查询未读消息数量
+        SysMessageNotice messageParam = new SysMessageNotice();
+        messageParam.setReadType(0);
+        messageParam.setMessageCustomer(customer != null ? customer.getId() : 0);
+        int unReadNoticeTotal = sysMessageNoticeService.getCustomerMessageCount(messageParam);
+        result.put("unReadNoticeTotal", unReadNoticeTotal);
+        return AjaxResult.success(result);
     }
 
     /**
@@ -308,5 +326,31 @@ public class WechatAppletController extends BaseController {
             return AjaxResult.error("添加失败");
         }
         return toAjax(sysAskNutritionQuestionService.insertSysAskNutritionQuestion(sysAskNutritionQuestion));
+    }
+
+    /**
+     * 获取用户通知消息
+     */
+    @GetMapping(value = "/getCustomerMessage")
+    public TableDataInfo getCustomerMessage(SysMessageNotice sysMessageNotice) {
+        startPage();
+        if(StringUtils.isNotEmpty(sysMessageNotice.getCustomerId())){
+            sysMessageNotice.setMessageCustomer(Long.parseLong(AesUtils.decrypt(sysMessageNotice.getCustomerId(), null)));
+        }else{
+            sysMessageNotice.setMessageCustomer(0L);
+        }
+        List<MessageNoticeResponse> list = sysMessageNoticeService.getCustomerMessage(sysMessageNotice);
+        return getDataTable(list);
+    }
+
+    /**
+     * 更新用户通知消息已读状态
+     */
+    @GetMapping(value = "/updateMessageReadStatus")
+    public AjaxResult updateMessageReadStatus(@RequestParam("id")Long id) {
+        SysMessageNotice sysMessageNotice = new SysMessageNotice();
+        sysMessageNotice.setReadType(1);
+        sysMessageNotice.setId(id);
+        return toAjax(sysMessageNoticeService.updateSysMessageNotice(sysMessageNotice));
     }
 }

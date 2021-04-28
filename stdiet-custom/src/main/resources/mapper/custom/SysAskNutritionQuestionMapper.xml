@@ -26,6 +26,7 @@
         <include refid="selectSysAskNutritionQuestionVo"/>
         from sys_ask_nutrition_question where del_flag = 0
         <if test="question != null  and question != ''"> and question like concat('%',#{question},'%')</if>
+        order by id desc
     </select>
 
     <select id="selectSysAskNutritionQuestionById" parameterType="Long" resultMap="SysAskNutritionQuestionResult">
@@ -77,15 +78,15 @@
         where id = #{id}
     </update>
 
-    <delete id="deleteSysAskNutritionQuestionById" parameterType="Long">
+    <update id="deleteSysAskNutritionQuestionById" parameterType="Long">
         update sys_ask_nutrition_question set del_flag = 1 where id = #{id}
-    </delete>
+    </update>
 
-    <delete id="deleteSysAskNutritionQuestionByIds" parameterType="String">
+    <update id="deleteSysAskNutritionQuestionByIds" parameterType="String">
         update sys_ask_nutrition_question set del_flag = 1 where id in
         <foreach item="id" collection="array" open="(" separator="," close=")">
             #{id}
         </foreach>
-    </delete>
+    </update>
 
 </mapper>

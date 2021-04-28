@@ -13,6 +13,7 @@ import com.stdiet.common.utils.poi.ExcelUtil;
 import com.stdiet.custom.domain.SysWxUserInfo;
 import com.stdiet.custom.domain.SysWxUserLog;
 import com.stdiet.custom.page.WxLogInfo;
+import com.stdiet.custom.service.ISysMessageNoticeService;
 import com.stdiet.custom.service.ISysOrderService;
 import com.stdiet.custom.service.ISysWxUserInfoService;
 import com.stdiet.custom.service.ISysWxUserLogService;
@@ -40,7 +41,11 @@ public class SysWxUserLogController extends BaseController {
     @Autowired
     private ISysWxUserInfoService sysWxUserInfoService;
 
+    @Autowired
     private ISysOrderService sysOrderService;
+
+    @Autowired
+    private ISysMessageNoticeService sysMessageNoticeService;
 
     /**
      * 查询微信用户记录列表
@@ -211,6 +216,11 @@ public class SysWxUserLogController extends BaseController {
     @PreAuthorize("@ss.hasPermi('custom:wxUserLog:query')")
     @PostMapping("/commentPunchContent")
     public AjaxResult commentPunchContent(@RequestBody SysWxUserLog sysWxUserLog) {
-        return toAjax(sysWxUserLogService.updateSysWxUserLog(sysWxUserLog));
+        int row = sysWxUserLogService.updateSysWxUserLog(sysWxUserLog);
+        if(row > 0){
+            SysWxUserLog log = sysWxUserLogService.selectSysWxUserLogById(sysWxUserLog.getId()+"");
+            sysMessageNoticeService.sendPunchCommentMessage(log);
+        }
+        return toAjax(row);
     }
 }
