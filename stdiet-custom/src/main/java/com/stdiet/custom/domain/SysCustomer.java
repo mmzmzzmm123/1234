@@ -2,6 +2,8 @@ package com.stdiet.custom.domain;
 
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.List;
+
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -101,5 +103,11 @@ public class SysCustomer extends BaseEntity
     private Long channelId;
 
     private String[] channels;
+
+    //病史体征ID集合，非持久化字段
+    private List<Long> signIdList;
+
+    //病史体征ID
+    private String physicalSignsId;
 
 }

@@ -34,26 +34,41 @@
     </sql>
 
     <select id="selectSysCustomerList" parameterType="SysCustomer" resultMap="SysCustomerResult">
-        <include refid="selectSysCustomerVo"/>
-        where del_flag = 0
-        <if test="name != null  and name != ''"> and (name like concat('%', #{name}, '%') or phone like concat('%', #{name}, '%'))</if>
-        <if test="mainDietitian != null  and mainDietitian != ''"> and main_dietitian = #{mainDietitian}</if>
-        <if test="mainDietitian == 0"> and (isnull(main_dietitian) or main_dietitian=0)</if>
-        <if test="salesman != null  and salesman != ''"> and salesman = #{salesman}</if>
-        <if test="salesman == 0"> and (isnull(salesman) or salesman=0)</if>
-        <if test="afterDietitian != null  and afterDietitian != ''"> and after_dietitian = #{afterDietitian}</if>
-        <if test="afterDietitian == 0"> and (isnull(after_dietitian) or after_dietitian=0)</if>
-        <if test="assistantDietitian != null  and assistantDietitian != ''"> and assistant_dietitian = #{assistantDietitian}</if>
-        <if test="assistantDietitian == 0"> and (isnull(assistant_dietitian) or assistant_dietitian=0)</if>
-        <if test="fansChannel != null "> and fans_channel = #{fansChannel}</if>
-        <if test="channelId != null "> and channel_id = #{channelId}</if>
+        select
+        sc.id, sc.name, sc.phone, sc.email, sc.fans_time, sc.fans_channel, sc.address, sc.pay_date, sc.start_date, sc.purchase_num, sc.pay_total, sc.main_dietitian,
+        sc.assistant_dietitian, sc.after_dietitian, sc.salesman, sc.charge_person, sc.follow_status, sc.create_time,sc.channel_id
+        from sys_customer sc
+        left join sys_customer_healthy as sch
+        on sch.customer_id = sc.id and sch.del_flag = 0
+        where sc.del_flag = 0
+        <if test="name != null  and name != ''">
+            and (sc.name like concat('%', #{name}, '%') or sc.phone like concat('%', #{name}, '%'))
+        </if>
+        <if test="mainDietitian != null  and mainDietitian != ''"> and sc.main_dietitian = #{mainDietitian}</if>
+        <if test="mainDietitian == 0"> and (isnull(sc.main_dietitian) or sc.main_dietitian=0)</if>
+        <if test="salesman != null  and salesman != ''"> and sc.salesman = #{salesman}</if>
+        <if test="salesman == 0"> and (isnull(sc.salesman) or sc.salesman=0)</if>
+        <if test="afterDietitian != null  and afterDietitian != ''"> and sc.after_dietitian = #{afterDietitian}</if>
+        <if test="afterDietitian == 0"> and (isnull(sc.after_dietitian) or sc.after_dietitian=0)</if>
+        <if test="assistantDietitian != null  and assistantDietitian != ''"> and sc.assistant_dietitian = #{assistantDietitian}</if>
+        <if test="assistantDietitian == 0"> and (isnull(sc.assistant_dietitian) or sc.assistant_dietitian=0)</if>
+        <if test="fansChannel != null "> and sc.fans_channel = #{fansChannel}</if>
+        <if test="channelId != null "> and sc.channel_id = #{channelId}</if>
         <if test="channels != null">
-            and channel_id in
+            and sc.channel_id in
             <foreach collection="channels" item="cn" separator="," open="(" close=")">
                 #{cn}
             </foreach>
         </if>
-        order by create_time desc
+        <if test="signIdList != null">
+            and (
+            sch.other_physical_signs like concat('%', #{name}, '%')
+            <foreach collection="signIdList " item="signId" index="index" open=" OR (" close=")" separator=" OR ">
+                FIND_IN_SET(#{signId}, sch.physical_signs_id)
+            </foreach>
+            )
+        </if>
+        order by sc.create_time desc
     </select>
 
     <select id="selectSysCustomerById" parameterType="Long" resultMap="SysCustomerResult">

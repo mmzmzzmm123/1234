@@ -1,11 +1,15 @@
 package com.stdiet.web.controller.custom;
 
+import com.aliyun.vod20170321.models.GetPlayInfoResponseBody;
+import com.aliyun.vod20170321.models.GetVideoInfoResponseBody;
+import com.aliyun.vod20170321.models.GetVideoListResponseBody;
 import com.itextpdf.io.util.DateTimeUtil;
 import com.stdiet.common.core.controller.BaseController;
 import com.stdiet.common.core.domain.AjaxResult;
 import com.stdiet.common.core.page.TableDataInfo;
 import com.stdiet.common.enums.BusinessType;
 import com.stdiet.common.exception.file.FileNameLengthLimitExceededException;
+import com.stdiet.common.utils.AliyunVideoUtils;
 import com.stdiet.common.utils.DateUtils;
 import com.stdiet.common.utils.StringUtils;
 import com.stdiet.common.utils.file.FileUploadUtils;
@@ -15,6 +19,7 @@ import com.stdiet.common.utils.sign.AesUtils;
 import com.stdiet.custom.domain.*;
 import com.stdiet.custom.dto.response.CustomerCaseResponse;
 import com.stdiet.custom.dto.response.MessageNoticeResponse;
+import com.stdiet.custom.dto.response.NutritionalVideoResponse;
 import com.stdiet.custom.page.WxLogInfo;
 import com.stdiet.custom.service.*;
 import org.aspectj.weaver.loadtime.Aj;
@@ -352,5 +357,63 @@ public class WechatAppletController extends BaseController {
         sysMessageNotice.setReadType(1);
         sysMessageNotice.setId(id);
         return toAjax(sysMessageNoticeService.updateSysMessageNotice(sysMessageNotice));
+    }
+
+    /**
+     * 更新用户通知消息已读状态
+     */
+    @GetMapping(value = "/getVideoList")
+    public AjaxResult getVideoList(@RequestParam(value = "pageNum", defaultValue = "1") int pageNum,  @RequestParam(value = "pageSize", defaultValue = "10") int pageSize) {
+        AjaxResult result = AjaxResult.success();
+        int total = 0;
+        List<NutritionalVideoResponse> nutritionalVideoList = new ArrayList<>();
+        try{
+            GetVideoListResponseBody videoListResponseBody = AliyunVideoUtils.getVideoListByPage(null, "Normal", pageNum, pageSize);
+            if(videoListResponseBody != null){
+                total = videoListResponseBody.total;
+                for (GetVideoListResponseBody.GetVideoListResponseBodyVideoListVideo video : videoListResponseBody.videoList.video) {
+                    NutritionalVideoResponse nutritionalVideoResponse = new NutritionalVideoResponse();
+                    nutritionalVideoResponse.setCoverURL(video.getCoverURL());
+                    nutritionalVideoResponse.setTitle(video.getTitle());
+                    nutritionalVideoResponse.setVideoId(video.getVideoId());
+                    nutritionalVideoResponse.setDescription(video.getDescription());
+                    nutritionalVideoResponse.setTags(video.getTags());
+                    nutritionalVideoList.add(nutritionalVideoResponse);
+                }
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        result.put("total", total);
+        result.put("nutritionalVideoList", nutritionalVideoList);
+        return result;
+    }
+
+
+    /**
+     * 根据视频id获取播放链接
+     */
+    @GetMapping(value = "/getVideoDetailById")
+    public AjaxResult getVideoDetailById(@RequestParam(value = "videoId") String videoId) {
+        AjaxResult result = AjaxResult.success();
+        NutritionalVideoResponse nutritionalVideoResponse = new NutritionalVideoResponse();
+        try{
+            GetPlayInfoResponseBody playInfoResponseBody = AliyunVideoUtils.getVideoVisitDetail(videoId);
+            GetVideoInfoResponseBody videoInfoResponseBody = AliyunVideoUtils.getVideoById(videoId);
+            List<GetPlayInfoResponseBody.GetPlayInfoResponseBodyPlayInfoListPlayInfo> playList = playInfoResponseBody.playInfoList.playInfo;
+            if(playList != null && playList.size() > 0){
+                nutritionalVideoResponse.setPlayUrl(playList.get(0).getPlayURL());
+            }
+            if(videoInfoResponseBody != null){
+                nutritionalVideoResponse.setDescription(videoInfoResponseBody.video.description);
+                nutritionalVideoResponse.setTags(videoInfoResponseBody.video.tags);
+                nutritionalVideoResponse.setTitle(videoInfoResponseBody.video.title);
+                nutritionalVideoResponse.setCreateTime(videoInfoResponseBody.video.creationTime);
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        result.put("videoDetail", nutritionalVideoResponse);
+        return result;
     }
 }

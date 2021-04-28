@@ -83,6 +83,26 @@
           />
         </el-select>
       </el-form-item>
+      
+    <el-form-item label="病史体征" prop="physicalSignsId">
+          <el-select
+            v-model="queryParams.physicalSignsId"
+            filterable
+            clearable
+            allow-create
+            default-first-option
+            placeholder="请选择病史体征"
+          >
+            <el-option
+              v-for="physicalSign in physicalSignsList"
+              :key="physicalSign.id"
+              :label="physicalSign.name"
+              :value="physicalSign.id"
+            >
+            </el-option>
+          </el-select>
+        </el-form-item>
+
       <el-form-item>
         <el-button type="cyan" icon="el-icon-search" @click="handleQuery"
           >搜索</el-button
@@ -434,6 +454,7 @@ import ContractDrawer from "@/components/ContractDrawer";
 import HeatStatisticsDrawer from "@/components/HeatStatisticsDrawer";
 import RecipesPlanDrawer from "@/components/RecipesPlanDrawer";
 import CustomerPunchLogDrawer from "@/components/PunchLog/CustomerPunchLog";
+import { listPhysicalSigns } from "@/api/custom/physicalSigns";
 import { mapGetters } from "vuex";
 
 export default {
@@ -483,6 +504,7 @@ export default {
         assistantDietitian: null,
         afterDietitian: null,
         salesman: null,
+        physicalSignsId: null
       },
       // 表单参数
       form: {},
@@ -524,6 +546,8 @@ export default {
           return time.getTime() > Date.now();
         },
       },
+      //病史体征
+      physicalSignsList:[]
     };
   },
   created() {
@@ -545,6 +569,9 @@ export default {
       }
     });
     this.getList();
+    listPhysicalSigns().then(response => {
+          this.physicalSignsList = response.rows;
+    });
   },
   computed: {
     isPartner() {

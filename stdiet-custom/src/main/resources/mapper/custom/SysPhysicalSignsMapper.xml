@@ -66,5 +66,10 @@
         </foreach>
     </delete>
 
+    <!-- 根据体征名称查询体征ID -->
+    <select id="getSignIdByName" parameterType="String" resultType="Long">
+        select sps.id from sys_physical_signs sps where sps.name like concat('%', #{name}, '%')
+    </select>
+
 
 </mapper>
