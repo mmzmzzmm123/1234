@@ -98,7 +98,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="createTime != null">create_time = #{createTime},</if>
             <if test="createUser != null">create_user = #{createUser},</if>
         </trim>
-        where a.id = #{id}
+        where id = #{id}
     </update>
 
     <delete id="deleteTsbzXybmsqById" parameterType="Long">

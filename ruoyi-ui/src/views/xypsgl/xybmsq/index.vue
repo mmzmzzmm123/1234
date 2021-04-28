@@ -576,7 +576,6 @@ export default {
         this.title = "基地报名";
       });
       listJsjbxx(this.queryParams_jsjbxx).then((response) => {
-        console.log(response.rows);
         this.form.name = response.rows[0].jsxm;
         this.form.jsid = response.rows[0].jsid;
         this.form.jxbh = response.rows[0].dabh;
@@ -599,7 +598,6 @@ export default {
       const id = row.id || this.ids;
       getXybmsq(id).then((response) => {
         this.form = response.data;
-        console.log(response.data);
         this.open = true;
         this.title = "修改学员报名申请";
       });

@@ -8,7 +8,7 @@
       label-width="68px"
     >
       <el-form-item label="报名基地" prop="jdid">
-        <el-select v-model="form.jdid" placeholder="请选择报名基地id">
+        <el-select v-model="form.jdid" placeholder="请选择报名基地">
           <el-option
             v-for="dict in zcrjdcjList"
             :key="dict.id"
@@ -17,10 +17,10 @@
           ></el-option>
         </el-select>
       </el-form-item>
-      <el-form-item label="学校" prop="dwmc">
+      <el-form-item label="姓名" prop="name">
         <el-input
-          v-model="queryParams.dwmc"
-          placeholder="请输入学校"
+          v-model="queryParams.name"
+          placeholder="请输入姓名"
           clearable
           size="small"
           @keyup.enter.native="handleQuery"
@@ -88,6 +88,12 @@
         :formatter="jdtypeFormat"
       />
       <el-table-column
+        label="审核状态"
+        align="center"
+        prop="xxshstatus"
+        :formatter="xxshstatusFormat"
+      />
+      <el-table-column
         label="操作"
         align="center"
         class-name="small-padding fixed-width"
@@ -97,22 +103,21 @@
             size="mini"
             type="text"
             icon="el-icon-edit"
-            @click="handleUpdate(scope.row)"
+            @click="handlePass(scope.row)"
             v-hasPermi="['xypsgl:xybmsq:edit']"
-            >修改</el-button
+            >通过</el-button
           >
           <el-button
             size="mini"
             type="text"
             icon="el-icon-delete"
-            @click="handleDelete(scope.row)"
+            @click="handleFail(scope.row)"
             v-hasPermi="['xypsgl:xybmsq:remove']"
-            >删除</el-button
+            >退回</el-button
           >
         </template>
       </el-table-column>
     </el-table>
-
     <pagination
       v-show="total > 0"
       :total="total"
@@ -120,118 +125,27 @@
       :limit.sync="queryParams.pageSize"
       @pagination="getList"
     />
-
     <!-- 添加或修改学员报名申请对话框 -->
     <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="120px">
-        <el-form-item label="报名基地" prop="jdid">
+        <el-form-item label="审核状态" prop="xxshstatus">
           <el-select
-            v-model="form.jdid"
-            placeholder="请选择报名基地id"
-            :disabled="true"
+            v-model="form.xxshstatus"
+            placeholder="请选择审核状态"
           >
             <el-option
-              v-for="dict in zcrjdcjList"
-              :key="dict.id"
-              :label="dict.name"
-              :value="dict.id"
-            ></el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item label="基地类别" prop="jdtype">
-          <el-select
-            v-model="form.jdtype"
-            placeholder="请选择基地类别"
-            :disabled="true"
-          >
-            <el-option
-              v-for="dict in jdtypeOptions"
+              v-for="dict in xxshstatusOptions"
               :key="dict.dictValue"
               :label="dict.dictLabel"
               :value="dict.dictValue"
             ></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="姓名" prop="name">
-          <el-input v-model="form.name" placeholder="请输入姓名" />
-        </el-form-item>
-        <el-form-item label="进修编号" prop="jxbh">
-          <el-input v-model="form.jxbh" placeholder="请输入进修编号" />
-        </el-form-item>
-        <el-form-item label="性别" prop="xb">
-          <el-select v-model="form.xb" placeholder="请选择性别">
-            <el-option
-              v-for="dict in xbOptions"
-              :key="dict.dictValue"
-              :label="dict.dictLabel"
-              :value="dict.dictValue"
-            ></el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item label="出生日期" prop="csrq">
-          <el-date-picker
-            clearable
-            size="small"
-            style="width: 200px"
-            v-model="form.csrq"
-            type="date"
-            value-format="yyyy-MM-dd"
-            placeholder="选择出生日期"
-          >
-          </el-date-picker>
-        </el-form-item>
-        <el-form-item label="学段" prop="xd">
-          <el-select v-model="form.xd" placeholder="请选择学段">
-            <el-option
-              v-for="dict in xdOptions"
-              :key="dict.dictValue"
-              :label="dict.dictLabel"
-              :value="dict.dictValue"
-            ></el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item label="学科" prop="xk">
-          <el-select v-model="form.xk" placeholder="请选择学科">
-            <el-option
-              v-for="dict in xkOptions"
-              :key="dict.dictValue"
-              :label="dict.dictLabel"
-              :value="dict.dictValue"
-            ></el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item label="职称" prop="zc">
-          <el-select v-model="form.zc" placeholder="请选择职称">
-            <el-option
-              v-for="dict in zcOptions"
-              :key="dict.dictValue"
-              :label="dict.dictLabel"
-              :value="dict.dictValue"
-            ></el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item label="单位名称" prop="dwmc">
-          <el-input v-model="form.dwmc" placeholder="请输入单位名称" />
-        </el-form-item>
-        <el-form-item label="单位地址" prop="dwdz">
-          <el-input v-model="form.dwdz" placeholder="请输入单位地址" />
-        </el-form-item>
-
-        <el-form-item label="身份" prop="sf">
-          <el-select v-model="form.sf" placeholder="请选择身份">
-            <el-option
-              v-for="dict in sfOptions"
-              :key="dict.dictValue"
-              :label="dict.dictLabel"
-              :value="dict.dictValue"
-            ></el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item label="电话" prop="phone">
-          <el-input v-model="form.phone" placeholder="请输入电话" />
-        </el-form-item>
-        <el-form-item label="电子邮箱" prop="email">
-          <el-input v-model="form.email" placeholder="请输入电子邮箱" />
+        <el-form-item label="审核建议" prop="xxshjy">
+          <el-input
+            v-model="form.xxshjy"
+            placeholder="请输入审核建议"
+          />
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -252,6 +166,13 @@ import {
   exportXybmsq,
 } from "@/api/xypsgl/xybmsq";
 import {
+  listJsjbxx,
+  getJsjbxx,
+  delJsjbxx,
+  addJsjbxx,
+  updateJsjbxx,
+} from "@/api/qtjs/jsjbxx";
+import {
   listZcrjdcj,
   getZcrjdcj,
   delZcrjdcj,
@@ -260,6 +181,8 @@ import {
   exportZcrjdcj,
 } from "@/api/zcrpsgl/zcrjdcj";
 import { listZcrbmsq, getZcrbmsq } from "@/api/zcrpsgl/zcrbmsq";
+import { listXxjbxx } from "@/api/qtjs/xxjbxx";
+import { getUserProfile } from "@/api/system/user";
 
 export default {
   name: "Xybmsq",
@@ -300,6 +223,8 @@ export default {
       zcrjdcjList: [],
       // 主持人选项
       zcrOptions: [],
+      // 学校审核状态选项
+      xxshstatusOptions: [],
       // 当前报名人数
       dqybm: undefined,
       // 查询参数
@@ -308,15 +233,8 @@ export default {
         pageSize: 10,
         faid: null,
         jdid: null,
-        name: null,
+        jsid: null,
         jxbh: null,
-        xb: null,
-        csrq: null,
-        xd: null,
-        xk: null,
-        zc: null,
-        dwmc: null,
-        dwdz: null,
         jdtype: null,
         sf: null,
         phone: null,
@@ -331,6 +249,11 @@ export default {
       queryParams_bm: {
         jdid: null,
       },
+
+      // 查询教师基本信息
+      queryParams_jsjbxx: {
+        dabh: null,
+      },
       // 表单参数
       form: {},
       // 表单校验
@@ -340,6 +263,7 @@ export default {
   created() {
     this.getList();
     this.getZcrList();
+    this.getUser();
     this.getDicts("sys_user_sex").then((response) => {
       this.xbOptions = response.data;
     });
@@ -357,6 +281,9 @@ export default {
     });
     this.getDicts("sys_dm_zcrsf").then((response) => {
       this.sfOptions = response.data;
+    });
+    this.getDicts("sys_dm_zcrshzt").then((response) => {
+      this.xxshstatusOptions = response.data;
     });
   },
   methods: {
@@ -378,6 +305,14 @@ export default {
         this.loading = false;
       });
     },
+    // /** 查询教师基本信息列表 */
+    // getJdList() {
+    //   this.loading = true;
+    //   listZcrjdcj(null).then((response) => {
+    //     this.zcrjdcjList = response.rows;
+    //     this.loading = false;
+    //   });
+    // },
     /** 查询主持人报名申请列表 */
     getZcrList() {
       listZcrbmsq(null).then((response) => {
@@ -420,6 +355,12 @@ export default {
         return false;
       }
     },
+    // 获取登录用户档案编号
+    getUser() {
+      getUserProfile().then((response) => {
+        this.queryParams_jsjbxx.dabh = response.data.userName;
+      });
+    },
     // 性别字典翻译
     xbFormat(row, column) {
       return this.selectDictLabel(this.xbOptions, row.xb);
@@ -444,6 +385,10 @@ export default {
     sfFormat(row, column) {
       return this.selectDictLabel(this.sfOptions, row.sf);
     },
+    // 审核状态字典翻译
+    xxshstatusFormat(row, column) {
+      return this.selectDictLabel(this.xxshstatusOptions, row.xxshstatus);
+    },
     // 切换tab
     handleChangeTab(tab, event) {},
     // 取消按钮
@@ -457,19 +402,10 @@ export default {
         id: null,
         faid: null,
         jdid: null,
-        name: null,
+        jsid: null,
         jxbh: null,
-        xb: null,
-        csrq: null,
-        xd: null,
-        xk: null,
-        zc: null,
-        dwmc: null,
-        dwdz: null,
         jdtype: null,
         sf: null,
-        phone: null,
-        email: null,
         createTime: null,
         createUser: null,
         xxshstatus: null,
@@ -505,6 +441,21 @@ export default {
         this.open = true;
         this.title = "基地报名";
       });
+      listJsjbxx(this.queryParams_jsjbxx).then((response) => {
+        this.form.name = response.rows[0].jsxm;
+        this.form.jsid = response.rows[0].jsid;
+        this.form.jxbh = response.rows[0].dabh;
+        this.form.xb = response.rows[0].xb;
+        this.form.csrq = response.rows[0].csrq;
+        this.form.xd = response.rows[0].xd;
+        this.form.xk = response.rows[0].xk;
+        this.form.zc = response.rows[0].zc;
+        this.form.xl = response.rows[0].xl;
+        this.form.dwmc = response.rows[0].tsbzXxjbxx.xxmc;
+        this.form.dwdz = response.rows[0].tsbzXxjbxx.xxdz;
+        this.form.email = response.rows[0].email;
+        this.form.phone = response.rows[0].phone;
+      });
     },
     /** 修改按钮操作 */
     handleUpdate(row) {
@@ -512,6 +463,29 @@ export default {
       const id = row.id || this.ids;
       getXybmsq(id).then((response) => {
         this.form = response.data;
+        this.open = true;
+        this.title = "修改学员报名申请";
+      });
+    },
+    /** 通过按钮操作 */
+    handlePass(row) {
+      this.reset();
+      const id = row.id || this.ids;
+      getXybmsq(id).then((response) => {
+        console.log(response);
+        this.form.id = response.data.id;
+        this.form.xxshstatus = "1";
+        this.open = true;
+        this.title = "修改学员报名申请";
+      });
+    },
+    /** 修改按钮操作 */
+    handleFail(row) {
+      this.reset();
+      const id = row.id || this.ids;
+      getXybmsq(id).then((response) => { 
+        this.form.id = response.data.id;
+        this.form.xxshstatus = "2";  
         this.open = true;
         this.title = "修改学员报名申请";
       });
