@@ -26,10 +26,15 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="scfaname"    column="scfaname"    />
         <result property="createTime"    column="create_time"    />
         <result property="createUser"    column="create_user"    />
+        <result property="xxshStatus"    column="xxsh_status"    />
+        <result property="qjshStatus"    column="qjsh_status"    />
+        <result property="jgqrStatus"    column="jgqr_status"    />
+        <result property="xxshyj"    column="xxshyj"    />
+        <result property="qjshyj"    column="qjshyj"    />
     </resultMap>
 
     <sql id="selectTsbzZcrbmsqVo">
-        select a.id, a.zjzid, a.faid, a.name, a.jxbh, a.xb, a.csrq, a.xd, a.xk, a.dwmc, a.dwdz, a.jdtype, a.sf, a.phone, a.Email, a.dwfzr, a.dwfzrphone, a.scfapath, a.scfaname, a.create_time, a.create_user, (select group_concat(name separator ',') from tsbz_zcrzjzmd where find_in_set(id,a.zjzid)) as zjz
+        select a.id, a.zjzid, a.faid, a.name, a.jxbh, a.xb, a.csrq, a.xd, a.xk, a.dwmc, a.dwdz, a.jdtype, a.sf, a.phone, a.Email, a.dwfzr, a.dwfzrphone, a.scfapath, a.scfaname, a.create_time, a.create_user, a.xxsh_status,a.qjsh_status,a.jgqr_status,a.xxshyj,a.qjshyj,(select group_concat(name separator ',') from tsbz_zcrzjzmd where find_in_set(id,a.zjzid)) as zjz
         from tsbz_zcrbmsq a
     </sql>
 
@@ -55,6 +60,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="scfapath != null  and scfapath != ''"> and scfapath = #{scfapath}</if>
             <if test="scfaname != null  and scfaname != ''"> and scfaname like concat('%', #{scfaname}, '%')</if>
             <if test="createUser != null "> and create_user = #{createUser}</if>
+            <if test="xxshStatus != null "> and xxsh_status = #{xxshStatus}</if>
+            <if test="qjshStatus != null "> and qjsh_status = #{qjshStatus}</if>
+            <if test="jgqrStatus != null "> and jgqr_status = #{jgqrStatus}</if>
+            <if test="xxshyj != null "> and xxshyj = #{xxshyj}</if>
+            <if test="qjshyj != null "> and qjshyj = #{qjshyj}</if>
         </where>
     </select>
     
@@ -87,6 +97,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="scfaname != null">scfaname,</if>
             <if test="createTime != null">create_time,</if>
             <if test="createUser != null">create_user,</if>
+            <if test="xxshStatus != null">xxsh_status,</if>
+            <if test="qjshStatus != null">qjsh_status,</if>
+            <if test="jgqrStatus != null">jgqr_status,</if>
+            <if test="xxshyj != null">xxshyj,</if>
+            <if test="qjshyj != null">qjshyj,</if>
          </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="id != null">#{id},</if>
@@ -110,6 +125,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="scfaname != null">#{scfaname},</if>
             <if test="createTime != null">#{createTime},</if>
             <if test="createUser != null">#{createUser},</if>
+            <if test="xxshStatus != null">#{xxshStatus},</if>
+            <if test="qjshStatus != null">#{qjshStatus},</if>
+            <if test="jgqrStatus != null">#{jgqrStatus},</if>
+            <if test="xxshyj != null">#{xxshyj},</if>
+            <if test="qjshyj != null">#{qjshyj},</if>
          </trim>
     </insert>
 
@@ -136,6 +156,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="scfaname != null">scfaname = #{scfaname},</if>
             <if test="createTime != null">create_time = #{createTime},</if>
             <if test="createUser != null">create_user = #{createUser},</if>
+            <if test="xxshStatus != null">xxsh_status = #{xxshStatus},</if>
+            <if test="qjshStatus != null">qjsh_status = #{qjshStatus},</if>
+            <if test="jgqrStatus != null">jgqr_status = #{jgqrStatus},</if>
+            <if test="xxshyj != null">xxshyj = #{xxshyj},</if>
+            <if test="qjshyj != null">qjshyj = #{qjshyj},</if>
         </trim>
         where id = #{id}
     </update>

@@ -106,4 +106,64 @@ public class TsbzZcrbmsqController extends BaseController
     {
         return toAjax(tsbzZcrbmsqService.deleteTsbzZcrbmsqByIds(ids));
     }
+
+    /**
+     * 通过学校审核(主持人评审管理-学校审核)
+     */
+    @PreAuthorize("@ss.hasPermi('zcrpsgl:zcrbmsq:passXxpsStatus')")
+    @PutMapping(value = "/passXxpsStatus")
+    public AjaxResult passXxpsStatus(@RequestBody TsbzZcrbmsq tsbzZcrbmsq)
+    {
+        return toAjax(tsbzZcrbmsqService.passXxpsStatus(tsbzZcrbmsq));
+    }
+
+    /**
+     * 退回学校审核(主持人评审管理-学校审核)
+     */
+    @PreAuthorize("@ss.hasPermi('zcrpsgl:zcrbmsq:backXxpsStatus')")
+    @PutMapping(value = "/backXxpsStatus")
+    public AjaxResult backXxpsStatus(@RequestBody TsbzZcrbmsq tsbzZcrbmsq)
+    {
+        return toAjax(tsbzZcrbmsqService.backXxpsStatus(tsbzZcrbmsq));
+    }
+
+    /**
+     * 通过区级审核(主持人评审管理-区级审核)
+     */
+    @PreAuthorize("@ss.hasPermi('zcrpsgl:zcrbmsq:passQjpsStatus')")
+    @PutMapping(value = "/passQjpsStatus")
+    public AjaxResult passQjpsStatus(@RequestBody TsbzZcrbmsq tsbzZcrbmsq)
+    {
+        return toAjax(tsbzZcrbmsqService.passQjpsStatus(tsbzZcrbmsq));
+    }
+
+    /**
+     * 退回区级审核(主持人评审管理-区级审核)
+     */
+    @PreAuthorize("@ss.hasPermi('zcrpsgl:zcrbmsq:backQjpsStatus')")
+    @PutMapping(value = "/backQjpsStatus")
+    public AjaxResult backQjpsStatus(@RequestBody TsbzZcrbmsq tsbzZcrbmsq)
+    {
+        return toAjax(tsbzZcrbmsqService.backQjpsStatus(tsbzZcrbmsq));
+    }
+
+    /**
+     * 通过结果确认(主持人评审管理-结果确认)
+     */
+    @PreAuthorize("@ss.hasPermi('zcrpsgl:zcrbmsq:passJgqrStatus')")
+    @PutMapping(value = "/passJgqrStatus")
+    public AjaxResult passJgqrStatus(@RequestBody TsbzZcrbmsq tsbzZcrbmsq)
+    {
+        return toAjax(tsbzZcrbmsqService.passJgqrStatus(tsbzZcrbmsq));
+    }
+
+    /**
+     * 退回结果确认(主持人评审管理-结果确认)
+     */
+    @PreAuthorize("@ss.hasPermi('zcrpsgl:zcrbmsq:backJgqrStatus')")
+    @PutMapping(value = "/backJgqrStatus")
+    public AjaxResult backJgqrStatus(@RequestBody TsbzZcrbmsq tsbzZcrbmsq)
+    {
+        return toAjax(tsbzZcrbmsqService.backJgqrStatus(tsbzZcrbmsq));
+    }
 }

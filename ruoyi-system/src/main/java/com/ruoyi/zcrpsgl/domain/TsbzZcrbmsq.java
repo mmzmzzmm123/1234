@@ -109,6 +109,26 @@ public class TsbzZcrbmsq extends BaseEntity
     @Excel(name = "创建人")
     private Long createUser;
 
+    /** 学校审核状态 */
+    @Excel(name = "学校审核状态")
+    private String xxshStatus;
+
+    /** 区级审核状态 */
+    @Excel(name = "区级审核状态")
+    private String qjshStatus;
+
+    /** 结果确认状态 */
+    @Excel(name = "结果确认状态")
+    private String jgqrStatus;
+
+    /** 学校审核意见 */
+    @Excel(name = "学校审核意见")
+    private String xxshyj;
+
+    /** 区级审核意见 */
+    @Excel(name = "区级审核意见")
+    private String qjshyj;
+
     public void setId(Long id) 
     {
         this.id = id;
@@ -290,6 +310,46 @@ public class TsbzZcrbmsq extends BaseEntity
         return createUser;
     }
 
+    public String getXxshStatus() {
+        return xxshStatus;
+    }
+
+    public void setXxshStatus(String xxshStatus) {
+        this.xxshStatus = xxshStatus;
+    }
+
+    public String getQjshStatus() {
+        return qjshStatus;
+    }
+
+    public void setQjshStatus(String qjshStatus) {
+        this.qjshStatus = qjshStatus;
+    }
+
+    public String getJgqrStatus() {
+        return jgqrStatus;
+    }
+
+    public void setJgqrStatus(String jgqrStatus) {
+        this.jgqrStatus = jgqrStatus;
+    }
+
+    public String getXxshyj() {
+        return xxshyj;
+    }
+
+    public void setXxshyj(String xxshyj) {
+        this.xxshyj = xxshyj;
+    }
+
+    public String getQjshyj() {
+        return qjshyj;
+    }
+
+    public void setQjshyj(String qjshyj) {
+        this.qjshyj = qjshyj;
+    }
+
     @Override
     public String toString() {
         return new ToStringBuilder(this,ToStringStyle.MULTI_LINE_STYLE)
@@ -315,6 +375,11 @@ public class TsbzZcrbmsq extends BaseEntity
             .append("scfaname", getScfaname())
             .append("createTime", getCreateTime())
             .append("createUser", getCreateUser())
+                .append("xxshStatus", getXxshStatus())
+                .append("qjshStatus", getQjshStatus())
+                .append("jgqrStatus", getJgqrStatus())
+                .append("xxshyj", getXxshyj())
+                .append("qjshyj", getQjshyj())
             .toString();
     }
 }

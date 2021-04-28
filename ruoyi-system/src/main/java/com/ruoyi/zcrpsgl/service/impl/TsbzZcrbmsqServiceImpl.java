@@ -92,4 +92,44 @@ public class TsbzZcrbmsqServiceImpl implements ITsbzZcrbmsqService
     {
         return tsbzZcrbmsqMapper.deleteTsbzZcrbmsqById(id);
     }
+
+    @Override
+    public int passXxpsStatus(TsbzZcrbmsq tsbzZcrbmsq) {
+        tsbzZcrbmsq.setXxshStatus("1");
+        if(!"2".equals(tsbzZcrbmsq.getSf())){
+            tsbzZcrbmsq.setQjshStatus("1");
+        }
+        return updateTsbzZcrbmsq(tsbzZcrbmsq);
+
+    }
+
+    @Override
+    public int backXxpsStatus(TsbzZcrbmsq tsbzZcrbmsq) {
+        tsbzZcrbmsq.setXxshStatus("2");
+        return updateTsbzZcrbmsq(tsbzZcrbmsq);
+    }
+
+    @Override
+    public int passQjpsStatus(TsbzZcrbmsq tsbzZcrbmsq) {
+        tsbzZcrbmsq.setQjshStatus("1");
+        return updateTsbzZcrbmsq(tsbzZcrbmsq);
+    }
+
+    @Override
+    public int backQjpsStatus(TsbzZcrbmsq tsbzZcrbmsq) {
+        tsbzZcrbmsq.setQjshStatus("2");
+        return updateTsbzZcrbmsq(tsbzZcrbmsq);
+    }
+
+    @Override
+    public int passJgqrStatus(TsbzZcrbmsq tsbzZcrbmsq) {
+        tsbzZcrbmsq.setJgqrStatus("1");
+        return updateTsbzZcrbmsq(tsbzZcrbmsq);
+    }
+
+    @Override
+    public int backJgqrStatus(TsbzZcrbmsq tsbzZcrbmsq) {
+        tsbzZcrbmsq.setJgqrStatus("2");
+        return updateTsbzZcrbmsq(tsbzZcrbmsq);
+    }
 }
