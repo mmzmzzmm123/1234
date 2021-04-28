@@ -1,5 +1,6 @@
 package com.ruoyi.framework.config;
 
+import com.ruoyi.framework.interceptor.RedisKeySerializer;
 import org.springframework.cache.annotation.CachingConfigurerSupport;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.Bean;
@@ -24,7 +25,7 @@ public class RedisConfig extends CachingConfigurerSupport
 {
     @Bean
     @SuppressWarnings(value = { "unchecked", "rawtypes" })
-    public RedisTemplate<Object, Object> redisTemplate(RedisConnectionFactory connectionFactory)
+    public RedisTemplate<Object, Object> redisTemplate(RedisConnectionFactory connectionFactory, RedisKeySerializer redisKeySerializer)
     {
         RedisTemplate<Object, Object> template = new RedisTemplate<>();
         template.setConnectionFactory(connectionFactory);
@@ -37,8 +38,8 @@ public class RedisConfig extends CachingConfigurerSupport
         serializer.setObjectMapper(mapper);
 
         template.setValueSerializer(serializer);
-        // 使用StringRedisSerializer来序列化和反序列化redis的key值
-        template.setKeySerializer(new StringRedisSerializer());
+        // 使用redisKeySerializer来序列化和反序列化redis的key值
+        template.setKeySerializer(redisKeySerializer);
         template.afterPropertiesSet();
         return template;
     }
