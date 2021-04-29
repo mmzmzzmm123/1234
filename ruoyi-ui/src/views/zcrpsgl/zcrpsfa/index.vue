@@ -15,9 +15,9 @@
         <el-select v-model="queryParams.jdtype" placeholder="请选择方案类型" clearable size="small">
           <el-option
             v-for="dict in jdtypeOptions"
-            :key="dict.id"
-            :label="dict.jdxmc"
-            :value="dict.id"
+            :key="dict.dictValue"
+            :label="dict.dictLabel"
+            :value="dict.dictValue"
           ></el-option>
         </el-select>
       </el-form-item>
@@ -140,11 +140,11 @@
         <el-form-item label="基地类型" prop="jdtype">
           <el-select v-model="form.jdtype" placeholder="请选择基地类型">
             <el-option
-              v-for="dict in jdtypeOptions"
-              :key="dict.id"
-              :label="dict.jdxmc"
-              :value="dict.id"
-            ></el-option>
+            v-for="dict in jdtypeOptions"
+            :key="dict.dictValue"
+            :label="dict.dictLabel"
+            :value="dict.dictValue"
+          ></el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="报名时间" prop="starttime">
@@ -224,8 +224,8 @@ export default {
     this.getDicts("sys_dm_zcrfadqzt").then(response => {
       this.statusOptions = response.data;
     });
-    listJdx().then(response => {
-      this.jdtypeOptions = response.rows;
+    this.getDicts("sys_dm_zcrjdtype").then((response) => {
+      this.jdtypeOptions = response.data;
     });
   },
   methods: {
@@ -243,10 +243,9 @@ export default {
     statusFormat(row, column) {
       return this.selectDictLabel(this.statusOptions, row.status);
     },
-
     // 字典翻译--基地类型
     jdtypeFormat(row, column) {
-      return selectJdtype(this.jdtypeOptions, row.jdtype);
+      return this.selectDictLabel(this.jdtypeOptions, row.jdtype);
     },
     // 取消按钮
     cancel() {

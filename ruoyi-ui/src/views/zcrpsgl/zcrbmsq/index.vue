@@ -31,9 +31,9 @@
         >
           <el-option
             v-for="dict in jdtypeOptions"
-            :key="dict.id"
-            :label="dict.jdxmc"
-            :value="dict.id"
+            :key="dict.dictValue"
+            :label="dict.dictLabel"
+            :value="dict.dictValue"
           ></el-option>
         </el-select>
       </el-form-item>
@@ -51,179 +51,151 @@
       </el-form-item>
     </el-form>
 
-    <el-row :gutter="10" class="mb8">
-      <!-- <el-col :span="1.5">
-        <el-button
-          type="primary"
-          icon="el-icon-plus"
-          size="mini"
-          @click="handleAdd"
-          v-hasPermi="['zcrpsgl:zcrbmsq:add']"
-          >报名</el-button
+    <el-tabs v-model="activeName" @tab-click="handleChangeTab">
+      <!-- 方案tab -->
+      <el-tab-pane label="方案列表" name="falb">
+        <el-table
+          v-loading="loading"
+          :data="zcrpsfaList"
+          @selection-change="handleSelectionChange"
         >
-      </el-col> -->
-      <!-- <el-col :span="1.5">
-        <el-button
-          type="success"
-          icon="el-icon-edit"
-          size="mini"
-          :disabled="single"
-          @click="handleUpdate"
-          v-hasPermi="['zcrpsgl:zcrbmsq:edit']"
-          >修改</el-button
+          <el-table-column type="selection" width="55" align="center" />
+          <el-table-column label="方案名称" align="center" prop="name" />
+          <el-table-column
+            label="基地类型"
+            align="center"
+            prop="jdtype"
+            :formatter="jdtypeFormat"
+          />
+          <el-table-column
+            label="当前状态"
+            align="center"
+            prop="status"
+            :formatter="statusFormat"
+          />
+          <el-table-column
+            label="报名时间"
+            align="center"
+            prop="starttime"
+            width="180"
+          >
+            <template slot-scope="scope">
+              <span>{{ parseTime(scope.row.starttime, "{y}-{m}-{d}") }}</span>
+            </template>
+          </el-table-column>
+          <el-table-column
+            label="结束时间"
+            align="center"
+            prop="endtime"
+            width="180"
+          >
+            <template slot-scope="scope">
+              <span>{{ parseTime(scope.row.endtime, "{y}-{m}-{d}") }}</span>
+            </template>
+          </el-table-column>
+          <el-table-column
+            label="操作"
+            align="center"
+            class-name="small-padding fixed-width"
+          >
+            <template slot-scope="scope">
+              <el-button
+                size="mini"
+                type="text"
+                icon="el-icon-edit"
+                @click="handleAdd(scope.row)"
+                v-show="isShow(scope.row)"
+                v-hasPermi="['zcrpsgl:zcrpsfa:edit']"
+                >报名</el-button
+              >
+            </template>
+          </el-table-column>
+        </el-table>
+      </el-tab-pane>
+      <!-- 我的报名tab -->
+      <el-tab-pane label="我的报名" name="jdlb">
+        <el-table
+          v-loading="loading"
+          :data="zcrbmsqList"
+          @selection-change="handleSelectionChange"
         >
-      </el-col>
-      <el-col :span="1.5">
-        <el-button
-          type="danger"
-          icon="el-icon-delete"
-          size="mini"
-          :disabled="multiple"
-          @click="handleDelete"
-          v-hasPermi="['zcrpsgl:zcrbmsq:remove']"
-          >删除</el-button
-        >
-      </el-col> -->
-      <right-toolbar
-        :showSearch.sync="showSearch"
-        @queryTable="getList"
-      ></right-toolbar>
-    </el-row>
+          <el-table-column type="selection" width="55" align="center" />
+          <el-table-column
+            label="方案编号"
+            align="center"
+            prop="faid"
+            :formatter="faFormat"
+          />
+          <el-table-column
+            label="基地类型"
+            align="center"
+            prop="jdtype"
+            :formatter="jdtypeFormat"
+          />
+          <el-table-column label="专家组" align="center" prop="zjz" />
+          <el-table-column label="姓名" align="center" prop="name" />
+          <el-table-column label="进修编号" align="center" prop="jxbh" />
+          <el-table-column
+            label="性别"
+            align="center"
+            prop="xb"
+            :formatter="xbFormat"
+          />
+          <el-table-column
+            label="学段"
+            align="center"
+            prop="xd"
+            :formatter="xdFormat"
+          />
+          <el-table-column
+            label="学科"
+            align="center"
+            prop="xk"
+            :formatter="xkFormat"
+          />
+          <el-table-column label="单位名称" align="center" prop="dwmc" />
+          <el-table-column label="单位地址" align="center" prop="dwdz" />
 
-    <el-table
-      v-loading="loading"
-      :data="zcrpsfaList"
-      @selection-change="handleSelectionChange"
-    >
-      <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="方案名称" align="center" prop="name" />
-      <el-table-column
-        label="基地类型"
-        align="center"
-        prop="jdtype"
-        :formatter="jdtypeFormat"
-      />
-      <el-table-column
-        label="当前状态"
-        align="center"
-        prop="status"
-        :formatter="statusFormat"
-      />
-      <el-table-column
-        label="报名时间"
-        align="center"
-        prop="starttime"
-        width="180"
-      >
-        <template slot-scope="scope">
-          <span>{{ parseTime(scope.row.starttime, "{y}-{m}-{d}") }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column
-        label="结束时间"
-        align="center"
-        prop="endtime"
-        width="180"
-      >
-        <template slot-scope="scope">
-          <span>{{ parseTime(scope.row.endtime, "{y}-{m}-{d}") }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column
-        label="操作"
-        align="center"
-        class-name="small-padding fixed-width"
-      >
-        <template slot-scope="scope">
-          <el-button
-            size="mini"
-            type="text"
-            icon="el-icon-edit"
-            @click="handleAdd(scope.row)"
-            v-show="isShow(scope.row)"
-            v-hasPermi="['zcrpsgl:zcrpsfa:edit']"
-            >报名</el-button
+          <el-table-column
+            label="上传方案名称"
+            align="center"
+            prop="scfaname"
+          />
+          <el-table-column
+            label="操作"
+            align="center"
+            class-name="small-padding fixed-width"
           >
-        </template>
-      </el-table-column>
-    </el-table>
+            <template slot-scope="scope">
+              <el-button
+                size="mini"
+                type="text"
+                icon="el-icon-edit"
+                @click="handleUpdate(scope.row)"
+                v-hasPermi="['zcrpsgl:zcrbmsq:edit']"
+                >修改</el-button
+              >
+              <el-button
+                size="mini"
+                type="text"
+                icon="el-icon-delete"
+                @click="handleDelete(scope.row)"
+                v-hasPermi="['zcrpsgl:zcrbmsq:remove']"
+                >删除</el-button
+              >
+            </template>
+          </el-table-column>
+        </el-table>
 
-    <el-table
-      v-loading="loading"
-      :data="zcrbmsqList"
-      @selection-change="handleSelectionChange"
-    >
-      <el-table-column type="selection" width="55" align="center" />
-      <el-table-column
-        label="方案编号"
-        align="center"
-        prop="faid"
-        :formatter="faFormat"
-      />
-      <el-table-column
-        label="基地类型"
-        align="center"
-        prop="jdtype"
-        :formatter="jdtypeFormat"
-      />
-      <el-table-column label="专家组" align="center" prop="zjz" />
-      <el-table-column label="姓名" align="center" prop="name" />
-      <el-table-column label="进修编号" align="center" prop="jxbh" />
-      <el-table-column
-        label="性别"
-        align="center"
-        prop="xb"
-        :formatter="xbFormat"
-      />
-      <el-table-column
-        label="学段"
-        align="center"
-        prop="xd"
-        :formatter="xdFormat"
-      />
-      <el-table-column
-        label="学科"
-        align="center"
-        prop="xk"
-        :formatter="xkFormat"
-      />
-      <el-table-column label="单位名称" align="center" prop="dwmc" />
-      <el-table-column label="单位地址" align="center" prop="dwdz" />
-
-      <el-table-column label="上传方案名称" align="center" prop="scfaname" />
-      <el-table-column
-        label="操作"
-        align="center"
-        class-name="small-padding fixed-width"
-      >
-        <template slot-scope="scope">
-          <el-button
-            size="mini"
-            type="text"
-            icon="el-icon-edit"
-            @click="handleUpdate(scope.row)"
-            v-hasPermi="['zcrpsgl:zcrbmsq:edit']"
-            >修改</el-button
-          >
-          <el-button
-            size="mini"
-            type="text"
-            icon="el-icon-delete"
-            @click="handleDelete(scope.row)"
-            v-hasPermi="['zcrpsgl:zcrbmsq:remove']"
-            >删除</el-button
-          >
-        </template>
-      </el-table-column>
-    </el-table>
-
-    <pagination
-      v-show="total > 0"
-      :total="total"
-      :page.sync="queryParams.pageNum"
-      :limit.sync="queryParams.pageSize"
-      @pagination="getList"
-    />
+        <pagination
+          v-show="total > 0"
+          :total="total"
+          :page.sync="queryParams.pageNum"
+          :limit.sync="queryParams.pageSize"
+          @pagination="getList"
+        />
+      </el-tab-pane>
+    </el-tabs>
 
     <!-- 添加或修改主持人报名申请对话框 -->
     <el-dialog :title="title" :visible.sync="open" width="800px" append-to-body>
@@ -236,6 +208,7 @@
                 placeholder="请选择方案类型"
                 clearable
                 size="small"
+                :disabled="true"
               >
                 <el-option
                   v-for="dict in zcrpsfaOptions"
@@ -247,8 +220,31 @@
             </el-form-item>
           </el-col>
           <el-col :span="12">
+            <el-form-item label="基地类别" prop="jdtype">
+              <el-select
+                v-model="form.jdtype"
+                placeholder="请选择方案类型"
+                clearable
+                size="small"
+                :disabled="true"
+              >
+                <el-option
+                  v-for="dict in jdtypeOptions"
+                  :key="dict.dictValue"
+                  :label="dict.dictLabel"
+                  :value="dict.dictValue"
+                ></el-option>
+              </el-select>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
             <el-form-item label="姓名" prop="name">
-              <el-input v-model="form.name" placeholder="请输入姓名" />
+              <el-input v-model="form.name" placeholder="请输入姓名" :disabled="true"/>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="进修编号" prop="jxbh">
+              <el-input v-model="form.jxbh" placeholder="请输入进修编号" :disabled="true" />
             </el-form-item>
           </el-col>
           <el-col :span="12">
@@ -258,6 +254,7 @@
                 placeholder="请选择性别"
                 clearable
                 size="small"
+                :disabled="true"
               >
                 <el-option
                   v-for="dict in xbOptions"
@@ -265,29 +262,6 @@
                   :label="dict.dictLabel"
                   :value="dict.dictValue"
                 />
-              </el-select>
-            </el-form-item>
-          </el-col>
-          <el-col :span="12">
-            <el-form-item label="进修编号" prop="jxbh">
-              <el-input v-model="form.jxbh" placeholder="请输入进修编号" />
-            </el-form-item>
-          </el-col>
-          <el-col :span="12">
-            <el-form-item label="专家组" prop="zjzid">
-              <el-select
-                v-model="form.zjzid"
-                multiple
-                placeholder="请选择专家"
-                clearable
-                size="small"
-              >
-                <el-option
-                  v-for="dict in zjzOptions"
-                  :key="dict.id"
-                  :label="dict.name"
-                  :value="dict.id"
-                ></el-option>
               </el-select>
             </el-form-item>
           </el-col>
@@ -301,17 +275,19 @@
                 type="date"
                 value-format="yyyy-MM-dd"
                 placeholder="选择出生日期"
+                :disabled="true"
               >
               </el-date-picker>
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item label="学段" prop="xd">
+            <el-form-item label="学段" prop="xd" >
               <el-select
                 v-model="form.xd"
                 placeholder="请选择任教学段"
                 clearable
                 size="small"
+                :disabled="true"
               >
                 <el-option
                   v-for="dict in xdOptions"
@@ -329,6 +305,7 @@
                 placeholder="请选择任教学科"
                 clearable
                 size="small"
+                :disabled="true"
               >
                 <el-option
                   v-for="dict in xkOptions"
@@ -341,7 +318,12 @@
           </el-col>
           <el-col :span="12">
             <el-form-item label="单位名称" prop="dwmc">
-              <el-input v-model="form.dwmc" placeholder="请输入单位名称" />
+              <el-input v-model="form.dwmc" placeholder="请输入单位名称" :disabled="true"/>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="单位地址" prop="dwdz">
+              <el-input v-model="form.dwdz" placeholder="请输入单位地址" :disabled="true"/>
             </el-form-item>
           </el-col>
           <el-col :span="12">
@@ -362,51 +344,24 @@
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item label="单位地址" prop="dwdz">
-              <el-input v-model="form.dwdz" placeholder="请输入单位地址" />
-            </el-form-item>
-          </el-col>
-          <el-col :span="12">
-            <el-form-item label="基地类别" prop="jdtype">
+            <el-form-item label="专家组" prop="zjzid">
               <el-select
-                v-model="form.jdtype"
-                placeholder="请选择方案类型"
+                v-model="form.zjzid"
+                multiple
+                placeholder="请选择专家"
                 clearable
                 size="small"
               >
                 <el-option
-                  v-for="dict in jdtypeOptions"
+                  v-for="dict in zjzOptions"
                   :key="dict.id"
-                  :label="dict.jdxmc"
+                  :label="dict.name"
                   :value="dict.id"
                 ></el-option>
               </el-select>
             </el-form-item>
           </el-col>
-
-          <el-col :span="12">
-            <el-form-item label="电话" prop="phone">
-              <el-input v-model="form.phone" placeholder="请输入电话" />
-            </el-form-item>
-          </el-col>
-          <el-col :span="12">
-            <el-form-item label="电子邮箱" prop="email">
-              <el-input v-model="form.email" placeholder="请输入电子邮箱" />
-            </el-form-item>
-          </el-col>
-          <el-col :span="12">
-            <el-form-item label="单位负责人" prop="dwfzr">
-              <el-input v-model="form.dwfzr" placeholder="请输入单位负责人" />
-            </el-form-item>
-          </el-col>
-          <el-col :span="12">
-            <el-form-item label="单位负责人电话" prop="dwfzrphone">
-              <el-input
-                v-model="form.dwfzrphone"
-                placeholder="请输入单位负责人电话"
-              />
-            </el-form-item>
-          </el-col>
+          
           <el-col :span="12">
             <el-form-item label="上传文件" prop="scfapath">
               <el-input v-model="form.scfaname" v-if="false" />
@@ -472,9 +427,9 @@
           >
             <el-option
               v-for="dict in jdtypeOptions"
-              :key="dict.id"
-              :label="dict.jdxmc"
-              :value="dict.id"
+              :key="dict.dictValue"
+              :label="dict.dictLabel"
+              :value="dict.dictValue"
             ></el-option>
           </el-select>
         </el-form-item>
@@ -533,14 +488,23 @@ import {
   listJdx,
   selectJdtype,
 } from "@/api/zcrpsgl/zcrpsfa";
+import {
+  listJsjbxx,
+  getJsjbxx,
+  delJsjbxx,
+  addJsjbxx,
+  updateJsjbxx,
+} from "@/api/qtjs/jsjbxx";
 import { listZcrzjzmd, getZcrzjzmd } from "@/api/zcrpsgl/zcrzjzmd";
 import { getUserProfile } from "@/api/system/user";
+import { listXxjbxx } from "@/api/qtjs/xxjbxx";
 import { getToken } from "@/utils/auth";
 
 export default {
   name: "Zcrbmsq",
   data() {
     return {
+      activeName: "falb",
       // 遮罩层
       loading: true,
       // 选中数组
@@ -583,6 +547,10 @@ export default {
       // 是否显示弹出层
       open: false,
       open_check: false,
+      // 查询教师基本信息
+      queryParams_jsjbxx: {
+        dabh: null,
+      }, 
       // 查询参数
       queryParams: {
         pageNum: 1,
@@ -629,8 +597,8 @@ export default {
     this.getDicts("sys_dm_zcrfadqzt").then((response) => {
       this.statusOptions = response.data;
     });
-    listJdx().then((response) => {
-      this.jdtypeOptions = response.rows;
+    this.getDicts("sys_dm_zcrjdtype").then((response) => {
+      this.jdtypeOptions = response.data;
     });
     listZcrpsfa().then((response) => {
       this.zcrpsfaOptions = response.rows;
@@ -659,12 +627,20 @@ export default {
         this.loading = false;
       });
     },
+    // 切换tab
+    handleChangeTab(tab, event) {},
     /** 查询评审方案(主持人评审管理-评审方案)列表 */
     getPsfaList() {
       this.loading = true;
       listZcrpsfa(null).then((response) => {
         this.zcrpsfaList = response.rows;
         this.loading = false;
+      });
+    },
+    // 获取登录用户档案编号
+    getUser() {
+      getUserProfile().then((response) => {
+        this.queryParams_jsjbxx.dabh = response.data.userName;
       });
     },
     /** 查看按钮操作 */
@@ -676,10 +652,6 @@ export default {
         this.open_check = true;
         this.title = "查看主持人评审方案";
       });
-    },
-    // 字典翻译--基地类型
-    jdtypeFormat(row, column) {
-      return selectJdtype(this.jdtypeOptions, row.jdtype);
     },
     // 方案字典翻译
     faFormat(row, column) {
@@ -696,6 +668,10 @@ export default {
     // 字典翻译--当前状态
     statusFormat(row, column) {
       return this.selectDictLabel(this.statusOptions, row.status);
+    },
+    // 字典翻译--基地类型
+    jdtypeFormat(row, column) {
+      return this.selectDictLabel(this.jdtypeOptions, row.jdtype);
     },
     // 性别字典翻译
     xbFormat(row, column) {
@@ -728,8 +704,8 @@ export default {
     // 获取登录用户id
     getUser() {
       getUserProfile().then((response) => {
-        this.user = response.data;
-        this.queryParams_zjz.createUserid = this.user.userId;
+        this.queryParams_zjz.createUserid = response.data.userId;
+        this.queryParams_jsjbxx.dabh = response.data.userName;
         this.getZjzmdList();
       });
     },
@@ -740,7 +716,7 @@ export default {
     },
     // 文件上传移除
     handleRemove(file, fileList) {
-      //console.log(file, fileList);
+      // console.log(file);
       if (file.response.code == "200") {
         this.form.scfapath = "";
       }
@@ -828,6 +804,21 @@ export default {
     /** 报名按钮操作 */
     handleAdd(row) {
       this.reset();
+      listJsjbxx(this.queryParams_jsjbxx).then((response) => {
+        this.form.name = response.rows[0].jsxm;
+        this.form.jsid = response.rows[0].jsid;
+        this.form.jxbh = response.rows[0].dabh;
+        this.form.xb = response.rows[0].xb;
+        this.form.csrq = response.rows[0].csrq;
+        this.form.xd = response.rows[0].xd;
+        this.form.xk = response.rows[0].xk;
+        this.form.zc = response.rows[0].zc;
+        this.form.xl = response.rows[0].xl;
+        this.form.dwmc = response.rows[0].tsbzXxjbxx.xxmc;
+        this.form.dwdz = response.rows[0].tsbzXxjbxx.xxdz;
+        this.form.email = response.rows[0].email;
+        this.form.phone = response.rows[0].phone;
+      });
       const id = row.id || this.ids;
       getZcrpsfa(id).then((response) => {
         this.form.faid = response.data.id;

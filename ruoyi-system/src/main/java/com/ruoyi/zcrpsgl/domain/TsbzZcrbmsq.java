@@ -24,6 +24,9 @@ public class TsbzZcrbmsq extends BaseEntity
     @Excel(name = "方案编号")
     private Long faid;
 
+    // 教师id
+    private Long jsid;
+
     /** 专家组id */
     @Excel(name = "专家组id")
     private String zjzid;
@@ -375,11 +378,20 @@ public class TsbzZcrbmsq extends BaseEntity
             .append("scfaname", getScfaname())
             .append("createTime", getCreateTime())
             .append("createUser", getCreateUser())
-                .append("xxshStatus", getXxshStatus())
-                .append("qjshStatus", getQjshStatus())
-                .append("jgqrStatus", getJgqrStatus())
-                .append("xxshyj", getXxshyj())
-                .append("qjshyj", getQjshyj())
+            .append("xxshStatus", getXxshStatus())
+            .append("qjshStatus", getQjshStatus())
+            .append("jgqrStatus", getJgqrStatus())
+            .append("xxshyj", getXxshyj())
+            .append("qjshyj", getQjshyj())
+            .append("jsid", getJsid())
             .toString();
+    }
+
+    public Long getJsid() {
+        return jsid;
+    }
+
+    public void setJsid(Long jsid) {
+        this.jsid = jsid;
     }
 }

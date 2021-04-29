@@ -568,13 +568,6 @@ export default {
     /** 新增按钮操作 */
     handleAdd(row) {
       this.reset();
-      const id = row.id || this.ids;
-      this.form.jdid = id;
-      getZcrjdcj(id).then((response) => {
-        this.form.jdtype = response.data.jdtype;
-        this.open = true;
-        this.title = "基地报名";
-      });
       listJsjbxx(this.queryParams_jsjbxx).then((response) => {
         this.form.name = response.rows[0].jsxm;
         this.form.jsid = response.rows[0].jsid;
@@ -590,7 +583,13 @@ export default {
         this.form.email = response.rows[0].email;
         this.form.phone = response.rows[0].phone;
       });
-      
+      const id = row.id || this.ids;
+      this.form.jdid = id;
+      getZcrjdcj(id).then((response) => {
+        this.form.jdtype = response.data.jdtype;
+        this.open = true;
+        this.title = "基地报名";
+      });  
     },
     /** 修改按钮操作 */
     handleUpdate(row) {
