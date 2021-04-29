@@ -89,9 +89,9 @@
       />
       
       <el-table-column
-        label="学校审核状态"
+        label="区级审核状态"
         align="center"
-        prop="xxshstatus"
+        prop="qjshstatus"
         :formatter="xxshstatusFormat"
       />
       <el-table-column
@@ -114,7 +114,7 @@
             icon="el-icon-edit"
             @click="handlePass(scope.row)"
             v-hasPermi="['xypsgl:xybmsq:edit']"
-            v-if="scope.row.xxshstatus=='1'?false:true"
+            v-if="scope.row.qjshstatus=='1'?false:true"
             >通过</el-button
           >
           <el-button
@@ -123,7 +123,7 @@
             icon="el-icon-delete"
             @click="handleFail(scope.row)"
             v-hasPermi="['xypsgl:xybmsq:remove']"
-            v-if="scope.row.xxshstatus=='2'?false:true"
+            v-if="scope.row.qjshstatus=='2'?false:true"
             >退回</el-button
           >
         </template>
@@ -139,9 +139,9 @@
     <!-- 添加或修改学员报名申请对话框 -->
     <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="120px">
-        <el-form-item label="审核状态" prop="xxshstatus">
+        <el-form-item label="审核状态" prop="qjshstatus">
           <el-select
-            v-model="form.xxshstatus"
+            v-model="form.qjshstatus"
             placeholder="请选择审核状态"
           >
             <el-option
@@ -511,7 +511,7 @@ export default {
     },
     // 审核状态字典翻译
     xxshstatusFormat(row, column) {
-      return this.selectDictLabel(this.xxshstatusOptions, row.xxshstatus);
+      return this.selectDictLabel(this.xxshstatusOptions, row.qjshstatus);
     },
     // 切换tab
     handleChangeTab(tab, event) {},
@@ -598,9 +598,9 @@ export default {
       const id = row.id || this.ids;
       getXybmsq(id).then((response) => {
         this.form.id = response.data.id;
-        this.form.xxshstatus = "1";
+        this.form.qjshstatus = "1";
         this.open = true;
-        this.title = "学校通过学员报名申请";
+        this.title = "区级通过学员报名申请";
       });
     },
     /** 修改按钮操作 */
@@ -609,9 +609,9 @@ export default {
       const id = row.id || this.ids;
       getXybmsq(id).then((response) => { 
         this.form.id = response.data.id;
-        this.form.xxshstatus = "2";  
+        this.form.qjshstatus = "2";  
         this.open = true;
-        this.title = "学校退回学员报名申请";
+        this.title = "区级退回学员报名申请";
       });
     },
     /** 提交按钮 */
