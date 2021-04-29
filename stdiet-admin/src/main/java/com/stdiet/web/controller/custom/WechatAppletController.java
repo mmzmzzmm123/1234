@@ -64,6 +64,9 @@ public class WechatAppletController extends BaseController {
     @Autowired
     private ISysCustomerService sysCustomerService;
 
+    @Autowired
+    private ISysNutritionalVideoService sysNutritionalVideoService;
+
     /**
      * 查询微信小程序中展示的客户案例
      */
@@ -363,12 +366,13 @@ public class WechatAppletController extends BaseController {
      * 更新用户通知消息已读状态
      */
     @GetMapping(value = "/getVideoList")
-    public AjaxResult getVideoList(@RequestParam(value = "pageNum", defaultValue = "1") int pageNum,  @RequestParam(value = "pageSize", defaultValue = "10") int pageSize) {
+    public TableDataInfo getVideoList(SysNutritionalVideo sysNutritionalVideo) {
         AjaxResult result = AjaxResult.success();
-        int total = 0;
-        List<NutritionalVideoResponse> nutritionalVideoList = new ArrayList<>();
+        startPage();
+        //int total = 0;
+        //List<NutritionalVideoResponse> nutritionalVideoList = new ArrayList<>();
         try{
-            GetVideoListResponseBody videoListResponseBody = AliyunVideoUtils.getVideoListByPage(null, "Normal", pageNum, pageSize);
+            /**GetVideoListResponseBody videoListResponseBody = AliyunVideoUtils.getVideoListByPage(null, "Normal", 1, 10);
             if(videoListResponseBody != null){
                 total = videoListResponseBody.total;
                 for (GetVideoListResponseBody.GetVideoListResponseBodyVideoListVideo video : videoListResponseBody.videoList.video) {
@@ -379,14 +383,20 @@ public class WechatAppletController extends BaseController {
                     nutritionalVideoResponse.setDescription(video.getDescription());
                     nutritionalVideoResponse.setTags(video.getTags());
                     nutritionalVideoList.add(nutritionalVideoResponse);
+                    System.out.println(video.getVideoId());
+                    System.out.println(video.getCoverURL());
+                    System.out.println(video.getTitle());
+                    System.out.println(video.getDescription());
                 }
             }
+            System.out.println();**/
+            sysNutritionalVideo.setShowFlag(1);
+            List<SysNutritionalVideo> list = sysNutritionalVideoService.selectSysNutritionalVideoList(sysNutritionalVideo);
+            return getDataTable(list);
         }catch (Exception e){
             e.printStackTrace();
         }
-        result.put("total", total);
-        result.put("nutritionalVideoList", nutritionalVideoList);
-        return result;
+        return null;
     }
 
 
@@ -398,17 +408,18 @@ public class WechatAppletController extends BaseController {
         AjaxResult result = AjaxResult.success();
         NutritionalVideoResponse nutritionalVideoResponse = new NutritionalVideoResponse();
         try{
-            GetPlayInfoResponseBody playInfoResponseBody = AliyunVideoUtils.getVideoVisitDetail(videoId);
-            GetVideoInfoResponseBody videoInfoResponseBody = AliyunVideoUtils.getVideoById(videoId);
-            List<GetPlayInfoResponseBody.GetPlayInfoResponseBodyPlayInfoListPlayInfo> playList = playInfoResponseBody.playInfoList.playInfo;
-            if(playList != null && playList.size() > 0){
-                nutritionalVideoResponse.setPlayUrl(playList.get(0).getPlayURL());
-            }
-            if(videoInfoResponseBody != null){
-                nutritionalVideoResponse.setDescription(videoInfoResponseBody.video.description);
-                nutritionalVideoResponse.setTags(videoInfoResponseBody.video.tags);
-                nutritionalVideoResponse.setTitle(videoInfoResponseBody.video.title);
-                nutritionalVideoResponse.setCreateTime(videoInfoResponseBody.video.creationTime);
+            SysNutritionalVideo sysNutritionalVideo = sysNutritionalVideoService.selectSysNutritionalVideByVideoId(videoId);
+            if(sysNutritionalVideo != null){
+                GetPlayInfoResponseBody playInfoResponseBody = AliyunVideoUtils.getVideoVisitDetail(videoId);
+                //GetVideoInfoResponseBody videoInfoResponseBody = AliyunVideoUtils.getVideoById(videoId);
+                List<GetPlayInfoResponseBody.GetPlayInfoResponseBodyPlayInfoListPlayInfo> playList = playInfoResponseBody.playInfoList.playInfo;
+                if(playList != null && playList.size() > 0){
+                    nutritionalVideoResponse.setPlayUrl(playList.get(0).getPlayURL());
+                }
+                nutritionalVideoResponse.setDescription(sysNutritionalVideo.getDescription());
+                nutritionalVideoResponse.setTags(sysNutritionalVideo.getTags());
+                nutritionalVideoResponse.setTitle(sysNutritionalVideo.getTitle());
+                nutritionalVideoResponse.setCreateTime(DateUtils.dateTime(sysNutritionalVideo.getCreateTime()));
             }
         }catch (Exception e){
             e.printStackTrace();

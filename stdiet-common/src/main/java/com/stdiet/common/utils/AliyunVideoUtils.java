@@ -3,6 +3,7 @@ package com.stdiet.common.utils;
 import com.aliyun.vod20170321.models.*;
 import com.aliyun.teaopenapi.models.*;
 import com.stdiet.common.config.AliyunOSSConfig;
+import org.apache.commons.collections4.Get;
 
 public class AliyunVideoUtils {
 
@@ -94,6 +95,31 @@ public class AliyunVideoUtils {
         }
         return null;
     }
+
+    /**
+     * 根据视频消息获取上传凭证
+     * @param cateId
+     * @param fileName
+     * @param title
+     * @param coverURL
+     * @param tags
+     * @param description
+     */
+    public static CreateUploadVideoResponse createUploadVideoRequest(Long cateId, String fileName, String title, String coverURL, String tags, String description) throws Exception{
+        com.aliyun.vod20170321.Client client = AliyunVideoUtils.createClient();
+        CreateUploadVideoRequest createUploadVideoRequest = new CreateUploadVideoRequest()
+                .setDescription(description)
+                .setCoverURL(coverURL)
+                .setFileName(fileName)
+                .setTitle(title)
+                .setCateId(cateId)
+                .setTags(tags);
+        return client.createUploadVideo(createUploadVideoRequest);
+    }
+
+
+
+
 
 
 
