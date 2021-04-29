@@ -99,6 +99,9 @@ public class TsbzXybmsq extends BaseEntity
     // 区级审核状态
     private String qjshstatus;
 
+    // 学员选拔状态
+    private String xyxbstatus;
+
     // 已经报名人数
     private Integer countYbm;
 
@@ -328,6 +331,7 @@ public class TsbzXybmsq extends BaseEntity
             .append("qjshstatus", getQjshstatus())
             .append("qjshjy", getQjshjy())
             .append("countYbm", getCountYbm())
+            .append("xyxbstatus", getXyxbstatus())
             .toString();
     }
 
@@ -337,5 +341,13 @@ public class TsbzXybmsq extends BaseEntity
 
     public void setCountYbm(Integer countYbm) {
         this.countYbm = countYbm;
+    }
+
+    public String getXyxbstatus() {
+        return xyxbstatus;
+    }
+
+    public void setXyxbstatus(String xyxbstatus) {
+        this.xyxbstatus = xyxbstatus;
     }
 }

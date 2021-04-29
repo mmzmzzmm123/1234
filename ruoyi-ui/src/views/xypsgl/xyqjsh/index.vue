@@ -87,12 +87,17 @@
         prop="xk"
         :formatter="xkFormat"
       />
-      
+      <el-table-column
+        label="学校审核状态"
+        align="center"
+        prop="xxshstatus"
+        :formatter="xxshstatusFormat"
+      />
       <el-table-column
         label="区级审核状态"
         align="center"
         prop="qjshstatus"
-        :formatter="xxshstatusFormat"
+        :formatter="qjshstatusFormat"
       />
       <el-table-column
         label="操作"
@@ -349,6 +354,8 @@ export default {
       zcrOptions: [],
       // 学校审核状态选项
       xxshstatusOptions: [],
+      // 区级审核状态选项
+      qjshstatusOptions: [],
       // 当前报名人数
       dqybm: undefined,
       // 查询参数
@@ -416,6 +423,10 @@ export default {
       this.loading = true;
       listXybmsq(this.queryParams).then((response) => {
         this.xybmsqList = response.rows;
+        // 过滤未审核和未同意的人员
+        this.xybmsqList = this.xybmsqList.filter(function (item) {
+          return item.xxshstatus == 1;
+        });
         this.total = response.total;
         this.getJdList();
         this.loading = false;
@@ -467,18 +478,6 @@ export default {
       });
       return actions.join("");
     },
-    // 报名是否显示
-    isShow_bm(row) {
-      this.queryParams_bm.jdid = row.id;
-      listXybmsq(this.queryParams_bm).then((response) => {
-        this.dqybm = response.rows.length;
-      });
-      if (this.dqybm < row.zsme) {
-        return true;
-      } else {
-        return false;
-      }
-    },
     // 获取登录用户档案编号
     getUser() {
       getUserProfile().then((response) => {
@@ -510,8 +509,12 @@ export default {
       return this.selectDictLabel(this.sfOptions, row.sf);
     },
     // 审核状态字典翻译
-    xxshstatusFormat(row, column) {
+    qjshstatusFormat(row, column) {
       return this.selectDictLabel(this.xxshstatusOptions, row.qjshstatus);
+    },
+    // 审核状态字典翻译
+    xxshstatusFormat(row, column) {
+      return this.selectDictLabel(this.xxshstatusOptions, row.xxshstatus);
     },
     // 切换tab
     handleChangeTab(tab, event) {},

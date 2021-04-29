@@ -8,14 +8,14 @@
       label-width="68px"
     >
       <el-form-item label="报名基地" prop="jdid">
-        <el-select v-model="form.jdid" placeholder="请选择报名基地" >
-            <el-option
-              v-for="dict in zcrjdcjList"
-              :key="dict.id"
-              :label="dict.name"
-              :value="dict.id"
-            ></el-option>
-          </el-select>
+        <el-select v-model="form.jdid" placeholder="请选择报名基地">
+          <el-option
+            v-for="dict in zcrjdcjList"
+            :key="dict.id"
+            :label="dict.name"
+            :value="dict.id"
+          ></el-option>
+        </el-select>
       </el-form-item>
       <el-form-item label="姓名" prop="name">
         <el-input
@@ -55,137 +55,113 @@
       </el-form-item>
     </el-form>
 
-    <el-tabs v-model="activeName" @tab-click="handleChangeTab">
-      <!-- 基地报名tab -->
-      <el-tab-pane label="基地列表" name="jdlb">
-        <el-table v-loading="loading" :data="zcrjdcjList">
-          <el-table-column type="selection" width="55" align="center" />
-          <el-table-column label="基地名称" align="center" prop="name" />
-          <el-table-column
-            label="主持人"
-            align="center"
-            prop="zcrid"
-            :formatter="ZcrFormat"
-          />
-          <el-table-column
-            label="基地类型"
-            align="center"
-            prop="jdtype"
-            :formatter="jdtypeFormat"
-          />
-          <el-table-column label="招生名额" align="center" prop="zsme" />
-          <el-table-column
-            label="报名开始时间"
-            align="center"
-            prop="starttime"
-            width="180"
+    <el-table
+      v-loading="loading"
+      :data="xybmsqList"
+      @selection-change="handleSelectionChange"
+    >
+      <el-table-column type="selection" width="55" align="center" />
+      <el-table-column label="姓名" align="center" prop="name" />
+      <el-table-column label="单位" align="center" prop="dwmc" />
+      <el-table-column label="身份" align="center" prop="sf" :formatter="sfFormat"/>
+      <el-table-column
+        label="基地类别"
+        align="center"
+        prop="jdtype"
+        :formatter="jdtypeFormat"
+      />
+      <el-table-column
+        label="报名基地"
+        align="center"
+        prop="jdid"
+        :formatter="JdFormat"
+      />
+      <el-table-column
+        label="学段"
+        align="center"
+        prop="xd"
+        :formatter="xdFormat"
+      />
+      <el-table-column
+        label="学科"
+        align="center"
+        prop="xk"
+        :formatter="xkFormat"
+      />
+      
+      <el-table-column
+        label="学员选拔状态"
+        align="center"
+        prop="xyxbstatus"
+        :formatter="xyxbstatusFormat"
+      />
+      <el-table-column
+        label="操作"
+        align="center"
+        class-name="small-padding fixed-width"
+      >
+        <template slot-scope="scope">
+          <el-button
+            size="mini"
+            type="text"
+            icon="el-icon-check"
+            @click="handleCheck(scope.row)"
+            v-hasPermi="['xypsgl:xybmsq:edit']"
+            >查看</el-button
           >
-            <template slot-scope="scope">
-              <span>{{ parseTime(scope.row.starttime, "{y}-{m}-{d}") }}</span>
-            </template>
-          </el-table-column>
-          <el-table-column
-            label="报名结束时间"
-            align="center"
-            prop="endtime"
-            width="180"
+          <el-button
+            size="mini"
+            type="text"
+            icon="el-icon-edit"
+            @click="handlePass(scope.row)"
+            v-hasPermi="['xypsgl:xybmsq:edit']"
+            v-if="scope.row.xyxbstatus=='1'?false:true"
+            >通过</el-button
           >
-            <template slot-scope="scope">
-              <span>{{ parseTime(scope.row.endtime, "{y}-{m}-{d}") }}</span>
-            </template>
-          </el-table-column>
-          <el-table-column
-            label="操作"
-            align="center"
-            class-name="small-padding fixed-width"
+          <el-button
+            size="mini"
+            type="text"
+            icon="el-icon-delete"
+            @click="handleFail(scope.row)"
+            v-hasPermi="['xypsgl:xybmsq:remove']"
+            v-if="scope.row.xyxbstatus=='2'?false:true"
+            >退回</el-button
           >
-            <template slot-scope="scope">
-              <el-button
-                size="mini"
-                type="text"
-                icon="el-icon-edit"
-                @click="handleAdd(scope.row)"
-                v-show="isShow_bm(scope.row)"
-                v-hasPermi="['zcrpsgl:xybmsq:edit']"
-                >报名</el-button
-              >
-            </template>
-          </el-table-column>
-        </el-table>
-      </el-tab-pane>
-
-      <!-- 我的报名tab -->
-      <el-tab-pane label="我的报名" name="wdbm">
-        <el-table
-          v-loading="loading"
-          :data="xybmsqList"
-          @selection-change="handleSelectionChange"
-        >
-          <el-table-column type="selection" width="55" align="center" />
-          <el-table-column
-            label="报名基地"
-            align="center"
-            prop="jdid"
-            :formatter="JdFormat"
-          />
-          <el-table-column label="姓名" align="center" prop="name" />
-          <el-table-column label="进修编号" align="center" prop="jxbh" />
-          <el-table-column
-            label="学段"
-            align="center"
-            prop="xd"
-            :formatter="xdFormat"
-          />
-          <el-table-column
-            label="学科"
-            align="center"
-            prop="xk"
-            :formatter="xkFormat"
-          />
-          <el-table-column
-            label="基地类别"
-            align="center"
-            prop="jdtype"
-            :formatter="jdtypeFormat"
-          />
-          <el-table-column
-            label="操作"
-            align="center"
-            class-name="small-padding fixed-width"
-          >
-            <template slot-scope="scope">
-              <el-button
-                size="mini"
-                type="text"
-                icon="el-icon-edit"
-                @click="handleUpdate(scope.row)"
-                v-hasPermi="['xypsgl:xybmsq:edit']"
-                >修改</el-button
-              >
-              <el-button
-                size="mini"
-                type="text"
-                icon="el-icon-delete"
-                @click="handleDelete(scope.row)"
-                v-hasPermi="['xypsgl:xybmsq:remove']"
-                >删除</el-button
-              >
-            </template>
-          </el-table-column>
-        </el-table>
-
-        <pagination
-          v-show="total > 0"
-          :total="total"
-          :page.sync="queryParams.pageNum"
-          :limit.sync="queryParams.pageSize"
-          @pagination="getList"
-        />
-      </el-tab-pane>
-    </el-tabs>
-
+        </template>
+      </el-table-column>
+    </el-table>
+    <pagination
+      v-show="total > 0"
+      :total="total"
+      :page.sync="queryParams.pageNum"
+      :limit.sync="queryParams.pageSize"
+      @pagination="getList"
+    />
     <!-- 添加或修改学员报名申请对话框 -->
     <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
+      <el-form ref="form" :model="form" :rules="rules" label-width="120px">
+        <el-form-item label="审核状态" prop="xyxbstatus">
+          <el-select
+            v-model="form.xyxbstatus"
+            placeholder="请选择审核状态"
+          >
+            <el-option
+              v-for="dict in xyxbstatusOptions"
+              :key="dict.dictValue"
+              :label="dict.dictLabel"
+              :value="dict.dictValue"
+            ></el-option>
+          </el-select>
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button type="primary" @click="submitForm">确 定</el-button>
+        <el-button @click="cancel">取 消</el-button>
+      </div>
+    </el-dialog>
+
+    <!-- 查看学员报名申请对话框 -->
+    <el-dialog :title="title" :visible.sync="open_check" width="500px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="120px">
         <el-form-item label="报名基地" prop="jdid">
           <el-select v-model="form.jdid" placeholder="请选择报名基地id" :disabled="true">
@@ -274,7 +250,7 @@
         </el-form-item>
 
         <el-form-item label="身份" prop="sf">
-          <el-select v-model="form.sf" placeholder="请选择身份" >
+          <el-select v-model="form.sf" placeholder="请选择身份" :disabled="true" >
             <el-option
               v-for="dict in sfOptions"
               :key="dict.dictValue"
@@ -291,7 +267,6 @@
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="submitForm">确 定</el-button>
         <el-button @click="cancel">取 消</el-button>
       </div>
     </el-dialog>
@@ -349,6 +324,8 @@ export default {
       title: "",
       // 是否显示弹出层
       open: false,
+      // 是否显示弹出层
+      open_check: false,
       // 性别字典
       xbOptions: [],
       // 学段字典
@@ -365,7 +342,10 @@ export default {
       zcrjdcjList: [],
       // 主持人选项
       zcrOptions: [],
-      
+      // 学校审核状态选项
+      xxshstatusOptions: [],
+      // 学员选拔状态选项
+      xyxbstatusOptions: [],
       // 当前报名人数
       dqybm: undefined,
       // 查询参数
@@ -395,7 +375,7 @@ export default {
       // 查询教师基本信息
       queryParams_jsjbxx: {
         dabh: null,
-      },      
+      },
       // 表单参数
       form: {},
       // 表单校验
@@ -424,6 +404,12 @@ export default {
     this.getDicts("sys_dm_zcrsf").then((response) => {
       this.sfOptions = response.data;
     });
+    this.getDicts("sys_dm_zcrshzt").then((response) => {
+      this.xxshstatusOptions = response.data;
+    });
+    this.getDicts("sys_dm_xyxbzt").then((response) => {
+      this.xyxbstatusOptions = response.data;
+    });
   },
   methods: {
     /** 查询学员报名申请列表 */
@@ -431,6 +417,10 @@ export default {
       this.loading = true;
       listXybmsq(this.queryParams).then((response) => {
         this.xybmsqList = response.rows;
+        // 过滤未审核和未同意的人员
+        this.xybmsqList = this.xybmsqList.filter(function (item) {
+          return item.qjshstatus == 1;
+        });
         this.total = response.total;
         this.getJdList();
         this.loading = false;
@@ -524,11 +514,20 @@ export default {
     sfFormat(row, column) {
       return this.selectDictLabel(this.sfOptions, row.sf);
     },
+    // 审核状态字典翻译
+    xxshstatusFormat(row, column) {
+      return this.selectDictLabel(this.xxshstatusOptions, row.qjshstatus);
+    },
+    // 审核状态字典翻译
+    xyxbstatusFormat(row, column) {
+      return this.selectDictLabel(this.xyxbstatusOptions, row.xyxbstatus);
+    },
     // 切换tab
     handleChangeTab(tab, event) {},
     // 取消按钮
     cancel() {
       this.open = false;
+      this.open_check = false;
       this.reset();
     },
     // 表单重置
@@ -570,6 +569,13 @@ export default {
     /** 新增按钮操作 */
     handleAdd(row) {
       this.reset();
+      const id = row.id || this.ids;
+      this.form.jdid = id;
+      getZcrjdcj(id).then((response) => {
+        this.form.jdtype = response.data.jdtype;
+        this.open = true;
+        this.title = "基地报名";
+      });
       listJsjbxx(this.queryParams_jsjbxx).then((response) => {
         this.form.name = response.rows[0].jsxm;
         this.form.jsid = response.rows[0].jsid;
@@ -585,22 +591,37 @@ export default {
         this.form.email = response.rows[0].email;
         this.form.phone = response.rows[0].phone;
       });
-      const id = row.id || this.ids;
-      this.form.jdid = id;
-      getZcrjdcj(id).then((response) => {
-        this.form.jdtype = response.data.jdtype;
-        this.open = true;
-        this.title = "基地报名";
-      });  
     },
     /** 修改按钮操作 */
-    handleUpdate(row) {
+    handleCheck(row) {
       this.reset();
       const id = row.id || this.ids;
       getXybmsq(id).then((response) => {
         this.form = response.data;
+        this.open_check = true;
+        this.title = "查看学员报名申请";
+      });
+    },
+    /** 通过按钮操作 */
+    handlePass(row) {
+      this.reset();
+      const id = row.id || this.ids;
+      getXybmsq(id).then((response) => {
+        this.form.id = response.data.id;
+        this.form.xyxbstatus = "1";
         this.open = true;
-        this.title = "修改学员报名申请";
+        this.title = "选拔通过学员";
+      });
+    },
+    /** 修改按钮操作 */
+    handleFail(row) {
+      this.reset();
+      const id = row.id || this.ids;
+      getXybmsq(id).then((response) => { 
+        this.form.id = response.data.id;
+        this.form.xyxbstatus = "2";  
+        this.open = true;
+        this.title = "选拔退回学员";
       });
     },
     /** 提交按钮 */
