@@ -1,11 +1,15 @@
 package com.stdiet.web.controller.custom;
 
+import com.aliyun.vod20170321.models.GetPlayInfoResponseBody;
+import com.aliyun.vod20170321.models.GetVideoInfoResponseBody;
+import com.aliyun.vod20170321.models.GetVideoListResponseBody;
 import com.itextpdf.io.util.DateTimeUtil;
 import com.stdiet.common.core.controller.BaseController;
 import com.stdiet.common.core.domain.AjaxResult;
 import com.stdiet.common.core.page.TableDataInfo;
 import com.stdiet.common.enums.BusinessType;
 import com.stdiet.common.exception.file.FileNameLengthLimitExceededException;
+import com.stdiet.common.utils.AliyunVideoUtils;
 import com.stdiet.common.utils.DateUtils;
 import com.stdiet.common.utils.StringUtils;
 import com.stdiet.common.utils.file.FileUploadUtils;
@@ -15,6 +19,7 @@ import com.stdiet.common.utils.sign.AesUtils;
 import com.stdiet.custom.domain.*;
 import com.stdiet.custom.dto.response.CustomerCaseResponse;
 import com.stdiet.custom.dto.response.MessageNoticeResponse;
+import com.stdiet.custom.dto.response.NutritionalVideoResponse;
 import com.stdiet.custom.page.WxLogInfo;
 import com.stdiet.custom.service.*;
 import org.aspectj.weaver.loadtime.Aj;
@@ -58,6 +63,9 @@ public class WechatAppletController extends BaseController {
 
     @Autowired
     private ISysCustomerService sysCustomerService;
+
+    @Autowired
+    private ISysNutritionalVideoService sysNutritionalVideoService;
 
     /**
      * 查询微信小程序中展示的客户案例
@@ -352,5 +360,71 @@ public class WechatAppletController extends BaseController {
         sysMessageNotice.setReadType(1);
         sysMessageNotice.setId(id);
         return toAjax(sysMessageNoticeService.updateSysMessageNotice(sysMessageNotice));
+    }
+
+    /**
+     * 更新用户通知消息已读状态
+     */
+    @GetMapping(value = "/getVideoList")
+    public TableDataInfo getVideoList(SysNutritionalVideo sysNutritionalVideo) {
+        AjaxResult result = AjaxResult.success();
+        startPage();
+        //int total = 0;
+        //List<NutritionalVideoResponse> nutritionalVideoList = new ArrayList<>();
+        try{
+            /**GetVideoListResponseBody videoListResponseBody = AliyunVideoUtils.getVideoListByPage(null, "Normal", 1, 10);
+            if(videoListResponseBody != null){
+                total = videoListResponseBody.total;
+                for (GetVideoListResponseBody.GetVideoListResponseBodyVideoListVideo video : videoListResponseBody.videoList.video) {
+                    NutritionalVideoResponse nutritionalVideoResponse = new NutritionalVideoResponse();
+                    nutritionalVideoResponse.setCoverURL(video.getCoverURL());
+                    nutritionalVideoResponse.setTitle(video.getTitle());
+                    nutritionalVideoResponse.setVideoId(video.getVideoId());
+                    nutritionalVideoResponse.setDescription(video.getDescription());
+                    nutritionalVideoResponse.setTags(video.getTags());
+                    nutritionalVideoList.add(nutritionalVideoResponse);
+                    System.out.println(video.getVideoId());
+                    System.out.println(video.getCoverURL());
+                    System.out.println(video.getTitle());
+                    System.out.println(video.getDescription());
+                }
+            }
+            System.out.println();**/
+            sysNutritionalVideo.setShowFlag(1);
+            List<SysNutritionalVideo> list = sysNutritionalVideoService.selectSysNutritionalVideoList(sysNutritionalVideo);
+            return getDataTable(list);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+
+    /**
+     * 根据视频id获取播放链接
+     */
+    @GetMapping(value = "/getVideoDetailById")
+    public AjaxResult getVideoDetailById(@RequestParam(value = "videoId") String videoId) {
+        AjaxResult result = AjaxResult.success();
+        NutritionalVideoResponse nutritionalVideoResponse = new NutritionalVideoResponse();
+        try{
+            SysNutritionalVideo sysNutritionalVideo = sysNutritionalVideoService.selectSysNutritionalVideByVideoId(videoId);
+            if(sysNutritionalVideo != null){
+                GetPlayInfoResponseBody playInfoResponseBody = AliyunVideoUtils.getVideoVisitDetail(videoId);
+                //GetVideoInfoResponseBody videoInfoResponseBody = AliyunVideoUtils.getVideoById(videoId);
+                List<GetPlayInfoResponseBody.GetPlayInfoResponseBodyPlayInfoListPlayInfo> playList = playInfoResponseBody.playInfoList.playInfo;
+                if(playList != null && playList.size() > 0){
+                    nutritionalVideoResponse.setPlayUrl(playList.get(0).getPlayURL());
+                }
+                nutritionalVideoResponse.setDescription(sysNutritionalVideo.getDescription());
+                nutritionalVideoResponse.setTags(sysNutritionalVideo.getTags());
+                nutritionalVideoResponse.setTitle(sysNutritionalVideo.getTitle());
+                nutritionalVideoResponse.setCreateTime(DateUtils.dateTime(sysNutritionalVideo.getCreateTime()));
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        result.put("videoDetail", nutritionalVideoResponse);
+        return result;
     }
 }

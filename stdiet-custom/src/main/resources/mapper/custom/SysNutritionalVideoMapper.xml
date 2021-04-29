@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.stdiet.custom.mapper.SysNutritionalVideoMapper">
+
+    <resultMap type="SysNutritionalVideo" id="SysNutritionalVideoResult">
+        <result property="id"    column="id"    />
+        <result property="cateId"    column="cate_id"    />
+        <result property="videoId"    column="video_id"    />
+        <result property="coverUrl"    column="cover_url"    />
+        <result property="title"    column="title"    />
+        <result property="description"    column="description"    />
+        <result property="videoSize"    column="video_size"    />
+        <result property="tags"    column="tags"    />
+        <result property="showFlag"    column="show_flag"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="delFlag"    column="del_flag"    />
+    </resultMap>
+
+    <sql id="selectSysNutritionalVideoVo">
+        select id, cate_id, video_id, cover_url, title, description, video_size, tags, show_flag, create_time, create_by, update_time, update_by, del_flag from sys_nutritional_video
+    </sql>
+
+    <select id="selectSysNutritionalVideoList" parameterType="SysNutritionalVideo" resultMap="SysNutritionalVideoResult">
+        <include refid="selectSysNutritionalVideoVo"/> where del_flag = 0
+        <if test="showFlag != null">
+            and show_flag = #{showFlag}
+        </if>
+    </select>
+
+    <select id="selectSysNutritionalVideoById" parameterType="Long" resultMap="SysNutritionalVideoResult">
+        <include refid="selectSysNutritionalVideoVo"/>
+        where id = #{id} and del_flag = 0
+    </select>
+
+    <insert id="insertSysNutritionalVideo" parameterType="SysNutritionalVideo" useGeneratedKeys="true" keyProperty="id">
+        insert into sys_nutritional_video
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="cateId != null">cate_id,</if>
+            <if test="videoId != null">video_id,</if>
+            <if test="coverUrl != null">cover_url,</if>
+            <if test="title != null">title,</if>
+            <if test="description != null">description,</if>
+            <if test="videoSize != null">video_size,</if>
+            <if test="tags != null">tags,</if>
+            <if test="showFlag != null">show_flag,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="delFlag != null">del_flag,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="cateId != null">#{cateId},</if>
+            <if test="videoId != null">#{videoId},</if>
+            <if test="coverUrl != null">#{coverUrl},</if>
+            <if test="title != null">#{title},</if>
+            <if test="description != null">#{description},</if>
+            <if test="videoSize != null">#{videoSize},</if>
+            <if test="tags != null">#{tags},</if>
+            <if test="showFlag != null">#{showFlag},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="delFlag != null">#{delFlag},</if>
+        </trim>
+    </insert>
+
+    <update id="updateSysNutritionalVideo" parameterType="SysNutritionalVideo">
+        update sys_nutritional_video
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="cateId != null">cate_id = #{cateId},</if>
+            <if test="videoId != null">video_id = #{videoId},</if>
+            <if test="coverUrl != null">cover_url = #{coverUrl},</if>
+            <if test="title != null">title = #{title},</if>
+            <if test="description != null">description = #{description},</if>
+            <if test="videoSize != null">video_size = #{videoSize},</if>
+            <if test="tags != null">tags = #{tags},</if>
+            <if test="showFlag != null">show_flag = #{showFlag},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="delFlag != null">del_flag = #{delFlag},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <update id="deleteSysNutritionalVideoById" parameterType="Long">
+        update sys_nutritional_video set del_flag = 1 where id = #{id}
+    </update>
+
+    <update id="deleteSysNutritionalVideoByIds" parameterType="String">
+        update sys_nutritional_video set del_flag = 1 where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </update>
+
+    <select id="selectSysNutritionalVideByVideoId" parameterType="String" resultMap="SysNutritionalVideoResult">
+        <include refid="selectSysNutritionalVideoVo"/> where video_id = #{videoId} and del_flag = 0 limit 1
+    </select>
+
+</mapper>

@@ -15,12 +15,14 @@ import com.stdiet.custom.domain.SysCustomerPhysicalSigns;
 import com.stdiet.custom.service.ISysCustomerHealthyService;
 import com.stdiet.custom.service.ISysCustomerPhysicalSignsService;
 import com.stdiet.custom.service.ISysCustomerService;
+import com.stdiet.custom.service.ISysPhysicalSignsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Pattern;
 
 /**
  * 客户体征信息Controller
@@ -40,6 +42,9 @@ public class SysCustomerController extends BaseController {
     @Autowired
     private ISysCustomerHealthyService sysCustomerHealthyService;
 
+    @Autowired
+    private ISysPhysicalSignsService sysPhysicalSignsService;
+
     /**
      * 查询客户信息列表
      */
@@ -56,6 +61,20 @@ public class SysCustomerController extends BaseController {
                 sysCustomer.setChannels(remark.split("\\|"));
             }
         }
+
+        //体征查询
+        if(StringUtils.isNotEmpty(sysCustomer.getPhysicalSignsId())){
+            //判断是否数字ID
+            Pattern pattern = Pattern.compile("^[-\\+]?[\\d]*$");
+            if(pattern.matcher(sysCustomer.getPhysicalSignsId()).matches()){
+                List<Long> signIdList = new ArrayList<>();
+                signIdList.add(Long.parseLong(sysCustomer.getPhysicalSignsId()));
+                sysCustomer.setSignIdList(signIdList);
+            }else {
+                sysCustomer.setSignIdList(sysPhysicalSignsService.getSignIdByName(sysCustomer.getPhysicalSignsId()));
+            }
+        }
+
         list = sysCustomerService.selectSysCustomerList(sysCustomer);
         if (list != null && list.size() > 0) {
             for (SysCustomer sysCus : list) {

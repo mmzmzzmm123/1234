@@ -58,4 +58,11 @@ public interface ISysPhysicalSignsService
      * @return 结果
      */
     public int deleteSysPhysicalSignsById(Long id);
+
+    /**
+     * 根据名称查询体征ID集合
+     * @param name
+     * @return
+     */
+    List<Long> getSignIdByName(String name);
 }

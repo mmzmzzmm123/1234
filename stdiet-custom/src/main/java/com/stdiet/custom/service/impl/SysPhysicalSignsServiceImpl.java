@@ -90,4 +90,14 @@ public class SysPhysicalSignsServiceImpl implements ISysPhysicalSignsService
     {
         return sysPhysicalSignsMapper.deleteSysPhysicalSignsById(id);
     }
+
+    /**
+     * 根据名称查询体征ID集合
+     * @param name
+     * @return
+     */
+    @Override
+    public List<Long> getSignIdByName(String name){
+        return sysPhysicalSignsMapper.getSignIdByName(name);
+    }
 }
