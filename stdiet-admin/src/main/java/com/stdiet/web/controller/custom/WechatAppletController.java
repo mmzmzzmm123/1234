@@ -363,40 +363,33 @@ public class WechatAppletController extends BaseController {
     }
 
     /**
-     * 更新用户通知消息已读状态
+     * 获取视频列表
      */
     @GetMapping(value = "/getVideoList")
-    public TableDataInfo getVideoList(SysNutritionalVideo sysNutritionalVideo) {
+    public AjaxResult getVideoList(SysNutritionalVideo sysNutritionalVideo, @RequestParam(value = "pageNum", defaultValue = "1") int pageNum,  @RequestParam(value = "pageSize", defaultValue = "5")int pageSize) {
         AjaxResult result = AjaxResult.success();
-        startPage();
-        //int total = 0;
-        //List<NutritionalVideoResponse> nutritionalVideoList = new ArrayList<>();
+        int total = 0;
+        List<NutritionalVideoResponse> nutritionalVideoList = new ArrayList<>();
         try{
-            /**GetVideoListResponseBody videoListResponseBody = AliyunVideoUtils.getVideoListByPage(null, "Normal", 1, 10);
+            GetVideoListResponseBody videoListResponseBody = AliyunVideoUtils.getVideoListByPage(null, "Normal", pageNum, pageSize);
             if(videoListResponseBody != null){
                 total = videoListResponseBody.total;
                 for (GetVideoListResponseBody.GetVideoListResponseBodyVideoListVideo video : videoListResponseBody.videoList.video) {
                     NutritionalVideoResponse nutritionalVideoResponse = new NutritionalVideoResponse();
-                    nutritionalVideoResponse.setCoverURL(video.getCoverURL());
+                    nutritionalVideoResponse.setCoverUrl(video.getCoverURL());
                     nutritionalVideoResponse.setTitle(video.getTitle());
                     nutritionalVideoResponse.setVideoId(video.getVideoId());
                     nutritionalVideoResponse.setDescription(video.getDescription());
                     nutritionalVideoResponse.setTags(video.getTags());
                     nutritionalVideoList.add(nutritionalVideoResponse);
-                    System.out.println(video.getVideoId());
-                    System.out.println(video.getCoverURL());
-                    System.out.println(video.getTitle());
-                    System.out.println(video.getDescription());
                 }
             }
-            System.out.println();**/
-            sysNutritionalVideo.setShowFlag(1);
-            List<SysNutritionalVideo> list = sysNutritionalVideoService.selectSysNutritionalVideoList(sysNutritionalVideo);
-            return getDataTable(list);
         }catch (Exception e){
             e.printStackTrace();
         }
-        return null;
+        result.put("total",total);
+        result.put("rows", nutritionalVideoList);
+        return result;
     }
 
 
@@ -408,19 +401,16 @@ public class WechatAppletController extends BaseController {
         AjaxResult result = AjaxResult.success();
         NutritionalVideoResponse nutritionalVideoResponse = new NutritionalVideoResponse();
         try{
-            SysNutritionalVideo sysNutritionalVideo = sysNutritionalVideoService.selectSysNutritionalVideByVideoId(videoId);
-            if(sysNutritionalVideo != null){
                 GetPlayInfoResponseBody playInfoResponseBody = AliyunVideoUtils.getVideoVisitDetail(videoId);
-                //GetVideoInfoResponseBody videoInfoResponseBody = AliyunVideoUtils.getVideoById(videoId);
+                GetVideoInfoResponseBody videoInfoResponseBody = AliyunVideoUtils.getVideoById(videoId);
                 List<GetPlayInfoResponseBody.GetPlayInfoResponseBodyPlayInfoListPlayInfo> playList = playInfoResponseBody.playInfoList.playInfo;
                 if(playList != null && playList.size() > 0){
                     nutritionalVideoResponse.setPlayUrl(playList.get(0).getPlayURL());
                 }
-                nutritionalVideoResponse.setDescription(sysNutritionalVideo.getDescription());
-                nutritionalVideoResponse.setTags(sysNutritionalVideo.getTags());
-                nutritionalVideoResponse.setTitle(sysNutritionalVideo.getTitle());
-                nutritionalVideoResponse.setCreateTime(DateUtils.dateTime(sysNutritionalVideo.getCreateTime()));
-            }
+                nutritionalVideoResponse.setDescription(videoInfoResponseBody.video.getDescription());
+                nutritionalVideoResponse.setTags(videoInfoResponseBody.video.getTags());
+                nutritionalVideoResponse.setTitle(videoInfoResponseBody.video.getTitle());
+                //nutritionalVideoResponse.setCreateTime(sysNutritionalVideo.getCreateTime() == null ? "" : DateUtils.dateTime(sysNutritionalVideo.getCreateTime()));
         }catch (Exception e){
             e.printStackTrace();
         }
