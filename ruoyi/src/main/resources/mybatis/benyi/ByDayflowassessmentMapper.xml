@@ -28,6 +28,7 @@
         <result property="pgdxxm" column="pgdxxm"/>
         <result property="createUserid" column="create_userid"/>
         <result property="createTime" column="create_time"/>
+        <result property="remark" column="remark"/>
         <result property="bjpjf" column="bjpjf"/>
         <result property="zjjdpjf" column="zjjdpjf"/>
         <result property="ycpjf" column="ycpjf"/>
@@ -206,6 +207,7 @@ group by t.pgdx
             <if test="pgdxxm != null ">pgdxxm,</if>
             <if test="createUserid != null ">create_userid,</if>
             <if test="createTime != null ">create_time,</if>
+            <if test="remark != null  and remark != ''">remark,</if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="planid != null ">#{planid},</if>
@@ -230,6 +232,7 @@ group by t.pgdx
             <if test="pgdxxm != null ">#{pgdxxm},</if>
             <if test="createUserid != null ">#{createUserid},</if>
             <if test="createTime != null ">#{createTime},</if>
+            <if test="remark != null  and remark != ''">#{remark},</if>
         </trim>
     </insert>
 

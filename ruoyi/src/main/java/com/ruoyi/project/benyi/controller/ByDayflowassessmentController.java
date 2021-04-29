@@ -10,6 +10,8 @@ import com.ruoyi.project.benyi.service.IByDayFlowStandardService;
 import com.ruoyi.project.benyi.service.IByDayflowassessmentitemService;
 import com.ruoyi.project.benyi.service.IByDayflowassessmentplanService;
 import com.ruoyi.project.common.SchoolCommon;
+import com.ruoyi.project.system.domain.ByClass;
+import com.ruoyi.project.system.service.IByClassService;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -34,9 +36,7 @@ public class ByDayflowassessmentController extends BaseController {
     @Autowired
     private IByDayflowassessmentService byDayflowassessmentService;
     @Autowired
-    private IByDayFlowStandardService byDayFlowStandardService;
-    @Autowired
-    private IByDayflowassessmentplanService byDayflowassessmentplanService;
+    private IByClassService byClassService;
     @Autowired
     private SchoolCommon schoolCommon;
     @Autowired
@@ -118,11 +118,43 @@ public class ByDayflowassessmentController extends BaseController {
     @Log(title = "幼儿园一日流程评估", businessType = BusinessType.INSERT)
     @PostMapping
     public AjaxResult add(@RequestBody ByDayflowassessment byDayflowassessment) {
-        byDayflowassessment.setDeptId(SecurityUtils.getLoginUser().getUser().getDeptId());
-        byDayflowassessment.setCreateUserid(SecurityUtils.getLoginUser().getUser().getUserId());
-        byDayflowassessment.setXnxq(schoolCommon.getCurrentXnXq());
-        //获取总得分
-        byDayflowassessment.setZzdf(GetDf(byDayflowassessment.getList()));
+        //判断当前评估对象的角色是主班 配班 还是助理教师
+        Long pgdx = byDayflowassessment.getPgdx();
+        //获取班级信息
+        String classId = byDayflowassessment.getClassid();
+        ByClass byClass = byClassService.selectByClassById(classId);
+        if (byClass != null) {
+            byDayflowassessment.setDeptId(SecurityUtils.getLoginUser().getUser().getDeptId());
+            byDayflowassessment.setCreateUserid(SecurityUtils.getLoginUser().getUser().getUserId());
+            byDayflowassessment.setXnxq(schoolCommon.getCurrentXnXq());
+            //获取总得分
+            byDayflowassessment.setZzdf(GetDf(byDayflowassessment.getList()));
+            //如果评估对象非主班教师，那么对主班教师产生相同的扣分项
+            if (byClass.getZbjs() == pgdx) {
+                int iRows = addDayFlowAssessment(byDayflowassessment);
+                return toAjax(iRows);
+            } else {
+                //评估对象为助理教师和配班教师
+                int iRows = addDayFlowAssessment(byDayflowassessment);
+                ByDayflowassessment byDayflowassessmentNew = byDayflowassessment;
+                if (byClass.getZbjs() == null) {
+                    System.out.println("未设置主班教师");
+                } else {
+                    byDayflowassessmentNew.setPgdx(byClass.getZbjs());//设置评估对象为主班教师
+                    byDayflowassessmentNew.setPgdxxm(byClass.getZbjsxm());
+                    byDayflowassessmentNew.setRemark("被评估："+byDayflowassessment.getId());
+
+                    iRows = iRows + addDayFlowAssessment(byDayflowassessmentNew);
+                }
+                return toAjax(iRows);
+            }
+        } else {
+            return AjaxResult.error("班级信息错误");
+        }
+    }
+
+    //
+    public Integer addDayFlowAssessment(ByDayflowassessment byDayflowassessment) {
         int iRows = byDayflowassessmentService.insertByDayflowassessment(byDayflowassessment);
 
         List<ByDayFlowStandard> list = byDayflowassessment.getList();
@@ -139,13 +171,12 @@ public class ByDayflowassessmentController extends BaseController {
                         byDayflowassessmentitem.setPid(byDayflowassessment.getId());
                         byDayflowassessmentitem.setItem(list.get(i).getId());
                         byDayflowassessmentitem.setValue(dMrz);
-                        byDayflowassessmentitemService.insertByDayflowassessmentitem(byDayflowassessmentitem);
+                        iRows = iRows + byDayflowassessmentitemService.insertByDayflowassessmentitem(byDayflowassessmentitem);
                     }
                 }
             }
         }
-
-        return toAjax(iRows);
+        return iRows;
     }
 
     public Double GetDf(List<ByDayFlowStandard> list) {
