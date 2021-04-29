@@ -2,6 +2,7 @@ package com.stdiet.custom.mapper;
 
 import java.util.List;
 import com.stdiet.custom.domain.SysPhysicalSigns;
+import org.apache.ibatis.annotations.Param;
 
 /**
  * 体征Mapper接口
@@ -58,4 +59,11 @@ public interface SysPhysicalSignsMapper
      * @return 结果
      */
     public int deleteSysPhysicalSignsByIds(Long[] ids);
+
+    /**
+     * 根据名称查询体征ID集合
+     * @param name
+     * @return
+     */
+    List<Long> getSignIdByName(@Param("name") String name);
 }
