@@ -1,10 +1,8 @@
 package com.stdiet.web.controller.custom;
 
-import com.itextpdf.io.util.DateTimeUtil;
 import com.stdiet.common.core.controller.BaseController;
 import com.stdiet.common.core.domain.AjaxResult;
 import com.stdiet.common.core.page.TableDataInfo;
-import com.stdiet.common.enums.BusinessType;
 import com.stdiet.common.exception.file.FileNameLengthLimitExceededException;
 import com.stdiet.common.utils.DateUtils;
 import com.stdiet.common.utils.StringUtils;
@@ -17,7 +15,6 @@ import com.stdiet.custom.dto.response.CustomerCaseResponse;
 import com.stdiet.custom.page.WxLogInfo;
 import com.stdiet.custom.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -33,30 +30,27 @@ import java.util.*;
 public class WechatAppletController extends BaseController {
 
 
+    public static final String[] imageName = {"breakfastImages", "lunchImages", "dinnerImages", "extraMealImages", "bodyImages"};
     @Autowired
     private ISysCustomerCaseService sysCustomerCaseService;
-
     @Autowired
     private ISysWxUserLogService sysWxUserLogService;
-
     @Autowired
     private ISysWxUserInfoService sysWxUserInfoService;
-
     @Autowired
     private ISysOrderService sysOrderService;
-
     @Autowired
     private ISysNutritionQuestionService sysNutritionQuestionService;
-
     @Autowired
     private ISysAskNutritionQuestionService sysAskNutritionQuestionService;
+    @Autowired
+    private ISysCustomerService iSysCustomerService;
 
     /**
      * 查询微信小程序中展示的客户案例
      */
     @GetMapping("/caseList")
-    public TableDataInfo caseList(SysCustomerCase sysCustomerCase)
-    {
+    public TableDataInfo caseList(SysCustomerCase sysCustomerCase) {
         startPage();
         sysCustomerCase.setKeywordArray(StringUtils.isNotEmpty(sysCustomerCase.getKeyword()) ? sysCustomerCase.getKeyword().split(",") : null);
         List<CustomerCaseResponse> list = sysCustomerCaseService.getWxCustomerCaseList(sysCustomerCase);
@@ -69,12 +63,11 @@ public class WechatAppletController extends BaseController {
      * 查询客户案例文件列表
      */
     @GetMapping("/getFileByCaseId")
-    public AjaxResult getFileByCaseId(@RequestParam("caseId")String caseId)
-    {
+    public AjaxResult getFileByCaseId(@RequestParam("caseId") String caseId) {
         Long id = StringUtils.isNotEmpty(caseId) ? Long.parseLong(AesUtils.decrypt(caseId, null)) : null;
         CustomerCaseResponse customerCaseResponse = new CustomerCaseResponse();
         customerCaseResponse.setId(caseId);
-        if(id != null){
+        if (id != null) {
             List<SysCustomerCaseFile> list = sysCustomerCaseService.getFileListByCaseId(id);
             List<String> fileUrl = new ArrayList<>();
             for (SysCustomerCaseFile caseFile : list) {
@@ -82,7 +75,7 @@ public class WechatAppletController extends BaseController {
             }
             List<String> downUrlList = AliyunOSSUtils.generatePresignedUrl(fileUrl);
             customerCaseResponse.setFileList(downUrlList);
-        }else{
+        } else {
             customerCaseResponse.setFileList(new ArrayList<>());
         }
         return AjaxResult.success(customerCaseResponse);
@@ -90,20 +83,21 @@ public class WechatAppletController extends BaseController {
 
     /**
      * 同步客户信息，返回订单数量
+     *
      * @param sysWxUserInfo
      * @return
      */
     @PostMapping("/synchroCustomerInfo")
     public AjaxResult synchroCustomerInfo(@RequestBody SysWxUserInfo sysWxUserInfo) {
-        if(StringUtils.isEmpty(sysWxUserInfo.getOpenid()) || StringUtils.isEmpty(sysWxUserInfo.getPhone())){
+        if (StringUtils.isEmpty(sysWxUserInfo.getOpenid()) || StringUtils.isEmpty(sysWxUserInfo.getPhone())) {
             return AjaxResult.error("手机号为空");
         }
         // 查询微信用户
         SysWxUserInfo userInfo = sysWxUserInfoService.selectSysWxUserInfoById(sysWxUserInfo.getOpenid());
-        if(userInfo != null){
+        if (userInfo != null) {
             //更新数据
             sysWxUserInfoService.updateSysWxUserInfo(sysWxUserInfo);
-        }else{
+        } else {
             sysWxUserInfoService.insertSysWxUserInfo(sysWxUserInfo);
         }
         return AjaxResult.success();
@@ -111,27 +105,28 @@ public class WechatAppletController extends BaseController {
 
     /**
      * 微信小程序获取客户打卡记录
+     *
      * @param sysWxUserLog
      * @return
      */
     @GetMapping(value = "/getPunchLogs")
     public AjaxResult getPunchLogs(SysWxUserLog sysWxUserLog) {
-        if(StringUtils.isEmpty(sysWxUserLog.getPhone()) && StringUtils.isEmpty(sysWxUserLog.getOpenid())){
-            return  AjaxResult.error(5001, "缺少参数");
+        if (StringUtils.isEmpty(sysWxUserLog.getPhone()) && StringUtils.isEmpty(sysWxUserLog.getOpenid())) {
+            return AjaxResult.error(5001, "缺少参数");
         }
         //查询是否下单
         SysCustomer param = new SysCustomer();
         param.setPhone(sysWxUserLog.getPhone());
         int orderCount = sysOrderService.getOrderCountByCustomer(param);
-        if(orderCount > 0){
+        if (orderCount > 0) {
             Map<String, Object> result = new HashMap<>();
             //今日是否已打卡
             boolean isPunch = false;
             startPage();
             List<WxLogInfo> list = sysWxUserLogService.getWxLogInfoList(sysWxUserLog);
-            if(list.size() > 0){
+            if (list.size() > 0) {
                 WxLogInfo lastLog = list.get(0);
-                if(lastLog.getDate() != null && ChronoUnit.DAYS.between(DateUtils.stringToLocalDate(lastLog.getDate(), "yyyy-MM-dd"), LocalDate.now()) == 0) {
+                if (lastLog.getDate() != null && ChronoUnit.DAYS.between(DateUtils.stringToLocalDate(lastLog.getDate(), "yyyy-MM-dd"), LocalDate.now()) == 0) {
                     isPunch = true;
                 }
             }
@@ -145,13 +140,14 @@ public class WechatAppletController extends BaseController {
             result.put("isPunch", isPunch);
             result.put("tableDataInfo", tableDataInfo);
             return AjaxResult.success(result);
-        }else{
+        } else {
             return AjaxResult.error(5002, "未查询到相关订单信息");
         }
     }
 
     /**
      * 今日是否打卡
+     *
      * @param openid
      * @return
      */
@@ -166,6 +162,7 @@ public class WechatAppletController extends BaseController {
 
     /**
      * 微信小程序打卡
+     *
      * @param sysWxUserLog
      * @return
      */
@@ -176,23 +173,21 @@ public class WechatAppletController extends BaseController {
         if (userInfo == null || StringUtils.isEmpty(userInfo.getPhone())) {
             return AjaxResult.error("打卡失败");
         }
-        if(sysWxUserLog.getId() == null){
+        if (sysWxUserLog.getId() == null) {
             //查询今日是否已打卡
-            if(sysWxUserLog.getLogTime() == null){
+            if (sysWxUserLog.getLogTime() == null) {
                 sysWxUserLog.setLogTime(new Date());
             }
             int count = sysWxUserLogService.checkWxLogInfoCount(sysWxUserLog);
-            if(count > 0){
+            if (count > 0) {
                 return AjaxResult.error("今日已打卡，不可重复打卡");
             }
             return toAjax(sysWxUserLogService.insertSysWxUserLog(sysWxUserLog));
-        }else{
+        } else {
             return toAjax(sysWxUserLogService.updateSysWxUserLog(sysWxUserLog));
         }
 
     }
-
-    public static final String[] imageName = {"breakfastImages", "lunchImages", "dinnerImages", "extraMealImages", "bodyImages"};
 
     /**
      * 获取微信用户记录详细信息
@@ -204,7 +199,7 @@ public class WechatAppletController extends BaseController {
         SysWxUserLog param = new SysWxUserLog();
         param.setId(Long.parseLong(id));
         sysWxUserLog = sysWxUserLogService.getWxLogInfoDetailById(param);
-        if(sysWxUserLog == null){
+        if (sysWxUserLog == null) {
             return AjaxResult.error("打卡记录不存在");
         }
         Map<String, List<String>> imageUrlMap = new HashMap<>();
@@ -221,10 +216,10 @@ public class WechatAppletController extends BaseController {
         imageUrlMap.put(imageName[3], extraMealImagesUrlList);
 
         List<String> bodyImagesUrlList = StringUtils.isNotEmpty(sysWxUserLog.getBodyImages()) ? Arrays.asList(sysWxUserLog.getBodyImages().split("\\|")) : new ArrayList<>();
-        imageUrlMap.put(imageName[4], bodyImagesUrlList );
+        imageUrlMap.put(imageName[4], bodyImagesUrlList);
 
         //生成预览链接
-        Map<String,List<String>> downUrlList = AliyunOSSUtils.generatePresignedUrl(imageUrlMap);
+        Map<String, List<String>> downUrlList = AliyunOSSUtils.generatePresignedUrl(imageUrlMap);
 
         sysWxUserLog.setBreakfastImagesUrl(downUrlList.get(imageName[0]));
         sysWxUserLog.setLunchImagesUrl(downUrlList.get(imageName[1]));
@@ -236,7 +231,7 @@ public class WechatAppletController extends BaseController {
         List<String> allUrlList = new ArrayList<>();
 
         for (String key : imageName) {
-            if(!"bodyImages".equals(key)){
+            if (!"bodyImages".equals(key)) {
                 allUrlList.addAll(downUrlList.get(key));
                 allImagesList.addAll(imageUrlMap.get(key));
             }
@@ -249,12 +244,13 @@ public class WechatAppletController extends BaseController {
 
     /**
      * 处理返回值的ID加密
+     *
      * @param list
      * @return
      */
-    private void dealIdEnc(List<CustomerCaseResponse> list){
+    private void dealIdEnc(List<CustomerCaseResponse> list) {
         for (CustomerCaseResponse cus : list) {
-            cus.setId(AesUtils.encrypt(cus.getId()+"", null));
+            cus.setId(AesUtils.encrypt(cus.getId() + "", null));
         }
     }
 
@@ -292,9 +288,9 @@ public class WechatAppletController extends BaseController {
      * 获取小程序展示的营养小知识列表
      */
     @GetMapping(value = "/getNutritionQuestionList")
-    public AjaxResult getNutritionQuestionList(SysNutritionQuestion sysNutritionQuestion, @RequestParam(value = "pageNum", defaultValue = "1") int pageNum,  @RequestParam(value = "pageSize", defaultValue = "10")int pageSize) {
+    public AjaxResult getNutritionQuestionList(SysNutritionQuestion sysNutritionQuestion, @RequestParam(value = "pageNum", defaultValue = "1") int pageNum, @RequestParam(value = "pageSize", defaultValue = "10") int pageSize) {
         sysNutritionQuestion.setShowFlag(1);
-        Map<String,Object> result = sysNutritionQuestionService.getNutritionQuestionListByKey(sysNutritionQuestion, pageNum, pageSize);
+        Map<String, Object> result = sysNutritionQuestionService.getNutritionQuestionListByKey(sysNutritionQuestion, pageNum, pageSize);
         return AjaxResult.success(result);
     }
 
@@ -302,11 +298,40 @@ public class WechatAppletController extends BaseController {
      * 新增营养小知识提问
      */
     @PostMapping("/addAskNutritionQuestion")
-    public AjaxResult addAskNutritionQuestion(@RequestBody SysAskNutritionQuestion sysAskNutritionQuestion)
-    {
-        if(StringUtils.isEmpty(sysAskNutritionQuestion.getOpenid()) || StringUtils.isEmpty(sysAskNutritionQuestion.getQuestion())){
+    public AjaxResult addAskNutritionQuestion(@RequestBody SysAskNutritionQuestion sysAskNutritionQuestion) {
+        if (StringUtils.isEmpty(sysAskNutritionQuestion.getOpenid()) || StringUtils.isEmpty(sysAskNutritionQuestion.getQuestion())) {
             return AjaxResult.error("添加失败");
         }
         return toAjax(sysAskNutritionQuestionService.insertSysAskNutritionQuestion(sysAskNutritionQuestion));
+    }
+
+    @PostMapping("/login")
+    public AjaxResult login(@RequestBody SysWxUserInfo sysWxUserInfo) {
+        if (StringUtils.isEmpty(sysWxUserInfo.getOpenid())) {
+            return AjaxResult.error("缺少参数：openid");
+        }
+        SysWxUserInfo curWxUserInfo = sysWxUserInfoService.selectSysWxUserInfoById(sysWxUserInfo.getOpenid());
+
+        // 第一次尝试匹配，搜索sys_wx_user_info表，尝试查找cus_id，此时不需要手机号
+        if (StringUtils.isEmpty(sysWxUserInfo.getPhone()) && StringUtils.isNull(curWxUserInfo) || StringUtils.isNull(curWxUserInfo.getCusId())) {
+            // 如果没找到任何信息，此时为未登录过的新用户 || 没有cusId，没有创建用户信息
+            return AjaxResult.error(5000, "需要手机号进一步匹配");
+        } else {
+            // 第二次尝试匹配，带上手机号，先去sys_customer查找，找到就更新sys_wx_user_info表，并返回一系列登录后的数据
+            SysCustomer sysCustomer = iSysCustomerService.getCustomerByPhone(sysWxUserInfo.getPhone());
+            if (StringUtils.isNull(sysCustomer)) {
+                return AjaxResult.error(5003, "未查到用户信息，请联系销售顾问");
+            }
+
+            if (StringUtils.isNull(curWxUserInfo)) {
+                // 新增sys_wx_user_info
+                sysWxUserInfo.setCusId(sysCustomer.getId());
+                sysWxUserInfoService.insertSysWxUserInfo(sysWxUserInfo);
+            }
+        }
+        // 更新sys_wx_user_info数据，并返回一系列登录后的数据
+        sysWxUserInfoService.updateSysWxUserInfo(curWxUserInfo);
+
+        return AjaxResult.success(curWxUserInfo);
     }
 }
