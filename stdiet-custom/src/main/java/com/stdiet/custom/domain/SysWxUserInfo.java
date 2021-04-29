@@ -71,7 +71,11 @@ public class SysWxUserInfo {
 
     private Date createTime;
 
+    private String createBy;
+
     private Date updateTime;
+
+    private String updateBy;
 
     private String remark;
 
