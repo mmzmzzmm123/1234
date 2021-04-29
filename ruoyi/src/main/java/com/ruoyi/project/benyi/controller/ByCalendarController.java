@@ -70,6 +70,8 @@ public class ByCalendarController extends BaseController {
     @Autowired
     private IByDayflowassessmentplanService byDayflowassessmentplanService;
     @Autowired
+    private IByDayflowassessmentService byDayflowassessmentService;
+    @Autowired
     private IByDayFlowDetailService byDayFlowDetailService;
 
     /**
@@ -195,7 +197,11 @@ public class ByCalendarController extends BaseController {
         listvi.addAll(getbychildcheckdata(classId, formatter));
 
         //幼儿一日流程评估计划
-        listvi.addAll(getdayflowdata(classId,formatter));
+        listvi.addAll(getdayflowdata(classId, formatter));
+
+        //幼儿园一日流程评估结果
+        Long userId = SecurityUtils.getLoginUser().getUser().getUserId();
+        listvi.addAll(getdayflowresult(userId, formatter));
 
         AjaxResult ajax = AjaxResult.success();
         ajax.put("calendarData", listvi);
@@ -451,8 +457,33 @@ public class ByCalendarController extends BaseController {
                 by = new ByCalendarShow();
                 ByDayflowassessmentplan byNewDayflowassessmentplan = list.get(i);
                 SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");//设置日期格式
-                by.setTitle(sdf.format(byNewDayflowassessmentplan.getStarttime()) +"评估"+ byClassService.selectByClassById(byNewDayflowassessmentplan.getClassid()).getBjmc() + byDayFlowDetailService.selectByDayFlowDetailById(Long.valueOf(byNewDayflowassessmentplan.getConnent())).getName());
+                by.setTitle(sdf.format(byNewDayflowassessmentplan.getStarttime()) + "评估" + byClassService.selectByClassById(byNewDayflowassessmentplan.getClassid()).getBjmc() + byDayFlowDetailService.selectByDayFlowDetailById(Long.valueOf(byNewDayflowassessmentplan.getConnent())).getName());
                 String timefor = formatter.format(byNewDayflowassessmentplan.getStarttime());
+                by.setStart(timefor);
+                by.setEnd(timefor);
+                by.setColor("#1890ff");
+                listvi.add(by);
+            }
+        }
+        return listvi;
+    }
+
+    //获取教师一日流程评估结果
+    private List<ByCalendarShow> getdayflowresult(Long userId, SimpleDateFormat formatter) {
+        List<ByCalendarShow> listvi = new ArrayList<>();
+
+        Long deptId = SecurityUtils.getLoginUser().getUser().getDept().getDeptId();
+        ByDayflowassessment byDayflowassessment = new ByDayflowassessment();
+        byDayflowassessment.setDeptId(deptId);
+        byDayflowassessment.setPgdx(userId);
+        List<ByDayflowassessment> list = byDayflowassessmentService.selectByDayflowassessmentList(byDayflowassessment);
+        if (list != null && list.size() > 0) {
+            ByCalendarShow by = null;
+            for (int i = 0; i < list.size(); i++) {
+                by = new ByCalendarShow();
+                ByDayflowassessment byNewDayflowassessment = list.get(i);
+                by.setTitle("一日流程评估：" + byNewDayflowassessment.getZzdf());
+                String timefor = formatter.format(byNewDayflowassessment.getCreateTime());
                 by.setStart(timefor);
                 by.setEnd(timefor);
                 by.setColor("#1890ff");
