@@ -18,10 +18,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="qjshstatus"    column="qjshstatus"    />
         <result property="qjshjy"    column="qjshjy"    />
         <result property="xyxbstatus"    column="xyxbstatus"    />
+        <result property="xypsjgqrstatus"    column="xypsjgqrstatus"    />
     </resultMap>
 
     <sql id="selectTsbzXybmsqVo">
-        select a.id, a.faid, a.jdid, a.jsid, b.jsxm as name, b.dabh as jxbh, b.xb as xb, b.csrq as csrq, b.xd as xd, b.xk as xk, b.zc as zc, c.xxmc as dwmc, c.xxdz as dwdz, d.email as email, d.phonenumber as phone, a.jdtype, a.sf, a.create_time, a.create_user, a.xxshstatus, a.xxshjy, a.qjshstatus, a.qjshjy, a.xyxbstatus
+        select a.id, a.faid, a.jdid, a.jsid, b.jsxm as name, b.dabh as jxbh, b.xb as xb, b.csrq as csrq, b.xd as xd, b.xk as xk, b.zc as zc, c.xxmc as dwmc, c.xxdz as dwdz, d.email as email, d.phonenumber as phone, a.jdtype, a.sf, a.create_time, a.create_user, a.xxshstatus, a.xxshjy, a.qjshstatus, a.qjshjy, a.xyxbstatus, a.xypsjgqrstatus
         from tsbz_xybmsq a
         left join tsbz_jsjbxx b on a.jsid=b.id
         left join tsbz_xxjbxx c on b.deptid=c.xxdm
@@ -42,6 +43,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="qjshjy != null  and qjshjy != ''"> and a.qjshjy = #{qjshjy}</if>
             <if test="createUser != null "> and a.create_user = #{createUser}</if>
             <if test="xyxbstatus != null "> and a.xyxbstatus = #{xyxbstatus}</if>
+            <if test="xypsjgqrstatus != null "> and a.xypsjgqrstatus = #{xypsjgqrstatus}</if>
         </where>
     </select>
 
@@ -70,6 +72,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="createTime != null">create_time,</if>
             <if test="createUser != null">create_user,</if>
             <if test="xyxbstatus != null">xyxbstatus,</if>
+            <if test="xypsjgqrstatus != null">xypsjgqrstatus,</if>
          </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="faid != null">#{faid},</if>
@@ -84,6 +87,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="createTime != null">#{createTime},</if>
             <if test="createUser != null">#{createUser},</if>
             <if test="xyxbstatus != null">#{xyxbstatus},</if>
+            <if test="xypsjgqrstatus != null">#{xypsjgqrstatus},</if>
          </trim>
     </insert>
 
@@ -102,6 +106,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="createTime != null">create_time = #{createTime},</if>
             <if test="createUser != null">create_user = #{createUser},</if>
             <if test="xyxbstatus != null">xyxbstatus = #{xyxbstatus},</if>
+            <if test="xypsjgqrstatus != null">xypsjgqrstatus = #{xypsjgqrstatus},</if>
         </trim>
         where id = #{id}
     </update>

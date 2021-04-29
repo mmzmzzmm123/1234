@@ -90,10 +90,10 @@
       />
       
       <el-table-column
-        label="学员选拔状态"
+        label="评审结果确认"
         align="center"
-        prop="xyxbstatus"
-        :formatter="xyxbstatusFormat"
+        prop="xypsjgqrstatus"
+        :formatter="xypsjgqrstatusFormat"
       />
       <el-table-column
         label="操作"
@@ -115,7 +115,7 @@
             icon="el-icon-edit"
             @click="handlePass(scope.row)"
             v-hasPermi="['xypsgl:xybmsq:edit']"
-            v-if="scope.row.xyxbstatus=='1'?false:true"
+            v-if="scope.row.xypsjgqrstatus=='1'?false:true"
             >通过</el-button
           >
           <el-button
@@ -124,7 +124,7 @@
             icon="el-icon-delete"
             @click="handleFail(scope.row)"
             v-hasPermi="['xypsgl:xybmsq:remove']"
-            v-if="scope.row.xyxbstatus=='2'?false:true"
+            v-if="scope.row.xypsjgqrstatus=='2'?false:true"
             >退回</el-button
           >
         </template>
@@ -140,13 +140,13 @@
     <!-- 添加或修改学员报名申请对话框 -->
     <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="120px">
-        <el-form-item label="审核状态" prop="xyxbstatus">
+        <el-form-item label="审核确认" prop="xypsjgqrstatus">
           <el-select
-            v-model="form.xyxbstatus"
-            placeholder="请选择审核状态"
+            v-model="form.xypsjgqrstatus"
+            placeholder="请选择确认状态"
           >
             <el-option
-              v-for="dict in xyxbstatusOptions"
+              v-for="dict in xypsjgqrstatusOptions"
               :key="dict.dictValue"
               :label="dict.dictLabel"
               :value="dict.dictValue"
@@ -345,7 +345,7 @@ export default {
       // 学校审核状态选项
       xxshstatusOptions: [],
       // 学员选拔状态选项
-      xyxbstatusOptions: [],
+      xypsjgqrstatusOptions: [],
       // 当前报名人数
       dqybm: undefined,
       // 查询参数
@@ -366,6 +366,7 @@ export default {
         qjshstatus: null,
         qjshjy: null,
         xyxbstatus: null,
+        xypsjgqrstatus: null,
       },
       // 查询报名名额参数
       queryParams_bm: {
@@ -407,8 +408,8 @@ export default {
     this.getDicts("sys_dm_zcrshzt").then((response) => {
       this.xxshstatusOptions = response.data;
     });
-    this.getDicts("sys_dm_xyxbzt").then((response) => {
-      this.xyxbstatusOptions = response.data;
+    this.getDicts("sys_dm_zcrjgqrzt").then((response) => {
+      this.xypsjgqrstatusOptions = response.data;
     });
   },
   methods: {
@@ -419,7 +420,7 @@ export default {
         this.xybmsqList = response.rows;
         // 过滤未审核和未同意的人员
         this.xybmsqList = this.xybmsqList.filter(function (item) {
-          return item.qjshstatus == 1;
+          return item.xyxbstatus == 1;
         });
         this.total = response.total;
         this.getJdList();
@@ -519,8 +520,8 @@ export default {
       return this.selectDictLabel(this.xxshstatusOptions, row.qjshstatus);
     },
     // 审核状态字典翻译
-    xyxbstatusFormat(row, column) {
-      return this.selectDictLabel(this.xyxbstatusOptions, row.xyxbstatus);
+    xypsjgqrstatusFormat(row, column) {
+      return this.selectDictLabel(this.xypsjgqrstatusOptions, row.xypsjgqrstatus);
     },
     // 切换tab
     handleChangeTab(tab, event) {},
@@ -547,6 +548,7 @@ export default {
         qjshstatus: null,
         qjshjy: null,
         xyxbstatus: null,
+        xypsjgqrstatus: null,
       };
       this.resetForm("form");
     },
@@ -608,9 +610,9 @@ export default {
       const id = row.id || this.ids;
       getXybmsq(id).then((response) => {
         this.form.id = response.data.id;
-        this.form.xyxbstatus = "1";
+        this.form.xypsjgqrstatus = "1";
         this.open = true;
-        this.title = "选拔通过学员";
+        this.title = "确认通过学员";
       });
     },
     /** 修改按钮操作 */
@@ -619,9 +621,9 @@ export default {
       const id = row.id || this.ids;
       getXybmsq(id).then((response) => { 
         this.form.id = response.data.id;
-        this.form.xyxbstatus = "0";  
+        this.form.xypsjgqrstatus = "2";  
         this.open = true;
-        this.title = "选拔退回学员";
+        this.title = "确认退回学员";
       });
     },
     /** 提交按钮 */

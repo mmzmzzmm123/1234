@@ -1,6 +1,12 @@
 <template>
   <div class="app-container">
-    <el-form :model="queryParams" ref="queryForm" :inline="true" v-show="showSearch" label-width="68px">
+    <el-form
+      :model="queryParams"
+      ref="queryForm"
+      :inline="true"
+      v-show="showSearch"
+      label-width="68px"
+    >
       <el-form-item label="基地名称" prop="name">
         <el-input
           v-model="queryParams.name"
@@ -20,7 +26,12 @@
         />
       </el-form-item>
       <el-form-item label="基地类型" prop="jdtype">
-        <el-select v-model="queryParams.jdtype" placeholder="请选择基地类型" clearable size="small">
+        <el-select
+          v-model="queryParams.jdtype"
+          placeholder="请选择基地类型"
+          clearable
+          size="small"
+        >
           <el-option
             v-for="dict in jdtypeOptions"
             :key="dict.dictValue"
@@ -30,8 +41,16 @@
         </el-select>
       </el-form-item>
       <el-form-item>
-        <el-button type="cyan" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
-        <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
+        <el-button
+          type="cyan"
+          icon="el-icon-search"
+          size="mini"
+          @click="handleQuery"
+          >搜索</el-button
+        >
+        <el-button icon="el-icon-refresh" size="mini" @click="resetQuery"
+          >重置</el-button
+        >
       </el-form-item>
     </el-form>
 
@@ -43,7 +62,8 @@
           size="mini"
           @click="handleAdd"
           v-hasPermi="['zcrpsgl:zcrjdcj:add']"
-        >新增</el-button>
+          >新增</el-button
+        >
       </el-col>
       <el-col :span="1.5">
         <el-button
@@ -53,7 +73,8 @@
           :disabled="single"
           @click="handleUpdate"
           v-hasPermi="['zcrpsgl:zcrjdcj:edit']"
-        >修改</el-button>
+          >修改</el-button
+        >
       </el-col>
       <el-col :span="1.5">
         <el-button
@@ -63,28 +84,67 @@
           :disabled="multiple"
           @click="handleDelete"
           v-hasPermi="['zcrpsgl:zcrjdcj:remove']"
-        >删除</el-button>
+          >删除</el-button
+        >
       </el-col>
-	  <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
+      <right-toolbar
+        :showSearch.sync="showSearch"
+        @queryTable="getList"
+      ></right-toolbar>
     </el-row>
 
-    <el-table v-loading="loading" :data="zcrjdcjList" @selection-change="handleSelectionChange">
+    <el-table
+      v-loading="loading"
+      :data="zcrjdcjList"
+      @selection-change="handleSelectionChange"
+    >
       <el-table-column type="selection" width="55" align="center" />
       <el-table-column label="基地名称" align="center" prop="name" />
       <el-table-column label="主持人" align="center" prop="zcrid" />
-      <el-table-column label="基地类型" align="center" prop="jdtype" :formatter="jdtypeFormat" />
+      <el-table-column
+        label="基地类型"
+        align="center"
+        prop="jdtype"
+        :formatter="jdtypeFormat"
+      />
       <el-table-column label="招生名额" align="center" prop="zsme" />
-      <el-table-column label="报名开始时间" align="center" prop="starttime" width="180">
+      <el-table-column
+        label="学段"
+        align="center"
+        prop="xd"
+        :formatter="xdFormat"
+      />
+      <el-table-column
+        label="学科"
+        align="center"
+        prop="xk"
+        :formatter="xkFormat"
+      />
+      <el-table-column
+        label="报名开始时间"
+        align="center"
+        prop="starttime"
+        width="180"
+      >
         <template slot-scope="scope">
-          <span>{{ parseTime(scope.row.starttime, '{y}-{m}-{d}') }}</span>
+          <span>{{ parseTime(scope.row.starttime, "{y}-{m}-{d}") }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="报名结束时间" align="center" prop="endtime" width="180">
+      <el-table-column
+        label="报名结束时间"
+        align="center"
+        prop="endtime"
+        width="180"
+      >
         <template slot-scope="scope">
-          <span>{{ parseTime(scope.row.endtime, '{y}-{m}-{d}') }}</span>
+          <span>{{ parseTime(scope.row.endtime, "{y}-{m}-{d}") }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
+      <el-table-column
+        label="操作"
+        align="center"
+        class-name="small-padding fixed-width"
+      >
         <template slot-scope="scope">
           <el-button
             size="mini"
@@ -92,20 +152,22 @@
             icon="el-icon-edit"
             @click="handleUpdate(scope.row)"
             v-hasPermi="['zcrpsgl:zcrjdcj:edit']"
-          >修改</el-button>
+            >修改</el-button
+          >
           <el-button
             size="mini"
             type="text"
             icon="el-icon-delete"
             @click="handleDelete(scope.row)"
             v-hasPermi="['zcrpsgl:zcrjdcj:remove']"
-          >删除</el-button>
+            >删除</el-button
+          >
         </template>
       </el-table-column>
     </el-table>
-    
+
     <pagination
-      v-show="total>0"
+      v-show="total > 0"
       :total="total"
       :page.sync="queryParams.pageNum"
       :limit.sync="queryParams.pageSize"
@@ -131,23 +193,57 @@
             ></el-option>
           </el-select>
         </el-form-item>
+        <el-form-item label="学段" prop="xd">
+          <el-select
+            v-model="form.xd"
+            placeholder="请选择学段"
+          >
+            <el-option
+              v-for="dict in xdOptions"
+              :key="dict.dictValue"
+              :label="dict.dictLabel"
+              :value="dict.dictValue"
+            ></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="学科" prop="xk">
+          <el-select
+            v-model="form.xk"
+            placeholder="请选择学科"
+          >
+            <el-option
+              v-for="dict in xkOptions"
+              :key="dict.dictValue"
+              :label="dict.dictLabel"
+              :value="dict.dictValue"
+            ></el-option>
+          </el-select>
+        </el-form-item>
         <el-form-item label="招生名额" prop="zsme">
           <el-input v-model="form.zsme" placeholder="请输入招生名额" />
         </el-form-item>
         <el-form-item label="报名开始时间" prop="starttime">
-          <el-date-picker clearable size="small" style="width: 200px"
+          <el-date-picker
+            clearable
+            size="small"
+            style="width: 200px"
             v-model="form.starttime"
             type="date"
             value-format="yyyy-MM-dd"
-            placeholder="选择报名开始时间">
+            placeholder="选择报名开始时间"
+          >
           </el-date-picker>
         </el-form-item>
         <el-form-item label="报名结束时间" prop="endtime">
-          <el-date-picker clearable size="small" style="width: 200px"
+          <el-date-picker
+            clearable
+            size="small"
+            style="width: 200px"
             v-model="form.endtime"
             type="date"
             value-format="yyyy-MM-dd"
-            placeholder="选择报名结束时间">
+            placeholder="选择报名结束时间"
+          >
           </el-date-picker>
         </el-form-item>
       </el-form>
@@ -160,7 +256,14 @@
 </template>
 
 <script>
-import { listZcrjdcj, getZcrjdcj, delZcrjdcj, addZcrjdcj, updateZcrjdcj, exportZcrjdcj } from "@/api/zcrpsgl/zcrjdcj";
+import {
+  listZcrjdcj,
+  getZcrjdcj,
+  delZcrjdcj,
+  addZcrjdcj,
+  updateZcrjdcj,
+  exportZcrjdcj,
+} from "@/api/zcrpsgl/zcrjdcj";
 
 export default {
   name: "Zcrjdcj",
@@ -186,6 +289,10 @@ export default {
       open: false,
       // 基地类型字典
       jdtypeOptions: [],
+      // 学段字典
+      xdOptions: [],
+      // 学科字典
+      xkOptions: [],
       // 当前报名状态字典
       statusOptions: [],
       // 查询参数
@@ -200,28 +307,35 @@ export default {
         starttime: null,
         endtime: null,
         createUserid: null,
+        xk: null,
+        xd: null,
       },
       // 表单参数
       form: {},
       // 表单校验
-      rules: {
-      }
+      rules: {},
     };
   },
   created() {
     this.getList();
-    this.getDicts("sys_dm_zcrjdtype").then(response => {
+    this.getDicts("sys_dm_zcrjdtype").then((response) => {
       this.jdtypeOptions = response.data;
     });
-    this.getDicts("sys_dm_xybmzt").then(response => {
+    this.getDicts("sys_dm_xybmzt").then((response) => {
       this.statusOptions = response.data;
+    });
+    this.getDicts("sys_dm_rjxd").then((response) => {
+      this.xdOptions = response.data;
+    });
+    this.getDicts("sys_dm_rjxk").then((response) => {
+      this.xkOptions = response.data;
     });
   },
   methods: {
     /** 查询主持人基地列表 */
     getList() {
       this.loading = true;
-      listZcrjdcj(this.queryParams).then(response => {
+      listZcrjdcj(this.queryParams).then((response) => {
         this.zcrjdcjList = response.rows;
         this.total = response.total;
         this.loading = false;
@@ -234,6 +348,14 @@ export default {
     // 当前报名状态字典翻译
     statusFormat(row, column) {
       return this.selectDictLabel(this.statusOptions, row.status);
+    },
+    // 学段字典翻译
+    xdFormat(row, column) {
+      return this.selectDictLabel(this.xdOptions, row.xd);
+    },
+    // 学科字典翻译
+    xkFormat(row, column) {
+      return this.selectDictLabel(this.xkOptions, row.xk);
     },
     // 取消按钮
     cancel() {
@@ -252,7 +374,9 @@ export default {
         starttime: null,
         endtime: null,
         createUserid: null,
-        createTime: null
+        createTime: null,
+        xk: null,
+        xd: null,
       };
       this.resetForm("form");
     },
@@ -268,9 +392,9 @@ export default {
     },
     // 多选框选中数据
     handleSelectionChange(selection) {
-      this.ids = selection.map(item => item.id)
-      this.single = selection.length!==1
-      this.multiple = !selection.length
+      this.ids = selection.map((item) => item.id);
+      this.single = selection.length !== 1;
+      this.multiple = !selection.length;
     },
     /** 新增按钮操作 */
     handleAdd() {
@@ -281,8 +405,8 @@ export default {
     /** 修改按钮操作 */
     handleUpdate(row) {
       this.reset();
-      const id = row.id || this.ids
-      getZcrjdcj(id).then(response => {
+      const id = row.id || this.ids;
+      getZcrjdcj(id).then((response) => {
         this.form = response.data;
         this.open = true;
         this.title = "修改主持人基地";
@@ -290,10 +414,10 @@ export default {
     },
     /** 提交按钮 */
     submitForm() {
-      this.$refs["form"].validate(valid => {
+      this.$refs["form"].validate((valid) => {
         if (valid) {
           if (this.form.id != null) {
-            updateZcrjdcj(this.form).then(response => {
+            updateZcrjdcj(this.form).then((response) => {
               if (response.code === 200) {
                 this.msgSuccess("修改成功");
                 this.open = false;
@@ -301,7 +425,7 @@ export default {
               }
             });
           } else {
-            addZcrjdcj(this.form).then(response => {
+            addZcrjdcj(this.form).then((response) => {
               if (response.code === 200) {
                 this.msgSuccess("新增成功");
                 this.open = false;
@@ -315,30 +439,40 @@ export default {
     /** 删除按钮操作 */
     handleDelete(row) {
       const ids = row.id || this.ids;
-      this.$confirm('是否确认删除主持人基地编号为"' + ids + '"的数据项?', "警告", {
+      this.$confirm(
+        '是否确认删除主持人基地编号为"' + ids + '"的数据项?',
+        "警告",
+        {
           confirmButtonText: "确定",
           cancelButtonText: "取消",
-          type: "warning"
-        }).then(function() {
+          type: "warning",
+        }
+      )
+        .then(function () {
           return delZcrjdcj(ids);
-        }).then(() => {
+        })
+        .then(() => {
           this.getList();
           this.msgSuccess("删除成功");
-        }).catch(function() {});
+        })
+        .catch(function () {});
     },
     /** 导出按钮操作 */
     handleExport() {
       const queryParams = this.queryParams;
-      this.$confirm('是否确认导出所有主持人基地数据项?', "警告", {
-          confirmButtonText: "确定",
-          cancelButtonText: "取消",
-          type: "warning"
-        }).then(function() {
+      this.$confirm("是否确认导出所有主持人基地数据项?", "警告", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning",
+      })
+        .then(function () {
           return exportZcrjdcj(queryParams);
-        }).then(response => {
+        })
+        .then((response) => {
           this.download(response.msg);
-        }).catch(function() {});
-    }
-  }
+        })
+        .catch(function () {});
+    },
+  },
 };
 </script>

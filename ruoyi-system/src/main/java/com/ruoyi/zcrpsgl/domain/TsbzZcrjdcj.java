@@ -24,6 +24,9 @@ public class TsbzZcrjdcj extends BaseEntity
     @Excel(name = "基地名称")
     private String name;
 
+    private String xk;
+    private String xd;
+
     /** 主持人id */
     @Excel(name = "主持人id")
     private Long zcrid;
@@ -141,6 +144,8 @@ public class TsbzZcrjdcj extends BaseEntity
         return new ToStringBuilder(this,ToStringStyle.MULTI_LINE_STYLE)
             .append("id", getId())
             .append("name", getName())
+            .append("xk", getXk())
+            .append("xd", getXd())
             .append("zcrid", getZcrid())
             .append("jdtype", getJdtype())
             .append("status", getStatus())
@@ -150,5 +155,21 @@ public class TsbzZcrjdcj extends BaseEntity
             .append("createUserid", getCreateUserid())
             .append("createTime", getCreateTime())
             .toString();
+    }
+
+    public String getXk() {
+        return xk;
+    }
+
+    public void setXk(String xk) {
+        this.xk = xk;
+    }
+
+    public String getXd() {
+        return xd;
+    }
+
+    public void setXd(String xd) {
+        this.xd = xd;
     }
 }

@@ -7,6 +7,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <resultMap type="TsbzZcrjdcj" id="TsbzZcrjdcjResult">
         <result property="id"    column="id"    />
         <result property="name"    column="name"    />
+        <result property="xk"    column="xk"    />
+        <result property="xd"    column="xd"    />
         <result property="zcrid"    column="zcrid"    />
         <result property="jdtype"    column="jdtype"    />
         <result property="status"    column="status"    />
@@ -18,7 +20,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </resultMap>
 
     <sql id="selectTsbzZcrjdcjVo">
-        select id, name, zcrid, jdtype, status, zsme, starttime, endtime, create_userid, create_time from tsbz_zcrjdcj
+        select id, name, zcrid, jdtype, xk, xd, status, zsme, starttime, endtime, create_userid, create_time from tsbz_zcrjdcj
     </sql>
 
     <select id="selectTsbzZcrjdcjList" parameterType="TsbzZcrjdcj" resultMap="TsbzZcrjdcjResult">
@@ -32,6 +34,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="starttime != null "> and starttime = #{starttime}</if>
             <if test="endtime != null "> and endtime = #{endtime}</if>
             <if test="createUserid != null "> and create_userid = #{createUserid}</if>
+            <if test="xk != null "> and xk = #{xk}</if>
+            <if test="xd != null "> and xd = #{xd}</if>
         </where>
     </select>
     
@@ -52,6 +56,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="endtime != null">endtime,</if>
             <if test="createUserid != null">create_userid,</if>
             <if test="createTime != null">create_time,</if>
+            <if test="xk != null">xk,</if>
+            <if test="xd != null">xd,</if>
          </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="name != null">#{name},</if>
@@ -63,6 +69,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="endtime != null">#{endtime},</if>
             <if test="createUserid != null">#{createUserid},</if>
             <if test="createTime != null">#{createTime},</if>
+            <if test="xk != null">#{xk},</if>
+            <if test="xd != null">#{xd},</if>
          </trim>
     </insert>
 
@@ -78,6 +86,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="endtime != null">endtime = #{endtime},</if>
             <if test="createUserid != null">create_userid = #{createUserid},</if>
             <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="xk != null">xk = #{xk},</if>
+            <if test="xd != null">xd = #{xd},</if>
         </trim>
         where id = #{id}
     </update>
