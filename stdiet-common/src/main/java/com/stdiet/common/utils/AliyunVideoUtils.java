@@ -3,7 +3,6 @@ package com.stdiet.common.utils;
 import com.aliyun.vod20170321.models.*;
 import com.aliyun.teaopenapi.models.*;
 import com.stdiet.common.config.AliyunOSSConfig;
-import org.apache.commons.collections4.Get;
 
 public class AliyunVideoUtils {
 
@@ -16,6 +15,9 @@ public class AliyunVideoUtils {
     public static final String default_output_type = "oss";
 
     public static final String default_formats = "mp4";
+
+    //播放地址日期，30天
+    public static final Long default_authTimeout = 2592000L;
 
     /**
      * 初始化视频点播Client
@@ -70,6 +72,7 @@ public class AliyunVideoUtils {
         com.aliyun.vod20170321.Client client = AliyunVideoUtils.createClient();
         GetPlayInfoRequest getPlayInfoRequest = new GetPlayInfoRequest()
                 .setVideoId(videoId)
+                .setAuthTimeout(default_authTimeout)
                 .setStreamType(default_stream_type)
                 .setOutputType(default_output_type)
                 .setFormats(default_formats);

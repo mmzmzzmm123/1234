@@ -52,4 +52,7 @@ public class SysNutritionalVideo extends BaseEntity
 
     /** 删除标识，0未删除 1已删除，默认0 */
     private Integer delFlag;
+
+    //文件名称
+    private String fileName;
 }
