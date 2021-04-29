@@ -25,7 +25,7 @@ public class NutritionalVideoResponse implements Serializable {
     public String videoId;
 
     //封面URL
-    public String coverURL;
+    public String coverUrl;
 
     //视频描述
     public String description;
