@@ -1,6 +1,13 @@
 package com.stdiet.custom.service.impl;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
+import com.aliyun.vod20170321.models.SearchMediaResponse;
+import com.aliyun.vod20170321.models.SearchMediaResponseBody;
+import com.stdiet.common.utils.AliyunVideoUtils;
 import com.stdiet.common.utils.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -102,4 +109,60 @@ public class SysNutritionalVideoServiceImpl implements ISysNutritionalVideoServi
     public SysNutritionalVideo selectSysNutritionalVideByVideoId(String videoId){
         return sysNutritionalVideoMapper.selectSysNutritionalVideByVideoId(videoId);
     }
+
+    /**
+     * 阿里云视频查询检索
+     * @return
+     */
+    public Map<String,Object> searchVideo(String key, Integer showFlag, Integer pageNo, Integer pageSize, String scrollToken){
+        pageSize = pageSize.intValue() > 100 ? 10 : pageSize;
+        long total = 0;
+        String newScrollToken = null;
+        List<SysNutritionalVideo> nutritionalVideoList = new ArrayList<>();
+        try {
+            SearchMediaResponse response = AliyunVideoUtils.searchVideo(key, getStatusString(showFlag), pageNo, pageSize, scrollToken);
+            if(response != null){
+                SearchMediaResponseBody body  = response.body;
+                total = body.total;
+                newScrollToken = body.scrollToken;
+                List<SearchMediaResponseBody.SearchMediaResponseBodyMediaList> mediaList = body.mediaList;
+                if(mediaList != null && mediaList.size() > 0){
+                    for (SearchMediaResponseBody.SearchMediaResponseBodyMediaList media : mediaList) {
+                        SysNutritionalVideo sysNutritionalVideo = new SysNutritionalVideo();
+                        sysNutritionalVideo.setTitle(media.video.title);
+                        sysNutritionalVideo.setCoverUrl(media.video.coverURL);
+                        sysNutritionalVideo.setShowFlag(getStatus(media.video.getStatus()));
+                        sysNutritionalVideo.setTags(media.video.tags);
+                        String createTime = media.video.creationTime;
+                        System.out.println(createTime);
+                        sysNutritionalVideo.setDescription(media.video.description);
+                        sysNutritionalVideo.setVideoId(media.video.videoId);
+                        nutritionalVideoList.add(sysNutritionalVideo);
+                    }
+                }
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        Map<String, Object> result = new HashMap<>();
+        result.put("total", total);
+        result.put("newScrollToken", newScrollToken);
+        result.put("nutritionalVideoList", nutritionalVideoList);
+        return result;
+    }
+
+    private String getStatusString(Integer status){
+        if(status == null){
+            return "Normal,Blocked";
+        }
+        return status.intValue() == 1 ? "Normal" : "Blocked";
+    }
+
+    private Integer getStatus(String status){
+        if(status == null){
+            return 1;
+        }
+        return "Normal".equals(status) ? 1 :  0;
+    }
+
 }

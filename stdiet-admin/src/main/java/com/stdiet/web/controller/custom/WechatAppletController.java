@@ -368,27 +368,9 @@ public class WechatAppletController extends BaseController {
     @GetMapping(value = "/getVideoList")
     public AjaxResult getVideoList(SysNutritionalVideo sysNutritionalVideo, @RequestParam(value = "pageNum", defaultValue = "1") int pageNum,  @RequestParam(value = "pageSize", defaultValue = "5")int pageSize) {
         AjaxResult result = AjaxResult.success();
-        int total = 0;
-        List<NutritionalVideoResponse> nutritionalVideoList = new ArrayList<>();
-        try{
-            GetVideoListResponseBody videoListResponseBody = AliyunVideoUtils.getVideoListByPage(null, "Normal", pageNum, pageSize);
-            if(videoListResponseBody != null){
-                total = videoListResponseBody.total;
-                for (GetVideoListResponseBody.GetVideoListResponseBodyVideoListVideo video : videoListResponseBody.videoList.video) {
-                    NutritionalVideoResponse nutritionalVideoResponse = new NutritionalVideoResponse();
-                    nutritionalVideoResponse.setCoverUrl(video.getCoverURL());
-                    nutritionalVideoResponse.setTitle(video.getTitle());
-                    nutritionalVideoResponse.setVideoId(video.getVideoId());
-                    nutritionalVideoResponse.setDescription(video.getDescription());
-                    nutritionalVideoResponse.setTags(video.getTags());
-                    nutritionalVideoList.add(nutritionalVideoResponse);
-                }
-            }
-        }catch (Exception e){
-            e.printStackTrace();
-        }
-        result.put("total",total);
-        result.put("rows", nutritionalVideoList);
+        Map<String, Object> map = sysNutritionalVideoService.searchVideo(sysNutritionalVideo.getKey(), 1, pageNum, pageSize, null);
+        result.put("total", map.get("total"));
+        result.put("rows", map.get("nutritionalVideoList"));
         return result;
     }
 
