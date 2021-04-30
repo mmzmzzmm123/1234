@@ -1,6 +1,25 @@
 <template>
   <div class="app-container">
     <!--<el-form :model="queryParams" ref="queryForm" :inline="true" v-show="showSearch" label-width="68px">
+      <el-form-item label="关键词" prop="title">
+        <el-input
+          v-model="queryParams.key"
+          placeholder="请输入关键词"
+          clearable
+          size="small"
+        />
+      </el-form-item>
+      <el-form-item label="状态" prop="showFlag">
+        <el-select
+          v-model="queryParams.showFlag"
+          placeholder="请选示状态"
+          clearable
+          size="small"
+        >
+          <el-option key="0" label="屏蔽" value="0"/>
+          <el-option key="1" label="正常" value="1"/>
+        </el-select>
+      </el-form-item>
       <el-form-item>
         <el-button type="cyan" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
         <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
@@ -166,6 +185,8 @@
         queryParams: {
           pageNum: 1,
           pageSize: 5,
+          key: null,
+          showFlag: null
         },
         // 表单参数
         form: {},
