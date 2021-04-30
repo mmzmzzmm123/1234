@@ -2,6 +2,7 @@ package com.stdiet.web.controller.custom;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import com.aliyun.vod20170321.models.CreateUploadVideoResponse;
 import com.aliyun.vod20170321.models.GetVideoListResponseBody;
@@ -37,28 +38,11 @@ public class SysNutritionalVideoController extends BaseController
     public AjaxResult list(SysNutritionalVideo sysNutritionalVideo, @RequestParam(value = "pageNum", defaultValue = "1") int pageNum, @RequestParam(value = "pageSize", defaultValue = "5")int pageSize)
     {
         AjaxResult result = AjaxResult.success();
-        int total = 0;
-        List<SysNutritionalVideo> nutritionalVideoList = new ArrayList<>();
-        try{
-            GetVideoListResponseBody videoListResponseBody = AliyunVideoUtils.getVideoListByPage(null, "Normal,Blocked", pageNum, pageSize);
-            if(videoListResponseBody != null){
-                total = videoListResponseBody.total;
-                for (GetVideoListResponseBody.GetVideoListResponseBodyVideoListVideo video : videoListResponseBody.videoList.video) {
-                    SysNutritionalVideo nutritionalVideo = new SysNutritionalVideo();
-                    nutritionalVideo.setCoverUrl(video.getCoverURL());
-                    nutritionalVideo.setTitle(video.getTitle());
-                    nutritionalVideo.setVideoId(video.getVideoId());
-                    nutritionalVideo.setDescription(video.getDescription());
-                    nutritionalVideo.setTags(video.getTags());
-                    nutritionalVideoList.add(nutritionalVideo);
-                    nutritionalVideo.setShowFlag("Normal".equals(video.getStatus()) ? 1 : 0);
-                }
-            }
-        }catch (Exception e){
-            e.printStackTrace();
+        Map<String, Object> map = sysNutritionalVideoService.searchVideo(sysNutritionalVideo.getKey(), sysNutritionalVideo.getShowFlag(), pageNum, pageSize, null);
+        if(map != null){
+            result.put("total", map.get("total"));
+            result.put("rows", map.get("nutritionalVideoList"));
         }
-        result.put("total",total);
-        result.put("rows", nutritionalVideoList);
         return result;
     }
 

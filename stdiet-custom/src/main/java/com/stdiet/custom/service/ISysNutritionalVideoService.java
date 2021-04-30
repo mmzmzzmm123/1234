@@ -1,6 +1,8 @@
 package com.stdiet.custom.service;
 
 import java.util.List;
+import java.util.Map;
+
 import com.stdiet.custom.domain.SysNutritionalVideo;
 
 /**
@@ -65,4 +67,10 @@ public interface ISysNutritionalVideoService
      * @return
      */
     public SysNutritionalVideo selectSysNutritionalVideByVideoId(String videoId);
+
+    /**
+     * 阿里云视频查询检索
+     * @return
+     */
+    public Map<String,Object> searchVideo(String key, Integer status, Integer pageNo, Integer pageSize, String scrollToken);
 }

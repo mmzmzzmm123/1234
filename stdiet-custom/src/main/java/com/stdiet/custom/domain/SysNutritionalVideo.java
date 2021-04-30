@@ -55,4 +55,6 @@ public class SysNutritionalVideo extends BaseEntity
 
     //文件名称
     private String fileName;
+
+    private String key;
 }
