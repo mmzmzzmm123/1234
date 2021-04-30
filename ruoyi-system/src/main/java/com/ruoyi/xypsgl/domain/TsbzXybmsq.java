@@ -105,7 +105,11 @@ public class TsbzXybmsq extends BaseEntity
     // 已经报名人数
     private Integer countYbm;
 
+    // 学员结果确认状态
     private String xypsjgqrstatus;
+
+    // 部门id
+    private String deptid;
 
 
 
@@ -335,6 +339,7 @@ public class TsbzXybmsq extends BaseEntity
             .append("countYbm", getCountYbm())
             .append("xyxbstatus", getXyxbstatus())
             .append("xypsjgqrstatus", getXypsjgqrstatus())
+            .append("deptid", getDeptid())
             .toString();
     }
 
@@ -360,5 +365,13 @@ public class TsbzXybmsq extends BaseEntity
 
     public void setXypsjgqrstatus(String xypsjgqrstatus) {
         this.xypsjgqrstatus = xypsjgqrstatus;
+    }
+
+    public String getDeptid() {
+        return deptid;
+    }
+
+    public void setDeptid(String deptid) {
+        this.deptid = deptid;
     }
 }

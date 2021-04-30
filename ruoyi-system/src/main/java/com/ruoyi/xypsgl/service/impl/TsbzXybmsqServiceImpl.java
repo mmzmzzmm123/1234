@@ -44,6 +44,13 @@ public class TsbzXybmsqServiceImpl implements ITsbzXybmsqService
         return tsbzXybmsqMapper.selectTsbzXybmsqList(tsbzXybmsq);
     }
 
+    // 查询学员学校审核列表
+    @Override
+    public List<TsbzXybmsq> selectTsbzXybmsqListXxsh(TsbzXybmsq tsbzXybmsq) {
+
+        return tsbzXybmsqMapper.selectTsbzXybmsqList(tsbzXybmsq);
+    }
+
     // 查询已报名人数
     @Override
     public TsbzXybmsq selectCountYibaoming(TsbzXybmsq tsbzXybmsq) {

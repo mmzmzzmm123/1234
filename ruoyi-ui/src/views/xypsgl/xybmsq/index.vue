@@ -106,7 +106,7 @@
                 icon="el-icon-edit"
                 @click="handleAdd(scope.row)"
                 v-show="isShow_bm(scope.row)"
-                v-hasPermi="['zcrpsgl:xybmsq:edit']"
+                v-hasPermi="['xypsgl:xybmsq:add']"
                 >报名</el-button
               >
             </template>
@@ -463,7 +463,7 @@ export default {
       var actions = [];
       var datas = this.zcrOptions;
       Object.keys(datas).map((key) => {
-        if (datas[key].id == "" + row.zcrid) {
+        if (datas[key].jsid == "" + row.zcrid) {
           actions.push(datas[key].name);
           return false;
         }

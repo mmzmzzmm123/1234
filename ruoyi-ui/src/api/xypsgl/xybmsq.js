@@ -9,6 +9,15 @@ export function listXybmsq(query) {
     })
 }
 
+// 查询学员学校审核列表
+export function listXybmsqXxsh(query) {
+    return request({
+        url: '/xypsgl/xybmsq/listXxsh',
+        method: 'get',
+        params: query
+    })
+}
+
 // 查询学员报名申请详细
 export function getXybmsq(id) {
     return request({

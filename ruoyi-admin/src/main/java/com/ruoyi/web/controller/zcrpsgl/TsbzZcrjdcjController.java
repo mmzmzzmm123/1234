@@ -39,7 +39,7 @@ public class TsbzZcrjdcjController extends BaseController
     /**
      * 查询主持人基地列表
      */
-    @PreAuthorize("@ss.hasPermi('zcrpsgl:zcrjdcj:list')")
+    @PreAuthorize("@ss.hasPermi('zcrpsgl:zcrjdcj:list')" + "||@ss.hasPermi('xypsgl:xybmsq:list')")
     @GetMapping("/list")
     public TableDataInfo list(TsbzZcrjdcj tsbzZcrjdcj)
     {

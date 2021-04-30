@@ -286,6 +286,7 @@ import {
   addXybmsq,
   updateXybmsq,
   exportXybmsq,
+  listXybmsqXxsh,
 } from "@/api/xypsgl/xybmsq";
 import {
   listJsjbxx,
@@ -414,8 +415,9 @@ export default {
     /** 查询学员报名申请列表 */
     getList() {
       this.loading = true;
-      listXybmsq(this.queryParams).then((response) => {
+      listXybmsqXxsh(this.queryParams).then((response) => {
         this.xybmsqList = response.rows;
+        console.log(response.rows);
         this.total = response.total;
         this.getJdList();
         this.loading = false;

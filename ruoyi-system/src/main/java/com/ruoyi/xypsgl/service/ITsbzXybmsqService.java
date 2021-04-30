@@ -27,6 +27,9 @@ public interface ITsbzXybmsqService
      */
     public List<TsbzXybmsq> selectTsbzXybmsqList(TsbzXybmsq tsbzXybmsq);
 
+    // 查询学员学校审核列表
+    public List<TsbzXybmsq> selectTsbzXybmsqListXxsh(TsbzXybmsq tsbzXybmsq);
+
     // 查询已经报名人数
     public TsbzXybmsq selectCountYibaoming(TsbzXybmsq tsbzXybmsq);
 

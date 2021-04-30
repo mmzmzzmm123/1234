@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.List;
 
 import com.ruoyi.common.utils.SecurityUtils;
+import com.ruoyi.web.controller.common.SchoolCommonController;
 import com.ruoyi.web.controller.zcrpsgl.TsbzZcrjdcjController;
 import com.ruoyi.zcrpsgl.service.ITsbzZcrjdcjService;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -39,6 +40,8 @@ public class TsbzXybmsqController extends BaseController
     private ITsbzXybmsqService tsbzXybmsqService;
     @Autowired
     private ITsbzZcrjdcjService tsbzZcrjdcjService;
+    @Autowired
+    private SchoolCommonController schoolCommonController;
 
     /**
      * 查询学员报名申请列表
@@ -48,8 +51,29 @@ public class TsbzXybmsqController extends BaseController
     public TableDataInfo list(TsbzXybmsq tsbzXybmsq)
     {
         startPage();
+        tsbzXybmsq.setJxbh(SecurityUtils.getLoginUser().getUser().getUserName());
+        System.out.print(SecurityUtils.getLoginUser().getUser().getUserName()+"AAAAAAAAAAAAAAAAAA");
         List<TsbzXybmsq> list = tsbzXybmsqService.selectTsbzXybmsqList(tsbzXybmsq);
         return getDataTable(list);
+    }
+
+    /**
+     * 查询学校审核列表
+     */
+    @PreAuthorize("@ss.hasPermi('xypsgl:xybmsq:listsXxsh')")
+    @GetMapping("/listXxsh")
+    public TableDataInfo listXxsh(TsbzXybmsq tsbzXybmsq)
+    {
+
+        //首先判断是否为学校用户
+        String xxId = schoolCommonController.deptIdToXxId();
+        if (!schoolCommonController.isStringEmpty(xxId)) {
+            tsbzXybmsq.setDeptid(xxId);
+        }
+
+        startPage();
+        List<TsbzXybmsq> listXxsh = tsbzXybmsqService.selectTsbzXybmsqListXxsh(tsbzXybmsq);
+        return getDataTable(listXxsh);
     }
 
     /**
@@ -101,6 +125,7 @@ public class TsbzXybmsqController extends BaseController
             if (countYbm < countZsme) {
                 tsbzXybmsq.setCreateUser(SecurityUtils.getLoginUser().getUser().getUserId());
                 tsbzXybmsq.setCreateTime(new Date());
+                tsbzXybmsq.setDeptid(SecurityUtils.getLoginUser().getUser().getDeptId().toString());
                 tsbzXybmsqService.insertTsbzXybmsq(tsbzXybmsq);
                 return ajax;
             } else {
