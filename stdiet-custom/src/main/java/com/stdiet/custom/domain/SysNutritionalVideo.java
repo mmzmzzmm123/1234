@@ -22,6 +22,8 @@ public class SysNutritionalVideo extends BaseEntity
     @Excel(name = "视频分类ID")
     private Long cateId;
 
+    private String cateName;
+
     /** 阿里云视频ID */
     @Excel(name = "阿里云视频ID")
     private String videoId;
@@ -49,6 +51,16 @@ public class SysNutritionalVideo extends BaseEntity
     /** 是否显示，0不显示 1显示，默认0 */
     @Excel(name = "是否显示，0不显示 1显示，默认0")
     private Integer showFlag;
+
+    /** 优先级，默认0 */
+    @Excel(name = "优先级，默认0")
+    private Long priorityLevel;
+
+    /** 视频付费等级，0无需付费 1客户可看 2付费可看 */
+    @Excel(name = "视频付费等级，0无需付费 1客户可看 2付费可看")
+    private Long payLevel;
+
+    private String payLevelName;
 
     /** 删除标识，0未删除 1已删除，默认0 */
     private Integer delFlag;

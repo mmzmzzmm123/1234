@@ -9,6 +9,7 @@ import com.aliyun.vod20170321.models.SearchMediaResponse;
 import com.aliyun.vod20170321.models.SearchMediaResponseBody;
 import com.stdiet.common.utils.AliyunVideoUtils;
 import com.stdiet.common.utils.DateUtils;
+import com.stdiet.common.utils.oss.AliyunOSSUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.stdiet.custom.mapper.SysNutritionalVideoMapper;
@@ -46,9 +47,24 @@ public class SysNutritionalVideoServiceImpl implements ISysNutritionalVideoServi
      * @return 营养视频
      */
     @Override
-    public List<SysNutritionalVideo> selectSysNutritionalVideoList(SysNutritionalVideo sysNutritionalVideo)
+    public List<SysNutritionalVideo> selectSysNutritionalVideoList(SysNutritionalVideo sysNutritionalVideo, boolean flag)
     {
-        return sysNutritionalVideoMapper.selectSysNutritionalVideoList(sysNutritionalVideo);
+        List<SysNutritionalVideo> list = sysNutritionalVideoMapper.selectSysNutritionalVideoList(sysNutritionalVideo);
+        if(flag && list != null && list.size() > 0){
+            List<String> fileUrl = new ArrayList<>();
+            for (SysNutritionalVideo video : list) {
+                fileUrl.add(video.getCoverUrl());
+            }
+            List<String> downUrlList = AliyunOSSUtils.generatePresignedUrl(fileUrl);
+            if(downUrlList != null && downUrlList.size() > 0){
+                int index = 0;
+                for (String downUrl : downUrlList) {
+                    list.get(index).setCoverUrl(downUrl);
+                    index++;
+                }
+            }
+        }
+        return list;
     }
 
     /**
@@ -133,8 +149,7 @@ public class SysNutritionalVideoServiceImpl implements ISysNutritionalVideoServi
                         sysNutritionalVideo.setCoverUrl(media.video.coverURL);
                         sysNutritionalVideo.setShowFlag(getStatus(media.video.getStatus()));
                         sysNutritionalVideo.setTags(media.video.tags);
-                        String createTime = media.video.creationTime;
-                        System.out.println(createTime);
+                        //String createTime = media.video.creationTime;
                         sysNutritionalVideo.setDescription(media.video.description);
                         sysNutritionalVideo.setVideoId(media.video.videoId);
                         nutritionalVideoList.add(sysNutritionalVideo);

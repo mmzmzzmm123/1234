@@ -14,22 +14,39 @@
         <result property="videoSize"    column="video_size"    />
         <result property="tags"    column="tags"    />
         <result property="showFlag"    column="show_flag"    />
+        <result property="priorityLevel"    column="priority_level"    />
+        <result property="payLevel"    column="pay_level"    />
         <result property="createTime"    column="create_time"    />
         <result property="createBy"    column="create_by"    />
         <result property="updateTime"    column="update_time"    />
         <result property="updateBy"    column="update_by"    />
         <result property="delFlag"    column="del_flag"    />
+
+        <result property="payLevelName" column="pay_level_name"></result>
+        <result property="cateName" column="cate_name"></result>
     </resultMap>
 
     <sql id="selectSysNutritionalVideoVo">
-        select id, cate_id, video_id, cover_url, title, description, video_size, tags, show_flag, create_time, create_by, update_time, update_by, del_flag from sys_nutritional_video
+        select id, cate_id, video_id, cover_url, title, description, priority_level,pay_level,video_size, tags, show_flag, create_time, create_by, update_time, update_by, del_flag from sys_nutritional_video
     </sql>
 
     <select id="selectSysNutritionalVideoList" parameterType="SysNutritionalVideo" resultMap="SysNutritionalVideoResult">
-        <include refid="selectSysNutritionalVideoVo"/> where del_flag = 0
+        select snv.id, snv.cate_id, snv.video_id, snv.cover_url, snv.title, snv.description, snv.priority_level,snv.pay_level,snv.video_size, snv.tags, snv.show_flag, snv.create_time,
+        pay.dict_label as pay_level_name, svc.cate_name
+        from sys_nutritional_video snv
+        left join (SELECT dict_label, dict_value FROM sys_dict_data WHERE dict_type = 'video_pay_level') AS pay ON pay.dict_value = snv.pay_level
+        left join sys_video_classify svc on svc.id = snv.cate_id and svc.del_flag = 0
+        where snv.del_flag = 0
         <if test="showFlag != null">
-            and show_flag = #{showFlag}
+            and snv.show_flag = #{showFlag}
         </if>
+        <if test="cateId != null">
+            and snv.cate_id = #{cateId}
+        </if>
+        <if test="key != null and key != ''">
+            and (snv.title like concat('%',#{key},'%') or snv.description like concat('%',#{key},'%'))
+        </if>
+        order by snv.priority_level DESC,snv.create_time DESC
     </select>
 
     <select id="selectSysNutritionalVideoById" parameterType="Long" resultMap="SysNutritionalVideoResult">
@@ -48,8 +65,10 @@
             <if test="videoSize != null">video_size,</if>
             <if test="tags != null">tags,</if>
             <if test="showFlag != null">show_flag,</if>
+            <if test="priorityLevel != null">priority_level,</if>
             <if test="createTime != null">create_time,</if>
             <if test="createBy != null">create_by,</if>
+            <if test="payLevel != null">pay_level,</if>
             <if test="updateTime != null">update_time,</if>
             <if test="updateBy != null">update_by,</if>
             <if test="delFlag != null">del_flag,</if>
@@ -63,8 +82,10 @@
             <if test="videoSize != null">#{videoSize},</if>
             <if test="tags != null">#{tags},</if>
             <if test="showFlag != null">#{showFlag},</if>
+            <if test="priorityLevel != null">#{priorityLevel},</if>
             <if test="createTime != null">#{createTime},</if>
             <if test="createBy != null">#{createBy},</if>
+            <if test="payLevel != null">#{payLevel},</if>
             <if test="updateTime != null">#{updateTime},</if>
             <if test="updateBy != null">#{updateBy},</if>
             <if test="delFlag != null">#{delFlag},</if>
@@ -82,8 +103,10 @@
             <if test="videoSize != null">video_size = #{videoSize},</if>
             <if test="tags != null">tags = #{tags},</if>
             <if test="showFlag != null">show_flag = #{showFlag},</if>
+            <if test="priorityLevel != null">priority_level = #{priorityLevel},</if>
             <if test="createTime != null">create_time = #{createTime},</if>
             <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="payLevel != null">pay_level = #{payLevel},</if>
             <if test="updateTime != null">update_time = #{updateTime},</if>
             <if test="updateBy != null">update_by = #{updateBy},</if>
             <if test="delFlag != null">del_flag = #{delFlag},</if>

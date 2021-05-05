@@ -27,7 +27,7 @@ public interface ISysNutritionalVideoService
      * @param sysNutritionalVideo 营养视频
      * @return 营养视频集合
      */
-    public List<SysNutritionalVideo> selectSysNutritionalVideoList(SysNutritionalVideo sysNutritionalVideo);
+    public List<SysNutritionalVideo> selectSysNutritionalVideoList(SysNutritionalVideo sysNutritionalVideo, boolean flag);
 
     /**
      * 新增营养视频

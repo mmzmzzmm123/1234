@@ -366,12 +366,16 @@ public class WechatAppletController extends BaseController {
      * 获取视频列表
      */
     @GetMapping(value = "/getVideoList")
-    public AjaxResult getVideoList(SysNutritionalVideo sysNutritionalVideo, @RequestParam(value = "pageNum", defaultValue = "1") int pageNum,  @RequestParam(value = "pageSize", defaultValue = "5")int pageSize) {
-        AjaxResult result = AjaxResult.success();
+    public TableDataInfo getVideoList(SysNutritionalVideo sysNutritionalVideo) {
+       /* AjaxResult result = AjaxResult.success();
         Map<String, Object> map = sysNutritionalVideoService.searchVideo(sysNutritionalVideo.getKey(), 1, pageNum, pageSize, null);
         result.put("total", map.get("total"));
         result.put("rows", map.get("nutritionalVideoList"));
-        return result;
+        return result;*/
+        startPage();
+        sysNutritionalVideo.setShowFlag(1);
+        List<SysNutritionalVideo> list = sysNutritionalVideoService.selectSysNutritionalVideoList(sysNutritionalVideo, true);
+        return getDataTable(list);
     }
 
 

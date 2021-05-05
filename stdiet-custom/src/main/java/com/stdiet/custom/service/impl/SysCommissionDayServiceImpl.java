@@ -296,7 +296,7 @@ public class SysCommissionDayServiceImpl implements ISysCommissionDayService {
         //该笔订单当月的成交总额
         sysOrderCommisionDayDetail.setMonthOrderTotalAmount(everyMonthTotalAmountMap.get(yearMonth));
         //该笔订单对应提成比例
-        sysOrderCommisionDayDetail.setCommissionRate(rateMap.get(yearMonth));
+        sysOrderCommisionDayDetail.setCommissionRate(rateMap.get(yearMonth) == null ? rateMap.get("190001") : rateMap.get(yearMonth));
         //计算该笔订单总提成
         sysOrderCommisionDayDetail.setOrderCommission(getMoney(sysOrderCommisionDayDetail.getOrderAmount().doubleValue() * sysOrderCommisionDayDetail.getCommissionRate() / 100D));
         //每年每月提成
@@ -357,6 +357,8 @@ public class SysCommissionDayServiceImpl implements ISysCommissionDayService {
         tmpQueryCom.setPostId(postId);
         List<SysCommision> tmpComList = sysCommisionMapper.selectSysCommisionList(tmpQueryCom);
         Map<String, Float> rateMap = new TreeMap<>(new MyComparator());
+        //取第一个区间为默认提成比例
+        rateMap.put("190001", (tmpComList != null && tmpComList.size() > 0) ? tmpComList.get(0).getRate() : 0.0F);
         for(String yearMonth : amountMap.keySet()){
             BigDecimal orderAmount = amountMap.get(yearMonth);
             rateMap.put(yearMonth, 0F);
