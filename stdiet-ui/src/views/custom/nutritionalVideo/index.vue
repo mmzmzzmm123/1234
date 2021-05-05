@@ -1,6 +1,25 @@
 <template>
   <div class="app-container">
     <!--<el-form :model="queryParams" ref="queryForm" :inline="true" v-show="showSearch" label-width="68px">
+      <el-form-item label="关键词" prop="title">
+        <el-input
+          v-model="queryParams.key"
+          placeholder="请输入关键词"
+          clearable
+          size="small"
+        />
+      </el-form-item>
+      <el-form-item label="状态" prop="showFlag">
+        <el-select
+          v-model="queryParams.showFlag"
+          placeholder="请选示状态"
+          clearable
+          size="small"
+        >
+          <el-option key="0" label="屏蔽" value="0"/>
+          <el-option key="1" label="正常" value="1"/>
+        </el-select>
+      </el-form-item>
       <el-form-item>
         <el-button type="cyan" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
         <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
@@ -52,21 +71,23 @@
     <el-table v-loading="loading" :data="nutritionalVideoList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
       <!--<el-table-column label="视频分类ID" align="center" prop="cateId" />-->
-      <el-table-column label="封面" align="center" prop="coverUrl">
+      <el-table-column label="封面" align="center" prop="coverUrl" width="300">
         <template slot-scope="scope">
-          <el-image title="点击大图预览"
-          style="width: 200px; height: 200px"
+          <el-image
+          style="width: 300px; height: 200px"
           :src="scope.row.coverUrl"
           :preview-src-list="coverImageList">
           </el-image>
         </template>
       </el-table-column>
-      <el-table-column label="标题" align="center" prop="title" />
+      <el-table-column label="标题" align="center" prop="title" width="200"/>
       <el-table-column label="描述" align="center" prop="description" />
-      <el-table-column label="标签" align="center" prop="tags" />
-      <el-table-column label="显示状态" align="center" prop="showFlag">
+      <el-table-column label="标签" align="center" prop="tags" width="100"/>
+       <el-table-column label="分类" align="center" prop="cateName" width="100"/>
+       <el-table-column label="权限等级" align="center" prop="payLevelName" width="100"/>
+      <el-table-column label="显示状态" align="center" prop="showFlag" width="100">
         <template slot-scope="scope">
-          {{scope.row.showFlag == 1 ? '正常' : '屏蔽'}}
+          {{scope.row.showFlag == 1 ? '正常' : '不显示'}}
         </template>
       </el-table-column>
       <!--<el-table-column label="操作" align="center" class-name="small-padding fixed-width">
@@ -166,6 +187,8 @@
         queryParams: {
           pageNum: 1,
           pageSize: 5,
+          key: null,
+          showFlag: null
         },
         // 表单参数
         form: {},
@@ -187,8 +210,8 @@
         this.loading = true;
         listNutritionalVideo(this.queryParams).then(response => {
           this.nutritionalVideoList = response.rows;
-        this.total = response.total;
-        this.loading = false;
+          this.total = response.total;
+          this.loading = false;
       });
       },
       // 取消按钮

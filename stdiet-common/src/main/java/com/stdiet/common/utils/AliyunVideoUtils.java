@@ -137,6 +137,7 @@ public class AliyunVideoUtils {
                 .setFields(search_field)
                 .setPageNo(pageNo == null ? 1 : pageNo)
                 .setPageSize(pageSize == null ? 10 : pageSize)
+                .setSortBy("CateId:Asc,CreationTime:Desc")
                 .setScrollToken(scrollToken);
         if(StringUtils.isNotEmpty(key) || StringUtils.isNotEmpty(status)){
             String matchString = null;

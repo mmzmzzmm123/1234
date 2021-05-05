@@ -1,11 +1,13 @@
 package com.stdiet.web.controller;
 
 import com.stdiet.common.config.AliyunOSSConfig;
+import com.stdiet.common.core.domain.AjaxResult;
 import com.stdiet.common.core.domain.entity.SysUser;
 import com.stdiet.common.utils.StringUtils;
 import com.stdiet.common.utils.oss.AliyunOSSUtils;
 import com.stdiet.common.utils.poi.ExcelUtil;
 import com.stdiet.custom.domain.SysNutritionQuestion;
+import com.stdiet.custom.domain.SysNutritionalVideo;
 import com.stdiet.custom.domain.SysWxUserInfo;
 import com.stdiet.custom.domain.SysWxUserLog;
 import com.stdiet.custom.mapper.SysCustomerPhysicalSignsMapper;
@@ -13,6 +15,7 @@ import com.stdiet.custom.mapper.SysNutritionQuestionMapper;
 import com.stdiet.custom.mapper.SysWxUserInfoMapper;
 import com.stdiet.custom.mapper.SysWxUserLogMapper;
 import com.stdiet.custom.service.ISysNutritionQuestionService;
+import com.stdiet.custom.service.ISysNutritionalVideoService;
 import com.stdiet.custom.service.ISysWxUserLogService;
 import com.stdiet.custom.utils.LuceneIndexUtils;
 import com.stdiet.framework.web.domain.server.Sys;
@@ -28,6 +31,7 @@ import org.springframework.stereotype.Component;
 import java.io.File;
 import java.io.FileInputStream;
 import java.util.List;
+import java.util.Map;
 
 @Component
 @Order(value = 1)
@@ -41,6 +45,9 @@ public class MyApplicationRunner implements ApplicationRunner {
 
     @Autowired
     private ISysNutritionQuestionService sysNutritionQuestionService;
+
+    @Autowired
+    private ISysNutritionalVideoService sysNutritionalVideoService;
 
 
 
@@ -105,4 +112,19 @@ public class MyApplicationRunner implements ApplicationRunner {
         }
 
     }
+
+    public void updateVideo(){
+        Map<String, Object> map = sysNutritionalVideoService.searchVideo(null, null, 1,100, null);
+        if(map != null){
+            List<SysNutritionalVideo> list = (List<SysNutritionalVideo>)map.get("nutritionalVideoList");
+            if(list != null && list.size() > 0){
+                for (SysNutritionalVideo video : list) {
+                    sysNutritionalVideoService.insertSysNutritionalVideo(video);
+                }
+            }
+        }
+    }
+
+
+
 }
