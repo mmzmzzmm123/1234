@@ -296,7 +296,7 @@ public class SysCommissionDayServiceImpl implements ISysCommissionDayService {
         //该笔订单当月的成交总额
         sysOrderCommisionDayDetail.setMonthOrderTotalAmount(everyMonthTotalAmountMap.get(yearMonth));
         //该笔订单对应提成比例
-        sysOrderCommisionDayDetail.setCommissionRate(rateMap.get(yearMonth) == null ? rateMap.get("190001") : rateMap.get(yearMonth));
+        sysOrderCommisionDayDetail.setCommissionRate(rateMap.get(yearMonth) == null ? rateMap.get("19001") : rateMap.get(yearMonth));
         //计算该笔订单总提成
         sysOrderCommisionDayDetail.setOrderCommission(getMoney(sysOrderCommisionDayDetail.getOrderAmount().doubleValue() * sysOrderCommisionDayDetail.getCommissionRate() / 100D));
         //每年每月提成
@@ -358,25 +358,42 @@ public class SysCommissionDayServiceImpl implements ISysCommissionDayService {
         List<SysCommision> tmpComList = sysCommisionMapper.selectSysCommisionList(tmpQueryCom);
         Map<String, Float> rateMap = new TreeMap<>(new MyComparator());
         //取第一个区间为默认提成比例
-        rateMap.put("190001", (tmpComList != null && tmpComList.size() > 0) ? tmpComList.get(0).getRate() : 0.0F);
+        rateMap.put("19001", (tmpComList != null && tmpComList.size() > 0) ? tmpComList.get(0).getRate() : 0.0F);
+        //按比例开始时间分类
+        Map<String, List<SysCommision>> rateYearMonthMap = getRateMapByStartTime(tmpComList);
         for(String yearMonth : amountMap.keySet()){
             BigDecimal orderAmount = amountMap.get(yearMonth);
             rateMap.put(yearMonth, 0F);
-            if(tmpComList != null && tmpComList.size() > 0){
-                for (int i = 0; i < tmpComList.size(); i++) {
-                    SysCommision com = tmpComList.get(i);
+            List<SysCommision> yearMonthRateList = null;
+            for (String rateMonth : rateYearMonthMap.keySet()) {
+                if(Long.parseLong(yearMonth) >= Long.parseLong(rateMonth)){
+                    yearMonthRateList = rateYearMonthMap.get(rateMonth);
+                }else{
+                    break;
+                }
+            }
+            if(yearMonthRateList != null && yearMonthRateList.size() > 0){
+                for (int i = 0; i < yearMonthRateList.size(); i++) {
+                    SysCommision com = yearMonthRateList.get(i);
                     double cAmount = com.getAmount().floatValue();
-                    if (orderAmount.floatValue() <= cAmount && i == 0) {
+                    Long rateStartYearMonth = null;
+                    if(com.getStartTime() != null){
+                        rateStartYearMonth = Long.parseLong(DateUtils.dateToLocalDate(com.getStartTime()).getYear() + "" + DateUtils.dateToLocalDate(com.getStartTime()).getMonth().getValue());
+                    }else{
+                        rateStartYearMonth = 19001L;
+                    }
+
+                    if (orderAmount.floatValue() <= cAmount && i == 0 && Long.parseLong(yearMonth) >= rateStartYearMonth) {
                         // 第一条规则
                         rateMap.put(yearMonth,com.getRate());
                         break;
-                    } else if (i == tmpComList.size() - 1 && orderAmount.floatValue() > cAmount) {
+                    } else if (i == yearMonthRateList.size() - 1 && orderAmount.floatValue() > cAmount && Long.parseLong(yearMonth) >= rateStartYearMonth) {
                         // 最后一条规则
                         rateMap.put(yearMonth,com.getRate());
                         break;
-                    } else if (cAmount < orderAmount.floatValue() && orderAmount.floatValue() <= tmpComList.get(i + 1).getAmount().floatValue()) {
+                    } else if (cAmount < orderAmount.floatValue() && orderAmount.floatValue() <= yearMonthRateList.get(i + 1).getAmount().floatValue() && Long.parseLong(yearMonth) >= rateStartYearMonth) {
                         // 中间规则
-                        rateMap.put(yearMonth,tmpComList.get(i + 1).getRate());
+                        rateMap.put(yearMonth,yearMonthRateList.get(i + 1).getRate());
                         break;
                     }
                 }
@@ -384,6 +401,32 @@ public class SysCommissionDayServiceImpl implements ISysCommissionDayService {
         }
         return rateMap;
     }
+
+    /**
+     * 根据比例开始执行时间进行分类
+     * @param tmpComList
+     * @return
+     */
+    public Map<String, List<SysCommision>> getRateMapByStartTime(List<SysCommision> tmpComList){
+        Map<String, List<SysCommision>> result = new TreeMap<>(new MyComparator());
+        for (SysCommision sysCommision : tmpComList) {
+            String rateStartYearMonth = null;
+            if(sysCommision.getStartTime() != null){
+                rateStartYearMonth = DateUtils.dateToLocalDate(sysCommision.getStartTime()).getYear() + "" + DateUtils.dateToLocalDate(sysCommision.getStartTime()).getMonth().getValue();
+            }else{
+                rateStartYearMonth = 19001+"";
+            }
+            if(result.containsKey(rateStartYearMonth)){
+                result.get(rateStartYearMonth).add(sysCommision);
+            }else{
+                List<SysCommision> list = new ArrayList<>();
+                list.add(sysCommision);
+                result.put(rateStartYearMonth, list);
+            }
+        }
+        return result;
+    }
+
 
     /**
      * 查询2021年1月份之后所有订单，对订单进行处理，得出每笔订单的相关信息
@@ -549,12 +592,12 @@ public class SysCommissionDayServiceImpl implements ISysCommissionDayService {
                 }
             }
         }
-        for (SysOrderCommisionDayDetail c : sysOrderCommisionDayDetailList) {
+        /**for (SysOrderCommisionDayDetail c : sysOrderCommisionDayDetailList) {
             System.out.println(c.getOrderId() + "-" + c.getNutritionistId() + "-" + c.getAfterSaleId() + "-"+
                     DateUtils.localDateToString(c.getServerStartDate(),"yyyy-MM-dd") + "-" +
                     DateUtils.localDateToString(c.getServerEndDate(),"yyyy-MM-dd") +
                     "-" + c.getDayMoney().doubleValue() + "-" + c.getOrderAmount().doubleValue());
-        }
+        }**/
         return sysOrderCommisionDayDetailList;
     }
 

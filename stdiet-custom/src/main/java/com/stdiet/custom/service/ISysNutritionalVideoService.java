@@ -73,4 +73,12 @@ public interface ISysNutritionalVideoService
      * @return
      */
     public Map<String,Object> searchVideo(String key, Integer status, Integer pageNo, Integer pageSize, String scrollToken);
+
+    /**
+     * 更新微信展示状态
+     * @param wxShow
+     * @param ids
+     * @return
+     */
+    public int updateWxshowByIds(Integer wxShow, Long[] ids);
 }

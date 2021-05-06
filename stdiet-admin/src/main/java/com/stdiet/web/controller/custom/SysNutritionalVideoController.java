@@ -6,6 +6,7 @@ import java.util.List;
 import com.aliyun.vod20170321.models.CreateUploadVideoResponse;
 import com.stdiet.common.core.page.TableDataInfo;
 import com.stdiet.common.utils.AliyunVideoUtils;
+import com.stdiet.common.utils.StringUtils;
 import com.stdiet.common.utils.oss.AliyunOSSUtils;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -113,4 +114,20 @@ public class SysNutritionalVideoController extends BaseController
     {
         return toAjax(sysNutritionalVideoService.deleteSysNutritionalVideoByIds(ids));
     }
+
+    /**
+     * 修改营养小知识是否微信展示状态
+     */
+    @PreAuthorize("@ss.hasPermi('custom:nutritionalVideo:edit')")
+    @Log(title = "微信展示状态修改", businessType = BusinessType.UPDATE)
+    @GetMapping("/updateWxShow")
+    public AjaxResult updateWxShow(@RequestParam("id")String id, @RequestParam("showFlag")Integer showFlag)
+    {
+        if(StringUtils.isEmpty(id) || showFlag == null){
+            return AjaxResult.error();
+        }
+        Long[] ids = {Long.parseLong(id)};
+        return toAjax(sysNutritionalVideoService.updateWxshowByIds(showFlag, ids));
+    }
+
 }
