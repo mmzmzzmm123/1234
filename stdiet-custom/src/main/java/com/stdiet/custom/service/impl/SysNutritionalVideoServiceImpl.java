@@ -180,4 +180,14 @@ public class SysNutritionalVideoServiceImpl implements ISysNutritionalVideoServi
         return "Normal".equals(status) ? 1 :  0;
     }
 
+    /**
+     * 更新微信展示状态
+     * @param wxShow
+     * @param ids
+     * @return
+     */
+    public int updateWxshowByIds(Integer wxShow, Long[] ids){
+        return sysNutritionalVideoMapper. updateWxshowByIds(wxShow, ids);
+    }
+
 }

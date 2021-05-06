@@ -1,7 +1,7 @@
 <template>
   <div class="app-container">
-    <!--<el-form :model="queryParams" ref="queryForm" :inline="true" v-show="showSearch" label-width="68px">
-      <el-form-item label="关键词" prop="title">
+    <el-form :model="queryParams" ref="queryForm" :inline="true" v-show="showSearch" label-width="68px">
+      <el-form-item label="关键词" prop="key">
         <el-input
           v-model="queryParams.key"
           placeholder="请输入关键词"
@@ -9,22 +9,42 @@
           size="small"
         />
       </el-form-item>
-      <el-form-item label="状态" prop="showFlag">
+      <el-form-item label="小程序展示状态" prop="showFlag" label-width="200">
         <el-select
           v-model="queryParams.showFlag"
           placeholder="请选示状态"
           clearable
           size="small"
         >
-          <el-option key="0" label="屏蔽" value="0"/>
-          <el-option key="1" label="正常" value="1"/>
+          <el-option key="0" label="不展示" value="0"/>
+          <el-option key="1" label="展示" value="1"/>
         </el-select>
       </el-form-item>
+       <el-form-item label="视频类别" prop="cateId">
+            <el-select v-model="queryParams.cateId" clearable filterable placeholder="请选择类别">
+              <el-option
+                v-for="classify in classifyList"
+                :key="classify.id"
+                :label="classify.cateName"
+                :value="classify.id"
+              />
+            </el-select>
+      </el-form-item>
+      <el-form-item label="视频权限" prop="payLevel">
+            <el-select v-model="queryParams.payLevel" clearable filterable placeholder="请选择权限">
+              <el-option
+                v-for="dict in payVideoLevelList"
+                :key="dict.dictValue"
+                :label="dict.dictLabel"
+                :value="parseInt(dict.dictValue)"
+              />
+            </el-select>
+          </el-form-item>
       <el-form-item>
         <el-button type="cyan" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
         <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
       </el-form-item>
-    </el-form>-->
+    </el-form>
 
     <el-row :gutter="10" class="mb8">
       <el-col :span="1.5">
@@ -36,7 +56,7 @@
           v-hasPermi="['custom:nutritionalVideo:add']"
         >视频上传</el-button>
       </el-col>
-      <!--<el-col :span="1.5">
+      <el-col :span="1.5">
         <el-button
           type="success"
           icon="el-icon-edit"
@@ -56,6 +76,7 @@
           v-hasPermi="['custom:nutritionalVideo:remove']"
         >删除</el-button>
       </el-col>
+      <!--
       <el-col :span="1.5">
         <el-button
           type="warning"
@@ -82,15 +103,21 @@
       </el-table-column>
       <el-table-column label="标题" align="center" prop="title" width="200"/>
       <el-table-column label="描述" align="center" prop="description" />
-      <el-table-column label="标签" align="center" prop="tags" width="100"/>
+      <!--<el-table-column label="标签" align="center" prop="tags" width="100"/>-->
        <el-table-column label="分类" align="center" prop="cateName" width="100"/>
        <el-table-column label="权限等级" align="center" prop="payLevelName" width="100"/>
-      <el-table-column label="显示状态" align="center" prop="showFlag" width="100">
-        <template slot-scope="scope">
-          {{scope.row.showFlag == 1 ? '正常' : '不显示'}}
+      <el-table-column label="小程序展示状态" align="center" prop="showFlag" width="200">
+        <template slot-scope="scope" >
+          <el-switch
+                v-model="scope.row.wxShow"
+                active-text="展示"
+                inactive-text="不展示"
+                @change="handleWxShow($event, scope.row)"
+                >
+              </el-switch>
         </template>
       </el-table-column>
-      <!--<el-table-column label="操作" align="center" class-name="small-padding fixed-width">
+      <el-table-column label="操作" align="center" width="200">
         <template slot-scope="scope">
           <el-button
             size="mini"
@@ -107,8 +134,10 @@
             v-hasPermi="['custom:nutritionalVideo:remove']"
           >删除</el-button>
         </template>
-      </el-table-column>-->
+      </el-table-column>
     </el-table>
+
+
 
     <pagination
       v-show="total>0"
@@ -158,8 +187,8 @@
 </template>
 
 <script>
-  import { listNutritionalVideo, getNutritionalVideo, delNutritionalVideo, addNutritionalVideo, updateNutritionalVideo, exportNutritionalVideo,getUploadVideoAuth } from "@/api/custom/nutritionalVideo";
-
+  import { listNutritionalVideo, getNutritionalVideo, delNutritionalVideo, addNutritionalVideo, updateNutritionalVideo, exportNutritionalVideo, updateWxShow } from "@/api/custom/nutritionalVideo";
+  import {getAllClassify } from "@/api/custom/videoClassify";
   import UploadVideo from "@/components/UploadVideo";
   export default {
     name: "NutritionalVideo",
@@ -188,18 +217,32 @@
           pageNum: 1,
           pageSize: 5,
           key: null,
-          showFlag: null
+          showFlag: null,
+          cateId: null,
+          payLevel: null
         },
         // 表单参数
         form: {},
         // 表单校验
         rules: {
         },
-        coverImageList:[]
+        coverImageList:[],
+        //分类列表
+        classifyList:[],
+        //权限等级列表
+        payVideoLevelList:[]
       };
     },
     created() {
       this.getList();
+      getAllClassify().then(response => {
+          if(response.code == 200){
+              this.classifyList = response.data;
+          }
+      });
+      this.getDicts("video_pay_level").then((response) => {
+        this.payVideoLevelList = response.data;
+      });
     },
     components: {
       UploadVideo
@@ -209,6 +252,9 @@
       getList() {
         this.loading = true;
         listNutritionalVideo(this.queryParams).then(response => {
+          response.rows.forEach(element => {
+            element.wxShow = element.showFlag == 1 ? true : false;
+          });
           this.nutritionalVideoList = response.rows;
           this.total = response.total;
           this.loading = false;
@@ -299,6 +345,13 @@
             }
           }
         });
+      },
+      handleWxShow(newWxshow, row){
+        let param = {
+          id: row.id,
+          showFlag: newWxshow ? 1 : 0
+        };
+        updateWxShow(param);
       },
       /** 删除按钮操作 */
       handleDelete(row) {

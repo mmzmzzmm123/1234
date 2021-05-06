@@ -43,6 +43,9 @@
         <if test="cateId != null">
             and snv.cate_id = #{cateId}
         </if>
+        <if test="payLevel != null">
+            and snv.pay_level = #{payLevel}
+        </if>
         <if test="key != null and key != ''">
             and (snv.title like concat('%',#{key},'%') or snv.description like concat('%',#{key},'%'))
         </if>
@@ -128,5 +131,12 @@
     <select id="selectSysNutritionalVideByVideoId" parameterType="String" resultMap="SysNutritionalVideoResult">
         <include refid="selectSysNutritionalVideoVo"/> where video_id = #{videoId} and del_flag = 0 limit 1
     </select>
+
+    <update id="updateWxshowByIds" parameterType="String">
+        update sys_nutritional_video set show_flag = #{wxShow} where del_flag = 0 and id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </update>
 
 </mapper>

@@ -9,7 +9,7 @@
           size="small"
         />
       </el-form-item>
-      <el-form-item label="展示状态" prop="showFlag">
+      <el-form-item label="小程序展示状态" prop="showFlag" label-width="200">
         <el-select
           v-model="queryParams.showFlag"
           placeholder="请选择展示状态"

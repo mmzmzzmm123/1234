@@ -12,6 +12,7 @@
           v-model="queryParams.postId"
           placeholder="请选择岗位"
           clearable
+          filterable
           size="small"
           @change="searchPostChange"
         >
@@ -28,6 +29,7 @@
           v-model="queryParams.userId"
           placeholder="请选择业务员"
           clearable
+          filterable
           size="small"
         >
           <el-option
@@ -119,6 +121,7 @@
           {{ scope.row.rate + "%" }}
         </template>
       </el-table-column>
+      <el-table-column label="开始时间" align="center" prop="startTime"/>
       <el-table-column label="备注" align="center" prop="remark" />
       <el-table-column
         label="操作"
@@ -196,6 +199,16 @@
               <el-input v-model="form.rate" placeholder="请输入比例" />
             </el-form-item>
           </el-col>
+          <el-col :span="12">
+            <el-form-item label="开始时间" prop="startTime">
+               <el-date-picker
+                  v-model="form.startTime"
+                  value-format="yyyy-MM-dd"
+                  type="month"
+                  placeholder="选择开始时间">
+            </el-date-picker>
+            </el-form-item>
+          </el-col>
           <el-col :span="24">
             <el-form-item label="备注" prop="remark">
               <el-input
@@ -240,7 +253,7 @@ export default {
       // 非多个禁用
       multiple: true,
       // 显示搜索条件
-      showSearch: false,
+      showSearch: true,
       // 总条数
       total: 0,
       // 业务提成比例表格数据
@@ -281,6 +294,9 @@ export default {
         amount: [{ required: true, message: "金额不能为空", trigger: "blur" }],
         rate: [
           { required: true, message: "分成比例不能为空", trigger: "blur" },
+        ],
+        startTime: [
+          { required: true, message: "开始时间不能为空", trigger: "blur" },
         ],
       },
     };
@@ -396,6 +412,7 @@ export default {
         userName: null,
         amount: null,
         rate: null,
+        startTime: null,
         createBy: null,
         createTime: null,
         updateBy: null,

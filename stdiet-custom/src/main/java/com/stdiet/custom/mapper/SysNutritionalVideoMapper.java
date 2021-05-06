@@ -66,4 +66,13 @@ public interface SysNutritionalVideoMapper
      * @return
      */
     public SysNutritionalVideo selectSysNutritionalVideByVideoId(@Param("videoId")String videoId);
+
+
+    /**
+     * 更新微信展示状态
+     * @param wxShow
+     * @param ids
+     * @return
+     */
+    public int updateWxshowByIds(@Param("wxShow")Integer wxShow, @Param("array") Long[] ids);
 }
