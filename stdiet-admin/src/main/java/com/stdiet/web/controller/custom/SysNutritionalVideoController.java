@@ -57,7 +57,11 @@ public class SysNutritionalVideoController extends BaseController
     @GetMapping(value = "/{id}")
     public AjaxResult getInfo(@PathVariable("id") Long id)
     {
-        return AjaxResult.success(sysNutritionalVideoService.selectSysNutritionalVideoById(id));
+        SysNutritionalVideo sysNutritionalVideos = sysNutritionalVideoService.selectSysNutritionalVideoById(id);
+        if(sysNutritionalVideos != null && StringUtils.isNotEmpty(sysNutritionalVideos.getCoverUrl())){
+            sysNutritionalVideos.setPreviewUrl(AliyunOSSUtils.generatePresignedUrl(sysNutritionalVideos.getCoverUrl()));
+        }
+        return AjaxResult.success(sysNutritionalVideos);
     }
 
     /**

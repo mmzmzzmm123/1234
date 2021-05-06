@@ -2,14 +2,20 @@ package com.stdiet.web.controller.custom;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
 
+import com.stdiet.common.utils.DateUtils;
 import com.stdiet.custom.domain.SysCommissionDayDetail;
 import com.stdiet.custom.domain.SysOrder;
 import com.stdiet.custom.domain.SysOrderCommisionDayDetail;
 import com.stdiet.custom.dto.request.SysOrderCommision;
 import com.stdiet.custom.service.ISysCommissionDayService;
+import com.stdiet.custom.service.ISysNutritionalVideoService;
 import com.stdiet.custom.service.ISysOrderService;
+import com.stdiet.custom.service.impl.SysCommissionDayServiceImpl;
 import com.stdiet.framework.web.domain.server.Sys;
 import com.stdiet.system.domain.CusSalesman;
 import com.stdiet.system.service.ISysUserService;
@@ -41,6 +47,7 @@ import com.stdiet.common.core.page.TableDataInfo;
 @RestController
 @RequestMapping("/custom/commision")
 public class SysCommisionController extends BaseController {
+
     @Autowired
     private ISysCommisionService sysCommisionService;
 
@@ -49,6 +56,9 @@ public class SysCommisionController extends BaseController {
 
     @Autowired
     private ISysCommissionDayService sysCommissionDayService;
+
+    @Autowired
+    private ISysNutritionalVideoService sysNutritionalVideoService;
 
     /**
      * 查询业务提成比例列表
@@ -158,6 +168,14 @@ public class SysCommisionController extends BaseController {
     @GetMapping("/detail")
     public TableDataInfo getDetail(SysCommision sysCommision) {
         startPage();
+        if(sysCommision.getPostId() != null && sysCommision.getPostId().intValue() > 0){
+            //查询售后所有ID
+            SysCommision param = new SysCommision();
+            param.setPostId(sysCommision.getPostId());
+            List<Long> userIds = sysCommisionService.getAfterSaleId(param);
+            sysCommision.setUserIds(userIds.size() == 0 ? null : userIds);
+            sysCommision.setPostId(null);
+        }
         List<SysCommision> list = sysCommisionService.selectSysCommisionDetail(sysCommision);
         for (SysCommision detail : list) {
             detail.setRate(0F);
@@ -165,22 +183,38 @@ public class SysCommisionController extends BaseController {
             tmpQueryCom.setUserId(detail.getUserId());
             tmpQueryCom.setPostId(detail.getPostId());
             List<SysCommision> tmpComList = sysCommisionService.selectSysCommisionList(tmpQueryCom);
-
+            //按比例开始时间分类
+            Map<String, List<SysCommision>> rateYearMonthMap = sysCommissionDayService.getRateMapByStartTime(tmpComList);
+            String yearMonth = DateUtils.stringToLocalDate(sysCommision.getBeginTime(),"yyyy-MM-dd").getYear() + "" + DateUtils.stringToLocalDate(sysCommision.getBeginTime(),"yyyy-MM-dd").getMonth().getValue();
+            List<SysCommision> yearMonthRateList = new ArrayList<>();
+            for (String rateMonth : rateYearMonthMap.keySet()) {
+                if(Long.parseLong(yearMonth) >= Long.parseLong(rateMonth)){
+                    yearMonthRateList = rateYearMonthMap.get(rateMonth);
+                }else{
+                    break;
+                }
+            }
             float dAmount = detail.getAmount().floatValue();
-            for (int i = 0; i < tmpComList.size(); i++) {
-                SysCommision com = tmpComList.get(i);
+            for (int i = 0; i < yearMonthRateList.size(); i++) {
+                SysCommision com = yearMonthRateList.get(i);
                 float cAmount = com.getAmount().floatValue();
-                if (dAmount <= cAmount && i == 0) {
+                Long rateStartYearMonth = null;
+                if(com.getStartTime() != null){
+                    rateStartYearMonth = Long.parseLong(DateUtils.dateToLocalDate(com.getStartTime()).getYear() + "" + DateUtils.dateToLocalDate(com.getStartTime()).getMonth().getValue());
+                }else{
+                    rateStartYearMonth = 19001L;
+                }
+                if (dAmount <= cAmount && i == 0 && Long.parseLong(yearMonth) >= rateStartYearMonth) {
                     // 第一条规则
                     detail.setRate(com.getRate());
                     break;
-                } else if (i == tmpComList.size() - 1 && dAmount > cAmount) {
+                } else if (i == yearMonthRateList.size() - 1 && dAmount > cAmount && Long.parseLong(yearMonth) >= rateStartYearMonth) {
                     // 最后一条规则
                     detail.setRate(com.getRate());
                     break;
-                } else if (cAmount < dAmount && dAmount <= tmpComList.get(i + 1).getAmount().floatValue()) {
+                } else if (cAmount < dAmount && dAmount <= yearMonthRateList.get(i + 1).getAmount().floatValue() && Long.parseLong(yearMonth) >= rateStartYearMonth) {
                     // 中间规则
-                    detail.setRate(tmpComList.get(i + 1).getRate());
+                    detail.setRate(yearMonthRateList.get(i + 1).getRate());
                     break;
                 }
             }
@@ -188,6 +222,7 @@ public class SysCommisionController extends BaseController {
             float amount = detail.getAmount().floatValue();
             amount = amount * detail.getRate() / 100F;
             detail.setCommision(new BigDecimal(amount));
+
         }
         return getDataTable(list);
     }

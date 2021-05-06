@@ -32,6 +32,9 @@ public class SysNutritionalVideo extends BaseEntity
     @Excel(name = "视频封面URL")
     private String coverUrl;
 
+    //预览URL
+    private String previewUrl;
+
     /** 视频标题 */
     @Excel(name = "视频标题")
     private String title;

@@ -98,4 +98,14 @@ public class SysCommisionServiceImpl implements ISysCommisionService
     public List<SysCommision> selectSysCommisionDetail(SysCommision sysCommision) {
         return sysCommisionMapper.selectSysCommisionDetail(sysCommision);
     }
+
+    /**
+     * 查询售后、营养师用户信息
+     * @param sysCommision
+     * @return
+     */
+    @Override
+    public List<Long> getAfterSaleId(SysCommision sysCommision){
+        return sysCommisionMapper.getAfterSaleId(sysCommision);
+    }
 }
