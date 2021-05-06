@@ -606,6 +606,7 @@ export default {
     /** 提交按钮 */
     submitForm() {
       this.$refs["form"].validate((valid) => {
+        console.log(this.form);
         if (valid) {
           if (this.form.id != null) {
             updateXybmsq(this.form).then((response) => {

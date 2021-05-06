@@ -30,6 +30,9 @@ public interface ITsbzXybmsqService
     // 查询学员学校审核列表
     public List<TsbzXybmsq> selectTsbzXybmsqListXxsh(TsbzXybmsq tsbzXybmsq);
 
+    // 查询学员区级审核列表
+    public List<TsbzXybmsq> selectTsbzXybmsqListQjsh(TsbzXybmsq tsbzXybmsq);
+
     // 查询已经报名人数
     public TsbzXybmsq selectCountYibaoming(TsbzXybmsq tsbzXybmsq);
 

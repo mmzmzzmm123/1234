@@ -44,11 +44,19 @@ public class TsbzXybmsqServiceImpl implements ITsbzXybmsqService
         return tsbzXybmsqMapper.selectTsbzXybmsqList(tsbzXybmsq);
     }
 
+
     // 查询学员学校审核列表
     @Override
     public List<TsbzXybmsq> selectTsbzXybmsqListXxsh(TsbzXybmsq tsbzXybmsq) {
 
-        return tsbzXybmsqMapper.selectTsbzXybmsqList(tsbzXybmsq);
+        return tsbzXybmsqMapper.selectTsbzXybmsqListXxsh(tsbzXybmsq);
+    }
+
+    // 查询学员区级审核列表
+    @Override
+    public List<TsbzXybmsq> selectTsbzXybmsqListQjsh(TsbzXybmsq tsbzXybmsq) {
+
+        return tsbzXybmsqMapper.selectTsbzXybmsqListQjsh(tsbzXybmsq);
     }
 
     // 查询已报名人数

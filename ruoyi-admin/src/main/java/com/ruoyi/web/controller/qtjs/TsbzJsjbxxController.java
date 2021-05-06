@@ -44,7 +44,7 @@ public class TsbzJsjbxxController extends BaseController {
     /**
      * 查询教师基本信息列表
      */
-    @PreAuthorize("@ss.hasPermi('qtjs:jsjbxx:list')" + "||@ss.hasPermi('xypsgl:xybmsq:list')" + "||@ss.hasPermi('xypsgl:xybmsq:query')"+ "||@ss.hasPermi('xypsgl:xybmsq:list')")
+    @PreAuthorize("@ss.hasPermi('qtjs:jsjbxx:list')" + "||@ss.hasPermi('xypsgl:xybmsq:list')" + "||@ss.hasPermi('xypsgl:xybmsq:query')"+ "||@ss.hasPermi('xypsgl:xybmsq:add')")
     @GetMapping("/list")
     public TableDataInfo list(TsbzJsjbxx tsbzJsjbxx) {
         startPage();

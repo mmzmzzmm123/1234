@@ -52,7 +52,6 @@ public class TsbzXybmsqController extends BaseController
     {
         startPage();
         tsbzXybmsq.setJxbh(SecurityUtils.getLoginUser().getUser().getUserName());
-        System.out.print(SecurityUtils.getLoginUser().getUser().getUserName()+"AAAAAAAAAAAAAAAAAA");
         List<TsbzXybmsq> list = tsbzXybmsqService.selectTsbzXybmsqList(tsbzXybmsq);
         return getDataTable(list);
     }
@@ -64,16 +63,22 @@ public class TsbzXybmsqController extends BaseController
     @GetMapping("/listXxsh")
     public TableDataInfo listXxsh(TsbzXybmsq tsbzXybmsq)
     {
-
-        //首先判断是否为学校用户
-        String xxId = schoolCommonController.deptIdToXxId();
-        if (!schoolCommonController.isStringEmpty(xxId)) {
-            tsbzXybmsq.setDeptid(xxId);
-        }
-
+        tsbzXybmsq.setDeptid(SecurityUtils.getLoginUser().getUser().getDeptId().toString());
         startPage();
         List<TsbzXybmsq> listXxsh = tsbzXybmsqService.selectTsbzXybmsqListXxsh(tsbzXybmsq);
         return getDataTable(listXxsh);
+    }
+
+    /**
+     * 查询区级审核列表
+     */
+    @PreAuthorize("@ss.hasPermi('xypsgl:xybmsq:listsQjsh')")
+    @GetMapping("/listQjsh")
+    public TableDataInfo listQjsh(TsbzXybmsq tsbzXybmsq)
+    {
+        startPage();
+        List<TsbzXybmsq> listQjsh = tsbzXybmsqService.selectTsbzXybmsqListQjsh(tsbzXybmsq);
+        return getDataTable(listQjsh);
     }
 
     /**
@@ -114,10 +119,9 @@ public class TsbzXybmsqController extends BaseController
         TsbzXybmsq tsbzXybmsq1 = new TsbzXybmsq();
         tsbzXybmsq1.setJdid(tsbzXybmsq.getJdid());
         tsbzXybmsq1.setJsid(tsbzXybmsq.getJsid());
-        System.out.print("AAAAAAAAAAAAAAAAAAAAAA");
         // 先判断是否此用户已经报名此基地
         if (tsbzXybmsqService.selectTsbzXybmsqList(tsbzXybmsq1).size() > 0) {
-            return AjaxResult.error("您已报名次基地,无法再次报名");
+            return AjaxResult.error("您已报名此基地,无法再次报名");
         } else {
             // 获取已经报名的老师
             int countYbm = tsbzXybmsqService.selectCountYibaoming(tsbzXybmsq1).getCountYbm();

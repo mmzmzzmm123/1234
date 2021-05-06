@@ -7,8 +7,21 @@
       v-show="showSearch"
       label-width="68px"
     >
+      <el-form-item label="审核状态" prop="xxshstatus">
+          <el-select
+            v-model="queryParams.xxshstatus"
+            placeholder="请选择审核状态"
+          >
+            <el-option
+              v-for="dict in xxshstatusOptions"
+              :key="dict.dictValue"
+              :label="dict.dictLabel"
+              :value="dict.dictValue"
+            ></el-option>
+          </el-select>
+        </el-form-item>
       <el-form-item label="报名基地" prop="jdid">
-        <el-select v-model="form.jdid" placeholder="请选择报名基地">
+        <el-select v-model="queryParams.jdid" placeholder="请选择报名基地">
           <el-option
             v-for="dict in zcrjdcjList"
             :key="dict.id"
@@ -105,7 +118,7 @@
             type="text"
             icon="el-icon-check"
             @click="handleCheck(scope.row)"
-            v-hasPermi="['xypsgl:xybmsq:edit']"
+            v-hasPermi="['xypsgl:xybmsq:query']"
             >查看</el-button
           >
           <el-button
@@ -122,7 +135,7 @@
             type="text"
             icon="el-icon-delete"
             @click="handleFail(scope.row)"
-            v-hasPermi="['xypsgl:xybmsq:remove']"
+            v-hasPermi="['xypsgl:xybmsq:edit']"
             v-if="scope.row.xxshstatus=='2'?false:true"
             >退回</el-button
           >
@@ -417,7 +430,6 @@ export default {
       this.loading = true;
       listXybmsqXxsh(this.queryParams).then((response) => {
         this.xybmsqList = response.rows;
-        console.log(response.rows);
         this.total = response.total;
         this.getJdList();
         this.loading = false;

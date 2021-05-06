@@ -23,7 +23,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </resultMap>
 
     <sql id="selectTsbzXybmsqVo">
-        select a.id, a.faid, a.jdid, a.jsid,a.jxbh, a.deptid, b.jsxm as name, b.xb as xb, b.csrq as csrq, b.xd as xd, b.xk as xk, b.zc as zc, c.xxmc as dwmc, c.xxdz as dwdz, d.email as email, d.phonenumber as phone, a.jdtype, a.sf, a.create_time, a.create_user, a.xxshstatus, a.xxshjy, a.qjshstatus, a.qjshjy, a.xyxbstatus, a.xypsjgqrstatus
+        select a.id, a.faid, a.jdid, a.jsid, a.jxbh, a.deptid, b.jsxm as name, b.xb as xb, b.csrq as csrq, b.xd as xd, b.xk as xk, b.zc as zc, c.xxmc as dwmc, c.xxdz as dwdz, d.email as email, d.phonenumber as phone, a.jdtype, a.sf, a.create_time, a.create_user, a.xxshstatus, a.xxshjy, a.qjshstatus, a.qjshjy, a.xyxbstatus, a.xypsjgqrstatus
         from tsbz_xybmsq a
         left join tsbz_jsjbxx b on a.jsid=b.id
         left join tsbz_xxjbxx c on b.deptid=c.xxdm
@@ -71,6 +71,27 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         </where>
     </select>
 
+    <select id="selectTsbzXybmsqListQjsh" parameterType="TsbzXybmsq" resultMap="TsbzXybmsqResult">
+        <include refid="selectTsbzXybmsqVo"/>
+        <where>
+            <if test="faid != null "> and a.faid = #{faid}</if>
+            <if test="deptid != null "> and deptid = #{deptid}</if>
+            <if test="jdid != null "> and a.jdid = #{jdid}</if>
+            <if test="jsid != null "> and a.jsid = #{jsid}</if>
+            <if test="jxbh != null "> and a.jxbh = #{jxbh}</if>
+            <if test="deptid != null "> and a.deptid = #{deptid}</if>
+            <if test="jdtype != null  and jdtype != ''"> and a.jdtype = #{jdtype}</if>
+            <if test="sf != null  and sf != ''"> and a.sf = #{sf}</if>
+            <if test="xxshstatus != null  and xxshstatus != ''"> and a.xxshstatus = #{xxshstatus}</if>
+            <if test="xxshjy != null  and xxshjy != ''"> and a.xxshjy = #{xxshjy}</if>
+            <if test="qjshstatus != null  and qjshstatus != ''"> and a.qjshstatus = #{qjshstatus}</if>
+            <if test="qjshjy != null  and qjshjy != ''"> and a.qjshjy = #{qjshjy}</if>
+            <if test="createUser != null "> and a.create_user = #{createUser}</if>
+            <if test="xyxbstatus != null "> and a.xyxbstatus = #{xyxbstatus}</if>
+            <if test="xypsjgqrstatus != null "> and a.xypsjgqrstatus = #{xypsjgqrstatus}</if>
+        </where>
+    </select>
+
     <select id="selectTsbzXybmsqById" parameterType="Long" resultMap="TsbzXybmsqResult">
         <include refid="selectTsbzXybmsqVo"/>
         where a.id = #{id}
@@ -84,38 +105,38 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <insert id="insertTsbzXybmsq" parameterType="TsbzXybmsq" useGeneratedKeys="true" keyProperty="id">
         insert into tsbz_xybmsq
         <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="jsid != null">jsid,</if>
             <if test="faid != null">faid,</if>
             <if test="jdid != null">jdid,</if>
-            <if test="jsid != null">jsid,</if>
-            <if test="deptid != null">deptid,</if>
             <if test="jxbh != null">jxbh,</if>
             <if test="jdtype != null">jdtype,</if>
             <if test="sf != null">sf,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="createUser != null">create_user,</if>
             <if test="xxshstatus != null">xxshstatus,</if>
             <if test="xxshjy != null">xxshjy,</if>
             <if test="qjshstatus != null">qjshstatus,</if>
             <if test="qjshjy != null">qjshjy,</if>
-            <if test="createTime != null">create_time,</if>
-            <if test="createUser != null">create_user,</if>
             <if test="xyxbstatus != null">xyxbstatus,</if>
             <if test="xypsjgqrstatus != null">xypsjgqrstatus,</if>
+            <if test="deptid != null">deptid,</if>
          </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="jsid != null">#{jsid},</if>
             <if test="faid != null">#{faid},</if>
             <if test="jdid != null">#{jdid},</if>
-            <if test="jsid != null">#{jsid},</if>
-            <if test="deptid != null">#{deptid},</if>
-            <if test="jdtype != null">#{jdtype},</if>
             <if test="jxbh != null">#{jxbh},</if>
+            <if test="jdtype != null">#{jdtype},</if>
             <if test="sf != null">#{sf},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="createUser != null">#{createUser},</if>
             <if test="xxshstatus != null">#{xxshstatus},</if>
             <if test="xxshjy != null">#{xxshjy},</if>
             <if test="qjshstatus != null">#{qjshstatus},</if>
             <if test="qjshjy != null">#{qjshjy},</if>
-            <if test="createTime != null">#{createTime},</if>
-            <if test="createUser != null">#{createUser},</if>
             <if test="xyxbstatus != null">#{xyxbstatus},</if>
             <if test="xypsjgqrstatus != null">#{xypsjgqrstatus},</if>
+            <if test="deptid != null">#{deptid},</if>
          </trim>
     </insert>
 
@@ -125,18 +146,18 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="faid != null">faid = #{faid},</if>
             <if test="jdid != null">jdid = #{jdid},</if>
             <if test="jsid != null">jsid = #{jsid},</if>
-            <if test="deptid != null">deptid = #{deptid},</if>
             <if test="jxbh != null">jxbh = #{jxbh},</if>
             <if test="jdtype != null">jdtype = #{jdtype},</if>
             <if test="sf != null">sf = #{sf},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="createUser != null">create_user = #{createUser},</if>
             <if test="xxshstatus != null">xxshstatus = #{xxshstatus},</if>
             <if test="xxshjy != null">xxshjy = #{xxshjy},</if>
             <if test="qjshstatus != null">qjshstatus = #{qjshstatus},</if>
             <if test="qjshjy != null">qjshjy = #{qjshjy},</if>
-            <if test="createTime != null">create_time = #{createTime},</if>
-            <if test="createUser != null">create_user = #{createUser},</if>
             <if test="xyxbstatus != null">xyxbstatus = #{xyxbstatus},</if>
             <if test="xypsjgqrstatus != null">xypsjgqrstatus = #{xypsjgqrstatus},</if>
+            <if test="deptid != null">deptid = #{deptid},</if>
         </trim>
         where id = #{id}
     </update>

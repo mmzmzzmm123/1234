@@ -64,7 +64,7 @@ public class TsbzZcrjdcjController extends BaseController
     /**
      * 获取主持人基地详细信息
      */
-    @PreAuthorize("@ss.hasPermi('zcrpsgl:zcrjdcj:query')")
+    @PreAuthorize("@ss.hasPermi('zcrpsgl:zcrjdcj:query')" + "||@ss.hasPermi('xypsgl:xybmsq:add')")
     @GetMapping(value = "/{id}")
     public AjaxResult getInfo(@PathVariable("id") Long id)
     {

@@ -8,7 +8,7 @@
       label-width="68px"
     >
       <el-form-item label="报名基地" prop="jdid">
-        <el-select v-model="form.jdid" placeholder="请选择报名基地">
+        <el-select v-model="queryParams.jdid" placeholder="请选择报名基地">
           <el-option
             v-for="dict in zcrjdcjList"
             :key="dict.id"
@@ -110,7 +110,7 @@
             type="text"
             icon="el-icon-check"
             @click="handleCheck(scope.row)"
-            v-hasPermi="['xypsgl:xybmsq:edit']"
+            v-hasPermi="['xypsgl:xybmsq:query']"
             >查看</el-button
           >
           <el-button
@@ -127,7 +127,7 @@
             type="text"
             icon="el-icon-delete"
             @click="handleFail(scope.row)"
-            v-hasPermi="['xypsgl:xybmsq:remove']"
+            v-hasPermi="['xypsgl:xybmsq:edit']"
             v-if="scope.row.qjshstatus=='2'?false:true"
             >退回</el-button
           >
@@ -291,6 +291,7 @@ import {
   addXybmsq,
   updateXybmsq,
   exportXybmsq,
+  listXybmsqQjsh,
 } from "@/api/xypsgl/xybmsq";
 import {
   listJsjbxx,
@@ -421,9 +422,8 @@ export default {
     /** 查询学员报名申请列表 */
     getList() {
       this.loading = true;
-      listXybmsq(this.queryParams).then((response) => {
+      listXybmsqQjsh(this.queryParams).then((response) => {
         this.xybmsqList = response.rows;
-        // 过滤未审核和未同意的人员
         this.xybmsqList = this.xybmsqList.filter(function (item) {
           return item.xxshstatus == 1;
         });

@@ -33,6 +33,10 @@ public interface TsbzXybmsqMapper
     // 查询学员学校审核列表
     public List<TsbzXybmsq> selectTsbzXybmsqListXxsh(TsbzXybmsq tsbzXybmsq);
 
+    // 查询学员区级审核列表
+    public List<TsbzXybmsq> selectTsbzXybmsqListQjsh(TsbzXybmsq tsbzXybmsq);
+
+
     /**
      * 新增学员报名申请
      * 
