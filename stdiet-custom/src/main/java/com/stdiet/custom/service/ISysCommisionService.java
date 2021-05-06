@@ -62,4 +62,11 @@ public interface ISysCommisionService
     public int deleteSysCommisionById(Long ruleId);
 
     public List<SysCommision> selectSysCommisionDetail(SysCommision sysCommision);
+
+    /**
+     * 查询售后、营养师用户信息
+     * @param sysCommision
+     * @return
+     */
+    List<Long> getAfterSaleId(SysCommision sysCommision);
 }

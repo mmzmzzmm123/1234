@@ -39,4 +39,11 @@ public interface ISysCommissionDayService {
      */
     AjaxResult calculateOrderCommissionDetail(SysCommision sysCommision);
 
+    /**
+     * 根据开始生效时间分类提成比例
+     * @param tmpComList
+     * @return
+     */
+    Map<String, List<SysCommision>> getRateMapByStartTime(List<SysCommision> tmpComList);
+
 }

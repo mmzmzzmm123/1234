@@ -9,6 +9,7 @@ import com.stdiet.common.core.domain.BaseEntity;
 
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.List;
 
 /**
  * 业务提成比例对象 sys_commision
@@ -29,6 +30,8 @@ public class SysCommision extends BaseEntity {
      * 业务员
      */
     private Long userId;
+
+    private List<Long> userIds;
 
     /**
      * 岗位id

@@ -7,7 +7,7 @@
   :on-success="handleFileSuccess"
   :accept="'.png,.jpg'"
   :before-upload="beforeAvatarUpload">
-  <img v-if="imageUrl" :src="imageUrl" class="avatar">
+  <img v-if="imageUrl || coverUrl" :src="imageUrl || coverUrl" class="avatar">
   <i v-else class="el-icon-plus avatar-uploader-icon"></i>
   <div class="el-upload__tip" slot="tip">
       1、只能上传png、jpg文件，且每个文件不超过{{
@@ -75,6 +75,10 @@ export default {
     prefix: {
       type: String,
       default: "videoCover",
+    },
+    coverUrl:{
+      type: String,
+      default: ""
     }
   }
 };

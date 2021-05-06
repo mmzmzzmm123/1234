@@ -1,6 +1,7 @@
 <template>
 <el-dialog title="视频上传" v-if="open" :visible.sync="open" width="700px" :close-on-click-modal="false" :show-close="false" append-to-body>
 <el-form ref="videoFrom" :model="videoFrom" :rules="videoRules" label-width="80px">
+  <el-row :gutter="15">
         <el-form-item label="视频标题" prop="title">
             <el-input
                 type="textarea"
@@ -24,7 +25,8 @@
          <el-form-item label="视频封面" prop="coverUrl">
               <UploadFile ref="uploadFile" :prefix="'videoCover'" @callbackMethod="handleCoverUrl"></UploadFile>
           </el-form-item>
-        <el-form-item label="视频类别" prop="cateId">
+<el-col :span="12">
+          <el-form-item label="视频类别" prop="cateId">
             <el-select v-model="videoFrom.cateId" clearable filterable placeholder="请选择类别">
               <el-option
                 v-for="classify in classifyList"
@@ -34,8 +36,8 @@
               />
             </el-select>
           </el-form-item>
-         
-          
+</el-col>
+      <el-col :span="12">    
           <el-form-item label="视频权限" prop="payLevel">
             <el-select v-model="videoFrom.payLevel" clearable filterable placeholder="请选择权限">
               <el-option
@@ -46,6 +48,7 @@
               />
             </el-select>
           </el-form-item>
+</el-col>
           
         <el-form-item label="视频文件" prop="file">
             <div>
@@ -55,6 +58,15 @@
             </div>
         </el-form-item>
 
+        <el-form-item label="展示状态" prop="wxShow">
+              <el-switch
+                v-model="videoFrom.wxShow"
+                active-text="小程序展示"
+                inactive-text="小程序不展示">
+              </el-switch>
+              <div>提示：请保证内容正确再展示到小程序</div>
+          </el-form-item>    
+  </el-row>
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button type="primary" @click="authUpload" :disabled="uploadDisabled">开始上传</el-button>
@@ -109,7 +121,7 @@
         pauseDisabled: true,
         uploader: null,
         statusText: '',
-        fileType:['mp4'],
+        fileType:['mp4','MP4'],
         uploading: false
       }
     },
@@ -143,8 +155,9 @@
                 title: null,
                 description: null,
                 tags: null,
-                payLevel: null,
-                videoId: null
+                payLevel: 0,
+                videoId: null,
+                wxShow: false
             };
             if(this.$refs.uploadFile){
                 this.$refs.uploadFile.resetUpload();
@@ -321,6 +334,7 @@
             self.statusText = '文件上传完毕'
             self.uploading = false;
             //self.msgSuccess("上传成功");
+            self.videoFrom.showFlag = self.videoFrom.wxShow ? 1 : 0;
             addNutritionalVideo(self.videoFrom).then(response => {
                 if (response.code === 200) {
                   self.msgSuccess("视频上传成功");
