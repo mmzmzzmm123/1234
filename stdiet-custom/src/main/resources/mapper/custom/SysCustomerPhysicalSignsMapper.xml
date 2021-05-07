@@ -80,7 +80,6 @@
         insert into sys_customer_physical_signs
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="customerId != null">customer_id,</if>
-            <if test="customerId != null">out_id,</if>
             <if test="sex != null">sex,</if>
             <if test="age != null">age,</if>
             <if test="tall != null">tall,</if>
@@ -118,7 +117,6 @@
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="customerId != null">#{customerId},</if>
-            <if test="customerId != null">md5#{customerId},</if>
             <if test="sex != null">#{sex},</if>
             <if test="age != null">#{age},</if>
             <if test="tall != null">#{tall},</if>
@@ -160,7 +158,6 @@
         update sys_customer_physical_signs
         <trim prefix="SET" suffixOverrides=",">
             <if test="customerId != null">customer_id = #{customerId},</if>
-            <if test="customerId != null">out_id = md5(#{customerId}),</if>
             <if test="sex != null">sex = #{sex},</if>
             <if test="age != null">age = #{age},</if>
             <if test="tall != null">tall = #{tall},</if>

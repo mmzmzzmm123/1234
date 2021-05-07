@@ -18,10 +18,16 @@ public class AesUtils {
     private static final String DEFAULT_CIPHER_ALGORITHM = "AES/ECB/PKCS5Padding";  //默认的加密算法
     private static final String DEFAULT_KEY = "Yhokm#876OTG!c";
 
+
+    public static String encrypt(String content) {
+        return encrypt(content, null);
+    }
+
     /**
      * AES 加密操作
-     * @param content  待加密内容
-     * @param key 加密密码
+     *
+     * @param content 待加密内容
+     * @param key     加密密码
      * @return 返回Base64转码后的加密数据
      */
     public static String encrypt(String content, String key) {
@@ -44,8 +50,14 @@ public class AesUtils {
         return null;
     }
 
+
+    public static String decrypt(String content) {
+        return decrypt(content, null);
+    }
+
     /**
      * AES 解密操作
+     *
      * @param content
      * @param key
      * @return
