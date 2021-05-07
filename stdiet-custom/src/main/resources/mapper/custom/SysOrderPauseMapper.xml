@@ -8,6 +8,7 @@
         <result property="id" column="id"/>
         <result property="orderId" column="order_id"/>
         <result property="cusId" column="cus_id"/>
+        <result property="outId" column="out_id"/>
         <result property="pauseStartDate" column="pause_start_date"/>
         <result property="pauseEndDate" column="pause_end_date"/>
         <result property="reason" column="reason"/>
@@ -36,6 +37,7 @@
         where sop.del_flag = 0
         <if test="orderId != null ">and sop.order_id = #{orderId}</if>
         <if test="cusId != null ">and sop.cus_id = #{cusId}</if>
+        <if test="outId != null ">and sop.out_id = #{outId}</if>
         <if test="pauseStartDate != null ">and sop.pause_start_date = #{pauseStartDate}</if>
         <if test="pauseEndDate != null ">and sop.pause_end_date = #{pauseEndDate}</if>
         <if test="reason != null  and reason != ''">and sop.reason = #{reason}</if>
