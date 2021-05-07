@@ -54,7 +54,6 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <include refid="selectTsbzXybmsqVo"/>
         <where>
             <if test="faid != null "> and a.faid = #{faid}</if>
-            <if test="deptid != null "> and deptid = #{deptid}</if>
             <if test="jdid != null "> and a.jdid = #{jdid}</if>
             <if test="jsid != null "> and a.jsid = #{jsid}</if>
             <if test="jxbh != null "> and a.jxbh = #{jxbh}</if>
@@ -75,7 +74,6 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <include refid="selectTsbzXybmsqVo"/>
         <where>
             <if test="faid != null "> and a.faid = #{faid}</if>
-            <if test="deptid != null "> and deptid = #{deptid}</if>
             <if test="jdid != null "> and a.jdid = #{jdid}</if>
             <if test="jsid != null "> and a.jsid = #{jsid}</if>
             <if test="jxbh != null "> and a.jxbh = #{jxbh}</if>

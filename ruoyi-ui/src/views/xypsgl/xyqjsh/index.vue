@@ -7,6 +7,19 @@
       v-show="showSearch"
       label-width="68px"
     >
+      <el-form-item label="审核状态" prop="qjshstatus">
+          <el-select
+            v-model="queryParams.qjshstatus"
+            placeholder="请选择审核状态"
+          >
+            <el-option
+              v-for="dict in xxshstatusOptions"
+              :key="dict.dictValue"
+              :label="dict.dictLabel"
+              :value="dict.dictValue"
+            ></el-option>
+          </el-select>
+        </el-form-item>
       <el-form-item label="报名基地" prop="jdid">
         <el-select v-model="queryParams.jdid" placeholder="请选择报名基地">
           <el-option
@@ -374,7 +387,7 @@ export default {
         createUser: null,
         xxshstatus: null,
         xxshjy: null,
-        qjshstatus: null,
+        qjshstatus: '0',
         qjshjy: null,
       },
       // 查询报名名额参数

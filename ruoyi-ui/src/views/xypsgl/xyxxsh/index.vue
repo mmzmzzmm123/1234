@@ -378,7 +378,7 @@ export default {
         phone: null,
         email: null,
         createUser: null,
-        xxshstatus: null,
+        xxshstatus: '0',
         xxshjy: null,
         qjshstatus: null,
         qjshjy: null,
