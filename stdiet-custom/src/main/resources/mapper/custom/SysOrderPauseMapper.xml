@@ -25,7 +25,7 @@
     </sql>
 
     <sql id="selectSysOrderPauseVo">
-        select id, order_id, cus_id, out_id, pause_start_date, pause_end_date, reason, remarks, create_time, create_by, update_time, update_by, del_flag from sys_recipes_pause sop
+        select id, order_id, cus_id, pause_start_date, pause_end_date, reason, remarks, create_time, create_by, update_time, update_by, del_flag from sys_recipes_pause sop
     </sql>
 
     <select id="selectSysOrderPauseList" parameterType="SysOrderPause" resultMap="SysOrderPauseResult">
@@ -86,7 +86,7 @@
         <trim prefix="SET" suffixOverrides=",">
             <if test="orderId != null">order_id = #{orderId},</if>
             <if test="cusId != null">cus_id = #{cusId},</if>
-            <if test="outId != null">out_id = #{outId},</if>
+            <if test="cusId != null">out_id = md5(#{cusId}),</if>
             <if test="pauseStartDate != null">pause_start_date = #{pauseStartDate},</if>
             <if test="pauseEndDate != null">pause_end_date = #{pauseEndDate},</if>
             <if test="reason != null">reason = #{reason},</if>

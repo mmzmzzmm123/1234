@@ -18,6 +18,7 @@
     <div v-loading="loading">
       <div class="content">
         <MenuDetail :value="menuData" :date="curDate" />
+        <div class="bei_an">粤ICP备2020073675</div>
       </div>
     </div>
 
@@ -204,6 +205,13 @@ export default {
   .content {
     height: calc(100vh - 44px);
     overflow: auto;
+
+    .bei_an {
+      text-align: center;
+      padding: 8px;
+      font-size: 12px;
+      color: #8c8c8c;
+    }
   }
 }
 </style>
