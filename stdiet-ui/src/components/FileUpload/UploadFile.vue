@@ -99,14 +99,14 @@ export default {
   .avatar-uploader-icon {
     font-size: 28px;
     color: #8c939d;
-    width: 178px;
-    height: 178px;
-    line-height: 178px;
+    width: 200px;
+    height: 120px;
+    line-height: 120px;
     text-align: center;
   }
   .avatar {
-    width: 300px;
-    height: 200px;
+    width: 200px;
+    height: 120px;
     display: block;
   }
 </style>
