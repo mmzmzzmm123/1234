@@ -11,6 +11,7 @@ import com.stdiet.common.utils.AliyunVideoUtils;
 import com.stdiet.common.utils.DateUtils;
 import com.stdiet.common.utils.oss.AliyunOSSUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import com.stdiet.custom.mapper.SysNutritionalVideoMapper;
 import com.stdiet.custom.domain.SysNutritionalVideo;
@@ -90,7 +91,23 @@ public class SysNutritionalVideoServiceImpl implements ISysNutritionalVideoServi
     public int updateSysNutritionalVideo(SysNutritionalVideo sysNutritionalVideo)
     {
         sysNutritionalVideo.setUpdateTime(DateUtils.getNowDate());
-        return sysNutritionalVideoMapper.updateSysNutritionalVideo(sysNutritionalVideo);
+        int row = sysNutritionalVideoMapper.updateSysNutritionalVideo(sysNutritionalVideo);
+        if(row > 0){
+            updateAliyunVideo(sysNutritionalVideo.getId());
+        }
+        return row;
+    }
+
+    @Async
+    public void updateAliyunVideo(Long id){
+        try{
+            SysNutritionalVideo sysNutritionalVideo = selectSysNutritionalVideoById(id);
+            if(sysNutritionalVideo != null && sysNutritionalVideo.getVideoId() != null){
+                AliyunVideoUtils.updateVideo(sysNutritionalVideo.getVideoId(), sysNutritionalVideo.getTitle(), sysNutritionalVideo.getTags(), sysNutritionalVideo.getDescription(), null);
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -102,7 +119,11 @@ public class SysNutritionalVideoServiceImpl implements ISysNutritionalVideoServi
     @Override
     public int deleteSysNutritionalVideoByIds(Long[] ids)
     {
-        return sysNutritionalVideoMapper.deleteSysNutritionalVideoByIds(ids);
+        int row = sysNutritionalVideoMapper.deleteSysNutritionalVideoByIds(ids);
+        if(row > 0){
+            updateAliyunVideoCateId(ids);
+        }
+        return row;
     }
 
     /**
@@ -114,7 +135,12 @@ public class SysNutritionalVideoServiceImpl implements ISysNutritionalVideoServi
     @Override
     public int deleteSysNutritionalVideoById(Long id)
     {
-        return sysNutritionalVideoMapper.deleteSysNutritionalVideoById(id);
+        int row = sysNutritionalVideoMapper.deleteSysNutritionalVideoById(id);
+        if(row > 0){
+            Long[] ids = {id};
+            updateAliyunVideoCateId(ids);
+        }
+        return row;
     }
 
     /**
@@ -187,7 +213,33 @@ public class SysNutritionalVideoServiceImpl implements ISysNutritionalVideoServi
      * @return
      */
     public int updateWxshowByIds(Integer wxShow, Long[] ids){
-        return sysNutritionalVideoMapper. updateWxshowByIds(wxShow, ids);
+        return sysNutritionalVideoMapper.updateWxshowByIds(wxShow, ids);
+    }
+
+    /**
+     * 将删除的阿里云视频放入回收站
+     * @param ids
+     */
+    @Async
+    public void updateAliyunVideoCateId(Long[] ids){
+        try {
+            List<String> videoIdList = sysNutritionalVideoMapper.getVideoIdByIds(ids);
+            if(videoIdList != null && videoIdList.size() > 0){
+                for (String videoId : videoIdList) {
+                    AliyunVideoUtils.delVideo(videoId);
+                }
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * 更新视频播放量
+     * @return
+     */
+    public int updateVideoPlayNum(String videoId){
+        return sysNutritionalVideoMapper.updateVideoPlayNum(videoId);
     }
 
 }

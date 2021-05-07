@@ -65,6 +65,10 @@ public class SysNutritionalVideo extends BaseEntity
 
     private String payLevelName;
 
+    /** 播放次数，默认0 */
+    @Excel(name = "播放次数，默认0")
+    private Integer playNum;
+
     /** 删除标识，0未删除 1已删除，默认0 */
     private Integer delFlag;
 
@@ -72,4 +76,7 @@ public class SysNutritionalVideo extends BaseEntity
     private String fileName;
 
     private String key;
+
+    //排序方式 1 按照创建时间倒序 2按照优先级、时间倒序
+    private Integer sortType;
 }

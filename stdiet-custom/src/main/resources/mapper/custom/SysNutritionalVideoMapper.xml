@@ -16,6 +16,7 @@
         <result property="showFlag"    column="show_flag"    />
         <result property="priorityLevel"    column="priority_level"    />
         <result property="payLevel"    column="pay_level"    />
+        <result property="playNum"    column="play_num"    />
         <result property="createTime"    column="create_time"    />
         <result property="createBy"    column="create_by"    />
         <result property="updateTime"    column="update_time"    />
@@ -27,11 +28,11 @@
     </resultMap>
 
     <sql id="selectSysNutritionalVideoVo">
-        select id, cate_id, video_id, cover_url, title, description, priority_level,pay_level,video_size, tags, show_flag, create_time, create_by, update_time, update_by, del_flag from sys_nutritional_video
+        select id, cate_id, video_id, cover_url, title, description, priority_level,pay_level,play_num,video_size, tags, show_flag, create_time, create_by, update_time, update_by, del_flag from sys_nutritional_video
     </sql>
 
     <select id="selectSysNutritionalVideoList" parameterType="SysNutritionalVideo" resultMap="SysNutritionalVideoResult">
-        select snv.id, snv.cate_id, snv.video_id, snv.cover_url, snv.title, snv.description, snv.priority_level,snv.pay_level,snv.video_size, snv.tags, snv.show_flag, snv.create_time,
+        select snv.id, snv.cate_id, snv.video_id, snv.cover_url, snv.title, snv.description, snv.priority_level,snv.pay_level,snv.play_num,snv.video_size, snv.tags, snv.show_flag, snv.create_time,
         pay.dict_label as pay_level_name, svc.cate_name
         from sys_nutritional_video snv
         left join (SELECT dict_label, dict_value FROM sys_dict_data WHERE dict_type = 'video_pay_level') AS pay ON pay.dict_value = snv.pay_level
@@ -49,7 +50,12 @@
         <if test="key != null and key != ''">
             and (snv.title like concat('%',#{key},'%') or snv.description like concat('%',#{key},'%'))
         </if>
-        order by snv.priority_level DESC,snv.create_time DESC
+        <if test="sortType == null or sortType == 1">
+            order by snv.create_time DESC
+        </if>
+        <if test="sortType != null and sortType == 2">
+            order by snv.priority_level DESC,snv.create_time DESC
+        </if>
     </select>
 
     <select id="selectSysNutritionalVideoById" parameterType="Long" resultMap="SysNutritionalVideoResult">
@@ -69,6 +75,7 @@
             <if test="tags != null">tags,</if>
             <if test="showFlag != null">show_flag,</if>
             <if test="priorityLevel != null">priority_level,</if>
+            <if test="playNum != null">play_num,</if>
             <if test="createTime != null">create_time,</if>
             <if test="createBy != null">create_by,</if>
             <if test="payLevel != null">pay_level,</if>
@@ -86,6 +93,7 @@
             <if test="tags != null">#{tags},</if>
             <if test="showFlag != null">#{showFlag},</if>
             <if test="priorityLevel != null">#{priorityLevel},</if>
+            <if test="playNum != null">#{playNum},</if>
             <if test="createTime != null">#{createTime},</if>
             <if test="createBy != null">#{createBy},</if>
             <if test="payLevel != null">#{payLevel},</if>
@@ -107,6 +115,7 @@
             <if test="tags != null">tags = #{tags},</if>
             <if test="showFlag != null">show_flag = #{showFlag},</if>
             <if test="priorityLevel != null">priority_level = #{priorityLevel},</if>
+            <if test="playNum != null">play_num = #{playNum},</if>
             <if test="createTime != null">create_time = #{createTime},</if>
             <if test="createBy != null">create_by = #{createBy},</if>
             <if test="payLevel != null">pay_level = #{payLevel},</if>
@@ -137,6 +146,19 @@
         <foreach item="id" collection="array" open="(" separator="," close=")">
             #{id}
         </foreach>
+    </update>
+
+    <!-- 查询视频的阿里云ID，包含已删除的 -->
+    <select id="getVideoIdByIds" parameterType="String" resultType="String">
+        select video_id from sys_nutritional_video where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </select>
+
+    <!-- 更新视频播放量  -->
+    <update id="updateVideoPlayNum" parameterType="String">
+        update sys_nutritional_video set play_num = play_num + 1 where video_id = #{videoId} and del_flag = 0
     </update>
 
 </mapper>

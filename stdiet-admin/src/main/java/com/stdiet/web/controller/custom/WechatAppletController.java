@@ -255,7 +255,7 @@ public class WechatAppletController extends BaseController {
         List<String> allUrlList = new ArrayList<>();
 
         for (String key : imageName) {
-            if (!"bodyImages".equals(key)) {
+            if(!"bodyImages".equals(key)){
                 allUrlList.addAll(downUrlList.get(key));
                 allImagesList.addAll(imageUrlMap.get(key));
             }
@@ -358,13 +358,9 @@ public class WechatAppletController extends BaseController {
      */
     @GetMapping(value = "/getVideoList")
     public TableDataInfo getVideoList(SysNutritionalVideo sysNutritionalVideo) {
-       /* AjaxResult result = AjaxResult.success();
-        Map<String, Object> map = sysNutritionalVideoService.searchVideo(sysNutritionalVideo.getKey(), 1, pageNum, pageSize, null);
-        result.put("total", map.get("total"));
-        result.put("rows", map.get("nutritionalVideoList"));
-        return result;*/
         startPage();
         sysNutritionalVideo.setShowFlag(1);
+        sysNutritionalVideo.setSortType(2);
         List<SysNutritionalVideo> list = sysNutritionalVideoService.selectSysNutritionalVideoList(sysNutritionalVideo, true);
         return getDataTable(list);
     }
@@ -377,21 +373,35 @@ public class WechatAppletController extends BaseController {
     public AjaxResult getVideoDetailById(@RequestParam(value = "videoId") String videoId) {
         AjaxResult result = AjaxResult.success();
         NutritionalVideoResponse nutritionalVideoResponse = new NutritionalVideoResponse();
-        try {
-            GetPlayInfoResponseBody playInfoResponseBody = AliyunVideoUtils.getVideoVisitDetail(videoId);
-            GetVideoInfoResponseBody videoInfoResponseBody = AliyunVideoUtils.getVideoById(videoId);
-            List<GetPlayInfoResponseBody.GetPlayInfoResponseBodyPlayInfoListPlayInfo> playList = playInfoResponseBody.playInfoList.playInfo;
-            if (playList != null && playList.size() > 0) {
-                nutritionalVideoResponse.setPlayUrl(playList.get(0).getPlayURL());
-            }
-            nutritionalVideoResponse.setDescription(videoInfoResponseBody.video.getDescription());
-            nutritionalVideoResponse.setTags(videoInfoResponseBody.video.getTags());
-            nutritionalVideoResponse.setTitle(videoInfoResponseBody.video.getTitle());
-            //nutritionalVideoResponse.setCreateTime(sysNutritionalVideo.getCreateTime() == null ? "" : DateUtils.dateTime(sysNutritionalVideo.getCreateTime()));
-        } catch (Exception e) {
+        try{
+                SysNutritionalVideo sysNutritionalVideo = sysNutritionalVideoService.selectSysNutritionalVideByVideoId(videoId);
+                if(sysNutritionalVideo != null){
+                    GetPlayInfoResponseBody playInfoResponseBody = AliyunVideoUtils.getVideoVisitDetail(videoId);
+                    List<GetPlayInfoResponseBody.GetPlayInfoResponseBodyPlayInfoListPlayInfo> playList = playInfoResponseBody.playInfoList.playInfo;
+                    if(playList != null && playList.size() > 0){
+                        nutritionalVideoResponse.setPlayUrl(playList.get(0).getPlayURL());
+                    }
+                    nutritionalVideoResponse.setDescription(sysNutritionalVideo.getDescription());
+                    nutritionalVideoResponse.setTags(sysNutritionalVideo.getTags());
+                    nutritionalVideoResponse.setTitle(sysNutritionalVideo.getTitle());
+                    nutritionalVideoResponse.setPlayNum(sysNutritionalVideo.getPlayNum());
+                }
+        }catch (Exception e){
             e.printStackTrace();
         }
         result.put("videoDetail", nutritionalVideoResponse);
+        return result;
+    }
+
+    /**
+     * 更新播放次数
+     */
+    @GetMapping(value = "/updateVideoPlayNum")
+    public AjaxResult updateVideoPlayNum(@RequestParam(value = "videoId") String videoId) {
+        AjaxResult result = AjaxResult.error();
+        if(sysNutritionalVideoService.updateVideoPlayNum(videoId) > 0){
+            result = AjaxResult.success();
+        }
         return result;
     }
 

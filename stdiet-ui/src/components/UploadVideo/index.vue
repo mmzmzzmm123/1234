@@ -5,7 +5,7 @@
             <el-input
                 type="textarea"
                 placeholder="请输入视频标题"
-                v-model="videoFrom.title"
+                v-model.trim="videoFrom.title"
                 maxlength="50" 
                 rows="1"
                 show-word-limit
@@ -15,7 +15,7 @@
           <el-input
                 type="textarea"
                 placeholder="请输入视频描述"
-                v-model="videoFrom.description"
+                v-model.trim="videoFrom.description"
                 maxlength="1000"
                 rows="3"
                 show-word-limit
@@ -98,7 +98,9 @@
         },
         callback: null,
         classifyList: [],
+        defaultClassify: null,
         payVideoLevelList:[],
+        defaultPayLevel: null,
         uploadAuth:{
             
         },
@@ -118,17 +120,23 @@
         uploader: null,
         statusText: '',
         fileType:['mp4','MP4'],
-        uploading: false
+        uploading: false,
       }
     },
     created(){
-      getAllClassify().then(response => {
+      /*getAllClassify().then(response => {
           if(response.code == 200){
               this.classifyList = response.data;
+              if(response.data != null && response.data.length > 0){
+                 this.defaultClassify = response.data[0].id;
+              }
           }
-      });
+      });*/
       this.getDicts("video_pay_level").then((response) => {
         this.payVideoLevelList = response.data;
+        if(response.data != null && response.data.length > 0){
+          this.defaultPayLevel =  response.data[0].dictValue;
+        }
       });
         
     },
@@ -136,22 +144,26 @@
       UploadFile
     },
     methods: {
-        showDialog(callback){
+        showDialog(classifyList, callback){
             this.resetVideoFrom();
             this.open = true;
             this.callback = callback;
+            this.classifyList = classifyList;
+            if(classifyList != null && classifyList.length > 0){
+                 this.defaultClassify = classifyList[0].id;
+            }
         },
         handleCoverUrl(url){
           this.videoFrom.coverUrl = url;
         },
         resetVideoFrom(){
             this.videoFrom = {
-                cateId: null,
+                cateId: this.defaultClassify ? this.defaultClassify : null,
                 coverUrl: null,
                 title: null,
                 description: null,
                 tags: null,
-                payLevel: 0,
+                payLevel: this.defaultPayLevel ? parseInt(this.defaultPayLevel) : null,
                 videoId: null,
                 wxShow: false
             };

@@ -38,14 +38,8 @@ public class SysNutritionalVideoController extends BaseController
     @GetMapping("/list")
     public TableDataInfo list(SysNutritionalVideo sysNutritionalVideo)
     {
-        /*AjaxResult result = AjaxResult.success();
-        Map<String, Object> map = sysNutritionalVideoService.searchVideo(sysNutritionalVideo.getKey(), sysNutritionalVideo.getShowFlag(), pageNum, pageSize, null);
-        if(map != null){
-            result.put("total", map.get("total"));
-            result.put("rows", map.get("nutritionalVideoList"));
-        }
-        return result;*/
         startPage();
+        sysNutritionalVideo.setSortType(1);
         List<SysNutritionalVideo> list = sysNutritionalVideoService.selectSysNutritionalVideoList(sysNutritionalVideo, true);
         return getDataTable(list);
     }
@@ -72,7 +66,6 @@ public class SysNutritionalVideoController extends BaseController
     @PostMapping
     public AjaxResult add(@RequestBody SysNutritionalVideo sysNutritionalVideo)
     {
-        sysNutritionalVideo.setShowFlag(1);
         return toAjax(sysNutritionalVideoService.insertSysNutritionalVideo(sysNutritionalVideo));
     }
 

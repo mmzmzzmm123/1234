@@ -3,7 +3,7 @@
     <el-form :model="queryParams" ref="queryForm" :inline="true" v-show="showSearch" label-width="68px">
       <el-form-item label="关键词" prop="title">
         <el-input
-          v-model="queryParams.key"
+          v-model.trim="queryParams.key"
           placeholder="请输入关键词"
           clearable
           size="small"
@@ -62,6 +62,7 @@
         <el-button
           type="primary"
           size="mini"
+          icon="el-icon-question"
           @click="handleAskQuestion"
           v-hasPermi="['custom:askQuestion:list']"
         >问题解答</el-button>

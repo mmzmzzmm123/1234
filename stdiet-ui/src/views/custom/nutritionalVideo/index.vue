@@ -3,7 +3,7 @@
     <el-form :model="queryParams" ref="queryForm" :inline="true" v-show="showSearch" label-width="68px">
       <el-form-item label="关键词" prop="key">
         <el-input
-          v-model="queryParams.key"
+          v-model.trim="queryParams.key"
           placeholder="请输入关键词"
           clearable
           size="small"
@@ -75,6 +75,15 @@
           @click="handleDelete"
           v-hasPermi="['custom:nutritionalVideo:remove']"
         >删除</el-button>
+      </el-col>
+      <el-col :span="1.5">
+        <el-button
+          type="primary"
+          size="mini"
+          icon="el-icon-menu"
+          @click="handleVideoClassify"
+          v-hasPermi="['custom:videoClassify:list']"
+        >视频分类管理</el-button>
       </el-col>
       <!--
       <el-col :span="1.5">
@@ -211,6 +220,11 @@
     </el-dialog>
 
     <UploadVideo ref="uploadVideoRef"></UploadVideo>
+
+    <!-- 视频分类管理 -->
+    <el-dialog title="视频分类列表" :visible.sync="videoClassifyOpen" width="800px" append-to-body @closed="getAllVideoClassify();">
+      <VideoClassify ref="videoClassifyRef"></VideoClassify>
+    </el-dialog>
   </div>
 </template>
 
@@ -219,6 +233,7 @@
   import {getAllClassify } from "@/api/custom/videoClassify";
   import UploadVideo from "@/components/UploadVideo";
   import UploadFile from "@/components/FileUpload/UploadFile";
+  import VideoClassify from "../videoClassify";
   export default {
     name: "NutritionalVideo",
     data() {
@@ -259,22 +274,21 @@
         //分类列表
         classifyList:[],
         //权限等级列表
-        payVideoLevelList:[]
+        payVideoLevelList:[],
+        //视频分类弹窗显示标识
+        videoClassifyOpen:false
+
       };
     },
     created() {
       this.getList();
-      getAllClassify().then(response => {
-          if(response.code == 200){
-              this.classifyList = response.data;
-          }
-      });
+      this.getAllVideoClassify();
       this.getDicts("video_pay_level").then((response) => {
         this.payVideoLevelList = response.data;
       });
     },
     components: {
-      UploadVideo,UploadFile
+      UploadVideo,UploadFile,VideoClassify
     },
     methods: {
       /** 查询营养视频列表 */
@@ -288,6 +302,14 @@
           this.total = response.total;
           this.loading = false;
       });
+      },
+      //获取所有分类
+      getAllVideoClassify(){
+        getAllClassify().then(response => {
+          if(response.code == 200){
+            this.classifyList = response.data;
+          }
+        });
       },
       // 取消按钮
       cancel() {
@@ -326,9 +348,12 @@
         this.multiple = !selection.length
       },
       clickUploadVideo(){
-        this.$refs.uploadVideoRef.showDialog(()=>{
+        this.$refs.uploadVideoRef.showDialog(this.classifyList, ()=>{
          this.getList();
         });
+      },
+      handleVideoClassify(){
+        this.videoClassifyOpen = true;
       },
       /** 新增按钮操作 */
       handleAdd() {

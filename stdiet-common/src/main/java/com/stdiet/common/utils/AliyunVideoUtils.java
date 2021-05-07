@@ -19,6 +19,9 @@ public class AliyunVideoUtils {
     //播放地址日期，30天
     public static final Long default_authTimeout = 2592000L;
 
+    //阿里云回收站分类ID
+    public static final Long default_delete_cateId = 1860L;
+
     public static final String search_field = "VideoId,Title,CoverURL,CateName,Tags,Status,Description,CreationTime";
 
     /**
@@ -152,6 +155,51 @@ public class AliyunVideoUtils {
             searchMediaRequest.setMatch(matchString);
         }
         return client.searchMedia(searchMediaRequest);
+    }
+
+    /**
+     * 更新视频消息
+     * @param videoId 视频ID必须
+     * @param title
+     * @param tags
+     * @param description
+     * @param cateId
+     * @return
+     * @throws Exception
+     */
+    public static String updateVideo(String videoId, String title, String tags, String description, Long cateId) throws Exception{
+        com.aliyun.vod20170321.Client client = AliyunVideoUtils.createClient();
+        if(StringUtils.isEmpty(videoId)){
+            return null;
+        }
+        UpdateVideoInfoRequest updateVideoInfoRequest = new UpdateVideoInfoRequest().setVideoId(videoId);
+        if(StringUtils.isNotEmpty(title)){
+            updateVideoInfoRequest.setTitle(title);
+        }
+        if(StringUtils.isNotEmpty(tags)){
+            updateVideoInfoRequest.setTags(tags);
+        }
+        if(StringUtils.isNotEmpty(description)){
+            updateVideoInfoRequest.setDescription(description);
+        }
+        if(cateId != null && cateId.longValue() > 0){
+            updateVideoInfoRequest.setCateId(cateId);
+        }
+        UpdateVideoInfoResponse updateVideoInfoResponse = client.updateVideoInfo(updateVideoInfoRequest);
+        if(updateVideoInfoResponse != null){
+            return updateVideoInfoResponse.body.requestId;
+        }
+        return null;
+    }
+
+    /**
+     * 将视频分类到回收站中
+     * @param videoId
+     * @return
+     * @throws Exception
+     */
+    public static String delVideo(String videoId) throws Exception{
+        return updateVideo(videoId, null,null,null, default_delete_cateId);
     }
 
 
