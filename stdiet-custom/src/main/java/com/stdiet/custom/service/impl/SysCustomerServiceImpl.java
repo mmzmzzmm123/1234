@@ -69,10 +69,7 @@ public class SysCustomerServiceImpl implements ISysCustomerService {
     @Override
     public int insertSysCustomer(SysCustomer sysCustomer) {
         sysCustomer.setCreateTime(DateUtils.getNowDate());
-        sysCustomerMapper.insertSysCustomer(sysCustomer);
-        SysCustomer mCustomer = new SysCustomer();
-        mCustomer.setId(sysCustomer.getId());
-        return sysCustomerMapper.updateSysCustomer(mCustomer);
+        return sysCustomerMapper.insertSysCustomer(sysCustomer);
     }
 
     /**
