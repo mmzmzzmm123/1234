@@ -129,6 +129,7 @@
     <update id="updateSysCustomer" parameterType="SysCustomer">
         update sys_customer
         <trim prefix="SET" suffixOverrides=",">
+            <if test="id != null">out_id = md5(#{id}),</if>
             <if test="name != null">name = #{name},</if>
             <if test="phone != null">phone = #{phone},</if>
             <if test="fansTime != null">fans_time = #{fansTime},</if>

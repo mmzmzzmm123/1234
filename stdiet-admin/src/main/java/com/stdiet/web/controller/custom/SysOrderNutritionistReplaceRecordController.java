@@ -111,12 +111,14 @@ public class SysOrderNutritionistReplaceRecordController extends BaseController
             return AjaxResult.error("开始时间不能小于"+ DateUtils.dateTime(sysOrder.getCommissStartTime()));
         }
         //更换的售后或营养师不能与原订单一致
-        if(sysOrderNutritionistReplaceRecord.getNutritionistId() != null && sysOrder.getNutritionistId().longValue() == sysOrderNutritionistReplaceRecord.getNutritionistId().longValue()){
-            return AjaxResult.error("更换的营养师与原订单营养师不能相同");
-        }
-        if(sysOrderNutritionistReplaceRecord.getAfterSaleId() != null && sysOrder.getAfterSaleId().longValue() == sysOrderNutritionistReplaceRecord.getAfterSaleId().longValue()){
-            return AjaxResult.error("更换的售后与原订单售后不能相同");
-        }
+//        if(sysOrderNutritionistReplaceRecord.getNutritionistId() != null && sysOrder.getNutritionistId().longValue() == sysOrderNutritionistReplaceRecord.getNutritionistId().longValue()){
+//            return AjaxResult.error("更换的营养师与原订单营养师不能相同");
+//        }
+
+//        if(sysOrderNutritionistReplaceRecord.getAfterSaleId() != null && sysOrder.getAfterSaleId().longValue() == sysOrderNutritionistReplaceRecord.getAfterSaleId().longValue()){
+//            return AjaxResult.error("更换的售后与原订单售后不能相同");
+//        }
+
         //体验单、二开售后提成单都不支持更换营养师和售后
         if(sysOrder.getAfterSaleCommissOrder().intValue() == 1 || "2".equals(sysOrder.getOrderType())){
             return AjaxResult.error("二开提成单、体验单不支持更换营养师、售后");
