@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.stdiet.custom.domain.SysNutritionalVideo;
+import org.apache.ibatis.annotations.Param;
 
 /**
  * 营养视频Service接口
@@ -81,4 +82,10 @@ public interface ISysNutritionalVideoService
      * @return
      */
     public int updateWxshowByIds(Integer wxShow, Long[] ids);
+
+    /**
+     * 更新视频播放量
+     * @return
+     */
+    public int updateVideoPlayNum(String videoId);
 }

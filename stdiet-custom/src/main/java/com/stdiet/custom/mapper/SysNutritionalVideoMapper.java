@@ -75,4 +75,17 @@ public interface SysNutritionalVideoMapper
      * @return
      */
     public int updateWxshowByIds(@Param("wxShow")Integer wxShow, @Param("array") Long[] ids);
+
+    /**
+     * 查询阿里云的视频ID，包含已删除的
+     * @param ids
+     * @return
+     */
+    public List<String> getVideoIdByIds(@Param("array") Long[] ids);
+
+    /**
+     * 更新视频播放量
+     * @return
+     */
+    public int updateVideoPlayNum(@Param("videoId")String videoId);
 }
