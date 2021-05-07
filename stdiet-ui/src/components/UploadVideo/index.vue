@@ -1,7 +1,6 @@
 <template>
 <el-dialog title="视频上传" v-if="open" :visible.sync="open" width="700px" :close-on-click-modal="false" :show-close="false" append-to-body>
-<el-form ref="videoFrom" :model="videoFrom" :rules="videoRules" label-width="80px">
-  <el-row :gutter="15">
+<el-form ref="videoFrom" :model="videoFrom" :rules="videoRules" label-width="80px" style="height: 650px; overflow: auto">
         <el-form-item label="视频标题" prop="title">
             <el-input
                 type="textarea"
@@ -22,11 +21,12 @@
                 show-word-limit
             />
         </el-form-item>
+        
          <el-form-item label="视频封面" prop="coverUrl">
               <UploadFile ref="uploadFile" :prefix="'videoCover'" @callbackMethod="handleCoverUrl"></UploadFile>
-          </el-form-item>
-<el-col :span="12">
-          <el-form-item label="视频类别" prop="cateId">
+          </el-form-item>  
+          <div style="display:flex">
+            <el-form-item label="视频类别" prop="cateId">
             <el-select v-model="videoFrom.cateId" clearable filterable placeholder="请选择类别">
               <el-option
                 v-for="classify in classifyList"
@@ -35,10 +35,8 @@
                 :value="classify.id"
               />
             </el-select>
-          </el-form-item>
-</el-col>
-      <el-col :span="12">    
-          <el-form-item label="视频权限" prop="payLevel">
+          </el-form-item> 
+          <el-form-item label="视频权限" prop="payLevel" style="margin-left:40px">
             <el-select v-model="videoFrom.payLevel" clearable filterable placeholder="请选择权限">
               <el-option
                 v-for="dict in payVideoLevelList"
@@ -47,8 +45,8 @@
                 :value="parseInt(dict.dictValue)"
               />
             </el-select>
-          </el-form-item>
-</el-col>
+          </el-form-item>   
+          </div>
           
         <el-form-item label="视频文件" prop="file">
             <div>
@@ -57,7 +55,6 @@
             <div > 1、只能上传mp4文件，上传大文件时请使用客户端上传，防止上传超时</div>
             </div>
         </el-form-item>
-
         <el-form-item label="展示状态" prop="wxShow">
               <el-switch
                 v-model="videoFrom.wxShow"
@@ -65,8 +62,7 @@
                 inactive-text="小程序不展示">
               </el-switch>
               <div>提示：请保证内容正确再展示到小程序</div>
-          </el-form-item>    
-  </el-row>
+          </el-form-item>  
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button type="primary" @click="authUpload" :disabled="uploadDisabled">开始上传</el-button>
