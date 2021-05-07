@@ -1,5 +1,6 @@
 package com.stdiet.custom.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.stdiet.common.annotation.Excel;
 import lombok.Data;
 
@@ -19,7 +20,10 @@ public class SysWxUserInfo {
      */
     private String openid;
 
+    @JsonIgnore
     private Long cusId;
+
+    private String customerId;
 
     /**
      * 昵称
@@ -62,6 +66,8 @@ public class SysWxUserInfo {
      */
     @Excel(name = "省份")
     private String province;
+
+    private String language;
 
     /**
      * 国家

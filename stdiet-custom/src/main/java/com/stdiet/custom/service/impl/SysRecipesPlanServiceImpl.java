@@ -279,6 +279,9 @@ public class SysRecipesPlanServiceImpl implements ISysRecipesPlanService {
                 planStartDate = serverEndDate;
                 breakFlag = false;
             }
+            if(planEndDate == planStartDate && StringUtils.isNotEmpty(pauseResult)) {
+                continue;
+            }
             //暂停日期
             sysRecipesPlan.setPauseDate(pauseResult[3]);
             sysRecipesPlan.setStartDate(DateUtils.localDateToDate(planStartDate));

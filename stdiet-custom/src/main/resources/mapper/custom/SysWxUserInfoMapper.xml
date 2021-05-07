@@ -7,6 +7,7 @@
     <resultMap type="SysWxUserInfo" id="SysWxUserInfoResult">
         <result property="openid" column="openid"/>
         <result property="cusId" column="cus_id"/>
+        <result property="customerId" column="out_id"/>
         <result property="nickName" column="nick_name"/>
         <result property="appid" column="appid"/>
         <result property="phone" column="phone"/>
@@ -20,6 +21,7 @@
         <result property="updateBy" column="update_by"/>
         <result property="updateTime" column="update_time"/>
         <result property="remark" column="remark"/>
+        <result property="language" column="language"/>
     </resultMap>
 
     <sql id="selectSysWxUserInfoVo">
@@ -56,6 +58,7 @@
             <if test="nickName != null">nick_name,</if>
             <if test="appid != null">appid,</if>
             <if test="cusId != null">cus_id,</if>
+            <if test="cusId != null">out_id,</if>
             <if test="phone != null">phone,</if>
             <if test="avatarUrl != null">avatar_url,</if>
             <if test="sex != null">sex,</if>
@@ -67,12 +70,14 @@
             <if test="updateBy != null">update_by,</if>
             <if test="updateTime != null">update_time,</if>
             <if test="remark != null">remark,</if>
+            <if test="language != null">language,</if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="openid != null">#{openid},</if>
             <if test="nickName != null">#{nickName},</if>
             <if test="appid != null">#{appid},</if>
             <if test="cusId != null">#{cusId},</if>
+            <if test="cusId != null">md5(#{cusId}),</if>
             <if test="phone != null">#{phone},</if>
             <if test="avatarUrl != null">#{avatarUrl},</if>
             <if test="sex != null">#{sex},</if>
@@ -84,6 +89,7 @@
             <if test="updateBy != null">#{updateBy},</if>
             <if test="updateTime != null">#{updateTime},</if>
             <if test="remark != null">#{remark},</if>
+            <if test="language != null">#{language},</if>
         </trim>
     </insert>
 
@@ -93,6 +99,7 @@
             <if test="nickName != null">nick_name = #{nickName},</if>
             <if test="appid != null">appid = #{appid},</if>
             <if test="cusId != null">cus_id = #{cusId},</if>
+            <if test="cusId != null">out_id = md5(#{cusId}),</if>
             <if test="phone != null">phone = #{phone},</if>
             <if test="avatarUrl != null">avatar_url = #{avatarUrl},</if>
             <if test="sex != null">sex = #{sex},</if>
@@ -104,6 +111,7 @@
             <if test="updateBy != null">update_by = #{updateBy},</if>
             <if test="updateTime != null">update_time = #{updateTime},</if>
             <if test="remark != null">remark = #{remark},</if>
+            <if test="language != null">language = #{language},</if>
         </trim>
         where openid = #{openid}
     </update>

@@ -1,6 +1,8 @@
 package com.stdiet.web.controller.custom;
 
 import com.aliyun.vod20170321.models.GetPlayInfoResponseBody;
+import com.aliyun.vod20170321.models.GetVideoInfoResponseBody;
+import com.aliyun.vod20170321.models.GetVideoListResponseBody;
 import com.stdiet.common.core.controller.BaseController;
 import com.stdiet.common.core.domain.AjaxResult;
 import com.stdiet.common.core.page.TableDataInfo;
@@ -358,13 +360,13 @@ public class WechatAppletController extends BaseController {
      * 获取视频列表
      */
     @GetMapping(value = "/getVideoList")
-    public AjaxResult getVideoList(SysNutritionalVideo sysNutritionalVideo, @RequestParam(value = "pageNum", defaultValue = "1") int pageNum,  @RequestParam(value = "pageSize", defaultValue = "5")int pageSize) {
+    public AjaxResult getVideoList(SysNutritionalVideo sysNutritionalVideo, @RequestParam(value = "pageNum", defaultValue = "1") int pageNum, @RequestParam(value = "pageSize", defaultValue = "5") int pageSize) {
         AjaxResult result = AjaxResult.success();
         int total = 0;
         List<NutritionalVideoResponse> nutritionalVideoList = new ArrayList<>();
-        try{
+        try {
             GetVideoListResponseBody videoListResponseBody = AliyunVideoUtils.getVideoListByPage(null, "Normal", pageNum, pageSize);
-            if(videoListResponseBody != null){
+            if (videoListResponseBody != null) {
                 total = videoListResponseBody.total;
                 for (GetVideoListResponseBody.GetVideoListResponseBodyVideoListVideo video : videoListResponseBody.videoList.video) {
                     NutritionalVideoResponse nutritionalVideoResponse = new NutritionalVideoResponse();
@@ -376,10 +378,10 @@ public class WechatAppletController extends BaseController {
                     nutritionalVideoList.add(nutritionalVideoResponse);
                 }
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
-        result.put("total",total);
+        result.put("total", total);
         result.put("rows", nutritionalVideoList);
         return result;
     }
@@ -392,18 +394,18 @@ public class WechatAppletController extends BaseController {
     public AjaxResult getVideoDetailById(@RequestParam(value = "videoId") String videoId) {
         AjaxResult result = AjaxResult.success();
         NutritionalVideoResponse nutritionalVideoResponse = new NutritionalVideoResponse();
-        try{
-                GetPlayInfoResponseBody playInfoResponseBody = AliyunVideoUtils.getVideoVisitDetail(videoId);
-                GetVideoInfoResponseBody videoInfoResponseBody = AliyunVideoUtils.getVideoById(videoId);
-                List<GetPlayInfoResponseBody.GetPlayInfoResponseBodyPlayInfoListPlayInfo> playList = playInfoResponseBody.playInfoList.playInfo;
-                if (playList != null && playList.size() > 0) {
-                    nutritionalVideoResponse.setPlayUrl(playList.get(0).getPlayURL());
-                }
-                nutritionalVideoResponse.setDescription(videoInfoResponseBody.video.getDescription());
-                nutritionalVideoResponse.setTags(videoInfoResponseBody.video.getTags());
-                nutritionalVideoResponse.setTitle(videoInfoResponseBody.video.getTitle());
-                //nutritionalVideoResponse.setCreateTime(sysNutritionalVideo.getCreateTime() == null ? "" : DateUtils.dateTime(sysNutritionalVideo.getCreateTime()));
-        }catch (Exception e){
+        try {
+            GetPlayInfoResponseBody playInfoResponseBody = AliyunVideoUtils.getVideoVisitDetail(videoId);
+            GetVideoInfoResponseBody videoInfoResponseBody = AliyunVideoUtils.getVideoById(videoId);
+            List<GetPlayInfoResponseBody.GetPlayInfoResponseBodyPlayInfoListPlayInfo> playList = playInfoResponseBody.playInfoList.playInfo;
+            if (playList != null && playList.size() > 0) {
+                nutritionalVideoResponse.setPlayUrl(playList.get(0).getPlayURL());
+            }
+            nutritionalVideoResponse.setDescription(videoInfoResponseBody.video.getDescription());
+            nutritionalVideoResponse.setTags(videoInfoResponseBody.video.getTags());
+            nutritionalVideoResponse.setTitle(videoInfoResponseBody.video.getTitle());
+            //nutritionalVideoResponse.setCreateTime(sysNutritionalVideo.getCreateTime() == null ? "" : DateUtils.dateTime(sysNutritionalVideo.getCreateTime()));
+        } catch (Exception e) {
             e.printStackTrace();
         }
         result.put("videoDetail", nutritionalVideoResponse);
@@ -435,13 +437,15 @@ public class WechatAppletController extends BaseController {
                 sysWxUserInfo.setCusId(sysCustomer.getId());
                 sysWxUserInfo.setCreateTime(DateUtils.getNowDate());
                 sysWxUserInfoService.insertSysWxUserInfo(sysWxUserInfo);
+            } else {
+                // 更新sys_wx_user_info数据，
+                curWxUserInfo.setCusId(sysCustomer.getId());
+                curWxUserInfo.setUpdateTime(DateUtils.getNowDate());
+                sysWxUserInfoService.updateSysWxUserInfo(curWxUserInfo);
             }
         }
 
-        // 更新sys_wx_user_info数据，并返回一系列登录后的数据
-        curWxUserInfo.setUpdateTime(DateUtils.getNowDate());
-        sysWxUserInfoService.updateSysWxUserInfo(curWxUserInfo);
-
+        // 并返回一系列登录后的数据
         return AjaxResult.success(curWxUserInfo);
     }
 }
