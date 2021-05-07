@@ -8,7 +8,6 @@
         <result property="id" column="id"/>
         <result property="orderId" column="order_id"/>
         <result property="cusId" column="cus_id"/>
-        <result property="outId" column="out_id"/>
         <result property="pauseStartDate" column="pause_start_date"/>
         <result property="pauseEndDate" column="pause_end_date"/>
         <result property="reason" column="reason"/>
@@ -25,7 +24,7 @@
     </sql>
 
     <sql id="selectSysOrderPauseVo">
-        select id, order_id, cus_id, out_id, pause_start_date, pause_end_date, reason, remarks, create_time, create_by, update_time, update_by, del_flag from sys_recipes_pause sop
+        select id, order_id, cus_id, pause_start_date, pause_end_date, reason, remarks, create_time, create_by, update_time, update_by, del_flag from sys_recipes_pause sop
     </sql>
 
     <select id="selectSysOrderPauseList" parameterType="SysOrderPause" resultMap="SysOrderPauseResult">
@@ -37,7 +36,6 @@
         where sop.del_flag = 0
         <if test="orderId != null ">and sop.order_id = #{orderId}</if>
         <if test="cusId != null ">and sop.cus_id = #{cusId}</if>
-        <if test="outId != null ">and sop.out_id = #{outId}</if>
         <if test="pauseStartDate != null ">and sop.pause_start_date = #{pauseStartDate}</if>
         <if test="pauseEndDate != null ">and sop.pause_end_date = #{pauseEndDate}</if>
         <if test="reason != null  and reason != ''">and sop.reason = #{reason}</if>
@@ -86,7 +84,7 @@
         <trim prefix="SET" suffixOverrides=",">
             <if test="orderId != null">order_id = #{orderId},</if>
             <if test="cusId != null">cus_id = #{cusId},</if>
-            <if test="outId != null">out_id = #{outId},</if>
+            <if test="cusId != null">out_id = md5(#{cusId}),</if>
             <if test="pauseStartDate != null">pause_start_date = #{pauseStartDate},</if>
             <if test="pauseEndDate != null">pause_end_date = #{pauseEndDate},</if>
             <if test="reason != null">reason = #{reason},</if>

@@ -2,7 +2,6 @@ package com.stdiet.web.controller.custom;
 
 import com.aliyun.vod20170321.models.GetPlayInfoResponseBody;
 import com.aliyun.vod20170321.models.GetVideoInfoResponseBody;
-import com.aliyun.vod20170321.models.GetVideoListResponseBody;
 import com.stdiet.common.core.controller.BaseController;
 import com.stdiet.common.core.domain.AjaxResult;
 import com.stdiet.common.core.page.TableDataInfo;
@@ -79,10 +78,10 @@ public class WechatAppletController extends BaseController {
      */
     @GetMapping("/getFileByCaseId")
     public AjaxResult getFileByCaseId(@RequestParam("caseId") String caseId) {
-        Long id = StringUtils.isNotEmpty(caseId) ? Long.parseLong(AesUtils.decrypt(caseId, null)) : null;
+        Long id = StringUtils.isNotEmpty(caseId) ? Long.parseLong(AesUtils.decrypt(caseId, null)) : -1L;
         CustomerCaseResponse customerCaseResponse = new CustomerCaseResponse();
         customerCaseResponse.setId(caseId);
-        if (id != null) {
+        if (id != -1) {
             List<SysCustomerCaseFile> list = sysCustomerCaseService.getFileListByCaseId(id);
             List<String> fileUrl = new ArrayList<>();
             for (SysCustomerCaseFile caseFile : list) {
@@ -336,11 +335,9 @@ public class WechatAppletController extends BaseController {
     @GetMapping(value = "/getCustomerMessage")
     public TableDataInfo getCustomerMessage(SysMessageNotice sysMessageNotice) {
         startPage();
-        if (StringUtils.isNotEmpty(sysMessageNotice.getCustomerId())) {
-            sysMessageNotice.setMessageCustomer(Long.parseLong(AesUtils.decrypt(sysMessageNotice.getCustomerId(), null)));
-        } else {
-            sysMessageNotice.setMessageCustomer(0L);
-        }
+        Long cusId = StringUtils.isNotEmpty(sysMessageNotice.getCustomerId()) ? Long.parseLong(AesUtils.decrypt(sysMessageNotice.getCustomerId())) : 0L;
+
+        sysMessageNotice.setMessageCustomer(cusId);
         List<MessageNoticeResponse> list = sysMessageNoticeService.getCustomerMessage(sysMessageNotice);
         return getDataTable(list);
     }
@@ -430,6 +427,8 @@ public class WechatAppletController extends BaseController {
                 sysWxUserInfoService.updateSysWxUserInfo(curWxUserInfo);
             }
         }
+
+        curWxUserInfo.setCustomerId(AesUtils.encrypt(curWxUserInfo.getCusId().toString()));
 
         // 并返回一系列登录后的数据
         return AjaxResult.success(curWxUserInfo);
