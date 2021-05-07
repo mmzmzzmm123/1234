@@ -60,3 +60,12 @@ export function getUploadVideoAuth(data) {
     data: data
   })
 }
+
+// 修改视频展示状态
+export function updateWxShow(data){
+  return request({
+    url: '/custom/nutritionalVideo/updateWxShow',
+    method: 'get',
+    params: data
+  })
+}

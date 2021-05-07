@@ -68,4 +68,6 @@ public interface SysCommisionMapper
      * @return
      */
     List<SysCommision> getAfterSaleAndNutri(SysCommision sysCommision);
+
+    List<Long> getAfterSaleId(SysCommision sysCommision);
 }

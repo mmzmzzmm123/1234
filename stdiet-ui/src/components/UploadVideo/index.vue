@@ -1,13 +1,13 @@
 <template>
 <el-dialog title="视频上传" v-if="open" :visible.sync="open" width="700px" :close-on-click-modal="false" :show-close="false" append-to-body>
-<el-form ref="videoFrom" :model="videoFrom" :rules="videoRules" label-width="80px">
+<el-form ref="videoFrom" :model="videoFrom" :rules="videoRules" label-width="80px" style="height: 650px; overflow: auto">
         <el-form-item label="视频标题" prop="title">
             <el-input
                 type="textarea"
                 placeholder="请输入视频标题"
                 v-model="videoFrom.title"
                 maxlength="50" 
-                rows="3"
+                rows="1"
                 show-word-limit
             />
         </el-form-item>
@@ -16,11 +16,38 @@
                 type="textarea"
                 placeholder="请输入视频描述"
                 v-model="videoFrom.description"
-                maxlength="2000"
-                rows="10"
+                maxlength="1000"
+                rows="3"
                 show-word-limit
             />
         </el-form-item>
+        
+         <el-form-item label="视频封面" prop="coverUrl">
+              <UploadFile ref="uploadFile" :prefix="'videoCover'" @callbackMethod="handleCoverUrl"></UploadFile>
+          </el-form-item>  
+          <div style="display:flex">
+            <el-form-item label="视频类别" prop="cateId">
+            <el-select v-model="videoFrom.cateId" clearable filterable placeholder="请选择类别">
+              <el-option
+                v-for="classify in classifyList"
+                :key="classify.id"
+                :label="classify.cateName"
+                :value="classify.id"
+              />
+            </el-select>
+          </el-form-item> 
+          <el-form-item label="视频权限" prop="payLevel" style="margin-left:40px">
+            <el-select v-model="videoFrom.payLevel" clearable filterable placeholder="请选择权限">
+              <el-option
+                v-for="dict in payVideoLevelList"
+                :key="dict.dictValue"
+                :label="dict.dictLabel"
+                :value="parseInt(dict.dictValue)"
+              />
+            </el-select>
+          </el-form-item>   
+          </div>
+          
         <el-form-item label="视频文件" prop="file">
             <div>
             <input type="file" accept=".mp4" ref="videoFile" id="videoFile" @change="fileChange($event)">
@@ -28,7 +55,14 @@
             <div > 1、只能上传mp4文件，上传大文件时请使用客户端上传，防止上传超时</div>
             </div>
         </el-form-item>
-
+        <el-form-item label="展示状态" prop="wxShow">
+              <el-switch
+                v-model="videoFrom.wxShow"
+                active-text="小程序展示"
+                inactive-text="小程序不展示">
+              </el-switch>
+              <div>提示：请保证内容正确再展示到小程序</div>
+          </el-form-item>  
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button type="primary" @click="authUpload" :disabled="uploadDisabled">开始上传</el-button>
@@ -39,17 +73,32 @@
 </template>
 <script>
   import axios from 'axios'
-  import {getUploadVideoAuth } from "@/api/custom/nutritionalVideo";
-
+  import {getUploadVideoAuth,addNutritionalVideo } from "@/api/custom/nutritionalVideo";
+  import {getAllClassify } from "@/api/custom/videoClassify";
+  import UploadFile from "@/components/FileUpload/UploadFile";
   export default {
       name: "UploadVideo",
     data () {
       return {
         open: false,
         videoFrom:{},
-        videoRules:{},
+        videoRules:{
+          title: [
+            { required: true, message: "标题不能为空", trigger: "blur" },
+          ],
+          coverUrl: [
+           { required: true, message: "封面不能为空", trigger: "blur" },
+          ],
+          cateId:[
+            { required: true, message: "视频类别不能为空", trigger: "blur" },
+          ],
+          payLevel:[
+            { required: true, message: "视频权限不能为空", trigger: "blur" },
+          ]
+        },
         callback: null,
-
+        classifyList: [],
+        payVideoLevelList:[],
         uploadAuth:{
             
         },
@@ -68,9 +117,23 @@
         pauseDisabled: true,
         uploader: null,
         statusText: '',
-        fileType:['mp4'],
+        fileType:['mp4','MP4'],
         uploading: false
       }
+    },
+    created(){
+      getAllClassify().then(response => {
+          if(response.code == 200){
+              this.classifyList = response.data;
+          }
+      });
+      this.getDicts("video_pay_level").then((response) => {
+        this.payVideoLevelList = response.data;
+      });
+        
+    },
+    components: {
+      UploadFile
     },
     methods: {
         showDialog(callback){
@@ -78,14 +141,23 @@
             this.open = true;
             this.callback = callback;
         },
+        handleCoverUrl(url){
+          this.videoFrom.coverUrl = url;
+        },
         resetVideoFrom(){
             this.videoFrom = {
                 cateId: null,
                 coverUrl: null,
                 title: null,
                 description: null,
-                tags: null, 
+                tags: null,
+                payLevel: 0,
+                videoId: null,
+                wxShow: false
             };
+            if(this.$refs.uploadFile){
+                this.$refs.uploadFile.resetUpload();
+            }
             this.authProgress = 0;
             this.file = null;
             this.videoFileList = [];
@@ -112,55 +184,53 @@
         },
 
         fileChange (e) {
-            if(this.videoFrom.title == null || this.videoFrom.title.trim().length == 0){
-                this.$message({
-                    message: "标题不能为空",
-                    type: "warning",
-                });
-                return;
-            }
-            if(this.uploading){
-                this.$message({
-                    message: "文件正在上传，请勿取消",
-                    type: "warning",
-                });
-                return;
-            }
-            this.file = e.target.files[0];
-            var userData = '{"Vod":{}}'
-            /**if (this.uploader) {
-                this.uploader.stopUpload()
-                this.authProgress = 0
-                this.statusText = ""
-            }**/
-            this.videoFrom.fileName = this.file.name;
-            if(this.videoFrom.fileName == null || this.videoFrom.fileName.length == 0 || this.videoFrom.fileName.lastIndexOf(".") == -1){
-                this.$message({
-                    message: "当前文件名称错误",
-                    type: "warning",
-                });
-                return;
-            }
-            let fileType = this.videoFrom.fileName.substring(this.videoFrom.fileName.lastIndexOf(".")+1);
-            if(this.fileType.indexOf(fileType) == -1){
-                this.$message({
-                    message: "当前文件格式错误",
-                    type: "warning",
-                });
-                return;
-            }
-            
-            getUploadVideoAuth(this.videoFrom).then(response => {
-                if(response.code == 200){
-                    this.uploadAuth = response.uploadAuth;
-                    this.uploader = this.createUploader()
-                    this.uploader.addFile(this.file, null, null, null, userData)
-                    this.uploadDisabled = false
-                    this.pauseDisabled = true
-                    this.resumeDisabled = true
-                }
-            })
-            
+            this.$refs["videoFrom"].validate((valid) => {
+              if (valid) {
+                 if(this.uploading){
+                    this.$message({
+                      message: "文件正在上传，请勿取消",
+                      type: "warning",
+                    });
+                    return;
+                  }
+                  this.file = e.target.files[0];
+                  var userData = '{"Vod":{}}'
+                  /**if (this.uploader) {
+                      this.uploader.stopUpload()
+                      this.authProgress = 0
+                      this.statusText = ""
+                  }**/
+                  this.videoFrom.fileName = this.file.name;
+                  if(this.videoFrom.fileName == null || this.videoFrom.fileName.length == 0 || this.videoFrom.fileName.lastIndexOf(".") == -1){
+                      this.$message({
+                          message: "当前文件名称错误",
+                          type: "warning",
+                      });
+                      return;
+                  }
+                  let fileType = this.videoFrom.fileName.substring(this.videoFrom.fileName.lastIndexOf(".")+1);
+                  if(this.fileType.indexOf(fileType) == -1){
+                      this.$message({
+                          message: "当前文件格式错误",
+                          type: "warning",
+                      });
+                      return;
+                  }
+                  
+                  getUploadVideoAuth(this.videoFrom).then(response => {
+                      if(response.code == 200){
+                          this.uploadAuth = response.uploadAuth;
+                          console.log(this.uploadAuth);
+                          this.videoFrom.videoId = this.uploadAuth.videoId;
+                          this.uploader = this.createUploader()
+                          this.uploader.addFile(this.file, null, null, null, userData)
+                          this.uploadDisabled = false
+                          this.pauseDisabled = true
+                          this.resumeDisabled = true
+                      }
+                  })
+                    }
+                  }); 
       },
       authUpload () {
         // 然后调用 startUpload 方法, 开始上传
@@ -259,9 +329,15 @@
           onUploadEnd: function (uploadInfo) {
             self.statusText = '文件上传完毕'
             self.uploading = false;
-            self.msgSuccess("上传成功");
-            self.open = false;
-            self.callback && self.callback();
+            //self.msgSuccess("上传成功");
+            self.videoFrom.showFlag = self.videoFrom.wxShow ? 1 : 0;
+            addNutritionalVideo(self.videoFrom).then(response => {
+                if (response.code === 200) {
+                  self.msgSuccess("视频上传成功");
+                  self.open = false;
+                  self.callback && self.callback();
+                }
+            })         
           }
         })
         return uploader

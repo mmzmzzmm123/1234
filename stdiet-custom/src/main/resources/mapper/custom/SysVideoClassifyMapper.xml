@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.stdiet.custom.mapper.SysVideoClassifyMapper">
+
+    <resultMap type="SysVideoClassify" id="SysVideoClassifyResult">
+        <result property="id"    column="id"    />
+        <result property="cateName"    column="cate_name"    />
+        <result property="payFlag"    column="pay_flag"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="delFlag"    column="del_flag"    />
+    </resultMap>
+
+    <sql id="selectSysVideoClassifyVo">
+        select id, cate_name, pay_flag, create_time, create_by, update_time, update_by, del_flag from sys_video_classify
+    </sql>
+
+    <select id="selectSysVideoClassifyList" parameterType="SysVideoClassify" resultMap="SysVideoClassifyResult">
+        <include refid="selectSysVideoClassifyVo"/>
+        where del_flag = 0
+    </select>
+
+    <select id="selectSysVideoClassifyById" parameterType="Long" resultMap="SysVideoClassifyResult">
+        <include refid="selectSysVideoClassifyVo"/>
+        where id = #{id} and del_flag =  0
+    </select>
+
+    <insert id="insertSysVideoClassify" parameterType="SysVideoClassify">
+        insert into sys_video_classify
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="cateName != null">cate_name,</if>
+            <if test="payFlag != null">pay_flag,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="delFlag != null">del_flag,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="cateName != null">#{cateName},</if>
+            <if test="payFlag != null">#{payFlag},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="delFlag != null">#{delFlag},</if>
+        </trim>
+    </insert>
+
+    <update id="updateSysVideoClassify" parameterType="SysVideoClassify">
+        update sys_video_classify
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="cateName != null">cate_name = #{cateName},</if>
+            <if test="payFlag != null">pay_flag = #{payFlag},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="delFlag != null">del_flag = #{delFlag},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <update id="deleteSysVideoClassifyById" parameterType="Long">
+        update sys_video_classify set del_flag = 1 where id = #{id}
+    </update>
+
+    <update id="deleteSysVideoClassifyByIds" parameterType="String">
+        update sys_video_classify set del_flag = 1 where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </update>
+
+    <select id="getAllClassify" resultMap="SysVideoClassifyResult">
+        select id,cate_name from sys_video_classify where del_flag = 0
+    </select>
+
+</mapper>

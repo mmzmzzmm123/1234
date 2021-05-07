@@ -1,11 +1,50 @@
 <template>
   <div class="app-container">
-    <!--<el-form :model="queryParams" ref="queryForm" :inline="true" v-show="showSearch" label-width="68px">
+    <el-form :model="queryParams" ref="queryForm" :inline="true" v-show="showSearch" label-width="68px">
+      <el-form-item label="关键词" prop="key">
+        <el-input
+          v-model="queryParams.key"
+          placeholder="请输入关键词"
+          clearable
+          size="small"
+        />
+      </el-form-item>
+      <el-form-item label="小程序展示状态" prop="showFlag" label-width="200">
+        <el-select
+          v-model="queryParams.showFlag"
+          placeholder="请选示状态"
+          clearable
+          size="small"
+        >
+          <el-option key="0" label="不展示" value="0"/>
+          <el-option key="1" label="展示" value="1"/>
+        </el-select>
+      </el-form-item>
+       <el-form-item label="视频类别" prop="cateId">
+            <el-select v-model="queryParams.cateId" clearable filterable placeholder="请选择类别">
+              <el-option
+                v-for="classify in classifyList"
+                :key="classify.id"
+                :label="classify.cateName"
+                :value="classify.id"
+              />
+            </el-select>
+      </el-form-item>
+      <el-form-item label="视频权限" prop="payLevel">
+            <el-select v-model="queryParams.payLevel" clearable filterable placeholder="请选择权限">
+              <el-option
+                v-for="dict in payVideoLevelList"
+                :key="dict.dictValue"
+                :label="dict.dictLabel"
+                :value="parseInt(dict.dictValue)"
+              />
+            </el-select>
+          </el-form-item>
       <el-form-item>
         <el-button type="cyan" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
         <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
       </el-form-item>
-    </el-form>-->
+    </el-form>
 
     <el-row :gutter="10" class="mb8">
       <el-col :span="1.5">
@@ -17,7 +56,7 @@
           v-hasPermi="['custom:nutritionalVideo:add']"
         >视频上传</el-button>
       </el-col>
-      <!--<el-col :span="1.5">
+      <el-col :span="1.5">
         <el-button
           type="success"
           icon="el-icon-edit"
@@ -37,6 +76,7 @@
           v-hasPermi="['custom:nutritionalVideo:remove']"
         >删除</el-button>
       </el-col>
+      <!--
       <el-col :span="1.5">
         <el-button
           type="warning"
@@ -52,24 +92,32 @@
     <el-table v-loading="loading" :data="nutritionalVideoList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
       <!--<el-table-column label="视频分类ID" align="center" prop="cateId" />-->
-      <el-table-column label="封面" align="center" prop="coverUrl">
+      <el-table-column label="封面" align="center" prop="coverUrl" width="300">
         <template slot-scope="scope">
-          <el-image title="点击大图预览"
-          style="width: 200px; height: 200px"
+          <el-image
+          style="width: 300px; height: 200px"
           :src="scope.row.coverUrl"
           :preview-src-list="coverImageList">
           </el-image>
         </template>
       </el-table-column>
-      <el-table-column label="标题" align="center" prop="title" />
+      <el-table-column label="标题" align="center" prop="title" width="200"/>
       <el-table-column label="描述" align="center" prop="description" />
-      <el-table-column label="标签" align="center" prop="tags" />
-      <el-table-column label="显示状态" align="center" prop="showFlag">
-        <template slot-scope="scope">
-          {{scope.row.showFlag == 1 ? '正常' : '屏蔽'}}
+      <!--<el-table-column label="标签" align="center" prop="tags" width="100"/>-->
+       <el-table-column label="分类" align="center" prop="cateName" width="100"/>
+       <el-table-column label="权限等级" align="center" prop="payLevelName" width="100"/>
+      <el-table-column label="小程序展示状态" align="center" prop="showFlag" width="200">
+        <template slot-scope="scope" >
+          <el-switch
+                v-model="scope.row.wxShow"
+                active-text="展示"
+                inactive-text="不展示"
+                @change="handleWxShow($event, scope.row)"
+                >
+              </el-switch>
         </template>
       </el-table-column>
-      <!--<el-table-column label="操作" align="center" class-name="small-padding fixed-width">
+      <el-table-column label="操作" align="center" width="200">
         <template slot-scope="scope">
           <el-button
             size="mini"
@@ -86,8 +134,10 @@
             v-hasPermi="['custom:nutritionalVideo:remove']"
           >删除</el-button>
         </template>
-      </el-table-column>-->
+      </el-table-column>
     </el-table>
+
+
 
     <pagination
       v-show="total>0"
@@ -99,33 +149,61 @@
     />
 
     <!-- 添加或修改营养视频对话框 -->
-    <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
+    <el-dialog :title="title" :visible.sync="open" width="700px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
-        <el-form-item label="视频分类ID" prop="cateId">
-          <el-input v-model="form.cateId" placeholder="请输入视频分类ID" />
-        </el-form-item>
-        <el-form-item label="阿里云视频ID" prop="videoId">
-          <el-input v-model="form.videoId" placeholder="请输入阿里云视频ID" />
-        </el-form-item>
-        <el-form-item label="视频封面URL" prop="coverUrl">
-          <el-input v-model="form.coverUrl" placeholder="请输入视频封面URL" />
-        </el-form-item>
         <el-form-item label="视频标题" prop="title">
-          <el-input v-model="form.title" placeholder="请输入视频标题" />
+            <el-input
+                type="textarea"
+                placeholder="请输入视频标题"
+                v-model="form.title"
+                maxlength="50" 
+                rows="1"
+                show-word-limit
+            />
         </el-form-item>
         <el-form-item label="视频描述" prop="description">
-          <el-input v-model="form.description" placeholder="请输入视频描述" />
+          <el-input
+                type="textarea"
+                placeholder="请输入视频描述"
+                v-model="form.description"
+                maxlength="1000"
+                rows="2"
+                show-word-limit
+            />
         </el-form-item>
-        <el-form-item label="视频大小，单位：字节" prop="videoSize">
-          <el-input v-model="form.videoSize" placeholder="请输入视频大小，单位：字节" />
-        </el-form-item>
-        <el-form-item label="标签，使用 , 隔开" prop="tags">
-          <el-input v-model="form.tags" placeholder="请输入标签，使用 , 隔开" />
-        </el-form-item>
-        <el-form-item label="是否显示，0不显示 1显示，默认0" prop="showFlag">
-          <el-input v-model="form.showFlag" placeholder="请输入是否显示，0不显示 1显示，默认0" />
-        </el-form-item>
+         <el-form-item label="视频封面" prop="coverUrl">
+              <UploadFile ref="uploadFile" :prefix="'videoCover'" :coverUrl="form.previewUrl" @callbackMethod="handleCoverUrl"></UploadFile>
+          </el-form-item>
+        <el-form-item label="视频类别" prop="cateId">
+            <el-select v-model="form.cateId" clearable filterable placeholder="请选择类别">
+              <el-option
+                v-for="classify in classifyList"
+                :key="classify.id"
+                :label="classify.cateName"
+                :value="classify.id"
+              />
+            </el-select>
+          </el-form-item>
+          <el-form-item label="视频权限" prop="payLevel">
+            <el-select v-model="form.payLevel" clearable filterable placeholder="请选择权限">
+              <el-option
+                v-for="dict in payVideoLevelList"
+                :key="dict.dictValue"
+                :label="dict.dictLabel"
+                :value="parseInt(dict.dictValue)"
+              />
+            </el-select>
+          </el-form-item>
+           <el-form-item label="展示状态" prop="wxShow">
+              <el-switch
+                v-model="form.wxShow"
+                active-text="小程序展示"
+                inactive-text="小程序不展示">
+              </el-switch>
+              <div>提示：请保证内容正确再展示到小程序</div>
+          </el-form-item>    
       </el-form>
+     
       <div slot="footer" class="dialog-footer">
         <el-button type="primary" @click="submitForm">确 定</el-button>
         <el-button @click="cancel">取 消</el-button>
@@ -137,9 +215,10 @@
 </template>
 
 <script>
-  import { listNutritionalVideo, getNutritionalVideo, delNutritionalVideo, addNutritionalVideo, updateNutritionalVideo, exportNutritionalVideo,getUploadVideoAuth } from "@/api/custom/nutritionalVideo";
-
+  import { listNutritionalVideo, getNutritionalVideo, delNutritionalVideo, addNutritionalVideo, updateNutritionalVideo, exportNutritionalVideo, updateWxShow } from "@/api/custom/nutritionalVideo";
+  import {getAllClassify } from "@/api/custom/videoClassify";
   import UploadVideo from "@/components/UploadVideo";
+  import UploadFile from "@/components/FileUpload/UploadFile";
   export default {
     name: "NutritionalVideo",
     data() {
@@ -166,29 +245,48 @@
         queryParams: {
           pageNum: 1,
           pageSize: 5,
+          key: null,
+          showFlag: null,
+          cateId: null,
+          payLevel: null
         },
         // 表单参数
         form: {},
         // 表单校验
         rules: {
         },
-        coverImageList:[]
+        coverImageList:[],
+        //分类列表
+        classifyList:[],
+        //权限等级列表
+        payVideoLevelList:[]
       };
     },
     created() {
       this.getList();
+      getAllClassify().then(response => {
+          if(response.code == 200){
+              this.classifyList = response.data;
+          }
+      });
+      this.getDicts("video_pay_level").then((response) => {
+        this.payVideoLevelList = response.data;
+      });
     },
     components: {
-      UploadVideo
+      UploadVideo,UploadFile
     },
     methods: {
       /** 查询营养视频列表 */
       getList() {
         this.loading = true;
         listNutritionalVideo(this.queryParams).then(response => {
+          response.rows.forEach(element => {
+            element.wxShow = element.showFlag == 1 ? true : false;
+          });
           this.nutritionalVideoList = response.rows;
-        this.total = response.total;
-        this.loading = false;
+          this.total = response.total;
+          this.loading = false;
       });
       },
       // 取消按钮
@@ -201,18 +299,13 @@
         this.form = {
           id: null,
           cateId: null,
-          videoId: null,
           coverUrl: null,
           title: null,
           description: null,
-          videoSize: null,
           tags: null,
+          payLevel:null,
           showFlag: null,
-          createTime: null,
-          createBy: null,
-          updateTime: null,
-          updateBy: null,
-          delFlag: null
+          wxShow: false
         };
         this.resetForm("form");
       },
@@ -248,15 +341,17 @@
         this.reset();
         const id = row.id || this.ids
         getNutritionalVideo(id).then(response => {
+          response.data.wxShow = response.data.showFlag == 1 ? true : false;
           this.form = response.data;
-        this.open = true;
-        this.title = "修改营养视频";
-      });
+          this.open = true;
+          this.title = "修改营养视频";
+        });
       },
       /** 提交按钮 */
       submitForm() {
         this.$refs["form"].validate(valid => {
           if (valid) {
+            this.form.showFlag = this.form.wxShow ? 1 : 0;
             if (this.form.id != null) {
               updateNutritionalVideo(this.form).then(response => {
                 if (response.code === 200) {
@@ -276,6 +371,16 @@
             }
           }
         });
+      },
+      handleWxShow(newWxshow, row){
+        let param = {
+          id: row.id,
+          showFlag: newWxshow ? 1 : 0
+        };
+        updateWxShow(param);
+      },
+      handleCoverUrl(url){
+        this.form.coverUrl = url;
       },
       /** 删除按钮操作 */
       handleDelete(row) {

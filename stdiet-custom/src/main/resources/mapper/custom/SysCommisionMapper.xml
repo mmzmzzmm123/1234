@@ -12,6 +12,7 @@
         <result property="postName" column="post_name"/>
         <result property="amount" column="amount"/>
         <result property="rate" column="rate"/>
+        <result property="startTime"    column="start_time"    />
         <result property="createBy" column="create_by"/>
         <result property="createTime" column="create_time"/>
         <result property="updateBy" column="update_by"/>
@@ -114,6 +115,12 @@
         <where>
             <if test="postId != null and postId != ''">and post_id = #{postId}</if>
             <if test="userId != null and userId != ''">and user_id = #{userId}</if>
+            <if test="userIds != null">
+                and user_id in
+                <foreach item="id" collection="userIds" open="(" separator="," close=")">
+                    #{id}
+                </foreach>
+            </if>
         </where>
     </select>
 
@@ -136,6 +143,8 @@
             <if test="userId != null ">and user_id = #{userId}</if>
             <if test="postId != null ">and post_id = #{postId}</if>
         </where>
+        <!-- 请勿随意修改排序方式，会影响提成计算 -->
+        order by user_id asc,amount asc,start_time asc
     </select>
 
     <select id="selectSysCommisionById" parameterType="SysCommision" resultMap="SysCommisionResult">
@@ -152,6 +161,7 @@
             <if test="postId != null">post_id,</if>
             <if test="amount != null">amount,</if>
             <if test="rate != null">rate,</if>
+            <if test="startTime != null">start_time,</if>
             <if test="createBy != null">create_by,</if>
             <if test="createTime != null">create_time,</if>
             <if test="updateBy != null">update_by,</if>
@@ -163,6 +173,7 @@
             <if test="postId != null">#{postId},</if>
             <if test="amount != null">#{amount},</if>
             <if test="rate != null">#{rate},</if>
+            <if test="startTime != null">#{startTime},</if>
             <if test="createBy != null">#{createBy},</if>
             <if test="createTime != null">#{createTime},</if>
             <if test="updateBy != null">#{updateBy},</if>
@@ -178,6 +189,7 @@
             <if test="postId != null">post_id = #{postId},</if>
             <if test="amount != null">amount = #{amount},</if>
             <if test="rate != null">rate = #{rate},</if>
+            <if test="startTime != null">start_time = #{startTime},</if>
             <if test="createBy != null">create_by = #{createBy},</if>
             <if test="createTime != null">create_time = #{createTime},</if>
             <if test="updateBy != null">update_by = #{updateBy},</if>
@@ -206,5 +218,12 @@
         WHERE su.del_flag = 0 AND su.status = 0 AND sp.remark = 'sale_post' AND (sp.post_code = 'after_sale' OR sp.post_code = 'nutri')
         <if test="postId != null and postId != ''">and sp.post_id = #{postId}</if>
         <if test="userId != null and userId != ''">and su.user_id = #{userId}</if>
+    </select>
+
+    <select id="getAfterSaleId" parameterType="SysCommision" resultType="Long">
+        SELECT su.user_id FROM sys_user su
+        LEFT JOIN sys_user_post sup ON sup.user_id = su.user_id
+        LEFT JOIN sys_post sp ON sp.post_id = sup.post_id
+        WHERE su.del_flag = 0 and sp.post_id = #{postId}
     </select>
 </mapper>

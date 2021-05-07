@@ -23,7 +23,7 @@ public class SysFileUploadController extends BaseController {
      * 上传文件到OSS返回URL
      */
     @PostMapping(value = "/{prefix}")
-    @PreAuthorize("@ss.hasPermi('custom:file:upload')")
+    //@PreAuthorize("@ss.hasPermi('custom:file:upload')")
     public AjaxResult uploadCseFile(MultipartFile file, @PathVariable String prefix) throws Exception {
 
         try {

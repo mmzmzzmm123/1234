@@ -14,10 +14,12 @@ public class AliyunVideoUtils {
 
     public static final String default_output_type = "oss";
 
-    public static final String default_formats = "mp4";
+    public static final String default_formats = "cdn";
 
     //播放地址日期，30天
     public static final Long default_authTimeout = 2592000L;
+
+    public static final String search_field = "VideoId,Title,CoverURL,CateName,Tags,Status,Description,CreationTime";
 
     /**
      * 初始化视频点播Client
@@ -43,7 +45,7 @@ public class AliyunVideoUtils {
     }
 
     /**
-     * 分页获取视频列表
+     * 分页获取视频列表（限于5000条，不能关键词搜索）
      * @param pageNo 页码
      * @param pageSize 每页数量
      * @return
@@ -120,6 +122,37 @@ public class AliyunVideoUtils {
         return client.createUploadVideo(createUploadVideoRequest);
     }
 
+    /**
+     *
+     * @param key
+     * @param status
+     * @param pageNo
+     * @param pageSize
+     * @throws Exception
+     */
+    public static SearchMediaResponse searchVideo(String key, String status, Integer pageNo, Integer pageSize, String scrollToken) throws Exception{
+        com.aliyun.vod20170321.Client client = AliyunVideoUtils.createClient();
+        SearchMediaRequest searchMediaRequest = new SearchMediaRequest()
+                .setSearchType("video")
+                .setFields(search_field)
+                .setPageNo(pageNo == null ? 1 : pageNo)
+                .setPageSize(pageSize == null ? 10 : pageSize)
+                .setSortBy("CateId:Asc,CreationTime:Desc")
+                .setScrollToken(scrollToken);
+        if(StringUtils.isNotEmpty(key) || StringUtils.isNotEmpty(status)){
+            String matchString = null;
+            if(StringUtils.isNotEmpty(key)){
+                matchString += StringUtils.format("(Title = '%s' or  Description = '%s')", key, key);
+            }
+            if(StringUtils.isNotEmpty(status)) {
+                matchString += matchString == null ? "" : " and ";
+                matchString += StringUtils.format("(Status = '%s')", status);
+            }
+            System.out.println(matchString);
+            searchMediaRequest.setMatch(matchString);
+        }
+        return client.searchMedia(searchMediaRequest);
+    }
 
 
 

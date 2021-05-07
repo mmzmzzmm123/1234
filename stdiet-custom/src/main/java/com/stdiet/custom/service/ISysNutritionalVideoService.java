@@ -1,6 +1,8 @@
 package com.stdiet.custom.service;
 
 import java.util.List;
+import java.util.Map;
+
 import com.stdiet.custom.domain.SysNutritionalVideo;
 
 /**
@@ -25,7 +27,7 @@ public interface ISysNutritionalVideoService
      * @param sysNutritionalVideo 营养视频
      * @return 营养视频集合
      */
-    public List<SysNutritionalVideo> selectSysNutritionalVideoList(SysNutritionalVideo sysNutritionalVideo);
+    public List<SysNutritionalVideo> selectSysNutritionalVideoList(SysNutritionalVideo sysNutritionalVideo, boolean flag);
 
     /**
      * 新增营养视频
@@ -65,4 +67,18 @@ public interface ISysNutritionalVideoService
      * @return
      */
     public SysNutritionalVideo selectSysNutritionalVideByVideoId(String videoId);
+
+    /**
+     * 阿里云视频查询检索
+     * @return
+     */
+    public Map<String,Object> searchVideo(String key, Integer status, Integer pageNo, Integer pageSize, String scrollToken);
+
+    /**
+     * 更新微信展示状态
+     * @param wxShow
+     * @param ids
+     * @return
+     */
+    public int updateWxshowByIds(Integer wxShow, Long[] ids);
 }

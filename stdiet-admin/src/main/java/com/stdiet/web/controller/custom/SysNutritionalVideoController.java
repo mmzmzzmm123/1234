@@ -4,8 +4,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.aliyun.vod20170321.models.CreateUploadVideoResponse;
-import com.aliyun.vod20170321.models.GetVideoListResponseBody;
+import com.stdiet.common.core.page.TableDataInfo;
 import com.stdiet.common.utils.AliyunVideoUtils;
+import com.stdiet.common.utils.StringUtils;
+import com.stdiet.common.utils.oss.AliyunOSSUtils;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -34,32 +36,18 @@ public class SysNutritionalVideoController extends BaseController
      */
     @PreAuthorize("@ss.hasPermi('custom:nutritionalVideo:list')")
     @GetMapping("/list")
-    public AjaxResult list(SysNutritionalVideo sysNutritionalVideo, @RequestParam(value = "pageNum", defaultValue = "1") int pageNum, @RequestParam(value = "pageSize", defaultValue = "5")int pageSize)
+    public TableDataInfo list(SysNutritionalVideo sysNutritionalVideo)
     {
-        AjaxResult result = AjaxResult.success();
-        int total = 0;
-        List<SysNutritionalVideo> nutritionalVideoList = new ArrayList<>();
-        try{
-            GetVideoListResponseBody videoListResponseBody = AliyunVideoUtils.getVideoListByPage(null, "Normal,Blocked", pageNum, pageSize);
-            if(videoListResponseBody != null){
-                total = videoListResponseBody.total;
-                for (GetVideoListResponseBody.GetVideoListResponseBodyVideoListVideo video : videoListResponseBody.videoList.video) {
-                    SysNutritionalVideo nutritionalVideo = new SysNutritionalVideo();
-                    nutritionalVideo.setCoverUrl(video.getCoverURL());
-                    nutritionalVideo.setTitle(video.getTitle());
-                    nutritionalVideo.setVideoId(video.getVideoId());
-                    nutritionalVideo.setDescription(video.getDescription());
-                    nutritionalVideo.setTags(video.getTags());
-                    nutritionalVideoList.add(nutritionalVideo);
-                    nutritionalVideo.setShowFlag("Normal".equals(video.getStatus()) ? 1 : 0);
-                }
-            }
-        }catch (Exception e){
-            e.printStackTrace();
+        /*AjaxResult result = AjaxResult.success();
+        Map<String, Object> map = sysNutritionalVideoService.searchVideo(sysNutritionalVideo.getKey(), sysNutritionalVideo.getShowFlag(), pageNum, pageSize, null);
+        if(map != null){
+            result.put("total", map.get("total"));
+            result.put("rows", map.get("nutritionalVideoList"));
         }
-        result.put("total",total);
-        result.put("rows", nutritionalVideoList);
-        return result;
+        return result;*/
+        startPage();
+        List<SysNutritionalVideo> list = sysNutritionalVideoService.selectSysNutritionalVideoList(sysNutritionalVideo, true);
+        return getDataTable(list);
     }
 
     /**
@@ -69,7 +57,11 @@ public class SysNutritionalVideoController extends BaseController
     @GetMapping(value = "/{id}")
     public AjaxResult getInfo(@PathVariable("id") Long id)
     {
-        return AjaxResult.success(sysNutritionalVideoService.selectSysNutritionalVideoById(id));
+        SysNutritionalVideo sysNutritionalVideos = sysNutritionalVideoService.selectSysNutritionalVideoById(id);
+        if(sysNutritionalVideos != null && StringUtils.isNotEmpty(sysNutritionalVideos.getCoverUrl())){
+            sysNutritionalVideos.setPreviewUrl(AliyunOSSUtils.generatePresignedUrl(sysNutritionalVideos.getCoverUrl()));
+        }
+        return AjaxResult.success(sysNutritionalVideos);
     }
 
     /**
@@ -80,6 +72,7 @@ public class SysNutritionalVideoController extends BaseController
     @PostMapping
     public AjaxResult add(@RequestBody SysNutritionalVideo sysNutritionalVideo)
     {
+        sysNutritionalVideo.setShowFlag(1);
         return toAjax(sysNutritionalVideoService.insertSysNutritionalVideo(sysNutritionalVideo));
     }
 
@@ -93,7 +86,7 @@ public class SysNutritionalVideoController extends BaseController
     {
         AjaxResult result = AjaxResult.error();
         try {
-            CreateUploadVideoResponse response = AliyunVideoUtils.createUploadVideoRequest(sysNutritionalVideo.getCateId(), sysNutritionalVideo.getFileName(), sysNutritionalVideo.getTitle(), sysNutritionalVideo.getCoverUrl(), sysNutritionalVideo.getTags(), sysNutritionalVideo.getDescription());
+            CreateUploadVideoResponse response = AliyunVideoUtils.createUploadVideoRequest(null, sysNutritionalVideo.getFileName(), sysNutritionalVideo.getTitle(), null, sysNutritionalVideo.getTags(), sysNutritionalVideo.getDescription());
             if(response != null){
                 result = AjaxResult.success();
                 result.put("uploadAuth", response.body);
@@ -125,4 +118,20 @@ public class SysNutritionalVideoController extends BaseController
     {
         return toAjax(sysNutritionalVideoService.deleteSysNutritionalVideoByIds(ids));
     }
+
+    /**
+     * 修改营养小知识是否微信展示状态
+     */
+    @PreAuthorize("@ss.hasPermi('custom:nutritionalVideo:edit')")
+    @Log(title = "微信展示状态修改", businessType = BusinessType.UPDATE)
+    @GetMapping("/updateWxShow")
+    public AjaxResult updateWxShow(@RequestParam("id")String id, @RequestParam("showFlag")Integer showFlag)
+    {
+        if(StringUtils.isEmpty(id) || showFlag == null){
+            return AjaxResult.error();
+        }
+        Long[] ids = {Long.parseLong(id)};
+        return toAjax(sysNutritionalVideoService.updateWxshowByIds(showFlag, ids));
+    }
+
 }
