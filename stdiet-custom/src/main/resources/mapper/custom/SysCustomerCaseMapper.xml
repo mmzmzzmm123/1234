@@ -45,6 +45,7 @@
     <select id="selectSysCustomerCaseList" parameterType="SysCustomerCase" resultMap="SysCustomerCaseResult">
         select scc.id, scc.name, scc.keyword, scc.remark, scc.customer_id, scc.wx_show, scc.create_time,sc.name as customer_name from sys_customer_case scc
         left join sys_customer sc on sc.id = scc.customer_id and sc.del_flag = 0
+        left join sys_customer_healthy as sch on sch.customer_id = sc.id and sch.del_flag = 0
         where scc.del_flag = 0
         <include refid="searchKey">
             <property name="keywordArray" value="#{keywordArray}"/>
@@ -52,6 +53,21 @@
         <if test="customerName != null and customerName != ''">
             and sc.name like concat('%', #{customerName}, '%')
         </if>
+        <if test="keyword != null">
+            and
+            (
+              sc.name like concat('%', #{keyword}, '%') or
+              scc.keyword like concat('%', #{keyword}, '%') or scc.name like concat('%', #{keyword}, '%')
+              or scc.remark like concat('%', #{keyword}, '%') or sch.other_physical_signs like concat('%', #{keyword}, '%')
+              or sch.remark like concat('%', #{keyword}, '%')
+            <if test="signIdList != null">
+                  <foreach collection="signIdList " item="signId" index="index" open=" OR (" close=")" separator=" OR ">
+                      FIND_IN_SET(#{signId}, sch.physical_signs_id)
+                  </foreach>
+              </if>
+            )
+        </if>
+
         <if test="wxShow != null">
             and scc.wx_show = #{wxShow}
         </if>

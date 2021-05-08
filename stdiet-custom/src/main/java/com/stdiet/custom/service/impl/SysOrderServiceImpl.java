@@ -406,4 +406,13 @@ public class SysOrderServiceImpl implements ISysOrderService {
     public List<SysOrder> getAllOrderByCusId(Long cusId){
         return sysOrderMapper.getAllOrderByCusId(cusId);
     }
+
+    /**
+     * 根据openid查询订单数量
+     * @param openid
+     * @return
+     */
+    public int getOrderCountByOpenId(String openid){
+        return sysOrderMapper.getOrderCountByOpenId(openid);
+    }
 }

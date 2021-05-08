@@ -9,10 +9,11 @@
   :before-upload="beforeAvatarUpload">
   <img v-if="imageUrl || coverUrl" :src="imageUrl || coverUrl" class="avatar">
   <i v-else class="el-icon-plus avatar-uploader-icon"></i>
-  <div class="el-upload__tip" slot="tip">
-      1、只能上传png、jpg文件，且每个文件不超过{{
+  <div class="el-upload__tip" slot="tip" style="color:#1890ff">
+      <div>1、只能上传png、jpg文件，且每个文件不超过{{
         upload.fileSize / (1024 * 1024)
-      }}M
+      }}M</div>
+      <div style="margin-top:-10px;">{{tips ? ('2、'+tips) : ''}}</div>
     </div>
 </el-upload>
 </template>
@@ -77,6 +78,10 @@ export default {
       default: "videoCover",
     },
     coverUrl:{
+      type: String,
+      default: ""
+    },
+    tips: {
       type: String,
       default: ""
     }

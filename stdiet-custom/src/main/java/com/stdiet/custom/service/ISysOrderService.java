@@ -114,4 +114,11 @@ public interface ISysOrderService
      * @return
      */
     List<SysOrder> getAllOrderByCusId(Long cusId);
+
+    /**
+     * 根据openid查询订单数量
+     * @param openid
+     * @return
+     */
+    int getOrderCountByOpenId(String openid);
 }

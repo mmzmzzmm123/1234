@@ -195,6 +195,4 @@ public class SysOrderController extends OrderBaseController {
     public AjaxResult remove(@PathVariable Long orderId) {
         return toAjax(sysOrderService.deleteSysOrderById(orderId));
     }
-
-
 }

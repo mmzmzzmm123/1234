@@ -512,4 +512,15 @@
         select * from sys_order where del_flag = 0 and cus_id = #{cusId} order by order_time asc
     </select>
 
+    <!-- 根据微信openId查询客户订单数量 -->
+    <select id="getOrderCountByOpenId" parameterType="String" resultType="int">
+      select count(so.order_id) from sys_order so
+      where so.del_flag = 0 and so.cus_id is not null and so.cus_id = (select su.cus_id from sys_wx_user_info su where su.openid = #{openid} limit 1)
+    </select>
+
+    <!-- 根据营养师ID查询最后一单的情况 -->
+    <select id="getLastOrderByNutritionistId" parameterType="Long" resultMap="SysOrderResult">
+        select * from sys_order so
+        where del_flag = 0 and nutritionist_id = #{nutritionistId} order by order_id desc limit 1
+    </select>
 </mapper>
