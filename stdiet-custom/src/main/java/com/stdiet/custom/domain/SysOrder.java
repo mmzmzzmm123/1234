@@ -280,6 +280,8 @@ public class SysOrder extends BaseEntity {
     //订单查询时的订单类型二维数组
     private JSONArray searchOrderTypeArray;
 
+    private Integer counted;
+
 
 
 }
