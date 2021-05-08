@@ -106,6 +106,14 @@ public class WechatAppletController extends BaseController {
         if (StringUtils.isEmpty(sysWxUserInfo.getOpenid()) || StringUtils.isEmpty(sysWxUserInfo.getPhone())) {
             return AjaxResult.error("手机号为空");
         }
+        //根据手机号查询返回用户加密ID
+        SysCustomer customer = sysCustomerService.getCustomerByPhone(sysWxUserInfo.getPhone());
+        //加密ID
+        String customerEncId = null;
+        if(customer != null){
+            sysWxUserInfo.setCusId(customer.getId());
+            customerEncId = AesUtils.encrypt(customer.getId() + "", null);
+        }
         // 查询微信用户
         SysWxUserInfo userInfo = sysWxUserInfoService.selectSysWxUserInfoById(sysWxUserInfo.getOpenid());
         if (userInfo != null) {
@@ -115,9 +123,7 @@ public class WechatAppletController extends BaseController {
             sysWxUserInfoService.insertSysWxUserInfo(sysWxUserInfo);
         }
         Map<String, Object> result = new HashMap<>();
-        //根据手机号查询返回用户加密ID
-        SysCustomer customer = sysCustomerService.getCustomerByPhone(sysWxUserInfo.getPhone());
-        result.put("customerId", customer != null ? AesUtils.encrypt(customer.getId() + "", null) : null);
+        result.put("customerId",  customerEncId);
         //查询未读消息数量
         SysMessageNotice messageParam = new SysMessageNotice();
         messageParam.setReadType(0);
@@ -358,9 +364,18 @@ public class WechatAppletController extends BaseController {
      */
     @GetMapping(value = "/getVideoList")
     public TableDataInfo getVideoList(SysNutritionalVideo sysNutritionalVideo) {
-        startPage();
         sysNutritionalVideo.setShowFlag(1);
         sysNutritionalVideo.setSortType(2);
+        //普通用户
+        sysNutritionalVideo.setUserType(0);
+        if(StringUtils.isNotEmpty(sysNutritionalVideo.getOpenId())){
+            //查询是否为客户，存在订单就视为客户
+            int orderNum = sysOrderService.getOrderCountByOpenId(sysNutritionalVideo.getOpenId());
+            if(orderNum > 0){
+                sysNutritionalVideo.setUserType(1);
+            }
+        }
+        startPage();
         List<SysNutritionalVideo> list = sysNutritionalVideoService.selectSysNutritionalVideoList(sysNutritionalVideo, true);
         return getDataTable(list);
     }
@@ -380,6 +395,9 @@ public class WechatAppletController extends BaseController {
                     List<GetPlayInfoResponseBody.GetPlayInfoResponseBodyPlayInfoListPlayInfo> playList = playInfoResponseBody.playInfoList.playInfo;
                     if(playList != null && playList.size() > 0){
                         nutritionalVideoResponse.setPlayUrl(playList.get(0).getPlayURL());
+                    }
+                    if(StringUtils.isNotEmpty(sysNutritionalVideo.getCoverUrl())){
+                        nutritionalVideoResponse.setCoverUrl(AliyunOSSUtils.generatePresignedUrl(sysNutritionalVideo.getCoverUrl()));
                     }
                     nutritionalVideoResponse.setDescription(sysNutritionalVideo.getDescription());
                     nutritionalVideoResponse.setTags(sysNutritionalVideo.getTags());

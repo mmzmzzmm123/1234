@@ -4,6 +4,11 @@ import com.aliyun.vod20170321.models.*;
 import com.aliyun.teaopenapi.models.*;
 import com.stdiet.common.config.AliyunOSSConfig;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 public class AliyunVideoUtils {
 
     public static com.aliyun.vod20170321.Client videoClient = null;
@@ -116,12 +121,16 @@ public class AliyunVideoUtils {
     public static CreateUploadVideoResponse createUploadVideoRequest(Long cateId, String fileName, String title, String coverURL, String tags, String description) throws Exception{
         com.aliyun.vod20170321.Client client = AliyunVideoUtils.createClient();
         CreateUploadVideoRequest createUploadVideoRequest = new CreateUploadVideoRequest()
-                .setDescription(description)
-                .setCoverURL(coverURL)
-                .setFileName(fileName)
-                .setTitle(title)
-                .setCateId(cateId)
-                .setTags(tags);
+                .setDescription(description).setFileName(fileName).setTitle(title);
+        if(StringUtils.isNotEmpty(coverURL)){
+            createUploadVideoRequest.setCoverURL(coverURL);
+        }
+        if(cateId != null){
+            createUploadVideoRequest.setCateId(cateId);
+        }
+        if(StringUtils.isNotEmpty(tags)){
+            createUploadVideoRequest.setTags(tags);
+        }
         return client.createUploadVideo(createUploadVideoRequest);
     }
 
@@ -200,6 +209,33 @@ public class AliyunVideoUtils {
      */
     public static String delVideo(String videoId) throws Exception{
         return updateVideo(videoId, null,null,null, default_delete_cateId);
+    }
+
+    /**
+     * 根据VideoId获取封面
+     * @param videoId
+     * @return
+     */
+    public static List<String> getVideoCoverUrl(List<String> videoId){
+        List<String> result = new ArrayList<>();
+        try{
+            com.aliyun.vod20170321.Client client = AliyunVideoUtils.createClient();
+            GetVideoInfosRequest getVideoInfosRequest = new GetVideoInfosRequest()
+                    .setVideoIds(StringUtils.join(videoId.toArray(), ","));
+            GetVideoInfosResponse getVideoInfosResponse = client.getVideoInfos(getVideoInfosRequest);
+            if(getVideoInfosResponse != null){
+                GetVideoInfosResponseBody body = getVideoInfosResponse.body;
+                List<GetVideoInfosResponseBody.GetVideoInfosResponseBodyVideoList> videoList = body.videoList;
+                if(videoList != null && videoList.size() > 0){
+                    for (GetVideoInfosResponseBody.GetVideoInfosResponseBodyVideoList video : videoList) {
+                        result.add(video.getCoverURL());
+                    }
+                }
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return result;
     }
 
 

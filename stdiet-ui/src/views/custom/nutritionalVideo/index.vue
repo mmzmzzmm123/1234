@@ -110,8 +110,16 @@
           </el-image>
         </template>
       </el-table-column>
-      <el-table-column label="标题" align="center" prop="title" width="200"/>
-      <el-table-column label="描述" align="center" prop="description" />
+      <el-table-column label="标题" align="center" prop="title" width="200">
+        <template slot-scope="scope" >
+            <AutoHideMessage :data="scope.row.title == null ? '' : (scope.row.title+'')" :maxLength="20"></AutoHideMessage>
+        </template>
+      </el-table-column>
+      <el-table-column label="描述" align="center" prop="description" >
+        <template slot-scope="scope" >
+            <AutoHideMessage :data="scope.row.description == null ? '' : (scope.row.description+'')" :maxLength="100"></AutoHideMessage>
+        </template>
+      </el-table-column>
       <!--<el-table-column label="标签" align="center" prop="tags" width="100"/>-->
        <el-table-column label="分类" align="center" prop="cateName" width="100"/>
        <el-table-column label="权限等级" align="center" prop="payLevelName" width="100"/>
@@ -128,6 +136,13 @@
       </el-table-column>
       <el-table-column label="操作" align="center" width="200">
         <template slot-scope="scope">
+          <el-button
+            size="mini"
+            type="text"
+            icon="el-icon-edit"
+            @click="getVideoPlayUrl(scope.row.id)"
+            v-hasPermi="['custom:nutritionalVideo:query']"
+          >播放</el-button>
           <el-button
             size="mini"
             type="text"
@@ -229,11 +244,12 @@
 </template>
 
 <script>
-  import { listNutritionalVideo, getNutritionalVideo, delNutritionalVideo, addNutritionalVideo, updateNutritionalVideo, exportNutritionalVideo, updateWxShow } from "@/api/custom/nutritionalVideo";
+  import { listNutritionalVideo, getNutritionalVideo, delNutritionalVideo, addNutritionalVideo, updateNutritionalVideo, exportNutritionalVideo, updateWxShow,getVideoPlayUrlById } from "@/api/custom/nutritionalVideo";
   import {getAllClassify } from "@/api/custom/videoClassify";
   import UploadVideo from "@/components/UploadVideo";
   import UploadFile from "@/components/FileUpload/UploadFile";
   import VideoClassify from "../videoClassify";
+  import AutoHideMessage from "@/components/AutoHideMessage";
   export default {
     name: "NutritionalVideo",
     data() {
@@ -269,6 +285,15 @@
         form: {},
         // 表单校验
         rules: {
+          title: [
+            { required: true, message: "标题不能为空", trigger: "blur" },
+          ],
+          cateId:[
+            { required: true, message: "视频类别不能为空", trigger: "blur" },
+          ],
+          payLevel:[
+            { required: true, message: "视频权限不能为空", trigger: "blur" },
+          ]
         },
         coverImageList:[],
         //分类列表
@@ -288,7 +313,7 @@
       });
     },
     components: {
-      UploadVideo,UploadFile,VideoClassify
+      UploadVideo,UploadFile,VideoClassify,AutoHideMessage
     },
     methods: {
       /** 查询营养视频列表 */
@@ -370,6 +395,15 @@
           this.form = response.data;
           this.open = true;
           this.title = "修改营养视频";
+        });
+      },
+      //获取播放地址
+      getVideoPlayUrl(id){
+        getVideoPlayUrlById(id).then(response => {
+           let url = response.data.playUrl;
+           if(url != undefined && url != null){
+                window.open(url, '_blank');
+           }
         });
       },
       /** 提交按钮 */

@@ -238,6 +238,18 @@ public class SysCommisionController extends BaseController {
     }
 
     /**
+     * 导出按天计算提成详细列表
+     */
+    @PreAuthorize("@ss.hasPermi('commisionDay:detail:export')")
+    @Log(title = "导出按天计算提成详细列表", businessType = BusinessType.EXPORT)
+    @GetMapping("/exportDetailDay")
+    public AjaxResult exportDetailDay(SysCommision sysCommision) {
+        ExcelUtil<SysCommissionDayDetail> util = new ExcelUtil<>(SysCommissionDayDetail.class);
+        List<SysCommissionDayDetail> list = sysCommissionDayService.calculateCommissionByDay(sysCommision);
+        return util.exportExcel(list, "commision");
+    }
+
+    /**
      * 根据用户ID查询该用户按天计算提成的详情
      * */
     @PreAuthorize("@ss.hasPermi('commisionDay:detail:list')")
@@ -248,14 +260,18 @@ public class SysCommisionController extends BaseController {
     }
 
     /**
-     * 导出按天计算提成详细列表
+     * 导出具体地点按天计算提成详细列表
      */
     @PreAuthorize("@ss.hasPermi('commisionDay:detail:export')")
-    @Log(title = "导出按天计算提成详细列表", businessType = BusinessType.EXPORT)
-    @GetMapping("/exportDetailDay")
-    public AjaxResult exportDetailDay(SysCommision sysCommision) {
-        ExcelUtil<SysCommissionDayDetail> util = new ExcelUtil<>(SysCommissionDayDetail.class);
-        List<SysCommissionDayDetail> list = sysCommissionDayService.calculateCommissionByDay(sysCommision);
-        return util.exportExcel(list, "commision");
+    @Log(title = "导出具体地点按天计算提成详细列表", businessType = BusinessType.EXPORT)
+    @GetMapping("/exportOrderDetailDay")
+    public AjaxResult exportOrderDetailDay(SysCommision sysCommision) {
+        ExcelUtil<SysOrderCommisionDayDetail> util = new ExcelUtil<>(SysOrderCommisionDayDetail.class);
+        AjaxResult result = sysCommissionDayService.calculateOrderCommissionDetail(sysCommision);
+        List<SysOrderCommisionDayDetail> orderDetailList = null;
+        if(result != null && (int)result.get("code") == 200){
+            orderDetailList = (List<SysOrderCommisionDayDetail>)result.get("list");
+        }
+        return util.exportExcel(orderDetailList == null ? new ArrayList<>() : orderDetailList, "commision");
     }
 }

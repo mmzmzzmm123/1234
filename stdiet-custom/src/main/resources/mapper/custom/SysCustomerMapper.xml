@@ -62,7 +62,7 @@
         </if>
         <if test="signIdList != null">
             and (
-            sch.other_physical_signs like concat('%', #{name}, '%')
+            sch.other_physical_signs like concat('%', #{physicalSignsId}, '%')
             <foreach collection="signIdList " item="signId" index="index" open=" OR (" close=")" separator=" OR ">
                 FIND_IN_SET(#{signId}, sch.physical_signs_id)
             </foreach>

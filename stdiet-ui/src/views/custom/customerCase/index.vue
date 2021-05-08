@@ -17,8 +17,7 @@
       </el-form-item>-->
       <el-form-item label="案例信息" prop="name">
         <el-select
-          v-model="keywordArray"
-          multiple
+          v-model="queryParams.keyword"
           filterable
           allow-create
           clearable
@@ -150,12 +149,22 @@
           ></AutoHideMessage>
         </template>
       </el-table-column>
-      <el-table-column label="所属客户" align="center" prop="customerName" />
+      <el-table-column label="所属客户" align="center" prop="customerName">
+          <template slot-scope="scope">
+              <el-button
+            size="normal"
+            type="text"
+            @click="handleOnHealthSignClick(scope.row.customerId)"
+            title="点击查看用户详情"
+            >{{scope.row.customerName}}</el-button
+          >
+          </template>
+      </el-table-column>
       
       <el-table-column label="文件" align="center">
         <template slot-scope="scope">
           <el-button
-            size="mini"
+            size="normal"
             type="text"
             @click="getFileListByCaseId(scope.row)"
             >文件列表
@@ -323,6 +332,9 @@
       @dealCustomerId="dealCustomerId"
       ref="selectCustomerRef"
     ></SelectCustomer>
+
+     <!-- 健康评估弹窗 -->
+    <PhysicalSignsDialog ref="physicalSignsDialogRef" />
   </div>
 </template>
 
@@ -337,13 +349,16 @@ import {
   getFileListByCaseId,
   updateWxShow
 } from "@/api/custom/customerCase";
+import {
+  getCustomer
+} from "@/api/custom/customer";
 import DragUpload from "@/components/FileUpload/DragUpload";
 import DragUploadEdit from "@/components/FileUpload/DragUploadEdit";
 import SelectCustomer from "@/components/Customer/SelectCustomer";
 import MuchFileDown from "@/components/FileDownload/MuchFileDown";
 import AutoHideMessage from "@/components/AutoHideMessage";
 import AutoHideInfo from "@/components/AutoHideInfo";
-
+import PhysicalSignsDialog from "@/components/PhysicalSignsDialog";
 export default {
   name: "CustomerCase",
   data() {
@@ -398,6 +413,7 @@ export default {
     AutoHideMessage: AutoHideMessage,
     AutoHideInfo: AutoHideInfo,
     DragUploadEdit: DragUploadEdit,
+    PhysicalSignsDialog
   },
   created() {
     this.getList();
@@ -409,7 +425,7 @@ export default {
     /** 查询客户案例管理列表 */
     getList() {
       this.loading = true;
-      this.queryParams.keyword = this.keywordArray.join(",");
+      //this.queryParams.keyword = this.keywordArray.join(",");
       listCustomerCase(this.queryParams).then((response) => {
         this.customerCaseList = response.rows;
         this.total = response.total;
@@ -424,6 +440,14 @@ export default {
       this.$refs["editUploadCaseFile"] &&
         this.$refs["editUploadCaseFile"].uploadReset();
       this.reset();
+    },
+    handleOnHealthSignClick(id) {
+      getCustomer(id).then((response) => {
+        if(response.code == 200){
+            this.$refs["physicalSignsDialogRef"].showDialog(response.data);
+        }
+      });
+      
     },
     // 表单重置
     reset() {

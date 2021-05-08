@@ -54,4 +54,7 @@ public class SysCustomerCase extends BaseEntity
 
     //案例文件URL数组
     private String[] caseFileUrl;
+
+    //病史体征ID集合，非持久化字段
+    private List<Long> signIdList;
 }

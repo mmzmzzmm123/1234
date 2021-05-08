@@ -1,9 +1,9 @@
 package com.stdiet.web.controller.custom;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import com.aliyun.vod20170321.models.CreateUploadVideoResponse;
+import com.aliyun.vod20170321.models.GetPlayInfoResponseBody;
 import com.stdiet.common.core.page.TableDataInfo;
 import com.stdiet.common.utils.AliyunVideoUtils;
 import com.stdiet.common.utils.StringUtils;
@@ -125,6 +125,28 @@ public class SysNutritionalVideoController extends BaseController
         }
         Long[] ids = {Long.parseLong(id)};
         return toAjax(sysNutritionalVideoService.updateWxshowByIds(showFlag, ids));
+    }
+
+    /**
+     * 获取营养视频播放地址
+     */
+    @PreAuthorize("@ss.hasPermi('custom:nutritionalVideo:query')")
+    @GetMapping(value = "/getVideoPlayUrlById/{id}")
+    public AjaxResult getVideoPlayUrlById(@PathVariable("id") Long id)
+    {
+        SysNutritionalVideo sysNutritionalVideos = sysNutritionalVideoService.selectSysNutritionalVideoById(id);
+        if(sysNutritionalVideos != null && StringUtils.isNotEmpty(sysNutritionalVideos.getVideoId())){
+            try{
+                GetPlayInfoResponseBody playInfoResponseBody = AliyunVideoUtils.getVideoVisitDetail(sysNutritionalVideos.getVideoId());
+                List<GetPlayInfoResponseBody.GetPlayInfoResponseBodyPlayInfoListPlayInfo> playList = playInfoResponseBody.playInfoList.playInfo;
+                if(playList != null && playList.size() > 0){
+                    sysNutritionalVideos.setPlayUrl(playList.get(0).getPlayURL());
+                }
+            }catch (Exception e){
+                e.printStackTrace();
+            }
+        }
+        return AjaxResult.success(sysNutritionalVideos);
     }
 
 }

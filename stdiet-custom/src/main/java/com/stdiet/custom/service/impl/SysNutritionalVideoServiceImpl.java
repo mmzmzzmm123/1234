@@ -9,6 +9,7 @@ import com.aliyun.vod20170321.models.SearchMediaResponse;
 import com.aliyun.vod20170321.models.SearchMediaResponseBody;
 import com.stdiet.common.utils.AliyunVideoUtils;
 import com.stdiet.common.utils.DateUtils;
+import com.stdiet.common.utils.StringUtils;
 import com.stdiet.common.utils.oss.AliyunOSSUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
@@ -53,15 +54,42 @@ public class SysNutritionalVideoServiceImpl implements ISysNutritionalVideoServi
         List<SysNutritionalVideo> list = sysNutritionalVideoMapper.selectSysNutritionalVideoList(sysNutritionalVideo);
         if(flag && list != null && list.size() > 0){
             List<String> fileUrl = new ArrayList<>();
+            List<String> videoIdList = new ArrayList<>();
             for (SysNutritionalVideo video : list) {
-                fileUrl.add(video.getCoverUrl());
+                if(StringUtils.isNotEmpty(video.getCoverUrl())){
+                    fileUrl.add(video.getCoverUrl());
+                }else{
+                    videoIdList.add(video.getVideoId());
+                }
             }
-            List<String> downUrlList = AliyunOSSUtils.generatePresignedUrl(fileUrl);
-            if(downUrlList != null && downUrlList.size() > 0){
-                int index = 0;
-                for (String downUrl : downUrlList) {
-                    list.get(index).setCoverUrl(downUrl);
-                    index++;
+            if(fileUrl.size() > 0){
+                List<String> downUrlList = AliyunOSSUtils.generatePresignedUrl(fileUrl);
+                if(downUrlList != null && downUrlList.size() > 0){
+                    int index = 0;
+                    for (SysNutritionalVideo video : list) {
+                        if (StringUtils.isNotEmpty(video.getCoverUrl())) {
+                            video.setCoverUrl(downUrlList.get(index));
+                            index++;
+                            if(index == downUrlList.size()){
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
+            if(videoIdList.size() > 0) {
+                List<String> coverUrlList = AliyunVideoUtils.getVideoCoverUrl(videoIdList);
+                if (coverUrlList != null && coverUrlList.size() > 0) {
+                    int index = 0;
+                    for (SysNutritionalVideo video : list) {
+                        if (StringUtils.isEmpty(video.getCoverUrl())) {
+                            video.setCoverUrl(coverUrlList.get(index));
+                            index++;
+                            if(index == coverUrlList.size()){
+                                break;
+                            }
+                        }
+                    }
                 }
             }
         }

@@ -47,6 +47,14 @@
         <if test="payLevel != null">
             and snv.pay_level = #{payLevel}
         </if>
+        <if test="userType != null">
+            <if test="userType == 0">
+                and pay_level = 0
+            </if>
+            <if test="userType == 1">
+                and (pay_level = 0 or pay_level = 1)
+            </if>
+        </if>
         <if test="key != null and key != ''">
             and (snv.title like concat('%',#{key},'%') or snv.description like concat('%',#{key},'%'))
         </if>

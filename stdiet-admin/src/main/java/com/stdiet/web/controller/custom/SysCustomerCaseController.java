@@ -18,6 +18,8 @@ import com.stdiet.common.utils.file.MimeTypeUtils;
 import com.stdiet.common.utils.oss.AliyunOSSUtils;
 import com.stdiet.custom.domain.SysCustomerCaseFile;
 import com.stdiet.custom.dto.request.FileRequest;
+import com.stdiet.custom.service.ISysPhysicalSignsService;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.unit.DataUnit;
@@ -49,6 +51,9 @@ public class SysCustomerCaseController extends BaseController
     @Autowired
     private ISysCustomerCaseService sysCustomerCaseService;
 
+    @Autowired
+    private ISysPhysicalSignsService sysPhysicalSignsService;
+
     /**
      * 查询客户案例管理列表
      */
@@ -56,8 +61,13 @@ public class SysCustomerCaseController extends BaseController
     @GetMapping("/list")
     public TableDataInfo list(SysCustomerCase sysCustomerCase)
     {
+        //sysCustomerCase.setKeywordArray(StringUtils.isNotEmpty(sysCustomerCase.getKeyword()) ? sysCustomerCase.getKeyword().split(",") : null);
+
+        if(StringUtils.isNotEmpty(sysCustomerCase.getKeyword())){
+            sysCustomerCase.setSignIdList(sysPhysicalSignsService.getSignIdByName(sysCustomerCase.getKeyword()));
+        }
+
         startPage();
-        sysCustomerCase.setKeywordArray(StringUtils.isNotEmpty(sysCustomerCase.getKeyword()) ? sysCustomerCase.getKeyword().split(",") : null);
         List<SysCustomerCase> list = sysCustomerCaseService.selectSysCustomerCaseList(sysCustomerCase);
         return getDataTable(list);
     }

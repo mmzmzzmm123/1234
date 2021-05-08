@@ -69,3 +69,12 @@ export function updateWxShow(data){
     params: data
   })
 }
+
+// 查询营养视频播放地址
+export function getVideoPlayUrlById(id) {
+  return request({
+    url: '/custom/nutritionalVideo/getVideoPlayUrlById/' + id,
+    method: 'get'
+  })
+}
+
