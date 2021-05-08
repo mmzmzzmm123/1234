@@ -63,6 +63,7 @@ export default {
         theme: "snow",
         bounds: document.body,
         debug: "warn",
+       //   url: process.env.VUE_APP_BASE_API,
         modules: {
           // 工具栏配置
           toolbar: [
@@ -166,6 +167,12 @@ export default {
         let length = quill.getSelection().index;
         // 插入图片  res.url为服务器返回的图片地址
         quill.insertEmbed(length, "image", res.url);
+
+// const imgObjectUrl = this.url + file.response.imgUrl;
+
+        // 插入图片  res.url为服务器返回的图片地址
+ //       quill.insertEmbed(length, "image", imgObjectUrl);
+
         // 调整光标到最后
         quill.setSelection(length + 1);
       } else {
