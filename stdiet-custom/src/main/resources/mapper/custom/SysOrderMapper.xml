@@ -49,6 +49,7 @@
         <result property="afterSaleCommissOrder" column="after_sale_commiss_order"/>
         <result property="commissStartTime" column="commiss_start_time"/>
         <result property="delFlag" column="del_flag"/>
+        <result property="counted" column="counted"/>
 
         <!-- 非持久化字段 -->
         <result property="afterSale" column="afterSale_name"></result><!-- 售后名称  -->
@@ -61,7 +62,7 @@
         o.serve_time_id, o.pay_type_id, pay.dict_label as pay_type, o.pre_sale_id, o.create_by, o.create_time, o.after_sale_id, o.update_by, o.update_time,
         o.nutritionist_id, o.remark, o.nutri_assis_id, o.account_id, acc.dict_label as account, o.planner_id, o.planner_assis_id, o.operator_id, o.operator_assis_id,
         o.recommender, o.order_time,o.give_serve_day,o.conditioning_project_id,cp.dict_label as conditioning_project,o.server_end_time,
-        o.on_sale_id,o.order_type,o.order_count_type,o.order_money_type,o.main_order_id,o.after_sale_commiss_order,o.commiss_start_time
+        o.on_sale_id,o.order_type,o.order_count_type,o.order_money_type,o.main_order_id,o.after_sale_commiss_order,o.commiss_start_time, o.counted
         from sys_order o
         LEFT JOIN sys_customer sc ON sc.id = o.cus_id
         LEFT JOIN (SELECT dict_label, dict_value FROM sys_dict_data WHERE dict_type = 'cus_pay_type') AS pay ON pay.dict_value = o.pay_type_id
@@ -243,6 +244,7 @@
             <if test="afterSaleCommissOrder != null">after_sale_commiss_order,</if>
             <if test="commissStartTime != null">commiss_start_time,</if>
             <if test="delFlag != null">del_flag,</if>
+            <if test="counted != null">counted,</if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="orderId != null">#{orderId},</if>
@@ -285,6 +287,7 @@
             <if test="afterSaleCommissOrder != null">#{afterSaleCommissOrder},</if>
             <if test="commissStartTime != null">#{commissStartTime},</if>
             <if test="delFlag != null">#{delFlag},</if>
+            <if test="counted != null">#{counted},</if>
         </trim>
     </insert>
 
@@ -330,6 +333,7 @@
             <if test="afterSaleCommissOrder != null">after_sale_commiss_order = #{afterSaleCommissOrder},</if>
             <if test="commissStartTime != null">commiss_start_time = #{commissStartTime},</if>
             <if test="delFlag != null">del_flag = #{delFlag},</if>
+            <if test="counted != null">counted = #{counted},</if>
         </trim>
         where order_id = #{orderId}
     </update>
