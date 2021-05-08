@@ -403,7 +403,7 @@ export default {
     this.getDicts("sys_dm_zcrjdtype").then((response) => {
       this.jdtypeOptions = response.data;
     });
-    this.getDicts("sys_dm_zcrsf").then((response) => {
+    this.getDicts("sys_dm_xybmsf").then((response) => {
       this.sfOptions = response.data;
     });
     this.getDicts("sys_dm_zcrshzt").then((response) => {

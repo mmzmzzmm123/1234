@@ -127,11 +127,21 @@ public class TsbzXybmsqController extends BaseController
             int countYbm = tsbzXybmsqService.selectCountYibaoming(tsbzXybmsq1).getCountYbm();
             // 判断是否有名额
             if (countYbm < countZsme) {
-                tsbzXybmsq.setCreateUser(SecurityUtils.getLoginUser().getUser().getUserId());
-                tsbzXybmsq.setCreateTime(new Date());
-                tsbzXybmsq.setDeptid(SecurityUtils.getLoginUser().getUser().getDeptId().toString());
-                tsbzXybmsqService.insertTsbzXybmsq(tsbzXybmsq);
-                return ajax;
+                if (tsbzXybmsq.getSf().equals("0")) {
+                    tsbzXybmsq.setCreateUser(SecurityUtils.getLoginUser().getUser().getUserId());
+                    tsbzXybmsq.setCreateTime(new Date());
+                    tsbzXybmsq.setDeptid(SecurityUtils.getLoginUser().getUser().getDeptId().toString());
+                    tsbzXybmsqService.insertTsbzXybmsq(tsbzXybmsq);
+                    return ajax;
+                }else {
+                    tsbzXybmsq.setXxshstatus("1");
+                    tsbzXybmsq.setQjshstatus("1");
+                    tsbzXybmsq.setCreateUser(SecurityUtils.getLoginUser().getUser().getUserId());
+                    tsbzXybmsq.setCreateTime(new Date());
+                    tsbzXybmsq.setDeptid(SecurityUtils.getLoginUser().getUser().getDeptId().toString());
+                    tsbzXybmsqService.insertTsbzXybmsq(tsbzXybmsq);
+                    return ajax;
+                }
             } else {
                 return AjaxResult.error("当前基地名额已满,无法继续报名");
             }
