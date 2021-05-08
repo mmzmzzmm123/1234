@@ -106,7 +106,7 @@
             type="text"
             icon="el-icon-check"
             @click="handleCheck(scope.row)"
-            v-hasPermi="['xypsgl:xybmsq:edit']"
+            v-hasPermi="['xypsgl:xybmsq:query']"
             >查看</el-button
           >
           <el-button
@@ -123,7 +123,7 @@
             type="text"
             icon="el-icon-delete"
             @click="handleFail(scope.row)"
-            v-hasPermi="['xypsgl:xybmsq:remove']"
+            v-hasPermi="['xypsgl:xybmsq:edit']"
             v-if="scope.row.xypsjgqrstatus=='2'?false:true"
             >退回</el-button
           >

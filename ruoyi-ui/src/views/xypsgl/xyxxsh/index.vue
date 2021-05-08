@@ -443,14 +443,6 @@ export default {
         this.loading = false;
       });
     },
-    // /** 查询教师基本信息列表 */
-    // getJdList() {
-    //   this.loading = true;
-    //   listZcrjdcj(null).then((response) => {
-    //     this.zcrjdcjList = response.rows;
-    //     this.loading = false;
-    //   });
-    // },
     /** 查询主持人报名申请列表 */
     getZcrList() {
       listZcrbmsq(null).then((response) => {

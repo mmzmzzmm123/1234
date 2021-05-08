@@ -97,7 +97,7 @@ public class TsbzXybmsqController extends BaseController
     /**
      * 获取学员报名申请详细信息
      */
-    @PreAuthorize("@ss.hasPermi('xypsgl:xybmsq:query')")
+    @PreAuthorize("@ss.hasPermi('xypsgl:xybmsq:query')" + "||@ss.hasPermi('xypsgl:xyqjsh:list')" + "||@ss.hasPermi('xypsgl:xyxxsh:list')" + "||@ss.hasPermi('xypsgl:xypsjgqr:list')")
     @GetMapping(value = "/{id}")
     public AjaxResult getInfo(@PathVariable("id") Long id)
     {
@@ -141,7 +141,7 @@ public class TsbzXybmsqController extends BaseController
     /**
      * 修改学员报名申请
      */
-    @PreAuthorize("@ss.hasPermi('xypsgl:xybmsq:edit')")
+    @PreAuthorize("@ss.hasPermi('xypsgl:xybmsq:edit')" )
     @Log(title = "学员报名申请", businessType = BusinessType.UPDATE)
     @PutMapping
     public AjaxResult edit(@RequestBody TsbzXybmsq tsbzXybmsq)
