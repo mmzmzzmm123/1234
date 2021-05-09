@@ -11,6 +11,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="zjzid"    column="zjzid"    />
         <result property="jdtype"    column="jdtype"    />
         <result property="sf"    column="sf"    />
+        <result property="jxbh"    column="jxbh"    />
         <result property="scfapath"    column="scfapath"    />
         <result property="scfaname"    column="scfaname"    />
         <result property="createTime"    column="create_time"    />
@@ -20,10 +21,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="jgqrStatus"    column="jgqr_status"    />
         <result property="xxshyj"    column="xxshyj"    />
         <result property="qjshyj"    column="qjshyj"    />
+        <result property="deptid"    column="deptid"    />
     </resultMap>
 
     <sql id="selectTsbzZcrbmsqVo">
-        select a.id, a.jsid, a.zjzid, a.faid,b.jsxm as name, b.dabh as jxbh, b.xb as xb, b.csrq as csrq, b.xd as xd, b.xk as xk, b.zc as zc, c.xxmc as dwmc, c.xxdz as dwdz, d.email as email, d.phonenumber as phone, a.jdtype, a.sf, a.scfapath, a.scfaname, a.create_time, a.create_user, a.xxsh_status,a.qjsh_status,a.jgqr_status,a.xxshyj,a.qjshyj,(select group_concat(name separator ',') from tsbz_zcrzjzmd where find_in_set(id,a.zjzid)) as zjz
+        select a.id, a.jsid, a.zjzid, a.faid,b.jsxm as name, b.dabh as jxbh, b.xb as xb, b.csrq as csrq, b.xd as xd, b.xk as xk, b.zc as zc, c.xxmc as dwmc, c.xxdz as dwdz, d.email as email, d.phonenumber as phone, a.jdtype, a.sf, a.scfapath, a.scfaname, a.create_time, a.create_user, a.xxsh_status,a.qjsh_status,a.jgqr_status,a.xxshyj,a.qjshyj,b.deptid,(select group_concat(name separator ',') from tsbz_zcrzjzmd where find_in_set(id,a.zjzid)) as zjz
         from tsbz_zcrbmsq a
         left join tsbz_jsjbxx b on a.jsid=b.id
         left join tsbz_xxjbxx c on b.deptid=c.xxdm
@@ -38,6 +40,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="zjzid != null  and zjzid != ''"> and a.zjzid = #{zjzid}</if>
             <if test="jdtype != null  and jdtype != ''"> and a.jdtype = #{jdtype}</if>
             <if test="sf != null  and sf != ''"> and a.sf = #{sf}</if>
+            <if test="jxbh != null"> and b.dabh = #{jxbh}</if>
             <if test="scfapath != null  and scfapath != ''"> and a.scfapath = #{scfapath}</if>
             <if test="scfaname != null  and scfaname != ''"> and a.scfaname like concat('%', #{scfaname}, '%')</if>
             <if test="createUser != null "> and a.create_user = #{createUser}</if>
@@ -46,6 +49,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="jgqrStatus != null "> and a.jgqr_status = #{jgqrStatus}</if>
             <if test="xxshyj != null "> and a.xxshyj = #{xxshyj}</if>
             <if test="qjshyj != null "> and a.qjshyj = #{qjshyj}</if>
+            <if test="deptid != null "> and b.deptid = #{deptid}</if>
         </where>
     </select>
     

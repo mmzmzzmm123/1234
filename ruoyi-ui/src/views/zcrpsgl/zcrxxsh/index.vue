@@ -224,7 +224,7 @@
 
 <script>
 import { passXxpsStatus,  backXxpsStatus } from "@/api/zcrpsgl/zcrxxsh";
-import { listZcrbmsq,  getZcrbmsq } from "@/api/zcrpsgl/zcrbmsq";
+import { listZcrbmsqXxsh,  getZcrbmsq } from "@/api/zcrpsgl/zcrbmsq";
 import { listXxjbxx } from "@/api/qtjs/xxjbxx";
 export default {
   name: "Zcrxxsh",
@@ -323,7 +323,7 @@ export default {
     /** 查询学校审核列表 */
     getList() {
       this.loading = true;
-      listZcrbmsq(this.queryParams).then(response => {
+      listZcrbmsqXxsh(this.queryParams).then(response => {
         this.zcrxxshList = response.rows;
         this.total = response.total;
         this.loading = false;

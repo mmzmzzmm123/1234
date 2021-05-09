@@ -132,6 +132,10 @@ public class TsbzZcrbmsq extends BaseEntity
     @Excel(name = "区级审核意见")
     private String qjshyj;
 
+    /** 部门id */
+    @Excel(name = "部门id")
+    private String deptid;
+
     public void setId(Long id) 
     {
         this.id = id;
@@ -353,6 +357,14 @@ public class TsbzZcrbmsq extends BaseEntity
         this.qjshyj = qjshyj;
     }
 
+    public String getDeptid() {
+        return deptid;
+    }
+
+    public void setDeptid(String deptid) {
+        this.deptid = deptid;
+    }
+
     @Override
     public String toString() {
         return new ToStringBuilder(this,ToStringStyle.MULTI_LINE_STYLE)
@@ -384,6 +396,7 @@ public class TsbzZcrbmsq extends BaseEntity
             .append("xxshyj", getXxshyj())
             .append("qjshyj", getQjshyj())
             .append("jsid", getJsid())
+                .append("deptid", getDeptid())
             .toString();
     }
 

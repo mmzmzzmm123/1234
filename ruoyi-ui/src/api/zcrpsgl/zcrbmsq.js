@@ -9,6 +9,24 @@ export function listZcrbmsq(query) {
   })
 }
 
+// 查询学校审核列表
+export function listZcrbmsqXxsh(query) {
+  return request({
+    url: '/zcrpsgl/zcrbmsq/listXxsh',
+    method: 'get',
+    params: query
+  })
+}
+
+// 查询区级审核列表
+export function listZcrbmsqQjsh(query) {
+  return request({
+    url: '/zcrpsgl/zcrbmsq/listQjsh',
+    method: 'get',
+    params: query
+  })
+}
+
 // 查询主持人报名申请详细
 export function getZcrbmsq(id) {
   return request({

@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.ruoyi.common.utils.SecurityUtils;
+import com.ruoyi.xypsgl.domain.TsbzXybmsq;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -40,15 +41,39 @@ public class TsbzZcrbmsqController extends BaseController
     /**
      * 查询主持人报名申请列表
      */
-    @PreAuthorize("@ss.hasPermi('zcrpsgl:zcrbmsq:list')" + "||@ss.hasPermi('xypsgl:xybmsq:list')" + "||@ss.hasPermi('xypsgl:xyxxsh:list')" + "||@ss.hasPermi('xypsgl:xyqjsh:list')")
+    @PreAuthorize("@ss.hasPermi('zcrpsgl:zcrbmsq:list')" + "||@ss.hasPermi('xypsgl:xybmsq:list')")
     @GetMapping("/list")
     public TableDataInfo list(TsbzZcrbmsq tsbzZcrbmsq)
     {
+        tsbzZcrbmsq.setJxbh(SecurityUtils.getLoginUser().getUser().getUserName());
         startPage();
         List<TsbzZcrbmsq> list = tsbzZcrbmsqService.selectTsbzZcrbmsqList(tsbzZcrbmsq);
         return getDataTable(list);
     }
+    /**
+     * 查询学校审核列表
+     */
+    @PreAuthorize("@ss.hasPermi('zcrpsgl:zcrbmsq:listXxsh')")
+    @GetMapping("/listXxsh")
+    public TableDataInfo listXxsh(TsbzZcrbmsq tsbzZcrbmsq)
+    {
+        tsbzZcrbmsq.setDeptid(SecurityUtils.getLoginUser().getUser().getDeptId().toString());
+        startPage();
+        List<TsbzZcrbmsq> listXxsh = tsbzZcrbmsqService.selectTsbzZcrbmsqList(tsbzZcrbmsq);
+        return getDataTable(listXxsh);
+    }
 
+    /**
+     * 查询区级审核列表
+     */
+    @PreAuthorize("@ss.hasPermi('zcrpsgl:zcrbmsq:listQjsh')")
+    @GetMapping("/listQjsh")
+    public TableDataInfo listQjsh(TsbzZcrbmsq tsbzZcrbmsq)
+    {
+        startPage();
+        List<TsbzZcrbmsq> listQjsh = tsbzZcrbmsqService.selectTsbzZcrbmsqList(tsbzZcrbmsq);
+        return getDataTable(listQjsh);
+    }
     /**
      * 导出主持人报名申请列表
      */
