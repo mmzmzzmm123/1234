@@ -41,7 +41,7 @@ public class TsbzZcrbmsqController extends BaseController
     /**
      * 查询主持人报名申请列表
      */
-    @PreAuthorize("@ss.hasPermi('zcrpsgl:zcrbmsq:list')" + "||@ss.hasPermi('xypsgl:xybmsq:list')")
+    @PreAuthorize("@ss.hasPermi('zcrpsgl:zcrbmsq:list')" + "||@ss.hasPermi('xypsgl:xybmsq:list')" + "||@ss.hasPermi('xypsgl:xyxxsh:list')" + "||@ss.hasPermi('xypsgl:xyqjsh:list')")
     @GetMapping("/list")
     public TableDataInfo list(TsbzZcrbmsq tsbzZcrbmsq)
     {
