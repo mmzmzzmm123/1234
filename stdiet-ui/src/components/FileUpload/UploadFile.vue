@@ -9,11 +9,14 @@
   :before-upload="beforeAvatarUpload">
   <img v-if="imageUrl || coverUrl" :src="imageUrl || coverUrl" class="avatar">
   <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+  
   <div class="el-upload__tip" slot="tip" style="color:#1890ff">
+    <el-button v-if="imageUrl || coverUrl" size="small" type="danger" @click="removeFile">移除</el-button>
       <div>1、只能上传png、jpg文件，且每个文件不超过{{
         upload.fileSize / (1024 * 1024)
       }}M</div>
-      <div style="margin-top:-10px;">{{tips ? ('2、'+tips) : ''}}</div>
+      <div style="margin-top:5px;">{{tips ? ('2、'+tips) : ''}}</div>
+      
     </div>
 </el-upload>
 </template>
@@ -42,7 +45,7 @@ export default {
   methods: {
     resetUpload(){
         this.imageUrl = null;
-        this.fileUrl = null
+        this.fileUrl = null;
     },
     // 文件上传成功处理
     handleFileSuccess(response, file, fileList) {
@@ -55,6 +58,11 @@ export default {
       } else {
         this.$message.error("文件上传失败");
       }
+    },
+    removeFile(){
+        this.resetUpload();
+        this.coverUrl = null;
+        this.$emit("callbackMethod", '');
     },
     // 文件上传失败处理
     handleFileFail(err, file, fileList) {
