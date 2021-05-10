@@ -403,6 +403,8 @@ public class WechatAppletController extends BaseController {
                     }
                     if(StringUtils.isNotEmpty(sysNutritionalVideo.getCoverUrl())){
                         nutritionalVideoResponse.setCoverUrl(AliyunOSSUtils.generatePresignedUrl(sysNutritionalVideo.getCoverUrl()));
+                    }else{
+                        nutritionalVideoResponse.setCoverUrl(AliyunVideoUtils.getVideoCoverUrl(videoId));
                     }
                     nutritionalVideoResponse.setDescription(sysNutritionalVideo.getDescription());
                     nutritionalVideoResponse.setTags(sysNutritionalVideo.getTags());

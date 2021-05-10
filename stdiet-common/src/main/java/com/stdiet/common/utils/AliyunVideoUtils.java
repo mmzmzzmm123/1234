@@ -238,6 +238,29 @@ public class AliyunVideoUtils {
         return result;
     }
 
+    /**
+     * 根据VideoId获取封面
+     * @param videoId
+     * @return
+     */
+    public static String getVideoCoverUrl(String videoId){
+        String coverUrl = null;
+        try{
+            com.aliyun.vod20170321.Client client = AliyunVideoUtils.createClient();
+            GetVideoInfoRequest getVideoInfoRequest = new GetVideoInfoRequest()
+                    .setVideoId(videoId);
+            GetVideoInfoResponse response = client.getVideoInfo(getVideoInfoRequest);
+            if(response != null){
+                GetVideoInfoResponseBody body = response.body;
+                GetVideoInfoResponseBody.GetVideoInfoResponseBodyVideo video = body.video;
+                coverUrl = video.coverURL;
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return coverUrl;
+    }
+
 
 
 

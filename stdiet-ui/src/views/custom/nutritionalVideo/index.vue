@@ -196,7 +196,7 @@
             />
         </el-form-item>
          <el-form-item label="视频封面" prop="coverUrl">
-              <UploadFile ref="uploadFile" :prefix="'videoCover'" :coverUrl="form.previewUrl" @callbackMethod="handleCoverUrl"></UploadFile>
+              <UploadFile ref="uploadFile" v-if="open" :prefix="'videoCover'" :coverUrl="form.previewUrl" @callbackMethod="handleCoverUrl" :tips="'视频未传封面图片时，会主动截取封面，但会存在延迟，请勿直接发布到小程序'"></UploadFile>
           </el-form-item>
         <el-form-item label="视频类别" prop="cateId">
             <el-select v-model="form.cateId" clearable filterable placeholder="请选择类别">
@@ -224,7 +224,7 @@
                 active-text="小程序展示"
                 inactive-text="小程序不展示">
               </el-switch>
-              <div>提示：请保证内容正确再展示到小程序</div>
+              <div style="color:red">提示：请保证内容正确再展示到小程序</div>
           </el-form-item>    
       </el-form>
      
@@ -440,6 +440,7 @@
       },
       handleCoverUrl(url){
         this.form.coverUrl = url;
+        console.log(this.form.coverUrl);
       },
       /** 删除按钮操作 */
       handleDelete(row) {
