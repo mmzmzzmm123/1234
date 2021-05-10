@@ -107,6 +107,7 @@ export default {
           title: "既往病史/用药史评估",
           content: [
             { title: "病史体征", value: "physicalSigns" },
+            { title: "忌口过敏食物", value: "dishesIngredient" },
             { title: "湿气数据", value: "moistureDate" },
             { title: "气血数据", value: "bloodData" },
             { title: "家族疾病史", value: "familyIllnessHistory" },
@@ -118,7 +119,16 @@ export default {
             { title: "是否出现过过敏症状", value: "allergyFlag" },
             { title: "过敏症状", value: "allergySituation" },
             { title: "过敏源", value: "allergen" },
-            { title: "忌口过敏食物", value: "dishesIngredient" },
+          ],
+        },
+         {
+          title: "运动习惯评估",
+          content: [
+            { title: "每周运动次数", value: "motionNum" },
+            { title: "每次运动的时长", value: "motionDuration" },
+            { title: "每天运动的时间", value: "motionTime" },
+            { title: "运动", value: "motion" },
+            { title: "运动场地", value: "motionField" },
           ],
         },
         {
@@ -193,16 +203,7 @@ export default {
             { title: "排便的颜色", value: "defecationColor" },
           ],
         },
-        {
-          title: "运动习惯评估",
-          content: [
-            { title: "每周运动次数", value: "motionNum" },
-            { title: "每次运动的时长", value: "motionDuration" },
-            { title: "每天运动的时间", value: "motionTime" },
-            { title: "运动", value: "motion" },
-            { title: "运动场地", value: "motionField" },
-          ],
-        },
+
         {
           title: "睡眠质量评估",
           content: [

@@ -4,6 +4,7 @@ import com.aliyun.vod20170321.models.GetPlayInfoResponseBody;
 import com.aliyun.vod20170321.models.GetVideoInfoResponseBody;
 import com.stdiet.common.core.controller.BaseController;
 import com.stdiet.common.core.domain.AjaxResult;
+import com.stdiet.common.core.domain.entity.SysDictData;
 import com.stdiet.common.core.page.TableDataInfo;
 import com.stdiet.common.exception.file.FileNameLengthLimitExceededException;
 import com.stdiet.common.utils.AliyunVideoUtils;
@@ -19,6 +20,7 @@ import com.stdiet.custom.dto.response.MessageNoticeResponse;
 import com.stdiet.custom.dto.response.NutritionalVideoResponse;
 import com.stdiet.custom.page.WxLogInfo;
 import com.stdiet.custom.service.*;
+import com.stdiet.system.service.ISysDictTypeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -50,15 +52,18 @@ public class WechatAppletController extends BaseController {
     private ISysAskNutritionQuestionService sysAskNutritionQuestionService;
     @Autowired
     private ISysCustomerService iSysCustomerService;
-
     @Autowired
     private ISysMessageNoticeService sysMessageNoticeService;
-
     @Autowired
     private ISysCustomerService sysCustomerService;
-
     @Autowired
     private ISysNutritionalVideoService sysNutritionalVideoService;
+    @Autowired
+    private ISysRecipesPlanService sysRecipesPlanService;
+    @Autowired
+    private ISysOrderPauseService sysOrderPauseService;
+    @Autowired
+    private ISysDictTypeService iSysDictTypeService;
 
     /**
      * 查询微信小程序中展示的客户案例
@@ -443,17 +448,23 @@ public class WechatAppletController extends BaseController {
                 return AjaxResult.error(5003, "未查到用户信息，请联系销售顾问");
             }
 
+            sysWxUserInfo.setCusId(sysCustomer.getId());
             if (StringUtils.isNull(curWxUserInfo)) {
                 // 新增sys_wx_user_info
-                sysWxUserInfo.setCusId(sysCustomer.getId());
                 sysWxUserInfo.setCreateTime(DateUtils.getNowDate());
                 sysWxUserInfoService.insertSysWxUserInfo(sysWxUserInfo);
             } else {
                 // 更新sys_wx_user_info数据，
-                curWxUserInfo.setCusId(sysCustomer.getId());
-                curWxUserInfo.setUpdateTime(DateUtils.getNowDate());
-                sysWxUserInfoService.updateSysWxUserInfo(curWxUserInfo);
+                sysWxUserInfo.setUpdateTime(DateUtils.getNowDate());
+                sysWxUserInfoService.updateSysWxUserInfo(sysWxUserInfo);
             }
+            // 更新对象
+            curWxUserInfo = sysWxUserInfo;
+        }
+
+        // 更新时间超过7天，重新登录获取最新信息
+        if (StringUtils.isEmpty(curWxUserInfo.getAvatarUrl()) || ChronoUnit.DAYS.between(DateUtils.dateToLocalDate(curWxUserInfo.getUpdateTime()), LocalDate.now()) >= 7) {
+            return AjaxResult.error(5001, "信息缺失或者过期需要重新登录");
         }
 
         curWxUserInfo.setCustomerId(AesUtils.encrypt(curWxUserInfo.getCusId().toString()));
@@ -461,4 +472,38 @@ public class WechatAppletController extends BaseController {
         // 并返回一系列登录后的数据
         return AjaxResult.success(curWxUserInfo);
     }
+
+    @GetMapping("/getRecipesPlans")
+    public AjaxResult getRecipesPlans(@RequestParam String customerId) {
+        Long cusId = StringUtils.isNotEmpty(customerId) ? Long.parseLong(AesUtils.decrypt(customerId)) : 0L;
+
+        List<SysRecipesPlan> plans = sysRecipesPlanService.selectPlanListByCusId(cusId);
+
+        SysOrderPause orderPause = new SysOrderPause();
+        orderPause.setCusId(cusId);
+        List<SysOrderPause> pauses = sysOrderPauseService.selectSysOrderPauseList(orderPause);
+
+        Map<String, Object> result = new HashMap<>();
+        result.put("plans", plans);
+        result.put("pauses", pauses);
+
+        return AjaxResult.success(result);
+    }
+
+    @GetMapping("/getDicts")
+    public AjaxResult getDicts() {
+
+        List<SysDictData> unitDict = iSysDictTypeService.selectDictDataByType("cus_cus_unit");
+        List<SysDictData> weightDict = iSysDictTypeService.selectDictDataByType("cus_cus_weight");
+        List<SysDictData> menuTypeDict = iSysDictTypeService.selectDictDataByType("cus_dishes_type");
+
+        Map<String, Object> result = new HashMap<>();
+        result.put("unitDict", unitDict);
+        result.put("weightDict", weightDict);
+        result.put("menuTypeDict", menuTypeDict);
+
+        return AjaxResult.success(result);
+    }
 }
+
+

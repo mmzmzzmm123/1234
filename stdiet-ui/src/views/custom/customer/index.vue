@@ -83,7 +83,7 @@
           />
         </el-select>
       </el-form-item>
-      
+
     <el-form-item label="病史体征" prop="physicalSignsId">
           <el-select
             v-model="queryParams.physicalSignsId"
@@ -147,7 +147,7 @@
         label="创建时间"
         align="center"
         prop="createTime"
-        width="100"
+        width="110"
       >
         <template slot-scope="scope">
           <div v-for="time in scope.row.createTime.split(' ')" :key="time">

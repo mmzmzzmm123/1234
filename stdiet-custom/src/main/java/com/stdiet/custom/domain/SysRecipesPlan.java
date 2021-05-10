@@ -1,6 +1,7 @@
 package com.stdiet.custom.domain;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.stdiet.common.annotation.Excel;
 import lombok.Data;
 
@@ -24,6 +25,7 @@ public class SysRecipesPlan {
      * 订单ID
      */
     //@Excel(name = "订单ID")
+    @JsonIgnore
     private Long orderId;
 
     private Long cusId;
@@ -116,7 +118,9 @@ public class SysRecipesPlan {
      */
     private Integer reviewStatus;
 
-    /** 该食谱计划中暂停日期，使用 | 隔开 */
+    /**
+     * 该食谱计划中暂停日期，使用 | 隔开
+     */
     //@Excel(name = "该食谱计划中暂停日期，使用 | 隔开")
     private String pauseDate;
 

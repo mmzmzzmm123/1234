@@ -1,6 +1,7 @@
 package com.stdiet.custom.domain;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.stdiet.common.annotation.Excel;
 import lombok.Data;
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -25,8 +26,10 @@ public class SysOrderPause {
     /**
      * 订单id
      */
+    @JsonIgnore
     private Long orderId;
 
+    @JsonIgnore
     private Long cusId;
 
     private String outId;
