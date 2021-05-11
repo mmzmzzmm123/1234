@@ -112,6 +112,9 @@ public interface ISysRecipesPlanService
      */
     List<SysRecipesPlanListInfo> selectRecipesPlanListInfo(String outId);
 
+    List<SysRecipesPlanListInfo> selectRecipesPlanListInfoByCusId(Long cusId);
+
+
     /**
      * 通过客户id查询食谱计划
      * @param cusId

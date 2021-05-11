@@ -39,6 +39,8 @@ public class WechatAppletController extends BaseController {
 
     public static final String[] imageName = {"breakfastImages", "lunchImages", "dinnerImages", "extraMealImages", "bodyImages"};
     @Autowired
+    ISysRecipesService iSysRecipesService;
+    @Autowired
     private ISysCustomerCaseService sysCustomerCaseService;
     @Autowired
     private ISysWxUserLogService sysWxUserLogService;
@@ -449,7 +451,7 @@ public class WechatAppletController extends BaseController {
     public AjaxResult getRecipesPlans(@RequestParam String customerId) {
         Long cusId = StringUtils.isNotEmpty(customerId) ? Long.parseLong(AesUtils.decrypt(customerId)) : 0L;
 
-        List<SysRecipesPlan> plans = sysRecipesPlanService.selectPlanListByCusId(cusId);
+        List<SysRecipesPlanListInfo> plans = sysRecipesPlanService.selectRecipesPlanListInfoByCusId(cusId);
 
         SysOrderPause orderPause = new SysOrderPause();
         orderPause.setCusId(cusId);
@@ -475,6 +477,11 @@ public class WechatAppletController extends BaseController {
         result.put("menuTypeDict", menuTypeDict);
 
         return AjaxResult.success(result);
+    }
+
+    @GetMapping("/getRecipesDetail")
+    public AjaxResult getRecipesDetail(@RequestParam Long menuId) {
+        return AjaxResult.success(iSysRecipesService.selectDishesByMenuId(menuId));
     }
 }
 
