@@ -120,9 +120,9 @@ public class SysRecipesPlanServiceImpl implements ISysRecipesPlanService {
      */
     @Async
     public void regenerateRecipesPlan(Long cusId) {
-        try{
+        try {
             Thread.sleep(5000);
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
         if (cusId == null || cusId <= 0) {
@@ -132,17 +132,17 @@ public class SysRecipesPlanServiceImpl implements ISysRecipesPlanService {
             //获取redis中该订单对应的锁
             if (synchrolockUtil.lock(String.format(generateRecipesPlanLockKey, cusId))) {
                 List<SysOrder> customerOrderList = sysOrderService.getAllOrderByCusId(cusId);
-                if(customerOrderList != null && customerOrderList.size() > 0){
+                if (customerOrderList != null && customerOrderList.size() > 0) {
 
-                    for(SysOrder sysOrder : customerOrderList){
+                    for (SysOrder sysOrder : customerOrderList) {
                         //订单为空、金额小于0、订单未审核不进行食谱生成、更新，只对2021年开始的订单进行食谱计划生成，判断订单金额、开始时间、结束时间，为空则直接返回，不重新生成食谱计划
                         if (sysOrder == null || !sysOrder.getReviewStatus().equals("yes") || sysOrder.getAmount().floatValue() <= 0 || sysOrder.getStartTime() == null || sysOrder.getServerEndTime() == null) {
                             continue;
                         }
                         //判断是否提成单，拆分单中的副单，体验单,定金单
-                        if(sysOrder.getAfterSaleCommissOrder().intValue() == 1 || ("1".equals(sysOrder.getOrderType()) && sysOrder.getMainOrderId().intValue() != 0) ||
-                                "2".equals(sysOrder.getOrderType()) || "1".equals(sysOrder.getOrderMoneyType())){
-                            System.out.println("---------------------"+sysOrder.getOrderId()+"不生成食谱------------------------");
+                        if (sysOrder.getAfterSaleCommissOrder().intValue() == 1 || ("1".equals(sysOrder.getOrderType()) && sysOrder.getMainOrderId().intValue() != 0) ||
+                                "2".equals(sysOrder.getOrderType()) || "1".equals(sysOrder.getOrderMoneyType()) || sysOrder.getCounted() == 1) {
+                            System.out.println("---------------------" + sysOrder.getOrderId() + "不生成食谱------------------------");
                             continue;
                         }
                         //判断是否已存在食谱计划
@@ -157,9 +157,9 @@ public class SysRecipesPlanServiceImpl implements ISysRecipesPlanService {
                         List<SysOrderPause> pauseList = sysOrderPauseService.getPauseListByCusIdAndOrderId(pauseParam);
 
                         List<SysRecipesPlan> planList = generatePlan(sysOrder, DateUtils.dateToLocalDate(sysOrder.getStartTime()), DateUtils.dateToLocalDate(sysOrder.getServerEndTime()), pauseList);
-                        if(oldRecipesPlanList != null && oldRecipesPlanList.size() > 0){
+                        if (oldRecipesPlanList != null && oldRecipesPlanList.size() > 0) {
                             updateOrAddRecipesPlan(oldRecipesPlanList, planList);
-                        }else{
+                        } else {
                             if (planList != null && planList.size() > 0) {
                                 sysRecipesPlanMapper.insertBatch(planList);
                             }
@@ -177,43 +177,44 @@ public class SysRecipesPlanServiceImpl implements ISysRecipesPlanService {
 
     /**
      * 更新食谱计划，删除旧食谱中多余的，添加新食谱中多的
+     *
      * @param oldRecipesPlanList
      * @param newRecipesPlanList
      */
-    private void updateOrAddRecipesPlan(List<SysRecipesPlan> oldRecipesPlanList, List<SysRecipesPlan> newRecipesPlanList){
+    private void updateOrAddRecipesPlan(List<SysRecipesPlan> oldRecipesPlanList, List<SysRecipesPlan> newRecipesPlanList) {
         int newSize = newRecipesPlanList.size();
         int index = 0;
         List<SysRecipesPlan> addList = new ArrayList<>();
         List<SysRecipesPlan> updateList = new ArrayList<>();
         List<Long> delList = new ArrayList<>();
         for (SysRecipesPlan plan : oldRecipesPlanList) {
-            if(index < newSize){
+            if (index < newSize) {
                 plan.setStartDate(newRecipesPlanList.get(index).getStartDate());
                 plan.setEndDate(newRecipesPlanList.get(index).getEndDate());
                 plan.setPauseDate(newRecipesPlanList.get(index).getPauseDate());
                 plan.setStartNumDay(newRecipesPlanList.get(index).getStartNumDay());
                 plan.setEndNumDay(newRecipesPlanList.get(index).getEndNumDay());
                 updateList.add(plan);
-            }else{
+            } else {
                 delList.add(plan.getId());
             }
             index++;
         }
-        if(newSize > oldRecipesPlanList.size()){
-            addList = newRecipesPlanList.subList(oldRecipesPlanList.size(),newSize);
+        if (newSize > oldRecipesPlanList.size()) {
+            addList = newRecipesPlanList.subList(oldRecipesPlanList.size(), newSize);
         }
         //更新
-        if(updateList.size() > 0){
+        if (updateList.size() > 0) {
             for (SysRecipesPlan plan : updateList) {
                 sysRecipesPlanMapper.updateSysRecipesPlan(plan);
             }
         }
         //删除多余的食谱计划
-        if(delList.size() > 0){
+        if (delList.size() > 0) {
             sysRecipesPlanMapper.deleteSysRecipesPlanByIds(delList.toArray(new Long[delList.size()]));
         }
         //添加新的
-        if(addList.size() > 0){
+        if (addList.size() > 0) {
             sysRecipesPlanMapper.insertBatch(addList);
         }
     }
@@ -221,10 +222,10 @@ public class SysRecipesPlanServiceImpl implements ISysRecipesPlanService {
     /**
      * 根据订单ID、订单开始服务时间、结束时间、暂停列表生成食谱计划列表
      *
-     * @param sysOrder           订单对象
-     * @param serverStartDate    服务开始时间
-     * @param serverEndDate      服务结束时间
-     * @param pauseList          暂停列表
+     * @param sysOrder        订单对象
+     * @param serverStartDate 服务开始时间
+     * @param serverEndDate   服务结束时间
+     * @param pauseList       暂停列表
      * @return
      */
     private List<SysRecipesPlan> generatePlan(SysOrder sysOrder, LocalDate serverStartDate, LocalDate serverEndDate, List<SysOrderPause> pauseList) {
@@ -232,7 +233,7 @@ public class SysRecipesPlanServiceImpl implements ISysRecipesPlanService {
         SysRecipesPlan beforeOrderLastPlan = getLastDayRecipesPlan(sysOrder.getCusId(), sysOrder.getOrderTime());
         int startNumDay = 0;
         //之前是否存在食谱
-        if(beforeOrderLastPlan != null){
+        if (beforeOrderLastPlan != null) {
             long differDay = ChronoUnit.DAYS.between(DateUtils.dateToLocalDate(beforeOrderLastPlan.getEndDate()), serverStartDate);
             //检查之前食谱的结束时间和目前该订单的开始时间是否连续
             if(differDay <= 1){
@@ -241,8 +242,8 @@ public class SysRecipesPlanServiceImpl implements ISysRecipesPlanService {
 
                 if(differNum < 6){
                     //更新该食谱计划
-                    beforeOrderLastPlan.setEndNumDay(beforeOrderLastPlan.getStartNumDay()+6);
-                    beforeOrderLastPlan.setEndDate(DateUtils.localDateToDate(DateUtils.dateToLocalDate(beforeOrderLastPlan.getEndDate()).plusDays(6-differNum)));
+                    beforeOrderLastPlan.setEndNumDay(beforeOrderLastPlan.getStartNumDay() + 6);
+                    beforeOrderLastPlan.setEndDate(DateUtils.localDateToDate(DateUtils.dateToLocalDate(beforeOrderLastPlan.getEndDate()).plusDays(6 - differNum)));
                     sysRecipesPlanMapper.updateSysRecipesPlan(beforeOrderLastPlan);
                     serverStartDate = DateUtils.dateToLocalDate(beforeOrderLastPlan.getEndDate()).plusDays(1);
                 }
@@ -263,8 +264,8 @@ public class SysRecipesPlanServiceImpl implements ISysRecipesPlanService {
             }
             String[] pauseResult = dealPlanPause(planStartDate, planEndDate, pauseList);
             //根据暂停结果返回的数据更新计划开始、结束时间
-            planStartDate = DateUtils.stringToLocalDate(pauseResult[0],"yyyyMMdd");
-            planEndDate = DateUtils.stringToLocalDate(pauseResult[1],"yyyyMMdd");
+            planStartDate = DateUtils.stringToLocalDate(pauseResult[0], "yyyyMMdd");
+            planEndDate = DateUtils.stringToLocalDate(pauseResult[1], "yyyyMMdd");
             //判断是否大于服务到期时间
             if (ChronoUnit.DAYS.between(planEndDate, serverEndDate) <= 0) {
                 planEndDate = serverEndDate;
@@ -274,7 +275,7 @@ public class SysRecipesPlanServiceImpl implements ISysRecipesPlanService {
                 planStartDate = serverEndDate;
                 breakFlag = false;
             }
-            if(planEndDate == planStartDate && StringUtils.isNotEmpty(pauseResult)) {
+            if (planEndDate == planStartDate && StringUtils.isNotEmpty(pauseResult)) {
                 continue;
             }
             //暂停日期
@@ -287,32 +288,33 @@ public class SysRecipesPlanServiceImpl implements ISysRecipesPlanService {
             startNumDay += 1;
             sysRecipesPlan.setStartNumDay(startNumDay);
             long dayNumber = ChronoUnit.DAYS.between(planStartDate, planEndDate);
-            startNumDay +=  dayNumber > 6 ? 6 : dayNumber;
+            startNumDay += dayNumber > 6 ? 6 : dayNumber;
             sysRecipesPlan.setEndNumDay(startNumDay);
             //添加暂停范围内的日期
             planList.add(sysRecipesPlan);
             //System.out.println(DateUtils.dateTime(sysRecipesPlan.getStartDate()) + "-----" + DateUtils.dateTime(sysRecipesPlan.getEndDate()));
-        }while (breakFlag);
+        } while (breakFlag);
         return planList;
     }
 
     /**
      * 根据食谱开始时间、结束时间、暂停列表获取在食谱计划范围内的暂停天数，以及返回调整之后的计划开始、结束时间，以及暂停日期
+     *
      * @param planStartDate 原先的计划开始时间
-     * @param planEndDate 原先计划结束时间
-     * @param pauseList 暂停列表集合
+     * @param planEndDate   原先计划结束时间
+     * @param pauseList     暂停列表集合
      * @return
      */
     private String[] dealPlanPause(LocalDate planStartDate, LocalDate planEndDate, List<SysOrderPause> pauseList) {
         //分别为计划开始时间、计划结束时间，范围内暂停天数，具体暂停日期，使用|隔开
-        String[] result = {"","","0",""};
+        String[] result = {"", "", "0", ""};
         long pauseDay = 0;
         Set<String> pauseDateString = new TreeSet<>(new MyComparator());
         //判断这个时间内是否存在暂停
         if (pauseList != null && pauseList.size() > 0) {
             //每条暂停时间的范围不会重叠，在添加暂停时做了限制
             for (SysOrderPause sysOrderPause : pauseList) {
-                while(true){
+                while (true) {
                     LocalDate pauseStartDate = DateUtils.dateToLocalDate(sysOrderPause.getPauseStartDate());
                     LocalDate pauseEndDate = DateUtils.dateToLocalDate(sysOrderPause.getPauseEndDate());
                     if (ChronoUnit.DAYS.between(pauseEndDate, planStartDate) > 0 || ChronoUnit.DAYS.between(planEndDate, pauseStartDate) > 0) {
@@ -325,10 +327,10 @@ public class SysRecipesPlanServiceImpl implements ISysRecipesPlanService {
                         pauseEndDate = planEndDate;
                     }*/
                     //判断暂停记录是否从食谱计划开始时间开始的
-                    if(ChronoUnit.DAYS.between(pauseStartDate, planStartDate) == 0){
+                    if (ChronoUnit.DAYS.between(pauseStartDate, planStartDate) == 0) {
                         planStartDate = pauseEndDate.plusDays(1);
                         planEndDate = planStartDate.plusDays(6);
-                    }else{
+                    } else {
                         planEndDate = planEndDate.plusDays(ChronoUnit.DAYS.between(pauseStartDate, pauseEndDate) + 1);
                         pauseDateString.addAll(getPauseDateString(pauseStartDate, pauseEndDate));
                         break;
@@ -340,35 +342,25 @@ public class SysRecipesPlanServiceImpl implements ISysRecipesPlanService {
                 System.out.println("---------------------------------------");*/
             }
         }
-        result[0] = DateUtils.localDateToString(planStartDate,"yyyyMMdd");
-        result[1] = DateUtils.localDateToString(planEndDate,"yyyyMMdd");
+        result[0] = DateUtils.localDateToString(planStartDate, "yyyyMMdd");
+        result[1] = DateUtils.localDateToString(planEndDate, "yyyyMMdd");
         result[2] = pauseDay + "";
-        result[3] = pauseDateString.size() > 0 ? StringUtils.join(pauseDateString,"|") : "";
+        result[3] = pauseDateString.size() > 0 ? StringUtils.join(pauseDateString, "|") : "";
         return result;
     }
 
     /**
      * 根据暂停时间范围获取范围内的日期
+     *
      * @return
      */
-    private Set<String> getPauseDateString(LocalDate pauseStartDate, LocalDate pauseEndDate){
+    private Set<String> getPauseDateString(LocalDate pauseStartDate, LocalDate pauseEndDate) {
         Set<String> pauseDateList = new HashSet<>();
         long daysBetween = ChronoUnit.DAYS.between(pauseStartDate, pauseEndDate);
-        for(int i = 0; i <= daysBetween; i++){
-            pauseDateList.add(DateUtils.localDateToString(pauseStartDate.plusDays(i),"yyyyMMdd"));
+        for (int i = 0; i <= daysBetween; i++) {
+            pauseDateList.add(DateUtils.localDateToString(pauseStartDate.plusDays(i), "yyyyMMdd"));
         }
         return pauseDateList;
-    }
-
-    /**
-     * 集合排序key值比较器
-     * */
-    class MyComparator implements Comparator<String>{
-
-        @Override
-        public int compare(String o1, String o2) {
-            return Integer.parseInt(o1) - Integer.parseInt(o2);
-        }
     }
 
     /**
@@ -406,10 +398,11 @@ public class SysRecipesPlanServiceImpl implements ISysRecipesPlanService {
 
     /**
      * 根据客户ID查询最后一天食谱计划
+     *
      * @param customerId 客户ID
      * @return
      */
-    public SysRecipesPlan getLastDayRecipesPlan(Long customerId, Date orderTime){
+    public SysRecipesPlan getLastDayRecipesPlan(Long customerId, Date orderTime) {
         return sysRecipesPlanMapper.getLastDayRecipesPlan(customerId, orderTime);
     }
 
@@ -430,6 +423,17 @@ public class SysRecipesPlanServiceImpl implements ISysRecipesPlanService {
 
     public List<SysRecipesPlan> selectRecipesModelList(SysRecipesPlan sysRecipesPlan) {
         return sysRecipesPlanMapper.selectRecipesModelList(sysRecipesPlan);
+    }
+
+    /**
+     * 集合排序key值比较器
+     */
+    class MyComparator implements Comparator<String> {
+
+        @Override
+        public int compare(String o1, String o2) {
+            return Integer.parseInt(o1) - Integer.parseInt(o2);
+        }
     }
 
 }
