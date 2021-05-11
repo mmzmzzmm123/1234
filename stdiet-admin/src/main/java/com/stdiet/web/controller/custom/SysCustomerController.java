@@ -51,7 +51,6 @@ public class SysCustomerController extends BaseController {
     @PreAuthorize("@ss.hasPermi('custom:customer:list')")
     @GetMapping("/list")
     public TableDataInfo list(SysCustomer sysCustomer) {
-        startPage();
         List<SysCustomer> list = new ArrayList<>();
         if (SecurityUtils.getLoginUser().getUser().getRoles().get(0).getRoleKey().equals("partner")) {
             String remark = SecurityUtils.getLoginUser().getUser().getRemark();
@@ -74,7 +73,7 @@ public class SysCustomerController extends BaseController {
                 sysCustomer.setSignIdList(sysPhysicalSignsService.getSignIdByName(sysCustomer.getPhysicalSignsId()));
             }
         }
-
+        startPage();
         list = sysCustomerService.selectSysCustomerList(sysCustomer);
         if (list != null && list.size() > 0) {
             for (SysCustomer sysCus : list) {

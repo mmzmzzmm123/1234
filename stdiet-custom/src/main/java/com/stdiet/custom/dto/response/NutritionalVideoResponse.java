@@ -33,6 +33,8 @@ public class NutritionalVideoResponse implements Serializable {
     //播放链接
     public String playUrl;
 
+    //播放量
+    private Integer playNum;
 
     public String createTime;
 

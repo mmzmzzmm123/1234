@@ -96,3 +96,13 @@ export function orderDetailDay(query) {
   })
 }
 
+// 导出具体订单按天计算提成明细
+export function exportOrderDetailDay(query) {
+  return request({
+    url: '/custom/commision/exportOrderDetailDay',
+    method: 'get',
+    params: query
+  })
+}
+
+

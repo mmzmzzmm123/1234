@@ -5,7 +5,7 @@
             <el-input
                 type="textarea"
                 placeholder="请输入视频标题"
-                v-model="videoFrom.title"
+                v-model.trim="videoFrom.title"
                 maxlength="50" 
                 rows="1"
                 show-word-limit
@@ -15,7 +15,7 @@
           <el-input
                 type="textarea"
                 placeholder="请输入视频描述"
-                v-model="videoFrom.description"
+                v-model.trim="videoFrom.description"
                 maxlength="1000"
                 rows="3"
                 show-word-limit
@@ -23,7 +23,7 @@
         </el-form-item>
         
          <el-form-item label="视频封面" prop="coverUrl">
-              <UploadFile ref="uploadFile" :prefix="'videoCover'" @callbackMethod="handleCoverUrl"></UploadFile>
+              <UploadFile ref="uploadFile" :prefix="'videoCover'" @callbackMethod="handleCoverUrl" :tips="'视频未传封面图片时，会主动截取封面，但会存在延迟，请勿直接发布到小程序'"></UploadFile>
           </el-form-item>  
           <div style="display:flex">
             <el-form-item label="视频类别" prop="cateId">
@@ -52,7 +52,9 @@
             <div>
             <input type="file" accept=".mp4" ref="videoFile" id="videoFile" @change="fileChange($event)">
             <div > <span>上传状态：{{statusText}}</span><span style="margin-left:100px">进度：{{authProgress}}%</span></div>
-            <div > 1、只能上传mp4文件，上传大文件时请使用客户端上传，防止上传超时</div>
+            <div style="color:#1890ff"> 
+                1、只能上传mp4文件，上传大文件时请使用客户端上传，防止上传超时 
+            </div>
             </div>
         </el-form-item>
         <el-form-item label="展示状态" prop="wxShow">
@@ -61,7 +63,7 @@
                 active-text="小程序展示"
                 inactive-text="小程序不展示">
               </el-switch>
-              <div>提示：请保证内容正确再展示到小程序</div>
+              <div style="color:red">提示：请保证内容正确再展示到小程序</div>
           </el-form-item>  
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -86,9 +88,6 @@
           title: [
             { required: true, message: "标题不能为空", trigger: "blur" },
           ],
-          coverUrl: [
-           { required: true, message: "封面不能为空", trigger: "blur" },
-          ],
           cateId:[
             { required: true, message: "视频类别不能为空", trigger: "blur" },
           ],
@@ -98,7 +97,9 @@
         },
         callback: null,
         classifyList: [],
+        defaultClassify: null,
         payVideoLevelList:[],
+        defaultPayLevel: null,
         uploadAuth:{
             
         },
@@ -118,17 +119,23 @@
         uploader: null,
         statusText: '',
         fileType:['mp4','MP4'],
-        uploading: false
+        uploading: false,
       }
     },
     created(){
-      getAllClassify().then(response => {
+      /*getAllClassify().then(response => {
           if(response.code == 200){
               this.classifyList = response.data;
+              if(response.data != null && response.data.length > 0){
+                 this.defaultClassify = response.data[0].id;
+              }
           }
-      });
+      });*/
       this.getDicts("video_pay_level").then((response) => {
         this.payVideoLevelList = response.data;
+        if(response.data != null && response.data.length > 0){
+          this.defaultPayLevel =  response.data[0].dictValue;
+        }
       });
         
     },
@@ -136,22 +143,26 @@
       UploadFile
     },
     methods: {
-        showDialog(callback){
+        showDialog(classifyList, callback){
+            if(classifyList != null && classifyList.length > 0){
+                 this.defaultClassify = classifyList[0].id;
+            }
             this.resetVideoFrom();
             this.open = true;
             this.callback = callback;
+            this.classifyList = classifyList;
         },
         handleCoverUrl(url){
           this.videoFrom.coverUrl = url;
         },
         resetVideoFrom(){
             this.videoFrom = {
-                cateId: null,
+                cateId: this.defaultClassify ? this.defaultClassify : null,
                 coverUrl: null,
                 title: null,
                 description: null,
                 tags: null,
-                payLevel: 0,
+                payLevel: this.defaultPayLevel ? parseInt(this.defaultPayLevel) : null,
                 videoId: null,
                 wxShow: false
             };

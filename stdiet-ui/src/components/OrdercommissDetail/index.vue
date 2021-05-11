@@ -37,6 +37,7 @@
         <div
           class="order_total_data"
         >
+        
        <span class="order_total_data_span_right20">
             当前页总服务金额：{{totalServerAmount}}元
           </span>
@@ -50,6 +51,18 @@
             >未发放总提成：{{ totalNotSendCommission }}元</span
           >  
         </div>
+        <el-row :gutter="10" class="mb8" style="margin-top: 10px;margin-left:10px">
+          <el-col :span="1.5">
+        <el-button
+          type="warning"
+          icon="el-icon-download"
+          size="mini"
+          @click="handleExport"
+          v-hasPermi="['commisionDay:detail:export']"
+          >导出
+        </el-button>
+      </el-col>
+    </el-row>
         <div style="width:100%;height:80%;overflow: auto">
         <el-table :data="orderList" v-loading="loading" stripe>
           <el-table-column
@@ -208,7 +221,7 @@
   </div>
 </template>
 <script>
-import { orderDetailDay } from "@/api/custom/commision";
+import { orderDetailDay,exportOrderDetailDay } from "@/api/custom/commision";
 import OrderDetail from "@/components/OrderDetail";
 
 export default {
@@ -317,6 +330,23 @@ export default {
     handleOnDetailClick(data) {
       this.$refs.orderDetailRef.showDialog(data.orderId);
     },
+    handleExport(){
+      this.queryParam.serverScopeStartTime = this.serverDateScope && this.serverDateScope.length > 0 ? this.serverDateScope[0] : null;
+      this.queryParam.serverScopeEndTime = this.serverDateScope && this.serverDateScope.length > 0 ? this.serverDateScope[1] : null;
+      const queryParams = this.queryParam;
+      this.$confirm("是否确认导出所有订单提成比例数据项?", "警告", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning",
+      })
+        .then(function () {
+          return exportOrderDetailDay(queryParams);
+        })
+        .then((response) => {
+          this.download(response.msg);
+        })
+        .catch(function () {});
+    }
   },
 };
 </script>
@@ -332,7 +362,7 @@ export default {
 .order_total_data {
   float: right; 
   margin-right: 40px; 
-  margin-bottom:20px
+  margin-bottom:15px
 }
 
 .order_total_data_span_right20 {

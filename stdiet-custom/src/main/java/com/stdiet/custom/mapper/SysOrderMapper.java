@@ -106,4 +106,18 @@ public interface SysOrderMapper
      * @return
      */
     List<SysOrder> getAllOrderByCusId(@Param("cusId") Long cusId);
+
+    /**
+     * 根据openid查询订单数量
+     * @param openid
+     * @return
+     */
+    int getOrderCountByOpenId(@Param("openid")String openid);
+
+    /**
+     * 根据营养师ID查询最后一个订单
+     * @param nutritionistId
+     * @return
+     */
+    SysOrder getLastOrderByNutritionistId(@Param("nutritionistId")Long nutritionistId);
 }

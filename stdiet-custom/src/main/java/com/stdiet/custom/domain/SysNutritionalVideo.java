@@ -61,15 +61,29 @@ public class SysNutritionalVideo extends BaseEntity
 
     /** 视频付费等级，0无需付费 1客户可看 2付费可看 */
     @Excel(name = "视频付费等级，0无需付费 1客户可看 2付费可看")
-    private Long payLevel;
+    private Integer payLevel;
 
     private String payLevelName;
 
+    /** 播放次数，默认0 */
+    @Excel(name = "播放次数，默认0")
+    private Integer playNum;
+
     /** 删除标识，0未删除 1已删除，默认0 */
     private Integer delFlag;
+
+    private String playUrl;
 
     //文件名称
     private String fileName;
 
     private String key;
+
+    //排序方式 1 按照创建时间倒序 2按照优先级、时间倒序
+    private Integer sortType;
+
+    private String openId;
+
+    //微信用户类型  0 普通用户 1 已下单客户
+    private Integer userType;
 }

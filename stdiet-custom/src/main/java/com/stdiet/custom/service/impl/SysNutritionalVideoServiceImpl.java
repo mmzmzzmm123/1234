@@ -9,8 +9,10 @@ import com.aliyun.vod20170321.models.SearchMediaResponse;
 import com.aliyun.vod20170321.models.SearchMediaResponseBody;
 import com.stdiet.common.utils.AliyunVideoUtils;
 import com.stdiet.common.utils.DateUtils;
+import com.stdiet.common.utils.StringUtils;
 import com.stdiet.common.utils.oss.AliyunOSSUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import com.stdiet.custom.mapper.SysNutritionalVideoMapper;
 import com.stdiet.custom.domain.SysNutritionalVideo;
@@ -52,15 +54,42 @@ public class SysNutritionalVideoServiceImpl implements ISysNutritionalVideoServi
         List<SysNutritionalVideo> list = sysNutritionalVideoMapper.selectSysNutritionalVideoList(sysNutritionalVideo);
         if(flag && list != null && list.size() > 0){
             List<String> fileUrl = new ArrayList<>();
+            List<String> videoIdList = new ArrayList<>();
             for (SysNutritionalVideo video : list) {
-                fileUrl.add(video.getCoverUrl());
+                if(StringUtils.isNotEmpty(video.getCoverUrl())){
+                    fileUrl.add(video.getCoverUrl());
+                }else{
+                    videoIdList.add(video.getVideoId());
+                }
             }
-            List<String> downUrlList = AliyunOSSUtils.generatePresignedUrl(fileUrl);
-            if(downUrlList != null && downUrlList.size() > 0){
-                int index = 0;
-                for (String downUrl : downUrlList) {
-                    list.get(index).setCoverUrl(downUrl);
-                    index++;
+            if(fileUrl.size() > 0){
+                List<String> downUrlList = AliyunOSSUtils.generatePresignedUrl(fileUrl);
+                if(downUrlList != null && downUrlList.size() > 0){
+                    int index = 0;
+                    for (SysNutritionalVideo video : list) {
+                        if (StringUtils.isNotEmpty(video.getCoverUrl())) {
+                            video.setCoverUrl(downUrlList.get(index));
+                            index++;
+                            if(index == downUrlList.size()){
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
+            if(videoIdList.size() > 0) {
+                List<String> coverUrlList = AliyunVideoUtils.getVideoCoverUrl(videoIdList);
+                if (coverUrlList != null && coverUrlList.size() > 0) {
+                    int index = 0;
+                    for (SysNutritionalVideo video : list) {
+                        if (StringUtils.isEmpty(video.getCoverUrl())) {
+                            video.setCoverUrl(coverUrlList.get(index));
+                            index++;
+                            if(index == coverUrlList.size()){
+                                break;
+                            }
+                        }
+                    }
                 }
             }
         }
@@ -90,7 +119,23 @@ public class SysNutritionalVideoServiceImpl implements ISysNutritionalVideoServi
     public int updateSysNutritionalVideo(SysNutritionalVideo sysNutritionalVideo)
     {
         sysNutritionalVideo.setUpdateTime(DateUtils.getNowDate());
-        return sysNutritionalVideoMapper.updateSysNutritionalVideo(sysNutritionalVideo);
+        int row = sysNutritionalVideoMapper.updateSysNutritionalVideo(sysNutritionalVideo);
+        if(row > 0){
+            updateAliyunVideo(sysNutritionalVideo.getId());
+        }
+        return row;
+    }
+
+    @Async
+    public void updateAliyunVideo(Long id){
+        try{
+            SysNutritionalVideo sysNutritionalVideo = selectSysNutritionalVideoById(id);
+            if(sysNutritionalVideo != null && sysNutritionalVideo.getVideoId() != null){
+                AliyunVideoUtils.updateVideo(sysNutritionalVideo.getVideoId(), sysNutritionalVideo.getTitle(), sysNutritionalVideo.getTags(), sysNutritionalVideo.getDescription(), null);
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -102,7 +147,11 @@ public class SysNutritionalVideoServiceImpl implements ISysNutritionalVideoServi
     @Override
     public int deleteSysNutritionalVideoByIds(Long[] ids)
     {
-        return sysNutritionalVideoMapper.deleteSysNutritionalVideoByIds(ids);
+        int row = sysNutritionalVideoMapper.deleteSysNutritionalVideoByIds(ids);
+        if(row > 0){
+            updateAliyunVideoCateId(ids);
+        }
+        return row;
     }
 
     /**
@@ -114,7 +163,12 @@ public class SysNutritionalVideoServiceImpl implements ISysNutritionalVideoServi
     @Override
     public int deleteSysNutritionalVideoById(Long id)
     {
-        return sysNutritionalVideoMapper.deleteSysNutritionalVideoById(id);
+        int row = sysNutritionalVideoMapper.deleteSysNutritionalVideoById(id);
+        if(row > 0){
+            Long[] ids = {id};
+            updateAliyunVideoCateId(ids);
+        }
+        return row;
     }
 
     /**
@@ -187,7 +241,33 @@ public class SysNutritionalVideoServiceImpl implements ISysNutritionalVideoServi
      * @return
      */
     public int updateWxshowByIds(Integer wxShow, Long[] ids){
-        return sysNutritionalVideoMapper. updateWxshowByIds(wxShow, ids);
+        return sysNutritionalVideoMapper.updateWxshowByIds(wxShow, ids);
+    }
+
+    /**
+     * 将删除的阿里云视频放入回收站
+     * @param ids
+     */
+    @Async
+    public void updateAliyunVideoCateId(Long[] ids){
+        try {
+            List<String> videoIdList = sysNutritionalVideoMapper.getVideoIdByIds(ids);
+            if(videoIdList != null && videoIdList.size() > 0){
+                for (String videoId : videoIdList) {
+                    AliyunVideoUtils.delVideo(videoId);
+                }
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * 更新视频播放量
+     * @return
+     */
+    public int updateVideoPlayNum(String videoId){
+        return sysNutritionalVideoMapper.updateVideoPlayNum(videoId);
     }
 
 }

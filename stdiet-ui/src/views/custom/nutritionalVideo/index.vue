@@ -3,7 +3,7 @@
     <el-form :model="queryParams" ref="queryForm" :inline="true" v-show="showSearch" label-width="68px">
       <el-form-item label="关键词" prop="key">
         <el-input
-          v-model="queryParams.key"
+          v-model.trim="queryParams.key"
           placeholder="请输入关键词"
           clearable
           size="small"
@@ -76,6 +76,15 @@
           v-hasPermi="['custom:nutritionalVideo:remove']"
         >删除</el-button>
       </el-col>
+      <el-col :span="1.5">
+        <el-button
+          type="primary"
+          size="mini"
+          icon="el-icon-menu"
+          @click="handleVideoClassify"
+          v-hasPermi="['custom:videoClassify:list']"
+        >视频分类管理</el-button>
+      </el-col>
       <!--
       <el-col :span="1.5">
         <el-button
@@ -101,8 +110,16 @@
           </el-image>
         </template>
       </el-table-column>
-      <el-table-column label="标题" align="center" prop="title" width="200"/>
-      <el-table-column label="描述" align="center" prop="description" />
+      <el-table-column label="标题" align="center" prop="title" width="200">
+        <template slot-scope="scope" >
+            <AutoHideMessage :data="scope.row.title == null ? '' : (scope.row.title+'')" :maxLength="20"></AutoHideMessage>
+        </template>
+      </el-table-column>
+      <el-table-column label="描述" align="center" prop="description" >
+        <template slot-scope="scope" >
+            <AutoHideMessage :data="scope.row.description == null ? '' : (scope.row.description+'')" :maxLength="100"></AutoHideMessage>
+        </template>
+      </el-table-column>
       <!--<el-table-column label="标签" align="center" prop="tags" width="100"/>-->
        <el-table-column label="分类" align="center" prop="cateName" width="100"/>
        <el-table-column label="权限等级" align="center" prop="payLevelName" width="100"/>
@@ -119,6 +136,13 @@
       </el-table-column>
       <el-table-column label="操作" align="center" width="200">
         <template slot-scope="scope">
+          <el-button
+            size="mini"
+            type="text"
+            icon="el-icon-edit"
+            @click="getVideoPlayUrl(scope.row.id)"
+            v-hasPermi="['custom:nutritionalVideo:query']"
+          >播放</el-button>
           <el-button
             size="mini"
             type="text"
@@ -172,7 +196,7 @@
             />
         </el-form-item>
          <el-form-item label="视频封面" prop="coverUrl">
-              <UploadFile ref="uploadFile" :prefix="'videoCover'" :coverUrl="form.previewUrl" @callbackMethod="handleCoverUrl"></UploadFile>
+              <UploadFile ref="uploadFile" v-if="open" :prefix="'videoCover'" :coverUrl="form.previewUrl" @callbackMethod="handleCoverUrl" :tips="'视频未传封面图片时，会主动截取封面，但会存在延迟，请勿直接发布到小程序'"></UploadFile>
           </el-form-item>
         <el-form-item label="视频类别" prop="cateId">
             <el-select v-model="form.cateId" clearable filterable placeholder="请选择类别">
@@ -200,7 +224,7 @@
                 active-text="小程序展示"
                 inactive-text="小程序不展示">
               </el-switch>
-              <div>提示：请保证内容正确再展示到小程序</div>
+              <div style="color:red">提示：请保证内容正确再展示到小程序</div>
           </el-form-item>    
       </el-form>
      
@@ -211,14 +235,21 @@
     </el-dialog>
 
     <UploadVideo ref="uploadVideoRef"></UploadVideo>
+
+    <!-- 视频分类管理 -->
+    <el-dialog title="视频分类列表" :visible.sync="videoClassifyOpen" width="800px" append-to-body @closed="getAllVideoClassify();">
+      <VideoClassify ref="videoClassifyRef"></VideoClassify>
+    </el-dialog>
   </div>
 </template>
 
 <script>
-  import { listNutritionalVideo, getNutritionalVideo, delNutritionalVideo, addNutritionalVideo, updateNutritionalVideo, exportNutritionalVideo, updateWxShow } from "@/api/custom/nutritionalVideo";
+  import { listNutritionalVideo, getNutritionalVideo, delNutritionalVideo, addNutritionalVideo, updateNutritionalVideo, exportNutritionalVideo, updateWxShow,getVideoPlayUrlById } from "@/api/custom/nutritionalVideo";
   import {getAllClassify } from "@/api/custom/videoClassify";
   import UploadVideo from "@/components/UploadVideo";
   import UploadFile from "@/components/FileUpload/UploadFile";
+  import VideoClassify from "../videoClassify";
+  import AutoHideMessage from "@/components/AutoHideMessage";
   export default {
     name: "NutritionalVideo",
     data() {
@@ -254,27 +285,35 @@
         form: {},
         // 表单校验
         rules: {
+          title: [
+            { required: true, message: "标题不能为空", trigger: "blur" },
+          ],
+          cateId:[
+            { required: true, message: "视频类别不能为空", trigger: "blur" },
+          ],
+          payLevel:[
+            { required: true, message: "视频权限不能为空", trigger: "blur" },
+          ]
         },
         coverImageList:[],
         //分类列表
         classifyList:[],
         //权限等级列表
-        payVideoLevelList:[]
+        payVideoLevelList:[],
+        //视频分类弹窗显示标识
+        videoClassifyOpen:false
+
       };
     },
     created() {
       this.getList();
-      getAllClassify().then(response => {
-          if(response.code == 200){
-              this.classifyList = response.data;
-          }
-      });
+      this.getAllVideoClassify();
       this.getDicts("video_pay_level").then((response) => {
         this.payVideoLevelList = response.data;
       });
     },
     components: {
-      UploadVideo,UploadFile
+      UploadVideo,UploadFile,VideoClassify,AutoHideMessage
     },
     methods: {
       /** 查询营养视频列表 */
@@ -288,6 +327,14 @@
           this.total = response.total;
           this.loading = false;
       });
+      },
+      //获取所有分类
+      getAllVideoClassify(){
+        getAllClassify().then(response => {
+          if(response.code == 200){
+            this.classifyList = response.data;
+          }
+        });
       },
       // 取消按钮
       cancel() {
@@ -326,9 +373,12 @@
         this.multiple = !selection.length
       },
       clickUploadVideo(){
-        this.$refs.uploadVideoRef.showDialog(()=>{
+        this.$refs.uploadVideoRef.showDialog(this.classifyList, ()=>{
          this.getList();
         });
+      },
+      handleVideoClassify(){
+        this.videoClassifyOpen = true;
       },
       /** 新增按钮操作 */
       handleAdd() {
@@ -345,6 +395,15 @@
           this.form = response.data;
           this.open = true;
           this.title = "修改营养视频";
+        });
+      },
+      //获取播放地址
+      getVideoPlayUrl(id){
+        getVideoPlayUrlById(id).then(response => {
+           let url = response.data.playUrl;
+           if(url != undefined && url != null){
+                window.open(url, '_blank');
+           }
         });
       },
       /** 提交按钮 */
@@ -381,6 +440,7 @@
       },
       handleCoverUrl(url){
         this.form.coverUrl = url;
+        console.log(this.form.coverUrl);
       },
       /** 删除按钮操作 */
       handleDelete(row) {

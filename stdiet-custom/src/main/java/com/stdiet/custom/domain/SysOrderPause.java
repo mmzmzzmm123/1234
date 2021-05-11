@@ -26,10 +26,10 @@ public class SysOrderPause {
     /**
      * 订单id
      */
-    @JsonIgnore
+    //@JsonIgnore
     private Long orderId;
 
-    @JsonIgnore
+    //@JsonIgnore
     private Long cusId;
 
     private String outId;

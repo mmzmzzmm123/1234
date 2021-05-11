@@ -102,7 +102,7 @@
             </el-table>
           </div>
           <!-- 其他信息 -->
-          <div style="height: 390px; overflow: auto">
+          <div style="height: 370px; overflow: auto">
             <div
               v-for="(item, index) in dataList.slice(1, 10)"
               style="margin-bottom: 50px"

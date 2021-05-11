@@ -4,6 +4,11 @@ import com.aliyun.vod20170321.models.*;
 import com.aliyun.teaopenapi.models.*;
 import com.stdiet.common.config.AliyunOSSConfig;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 public class AliyunVideoUtils {
 
     public static com.aliyun.vod20170321.Client videoClient = null;
@@ -18,6 +23,9 @@ public class AliyunVideoUtils {
 
     //播放地址日期，30天
     public static final Long default_authTimeout = 2592000L;
+
+    //阿里云回收站分类ID
+    public static final Long default_delete_cateId = 1860L;
 
     public static final String search_field = "VideoId,Title,CoverURL,CateName,Tags,Status,Description,CreationTime";
 
@@ -113,12 +121,16 @@ public class AliyunVideoUtils {
     public static CreateUploadVideoResponse createUploadVideoRequest(Long cateId, String fileName, String title, String coverURL, String tags, String description) throws Exception{
         com.aliyun.vod20170321.Client client = AliyunVideoUtils.createClient();
         CreateUploadVideoRequest createUploadVideoRequest = new CreateUploadVideoRequest()
-                .setDescription(description)
-                .setCoverURL(coverURL)
-                .setFileName(fileName)
-                .setTitle(title)
-                .setCateId(cateId)
-                .setTags(tags);
+                .setDescription(description).setFileName(fileName).setTitle(title);
+        if(StringUtils.isNotEmpty(coverURL)){
+            createUploadVideoRequest.setCoverURL(coverURL);
+        }
+        if(cateId != null){
+            createUploadVideoRequest.setCateId(cateId);
+        }
+        if(StringUtils.isNotEmpty(tags)){
+            createUploadVideoRequest.setTags(tags);
+        }
         return client.createUploadVideo(createUploadVideoRequest);
     }
 
@@ -152,6 +164,101 @@ public class AliyunVideoUtils {
             searchMediaRequest.setMatch(matchString);
         }
         return client.searchMedia(searchMediaRequest);
+    }
+
+    /**
+     * 更新视频消息
+     * @param videoId 视频ID必须
+     * @param title
+     * @param tags
+     * @param description
+     * @param cateId
+     * @return
+     * @throws Exception
+     */
+    public static String updateVideo(String videoId, String title, String tags, String description, Long cateId) throws Exception{
+        com.aliyun.vod20170321.Client client = AliyunVideoUtils.createClient();
+        if(StringUtils.isEmpty(videoId)){
+            return null;
+        }
+        UpdateVideoInfoRequest updateVideoInfoRequest = new UpdateVideoInfoRequest().setVideoId(videoId);
+        if(StringUtils.isNotEmpty(title)){
+            updateVideoInfoRequest.setTitle(title);
+        }
+        if(StringUtils.isNotEmpty(tags)){
+            updateVideoInfoRequest.setTags(tags);
+        }
+        if(StringUtils.isNotEmpty(description)){
+            updateVideoInfoRequest.setDescription(description);
+        }
+        if(cateId != null && cateId.longValue() > 0){
+            updateVideoInfoRequest.setCateId(cateId);
+        }
+        UpdateVideoInfoResponse updateVideoInfoResponse = client.updateVideoInfo(updateVideoInfoRequest);
+        if(updateVideoInfoResponse != null){
+            return updateVideoInfoResponse.body.requestId;
+        }
+        return null;
+    }
+
+    /**
+     * 将视频分类到回收站中
+     * @param videoId
+     * @return
+     * @throws Exception
+     */
+    public static String delVideo(String videoId) throws Exception{
+        return updateVideo(videoId, null,null,null, default_delete_cateId);
+    }
+
+    /**
+     * 根据VideoId获取封面
+     * @param videoId
+     * @return
+     */
+    public static List<String> getVideoCoverUrl(List<String> videoId){
+        List<String> result = new ArrayList<>();
+        try{
+            com.aliyun.vod20170321.Client client = AliyunVideoUtils.createClient();
+            GetVideoInfosRequest getVideoInfosRequest = new GetVideoInfosRequest()
+                    .setVideoIds(StringUtils.join(videoId.toArray(), ","));
+            GetVideoInfosResponse getVideoInfosResponse = client.getVideoInfos(getVideoInfosRequest);
+            if(getVideoInfosResponse != null){
+                GetVideoInfosResponseBody body = getVideoInfosResponse.body;
+                List<GetVideoInfosResponseBody.GetVideoInfosResponseBodyVideoList> videoList = body.videoList;
+                if(videoList != null && videoList.size() > 0){
+                    for (GetVideoInfosResponseBody.GetVideoInfosResponseBodyVideoList video : videoList) {
+                        result.add(video.getCoverURL());
+                    }
+                }
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return result;
+    }
+
+    /**
+     * 根据VideoId获取封面
+     * @param videoId
+     * @return
+     */
+    public static String getVideoCoverUrl(String videoId){
+        String coverUrl = null;
+        try{
+            com.aliyun.vod20170321.Client client = AliyunVideoUtils.createClient();
+            GetVideoInfoRequest getVideoInfoRequest = new GetVideoInfoRequest()
+                    .setVideoId(videoId);
+            GetVideoInfoResponse response = client.getVideoInfo(getVideoInfoRequest);
+            if(response != null){
+                GetVideoInfoResponseBody body = response.body;
+                GetVideoInfoResponseBody.GetVideoInfoResponseBodyVideo video = body.video;
+                coverUrl = video.coverURL;
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return coverUrl;
     }
 
 
