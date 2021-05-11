@@ -731,7 +731,7 @@ public class SysCommissionDayServiceImpl implements ISysCommissionDayService {
         }
         //更新服务结束时间
         if(ChronoUnit.DAYS.between(realEndDate,serverEndDate) > 0){
-            serverEndDate =  realEndDate;
+            //serverEndDate =  realEndDate;
         }
         return getEveryYearMonthPauseDay(list, serverStartDate, serverEndDate);
     }
@@ -759,7 +759,7 @@ public class SysCommissionDayServiceImpl implements ISysCommissionDayService {
                 pauseStartDate = serverStartDate;
             }
             if(ChronoUnit.DAYS.between(serverEndDate, pauseEndDate) > 0){
-                pauseEndDate = serverEndDate;
+                //pauseEndDate = serverEndDate;
             }
             //根据暂停记录获取该条记录在每年每月的暂停天数
             Map<String, Integer> orderYearMonthPauseDay = getEveryYearMonthDayCount(pauseStartDate, pauseEndDate, null);

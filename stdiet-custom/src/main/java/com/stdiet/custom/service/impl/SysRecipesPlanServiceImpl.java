@@ -236,16 +236,11 @@ public class SysRecipesPlanServiceImpl implements ISysRecipesPlanService {
         if (beforeOrderLastPlan != null) {
             long differDay = ChronoUnit.DAYS.between(DateUtils.dateToLocalDate(beforeOrderLastPlan.getEndDate()), serverStartDate);
             //检查之前食谱的结束时间和目前该订单的开始时间是否连续
-            if (differDay <= 1) {
-                /*if(differDay <= 0){
-                    serverStartDate = DateUtils.dateToLocalDate(beforeOrderLastPlan.getEndDate()).plusDays(1);
-                    //更新该订单的开始时间
-                    sysOrderService.updateOrderStartTime(sysOrder, serverStartDate);1 7   1  3  2
-                }*/
+            if(differDay <= 1){
                 //判断前一个订单食谱是否满七天，不满则需要接上
                 int differNum = beforeOrderLastPlan.getEndNumDay() - beforeOrderLastPlan.getStartNumDay();
 
-                if (differNum < 6) {
+                if(differNum < 6){
                     //更新该食谱计划
                     beforeOrderLastPlan.setEndNumDay(beforeOrderLastPlan.getStartNumDay() + 6);
                     beforeOrderLastPlan.setEndDate(DateUtils.localDateToDate(DateUtils.dateToLocalDate(beforeOrderLastPlan.getEndDate()).plusDays(6 - differNum)));
@@ -328,9 +323,9 @@ public class SysRecipesPlanServiceImpl implements ISysRecipesPlanService {
                     if (ChronoUnit.DAYS.between(pauseStartDate, planStartDate) > 0) {
                         pauseStartDate = planStartDate;
                     }
-                    if (ChronoUnit.DAYS.between(planEndDate, pauseEndDate) > 0) {
+                    /*if (ChronoUnit.DAYS.between(planEndDate, pauseEndDate) > 0) {
                         pauseEndDate = planEndDate;
-                    }
+                    }*/
                     //判断暂停记录是否从食谱计划开始时间开始的
                     if (ChronoUnit.DAYS.between(pauseStartDate, planStartDate) == 0) {
                         planStartDate = pauseEndDate.plusDays(1);
