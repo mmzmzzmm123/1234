@@ -90,6 +90,7 @@ token:
   
 # MyBatis配置
 mybatis:
+    mapperPackage: com.ruoyi.**.mapper
     # 搜索指定包别名
     typeAliasesPackage: com.ruoyi.**.domain
     # 配置mapper的扫描，找到所有的mapper.xml映射文件
@@ -110,6 +111,12 @@ swagger:
   enabled: true
   # 请求前缀
   pathMapping: /dev-api
+  # 标题
+  title: '标题：若依管理系统_接口文档'
+  # 描述
+  description: '描述：用于管理集团旗下公司的人员信息,具体包括XXX,XXX模块...'
+  # 版本
+  version: '版本号: ${ruoyi.version}'
 
 # 防止XSS攻击
 xss: 
@@ -119,3 +126,21 @@ xss:
   excludes: /system/notice/*
   # 匹配链接
   urlPatterns: /system/*,/monitor/*,/tool/*
+
+threadPoolConfig:
+  # 是否开启线程池
+  enabled: true
+  # 核心线程池大小
+  corePoolSize: 50
+  # 最大可创建的线程数
+  maxPoolSize: 200
+  # 队列最大长度
+  queueCapacity: 1000
+  # 线程池维护线程所允许的空闲时间
+  keepAliveSeconds: 300
+  # 线程池对拒绝任务(无线程可用)的处理策略
+  # CallerRunsPolicy 等待
+  # DiscardOldestPolicy 放弃最旧的
+  # DiscardPolicy 丢弃
+  # AbortPolicy 中止
+  rejectedExecutionHandler: CallerRunsPolicy

@@ -9,6 +9,7 @@ import javax.sql.DataSource;
 import org.apache.ibatis.io.VFS;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.mybatis.spring.SqlSessionFactoryBean;
+import org.mybatis.spring.annotation.MapperScan;
 import org.mybatis.spring.boot.autoconfigure.SpringBootVFS;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -29,6 +30,8 @@ import com.ruoyi.common.utils.StringUtils;
  * 
  * @author ruoyi
  */
+// 指定要扫描的Mapper类的包的路径
+@MapperScan("${mybatis.mapperPackage}")
 @Configuration
 public class MyBatisConfig
 {
