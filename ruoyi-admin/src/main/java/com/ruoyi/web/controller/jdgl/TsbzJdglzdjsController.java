@@ -43,6 +43,7 @@ public class TsbzJdglzdjsController extends BaseController
     @GetMapping("/list")
     public TableDataInfo list(TsbzJdglzdjs tsbzJdglzdjs)
     {
+
         startPage();
         List<TsbzJdglzdjs> list = tsbzJdglzdjsService.selectTsbzJdglzdjsList(tsbzJdglzdjs);
         return getDataTable(list);

@@ -1,13 +1,29 @@
 <template>
   <div class="app-container">
-    <el-form :model="queryParams" ref="queryForm" :inline="true" v-show="showSearch" label-width="68px">
+    <el-form
+      :model="queryParams"
+      ref="queryForm"
+      :inline="true"
+      v-show="showSearch"
+      label-width="68px"
+    >
       <el-form-item label="基地编号" prop="jdid">
-        <el-select v-model="queryParams.jdid" placeholder="请选择基地编号" clearable size="small">
+        <el-select
+          v-model="queryParams.jdid"
+          placeholder="请选择基地编号"
+          clearable
+          size="small"
+        >
           <el-option label="请选择字典生成" value="" />
         </el-select>
       </el-form-item>
       <el-form-item label="任务类型" prop="rwtype">
-        <el-select v-model="queryParams.rwtype" placeholder="请选择任务类型" clearable size="small">
+        <el-select
+          v-model="queryParams.rwtype"
+          placeholder="请选择任务类型"
+          clearable
+          size="small"
+        >
           <el-option
             v-for="dict in rwtypeOptions"
             :key="dict.dictValue"
@@ -17,8 +33,16 @@
         </el-select>
       </el-form-item>
       <el-form-item>
-        <el-button type="cyan" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
-        <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
+        <el-button
+          type="cyan"
+          icon="el-icon-search"
+          size="mini"
+          @click="handleQuery"
+          >搜索</el-button
+        >
+        <el-button icon="el-icon-refresh" size="mini" @click="resetQuery"
+          >重置</el-button
+        >
       </el-form-item>
     </el-form>
 
@@ -30,7 +54,8 @@
           size="mini"
           @click="handleAdd"
           v-hasPermi="['jdgl:jdglzdjs:add']"
-        >新增</el-button>
+          >新增</el-button
+        >
       </el-col>
       <el-col :span="1.5">
         <el-button
@@ -40,7 +65,8 @@
           :disabled="single"
           @click="handleUpdate"
           v-hasPermi="['jdgl:jdglzdjs:edit']"
-        >修改</el-button>
+          >修改</el-button
+        >
       </el-col>
       <el-col :span="1.5">
         <el-button
@@ -50,24 +76,45 @@
           :disabled="multiple"
           @click="handleDelete"
           v-hasPermi="['jdgl:jdglzdjs:remove']"
-        >删除</el-button>
+          >删除</el-button
+        >
       </el-col>
-	  <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
+      <right-toolbar
+        :showSearch.sync="showSearch"
+        @queryTable="getList"
+      ></right-toolbar>
     </el-row>
 
-    <el-table v-loading="loading" :data="jdglzdjsList" @selection-change="handleSelectionChange">
+    <el-table
+      v-loading="loading"
+      :data="jdglzdjsList"
+      @selection-change="handleSelectionChange"
+    >
       <el-table-column type="selection" width="55" align="center" />
       <el-table-column label="编号" align="center" prop="id" />
       <el-table-column label="基地编号" align="center" prop="jdid" />
-      <el-table-column label="信息名称" align="center" prop="name" />
-      <el-table-column label="任务类型" align="center" prop="rwtype" :formatter="rwtypeFormat" />
-      <el-table-column label="上传时间" align="center" prop="sctime" width="180">
+      <el-table-column label="信息文件名称" align="center" prop="name" />
+      <el-table-column
+        label="任务类型"
+        align="center"
+        prop="rwtype"
+        :formatter="rwtypeFormat"
+      />
+      <el-table-column
+        label="上传时间"
+        align="center"
+        prop="sctime"
+        width="180"
+      >
         <template slot-scope="scope">
-          <span>{{ parseTime(scope.row.sctime, '{y}-{m}-{d}') }}</span>
+          <span>{{ parseTime(scope.row.sctime, "{y}-{m}-{d}") }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="上传路径" align="center" prop="scpath" />
-      <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
+      <el-table-column
+        label="操作"
+        align="center"
+        class-name="small-padding fixed-width"
+      >
         <template slot-scope="scope">
           <el-button
             size="mini"
@@ -75,20 +122,22 @@
             icon="el-icon-edit"
             @click="handleUpdate(scope.row)"
             v-hasPermi="['jdgl:jdglzdjs:edit']"
-          >修改</el-button>
+            >修改</el-button
+          >
           <el-button
             size="mini"
             type="text"
             icon="el-icon-delete"
             @click="handleDelete(scope.row)"
             v-hasPermi="['jdgl:jdglzdjs:remove']"
-          >删除</el-button>
+            >删除</el-button
+          >
         </template>
       </el-table-column>
     </el-table>
-    
+
     <pagination
-      v-show="total>0"
+      v-show="total > 0"
       :total="total"
       :page.sync="queryParams.pageNum"
       :limit.sync="queryParams.pageSize"
@@ -113,11 +162,23 @@
             ></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="信息名称" prop="name">
-          <el-input v-model="form.name" placeholder="请输入信息名称" />
-        </el-form-item>
-        <el-form-item label="上传路径" prop="scpath">
-          <el-input v-model="form.scpath" placeholder="请输入上传路径" />
+        <el-form-item label="上传文件" prop="scpath">
+          <el-input v-model="form.name" v-if="false" />
+          <el-input v-model="form.scpath" v-if="false" />
+          <el-upload
+            class="upload-demo"
+            :action="uploadFileUrl"
+            :headers="headers"
+            :on-preview="handlePreview"
+            :on-remove="handleRemove"
+            :before-remove="beforeRemove"
+            :limit="1"
+            :on-exceed="handleExceed"
+            :file-list="fileList"
+            :on-success="handleAvatarSuccess"
+          >
+            <el-button size="small" type="primary">选择文件</el-button>
+          </el-upload>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -129,7 +190,15 @@
 </template>
 
 <script>
-import { listJdglzdjs, getJdglzdjs, delJdglzdjs, addJdglzdjs, updateJdglzdjs, exportJdglzdjs } from "@/api/jdgl/jdglzdjs";
+import {
+  listJdglzdjs,
+  getJdglzdjs,
+  delJdglzdjs,
+  addJdglzdjs,
+  updateJdglzdjs,
+  exportJdglzdjs,
+} from "@/api/jdgl/jdglzdjs";
+import { getToken } from "@/utils/auth";
 
 export default {
   name: "Jdglzdjs",
@@ -149,6 +218,8 @@ export default {
       total: 0,
       // 基地管理制度建设表格数据
       jdglzdjsList: [],
+      // 上传文件list
+      fileList: [],
       // 弹出层标题
       title: "",
       // 是否显示弹出层
@@ -169,13 +240,16 @@ export default {
       // 表单参数
       form: {},
       // 表单校验
-      rules: {
-      }
+      rules: {},
+      uploadFileUrl: process.env.VUE_APP_BASE_API + "/common/upload", // 上传的图片服务器地址
+      headers: {
+        Authorization: "Bearer " + getToken(),
+      },
     };
   },
   created() {
     this.getList();
-    this.getDicts("sys_dm_zdjsrwtype").then(response => {
+    this.getDicts("sys_dm_zdjsrwtype").then((response) => {
       this.rwtypeOptions = response.data;
     });
   },
@@ -183,7 +257,7 @@ export default {
     /** 查询基地管理制度建设列表 */
     getList() {
       this.loading = true;
-      listJdglzdjs(this.queryParams).then(response => {
+      listJdglzdjs(this.queryParams).then((response) => {
         this.jdglzdjsList = response.rows;
         this.total = response.total;
         this.loading = false;
@@ -208,9 +282,42 @@ export default {
         sctime: null,
         scpath: null,
         createUserid: null,
-        createTime: null
+        createTime: null,
       };
       this.resetForm("form");
+    },
+    // 文件上传
+    handlePreview(file) {
+      //console.log(file);
+    },
+    // 文件上传移除
+    handleRemove(file, fileList) {
+      // console.log(file);
+      if (file.response.code == "200") {
+        this.form.scpath = "";
+      }
+    },
+    // 文件上传 弹窗
+    beforeRemove(file, fileList) {
+      return this.$confirm(`确定移除 ${file.name}？`);
+    },
+    // 文件上传  限制
+    handleExceed(files, fileList) {
+      this.$message.warning(
+        `当前限制选择 1 个文件，本次选择了 ${files.length} 个文件，共选择了 ${
+          files.length + fileList.length
+        } 个文件`
+      );
+    },
+    // 文件上传 成功钩子
+    handleAvatarSuccess(res, file) {
+      // console.log(res, file);
+      if (res.code == "200") {
+        this.form.scpath = res.fileName;
+        this.form.name = file.name;
+      } else {
+        this.msgError(res.msg);
+      }
     },
     /** 搜索按钮操作 */
     handleQuery() {
@@ -224,9 +331,9 @@ export default {
     },
     // 多选框选中数据
     handleSelectionChange(selection) {
-      this.ids = selection.map(item => item.id)
-      this.single = selection.length!==1
-      this.multiple = !selection.length
+      this.ids = selection.map((item) => item.id);
+      this.single = selection.length !== 1;
+      this.multiple = !selection.length;
     },
     /** 新增按钮操作 */
     handleAdd() {
@@ -237,8 +344,8 @@ export default {
     /** 修改按钮操作 */
     handleUpdate(row) {
       this.reset();
-      const id = row.id || this.ids
-      getJdglzdjs(id).then(response => {
+      const id = row.id || this.ids;
+      getJdglzdjs(id).then((response) => {
         this.form = response.data;
         this.open = true;
         this.title = "修改基地管理制度建设";
@@ -246,10 +353,10 @@ export default {
     },
     /** 提交按钮 */
     submitForm() {
-      this.$refs["form"].validate(valid => {
+      this.$refs["form"].validate((valid) => {
         if (valid) {
           if (this.form.id != null) {
-            updateJdglzdjs(this.form).then(response => {
+            updateJdglzdjs(this.form).then((response) => {
               if (response.code === 200) {
                 this.msgSuccess("修改成功");
                 this.open = false;
@@ -257,7 +364,7 @@ export default {
               }
             });
           } else {
-            addJdglzdjs(this.form).then(response => {
+            addJdglzdjs(this.form).then((response) => {
               if (response.code === 200) {
                 this.msgSuccess("新增成功");
                 this.open = false;
@@ -271,30 +378,40 @@ export default {
     /** 删除按钮操作 */
     handleDelete(row) {
       const ids = row.id || this.ids;
-      this.$confirm('是否确认删除基地管理制度建设编号为"' + ids + '"的数据项?', "警告", {
+      this.$confirm(
+        '是否确认删除基地管理制度建设编号为"' + ids + '"的数据项?',
+        "警告",
+        {
           confirmButtonText: "确定",
           cancelButtonText: "取消",
-          type: "warning"
-        }).then(function() {
+          type: "warning",
+        }
+      )
+        .then(function () {
           return delJdglzdjs(ids);
-        }).then(() => {
+        })
+        .then(() => {
           this.getList();
           this.msgSuccess("删除成功");
-        }).catch(function() {});
+        })
+        .catch(function () {});
     },
     /** 导出按钮操作 */
     handleExport() {
       const queryParams = this.queryParams;
-      this.$confirm('是否确认导出所有基地管理制度建设数据项?', "警告", {
-          confirmButtonText: "确定",
-          cancelButtonText: "取消",
-          type: "warning"
-        }).then(function() {
+      this.$confirm("是否确认导出所有基地管理制度建设数据项?", "警告", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning",
+      })
+        .then(function () {
           return exportJdglzdjs(queryParams);
-        }).then(response => {
+        })
+        .then((response) => {
           this.download(response.msg);
-        }).catch(function() {});
-    }
-  }
+        })
+        .catch(function () {});
+    },
+  },
 };
 </script>

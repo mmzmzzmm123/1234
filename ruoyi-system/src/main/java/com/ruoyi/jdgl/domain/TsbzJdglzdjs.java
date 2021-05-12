@@ -45,6 +45,11 @@ public class TsbzJdglzdjs extends BaseEntity
     @Excel(name = "创建人")
     private Long createUserid;
 
+    /** 创建时间 */
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    @Excel(name = "创建时间", width = 30, dateFormat = "yyyy-MM-dd")
+    private Date createTime;
+
     public void setId(Long id) 
     {
         this.id = id;
@@ -121,5 +126,15 @@ public class TsbzJdglzdjs extends BaseEntity
             .append("createUserid", getCreateUserid())
             .append("createTime", getCreateTime())
             .toString();
+    }
+
+    @Override
+    public Date getCreateTime() {
+        return createTime;
+    }
+
+    @Override
+    public void setCreateTime(Date createTime) {
+        this.createTime = createTime;
     }
 }
