@@ -103,9 +103,13 @@ public interface SysRecipesPlanMapper
 
     List<SysRecipesPlanListInfo> selectRecipesPlanListInfo(String outId);
 
+    List<SysRecipesPlanListInfo> selectRecipesPlanListInfoByCusId(Long cusId);
+
+
     List<SysRecipesPlan> selectPlanListByCusId(Long cusId);
     
     List<SysRecipesPlan> selectRecipesModelList(SysRecipesPlan sysRecipesPlan);
+
 
     /**
      * 批量更新食谱计划的开始时间、结束时间

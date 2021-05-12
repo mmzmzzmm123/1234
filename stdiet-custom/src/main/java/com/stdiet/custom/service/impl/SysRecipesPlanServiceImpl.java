@@ -417,6 +417,11 @@ public class SysRecipesPlanServiceImpl implements ISysRecipesPlanService {
     }
 
     @Override
+    public List<SysRecipesPlanListInfo> selectRecipesPlanListInfoByCusId(Long cusId) {
+        return sysRecipesPlanMapper.selectRecipesPlanListInfoByCusId(cusId);
+    }
+
+    @Override
     public List<SysRecipesPlan> selectPlanListByCusId(Long cusId) {
         return sysRecipesPlanMapper.selectPlanListByCusId(cusId);
     }
