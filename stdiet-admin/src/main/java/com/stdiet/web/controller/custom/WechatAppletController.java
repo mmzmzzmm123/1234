@@ -1,7 +1,6 @@
 package com.stdiet.web.controller.custom;
 
 import com.aliyun.vod20170321.models.GetPlayInfoResponseBody;
-import com.aliyun.vod20170321.models.GetVideoInfoResponseBody;
 import com.stdiet.common.core.controller.BaseController;
 import com.stdiet.common.core.domain.AjaxResult;
 import com.stdiet.common.core.domain.entity.SysDictData;
@@ -117,7 +116,7 @@ public class WechatAppletController extends BaseController {
         SysCustomer customer = sysCustomerService.getCustomerByPhone(sysWxUserInfo.getPhone());
         //加密ID
         String customerEncId = null;
-        if(customer != null){
+        if (customer != null) {
             sysWxUserInfo.setCusId(customer.getId());
             customerEncId = AesUtils.encrypt(customer.getId() + "", null);
         }
@@ -130,7 +129,7 @@ public class WechatAppletController extends BaseController {
             sysWxUserInfoService.insertSysWxUserInfo(sysWxUserInfo);
         }
         Map<String, Object> result = new HashMap<>();
-        result.put("customerId",  customerEncId);
+        result.put("customerId", customerEncId);
         //查询未读消息数量
         SysMessageNotice messageParam = new SysMessageNotice();
         messageParam.setReadType(0);
@@ -268,7 +267,7 @@ public class WechatAppletController extends BaseController {
         List<String> allUrlList = new ArrayList<>();
 
         for (String key : imageName) {
-            if(!"bodyImages".equals(key)){
+            if (!"bodyImages".equals(key)) {
                 allUrlList.addAll(downUrlList.get(key));
                 allImagesList.addAll(imageUrlMap.get(key));
             }
@@ -375,10 +374,10 @@ public class WechatAppletController extends BaseController {
         sysNutritionalVideo.setSortType(2);
         //普通用户
         sysNutritionalVideo.setUserType(0);
-        if(StringUtils.isNotEmpty(sysNutritionalVideo.getOpenId())){
+        if (StringUtils.isNotEmpty(sysNutritionalVideo.getOpenId())) {
             //查询是否为客户，存在订单就视为客户
             int orderNum = sysOrderService.getOrderCountByOpenId(sysNutritionalVideo.getOpenId());
-            if(orderNum > 0){
+            if (orderNum > 0) {
                 sysNutritionalVideo.setUserType(1);
             }
         }
@@ -395,25 +394,25 @@ public class WechatAppletController extends BaseController {
     public AjaxResult getVideoDetailById(@RequestParam(value = "videoId") String videoId) {
         AjaxResult result = AjaxResult.success();
         NutritionalVideoResponse nutritionalVideoResponse = new NutritionalVideoResponse();
-        try{
-                SysNutritionalVideo sysNutritionalVideo = sysNutritionalVideoService.selectSysNutritionalVideByVideoId(videoId);
-                if(sysNutritionalVideo != null){
-                    GetPlayInfoResponseBody playInfoResponseBody = AliyunVideoUtils.getVideoVisitDetail(videoId);
-                    List<GetPlayInfoResponseBody.GetPlayInfoResponseBodyPlayInfoListPlayInfo> playList = playInfoResponseBody.playInfoList.playInfo;
-                    if(playList != null && playList.size() > 0){
-                        nutritionalVideoResponse.setPlayUrl(playList.get(0).getPlayURL());
-                    }
-                    if(StringUtils.isNotEmpty(sysNutritionalVideo.getCoverUrl())){
-                        nutritionalVideoResponse.setCoverUrl(AliyunOSSUtils.generatePresignedUrl(sysNutritionalVideo.getCoverUrl()));
-                    }else{
-                        nutritionalVideoResponse.setCoverUrl(AliyunVideoUtils.getVideoCoverUrl(videoId));
-                    }
-                    nutritionalVideoResponse.setDescription(sysNutritionalVideo.getDescription());
-                    nutritionalVideoResponse.setTags(sysNutritionalVideo.getTags());
-                    nutritionalVideoResponse.setTitle(sysNutritionalVideo.getTitle());
-                    nutritionalVideoResponse.setPlayNum(sysNutritionalVideo.getPlayNum());
+        try {
+            SysNutritionalVideo sysNutritionalVideo = sysNutritionalVideoService.selectSysNutritionalVideByVideoId(videoId);
+            if (sysNutritionalVideo != null) {
+                GetPlayInfoResponseBody playInfoResponseBody = AliyunVideoUtils.getVideoVisitDetail(videoId);
+                List<GetPlayInfoResponseBody.GetPlayInfoResponseBodyPlayInfoListPlayInfo> playList = playInfoResponseBody.playInfoList.playInfo;
+                if (playList != null && playList.size() > 0) {
+                    nutritionalVideoResponse.setPlayUrl(playList.get(0).getPlayURL());
                 }
-        }catch (Exception e){
+                if (StringUtils.isNotEmpty(sysNutritionalVideo.getCoverUrl())) {
+                    nutritionalVideoResponse.setCoverUrl(AliyunOSSUtils.generatePresignedUrl(sysNutritionalVideo.getCoverUrl()));
+                } else {
+                    nutritionalVideoResponse.setCoverUrl(AliyunVideoUtils.getVideoCoverUrl(videoId));
+                }
+                nutritionalVideoResponse.setDescription(sysNutritionalVideo.getDescription());
+                nutritionalVideoResponse.setTags(sysNutritionalVideo.getTags());
+                nutritionalVideoResponse.setTitle(sysNutritionalVideo.getTitle());
+                nutritionalVideoResponse.setPlayNum(sysNutritionalVideo.getPlayNum());
+            }
+        } catch (Exception e) {
             e.printStackTrace();
         }
         result.put("videoDetail", nutritionalVideoResponse);
@@ -426,7 +425,7 @@ public class WechatAppletController extends BaseController {
     @GetMapping(value = "/updateVideoPlayNum")
     public AjaxResult updateVideoPlayNum(@RequestParam(value = "videoId") String videoId) {
         AjaxResult result = AjaxResult.error();
-        if(sysNutritionalVideoService.updateVideoPlayNum(videoId) > 0){
+        if (sysNutritionalVideoService.updateVideoPlayNum(videoId) > 0) {
             result = AjaxResult.success();
         }
         return result;
@@ -500,11 +499,15 @@ public class WechatAppletController extends BaseController {
         List<SysDictData> unitDict = iSysDictTypeService.selectDictDataByType("cus_cus_unit");
         List<SysDictData> weightDict = iSysDictTypeService.selectDictDataByType("cus_cus_weight");
         List<SysDictData> menuTypeDict = iSysDictTypeService.selectDictDataByType("cus_dishes_type");
+        List<SysDictData> igdUnitDict = iSysDictTypeService.selectDictDataByType("sys_ingredient_unit");
+        List<SysDictData> idgTypeDict = iSysDictTypeService.selectDictDataByType("cus_ing_type");
 
         Map<String, Object> result = new HashMap<>();
         result.put("unitDict", unitDict);
         result.put("weightDict", weightDict);
         result.put("menuTypeDict", menuTypeDict);
+        result.put("igdUnitDict", igdUnitDict);
+        result.put("idgTypeDict", idgTypeDict);
 
         return AjaxResult.success(result);
     }
@@ -512,6 +515,11 @@ public class WechatAppletController extends BaseController {
     @GetMapping("/getRecipesDetail")
     public AjaxResult getRecipesDetail(@RequestParam Long menuId) {
         return AjaxResult.success(iSysRecipesService.selectDishesByMenuId(menuId));
+    }
+
+    @GetMapping("/getPlanDetail")
+    public AjaxResult getPlanDetail(@RequestParam Long planId) {
+        return AjaxResult.success(iSysRecipesService.selectSysRecipesByRecipesId(planId));
     }
 }
 
