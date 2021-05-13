@@ -4,6 +4,8 @@ import java.util.Date;
 import java.util.List;
 
 import com.ruoyi.common.utils.SecurityUtils;
+import com.ruoyi.zcrpsgl.domain.TsbzZcrjdcj;
+import com.ruoyi.zcrpsgl.service.ITsbzZcrjdcjService;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -35,6 +37,8 @@ public class TsbzJdglhdglController extends BaseController
 {
     @Autowired
     private ITsbzJdglhdglService tsbzJdglhdglService;
+    @Autowired
+    private ITsbzZcrjdcjService tsbzZcrjdcjService;
 
     /**
      * 查询基地管理活动管理列表
@@ -43,6 +47,7 @@ public class TsbzJdglhdglController extends BaseController
     @GetMapping("/list")
     public TableDataInfo list(TsbzJdglhdgl tsbzJdglhdgl)
     {
+        tsbzJdglhdgl.setCreateUserid(SecurityUtils.getLoginUser().getUser().getUserId());
         startPage();
         List<TsbzJdglhdgl> list = tsbzJdglhdglService.selectTsbzJdglhdglList(tsbzJdglhdgl);
         return getDataTable(list);
@@ -79,9 +84,20 @@ public class TsbzJdglhdglController extends BaseController
     @PostMapping
     public AjaxResult add(@RequestBody TsbzJdglhdgl tsbzJdglhdgl)
     {
-        tsbzJdglhdgl.setCreateTime(new Date());
-        tsbzJdglhdgl.setCreateUserid(SecurityUtils.getLoginUser().getUser().getUserId());
-        return toAjax(tsbzJdglhdglService.insertTsbzJdglhdgl(tsbzJdglhdgl));
+        AjaxResult ajax = AjaxResult.success();
+
+        TsbzZcrjdcj tsbzZcrjdcj = new TsbzZcrjdcj();
+        tsbzZcrjdcj.setCreateUserid(SecurityUtils.getLoginUser().getUser().getUserId());
+        List<TsbzZcrjdcj> jdcjList = tsbzZcrjdcjService.selectTsbzZcrjdcjList(tsbzZcrjdcj);
+        if (jdcjList.size()>0) {
+            tsbzJdglhdgl.setJdid(jdcjList.get(0).getId());
+            tsbzJdglhdgl.setCreateUserid(SecurityUtils.getLoginUser().getUser().getUserId());
+            tsbzJdglhdgl.setCreateTime(new Date());
+            tsbzJdglhdglService.insertTsbzJdglhdgl(tsbzJdglhdgl);
+            return ajax;
+        }else {
+            return AjaxResult.error("当前用户没有基地,无法新增活动");
+        }
     }
 
     /**
