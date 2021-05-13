@@ -57,6 +57,7 @@ export default {
       headers: {
         Authorization: "Bearer " + getToken()
       },
+      uploadType:"",
       Quill: null,
       currentValue: "",
       options: {
@@ -75,7 +76,7 @@ export default {
             [{ color: [] }, { background: [] }],             // 字体颜色、字体背景颜色
             [{ align: [] }],                                 // 对齐方式
             ["clean"],                                       // 清除文本格式
-            ["link", "image"]                                // 链接、图片
+            ["link", "image","video"]                                // 链接、图片
           ],
         },
         placeholder: "请输入内容",
@@ -164,8 +165,12 @@ export default {
       if (res.code == 200) {
         // 获取光标所在位置
         let length = quill.getSelection().index;
-        // 插入图片  res.url为服务器返回的图片地址
-        quill.insertEmbed(length, "image", res.url);
+        // 插入图片/视频  res.url为服务器返回的图片、视频地址,判断是图片还是视频，如果传的是文件需要自己再加一个判断
+         if(this.uploadType=="image"){
+          quill.insertEmbed(length, "image", res.url);
+        }else if(this.uploadType=="video"){
+          quill.insertEmbed(length, "video", res.url);
+        }
         // 调整光标到最后
         quill.setSelection(length + 1);
       } else {
