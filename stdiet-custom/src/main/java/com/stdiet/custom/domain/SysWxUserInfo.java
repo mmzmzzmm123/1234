@@ -20,7 +20,6 @@ public class SysWxUserInfo {
      */
     private String openid;
 
-    @JsonIgnore
     private Long cusId;
 
     private String customerId;

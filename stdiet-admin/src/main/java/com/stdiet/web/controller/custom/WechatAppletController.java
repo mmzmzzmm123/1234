@@ -66,6 +66,8 @@ public class WechatAppletController extends BaseController {
     private ISysOrderPauseService sysOrderPauseService;
     @Autowired
     private ISysDictTypeService iSysDictTypeService;
+    @Autowired
+    private IWechatAppletService iWechatAppletService;
 
     /**
      * 查询微信小程序中展示的客户案例
@@ -472,6 +474,7 @@ public class WechatAppletController extends BaseController {
         }
 
         curWxUserInfo.setCustomerId(AesUtils.encrypt(curWxUserInfo.getCusId().toString()));
+        curWxUserInfo.setCusId(null);
 
         // 并返回一系列登录后的数据
         return AjaxResult.success(curWxUserInfo);
@@ -528,6 +531,11 @@ public class WechatAppletController extends BaseController {
 //        String token = "shengtang";
 //        String encodingAESKey = "i483gAY6KM0Ty5ij245U08jLhROxateWvg0LPjYLprS";
         return request.getParameter("echostr");
+    }
+
+    @GetMapping("/getToken")
+    public String getToken(@RequestParam String appId) {
+        return iWechatAppletService.getAccessToken(appId);
     }
 
 
