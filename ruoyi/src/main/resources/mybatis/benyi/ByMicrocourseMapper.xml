@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.project.benyi.mapper.ByMicrocourseMapper">
+
+    <resultMap type="ByMicrocourse" id="ByMicrocourseResult">
+        <result property="id" column="id"/>
+        <result property="title" column="title"/>
+        <result property="author" column="author"/>
+        <result property="contents" column="contents"/>
+        <result property="type" column="type"/>
+        <result property="scpoe" column="scpoe"/>
+        <result property="upanddown" column="upanddown"/>
+        <result property="sort" column="sort"/>
+        <result property="createTime" column="create_time"/>
+    </resultMap>
+
+    <sql id="selectByMicrocourseVo">
+        select id, title, author, contents, type, scpoe, upanddown, sort, create_time from by_microcourse
+    </sql>
+
+    <select id="selectByMicrocourseList" parameterType="ByMicrocourse" resultMap="ByMicrocourseResult">
+        <include refid="selectByMicrocourseVo"/>
+        <where>
+            <if test="title != null  and title != ''">and title = #{title}</if>
+            <if test="author != null  and author != ''">and author = #{author}</if>
+            <if test="contents != null  and contents != ''">and contents = #{contents}</if>
+            <if test="type != null  and type != ''">and type = #{type}</if>
+            <if test="scpoe != null  and scpoe != ''">and scpoe = #{scpoe}</if>
+            <if test="upanddown != null  and upanddown != ''">and upanddown = #{upanddown}</if>
+        </where>
+        order by sort
+    </select>
+
+    <select id="selectByMicrocourseById" parameterType="Long" resultMap="ByMicrocourseResult">
+        <include refid="selectByMicrocourseVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertByMicrocourse" parameterType="ByMicrocourse" useGeneratedKeys="true" keyProperty="id">
+        insert into by_microcourse
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="title != null  and title != ''">title,</if>
+            <if test="author != null  and author != ''">author,</if>
+            <if test="contents != null  and contents != ''">contents,</if>
+            <if test="type != null  and type != ''">type,</if>
+            <if test="scpoe != null  and scpoe != ''">scpoe,</if>
+            <if test="upanddown != null  and upanddown != ''">upanddown,</if>
+            <if test="sort != null ">sort,</if>
+            <if test="createTime != null ">create_time,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="title != null  and title != ''">#{title},</if>
+            <if test="author != null  and author != ''">#{author},</if>
+            <if test="contents != null  and contents != ''">#{contents},</if>
+            <if test="type != null  and type != ''">#{type},</if>
+            <if test="scpoe != null  and scpoe != ''">#{scpoe},</if>
+            <if test="upanddown != null  and upanddown != ''">#{upanddown},</if>
+            <if test="sort != null ">#{sort},</if>
+            <if test="createTime != null ">#{createTime},</if>
+        </trim>
+    </insert>
+
+    <update id="updateByMicrocourse" parameterType="ByMicrocourse">
+        update by_microcourse
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="title != null  and title != ''">title = #{title},</if>
+            <if test="author != null  and author != ''">author = #{author},</if>
+            <if test="contents != null  and contents != ''">contents = #{contents},</if>
+            <if test="type != null  and type != ''">type = #{type},</if>
+            <if test="scpoe != null  and scpoe != ''">scpoe = #{scpoe},</if>
+            <if test="upanddown != null  and upanddown != ''">upanddown = #{upanddown},</if>
+            <if test="sort != null ">sort = #{sort},</if>
+            <if test="createTime != null ">create_time = #{createTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteByMicrocourseById" parameterType="Long">
+        delete from by_microcourse where id = #{id}
+    </delete>
+
+    <delete id="deleteByMicrocourseByIds" parameterType="String">
+        delete from by_microcourse where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+</mapper>
