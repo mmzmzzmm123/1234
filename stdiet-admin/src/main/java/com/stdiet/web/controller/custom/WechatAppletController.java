@@ -523,8 +523,8 @@ public class WechatAppletController extends BaseController {
     }
 
     @GetMapping("/server")
-    public Boolean authServer(@RequestParam String signature, @RequestParam String timestamp, @RequestParam String nonce, @RequestParam String echostr) {
-        return true;
+    public String authServer(@RequestParam String signature, @RequestParam String timestamp, @RequestParam String nonce, @RequestParam String echostr) {
+        return "success";
     }
 
 
