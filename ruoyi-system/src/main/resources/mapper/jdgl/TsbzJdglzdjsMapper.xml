@@ -16,24 +16,26 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </resultMap>
 
     <sql id="selectTsbzJdglzdjsVo">
-        select id, jdid, name, rwtype, sctime, scpath, create_userid, create_time from tsbz_jdglzdjs
+        select a.id, a.jdid, a.name, a.rwtype, a.sctime, a.scpath, a.create_userid, a.create_time, c.zcrid as zcrid, c.jdtype as jdtype from tsbz_jdglzdjs a
+        LEFT JOIN sys_user b on b.user_id=a.create_userid
+        LEFT JOIN tsbz_zcrjdcj c on c.id=a.jdid
     </sql>
 
     <select id="selectTsbzJdglzdjsList" parameterType="TsbzJdglzdjs" resultMap="TsbzJdglzdjsResult">
         <include refid="selectTsbzJdglzdjsVo"/>
         <where>  
-            <if test="jdid != null "> and jdid = #{jdid}</if>
-            <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
-            <if test="rwtype != null  and rwtype != ''"> and rwtype = #{rwtype}</if>
-            <if test="sctime != null "> and sctime = #{sctime}</if>
-            <if test="scpath != null  and scpath != ''"> and scpath = #{scpath}</if>
-            <if test="createUserid != null "> and create_userid = #{createUserid}</if>
+            <if test="jdid != null "> and a.jdid = #{jdid}</if>
+            <if test="name != null  and name != ''"> and a.name like concat('%', #{name}, '%')</if>
+            <if test="rwtype != null  and rwtype != ''"> and a.rwtype = #{rwtype}</if>
+            <if test="sctime != null "> and a.sctime = #{sctime}</if>
+            <if test="scpath != null  and scpath != ''"> and a.scpath = #{scpath}</if>
+            <if test="createUserid != null "> and a.create_userid = #{createUserid}</if>
         </where>
     </select>
     
     <select id="selectTsbzJdglzdjsById" parameterType="Long" resultMap="TsbzJdglzdjsResult">
         <include refid="selectTsbzJdglzdjsVo"/>
-        where id = #{id}
+        where a.id = #{id}
     </select>
         
     <insert id="insertTsbzJdglzdjs" parameterType="TsbzJdglzdjs" useGeneratedKeys="true" keyProperty="id">

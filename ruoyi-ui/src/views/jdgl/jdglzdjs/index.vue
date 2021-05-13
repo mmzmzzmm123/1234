@@ -7,16 +7,6 @@
       v-show="showSearch"
       label-width="68px"
     >
-      <el-form-item label="基地编号" prop="jdid">
-        <el-select
-          v-model="queryParams.jdid"
-          placeholder="请选择基地编号"
-          clearable
-          size="small"
-        >
-          <el-option label="请选择字典生成" value="" />
-        </el-select>
-      </el-form-item>
       <el-form-item label="任务类型" prop="rwtype">
         <el-select
           v-model="queryParams.rwtype"
@@ -91,14 +81,24 @@
       @selection-change="handleSelectionChange"
     >
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="编号" align="center" prop="id" />
-      <el-table-column label="基地编号" align="center" prop="jdid" />
       <el-table-column label="信息文件名称" align="center" prop="name" />
       <el-table-column
         label="任务类型"
         align="center"
         prop="rwtype"
         :formatter="rwtypeFormat"
+      />
+      <el-table-column
+        label="基地类型"
+        align="center"
+        prop="jdtype"
+        :formatter="jdtypeFormat"
+      />
+      <el-table-column
+        label="基地主持人"
+        align="center"
+        prop="zcrid"
+        :formatter="zcrFormat"
       />
       <el-table-column
         label="上传时间"
@@ -147,11 +147,6 @@
     <!-- 添加或修改基地管理制度建设对话框 -->
     <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
-        <el-form-item label="基地编号" prop="jdid">
-          <el-select v-model="form.jdid" placeholder="请选择基地编号">
-            <el-option label="请选择字典生成" value="" />
-          </el-select>
-        </el-form-item>
         <el-form-item label="任务类型" prop="rwtype">
           <el-select v-model="form.rwtype" placeholder="请选择任务类型">
             <el-option
@@ -198,6 +193,15 @@ import {
   updateJdglzdjs,
   exportJdglzdjs,
 } from "@/api/jdgl/jdglzdjs";
+import {
+  listZcrjdcj,
+  getZcrjdcj,
+  delZcrjdcj,
+  addZcrjdcj,
+  updateZcrjdcj,
+  exportZcrjdcj,
+} from "@/api/zcrpsgl/zcrjdcj";
+import { listJsjbxx, getJsjbxx } from "@/api/qtjs/jsjbxx";
 import { getToken } from "@/utils/auth";
 
 export default {
@@ -226,6 +230,12 @@ export default {
       open: false,
       // 任务类型字典
       rwtypeOptions: [],
+      // 主持人选项
+      zcrOptions: [],
+      // 主持人基地list
+      zcrjdcjList: [],
+      // 基地类别字典
+      jdtypeOptions: [],
       // 查询参数
       queryParams: {
         pageNum: 1,
@@ -236,6 +246,8 @@ export default {
         sctime: null,
         scpath: null,
         createUserid: null,
+        zcrid: null,
+        jdtype: null,
       },
       // 表单参数
       form: {},
@@ -249,6 +261,11 @@ export default {
   },
   created() {
     this.getList();
+    this.getZcrjdList();
+    this.getZcrList();
+    this.getDicts("sys_dm_zcrjdtype").then((response) => {
+      this.jdtypeOptions = response.data;
+    });
     this.getDicts("sys_dm_zdjsrwtype").then((response) => {
       this.rwtypeOptions = response.data;
     });
@@ -263,9 +280,49 @@ export default {
         this.loading = false;
       });
     },
+    /** 查询主持人基地列表 */
+    getZcrjdList() {
+      listZcrjdcj(null).then((response) => {
+        this.zcrjdcjList = response.rows;
+      });
+    },
+    /** 查询主持人列表 */
+    getZcrList() {
+      listJsjbxx(null).then((response) => {
+        this.zcrOptions = response.rows;
+      });
+    },
     // 任务类型字典翻译
     rwtypeFormat(row, column) {
       return this.selectDictLabel(this.rwtypeOptions, row.rwtype);
+    },
+    // 基地类别字典翻译
+    jdtypeFormat(row, column) {
+      return this.selectDictLabel(this.jdtypeOptions, row.jdtype);
+    },
+    // 基地字典翻译
+    zcrjdFormat(row, column) {
+      var actions = [];
+      var datas = this.zcrjdcjList;
+      Object.keys(datas).map((key) => {
+        if (datas[key].id == "" + row.jdid) {
+          actions.push(datas[key].name);
+          return false;
+        }
+      });
+      return actions.join("");
+    },
+    // 主持人字典翻译
+    zcrFormat(row, column) {
+      var actions = [];
+      var datas = this.zcrOptions;
+      Object.keys(datas).map((key) => {
+        if (datas[key].id == "" + row.zcrid) {
+          actions.push(datas[key].jsxm);
+          return false;
+        }
+      });
+      return actions.join("");
     },
     // 取消按钮
     cancel() {
@@ -283,8 +340,11 @@ export default {
         scpath: null,
         createUserid: null,
         createTime: null,
+        zcrid: null,
+        jdtype: null,
       };
       this.resetForm("form");
+      this.fileList = [];
     },
     // 文件上传
     handlePreview(file) {
@@ -347,6 +407,10 @@ export default {
       const id = row.id || this.ids;
       getJdglzdjs(id).then((response) => {
         this.form = response.data;
+        this.fileList.push({
+          name: response.data.name,
+          url: response.data.scpath,
+        });
         this.open = true;
         this.title = "修改基地管理制度建设";
       });

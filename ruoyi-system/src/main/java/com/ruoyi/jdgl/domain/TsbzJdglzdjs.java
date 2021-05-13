@@ -50,6 +50,25 @@ public class TsbzJdglzdjs extends BaseEntity
     @Excel(name = "创建时间", width = 30, dateFormat = "yyyy-MM-dd")
     private Date createTime;
 
+    public Long getZcrid() {
+        return zcrid;
+    }
+
+    public void setZcrid(Long zcrid) {
+        this.zcrid = zcrid;
+    }
+
+    public String getJdtype() {
+        return jdtype;
+    }
+
+    public void setJdtype(String jdtype) {
+        this.jdtype = jdtype;
+    }
+
+    private Long zcrid;
+    private String jdtype;
+
     public void setId(Long id) 
     {
         this.id = id;
@@ -125,6 +144,8 @@ public class TsbzJdglzdjs extends BaseEntity
             .append("scpath", getScpath())
             .append("createUserid", getCreateUserid())
             .append("createTime", getCreateTime())
+            .append("zcrid", getZcrid())
+            .append("jdtype", getJdtype())
             .toString();
     }
 

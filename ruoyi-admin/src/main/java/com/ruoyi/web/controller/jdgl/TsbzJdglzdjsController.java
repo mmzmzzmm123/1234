@@ -4,6 +4,8 @@ import java.util.Date;
 import java.util.List;
 
 import com.ruoyi.common.utils.SecurityUtils;
+import com.ruoyi.zcrpsgl.domain.TsbzZcrjdcj;
+import com.ruoyi.zcrpsgl.service.ITsbzZcrjdcjService;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -35,6 +37,8 @@ public class TsbzJdglzdjsController extends BaseController
 {
     @Autowired
     private ITsbzJdglzdjsService tsbzJdglzdjsService;
+    @Autowired
+    private ITsbzZcrjdcjService tsbzZcrjdcjService;
 
     /**
      * 查询基地管理制度建设列表
@@ -43,7 +47,7 @@ public class TsbzJdglzdjsController extends BaseController
     @GetMapping("/list")
     public TableDataInfo list(TsbzJdglzdjs tsbzJdglzdjs)
     {
-
+        tsbzJdglzdjs.setCreateUserid(SecurityUtils.getLoginUser().getUser().getUserId());
         startPage();
         List<TsbzJdglzdjs> list = tsbzJdglzdjsService.selectTsbzJdglzdjsList(tsbzJdglzdjs);
         return getDataTable(list);
@@ -80,10 +84,23 @@ public class TsbzJdglzdjsController extends BaseController
     @PostMapping
     public AjaxResult add(@RequestBody TsbzJdglzdjs tsbzJdglzdjs)
     {
-        tsbzJdglzdjs.setCreateUserid(SecurityUtils.getLoginUser().getUser().getUserId());
-        tsbzJdglzdjs.setSctime(new Date());
-        tsbzJdglzdjs.setCreateTime(new Date());
-        return toAjax(tsbzJdglzdjsService.insertTsbzJdglzdjs(tsbzJdglzdjs));
+        AjaxResult ajax = AjaxResult.success();
+
+        TsbzZcrjdcj tsbzZcrjdcj = new TsbzZcrjdcj();
+        tsbzZcrjdcj.setCreateUserid(SecurityUtils.getLoginUser().getUser().getUserId());
+        List<TsbzZcrjdcj> jdcjList = tsbzZcrjdcjService.selectTsbzZcrjdcjList(tsbzZcrjdcj);
+        if (jdcjList.size()>0) {
+            tsbzJdglzdjs.setJdid(jdcjList.get(0).getId());
+            tsbzJdglzdjs.setCreateUserid(SecurityUtils.getLoginUser().getUser().getUserId());
+            tsbzJdglzdjs.setSctime(new Date());
+            tsbzJdglzdjs.setCreateTime(new Date());
+            tsbzJdglzdjsService.insertTsbzJdglzdjs(tsbzJdglzdjs);
+            return ajax;
+        }else {
+            return AjaxResult.error("当前用户没有基地,无法新增制度建设");
+        }
+
+
     }
 
     /**
