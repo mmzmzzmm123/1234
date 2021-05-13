@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.jdgl.mapper.TsbzJdglhdglMapper">
+    
+    <resultMap type="TsbzJdglhdgl" id="TsbzJdglhdglResult">
+        <result property="id"    column="id"    />
+        <result property="jdid"    column="jdid"    />
+        <result property="name"    column="name"    />
+        <result property="hdtype"    column="hdtype"    />
+        <result property="hdtime"    column="hdtime"    />
+        <result property="hddd"    column="hddd"    />
+        <result property="scpath"    column="scpath"    />
+        <result property="createUserid"    column="create_userid"    />
+        <result property="createTime"    column="create_time"    />
+    </resultMap>
+
+    <sql id="selectTsbzJdglhdglVo">
+        select id, jdid, name, hdtype, hdtime, hddd, scpath, create_userid, create_time from tsbz_jdglhdgl
+    </sql>
+
+    <select id="selectTsbzJdglhdglList" parameterType="TsbzJdglhdgl" resultMap="TsbzJdglhdglResult">
+        <include refid="selectTsbzJdglhdglVo"/>
+        <where>  
+            <if test="jdid != null "> and jdid = #{jdid}</if>
+            <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
+            <if test="hdtype != null  and hdtype != ''"> and hdtype = #{hdtype}</if>
+            <if test="hdtime != null "> and hdtime = #{hdtime}</if>
+            <if test="hddd != null  and hddd != ''"> and hddd = #{hddd}</if>
+            <if test="scpath != null  and scpath != ''"> and scpath = #{scpath}</if>
+            <if test="createUserid != null "> and create_userid = #{createUserid}</if>
+        </where>
+    </select>
+    
+    <select id="selectTsbzJdglhdglById" parameterType="Long" resultMap="TsbzJdglhdglResult">
+        <include refid="selectTsbzJdglhdglVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertTsbzJdglhdgl" parameterType="TsbzJdglhdgl" useGeneratedKeys="true" keyProperty="id">
+        insert into tsbz_jdglhdgl
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="jdid != null">jdid,</if>
+            <if test="name != null">name,</if>
+            <if test="hdtype != null">hdtype,</if>
+            <if test="hdtime != null">hdtime,</if>
+            <if test="hddd != null">hddd,</if>
+            <if test="scpath != null">scpath,</if>
+            <if test="createUserid != null">create_userid,</if>
+            <if test="createTime != null">create_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="jdid != null">#{jdid},</if>
+            <if test="name != null">#{name},</if>
+            <if test="hdtype != null">#{hdtype},</if>
+            <if test="hdtime != null">#{hdtime},</if>
+            <if test="hddd != null">#{hddd},</if>
+            <if test="scpath != null">#{scpath},</if>
+            <if test="createUserid != null">#{createUserid},</if>
+            <if test="createTime != null">#{createTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateTsbzJdglhdgl" parameterType="TsbzJdglhdgl">
+        update tsbz_jdglhdgl
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="jdid != null">jdid = #{jdid},</if>
+            <if test="name != null">name = #{name},</if>
+            <if test="hdtype != null">hdtype = #{hdtype},</if>
+            <if test="hdtime != null">hdtime = #{hdtime},</if>
+            <if test="hddd != null">hddd = #{hddd},</if>
+            <if test="scpath != null">scpath = #{scpath},</if>
+            <if test="createUserid != null">create_userid = #{createUserid},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteTsbzJdglhdglById" parameterType="Long">
+        delete from tsbz_jdglhdgl where id = #{id}
+    </delete>
+
+    <delete id="deleteTsbzJdglhdglByIds" parameterType="String">
+        delete from tsbz_jdglhdgl where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+</mapper>
