@@ -24,6 +24,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
@@ -523,10 +524,10 @@ public class WechatAppletController extends BaseController {
     }
 
     @GetMapping("/authServer")
-    public String authServer(@RequestParam String signature, @RequestParam String timestamp, @RequestParam String nonce, @RequestParam String echostr) {
+    public String authServer(HttpServletRequest request) {
 //        String token = "shengtang";
 //        String encodingAESKey = "DsZDa8UQs2B0BUF31RNBexGrCEXMwa4z2uONuJmVKFW";
-        return echostr;
+        return request.getParameter("echostr");
     }
 
 
