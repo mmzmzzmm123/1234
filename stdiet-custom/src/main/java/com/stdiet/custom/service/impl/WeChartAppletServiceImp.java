@@ -38,13 +38,15 @@ public class WeChartAppletServiceImp implements IWechatAppletService {
 
             ResponseEntity<String> entity = restTemplate.getForEntity(url, String.class, param);
 
-            JSONObject resultObj = JSONObject.parseObject(entity.getBody());
+            return entity.getBody();
 
-            if (resultObj.getInteger("errcode") == 0) {
-                accessToken = resultObj.getString("access_token");
-                Integer expiresIn = resultObj.getInteger("expires_in");
-                redisCache.setCacheObject(appId, accessToken, expiresIn, TimeUnit.SECONDS);
-            }
+//            JSONObject resultObj = JSONObject.parseObject(entity.getBody());
+//
+//            if (resultObj.getInteger("errcode") == 0) {
+//                accessToken = resultObj.getString("access_token");
+//                Integer expiresIn = resultObj.getInteger("expires_in");
+//                redisCache.setCacheObject(appId, accessToken, expiresIn, TimeUnit.SECONDS);
+//            }
         }
         return accessToken;
     }
