@@ -1,8 +1,11 @@
 package com.stdiet.framework.config;
 
 import javax.servlet.http.HttpServletRequest;
+
+import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
 import com.stdiet.common.utils.ServletUtils;
+import org.springframework.web.client.RestTemplate;
 
 /**
  * 服务相关配置
@@ -28,5 +31,10 @@ public class ServerConfig
         StringBuffer url = request.getRequestURL();
         String contextPath = request.getServletContext().getContextPath();
         return url.delete(url.length() - request.getRequestURI().length(), url.length()).append(contextPath).toString();
+    }
+
+    @Bean
+    public RestTemplate restTemplate() {
+        return new RestTemplate();
     }
 }
