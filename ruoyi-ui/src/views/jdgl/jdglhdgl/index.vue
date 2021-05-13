@@ -1,24 +1,6 @@
 <template>
   <div class="app-container">
     <el-form :model="queryParams" ref="queryForm" :inline="true" v-show="showSearch" label-width="68px">
-      <el-form-item label="基地编号" prop="jdid">
-        <el-input
-          v-model="queryParams.jdid"
-          placeholder="请输入基地编号"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="活动名称" prop="name">
-        <el-input
-          v-model="queryParams.name"
-          placeholder="请输入活动名称"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
       <el-form-item label="活动类型" prop="hdtype">
         <el-select v-model="queryParams.hdtype" placeholder="请选择活动类型" clearable size="small">
           <el-option
@@ -28,41 +10,6 @@
             :value="dict.dictValue"
           />
         </el-select>
-      </el-form-item>
-      <el-form-item label="活动时间" prop="hdtime">
-        <el-date-picker clearable size="small" style="width: 200px"
-          v-model="queryParams.hdtime"
-          type="date"
-          value-format="yyyy-MM-dd"
-          placeholder="选择活动时间">
-        </el-date-picker>
-      </el-form-item>
-      <el-form-item label="活动地点" prop="hddd">
-        <el-input
-          v-model="queryParams.hddd"
-          placeholder="请输入活动地点"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="上传路径" prop="scpath">
-        <el-input
-          v-model="queryParams.scpath"
-          placeholder="请输入上传路径"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="创建人" prop="createUserid">
-        <el-input
-          v-model="queryParams.createUserid"
-          placeholder="请输入创建人"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
       </el-form-item>
       <el-form-item>
         <el-button type="cyan" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
@@ -100,32 +47,20 @@
           v-hasPermi="['jdgl:jdglhdgl:remove']"
         >删除</el-button>
       </el-col>
-      <el-col :span="1.5">
-        <el-button
-          type="warning"
-          icon="el-icon-download"
-          size="mini"
-          @click="handleExport"
-          v-hasPermi="['jdgl:jdglhdgl:export']"
-        >导出</el-button>
-      </el-col>
 	  <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
     </el-row>
 
     <el-table v-loading="loading" :data="jdglhdglList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="编号" align="center" prop="id" />
-      <el-table-column label="基地编号" align="center" prop="jdid" />
       <el-table-column label="活动名称" align="center" prop="name" />
       <el-table-column label="活动类型" align="center" prop="hdtype" :formatter="hdtypeFormat" />
+      <el-table-column label="基地名称" align="center" prop="jdid" />
       <el-table-column label="活动时间" align="center" prop="hdtime" width="180">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.hdtime, '{y}-{m}-{d}') }}</span>
         </template>
       </el-table-column>
       <el-table-column label="活动地点" align="center" prop="hddd" :formatter="hdddFormat" />
-      <el-table-column label="上传路径" align="center" prop="scpath" />
-      <el-table-column label="创建人" align="center" prop="createUserid" />
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button
@@ -157,12 +92,6 @@
     <!-- 添加或修改基地管理活动管理对话框 -->
     <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
-        <el-form-item label="基地编号" prop="jdid">
-          <el-input v-model="form.jdid" placeholder="请输入基地编号" />
-        </el-form-item>
-        <el-form-item label="活动名称" prop="name">
-          <el-input v-model="form.name" placeholder="请输入活动名称" />
-        </el-form-item>
         <el-form-item label="活动类型" prop="hdtype">
           <el-select v-model="form.hdtype" placeholder="请选择活动类型">
             <el-option
@@ -182,13 +111,32 @@
           </el-date-picker>
         </el-form-item>
         <el-form-item label="活动地点" prop="hddd">
-          <el-input v-model="form.hddd" placeholder="请输入活动地点" />
+          <el-select v-model="form.hddd" placeholder="请选择活动地点">
+            <el-option
+              v-for="dict in hdddOptions"
+              :key="dict.dictValue"
+              :label="dict.dictLabel"
+              :value="dict.dictValue"
+            ></el-option>
+          </el-select>
         </el-form-item>
-        <el-form-item label="上传路径" prop="scpath">
-          <el-input v-model="form.scpath" placeholder="请输入上传路径" />
-        </el-form-item>
-        <el-form-item label="创建人" prop="createUserid">
-          <el-input v-model="form.createUserid" placeholder="请输入创建人" />
+        <el-form-item label="上传文件" prop="scpath">
+          <el-input v-model="form.name" v-if="false" />
+          <el-input v-model="form.scpath" v-if="false" />
+          <el-upload
+            class="upload-demo"
+            :action="uploadFileUrl"
+            :headers="headers"
+            :on-preview="handlePreview"
+            :on-remove="handleRemove"
+            :before-remove="beforeRemove"
+            :limit="1"
+            :on-exceed="handleExceed"
+            :file-list="fileList"
+            :on-success="handleAvatarSuccess"
+          >
+            <el-button size="small" type="primary">选择文件</el-button>
+          </el-upload>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -201,6 +149,7 @@
 
 <script>
 import { listJdglhdgl, getJdglhdgl, delJdglhdgl, addJdglhdgl, updateJdglhdgl, exportJdglhdgl } from "@/api/jdgl/jdglhdgl";
+import { getToken } from "@/utils/auth";
 
 export default {
   name: "Jdglhdgl",
@@ -228,6 +177,8 @@ export default {
       hdtypeOptions: [],
       // 活动地点字典
       hdddOptions: [],
+      // 上传文件list
+      fileList: [],
       // 查询参数
       queryParams: {
         pageNum: 1,
@@ -244,7 +195,11 @@ export default {
       form: {},
       // 表单校验
       rules: {
-      }
+      },
+      uploadFileUrl: process.env.VUE_APP_BASE_API + "/common/upload", // 上传的图片服务器地址
+      headers: {
+        Authorization: "Bearer " + getToken(),
+      },
     };
   },
   created() {
@@ -274,6 +229,39 @@ export default {
     hdddFormat(row, column) {
       return this.selectDictLabel(this.hdddOptions, row.hddd);
     },
+    // 文件上传
+    handlePreview(file) {
+      //console.log(file);
+    },
+    // 文件上传移除
+    handleRemove(file, fileList) {
+      // console.log(file);
+      if (file.response.code == "200") {
+        this.form.scpath = "";
+      }
+    },
+    // 文件上传 弹窗
+    beforeRemove(file, fileList) {
+      return this.$confirm(`确定移除 ${file.name}？`);
+    },
+    // 文件上传  限制
+    handleExceed(files, fileList) {
+      this.$message.warning(
+        `当前限制选择 1 个文件，本次选择了 ${files.length} 个文件，共选择了 ${
+          files.length + fileList.length
+        } 个文件`
+      );
+    },
+    // 文件上传 成功钩子
+    handleAvatarSuccess(res, file) {
+      // console.log(res, file);
+      if (res.code == "200") {
+        this.form.scpath = res.fileName;
+        this.form.name = file.name;
+      } else {
+        this.msgError(res.msg);
+      }
+    },
     // 取消按钮
     cancel() {
       this.open = false;
@@ -293,6 +281,7 @@ export default {
         createTime: null
       };
       this.resetForm("form");
+      this.fileList = [];
     },
     /** 搜索按钮操作 */
     handleQuery() {
@@ -322,6 +311,10 @@ export default {
       const id = row.id || this.ids
       getJdglhdgl(id).then(response => {
         this.form = response.data;
+        this.fileList.push({
+          name: response.data.name,
+          url: response.data.scpath,
+        });
         this.open = true;
         this.title = "修改基地管理活动管理";
       });
@@ -364,19 +357,6 @@ export default {
           this.msgSuccess("删除成功");
         }).catch(function() {});
     },
-    /** 导出按钮操作 */
-    handleExport() {
-      const queryParams = this.queryParams;
-      this.$confirm('是否确认导出所有基地管理活动管理数据项?', "警告", {
-          confirmButtonText: "确定",
-          cancelButtonText: "取消",
-          type: "warning"
-        }).then(function() {
-          return exportJdglhdgl(queryParams);
-        }).then(response => {
-          this.download(response.msg);
-        }).catch(function() {});
-    }
   }
 };
 </script>
