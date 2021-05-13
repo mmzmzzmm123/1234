@@ -23,8 +23,8 @@
     <select id="selectByMicrocourseList" parameterType="ByMicrocourse" resultMap="ByMicrocourseResult">
         <include refid="selectByMicrocourseVo"/>
         <where>
-            <if test="title != null  and title != ''">and title = #{title}</if>
-            <if test="author != null  and author != ''">and author = #{author}</if>
+            <if test="title != null  and title != ''">and title like concat('%', #{title}, '%')</if>
+            <if test="author != null  and author != ''">and author like concat('%', #{author}, '%')</if>
             <if test="contents != null  and contents != ''">and contents = #{contents}</if>
             <if test="type != null  and type != ''">and type = #{type}</if>
             <if test="scpoe != null  and scpoe != ''">and scpoe = #{scpoe}</if>

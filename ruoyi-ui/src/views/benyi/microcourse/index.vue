@@ -6,60 +6,42 @@
       :inline="true"
       label-width="70px"
     >
-      <el-form-item label="标题" prop="title">
+      <el-form-item label="课程标题" prop="title">
         <el-input
           v-model="queryParams.title"
-          placeholder="请输入标题"
+          placeholder="请输入课程标题"
           clearable
           size="small"
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="作者" prop="author">
-        <el-input
-          v-model="queryParams.author"
-          placeholder="请输入作者"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="内容" prop="contents">
-        <el-input
-          v-model="queryParams.contents"
-          placeholder="请输入内容"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="类型" prop="type">
+      <el-form-item label="课程类型" prop="type">
         <el-select
           v-model="queryParams.type"
-          placeholder="请选择类型"
           clearable
-          size="small"
+          placeholder="请选择课程类型"
         >
-          <el-option label="请选择字典生成" value="" />
+          <el-option
+            v-for="dict in typeOptions"
+            :key="dict.dictValue"
+            :label="dict.dictLabel"
+            :value="dict.dictValue"
+          />
         </el-select>
       </el-form-item>
-      <el-form-item label="适用范围" prop="scpoe">
-        <el-input
+      <el-form-item label="适用班级" prop="scpoe">
+        <el-select
           v-model="queryParams.scpoe"
-          placeholder="请输入适用范围"
           clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="上下册" prop="upanddown">
-        <el-input
-          v-model="queryParams.upanddown"
-          placeholder="请输入上下册"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
+          placeholder="请选择适用班级"
+        >
+          <el-option
+            v-for="dict in bjtypeOptions"
+            :key="dict.dictValue"
+            :label="dict.dictLabel"
+            :value="dict.dictValue"
+          />
+        </el-select>
       </el-form-item>
       <el-form-item>
         <el-button
@@ -116,13 +98,13 @@
       @selection-change="handleSelectionChange"
     >
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="编号" align="center" prop="id" />
-      <el-table-column label="标题" align="center" prop="title" />
+      <!-- <el-table-column label="编号" align="center" prop="id" /> -->
+      <el-table-column label="课程标题" align="center" prop="title" />
       <el-table-column label="作者" align="center" prop="author" />
-      <el-table-column label="内容" align="center" prop="contents" />
-      <el-table-column label="类型" align="center" prop="type" />
-      <el-table-column label="适用范围" align="center" prop="scpoe" />
-      <el-table-column label="上下册" align="center" prop="upanddown" />
+      <!-- <el-table-column label="内容" align="center" prop="contents" /> -->
+      <el-table-column label="课程类型" align="center" prop="type" :formatter="typeFormat" />
+      <el-table-column label="适用班级" align="center" prop="scpoe" :formatter="bjtypeFormat" />
+      <el-table-column label="上下册" align="center" prop="upanddown" :formatter="upanddownFormat" />
       <el-table-column
         label="操作"
         align="center"
@@ -158,30 +140,49 @@
     />
 
     <!-- 添加或修改微型课程对话框 -->
-    <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
+    <el-dialog :title="title" :visible.sync="open" width="800px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
-        <el-form-item label="标题" prop="title">
-          <el-input v-model="form.title" placeholder="请输入标题" />
+        <el-form-item label="课程标题" prop="title">
+          <el-input v-model="form.title" placeholder="请输入课程标题" />
         </el-form-item>
         <el-form-item label="作者" prop="author">
           <el-input v-model="form.author" placeholder="请输入作者" />
         </el-form-item>
         <el-form-item label="内容" prop="contents">
-          <el-input v-model="form.contents" placeholder="请输入内容" />
+          <Editor v-model="form.contents" placeholder="请输入内容" />
         </el-form-item>
-        <el-form-item label="类型">
-          <el-select v-model="form.type" placeholder="请选择类型">
-            <el-option label="请选择字典生成" value="" />
+        <el-form-item label="课程类型">
+          <el-select v-model="form.type" placeholder="请选择课程类型">
+            <el-option
+              v-for="dict in typeOptions"
+              :key="dict.dictValue"
+              :label="dict.dictLabel"
+              :value="dict.dictValue"
+            />
           </el-select>
         </el-form-item>
-        <el-form-item label="适用范围" prop="scpoe">
-          <el-input v-model="form.scpoe" placeholder="请输入适用范围" />
+        <el-form-item label="适用班级" prop="scpoe">
+          <el-select v-model="form.scpoe" placeholder="请选择适用班级">
+            <el-option
+              v-for="dict in bjtypeOptions"
+              :key="dict.dictValue"
+              :label="dict.dictLabel"
+              :value="dict.dictValue"
+            />
+          </el-select>
         </el-form-item>
         <el-form-item label="上下册" prop="upanddown">
-          <el-input v-model="form.upanddown" placeholder="请输入上下册" />
+          <el-select v-model="form.upanddown" placeholder="请选择上下册">
+            <el-option
+              v-for="dict in upanddownOptions"
+              :key="dict.dictValue"
+              :label="dict.dictLabel"
+              :value="dict.dictValue"
+            />
+          </el-select>
         </el-form-item>
         <el-form-item label="序号" prop="sort">
-          <el-input v-model="form.sort" placeholder="请输入序号" />
+          <el-input-number v-model="form.sort" placeholder="请输入序号" />
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -200,9 +201,13 @@ import {
   addMicrocourse,
   updateMicrocourse,
 } from "@/api/benyi/microcourse";
+import Editor from "@/components/Editor";
 
 export default {
   name: "Microcourse",
+  components: {
+    Editor,
+  },
   data() {
     return {
       // 遮罩层
@@ -217,6 +222,12 @@ export default {
       total: 0,
       // 微型课程表格数据
       microcourseList: [],
+      //微型课程类型
+      typeOptions: [],
+      //微型课程上下册
+      upanddownOptions: [],
+      //班级类型 字典
+      bjtypeOptions: [],
       // 弹出层标题
       title: "",
       // 是否显示弹出层
@@ -241,8 +252,29 @@ export default {
   },
   created() {
     this.getList();
+    this.getDicts("sys_dm_wxkclx").then((response) => {
+      this.typeOptions = response.data;
+    });
+    this.getDicts("sys_dm_wxkcsxc").then((response) => {
+      this.upanddownOptions = response.data;
+    });
+    this.getDicts("sys_yebjlx").then((response) => {
+      this.bjtypeOptions = response.data;
+    });
   },
   methods: {
+    // 班级类型--字典状态字典翻译
+    typeFormat(row, column) {
+      return this.selectDictLabel(this.typeOptions, row.type);
+    },
+    // 班级类型--字典状态字典翻译
+    upanddownFormat(row, column) {
+      return this.selectDictLabel(this.upanddownOptions, row.upanddown);
+    },
+    // 班级类型--字典状态字典翻译
+    bjtypeFormat(row, column) {
+      return this.selectDictLabel(this.bjtypeOptions, row.scpoe);
+    },
     /** 查询微型课程列表 */
     getList() {
       this.loading = true;
