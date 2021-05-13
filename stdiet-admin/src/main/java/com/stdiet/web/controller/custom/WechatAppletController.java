@@ -526,7 +526,7 @@ public class WechatAppletController extends BaseController {
     @GetMapping("/authServer")
     public String authServer(HttpServletRequest request) {
 //        String token = "shengtang";
-//        String encodingAESKey = "DsZDa8UQs2B0BUF31RNBexGrCEXMwa4z2uONuJmVKFW";
+//        String encodingAESKey = "i483gAY6KM0Ty5ij245U08jLhROxateWvg0LPjYLprS";
         return request.getParameter("echostr");
     }
 
