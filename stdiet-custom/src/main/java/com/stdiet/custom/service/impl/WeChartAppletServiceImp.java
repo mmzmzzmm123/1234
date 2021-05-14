@@ -24,7 +24,7 @@ public class WeChartAppletServiceImp implements IWechatAppletService {
     private RestTemplate restTemplate;
 
     @Override
-    public String getAccessToken(String appId) {
+    public String getAccessToken(String appId) throws Exception {
         String accessToken = redisCache.getCacheObject(appId);
         if (StringUtils.isNull(accessToken)) {
             String appSecret = "";
@@ -38,19 +38,18 @@ public class WeChartAppletServiceImp implements IWechatAppletService {
 
             ResponseEntity<String> entity = restTemplate.getForEntity(url, String.class, param);
 
+
             JSONObject resultObj = JSONObject.parseObject(entity.getBody());
 
-            if (resultObj.getInteger("errcode") == 0) {
-                accessToken = resultObj.getString("access_token");
-                Integer expiresIn = resultObj.getInteger("expires_in");
-                redisCache.setCacheObject(appId, accessToken, expiresIn, TimeUnit.SECONDS);
-            }
+            accessToken = resultObj.getString("access_token");
+            Integer expiresIn = resultObj.getInteger("expires_in");
+            redisCache.setCacheObject(appId, accessToken, expiresIn, TimeUnit.SECONDS);
         }
         return accessToken;
     }
 
     @Override
-    public void postRecipesMessage(String appId, String openId, String name, String startDate, String endDate, String remark) {
+    public void postRecipesMessage(String appId, String openId, String name, String startDate, String endDate, String remark) throws Exception {
         String accessToken = getAccessToken(appId);
         if (StringUtils.isNull(accessToken)) {
             return;

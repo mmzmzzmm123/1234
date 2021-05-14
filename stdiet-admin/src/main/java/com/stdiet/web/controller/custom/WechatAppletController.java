@@ -534,7 +534,7 @@ public class WechatAppletController extends BaseController {
     }
 
     @GetMapping("/getToken")
-    public String getToken(@RequestParam String appId) {
+    public String getToken(@RequestParam String appId) throws Exception {
         return iWechatAppletService.getAccessToken(appId);
     }
 
