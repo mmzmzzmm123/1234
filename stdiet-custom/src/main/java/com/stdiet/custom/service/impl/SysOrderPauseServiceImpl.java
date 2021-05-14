@@ -98,10 +98,13 @@ public class SysOrderPauseServiceImpl implements ISysOrderPauseService
     public int deleteSysOrderPauseByIds(Long[] ids)
     {
         SysOrderPause sysOrderPause = selectSysOrderPauseById(ids[0]);
-        if(sysOrderPauseMapper.deleteSysOrderPauseByIds(ids) > 0){
-            return sysOrderService.updateOrderServerStartEndDate(sysOrderPause.getCusId());
+        int row = sysOrderPauseMapper.deleteSysOrderPauseByIds(ids);
+        if(row > 0){
+            if(sysOrderPause != null && sysOrderPause.getCusId() != null){
+                sysOrderService.updateOrderServerStartEndDate(sysOrderPause.getCusId());
+            }
         }
-        return 0;
+        return row;
     }
 
     /**

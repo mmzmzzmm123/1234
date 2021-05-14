@@ -1,0 +1,196 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.stdiet.custom.mapper.SysLiveSchedulMapper">
+
+    <resultMap type="SysLiveSchedul" id="SysLiveSchedulResult">
+        <result property="id"    column="id"    />
+        <result property="liveRoom"    column="live_room"    />
+        <result property="liveSchedulDate"    column="live_schedul_date"    />
+        <result property="liveStartTime"    column="live_start_time"    />
+        <result property="liveEndTime"    column="live_end_time"    />
+        <result property="liveNutritionistId"    column="live_nutritionist_id"    />
+        <result property="liveOperatorId"    column="live_operator_id"    />
+        <result property="livePlannerId"    column="live_planner_id"    />
+        <result property="fanChannel"    column="fan_channel"    />
+        <result property="liveStatus"    column="live_status"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="delFlag"    column="del_flag"    />
+
+        <result property="liveRoomName" column="live_room_name"></result>
+        <result property="liveNutritionistName" column="live_nutritionist_name"></result>
+        <result property="livePlannerName" column="live_planner_name"></result>
+        <result property="liveOperatorName" column="live_operator_name"></result>
+        <result property="fanChannelName"  column="fan_channel_name"></result>
+
+        <!-- 根据渠道查询对应微信号（微信账号分配表中） -->
+        <association property="wxAccountList" column="fan_channel" select="getWxAccountListByFanChannel"/>
+    </resultMap>
+
+    <resultMap type="SysLiveSchedul" id="SysLiveSchedulResultSigle">
+        <result property="id"    column="id"    />
+        <result property="liveRoom"    column="live_room"    />
+        <result property="liveSchedulDate"    column="live_schedul_date"    />
+        <result property="liveStartTime"    column="live_start_time"    />
+        <result property="liveEndTime"    column="live_end_time"    />
+        <result property="liveNutritionistId"    column="live_nutritionist_id"    />
+        <result property="liveOperatorId"    column="live_operator_id"    />
+        <result property="livePlannerId"    column="live_planner_id"    />
+        <result property="fanChannel"    column="fan_channel"    />
+        <result property="liveStatus"    column="live_status"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="delFlag"    column="del_flag"    />
+    </resultMap>
+
+    <sql id="selectSysLiveSchedulVo">
+        id, live_room, live_schedul_date,live_start_time, live_end_time, live_nutritionist_id, live_operator_id, live_planner_id, fan_channel, live_status, create_time, create_by, update_time, update_by, del_flag
+    </sql>
+
+    <select id="selectSysLiveSchedulList" parameterType="SysLiveSchedul" resultMap="SysLiveSchedulResult">
+        select
+        slc.id, slc.live_room, slc.live_schedul_date,slc.live_start_time, slc.live_end_time, slc.live_nutritionist_id, slc.live_operator_id, slc.live_planner_id, slc.fan_channel, slc.live_status, slc.create_time, slc.create_by
+        ,slt.dict_label as live_room_name,su_nutritionist.nick_name as live_nutritionist_name, su_plan.nick_name as live_planner_name,
+        su_operator.nick_name as live_operator_name,fc.dict_label as fan_channel_name
+        from sys_live_schedul slc
+        left join (SELECT dict_label, dict_value FROM sys_dict_data WHERE dict_type = 'sys_live_type') AS slt ON slt.dict_value = slc.live_room
+        left join (SELECT dict_label, dict_value FROM sys_dict_data WHERE dict_type = 'fan_channel') AS fc ON fc.dict_value = slc.fan_channel
+        left join sys_user su_nutritionist on su_nutritionist.user_id = slc.live_nutritionist_id and su_nutritionist.del_flag = 0
+        left join sys_user su_plan on su_plan.user_id = slc.live_planner_id and su_plan.del_flag = 0
+        left join sys_user su_operator on su_operator.user_id = slc.live_operator_id and su_operator.del_flag = 0
+        where slc.del_flag = 0
+        <if test="liveSchedulDate != null">
+            and date_format(slc.live_schedul_date,'%y%m%d') = date_format(#{liveSchedulDate},'%y%m%d')
+        </if>
+        <if test="liveRoom != null">
+            and slc.live_room = #{liveRoom}
+        </if>
+        <if test="fanChannel != null">
+            and slc.fan_channel = #{fanChannel}
+        </if>
+        <if test="wxAccountId != null">
+            and slc.fan_channel = (SELECT swd.account_id FROM sys_wx_distribution AS swd where swd.wechat_account = #{wxAccountId} and swd.del_flag = 0 limit 1)
+        </if>
+        order by slc.live_schedul_date desc,slc.live_start_time desc ,slc.live_room asc
+    </select>
+
+    <select id="selectSysLiveSchedulById" parameterType="Long" resultMap="SysLiveSchedulResultSigle">
+        select
+        <include refid="selectSysLiveSchedulVo"/>
+        from sys_live_schedul
+        where id = #{id} and del_flag = 0
+    </select>
+
+    <insert id="insertSysLiveSchedul" parameterType="SysLiveSchedul" useGeneratedKeys="true" keyProperty="id">
+        insert into sys_live_schedul
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="liveRoom != null">live_room,</if>
+            <if test="liveSchedulDate != null">live_schedul_date,</if>
+            <if test="liveStartTime != null">live_start_time,</if>
+            <if test="liveEndTime != null">live_end_time,</if>
+            <if test="liveNutritionistId != null">live_nutritionist_id,</if>
+            <if test="liveOperatorId != null">live_operator_id,</if>
+            <if test="livePlannerId != null">live_planner_id,</if>
+            <if test="fanChannel != null">fan_channel,</if>
+            <if test="liveStatus != null">live_status,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="delFlag != null">del_flag,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="liveRoom != null">#{liveRoom},</if>
+            <if test="liveSchedulDate != null">#{liveSchedulDate},</if>
+            <if test="liveStartTime != null">#{liveStartTime},</if>
+            <if test="liveEndTime != null">#{liveEndTime},</if>
+            <if test="liveNutritionistId != null">#{liveNutritionistId},</if>
+            <if test="liveOperatorId != null">#{liveOperatorId},</if>
+            <if test="livePlannerId != null">#{livePlannerId},</if>
+            <if test="fanChannel != null">#{fanChannel},</if>
+            <if test="liveStatus != null">#{liveStatus},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="delFlag != null">#{delFlag},</if>
+        </trim>
+    </insert>
+
+    <update id="updateSysLiveSchedul" parameterType="SysLiveSchedul">
+        update sys_live_schedul
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="liveRoom != null">live_room = #{liveRoom},</if>
+            <if test="liveSchedulDate != null">live_schedul_date = #{liveSchedulDate},</if>
+            <if test="liveStartTime != null">live_start_time = #{liveStartTime},</if>
+            <if test="liveEndTime != null">live_end_time = #{liveEndTime},</if>
+            <if test="liveNutritionistId != null">live_nutritionist_id = #{liveNutritionistId},</if>
+            <if test="liveOperatorId != null">live_operator_id = #{liveOperatorId},</if>
+            <if test="livePlannerId != null">live_planner_id = #{livePlannerId},</if>
+            <if test="fanChannel != null">fan_channel = #{fanChannel},</if>
+            <if test="liveStatus != null">live_status = #{liveStatus},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="delFlag != null">del_flag = #{delFlag},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <update id="updateSysLiveSchedulById" parameterType="SysLiveSchedul">
+        update sys_live_schedul set live_room = #{liveRoom},live_schedul_date = #{liveSchedulDate},live_start_time = #{liveStartTime},
+        live_end_time = #{liveEndTime},live_nutritionist_id = #{liveNutritionistId},live_operator_id = #{liveOperatorId},live_planner_id = #{livePlannerId},
+        fan_channel = #{fanChannel},live_status = #{liveStatus},update_time = #{updateTime}
+        where id = #{id}
+    </update>
+
+    <update id="deleteSysLiveSchedulById" parameterType="Long">
+        update sys_live_schedul set del_flag = 1 where id = #{id}
+    </update>
+
+    <update id="deleteSysLiveSchedulByIds" parameterType="String">
+        update sys_live_schedul set del_flag = 1 where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </update>
+
+    <!-- 根据渠道查询该渠道下分配的微信号 -->
+    <select id="getWxAccountListByFanChannel" parameterType="Integer" resultType="Map">
+      SELECT su.nick_name as nickName,swsa.wx_account as wxAccount,asg.dict_label as saleGroupName
+      FROM sys_wx_distribution AS swd
+      lEFT JOIN sys_wx_sale_account swsa ON swsa.id = swd.wechat_account and swsa.del_flag = 0
+      LEFT JOIN sys_user su ON su.user_id = swd.user_id AND su.del_flag = 0
+      LEFT JOIN (SELECT dict_label, dict_value FROM sys_dict_data WHERE dict_type = 'sale_group') AS asg ON asg.dict_value = swd.sale_group_id
+      where swd.account_id = #{fan_channel} and swd.del_flag = 0
+    </select>
+
+    <!-- 查询直播时间范围是否重叠 -->
+    <select id="getLiveSchedulByLiveTime" parameterType="SysLiveSchedul" resultMap="SysLiveSchedulResultSigle">
+        select
+        <include refid="selectSysLiveSchedulVo"/>
+        from sys_live_schedul
+        where live_room = #{liveRoom} and del_flag = 0
+        AND (
+          (#{liveStartTime} >= live_start_time AND live_end_time > #{liveStartTime})
+          <if test="liveEndTime != null">
+              OR (#{liveEndTime} > live_start_time AND live_end_time >= #{liveEndTime})
+          </if>
+        )
+        limit 1
+    </select>
+
+    <select id="getLastLiveSchedulById" parameterType="SysLiveSchedul" resultMap="SysLiveSchedulResultSigle">
+        select
+        <include refid="selectSysLiveSchedulVo"/>
+        from sys_live_schedul
+        where id <![CDATA[ < ]]> #{id} and del_flag = 0 and live_room = #{liveRoom}  order by live_start_time desc limit 1
+    </select>
+</mapper>

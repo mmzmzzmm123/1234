@@ -114,8 +114,8 @@
     <!-- 根据用户ID、时间范围查询数量 -->
     <select id="getCountByCusIdAndPauseDate" parameterType="SysOrderPause" resultType="int">
         select count(id) from sys_recipes_pause where del_flag = 0 and cus_id = #{cusId}
-        AND (#{pauseStartDate} >= pause_start_date AND pause_end_date >= #{pauseStartDate}
-        OR #{pauseEndDate} >= pause_start_date AND pause_end_date >= #{pauseEndDate})
+        AND ((#{pauseStartDate} >= pause_start_date AND pause_end_date >= #{pauseStartDate})
+        OR (#{pauseEndDate} >= pause_start_date AND pause_end_date >= #{pauseEndDate}))
         <if test="id != null">
             and id <![CDATA[ <> ]]> #{id}
         </if>
