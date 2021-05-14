@@ -169,7 +169,7 @@ public class DateUtils extends org.apache.commons.lang3.time.DateUtils
      * LocalDateTime对象转Date
      * */
     public static Date localDateTimeToDate(LocalDateTime localDateTime){
-        ZonedDateTime zdt = LocalDateTime.now().atZone(ZoneId.systemDefault());
+        ZonedDateTime zdt = localDateTime.atZone(ZoneId.systemDefault());
         return Date.from(zdt.toInstant());
     }
 
@@ -193,8 +193,42 @@ public class DateUtils extends org.apache.commons.lang3.time.DateUtils
         return date.format(fmt);
     }
 
+    public static String localDateTimeToString(LocalDateTime date, String pattern){
+        DateTimeFormatter fmt = DateTimeFormatter.ofPattern(pattern);
+        return date.format(fmt);
+    }
+
     public static LocalDate stringToLocalDate(String date, String pattern){
         DateTimeFormatter fmt = DateTimeFormatter.ofPattern(pattern);
         return LocalDate.parse(date, fmt);
+    }
+
+    /**
+     * 获取当前Date型日期
+     *
+     * @return Date() 当前日期
+     */
+    public static Date dateToDate(Date date)
+    {
+        return parseDate(DateFormatUtils.format(date, YYYY_MM_DD));
+    }
+
+    /**
+     * 判断两个日期是否同一天
+     * @param dateOne
+     * @param dateTwo
+     * @return
+     */
+    public static boolean isSameDay(Date dateOne, Date dateTwo){
+        return dateToDate(dateOne).getTime() == dateToDate(dateTwo).getTime();
+    }
+
+    /**
+     * 获取该日期的最后一秒对应时间
+     * @param date
+     * @return
+     */
+    public static Date getLastMinuteDate(Date date){
+        return new Date(dateToDate(date).getTime()+(24 * 60 * 60 * 1000 - 1000));
     }
 }

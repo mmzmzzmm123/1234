@@ -26,4 +26,6 @@ public class NutritionQuestionResponse implements Serializable {
 
     /** 小程序是否显示，0不显示 1显示 */
     private String showFlag;
+
+    private String createTime;
 }

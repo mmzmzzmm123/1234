@@ -1,6 +1,8 @@
 package com.stdiet.custom.service;
 
 import java.util.List;
+
+import com.stdiet.common.core.domain.AjaxResult;
 import com.stdiet.custom.domain.SysLiveSchedul;
 
 /**
@@ -77,4 +79,10 @@ public interface ISysLiveSchedulService
      * @return
      */
     public SysLiveSchedul getLastLiveSchedulById(SysLiveSchedul sysLiveSchedul);
+
+    /**
+     * 复制上一次直播间计划，并将上次的直播计划状态全部改为未开播
+     * @return
+     */
+    public AjaxResult copyLastTimeLiveSchedul();
 }

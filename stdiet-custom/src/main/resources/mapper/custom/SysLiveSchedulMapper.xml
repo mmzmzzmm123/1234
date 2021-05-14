@@ -193,4 +193,22 @@
         from sys_live_schedul
         where id <![CDATA[ < ]]> #{id} and del_flag = 0 and live_room = #{liveRoom}  order by live_start_time desc limit 1
     </select>
+
+    <!-- 根据时间查询所有直播计划 -->
+    <select id="getAllLiveSchedulByDate" parameterType="SysLiveSchedul" resultMap="SysLiveSchedulResultSigle">
+        select
+        <include refid="selectSysLiveSchedulVo"/>
+        from sys_live_schedul where del_flag = 0 and live_schedul_date = #{liveSchedulDate}
+        order by live_start_time asc
+    </select>
+
+    <!-- 查最后一次直播计划 -->
+    <select id="getLastLiveSchedul" resultMap="SysLiveSchedulResultSigle">
+        select
+        <include refid="selectSysLiveSchedulVo"/>
+        from sys_live_schedul
+        where del_flag = 0 order by live_schedul_date  desc limit 1
+    </select>
+
+
 </mapper>

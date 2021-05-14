@@ -61,3 +61,14 @@ export function updateLiveStatus(data) {
     params: data
   })
 }
+
+// 复制上次直播记录
+export function copyLastTimeLiveSchedul() {
+  return request({
+    url: '/custom/liveSchedul/copyLastTimeLiveSchedul',
+    method: 'get',
+    params: {}
+  })
+}
+
+

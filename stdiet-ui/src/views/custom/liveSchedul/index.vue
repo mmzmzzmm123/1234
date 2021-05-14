@@ -96,6 +96,15 @@
           v-hasPermi="['custom:liveSchedul:remove']"
         >删除</el-button>
       </el-col>
+      <el-col :span="1.5">
+        <el-button
+          type="primary"
+          size="mini"
+          @click="copyLastTimeLiveSchedul"
+          v-hasPermi="['custom:liveSchedul:add']"
+        >一键复制上次记录</el-button>
+      </el-col>
+      
       <!--<el-col :span="1.5">
         <el-button
           type="warning"
@@ -339,7 +348,7 @@
 </template>
 
 <script>
-import { listLiveSchedul, getLiveSchedul, delLiveSchedul, addLiveSchedul, updateLiveSchedul, exportLiveSchedul,updateLiveStatus } from "@/api/custom/liveSchedul";
+import { listLiveSchedul, getLiveSchedul, delLiveSchedul, addLiveSchedul, updateLiveSchedul, exportLiveSchedul,updateLiveStatus,copyLastTimeLiveSchedul } from "@/api/custom/liveSchedul";
 import { listWxAccount } from "@/api/custom/wxAccount";
 import AutoHideInfo from "@/components/AutoHideInfo";
 import dayjs from "dayjs";
@@ -597,6 +606,17 @@ export default {
     },
     wxAccountFormat(row){
        return (row.wxAccountList != null && row.wxAccountList.length > 0) ? row.wxAccountList : [];
+    },
+    copyLastTimeLiveSchedul(){
+      copyLastTimeLiveSchedul().then(response => {
+          if (response.code === 200) {
+              this.msgSuccess("一键复制成功");
+              this.getList();
+          }else{
+            this.msgError(response.msg);
+          }
+      });
+      
     }
   }
 };
