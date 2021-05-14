@@ -2,6 +2,8 @@ package com.stdiet.web.controller.custom;
 
 import java.util.Date;
 import java.util.List;
+
+import com.stdiet.common.utils.DateUtils;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -84,7 +86,12 @@ public class SysLiveSchedulController extends BaseController
         //下播,补全下播时间
         if (sysLiveSchedul.getLiveStatus() != null && sysLiveSchedul.getLiveStatus().longValue() == 2
                 && sysLiveSchedul.getLiveEndTime() == null){
-            sysLiveSchedul.setLiveEndTime(new Date());
+            Date now = new Date();
+            if(!DateUtils.isSameDay(now,sysLiveSchedul.getLiveStartTime())){
+                sysLiveSchedul.setLiveEndTime(DateUtils.getLastMinuteDate(sysLiveSchedul.getLiveStartTime()));
+            }else{
+                sysLiveSchedul.setLiveEndTime(now);
+            }
         }
         int row = sysLiveSchedulService.insertSysLiveSchedul(sysLiveSchedul);
         if(row > 0){
@@ -96,7 +103,11 @@ public class SysLiveSchedulController extends BaseController
                     if(lastLiveSchedul != null && lastLiveSchedul.getLiveStatus().longValue() == 1){
                         lastLiveSchedul.setLiveStatus(2L);
                         if(lastLiveSchedul.getLiveEndTime() == null){
-                            lastLiveSchedul.setLiveEndTime(sysLiveSchedul.getLiveStartTime());
+                            if(!DateUtils.isSameDay(lastLiveSchedul.getLiveStartTime(),sysLiveSchedul.getLiveStartTime())){
+                                lastLiveSchedul.setLiveEndTime(DateUtils.getLastMinuteDate(lastLiveSchedul.getLiveStartTime()));
+                            }else{
+                                lastLiveSchedul.setLiveEndTime(sysLiveSchedul.getLiveStartTime());
+                            }
                         }
                         row = sysLiveSchedulService.updateSysLiveSchedul(lastLiveSchedul);
                     }
@@ -121,7 +132,12 @@ public class SysLiveSchedulController extends BaseController
         //下播,补全下播时间
         if (sysLiveSchedul.getLiveStatus() != null && sysLiveSchedul.getLiveStatus().longValue() == 2
                 && sysLiveSchedul.getLiveEndTime() == null){
-            sysLiveSchedul.setLiveEndTime(new Date());
+            Date now = new Date();
+            if(!DateUtils.isSameDay(now,sysLiveSchedul.getLiveStartTime())){
+                sysLiveSchedul.setLiveEndTime(DateUtils.getLastMinuteDate(sysLiveSchedul.getLiveStartTime()));
+            }else{
+                sysLiveSchedul.setLiveEndTime(now);
+            }
         }
         int row = sysLiveSchedulService.updateSysLiveSchedulById(sysLiveSchedul);
         if(row > 0){
@@ -133,7 +149,11 @@ public class SysLiveSchedulController extends BaseController
                     if(lastLiveSchedul != null && lastLiveSchedul.getLiveStatus().longValue() == 1){
                         lastLiveSchedul.setLiveStatus(2L);
                         if(lastLiveSchedul.getLiveEndTime() == null){
-                            lastLiveSchedul.setLiveEndTime(sysLiveSchedul.getLiveStartTime());
+                            if(!DateUtils.isSameDay(lastLiveSchedul.getLiveStartTime(),sysLiveSchedul.getLiveStartTime())){
+                                lastLiveSchedul.setLiveEndTime(DateUtils.getLastMinuteDate(lastLiveSchedul.getLiveStartTime()));
+                            }else{
+                                lastLiveSchedul.setLiveEndTime(sysLiveSchedul.getLiveStartTime());
+                            }
                         }
                         row = sysLiveSchedulService.updateSysLiveSchedul(lastLiveSchedul);
                     }
@@ -178,7 +198,11 @@ public class SysLiveSchedulController extends BaseController
                         if(lastLiveSchedul != null && lastLiveSchedul.getLiveStatus().longValue() == 1){
                             lastLiveSchedul.setLiveStatus(2L);
                             if(lastLiveSchedul.getLiveEndTime() == null){
-                                lastLiveSchedul.setLiveEndTime(sysLiveSchedul.getLiveStartTime());
+                                if(!DateUtils.isSameDay(lastLiveSchedul.getLiveStartTime(),sysLiveSchedul.getLiveStartTime())){
+                                    lastLiveSchedul.setLiveEndTime(DateUtils.getLastMinuteDate(lastLiveSchedul.getLiveStartTime()));
+                                }else{
+                                    lastLiveSchedul.setLiveEndTime(sysLiveSchedul.getLiveStartTime());
+                                }
                             }
                             row = sysLiveSchedulService.updateSysLiveSchedul(lastLiveSchedul);
                         }
@@ -188,10 +212,25 @@ public class SysLiveSchedulController extends BaseController
         }else{
             SysLiveSchedul newLiveSchedul = sysLiveSchedulService.selectSysLiveSchedulById(sysLiveSchedul.getId());
             if(newLiveSchedul != null && newLiveSchedul.getLiveEndTime() == null){
-                sysLiveSchedul.setLiveEndTime(new Date());
+                Date now = new Date();
+                if(!DateUtils.isSameDay(now,newLiveSchedul.getLiveStartTime())){
+                    sysLiveSchedul.setLiveEndTime(DateUtils.getLastMinuteDate(newLiveSchedul.getLiveStartTime()));
+                }else{
+                    sysLiveSchedul.setLiveEndTime(now);
+                }
             }
             row = sysLiveSchedulService.updateSysLiveSchedul(sysLiveSchedul);
         }
         return toAjax(row);
+    }
+
+    /**
+     * 复制上次直播记录
+     */
+    @PreAuthorize("@ss.hasPermi('custom:liveSchedul:add')")
+    @Log(title = "复制上次直播记录", businessType = BusinessType.INSERT)
+    @GetMapping(value = "/copyLastTimeLiveSchedul")
+    public AjaxResult copyLastTimeLiveSchedul(){
+        return sysLiveSchedulService.copyLastTimeLiveSchedul();
     }
 }

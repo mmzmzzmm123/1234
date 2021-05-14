@@ -208,6 +208,19 @@ public class SysOrderServiceImpl implements ISysOrderService {
             sysOrder.setOperatorId(null);
             sysOrder.setOperatorAssisId(null);
         }
+        if(oldSysOrder.getStartTime() == null){//确保提成计算时间不为空
+            sysOrder.setCommissStartTime(sysOrder.getOrderTime());
+        }
+        //如果更新了开始服务时间，需要判断是否需要同步提成计算时间
+        if (oldSysOrder.getStartTime() != null && sysOrder.getStartTime() != null
+                && ChronoUnit.DAYS.between(DateUtils.dateToLocalDate(oldSysOrder.getStartTime()), DateUtils.dateToLocalDate(sysOrder.getStartTime())) != 0) {
+            //本月第一天
+            LocalDate monthStart = LocalDate.now().with(TemporalAdjusters.firstDayOfMonth());
+            //旧的开始时间和新的开始时间都要需要大于本月第一天
+            if(oldSysOrder.getCommissStartTime() != null && ChronoUnit.DAYS.between(monthStart, DateUtils.dateToLocalDate(oldSysOrder.getCommissStartTime())) >= 0 && ChronoUnit.DAYS.between(monthStart, DateUtils.dateToLocalDate(sysOrder.getStartTime())) >= 0){
+                sysOrder.setCommissStartTime(sysOrder.getStartTime());
+            }
+        }
         //更新订单
         int row = sysOrderMapper.updateSysOrder(sysOrder);
         // 审核后的订单才生成食谱
@@ -300,7 +313,7 @@ public class SysOrderServiceImpl implements ISysOrderService {
             for (SysOrder sysOrder : orderList) {
                 LocalDate newStartTime = null;
                 //判断是否提成单，拆分单中的副单，体验单,定金单
-                if(sysOrder.getAfterSaleCommissOrder().intValue() == 1 || ("1".equals(sysOrder.getOrderType()) && sysOrder.getMainOrderId().intValue() != 0) ||
+                if(sysOrder.getStartTime() == null || sysOrder.getAfterSaleCommissOrder().intValue() == 1 || ("1".equals(sysOrder.getOrderType()) && sysOrder.getMainOrderId().intValue() != 0) ||
                         "2".equals(sysOrder.getOrderType()) || "1".equals(sysOrder.getOrderMoneyType())){
                     continue;
                 }
@@ -310,7 +323,7 @@ public class SysOrderServiceImpl implements ISysOrderService {
                     //本月第一天
                     LocalDate monthStart = LocalDate.now().with(TemporalAdjusters.firstDayOfMonth());
                     //旧的开始时间和新的开始时间都要需要大于本月第一天
-                    if(ChronoUnit.DAYS.between(monthStart, DateUtils.dateToLocalDate(sysOrder.getStartTime())) >= 0 && ChronoUnit.DAYS.between(monthStart, newStartTime) >= 0){
+                    if(sysOrder.getCommissStartTime() != null && ChronoUnit.DAYS.between(monthStart, DateUtils.dateToLocalDate(sysOrder.getCommissStartTime())) >= 0 && ChronoUnit.DAYS.between(monthStart, newStartTime) >= 0){
                         sysOrder.setCommissStartTime(DateUtils.localDateToDate(newStartTime));
                     }
                     sysOrder.setStartTime(DateUtils.localDateToDate(newStartTime));

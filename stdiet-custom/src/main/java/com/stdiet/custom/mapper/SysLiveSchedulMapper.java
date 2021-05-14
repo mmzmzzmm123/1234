@@ -77,4 +77,17 @@ public interface SysLiveSchedulMapper
      * @return
      */
     public SysLiveSchedul getLastLiveSchedulById(SysLiveSchedul sysLiveSchedul);
+
+    /**
+     * 获取所有计划
+     * @param sysLiveSchedul
+     * @return
+     */
+    public List<SysLiveSchedul> getAllLiveSchedulByDate(SysLiveSchedul sysLiveSchedul);
+
+    /**
+     * 获取最后一次直播计划
+     * @return
+     */
+    public SysLiveSchedul getLastLiveSchedul();
 }
