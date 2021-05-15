@@ -563,7 +563,7 @@ public class WechatAppletController extends BaseController {
     }
 
     @GetMapping("/subscribe")
-    public AjaxResult subscribe(@RequestParam String customerId, Long planId, Integer subscribed) {
+    public AjaxResult subscribe(@RequestParam String customerId, @RequestParam Long planId, @RequestParam Integer subscribed) {
 //        Long cusId = StringUtils.isNotEmpty(customerId) ? Long.parseLong(AesUtils.decrypt(customerId)) : 0L;
 
         SysRecipesPlan info = new SysRecipesPlan();
@@ -571,6 +571,12 @@ public class WechatAppletController extends BaseController {
         info.setSubscribed(subscribed);
 
         return AjaxResult.success(sysRecipesPlanService.updateSysRecipesPlan(info));
+    }
+
+
+    @GetMapping("/subscribe/post")
+    public AjaxResult subscribePost(@RequestParam Long cusId, @RequestParam Long planId, @RequestParam String name, @RequestParam String startDate, @RequestParam String endDate, @RequestParam String remark) {
+        return AjaxResult.success(iWechatAppletService.postRecipesMessage(cusId, planId, name, startDate, endDate, remark));
     }
 
 
