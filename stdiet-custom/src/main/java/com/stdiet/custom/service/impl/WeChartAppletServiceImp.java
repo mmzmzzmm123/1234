@@ -3,8 +3,13 @@ package com.stdiet.custom.service.impl;
 import com.alibaba.fastjson.JSONObject;
 import com.google.gson.JsonObject;
 import com.stdiet.common.core.redis.RedisCache;
+import com.stdiet.common.utils.DateUtils;
 import com.stdiet.common.utils.StringUtils;
+import com.stdiet.custom.domain.SysWxUserInfo;
+import com.stdiet.custom.domain.wechat.WxSubscribePostLog;
+import com.stdiet.custom.service.ISysWxUserInfoService;
 import com.stdiet.custom.service.IWechatAppletService;
+import com.stdiet.custom.service.IWxSubscribePostLogService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -23,8 +28,14 @@ public class WeChartAppletServiceImp implements IWechatAppletService {
     @Autowired
     private RestTemplate restTemplate;
 
+    @Autowired
+    private ISysWxUserInfoService sysWxUserInfoService;
+
+    @Autowired
+    private IWxSubscribePostLogService wxSubscribePostLogService;
+
     @Override
-    public String getAccessToken(String appId) throws Exception {
+    public String getAccessToken(String appId) {
         String accessToken = redisCache.getCacheObject(appId);
         if (StringUtils.isNull(accessToken)) {
             String appSecret = "";
@@ -49,26 +60,31 @@ public class WeChartAppletServiceImp implements IWechatAppletService {
     }
 
     @Override
-    public void postRecipesMessage(String appId, String openId, String name, String startDate, String endDate, String remark) throws Exception {
-        String accessToken = getAccessToken(appId);
-        if (StringUtils.isNull(accessToken)) {
-            return;
+    public String postRecipesMessage(Long cusId, Long planId, String name, String startDate, String endDate, String remark) {
+        SysWxUserInfo sysWxUserInfo = sysWxUserInfoService.selectSysWxUserInfoByCusId(cusId);
+        if (StringUtils.isNull(sysWxUserInfo)) {
+            return null;
         }
-        String tmpId = "";
+
+        String accessToken = getAccessToken(sysWxUserInfo.getAppid());
+        if (StringUtils.isNull(accessToken)) {
+            return "";
+        }
+        String tmpId = "EWeha9m0ggpnhMANDLHtl2ezLfPWKY_9PsJubbG_6eA";
         String url = "https://api.weixin.qq.com/cgi-bin/message/subscribe/send?access_token=" + accessToken;
 
 
         JsonObject param = new JsonObject();
         param.addProperty("access_token", accessToken);
-        param.addProperty("touser", openId);
+        param.addProperty("touser", sysWxUserInfo.getOpenid());
         param.addProperty("template_id", tmpId);
         param.addProperty("page", "pages/recipes/index");
 
         JsonObject dataParam = new JsonObject();
-        dataParam.addProperty("key1", name);
-        dataParam.addProperty("key2", startDate);
-        dataParam.addProperty("key3", endDate);
-        dataParam.addProperty("key4", remark);
+        dataParam.addProperty("phrase1", name);
+        dataParam.addProperty("date3", startDate);
+        dataParam.addProperty("thing6", endDate);
+//        dataParam.addProperty("thing6", remark);
 
         param.add("data", dataParam);
 
@@ -76,7 +92,17 @@ public class WeChartAppletServiceImp implements IWechatAppletService {
 
         JSONObject resultObj = JSONObject.parseObject(entity.getBody());
 
-        System.out.println(resultObj.toJSONString());
+        WxSubscribePostLog postLog = new WxSubscribePostLog();
+        postLog.setAppid(sysWxUserInfo.getAppid());
+        postLog.setOpenid(sysWxUserInfo.getOpenid());
+        postLog.setErrcode(resultObj.getInteger("errcode"));
+        postLog.setErrmsg(resultObj.getString("errmsg"));
+        postLog.setSendTime(DateUtils.getNowDate());
+        postLog.setPlanId(planId);
+        postLog.setData(dataParam);
+        wxSubscribePostLogService.insertWxSubscribePostLog(postLog);
+
+        return resultObj.toJSONString();
 //        Integer errcode = resultObj.getInteger("errcode");
 
     }

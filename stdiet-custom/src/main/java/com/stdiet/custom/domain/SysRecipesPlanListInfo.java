@@ -25,4 +25,10 @@ public class SysRecipesPlanListInfo {
 
     private List<SysRecipesPlan> menus;
 
+    private Integer sendFlag;
+
+    private Integer subscribed;
+
+    private Integer status;
+
 }

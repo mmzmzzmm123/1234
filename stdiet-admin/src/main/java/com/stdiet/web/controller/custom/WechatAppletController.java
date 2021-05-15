@@ -451,17 +451,24 @@ public class WechatAppletController extends BaseController {
         if (StringUtils.isNotEmpty(sysWxUserInfo.getPhone())) {
             SysCustomer sysCustomer = iSysCustomerService.getCustomerByPhone(sysWxUserInfo.getPhone());
             if (StringUtils.isNull(sysCustomer)) {
-                return AjaxResult.error(5003, "未查到用户信息，请联系销售顾问");
+//                return AjaxResult.error(5003, "未查到用户信息，请联系销售顾问");
+                // 创建新客户
+                sysCustomer = new SysCustomer();
+                sysCustomer.setName(sysWxUserInfo.getNickName());
+                sysCustomer.setPhone(sysWxUserInfo.getPhone());
+                sysCustomer.setUpdateTime(DateUtils.getNowDate());
+                sysCustomer.setCreateTime(DateUtils.getNowDate());
+                iSysCustomerService.insertSysCustomer(sysCustomer);
             }
 
             sysWxUserInfo.setCusId(sysCustomer.getId());
+            sysWxUserInfo.setUpdateTime(DateUtils.getNowDate());
             if (StringUtils.isNull(curWxUserInfo)) {
                 // 新增sys_wx_user_info
                 sysWxUserInfo.setCreateTime(DateUtils.getNowDate());
                 sysWxUserInfoService.insertSysWxUserInfo(sysWxUserInfo);
             } else {
                 // 更新sys_wx_user_info数据，
-                sysWxUserInfo.setUpdateTime(DateUtils.getNowDate());
                 sysWxUserInfoService.updateSysWxUserInfo(sysWxUserInfo);
             }
             // 更新对象
@@ -485,6 +492,23 @@ public class WechatAppletController extends BaseController {
         Long cusId = StringUtils.isNotEmpty(customerId) ? Long.parseLong(AesUtils.decrypt(customerId)) : 0L;
 
         List<SysRecipesPlanListInfo> plans = sysRecipesPlanService.selectRecipesPlanListInfoByCusId(cusId);
+
+        SysRecipesPlanListInfo tmpPlan;
+        for (int i = 0; i < plans.size(); i++) {
+            tmpPlan = plans.get(i);
+            tmpPlan.setStatus(1);
+            if (StringUtils.isNull(tmpPlan.getSendFlag()) || tmpPlan.getSendFlag() == 0) {
+                tmpPlan.setSendFlag(0);
+                tmpPlan.setMenus(new ArrayList<>());
+            }
+            // 从excel转到线上的客户，之前的食谱无效
+            if (i > 0 && plans.get(i - 1).getRecipesId() == null && i < plans.size() - 1 && plans.get(i + 1).getRecipesId() != null) {
+                for (int j = 0; j < i; j++) {
+                    plans.get(j).setStatus(0);
+                }
+            }
+        }
+
 
         SysOrderPause orderPause = new SysOrderPause();
         orderPause.setCusId(cusId);
@@ -534,8 +558,19 @@ public class WechatAppletController extends BaseController {
     }
 
     @GetMapping("/getToken")
-    public String getToken(@RequestParam String appId) throws Exception {
+    public String getToken(@RequestParam String appId) {
         return iWechatAppletService.getAccessToken(appId);
+    }
+
+    @GetMapping("/subscribe")
+    public AjaxResult subscribe(@RequestParam String customerId, Long planId, Integer subscribed) {
+//        Long cusId = StringUtils.isNotEmpty(customerId) ? Long.parseLong(AesUtils.decrypt(customerId)) : 0L;
+
+        SysRecipesPlan info = new SysRecipesPlan();
+        info.setId(planId);
+        info.setSubscribed(subscribed);
+
+        return AjaxResult.success(sysRecipesPlanService.updateSysRecipesPlan(info));
     }
 
 

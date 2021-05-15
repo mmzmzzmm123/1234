@@ -19,6 +19,8 @@ public interface ISysWxUserInfoService
      */
     public SysWxUserInfo selectSysWxUserInfoById(String openid);
 
+    public SysWxUserInfo selectSysWxUserInfoByCusId(Long cusId);
+
     /**
      * 查询微信用户列表
      *

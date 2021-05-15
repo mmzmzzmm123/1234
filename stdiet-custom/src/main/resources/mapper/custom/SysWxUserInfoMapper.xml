@@ -32,6 +32,7 @@
         <where>
             <if test="nickName != null  and nickName != ''">and nick_name like concat('%', #{nickName}, '%')</if>
             <if test="appid != null  and appid != ''">and appid = #{appid}</if>
+            <if test="cusId != null  and cusId != ''">and cus_id = #{cusId}</if>
             <if test="phone != null  and phone != ''">and phone = #{phone}</if>
             <if test="sex != null  and sex != ''">and sex = #{sex}</if>
         </where>
@@ -43,6 +44,11 @@
         <if test="appid != null  and appid != ''">and wxuser.appid = #{appid}</if>
         <if test="openid != null and openid != ''">and wxuser.openid  <![CDATA[ <> ]]> #{openid} </if>
         order by wxuser.update_time desc
+    </select>
+
+    <select id="selectSysWxUserInfoByCusId" parameterType="String" resultMap="SysWxUserInfoResult">
+        <include refid="selectSysWxUserInfoVo"/>
+        where cus_id = #{cusId}
     </select>
 
     <select id="selectSysWxUserInfoById" parameterType="String" resultMap="SysWxUserInfoResult">

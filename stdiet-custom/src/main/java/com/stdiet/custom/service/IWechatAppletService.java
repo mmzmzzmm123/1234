@@ -2,7 +2,7 @@ package com.stdiet.custom.service;
 
 public interface IWechatAppletService {
 
-    public String getAccessToken(String appId) throws Exception;
+    public String getAccessToken(String appId);
 
-    public void postRecipesMessage(String appId, String openId, String name, String startDate, String endDate, String remark) throws Exception;
+    public String postRecipesMessage(Long cusId, Long planId, String name, String startDate, String endDate, String remark);
 }

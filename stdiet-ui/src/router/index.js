@@ -161,6 +161,12 @@ export const constantRoutes = [
     meta: { title: "胜唐体控健康评估表" }
   },
   {
+    path: "/live",
+    component: resolve => require(["@/components/ScrollingNum"], resolve),
+    hidden: true,
+    meta: { title: "直播数据" }
+  },
+  {
     path: "/foodHeatCalculator/:id",
     component: resolve =>
       require(["@/views/custom/foodHeatStatistics/investigate"], resolve),

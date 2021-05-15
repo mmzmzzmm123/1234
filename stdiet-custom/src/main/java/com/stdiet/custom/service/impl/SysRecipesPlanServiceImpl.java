@@ -12,6 +12,7 @@ import com.stdiet.custom.mapper.SysRecipesPlanMapper;
 import com.stdiet.custom.service.ISysOrderPauseService;
 import com.stdiet.custom.service.ISysOrderService;
 import com.stdiet.custom.service.ISysRecipesPlanService;
+import com.stdiet.custom.service.IWechatAppletService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
@@ -40,6 +41,8 @@ public class SysRecipesPlanServiceImpl implements ISysRecipesPlanService {
     private ISysOrderPauseService sysOrderPauseService;
     @Autowired
     private SynchrolockUtil synchrolockUtil;
+    @Autowired
+    private IWechatAppletService wechatAppletService;
 
     /**
      * 查询食谱计划
@@ -83,10 +86,20 @@ public class SysRecipesPlanServiceImpl implements ISysRecipesPlanService {
      */
     @Override
     public int updateSysRecipesPlan(SysRecipesPlan sysRecipesPlan) {
+        SysRecipesPlan recipesPlan = sysRecipesPlanMapper.selectSysRecipesPlanById(sysRecipesPlan.getId());
+
         sysRecipesPlan.setUpdateTime(DateUtils.getNowDate());
         //目前只能修改发送状态，所以修改时加上发送时间
         sysRecipesPlan.setSendTime(DateUtils.getNowDate());
-        return sysRecipesPlanMapper.updateSysRecipesPlan(sysRecipesPlan);
+        int row = sysRecipesPlanMapper.updateSysRecipesPlan(sysRecipesPlan);
+        if (row > 0 && sysRecipesPlan.getSendFlag() == 1 && StringUtils.isNull(recipesPlan.getSendTime())) {
+            // 未发送过
+            String name = "第" + recipesPlan.getStartNumDay() + "至" + recipesPlan.getEndNumDay() + "天";
+            String startDate = recipesPlan.getStartDate().toString();
+            String endDate = recipesPlan.getEndDate().toString();
+            wechatAppletService.postRecipesMessage(sysRecipesPlan.getCusId(), sysRecipesPlan.getId(), name, startDate, endDate, recipesPlan.getRemark());
+        }
+        return row;
     }
 
     /**
@@ -236,11 +249,11 @@ public class SysRecipesPlanServiceImpl implements ISysRecipesPlanService {
         if (beforeOrderLastPlan != null) {
             long differDay = ChronoUnit.DAYS.between(DateUtils.dateToLocalDate(beforeOrderLastPlan.getEndDate()), serverStartDate);
             //检查之前食谱的结束时间和目前该订单的开始时间是否连续
-            if(differDay <= 1){
+            if (differDay <= 1) {
                 //判断前一个订单食谱是否满七天，不满则需要接上
                 int differNum = beforeOrderLastPlan.getEndNumDay() - beforeOrderLastPlan.getStartNumDay();
 
-                if(differNum < 6){
+                if (differNum < 6) {
                     //更新该食谱计划
                     beforeOrderLastPlan.setEndNumDay(beforeOrderLastPlan.getStartNumDay() + 6);
                     beforeOrderLastPlan.setEndDate(DateUtils.localDateToDate(DateUtils.dateToLocalDate(beforeOrderLastPlan.getEndDate()).plusDays(6 - differNum)));
