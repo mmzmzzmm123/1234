@@ -86,13 +86,18 @@ public class SysRecipesPlanServiceImpl implements ISysRecipesPlanService {
      */
     @Override
     public int updateSysRecipesPlan(SysRecipesPlan sysRecipesPlan) {
-        SysRecipesPlan recipesPlan = sysRecipesPlanMapper.selectSysRecipesPlanById(sysRecipesPlan.getId());
+        SysRecipesPlan recipesPlan = null;
 
         sysRecipesPlan.setUpdateTime(DateUtils.getNowDate());
-        //目前只能修改发送状态，所以修改时加上发送时间
-        sysRecipesPlan.setSendTime(DateUtils.getNowDate());
+        if (StringUtils.isNotNull(sysRecipesPlan.getSubscribed())) {
+            // 客户端修改订阅状态
+        } else if (StringUtils.isNotNull(sysRecipesPlan.getSendFlag())) {
+            // 后台修改发送状态
+            sysRecipesPlan.setSendTime(DateUtils.getNowDate());
+            recipesPlan = sysRecipesPlanMapper.selectSysRecipesPlanById(sysRecipesPlan.getId());
+        }
         int row = sysRecipesPlanMapper.updateSysRecipesPlan(sysRecipesPlan);
-        if (row > 0 && sysRecipesPlan.getSendFlag() == 1 && StringUtils.isNull(recipesPlan.getSendTime())) {
+        if (row > 0 && StringUtils.isNotNull(sysRecipesPlan.getSendFlag()) && sysRecipesPlan.getSendFlag() == 1 && StringUtils.isNotNull(recipesPlan) && StringUtils.isNull(recipesPlan.getSendTime())) {
             // 未发送过
             String name = "第" + recipesPlan.getStartNumDay() + "至" + recipesPlan.getEndNumDay() + "天";
             String startDate = recipesPlan.getStartDate().toString();
