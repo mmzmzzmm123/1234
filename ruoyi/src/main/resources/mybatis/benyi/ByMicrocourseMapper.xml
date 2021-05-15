@@ -14,11 +14,26 @@
         <result property="upanddown" column="upanddown"/>
         <result property="sort" column="sort"/>
         <result property="createTime" column="create_time"/>
+        <result property="parentId" column="parent_id"/>
     </resultMap>
 
     <sql id="selectByMicrocourseVo">
         select id, title, author, contents, type, scpoe, upanddown, sort, create_time from by_microcourse
     </sql>
+
+    <sql id="selectByMicrocourseVoTree">
+        select dict_value+9999 id, 0 parent_id,dict_label title,dict_sort sort   from sys_dict_data where dict_type='sys_yebjlx' and dict_label !='托班（2-3岁）'
+        union all
+        select id, scpoe+9999, title, sort from by_microcourse
+    </sql>
+
+    <select id="selectByMicrocourseListTree" parameterType="ByMicrocourse" resultMap="ByMicrocourseResult">
+        <include refid="selectByMicrocourseVoTree"/>
+        <where>
+            <if test="title != null  and title != ''">and title like concat('%', #{title}, '%')</if>
+        </where>
+        order by sort
+    </select>
 
     <select id="selectByMicrocourseList" parameterType="ByMicrocourse" resultMap="ByMicrocourseResult">
         <include refid="selectByMicrocourseVo"/>

@@ -45,6 +45,16 @@ public class ByMicrocourseController extends BaseController {
     }
 
     /**
+     * 查询微型课程列表
+     */
+    @Log(title = "微型课程学习", businessType = BusinessType.QUERY)
+    @GetMapping("/treeselect")
+    public AjaxResult treeselect(ByMicrocourse byMicrocourse) {
+        List<ByMicrocourse> list = byMicrocourseService.selectByMicrocourseListTree(byMicrocourse);
+        return AjaxResult.success(byMicrocourseService.buildMicrocourseTreeSelect(list));
+    }
+
+    /**
      * 导出微型课程列表
      */
     @PreAuthorize("@ss.hasPermi('benyi:microcourse:export')")

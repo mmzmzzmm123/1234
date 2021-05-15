@@ -28,6 +28,14 @@ public interface ByMicrocourseMapper {
     public List<ByMicrocourse> selectByMicrocourseList(ByMicrocourse byMicrocourse);
 
     /**
+     * 查询微型课程列表
+     *
+     * @param byMicrocourse 微型课程
+     * @return 微型课程集合
+     */
+    public List<ByMicrocourse> selectByMicrocourseListTree(ByMicrocourse byMicrocourse);
+
+    /**
      * 新增微型课程
      *
      * @param byMicrocourse 微型课程

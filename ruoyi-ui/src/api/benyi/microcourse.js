@@ -9,6 +9,14 @@ export function listMicrocourse(query) {
   })
 }
 
+// 查询流程下拉树结构
+export function treeselect() {
+  return request({
+      url: '/benyi/microcourse/treeselect',
+      method: 'get'
+  })
+}
+
 // 查询微型课程详细
 export function getMicrocourse(id) {
   return request({
