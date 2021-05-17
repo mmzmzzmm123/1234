@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.jdgl.mapper.TsbzJdglylfsMapper">
+    
+    <resultMap type="TsbzJdglylfs" id="TsbzJdglylfsResult">
+        <result property="id"    column="id"    />
+        <result property="jdid"    column="jdid"    />
+        <result property="name"    column="name"    />
+        <result property="rwmc"    column="rwmc"    />
+        <result property="sctime"    column="sctime"    />
+        <result property="scpath"    column="scpath"    />
+        <result property="createUserid"    column="create_userid"    />
+        <result property="createTime"    column="create_time"    />
+    </resultMap>
+
+    <sql id="selectTsbzJdglylfsVo">
+        select id, jdid, name, rwmc, sctime, scpath, create_userid, create_time from tsbz_jdglylfs
+    </sql>
+
+    <select id="selectTsbzJdglylfsList" parameterType="TsbzJdglylfs" resultMap="TsbzJdglylfsResult">
+        <include refid="selectTsbzJdglylfsVo"/>
+        <where>  
+            <if test="jdid != null "> and jdid = #{jdid}</if>
+            <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
+            <if test="rwmc != null  and rwmc != ''"> and rwmc = #{rwmc}</if>
+            <if test="sctime != null "> and sctime = #{sctime}</if>
+            <if test="scpath != null  and scpath != ''"> and scpath = #{scpath}</if>
+            <if test="createUserid != null "> and create_userid = #{createUserid}</if>
+        </where>
+    </select>
+    
+    <select id="selectTsbzJdglylfsById" parameterType="Long" resultMap="TsbzJdglylfsResult">
+        <include refid="selectTsbzJdglylfsVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertTsbzJdglylfs" parameterType="TsbzJdglylfs" useGeneratedKeys="true" keyProperty="id">
+        insert into tsbz_jdglylfs
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="jdid != null">jdid,</if>
+            <if test="name != null">name,</if>
+            <if test="rwmc != null">rwmc,</if>
+            <if test="sctime != null">sctime,</if>
+            <if test="scpath != null">scpath,</if>
+            <if test="createUserid != null">create_userid,</if>
+            <if test="createTime != null">create_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="jdid != null">#{jdid},</if>
+            <if test="name != null">#{name},</if>
+            <if test="rwmc != null">#{rwmc},</if>
+            <if test="sctime != null">#{sctime},</if>
+            <if test="scpath != null">#{scpath},</if>
+            <if test="createUserid != null">#{createUserid},</if>
+            <if test="createTime != null">#{createTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateTsbzJdglylfs" parameterType="TsbzJdglylfs">
+        update tsbz_jdglylfs
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="jdid != null">jdid = #{jdid},</if>
+            <if test="name != null">name = #{name},</if>
+            <if test="rwmc != null">rwmc = #{rwmc},</if>
+            <if test="sctime != null">sctime = #{sctime},</if>
+            <if test="scpath != null">scpath = #{scpath},</if>
+            <if test="createUserid != null">create_userid = #{createUserid},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteTsbzJdglylfsById" parameterType="Long">
+        delete from tsbz_jdglylfs where id = #{id}
+    </delete>
+
+    <delete id="deleteTsbzJdglylfsByIds" parameterType="String">
+        delete from tsbz_jdglylfs where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+</mapper>

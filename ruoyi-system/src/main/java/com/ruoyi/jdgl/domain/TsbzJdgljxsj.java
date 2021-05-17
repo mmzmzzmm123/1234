@@ -53,6 +53,9 @@ public class TsbzJdgljxsj extends BaseEntity
     @Excel(name = "创建人")
     private Long createUser;
 
+    // 基地id
+    private Long jdid;
+
     public void setId(Long id) 
     {
         this.id = id;
@@ -148,6 +151,15 @@ public class TsbzJdgljxsj extends BaseEntity
             .append("xxmc", getXxmc())
             .append("createUser", getCreateUser())
             .append("createTime", getCreateTime())
+            .append("jdid", getJdid())
             .toString();
+    }
+
+    public Long getJdid() {
+        return jdid;
+    }
+
+    public void setJdid(Long jdid) {
+        this.jdid = jdid;
     }
 }

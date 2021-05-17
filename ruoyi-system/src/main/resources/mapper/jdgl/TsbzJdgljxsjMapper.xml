@@ -15,10 +15,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="xxmc"    column="xxmc"    />
         <result property="createUser"    column="create_user"    />
         <result property="createTime"    column="create_time"    />
+        <result property="jdid"    column="jdid"    />
     </resultMap>
 
     <sql id="selectTsbzJdgljxsjVo">
-        select id, rwmc, kcmc, zjr, sktime, km, nj, xxmc, create_user, create_time from tsbz_jdgljxsj
+        select id, jdid, rwmc, kcmc, zjr, sktime, km, nj, xxmc, create_user, create_time from tsbz_jdgljxsj
     </sql>
 
     <select id="selectTsbzJdgljxsjList" parameterType="TsbzJdgljxsj" resultMap="TsbzJdgljxsjResult">
@@ -32,6 +33,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="nj != null  and nj != ''"> and nj = #{nj}</if>
             <if test="xxmc != null  and xxmc != ''"> and xxmc = #{xxmc}</if>
             <if test="createUser != null "> and create_user = #{createUser}</if>
+            <if test="jdid != null  and jdid != ''"> and jdid = #{jdid}</if>
         </where>
     </select>
     
@@ -52,6 +54,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="xxmc != null">xxmc,</if>
             <if test="createUser != null">create_user,</if>
             <if test="createTime != null">create_time,</if>
+            <if test="jdid != null">jdid,</if>
          </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="rwmc != null">#{rwmc},</if>
@@ -63,6 +66,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="xxmc != null">#{xxmc},</if>
             <if test="createUser != null">#{createUser},</if>
             <if test="createTime != null">#{createTime},</if>
+            <if test="jdid != null">#{jdid},</if>
          </trim>
     </insert>
 
@@ -78,6 +82,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="xxmc != null">xxmc = #{xxmc},</if>
             <if test="createUser != null">create_user = #{createUser},</if>
             <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="jdid != null">jdid = #{jdid},</if>
         </trim>
         where id = #{id}
     </update>

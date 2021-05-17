@@ -43,6 +43,7 @@ public class TsbzJdgljxsjController extends BaseController
     @GetMapping("/list")
     public TableDataInfo list(TsbzJdgljxsj tsbzJdgljxsj)
     {
+        tsbzJdgljxsj.setCreateUser(SecurityUtils.getLoginUser().getUser().getUserId());
         startPage();
         List<TsbzJdgljxsj> list = tsbzJdgljxsjService.selectTsbzJdgljxsjList(tsbzJdgljxsj);
         return getDataTable(list);
