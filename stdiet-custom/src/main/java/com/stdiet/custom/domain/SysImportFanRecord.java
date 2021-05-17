@@ -1,0 +1,36 @@
+package com.stdiet.custom.domain;
+
+import java.util.Date;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.stdiet.common.annotation.Excel;
+import com.stdiet.common.core.domain.BaseEntity;
+
+/**
+ * 导粉管理对象 sys_import_fan_record
+ *
+ * @author xzj
+ * @date 2021-05-17
+ */
+public class SysImportFanRecord extends BaseEntity
+{
+    private static final long serialVersionUID = 1L;
+
+    /** $column.columnComment */
+    private Long id;
+
+    /** 导粉日期 */
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    @Excel(name = "导粉日期", width = 30, dateFormat = "yyyy-MM-dd")
+    private Date importFanDate;
+
+    /** 导粉渠道 */
+    @Excel(name = "导粉渠道")
+    private Long importFanChannel;
+
+    /** 进粉直播间 */
+    @Excel(name = "进粉直播间")
+    private Long importFanLive;
+
+    /** 删除标识，0未删除 1已删除 */
+    private Long delFlag;
+}
