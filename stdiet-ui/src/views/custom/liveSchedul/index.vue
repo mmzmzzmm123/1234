@@ -41,7 +41,7 @@
               />
             </el-select>
         </el-form-item>
-        <el-form-item label="微信号" prop="wxAccountId">
+        <!--<el-form-item label="微信号" prop="wxAccountId">
           <el-select
             v-model="queryParams.wxAccountId"
             filterable
@@ -56,7 +56,7 @@
               :value="parseInt(dict.id)"
             />
           </el-select>
-        </el-form-item>
+        </el-form-item>-->
 
         
         
@@ -323,7 +323,7 @@
                 :value="parseInt(dict.dictValue)"
               />
             </el-select>
-            <span style="margin-left:10px;color:#1890ff">该账号与销售接粉微信号绑定</span>
+            <!--<span style="margin-left:10px;color:#1890ff">该账号与销售接粉微信号绑定</span>-->
         </el-form-item>
         <el-form-item label="直播状态" prop="liveStatus">
             <el-select
@@ -425,7 +425,10 @@ export default {
     this.getDicts("sys_live_type").then((response) => {
       this.liveTypeOptions = response.data;
     });
-    this.getDicts("fan_channel").then((response) => {
+    /**this.getDicts("fan_channel").then((response) => {
+      this.fanChanneloptions = response.data;
+    });**/
+    this.getDicts("cus_account").then((response) => {
       this.fanChanneloptions = response.data;
     });
     this.getListWxAccount();
