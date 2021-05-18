@@ -20,10 +20,12 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="qjshjy"    column="qjshjy"    />
         <result property="xyxbstatus"    column="xyxbstatus"    />
         <result property="xypsjgqrstatus"    column="xypsjgqrstatus"    />
+        <result property="ssxn"    column="ssxn"    />
+        <result property="xypjjgstatus"    column="xypjjgstatus"    />
     </resultMap>
 
     <sql id="selectTsbzXybmsqVo">
-        select a.id, a.faid, a.jdid, a.jsid, a.jxbh, a.deptid, b.jsxm as name, b.xb as xb, b.csrq as csrq, b.xd as xd, b.xk as xk, b.zc as zc, c.xxmc as dwmc, c.xxdz as dwdz, d.email as email, d.phonenumber as phone, a.jdtype, a.sf, a.create_time, a.create_user, a.xxshstatus, a.xxshjy, a.qjshstatus, a.qjshjy, a.xyxbstatus, a.xypsjgqrstatus
+        select a.id, a.faid, a.jdid, a.jsid, a.jxbh, a.deptid, b.jsxm as name, b.xb as xb, b.csrq as csrq, b.xd as xd, b.xk as xk, b.zc as zc, c.xxmc as dwmc, c.xxdz as dwdz, d.email as email, d.phonenumber as phone, a.jdtype, a.sf, a.create_time, a.create_user, a.xxshstatus, a.xxshjy, a.qjshstatus, a.qjshjy, a.xyxbstatus, a.xypsjgqrstatus, a.ssxn, a.xypjjgstatus
         from tsbz_xybmsq a
         left join tsbz_jsjbxx b on a.jsid=b.id
         left join tsbz_xxjbxx c on b.deptid=c.xxdm
@@ -47,6 +49,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="createUser != null "> and a.create_user = #{createUser}</if>
             <if test="xyxbstatus != null "> and a.xyxbstatus = #{xyxbstatus}</if>
             <if test="xypsjgqrstatus != null "> and a.xypsjgqrstatus = #{xypsjgqrstatus}</if>
+            <if test="ssxn != null "> and a.ssxn = #{ssxn}</if>
+            <if test="xypjjgstatus != null "> and a.xypjjgstatus = #{xypjjgstatus}</if>
         </where>
     </select>
 
@@ -67,6 +71,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="createUser != null "> and a.create_user = #{createUser}</if>
             <if test="xyxbstatus != null "> and a.xyxbstatus = #{xyxbstatus}</if>
             <if test="xypsjgqrstatus != null "> and a.xypsjgqrstatus = #{xypsjgqrstatus}</if>
+            <if test="ssxn != null "> and a.ssxn = #{ssxn}</if>
+            <if test="xypjjgstatus != null "> and a.xypjjgstatus = #{xypjjgstatus}</if>
         </where>
     </select>
 
@@ -87,6 +93,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="createUser != null "> and a.create_user = #{createUser}</if>
             <if test="xyxbstatus != null "> and a.xyxbstatus = #{xyxbstatus}</if>
             <if test="xypsjgqrstatus != null "> and a.xypsjgqrstatus = #{xypsjgqrstatus}</if>
+            <if test="ssxn != null "> and a.ssxn = #{ssxn}</if>
+            <if test="xypjjgstatus != null "> and a.xypjjgstatus = #{xypjjgstatus}</if>
         </where>
     </select>
 
@@ -118,6 +126,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="xyxbstatus != null">xyxbstatus,</if>
             <if test="xypsjgqrstatus != null">xypsjgqrstatus,</if>
             <if test="deptid != null">deptid,</if>
+            <if test="ssxn != null">ssxn,</if>
+            <if test="xypjjgstatus != null">xypjjgstatus,</if>
          </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="jsid != null">#{jsid},</if>
@@ -135,6 +145,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="xyxbstatus != null">#{xyxbstatus},</if>
             <if test="xypsjgqrstatus != null">#{xypsjgqrstatus},</if>
             <if test="deptid != null">#{deptid},</if>
+            <if test="ssxn != null">#{ssxn},</if>
+            <if test="xypjjgstatus != null">#{xypjjgstatus},</if>
          </trim>
     </insert>
 
@@ -156,6 +168,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="xyxbstatus != null">xyxbstatus = #{xyxbstatus},</if>
             <if test="xypsjgqrstatus != null">xypsjgqrstatus = #{xypsjgqrstatus},</if>
             <if test="deptid != null">deptid = #{deptid},</if>
+            <if test="ssxn != null">ssxn = #{ssxn},</if>
+            <if test="xypjjgstatus != null">xypjjgstatus = #{xypjjgstatus},</if>
         </trim>
         where id = #{id}
     </update>

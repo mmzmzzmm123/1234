@@ -113,6 +113,14 @@ public class TsbzXybmsq extends BaseEntity
 
 
 
+    // 所属学年
+    private String ssxn;
+
+    // 学员评价结果状态
+    private String xypjjgstatus;
+
+
+
     // 区级审核建议
     private String qjshjy;
 
@@ -310,6 +318,22 @@ public class TsbzXybmsq extends BaseEntity
         this.jsid = jsid;
     }
 
+    public String getSsxn() {
+        return ssxn;
+    }
+
+    public void setSsxn(String ssxn) {
+        this.ssxn = ssxn;
+    }
+
+    public String getXypjjgstatus() {
+        return xypjjgstatus;
+    }
+
+    public void setXypjjgstatus(String xypjjgstatus) {
+        this.xypjjgstatus = xypjjgstatus;
+    }
+
     @Override
     public String toString() {
         return new ToStringBuilder(this,ToStringStyle.MULTI_LINE_STYLE)
@@ -340,6 +364,8 @@ public class TsbzXybmsq extends BaseEntity
             .append("xyxbstatus", getXyxbstatus())
             .append("xypsjgqrstatus", getXypsjgqrstatus())
             .append("deptid", getDeptid())
+            .append("ssxn", getSsxn())
+            .append("xypjjgstatus", getXypjjgstatus())
             .toString();
     }
 
