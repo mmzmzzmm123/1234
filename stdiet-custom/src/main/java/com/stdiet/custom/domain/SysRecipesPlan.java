@@ -148,4 +148,15 @@ public class SysRecipesPlan {
 
     //    0-普通 1-模板
     private Integer type;
+
+    /**
+     * 订阅推送
+     */
+    private Integer subscribed;
+
+    private String remark;
+
+    private Integer subSend;
+
+    private Integer smsSend;
 }

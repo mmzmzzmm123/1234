@@ -1,12 +1,13 @@
 package com.stdiet.custom.service.impl;
 
-import java.util.List;
 import com.stdiet.common.utils.DateUtils;
+import com.stdiet.custom.domain.SysWxUserInfo;
+import com.stdiet.custom.mapper.SysWxUserInfoMapper;
+import com.stdiet.custom.service.ISysWxUserInfoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import com.stdiet.custom.mapper.SysWxUserInfoMapper;
-import com.stdiet.custom.domain.SysWxUserInfo;
-import com.stdiet.custom.service.ISysWxUserInfoService;
+
+import java.util.List;
 
 /**
  * 微信用户Service业务层处理
@@ -15,8 +16,7 @@ import com.stdiet.custom.service.ISysWxUserInfoService;
  * @date 2020-11-28
  */
 @Service
-public class SysWxUserInfoServiceImpl implements ISysWxUserInfoService
-{
+public class SysWxUserInfoServiceImpl implements ISysWxUserInfoService {
     @Autowired
     private SysWxUserInfoMapper sysWxUserInfoMapper;
 
@@ -27,9 +27,13 @@ public class SysWxUserInfoServiceImpl implements ISysWxUserInfoService
      * @return 微信用户
      */
     @Override
-    public SysWxUserInfo selectSysWxUserInfoById(String openid)
-    {
+    public SysWxUserInfo selectSysWxUserInfoById(String openid) {
         return sysWxUserInfoMapper.selectSysWxUserInfoById(openid);
+    }
+
+    @Override
+    public SysWxUserInfo selectSysWxUserInfoByCusId(Long cusId) {
+        return sysWxUserInfoMapper.selectSysWxUserInfoByCusId(cusId);
     }
 
     /**
@@ -39,8 +43,7 @@ public class SysWxUserInfoServiceImpl implements ISysWxUserInfoService
      * @return 微信用户
      */
     @Override
-    public List<SysWxUserInfo> selectSysWxUserInfoList(SysWxUserInfo sysWxUserInfo)
-    {
+    public List<SysWxUserInfo> selectSysWxUserInfoList(SysWxUserInfo sysWxUserInfo) {
         return sysWxUserInfoMapper.selectSysWxUserInfoList(sysWxUserInfo);
     }
 
@@ -56,8 +59,7 @@ public class SysWxUserInfoServiceImpl implements ISysWxUserInfoService
      * @return 结果
      */
     @Override
-    public int insertSysWxUserInfo(SysWxUserInfo sysWxUserInfo)
-    {
+    public int insertSysWxUserInfo(SysWxUserInfo sysWxUserInfo) {
         sysWxUserInfo.setCreateTime(DateUtils.getNowDate());
         return sysWxUserInfoMapper.insertSysWxUserInfo(sysWxUserInfo);
     }
@@ -69,8 +71,7 @@ public class SysWxUserInfoServiceImpl implements ISysWxUserInfoService
      * @return 结果
      */
     @Override
-    public int updateSysWxUserInfo(SysWxUserInfo sysWxUserInfo)
-    {
+    public int updateSysWxUserInfo(SysWxUserInfo sysWxUserInfo) {
         sysWxUserInfo.setUpdateTime(DateUtils.getNowDate());
         return sysWxUserInfoMapper.updateSysWxUserInfo(sysWxUserInfo);
     }
@@ -82,8 +83,7 @@ public class SysWxUserInfoServiceImpl implements ISysWxUserInfoService
      * @return 结果
      */
     @Override
-    public int deleteSysWxUserInfoByIds(String[] openids)
-    {
+    public int deleteSysWxUserInfoByIds(String[] openids) {
         return sysWxUserInfoMapper.deleteSysWxUserInfoByIds(openids);
     }
 
@@ -94,8 +94,7 @@ public class SysWxUserInfoServiceImpl implements ISysWxUserInfoService
      * @return 结果
      */
     @Override
-    public int deleteSysWxUserInfoById(String openid)
-    {
+    public int deleteSysWxUserInfoById(String openid) {
         return sysWxUserInfoMapper.deleteSysWxUserInfoById(openid);
     }
 }
