@@ -282,6 +282,7 @@ public class SysOrder extends BaseEntity {
 
     private Integer counted;
 
-
+    //食谱计划是否连续上个订单
+    private Integer recipesPlanContinue;
 
 }

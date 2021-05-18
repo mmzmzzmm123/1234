@@ -232,8 +232,9 @@ public class SysRecipesPlanServiceImpl implements ISysRecipesPlanService {
         //查询在上一个订单最后一条食谱计划
         SysRecipesPlan beforeOrderLastPlan = getLastDayRecipesPlan(sysOrder.getCusId(), sysOrder.getOrderTime());
         int startNumDay = 0;
-        //之前是否存在食谱
-        if (beforeOrderLastPlan != null) {
+        //System.out.println(sysOrder.getRecipesPlanContinue() == null);
+        //之前是否存在食谱以及该订单食谱计划是否需要连续
+        if (beforeOrderLastPlan != null && sysOrder.getRecipesPlanContinue().intValue() == 1) {
             long differDay = ChronoUnit.DAYS.between(DateUtils.dateToLocalDate(beforeOrderLastPlan.getEndDate()), serverStartDate);
             //检查之前食谱的结束时间和目前该订单的开始时间是否连续
             if(differDay <= 1){
@@ -250,6 +251,7 @@ public class SysRecipesPlanServiceImpl implements ISysRecipesPlanService {
             }
             startNumDay = beforeOrderLastPlan.getEndNumDay();
         }
+        //System.out.println(startNumDay + "-------------------------------");
         List<SysRecipesPlan> planList = new ArrayList<>();
         LocalDate planStartDate = null;
         LocalDate planEndDate = serverStartDate.plusDays(-1);

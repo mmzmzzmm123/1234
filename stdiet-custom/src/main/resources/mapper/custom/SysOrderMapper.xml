@@ -48,6 +48,7 @@
         <result property="mainOrderId" column="main_order_id"/>
         <result property="afterSaleCommissOrder" column="after_sale_commiss_order"/>
         <result property="commissStartTime" column="commiss_start_time"/>
+        <result property="recipesPlanContinue"    column="recipes_plan_continue"    />
         <result property="delFlag" column="del_flag"/>
         <result property="counted" column="counted"/>
 
@@ -393,6 +394,7 @@
         <result property="mainOrderId" column="main_order_id"/>
         <result property="afterSaleCommissOrder" column="after_sale_commiss_order"/>
         <result property="commissStartTime" column="commiss_start_time"/>
+        <result property="recipesPlanContinue"    column="recipes_plan_continue"    />
         <result property="delFlag" column="del_flag"/>
 
         <!-- 非持久化字段 -->
