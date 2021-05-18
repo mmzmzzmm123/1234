@@ -76,7 +76,7 @@ public class WeChartAppletServiceImp implements IWechatAppletService {
     public Integer postSubscribeMessage(Long cusId, Long planId, String name, String startDate, String endDate, String remark) {
         SysWxUserInfo sysWxUserInfo = sysWxUserInfoService.selectSysWxUserInfoByCusId(cusId);
         if (StringUtils.isNull(sysWxUserInfo)) {
-            return null;
+            return -1;
         }
 
         String accessToken = getAccessToken(sysWxUserInfo.getAppid());
