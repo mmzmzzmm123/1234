@@ -112,6 +112,8 @@
       <el-table-column label="状态" align="center" prop="status">
         <template slot-scope="scope">
           <el-switch
+            active-text="可接粉"
+            inactive-text="不可接粉"
             :value="!scope.row.status"
             @change="handleOnChange($event, scope.row)"
           />

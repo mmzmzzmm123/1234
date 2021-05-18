@@ -41,7 +41,7 @@
               />
             </el-select>
         </el-form-item>
-        <el-form-item label="微信号" prop="wxAccountId">
+        <!--<el-form-item label="微信号" prop="wxAccountId">
           <el-select
             v-model="queryParams.wxAccountId"
             filterable
@@ -56,7 +56,7 @@
               :value="parseInt(dict.id)"
             />
           </el-select>
-        </el-form-item>
+        </el-form-item>-->
 
         
         
@@ -96,6 +96,15 @@
           v-hasPermi="['custom:liveSchedul:remove']"
         >删除</el-button>
       </el-col>
+      <el-col :span="1.5">
+        <el-button
+          type="primary"
+          size="mini"
+          @click="copyLastTimeLiveSchedul"
+          v-hasPermi="['custom:liveSchedul:add']"
+        >一键复制上次记录</el-button>
+      </el-col>
+      
       <!--<el-col :span="1.5">
         <el-button
           type="warning"
@@ -314,7 +323,7 @@
                 :value="parseInt(dict.dictValue)"
               />
             </el-select>
-            <span style="margin-left:10px;color:#1890ff">该账号与销售接粉微信号绑定</span>
+            <!--<span style="margin-left:10px;color:#1890ff">该账号与销售接粉微信号绑定</span>-->
         </el-form-item>
         <el-form-item label="直播状态" prop="liveStatus">
             <el-select
@@ -339,7 +348,7 @@
 </template>
 
 <script>
-import { listLiveSchedul, getLiveSchedul, delLiveSchedul, addLiveSchedul, updateLiveSchedul, exportLiveSchedul,updateLiveStatus } from "@/api/custom/liveSchedul";
+import { listLiveSchedul, getLiveSchedul, delLiveSchedul, addLiveSchedul, updateLiveSchedul, exportLiveSchedul,updateLiveStatus,copyLastTimeLiveSchedul } from "@/api/custom/liveSchedul";
 import { listWxAccount } from "@/api/custom/wxAccount";
 import AutoHideInfo from "@/components/AutoHideInfo";
 import dayjs from "dayjs";
@@ -416,7 +425,10 @@ export default {
     this.getDicts("sys_live_type").then((response) => {
       this.liveTypeOptions = response.data;
     });
-    this.getDicts("fan_channel").then((response) => {
+    /**this.getDicts("fan_channel").then((response) => {
+      this.fanChanneloptions = response.data;
+    });**/
+    this.getDicts("cus_account").then((response) => {
       this.fanChanneloptions = response.data;
     });
     this.getListWxAccount();
@@ -597,6 +609,17 @@ export default {
     },
     wxAccountFormat(row){
        return (row.wxAccountList != null && row.wxAccountList.length > 0) ? row.wxAccountList : [];
+    },
+    copyLastTimeLiveSchedul(){
+      copyLastTimeLiveSchedul().then(response => {
+          if (response.code === 200) {
+              this.msgSuccess("一键复制成功");
+              this.getList();
+          }else{
+            this.msgError(response.msg);
+          }
+      });
+      
     }
   }
 };

@@ -40,7 +40,7 @@ public class SysNutritionQuestionServiceImpl implements ISysNutritionQuestionSer
     public String index_path;
 
     //建立索引的字段名称
-    public static final String[] index_field_array = {"id", "title", "content", "key", "showFlag"};
+    public static final String[] index_field_array = {"id", "title", "content", "key", "showFlag", "createTime"};
     //查询字段
     public static final String[] index_select_field_array = {"title", "content", "key"};
 
@@ -275,7 +275,8 @@ public class SysNutritionQuestionServiceImpl implements ISysNutritionQuestionSer
     private NutritionQuestionResponse documentToNutritionQuestion(Document document){
         NutritionQuestionResponse nutritionQuestionResponse = new NutritionQuestionResponse();
         for (String fieldName : index_field_array) {
-            ReflectUtils.setFieldValue(nutritionQuestionResponse, fieldName, document.get(fieldName));
+            String value = document.get(fieldName);
+            ReflectUtils.setFieldValue(nutritionQuestionResponse, fieldName, StringUtils.isEmpty(value) ? "" : value);
         }
         return nutritionQuestionResponse;
     }
@@ -288,7 +289,12 @@ public class SysNutritionQuestionServiceImpl implements ISysNutritionQuestionSer
     private Document nutritionQuestionToDocument(SysNutritionQuestion sysNutritionQuestion){
         Document document = new Document();
         for (String fieldName : index_field_array) {
-            TextField field = new TextField(fieldName, ReflectUtils.getFieldValue(sysNutritionQuestion, fieldName)+"", Field.Store.YES);
+            TextField field = null;
+            if("createTime".equals(fieldName)){
+                field = new TextField(fieldName, DateUtils.parseDateToStr(DateUtils.YYYY_MM_DD_HH_MM_SS,sysNutritionQuestion.getCreateTime()), Field.Store.YES);
+            } else{
+                field = new TextField(fieldName, ReflectUtils.getFieldValue(sysNutritionQuestion, fieldName)+"", Field.Store.YES);
+            }
             if(nutritionQuestionBoostMap.containsKey(fieldName)){
                 field.setBoost(nutritionQuestionBoostMap.get(fieldName).floatValue());
             }

@@ -28,7 +28,7 @@
         <result property="fanChannelName"  column="fan_channel_name"></result>
 
         <!-- 根据渠道查询对应微信号（微信账号分配表中） -->
-        <association property="wxAccountList" column="fan_channel" select="getWxAccountListByFanChannel"/>
+        <!--<association property="wxAccountList" column="fan_channel" select="getWxAccountListByFanChannel"/>-->
     </resultMap>
 
     <resultMap type="SysLiveSchedul" id="SysLiveSchedulResultSigle">
@@ -60,7 +60,7 @@
         su_operator.nick_name as live_operator_name,fc.dict_label as fan_channel_name
         from sys_live_schedul slc
         left join (SELECT dict_label, dict_value FROM sys_dict_data WHERE dict_type = 'sys_live_type') AS slt ON slt.dict_value = slc.live_room
-        left join (SELECT dict_label, dict_value FROM sys_dict_data WHERE dict_type = 'fan_channel') AS fc ON fc.dict_value = slc.fan_channel
+        left join (SELECT dict_label, dict_value FROM sys_dict_data WHERE dict_type = 'cus_account') AS fc ON fc.dict_value = slc.fan_channel
         left join sys_user su_nutritionist on su_nutritionist.user_id = slc.live_nutritionist_id and su_nutritionist.del_flag = 0
         left join sys_user su_plan on su_plan.user_id = slc.live_planner_id and su_plan.del_flag = 0
         left join sys_user su_operator on su_operator.user_id = slc.live_operator_id and su_operator.del_flag = 0
@@ -193,4 +193,22 @@
         from sys_live_schedul
         where id <![CDATA[ < ]]> #{id} and del_flag = 0 and live_room = #{liveRoom}  order by live_start_time desc limit 1
     </select>
+
+    <!-- 根据时间查询所有直播计划 -->
+    <select id="getAllLiveSchedulByDate" parameterType="SysLiveSchedul" resultMap="SysLiveSchedulResultSigle">
+        select
+        <include refid="selectSysLiveSchedulVo"/>
+        from sys_live_schedul where del_flag = 0 and live_schedul_date = #{liveSchedulDate}
+        order by live_start_time asc
+    </select>
+
+    <!-- 查最后一次直播计划 -->
+    <select id="getLastLiveSchedul" resultMap="SysLiveSchedulResultSigle">
+        select
+        <include refid="selectSysLiveSchedulVo"/>
+        from sys_live_schedul
+        where del_flag = 0 order by live_schedul_date  desc limit 1
+    </select>
+
+
 </mapper>
