@@ -128,4 +128,13 @@ public class SysWxSaleAccountServiceImpl implements ISysWxSaleAccountService {
     public Integer logWxAd(SysWxAdLog sysWxAdLog) {
         return sysWxSaleAccountMapper.insertWxAdLog(sysWxAdLog);
     }
+
+    /**
+     * 获取可接粉的微信号以及分配的销售昵称
+     * @param sysWxSaleAccount
+     * @return
+     */
+    public List<SysWxSaleAccount> getWxAccountAndSale(SysWxSaleAccount sysWxSaleAccount){
+        return sysWxSaleAccountMapper.getWxAccountAndSale(sysWxSaleAccount);
+    }
 }

@@ -33,7 +33,7 @@ public class SysCommissionDayServiceImpl implements ISysCommissionDayService {
     private SysOrderMapper sysOrderMapper;
 
     @Autowired
-    private SysOrderPauseMapper sysOrderPauseMapper;
+    private SysOrderPauseMapper sysOrderPauseMapper    ;
 
     @Autowired
     private ISysOrderNutritionistReplaceRecordService sysOrderNutritionistReplaceRecordService;

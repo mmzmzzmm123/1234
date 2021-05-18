@@ -72,4 +72,11 @@ public interface ISysWxSaleAccountService
     String getWxAdId(SysWxAdLog sysWxAdLog);
 
     Integer logWxAd(SysWxAdLog sysWxAdLog);
+
+    /**
+     * 获取可接粉的微信号以及分配的销售昵称
+     * @param sysWxSaleAccount
+     * @return
+     */
+    List<SysWxSaleAccount> getWxAccountAndSale(SysWxSaleAccount sysWxSaleAccount);
 }

@@ -1,6 +1,9 @@
 package com.stdiet.web.controller.custom;
 
 import java.util.List;
+
+import com.stdiet.custom.domain.SysWxSaleAccount;
+import com.stdiet.custom.service.ISysWxSaleAccountService;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -32,6 +35,9 @@ public class SysImportFanRecordController extends BaseController
 {
     @Autowired
     private ISysImportFanRecordService sysImportFanRecordService;
+
+    @Autowired
+    private ISysWxSaleAccountService sysWxSaleAccountService;
 
     /**
      * 查询导粉管理列表
@@ -99,5 +105,16 @@ public class SysImportFanRecordController extends BaseController
     public AjaxResult remove(@PathVariable Long[] ids)
     {
         return toAjax(sysImportFanRecordService.deleteSysImportFanRecordByIds(ids));
+    }
+
+    /**
+     * 获取可接粉的微信号以及对应销售
+     * @param sysWxSaleAccount
+     * @return
+     */
+    @PreAuthorize("@ss.hasPermi('custom:importFanRecord:add')")
+    @GetMapping(value = "/getWxAccountAndSale")
+    public TableDataInfo getWxAccountAndSale(SysWxSaleAccount sysWxSaleAccount){
+        return getDataTable(sysWxSaleAccountService.getWxAccountAndSale(sysWxSaleAccount));
     }
 }
