@@ -155,4 +155,8 @@ public class SysRecipesPlan {
     private Integer subscribed;
 
     private String remark;
+
+    private Integer subSend;
+
+    private Integer smsSend;
 }

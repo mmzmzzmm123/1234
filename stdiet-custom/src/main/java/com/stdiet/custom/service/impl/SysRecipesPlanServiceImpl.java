@@ -9,15 +9,13 @@ import com.stdiet.custom.domain.SysOrderPause;
 import com.stdiet.custom.domain.SysRecipesPlan;
 import com.stdiet.custom.domain.SysRecipesPlanListInfo;
 import com.stdiet.custom.mapper.SysRecipesPlanMapper;
-import com.stdiet.custom.service.ISysOrderPauseService;
-import com.stdiet.custom.service.ISysOrderService;
-import com.stdiet.custom.service.ISysRecipesPlanService;
-import com.stdiet.custom.service.IWechatAppletService;
+import com.stdiet.custom.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
@@ -31,8 +29,8 @@ import java.util.*;
 @Service("sysRecipesPlanService")
 @Transactional
 public class SysRecipesPlanServiceImpl implements ISysRecipesPlanService {
-
     public static final String generateRecipesPlanLockKey = "generateRecipesPlanLock::%s";
+    static final SimpleDateFormat ft = new SimpleDateFormat("yyyy-MM-dd");
     @Autowired
     private SysRecipesPlanMapper sysRecipesPlanMapper;
     @Autowired
@@ -43,6 +41,8 @@ public class SysRecipesPlanServiceImpl implements ISysRecipesPlanService {
     private SynchrolockUtil synchrolockUtil;
     @Autowired
     private IWechatAppletService wechatAppletService;
+    @Autowired
+    private ISysCustomerService sysCustomerService;
 
     /**
      * 查询食谱计划
@@ -86,7 +86,6 @@ public class SysRecipesPlanServiceImpl implements ISysRecipesPlanService {
      */
     @Override
     public int updateSysRecipesPlan(SysRecipesPlan sysRecipesPlan) {
-        SysRecipesPlan recipesPlan = null;
 
         sysRecipesPlan.setUpdateTime(DateUtils.getNowDate());
         if (StringUtils.isNotNull(sysRecipesPlan.getSubscribed())) {
@@ -94,17 +93,30 @@ public class SysRecipesPlanServiceImpl implements ISysRecipesPlanService {
         } else if (StringUtils.isNotNull(sysRecipesPlan.getSendFlag())) {
             // 后台修改发送状态
             sysRecipesPlan.setSendTime(DateUtils.getNowDate());
-            recipesPlan = sysRecipesPlanMapper.selectSysRecipesPlanById(sysRecipesPlan.getId());
+            SysRecipesPlan recipesPlan = sysRecipesPlanMapper.selectSysRecipesPlanById(sysRecipesPlan.getId());
+            if (StringUtils.isNotNull(sysRecipesPlan.getSendFlag()) && sysRecipesPlan.getSendFlag() == 1) {
+                // 未发送过
+                String name = "第" + recipesPlan.getStartNumDay() + "至" + recipesPlan.getEndNumDay() + "天";
+                String startDate = ft.format(recipesPlan.getStartDate());
+                String endDate = ft.format(recipesPlan.getEndDate());
+                // 发送微信订阅
+                if (StringUtils.isNotNull(recipesPlan) && recipesPlan.getSubSend() == 0) {
+                    Integer code = wechatAppletService.postSubscribeMessage(recipesPlan.getCusId(), recipesPlan.getId(), name, startDate, endDate, recipesPlan.getRemark());
+                    if (code == 0) {
+                        sysRecipesPlan.setSubSend(1);
+                    }
+                }
+                // 发送通知短信
+                if(StringUtils.isNotNull(recipesPlan) && recipesPlan.getSmsSend() == 0) {
+                    Integer smsCode = wechatAppletService.postSms(recipesPlan.getCusId(), recipesPlan.getId(), name);
+                    if (smsCode == 0) {
+                        sysRecipesPlan.setSmsSend(1);
+                    }
+                }
+            }
         }
-        int row = sysRecipesPlanMapper.updateSysRecipesPlan(sysRecipesPlan);
-        if (row > 0 && StringUtils.isNotNull(sysRecipesPlan.getSendFlag()) && sysRecipesPlan.getSendFlag() == 1 && StringUtils.isNotNull(recipesPlan) && StringUtils.isNull(recipesPlan.getSendTime())) {
-            // 未发送过
-            String name = "第" + recipesPlan.getStartNumDay() + "至" + recipesPlan.getEndNumDay() + "天";
-            String startDate = recipesPlan.getStartDate().toString();
-            String endDate = recipesPlan.getEndDate().toString();
-            wechatAppletService.postRecipesMessage(sysRecipesPlan.getCusId(), sysRecipesPlan.getId(), name, startDate, endDate, recipesPlan.getRemark());
-        }
-        return row;
+
+        return sysRecipesPlanMapper.updateSysRecipesPlan(sysRecipesPlan);
     }
 
     /**

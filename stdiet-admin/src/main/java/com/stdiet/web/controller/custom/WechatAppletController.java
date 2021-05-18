@@ -576,7 +576,7 @@ public class WechatAppletController extends BaseController {
 
     @GetMapping("/subscribe/post")
     public AjaxResult subscribePost(@RequestParam Long cusId, @RequestParam Long planId, @RequestParam String name, @RequestParam String startDate, @RequestParam String endDate, @RequestParam String remark) {
-        return AjaxResult.success(iWechatAppletService.postRecipesMessage(cusId, planId, name, startDate, endDate, remark));
+        return AjaxResult.success(iWechatAppletService.postSubscribeMessage(cusId, planId, name, startDate, endDate, remark));
     }
 
 

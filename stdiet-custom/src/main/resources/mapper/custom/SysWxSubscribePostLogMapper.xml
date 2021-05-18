@@ -10,8 +10,8 @@
         <result property="openid" column="openid"/>
         <result property="sendTime" column="send_time"/>
         <result property="planId" column="plan_id"/>
-        <result property="errcode" column="errcode"/>
-        <result property="errmsg" column="errmsg"/>
+        <result property="phone" column="phone"/>
+        <result property="result" column="result" typeHandler="com.stdiet.custom.typehandler.ObjectJsonHandler"/>
         <result property="data" column="data" typeHandler="com.stdiet.custom.typehandler.ObjectJsonHandler"/>
     </resultMap>
 
@@ -22,18 +22,20 @@
             <if test="openid != null">openid,</if>
             <if test="planId != null">plan_id,</if>
             <if test="sendTime != null">send_time,</if>
-            <if test="errcode != null">errcode,</if>
-            <if test="errmsg != null">errmsg,</if>
+            <if test="result != null">result,</if>
+            <if test="phone != null">phone,</if>
             <if test="data != null">data,</if>
+            <if test="type != null">type,</if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="appid != null">#{appid},</if>
             <if test="openid != null">#{openid},</if>
             <if test="planId != null">#{planId},</if>
             <if test="sendTime != null">#{sendTime},</if>
-            <if test="errcode != null">#{errcode},</if>
-            <if test="errmsg != null">#{errmsg},</if>
+            <if test="result != null">#{result, jdbcType=OTHER, typeHandler=com.stdiet.custom.typehandler.ObjectJsonHandler},</if>
+            <if test="phone != null">#{phone},</if>
             <if test="data != null">#{data, jdbcType=OTHER, typeHandler=com.stdiet.custom.typehandler.ObjectJsonHandler},</if>
+            <if test="type != null">#{type},</if>
         </trim>
 
     </insert>
@@ -45,8 +47,8 @@
             <if test="openid != null">AND openid = #{openid}</if>
             <if test="appid != null">AND appid = #{appid}</if>
             <if test="planId != null">AND plan_id = #{planId}</if>
-            <if test="planId != null">AND plan_id = #{planId}</if>
-            <if test="errcode != null">AND errcode = #{errcode}</if>
+            <if test="phone != null">AND phone = #{phone}</if>
+            <if test="type != null">AND type = #{type}</if>
         </where>
     </select>
 

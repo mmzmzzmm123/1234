@@ -1,6 +1,6 @@
 package com.stdiet.custom.domain.wechat;
 
-import com.google.gson.JsonObject;
+import com.alibaba.fastjson.JSONObject;
 import lombok.Data;
 
 import java.util.Date;
@@ -10,9 +10,10 @@ public class WxSubscribePostLog {
     Long id;
     String appid;
     String openid;
+    String phone;
     Long planId;
     Date sendTime;
-    Integer errcode;
-    String errmsg;
-    JsonObject data;
+    JSONObject result;
+    JSONObject data;
+    Integer type;
 }

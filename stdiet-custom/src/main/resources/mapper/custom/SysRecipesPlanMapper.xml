@@ -23,6 +23,8 @@
         <result property="cusId" column="cus_id"/>
         <result property="outId" column="out_id"/>
         <result property="subscribed" column="subscribed"/>
+        <result property="subSend" column="sub_send"/>
+        <result property="smsSend" column="sms_send"/>
         <!-- 非持久化字段 -->
         <!--        <result property="customerId" column="cus_id"></result>&lt;!&ndash; 客户ID &ndash;&gt;-->
         <result property="customer" column="customer"/><!-- 客户姓名 -->
@@ -38,7 +40,7 @@
 
 
     <sql id="selectSysRecipesPlanVo">
-        select id, order_id, cus_id, out_id, start_date, end_date, start_num_day, end_num_day, recipes_id, send_flag, send_time, pause_date, create_time, create_by, update_time, update_by, del_flag, review_status from sys_recipes_plan
+        select id, order_id, cus_id, out_id, start_date, end_date, start_num_day, end_num_day, recipes_id, send_flag, send_time, pause_date, create_time, create_by, update_time, update_by, del_flag, review_status, sub_send, sms_send from sys_recipes_plan
     </sql>
 
     <select id="selectSysRecipesPlanList" parameterType="SysRecipesPlan" resultMap="SysRecipesPlanResult">
@@ -137,6 +139,8 @@
             <if test="delFlag != null">del_flag = #{delFlag},</if>
             <if test="reviewStatus != null">review_status = #{reviewStatus},</if>
             <if test="subscribed != null">subscribed = #{subscribed},</if>
+            <if test="subSend != null">sub_send = #{subSend},</if>
+            <if test="smsSend != null">sms_send = #{smsSend},</if>
         </trim>
         where id = #{id} and del_flag = 0
     </update>

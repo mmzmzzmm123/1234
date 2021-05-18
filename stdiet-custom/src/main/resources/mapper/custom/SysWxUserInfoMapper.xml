@@ -46,7 +46,7 @@
         order by wxuser.update_time desc
     </select>
 
-    <select id="selectSysWxUserInfoByCusId" parameterType="String" resultMap="SysWxUserInfoResult">
+    <select id="selectSysWxUserInfoByCusId" parameterType="Long" resultMap="SysWxUserInfoResult">
         <include refid="selectSysWxUserInfoVo"/>
         where cus_id = #{cusId}
     </select>
