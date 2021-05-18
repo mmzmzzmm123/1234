@@ -22,16 +22,15 @@
 
     <select id="selectSysImportFanRecordList" parameterType="SysImportFanRecord" resultMap="SysImportFanRecordResult">
         <include refid="selectSysImportFanRecordVo"/>
-        <where>
-            <if test="importFanDate != null "> and import_fan_date = #{importFanDate}</if>
-            <if test="importFanChannel != null "> and import_fan_channel = #{importFanChannel}</if>
-            <if test="importFanLive != null "> and import_fan_live = #{importFanLive}</if>
-        </where>
+        where del_flag = 0
+        <if test="importFanDate != null "> and import_fan_date = #{importFanDate}</if>
+        <if test="importFanChannel != null "> and import_fan_channel = #{importFanChannel}</if>
+        <if test="importFanLive != null "> and import_fan_live = #{importFanLive}</if>
     </select>
 
     <select id="selectSysImportFanRecordById" parameterType="Long" resultMap="SysImportFanRecordResult">
         <include refid="selectSysImportFanRecordVo"/>
-        where id = #{id}
+        where id = #{id} and del_flag = 0
     </select>
 
     <insert id="insertSysImportFanRecord" parameterType="SysImportFanRecord" useGeneratedKeys="true" keyProperty="id">
@@ -73,15 +72,15 @@
         where id = #{id}
     </update>
 
-    <delete id="deleteSysImportFanRecordById" parameterType="Long">
-        delete from sys_import_fan_record where id = #{id}
-    </delete>
+    <update id="deleteSysImportFanRecordById" parameterType="Long">
+        update sys_import_fan_record set del_flag = 1 where id = #{id}
+    </update>
 
-    <delete id="deleteSysImportFanRecordByIds" parameterType="String">
-        delete from sys_import_fan_record where id in
+    <update id="deleteSysImportFanRecordByIds" parameterType="String">
+        update sys_import_fan_record set del_flag = 1 where id in
         <foreach item="id" collection="array" open="(" separator="," close=")">
             #{id}
         </foreach>
-    </delete>
+    </update>
 
 </mapper>
