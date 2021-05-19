@@ -129,4 +129,10 @@
         </foreach>
     </delete>
 
+    <!-- 根据手机号查询微信用户 -->
+    <select id="getSysWxUserInfoByPhone" parameterType="String" resultMap="SysWxUserInfoResult">
+        <include refid="selectSysWxUserInfoVo"/>
+        where phone = #{phone} order by create_time desc limit 1
+    </select>
+
 </mapper>

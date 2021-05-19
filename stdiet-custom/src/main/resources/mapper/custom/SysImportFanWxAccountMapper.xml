@@ -82,4 +82,9 @@
         </foreach>
     </update>
 
+    <select id="getWxAccountByFanRecordId" parameterType="SysImportFanWxAccount" resultMap="SysImportFanWxAccountResult">
+        select * from sys_import_fan_wx_account where del_flag = 0 and import_fan_record_id = #{importFanRecordId}
+        and import_wx_account_id = #{importWxAccountId} order by id desc limit 1
+    </select>
+
 </mapper>

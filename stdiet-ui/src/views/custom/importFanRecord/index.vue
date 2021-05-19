@@ -89,8 +89,12 @@
           <span>{{ parseTime(scope.row.importFanDate, '{y}-{m}-{d}') }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="导粉渠道" align="center" prop="importFanChannel" />
-      <!--<el-table-column label="进粉直播间" align="center" prop="importFanLive" />-->
+      <el-table-column label="进粉账号渠道" align="center" prop="importFanChannelName" />
+      <el-table-column label="所属直播间" align="center" prop="liveRoomName" >
+        <template slot-scope="scope">
+            {{scope.row.liveRoomName + "—" + scope.row.liveNutritionistName}}
+        </template>
+      </el-table-column>
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button

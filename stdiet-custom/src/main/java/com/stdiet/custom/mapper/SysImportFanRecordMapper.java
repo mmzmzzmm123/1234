@@ -58,4 +58,11 @@ public interface SysImportFanRecordMapper
      * @return 结果
      */
     public int deleteSysImportFanRecordByIds(Long[] ids);
+
+    /**
+     * 根据日期渠道、直播间获取进粉记录
+     * @param sysImportFanRecord
+     * @return
+     */
+    public SysImportFanRecord getFanRecordByChannelLive(SysImportFanRecord sysImportFanRecord);
 }

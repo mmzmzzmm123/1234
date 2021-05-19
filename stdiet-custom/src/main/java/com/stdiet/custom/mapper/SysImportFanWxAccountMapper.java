@@ -58,4 +58,11 @@ public interface SysImportFanWxAccountMapper
      * @return 结果
      */
     public int deleteSysImportFanWxAccountByIds(Long[] ids);
+
+    /**
+     * 根据导粉记录ID、微信ID查询对应微信记录
+     * @param sysImportFanWxAccount
+     * @return
+     */
+    public SysImportFanWxAccount getWxAccountByFanRecordId(SysImportFanWxAccount sysImportFanWxAccount);
 }

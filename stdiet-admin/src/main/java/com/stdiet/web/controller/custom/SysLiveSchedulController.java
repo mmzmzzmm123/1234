@@ -233,4 +233,13 @@ public class SysLiveSchedulController extends BaseController
     public AjaxResult copyLastTimeLiveSchedul(){
         return sysLiveSchedulService.copyLastTimeLiveSchedul();
     }
+
+    /**
+     * 根据日期查询直播记录
+     */
+    @GetMapping(value = "/getAllLiveSchedulByDate")
+    public AjaxResult getAllLiveSchedulByDate(SysLiveSchedul sysLiveSchedul){
+        List<SysLiveSchedul> list = sysLiveSchedulService.selectSysLiveSchedulList(sysLiveSchedul);
+        return AjaxResult.success(list);
+    }
 }

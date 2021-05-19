@@ -93,4 +93,13 @@ public class SysImportFanWxAccountServiceImpl implements ISysImportFanWxAccountS
     {
         return sysImportFanWxAccountMapper.deleteSysImportFanWxAccountById(id);
     }
+
+    /**
+     * 根据导粉记录ID、微信ID查询对应微信记录
+     * @param sysImportFanWxAccount
+     * @return
+     */
+    public SysImportFanWxAccount getWxAccountByFanRecordId(SysImportFanWxAccount sysImportFanWxAccount){
+        return sysImportFanWxAccountMapper.getWxAccountByFanRecordId(sysImportFanWxAccount);
+    }
 }

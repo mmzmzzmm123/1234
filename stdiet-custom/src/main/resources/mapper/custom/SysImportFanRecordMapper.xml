@@ -14,18 +14,47 @@
         <result property="updateTime"    column="update_time"    />
         <result property="updateBy"    column="update_by"    />
         <result property="delFlag"    column="del_flag"    />
+
+        <result property="importFanChannelName" column="import_fan_channel_name"></result>
+        <result property="liveRoomName" column="live_room_name"></result>
+        <result property="liveNutritionistName" column="live_nutritionist_name"></result>
+    </resultMap>
+
+    <resultMap type="SysImportFanRecord" id="SysImportFanRecordResultExtended">
+        <result property="id"    column="id"    />
+        <result property="importFanDate"    column="import_fan_date"    />
+        <result property="importFanChannel"    column="import_fan_channel"    />
+        <result property="importFanLive"    column="import_fan_live"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="delFlag"    column="del_flag"    />
+
+        <result property="importFanChannelName" column="import_fan_channel_name"></result>
+        <result property="liveRoomName" column="live_room_name"></result>
+        <result property="liveNutritionistName" column="live_nutritionist_name"></result>
+
+        <!-- 查询该渠道已导粉的微信号 -->
+        <association property="wxAccountList" column="id" select="getWxAccountListByFanRecordId"/>
     </resultMap>
 
     <sql id="selectSysImportFanRecordVo">
         select id, import_fan_date, import_fan_channel, import_fan_live, create_time, create_by, update_time, update_by, del_flag from sys_import_fan_record
     </sql>
 
-    <select id="selectSysImportFanRecordList" parameterType="SysImportFanRecord" resultMap="SysImportFanRecordResult">
-        <include refid="selectSysImportFanRecordVo"/>
-        where del_flag = 0
-        <if test="importFanDate != null "> and import_fan_date = #{importFanDate}</if>
-        <if test="importFanChannel != null "> and import_fan_channel = #{importFanChannel}</if>
-        <if test="importFanLive != null "> and import_fan_live = #{importFanLive}</if>
+    <select id="selectSysImportFanRecordList" parameterType="SysImportFanRecord" resultMap="SysImportFanRecordResultExtended">
+        select fc.id, fc.import_fan_date, fc.import_fan_channel, fc.import_fan_live, fc.create_time,
+        ca.dict_label as import_fan_channel_name, slt.dict_label as live_room_name,su_nutritionist.nick_name as live_nutritionist_name
+        from sys_import_fan_record as fc
+        left join (SELECT dict_label, dict_value FROM sys_dict_data WHERE dict_type = 'cus_account') AS ca ON ca.dict_value = fc.import_fan_channel
+        left join sys_live_schedul as slc on slc.id = fc.import_fan_live and slc.del_flag = 0
+        left join (SELECT dict_label, dict_value FROM sys_dict_data WHERE dict_type = 'sys_live_type') AS slt ON slt.dict_value = slc.live_room
+        left join sys_user as su_nutritionist on su_nutritionist.user_id = slc.live_nutritionist_id and su_nutritionist.del_flag = 0
+        where fc.del_flag = 0
+        <if test="importFanDate != null "> and fc.import_fan_date = #{importFanDate}</if>
+        <if test="importFanChannel != null "> and fc.import_fan_channel = #{importFanChannel}</if>
+        <if test="importFanLive != null "> and fc.import_fan_live = #{importFanLive}</if>
     </select>
 
     <select id="selectSysImportFanRecordById" parameterType="Long" resultMap="SysImportFanRecordResult">
@@ -82,5 +111,21 @@
             #{id}
         </foreach>
     </update>
+
+    <select id="getFanRecordByChannelLive" parameterType="SysImportFanRecord" resultMap="SysImportFanRecordResult">
+        select * from sys_import_fan_record where del_flag = 0 and import_fan_date = #{importFanDate} and import_fan_channel = #{importFanChannel}
+        and import_fan_live = #{importFanLive}
+        order by id desc limit 1
+    </select>
+
+    <select id="getWxAccountListByFanRecordId" parameterType="Long" resultType="Map">
+        select fwc.id, fwc.import_fan_record_id as importFanRecordId, fwc.import_wx_account_id as importWxAccountId, fwc.import_fan_num as importFanNum,
+        su.nick_name as saleName,wa.wx_account as wxAccount
+        from sys_import_fan_wx_account fwc
+        left join sys_wx_sale_account wa on wa.id = fwc.import_wx_account_id and wa.del_flag = 0
+        left join sys_wx_distribution swd on swd.wechat_account = wa.id and swd.del_flag = 0
+        left join sys_user su on swd.user_id = su.id and su.del_flag = 0
+        where fwc.del_flag = 0
+    </select>
 
 </mapper>

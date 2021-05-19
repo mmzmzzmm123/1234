@@ -1,7 +1,10 @@
 package com.stdiet.custom.service.impl;
 
+import java.util.Date;
 import java.util.List;
 import com.stdiet.common.utils.DateUtils;
+import com.stdiet.custom.domain.SysImportFanWxAccount;
+import com.stdiet.custom.service.ISysImportFanWxAccountService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.stdiet.custom.mapper.SysImportFanRecordMapper;
@@ -19,6 +22,9 @@ public class SysImportFanRecordServiceImpl implements ISysImportFanRecordService
 {
     @Autowired
     private SysImportFanRecordMapper sysImportFanRecordMapper;
+
+    @Autowired
+    private ISysImportFanWxAccountService sysImportFanWxAccountService;
 
     /**
      * 查询导粉管理
@@ -54,7 +60,29 @@ public class SysImportFanRecordServiceImpl implements ISysImportFanRecordService
     public int insertSysImportFanRecord(SysImportFanRecord sysImportFanRecord)
     {
         sysImportFanRecord.setCreateTime(DateUtils.getNowDate());
-        return sysImportFanRecordMapper.insertSysImportFanRecord(sysImportFanRecord);
+        //根据账号渠道、直播间判断是否已存在该渠道的导粉记录
+        SysImportFanRecord record = sysImportFanRecordMapper.getFanRecordByChannelLive(sysImportFanRecord);
+        int row = 0;
+        if(record == null){
+            row = sysImportFanRecordMapper.insertSysImportFanRecord(sysImportFanRecord);
+        }
+        if(record != null || row > 0){
+            //添加微信号对应记录
+            SysImportFanWxAccount sysImportFanWxAccount = new SysImportFanWxAccount();
+            sysImportFanWxAccount.setImportFanRecordId(record != null ? record.getId() : sysImportFanRecord.getId());
+            sysImportFanWxAccount.setImportWxAccountId(sysImportFanRecord.getWxAccountId());
+            sysImportFanWxAccount.setImportFanNum(sysImportFanRecord.getFanNum());
+            sysImportFanWxAccount.setCreateTime(new Date());
+            //根据微信号、导粉记录查询是否存在
+            SysImportFanWxAccount oldFanWxAccount = sysImportFanWxAccountService.getWxAccountByFanRecordId(sysImportFanWxAccount);
+            if(oldFanWxAccount == null){
+                row = sysImportFanWxAccountService.insertSysImportFanWxAccount(sysImportFanWxAccount);
+            }else{
+                oldFanWxAccount.setImportFanNum((oldFanWxAccount.getImportFanNum() == null ? 0 : oldFanWxAccount.getImportFanNum()) + sysImportFanWxAccount.getImportFanNum());
+                row = sysImportFanWxAccountService.updateSysImportFanWxAccount(oldFanWxAccount);
+            }
+        }
+        return row;
     }
 
     /**
