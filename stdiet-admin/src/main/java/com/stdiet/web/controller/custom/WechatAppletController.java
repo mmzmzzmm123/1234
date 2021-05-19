@@ -509,7 +509,6 @@ public class WechatAppletController extends BaseController {
             }
         }
 
-
         SysOrderPause orderPause = new SysOrderPause();
         orderPause.setCusId(cusId);
         List<SysOrderPause> pauses = sysOrderPauseService.selectSysOrderPauseList(orderPause);
@@ -557,9 +556,15 @@ public class WechatAppletController extends BaseController {
         return request.getParameter("echostr");
     }
 
-    @GetMapping("/getToken")
-    public String getToken(@RequestParam String appId) {
-        return iWechatAppletService.getAccessToken(appId);
+//    @GetMapping("/getToken")
+//    public String getToken(@RequestParam String appId) {
+//        return iWechatAppletService.getAccessToken(appId);
+//    }
+
+    @GetMapping("/trans")
+    public AjaxResult transId(@RequestParam String customerId) {
+        Long cusId = StringUtils.isNotEmpty(customerId) ? Long.parseLong(AesUtils.decrypt(customerId)) : 0L;
+        return AjaxResult.success(String.valueOf(cusId));
     }
 
     @GetMapping("/subscribe")

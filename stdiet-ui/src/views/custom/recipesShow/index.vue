@@ -104,7 +104,7 @@ export default {
       let curPlanId, curMenuId, curDate;
       const toDay = dayjs().format("YYYY-MM-DD");
       this.planList = plansRes.data.reduce((arr, plan) => {
-        if (plan.menus) {
+        if (plan.menus && !!plan.sendFlag) {
           let tmpDate = dayjs(plan.startDate).subtract(1, "days");
           arr.push({
             menus: plan.menus.map((menu) => {
