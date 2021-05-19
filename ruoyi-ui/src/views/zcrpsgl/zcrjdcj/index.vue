@@ -16,15 +16,6 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="主持人" prop="zcrid">
-        <el-input
-          v-model="queryParams.zcrid"
-          placeholder="请输入主持人"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
       <el-form-item label="基地类型" prop="jdtype">
         <el-select
           v-model="queryParams.jdtype"
@@ -100,7 +91,7 @@
     >
       <el-table-column type="selection" width="55" align="center" />
       <el-table-column label="基地名称" align="center" prop="name" />
-      <el-table-column label="主持人" align="center" prop="zcrid" />
+      <el-table-column label="主持人" align="center" prop="jsxm" />
       <el-table-column
         label="基地类型"
         align="center"
@@ -179,9 +170,6 @@
       <el-form ref="form" :model="form" :rules="rules" label-width="120px">
         <el-form-item label="基地名称" prop="name">
           <el-input v-model="form.name" placeholder="请输入基地名称" />
-        </el-form-item>
-        <el-form-item label="主持人" prop="zcrid">
-          <el-input v-model="form.zcrid" placeholder="请输入主持人id" />
         </el-form-item>
         <el-form-item label="基地类型" prop="jdtype">
           <el-select v-model="form.jdtype" placeholder="请选择基地类型">
@@ -309,6 +297,7 @@ export default {
         createUserid: null,
         xk: null,
         xd: null,
+        jsxm: null,
       },
       // 表单参数
       form: {},
@@ -377,6 +366,7 @@ export default {
         createTime: null,
         xk: null,
         xd: null,
+        jsxm: null,
       };
       this.resetForm("form");
     },

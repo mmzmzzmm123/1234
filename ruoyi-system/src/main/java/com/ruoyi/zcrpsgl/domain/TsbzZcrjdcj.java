@@ -57,6 +57,9 @@ public class TsbzZcrjdcj extends BaseEntity
     @Excel(name = "创建人")
     private Long createUserid;
 
+    //教师姓名
+    private String jsxm;
+
     public void setId(Long id) 
     {
         this.id = id;
@@ -154,6 +157,7 @@ public class TsbzZcrjdcj extends BaseEntity
             .append("endtime", getEndtime())
             .append("createUserid", getCreateUserid())
             .append("createTime", getCreateTime())
+            .append("jsxm", getJsxm())
             .toString();
     }
 
@@ -171,5 +175,13 @@ public class TsbzZcrjdcj extends BaseEntity
 
     public void setXd(String xd) {
         this.xd = xd;
+    }
+
+    public String getJsxm() {
+        return jsxm;
+    }
+
+    public void setJsxm(String jsxm) {
+        this.jsxm = jsxm;
     }
 }

@@ -4,6 +4,11 @@ import java.util.Date;
 import java.util.List;
 
 import com.ruoyi.common.utils.SecurityUtils;
+import com.ruoyi.qtjs.domain.TsbzJsjbxx;
+import com.ruoyi.qtjs.service.ITsbzJsjbxxService;
+import com.ruoyi.system.service.ISysUserService;
+import com.ruoyi.zcrpsgl.domain.TsbzZcrbmsq;
+import com.ruoyi.zcrpsgl.service.ITsbzZcrbmsqService;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -35,6 +40,12 @@ public class TsbzZcrjdcjController extends BaseController
 {
     @Autowired
     private ITsbzZcrjdcjService tsbzZcrjdcjService;
+    @Autowired
+    private ISysUserService userService;
+    @Autowired
+    private ITsbzJsjbxxService tsbzJsjbxxService;
+    @Autowired
+    private ITsbzZcrbmsqService tsbzZcrbmsqService;
 
     /**
      * 查询主持人基地列表
@@ -79,9 +90,26 @@ public class TsbzZcrjdcjController extends BaseController
     @PostMapping
     public AjaxResult add(@RequestBody TsbzZcrjdcj tsbzZcrjdcj)
     {
-        tsbzZcrjdcj.setCreateUserid(SecurityUtils.getLoginUser().getUser().getUserId());
-        tsbzZcrjdcj.setCreateTime(new Date());
-        return toAjax(tsbzZcrjdcjService.insertTsbzZcrjdcj(tsbzZcrjdcj));
+        AjaxResult ajax = AjaxResult.success();
+        // 通过登录id获取档案编号  查询教师id
+        String dabh = userService.selectUserById(SecurityUtils.getLoginUser().getUser().getUserId()).getUserName();
+        TsbzJsjbxx tsbzJsjbxx = new TsbzJsjbxx();
+        tsbzJsjbxx.setDabh(dabh);
+        String jsid = tsbzJsjbxxService.selectTsbzJsjbxxList(tsbzJsjbxx).get(0).getJsid();
+        // 传入教师id和确认状态 判断此主持人是否可创建基地
+        TsbzZcrbmsq tsbzZcrbmsq = new TsbzZcrbmsq();
+        tsbzZcrbmsq.setJsid(Long.valueOf(jsid));
+        tsbzZcrbmsq.setJgqrStatus("1");
+        List list1 = tsbzZcrbmsqService.selectTsbzZcrbmsqList(tsbzZcrbmsq);
+        if (list1.size() > 0) {
+            tsbzZcrjdcj.setZcrid(Long.valueOf(jsid));
+            tsbzZcrjdcj.setCreateUserid(SecurityUtils.getLoginUser().getUser().getUserId());
+            tsbzZcrjdcj.setCreateTime(new Date());
+            tsbzZcrjdcjService.insertTsbzZcrjdcj(tsbzZcrjdcj);
+            return ajax;
+        } else {
+            return AjaxResult.error("没有此主持人或审核未通过,无法创建基地");
+        }
     }
 
     /**

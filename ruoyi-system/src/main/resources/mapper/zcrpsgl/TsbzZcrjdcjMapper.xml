@@ -20,28 +20,29 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </resultMap>
 
     <sql id="selectTsbzZcrjdcjVo">
-        select id, name, zcrid, jdtype, xk, xd, status, zsme, starttime, endtime, create_userid, create_time from tsbz_zcrjdcj
+        select a.id, a.name, a.zcrid, a.jdtype, a.xk, a.xd, a.status, a.zsme, a.starttime, a.endtime, a.create_userid, a.create_time, b.jsxm as jsxm from tsbz_zcrjdcj a
+        left join tsbz_jsjbxx b on a.zcrid = b.id
     </sql>
 
     <select id="selectTsbzZcrjdcjList" parameterType="TsbzZcrjdcj" resultMap="TsbzZcrjdcjResult">
         <include refid="selectTsbzZcrjdcjVo"/>
         <where>  
-            <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
-            <if test="zcrid != null "> and zcrid = #{zcrid}</if>
-            <if test="jdtype != null  and jdtype != ''"> and jdtype = #{jdtype}</if>
-            <if test="status != null  and status != ''"> and status = #{status}</if>
-            <if test="zsme != null "> and zsme = #{zsme}</if>
-            <if test="starttime != null "> and starttime = #{starttime}</if>
-            <if test="endtime != null "> and endtime = #{endtime}</if>
-            <if test="createUserid != null "> and create_userid = #{createUserid}</if>
-            <if test="xk != null "> and xk = #{xk}</if>
-            <if test="xd != null "> and xd = #{xd}</if>
+            <if test="name != null  and name != ''"> and a.name like concat('%', #{name}, '%')</if>
+            <if test="zcrid != null "> and a.zcrid = #{zcrid}</if>
+            <if test="jdtype != null  and jdtype != ''"> and a.jdtype = #{jdtype}</if>
+            <if test="status != null  and status != ''"> and a.status = #{status}</if>
+            <if test="zsme != null "> and a.zsme = #{zsme}</if>
+            <if test="starttime != null "> and a.starttime = #{starttime}</if>
+            <if test="endtime != null "> and a.endtime = #{endtime}</if>
+            <if test="createUserid != null "> and a.create_userid = #{createUserid}</if>
+            <if test="xk != null "> and a.xk = #{xk}</if>
+            <if test="xd != null "> and a.xd = #{xd}</if>
         </where>
     </select>
     
     <select id="selectTsbzZcrjdcjById" parameterType="Long" resultMap="TsbzZcrjdcjResult">
         <include refid="selectTsbzZcrjdcjVo"/>
-        where id = #{id}
+        where a.id = #{id}
     </select>
         
     <insert id="insertTsbzZcrjdcj" parameterType="TsbzZcrjdcj" useGeneratedKeys="true" keyProperty="id">
