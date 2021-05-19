@@ -13,7 +13,8 @@ const whiteList = [
   "/bind",
   "/register",
   "/question",
-  "/subhealthyInvestigation"
+  "/subhealthyInvestigation",
+  "/live"
 ];
 
 router.beforeEach((to, from, next) => {

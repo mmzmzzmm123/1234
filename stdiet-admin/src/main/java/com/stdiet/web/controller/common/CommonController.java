@@ -7,11 +7,7 @@ import com.stdiet.common.core.redis.RedisCache;
 import com.stdiet.common.utils.StringUtils;
 import com.stdiet.common.utils.file.FileUploadUtils;
 import com.stdiet.common.utils.file.FileUtils;
-import com.stdiet.custom.domain.wechat.WxAccessToken;
-import com.stdiet.custom.domain.wechat.WxFileUploadResult;
-import com.stdiet.custom.utils.WxTokenUtils;
 import com.stdiet.framework.config.ServerConfig;
-import org.aspectj.weaver.loadtime.Aj;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,7 +19,6 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.net.URLDecoder;
-import java.util.concurrent.TimeUnit;
 
 /**
  * 通用请求处理

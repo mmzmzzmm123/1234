@@ -75,6 +75,13 @@
             {{ `${scope.row.startDate} 至 ${scope.row.endDate}` }}
           </template>
         </el-table-column>
+        <el-table-column label="订阅情况" align="center">
+          <template slot-scope="scope">
+            <el-tag :type="scope.row.subscribed ? 'success' : 'danger'">
+              {{ scope.row.subscribed ? "已订阅" : "未订阅" }}
+            </el-tag>
+          </template>
+        </el-table-column>
         <el-table-column label="发送" align="center" width="80">
           <template slot-scope="scope">
             <el-switch
