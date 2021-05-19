@@ -26,7 +26,10 @@
         <!-- <el-tooltip content="布局大小" effect="dark" placement="bottom">
           <size-select id="size-select" class="right-menu-item hover-effect" />
         </el-tooltip> -->
-        <div class="right-menu-item hover-effect badge_style">
+        <div
+          class="right-menu-item hover-effect badge_style"
+          @click="handleOnMessageClick"
+        >
           <el-badge :value="12">
             <el-tooltip content="消息" effect="dark" placement="bottom">
               <em class="el-icon-message" :style="{ fontSize: '28px' }" />
@@ -98,6 +101,9 @@ export default {
     ...mapActions(["init"]),
     toggleSideBar() {
       this.$store.dispatch("app/toggleSideBar");
+    },
+    handleOnMessageClick() {
+
     },
     async logout() {
       this.$confirm("确定注销并退出系统吗？", "提示", {
