@@ -109,7 +109,7 @@ import { listClass, getUserList } from "@/api/system/class";
 import { listUser } from "@/api/system/user";
 
 export default {
-  name: "Assessmentstudent",
+  name: "dayflowassessmentteacher",
 
   data() {
     return {

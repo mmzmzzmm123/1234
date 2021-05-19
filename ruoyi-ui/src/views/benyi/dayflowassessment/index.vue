@@ -86,7 +86,7 @@
         prop="pgdx"
         :formatter="pgdxFormat"
       />
-      <el-table-column label="最终得分" align="center" prop="zzdf" />
+      <el-table-column label="最终扣分" align="center" prop="zzdf" />
       <el-table-column
         label="评估人"
         align="center"

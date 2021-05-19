@@ -116,7 +116,7 @@
             </if>
             <!-- 数据范围过滤 -->
             ${dataScope}
-            order by d.classid
+            order by d.create_time desc
         </where>
     </select>
 

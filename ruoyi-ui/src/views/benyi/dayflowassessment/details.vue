@@ -5,7 +5,7 @@
         <span>班级：{{ classFormat(this.classid) }} </span>
         <span> 评估对象：{{ pgdxFormat(this.pgdx) }} </span>
         <span> 评估时间：{{ this.createtime }} </span>
-        <span> 得分：{{ this.df }} </span>
+        <span> 扣分：{{ this.df }} </span>
       </p>
     </div>
     <el-tabs v-model="activeName" type="card">
@@ -71,7 +71,7 @@ import { listClass, getUserList } from "@/api/system/class";
 import { listUser } from "@/api/system/user";
 
 export default {
-  name: "Assessmentstudentdetails",
+  name: "dayflowassessmentteacherdetails",
   data() {
     return {
       id: "",

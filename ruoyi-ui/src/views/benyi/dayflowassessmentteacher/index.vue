@@ -87,7 +87,7 @@
         :formatter="createUserFormat"
       />
       <el-table-column
-        label="最终得分"
+        label="最终扣分"
         align="center"
         prop="zzdf"
         width="110"

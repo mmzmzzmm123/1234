@@ -38,6 +38,7 @@
             <if test="starttime != null ">and starttime = #{starttime}</if>
             <if test="createUserid != null ">and create_userid = #{createUserid}</if>
         </where>
+        order by create_time desc
     </select>
 
     <select id="selectByDayflowassessmentplanById" parameterType="Long" resultMap="ByDayflowassessmentplanResult">

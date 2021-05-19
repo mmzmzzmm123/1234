@@ -49,7 +49,7 @@
 
     <el-table v-loading="loading" border :default-sort = "{prop: 'bjpjf', order: 'descending'}" :data="dayflowassessmentList">
       <el-table-column label="评估对象" align="center" prop="pgdxxm" fixed />
-      <el-table-column label="最终得分" align="center" prop="bjpjf" sortable width="110"/>
+      <el-table-column label="最终扣分" align="center" prop="bjpjf" sortable width="110"/>
       <el-table-column label="早间接待" align="center" prop="zjjdpjf" sortable width="110"/>
       <el-table-column label="用餐" align="center" prop="ycpjf" sortable width="80"/>
       <el-table-column label="早间坐圈" align="center" prop="zjzqpjf" sortable width="110"/>
