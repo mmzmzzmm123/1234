@@ -173,6 +173,12 @@
             :formatter="xypsjgqrstatusFormat"
           />
           <el-table-column
+            label="学员评价"
+            align="center"
+            prop="xypjjgstatus"
+            :formatter="xypjjgstatusFormat"
+          />
+          <el-table-column
             label="操作"
             align="center"
             class-name="small-padding fixed-width"
@@ -193,6 +199,15 @@
                 @click="handleDelete(scope.row)"
                 v-hasPermi="['xypsgl:xybmsq:remove']"
                 >删除</el-button
+              >
+              <el-button
+                size="mini"
+                type="text"
+                icon="el-icon-check"
+                @click="handleZsCheck(scope.row)"
+                v-hasPermi="['xypsgl:xybmsq:edit']"
+                v-if="scope.row.xypjjgstatus=='1'?true:false"
+                >证书查看</el-button
               >
             </template>
           </el-table-column>
@@ -456,6 +471,8 @@ export default {
       zcrOptions: [],
       // 学年选项
       ssxnOptions: [],
+      // 学员评价状态选项
+      xypjjgstatusOptions: [],
       // 当前报名人数
       dqybm: undefined,
       // 查询参数
@@ -531,6 +548,12 @@ export default {
     this.getDicts("sys_dm_zcrjgqrzt").then((response) => {
       this.xypsjgqrstatusOptions = response.data;
     });
+    this.getDicts("sys_dm_xypjjgzt").then((response) => {
+      this.xypjjgstatusOptions = response.data;
+    });
+    this.getDicts("sys_gbxn").then((response) => {
+      this.ssxnOptions = response.data;
+    });
   },
   methods: {
     /** 查询学员报名申请列表 */
@@ -561,7 +584,7 @@ export default {
     // },
     /** 查询主持人报名申请列表 */
     getZcrList() {
-      listZcrbmsq(null).then((response) => {
+      listJsjbxx().then((response) => {
         this.zcrOptions = response.rows;
       });
     },
@@ -571,7 +594,7 @@ export default {
       var datas = this.zcrOptions;
       Object.keys(datas).map((key) => {
         if (datas[key].jsid == "" + row.zcrid) {
-          actions.push(datas[key].name);
+          actions.push(datas[key].jsxm);
           return false;
         }
       });
@@ -650,6 +673,12 @@ export default {
     // 确认字典翻译
     xypsjgqrstatusFormat(row, column) {
       return this.selectDictLabel(this.xypsjgqrstatusOptions, row.xypsjgqrstatus);
+    },
+    xypjjgstatusFormat(row, column) {
+      return this.selectDictLabel(this.xypjjgstatusOptions, row.xypjjgstatus);
+    },
+    ssxnFormat(row, column) {
+      return this.selectDictLabel(this.ssxnOptions, row.ssxn);
     },
     // 切换tab
     handleChangeTab(tab, event) {},
@@ -731,6 +760,17 @@ export default {
         this.open = true;
         this.title = "修改学员报名申请";
       });
+    },
+    /** 修改按钮操作 */
+    handleZsCheck(row) {
+      this.reset();
+      alert("待开发证书");
+      // const id = row.id || this.ids;
+      // getXybmsq(id).then((response) => {
+      //   this.form = response.data;
+      //   this.open = true;
+      //   this.title = "修改学员报名申请";
+      // });
     },
     /** 提交按钮 */
     submitForm() {
