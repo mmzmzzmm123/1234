@@ -495,7 +495,7 @@ export const constantRoutes = [
     hidden: true,
     children: [
       {
-        path: "teacher",
+        path: "teacher/:id(\\d+)",
         component: () => import("@/views/benyi/dayflowassessment/teacher"),
         name: "dayflowassessmentteacher",
         meta: {

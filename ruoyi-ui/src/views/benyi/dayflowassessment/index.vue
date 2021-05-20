@@ -287,7 +287,9 @@ export default {
       this.$router.push({ path: "/benyi/dayflowassessments/details/" + id });
     },
     handleAdd() {
-      this.$router.push({ path: "/benyi/dayflowassessment/teacher" });
+      this.$router.push({
+        path: "/benyi/dayflowassessment/teacher/" + Date.now(),
+      });
     },
     /** 删除按钮操作 */
     handleDelete(row) {
