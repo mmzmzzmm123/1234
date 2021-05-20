@@ -22,21 +22,33 @@
     </sql>
 
     <sql id="selectByMicrocourseVoTree">
-        select dict_value+9999 id, 0 parent_id,dict_label title,dict_sort sort   from sys_dict_data where dict_type='sys_yebjlx' and dict_label !='托班（2-3岁）'
+select dict_value+9999 id, 0 parent_id,dict_label title,dict_sort sort   from sys_dict_data where dict_type='sys_yebjlx' and dict_label !='托班（2-3岁）'
                 union all
-								select 1000101 ,concat(10001),'上册','5'
-								union all
-								select 1000102 ,concat(10001),'下册','6'
-								union all
-								select 1000201 ,concat(10002),'上册','7'
-								union all
-								select 1000202 ,concat(10002),'下册','8'
-								union all
-								select 1000301 ,concat(10003),'上册','9'
-								union all
-								select 1000302 ,concat(10003),'下册','10'
+				select 1000101 ,concat(10001),'上册',5
 				union all
-        select id, CONCAT(scpoe+9999,upanddown), title, sort from by_microcourse
+				select 1000102 ,concat(10001),'下册',6
+				union all
+				select 1000201 ,concat(10002),'上册',7
+				union all
+				select 1000202 ,concat(10002),'下册',8
+				union all
+				select 1000301 ,concat(10003),'上册',9
+				union all
+				select 1000302 ,concat(10003),'下册',10
+				union all
+				select concat(1000101,dict_value), 1000101,dict_label title,dict_sort sort   from sys_dict_data where dict_type='sys_dm_wxkclx'
+				union all
+				select concat(1000102,dict_value), 1000102,dict_label title,dict_sort sort   from sys_dict_data where dict_type='sys_dm_wxkclx'
+				union all
+				select concat(1000201,dict_value), 1000201,dict_label title,dict_sort sort   from sys_dict_data where dict_type='sys_dm_wxkclx'
+				union all
+				select concat(1000202,dict_value), 1000202,dict_label title,dict_sort sort   from sys_dict_data where dict_type='sys_dm_wxkclx'
+				union all
+				select concat(1000301,dict_value), 1000301,dict_label title,dict_sort sort   from sys_dict_data where dict_type='sys_dm_wxkclx'
+				union all
+				select concat(1000302,dict_value), 1000302,dict_label title,dict_sort sort   from sys_dict_data where dict_type='sys_dm_wxkclx'
+				union all
+        select id, CONCAT(scpoe+9999,upanddown,type), title, sort from by_microcourse
     </sql>
 
     <select id="selectByMicrocourseListTree" parameterType="ByMicrocourse" resultMap="ByMicrocourseResult">

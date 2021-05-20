@@ -1,7 +1,7 @@
 <template>
   <div class="app-container">
     <el-row :gutter="20">
-      <el-col :span="4" :xs="24">
+      <el-col :span="6" :xs="24">
         <div class="head-container">
           <el-input
             v-model="name"
@@ -12,19 +12,19 @@
             style="margin-bottom: 20px"
           />
         </div>
-        <div class="head-container">
+        <div class="head-container tree">
           <el-tree
             :data="treeOptions"
             :props="defaultProps"
             :expand-on-click-node="false"
             :filter-node-method="filterNode"
             ref="tree"
-            default-expand-all
+            :default-expand-all="false"
             @node-click="handleNodeClick"
           />
         </div>
       </el-col>
-      <el-col :span="20" :xs="24">
+      <el-col :span="18" :xs="24">
         <el-card class="box-card">
           <div slot="header" class="clearfix">
             <span class="box-card-title">{{ title }}</span>
@@ -50,7 +50,7 @@
 import { treeselect, getMicrocourse } from "@/api/benyi/microcourse";
 
 export default {
-  name: "Detail",
+  name: "Microcoursestudy",
   data() {
     return {
       // 主题整合名称
@@ -185,5 +185,13 @@ div {
   -moz-user-select: none;
   -ms-user-select: none;
   user-select: none;
+}
+.el-tree {
+  min-width: 100%;
+  display: inline-block;
+}
+.tree {
+  overflow:auto;
+  max-height: 300px;
 }
 </style>
