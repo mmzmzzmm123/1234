@@ -9,7 +9,9 @@ import com.stdiet.custom.service.ISysWxSaleAccountService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 微信账号Service业务层处理
@@ -134,7 +136,7 @@ public class SysWxSaleAccountServiceImpl implements ISysWxSaleAccountService {
      * @param sysWxSaleAccount
      * @return
      */
-    public List<SysWxSaleAccount> getWxAccountAndSale(SysWxSaleAccount sysWxSaleAccount){
-        return sysWxSaleAccountMapper.getWxAccountAndSale(sysWxSaleAccount);
+    public List<SysWxSaleAccount> getWxAccountAndSale(){
+        return sysWxSaleAccountMapper.getWxAccountAndSale();
     }
 }

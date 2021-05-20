@@ -124,8 +124,8 @@
         from sys_import_fan_wx_account fwc
         left join sys_wx_sale_account wa on wa.id = fwc.import_wx_account_id and wa.del_flag = 0
         left join sys_wx_distribution swd on swd.wechat_account = wa.id and swd.del_flag = 0
-        left join sys_user su on swd.user_id = su.id and su.del_flag = 0
-        where fwc.del_flag = 0
+        left join sys_user su on swd.user_id = su.user_id and su.del_flag = 0
+        where fwc.del_flag = 0 and fwc.import_fan_record_id = #{id}
     </select>
 
 </mapper>

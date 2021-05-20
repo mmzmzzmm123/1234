@@ -75,8 +75,7 @@ public interface ISysWxSaleAccountService
 
     /**
      * 获取可接粉的微信号以及分配的销售昵称
-     * @param sysWxSaleAccount
      * @return
      */
-    List<SysWxSaleAccount> getWxAccountAndSale(SysWxSaleAccount sysWxSaleAccount);
+    List<SysWxSaleAccount> getWxAccountAndSale();
 }

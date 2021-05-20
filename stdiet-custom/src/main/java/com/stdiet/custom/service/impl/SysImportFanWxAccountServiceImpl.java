@@ -1,7 +1,10 @@
 package com.stdiet.custom.service.impl;
 
 import java.util.List;
+import java.util.Map;
+
 import com.stdiet.common.utils.DateUtils;
+import com.stdiet.custom.domain.SysWxSaleAccount;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.stdiet.custom.mapper.SysImportFanWxAccountMapper;
@@ -101,5 +104,14 @@ public class SysImportFanWxAccountServiceImpl implements ISysImportFanWxAccountS
      */
     public SysImportFanWxAccount getWxAccountByFanRecordId(SysImportFanWxAccount sysImportFanWxAccount){
         return sysImportFanWxAccountMapper.getWxAccountByFanRecordId(sysImportFanWxAccount);
+    }
+
+
+    /**
+     * 根据日期统计微信号导粉数量
+     * @return
+     */
+    public List<Map<String,Object>> getTotalImportFanNum(SysImportFanWxAccount sysImportFanWxAccount){
+        return sysImportFanWxAccountMapper.getTotalImportFanNum(sysImportFanWxAccount);
     }
 }

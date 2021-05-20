@@ -1,8 +1,11 @@
 package com.stdiet.custom.domain;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 import com.stdiet.common.annotation.Excel;
 import com.stdiet.common.core.domain.BaseEntity;
+
+import java.util.Date;
 
 /**
  * 导粉记录中对应微信记录对象 sys_import_fan_wx_account
@@ -32,4 +35,8 @@ public class SysImportFanWxAccount extends BaseEntity
 
     /** 删除标识 0未删除 1已删除 */
     private Long delFlag;
+
+    //导粉日期
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    private Date importFanDate;
 }

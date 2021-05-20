@@ -92,10 +92,29 @@
       <el-table-column label="进粉账号渠道" align="center" prop="importFanChannelName" />
       <el-table-column label="所属直播间" align="center" prop="liveRoomName" >
         <template slot-scope="scope">
-            {{scope.row.liveRoomName + "—" + scope.row.liveNutritionistName}}
+            {{(scope.row.liveRoomName != null || scope.row.liveNutritionistName != null) ? (scope.row.liveRoomName + "—" + scope.row.liveNutritionistName) : ""}}
         </template>
       </el-table-column>
-      <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
+      <el-table-column label="导粉总数" align="center" prop="wxAccountList" :formatter="getTotalFanNum">
+      </el-table-column>
+      <el-table-column label="导粉微信号" align="center" prop="wxAccountList" >
+        <template slot-scope="scope">
+          <el-popover
+          placement="left"
+          width="390"
+          trigger="click">
+          <el-table :data="scope.row.wxAccountList" style="width:370;height: 400px;overflow: auto;">
+            <el-table-column width="100" property="saleName" label="销售" align="center"></el-table-column>
+            <el-table-column width="160" property="wxAccount" label="微信号" align="center"></el-table-column>
+            <el-table-column width="80" property="importFanNum" label="导粉数量" align="center"></el-table-column>
+          </el-table>
+          <el-button slot="reference">详情</el-button>
+          </el-popover>
+        </template>
+      </el-table-column>
+      
+      
+     <!-- <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button
             size="mini"
@@ -112,7 +131,7 @@
             v-hasPermi="['custom:importFanRecord:remove']"
           >删除</el-button>
         </template>
-      </el-table-column>
+      </el-table-column>-->
     </el-table>
     
     <pagination
@@ -334,6 +353,15 @@ export default {
         this.$refs.importFanRef.showDialog(data,()=>{
             this.getList();
         }, this.fanChanneloptions);
+    },
+    getTotalFanNum(row, column){
+      let fanNum = 0;
+      if(row.wxAccountList != null){
+        row.wxAccountList.forEach((item,index) => {
+          fanNum += item.importFanNum == null ? 0 : item.importFanNum;
+        });
+      }
+      return fanNum;
     }
   }
 };

@@ -1,6 +1,8 @@
 package com.stdiet.custom.mapper;
 
 import java.util.List;
+import java.util.Map;
+
 import com.stdiet.custom.domain.SysImportFanWxAccount;
 
 /**
@@ -65,4 +67,11 @@ public interface SysImportFanWxAccountMapper
      * @return
      */
     public SysImportFanWxAccount getWxAccountByFanRecordId(SysImportFanWxAccount sysImportFanWxAccount);
+
+    /**
+     * 根据微信号查询
+     * @param sysImportFanWxAccount
+     * @return
+     */
+    List<Map<String,Object>> getTotalImportFanNum(SysImportFanWxAccount sysImportFanWxAccount);
 }

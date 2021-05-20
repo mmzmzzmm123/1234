@@ -1,8 +1,12 @@
 package com.stdiet.web.controller.custom;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+import com.stdiet.custom.domain.SysImportFanWxAccount;
 import com.stdiet.custom.domain.SysWxSaleAccount;
+import com.stdiet.custom.service.ISysImportFanWxAccountService;
 import com.stdiet.custom.service.ISysWxSaleAccountService;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,6 +42,9 @@ public class SysImportFanRecordController extends BaseController
 
     @Autowired
     private ISysWxSaleAccountService sysWxSaleAccountService;
+
+    @Autowired
+    private ISysImportFanWxAccountService sysImportFanWxAccountService;
 
     /**
      * 查询导粉管理列表
@@ -109,12 +116,16 @@ public class SysImportFanRecordController extends BaseController
 
     /**
      * 获取可接粉的微信号以及对应销售
-     * @param sysWxSaleAccount
      * @return
      */
     @PreAuthorize("@ss.hasPermi('custom:importFanRecord:add')")
     @GetMapping(value = "/getWxAccountAndSale")
-    public TableDataInfo getWxAccountAndSale(SysWxSaleAccount sysWxSaleAccount){
-        return getDataTable(sysWxSaleAccountService.getWxAccountAndSale(sysWxSaleAccount));
+    public AjaxResult getWxAccountAndSale(SysImportFanWxAccount sysImportFanWxAccount){
+        Map<String, Object> result = new HashMap<>();
+        List<SysWxSaleAccount> list = sysWxSaleAccountService.getWxAccountAndSale();
+        List<Map<String,Object>> fanNumList = sysImportFanWxAccountService.getTotalImportFanNum(sysImportFanWxAccount);
+        result.put("wxSaleAccountList", list);
+        result.put("fanNumList", fanNumList);
+        return AjaxResult.success(result);
     }
 }

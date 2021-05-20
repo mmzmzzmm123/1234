@@ -4,7 +4,7 @@
         <div style="height: 500px; overflow: auto">
             <el-table v-loading="loading" :data="wxAccountList">
                 <!--<el-table-column label="微信昵称" align="center" prop="wxNickName" />-->
-                <el-table-column label="微信号" align="center" prop="wxAccount" width="120"/>
+                <el-table-column label="微信号" align="center" prop="wxAccount" width="160"/>
                 <el-table-column label="销售" align="center" prop="saleName" width="120"/>
                 <el-table-column label="已导粉数量" align="center" prop="importFanNum" width="120"/>
                 <el-table-column label="进粉渠道" align="center" prop="importFanChannel" >
@@ -48,7 +48,7 @@
                             <el-input-number v-model="scope.row.fanNum" :min="1" :max="10000" label="导粉数量" style="width:160px"></el-input-number>
                     </template>
                 </el-table-column>
-                <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
+                <el-table-column label="操作" align="center" class-name="small-padding fixed-width" width="100">
                     <template slot-scope="scope">
                     <el-button
                         size="normal"
@@ -91,7 +91,9 @@ export default {
       wxAccountList:[],
       fanChanneloptions:[],
       //当日直播间
-      liveSchedukList:[]
+      liveSchedukList:[],
+      //总导粉统计
+      fanNumList:[]
     };
   },
   created(){
@@ -129,22 +131,35 @@ export default {
     //获取所有可接粉的微信号
     getListWxAccount() {
         this.loading = true;
-        getWxAccountAndSale().then((response) => {
-            response.rows.forEach((item,index) => {
+        getWxAccountAndSale({'importFanDate': this.data.importFanDate}).then((response) => {
+            response.data.wxSaleAccountList.forEach((item,index) => {
                 item.fanNum = 1;
-            })
-            this.wxAccountList = response.rows;
+                item.importFanNum =  this.getTotalFanNum(response.data.fanNumList, item.id);
+            });
+            this.wxAccountList = response.data.wxSaleAccountList;
+            this.fanNumList = response.data.fanNumList;
             this.loading = false;
         });
     },
     getAllLiveSchedulByDate(){
-      console.log("--");
       getAllLiveSchedulByDate({'liveSchedulDate':this.data.importFanDate}).then((response) => {
           response.data.forEach((item,index) => {
             item.liveRoomName = item.liveNutritionistName + " " + item.liveRoomName;
           });
           this.liveSchedukList = response.data;  
       });
+    },
+    getTotalFanNum(fanNumList, wxAccountId){
+        if(wxAccountId == null || fanNumList == null){
+          return 0;
+        }
+        let num = 0;
+        fanNumList.forEach((item,index) => {
+            if(item.wxAccountId == wxAccountId){
+                num = item.fanNum;
+            }
+        });
+        return num;
     },
     addImportFanRecord(row){
         //账号渠道、进粉数量不能为空
@@ -177,6 +192,7 @@ export default {
                 row.importFanChannel = null;
                 row.fanNum = 1;
                 row.importFanLive = null;
+                row.importFanNum += row.fanNum;
             }
         });
         
