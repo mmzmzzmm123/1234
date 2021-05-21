@@ -18,7 +18,7 @@
     <resultMap id="SysDishesResult" type="SysRecipesDailyDishes">
         <result property="dishesId" column="dishes_id"/>
         <result property="menuId" column="menu_id"/>
-        <result property="id" column="id" />
+        <result property="id" column="id"/>
         <result property="name" column="name"/>
         <result property="type" column="type"/>
         <result property="methods" column="methods"/>
@@ -39,13 +39,13 @@
         <result property="area" column="area"/>
         <result property="rec" column="rec"/>
         <result property="notRec" column="not_rec"/>
-        <result property="cusWeight"    column="cus_weight"    />
-        <result property="cusUnit"    column="cus_unit"    />
-        <result property="weight"    column="weight"    />
+        <result property="cusWeight" column="cus_weight"/>
+        <result property="cusUnit" column="cus_unit"/>
+        <result property="weight" column="weight"/>
     </resultMap>
 
     <select id="selectSysRecipesByRecipesId" parameterType="Long" resultMap="SysRecipesResult">
-        SELECT * FROM sys_customer_daily_menu WHERE recipes_id = #{id}
+        SELECT id, num_day, create_by, create_time, update_by, update_time, review_status FROM sys_customer_daily_menu WHERE recipes_id = #{id}
     </select>
 
     <select id="selectDishesByMenuId" parameterType="Long" resultMap="SysDishesResult">
@@ -86,7 +86,9 @@
             <if test="menuId != null">menu_id = #{menuId},</if>
             <if test="dishesId != null">dishes_id = #{dishesId},</if>
             <if test="type != null">type = #{type},</if>
-            <if test="detail != null">detail = #{detail, jdbcType=OTHER, typeHandler=com.stdiet.custom.typehandler.ArrayJsonHandler},</if>
+            <if test="detail != null">detail =
+                #{detail, jdbcType=OTHER, typeHandler=com.stdiet.custom.typehandler.ArrayJsonHandler},
+            </if>
             <if test="remark != null">remark = #{remark},</if>
         </trim>
         where id = #{id}
@@ -106,7 +108,9 @@
             <if test="menuId != null">#{menuId},</if>
             <if test="dishesId != null">#{dishesId},</if>
             <if test="type != null">#{type},</if>
-            <if test="detail != null">#{detail, jdbcType=OTHER, typeHandler=com.stdiet.custom.typehandler.ArrayJsonHandler},</if>
+            <if test="detail != null">
+                #{detail, jdbcType=OTHER, typeHandler=com.stdiet.custom.typehandler.ArrayJsonHandler},
+            </if>
             <if test="remark != null">#{remark},</if>
         </trim>
     </insert>
@@ -125,7 +129,7 @@
     <select id="getNumDayByCusId" parameterType="Long" resultType="Integer">
         select count(*) from sys_customer_daily_menu where cus_id = #{id}
     </select>
-    
+
     <!--  新增食谱  -->
     <insert id="addRecipes" parameterType="SysRecipes" useGeneratedKeys="true" keyProperty="id">
         insert into sys_customer_menu
@@ -149,8 +153,66 @@
     <insert id="bashAddDishes" useGeneratedKeys="true" keyProperty="id">
         insert into sys_customer_menu_dishes (menu_id, type, dishes_id, remark, detail) values
         <foreach collection="list" separator="," item="item" index="index">
-            (#{item.menuId}, #{item.type}, #{item.dishesId}, #{item.remark}, #{item.detail, jdbcType=OTHER, typeHandler=com.stdiet.custom.typehandler.ArrayJsonHandler})
+            (#{item.menuId}, #{item.type}, #{item.dishesId}, #{item.remark},
+            #{item.detail, jdbcType=OTHER, typeHandler=com.stdiet.custom.typehandler.ArrayJsonHandler})
         </foreach>
     </insert>
+
+    <!--    展示用食谱查找精简 -->
+    <resultMap type="SysRecipesDaily" id="SysRecipesResultShow">
+        <result property="id" column="id"/>
+        <result property="numDay" column="num_day"/>
+        <result property="reviewStatus" column="review_status"/>
+        <association property="dishes" column="id" select="selectDishesByMenuIdShow"/>
+    </resultMap>
+
+    <resultMap type="SysRecipesDailyDishes" id="SysDishesResultShow">
+        <result property="dishesId" column="dishes_id"/>
+        <result property="menuId" column="menu_id"/>
+        <result property="id" column="id"/>
+        <result property="name" column="name"/>
+        <result property="type" column="type"/>
+        <result property="methods" column="methods"/>
+        <result property="remark" column="remark"/>
+        <result property="isMain" column="is_main"/>
+        <result property="detail" column="detail" typeHandler="com.stdiet.custom.typehandler.ArrayJsonHandler"
+                javaType="com.stdiet.custom.domain.SysDishesIngredient"/>
+        <association property="igdList" column="dishes_id" select="selectIngredientsByDishesIdShow"/>
+    </resultMap>
+
+    <resultMap type="SysDishesIngredient" id="SysIgdsResultShow">
+        <result property="id" column="id"/>
+        <result property="name" column="name"/>
+        <result property="type" column="type"/>
+        <result property="proteinRatio" column="protein_ratio"/>
+        <result property="fatRatio" column="fat_ratio"/>
+        <result property="carbonRatio" column="carbon_ratio"/>
+        <result property="area" column="area"/>
+        <result property="cusWeight" column="cus_weight"/>
+        <result property="cusUnit" column="cus_unit"/>
+        <result property="weight" column="weight"/>
+    </resultMap>
+
+    <select id="selectSysRecipesByRecipesIdShow" parameterType="Long" resultMap="SysRecipesResultShow">
+        SELECT id, num_day, review_status FROM sys_customer_daily_menu WHERE recipes_id = #{id}
+    </select>
+
+    <select id="selectDishesByMenuIdShow" parameterType="Long" resultMap="SysDishesResultShow">
+        SELECT * FROM (SELECT id, menu_id, dishes_id, type, detail, remark FROM sys_customer_menu_dishes WHERE menu_id = #{id}) AS menu
+        LEFT JOIN sys_dishes ON menu.dishes_id = sys_dishes.id
+    </select>
+
+    <select id="selectIngredientsByDishesIdShow" parameterType="Long" resultMap="SysIgdsResultShow">
+       SELECT * FROM(
+            SELECT ingredient_id AS id, ingredient_weight AS weight, cus_weight, cus_unit, remark
+            FROM sys_dishes_ingredient
+            WHERE dishes_id = #{id}
+        ) dishes
+        LEFT JOIN (
+            SELECT id, name, type, protein_ratio, fat_ratio, carbon_ratio, area
+            FROM sys_ingredient igd
+        ) ing USING(id)
+    </select>
+
 
 </mapper>

@@ -550,12 +550,12 @@ public class WechatAppletController extends BaseController {
 
     @GetMapping("/getRecipesDetail")
     public AjaxResult getRecipesDetail(@RequestParam Long menuId) {
-        return AjaxResult.success(iSysRecipesService.selectDishesByMenuId(menuId));
+        return AjaxResult.success(iSysRecipesService.selectDishesByMenuIdShow(menuId));
     }
 
     @GetMapping("/getPlanDetail")
     public AjaxResult getPlanDetail(@RequestParam Long planId) {
-        return AjaxResult.success(iSysRecipesService.selectSysRecipesByRecipesId(planId));
+        return AjaxResult.success(iSysRecipesService.selectSysRecipesByRecipesIdShow(planId));
     }
 
     @GetMapping("/authServer")
