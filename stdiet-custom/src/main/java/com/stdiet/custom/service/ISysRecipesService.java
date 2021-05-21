@@ -13,7 +13,11 @@ public interface ISysRecipesService {
 
     public List<SysRecipes> selectSysRecipesByRecipesId(Long id);
 
+    public List<SysRecipes> selectSysRecipesByRecipesIdShow(Long id);
+
     public List<SysRecipesDailyDishes> selectDishesByMenuId(Long id);
+
+    public List<SysRecipesDailyDishes> selectDishesByMenuIdShow(Long id);
 
     public int updateDishesDetail(SysRecipesDailyDishes sysRecipesDaily);
 
