@@ -58,4 +58,7 @@ public interface ISysImportFanRecordService
      * @return 结果
      */
     public int deleteSysImportFanRecordById(Long id);
+
+    //查询总导粉数量
+    int selectTotalSysImportFanNum(SysImportFanRecord sysImportFanRecord);
 }

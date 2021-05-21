@@ -14,6 +14,7 @@ import com.stdiet.custom.domain.SysCustomer;
 import com.stdiet.custom.domain.SysCustomerPhysicalSigns;
 import com.stdiet.custom.dto.request.HealthyDetailRequest;
 import com.stdiet.custom.dto.response.NutritionalCalories;
+import com.stdiet.custom.mapper.SysCustomerMapper;
 import com.stdiet.custom.service.ISysCustomerService;
 import com.stdiet.custom.utils.NutritionalUtils;
 import com.stdiet.custom.utils.PdfUtils;
@@ -36,7 +37,7 @@ public class SysCustomerHealthyServiceImpl implements ISysCustomerHealthyService
     private SysCustomerHealthyMapper sysCustomerHealthyMapper;
 
     @Autowired
-    private ISysCustomerService sysCustomerService;
+    private SysCustomerMapper sysCustomerMapper;
 
     public static final String reportDownFileNameFormat = "%s超重%s斤%s";
 
@@ -78,7 +79,7 @@ public class SysCustomerHealthyServiceImpl implements ISysCustomerHealthyService
             return AjaxResult.error("客户不存在");
         }
         //判断客户是否存在
-        SysCustomer sysCustomer = sysCustomerService.selectSysCustomerById(Long.parseLong(customerId));
+        SysCustomer sysCustomer = sysCustomerMapper.selectSysCustomerById(Long.parseLong(customerId));
         if(sysCustomer == null){
             return AjaxResult.error("客户不存在");
         }

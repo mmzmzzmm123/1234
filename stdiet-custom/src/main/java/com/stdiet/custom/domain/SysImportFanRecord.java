@@ -1,9 +1,13 @@
 package com.stdiet.custom.domain;
 
 import java.util.Date;
+import java.util.List;
+import java.util.Map;
+
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.stdiet.common.annotation.Excel;
 import com.stdiet.common.core.domain.BaseEntity;
+import lombok.Data;
 
 /**
  * 导粉管理对象 sys_import_fan_record
@@ -11,6 +15,7 @@ import com.stdiet.common.core.domain.BaseEntity;
  * @author xzj
  * @date 2021-05-17
  */
+@Data
 public class SysImportFanRecord extends BaseEntity
 {
     private static final long serialVersionUID = 1L;
@@ -33,4 +38,31 @@ public class SysImportFanRecord extends BaseEntity
 
     /** 删除标识，0未删除 1已删除 */
     private Long delFlag;
+
+    //微信ID
+    private Long wxAccountId;
+
+    //进粉数量
+    private Long fanNum;
+
+    private String importFanChannelName;
+
+    private String liveRoomName;
+
+    private String liveNutritionistName;
+
+    private List<Map<String,Object>> wxAccountList;
+
+
+    private String importFanChannels;
+
+    private String importFanLives;
+
+    private String wxAccountIds;
+
+    private String fanNums;
+
+
+    //总进粉数量
+    private Integer totalFanNum;
 }

@@ -6,10 +6,14 @@ import com.stdiet.common.utils.sign.AesUtils;
 import com.stdiet.custom.domain.SysCustomer;
 import com.stdiet.custom.domain.SysCustomerHealthy;
 import com.stdiet.custom.domain.SysCustomerPhysicalSigns;
+import com.stdiet.custom.domain.SysWxUserInfo;
 import com.stdiet.custom.mapper.SysCustomerMapper;
 import com.stdiet.custom.mapper.SysCustomerPhysicalSignsMapper;
+import com.stdiet.custom.mapper.SysWxUserInfoMapper;
 import com.stdiet.custom.service.ISysCustomerService;
+import com.stdiet.custom.service.ISysWxUserInfoService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -37,6 +41,9 @@ public class SysCustomerServiceImpl implements ISysCustomerService {
 
     @Autowired
     private SysCustomerPhysicalSignsServiceImpl sysCustomerPhysicalSignsService;
+
+    @Autowired
+    private ISysWxUserInfoService sysWxUserInfoService;
 
     /**
      * 查询客户信息
@@ -69,7 +76,11 @@ public class SysCustomerServiceImpl implements ISysCustomerService {
     @Override
     public int insertSysCustomer(SysCustomer sysCustomer) {
         sysCustomer.setCreateTime(DateUtils.getNowDate());
-        return sysCustomerMapper.insertSysCustomer(sysCustomer);
+        int row = sysCustomerMapper.insertSysCustomer(sysCustomer);
+        if(row > 0){
+            updateWxInfoMessage(sysCustomer);
+        }
+        return row;
     }
 
     /**
@@ -81,7 +92,11 @@ public class SysCustomerServiceImpl implements ISysCustomerService {
     @Override
     public int updateSysCustomer(SysCustomer sysCustomer) {
         sysCustomer.setUpdateTime(DateUtils.getNowDate());
-        return sysCustomerMapper.updateSysCustomer(sysCustomer);
+        int row = sysCustomerMapper.updateSysCustomer(sysCustomer);
+        if(row > 0){
+            updateWxInfoMessage(sysCustomer);
+        }
+        return row;
     }
 
     /**
@@ -176,5 +191,18 @@ public class SysCustomerServiceImpl implements ISysCustomerService {
      */
     public SysCustomer getCustomerByOpenId(String openid){
         return sysCustomerMapper.getCustomerByOpenId(openid);
+    }
+
+    @Async
+    public void updateWxInfoMessage(SysCustomer newCustomer){
+        if(newCustomer == null || newCustomer.getId() == null || StringUtils.isEmpty(newCustomer.getPhone())){
+            return;
+        }
+        //根据手机号查询微信用户记录
+        SysWxUserInfo wxUserInfo = sysWxUserInfoService.getSysWxUserInfoByPhone(newCustomer.getPhone());
+        if(wxUserInfo != null && (wxUserInfo.getCusId() == null || wxUserInfo.getCusId().longValue() != newCustomer.getId())){
+            wxUserInfo.setCusId(newCustomer.getId());
+            sysWxUserInfoService.updateSysWxUserInfo(wxUserInfo);
+        }
     }
 }

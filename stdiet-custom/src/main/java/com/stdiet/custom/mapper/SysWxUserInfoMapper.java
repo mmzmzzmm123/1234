@@ -2,6 +2,7 @@ package com.stdiet.custom.mapper;
 
 import java.util.List;
 import com.stdiet.custom.domain.SysWxUserInfo;
+import org.apache.ibatis.annotations.Param;
 
 /**
  * 微信用户Mapper接口
@@ -62,4 +63,11 @@ public interface SysWxUserInfoMapper
      * @return 结果
      */
     public int deleteSysWxUserInfoByIds(String[] openids);
+
+    /**
+     * 根据手机号查询微信用户
+     * @param phone
+     * @return
+     */
+    public SysWxUserInfo getSysWxUserInfoByPhone(@Param("phone")String phone);
 }

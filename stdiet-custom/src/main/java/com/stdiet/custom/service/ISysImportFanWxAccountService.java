@@ -1,7 +1,10 @@
 package com.stdiet.custom.service;
 
 import java.util.List;
+import java.util.Map;
+
 import com.stdiet.custom.domain.SysImportFanWxAccount;
+import com.stdiet.custom.domain.SysWxSaleAccount;
 
 /**
  * 导粉记录中对应微信记录Service接口
@@ -58,4 +61,24 @@ public interface ISysImportFanWxAccountService
      * @return 结果
      */
     public int deleteSysImportFanWxAccountById(Long id);
+
+    /**
+     * 根据导粉记录ID、微信ID查询对应微信记录
+     * @param sysImportFanWxAccount
+     * @return
+     */
+    public SysImportFanWxAccount getWxAccountByFanRecordId(SysImportFanWxAccount sysImportFanWxAccount);
+
+    /**
+     * 根据日期统计微信号导粉数量
+     * @return
+     */
+    List<Map<String,Object>> getTotalImportFanNum(SysImportFanWxAccount sysImportFanWxAccount);
+
+    /**
+     * 根据记录ID删除对应所有微信
+     * @param ids
+     * @return
+     */
+    int deleteSysImportFanWxAccountByFanRecordIds(Long[] ids);
 }

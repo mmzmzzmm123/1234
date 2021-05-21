@@ -1,7 +1,10 @@
 package com.stdiet.custom.service.impl;
 
 import java.util.List;
+import java.util.Map;
+
 import com.stdiet.common.utils.DateUtils;
+import com.stdiet.custom.domain.SysWxSaleAccount;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.stdiet.custom.mapper.SysImportFanWxAccountMapper;
@@ -92,5 +95,32 @@ public class SysImportFanWxAccountServiceImpl implements ISysImportFanWxAccountS
     public int deleteSysImportFanWxAccountById(Long id)
     {
         return sysImportFanWxAccountMapper.deleteSysImportFanWxAccountById(id);
+    }
+
+    /**
+     * 根据导粉记录ID、微信ID查询对应微信记录
+     * @param sysImportFanWxAccount
+     * @return
+     */
+    public SysImportFanWxAccount getWxAccountByFanRecordId(SysImportFanWxAccount sysImportFanWxAccount){
+        return sysImportFanWxAccountMapper.getWxAccountByFanRecordId(sysImportFanWxAccount);
+    }
+
+
+    /**
+     * 根据日期统计微信号导粉数量
+     * @return
+     */
+    public List<Map<String,Object>> getTotalImportFanNum(SysImportFanWxAccount sysImportFanWxAccount){
+        return sysImportFanWxAccountMapper.getTotalImportFanNum(sysImportFanWxAccount);
+    }
+
+    /**
+     * 根据记录ID删除对应所有微信
+     * @param ids
+     * @return
+     */
+    public int deleteSysImportFanWxAccountByFanRecordIds(Long[] ids){
+        return sysImportFanWxAccountMapper.deleteSysImportFanWxAccountByFanRecordIds(ids);
     }
 }
