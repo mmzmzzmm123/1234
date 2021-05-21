@@ -488,8 +488,17 @@ public class WechatAppletController extends BaseController {
     }
 
     @GetMapping("/getRecipesPlans")
-    public AjaxResult getRecipesPlans(@RequestParam String customerId) {
-        Long cusId = StringUtils.isNotEmpty(customerId) ? Long.parseLong(AesUtils.decrypt(customerId)) : 0L;
+    public AjaxResult getRecipesPlans(@RequestParam String customerId, @RequestParam String openid) {
+        Long cusId = 0L;
+        if (StringUtils.isNull(customerId)) {
+            SysWxUserInfo wxUserInfo = sysWxUserInfoService.selectSysWxUserInfoById(openid);
+            cusId = StringUtils.isNotNull(wxUserInfo) ? wxUserInfo.getCusId() : 0L;
+        } else {
+            cusId = StringUtils.isNotEmpty(customerId) ? Long.parseLong(AesUtils.decrypt(customerId)) : 0L;
+        }
+        if (cusId == 0L) {
+            return AjaxResult.error(5000, "需要手机号进一步匹配");
+        }
 
         List<SysRecipesPlanListInfo> plans = sysRecipesPlanService.selectRecipesPlanListInfoByCusId(cusId);
 
