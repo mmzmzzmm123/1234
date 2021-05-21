@@ -20,6 +20,8 @@ public interface SysRecipesMapper {
 
     public List<SysRecipes> selectSysRecipesByRecipesId(Long id);
 
+    public List<SysRecipes> selectSysRecipesByRecipesIdShow(Long id);
+
     public int updateDishesDetail(SysRecipesDailyDishes sysRecipesDaily);
 
     public int addDishes(SysRecipesDailyDishes sysRecipesDaily);
@@ -29,4 +31,6 @@ public interface SysRecipesMapper {
     public int deleteMenu(Long id);
 
     public List<SysRecipesDailyDishes> selectDishesByMenuId(Long id);
+
+    public List<SysRecipesDailyDishes> selectDishesByMenuIdShow(Long id);
 }
