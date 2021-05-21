@@ -114,4 +114,13 @@ public class SysImportFanWxAccountServiceImpl implements ISysImportFanWxAccountS
     public List<Map<String,Object>> getTotalImportFanNum(SysImportFanWxAccount sysImportFanWxAccount){
         return sysImportFanWxAccountMapper.getTotalImportFanNum(sysImportFanWxAccount);
     }
+
+    /**
+     * 根据记录ID删除对应所有微信
+     * @param ids
+     * @return
+     */
+    public int deleteSysImportFanWxAccountByFanRecordIds(Long[] ids){
+        return sysImportFanWxAccountMapper.deleteSysImportFanWxAccountByFanRecordIds(ids);
+    }
 }

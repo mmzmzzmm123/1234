@@ -52,4 +52,17 @@ public class SysImportFanRecord extends BaseEntity
     private String liveNutritionistName;
 
     private List<Map<String,Object>> wxAccountList;
+
+
+    private String importFanChannels;
+
+    private String importFanLives;
+
+    private String wxAccountIds;
+
+    private String fanNums;
+
+
+    //总进粉数量
+    private Integer totalFanNum;
 }

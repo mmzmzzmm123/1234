@@ -74,4 +74,11 @@ public interface SysImportFanWxAccountMapper
      * @return
      */
     List<Map<String,Object>> getTotalImportFanNum(SysImportFanWxAccount sysImportFanWxAccount);
+
+    /**
+     * 根据记录ID删除对应所有微信
+     * @param ids
+     * @return
+     */
+    int deleteSysImportFanWxAccountByFanRecordIds(Long[] ids);
 }

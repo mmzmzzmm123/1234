@@ -65,4 +65,7 @@ public interface SysImportFanRecordMapper
      * @return
      */
     public SysImportFanRecord getFanRecordByChannelLive(SysImportFanRecord sysImportFanRecord);
+
+    //查询总导粉数量
+    int selectTotalSysImportFanNum(SysImportFanRecord sysImportFanRecord);
 }

@@ -105,4 +105,12 @@
         group by w.import_wx_account_id order by w.import_wx_account_id desc
     </select>
 
+    <!-- 根据导粉ID删除对应所有微信记录 -->
+    <update id="deleteSysImportFanWxAccountByFanRecordIds" parameterType="String">
+        update sys_import_fan_wx_account set del_flag = 1 where import_fan_record_id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </update>
+
 </mapper>

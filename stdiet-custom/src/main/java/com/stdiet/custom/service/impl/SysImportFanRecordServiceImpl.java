@@ -107,7 +107,11 @@ public class SysImportFanRecordServiceImpl implements ISysImportFanRecordService
     @Override
     public int deleteSysImportFanRecordByIds(Long[] ids)
     {
-        return sysImportFanRecordMapper.deleteSysImportFanRecordByIds(ids);
+        int row = sysImportFanRecordMapper.deleteSysImportFanRecordByIds(ids);
+        if(row > 0){
+            sysImportFanWxAccountService.deleteSysImportFanWxAccountByFanRecordIds(ids);
+        }
+        return row;
     }
 
     /**
@@ -119,6 +123,16 @@ public class SysImportFanRecordServiceImpl implements ISysImportFanRecordService
     @Override
     public int deleteSysImportFanRecordById(Long id)
     {
-        return sysImportFanRecordMapper.deleteSysImportFanRecordById(id);
+        int row = sysImportFanRecordMapper.deleteSysImportFanRecordById(id);
+        if(row > 0){
+            Long[] ids = {id};
+            sysImportFanWxAccountService.deleteSysImportFanWxAccountByFanRecordIds(ids);
+        }
+        return row;
+    }
+
+    //查询总导粉数量
+    public int selectTotalSysImportFanNum(SysImportFanRecord sysImportFanRecord){
+        return sysImportFanRecordMapper.selectTotalSysImportFanNum(sysImportFanRecord);
     }
 }

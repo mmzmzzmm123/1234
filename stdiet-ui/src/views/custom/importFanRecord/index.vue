@@ -5,7 +5,7 @@
         <el-date-picker clearable size="small" style="width: 200px"
           v-model="queryParams.importFanDate"
           type="date"
-          value-format="yyyy-MM-dd"
+          value-format="yyyy-MM-dd" 
           placeholder="选择导粉日期">
         </el-date-picker>
       </el-form-item>
@@ -79,6 +79,9 @@
           v-hasPermi="['custom:importFanRecord:export']"
         >导出</el-button>
       </el-col>-->
+      <el-col :span="1.5">
+      
+        </el-col>
 	  <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
     </el-row>
 
@@ -114,15 +117,15 @@
       </el-table-column>
       
       
-     <!-- <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
+      <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
-          <el-button
+          <!--<el-button
             size="mini"
             type="text"
             icon="el-icon-edit"
             @click="handleUpdate(scope.row)"
             v-hasPermi="['custom:importFanRecord:edit']"
-          >修改</el-button>
+          >修改</el-button>-->
           <el-button
             size="mini"
             type="text"
@@ -131,16 +134,37 @@
             v-hasPermi="['custom:importFanRecord:remove']"
           >删除</el-button>
         </template>
-      </el-table-column>-->
+      </el-table-column>
     </el-table>
     
-    <pagination
+    <!--<pagination
       v-show="total>0"
       :total="total"
       :page.sync="queryParams.pageNum"
       :limit.sync="queryParams.pageSize"
+      :layout="'total, slot, sizes, prev, pager, next, jumper'"
+      @pagination="getList" 
+        <span style="margin-right: 12px"
+        >总计导粉量：{{totalFanNum}}
+        元</span
+      >
+    </pagination>-->
+
+    <pagination
+      v-show="total > 0"
+      :total="total"
+      :page.sync="queryParams.pageNum"
+      :limit.sync="queryParams.pageSize"
+      :layout="`${'total, slot, sizes, prev, pager, next, jumper'}`"
       @pagination="getList"
-    />
+    >
+      <span style="margin-right: 12px" v-if="!isMobile"
+        >总计导粉量：{{
+          totalFanNum
+        }}
+        </span
+      >
+    </pagination>
 
     <!-- 添加或修改导粉管理对话框 -->
     <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
@@ -212,7 +236,9 @@ export default {
       rules: {
       },
       //导粉账号渠道
-      fanChanneloptions:[]
+      fanChanneloptions:[],
+      //总导粉量
+      totalFanNum:0
     };
   },
   created() {
@@ -229,6 +255,11 @@ export default {
     getList() {
       this.loading = true;
       listImportFanRecord(this.queryParams).then(response => {
+        if(response.rows != null && response.rows.length > 0){
+          this.totalFanNum = response.rows[0].totalFanNum;
+        }else{
+          this.totalFanNum = 0;
+        }
         this.importFanRecordList = response.rows;
         this.total = response.total;
         this.loading = false;

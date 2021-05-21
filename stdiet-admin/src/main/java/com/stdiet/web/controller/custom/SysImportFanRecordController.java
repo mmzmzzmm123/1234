@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.stdiet.common.utils.StringUtils;
 import com.stdiet.custom.domain.SysImportFanWxAccount;
 import com.stdiet.custom.domain.SysWxSaleAccount;
 import com.stdiet.custom.service.ISysImportFanWxAccountService;
@@ -55,6 +56,12 @@ public class SysImportFanRecordController extends BaseController
     {
         startPage();
         List<SysImportFanRecord> list = sysImportFanRecordService.selectSysImportFanRecordList(sysImportFanRecord);
+        SysImportFanWxAccount sysImportFanWxAccount = new SysImportFanWxAccount();
+        if(list != null && list.size() > 0){
+            //总导粉量
+            int totalNum = sysImportFanRecordService.selectTotalSysImportFanNum(sysImportFanRecord);
+            list.get(0).setTotalFanNum(totalNum);
+        }
         return getDataTable(list);
     }
 
@@ -89,7 +96,34 @@ public class SysImportFanRecordController extends BaseController
     @PostMapping
     public AjaxResult add(@RequestBody SysImportFanRecord sysImportFanRecord)
     {
-        return toAjax(sysImportFanRecordService.insertSysImportFanRecord(sysImportFanRecord));
+        if(sysImportFanRecord.getImportFanDate() == null){
+            return AjaxResult.error("导入日期不存在");
+        }
+        int row = 0;
+        //批量保存
+        if(StringUtils.isNotEmpty(sysImportFanRecord.getImportFanChannels() )){
+            String[] importFanChannelArray = sysImportFanRecord.getImportFanChannels().split(",");
+            String[] importFanLiveArray = sysImportFanRecord.getImportFanLives().split(",");
+            String[] wxAccountIdArray = sysImportFanRecord.getWxAccountIds().split(",");
+            String[] fanNumArray = sysImportFanRecord.getFanNums().split(",");
+            int index = -1;
+            for (String importFanChannel : importFanChannelArray) {
+                index++;
+                if(StringUtils.isEmpty(importFanChannel)){
+                    continue;
+                }
+                sysImportFanRecord.setImportFanChannel(Long.parseLong(importFanChannel));
+                sysImportFanRecord.setImportFanLive(StringUtils.isEmpty(importFanLiveArray[index]) ? 0L : Long.parseLong(importFanLiveArray[index]));
+                sysImportFanRecord.setWxAccountId(Long.parseLong(wxAccountIdArray[index]));
+                sysImportFanRecord.setFanNum(Long.parseLong(fanNumArray[index]));
+                row = sysImportFanRecordService.insertSysImportFanRecord(sysImportFanRecord);
+            }
+        }else{
+            if(sysImportFanRecord.getImportFanChannel() != null){
+                row = sysImportFanRecordService.insertSysImportFanRecord(sysImportFanRecord);
+            }
+        }
+        return toAjax(row);
     }
 
     /**

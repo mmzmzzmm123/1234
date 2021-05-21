@@ -54,7 +54,16 @@
         where fc.del_flag = 0
         <if test="importFanDate != null "> and fc.import_fan_date = #{importFanDate}</if>
         <if test="importFanChannel != null "> and fc.import_fan_channel = #{importFanChannel}</if>
-        <if test="importFanLive != null "> and fc.import_fan_live = #{importFanLive}</if>
+        order by fc.import_fan_date desc,fc.import_fan_channel asc
+    </select>
+
+    <select id="selectTotalSysImportFanNum" parameterType="SysImportFanRecord" resultType="int">
+        select sum(fwa.import_fan_num)
+        from sys_import_fan_record as fc
+        left join sys_import_fan_wx_account fwa on fwa.import_fan_record_id = fc.id and fwa.del_flag = 0
+        where fc.del_flag = 0
+        <if test="importFanDate != null "> and fc.import_fan_date = #{importFanDate}</if>
+        <if test="importFanChannel != null "> and fc.import_fan_channel = #{importFanChannel}</if>
     </select>
 
     <select id="selectSysImportFanRecordById" parameterType="Long" resultMap="SysImportFanRecordResult">
