@@ -1,5 +1,6 @@
 <template>
   <div class="dashboard-editor-container">
+    <notice :message="message"></notice>
     <el-row :gutter="30">
       <el-col :xs="24" :sm="24" :lg="8">
         <div class="chart-wrapper">
@@ -51,6 +52,7 @@
 </template>
 
 <script>
+import notice from "@/components/rolling-notice";
 import RaddarChart from "./dashboard/RaddarChart";
 import PieChart from "./dashboard/PieChart";
 import BarChart from "./dashboard/BarChart";
@@ -63,6 +65,7 @@ export default {
   name: "Index",
   name: "calendar",
   components: {
+    notice,
     RaddarChart,
     PieChart,
     BarChart,
@@ -70,6 +73,7 @@ export default {
   },
   data() {
     return {
+      message: `本一智慧平台可用手机微信登录啦！关注“本一智慧平台”公众号，点击左下角菜单“智慧平台”，进入2.0平台入口。首次登录输入账号密码，根据提示绑定微信号码！以后登录，可以使用手机直接微信登录，无需再输入账号密码，方便快捷！`,
       code: "",
       calendarData: [],
       value: new Date(),

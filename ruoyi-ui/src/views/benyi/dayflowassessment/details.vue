@@ -118,6 +118,10 @@ export default {
     this.getTaskList();
   },
   methods: {
+    setTitle() {
+      // const $tag = document.querySelector('.tags-view-item.router-link-exact-active.router-link-active.active');
+      // console.log(tag);
+    },
     getDetail() {
       getDayflowassessment(this.id).then((response) => {
         //console.log(response);

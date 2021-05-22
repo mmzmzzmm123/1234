@@ -6,9 +6,15 @@ const state = {
 const mutations = {
   ADD_VISITED_VIEW: (state, view) => {
     if (state.visitedViews.some(v => v.path === view.path)) return
+    let title = view.meta.title || 'no-name';
+    console.log(view)
+    if(view && view.query && view.query.dayflowassessmentteacherdetails) {
+      title = view.query.dayflowassessmentteacherdetails;
+    }
+
     state.visitedViews.push(
       Object.assign({}, view, {
-        title: view.meta.title || 'no-name'
+        title
       })
     )
   },

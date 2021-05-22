@@ -284,7 +284,13 @@ export default {
     },
     handleAssessment(row) {
       const id = row.id;
-      this.$router.push({ path: "/benyi/dayflowassessments/details/" + id });
+      this.$router.push({
+        path: "/benyi/dayflowassessments/details/" + id,
+        query: {
+          dayflowassessmentteacherdetails:
+            "一日流程评估（" + row.pgdxxm + "）",
+        },
+      });
     },
     handleAdd() {
       this.$router.push({

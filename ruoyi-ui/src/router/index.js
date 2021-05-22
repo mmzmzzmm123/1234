@@ -515,7 +515,7 @@ export const constantRoutes = [
         component: () => import("@/views/benyi/dayflowassessment/details"),
         name: "dayflowassessmentteacherdetails",
         meta: {
-          title: "一日流程评估详情",
+          title: `一日流程评估详情`,
           icon: ""
         }
       }

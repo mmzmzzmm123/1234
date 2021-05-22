@@ -68,7 +68,7 @@
     </resultMap>
 
     <sql id="selectByDayflowassessmentVo">
-        select d.id, d.planid, d.dept_id, d.classid, e.bjmc, d.bzbh, d.bzxm, d.pbbh, d.pbxm, d.zlbh, d.zlxm, d.xnxq, d.bzid, d.bzmf, d.kfz, d.kfcs, d.zzdf, d.classdf, d.items, d.values, d.pgdx, d.pgdxxm, d.create_userid, d.create_time,
+        select d.id, d.planid, d.dept_id, d.classid, e.bjmc, d.bzbh, d.bzxm, d.pbbh, d.pbxm, d.zlbh, d.zlxm, d.xnxq, d.bzid, d.bzmf, d.kfz, d.kfcs, d.zzdf, d.classdf, d.items, d.values, d.pgdx, f.nick_name as pgdxxm, d.create_userid, d.create_time,
          (select sum(b.value) from by_dayflowassessmentitem b where d.id=b.pid and b.item in (select id from by_day_flow where name='早间接待')) as zjjdpjf,
 (select sum(b.value) from by_dayflowassessmentitem b where d.id=b.pid and b.item in (select id from by_day_flow where name='用餐')) as ycpjf,
 (select sum(b.value) from by_dayflowassessmentitem b where d.id=b.pid and b.item in (select id from by_day_flow where name='早间坐圈')) as zjzqpjf,
@@ -84,7 +84,7 @@
 (select sum(b.value) from by_dayflowassessmentitem b where d.id=b.pid and b.item in (select id from by_day_flow where name='规则与纪律约束')) as gzyjlyspjf,
 (select sum(b.value) from by_dayflowassessmentitem b where d.id=b.pid and b.item in (select id from by_day_flow where name='微型课程')) as wxkcpjf,
 (select sum(b.value) from by_dayflowassessmentitem b where d.id=b.pid and b.item in (select id from by_day_flow where name='潜课程')) as qkcpjf
-         from by_dayflowassessment d left join by_class e on d.classid=e.bjbh
+         from by_dayflowassessment d left join by_class e on d.classid=e.bjbh left join sys_user f on d.pgdx=f.user_id
     </sql>
 
     <select id="selectByDayflowassessmentList" parameterType="ByDayflowassessment"
