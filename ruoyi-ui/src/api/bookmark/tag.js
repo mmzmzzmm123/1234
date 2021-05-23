@@ -1,6 +1,37 @@
 import request from '@/utils/request'
 
 // 查询书签_标签列表
+export function listByUser(query) {
+  return request({
+    url: '/system/tag/listByUser',
+    method: 'get',
+    params: query
+  })
+}
+
+// 查询书签_标签列表
+export function listByUserLike(query) {
+  return request({
+    url: '/system/tag/listByUserLike',
+    method: 'get',
+    params: query
+  })
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// 查询书签_标签列表
 export function listTag(query) {
   return request({
     url: '/system/tag/list',

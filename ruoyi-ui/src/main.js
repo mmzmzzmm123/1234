@@ -27,7 +27,12 @@ import 'element-ui/lib/theme-chalk/index.css'
 //媒体查詢
 import '@/assets/styles/base.css'
 
-
+// 全局引入VueMaterial组件库 https://vuematerial.io/
+// import VueMaterial from 'vue-material'
+// import 'vue-material/dist/vue-material.min.css'
+// import 'vue-material/dist/theme/default.css'
+//
+// Vue.use(VueMaterial)
 
 
 

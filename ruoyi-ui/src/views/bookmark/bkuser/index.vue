@@ -19,7 +19,7 @@
       <div class="mdui-btn-group head-tag-button">
 <!--        <div  :class="['classification',property=='0'?' classification-click':'']" @click="showopen(0)"><span>网页</span></div>-->
         <button @click="goRouter(1)" :class="['mdui-btn mdui-color-theme-accent mdui-ripple ',property=='1'?' mdui-btn-active mdui-color-blue-50 mdui-text-color-blue-600':'']">个人中心</button>
-        <button @click="goRouter(7)" :class="['mdui-btn mdui-color-theme-accent mdui-ripple ',property=='7'?' mdui-btn-active mdui-color-blue-50 mdui-text-color-blue-600':'']">外观设置</button>
+<!--        <button @click="goRouter(7)" :class="['mdui-btn mdui-color-theme-accent mdui-ripple ',property=='7'?' mdui-btn-active mdui-color-blue-50 mdui-text-color-blue-600':'']">外观设置</button>-->
         <button @click="goRouter(2)" :class="['mdui-btn mdui-color-theme-accent mdui-ripple ',property=='2'?' mdui-btn-active mdui-color-blue-50 mdui-text-color-blue-600':'']">系统设置</button>
         <button @click="goRouter(3)" :class="['mdui-btn mdui-color-theme-accent mdui-ripple ',property=='3'?' mdui-btn-active mdui-color-blue-50 mdui-text-color-blue-600':'']">导入书签</button>
         <button @click="goRouter(4)" :class="['mdui-btn mdui-color-theme-accent mdui-ripple ',property=='4'?' mdui-btn-active mdui-color-blue-50 mdui-text-color-blue-600':'']">备份导出</button>
@@ -70,7 +70,7 @@
             that.$router.push({
               path: "/content",
               query: {
-                menuId: 'BOOKMARK'
+                menuId: 'newest'
               }
             })
             break;

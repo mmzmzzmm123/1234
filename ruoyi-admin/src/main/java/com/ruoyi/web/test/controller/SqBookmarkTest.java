@@ -174,16 +174,6 @@ public class SqBookmarkTest extends BaseSpringBootTest{
      * @return
      * @throws Exception
      */
-    private HttpSession getLoginSession() throws Exception{
-        // mock request get login session
-        // url = /xxx/xxx/{username}/{password}
-        MvcResult result = this.mockMvc
-                .perform((MockMvcRequestBuilders.post("/login")))
-                .andExpect(MockMvcResultMatchers.status().isOk())
-                .andReturn();
-        return result.getRequest().getSession();
-    }
-
 
 
 

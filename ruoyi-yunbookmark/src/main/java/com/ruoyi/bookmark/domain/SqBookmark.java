@@ -113,9 +113,19 @@ public class SqBookmark
     /** 排序的方式 **/
     @Transient
     private String sort;
+    /** 搜索 **/
+    @Transient
+    private String sousuo;
+
+
 
     private List<Map<String,Object>> sqTags;
+    public SqBookmark (){
+    }
 
-
+    public SqBookmark (String url,Long userid){
+        this.url = url;
+        this.userid = userid;
+    }
 
 }

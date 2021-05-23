@@ -24,7 +24,8 @@
         <div class="sousouright-iconadd">
           <el-dropdown trigger="click" size="small" :hide-on-click="true" >
               <span class="el-dropdown-link">
-          <i class="el-icon-plus" style="font-size: 18px;"/>
+<!--          <i class="el-icon-plus" style="font-size: 18px;"/>-->
+                <el-button icon="el-icon-plus" style="border:0px;font-size: 18px;" size="mini"></el-button>
              </span>
             <el-dropdown-menu slot="dropdown" class="sq-dropdown">
               <el-dropdown-item class="filter-item" icon="el-icon-plus" @click.native="addbookmarkurl">添加连接
@@ -38,7 +39,7 @@
           <el-dropdown trigger="click" size="small" :hide-on-click="false">
               <span class="el-dropdown-link">
 
-           <el-avatar :size="28"
+           <el-avatar style="margin-top: 5px" :size="28"
                       src="https://up.raindrop.io/collection/templates/social-media-logos-6/97social.png"></el-avatar>
               </span>
             <el-dropdown-menu slot="dropdown" class="sq-dropdown">
@@ -55,14 +56,15 @@
           <div class="filter-tbar">
             <div class="filter-classification">
               <div  :class="['classification',property=='0'?' classification-click':'']" @click="showopen(0)"><span>网页</span></div>
-              <div :class="['classification',property=='1'?' classification-click':'']" @click="showopen(1)"><span>文本</span></div>
+<!--              <div :class="['classification',property=='1'?' classification-click':'']" @click="showopen(1)"><span>文本</span></div>-->
               <div :class="['classification',property=='2'?' classification-click':'']" @click="showopen(2)"><span>其他</span></div>
             </div>
             <div class="setUpThe">
               <div class="filter-content">
                 <el-dropdown trigger="hover" size="small" @command="handleCommand">
                   <div class="el-dropdown-link dropdownList">
-                    <i class="el-icon-document-checked "></i>
+<!--                    <i class="el-icon-document-checked "></i>-->
+                    <el-button icon="el-icon-document-checked" style="border:0px;font-size: 18px;" size="mini"></el-button>
                   </div>
                   <el-dropdown-menu slot="dropdown" class="filter-sort-dropdown">
                     <el-dropdown-item class="filter-item" command="0"><i class="el-icon-bottom"></i>按时间排序(正)
@@ -80,7 +82,7 @@
               <div class="filter-content">
                 <el-dropdown trigger="hover" size="small">
                   <div class="el-dropdown-link dropdownList">
-                    <i class="el-icon-tickets "></i>
+                    <el-button icon="el-icon-tickets" style="border:0px;font-size: 18px;" size="mini"></el-button>
                   </div>
                   <el-dropdown-menu slot="dropdown" class="filter-sort-dropdown">
                     <el-dropdown-item class="filter-item"><i class="el-icon-bottom"></i>按时间排序(正)</el-dropdown-item>
@@ -105,8 +107,8 @@
           <div class="nullbookmark" v-if="showimg">
             <div class="nullbookmark-img">
             </div>
-            <div style="color: #000000" class="nullbookmark-text">
-              此目录还未添加收藏
+            <div  class="nullbookmark-text">
+              空空如也
             </div>
           </div>
 
@@ -411,7 +413,7 @@
       }
 
       console.log("routedata："+routedata)
-      if (routedata == 'newest'||routedata == 'asterisk'||routedata == 'seeYouLater'||routedata == 'recycle') {
+      if ((sousuo != null && sousuo != undefined && sousuo != '')||routedata == 'newest'||routedata == 'asterisk'||routedata == 'seeYouLater'||routedata == 'recycle') {
         that.queryParams.menuId=null;
 
         this.listByUserAndPolymerization(routedata);
@@ -606,14 +608,25 @@
                   this.msgSuccess("修改成功");
                   this.open = false;
                   this.getList();
+                }else{
+                  this.msgError("新增失败,系统错误!");
+                  this.open = false;
                 }
               });
             } else {
               addBookmark(this.form).then(response => {
                 if (response.code === 200) {
+                  if(response.data === 'repetition'){
+                    this.msgSuccess("新增失败,此书签已经存在了!");
+                    this.open = false;
+                    return;
+                  }
                   this.msgSuccess("新增成功");
                   this.open = false;
                   this.getList();
+                }else{
+                  this.msgError("新增失败,系统错误!");
+                  this.open = false;
                 }
               });
             }
@@ -705,24 +718,24 @@
           }
         });
       },
-      /** 全部书签**/
-      getBookmarkList() {
-        this.loading = true;
-        selectByUseridList(this.queryParams).then(response => {
-            if (response.code == 200) {
-              this.bookmarkList = this.bookmarkList.concat(response.rows);
-              this.total = response.total;
-              this.listloading = false
-              this.loading = false;
-              console.log("请求完毕" + this.queryParams.pageNum)
-            } else {
-              //出错了加载完毕了 禁止滚动
-              this.noMore = true;
-              this.listloading = false
-              this.loading = false;
-            }
-        });
-      },
+      // /** 全部书签**/
+      // getBookmarkList() {
+      //   this.loading = true;
+      //   selectByUseridList(this.queryParams).then(response => {
+      //       if (response.code == 200) {
+      //         this.bookmarkList = this.bookmarkList.concat(response.rows);
+      //         this.total = response.total;
+      //         this.listloading = false
+      //         this.loading = false;
+      //         console.log("请求完毕" + this.queryParams.pageNum)
+      //       } else {
+      //         //出错了加载完毕了 禁止滚动
+      //         this.noMore = true;
+      //         this.listloading = false
+      //         this.loading = false;
+      //       }
+      //   });
+      // },
       /** 最新 星标 回收站 稍后看**/
       listByUserAndPolymerization(str) {
         console.log(" 最新 星标 回收站 稍后看");
@@ -735,12 +748,16 @@
               this.total = response.total;
               this.listloading = false
               this.loading = false;
+              if (response.total == 0){
+                this.showimg = true;//空提示
+              }
               console.log("请求完毕" + this.queryParams.pageNum)
             } else {
               //出错了加载完毕了 禁止滚动
               this.noMore = true;
               this.listloading = false
               this.loading = false;
+              this.showimg = true;
             }
         });
       },
@@ -787,7 +804,7 @@
       /** 查询书签管理列表 */
       getList() {
         this.loading = true;
-        selectBymenuIdUserID(this.queryParams).then(response => {
+        listByUserAndPolymerization(this.queryParams).then(response => {
           if (response.code == 200) {
             this.bookmarkList = response.rows;
             this.total = response.total;
@@ -810,14 +827,9 @@
         var routedata = this.queryParams.menuId;
         if(routedata == 'newest'||routedata == 'asterisk'||routedata == 'seeYouLater'||routedata == 'recycle'){
           this.listByUserAndPolymerization(routedata);
-        //   //全部书签
-        //   this.getBookmarkList();
-        // }else if (this.queryParams.menuId == 'RECYCLE') {
-        //   //回收站书签
-        //   this.getrecycleList();
         }else{
           //查看目录下的书签
-          this.getlistByMenuId();
+          this.listByUserAndPolymerization(routedata);
         }
       },
       /**查询便签 滚动加载分页拼接*/
@@ -965,7 +977,13 @@
 
 
 <style scoped>
-
+/*.isbookmarkContainer{*/
+/*  background-color: #f0f0f2;*/
+/*  background-image: url(https://shijiechao.oss-cn-hangzhou.aliyuncs.com/wp-content/uploads/2020/12/top_bg.png);*/
+/*  background-repeat: no-repeat;*/
+/*  background-attachment: fixed;*/
+/*  background-position: center top;*/
+/*}*/
 
   .button-new-tag {
     margin-left: 10px;
@@ -1019,21 +1037,23 @@
 
   .nullbookmark-img {
     margin: 0 auto;
-    width: 250px;
+    width: 450px;
     height: 250px;
     justify-content: center;
     align-content: center;
-    background-image: url("https://s1.ax1x.com/2020/08/22/dawFp9.png");
+    background-image: url("../../../assets/image/ts.png");
     background-repeat: no-repeat;
     background-size: 100% 100%;
+    opacity: 0.75;
   }
 
   .nullbookmark-text {
     margin: 0 auto;
     width: 250px;
     text-align: center;
-    color: #D4D4D4 !important;
-
+    color: #D4D4D4;
+    font-size: 18px;
+    /*font-family: "Arial","Microsoft YaHei","黑体","宋体",sans-serif;*/
   }
 
   .editBookamrk {
@@ -1104,10 +1124,10 @@
     height: 40px;
     -webkit-box-pack: justify;
     justify-content: space-between;
-    -webkit-box-align: center;
     align-items: center;
 
     box-sizing: border-box;
+
   }
 
   .filter-classification {
@@ -1125,7 +1145,7 @@
   }
 
   .filter-content {
-    margin-left: 13px;
+    margin-left: 2px;
 
   }
 
@@ -1331,7 +1351,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    width: 50px;
+    width: 60px;
   }
 
   .sq-dropdown {

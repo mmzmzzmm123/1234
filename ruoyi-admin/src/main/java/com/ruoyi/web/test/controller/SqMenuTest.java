@@ -15,8 +15,12 @@ import org.junit.Test;
 import org.mybatis.spring.SqlSessionTemplate;
 import org.omg.PortableServer.THREAD_POLICY_ID;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.web.servlet.MvcResult;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.servlet.http.HttpSession;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -38,9 +42,18 @@ public class SqMenuTest extends BaseSpringBootTest{
     SqBookmarkMapper sqBookmarkMapper;
     @Autowired
     SqlSessionTemplate sqlSessionTemplate;
+
+
+
+
+
+
+
+
+
+
     @Test
     public void addMenuUplinkSeries() {
-
 
       List<com.ruoyi.bookmark.domain.SqMenu> sqMenus =  sqMenuMapper.selectbymenuUplinkSeries();
       if (null!=sqMenus&&!sqMenus.isEmpty()) {
@@ -86,6 +99,11 @@ public class SqMenuTest extends BaseSpringBootTest{
             sqMenuMapper.updateSqMenu(sqMenu);
         }
 
+    }
+
+    @Test
+    public void test67(){
+        iSqBookmarkService.bookmarkDeleteRepetition(1L);
     }
 
 

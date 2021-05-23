@@ -28,7 +28,11 @@
           </div>
           <div class="bookmark-official bookmark-list-tag-top">{{bm.urls}}&nbsp;·&nbsp;</div>
           <div class="bookmark-time bookmark-list-tag-top">{{bm.createTime|changeTime}}</div>
-          <div class="bookmark-time bookmark-list-tag-top">{{bm.bookmarkStar}}</div>
+          <div class="bookmark-time bookmark-list-tag-top" v-if="bm.bookmarkStar == 1">
+            <svg-icon slot="prefix" icon-class="str" style="font-size: 18px;"/>
+<!--            <i class="el-icon-star-on" style="color: #569cd5;font-size: 18px;margin-top: 4px"></i>-->
+          </div>
+
 
           <div class="bookmark-time" v-if="bm.tagNameAll!=null&&bm.tagNameAll!=''"  >
             <el-tag  v-for="item in JSON.parse(bm.tagNameAll)"  class="bookmark-list-tag bookmark-list-tag-top" style="float: left"  type="info"  data-tagid="item.tagId"  size="mini">
@@ -69,7 +73,7 @@
         isBookmarkIcon:false,
         Ueditor:undefined,
         seen:false,
-        current:0,
+        current:0
       }
     },
     mounted(){
@@ -109,15 +113,39 @@
       },
       /** 星标 **/
       updateStarById:function(bookmarkId,bookmarkStar){
+        var that = this;
         console.log("bookmarkStar:"+bookmarkStar)
         var param={
           bookmarkId:bookmarkId,
-          bookmarkStr:bookmarkStar==0?1:0
+          bookmarkStr:bookmarkStar
         }
         console.log("bookmarkStar2:"+param.bookmarkStar)
         updateBookmarkStarById(param).then(response => {
           if (response.code === 200) {
             this.msgSuccess("设置成功");
+            // let list = this.bookmarkList;
+            // for (var i=0;i<list.length;i++){
+            //   if (list[i].bookmarkId == bookmarkId) {
+            //     that.$set(this.bookmarkList[i], `bookmarkStr`, 0)
+            //     console.log("bookmarkStar2:"+this.bookmarkList[i].bookmarkStr)
+            //     break;
+            //   }
+            // }
+            // //修改数据
+            // for (var item of list) {
+            //   if (item.bookmarkId == bookmarkId){
+            //     //修改数据
+            //     console.log(item.bookmarkId+"   "+bookmarkId);
+            //     console.log("item.bookmarkstatus1 = "+ item.bookmarkStr);
+            //     item.bookmarkStr = bookmarkStar;
+            //     this.$set(item, `showAlert`, true)
+            //     console.log("item.bookmarkstatus2 = "+ item.bookmarkStr);
+            //     this.bookmarkList = list;
+            //     break;
+            //   }
+            //
+            // }
+
           }
         });
       },
@@ -145,6 +173,7 @@
 
       /**搜索高亮 开始**/
       highLight(item, highLight) {
+        // console.log("搜索高亮")
         return this.highLightTableMsg(item, highLight)
       },
       highLightTableMsg(msg, highLightStr) {

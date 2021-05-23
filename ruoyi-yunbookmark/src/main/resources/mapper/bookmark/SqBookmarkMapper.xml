@@ -187,6 +187,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="idelete != null "> and idelete = #{idelete}</if>
             <if test="bookmarkStar != null "> and bookmark_star = #{bookmarkStar}</if>
             <if test="seeYouLater != null "> and see_you_later = #{seeYouLater}</if>
+            <if test="(sousuo == null  or sousuo == '') and menuId!=null and menuId!=''"> and menu_id = #{menuId}</if>
+            <if test="start != null  and start != ''"> and start = #{start}</if>
+            <if test="sousuo != null  and sousuo != ''"> and title like concat('%', #{sousuo}, '%')</if>
             order by
             <choose>
                 <when test="sort == 0">

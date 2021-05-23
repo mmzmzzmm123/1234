@@ -25,6 +25,8 @@ import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.common.utils.bookmarkhtml.Const;
 import com.ruoyi.common.utils.bookmarkhtml.HtmlName;
 import com.ruoyi.common.utils.bookmarkhtml.ImportHtml;
+import com.sun.org.apache.bcel.internal.generic.RETURN;
+import org.jacoco.agent.rt.internal_f3994fa.core.internal.flow.IFrame;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -119,6 +121,12 @@ public class SqBookmarkServiceImpl implements ISqBookmarkService
     @Transactional
     public int insertSqBookmark(SqBookmark sqBookmark)
     {
+        //判断标签是否已经存在了 999
+        List<SqBookmark> list = sqBookmarkMapper.select(new SqBookmark(sqBookmark.getUrl(),sqBookmark.getUserid()));
+        if (!(list==null||list.isEmpty()))
+            return 999;
+
+
         JSONArray objects = new JSONArray();
         JSONObject json = null;
         //获取官网urls
@@ -378,7 +386,7 @@ public class SqBookmarkServiceImpl implements ISqBookmarkService
 
     @Override
     public int updateBookmarkStarById(Long userId, Long bookmarkId, Integer bookmarkStr) {
-        return sqBookmarkMapper.updateSqBookmarkByStar(bookmarkId,userId,bookmarkStr==1?1:0);
+        return sqBookmarkMapper.updateSqBookmarkByStar(bookmarkId,userId,bookmarkStr==1?0:1);
     }
 
     @Override
@@ -501,23 +509,32 @@ public class SqBookmarkServiceImpl implements ISqBookmarkService
     @Override
     public List<SqBookmark> listByUserAndPolymerization(SqBookmark sqBookmark) {
 
-        SqBookmark searchBookmark = new  SqBookmark();
-        searchBookmark.setUserid(sqBookmark.getUserid());
+        SqBookmark search = new SqBookmark();
+        search.setUserid(sqBookmark.getUserid());
+        search.setSort(sqBookmark.getSort());
+        search.setSousuo(sqBookmark.getSousuo());
+        //未删除的
+        search.setIdelete(Const.BKDELETE);
 
-        if(sqBookmark.getType().equals(Const.RECYCLE)){
-            searchBookmark.setIdelete(Const.BKNOTDELETE);//删除的
-        }else{
-            searchBookmark.setIdelete(Const.BKDELETE);//未删除的
+
+        if (sqBookmark.getType()==null){
+            //搜索情况下走这里
+            return sqBookmarkMapper.listByUserAndPolymerization(search);
         }
-
-        if (sqBookmark.getType().equals(Const.NEWEST)){//最新的
+        if(sqBookmark.getType().equals(Const.RECYCLE)){
+            search.setIdelete(Const.BKNOTDELETE);//删除的
+        }else if (sqBookmark.getType().equals(Const.NEWEST)){//最新的
             //无处理
         }else if(sqBookmark.getType().equals(Const.ASTERISK)){
-            searchBookmark.setBookmarkStar(1);
+            search.setBookmarkStar(1);
         }else if(sqBookmark.getType().equals(Const.SEEYOULATER)){//稍后看
-            searchBookmark.setSeeYouLater(1);
+            search.setSeeYouLater(1);
+        }else {
+            //默认的目录Muidid
+            search.setMenuId(Long.valueOf(sqBookmark.getType()));
         }
-        return sqBookmarkMapper.listByUserAndPolymerization(searchBookmark);
+
+        return sqBookmarkMapper.listByUserAndPolymerization(search);
     }
 
 

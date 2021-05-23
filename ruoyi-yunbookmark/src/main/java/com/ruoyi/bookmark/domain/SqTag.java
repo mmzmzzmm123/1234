@@ -80,4 +80,7 @@ public class SqTag
     private Date createTime;
 
 
+    public  SqTag(Long userId){
+        this.userId = userId;
+    }
 }

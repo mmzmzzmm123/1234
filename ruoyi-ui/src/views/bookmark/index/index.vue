@@ -20,11 +20,26 @@
 
           <div class="main-right">
 <!--            <svg-icon icon-class="tool" class="svgicon"/>-->
-            <div class="aside-title" @click="goRouter(8)"><i class="el-icon-folder"></i><span>最新</span></div>
-            <div class="aside-title" @click="goRouter(9)"><i class="el-icon-star-off"></i><span>星标</span></div>
-            <div class="aside-title" @click="goRouter(10)"><i class="el-icon-reading"></i><span>稍后看</span></div>
-            <div class="aside-title"><i class="el-icon-view"></i><span>发现</span></div>
-            <div class="aside-title"><i class="el-icon-message"></i><span>收件箱</span></div>
+            <div class="aside-title" @click="goRouter(8)"><i class="el-icon-folder"></i>
+              <span>最新</span>
+              <span class="menuCount">112</span>
+            </div>
+            <div class="aside-title" @click="goRouter(9)"><i class="el-icon-star-off"></i>
+              <span>星标</span>
+              <span class="menuCount">92</span>
+            </div>
+            <div class="aside-title" @click="goRouter(10)"><i class="el-icon-reading"></i>
+              <span>稍后看</span>
+              <span class="menuCount">5</span>
+            </div>
+            <div class="aside-title"><i class="el-icon-view"></i>
+              <span>发现</span>
+              <span class="menuCount"></span>
+            </div>
+            <div class="aside-title"><i class="el-icon-message"></i>
+              <span>收件箱</span>
+              <span class="menuCount">5</span>
+            </div>
 
 
             <div class="aside-titleB"  @mouseenter="eidtMenuText=!eidtMenuText" @mouseleave="eidtMenuText=!eidtMenuText">
@@ -73,32 +88,42 @@
               </el-input>
               <i v-if="!searchBkMenu" @click="searchBkMenuCk" class="el-icon-close" style="font-size: 25px;margin-left: 5px;margin-bottom: 2px"></i>
             </div>
-<!--            <transition name="el-zoom-in-top">-->
+
             <!-- 目录-->
-            <div class="areaTree" v-show="menuListShow">
-              <ul id="treeDemo" class="ztree"></ul>
-            </div>
-<!--            </transition>-->
-
-<!--            <div class="reminder" STYLE="">工具箱</div>-->
-
-            <div class="aside-titleB"  @mouseenter="eidtTAGText=!eidtTAGText" @mouseleave="eidtTAGText=!eidtTAGText">
-              <i @click="tagListShowCk" :class="tagListShow ? 'el-icon-caret-bottom aside-titleB_childi_one':'el-icon-caret-right aside-titleB_childi_one'"   ></i>
-              <i class="el-icon-price-tag aside-titleB_childi_two"></i>
-            <span >工具箱</span>
-              <div style="margin-left: 40%" v-show="eidtTAGText">
-                <i class="el-icon-search" style="font-size: 19px;margin-left: 5px;margin-top: 7px" @click="searchBkTagCk"></i>
-                <i class="el-icon-folder-add" style="font-size: 19px;margin-left: 5px;margin-top: 7px" @click="addBkTagCk"></i>
+            <el-collapse-transition>
+              <div  class="areaTree transition-box" v-show="menuListShow">
+                <ul id="treeDemo"  class="ztree"></ul>
               </div>
-            </div>
+            </el-collapse-transition>
+
+
+
+            <div class="reminder" STYLE="">工具箱</div>
+
+
+
+              <!-- TAG标签 -->
+
+                <usertag/>
+
+
+
+
+
+
+
+
+
+
+
 
 
 
 <!--            <div class="aside-title"><i class="el-icon-s-flag" style="color: #569cd5"></i><span>RSS订阅</span></div>-->
-            <div class="aside-title" @click="goRouter(7)"><i class="el-icon-collection"></i><span>标签管理</span></div>
+<!--            <div class="aside-title" @click="goRouter(7)"><i class="el-icon-collection"></i><span>功能管理</span></div>-->
             <div class="aside-title" @click="goRouter(6)"><i class="el-icon-delete" ></i><span>垃圾桶</span></div>
-            <div class="aside-title"><i class="el-icon-chat-dot-square"></i><span>意见反馈</span></div>
-            <div class="aside-title" @click="goRouter(2)"><i class="el-icon-suitcase"></i><span>小工具</span></div>
+<!--            <div class="aside-title"><i class="el-icon-chat-dot-square"></i><span>意见反馈</span></div>-->
+<!--            <div class="aside-title" @click="goRouter(2)"><i class="el-icon-suitcase"></i><span>小工具</span></div>-->
             <div class="aside-title " style="margin-bottom: 100px"  @click="goRouter(11)"><i class="el-icon-setting"></i><span>更多设置</span></div>
 
           </div>
@@ -111,8 +136,8 @@
 
 
       <!-- 拖拽 -->
-<!--      <div class="isresize" style="cursor:w-resize">-->
-<!--      </div>-->
+      <div class="isresize" style="cursor:w-resize">
+      </div>
 
 
 
@@ -173,11 +198,12 @@
   import "../ztree/zTreeStyle.css"
   import "../ztree/jquery.ztree.exedit.js"
   import {listMenuByUserId,listByMenuId} from "@/api/bookmark/menu";
+  import usertag from '../tag/usertag.vue'
 
   export default {
     name: 'areaTree',
     components: {
-      Treeselect
+      Treeselect,usertag
     },
 
     data: function () {
@@ -187,10 +213,6 @@
         menuListShow:true,//目录list
         eidtMenuText:false,//我的收藏
 
-        addBkTAG:true,//添加书TAG
-        searchBkTAG:true,//搜索TAG
-        tagListShow:false,//TAGlist
-        eidtTAGText:false,//我的TAG
 
 
         queryParams: {
@@ -370,24 +392,7 @@
       },
 
 
-      /**添加书签目录**/
-      addBkTagCk(){
-        this.addBkTAG = this.addBkTAG?false:true;
-        this.searchBkTAG = true;
-        this.tagListShow = true;
-      },
-      /**搜索书签目录**/
-      searchBkTagCk(){
-        this.searchBkMenu = this.searchBkTAG?false:true;
-        this.addBkTAG = true;
-        this.tagListShow = true;
-      },
-      /**搜索书签目录**/
-      tagListShowCk(){
-        this.tagListShow = this.tagListShow?false:true;
-        this.addBkTAG = true;
-        this.searchBkTAG = true;
-      },
+
 
       /**图片失败显示**/
       errorHandler() {
@@ -413,7 +418,8 @@
         console.log("开始拖拽")
         var resize = document.getElementsByClassName('isresize');
         var left = document.getElementsByClassName('main-right');
-        var mid = document.getElementsByClassName('el-container mid is-vertical');
+        // var mid = document.getElementsByClassName('el-container mid is-vertical');
+       var mid = document.getElementsByClassName('mid');
         var box = document.getElementsByClassName('box');
         var transition = document.getElementsByClassName('transition-box');
 
@@ -886,7 +892,8 @@
             that.$router.push({
               path: "/content",
               query: {
-                menuId: 'recycle'
+                menuId: 'recycle',
+                t:Date.now()
               }
             })
             break;
@@ -999,7 +1006,6 @@
   }
 </script>
 <style scoped>
-
 
   body {
     /*font-family: "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "微软雅黑", Arial, sans-serif;*/
@@ -1212,6 +1218,11 @@
 
   .separator {
     float: left;
+  }
+  .menuCount{
+    float: right;
+    margin-right:18px!important;
+    color: #9e9e9e
   }
 
   .filter-sort i {

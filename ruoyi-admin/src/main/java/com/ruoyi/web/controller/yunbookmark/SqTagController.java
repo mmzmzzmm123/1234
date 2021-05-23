@@ -37,6 +37,40 @@ public class SqTagController extends BaseController
 
 
 
+    /**
+     * 获取所有的书签TAG 并且翻页
+     */
+    @GetMapping("/listByUser")
+    public TableDataInfo listByUser()
+    {
+        startPage();
+        List<SqTag> list = sqTagService.selectSqTagList(new SqTag(getAuthUser().getUserId()));
+        return getDataTable(list);
+    }
+
+
+    /**
+     * 模糊查书签TAG
+     */
+    @GetMapping("/listByUserLike")
+    public TableDataInfo listByUserLike()
+    {
+        startPage();
+        List<SqTag> list = sqTagService.selectSqTagList(new SqTag(getAuthUser().getUserId()));
+        return getDataTable(list);
+    }
+
+
+
+
+
+
+
+
+
+
+    // 以下是系统管理员的操作
+
 
     /**
      * 查询书签_标签列表

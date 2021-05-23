@@ -181,7 +181,8 @@ public class SqBookmarkController extends BaseController
     public AjaxResult add(@RequestBody SqBookmark sqBookmark)
     {
         sqBookmark.setUserid(getAuthUser().getUserId());
-        return toAjax(sqBookmarkService.insertSqBookmark(sqBookmark));
+        int i = sqBookmarkService.insertSqBookmark(sqBookmark);
+        return new AjaxResult(200,(i>0&&i!=999)?"success":"repetition");
     }
 
     /**
