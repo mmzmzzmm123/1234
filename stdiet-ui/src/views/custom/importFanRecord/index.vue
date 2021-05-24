@@ -104,12 +104,48 @@
         <template slot-scope="scope">
           <el-popover
           placement="left"
-          width="390"
+          width="520"
           trigger="click">
-          <el-table :data="scope.row.wxAccountList" style="width:370;height: 400px;overflow: auto;">
-            <el-table-column width="100" property="saleName" label="销售" align="center"></el-table-column>
+          <el-table :data="scope.row.wxAccountList" style="width:450;height: 400px;overflow: auto;">
+            <el-table-column width="80" property="saleName" label="销售" align="center"></el-table-column>
             <el-table-column width="160" property="wxAccount" label="微信号" align="center"></el-table-column>
-            <el-table-column width="80" property="importFanNum" label="导粉数量" align="center"></el-table-column>
+            <el-table-column width="120" property="importFanNum" label="导粉数量" align="center">
+                <template slot-scope="scope">
+                  <div v-if="scope.row.updateFlag">
+                    <el-input-number v-model="scope.row.importFanNum" controls-position="right" :min="1" :max="10000" style="width:100px"></el-input-number>
+                  </div>
+                  <div v-else>
+                    {{scope.row.importFanNum}}
+                  </div>
+                </template>
+            </el-table-column>
+            <el-table-column width="120" label="操作" align="center">
+              <template slot-scope="scope">
+                <el-button
+                    v-if="scope.row.updateFlag"
+                    size="mini"
+                    type="text"
+                    icon="el-icon-check"
+                    @click="saveWxAccountFanNum(scope.row)"
+                    v-hasPermi="['custom:importFanRecord:edit']"
+                  >保存</el-button>
+                  <el-button 
+                    v-else
+                    size="mini"
+                    type="text"
+                    icon="el-icon-edit"
+                    @click="scope.row.updateFlag = true"
+                    v-hasPermi="['custom:importFanRecord:edit']"
+                  >修改</el-button>
+                  <el-button
+                    size="mini"
+                    type="text"
+                    icon="el-icon-delete"
+                    @click="removeWxAccount(scope.row.id)"  
+                    v-hasPermi="['custom:importFanRecord:remove']"
+                  >移除</el-button>
+              </template>
+            </el-table-column>
           </el-table>
           <el-button slot="reference">详情</el-button>
           </el-popover>
@@ -158,7 +194,7 @@
       :layout="`${'total, slot, sizes, prev, pager, next, jumper'}`"
       @pagination="getList"
     >
-      <span style="margin-right: 12px" v-if="!isMobile"
+      <span style="margin-right: 12px"
         >总计导粉量：{{
           totalFanNum
         }}
@@ -195,7 +231,7 @@
 </template>
 
 <script>
-import { listImportFanRecord, getImportFanRecord, delImportFanRecord, addImportFanRecord, updateImportFanRecord, exportImportFanRecord } from "@/api/custom/importFanRecord";
+import { listImportFanRecord, getImportFanRecord, delImportFanRecord, addImportFanRecord, updateImportFanRecord, exportImportFanRecord,removeFanWxAccount,saveWxAccountFanNum } from "@/api/custom/importFanRecord";
 import ImportFan from "@/components/ImportFanRecord/ImportFan";
 import dayjs from "dayjs";
 const nowDate = dayjs().format("YYYY-MM-DD");
@@ -257,6 +293,13 @@ export default {
       listImportFanRecord(this.queryParams).then(response => {
         if(response.rows != null && response.rows.length > 0){
           this.totalFanNum = response.rows[0].totalFanNum;
+          response.rows.forEach((item,index) => {
+              if(item.wxAccountList != null && item.wxAccountList.length > 0){
+                 item.wxAccountList.forEach((wx,i) => {
+                    wx.updateFlag = false;
+                 })
+              }
+          });
         }else{
           this.totalFanNum = 0;
         }
@@ -393,6 +436,26 @@ export default {
         });
       }
       return fanNum;
+    },
+    removeWxAccount(id){
+       removeFanWxAccount(id).then(response => {
+          if (response.code === 200) {
+              this.msgSuccess("移除成功");
+              this.getList();
+          }
+      });
+    },
+    saveWxAccountFanNum(row){
+        let param = {
+          id: row.id,
+          importFanNum: row.importFanNum
+        };
+        saveWxAccountFanNum(param).then(response => {
+          if (response.code === 200) {
+              this.msgSuccess("保存成功");
+              this.getList();
+          }
+        });
     }
   }
 };

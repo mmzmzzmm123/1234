@@ -59,3 +59,20 @@ export function getWxAccountAndSale(query){
         params: query
       })
 }
+
+// 删除导粉记录中对应的微信记录
+export function removeFanWxAccount(id) {
+  return request({
+    url: '/custom/importFanRecord/removeFanWxAccount/' + id,
+    method: 'get'
+  })
+}
+
+
+export function saveWxAccountFanNum(data){
+  return request({
+    url: '/custom/importFanRecord/saveWxAccountFanNum',
+    method: 'get',
+    params: data
+  })
+}

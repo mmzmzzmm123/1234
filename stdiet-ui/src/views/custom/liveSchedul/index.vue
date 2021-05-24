@@ -144,12 +144,12 @@
         <template slot-scope="scope">
           <el-popover
           placement="left"
-          width="390"
+          width="370"
           trigger="click">
-          <el-table :data="scope.row.wxAccountList" style="width:370;height: 400px;overflow: auto;">
-            <el-table-column width="100" property="nickName" label="销售"></el-table-column>
-            <el-table-column width="120" property="wxAccount" label="微信号"></el-table-column>
-            <el-table-column width="120" property="saleGroupName" label="销售组别"></el-table-column>
+          <el-table :data="scope.row.wxAccountList" style="width:360;height: 300px;overflow: auto;">
+            <el-table-column width="80" property="saleName" label="销售"></el-table-column>
+            <el-table-column width="180" property="wxAccount" label="微信号" align="center"></el-table-column>
+            <el-table-column width="80" property="fanNum" label="导粉量" align="center"></el-table-column>
           </el-table>
           <el-button slot="reference">详情</el-button>
           </el-popover>

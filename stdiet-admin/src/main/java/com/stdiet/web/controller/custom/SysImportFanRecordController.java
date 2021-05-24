@@ -162,4 +162,26 @@ public class SysImportFanRecordController extends BaseController
         result.put("fanNumList", fanNumList);
         return AjaxResult.success(result);
     }
+
+    /**
+     * 删除导粉记录中对应微信记录
+     */
+    @PreAuthorize("@ss.hasPermi('custom:importFanRecord:remove')")
+    @Log(title = "删除导粉记录中对应微信记录", businessType = BusinessType.DELETE)
+    @GetMapping("/removeFanWxAccount/{ids}")
+    public AjaxResult removeFanWxAccount(@PathVariable Long[] ids)
+    {
+        return toAjax(sysImportFanWxAccountService.deleteSysImportFanWxAccountByIds(ids));
+    }
+
+    /**
+     * 删除导粉记录中对应微信记录
+     */
+    @PreAuthorize("@ss.hasPermi('custom:importFanRecord:edit')")
+    @GetMapping("/saveWxAccountFanNum")
+    public AjaxResult saveWxAccountFanNum(SysImportFanWxAccount sysImportFanWxAccount)
+    {
+        return toAjax(sysImportFanWxAccountService.updateSysImportFanWxAccount(sysImportFanWxAccount));
+    }
+
 }

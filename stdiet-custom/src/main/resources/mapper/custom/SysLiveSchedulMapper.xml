@@ -28,7 +28,7 @@
         <result property="fanChannelName"  column="fan_channel_name"></result>
 
         <!-- 根据渠道查询对应微信号（微信账号分配表中） -->
-        <!--<association property="wxAccountList" column="fan_channel" select="getWxAccountListByFanChannel"/>-->
+        <association property="wxAccountList" column="id" select="getWxAccountListByLiveId"/>
     </resultMap>
 
     <resultMap type="SysLiveSchedul" id="SysLiveSchedulResultSigle">
@@ -74,9 +74,9 @@
         <if test="fanChannel != null">
             and slc.fan_channel = #{fanChannel}
         </if>
-        <if test="wxAccountId != null">
+        <!--<if test="wxAccountId != null">
             and slc.fan_channel = (SELECT swd.account_id FROM sys_wx_distribution AS swd where swd.wechat_account = #{wxAccountId} and swd.del_flag = 0 limit 1)
-        </if>
+        </if>-->
         order by slc.live_schedul_date desc,slc.live_start_time desc ,slc.live_room asc
     </select>
 
@@ -162,14 +162,15 @@
         </foreach>
     </update>
 
-    <!-- 根据渠道查询该渠道下分配的微信号 -->
-    <select id="getWxAccountListByFanChannel" parameterType="Integer" resultType="Map">
-      SELECT su.nick_name as nickName,swsa.wx_account as wxAccount,asg.dict_label as saleGroupName
-      FROM sys_wx_distribution AS swd
-      lEFT JOIN sys_wx_sale_account swsa ON swsa.id = swd.wechat_account and swsa.del_flag = 0
-      LEFT JOIN sys_user su ON su.user_id = swd.user_id AND su.del_flag = 0
-      LEFT JOIN (SELECT dict_label, dict_value FROM sys_dict_data WHERE dict_type = 'sale_group') AS asg ON asg.dict_value = swd.sale_group_id
-      where swd.account_id = #{fan_channel} and swd.del_flag = 0
+    <!-- 根据直播ID查询该渠道下分配的微信号 -->
+    <select id="getWxAccountListByLiveId" parameterType="Long" resultType="Map">
+      SELECT su.nick_name as saleName,w.wx_account as wxAccount, sum(wa.import_fan_num) as fanNum from sys_import_fan_record as fc
+      left join sys_import_fan_wx_account as wa on wa.import_fan_record_id =  fc.id and wa.del_flag = 0
+      left join sys_wx_sale_account as w on w.id = wa.import_wx_account_id and w.del_flag = 0
+      left join sys_wx_distribution swd on swd.wechat_account = w.id and swd.del_flag = 0
+      left join sys_user su on swd.user_id = su.user_id and su.del_flag = 0
+      where fc.import_fan_live = #{id} and fc.del_flag = 0
+      group by w.wx_account,su.nick_name
     </select>
 
     <!-- 查询直播时间范围是否重叠 -->
