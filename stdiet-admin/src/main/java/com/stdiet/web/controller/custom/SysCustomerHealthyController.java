@@ -1,4 +1,4 @@
-package com.stdiet.custom.controller;
+package com.stdiet.web.controller.custom;
 
 import java.util.List;
 
