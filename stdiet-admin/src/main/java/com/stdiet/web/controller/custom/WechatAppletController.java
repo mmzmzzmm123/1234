@@ -68,6 +68,8 @@ public class WechatAppletController extends BaseController {
     private ISysDictTypeService iSysDictTypeService;
     @Autowired
     private IWechatAppletService iWechatAppletService;
+    @Autowired
+    private ISysServicesQuestionService iSysServicesQuestionService;
 
     /**
      * 查询微信小程序中展示的客户案例
@@ -571,9 +573,12 @@ public class WechatAppletController extends BaseController {
 //    }
 
     @GetMapping("/trans")
-    public AjaxResult transId(@RequestParam String customerId) {
-        Long cusId = StringUtils.isNotEmpty(customerId) ? Long.parseLong(AesUtils.decrypt(customerId)) : 0L;
-        return AjaxResult.success(String.valueOf(cusId));
+    public AjaxResult transId(@RequestParam String customerId, @RequestParam Long cusId) {
+        if (StringUtils.isNotEmpty(customerId)) {
+            return AjaxResult.success(AesUtils.decrypt(customerId));
+        }
+
+        return AjaxResult.success(AesUtils.encrypt(String.valueOf(cusId)));
     }
 
     @GetMapping("/subscribe")
@@ -585,6 +590,19 @@ public class WechatAppletController extends BaseController {
         info.setSubscribed(subscribed);
 
         return AjaxResult.success(sysRecipesPlanService.updateSysRecipesPlan(info));
+    }
+
+    @GetMapping("/fetchServiceQuestion")
+    public AjaxResult fetchServiceQuestion(@RequestParam String customerId, @RequestParam Integer pageNum, @RequestParam Integer pageSize) {
+        startPage();
+
+        Long cusId = StringUtils.isNotEmpty(customerId) ? Long.parseLong(AesUtils.decrypt(customerId)) : 0L;
+
+        SysServicesQuestion servicesQuestion = new SysServicesQuestion();
+        servicesQuestion.setRole("customer");
+        servicesQuestion.setUserId(cusId);
+
+        return AjaxResult.success(iSysServicesQuestionService.selectSysServicesQuestionByUserIdAndRole(servicesQuestion));
     }
 
 
