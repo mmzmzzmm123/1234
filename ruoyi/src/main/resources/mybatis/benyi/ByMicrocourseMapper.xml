@@ -36,17 +36,17 @@ select dict_value+9999 id, 0 parent_id,dict_label title,dict_sort sort   from sy
 				union all
 				select 1000302 ,concat(10003),'下册',10
 				union all
-				select concat(1000101,dict_value), 1000101,dict_label title,dict_sort sort   from sys_dict_data where dict_type='sys_dm_wxkclx'
+				select concat(1000101,dict_value), 1000101,dict_label title,dict_sort sort   from sys_dict_data where dict_type='sys_dm_wxkclx' and (dict_label not in ('百家姓','绕口令','游戏','孟子名言','谚语','千字文','韩非子名言','《诗经》名言','《春秋左传》名言','脑筋急转弯','《易经》名言 ','老子名言'))
 				union all
-				select concat(1000102,dict_value), 1000102,dict_label title,dict_sort sort   from sys_dict_data where dict_type='sys_dm_wxkclx'
+				select concat(1000102,dict_value), 1000102,dict_label title,dict_sort sort   from sys_dict_data where dict_type='sys_dm_wxkclx' and (dict_label not in ('百家姓','绕口令','游戏','孟子名言','谚语','千字文','韩非子名言','《诗经》名言','《春秋左传》名言','脑筋急转弯','《易经》名言 ','老子名言'))
 				union all
-				select concat(1000201,dict_value), 1000201,dict_label title,dict_sort sort   from sys_dict_data where dict_type='sys_dm_wxkclx'
+				select concat(1000201,dict_value), 1000201,dict_label title,dict_sort sort   from sys_dict_data where dict_type='sys_dm_wxkclx' and (dict_label not in ('三字经（节选）','千字文','语言游戏','孔子名言','韩非子名言','《诗经》名言','《春秋左传》名言','脑筋急转弯','《易经》名言 ','老子名言'))
 				union all
-				select concat(1000202,dict_value), 1000202,dict_label title,dict_sort sort   from sys_dict_data where dict_type='sys_dm_wxkclx'
+				select concat(1000202,dict_value), 1000202,dict_label title,dict_sort sort   from sys_dict_data where dict_type='sys_dm_wxkclx' and (dict_label not in ('三字经（节选）','千字文','语言游戏','孔子名言','韩非子名言','《诗经》名言','《春秋左传》名言','孟子名言','脑筋急转弯','《易经》名言 '))
 				union all
-				select concat(1000301,dict_value), 1000301,dict_label title,dict_sort sort   from sys_dict_data where dict_type='sys_dm_wxkclx'
+				select concat(1000301,dict_value), 1000301,dict_label title,dict_sort sort   from sys_dict_data where dict_type='sys_dm_wxkclx' and (dict_label not in ('百家姓','三字经（节选）','语言游戏','孔子名言','歇后语','孟子名言','《春秋左传》名言','《易经》名言 ','老子名言'))
 				union all
-				select concat(1000302,dict_value), 1000302,dict_label title,dict_sort sort   from sys_dict_data where dict_type='sys_dm_wxkclx'
+				select concat(1000302,dict_value), 1000302,dict_label title,dict_sort sort   from sys_dict_data where dict_type='sys_dm_wxkclx' and (dict_label not in ('百家姓','三字经（节选）','语言游戏','孔子名言','歇后语','孟子名言','韩非子名言','《诗经》名言','老子名言'))
 				union all
         select id, CONCAT(scpoe+9999,upanddown,type), title, sort from by_microcourse
     </sql>
