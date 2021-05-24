@@ -97,7 +97,7 @@ public class WeChartAppletServiceImp implements IWechatAppletService {
         dataParam.put("thing1", JSONObject.parse("{\"value\":\"" + name + "\"}"));
         dataParam.put("time2", JSONObject.parse("{\"value\":\"" + startDate + "\"}"));
         dataParam.put("time3", JSONObject.parse("{\"value\":\"" + endDate + "\"}"));
-        String mRemark = StringUtils.isNull(remark) ? "" : remark;
+        String mRemark = StringUtils.isNull(remark) ? "无" : remark;
         dataParam.put("thing4", JSONObject.parse("{\"value\":\"" + mRemark + "\"}"));
 
         param.put("data", dataParam);
