@@ -288,7 +288,7 @@ export default {
         path: "/benyi/dayflowassessments/details/" + id,
         query: {
           dayflowassessmentteacherdetails:
-            "一日流程评估（" + row.pgdxxm + "）",
+            "一日流程评估详情（" + row.pgdxxm + "）",
         },
       });
     },
