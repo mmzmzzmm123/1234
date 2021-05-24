@@ -113,6 +113,15 @@
           <el-button
             size="mini"
             type="text"
+            icon="el-icon-edit"
+            v-show="!checkUpdateable(scope.row)"
+            @click="handleUpdateAssessment(scope.row)"
+            v-hasPermi="['benyi:dayflowassessment:query']"
+            >评估</el-button
+          >
+          <el-button
+            size="mini"
+            type="text"
             icon="el-icon-delete"
             @click="handleDelete(scope.row)"
             v-hasPermi="['benyi:dayflowassessment:remove']"
@@ -292,6 +301,13 @@ export default {
         },
       });
     },
+    handleUpdateAssessment(row) {
+      const id = row.id;
+      //console.log(id);
+      this.$router.push({
+        path: "/benyi/dayflowassessment/teacher/" + id,
+      });
+    },
     handleAdd() {
       this.$router.push({
         path: "/benyi/dayflowassessment/teacher/" + Date.now(),
@@ -313,6 +329,12 @@ export default {
           this.msgSuccess("删除成功");
         })
         .catch(function () {});
+    },
+    //控制按钮可用
+    checkUpdateable(row) {
+      var status = row.status;
+      //console.log(date.toLocaleDateString());
+      return status == "1";
     },
   },
 };

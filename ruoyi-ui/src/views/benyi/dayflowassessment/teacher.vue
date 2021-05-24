@@ -233,6 +233,7 @@ export default {
         pgdxxm: undefined,
         createUserid: undefined,
         createTime: undefined,
+        status: undefined,
         list: [],
       };
       this.resetForm("form");
@@ -251,6 +252,7 @@ export default {
               if (action === "confirm") {
                 this.loading = true;
                 this.form.list = this.dayflowstandardList;
+                this.form.status = "1";
                 addDayflowassessment(this.form).then((response) => {
                   if (response.code === 200) {
                     this.msgSuccess("评估成功");

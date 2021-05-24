@@ -155,6 +155,12 @@ public class ByDayflowassessment extends BaseEntity {
 //    @Excel(name = "创建时间")
 //    private Date createTime;
 
+    /**
+     * 状态
+     */
+    @Excel(name = "状态")
+    private String status;
+
     public Double getBjpjf() {
         return bjpjf;
     }
@@ -464,6 +470,14 @@ public class ByDayflowassessment extends BaseEntity {
         this.byClass = byClass;
     }
 
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
     @Override
     public String toString() {
         return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE)
@@ -508,6 +522,7 @@ public class ByDayflowassessment extends BaseEntity {
                 .append("wxkcpjf", getWxkcpjf())
                 .append("qkcpjf", getQkcpjf())
                 .append("byClass", getByClass())
+                .append("status", getStatus())
                 .toString();
     }
 

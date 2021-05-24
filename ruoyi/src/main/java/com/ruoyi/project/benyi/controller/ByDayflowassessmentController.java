@@ -142,6 +142,7 @@ public class ByDayflowassessmentController extends BaseController {
                 } else {
                     byDayflowassessmentNew.setPgdx(byClass.getZbjs());//设置评估对象为主班教师
                     byDayflowassessmentNew.setPgdxxm(byClass.getZbjsxm());
+                    byDayflowassessmentNew.setStatus("1");//永远是提交状态，因为是助理或配班教师所产生的数据项
                     byDayflowassessmentNew.setRemark("被评估："+byDayflowassessment.getId());
 
                     iRows = iRows + addDayFlowAssessment(byDayflowassessmentNew);
