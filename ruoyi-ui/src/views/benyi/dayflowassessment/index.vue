@@ -305,7 +305,7 @@ export default {
       const id = row.id;
       //console.log(id);
       this.$router.push({
-        path: "/benyi/dayflowassessment/teacher/" + id,
+        path: "/benyi/dayflowassessmentupdate/edit/" + id,
       });
     },
     handleAdd() {

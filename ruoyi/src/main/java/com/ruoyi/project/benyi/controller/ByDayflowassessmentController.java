@@ -118,45 +118,90 @@ public class ByDayflowassessmentController extends BaseController {
     @Log(title = "幼儿园一日流程评估", businessType = BusinessType.INSERT)
     @PostMapping
     public AjaxResult add(@RequestBody ByDayflowassessment byDayflowassessment) {
-        //判断当前评估对象的角色是主班 配班 还是助理教师
-        Long pgdx = byDayflowassessment.getPgdx();
-        //获取班级信息
-        String classId = byDayflowassessment.getClassid();
-        ByClass byClass = byClassService.selectByClassById(classId);
-        if (byClass != null) {
-            byDayflowassessment.setDeptId(SecurityUtils.getLoginUser().getUser().getDeptId());
-            byDayflowassessment.setCreateUserid(SecurityUtils.getLoginUser().getUser().getUserId());
-            byDayflowassessment.setXnxq(schoolCommon.getCurrentXnXq());
-            //获取总得分
-            byDayflowassessment.setZzdf(GetDf(byDayflowassessment.getList()));
-            //如果评估对象非主班教师，那么对主班教师产生相同的扣分项
+        //首先判断byDayflowassessment.id 是否为空
+        if (byDayflowassessment.getId() == null) {
+            //判断当前评估对象的角色是主班 配班 还是助理教师
+            Long pgdx = byDayflowassessment.getPgdx();
+            //获取班级信息
+            String classId = byDayflowassessment.getClassid();
+            ByClass byClass = byClassService.selectByClassById(classId);
+            if (byClass != null) {
+                byDayflowassessment.setDeptId(SecurityUtils.getLoginUser().getUser().getDeptId());
+                byDayflowassessment.setCreateUserid(SecurityUtils.getLoginUser().getUser().getUserId());
+                byDayflowassessment.setXnxq(schoolCommon.getCurrentXnXq());
+                //获取总得分
+                byDayflowassessment.setZzdf(GetDf(byDayflowassessment.getList()));
+                //如果评估对象非主班教师，那么对主班教师产生相同的扣分项
+                if (byClass.getZbjs() == pgdx) {
+                    int iRows = addDayFlowAssessment(byDayflowassessment);
+                    return toAjax(iRows);
+                } else {
+                    //评估对象为助理教师和配班教师
+                    int iRows = addDayFlowAssessment(byDayflowassessment);
+                    ByDayflowassessment byDayflowassessmentNew = byDayflowassessment;
+                    if (byClass.getZbjs() == null) {
+                        System.out.println("未设置主班教师");
+                    } else {
+                        byDayflowassessmentNew.setPgdx(byClass.getZbjs());//设置评估对象为主班教师
+                        byDayflowassessmentNew.setPgdxxm(byClass.getZbjsxm());
+                        byDayflowassessmentNew.setStatus("1");//永远是提交状态，因为是助理或配班教师所产生的数据项
+                        byDayflowassessmentNew.setRemark(byDayflowassessment.getId().toString());
+
+                        iRows = iRows + addDayFlowAssessment(byDayflowassessmentNew);
+                    }
+                    return toAjax(iRows);
+                }
+            } else {
+                return AjaxResult.error("班级信息错误");
+            }
+        } else {
+            //id 不为空，说明是修改
+            ByDayflowassessment byDayflowassessmentModel = byDayflowassessmentService.selectByDayflowassessmentById(byDayflowassessment.getId());
+            byDayflowassessmentModel.setZzdf(GetDf(byDayflowassessment.getList()));
+            byDayflowassessmentModel.setList(byDayflowassessment.getList());
+            //判断当前评估对象的角色是主班 配班 还是助理教师
+            Long pgdx = byDayflowassessmentModel.getPgdx();
+            //获取班级信息
+            String classId = byDayflowassessmentModel.getClassid();
+            ByClass byClass = byClassService.selectByClassById(classId);
             if (byClass.getZbjs() == pgdx) {
-                int iRows = addDayFlowAssessment(byDayflowassessment);
+                //首先清除item
+                byDayflowassessmentitemService.deleteByDayflowassessmentitemByPid(byDayflowassessmentModel.getId());
+                int iRows = addDayFlowAssessment(byDayflowassessmentModel);
                 return toAjax(iRows);
             } else {
                 //评估对象为助理教师和配班教师
-                int iRows = addDayFlowAssessment(byDayflowassessment);
-                ByDayflowassessment byDayflowassessmentNew = byDayflowassessment;
+                int iRows = addDayFlowAssessment(byDayflowassessmentModel);
+                ByDayflowassessment byDayflowassessmentNew = byDayflowassessmentModel;
                 if (byClass.getZbjs() == null) {
                     System.out.println("未设置主班教师");
                 } else {
+                    //主班教师被评估记录的id
+                    ByDayflowassessment byDayflowassessmentZbjs=new ByDayflowassessment();
+                    byDayflowassessmentZbjs.setRemark(byDayflowassessmentModel.getId().toString());
+                    Long id=byDayflowassessmentService.selectByDayflowassessmentList(byDayflowassessmentZbjs).get(0).getId();
+                    //清空item
+                    byDayflowassessmentitemService.deleteByDayflowassessmentitemByPid(id);
+                    byDayflowassessmentNew.setId(id);
+                    byDayflowassessmentNew.setStatus("1");//永远是提交状态，因为是助理或配班教师所产生的数据项
                     byDayflowassessmentNew.setPgdx(byClass.getZbjs());//设置评估对象为主班教师
                     byDayflowassessmentNew.setPgdxxm(byClass.getZbjsxm());
-                    byDayflowassessmentNew.setStatus("1");//永远是提交状态，因为是助理或配班教师所产生的数据项
-                    byDayflowassessmentNew.setRemark("被评估："+byDayflowassessment.getId());
 
                     iRows = iRows + addDayFlowAssessment(byDayflowassessmentNew);
                 }
                 return toAjax(iRows);
             }
-        } else {
-            return AjaxResult.error("班级信息错误");
         }
     }
 
     //
     public Integer addDayFlowAssessment(ByDayflowassessment byDayflowassessment) {
-        int iRows = byDayflowassessmentService.insertByDayflowassessment(byDayflowassessment);
+        int iRows = 0;
+        if (byDayflowassessment.getId() == null) {
+            iRows = byDayflowassessmentService.insertByDayflowassessment(byDayflowassessment);
+        } else {
+            iRows = byDayflowassessmentService.updateByDayflowassessment(byDayflowassessment);
+        }
 
         List<ByDayFlowStandard> list = byDayflowassessment.getList();
 

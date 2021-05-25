@@ -4,9 +4,27 @@
       <p class="title flex align-center">
         <span>班级：{{ classFormat(this.classid) }} </span>
         <span> 评估对象：{{ pgdxFormat(this.pgdx) }} </span>
-        <span> 评估时间：{{ this.createtime }} </span>
-        <span> 扣分：{{ this.df }} </span>
       </p>
+    </div>
+    <div class="mb8 btn-list">
+      <el-button
+        type="primary"
+        icon="el-icon-success"
+        size="mini"
+        @click="submitForm"
+        v-hasPermi="['benyi:dayflowassessment:edit']"
+        v-prevent-re-click
+        >提交评估</el-button
+      >
+      <el-button
+        type="primary"
+        icon="el-icon-circle-check"
+        size="mini"
+        @click="saveForm"
+        v-hasPermi="['benyi:dayflowassessment:edit']"
+        v-prevent-re-click
+        >保存评估</el-button
+      >
     </div>
     <el-tabs v-model="activeName" type="card">
       <el-tab-pane
@@ -46,7 +64,7 @@
                   v-model="itemBz.mrz"
                   :precision="2"
                   :step="0.1"
-                  :disabled="true"
+                  :max="0"
                 ></el-input-number>
               </div>
             </div>
@@ -70,14 +88,12 @@ import { listClass, getUserList } from "@/api/system/class";
 import { listUser } from "@/api/system/user";
 
 export default {
-  name: "dayflowassessmentteacherdetails",
+  name: "dayflowassessmentteacheredit",
   data() {
     return {
       id: "",
       classid: "",
       pgdx: "",
-      createtime: "",
-      df: "",
       // 遮罩层
       loading: false,
       // 根据一日流程id查到的名下任务列表
@@ -92,6 +108,8 @@ export default {
       pgdxOptions: [],
       // 一日流程表格数据
       detailOptions: [],
+      // 表单参数
+      form: {},
       // 查询一日流程标准
       queryParams_standard: {
         id: undefined,
@@ -109,6 +127,7 @@ export default {
   },
   created() {
     this.id = this.$route.params && this.$route.params.id;
+    console.log(this.id);
     this.queryParams_standard.id = this.id;
     this.getDetail();
     this.getClassList();
@@ -122,8 +141,6 @@ export default {
         //console.log(response);
         this.classid = response.data.classid;
         this.pgdx = response.data.pgdx;
-        this.createtime = response.data.createTime;
-        this.df = response.data.zzdf;
       });
     },
     /** 查询一日流程列表 */
@@ -181,6 +198,54 @@ export default {
       });
       listStandardAssessment(this.queryParams_standard).then((response) => {
         this.dayflowstandardList = response.rows;
+      });
+    },
+    /** 提交按钮 */
+    submitForm: function () {
+      //console.log(this.dayflowstandardList);
+      // console.log(this.form);
+      this.form.id = this.id;
+      this.$confirm("确认提交评估数据?评估后数据不能修改", "警告", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning",
+        callback: (action) => {
+          if (action === "confirm") {
+            this.loading = true;
+            this.form.list = this.dayflowstandardList;
+            this.form.status = "1";
+            addDayflowassessment(this.form).then((response) => {
+              if (response.code === 200) {
+                this.msgSuccess("评估成功");
+                this.loading = false;
+              }
+            });
+          }
+        },
+      });
+    },
+    /** 保存按钮 */
+    saveForm: function () {
+      //console.log(this.dayflowstandardList);
+      // console.log(this.form);
+      this.form.id = this.id;
+      this.$confirm("确认保存评估数据?", "警告", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning",
+        callback: (action) => {
+          if (action === "confirm") {
+            this.loading = true;
+            this.form.list = this.dayflowstandardList;
+            this.form.status = "0";
+            addDayflowassessment(this.form).then((response) => {
+              if (response.code === 200) {
+                this.msgSuccess("保存成功");
+                this.loading = false;
+              }
+            });
+          }
+        },
       });
     },
   },

@@ -39,12 +39,21 @@
     <div class="mb8 btn-list">
       <el-button
         type="primary"
-        icon="el-icon-s-data"
+        icon="el-icon-success"
         size="mini"
         @click="submitForm"
         v-hasPermi="['benyi:dayflowassessment:edit']"
         v-prevent-re-click
         >提交评估</el-button
+      >
+      <el-button
+        type="primary"
+        icon="el-icon-circle-check"
+        size="mini"
+        @click="saveForm"
+        v-hasPermi="['benyi:dayflowassessment:edit']"
+        v-prevent-re-click
+        >保存评估</el-button
       >
     </div>
     <el-tabs v-model="activeName" type="card">
@@ -244,7 +253,7 @@ export default {
       this.$refs["form"].validate((valid) => {
         if (valid) {
           // console.log(this.form);
-          this.$confirm("确认提交评估数据?评估后数据不能取消", "警告", {
+          this.$confirm("确认提交评估数据?评估后数据不能修改", "警告", {
             confirmButtonText: "确定",
             cancelButtonText: "取消",
             type: "warning",
@@ -256,6 +265,33 @@ export default {
                 addDayflowassessment(this.form).then((response) => {
                   if (response.code === 200) {
                     this.msgSuccess("评估成功");
+                    this.loading = false;
+                  }
+                });
+              }
+            },
+          });
+        }
+      });
+    },
+    /** 保存按钮 */
+    saveForm: function () {
+      //console.log(this.dayflowstandardList);
+      this.$refs["form"].validate((valid) => {
+        if (valid) {
+          // console.log(this.form);
+          this.$confirm("确认保存评估数据?", "警告", {
+            confirmButtonText: "确定",
+            cancelButtonText: "取消",
+            type: "warning",
+            callback: (action) => {
+              if (action === "confirm") {
+                this.loading = true;
+                this.form.list = this.dayflowstandardList;
+                this.form.status = "0";
+                addDayflowassessment(this.form).then((response) => {
+                  if (response.code === 200) {
+                    this.msgSuccess("保存成功");
                     this.loading = false;
                   }
                 });

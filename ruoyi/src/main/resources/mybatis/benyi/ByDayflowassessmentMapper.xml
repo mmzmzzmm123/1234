@@ -115,6 +115,7 @@
             <if test="endTime != null and endTime != ''"><!-- 结束时间检索 -->
                 AND date_format(d.create_time,'%y%m%d') &lt;= date_format(#{endTime},'%y%m%d')
             </if>
+            <if test="remark != null  and remark != ''">and d.remark = #{remark}</if>
             <!-- 数据范围过滤 -->
             ${dataScope}
             order by d.create_time desc
@@ -264,8 +265,8 @@ group by t.pgdx
             <if test="pgdxxm != null ">pgdxxm = #{pgdxxm},</if>
             <if test="createUserid != null ">create_userid = #{createUserid},</if>
             <if test="createTime != null ">create_time = #{createTime},</if>
-            <if test="remark != null  and remark != ''">#{remark},</if>
-            <if test="status != null  and status != ''">#{status},</if>
+            <if test="remark != null  and remark != ''">remark = #{remark},</if>
+            <if test="status != null  and status != ''">status = #{status},</if>
         </trim>
         where id = #{id}
     </update>

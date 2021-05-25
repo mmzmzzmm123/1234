@@ -522,6 +522,22 @@ export const constantRoutes = [
     ]
   },
   {
+    path: "/benyi/dayflowassessmentupdate",
+    component: Layout,
+    hidden: true,
+    children: [
+      {
+        path: "edit/:id(\\d+)",
+        component: () => import("@/views/benyi/dayflowassessment/edit"),
+        name: "dayflowassessmentteacheredit",
+        meta: {
+          title: `一日流程评估`,
+          icon: ""
+        }
+      }
+    ]
+  },
+  {
     path: "/benyi/assessmentchild",
     component: Layout,
     hidden: true,
