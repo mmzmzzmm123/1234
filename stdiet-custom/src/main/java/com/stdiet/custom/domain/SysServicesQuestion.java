@@ -1,6 +1,7 @@
 package com.stdiet.custom.domain;
 
 import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 
@@ -11,7 +12,7 @@ public class SysServicesQuestion {
     /**
      * 问题状态id
      */
-    String id;
+    Long id;
 
     /**
      * 问题id(搜索用)
@@ -71,5 +72,7 @@ public class SysServicesQuestion {
      * 角色id
      */
     Long userId;
+
+    SysServicesQuestionUserInfo userInfo;
 
 }

@@ -592,7 +592,7 @@ public class WechatAppletController extends BaseController {
         return AjaxResult.success(sysRecipesPlanService.updateSysRecipesPlan(info));
     }
 
-    @GetMapping("/fetchServiceQuestion")
+    @GetMapping("/services/list")
     public AjaxResult fetchServiceQuestion(@RequestParam String customerId, @RequestParam Integer pageNum, @RequestParam Integer pageSize) {
         startPage();
 
@@ -605,6 +605,50 @@ public class WechatAppletController extends BaseController {
         return AjaxResult.success(iSysServicesQuestionService.selectSysServicesQuestionByUserIdAndRole(servicesQuestion));
     }
 
+    /**
+     * 客户添加问题
+     * @param servicesQuestion
+     * @param customerId
+     * @return
+     */
+    @PostMapping("/services/post")
+    public AjaxResult postServiceQuestion(@RequestBody SysServicesQuestion servicesQuestion, @RequestParam String customerId) {
+        Long cusId = StringUtils.isNotEmpty(customerId) ? Long.parseLong(AesUtils.decrypt(customerId)) : 0L;
+        if(cusId == 0L) {
+            return toAjax(0);
+        }
+        servicesQuestion.setCusId(cusId);
+        return toAjax(iSysServicesQuestionService.insertSysServicesQuestion(servicesQuestion));
+    }
+
+    @GetMapping("/services/reply")
+    public AjaxResult serviceQuestionReply(@RequestParam String queId) {
+        return AjaxResult.success(iSysServicesQuestionService.selectSysServicesQuestionSessionByQueId(queId));
+    }
+
+    /**
+     * 设置已读
+     * @param id
+     * @return
+     */
+    @GetMapping("/services/post/update")
+    public AjaxResult updateServiceQuestion(@RequestParam Long id) {
+        SysServicesQuestion servicesQuestion = new SysServicesQuestion();
+        servicesQuestion.setRead(1);
+        servicesQuestion.setId(id);
+
+        return toAjax(iSysServicesQuestionService.updateSysServicesQuestionStatus(servicesQuestion));
+    }
+
+    @PostMapping("/services/post/reply")
+    public AjaxResult replyServiceQuestion(@RequestBody SysServicesQuestion servicesQuestion, @RequestParam String customerId) {
+        Long cusId = StringUtils.isNotEmpty(customerId) ? Long.parseLong(AesUtils.decrypt(customerId)) : 0L;
+
+        servicesQuestion.setRole("customer");
+        servicesQuestion.setUserId(cusId);
+
+        return toAjax(iSysServicesQuestionService.inserSysServicesQuestionReply(servicesQuestion));
+    }
 
 }
 

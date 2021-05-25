@@ -9,7 +9,11 @@ public interface SysServicesQuestionMapper {
 
     int insertSysServicesQuestion(SysServicesQuestion servicesQuestion);
 
-    int insertSysServicesQuestionStatus(List<SysServicesQuestion> sysServicesQuestion);
+    int insertSysServicesQuestionStatus(List<SysServicesQuestion> servicesQuestion);
 
-    int updateSysServicesQuestionStatus(SysServicesQuestion sysServicesQuestion);
+    int updateSysServicesQuestionStatus(SysServicesQuestion servicesQuestion);
+
+    int inserSysServicesQuestionReply(SysServicesQuestion servicesQuestion);
+
+    List<SysServicesQuestion> selectSysServicesQuestionSessionByQueId(String queId);
 }
