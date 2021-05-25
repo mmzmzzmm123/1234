@@ -64,7 +64,10 @@ public class SysRecipesServiceImpl implements ISysRecipesService {
 
     @Override
     public List<SysRecipes> selectSysRecipesByRecipesId(Long id) {
-        return sysRecipesMapper.selectSysRecipesByRecipesId(id);
+        long t = System.currentTimeMillis();
+        List<SysRecipes> list = sysRecipesMapper.selectSysRecipesByRecipesId(id);
+        System.out.println(System.currentTimeMillis() - t);
+        return list;
     }
 
     @Override
