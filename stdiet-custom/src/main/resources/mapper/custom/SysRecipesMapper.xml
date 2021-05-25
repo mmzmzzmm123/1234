@@ -198,12 +198,16 @@
     </select>
 
     <select id="selectDishesByMenuIdShow" parameterType="Long" resultMap="SysDishesResultShow">
-        SELECT * FROM (SELECT id, menu_id, dishes_id, type, detail, remark FROM sys_customer_menu_dishes WHERE menu_id = #{id}) AS menu
-        LEFT JOIN sys_dishes ON menu.dishes_id = sys_dishes.id
+        SELECT
+        menu.id, menu.menu_id, menu.dishes_id, menu.type, menu.detail, menu.remark, sd.is_main,sd.name,sd.methods
+        FROM (SELECT id, menu_id, dishes_id, type, detail, remark FROM sys_customer_menu_dishes WHERE menu_id = #{id}) AS menu
+        LEFT JOIN sys_dishes as sd ON menu.dishes_id = sd.id
     </select>
 
     <select id="selectIngredientsByDishesIdShow" parameterType="Long" resultMap="SysIgdsResultShow">
-       SELECT * FROM(
+       SELECT
+       ing.id,ing.name,ing.type.ing.protein_ratio,ing.fat_ratio,ing.carbon_ratio.ing.area,dishes.cus_weight,dishes.cus_unit,dishes.weight
+       FROM(
             SELECT ingredient_id AS id, ingredient_weight AS weight, cus_weight, cus_unit, remark
             FROM sys_dishes_ingredient
             WHERE dishes_id = #{id}

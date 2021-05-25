@@ -63,5 +63,12 @@ public interface ISysWxUserInfoService
      */
     public int deleteSysWxUserInfoById(String openid);
 
+    /**
+     * 根据手机号查询微信用户
+     * @param phone
+     * @return
+     */
+    public SysWxUserInfo getSysWxUserInfoByPhone(String phone);
+
 
 }

@@ -44,4 +44,7 @@ public class SysWxSaleAccount extends BaseEntity
     private Integer status;
 
     private Integer useCount;
+
+    //销售昵称
+    private String saleName;
 }

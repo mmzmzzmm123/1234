@@ -79,8 +79,8 @@ public class SysCustomerController extends BaseController {
             for (SysCustomer sysCus : list) {
                 if (StringUtils.isNotEmpty(sysCus.getPhone())) {
                     sysCus.setPhone(StringUtils.hiddenPhoneNumber(sysCus.getPhone()));
-                    sysCus.setEncId(sysCus.getId() != null ? AesUtils.encrypt(sysCus.getId() + "", null) : "");
                 }
+                sysCus.setEncId(sysCus.getId() != null ? AesUtils.encrypt(sysCus.getId() + "", null) : "");
             }
         }
         return getDataTable(list);

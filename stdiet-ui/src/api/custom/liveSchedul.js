@@ -71,4 +71,14 @@ export function copyLastTimeLiveSchedul() {
   })
 }
 
+// 根据日期查询直播记录
+export function getAllLiveSchedulByDate(data) {
+  return request({
+    url: '/custom/liveSchedul/getAllLiveSchedulByDate',
+    method: 'get',
+    params: data
+  })
+}
+
+
 

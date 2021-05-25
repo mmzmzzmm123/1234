@@ -1,6 +1,8 @@
 package com.stdiet.custom.mapper;
 
 import java.util.List;
+import java.util.Map;
+
 import com.stdiet.custom.domain.SysImportFanWxAccount;
 
 /**
@@ -58,4 +60,25 @@ public interface SysImportFanWxAccountMapper
      * @return 结果
      */
     public int deleteSysImportFanWxAccountByIds(Long[] ids);
+
+    /**
+     * 根据导粉记录ID、微信ID查询对应微信记录
+     * @param sysImportFanWxAccount
+     * @return
+     */
+    public SysImportFanWxAccount getWxAccountByFanRecordId(SysImportFanWxAccount sysImportFanWxAccount);
+
+    /**
+     * 根据微信号查询
+     * @param sysImportFanWxAccount
+     * @return
+     */
+    List<Map<String,Object>> getTotalImportFanNum(SysImportFanWxAccount sysImportFanWxAccount);
+
+    /**
+     * 根据记录ID删除对应所有微信
+     * @param ids
+     * @return
+     */
+    int deleteSysImportFanWxAccountByFanRecordIds(Long[] ids);
 }
