@@ -14,13 +14,18 @@ public class SysServiceQuestionController extends BaseController {
     @Autowired
     private ISysServicesQuestionService sysServicesQuestionService;
 
-    @PostMapping(value = "/list")
+    @PostMapping("/list")
     public AjaxResult list(@RequestBody SysServicesQuestion sysServicesQuestion) {
         return AjaxResult.success(sysServicesQuestionService.selectSysServicesQuestionByUserIdAndRole(sysServicesQuestion));
     }
 
-    @PutMapping(value = "/updateStatus")
-    public AjaxResult reply(@RequestBody SysServicesQuestion sysServicesQuestion) {
+    @PutMapping("/updateStatus")
+    public AjaxResult status(@RequestBody SysServicesQuestion sysServicesQuestion) {
         return toAjax(sysServicesQuestionService.updateSysServicesQuestionStatus(sysServicesQuestion));
+    }
+
+    @PostMapping("/reply")
+    public AjaxResult reply(@RequestBody SysServicesQuestion servicesQuestion) {
+        return toAjax(sysServicesQuestionService.inserSysServicesQuestionReply(servicesQuestion));
     }
 }

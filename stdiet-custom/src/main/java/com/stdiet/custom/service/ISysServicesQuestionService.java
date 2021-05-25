@@ -11,4 +11,8 @@ public interface ISysServicesQuestionService {
     int insertSysServicesQuestion(SysServicesQuestion servicesQuestion);
 
     int updateSysServicesQuestionStatus(SysServicesQuestion sysServicesQuestion);
+
+    int inserSysServicesQuestionReply(SysServicesQuestion sysServicesQuestion);
+
+    List<SysServicesQuestion> selectSysServicesQuestionSessionByQueId(String queId);
 }
