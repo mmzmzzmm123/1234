@@ -73,6 +73,4 @@ public class SysServicesQuestion {
      */
     Long userId;
 
-    SysServicesQuestionUserInfo userInfo;
-
 }

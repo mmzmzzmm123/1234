@@ -206,7 +206,7 @@
 
     <select id="selectIngredientsByDishesIdShow" parameterType="Long" resultMap="SysIgdsResultShow">
        SELECT
-       ing.id,ing.name,ing.type.ing.protein_ratio,ing.fat_ratio,ing.carbon_ratio.ing.area,dishes.cus_weight,dishes.cus_unit,dishes.weight
+       ing.id, ing.name, ing.type.ing.protein_ratio, ing.fat_ratio, ing.carbon_ratio, ing.area,dishes.cus_weight, dishes.cus_unit, dishes.weight
        FROM(
             SELECT ingredient_id AS id, ingredient_weight AS weight, cus_weight, cus_unit, remark
             FROM sys_dishes_ingredient
