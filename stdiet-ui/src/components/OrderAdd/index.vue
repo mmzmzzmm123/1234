@@ -57,6 +57,8 @@
             <el-select
               v-model="form.accountId"
               placeholder="请选择"
+              filterable
+              clearable
               @change="handleOnChanelIdChange"
             >
               <el-option
@@ -96,6 +98,8 @@
           <el-form-item label="调理项目" prop="conditioningProjectId">
             <el-select
               v-model="form.conditioningProjectId"
+              filterable
+              clearable
               placeholder="请选择"
             >
               <el-option
@@ -109,7 +113,8 @@
         </el-col>
         <el-col :span="8">
           <el-form-item label="售前" prop="preSaleId">
-            <el-select v-model="form.preSaleId" placeholder="请选择">
+            <el-select v-model="form.preSaleId" placeholder="请选择" filterable
+              clearable>
               <el-option
                 v-for="dict in preSaleIdOptions"
                 :key="dict.dictValue"
@@ -133,7 +138,8 @@
         </el-col>
         <el-col :span="8" v-show="afterNutiShow">
           <el-form-item label="售后" prop="afterSaleId">
-            <el-select v-model="form.afterSaleId" placeholder="请选择">
+            <el-select v-model="form.afterSaleId" placeholder="请选择" filterable
+              clearable>
               <el-option
                 v-for="dict in afterSaleIdOptions"
                 :key="dict.dictValue"
@@ -148,6 +154,7 @@
             <el-select
               v-model="form.nutritionistIdList"
               multiple
+              filterable
               placeholder="请选择"
             >
               <el-option
@@ -173,7 +180,8 @@
         </el-col>
         <el-col :span="8" v-show="afterNutiShow">
           <el-form-item label="助理营养师" prop="nutriAssisId">
-            <el-select v-model="form.nutriAssisId" placeholder="请选择">
+            <el-select v-model="form.nutriAssisId" placeholder="请选择" filterable
+              clearable>
               <el-option
                 v-for="dict in nutriAssisIdOptions"
                 :key="dict.dictValue"
@@ -185,7 +193,8 @@
         </el-col>
         <el-col :span="8">
           <el-form-item label="策划" prop="plannerId">
-            <el-select v-model="form.plannerId" placeholder="请选择">
+            <el-select v-model="form.plannerId" placeholder="请选择" filterable
+              clearable> 
               <el-option
                 v-for="dict in plannerIdOptions"
                 :key="dict.dictValue"
@@ -197,7 +206,8 @@
         </el-col>
         <el-col :span="8">
           <el-form-item label="策划助理" prop="plannerAssisId">
-            <el-select v-model="form.plannerAssisId" placeholder="请选择">
+            <el-select v-model="form.plannerAssisId" placeholder="请选择" filterable
+              clearable>
               <el-option
                 v-for="dict in plannerAssisIdOptions"
                 :key="dict.dictValue"
@@ -209,7 +219,8 @@
         </el-col>
         <el-col :span="8">
           <el-form-item label="运营" prop="operatorId">
-            <el-select v-model="form.operatorId" placeholder="请选择">
+            <el-select v-model="form.operatorId" placeholder="请选择" filterable
+              clearable>
               <el-option
                 v-for="dict in operatorIdOptions"
                 :key="dict.dictValue"
@@ -221,7 +232,8 @@
         </el-col>
         <el-col :span="8">
           <el-form-item label="运营助理" prop="operatorAssisId">
-            <el-select v-model="form.operatorAssisId" placeholder="请选择">
+            <el-select v-model="form.operatorAssisId" placeholder="请选择" filterable
+              clearable>
               <el-option
                 v-for="dict in operatorAssisIdOptions"
                 :key="dict.dictValue"

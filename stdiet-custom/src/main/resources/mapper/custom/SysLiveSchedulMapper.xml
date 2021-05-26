@@ -211,5 +211,14 @@
         where del_flag = 0 order by live_schedul_date  desc limit 1
     </select>
 
+    <!-- 根据渠道、进粉时间确实进粉来源哪个直播间，取最近的 -->
+    <select id="getLiveSchedulByTime" parameterType="SysLiveSchedul" resultMap="SysLiveSchedulResultSigle">
+        select
+        <include refid="selectSysLiveSchedulVo"/>
+        from sys_live_schedul where del_flag = 0
+        and   fan_channel = #{fanChannel}
+        and  #{liveStartTime} >= live_start_time order by live_start_time desc limit 1
+    </select>
+
 
 </mapper>

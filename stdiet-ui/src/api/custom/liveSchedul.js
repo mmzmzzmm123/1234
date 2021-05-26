@@ -80,5 +80,14 @@ export function getAllLiveSchedulByDate(data) {
   })
 }
 
+// 根据进粉时间查询最近直播记录
+export function getLiveSchedulByTime(data) {
+  return request({
+    url: '/custom/liveSchedul/getLiveSchedulByTime',
+    method: 'get',
+    params: data
+  })
+}
+
 
 
