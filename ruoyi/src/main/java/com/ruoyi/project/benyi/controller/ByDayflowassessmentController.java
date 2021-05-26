@@ -126,11 +126,15 @@ public class ByDayflowassessmentController extends BaseController {
             String classId = byDayflowassessment.getClassid();
             ByClass byClass = byClassService.selectByClassById(classId);
             if (byClass != null) {
-                byDayflowassessment.setDeptId(SecurityUtils.getLoginUser().getUser().getDeptId());
-                byDayflowassessment.setCreateUserid(SecurityUtils.getLoginUser().getUser().getUserId());
-                byDayflowassessment.setXnxq(schoolCommon.getCurrentXnXq());
+                Long deptId=SecurityUtils.getLoginUser().getUser().getDeptId();
+                Long userId=SecurityUtils.getLoginUser().getUser().getUserId();
+                String xnXq=schoolCommon.getCurrentXnXq();
+                byDayflowassessment.setDeptId(deptId);
+                byDayflowassessment.setCreateUserid(userId);
+                byDayflowassessment.setXnxq(xnXq);
                 //获取总得分
-                byDayflowassessment.setZzdf(GetDf(byDayflowassessment.getList()));
+                Double dTotal=GetDf(byDayflowassessment.getList());
+                byDayflowassessment.setZzdf(dTotal);
                 //如果评估对象非主班教师，那么对主班教师产生相同的扣分项
                 if (byClass.getZbjs() == pgdx) {
                     int iRows = addDayFlowAssessment(byDayflowassessment);
@@ -138,7 +142,14 @@ public class ByDayflowassessmentController extends BaseController {
                 } else {
                     //评估对象为助理教师和配班教师
                     int iRows = addDayFlowAssessment(byDayflowassessment);
-                    ByDayflowassessment byDayflowassessmentNew = byDayflowassessment;
+                    ByDayflowassessment byDayflowassessmentNew = new ByDayflowassessment();
+                    byDayflowassessmentNew.setClassid(classId);
+                    byDayflowassessmentNew.setDeptId(deptId);
+                    byDayflowassessmentNew.setCreateUserid(userId);
+                    byDayflowassessmentNew.setXnxq(xnXq);
+                    //获取总得分
+                    byDayflowassessmentNew.setZzdf(dTotal);
+
                     if (byClass.getZbjs() == null) {
                         System.out.println("未设置主班教师");
                     } else {
@@ -157,8 +168,10 @@ public class ByDayflowassessmentController extends BaseController {
         } else {
             //id 不为空，说明是修改
             ByDayflowassessment byDayflowassessmentModel = byDayflowassessmentService.selectByDayflowassessmentById(byDayflowassessment.getId());
-            byDayflowassessmentModel.setZzdf(GetDf(byDayflowassessment.getList()));
+            Double dTotal=GetDf(byDayflowassessment.getList());
+            byDayflowassessmentModel.setZzdf(dTotal);
             byDayflowassessmentModel.setList(byDayflowassessment.getList());
+            byDayflowassessmentModel.setStatus(byDayflowassessment.getStatus());
             //判断当前评估对象的角色是主班 配班 还是助理教师
             Long pgdx = byDayflowassessmentModel.getPgdx();
             //获取班级信息
@@ -170,9 +183,13 @@ public class ByDayflowassessmentController extends BaseController {
                 int iRows = addDayFlowAssessment(byDayflowassessmentModel);
                 return toAjax(iRows);
             } else {
+                //清空item
+                byDayflowassessmentitemService.deleteByDayflowassessmentitemByPid(byDayflowassessmentModel.getId());
                 //评估对象为助理教师和配班教师
                 int iRows = addDayFlowAssessment(byDayflowassessmentModel);
-                ByDayflowassessment byDayflowassessmentNew = byDayflowassessmentModel;
+                ByDayflowassessment byDayflowassessmentNew = new ByDayflowassessment();
+                byDayflowassessmentNew.setZzdf(dTotal);
+                byDayflowassessmentNew.setList(byDayflowassessment.getList());
                 if (byClass.getZbjs() == null) {
                     System.out.println("未设置主班教师");
                 } else {
