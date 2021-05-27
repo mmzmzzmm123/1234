@@ -326,16 +326,42 @@
     />
 
     <!-- 添加或修改客户档案对话框 -->
-    <el-dialog :title="title" :visible.sync="open" width="520px" append-to-body>
+    <el-dialog :title="title" :visible.sync="open" width="700px" append-to-body>
       <el-row :gutter="15">
         <el-form ref="form" :model="form" :rules="rules" label-width="100px">
           <el-col :span="12">
-            <el-form-item label="客户名字" prop="name">
+            <el-form-item label="进粉渠道" prop="channelId" style="width:400px">
+              <el-select v-model="form.channelId" placeholder="请选择" filterable clearable @change="channelAutoSelectNutritionist">
+                <el-option
+                  v-for="dict in accountIdOptions"
+                  :key="dict.dictValue"
+                  :label="dict.dictLabel"
+                  :value="parseInt(dict.dictValue)"
+                />
+              </el-select>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="进粉时间" prop="fansTime">
+              <el-date-picker
+                v-model="form.fansTime"
+                type="datetime"
+                placeholder="选择进粉时间"
+                format="yyyy-MM-dd HH:mm"
+                value-format="yyyy-MM-dd HH:mm"
+                :picker-options="fanPickerOptions"
+                @change="fanTimeAutoSelectNutritionist"
+              >
+              </el-date-picker>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="客户名字" prop="name" style="width:300px">
               <el-input v-model.trim="form.name" placeholder="请输入名字" />
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item label="手机号" prop="phone">
+            <el-form-item label="手机号" prop="phone" style="width:300px">
               <el-input v-model.trim="form.phone" placeholder="请输入手机号" />
             </el-form-item>
           </el-col>
@@ -387,31 +413,8 @@
               </el-select>
             </el-form-item>
           </el-col>
-          <el-col :span="24">
-            <el-form-item label="进粉时间" prop="fansTime">
-              <el-date-picker
-                v-model="form.fansTime"
-                type="date"
-                placeholder="选择进粉时间"
-                format="yyyy-MM-dd"
-                value-format="yyyy-MM-dd"
-                :picker-options="fanPickerOptions"
-              >
-              </el-date-picker>
-            </el-form-item>
-          </el-col>
-          <el-col :span="12">
-            <el-form-item label="进粉渠道" prop="channelId">
-              <el-select v-model="form.channelId" placeholder="请选择">
-                <el-option
-                  v-for="dict in accountIdOptions"
-                  :key="dict.dictValue"
-                  :label="dict.dictLabel"
-                  :value="parseInt(dict.dictValue)"
-                />
-              </el-select>
-            </el-form-item>
-          </el-col>
+          
+          
         </el-form>
       </el-row>
       <div slot="footer" class="dialog-footer">
@@ -446,6 +449,7 @@ import {
   listCustomer,
   updateCustomer,
 } from "@/api/custom/customer";
+import { getLiveSchedulByTime } from "@/api/custom/liveSchedul";
 
 import store from "@/store";
 import OrderDrawer from "@/components/OrderDrawer";
@@ -785,6 +789,52 @@ export default {
         })
         .catch(function () {});
     },
+    channelAutoSelectNutritionist(channelValue){
+        this.form.fansChannel = channelValue == "" ? null : channelValue;
+        if(channelValue == undefined || channelValue == null || channelValue == ""){
+            this.form.mainDietitian = null;
+            return;
+        }
+        if(this.form.fansTime == undefined || this.form.fansTime == null){
+            this.form.mainDietitian = null;
+            return;
+        }      
+        this.autoSelectNutritionist();
+    },
+    fanTimeAutoSelectNutritionist(fansTime){
+        this.form.fansTime = fansTime;
+        if(fansTime == undefined || fansTime == null){
+            this.form.mainDietitian = null;
+            return;
+        }
+        if(this.form.fansChannel == undefined || this.form.fansChannel == null || this.form.fansChannel == ""){
+            this.form.mainDietitian = null;
+            return;
+        }
+        this.autoSelectNutritionist();
+    },
+    autoSelectNutritionist(){
+        getLiveSchedulByTime({'fanChannel':this.form.fansChannel,'liveStartTimeString':encodeURIComponent(this.form.fansTime)}).then((response) => {
+              if (response.code === 200) {
+                 let live = response.data;
+                 if(live != undefined && live != null && live.liveNutritionistId != null && this.nutritionistIdOptions != null){
+                    let mainDietitian = null;
+                     this.nutritionistIdOptions.forEach((item,index) => {
+                        if(live.liveNutritionistId == item.dictValue){
+                           mainDietitian = live.liveNutritionistId;
+                        }
+                        if(index == this.nutritionistIdOptions.length - 1){
+                          this.form.mainDietitian = mainDietitian;
+                        }
+                     });
+                 }else{
+                   this.form.mainDietitian = null;
+                 }
+              }else{
+                this.form.mainDietitian = null;
+              }
+        });
+    }
   },
 };
 </script>

@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.List;
 
 import com.stdiet.common.utils.DateUtils;
+import com.stdiet.common.utils.StringUtils;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -241,5 +242,23 @@ public class SysLiveSchedulController extends BaseController
     public AjaxResult getAllLiveSchedulByDate(SysLiveSchedul sysLiveSchedul){
         List<SysLiveSchedul> list = sysLiveSchedulService.selectSysLiveSchedulList(sysLiveSchedul);
         return AjaxResult.success(list);
+    }
+
+    /**
+     * 根据日期查询直播记录
+     */
+    @GetMapping(value = "/getLiveSchedulByTime")
+    public AjaxResult getLiveSchedulByTime(SysLiveSchedul sysLiveSchedul){
+        SysLiveSchedul live = null;
+        try {
+            if(sysLiveSchedul.getFanChannel() != null && StringUtils.isNotEmpty(sysLiveSchedul.getLiveStartTimeString())){
+                sysLiveSchedul.setLiveStartTimeString(java.net.URLDecoder.decode(sysLiveSchedul.getLiveStartTimeString(), "UTF-8"));
+                sysLiveSchedul.setLiveStartTime(DateUtils.parseDate(sysLiveSchedul.getLiveStartTimeString()));
+                live = sysLiveSchedulService.getLiveSchedulByTime(sysLiveSchedul);
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return AjaxResult.success(live);
     }
 }

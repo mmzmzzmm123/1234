@@ -1,7 +1,8 @@
 <template>
     <!--  -->
     <!-- 添加或修改导粉管理对话框 -->
-    <el-dialog :title="title" :visible.sync="open" width="1100px" :close-on-click-modal="false" append-to-body @closed="cancel">
+    <el-dialog :title="title" :visible.sync="open" width="1000px" :close-on-click-modal="false" append-to-body @closed="cancel">
+      <div style="margin-bottom: 20px;color:red">1、添加导粉记录时会根据进粉渠道、当前时间来自动确定所属直播间，当前时间段没有直播，则取上一次直播，若账号从未直播过，则为空</div>
         <div style="height: 500px; overflow: auto">
             <el-table v-loading="loading" :data="wxAccountList">
                 <!--<el-table-column label="微信昵称" align="center" prop="wxNickName" />-->
@@ -27,7 +28,7 @@
                         </el-select>
                     </template>
                 </el-table-column>
-                <el-table-column label="直播间" align="center" prop="importFanLive" >
+                <!--<el-table-column label="直播间" align="center" prop="importFanLive" >
                     <template slot-scope="scope">
                         <el-select
                           v-model="scope.row.importFanLive"
@@ -44,7 +45,7 @@
                         />
                         </el-select>
                     </template>
-                </el-table-column>
+                </el-table-column>-->
                 <el-table-column label="导粉数量" align="center" prop="fanNum" width="200">
                     <template slot-scope="scope">
                             <el-input-number v-model="scope.row.fanNum" :min="1" :max="10000" label="导粉数量" style="width:160px"></el-input-number>
@@ -74,7 +75,7 @@
 </template>
 <script>
 import { addImportFanRecord,getWxAccountAndSale } from "@/api/custom/importFanRecord";
-import { getAllLiveSchedulByDate } from "@/api/custom/liveSchedul";
+import { getAllLiveSchedulByDate,getLiveSchedulByTime } from "@/api/custom/liveSchedul";
 import dayjs from "dayjs";
 const nowTime = dayjs().format("YYYY-MM-DD HH:mm");
 export default {
@@ -125,7 +126,7 @@ export default {
       this.reset();
       this.callback = callback;
       this.getListWxAccount();
-      this.getAllLiveSchedulByDate();
+      //this.getAllLiveSchedulByDate();
       this.open = true;
     },
     reset(){
@@ -268,7 +269,24 @@ export default {
       return (value == undefined || value == null || value == "") ? "" : value;
     },
     autoSelectLive(row){
-        if(row.importFanLive == undefined || row.importFanLive == null || row.importFanLive == ""){
+        if(row.importFanChannel == undefined || row.importFanChannel == null || row.importFanChannel == ""){
+           row.importFanLive = null;
+           return;
+        }
+        getLiveSchedulByTime({'fanChannel':row.importFanChannel,'liveStartTimeString':encodeURIComponent(dayjs().format("YYYY-MM-DD HH:mm"))}).then((response) => {
+              if (response.code === 200) {
+                 let live = response.data;
+                 if(live != undefined && live != null){
+                    row.importFanLive = live.id;
+                 }else{
+                   row.importFanLive = null;
+                 }
+              }else{
+                row.importFanLive = null;
+              }
+        });
+
+        /*if(row.importFanLive == undefined || row.importFanLive == null || row.importFanLive == ""){
             if(row.importFanChannel == undefined || row.importFanChannel == null || row.importFanChannel == ""){
               row.importFanLive = null;
             }else{
@@ -286,7 +304,7 @@ export default {
                   });
               }
             }
-        } 
+        } */
     }
   },
 };
