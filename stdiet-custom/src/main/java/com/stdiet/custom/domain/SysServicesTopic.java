@@ -2,16 +2,19 @@ package com.stdiet.custom.domain;
 
 import com.alibaba.fastjson.JSONArray;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Data;
 
 import java.util.Date;
+import java.util.List;
 
 @Data
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class SysServicesTopic {
     /**
      *
      */
-    Long id;
+    String id;
 
     /**
      * 问题id
@@ -22,6 +25,12 @@ public class SysServicesTopic {
      * 问题类型
      */
     Integer topicType;
+
+    String commentId;
+
+    String replyId;
+
+    Integer replyType;
 
     /**
      * 角色
@@ -64,10 +73,20 @@ public class SysServicesTopic {
      */
     String role;
 
+    String fromRole;
+
+    String toRole;
+
     // 非持久化字段
     /**
      * 角色名字
      */
+    String fromName;
+    String toName;
     String name;
+
+    List<SysServicesTopic> comments;
+
+    List<SysServicesTopic> replys;
 
 }

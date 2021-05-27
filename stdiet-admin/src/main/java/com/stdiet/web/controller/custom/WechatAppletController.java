@@ -70,6 +70,8 @@ public class WechatAppletController extends BaseController {
     private IWechatAppletService iWechatAppletService;
     @Autowired
     private ISysServicesQuestionService iSysServicesQuestionService;
+    @Autowired
+    private ISysServicesTopicService iSysServicesTopicService;
 
     /**
      * 查询微信小程序中展示的客户案例
@@ -603,6 +605,24 @@ public class WechatAppletController extends BaseController {
         servicesQuestion.setUserId(cusId);
 
         return getDataTable(iSysServicesQuestionService.selectSysServicesQuestionByUserIdAndRole(servicesQuestion));
+    }
+
+    /**
+     * 客户添加问题
+     *
+     * @param topic
+     * @param customerId
+     * @return
+     */
+    @PostMapping("/services/topic/post")
+    public AjaxResult postServiceTopic(@RequestBody SysServicesTopic topic, @RequestParam String customerId) {
+        Long cusId = StringUtils.isNotEmpty(customerId) ? Long.parseLong(AesUtils.decrypt(customerId)) : 0L;
+        if (cusId == 0L) {
+            return toAjax(0);
+        }
+        topic.setUid(cusId);
+
+        return AjaxResult.success(iSysServicesTopicService.insertSysServicesTopic(topic));
     }
 
     /**

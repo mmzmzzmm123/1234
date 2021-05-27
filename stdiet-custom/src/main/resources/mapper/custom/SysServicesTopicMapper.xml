@@ -9,7 +9,6 @@
         <result column="topic_id" property="topicId"/>
         <result column="topic_type" property="topicType"/>
         <result column="content" property="content"/>
-        <result column="role" property="role"/>
         <result column="name" property="name"/>
         <result column="read" property="read"/>
         <result column="img" property="img" typeHandler="com.stdiet.custom.typehandler.ArrayJsonHandler"/>
@@ -17,91 +16,140 @@
         <result column="update_time" property="updateTime"/>
     </resultMap>
 
-    <resultMap id="SysServicesQuestionSessionResult" type="SysServicesQuestion">
-        <result column="id" property="id"/>
-        <result column="type" property="type"/>
-        <result column="content" property="content"/>
-        <result column="img" property="img" typeHandler="com.stdiet.custom.typehandler.ArrayJsonHandler"/>
-        <result column="create_time" property="createTime"/>
-        <association property="name" column="{userId=user_id,role=role}" select="selectUserInfo"/>
-    </resultMap>
 
     <!--    根据userId和角色查询问题列表-->
     <select id="selectSysServicesTopicByUserIdAndRole" parameterType="SysServicesTopic"
-            resultMap="SysServicesQuestionResult">
+            resultMap="SysServicesTopicResult">
         SELECT * FROM (
         SELECT * FROM sys_services_topic_status WHERE role = #{role} AND uid = #{uid}
         ) AS status
-        LEFT JOIN sys_services_question USING(topic_id)
+        LEFT JOIN sys_services_topic USING(topic_id)
         <choose>
             <when test="role == 'customer'">
                 LEFT JOIN (
-                    SELECT name, id AS uid FROM sys_customer WHERE id = #{uid}
-                ) AS customer USING(uid)
+                SELECT name, id AS uid FROM sys_customer WHERE id = #{uid}
+                ) AS customer ON status.uid = customer.uid
             </when>
             <otherwise>
                 LEFT JOIN (
-                    SELECT name, user_id AS uid, nick_name AS name FROM sys_user WHERE user_id = #{uid}
-                ) AS user USING(uid)
+                SELECT user_id AS uid, nick_name AS name FROM sys_user WHERE user_id = #{uid}
+                ) AS user ON status.uid = user.uid
             </otherwise>
         </choose>
         ORDER BY `read` ASC, update_time DESC
     </select>
 
-    <select id="selectSysServicesQuestionSessionByQueId" resultMap="SysServicesQuestionSessionResult"
+    <!--    查询主题-->
+
+    <resultMap id="SysServicesTopicSessionResult" type="SysServicesTopic">
+        <result column="id" property="id"/>
+        <result column="uid" property="uid"/>
+        <result column="topic_id" property="topicId"/>
+        <result column="topic_type" property="topicType"/>
+        <result column="content" property="content"/>
+        <result column="img" property="img" typeHandler="com.stdiet.custom.typehandler.ArrayJsonHandler"/>
+        <result column="create_time" property="createTime"/>
+        <association property="name" column="{uid=uid,role=role}" select="selectUserInfo"/>
+        <collection property="comments" column="topic_id" select="selectServicesTopicCommentByTopicId"/>
+    </resultMap>
+
+    <resultMap id="ServicesTopicCommentResult" type="SysServicesTopic">
+        <result column="id" property="id"/>
+        <result column="topic_id" property="topicId"/>
+        <result column="content" property="content"/>
+        <result column="from_uid" property="fromUid"/>
+        <result column="from_role" property="fromRole"/>
+        <result column="to_uid" property="toUid"/>
+        <result column="to_role" property="toRole"/>
+        <result column="img" property="img" typeHandler="com.stdiet.custom.typehandler.ArrayJsonHandler"/>
+        <result column="create_time" property="createTime"/>
+        <association property="fromName" column="{uid=from_uid,role=from_role}" select="selectUserInfo"/>
+        <association property="toName" column="{uid=to_uid,role=to_role}" select="selectUserInfo"/>
+        <collection property="replys" column="id" ofType="ServicesTopicCommentReplyResult"
+                    select="selectServicesTopicCommentReplyByCommentId"/>
+    </resultMap>
+
+    <resultMap id="ServicesTopicCommentReplyResult" type="SysServicesTopic">
+        <result column="id" property="id"/>
+        <result column="topic_id" property="topicId"/>
+        <result column="content" property="content"/>
+        <result column="from_uid" property="fromUid"/>
+        <result column="from_role" property="fromRole"/>
+        <result column="to_uid" property="toUid"/>
+        <result column="to_role" property="toRole"/>
+        <result column="img" property="img" typeHandler="com.stdiet.custom.typehandler.ArrayJsonHandler"/>
+        <result column="create_time" property="createTime"/>
+        <association property="fromName" column="{uid=from_uid,role=from_role}" select="selectUserInfo"/>
+        <association property="toName" column="{uid=to_uid,role=to_role}" select="selectUserInfo"/>
+
+    </resultMap>
+
+    <select id="selectSysServicesTopicSessionByTopicId" resultMap="SysServicesTopicSessionResult"
             parameterType="String">
-        select que_id, cus_id as user_id, 'customer' as role, content, img, create_time from sys_services_question where que_id = #{queId}
-        union select que_id, user_id, role, content, img, create_time from sys_services_question_session where que_id = #{queId}
-        order by create_time asc
+        select topic_id, uid, 'customer' as role, content, img, create_time from sys_services_topic where topic_id = #{topicId}
     </select>
 
+    <select id="selectServicesTopicCommentByTopicId" resultMap="ServicesTopicCommentResult">
+        select * from sys_services_topic_comment where topic_id = #{topic_id}
+    </select>
+
+    <select id="selectServicesTopicCommentReplyByCommentId" resultMap="ServicesTopicCommentReplyResult">
+        select * from sys_services_topic_reply where reply_type = 0 and reply_id = #{id}
+    </select>
+
+    <select id="selectServicesTopicCommentReplyReplyByCommentId" resultMap="ServicesTopicCommentReplyResult">
+        select * from sys_services_topic_reply where reply_type = 1 and reply_id = #{id}
+    </select>
+
+
+    <!--    查询人名-->
     <select id="selectUserInfo" parameterType="java.util.Map" resultType="String">
         <choose>
             <when test="_parameter.get('role') == 'customer'">
-                select name from sys_customer where id = #{userId}
+                select name from sys_customer where id = #{uid}
             </when>
             <otherwise>
-                select nick_name from sys_user where user_id = #{userId}
+                select nick_name from sys_user where user_id = #{uid}
             </otherwise>
         </choose>
     </select>
 
     <!--    插入问题-->
-    <insert id="insertSysServicesQuestion" parameterType="SysServicesQuestion" useGeneratedKeys="true"
-            keyProperty="queId" keyColumn="que_id">
-        insert into sys_services_question
+    <insert id="insertSysServicesTopic" parameterType="SysServicesTopic" useGeneratedKeys="true"
+            keyProperty="id" keyColumn="id">
+        insert into sys_services_topic
         <trim prefix="(" suffix=")" suffixOverrides=",">
-            <if test="queId != null">que_id,</if>
-            <if test="cusId != null">cus_id,</if>
+            <if test="topicId != null">topic_id,</if>
+            <if test="uid != null">uid,</if>
             <if test="content != null">content,</if>
-            <if test="type != null">type,</if>
+            <if test="topicType != null">topic_type,</if>
             <if test="createTime != null">create_time,</if>
             <if test="img != null">img,</if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
-            <if test="queId != null">#{queId},</if>
-            <if test="cusId != null">#{cusId},</if>
+            <if test="topicId != null">#{topicId},</if>
+            <if test="uid != null">#{uid},</if>
             <if test="content != null">#{content},</if>
-            <if test="type != null">#{type},</if>
+            <if test="topicType != null">#{topicType},</if>
             <if test="createTime != null">#{createTime},</if>
             <if test="img != null">
-                #{img,  jdbcType=OTHER, typeHandler=com.stdiet.custom.typehandler.ArrayJsonHandler},
+                #{img, jdbcType=OTHER, typeHandler=com.stdiet.custom.typehandler.ArrayJsonHandler},
             </if>
         </trim>
     </insert>
 
     <!--    插入问题的四个角色：1，用户； 2，营养师； 3，售后； 4，助理-->
-    <insert id="insertSysServicesQuestionStatus" parameterType="java.util.List" useGeneratedKeys="true" keyProperty="id"
+    <insert id="insertSysServicesTopicStatus" parameterType="java.util.List" useGeneratedKeys="true" keyProperty="id"
             keyColumn="id">
-        insert into sys_services_question_status (que_id, user_id, role, `read`, create_time, update_time) values
+        insert into sys_services_topic_status (topic_id, uid, role, `read`, create_time, update_time) values
         <foreach collection="list" item="status" index="index" separator=",">
-            (#{status.queId}, #{status.userId}, #{status.role}, #{status.read}, now(), now())
+            (#{status.topicId}, #{status.uid}, #{status.role}, #{status.read}, now(), now())
         </foreach>
     </insert>
 
     <!--    根据状态id更新， role=customer 客户回复，这时更新另外三个角色未读；role != customer，更新客户未读-->
-    <update id="updateSysServicesQuestionStatus" parameterType="SysServicesQuestion">
-        update sys_services_question_status
+    <update id="updateSysServicesTopicStatus" parameterType="SysServicesTopic">
+        update sys_services_topic_status
         <trim prefix="SET" suffixOverrides=",">
             <if test="read != null">`read` = #{read},</if>
             <if test="read != null">update_time = now(),</if>
@@ -118,37 +166,73 @@
                     <if test="role != 'customer'">
                         role = 'customer' and
                     </if>
-                    que_id = #{queId}
+                    topic_id = #{topicId}
                 </otherwise>
             </choose>
         </where>
     </update>
 
     <!--    插入问题回复-->
-    <insert id="inserSysServicesQuestionReply" parameterType="SysServicesQuestion">
-        insert into sys_services_question_session
+    <insert id="inserSysServicesTopicComment" parameterType="SysServicesTopic">
+        insert into sys_services_topic_comment
         <trim prefix="(" suffix=")" suffixOverrides=",">
-            <if test="queId != null">que_id,</if>
-            <if test="userId != null">user_id,</if>
+            <if test="id != null">id,</if>
+            <if test="topicId != null">topic_id,</if>
+            <if test="fromUid != null">from_uid,</if>
+            <if test="fromRole != null">from_role,</if>
+            <if test="toUid != null">to_uid,</if>
+            <if test="toRole != null">to_role,</if>
             <if test="content != null">content,</if>
-            <if test="read != null">`read`,</if>
-            <if test="role != null">role,</if>
             <if test="img != null">img,</if>
-            <if test="queId != null">create_time,</if>
-            <if test="queId != null">update_time,</if>
-
+            <if test="topicId != null">create_time,</if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
-            <if test="queId != null">#{queId},</if>
-            <if test="userId != null">#{userId},</if>
+            <if test="id != null">#{id},</if>
+            <if test="topicId != null">#{topicId},</if>
+            <if test="fromUid != null">#{fromUid},</if>
+            <if test="fromRole != null">#{fromRole},</if>
+            <if test="toUid != null">#{toUid},</if>
+            <if test="toRole != null">#{toRole},</if>
             <if test="content != null">#{content},</if>
-            <if test="read != null">#{read},</if>
-            <if test="role != null">#{role},</if>
             <if test="img != null">
                 #{img,  jdbcType=OTHER, typeHandler=com.stdiet.custom.typehandler.ArrayJsonHandler},
             </if>
-            <if test="queId != null">now(),</if>
-            <if test="queId != null">now(),</if>
+            <if test="topicId != null">now(),</if>
+        </trim>
+    </insert>
+
+    <!--    插入问题回复-->
+    <insert id="inserSysServicesTopicReply" parameterType="SysServicesQuestion" useGeneratedKeys="true" keyColumn="id"
+            keyProperty="id">
+        insert into sys_services_topic_reply
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="commentId != null">comment_id,</if>
+            <if test="replyId != null">reply_id,</if>
+            <if test="replyType != null">reply_type,</if>
+            <if test="content != null">content,</if>
+            <if test="fromUid != null">from_uid,</if>
+            <if test="toUid != null">to_uid,</if>
+            <if test="img != null">img,</if>
+            <if test="fromRole != null">from_role,</if>
+            <if test="toRole != null">to_role,</if>
+            <if test="content != null">create_time,</if>
+
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="commentId != null">#{commentId},</if>
+            <if test="replyId != null">#{replyId},</if>
+            <if test="replyType != null">#{replyType},</if>
+            <if test="content != null">#{content},</if>
+            <if test="fromUid != null">#{fromUid},</if>
+            <if test="toUid != null">#{toUid},</if>
+            <if test="img != null">
+                #{img,  jdbcType=OTHER, typeHandler=com.stdiet.custom.typehandler.ArrayJsonHandler},
+            </if>
+            <if test="fromRole != null">#{fromRole},</if>
+            <if test="toRole != null">#{toRole},</if>
+            <if test="content != null">now(),</if>
         </trim>
     </insert>
 
