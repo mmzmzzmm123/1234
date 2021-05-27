@@ -1,5 +1,6 @@
 package com.stdiet.custom.service.impl;
 
+import com.stdiet.common.utils.DateUtils;
 import com.stdiet.common.utils.uuid.UUID;
 import com.stdiet.custom.domain.SysCustomer;
 import com.stdiet.custom.domain.SysServicesQuestion;
@@ -26,9 +27,11 @@ public class SysServicesQuestionServiceImp implements ISysServicesQuestionServic
     }
 
     @Override
-    public int insertSysServicesQuestion(SysServicesQuestion servicesQuestion) {
+    public SysServicesQuestion insertSysServicesQuestion(SysServicesQuestion servicesQuestion) {
         // 生成uuid
         servicesQuestion.setQueId(UUID.randomUUID().toString().replaceAll("-", ""));
+        servicesQuestion.setRead(1);
+        servicesQuestion.setCreateTime(DateUtils.getNowDate());
 
         servicesQuestionMapper.insertSysServicesQuestion(servicesQuestion);
 
@@ -45,25 +48,31 @@ public class SysServicesQuestionServiceImp implements ISysServicesQuestionServic
         SysServicesQuestion dieticianStatus = new SysServicesQuestion();
         dieticianStatus.setUserId(customer.getMainDietitian());
         dieticianStatus.setRole("dietician");
-        customerStatus.setRead(0);
+        dieticianStatus.setRead(0);
         dieticianStatus.setQueId(servicesQuestion.getQueId());
         statusList.add(dieticianStatus);
 
         SysServicesQuestion afterSaleStatus = new SysServicesQuestion();
         afterSaleStatus.setUserId(customer.getAfterDietitian());
         afterSaleStatus.setRole("after_sale");
-        customerStatus.setRead(0);
+        afterSaleStatus.setRead(0);
         afterSaleStatus.setQueId(servicesQuestion.getQueId());
         statusList.add(afterSaleStatus);
 
         SysServicesQuestion dieticianAssistantStatus = new SysServicesQuestion();
         dieticianAssistantStatus.setUserId(customer.getAssistantDietitian());
         dieticianAssistantStatus.setRole("dietician_assistant");
-        customerStatus.setRead(0);
+        dieticianAssistantStatus.setRead(0);
         dieticianAssistantStatus.setQueId(servicesQuestion.getQueId());
+
         statusList.add(dieticianAssistantStatus);
 
-        return servicesQuestionMapper.insertSysServicesQuestionStatus(statusList);
+        servicesQuestionMapper.insertSysServicesQuestionStatus(statusList);
+
+        servicesQuestion.setId(customerStatus.getId());
+        servicesQuestion.setCusId(null);
+
+        return servicesQuestion;
     }
 
 

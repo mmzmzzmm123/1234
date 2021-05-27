@@ -8,7 +8,7 @@ public interface ISysServicesQuestionService {
 
     List<SysServicesQuestion> selectSysServicesQuestionByUserIdAndRole(SysServicesQuestion servicesQuestion);
 
-    int insertSysServicesQuestion(SysServicesQuestion servicesQuestion);
+    SysServicesQuestion insertSysServicesQuestion(SysServicesQuestion servicesQuestion);
 
     int updateSysServicesQuestionStatus(SysServicesQuestion sysServicesQuestion);
 

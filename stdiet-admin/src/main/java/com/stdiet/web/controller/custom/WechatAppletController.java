@@ -70,6 +70,8 @@ public class WechatAppletController extends BaseController {
     private IWechatAppletService iWechatAppletService;
     @Autowired
     private ISysServicesQuestionService iSysServicesQuestionService;
+    @Autowired
+    private ISysServicesTopicService iSysServicesTopicService;
 
     /**
      * 查询微信小程序中展示的客户案例
@@ -593,7 +595,7 @@ public class WechatAppletController extends BaseController {
     }
 
     @GetMapping("/services/list")
-    public AjaxResult fetchServiceQuestion(@RequestParam String customerId, @RequestParam Integer pageNum, @RequestParam Integer pageSize) {
+    public TableDataInfo fetchServiceQuestion(@RequestParam String customerId, @RequestParam Integer pageNum, @RequestParam Integer pageSize) {
         startPage();
 
         Long cusId = StringUtils.isNotEmpty(customerId) ? Long.parseLong(AesUtils.decrypt(customerId)) : 0L;
@@ -602,11 +604,30 @@ public class WechatAppletController extends BaseController {
         servicesQuestion.setRole("customer");
         servicesQuestion.setUserId(cusId);
 
-        return AjaxResult.success(iSysServicesQuestionService.selectSysServicesQuestionByUserIdAndRole(servicesQuestion));
+        return getDataTable(iSysServicesQuestionService.selectSysServicesQuestionByUserIdAndRole(servicesQuestion));
     }
 
     /**
      * 客户添加问题
+     *
+     * @param topic
+     * @param customerId
+     * @return
+     */
+    @PostMapping("/services/topic/post")
+    public AjaxResult postServiceTopic(@RequestBody SysServicesTopic topic, @RequestParam String customerId) {
+        Long cusId = StringUtils.isNotEmpty(customerId) ? Long.parseLong(AesUtils.decrypt(customerId)) : 0L;
+        if (cusId == 0L) {
+            return toAjax(0);
+        }
+        topic.setUid(cusId);
+
+        return AjaxResult.success(iSysServicesTopicService.insertSysServicesTopic(topic));
+    }
+
+    /**
+     * 客户添加问题
+     *
      * @param servicesQuestion
      * @param customerId
      * @return
@@ -614,41 +635,68 @@ public class WechatAppletController extends BaseController {
     @PostMapping("/services/post")
     public AjaxResult postServiceQuestion(@RequestBody SysServicesQuestion servicesQuestion, @RequestParam String customerId) {
         Long cusId = StringUtils.isNotEmpty(customerId) ? Long.parseLong(AesUtils.decrypt(customerId)) : 0L;
-        if(cusId == 0L) {
+        if (cusId == 0L) {
             return toAjax(0);
         }
         servicesQuestion.setCusId(cusId);
-        return toAjax(iSysServicesQuestionService.insertSysServicesQuestion(servicesQuestion));
-    }
 
-    @GetMapping("/services/reply")
-    public AjaxResult serviceQuestionReply(@RequestParam String queId) {
-        return AjaxResult.success(iSysServicesQuestionService.selectSysServicesQuestionSessionByQueId(queId));
+        return AjaxResult.success(iSysServicesQuestionService.insertSysServicesQuestion(servicesQuestion));
     }
 
     /**
-     * 设置已读
-     * @param id
+     * 回答问题
+     *
+     * @param servicesQuestion
+     * @param customerId
      * @return
      */
-    @GetMapping("/services/post/update")
-    public AjaxResult updateServiceQuestion(@RequestParam Long id) {
-        SysServicesQuestion servicesQuestion = new SysServicesQuestion();
-        servicesQuestion.setRead(1);
-        servicesQuestion.setId(id);
-
-        return toAjax(iSysServicesQuestionService.updateSysServicesQuestionStatus(servicesQuestion));
-    }
-
     @PostMapping("/services/post/reply")
     public AjaxResult replyServiceQuestion(@RequestBody SysServicesQuestion servicesQuestion, @RequestParam String customerId) {
         Long cusId = StringUtils.isNotEmpty(customerId) ? Long.parseLong(AesUtils.decrypt(customerId)) : 0L;
-
+        if (cusId == 0L) {
+            return toAjax(0);
+        }
         servicesQuestion.setRole("customer");
         servicesQuestion.setUserId(cusId);
 
-        return toAjax(iSysServicesQuestionService.inserSysServicesQuestionReply(servicesQuestion));
+        int row = iSysServicesQuestionService.inserSysServicesQuestionReply(servicesQuestion);
+        if (row > 0) {
+            // 更新三个觉得未读，id不能有值
+            servicesQuestion.setRead(0);
+            iSysServicesQuestionService.updateSysServicesQuestionStatus(servicesQuestion);
+        }
+
+        return toAjax(row);
     }
+
+    /**
+     * 获取问题详情
+     *
+     * @param id
+     * @return
+     */
+    @GetMapping("/services/detail")
+    public AjaxResult serviceQuestionDetail(@RequestParam String queId, @RequestParam Long id) {
+        List<SysServicesQuestion> questions = iSysServicesQuestionService.selectSysServicesQuestionSessionByQueId(queId);
+        if (StringUtils.isNotNull(questions)) {
+            SysServicesQuestion status = new SysServicesQuestion();
+            status.setId(id);
+            status.setRead(1);
+            iSysServicesQuestionService.updateSysServicesQuestionStatus(status);
+        }
+        return AjaxResult.success(questions);
+    }
+
+
+//    @GetMapping("/services/post/update")
+//    public AjaxResult updateServiceQuestion(@RequestParam Long id) {
+//        SysServicesQuestion servicesQuestion = new SysServicesQuestion();
+//        servicesQuestion.setRead(1);
+//        servicesQuestion.setId(id);
+//
+//        return toAjax(iSysServicesQuestionService.updateSysServicesQuestionStatus(servicesQuestion));
+//    }
+
 
 }
 
