@@ -37,6 +37,8 @@ public class SysLiveSchedul extends BaseEntity
     @Excel(name = "直播开始时间", width = 30, dateFormat = "yyyy-MM-dd")
     private Date liveStartTime;
 
+    private String liveStartTimeString;
+
     /** 直播结束时间 */
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm")
     @Excel(name = "直播结束时间", width = 30, dateFormat = "yyyy-MM-dd")

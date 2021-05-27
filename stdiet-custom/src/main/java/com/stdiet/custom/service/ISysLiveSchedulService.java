@@ -85,4 +85,10 @@ public interface ISysLiveSchedulService
      * @return
      */
     public AjaxResult copyLastTimeLiveSchedul();
+
+    /**
+     * 根据时间确定最近的直播记录
+     * @return
+     */
+    public SysLiveSchedul getLiveSchedulByTime(SysLiveSchedul sysLiveSchedul);
 }

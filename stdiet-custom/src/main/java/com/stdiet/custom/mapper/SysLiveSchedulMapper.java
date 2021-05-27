@@ -90,4 +90,10 @@ public interface SysLiveSchedulMapper
      * @return
      */
     public SysLiveSchedul getLastLiveSchedul();
+
+    /**
+     * 根据时间确定最近的直播记录
+     * @return
+     */
+    public SysLiveSchedul getLiveSchedulByTime(SysLiveSchedul sysLiveSchedul);
 }

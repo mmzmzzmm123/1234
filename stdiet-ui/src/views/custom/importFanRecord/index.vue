@@ -233,6 +233,7 @@
 <script>
 import { listImportFanRecord, getImportFanRecord, delImportFanRecord, addImportFanRecord, updateImportFanRecord, exportImportFanRecord,removeFanWxAccount,saveWxAccountFanNum } from "@/api/custom/importFanRecord";
 import ImportFan from "@/components/ImportFanRecord/ImportFan";
+import { getLiveSchedulByTime } from "@/api/custom/liveSchedul";
 import dayjs from "dayjs";
 const nowDate = dayjs().format("YYYY-MM-DD");
 const nowTime = dayjs().format("YYYY-MM-DD HH:mm");
