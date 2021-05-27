@@ -435,14 +435,20 @@ public class SysCommissionDayServiceImpl implements ISysCommissionDayService {
      * @param cutOrderFlag 是否根据售后、营养师更换记录进行订单切割计算提成
      * @return
      */
-    public Map<Long, List<SysOrderCommisionDayDetail>> getOrderByList(SysCommision sysCommision, boolean cutOrderFlag){
+    public Map<Long, List<SysOrderCommisionDayDetail>> getOrderByList(SysCommision sysCommision, Boolean cutOrderFlag){
         //查询2021年1月份之后所有订单
+        System.out.println(sysCommision.getReplaceOrderFlag() == null);
         List<SysOrder> orderList = sysOrderMapper.selectSimpleOrderMessage(sysCommision);
-        Map<Long, List<SysOrderNutritionistReplaceRecord>> replaceRecordMap = null;
-        if(cutOrderFlag){
+        Map<Long, List<SysOrderNutritionistReplaceRecord>> replaceRecordMap = dealNutritionistReplaceRecord(sysOrderNutritionistReplaceRecordService.getSysOrderReplaceRecordByOrderId(null));
+        /*if(cutOrderFlag){
             //查询所有订单营养师、售后转移记录
             replaceRecordMap = dealNutritionistReplaceRecord(sysOrderNutritionistReplaceRecordService.getSysOrderReplaceRecordByOrderId(null));
-        }
+        }*/
+        //根据用户ID查询所有替换记录
+        /*List<SysOrderNutritionistReplaceRecord> usertReplaceRecordList = null;
+        if(replaceOrderFlag != null && replaceOrderFlag && sysCommision.getUserId() != null){
+             usertReplaceRecordList = sysOrderNutritionistReplaceRecordService.getSysOrderReplaceRecordByUserId(sysCommision.getUserId());
+        }*/
         //整理出每个用户对应的订单List
         Map<Long, List<SysOrderCommisionDayDetail>> userOrderResultMap = new HashMap<>();
         for (SysOrder sysOrder : orderList) {
@@ -462,9 +468,22 @@ public class SysCommissionDayServiceImpl implements ISysCommissionDayService {
                 SysOrderCommisionDayDetail sysOrderCommisionDayDetail = statisticsOrderMessage(sysOrder, sysCommision.getServerScopeStartTime(), sysCommision.getServerScopeEndTime());
                 orderCommisionDayDetailList = cutOrderByReplaceRecord(sysOrder, sysCommision, sysOrderCommisionDayDetail, replaceRecordMap.get(sysOrder.getOrderId()));
             }else{
-                 SysOrderCommisionDayDetail commisionDetail = statisticsOrderMessage(sysOrder, sysCommision.getServerScopeStartTime(), sysCommision.getServerScopeEndTime());
-                 orderCommisionDayDetailList = new ArrayList<>();
-                 orderCommisionDayDetailList.add(commisionDetail);
+                SysOrderCommisionDayDetail commisionDetail = statisticsOrderMessage(sysOrder, sysCommision.getServerScopeStartTime(), sysCommision.getServerScopeEndTime());
+                if(sysCommision.getReplaceOrderFlag() != null && sysCommision.getReplaceOrderFlag() && sysCommision.getUserId() != null &&
+                        replaceRecordMap.containsKey(sysOrder.getOrderId())){
+                    //判断该订单是否属于营养师、售后替换订单
+                    List<SysOrderCommisionDayDetail> userorderCommisionList = cutOrderByReplaceRecord(sysOrder, sysCommision, commisionDetail, replaceRecordMap.get(sysOrder.getOrderId()));
+                    for (SysOrderCommisionDayDetail detail : userorderCommisionList) {
+                        if((detail.getAfterSaleId() != null && detail.getAfterSaleId().longValue() == sysCommision.getUserId()) || (detail.getNutritionistId() != null && detail.getNutritionistId().longValue() == sysCommision.getUserId())){
+                            commisionDetail = detail;
+                            break;
+                        }
+                    }
+                }
+                orderCommisionDayDetailList = orderCommisionDayDetailList == null ? new ArrayList<>() : orderCommisionDayDetailList;
+                if(commisionDetail != null){
+                    orderCommisionDayDetailList.add(commisionDetail);
+                }
             }
             if(orderCommisionDayDetailList != null){
                 for (SysOrderCommisionDayDetail detail : orderCommisionDayDetailList) {
@@ -477,6 +496,7 @@ public class SysCommissionDayServiceImpl implements ISysCommissionDayService {
                 }
             }
         }
+        System.out.println(userOrderResultMap.get(131L).size() +"   订单数量");
         return userOrderResultMap;
     }
 

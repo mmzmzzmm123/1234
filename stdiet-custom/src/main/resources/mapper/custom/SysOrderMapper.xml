@@ -437,8 +437,14 @@
         <if test="reviewStatus != null and reviewStatus != ''">
             and review_status = #{reviewStatus}
         </if>
-        <if test="userId != null"><!-- 限于营养师、售后不可能同一个的情况下 -->
-            and (su_sale.user_id = #{userId} or su_nutritionist.user_id = #{userId})
+        <if test="userId != null">
+            and (
+              su_sale.user_id = #{userId} or su_nutritionist.user_id = #{userId}
+              <!-- 是否查询根据用户ID查询对应替换订单 -->
+              <if test="replaceOrderFlag != null">
+                or o.order_id in (select r.order_id from sys_order_nutritionist_replace_record r where r.del_flag = 0 and (r.after_sale_id = #{userId} or r.nutritionist_id = #{userId}) )
+              </if>
+            )
         </if>
         <if test="endTime != null and endTime != ''">
             AND DATE_FORMAT(o.order_time,'%Y-%m-%d') &lt;= #{endTime}

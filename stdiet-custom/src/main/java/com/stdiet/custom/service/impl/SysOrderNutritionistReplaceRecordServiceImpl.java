@@ -105,4 +105,13 @@ public class SysOrderNutritionistReplaceRecordServiceImpl implements ISysOrderNu
     public List<SysOrderNutritionistReplaceRecord> getSysOrderReplaceRecordByOrderId(Long orderId){
         return sysOrderNutritionistReplaceRecordMapper.getSysOrderReplaceRecordByOrderId(orderId);
     }
+
+    /**
+     * 根据用户ID查询营养师、售后更换记录
+     * @param userId
+     * @return
+     */
+    public List<SysOrderNutritionistReplaceRecord> getSysOrderReplaceRecordByUserId(Long userId){
+        return sysOrderNutritionistReplaceRecordMapper.getSysOrderReplaceRecordByUserId(userId);
+    }
 }
