@@ -468,7 +468,7 @@
         <if test="reviewStatus != null and reviewStatus != ''">
             and review_status = #{reviewStatus}
         </if>
-        <if test="userId != null"><!-- 限于营养师、售后不可能同一个的情况下 -->
+        <if test="userId != null">
             and (
             su_sale.user_id = #{userId} or su_nutritionist.user_id = #{userId}
             <!-- 是否查询根据用户ID查询对应替换订单 -->

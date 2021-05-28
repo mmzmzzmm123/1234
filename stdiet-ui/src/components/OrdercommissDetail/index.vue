@@ -243,6 +243,7 @@ export default {
       totalSendCommission: 0,
       totalNotSendCommission: 0,
       serverDateScope: null,
+      fileName:""
     };
   },
   computed: {},
@@ -261,14 +262,18 @@ export default {
       this.queryParam.reviewStatus = this.data.reviewStatus;
       this.queryParam.endTime = this.data.endTime;
       this.title = `「${this.data.name}`;
+      this.fileName = this.data.name;
       if (this.data.yearMonth) {
         this.title += " 截止" + `${this.data.yearMonth}`;
+        this.fileName += "截止" + `${this.data.yearMonth}`;
       }
       if (this.queryParam.reviewStatus) {
         this.title +=
           this.queryParam.reviewStatus == "yes" ? " 已审核" : " 未审核";
+          this.fileName += this.queryParam.reviewStatus == "yes" ? "已审核" : "未审核";
       }
       this.title += " 订单提成列表」";
+      this.fileName += "订单提成列表";
       this.visible = true;
       this.fetchOrderList();
     },
@@ -343,7 +348,7 @@ export default {
           return exportOrderDetailDay(queryParams);
         })
         .then((response) => {
-          this.download(response.msg);
+          this.download(response.msg, this.fileName+".xls");
         })
         .catch(function () {});
     }
