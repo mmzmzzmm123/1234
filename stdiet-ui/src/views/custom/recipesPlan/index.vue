@@ -140,6 +140,21 @@
         prop="nutritionistAssis"
         width="180"
       />
+      <el-table-column label="订阅情况" align="center">
+        <template slot-scope="scope">
+          <el-tag :type="scope.row.subscribed ? 'success' : 'danger'">
+            {{ scope.row.subscribed ? "已订阅" : "未订阅" }}
+          </el-tag>
+        </template>
+      </el-table-column>
+      <el-table-column label="发送" align="center" width="80">
+        <template slot-scope="scope">
+          <el-switch
+            v-model="!!scope.row.sendFlag"
+            @change="(val) => handleOnSendChange(val, scope.row)"
+          />
+        </template>
+      </el-table-column>
       <el-table-column
         label="操作"
         align="center"
@@ -172,7 +187,11 @@
 </template>
 
 <script>
-import { exportRecipesPlan, listRecipesPlan } from "@/api/custom/recipesPlan";
+import {
+  exportRecipesPlan,
+  listRecipesPlan,
+  updateRecipesPlan,
+} from "@/api/custom/recipesPlan";
 import dayjs from "dayjs";
 import store from "@/store";
 import { mapState } from "vuex";
@@ -306,6 +325,25 @@ export default {
     // 取消按钮
     cancel() {
       this.reset();
+    },
+    handleOnSendChange(val, data) {
+      const { id } = data;
+      if (data.reviewStatus === 2) {
+        updateRecipesPlan({
+          id,
+          sendFlag: val ? 1 : 0,
+        }).then((res) => {
+          if (res.code === 200) {
+            this.$message.success(res.msg);
+            const tarPlan = this.recipesPlanList.find((obj) => obj.id === id);
+            if (tarPlan) {
+              tarPlan.sendFlag = val ? 1 : 0;
+            }
+          }
+        });
+      } else {
+        this.$message.error("未审核的食谱不能发送");
+      }
     },
     // 表单重置
     reset() {
