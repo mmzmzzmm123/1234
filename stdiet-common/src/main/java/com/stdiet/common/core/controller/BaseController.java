@@ -64,13 +64,18 @@ public class BaseController {
         PageDomain pageDomain = TableSupport.buildPageRequest();
         Integer pageNum = pageDomain.getPageNum();
         Integer pageSize = pageDomain.getPageSize();
-
         long total = new PageInfo(list).getTotal();
+        List<?> rows;
+        if (StringUtils.isNull(pageNum) || StringUtils.isNull(pageSize)) {
+            rows = list;
+        } else {
+            rows = total > pageSize * (pageNum - 1) ? list : new ArrayList<>();
+        }
 
         TableDataInfo rspData = new TableDataInfo();
         rspData.setCode(HttpStatus.SUCCESS);
         rspData.setMsg("查询成功");
-        rspData.setRows(total > pageSize * (pageNum - 1) ? list : new ArrayList<>());
+        rspData.setRows(rows);
         rspData.setTotal(total);
         return rspData;
     }

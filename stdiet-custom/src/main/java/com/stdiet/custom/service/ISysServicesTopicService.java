@@ -1,6 +1,5 @@
 package com.stdiet.custom.service;
 
-import com.stdiet.custom.domain.SysServicesQuestion;
 import com.stdiet.custom.domain.SysServicesTopic;
 
 import java.util.List;

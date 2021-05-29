@@ -36,33 +36,33 @@ public class SysServicesTopicServiceImp implements ISysServicesTopicService {
 
         servicesTopicMapper.insertSysServicesTopic(topic);
 
-        SysCustomer customer = sysCustomerMapper.selectSysCustomerById(topic.getUid());
+        SysCustomer customer = sysCustomerMapper.selectSysCustomerById(Long.parseLong(topic.getUid()));
 
         List<SysServicesTopic> statusList = new ArrayList<>();
 
         SysServicesTopic customerStatus = new SysServicesTopic();
-        customerStatus.setUid(customer.getId());
+        customerStatus.setUid(String.valueOf(customer.getId()));
         customerStatus.setRole("customer");
         customerStatus.setRead(1);
         customerStatus.setTopicId(topic.getTopicId());
         statusList.add(customerStatus);
 
         SysServicesTopic dieticianStatus = new SysServicesTopic();
-        dieticianStatus.setUid(customer.getMainDietitian());
+        dieticianStatus.setUid(String.valueOf(customer.getMainDietitian()));
         dieticianStatus.setRole("dietician");
         dieticianStatus.setRead(0);
         dieticianStatus.setTopicId(topic.getTopicId());
         statusList.add(dieticianStatus);
 
         SysServicesTopic afterSaleStatus = new SysServicesTopic();
-        afterSaleStatus.setUid(customer.getAfterDietitian());
+        afterSaleStatus.setUid(String.valueOf(customer.getAfterDietitian()));
         afterSaleStatus.setRole("after_sale");
         afterSaleStatus.setRead(0);
         afterSaleStatus.setTopicId(topic.getTopicId());
         statusList.add(afterSaleStatus);
 
         SysServicesTopic dieticianAssistantStatus = new SysServicesTopic();
-        dieticianAssistantStatus.setUid(customer.getAssistantDietitian());
+        dieticianAssistantStatus.setUid(String.valueOf(customer.getAssistantDietitian()));
         dieticianAssistantStatus.setRole("dietician_assistant");
         dieticianAssistantStatus.setRead(0);
         dieticianAssistantStatus.setTopicId(topic.getTopicId());
