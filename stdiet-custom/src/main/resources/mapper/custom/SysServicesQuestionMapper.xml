@@ -48,7 +48,7 @@
                 ) AS user USING(user_id)
             </otherwise>
         </choose>
-        ORDER BY type ASC, update_time DESC
+        ORDER BY `read` ASC, update_time DESC
     </select>
 
     <select id="selectSysServicesQuestionSessionByQueId" resultMap="SysServicesQuestionSessionResult"
@@ -78,7 +78,7 @@
             <if test="cusId != null">cus_id,</if>
             <if test="content != null">content,</if>
             <if test="type != null">type,</if>
-            <if test="cusId != null">create_time,</if>
+            <if test="createTime != null">create_time,</if>
             <if test="img != null">img,</if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
@@ -86,7 +86,7 @@
             <if test="cusId != null">#{cusId},</if>
             <if test="content != null">#{content},</if>
             <if test="type != null">#{type},</if>
-            <if test="cusId != null">now(),</if>
+            <if test="createTime != null">#{createTime},</if>
             <if test="img != null">
                 #{img,  jdbcType=OTHER, typeHandler=com.stdiet.custom.typehandler.ArrayJsonHandler},
             </if>
@@ -94,10 +94,11 @@
     </insert>
 
     <!--    插入问题的四个角色：1，用户； 2，营养师； 3，售后； 4，助理-->
-    <insert id="insertSysServicesQuestionStatus" parameterType="java.util.List">
-        insert into sys_services_question_status (que_id, user_id, role, create_time, update_time) values
+    <insert id="insertSysServicesQuestionStatus" parameterType="java.util.List" useGeneratedKeys="true" keyProperty="id"
+            keyColumn="id">
+        insert into sys_services_question_status (que_id, user_id, role, `read`, create_time, update_time) values
         <foreach collection="list" item="status" index="index" separator=",">
-            (#{status.queId}, #{status.userId}, #{status.role}, now(), now())
+            (#{status.queId}, #{status.userId}, #{status.role}, #{status.read}, now(), now())
         </foreach>
     </insert>
 
@@ -127,8 +128,7 @@
     </update>
 
     <!--    插入问题回复-->
-    <insert id="inserSysServicesQuestionReply" parameterType="SysServicesQuestion" useGeneratedKeys="true"
-            keyProperty="id" keyColumn="id">
+    <insert id="inserSysServicesQuestionReply" parameterType="SysServicesQuestion">
         insert into sys_services_question_session
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="queId != null">que_id,</if>

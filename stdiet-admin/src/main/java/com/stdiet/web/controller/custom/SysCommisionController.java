@@ -255,6 +255,7 @@ public class SysCommisionController extends BaseController {
     @PreAuthorize("@ss.hasPermi('commisionDay:detail:list')")
     @GetMapping("/orderDetailDay")
     public AjaxResult getOrderCommissionDetailDay(SysCommision sysCommision) {
+        sysCommision.setReplaceOrderFlag(true);
         startPage();
         return sysCommissionDayService.calculateOrderCommissionDetail(sysCommision);
     }

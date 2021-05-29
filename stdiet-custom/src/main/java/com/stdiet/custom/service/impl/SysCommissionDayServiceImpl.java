@@ -53,7 +53,7 @@ public class SysCommissionDayServiceImpl implements ISysCommissionDayService {
         total.setTotalNotSentCommissionAmount(new BigDecimal(0));
         total.setNextMonthCommission(new BigDecimal(0));
         if(list != null && list.size() > 0){
-            sysCommision.setUserId(null);  //由于存在售后、营养师更换问题，不能根据营养师或售后查询订单
+            //sysCommision.setUserId(null);  //由于存在售后、营养师更换问题，不能根据营养师或售后查询订单
             Map<Long, List<SysOrderCommisionDayDetail>> orderDetailMap = getOrderByList(sysCommision, true);
             SysCommissionDayDetail sysCommissionDayDetail = null;
             for(SysCommision commision : list){
@@ -435,14 +435,20 @@ public class SysCommissionDayServiceImpl implements ISysCommissionDayService {
      * @param cutOrderFlag 是否根据售后、营养师更换记录进行订单切割计算提成
      * @return
      */
-    public Map<Long, List<SysOrderCommisionDayDetail>> getOrderByList(SysCommision sysCommision, boolean cutOrderFlag){
+    public Map<Long, List<SysOrderCommisionDayDetail>> getOrderByList(SysCommision sysCommision, Boolean cutOrderFlag){
         //查询2021年1月份之后所有订单
         List<SysOrder> orderList = sysOrderMapper.selectSimpleOrderMessage(sysCommision);
-        Map<Long, List<SysOrderNutritionistReplaceRecord>> replaceRecordMap = null;
-        if(cutOrderFlag){
+        //查询所有订单营养师、售后转移记录
+        Map<Long, List<SysOrderNutritionistReplaceRecord>> replaceRecordMap = dealNutritionistReplaceRecord(sysOrderNutritionistReplaceRecordService.getSysOrderReplaceRecordByOrderId(null));
+        /*if(cutOrderFlag){
             //查询所有订单营养师、售后转移记录
             replaceRecordMap = dealNutritionistReplaceRecord(sysOrderNutritionistReplaceRecordService.getSysOrderReplaceRecordByOrderId(null));
-        }
+        }*/
+        //根据用户ID查询所有替换记录
+        /*List<SysOrderNutritionistReplaceRecord> usertReplaceRecordList = null;
+        if(replaceOrderFlag != null && replaceOrderFlag && sysCommision.getUserId() != null){
+             usertReplaceRecordList = sysOrderNutritionistReplaceRecordService.getSysOrderReplaceRecordByUserId(sysCommision.getUserId());
+        }*/
         //整理出每个用户对应的订单List
         Map<Long, List<SysOrderCommisionDayDetail>> userOrderResultMap = new HashMap<>();
         for (SysOrder sysOrder : orderList) {
@@ -453,18 +459,27 @@ public class SysCommissionDayServiceImpl implements ISysCommissionDayService {
                 //System.out.println("客户："+ sysOrder.getCustomer() +",营养师："+sysOrder.getNutritionist() + ",售后" + sysOrder.getAfterSale());
                 continue;
             }
-            List<SysOrderCommisionDayDetail> orderCommisionDayDetailList = null;
+            List<SysOrderCommisionDayDetail> orderCommisionDayDetailList = new ArrayList<>();
             //将服务结束时间设置为空，因为提成的结束时间需要重新计算
             sysOrder.setServerEndTime(null);
             //判断是否存在营养师、售后更换记录
-            if(cutOrderFlag && replaceRecordMap.containsKey(sysOrder.getOrderId()) && replaceRecordMap.get(sysOrder.getOrderId()).size() > 0){
+            if(replaceRecordMap.containsKey(sysOrder.getOrderId()) && replaceRecordMap.get(sysOrder.getOrderId()).size() > 0){
                 //将订单根据更换记录切割成多个订单
                 SysOrderCommisionDayDetail sysOrderCommisionDayDetail = statisticsOrderMessage(sysOrder, sysCommision.getServerScopeStartTime(), sysCommision.getServerScopeEndTime());
-                orderCommisionDayDetailList = cutOrderByReplaceRecord(sysOrder, sysCommision, sysOrderCommisionDayDetail, replaceRecordMap.get(sysOrder.getOrderId()));
+                List<SysOrderCommisionDayDetail> muchCommisionDayDetailList = cutOrderByReplaceRecord(sysOrder, sysCommision, sysOrderCommisionDayDetail, replaceRecordMap.get(sysOrder.getOrderId()));
+                if(sysCommision.getUserId() != null){
+                    for (SysOrderCommisionDayDetail detail : muchCommisionDayDetailList) {
+                        if((detail.getAfterSaleId() != null && detail.getAfterSaleId().longValue() == sysCommision.getUserId()) || (detail.getNutritionistId() != null && detail.getNutritionistId().longValue() == sysCommision.getUserId())){
+                            orderCommisionDayDetailList.add(detail);
+                            break;
+                        }
+                    }
+                }else{
+                    orderCommisionDayDetailList.addAll(muchCommisionDayDetailList);
+                }
             }else{
-                 SysOrderCommisionDayDetail commisionDetail = statisticsOrderMessage(sysOrder, sysCommision.getServerScopeStartTime(), sysCommision.getServerScopeEndTime());
-                 orderCommisionDayDetailList = new ArrayList<>();
-                 orderCommisionDayDetailList.add(commisionDetail);
+                SysOrderCommisionDayDetail commisionDetail = statisticsOrderMessage(sysOrder, sysCommision.getServerScopeStartTime(), sysCommision.getServerScopeEndTime());
+                orderCommisionDayDetailList.add(commisionDetail);
             }
             if(orderCommisionDayDetailList != null){
                 for (SysOrderCommisionDayDetail detail : orderCommisionDayDetailList) {
@@ -496,10 +511,12 @@ public class SysCommissionDayServiceImpl implements ISysCommissionDayService {
 
         //售后和营养师分类
         for (SysOrderNutritionistReplaceRecord sysOrderRecord : replaceRecordList) {
-            if (sysOrderRecord.getNutritionistId() != null && sysOrderRecord.getNutritionistId().longValue() > 0) {
+            if (sysOrderRecord.getNutritionistId() != null && sysOrderRecord.getNutritionistId().longValue() > 0
+                    && sysOrder.getNutritionistId() != null && sysOrder.getNutritionistId().longValue() != sysOrderRecord.getNutritionistId().longValue()) {
                 nutritionistRecord.add(sysOrderRecord);
             }
-            if (sysOrderRecord.getAfterSaleId() != null && sysOrderRecord.getAfterSaleId().longValue() > 0) {
+            if (sysOrderRecord.getAfterSaleId() != null && sysOrderRecord.getAfterSaleId().longValue() > 0
+                    && sysOrder.getAfterSaleId() != null && sysOrder.getAfterSaleId().longValue() != sysOrderRecord.getAfterSaleId().longValue()) {
                 afterSaleRecord.add(sysOrderRecord);
             }
         }
@@ -593,12 +610,12 @@ public class SysCommissionDayServiceImpl implements ISysCommissionDayService {
                 }
             }
         }
-        /**for (SysOrderCommisionDayDetail c : sysOrderCommisionDayDetailList) {
+        /*for (SysOrderCommisionDayDetail c : sysOrderCommisionDayDetailList) {
             System.out.println(c.getOrderId() + "-" + c.getNutritionistId() + "-" + c.getAfterSaleId() + "-"+
                     DateUtils.localDateToString(c.getServerStartDate(),"yyyy-MM-dd") + "-" +
                     DateUtils.localDateToString(c.getServerEndDate(),"yyyy-MM-dd") +
                     "-" + c.getDayMoney().doubleValue() + "-" + c.getOrderAmount().doubleValue());
-        }**/
+        }*/
         return sysOrderCommisionDayDetailList;
     }
 

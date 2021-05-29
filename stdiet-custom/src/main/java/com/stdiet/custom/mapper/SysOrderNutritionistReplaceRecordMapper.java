@@ -66,4 +66,11 @@ public interface SysOrderNutritionistReplaceRecordMapper
      * @return
      */
     List<SysOrderNutritionistReplaceRecord> getSysOrderReplaceRecordByOrderId(@Param("orderId")Long orderId);
+
+    /**
+     * 根据用户ID查询营养师、售后更换记录
+     * @param userId
+     * @return
+     */
+    List<SysOrderNutritionistReplaceRecord> getSysOrderReplaceRecordByUserId(@Param("userId")Long userId);
 }

@@ -65,4 +65,11 @@ public interface ISysOrderNutritionistReplaceRecordService
      * @return
      */
     List<SysOrderNutritionistReplaceRecord> getSysOrderReplaceRecordByOrderId(Long orderId);
+
+    /**
+     * 根据用户ID查询营养师、售后更换记录
+     * @param userId
+     * @return
+     */
+    List<SysOrderNutritionistReplaceRecord> getSysOrderReplaceRecordByUserId(Long userId);
 }

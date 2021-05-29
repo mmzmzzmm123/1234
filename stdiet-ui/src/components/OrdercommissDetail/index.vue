@@ -24,7 +24,7 @@
                 end-placeholder="结束日期"
                 format="yyyy-MM-dd"
                 value-format="yyyy-MM-dd"
-              
+
               >
               </el-date-picker>
             </el-form-item>
@@ -37,7 +37,7 @@
         <div
           class="order_total_data"
         >
-        
+
        <span class="order_total_data_span_right20">
             当前页总服务金额：{{totalServerAmount}}元
           </span>
@@ -49,7 +49,7 @@
           >
           <span class="order_total_data_span"
             >未发放总提成：{{ totalNotSendCommission }}元</span
-          >  
+          >
         </div>
         <el-row :gutter="10" class="mb8" style="margin-top: 10px;margin-left:10px">
           <el-col :span="1.5">
@@ -187,7 +187,7 @@
                 >订单详情</el-button
               >
             </template>
-          </el-table-column> 
+          </el-table-column>
         </el-table>
         </div>
         <!--<div style="float: right; margin-right: 40px">
@@ -202,7 +202,7 @@
           >
           <span style="font-size：14px;margin-top:-200px"
             >未发放总提成：{{ totalNotSendCommission }}元</span
-          >  
+          >
         </div>-->
         <pagination
           v-show="total > 0"
@@ -210,10 +210,10 @@
           :page.sync="queryParam.pageNum"
           :limit.sync="queryParam.pageSize"
           @pagination="fetchOrderList"
-          :pageSizes="[10, 15, 30, 50, 100]"
+          :pageSizes="[10, 20, 50, 100, 500, 1000]"
         >
         </pagination>
-        
+
       </div>
     </el-drawer>
 
@@ -243,6 +243,7 @@ export default {
       totalSendCommission: 0,
       totalNotSendCommission: 0,
       serverDateScope: null,
+      fileName:""
     };
   },
   computed: {},
@@ -261,14 +262,18 @@ export default {
       this.queryParam.reviewStatus = this.data.reviewStatus;
       this.queryParam.endTime = this.data.endTime;
       this.title = `「${this.data.name}`;
+      this.fileName = this.data.name;
       if (this.data.yearMonth) {
         this.title += " 截止" + `${this.data.yearMonth}`;
+        this.fileName += "截止" + `${this.data.yearMonth}`;
       }
       if (this.queryParam.reviewStatus) {
         this.title +=
           this.queryParam.reviewStatus == "yes" ? " 已审核" : " 未审核";
+          this.fileName += this.queryParam.reviewStatus == "yes" ? "已审核" : "未审核";
       }
       this.title += " 订单提成列表」";
+      this.fileName += "订单提成列表";
       this.visible = true;
       this.fetchOrderList();
     },
@@ -343,7 +348,7 @@ export default {
           return exportOrderDetailDay(queryParams);
         })
         .then((response) => {
-          this.download(response.msg);
+          this.download(response.msg, this.fileName+".xls");
         })
         .catch(function () {});
     }
@@ -360,8 +365,8 @@ export default {
 }
 
 .order_total_data {
-  float: right; 
-  margin-right: 40px; 
+  float: right;
+  margin-right: 40px;
   margin-bottom:15px
 }
 

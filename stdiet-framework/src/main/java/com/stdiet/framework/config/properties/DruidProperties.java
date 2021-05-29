@@ -72,6 +72,9 @@ public class DruidProperties
         datasource.setTestOnBorrow(testOnBorrow);
         /** 归还连接时执行validationQuery检测连接是否有效，做了这个配置会降低性能。 */
         datasource.setTestOnReturn(testOnReturn);
+
+        datasource.setRemoveAbandoned(true);
+        datasource.setRemoveAbandonedTimeout(180);
         return datasource;
     }
 }

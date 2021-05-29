@@ -78,4 +78,7 @@ public class SysCommision extends BaseEntity {
 
     //服务结束时间，用于计算该时间段的提成
     private String serverScopeEndTime;
+
+    //是否查询替换订单
+    private Boolean replaceOrderFlag;
 }
