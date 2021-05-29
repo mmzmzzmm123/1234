@@ -35,11 +35,11 @@ public class SysServicesTopic {
     /**
      * 角色
      */
-    Long uid;
+    String uid;
 
-    Long fromUid;
+    String fromUid;
 
-    Long toUid;
+    String toUid;
 
     /**
      * 问题内容

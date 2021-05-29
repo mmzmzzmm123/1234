@@ -69,8 +69,6 @@ public class WechatAppletController extends BaseController {
     @Autowired
     private IWechatAppletService iWechatAppletService;
     @Autowired
-    private ISysServicesQuestionService iSysServicesQuestionService;
-    @Autowired
     private ISysServicesTopicService iSysServicesTopicService;
 
     /**
@@ -594,17 +592,33 @@ public class WechatAppletController extends BaseController {
         return AjaxResult.success(sysRecipesPlanService.updateSysRecipesPlan(info));
     }
 
-    @GetMapping("/services/list")
+
+    /**
+     * 主题列表
+     *
+     * @param customerId
+     * @param pageNum
+     * @param pageSize
+     * @return
+     */
+    @GetMapping("/services/topic/list")
     public TableDataInfo fetchServiceQuestion(@RequestParam String customerId, @RequestParam Integer pageNum, @RequestParam Integer pageSize) {
         startPage();
 
-        Long cusId = StringUtils.isNotEmpty(customerId) ? Long.parseLong(AesUtils.decrypt(customerId)) : 0L;
+        String cusId = StringUtils.isNotEmpty(customerId) ? AesUtils.decrypt(customerId) : "0";
 
-        SysServicesQuestion servicesQuestion = new SysServicesQuestion();
-        servicesQuestion.setRole("customer");
-        servicesQuestion.setUserId(cusId);
+        SysServicesTopic topic = new SysServicesTopic();
+        topic.setRole("customer");
+        topic.setUid(cusId);
 
-        return getDataTable(iSysServicesQuestionService.selectSysServicesQuestionByUserIdAndRole(servicesQuestion));
+        List<SysServicesTopic> list = iSysServicesTopicService.selectSysServicesTopicByUserIdAndRole(topic);
+        if (StringUtils.isNotNull(list)) {
+            for (SysServicesTopic tTopic : list) {
+                tTopic.setUid(AesUtils.encrypt(tTopic.getUid()));
+            }
+        }
+
+        return getDataTable(list);
     }
 
     /**
@@ -616,8 +630,8 @@ public class WechatAppletController extends BaseController {
      */
     @PostMapping("/services/topic/post")
     public AjaxResult postServiceTopic(@RequestBody SysServicesTopic topic, @RequestParam String customerId) {
-        Long cusId = StringUtils.isNotEmpty(customerId) ? Long.parseLong(AesUtils.decrypt(customerId)) : 0L;
-        if (cusId == 0L) {
+        String cusId = StringUtils.isNotEmpty(customerId) ? AesUtils.decrypt(customerId) : "0";
+        if (StringUtils.isEmpty(cusId)) {
             return toAjax(0);
         }
         topic.setUid(cusId);
@@ -625,48 +639,22 @@ public class WechatAppletController extends BaseController {
         return AjaxResult.success(iSysServicesTopicService.insertSysServicesTopic(topic));
     }
 
-    /**
-     * 客户添加问题
-     *
-     * @param servicesQuestion
-     * @param customerId
-     * @return
-     */
-    @PostMapping("/services/post")
-    public AjaxResult postServiceQuestion(@RequestBody SysServicesQuestion servicesQuestion, @RequestParam String customerId) {
-        Long cusId = StringUtils.isNotEmpty(customerId) ? Long.parseLong(AesUtils.decrypt(customerId)) : 0L;
-        if (cusId == 0L) {
-            return toAjax(0);
-        }
-        servicesQuestion.setCusId(cusId);
-
-        return AjaxResult.success(iSysServicesQuestionService.insertSysServicesQuestion(servicesQuestion));
-    }
 
     /**
      * 回答问题
      *
-     * @param servicesQuestion
-     * @param customerId
+     * @param topic
      * @return
      */
-    @PostMapping("/services/post/reply")
-    public AjaxResult replyServiceQuestion(@RequestBody SysServicesQuestion servicesQuestion, @RequestParam String customerId) {
-        Long cusId = StringUtils.isNotEmpty(customerId) ? Long.parseLong(AesUtils.decrypt(customerId)) : 0L;
-        if (cusId == 0L) {
-            return toAjax(0);
-        }
-        servicesQuestion.setRole("customer");
-        servicesQuestion.setUserId(cusId);
+    @PostMapping("/services/topic/reply")
+    public AjaxResult replyServiceTopic(@RequestBody SysServicesTopic topic, @RequestParam Integer type) {
 
-        int row = iSysServicesQuestionService.inserSysServicesQuestionReply(servicesQuestion);
-        if (row > 0) {
-            // 更新三个觉得未读，id不能有值
-            servicesQuestion.setRead(0);
-            iSysServicesQuestionService.updateSysServicesQuestionStatus(servicesQuestion);
-        }
+        topic.setFromUid(AesUtils.decrypt(topic.getFromUid()));
+        topic.setToUid(AesUtils.decrypt(topic.getToUid()));
 
-        return toAjax(row);
+        SysServicesTopic servicesTopic = type == 0 ? iSysServicesTopicService.inserSysServicesTopicComment(topic) : iSysServicesTopicService.inserSysServicesTopicReply(topic);
+
+        return AjaxResult.success(servicesTopic);
     }
 
     /**
@@ -675,16 +663,32 @@ public class WechatAppletController extends BaseController {
      * @param id
      * @return
      */
-    @GetMapping("/services/detail")
-    public AjaxResult serviceQuestionDetail(@RequestParam String queId, @RequestParam Long id) {
-        List<SysServicesQuestion> questions = iSysServicesQuestionService.selectSysServicesQuestionSessionByQueId(queId);
-        if (StringUtils.isNotNull(questions)) {
-            SysServicesQuestion status = new SysServicesQuestion();
+    @GetMapping("/services/topic/detail")
+    public AjaxResult serviceTopicDetail(@RequestParam String topicId, @RequestParam String id) {
+        List<SysServicesTopic> topics = iSysServicesTopicService.selectSysServicesTopicSessionByTopicId(topicId);
+        if (StringUtils.isNotNull(topics)) {
+            SysServicesTopic status = new SysServicesTopic();
             status.setId(id);
             status.setRead(1);
-            iSysServicesQuestionService.updateSysServicesQuestionStatus(status);
+            iSysServicesTopicService.updateSysServicesTopicStatus(status);
+
+            for (SysServicesTopic topic : topics) {
+                topic.setUid(AesUtils.encrypt(topic.getUid()));
+                if (StringUtils.isNotNull(topic.getComments())) {
+                    for (SysServicesTopic cTopic : topic.getComments()) {
+                        cTopic.setFromUid(AesUtils.encrypt(cTopic.getFromUid()));
+                        cTopic.setToUid(AesUtils.encrypt(cTopic.getToUid()));
+                        if (StringUtils.isNotNull(cTopic.getReplys())) {
+                            for (SysServicesTopic rTopic : cTopic.getReplys()) {
+                                rTopic.setFromUid(AesUtils.encrypt(rTopic.getFromUid()));
+                                rTopic.setToUid(AesUtils.encrypt(rTopic.getToUid()));
+                            }
+                        }
+                    }
+                }
+            }
         }
-        return AjaxResult.success(questions);
+        return AjaxResult.success(topics);
     }
 
 

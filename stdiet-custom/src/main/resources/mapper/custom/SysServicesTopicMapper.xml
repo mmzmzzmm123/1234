@@ -40,7 +40,6 @@
     </select>
 
     <!--    查询主题-->
-
     <resultMap id="SysServicesTopicSessionResult" type="SysServicesTopic">
         <result column="id" property="id"/>
         <result column="uid" property="uid"/>
@@ -50,7 +49,7 @@
         <result column="img" property="img" typeHandler="com.stdiet.custom.typehandler.ArrayJsonHandler"/>
         <result column="create_time" property="createTime"/>
         <association property="name" column="{uid=uid,role=role}" select="selectUserInfo"/>
-        <collection property="comments" column="topic_id" select="selectServicesTopicCommentByTopicId"/>
+        <association property="comments" column="topic_id" select="selectServicesTopicCommentByTopicId"/>
     </resultMap>
 
     <resultMap id="ServicesTopicCommentResult" type="SysServicesTopic">
@@ -65,24 +64,26 @@
         <result column="create_time" property="createTime"/>
         <association property="fromName" column="{uid=from_uid,role=from_role}" select="selectUserInfo"/>
         <association property="toName" column="{uid=to_uid,role=to_role}" select="selectUserInfo"/>
-        <collection property="replys" column="id" ofType="ServicesTopicCommentReplyResult"
-                    select="selectServicesTopicCommentReplyByCommentId"/>
+        <association property="replys" column="id"
+                     select="selectServicesTopicCommentReplyByCommentId"/>
     </resultMap>
 
     <resultMap id="ServicesTopicCommentReplyResult" type="SysServicesTopic">
         <result column="id" property="id"/>
         <result column="topic_id" property="topicId"/>
+        <result column="comment_id" property="commentId"/>
         <result column="content" property="content"/>
         <result column="from_uid" property="fromUid"/>
         <result column="from_role" property="fromRole"/>
         <result column="to_uid" property="toUid"/>
         <result column="to_role" property="toRole"/>
+        <result column="reply_id" property="replyId"/>
         <result column="img" property="img" typeHandler="com.stdiet.custom.typehandler.ArrayJsonHandler"/>
         <result column="create_time" property="createTime"/>
         <association property="fromName" column="{uid=from_uid,role=from_role}" select="selectUserInfo"/>
         <association property="toName" column="{uid=to_uid,role=to_role}" select="selectUserInfo"/>
-
     </resultMap>
+
 
     <select id="selectSysServicesTopicSessionByTopicId" resultMap="SysServicesTopicSessionResult"
             parameterType="String">
@@ -94,11 +95,7 @@
     </select>
 
     <select id="selectServicesTopicCommentReplyByCommentId" resultMap="ServicesTopicCommentReplyResult">
-        select * from sys_services_topic_reply where reply_type = 0 and reply_id = #{id}
-    </select>
-
-    <select id="selectServicesTopicCommentReplyReplyByCommentId" resultMap="ServicesTopicCommentReplyResult">
-        select * from sys_services_topic_reply where reply_type = 1 and reply_id = #{id}
+        select * from sys_services_topic_reply where comment_id = #{id} order by create_time asc
     </select>
 
 
@@ -202,7 +199,7 @@
     </insert>
 
     <!--    插入问题回复-->
-    <insert id="inserSysServicesTopicReply" parameterType="SysServicesQuestion" useGeneratedKeys="true" keyColumn="id"
+    <insert id="inserSysServicesTopicReply" parameterType="SysServicesTopic" useGeneratedKeys="true" keyColumn="id"
             keyProperty="id">
         insert into sys_services_topic_reply
         <trim prefix="(" suffix=")" suffixOverrides=",">
