@@ -13,6 +13,7 @@
         <result property="endNumDay" column="end_num_day"/>
         <result property="recipesId" column="recipes_id"/>
         <result property="sendFlag" column="send_flag"/>
+        <result property="subscribed" column="subscribed"/>
         <result property="sendTime" column="send_time"/>
         <result property="pauseDate" column="pause_date"/>
         <result property="createTime" column="create_time"/>
@@ -22,7 +23,6 @@
         <result property="delFlag" column="del_flag"/>
         <result property="cusId" column="cus_id"/>
         <result property="outId" column="out_id"/>
-        <result property="subscribed" column="subscribed"/>
         <result property="subSend" column="sub_send"/>
         <result property="smsSend" column="sms_send"/>
         <!-- 非持久化字段 -->
@@ -181,7 +181,8 @@
     <select id="selectPlanListByCondition" parameterType="SysRecipesPlan" resultMap="SysRecipesPlanResult">
         SELECT srp.id,srp.order_id,srp.recipes_id,srp.start_num_day,srp.end_num_day,srp.cus_id,sc.phone,
         su_nutritionist.nick_name AS nutritionist,su_nutritionist_assis.nick_name AS nutritionist_assis,
-        srp.start_date,srp.end_date,srp.send_flag,srp.send_time, sc.name as customer, srp.review_status
+        srp.start_date,srp.end_date,srp.send_flag,srp.send_time, sc.name as customer, srp.review_status,
+        srp.subscribed
         FROM sys_recipes_plan srp
         LEFT JOIN sys_order sr ON sr.order_id = srp.order_id
         LEFT JOIN sys_customer sc ON sc.id = srp.cus_id
