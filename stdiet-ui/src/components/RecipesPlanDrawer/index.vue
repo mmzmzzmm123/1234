@@ -70,7 +70,7 @@
             {{ `第${scope.row.startNumDay} 至 ${scope.row.endNumDay}天` }}
           </template>
         </el-table-column>
-        <el-table-column label="日期" align="center">
+        <el-table-column label="日期" align="center" width="200">
           <template slot-scope="scope">
             {{ `${scope.row.startDate} 至 ${scope.row.endDate}` }}
           </template>
