@@ -83,6 +83,13 @@ export const constantRoutes = [
           require(["@/views/system/user/profile/index"], resolve),
         name: "Profile",
         meta: { title: "个人中心", icon: "user" }
+      },
+      {
+        path: "message",
+        component: resolve =>
+          require(["@/views/custom/message/index"], resolve),
+        name: "Profile",
+        meta: { title: "客户消息", icon: "user" }
       }
     ]
   },

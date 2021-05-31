@@ -8,6 +8,7 @@ import settings from "./modules/settings";
 import recipes from "./modules/recipes";
 import recipesShow from "./modules/recipesShow";
 import global from "./modules/global";
+import message from "./modules/message";
 
 import getters from "./getters";
 import actions from "./actions";
@@ -23,7 +24,8 @@ const store = new Vuex.Store({
     settings,
     recipes,
     recipesShow,
-    global
+    global,
+    message
   },
   getters,
   actions

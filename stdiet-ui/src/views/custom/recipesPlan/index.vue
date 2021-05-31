@@ -115,30 +115,14 @@
         </template>
       </el-table-column>
       <el-table-column label="客户姓名" align="center" prop="customer" />
-      <el-table-column
-        label="客户手机号"
-        align="center"
-        prop="hidePhone"
-        width="180"
-      />
-      <el-table-column
-        label="计划"
-        align="center"
-        prop="scopeDay"
-        width="200"
-      />
-      <el-table-column
-        label="日期"
-        align="center"
-        prop="scopeDate"
-        width="200"
-      />
+      <el-table-column label="客户手机号" align="center" prop="hidePhone" />
+      <el-table-column label="计划" align="center" prop="scopeDay" />
+      <el-table-column label="日期" align="center" prop="scopeDate" width="200"/>
       <el-table-column label="营养师" align="center" prop="nutritionist" />
       <el-table-column
         label="营养师助理"
         align="center"
         prop="nutritionistAssis"
-        width="180"
       />
       <el-table-column label="订阅情况" align="center">
         <template slot-scope="scope">
@@ -147,7 +131,7 @@
           </el-tag>
         </template>
       </el-table-column>
-      <el-table-column label="发送" align="center" width="80">
+      <el-table-column label="发送" align="center">
         <template slot-scope="scope">
           <el-switch
             v-model="!!scope.row.sendFlag"
@@ -159,7 +143,6 @@
         label="操作"
         align="center"
         class-name="small-padding fixed-width"
-        width="300"
       >
         <template slot-scope="scope">
           <el-button
