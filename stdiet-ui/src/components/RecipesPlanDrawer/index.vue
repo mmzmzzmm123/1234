@@ -151,8 +151,11 @@
 </template>
 <script>
 import Clipboard from "clipboard";
-import { listRecipesPlanByCusId } from "@/api/custom/recipesPlan";
-import { addRecipesPlan, updateRecipesPlan } from "@/api/custom/recipesPlan";
+import {
+  listRecipesPlanByCusId,
+  addRecipesPlan,
+  updateRecipesPlan,
+} from "@/api/custom/recipesPlan";
 import PlanPauseDrawer from "./PlanPauseDrawer";
 import VueQr from "vue-qr";
 import dayjs from "dayjs";

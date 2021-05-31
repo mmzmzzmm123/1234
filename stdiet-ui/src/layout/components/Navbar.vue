@@ -103,7 +103,7 @@ export default {
       this.$store.dispatch("app/toggleSideBar");
     },
     handleOnMessageClick() {
-
+      this.$router.push("/user/message");
     },
     async logout() {
       this.$confirm("确定注销并退出系统吗？", "提示", {
