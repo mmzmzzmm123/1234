@@ -7,26 +7,31 @@
     <!-- 滚动文字区域 -->
     <div class="marquee-wrap">
       <ul class="marquee-box" id="marquee-box">
-        <li class="marquee-list" :key="i" v-for="i in 3" v-html="message" :id="i==1?'marquee':''"></li>
+        <li
+          class="marquee-list"
+          :key="i"
+          v-for="i in 1"
+          v-html="message"
+          :id="i == 1 ? 'marquee' : ''"
+        ></li>
       </ul>
     </div>
   </div>
 </template>
 <script type="text/javascript">
+
 export default {
-  name: 'notice',
+  name: "notice",
   props: {
     message: {
       type: String,
-      required: true
-    }
+      required: true,
+    },
   },
   data() {
-    return {
-
-    };
+    return {};
   },
-  mounted: function() {
+  mounted: function () {
     // 延时滚动
     setTimeout(() => {
       this.runMarquee();
@@ -48,14 +53,14 @@ export default {
         // marquee.style.transform = 'translateX(' + disx + 'px)'
         marquee.style.left = disx + "px";
       }, 30); //滚动速度
-    }
-  }
+    },
+  },
 };
 // JavaScript Document
 (function px2rem(doc, win) {
   var docEl = doc.documentElement,
     resizeEvt = "orientationchange" in window ? "orientationchange" : "resize",
-    recalc = function() {
+    recalc = function () {
       var clientWidth = docEl.clientWidth;
       if (!clientWidth) return;
       docEl.style.fontSize = 100 * (clientWidth / 750) + "px";
@@ -64,7 +69,7 @@ export default {
   // 窗口大小发生变化，初始化
   win.addEventListener(resizeEvt, recalc, false);
   doc.addEventListener("DOMContentLoaded", recalc, false);
-  setTimeout(function() {
+  setTimeout(function () {
     px2rem(doc, win);
   }, 200);
 })(document, window);
@@ -97,12 +102,12 @@ li {
   display: flex;
   justify-content: center;
   align-items: center;
-   color: #E6A23C;
-   flex: 0 0 100px;
+  color: #e6a23c;
+  flex: 0 0 100px;
 }
 .ico-horn .icon {
-    font-size: 24px;
-    color: #E6A23C;
+  font-size: 24px;
+  color: #e6a23c;
 }
 /* 以下代码与滚动相关 */
 .marquee-wrap {
@@ -111,7 +116,7 @@ li {
   overflow: hidden;
   width: 100%;
   height: 100%;
-    margin-left: 8px;
+  margin-left: 8px;
 }
 .marquee-box {
   position: absolute;
@@ -122,7 +127,7 @@ li {
 }
 .marquee-list {
   margin-right: 10px;
-} 
+}
 .marquee-list span {
   padding: 0 0.04rem;
   color: #ffe17b;

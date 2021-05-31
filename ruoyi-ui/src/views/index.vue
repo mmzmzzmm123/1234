@@ -58,6 +58,7 @@ import PieChart from "./dashboard/PieChart";
 import BarChart from "./dashboard/BarChart";
 import LineChart from "./dashboard/LineChart";
 import { bindwx, isbindwx, wxlogin } from "@/api/system/user";
+import { listNotice, getNotice } from "@/api/system/notice";
 //import { getSchoolCalendars } from "@/api/benyi/schoolcalendar";
 //备用进行班级园历显示操作import { getSchoolCalendarsClass } from "@/api/benyi/schoolcalendarclass";
 
@@ -73,22 +74,42 @@ export default {
   },
   data() {
     return {
-      message: `本一智慧平台可用手机微信登录啦！关注“本一智慧平台”公众号，点击左下角菜单“智慧平台”，进入2.0平台入口。首次登录输入账号密码，根据提示绑定微信号码！以后登录，可以使用手机直接微信登录，无需再输入账号密码，方便快捷！`,
+      message: ``,
       code: "",
       calendarData: [],
       value: new Date(),
       // 查询参数
       queryParams: {},
+      // 查询参数
+      queryParams_note: {
+        status: "0",
+      },
       // lineChartData: lineChartData.newVisitis,
     };
   },
   created() {
+    this.getList();
     this.code = this.$route.query.code;
     //console.log(this.code);
     this.bindWxInfo();
     //this.getSchoolCalendarList();
   },
   methods: {
+    /** 查询公告列表 */
+    getList() {
+      listNotice(this.queryParams_note).then((response) => {
+        console.log(response.rows);
+        if (response.rows.length > 0) {
+          var msg = "";
+          response.rows.forEach((element) => {
+            msg = msg + element.noticeContent;
+          });
+          this.message = msg;
+        } else {
+          this.message = "暂无公告";
+        }
+      });
+    },
     async bindWxInfo() {
       await isbindwx().then((res) => {
         if (this.code != "" && this.code != null && res.msg == "1") {
