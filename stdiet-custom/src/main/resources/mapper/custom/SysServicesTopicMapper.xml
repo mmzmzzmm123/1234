@@ -9,11 +9,13 @@
         <result column="topic_id" property="topicId"/>
         <result column="topic_type" property="topicType"/>
         <result column="content" property="content"/>
-        <result column="name" property="name"/>
+        <result column="uid" property="uid"/>
+        <result column="role" property="role"/>
         <result column="read" property="read"/>
         <result column="img" property="img" typeHandler="com.stdiet.custom.typehandler.ArrayJsonHandler"/>
         <result column="create_time" property="createTime"/>
         <result column="update_time" property="updateTime"/>
+        <association column="{uid=uid,role=role}" property="name" select="selectUserInfo"/>
     </resultMap>
 
 
@@ -21,21 +23,9 @@
     <select id="selectSysServicesTopicByUserIdAndRole" parameterType="SysServicesTopic"
             resultMap="SysServicesTopicResult">
         SELECT * FROM (
-        SELECT * FROM sys_services_topic_status WHERE role = #{role} AND uid = #{uid}
+        SELECT topic_id, id, `read`, create_time, update_time, 'customer' AS role FROM sys_services_topic_status WHERE role = #{role} AND uid = #{uid}
         ) AS status
         LEFT JOIN sys_services_topic USING(topic_id)
-        <choose>
-            <when test="role == 'customer'">
-                LEFT JOIN (
-                SELECT name, id AS uid FROM sys_customer WHERE id = #{uid}
-                ) AS customer ON status.uid = customer.uid
-            </when>
-            <otherwise>
-                LEFT JOIN (
-                SELECT user_id AS uid, nick_name AS name FROM sys_user WHERE user_id = #{uid}
-                ) AS user ON status.uid = user.uid
-            </otherwise>
-        </choose>
         ORDER BY `read` ASC, update_time DESC
     </select>
 
@@ -92,10 +82,12 @@
 
     <select id="selectServicesTopicCommentByTopicId" resultMap="ServicesTopicCommentResult">
         select * from sys_services_topic_comment where topic_id = #{topic_id}
+        order by create_time asc
     </select>
 
     <select id="selectServicesTopicCommentReplyByCommentId" resultMap="ServicesTopicCommentReplyResult">
-        select * from sys_services_topic_reply where comment_id = #{id} order by create_time asc
+        select * from sys_services_topic_reply where comment_id = #{id}
+        order by create_time asc
     </select>
 
 

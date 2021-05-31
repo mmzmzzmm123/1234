@@ -5,7 +5,7 @@
   </div>
 </template>
 <script>
-import MessageBrowser from "./messageBrowser";
+import MessageBrowser from "./messageBrowser/index";
 export default {
   data() {
     return {};
