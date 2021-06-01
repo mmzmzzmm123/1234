@@ -24,7 +24,7 @@
           type="primary"
           style="margin-left: 12px"
           icon="el-icon-download"
-          @click="handleOnExportImg"
+          @click="handleOnExportStartNumConfig"
           v-loading="downloading"
           :disabled="downloading"
         >
@@ -126,6 +126,7 @@ export default {
         { value: 16, label: "16" },
         { value: 18, label: "18" },
       ],
+      oriStartNum: 0,
     };
   },
   updated() {},
@@ -174,7 +175,7 @@ export default {
         if (response.code === 200) {
           const { planId, id } = response.data;
           this.saveRecipes({
-            cusId: 0,
+            cusId: 0, // 模板特有
             planId,
             reviewStatus: 2, // 已审核
             callback: () => {
@@ -215,7 +216,18 @@ export default {
           return "info";
       }
     },
-    handleOnExportImg() {
+    handleOnExportStartNumConfig() {
+      this.oriStartNum = this.recipesData[0].numDay;
+      this.$prompt("食谱开始天数", "导出图片", {
+        confirmButtonText: "确定",
+        inputValue: this.oriStartNum,
+        inputPattern: /^[1-9]\d*$/,
+        inputErrorMessage: "请输入正整数",
+      }).then(({ value }) => {
+        this.handleOnExportImg(parseInt(value));
+      });
+    },
+    handleOnExportImg(startNum) {
       this.downloading = true;
       this.$nextTick(() => {
         const centerContentDom = document.getElementById("center_content");
@@ -234,6 +246,10 @@ export default {
           if (tmpElm) {
             tmpElm.classList = [];
           }
+          const tmpNum = document.getElementById(`day_num_${idx}`);
+          if (tmpNum) {
+            tmpNum.innerText = `第${startNum + idx}天`;
+          }
         });
         recipesDom.style.overflow = "visible";
         html2canvans(recipesDom, {
@@ -241,10 +257,11 @@ export default {
           height: recipesDom.scrollHeight,
         }).then((canvas) => {
           const { name } = this.healthyData;
-          const startNum = this.recipesData[0].numDay;
-          const endNum = this.recipesData[this.recipesData.length - 1].numDay;
+          // const startNum = this.recipesData[0].numDay;
+          // const endNum = this.recipesData[this.recipesData.length - 1].numDay;
+          const endNum = startNum + this.recipesData.length - 1;
           const link = document.createElement("a");
-          link.download = `${name}_第${startNum}至${endNum}天.jpeg`;
+          link.download = `${name || "匿名"}_第${startNum}至${endNum}天.jpeg`;
           link.href = canvas.toDataURL();
           link.click();
 
@@ -255,6 +272,10 @@ export default {
             const tmpElm = document.getElementById(`cus_name_${idx}`);
             if (tmpElm) {
               tmpElm.classList = ["cus_name_hide"];
+            }
+            const tmpNum = document.getElementById(`day_num_${idx}`);
+            if (tmpNum) {
+              tmpNum.innerText = `第${this.oriStartNum + idx}天`;
             }
           });
 

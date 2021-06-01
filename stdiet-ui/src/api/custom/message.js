@@ -20,7 +20,7 @@ export function postTopicReply(data) {
   return request({
     url: "/services/topic/reply",
     method: "post",
-    body: data
+    data
   });
 }
 
@@ -28,6 +28,6 @@ export function postTopicComment(data) {
   return request({
     url: "/services/topic/comment",
     method: "post",
-    body: data
+    data
   });
 }
