@@ -59,8 +59,10 @@
               @click="handleOnResetCurrentDay"
               slot="reference"
             >
-              <div class="cus_name_hide" :id="`cus_name_${num}`">{{ name }}</div>
-              <div>{{ `第${numDay}天` }}</div>
+              <div class="cus_name_hide" :id="`cus_name_${num}`">
+                {{ name }}
+              </div>
+              <div :id="`day_num_${num}`">{{ `第${numDay}天` }}</div>
             </div>
           </el-popover>
         </template>
