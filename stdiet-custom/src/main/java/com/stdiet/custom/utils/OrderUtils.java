@@ -4,9 +4,9 @@ import com.stdiet.custom.domain.SysOrder;
 
 public class OrderUtils {
 
-    private static final String[] orderTypeArray = {"普通单","比例拆分单","体验单"};
+    private static final String[] orderTypeArray = {"普通单","比例拆分单","体验单","售中单"};
 
-    private static final String[] orderCountTypeArray = {"一开单","二开单"};
+    private static final String[] orderCountTypeArray = {"一开单","二开单","一开单(拆分)","二开单(拆分)"};
 
     private static final String[] orderMoneyTypeArray = {"全款单","定金单","尾款单"};
 
@@ -27,7 +27,7 @@ public class OrderUtils {
         orderTypeName += "/"+orderCountTypeArray[Integer.parseInt(sysOrder.getOrderCountType())];
         orderTypeName += "/"+orderMoneyTypeArray[Integer.parseInt(sysOrder.getOrderMoneyType())];
         //判断是不是二开提成单
-        if("1".equals(sysOrder.getOrderCountType()) && sysOrder.getAfterSaleCommissOrder().intValue() == 1){
+        if(sysOrder.getAfterSaleCommissOrder() != null && sysOrder.getAfterSaleCommissOrder().intValue() == 1){
             orderTypeName += "/提成单";
         }
         return orderTypeName;

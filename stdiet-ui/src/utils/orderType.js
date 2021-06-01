@@ -25,6 +25,29 @@ export const orderCountTypeArray = [
   }
 ]
 
+//订单次数加拆分类型
+export const orderCountExtendedTypeArray = [
+  {
+    value: 0,
+    label: "一开单",
+    children: orderMoneyTypeArray
+  },{
+    value: 1,
+    label: "二开单",
+    children: orderMoneyTypeArray
+  },
+  {
+    value: 2,
+    label: "一开单(拆分)",
+    children: orderMoneyTypeArray
+  },
+  {
+    value: 3,
+    label: "二开单(拆分)",
+    children: orderMoneyTypeArray
+  }
+]
+
 //订单类型（订单新增）
 export const orderTypeArray = [
   {
@@ -47,6 +70,11 @@ export const orderTypeArray = [
         label: "全款单"
       }]
     }]
+  },
+  {
+    value: 3,
+    label: "售中单",
+    children: orderCountExtendedTypeArray
   }
 ]
 

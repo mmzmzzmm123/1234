@@ -111,8 +111,8 @@
             </el-select>
           </el-form-item>
         </el-col>
-        <el-col :span="8">
-          <el-form-item label="售前" prop="preSaleId">
+        <el-col :span="8" v-show="preSaleShow">
+          <el-form-item label="售前" prop="preSaleId" >
             <el-select v-model="form.preSaleId" placeholder="请选择" filterable
               clearable>
               <el-option
@@ -124,7 +124,20 @@
             </el-select>
           </el-form-item>
         </el-col>
-        <el-col :span="8" v-show="!afterNutiShow">
+        <el-col :span="8" v-show="pushPreSaleShow">
+          <el-form-item label="售前推送" prop="preSaleId" title="售前推送人就是该客户体验单的销售，只有售中一开单需要选择">
+            <el-select v-model="form.pushPreSaleId" placeholder="请选择" filterable
+              clearable>
+              <el-option
+                v-for="dict in preSaleIdOptions"
+                :key="dict.dictValue"
+                :label="dict.dictLabel"
+                :value="parseInt(dict.dictValue)"
+              />
+            </el-select>
+          </el-form-item>
+        </el-col>
+        <el-col :span="8" v-show="onSaleShow">
           <el-form-item label="售中" prop="onSaleId">
             <el-select v-model="form.onSaleId" placeholder="请选择">
               <el-option
@@ -243,11 +256,11 @@
             </el-select>
           </el-form-item>
         </el-col>
-        <el-col :span="8">
+        <!--<el-col :span="8">
           <el-form-item label="推荐人" prop="recommender">
             <el-input v-model="form.recommender" placeholder="请输入推荐人" />
           </el-form-item>
-        </el-col>
+        </el-col>-->
         <el-col :span="10">
           <el-form-item label="成交时间" prop="orderTime">
             <el-date-picker
@@ -263,7 +276,7 @@
           </el-form-item>
         </el-col>
         <el-col :span="10">
-          <el-form-item label="服务开始时间" prop="startTime" label-width="120">
+          <el-form-item label="服务开始时间" prop="startTime" label-width="180">
             <el-date-picker
               style="width: 182.5px"
               v-model="form.startTime"
@@ -347,11 +360,15 @@ export default {
       visible: false,
       // 表单校验
       rules: {
-        customer: [
+        /*customer: [
           { required: true, message: "客户姓名不能为空", trigger: "blur" },
-        ],
+        ],*/
         amount: [{ required: true, message: "金额不能为空", trigger: "blur" }],
-        phone: [
+        /*payTypeId: [{ required: true, message: "收款方式不能为空", trigger: "blur" }],
+        accountId: [{ required: true, message: "渠道不能为空", trigger: "blur" }],
+        serveTime: [{ required: true, message: "服务时间不能为空", trigger: "blur" }],
+        conditioningProjectId: [{ required: true, message: "服务项目不能为空", trigger: "blur" }],*/
+        /*phone: [
           { required: true, message: "手机号不能为空", trigger: "blur" },
           {
             required: true,
@@ -359,7 +376,7 @@ export default {
             pattern: /^[0-9]{5,11}$/,
             message: "手机号格式不正确",
           },
-        ],
+        ],*/
         orderTime: [
           { required: true, message: "成交时间不能为空", trigger: "blur" },
           { required: true, trigger: "blur", validator: checkOrderTime },
@@ -425,6 +442,7 @@ export default {
           return time.getTime() < Date.now();
         },
       },
+      data: null,
       // 收款方式字典
       payTypeIdOptions: [],
       // 账号
@@ -444,7 +462,14 @@ export default {
       secondAfterSaleFlagShow: false,
       //分成比例
       orderRateOptions: orderTypeData["orderRateArray"],
+      //比例是否显示
       orderRateOptionsShow: false,
+      //售前是否显示
+      preSaleShow: true,
+      //售中是否显示
+      onSaleShow: false,
+      //售前推送人是否显示(售中一开单才存在)
+      pushPreSaleShow: false,
       //售后、营养师、营养师助理是否显示
       afterNutiShow: true,
     };
@@ -518,7 +543,7 @@ export default {
       // this.data = data;
       this.callback = callback;
       this.reset(data);
-
+      this.data = data;
       this.title = `${data.orderId ? "修改" : "创建"}「${
         data.customer
       }」客户订单`;
@@ -527,15 +552,15 @@ export default {
     /** 提交按钮 */
     submitForm() {
       this.$refs["form"].validate((valid) => {
-        if (valid) {
+        if (valid && this.validateAddOrder()) {
           if (this.form.orderId != null) {
-            updateOrder(this.form).then((response) => {
+            /*updateOrder(this.form).then((response) => {
               if (response.code === 200) {
                 this.msgSuccess("修改成功");
                 this.visible = false;
                 this.callback && this.callback();
               }
-            });
+            });*/
           } else {
             addOrder(this.form).then((response) => {
               if (response.code === 200) {
@@ -547,6 +572,88 @@ export default {
           }
         }
       });
+    },
+    //验证订单参数
+    validateAddOrder(){
+      //普通单、拆分单
+      if(this.form.orderTypeList[0] == 0 || this.form.orderTypeList[0] == 1){
+           //售前、售后、营养师助理都不能为空
+           if(this.form.preSaleId == null || this.form.preSaleId <= 0 || this.form.afterSaleId == null || this.form.afterSaleId <= 0 
+              || this.form.nutriAssisId == null ||  this.form.nutriAssisId <= 0){
+              this.$message({
+                type: 'warning',
+                message: '售前、售后、营养师助理不能为空',
+                center: true
+              });
+              return false;
+           }
+           //根据是否拆分判断营养师
+           if(this.form.orderTypeList[0] == 0){
+              if(this.form.nutritionistIdList == null || this.form.nutritionistIdList.length != 1 || this.form.nutritionistIdList[0] <= 0){
+                this.$message({
+                  type: 'warning',
+                  message: '营养师不能为空，普通单只能选择一个营养师',
+                  center: true
+                });
+                return false;
+              }
+           }else{
+              if(this.form.nutritionistIdList == null || this.form.nutritionistIdList.length != 2 || this.form.nutritionistIdList[0] <= 0 || this.form.nutritionistIdList[1] <= 0){
+                this.$message({
+                  type: 'warning',
+                  message: '营养师不能为空，拆分单需要选择两个营养师',
+                  center: true
+                });
+                return false;
+              }
+           }
+      }
+      //体验单
+      else if(this.form.orderTypeList[0] == 2){
+          //售前、售中不能为空
+          if(this.form.preSaleId == null || this.form.preSaleId <= 0 || this.form.onSaleId == null ||  this.form.onSaleId <= 0){
+              this.$message({
+                type: 'warning',
+                message: '售前、售中不能为空',
+                center: true
+              });
+              return false;
+           }
+      }
+      //售中单
+      else if(this.form.orderTypeList[0] == 3){
+          //售中、售后、营养师助理不能为空
+          if(this.form.onSaleId == null || this.form.onSaleId <= 0 || this.form.afterSaleId == null || this.form.afterSaleId <= 0 
+              || this.form.nutriAssisId == null ||  this.form.nutriAssisId <= 0){
+              this.$message({
+                type: 'warning',
+                message: '售中、售后、营养师助理不能为空',
+                center: true
+              });
+              return false;
+           }
+           //判断是否拆分单
+           if(this.form.orderTypeList[1] == 0 || this.form.orderTypeList[1] == 1){
+              if(this.form.nutritionistIdList == null || this.form.nutritionistIdList.length != 1 || this.form.nutritionistIdList[0] <= 0){
+                this.$message({
+                  type: 'warning',
+                  message: '营养师不能为空，普通单只能选择一个营养师',
+                  center: true
+                });
+                return false;
+              }
+           }else{
+              if(this.form.nutritionistIdList == null || this.form.nutritionistIdList.length != 2 || this.form.nutritionistIdList[0] <= 0 || this.form.nutritionistIdList[1] <= 0){
+                this.$message({
+                  type: 'warning',
+                  message: '营养师不能为空，拆分单需要选择两个营养师',
+                  center: true
+                });
+                return false;
+              }
+           }
+      }
+      return true;
     },
     reset(obj = {}) {
       const defaultPayType = this.payTypeIdOptions.find(
@@ -614,6 +721,7 @@ export default {
         pauseTime: null,
         payTypeId: defaultPayType ? parseInt(defaultPayType.dictValue) : null,
         preSaleId: defaultPresale ? parseInt(defaultPresale.dictValue) : null,
+        pushPreSaleId: null,
         createBy: null,
         createTime: null,
         onSaleId: null,
@@ -696,7 +804,7 @@ export default {
     // },
     "form.orderTypeList": function (newVal, oldVal) {
       //判断订单类型是否选择了二开
-      if (newVal[1] == 1) {
+      if (newVal[1] == 1 || newVal[1] == 3) {
         this.form.secondAfterSaleFlag = 1;
         this.secondAfterSaleFlagShow = true;
       } else {
@@ -704,7 +812,7 @@ export default {
         this.secondAfterSaleFlagShow = false;
       }
       //判断是否选择了比例拆分单
-      if (newVal[0] == 1) {
+      if (newVal[0] == 1 || newVal[1] == 2 || newVal[1] == 3) {
         this.orderRateOptionsShow = true;
         this.form.nutritionistRate = "2,8";
       } else {
@@ -713,15 +821,40 @@ export default {
       }
       //判断是否选择了体验单
       if (newVal[0] == 2) {
-        this.afterNutiShow = false;
-        this.form.onSaleId = parseInt(this.onSaleIdOptions[1].dictValue);
         this.form.serveTimeId = 7;
         this.form.conditioningProjectId = 12;
+        this.onSaleShow = true;
+        this.afterNutiShow = false;
       } else {
         this.form.onSaleId = null;
         this.form.serveTimeId = 90;
-        this.afterNutiShow = true;
         this.form.conditioningProjectId = 0;
+        this.onSaleShow = false;
+        this.afterNutiShow = true;
+      }
+      //判断是否选择了售中单
+      if(newVal[0] == 3){
+        //不需要选择销售,需要选择售中
+        this.form.preSaleId = null;
+        this.onSaleShow = true;
+        this.preSaleShow = false;
+        //一开单
+        if(newVal[1] == 0 || newVal[1] == 2){
+          this.form.pushPreSaleId = (this.data && this.data.preSaleId != null) ? this.data.preSaleId : null;
+            this.pushPreSaleShow = true;
+        }else{
+            this.pushPreSaleShow = false;
+            this.form.pushPreSaleId = null;
+        }
+      }else{
+          this.form.pushPreSaleId = null;
+          this.pushPreSaleShow = false;
+          this.preSaleShow = true;
+          //需要判断是否为体验单
+          if (newVal[0] != 2) {
+            this.form.onSaleId = null;
+            this.onSaleShow = false;
+          }
       }
     },
   },

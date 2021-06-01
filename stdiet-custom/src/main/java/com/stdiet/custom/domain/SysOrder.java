@@ -84,6 +84,17 @@ public class SysOrder extends BaseEntity {
     @Excel(name = "售前")
     private String preSale;
 
+    /**
+     * 售前推送人（售中一开单才存在）
+     */
+    //@Excel(name = "售前推送人")
+    private Long pushPreSaleId;
+
+    /**
+     * 售前推送人（售中一开单才存在）
+     */
+    private String pushPreSale;
+
     /** 售中ID */
     private Long onSaleId;
 
