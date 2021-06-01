@@ -136,7 +136,7 @@ public class SysWxSaleAccountServiceImpl implements ISysWxSaleAccountService {
      * @param sysWxSaleAccount
      * @return
      */
-    public List<SysWxSaleAccount> getWxAccountAndSale(){
-        return sysWxSaleAccountMapper.getWxAccountAndSale();
+    public List<SysWxSaleAccount> getWxAccountAndSale(SysWxSaleAccount sysWxSaleAccount){
+        return sysWxSaleAccountMapper.getWxAccountAndSale(sysWxSaleAccount);
     }
 }

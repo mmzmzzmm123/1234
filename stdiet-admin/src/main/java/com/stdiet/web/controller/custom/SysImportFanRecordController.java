@@ -154,12 +154,12 @@ public class SysImportFanRecordController extends BaseController
      */
     @PreAuthorize("@ss.hasPermi('custom:importFanRecord:add')")
     @GetMapping(value = "/getWxAccountAndSale")
-    public AjaxResult getWxAccountAndSale(SysImportFanWxAccount sysImportFanWxAccount){
+    public AjaxResult getWxAccountAndSale(SysWxSaleAccount sysWxSaleAccount){
         Map<String, Object> result = new HashMap<>();
-        List<SysWxSaleAccount> list = sysWxSaleAccountService.getWxAccountAndSale();
-        List<Map<String,Object>> fanNumList = sysImportFanWxAccountService.getTotalImportFanNum(sysImportFanWxAccount);
+        List<SysWxSaleAccount> list = sysWxSaleAccountService.getWxAccountAndSale(sysWxSaleAccount);
+        //List<Map<String,Object>> fanNumList = sysImportFanWxAccountService.getTotalImportFanNum(sysImportFanWxAccount);
         result.put("wxSaleAccountList", list);
-        result.put("fanNumList", fanNumList);
+        //result.put("fanNumList", fanNumList);
         return AjaxResult.success(result);
     }
 

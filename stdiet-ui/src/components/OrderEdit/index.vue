@@ -90,9 +90,22 @@
             </el-select>
           </el-form-item>
         </el-col>
-        <el-col :span="8">
+        <el-col :span="8" v-show="preSaleShow">
           <el-form-item label="售前" prop="preSaleId">
             <el-select v-model="form.preSaleId" placeholder="请选择">
+              <el-option
+                v-for="dict in preSaleIdOptions"
+                :key="dict.dictValue"
+                :label="dict.dictLabel"
+                :value="parseInt(dict.dictValue)"
+              />
+            </el-select>
+          </el-form-item>
+        </el-col>
+
+        <el-col :span="8" v-show="pushPreSaleShow">
+          <el-form-item label="售前推送" prop="preSaleId">
+            <el-select v-model="form.pushPreSaleId" placeholder="请选择">
               <el-option
                 v-for="dict in preSaleIdOptions"
                 :key="dict.dictValue"
@@ -198,11 +211,11 @@
             </el-select>
           </el-form-item>
         </el-col>
-        <el-col :span="8">
+        <!--<el-col :span="8">
           <el-form-item label="推荐人" prop="recommender">
             <el-input v-model="form.recommender" placeholder="请输入推荐人" />
           </el-form-item>
-        </el-col>
+        </el-col>-->
         <el-col :span="10">
           <el-form-item label="成交时间" prop="orderTime">
             <el-date-picker
@@ -218,7 +231,7 @@
           </el-form-item>
         </el-col>
         <el-col :span="12">
-          <el-form-item label="服务开始时间" prop="startTime" label-width="120">
+          <el-form-item label="服务开始时间" prop="startTime" label-width="160">
             <el-date-picker
               style="width: 182.5px"
               v-model="form.startTime"
@@ -392,8 +405,12 @@ export default {
       reviewStatusOptions: [],
       //下拉列表对应关系(用于选择收款账号自动选择策划、策划助理、运营、运营助理)
       orderDropdownCorrespondingOptions: [],
-      //是否显示售中
+      //售前是否显示
+      preSaleShow: true,
+      //售中是否显示
       onSaleShow: false,
+      //售前推送人是否显示(售中一开单才存在)
+      pushPreSaleShow: false,
       //是否显示售后、营养师、营养师助理
       afterSaleNutriAssShow: true,
       //是否显示策划、策划助理、运营、运营助理
@@ -545,6 +562,7 @@ export default {
         pauseTime: null,
         payTypeId: defaultPayType ? parseInt(defaultPayType.dictValue) : null,
         preSaleId: defaultPresale ? parseInt(defaultPresale.dictValue) : null,
+        pushPreSaleId: null,
         onSaleId: null,
         createBy: null,
         createTime: null,
@@ -575,13 +593,42 @@ export default {
         accountId,
         ...obj,
       };
-      // console.log(this.form);
       this.resetForm("form");
-      // console.log("--"+obj.orderType);
-      this.onSaleShow = this.form.orderType == "2";
-      this.afterSaleNutriAssShow =
-        this.form.orderType != "2" && this.form.afterSaleCommissOrder == 0;
-      this.planOperatorShow = this.form.afterSaleCommissOrder == 0;
+
+      //售前是否显示
+      this.preSaleShow = true;
+      //售中是否显示
+      this.onSaleShow = false;
+      //售前推送人是否显示(售中一开单才存在)
+      this.pushPreSaleShow= false;
+      //是否显示售后、营养师、营养师助理
+      this.afterSaleNutriAssShow= true;
+      //是否显示策划、策划助理、运营、运营助理
+      this.planOperatorShow = true;
+      
+      if(this.form.orderType == "3"){
+         //售中单的非提成单不显示售前
+         if(this.form.afterSaleCommissOrder == null || this.form.afterSaleCommissOrder == 0){
+            this.preSaleShow = false;
+         }
+         if(this.form.orderCountType == 0 || this.form.orderCountType == 2){
+           this.pushPreSaleShow = true;
+         }
+      }
+
+      if(this.form.orderType == "2" || (this.form.orderType == "3" && (this.form.afterSaleCommissOrder == null || this.form.afterSaleCommissOrder == 0))){
+        this.onSaleShow = true;
+      }
+
+      if((this.form.afterSaleCommissOrder != null && this.form.afterSaleCommissOrder != 0) || this.form.orderType == "2"){
+        this.afterSaleNutriAssShow = false;
+      }
+
+      if(this.form.afterSaleCommissOrder != null && this.form.afterSaleCommissOrder != 0){
+        this.planOperatorShow = false;
+      }
+
+      //console.log(this.preSaleShow + " | " + this.pushPreSaleShow + " | " + this.onSaleShow + " | " + this.afterSaleNutriAssShow + "|" + this.planOperatorShow);
     },
     handleOnClosed() {
       this.reset();
