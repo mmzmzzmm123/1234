@@ -297,7 +297,7 @@ export default {
         () => {
           this.drawingList = []
         }
-      )
+      ).catch(() => {})
     },
     drawingItemCopy(item, parent) {
       let clone = JSON.parse(JSON.stringify(item))
