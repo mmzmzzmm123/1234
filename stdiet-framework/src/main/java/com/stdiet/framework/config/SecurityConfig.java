@@ -102,6 +102,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                         "/custom/wxUserInfo/wx/**",
                         "/custom/wxUserLog/wx/**",
                         "/wx/**",
+//                        "/ws/**",
                         "/wap/**",
                         "/investigate/**",
                         "/common/customerUploadFile",
