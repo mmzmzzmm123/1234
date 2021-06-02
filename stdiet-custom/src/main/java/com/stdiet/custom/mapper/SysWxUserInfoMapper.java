@@ -70,4 +70,11 @@ public interface SysWxUserInfoMapper
      * @return
      */
     public SysWxUserInfo getSysWxUserInfoByPhone(@Param("phone")String phone);
+
+    /**
+     * 根据openid移除对应绑定的cusId
+     * @param openid
+     * @return
+     */
+    public int removeCusIdByOpenId(@Param("openid")String openid);
 }

@@ -129,7 +129,7 @@
             <el-select v-model="form.pushPreSaleId" placeholder="请选择" filterable
               clearable>
               <el-option
-                v-for="dict in preSaleIdOptions"
+                v-for="dict in pushPreSaleIdOptions"
                 :key="dict.dictValue"
                 :label="dict.dictLabel"
                 :value="parseInt(dict.dictValue)"
@@ -536,6 +536,8 @@ export default {
       "operatorIdOptions",
       // 运营助理字典
       "operatorAssisIdOptions",
+      //售前推送
+      "pushPreSaleIdOptions"
     ]),
   },
   methods: {

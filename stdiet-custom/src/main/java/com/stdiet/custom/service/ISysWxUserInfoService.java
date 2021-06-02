@@ -70,5 +70,12 @@ public interface ISysWxUserInfoService
      */
     public SysWxUserInfo getSysWxUserInfoByPhone(String phone);
 
+    /**
+     * 根据openid移除对应绑定的cusId
+     * @param openid
+     * @return
+     */
+    public int removeCusIdByOpenId(String openid);
+
 
 }
