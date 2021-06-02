@@ -1,9 +1,7 @@
-import { getToken } from "./auth";
-
 const { protocol, hostname, origin, port } = window.location;
 const wsProtocol = protocol.startsWith("https") ? "wss" : "ws";
 const url = `${wsProtocol}://${hostname}${
-  port === "80" || port === "443" ? "" : `:${8091}`
+  hostname === "localhost" ? `:${8091}` : ""
 }/ws`;
 let ws = undefined;
 let intervalRef = undefined;
