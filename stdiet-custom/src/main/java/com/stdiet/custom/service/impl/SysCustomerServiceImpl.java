@@ -198,11 +198,33 @@ public class SysCustomerServiceImpl implements ISysCustomerService {
         if(newCustomer == null || newCustomer.getId() == null || StringUtils.isEmpty(newCustomer.getPhone())){
             return;
         }
+        //先根据cusId查询是否已经绑定过微信用户
+        SysWxUserInfo cusIdWxUserInfo = sysWxUserInfoService.selectSysWxUserInfoByCusId(newCustomer.getId());
         //根据手机号查询微信用户记录
-        SysWxUserInfo wxUserInfo = sysWxUserInfoService.getSysWxUserInfoByPhone(newCustomer.getPhone());
-        if(wxUserInfo != null && (wxUserInfo.getCusId() == null || wxUserInfo.getCusId().longValue() != newCustomer.getId())){
-            wxUserInfo.setCusId(newCustomer.getId());
-            sysWxUserInfoService.updateSysWxUserInfo(wxUserInfo);
+        SysWxUserInfo phoneWxUserInfo = sysWxUserInfoService.getSysWxUserInfoByPhone(newCustomer.getPhone());
+        if(cusIdWxUserInfo != null) {
+            if(phoneWxUserInfo != null){
+                if(!cusIdWxUserInfo.getOpenid().equals(phoneWxUserInfo.getOpenid())){
+                    //解绑之前记录
+                    sysWxUserInfoService.removeCusIdByOpenId(cusIdWxUserInfo.getOpenid());
+                    //更新
+                    SysWxUserInfo param = new SysWxUserInfo();
+                    param.setOpenid(phoneWxUserInfo.getOpenid());
+                    param.setCusId(newCustomer.getId());
+                    sysWxUserInfoService.updateSysWxUserInfo(param);
+                }
+            }else{
+                //解绑之前记录
+                sysWxUserInfoService.removeCusIdByOpenId(cusIdWxUserInfo.getOpenid());
+            }
+        }else{
+            if(phoneWxUserInfo != null){
+                //更新
+                SysWxUserInfo param = new SysWxUserInfo();
+                param.setOpenid(phoneWxUserInfo.getOpenid());
+                param.setCusId(newCustomer.getId());
+                sysWxUserInfoService.updateSysWxUserInfo(param);
+            }
         }
     }
 }

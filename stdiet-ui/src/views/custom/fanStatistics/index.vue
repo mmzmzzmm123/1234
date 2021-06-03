@@ -356,7 +356,7 @@ export default {
   },
   created() {
     this.getList();
-    this.getDicts("fan_channel").then((response) => {
+    this.getDicts("cus_account").then((response) => {
       this.accountIdOptions = response.data;
     });
   },

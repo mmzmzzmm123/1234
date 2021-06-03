@@ -11,6 +11,7 @@ const oriState = {
   operatorIdOptions: [],
   operatorAssisIdOptions: [],
   msgUnreadCount: 0,
+  pushPreSaleIdOptions:[]
 };
 
 const mutations = {
@@ -48,7 +49,8 @@ const actions = {
       plannerIdOptions: options["planner"] || [],
       plannerAssisIdOptions: options["planner_assis"] || [],
       operatorIdOptions: options["operator"] || [],
-      operatorAssisIdOptions: options["operator_assis"] || []
+      operatorAssisIdOptions: options["operator_assis"] || [],
+      pushPreSaleIdOptions: options["push_pre_sale"] || [],
     });
   }
 };

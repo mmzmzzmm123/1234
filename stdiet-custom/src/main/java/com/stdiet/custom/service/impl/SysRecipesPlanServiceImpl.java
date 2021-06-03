@@ -170,7 +170,7 @@ public class SysRecipesPlanServiceImpl implements ISysRecipesPlanService {
                             continue;
                         }
                         //判断是否提成单，拆分单中的副单，体验单,定金单
-                        if (sysOrder.getAfterSaleCommissOrder().intValue() == 1 || ("1".equals(sysOrder.getOrderType()) && sysOrder.getMainOrderId().intValue() != 0) ||
+                        if (sysOrder.getAfterSaleCommissOrder().intValue() == 1 || sysOrder.getMainOrderId().intValue() != 0 ||
 //                                "2".equals(sysOrder.getOrderType()) || // 体验单也需要生成计划 2021.05.29
                                 "1".equals(sysOrder.getOrderMoneyType()) || sysOrder.getCounted() == 1) {
                             System.out.println("---------------------" + sysOrder.getOrderId() + "不生成食谱------------------------");

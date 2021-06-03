@@ -1,15 +1,56 @@
 <template>
     <!--  -->
     <!-- 添加或修改导粉管理对话框 -->
-    <el-dialog :title="title" :visible.sync="open" width="1000px" :close-on-click-modal="false" append-to-body @closed="cancel">
-      <div style="margin-bottom: 20px;color:red">1、添加导粉记录时会根据进粉渠道、当前时间来自动确定所属直播间，当前时间段没有直播，则取上一次直播，若账号从未直播过，则为空</div>
+    <el-dialog :title="title" :visible.sync="open" width="1050px" :close-on-click-modal="false" append-to-body @closed="cancel">
+      <!--<div style="margin-bottom: 20px;color:red">1、添加导粉记录时会根据进粉渠道、当前时间来自动确定所属直播间，当前时间段没有直播，则取上一次直播，若账号从未直播过，则为空</div>-->
+        <el-form :model="queryParams" ref="queryForm" :inline="true" label-width="68px">
+      <!--<el-form-item label="账号渠道" prop="channel">
+          <el-select
+              v-model="queryParams.channel"
+              placeholder="请选择账号渠道"
+              clearable
+              filterable
+              size="small"
+            >
+              <el-option
+                v-for="dict in fanChanneloptions"
+                :key="dict.dictValue"
+                :label="dict.dictLabel"
+                :value="parseInt(dict.dictValue)"
+              />
+            </el-select>
+        </el-form-item>-->
+        <el-form-item label="销售" prop="saleId" label-width="50px">
+          <el-select
+              v-model="queryParams.saleId"
+              placeholder="请选择销售"
+              clearable
+              filterable
+              size="small"
+            >
+              <el-option
+                v-for="dict in preSaleIdOptions"
+                :key="dict.dictValue"
+                :label="dict.dictLabel"
+                :value="parseInt(dict.dictValue)"
+              />
+            </el-select>
+        </el-form-item>
+        <el-form-item label="微信账号" prop="wxAccount">
+            <el-input v-model.trim="queryParams.wxAccount" placeholder="请输入微信号" />
+        </el-form-item>
+      <el-form-item>
+        <el-button type="cyan" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
+        <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
+      </el-form-item>
+    </el-form>
         <div style="height: 500px; overflow: auto">
             <el-table v-loading="loading" :data="wxAccountList">
                 <!--<el-table-column label="微信昵称" align="center" prop="wxNickName" />-->
                 <el-table-column label="微信号" align="center" prop="wxAccount" width="160"/>
                 <el-table-column label="销售" align="center" prop="saleName" width="120"/>
-                <el-table-column label="已导粉数量" align="center" prop="importFanNum" width="120"/>
-                <el-table-column label="进粉渠道" align="center" prop="importFanChannel" >
+                <!--<el-table-column label="已导粉数量" align="center" prop="importFanNum" width="120"/>-->
+                <el-table-column label="账号渠道" align="center" prop="importFanChannel" width="180">
                     <template slot-scope="scope">
                             <el-select
                         v-model="scope.row.importFanChannel"
@@ -46,7 +87,23 @@
                         </el-select>
                     </template>
                 </el-table-column>-->
-                <el-table-column label="导粉数量" align="center" prop="fanNum" width="200">
+                 <el-table-column label="导粉时间" align="center" prop="fanTime" width="240">
+                   <template slot-scope="scope">
+                  <el-date-picker
+                    v-model="scope.row.fanTime"
+                    type="datetime"
+                    placeholder="选择导粉时间"
+                    format="yyyy-MM-dd HH:mm"
+                    value-format="yyyy-MM-dd HH:mm"
+                    :picker-options="fanPickerOptions"
+                    @change="autoSelectLive(scope.row)"
+                  >
+                  </el-date-picker>
+                   </template>
+                </el-table-column>
+                
+
+                <el-table-column label="导粉数量" align="center" prop="fanNum" width="180">
                     <template slot-scope="scope">
                             <el-input-number v-model="scope.row.fanNum" :min="1" :max="10000" label="导粉数量" style="width:160px"></el-input-number>
                     </template>
@@ -76,6 +133,7 @@
 <script>
 import { addImportFanRecord,getWxAccountAndSale } from "@/api/custom/importFanRecord";
 import { getAllLiveSchedulByDate,getLiveSchedulByTime } from "@/api/custom/liveSchedul";
+import { mapGetters } from "vuex";
 import dayjs from "dayjs";
 const nowTime = dayjs().format("YYYY-MM-DD HH:mm");
 export default {
@@ -107,12 +165,28 @@ export default {
       //总导粉统计
       fanNumList:[],
       //是否进行了导粉操作
-      importFanFlag: false
+      importFanFlag: false,
+      queryParams:{
+          channel: null,
+          saleId: null,
+          wxAccount: null
+      },
+      fanPickerOptions: {
+        disabledDate(time) {
+          return time.getTime() > Date.now() || time.getTime() < Date.now();
+        },
+      },
     };
   },
   created(){
     
         
+  },
+  computed: {
+    ...mapGetters([
+      // 售前字典
+      "preSaleIdOptions"
+    ]),
   },
   methods: {
     showDialog(data, callback, fanChanneloptions) {
@@ -149,17 +223,28 @@ export default {
     //获取所有可接粉的微信号
     getListWxAccount() {
         this.loading = true;
-        getWxAccountAndSale({'importFanDate': this.data.importFanDate}).then((response) => {
+        getWxAccountAndSale(this.queryParams).then((response) => {
             response.data.wxSaleAccountList.forEach((item,index) => {
                 item.fanNum = 1;
-                item.importFanNum =  this.getTotalFanNum(response.data.fanNumList, item.id);
+                //item.importFanNum =  this.getTotalFanNum(response.data.fanNumList, item.id);
                 item.importFanChannel = null;
                 item.importFanLive = null;
+                item.fanTime = null;
             });
             this.wxAccountList = response.data.wxSaleAccountList;
-            this.fanNumList = response.data.fanNumList;
+            //this.fanNumList = response.data.fanNumList;
             this.loading = false;
         });
+    },
+    handleQuery(){
+        this.getListWxAccount();
+    },
+    resetQuery(){
+        this.queryParams = {
+          channel: null,
+          saleId: null,
+          wxAccount: null
+        };
     },
     getAllLiveSchedulByDate(){
       getAllLiveSchedulByDate({'liveSchedulDate':this.data.importFanDate}).then((response) => {
@@ -186,7 +271,15 @@ export default {
         if(row.importFanChannel == undefined || row.importFanChannel == null || row.importFanChannel == ""){
           this.$message({
                 type: 'warning',
-                message: '进粉渠道不能为空',
+                message: '账号渠道不能为空',
+                center: true
+          });
+          return;
+        }
+        if(row.fanTime == undefined || row.fanTime == null || row.fanTime == ""){
+          this.$message({
+                type: 'warning',
+                message: '导粉时间不能为空',
                 center: true
           });
           return;
@@ -273,7 +366,7 @@ export default {
            row.importFanLive = null;
            return;
         }
-        getLiveSchedulByTime({'fanChannel':row.importFanChannel,'liveStartTimeString':encodeURIComponent(dayjs().format("YYYY-MM-DD HH:mm"))}).then((response) => {
+        getLiveSchedulByTime({'fanChannel':row.importFanChannel,'liveStartTimeString':encodeURIComponent(row.fanTime)}).then((response) => {
               if (response.code === 200) {
                  let live = response.data;
                  if(live != undefined && live != null){

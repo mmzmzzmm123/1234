@@ -27,7 +27,7 @@
         </el-select>
       </el-form-item> -->
       <el-form-item label="进粉渠道" prop="channelId">
-        <el-select v-model="queryParams.channelId" placeholder="请选择">
+        <el-select v-model="queryParams.channelId" filterable clearable placeholder="请选择">
           <el-option
             v-for="dict in accountIdOptions"
             :key="dict.dictValue"

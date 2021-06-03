@@ -135,4 +135,9 @@
         where phone = #{phone} order by create_time desc limit 1
     </select>
 
+    <!-- 根据openid移除绑定的cusId -->
+    <update id="removeCusIdByOpenId" parameterType="String">
+        update sys_wx_user_info set cus_id = null where openid = #{openid}
+    </update>
+
 </mapper>

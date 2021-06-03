@@ -8,6 +8,7 @@ import java.util.Map;
 import java.util.TreeMap;
 
 import com.stdiet.common.utils.DateUtils;
+import com.stdiet.common.utils.StringUtils;
 import com.stdiet.custom.domain.SysCommissionDayDetail;
 import com.stdiet.custom.domain.SysOrder;
 import com.stdiet.custom.domain.SysOrderCommisionDayDetail;
@@ -169,12 +170,45 @@ public class SysCommisionController extends BaseController {
     public TableDataInfo getDetail(SysCommision sysCommision) {
         startPage();
         if(sysCommision.getPostId() != null && sysCommision.getPostId().intValue() > 0){
-            //查询售后所有ID
-            SysCommision param = new SysCommision();
-            param.setPostId(sysCommision.getPostId());
-            List<Long> userIds = sysCommisionService.getAfterSaleId(param);
-            sysCommision.setUserIds(userIds.size() == 0 ? null : userIds);
-            sysCommision.setPostId(null);
+            String postCodeId = "";
+            switch (sysCommision.getPostId().intValue()){
+                case 5:
+                    postCodeId = "pre_sale_id";
+                    break;
+                case 18:
+                    postCodeId = "push_pre_sale_id";
+                    break;
+                case 16:
+                    postCodeId = "on_sale_id";
+                    break;
+                case 6:
+                    postCodeId = "after_sale_id";
+                    break;
+                case 9:
+                    postCodeId = "nutritionist_id";
+                    break;
+                case 10:
+                    postCodeId = "nutri_assis_id";
+                    break;
+                case 11:
+                    postCodeId = "operator_id";
+                    break;
+                case 13:
+                    postCodeId = "operator_assis_id";
+                    break;
+                case 7:
+                    postCodeId = "planner_id";
+                    break;
+                case 8:
+                    postCodeId = "planner_assis_id";
+                    break;
+                default:
+            }
+            if(StringUtils.isEmpty(postCodeId)){
+                sysCommision.setPostId(null);
+            }else{
+                sysCommision.setPostCode(postCodeId);
+            }
         }
         List<SysCommision> list = sysCommisionService.selectSysCommisionDetail(sysCommision);
         for (SysCommision detail : list) {
