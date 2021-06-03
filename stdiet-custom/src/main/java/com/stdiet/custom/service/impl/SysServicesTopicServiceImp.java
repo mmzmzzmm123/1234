@@ -171,7 +171,7 @@ public class SysServicesTopicServiceImp implements ISysServicesTopicService {
                 msgObj.put("type", WsUtils.WS_TYPE_NEW_CUSTOMER_REPLY);
                 msgObj.put("msg", "新客户回复");
                 msgObj.put("data", dataObj);
-                WebSocketServer.sendInfo(msgObj.toJSONString(), counts.get(i).getUid());
+                WebSocketServer.sendInfo(msgObj.toJSONString(), statusList.get(i).getUid());
             }
         } catch (IOException e) {
             e.printStackTrace();

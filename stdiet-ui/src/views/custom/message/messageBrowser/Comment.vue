@@ -86,6 +86,7 @@ export default {
 
       .reply_btn {
         margin-left: 16px;
+        color: #1890ff;
         cursor: pointer;
       }
     }

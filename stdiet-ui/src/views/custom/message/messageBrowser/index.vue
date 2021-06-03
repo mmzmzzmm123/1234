@@ -57,7 +57,7 @@
         <div
           :style="{ marginBottom: '8px', fontSize: '12px', color: '#8c8c8c' }"
         >
-          回复：{{ replyTarget }}
+          回复 to：{{ replyTarget }}
         </div>
         <el-input
           type="textarea"
@@ -339,6 +339,7 @@ export default {
 
         .reply_btn {
           margin-left: 16px;
+          color: #1890ff;
           cursor: pointer;
         }
       }
