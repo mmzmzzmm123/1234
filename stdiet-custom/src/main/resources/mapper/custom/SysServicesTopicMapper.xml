@@ -225,5 +225,23 @@
         </trim>
     </insert>
 
+    <resultMap type="SysServicesTopic" id="SysServicesCountResult">
+        <result column="uid" property="uid"/>
+        <result column="count" property="count"/>
+    </resultMap>
 
+    <select id="selectUnreadTopicCount" parameterType="java.util.List" resultMap="SysServicesCountResult">
+        <foreach collection="list" item="status" index="index">
+            <choose>
+                <when test="index == 0">
+                    SELECT COUNT(*) AS count, uid FROM sys_services_topic_status WHERE `read` = 0 AND uid =
+                    #{status.uid}
+                </when>
+                <otherwise>
+                    UNION ALL SELECT COUNT(*) AS count, uid FROM sys_services_topic_status WHERE `read` = 0 AND uid =
+                    #{status.uid}
+                </otherwise>
+            </choose>
+        </foreach>
+    </select>
 </mapper>

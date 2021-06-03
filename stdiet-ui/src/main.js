@@ -18,12 +18,16 @@ import "./permission"; // permission control
 import { getDicts } from "@/api/system/dict/data";
 import { getConfigKey } from "@/api/system/config";
 import VueScrollTo from "vue-scrollto";
-import VueResource from "vue-resource"
-import HighchartsVue from 'highcharts-vue'
-import Highcharts from 'highcharts'
+import VueResource from "vue-resource";
+import HighchartsVue from "highcharts-vue";
+import Highcharts from "highcharts";
+import { init } from "@/utils/websocket";
 //图片导出模块
-import exportingInit from 'highcharts/modules/exporting'
-exportingInit(Highcharts)
+import exportingInit from "highcharts/modules/exporting";
+exportingInit(Highcharts);
+
+// websocket 初始化
+init();
 
 import {
   addDateRange,
@@ -111,7 +115,7 @@ Vue.use(VueScrollTo, {
   y: true
 });
 
-Vue.use(VueResource)
+Vue.use(VueResource);
 
 new Vue({
   el: "#app",

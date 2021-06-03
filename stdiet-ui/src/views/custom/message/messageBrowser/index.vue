@@ -1,28 +1,35 @@
 <template>
   <div class="message_browser_wrapper">
-    <div class="topic_list">
-      <div
-        v-for="topic in topicList"
-        :key="topic.topicId"
-        :class="`topic_item ${
-          selTopicId === topic.topicId ? 'topic_item_sel' : ''
-        }`"
-        @click="handleOnTopicClick(topic)"
-      >
-        <div class="topic_status topic_status_read" />
-        <div class="topic_item_content">
-          <div class="topic_content">{{ topic.content }}</div>
-          <div class="topic_user_name">by {{ topic.name }}</div>
-        </div>
-        <div class="topic_info">
-          <el-tag size="small">{{ topicTypeDict[topic.topicType] }}</el-tag>
-          <div class="topic_time">{{ formatDate(topic.createTime) }}</div>
+    <div class="topic_list" @scroll="handleOnScroll">
+      <div v-if="topicList && topicList.length">
+        <div
+          v-for="topic in topicList"
+          :key="topic.topicId"
+          :class="`topic_item ${
+            selTopicId === topic.topicId ? 'topic_item_sel' : ''
+          }`"
+          @click="handleOnTopicClick(topic)"
+        >
+          <div
+            :class="`topic_status ${
+              topic.read ? 'topic_status_read' : 'topic_status_unread'
+            }`"
+          />
+          <div class="topic_item_content">
+            <div class="topic_content">{{ topic.content }}</div>
+            <div class="topic_user_name">by {{ topic.name }}</div>
+          </div>
+          <div class="topic_info">
+            <el-tag size="small">{{ topicTypeDict[topic.topicType] }}</el-tag>
+            <div class="topic_time">{{ formatDate(topic.createTime) }}</div>
+          </div>
         </div>
       </div>
+      <div v-else class="topic_list_empty">暂无消息</div>
     </div>
     <div class="topic_detail">
       <div class="topic_detail_list">
-        <div class="topic_detail_title">
+        <div class="topic_detail_title" v-if="!!detailData.content">
           <div>{{ detailData.content }}</div>
           <div class="content_time" :style="{ marginTop: '4px' }">
             {{ formatDate(detailData.createTime) }}
@@ -50,7 +57,12 @@
         >
           回复：{{ replyTarget }}
         </div>
-        <el-input type="textarea" :rows="3" v-model="replyContent" />
+        <el-input
+          type="textarea"
+          :rows="3"
+          v-model="replyContent"
+          :disabled="!detailData.content"
+        />
         <div class="send_btn_zone">
           <el-button
             type="primary"
@@ -65,9 +77,10 @@
   </div>
 </template>
 <script>
-import { createNamespacedHelpers } from "vuex";
+import { createNamespacedHelpers, mapActions as globalMapActions } from "vuex";
 import Comment from "./Comment";
 import dayjs from "dayjs";
+import { keys } from "@/utils/websocket";
 const {
   mapActions,
   mapState,
@@ -91,10 +104,61 @@ export default {
   created() {
     this.init();
   },
+  mounted() {
+    window.addEventListener("message", this.handleOnMessage);
+  },
+  unmounted() {
+    window.removeEventListener("message", this.handleOnMessage);
+  },
   computed: {
     ...mapState(["topicList", "selTopicId", "detailData"]),
   },
   methods: {
+    handleOnScroll({ target }) {
+      if (
+        target.clientHeight + parseInt(target.scrollTop) ===
+        target.scrollHeight
+      ) {
+        this.fetchTopicListApi();
+      }
+    },
+    handleOnMessage({ data }) {
+      if (data.type === keys.WS_TYPE_MESSAGE_COUNT) {
+        const { data: tData } = data.data;
+        const time = dayjs(tData.createTime).format("YYYY-MM-DD HH:mm:ss");
+        const newTopicList = [
+          {
+            id: tData.id,
+            content: tData.content,
+            createTime: time,
+            img: tData.img,
+            topicId: tData.topicId,
+            role: "customer",
+            uid: tData.uid,
+            updateTime: time,
+            topicType: tData.topicType,
+            read: tData.read,
+          },
+          ...this.topicList,
+        ];
+        this.save({
+          topicList: newTopicList,
+        });
+      } else if (data.type === keys.WS_TYPE_NEW_CUSTOMER_REPLY) {
+        const { count, topicId } = data.data;
+        this.updateUnreadCount({
+          msgUnreadCount: count,
+        });
+        if (this.selTopicId === topicId) {
+          const tarTopic = this.topicList.find(
+            (obj) => obj.topicId === topicId
+          );
+          if (tarTopic) {
+            this.fetchTopicDetailActions({ topicId, id: tarTopic.id });
+          }
+        }
+      }
+    },
     formatDate(date) {
       return dayjs(date).format("MM-DD HH:mm");
     },
@@ -147,8 +211,14 @@ export default {
         this.$message.error("请选择回复对象");
       }
     },
-    ...mapActions(["init", "fetchTopicDetailActions", "postTopicReplyActions"]),
-    ...mapMutations(["clean"]),
+    ...mapActions([
+      "init",
+      "fetchTopicDetailActions",
+      "postTopicReplyActions",
+      "fetchTopicListApi",
+    ]),
+    ...mapMutations(["clean", "save"]),
+    ...globalMapActions(["updateUnreadCount"]),
   },
 };
 </script>
@@ -157,6 +227,7 @@ export default {
   display: flex;
   .topic_list {
     flex: 2;
+    overflow: auto;
 
     .topic_item {
       display: flex;
@@ -222,6 +293,13 @@ export default {
 
     .topic_item_sel {
       background: #dedede;
+    }
+
+    .topic_list_empty {
+      height: 100px;
+      text-align: center;
+      line-height: 100px;
+      color: #8c8c8c;
     }
   }
 

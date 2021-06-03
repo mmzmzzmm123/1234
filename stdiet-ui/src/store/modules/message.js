@@ -6,6 +6,7 @@ import {
 } from "@/api/custom/message";
 
 const oriState = {
+  pageNum: 1,
   topicList: [],
   detailData: {},
   selTopicId: ""
@@ -28,23 +29,35 @@ const mutations = {
 };
 
 const actions = {
-  async init({ rootGetters, commit, dispatch }, payload) {
+  async init({ dispatch }, payload) {
+    dispatch("fetchTopicListApi", {});
+  },
+  async fetchTopicListApi({ dispatch, commit, rootGetters, state }, payload) {
     const {
       roles: [role],
       userId
     } = rootGetters;
-    const result = await fetchTopicList({ role, uid: userId });
+    const { detailData, pageNum, topicList } = state;
+    const result = await fetchTopicList({
+      role,
+      uid: userId,
+      pageSize: 20,
+      pageNum
+    });
     if (result.code === 200) {
-      const [defTopic] = result.rows;
-
-      dispatch("fetchTopicDetailActions", {
-        topicId: defTopic.topicId,
-        id: defTopic.id
-      });
-
-      commit("save", {
-        topicList: result.rows
-      });
+      if (!detailData.topicId) {
+        const [defTopic] = result.rows;
+        dispatch("fetchTopicDetailActions", {
+          topicId: defTopic.topicId,
+          id: defTopic.id
+        });
+      }
+      if (result.rows.length) {
+        commit("save", {
+          pageNum: pageNum + 1,
+          topicList: [...topicList, ...result.rows]
+        });
+      }
     }
   },
   async fetchTopicDetailActions({ commit }, payload) {

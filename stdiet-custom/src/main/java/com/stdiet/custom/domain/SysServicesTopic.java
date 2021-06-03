@@ -89,4 +89,6 @@ public class SysServicesTopic {
 
     List<SysServicesTopic> replys;
 
+    Integer count;
+
 }

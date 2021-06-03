@@ -10,6 +10,7 @@ const oriState = {
   plannerAssisIdOptions: [],
   operatorIdOptions: [],
   operatorAssisIdOptions: [],
+  msgUnreadCount: 0,
   pushPreSaleIdOptions:[]
 };
 
