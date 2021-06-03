@@ -91,9 +91,9 @@ export default {
   data() {
     return {
       topicTypeDict: {
-        0: "建议",
-        1: "食谱",
-        2: "咨询",
+        0: "食材",
+        1: "身体",
+        2: "环境",
       },
       replyTarget: "",
       replyContent: "",
