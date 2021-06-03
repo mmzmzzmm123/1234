@@ -45,6 +45,12 @@ public class SysWxSaleAccount extends BaseEntity
 
     private Integer useCount;
 
+    //进粉渠道
+    private Integer channel;
+
+    //销售ID
+    private Long saleId;
+
     //销售昵称
     private String saleName;
 }

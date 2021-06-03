@@ -39,4 +39,7 @@ public class SysImportFanWxAccount extends BaseEntity
     //导粉日期
     @JsonFormat(pattern = "yyyy-MM-dd")
     private Date importFanDate;
+
+    //售前
+    private Long preSaleId;
 }

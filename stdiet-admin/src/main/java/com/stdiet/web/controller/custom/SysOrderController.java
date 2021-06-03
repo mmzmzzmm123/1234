@@ -162,6 +162,9 @@ public class SysOrderController extends OrderBaseController {
             if (user.getUserId().equals(order.getOperatorAssisId())) {
                 order.setOperatorAssis(user.getNickName());
             }
+            if (user.getUserId().equals(order.getPushPreSaleId())) {
+                order.setPushPreSale(user.getNickName());
+            }
         }
         order.setOrderTypeName(OrderUtils.getOrderTypeName(order));
     }

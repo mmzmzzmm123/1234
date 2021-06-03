@@ -106,4 +106,13 @@ public class SysWxUserInfoServiceImpl implements ISysWxUserInfoService {
     public SysWxUserInfo getSysWxUserInfoByPhone(String phone){
         return sysWxUserInfoMapper.getSysWxUserInfoByPhone(phone);
     }
+
+    /**
+     * 根据openid移除对应绑定的cusId
+     * @param openid
+     * @return
+     */
+    public int removeCusIdByOpenId(String openid){
+        return sysWxUserInfoMapper.removeCusIdByOpenId(openid);
+    }
 }

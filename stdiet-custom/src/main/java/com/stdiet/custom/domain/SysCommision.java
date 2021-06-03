@@ -39,6 +39,11 @@ public class SysCommision extends BaseEntity {
     private Long postId;
 
     /**
+     * 岗位编码code
+     */
+    private String postCode;
+
+    /**
      * 业务员
      */
     @Excel(name = "业务员")

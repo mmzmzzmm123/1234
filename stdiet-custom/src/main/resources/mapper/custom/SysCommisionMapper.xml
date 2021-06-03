@@ -42,18 +42,39 @@
         <if test="endTime != null and endTime != ''">AND date_format(order_time,'%y%m%d') &lt;=
             date_format(${endTime},'%y%m%d')
         </if>
+        <!-- 因为体验单、售中单都存在售中，所以售中的提成金额只计算售中单的，不计算体验单 -->
+        <if test="postCode != null and postCode == 'on_sale_id'">
+            and order_type = 3
+        </if>
         GROUP BY ${column}
     </sql>
 
     <select id="selectSysCommisionDetail" parameterType="SysCommision" resultMap="SysCommisionResult">
         SELECT * FROM view_user_post pa
         JOIN (
+        <if test="postId == null or postId == 0">
         <include refid="groupAmountVo">
             <property name="column" value="pre_sale_id"/>
             <property name="reviewStatus" value="#{reviewStatus}"/>
             <property name="beginTime" value="#{beginTime}"/>
             <property name="endTime" value="#{endTime}"/>
             <property name="postId" value="5"/>
+        </include>
+        UNION
+        <include refid="groupAmountVo">
+            <property name="column" value="push_pre_sale_id"/>
+            <property name="reviewStatus" value="#{reviewStatus}"/>
+            <property name="beginTime" value="#{beginTime}"/>
+            <property name="endTime" value="#{endTime}"/>
+            <property name="postId" value="18"/>
+        </include>
+        UNION
+        <include refid="groupAmountVo">
+            <property name="column" value="on_sale_id"/>
+            <property name="reviewStatus" value="#{reviewStatus}"/>
+            <property name="beginTime" value="#{beginTime}"/>
+            <property name="endTime" value="#{endTime}"/>
+            <property name="postId" value="16"/>
         </include>
         UNION
         <include refid="groupAmountVo">
@@ -111,9 +132,19 @@
             <property name="endTime" value="#{endTime}"/>
             <property name="postId" value="8"/>
         </include>
+        </if>
+        <if test="postId != null and postId > 0">
+            <include refid="groupAmountVo">
+                <property name="column" value="${postCode}"/>
+                <property name="reviewStatus" value="#{reviewStatus}"/>
+                <property name="beginTime" value="#{beginTime}"/>
+                <property name="endTime" value="#{endTime}"/>
+                <property name="postId" value="${postId}"/>
+            </include>
+        </if>
         ) AS a USING(user_id, post_id)
         <where>
-            <if test="postId != null and postId != ''">and post_id = #{postId}</if>
+            <!--<if test="postId != null and postId != ''">and post_id = #{postId}</if>-->
             <if test="userId != null and userId != ''">and user_id = #{userId}</if>
             <if test="userIds != null">
                 and user_id in
@@ -122,6 +153,7 @@
                 </foreach>
             </if>
         </where>
+        order by user_id asc
     </select>
 
     <sql id="selectSysCommisionVo">

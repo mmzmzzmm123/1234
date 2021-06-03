@@ -37,7 +37,7 @@
          left join sys_wx_sale_account swsa on swsa.id = swfs.wx_id and swsa.del_flag = 0
          left join sys_wx_distribution swd on swd.wechat_account = swfs.wx_id and swd.del_flag = 0
          left join sys_user su on su.user_id = swd.user_id and su.del_flag = 0
-         LEFT JOIN (SELECT dict_label, dict_value FROM sys_dict_data WHERE dict_type = 'fan_channel') AS acc ON acc.dict_value = swd.account_id
+         LEFT JOIN (SELECT dict_label, dict_value FROM sys_dict_data WHERE dict_type = 'cus_account') AS acc ON acc.dict_value = swd.account_id
          LEFT JOIN (SELECT dict_label, dict_value FROM sys_dict_data WHERE dict_type = 'sale_group') AS asg ON asg.dict_value = swd.sale_group_id
     </sql>
 
