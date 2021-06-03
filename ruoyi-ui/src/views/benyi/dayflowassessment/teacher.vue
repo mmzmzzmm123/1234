@@ -259,13 +259,23 @@ export default {
             type: "warning",
             callback: (action) => {
               if (action === "confirm") {
-                this.loading = true;
                 this.form.list = this.dayflowstandardList;
                 this.form.status = "1";
                 addDayflowassessment(this.form).then((response) => {
                   if (response.code === 200) {
                     this.msgSuccess("评估成功");
-                    this.loading = false;
+                    // 自动关闭 tab
+                    this.$store.state.tagsView.visitedViews.splice(
+                      this.$store.state.tagsView.visitedViews.findIndex(
+                        (item) => item.path === this.$route.path
+                      ),
+                      1
+                    );
+                    this.$router.push(
+                      this.$store.state.tagsView.visitedViews[
+                        this.$store.state.tagsView.visitedViews.length - 1
+                      ].path
+                    );
                   }
                 });
               }
@@ -286,13 +296,23 @@ export default {
             type: "warning",
             callback: (action) => {
               if (action === "confirm") {
-                this.loading = true;
                 this.form.list = this.dayflowstandardList;
                 this.form.status = "0";
                 addDayflowassessment(this.form).then((response) => {
                   if (response.code === 200) {
                     this.msgSuccess("保存成功");
-                    this.loading = false;
+                    // 自动关闭 tab
+                    this.$store.state.tagsView.visitedViews.splice(
+                      this.$store.state.tagsView.visitedViews.findIndex(
+                        (item) => item.path === this.$route.path
+                      ),
+                      1
+                    );
+                    this.$router.push(
+                      this.$store.state.tagsView.visitedViews[
+                        this.$store.state.tagsView.visitedViews.length - 1
+                      ].path
+                    );
                   }
                 });
               }

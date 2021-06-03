@@ -152,7 +152,7 @@ import { listUser } from "@/api/system/user";
 import { listDetail, getDetail } from "@/api/benyi/dayflow/dayflowmanger";
 
 export default {
-  name: "Dayflowassessment",
+  name: "Dayflowassessment_1",
   data() {
     return {
       // 遮罩层
@@ -332,9 +332,23 @@ export default {
     },
     //控制按钮可用
     checkUpdateable(row) {
+      //console.log(row.createTime);
       var status = row.status;
+      var nowdate = new Date();
+      var y = nowdate.getFullYear();
+      var m = (nowdate.getMonth() + 1).toString().padStart(2, "0");
       //console.log(date.toLocaleDateString());
-      return status == "1";
+
+      return status == "1" || !this.CompareDate(row.createTime, y + "/" + m);
+    },
+    //比较日期大小
+    CompareDate(d1, d2) {
+      //return new Date(d1.replace(/-/g, "/")) > new Date(d2.replace(/-/g, "/"));
+      //console.log(d1.replace(/-/g, "/").substring(0, 7));
+      //console.log(d2.replace(/-/g, "/").substring(0, 7));
+      var d3 = d1.replace(/-/g, "/").substring(0, 7);
+      var d4 = d2.replace(/-/g, "/").substring(0, 7);
+      return d3 == d4;
     },
   },
 };
