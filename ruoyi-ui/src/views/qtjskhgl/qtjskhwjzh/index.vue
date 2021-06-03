@@ -147,6 +147,7 @@
 <script>
 import { listQtjskhwj, getQtjskhwj } from "@/api/qtjskhgl/qtjskhwj";
 import { listQtjskhfa } from "@/api/qtjskhgl/qtjskhfa";
+import { downLoadZip } from "@/utils/zipdownload";
 
 export default {
   name: "Qtjskhwjzh",
@@ -259,6 +260,12 @@ export default {
     handleDownload(row) {
       window.open(process.env.VUE_APP_BASE_API + row.filepath);
       //console.log(row.filepath);
+    },
+    handleDownloads(row) {
+      const ids = row.id || this.ids;
+      //window.open(process.env.VUE_APP_BASE_API + row.filepath);
+      //console.log(row.filepath);
+       downLoadZip("/tool/gen/batchGenCode?tables=" + tableNames, "ruoyi");
     },
   },
 };
