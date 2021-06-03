@@ -75,6 +75,7 @@
           type="primary"
           icon="el-icon-download"
           size="mini"
+          :disabled="multiple"
           @click="handleDownloads"
           v-hasPermi="['qtjskhgl:qtjskhwj:list']"
           >下载</el-button
@@ -265,7 +266,7 @@ export default {
       const ids = row.id || this.ids;
       //window.open(process.env.VUE_APP_BASE_API + row.filepath);
       //console.log(row.filepath);
-       downLoadZip("/tool/gen/batchGenCode?tables=" + tableNames, "ruoyi");
+      downLoadZip("/tool/gen/batchGenCode?tables=" + ids, "file");
     },
   },
 };
