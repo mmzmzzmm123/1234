@@ -28,8 +28,8 @@
         trigger="click"
       >
         <div class="avatar-wrapper">
-          <img :src="avatar" class="user-avatar" />
-          <i class="el-icon-caret-bottom" />
+          <img :src="avatar" class="user-avatar" alt="avatar" />
+          <em class="el-icon-caret-bottom" />
         </div>
         <el-dropdown-menu slot="dropdown">
           <router-link to="/user/profile">
@@ -51,7 +51,7 @@
 import { mapGetters, mapActions } from "vuex";
 import Breadcrumb from "@/components/Breadcrumb";
 import Hamburger from "@/components/Hamburger";
-import { keys } from "@/utils/websocket";
+import { keys, websocketInit, beforeUnmount } from "@/utils/websocket";
 
 export default {
   components: {
@@ -65,12 +65,14 @@ export default {
   },
   created() {
     this.init();
+    websocketInit();
   },
   mounted() {
     window.postMessage({ type: keys.GET_UNREAD_COUNT }, window.location.origin);
     window.addEventListener("message", this.handleOnMessage);
   },
   unmounted() {
+    beforeUnmount();
     window.removeEventListener("message", this.handleOnMessage);
   },
   computed: {
