@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.qtjskhgl.mapper.TsbzQtjskhwjMapper">
+
+    <resultMap type="TsbzQtjskhwj" id="TsbzQtjskhwjResult">
+        <result property="id" column="id"/>
+        <result property="faid" column="faid"/>
+        <result property="nf" column="nf"/>
+        <result property="khlx" column="khlx"/>
+        <result property="fjlx" column="fjlx"/>
+        <result property="filename" column="filename"/>
+        <result property="filepath" column="filepath"/>
+        <result property="deptId" column="dept_id"/>
+        <result property="createUserid" column="create_userid"/>
+        <result property="createTime" column="create_time"/>
+    </resultMap>
+
+    <sql id="selectTsbzQtjskhwjVo">
+        select id, faid, nf, khlx, fjlx, filename, filepath, dept_id, create_userid, create_time from tsbz_qtjskhwj
+    </sql>
+
+    <select id="selectTsbzQtjskhwjList" parameterType="TsbzQtjskhwj" resultMap="TsbzQtjskhwjResult">
+        <include refid="selectTsbzQtjskhwjVo"/>
+        <where>
+            <if test="faid != null ">and faid = #{faid}</if>
+            <if test="nf != null  and nf != ''">and nf = #{nf}</if>
+            <if test="khlx != null  and khlx != ''">and khlx = #{khlx}</if>
+            <if test="fjlx != null  and fjlx != ''">and fjlx = #{fjlx}</if>
+            <if test="filename != null  and filename != ''">and filename like concat('%', #{filename}, '%')</if>
+            <if test="filepath != null  and filepath != ''">and filepath = #{filepath}</if>
+            <if test="deptId != null ">and dept_id = #{deptId}</if>
+            <if test="createUserid != null ">and create_userid = #{createUserid}</if>
+        </where>
+    </select>
+
+    <select id="selectTsbzQtjskhwjById" parameterType="Long" resultMap="TsbzQtjskhwjResult">
+        <include refid="selectTsbzQtjskhwjVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertTsbzQtjskhwj" parameterType="TsbzQtjskhwj" useGeneratedKeys="true" keyProperty="id">
+        insert into tsbz_qtjskhwj
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="faid != null">faid,</if>
+            <if test="nf != null">nf,</if>
+            <if test="khlx != null">khlx,</if>
+            <if test="fjlx != null">fjlx,</if>
+            <if test="filename != null">filename,</if>
+            <if test="filepath != null">filepath,</if>
+            <if test="deptId != null">dept_id,</if>
+            <if test="createUserid != null">create_userid,</if>
+            <if test="createTime != null">create_time,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="faid != null">#{faid},</if>
+            <if test="nf != null">#{nf},</if>
+            <if test="khlx != null">#{khlx},</if>
+            <if test="fjlx != null">#{fjlx},</if>
+            <if test="filename != null">#{filename},</if>
+            <if test="filepath != null">#{filepath},</if>
+            <if test="deptId != null">#{deptId},</if>
+            <if test="createUserid != null">#{createUserid},</if>
+            <if test="createTime != null">#{createTime},</if>
+        </trim>
+    </insert>
+
+    <update id="updateTsbzQtjskhwj" parameterType="TsbzQtjskhwj">
+        update tsbz_qtjskhwj
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="faid != null">faid = #{faid},</if>
+            <if test="nf != null">nf = #{nf},</if>
+            <if test="khlx != null">khlx = #{khlx},</if>
+            <if test="fjlx != null">fjlx = #{fjlx},</if>
+            <if test="filename != null">filename = #{filename},</if>
+            <if test="filepath != null">filepath = #{filepath},</if>
+            <if test="deptId != null">dept_id = #{deptId},</if>
+            <if test="createUserid != null">create_userid = #{createUserid},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteTsbzQtjskhwjById" parameterType="Long">
+        delete from tsbz_qtjskhwj where id = #{id}
+    </delete>
+
+    <delete id="deleteTsbzQtjskhwjByIds" parameterType="String">
+        delete from tsbz_qtjskhwj where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+</mapper>
