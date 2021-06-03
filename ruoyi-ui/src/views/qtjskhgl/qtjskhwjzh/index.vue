@@ -75,7 +75,7 @@
           type="primary"
           icon="el-icon-download"
           size="mini"
-          @click="handleExport"
+          @click="handleDownloads"
           v-hasPermi="['qtjskhgl:qtjskhwj:list']"
           >下载</el-button
         >
@@ -126,7 +126,7 @@
             size="mini"
             type="text"
             icon="el-icon-download"
-            @click="handleDelete(scope.row)"
+            @click="handleDownload(scope.row)"
             v-hasPermi="['qtjskhgl:qtjskhwj:query']"
             >下载</el-button
           >
@@ -255,6 +255,10 @@ export default {
         }
       });
       return actions.join("");
+    },
+    handleDownload(row) {
+      window.open(process.env.VUE_APP_BASE_API + row.filepath);
+      //console.log(row.filepath);
     },
   },
 };
