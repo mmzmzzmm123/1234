@@ -146,9 +146,8 @@
 </template>
 
 <script>
-import { listQtjskhwj, getQtjskhwj } from "@/api/qtjskhgl/qtjskhwj";
+import { listQtjskhwj, getQtjskhwj, downLoad } from "@/api/qtjskhgl/qtjskhwj";
 import { listQtjskhfa } from "@/api/qtjskhgl/qtjskhfa";
-import { downLoadZip } from "@/utils/zipdownload";
 
 export default {
   name: "Qtjskhwjzh",
@@ -266,7 +265,7 @@ export default {
       const ids = row.id || this.ids;
       //window.open(process.env.VUE_APP_BASE_API + row.filepath);
       //console.log(row.filepath);
-      downLoadZip("/tool/gen/batchGenCode?tables=" + ids, "file");
+      downLoad(ids);
     },
   },
 };

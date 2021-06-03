@@ -105,4 +105,12 @@
         </foreach>
     </delete>
 
+    <select id="selectTsbzQtjskhwjListByIds" parameterType="String" resultMap="TsbzQtjskhwjResult">
+        select id, faid, nf, khlx, fjlx, filename, filepath, dept_id, create_userid, create_time from tsbz_qtjskhwj
+        where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </select>
+
 </mapper>

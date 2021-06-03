@@ -51,3 +51,11 @@ export function exportQtjskhwj(query) {
     params: query
   })
 }
+
+// 删除群体教师考核文件管理
+export function downLoad(ids) {
+  return request({
+    url: '/qtjskhgl/qtjskhwj/download/' + ids,
+    method: 'get'
+  })
+}

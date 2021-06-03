@@ -45,6 +45,17 @@ public class TsbzQtjskhwjServiceImpl implements ITsbzQtjskhwjService {
     }
 
     /**
+     * 批量群体教师考核文件管理
+     *
+     * @param ids 需要选择的数据ID
+     * @return 结果
+     */
+    @Override
+    public List<TsbzQtjskhwj> selectTsbzQtjskhwjListByIds(Long[] ids){
+        return tsbzQtjskhwjMapper.selectTsbzQtjskhwjListByIds(ids);
+    }
+
+    /**
      * 新增群体教师考核文件管理
      *
      * @param tsbzQtjskhwj 群体教师考核文件管理
