@@ -72,7 +72,7 @@ export default {
     window.addEventListener("message", this.handleOnMessage);
   },
   unmounted() {
-    beforeUnmount();
+    beforeUnmount(1000);
     window.removeEventListener("message", this.handleOnMessage);
   },
   computed: {
