@@ -28,7 +28,7 @@
         trigger="click"
       >
         <div class="avatar-wrapper">
-          <img :src="avatar" class="user-avatar" alt="avatar" />
+          <img :src="avatar" class="user-avatar" />
           <em class="el-icon-caret-bottom" />
         </div>
         <el-dropdown-menu slot="dropdown">
@@ -72,7 +72,7 @@ export default {
     window.addEventListener("message", this.handleOnMessage);
   },
   unmounted() {
-    beforeUnmount();
+    beforeUnmount(1000);
     window.removeEventListener("message", this.handleOnMessage);
   },
   computed: {

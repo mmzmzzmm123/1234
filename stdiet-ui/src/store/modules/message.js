@@ -1,3 +1,6 @@
+import { getCustomerPhysicalSignsByCusId } from "@/api/custom/customer";
+import { dealHealthy } from "@/utils/healthyData";
+
 import {
   fetchTopicList,
   postTopicReply,
@@ -9,7 +12,11 @@ const oriState = {
   pageNum: 1,
   topicList: [],
   detailData: {},
-  selTopicId: ""
+  selTopicId: "",
+  healthyData: {},
+  healthDataLoading: false,
+  healthyDataType: 0,
+  avoidFoodIds: []
 };
 
 const mutations = {
@@ -46,10 +53,12 @@ const actions = {
     });
     if (result.code === 200) {
       if (!detailData.topicId) {
+        // 默认展示第一个
         const [defTopic] = result.rows;
         dispatch("fetchTopicDetailActions", {
           topicId: defTopic.topicId,
-          id: defTopic.id
+          id: defTopic.id,
+          uid: defTopic.uid
         });
       }
       if (result.rows.length) {
@@ -60,9 +69,15 @@ const actions = {
       }
     }
   },
-  async fetchTopicDetailActions({ commit }, payload) {
-    const { topicId, id } = payload;
+  async fetchTopicDetailActions({ commit, dispatch, state }, payload) {
+    const { topicId, id, uid } = payload;
+    const { healthyData } = state;
     commit("save", { selTopicId: topicId });
+    // 客户信息
+    if (healthyData.customerId !== parseInt(uid)) {
+      dispatch("getHealthyData", { cusId: uid });
+    }
+    //
     const result = await fetchTopicDetail({ topicId, id });
     if (result.code === 200) {
       commit("save", { detailData: result.data[0] });
@@ -89,11 +104,35 @@ const actions = {
       if (tarTopic) {
         dispatch("fetchTopicDetailActions", {
           topicId: tarTopic.topicId,
-          id: tarTopic.id
+          id: tarTopic.id,
+          uid: tarTopic.uid
         });
       }
     }
     return result;
+  },
+  async getHealthyData({ commit }, payload) {
+    commit("save", { healthDataLoading: true });
+    const healthyDataResult = await getCustomerPhysicalSignsByCusId(
+      payload.cusId
+    );
+    let healthyData = undefined,
+      healthyDataType = 0;
+    if (healthyDataResult.code === 200) {
+      if (!healthyDataResult.data.customerHealthy) {
+        throw new Error("客户还没填写健康评估表");
+      }
+      healthyDataType = healthyDataResult.data.type;
+      healthyData = dealHealthy(healthyDataResult.data.customerHealthy);
+    } else {
+      throw new Error(healthyDataResult.msg);
+    }
+    commit("save", {
+      healthDataLoading: false,
+      healthyDataType,
+      healthyData,
+      avoidFoodIds: (healthyData.avoidFood || []).map(obj => obj.id)
+    });
   }
 };
 

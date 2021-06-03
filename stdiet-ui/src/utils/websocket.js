@@ -39,6 +39,7 @@ function connect() {
 
     ws.onerror = event => {
       // console.log({ event });
+      ws.close();
       ws = undefined;
       window.removeEventListener("message", handleOnMessageReceive);
 
@@ -56,6 +57,7 @@ function connect() {
   } catch (error) {
     // console.log(error);
     // console.log("浏览器不支持websocket");
+    ws.close();
     ws = undefined;
     websocketInit();
   }
