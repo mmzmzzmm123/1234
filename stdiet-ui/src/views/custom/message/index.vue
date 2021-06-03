@@ -1,17 +1,19 @@
 <template>
   <div class="user_message_wrapper">
     <MessageBrowser />
-    <div class="info_zone"></div>
+    <UserInfo />
   </div>
 </template>
 <script>
 import MessageBrowser from "./messageBrowser/index";
+import UserInfo from "./userInfo/index";
 export default {
   data() {
     return {};
   },
   components: {
     MessageBrowser,
+    UserInfo,
   },
   created() {},
   computed: {},

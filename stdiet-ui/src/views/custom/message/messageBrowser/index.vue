@@ -16,7 +16,9 @@
             }`"
           />
           <div class="topic_item_content">
-            <div class="topic_content">{{ topic.content }}</div>
+            <div class="topic_content" :style="{ width: `${itemWidth}px` }">
+              {{ topic.content }}
+            </div>
             <div class="topic_user_name">by {{ topic.name }}</div>
           </div>
           <div class="topic_info">
@@ -98,6 +100,7 @@ export default {
       replyTarget: "",
       replyContent: "",
       replyObj: {},
+      itemWidth: 160,
     };
   },
   components: { Comment },
@@ -106,6 +109,14 @@ export default {
   },
   mounted() {
     window.addEventListener("message", this.handleOnMessage);
+
+    setTimeout(() => {
+      const itemElm = document.querySelector(".topic_item");
+      if (itemElm) {
+        console.log(itemElm);
+        this.itemWidth = itemElm.clientWidth - 32 - 20 - 80;
+      }
+    }, 100);
   },
   unmounted() {
     window.removeEventListener("message", this.handleOnMessage);
@@ -154,7 +165,12 @@ export default {
             (obj) => obj.topicId === topicId
           );
           if (tarTopic) {
-            this.fetchTopicDetailActions({ topicId, id: tarTopic.id });
+            console.log({ tarTopic });
+            this.fetchTopicDetailActions({
+              topicId,
+              id: tarTopic.id,
+              uid: tarTopic.uid,
+            });
           }
         }
       }
@@ -166,7 +182,11 @@ export default {
       this.replyTarget = "";
       this.replyContent = "";
       this.replyObj = {};
-      this.fetchTopicDetailActions({ topicId: data.topicId, id: data.id });
+      this.fetchTopicDetailActions({
+        topicId: data.topicId,
+        id: data.id,
+        uid: data.uid,
+      });
     },
     handleOnReplyTopic(data) {
       this.replyTarget = "主题";
@@ -265,7 +285,7 @@ export default {
         flex: 1 0 0;
 
         .topic_content {
-          width: 260px;
+          width: 100px;
           overflow: hidden;
           white-space: nowrap;
           text-overflow: ellipsis;
