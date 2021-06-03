@@ -15,29 +15,41 @@
         <result property="deptId" column="dept_id"/>
         <result property="createUserid" column="create_userid"/>
         <result property="createTime" column="create_time"/>
+        <association property="dept" column="dept_id" javaType="SysDept" resultMap="deptResult"/>
+    </resultMap>
+
+    <resultMap id="deptResult" type="SysDept">
+        <id property="deptId" column="dept_id"/>
+        <result property="parentId" column="parent_id"/>
+        <result property="deptName" column="dept_name"/>
+        <result property="orderNum" column="order_num"/>
+        <result property="leader" column="leader"/>
+        <result property="status" column="dept_status"/>
     </resultMap>
 
     <sql id="selectTsbzQtjskhwjVo">
-        select id, faid, nf, khlx, fjlx, filename, filepath, dept_id, create_userid, create_time from tsbz_qtjskhwj
+        select d.id, d.faid, d.nf, d.khlx, d.fjlx, d.filename, d.filepath, d.dept_id, d.create_userid, d.create_time,f.dept_name from tsbz_qtjskhwj d
+        left join sys_dept f on d.dept_id=f.dept_id
     </sql>
 
     <select id="selectTsbzQtjskhwjList" parameterType="TsbzQtjskhwj" resultMap="TsbzQtjskhwjResult">
         <include refid="selectTsbzQtjskhwjVo"/>
         <where>
-            <if test="faid != null ">and faid = #{faid}</if>
-            <if test="nf != null  and nf != ''">and nf = #{nf}</if>
-            <if test="khlx != null  and khlx != ''">and khlx = #{khlx}</if>
-            <if test="fjlx != null  and fjlx != ''">and fjlx = #{fjlx}</if>
-            <if test="filename != null  and filename != ''">and filename like concat('%', #{filename}, '%')</if>
-            <if test="filepath != null  and filepath != ''">and filepath = #{filepath}</if>
-            <if test="deptId != null ">and dept_id = #{deptId}</if>
-            <if test="createUserid != null ">and create_userid = #{createUserid}</if>
+            <if test="faid != null ">and d.faid = #{faid}</if>
+            <if test="nf != null  and nf != ''">and d.nf = #{nf}</if>
+            <if test="khlx != null  and khlx != ''">and d.khlx = #{khlx}</if>
+            <if test="fjlx != null  and fjlx != ''">and d.fjlx = #{fjlx}</if>
+            <if test="filename != null  and filename != ''">and d.filename like concat('%', #{filename}, '%')</if>
+            <if test="filepath != null  and filepath != ''">and d.filepath = #{filepath}</if>
+            <if test="createUserid != null ">and d.create_userid = #{createUserid}</if>
         </where>
+        <!-- 数据范围过滤 -->
+        ${params.dataScope}
     </select>
 
     <select id="selectTsbzQtjskhwjById" parameterType="Long" resultMap="TsbzQtjskhwjResult">
         <include refid="selectTsbzQtjskhwjVo"/>
-        where id = #{id}
+        where d.id = #{id}
     </select>
 
     <insert id="insertTsbzQtjskhwj" parameterType="TsbzQtjskhwj" useGeneratedKeys="true" keyProperty="id">

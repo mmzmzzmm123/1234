@@ -93,8 +93,13 @@
     >
       <el-table-column type="selection" width="55" align="center" />
       <!-- <el-table-column label="标识" align="center" prop="id" /> -->
-      <el-table-column label="所属方案" align="center" prop="faid" />
-      <el-table-column label="学校名称" align="center" prop="deptId" />
+      <el-table-column
+        label="所属方案"
+        align="center"
+        prop="faid"
+        :formatter="faFormat"
+      />
+      <el-table-column label="学校名称" align="center" prop="dept.deptName" />
       <el-table-column label="考核年份" align="center" prop="nf" />
       <el-table-column
         label="考核类型"
@@ -237,6 +242,19 @@ export default {
     // 字典翻译
     khfjlxFormat(row, column) {
       return this.selectDictLabel(this.khfjlxOptions, row.fjlx);
+    },
+    // 字典翻译
+    faFormat(row, column) {
+      // return this.selectDictLabel(this.classOptions, row.classid);
+      var actions = [];
+      var datas = this.qtjskhfaOptions;
+      Object.keys(datas).map((key) => {
+        if (datas[key].id == "" + row.faid) {
+          actions.push(datas[key].name);
+          return false;
+        }
+      });
+      return actions.join("");
     },
   },
 };

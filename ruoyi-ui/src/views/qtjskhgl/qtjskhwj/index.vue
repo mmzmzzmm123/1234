@@ -134,7 +134,7 @@
         prop="fjlx"
         :formatter="fjlxFormat"
       />
-      <el-table-column label="学校名称" align="center" prop="deptId" />
+      <el-table-column label="学校名称" align="center" prop="dept.deptName" />
       <el-table-column
         label="操作"
         align="center"

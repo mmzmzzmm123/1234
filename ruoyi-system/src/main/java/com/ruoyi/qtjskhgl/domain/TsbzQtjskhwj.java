@@ -1,5 +1,6 @@
 package com.ruoyi.qtjskhgl.domain;
 
+import com.ruoyi.common.core.domain.entity.SysDept;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import com.ruoyi.common.annotation.Excel;
@@ -66,6 +67,8 @@ public class TsbzQtjskhwj extends BaseEntity {
      */
     @Excel(name = "创建人")
     private Long createUserid;
+
+    private SysDept dept;
 
     public void setId(Long id) {
         this.id = id;
@@ -139,6 +142,14 @@ public class TsbzQtjskhwj extends BaseEntity {
         return createUserid;
     }
 
+    public SysDept getDept() {
+        return dept;
+    }
+
+    public void setDept(SysDept dept) {
+        this.dept = dept;
+    }
+
     @Override
     public String toString() {
         return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE)
@@ -152,6 +163,7 @@ public class TsbzQtjskhwj extends BaseEntity {
                 .append("deptId", getDeptId())
                 .append("createUserid", getCreateUserid())
                 .append("createTime", getCreateTime())
+                .append("dept",getDept())
                 .toString();
     }
 }
