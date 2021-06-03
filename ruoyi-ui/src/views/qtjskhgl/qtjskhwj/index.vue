@@ -129,6 +129,12 @@
         :formatter="khlxFormat"
       />
       <el-table-column
+        label="所属方案"
+        align="center"
+        prop="faid"
+        :formatter="faFormat"
+      />
+      <el-table-column
         label="附件类型"
         align="center"
         prop="fjlx"
@@ -182,6 +188,17 @@
             ></el-option>
           </el-select>
         </el-form-item>
+        <el-form-item label="所属方案" prop="faid">
+          <el-select v-model="form.faid" >
+            <el-option
+              v-for="item in qtjskhfaOptions"
+              :key="item.id"
+              :label="item.name"
+              :value="item.id"
+            />
+          </el-select>
+        </el-form-item>
+
         <el-form-item label="考核类型" prop="khlx">
           <el-select v-model="form.khlx" placeholder="请选择考核类型">
             <el-option
@@ -239,6 +256,7 @@ import {
   exportQtjskhwj,
 } from "@/api/qtjskhgl/qtjskhwj";
 import { getToken } from "@/utils/auth";
+import { listQtjskhfa, getQtjskhfa } from "@/api/qtjskhgl/qtjskhfa";
 
 export default {
   name: "Qtjskhwj",
@@ -266,6 +284,8 @@ export default {
       fjlxOptions: [],
       // 上传文件list
       fileList: [],
+      // 方案列表
+      qtjskhfaOptions: [],
       // 弹出层标题
       title: "",
       // 是否显示弹出层
@@ -286,7 +306,23 @@ export default {
       // 表单参数
       form: {},
       // 表单校验
-      rules: {},
+      rules: {
+        faid: [
+          { required: true, message: "所属方案不能为空", trigger: "blur" },
+        ],
+        nf: [
+          { required: true, message: "年份不能为空", trigger: "blur" },
+        ],
+        khlx: [
+          { required: true, message: "考核类型不能为空", trigger: "blur" },
+        ],
+        fjlx: [
+          { required: true, message: "附件类型不能为空", trigger: "blur" },
+        ],
+        filepath: [
+          { required: true, message: "附件不能为空", trigger: "blur" },
+        ],
+      },
       uploadFileUrl: process.env.VUE_APP_BASE_API + "/common/upload", // 上传的图片服务器地址
       headers: {
         Authorization: "Bearer " + getToken(),
@@ -295,6 +331,7 @@ export default {
   },
   created() {
     this.getList();
+    this.getKhfa();
     this.getDicts("sys_gbxn").then((response) => {
       this.nfOptions = response.data;
     });
@@ -358,6 +395,25 @@ export default {
       } else {
         this.msgError(res.msg);
       }
+    },
+    // 字典翻译
+    faFormat(row, column) {
+      // return this.selectDictLabel(this.classOptions, row.classid);
+      var actions = [];
+      var datas = this.qtjskhfaOptions;
+      Object.keys(datas).map((key) => {
+        if (datas[key].id == "" + row.faid) {
+          actions.push(datas[key].name);
+          return false;
+        }
+      });
+      return actions.join("");
+    },
+    //考核方案
+    getKhfa() {
+      listQtjskhfa(null).then((response) => {
+        this.qtjskhfaOptions = response.rows;
+      });
     },
     // 取消按钮
     cancel() {
