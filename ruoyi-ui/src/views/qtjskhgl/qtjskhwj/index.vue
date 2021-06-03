@@ -7,73 +7,40 @@
       v-show="showSearch"
       label-width="70px"
     >
-      <el-form-item label="方案编号" prop="faid">
-        <el-input
-          v-model="queryParams.faid"
-          placeholder="请输入方案编号"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
       <el-form-item label="考核年份" prop="nf">
-        <el-input
-          v-model="queryParams.nf"
-          placeholder="请输入考核年份"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
+        <el-select v-model="queryParams.nf" placeholder="请选择考核类型">
+          <el-option
+            v-for="dict in nfOptions"
+            :key="dict.dictValue"
+            :label="dict.dictLabel"
+            :value="dict.dictValue"
+          ></el-option>
+        </el-select>
       </el-form-item>
       <el-form-item label="考核类型" prop="khlx">
-        <el-input
-          v-model="queryParams.khlx"
-          placeholder="请输入考核类型"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
+        <el-select v-model="queryParams.khlx" placeholder="请选择考核类型">
+          <el-option
+            v-for="dict in khlxOptions"
+            :key="dict.dictValue"
+            :label="dict.dictLabel"
+            :value="dict.dictValue"
+          />
+        </el-select>
       </el-form-item>
       <el-form-item label="附件类型" prop="fjlx">
-        <el-input
-          v-model="queryParams.fjlx"
-          placeholder="请输入附件类型"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="文件名称" prop="filename">
-        <el-input
-          v-model="queryParams.filename"
-          placeholder="请输入文件名称"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="文件路径" prop="filepath">
-        <el-input
-          v-model="queryParams.filepath"
-          placeholder="请输入文件路径"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
+        <el-select v-model="queryParams.khlx" placeholder="请选择考核类型">
+          <el-option
+            v-for="dict in fjlxOptions"
+            :key="dict.dictValue"
+            :label="dict.dictLabel"
+            :value="dict.dictValue"
+          />
+        </el-select>
       </el-form-item>
       <el-form-item label="部门" prop="deptId">
         <el-input
           v-model="queryParams.deptId"
           placeholder="请输入部门"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="创建人" prop="createUserid">
-        <el-input
-          v-model="queryParams.createUserid"
-          placeholder="请输入创建人"
           clearable
           size="small"
           @keyup.enter.native="handleQuery"
@@ -148,15 +115,26 @@
       @selection-change="handleSelectionChange"
     >
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="标识" align="center" prop="id" />
-      <el-table-column label="方案编号" align="center" prop="faid" />
-      <el-table-column label="考核年份" align="center" prop="nf" />
-      <el-table-column label="考核类型" align="center" prop="khlx" />
-      <el-table-column label="附件类型" align="center" prop="fjlx" />
-      <el-table-column label="文件名称" align="center" prop="filename" />
-      <el-table-column label="文件路径" align="center" prop="filepath" />
-      <el-table-column label="部门" align="center" prop="deptId" />
-      <el-table-column label="创建人" align="center" prop="createUserid" />
+      <el-table-column label="编号" align="center" prop="id" />
+      <el-table-column
+        label="考核年份"
+        align="center"
+        prop="nf"
+        :formatter="nfFormat"
+      />
+      <el-table-column
+        label="考核类型"
+        align="center"
+        prop="khlx"
+        :formatter="khlxFormat"
+      />
+      <el-table-column
+        label="附件类型"
+        align="center"
+        prop="fjlx"
+        :formatter="fjlxFormat"
+      />
+      <el-table-column label="学校名称" align="center" prop="deptId" />
       <el-table-column
         label="操作"
         align="center"
@@ -194,29 +172,53 @@
     <!-- 添加或修改群体教师考核文件管理对话框 -->
     <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
-        <el-form-item label="方案编号" prop="faid">
-          <el-input v-model="form.faid" placeholder="请输入方案编号" />
-        </el-form-item>
         <el-form-item label="考核年份" prop="nf">
-          <el-input v-model="form.nf" placeholder="请输入考核年份" />
+          <el-select v-model="form.nf" placeholder="请选择考核类型">
+            <el-option
+              v-for="dict in nfOptions"
+              :key="dict.dictValue"
+              :label="dict.dictLabel"
+              :value="dict.dictValue"
+            ></el-option>
+          </el-select>
         </el-form-item>
         <el-form-item label="考核类型" prop="khlx">
-          <el-input v-model="form.khlx" placeholder="请输入考核类型" />
+          <el-select v-model="form.khlx" placeholder="请选择考核类型">
+            <el-option
+              v-for="dict in khlxOptions"
+              :key="dict.dictValue"
+              :label="dict.dictLabel"
+              :value="dict.dictValue"
+            />
+          </el-select>
         </el-form-item>
         <el-form-item label="附件类型" prop="fjlx">
-          <el-input v-model="form.fjlx" placeholder="请输入附件类型" />
-        </el-form-item>
-        <el-form-item label="文件名称" prop="filename">
-          <el-input v-model="form.filename" placeholder="请输入文件名称" />
+          <el-select v-model="form.fjlx" placeholder="请选择考核类型">
+            <el-option
+              v-for="dict in fjlxOptions"
+              :key="dict.dictValue"
+              :label="dict.dictLabel"
+              :value="dict.dictValue"
+            />
+          </el-select>
         </el-form-item>
         <el-form-item label="文件路径" prop="filepath">
-          <el-input v-model="form.filepath" placeholder="请输入文件路径" />
-        </el-form-item>
-        <el-form-item label="部门" prop="deptId">
-          <el-input v-model="form.deptId" placeholder="请输入部门" />
-        </el-form-item>
-        <el-form-item label="创建人" prop="createUserid">
-          <el-input v-model="form.createUserid" placeholder="请输入创建人" />
+          <el-input v-model="form.filename" v-if="false" />
+          <el-input v-model="form.filepath" v-if="false" />
+          <el-upload
+            class="upload-demo"
+            :action="uploadFileUrl"
+            :headers="headers"
+            :on-preview="handlePreview"
+            :on-remove="handleRemove"
+            :before-remove="beforeRemove"
+            :limit="1"
+            :on-exceed="handleExceed"
+            :file-list="fileList"
+            :on-success="handleAvatarSuccess"
+          >
+            <el-button size="small" type="primary">选择文件</el-button>
+          </el-upload>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -236,6 +238,7 @@ import {
   updateQtjskhwj,
   exportQtjskhwj,
 } from "@/api/qtjskhgl/qtjskhwj";
+import { getToken } from "@/utils/auth";
 
 export default {
   name: "Qtjskhwj",
@@ -255,6 +258,14 @@ export default {
       total: 0,
       // 群体教师考核文件管理表格数据
       qtjskhwjList: [],
+      // 年份选项
+      nfOptions: [],
+      // 考核类型
+      khlxOptions: [],
+      // 文件类型
+      fjlxOptions: [],
+      // 上传文件list
+      fileList: [],
       // 弹出层标题
       title: "",
       // 是否显示弹出层
@@ -276,10 +287,23 @@ export default {
       form: {},
       // 表单校验
       rules: {},
+      uploadFileUrl: process.env.VUE_APP_BASE_API + "/common/upload", // 上传的图片服务器地址
+      headers: {
+        Authorization: "Bearer " + getToken(),
+      },
     };
   },
   created() {
     this.getList();
+    this.getDicts("sys_gbxn").then((response) => {
+      this.nfOptions = response.data;
+    });
+    this.getDicts("sys_dm_qtjskhlx").then((response) => {
+      this.khlxOptions = response.data;
+    });
+    this.getDicts("sys_dm_qtjskhwjlx").then((response) => {
+      this.fjlxOptions = response.data;
+    });
   },
   methods: {
     /** 查询群体教师考核文件管理列表 */
@@ -290,6 +314,50 @@ export default {
         this.total = response.total;
         this.loading = false;
       });
+    },
+    // 字典翻译
+    nfFormat(row, column) {
+      return this.selectDictLabel(this.nfOptions, row.nf);
+    },
+    // 考核类型
+    khlxFormat(row, column) {
+      return this.selectDictLabel(this.khlxOptions, row.khlx);
+    },
+    fjlxFormat(row, column) {
+      return this.selectDictLabel(this.fjlxOptions, row.fjlx);
+    },
+    // 文件上传
+    handlePreview(file) {
+      //console.log(file);
+    },
+    // 文件上传移除
+    handleRemove(file, fileList) {
+      // console.log(file);
+      if (file.response.code == "200") {
+        this.form.filepath = "";
+      }
+    },
+    // 文件上传 弹窗
+    beforeRemove(file, fileList) {
+      return this.$confirm(`确定移除 ${file.name}？`);
+    },
+    // 文件上传  限制
+    handleExceed(files, fileList) {
+      this.$message.warning(
+        `当前限制选择 1 个文件，本次选择了 ${files.length} 个文件，共选择了 ${
+          files.length + fileList.length
+        } 个文件`
+      );
+    },
+    // 文件上传 成功钩子
+    handleAvatarSuccess(res, file) {
+      // console.log(res, file);
+      if (res.code == "200") {
+        this.form.filepath = res.fileName;
+        this.form.filename = file.name;
+      } else {
+        this.msgError(res.msg);
+      }
     },
     // 取消按钮
     cancel() {
@@ -311,6 +379,7 @@ export default {
         createTime: null,
       };
       this.resetForm("form");
+      this.fileList = [];
     },
     /** 搜索按钮操作 */
     handleQuery() {
@@ -342,6 +411,10 @@ export default {
         this.form = response.data;
         this.open = true;
         this.title = "修改群体教师考核文件管理";
+        this.fileList.push({
+          name: response.data.filename,
+          url: response.data.filepath,
+        });
       });
     },
     /** 提交按钮 */

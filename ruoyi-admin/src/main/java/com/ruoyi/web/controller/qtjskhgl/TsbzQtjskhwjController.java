@@ -1,7 +1,9 @@
 package com.ruoyi.web.controller.qtjskhgl;
 
+import java.util.Date;
 import java.util.List;
 
+import com.ruoyi.common.utils.SecurityUtils;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -72,6 +74,9 @@ public class TsbzQtjskhwjController extends BaseController {
     @Log(title = "群体教师考核文件管理", businessType = BusinessType.INSERT)
     @PostMapping
     public AjaxResult add(@RequestBody TsbzQtjskhwj tsbzQtjskhwj) {
+        tsbzQtjskhwj.setCreateUserid(SecurityUtils.getLoginUser().getUser().getUserId());
+        tsbzQtjskhwj.setCreateTime(new Date());
+        tsbzQtjskhwj.setDeptId(SecurityUtils.getLoginUser().getUser().getDeptId());
         return toAjax(tsbzQtjskhwjService.insertTsbzQtjskhwj(tsbzQtjskhwj));
     }
 
