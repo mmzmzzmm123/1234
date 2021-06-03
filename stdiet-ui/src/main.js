@@ -26,6 +26,7 @@ import { init } from "@/utils/websocket";
 import exportingInit from "highcharts/modules/exporting";
 exportingInit(Highcharts);
 
+// websocket 初始化
 init();
 
 import {

@@ -17,4 +17,6 @@ public interface ISysServicesTopicService {
     SysServicesTopic inserSysServicesTopicComment(SysServicesTopic topic);
 
     List<SysServicesTopic> selectSysServicesTopicSessionByTopicId(String topicId);
+
+    List<SysServicesTopic> selectUnreadTopicCount(List<SysServicesTopic> topic);
 }

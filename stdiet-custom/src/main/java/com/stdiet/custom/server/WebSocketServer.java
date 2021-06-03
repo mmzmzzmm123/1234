@@ -1,7 +1,10 @@
-package com.stdiet.web.server;
+package com.stdiet.custom.server;
 
 import com.alibaba.fastjson.JSONObject;
 import com.stdiet.common.core.domain.model.LoginUser;
+import com.stdiet.common.utils.spring.SpringUtils;
+import com.stdiet.custom.domain.SysServicesTopic;
+import com.stdiet.custom.service.ISysServicesTopicService;
 import com.stdiet.custom.utils.WsUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -10,15 +13,17 @@ import org.springframework.stereotype.Component;
 import javax.websocket.*;
 import javax.websocket.server.ServerEndpoint;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.CopyOnWriteArraySet;
 
 @ServerEndpoint(value = "/ws")
 @Component
 @Slf4j
 public class WebSocketServer {
-
     // concurrent包的线程安全Set，用来存放每个客户端对应的MyWebSocket对象。
     private static CopyOnWriteArraySet<WebSocketServer> webSocketSet = new CopyOnWriteArraySet<WebSocketServer>();
+
     //private static ConcurrentHashMap<String,WebSocketServer> websocketList = new ConcurrentHashMap<>();
     // 与某个客户端的连接会话，需要通过它来给客户端发送数据
     private Session session;
@@ -74,23 +79,6 @@ public class WebSocketServer {
         log.info("有一连接关闭！");
     }
 
-    // */
-    /// **
-    // * 收到客户端消息后调用的方法
-    // *
-    // * @param message 客户端发送过来的消息*//*
-    @OnMessage
-    public void onMessage(String message, Session session) {
-        log.info("收到来自窗口" + sid + "的信息:" + message);
-//        // 群发消息
-//        for (WebSocketServer item : webSocketSet) {
-//            try {
-//                item.sendMessage(message);
-//            } catch (IOException e) {
-//                e.printStackTrace();
-//            }
-//        }
-    }
 
     /**
      * @param session
@@ -115,6 +103,39 @@ public class WebSocketServer {
             return ((LoginUser) ((UsernamePasswordAuthenticationToken) session.getUserPrincipal()).getPrincipal()).getUser().getUserId();
         } catch (Exception e) {
             return 0L;
+        }
+    }
+
+    @OnMessage
+    public void onMessage(String message, Session session) {
+        log.info("收到来自窗口" + sid + "的信息:" + message);
+        try {
+            String sid = String.valueOf(getUserId(session));
+            if (sid.equals("0")) {
+                return;
+            }
+            JSONObject resultObj = new JSONObject();
+            if (message.equals(WsUtils.WS_GET_UNREAD_COUNT)) {
+                SysServicesTopic topic = new SysServicesTopic();
+                topic.setUid(sid);
+                List<SysServicesTopic> statusList = new ArrayList<>();
+                statusList.add(topic);
+                ISysServicesTopicService servicesTopicService = SpringUtils.getBean(ISysServicesTopicService.class);
+                List<SysServicesTopic> result = servicesTopicService.selectUnreadTopicCount(statusList);
+
+                JSONObject dataObj = new JSONObject();
+                dataObj.put("count", result.get(0).getCount());
+
+                resultObj.put("type", WsUtils.WS_TYPE_MESSAGE_COUNT);
+                resultObj.put("msg", "未读消息数");
+                resultObj.put("data", dataObj);
+
+            } else if (message.equals(WsUtils.WS_PING)) {
+
+            }
+            WebSocketServer.sendInfo(resultObj.toJSONString(), sid);
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 

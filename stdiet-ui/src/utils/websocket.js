@@ -6,8 +6,10 @@ const url = `${wsProtocol}://${hostname}${
 let ws = undefined;
 let intervalRef = undefined;
 
-function handleOnMessageReceive(event) {
-  console.log({ event });
+function handleOnMessageReceive({ data = {} }) {
+  if (data.type && data.type === keys.GET_UNREAD_COUNT) {
+    ws.send(keys.GET_UNREAD_COUNT);
+  }
 }
 
 function connect() {
@@ -18,11 +20,15 @@ function connect() {
       console.log("ws连接成功");
       intervalRef && clearInterval(intervalRef);
 
-      document.addEventListener("message", handleOnMessageReceive);
+      setInterval(() => {
+        ws.send("ping");
+      }, 30000);
+
+      window.addEventListener("message", handleOnMessageReceive);
     };
 
     ws.onmessage = event => {
-      console.log({ event });
+      // console.log({ event });
 
       const dataObj = JSON.parse(event.data || "{}");
 
@@ -32,24 +38,35 @@ function connect() {
     };
 
     ws.onerror = event => {
-      console.log({ event });
+      // console.log({ event });
       ws = undefined;
-      document.removeEventListener("message", handleOnMessageReceive);
+      window.removeEventListener("message", handleOnMessageReceive);
     };
 
     ws.onclose = event => {
       ws = undefined;
-      document.removeEventListener("message", handleOnMessageReceive);
+      window.removeEventListener("message", handleOnMessageReceive);
     };
   } catch (error) {
-    console.log(error);
+    // console.log(error);
+    ws = undefined;
+    init();
     console.log("浏览器不支持websocket");
   }
 }
 
 export function init() {
-  intervalRef = setInterval(() => {
-    console.log("尝试连接websocket");
-    !ws && connect();
-  }, 10000);
+  !ws && connect();
+
+  !ws &&
+    (intervalRef = setInterval(() => {
+      console.log("尝试连接websocket");
+      !ws && connect();
+    }, 10000));
 }
+
+export const keys = {
+  GET_UNREAD_COUNT: "GET_UNREAD_COUNT",
+  WS_TYPE_MESSAGE_COUNT: "WS_TYPE_MESSAGE_COUNT",
+  WS_TYPE_NEW_CUSTOMER_REPLY: "WS_TYPE_NEW_CUSTOMER_REPLY"
+};

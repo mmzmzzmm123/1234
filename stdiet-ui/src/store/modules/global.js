@@ -9,7 +9,8 @@ const oriState = {
   plannerIdOptions: [],
   plannerAssisIdOptions: [],
   operatorIdOptions: [],
-  operatorAssisIdOptions: []
+  operatorAssisIdOptions: [],
+  msgUnreadCount: 0,
 };
 
 const mutations = {

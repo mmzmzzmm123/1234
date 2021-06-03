@@ -18,4 +18,6 @@ public interface SysServicesTopicMapper {
     int inserSysServicesTopicReply(SysServicesTopic topic);
 
     List<SysServicesTopic> selectSysServicesTopicSessionByTopicId(String topicId);
+
+    List<SysServicesTopic> selectUnreadTopicCount(List<SysServicesTopic> topics);
 }
