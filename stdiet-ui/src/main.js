@@ -21,13 +21,9 @@ import VueScrollTo from "vue-scrollto";
 import VueResource from "vue-resource";
 import HighchartsVue from "highcharts-vue";
 import Highcharts from "highcharts";
-import { init } from "@/utils/websocket";
 //图片导出模块
 import exportingInit from "highcharts/modules/exporting";
 exportingInit(Highcharts);
-
-// websocket 初始化
-init();
 
 import {
   addDateRange,
