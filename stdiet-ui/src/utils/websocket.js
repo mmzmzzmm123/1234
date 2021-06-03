@@ -43,23 +43,23 @@ function connect() {
       ws = undefined;
       window.removeEventListener("message", handleOnMessageReceive);
 
-      websocketInit();
+      // websocketInit();
     };
 
     ws.onclose = event => {
       // console.log(event);
       ws = undefined;
       window.removeEventListener("message", handleOnMessageReceive);
-      if (event.reason !== "unmount") {
-        websocketInit();
-      }
+      // if (event.reason !== "unmount") {
+        // websocketInit();
+      // }
     };
   } catch (error) {
     // console.log(error);
     // console.log("浏览器不支持websocket");
     ws.close();
     ws = undefined;
-    websocketInit();
+    // websocketInit();
   }
 }
 
