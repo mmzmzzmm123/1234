@@ -102,12 +102,12 @@ li {
   display: flex;
   justify-content: center;
   align-items: center;
-  color: #e6a23c;
+  color: #F56C6C;
   flex: 0 0 100px;
 }
 .ico-horn .icon {
   font-size: 24px;
-  color: #e6a23c;
+  color: #F56C6C;
 }
 /* 以下代码与滚动相关 */
 .marquee-wrap {
