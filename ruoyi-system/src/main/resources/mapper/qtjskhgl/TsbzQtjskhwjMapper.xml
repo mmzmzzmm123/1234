@@ -42,9 +42,9 @@
             <if test="filename != null  and filename != ''">and d.filename like concat('%', #{filename}, '%')</if>
             <if test="filepath != null  and filepath != ''">and d.filepath = #{filepath}</if>
             <if test="createUserid != null ">and d.create_userid = #{createUserid}</if>
+            <!-- 数据范围过滤 -->
+            ${params.dataScope}
         </where>
-        <!-- 数据范围过滤 -->
-        ${params.dataScope}
     </select>
 
     <select id="selectTsbzQtjskhwjById" parameterType="Long" resultMap="TsbzQtjskhwjResult">
