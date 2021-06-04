@@ -77,9 +77,12 @@
       <el-table-column
         label="公告标题"
         align="center"
-        prop="noticeTitle"
         :show-overflow-tooltip="true"
-      />
+      >
+        <template slot-scope="scope">
+          <span class="link-type" @click="handleView(scope.row)">{{ scope.row.noticeTitle }}</span>
+        </template>
+      </el-table-column>
       <el-table-column
         label="公告类型"
         align="center"
@@ -165,11 +168,55 @@
               <editor v-model="form.noticeContent" :min-height="192"/>
             </el-form-item>
           </el-col>
+          <el-col :span="24">
+            <el-form-item label="备注">
+              <el-input type="textarea" :autosize="{ minRows: 2, maxRows: 4}" v-model="form.remark" placeholder="请输入备注" />
+            </el-form-item>
+          </el-col>
         </el-row>
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button type="primary" @click="submitForm">确 定</el-button>
         <el-button @click="cancel">取 消</el-button>
+      </div>
+    </el-dialog>
+
+    <!--公告详情-->
+    <el-dialog :title="title" :visible.sync="openView" width="780px" append-to-body>
+      <el-form ref="form" :model="form" size="mini" label-width="120px">
+        <el-row>
+          <el-col :span="12">
+            <el-form-item label="公告标题：">
+              {{form.noticeTitle}}
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="公告类型：">
+              <div v-if="form.noticeType==1">通知</div>
+              <div v-else-if="form.noticeType==2">公告</div>
+            </el-form-item>
+          </el-col>
+          <el-col :span="24">
+            <el-form-item label="状态：">
+              <div v-if="form.status==0">正常</div>
+              <div v-else-if="form.status==1">关闭</div>
+            </el-form-item>
+          </el-col>
+          <el-col :span="24">
+            <el-form-item label="内容：">
+              <!--              <editor v-model="form.noticeContent" :min-height="192"/>-->
+              <span v-html="form.noticeContent"></span>
+            </el-form-item>
+          </el-col>
+          <el-col :span="24">
+            <el-form-item label="备注：">
+              {{form.remark}}
+            </el-form-item>
+          </el-col>
+        </el-row>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="openView = false">关闭</el-button>
       </div>
     </el-dialog>
   </div>
@@ -204,6 +251,8 @@ export default {
       title: "",
       // 是否显示弹出层
       open: false,
+      // 是否显示详细弹出层
+      openView: false,
       // 类型数据字典
       statusOptions: [],
       // 状态数据字典
@@ -337,6 +386,14 @@ export default {
           this.getList();
           this.msgSuccess("删除成功");
         }).catch(() => {})
+    },
+    handleView(row){
+      const noticeId = row.noticeId || this.ids
+      getNotice(noticeId).then(response => {
+        this.form = response.data;
+        this.openView = true;
+        this.title = "公告详情";
+      });
     }
   }
 };
