@@ -67,7 +67,7 @@
             </if>
         ) AS wfs ON wd.wechat_account = wfs.wx_id
         LEFT JOIN (SELECT id, wx_account, wx_phone FROM sys_wx_sale_account) AS wsa ON wd.wechat_account = wsa.id
-        LEFT JOIN (SELECT dict_label, dict_value FROM sys_dict_data WHERE dict_type = 'fan_channel') AS cn ON cn.dict_value = wd.account_id
+        LEFT JOIN (SELECT dict_label, dict_value FROM sys_dict_data WHERE dict_type = 'cus_account') AS cn ON cn.dict_value = wd.account_id
         LEFT JOIN sys_user AS su ON su.user_id = wd.user_id
         WHERE wd.del_flag = 0
         ORDER BY wd.sale_group_id, wd.user_id, wd.wechat_account ASC
