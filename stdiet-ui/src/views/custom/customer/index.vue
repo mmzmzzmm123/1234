@@ -246,7 +246,7 @@
         </template>
       </el-table-column>
       <el-table-column
-        label="外食热量统计"
+        label="外食热量"
         align="center"
         v-hasPermi="['custom:foodHeatStatistics:list']"
       >
@@ -413,8 +413,8 @@
               </el-select>
             </el-form-item>
           </el-col>
-          
-          
+
+
         </el-form>
       </el-row>
       <div slot="footer" class="dialog-footer">
@@ -798,7 +798,7 @@ export default {
         if(this.form.fansTime == undefined || this.form.fansTime == null){
             this.form.mainDietitian = null;
             return;
-        }      
+        }
         this.autoSelectNutritionist();
     },
     fanTimeAutoSelectNutritionist(fansTime){
