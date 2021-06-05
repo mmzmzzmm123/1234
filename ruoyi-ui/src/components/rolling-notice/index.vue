@@ -57,22 +57,22 @@ export default {
   },
 };
 // JavaScript Document
-(function px2rem(doc, win) {
-  var docEl = doc.documentElement,
-    resizeEvt = "orientationchange" in window ? "orientationchange" : "resize",
-    recalc = function () {
-      var clientWidth = docEl.clientWidth;
-      if (!clientWidth) return;
-      docEl.style.fontSize = 100 * (clientWidth / 750) + "px";
-    };
-  if (!doc.addEventListener) return;
-  // 窗口大小发生变化，初始化
-  win.addEventListener(resizeEvt, recalc, false);
-  doc.addEventListener("DOMContentLoaded", recalc, false);
-  setTimeout(function () {
-    px2rem(doc, win);
-  }, 200);
-})(document, window);
+// (function px2rem(doc, win) {
+//   var docEl = doc.documentElement,
+//     resizeEvt = "orientationchange" in window ? "orientationchange" : "resize",
+//     recalc = function () {
+//       var clientWidth = docEl.clientWidth;
+//       if (!clientWidth) return;
+//       docEl.style.fontSize = 100 * (clientWidth / 750) + "px";
+//     };
+//   if (!doc.addEventListener) return;
+//   // 窗口大小发生变化，初始化
+//   win.addEventListener(resizeEvt, recalc, false);
+//   doc.addEventListener("DOMContentLoaded", recalc, false);
+//   setTimeout(function () {
+//     px2rem(doc, win);
+//   }, 200);
+// })(document, window);
 </script>
 <style>
 body,
