@@ -31,12 +31,19 @@
     </div>
     <div class="topic_detail">
       <div class="topic_detail_list">
-        <div class="topic_detail_title" v-if="!!detailData.content">
-          <div>{{ detailData.content }}</div>
-          <div class="content_time" :style="{ marginTop: '4px' }">
-            {{ formatDate(detailData.createTime) }}
-            <div class="reply_btn" @click="handleOnReplyTopic(detailData)">
-              回复
+        <div
+          class="topic_detail_title"
+          v-if="!!detailData.content"
+          @click="handleOnReplyTopic(detailData)"
+        >
+          <el-avatar :src="detailData.avatar">{{
+            detailData.name.substr(-1)
+          }}</el-avatar>
+          <div :style="{ marginLeft: '8px' }">
+            <div>{{ detailData.content }}</div>
+            <div class="content_time" :style="{ marginTop: '4px' }">
+              {{ formatDate(detailData.createTime) }}
+              <div class="reply_btn">回复</div>
             </div>
           </div>
         </div>
@@ -83,12 +90,8 @@ import { createNamespacedHelpers, mapActions as globalMapActions } from "vuex";
 import Comment from "./Comment";
 import dayjs from "dayjs";
 import { keys } from "@/utils/websocket";
-const {
-  mapActions,
-  mapState,
-  mapMutations,
-  mapGetters,
-} = createNamespacedHelpers("message");
+const { mapActions, mapState, mapMutations, mapGetters } =
+  createNamespacedHelpers("message");
 export default {
   data() {
     return {
@@ -179,14 +182,17 @@ export default {
       return dayjs(date).format("MM-DD HH:mm");
     },
     handleOnTopicClick(data) {
-      this.replyTarget = "";
-      this.replyContent = "";
-      this.replyObj = {};
-      this.fetchTopicDetailActions({
-        topicId: data.topicId,
-        id: data.id,
-        uid: data.uid,
-      });
+      if (data.topicId !== this.selTopicId) {
+        this.replyTarget = "";
+        this.replyContent = "";
+        this.replyObj = {};
+        this.fetchTopicDetailActions({
+          topicId: data.topicId,
+          id: data.id,
+          uid: data.uid,
+          callback: (err) => this.$message.error(err),
+        });
+      }
     },
     handleOnReplyTopic(data) {
       this.replyTarget = "主题";
@@ -340,11 +346,13 @@ export default {
         .reply_btn {
           margin-left: 16px;
           color: #1890ff;
-          cursor: pointer;
+          // cursor: pointer;
         }
       }
 
       .topic_detail_title {
+        display: flex;
+        cursor: pointer;
       }
 
       .comment_reply_item {

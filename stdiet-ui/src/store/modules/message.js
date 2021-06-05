@@ -75,7 +75,7 @@ const actions = {
     commit("save", { selTopicId: topicId });
     // 客户信息
     if (healthyData.customerId !== parseInt(uid)) {
-      dispatch("getHealthyData", { cusId: uid });
+      dispatch("getHealthyData", { cusId: uid, callback: payload.callback });
     }
     //
     const result = await fetchTopicDetail({ topicId, id });
@@ -116,22 +116,26 @@ const actions = {
     const healthyDataResult = await getCustomerPhysicalSignsByCusId(
       payload.cusId
     );
-    let healthyData = undefined,
-      healthyDataType = 0;
+    const newState = {};
     if (healthyDataResult.code === 200) {
       if (!healthyDataResult.data.customerHealthy) {
-        throw new Error("客户还没填写健康评估表");
+        // throw new Error("客户还没填写健康评估表");
+        payload.callback && payload.callback("客户还没填写健康评估表");
+      } else {
+        newState.healthyDataType = healthyDataResult.data.type;
+        newState.healthyData = dealHealthy(
+          healthyDataResult.data.customerHealthy
+        );
+        newState.avoidFoodIds = (newState.healthyData.avoidFood || []).map(
+          obj => obj.id
+        );
       }
-      healthyDataType = healthyDataResult.data.type;
-      healthyData = dealHealthy(healthyDataResult.data.customerHealthy);
     } else {
       throw new Error(healthyDataResult.msg);
     }
     commit("save", {
       healthDataLoading: false,
-      healthyDataType,
-      healthyData,
-      avoidFoodIds: (healthyData.avoidFood || []).map(obj => obj.id)
+      ...newState
     });
   }
 };
