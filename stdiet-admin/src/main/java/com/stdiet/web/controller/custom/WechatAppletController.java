@@ -70,6 +70,8 @@ public class WechatAppletController extends BaseController {
     private IWechatAppletService iWechatAppletService;
     @Autowired
     private ISysServicesTopicService iSysServicesTopicService;
+    @Autowired
+    private ISysVideoClassifyService sysVideoClassifyService;
 
     /**
      * 查询微信小程序中展示的客户案例
@@ -385,6 +387,9 @@ public class WechatAppletController extends BaseController {
             if (orderNum > 0) {
                 sysNutritionalVideo.setUserType(1);
             }
+        }
+        if(sysNutritionalVideo.getCateId() != null && sysNutritionalVideo.getCateId().longValue() == 0){
+            sysNutritionalVideo.setCateId(null);
         }
         startPage();
         List<SysNutritionalVideo> list = sysNutritionalVideoService.selectSysNutritionalVideoList(sysNutritionalVideo, true);
@@ -702,6 +707,41 @@ public class WechatAppletController extends BaseController {
 //    }
 
 
+    /**
+     * 获取视频分类
+     * @param openid
+     * @return
+     */
+    @GetMapping("/getVideoClassify")
+    public AjaxResult getVideoClassify(@RequestParam("openid")String openid) {
+        List<SysVideoClassify> list = sysVideoClassifyService.selectSysVideoClassifyList(new SysVideoClassify());
+        List<List<Map<String,Object>>> result = new ArrayList<>();
+        int groupCount = 3;
+        SysVideoClassify all = new SysVideoClassify();
+        all.setId(0L);
+        all.setCateName("全部内容");
+        list.add(0, all);
+        if(list != null && list.size() > 0){
+            //分成三组
+            int groupNum = list.size()/groupCount + (list.size() % groupCount > 0 ? 1 : 0);
+            for (int i = 0; i < groupNum; i++) {
+                List<Map<String,Object>> groupList = new ArrayList<>();
+                for (int j = i * groupCount; j < (i+1)*groupCount; j++) {
+                    if(j < list.size()){
+                        Map<String,Object> videoClassifyMap = new HashMap<>();
+                        SysVideoClassify sysVideoClassify = list.get(j);
+                        videoClassifyMap.put("cateName", sysVideoClassify.getCateName());
+                        videoClassifyMap.put("cateId", sysVideoClassify.getId());
+                        groupList.add(videoClassifyMap);
+                    }else{
+                        break;
+                    }
+                }
+                result.add(groupList);
+            }
+        }
+        return AjaxResult.success(result);
+    }
 }
 
 
