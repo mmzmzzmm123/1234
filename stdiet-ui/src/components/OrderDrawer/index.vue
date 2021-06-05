@@ -65,8 +65,10 @@
           <el-table-column label="成交金额" prop="amount" align="center" />
           <el-table-column label="成交时间" prop="orderTime" align="center"
             ><template slot-scope="scope">
-              <div v-for="time in scope.row.orderTime.split(' ')" :key="time">
-                {{ time }}
+              <div v-if="scope.row.orderTime != undefined && scope.row.orderTime != null">
+                  <div v-for="time in scope.row.orderTime.split(' ')" :key="time">
+                    {{ time }}
+                  </div>
               </div>
             </template>
           </el-table-column>
