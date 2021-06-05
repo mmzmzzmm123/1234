@@ -23,7 +23,7 @@
     <select id="selectSysServicesTopicByUserIdAndRole" parameterType="SysServicesTopic"
             resultMap="SysServicesTopicResult">
         <choose>
-            <when test="role == 'admin' or role == 'manager'">
+            <when test="role == 'admin' or role == 'manager' or role == 'admin-dev'">
                 select topic_id, topic_type, content, uid, create_time, img, 1 as `read`, '0' as id, 'customer' as role
                 from sys_services_topic where del_flag = 0 order by create_time desc
             </when>
