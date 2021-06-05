@@ -27,7 +27,12 @@
         </el-select>
       </el-form-item> -->
       <el-form-item label="进粉渠道" prop="channelId">
-        <el-select v-model="queryParams.channelId" filterable clearable placeholder="请选择">
+        <el-select
+          v-model="queryParams.channelId"
+          filterable
+          clearable
+          placeholder="请选择"
+        >
           <el-option
             v-for="dict in accountIdOptions"
             :key="dict.dictValue"
@@ -84,24 +89,24 @@
         </el-select>
       </el-form-item>
 
-    <el-form-item label="病史体征" prop="physicalSignsId">
-          <el-select
-            v-model="queryParams.physicalSignsId"
-            filterable
-            clearable
-            allow-create
-            default-first-option
-            placeholder="请选择病史体征"
+      <el-form-item label="病史体征" prop="physicalSignsId">
+        <el-select
+          v-model="queryParams.physicalSignsId"
+          filterable
+          clearable
+          allow-create
+          default-first-option
+          placeholder="请选择病史体征"
+        >
+          <el-option
+            v-for="physicalSign in physicalSignsList"
+            :key="physicalSign.id"
+            :label="physicalSign.name"
+            :value="physicalSign.id"
           >
-            <el-option
-              v-for="physicalSign in physicalSignsList"
-              :key="physicalSign.id"
-              :label="physicalSign.name"
-              :value="physicalSign.id"
-            >
-            </el-option>
-          </el-select>
-        </el-form-item>
+          </el-option>
+        </el-select>
+      </el-form-item>
 
       <el-form-item>
         <el-button type="cyan" icon="el-icon-search" @click="handleQuery"
@@ -330,8 +335,18 @@
       <el-row :gutter="15">
         <el-form ref="form" :model="form" :rules="rules" label-width="100px">
           <el-col :span="12">
-            <el-form-item label="进粉渠道" prop="channelId" style="width:400px">
-              <el-select v-model="form.channelId" placeholder="请选择" filterable clearable @change="channelAutoSelectNutritionist">
+            <el-form-item
+              label="进粉渠道"
+              prop="channelId"
+              style="width: 400px"
+            >
+              <el-select
+                v-model="form.channelId"
+                placeholder="请选择"
+                filterable
+                clearable
+                @change="channelAutoSelectNutritionist"
+              >
                 <el-option
                   v-for="dict in accountIdOptions"
                   :key="dict.dictValue"
@@ -356,12 +371,12 @@
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item label="客户名字" prop="name" style="width:300px">
+            <el-form-item label="客户名字" prop="name" style="width: 300px">
               <el-input v-model.trim="form.name" placeholder="请输入名字" />
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item label="手机号" prop="phone" style="width:300px">
+            <el-form-item label="手机号" prop="phone" style="width: 300px">
               <el-input v-model.trim="form.phone" placeholder="请输入手机号" />
             </el-form-item>
           </el-col>
@@ -413,8 +428,6 @@
               </el-select>
             </el-form-item>
           </el-col>
-
-
         </el-form>
       </el-row>
       <div slot="footer" class="dialog-footer">
@@ -508,7 +521,7 @@ export default {
         assistantDietitian: null,
         afterDietitian: null,
         salesman: null,
-        physicalSignsId: null
+        physicalSignsId: null,
       },
       // 表单参数
       form: {},
@@ -551,7 +564,7 @@ export default {
         },
       },
       //病史体征
-      physicalSignsList:[]
+      physicalSignsList: [],
     };
   },
   created() {
@@ -573,8 +586,8 @@ export default {
       }
     });
     this.getList();
-    listPhysicalSigns().then(response => {
-          this.physicalSignsList = response.rows;
+    listPhysicalSigns().then((response) => {
+      this.physicalSignsList = response.rows;
     });
   },
   computed: {
@@ -789,52 +802,68 @@ export default {
         })
         .catch(function () {});
     },
-    channelAutoSelectNutritionist(channelValue){
-        this.form.fansChannel = channelValue == "" ? null : channelValue;
-        if(channelValue == undefined || channelValue == null || channelValue == ""){
-            this.form.mainDietitian = null;
-            return;
-        }
-        if(this.form.fansTime == undefined || this.form.fansTime == null){
-            this.form.mainDietitian = null;
-            return;
-        }
-        this.autoSelectNutritionist();
+    channelAutoSelectNutritionist(channelValue) {
+      this.form.fansChannel = channelValue == "" ? null : channelValue;
+      if (
+        channelValue == undefined ||
+        channelValue == null ||
+        channelValue == ""
+      ) {
+        this.form.mainDietitian = null;
+        return;
+      }
+      if (this.form.fansTime == undefined || this.form.fansTime == null) {
+        this.form.mainDietitian = null;
+        return;
+      }
+      this.autoSelectNutritionist();
     },
-    fanTimeAutoSelectNutritionist(fansTime){
-        this.form.fansTime = fansTime;
-        if(fansTime == undefined || fansTime == null){
-            this.form.mainDietitian = null;
-            return;
-        }
-        if(this.form.fansChannel == undefined || this.form.fansChannel == null || this.form.fansChannel == ""){
-            this.form.mainDietitian = null;
-            return;
-        }
-        this.autoSelectNutritionist();
+    fanTimeAutoSelectNutritionist(fansTime) {
+      this.form.fansTime = fansTime;
+      if (fansTime == undefined || fansTime == null) {
+        this.form.mainDietitian = null;
+        return;
+      }
+      if (
+        this.form.fansChannel == undefined ||
+        this.form.fansChannel == null ||
+        this.form.fansChannel == ""
+      ) {
+        this.form.mainDietitian = null;
+        return;
+      }
+      this.autoSelectNutritionist();
     },
-    autoSelectNutritionist(){
-        getLiveSchedulByTime({'fanChannel':this.form.fansChannel,'liveStartTimeString':encodeURIComponent(this.form.fansTime)}).then((response) => {
-              if (response.code === 200) {
-                 let live = response.data;
-                 if(live != undefined && live != null && live.liveNutritionistId != null && this.nutritionistIdOptions != null){
-                    let mainDietitian = null;
-                     this.nutritionistIdOptions.forEach((item,index) => {
-                        if(live.liveNutritionistId == item.dictValue){
-                           mainDietitian = live.liveNutritionistId;
-                        }
-                        if(index == this.nutritionistIdOptions.length - 1){
-                          this.form.mainDietitian = mainDietitian;
-                        }
-                     });
-                 }else{
-                   this.form.mainDietitian = null;
-                 }
-              }else{
-                this.form.mainDietitian = null;
+    autoSelectNutritionist() {
+      getLiveSchedulByTime({
+        fanChannel: this.form.fansChannel,
+        liveStartTimeString: encodeURIComponent(this.form.fansTime),
+      }).then((response) => {
+        if (response.code === 200) {
+          let live = response.data;
+          if (
+            live != undefined &&
+            live != null &&
+            live.liveNutritionistId != null &&
+            this.nutritionistIdOptions != null
+          ) {
+            let mainDietitian = null;
+            this.nutritionistIdOptions.forEach((item, index) => {
+              if (live.liveNutritionistId == item.dictValue) {
+                mainDietitian = live.liveNutritionistId;
               }
-        });
-    }
+              if (index == this.nutritionistIdOptions.length - 1) {
+                this.form.mainDietitian = mainDietitian;
+              }
+            });
+          } else {
+            this.form.mainDietitian = null;
+          }
+        } else {
+          this.form.mainDietitian = null;
+        }
+      });
+    },
   },
 };
 </script>
