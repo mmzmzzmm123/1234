@@ -22,11 +22,22 @@
     <!--    根据userId和角色查询问题列表-->
     <select id="selectSysServicesTopicByUserIdAndRole" parameterType="SysServicesTopic"
             resultMap="SysServicesTopicResult">
-        SELECT * FROM (
-        SELECT topic_id, id, `read`, create_time, update_time, 'customer' AS role FROM sys_services_topic_status WHERE role = #{role} AND uid = #{uid}
-        ) AS status
-        LEFT JOIN sys_services_topic USING(topic_id) WHERE del_flag = 0
-        ORDER BY `read` ASC, update_time DESC
+        <choose>
+            <when test="role == 'admin' or role == 'manager'">
+                select topic_id, topic_type, content, uid, create_time, img, 1 as `read`, '0' as id, 'customer' as role
+                from sys_services_topic where del_flag = 0 order by create_time desc
+            </when>
+            <otherwise>
+                SELECT * FROM (
+                SELECT topic_id, id, `read`, create_time, update_time, 'customer' AS role FROM sys_services_topic_status
+                WHERE role = #{role} AND uid = #{uid}
+                ) AS status
+                LEFT JOIN sys_services_topic USING(topic_id) WHERE del_flag = 0
+                ORDER BY `read` ASC, update_time DESC
+            </otherwise>
+        </choose>
+
+
     </select>
 
     <!--    查询主题-->
@@ -56,7 +67,7 @@
         <association property="fromName" column="{uid=from_uid,role=from_role}" select="selectUserInfo"/>
         <association property="fromAvatar" column="{uid=from_uid,role=from_role}" select="selectUserAvatar"/>
         <association property="toName" column="{uid=to_uid,role=to_role}" select="selectUserInfo"/>
-<!--        <association property="toAvatar" column="{uid=to_uid,role=to_role}" select="selectUserAvatar"/>-->
+        <!--        <association property="toAvatar" column="{uid=to_uid,role=to_role}" select="selectUserAvatar"/>-->
         <association property="replys" column="id"
                      select="selectServicesTopicCommentReplyByCommentId"/>
     </resultMap>
@@ -76,7 +87,7 @@
         <association property="fromName" column="{uid=from_uid,role=from_role}" select="selectUserInfo"/>
         <association property="fromAvatar" column="{uid=from_uid,role=from_role}" select="selectUserAvatar"/>
         <association property="toName" column="{uid=to_uid,role=to_role}" select="selectUserInfo"/>
-<!--        <association property="toAvatar" column="{uid=to_uid,role=to_role}" select="selectUserAvatar"/>-->
+        <!--        <association property="toAvatar" column="{uid=to_uid,role=to_role}" select="selectUserAvatar"/>-->
     </resultMap>
 
 
@@ -115,7 +126,8 @@
                 select avatar_url from sys_wx_user_info where cus_id = #{uid}
             </when>
             <otherwise>
-                select IF(avatar != '', CONCAT("https://api.stdiet.top/prod-api", avatar), '') as avatar from sys_user where user_id = #{uid}
+                select IF(avatar != '', CONCAT("https://api.stdiet.top/prod-api", avatar), '') as avatar from sys_user
+                where user_id = #{uid}
             </otherwise>
         </choose>
     </select>
