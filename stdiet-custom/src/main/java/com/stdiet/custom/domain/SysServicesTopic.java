@@ -85,8 +85,15 @@ public class SysServicesTopic {
     String toName;
     String name;
 
+    String avatar;
+    String fromAvatar;
+    String toAvatar;
+
+
     List<SysServicesTopic> comments;
 
     List<SysServicesTopic> replys;
+
+    Integer count;
 
 }

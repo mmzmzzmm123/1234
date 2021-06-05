@@ -11,26 +11,11 @@
 
     <div class="right-menu">
       <template v-if="device !== 'mobile'">
-        <!-- <search id="header-search" class="right-menu-item" /> -->
-
-        <!-- <el-tooltip content="源码地址" effect="dark" placement="bottom">
-          <ruo-yi-git id="ruoyi-git" class="right-menu-item hover-effect" />
-        </el-tooltip> -->
-
-        <!-- <el-tooltip content="文档地址" effect="dark" placement="bottom">
-          <ruo-yi-doc id="ruoyi-doc" class="right-menu-item hover-effect" />
-        </el-tooltip> -->
-
-        <!-- <screenfull id="screenfull" class="right-menu-item hover-effect" /> -->
-
-        <!-- <el-tooltip content="布局大小" effect="dark" placement="bottom">
-          <size-select id="size-select" class="right-menu-item hover-effect" />
-        </el-tooltip> -->
         <div
           class="right-menu-item hover-effect badge_style"
           @click="handleOnMessageClick"
         >
-          <el-badge :value="12">
+          <el-badge :value="msgUnreadCount">
             <el-tooltip content="消息" effect="dark" placement="bottom">
               <em class="el-icon-message" :style="{ fontSize: '28px' }" />
             </el-tooltip>
@@ -44,7 +29,7 @@
       >
         <div class="avatar-wrapper">
           <img :src="avatar" class="user-avatar" />
-          <i class="el-icon-caret-bottom" />
+          <em class="el-icon-caret-bottom" />
         </div>
         <el-dropdown-menu slot="dropdown">
           <router-link to="/user/profile">
@@ -66,25 +51,32 @@
 import { mapGetters, mapActions } from "vuex";
 import Breadcrumb from "@/components/Breadcrumb";
 import Hamburger from "@/components/Hamburger";
-// import Screenfull from "@/components/Screenfull";
-// import SizeSelect from "@/components/SizeSelect";
-// import Search from "@/components/HeaderSearch";
-// import RuoYiGit from "@/components/RuoYi/Git";
-// import RuoYiDoc from "@/components/RuoYi/Doc";
+import { keys, websocketInit, beforeUnmount } from "@/utils/websocket";
 
 export default {
   components: {
     Breadcrumb,
     Hamburger,
-    // Screenfull,
-    // SizeSelect,
-    // Search,
+  },
+  data() {
+    return {
+      msgNum: 0,
+    };
   },
   created() {
     this.init();
+    websocketInit();
+  },
+  mounted() {
+    window.postMessage({ type: keys.GET_UNREAD_COUNT }, window.location.origin);
+    window.addEventListener("message", this.handleOnMessage);
+  },
+  unmounted() {
+    beforeUnmount(1000);
+    window.removeEventListener("message", this.handleOnMessage);
   },
   computed: {
-    ...mapGetters(["sidebar", "avatar", "device"]),
+    ...mapGetters(["sidebar", "avatar", "device", "msgUnreadCount"]),
     setting: {
       get() {
         return this.$store.state.settings.showSettings;
@@ -98,7 +90,14 @@ export default {
     },
   },
   methods: {
-    ...mapActions(["init"]),
+    ...mapActions(["init", "updateUnreadCount"]),
+    handleOnMessage({ data }) {
+      if (data.type === keys.WS_TYPE_MESSAGE_COUNT) {
+        this.updateUnreadCount({
+          msgUnreadCount: data.data.count,
+        });
+      }
+    },
     toggleSideBar() {
       this.$store.dispatch("app/toggleSideBar");
     },

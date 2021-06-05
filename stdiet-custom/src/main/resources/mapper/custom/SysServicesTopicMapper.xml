@@ -22,11 +22,22 @@
     <!--    根据userId和角色查询问题列表-->
     <select id="selectSysServicesTopicByUserIdAndRole" parameterType="SysServicesTopic"
             resultMap="SysServicesTopicResult">
-        SELECT * FROM (
-        SELECT topic_id, id, `read`, create_time, update_time, 'customer' AS role FROM sys_services_topic_status WHERE role = #{role} AND uid = #{uid}
-        ) AS status
-        LEFT JOIN sys_services_topic USING(topic_id)
-        ORDER BY `read` ASC, update_time DESC
+        <choose>
+            <when test="role == 'admin' or role == 'manager' or role == 'admin-dev'">
+                select topic_id, topic_type, content, uid, create_time, img, 1 as `read`, '0' as id, 'customer' as role
+                from sys_services_topic where del_flag = 0 order by create_time desc
+            </when>
+            <otherwise>
+                SELECT * FROM (
+                SELECT topic_id, id, `read`, create_time, update_time, 'customer' AS role FROM sys_services_topic_status
+                WHERE role = #{role} AND uid = #{uid}
+                ) AS status
+                LEFT JOIN sys_services_topic USING(topic_id) WHERE del_flag = 0
+                ORDER BY `read` ASC, update_time DESC
+            </otherwise>
+        </choose>
+
+
     </select>
 
     <!--    查询主题-->
@@ -39,6 +50,7 @@
         <result column="img" property="img" typeHandler="com.stdiet.custom.typehandler.ArrayJsonHandler"/>
         <result column="create_time" property="createTime"/>
         <association property="name" column="{uid=uid,role=role}" select="selectUserInfo"/>
+        <association property="avatar" column="{uid=uid,role=role}" select="selectUserAvatar"/>
         <association property="comments" column="topic_id" select="selectServicesTopicCommentByTopicId"/>
     </resultMap>
 
@@ -53,7 +65,9 @@
         <result column="img" property="img" typeHandler="com.stdiet.custom.typehandler.ArrayJsonHandler"/>
         <result column="create_time" property="createTime"/>
         <association property="fromName" column="{uid=from_uid,role=from_role}" select="selectUserInfo"/>
+        <association property="fromAvatar" column="{uid=from_uid,role=from_role}" select="selectUserAvatar"/>
         <association property="toName" column="{uid=to_uid,role=to_role}" select="selectUserInfo"/>
+        <!--        <association property="toAvatar" column="{uid=to_uid,role=to_role}" select="selectUserAvatar"/>-->
         <association property="replys" column="id"
                      select="selectServicesTopicCommentReplyByCommentId"/>
     </resultMap>
@@ -71,7 +85,9 @@
         <result column="img" property="img" typeHandler="com.stdiet.custom.typehandler.ArrayJsonHandler"/>
         <result column="create_time" property="createTime"/>
         <association property="fromName" column="{uid=from_uid,role=from_role}" select="selectUserInfo"/>
+        <association property="fromAvatar" column="{uid=from_uid,role=from_role}" select="selectUserAvatar"/>
         <association property="toName" column="{uid=to_uid,role=to_role}" select="selectUserInfo"/>
+        <!--        <association property="toAvatar" column="{uid=to_uid,role=to_role}" select="selectUserAvatar"/>-->
     </resultMap>
 
 
@@ -99,6 +115,19 @@
             </when>
             <otherwise>
                 select nick_name from sys_user where user_id = #{uid}
+            </otherwise>
+        </choose>
+    </select>
+
+    <!--    查询头像-->
+    <select id="selectUserAvatar" parameterType="java.util.Map" resultType="String">
+        <choose>
+            <when test="_parameter.get('role') == 'customer'">
+                select avatar_url from sys_wx_user_info where cus_id = #{uid}
+            </when>
+            <otherwise>
+                select IF(avatar != '', CONCAT("https://api.stdiet.top/prod-api", avatar), '') as avatar from sys_user
+                where user_id = #{uid}
             </otherwise>
         </choose>
     </select>
@@ -225,5 +254,23 @@
         </trim>
     </insert>
 
+    <resultMap type="SysServicesTopic" id="SysServicesCountResult">
+        <result column="uid" property="uid"/>
+        <result column="count" property="count"/>
+    </resultMap>
 
+    <select id="selectUnreadTopicCount" parameterType="java.util.List" resultMap="SysServicesCountResult">
+        <foreach collection="list" item="status" index="index">
+            <choose>
+                <when test="index == 0">
+                    SELECT COUNT(*) AS count, uid FROM sys_services_topic_status WHERE `read` = 0 AND uid =
+                    #{status.uid}
+                </when>
+                <otherwise>
+                    UNION ALL SELECT COUNT(*) AS count, uid FROM sys_services_topic_status WHERE `read` = 0 AND uid =
+                    #{status.uid}
+                </otherwise>
+            </choose>
+        </foreach>
+    </select>
 </mapper>

@@ -1,7 +1,9 @@
 <template>
-  <div class="topic_comment_item">
+  <div class="topic_comment_item" @click="handOnClick(data)">
     <div class="comment_avatar">
-      <el-avatar size="medium">{{ data.fromName.substr(-1) }}</el-avatar>
+      <el-avatar size="medium" :src="data.fromAvatar || ''">{{
+        data.fromName.substr(-1)
+      }}</el-avatar>
     </div>
     <div class="comment_content">
       <div class="content_title">
@@ -10,11 +12,7 @@
       <div class="content_type">{{ data.content }}</div>
       <div class="content_time">
         {{ formatDate(data.createTime) }}
-        <div
-          v-if="data.fromUid !== userId.toString()"
-          class="reply_btn"
-          @click="handOnClick(data)"
-        >
+        <div v-if="data.fromUid !== userId.toString()" class="reply_btn">
           回复
         </div>
       </div>
@@ -30,7 +28,7 @@ export default {
     return {
       roleDict: {
         customer: "客户",
-        dietician: "主营养师",
+        dietician: "主任营养师",
         after_sale: "售后营养师",
         dietician_assistant: "营养师助理",
       },
@@ -61,6 +59,7 @@ export default {
 .topic_comment_item {
   margin: 12px;
   display: flex;
+  cursor: pointer;
 
   .comment_avatar {
     flex: 0 0 36px;
@@ -86,7 +85,8 @@ export default {
 
       .reply_btn {
         margin-left: 16px;
-        cursor: pointer;
+        color: #1890ff;
+        // cursor: pointer;
       }
     }
   }

@@ -75,14 +75,14 @@
             {{ `${scope.row.startDate} 至 ${scope.row.endDate}` }}
           </template>
         </el-table-column>
-        <el-table-column label="订阅情况" align="center">
+        <el-table-column label="订阅情况" align="center" width="80">
           <template slot-scope="scope">
             <el-tag :type="scope.row.subscribed ? 'success' : 'danger'">
               {{ scope.row.subscribed ? "已订阅" : "未订阅" }}
             </el-tag>
           </template>
         </el-table-column>
-        <el-table-column label="发送" align="center" width="80">
+        <el-table-column label="发送" align="center" width="60">
           <template slot-scope="scope">
             <el-switch
               v-model="!!scope.row.sendFlag"
@@ -90,7 +90,7 @@
             />
           </template>
         </el-table-column>
-        <el-table-column label="操作" align="center" width="160">
+        <el-table-column label="操作" align="center" width="140">
           <template slot-scope="scope">
             <el-button
               type="text"
@@ -102,7 +102,6 @@
               {{ `${scope.row.recipesId ? "编辑" : "制作"}` }}
             </el-button>
             <el-button
-              v-if="scope.row.reviewStatus === 1"
               type="text"
               icon="el-icon-delete"
               @click="handleOnDelete(scope.row)"
