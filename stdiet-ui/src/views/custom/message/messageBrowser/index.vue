@@ -353,6 +353,13 @@ export default {
       .topic_detail_title {
         display: flex;
         cursor: pointer;
+
+        & > :nth-child(1) {
+          flex: 0 0 40px;
+        }
+        & > :nth-child(2) {
+          flex: 1 0 0;
+        }
       }
 
       .comment_reply_item {

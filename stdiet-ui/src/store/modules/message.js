@@ -1,5 +1,9 @@
 import { getCustomerPhysicalSignsByCusId } from "@/api/custom/customer";
 import { dealHealthy } from "@/utils/healthyData";
+import {
+  listRecipesPlanByCusId,
+  updateRecipesPlan
+} from "@/api/custom/recipesPlan";
 
 import {
   fetchTopicList,
@@ -16,7 +20,10 @@ const oriState = {
   healthyData: {},
   healthDataLoading: false,
   healthyDataType: 0,
-  avoidFoodIds: []
+  avoidFoodIds: [],
+  //
+  planList: [],
+  planListLoading: false
 };
 
 const mutations = {
@@ -71,12 +78,17 @@ const actions = {
   },
   async fetchTopicDetailActions({ commit, dispatch, state }, payload) {
     const { topicId, id, uid } = payload;
-    const { healthyData } = state;
+    const { healthyData, planList } = state;
     commit("save", { selTopicId: topicId });
     // 客户信息
     if (healthyData.customerId !== parseInt(uid)) {
       dispatch("getHealthyData", { cusId: uid, callback: payload.callback });
     }
+    // 食谱计划
+    if (!planList.length || planList[0].cusId !== parseInt(uid)) {
+      dispatch("getRecipesPlanActions", { cusId: uid });
+    }
+
     //
     const result = await fetchTopicDetail({ topicId, id });
     if (result.code === 200) {
@@ -130,13 +142,39 @@ const actions = {
           obj => obj.id
         );
       }
-    } else {
-      throw new Error(healthyDataResult.msg);
     }
     commit("save", {
       healthDataLoading: false,
       ...newState
     });
+  },
+  async getRecipesPlanActions({ commit }, payload) {
+    commit("save", { planListLoading: true, planList: [] });
+    const result = await listRecipesPlanByCusId(payload.cusId);
+    let planList = [];
+    if (result.code === 200) {
+      planList = result.data;
+    }
+    commit("save", {
+      planList,
+      planListLoading: false
+    });
+  },
+  async updateRecipesPlanActions({ commit, state }, payload) {
+    const { id, sendFlag, callback } = payload;
+    const { planList } = state;
+    const result = await updateRecipesPlan({ id, sendFlag });
+    if (result.code === 200) {
+      callback && callback("success", result.msg);
+      const newPlanList = JSON.parse(JSON.stringify(planList));
+      const tarPlan = newPlanList.find(obj => obj.id === id);
+      if (tarPlan) {
+        tarPlan.sendFlag = sendFlag;
+      }
+      commit("save", {
+        planList: newPlanList
+      });
+    }
   }
 };
 

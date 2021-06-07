@@ -192,7 +192,7 @@ export default {
   },
   methods: {
     showDrawer(data) {
-      // console.log(data);
+      console.log(data);
       this.data = data;
       if (!this.data) {
         return;
