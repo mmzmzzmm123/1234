@@ -39,6 +39,10 @@ public class SysImportFanRecord extends BaseEntity
     /** 删除标识，0未删除 1已删除 */
     private Long delFlag;
 
+    //导粉时间
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm")
+    private Date importTime;
+
     //微信ID
     private Long wxAccountId;
 
@@ -61,6 +65,8 @@ public class SysImportFanRecord extends BaseEntity
     private String wxAccountIds;
 
     private String fanNums;
+
+    private String importTimes;
 
 
     //总进粉数量

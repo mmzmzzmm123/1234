@@ -92,10 +92,15 @@
           <span>{{ parseTime(scope.row.importFanDate, '{y}-{m}-{d}') }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="进粉账号渠道" align="center" prop="importFanChannelName" />
+      <el-table-column label="账号渠道" align="center" prop="importFanChannelName" />
       <el-table-column label="所属直播间" align="center" prop="liveRoomName" >
         <template slot-scope="scope">
-            {{(scope.row.liveRoomName != null || scope.row.liveNutritionistName != null) ? (scope.row.liveRoomName + "—" + scope.row.liveNutritionistName) : ""}}
+            {{(scope.row.liveRoomName != null ? scope.row.liveRoomName : "无")}}
+        </template>
+      </el-table-column>
+      <el-table-column label="直播营养师" align="center" prop="liveNutritionistName" >
+        <template slot-scope="scope">
+            {{scope.row.liveNutritionistName != null ? scope.row.liveNutritionistName : "无"}}
         </template>
       </el-table-column>
       <el-table-column label="导粉总数" align="center" prop="wxAccountList" :formatter="getTotalFanNum">
@@ -104,9 +109,9 @@
         <template slot-scope="scope">
           <el-popover
           placement="left"
-          width="520"
+          width="700"
           trigger="click">
-          <el-table :data="scope.row.wxAccountList" style="width:450;height: 400px;overflow: auto;">
+          <el-table :data="scope.row.wxAccountList" style="width:700;height: 400px;overflow: auto;">
             <el-table-column width="80" property="saleName" label="销售" align="center"></el-table-column>
             <el-table-column width="160" property="wxAccount" label="微信号" align="center"></el-table-column>
             <el-table-column width="120" property="importFanNum" label="导粉数量" align="center">
@@ -118,6 +123,8 @@
                     {{scope.row.importFanNum}}
                   </div>
                 </template>
+            </el-table-column>
+            <el-table-column width="160" property="importTime" label="导粉时间" align="center">     
             </el-table-column>
             <el-table-column width="120" label="操作" align="center">
               <template slot-scope="scope">

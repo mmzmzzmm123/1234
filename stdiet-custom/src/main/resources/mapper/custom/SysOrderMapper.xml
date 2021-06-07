@@ -113,6 +113,9 @@
             <if test="status != null ">and status = #{status}</if>
             <if test="payTypeId != null ">and pay_type_id = #{payTypeId}</if>
             <if test="preSaleId != null ">and pre_sale_id = #{preSaleId}</if>
+            <if test="onSaleId != null">
+                and on_sale_id = #{onSaleId}
+            </if>
             <if test="afterSaleId != null ">and after_sale_id = #{afterSaleId}</if>
             <if test="nutritionistId != null ">and nutritionist_id = #{nutritionistId}</if>
             <if test="nutriAssisId != null ">and nutri_assis_id = #{nutriAssisId}</if>
@@ -164,6 +167,9 @@
             <if test="phone != null  and phone != ''">and sc.phone = #{phone}</if>
             <if test="status != null ">and status = #{status}</if>
             <if test="payTypeId != null ">and pay_type_id = #{payTypeId}</if>
+            <if test="onSaleId != null">
+                and on_sale_id = #{onSaleId}
+            </if>
             <if test="preSaleId != null ">and pre_sale_id = #{preSaleId}</if>
             <if test="afterSaleId != null ">and after_sale_id = #{afterSaleId}</if>
             <if test="nutritionistId != null ">and nutritionist_id = #{nutritionistId}</if>

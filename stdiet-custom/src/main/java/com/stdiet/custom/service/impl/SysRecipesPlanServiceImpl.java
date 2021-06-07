@@ -4,10 +4,8 @@ import com.stdiet.common.utils.DateUtils;
 import com.stdiet.common.utils.StringUtils;
 import com.stdiet.common.utils.SynchrolockUtil;
 import com.stdiet.common.utils.sign.Md5Utils;
-import com.stdiet.custom.domain.SysOrder;
-import com.stdiet.custom.domain.SysOrderPause;
-import com.stdiet.custom.domain.SysRecipesPlan;
-import com.stdiet.custom.domain.SysRecipesPlanListInfo;
+import com.stdiet.custom.domain.*;
+import com.stdiet.custom.mapper.SysRecipesMapper;
 import com.stdiet.custom.mapper.SysRecipesPlanMapper;
 import com.stdiet.custom.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,6 +41,8 @@ public class SysRecipesPlanServiceImpl implements ISysRecipesPlanService {
     private IWechatAppletService wechatAppletService;
     @Autowired
     private ISysCustomerService sysCustomerService;
+    @Autowired
+    private SysRecipesMapper sysRecipesMapper;
 
     /**
      * 查询食谱计划
@@ -151,7 +151,7 @@ public class SysRecipesPlanServiceImpl implements ISysRecipesPlanService {
     @Async
     public void regenerateRecipesPlan(Long cusId) {
         try {
-            Thread.sleep(5000);
+            Thread.sleep(3000);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -196,6 +196,8 @@ public class SysRecipesPlanServiceImpl implements ISysRecipesPlanService {
                             }
                         }
                     }
+                    //食谱计划更新完成之后需要查询是否存在天数缺失情况，进行补充
+                    supplyRecipesBmenu(cusId);
                 }
             }
         } catch (Exception e) {
@@ -205,6 +207,34 @@ public class SysRecipesPlanServiceImpl implements ISysRecipesPlanService {
             synchrolockUtil.unlock(String.format(generateRecipesPlanLockKey, cusId));
         }
     }
+
+    /**
+     * 查询食谱计划中对应食谱存在天数缺失的食谱计划，食谱计划发生变化时，可能会导致sys_customer_daily_menu表中天数缺失，需要查询出来进行补充
+     * @param cusId 客户ID
+     */
+    private void supplyRecipesBmenu(Long cusId){
+        List<Map<String,Object>> list = getNeedSupplyRecipesByCusId(cusId);
+        if(list != null && list.size() > 0){
+            for (Map<String,Object> map : list) {
+                Long recipesId = (Long)map.get("recipesId");
+                Integer enNumDay = (Integer)map.get("enNumDay");
+                Integer maxNumDay = (Integer)map.get("maxNumDay");
+                if(recipesId != null && enNumDay != null && maxNumDay != null){
+                    List<SysRecipesDaily> menus = new ArrayList<>();
+                    for (int i = maxNumDay+1; i <= enNumDay; i++) {
+                        SysRecipesDaily daily = new SysRecipesDaily();
+                        daily.setCusId(cusId);
+                        daily.setNumDay(i);
+                        daily.setRecipesId(recipesId);
+                        menus.add(daily);
+                    }
+                    sysRecipesMapper.bashAddMenus(menus);
+                }
+            }
+        }
+    }
+
+
 
     /**
      * 更新食谱计划，删除旧食谱中多余的，添加新食谱中多的
@@ -472,6 +502,15 @@ public class SysRecipesPlanServiceImpl implements ISysRecipesPlanService {
         public int compare(String o1, String o2) {
             return Integer.parseInt(o1) - Integer.parseInt(o2);
         }
+    }
+
+    /**
+     * 查询食谱计划中对应食谱存在天数缺失的食谱计划
+     * @param cusId
+     * @return
+     */
+    public List<Map<String,Object>> getNeedSupplyRecipesByCusId(Long cusId){
+        return sysRecipesPlanMapper.getNeedSupplyRecipesByCusId(cusId);
     }
 
 }

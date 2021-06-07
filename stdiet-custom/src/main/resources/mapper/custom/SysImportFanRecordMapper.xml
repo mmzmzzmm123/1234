@@ -58,12 +58,13 @@
     </select>
 
     <select id="selectTotalSysImportFanNum" parameterType="SysImportFanRecord" resultType="int">
-        select sum(fwa.import_fan_num)
-        from sys_import_fan_record as fc
-        left join sys_import_fan_wx_account fwa on fwa.import_fan_record_id = fc.id and fwa.del_flag = 0
-        where fc.del_flag = 0
-        <if test="importFanDate != null "> and fc.import_fan_date = #{importFanDate}</if>
-        <if test="importFanChannel != null "> and fc.import_fan_channel = #{importFanChannel}</if>
+        select ifnull(sum(fwa.import_fan_num),0) from sys_import_fan_wx_account fwa
+        where fwa.del_flag = 0 and fwa.import_fan_record_id in
+        (
+          select fc.id from sys_import_fan_record as fc where fc.del_flag = 0
+          <if test="importFanDate != null "> and fc.import_fan_date = #{importFanDate}</if>
+          <if test="importFanChannel != null "> and fc.import_fan_channel = #{importFanChannel}</if>
+        )
     </select>
 
     <select id="selectSysImportFanRecordById" parameterType="Long" resultMap="SysImportFanRecordResult">
@@ -129,7 +130,7 @@
 
     <select id="getWxAccountListByFanRecordId" parameterType="Long" resultType="Map">
         select fwc.id, fwc.import_fan_record_id as importFanRecordId, fwc.import_wx_account_id as importWxAccountId, fwc.import_fan_num as importFanNum,
-        su.nick_name as saleName,wa.wx_account as wxAccount
+        DATE_FORMAT(fwc.import_time,'%Y-%m-%d %H:%i') as importTime,su.nick_name as saleName,wa.wx_account as wxAccount
         from sys_import_fan_wx_account fwc
         left join sys_wx_sale_account wa on wa.id = fwc.import_wx_account_id and wa.del_flag = 0
         left join sys_wx_distribution swd on swd.wechat_account = wa.id and swd.del_flag = 0

@@ -89,6 +89,24 @@
           </el-form-item>
         </el-col>
         <el-col :span="6" v-if="!isPartner">
+          <el-form-item label="售中" prop="onSaleId">
+            <el-select
+              v-model="queryParams.onSaleId"
+              placeholder="请选择售中"
+              clearable
+              filterable
+              size="small"
+            >
+              <el-option
+                v-for="dict in onSaleIdOptions"
+                :key="dict.dictValue"
+                :label="dict.dictLabel"
+                :value="parseInt(dict.dictValue)"
+              />
+            </el-select>
+          </el-form-item>
+        </el-col>
+        <el-col :span="6" v-if="!isPartner">
           <el-form-item label="售后" prop="afterSaleId">
             <el-select
               v-model="queryParams.afterSaleId"
@@ -248,7 +266,7 @@
             </el-select>
           </el-form-item>
         </el-col>
-        <el-col :span="12">
+        <el-col :span="6">
           <el-form-item label="订单类型" prop="searchOrderTypeArray">
             <el-cascader
               placeholder="请选择订单类型"
@@ -257,13 +275,13 @@
               :props="orderTypeProps"
               collapse-tags
               clearable
-              style="width: 300px"
             ></el-cascader> </el-form-item
           ><!--   -->
         </el-col>
-        <el-col :span="12">
+        <el-col :span="20">
           <el-form-item label="成交日期" prop="orderTime">
             <el-date-picker
+              style="width:300px"
               v-model="daterange"
               type="daterange"
               size="small"
@@ -276,10 +294,7 @@
             >
             </el-date-picker>
           </el-form-item>
-        </el-col>
-
-        <el-col>
-          <el-form-item>
+          <el-form-item style="margin-left:50px">
             <el-button
               type="cyan"
               icon="el-icon-search"
@@ -292,6 +307,20 @@
             </el-button>
           </el-form-item>
         </el-col>
+        <!--<el-col>
+          <el-form-item>
+            <el-button
+              type="cyan"
+              icon="el-icon-search"
+              size="mini"
+              @click="handleQuery"
+              >搜索
+            </el-button>
+            <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">
+              重置
+            </el-button>
+          </el-form-item>
+        </el-col>-->
       </el-form>
     </el-row>
 
@@ -337,8 +366,10 @@
         width="100"
       >
         <template slot-scope="scope">
+          <div v-if="scope.row.orderTime != undefined && scope.row.orderTime != null">
           <div v-for="time in scope.row.orderTime.split(' ')" :key="time">
             {{ time }}
+          </div>
           </div>
         </template>
       </el-table-column>
@@ -362,7 +393,11 @@
         width="90"
       />
       <el-table-column label="服务时长" align="center" prop="serveTime" />
-      <el-table-column label="销售" align="center" prop="preSale" />
+      <el-table-column label="销售/售中" align="center" prop="preSale" >
+          <template slot-scope="scope">
+              {{ scope.row.preSaleId ? scope.row.preSale : scope.row.onSale }}
+          </template>
+      </el-table-column>
       <el-table-column
         v-if="!isMobile"
         label="售后"
@@ -561,6 +596,7 @@ export default {
         phone: null,
         payTypeId: null,
         preSaleId: null,
+        onSaleId: null,
         afterSaleId: null,
         nutritionistId: null,
         nutriAssisId: null,
@@ -592,6 +628,7 @@ export default {
     ...mapGetters([
       // 售前字典
       "preSaleIdOptions",
+      "onSaleIdOptions",
       // 售后字典
       "afterSaleIdOptions",
       // 主营养师字典

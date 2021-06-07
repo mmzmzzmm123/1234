@@ -4,7 +4,7 @@
     <el-dialog :title="title" :visible.sync="open" width="1050px" :close-on-click-modal="false" append-to-body @closed="cancel">
       <!--<div style="margin-bottom: 20px;color:red">1、添加导粉记录时会根据进粉渠道、当前时间来自动确定所属直播间，当前时间段没有直播，则取上一次直播，若账号从未直播过，则为空</div>-->
         <el-form :model="queryParams" ref="queryForm" :inline="true" label-width="68px">
-      <!--<el-form-item label="账号渠道" prop="channel">
+      <el-form-item label="账号渠道" prop="channel">
           <el-select
               v-model="queryParams.channel"
               placeholder="请选择账号渠道"
@@ -19,7 +19,7 @@
                 :value="parseInt(dict.dictValue)"
               />
             </el-select>
-        </el-form-item>-->
+        </el-form-item>
         <el-form-item label="销售" prop="saleId" label-width="50px">
           <el-select
               v-model="queryParams.saleId"
@@ -89,20 +89,15 @@
                 </el-table-column>-->
                  <el-table-column label="导粉时间" align="center" prop="fanTime" width="240">
                    <template slot-scope="scope">
-                  <el-date-picker
-                    v-model="scope.row.fanTime"
-                    type="datetime"
-                    placeholder="选择导粉时间"
-                    format="yyyy-MM-dd HH:mm"
+                  <el-time-picker
                     value-format="yyyy-MM-dd HH:mm"
-                    :picker-options="fanPickerOptions"
+                    v-model="scope.row.fanTime"
+                    placeholder="选择导粉时间"
                     @change="autoSelectLive(scope.row)"
                   >
-                  </el-date-picker>
+                  </el-time-picker>
                    </template>
                 </el-table-column>
-                
-
                 <el-table-column label="导粉数量" align="center" prop="fanNum" width="180">
                     <template slot-scope="scope">
                             <el-input-number v-model="scope.row.fanNum" :min="1" :max="10000" label="导粉数量" style="width:160px"></el-input-number>
@@ -227,9 +222,9 @@ export default {
             response.data.wxSaleAccountList.forEach((item,index) => {
                 item.fanNum = 1;
                 //item.importFanNum =  this.getTotalFanNum(response.data.fanNumList, item.id);
-                item.importFanChannel = null;
+                item.importFanChannel = item.channel ? item.channel : null;
                 item.importFanLive = null;
-                item.fanTime = null;
+                item.fanTime = null;           
             });
             this.wxAccountList = response.data.wxSaleAccountList;
             //this.fanNumList = response.data.fanNumList;
@@ -297,14 +292,16 @@ export default {
           'importFanChannel': row.importFanChannel,
           'importFanLive': row.importFanLive,
           'wxAccountId': row.id,
-          'fanNum': row.fanNum
+          'fanNum': row.fanNum,
+          "importTime": row.fanTime
         }
         addImportFanRecord(param).then((response) => {
             if(response.code == 200){
                 this.msgSuccess("保存成功");
-                row.importFanChannel = null;
+                //row.importFanChannel = null;
                 row.importFanLive = null;
                 row.importFanNum += row.fanNum;
+                row.fanTime = null;
                 row.fanNum = 1;
                 this.importFanFlag = true;
             }
@@ -321,17 +318,19 @@ export default {
         }
         let param = {
           'importFanDate': this.data.importFanDate,
-          'importFanChannels': null,
-          'importFanLives': null,
-          'wxAccountIds': null,
-          'fanNums': null
+          'importFanChannels': "",
+          'importFanLives': "",
+          'wxAccountIds': "",
+          'fanNums': "",
+          "importTimes": ""
         }
         this.wxAccountList.forEach((item,index) => {
-            if(item.importFanChannel != undefined && item.importFanChannel != null && item.importFanChannel != ""){
-              param.importFanChannels += param.importFanChannels != null ? (","+this.nullToString(item.importFanChannel)) : item.importFanChannel;
-              param.importFanLives += param.importFanLives != null ? (","+this.nullToString(item.importFanLive)) : item.importFanLive;
-              param.wxAccountIds += param.wxAccountIds != null ? (","+this.nullToString(item.id)) : item.id;
-              param.fanNums += param.fanNums != null ? (","+this.nullToString(item.fanNum)) : item.fanNum;
+            if(item.fanTime != undefined && item.fanTime != null && item.fanTime != ""){
+              param.importFanChannels += index != 0 ? (","+this.nullToString(item.importFanChannel)) : item.importFanChannel;
+              param.importFanLives += index != 0 ? (","+this.nullToString(item.importFanLive)) : item.importFanLive;
+              param.wxAccountIds += index != 0 ? (","+this.nullToString(item.id)) : item.id;
+              param.fanNums += index != 0 ? (","+this.nullToString(item.fanNum)) : item.fanNum;
+              param.importTimes += index != 0 ? (","+this.nullToString(item.fanTime)) : item.fanTime;
             }
             if(index == this.wxAccountList.length -1){
                 if(param.importFanChannels == null){
@@ -347,9 +346,10 @@ export default {
                             this.importFanFlag = true;
                             for(let i=0; i < this.wxAccountList.length; i++){
                                   this.wxAccountList[i].importFanLive = null;
-                                  this.wxAccountList[i].importFanChannel = null;
+                                  //this.wxAccountList[i].importFanChannel = null;
                                   this.wxAccountList[i].importFanNum += this.wxAccountList[i].fanNum;
                                   this.wxAccountList[i].fanNum = 1;
+                                  this.wxAccountList[i].fanTime = null;
                                   //this.$set('wxAccountList', index, item);
                             }
                         }
@@ -366,6 +366,8 @@ export default {
            row.importFanLive = null;
            return;
         }
+        row.fanTime = this.data.importFanDate + " " + row.fanTime.substring(row.fanTime.length - 5);
+        //console.log(row.fanTime);
         getLiveSchedulByTime({'fanChannel':row.importFanChannel,'liveStartTimeString':encodeURIComponent(row.fanTime)}).then((response) => {
               if (response.code === 200) {
                  let live = response.data;
