@@ -9,6 +9,7 @@
         <result property="importFanRecordId"    column="import_fan_record_id"    />
         <result property="importWxAccountId"    column="import_wx_account_id"    />
         <result property="importFanNum"    column="import_fan_num"    />
+        <result property="importTime"    column="import_time"    />
         <result property="createTime"    column="create_time"    />
         <result property="createBy"    column="create_by"    />
         <result property="updateTime"    column="update_time"    />
@@ -17,7 +18,7 @@
     </resultMap>
 
     <sql id="selectSysImportFanWxAccountVo">
-        select id, import_fan_record_id, import_wx_account_id, import_fan_num, create_time, create_by, update_time, update_by, del_flag from sys_import_fan_wx_account
+        select id, import_fan_record_id, import_wx_account_id, import_fan_num,import_time, create_time, create_by, update_time, update_by, del_flag from sys_import_fan_wx_account
     </sql>
 
     <select id="selectSysImportFanWxAccountList" parameterType="SysImportFanWxAccount" resultMap="SysImportFanWxAccountResult">
@@ -38,6 +39,7 @@
             <if test="importFanRecordId != null">import_fan_record_id,</if>
             <if test="importWxAccountId != null">import_wx_account_id,</if>
             <if test="importFanNum != null">import_fan_num,</if>
+            <if test="importTime != null">import_time,</if>
             <if test="createTime != null">create_time,</if>
             <if test="createBy != null">create_by,</if>
             <if test="updateTime != null">update_time,</if>
@@ -48,6 +50,7 @@
             <if test="importFanRecordId != null">#{importFanRecordId},</if>
             <if test="importWxAccountId != null">#{importWxAccountId},</if>
             <if test="importFanNum != null">#{importFanNum},</if>
+            <if test="importTime != null">#{importTime},</if>
             <if test="createTime != null">#{createTime},</if>
             <if test="createBy != null">#{createBy},</if>
             <if test="updateTime != null">#{updateTime},</if>
@@ -62,6 +65,7 @@
             <if test="importFanRecordId != null">import_fan_record_id = #{importFanRecordId},</if>
             <if test="importWxAccountId != null">import_wx_account_id = #{importWxAccountId},</if>
             <if test="importFanNum != null">import_fan_num = #{importFanNum},</if>
+            <if test="importTime != null">import_time = #{importTime},</if>
             <if test="createTime != null">create_time = #{createTime},</if>
             <if test="createBy != null">create_by = #{createBy},</if>
             <if test="updateTime != null">update_time = #{updateTime},</if>

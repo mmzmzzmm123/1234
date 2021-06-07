@@ -72,15 +72,18 @@ public class SysImportFanRecordServiceImpl implements ISysImportFanRecordService
             sysImportFanWxAccount.setImportFanRecordId(record != null ? record.getId() : sysImportFanRecord.getId());
             sysImportFanWxAccount.setImportWxAccountId(sysImportFanRecord.getWxAccountId());
             sysImportFanWxAccount.setImportFanNum(sysImportFanRecord.getFanNum());
+            sysImportFanWxAccount.setImportTime(sysImportFanRecord.getImportTime());
             sysImportFanWxAccount.setCreateTime(new Date());
+            row = sysImportFanWxAccountService.insertSysImportFanWxAccount(sysImportFanWxAccount);
+
             //根据微信号、导粉记录查询是否存在
-            SysImportFanWxAccount oldFanWxAccount = sysImportFanWxAccountService.getWxAccountByFanRecordId(sysImportFanWxAccount);
+            /*SysImportFanWxAccount oldFanWxAccount = sysImportFanWxAccountService.getWxAccountByFanRecordId(sysImportFanWxAccount);
             if(oldFanWxAccount == null){
                 row = sysImportFanWxAccountService.insertSysImportFanWxAccount(sysImportFanWxAccount);
             }else{
                 oldFanWxAccount.setImportFanNum((oldFanWxAccount.getImportFanNum() == null ? 0 : oldFanWxAccount.getImportFanNum()) + sysImportFanWxAccount.getImportFanNum());
                 row = sysImportFanWxAccountService.updateSysImportFanWxAccount(oldFanWxAccount);
-            }
+            }*/
         }
         return row;
     }

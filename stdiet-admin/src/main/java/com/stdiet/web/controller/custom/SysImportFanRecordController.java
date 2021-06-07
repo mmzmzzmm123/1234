@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.stdiet.common.utils.DateUtils;
 import com.stdiet.common.utils.StringUtils;
 import com.stdiet.custom.domain.SysImportFanWxAccount;
 import com.stdiet.custom.domain.SysWxSaleAccount;
@@ -106,6 +107,7 @@ public class SysImportFanRecordController extends BaseController
             String[] importFanLiveArray = sysImportFanRecord.getImportFanLives().split(",");
             String[] wxAccountIdArray = sysImportFanRecord.getWxAccountIds().split(",");
             String[] fanNumArray = sysImportFanRecord.getFanNums().split(",");
+            String[] importTimeArray = sysImportFanRecord.getImportTimes().split(",");
             int index = -1;
             for (String importFanChannel : importFanChannelArray) {
                 index++;
@@ -116,6 +118,7 @@ public class SysImportFanRecordController extends BaseController
                 sysImportFanRecord.setImportFanLive(StringUtils.isEmpty(importFanLiveArray[index]) ? 0L : Long.parseLong(importFanLiveArray[index]));
                 sysImportFanRecord.setWxAccountId(Long.parseLong(wxAccountIdArray[index]));
                 sysImportFanRecord.setFanNum(Long.parseLong(fanNumArray[index]));
+                sysImportFanRecord.setImportTime(DateUtils.parseDate(importTimeArray[index]));
                 row = sysImportFanRecordService.insertSysImportFanRecord(sysImportFanRecord);
             }
         }else{

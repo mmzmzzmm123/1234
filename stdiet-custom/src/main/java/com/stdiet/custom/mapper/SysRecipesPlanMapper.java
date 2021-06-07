@@ -2,6 +2,8 @@ package com.stdiet.custom.mapper;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
+
 import com.stdiet.custom.domain.SysRecipesPlan;
 import com.stdiet.custom.domain.SysRecipesPlanListInfo;
 import org.apache.ibatis.annotations.Param;
@@ -117,4 +119,11 @@ public interface SysRecipesPlanMapper
      * @return
      */
     int updateMuchRecipesPlanDate(SysRecipesPlan sysRecipesPlan);
+
+    /**
+     * 查询食谱计划中对应食谱存在天数缺失的食谱计划
+     * @param cusId
+     * @return
+     */
+    List<Map<String,Object>> getNeedSupplyRecipesByCusId(@Param("cusId")Long cusId);
 }

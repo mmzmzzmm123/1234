@@ -2,6 +2,7 @@ package com.stdiet.custom.service;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 import com.stdiet.custom.domain.SysRecipesPlan;
 import com.stdiet.custom.domain.SysRecipesPlanListInfo;
@@ -121,5 +122,12 @@ public interface ISysRecipesPlanService
      * @return
      */
     List<SysRecipesPlan> selectPlanListByCusId(Long cusId);
+
+    /**
+     * 查询食谱计划中对应食谱存在天数缺失的食谱计划
+     * @param cusId
+     * @return
+     */
+    List<Map<String,Object>> getNeedSupplyRecipesByCusId(Long cusId);
 
 }

@@ -284,4 +284,16 @@
         update sys_recipes_plan set start_date = #{startDate},end_date = #{endDate},pause_date=#{pauseDate} where id =
         #{id}
     </update>
+
+    <!-- 查询食谱计划中对应食谱存在天数缺失的食谱计划，食谱计划发生变化时，可能会导致sys_customer_daily_menu表中天数缺失，需要查询出来进行补充 -->
+    <select id="getNeedSupplyRecipesByCusId" parameterType="Long" resultType="Map">
+        select plan.recipes_id as recipesId,plan.end_num_day as enNumDay,s.maxNumDay from sys_recipes_plan as plan left join
+
+        (
+          select recipes_id,count(1) as dayNum,max(num_day) as maxNumDay from sys_customer_daily_menu where cus_id = #{cusId} and recipes_id is not null group by recipes_id
+        )
+        as s on s.recipes_id = plan.recipes_id
+
+        where plan.cus_id = #{cusId} and plan.del_flag = 0 and plan.recipes_id is not null and plan.end_num_day > s.maxNumDay
+    </select>
 </mapper>

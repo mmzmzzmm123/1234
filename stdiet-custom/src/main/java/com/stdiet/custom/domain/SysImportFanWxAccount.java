@@ -33,6 +33,11 @@ public class SysImportFanWxAccount extends BaseEntity
     @Excel(name = "导粉数量")
     private Long importFanNum;
 
+    /** 导粉时间 */
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm")
+    @Excel(name = "导粉时间", width = 30, dateFormat = "yyyy-MM-dd HH:mm")
+    private Date importTime;
+
     /** 删除标识 0未删除 1已删除 */
     private Long delFlag;
 
