@@ -2,8 +2,8 @@ package com.stdiet.web.controller.custom;
 
 import com.alibaba.fastjson.JSONObject;
 import com.stdiet.common.core.controller.BaseController;
-import com.stdiet.custom.utils.WsUtils;
 import com.stdiet.custom.server.WebSocketServer;
+import com.stdiet.custom.utils.WsUtils;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Controller;
@@ -38,16 +38,16 @@ public class WebSocketController extends BaseController {
 
     }
 
-//    @Scheduled(fixedRate = 30000)
-//    public void boardCast() {
-//        try {
-//            JSONObject heartBeat = new JSONObject();
-//            heartBeat.put("type", WsUtils.WS_TYPE_HEART_BEAT);
-//            heartBeat.put("msg", "ping");
-//
-//            WebSocketServer.sendInfo(heartBeat.toJSONString(), null);
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-//    }
+    @Scheduled(fixedRate = 1800000)
+    public void boardCast() {
+        try {
+            JSONObject heartBeat = new JSONObject();
+            heartBeat.put("type", WsUtils.WS_TYPE_SYSTEM_MESSAGE_CLEAN);
+            heartBeat.put("msg", "clean");
+
+            WebSocketServer.sendInfo(heartBeat.toJSONString(), null);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 }

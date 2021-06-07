@@ -31,6 +31,7 @@ export default {
         dietician: "主任营养师",
         after_sale: "售后营养师",
         dietician_assistant: "营养师助理",
+        manager: "总经理",
       },
     };
   },
