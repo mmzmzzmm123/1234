@@ -30,6 +30,10 @@ public class SysServicesTopicServiceImp implements ISysServicesTopicService {
         return servicesTopicMapper.selectSysServicesTopicByUserIdAndRole(topic);
     }
 
+    @Override
+    public List<SysServicesTopic> selectCustomerListByUserIdAndRole(SysServicesTopic topic) {
+        return servicesTopicMapper.selectCustomerListByUserIdAndRole(topic);
+    }
 
     @Override
     public SysServicesTopic insertSysServicesTopic(SysServicesTopic topic) {
@@ -186,5 +190,10 @@ public class SysServicesTopicServiceImp implements ISysServicesTopicService {
     @Override
     public List<SysServicesTopic> selectUnreadTopicCount(List<SysServicesTopic> statusList) {
         return servicesTopicMapper.selectUnreadTopicCount(statusList);
+    }
+
+    @Override
+    public List<SysServicesTopic> selectTopicListByUid(SysServicesTopic topic) {
+        return servicesTopicMapper.selectTopicListByUid(topic);
     }
 }

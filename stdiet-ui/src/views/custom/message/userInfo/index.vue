@@ -1,5 +1,5 @@
 <template>
-  <el-tabs v-model="activeName">
+  <el-tabs v-model="activeName" class="message_userinfo_wrapper">
     <el-tab-pane label="客户信息" name="health">
       <div
         v-loading="healthDataLoading"
@@ -15,6 +15,22 @@
           :data="healthyDataType === 1 ? healthyData : {}"
           v-show="healthyDataType === 1"
         />
+        <div v-if="customerData.id" class="customer_service_info">
+          <div class="info_item">
+            <span>主任营养师：</span>
+            <span>
+              {{ customerData.dietitianName || "无" }}
+            </span>
+          </div>
+          <div class="info_item">
+            <span>营养师助理：</span>
+            <span>{{ customerData.assDietitianName || "无" }}</span>
+          </div>
+          <div class="info_item">
+            <span>售后营养师：</span>
+            <span>{{ customerData.afterDietitianName || "无" }}</span>
+          </div>
+        </div>
       </div>
     </el-tab-pane>
     <el-tab-pane label="食谱计划" name="plan">
@@ -53,9 +69,30 @@ export default {
     },
   },
   computed: {
-    ...mapState(["healthyData", "healthyDataType", "healthDataLoading"]),
+    ...mapState([
+      "healthyData",
+      "healthyDataType",
+      "healthDataLoading",
+      "customerData",
+    ]),
   },
 };
 </script>
 <style lang="scss" scoped>
+.message_userinfo_wrapper {
+  .customer_service_info {
+    position: absolute;
+    right: 30%;
+    top: 68px;
+
+    .info_item {
+      margin-bottom: 10px;
+      font-size: 14px;
+
+      & > span:nth-child(1) {
+        color: #8c8c8c;
+      }
+    }
+  }
+}
 </style>

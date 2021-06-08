@@ -1,8 +1,8 @@
 <template>
   <div class="topic_comment_item" @click="handOnClick(data)">
     <div class="comment_avatar">
-      <el-avatar size="medium" :src="data.fromAvatar || ''">{{
-        data.fromName.substr(-1)
+      <el-avatar size="medium" :src="data.fromAvatar">{{
+        data.fromName && data.fromName.substr(-1)
       }}</el-avatar>
     </div>
     <div class="comment_content">

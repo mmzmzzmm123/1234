@@ -5,29 +5,39 @@
 <mapper namespace="com.stdiet.custom.mapper.SysCustomerMapper">
 
     <resultMap type="SysCustomer" id="SysCustomerResult">
-        <result property="id"    column="id"    />
-        <result property="name"    column="name"    />
-        <result property="phone"    column="phone"    />
-        <result property="email"    column="email"    />
-        <result property="address"    column="address"    />
-        <result property="payDate"    column="pay_date"    />
-        <result property="startDate"    column="start_date"    />
-        <result property="fansTime" column="fans_time" />
-        <result property="fansChannel" column="fans_channel" />
-        <result property="purchaseNum"    column="purchase_num"    />
-        <result property="payTotal"    column="pay_total"    />
-        <result property="mainDietitian"    column="main_dietitian"    />
-        <result property="assistantDietitian"    column="assistant_dietitian"    />
-        <result property="afterDietitian"    column="after_dietitian"    />
-        <result property="salesman"    column="salesman"    />
-        <result property="chargePerson"    column="charge_person"    />
-        <result property="followStatus"    column="follow_status"    />
-        <result property="createTime"    column="create_time"    />
-        <result property="createBy"    column="create_by"    />
-        <result property="updateTime"    column="update_time"    />
-        <result property="updateBy"    column="update_by"    />
-        <result property="channelId"    column="channel_id"    />
+        <result property="id" column="id"/>
+        <result property="name" column="name"/>
+        <result property="phone" column="phone"/>
+        <result property="email" column="email"/>
+        <result property="address" column="address"/>
+        <result property="payDate" column="pay_date"/>
+        <result property="startDate" column="start_date"/>
+        <result property="fansTime" column="fans_time"/>
+        <result property="fansChannel" column="fans_channel"/>
+        <result property="purchaseNum" column="purchase_num"/>
+        <result property="payTotal" column="pay_total"/>
+        <result property="chargePerson" column="charge_person"/>
+        <result property="followStatus" column="follow_status"/>
+        <result property="createTime" column="create_time"/>
+        <result property="createBy" column="create_by"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="updateBy" column="update_by"/>
+        <result property="channelId" column="channel_id"/>
+
+        <result property="mainDietitian" column="main_dietitian"/>
+        <result property="assistantDietitian" column="assistant_dietitian"/>
+        <result property="afterDietitian" column="after_dietitian"/>
+        <result property="salesman" column="salesman"/>
+
+        <association property="dietitianName" column="{id=main_dietitian}" select="selectUserName"/>
+        <association property="assDietitianName" column="{id=assistant_dietitian}" select="selectUserName"/>
+        <association property="afterDietitianName" column="{id=after_dietitian}" select="selectUserName"/>
+        <association property="salesName" column="{id=salesman}" select="selectUserName"/>
     </resultMap>
+
+    <select id="selectUserName" parameterType="java.util.Map" resultType="String">
+        select nick_name from sys_user where user_id = #{id}
+    </select>
 
     <sql id="selectSysCustomerVo">
         select id, name, phone, email, fans_time, fans_channel, address, pay_date, start_date, purchase_num, pay_total, main_dietitian, assistant_dietitian, after_dietitian, salesman, charge_person, follow_status, create_time, create_by, update_time, update_by, channel_id from sys_customer
@@ -35,8 +45,10 @@
 
     <select id="selectSysCustomerList" parameterType="SysCustomer" resultMap="SysCustomerResult">
         select
-        sc.id, sc.name, sc.phone, sc.email, sc.fans_time, sc.fans_channel, sc.address, sc.pay_date, sc.start_date, sc.purchase_num, sc.pay_total, sc.main_dietitian,
-        sc.assistant_dietitian, sc.after_dietitian, sc.salesman, sc.charge_person, sc.follow_status, sc.create_time,sc.channel_id
+        sc.id, sc.name, sc.phone, sc.email, sc.fans_time, sc.fans_channel, sc.address, sc.pay_date, sc.start_date,
+        sc.purchase_num, sc.pay_total, sc.main_dietitian,
+        sc.assistant_dietitian, sc.after_dietitian, sc.salesman, sc.charge_person, sc.follow_status,
+        sc.create_time,sc.channel_id
         from sys_customer sc
         left join sys_customer_healthy as sch
         on sch.customer_id = sc.id and sch.del_flag = 0
@@ -44,16 +56,18 @@
         <if test="name != null  and name != ''">
             and (sc.name like concat('%', #{name}, '%') or sc.phone like concat('%', #{name}, '%'))
         </if>
-        <if test="mainDietitian != null  and mainDietitian != ''"> and sc.main_dietitian = #{mainDietitian}</if>
-        <if test="mainDietitian == 0"> and (isnull(sc.main_dietitian) or sc.main_dietitian=0)</if>
-        <if test="salesman != null  and salesman != ''"> and sc.salesman = #{salesman}</if>
-        <if test="salesman == 0"> and (isnull(sc.salesman) or sc.salesman=0)</if>
-        <if test="afterDietitian != null  and afterDietitian != ''"> and sc.after_dietitian = #{afterDietitian}</if>
-        <if test="afterDietitian == 0"> and (isnull(sc.after_dietitian) or sc.after_dietitian=0)</if>
-        <if test="assistantDietitian != null  and assistantDietitian != ''"> and sc.assistant_dietitian = #{assistantDietitian}</if>
-        <if test="assistantDietitian == 0"> and (isnull(sc.assistant_dietitian) or sc.assistant_dietitian=0)</if>
-        <if test="fansChannel != null "> and sc.fans_channel = #{fansChannel}</if>
-        <if test="channelId != null "> and sc.channel_id = #{channelId}</if>
+        <if test="mainDietitian != null  and mainDietitian != ''">and sc.main_dietitian = #{mainDietitian}</if>
+        <if test="mainDietitian == 0">and (isnull(sc.main_dietitian) or sc.main_dietitian=0)</if>
+        <if test="salesman != null  and salesman != ''">and sc.salesman = #{salesman}</if>
+        <if test="salesman == 0">and (isnull(sc.salesman) or sc.salesman=0)</if>
+        <if test="afterDietitian != null  and afterDietitian != ''">and sc.after_dietitian = #{afterDietitian}</if>
+        <if test="afterDietitian == 0">and (isnull(sc.after_dietitian) or sc.after_dietitian=0)</if>
+        <if test="assistantDietitian != null  and assistantDietitian != ''">and sc.assistant_dietitian =
+            #{assistantDietitian}
+        </if>
+        <if test="assistantDietitian == 0">and (isnull(sc.assistant_dietitian) or sc.assistant_dietitian=0)</if>
+        <if test="fansChannel != null ">and sc.fans_channel = #{fansChannel}</if>
+        <if test="channelId != null ">and sc.channel_id = #{channelId}</if>
         <if test="channels != null">
             and sc.channel_id in
             <foreach collection="channels" item="cn" separator="," open="(" close=")">

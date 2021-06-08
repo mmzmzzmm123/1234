@@ -20,9 +20,15 @@ public class SysServiceTopicController extends BaseController {
 
     @GetMapping("/list")
     public TableDataInfo list(SysServicesTopic topic) {
-        startPage();
-        return getDataTable(servicesTopicService.selectSysServicesTopicByUserIdAndRole(topic));
+        return getDataTable(servicesTopicService.selectTopicListByUid(topic));
     }
+
+    @GetMapping("/customers")
+    public TableDataInfo customers(SysServicesTopic topic) {
+        startPage();
+        return getDataTable(servicesTopicService.selectCustomerListByUserIdAndRole(topic));
+    }
+
 
 //    @PutMapping("/update/status")
 //    public AjaxResult status(@RequestBody SysServicesQuestion sysServicesQuestion) {

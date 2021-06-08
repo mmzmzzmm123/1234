@@ -1,4 +1,7 @@
-import { getCustomerPhysicalSignsByCusId } from "@/api/custom/customer";
+import {
+  getCustomerPhysicalSignsByCusId,
+  getCustomer
+} from "@/api/custom/customer";
 import { dealHealthy } from "@/utils/healthyData";
 import {
   listRecipesPlanByCusId,
@@ -6,6 +9,7 @@ import {
 } from "@/api/custom/recipesPlan";
 
 import {
+  fetchCustomerList,
   fetchTopicList,
   postTopicReply,
   fetchTopicDetail,
@@ -14,13 +18,23 @@ import {
 
 const oriState = {
   pageNum: 1,
+  cusLoading: false,
+  customerList: [],
+  selCusId: "",
+  //
   topicList: [],
-  detailData: {},
+  topicLoading: false,
   selTopicId: "",
+  //
+  detailData: {},
+  detailLoading: false,
+  //
   healthyData: {},
   healthDataLoading: false,
   healthyDataType: 0,
   avoidFoodIds: [],
+  //
+  customerData: {},
   //
   planList: [],
   planListLoading: false
@@ -44,42 +58,71 @@ const mutations = {
 
 const actions = {
   async init({ dispatch }, payload) {
-    dispatch("fetchTopicListApi", {});
+    dispatch("fetchCustomerListActions", {});
   },
-  async fetchTopicListApi({ dispatch, commit, rootGetters, state }, payload) {
-    const {
-      roles: [role],
-      userId
-    } = rootGetters;
-    const { detailData, pageNum, topicList } = state;
-    const result = await fetchTopicList({
+
+  async fetchCustomerListActions(
+    { dispatch, commit, rootGetters, state },
+    payload
+  ) {
+    // prettier-ignore
+    const { roles: [role], userId } = rootGetters;
+    const { customerList, pageNum } = state;
+    commit("save", { cusLoading: true });
+    const result = await fetchCustomerList({
       role,
       uid: userId,
       pageSize: 20,
       pageNum
     });
-    if (result.code === 200) {
-      if (!detailData.topicId) {
-        // 默认展示第一个
-        const [defTopic] = result.rows;
-        dispatch("fetchTopicDetailActions", {
-          topicId: defTopic.topicId,
-          id: defTopic.id,
-          uid: defTopic.uid
-        });
+    let mPageNum = pageNum,
+      mCustomerList = customerList;
+    if (result.code === 200 && result.rows.length) {
+      //
+      if (!customerList.length) {
+        const [defCustomer] = result.rows;
+        dispatch("fetchTopicListApi", { fromUid: defCustomer.uid });
       }
-      if (result.rows.length) {
-        commit("save", {
-          pageNum: pageNum + 1,
-          topicList: [...topicList, ...result.rows]
-        });
-      }
+      //
+      mPageNum += 1;
+      mCustomerList = [...customerList, ...result.rows];
     }
+    commit("save", {
+      pageNum: mPageNum,
+      cusLoading: false,
+      customerList: mCustomerList
+    });
+  },
+  async fetchTopicListApi({ dispatch, commit, rootGetters, state }, payload) {
+    // prettier-ignore
+    const { roles: [role], userId } = rootGetters;
+    const { fromUid } = payload;
+    commit("save", { selCusId: fromUid, topicLoading: true });
+    const result = await fetchTopicList({
+      role,
+      uid: userId,
+      fromUid
+    });
+    let mTopicList = [];
+    if (result.code === 200 && result.rows.length) {
+      // 默认展示第一个
+      const [defTopic] = result.rows;
+      dispatch("fetchTopicDetailActions", {
+        topicId: defTopic.topicId,
+        id: defTopic.id,
+        uid: defTopic.uid
+      });
+      mTopicList = result.rows;
+    }
+    commit("save", {
+      topicList: mTopicList,
+      topicLoading: false
+    });
   },
   async fetchTopicDetailActions({ commit, dispatch, state }, payload) {
-    const { topicId, id, uid } = payload;
-    const { healthyData, planList } = state;
-    commit("save", { selTopicId: topicId });
+    const { topicId, id = 0, uid } = payload;
+    const { healthyData, planList, customerData } = state;
+    commit("save", { selTopicId: topicId, detailLoading: true });
     // 客户信息
     if (healthyData.customerId !== parseInt(uid)) {
       dispatch("getHealthyData", { cusId: uid, callback: payload.callback });
@@ -88,11 +131,20 @@ const actions = {
     if (!planList.length || planList[0].cusId !== parseInt(uid)) {
       dispatch("getRecipesPlanActions", { cusId: uid });
     }
-
+    // 客户档案
+    if (customerData.id !== parseInt(uid)) {
+      dispatch("getCustomerFileActions", { cusId: uid });
+    }
     //
     const result = await fetchTopicDetail({ topicId, id });
     if (result.code === 200) {
-      commit("save", { detailData: result.data[0] });
+      commit("save", { detailData: result.data[0], detailLoading: false });
+    }
+  },
+  async getCustomerFileActions({ commit }, payload) {
+    const result = await getCustomer(payload.cusId);
+    if (result.code === 200) {
+      commit("save", { customerData: result.data });
     }
   },
   async postTopicReplyActions(
