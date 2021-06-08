@@ -1,6 +1,25 @@
 <template>
   <div class="message_browser_wrapper">
-    <div class="topic_list" @scroll="handleOnScroll">
+    <div class="customers_list" @scroll="handleOnScroll" v-loading="cusLoading">
+      <div v-if="customerList && customerList.length">
+        <div
+          v-for="customer in customerList"
+          :key="customer.uid"
+          :class="`customer_item ${
+            customer.uid === selCusId ? 'customer_item_sel' : ''
+          }`"
+          @click="handleOnCustomerClick(customer)"
+        >
+          <el-avatar size="medium" :src="customer.avatar">
+            {{ customer.name && customer.name.substr(-1) }}
+          </el-avatar>
+          <span class="customer_name">
+            {{ customer.name }}
+          </span>
+        </div>
+      </div>
+    </div>
+    <div class="topic_list" v-loading="topicLoading">
       <div v-if="topicList && topicList.length">
         <div
           v-for="topic in topicList"
@@ -29,7 +48,7 @@
       </div>
       <div v-else class="topic_list_empty">暂无消息</div>
     </div>
-    <div class="topic_detail">
+    <div class="topic_detail" v-loading="detailLoading">
       <div class="topic_detail_list">
         <div
           class="topic_detail_title"
@@ -125,7 +144,16 @@ export default {
     window.removeEventListener("message", this.handleOnMessage);
   },
   computed: {
-    ...mapState(["topicList", "selTopicId", "detailData"]),
+    ...mapState([
+      "cusLoading",
+      "topicLoading",
+      "detailLoading",
+      "topicList",
+      "selCusId",
+      "selTopicId",
+      "detailData",
+      "customerList",
+    ]),
   },
   methods: {
     handleOnScroll({ target }) {
@@ -133,7 +161,7 @@ export default {
         target.clientHeight + parseInt(target.scrollTop) ===
         target.scrollHeight
       ) {
-        this.fetchTopicListApi();
+        this.fetchCustomerListActions();
       }
     },
     handleOnMessage({ data }) {
@@ -180,6 +208,14 @@ export default {
     },
     formatDate(date) {
       return dayjs(date).format("MM-DD HH:mm");
+    },
+    handleOnCustomerClick(data) {
+      if (this.selCusId !== data.uid) {
+        this.replyTarget = "";
+        this.replyContent = "";
+        this.replyObj = {};
+        this.fetchTopicListApi({ fromUid: data.uid });
+      }
     },
     handleOnTopicClick(data) {
       if (data.topicId !== this.selTopicId) {
@@ -242,6 +278,7 @@ export default {
       "fetchTopicDetailActions",
       "postTopicReplyActions",
       "fetchTopicListApi",
+      "fetchCustomerListActions",
     ]),
     ...mapMutations(["clean", "save"]),
     ...globalMapActions(["updateUnreadCount"]),
@@ -251,13 +288,40 @@ export default {
 <style lang="scss" scoped>
 .message_browser_wrapper {
   display: flex;
+
+  .customers_list {
+    flex: 1;
+    overflow: auto;
+    border-right: 1px solid #f0f0f0;
+
+    .customer_item {
+      padding: 8px 12px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+
+      &:hover {
+        background: #dedede;
+      }
+
+      .customer_name {
+        margin-left: 8px;
+      }
+    }
+
+    .customer_item_sel {
+      background: #f0f0f0;
+    }
+  }
+
   .topic_list {
     flex: 2;
     overflow: auto;
+    border-right: 1px solid #f0f0f0;
 
     .topic_item {
       display: flex;
-      padding: 8px 16px;
+      padding: 8px 12px;
       cursor: pointer;
 
       &:hover {
@@ -318,7 +382,7 @@ export default {
     }
 
     .topic_item_sel {
-      background: #dedede;
+      background: #f0f0f0;
     }
 
     .topic_list_empty {

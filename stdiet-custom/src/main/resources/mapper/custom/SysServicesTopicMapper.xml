@@ -16,8 +16,57 @@
         <result column="create_time" property="createTime"/>
         <result column="update_time" property="updateTime"/>
         <association column="{uid=uid,role=role}" property="name" select="selectUserInfo"/>
+        <association property="avatar" column="{uid=uid,role=role}" select="selectUserAvatar"/>
     </resultMap>
 
+    <select id="selectCustomerListByUserIdAndRole" parameterType="SysServicesTopic" resultMap="SysServicesTopicResult">
+        SELECT DISTINCT(uid)AS uid, MAX(update_time) AS update_time, MIN(create_time) AS create_time, MIN(`read`) AS
+        `read`, role FROM (
+        SELECT * FROM (
+        SELECT topic_id, `read`, create_time, update_time, 'customer' AS role FROM sys_services_topic_status
+        <choose>
+            <when test="role == 'admin' or role == 'manager' or role == 'admin-dev'">
+                WHERE role = 'dietician'
+            </when>
+            <otherwise>
+                WHERE role = #{role} AND uid = #{uid}
+            </otherwise>
+        </choose>
+
+        ) AS status
+        LEFT JOIN (SELECT topic_id, uid, del_flag FROM sys_services_topic ) AS topic USING(topic_id)
+        WHERE del_flag = 0
+        ORDER BY `read` ASC, update_time DESC
+        ) AS userList GROUP BY uid
+    </select>
+
+    <select id="selectTopicListByUid" parameterType="SysServicesTopic" resultMap="SysServicesTopicResult">
+        SELECT * FROM(
+        SELECT topic_id, topic_type, content, uid, img, 'customer' AS role FROM sys_services_topic
+        WHERE uid = #{fromUid} AND del_flag = 0
+        ) AS topic
+        LEFT JOIN (SELECT topic_id, create_time, update_time, `read`,
+        <choose>
+            <when test="role == 'admin' or role == 'manager' or role == 'admin-dev'">
+                '0' AS id
+            </when>
+            <otherwise>
+                id
+            </otherwise>
+        </choose>
+        FROM sys_services_topic_status
+        <choose>
+            <when test="role == 'admin' or role == 'manager' or role == 'admin-dev'">
+                WHERE role = 'dietician'
+            </when>
+            <otherwise>
+                WHERE role = #{role} AND uid = #{uid}
+            </otherwise>
+        </choose>
+        ) AS state
+        USING(topic_id)
+        ORDER BY `read` ASC, update_time DESC
+    </select>
 
     <!--    根据userId和角色查询问题列表-->
     <select id="selectSysServicesTopicByUserIdAndRole" parameterType="SysServicesTopic"
@@ -36,8 +85,6 @@
                 ORDER BY `read` ASC, update_time DESC
             </otherwise>
         </choose>
-
-
     </select>
 
     <!--    查询主题-->
