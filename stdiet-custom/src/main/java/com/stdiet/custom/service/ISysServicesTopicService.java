@@ -8,6 +8,8 @@ public interface ISysServicesTopicService {
 
     List<SysServicesTopic> selectSysServicesTopicByUserIdAndRole(SysServicesTopic topic);
 
+    List<SysServicesTopic> selectCustomerListByUserIdAndRole(SysServicesTopic topic);
+
     SysServicesTopic insertSysServicesTopic(SysServicesTopic topic);
 
     int updateSysServicesTopicStatus(SysServicesTopic topic);
@@ -19,4 +21,6 @@ public interface ISysServicesTopicService {
     List<SysServicesTopic> selectSysServicesTopicSessionByTopicId(String topicId);
 
     List<SysServicesTopic> selectUnreadTopicCount(List<SysServicesTopic> topic);
+
+    List<SysServicesTopic> selectTopicListByUid(SysServicesTopic topic);
 }

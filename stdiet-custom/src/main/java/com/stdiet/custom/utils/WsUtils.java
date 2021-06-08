@@ -6,6 +6,8 @@ public class WsUtils {
 
     public static final String WS_TYPE_SYSTEM_MESSAGE = "WS_TYPE_SYSTEM_MESSAGE";
 
+    public static final String WS_TYPE_SYSTEM_MESSAGE_CLEAN = "WS_TYPE_SYSTEM_MESSAGE_CLEAN";
+
     public static final String WS_TYPE_MESSAGE_COUNT = "WS_TYPE_MESSAGE_COUNT";
 
     public static final String WS_TYPE_NEW_CUSTOMER_REPLY = "WS_TYPE_NEW_CUSTOMER_REPLY";

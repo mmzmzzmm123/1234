@@ -1,5 +1,13 @@
 import request from "@/utils/request";
 
+export function fetchCustomerList(query) {
+  return request({
+    url: "/services/topic/customers",
+    method: "get",
+    params: query
+  });
+}
+
 export function fetchTopicList(query) {
   return request({
     url: "/services/topic/list",

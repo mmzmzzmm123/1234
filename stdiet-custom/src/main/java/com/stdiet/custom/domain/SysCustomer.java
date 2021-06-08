@@ -71,18 +71,26 @@ public class SysCustomer extends BaseEntity
 
     /** 主营养师 */
     @Excel(name = "主营养师")
+    private String dietitianName;
+
     private Long mainDietitian;
 
     /** 营养师助理 */
     @Excel(name = "营养师助理")
+    private String assDietitianName;
+
     private Long assistantDietitian;
 
     /** 售后营养师 */
     @Excel(name = "售后营养师")
+    private String afterDietitianName;
+
     private Long afterDietitian;
 
     /** 销售人员 */
     @Excel(name = "销售人员")
+    private String salesName;
+
     private Long salesman;
 
     /** 负责人 */

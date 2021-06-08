@@ -27,7 +27,7 @@ public class WebSocketServer {
     //private static ConcurrentHashMap<String,WebSocketServer> websocketList = new ConcurrentHashMap<>();
     // 与某个客户端的连接会话，需要通过它来给客户端发送数据
     private Session session;
-    // 接收sid
+    // 接收sidw
     private String sid = "";
 
     public static CopyOnWriteArraySet<WebSocketServer> getWebSocketSet() {
