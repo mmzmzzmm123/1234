@@ -214,22 +214,36 @@ public class SysRecipesPlanServiceImpl implements ISysRecipesPlanService {
      */
     private void supplyRecipesBmenu(Long cusId){
         List<Map<String,Object>> list = getNeedSupplyRecipesByCusId(cusId);
-        if(list != null && list.size() > 0){
-            for (Map<String,Object> map : list) {
-                Long recipesId = (Long)map.get("recipesId");
-                Integer enNumDay = (Integer)map.get("enNumDay");
-                Integer maxNumDay = (Integer)map.get("maxNumDay");
-                if(recipesId != null && enNumDay != null && maxNumDay != null){
-                    List<SysRecipesDaily> menus = new ArrayList<>();
-                    for (int i = maxNumDay+1; i <= enNumDay; i++) {
-                        SysRecipesDaily daily = new SysRecipesDaily();
-                        daily.setCusId(cusId);
-                        daily.setNumDay(i);
-                        daily.setRecipesId(recipesId);
-                        menus.add(daily);
-                    }
-                    sysRecipesMapper.bashAddMenus(menus);
+        if(list == null || list.size() == 0){
+            return;
+        }
+        for (Map<String,Object> map : list) {
+            Long recipesId = (Long)map.get("recipesId");
+            Integer startNumDay = (Integer)map.get("startNumDay");
+            Integer endNumDay = (Integer)map.get("endNumDay");
+            if(recipesId == null || startNumDay == null || endNumDay == null){
+                continue;
+            }
+            List<SysRecipesDaily> recipesDailyList = sysRecipesMapper.getRecipesListByRecipesId(recipesId);
+            if(recipesDailyList != null && recipesDailyList.size() > 0){
+                for (SysRecipesDaily sysRecipesDaily : recipesDailyList) {
+                    sysRecipesDaily.setNumDay(startNumDay);
+                    //更新
+                    sysRecipesMapper.updateRecipesById(sysRecipesDaily);
+                    startNumDay++;
                 }
+            }
+            recipesDailyList = new ArrayList<>();
+            for (int i = startNumDay; i <= endNumDay; i++) {
+                SysRecipesDaily sysRecipesDaily = new SysRecipesDaily();
+                sysRecipesDaily.setNumDay(i);
+                sysRecipesDaily.setRecipesId(recipesId);
+                sysRecipesDaily.setCusId(cusId);
+                recipesDailyList.add(sysRecipesDaily);
+            }
+            if(recipesDailyList.size() > 0){
+                //批量添加
+                sysRecipesMapper.bashAddMenus(recipesDailyList);
             }
         }
     }

@@ -138,4 +138,21 @@
         where fwc.del_flag = 0 and fwc.import_fan_record_id = #{id}
     </select>
 
+    <!-- 根据时间范围统计各个渠道的总导粉数量 -->
+    <select id="getTotalFanNumGroupByChannel" parameterType="SysWxFanStatistics" resultType="Map" >
+        select s.channelId,acc.dict_label as channelName, s.totalFanNum from
+        (
+          select fr.import_fan_channel as channelId,sum(wa.import_fan_num) as totalFanNum from  sys_import_fan_wx_account wa
+          left join sys_import_fan_record fr on fr.id = wa.import_fan_record_id and fr.del_flag = 0
+          where wa.del_flag = 0
+          <if test="fanStartTime != null and fanEndTime != null">
+            and fr.import_fan_date >= #{fanStartTime} and #{fanEndTime} >= fr.import_fan_date
+          </if>
+          group by fr.import_fan_channel
+        )
+        s LEFT JOIN (SELECT dict_label, dict_value FROM sys_dict_data WHERE dict_type = 'cus_account') AS acc ON acc.dict_value = s.channelId
+        order by s.channelId asc
+    </select>
+
+
 </mapper>

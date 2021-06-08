@@ -3,6 +3,7 @@ package com.stdiet.custom.mapper;
 import com.stdiet.custom.domain.SysRecipes;
 import com.stdiet.custom.domain.SysRecipesDaily;
 import com.stdiet.custom.domain.SysRecipesDailyDishes;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -33,4 +34,8 @@ public interface SysRecipesMapper {
     public List<SysRecipesDailyDishes> selectDishesByMenuId(Long id);
 
     public List<SysRecipesDailyDishes> selectDishesByMenuIdShow(Long id);
+
+    List<SysRecipesDaily> getRecipesListByRecipesId(@Param("recipesId")Long id);
+
+    int updateRecipesById(SysRecipesDaily sysRecipesDaily);
 }

@@ -153,4 +153,22 @@
         <if test="wxId != null">and swfs.wx_id = #{wxId}</if>
     </select>
 
+    <!-- 根据时间范围统计每个渠道的总进粉量 -->
+    <select id="getTotalFanNumGroupByChannel" parameterType="SysWxFanStatistics" resultType="Map">
+        select s.channelId,acc.dict_label as channelName,s.totalFanNum from
+        (
+		  select
+		  swd.account_id as channelId, sum(swfs.fan_num) as totalFanNum
+		  from sys_wx_fan_statistics swfs
+		  left join sys_wx_distribution swd on swd.wechat_account = swfs.wx_id and swd.del_flag = 0
+		  where swfs.del_flag = 0
+          <if test="fanStartTime != null and fanEndTime != null">
+            and swfs.fan_time >= #{fanStartTime} and #{fanEndTime} >= swfs.fan_time
+          </if>
+		  group by swd.account_id
+	    ) s
+	    LEFT JOIN (SELECT dict_label, dict_value FROM sys_dict_data WHERE dict_type = 'cus_account') AS acc ON acc.dict_value = s.channelId
+        order by s.channelId asc
+    </select>
+
 </mapper>

@@ -1,16 +1,16 @@
 package com.stdiet.web.controller.custom;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.math.BigDecimal;
+import java.util.*;
 
 import com.stdiet.common.utils.DateUtils;
 import com.stdiet.custom.domain.SysWxDistribution;
 import com.stdiet.custom.dto.request.FanStatisticsRequest;
 import com.stdiet.custom.dto.response.ExportFanStatisticsResponse;
+import com.stdiet.custom.service.ISysImportFanRecordService;
 import com.stdiet.custom.service.ISysWxDistributionService;
 import com.stdiet.framework.web.domain.server.Sys;
+import io.swagger.models.auth.In;
 import org.aspectj.weaver.loadtime.Aj;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,6 +39,9 @@ public class SysWxFanStatisticsController extends BaseController
 
     @Autowired
     private ISysWxDistributionService sysWxDistributionService;
+
+    @Autowired
+    private ISysImportFanRecordService sysImportFanRecordService;
 
     /**
      * 查询进粉统计列表
@@ -152,5 +155,79 @@ public class SysWxFanStatisticsController extends BaseController
     public AjaxResult getWxByUserId(@RequestParam("userId")Long userId){
         List<SysWxDistribution> list = sysWxDistributionService.selectDistributionWxByUserId(userId);
         return AjaxResult.success(list);
+    }
+
+    /**
+     * 获取导粉通过率
+     */
+    @RequestMapping("/getImportFanPassRate")
+    public AjaxResult getImportFanPassRate(SysWxFanStatistics sysWxFanStatistics){
+        List<Map<String,Object>> passList = sysWxFanStatisticsService.getTotalFanNumGroupByChannel(sysWxFanStatistics);
+        List<Map<String,Object>> importList = sysImportFanRecordService.getTotalFanNumGroupByChannel(sysWxFanStatistics);
+        List<Map<String,Object>> resultList = new ArrayList<>();
+        List<Integer> channelIdList = new ArrayList<>();
+        for (Map<String,Object> map : passList) {
+            Integer channelId = (Integer)map.get("channelId");
+            if(channelId != null && !channelIdList.contains(channelId)){
+                channelIdList.add(channelId);
+            }
+        }
+        for (Map<String,Object> map : importList) {
+            Integer channelId = (Integer)map.get("channelId");
+            if(channelId != null && !channelIdList.contains(channelId)){
+                channelIdList.add(channelId);
+            }
+        }
+        Double allTotalImportFanNum = 0.0;
+        Double allTotalPassFanNum = 0.0;
+        for (Integer channelId : channelIdList) {
+            //根据渠道ID查询导粉记录
+            Map<String,Object> importMap = getMap(importList, channelId);
+            Map<String,Object> passMap = getMap(passList, channelId);
+            if(importMap != null || passMap != null){
+                BigDecimal totalImportFanNum = new BigDecimal(0);
+                BigDecimal totalPassFanNum = new BigDecimal(0);
+                String channelName = "";
+                if(importMap != null){
+                    totalImportFanNum = importMap.get("totalFanNum") != null ? (BigDecimal) importMap.get("totalFanNum") : new BigDecimal(0);
+                    channelName = (String)importMap.get("channelName");
+                }
+                if(passMap != null){
+                    totalPassFanNum = passMap.get("totalFanNum") != null ? (BigDecimal) passMap.get("totalFanNum") : new BigDecimal(0);
+                    channelName = (String)passMap.get("channelName");
+                }
+                if(totalImportFanNum.doubleValue() == 0 && totalPassFanNum.doubleValue() == 0){
+                    continue;
+                }
+                allTotalImportFanNum += totalImportFanNum.doubleValue();
+                allTotalPassFanNum += totalPassFanNum.doubleValue();
+                Map<String, Object> rateMap = new HashMap<>();
+                rateMap.put("channelName", channelName);
+                rateMap.put("totalImportFanNum", totalImportFanNum);
+                rateMap.put("totalPassFanNum", totalPassFanNum);
+                BigDecimal passRate = totalImportFanNum.doubleValue() > 0 ? new BigDecimal(totalPassFanNum.doubleValue()*100/totalImportFanNum.doubleValue()).setScale(1, BigDecimal.ROUND_HALF_UP) : new BigDecimal(100);
+                rateMap.put("passRate", passRate.doubleValue() > 100 ? 100 : passRate);
+                resultList.add(rateMap);
+            }
+        }
+        if(resultList.size() > 0){
+            Map<String,Object> total = new HashMap<>();
+            total.put("channelName", "总计");
+            total.put("totalImportFanNum", allTotalImportFanNum);
+            total.put("totalPassFanNum", allTotalPassFanNum);
+            BigDecimal totalPassRate = allTotalImportFanNum > 0 ? new BigDecimal(allTotalPassFanNum*100/allTotalImportFanNum).setScale(1, BigDecimal.ROUND_HALF_UP) : new BigDecimal(100);
+            total.put("passRate", totalPassRate.doubleValue() > 100 ? 100 : totalPassRate);
+            resultList.add(total);
+        }
+        return AjaxResult.success(resultList);
+    }
+
+    private Map<String,Object> getMap(List<Map<String,Object>> list, Integer channelId){
+        for (Map<String,Object> map : list) {
+            if(map.get("channelId") != null && ((Integer) map.get("channelId")).intValue() == channelId.intValue()){
+                return map;
+            }
+        }
+        return null;
     }
 }
