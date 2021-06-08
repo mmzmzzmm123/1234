@@ -1,6 +1,7 @@
 package com.stdiet.custom.service;
 
 import java.util.List;
+import java.util.Map;
 
 import com.stdiet.common.core.domain.AjaxResult;
 import com.stdiet.custom.domain.SysWxFanStatistics;
@@ -84,4 +85,11 @@ public interface ISysWxFanStatisticsService
     public int selectFanNumCount(SysWxFanStatistics sysWxFanStatistics);
 
     List<SysWxFanStatistics> exportStatisticsList(SysWxFanStatistics sysWxFanStatistics);
+
+    /**
+     * 根据时间范围统计每个渠道的进粉数量
+     * @param sysWxFanStatistics
+     * @return
+     */
+    public List<Map<String,Object>> getTotalFanNumGroupByChannel(SysWxFanStatistics sysWxFanStatistics);
 }

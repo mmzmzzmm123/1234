@@ -1,7 +1,10 @@
 package com.stdiet.custom.mapper;
 
 import java.util.List;
+import java.util.Map;
+
 import com.stdiet.custom.domain.SysImportFanRecord;
+import com.stdiet.custom.domain.SysWxFanStatistics;
 
 /**
  * 导粉管理Mapper接口
@@ -68,4 +71,11 @@ public interface SysImportFanRecordMapper
 
     //查询总导粉数量
     int selectTotalSysImportFanNum(SysImportFanRecord sysImportFanRecord);
+
+    /**
+     * 根据时间范围统计各个渠道的总导粉数量
+     * @param sysWxFanStatistics
+     * @return
+     */
+    List<Map<String,Object>> getTotalFanNumGroupByChannel(SysWxFanStatistics sysWxFanStatistics);
 }

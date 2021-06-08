@@ -1,7 +1,10 @@
 package com.stdiet.custom.service;
 
 import java.util.List;
+import java.util.Map;
+
 import com.stdiet.custom.domain.SysImportFanRecord;
+import com.stdiet.custom.domain.SysWxFanStatistics;
 
 /**
  * 导粉管理Service接口
@@ -61,4 +64,11 @@ public interface ISysImportFanRecordService
 
     //查询总导粉数量
     int selectTotalSysImportFanNum(SysImportFanRecord sysImportFanRecord);
+
+    /**
+     * 根据时间范围统计各个渠道的总导粉数量
+     * @param sysWxFanStatistics
+     * @return
+     */
+    List<Map<String,Object>> getTotalFanNumGroupByChannel(SysWxFanStatistics sysWxFanStatistics);
 }

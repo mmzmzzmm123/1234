@@ -2,8 +2,11 @@ package com.stdiet.custom.service.impl;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
+
 import com.stdiet.common.utils.DateUtils;
 import com.stdiet.custom.domain.SysImportFanWxAccount;
+import com.stdiet.custom.domain.SysWxFanStatistics;
 import com.stdiet.custom.service.ISysImportFanWxAccountService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -137,5 +140,14 @@ public class SysImportFanRecordServiceImpl implements ISysImportFanRecordService
     //查询总导粉数量
     public int selectTotalSysImportFanNum(SysImportFanRecord sysImportFanRecord){
         return sysImportFanRecordMapper.selectTotalSysImportFanNum(sysImportFanRecord);
+    }
+
+    /**
+     * 根据时间范围统计各个渠道的总导粉数量
+     * @param sysWxFanStatistics
+     * @return
+     */
+    public List<Map<String,Object>> getTotalFanNumGroupByChannel(SysWxFanStatistics sysWxFanStatistics){
+        return sysImportFanRecordMapper.getTotalFanNumGroupByChannel(sysWxFanStatistics);
     }
 }

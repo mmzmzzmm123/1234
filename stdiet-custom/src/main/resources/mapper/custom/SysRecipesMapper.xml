@@ -218,5 +218,16 @@
         ) ing USING(id)
     </select>
 
+    <!-- 根据 recipesId查询食谱具体每天详情 -->
+    <select id="getRecipesListByRecipesId" parameterType="Long" resultType="SysRecipesDaily">
+        SELECT id, num_day as numDay FROM sys_customer_daily_menu WHERE recipes_id = #{recipesId} order by num_day asc
+    </select>
 
+    <update id="updateRecipesById" parameterType="SysRecipesDaily">
+        update sys_customer_daily_menu
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="numDay != null">num_day = #{numDay},</if>
+        </trim>
+        where id = #{id}
+    </update>
 </mapper>

@@ -108,6 +108,15 @@
           >导出</el-button
         >
       </el-col>
+      <el-col :span="1.5">
+      <el-button
+            size="mini"
+            type="success"
+            @click="showPassRate()"
+            
+            >导粉通过率统计</el-button
+          >
+      </el-col>
       <right-toolbar
         :showSearch.sync="showSearch"
         @queryTable="getList"
@@ -270,6 +279,9 @@
         <el-button @click="editCancel">取 消</el-button>
       </div>
     </el-dialog>
+
+    <!-- 通过率 -->
+    <ImportFanRate ref="importFanRateRef"></ImportFanRate>
   </div>
 </template>
 
@@ -282,7 +294,9 @@ import {
   updateFanStatistics,
   exportFanStatistics,
   getWxByUserId,
+  getImportFanPassRate
 } from "@/api/custom/fanStatistics";
+import ImportFanRate from "@/components/ImportFanRate";
 import store from "@/store";
 import dayjs from "dayjs";
 import { mapState } from "vuex";
@@ -365,6 +379,9 @@ export default {
       //销售列表
       preSaleIdOptions: (state) => state.global.preSaleIdOptions.slice(1),
     }),
+  },
+  components:{
+      ImportFanRate
   },
   methods: {
     /** 查询进粉统计列表 */
@@ -563,6 +580,11 @@ export default {
         }
       });
     },
+    showPassRate(){
+      this.queryParams.fanStartTime = this.fanTimeScope && this.fanTimeScope.length > 0 ? this.fanTimeScope[0] : null;
+      this.queryParams.fanEndTime = this.fanTimeScope && this.fanTimeScope.length > 0 ? this.fanTimeScope[1] : null;
+      this.$refs.importFanRateRef.showDialog(this.queryParams);
+    }
   },
   watch: {
     // 监听用户ID变化

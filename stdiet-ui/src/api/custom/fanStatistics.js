@@ -61,5 +61,15 @@ export function getWxByUserId(userId) {
   })
 }
 
+// 获取通过率
+export function getImportFanPassRate(data) {
+  return request({
+    url: '/custom/fanStatistics/getImportFanPassRate',
+    method: 'get',
+    params: data
+  })
+}
+
+
 
 

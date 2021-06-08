@@ -3,6 +3,7 @@ package com.stdiet.custom.mapper;
 import com.stdiet.custom.domain.SysWxFanStatistics;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * 进粉统计Mapper接口
@@ -73,4 +74,11 @@ public interface SysWxFanStatisticsMapper {
     public int selectFanNumCount(SysWxFanStatistics sysWxFanStatistics);
 
     public List<SysWxFanStatistics> exportStatisticsList(SysWxFanStatistics sysWxFanStatistics);
+
+    /**
+     * 根据时间范围统计每个渠道的进粉数量
+     * @param sysWxFanStatistics
+     * @return
+     */
+    public List<Map<String,Object>> getTotalFanNumGroupByChannel(SysWxFanStatistics sysWxFanStatistics);
 }
