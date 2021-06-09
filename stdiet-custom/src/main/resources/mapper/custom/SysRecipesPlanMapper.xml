@@ -184,13 +184,11 @@
         srp.start_date,srp.end_date,srp.send_flag,srp.send_time, sc.name as customer, srp.review_status,
         srp.subscribed
         FROM sys_recipes_plan srp
-        LEFT JOIN sys_order sr ON sr.order_id = srp.order_id
         LEFT JOIN sys_customer sc ON sc.id = srp.cus_id
-        LEFT JOIN sys_user su_nutritionist ON su_nutritionist.user_id = sr.nutritionist_id AND su_nutritionist.del_flag
-        = 0
-        LEFT JOIN sys_user su_nutritionist_assis ON su_nutritionist_assis.user_id = sr.nutri_assis_id AND
+        LEFT JOIN sys_user su_nutritionist ON su_nutritionist.user_id = sc.main_dietitian AND su_nutritionist.del_flag = 0
+        LEFT JOIN sys_user su_nutritionist_assis ON su_nutritionist_assis.user_id = sc.assistant_dietitian AND
         su_nutritionist_assis.del_flag = 0
-        WHERE srp.del_flag = 0 AND sr.del_flag = 0 AND srp.type = 0
+        WHERE srp.del_flag = 0 AND sc.del_flag = 0  AND srp.type = 0
         <if test="orderId != null">AND srp.order_id = #{orderId}</if>
         <if test="sendFlag != null">AND srp.send_flag = #{sendFlag}</if>
         <if test="customer != null and customer != ''">AND (sc.name like concat('%',#{customer},'%') OR sc.phone like

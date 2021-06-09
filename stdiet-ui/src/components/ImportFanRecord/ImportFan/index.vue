@@ -362,7 +362,8 @@ export default {
       return (value == undefined || value == null || value == "") ? "" : value;
     },
     autoSelectLive(row){
-        if(row.importFanChannel == undefined || row.importFanChannel == null || row.importFanChannel == ""){
+        if(row.importFanChannel == undefined || row.importFanChannel == null || row.importFanChannel == ""
+          || row.fanTime == undefined || row.fanTime == null || row.fanTime == ""){
            row.importFanLive = null;
            return;
         }

@@ -395,7 +395,17 @@
       <el-table-column label="服务时长" align="center" prop="serveTime" />
       <el-table-column label="销售/售中" align="center" prop="preSale" >
           <template slot-scope="scope">
-              {{ scope.row.preSaleId ? scope.row.preSale : scope.row.onSale }}
+              <div v-if="scope.row.orderType == 2">
+                <div>
+                  {{ scope.row.preSaleId ? scope.row.preSale : "无" }}
+                </div>
+                <div>
+                {{scope.row.onSaleId ? scope.row.onSale : "无" }}
+                </div>
+              </div>
+              <div v-else>
+                  {{scope.row.preSaleId ? scope.row.preSale : scope.row.onSale}}
+              </div>
           </template>
       </el-table-column>
       <el-table-column
@@ -416,7 +426,7 @@
         align="center"
         prop="nutriAssis"
       />
-      <el-table-column
+      <!--<el-table-column
         v-if="!isMobile"
         label="策划"
         align="center"
@@ -427,7 +437,7 @@
         label="策划助理"
         align="center"
         prop="plannerAssis"
-      />
+      />-->
       <el-table-column
         v-if="!isMobile"
         label="运营"
@@ -444,7 +454,7 @@
         <template slot-scope="scope">
           <auto-hide-message
             :data="scope.row.remark == null ? '' : scope.row.remark + ''"
-            :maxLength="20"
+            :maxLength="10"
           />
         </template>
       </el-table-column>
