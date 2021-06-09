@@ -83,12 +83,12 @@
         >
       </el-form-item>
     </el-form>
-    <div>
+    <!--<div>
       <span style="color: #e6a23c; font-family: PingFang SC">
         注意事项：
         <br />1、2021年1月开始的订单才会自动生成食谱计划</span
       >
-    </div>
+    </div>-->
     <el-row :gutter="10" class="mb8" style="margin-top: 10px">
       <el-col :span="1.5">
         <el-button

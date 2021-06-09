@@ -261,6 +261,7 @@ export default {
       selNotRec: [],
       selRecIds: [],
       selNotRecIds: [],
+      copyFlag: false  //是否为拷贝
     };
   },
   props: [
@@ -316,9 +317,10 @@ export default {
     },
   },
   methods: {
-    showDrawer(id) {
+    showDrawer(id, copyFlag) {
       this.open = true;
-      this.title = id ? "修改菜品" : "新建菜品";
+      this.copyFlag = (copyFlag != undefined && copyFlag) ? true : false;
+      this.title = id ? (this.copyFlag ? "拷贝菜品" : "修改菜品") : "新建菜品";
       this.reset();
       if (id) {
         this.fetchDishesDetail(id);
@@ -390,7 +392,7 @@ export default {
           data.type = data.type.join(",");
           data.recIds = this.selRecIds;
           data.notRecIds = this.selNotRecIds;
-          if (data.id != null) {
+          if (data.id != null && !this.copyFlag) {
             updateDishes(data).then((response) => {
               if (response.code === 200) {
                 this.msgSuccess("修改成功");
@@ -399,9 +401,13 @@ export default {
               }
             });
           } else {
+            if(this.copyFlag){
+              //拷贝时不需要传id
+              data.id = null;
+            }
             addDishes(data).then((response) => {
               if (response.code === 200) {
-                this.msgSuccess("新增成功");
+                this.msgSuccess(this.copyFlag ? "拷贝成功" : "新增成功");
                 this.open = false;
                 this.$emit("onSuccess");
               }

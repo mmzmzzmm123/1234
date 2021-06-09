@@ -149,7 +149,7 @@
       >
         <template slot-scope="scope">
           <el-button
-            size="mini"
+            size="normal"
             type="text"
             icon="el-icon-edit"
             @click="handleUpdate(scope.row)"
@@ -157,7 +157,15 @@
             >修改
           </el-button>
           <el-button
-            size="mini"
+            size="normal"
+            type="text"
+            icon="el-icon-document-copy"
+            @click="handleCopy(scope.row)"
+            v-hasPermi="['custom:dishes:add']"
+            >拷贝
+          </el-button>
+          <el-button
+            size="normal"
             type="text"
             icon="el-icon-delete"
             @click="handleDelete(scope.row)"
@@ -377,6 +385,10 @@ export default {
     /** 修改按钮操作 */
     handleUpdate(row) {
       this.$refs.dishesDrawerRef.showDrawer(row.id);
+    },
+    /** 拷贝按钮操作 */
+    handleCopy(row) {
+      this.$refs.dishesDrawerRef.showDrawer(row.id, true);
     },
     /** 删除按钮操作 */
     handleDelete(row) {
