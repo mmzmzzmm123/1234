@@ -3,12 +3,10 @@ package com.stdiet.web.controller.custom;
 import com.stdiet.common.core.controller.BaseController;
 import com.stdiet.common.core.domain.AjaxResult;
 import com.stdiet.common.utils.DateUtils;
+import com.stdiet.common.utils.StringUtils;
 import com.stdiet.custom.domain.SysOrderPause;
 import com.stdiet.custom.domain.SysWxAdLog;
-import com.stdiet.custom.service.ISysOrderPauseService;
-import com.stdiet.custom.service.ISysRecipesService;
-import com.stdiet.custom.service.ISysWapServices;
-import com.stdiet.custom.service.ISysWxSaleAccountService;
+import com.stdiet.custom.service.*;
 import com.stdiet.custom.utils.HttpRequestUtils;
 import com.stdiet.system.service.ISysDictTypeService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,6 +34,9 @@ public class SysWapController extends BaseController {
 
     @Autowired
     ISysWxSaleAccountService iSysWxSaleAccountService;
+
+    @Autowired
+    ISysSmsConfirmServie iSysSmsConfirmServie;
 
     /**
      * 客户食谱详情
@@ -137,6 +138,41 @@ public class SysWapController extends BaseController {
         sysWxAdLog.setDate(DateUtils.getNowDate());
 
         return toAjax(iSysWxSaleAccountService.logWxAd(sysWxAdLog));
+    }
+
+    @GetMapping(value = "/getCode")
+    public AjaxResult getCode(@RequestParam String phone) {
+
+        if (!StringUtils.isMobileNO(phone)) {
+            return AjaxResult.error(50001, "非法手机号");
+        }
+
+        int code = iSysSmsConfirmServie.sendSmsCode(phone);
+        if (code == 1) {
+            return AjaxResult.error(50001, "非法手机号");
+        } else if (code == 0) {
+            return AjaxResult.success();
+        } else {
+            return AjaxResult.error();
+        }
+
+    }
+
+    @GetMapping(value = "/checkCode")
+    public AjaxResult checkCode(@RequestParam String phone, @RequestParam String code) {
+        if (StringUtils.isEmpty(code)) {
+            return AjaxResult.error(50002, "验证码不能为空");
+        }
+        int checkCode = iSysSmsConfirmServie.checkSmsCode(phone, code);
+        if (checkCode == 0) {
+            return AjaxResult.success();
+        } else if (checkCode == 1) {
+            return AjaxResult.error(50003, "验证码失效");
+        } else if (checkCode == 2) {
+            return AjaxResult.error(50004, "验证码错误");
+        } else {
+            return AjaxResult.error();
+        }
     }
 
 }

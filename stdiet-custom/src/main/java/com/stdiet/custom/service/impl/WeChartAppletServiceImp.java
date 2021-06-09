@@ -29,9 +29,6 @@ import java.util.concurrent.TimeUnit;
 public class WeChartAppletServiceImp implements IWechatAppletService {
     static final String WX_TEM_ID = "Ow0j0Jt4OJhjy6GruBstOMLTGjAVagM4hTZRLAaxqJo";
 
-    static final String SMS_TEM_ID = "SMS_216839183";
-    static final String SMS_SIGN_NAME = "胜唐体控";
-
     @Autowired
     private RedisCache redisCache;
 
@@ -128,7 +125,9 @@ public class WeChartAppletServiceImp implements IWechatAppletService {
     public Integer postSms(Long cusId, Long planId, String plan) {
         try {
             SysCustomer customer = sysCustomerService.selectSysCustomerById(cusId);
-            SendSmsResponse response = SmsUtils.sendSms(customer.getPhone(), plan, SMS_TEM_ID, SMS_SIGN_NAME);
+            JSONObject paramObj = new JSONObject();
+            paramObj.put("plan", plan);
+            SendSmsResponse response = SmsUtils.sendSms(customer.getPhone(), paramObj.toJSONString(), SmsUtils.SMS_216839183, SmsUtils.SMS_SIGN_NAME);
 
             WxSubscribePostLog postLog = new WxSubscribePostLog();
             postLog.setPhone(customer.getPhone());
@@ -142,8 +141,8 @@ public class WeChartAppletServiceImp implements IWechatAppletService {
             JSONObject dataParam = new JSONObject();
             dataParam.put("phone", customer.getPhone());
             dataParam.put("plan", plan);
-            dataParam.put("tmpCode", SMS_TEM_ID);
-            dataParam.put("signName", SMS_SIGN_NAME);
+            dataParam.put("tmpCode", SmsUtils.SMS_216839183);
+            dataParam.put("signName", SmsUtils.SMS_SIGN_NAME);
             postLog.setData(dataParam);
             postLog.setSendTime(DateUtils.getNowDate());
             postLog.setType(1);

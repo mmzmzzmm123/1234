@@ -10,9 +10,11 @@
           }`"
           @click="handleOnCustomerClick(customer)"
         >
-          <el-avatar size="medium" :src="customer.avatar">
-            {{ customer.name && customer.name.substr(-1) }}
-          </el-avatar>
+          <span class="customer_avatar">
+            <el-avatar size="medium" :src="customer.avatar">
+              {{ customer.name && customer.name.substr(-1) }}
+            </el-avatar>
+          </span>
           <span class="customer_name">
             {{ customer.name }}
           </span>
@@ -38,11 +40,10 @@
             <div class="topic_content" :style="{ width: `${itemWidth}px` }">
               {{ topic.content }}
             </div>
-            <div class="topic_user_name">by {{ topic.name }}</div>
+            <div class="topic_time">{{ formatDate(topic.createTime) }}</div>
           </div>
           <div class="topic_info">
             <el-tag size="small">{{ topicTypeDict[topic.topicType] }}</el-tag>
-            <div class="topic_time">{{ formatDate(topic.createTime) }}</div>
           </div>
         </div>
       </div>
@@ -306,6 +307,9 @@ export default {
 
       .customer_name {
         margin-left: 8px;
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
       }
     }
 
@@ -362,22 +366,16 @@ export default {
           line-height: 1.5;
         }
 
-        .topic_user_name {
-          color: #8c8c8c;
+        .topic_time {
           font-size: 14px;
-          margin-top: 8px;
+          margin-top: 6px;
+          color: #8c8c8c;
         }
       }
 
       .topic_info {
         flex: 0 0 80px;
         text-align: center;
-
-        .topic_time {
-          font-size: 14px;
-          margin-top: 8px;
-          color: #8c8c8c;
-        }
       }
     }
 

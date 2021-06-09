@@ -1,6 +1,5 @@
 package com.stdiet.custom.utils;
 
-import com.alibaba.fastjson.JSONObject;
 import com.aliyuncs.DefaultAcsClient;
 import com.aliyuncs.IAcsClient;
 import com.aliyuncs.dysmsapi.model.v20170525.QuerySendDetailsRequest;
@@ -16,12 +15,42 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class SmsUtils {
+    /**
+     * 身份验证码
+     */
+    public static final String SMS_217025173 = "SMS_217025173";
+    /**
+     * 登录确认验证码
+     */
+    public static final String SMS_217025172 = "SMS_217025172";
+    /**
+     * 用户注册验证码
+     */
+    public static final String SMS_217025170 = "SMS_217025170";
+    /**
+     * 修改密码验证码
+     */
+    public static final String SMS_217025169 = "SMS_217025169";
+    /**
+     * 新食谱通知
+     */
+    public static final String SMS_216839183 = "SMS_216839183";
+
+    /**
+     * 签名
+     */
+    public static final String SMS_SIGN_NAME = "胜唐体控";
+
     //产品名称:云通信短信API产品,开发者无需替换
     static final String product = "Dysmsapi";
     //产品域名,开发者无需替换
     static final String domain = "dysmsapi.aliyuncs.com";
 
-    public static SendSmsResponse sendSms(String phone, String plan, String tmpCode, String signName) throws ClientException {
+    public static SendSmsResponse sendSms(String phone, String paramStr, String tmpCode) throws ClientException {
+        return sendSms(phone, paramStr, tmpCode, SMS_SIGN_NAME);
+    }
+
+    public static SendSmsResponse sendSms(String phone, String paramStr, String tmpCode, String signName) throws ClientException {
 
         //可自助调整超时时间
         System.setProperty("sun.net.client.defaultConnectTimeout", "10000");
@@ -41,9 +70,7 @@ public class SmsUtils {
         //必填:短信模板-可在短信控制台中找到
         request.setTemplateCode(tmpCode);
         //可选:模板中的变量替换JSON串,如模板内容为"亲爱的${name},您的验证码为${code}"时,此处的值为
-        JSONObject paramObj = new JSONObject();
-        paramObj.put("plan", plan);
-        request.setTemplateParam(paramObj.toJSONString());
+        request.setTemplateParam(paramStr);
 
         //选填-上行短信扩展码(无特殊需求用户请忽略此字段)
         //request.setSmsUpExtendCode("90997");
