@@ -97,6 +97,7 @@ public class TsbzQtjskhgcsjController extends BaseController {
         String uuid = schoolCommonController.getUuid();
         tsbzQtjskhgcsj.setId(uuid);
         tsbzQtjskhgcsj.setCreateuserid(schoolCommonController.userIdToxxjsId(SecurityUtils.getLoginUser().getUser().getUserId()));
+        tsbzQtjskhgcsj.setSubstatus("1");
 
         String filePaths = tsbzQtjskhgcsj.getFilepath();
         String fileNames = tsbzQtjskhgcsj.getFilename();
@@ -110,7 +111,6 @@ public class TsbzQtjskhgcsjController extends BaseController {
                 tsbzQtjskhgcwjsj.setFilename(strArrFileName[i]);
                 tsbzQtjskhgcwjsj.setGcid(uuid);
                 tsbzQtjskhgcwjsj.setCreateuserid(schoolCommonController.userIdToJxjsId(SecurityUtils.getLoginUser().getUser().getUserId()));
-
                 tsbzQtjskhgcwjsjService.insertTsbzQtjskhgcwjsj(tsbzQtjskhgcwjsj);
             }
         }
@@ -147,6 +147,7 @@ public class TsbzQtjskhgcsjController extends BaseController {
                 tsbzQtjskhgcwjsjService.insertTsbzQtjskhgcwjsj(tsbzQtjskhgcwjsj);
             }
         }
+        tsbzQtjskhgcsj.setSubstatus("1");
         return toAjax(tsbzQtjskhgcsjService.updateTsbzQtjskhgcsj(tsbzQtjskhgcsj));
 //        return toAjax(tsbzQtjskhgcsjService.updateTsbzQtjskhgcsj(tsbzQtjskhgcsj));
     }

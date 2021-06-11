@@ -57,6 +57,9 @@ public class TsbzQtjskhgcsj extends BaseEntity {
     @Excel(name = "文件路径")
     private String filepath;
 
+    // 提交状态
+    private String substatus;
+
     public void setId(String id) {
         this.id = id;
     }
@@ -133,6 +136,15 @@ public class TsbzQtjskhgcsj extends BaseEntity {
                 .append("tsbzQtjskhzbx", getTsbzQtjskhzbx())
                 .append("filename", getFilename())
                 .append("filepath", getFilepath())
+                .append("substatus", getSubstatus())
                 .toString();
+    }
+
+    public String getSubstatus() {
+        return substatus;
+    }
+
+    public void setSubstatus(String substatus) {
+        this.substatus = substatus;
     }
 }

@@ -61,6 +61,7 @@
       <el-table-column label="指标项" align="center" prop="tsbzQtjskhzbx.khnr" />
       <el-table-column label="提交文件数" align="center" prop="tsbzQtjskhzbx.tjsl" />
       <el-table-column label="内容" align="center" prop="content" />
+      <el-table-column label="提交状态" align="center" prop="substatus" :formatter="substatusFormat" />
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button
@@ -179,6 +180,8 @@ export default {
       // 群体教师考核过程数据表格数据
       qtjskhgcsjList: [],
       qtjskhfaOptions: [],
+      // 提交状态
+      substatusOptions: [],
       //指标模块
       khmkOptions: [],
       // 弹出层标题
@@ -199,6 +202,7 @@ export default {
         zbid: null,
         content: null,
         createuserid: null,
+        substatus: null,
       },
       // 查询参数
       queryParams_fa: {
@@ -222,6 +226,9 @@ export default {
     this.getKhfa();
     this.getDicts("sys_dm_khmk").then((response) => {
       this.khmkOptions = response.data;
+    });
+    this.getDicts("sys_dm_qtjsshgctjzt").then((response) => {
+      this.substatusOptions = response.data;
     });
   },
   methods: {
@@ -273,6 +280,10 @@ export default {
     khmkFormat(row, column) {
       return this.selectDictLabel(this.khmkOptions, row.tsbzQtjskhzbx.khmk);
     },
+    // 提交状态字典项字典翻译
+    substatusFormat(row, column) {
+      return this.selectDictLabel(this.substatusOptions, row.substatus);
+    },
     // 字典翻译
     faFormat(row, column) {
       // return this.selectDictLabel(this.classOptions, row.classid);
@@ -320,6 +331,7 @@ export default {
         khnr: null,
         createuserid: null,
         createTime: null,
+        substatus: "0",
         filepath: "",
         filename: "",
       };

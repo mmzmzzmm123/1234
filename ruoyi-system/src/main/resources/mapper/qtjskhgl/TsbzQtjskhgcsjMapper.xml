@@ -11,6 +11,7 @@
         <result property="content" column="content"/>
         <result property="createuserid" column="createuserid"/>
         <result property="createTime" column="create_time"/>
+        <result property="substatus" column="substatus"/>
         <association property="tsbzQtjskhzbx" column="zbid" javaType="TsbzQtjskhzbx" resultMap="TsbzQtjskhzbxResult"/>
     </resultMap>
 
@@ -35,7 +36,7 @@
 
     <sql id="selectTsbzQtjskhgcsjVo">
 --         select id, faid, zbid, content, createuserid, create_time from tsbz_qtjskhgcsj
-select b.id,b.content,b.zbid,b.createuserid,a.create_time,a.id as zbxid,a.faid,a.khmk,a.khnr,a.tjsl,a.gjzd,a.tbly,a.jkbj,a.starttime,a.endtime,a.zxrw,a.yly,a.yle from tsbz_qtjskhzbx a
+select b.id,b.content,b.zbid,b.createuserid,b.substatus,a.create_time,a.id as zbxid,a.faid,a.khmk,a.khnr,a.tjsl,a.gjzd,a.tbly,a.jkbj,a.starttime,a.endtime,a.zxrw,a.yly,a.yle from tsbz_qtjskhzbx a
 left join (select * from tsbz_qtjskhgcsj where createuserid= #{createuserid}) b
 on a.faid=b.faid and a.id=b.zbid
     </sql>
@@ -46,6 +47,7 @@ on a.faid=b.faid and a.id=b.zbid
             <if test="faid != null ">and a.faid = #{faid}</if>
             <if test="zbid != null ">and a.zbid = #{zbid}</if>
             <if test="content != null  and content != ''">and b.content = #{content}</if>
+            <if test="substatus != null  and substatus != ''">and b.substatus = #{substatus}</if>
         </where>
     </select>
 
@@ -63,6 +65,7 @@ on a.faid=b.faid and a.id=b.zbid
             <if test="content != null">content,</if>
             <if test="createuserid != null">createuserid,</if>
             <if test="createTime != null">create_time,</if>
+            <if test="substatus != null">substatus,</if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="id != null">#{id},</if>
@@ -71,6 +74,7 @@ on a.faid=b.faid and a.id=b.zbid
             <if test="content != null">#{content},</if>
             <if test="createuserid != null">#{createuserid},</if>
             <if test="createTime != null">#{createTime},</if>
+            <if test="substatus != null">#{substatus},</if>
         </trim>
     </insert>
 
@@ -82,6 +86,7 @@ on a.faid=b.faid and a.id=b.zbid
             <if test="content != null">content = #{content},</if>
             <if test="createuserid != null">createuserid = #{createuserid},</if>
             <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="substatus != null">substatus = #{substatus},</if>
         </trim>
         where id = #{id}
     </update>
