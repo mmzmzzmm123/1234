@@ -13,9 +13,12 @@ import com.ruoyi.common.config.RuoYiConfig;
 import com.ruoyi.common.constant.Constants;
 import com.ruoyi.framework.interceptor.RepeatSubmitInterceptor;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * 通用配置
- * 
+ *
  * @author ruoyi
  */
 @Configuration
@@ -53,7 +56,9 @@ public class ResourcesConfig implements WebMvcConfigurer
         CorsConfiguration config = new CorsConfiguration();
         config.setAllowCredentials(true);
         // 设置访问源地址
-        config.addAllowedOrigin("*");
+        List<String> patterns = new ArrayList<>();
+        patterns.add("*");
+        config.setAllowedOriginPatterns(patterns);
         // 设置访问源请求头
         config.addAllowedHeader("*");
         // 设置访问源请求方法
