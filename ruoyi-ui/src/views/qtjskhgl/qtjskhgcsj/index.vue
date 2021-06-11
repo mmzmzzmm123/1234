@@ -300,7 +300,6 @@ export default {
     getList() {
       this.loading = true;
       listQtjskhgcsj(this.queryParams).then((response) => {
-        console.log(response.rows);
         this.qtjskhgcsjList = response.rows;
         this.total = response.total;
         this.loading = false;
@@ -325,6 +324,7 @@ export default {
         filename: "",
       };
       this.resetForm("form");
+      this.fileList = [];
     },
     /** 搜索按钮操作 */
     handleQuery() {
@@ -351,11 +351,11 @@ export default {
       if (id != "") {
         getQtjskhgcsj(id).then((response) => {
           this.form = response.data;
-          console.log(response.data);
+          // console.log(response);
           this.open = true;
           this.title = "填报群体教师考核过程数据";
           this.form.khnr = row.tsbzQtjskhzbx.khnr;
-          console.log(response.file);
+          // console.log(response.file);
           var array = [];
           var path = "";
           var name = "";
