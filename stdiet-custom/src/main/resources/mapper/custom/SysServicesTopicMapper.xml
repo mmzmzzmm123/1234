@@ -36,8 +36,8 @@
         ) AS status
         LEFT JOIN (SELECT topic_id, uid, del_flag FROM sys_services_topic ) AS topic USING(topic_id)
         WHERE del_flag = 0
-        ORDER BY `read` ASC, update_time DESC
         ) AS userList GROUP BY uid
+        ORDER BY `read` ASC, update_time DESC
     </select>
 
     <select id="selectTopicListByUid" parameterType="SysServicesTopic" resultMap="SysServicesTopicResult">

@@ -119,7 +119,7 @@ export default {
   },
   watch: {
     planList(val, newVal) {
-      console.log({ val, newVal });
+      // console.log({ val, newVal });
       this.cusOutId = val.reduce((str, cur) => {
         if (!str && cur.recipesId && cur.reviewStatus === 2) {
           str = cur.outId;
@@ -184,7 +184,7 @@ export default {
       );
     },
     handleOnSendChange(val, data) {
-      console.log({ val, data });
+      // console.log({ val, data });
       const { id } = data;
       if (data.reviewStatus === 2) {
         this.updateRecipesPlanActions({

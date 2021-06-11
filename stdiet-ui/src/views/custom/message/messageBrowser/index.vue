@@ -1,5 +1,6 @@
 <template>
   <div class="message_browser_wrapper">
+    <!-- 客户列表 -->
     <div class="customers_list" @scroll="handleOnScroll" v-loading="cusLoading">
       <div v-if="customerList && customerList.length">
         <div
@@ -10,7 +11,11 @@
           }`"
           @click="handleOnCustomerClick(customer)"
         >
-          <span class="customer_avatar">
+          <span
+            :class="`customer_avatar ${
+              !customer.read ? 'customer_avatar_unread' : ''
+            }`"
+          >
             <el-avatar size="medium" :src="customer.avatar">
               {{ customer.name && customer.name.substr(-1) }}
             </el-avatar>
@@ -21,6 +26,7 @@
         </div>
       </div>
     </div>
+    <!-- 客户问题列表 -->
     <div class="topic_list" v-loading="topicLoading">
       <div v-if="topicList && topicList.length">
         <div
@@ -49,6 +55,7 @@
       </div>
       <div v-else class="topic_list_empty">暂无消息</div>
     </div>
+    <!-- 问题对话详情列表 -->
     <div class="topic_detail" v-loading="detailLoading">
       <div class="topic_detail_list">
         <div
@@ -136,8 +143,8 @@ export default {
     setTimeout(() => {
       const itemElm = document.querySelector(".topic_item");
       if (itemElm) {
-        console.log(itemElm);
-        this.itemWidth = itemElm.clientWidth - 32 - 20 - 80;
+        // console.log(itemElm);
+        this.itemWidth = itemElm.clientWidth - 24 - 20 - 50 - 4;
       }
     }, 100);
   },
@@ -167,28 +174,29 @@ export default {
     },
     handleOnMessage({ data }) {
       if (data.type === keys.WS_TYPE_MESSAGE_COUNT) {
-        const { data: tData } = data.data;
-        const time = dayjs(tData.createTime).format("YYYY-MM-DD HH:mm:ss");
-        const newTopicList = [
-          {
-            id: tData.id,
-            content: tData.content,
-            createTime: time,
-            img: tData.img,
-            topicId: tData.topicId,
-            role: "customer",
-            uid: tData.uid,
-            updateTime: time,
-            topicType: tData.topicType,
-            read: tData.read,
-          },
-          ...this.topicList,
-        ];
-        this.save({
-          topicList: newTopicList,
+        const { data: tData, count } = data.data;
+        this.updateUnreadCount({
+          msgUnreadCount: count,
         });
+        if (tData.uid === selCusId) {
+          this.fetchTopicListApi({
+            fromUid: tData.uid,
+          });
+        } else {
+          // 调整用户列表顺序
+          const newCustomers = JSON.parse(JSON.stringify(this.customerList));
+          const tarIdx = newCustomers.findIndex((obj) => obj.uid === tData.uid);
+          if (tarIdx > -1) {
+            const [tarCustomer] = newCustomers.splice(tarIdx, 1);
+            tarCustomer.read = 0;
+            newCustomers.splice(0, 0, tarCustomer);
+            this.save({
+              customerList: newCustomers,
+            });
+          }
+        }
       } else if (data.type === keys.WS_TYPE_NEW_CUSTOMER_REPLY) {
-        const { count, topicId } = data.data;
+        const { count, topicId, uid } = data.data;
         this.updateUnreadCount({
           msgUnreadCount: count,
         });
@@ -197,11 +205,22 @@ export default {
             (obj) => obj.topicId === topicId
           );
           if (tarTopic) {
-            console.log({ tarTopic });
             this.fetchTopicDetailActions({
               topicId,
               id: tarTopic.id,
               uid: tarTopic.uid,
+            });
+          }
+        } else {
+          // 调整用户列表顺序
+          const newCustomers = JSON.parse(JSON.stringify(this.customerList));
+          const tarIdx = newCustomers.findIndex((obj) => obj.uid === uid);
+          if (tarIdx > -1) {
+            const [tarCustomer] = newCustomers.splice(tarIdx, 1);
+            tarCustomer.read = 0;
+            newCustomers.splice(0, 0, tarCustomer);
+            this.save({
+              customerList: newCustomers,
             });
           }
         }
@@ -300,9 +319,27 @@ export default {
       cursor: pointer;
       display: flex;
       align-items: center;
+      position: relative;
 
       &:hover {
         background: #dedede;
+      }
+
+      .customer_avatar {
+      }
+
+      .customer_avatar_unread {
+        &::after {
+          content: "";
+          display: block;
+          width: 12px;
+          height: 12px;
+          border-radius: 50%;
+          background: #d96969;
+          position: absolute;
+          top: 8px;
+          left: 36px;
+        }
       }
 
       .customer_name {
@@ -374,7 +411,7 @@ export default {
       }
 
       .topic_info {
-        flex: 0 0 80px;
+        flex: 0 0 50px;
         text-align: center;
       }
     }

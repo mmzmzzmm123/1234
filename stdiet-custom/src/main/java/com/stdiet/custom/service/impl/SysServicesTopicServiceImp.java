@@ -170,6 +170,7 @@ public class SysServicesTopicServiceImp implements ISysServicesTopicService {
                 JSONObject dataObj = new JSONObject();
                 dataObj.put("count", counts.get(i).getCount());
                 dataObj.put("topicId", topic.getTopicId());
+                dataObj.put("uid", topic.getFromUid());
 
                 JSONObject msgObj = new JSONObject();
                 msgObj.put("type", WsUtils.WS_TYPE_NEW_CUSTOMER_REPLY);
