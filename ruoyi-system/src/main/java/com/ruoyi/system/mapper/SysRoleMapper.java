@@ -1,6 +1,8 @@
 package com.ruoyi.system.mapper;
 
 import java.util.List;
+
+import com.ruoyi.common.core.domain.dto.SysRoleRedisDTO;
 import com.ruoyi.common.core.domain.entity.SysRole;
 
 /**
@@ -8,7 +10,7 @@ import com.ruoyi.common.core.domain.entity.SysRole;
  * 
  * @author ruoyi
  */
-public interface SysRoleMapper
+public interface SysRoleMapper extends BaseMapper
 {
     /**
      * 根据条件分页查询角色数据
@@ -104,4 +106,12 @@ public interface SysRoleMapper
      * @return 结果
      */
     public int deleteRoleByIds(Long[] roleIds);
+
+    /**
+     * 查询角色信息以及权限
+     *
+     * @param roleId 角色id 不传递查询全部
+     * @return 结果
+     */
+    public List<SysRoleRedisDTO> selectRolePerms(Long roleId);
 }

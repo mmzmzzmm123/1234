@@ -1,9 +1,12 @@
 package com.ruoyi.framework.web.service;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 import javax.servlet.http.HttpServletRequest;
+
+import com.ruoyi.common.core.domain.dto.SysRoleRedisDTO;
+import com.ruoyi.common.core.domain.entity.SysRole;
+import com.ruoyi.common.utils.bean.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -19,6 +22,7 @@ import eu.bitwalker.useragentutils.UserAgent;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import org.springframework.util.CollectionUtils;
 
 /**
  * token验证处理
@@ -65,9 +69,50 @@ public class TokenService
             String uuid = (String) claims.get(Constants.LOGIN_USER_KEY);
             String userKey = getTokenKey(uuid);
             LoginUser user = redisCache.getCacheObject(userKey);
+            // 获取角色实时信息以及权限字符
+            getUserRoleAndPerms(user);
             return user;
         }
         return null;
+    }
+
+    /**
+     * redis获取用户角色信息和权限字符
+     *
+     * @param user 当前登陆人
+     */
+    private void getUserRoleAndPerms(LoginUser user)
+    {
+        if (user == null || user.getUser() == null)
+        {
+            return;
+        }
+        // 角色信息
+        List<SysRole> roles = new ArrayList<>();
+        // 权限信息
+        Set<String> allPerms = new HashSet<>();
+
+        if (user.getUser().isAdmin())
+        {
+            roles = user.getUser().getRoles();
+            allPerms.add("*:*:*");
+        } else {
+            for (SysRole item : user.getUser().getRoles()) {
+                SysRoleRedisDTO dto = redisCache.getCacheObject(Constants.ROLE_PERMS_KEY + item.getRoleId());
+                if (dto != null) {
+                    SysRole role = new SysRole();
+                    BeanUtils.copyBeanProp(role, dto);
+                    // 从redis获取角色最新数据
+                    roles.add(role);
+                    // 添加权限字符
+                    if (!CollectionUtils.isEmpty(dto.getPerms())) {
+                        allPerms.addAll(dto.getPerms());
+                    }
+                }
+            }
+        }
+        user.getUser().setRoles(roles);
+        user.setPermissions(allPerms);
     }
 
     /**

@@ -5,6 +5,11 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+
+import com.ruoyi.common.constant.Constants;
+import com.ruoyi.common.core.domain.dto.SysRoleRedisDTO;
+import com.ruoyi.common.core.redis.RedisCache;
+import com.ruoyi.common.core.text.Convert;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,6 +26,9 @@ import com.ruoyi.system.mapper.SysRoleMapper;
 import com.ruoyi.system.mapper.SysRoleMenuMapper;
 import com.ruoyi.system.mapper.SysUserRoleMapper;
 import com.ruoyi.system.service.ISysRoleService;
+import org.springframework.util.CollectionUtils;
+
+import javax.annotation.PostConstruct;
 
 /**
  * 角色 业务层处理
@@ -41,6 +49,30 @@ public class SysRoleServiceImpl implements ISysRoleService
 
     @Autowired
     private SysRoleDeptMapper roleDeptMapper;
+
+    @Autowired
+    private RedisCache redisCache;
+
+
+    /**
+     * 项目启动时，将角色对应的权限放入缓存
+     */
+    @PostConstruct
+    public void init()
+    {
+        loadingRoleCache();
+    }
+
+    /**
+     * 角色信息加入redis
+     */
+    private void loadingRoleCache()
+    {
+        List<SysRoleRedisDTO> rolePerms = roleMapper.selectRolePerms(null);
+        if (!CollectionUtils.isEmpty(rolePerms)) {
+            rolePerms.forEach(item -> redisCache.setCacheObject(getCacheKey(Convert.toStr(item.getRoleId())), item));
+        }
+    }
 
     /**
      * 根据条件分页查询角色数据
@@ -185,6 +217,8 @@ public class SysRoleServiceImpl implements ISysRoleService
     {
         // 新增角色信息
         roleMapper.insertRole(role);
+        // 获取刚刚新增的角色id
+        role.setRoleId(roleMapper.getLastInsertId());
         return insertRoleMenu(role);
     }
 
@@ -231,6 +265,8 @@ public class SysRoleServiceImpl implements ISysRoleService
         roleMapper.updateRole(role);
         // 删除角色与部门关联
         roleDeptMapper.deleteRoleDeptByRoleId(role.getRoleId());
+        // 将修改完后的角色信息再次缓存
+        cacheRoleInfo(role.getRoleId());
         // 新增角色和部门信息（数据权限）
         return insertRoleDept(role);
     }
@@ -255,6 +291,8 @@ public class SysRoleServiceImpl implements ISysRoleService
         if (list.size() > 0)
         {
             rows = roleMenuMapper.batchRoleMenu(list);
+            // 跟新redis中的角色信息
+            cacheRoleInfo(role.getRoleId());
         }
         return rows;
     }
@@ -324,5 +362,30 @@ public class SysRoleServiceImpl implements ISysRoleService
         // 删除角色与部门关联
         roleDeptMapper.deleteRoleDept(roleIds);
         return roleMapper.deleteRoleByIds(roleIds);
+    }
+
+    /**
+     * 缓存角色信息以及对应的权限
+     *
+     * @param roleId 角色id
+     */
+    private void cacheRoleInfo(Long roleId) {
+        if (roleId == null || roleId == 0) {
+            return;
+        }
+        // 查询
+        SysRoleRedisDTO dto = roleMapper.selectRolePerms(roleId).get(0);
+        redisCache.setCacheObject(Constants.ROLE_PERMS_KEY + roleId, dto);
+    }
+
+
+    /**
+     * 设置cache key
+     *
+     * @param configKey 参数键
+     * @return 缓存键key
+     */
+    public static String getCacheKey(String configKey) {
+        return Constants.ROLE_PERMS_KEY + configKey;
     }
 }

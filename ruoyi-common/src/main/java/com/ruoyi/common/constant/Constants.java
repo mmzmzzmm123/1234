@@ -61,7 +61,12 @@ public class Constants
      * 登录用户 redis key
      */
     public static final String LOGIN_TOKEN_KEY = "login_tokens:";
-    
+
+    /**
+     * 角色对应的权限信息
+     */
+    public static final String ROLE_PERMS_KEY = "role_perms:";
+
     /**
      * 防重提交 redis key
      */

@@ -145,5 +145,28 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
  			#{roleId}
         </foreach> 
  	</delete>
- 	
-</mapper> 
+
+	<resultMap id="roleAndPermsMap" type="com.ruoyi.common.core.domain.dto.SysRoleRedisDTO" extends="SysRoleResult">
+		<collection property="perms" ofType="java.lang.String">
+			<constructor>
+				<arg column="perms"/>
+			</constructor>
+		</collection>
+	</resultMap>
+
+	<select id="selectRolePerms"  resultMap="roleAndPermsMap">
+		SELECT r.*, m.perms
+		FROM sys_role r
+			LEFT JOIN sys_role_menu rm ON r.role_id = rm.role_id
+			LEFT JOIN sys_menu m ON rm.menu_id = m.menu_id
+		WHERE r.status = '0'
+			AND r.del_flag = '0'
+			AND m.status = '0'
+			AND m.perms IS NOT NULL
+			AND m.perms != ''
+		<if test="roleId != null and roleId != 0">
+			AND r.role_id = #{roleId}
+		</if>
+		ORDER BY r.role_id
+	</select>
+</mapper>
