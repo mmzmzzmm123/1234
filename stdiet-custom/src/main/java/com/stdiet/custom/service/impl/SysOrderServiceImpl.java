@@ -378,7 +378,7 @@ public class SysOrderServiceImpl implements ISysOrderService {
                 LocalDate newStartTime = null;
                 //判断是否提成单，拆分单中的副单，体验单,定金单
                 if(sysOrder.getStartTime() == null || sysOrder.getAfterSaleCommissOrder().intValue() == 1 || sysOrder.getMainOrderId().intValue() != 0 ||
-                        "2".equals(sysOrder.getOrderType()) || "1".equals(sysOrder.getOrderMoneyType())){
+                        "2".equals(sysOrder.getOrderType()) || !isNeedByOrderMoneyType(sysOrder)){
                     continue;
                 }
                 //判断前一个订单的结束时间是否大于第二个订单的
@@ -402,6 +402,21 @@ public class SysOrderServiceImpl implements ISysOrderService {
             sysRecipesPlanService.regenerateRecipesPlan(cusId);
         }
         return row;
+    }
+
+    //定金单或尾款单是否需要生成食谱计划，2021-01-12修改为6月11日之后成交的订单只生成定金单计划
+    private boolean isNeedByOrderMoneyType(SysOrder sysOrder){
+        if("0".equals(sysOrder.getOrderMoneyType())){
+            return true;
+        }else{
+            //成交时间
+            LocalDate orderDate = DateUtils.dateToLocalDate(sysOrder.getOrderTime());
+            if(ChronoUnit.DAYS.between(SysRecipesPlanServiceImpl.newVersionPlanStartDate, orderDate) >= 0){
+                return "1".equals(sysOrder.getOrderMoneyType());
+            }else{
+                return "2".equals(sysOrder.getOrderMoneyType());
+            }
+        }
     }
 
     /**

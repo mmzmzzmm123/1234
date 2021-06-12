@@ -714,7 +714,9 @@ public class WechatAppletController extends BaseController {
      */
     @GetMapping("/getVideoClassify")
     public AjaxResult getVideoClassify(@RequestParam("openid")String openid) {
-        List<SysVideoClassify> list = sysVideoClassifyService.selectSysVideoClassifyList(new SysVideoClassify());
+        SysVideoClassify param = new SysVideoClassify();
+        param.setParentId(0L);
+        List<SysVideoClassify> list = sysVideoClassifyService.getAllClassify(param);
         List<List<Map<String,Object>>> result = new ArrayList<>();
         int groupCount = 3;
         SysVideoClassify all = new SysVideoClassify();

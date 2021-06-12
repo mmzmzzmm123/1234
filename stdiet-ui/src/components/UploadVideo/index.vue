@@ -26,15 +26,14 @@
               <UploadFile ref="uploadFile" :prefix="'videoCover'" @callbackMethod="handleCoverUrl" :tips="'视频未传封面图片时，会主动截取封面，但会存在延迟，请勿直接发布到小程序'"></UploadFile>
           </el-form-item>  
           <div style="display:flex">
-            <el-form-item label="视频类别" prop="cateId">
-            <el-select v-model="videoFrom.cateId" clearable filterable placeholder="请选择类别">
-              <el-option
-                v-for="classify in classifyList"
-                :key="classify.id"
-                :label="classify.cateName"
-                :value="classify.id"
+            <el-form-item label="视频类别" prop="cateId" style="width:300px">
+            <treeselect
+                v-model="videoFrom.cateId"
+                :options="classifyList"
+                :normalizer="normalizer"
+                :show-count="true"
+                placeholder="选择分类"
               />
-            </el-select>
           </el-form-item> 
           <el-form-item label="视频权限" prop="payLevel" style="margin-left:40px">
             <el-select v-model="videoFrom.payLevel" clearable filterable placeholder="请选择权限">
@@ -78,6 +77,9 @@
   import {getUploadVideoAuth,addNutritionalVideo } from "@/api/custom/nutritionalVideo";
   import {getAllClassify } from "@/api/custom/videoClassify";
   import UploadFile from "@/components/FileUpload/UploadFile";
+   import Treeselect from "@riophae/vue-treeselect";
+  import "@riophae/vue-treeselect/dist/vue-treeselect.css";
+  import IconSelect from "@/components/IconSelect";
   export default {
       name: "UploadVideo",
     data () {
@@ -140,7 +142,7 @@
         
     },
     components: {
-      UploadFile
+      UploadFile,Treeselect, IconSelect
     },
     methods: {
         showDialog(classifyList, callback){
@@ -150,7 +152,8 @@
             this.resetVideoFrom();
             this.open = true;
             this.callback = callback;
-            this.classifyList = classifyList;
+            this.dealClassify(classifyList);
+            //this.classifyList = classifyList;
         },
         handleCoverUrl(url){
           this.videoFrom.coverUrl = url;
@@ -182,6 +185,23 @@
         submitVideoForm(){
             
         },
+        /** 转换菜单数据结构 */
+        normalizer(node) {
+          if (node.children && !node.children.length) {
+            delete node.children;
+          }
+          return {
+            id: node.id,
+            label: node.cateName,
+            children: node.children
+          };
+        },
+        dealClassify(data){
+            this.classifyList = [];
+            const classify = { id: 0, cateName: '主分类', children: [] };
+            classify.children = this.handleTree(data, "id");
+            this.classifyList.push(classify);
+        },
         cancel(){
             if(this.uploading){
                 this.$message({
@@ -211,6 +231,14 @@
                       this.authProgress = 0
                       this.statusText = ""
                   }**/
+                  //视频分类不能选择主分类
+                  if(this.videoFrom.cateId == 0){
+                     this.$message({
+                          message: "视频分类不能选择主分类",
+                          type: "warning",
+                      });
+                      return;
+                  }
                   this.videoFrom.fileName = this.file.name;
                   if(this.videoFrom.fileName == null || this.videoFrom.fileName.length == 0 || this.videoFrom.fileName.lastIndexOf(".") == -1){
                       this.$message({

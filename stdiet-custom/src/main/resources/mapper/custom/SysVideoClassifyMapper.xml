@@ -7,6 +7,8 @@
     <resultMap type="SysVideoClassify" id="SysVideoClassifyResult">
         <result property="id"    column="id"    />
         <result property="cateName"    column="cate_name"    />
+        <result property="parentId"    column="parent_id"    />
+        <result property="orderNum"    column="order_num"    />
         <result property="payFlag"    column="pay_flag"    />
         <result property="createTime"    column="create_time"    />
         <result property="createBy"    column="create_by"    />
@@ -16,12 +18,16 @@
     </resultMap>
 
     <sql id="selectSysVideoClassifyVo">
-        select id, cate_name, pay_flag, create_time, create_by, update_time, update_by, del_flag from sys_video_classify
+        select id, cate_name, parent_id, order_num, pay_flag, create_time, create_by, update_time, update_by, del_flag from sys_video_classify
     </sql>
 
     <select id="selectSysVideoClassifyList" parameterType="SysVideoClassify" resultMap="SysVideoClassifyResult">
-        <include refid="selectSysVideoClassifyVo"/>
+        select id, cate_name, parent_id, order_num, pay_flag, create_time from sys_video_classify
         where del_flag = 0
+        <if test="parentId != null">
+            and parent_id = #{parentId}
+        </if>
+        order by order_num asc,id asc
     </select>
 
     <select id="selectSysVideoClassifyById" parameterType="Long" resultMap="SysVideoClassifyResult">
@@ -34,6 +40,8 @@
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="id != null">id,</if>
             <if test="cateName != null">cate_name,</if>
+            <if test="parentId != null">parent_id,</if>
+            <if test="orderNum != null">order_num,</if>
             <if test="payFlag != null">pay_flag,</if>
             <if test="createTime != null">create_time,</if>
             <if test="createBy != null">create_by,</if>
@@ -44,6 +52,8 @@
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="id != null">#{id},</if>
             <if test="cateName != null">#{cateName},</if>
+            <if test="parentId != null">#{parentId},</if>
+            <if test="orderNum != null">#{orderNum},</if>
             <if test="payFlag != null">#{payFlag},</if>
             <if test="createTime != null">#{createTime},</if>
             <if test="createBy != null">#{createBy},</if>
@@ -57,6 +67,8 @@
         update sys_video_classify
         <trim prefix="SET" suffixOverrides=",">
             <if test="cateName != null">cate_name = #{cateName},</if>
+            <if test="parentId != null">parent_id = #{parentId},</if>
+            <if test="orderNum != null">order_num = #{orderNum},</if>
             <if test="payFlag != null">pay_flag = #{payFlag},</if>
             <if test="createTime != null">create_time = #{createTime},</if>
             <if test="createBy != null">create_by = #{createBy},</if>
@@ -78,8 +90,62 @@
         </foreach>
     </update>
 
-    <select id="getAllClassify" resultMap="SysVideoClassifyResult">
-        select id,cate_name from sys_video_classify where del_flag = 0
+    <select id="getAllClassify" resultMap="SysVideoClassifyResult" parameterType="SysVideoClassify">
+        select id, cate_name, parent_id, order_num, pay_flag, create_time, create_by, update_time, update_by, del_flag from sys_video_classify
+        where del_flag = 0
+        <if test="parentId != null">
+            and parent_id = #{parentId}
+        </if>
+        order by order_num asc,id asc
+    </select>
+
+    <resultMap type="SysVideoClassify" id="VideoClassifyOneResult">
+        <result property="id"    column="id"    />
+        <result property="cateName"    column="cate_name"    />
+        <!-- 查询子分类 -->
+        <!--<association property="childrenClassify" column="id" select="getTwoAllClassifyAndVideo"/>-->
+        <!-- 查询子视频 -->
+        <!--<association property="childrenVideo" column="id" select="getAllVideoByClassify"/>-->
+    </resultMap>
+
+    <resultMap type="SysVideoClassify" id="VideoClassifyTwoResult">
+        <result property="id"    column="id"    />
+        <result property="cateName"    column="cate_name"    />
+        <!-- 查询子分类 -->
+        <!--<association property="childrenClassify" column="id" select="getThreeAllClassifyAndVideo"/>-->
+        <!-- 查询子视频 -->
+        <!--<association property="childrenVideo" column="id" select="getAllVideoByClassify"/>-->
+    </resultMap>
+
+    <resultMap type="com.stdiet.custom.dto.response.VideoClassifyThreeResponse" id="VideoClassifyThreeResult">
+        <result property="id"    column="id"    />
+        <result property="cateName"    column="cate_name"    />
+        <!-- 查询子视频 -->
+        <association property="childrenVideo" column="id" select="getAllVideoByClassify"/>
+    </resultMap>
+
+    <select id="getOneAllClassifyAndVideo" resultMap="VideoClassifyOneResult" parameterType="SysVideoClassify">
+        select id, cate_name from sys_video_classify
+        left join sys_video_classify
+        where del_flag = 0 and parent_id = #{parentId}
+        order by order_num asc,id asc
+    </select>
+
+    <select id="getTwoAllClassifyAndVideo" resultMap="VideoClassifyTwoResult" parameterType="Long">
+        select id, cate_name from sys_video_classify
+        where del_flag = 0 and parent_id = #{id}
+        order by order_num asc,id asc
+    </select>
+
+    <select id="getThreeAllClassifyAndVideo" resultMap="VideoClassifyThreeResult" parameterType="Long">
+        select id, cate_name from sys_video_classify
+        where del_flag = 0 and parent_id = #{id}
+        order by order_num asc,id asc
+    </select>
+
+    <select id="getAllVideoByClassify" resultType="Map" parameterType="Long">
+        select snv.video_id as videoId, snv.cover_url as coverUrl, snv.title, snv.description
+        from sys_nutritional_video snv where cate_id = #{id} and del_flag = 0 and show_flag = 1
     </select>
 
 </mapper>

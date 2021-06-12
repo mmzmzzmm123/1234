@@ -243,7 +243,9 @@
 
     <!-- 视频分类管理 -->
     <el-dialog title="视频分类列表" :visible.sync="videoClassifyOpen" width="800px" append-to-body @closed="getAllVideoClassify();">
-      <VideoClassify ref="videoClassifyRef"></VideoClassify>
+      <div style="height: 500px; overflow: auto">
+           <VideoClassify ref="videoClassifyRef"></VideoClassify>
+      </div>
     </el-dialog>
   </div>
 </template>

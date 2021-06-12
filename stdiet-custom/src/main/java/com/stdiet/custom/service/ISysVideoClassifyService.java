@@ -2,6 +2,7 @@ package com.stdiet.custom.service;
 
 import java.util.List;
 import com.stdiet.custom.domain.SysVideoClassify;
+import com.stdiet.custom.dto.response.VideoClassifyResponse;
 
 /**
  * 视频分类Service接口
@@ -63,5 +64,12 @@ public interface ISysVideoClassifyService
      * 获取所有类别
      * @return
      */
-    public List<SysVideoClassify> getAllClassify();
+    public List<SysVideoClassify> getAllClassify(SysVideoClassify sysVideoClassify);
+
+    /**
+     * 按分类层级分类，返回视频目录列表
+     *
+     * @return 视频分类集合
+     */
+    public List<SysVideoClassify> getAllClassifyAndVideo(Long parentId);
 }

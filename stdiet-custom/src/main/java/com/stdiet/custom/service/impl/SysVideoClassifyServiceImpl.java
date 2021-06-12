@@ -2,6 +2,8 @@ package com.stdiet.custom.service.impl;
 
 import java.util.List;
 import com.stdiet.common.utils.DateUtils;
+import com.stdiet.custom.dto.response.VideoClassifyResponse;
+import com.stdiet.custom.mapper.SysNutritionalVideoMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.stdiet.custom.mapper.SysVideoClassifyMapper;
@@ -19,6 +21,9 @@ public class SysVideoClassifyServiceImpl implements ISysVideoClassifyService
 {
     @Autowired
     private SysVideoClassifyMapper sysVideoClassifyMapper;
+
+    @Autowired
+    private SysNutritionalVideoMapper sysNutritionalVideoMapper;
 
     /**
      * 查询视频分类
@@ -94,12 +99,28 @@ public class SysVideoClassifyServiceImpl implements ISysVideoClassifyService
         return sysVideoClassifyMapper.deleteSysVideoClassifyById(id);
     }
 
+    private boolean delChildrenClassify(Long id){
+        //判断分类下是否存在视频，存在视频不能删除
+
+        return true;
+    }
+
     /**
      * 获取所有类别
      * @return
      */
     @Override
-    public List<SysVideoClassify> getAllClassify(){
-        return sysVideoClassifyMapper.getAllClassify();
+    public List<SysVideoClassify> getAllClassify(SysVideoClassify sysVideoClassify){
+        return sysVideoClassifyMapper.getAllClassify(sysVideoClassify);
+    }
+
+    /**
+     * 按分类层级分类，返回视频目录列表
+     *
+     * @param sysVideoClassify 视频分类
+     * @return 视频分类集合
+     */
+    public List<SysVideoClassify> getAllClassifyAndVideo(Long parentId){
+        return sysVideoClassifyMapper.getOneAllClassifyAndVideo(parentId);
     }
 }

@@ -44,6 +44,9 @@ public class SysRecipesPlanServiceImpl implements ISysRecipesPlanService {
     @Autowired
     private SysRecipesMapper sysRecipesMapper;
 
+    //2021-06-11之后（大于等于）成交的订单，只生成定金单食谱计划，不生成尾款食谱计划，之前成交的订单还是保持之前逻辑
+    public static final LocalDate newVersionPlanStartDate = DateUtils.stringToLocalDate("2021-06-11", "yyyy-MM-dd");
+
     /**
      * 查询食谱计划
      *
@@ -172,7 +175,7 @@ public class SysRecipesPlanServiceImpl implements ISysRecipesPlanService {
                         //判断是否提成单，拆分单中的副单，体验单,定金单
                         if (sysOrder.getAfterSaleCommissOrder().intValue() == 1 || sysOrder.getMainOrderId().intValue() != 0 ||
 //                                "2".equals(sysOrder.getOrderType()) || // 体验单也需要生成计划 2021.05.29
-                                "1".equals(sysOrder.getOrderMoneyType()) || sysOrder.getCounted() == 1) {
+                                !isNeedByOrderMoneyType(sysOrder) || sysOrder.getCounted() == 1) {
                             System.out.println("---------------------" + sysOrder.getOrderId() + "不生成食谱------------------------");
                             continue;
                         }
@@ -205,6 +208,21 @@ public class SysRecipesPlanServiceImpl implements ISysRecipesPlanService {
         } finally {
             // 一定要释放锁
             synchrolockUtil.unlock(String.format(generateRecipesPlanLockKey, cusId));
+        }
+    }
+
+    //定金单或尾款单是否需要生成食谱计划，2021-01-12修改为6月11日之后成交的订单只生成定金单计划
+    private boolean isNeedByOrderMoneyType(SysOrder sysOrder){
+        if("0".equals(sysOrder.getOrderMoneyType())){
+            return true;
+        }else{
+            //成交时间
+            LocalDate orderDate = DateUtils.dateToLocalDate(sysOrder.getOrderTime());
+            if(ChronoUnit.DAYS.between(newVersionPlanStartDate, orderDate) >= 0){
+                return "1".equals(sysOrder.getOrderMoneyType());
+            }else{
+                return "2".equals(sysOrder.getOrderMoneyType());
+            }
         }
     }
 

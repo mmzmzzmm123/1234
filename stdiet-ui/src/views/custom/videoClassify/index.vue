@@ -35,7 +35,7 @@
           v-hasPermi="['custom:videoClassify:add']"
         >新增</el-button>
       </el-col>
-      <el-col :span="1.5">
+      <!--<el-col :span="1.5">
         <el-button
           type="success"
           icon="el-icon-edit"
@@ -54,7 +54,7 @@
           @click="handleDelete"
           v-hasPermi="['custom:videoClassify:remove']"
         >删除</el-button>
-      </el-col>
+      </el-col>-->
       <!--<el-col :span="1.5">
         <el-button
           type="warning"
@@ -67,11 +67,28 @@
       <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
     </el-row>
 
-    <el-table v-loading="loading" :data="videoClassifyList" @selection-change="handleSelectionChange">
-      <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="分类名称" align="center" prop="cateName" />
+    <el-table
+      v-loading="loading"
+      :data="videoClassifyList"
+      row-key="id"
+      :tree-props="{children: 'children', hasChildren: 'hasChildren'}"
+    >
+      <el-table-column label="分类名称"  prop="cateName" :show-overflow-tooltip="true"/>
+      <el-table-column label="显示排序"  prop="orderNum" align="center"/>
+      <el-table-column label="创建时间"  prop="createTime" align="center">
+        <template slot-scope="scope">
+             <span>{{ parseTime(scope.row.createTime, '{y}-{m}-{d}') }}</span>
+        </template>
+      </el-table-column>
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
+          <el-button
+          icon="el-icon-plus"
+          type="text"
+          size="mini"
+          @click="handleAdd(scope.row)"
+          v-hasPermi="['custom:videoClassify:add']"
+        >新增</el-button>
           <el-button
             size="mini"
             type="text"
@@ -90,21 +107,34 @@
       </el-table-column>
     </el-table>
 
-    <pagination
+    <!--<pagination
       v-show="total>0"
       :total="total"
       :page.sync="queryParams.pageNum"
       :limit.sync="queryParams.pageSize"
       @pagination="getList"
-    />
+    />-->
 
     <!-- 添加或修改视频分类对话框 -->
     <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
+        <el-form-item label="上级分类">
+              <treeselect
+                v-model="form.parentId"
+                :options="classifyOptions"
+                :normalizer="normalizer"
+                :show-count="true"
+                placeholder="选择上级分类"
+              />
+        </el-form-item>
         <el-form-item label="分类名称" prop="cateName">
           <el-input v-model.trim="form.cateName" placeholder="请输入分类名称" />
         </el-form-item>
+        <el-form-item label="显示排序" prop="orderNum">
+              <el-input-number v-model="form.orderNum" controls-position="right" :min="0" />
+            </el-form-item>
       </el-form>
+
       <div slot="footer" class="dialog-footer">
         <el-button type="primary" @click="submitForm">确 定</el-button>
         <el-button @click="cancel">取 消</el-button>
@@ -114,8 +144,10 @@
 </template>
 
 <script>
-  import { listVideoClassify, getVideoClassify, delVideoClassify, addVideoClassify, updateVideoClassify, exportVideoClassify } from "@/api/custom/videoClassify";
-
+  import { listVideoClassify, getVideoClassify, delVideoClassify, addVideoClassify, updateVideoClassify, exportVideoClassify,getAllClassify } from "@/api/custom/videoClassify";
+  import Treeselect from "@riophae/vue-treeselect";
+  import "@riophae/vue-treeselect/dist/vue-treeselect.css";
+  import IconSelect from "@/components/IconSelect";
   export default {
     name: "VideoClassify",
     data() {
@@ -152,9 +184,11 @@
            cateName: [
             { required: true, message: "分类名称不能为空", trigger: "blur" },
           ],
-        }
+        },
+        classifyOptions:[]
       };
     },
+    components: { Treeselect, IconSelect },
     created() {
       this.getList();
     },
@@ -163,10 +197,10 @@
       getList() {
         this.loading = true;
         listVideoClassify(this.queryParams).then(response => {
-          this.videoClassifyList = response.rows;
-        this.total = response.total;
-        this.loading = false;
-      });
+          this.videoClassifyList = this.handleTree(response.rows, "id");
+          this.total = response.total;
+          this.loading = false;
+        });
       },
       // 取消按钮
       cancel() {
@@ -178,6 +212,8 @@
         this.form = {
           id: null,
           cateName: null,
+          parentId: null,
+          orderNum: 0,
           payFlag: null,
           createTime: null,
           createBy: null,
@@ -204,8 +240,14 @@
         this.multiple = !selection.length
       },
       /** 新增按钮操作 */
-      handleAdd() {
+      handleAdd(row) {
         this.reset();
+        this.getTreeselect();
+        if (row != null && row.id) {
+          this.form.parentId = row.id;
+        } else {
+          this.form.parentId = 0;
+        }
         this.open = true;
         this.title = "添加视频分类";
       },
@@ -215,9 +257,9 @@
         const id = row.id || this.ids
         getVideoClassify(id).then(response => {
           this.form = response.data;
-        this.open = true;
-        this.title = "修改视频分类";
-      });
+          this.open = true;
+          this.title = "修改视频分类";
+        });
       },
       /** 提交按钮 */
       submitForm() {
@@ -269,7 +311,27 @@
         }).then(response => {
           this.download(response.msg);
       }).catch(function() {});
-      }
+      },
+      /** 转换菜单数据结构 */
+      normalizer(node) {
+        if (node.children && !node.children.length) {
+          delete node.children;
+        }
+        return {
+          id: node.id,
+          label: node.cateName,
+          children: node.children
+        };
+      },
+       /** 查询目录下拉树结构 */
+      getTreeselect() {
+        getAllClassify().then(response => {
+          this.classifyOptions = [];
+          const classify = { id: 0, cateName: '主分类', children: [] };
+          classify.children = this.handleTree(response.data, "id");
+          this.classifyOptions.push(classify);
+        });
+      },
     }
   };
 </script>
