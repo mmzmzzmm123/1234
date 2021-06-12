@@ -96,8 +96,27 @@ const actions = {
   async fetchTopicListApi({ dispatch, commit, rootGetters, state }, payload) {
     // prettier-ignore
     const { roles: [role], userId } = rootGetters;
+    const { customerList } = state;
     const { fromUid } = payload;
-    commit("save", { selCusId: fromUid, topicLoading: true });
+    const newCustomerList = JSON.parse(JSON.stringify(customerList));
+
+    const tarIdx = newCustomerList.findIndex(obj => obj.reSort);
+    if (tarIdx > -1) {
+      const [tarCustomer] = newCustomerList.splice(tarIdx, 1);
+      const injectIdx = newCustomerList.findIndex(obj => obj.read == 1);
+      tarCustomer.reSort = false;
+      if (injectIdx === -1) {
+        newCustomerList.splice(newCustomerList.length, 0, tarCustomer);
+      } else {
+        newCustomerList.splice(injectIdx, 0, tarCustomer);
+      }
+    }
+
+    commit("save", {
+      selCusId: fromUid,
+      topicLoading: true,
+      customerList: newCustomerList
+    });
     const result = await fetchTopicList({
       role,
       uid: userId,
@@ -106,12 +125,14 @@ const actions = {
     let mTopicList = [];
     if (result.code === 200 && result.rows.length) {
       // 默认展示第一个
-      const [defTopic] = result.rows;
-      dispatch("fetchTopicDetailActions", {
-        topicId: defTopic.topicId,
-        id: defTopic.id,
-        uid: defTopic.uid
-      });
+      setTimeout(() => {
+        const [defTopic] = result.rows;
+        dispatch("fetchTopicDetailActions", {
+          topicId: defTopic.topicId,
+          id: defTopic.id,
+          uid: defTopic.uid
+        });
+      }, 100);
       mTopicList = result.rows;
     }
     commit("save", {
@@ -121,7 +142,13 @@ const actions = {
   },
   async fetchTopicDetailActions({ commit, dispatch, state }, payload) {
     const { topicId, id = 0, uid } = payload;
-    const { healthyData, planList, customerData } = state;
+    const {
+      healthyData,
+      planList,
+      customerData,
+      topicList,
+      customerList
+    } = state;
     commit("save", { selTopicId: topicId, detailLoading: true });
     // 客户信息
     if (healthyData.customerId !== parseInt(uid)) {
@@ -138,7 +165,23 @@ const actions = {
     //
     const result = await fetchTopicDetail({ topicId, id });
     if (result.code === 200) {
-      commit("save", { detailData: result.data[0], detailLoading: false });
+      // 设置已读
+      const newTopicList = JSON.parse(JSON.stringify(topicList));
+      const preState = newTopicList.some(t => t.read == 0);
+      newTopicList.find(obj => obj.topicId === topicId).read = 1;
+      const newCutomers = JSON.parse(JSON.stringify(customerList));
+      const afterState = newTopicList.some(t => t.read == 0);
+      if (!afterState) {
+        const tarCustomer = newCutomers.find(cus => cus.uid === uid);
+        tarCustomer.read = 1;
+        tarCustomer.reSort = preState;
+      }
+      commit("save", {
+        detailData: result.data[0],
+        detailLoading: false,
+        topicList: newTopicList,
+        customerList: newCutomers
+      });
     }
   },
   async getCustomerFileActions({ commit }, payload) {
