@@ -2,13 +2,16 @@ package com.stdiet.custom.service.impl;
 
 import com.alibaba.fastjson.JSONObject;
 import com.stdiet.common.utils.DateUtils;
+import com.stdiet.common.utils.StringUtils;
 import com.stdiet.common.utils.uuid.UUID;
 import com.stdiet.custom.domain.SysCustomer;
 import com.stdiet.custom.domain.SysServicesTopic;
+import com.stdiet.custom.domain.SysWxUserInfo;
 import com.stdiet.custom.mapper.SysCustomerMapper;
 import com.stdiet.custom.mapper.SysServicesTopicMapper;
 import com.stdiet.custom.server.WebSocketServer;
 import com.stdiet.custom.service.ISysServicesTopicService;
+import com.stdiet.custom.service.ISysWxUserInfoService;
 import com.stdiet.custom.utils.WsUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -24,6 +27,9 @@ public class SysServicesTopicServiceImp implements ISysServicesTopicService {
 
     @Autowired
     SysCustomerMapper sysCustomerMapper;
+
+    @Autowired
+    ISysWxUserInfoService iSysWxUserInfoService;
 
     @Override
     public List<SysServicesTopic> selectSysServicesTopicByUserIdAndRole(SysServicesTopic topic) {
@@ -90,10 +96,23 @@ public class SysServicesTopicServiceImp implements ISysServicesTopicService {
                     dataObj.put("count", counts.get(i).getCount());
                     dataObj.put("data", topic);
 
+                    JSONObject userObj = new JSONObject();
+                    SysWxUserInfo userInfo = iSysWxUserInfoService.selectSysWxUserInfoByCusId(Long.parseLong(customerId));
+                    if (!StringUtils.isNull(userInfo)) {
+                        userObj.put("avatar", userInfo.getAvatarUrl());
+                    }
+                    userObj.put("name", customer.getName());
+                    userObj.put("create_time", DateUtils.dateTimeNow("yyyy-MM-dd HH:mm:ss"));
+                    userObj.put("update_time", DateUtils.dateTimeNow("yyyy-MM-dd HH:mm:ss"));
+                    userObj.put("read", 0);
+                    userObj.put("uid", customerId);
+                    userObj.put("role", "customer");
+
                     JSONObject msgObj = new JSONObject();
                     msgObj.put("type", WsUtils.WS_TYPE_MESSAGE_COUNT);
                     msgObj.put("msg", "未读消息数");
                     msgObj.put("data", dataObj);
+                    msgObj.put("customer", userObj);
                     WebSocketServer.sendInfo(msgObj.toJSONString(), counts.get(i).getUid());
                 }
             } catch (IOException e) {
@@ -156,12 +175,15 @@ public class SysServicesTopicServiceImp implements ISysServicesTopicService {
         List<SysServicesTopic> statusList = new ArrayList<>();
         SysServicesTopic dieticianStatus = new SysServicesTopic();
         dieticianStatus.setUid(String.valueOf(customer.getMainDietitian()));
+        dieticianStatus.setRole("dietician");
         statusList.add(dieticianStatus);
         SysServicesTopic afterSaleStatus = new SysServicesTopic();
         afterSaleStatus.setUid(String.valueOf(customer.getAfterDietitian()));
+        afterSaleStatus.setRole("after_sale");
         statusList.add(afterSaleStatus);
         SysServicesTopic dieticianAssistantStatus = new SysServicesTopic();
         dieticianAssistantStatus.setUid(String.valueOf(customer.getAssistantDietitian()));
+        dieticianAssistantStatus.setRole("dietician_assistant");
         statusList.add(dieticianAssistantStatus);
 
         try {

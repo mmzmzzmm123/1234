@@ -178,11 +178,12 @@ export default {
         this.updateUnreadCount({
           msgUnreadCount: count,
         });
-        if (tData.uid === selCusId) {
+        if (tData.uid === this.selCusId) {
           this.fetchTopicListApi({
             fromUid: tData.uid,
           });
         } else {
+          const { customer } = data;
           // 调整用户列表顺序
           const newCustomers = JSON.parse(JSON.stringify(this.customerList));
           const tarIdx = newCustomers.findIndex((obj) => obj.uid === tData.uid);
@@ -190,10 +191,12 @@ export default {
             const [tarCustomer] = newCustomers.splice(tarIdx, 1);
             tarCustomer.read = 0;
             newCustomers.splice(0, 0, tarCustomer);
-            this.save({
-              customerList: newCustomers,
-            });
+          } else {
+            newCustomers.splice(0, 0, customer);
           }
+          this.save({
+            customerList: newCustomers,
+          });
         }
       } else if (data.type === keys.WS_TYPE_NEW_CUSTOMER_REPLY) {
         const { count, topicId, uid } = data.data;
