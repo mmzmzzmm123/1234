@@ -90,7 +90,7 @@
 
     <el-table v-loading="loading" :data="qtjskhzbxList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="所属考核方案" align="center" prop="faid" />
+      <!-- <el-table-column label="所属考核方案" align="center" prop="faid" /> -->
       <el-table-column label="考核模块" align="center" prop="khmk" :formatter="khmkFormat" />
       <el-table-column label="考核内容" align="center" prop="khnr" />
       <el-table-column label="提交数量" align="center" prop="tjsl" />

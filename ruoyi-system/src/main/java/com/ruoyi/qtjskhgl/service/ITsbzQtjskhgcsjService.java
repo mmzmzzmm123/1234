@@ -44,6 +44,14 @@ public interface ITsbzQtjskhgcsjService {
     public int updateTsbzQtjskhgcsj(TsbzQtjskhgcsj tsbzQtjskhgcsj);
 
     /**
+     * 修改群体教师考核过程数据
+     *
+     * @param tsbzQtjskhgcsj 群体教师考核过程数据
+     * @return 结果
+     */
+    public int updateTsbzQtjskhgcsjStatue(TsbzQtjskhgcsj tsbzQtjskhgcsj);
+
+    /**
      * 批量删除群体教师考核过程数据
      *
      * @param ids 需要删除的群体教师考核过程数据ID

@@ -18,8 +18,16 @@
         </el-select>
       </el-form-item>
       <el-form-item>
-        <el-button type="cyan" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
-        <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
+        <el-button
+          type="cyan"
+          icon="el-icon-search"
+          size="mini"
+          @click="handleQuery"
+          >搜索</el-button
+        >
+        <el-button icon="el-icon-refresh" size="mini" @click="resetQuery"
+          >重置</el-button
+        >
       </el-form-item>
     </el-form>
 
@@ -33,7 +41,8 @@
           @click="handleDelete"
           v-hasPermi="['qtjskhgl:qtjskhgcsj:remove']"
           v-show="disable"
-        >清空</el-button>
+          >清空</el-button
+        >
       </el-col>
       <el-col :span="1.5">
         <el-button
@@ -43,27 +52,64 @@
           @click="handleCheck"
           v-hasPermi="['qtjskhgl:qtjskhgcsj:edit']"
           v-show="disable"
-        >提交</el-button>
+          >提交</el-button
+        >
       </el-col>
-      <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
+      <right-toolbar
+        :showSearch.sync="showSearch"
+        @queryTable="getList"
+      ></right-toolbar>
     </el-row>
 
-    <el-table v-loading="loading" :data="qtjskhgcsjList" @selection-change="handleSelectionChange">
+    <el-table
+      v-loading="loading"
+      :data="qtjskhgcsjList"
+      @selection-change="handleSelectionChange"
+    >
       <el-table-column type="selection" width="55" align="center" />
       <!-- <el-table-column label="编号" align="center" prop="id" /> -->
-      <el-table-column label="所属方案" align="center" prop="tsbzQtjskhzbx.faid" :formatter="faFormat" />
+      <el-table-column
+        label="所属方案"
+        align="center"
+        prop="tsbzQtjskhzbx.faid"
+        :formatter="faFormat"
+      />
       <el-table-column
         label="指标模块"
         align="center"
         prop="tsbzQtjskhzbx.khmk"
         :formatter="khmkFormat"
       />
-      <el-table-column label="指标项" align="center" prop="tsbzQtjskhzbx.khnr" />
-      <el-table-column label="提交文件数" align="center" prop="tsbzQtjskhzbx.tjsl" />
+      <el-table-column
+        label="指标项"
+        align="center"
+        prop="tsbzQtjskhzbx.khnr"
+      />
+      <el-table-column
+        label="提交文件数"
+        align="center"
+        prop="tsbzQtjskhzbx.tjsl"
+      />
       <el-table-column label="内容" align="center" prop="content" />
-      <el-table-column label="提交状态" align="center" prop="substatus" :formatter="substatusFormat" />
-      <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
+      <el-table-column
+        label="当前状态"
+        align="center"
+        prop="substatus"
+        :formatter="substatusFormat"
+      />
+      <el-table-column
+        label="操作"
+        align="center"
+        class-name="small-padding fixed-width"
+      >
         <template slot-scope="scope">
+          <el-button
+            size="mini"
+            type="text"
+            icon="el-icon-view"
+            @click="handleDetail(scope.row)"
+            >详情</el-button
+          >
           <el-button
             size="mini"
             type="text"
@@ -71,7 +117,8 @@
             @click="handleUpdate(scope.row)"
             v-hasPermi="['qtjskhgl:qtjskhgcsj:edit']"
             v-show="disable"
-          >填报</el-button>
+            >填报</el-button
+          >
           <el-button
             size="mini"
             type="text"
@@ -79,13 +126,14 @@
             @click="handleDelete(scope.row)"
             v-hasPermi="['qtjskhgl:qtjskhgcsj:remove']"
             v-show="disable"
-          >清空</el-button>
+            >清空</el-button
+          >
         </template>
       </el-table-column>
     </el-table>
 
     <pagination
-      v-show="total>0"
+      v-show="total > 0"
       :total="total"
       :page.sync="queryParams.pageNum"
       :limit.sync="queryParams.pageSize"
@@ -110,7 +158,12 @@
           <el-input v-model="form.zbid" v-if="false" />
         </el-form-item>
         <el-form-item label="内容" prop="content">
-          <el-input v-model="form.content" type="textarea" placeholder="请输入内容" />
+          <el-input
+            v-model="form.content"
+            type="textarea"
+            disabled="btndisable"
+            placeholder="请输入内容"
+          />
         </el-form-item>
         <el-form-item label="选择文件" prop="filepath">
           <el-input v-model="form.filepath" v-if="false" />
@@ -131,7 +184,9 @@
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="submitForm">确 定</el-button>
+        <el-button type="primary" v-show="btndisable" @click="submitForm"
+          >确 定</el-button
+        >
         <el-button @click="cancel">取 消</el-button>
       </div>
     </el-dialog>
@@ -161,6 +216,7 @@ export default {
     return {
       //是否已提交
       disable: true,
+      btndisable: true,
       //默认方案id
       defaultFaid: "",
       filecount: 1,
@@ -230,12 +286,13 @@ export default {
     this.getDicts("sys_dm_qtjsshgctjzt").then((response) => {
       this.substatusOptions = response.data;
     });
+    this.getIsCheck();
   },
   methods: {
     //判断该方案是否已提交
     getIsCheck() {
       this.queryParams_khsh.faid = this.defaultFaid;
-      listQtjskhshByfaid(this.queryParams_khsh).then((response) => {
+      listQtjskhsh(this.queryParams_khsh).then((response) => {
         if (response.rows.length > 0) {
           this.disable = false;
         }
@@ -358,6 +415,7 @@ export default {
     /** 修改按钮操作 */
     handleUpdate(row) {
       this.reset();
+      this.btndisable = true;
       const id = row.id || this.ids;
 
       if (id != "") {
@@ -391,6 +449,41 @@ export default {
         this.form.khnr = row.tsbzQtjskhzbx.khnr;
       }
     },
+    /** 详情按钮操作 */
+    handleDetail(row) {
+      this.reset();
+      const id = row.id || this.ids;
+      this.title = "群体教师考核过程数据详情";
+      this.btndisable = false;
+      if (id != "") {
+        getQtjskhgcsj(id).then((response) => {
+          this.form = response.data;
+          // console.log(response);
+          this.open = true;
+          this.form.khnr = row.tsbzQtjskhzbx.khnr;
+          // console.log(response.file);
+          var array = [];
+          var path = "";
+          var name = "";
+          response.file.forEach(function (value, key, arr) {
+            //console.log(value); // 结果依次为1，2，3
+            array.push({ name: value.filename, url: value.filepath });
+            path = path + value.filepath + ";";
+            name = name + value.filename + ";";
+          });
+          this.filecount = response.file.length;
+          this.form.filepath = path;
+          this.form.filename = name;
+          this.fileList = array;
+        });
+      } else {
+        this.reset();
+        this.open = true;
+        this.form.faid = row.tsbzQtjskhzbx.faid;
+        this.form.zbid = row.tsbzQtjskhzbx.id;
+        this.form.khnr = row.tsbzQtjskhzbx.khnr;
+      }
+    },
     /** 提交按钮 */
     submitForm() {
       this.$refs["form"].validate((valid) => {
@@ -418,15 +511,11 @@ export default {
     /** 删除按钮操作 */
     handleDelete(row) {
       const ids = row.id || this.ids;
-      this.$confirm(
-        '是否确认清空群体教师考核过程数据项?',
-        "警告",
-        {
-          confirmButtonText: "确定",
-          cancelButtonText: "取消",
-          type: "warning",
-        }
-      )
+      this.$confirm("是否确认清空群体教师考核过程数据项?", "警告", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning",
+      })
         .then(function () {
           return delQtjskhgcsj(ids);
         })

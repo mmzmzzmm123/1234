@@ -97,7 +97,7 @@ public class TsbzQtjskhgcsjController extends BaseController {
         String uuid = schoolCommonController.getUuid();
         tsbzQtjskhgcsj.setId(uuid);
         tsbzQtjskhgcsj.setCreateuserid(schoolCommonController.userIdToxxjsId(SecurityUtils.getLoginUser().getUser().getUserId()));
-        tsbzQtjskhgcsj.setSubstatus("1");
+        tsbzQtjskhgcsj.setSubstatus("0");
 
         String filePaths = tsbzQtjskhgcsj.getFilepath();
         String fileNames = tsbzQtjskhgcsj.getFilename();
@@ -110,7 +110,7 @@ public class TsbzQtjskhgcsjController extends BaseController {
                 tsbzQtjskhgcwjsj.setFilepath(strArrFilePath[i]);
                 tsbzQtjskhgcwjsj.setFilename(strArrFileName[i]);
                 tsbzQtjskhgcwjsj.setGcid(uuid);
-                tsbzQtjskhgcwjsj.setCreateuserid(schoolCommonController.userIdToJxjsId(SecurityUtils.getLoginUser().getUser().getUserId()));
+                tsbzQtjskhgcwjsj.setCreateuserid(schoolCommonController.userIdToxxjsId(SecurityUtils.getLoginUser().getUser().getUserId()));
                 tsbzQtjskhgcwjsjService.insertTsbzQtjskhgcwjsj(tsbzQtjskhgcwjsj);
             }
         }

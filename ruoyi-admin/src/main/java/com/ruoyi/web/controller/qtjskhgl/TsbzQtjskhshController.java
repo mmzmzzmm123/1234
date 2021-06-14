@@ -3,6 +3,8 @@ package com.ruoyi.web.controller.qtjskhgl;
 import java.util.List;
 
 import com.ruoyi.common.utils.SecurityUtils;
+import com.ruoyi.qtjskhgl.domain.TsbzQtjskhgcsj;
+import com.ruoyi.qtjskhgl.service.ITsbzQtjskhgcsjService;
 import com.ruoyi.web.controller.common.SchoolCommonController;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,11 +38,13 @@ public class TsbzQtjskhshController extends BaseController {
     private ITsbzQtjskhshService tsbzQtjskhshService;
     @Autowired
     private SchoolCommonController schoolCommonController;
+    @Autowired
+    private ITsbzQtjskhgcsjService tsbzQtjskhgcsjService;
 
     /**
      * 查询群体教师考核审核过程列表
      */
-    @PreAuthorize("@ss.hasPermi('qtjskhgl:qtjskhsh:list')")
+    @PreAuthorize("@ss.hasPermi('qtjskhgl:qtjskhsh:list')"+ "||@ss.hasPermi('qtjskhgl:qtjskhgcsj:list')")
     @GetMapping("/list")
     public TableDataInfo list(TsbzQtjskhsh tsbzQtjskhsh) {
         startPage();
@@ -133,12 +137,22 @@ public class TsbzQtjskhshController extends BaseController {
     @PreAuthorize("@ss.hasPermi('qtjskhgl:qtjskhsh:add')" + "||@ss.hasPermi('qtjskhgl:qtjskhgcsj:edit')")
     @Log(title = "考核审核过程", businessType = BusinessType.INSERT)
     @PostMapping("/check/{id}")
-    public AjaxResult add(@PathVariable Long id) {
+    public AjaxResult check(@PathVariable Long id) {
         TsbzQtjskhsh tsbzQtjskhsh = new TsbzQtjskhsh();
         tsbzQtjskhsh.setFaid(id);
         tsbzQtjskhsh.setStatus("1");
-        tsbzQtjskhsh.setJsid(schoolCommonController.userIdToxxjsId(SecurityUtils.getLoginUser().getUser().getUserId()));
-        tsbzQtjskhsh.setCreateuseird(schoolCommonController.userIdToxxjsId(SecurityUtils.getLoginUser().getUser().getUserId()));
+        Long jsId=schoolCommonController.userIdToxxjsId(SecurityUtils.getLoginUser().getUser().getUserId());
+
+        //将所有数据改为提交状态
+        TsbzQtjskhgcsj tsbzQtjskhgcsj=new TsbzQtjskhgcsj();
+        tsbzQtjskhgcsj.setFaid(id);
+        tsbzQtjskhgcsj.setSubstatus("1");
+        tsbzQtjskhgcsj.setCreateuserid(jsId);
+        tsbzQtjskhgcsjService.updateTsbzQtjskhgcsjStatue(tsbzQtjskhgcsj);
+        ////////////////////////
+
+        tsbzQtjskhsh.setJsid(jsId);
+        tsbzQtjskhsh.setCreateuseird(jsId);
         return toAjax(tsbzQtjskhshService.insertTsbzQtjskhsh(tsbzQtjskhsh));
     }
 }

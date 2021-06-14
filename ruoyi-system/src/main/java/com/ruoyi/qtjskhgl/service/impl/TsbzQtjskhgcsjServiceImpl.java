@@ -66,6 +66,17 @@ public class TsbzQtjskhgcsjServiceImpl implements ITsbzQtjskhgcsjService {
     }
 
     /**
+     * 修改群体教师考核过程数据
+     *
+     * @param tsbzQtjskhgcsj 群体教师考核过程数据
+     * @return 结果
+     */
+    @Override
+    public int updateTsbzQtjskhgcsjStatue(TsbzQtjskhgcsj tsbzQtjskhgcsj){
+        return tsbzQtjskhgcsjMapper.updateTsbzQtjskhgcsjStatue(tsbzQtjskhgcsj);
+    }
+
+    /**
      * 批量删除群体教师考核过程数据
      *
      * @param ids 需要删除的群体教师考核过程数据ID

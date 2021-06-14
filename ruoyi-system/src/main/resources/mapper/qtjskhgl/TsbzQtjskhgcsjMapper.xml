@@ -49,6 +49,7 @@ on a.faid=b.faid and a.id=b.zbid
             <if test="content != null  and content != ''">and b.content = #{content}</if>
             <if test="substatus != null  and substatus != ''">and b.substatus = #{substatus}</if>
         </where>
+        order by a.id
     </select>
 
     <select id="selectTsbzQtjskhgcsjById" parameterType="TsbzQtjskhgcsj" resultMap="TsbzQtjskhgcsjResult">
@@ -89,6 +90,14 @@ on a.faid=b.faid and a.id=b.zbid
             <if test="substatus != null">substatus = #{substatus},</if>
         </trim>
         where id = #{id}
+    </update>
+
+    <update id="updateTsbzQtjskhgcsjStatue" parameterType="TsbzQtjskhgcsj">
+        update tsbz_qtjskhgcsj
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="substatus != null">substatus = #{substatus},</if>
+        </trim>
+        where faid = #{faid} and createuserid = #{createuserid}
     </update>
 
     <delete id="deleteTsbzQtjskhgcsjById" parameterType="String">
