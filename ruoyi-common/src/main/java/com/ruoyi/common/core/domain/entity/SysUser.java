@@ -117,6 +117,12 @@ public class SysUser extends BaseEntity {
     private Long jsid;
 
     /**
+     * 教师身份:骨干、学科带头人等
+     */
+    @Excel(name = "教师身份:骨干、学科带头人等")
+    private String jssf;
+
+    /**
      * 部门对象
      */
     @Excels({
@@ -324,6 +330,14 @@ public class SysUser extends BaseEntity {
         return jsid;
     }
 
+    public void setJssf(String jssf) {
+        this.jssf = jssf;
+    }
+
+    public String getJssf() {
+        return jssf;
+    }
+
     @Override
     public String toString() {
         return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE)
@@ -349,6 +363,7 @@ public class SysUser extends BaseEntity {
                 .append("dept", getDept())
                 .append("jstype", getJstype())
                 .append("jsid", getJsid())
+                .append("jssf", getJssf())
                 .toString();
     }
 }

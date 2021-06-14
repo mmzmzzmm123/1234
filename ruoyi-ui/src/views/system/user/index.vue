@@ -373,6 +373,20 @@
         </el-row>
         <el-row>
           <el-col :span="24">
+            <el-form-item label="教师身份" prop="jssf">
+                <el-select v-model="form.jssf" placeholder="请选择">
+                <el-option
+                  v-for="dict in jssfOptions"
+                  :key="dict.dictValue"
+                  :label="dict.dictLabel"
+                  :value="dict.dictValue"
+                ></el-option>
+              </el-select>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="24">
             <el-form-item label="备注">
               <el-input
                 v-model="form.remark"
@@ -489,6 +503,8 @@ export default {
       postOptions: [],
       // 角色选项
       roleOptions: [],
+      //教师身份
+      jssfOptions:[],
       // 表单参数
       form: {},
       defaultProps: {
@@ -566,6 +582,9 @@ export default {
     });
     this.getDicts("sys_user_sex").then((response) => {
       this.sexOptions = response.data;
+    });
+    this.getDicts("sys_dm_ggjskhfalx").then((response) => {
+      this.jssfOptions = response.data;
     });
     this.getConfigKey("sys.user.initPassword").then((response) => {
       this.initPassword = response.msg;

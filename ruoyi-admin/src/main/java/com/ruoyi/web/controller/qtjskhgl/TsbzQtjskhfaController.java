@@ -2,7 +2,10 @@ package com.ruoyi.web.controller.qtjskhgl;
 
 import java.util.List;
 
+import com.ruoyi.common.core.domain.entity.SysUser;
 import com.ruoyi.common.utils.SecurityUtils;
+import com.ruoyi.system.service.ISysUserService;
+import com.ruoyi.web.controller.common.SchoolCommonController;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -34,6 +37,10 @@ public class TsbzQtjskhfaController extends BaseController
 {
     @Autowired
     private ITsbzQtjskhfaService tsbzQtjskhfaService;
+    @Autowired
+    private SchoolCommonController schoolCommonController;
+    @Autowired
+    private ISysUserService userService;
 
     /**
      * 查询群体教师考核方案列表
@@ -42,6 +49,12 @@ public class TsbzQtjskhfaController extends BaseController
     @GetMapping("/list")
     public TableDataInfo list(TsbzQtjskhfa tsbzQtjskhfa)
     {
+        //获取当前登录账号的身份类型
+        SysUser sysUser= userService.selectUserById(SecurityUtils.getLoginUser().getUser().getUserId());
+        if(!schoolCommonController.isStringEmpty(sysUser.getJssf())){
+            tsbzQtjskhfa.setKhlx(sysUser.getJssf());
+        }
+
         startPage();
         List<TsbzQtjskhfa> list = tsbzQtjskhfaService.selectTsbzQtjskhfaList(tsbzQtjskhfa);
         return getDataTable(list);
