@@ -61,14 +61,34 @@ public class TsbzQtjspxjg extends BaseEntity {
 
     private  String deptname;
 
-    private BigDecimal bfb;
+    private BigDecimal bzbfb;
 
-    public BigDecimal getBfb() {
-        return bfb;
+    public BigDecimal getBzbfb() {
+        return bzbfb;
     }
 
-    public void setBfb(BigDecimal bfb) {
-        this.bfb = bfb;
+    public void setBzbfb(BigDecimal bzbfb) {
+        this.bzbfb = bzbfb;
+    }
+
+    private BigDecimal exybfb;
+
+    public BigDecimal getExybfb() {
+        return exybfb;
+    }
+
+    public void setExybfb(BigDecimal exybfb) {
+        this.exybfb = exybfb;
+    }
+
+    private BigDecimal xzxxmbfb;
+
+    public BigDecimal getXzxxmbfb() {
+        return xzxxmbfb;
+    }
+
+    public void setXzxxmbfb(BigDecimal xzxxmbfb) {
+        this.xzxxmbfb = xzxxmbfb;
     }
 
     public TsbzJsjbxx getTsbzJsjbxx() {
@@ -159,7 +179,9 @@ public class TsbzQtjspxjg extends BaseEntity {
                 .append("createuserid", getCreateuserid())
                 .append("createTime", getCreateTime())
                 .append("deptid", getDeptid())
-                .append("bfb", getBfb())
+                .append("bzbfb", getBzbfb())
+                .append("exybfb", getExybfb())
+                .append("xzxxmbfb", getXzxxmbfb())
                 .append("tsbzJsjbxx", getTsbzJsjbxx())
                 .append("jsxm", getJsxm())
                 .append("deptname", getDeptname())

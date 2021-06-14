@@ -47,12 +47,32 @@
       <!-- <el-table-column label="编号" align="center" prop="id" /> -->
       <el-table-column label="学校" align="center" prop="deptname"/>
       <el-table-column label="姓名" align="center" prop="tsbzJsjbxx.jsxm" />
-      <el-table-column prop="bfb" label="完成进度">
+      <el-table-column prop="bzbfb" label="必做完成进度">
         <template slot-scope="scope">
           <el-progress
             :text-inside="true"
             :stroke-width="24"
-            :percentage="scope.row.bfb*100"
+            :percentage="scope.row.bzbfb*100"
+            status="success"
+          ></el-progress>
+        </template>
+      </el-table-column>
+      <el-table-column prop="exybfb" label="二选一完成进度">
+        <template slot-scope="scope">
+          <el-progress
+            :text-inside="true"
+            :stroke-width="24"
+            :percentage="scope.row.exybfb*100"
+            status="success"
+          ></el-progress>
+        </template>
+      </el-table-column>
+      <el-table-column prop="xzxxmbfb" label="选择性项目完成进度">
+        <template slot-scope="scope">
+          <el-progress
+            :text-inside="true"
+            :stroke-width="24"
+            :percentage="scope.row.xzxxmbfb*100"
             status="success"
           ></el-progress>
         </template>

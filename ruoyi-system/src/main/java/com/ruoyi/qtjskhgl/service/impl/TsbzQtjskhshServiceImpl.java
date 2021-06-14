@@ -2,6 +2,7 @@ package com.ruoyi.qtjskhgl.service.impl;
 
 import java.util.List;
 
+import com.ruoyi.common.annotation.DataScope;
 import com.ruoyi.common.utils.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -38,6 +39,7 @@ public class TsbzQtjskhshServiceImpl implements ITsbzQtjskhshService {
      * @return 群体教师考核审核过程
      */
     @Override
+    @DataScope(deptAlias = "c")
     public List<TsbzQtjskhsh> selectTsbzQtjskhshList(TsbzQtjskhsh tsbzQtjskhsh) {
         return tsbzQtjskhshMapper.selectTsbzQtjskhshList(tsbzQtjskhsh);
     }

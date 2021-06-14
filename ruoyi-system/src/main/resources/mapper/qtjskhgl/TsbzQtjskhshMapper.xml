@@ -74,6 +74,8 @@ left join tsbz_qtjskhgcwjsj e on a.jsid=e.createuserid
             <if test="qjshyj != null  and qjshyj != ''"> and d.qjshyj = #{qjshyj}</if>
             <if test="qjshjy != null  and qjshjy != ''"> and d.qjshjy = #{qjshjy}</if>
             <if test="createuseird != null "> and d.createuseird = #{createuseird}</if>
+            <!-- 数据范围过滤 -->
+            ${params.dataScope}
         </where>
     </select>
     

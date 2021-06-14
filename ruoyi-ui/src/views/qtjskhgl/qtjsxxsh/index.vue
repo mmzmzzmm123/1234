@@ -283,7 +283,7 @@ export default {
       this.loading = true;
       listQtjskhsh(this.queryParams).then((response) => {
         this.qtjskhshList = response.rows;
-        console.log(response.rows);
+        //console.log(response.rows);
         this.total = response.total;
         this.loading = false;
       });

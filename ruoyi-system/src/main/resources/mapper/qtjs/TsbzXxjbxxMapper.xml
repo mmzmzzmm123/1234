@@ -39,41 +39,44 @@
     </resultMap>
 
     <sql id="selectTsbzXxjbxxVo">
-        select id, xxdm, countyid, townid, villageid, jyjxxdm, xxmc, xxywmc, xxdz, xxxz, dzzfzr, jxny, xxbbm, xxlbm, szdqlbm, szdjjsxm, szdmzsxm, rxnl, zjxyym, fjxyym, zsqy, yzbm, lxdh, czdh, dzxx, zydz, zzjgdm, lsyg, dqxn, dqxq, create_time from tsbz_xxjbxx
+        select a.id,d.dept_id , a.xxdm, a.countyid, a.townid, a.villageid, a.jyjxxdm, a.xxmc, a.xxywmc, a.xxdz, a.xxxz, a.dzzfzr, a.jxny, a.xxbbm, a.xxlbm, a.szdqlbm, a.szdjjsxm, a.szdmzsxm, a.rxnl, a.zjxyym, a.fjxyym, a.zsqy, a.yzbm, a.lxdh, a.czdh, a.dzxx, a.zydz, a.zzjgdm, a.lsyg, a.dqxn, a.dqxq, a.create_time from tsbz_xxjbxx a
+        left join sys_dept d on a.id=d.schoolid
     </sql>
 
     <select id="selectTsbzXxjbxxList" parameterType="TsbzXxjbxx" resultMap="TsbzXxjbxxResult">
         <include refid="selectTsbzXxjbxxVo"/>
         <where>
-            <if test="xxdm != null  and xxdm != ''">and xxdm = #{xxdm}</if>
-            <if test="countyid != null  and countyid != ''">and countyid = #{countyid}</if>
-            <if test="townid != null  and townid != ''">and townid = #{townid}</if>
-            <if test="villageid != null  and villageid != ''">and villageid = #{villageid}</if>
-            <if test="jyjxxdm != null  and jyjxxdm != ''">and jyjxxdm = #{jyjxxdm}</if>
-            <if test="xxmc != null  and xxmc != ''">and xxmc like concat('%', #{xxmc}, '%')</if>
-            <if test="xxywmc != null  and xxywmc != ''">and xxywmc = #{xxywmc}</if>
-            <if test="xxdz != null  and xxdz != ''">and xxdz = #{xxdz}</if>
-            <if test="xxxz != null  and xxxz != ''">and xxxz = #{xxxz}</if>
-            <if test="dzzfzr != null  and dzzfzr != ''">and dzzfzr = #{dzzfzr}</if>
-            <if test="jxny != null ">and jxny = #{jxny}</if>
-            <if test="xxbbm != null  and xxbbm != ''">and xxbbm = #{xxbbm}</if>
-            <if test="xxlbm != null  and xxlbm != ''">and xxlbm = #{xxlbm}</if>
-            <if test="szdqlbm != null  and szdqlbm != ''">and szdqlbm = #{szdqlbm}</if>
-            <if test="szdjjsxm != null  and szdjjsxm != ''">and szdjjsxm = #{szdjjsxm}</if>
-            <if test="szdmzsxm != null  and szdmzsxm != ''">and szdmzsxm = #{szdmzsxm}</if>
-            <if test="rxnl != null ">and rxnl = #{rxnl}</if>
-            <if test="zjxyym != null  and zjxyym != ''">and zjxyym = #{zjxyym}</if>
-            <if test="fjxyym != null  and fjxyym != ''">and fjxyym = #{fjxyym}</if>
-            <if test="zsqy != null  and zsqy != ''">and zsqy = #{zsqy}</if>
-            <if test="yzbm != null  and yzbm != ''">and yzbm = #{yzbm}</if>
-            <if test="lxdh != null  and lxdh != ''">and lxdh = #{lxdh}</if>
-            <if test="czdh != null  and czdh != ''">and czdh = #{czdh}</if>
-            <if test="dzxx != null  and dzxx != ''">and dzxx = #{dzxx}</if>
-            <if test="zydz != null  and zydz != ''">and zydz = #{zydz}</if>
-            <if test="zzjgdm != null  and zzjgdm != ''">and zzjgdm = #{zzjgdm}</if>
-            <if test="lsyg != null  and lsyg != ''">and lsyg = #{lsyg}</if>
-            <if test="dqxn != null  and dqxn != ''">and dqxn = #{dqxn}</if>
-            <if test="dqxq != null  and dqxq != ''">and dqxq = #{dqxq}</if>
+            <if test="xxdm != null  and xxdm != ''">and a.xxdm = #{xxdm}</if>
+            <if test="countyid != null  and countyid != ''">and a.countyid = #{countyid}</if>
+            <if test="townid != null  and townid != ''">and a.townid = #{townid}</if>
+            <if test="villageid != null  and villageid != ''">and a.villageid = #{villageid}</if>
+            <if test="jyjxxdm != null  and jyjxxdm != ''">and a.jyjxxdm = #{jyjxxdm}</if>
+            <if test="xxmc != null  and xxmc != ''">and a.xxmc like concat('%', #{xxmc}, '%')</if>
+            <if test="xxywmc != null  and xxywmc != ''">and a.xxywmc = #{xxywmc}</if>
+            <if test="xxdz != null  and xxdz != ''">and a.xxdz = #{xxdz}</if>
+            <if test="xxxz != null  and xxxz != ''">and a.xxxz = #{xxxz}</if>
+            <if test="dzzfzr != null  and dzzfzr != ''">and a.dzzfzr = #{dzzfzr}</if>
+            <if test="jxny != null ">and a.jxny = #{jxny}</if>
+            <if test="xxbbm != null  and xxbbm != ''">and a.xxbbm = #{xxbbm}</if>
+            <if test="xxlbm != null  and xxlbm != ''">and a.xxlbm = #{xxlbm}</if>
+            <if test="szdqlbm != null  and szdqlbm != ''">and a.szdqlbm = #{szdqlbm}</if>
+            <if test="szdjjsxm != null  and szdjjsxm != ''">and a.szdjjsxm = #{szdjjsxm}</if>
+            <if test="szdmzsxm != null  and szdmzsxm != ''">and a.szdmzsxm = #{szdmzsxm}</if>
+            <if test="rxnl != null ">and a.rxnl = #{rxnl}</if>
+            <if test="zjxyym != null  and zjxyym != ''">and a.zjxyym = #{zjxyym}</if>
+            <if test="fjxyym != null  and fjxyym != ''">and a.fjxyym = #{fjxyym}</if>
+            <if test="zsqy != null  and zsqy != ''">and a.zsqy = #{zsqy}</if>
+            <if test="yzbm != null  and yzbm != ''">and a.yzbm = #{yzbm}</if>
+            <if test="lxdh != null  and lxdh != ''">and a.lxdh = #{lxdh}</if>
+            <if test="czdh != null  and czdh != ''">and a.czdh = #{czdh}</if>
+            <if test="dzxx != null  and dzxx != ''">and a.dzxx = #{dzxx}</if>
+            <if test="zydz != null  and zydz != ''">and a.zydz = #{zydz}</if>
+            <if test="zzjgdm != null  and zzjgdm != ''">and a.zzjgdm = #{zzjgdm}</if>
+            <if test="lsyg != null  and lsyg != ''">and a.lsyg = #{lsyg}</if>
+            <if test="dqxn != null  and dqxn != ''">and a.dqxn = #{dqxn}</if>
+            <if test="dqxq != null  and dqxq != ''">and a.dqxq = #{dqxq}</if>
+            <!-- 数据范围过滤 -->
+            ${params.dataScope}
         </where>
     </select>
 
