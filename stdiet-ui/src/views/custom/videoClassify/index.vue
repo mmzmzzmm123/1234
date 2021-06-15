@@ -86,6 +86,7 @@
           icon="el-icon-plus"
           type="text"
           size="mini"
+          v-if="threeLevelClassify.indexOf(scope.row.id) == -1"
           @click="handleAdd(scope.row)"
           v-hasPermi="['custom:videoClassify:add']"
         >新增</el-button>
@@ -185,12 +186,15 @@
             { required: true, message: "分类名称不能为空", trigger: "blur" },
           ],
         },
-        classifyOptions:[]
+        classifyOptions:[],
+        //三级目录ID
+        threeLevelClassify:[]
       };
     },
     components: { Treeselect, IconSelect },
     created() {
       this.getList();
+      this.getTreeselect();
     },
     methods: {
       /** 查询视频分类列表 */
@@ -242,7 +246,6 @@
       /** 新增按钮操作 */
       handleAdd(row) {
         this.reset();
-        this.getTreeselect();
         if (row != null && row.id) {
           this.form.parentId = row.id;
         } else {
@@ -265,12 +268,21 @@
       submitForm() {
         this.$refs["form"].validate(valid => {
           if (valid) {
+            //三级分类不能作为父级
+            if(this.threeLevelClassify.indexOf(this.form.parentId) != -1){
+                this.$message({
+                    message: "最多只支持三级分类，三级类别不能作为上级",
+                    type: "warning",
+                });
+                return;
+            }
             if (this.form.id != null) {
               updateVideoClassify(this.form).then(response => {
                 if (response.code === 200) {
                 this.msgSuccess("修改成功");
                 this.open = false;
                 this.getList();
+                this.getTreeselect();
               }
             });
             } else {
@@ -279,6 +291,7 @@
                 this.msgSuccess("新增成功");
                 this.open = false;
                 this.getList();
+                this.getTreeselect();
               }
             });
             }
@@ -329,6 +342,18 @@
           this.classifyOptions = [];
           const classify = { id: 0, cateName: '主分类', children: [] };
           classify.children = this.handleTree(response.data, "id");
+          classify.children.forEach((item,i) => {
+              if(item.children && item.children.length > 0){
+                 item.children.forEach((tem,j) => {
+                      if(tem.children && tem.children.length > 0){
+                         tem.children.forEach(element => {
+                              this.threeLevelClassify.push(element.id);
+                         });
+                      }
+                 });
+              }
+          });
+          console.log(this.threeLevelClassify.length);
           this.classifyOptions.push(classify);
         });
       },
