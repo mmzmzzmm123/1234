@@ -353,7 +353,7 @@
                  });
               }
           });
-          console.log(this.threeLevelClassify.length);
+          //console.log(this.threeLevelClassify.length);
           this.classifyOptions.push(classify);
         });
       },
