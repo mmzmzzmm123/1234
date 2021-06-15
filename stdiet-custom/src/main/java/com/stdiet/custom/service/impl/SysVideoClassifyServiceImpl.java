@@ -120,7 +120,7 @@ public class SysVideoClassifyServiceImpl implements ISysVideoClassifyService
      * @param sysVideoClassify 视频分类
      * @return 视频分类集合
      */
-    public List<SysVideoClassify> getAllClassifyAndVideo(Long parentId){
-        return sysVideoClassifyMapper.getOneAllClassifyAndVideo(parentId);
+    public List<VideoClassifyResponse> getAllClassifyAndVideo(SysVideoClassify sysVideoClassify){
+        return sysVideoClassifyMapper.getOneAllClassifyAndVideo(sysVideoClassify);
     }
 }

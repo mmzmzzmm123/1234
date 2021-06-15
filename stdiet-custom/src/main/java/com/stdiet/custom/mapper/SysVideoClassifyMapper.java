@@ -71,5 +71,5 @@ public interface SysVideoClassifyMapper
      * @param parentId
      * @return
      */
-    public List<SysVideoClassify>  getOneAllClassifyAndVideo(Long parentId);
+    public List<VideoClassifyResponse>  getOneAllClassifyAndVideo(SysVideoClassify sysVideoClassify);
 }

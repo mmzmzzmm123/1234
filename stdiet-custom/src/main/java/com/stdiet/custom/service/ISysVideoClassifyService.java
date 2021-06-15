@@ -71,5 +71,5 @@ public interface ISysVideoClassifyService
      *
      * @return 视频分类集合
      */
-    public List<SysVideoClassify> getAllClassifyAndVideo(Long parentId);
+    public List<VideoClassifyResponse> getAllClassifyAndVideo(SysVideoClassify sysVideoClassify);
 }

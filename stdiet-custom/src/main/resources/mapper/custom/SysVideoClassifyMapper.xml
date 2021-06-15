@@ -99,53 +99,64 @@
         order by order_num asc,id asc
     </select>
 
-    <resultMap type="SysVideoClassify" id="VideoClassifyOneResult">
+    <resultMap type="com.stdiet.custom.dto.response.VideoClassifyResponse" id="VideoClassifyOneResult">
         <result property="id"    column="id"    />
         <result property="cateName"    column="cate_name"    />
+        <result property="userType" column="userType"></result>
         <!-- 查询子分类 -->
-        <!--<association property="childrenClassify" column="id" select="getTwoAllClassifyAndVideo"/>-->
+        <association property="childrenClassify" column="{userType=userType,id=id}" select="getTwoAllClassifyAndVideo"/>
         <!-- 查询子视频 -->
-        <!--<association property="childrenVideo" column="id" select="getAllVideoByClassify"/>-->
+        <association property="childrenVideo" column="{userType=userType,id=id}" select="getAllVideoByClassify"/>
     </resultMap>
 
-    <resultMap type="SysVideoClassify" id="VideoClassifyTwoResult">
+    <resultMap type="com.stdiet.custom.dto.response.VideoClassifyResponse" id="VideoClassifyTwoResult">
         <result property="id"    column="id"    />
         <result property="cateName"    column="cate_name"    />
+        <result property="userType" column="userType"></result>
         <!-- 查询子分类 -->
-        <!--<association property="childrenClassify" column="id" select="getThreeAllClassifyAndVideo"/>-->
+        <association property="childrenClassify" column="{userType=userType,id=id}" select="getThreeAllClassifyAndVideo"/>
         <!-- 查询子视频 -->
-        <!--<association property="childrenVideo" column="id" select="getAllVideoByClassify"/>-->
+        <association property="childrenVideo" column="{userType=userType,id=id}" select="getAllVideoByClassify"/>
     </resultMap>
 
-    <resultMap type="com.stdiet.custom.dto.response.VideoClassifyThreeResponse" id="VideoClassifyThreeResult">
+    <resultMap type="com.stdiet.custom.dto.response.VideoClassifyResponse" id="VideoClassifyThreeResult">
         <result property="id"    column="id"    />
         <result property="cateName"    column="cate_name"    />
+        <result property="userType" column="userType" ></result>
         <!-- 查询子视频 -->
-        <association property="childrenVideo" column="id" select="getAllVideoByClassify"/>
+        <association property="childrenVideo" column="{userType=userType,id=id}" select="getAllVideoByClassify"/>
     </resultMap>
 
     <select id="getOneAllClassifyAndVideo" resultMap="VideoClassifyOneResult" parameterType="SysVideoClassify">
-        select id, cate_name from sys_video_classify
-        left join sys_video_classify
-        where del_flag = 0 and parent_id = #{parentId}
+        select id, cate_name, #{userType} as userType from sys_video_classify
+        where del_flag = 0 and parent_id = #{parentId} and 1 = 1
         order by order_num asc,id asc
     </select>
 
-    <select id="getTwoAllClassifyAndVideo" resultMap="VideoClassifyTwoResult" parameterType="Long">
-        select id, cate_name from sys_video_classify
-        where del_flag = 0 and parent_id = #{id}
+    <select id="getTwoAllClassifyAndVideo" resultMap="VideoClassifyTwoResult">
+        select id, cate_name,#{userType} as userType from sys_video_classify
+        where del_flag = 0 and parent_id = #{id} and 2 = 2
         order by order_num asc,id asc
     </select>
 
-    <select id="getThreeAllClassifyAndVideo" resultMap="VideoClassifyThreeResult" parameterType="Long">
-        select id, cate_name from sys_video_classify
-        where del_flag = 0 and parent_id = #{id}
+    <select id="getThreeAllClassifyAndVideo" resultMap="VideoClassifyThreeResult">
+        select id, cate_name,#{userType} as userType from sys_video_classify
+        where del_flag = 0 and parent_id = #{id} and 3 = 3
         order by order_num asc,id asc
     </select>
 
-    <select id="getAllVideoByClassify" resultType="Map" parameterType="Long">
-        select snv.video_id as videoId, snv.cover_url as coverUrl, snv.title, snv.description
+    <select id="getAllVideoByClassify" resultType="com.stdiet.custom.dto.response.VideoResponse">
+        select snv.video_id as videoId, snv.title
         from sys_nutritional_video snv where cate_id = #{id} and del_flag = 0 and show_flag = 1
+        <if test="userType != null">
+            <if test="userType == 0">
+                and pay_level = 0
+            </if>
+            <if test="userType == 1">
+                and (pay_level = 0 or pay_level = 1)
+            </if>
+        </if>
+        order by priority_level desc,id asc
     </select>
 
 </mapper>

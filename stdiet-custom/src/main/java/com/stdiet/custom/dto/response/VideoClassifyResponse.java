@@ -5,6 +5,7 @@ import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
 
+@Data
 public class VideoClassifyResponse implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -15,41 +16,12 @@ public class VideoClassifyResponse implements Serializable {
     //目录分类名称
     private String cateName;
 
+    //用户类型 0 普通用户 1付费客户
+    private Integer userType;
+
     //子分类
     private List<VideoClassifyTwoResponse> childrenClassify;
 
     //子视频
-    private List<Map<String, Object>> childrenVideo;
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getCateName() {
-        return cateName;
-    }
-
-    public void setCateName(String cateName) {
-        this.cateName = cateName;
-    }
-
-    public List<VideoClassifyTwoResponse> getChildrenClassify() {
-        return childrenClassify;
-    }
-
-    public void setChildrenClassify(List<VideoClassifyTwoResponse> childrenClassify) {
-        this.childrenClassify = childrenClassify;
-    }
-
-    public List<Map<String, Object>> getChildrenVideo() {
-        return childrenVideo;
-    }
-
-    public void setChildrenVideo(List<Map<String, Object>> childrenVideo) {
-        this.childrenVideo = childrenVideo;
-    }
+    private List<VideoResponse> childrenVideo;
 }

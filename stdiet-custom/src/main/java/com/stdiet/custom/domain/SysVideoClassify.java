@@ -37,9 +37,6 @@ public class SysVideoClassify extends BaseEntity
     /** 删除标识 0未删除 1已删除 */
     private Integer delFlag;
 
-    //子分类
-    private List<SysVideoClassify> childrenClassify;
-
-    //子视频
-    private List<Map<String, Object>> childrenVideo;
+    //用户类型 0 普通用户 1付费客户
+    private Integer userType;
 }
