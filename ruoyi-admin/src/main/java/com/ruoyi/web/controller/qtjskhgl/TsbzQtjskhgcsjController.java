@@ -44,11 +44,15 @@ public class TsbzQtjskhgcsjController extends BaseController {
     /**
      * 查询群体教师考核过程数据列表
      */
-    @PreAuthorize("@ss.hasPermi('qtjskhgl:qtjskhgcsj:list')")
+    //@PreAuthorize("@ss.hasPermi('qtjskhgl:qtjskhgcsj:list')")
     @GetMapping("/list")
     public TableDataInfo list(TsbzQtjskhgcsj tsbzQtjskhgcsj) {
+        if (tsbzQtjskhgcsj.getCreateuserid() == null) {
+            tsbzQtjskhgcsj.setCreateuserid(schoolCommonController.userIdToxxjsId(SecurityUtils.getLoginUser().getUser().getUserId()));
+        }
+        System.out.println(tsbzQtjskhgcsj.getCreateuserid());
+        //System.out.println(schoolCommonController.userIdToxxjsId(SecurityUtils.getLoginUser().getUser().getUserId()));
         startPage();
-        tsbzQtjskhgcsj.setCreateuserid(schoolCommonController.userIdToxxjsId(SecurityUtils.getLoginUser().getUser().getUserId()));
         List<TsbzQtjskhgcsj> list = tsbzQtjskhgcsjService.selectTsbzQtjskhgcsjList(tsbzQtjskhgcsj);
         return getDataTable(list);
     }

@@ -161,7 +161,7 @@
           <el-input
             v-model="form.content"
             type="textarea"
-            disabled="btndisable"
+            :disabled="!btndisable"
             placeholder="请输入内容"
           />
         </el-form-item>
@@ -203,7 +203,7 @@ import {
 } from "@/api/qtjskhgl/qtjskhgcsj";
 
 import {
-  listQtjskhsh,
+  listQtjskhshByuser,
   getQtjskhsh,
   checkQtjskhsh,
 } from "@/api/qtjskhgl/qtjskhsh";
@@ -286,13 +286,13 @@ export default {
     this.getDicts("sys_dm_qtjsshgctjzt").then((response) => {
       this.substatusOptions = response.data;
     });
-    this.getIsCheck();
   },
   methods: {
     //判断该方案是否已提交
     getIsCheck() {
       this.queryParams_khsh.faid = this.defaultFaid;
-      listQtjskhsh(this.queryParams_khsh).then((response) => {
+      listQtjskhshByuser(this.queryParams_khsh).then((response) => {
+        //console.log(response);
         if (response.rows.length > 0) {
           this.disable = false;
         }
@@ -372,6 +372,7 @@ export default {
         this.total = response.total;
         this.loading = false;
       });
+      this.getIsCheck();
     },
     // 取消按钮
     cancel() {

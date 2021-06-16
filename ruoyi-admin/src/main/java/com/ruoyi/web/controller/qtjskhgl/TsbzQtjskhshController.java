@@ -52,6 +52,14 @@ public class TsbzQtjskhshController extends BaseController {
         return getDataTable(list);
     }
 
+    @GetMapping("/listbyuser")
+    public TableDataInfo listbyuser(TsbzQtjskhsh tsbzQtjskhsh) {
+        tsbzQtjskhsh.setCreateuseird(schoolCommonController.userIdToxxjsId(SecurityUtils.getLoginUser().getUser().getUserId()));
+        startPage();
+        List<TsbzQtjskhsh> list = tsbzQtjskhshService.selectTsbzQtjskhshList(tsbzQtjskhsh);
+        return getDataTable(list);
+    }
+
     /**
      * 导出群体教师考核审核过程列表
      */

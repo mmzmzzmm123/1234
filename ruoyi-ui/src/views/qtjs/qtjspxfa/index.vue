@@ -112,13 +112,13 @@
             @change="handleStatusChange(scope.row)"
           ></el-switch>
         </template>
-      </el-table-column>  
-      <el-table-column label="方案有效开始时间" align="center" prop="fayxkssj" width="180">
+      </el-table-column>
+      <el-table-column label="方案开始时间" align="center" prop="fayxkssj" width="180">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.fayxkssj, '{y}-{m}-{d}') }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="方案有效结束时间" align="center" prop="fayxjssj" width="180">
+      <el-table-column label="方案结束时间" align="center" prop="fayxjssj" width="180">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.fayxjssj, '{y}-{m}-{d}') }}</span>
         </template>
@@ -198,7 +198,7 @@
             >{{dict.dictLabel}}</el-radio>
           </el-radio-group>
         </el-form-item>
-        <el-form-item label="方案有效开始时间" prop="fayxkssj">
+        <el-form-item label="方案开始时间" prop="fayxkssj">
           <el-date-picker
             clearable
             size="small"
@@ -209,7 +209,7 @@
             placeholder="选择方案有效开始时间"
           ></el-date-picker>
         </el-form-item>
-        <el-form-item label="方案有效结束时间" prop="fayxjssj">
+        <el-form-item label="方案结束时间" prop="fayxjssj">
           <el-date-picker
             clearable
             size="small"

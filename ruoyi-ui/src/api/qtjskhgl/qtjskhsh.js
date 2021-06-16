@@ -9,6 +9,15 @@ export function listQtjskhsh(query) {
   })
 }
 
+// 查询群体教师考核审核过程列表
+export function listQtjskhshByuser(query) {
+  return request({
+    url: '/qtjskhgl/qtjskhsh/listbyuser',
+    method: 'get',
+    params: query
+  })
+}
+
 // 查询群体教师考核审核过程详细
 export function getQtjskhsh(id) {
   return request({

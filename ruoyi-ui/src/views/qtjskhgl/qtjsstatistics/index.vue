@@ -37,22 +37,30 @@
         />
       </el-form-item>
       <el-form-item>
-        <el-button type="cyan" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
-        <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
+        <el-button
+          type="cyan"
+          icon="el-icon-search"
+          size="mini"
+          @click="handleQuery"
+          >搜索</el-button
+        >
+        <el-button icon="el-icon-refresh" size="mini" @click="resetQuery"
+          >重置</el-button
+        >
       </el-form-item>
     </el-form>
 
     <el-table v-loading="loading" :data="qtjskhjdList">
       <el-table-column type="selection" width="55" align="center" />
       <!-- <el-table-column label="编号" align="center" prop="id" /> -->
-      <el-table-column label="学校" align="center" prop="deptname"/>
+      <el-table-column label="学校" align="center" prop="deptname" />
       <el-table-column label="姓名" align="center" prop="tsbzJsjbxx.jsxm" />
       <el-table-column prop="bzbfb" label="必做完成进度">
         <template slot-scope="scope">
           <el-progress
             :text-inside="true"
             :stroke-width="24"
-            :percentage="scope.row.bzbfb*100"
+            :percentage="scope.row.bzbfb * 100"
             status="success"
           ></el-progress>
         </template>
@@ -62,7 +70,7 @@
           <el-progress
             :text-inside="true"
             :stroke-width="24"
-            :percentage="scope.row.exybfb*100"
+            :percentage="scope.row.exybfb * 100"
             status="success"
           ></el-progress>
         </template>
@@ -72,12 +80,16 @@
           <el-progress
             :text-inside="true"
             :stroke-width="24"
-            :percentage="scope.row.xzxxmbfb*100"
+            :percentage="scope.row.xzxxmbfb * 100"
             status="success"
           ></el-progress>
         </template>
       </el-table-column>
-      <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
+      <el-table-column
+        label="操作"
+        align="center"
+        class-name="small-padding fixed-width"
+      >
         <template slot-scope="scope">
           <el-button
             size="mini"
@@ -85,13 +97,14 @@
             icon="el-icon-view"
             @click="handleView(scope.row)"
             v-hasPermi="['qtjskhgl:qtjsstatistics:query']"
-          >详情</el-button>
+            >详情</el-button
+          >
         </template>
       </el-table-column>
     </el-table>
 
     <pagination
-      v-show="total>0"
+      v-show="total > 0"
       :total="total"
       :page.sync="queryParams.pageNum"
       :limit.sync="queryParams.pageSize"
@@ -211,6 +224,11 @@ export default {
       this.queryParams.faid = this.defaultFaid;
       this.queryParams.nf = this.defaultNf;
       this.handleQuery();
+    },
+    handleView(row) {
+      console.log(row.id);
+      const id = row.id;
+      this.$router.push({ path: "/qtjskhgl/qtjsxxsh/data/" + id });
     },
   },
 };

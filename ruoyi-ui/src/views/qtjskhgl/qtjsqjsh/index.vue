@@ -79,14 +79,14 @@
     <el-table v-loading="loading" :data="qtjskhshList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
       <!-- <el-table-column label="编号" align="center" prop="id" /> -->
-      <el-table-column label="考核方案" align="center" prop="faid" />
-      <el-table-column label="教师" align="center" prop="jsid" />
-      <el-table-column label="状态" align="center" prop="status" />
+      <el-table-column label="考核方案" align="center" prop="faid" :formatter="faFormat"/>
+      <el-table-column label="教师" align="center" prop="tsbzJsjbxx.jsxm" />
+      <el-table-column label="状态" align="center" prop="status" :formatter="statusFormat"/>
       <!-- <el-table-column label="校级审核人" align="center" prop="xjshr" /> -->
-      <el-table-column label="校级审核意见" align="center" prop="xjshyj" />
+      <el-table-column label="校级审核意见" align="center" prop="xjshyj" :formatter="xjshyjFormat"/>
       <el-table-column label="校级审核建议" align="center" prop="xjshjy" />
       <!-- <el-table-column label="区级审核人" align="center" prop="qjshr" /> -->
-      <el-table-column label="区级审核意见" align="center" prop="qjshyj" />
+      <el-table-column label="区级审核意见" align="center" prop="qjshyj" :formatter="qjshyjFormat"/>
       <el-table-column label="区级审核建议" align="center" prop="qjshjy" />
       <!-- <el-table-column label="创建人" align="center" prop="createuseird" /> -->
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
@@ -253,10 +253,36 @@ export default {
     getList() {
       this.loading = true;
       listQtjskhsh(this.queryParams).then((response) => {
+        console.log(response);
         this.qtjskhshList = response.rows;
         this.total = response.total;
         this.loading = false;
       });
+    },
+     // 状态字典翻译
+    statusFormat(row, column) {
+      return this.selectDictLabel(this.statusOptions, row.status);
+    },
+    // 校级审核意见字典翻译
+    xjshyjFormat(row, column) {
+      return this.selectDictLabel(this.xjshyjOptions, row.xjshyj);
+    },
+    // 区级审核意见字典翻译
+    qjshyjFormat(row, column) {
+      return this.selectDictLabel(this.qjshyjOptions, row.qjshyj);
+    },
+     // 方案字典翻译
+    faFormat(row, column) {
+      // return this.selectDictLabel(this.classOptions, row.classid);
+      var actions = [];
+      var datas = this.qtjskhfaOptions;
+      Object.keys(datas).map((key) => {
+        if (datas[key].id == "" + row.faid) {
+          actions.push(datas[key].name);
+          return false;
+        }
+      });
+      return actions.join("");
     },
     // 取消按钮
     cancel() {
