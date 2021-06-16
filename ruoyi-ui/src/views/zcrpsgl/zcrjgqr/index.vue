@@ -86,7 +86,7 @@
       <el-table-column label="学段" align="center" prop="xd" :formatter="xdFormat"/>
       <el-table-column label="学科" align="center" prop="xk" :formatter="xkFormat"/>
       <el-table-column
-        label="审核状态"
+        label="结果确认当前状态"
         align="center"
         prop="jgqrStatus"
         :formatter="jgqrStatusFormat"
@@ -142,7 +142,7 @@
           {{ form.name }}
         </el-form-item>
         <el-form-item label="学段">
-          <el-select v-model="form.xd" placeholder="请选择当前状态" :disabled="true">
+          <el-select v-model="form.xd" placeholder="请选择学段" :disabled="true">
             <el-option
               v-for="dict in xdOptions"
               :key="dict.dictValue"
@@ -153,7 +153,7 @@
           </el-select>
         </el-form-item>
         <el-form-item label="学科" prop="xk">
-          <el-select v-model="form.xk" placeholder="请选择当前状态" :disabled="true">
+          <el-select v-model="form.xk" placeholder="请选择学科" :disabled="true">
             <el-option
               v-for="dict in xkOptions"
               :key="dict.dictValue"
@@ -172,7 +172,7 @@
             ></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="区级审核状态" prop="xxshStatus">
+        <el-form-item label="区级审核状态" prop="qjshStatus">
           <el-select v-model="form.qjshStatus" placeholder="请选择当前状态" :disabled="true">
             <el-option
               v-for="dict in qjshStatusOptions"
@@ -182,7 +182,7 @@
             ></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="结果确认状态" prop="xxshStatus">
+        <el-form-item label="结果确认状态" prop="jgqrStatus">
           <el-select v-model="form.jgqrStatus" placeholder="请选择当前状态" :disabled="true">
             <el-option
               v-for="dict in jgqrStatusOptions"
@@ -363,7 +363,7 @@
         getZcrbmsq(id).then((response) => {
           this.form = response.data;
           this.open = true;
-          this.title = "报名明细详情";
+          this.title = "主持人报名明细详情";
         });
       },
 

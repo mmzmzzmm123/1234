@@ -142,7 +142,7 @@
           {{ form.name }}
         </el-form-item>
         <el-form-item label="学段">
-          <el-select v-model="form.xd" placeholder="请选择当前状态" :disabled="true">
+          <el-select v-model="form.xd" placeholder="请选择学段" :disabled="true">
             <el-option
               v-for="dict in xdOptions"
               :key="dict.dictValue"
@@ -153,7 +153,7 @@
           </el-select>
         </el-form-item>
         <el-form-item label="学科" prop="xk">
-          <el-select v-model="form.xk" placeholder="请选择当前状态" :disabled="true">
+          <el-select v-model="form.xk" placeholder="请选择学科" :disabled="true">
             <el-option
               v-for="dict in xkOptions"
               :key="dict.dictValue"
@@ -172,20 +172,10 @@
             ></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="区级审核状态" prop="xxshStatus">
+        <el-form-item label="区级审核状态" prop="qjshStatus">
           <el-select v-model="form.qjshStatus" placeholder="请选择当前状态" :disabled="true">
             <el-option
               v-for="dict in qjshStatusOptions"
-              :key="dict.dictValue"
-              :label="dict.dictLabel"
-              :value="dict.dictValue"
-            ></el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item label="结果确认状态" prop="xxshStatus">
-          <el-select v-model="form.jgqrStatus" placeholder="请选择当前状态" :disabled="true">
-            <el-option
-              v-for="dict in jgqrStatusOptions"
               :key="dict.dictValue"
               :label="dict.dictLabel"
               :value="dict.dictValue"
@@ -205,7 +195,7 @@
       append-to-body
     >
       <el-form ref="form" :model="form" :rules="rules" label-width="110px">
-        <el-form-item label="学校审核建议" prop="qjshyj">
+        <el-form-item label="区级审核建议" prop="qjshyj">
           <el-input
             v-model="form.qjshyj"
             type="textarea"
@@ -389,7 +379,7 @@
         getZcrbmsq(id).then((response) => {
           this.form = response.data;
           this.open = true;
-          this.title = "报名明细详情";
+          this.title = "主持人报名明细详情";
         });
       },
 
@@ -400,7 +390,7 @@
         getZcrbmsq(id).then((response) => {
           this.form = response.data;
           this.open_sh = true;
-          this.title_sh = "学校审核意见";
+          this.title_sh = "区级审核意见";
         });
       },
       /** 提交按钮 */

@@ -72,7 +72,7 @@ public class TsbzXybmsqController extends BaseController
     /**
      * 查询区级审核列表
      */
-    @PreAuthorize("@ss.hasPermi('xypsgl:xybmsq:listsQjsh')")
+    @PreAuthorize("@ss.hasPermi('xypsgl:xybmsq:listsQjsh')" + "||@ss.hasPermi('zcrpsgl:zcrbmsq:list')" )
     @GetMapping("/listQjsh")
     public TableDataInfo listQjsh(TsbzXybmsq tsbzXybmsq)
     {
@@ -97,7 +97,7 @@ public class TsbzXybmsqController extends BaseController
     /**
      * 获取学员报名申请详细信息
      */
-    @PreAuthorize("@ss.hasPermi('xypsgl:xybmsq:query')" + "||@ss.hasPermi('xypsgl:xyqjsh:list')" + "||@ss.hasPermi('xypsgl:xyxxsh:list')" + "||@ss.hasPermi('xypsgl:xypsjgqr:list')")
+    @PreAuthorize("@ss.hasPermi('xypsgl:xybmsq:query')" + "||@ss.hasPermi('xypsgl:xyqjsh:list')" + "||@ss.hasPermi('xypsgl:xyxxsh:list')" + "||@ss.hasPermi('xypsgl:xypsjgqr:list')" + "||@ss.hasPermi('zcrpsgl:zcrbmsq:list')")
     @GetMapping(value = "/{id}")
     public AjaxResult getInfo(@PathVariable("id") Long id)
     {
