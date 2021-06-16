@@ -51,6 +51,7 @@ d.name as pxfamc from tsbz_qtjspxjg a
 left join tsbz_jsjbxx b on a.jsid=b.id
 left join tsbz_xxjbxx c on b.deptid=c.id
 left join tsbz_qtjspxfa d on a.faid=d.id
+left join sys_dept e on b.deptid=e.schoolid
     </sql>
 
     <select id="selectTsbzQtjspxjgList" parameterType="TsbzQtjspxjg" resultMap="TsbzQtjspxjgResult">
@@ -60,6 +61,8 @@ left join tsbz_qtjspxfa d on a.faid=d.id
             <if test="jsid != null ">and a.jsid = #{jsid}</if>
             <if test="pxlx != null  and pxlx != ''">and a.pxlx = #{pxlx}</if>
             <if test="nf != null  and nf != ''">and a.nf = #{nf}</if>
+            <!-- 数据范围过滤 -->
+            ${params.dataScope}
         </where>
     </select>
 
