@@ -575,6 +575,7 @@ export default {
         scfaname: null,
         createUser: null,
         zjz: null,
+        deptid: null,
       },
       // 查询参数
       queryParams_zjz: {
@@ -781,6 +782,7 @@ export default {
         createTime: null,
         createUser: null,
         zjz: null,
+        deptid: null,
       };
       this.resetForm("form");
       this.fileList = [];
@@ -805,6 +807,7 @@ export default {
     handleAdd(row) {
       this.reset();
       listJsjbxx(this.queryParams_jsjbxx).then((response) => {
+        console.log(response.rows[0]);
         this.form.name = response.rows[0].jsxm;
         this.form.jsid = response.rows[0].jsid;
         this.form.jxbh = response.rows[0].dabh;

@@ -134,7 +134,7 @@ public class TsbzZcrbmsq extends BaseEntity
 
     /** 部门id */
     @Excel(name = "部门id")
-    private String deptid;
+    private Long deptid;
 
     public void setId(Long id) 
     {
@@ -357,11 +357,11 @@ public class TsbzZcrbmsq extends BaseEntity
         this.qjshyj = qjshyj;
     }
 
-    public String getDeptid() {
+    public Long getDeptid() {
         return deptid;
     }
 
-    public void setDeptid(String deptid) {
+    public void setDeptid(Long deptid) {
         this.deptid = deptid;
     }
 

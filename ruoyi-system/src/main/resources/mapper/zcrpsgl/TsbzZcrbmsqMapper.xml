@@ -25,7 +25,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </resultMap>
 
     <sql id="selectTsbzZcrbmsqVo">
-        select a.id, a.jsid, a.zjzid, a.faid,b.jsxm as name, b.dabh as jxbh, b.xb as xb, b.csrq as csrq, b.xd as xd, b.xk as xk, b.zc as zc, c.xxmc as dwmc, c.xxdz as dwdz, d.email as email, d.phonenumber as phone, a.jdtype, a.sf, a.scfapath, a.scfaname, a.create_time, a.create_user, a.xxsh_status,a.qjsh_status,a.jgqr_status,a.xxshyj,a.qjshyj,b.deptid,(select group_concat(name separator ',') from tsbz_zcrzjzmd where find_in_set(id,a.zjzid)) as zjz
+        select a.id, a.jsid, a.zjzid, a.faid,b.jsxm as name, b.dabh as jxbh, b.xb as xb, b.csrq as csrq, b.xd as xd, b.xk as xk, b.zc as zc, c.xxmc as dwmc, c.xxdz as dwdz, d.email as email, d.phonenumber as phone, a.jdtype, a.sf, a.scfapath, a.scfaname, a.create_time, a.create_user, a.xxsh_status, a.qjsh_status, a.jgqr_status, a.xxshyj, a.qjshyj,a.deptid, b.deptid,(select group_concat(name separator ',') from tsbz_zcrzjzmd where find_in_set(id,a.zjzid)) as zjz
         from tsbz_zcrbmsq a
         left join tsbz_jsjbxx b on a.jsid=b.id
         left join tsbz_xxjbxx c on b.deptid=c.xxdm
@@ -49,7 +49,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="jgqrStatus != null "> and a.jgqr_status = #{jgqrStatus}</if>
             <if test="xxshyj != null "> and a.xxshyj = #{xxshyj}</if>
             <if test="qjshyj != null "> and a.qjshyj = #{qjshyj}</if>
-            <if test="deptid != null "> and b.deptid = #{deptid}</if>
+            <if test="deptid != null "> and a.deptid = #{deptid}</if>
         </where>
     </select>
     
@@ -76,6 +76,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="jgqrStatus != null">jgqr_status,</if>
             <if test="xxshyj != null">xxshyj,</if>
             <if test="qjshyj != null">qjshyj,</if>
+            <if test="deptid != null">deptid,</if>
          </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="id != null">#{id},</if>
@@ -93,6 +94,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="jgqrStatus != null">#{jgqrStatus},</if>
             <if test="xxshyj != null">#{xxshyj},</if>
             <if test="qjshyj != null">#{qjshyj},</if>
+            <if test="deptid != null">#{deptid},</if>
          </trim>
     </insert>
 
@@ -113,6 +115,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="jgqrStatus != null">jgqr_status = #{jgqrStatus},</if>
             <if test="xxshyj != null">xxshyj = #{xxshyj},</if>
             <if test="qjshyj != null">qjshyj = #{qjshyj},</if>
+            <if test="deptid != null">deptid = #{deptid},</if>
         </trim>
         where id = #{id}
     </update>

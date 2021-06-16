@@ -57,7 +57,7 @@ public class TsbzZcrbmsqController extends BaseController
     @GetMapping("/listXxsh")
     public TableDataInfo listXxsh(TsbzZcrbmsq tsbzZcrbmsq)
     {
-        tsbzZcrbmsq.setDeptid(SecurityUtils.getLoginUser().getUser().getDeptId().toString());
+        tsbzZcrbmsq.setDeptid(SecurityUtils.getLoginUser().getUser().getDeptId());
         startPage();
         List<TsbzZcrbmsq> listXxsh = tsbzZcrbmsqService.selectTsbzZcrbmsqList(tsbzZcrbmsq);
         return getDataTable(listXxsh);
@@ -70,10 +70,25 @@ public class TsbzZcrbmsqController extends BaseController
     @GetMapping("/listQjsh")
     public TableDataInfo listQjsh(TsbzZcrbmsq tsbzZcrbmsq)
     {
+        tsbzZcrbmsq.setXxshStatus("1");
         startPage();
         List<TsbzZcrbmsq> listQjsh = tsbzZcrbmsqService.selectTsbzZcrbmsqList(tsbzZcrbmsq);
         return getDataTable(listQjsh);
     }
+
+    /**
+     * 查询结果确认列表
+     */
+    //@PreAuthorize("@ss.hasPermi('zcrpsgl:zcrbmsq:listJgqr')")
+    @GetMapping("/listJgqr")
+    public TableDataInfo listJgqr(TsbzZcrbmsq tsbzZcrbmsq)
+    {
+        tsbzZcrbmsq.setQjshStatus("1");
+        startPage();
+        List<TsbzZcrbmsq> listJgqr = tsbzZcrbmsqService.selectTsbzZcrbmsqList(tsbzZcrbmsq);
+        return getDataTable(listJgqr);
+    }
+
     /**
      * 导出主持人报名申请列表
      */
@@ -107,10 +122,11 @@ public class TsbzZcrbmsqController extends BaseController
     {
         tsbzZcrbmsq.setCreateUser(SecurityUtils.getLoginUser().getUser().getUserId());
         tsbzZcrbmsq.setCreateTime(new Date());
+        tsbzZcrbmsq.setDeptid(SecurityUtils.getLoginUser().getUser().getDeptId());
         return toAjax(tsbzZcrbmsqService.insertTsbzZcrbmsq(tsbzZcrbmsq));
     }
 
-    /**
+    /**W
      * 修改主持人报名申请
      */
     @PreAuthorize("@ss.hasPermi('zcrpsgl:zcrbmsq:edit')")
@@ -135,7 +151,7 @@ public class TsbzZcrbmsqController extends BaseController
     /**
      * 通过学校审核(主持人评审管理-学校审核)
      */
-    @PreAuthorize("@ss.hasPermi('zcrpsgl:zcrbmsq:passXxpsStatus')")
+    // @PreAuthorize("@ss.hasPermi('zcrpsgl:zcrbmsq:passXxpsStatus')")
     @PutMapping(value = "/passXxpsStatus")
     public AjaxResult passXxpsStatus(@RequestBody TsbzZcrbmsq tsbzZcrbmsq)
     {
@@ -145,7 +161,7 @@ public class TsbzZcrbmsqController extends BaseController
     /**
      * 退回学校审核(主持人评审管理-学校审核)
      */
-    @PreAuthorize("@ss.hasPermi('zcrpsgl:zcrbmsq:backXxpsStatus')")
+    // @PreAuthorize("@ss.hasPermi('zcrpsgl:zcrbmsq:backXxpsStatus')")
     @PutMapping(value = "/backXxpsStatus")
     public AjaxResult backXxpsStatus(@RequestBody TsbzZcrbmsq tsbzZcrbmsq)
     {
@@ -155,7 +171,7 @@ public class TsbzZcrbmsqController extends BaseController
     /**
      * 通过区级审核(主持人评审管理-区级审核)
      */
-    @PreAuthorize("@ss.hasPermi('zcrpsgl:zcrbmsq:passQjpsStatus')")
+    // @PreAuthorize("@ss.hasPermi('zcrpsgl:zcrbmsq:passQjpsStatus')")
     @PutMapping(value = "/passQjpsStatus")
     public AjaxResult passQjpsStatus(@RequestBody TsbzZcrbmsq tsbzZcrbmsq)
     {
@@ -165,7 +181,7 @@ public class TsbzZcrbmsqController extends BaseController
     /**
      * 退回区级审核(主持人评审管理-区级审核)
      */
-    @PreAuthorize("@ss.hasPermi('zcrpsgl:zcrbmsq:backQjpsStatus')")
+    // @PreAuthorize("@ss.hasPermi('zcrpsgl:zcrbmsq:backQjpsStatus')")
     @PutMapping(value = "/backQjpsStatus")
     public AjaxResult backQjpsStatus(@RequestBody TsbzZcrbmsq tsbzZcrbmsq)
     {
@@ -175,7 +191,7 @@ public class TsbzZcrbmsqController extends BaseController
     /**
      * 通过结果确认(主持人评审管理-结果确认)
      */
-    @PreAuthorize("@ss.hasPermi('zcrpsgl:zcrbmsq:passJgqrStatus')")
+    // @PreAuthorize("@ss.hasPermi('zcrpsgl:zcrbmsq:passJgqrStatus')")
     @PutMapping(value = "/passJgqrStatus")
     public AjaxResult passJgqrStatus(@RequestBody TsbzZcrbmsq tsbzZcrbmsq)
     {
@@ -185,7 +201,7 @@ public class TsbzZcrbmsqController extends BaseController
     /**
      * 退回结果确认(主持人评审管理-结果确认)
      */
-    @PreAuthorize("@ss.hasPermi('zcrpsgl:zcrbmsq:backJgqrStatus')")
+    // @PreAuthorize("@ss.hasPermi('zcrpsgl:zcrbmsq:backJgqrStatus')")
     @PutMapping(value = "/backJgqrStatus")
     public AjaxResult backJgqrStatus(@RequestBody TsbzZcrbmsq tsbzZcrbmsq)
     {

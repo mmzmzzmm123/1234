@@ -86,7 +86,7 @@
       <el-table-column label="学段" align="center" prop="xd" :formatter="xdFormat"/>
       <el-table-column label="学科" align="center" prop="xk" :formatter="xkFormat"/>
       <el-table-column
-        label="审核状态"
+        label="学校审核状态"
         align="center"
         prop="xxshStatus"
         :formatter="xxshStatusFormat"
@@ -172,26 +172,6 @@
             ></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="区级审核状态" prop="xxshStatus">
-          <el-select v-model="form.qjshStatus" placeholder="请选择当前状态" :disabled="true">
-            <el-option
-              v-for="dict in qjshStatusOptions"
-              :key="dict.dictValue"
-              :label="dict.dictLabel"
-              :value="dict.dictValue"
-            ></el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item label="结果确认状态" prop="xxshStatus">
-          <el-select v-model="form.jgqrStatus" placeholder="请选择当前状态" :disabled="true">
-            <el-option
-              v-for="dict in jgqrStatusOptions"
-              :key="dict.dictValue"
-              :label="dict.dictLabel"
-              :value="dict.dictValue"
-            ></el-option>
-          </el-select>
-        </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="cancel">取 消</el-button>
@@ -206,7 +186,7 @@
       append-to-body
     >
       <el-form ref="form" :model="form" :rules="rules" label-width="110px">
-        <el-form-item label="学校审核建议" prop="qjshyj">
+        <el-form-item label="学校审核建议" prop="xxshyj">
           <el-input
             v-model="form.xxshyj"
             type="textarea"
@@ -273,7 +253,8 @@ export default {
         pageSize: 10,
         jdtype: null,
         dwmc: null,
-        sf: null
+        sf: null,
+        deptid: null,
       },
       // 表单参数
       form: {},
@@ -354,6 +335,7 @@ export default {
     // 取消按钮
     cancel() {
       this.open = false;
+      this.open_sh = false;
       this.reset();
     },
     // 表单重置
@@ -395,6 +377,7 @@ export default {
 
     /** 审核通过操作 */
     handlePass(row) {
+      this.reset();
       const id = row.id|| this.ids;
       getZcrbmsq(id).then((response) => {
         this.form = response.data;
@@ -415,6 +398,7 @@ export default {
     },
     /** 退回操作 */
     handleBack(row) {
+      this.reset();
       const id = row.id|| this.ids;
       getZcrbmsq(id).then((response) => {
         backXxpsStatus(response.data).then(response => {

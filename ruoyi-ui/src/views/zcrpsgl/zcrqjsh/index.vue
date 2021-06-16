@@ -353,6 +353,7 @@
       // 取消按钮
       cancel() {
         this.open = false;
+        this.open_sh = false;
         this.reset();
       },
       // 表单重置
@@ -394,6 +395,7 @@
 
       /** 审核通过操作 */
       handlePass(row) {
+        this.reset();
         const id = row.id|| this.ids;
         getZcrbmsq(id).then((response) => {
           this.form = response.data;
@@ -413,6 +415,7 @@
       },
       /** 退回操作 */
       handleBack(row) {
+        this.reset();
         const id = row.id|| this.ids;
         getZcrbmsq(id).then((response) => {
           backQjpsStatus(response.data).then(response => {
