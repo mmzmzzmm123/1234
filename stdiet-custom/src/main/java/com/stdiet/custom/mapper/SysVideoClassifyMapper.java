@@ -2,6 +2,7 @@ package com.stdiet.custom.mapper;
 
 import java.util.List;
 import com.stdiet.custom.domain.SysVideoClassify;
+import com.stdiet.custom.dto.response.VideoClassifyResponse;
 
 /**
  * 视频分类Mapper接口
@@ -63,5 +64,12 @@ public interface SysVideoClassifyMapper
      * 获取所有类别
      * @return
      */
-    public List<SysVideoClassify> getAllClassify();
+    public List<SysVideoClassify> getAllClassify(SysVideoClassify sysVideoClassify);
+
+    /**
+     * 根据父级ID获取下面子分类以及视频
+     * @param parentId
+     * @return
+     */
+    public List<VideoClassifyResponse>  getOneAllClassifyAndVideo(SysVideoClassify sysVideoClassify);
 }

@@ -42,7 +42,11 @@
             and snv.show_flag = #{showFlag}
         </if>
         <if test="cateId != null">
-            and snv.cate_id = #{cateId}
+            and snv.cate_id in (
+                select id from sys_video_classify where del_flag = 0
+                and (id = #{cateId} or id in (select s.id from sys_video_classify s where s.parent_id = #{cateId} and s.del_flag = 0)
+                or id in (select ss.id from sys_video_classify ss where ss.del_flag = 0 and ss.parent_id in (select a.id from sys_video_classify a where a.parent_id = #{cateId} and a.del_flag = 0 )))
+            )
         </if>
         <if test="payLevel != null">
             and snv.pay_level = #{payLevel}

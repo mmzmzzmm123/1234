@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.stdiet.custom.domain.SysNutritionalVideo;
+import com.stdiet.custom.domain.SysVideoClassify;
 import org.apache.ibatis.annotations.Param;
 
 /**

@@ -21,14 +21,22 @@
         </el-select>
       </el-form-item>
        <el-form-item label="视频类别" prop="cateId">
-            <el-select v-model="queryParams.cateId" clearable filterable placeholder="请选择类别">
+           <!-- <el-select v-model="queryParams.cateId" clearable filterable placeholder="请选择类别">
               <el-option
                 v-for="classify in classifyList"
                 :key="classify.id"
                 :label="classify.cateName"
                 :value="classify.id"
               />
-            </el-select>
+            </el-select>-->
+            <treeselect
+                v-model="queryParams.cateId"
+                :options="classifyList"
+                :normalizer="normalizer"
+                :show-count="true"
+                placeholder="选择分类"
+                style="width:200px"
+              />
       </el-form-item>
       <el-form-item label="视频权限" prop="payLevel">
             <el-select v-model="queryParams.payLevel" clearable filterable placeholder="请选择权限">
@@ -243,7 +251,9 @@
 
     <!-- 视频分类管理 -->
     <el-dialog title="视频分类列表" :visible.sync="videoClassifyOpen" width="800px" append-to-body @closed="getAllVideoClassify();">
-      <VideoClassify ref="videoClassifyRef"></VideoClassify>
+      <div style="height: 500px; overflow: auto">
+           <VideoClassify ref="videoClassifyRef"></VideoClassify>
+      </div>
     </el-dialog>
   </div>
 </template>
@@ -255,6 +265,9 @@
   import UploadFile from "@/components/FileUpload/UploadFile";
   import VideoClassify from "../videoClassify";
   import AutoHideMessage from "@/components/AutoHideMessage";
+    import Treeselect from "@riophae/vue-treeselect";
+  import "@riophae/vue-treeselect/dist/vue-treeselect.css";
+  import IconSelect from "@/components/IconSelect";
   export default {
     name: "NutritionalVideo",
     data() {
@@ -318,7 +331,7 @@
       });
     },
     components: {
-      UploadVideo,UploadFile,VideoClassify,AutoHideMessage
+      UploadVideo,UploadFile,VideoClassify,AutoHideMessage,Treeselect, IconSelect
     },
     methods: {
       /** 查询营养视频列表 */
@@ -337,7 +350,10 @@
       getAllVideoClassify(){
         getAllClassify().then(response => {
           if(response.code == 200){
-            this.classifyList = response.data;
+            this.classifyList = [];
+            const classify = { id: 0, cateName: '主分类', children: [] };
+            classify.children = this.handleTree(response.data, "id");
+            this.classifyList.push(classify);
           }
         });
       },
@@ -410,6 +426,17 @@
                 window.open(url, '_blank');
            }
         });
+      },
+      /** 转换菜单数据结构 */
+      normalizer(node) {
+        if (node.children && !node.children.length) {
+          delete node.children;
+        }
+        return {
+          id: node.id,
+          label: node.cateName,
+          children: node.children
+        };
       },
       /** 提交按钮 */
       submitForm() {

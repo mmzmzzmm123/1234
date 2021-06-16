@@ -3,14 +3,7 @@ package com.stdiet.web.controller.custom;
 import java.util.List;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import com.stdiet.common.annotation.Log;
 import com.stdiet.common.core.controller.BaseController;
 import com.stdiet.common.core.domain.AjaxResult;
@@ -40,7 +33,8 @@ public class SysVideoClassifyController extends BaseController
     @GetMapping("/list")
     public TableDataInfo list(SysVideoClassify sysVideoClassify)
     {
-        startPage();
+        //startPage();
+        //sysVideoClassify.setParentId(0L);
         List<SysVideoClassify> list = sysVideoClassifyService.selectSysVideoClassifyList(sysVideoClassify);
         return getDataTable(list);
     }
@@ -105,9 +99,9 @@ public class SysVideoClassifyController extends BaseController
      * 查询视频分类列表
      */
     @GetMapping("/getAllClassify")
-    public AjaxResult getAllClassify()
+    public AjaxResult getAllClassify(SysVideoClassify sysVideoClassify)
     {
-        List<SysVideoClassify> list = sysVideoClassifyService.getAllClassify();
+        List<SysVideoClassify> list = sysVideoClassifyService.getAllClassify(sysVideoClassify);
         return AjaxResult.success(list);
     }
 }
