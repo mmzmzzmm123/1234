@@ -96,7 +96,7 @@
             type="text"
             icon="el-icon-view"
             @click="handleView(scope.row)"
-            v-hasPermi="['qtjskhgl:qtjsstatistics:query']"
+            v-hasPermi="['qtjskhgl:statistics:query']"
             >详情</el-button
           >
         </template>
