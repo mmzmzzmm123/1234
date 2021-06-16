@@ -390,7 +390,7 @@ export default {
     submitForm() {
       passXxpsStatus(this.form).then(response => {
         if (response.code === 200) {
-          this.msgSuccess("启用成功");
+          this.msgSuccess("审核成功");
           this.open_sh = false;
           this.getList();
         }
@@ -403,7 +403,7 @@ export default {
       getZcrbmsq(id).then((response) => {
         backXxpsStatus(response.data).then(response => {
           if (response.code === 200) {
-            this.msgSuccess("启用成功");
+            this.msgSuccess("审核成功");
             this.open = false;
             this.getList();
           }

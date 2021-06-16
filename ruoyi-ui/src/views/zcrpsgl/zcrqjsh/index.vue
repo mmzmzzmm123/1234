@@ -397,7 +397,7 @@
       submitForm() {
         passQjpsStatus(this.form).then(response => {
           if (response.code === 200) {
-            this.msgSuccess("启用成功");
+            this.msgSuccess("审核成功");
             this.open_sh = false;
             this.getList();
           }
@@ -410,7 +410,7 @@
         getZcrbmsq(id).then((response) => {
           backQjpsStatus(response.data).then(response => {
             if (response.code === 200) {
-              this.msgSuccess("启用成功");
+              this.msgSuccess("审核成功");
               this.open = false;
               this.getList();
             }

@@ -562,6 +562,16 @@ export default {
       this.single = selection.length !== 1;
       this.multiple = !selection.length;
     },
+    /** 修改按钮操作 */
+    handleCheck(row) {
+      this.reset();
+      const id = row.id || this.ids;
+      getXybmsq(id).then((response) => {
+        this.form = response.data;
+        this.open_check = true;
+        this.title = "查看学员报名申请";
+      });
+    },
     /** 新增按钮操作 */
     handleAdd(row) {
       this.reset();
@@ -586,16 +596,6 @@ export default {
         this.form.dwdz = response.rows[0].tsbzXxjbxx.xxdz;
         this.form.email = response.rows[0].email;
         this.form.phone = response.rows[0].phone;
-      });
-    },
-    /** 修改按钮操作 */
-    handleCheck(row) {
-      this.reset();
-      const id = row.id || this.ids;
-      getXybmsq(id).then((response) => {
-        this.form = response.data;
-        this.open_check = true;
-        this.title = "查看学员报名申请";
       });
     },
     /** 通过按钮操作 */

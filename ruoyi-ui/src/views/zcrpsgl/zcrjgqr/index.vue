@@ -373,7 +373,7 @@
         getZcrbmsq(id).then((response) => {
           passJgqrStatus(response.data).then(response => {
             if (response.code === 200) {
-              this.msgSuccess("启用成功");
+              this.msgSuccess("审核成功");
               this.open = false;
               this.getList();
             }
@@ -387,7 +387,7 @@
         getZcrbmsq(id).then((response) => {
           backJgqrStatus(response.data).then(response => {
             if (response.code === 200) {
-              this.msgSuccess("启用成功");
+              this.msgSuccess("审核成功");
               this.open = false;
               this.getList();
             }
