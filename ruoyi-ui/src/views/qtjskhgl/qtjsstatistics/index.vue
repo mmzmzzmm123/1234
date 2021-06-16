@@ -226,8 +226,8 @@ export default {
       this.handleQuery();
     },
     handleView(row) {
-      console.log(row.id);
-      const id = row.id;
+      console.log(row.khshid);
+      const id = row.khshid;
       this.$router.push({ path: "/qtjskhgl/qtjsxxsh/data/" + id });
     },
   },

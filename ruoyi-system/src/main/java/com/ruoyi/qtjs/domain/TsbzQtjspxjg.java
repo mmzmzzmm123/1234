@@ -51,6 +51,19 @@ public class TsbzQtjspxjg extends BaseEntity {
     @Excel(name = "创建人")
     private Long createuserid;
 
+    public Long getKhshid() {
+        return khshid;
+    }
+
+    public void setKhshid(Long khshid) {
+        this.khshid = khshid;
+    }
+
+    /**
+     * 编号
+     */
+    private Long khshid;
+
     public String getDeptname() {
         return deptname;
     }
@@ -59,7 +72,7 @@ public class TsbzQtjspxjg extends BaseEntity {
         this.deptname = deptname;
     }
 
-    private  String deptname;
+    private String deptname;
 
     private BigDecimal bzbfb;
 
@@ -185,6 +198,7 @@ public class TsbzQtjspxjg extends BaseEntity {
                 .append("tsbzJsjbxx", getTsbzJsjbxx())
                 .append("jsxm", getJsxm())
                 .append("deptname", getDeptname())
+                .append("khshid", getKhshid())
                 .toString();
     }
 }

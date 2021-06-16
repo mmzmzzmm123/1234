@@ -15,6 +15,7 @@
         <result property="bzbfb" column="bzbfb"/>
         <result property="exybfb" column="exybfb"/>
         <result property="xzxxmbfb" column="xzxxmbfb"/>
+        <result property="khshid" column="khshid"/>
         <result property="deptid" column="deptid"/>
         <result property="deptname"    column="deptname"    />
         <association property="tsbzJsjbxx" column="jsid" javaType="TsbzJsjbxx" resultMap="TsbzJsjbxxResult"/>
@@ -112,7 +113,7 @@ left join tsbz_qtjspxfa d on a.faid=d.id
     </delete>
 
     <select id="selectTsbzQtjspxjgKhjdList" parameterType="TsbzQtjspxjg" resultMap="TsbzQtjspxjgResult">
-        select b.id, b.jsid, b.jsxm, b.xb, b.deptid, b.dabh, b.zjlx, b.zjhm, b.bzzt, b.gwzt, b.gwlx, b.csrq, b.rjnx, b.zc, b.zyry, b.tzb, b.zks, b.create_time,
+        select b.id,d.id as khshid, b.jsid, b.jsxm, b.xb, b.deptid, b.dabh, b.zjlx, b.zjhm, b.bzzt, b.gwzt, b.gwlx, b.csrq, b.rjnx, b.zc, b.zyry, b.tzb, b.zks, b.create_time,
         c.xxmc as deptname,
         (select count(*)from tsbz_qtjskhgcsj where faid=#{faid} and createuserid=a.jsid and zbid in (select id from tsbz_qtjskhzbx where faid=#{faid} and khlx='1'))/(select count(*) from
         tsbz_qtjskhzbx where faid=#{faid} and khlx='1') bzbfb,
@@ -123,6 +124,8 @@ left join tsbz_qtjspxfa d on a.faid=d.id
          from tsbz_qtjspxjg a
         left join tsbz_jsjbxx b on a.jsid=b.id
         left join tsbz_xxjbxx c on b.deptid=c.id
+        left join tsbz_qtjskhsh d on a.jsid=d.jsid
+        left join tsbz_qtjskhfa e on d.faid=e.id
         where a.nf=#{nf}
         <if test="jsxm != null  and jsxm != ''">and b.jsxm like concat('%', #{jsxm}, '%')</if>
         <if test="deptid != null  and deptid != ''">and b.deptid = #{deptid}</if>
