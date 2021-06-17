@@ -94,7 +94,7 @@
       <el-table-column label="附件" align="center" prop="filename">
         <template slot-scope="scope">
           <router-link
-            :to="uploadFileUrl + scope.row.filepath"
+            :to="uploadFileUrl1 + scope.row.filepath"
             class="link-type"
           >
             <span>{{ scope.row.filename }}</span>
@@ -255,6 +255,7 @@ export default {
       // 是否显示弹出层
       open: false,
       uploadFileUrl: process.env.VUE_APP_BASE_API + "/common/upload", // 上传的图片服务器地址
+      uploadFileUrl1: process.env.VUE_APP_BASE_API, // 上传的图片服务器地址
       headers: {
         Authorization: "Bearer " + getToken(),
       },
