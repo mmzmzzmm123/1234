@@ -27,13 +27,9 @@
       <el-table-column label="内容" align="center" prop="content" />
       <el-table-column label="附件" align="center" prop="filename">
         <template slot-scope="scope">
-          <!-- <router-link
-            :to="uploadFileUrl1 + scope.row.filepath"
-            class="link-type"
-          >
-            <span>{{ scope.row.filename }}</span>
-          </router-link> -->
-          <div @click="detailData(scope.row)">{{ scope.row.filename }}</div>
+    
+          <el-link type="primary" :href="uploadFileUrl + scope.row.filepath" target="_blank">{{ scope.row.filename }}</el-link>
+        
         </template>
       </el-table-column>
       <el-table-column
@@ -142,9 +138,6 @@ export default {
     // 提交状态字典项字典翻译
     substatusFormat(row, column) {
       return this.selectDictLabel(this.substatusOptions, row.substatus);
-    },
-    detailData(row) {
-      window.open(process.env.VUE_APP_BASE_API + row.filepath);
     },
   },
 };
