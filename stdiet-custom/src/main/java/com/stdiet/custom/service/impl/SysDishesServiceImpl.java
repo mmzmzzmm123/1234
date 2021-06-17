@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 菜品Service业务层处理
@@ -181,6 +182,17 @@ public class SysDishesServiceImpl implements ISysDishesService {
     @Override
     public String getDishesMenuTypeById(Long id) {
         return sysDishesMapper.getDishesMenuTypeById(id);
+    }
+
+
+    /**
+     * 根据菜品ID查询大类小类名称
+     * @param dishId
+     * @return
+     */
+    @Override
+    public String getDishClassNameById(Long dishId){
+        return sysDishesMapper.getDishClassNameById(dishId);
     }
 
 }

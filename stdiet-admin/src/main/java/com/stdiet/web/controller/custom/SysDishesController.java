@@ -71,6 +71,7 @@ public class SysDishesController extends BaseController {
     public AjaxResult getMenuTypes(@PathVariable("id") Long id) {
         JSONObject object = new JSONObject();
         object.put("type", sysDishesService.getDishesMenuTypeById(id));
+        object.put("className", sysDishesService.getDishClassNameById(id));
         return AjaxResult.success(object);
     }
 

@@ -555,6 +555,7 @@ const actions = {
             id: new Date().getTime(),
             name: tarDishes.name,
             type: response.data.type.split(",").sort(),
+            className: response.data.className,  //大类小类名称
             data: tarDishes
           }).then(() => {
             window.postMessage(

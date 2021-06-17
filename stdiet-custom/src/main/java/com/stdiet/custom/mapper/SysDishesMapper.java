@@ -3,9 +3,11 @@ package com.stdiet.custom.mapper;
 import com.stdiet.custom.domain.SysDishes;
 import com.stdiet.custom.domain.SysDishesIngredient;
 import com.stdiet.custom.domain.SysPhysicalSignsObj;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 菜品Mapper接口
@@ -79,5 +81,13 @@ public interface SysDishesMapper {
     int deleteDishesRecByDishesId(Long dishesId);
 
     int deleteDishesNotRecByDishesId(Long dishesId);
+
+
+    /**
+     * 根据菜品ID查询大类小类名称
+     * @param dishId
+     * @return
+     */
+    String getDishClassNameById(@Param("dishId")Long dishId);
 
 }

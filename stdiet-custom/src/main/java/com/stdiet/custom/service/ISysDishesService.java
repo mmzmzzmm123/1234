@@ -1,6 +1,8 @@
 package com.stdiet.custom.service;
 
 import java.util.List;
+import java.util.Map;
+
 import com.stdiet.custom.domain.SysDishes;
 import com.stdiet.custom.domain.SysDishesIngredient;
 import com.stdiet.custom.domain.SysIngredient;
@@ -65,5 +67,12 @@ public interface ISysDishesService
     public int deleteSysDishesById(Long id);
 
     public String getDishesMenuTypeById(Long id);
+
+    /**
+     * 根据菜品ID查询大类小类名称
+     * @param dishId
+     * @return
+     */
+    String getDishClassNameById(Long dishId);
 
 }

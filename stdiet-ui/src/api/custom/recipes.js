@@ -45,3 +45,17 @@ export function replaceMenuApi(data) {
     data
   });
 }
+
+/**
+ * 根据菜品ID查询大类小类名称
+ * @param dishId
+ */
+export function getDishClassNameById(dishId) {
+  return request({
+    url: "/custom/recipes/getDishClassNameById",
+    method: "get",
+    params: {'dishId':dishId}
+  });
+}
+
+

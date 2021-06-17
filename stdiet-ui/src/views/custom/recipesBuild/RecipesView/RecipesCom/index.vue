@@ -342,6 +342,9 @@
   </div>
 </template>
 <script>
+import {
+  getDishClassNameById 
+} from "@/api/custom/recipes";
 import { createNamespacedHelpers } from "vuex";
 const {
   mapActions,
