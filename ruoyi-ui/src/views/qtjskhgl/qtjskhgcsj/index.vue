@@ -91,6 +91,16 @@
         prop="tsbzQtjskhzbx.tjsl"
       />
       <el-table-column label="内容" align="center" prop="content" />
+      <el-table-column label="附件" align="center" prop="filename">
+        <template slot-scope="scope">
+          <router-link
+            :to="uploadFileUrl + scope.row.filepath"
+            class="link-type"
+          >
+            <span>{{ scope.row.filename }}</span>
+          </router-link>
+        </template>
+      </el-table-column>
       <el-table-column
         label="当前状态"
         align="center"
