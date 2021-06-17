@@ -207,4 +207,12 @@
         delete from sys_dishes_not_rec where dishes_id=#{dishesId}
     </delete>
 
+    <!-- 根据菜品ID查询菜品对应大类小类名称 -->
+    <select id="getDishClassNameById" parameterType="Long" resultType="String">
+        select concat(IFNULL(big.dict_label,''),'/',IFNULL(small.dict_label,'')) as className from sys_dishes dish
+        LEFT JOIN (SELECT dict_label, dict_value FROM sys_dict_data WHERE dict_type = 'dish_class_big') AS big ON big.dict_value = dish.big_class
+        LEFT JOIN (SELECT dict_label, dict_value FROM sys_dict_data WHERE dict_type = 'dish_class_small') AS small ON small.dict_value = dish.small_class
+        where dish.id = #{dishId} and dish.del_flag = 0
+    </select>
+
 </mapper>

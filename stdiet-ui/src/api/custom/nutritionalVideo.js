@@ -78,3 +78,23 @@ export function getVideoPlayUrlById(id) {
   })
 }
 
+// 根据视频videoId提交视频截图请求
+export function submitVideoSnapshot(id) {
+  return request({
+    url: '/custom/nutritionalVideo/submitVideoSnapshot',
+    method: 'get',
+    params: {'videoId': id}
+  })
+}
+
+//根据视频videoId获取视频截图
+export function getVideoSnapshot(id) {
+  return request({
+    url: '/custom/nutritionalVideo/getVideoSnapshot',
+    method: 'get',
+    params: {'videoId': id}
+  })
+}
+
+
+

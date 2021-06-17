@@ -29,6 +29,9 @@ public class AliyunVideoUtils {
 
     public static final String search_field = "VideoId,Title,CoverURL,CateName,Tags,Status,Description,CreationTime";
 
+    //默认截图模板
+    public static final String defaultSnapshotTemplateId = "f8ccc3b5113ca8ea356ef9adf8c573b2";
+
     /**
      * 初始化视频点播Client
      * @return
@@ -176,7 +179,7 @@ public class AliyunVideoUtils {
      * @return
      * @throws Exception
      */
-    public static String updateVideo(String videoId, String title, String tags, String description, Long cateId) throws Exception{
+    public static String updateVideo(String videoId, String title, String tags, String description, Long cateId, String coverUrl) throws Exception{
         com.aliyun.vod20170321.Client client = AliyunVideoUtils.createClient();
         if(StringUtils.isEmpty(videoId)){
             return null;
@@ -194,6 +197,30 @@ public class AliyunVideoUtils {
         if(cateId != null && cateId.longValue() > 0){
             updateVideoInfoRequest.setCateId(cateId);
         }
+        if(StringUtils.isNotEmpty(coverUrl)){
+            updateVideoInfoRequest.setCoverURL(coverUrl);
+        }
+        UpdateVideoInfoResponse updateVideoInfoResponse = client.updateVideoInfo(updateVideoInfoRequest);
+        if(updateVideoInfoResponse != null){
+            return updateVideoInfoResponse.body.requestId;
+        }
+        return null;
+    }
+
+    /**
+     * 更新视频封面
+     * @param videoId 视频ID必须
+     * @param coverUrl 封面
+     * @return
+     * @throws Exception
+     */
+    public static String updateVideoCoverUrl(String videoId, String coverUrl) throws Exception{
+        com.aliyun.vod20170321.Client client = AliyunVideoUtils.createClient();
+        if(StringUtils.isEmpty(videoId) || StringUtils.isEmpty(coverUrl)){
+            return null;
+        }
+        UpdateVideoInfoRequest updateVideoInfoRequest = new UpdateVideoInfoRequest().setVideoId(videoId);
+        updateVideoInfoRequest.setCoverURL(coverUrl);
         UpdateVideoInfoResponse updateVideoInfoResponse = client.updateVideoInfo(updateVideoInfoRequest);
         if(updateVideoInfoResponse != null){
             return updateVideoInfoResponse.body.requestId;
@@ -208,7 +235,7 @@ public class AliyunVideoUtils {
      * @throws Exception
      */
     public static String delVideo(String videoId) throws Exception{
-        return updateVideo(videoId, null,null,null, default_delete_cateId);
+        return updateVideo(videoId, null,null,null, default_delete_cateId, null);
     }
 
     /**
@@ -261,10 +288,52 @@ public class AliyunVideoUtils {
         return coverUrl;
     }
 
+    /**
+     * 根据VideoId提交截图请求
+     * @param videoId
+     * @return
+     */
+    public static boolean submitVideoSnapshot(String videoId){
+        try{
+            com.aliyun.vod20170321.Client client = AliyunVideoUtils.createClient();
+            SubmitSnapshotJobRequest submitSnapshotJobRequest = new SubmitSnapshotJobRequest()
+                    .setSnapshotTemplateId(defaultSnapshotTemplateId)
+                    .setVideoId(videoId);
+            SubmitSnapshotJobResponse response = client.submitSnapshotJob(submitSnapshotJobRequest);
 
+            return response != null && response.body != null && response.body.snapshotJob != null;
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return false;
+    }
 
-
-
+    /**
+     * 根据VideoId获取普通截图信息
+     * @param videoId
+     * @return
+     */
+    public static List<String> getVideoSnapshot(String videoId){
+        List<String> snapshotList = new ArrayList<>();
+        try{
+            com.aliyun.vod20170321.Client client = AliyunVideoUtils.createClient();
+            ListSnapshotsRequest listSnapshotsRequest = new ListSnapshotsRequest()
+                    .setVideoId(videoId)
+                    .setSnapshotType("NormalSnapshot");
+            ListSnapshotsResponse response = client.listSnapshots(listSnapshotsRequest);
+            if(response != null && response.body != null){
+                List<ListSnapshotsResponseBody.ListSnapshotsResponseBodyMediaSnapshotSnapshotsSnapshot>  listSnapshots = response.body.mediaSnapshot.snapshots.snapshot;
+                if(listSnapshots != null && listSnapshots.size() > 0){
+                    for (ListSnapshotsResponseBody.ListSnapshotsResponseBodyMediaSnapshotSnapshotsSnapshot snapshot : listSnapshots) {
+                        snapshotList.add(snapshot.url);
+                    }
+                }
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return snapshotList;
+    }
 
 
 }

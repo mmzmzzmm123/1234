@@ -8,6 +8,7 @@ import com.stdiet.common.core.page.TableDataInfo;
 import com.stdiet.common.utils.AliyunVideoUtils;
 import com.stdiet.common.utils.StringUtils;
 import com.stdiet.common.utils.oss.AliyunOSSUtils;
+import org.aspectj.weaver.loadtime.Aj;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -54,6 +55,8 @@ public class SysNutritionalVideoController extends BaseController
         SysNutritionalVideo sysNutritionalVideos = sysNutritionalVideoService.selectSysNutritionalVideoById(id);
         if(sysNutritionalVideos != null && StringUtils.isNotEmpty(sysNutritionalVideos.getCoverUrl())){
             sysNutritionalVideos.setPreviewUrl(AliyunOSSUtils.generatePresignedUrl(sysNutritionalVideos.getCoverUrl()));
+        }else{
+            sysNutritionalVideos.setPreviewUrl(AliyunVideoUtils.getVideoCoverUrl(sysNutritionalVideos.getVideoId()));
         }
         return AjaxResult.success(sysNutritionalVideos);
     }
@@ -147,6 +150,49 @@ public class SysNutritionalVideoController extends BaseController
             }
         }
         return AjaxResult.success(sysNutritionalVideos);
+    }
+
+    /**
+     * 根据视频videoId提交视频截图请求
+     */
+    @PreAuthorize("@ss.hasPermi('custom:nutritionalVideo:add')")
+    @GetMapping("/submitVideoSnapshot")
+    public AjaxResult submitVideoSnapshot(@RequestParam("videoId")String videoId)
+    {
+        if(StringUtils.isEmpty(videoId)){
+            return AjaxResult.error("视频资源不存在");
+        }
+        AjaxResult result = AjaxResult.error("截图请求失败");
+        try {
+            if(AliyunVideoUtils.submitVideoSnapshot(videoId)){
+                result = AjaxResult.success();
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return result;
+    }
+
+    /**
+     * 根据视频videoId获取视频截图
+     */
+    @PreAuthorize("@ss.hasPermi('custom:nutritionalVideo:add')")
+    @GetMapping("/getVideoSnapshot")
+    public AjaxResult getVideoSnapshot(@RequestParam("videoId")String videoId)
+    {
+        if(StringUtils.isEmpty(videoId)){
+            return AjaxResult.error("视频资源不存在");
+        }
+        AjaxResult result = AjaxResult.error("截图不存在");
+        try {
+            List<String> videoSnapshotList = AliyunVideoUtils.getVideoSnapshot(videoId);
+            if(videoSnapshotList != null){
+                result = AjaxResult.success(videoSnapshotList);
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return result;
     }
 
 }

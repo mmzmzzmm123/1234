@@ -106,6 +106,17 @@ public class SysNutritionalVideoServiceImpl implements ISysNutritionalVideoServi
     public int insertSysNutritionalVideo(SysNutritionalVideo sysNutritionalVideo)
     {
         sysNutritionalVideo.setCreateTime(DateUtils.getNowDate());
+        //判断封面是上传的还是阿里云视频截图封面
+        if(isSnapshot(sysNutritionalVideo.getCoverUrl())){
+            //更新阿里云视频封面
+            try{
+                AliyunVideoUtils.updateVideoCoverUrl(sysNutritionalVideo.getVideoId(), sysNutritionalVideo.getCoverUrl());
+            }catch (Exception e){
+                e.printStackTrace();
+                return 0;
+            }
+            sysNutritionalVideo.setCoverUrl("");
+        }
         return sysNutritionalVideoMapper.insertSysNutritionalVideo(sysNutritionalVideo);
     }
 
@@ -119,19 +130,23 @@ public class SysNutritionalVideoServiceImpl implements ISysNutritionalVideoServi
     public int updateSysNutritionalVideo(SysNutritionalVideo sysNutritionalVideo)
     {
         sysNutritionalVideo.setUpdateTime(DateUtils.getNowDate());
+        sysNutritionalVideo.setCoverUrl(sysNutritionalVideo.getCoverUrl() == null ? "" : sysNutritionalVideo.getCoverUrl());
+        String coverUrl = sysNutritionalVideo.getCoverUrl();
+        //判断封面是上传的还是阿里云视频截图封面
+        sysNutritionalVideo.setCoverUrl(isSnapshot(coverUrl) ? "" : coverUrl);
         int row = sysNutritionalVideoMapper.updateSysNutritionalVideo(sysNutritionalVideo);
         if(row > 0){
-            updateAliyunVideo(sysNutritionalVideo.getId());
+            sysNutritionalVideo.setCoverUrl(isSnapshot(coverUrl) ? coverUrl : null);
+            updateAliyunVideo(sysNutritionalVideo);
         }
         return row;
     }
 
     @Async
-    public void updateAliyunVideo(Long id){
+    public void updateAliyunVideo(SysNutritionalVideo sysNutritionalVideo){
         try{
-            SysNutritionalVideo sysNutritionalVideo = selectSysNutritionalVideoById(id);
             if(sysNutritionalVideo != null && sysNutritionalVideo.getVideoId() != null){
-                AliyunVideoUtils.updateVideo(sysNutritionalVideo.getVideoId(), sysNutritionalVideo.getTitle(), sysNutritionalVideo.getTags(), sysNutritionalVideo.getDescription(), null);
+                AliyunVideoUtils.updateVideo(sysNutritionalVideo.getVideoId(), sysNutritionalVideo.getTitle(), sysNutritionalVideo.getTags(), sysNutritionalVideo.getDescription(), null, sysNutritionalVideo.getCoverUrl());
             }
         }catch (Exception e){
             e.printStackTrace();
@@ -269,5 +284,16 @@ public class SysNutritionalVideoServiceImpl implements ISysNutritionalVideoServi
     public int updateVideoPlayNum(String videoId){
         return sysNutritionalVideoMapper.updateVideoPlayNum(videoId);
     }
+
+    /**
+     * 判断是否为阿里点播的截图
+     * @param url
+     * @return
+     */
+    private boolean isSnapshot(String url){
+       return StringUtils.isNotEmpty(url) && url.startsWith("http://outin");
+    }
+
+
 
 }

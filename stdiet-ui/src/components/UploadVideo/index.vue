@@ -17,15 +17,11 @@
                 placeholder="请输入视频描述"
                 v-model.trim="videoFrom.description"
                 maxlength="1000"
-                rows="3"
+                rows="2"
                 show-word-limit
             />
         </el-form-item>
-        
-         <el-form-item label="视频封面" prop="coverUrl">
-              <UploadFile ref="uploadFile" :prefix="'videoCover'" @callbackMethod="handleCoverUrl" :tips="'视频未传封面图片时，会主动截取封面，但会存在延迟，请勿直接发布到小程序'"></UploadFile>
-          </el-form-item>  
-          <div style="display:flex">
+         <div style="display:flex">
             <el-form-item label="视频类别" prop="cateId" style="width:300px">
             <treeselect
                 v-model="videoFrom.cateId"
@@ -46,40 +42,47 @@
             </el-select>
           </el-form-item>   
           </div>
-          
         <el-form-item label="视频文件" prop="file">
             <div>
             <input type="file" accept=".mp4" ref="videoFile" id="videoFile" @change="fileChange($event)">
             <div > <span>上传状态：{{statusText}}</span><span style="margin-left:100px">进度：{{authProgress}}%</span></div>
             <div style="color:#1890ff"> 
-                1、只能上传mp4文件，上传大文件时请使用客户端上传，防止上传超时 
+                <el-button type="primary" @click="authUpload" :disabled="uploadDisabled" size="small" icon="el-icon-upload2">上传视频</el-button><span style="margin-left:20px">1、只能上传mp4格式视频</span>
             </div>
+            
             </div>
         </el-form-item>
+         <el-form-item label="视频封面" prop="coverUrl">
+              <UploadFile ref="uploadFile" :prefix="'videoCover'" :coverUrl="videoFrom.previewUrl" @callbackMethod="handleCoverUrl" :tips="''"></UploadFile>
+              <el-button type="primary" size="small" icon="el-icon-film" @click="selectVideoCover" :disabled="!uploadVideoFlag" title="上传视频之后选择视频截图作为封面">选择封面</el-button>
+          </el-form-item>  
         <el-form-item label="展示状态" prop="wxShow">
               <el-switch
                 v-model="videoFrom.wxShow"
-                active-text="小程序展示"
-                inactive-text="小程序不展示">
+                active-text="展示"
+                inactive-text="不展示">
               </el-switch>
-              <div style="color:red">提示：请保证内容正确再展示到小程序</div>
+              <div style="color:red">提示：开启展示之后客户可看到该视频，请保证内容正确再展示</div>
           </el-form-item>  
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="authUpload" :disabled="uploadDisabled">开始上传</el-button>
+        <el-button type="primary" @click="submitVideoForm">保存</el-button>
         <el-button @click="cancel">取 消</el-button>
       </div>
+      <!-- 手动选择封面 -->
+      <VideoSelectCover ref="videoSelectCoverRef"></VideoSelectCover>
 </el-dialog>
   
 </template>
 <script>
   import axios from 'axios'
-  import {getUploadVideoAuth,addNutritionalVideo } from "@/api/custom/nutritionalVideo";
+  import {getUploadVideoAuth,addNutritionalVideo,getVideoSnapshot,submitVideoSnapshot } from "@/api/custom/nutritionalVideo";
   import {getAllClassify } from "@/api/custom/videoClassify";
   import UploadFile from "@/components/FileUpload/UploadFile";
    import Treeselect from "@riophae/vue-treeselect";
   import "@riophae/vue-treeselect/dist/vue-treeselect.css";
   import IconSelect from "@/components/IconSelect";
+  import VideoSelectCover from "@/components/VideoSelectCover";
   export default {
       name: "UploadVideo",
     data () {
@@ -122,6 +125,8 @@
         statusText: '',
         fileType:['mp4','MP4'],
         uploading: false,
+        //视频是否上传成功标识
+        uploadVideoFlag: false
       }
     },
     created(){
@@ -142,7 +147,7 @@
         
     },
     components: {
-      UploadFile,Treeselect, IconSelect
+      UploadFile,Treeselect, IconSelect,VideoSelectCover
     },
     methods: {
         showDialog(classifyList, callback){
@@ -167,7 +172,8 @@
                 tags: null,
                 payLevel: this.defaultPayLevel ? parseInt(this.defaultPayLevel) : null,
                 videoId: null,
-                wxShow: false
+                wxShow: false,
+                previewUrl: null 
             };
             if(this.$refs.uploadFile){
                 this.$refs.uploadFile.resetUpload();
@@ -180,10 +186,52 @@
             this.uploader = null;
             this.statusText = '';
             this.uploading = false;
+            this.uploadVideoFlag = false;
             this.resetForm("videoFrom"); 
         },
         submitVideoForm(){
+          this.$refs["videoFrom"].validate((valid) => {
+              if (valid) {
+                    //视频分类不能选择主分类
+                    if(this.videoFrom.cateId == 0){
+                        this.$message({
+                            message: "视频分类不能选择主分类",
+                            type: "warning",
+                        });
+                        return;
+                    }
+                    if(this.uploading){
+                        this.$message({
+                            message: "视频正在上传，请勿取消",
+                            type: "warning",
+                        });
+                        return;
+                    }
+                    if(!this.uploadVideoFlag){
+                        this.$message({
+                            message: "请先上传视频再保存",
+                            type: "warning",
+                        });
+                        return;
+                    }
+                    this.videoFrom.showFlag = this.videoFrom.wxShow ? 1 : 0;
+                    addNutritionalVideo(this.videoFrom).then(response => {
+                        if (response.code === 200) {
+                          this.msgSuccess("视频保存成功");
+                          this.open = false;
+                          this.callback && this.callback();
+                        }
+                    })
+              }
+          });
             
+        },
+        selectVideoCover(){
+            this.$refs.videoSelectCoverRef.showDialog(this.videoFrom,(url)=>{
+               //console.log(url);
+               this.videoFrom.previewUrl = url;
+               this.videoFrom.coverUrl = url;
+            });
         },
         /** 转换菜单数据结构 */
         normalizer(node) {
@@ -205,7 +253,7 @@
         cancel(){
             if(this.uploading){
                 this.$message({
-                    message: "文件正在上传，请勿取消",
+                    message: "视频正在上传，请勿取消",
                     type: "warning",
                 });
                 return;
@@ -219,7 +267,7 @@
               if (valid) {
                  if(this.uploading){
                     this.$message({
-                      message: "文件正在上传，请勿取消",
+                      message: "视频正在上传，请勿取消",
                       type: "warning",
                     });
                     return;
@@ -242,7 +290,7 @@
                   this.videoFrom.fileName = this.file.name;
                   if(this.videoFrom.fileName == null || this.videoFrom.fileName.length == 0 || this.videoFrom.fileName.lastIndexOf(".") == -1){
                       this.$message({
-                          message: "当前文件名称错误",
+                          message: "当前视频名称错误",
                           type: "warning",
                       });
                       return;
@@ -250,7 +298,7 @@
                   let fileType = this.videoFrom.fileName.substring(this.videoFrom.fileName.lastIndexOf(".")+1);
                   if(this.fileType.indexOf(fileType) == -1){
                       this.$message({
-                          message: "当前文件格式错误",
+                          message: "当前视频格式错误",
                           type: "warning",
                       });
                       return;
@@ -268,8 +316,8 @@
                           this.resumeDisabled = true
                       }
                   })
-                    }
-                  }); 
+              }
+            }); 
       },
       authUpload () {
         // 然后调用 startUpload 方法, 开始上传
@@ -309,7 +357,7 @@
           addFileSuccess: function (uploadInfo) {
             self.uploadDisabled = false
             self.resumeDisabled = false
-            self.statusText = '添加文件成功, 等待上传...'
+            self.statusText = '添加视频成功, 等待上传...'
             console.log("addFileSuccess: " + uploadInfo.file.name)
           },
           // 开始上传
@@ -322,32 +370,32 @@
             // 如果 uploadInfo.videoId 存在, 调用 刷新视频上传凭证接口(https://help.aliyun.com/document_detail/55408.html)
             // 如果 uploadInfo.videoId 不存在,调用 获取视频上传地址和凭证接口(https://help.aliyun.com/document_detail/55407.html)
             uploader.setUploadAuthAndAddress(uploadInfo, self.uploadAuth.uploadAuth, self.uploadAuth.uploadAddress, self.uploadAuth.videoId) 
-            self.statusText = '文件开始上传...'
+            self.statusText = '视频开始上传...'
             console.log("onUploadStarted:" + uploadInfo.file.name + ", endpoint:" + uploadInfo.endpoint + ", bucket:" + uploadInfo.bucket + ", object:" + uploadInfo.object)
           },
           // 文件上传成功
           onUploadSucceed: function (uploadInfo) {
             console.log("onUploadSucceed: " + uploadInfo.file.name + ", endpoint:" + uploadInfo.endpoint + ", bucket:" + uploadInfo.bucket + ", object:" + uploadInfo.object)
-            self.statusText = '文件上传成功!'
+            self.statusText = '视频上传成功!'
             
           },
           // 文件上传失败
           onUploadFailed: function (uploadInfo, code, message) {
             console.log("onUploadFailed: file:" + uploadInfo.file.name + ",code:" + code + ", message:" + message);
             self.uploading = false;
-            self.statusText = '文件上传失败!'
+            self.statusText = '视频上传失败!'
           },
           // 取消文件上传
           onUploadCanceled: function (uploadInfo, code, message) {
             console.log("Canceled file: " + uploadInfo.file.name + ", code: " + code + ", message:" + message)
-            self.statusText = '文件已暂停上传'
+            self.statusText = '视频已暂停上传'
           },
           // 文件上传进度，单位：字节, 可以在这个函数中拿到上传进度并显示在页面上
           onUploadProgress: function (uploadInfo, totalSize, progress) {
             console.log("onUploadProgress:file:" + uploadInfo.file.name + ", fileSize:" + totalSize + ", percent:" + Math.ceil(progress * 100) + "%")
             let progressPercent = Math.ceil(progress * 100)
             self.authProgress = progressPercent
-            self.statusText = '文件上传中...'
+            self.statusText = '视频上传中...'
           },
           // 上传凭证超时
           onUploadTokenExpired: function (uploadInfo) {
@@ -360,23 +408,20 @@
               uploader.resumeUploadWithAuth(uploadAuth)
               console.log('upload expired and resume upload with uploadauth ' + uploadAuth)
             })*/
-            self.statusText = '文件上传超时...';
+            self.statusText = '视频上传超时...';
             self.uploading = false;
             
           },
           // 全部文件上传结束
           onUploadEnd: function (uploadInfo) {
-            self.statusText = '文件上传完毕'
+            self.statusText = '视频上传完毕'
             self.uploading = false;
-            //self.msgSuccess("上传成功");
-            self.videoFrom.showFlag = self.videoFrom.wxShow ? 1 : 0;
-            addNutritionalVideo(self.videoFrom).then(response => {
-                if (response.code === 200) {
-                  self.msgSuccess("视频上传成功");
-                  self.open = false;
-                  self.callback && self.callback();
+            self.uploadVideoFlag = true;
+            submitVideoSnapshot(self.videoFrom.videoId).then(response => {
+                if(response.code == 200){
+                    console.log("-- 截图成功 --");
                 }
-            })         
+            })
           }
         })
         return uploader

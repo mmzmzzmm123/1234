@@ -9,7 +9,7 @@
           size="small"
         />
       </el-form-item>
-      <el-form-item label="小程序展示状态" prop="showFlag" label-width="200">
+      <el-form-item label="展示状态" prop="showFlag" label-width="200">
         <el-select
           v-model="queryParams.showFlag"
           placeholder="请选示状态"
@@ -131,7 +131,7 @@
       <!--<el-table-column label="标签" align="center" prop="tags" width="100"/>-->
        <el-table-column label="分类" align="center" prop="cateName" width="100"/>
        <el-table-column label="权限等级" align="center" prop="payLevelName" width="100"/>
-      <el-table-column label="小程序展示状态" align="center" prop="showFlag" width="200">
+      <el-table-column label="展示状态" align="center" prop="showFlag" width="200">
         <template slot-scope="scope" >
           <el-switch
                 v-model="scope.row.wxShow"
@@ -208,20 +208,26 @@
                 show-word-limit
             />
         </el-form-item>
-         <el-form-item label="视频封面" prop="coverUrl">
-              <UploadFile ref="uploadFile" v-if="open" :prefix="'videoCover'" :coverUrl="form.previewUrl" @callbackMethod="handleCoverUrl" :tips="'视频未传封面图片时，会主动截取封面，但会存在延迟，请勿直接发布到小程序'"></UploadFile>
-          </el-form-item>
-        <el-form-item label="视频类别" prop="cateId">
-            <el-select v-model="form.cateId" clearable filterable placeholder="请选择类别">
+         <div style="display:flex">
+        <el-form-item label="视频类别" prop="cateId" style="width:300px">
+            <!--<el-select v-model="form.cateId" clearable filterable placeholder="请选择类别">
               <el-option
                 v-for="classify in classifyList"
                 :key="classify.id"
                 :label="classify.cateName"
                 :value="classify.id"
               />
-            </el-select>
+            </el-select>-->
+            <treeselect
+                v-model="form.cateId"
+                :options="classifyList"
+                :normalizer="normalizer"
+                :show-count="true"
+                placeholder="选择分类"
+                style="width:200px"
+              />
           </el-form-item>
-          <el-form-item label="视频权限" prop="payLevel">
+          <el-form-item label="视频权限" prop="payLevel" style="margin-left:40px">
             <el-select v-model="form.payLevel" clearable filterable placeholder="请选择权限">
               <el-option
                 v-for="dict in payVideoLevelList"
@@ -231,13 +237,18 @@
               />
             </el-select>
           </el-form-item>
+         </div>
+         <el-form-item label="视频封面" prop="coverUrl">
+              <UploadFile ref="uploadFile" v-if="open" :prefix="'videoCover'" :coverUrl="form.previewUrl" @callbackMethod="handleCoverUrl" :tips="''"></UploadFile>
+              <el-button type="primary" size="small" icon="el-icon-film" @click="selectVideoCover" title="上传视频之后选择视频截图作为封面">选择封面</el-button>
+          </el-form-item>
            <el-form-item label="展示状态" prop="wxShow">
               <el-switch
                 v-model="form.wxShow"
-                active-text="小程序展示"
-                inactive-text="小程序不展示">
+                active-text="展示"
+                inactive-text="不展示">
               </el-switch>
-              <div style="color:red">提示：请保证内容正确再展示到小程序</div>
+              <div style="color:red">提示：开启展示之后客户可看到该视频，请保证内容正确再展示</div>
           </el-form-item>    
       </el-form>
      
@@ -255,6 +266,9 @@
            <VideoClassify ref="videoClassifyRef"></VideoClassify>
       </div>
     </el-dialog>
+
+    <!-- 手动选择封面 -->
+      <VideoSelectCover ref="videoSelectCoverRef"></VideoSelectCover>
   </div>
 </template>
 
@@ -268,6 +282,7 @@
     import Treeselect from "@riophae/vue-treeselect";
   import "@riophae/vue-treeselect/dist/vue-treeselect.css";
   import IconSelect from "@/components/IconSelect";
+  import VideoSelectCover from "@/components/VideoSelectCover";
   export default {
     name: "NutritionalVideo",
     data() {
@@ -316,6 +331,8 @@
         coverImageList:[],
         //分类列表
         classifyList:[],
+        //所有分类
+        allClassifyList:[],
         //权限等级列表
         payVideoLevelList:[],
         //视频分类弹窗显示标识
@@ -331,7 +348,7 @@
       });
     },
     components: {
-      UploadVideo,UploadFile,VideoClassify,AutoHideMessage,Treeselect, IconSelect
+      UploadVideo,UploadFile,VideoClassify,AutoHideMessage,Treeselect, IconSelect,VideoSelectCover
     },
     methods: {
       /** 查询营养视频列表 */
@@ -350,6 +367,7 @@
       getAllVideoClassify(){
         getAllClassify().then(response => {
           if(response.code == 200){
+            this.allClassifyList = response.data;
             this.classifyList = [];
             const classify = { id: 0, cateName: '主分类', children: [] };
             classify.children = this.handleTree(response.data, "id");
@@ -366,6 +384,7 @@
       reset() {
         this.form = {
           id: null,
+          videoId:null,
           cateId: null,
           coverUrl: null,
           title: null,
@@ -373,9 +392,17 @@
           tags: null,
           payLevel:null,
           showFlag: null,
-          wxShow: false
+          wxShow: false,
+          previewUrl: null
         };
         this.resetForm("form");
+      },
+      selectVideoCover(){
+            this.$refs.videoSelectCoverRef.showDialog(this.form,(url)=>{
+               //console.log(url);
+               this.form.previewUrl = url;
+               this.form.coverUrl = url;
+            });
       },
       /** 搜索按钮操作 */
       handleQuery() {
@@ -394,7 +421,7 @@
         this.multiple = !selection.length
       },
       clickUploadVideo(){
-        this.$refs.uploadVideoRef.showDialog(this.classifyList, ()=>{
+        this.$refs.uploadVideoRef.showDialog(this.allClassifyList, ()=>{
          this.getList();
         });
       },
@@ -443,6 +470,14 @@
         this.$refs["form"].validate(valid => {
           if (valid) {
             this.form.showFlag = this.form.wxShow ? 1 : 0;
+            //视频分类不能选择主分类
+            if(this.form.cateId == 0){
+                this.$message({
+                    message: "视频分类不能选择主分类",
+                    type: "warning",
+                });
+                return;
+            }
             if (this.form.id != null) {
               updateNutritionalVideo(this.form).then(response => {
                 if (response.code === 200) {
