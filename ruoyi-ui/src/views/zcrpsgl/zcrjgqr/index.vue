@@ -135,9 +135,9 @@
       append-to-body
     >
       <el-form ref="form" :model="form" label-width="120px">
-        <el-form-item label="方案编号" prop="name">
+        <!-- <el-form-item label="方案编号" prop="name">
           {{ form.faid }}
-        </el-form-item>
+        </el-form-item> -->
         <el-form-item label="姓名" prop="name">
           {{ form.name }}
         </el-form-item>
