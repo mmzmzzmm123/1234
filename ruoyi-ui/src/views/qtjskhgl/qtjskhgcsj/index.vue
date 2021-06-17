@@ -93,12 +93,13 @@
       <el-table-column label="内容" align="center" prop="content" />
       <el-table-column label="附件" align="center" prop="filename">
         <template slot-scope="scope">
-          <router-link
+          <!-- <router-link
             :to="uploadFileUrl1 + scope.row.filepath"
             class="link-type"
           >
             <span>{{ scope.row.filename }}</span>
-          </router-link>
+          </router-link> -->
+          <div @click="detailData(scope.row)">{{ scope.row.filename }}</div>
         </template>
       </el-table-column>
       <el-table-column
@@ -138,7 +139,11 @@
             v-show="disable"
             >清空</el-button
           >
-        </template>
+        </template></el-table-column
+      ></el-table
+    >
+  </div>
+</template>
       </el-table-column>
     </el-table>
 
@@ -561,6 +566,9 @@ export default {
           this.msgSuccess("提交成功");
         })
         .catch(function () {});
+    },
+    detailData(row) {
+      window.open(process.env.VUE_APP_BASE_API + row.filepath);
     },
   },
 };
