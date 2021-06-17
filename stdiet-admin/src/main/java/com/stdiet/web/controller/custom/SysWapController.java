@@ -202,8 +202,8 @@ public class SysWapController extends BaseController {
             String tokenStr = phone + "_" + new Date().getTime() + "_" + RandomStringUtils.randomAlphanumeric(8);
             Cookie cookie = new Cookie("token", AesUtils.encrypt(tokenStr));
             cookie.setMaxAge(24 * 60 * 60);
-            cookie.setSecure(true);
-            cookie.setHttpOnly(true);
+//            cookie.setSecure(true);
+//            cookie.setHttpOnly(true);
             cookie.setDomain(request.getServerName());
             cookie.setPath("/");
             response.addCookie(cookie);
