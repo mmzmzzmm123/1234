@@ -1,18 +1,25 @@
 package com.stdiet.web.controller.custom;
 
+import com.alibaba.fastjson.JSONObject;
 import com.stdiet.common.core.controller.BaseController;
 import com.stdiet.common.core.domain.AjaxResult;
 import com.stdiet.common.utils.DateUtils;
 import com.stdiet.common.utils.StringUtils;
+import com.stdiet.common.utils.sign.AesUtils;
 import com.stdiet.custom.domain.SysOrderPause;
 import com.stdiet.custom.domain.SysWxAdLog;
 import com.stdiet.custom.service.*;
+import com.stdiet.custom.utils.CookieUtils;
 import com.stdiet.custom.utils.HttpRequestUtils;
 import com.stdiet.system.service.ISysDictTypeService;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -37,6 +44,7 @@ public class SysWapController extends BaseController {
 
     @Autowired
     ISysSmsConfirmServie iSysSmsConfirmServie;
+
 
     /**
      * 客户食谱详情
@@ -140,6 +148,29 @@ public class SysWapController extends BaseController {
         return toAjax(iSysWxSaleAccountService.logWxAd(sysWxAdLog));
     }
 
+    @GetMapping(value = "/getCookie")
+    public AjaxResult getCookie(@RequestParam String phone, HttpServletResponse response) {
+        String tokenStr = phone + "_" + new Date().getTime() + "_" + RandomStringUtils.random(8);
+        Cookie cookie = new Cookie("token", AesUtils.encrypt(tokenStr));
+        cookie.setMaxAge(24 * 60 * 60);
+        cookie.setSecure(true);
+        cookie.setHttpOnly(true);
+        cookie.setPath("/");
+        response.addCookie(cookie);
+
+        return AjaxResult.success();
+    }
+
+    @GetMapping(value = "/checkCookie")
+    public AjaxResult checkCookie(HttpServletRequest request) {
+        JSONObject resultObj = CookieUtils.checkCookieValida(request, "token");
+        if (resultObj.getInteger("code") == 200) {
+            return AjaxResult.success(resultObj.getString("msg"));
+        } else {
+            return AjaxResult.error(resultObj.getInteger("code"), resultObj.getString("msg"));
+        }
+    }
+
     @GetMapping(value = "/getCode")
     public AjaxResult getCode(@RequestParam String phone) {
 
@@ -159,13 +190,23 @@ public class SysWapController extends BaseController {
     }
 
     @GetMapping(value = "/checkCode")
-    public AjaxResult checkCode(@RequestParam String phone, @RequestParam String code) {
+    public AjaxResult checkCode(@RequestParam String phone, @RequestParam String code, HttpServletResponse response) {
+
         if (StringUtils.isEmpty(code)) {
             return AjaxResult.error(50002, "验证码不能为空");
         }
+
+
         int checkCode = iSysSmsConfirmServie.checkSmsCode(phone, code);
         if (checkCode == 0) {
-            return AjaxResult.success();
+            String tokenStr = phone + "_" + new Date().getTime() + "_" + RandomStringUtils.randomAlphanumeric(8);
+            Cookie cookie = new Cookie("token", AesUtils.encrypt(tokenStr));
+            cookie.setMaxAge(24 * 60 * 60);
+            cookie.setSecure(true);
+            cookie.setHttpOnly(true);
+            cookie.setPath("/");
+            response.addCookie(cookie);
+            return new AjaxResult(20000, "登录成功");
         } else if (checkCode == 1) {
             return AjaxResult.error(50003, "验证码失效");
         } else if (checkCode == 2) {
