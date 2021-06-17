@@ -25,6 +25,16 @@
         prop="tsbzQtjskhzbx.tjsl"
       />
       <el-table-column label="内容" align="center" prop="content" />
+      <el-table-column label="附件" align="center" prop="filename">
+        <template slot-scope="scope">
+          <router-link
+            :to="uploadFileUrl + scope.row.filepath"
+            class="link-type"
+          >
+            <span>{{ scope.row.filename }}</span>
+          </router-link>
+        </template>
+      </el-table-column>
       <el-table-column
         label="当前状态"
         align="center"
@@ -72,6 +82,7 @@ export default {
       substatusOptions: [],
       //指标模块
       khmkOptions: [],
+      uploadFileUrl: process.env.VUE_APP_BASE_API,
       // 查询参数
       queryParams: {
         pageNum: 1,
@@ -123,7 +134,7 @@ export default {
         this.loading = false;
       });
     },
-     // 考核模块字典项字典翻译
+    // 考核模块字典项字典翻译
     khmkFormat(row, column) {
       return this.selectDictLabel(this.khmkOptions, row.tsbzQtjskhzbx.khmk);
     },

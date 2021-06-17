@@ -9,6 +9,8 @@
         <result property="faid" column="faid"/>
         <result property="zbid" column="zbid"/>
         <result property="content" column="content"/>
+        <result property="filename" column="filename"/>
+        <result property="filepath" column="filepath"/>
         <result property="createuserid" column="createuserid"/>
         <result property="createTime" column="create_time"/>
         <result property="substatus" column="substatus"/>
@@ -36,8 +38,9 @@
 
     <sql id="selectTsbzQtjskhgcsjVo">
 --         select id, faid, zbid, content, createuserid, create_time from tsbz_qtjskhgcsj
-select b.id,b.content,b.zbid,b.createuserid,b.substatus,a.create_time,a.id as zbxid,a.faid,a.khmk,a.khnr,a.tjsl,a.gjzd,a.tbly,a.jkbj,a.starttime,a.endtime,a.zxrw,a.yly,a.yle from tsbz_qtjskhzbx a
+select d.filename,d.filepath,b.id,b.content,b.zbid,b.createuserid,b.substatus,a.create_time,a.id as zbxid,a.faid,a.khmk,a.khnr,a.tjsl,a.gjzd,a.tbly,a.jkbj,a.starttime,a.endtime,a.zxrw,a.yly,a.yle from tsbz_qtjskhzbx a
 left join (select * from tsbz_qtjskhgcsj where createuserid= #{createuserid}) b
+left join tsbz_qtjskhgcwjsj d on b.id=d.gcid
 on a.faid=b.faid and a.id=b.zbid
     </sql>
 
