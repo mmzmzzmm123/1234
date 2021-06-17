@@ -23,6 +23,17 @@ public class VideoResponse implements Serializable {
     //播放次数
     private Integer playNum;
 
+    // 播放等级
+    private Integer playLevel;
+
+    public void setPlayLevel(Integer playLevel) {
+        this.playLevel = playLevel;
+    }
+
+    public Integer getPlayLevel() {
+        return playLevel;
+    }
+
     public String getVideoId() {
         return videoId;
     }

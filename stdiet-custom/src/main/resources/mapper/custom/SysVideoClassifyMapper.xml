@@ -5,16 +5,16 @@
 <mapper namespace="com.stdiet.custom.mapper.SysVideoClassifyMapper">
 
     <resultMap type="SysVideoClassify" id="SysVideoClassifyResult">
-        <result property="id"    column="id"    />
-        <result property="cateName"    column="cate_name"    />
-        <result property="parentId"    column="parent_id"    />
-        <result property="orderNum"    column="order_num"    />
-        <result property="payFlag"    column="pay_flag"    />
-        <result property="createTime"    column="create_time"    />
-        <result property="createBy"    column="create_by"    />
-        <result property="updateTime"    column="update_time"    />
-        <result property="updateBy"    column="update_by"    />
-        <result property="delFlag"    column="del_flag"    />
+        <result property="id" column="id"/>
+        <result property="cateName" column="cate_name"/>
+        <result property="parentId" column="parent_id"/>
+        <result property="orderNum" column="order_num"/>
+        <result property="payFlag" column="pay_flag"/>
+        <result property="createTime" column="create_time"/>
+        <result property="createBy" column="create_by"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="updateBy" column="update_by"/>
+        <result property="delFlag" column="del_flag"/>
     </resultMap>
 
     <sql id="selectSysVideoClassifyVo">
@@ -32,7 +32,7 @@
 
     <select id="selectSysVideoClassifyById" parameterType="Long" resultMap="SysVideoClassifyResult">
         <include refid="selectSysVideoClassifyVo"/>
-        where id = #{id} and del_flag =  0
+        where id = #{id} and del_flag = 0
     </select>
 
     <insert id="insertSysVideoClassify" parameterType="SysVideoClassify">
@@ -91,7 +91,8 @@
     </update>
 
     <select id="getAllClassify" resultMap="SysVideoClassifyResult" parameterType="SysVideoClassify">
-        select id, cate_name, parent_id, order_num, pay_flag, create_time, create_by, update_time, update_by, del_flag from sys_video_classify
+        select id, cate_name, parent_id, order_num, pay_flag, create_time, create_by, update_time, update_by, del_flag
+        from sys_video_classify
         where del_flag = 0
         <if test="parentId != null">
             and parent_id = #{parentId}
@@ -100,9 +101,9 @@
     </select>
 
     <resultMap type="com.stdiet.custom.dto.response.VideoClassifyResponse" id="VideoClassifyOneResult">
-        <result property="id"    column="id"    />
-        <result property="cateName"    column="cate_name"    />
-        <result property="userType" column="userType"></result>
+        <result property="id" column="id"/>
+        <result property="cateName" column="cate_name"/>
+        <result property="userType" column="userType"/>
         <!-- 查询子分类 -->
         <association property="childrenClassify" column="{userType=userType,id=id}" select="getTwoAllClassifyAndVideo"/>
         <!-- 查询子视频 -->
@@ -110,19 +111,20 @@
     </resultMap>
 
     <resultMap type="com.stdiet.custom.dto.response.VideoClassifyResponse" id="VideoClassifyTwoResult">
-        <result property="id"    column="id"    />
-        <result property="cateName"    column="cate_name"    />
+        <result property="id" column="id"/>
+        <result property="cateName" column="cate_name"/>
         <result property="userType" column="userType"></result>
         <!-- 查询子分类 -->
-        <association property="childrenClassify" column="{userType=userType,id=id}" select="getThreeAllClassifyAndVideo"/>
+        <association property="childrenClassify" column="{userType=userType,id=id}"
+                     select="getThreeAllClassifyAndVideo"/>
         <!-- 查询子视频 -->
         <association property="childrenVideo" column="{userType=userType,id=id}" select="getAllVideoByClassify"/>
     </resultMap>
 
     <resultMap type="com.stdiet.custom.dto.response.VideoClassifyResponse" id="VideoClassifyThreeResult">
-        <result property="id"    column="id"    />
-        <result property="cateName"    column="cate_name"    />
-        <result property="userType" column="userType" ></result>
+        <result property="id" column="id"/>
+        <result property="cateName" column="cate_name"/>
+        <result property="userType" column="userType"></result>
         <!-- 查询子视频 -->
         <association property="childrenVideo" column="{userType=userType,id=id}" select="getAllVideoByClassify"/>
     </resultMap>
@@ -146,16 +148,14 @@
     </select>
 
     <select id="getAllVideoByClassify" resultType="com.stdiet.custom.dto.response.VideoResponse">
-        select snv.video_id as videoId, snv.title, snv.cover_url as coverUrl,snv.play_num as playNum
-        from sys_nutritional_video snv where cate_id = #{id} and del_flag = 0 and show_flag = 1
-        <if test="userType != null">
-            <if test="userType == 0">
-                and pay_level = 0
-            </if>
-            <if test="userType == 1">
-                and (pay_level = 0 or pay_level = 1)
-            </if>
+        select snv.video_id as videoId, snv.title, snv.cover_url as coverUrl, snv.play_num as playNum
+        <if test="userType == null or userType == 0">
+            , snv.pay_level as playLevel
         </if>
+        <if test="userType == 1">
+            , 0 as playLevel
+        </if>
+        from sys_nutritional_video snv where cate_id = #{id} and del_flag = 0 and show_flag = 1
         order by priority_level desc,id asc
     </select>
 
