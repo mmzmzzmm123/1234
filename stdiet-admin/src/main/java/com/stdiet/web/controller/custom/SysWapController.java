@@ -190,7 +190,7 @@ public class SysWapController extends BaseController {
     }
 
     @GetMapping(value = "/checkCode")
-    public AjaxResult checkCode(@RequestParam String phone, @RequestParam String code, HttpServletResponse response, HttpServletRequest request) {
+    public AjaxResult checkCode(@RequestParam String phone, @RequestParam String code, HttpServletResponse response) {
 
         if (StringUtils.isEmpty(code)) {
             return AjaxResult.error(50002, "验证码不能为空");
@@ -204,7 +204,6 @@ public class SysWapController extends BaseController {
             cookie.setMaxAge(24 * 60 * 60);
 //            cookie.setSecure(true);
 //            cookie.setHttpOnly(true);
-            cookie.setDomain(request.getServerName());
             cookie.setPath("/");
             response.addCookie(cookie);
             return new AjaxResult(20000, "登录成功");
