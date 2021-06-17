@@ -8,7 +8,7 @@
   :accept="'.png,.jpg'"
   :before-upload="beforeAvatarUpload">
   <img v-if="imageUrl || coverUrl" :src="imageUrl || coverUrl" class="avatar">
-  <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+  <i v-else class="el-icon-plus avatar-uploader-icon" title="手动上传图片"></i>
   
   <div class="el-upload__tip" slot="tip" style="color:#1890ff">
     <el-button v-if="imageUrl || coverUrl" size="small" type="danger" @click="removeFile">移除</el-button>
