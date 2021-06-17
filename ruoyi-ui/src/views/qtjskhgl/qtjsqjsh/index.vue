@@ -27,7 +27,12 @@
         />
       </el-form-item>
       <el-form-item label="当前状态" prop="status">
-        <el-select v-model="queryParams.status" placeholder="请选择状态" clearable size="small">
+        <el-select
+          v-model="queryParams.status"
+          placeholder="请选择状态"
+          clearable
+          size="small"
+        >
           <el-option
             v-for="dict in statusOptions"
             :key="dict.dictValue"
@@ -37,7 +42,12 @@
         </el-select>
       </el-form-item>
       <el-form-item label="区级意见" prop="qjshyj">
-        <el-select v-model="queryParams.qjshyj" placeholder="请选择区级审核意见" clearable size="small">
+        <el-select
+          v-model="queryParams.qjshyj"
+          placeholder="请选择区级审核意见"
+          clearable
+          size="small"
+        >
           <el-option
             v-for="dict in qjshyjOptions"
             :key="dict.dictValue"
@@ -47,8 +57,16 @@
         </el-select>
       </el-form-item>
       <el-form-item>
-        <el-button type="cyan" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
-        <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
+        <el-button
+          type="cyan"
+          icon="el-icon-search"
+          size="mini"
+          @click="handleQuery"
+          >搜索</el-button
+        >
+        <el-button icon="el-icon-refresh" size="mini" @click="resetQuery"
+          >重置</el-button
+        >
       </el-form-item>
     </el-form>
 
@@ -61,7 +79,8 @@
           :disabled="single"
           @click="handleUpdate"
           v-hasPermi="['qtjskhgl:qtjskhsh:edit']"
-        >审核</el-button>
+          >审核</el-button
+        >
       </el-col>
       <el-col :span="1.5">
         <el-button
@@ -71,25 +90,66 @@
           :disabled="multiple"
           @click="handleDelete"
           v-hasPermi="['qtjskhgl:qtjskhsh:remove']"
-        >退回</el-button>
+          >退回</el-button
+        >
       </el-col>
-      <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
+      <right-toolbar
+        :showSearch.sync="showSearch"
+        @queryTable="getList"
+      ></right-toolbar>
     </el-row>
 
-    <el-table v-loading="loading" :data="qtjskhshList" @selection-change="handleSelectionChange">
+    <el-table
+      v-loading="loading"
+      :data="qtjskhshList"
+      @selection-change="handleSelectionChange"
+    >
       <el-table-column type="selection" width="55" align="center" />
       <!-- <el-table-column label="编号" align="center" prop="id" /> -->
-      <el-table-column label="考核方案" align="center" prop="faid" :formatter="faFormat"/>
-      <el-table-column label="教师" align="center" prop="tsbzJsjbxx.jsxm" />
-      <el-table-column label="状态" align="center" prop="status" :formatter="statusFormat"/>
+      <el-table-column
+        label="考核方案"
+        align="center"
+        prop="faid"
+        :formatter="faFormat"
+      />
+      <el-table-column label="教师" align="center" prop="tsbzJsjbxx.jsxm">
+        <template slot-scope="scope">
+          <router-link
+            :to="'/qtjskhgl/qtjsxxsh/data/' + scope.row.id"
+            class="link-type"
+          >
+            <span>{{ scope.row.tsbzJsjbxx.jsxm }}</span>
+          </router-link>
+        </template>
+      </el-table-column>
+      <el-table-column
+        label="状态"
+        align="center"
+        prop="status"
+        :formatter="statusFormat"
+      />
       <!-- <el-table-column label="校级审核人" align="center" prop="xjshr" /> -->
-      <el-table-column label="校级审核意见" align="center" prop="xjshyj" :formatter="xjshyjFormat"/>
+      <el-table-column
+        label="校级审核意见"
+        align="center"
+        prop="xjshyj"
+        :formatter="xjshyjFormat"
+      />
       <el-table-column label="校级审核建议" align="center" prop="xjshjy" />
       <!-- <el-table-column label="区级审核人" align="center" prop="qjshr" /> -->
-      <el-table-column label="区级审核意见" align="center" prop="qjshyj" :formatter="qjshyjFormat"/>
+      <el-table-column
+        label="区级审核意见"
+        align="center"
+        prop="qjshyj"
+        :formatter="qjshyjFormat"
+      />
       <el-table-column label="区级审核建议" align="center" prop="qjshjy" />
       <!-- <el-table-column label="创建人" align="center" prop="createuseird" /> -->
-      <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
+      <el-table-column
+        label="操作"
+        align="center"
+        class-name="small-padding fixed-width"
+      >
         <template slot-scope="scope">
           <el-button
             size="mini"
@@ -97,20 +157,22 @@
             icon="el-icon-edit"
             @click="handleUpdate(scope.row)"
             v-hasPermi="['qtjskhgl:qtjskhsh:edit']"
-          >审核</el-button>
+            >审核</el-button
+          >
           <el-button
             size="mini"
             type="text"
             icon="el-icon-delete"
             @click="handleDelete(scope.row)"
             v-hasPermi="['qtjskhgl:qtjskhsh:remove']"
-          >退回</el-button>
+            >退回</el-button
+          >
         </template>
       </el-table-column>
     </el-table>
 
     <pagination
-      v-show="total>0"
+      v-show="total > 0"
       :total="total"
       :page.sync="queryParams.pageNum"
       :limit.sync="queryParams.pageSize"
@@ -145,7 +207,11 @@
           </el-select>
         </el-form-item>
         <el-form-item label="区级审核建议" prop="qjshjy">
-          <el-input v-model="form.qjshjy" type="textarea" placeholder="请输入内容" />
+          <el-input
+            v-model="form.qjshjy"
+            type="textarea"
+            placeholder="请输入内容"
+          />
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -259,7 +325,7 @@ export default {
         this.loading = false;
       });
     },
-     // 状态字典翻译
+    // 状态字典翻译
     statusFormat(row, column) {
       return this.selectDictLabel(this.statusOptions, row.status);
     },
@@ -271,7 +337,7 @@ export default {
     qjshyjFormat(row, column) {
       return this.selectDictLabel(this.qjshyjOptions, row.qjshyj);
     },
-     // 方案字典翻译
+    // 方案字典翻译
     faFormat(row, column) {
       // return this.selectDictLabel(this.classOptions, row.classid);
       var actions = [];
