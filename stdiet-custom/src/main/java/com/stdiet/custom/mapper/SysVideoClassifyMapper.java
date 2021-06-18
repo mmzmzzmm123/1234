@@ -3,6 +3,7 @@ package com.stdiet.custom.mapper;
 import java.util.List;
 import com.stdiet.custom.domain.SysVideoClassify;
 import com.stdiet.custom.dto.response.VideoClassifyResponse;
+import org.apache.ibatis.annotations.Param;
 
 /**
  * 视频分类Mapper接口
@@ -72,4 +73,11 @@ public interface SysVideoClassifyMapper
      * @return
      */
     public List<VideoClassifyResponse>  getOneAllClassifyAndVideo(SysVideoClassify sysVideoClassify);
+
+    /**
+     * 根据分类ID查询分类以及分类下的子类ID
+     * @param id
+     * @return
+     */
+    public List<Long> getVideoClassifyIdsById(@Param("id")Long id);
 }
