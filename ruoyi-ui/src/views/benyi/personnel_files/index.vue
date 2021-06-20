@@ -47,7 +47,7 @@ export default {
         pageSize: 10,
         name: undefined,
         filetype: undefined,
-        type: "2", //代表培训系列文件
+        type: "4", //代表人事行政系列文件
         fileurl: undefined,
         createuserid: undefined,
       },
