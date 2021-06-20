@@ -110,23 +110,23 @@
     />
 
     <!-- 添加或修改家庭教育对话框 -->
-    <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
+    <el-dialog :title="title" :visible.sync="open" width="900px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
         <el-form-item label="父节点" prop="parentid">
-          <el-input v-model="form.parentid" placeholder="请输入父节点" />
+          <el-input-number v-model="form.parentid" placeholder="请输入父节点" />
         </el-form-item>
         <el-form-item label="标题" prop="title">
           <el-input
             v-model="form.title"
-            type="textarea"
-            placeholder="请输入内容"
+            placeholder="请输入标题"
           />
         </el-form-item>
         <el-form-item label="内容" prop="content">
-          <el-input v-model="form.content" placeholder="请输入内容" />
+          <!-- <el-input v-model="form.content" placeholder="请输入内容" /> -->
+          <Editor v-model="form.content" placeholder="请输入内容" />
         </el-form-item>
         <el-form-item label="序号" prop="sort">
-          <el-input v-model="form.sort" placeholder="请输入序号" />
+          <el-input-number v-model="form.sort" placeholder="请输入序号" />
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -145,9 +145,13 @@ import {
   addFamilyedu,
   updateFamilyedu,
 } from "@/api/benyi/familyedu";
+import Editor from '@/components/Editor';
 
 export default {
   name: "Familyedu",
+  components: {
+    Editor
+  },
   data() {
     return {
       // 遮罩层
