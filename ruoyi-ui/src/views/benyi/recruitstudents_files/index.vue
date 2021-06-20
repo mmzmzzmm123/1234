@@ -44,7 +44,7 @@ export default {
       // 查询参数
       queryParams: {
         pageNum: 1,
-        pageSize: 10,
+        pageSize: 50,
         name: undefined,
         filetype: undefined,
         type: "3", //代表招生系列文件

@@ -44,7 +44,7 @@ export default {
       // 查询参数
       queryParams: {
         pageNum: 1,
-        pageSize: 10,
+        pageSize: 50,
         name: undefined,
         filetype: undefined,
         type: "1", //代表幼儿入园系列文件

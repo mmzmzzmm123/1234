@@ -44,7 +44,7 @@ export default {
       // 查询参数
       queryParams: {
         pageNum: 1,
-        pageSize: 10,
+        pageSize: 50,
         name: undefined,
         filetype: undefined,
         type: "2", //代表培训系列文件
