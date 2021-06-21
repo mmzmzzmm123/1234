@@ -3,6 +3,7 @@ package com.ruoyi.project.benyi.mapper;
 import java.util.List;
 
 import com.ruoyi.project.benyi.domain.ByFamilyedu;
+import com.ruoyi.project.benyi.domain.ByMicrocourse;
 
 /**
  * 家庭教育Mapper接口
@@ -26,6 +27,14 @@ public interface ByFamilyeduMapper {
      * @return 家庭教育集合
      */
     public List<ByFamilyedu> selectByFamilyeduList(ByFamilyedu byFamilyedu);
+
+    /**
+     * 查询家庭教育列表
+     *
+     * @param byFamilyedu 家庭教育
+     * @return 家庭教育集合
+     */
+    public List<ByFamilyedu> selectByFamilyeduListTree(ByFamilyedu byFamilyedu);
 
     /**
      * 新增家庭教育

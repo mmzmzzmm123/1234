@@ -9,6 +9,14 @@ export function listFamilyedu(query) {
   });
 }
 
+// 查询流程下拉树结构
+export function treeselect() {
+  return request({
+      url: '/benyi/familyedu/treeselect',
+      method: 'get'
+  })
+}
+
 // 查询家庭教育详细
 export function getFamilyedu(id) {
   return request({

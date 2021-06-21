@@ -2,7 +2,9 @@ package com.ruoyi.project.benyi.service;
 
 import java.util.List;
 
+import com.ruoyi.framework.web.domain.TreeSelect;
 import com.ruoyi.project.benyi.domain.ByFamilyedu;
+import com.ruoyi.project.benyi.domain.ByMicrocourse;
 
 /**
  * 家庭教育Service接口
@@ -26,6 +28,31 @@ public interface IByFamilyeduService {
      * @return 家庭教育集合
      */
     public List<ByFamilyedu> selectByFamilyeduList(ByFamilyedu byFamilyedu);
+
+    /**
+     * 查询家庭教育列表
+     *
+     * @param byFamilyedu 家庭教育
+     * @return 家庭教育集合
+     */
+    public List<ByFamilyedu> selectByFamilyeduListTree(ByFamilyedu byFamilyedu);
+
+    /**
+     * 构建前端所需要树结构
+     *
+     * @param byFamilyedus 部门列表
+     * @return 树结构列表
+     */
+    public List<ByFamilyedu> buildFamilyeduDetailTree(List<ByFamilyedu> byFamilyedus);
+
+    /**
+     * 构建前端所需要下拉树结构
+     *
+     * @param byFamilyedus 部门列表
+     * @return 下拉树结构列表
+     */
+    public List<TreeSelect> buildFamilyeduTreeSelect(List<ByFamilyedu> byFamilyedus);
+
 
     /**
      * 新增家庭教育

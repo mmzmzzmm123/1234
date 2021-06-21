@@ -2,6 +2,7 @@ package com.ruoyi.project.benyi.controller;
 
 import java.util.List;
 
+import com.ruoyi.project.benyi.domain.ByMicrocourse;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -42,6 +43,16 @@ public class ByFamilyeduController extends BaseController {
         startPage();
         List<ByFamilyedu> list = byFamilyeduService.selectByFamilyeduList(byFamilyedu);
         return getDataTable(list);
+    }
+
+    /**
+     * 查询微型课程列表
+     */
+    @Log(title = "家庭教育", businessType = BusinessType.QUERY)
+    @GetMapping("/treeselect")
+    public AjaxResult treeselect(ByFamilyedu byFamilyedu) {
+        List<ByFamilyedu> list = byFamilyeduService.selectByFamilyeduListTree(byFamilyedu);
+        return AjaxResult.success(byFamilyeduService.buildFamilyeduTreeSelect(list));
     }
 
     /**

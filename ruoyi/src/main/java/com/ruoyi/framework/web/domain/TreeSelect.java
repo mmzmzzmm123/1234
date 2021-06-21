@@ -74,6 +74,14 @@ public class TreeSelect implements Serializable
     }
 
     //下拉树构造器
+    public TreeSelect(ByFamilyedu byFamilyedu) {
+
+        this.id = byFamilyedu.getId();
+        this.label = byFamilyedu.getTitle();
+        this.children = byFamilyedu.getChildren().stream().map(TreeSelect::new).collect(Collectors.toList());
+    }
+
+    //下拉树构造器
     public TreeSelect(ByMath bymath) {
 
         this.id = bymath.getId();
