@@ -20,7 +20,9 @@ import com.stdiet.custom.utils.CookieUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
 
@@ -41,27 +43,38 @@ public class VideoWebInterfaceController extends BaseController {
      * 查询视频分类目录列表
      */
     @GetMapping("/getAllClassify")
-    public TableDataInfo getClassifyAndVideo(SysVideoClassify sysVideoClassify, HttpServletRequest request) {
+    public TableDataInfo getClassifyAndVideo(SysVideoClassify sysVideoClassify, HttpServletRequest request, HttpServletResponse response) {
 
         JSONObject result = CookieUtils.checkCookieValida(request, "token");
         if (result.getInteger("code") != 200) {
-            TableDataInfo errInfo = new TableDataInfo();
-            errInfo.setCode(result.getInteger("code"));
-            errInfo.setMsg(result.getString("msg"));
-            return errInfo;
-        }
+//            TableDataInfo errInfo = new TableDataInfo();
+//            errInfo.setCode(result.getInteger("code"));
+//            errInfo.setMsg(result.getString("msg"));
+//            return errInfo;
 
-        // 检查是否已消费
-        SysOrder order = new SysOrder();
-        order.setPhone(result.getString("phone"));
-        List<SysOrder> orders = iSysOrderService.selectSysOrderList(order);
+            Cookie cookie = new Cookie("token", "");
+            cookie.setMaxAge(24 * 60 * 60);
+            cookie.setPath("/");
+            response.addCookie(cookie);
+        }
+        String phone = result.getString("phone");
+        int payed = 0;
+        if (StringUtils.isNotNull(phone)) {
+            // 检查是否已消费
+            SysOrder order = new SysOrder();
+            order.setPhone(result.getString("phone"));
+            List<SysOrder> orders = iSysOrderService.selectSysOrderList(order);
+            if (orders.size() > 0) {
+                payed = 1;
+            }
+        }
 
         //不分页则不需要传pageNum、pageSize参数
         startPage();
         //父级分类ID 0表示主分类
         sysVideoClassify.setParentId(sysVideoClassify.getParentId() == null ? 0L : sysVideoClassify.getParentId());
         //客户类型 0未付费客户-playLevel根据上传的标记  1已付费客户-playLevel全为0
-        sysVideoClassify.setUserType(orders.size() > 0 ? 1 : 0);
+        sysVideoClassify.setUserType(payed);
         List<VideoClassifyResponse> list = sysVideoClassifyService.getAllClassifyAndVideo(sysVideoClassify);
         return getDataTable(list);
     }
@@ -75,10 +88,10 @@ public class VideoWebInterfaceController extends BaseController {
      */
     @GetMapping("/getVideoDetail/{videoId}")
     public AjaxResult getVideoDetail(@PathVariable("videoId") String videoId, HttpServletRequest request) {
-        JSONObject result = CookieUtils.checkCookieValida(request, "token");
-        if (result.getInteger("code") != 200) {
-            return AjaxResult.error(result.getInteger("code"), result.getString("msg"));
-        }
+//        JSONObject result = CookieUtils.checkCookieValida(request, "token");
+//        if (result.getInteger("code") != 200) {
+//            return AjaxResult.error(result.getInteger("code"), result.getString("msg"));
+//        }
 
         if (StringUtils.isEmpty(videoId)) {
             return AjaxResult.error("视频加载失败");
