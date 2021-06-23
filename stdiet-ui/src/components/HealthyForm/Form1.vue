@@ -23,6 +23,12 @@
     <el-form-item label="体重（斤）" prop="weight" >
       <el-input v-model="form.weight" placeholder="请输入体重（可保留一位小数）" autocomplete="off" ></el-input>
     </el-form-item>
+    <el-form-item label="腰围（厘米）" prop="waist" >
+      <el-input v-model="form.healthyExtend.waist" placeholder="请输入腰围（可保留一位小数）" autocomplete="off" ></el-input>
+    </el-form-item>
+    <el-form-item label="臀围（厘米）" prop="hipline" >
+      <el-input v-model="form.healthyExtend.hipline" placeholder="请输入臀围（可保留一位小数）" autocomplete="off" ></el-input>
+    </el-form-item>
     <el-form-item label="调理项目" prop="conditioningProjectId">
       <el-select v-model="form.conditioningProjectId" filterable clearable placeholder="请选择">
         <el-option

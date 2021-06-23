@@ -27,9 +27,10 @@
       <healthy-form5 v-show="stepArray[4]" :form.sync="form"></healthy-form5>
       <healthy-form6 v-show="stepArray[5]" :form.sync="form"></healthy-form6>
       <healthy-form7 v-show="stepArray[6]" :form.sync="form"></healthy-form7>
-      <healthy-form8 v-show="stepArray[7]" :form.sync="form"></healthy-form8>
+      <healthy-form8 v-show="stepArray[7]" :form.sync="form" @addNewDrugInput="addNewDrugInput"></healthy-form8>
+      <healthy-extended v-show="stepArray[8]" :form.sync="form"></healthy-extended>
       <healthy-form9
-        v-show="stepArray[8]"
+        v-show="stepArray[9]"
         ref="fileForm"
         @addOrEditHealthy="addCustomerHealthy()"
         :form.sync="form"
@@ -77,6 +78,7 @@ import Form6 from "@/components/HealthyForm/Form6";
 import Form7 from "@/components/HealthyForm/Form7";
 import Form8 from "@/components/HealthyForm/Form8";
 import Form9 from "@/components/HealthyForm/Form9";
+import FormExtended from "@/components/HealthyForm/FormExtended";
 export default {
   name: "index",
   data() {
@@ -86,7 +88,7 @@ export default {
       healthyData: healthyData,
       logo,
       submitFlag: false,
-      stepArray: [true, false, false, false, false, false, false, false, false],
+      stepArray: [true, false, false, false, false, false, false, false, false, false],
       stepActive: 0,
       form: {
         customerEncId: null,
@@ -195,6 +197,63 @@ export default {
         crux: 1,
         dishesIngredient: null,
         makeFoodType: 3,
+
+        healthyExtend:{
+            //腰围
+            waist: null,
+            //臀围
+            hipline: null,
+            //常吃水果名称，['']
+            eatFruitsNameArray:[],
+            //常吃水果json数组.[{'name':'苹果', "num": '200克'}, {'name'：'西瓜','num': '两个'}]
+            eatFruitsMessage:[],
+            //长期服用药物JSON数组, [{'type': 1, 'drug':[{'name':'降压药1','num':'每天三粒','time':'早中晚'}]}]
+            longEatDrugMessage:[],
+            //高血糖评估
+            bloodSugarMessage: {
+              "beforeMealBloodSugar": null, 
+              "afterMealBloodSugar": null, 
+              "measureBloodSugarFlag": 0, 
+              "measureBloodSugarTime": null, 
+              "nearBloodSugar": null,
+              "lowBloodSugarFlag": 0,
+              "lowBloodSugarTime": null,
+              "complicationFlag": 0,
+              "complication": null,
+              "inferiorSymptomFlag": 0,
+              "inferiorSymptom": [],
+              "weightChangeFlag": 0
+            },
+            //高血压评估
+            bloodPressureMessage:{
+              "beforeMealBloodPressure": null, 
+              "afterMealBloodPressure": null, 
+              "measureBloodPressureFlag": 0, 
+              "measureBloodPressureTime": null, 
+              "nearBloodPressure": null,
+              "lowBloodPressureFlag": 0,
+              "lowBloodPressureTime": null,
+              "complicationFlag": 0,
+              "complication": null,
+              "inferiorSymptomFlag": 0,
+              "inferiorSymptom": [],
+              "weightChangeFlag": 0
+            },
+            //焦虑情绪评估
+            anxietyStateMessage:{
+                "easyAnxiousFlag": 0,
+                "upsetRecently": 0,
+                "nervousOnSpecialOccasionsFlag": 0,
+                "terrifiedFlag":0
+            },
+            //郁抑情绪评估
+            depressedStateMessage:{
+                "listlessRecentlyFlag": 0,
+                "cryRecentlyFlag":0,
+                "wakeUpEarlyRecentlyFlag":0,
+                "noFunLiving":0
+            }
+        }
       },
       timer: null,
       rules: {
@@ -245,6 +304,7 @@ export default {
     "healthy-form7": Form7,
     "healthy-form8": Form8,
     "healthy-form9": Form9,
+    'healthy-extended':FormExtended
   },
   methods: {
     //根据用户ID获取用户基本信息（手机号、姓名）
@@ -291,9 +351,14 @@ export default {
       //数据处理
       let cusMessage = Object.assign({}, this.form);
       this.healthyData["arrayName"].forEach(function (item, index) {
-        cusMessage[item] =
-          cusMessage[item] != null ? cusMessage[item].join(",") : null;
+        cusMessage[item] = cusMessage[item] != null ? cusMessage[item].join(",") : null;
       });
+       let cusMessageExtended = Object.assign({}, this.form.healthyExtend);
+      //处理healthyExtend扩展数据
+      this.healthyData["needJSONFieldName"].forEach(function (item, index) {
+        cusMessageExtended[item] = cusMessageExtended[item] != null ? JSON.stringify(cusMessageExtended[item]) : null;
+      });
+      cusMessage.healthyExtend = cusMessageExtended;
       addCustomerHealthy(cusMessage)
         .then((response) => {
           if (response.code === 200) {
@@ -313,12 +378,27 @@ export default {
       this.submitFlag = false;
     },
     nextStep(step) {
+      var reg = new RegExp(/^(\d+)(\.\d{1})?$/) ;
       if (!this.customerExistFlag) {
         this.$message.error("客户不存在");
         return;
       }
       this.$refs.form.validate((valid) => {
         if (valid || step < 0) {
+          if(this.stepActive == 0){
+              if((this.form.healthyExtend.waist != null && this.form.healthyExtend.waist.trim() != "")){
+                  if(!reg.test(this.form.healthyExtend.waist)){
+                   this.$message.error("腰围格式错误，整数或一位小数"); 
+                   return;
+                }
+              }
+              if((this.form.healthyExtend.hipline != null && this.form.healthyExtend.hipline.trim() != "")){
+                  if(!reg.test(this.form.healthyExtend.hipline)){
+                   this.$message.error("臀围格式错误，整数或一位小数");
+                   return;
+                }
+              }
+          }
           this.stepArray[this.stepActive] = false;
           this.stepActive = this.stepActive + step;
           this.stepArray[this.stepActive] = true;
@@ -334,6 +414,15 @@ export default {
     goTop() {
       window.scroll(0, 0);
     },
+    addNewDrugInput(type){
+          let index = null;
+          this.form.healthyExtend.longEatDrugMessage.forEach((v, i) => {
+             if(v.type == type){
+               index = i;
+             }
+          });
+          this.form.healthyExtend.longEatDrugMessage[index].drug.push({'name':'','num':'','time':''});
+    }
   },
   created() {
     this.form.customerEncId = this.$route.params.id;
@@ -342,6 +431,36 @@ export default {
   beforeCreate() {
     document.title = this.$route.meta.title;
   },
+  watch:{
+    'form.healthyExtend.eatFruitsNameArray'(newArray, oldArray){
+       oldArray = (oldArray == undefined || oldArray == null) ? [] : oldArray;
+       newArray = (newArray == undefined || newArray == null) ? [] : newArray;
+       if(newArray.length > oldArray.length){
+          this.form.healthyExtend.eatFruitsMessage.push({'name': newArray[newArray.length-1], "num": ''});
+       }else{
+          let array = newArray.concat(oldArray).filter(function(v, i, arr) {
+            return arr.indexOf(v) === arr.lastIndexOf(v);
+          });
+          this.form.healthyExtend.eatFruitsMessage = this.form.healthyExtend.eatFruitsMessage.filter(function(v, i, arr) {
+            return array.indexOf(v.name) == -1;
+          });
+       }
+    },
+    'form.longEatDrugClassify'(newArray, oldArray){
+        oldArray = (oldArray == undefined || oldArray == null) ? [] : oldArray;
+        newArray = (newArray == undefined || newArray == null) ? [] : newArray;
+        if(newArray.length > oldArray.length){
+            this.form.healthyExtend.longEatDrugMessage.push({'type': newArray[newArray.length-1], 'drug': [{'name':'','num':'','time':''}]});
+        }else{
+            let array = newArray.concat(oldArray).filter(function(v, i, arr) {
+              return arr.indexOf(v) === arr.lastIndexOf(v);
+            });
+            this.form.healthyExtend.longEatDrugMessage = this.form.healthyExtend.longEatDrugMessage.filter(function(v, i, arr) {
+              return array.indexOf(v.name) == -1;
+            });
+        }
+    }
+  }
 };
 </script>
 

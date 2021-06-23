@@ -65,6 +65,21 @@
         <el-radio v-for="(item,index) in healthyData['fruitsRateArray']" :label="item.value" :key="index">{{item.name}}</el-radio>
       </el-radio-group>
     </el-form-item>
+    
+    <el-form-item label="(5) 常吃什么水果以及对应份量" prop="eatFruitsNameArray" class="margin-left">
+        <el-select v-model="form.healthyExtend.eatFruitsNameArray" multiple filterable allow-create default-first-option placeholder="请选择水果种类（可手动输入再选择）" style="width:90%">
+          <el-option
+            v-for="item in healthyData['eatFruitsArray']"
+            :key="item.value"
+            :label="item.name"
+            :value="item.value">
+          </el-option>
+        </el-select>
+        <div style="margin-top:10px" v-for="item in form.healthyExtend.eatFruitsMessage" :key="item.name">
+            <el-input v-model="item.name" :disabled="true" placeholder="水果名称" style="width:37%"></el-input><el-input style="width:50%;margin-left:3%;" v-model="item.num" placeholder="份量描述"></el-input>
+        </div>
+    </el-form-item>
+    
     <p class="p_title_2">5、饮食习惯</p>
     <el-form-item label="(1) 一餐吃几碗饭，几成饱" prop="riceNum" class="margin-left">
       <div>
@@ -145,7 +160,7 @@ export default {
     }
   },
   created() {
-
+    
   },
 
 };
