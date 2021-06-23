@@ -613,14 +613,14 @@ export default {
       //体验单
       else if(this.form.orderTypeList[0] == 2){
           //售前、售中不能为空
-          if(this.form.preSaleId == null || this.form.preSaleId <= 0 || this.form.onSaleId == null ||  this.form.onSaleId <= 0){
+          /*if(this.form.preSaleId == null || this.form.preSaleId <= 0 || this.form.onSaleId == null ||  this.form.onSaleId <= 0){
               this.$message({
                 type: 'warning',
                 message: '售前、售中不能为空',
                 center: true
               });
               return false;
-           }
+           }*/
       }
       //售中单
       else if(this.form.orderTypeList[0] == 3){
