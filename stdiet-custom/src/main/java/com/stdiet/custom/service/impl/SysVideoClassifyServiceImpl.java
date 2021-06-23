@@ -1,6 +1,8 @@
 package com.stdiet.custom.service.impl;
 
 import java.util.List;
+
+import com.stdiet.common.core.domain.AjaxResult;
 import com.stdiet.common.utils.DateUtils;
 import com.stdiet.custom.dto.response.VideoClassifyResponse;
 import com.stdiet.custom.mapper.SysNutritionalVideoMapper;
@@ -75,17 +77,6 @@ public class SysVideoClassifyServiceImpl implements ISysVideoClassifyService
         return sysVideoClassifyMapper.updateSysVideoClassify(sysVideoClassify);
     }
 
-    /**
-     * 批量删除视频分类
-     *
-     * @param ids 需要删除的视频分类ID
-     * @return 结果
-     */
-    @Override
-    public int deleteSysVideoClassifyByIds(Long[] ids)
-    {
-        return sysVideoClassifyMapper.deleteSysVideoClassifyByIds(ids);
-    }
 
     /**
      * 删除视频分类信息
@@ -94,15 +85,31 @@ public class SysVideoClassifyServiceImpl implements ISysVideoClassifyService
      * @return 结果
      */
     @Override
-    public int deleteSysVideoClassifyById(Long id)
+    public AjaxResult deleteSysVideoClassifyById(Long id)
     {
-        return sysVideoClassifyMapper.deleteSysVideoClassifyById(id);
+        return delChildrenClassify(id);
     }
 
-    private boolean delChildrenClassify(Long id){
+    /**
+     * 删除分类以及子分类，删除之前需要判断分类下是否存在视频
+     * @param id
+     * @return
+     */
+    private AjaxResult delChildrenClassify(Long id){
         //判断分类下是否存在视频，存在视频不能删除
-
-        return true;
+        int videoNum = sysNutritionalVideoMapper.getVideoCountByCateId(id);
+        if(videoNum > 0){
+            return AjaxResult.error("该分类下存在视频，无法直接删除");
+        }
+        //删除该分类以及全部子分类
+        List<Long> childrenIds = sysVideoClassifyMapper.getVideoClassifyIdsById(id);
+        if(childrenIds != null && childrenIds.size() > 0){
+            Long[] ids = new Long[childrenIds.size()];
+            if(sysVideoClassifyMapper.deleteSysVideoClassifyByIds(childrenIds.toArray(ids)) > 0) {
+                return AjaxResult.success();
+            }
+        }
+        return AjaxResult.error();
     }
 
     /**

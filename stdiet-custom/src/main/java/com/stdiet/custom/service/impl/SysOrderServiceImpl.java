@@ -379,24 +379,28 @@ public class SysOrderServiceImpl implements ISysOrderService {
                 //判断是否提成单，拆分单中的副单，体验单,定金单
                 if(sysOrder.getStartTime() == null || sysOrder.getAfterSaleCommissOrder().intValue() == 1 || sysOrder.getMainOrderId().intValue() != 0 ||
                         "2".equals(sysOrder.getOrderType()) || !isNeedByOrderMoneyType(sysOrder)){
-                    continue;
-                }
-                //判断前一个订单的结束时间是否大于第二个订单的
-                if(lastServerEndTime != null && ChronoUnit.DAYS.between(lastServerEndTime, DateUtils.dateToLocalDate(sysOrder.getStartTime())) <= 0){
-                    newStartTime = lastServerEndTime.plusDays(1);
-                    //本月第一天
-                    LocalDate monthStart = LocalDate.now().with(TemporalAdjusters.firstDayOfMonth());
-                    //旧的开始时间和新的开始时间都要需要大于本月第一天
-                    if(sysOrder.getCommissStartTime() != null && ChronoUnit.DAYS.between(monthStart, DateUtils.dateToLocalDate(sysOrder.getCommissStartTime())) >= 0 && ChronoUnit.DAYS.between(monthStart, newStartTime) >= 0){
-                        sysOrder.setCommissStartTime(DateUtils.localDateToDate(newStartTime));
+                    //设置服务到期时间
+                    setOrderServerEndDate(sysOrder);
+                    sysOrder.setUpdateTime(new Date());
+                    row = updateSysOrder(sysOrder);
+                }else {
+                    //判断前一个订单的结束时间是否大于第二个订单的
+                    if (lastServerEndTime != null && ChronoUnit.DAYS.between(lastServerEndTime, DateUtils.dateToLocalDate(sysOrder.getStartTime())) <= 0) {
+                        newStartTime = lastServerEndTime.plusDays(1);
+                        //本月第一天
+                        LocalDate monthStart = LocalDate.now().with(TemporalAdjusters.firstDayOfMonth());
+                        //旧的开始时间和新的开始时间都要需要大于本月第一天
+                        if (sysOrder.getCommissStartTime() != null && ChronoUnit.DAYS.between(monthStart, DateUtils.dateToLocalDate(sysOrder.getCommissStartTime())) >= 0 && ChronoUnit.DAYS.between(monthStart, newStartTime) >= 0) {
+                            sysOrder.setCommissStartTime(DateUtils.localDateToDate(newStartTime));
+                        }
+                        sysOrder.setStartTime(DateUtils.localDateToDate(newStartTime));
                     }
-                    sysOrder.setStartTime(DateUtils.localDateToDate(newStartTime));
+                    //设置服务到期时间
+                    setOrderServerEndDate(sysOrder);
+                    sysOrder.setUpdateTime(new Date());
+                    row = updateSysOrder(sysOrder);
+                    lastServerEndTime = DateUtils.dateToLocalDate(sysOrder.getServerEndTime());
                 }
-                //设置服务到期时间
-                setOrderServerEndDate(sysOrder);
-                sysOrder.setUpdateTime(new Date());
-                row = updateSysOrder(sysOrder);
-                lastServerEndTime = DateUtils.dateToLocalDate(sysOrder.getServerEndTime());
             }
             //异步更新食谱计划
             sysRecipesPlanService.regenerateRecipesPlan(cusId);
@@ -404,7 +408,7 @@ public class SysOrderServiceImpl implements ISysOrderService {
         return row;
     }
 
-    //定金单或尾款单是否需要生成食谱计划，2021-01-12修改为6月11日之后成交的订单只生成定金单计划
+    //定金单或尾款单是否需要生成食谱计划，2021-01-12修改为6月1日之后成交的订单只生成定金单计划
     private boolean isNeedByOrderMoneyType(SysOrder sysOrder){
         if("0".equals(sysOrder.getOrderMoneyType())){
             return true;

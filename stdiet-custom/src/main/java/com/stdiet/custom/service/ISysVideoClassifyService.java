@@ -1,6 +1,8 @@
 package com.stdiet.custom.service;
 
 import java.util.List;
+
+import com.stdiet.common.core.domain.AjaxResult;
 import com.stdiet.custom.domain.SysVideoClassify;
 import com.stdiet.custom.dto.response.VideoClassifyResponse;
 
@@ -44,13 +46,6 @@ public interface ISysVideoClassifyService
      */
     public int updateSysVideoClassify(SysVideoClassify sysVideoClassify);
 
-    /**
-     * 批量删除视频分类
-     *
-     * @param ids 需要删除的视频分类ID
-     * @return 结果
-     */
-    public int deleteSysVideoClassifyByIds(Long[] ids);
 
     /**
      * 删除视频分类信息
@@ -58,7 +53,7 @@ public interface ISysVideoClassifyService
      * @param id 视频分类ID
      * @return 结果
      */
-    public int deleteSysVideoClassifyById(Long id);
+    public AjaxResult deleteSysVideoClassifyById(Long id);
 
     /**
      * 获取所有类别

@@ -88,4 +88,11 @@ public interface SysNutritionalVideoMapper
      * @return
      */
     public int updateVideoPlayNum(@Param("videoId")String videoId);
+
+    /**
+     * 根据视频分类ID查询该分类下存在视频数量
+     * @param cateId
+     * @return
+     */
+    public int getVideoCountByCateId(@Param("cateId")Long cateId);
 }

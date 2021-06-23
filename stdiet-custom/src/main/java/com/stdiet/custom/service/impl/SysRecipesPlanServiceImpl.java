@@ -45,7 +45,7 @@ public class SysRecipesPlanServiceImpl implements ISysRecipesPlanService {
     private SysRecipesMapper sysRecipesMapper;
 
     //2021-06-11之后（大于等于）成交的订单，只生成定金单食谱计划，不生成尾款食谱计划，之前成交的订单还是保持之前逻辑
-    public static final LocalDate newVersionPlanStartDate = DateUtils.stringToLocalDate("2021-06-11", "yyyy-MM-dd");
+    public static final LocalDate newVersionPlanStartDate = DateUtils.stringToLocalDate("2021-06-01", "yyyy-MM-dd");
 
     /**
      * 查询食谱计划

@@ -113,6 +113,7 @@
             <if test="status != null ">and status = #{status}</if>
             <if test="payTypeId != null ">and pay_type_id = #{payTypeId}</if>
             <if test="preSaleId != null ">and pre_sale_id = #{preSaleId}</if>
+            <if test="pushPreSaleId != null ">and push_pre_sale_id = #{pushPreSaleId}</if>
             <if test="onSaleId != null">
                 and on_sale_id = #{onSaleId}
             </if>
@@ -167,6 +168,7 @@
             <if test="phone != null  and phone != ''">and sc.phone = #{phone}</if>
             <if test="status != null ">and status = #{status}</if>
             <if test="payTypeId != null ">and pay_type_id = #{payTypeId}</if>
+            <if test="pushPreSaleId != null ">and push_pre_sale_id = #{pushPreSaleId}</if>
             <if test="onSaleId != null">
                 and on_sale_id = #{onSaleId}
             </if>

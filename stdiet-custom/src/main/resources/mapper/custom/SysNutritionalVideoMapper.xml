@@ -173,4 +173,14 @@
         update sys_nutritional_video set play_num = play_num + 1 where video_id = #{videoId} and del_flag = 0
     </update>
 
+    <!-- 根据视频分类ID查询该分类下视频总量 -->
+    <select id="getVideoCountByCateId" parameterType="Long" resultType="int">
+        select count(snv.id) from sys_nutritional_video snv where snv.del_flag = 0
+        and snv.cate_id in (
+                select id from sys_video_classify where del_flag = 0
+                and (id = #{cateId} or id in (select s.id from sys_video_classify s where s.parent_id = #{cateId} and s.del_flag = 0)
+                or id in (select ss.id from sys_video_classify ss where ss.del_flag = 0 and ss.parent_id in (select a.id from sys_video_classify a where a.parent_id = #{cateId} and a.del_flag = 0 )))
+            )
+    </select>
+
 </mapper>

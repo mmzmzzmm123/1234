@@ -89,6 +89,25 @@
           </el-form-item>
         </el-col>
         <el-col :span="6" v-if="!isPartner">
+          <el-form-item label="售前推送" prop="pushPreSaleId">
+            <el-select
+              v-model="queryParams.pushPreSaleId"
+              placeholder="请选择售前推送"
+              clearable
+              filterable
+              size="small"
+            >
+              <el-option
+                v-for="dict in pushPreSaleIdOptions"
+                :key="dict.dictValue"
+                :label="dict.dictLabel"
+                :value="parseInt(dict.dictValue)"
+              />
+            </el-select>
+          </el-form-item>
+        </el-col>
+        
+        <el-col :span="6" v-if="!isPartner">
           <el-form-item label="售中" prop="onSaleId">
             <el-select
               v-model="queryParams.onSaleId"
@@ -266,7 +285,7 @@
             </el-select>
           </el-form-item>
         </el-col>
-        <el-col :span="6">
+        <el-col :span="26">
           <el-form-item label="订单类型" prop="searchOrderTypeArray">
             <el-cascader
               placeholder="请选择订单类型"
@@ -277,9 +296,7 @@
               clearable
             ></el-cascader> </el-form-item
           ><!--   -->
-        </el-col>
-        <el-col :span="20">
-          <el-form-item label="成交日期" prop="orderTime">
+          <el-form-item label="成交日期" prop="orderTime" style="margin-left:80px">
             <el-date-picker
               style="width:300px"
               v-model="daterange"
@@ -294,7 +311,7 @@
             >
             </el-date-picker>
           </el-form-item>
-          <el-form-item style="margin-left:50px">
+          <el-form-item style="margin-left:40px">
             <el-button
               type="cyan"
               icon="el-icon-search"
@@ -606,6 +623,7 @@ export default {
         phone: null,
         payTypeId: null,
         preSaleId: null,
+        pushPreSaleId: null,
         onSaleId: null,
         afterSaleId: null,
         nutritionistId: null,
@@ -653,6 +671,8 @@ export default {
       "operatorIdOptions",
       // 运营助理字典
       "operatorAssisIdOptions",
+      //售前推送
+      "pushPreSaleIdOptions",
       //
       "userId",
       //

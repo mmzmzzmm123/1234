@@ -1,5 +1,6 @@
 package com.stdiet.web.controller;
 
+import com.stdiet.common.utils.AliyunVideoUtils;
 import com.stdiet.common.utils.StringUtils;
 import com.stdiet.common.utils.poi.ExcelUtil;
 import com.stdiet.custom.domain.SysNutritionQuestion;
@@ -41,6 +42,27 @@ public class MyApplicationRunner implements ApplicationRunner {
         System.out.println("--------------项目启动调用方法开始----------");
 
         System.out.println("--------------项目启动调用方法结束-------------");
+    }
+
+    /**
+     * 给现有视频更新截图图片
+     */
+    public void getVideoSn(){
+        List<SysNutritionalVideo> list = sysNutritionalVideoService.selectSysNutritionalVideoList(new SysNutritionalVideo(), false);
+        int success = 0;
+        if(list != null && list.size() > 0){
+            for (SysNutritionalVideo video : list) {
+                try{
+                    Thread.sleep(500);
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
+                if(AliyunVideoUtils.submitVideoSnapshot(video.getVideoId())){
+                    success ++;
+                }
+            }
+        }
+        System.out.println("成功数量：" + success);
     }
 
 

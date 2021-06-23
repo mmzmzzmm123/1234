@@ -1,6 +1,8 @@
 package com.stdiet.web.controller.custom;
 
 import java.util.List;
+
+import com.stdiet.custom.typehandler.ArrayJsonHandler;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -92,7 +94,11 @@ public class SysVideoClassifyController extends BaseController
     @DeleteMapping("/{ids}")
     public AjaxResult remove(@PathVariable Long[] ids)
     {
-        return toAjax(sysVideoClassifyService.deleteSysVideoClassifyByIds(ids));
+        if(ids != null && ids.length == 1){
+            //只支持单个删除
+            return sysVideoClassifyService.deleteSysVideoClassifyById(ids[0]);
+        }
+        return AjaxResult.error();
     }
 
     /**
