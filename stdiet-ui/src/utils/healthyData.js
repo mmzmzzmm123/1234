@@ -19,7 +19,9 @@ export const condimentArray = [
   { name: "浓汤宝", value: "6" },
   { name: "鸡粉", value: "7" },
   { name: "花椒", value: "8" },
-  { name: "辣椒油", value: "9" }
+  { name: "辣椒油", value: "9" },
+  { name: "黄酒", value: "10" },
+  { name: "料酒", value: "11" }
 ];
 
 export const cookingStyleArray = [
@@ -95,6 +97,25 @@ export const fruitsRateArray = [
   { name: "经常吃", value: "2" },
   { name: "偶尔吃", value: "3" },
   { name: "从不吃", value: "4" }
+];
+
+export const eatFruitsArray = [
+  { name: "梨", value: "梨" },
+  { name: "苹果", value: "苹果" },
+  { name: "香蕉", value: "香蕉" },
+  { name: "榴莲", value: "榴莲" },
+  { name: "橙子", value: "橙子" },
+  { name: "西瓜", value: "西瓜" },
+  { name: "桃子", value: "桃子" },
+  { name: "葡萄", value: "葡萄" },
+  { name: "李子", value: "李子" },
+  { name: "哈密瓜", value: "哈密瓜"},
+  { name: "香瓜", value: "香瓜" },
+  { name: "荔枝", value: "荔枝" },
+  { name: "杨梅", value: "杨梅" },
+  { name: "菠萝", value: "菠萝" },
+  { name: "草莓", value: "草莓" },
+  { name: "龙眼", value: "龙眼" },
 ];
 
 export const eatingSpeedArray = [
@@ -298,6 +319,19 @@ export const drinkWineAmountUnitArray = ["两", "瓶", "毫升"];
 export const smokeRateArray = ["每天抽烟", "烟龄", "已戒烟"];
 export const smokeRateUnitArray = ["次", "年", "年"];
 
+
+//并发症
+export const syndromeNameArray = [
+  { name: "腰痛", value: "1" },
+  { name: "四肢酸痛", value: "2" },
+  { name: "手足蚁感", value: "3" },
+  { name: "麻木", value: "4" },
+  { name: "皮肤瘙痒", value: "5" },
+  { name: "性欲减退", value: "6" },
+  { name: "海男性勃起功能障碍", value: "7" },
+  { name: "视力下降", value: "8" }
+];
+
 //需要将数组转成字符串的属性名称，包含对象数组、字符串数组
 export const arrayName = [
   "condiment",
@@ -470,6 +504,16 @@ const moduleObj = {
   bloodDataArray,
   moistureDateArray
 };
+
+//healthyExtend扩展信息中需要将对象转为json字符串或字符串转json的字段
+export const needJSONFieldName = [
+  "eatFruitsMessage",
+  "longEatDrugMessage",
+  "bloodSugarMessage",
+  "bloodPressureMessage",
+  "anxietyStateMessage",
+  "depressedStateMessage"
+];
 
 //健康信息处理，将数组转为字符串
 export function dealHealthy(customerHealthy) {

@@ -173,6 +173,28 @@
                 </el-table>
               </div>
             </div>
+            <div
+              v-for="(item, index) in dataList.slice(10, 12)"
+              style="margin-bottom: 50px"
+              :key="index"
+            >
+              <div v-if="index==0">
+                <p class="p_title_1" style="margin-top: 5px">
+                  {{ '高血糖问卷信息' }}
+                </p>
+                <table-detail-message
+                  :data="item"
+                ></table-detail-message>
+              </div>
+              <div v-if="index==1">
+                <p class="p_title_1" style="margin-top: 5px">
+                  {{ '高血压问卷信息' }}
+                </p>
+                <table-detail-message
+                  :data="item"
+                ></table-detail-message>
+              </div>
+            </div>
           </div>
         </div>
         <!-- 客户体征 -->
@@ -303,8 +325,8 @@ export default {
         [
           ["创建时间", "客户姓名", "手机号"],
           ["调理项目", "性别", "年龄"],
-          ["身高(厘米)", "体重(斤)", "地域"],
-          ["BMI", "", ""],
+          ["身高(厘米)", "体重(斤)", "腰围(厘米)"],
+          ["臀围(厘米)", "地域", "BMI"],
         ],
         [
           ["减脂经历", "减脂遇到的困难", "减脂是否反弹"],
@@ -320,10 +342,10 @@ export default {
           ["晚餐时间", "每周吃夜宵次数", "夜宵通常吃的食物"],
           ["食物的冷热偏好", "食物的口味偏好", "平均每周吃生蔬菜几次"],
           ["每周吃生蔬菜的频次类型", "平均每天吃水果次数", "吃水果的时间段"],
-          ["平时吃水果的频次", "一餐吃几碗饭", "吃几成饱"],
-          ["吃饭速度", "饮食特点", "常吃的零食"],
-          ["有无服用营养保健品", "营养保健品品牌名", "营养保健品产品名"],
-          ["服用营养保健品频次", "忌口过敏食物", ""],
+          ["平时吃水果的频次", "经常吃的水果以及份量","一餐吃几碗饭"],
+          ["吃几成饱","吃饭速度", "饮食特点"],
+          ["常吃的零食","有无服用营养保健品", "营养保健品品牌名"],
+          ["营养保健品产品名","服用营养保健品频次", "忌口过敏食物"],
         ],
         [
           ["每天的饮水量", "喜欢喝什么水", "喝水习惯"],
@@ -348,14 +370,30 @@ export default {
           ["是否出现过过敏症状", "过敏症状", "过敏源"],
         ],
         [["体检报告(1)", "体检报告(2)", "体检报告(3)"]],
+        [
+          ["餐前餐后血糖", "是否有规律测血糖", "测量血糖时间"],
+          ["近期血糖水平", "是否有低血糖反应", "是否有出现并发症"],
+          ["并发症情况", "存在症状", "近三个月体重是否有变化"],
+          ["你认为你是一个容易焦虑或紧张的人吗","最近一段时间，你是否比平时更感到焦虑或忐忑不安","是否有一些特殊场合或情景更容易使得你紧张、焦虑"],
+          ["你曾经有过惊恐发作吗.即突然发生的强烈不适感或心慌、眩晕、感到憋气或呼吸困难等症状","过去几周(或几个月)是否感觉到无精打采、伤感、或对生活的乐趣减少","除了不开心之外，是否比平时更加悲观或想哭"],
+          ["经常有早醒吗?(事实上不需那么早醒来)","近来是否经常想到活着没有意思",""]
+        ]
+        [
+          ["餐前餐后血压", "是否有规律测血压", "测量血压时间"],
+          ["近期血压水平", "是否有低血压反应", "是否有出现并发症"],
+          ["并发症情况", "存在症状", "近三个月体重是否有变化"],
+          ["你认为你是一个容易焦虑或紧张的人吗","最近一段时间，你是否比平时更感到焦虑或忐忑不安","是否有一些特殊场合或情景更容易使得你紧张、焦虑"],
+          ["你曾经有过惊恐发作吗.即突然发生的强烈不适感或心慌、眩晕、感到憋气或呼吸困难等症状","过去几周(或几个月)是否感觉到无精打采、伤感、或对生活的乐趣减少","除了不开心之外，是否比平时更加悲观或想哭"],
+          ["经常有早醒吗?(事实上不需那么早醒来)","近来是否经常想到活着没有意思",""]
+        ]
       ],
       // 健康评估属性
       healthyValueData: [
         [
           ["createTime", "name", "phone"],
           ["conditioningProject", "sex", "age"],
-          ["tall", "weight", "position"],
-          ["bmi", "", ""],
+          ["tall", "weight", "healthyExtend,waist"],
+          ["healthyExtend,hipline", "position", "bmi"],
         ],
         [
           ["experience", "difficulty", "rebound"],
@@ -371,10 +409,10 @@ export default {
           ["dinnerTime", "supperNum", "supperFood"],
           ["dietHotAndCold", "dietFlavor", "vegetablesNum"],
           ["vegetablesRateType", "fruitsNum", "fruitsTime"],
-          ["fruitsRate", "riceNum", "riceFull"],
-          ["eatingSpeed", "makeFoodType", "snacks"],
-          ["healthProductsFlag", "healthProductsBrand", "healthProductsName"],
-          ["healthProductsWeekRate", "dishesIngredient", ""],
+          ["fruitsRate", "healthyExtend,eatFruitsMessage", "riceNum"],
+          [ "riceFull","eatingSpeed", "makeFoodType"],
+          ["snacks","healthProductsFlag", "healthProductsBrand"],
+          ["healthProductsName","healthProductsWeekRate", "dishesIngredient"],
         ],
         [
           ["waterNum", "waterType", "waterHabit"],
@@ -399,6 +437,22 @@ export default {
           ["allergyFlag", "allergySituation", "allergen"],
         ],
         [["medicalReport_one", "medicalReport_two", "medicalReport_three"]],
+        [
+          ["mealBloodSugar", "measureBloodSugarFlag", "measureBloodSugarTime"],
+          ["nearBloodSugar", "lowBloodSugarFlag", "complicationFlag"],
+          ["complication", "inferiorSymptomFlag", "weightChangeFlag"],
+          ["easyAnxiousFlag","upsetRecently","nervousOnSpecialOccasionsFlag"],
+          ["terrifiedFlag","listlessRecentlyFlag","cryRecentlyFlag"],
+          ["wakeUpEarlyRecentlyFlag","noFunLiving",""]
+        ],
+        [
+          ["mealBloodPressure", "measureBloodPressureFlag", "measureBloodPressureTime"],
+          ["nearBloodPressure", "lowBloodPressureFlag", "complicationFlag"],
+          ["complication", "inferiorSymptomFlag", "weightChangeFlag"],
+          ["easyAnxiousFlag","upsetRecently","nervousOnSpecialOccasionsFlag"],
+          ["terrifiedFlag","listlessRecentlyFlag","cryRecentlyFlag"],
+          ["wakeUpEarlyRecentlyFlag","noFunLiving",""]
+        ]
       ],
       copyValue: "",
       detailHealthy: null,
@@ -441,6 +495,12 @@ export default {
       getCustomerPhysicalSignsByCusId(this.data.id).then((res) => {
         this.showFlag = false;
         if (res.data.customerHealthy) {
+          if(res.data.type == 0){
+            //处理healthyExtend扩展数据
+            healthyData["needJSONFieldName"].forEach(function (item, index) {
+              res.data.customerHealthy.healthyExtend[item] = res.data.customerHealthy.healthyExtend[item] != null ? JSON.parse(res.data.customerHealthy.healthyExtend[item]) : null;
+            });
+          }
           //判断是体征还是健康评估
           this.dataType = res.data.type;
           this.healthyData = JSON.parse(
@@ -500,6 +560,7 @@ export default {
     //对健康评估信息进行处理
     getDataListByHealthyMessage(healthy) {
       let detailHealthy = this.dealHealthy(healthy);
+      console.log(detailHealthy.longEatDrugClassify);
       //性别
       detailHealthy.sex =
         detailHealthy.sex == 0 ? "男" : detailHealthy.sex == 1 ? "女" : "未知";
@@ -670,6 +731,19 @@ export default {
             ? detailHealthy.otherLongEatDrugClassify
             : "")
       );
+      if (detailHealthy.healthyExtend.longEatDrugMessage != null) {
+          let m = "";
+          detailHealthy.healthyExtend.longEatDrugMessage.forEach((item,i) => {
+            let mm = "";
+            if(item.drug != null && item.drug.length > 0){
+              item.drug.forEach((it, j) => {
+                mm += (mm == "" ? "" : ",") + it.name + "/" + it.num + "/" + it.time;
+              })
+            }
+            m += (m == "" ? "" : ",") + mm;
+          });
+          detailHealthy.longEatDrugClassify += " 药物详情：" + m;
+      }
       detailHealthy.allergyFlag = detailHealthy.allergyFlag == 1 ? "有" : "无";
       detailHealthy.allergen = this.trimComma(
         detailHealthy.allergen +
@@ -729,17 +803,57 @@ export default {
         (detailHealthy.tall / 100) /
         (detailHealthy.tall / 100)
       ).toFixed(1);
+      //常吃水果以及份量
+      let eatFruitsMessage = "";
+      if(detailHealthy.healthyExtend.eatFruitsMessage != null && detailHealthy.healthyExtend.eatFruitsMessage.length > 0){
+         detailHealthy.healthyExtend.eatFruitsMessage.forEach((item,index) => {
+            eatFruitsMessage += (eatFruitsMessage == "" ? "" : ", ") + item.name + "/" + item.num;
+         });
+      }
+      detailHealthy.healthyExtend.eatFruitsMessage = eatFruitsMessage;
+
+      detailHealthy.mealBloodSugar = "餐前血糖："+(detailHealthy.healthyExtend.bloodSugarMessage.beforeMealBloodSugar == null ? "" : detailHealthy.healthyExtend.bloodSugarMessage.beforeMealBloodSugar == null)+", "
+          +"餐后两小时血糖："+(detailHealthy.healthyExtend.bloodSugarMessage.afterMealBloodSugar == null ? "" : detailHealthy.healthyExtend.bloodSugarMessage.afterMealBloodSugar);
+      detailHealthy.measureBloodSugarFlag = detailHealthy.healthyExtend.bloodSugarMessage.measureBloodSugarFlag == 1 ? "是" : "否";
+      detailHealthy.measureBloodSugarTime = detailHealthy.healthyExtend.bloodSugarMessage.measureBloodSugarTime;
+      detailHealthy.nearBloodSugar = detailHealthy.healthyExtend.bloodSugarMessage.nearBloodSugar;
+      detailHealthy.lowBloodSugarFlag = (detailHealthy.healthyExtend.bloodSugarMessage.lowBloodSugarFlag == 1 ? "是" : "否") + ", 出现时间："+detailHealthy.healthyExtend.bloodSugarMessage.lowBloodSugarTime;
+      detailHealthy.complicationFlag = detailHealthy.healthyExtend.bloodSugarMessage.complicationFlag == 1 ? "是" : "否";
+      detailHealthy.complication = detailHealthy.healthyExtend.bloodSugarMessage.complication;
+      detailHealthy.inferiorSymptomFlag = (detailHealthy.healthyExtend.bloodSugarMessage.inferiorSymptomFlag == 1 ? "是" : "否") + ", 具体症状："+detailHealthy.healthyExtend.bloodSugarMessage.inferiorSymptom.join(",");
+      detailHealthy.weightChangeFlag = detailHealthy.healthyExtend.bloodSugarMessage.weightChangeFlag == 1 ? "是" : "否";
+
+      detailHealthy.mealBloodPressure = "餐前血糖："+(detailHealthy.healthyExtend.bloodPressureMessage.beforeMealBloodPressure == null ? "" : detailHealthy.healthyExtend.bloodPressureMessage.beforeMealBloodPressure == null)+", "
+          +"餐后两小时血糖："+(detailHealthy.healthyExtend.bloodPressureMessage.afterMealBloodPressure == null ? "" : detailHealthy.healthyExtend.bloodPressureMessage.afterMealBloodPressure);
+      detailHealthy.measureBloodPressureFlag = detailHealthy.healthyExtend.bloodPressureMessage.measureBloodPressureFlag == 1 ? "是" : "否";
+      detailHealthy.measureBloodPressureTime = detailHealthy.healthyExtend.bloodPressureMessage.measureBloodPressureTime;
+      detailHealthy.nearBloodPressure = detailHealthy.healthyExtend.bloodPressureMessage.nearBloodPressure;
+      detailHealthy.lowBloodPressureFlag = (detailHealthy.healthyExtend.bloodPressureMessage.lowBloodPressureFlag == 1 ? "是" : "否") + ", 出现时间："+detailHealthy.healthyExtend.bloodPressureMessage.lowBloodPressureTime;
+      detailHealthy.complicationFlag = detailHealthy.healthyExtend.bloodPressureMessage.complicationFlag == 1 ? "是" : "否";
+      detailHealthy.complication = detailHealthy.healthyExtend.bloodPressureMessage.complication;
+      detailHealthy.inferiorSymptomFlag = (detailHealthy.healthyExtend.bloodPressureMessage.inferiorSymptomFlag == 1 ? "是" : "否") + ", 具体症状："+detailHealthy.healthyExtend.bloodPressureMessage.inferiorSymptom.join(",");
+      detailHealthy.weightChangeFlag = detailHealthy.healthyExtend.bloodPressureMessage.weightChangeFlag == 1 ? "是" : "否";
+
+      detailHealthy.easyAnxiousFlag = detailHealthy.healthyExtend.anxietyStateMessage.easyAnxiousFlag == 1 ? "是" : "否";
+      detailHealthy.upsetRecently = detailHealthy.healthyExtend.anxietyStateMessage.upsetRecently == 1 ? "是" : "否";
+      detailHealthy.unervousOnSpecialOccasionsFlag = detailHealthy.healthyExtend.anxietyStateMessage.nervousOnSpecialOccasionsFlag == 1 ? "是" : "否";
+      detailHealthy.terrifiedFlag = detailHealthy.healthyExtend.anxietyStateMessage.terrifiedFlag == 1 ? "是" : "否";
+      detailHealthy.listlessRecentlyFlag = detailHealthy.healthyExtend.depressedStateMessage.listlessRecentlyFlag == 1 ? "是" : "否";
+      detailHealthy.cryRecentlyFlag = detailHealthy.healthyExtend.depressedStateMessage.cryRecentlyFlag == 1 ? "是" : "否";
+      detailHealthy.wakeUpEarlyRecentlyFlag = detailHealthy.healthyExtend.depressedStateMessage.wakeUpEarlyRecentlyFlag == 1 ? "是" : "否";
+      detailHealthy.noFunLiving = detailHealthy.healthyExtend.depressedStateMessage.noFunLiving == 1 ? "是" : "否";
+
       this.detailHealthy = detailHealthy;
       for (let i = 0; i < this.healthyTitleData.length; i++) {
         let stepArray = [];
         for (let j = 0; j < this.healthyTitleData[i].length; j++) {
           stepArray[j] = {
             attr_name_one: this.healthyTitleData[i][j][0],
-            value_one: detailHealthy[this.healthyValueData[i][j][0]],
+            value_one: this.healthyValueData[i][j][0].indexOf(",") == -1 ? detailHealthy[this.healthyValueData[i][j][0]] : detailHealthy[this.healthyValueData[i][j][0].split(",")[0]][this.healthyValueData[i][j][0].split(",")[1]],
             attr_name_two: this.healthyTitleData[i][j][1],
-            value_two: detailHealthy[this.healthyValueData[i][j][1]],
+            value_two: this.healthyValueData[i][j][1].indexOf(",") == -1 ? detailHealthy[this.healthyValueData[i][j][1]] : detailHealthy[this.healthyValueData[i][j][1].split(",")[0]][this.healthyValueData[i][j][1].split(",")[1]],
             attr_name_three: this.healthyTitleData[i][j][2],
-            value_three: detailHealthy[this.healthyValueData[i][j][2]],
+            value_three: this.healthyValueData[i][j][2].indexOf(",") == -1 ? detailHealthy[this.healthyValueData[i][j][2]] : detailHealthy[this.healthyValueData[i][j][2].split(",")[0]][this.healthyValueData[i][j][2].split(",")[1]],
           };
         }
         this.dataList[i] = stepArray;

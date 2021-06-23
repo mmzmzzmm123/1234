@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.stdiet.custom.mapper.SysCustomerHealthyExtendedMapper">
+
+    <resultMap type="SysCustomerHealthyExtended" id="SysCustomerHealthyExtendedResult">
+        <result property="id"    column="id"    />
+        <result property="healthyId"    column="healthy_id"    />
+        <result property="waist"    column="waist"    />
+        <result property="hipline"    column="hipline"    />
+        <result property="eatFruitsMessage"    column="eat_fruits_message"    />
+        <result property="longEatDrugMessage"    column="long_eat_drug_message"    />
+        <result property="bloodSugarMessage"    column="blood_sugar_message"    />
+        <result property="depressedStateMessage"    column="depressed_state_message"    />
+        <result property="bloodPressureMessage"    column="blood_pressure_message"    />
+        <result property="anxietyStateMessage"    column="anxiety_state_message"    />
+        <result property="delFlag"    column="del_flag"    />
+    </resultMap>
+
+    <sql id="selectSysCustomerHealthyExtendedVo">
+        select id, healthy_id, waist, hipline, eat_fruits_message, long_eat_drug_message, blood_sugar_message, depressed_state_message, blood_pressure_message, anxiety_state_message, del_flag from sys_customer_healthy_extended
+    </sql>
+
+    <select id="selectSysCustomerHealthyExtendedList" parameterType="SysCustomerHealthyExtended" resultMap="SysCustomerHealthyExtendedResult">
+        <include refid="selectSysCustomerHealthyExtendedVo"/> where del_flag = 0
+    </select>
+
+    <select id="selectSysCustomerHealthyExtendedById" parameterType="Long" resultMap="SysCustomerHealthyExtendedResult">
+        <include refid="selectSysCustomerHealthyExtendedVo"/>
+        where id = #{id} and del_flag = 0
+    </select>
+
+    <insert id="insertSysCustomerHealthyExtended" parameterType="SysCustomerHealthyExtended" useGeneratedKeys="true" keyProperty="id">
+        insert into sys_customer_healthy_extended
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="healthyId != null">healthy_id,</if>
+            <if test="waist != null">waist,</if>
+            <if test="hipline != null">hipline,</if>
+            <if test="eatFruitsMessage != null">eat_fruits_message,</if>
+            <if test="longEatDrugMessage != null">long_eat_drug_message,</if>
+            <if test="bloodSugarMessage != null">blood_sugar_message,</if>
+            <if test="depressedStateMessage != null">depressed_state_message,</if>
+            <if test="bloodPressureMessage != null">blood_pressure_message,</if>
+            <if test="anxietyStateMessage != null">anxiety_state_message,</if>
+            <if test="delFlag != null">del_flag,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="healthyId != null">#{healthyId},</if>
+            <if test="waist != null">#{waist},</if>
+            <if test="hipline != null">#{hipline},</if>
+            <if test="eatFruitsMessage != null">#{eatFruitsMessage},</if>
+            <if test="longEatDrugMessage != null">#{longEatDrugMessage},</if>
+            <if test="bloodSugarMessage != null">#{bloodSugarMessage},</if>
+            <if test="depressedStateMessage != null">#{depressedStateMessage},</if>
+            <if test="bloodPressureMessage != null">#{bloodPressureMessage},</if>
+            <if test="anxietyStateMessage != null">#{anxietyStateMessage},</if>
+            <if test="delFlag != null">#{delFlag},</if>
+        </trim>
+    </insert>
+
+    <update id="updateSysCustomerHealthyExtended" parameterType="SysCustomerHealthyExtended">
+        update sys_customer_healthy_extended
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="healthyId != null">healthy_id = #{healthyId},</if>
+            <if test="waist != null">waist = #{waist},</if>
+            <if test="hipline != null">hipline = #{hipline},</if>
+            <if test="eatFruitsMessage != null">eat_fruits_message = #{eatFruitsMessage},</if>
+            <if test="longEatDrugMessage != null">long_eat_drug_message = #{longEatDrugMessage},</if>
+            <if test="bloodSugarMessage != null">blood_sugar_message = #{bloodSugarMessage},</if>
+            <if test="depressedStateMessage != null">depressed_state_message = #{depressedStateMessage},</if>
+            <if test="bloodPressureMessage != null">blood_pressure_message = #{bloodPressureMessage},</if>
+            <if test="anxietyStateMessage != null">anxiety_state_message = #{anxietyStateMessage},</if>
+            <if test="delFlag != null">del_flag = #{delFlag},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <update id="deleteSysCustomerHealthyExtendedById" parameterType="Long">
+        update sys_customer_healthy_extended set del_flag = 1 where id = #{id}
+    </update>
+
+    <update id="deleteSysCustomerHealthyExtendedByIds" parameterType="String">
+        update sys_customer_healthy_extended set del_flag = 1 where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </update>
+
+
+</mapper>

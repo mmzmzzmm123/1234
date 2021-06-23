@@ -88,14 +88,20 @@
         <el-radio :label="1" key="2">是</el-radio>
       </el-radio-group>
     </el-form-item>
-    <el-form-item label="(2) 长期服用药物有（可多选）" prop="longEatDrugClassify" class="margin-left">
+    <el-form-item label="(2) 长期服用药物以及对应药物信息（可多选）" prop="longEatDrugClassify" class="margin-left">
       <el-checkbox-group v-model="form.longEatDrugClassify">
         <el-checkbox v-for="(item, index) in healthyData['longEatDrugClassifyArray']" :key="index" :label="item.value">{{item.name}}</el-checkbox>
       </el-checkbox-group>
-      <div><span>其他长期服用的药物</span>
+      <div style="margin-top:2px" v-for="item in form.healthyExtend.longEatDrugMessage" :key="item.type">
+            <div><span>{{getDrugTypeName(item.type)}}</span><el-button type="text" size="normal" style="margin-left:5px" @click="addNewDrugInput(item.type)">新增</el-button></div>
+            <div v-for="(it,index) in item.drug" :key="index" :style="index == 0 ? '' : 'margin-top:10px'">
+            <el-input placeholder="药物名称" v-model="it.name" style="width:33%"></el-input><el-input style="width:30%;margin-left:3%;" v-model="it.num" placeholder="用量"></el-input><el-input style="width:30%;margin-left:3%;" placeholder="服用时间" v-model="it.time"></el-input>
+            </div>
+      </div>
+      <div  style="margin-top:10px"><span>其他长期服用的药物（药物名称、用量、服用时间）</span>
         <el-input
           type="textarea"
-          placeholder="请输入其他药物"
+          placeholder="请输入其他药物名称、用量、服用时间"
           v-model="form.otherLongEatDrugClassify"
           maxlength="200"
           show-word-limit
@@ -191,6 +197,21 @@ export default {
         });
       }
     },
+    getDrugTypeName(type){
+        if(healthyData['longEatDrugClassifyArray'] && healthyData['longEatDrugClassifyArray'].length > 0){
+            for(let i = 0 ; i < healthyData['longEatDrugClassifyArray'].length; i++){
+                if(healthyData['longEatDrugClassifyArray'][i].value == type){
+                  //console.log(healthyData['longEatDrugClassifyArray'][i].name);
+                   return healthyData['longEatDrugClassifyArray'][i].name;
+                }
+            }
+        }else{
+          return "";
+        }
+    },
+    addNewDrugInput(type){
+      this.$emit('addNewDrugInput', type);
+    }
   },
   props: {
     form: {
@@ -208,6 +229,9 @@ export default {
       this.getMoistureDictData();
       this.getBloodDictData();
   },
+  computed:{
+    
+  }
 
 };
 </script>
