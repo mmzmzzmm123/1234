@@ -104,7 +104,7 @@
           <!-- 其他信息 -->
           <div style="height: 370px; overflow: auto">
             <div
-              v-for="(item, index) in dataList.slice(1, 10)"
+              v-for="(item, index) in dataList.slice(1, 9)"
               style="margin-bottom: 50px"
               :key="index"
             >
@@ -174,26 +174,21 @@
               </div>
             </div>
             <div
-              v-for="(item, index) in dataList.slice(10, 12)"
+              v-for="(item, index) in dataList.slice(9, 13)"
               style="margin-bottom: 50px"
-              :key="index"
+              :key="'sign'+index"
             >
-              <div v-if="index==0">
-                <p class="p_title_1" style="margin-top: 5px">
-                  {{ '高血糖问卷信息' }}
-                </p>
-                <table-detail-message
-                  :data="item"
-                ></table-detail-message>
+              <div v-if="healthyData.conditioningProjectId == 5 || healthyData.conditioningProjectId == 6">
+                <div v-if="index == 2 || index == 3 || (healthyData.conditioningProjectId == 5 && index == 1) || (healthyData.conditioningProjectId == 6 && index == 0)">
+                  <p class="p_title_1" style="margin-top: 5px">
+                    {{ extendedTitleArray[index] }}
+                  </p>
+                  <table-detail-message
+                    :data="item"
+                  ></table-detail-message>
+                </div>
               </div>
-              <div v-if="index==1">
-                <p class="p_title_1" style="margin-top: 5px">
-                  {{ '高血压问卷信息' }}
-                </p>
-                <table-detail-message
-                  :data="item"
-                ></table-detail-message>
-              </div>
+
             </div>
           </div>
         </div>
@@ -374,18 +369,21 @@ export default {
           ["餐前餐后血糖", "是否有规律测血糖", "测量血糖时间"],
           ["近期血糖水平", "是否有低血糖反应", "是否有出现并发症"],
           ["并发症情况", "存在症状", "近三个月体重是否有变化"],
-          ["你认为你是一个容易焦虑或紧张的人吗","最近一段时间，你是否比平时更感到焦虑或忐忑不安","是否有一些特殊场合或情景更容易使得你紧张、焦虑"],
-          ["你曾经有过惊恐发作吗.即突然发生的强烈不适感或心慌、眩晕、感到憋气或呼吸困难等症状","过去几周(或几个月)是否感觉到无精打采、伤感、或对生活的乐趣减少","除了不开心之外，是否比平时更加悲观或想哭"],
-          ["经常有早醒吗?(事实上不需那么早醒来)","近来是否经常想到活着没有意思",""]
-        ]
+
+        ],
         [
           ["餐前餐后血压", "是否有规律测血压", "测量血压时间"],
           ["近期血压水平", "是否有低血压反应", "是否有出现并发症"],
-          ["并发症情况", "存在症状", "近三个月体重是否有变化"],
-          ["你认为你是一个容易焦虑或紧张的人吗","最近一段时间，你是否比平时更感到焦虑或忐忑不安","是否有一些特殊场合或情景更容易使得你紧张、焦虑"],
-          ["你曾经有过惊恐发作吗.即突然发生的强烈不适感或心慌、眩晕、感到憋气或呼吸困难等症状","过去几周(或几个月)是否感觉到无精打采、伤感、或对生活的乐趣减少","除了不开心之外，是否比平时更加悲观或想哭"],
-          ["经常有早醒吗?(事实上不需那么早醒来)","近来是否经常想到活着没有意思",""]
-        ]
+          ["并发症情况", "存在症状", "近三个月体重是否有变化"]
+        ],
+          [
+              ["你认为你是一个容易焦虑或紧张的人吗","最近一段时间，你是否比平时更感到焦虑或忐忑不安","是否有一些特殊场合或情景更容易使得你紧张、焦虑"],
+              ["你曾经有过惊恐发作吗.即突然发生的强烈不适感或心慌、眩晕、感到憋气或呼吸困难等症状","",""]
+          ],
+          [
+              ["过去几周(或几个月)是否感觉到无精打采、伤感、或对生活的乐趣减少","除了不开心之外，是否比平时更加悲观或想哭","经常有早醒吗(事实上不需那么早醒来)"],
+              ["近来是否经常想到活着没有意思","",""]
+          ]
       ],
       // 健康评估属性
       healthyValueData: [
@@ -440,20 +438,24 @@ export default {
         [
           ["mealBloodSugar", "measureBloodSugarFlag", "measureBloodSugarTime"],
           ["nearBloodSugar", "lowBloodSugarFlag", "complicationFlag"],
-          ["complication", "inferiorSymptomFlag", "weightChangeFlag"],
-          ["easyAnxiousFlag","upsetRecently","nervousOnSpecialOccasionsFlag"],
-          ["terrifiedFlag","listlessRecentlyFlag","cryRecentlyFlag"],
-          ["wakeUpEarlyRecentlyFlag","noFunLiving",""]
+          ["complication", "inferiorSymptom", "weightChangeFlag"]
         ],
         [
           ["mealBloodPressure", "measureBloodPressureFlag", "measureBloodPressureTime"],
-          ["nearBloodPressure", "lowBloodPressureFlag", "complicationFlag"],
-          ["complication", "inferiorSymptomFlag", "weightChangeFlag"],
-          ["easyAnxiousFlag","upsetRecently","nervousOnSpecialOccasionsFlag"],
-          ["terrifiedFlag","listlessRecentlyFlag","cryRecentlyFlag"],
-          ["wakeUpEarlyRecentlyFlag","noFunLiving",""]
-        ]
+          ["nearBloodPressure", "lowBloodPressureFlag", "pressureComplicationFlag"],
+          ["pressureComplication", "pressureInferiorSymptom", "pressureWeightChangeFlag"],
+        ],
+          [
+              ["easyAnxiousFlag","upsetRecently","nervousOnSpecialOccasionsFlag"],
+              ["terrifiedFlag","",""]
+          ],
+          [
+              ["listlessRecentlyFlag","cryRecentlyFlag","wakeUpEarlyRecentlyFlag"],
+              ["noFunLiving","",""]
+          ]
+
       ],
+       extendedTitleArray:['十、高血糖信息评估',"十、高血压信息评估","十一、焦虑信息评估","十二、抑郁信息评估"],
       copyValue: "",
       detailHealthy: null,
       dialogWidth: "950px",
@@ -805,38 +807,39 @@ export default {
       ).toFixed(1);
       //常吃水果以及份量
       let eatFruitsMessage = "";
+      console.log(detailHealthy.healthyExtend.eatFruitsMessage);
       if(detailHealthy.healthyExtend.eatFruitsMessage != null && detailHealthy.healthyExtend.eatFruitsMessage.length > 0){
          detailHealthy.healthyExtend.eatFruitsMessage.forEach((item,index) => {
             eatFruitsMessage += (eatFruitsMessage == "" ? "" : ", ") + item.name + "/" + item.num;
          });
       }
       detailHealthy.healthyExtend.eatFruitsMessage = eatFruitsMessage;
-
-      detailHealthy.mealBloodSugar = "餐前血糖："+(detailHealthy.healthyExtend.bloodSugarMessage.beforeMealBloodSugar == null ? "" : detailHealthy.healthyExtend.bloodSugarMessage.beforeMealBloodSugar == null)+", "
-          +"餐后两小时血糖："+(detailHealthy.healthyExtend.bloodSugarMessage.afterMealBloodSugar == null ? "" : detailHealthy.healthyExtend.bloodSugarMessage.afterMealBloodSugar);
+      console.log(detailHealthy.healthyExtend.bloodSugarMessage.inferiorSymptom.join(","));
+      detailHealthy.mealBloodSugar = "餐前血糖："+(detailHealthy.healthyExtend.bloodSugarMessage.beforeMealBloodSugar == null ? "" : (detailHealthy.healthyExtend.bloodSugarMessage.beforeMealBloodSugar+"mmol/L"))+", "
+          +"餐后两小时血糖："+(detailHealthy.healthyExtend.bloodSugarMessage.afterMealBloodSugar == null ? "" : (detailHealthy.healthyExtend.bloodSugarMessage.afterMealBloodSugar+"mmol/L"));
       detailHealthy.measureBloodSugarFlag = detailHealthy.healthyExtend.bloodSugarMessage.measureBloodSugarFlag == 1 ? "是" : "否";
       detailHealthy.measureBloodSugarTime = detailHealthy.healthyExtend.bloodSugarMessage.measureBloodSugarTime;
       detailHealthy.nearBloodSugar = detailHealthy.healthyExtend.bloodSugarMessage.nearBloodSugar;
       detailHealthy.lowBloodSugarFlag = (detailHealthy.healthyExtend.bloodSugarMessage.lowBloodSugarFlag == 1 ? "是" : "否") + ", 出现时间："+detailHealthy.healthyExtend.bloodSugarMessage.lowBloodSugarTime;
       detailHealthy.complicationFlag = detailHealthy.healthyExtend.bloodSugarMessage.complicationFlag == 1 ? "是" : "否";
       detailHealthy.complication = detailHealthy.healthyExtend.bloodSugarMessage.complication;
-      detailHealthy.inferiorSymptomFlag = (detailHealthy.healthyExtend.bloodSugarMessage.inferiorSymptomFlag == 1 ? "是" : "否") + ", 具体症状："+detailHealthy.healthyExtend.bloodSugarMessage.inferiorSymptom.join(",");
+      detailHealthy.inferiorSymptom = (detailHealthy.healthyExtend.bloodSugarMessage.inferiorSymptomFlag == 1 ? "是" : "否") + ", 具体症状："+detailHealthy.healthyExtend.bloodSugarMessage.inferiorSymptom.join(",");
       detailHealthy.weightChangeFlag = detailHealthy.healthyExtend.bloodSugarMessage.weightChangeFlag == 1 ? "是" : "否";
 
-      detailHealthy.mealBloodPressure = "餐前血糖："+(detailHealthy.healthyExtend.bloodPressureMessage.beforeMealBloodPressure == null ? "" : detailHealthy.healthyExtend.bloodPressureMessage.beforeMealBloodPressure == null)+", "
-          +"餐后两小时血糖："+(detailHealthy.healthyExtend.bloodPressureMessage.afterMealBloodPressure == null ? "" : detailHealthy.healthyExtend.bloodPressureMessage.afterMealBloodPressure);
+      detailHealthy.mealBloodPressure = "餐前血压："+(detailHealthy.healthyExtend.bloodPressureMessage.beforeMealBloodPressure == null ? "" : (detailHealthy.healthyExtend.bloodPressureMessage.beforeMealBloodPressure+"mmHg"))+", "
+          +"餐后两小时血压："+(detailHealthy.healthyExtend.bloodPressureMessage.afterMealBloodPressure == null ? "" : (detailHealthy.healthyExtend.bloodPressureMessage.afterMealBloodPressure+"mmHg"));
       detailHealthy.measureBloodPressureFlag = detailHealthy.healthyExtend.bloodPressureMessage.measureBloodPressureFlag == 1 ? "是" : "否";
       detailHealthy.measureBloodPressureTime = detailHealthy.healthyExtend.bloodPressureMessage.measureBloodPressureTime;
       detailHealthy.nearBloodPressure = detailHealthy.healthyExtend.bloodPressureMessage.nearBloodPressure;
       detailHealthy.lowBloodPressureFlag = (detailHealthy.healthyExtend.bloodPressureMessage.lowBloodPressureFlag == 1 ? "是" : "否") + ", 出现时间："+detailHealthy.healthyExtend.bloodPressureMessage.lowBloodPressureTime;
-      detailHealthy.complicationFlag = detailHealthy.healthyExtend.bloodPressureMessage.complicationFlag == 1 ? "是" : "否";
-      detailHealthy.complication = detailHealthy.healthyExtend.bloodPressureMessage.complication;
-      detailHealthy.inferiorSymptomFlag = (detailHealthy.healthyExtend.bloodPressureMessage.inferiorSymptomFlag == 1 ? "是" : "否") + ", 具体症状："+detailHealthy.healthyExtend.bloodPressureMessage.inferiorSymptom.join(",");
-      detailHealthy.weightChangeFlag = detailHealthy.healthyExtend.bloodPressureMessage.weightChangeFlag == 1 ? "是" : "否";
+      detailHealthy.pressureComplicationFlag = detailHealthy.healthyExtend.bloodPressureMessage.complicationFlag == 1 ? "是" : "否";
+      detailHealthy.pressureComplication = detailHealthy.healthyExtend.bloodPressureMessage.complication;
+      detailHealthy.pressureInferiorSymptom = (detailHealthy.healthyExtend.bloodPressureMessage.inferiorSymptomFlag == 1 ? "是" : "否") + ", 具体症状："+detailHealthy.healthyExtend.bloodPressureMessage.inferiorSymptom.join(",");
+      detailHealthy.pressureWeightChangeFlag = detailHealthy.healthyExtend.bloodPressureMessage.weightChangeFlag == 1 ? "是" : "否";
 
       detailHealthy.easyAnxiousFlag = detailHealthy.healthyExtend.anxietyStateMessage.easyAnxiousFlag == 1 ? "是" : "否";
       detailHealthy.upsetRecently = detailHealthy.healthyExtend.anxietyStateMessage.upsetRecently == 1 ? "是" : "否";
-      detailHealthy.unervousOnSpecialOccasionsFlag = detailHealthy.healthyExtend.anxietyStateMessage.nervousOnSpecialOccasionsFlag == 1 ? "是" : "否";
+      detailHealthy.nervousOnSpecialOccasionsFlag = detailHealthy.healthyExtend.anxietyStateMessage.nervousOnSpecialOccasionsFlag == 1 ? "是" : "否";
       detailHealthy.terrifiedFlag = detailHealthy.healthyExtend.anxietyStateMessage.terrifiedFlag == 1 ? "是" : "否";
       detailHealthy.listlessRecentlyFlag = detailHealthy.healthyExtend.depressedStateMessage.listlessRecentlyFlag == 1 ? "是" : "否";
       detailHealthy.cryRecentlyFlag = detailHealthy.healthyExtend.depressedStateMessage.cryRecentlyFlag == 1 ? "是" : "否";
@@ -844,8 +847,10 @@ export default {
       detailHealthy.noFunLiving = detailHealthy.healthyExtend.depressedStateMessage.noFunLiving == 1 ? "是" : "否";
 
       this.detailHealthy = detailHealthy;
+      console.log("---");
       for (let i = 0; i < this.healthyTitleData.length; i++) {
         let stepArray = [];
+        console.log(i);
         for (let j = 0; j < this.healthyTitleData[i].length; j++) {
           stepArray[j] = {
             attr_name_one: this.healthyTitleData[i][j][0],

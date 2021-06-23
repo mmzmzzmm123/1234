@@ -32,6 +32,7 @@
       <healthy-form9
         v-show="stepArray[9]"
         ref="fileForm"
+        :titleNumFlag="extendedProjectIdArray.indexOf(this.form.conditioningProjectId) != -1"
         @addOrEditHealthy="addCustomerHealthy()"
         :form.sync="form"
       ></healthy-form9>
@@ -90,6 +91,7 @@ export default {
       submitFlag: false,
       stepArray: [true, false, false, false, false, false, false, false, false, false],
       stepActive: 0,
+       extendedProjectIdArray:[5,6],
       form: {
         customerEncId: null,
         name: null,
@@ -211,10 +213,10 @@ export default {
             longEatDrugMessage:[],
             //高血糖评估
             bloodSugarMessage: {
-              "beforeMealBloodSugar": null, 
-              "afterMealBloodSugar": null, 
-              "measureBloodSugarFlag": 0, 
-              "measureBloodSugarTime": null, 
+              "beforeMealBloodSugar": null,
+              "afterMealBloodSugar": null,
+              "measureBloodSugarFlag": 0,
+              "measureBloodSugarTime": null,
               "nearBloodSugar": null,
               "lowBloodSugarFlag": 0,
               "lowBloodSugarTime": null,
@@ -226,10 +228,10 @@ export default {
             },
             //高血压评估
             bloodPressureMessage:{
-              "beforeMealBloodPressure": null, 
-              "afterMealBloodPressure": null, 
-              "measureBloodPressureFlag": 0, 
-              "measureBloodPressureTime": null, 
+              "beforeMealBloodPressure": null,
+              "afterMealBloodPressure": null,
+              "measureBloodPressureFlag": 0,
+              "measureBloodPressureTime": null,
               "nearBloodPressure": null,
               "lowBloodPressureFlag": 0,
               "lowBloodPressureTime": null,
@@ -388,7 +390,7 @@ export default {
           if(this.stepActive == 0){
               if((this.form.healthyExtend.waist != null && this.form.healthyExtend.waist.trim() != "")){
                   if(!reg.test(this.form.healthyExtend.waist)){
-                   this.$message.error("腰围格式错误，整数或一位小数"); 
+                   this.$message.error("腰围格式错误，整数或一位小数");
                    return;
                 }
               }
@@ -397,6 +399,12 @@ export default {
                    this.$message.error("臀围格式错误，整数或一位小数");
                    return;
                 }
+              }
+          }
+          if((this.stepActive == 7 && step > 0) || (this.stepActive == 9 && step < 0)){
+              //高血糖、高血压
+              if(this.extendedProjectIdArray.indexOf(this.form.conditioningProjectId)  == -1){
+                  step = step * 2;
               }
           }
           this.stepArray[this.stepActive] = false;

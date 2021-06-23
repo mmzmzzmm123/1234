@@ -1,6 +1,6 @@
 <template>
   <div>
-    <p class="p_title_1">{{projectName[form.conditioningProjectId+'']}}信息调查</p>
+    <p class="p_title_1">九、{{projectName[form.conditioningProjectId+'']}}信息评估</p>
     <!--高血糖-->
     <div v-show="form.conditioningProjectId == 6 || form.conditioningProjectId == 5">
             <div v-show="form.conditioningProjectId == 6">
@@ -57,7 +57,7 @@
               <el-checkbox-group v-model="form.healthyExtend.bloodSugarMessage.inferiorSymptom">
                   <el-checkbox v-for="(item,index) in healthyData['syndromeNameArray']" :label="item.value" :key="index">{{ item.name }}</el-checkbox>
               </el-checkbox-group>
-        
+
               </div>
               </el-form-item>
               <p class="p_title_2">2、体重变化情况</p>
@@ -68,7 +68,7 @@
                 </el-radio-group>
               </el-form-item>
             </div>
-            
+
             <div v-show="form.conditioningProjectId == 5">
               <p class="p_title_2">1、餐前餐后血压</p>
               <div style="margin-top:10px">
@@ -123,7 +123,7 @@
                 <el-checkbox-group v-model="form.healthyExtend.bloodPressureMessage.inferiorSymptom">
                     <el-checkbox v-for="(item,index) in healthyData['syndromeNameArray']" :label="item.name" :key="index">{{ item.name }}</el-checkbox>
                 </el-checkbox-group>
-          
+
                 </div>
                 </el-form-item>
                 <p class="p_title_2">2、体重变化情况</p>
@@ -203,7 +203,7 @@ export default {
     };
   },
   methods: {
-    
+
   },
   props: {
     form: {
@@ -212,10 +212,10 @@ export default {
     }
   },
   created() {
-      
+
   },
   computed:{
-    
+
   }
 
 };

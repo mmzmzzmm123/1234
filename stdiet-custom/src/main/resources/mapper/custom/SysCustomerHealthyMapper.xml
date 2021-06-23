@@ -557,7 +557,7 @@
     </resultMap>
 
     <select id="getHealthyExtendedByHealthyId" parameterType="Long" resultMap="HealthyExtendedResult">
-       select waist, hipline, eat_fruits_message, long_eat_drug_message, blood_sugar_message, depressed_state_message, blood_pressure_message, anxiety_state_message from sys_customer_healthy_extended where del_flag = 0 and  healthy_id = #{id} limit 1
+       select id, healthy_id, waist, hipline, eat_fruits_message, long_eat_drug_message, blood_sugar_message, depressed_state_message, blood_pressure_message, anxiety_state_message from sys_customer_healthy_extended where del_flag = 0 and  healthy_id = #{id} limit 1
     </select>
 
 </mapper>
