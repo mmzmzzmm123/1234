@@ -25,7 +25,7 @@
             v-show="dataType == 0"
             @click="handleEditGuidanceClick"
             plain
-            >减脂指导</el-button
+            >{{guidanceButtonNmae ? guidanceButtonNmae : '减脂指导'}}</el-button
           >
           <el-button
             v-hasPermi="['custom:healthy:edit']"
@@ -60,7 +60,7 @@
           >
             <div>
               <p class="p_title_1" style="margin-top: 5px">
-                {{ titleArray[index] }}
+                {{ getTitle(index) }}
               </p>
               <table-detail-message :data="item"></table-detail-message>
             </div>
@@ -110,15 +110,15 @@
             >
               <div>
                 <p class="p_title_1" style="margin-top: 5px">
-                  {{ titleArray[index + 1] }}
+                  {{ getTitle(index+1) }}
                 </p>
                 <table-detail-message
                   :data="item"
-                  v-if="index != dataList.length - 2"
+                  v-if="index < 7"
                 ></table-detail-message>
                 <el-table
                   :show-header="false"
-                  v-if="index == dataList.length - 2"
+                  v-if="index == 7"
                   :data="item"
                   border
                   :cell-style="columnStyle"
@@ -287,6 +287,7 @@ export default {
       healthyData: null,
       remarkList: [{ remarkTitle: "备注信息", remarkValue: "" }],
       guidanceList: [{ guidanceTitle: "减脂指导", guidanceValue: "" }],
+      guidanceButtonNmae:"减脂指导",
       // 体征标题
       signTitleData: [
         ["创建时间", "姓名", "年龄"],
@@ -463,6 +464,9 @@ export default {
     };
   },
   methods: {
+    getTitle(index){
+      return healthyData.getTitle(this.healthyData.conditioningProjectId, index)
+    },
     getImgUrl(idx) {
       return `${window.location.origin}${this.medicalReportPathArray[idx]}`;
     },
@@ -562,7 +566,12 @@ export default {
     //对健康评估信息进行处理
     getDataListByHealthyMessage(healthy) {
       let detailHealthy = this.dealHealthy(healthy);
-      console.log(detailHealthy.longEatDrugClassify);
+      //修改第二栏经历信息（高血糖项目：减脂都改为降血糖）
+      this.healthyTitleData[1] = healthyData.getTitleShowArray(healthy.conditioningProjectId);
+      //修改指导名称（高血糖项目：降血糖指导）
+      this.guidanceList[0].guidanceTitle = healthyData.extendHealthyTitle[healthy.conditioningProjectId+""] + "指导";
+      this.guidanceButtonNmae = healthyData.extendHealthyTitle[healthy.conditioningProjectId+""] + "指导";
+
       //性别
       detailHealthy.sex =
         detailHealthy.sex == 0 ? "男" : detailHealthy.sex == 1 ? "女" : "未知";
@@ -807,14 +816,12 @@ export default {
       ).toFixed(1);
       //常吃水果以及份量
       let eatFruitsMessage = "";
-      console.log(detailHealthy.healthyExtend.eatFruitsMessage);
       if(detailHealthy.healthyExtend.eatFruitsMessage != null && detailHealthy.healthyExtend.eatFruitsMessage.length > 0){
          detailHealthy.healthyExtend.eatFruitsMessage.forEach((item,index) => {
             eatFruitsMessage += (eatFruitsMessage == "" ? "" : ", ") + item.name + "/" + item.num;
          });
       }
       detailHealthy.healthyExtend.eatFruitsMessage = eatFruitsMessage;
-      console.log(detailHealthy.healthyExtend.bloodSugarMessage.inferiorSymptom.join(","));
       detailHealthy.mealBloodSugar = "餐前血糖："+(detailHealthy.healthyExtend.bloodSugarMessage.beforeMealBloodSugar == null ? "" : (detailHealthy.healthyExtend.bloodSugarMessage.beforeMealBloodSugar+"mmol/L"))+", "
           +"餐后两小时血糖："+(detailHealthy.healthyExtend.bloodSugarMessage.afterMealBloodSugar == null ? "" : (detailHealthy.healthyExtend.bloodSugarMessage.afterMealBloodSugar+"mmol/L"));
       detailHealthy.measureBloodSugarFlag = detailHealthy.healthyExtend.bloodSugarMessage.measureBloodSugarFlag == 1 ? "是" : "否";
@@ -847,10 +854,8 @@ export default {
       detailHealthy.noFunLiving = detailHealthy.healthyExtend.depressedStateMessage.noFunLiving == 1 ? "是" : "否";
 
       this.detailHealthy = detailHealthy;
-      console.log("---");
       for (let i = 0; i < this.healthyTitleData.length; i++) {
         let stepArray = [];
-        console.log(i);
         for (let j = 0; j < this.healthyTitleData[i].length; j++) {
           stepArray[j] = {
             attr_name_one: this.healthyTitleData[i][j][0],

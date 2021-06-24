@@ -1,34 +1,34 @@
 <template>
   <div>
-    <p class="p_title_1">{{healthyData['titleArray'][1]}}</p>
-    <p class="p_title_2">1、减脂经历</p>
-    <el-form-item label="(1) 用过哪些减脂方法（重点）" prop="experience" class="margin-left">
+    <p class="p_title_1">{{getTitle()}}</p>
+    <p class="p_title_2">1、{{getTitleKey()}}经历</p>
+    <el-form-item :label="'(1) 用过哪些'+getTitleKey()+'方法（重点）'" prop="experience" class="margin-left">
       <el-input
         type="textarea"
-        placeholder="请描述减脂方法"
+        :placeholder="'请描述'+getTitleKey()+'方法'"
         v-model="form.experience"
         maxlength="200"
         show-word-limit
         rows="3"
       ></el-input>
     </el-form-item>
-    <el-form-item label="(2) 减脂中遇到的困难（重点）" prop="difficulty" class="margin-left">
+    <el-form-item :label="'(2) '+getTitleKey()+'中遇到的困难（重点）'" prop="difficulty" class="margin-left">
       <el-input
         type="textarea"
-        placeholder="请描述减脂中遇到的困难"
+        :placeholder="'请描述'+getTitleKey()+'中遇到的困难'"
         v-model="form.difficulty"
         maxlength="200"
         show-word-limit
         rows="3"
       ></el-input>
     </el-form-item>
-    <el-form-item label="(3) 减脂过程中是否反弹" prop="rebound" class="margin-left">
+    <el-form-item :label="'(3)'+getTitleKey()+'过程中是否反弹'" prop="rebound" class="margin-left">
       <el-radio-group v-model="form.rebound" style="margin-left: 10px;">
         <el-radio :label="0" key="1">否</el-radio>
         <el-radio :label="1" key="2">是</el-radio>
       </el-radio-group>
     </el-form-item>
-    <el-form-item label="(4) 是否意识到生活习惯是减脂关键" prop="crux" class="margin-left">
+    <el-form-item :label="'(4) 是否意识到生活习惯是'+getTitleKey()+'关键'" prop="crux" class="margin-left">
       <el-radio-group v-model="form.crux" style="margin-left: 10px;">
         <el-radio :label="0" key="1">否</el-radio>
         <el-radio :label="1" key="2">是</el-radio>
@@ -49,7 +49,12 @@ export default {
     };
   },
   methods: {
-
+      getTitle(){
+          return this.healthyData.getTitle(this.form.conditioningProjectId, 1);
+      },
+      getTitleKey(){
+         return this.healthyData.getTitleKey(this.form.conditioningProjectId);
+      }
   },
   props: {
     form: {

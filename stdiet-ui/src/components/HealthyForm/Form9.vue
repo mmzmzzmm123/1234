@@ -1,6 +1,6 @@
 <template>
   <div>
-    <p class="p_title_1">{{titleNumFlag ? '十、体检报告' : healthyData['titleArray'][8]}}</p>
+    <p class="p_title_1">{{healthyData.extendHealthyIndex.indexOf(form.conditioningProjectId) != -1 ? '十、体检报告' : healthyData['titleArray'][8]}}</p>
     <p class="p_title_2">1、体检报告</p>
     <el-form-item label="(1) 请上传相应的体检报告" prop="fileList" class="margin-left">
       <el-upload style="margin-left: 20px;"

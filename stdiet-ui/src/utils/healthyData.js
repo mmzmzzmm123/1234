@@ -328,7 +328,7 @@ export const syndromeNameArray = [
   { name: "麻木", value: "4" },
   { name: "皮肤瘙痒", value: "5" },
   { name: "性欲减退", value: "6" },
-  { name: "海男性勃起功能障碍", value: "7" },
+  { name: "男性勃起功能障碍", value: "7" },
   { name: "视力下降", value: "8" }
 ];
 
@@ -697,3 +697,34 @@ export function dealHealthy(customerHealthy) {
 
   return customerHealthy;
 }
+
+export const extendHealthyTitle = {"0":"减脂","5":"降血压","6":"降血糖"};
+export const projectName = {"0":"减脂","5":"高血压","6":"高血糖"};
+export const extendHealthyIndex = [5, 6];
+
+export function getTitleKey(projectId){
+    return extendHealthyTitle[projectId+""] ? extendHealthyTitle[projectId+""] : extendHealthyTitle["0"];
+}
+
+export function getTitle(projectId, index){
+    if(extendHealthyIndex.includes(projectId)){
+      if(index == 1){
+         return "二、"+getTitleKey(projectId)+"经历评估";
+      }else{
+         return titleArray[index];
+      }
+    }else{
+      return titleArray[index];
+    }
+}
+
+//获取展示时，根据项目不同返回不同标题
+export function getTitleShowArray(projectId){
+  let keyName =  getTitleKey(projectId);
+  let array = [
+    [keyName+"经历", keyName+"遇到的困难", keyName+"是否反弹"],
+    ["是否意识到生活习惯是"+keyName+"关键", "", ""],
+  ];
+  return array;
+}
+

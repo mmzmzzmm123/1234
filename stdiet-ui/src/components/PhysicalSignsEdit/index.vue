@@ -18,7 +18,7 @@
               v-for="(item, index) in healthyData['titleArray']"
               :label="index"
               :key="index"
-              >{{ item }}</el-checkbox
+              >{{ getTitle(index) }}</el-checkbox
             >
           </el-checkbox-group>
         </el-form-item>
@@ -232,7 +232,10 @@ export default {
               }
           });
           this.form.healthyExtend.longEatDrugMessage[index].drug.push({'name':'','num':'','time':''});
-      }
+      },
+      getTitle(index){
+          return this.healthyData.getTitle(this.form.conditioningProjectId, index);
+      },
   },
     watch:{
         'form.healthyExtend.eatFruitsNameArray'(newArray, oldArray){
