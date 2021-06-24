@@ -48,6 +48,7 @@
           v-show="stepArray[7]"
           :flag="1"
           :form.sync="form"
+          @addNewDrugInput="addNewDrugInput"
         ></healthy-form8>
         <edit-file
           v-show="stepArray[8]"
@@ -195,6 +196,12 @@ export default {
         cusMessage[item] =
           cusMessage[item] != null ? cusMessage[item].join(",") : null;
       });
+        let cusMessageExtended = Object.assign({}, this.form.healthyExtend);
+        //处理healthyExtend扩展数据
+        this.healthyData["needJSONFieldName"].forEach(function (item, index) {
+            cusMessageExtended[item] = cusMessageExtended[item] != null ? JSON.stringify(cusMessageExtended[item]) : null;
+        });
+        cusMessage.healthyExtend = cusMessageExtended;
       updateHealthy(cusMessage)
         .then((response) => {
           if (response.code === 200) {
@@ -217,7 +224,46 @@ export default {
       }
       this.submitShow = allShow;
     },
+      addNewDrugInput(type){
+          let index = null;
+          this.form.healthyExtend.longEatDrugMessage.forEach((v, i) => {
+              if(v.type == type){
+                  index = i;
+              }
+          });
+          this.form.healthyExtend.longEatDrugMessage[index].drug.push({'name':'','num':'','time':''});
+      }
   },
+    watch:{
+        'form.healthyExtend.eatFruitsNameArray'(newArray, oldArray){
+            oldArray = (oldArray == undefined || oldArray == null) ? [] : oldArray;
+            newArray = (newArray == undefined || newArray == null) ? [] : newArray;
+            if(newArray.length > oldArray.length){
+                this.form.healthyExtend.eatFruitsMessage.push({'name': newArray[newArray.length-1], "num": ''});
+            }else{
+                let array = newArray.concat(oldArray).filter(function(v, i, arr) {
+                    return arr.indexOf(v) === arr.lastIndexOf(v);
+                });
+                this.form.healthyExtend.eatFruitsMessage = this.form.healthyExtend.eatFruitsMessage.filter(function(v, i, arr) {
+                    return array.indexOf(v.name) == -1;
+                });
+            }
+        },
+        'form.longEatDrugClassify'(newArray, oldArray){
+            oldArray = (oldArray == undefined || oldArray == null) ? [] : oldArray;
+            newArray = (newArray == undefined || newArray == null) ? [] : newArray;
+            if(newArray.length > oldArray.length){
+                this.form.healthyExtend.longEatDrugMessage.push({'type': newArray[newArray.length-1], 'drug': [{'name':'','num':'','time':''}]});
+            }else{
+                let array = newArray.concat(oldArray).filter(function(v, i, arr) {
+                    return arr.indexOf(v) === arr.lastIndexOf(v);
+                });
+                this.form.healthyExtend.longEatDrugMessage = this.form.healthyExtend.longEatDrugMessage.filter(function(v, i, arr) {
+                    return array.indexOf(v.name) == -1;
+                });
+            }
+        }
+    }
 };
 </script>
 

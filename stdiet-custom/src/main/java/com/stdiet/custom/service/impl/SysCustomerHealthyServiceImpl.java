@@ -11,9 +11,11 @@ import com.stdiet.common.utils.bean.ObjectUtils;
 import com.stdiet.common.utils.reflect.ReflectUtils;
 import com.stdiet.common.utils.sign.AesUtils;
 import com.stdiet.custom.domain.SysCustomer;
+import com.stdiet.custom.domain.SysCustomerHealthyExtended;
 import com.stdiet.custom.domain.SysCustomerPhysicalSigns;
 import com.stdiet.custom.dto.request.HealthyDetailRequest;
 import com.stdiet.custom.dto.response.NutritionalCalories;
+import com.stdiet.custom.mapper.SysCustomerHealthyExtendedMapper;
 import com.stdiet.custom.mapper.SysCustomerMapper;
 import com.stdiet.custom.service.ISysCustomerService;
 import com.stdiet.custom.utils.NutritionalUtils;
@@ -38,6 +40,9 @@ public class SysCustomerHealthyServiceImpl implements ISysCustomerHealthyService
 
     @Autowired
     private SysCustomerMapper sysCustomerMapper;
+
+    @Autowired
+    private SysCustomerHealthyExtendedMapper sysCustomerHealthyExtendedMapper;
 
     public static final String reportDownFileNameFormat = "%s超重%s斤%s";
 
@@ -91,6 +96,11 @@ public class SysCustomerHealthyServiceImpl implements ISysCustomerHealthyService
         //设置客户ID
         sysCustomerHealthy.setCustomerId(Long.parseLong(customerId));
         int rows = sysCustomerHealthyMapper.insertSysCustomerHealthy(sysCustomerHealthy);
+        if(rows > 0 && sysCustomerHealthy.getId() != null){
+            //添加扩展信息
+            sysCustomerHealthy.getHealthyExtend().setHealthyId(sysCustomerHealthy.getId());
+            rows = sysCustomerHealthyExtendedMapper.insertSysCustomerHealthyExtended(sysCustomerHealthy.getHealthyExtend());
+        }
         return rows > 0 ? AjaxResult.success() : AjaxResult.error();
     }
 
@@ -101,7 +111,11 @@ public class SysCustomerHealthyServiceImpl implements ISysCustomerHealthyService
      */
     @Override
     public int updateSysCustomerHealthy(SysCustomerHealthy sysCustomerHealthy){
-        return sysCustomerHealthyMapper.updateSysCustomerHealthy(sysCustomerHealthy);
+        int rows = sysCustomerHealthyMapper.updateSysCustomerHealthy(sysCustomerHealthy);
+        if(rows > 0){
+            rows = sysCustomerHealthyExtendedMapper.updateSysCustomerHealthyExtended(sysCustomerHealthy.getHealthyExtend());
+        }
+        return rows;
     }
 
     /**

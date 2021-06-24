@@ -3,8 +3,12 @@ package com.stdiet.web.controller;
 import com.stdiet.common.utils.AliyunVideoUtils;
 import com.stdiet.common.utils.StringUtils;
 import com.stdiet.common.utils.poi.ExcelUtil;
+import com.stdiet.custom.domain.SysCustomerHealthy;
+import com.stdiet.custom.domain.SysCustomerHealthyExtended;
 import com.stdiet.custom.domain.SysNutritionQuestion;
 import com.stdiet.custom.domain.SysNutritionalVideo;
+import com.stdiet.custom.mapper.SysCustomerHealthyExtendedMapper;
+import com.stdiet.custom.mapper.SysCustomerHealthyMapper;
 import com.stdiet.custom.mapper.SysWxUserInfoMapper;
 import com.stdiet.custom.mapper.SysWxUserLogMapper;
 import com.stdiet.custom.service.ISysNutritionQuestionService;
@@ -36,12 +40,37 @@ public class MyApplicationRunner implements ApplicationRunner {
     @Autowired
     private ISysNutritionalVideoService sysNutritionalVideoService;
 
+    @Autowired
+    private SysCustomerHealthyMapper sysCustomerHealthyMapper;
+
+    @Autowired
+    private SysCustomerHealthyExtendedMapper sysCustomerHealthyExtendedMapper;
 
     @Override
     public void run(ApplicationArguments args) throws Exception {
         System.out.println("--------------项目启动调用方法开始----------");
 
         System.out.println("--------------项目启动调用方法结束-------------");
+    }
+
+    /**
+     * 给所有的健康信息加上扩展信息
+     *
+     */
+    public void addExtendedHealthy(){
+        List<SysCustomerHealthy> sysCustomerHealthies = sysCustomerHealthyMapper.selectSysCustomerHealthyList(new SysCustomerHealthy());
+        System.out.println("总条数："+sysCustomerHealthies.size());
+        int success = 0;
+        if(sysCustomerHealthies != null && sysCustomerHealthies.size() > 0){
+            for (SysCustomerHealthy sysCustomerHealthy : sysCustomerHealthies) {
+                SysCustomerHealthyExtended extended = new SysCustomerHealthyExtended();
+                extended.setHealthyId(sysCustomerHealthy.getId());
+                if(sysCustomerHealthyExtendedMapper.insertSysCustomerHealthyExtended(extended)  > 0){
+                    success++;
+                }
+            }
+        }
+        System.out.println("成功条数："+success);
     }
 
     /**

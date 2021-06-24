@@ -121,7 +121,7 @@
         <result property="avoidFood" column="avoid_food" typeHandler="com.stdiet.custom.typehandler.ArrayJsonHandler" />
         <!-- column是传的参数, select是调用的查询 -->
         <association property="signList" column="physical_signs_id" select="getSignByIds"/>
-
+        <association property="healthyExtend" column="id" select="getHealthyExtendedByHealthyId"></association>
     </resultMap>
 
     <sql id="selectSysCustomerHealthyVo">
@@ -160,7 +160,7 @@
         where sch.del_flag = 0 and sc.del_flag = 0 and sch.customer_id = #{customerId} order by sch.id desc limit 1
     </select>
 
-    <insert id="insertSysCustomerHealthy" parameterType="SysCustomerHealthy">
+    <insert id="insertSysCustomerHealthy" parameterType="SysCustomerHealthy"  useGeneratedKeys="true" keyProperty="id">
         insert into sys_customer_healthy
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="id != null">id,</if>
@@ -540,6 +540,24 @@
         and dict_value in <foreach collection="dictValueList" item="item" index="index"
                                    open="(" separator="," close=")">#{item}</foreach>
         order by dict_sort asc
+    </select>
+
+    <resultMap type="SysCustomerHealthyExtended" id="HealthyExtendedResult">
+        <result property="id"    column="id"    />
+        <result property="healthyId"    column="healthy_id"    />
+        <result property="waist"    column="waist"    />
+        <result property="hipline"    column="hipline"    />
+        <result property="eatFruitsMessage"    column="eat_fruits_message"    />
+        <result property="longEatDrugMessage"    column="long_eat_drug_message"    />
+        <result property="bloodSugarMessage"    column="blood_sugar_message"    />
+        <result property="depressedStateMessage"    column="depressed_state_message"    />
+        <result property="bloodPressureMessage"    column="blood_pressure_message"    />
+        <result property="anxietyStateMessage"    column="anxiety_state_message"    />
+        <result property="delFlag"    column="del_flag"    />
+    </resultMap>
+
+    <select id="getHealthyExtendedByHealthyId" parameterType="Long" resultMap="HealthyExtendedResult">
+       select id, healthy_id, waist, hipline, eat_fruits_message, long_eat_drug_message, blood_sugar_message, depressed_state_message, blood_pressure_message, anxiety_state_message from sys_customer_healthy_extended where del_flag = 0 and  healthy_id = #{id} limit 1
     </select>
 
 </mapper>

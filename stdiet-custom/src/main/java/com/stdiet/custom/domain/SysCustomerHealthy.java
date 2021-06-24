@@ -446,4 +446,6 @@ public class SysCustomerHealthy extends BaseEntity
     private Long delFlag;
 
     private JSONArray avoidFood;
+
+    private SysCustomerHealthyExtended healthyExtend;
 }
