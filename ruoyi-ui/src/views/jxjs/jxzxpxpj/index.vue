@@ -50,7 +50,7 @@
           />
         </el-select>
       </el-form-item>
-      <el-form-item label="培训年份" prop="pxnf">
+      <!-- <el-form-item label="培训年份" prop="pxnf">
         <el-date-picker
           clearable
           size="small"
@@ -61,7 +61,7 @@
           placeholder="选择培训年份"
         >
         </el-date-picker>
-      </el-form-item>
+      </el-form-item> -->
       <el-form-item>
         <el-button
           type="cyan"
@@ -122,11 +122,11 @@
         prop="pxbx"
         :formatter="pxbxFormat"
       />
-      <el-table-column label="培训年份" align="center" prop="pxnf" width="180">
+      <!-- <el-table-column label="培训年份" align="center" prop="pxnf" width="180">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.pxnf, "{y}") }}</span>
         </template>
-      </el-table-column>
+      </el-table-column> -->
       <el-table-column
         label="操作"
         align="center"
@@ -179,7 +179,7 @@
             ></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="培训年份" prop="pxnf">
+        <!-- <el-form-item label="培训年份" prop="pxnf">
           <el-date-picker
             v-model="form.pxnf"
             type="year"
@@ -187,7 +187,7 @@
             placeholder="选择培训年份"
           >
           </el-date-picker>
-        </el-form-item>
+        </el-form-item> -->
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button type="primary" @click="submitForm">确 定</el-button>
@@ -255,9 +255,6 @@ export default {
       rules: {
         pxbx: [
           { required: true, message: "培训表现不能为空", trigger: "blur" },
-        ],
-        pxnf: [
-          { required: true, message: "培训年份不能为空", trigger: "blur" },
         ],
       },
     };
@@ -341,12 +338,12 @@ export default {
       if (id == "" || id == null) {
         this.form.jsid = row.jsid;
         this.open = true;
-        this.title = "添加见习之星教师培训评价";
+        this.title = "添加见习教师培训评价";
       } else {
         getJxzxpxpj(id).then((response) => {
           this.form = response.data;
           this.open = true;
-          this.title = "修改见习之星教师培训评价";
+          this.title = "修改见习教师培训评价";
         });
       }
     },
