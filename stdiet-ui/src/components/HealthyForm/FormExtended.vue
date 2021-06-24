@@ -1,6 +1,6 @@
 <template>
   <div>
-    <p class="p_title_1">九、{{projectName[form.conditioningProjectId+'']}}信息评估</p>
+    <p class="p_title_1">九、{{healthyData.projectName[form.conditioningProjectId+'']}}信息评估</p>
     <!--高血糖-->
     <div v-show="form.conditioningProjectId == 6 || form.conditioningProjectId == 5">
             <div v-show="form.conditioningProjectId == 6">
@@ -198,8 +198,7 @@ export default {
   },
   data() {
     return {
-       healthyData:healthyData,
-       projectName:{'0':'减脂','5':'高血压','6':'高血糖'}
+       healthyData:healthyData
     };
   },
   methods: {

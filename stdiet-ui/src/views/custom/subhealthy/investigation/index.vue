@@ -32,7 +32,6 @@
       <healthy-form9
         v-show="stepArray[9]"
         ref="fileForm"
-        :titleNumFlag="extendedProjectIdArray.indexOf(this.form.conditioningProjectId) != -1"
         @addOrEditHealthy="addCustomerHealthy()"
         :form.sync="form"
       ></healthy-form9>
@@ -91,7 +90,6 @@ export default {
       submitFlag: false,
       stepArray: [true, false, false, false, false, false, false, false, false, false],
       stepActive: 0,
-       extendedProjectIdArray:[5,6],
       form: {
         customerEncId: null,
         name: null,
@@ -402,8 +400,8 @@ export default {
               }
           }
           if((this.stepActive == 7 && step > 0) || (this.stepActive == 9 && step < 0)){
-              //高血糖、高血压
-              if(this.extendedProjectIdArray.indexOf(this.form.conditioningProjectId)  == -1){
+              //
+              if(this.healthyData.extendHealthyIndex.indexOf(this.form.conditioningProjectId) == -1){
                   step = step * 2;
               }
           }
