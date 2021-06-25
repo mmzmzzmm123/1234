@@ -83,7 +83,6 @@
       </el-table-column>
       <el-table-column label="状态" align="center" prop="status" :formatter="statusFormat" />
       <el-table-column label="校级审核意见" align="center" prop="xjshyj" :formatter="xjshyjFormat" />
-      <el-table-column label="校级审核建议" align="center" prop="xjshjy" />
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button
@@ -136,9 +135,9 @@
             ></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="校级审核建议" prop="xjshjy">
+        <!-- <el-form-item label="校级审核建议" prop="xjshjy">
           <el-input v-model="form.xjshjy" type="textarea" placeholder="请输入内容" />
-        </el-form-item>
+        </el-form-item> -->
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button type="primary" @click="submitForm">确 定</el-button>

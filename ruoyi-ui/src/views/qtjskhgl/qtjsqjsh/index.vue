@@ -17,6 +17,15 @@
           />
         </el-select>
       </el-form-item>
+      <el-form-item label="选择学校" prop="deptname">
+        <el-input
+          v-model="queryParams.deptname"
+          placeholder="请输入学校"
+          clearable
+          size="small"
+          @keyup.enter.native="handleQuery"
+        />
+      </el-form-item>
       <el-form-item label="选择教师" prop="jsid">
         <el-input
           v-model="queryParams.jsid"
@@ -123,6 +132,11 @@
         </template>
       </el-table-column>
       <el-table-column
+        label="单位名称"
+        align="center"
+        prop="deptname"
+      />
+      <el-table-column
         label="状态"
         align="center"
         prop="status"
@@ -135,7 +149,7 @@
         prop="xjshyj"
         :formatter="xjshyjFormat"
       />
-      <el-table-column label="校级审核建议" align="center" prop="xjshjy" />
+      <!-- <el-table-column label="校级审核建议" align="center" prop="xjshjy" /> -->
       <!-- <el-table-column label="区级审核人" align="center" prop="qjshr" /> -->
       <el-table-column
         label="区级审核意见"
@@ -279,6 +293,7 @@ export default {
         qjshyj: null,
         qjshjy: null,
         createuseird: null,
+        deptname: null,
       },
       // 查询参数
       queryParams_fa: {
@@ -370,6 +385,7 @@ export default {
         qjshjy: null,
         createuseird: null,
         createTime: null,
+        deptname: null,
       };
       this.resetForm("form");
     },

@@ -80,7 +80,7 @@
 
     <el-table v-loading="loading" :data="qtjskhfaList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="考核方案名称" align="center" prop="name" :show-overflow-tooltip="true">
+      <el-table-column label="考核名称" align="center" prop="name" :show-overflow-tooltip="true">
         <template slot-scope="scope">
           <router-link :to="'/qtjskhgl/qtjskhfa/data/' + scope.row.id" class="link-type">
             <span>{{ scope.row.name }}</span>
@@ -130,7 +130,7 @@
     <!-- 添加或修改群体教师考核方案对话框 -->
     <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="120px">
-        <el-form-item label="考核方案名称" prop="name">
+        <el-form-item label="考核名称" prop="name">
           <el-input v-model="form.name" placeholder="请输入考核方案名称" />
         </el-form-item>
         <el-form-item label="考核方案状态" prop="status">
@@ -259,7 +259,7 @@ export default {
       form: {},
       // 表单校验
       rules: {
-        name: [{ required: true, message: "考核方案名称不能为空", trigger: "blur" },],
+        name: [{ required: true, message: "考核名称不能为空", trigger: "blur" },],
         status: [{ required: true, message: "考核状态不能为空", trigger: "blur" },],
         starttime: [{ required: true, message: "开始时间不能为空", trigger: "blur" },],
         endtime: [{ required: true, message: "结束时间不能为空", trigger: "blur" },],
