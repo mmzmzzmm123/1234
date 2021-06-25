@@ -112,7 +112,7 @@ public class SysCustomerHealthyServiceImpl implements ISysCustomerHealthyService
     @Override
     public int updateSysCustomerHealthy(SysCustomerHealthy sysCustomerHealthy){
         int rows = sysCustomerHealthyMapper.updateSysCustomerHealthy(sysCustomerHealthy);
-        if(rows > 0){
+        if(rows > 0 && sysCustomerHealthy.getHealthyExtend() != null && sysCustomerHealthy.getHealthyExtend().getId() != null){
             rows = sysCustomerHealthyExtendedMapper.updateSysCustomerHealthyExtended(sysCustomerHealthy.getHealthyExtend());
         }
         return rows;
