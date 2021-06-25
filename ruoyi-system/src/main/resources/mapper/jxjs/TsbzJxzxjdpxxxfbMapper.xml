@@ -20,10 +20,22 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="pxfaFilename"    column="pxfa_filename"    />
         <result property="pxzjFilepath"    column="pxzj_filepath"    />
         <result property="pxzjFilename"    column="pxzj_filename"    />
+        <result property="pxxzmdFilepath"    column="pxxzmd_filepath"    />
+        <result property="pxxzmdFilename"    column="pxxzmd_filename"    />
+        <result property="jzpxapFilepath"    column="jzpxap_filepath"    />
+        <result property="jzpxapFilename"    column="jzpxap_filename"    />
+        <result property="pxdsdjjhFilepath"    column="pxdsdjjh_filepath"    />
+        <result property="pxdsdjjhFilename"    column="pxdsdjjh_filename"    />
+        <result property="pxdsdjzjFilepath"    column="pxdsdjzj_filepath"    />
+        <result property="pxdsdjzjFilename"    column="pxdsdjzj_filename"    />
+        <result property="djdstjbFilepath"    column="djdstjb_filepath"    />
+        <result property="djdstjbFilename"    column="djdstjb_filename"    />
+        <result property="djdsalFilepath"    column="djdsal_filepath"    />
+        <result property="djdsalFilename"    column="djdsal_filename"    />
     </resultMap>
 
     <sql id="selectTsbzJxzxjdpxxxfbVo">
-        select id, jdxid, name, pxjh, pxfa, pxzj, px_beiyong, create_userid, create_time, file_path, file_name, pxfa_filepath, pxfa_filename, pxzj_filepath, pxzj_filename from tsbz_jxzxjdpxxxfb
+        select id, jdxid, name, pxjh, pxfa, pxzj, px_beiyong, create_userid, create_time, file_path, file_name, pxfa_filepath, pxfa_filename, pxzj_filepath, pxzj_filename, pxxzmd_filepath, pxxzmd_filename, jzpxap_filepath, jzpxap_filename, pxdsdjjh_filepath, pxdsdjjh_filename, pxdsdjzj_filepath, pxdsdjzj_filename, djdstjb_filepath, djdstjb_filename, djdsal_filepath, djdsal_filename from tsbz_jxzxjdpxxxfb
     </sql>
 
     <select id="selectTsbzJxzxjdpxxxfbList" parameterType="TsbzJxzxjdpxxxfb" resultMap="TsbzJxzxjdpxxxfbResult">
@@ -42,6 +54,18 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="pxfaFilename != null  and pxfaFilename != ''"> and pxfa_filename like concat('%', #{pxfaFilename}, '%')</if>
             <if test="pxzjFilepath != null  and pxzjFilepath != ''"> and pxzj_filepath = #{pxzjFilepath}</if>
             <if test="pxzjFilename != null  and pxzjFilename != ''"> and pxzj_filename like concat('%', #{pxzjFilename}, '%')</if>
+            <if test="pxxzmdFilepath != null  and pxxzmdFilepath != ''"> and pxxzmd_filepath = #{pxxzmdFilepath}</if>
+            <if test="pxxzmdFilename != null  and pxxzmdFilename != ''"> and pxxzmd_filename like concat('%', #{pxxzmdFilename}, '%')</if>
+            <if test="jzpxapFilepath != null  and jzpxapFilepath != ''"> and jzpxap_filepath = #{jzpxapFilepath}</if>
+            <if test="jzpxapFilename != null  and jzpxapFilename != ''"> and jzpxap_filename like concat('%', #{jzpxapFilename}, '%')</if>
+            <if test="pxdsdjjhFilepath != null  and pxdsdjjhFilepath != ''"> and pxdsdjjh_filepath = #{pxdsdjjhFilepath}</if>
+            <if test="pxdsdjjhFilename != null  and pxdsdjjhFilename != ''"> and pxdsdjjh_filename like concat('%', #{pxdsdjjhFilename}, '%')</if>
+            <if test="pxdsdjzjFilepath != null  and pxdsdjzjFilepath != ''"> and pxdsdjzj_filepath = #{pxdsdjzjFilepath}</if>
+            <if test="pxdsdjzjFilename != null  and pxdsdjzjFilename != ''"> and pxdsdjzj_filename like concat('%', #{pxdsdjzjFilename}, '%')</if>
+            <if test="djdstjbFilepath != null  and djdstjbFilepath != ''"> and djdstjb_filepath = #{djdstjbFilepath}</if>
+            <if test="djdstjbFilename != null  and djdstjbFilename != ''"> and djdstjb_filename like concat('%', #{djdstjbFilename}, '%')</if>
+            <if test="djdsalFilepath != null  and djdsalFilepath != ''"> and djdsal_filepath = #{djdsalFilepath}</if>
+            <if test="djdsalFilename != null  and djdsalFilename != ''"> and djdsal_filename like concat('%', #{djdsalFilename}, '%')</if>
         </where>
     </select>
     
@@ -67,6 +91,18 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="pxfaFilename != null">pxfa_filename,</if>
             <if test="pxzjFilepath != null">pxzj_filepath,</if>
             <if test="pxzjFilename != null">pxzj_filename,</if>
+            <if test="pxxzmdFilepath != null">pxxzmd_filepath,</if>
+            <if test="pxxzmdFilename != null">pxxzmd_filename,</if>
+            <if test="jzpxapFilepath != null">jzpxap_filepath,</if>
+            <if test="jzpxapFilename != null">jzpxap_filename,</if>
+            <if test="pxdsdjjhFilepath != null">pxdsdjjh_filepath,</if>
+            <if test="pxdsdjjhFilename != null">pxdsdjjh_filename,</if>
+            <if test="pxdsdjzjFilepath != null">pxdsdjzj_filepath,</if>
+            <if test="pxdsdjzjFilename != null">pxdsdjzj_filename,</if>
+            <if test="djdstjbFilepath != null">djdstjb_filepath,</if>
+            <if test="djdstjbFilename != null">djdstjb_filename,</if>
+            <if test="djdsalFilepath != null">djdsal_filepath,</if>
+            <if test="djdsalFilename != null">djdsal_filename,</if>
          </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="jdxid != null">#{jdxid},</if>
@@ -83,6 +119,18 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="pxfaFilename != null">#{pxfaFilename},</if>
             <if test="pxzjFilepath != null">#{pxzjFilepath},</if>
             <if test="pxzjFilename != null">#{pxzjFilename},</if>
+            <if test="pxxzmdFilepath != null">#{pxxzmdFilepath},</if>
+            <if test="pxxzmdFilename != null">#{pxxzmdFilename},</if>
+            <if test="jzpxapFilepath != null">#{jzpxapFilepath},</if>
+            <if test="jzpxapFilename != null">#{jzpxapFilename},</if>
+            <if test="pxdsdjjhFilepath != null">#{pxdsdjjhFilepath},</if>
+            <if test="pxdsdjjhFilename != null">#{pxdsdjjhFilename},</if>
+            <if test="pxdsdjzjFilepath != null">#{pxdsdjzjFilepath},</if>
+            <if test="pxdsdjzjFilename != null">#{pxdsdjzjFilename},</if>
+            <if test="djdstjbFilepath != null">#{djdstjbFilepath},</if>
+            <if test="djdstjbFilename != null">#{djdstjbFilename},</if>
+            <if test="djdsalFilepath != null">#{djdsalFilepath},</if>
+            <if test="djdsalFilename != null">#{djdsalFilename},</if>
          </trim>
     </insert>
 
@@ -103,6 +151,18 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="pxfaFilename != null">pxfa_filename = #{pxfaFilename},</if>
             <if test="pxzjFilepath != null">pxzj_filepath = #{pxzjFilepath},</if>
             <if test="pxzjFilename != null">pxzj_filename = #{pxzjFilename},</if>
+            <if test="pxxzmdFilepath != null">pxxzmd_filepath = #{pxxzmdFilepath},</if>
+            <if test="pxxzmdFilename != null">pxxzmd_filename = #{pxxzmdFilename},</if>
+            <if test="jzpxapFilepath != null">jzpxap_filepath = #{jzpxapFilepath},</if>
+            <if test="jzpxapFilename != null">jzpxap_filename = #{jzpxapFilename},</if>
+            <if test="pxdsdjjhFilepath != null">pxdsdjjh_filepath = #{pxdsdjjhFilepath},</if>
+            <if test="pxdsdjjhFilename != null">pxdsdjjh_filename = #{pxdsdjjhFilename},</if>
+            <if test="pxdsdjzjFilepath != null">pxdsdjzj_filepath = #{pxdsdjzjFilepath},</if>
+            <if test="pxdsdjzjFilename != null">pxdsdjzj_filename = #{pxdsdjzjFilename},</if>
+            <if test="djdstjbFilepath != null">djdstjb_filepath = #{djdstjbFilepath},</if>
+            <if test="djdstjbFilename != null">djdstjb_filename = #{djdstjbFilename},</if>
+            <if test="djdsalFilepath != null">djdsal_filepath = #{djdsalFilepath},</if>
+            <if test="djdsalFilename != null">djdsal_filename = #{djdsalFilename},</if>
         </trim>
         where id = #{id}
     </update>
