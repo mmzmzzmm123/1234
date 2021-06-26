@@ -8,7 +8,7 @@ import java.math.BigDecimal;
 
 /**
  * 自定义导出Excel数据注解
- * 
+ *
  * @author ruoyi
  */
 @Retention(RetentionPolicy.RUNTIME)
@@ -109,6 +109,11 @@ public @interface Excel
      * 导出字段对齐方式（0：默认；1：靠左；2：居中；3：靠右）
      */
     Align align() default Align.AUTO;
+
+    /**
+     * 导出数字格式，对应Excel中设置单元格格式下的数字格式。如：保留两位小数为"#0.00"
+     */
+    public String dataFormat() default "";
 
     public enum Align
     {
