@@ -14,12 +14,15 @@
             v-model="showModuleArray"
             @change="changeShowModule()"
           >
-            <el-checkbox
-              v-for="(item, index) in healthyData['titleArray']"
-              :label="index"
-              :key="index"
-              >{{ getTitle(index) }}</el-checkbox
-            >
+            <template v-for="(item, index) in healthyData['titleArray']">
+                <el-checkbox
+                v-if="index != 1 || healthyData['notExperienceIndex'].indexOf(form.conditioningProjectId) == -1"
+                :label="index"
+                :key="index"
+                >{{ getTitle(index) }}</el-checkbox
+                >
+            </template>
+            
           </el-checkbox-group>
         </el-form-item>
       </el-form>

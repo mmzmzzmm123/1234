@@ -10,7 +10,7 @@
           :rows="25"
           maxlength="300"
           show-word-limit
-          placeholder="请输入减脂指导"
+          placeholder="请输入指导内容"
           v-model="form.guidance">
         </el-input>
       </el-form-item>
@@ -45,9 +45,9 @@ export default {
     };
   },
   methods: {
-    showDialog(data, healthy) {
+    showDialog(data, healthy,guidanceButtonNmae) {
       this.data = data;
-      this.title = "修改"+`「${data.name}」`+"减脂指导";
+      this.title = "修改"+guidanceButtonNmae;//"修改"+`「${data.name}」`+""+guidanceButtonNmae+"指导";
       this.form.id = healthy.id;
       this.form.guidance = healthy.guidance;
       this.visible = true;

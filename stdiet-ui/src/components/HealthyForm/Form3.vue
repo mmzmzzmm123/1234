@@ -1,6 +1,6 @@
 <template>
   <div>
-    <p class="p_title_1">{{healthyData['titleArray'][2]}}</p>
+    <p class="p_title_1">{{getTitle()}}</p>
     <p class="p_title_2">1、家庭调味品</p>
     <el-form-item :label="'(1) 调味品种类'" prop="condiment" class="margin-left">
       <el-checkbox-group v-model="form.condiment">
@@ -50,7 +50,9 @@ export default {
     };
   },
   methods: {
-
+       getTitle(){
+          return this.healthyData.getTitle(this.form.conditioningProjectId, 2);
+       },
   },
   props: {
     form: {
