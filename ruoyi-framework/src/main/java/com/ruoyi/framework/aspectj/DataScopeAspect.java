@@ -86,8 +86,9 @@ public class DataScopeAspect
             // 如果是超级管理员，则不过滤数据
             if (StringUtils.isNotNull(currentUser) && !currentUser.isAdmin())
             {
-                dataScopeFilter(joinPoint, currentUser, controllerDataScope.deptAlias(),
-                        controllerDataScope.userAlias());
+                dataScopeFilter(joinPoint, currentUser,
+                        controllerDataScope.deptAlias(), controllerDataScope.deptColumnName(),
+                        controllerDataScope.userAlias(), controllerDataScope.userColumnName());
             }
         }
     }
@@ -99,7 +100,9 @@ public class DataScopeAspect
      * @param user 用户
      * @param userAlias 别名
      */
-    public static void dataScopeFilter(JoinPoint joinPoint, SysUser user, String deptAlias, String userAlias)
+    public static void dataScopeFilter(JoinPoint joinPoint, SysUser user,
+                                       String deptAlias, String deptColumnName,
+                                       String userAlias, String userColumnName)
     {
         StringBuilder sqlString = new StringBuilder();
 
@@ -114,24 +117,26 @@ public class DataScopeAspect
             else if (DATA_SCOPE_CUSTOM.equals(dataScope))
             {
                 sqlString.append(StringUtils.format(
-                        " OR {}.dept_id IN ( SELECT dept_id FROM sys_role_dept WHERE role_id = {} ) ", deptAlias,
-                        role.getRoleId()));
+                        " OR {}.{} IN ( SELECT dept_id FROM sys_role_dept WHERE role_id = {} ) ",
+                        deptAlias, deptColumnName, role.getRoleId()));
             }
             else if (DATA_SCOPE_DEPT.equals(dataScope))
             {
-                sqlString.append(StringUtils.format(" OR {}.dept_id = {} ", deptAlias, user.getDeptId()));
+                sqlString.append(StringUtils.format(" OR {}.{} = {} ",
+                        deptAlias, deptColumnName, user.getDeptId()));
             }
             else if (DATA_SCOPE_DEPT_AND_CHILD.equals(dataScope))
             {
                 sqlString.append(StringUtils.format(
-                        " OR {}.dept_id IN ( SELECT dept_id FROM sys_dept WHERE dept_id = {} or find_in_set( {} , ancestors ) )",
-                        deptAlias, user.getDeptId(), user.getDeptId()));
+                        " OR {}.{} IN ( SELECT dept_id FROM sys_dept WHERE dept_id = {} or find_in_set( {} , ancestors ) )",
+                        deptAlias, deptColumnName, user.getDeptId(), user.getDeptId()));
             }
             else if (DATA_SCOPE_SELF.equals(dataScope))
             {
                 if (StringUtils.isNotBlank(userAlias))
                 {
-                    sqlString.append(StringUtils.format(" OR {}.user_id = {} ", userAlias, user.getUserId()));
+                    sqlString.append(StringUtils.format(" OR {}.{} = {} ",
+                            userAlias, userColumnName, user.getUserId()));
                 }
                 else
                 {
