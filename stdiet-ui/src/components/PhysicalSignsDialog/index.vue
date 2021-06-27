@@ -15,7 +15,7 @@
           <!-- 只有新版健康评估信息才可修改，旧的体征数据不支持修改 -->
           <el-button
             type="info"
-            v-show="dataType == 0 && healthyData.conditioningProjectId == 0"
+            v-show="dataType == 0 && (healthyData && healthyData.conditioningProjectId == 0)"
             @click="generateReport"
             plain
             >下载报告</el-button
@@ -175,12 +175,12 @@
               </div>
             </div>
             <div
-              v-for="(item, index) in dataList.slice(9, 13)"
+              v-for="(item, index) in dataList.slice(9, 14)"
               style="margin-bottom: 50px"
               :key="'sign'+index"
             >
-              <div v-if="healthyData.conditioningProjectId == 5 || healthyData.conditioningProjectId == 6">
-                <div v-if="index == 2 || index == 3 || (healthyData.conditioningProjectId == 5 && index == 1) || (healthyData.conditioningProjectId == 6 && index == 0)">
+              <div v-if="healthyDataConstData['extendHealthyIndex'].indexOf(healthyData.conditioningProjectId) != -1">
+                <div v-if="isShowModule(index)">
                   <p class="p_title_1" style="margin-top: 5px">
                     {{ extendedTitleArray[index] }}
                   </p>
@@ -322,7 +322,7 @@ export default {
       healthyTitleData: healthyData['healthyTitleData'],
       // 健康评估属性
       healthyValueData: healthyData['healthyValueData'],
-       extendedTitleArray:['十、高血糖信息评估',"十、高血压信息评估","十一、焦虑信息评估","十二、抑郁信息评估"],
+       extendedTitleArray:['十、高血糖信息评估',"十、高血压信息评估","十一、焦虑信息评估","十二、抑郁信息评估","九、月经不调、多囊信息评估"],
       copyValue: "",
       detailHealthy: null,
       dialogWidth: "950px",
@@ -331,7 +331,7 @@ export default {
   },
   methods: {
     getTitle(index){
-      return healthyData.getTitle(this.healthyData.conditioningProjectId, index)
+      return healthyData.getTitle(this.healthyData.conditioningProjectId, index, 1)
     },
     getImgUrl(idx) {
       return `${window.location.origin}${this.medicalReportPathArray[idx]}`;
@@ -679,9 +679,8 @@ export default {
         (detailHealthy.tall / 100)
       ).toFixed(1);
 
-      
-
       this.detailHealthy = healthyData.dealHealthyExtend(detailHealthy);
+
       for (let i = 0; i < this.healthyTitleData.length; i++) {
         let stepArray = [];
         for (let j = 0; j < this.healthyTitleData[i].length; j++) {
@@ -697,6 +696,14 @@ export default {
         this.dataList[i] = stepArray;
       }
     },
+     isShowModule(index){
+         if(this.healthyData.conditioningProjectId == 5 || this.healthyData.conditioningProjectId == 6){
+             return index == 2 || index == 3 || (this.healthyData.conditioningProjectId == 5 && index == 1) || (this.healthyData.conditioningProjectId == 6 && index == 0)
+         }else if(this.healthyData.conditioningProjectId == 1 || this.healthyData.conditioningProjectId == 2){
+             return index == 4;
+         }
+         return false;
+     },
     //健康信息处理，将数组转为字符串
     dealHealthy(customerHealthy) {
       let array = healthyData["needAttrName"];

@@ -199,7 +199,7 @@
             </div>
         </div>
         <!-- 月经不调、多囊卵巢综合症 -->
-        <div v-if="form.conditioningProjectId == 1 || form.conditioningProjectId == 2"> 
+        <div v-if="form.conditioningProjectId == 1 || form.conditioningProjectId == 2">
             <p class="p_title_2">1、月经基础情况</p>
             <div style="margin-top:10px">
                 <el-form-item label="(1) 月经周期、天数" class="margin-left">
@@ -225,7 +225,7 @@
                             rows="3"
                   ></el-input>
             </el-form-item>
-            
+
             <el-form-item label="(4) 月经提前时长" class="margin-left">
                 <el-input type="textarea"
                             v-model="form.healthyExtend.menstruationMessage.menstrualAdvanceDays"
@@ -235,7 +235,7 @@
                             rows="3"
                   ></el-input>
             </el-form-item>
-            
+
             <el-form-item label="(4) 是否有闭经" class="margin-left">
                 <el-radio-group  v-model="form.healthyExtend.menstruationMessage.amenorrhoeaFlag">
                   <el-radio  :label="1" >是</el-radio>
@@ -243,7 +243,7 @@
                 </el-radio-group>
                 <div style="margin-top:8px;"><span class="text-span">若存在闭经，请您描述一下闭经时长</span>
                   <el-input maxlength="100"
-                          v-model="form.healthyExtend.bloodSugarMessage.amenorrhoeaDays"
+                          v-model="form.healthyExtend.menstruationMessage.amenorrhoeaDays"
                           placeholder="请输入闭经时长"
                 ></el-input>
                 </div>
@@ -276,7 +276,7 @@
                 ></el-input>
                 </div>
             </el-form-item>
-            
+
              <p class="p_title_2">2、痛经情况</p>
              <el-form-item label="(1)、是否痛经" class="margin-left">
                 <el-radio-group  v-model="form.healthyExtend.menstruationMessage.menstrualPainFlag">
@@ -284,24 +284,24 @@
                   <el-radio  :label="0" >否</el-radio>
                 </el-radio-group>
              </el-form-item>
-             
+
             <el-form-item label="(2)、痛经性质" class="margin-left">
-              
+
                 <el-radio-group v-model="form.healthyExtend.menstruationMessage.menstrualNature">
                   <el-radio  v-for="(item,index) in healthyData['menstrualNatureArray']" :style="'width:100%;'+(index >0 ? 'margin-top:7px' : '')" :label="item.value" :key="index">{{ item.name }}</el-radio>
                 </el-radio-group>
-            
+
             </el-form-item>
             <el-form-item label="(3)、痛经类型" class="margin-left">
-              
+
               <el-radio-group v-model="form.healthyExtend.menstruationMessage.menstrualType">
                   <el-radio  v-for="(item,index) in healthyData['menstrualTypeArray']" :style="'width:100%;'+(index >0 ? 'margin-top:7px' : '')" :label="item.value" :key="index">{{ item.name }}</el-radio>
                 </el-radio-group>
-                
+
             </el-form-item>
             <div class="margin-left text-span">
                   <div style="color:#1890ff">类型特点说明：</div>
-                  <div style="margin-top:5px" v-for="(item,index) in healthyData['menstrualTypeIntroduceArray']" :key="index+'div'">{{item.name}}：<span class="text-span-min">{{item.value}}</span></div>   
+                  <div style="margin-top:5px" v-for="(item,index) in healthyData['menstrualTypeIntroduceArray']" :key="index+'div'">{{item.name}}：<span class="text-span-min">{{item.value}}</span></div>
              </div>
 
             <p class="p_title_2">3、药物情况</p>
@@ -312,45 +312,45 @@
                 </el-radio-group>
                 <div style="margin-top:8px;"><span class="text-span">若存在用药，请描述具体名称、剂量、服用时间等</span>
                   <el-input maxlength="100"
-                          v-model="form.healthyExtend.bloodSugarMessage.medication"
+                          v-model="form.healthyExtend.menstruationMessage.medication"
                           placeholder="请输入用药详情"
                 ></el-input>
                 </div>
             </el-form-item>
             <el-form-item label="(2)、是否有生育计划" class="margin-left">
-              
+
               <el-radio-group  v-model="form.healthyExtend.menstruationMessage.familyPlann">
                   <el-radio  :label="1" >是</el-radio>
                   <el-radio  :label="0" >否</el-radio>
                 </el-radio-group>
-            
+
             </el-form-item>
 
             <el-form-item label="(3)、是否存在同房出血情况" class="margin-left">
-              
+
               <el-radio-group  v-model="form.healthyExtend.menstruationMessage.sameRoomBleed">
                   <el-radio  :label="1" >是</el-radio>
                   <el-radio  :label="0" >否</el-radio>
                 </el-radio-group>
-            
+
             </el-form-item>
 
             <el-form-item label="(4)、是否存在排卵期出血" class="margin-left">
-              
+
               <el-radio-group  v-model="form.healthyExtend.menstruationMessage.ovulationBleed">
                   <el-radio  :label="1" >是</el-radio>
                   <el-radio  :label="0" >否</el-radio>
                 </el-radio-group>
-            
+
             </el-form-item>
 
              <el-form-item label="(5)、是否出现胰岛素抵抗（重点）" class="margin-left">
-              
+
               <el-radio-group  v-model="form.healthyExtend.menstruationMessage.insulinResistanceFlag">
                   <el-radio  :label="1" >是</el-radio>
                   <el-radio  :label="0" >否</el-radio>
                 </el-radio-group>
-            
+
             </el-form-item>
 
             <el-form-item label="(6)、其他补充" class="margin-left">
@@ -362,7 +362,7 @@
                             show-word-limit
                             rows="3"
                   ></el-input>
-            
+
             </el-form-item>
 
         </div>

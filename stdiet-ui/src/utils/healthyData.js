@@ -764,7 +764,7 @@ export function getTitleKey(projectId){
     return extendHealthyTitle[projectId+""] != null ? extendHealthyTitle[projectId+""] : extendHealthyTitle["0"];
 }
 
-export function getTitle(projectId, index){
+export function getTitle(projectId, index , flag){
     if(extendHealthyIndex.includes(projectId)){
       //跳过了减脂经历
       if(notExperienceIndex.includes(projectId)){
@@ -776,7 +776,7 @@ export function getTitle(projectId, index){
       }else{
         if(index == 1){
           return titleNumArray[index]+getTitleKey(projectId)+"经历评估";
-        }else if(index == 8){
+        }else if(index == 8 && flag != 1){
             return titleNumArray[index+1] + titleArray[index];
         }else{
             return titleNumArray[index]+titleArray[index];
@@ -791,6 +791,8 @@ export function getTitle(projectId, index){
       }
     }
 }
+
+
 
 //获取展示时，根据项目不同返回不同标题
 export function getTitleShowArray(projectId){
@@ -836,8 +838,12 @@ export const extendedYesNoAttrName = [
 
   {"targetAttrName": "amenorrhoeaFlag", "healthyAttrName": "menstruationMessage,amenorrhoeaFlag"},
 
+  {"targetAttrName": "medicationFlag", "healthyAttrName": "menstruationMessage,medicationFlag"},
+  {"targetAttrName": "familyPlann", "healthyAttrName": "menstruationMessage,familyPlann"},
+  {"targetAttrName": "sameRoomBleed", "healthyAttrName": "menstruationMessage,sameRoomBleed"},
 
-  
+  {"targetAttrName": "ovulationBleed", "healthyAttrName": "menstruationMessage,ovulationBleed"},
+  {"targetAttrName": "insulinResistanceFlag", "healthyAttrName": "menstruationMessage,insulinResistanceFlag"}
 
 ]
 
@@ -883,7 +889,7 @@ export function dealHealthyExtend(detailHealthy){
         eatFruitsMessage += (eatFruitsMessage == "" ? "" : ", ") + item.name + "/" + item.num;
      });
   }
-  
+
   //高血糖
   detailHealthy.healthyExtend.eatFruitsMessage = eatFruitsMessage;
   detailHealthy.mealBloodSugar = "餐前血糖："+(detailHealthy.healthyExtend.bloodSugarMessage.beforeMealBloodSugar == null ? "" : (detailHealthy.healthyExtend.bloodSugarMessage.beforeMealBloodSugar+"mmol/L"))+", "
@@ -908,31 +914,37 @@ export function dealHealthyExtend(detailHealthy){
   detailHealthy.pressureInferiorSymptom = (detailHealthy.healthyExtend.bloodPressureMessage.inferiorSymptomFlag == 1 ? "是" : "否") + ", 具体症状："+getStringByMuchValue(syndromeNameArray,detailHealthy.healthyExtend.bloodPressureMessage.inferiorSymptom);
   detailHealthy.pressureWeightChangeFlag = detailHealthy.healthyExtend.bloodPressureMessage.weightChangeFlag == 1 ? "是" : "否";
 
-
-  detailHealthy.menstrualCycle = "生理周期：" + detailHealthy.healthyExtend.menstruationMessage.menstrualCycle + "，生理天数：" + detailHealthy.healthyExtend.menstruationMessage.menstrualDays;
-
+  //月经不调、多囊
+  detailHealthy.menstrualCycle = "生理周期：" + nullToString(detailHealthy.healthyExtend.menstruationMessage.menstrualCycle) + "，生理天数：" + nullToString(detailHealthy.healthyExtend.menstruationMessage.menstrualDays);
   detailHealthy.menstrualForecast = detailHealthy.healthyExtend.menstruationMessage.menstrualForecast;
-
-  dealHealthy.menstrualDelayDays = dealHealthy.healthyExtend.menstruationMessage.menstrualForecast;
-
-  dealHealthy.menstrualAdvanceDays = dealHealthy.healthyExtend.menstruationMessage.menstrualAdvanceDays;
-
-  dealHealthy.amenorrhoeaDays = dealHealthy.amenorrhoeaFlag + "，痛经时长：" + dealHealthy.healthyExtend.menstruationMessage.amenorrhoeaDays;
-
-  dealHealthy.amenorrhoeaDays = dealHealthy.amenorrhoeaFlag + "，痛经时长：" + dealHealthy.healthyExtend.menstruationMessage.amenorrhoeaDays;
-
-  dealHealthy.menstrualColor = getStringBySigleValue(menstrualColorArray, dealHealthy.healthyExtend.menstruationMessage.menstrualColor);
-  dealHealthy.menstrualColor += dealHealthy.menstrualColor != "" ? ("，"+ dealHealthy.healthyExtend.menstruationMessage.otherMenstrualColor) : dealHealthy.healthyExtend.menstruationMessage.otherMenstrualColor;
-  
-  dealHealthy.menstrualCharacter = getStringBySigleValue(menstrualCharacterArray, dealHealthy.healthyExtend.menstruationMessage.menstrualCharacter);
-  dealHealthy.menstrualCharacter += dealHealthy.menstrualCharacter != "" ? ("，"+dealHealthy.healthyExtend.menstruationMessage.otherMenstrualCharacter) : dealHealthy.healthyExtend.menstruationMessage.otherMenstrualCharacter;
-  
-  dealHealthy.menstrualNature = getStringBySigleValue(menstrualNatureArray, dealHealthy.healthyExtend.menstruationMessage.menstrualNature);
-
+  detailHealthy.menstrualDelayDays = detailHealthy.healthyExtend.menstruationMessage.menstrualDelayDays;
+  detailHealthy.menstrualAdvanceDays = detailHealthy.healthyExtend.menstruationMessage.menstrualAdvanceDays;
+  detailHealthy.amenorrhoeaDays = detailHealthy.amenorrhoeaFlag + "，痛经时长：" + nullToString(detailHealthy.healthyExtend.menstruationMessage.amenorrhoeaDays);
+  detailHealthy.menstrualColor = getStringBySigleValue(menstrualColorArray, detailHealthy.healthyExtend.menstruationMessage.menstrualColor);
+  detailHealthy.menstrualColor += (detailHealthy.menstrualColor != "" ? "，" : "") + nullToString(detailHealthy.healthyExtend.menstruationMessage.otherMenstrualColor);
+  detailHealthy.menstrualColor = removeEnd(detailHealthy.menstrualColor);
+  detailHealthy.menstrualCharacter = getStringBySigleValue(menstrualCharacterArray, detailHealthy.healthyExtend.menstruationMessage.menstrualCharacter);
+  detailHealthy.menstrualCharacter += (detailHealthy.menstrualCharacter != "" ? "，" : "") + nullToString(detailHealthy.healthyExtend.menstruationMessage.otherMenstrualCharacter);
+  detailHealthy.menstrualCharacter = removeEnd(detailHealthy.menstrualCharacter);
+  detailHealthy.menstrualNature = getStringBySigleValue(menstrualNatureArray, detailHealthy.healthyExtend.menstruationMessage.menstrualNature);
+  detailHealthy.menstrualType = getStringBySigleValue(menstrualTypeArray, detailHealthy.healthyExtend.menstruationMessage.menstrualType);
+  detailHealthy.medication = detailHealthy.medicationFlag + "，具体药物：" + nullToString(detailHealthy.healthyExtend.menstruationMessage.medication);
+  detailHealthy.otherDescriptions = detailHealthy.healthyExtend.menstruationMessage.otherDescriptions;
 }
 
 export function nullToString(val){
   return (val == undefined || val == null) ? "" : val;
+}
+
+export function removeEnd(val){
+  if(val == undefined || val == null){
+    return "";
+  }
+  let lastChar = val.substr(val.length-1, 1);
+  if(lastChar == "," || lastChar == "，"){
+    return val.substring(0, val.length-1);
+  }
+  return val;
 }
 
 // 健康评估标题
