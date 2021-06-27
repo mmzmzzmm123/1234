@@ -1,6 +1,6 @@
 <template>
   <div>
-    <p class="p_title_1">{{healthyData['titleArray'][5]}}</p>
+    <p class="p_title_1">{{getTitle()}}</p>
     <p class="p_title_2">1、运动频率</p>
     <el-form-item label="(1) 每周运动情况" prop="motionSituation" class="margin-left">
       <div>
@@ -60,7 +60,9 @@ export default {
     };
   },
   methods: {
-
+      getTitle(){
+          return this.healthyData.getTitle(this.form.conditioningProjectId, 5);
+       },
   },
   props: {
     form: {

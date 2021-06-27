@@ -1,6 +1,6 @@
 <template>
   <div>
-    <p class="p_title_1">{{healthyData.extendHealthyIndex.indexOf(form.conditioningProjectId) != -1 ? '十、体检报告' : healthyData['titleArray'][8]}}</p>
+    <p class="p_title_1">{{getTitle()}}</p>
     <p class="p_title_2">1、体检报告</p>
     <el-form-item label="(1) 请上传相应的体检报告" prop="fileList" class="margin-left">
       <el-upload style="margin-left: 20px;"
@@ -22,6 +22,7 @@
         <el-button style="margin-left: 10px;" size="small" @click="removeFileList()">移除文件</el-button>
         <div slot="tip" class="el-upload__tip">1、最多可上传三份，且每份文件不超过20M
           <br>2、仅支持bmp，gif, jpg, jpeg, png, doc, docx, xls, xlsx, ppt, pptx, html, htm, txt, rar, zip, gz, bz2, pdf格式文件
+          <br><span style="color:red">{{ form.conditioningProjectId == 3 ? '3、体检报告必须包含精子活力检查、阴道彩超、地中海贫血基因筛查、甲状腺功能检查、叶酸代谢基因检测五个方面' : ""}}</span>
         </div>
       </el-upload>
     </el-form-item>
@@ -59,6 +60,9 @@ export default {
     };
   },
   methods: {
+    getTitle(){
+          return this.healthyData.getTitle(this.form.conditioningProjectId, 8);
+       },
     uploadFile(){
       if(this.upload.fileList.length > 0 && this.form.medicalReport.length != this.upload.fileList.length){
         this.$refs.upload.submit();

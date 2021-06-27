@@ -15,7 +15,7 @@
           <!-- 只有新版健康评估信息才可修改，旧的体征数据不支持修改 -->
           <el-button
             type="info"
-            v-show="dataType == 0"
+            v-show="dataType == 0 && healthyData.conditioningProjectId == 0"
             @click="generateReport"
             plain
             >下载报告</el-button
@@ -25,7 +25,7 @@
             v-show="dataType == 0"
             @click="handleEditGuidanceClick"
             plain
-            >{{guidanceButtonNmae ? guidanceButtonNmae : '减脂指导'}}</el-button
+            >{{guidanceButtonNmae ? guidanceButtonNmae : '指导'}}</el-button
           >
           <el-button
             v-hasPermi="['custom:healthy:edit']"
@@ -108,7 +108,8 @@
               style="margin-bottom: 50px"
               :key="index"
             >
-              <div>
+             <!-- 备孕 -->
+              <div v-if="index > 0 || healthyDataConstData['notExperienceIndex'].indexOf(healthyData.conditioningProjectId) == -1">
                 <p class="p_title_1" style="margin-top: 5px">
                   {{ getTitle(index+1) }}
                 </p>
@@ -277,6 +278,7 @@ export default {
   },
   data() {
     return {
+      healthyDataConstData: healthyData,
       logo,
       visible: false,
       showFlag: false,
@@ -317,145 +319,9 @@ export default {
       //健康评估每个模板标题，与调查表保持一致
       titleArray: healthyData["titleArray"],
       // 健康评估标题
-      healthyTitleData: [
-        [
-          ["创建时间", "客户姓名", "手机号"],
-          ["调理项目", "性别", "年龄"],
-          ["身高(厘米)", "体重(斤)", "腰围(厘米)"],
-          ["臀围(厘米)", "地域", "BMI"],
-        ],
-        [
-          ["减脂经历", "减脂遇到的困难", "减脂是否反弹"],
-          ["是否意识到生活习惯是减脂关键", "", ""],
-        ],
-        [
-          ["调味品种", "烹调方式", "烹调频次"],
-          ["洗菜方式", "", ""],
-        ],
-        [
-          ["早餐习惯", "早餐吃的食物", "午餐习惯"],
-          ["晚餐习惯", "正餐中素菜占比", "最常吃的肉类"],
-          ["晚餐时间", "每周吃夜宵次数", "夜宵通常吃的食物"],
-          ["食物的冷热偏好", "食物的口味偏好", "平均每周吃生蔬菜几次"],
-          ["每周吃生蔬菜的频次类型", "平均每天吃水果次数", "吃水果的时间段"],
-          ["平时吃水果的频次", "经常吃的水果以及份量","一餐吃几碗饭"],
-          ["吃几成饱","吃饭速度", "饮食特点"],
-          ["常吃的零食","有无服用营养保健品", "营养保健品品牌名"],
-          ["营养保健品产品名","服用营养保健品频次", "忌口过敏食物"],
-        ],
-        [
-          ["每天的饮水量", "喜欢喝什么水", "喝水习惯"],
-          ["常喝的饮品的每周频次", "是否喝酒", "喝酒种类"],
-          ["对应酒的量", "是否抽烟", "抽烟频次和烟龄"],
-          ["是否经常抽二手烟", "工作行业", "工作性质"],
-          ["排便次数", "排便时间段", "排便的形状"],
-          ["排便的气味", "排便的速度", "排便的颜色"],
-        ],
-        [
-          ["每周运动次数", "每次运动的时长", "每天运动的时间"],
-          ["运动", "运动场地", ""],
-        ],
-        [
-          ["睡觉时间", "睡眠质量", "是否有辅助入睡药物"],
-          ["辅助睡眠类药物名称", "是否经常熬夜", "熬夜频次"],
-        ],
-        [
-          ["病史体征", "湿气数据", "气血数据"],
-          ["家族疾病史", "手术史", "近期是否做过手术"],
-          ["手术恢复情况", "是否长期服用药物", "长期服用的药物"],
-          ["是否出现过过敏症状", "过敏症状", "过敏源"],
-        ],
-        [["体检报告(1)", "体检报告(2)", "体检报告(3)"]],
-        [
-          ["餐前餐后血糖", "是否有规律测血糖", "测量血糖时间"],
-          ["近期血糖水平", "是否有低血糖反应", "是否有出现并发症"],
-          ["并发症情况", "存在症状", "近三个月体重是否有变化"],
-
-        ],
-        [
-          ["餐前餐后血压", "是否有规律测血压", "测量血压时间"],
-          ["近期血压水平", "是否有低血压反应", "是否有出现并发症"],
-          ["并发症情况", "存在症状", "近三个月体重是否有变化"]
-        ],
-          [
-              ["你认为你是一个容易焦虑或紧张的人吗","最近一段时间，你是否比平时更感到焦虑或忐忑不安","是否有一些特殊场合或情景更容易使得你紧张、焦虑"],
-              ["你曾经有过惊恐发作吗.即突然发生的强烈不适感或心慌、眩晕、感到憋气或呼吸困难等症状","",""]
-          ],
-          [
-              ["过去几周(或几个月)是否感觉到无精打采、伤感、或对生活的乐趣减少","除了不开心之外，是否比平时更加悲观或想哭","经常有早醒吗(事实上不需那么早醒来)"],
-              ["近来是否经常想到活着没有意思","",""]
-          ]
-      ],
+      healthyTitleData: healthyData['healthyTitleData'],
       // 健康评估属性
-      healthyValueData: [
-        [
-          ["createTime", "name", "phone"],
-          ["conditioningProject", "sex", "age"],
-          ["tall", "weight", "healthyExtend,waist"],
-          ["healthyExtend,hipline", "position", "bmi"],
-        ],
-        [
-          ["experience", "difficulty", "rebound"],
-          ["crux", "", ""],
-        ],
-        [
-          ["condiment", "cookingStyle", "cookingStyleRate"],
-          ["washVegetablesStyle", "", ""],
-        ],
-        [
-          ["breakfastType", "breakfastFood", "lunchType"],
-          ["dinner", "vegetableRate", "commonMeat"],
-          ["dinnerTime", "supperNum", "supperFood"],
-          ["dietHotAndCold", "dietFlavor", "vegetablesNum"],
-          ["vegetablesRateType", "fruitsNum", "fruitsTime"],
-          ["fruitsRate", "healthyExtend,eatFruitsMessage", "riceNum"],
-          [ "riceFull","eatingSpeed", "makeFoodType"],
-          ["snacks","healthProductsFlag", "healthProductsBrand"],
-          ["healthProductsName","healthProductsWeekRate", "dishesIngredient"],
-        ],
-        [
-          ["waterNum", "waterType", "waterHabit"],
-          ["drinksNum", "drinkWineFlag", "drinkWineClassify"],
-          ["drinkWineAmount", "smokeFlag", "smokeRate"],
-          ["secondSmoke", "workIndustry", "workType"],
-          ["defecationNum", "defecationTime", "defecationShape"],
-          ["defecationSmell", "defecationSpeed", "defecationColor"],
-        ],
-        [
-          ["motionNum", "motionDuration", "motionTime"],
-          ["motion", "motionField", ""],
-        ],
-        [
-          ["sleepTime", "sleepQuality", "sleepDrugFlag"],
-          ["sleepDrug", "stayupLateFlag", "stayupLateWeekNum"],
-        ],
-        [
-          ["physicalSigns", "moistureDate", "bloodData"],
-          ["familyIllnessHistory", "operationHistory", "nearOperationFlag"],
-          ["recoveryeSituation", "longEatDrugFlag", "longEatDrugClassify"],
-          ["allergyFlag", "allergySituation", "allergen"],
-        ],
-        [["medicalReport_one", "medicalReport_two", "medicalReport_three"]],
-        [
-          ["mealBloodSugar", "measureBloodSugarFlag", "measureBloodSugarTime"],
-          ["nearBloodSugar", "lowBloodSugarFlag", "complicationFlag"],
-          ["complication", "inferiorSymptom", "weightChangeFlag"]
-        ],
-        [
-          ["mealBloodPressure", "measureBloodPressureFlag", "measureBloodPressureTime"],
-          ["nearBloodPressure", "lowBloodPressureFlag", "pressureComplicationFlag"],
-          ["pressureComplication", "pressureInferiorSymptom", "pressureWeightChangeFlag"],
-        ],
-          [
-              ["easyAnxiousFlag","upsetRecently","nervousOnSpecialOccasionsFlag"],
-              ["terrifiedFlag","",""]
-          ],
-          [
-              ["listlessRecentlyFlag","cryRecentlyFlag","wakeUpEarlyRecentlyFlag"],
-              ["noFunLiving","",""]
-          ]
-
-      ],
+      healthyValueData: healthyData['healthyValueData'],
        extendedTitleArray:['十、高血糖信息评估',"十、高血压信息评估","十一、焦虑信息评估","十二、抑郁信息评估"],
       copyValue: "",
       detailHealthy: null,
@@ -502,10 +368,8 @@ export default {
         this.showFlag = false;
         if (res.data.customerHealthy) {
           if(res.data.type == 0){
-            //处理healthyExtend扩展数据
-            healthyData["needJSONFieldName"].forEach(function (item, index) {
-              res.data.customerHealthy.healthyExtend[item] = res.data.customerHealthy.healthyExtend[item] != null ? JSON.parse(res.data.customerHealthy.healthyExtend[item]) : null;
-            });
+            //json字符串转json对象
+            res.data.customerHealthy.healthyExtend = healthyData.dealHealthyExtendJson(res.data.customerHealthy.healthyExtend, true);
           }
           //判断是体征还是健康评估
           this.dataType = res.data.type;
@@ -814,46 +678,10 @@ export default {
         (detailHealthy.tall / 100) /
         (detailHealthy.tall / 100)
       ).toFixed(1);
-      //常吃水果以及份量
-      let eatFruitsMessage = "";
-      if(detailHealthy.healthyExtend.eatFruitsMessage != null && detailHealthy.healthyExtend.eatFruitsMessage.length > 0){
-         detailHealthy.healthyExtend.eatFruitsMessage.forEach((item,index) => {
-            eatFruitsMessage += (eatFruitsMessage == "" ? "" : ", ") + item.name + "/" + item.num;
-         });
-      }
-      detailHealthy.healthyExtend.eatFruitsMessage = eatFruitsMessage;
-      detailHealthy.mealBloodSugar = "餐前血糖："+(detailHealthy.healthyExtend.bloodSugarMessage.beforeMealBloodSugar == null ? "" : (detailHealthy.healthyExtend.bloodSugarMessage.beforeMealBloodSugar+"mmol/L"))+", "
-          +"餐后两小时血糖："+(detailHealthy.healthyExtend.bloodSugarMessage.afterMealBloodSugar == null ? "" : (detailHealthy.healthyExtend.bloodSugarMessage.afterMealBloodSugar+"mmol/L"));
-      detailHealthy.measureBloodSugarFlag = detailHealthy.healthyExtend.bloodSugarMessage.measureBloodSugarFlag == 1 ? "是" : "否";
-      detailHealthy.measureBloodSugarTime = detailHealthy.healthyExtend.bloodSugarMessage.measureBloodSugarTime;
-      detailHealthy.nearBloodSugar = detailHealthy.healthyExtend.bloodSugarMessage.nearBloodSugar;
-      detailHealthy.lowBloodSugarFlag = (detailHealthy.healthyExtend.bloodSugarMessage.lowBloodSugarFlag == 1 ? "是" : "否") + ", 出现时间："+detailHealthy.healthyExtend.bloodSugarMessage.lowBloodSugarTime;
-      detailHealthy.complicationFlag = detailHealthy.healthyExtend.bloodSugarMessage.complicationFlag == 1 ? "是" : "否";
-      detailHealthy.complication = detailHealthy.healthyExtend.bloodSugarMessage.complication;
-      detailHealthy.inferiorSymptom = (detailHealthy.healthyExtend.bloodSugarMessage.inferiorSymptomFlag == 1 ? "是" : "否") + ", 具体症状："+detailHealthy.healthyExtend.bloodSugarMessage.inferiorSymptom.join(",");
-      detailHealthy.weightChangeFlag = detailHealthy.healthyExtend.bloodSugarMessage.weightChangeFlag == 1 ? "是" : "否";
 
-      detailHealthy.mealBloodPressure = "餐前血压："+(detailHealthy.healthyExtend.bloodPressureMessage.beforeMealBloodPressure == null ? "" : (detailHealthy.healthyExtend.bloodPressureMessage.beforeMealBloodPressure+"mmHg"))+", "
-          +"餐后两小时血压："+(detailHealthy.healthyExtend.bloodPressureMessage.afterMealBloodPressure == null ? "" : (detailHealthy.healthyExtend.bloodPressureMessage.afterMealBloodPressure+"mmHg"));
-      detailHealthy.measureBloodPressureFlag = detailHealthy.healthyExtend.bloodPressureMessage.measureBloodPressureFlag == 1 ? "是" : "否";
-      detailHealthy.measureBloodPressureTime = detailHealthy.healthyExtend.bloodPressureMessage.measureBloodPressureTime;
-      detailHealthy.nearBloodPressure = detailHealthy.healthyExtend.bloodPressureMessage.nearBloodPressure;
-      detailHealthy.lowBloodPressureFlag = (detailHealthy.healthyExtend.bloodPressureMessage.lowBloodPressureFlag == 1 ? "是" : "否") + ", 出现时间："+detailHealthy.healthyExtend.bloodPressureMessage.lowBloodPressureTime;
-      detailHealthy.pressureComplicationFlag = detailHealthy.healthyExtend.bloodPressureMessage.complicationFlag == 1 ? "是" : "否";
-      detailHealthy.pressureComplication = detailHealthy.healthyExtend.bloodPressureMessage.complication;
-      detailHealthy.pressureInferiorSymptom = (detailHealthy.healthyExtend.bloodPressureMessage.inferiorSymptomFlag == 1 ? "是" : "否") + ", 具体症状："+detailHealthy.healthyExtend.bloodPressureMessage.inferiorSymptom.join(",");
-      detailHealthy.pressureWeightChangeFlag = detailHealthy.healthyExtend.bloodPressureMessage.weightChangeFlag == 1 ? "是" : "否";
+      
 
-      detailHealthy.easyAnxiousFlag = detailHealthy.healthyExtend.anxietyStateMessage.easyAnxiousFlag == 1 ? "是" : "否";
-      detailHealthy.upsetRecently = detailHealthy.healthyExtend.anxietyStateMessage.upsetRecently == 1 ? "是" : "否";
-      detailHealthy.nervousOnSpecialOccasionsFlag = detailHealthy.healthyExtend.anxietyStateMessage.nervousOnSpecialOccasionsFlag == 1 ? "是" : "否";
-      detailHealthy.terrifiedFlag = detailHealthy.healthyExtend.anxietyStateMessage.terrifiedFlag == 1 ? "是" : "否";
-      detailHealthy.listlessRecentlyFlag = detailHealthy.healthyExtend.depressedStateMessage.listlessRecentlyFlag == 1 ? "是" : "否";
-      detailHealthy.cryRecentlyFlag = detailHealthy.healthyExtend.depressedStateMessage.cryRecentlyFlag == 1 ? "是" : "否";
-      detailHealthy.wakeUpEarlyRecentlyFlag = detailHealthy.healthyExtend.depressedStateMessage.wakeUpEarlyRecentlyFlag == 1 ? "是" : "否";
-      detailHealthy.noFunLiving = detailHealthy.healthyExtend.depressedStateMessage.noFunLiving == 1 ? "是" : "否";
-
-      this.detailHealthy = detailHealthy;
+      this.detailHealthy = healthyData.dealHealthyExtend(detailHealthy);
       for (let i = 0; i < this.healthyTitleData.length; i++) {
         let stepArray = [];
         for (let j = 0; j < this.healthyTitleData[i].length; j++) {
@@ -992,7 +820,8 @@ export default {
       this.editGuidanceShow(true);
       this.$refs["physicalSignsGuidanceDialog"].showDialog(
         this.data,
-        this.healthyData
+        this.healthyData,
+        this.guidanceButtonNmae
       );
     },
     editGuidanceShow(flag) {

@@ -15,11 +15,12 @@
         <result property="depressedStateMessage"    column="depressed_state_message"    />
         <result property="bloodPressureMessage"    column="blood_pressure_message"    />
         <result property="anxietyStateMessage"    column="anxiety_state_message"    />
+        <result property="menstruationMessage"    column="menstruation_message"    />
         <result property="delFlag"    column="del_flag"    />
     </resultMap>
 
     <sql id="selectSysCustomerHealthyExtendedVo">
-        select id, healthy_id, waist, hipline, eat_fruits_message, long_eat_drug_message, blood_sugar_message, depressed_state_message, blood_pressure_message, anxiety_state_message, del_flag from sys_customer_healthy_extended
+        select id, healthy_id, waist, hipline, eat_fruits_message, long_eat_drug_message, blood_sugar_message, depressed_state_message, blood_pressure_message, anxiety_state_message, menstruation_messag,del_flag from sys_customer_healthy_extended
     </sql>
 
     <select id="selectSysCustomerHealthyExtendedList" parameterType="SysCustomerHealthyExtended" resultMap="SysCustomerHealthyExtendedResult">
@@ -43,6 +44,7 @@
             <if test="depressedStateMessage != null">depressed_state_message,</if>
             <if test="bloodPressureMessage != null">blood_pressure_message,</if>
             <if test="anxietyStateMessage != null">anxiety_state_message,</if>
+            <if test="menstruationMessage != null">menstruation_message,</if>
             <if test="delFlag != null">del_flag,</if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
@@ -55,6 +57,7 @@
             <if test="depressedStateMessage != null">#{depressedStateMessage},</if>
             <if test="bloodPressureMessage != null">#{bloodPressureMessage},</if>
             <if test="anxietyStateMessage != null">#{anxietyStateMessage},</if>
+            <if test="menstruationMessage != null">#{menstruationMessage},</if>
             <if test="delFlag != null">#{delFlag},</if>
         </trim>
     </insert>
@@ -71,6 +74,7 @@
             <if test="depressedStateMessage != null">depressed_state_message = #{depressedStateMessage},</if>
             <if test="bloodPressureMessage != null">blood_pressure_message = #{bloodPressureMessage},</if>
             <if test="anxietyStateMessage != null">anxiety_state_message = #{anxietyStateMessage},</if>
+            <if test="menstruationMessage != null">menstruation_message = #{menstruationMessage},</if>
             <if test="delFlag != null">del_flag = #{delFlag},</if>
         </trim>
         where id = #{id}
