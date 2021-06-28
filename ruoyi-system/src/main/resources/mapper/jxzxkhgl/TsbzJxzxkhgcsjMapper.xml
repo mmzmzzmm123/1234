@@ -11,6 +11,9 @@
         <result property="content" column="content"/>
         <result property="createuserid" column="createuserid"/>
         <result property="createTime" column="create_time"/>
+        <result property="zmtime" column="zm_time"/>
+        <result property="dd" column="dd"/>
+        <result property="lkdw" column="lkdw"/>
         <association property="tsbzJxzxkhzbx" column="zbid" javaType="TsbzJxzxkhzbx" resultMap="TsbzJxzxkhzbxResult"/>
     </resultMap>
 
@@ -33,7 +36,7 @@
     </resultMap>
 
     <sql id="selectTsbzJxzxkhgcsjVo">
-select b.id,b.content,b.zbid,b.createuserid,a.create_time,a.id as zbxid,a.faid,a.khmk,a.khnr,a.tjsl,a.gjzd,a.tbly,a.jkbj,a.starttime,a.endtime,a.zxrw,a.yly,a.yle from tsbz_jxzxkhzbx a
+select b.id,b.content,b.zbid,b.createuserid, b.zm_time, b.dd, b.lkdw, a.create_time,a.id as zbxid,a.faid,a.khmk,a.khnr,a.tjsl,a.gjzd,a.tbly,a.jkbj,a.starttime,a.endtime,a.zxrw,a.yly,a.yle from tsbz_jxzxkhzbx a
 left join (select * from tsbz_jxzxkhgcsj where createuserid= #{createuserid}) b
 on a.faid=b.faid and a.id=b.zbid
     </sql>
@@ -62,6 +65,9 @@ on a.faid=b.faid and a.id=b.zbid
             <if test="content != null">content,</if>
             <if test="createuserid != null">createuserid,</if>
             <if test="createTime != null">create_time,</if>
+            <if test="zmtime != null">zm_time,</if>
+            <if test="dd != null">dd,</if>
+            <if test="lkdw != null">lkdw,</if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="id != null">#{id},</if>
@@ -70,6 +76,9 @@ on a.faid=b.faid and a.id=b.zbid
             <if test="content != null">#{content},</if>
             <if test="createuserid != null">#{createuserid},</if>
             <if test="createTime != null">#{createTime},</if>
+            <if test="zmtime != null">#{zmtime},</if>
+            <if test="dd != null">#{dd},</if>
+            <if test="lkdw != null">#{lkdw},</if>
         </trim>
     </insert>
 
@@ -81,6 +90,9 @@ on a.faid=b.faid and a.id=b.zbid
             <if test="content != null">content = #{content},</if>
             <if test="createuserid != null">createuserid = #{createuserid},</if>
             <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="zmtime != null">zm_time = #{zmtime},</if>
+            <if test="dd != null">dd = #{dd},</if>
+            <if test="lkdw != null">lkdw = #{lkdw},</if>
         </trim>
         where id = #{id}
     </update>

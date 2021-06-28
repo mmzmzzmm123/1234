@@ -1,9 +1,12 @@
 package com.ruoyi.jxzxkhgl.domain;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import com.ruoyi.common.annotation.Excel;
 import com.ruoyi.common.core.domain.BaseEntity;
+
+import java.util.Date;
 
 /**
  * 考核过程数据对象 tsbz_jxzxkhgcsj
@@ -54,6 +57,30 @@ public class TsbzJxzxkhgcsj extends BaseEntity {
      */
     @Excel(name = "文件路径")
     private String filepath;
+
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    private Date zmtime;
+
+
+    public String getDd() {
+        return dd;
+    }
+
+    public void setDd(String dd) {
+        this.dd = dd;
+    }
+
+    public String getLkdw() {
+        return lkdw;
+    }
+
+    public void setLkdw(String lkdw) {
+        this.lkdw = lkdw;
+    }
+
+    private String dd;
+
+    private String lkdw;
 
     private TsbzJxzxkhzbx tsbzJxzxkhzbx;
 
@@ -134,6 +161,17 @@ public class TsbzJxzxkhgcsj extends BaseEntity {
                 .append("tsbzJxzxkhzbx", getTsbzJxzxkhzbx())
                 .append("filename", getFilename())
                 .append("filepath", getFilepath())
+                .append("zmtime", getZmtime())
+                .append("dd", getDd())
+                .append("lkdw", getLkdw())
                 .toString();
+    }
+
+    public Date getZmtime() {
+        return zmtime;
+    }
+
+    public void setZmtime(Date zmtime) {
+        this.zmtime = zmtime;
     }
 }

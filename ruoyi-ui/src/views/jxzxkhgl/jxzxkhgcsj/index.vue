@@ -72,6 +72,13 @@
       <el-table-column label="指标项" align="center" prop="tsbzJxzxkhzbx.khnr" />
       <el-table-column label="提交文件数" align="center" prop="tsbzJxzxkhzbx.tjsl" />
       <el-table-column label="内容" align="center" prop="content" />
+      <el-table-column label="证明时间" align="center" prop="zmtime" width="180">
+        <template slot-scope="scope">
+          <span>{{ parseTime(scope.row.zmtime, '{y}-{m}-{d}') }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="地点" align="center" prop="dd" />
+      <el-table-column label="落款单位" align="center" prop="lkdw" />
       <!-- <el-table-column label="创建人" align="center" prop="createuserid" /> -->
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
@@ -139,6 +146,23 @@
           >
             <el-button size="small" type="primary">选择文件</el-button>
           </el-upload>
+        </el-form-item>
+        <el-form-item label="证明时间" prop="zmtime">
+          <el-date-picker
+            clearable
+            size="small"
+            style="width: 200px"
+            v-model="form.zmtime"
+            type="date"
+            value-format="yyyy-MM-dd"
+            placeholder="选择证明时间"
+          ></el-date-picker>
+        </el-form-item>
+        <el-form-item label="地点" prop="dd">
+          <el-input v-model="form.dd"  placeholder="请输入地点" />
+        </el-form-item>
+        <el-form-item label="落款单位" prop="lkdw">
+          <el-input v-model="form.lkdw" placeholder="请输入落款单位" />
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -212,6 +236,10 @@ export default {
         zbid: null,
         content: null,
         createuserid: null,
+        zmtime: null,
+        dd: null,
+        lkdw: null,
+
       },
       // 查询参数
       queryParams_fa: {
@@ -338,6 +366,10 @@ export default {
         khnr: null,
         filepath: "",
         filename: "",
+        zmtime: null,
+        dd: null,
+        lkdw: null,
+
       };
       this.resetForm("form");
       this.fileList = [];
