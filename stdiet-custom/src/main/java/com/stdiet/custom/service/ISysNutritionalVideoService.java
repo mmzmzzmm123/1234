@@ -5,6 +5,7 @@ import java.util.Map;
 
 import com.stdiet.custom.domain.SysNutritionalVideo;
 import com.stdiet.custom.domain.SysVideoClassify;
+import com.stdiet.custom.domain.SysVideoComment;
 import org.apache.ibatis.annotations.Param;
 
 /**
@@ -89,4 +90,25 @@ public interface ISysNutritionalVideoService
      * @return
      */
     public int updateVideoPlayNum(String videoId);
+
+    /**
+     * 获取评论
+     * @param videoComment
+     * @return
+     */
+    public List<SysVideoComment> selectVideoCommentByTopicId(SysVideoComment videoComment, String phone);
+
+    /**
+     * 添加评论
+     * @param videoComment
+     * @return
+     */
+    public SysVideoComment insertVideoComment(SysVideoComment videoComment);
+
+    /**
+     * 添加回复
+     * @param videoComment
+     * @return
+     */
+    public SysVideoComment insertVideoCommentReply(SysVideoComment videoComment);
 }

@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.stdiet.custom.mapper.SysVideoCommentMapper">
+
+    <resultMap id="SysVideoCommentResult" type="SysVideoComment">
+        <result column="id" property="id"/>
+        <result column="topic_id" property="topicId"/>
+        <result column="content" property="content"/>
+        <result column="from_uid" property="fromUid"/>
+        <result column="from_role" property="fromRole"/>
+        <result column="to_uid" property="toUid"/>
+        <result column="to_role" property="toRole"/>
+<!--        <result column="img" property="img" typeHandler="com.stdiet.custom.typehandler.ArrayJsonHandler"/>-->
+        <result column="create_time" property="createTime"/>
+<!--        <association property="fromName" column="{uid=from_uid,role=from_role}" select="selectUserInfo"/>-->
+<!--        <association property="fromAvatar" column="{uid=from_uid,role=from_role}" select="selectUserAvatar"/>-->
+<!--        <association property="toName" column="{uid=to_uid,role=to_role}" select="selectUserInfo"/>-->
+        <association property="replys" column="id"
+                     select="selectVideoCommentReplyByCommentId"/>
+    </resultMap>
+
+    <resultMap id="SysVideoCommentReplyResult" type="SysVideoComment">
+        <result column="id" property="id"/>
+        <result column="topic_id" property="topicId"/>
+        <result column="comment_id" property="commentId"/>
+        <result column="content" property="content"/>
+        <result column="from_uid" property="fromUid"/>
+        <result column="from_role" property="fromRole"/>
+        <result column="to_uid" property="toUid"/>
+        <result column="to_role" property="toRole"/>
+        <result column="reply_id" property="replyId"/>
+<!--        <result column="img" property="img" typeHandler="com.stdiet.custom.typehandler.ArrayJsonHandler"/>-->
+        <result column="create_time" property="createTime"/>
+<!--        <association property="fromName" column="{uid=from_uid,role=from_role}" select="selectUserInfo"/>-->
+<!--        <association property="fromAvatar" column="{uid=from_uid,role=from_role}" select="selectUserAvatar"/>-->
+<!--        <association property="toName" column="{uid=to_uid,role=to_role}" select="selectUserInfo"/>-->
+        <!--        <association property="toAvatar" column="{uid=to_uid,role=to_role}" select="selectUserAvatar"/>-->
+    </resultMap>
+
+    <select id="selectVideoCommentByTopicId" resultMap="SysVideoCommentResult">
+        select * from sys_nutritional_video_comment where topic_id = #{topicId}  and del_flag = 0
+        order by create_time asc
+    </select>
+
+    <select id="selectVideoCommentReplyByCommentId" resultMap="SysVideoCommentReplyResult">
+        select * from sys_nutritional_video_reply where comment_id = #{id} and del_flag = 0
+        order by create_time asc
+    </select>
+
+    <!--    查询人名-->
+    <select id="selectUserInfo" parameterType="java.util.Map" resultType="String">
+        <choose>
+            <when test="_parameter.get('role') == 'customer'">
+                select name from sys_customer where id = #{uid}
+            </when>
+            <otherwise>
+                select nick_name from sys_user where user_id = #{uid}
+            </otherwise>
+        </choose>
+    </select>
+
+    <!--    查询头像-->
+    <select id="selectUserAvatar" parameterType="java.util.Map" resultType="String">
+        <choose>
+            <when test="_parameter.get('role') == 'customer'">
+                select avatar_url from sys_wx_user_info where cus_id = #{uid}
+            </when>
+            <otherwise>
+                select IF(avatar != '', CONCAT("https://api.stdiet.top/prod-api", avatar), '') as avatar from sys_user
+                where user_id = #{uid}
+            </otherwise>
+        </choose>
+    </select>
+
+
+    <!--    插入问题回复-->
+    <insert id="insertVideoComment" parameterType="SysVideoComment">
+        insert into sys_nutritional_video_comment
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="topicId != null">topic_id,</if>
+            <if test="fromUid != null">from_uid,</if>
+            <if test="fromRole != null">from_role,</if>
+            <if test="toUid != null">to_uid,</if>
+            <if test="toRole != null">to_role,</if>
+            <if test="content != null">content,</if>
+            <if test="img != null">img,</if>
+            <if test="topicId != null">create_time,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="topicId != null">#{topicId},</if>
+            <if test="fromUid != null">#{fromUid},</if>
+            <if test="fromRole != null">#{fromRole},</if>
+            <if test="toUid != null">#{toUid},</if>
+            <if test="toRole != null">#{toRole},</if>
+            <if test="content != null">#{content},</if>
+            <if test="img != null">
+                #{img,  jdbcType=OTHER, typeHandler=com.stdiet.custom.typehandler.ArrayJsonHandler},
+            </if>
+            <if test="topicId != null">now(),</if>
+        </trim>
+    </insert>
+
+    <!--    插入问题回复-->
+    <insert id="insertVideoCommentReply" parameterType="SysVideoComment" useGeneratedKeys="true" keyColumn="id"
+            keyProperty="id">
+        insert into sys_nutritional_video_reply
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="commentId != null">comment_id,</if>
+            <if test="replyId != null">reply_id,</if>
+            <if test="content != null">content,</if>
+            <if test="fromUid != null">from_uid,</if>
+            <if test="toUid != null">to_uid,</if>
+            <if test="img != null">img,</if>
+            <if test="fromRole != null">from_role,</if>
+            <if test="toRole != null">to_role,</if>
+            <if test="content != null">create_time,</if>
+
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="commentId != null">#{commentId},</if>
+            <if test="replyId != null">#{replyId},</if>
+            <if test="content != null">#{content},</if>
+            <if test="fromUid != null">#{fromUid},</if>
+            <if test="toUid != null">#{toUid},</if>
+            <if test="img != null">
+                #{img,  jdbcType=OTHER, typeHandler=com.stdiet.custom.typehandler.ArrayJsonHandler},
+            </if>
+            <if test="fromRole != null">#{fromRole},</if>
+            <if test="toRole != null">#{toRole},</if>
+            <if test="content != null">now(),</if>
+        </trim>
+    </insert>
+
+</mapper>

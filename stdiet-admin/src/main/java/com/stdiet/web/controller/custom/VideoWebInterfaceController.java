@@ -47,11 +47,6 @@ public class VideoWebInterfaceController extends BaseController {
 
         JSONObject result = CookieUtils.checkCookieValida(request, "token");
         if (result.getInteger("code") != 200) {
-//            TableDataInfo errInfo = new TableDataInfo();
-//            errInfo.setCode(result.getInteger("code"));
-//            errInfo.setMsg(result.getString("msg"));
-//            return errInfo;
-
             Cookie cookie = new Cookie("token", "");
             cookie.setMaxAge(24 * 60 * 60);
             cookie.setPath("/");
