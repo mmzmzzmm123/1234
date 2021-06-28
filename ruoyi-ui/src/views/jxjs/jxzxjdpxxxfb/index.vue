@@ -215,7 +215,10 @@
           </el-upload>
         </el-form-item>
         <!-- 领导小组名单 -->
-        <el-form-item label="见习教师规范化培训领导小组名单" prop="pxxzmdFilepath">
+        <el-form-item
+          label="见习教师规范化培训领导小组名单"
+          prop="pxxzmdFilepath"
+        >
           <el-input v-model="form.pxxzmdFilepath" v-if="false" />
           <el-upload
             class="upload-demo"
@@ -250,7 +253,10 @@
             <el-button size="small" type="primary">选择文件</el-button>
           </el-upload>
         </el-form-item>
-        <el-form-item label="见习教师规范化培训导师带教计划" prop="pxdsdjjhFilepath">
+        <el-form-item
+          label="见习教师规范化培训导师带教计划"
+          prop="pxdsdjjhFilepath"
+        >
           <el-input v-model="form.pxdsdjjhFilepath" v-if="false" />
           <el-upload
             class="upload-demo"
@@ -267,7 +273,10 @@
             <el-button size="small" type="primary">选择文件</el-button>
           </el-upload>
         </el-form-item>
-        <el-form-item label="见习教师规范化培训导师带教总结" prop="pxdsdjzjFilepath">
+        <el-form-item
+          label="见习教师规范化培训导师带教总结"
+          prop="pxdsdjzjFilepath"
+        >
           <el-input v-model="form.pxdsdjzjFilepath" v-if="false" />
           <el-upload
             class="upload-demo"
@@ -284,7 +293,10 @@
             <el-button size="small" type="primary">选择文件</el-button>
           </el-upload>
         </el-form-item>
-        <el-form-item label="见习教师规范化培训优秀带教导师推荐表" prop="djdstjbFilepath">
+        <el-form-item
+          label="见习教师规范化培训优秀带教导师推荐表"
+          prop="djdstjbFilepath"
+        >
           <el-input v-model="form.djdstjbFilepath" v-if="false" />
           <el-upload
             class="upload-demo"
@@ -301,7 +313,10 @@
             <el-button size="small" type="primary">选择文件</el-button>
           </el-upload>
         </el-form-item>
-        <el-form-item label="见习教师规范化培训优秀带教导师带教案例" prop="djdsalFilepath">
+        <el-form-item
+          label="见习教师规范化培训优秀带教导师带教案例"
+          prop="djdsalFilepath"
+        >
           <el-input v-model="form.djdsalFilepath" v-if="false" />
           <el-upload
             class="upload-demo"
@@ -350,20 +365,48 @@
             form.fileName
           }}</el-link></el-form-item
         > -->
-        <el-form-item label="培训方案" prop="pxfa">
+        <!-- <el-form-item label="培训方案" prop="pxfa">
           <span v-html="form.pxfa"></span>
-        </el-form-item>
-        <el-form-item label="培训方案文件" prop="pxfaFilename">
+        </el-form-item> -->
+        <el-form-item label="见习教师规范化培训方案" prop="pxfaFilename">
           <el-link type="primary" :href="downUrl + form.pxfaFilepath">{{
             form.pxfaFilename
           }}</el-link></el-form-item
         >
-        <el-form-item label="培训总结" prop="pxzj">
-          <span v-html="form.pxzj"></span>
-        </el-form-item>
-        <el-form-item label="培训总结文件" prop="pxzjFilename">
+        <el-form-item label="见习教师规范化培训工作总结" prop="pxzjFilename">
           <el-link type="primary" :href="downUrl + form.pxzjFilepath">{{
             form.pxzjFilename
+          }}</el-link>
+        </el-form-item>
+
+        <el-form-item label="见习教师规范化培训领导小组名单" prop="pxxzmdFilename">
+          <el-link type="primary" :href="downUrl + form.pxxzmdFilepath">{{
+            form.pxxzmdFilename
+          }}</el-link>
+        </el-form-item>
+        <el-form-item label="集中培训安排" prop="jzpxapFilename">
+          <el-link type="primary" :href="downUrl + form.jzpxapFilepath">{{
+            form.jzpxapFilename
+          }}</el-link>
+        </el-form-item>
+        <el-form-item label="见习教师规范化培训导师带教计划" prop="pxdsdjjhFilename">
+          <el-link type="primary" :href="downUrl + form.pxdsdjjhFilepath">{{
+            form.pxdsdjjhFilename
+          }}</el-link>
+        </el-form-item>
+        <el-form-item label="见习教师规范化培训导师带教总结" prop="pxdsdjzjFilename">
+          <el-link type="primary" :href="downUrl + form.pxdsdjzjFilepath">{{
+            form.pxdsdjzjFilename
+          }}</el-link>
+        </el-form-item>
+        <el-form-item label="见习教师规范化培训优秀带教导师推荐表" prop="djdstjbFilename">
+          <el-link type="primary" :href="downUrl + form.djdstjbFilepath">{{
+            form.djdstjbFilename
+          }}</el-link>
+        </el-form-item>
+        <el-form-item label="见习教师规范化培训优秀带教导师带教案例" prop="djdsalFilename">
+          <el-link type="primary" :href="downUrl + form.djdsalFilepath">{{
+            form.djdsalFilename
           }}</el-link>
         </el-form-item>
       </el-form>
@@ -468,28 +511,56 @@ export default {
         //   { required: true, message: "培训计划不能为空", trigger: "blur" },
         // ],
         pxfaFilepath: [
-          { required: true, message: "见习教师规范化培训方案不能为空", trigger: "blur" },
+          {
+            required: true,
+            message: "见习教师规范化培训方案不能为空",
+            trigger: "blur",
+          },
         ],
         pxzjFilepath: [
-          { required: true, message: "见习教师规范化培训工作总结不能为空", trigger: "blur" },
+          {
+            required: true,
+            message: "见习教师规范化培训工作总结不能为空",
+            trigger: "blur",
+          },
         ],
         pxxzmdFilepath: [
-          { required: true, message: "见习教师规范化培训领导小组名单不能为空", trigger: "blur" },
+          {
+            required: true,
+            message: "见习教师规范化培训领导小组名单不能为空",
+            trigger: "blur",
+          },
         ],
         jzpxapFilepath: [
           { required: true, message: "集中培训安排不能为空", trigger: "blur" },
         ],
         pxdsdjjhFilepath: [
-          { required: true, message: "见习教师规范化培训导师带教计划不能为空", trigger: "blur" },
+          {
+            required: true,
+            message: "见习教师规范化培训导师带教计划不能为空",
+            trigger: "blur",
+          },
         ],
         pxdsdjzjFilepath: [
-          { required: true, message: "见习教师规范化培训导师带教总结不能为空", trigger: "blur" },
+          {
+            required: true,
+            message: "见习教师规范化培训导师带教总结不能为空",
+            trigger: "blur",
+          },
         ],
         djdstjbFilepath: [
-          { required: true, message: "见习教师规范化培训优秀带教导师推荐表不能为空", trigger: "blur" },
+          {
+            required: true,
+            message: "见习教师规范化培训优秀带教导师推荐表不能为空",
+            trigger: "blur",
+          },
         ],
         djdsalFilepath: [
-          { required: true, message: "见习教师规范化培训优秀带教导师带教案例不能为空", trigger: "blur" },
+          {
+            required: true,
+            message: "见习教师规范化培训优秀带教导师带教案例不能为空",
+            trigger: "blur",
+          },
         ],
       },
       uploadFileUrl: process.env.VUE_APP_BASE_API + "/common/upload", // 上传的图片服务器地址
@@ -517,7 +588,7 @@ export default {
     handleAvatarSuccessPxfa(res, file) {
       if (res.code == "200") {
         this.form.pxfaFilepath = res.fileName;
-        this.form.pxfaFilename = file.name;
+        this.form.pxfaFilename = "见习教师规范化培训方案";
       } else {
         this.msgError(res.msg);
       }
@@ -526,7 +597,7 @@ export default {
     handleAvatarSuccessPxzj(res, file) {
       if (res.code == "200") {
         this.form.pxzjFilepath = res.fileName;
-        this.form.pxzjFilename = file.name;
+        this.form.pxzjFilename = "见习教师规范化培训工作总结";
       } else {
         this.msgError(res.msg);
       }
@@ -534,7 +605,7 @@ export default {
     handleAvatarSuccessPxxzmd(res, file) {
       if (res.code == "200") {
         this.form.pxxzmdFilepath = res.fileName;
-        this.form.pxxzmdFilename = file.name;
+        this.form.pxxzmdFilename = "见习教师规范化培训领导小组名单";
       } else {
         this.msgError(res.msg);
       }
@@ -542,7 +613,7 @@ export default {
     handleAvatarSuccessJzpxap(res, file) {
       if (res.code == "200") {
         this.form.jzpxapFilepath = res.fileName;
-        this.form.jzpxapFilename = file.name;
+        this.form.jzpxapFilename = "集中培训安排";
       } else {
         this.msgError(res.msg);
       }
@@ -550,7 +621,7 @@ export default {
     handleAvatarSuccessPxdsdjjh(res, file) {
       if (res.code == "200") {
         this.form.pxdsdjjhFilepath = res.fileName;
-        this.form.pxdsdjjhFilename = file.name;
+        this.form.pxdsdjjhFilename = "见习教师规范化培训导师带教计划";
       } else {
         this.msgError(res.msg);
       }
@@ -558,7 +629,7 @@ export default {
     handleAvatarSuccessPxdsdjzj(res, file) {
       if (res.code == "200") {
         this.form.pxdsdjzjFilepath = res.fileName;
-        this.form.pxdsdjzjFilename = file.name;
+        this.form.pxdsdjzjFilename = "见习教师规范化培训导师带教总结";
       } else {
         this.msgError(res.msg);
       }
@@ -566,7 +637,7 @@ export default {
     handleAvatarSuccessDjdstjb(res, file) {
       if (res.code == "200") {
         this.form.djdstjbFilepath = res.fileName;
-        this.form.djdstjbFilename = file.name;
+        this.form.djdstjbFilename = "见习教师规范化培训优秀带教导师推荐表";
       } else {
         this.msgError(res.msg);
       }
@@ -574,7 +645,7 @@ export default {
     handleAvatarSuccessDjdsal(res, file) {
       if (res.code == "200") {
         this.form.djdsalFilepath = res.fileName;
-        this.form.djdsalFilename = file.name;
+        this.form.djdsalFilename = "见习教师规范化培训优秀带教导师带教案例";
       } else {
         this.msgError(res.msg);
       }
@@ -801,12 +872,18 @@ export default {
         djdstjbFilepath: null,
         djdstjbFilename: "见习教师规范化培训优秀带教导师推荐表",
         djdsalFilepath: null,
-        djdsalFilename: "见习教师规范化培训优秀带教导师带教案例"
+        djdsalFilename: "见习教师规范化培训优秀带教导师带教案例",
       };
       this.resetForm("form");
       this.fileList = [];
       this.pxfafileList = [];
       this.pxzjfileList = [];
+      this.pxxzmdfileList = [];
+      this.jzpxapfileList = [];
+      this.pxdsdjjhfileList = [];
+      this.pxdsdjzjfileList = [];
+      this.djdstjbfileList = [];
+      this.djdsalfileList = [];
     },
     /** 搜索按钮操作 */
     handleQuery() {
@@ -865,7 +942,7 @@ export default {
             name: response.data.pxzjFilename,
             url: response.data.pxzjFilepath,
           });
-        } 
+        }
         if (
           response.data.pxxzmdFilename == null ||
           response.data.pxxzmdFilename == ""
@@ -875,7 +952,7 @@ export default {
             name: response.data.pxxzmdFilename,
             url: response.data.pxxzmdFilepath,
           });
-        } 
+        }
         if (
           response.data.jzpxapFilename == null ||
           response.data.jzpxapFilename == ""
@@ -885,7 +962,7 @@ export default {
             name: response.data.jzpxapFilename,
             url: response.data.jzpxapFilepath,
           });
-        } 
+        }
         if (
           response.data.pxdsdjjhFilename == null ||
           response.data.pxdsdjjhFilename == ""
@@ -895,7 +972,7 @@ export default {
             name: response.data.pxdsdjjhFilename,
             url: response.data.pxdsdjjhFilepath,
           });
-        } 
+        }
         if (
           response.data.pxdsdjzjFilename == null ||
           response.data.pxdsdjzjFilename == ""
@@ -905,7 +982,7 @@ export default {
             name: response.data.pxdsdjzjFilename,
             url: response.data.pxdsdjzjFilepath,
           });
-        } 
+        }
         if (
           response.data.djdstjbFilename == null ||
           response.data.djdstjbFilename == ""
@@ -915,7 +992,7 @@ export default {
             name: response.data.djdstjbFilename,
             url: response.data.djdstjbFilepath,
           });
-        } 
+        }
         if (
           response.data.djdsalFilename == null ||
           response.data.djdsalFilename == ""
@@ -925,7 +1002,7 @@ export default {
             name: response.data.djdsalFilename,
             url: response.data.djdsalFilepath,
           });
-        } 
+        }
       });
     },
     /** 修改按钮操作 */
@@ -974,7 +1051,7 @@ export default {
             name: response.data.pxxzmdFilename,
             url: response.data.pxxzmdFilepath,
           });
-        } 
+        }
         if (
           response.data.jzpxapFilename == null ||
           response.data.jzpxapFilename == ""
@@ -984,7 +1061,7 @@ export default {
             name: response.data.jzpxapFilename,
             url: response.data.jzpxapFilepath,
           });
-        } 
+        }
         if (
           response.data.pxdsdjjhFilename == null ||
           response.data.pxdsdjjhFilename == ""
@@ -994,7 +1071,7 @@ export default {
             name: response.data.pxdsdjjhFilename,
             url: response.data.pxdsdjjhFilepath,
           });
-        } 
+        }
         if (
           response.data.pxdsdjzjFilename == null ||
           response.data.pxdsdjzjFilename == ""
@@ -1004,7 +1081,7 @@ export default {
             name: response.data.pxdsdjzjFilename,
             url: response.data.pxdsdjzjFilepath,
           });
-        } 
+        }
         if (
           response.data.djdstjbFilename == null ||
           response.data.djdstjbFilename == ""
@@ -1014,7 +1091,7 @@ export default {
             name: response.data.djdstjbFilename,
             url: response.data.djdstjbFilepath,
           });
-        } 
+        }
         if (
           response.data.djdsalFilename == null ||
           response.data.djdsalFilename == ""
@@ -1024,7 +1101,7 @@ export default {
             name: response.data.djdsalFilename,
             url: response.data.djdsalFilepath,
           });
-        } 
+        }
       });
     },
     /** 提交按钮 */
