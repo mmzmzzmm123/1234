@@ -30,6 +30,16 @@
             <span class="box-card-title">{{ title }}</span>
           </div>
           <div class="text item" v-show="title1">
+            <el-button
+              type="primary"
+              class="copy-code-button"
+              plain
+              size="mini"
+              icon="el-icon-document-copy"
+              :data-clipboard-text="note"
+              @click="copy"
+              >复制</el-button
+            >
             <div class="pad-left" v-html="note"></div>
           </div>
         </el-card>
@@ -40,6 +50,7 @@
 
 <script>
 import { treeselect, getFamilyedu } from "@/api/benyi/familyedu";
+import Clipboard from "clipboard";
 
 export default {
   name: "familyedu_study",
@@ -102,6 +113,20 @@ export default {
         console.log(response);
         this.title1 = response.data.title;
         this.note = response.data.content;
+      });
+    },
+    copy() {
+      var clipboard = new Clipboard(".copy-code-button"); // 这里可以理解为选择器，选择上面的复制按钮
+      clipboard.on("success", (e) => {
+        this.msgSuccess("复制成功");
+        // 释放内存
+        clipboard.destroy();
+      });
+      clipboard.on("error", (e) => {
+        // 不支持复制
+        this.msgSuccess("手机权限不支持复制功能");
+        // 释放内存
+        clipboard.destroy();
       });
     },
   },
