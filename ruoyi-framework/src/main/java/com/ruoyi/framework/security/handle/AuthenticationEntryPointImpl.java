@@ -21,7 +21,9 @@ import com.ruoyi.common.utils.StringUtils;
 @Component
 public class AuthenticationEntryPointImpl implements AuthenticationEntryPoint, Serializable
 {
-    /*这里设置serialVersionUID主要目的来标识序列化问题，如果不指定系统将自动制定，若反序列化的时候类发生改变就会导致UID发生变化，反序列化的时候会验证UID，如果不相同就会报错。*/
+    /**
+    这里设置serialVersionUID主要目的来标识序列化问题，如果不指定系统将自动制定，若反序列化的时候类发生改变就会导致UID发生变化，反序列化的时候会验证UID，如果不相同就会报错。
+     */
     private static final long serialVersionUID = -8970718410437077606L;
 
     @Override

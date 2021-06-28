@@ -22,7 +22,7 @@ import com.ruoyi.framework.web.service.TokenService;
  * @author ruoyi
  */
 @Component
-public class JwtAuthenticationTokenFilter extends OncePerRequestFilter
+public class  JwtAuthenticationTokenFilter extends OncePerRequestFilter
 {
     @Autowired
     private TokenService tokenService;
