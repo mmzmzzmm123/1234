@@ -7,6 +7,7 @@ import com.stdiet.common.utils.DateUtils;
 import com.stdiet.common.utils.StringUtils;
 import com.stdiet.common.utils.sign.AesUtils;
 import com.stdiet.custom.domain.SysOrderPause;
+import com.stdiet.custom.domain.SysVideoComment;
 import com.stdiet.custom.domain.SysWxAdLog;
 import com.stdiet.custom.service.*;
 import com.stdiet.custom.utils.CookieUtils;
@@ -44,6 +45,9 @@ public class SysWapController extends BaseController {
 
     @Autowired
     ISysSmsConfirmServie iSysSmsConfirmServie;
+
+    @Autowired
+    ISysNutritionalVideoService iSysNutritionalVideoService;
 
 
     /**
@@ -159,6 +163,12 @@ public class SysWapController extends BaseController {
         return AjaxResult.success();
     }
 
+    /**
+     * 获取验证码
+     *
+     * @param request
+     * @return
+     */
     @GetMapping(value = "/checkCookie")
     public AjaxResult checkCookie(HttpServletRequest request) {
         JSONObject resultObj = CookieUtils.checkCookieValida(request, "token");
@@ -169,6 +179,12 @@ public class SysWapController extends BaseController {
         }
     }
 
+    /**
+     * 验证码校验
+     *
+     * @param phone
+     * @return
+     */
     @GetMapping(value = "/getCode")
     public AjaxResult getCode(@RequestParam String phone) {
 
@@ -200,8 +216,6 @@ public class SysWapController extends BaseController {
             String tokenStr = phone + "_" + new Date().getTime() + "_" + RandomStringUtils.randomAlphanumeric(8);
             Cookie cookie = new Cookie("token", AesUtils.encrypt(tokenStr));
             cookie.setMaxAge(24 * 60 * 60);
-//            cookie.setSecure(true);
-//            cookie.setHttpOnly(true);
             cookie.setPath("/");
             response.addCookie(cookie);
             return new AjaxResult(20000, "登录成功");
@@ -213,5 +227,54 @@ public class SysWapController extends BaseController {
             return AjaxResult.error();
         }
     }
+
+    @GetMapping(value = "/video/comment")
+    public AjaxResult getVideoComment(SysVideoComment videoComment, HttpServletRequest request) {
+        JSONObject result = CookieUtils.checkCookieValida(request, "token");
+
+        String phone = result.getString("phone");
+        List<SysVideoComment> comments = iSysNutritionalVideoService.selectVideoCommentByTopicId(videoComment, phone == null ? "" : phone);
+
+        return AjaxResult.success(comments);
+    }
+
+    @PostMapping(value = "/video/post/comment")
+    public AjaxResult insertVideoComment(@RequestBody SysVideoComment videoComment, HttpServletRequest request) {
+        JSONObject result = CookieUtils.checkCookieValida(request, "token");
+        if (result.getInteger("code") != 200) {
+            return AjaxResult.error(result.getInteger("code"), result.getString("msg"));
+        }
+
+        videoComment.setFromUid(result.getString("phone"));
+        videoComment.setFromRole("phone");
+
+        SysVideoComment comment = iSysNutritionalVideoService.insertVideoComment(videoComment);
+
+        if (StringUtils.isNull(comment)) {
+            return AjaxResult.error();
+        }
+
+        return AjaxResult.success(comment);
+    }
+
+    @PostMapping(value = "/video/post/reply")
+    public AjaxResult insertVideoCommentReply(@RequestBody SysVideoComment videoComment, HttpServletRequest request) {
+        JSONObject result = CookieUtils.checkCookieValida(request, "token");
+        if (result.getInteger("code") != 200) {
+            return AjaxResult.error(result.getInteger("code"), result.getString("msg"));
+        }
+
+        videoComment.setFromUid(result.getString("phone"));
+        videoComment.setFromRole("phone");
+
+        SysVideoComment reply = iSysNutritionalVideoService.insertVideoCommentReply(videoComment);
+
+        if (StringUtils.isNull(reply)) {
+            return AjaxResult.error();
+        }
+
+        return AjaxResult.success(reply);
+    }
+
 
 }
