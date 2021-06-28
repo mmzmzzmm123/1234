@@ -19,11 +19,22 @@ import com.ruoyi.common.utils.ServletUtils;
 @Component
 public abstract class RepeatSubmitInterceptor extends HandlerInterceptorAdapter
 {
+    /**
+     * preHandle方法都会在Controller方法调用之前执行，当preHandler中返回值为false时整个请求结束
+     * postHandle方法 在请求完成后执行,会在DispatcherServlet进行视图的渲染之前执行
+     * afterCompletion方法将在整个请求完成之后，也就是DispatcherServlet渲染了视图执行
+     * @param request
+     * @param response
+     * @param handler
+     * @return
+     * @throws Exception
+     */
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception
     {
         if (handler instanceof HandlerMethod)
         {
+            // HandlerMethod 封装 方法参数，方法返回值和方法注释
             HandlerMethod handlerMethod = (HandlerMethod) handler;
             Method method = handlerMethod.getMethod();
             RepeatSubmit annotation = method.getAnnotation(RepeatSubmit.class);

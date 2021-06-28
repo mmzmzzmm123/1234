@@ -47,6 +47,11 @@ public class SameUrlDataInterceptor extends RepeatSubmitInterceptor
         this.intervalTime = intervalTime;
     }
 
+    /**
+     * @SuppressWarnings("unchecked"): 告诉编译器忽略 unchecked 警告信息
+     * @param request
+     * @return
+     */
     @SuppressWarnings("unchecked")
     @Override
     public boolean isRepeatSubmit(HttpServletRequest request)

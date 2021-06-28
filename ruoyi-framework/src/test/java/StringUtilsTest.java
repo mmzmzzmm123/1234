@@ -1,4 +1,7 @@
+import com.alibaba.fastjson.JSONObject;
 import com.ruoyi.common.utils.StringUtils;
+
+import java.util.HashMap;
 
 /**
  * @author Fy
@@ -7,7 +10,5 @@ import com.ruoyi.common.utils.StringUtils;
  */
 public class StringUtilsTest {
     public static void main(String[] args) {
-        String msg = StringUtils.format("请求访问：{}，认证失败，无法访问系统资源", "www.baidu.com");
-        System.out.println(msg);
     }
 }
