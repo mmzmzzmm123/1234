@@ -7,7 +7,7 @@
       v-show="showSearch"
       label-width="68px"
     >
-      <el-form-item label="所属方案" prop="faid">
+      <el-form-item label="考核名称" prop="faid">
         <el-select v-model="queryParams.faid" size="small">
           <el-option
             v-for="item in qtjskhfaOptions"
@@ -69,7 +69,7 @@
       <el-table-column type="selection" width="55" align="center" />
       <!-- <el-table-column label="编号" align="center" prop="id" /> -->
       <el-table-column
-        label="所属方案"
+        label="考核名称"
         align="center"
         prop="tsbzQtjskhzbx.faid"
         :formatter="faFormat"
