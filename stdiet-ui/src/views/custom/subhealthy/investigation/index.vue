@@ -222,7 +222,11 @@ export default {
               "complication": null,
               "inferiorSymptomFlag": 0,
               "inferiorSymptom": [],
-              "weightChangeFlag": 0
+              "weightChangeFlag": 0,
+              //糖化血红蛋白
+              "sugarHemoglobin": null,
+              //体重变化描述
+              "weightChangeDescribe": null
             },
             //高血压评估
             bloodPressureMessage:{
@@ -252,6 +256,51 @@ export default {
                 "cryRecentlyFlag":0,
                 "wakeUpEarlyRecentlyFlag":0,
                 "noFunLiving":0
+            },
+            //月经不调/多囊问卷信息
+            menstruationMessage:{
+                //月经周期（单位：天）
+                menstrualCycle: null,
+                //月经天数
+                menstrualDays: null,
+                //月经预估量
+                menstrualForecast: null,
+                //推迟天数
+                menstrualDelayDays: null,
+                //提前天数
+                menstrualAdvanceDays: null,
+                //是否闭经
+                amenorrhoeaFlag: 0,
+                //闭经时长
+                amenorrhoeaDays: null,
+                //颜色
+                menstrualColor: null,
+                //其他颜色
+                otherMenstrualColor: null,
+                //形状
+                menstrualCharacter: null,
+                //其他形状
+                otherMenstrualCharacter: null,
+                //是否痛经
+                menstrualPainFlag: 0,
+                //痛经性质
+                menstrualNature: "0",
+                //痛经类型
+                menstrualType: "0",
+                //是否用药
+                medicationFlag: 0,
+                //药物情况描述
+                medication: null,
+                //有无生育计划
+                familyPlann: 0,
+                //同房出血
+                sameRoomBleed: 0,
+                //排卵期出血
+                ovulationBleed: 0,
+                //是否出现胰岛素抵抗
+                insulinResistanceFlag: 0,
+                //其他补充描述
+                otherDescriptions: null
             }
         }
       },
@@ -355,10 +404,7 @@ export default {
       });
        let cusMessageExtended = Object.assign({}, this.form.healthyExtend);
       //处理healthyExtend扩展数据
-      this.healthyData["needJSONFieldName"].forEach(function (item, index) {
-        cusMessageExtended[item] = cusMessageExtended[item] != null ? JSON.stringify(cusMessageExtended[item]) : null;
-      });
-      cusMessage.healthyExtend = cusMessageExtended;
+      cusMessage.healthyExtend = this.healthyData.dealHealthyExtendJson(cusMessageExtended, false);
       addCustomerHealthy(cusMessage)
         .then((response) => {
           if (response.code === 200) {
@@ -400,8 +446,14 @@ export default {
               }
           }
           if((this.stepActive == 7 && step > 0) || (this.stepActive == 9 && step < 0)){
-              //
+              //跳过慢病调理问卷
               if(this.healthyData.extendHealthyIndex.indexOf(this.form.conditioningProjectId) == -1){
+                  step = step * 2;
+              }
+          }
+          if((this.stepActive == 0 && step > 0) || (this.stepActive == 2 && step < 0)){
+              //跳过减脂经历
+              if(this.healthyData.notExperienceIndex.indexOf(this.form.conditioningProjectId) != -1){
                   step = step * 2;
               }
           }

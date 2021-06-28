@@ -1,6 +1,6 @@
 <template>
   <div>
-    <p class="p_title_1">{{healthyData['titleArray'][4]}}</p>
+    <p class="p_title_1">{{getTitle()}}</p>
     <p class="p_title_2">1、您每天的饮水习惯</p>
     <el-form-item label="(1) 每天饮水量（毫升）" prop="waterNum" class="margin-left">
       <el-input-number v-model="form.waterNum" :step="50" :min="0"></el-input-number>
@@ -145,7 +145,9 @@ export default {
     };
   },
   methods: {
-
+      getTitle(){
+          return this.healthyData.getTitle(this.form.conditioningProjectId, 4);
+       },
   },
   props: {
     form: {

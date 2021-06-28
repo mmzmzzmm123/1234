@@ -1,6 +1,6 @@
 <template>
   <div>
-    <p class="p_title_1" style="margin-top: 10px;">{{healthyData['titleArray'][0]}}</p>
+    <p class="p_title_1" style="margin-top: 10px;">{{getTitle()}}</p>
     <p style="font-size: 15px; margin-bottom: 12px;margin-top: 10px;">请您确认下方姓名、手机号是否正确</p>
     <el-form-item label="真实姓名" prop="name">
       <el-input v-model="form.name" :readonly="true" placeholder="请输入真实姓名" maxlength="20"/>
@@ -72,6 +72,9 @@ export default {
           this.conditioningProjectIdOption = response.data;
         });
       }
+    },
+    getTitle(){
+          return this.healthyData.getTitle(this.form.conditioningProjectId, 0);
     },
   },
   props: {

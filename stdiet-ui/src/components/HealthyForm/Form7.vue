@@ -1,6 +1,6 @@
 <template>
   <div>
-    <p class="p_title_1">{{healthyData['titleArray'][6]}}</p>
+    <p class="p_title_1">{{getTitle()}}</p>
     <p class="p_title_2">1、您的睡眠状况</p>
     <el-form-item label="(1) 一般晚上几点睡" prop="sleepTime" class="margin-left">
       <el-time-select v-model="form.sleepTime" :picker-options="{ start: '00:00', step: '01:00', end: '24:00' }" placeholder="请选择时间" :editable="false"/>
@@ -43,7 +43,9 @@ export default {
     };
   },
   methods: {
-
+      getTitle(){
+          return this.healthyData.getTitle(this.form.conditioningProjectId, 6);
+       },
   },
   props: {
     form: {

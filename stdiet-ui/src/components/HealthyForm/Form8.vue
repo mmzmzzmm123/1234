@@ -1,6 +1,6 @@
 <template>
   <div>
-    <p class="p_title_1">{{healthyData['titleArray'][7]}}</p>
+    <p class="p_title_1">{{getTitle()}}</p>
     <p class="p_title_2">1、本人病史情况</p>
     <el-form-item label="(1) 病史体征(可多选)" prop="physicalSignsId" class="margin-left">
       <el-select v-model="form.physicalSignsId" multiple placeholder="请选择">
@@ -161,6 +161,9 @@ export default {
     };
   },
   methods: {
+    getTitle(){
+          return this.healthyData.getTitle(this.form.conditioningProjectId, 7);
+       },
     //获取湿气
     getMoistureDictData() {
       if(this.flag == 0){

@@ -1,6 +1,6 @@
 <template>
   <div>
-    <p class="p_title_1">{{healthyData['titleArray'][3]}}</p>
+    <p class="p_title_1">{{getTitle()}}</p>
     <p class="p_title_2">1、您三餐的习惯</p>
     <el-form-item :label="'(1) 早餐习惯'" prop="breakfast" class="margin-left">
       <el-radio-group v-model="form.breakfastType">
@@ -151,7 +151,9 @@ export default {
     };
   },
   methods: {
-
+      getTitle(){
+          return this.healthyData.getTitle(this.form.conditioningProjectId, 3);
+       },
   },
   props: {
     form: {

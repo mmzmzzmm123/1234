@@ -1,13 +1,29 @@
 export const titleArray = [
-  "一、基础信息",
-  "二、减脂经历评估",
-  "三、食品安全评估",
-  "四、饮食结构评估",
-  "五、生活习惯评估",
-  "六、运动习惯评估",
-  "七、睡眠质量评估",
-  "八、既往病史/用药史评估",
-  "九、体检报告"
+  "基础信息",
+  "减脂经历评估",
+  "食品安全评估",
+  "饮食结构评估",
+  "生活习惯评估",
+  "运动习惯评估",
+  "睡眠质量评估",
+  "既往病史/用药史评估",
+  "体检报告"
+];
+
+export const titleNumArray = [
+  "一、",
+  "二、",
+  "三、",
+  "四、",
+  "五、",
+  "六、",
+  "七、",
+  "八、",
+  "九、",
+  "十、",
+  "十一、",
+  "十二、",
+  "十三、"
 ];
 
 export const condimentArray = [
@@ -332,6 +348,44 @@ export const syndromeNameArray = [
   { name: "视力下降", value: "8" }
 ];
 
+//月经颜色
+export const menstrualColorArray = [
+  { name: "鲜红色", value: "1" },
+  { name: "褐色", value: "2" },
+  { name: "暗黑色", value: "3" }
+];
+
+//月经形状
+export const menstrualCharacterArray = [
+  { name: "带血块", value: "1" },
+  { name: "豆腐渣", value: "2" },
+  { name: "正常", value: "3" }
+];
+
+//痛经形状
+export const menstrualNatureArray = [
+  { name: "无", value: "0" },
+  { name: "生理性（原发性）", value: "1" },
+  { name: "病理性（继发性，如子宫内膜炎）", value: "2" }
+];
+
+//痛经类型
+export const menstrualTypeArray = [
+  { name: "无", value: "0" },
+  { name: "气滞血瘀型", value: "1" },
+  { name: "寒湿凝滞型", value: "2" },
+  { name: "气血两虚型", value: "3" },
+  { name: "湿热瘀结型", value: "4" }
+];
+
+//痛经类型特点说明
+export const menstrualTypeIntroduceArray = [
+  { name: "气滞血瘀型", value: "经血排出不顺畅、颜色深有血块，血块排出后疼痛就减少" },
+  { name: "寒湿凝滞型", value: "小腹冷痛、热敷或者喝热汤后有缓解，怕冷手脚冰凉，经量少，颜色深有血块，便溏" },
+  { name: "气血两虚型", value: "小腹隐痛、月经稀少、颜色淡、脸色黄白没力气，吃不下还便溏" },
+  { name: "湿热瘀结型", value: "湿热瘀结型，特点是经期疼痛、经血深红粘稠，腰部胀痛，或者有低热，小便黄，便秘" }
+];
+
 //需要将数组转成字符串的属性名称，包含对象数组、字符串数组
 export const arrayName = [
   "condiment",
@@ -512,7 +566,8 @@ export const needJSONFieldName = [
   "bloodSugarMessage",
   "bloodPressureMessage",
   "anxietyStateMessage",
-  "depressedStateMessage"
+  "depressedStateMessage",
+  "menstruationMessage"
 ];
 
 //健康信息处理，将数组转为字符串
@@ -698,25 +753,46 @@ export function dealHealthy(customerHealthy) {
   return customerHealthy;
 }
 
-export const extendHealthyTitle = {"0":"减脂","5":"降血压","6":"降血糖"};
-export const projectName = {"0":"减脂","5":"高血压","6":"高血糖"};
-export const extendHealthyIndex = [5, 6];
+export const extendHealthyTitle = {"0":"减脂","5":"降血压","6":"降血糖","3": "备孕营养", "1": "月经不调", "2": "多囊调理", "11":"心脑血管调理"};
+export const projectName = {"0":"减脂","5":"高血压","6":"高血糖","3": "备孕营养", "1":"月经不调", "2":"多囊卵巢综合症"};
+//需要填写慢病调查问卷的项目
+export const extendHealthyIndex = [5, 6, 1, 2];
+//跳过减脂经历问卷的项目
+export const notExperienceIndex = [3,1,2];
 
 export function getTitleKey(projectId){
-    return extendHealthyTitle[projectId+""] ? extendHealthyTitle[projectId+""] : extendHealthyTitle["0"];
+    return extendHealthyTitle[projectId+""] != null ? extendHealthyTitle[projectId+""] : extendHealthyTitle["0"];
 }
 
-export function getTitle(projectId, index){
+export function getTitle(projectId, index , flag){
     if(extendHealthyIndex.includes(projectId)){
-      if(index == 1){
-         return "二、"+getTitleKey(projectId)+"经历评估";
+      //跳过了减脂经历
+      if(notExperienceIndex.includes(projectId)){
+          if(index > 1){
+            return titleNumArray[index-1] + titleArray[index];
+          }else{
+            return titleNumArray[index]+titleArray[index];
+          }
       }else{
-         return titleArray[index];
+        if(index == 1){
+          return titleNumArray[index]+getTitleKey(projectId)+"经历评估";
+        }else if(index == 8 && flag != 1){
+            return titleNumArray[index+1] + titleArray[index];
+        }else{
+            return titleNumArray[index]+titleArray[index];
+        }
       }
     }else{
-      return titleArray[index];
+      //跳过了减脂经历
+      if(notExperienceIndex.includes(projectId) && index > 1){
+         return titleNumArray[index-1] + titleArray[index];
+      }else{
+        return titleNumArray[index]+titleArray[index];
+      }
     }
 }
+
+
 
 //获取展示时，根据项目不同返回不同标题
 export function getTitleShowArray(projectId){
@@ -727,4 +803,302 @@ export function getTitleShowArray(projectId){
   ];
   return array;
 }
+
+/**
+ * 新增、查询展示时用于json与json字符串互相转换
+ * @param {*} healthyExtend 健康扩展数据
+ * @param {*} jsonFlag true json字符串转JSON  false json对象转json字符串
+ */
+export function dealHealthyExtendJson(healthyExtend, jsonFlag){
+    //处理healthyExtend扩展数据
+    needJSONFieldName.forEach(function (item, index) {
+      healthyExtend[item] = healthyExtend[item] != null ? (jsonFlag ? JSON.parse(healthyExtend[item]) : JSON.stringify(healthyExtend[item])) : null;
+    });
+    return healthyExtend;
+}
+
+
+export const extendedYesNoAttrName = [
+  //焦虑
+  {"targetAttrName": "easyAnxiousFlag", "healthyAttrName": "anxietyStateMessage,easyAnxiousFlag"},
+  {"targetAttrName": "upsetRecently", "healthyAttrName": "anxietyStateMessage,upsetRecently"},
+  {"targetAttrName": "nervousOnSpecialOccasionsFlag", "healthyAttrName": "anxietyStateMessage,nervousOnSpecialOccasionsFlag"},
+  {"targetAttrName": "terrifiedFlag", "healthyAttrName": "anxietyStateMessage,terrifiedFlag"},
+  //抑郁
+  {"targetAttrName": "listlessRecentlyFlag", "healthyAttrName": "depressedStateMessage,listlessRecentlyFlag"},
+  {"targetAttrName": "cryRecentlyFlag", "healthyAttrName": "depressedStateMessage,cryRecentlyFlag"},
+  {"targetAttrName": "wakeUpEarlyRecentlyFlag", "healthyAttrName": "depressedStateMessage,wakeUpEarlyRecentlyFlag"},
+  {"targetAttrName": "noFunLiving", "healthyAttrName": "depressedStateMessage,noFunLiving"},
+  //高血糖
+  {"targetAttrName": "measureBloodSugarFlag", "healthyAttrName": "bloodSugarMessage,measureBloodSugarFlag"},
+  {"targetAttrName": "lowBloodSugarFlag", "healthyAttrName": "bloodSugarMessage,lowBloodSugarFlag"},
+  {"targetAttrName": "complicationFlag", "healthyAttrName": "bloodSugarMessage,complicationFlag"},
+  {"targetAttrName": "inferiorSymptom", "healthyAttrName": "bloodSugarMessage,inferiorSymptomFlag"},
+  {"targetAttrName": "weightChangeFlag", "healthyAttrName": "bloodSugarMessage,weightChangeFlag"},
+
+  {"targetAttrName": "amenorrhoeaFlag", "healthyAttrName": "menstruationMessage,amenorrhoeaFlag"},
+
+  {"targetAttrName": "medicationFlag", "healthyAttrName": "menstruationMessage,medicationFlag"},
+  {"targetAttrName": "familyPlann", "healthyAttrName": "menstruationMessage,familyPlann"},
+  {"targetAttrName": "sameRoomBleed", "healthyAttrName": "menstruationMessage,sameRoomBleed"},
+
+  {"targetAttrName": "ovulationBleed", "healthyAttrName": "menstruationMessage,ovulationBleed"},
+  {"targetAttrName": "insulinResistanceFlag", "healthyAttrName": "menstruationMessage,insulinResistanceFlag"}
+
+]
+
+//单选的value转成对应name
+export function getStringBySigleValue(array, value){
+  if(value == undefined || value == null){
+    return "";
+  }
+  let val = "";
+  array.forEach((item,index) => {
+    if(item.value == value){
+      val = item.name;
+    }
+  })
+  return val;
+}
+
+//多选的value转成对应name
+export function getStringByMuchValue(array, valueArray){
+  if(valueArray == undefined || valueArray == null || valueArray.length == 0){
+    return "";
+  }
+  let val = [];
+  array.forEach((item,index) => {
+    if(valueArray.includes(item.value)){
+      val.push(item.name);
+    }
+  })
+  return val.join(",");
+}
+
+export function dealHealthyExtend(detailHealthy){
+  //将0、1处理成是、否
+  extendedYesNoAttrName.forEach((item,index) => {
+    let array = item.healthyAttrName.split(",");
+    detailHealthy[item.targetAttrName] = (array.length > 1 ? detailHealthy.healthyExtend[array[0]][array[1]] : detailHealthy.healthyExtend[array[0]]) == 1 ? '是' : '否';
+  })
+
+  //常吃水果以及份量
+  let eatFruitsMessage = "";
+  if(detailHealthy.healthyExtend.eatFruitsMessage != null && detailHealthy.healthyExtend.eatFruitsMessage.length > 0){
+     detailHealthy.healthyExtend.eatFruitsMessage.forEach((item,index) => {
+        eatFruitsMessage += (eatFruitsMessage == "" ? "" : ", ") + item.name + "/" + item.num;
+     });
+  }
+
+  //高血糖
+  detailHealthy.healthyExtend.eatFruitsMessage = eatFruitsMessage;
+  detailHealthy.mealBloodSugar = "餐前血糖："+(detailHealthy.healthyExtend.bloodSugarMessage.beforeMealBloodSugar == null ? "" : (detailHealthy.healthyExtend.bloodSugarMessage.beforeMealBloodSugar+"mmol/L"))+", "
+      +"餐后两小时血糖："+(detailHealthy.healthyExtend.bloodSugarMessage.afterMealBloodSugar == null ? "" : (detailHealthy.healthyExtend.bloodSugarMessage.afterMealBloodSugar+"mmol/L"))
+      +"，糖化血红蛋白："+(detailHealthy.healthyExtend.bloodSugarMessage.sugarHemoglobin == null ? "" : (detailHealthy.healthyExtend.bloodSugarMessage.sugarHemoglobin+"mmol/L"))
+  detailHealthy.measureBloodSugarTime = detailHealthy.healthyExtend.bloodSugarMessage.measureBloodSugarTime;
+  detailHealthy.nearBloodSugar = detailHealthy.healthyExtend.bloodSugarMessage.nearBloodSugar;
+  detailHealthy.lowBloodSugarFlag = detailHealthy.lowBloodSugarFlag + ", 出现时间："+nullToString(detailHealthy.healthyExtend.bloodSugarMessage.lowBloodSugarTime);
+  detailHealthy.complication = detailHealthy.healthyExtend.bloodSugarMessage.complication;
+  detailHealthy.inferiorSymptom = detailHealthy.inferiorSymptom +", 具体症状："+getStringByMuchValue( syndromeNameArray, detailHealthy.healthyExtend.bloodSugarMessage.inferiorSymptom);
+  detailHealthy.weightChangeFlag = detailHealthy.weightChangeFlag + "，具体变化情况："+detailHealthy.healthyExtend.bloodSugarMessage.weightChangeDescribe;
+
+  //高血压
+  detailHealthy.mealBloodPressure = "餐前血压："+(detailHealthy.healthyExtend.bloodPressureMessage.beforeMealBloodPressure == null ? "" : (detailHealthy.healthyExtend.bloodPressureMessage.beforeMealBloodPressure+"mmHg"))+", "
+      +"餐后两小时血压："+(detailHealthy.healthyExtend.bloodPressureMessage.afterMealBloodPressure == null ? "" : (detailHealthy.healthyExtend.bloodPressureMessage.afterMealBloodPressure+"mmHg"));
+  detailHealthy.measureBloodPressureFlag = detailHealthy.healthyExtend.bloodPressureMessage.measureBloodPressureFlag == 1 ? "是" : "否";
+  detailHealthy.measureBloodPressureTime = detailHealthy.healthyExtend.bloodPressureMessage.measureBloodPressureTime;
+  detailHealthy.nearBloodPressure = detailHealthy.healthyExtend.bloodPressureMessage.nearBloodPressure;
+  detailHealthy.lowBloodPressureFlag = (detailHealthy.healthyExtend.bloodPressureMessage.lowBloodPressureFlag == 1 ? "是" : "否") + ", 出现时间："+nullToString(detailHealthy.healthyExtend.bloodPressureMessage.lowBloodPressureTime);
+  detailHealthy.pressureComplicationFlag = detailHealthy.healthyExtend.bloodPressureMessage.complicationFlag == 1 ? "是" : "否";
+  detailHealthy.pressureComplication = detailHealthy.healthyExtend.bloodPressureMessage.complication;
+  detailHealthy.pressureInferiorSymptom = (detailHealthy.healthyExtend.bloodPressureMessage.inferiorSymptomFlag == 1 ? "是" : "否") + ", 具体症状："+getStringByMuchValue(syndromeNameArray,detailHealthy.healthyExtend.bloodPressureMessage.inferiorSymptom);
+  detailHealthy.pressureWeightChangeFlag = detailHealthy.healthyExtend.bloodPressureMessage.weightChangeFlag == 1 ? "是" : "否";
+
+  //月经不调、多囊
+  detailHealthy.menstrualCycle = "生理周期：" + nullToString(detailHealthy.healthyExtend.menstruationMessage.menstrualCycle) + "，生理天数：" + nullToString(detailHealthy.healthyExtend.menstruationMessage.menstrualDays);
+  detailHealthy.menstrualForecast = detailHealthy.healthyExtend.menstruationMessage.menstrualForecast;
+  detailHealthy.menstrualDelayDays = detailHealthy.healthyExtend.menstruationMessage.menstrualDelayDays;
+  detailHealthy.menstrualAdvanceDays = detailHealthy.healthyExtend.menstruationMessage.menstrualAdvanceDays;
+  detailHealthy.amenorrhoeaDays = detailHealthy.amenorrhoeaFlag + "，痛经时长：" + nullToString(detailHealthy.healthyExtend.menstruationMessage.amenorrhoeaDays);
+  detailHealthy.menstrualColor = getStringBySigleValue(menstrualColorArray, detailHealthy.healthyExtend.menstruationMessage.menstrualColor);
+  detailHealthy.menstrualColor += (detailHealthy.menstrualColor != "" ? "，" : "") + nullToString(detailHealthy.healthyExtend.menstruationMessage.otherMenstrualColor);
+  detailHealthy.menstrualColor = removeEnd(detailHealthy.menstrualColor);
+  detailHealthy.menstrualCharacter = getStringBySigleValue(menstrualCharacterArray, detailHealthy.healthyExtend.menstruationMessage.menstrualCharacter);
+  detailHealthy.menstrualCharacter += (detailHealthy.menstrualCharacter != "" ? "，" : "") + nullToString(detailHealthy.healthyExtend.menstruationMessage.otherMenstrualCharacter);
+  detailHealthy.menstrualCharacter = removeEnd(detailHealthy.menstrualCharacter);
+  detailHealthy.menstrualNature = getStringBySigleValue(menstrualNatureArray, detailHealthy.healthyExtend.menstruationMessage.menstrualNature);
+  detailHealthy.menstrualType = getStringBySigleValue(menstrualTypeArray, detailHealthy.healthyExtend.menstruationMessage.menstrualType);
+  detailHealthy.medication = detailHealthy.medicationFlag + "，具体药物：" + nullToString(detailHealthy.healthyExtend.menstruationMessage.medication);
+  detailHealthy.otherDescriptions = detailHealthy.healthyExtend.menstruationMessage.otherDescriptions;
+}
+
+export function nullToString(val){
+  return (val == undefined || val == null) ? "" : val;
+}
+
+export function removeEnd(val){
+  if(val == undefined || val == null){
+    return "";
+  }
+  let lastChar = val.substr(val.length-1, 1);
+  if(lastChar == "," || lastChar == "，"){
+    return val.substring(0, val.length-1);
+  }
+  return val;
+}
+
+// 健康评估标题
+export const healthyTitleData = [
+  [
+    ["创建时间", "客户姓名", "手机号"],
+    ["调理项目", "性别", "年龄"],
+    ["身高(厘米)", "体重(斤)", "腰围(厘米)"],
+    ["臀围(厘米)", "地域", "BMI"],
+  ],
+  [
+    ["减脂经历", "减脂遇到的困难", "减脂是否反弹"],
+    ["是否意识到生活习惯是减脂关键", "", ""],
+  ],
+  [
+    ["调味品种", "烹调方式", "烹调频次"],
+    ["洗菜方式", "", ""],
+  ],
+  [
+    ["早餐习惯", "早餐吃的食物", "午餐习惯"],
+    ["晚餐习惯", "正餐中素菜占比", "最常吃的肉类"],
+    ["晚餐时间", "每周吃夜宵次数", "夜宵通常吃的食物"],
+    ["食物的冷热偏好", "食物的口味偏好", "平均每周吃生蔬菜几次"],
+    ["每周吃生蔬菜的频次类型", "平均每天吃水果次数", "吃水果的时间段"],
+    ["平时吃水果的频次", "经常吃的水果以及份量","一餐吃几碗饭"],
+    ["吃几成饱","吃饭速度", "饮食特点"],
+    ["常吃的零食","有无服用营养保健品", "营养保健品品牌名"],
+    ["营养保健品产品名","服用营养保健品频次", "忌口过敏食物"],
+  ],
+  [
+    ["每天的饮水量", "喜欢喝什么水", "喝水习惯"],
+    ["常喝的饮品的每周频次", "是否喝酒", "喝酒种类"],
+    ["对应酒的量", "是否抽烟", "抽烟频次和烟龄"],
+    ["是否经常抽二手烟", "工作行业", "工作性质"],
+    ["排便次数", "排便时间段", "排便的形状"],
+    ["排便的气味", "排便的速度", "排便的颜色"],
+  ],
+  [
+    ["每周运动次数", "每次运动的时长", "每天运动的时间"],
+    ["运动", "运动场地", ""],
+  ],
+  [
+    ["睡觉时间", "睡眠质量", "是否有辅助入睡药物"],
+    ["辅助睡眠类药物名称", "是否经常熬夜", "熬夜频次"],
+  ],
+  [
+    ["病史体征", "湿气数据", "气血数据"],
+    ["家族疾病史", "手术史", "近期是否做过手术"],
+    ["手术恢复情况", "是否长期服用药物", "长期服用的药物"],
+    ["是否出现过过敏症状", "过敏症状", "过敏源"],
+  ],
+  [["体检报告(1)", "体检报告(2)", "体检报告(3)"]],
+  [
+    ["餐前餐后血糖", "是否有规律测血糖", "测量血糖时间"],
+    ["近期血糖水平", "是否有低血糖反应", "是否有出现并发症"],
+    ["并发症情况", "存在症状", "近三个月体重是否有变化"],
+
+  ],
+  [
+    ["餐前餐后血压", "是否有规律测血压", "测量血压时间"],
+    ["近期血压水平", "是否有低血压反应", "是否有出现并发症"],
+    ["并发症情况", "存在症状", "近三个月体重是否有变化"]
+  ],
+  [
+      ["你认为你是一个容易焦虑或紧张的人吗","最近一段时间，你是否比平时更感到焦虑或忐忑不安","是否有一些特殊场合或情景更容易使得你紧张、焦虑"],
+      ["你曾经有过惊恐发作吗.即突然发生的强烈不适感或心慌、眩晕、感到憋气或呼吸困难等症状","",""]
+  ],
+  [
+      ["过去几周(或几个月)是否感觉到无精打采、伤感、或对生活的乐趣减少","除了不开心之外，是否比平时更加悲观或想哭","经常有早醒吗(事实上不需那么早醒来)"],
+      ["近来是否经常想到活着没有意思","",""]
+  ],
+  [
+    ["月经周期、天数", "月经预估量", "月经推迟时长"],
+    ["月经提前时长", "是否闭经、闭经时长", "月经颜色"],
+    ["月经形状","痛经情况","痛经类型"],
+    ["用药情况","是否有生育计划","是否同房出血"],
+    ["是否排卵期出血","是否出现胰岛素抵抗","其他补充"]
+  ]
+]
+
+// 健康评估属性
+export const healthyValueData = [
+  [
+    ["createTime", "name", "phone"],
+    ["conditioningProject", "sex", "age"],
+    ["tall", "weight", "healthyExtend,waist"],
+    ["healthyExtend,hipline", "position", "bmi"],
+  ],
+  [
+    ["experience", "difficulty", "rebound"],
+    ["crux", "", ""],
+  ],
+  [
+    ["condiment", "cookingStyle", "cookingStyleRate"],
+    ["washVegetablesStyle", "", ""],
+  ],
+  [
+    ["breakfastType", "breakfastFood", "lunchType"],
+    ["dinner", "vegetableRate", "commonMeat"],
+    ["dinnerTime", "supperNum", "supperFood"],
+    ["dietHotAndCold", "dietFlavor", "vegetablesNum"],
+    ["vegetablesRateType", "fruitsNum", "fruitsTime"],
+    ["fruitsRate", "healthyExtend,eatFruitsMessage", "riceNum"],
+    [ "riceFull","eatingSpeed", "makeFoodType"],
+    ["snacks","healthProductsFlag", "healthProductsBrand"],
+    ["healthProductsName","healthProductsWeekRate", "dishesIngredient"],
+  ],
+  [
+    ["waterNum", "waterType", "waterHabit"],
+    ["drinksNum", "drinkWineFlag", "drinkWineClassify"],
+    ["drinkWineAmount", "smokeFlag", "smokeRate"],
+    ["secondSmoke", "workIndustry", "workType"],
+    ["defecationNum", "defecationTime", "defecationShape"],
+    ["defecationSmell", "defecationSpeed", "defecationColor"],
+  ],
+  [
+    ["motionNum", "motionDuration", "motionTime"],
+    ["motion", "motionField", ""],
+  ],
+  [
+    ["sleepTime", "sleepQuality", "sleepDrugFlag"],
+    ["sleepDrug", "stayupLateFlag", "stayupLateWeekNum"],
+  ],
+  [
+    ["physicalSigns", "moistureDate", "bloodData"],
+    ["familyIllnessHistory", "operationHistory", "nearOperationFlag"],
+    ["recoveryeSituation", "longEatDrugFlag", "longEatDrugClassify"],
+    ["allergyFlag", "allergySituation", "allergen"],
+  ],
+  [["medicalReport_one", "medicalReport_two", "medicalReport_three"]],
+  [
+    ["mealBloodSugar", "measureBloodSugarFlag", "measureBloodSugarTime"],
+    ["nearBloodSugar", "lowBloodSugarFlag", "complicationFlag"],
+    ["complication", "inferiorSymptom", "weightChangeFlag"]
+  ],
+  [
+    ["mealBloodPressure", "measureBloodPressureFlag", "measureBloodPressureTime"],
+    ["nearBloodPressure", "lowBloodPressureFlag", "pressureComplicationFlag"],
+    ["pressureComplication", "pressureInferiorSymptom", "pressureWeightChangeFlag"],
+  ],
+  [
+    ["easyAnxiousFlag","upsetRecently","nervousOnSpecialOccasionsFlag"],
+    ["terrifiedFlag","",""]
+  ],
+  [
+    ["listlessRecentlyFlag","cryRecentlyFlag","wakeUpEarlyRecentlyFlag"],
+    ["noFunLiving","",""]
+  ],
+  [
+    ["menstrualCycle", "menstrualForecast", "menstrualDelayDays"],
+    ["menstrualAdvanceDays", "amenorrhoeaDays", "menstrualColor"],
+    ["menstrualCharacter","menstrualNature","menstrualType"],
+    ["medication","familyPlann","sameRoomBleed"],
+    ["ovulationBleed","insulinResistanceFlag","otherDescriptions"]
+  ]
+]
 

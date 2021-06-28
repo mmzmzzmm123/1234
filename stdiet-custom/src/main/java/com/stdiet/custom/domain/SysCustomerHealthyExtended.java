@@ -57,6 +57,10 @@ public class SysCustomerHealthyExtended extends BaseEntity
     @Excel(name = "焦虑状态评估")
     private String anxietyStateMessage;
 
+    /** 月经不调、多囊信息 */
+    @Excel(name = "月经不调、多囊信息")
+    private String menstruationMessage;
+
     /** 删除标识 0未删除 1已删除 */
     private Long delFlag;
 }
