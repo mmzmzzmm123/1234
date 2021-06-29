@@ -12,11 +12,11 @@
         <result column="from_role" property="fromRole"/>
         <result column="to_uid" property="toUid"/>
         <result column="to_role" property="toRole"/>
-<!--        <result column="img" property="img" typeHandler="com.stdiet.custom.typehandler.ArrayJsonHandler"/>-->
+        <!--        <result column="img" property="img" typeHandler="com.stdiet.custom.typehandler.ArrayJsonHandler"/>-->
         <result column="create_time" property="createTime"/>
-<!--        <association property="fromName" column="{uid=from_uid,role=from_role}" select="selectUserInfo"/>-->
-<!--        <association property="fromAvatar" column="{uid=from_uid,role=from_role}" select="selectUserAvatar"/>-->
-<!--        <association property="toName" column="{uid=to_uid,role=to_role}" select="selectUserInfo"/>-->
+        <!--        <association property="fromName" column="{uid=from_uid,role=from_role}" select="selectUserInfo"/>-->
+        <!--        <association property="fromAvatar" column="{uid=from_uid,role=from_role}" select="selectUserAvatar"/>-->
+        <!--        <association property="toName" column="{uid=to_uid,role=to_role}" select="selectUserInfo"/>-->
         <association property="replys" column="id"
                      select="selectVideoCommentReplyByCommentId"/>
     </resultMap>
@@ -31,11 +31,11 @@
         <result column="to_uid" property="toUid"/>
         <result column="to_role" property="toRole"/>
         <result column="reply_id" property="replyId"/>
-<!--        <result column="img" property="img" typeHandler="com.stdiet.custom.typehandler.ArrayJsonHandler"/>-->
+        <!--        <result column="img" property="img" typeHandler="com.stdiet.custom.typehandler.ArrayJsonHandler"/>-->
         <result column="create_time" property="createTime"/>
-<!--        <association property="fromName" column="{uid=from_uid,role=from_role}" select="selectUserInfo"/>-->
-<!--        <association property="fromAvatar" column="{uid=from_uid,role=from_role}" select="selectUserAvatar"/>-->
-<!--        <association property="toName" column="{uid=to_uid,role=to_role}" select="selectUserInfo"/>-->
+        <!--        <association property="fromName" column="{uid=from_uid,role=from_role}" select="selectUserInfo"/>-->
+        <!--        <association property="fromAvatar" column="{uid=from_uid,role=from_role}" select="selectUserAvatar"/>-->
+        <!--        <association property="toName" column="{uid=to_uid,role=to_role}" select="selectUserInfo"/>-->
         <!--        <association property="toAvatar" column="{uid=to_uid,role=to_role}" select="selectUserAvatar"/>-->
     </resultMap>
 
@@ -136,5 +136,13 @@
             <if test="content != null">now(),</if>
         </trim>
     </insert>
+
+    <update id="deleteVideoCommentById" parameterType="String">
+        update sys_nutritional_video_comment set del_flag = 1 where id = #{id}
+    </update>
+
+    <update id="deleteVideoCommentReplyById" parameterType="String">
+        update sys_nutritional_video_reply set del_flag = 1 where id = #{id}
+    </update>
 
 </mapper>

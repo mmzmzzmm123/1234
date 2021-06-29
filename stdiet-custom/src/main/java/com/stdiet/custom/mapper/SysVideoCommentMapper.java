@@ -11,4 +11,7 @@ public interface SysVideoCommentMapper {
 
     int insertVideoCommentReply(SysVideoComment videoComment);
 
+    int deleteVideoCommentById(String id);
+
+    int deleteVideoCommentReplyById(String id);
 }

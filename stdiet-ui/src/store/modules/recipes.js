@@ -49,7 +49,8 @@ const oriState = {
   igdTypeOptions: [],
   physicalSignsOptions: [],
   //
-  curShortCutObj: {}
+  curShortCutObj: {},
+  recipesPlanRemark: ""
 };
 
 const mutations = {
@@ -147,7 +148,8 @@ const actions = {
       endNumDay,
       recipesId,
       cusId,
-      reviewStatus
+      reviewStatus,
+      remark
     } = planResponse.data;
     commit("updateStateData", {
       cusId,
@@ -157,7 +159,8 @@ const actions = {
       name: payload.name,
       planId: payload.planId,
       startNum: startNumDay,
-      endNum: endNumDay
+      endNum: endNumDay,
+      recipesPlanRemark: remark
     });
     getDicts("cus_cus_unit").then(response => {
       commit("updateStateData", { cusUnitOptions: response.data });
@@ -237,7 +240,8 @@ const actions = {
       commit("updateStateData", payload);
     }
   },
-  async getHealthyData({ commit }, payload) {
+  async getHealthyData({ commit, state }, payload) {
+    const { recipesPlanRemark } = state;
     commit("updateStateData", { healthDataLoading: true });
     const healthyDataResult = await getCustomerPhysicalSignsByCusId(
       payload.cusId
@@ -256,7 +260,10 @@ const actions = {
     commit("updateStateData", {
       healthDataLoading: false,
       healthyDataType,
-      healthyData,
+      healthyData: {
+        ...healthyData,
+        recipesPlanRemark
+      },
       avoidFoodIds: (healthyData.avoidFood || []).map(obj => obj.id)
     });
   },
@@ -555,7 +562,7 @@ const actions = {
             id: new Date().getTime(),
             name: tarDishes.name,
             type: response.data.type.split(",").sort(),
-            className: response.data.className,  //大类小类名称
+            className: response.data.className, //大类小类名称
             data: tarDishes
           }).then(() => {
             window.postMessage(

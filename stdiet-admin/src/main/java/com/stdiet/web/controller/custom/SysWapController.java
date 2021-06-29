@@ -276,5 +276,15 @@ public class SysWapController extends BaseController {
         return AjaxResult.success(reply);
     }
 
+    @DeleteMapping("/video/delete/comment/{id}")
+    public AjaxResult deleteVideoComment(@PathVariable String id) {
+        return toAjax(iSysNutritionalVideoService.deleteVideoCommentById(id));
+    }
+
+    @DeleteMapping("/video/delete/reply/{id}")
+    public AjaxResult deleteVideoReply(@PathVariable String id) {
+        return toAjax(iSysNutritionalVideoService.deleteVideoCommentReplyById(id));
+    }
+
 
 }

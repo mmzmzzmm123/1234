@@ -345,6 +345,16 @@ public class SysNutritionalVideoServiceImpl implements ISysNutritionalVideoServi
         return null;
     }
 
+    @Override
+    public int deleteVideoCommentById(String id) {
+        return sysVideoCommentMapper.deleteVideoCommentById(id);
+    }
+
+    @Override
+    public int deleteVideoCommentReplyById(String id) {
+        return sysVideoCommentMapper.deleteVideoCommentReplyById(id);
+    }
+
     /**
      * 判断是否为阿里点播的截图
      *
