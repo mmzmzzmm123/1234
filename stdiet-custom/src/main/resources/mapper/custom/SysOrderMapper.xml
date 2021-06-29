@@ -554,4 +554,12 @@
         select * from sys_order so
         where del_flag = 0 and nutritionist_id = #{nutritionistId} order by order_id desc limit 1
     </select>
+
+    <!-- 根据客户ID查询最后一个订单 -->
+    <select id="getLastOrderByCusId" parameterType="Long" resultMap="SysOrderResult">
+        select o.order_id,o.order_time,o.commiss_start_time,o.server_end_time,o.customer,o.review_status,o.amount,o.serve_time_id,o.give_serve_day,o.after_sale_id,o.conditioning_project_id
+        from sys_order as o where del_flag = 0 and cus_id = #{cusId} order by order_time desc limit 1
+    </select>
+
+
 </mapper>

@@ -511,4 +511,13 @@ public class SysOrderServiceImpl implements ISysOrderService {
     public int getOrderCountByOpenId(String openid){
         return sysOrderMapper.getOrderCountByOpenId(openid);
     }
+
+    /**
+     * 根据用户ID查询最后一个订单
+     * @param cusId 客户ID
+     * @return
+     */
+    public SysOrder getLastOrderByCusId(Long cusId){
+        return sysOrderMapper.getLastOrderByCusId(cusId);
+    }
 }

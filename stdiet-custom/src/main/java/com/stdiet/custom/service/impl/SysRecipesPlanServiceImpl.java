@@ -15,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
 
@@ -326,6 +327,8 @@ public class SysRecipesPlanServiceImpl implements ISysRecipesPlanService {
         SysRecipesPlan beforeOrderLastPlan = getLastDayRecipesPlan(sysOrder.getCusId(), sysOrder.getOrderTime());
         int startNumDay = 0;
         //System.out.println(sysOrder.getRecipesPlanContinue() == null);
+        int totalDays = (beforeOrderLastPlan != null ? beforeOrderLastPlan.getEndNumDay() : 0) + Integer.parseInt(sysOrder.getServeTimeId()+"");
+        System.out.println(totalDays);
         //之前是否存在食谱以及该订单食谱计划是否需要连续
         if (beforeOrderLastPlan != null && sysOrder.getRecipesPlanContinue().intValue() == 1) {
             long differDay = ChronoUnit.DAYS.between(DateUtils.dateToLocalDate(beforeOrderLastPlan.getEndDate()), serverStartDate);
@@ -333,11 +336,21 @@ public class SysRecipesPlanServiceImpl implements ISysRecipesPlanService {
             if (differDay <= 1) {
                 //判断前一个订单食谱是否满七天，不满则需要接上
                 int differNum = beforeOrderLastPlan.getEndNumDay() - beforeOrderLastPlan.getStartNumDay();
-
                 if (differNum < 6) {
                     //更新该食谱计划
                     beforeOrderLastPlan.setEndNumDay(beforeOrderLastPlan.getStartNumDay() + 6);
-                    beforeOrderLastPlan.setEndDate(DateUtils.localDateToDate(DateUtils.dateToLocalDate(beforeOrderLastPlan.getEndDate()).plusDays(6 - differNum)));
+                    //
+                    String[] pauseResult = dealPlanPause(DateUtils.dateToLocalDate(beforeOrderLastPlan.getEndDate()).plusDays(1), DateUtils.dateToLocalDate(beforeOrderLastPlan.getEndDate()).plusDays(6-differNum), pauseList);
+                    //LocalDate planStartDate = DateUtils.stringToLocalDate(pauseResult[0], "yyyyMMdd");
+                    LocalDate planEndDate = DateUtils.stringToLocalDate(pauseResult[1], "yyyyMMdd");
+                    beforeOrderLastPlan.setEndDate(DateUtils.localDateToDate(planEndDate));
+
+                    //beforeOrderLastPlan.setEndDate(DateUtils.localDateToDate(DateUtils.dateToLocalDate(beforeOrderLastPlan.getEndDate()).plusDays(6 - differNum)));
+                    //
+                    /*String[] pauseResult = dealPlanPause(DateUtils.dateToLocalDate(beforeOrderLastPlan.getStartDate()), DateUtils.dateToLocalDate(beforeOrderLastPlan.getEndDate()), pauseList);
+                    //LocalDate planStartDate = DateUtils.stringToLocalDate(pauseResult[0], "yyyyMMdd");
+                    LocalDate planEndDate = DateUtils.stringToLocalDate(pauseResult[1], "yyyyMMdd");
+                    beforeOrderLastPlan.setEndDate(DateUtils.localDateToDate(planEndDate));*/
                     sysRecipesPlanMapper.updateSysRecipesPlan(beforeOrderLastPlan);
                     serverStartDate = DateUtils.dateToLocalDate(beforeOrderLastPlan.getEndDate()).plusDays(1);
                 }
@@ -384,7 +397,7 @@ public class SysRecipesPlanServiceImpl implements ISysRecipesPlanService {
             sysRecipesPlan.setStartNumDay(startNumDay);
             long dayNumber = ChronoUnit.DAYS.between(planStartDate, planEndDate);
             startNumDay += dayNumber > 6 ? 6 : dayNumber;
-            sysRecipesPlan.setEndNumDay(startNumDay);
+            sysRecipesPlan.setEndNumDay(startNumDay > totalDays ? totalDays : startNumDay);
             //添加暂停范围内的日期
             planList.add(sysRecipesPlan);
             //System.out.println(DateUtils.dateTime(sysRecipesPlan.getStartDate()) + "-----" + DateUtils.dateTime(sysRecipesPlan.getEndDate()));
