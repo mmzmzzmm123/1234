@@ -21,6 +21,12 @@
         :value.sync="data.avoidFood"
         @onConfirm="handleOnConfirm"
       />
+      <RemarkCom
+        v-if="dev"
+        title="营养师点评"
+        :value.sync="data.recipesPlanRemark"
+        @onConfirm="handleOnRemarkConfirm"
+      />
     </div>
     <el-collapse>
       <el-collapse-item
@@ -57,6 +63,7 @@ import TextInfo from "@/components/TextInfo";
 import ACFCom from "./ACFCom";
 import RemarkCom from "./RemarkCom";
 import { updateHealthy } from "@/api/custom/healthy";
+import { updateRecipesPlan } from "@/api/custom/recipesPlan";
 
 export default {
   name: "HealthyView",
@@ -121,7 +128,7 @@ export default {
             { title: "过敏源", value: "allergen" },
           ],
         },
-         {
+        {
           title: "运动习惯评估",
           content: [
             { title: "每周运动次数", value: "motionNum" },
@@ -233,6 +240,18 @@ export default {
     },
     handleOnConfirm(data) {
       updateHealthy({ id: this.data.id, ...data }).then((res) => {
+        if (res.code === 200) {
+          this.$message.success("修改成功");
+        }
+      });
+    },
+    handleOnRemarkConfirm(data) {
+      const { pathname } = window.location;
+      const recipesId = pathname.substring(pathname.lastIndexOf("/") + 1);
+      updateRecipesPlan({
+        id: recipesId,
+        ...data,
+      }).then((res) => {
         if (res.code === 200) {
           this.$message.success("修改成功");
         }

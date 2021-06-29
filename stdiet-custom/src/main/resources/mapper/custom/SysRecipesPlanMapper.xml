@@ -36,11 +36,13 @@
         <result property="nutritionist" column="nutritionist"/>
         <result property="nutritionistAssisId" column="nutritionist_assis_id"/>
         <result property="nutritionistAssis" column="nutritionist_assis"/>
+        <result property="remark" column="remark"/>
     </resultMap>
 
 
     <sql id="selectSysRecipesPlanVo">
-        select id, order_id, cus_id, out_id, start_date, end_date, start_num_day, end_num_day, recipes_id, send_flag, send_time, pause_date, create_time, create_by, update_time, update_by, del_flag, review_status, sub_send, sms_send, subscribed from sys_recipes_plan
+        select id, order_id, cus_id, out_id, start_date, end_date, start_num_day, end_num_day, recipes_id, send_flag, send_time, pause_date, create_time, create_by, update_time, update_by, del_flag, review_status, sub_send, sms_send, subscribed, remark
+         from sys_recipes_plan
     </sql>
 
     <select id="selectSysRecipesPlanList" parameterType="SysRecipesPlan" resultMap="SysRecipesPlanResult">
@@ -141,6 +143,7 @@
             <if test="subscribed != null">subscribed = #{subscribed},</if>
             <if test="subSend != null">sub_send = #{subSend},</if>
             <if test="smsSend != null">sms_send = #{smsSend},</if>
+            <if test="remark != null">remark = #{remark},</if>
         </trim>
         where id = #{id} and del_flag = 0
     </update>
@@ -185,10 +188,11 @@
         srp.subscribed
         FROM sys_recipes_plan srp
         LEFT JOIN sys_customer sc ON sc.id = srp.cus_id
-        LEFT JOIN sys_user su_nutritionist ON su_nutritionist.user_id = sc.main_dietitian AND su_nutritionist.del_flag = 0
+        LEFT JOIN sys_user su_nutritionist ON su_nutritionist.user_id = sc.main_dietitian AND su_nutritionist.del_flag =
+        0
         LEFT JOIN sys_user su_nutritionist_assis ON su_nutritionist_assis.user_id = sc.assistant_dietitian AND
         su_nutritionist_assis.del_flag = 0
-        WHERE srp.del_flag = 0 AND sc.del_flag = 0  AND srp.type = 0
+        WHERE srp.del_flag = 0 AND sc.del_flag = 0 AND srp.type = 0
         <if test="orderId != null">AND srp.order_id = #{orderId}</if>
         <if test="sendFlag != null">AND srp.send_flag = #{sendFlag}</if>
         <if test="customer != null and customer != ''">AND (sc.name like concat('%',#{customer},'%') OR sc.phone like
@@ -249,6 +253,7 @@
         <result property="recipesId" column="recipes_id"/>
         <result property="sendFlag" column="send_flag"/>
         <result property="subscribed" column="subscribed"/>
+        <result property="remark" column="remark"/>
         <association property="menus" column="recipes_id" select="selectMenuIds"/>
     </resultMap>
 
@@ -256,12 +261,12 @@
               and review_status = 2 and send_flag = 1
     -->
     <select id="selectRecipesPlanListInfo" resultMap="SysRecipesPlanListInfoResult">
-        select id, start_date, end_date, start_num_day, end_num_day, recipes_id, send_flag, subscribed from sys_recipes_plan where out_id=#{outId} and del_flag = 0
+        select id, start_date, end_date, start_num_day, end_num_day, recipes_id, send_flag, subscribed, remark from sys_recipes_plan where out_id=#{outId} and del_flag = 0
     </select>
 
     <!--    and review_status = 2 and send_flag = 1-->
     <select id="selectRecipesPlanListInfoByCusId" resultMap="SysRecipesPlanListInfoResult">
-        select id, start_date, end_date, start_num_day, end_num_day, recipes_id, send_flag, subscribed from sys_recipes_plan where cus_id=#{cusId} and del_flag = 0
+        select id, start_date, end_date, start_num_day, end_num_day, recipes_id, send_flag, subscribed, remark from sys_recipes_plan where cus_id=#{cusId} and del_flag = 0
     </select>
 
     <resultMap type="SysRecipesDaily" id="SysRecipesResult">

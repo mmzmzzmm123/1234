@@ -31,4 +31,6 @@ public class SysRecipesPlanListInfo {
 
     private Integer status;
 
+    private String remark;
+
 }
