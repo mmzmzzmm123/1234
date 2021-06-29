@@ -120,4 +120,11 @@ public interface SysOrderMapper
      * @return
      */
     SysOrder getLastOrderByNutritionistId(@Param("nutritionistId")Long nutritionistId);
+
+    /**
+     * 根据用户ID查询最后一个订单
+     * @param cusId 客户ID
+     * @return
+     */
+    SysOrder getLastOrderByCusId(@Param("cusId")Long cusId);
 }

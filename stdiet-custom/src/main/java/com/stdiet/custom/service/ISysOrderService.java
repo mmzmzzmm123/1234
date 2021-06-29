@@ -121,4 +121,11 @@ public interface ISysOrderService
      * @return
      */
     int getOrderCountByOpenId(String openid);
+
+    /**
+     * 根据用户ID查询最后一个订单
+     * @param cusId 客户ID
+     * @return
+     */
+    SysOrder getLastOrderByCusId(Long cusId);
 }
