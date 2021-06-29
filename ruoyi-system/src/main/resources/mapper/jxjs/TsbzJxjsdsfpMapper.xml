@@ -10,6 +10,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="dsid"    column="dsid"    />
         <result property="createTime"    column="create_time"    />
         <result property="jdxmc" column="jdxmc"/>
+        <result property="jsname" column="jsname"/>
+        <result property="dsname" column="dsname"/>
         <result property="rjxd" column="rjxd"/>
         <result property="rjxk" column="rjxk"/>
         <association property="tsbzJxjsjbxx" column="jxjsid" javaType="TsbzJxjsjbxx" resultMap="TsbzJxjsjbxxResult"/>
@@ -54,6 +56,20 @@ left join tsbz_jxjsdsfp a on a.jxjsid=b.id
     <select id="selectTsbzJxjsdsfpList" parameterType="TsbzJxjsdsfp" resultMap="TsbzJxjsdsfpResult">
         <include refid="selectTsbzJxjsdsfpVo"/>
         <where>  
+            <if test="jxjsid != null "> and b.id = #{jxjsid}</if>
+            <if test="dsid != null "> and a.dsid = #{dsid}</if>
+        </where>
+    </select>
+
+    <select id="selectTsbzJxjsdsfpListExport" parameterType="TsbzJxjsdsfp" resultMap="TsbzJxjsdsfpResult">
+        select b.id, a.jxjsid, a.dsid, a.create_time, e.jsxm as dsname,
+        b.name as jsname, b.jxbh, b.xb, b.csrq, b.email, b.phone, b.yzbm, b.zzmm, b.mz, b.prdwid, b.prdwmc, b.jdxid, b.rjxd, b.rjxk, b.rjnj, b.byyx, b.xl, b.xw, b.sfsfs, b.lqnf,
+        c.jdxmc as jdxmc
+        from  tsbz_jxjsjbxx b
+        left join tsbz_jdx c on b.jdxid=c.id
+        left join tsbz_jxjsdsfp a on a.jxjsid=b.id
+        left join tsbz_dsjbxx e on a.dsid=e.id
+        <where>
             <if test="jxjsid != null "> and b.id = #{jxjsid}</if>
             <if test="dsid != null "> and a.dsid = #{dsid}</if>
         </where>

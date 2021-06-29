@@ -43,6 +43,17 @@ public class TsbzJxjsdsfpServiceImpl implements ITsbzJxjsdsfpService {
     }
 
     /**
+     * 查询见习教师导师分配列表
+     *
+     * @param tsbzJxjsdsfp 见习教师导师分配
+     * @return 见习教师导师分配集合
+     */
+    @Override
+    public List<TsbzJxjsdsfp> selectTsbzJxjsdsfpListExport(TsbzJxjsdsfp tsbzJxjsdsfp){
+        return tsbzJxjsdsfpMapper.selectTsbzJxjsdsfpListExport(tsbzJxjsdsfp);
+    }
+
+    /**
      * 新增见习教师导师分配
      *
      * @param tsbzJxjsdsfp 见习教师导师分配

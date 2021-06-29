@@ -28,6 +28,14 @@ public interface TsbzJxjsdsfpMapper {
     public List<TsbzJxjsdsfp> selectTsbzJxjsdsfpList(TsbzJxjsdsfp tsbzJxjsdsfp);
 
     /**
+     * 查询见习教师导师分配列表
+     *
+     * @param tsbzJxjsdsfp 见习教师导师分配
+     * @return 见习教师导师分配集合
+     */
+    public List<TsbzJxjsdsfp> selectTsbzJxjsdsfpListExport(TsbzJxjsdsfp tsbzJxjsdsfp);
+
+    /**
      * 新增见习教师导师分配
      *
      * @param tsbzJxjsdsfp 见习教师导师分配

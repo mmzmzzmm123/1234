@@ -71,6 +71,23 @@
       </el-form-item>
     </el-form>
 
+    <el-row :gutter="10" class="mb8">
+      <el-col :span="1.5">
+        <el-button
+          type="warning"
+          icon="el-icon-download"
+          size="mini"
+          @click="handleExport"
+          v-hasPermi="['jxjs:jxjsdsfp:export']"
+          >导出</el-button
+        >
+      </el-col>
+      <right-toolbar
+        :showSearch.sync="showSearch"
+        @queryTable="getList"
+      ></right-toolbar>
+    </el-row>
+
     <el-table
       v-loading="loading"
       :data="jxjsdsfpList"
@@ -284,6 +301,7 @@ import {
   delJxjsdsfp,
   addJxjsdsfp,
   updateJxjsdsfp,
+  exportJxjsdsfp,
 } from "@/api/jxjs/jxjsdsfp";
 import { listDsjbxx, getDsjbxx } from "@/api/jxzxkhgl/dsjbxx";
 import { listJxjsjbxx, getJxjsjbxx } from "@/api/jxjs/jxjsjbxx";
@@ -576,6 +594,22 @@ export default {
         .then(() => {
           this.getList();
           this.msgSuccess("清除成功");
+        })
+        .catch(function () {});
+    },
+    /** 导出按钮操作 */
+    handleExport() {
+      const queryParams = this.queryParams;
+      this.$confirm("是否确认导出所有见习教师导师分配数据项?", "警告", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning",
+      })
+        .then(function () {
+          return exportJxjsdsfp(queryParams);
+        })
+        .then((response) => {
+          this.download(response.msg);
         })
         .catch(function () {});
     },

@@ -51,7 +51,7 @@ public class TsbzJxjsdsfpController extends BaseController {
     @Log(title = "见习教师导师分配", businessType = BusinessType.EXPORT)
     @GetMapping("/export")
     public AjaxResult export(TsbzJxjsdsfp tsbzJxjsdsfp) {
-        List<TsbzJxjsdsfp> list = tsbzJxjsdsfpService.selectTsbzJxjsdsfpList(tsbzJxjsdsfp);
+        List<TsbzJxjsdsfp> list = tsbzJxjsdsfpService.selectTsbzJxjsdsfpListExport(tsbzJxjsdsfp);
         ExcelUtil<TsbzJxjsdsfp> util = new ExcelUtil<TsbzJxjsdsfp>(TsbzJxjsdsfp.class);
         return util.exportExcel(list, "jxjsdsfp");
     }

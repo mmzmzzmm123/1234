@@ -22,17 +22,46 @@ public class TsbzJxjsdsfp extends BaseEntity {
     /**
      * 见习之星编号
      */
-    @Excel(name = "见习之星编号")
+    //@Excel(name = "见习之星编号")
     private Long jxjsid;
+
+    /**
+     * 见习之星编号
+     */
+    @Excel(name = "见习教师")
+    private String jsname;
 
     /**
      * 导师编号
      */
-    @Excel(name = "导师编号")
+    //@Excel(name = "导师编号")
     private Long dsid;
+
+    public String getJsname() {
+        return jsname;
+    }
+
+    public void setJsname(String jsname) {
+        this.jsname = jsname;
+    }
+
+    public String getDsname() {
+        return dsname;
+    }
+
+    public void setDsname(String dsname) {
+        this.dsname = dsname;
+    }
+
+    /**
+     * 导师编号
+     */
+    @Excel(name = "导师姓名")
+    private String dsname;
 
     private TsbzJxjsjbxx tsbzJxjsjbxx;
 
+    @Excel(name = "基地校名称")
     private String jdxmc;
 
     public String getRjxd() {
@@ -103,6 +132,8 @@ public class TsbzJxjsdsfp extends BaseEntity {
                 .append("createTime", getCreateTime())
                 .append("tsbzJxjsjbxx", getTsbzJxjsjbxx())
                 .append("jdxmc", getJdxmc())
+                .append("dsname", getDsname())
+                .append("jsname", getJsname())
                 .append("rjxd", getRjxd())
                 .append("rjxk", getRjxk())
                 .toString();
