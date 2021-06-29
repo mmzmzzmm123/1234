@@ -25,14 +25,27 @@ public class TsbzJxzxpxpj extends BaseEntity {
     /**
      * 基地校ID
      */
-    @Excel(name = "基地校ID")
     private String jdxid;
 
     /**
      * 教师id
      */
-    @Excel(name = "教师id")
+    //@Excel(name = "教师id")
     private Long jsid;
+
+    public String getJsname() {
+        return jsname;
+    }
+
+    public void setJsname(String jsname) {
+        this.jsname = jsname;
+    }
+
+    /**
+     * 教师id
+     */
+    @Excel(name = "教师姓名")
+    private String jsname;
 
     /**
      * 培训表现
@@ -50,24 +63,25 @@ public class TsbzJxzxpxpj extends BaseEntity {
     /**
      * 备用字段
      */
-    @Excel(name = "备用字段")
+    //@Excel(name = "备用字段")
     private String pxBeiyong;
 
     /**
      * 创建人
      */
-    @Excel(name = "创建人")
+    //@Excel(name = "创建人")
     private Long createUserid;
 
     /**
      * 创建时间
      */
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    @Excel(name = "访问时间", width = 30, dateFormat = "yyyy-MM-dd HH:mm:ss")
+    //@Excel(name = "访问时间", width = 30, dateFormat = "yyyy-MM-dd HH:mm:ss")
     private Date createTime;
 
     private TsbzJxjsjbxx tsbzJxjsjbxx;
 
+    @Excel(name = "基地校")
     private String jdxmc;
 
     public void setId(Long id) {
@@ -155,6 +169,7 @@ public class TsbzJxzxpxpj extends BaseEntity {
                 .append("createTime", getCreateTime())
                 .append("tsbzJxjsjbxx", getTsbzJxjsjbxx())
                 .append("jdxmc", getJdxmc())
+                .append("jsname",getJsname())
                 .toString();
     }
 

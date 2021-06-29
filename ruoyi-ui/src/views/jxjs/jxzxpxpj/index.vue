@@ -88,16 +88,15 @@
           >评价</el-button
         >
       </el-col> -->
-      <!-- <el-col :span="1.5">
+      <el-col :span="1.5">
         <el-button
-          type="danger"
-          icon="el-icon-delete"
+          type="warning"
+          icon="el-icon-download"
           size="mini"
-          :disabled="multiple"
-          @click="handleDelete"
-          v-hasPermi="['jxjs:jxzxpxpj:remove']"
-        >删除</el-button>
-      </el-col> -->
+          @click="handleExport"
+          v-hasPermi="['jxjs:jxzxpxpj:export']"
+        >导出</el-button>
+      </el-col>
       <right-toolbar
         :showSearch.sync="showSearch"
         @queryTable="getList"
@@ -378,7 +377,7 @@ export default {
         this.msgError("未评价，不可清空");
         return;
       }
-      this.$confirm("是否确认清空见习之星教师培训评价的数据项?", "警告", {
+      this.$confirm("是否确认清空见习教师教师培训评价的数据项?", "警告", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
         type: "warning",
@@ -392,6 +391,19 @@ export default {
         })
         .catch(function () {});
     },
+    /** 导出按钮操作 */
+    handleExport() {
+      const queryParams = this.queryParams;
+      this.$confirm('是否确认导出所有见习教师教师培训评价数据项?', "警告", {
+          confirmButtonText: "确定",
+          cancelButtonText: "取消",
+          type: "warning"
+        }).then(function() {
+          return exportJxzxpxpj(queryParams);
+        }).then(response => {
+          this.download(response.msg);
+        }).catch(function() {});
+    }
   },
 };
 </script>

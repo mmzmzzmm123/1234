@@ -304,6 +304,7 @@ import {
   listJdcx,
   getJdcx,
   updateJdcxMs,
+  updateJdcx,
   exportJdcx,
   importMsTemplate,
 } from "@/api/jxjs/jdcx";
@@ -437,6 +438,7 @@ export default {
       });
     },
     isShow(row) {
+      console.log(row.dqzt);
       if (row.dqzt == "9" && (row.lqzt == null || row.lqzt == "")) {
         return true;
       } else {

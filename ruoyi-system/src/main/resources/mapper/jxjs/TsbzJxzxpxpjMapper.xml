@@ -14,6 +14,7 @@
         <result property="createUserid" column="create_userid"/>
         <result property="createTime" column="create_time"/>
         <result property="jdxmc" column="jdxmc"/>
+        <result property="jsname" column="jsname"/>
         <association property="tsbzJxjsjbxx" column="jsid" javaType="TsbzJxjsjbxx" resultMap="TsbzJxjsjbxxResult"/>
     </resultMap>
 
@@ -52,6 +53,20 @@
 
     <select id="selectTsbzJxzxpxpjList" parameterType="TsbzJxzxpxpj" resultMap="TsbzJxzxpxpjResult">
         <include refid="selectTsbzJxzxpxpjVo"/>
+        <where>
+            <if test="jdxid != null  and jdxid != ''">and j.jdxid = #{jdxid}</if>
+            <if test="pxnf != null">and p.pxnf = #{pxnf}</if>
+            <if test="pxbx != null  and pxbx != ''">and p.pxbx = #{pxbx}</if>
+            <if test="jsid != null  and jsid != ''">and j.id = #{jsid}</if>
+        </where>
+        order by j.id
+    </select>
+
+    <select id="selectTsbzJxzxpxpjListExport" parameterType="TsbzJxzxpxpj" resultMap="TsbzJxzxpxpjResult">
+        select p.id,j.id as jsid, (select dict_label from sys_dict_data where dict_type='sys_dm_pxpj' and dict_value=p.pxbx) as pxbx, p.pxnf, p.px_beiyong, p.create_userid, j.create_time,j.name as jsname, j.jdxid,c.jdxmc as jdxmc
+        from tsbz_jxjsjbxx j
+        left join  tsbz_jxzxpxpj p on p.jsid=j.id
+        left join tsbz_jdx c on j.jdxid=c.id
         <where>
             <if test="jdxid != null  and jdxid != ''">and j.jdxid = #{jdxid}</if>
             <if test="pxnf != null">and p.pxnf = #{pxnf}</if>

@@ -28,6 +28,14 @@ public interface ITsbzJxzxpxpjService
     public List<TsbzJxzxpxpj> selectTsbzJxzxpxpjList(TsbzJxzxpxpj tsbzJxzxpxpj);
 
     /**
+     * 查询见习之星教师培训评价列表
+     *
+     * @param tsbzJxzxpxpj 见习之星教师培训评价
+     * @return 见习之星教师培训评价集合
+     */
+    public List<TsbzJxzxpxpj> selectTsbzJxzxpxpjListExport(TsbzJxzxpxpj tsbzJxzxpxpj);
+
+    /**
      * 新增见习之星教师培训评价
      * 
      * @param tsbzJxzxpxpj 见习之星教师培训评价

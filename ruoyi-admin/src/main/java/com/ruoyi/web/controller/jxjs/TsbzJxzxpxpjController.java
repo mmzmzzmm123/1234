@@ -63,9 +63,9 @@ public class TsbzJxzxpxpjController extends BaseController
     @GetMapping("/export")
     public AjaxResult export(TsbzJxzxpxpj tsbzJxzxpxpj)
     {
-        List<TsbzJxzxpxpj> list = tsbzJxzxpxpjService.selectTsbzJxzxpxpjList(tsbzJxzxpxpj);
+        List<TsbzJxzxpxpj> list = tsbzJxzxpxpjService.selectTsbzJxzxpxpjListExport(tsbzJxzxpxpj);
         ExcelUtil<TsbzJxzxpxpj> util = new ExcelUtil<TsbzJxzxpxpj>(TsbzJxzxpxpj.class);
-        return util.exportExcel(list, "jxzxpxpj");
+        return util.exportExcel(list, "jxjspxpj");
     }
 
     /**
