@@ -237,7 +237,12 @@ export default {
         this.replyTarget = "";
         this.replyContent = "";
         this.replyObj = {};
-        this.fetchTopicListApi({ fromUid: data.uid });
+        this.fetchTopicListApi({
+          fromUid: data.uid,
+          callback: (msg) => {
+            this.$message.error(msg);
+          },
+        });
       }
     },
     handleOnTopicClick(data) {

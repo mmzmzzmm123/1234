@@ -4,7 +4,7 @@
       placement="right"
       trigger="click"
       width="400"
-      title="备注"
+      :title="title"
       @hide="handleOnHide"
     >
       <el-input
@@ -12,10 +12,10 @@
         v-model="nData"
         rows="6"
         placeholder="请输入备注信息"
-        maxlength="300"
+        maxlength="600"
         show-word-limit
       />
-      <span slot="reference" class="trigger">备注： </span>
+      <span slot="reference" class="trigger">{{ title }}：</span>
     </el-popover>
     <div class="content">
       <span v-if="newLine">
@@ -34,6 +34,10 @@ export default {
     value: {
       type: String,
       default: "",
+    },
+    title: {
+      type: String,
+      default: "备注",
     },
   },
   components: {},

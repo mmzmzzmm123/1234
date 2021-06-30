@@ -21,6 +21,12 @@
         :value.sync="data.avoidFood"
         @onConfirm="handleOnConfirm"
       />
+      <RemarkCom
+        v-if="dev && showRemark"
+        title="营养师点评"
+        :value.sync="data.recipesPlanRemark"
+        @onConfirm="handleOnRemarkConfirm"
+      />
     </div>
     <el-collapse>
       <el-collapse-item
@@ -57,6 +63,7 @@ import TextInfo from "@/components/TextInfo";
 import ACFCom from "./ACFCom";
 import RemarkCom from "./RemarkCom";
 import { updateHealthy } from "@/api/custom/healthy";
+import { updateRecipesPlan } from "@/api/custom/recipesPlan";
 
 export default {
   name: "HealthyView",
@@ -66,6 +73,10 @@ export default {
       default: {},
     },
     dev: {
+      type: Boolean,
+      default: false,
+    },
+    showRemark: {
       type: Boolean,
       default: false,
     },
@@ -121,7 +132,7 @@ export default {
             { title: "过敏源", value: "allergen" },
           ],
         },
-         {
+        {
           title: "运动习惯评估",
           content: [
             { title: "每周运动次数", value: "motionNum" },
@@ -237,6 +248,33 @@ export default {
           this.$message.success("修改成功");
         }
       });
+    },
+    handleOnRemarkConfirm(data) {
+      const { pathname } = window.location;
+      const recipesId = pathname.substring(pathname.lastIndexOf("/") + 1);
+      updateRecipesPlan({
+        id: recipesId,
+        ...data,
+      }).then((res) => {
+        if (res.code === 200) {
+          this.$message.success("修改成功");
+        }
+      });
+    },
+  },
+  watch: {
+    data(val, oldVal) {
+      if (
+        val &&
+        val.dietitianName &&
+        !this.basicInfo[3].some((obj) => obj.value === "dietitianName")
+      ) {
+        this.basicInfo.splice(3, 0, [
+          { title: "主营养师", value: "dietitianName" },
+          { title: "营养师助理", value: "assDietitianName" },
+          { title: "售后营养师", value: "afterDietitianName" },
+        ]);
+      }
     },
   },
 };

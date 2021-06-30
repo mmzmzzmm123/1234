@@ -1,6 +1,6 @@
 import {
-  getCustomerPhysicalSignsByCusId,
-  getCustomer
+  getCustomerPhysicalSignsByCusId
+  // getCustomer
 } from "@/api/custom/customer";
 import { dealHealthy } from "@/utils/healthyData";
 import {
@@ -33,8 +33,6 @@ const oriState = {
   healthDataLoading: false,
   healthyDataType: 0,
   avoidFoodIds: [],
-  //
-  customerData: {},
   //
   planList: [],
   planListLoading: false
@@ -130,7 +128,8 @@ const actions = {
         dispatch("fetchTopicDetailActions", {
           topicId: defTopic.topicId,
           id: defTopic.id,
-          uid: defTopic.uid
+          uid: defTopic.uid,
+          callback: payload.callback
         });
       }, 100);
       mTopicList = result.rows;
@@ -145,7 +144,6 @@ const actions = {
     const {
       healthyData,
       planList,
-      customerData,
       topicList,
       customerList
     } = state;
@@ -158,11 +156,6 @@ const actions = {
     if (!planList.length || planList[0].cusId !== parseInt(uid)) {
       dispatch("getRecipesPlanActions", { cusId: uid });
     }
-    // 客户档案
-    if (customerData.id !== parseInt(uid)) {
-      dispatch("getCustomerFileActions", { cusId: uid });
-    }
-    //
     const result = await fetchTopicDetail({ topicId, id });
     if (result.code === 200) {
       // 设置已读
@@ -182,12 +175,6 @@ const actions = {
         topicList: newTopicList,
         customerList: newCutomers
       });
-    }
-  },
-  async getCustomerFileActions({ commit }, payload) {
-    const result = await getCustomer(payload.cusId);
-    if (result.code === 200) {
-      commit("save", { customerData: result.data });
     }
   },
   async postTopicReplyActions(
@@ -223,7 +210,7 @@ const actions = {
     const healthyDataResult = await getCustomerPhysicalSignsByCusId(
       payload.cusId
     );
-    const newState = {};
+    const newState = { healthyData: {}, avoidFoodIds: [] };
     if (healthyDataResult.code === 200) {
       if (!healthyDataResult.data.customerHealthy) {
         // throw new Error("客户还没填写健康评估表");
@@ -236,6 +223,12 @@ const actions = {
         newState.avoidFoodIds = (newState.healthyData.avoidFood || []).map(
           obj => obj.id
         );
+        newState.healthyData.dietitianName =
+          healthyDataResult.data.customerInfo.dietitianName;
+        newState.healthyData.assDietitianName =
+          healthyDataResult.data.customerInfo.assDietitianName;
+        newState.healthyData.afterDietitianName =
+          healthyDataResult.data.customerInfo.afterDietitianName;
       }
     }
     commit("save", {

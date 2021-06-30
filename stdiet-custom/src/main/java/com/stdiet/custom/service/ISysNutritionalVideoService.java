@@ -1,11 +1,10 @@
 package com.stdiet.custom.service;
 
+import com.stdiet.custom.domain.SysNutritionalVideo;
+import com.stdiet.custom.domain.SysVideoComment;
+
 import java.util.List;
 import java.util.Map;
-
-import com.stdiet.custom.domain.SysNutritionalVideo;
-import com.stdiet.custom.domain.SysVideoClassify;
-import org.apache.ibatis.annotations.Param;
 
 /**
  * 营养视频Service接口
@@ -13,8 +12,7 @@ import org.apache.ibatis.annotations.Param;
  * @author xzj
  * @date 2021-04-29
  */
-public interface ISysNutritionalVideoService
-{
+public interface ISysNutritionalVideoService {
     /**
      * 查询营养视频
      *
@@ -65,6 +63,7 @@ public interface ISysNutritionalVideoService
 
     /**
      * 获取视频
+     *
      * @param videoId
      * @return
      */
@@ -72,12 +71,14 @@ public interface ISysNutritionalVideoService
 
     /**
      * 阿里云视频查询检索
+     *
      * @return
      */
-    public Map<String,Object> searchVideo(String key, Integer status, Integer pageNo, Integer pageSize, String scrollToken);
+    public Map<String, Object> searchVideo(String key, Integer status, Integer pageNo, Integer pageSize, String scrollToken);
 
     /**
      * 更新微信展示状态
+     *
      * @param wxShow
      * @param ids
      * @return
@@ -86,7 +87,38 @@ public interface ISysNutritionalVideoService
 
     /**
      * 更新视频播放量
+     *
      * @return
      */
     public int updateVideoPlayNum(String videoId);
+
+    /**
+     * 获取评论
+     *
+     * @param videoComment
+     * @return
+     */
+    public List<SysVideoComment> selectVideoCommentByTopicId(SysVideoComment videoComment, String phone);
+
+    /**
+     * 添加评论
+     *
+     * @param videoComment
+     * @return
+     */
+    public SysVideoComment insertVideoComment(SysVideoComment videoComment);
+
+    /**
+     * 添加回复
+     *
+     * @param videoComment
+     * @return
+     */
+    public SysVideoComment insertVideoCommentReply(SysVideoComment videoComment);
+
+    public int deleteVideoCommentById(String id);
+
+    public int deleteVideoCommentReplyById(String id);
+
+
 }
