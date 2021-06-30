@@ -30,7 +30,7 @@
       <el-input v-model="form.healthyExtend.hipline" placeholder="请输入臀围（可保留一位小数）" autocomplete="off" ></el-input>
     </el-form-item>
     <el-form-item label="调理项目" prop="conditioningProjectId">
-      <el-select v-model="form.conditioningProjectId" filterable clearable placeholder="请选择">
+      <el-select v-model="form.conditioningProjectId" :disabled="form.projectDisabledFlag" filterable clearable placeholder="请选择">
         <el-option
           v-for="dict in conditioningProjectIdOption"
           :key="dict.dictValue"

@@ -61,6 +61,14 @@ public class SysCustomerHealthyExtended extends BaseEntity
     @Excel(name = "月经不调、多囊信息")
     private String menstruationMessage;
 
+    /** 胃肠肿瘤信息 */
+    @Excel(name = "胃肠肿瘤信息")
+    private String gastrointestinalMessage;
+
+    /** 产后调理信息 */
+    @Excel(name = "产后调理信息")
+    private String postpartumConditioningMessage;
+
     /** 删除标识 0未删除 1已删除 */
     private Long delFlag;
 }

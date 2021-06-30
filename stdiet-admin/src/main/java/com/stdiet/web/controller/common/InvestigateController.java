@@ -7,6 +7,7 @@ import com.stdiet.common.utils.StringUtils;
 import com.stdiet.common.utils.sign.AesUtils;
 import com.stdiet.custom.domain.SysCustomer;
 import com.stdiet.custom.domain.SysCustomerHealthy;
+import com.stdiet.custom.domain.SysOrder;
 import com.stdiet.custom.domain.SysPhysicalSigns;
 import com.stdiet.custom.dto.request.CustomerInvestigateRequest;
 import com.stdiet.custom.dto.request.FoodHeatCalculatorRequest;
@@ -46,6 +47,9 @@ public class InvestigateController extends BaseController {
 
     @Autowired
     private ISysFoodHeatStatisticsService sysFoodHeatStatisticsService;
+
+    @Autowired
+    private ISysOrderService sysOrderService;
 
     /**
      * 建立客户信息档案
@@ -92,6 +96,9 @@ public class InvestigateController extends BaseController {
                 Map<String, Object> result = new HashMap<>();
                 result.put("name", sysCustomer.getName());
                 result.put("phone", sysCustomer.getPhone());
+                //查询下单对应调理项目
+                SysOrder order = sysOrderService.getLastOrderByCusId(Long.parseLong(id));
+                result.put("projectId", (order != null && order.getConditioningProjectId() != null) ? order.getConditioningProjectId() : null);
                 return AjaxResult.success(result);
             }
         }

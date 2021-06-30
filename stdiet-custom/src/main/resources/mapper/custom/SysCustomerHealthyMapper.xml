@@ -554,11 +554,15 @@
         <result property="bloodPressureMessage"    column="blood_pressure_message"    />
         <result property="anxietyStateMessage"    column="anxiety_state_message"    />
         <result property="menstruationMessage"    column="menstruation_message"    />
+        <result property="gastrointestinalMessage"    column="gastrointestinal_message"    />
+        <result property="postpartumConditioningMessage"    column="postpartum_conditioning_message"    />
         <result property="delFlag"    column="del_flag"    />
     </resultMap>
 
     <select id="getHealthyExtendedByHealthyId" parameterType="Long" resultMap="HealthyExtendedResult">
-       select id, healthy_id, waist, hipline, eat_fruits_message, long_eat_drug_message, blood_sugar_message, depressed_state_message, blood_pressure_message, anxiety_state_message,menstruation_message from sys_customer_healthy_extended where del_flag = 0 and  healthy_id = #{id} limit 1
+       select id, healthy_id, waist, hipline, eat_fruits_message, long_eat_drug_message, blood_sugar_message, depressed_state_message,
+       blood_pressure_message, anxiety_state_message,menstruation_message,gastrointestinal_message,postpartum_conditioning_message
+       from sys_customer_healthy_extended where del_flag = 0 and  healthy_id = #{id} limit 1
     </select>
 
 </mapper>

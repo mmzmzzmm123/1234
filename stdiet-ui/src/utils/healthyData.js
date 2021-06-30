@@ -386,6 +386,58 @@ export const menstrualTypeIntroduceArray = [
   { name: "湿热瘀结型", value: "湿热瘀结型，特点是经期疼痛、经血深红粘稠，腰部胀痛，或者有低热，小便黄，便秘" }
 ];
 
+//食欲程度类型
+export const appetiteArray = [
+  {name: "胃口很好", value: "1"},
+  {name: "胃口一般", value: "2"},
+  {name: "不太想吃", value: "3"},
+  {name: "完全吃不下", value: "4"}
+];
+
+//生产类型
+export const productionStatusArray = [
+  {name: "顺产", value: "1" },
+  {name: "剖宫产", value: "2"},
+  {name: "早产", value: "3"}
+];
+
+//孕期疾病类型
+export const pregnancyDiseaseArray = [
+  {name: "妊娠高血糖", value: "1" },
+  {name: "妊娠高血压", value: "2"},
+  {name: "妊娠甲减", value: "3"}
+];
+
+//喂养方式
+export const feedingMethodsArray = [
+  {name: "纯母乳", value: "1" },
+  {name: "混合喂养", value: "2" },
+  {name: "纯人工喂养", value: "3" }
+];
+
+//乳汁状态
+export const milkStateArray = [
+  {name: "良好", value: "1" },
+  {name: "乳汁不足", value: "2"},
+  {name: "乳汁稀薄", value: "3"}
+];
+
+//产后症状状态
+export const postpartumSymptomsArray = [
+  {name: "贫血", value: "1" },
+  {name: "缺钙（抽筋/腿软）", value: "2"},
+  {name: "抑郁", value: "3"},
+  {name: "焦虑", value: "4" },
+  {name: "脱发", value: "5"},
+  {name: "失眠", value: "6"},
+  {name: "漏尿", value: "7" },
+  {name: "腹直肌分离", value: "8"},
+  {name: "大汗不止", value: "9"},
+  {name: "恶露不尽", value: "10"},
+  {name: "虚弱怕冷", value: "11"}
+]
+
+
 //需要将数组转成字符串的属性名称，包含对象数组、字符串数组
 export const arrayName = [
   "condiment",
@@ -567,7 +619,9 @@ export const needJSONFieldName = [
   "bloodPressureMessage",
   "anxietyStateMessage",
   "depressedStateMessage",
-  "menstruationMessage"
+  "menstruationMessage",
+  "gastrointestinalMessage",
+  "postpartumConditioningMessage"
 ];
 
 //健康信息处理，将数组转为字符串
@@ -753,22 +807,23 @@ export function dealHealthy(customerHealthy) {
   return customerHealthy;
 }
 
-export const extendHealthyTitle = {"0":"减脂","5":"降血压","6":"降血糖","3": "备孕营养", "1": "月经不调", "2": "多囊调理", "11":"心脑血管调理"};
-export const projectName = {"0":"减脂","5":"高血压","6":"高血糖","3": "备孕营养", "1":"月经不调", "2":"多囊卵巢综合症"};
+export const extendHealthyTitle = {"0":"减脂","5":"降血压","6":"降血糖","3": "备孕营养", "1": "月经不调", "2": "多囊调理", "11":"心脑血管调理","13":"胃肠肿瘤调理","4":"产后调理"};
+export const projectName = {"0":"减脂","5":"高血压","6":"高血糖","3": "备孕营养", "1":"月经不调", "2":"多囊卵巢综合症", "13":"胃肠肿瘤","4":"产后调理"};
 //需要填写慢病调查问卷的项目
-export const extendHealthyIndex = [5, 6, 1, 2];
+export const extendHealthyIndex = [5, 6, 1, 2, 13,4];
 //跳过减脂经历问卷的项目
-export const notExperienceIndex = [3,1,2];
+export const notExperienceIndex = [3,1,2,13,4];
 
 export function getTitleKey(projectId){
     return extendHealthyTitle[projectId+""] != null ? extendHealthyTitle[projectId+""] : extendHealthyTitle["0"];
 }
 
-export function getTitle(projectId, index , flag){
+//添加问卷信息时获取标题方法
+export function getTitle(projectId, index){
     if(extendHealthyIndex.includes(projectId)){
       //跳过了减脂经历
       if(notExperienceIndex.includes(projectId)){
-          if(index > 1){
+          if(index > 1 && index < 8){
             return titleNumArray[index-1] + titleArray[index];
           }else{
             return titleNumArray[index]+titleArray[index];
@@ -776,7 +831,7 @@ export function getTitle(projectId, index , flag){
       }else{
         if(index == 1){
           return titleNumArray[index]+getTitleKey(projectId)+"经历评估";
-        }else if(index == 8 && flag != 1){
+        }else if(index == 8){
             return titleNumArray[index+1] + titleArray[index];
         }else{
             return titleNumArray[index]+titleArray[index];
@@ -790,6 +845,16 @@ export function getTitle(projectId, index , flag){
         return titleNumArray[index]+titleArray[index];
       }
     }
+}
+
+//展示问卷信息时获取标题方法
+export function getShowTitle(projectId, index){
+  //跳过了减脂经历
+  if(notExperienceIndex.includes(projectId) && index > 1){
+    return titleNumArray[index-1] + titleArray[index];
+  }else{
+   return titleNumArray[index]+titleArray[index];
+  }
 }
 
 
@@ -843,8 +908,12 @@ export const extendedYesNoAttrName = [
   {"targetAttrName": "sameRoomBleed", "healthyAttrName": "menstruationMessage,sameRoomBleed"},
 
   {"targetAttrName": "ovulationBleed", "healthyAttrName": "menstruationMessage,ovulationBleed"},
-  {"targetAttrName": "insulinResistanceFlag", "healthyAttrName": "menstruationMessage,insulinResistanceFlag"}
+  {"targetAttrName": "insulinResistanceFlag", "healthyAttrName": "menstruationMessage,insulinResistanceFlag"},
 
+  {"targetAttrName": "chemotherapyFlag", "healthyAttrName": "gastrointestinalMessage,chemotherapyFlag"},
+  {"targetAttrName": "foodIntoleranceFlag", "healthyAttrName": "gastrointestinalMessage,foodIntoleranceFlag"},
+
+  {"targetAttrName": "resumeMenstruationFlag", "healthyAttrName": "postpartumConditioningMessage,resumeMenstruationFlag"} 
 ]
 
 //单选的value转成对应name
@@ -930,6 +999,70 @@ export function dealHealthyExtend(detailHealthy){
   detailHealthy.menstrualType = getStringBySigleValue(menstrualTypeArray, detailHealthy.healthyExtend.menstruationMessage.menstrualType);
   detailHealthy.medication = detailHealthy.medicationFlag + "，具体药物：" + nullToString(detailHealthy.healthyExtend.menstruationMessage.medication);
   detailHealthy.otherDescriptions = detailHealthy.healthyExtend.menstruationMessage.otherDescriptions;
+
+  //胃肠肿瘤信息
+  detailHealthy.weightChangeDescribe = detailHealthy.healthyExtend.gastrointestinalMessage.weightChangeDescribe;
+  let eatingHabits = "一餐：";
+  let riceNum = nullToString(detailHealthy.healthyExtend.gastrointestinalMessage.riceNum);
+  if(riceNum  != ""){
+    eatingHabits +=  riceNum  + "碗饭，";
+  }
+  let dishNum = nullToString(detailHealthy.healthyExtend.gastrointestinalMessage.dishNum);
+  if(dishNum != ""){
+    eatingHabits += dishNum  + "个菜，";
+  }
+  let soupNum = nullToString(detailHealthy.healthyExtend.gastrointestinalMessage.soupNum);
+  if(soupNum != ""){
+    eatingHabits += soupNum  + "个汤";
+  }
+  detailHealthy.eatingHabits = eatingHabits;
+  detailHealthy.dailyFoodIntake = detailHealthy.healthyExtend.gastrointestinalMessage.dailyFoodIntake;
+  detailHealthy.appetite = getStringBySigleValue(appetiteArray, detailHealthy.healthyExtend.gastrointestinalMessage.appetite);
+  detailHealthy.appetite += (detailHealthy.appetite != "" ? '，' : '') + detailHealthy.healthyExtend.gastrointestinalMessage.otherAppetite;
+  detailHealthy.appetite = removeEnd(detailHealthy.appetite);
+  let sleepStatus = "";
+  let sleepTime = nullToString(detailHealthy.healthyExtend.gastrointestinalMessage.sleepTime);
+  if(sleepTime != ""){
+    sleepStatus += "睡觉时间：" + sleepTime;
+  }
+  let upTime = nullToString(detailHealthy.healthyExtend.gastrointestinalMessage.upTime);
+  if(upTime != ""){
+    sleepStatus += (sleepStatus != "" ? "，" : "") + "睡觉时间：" + upTime;
+  }
+  let lunchBreak = nullToString(detailHealthy.healthyExtend.gastrointestinalMessage.lunchBreak);
+  if(lunchBreak != ""){
+    sleepStatus += (sleepStatus != "" ? "，" : "") + "午休时间：" + lunchBreak;
+  }
+  detailHealthy.sleepStatus = sleepStatus;
+  detailHealthy.chemotherapy = detailHealthy.chemotherapyFlag + "，具体情况：" + detailHealthy.healthyExtend.gastrointestinalMessage.chemotherapy;
+  detailHealthy.foodIntolerance = detailHealthy.foodIntoleranceFlag + "，具体情况：" + detailHealthy.healthyExtend.gastrointestinalMessage.foodIntolerance;
+
+  //产后调理信息
+  detailHealthy.weightGain = detailHealthy.healthyExtend.postpartumConditioningMessage.weightGain;
+  detailHealthy.postpartumMonth = detailHealthy.healthyExtend.postpartumConditioningMessage.postpartumMonth;
+
+  detailHealthy.productionStatus = getStringBySigleValue(productionStatusArray,detailHealthy.healthyExtend.postpartumConditioningMessage.productionStatus);
+  detailHealthy.productionStatus += (detailHealthy.productionStatus != "" ? "，" : "") + nullToString(detailHealthy.healthyExtend.postpartumConditioningMessage.otherProductionStatus);
+  detailHealthy.productionStatus = removeEnd(detailHealthy.productionStatus);
+
+  detailHealthy.pregnancyDisease = getStringBySigleValue(pregnancyDiseaseArray,detailHealthy.healthyExtend.postpartumConditioningMessage.pregnancyDisease);
+  detailHealthy.pregnancyDisease += (detailHealthy.pregnancyDisease != "" ? "，" : "") + nullToString(detailHealthy.healthyExtend.postpartumConditioningMessage.otherPregnancyDisease);
+  detailHealthy.pregnancyDisease = removeEnd(detailHealthy.pregnancyDisease);
+
+  detailHealthy.feedingMethods = getStringBySigleValue(feedingMethodsArray,detailHealthy.healthyExtend.postpartumConditioningMessage.feedingMethods);
+  detailHealthy.feedingMethods += (detailHealthy.feedingMethods != "" ? "，" : "") + nullToString(detailHealthy.healthyExtend.postpartumConditioningMessage.otherFeedingMethods);
+  detailHealthy.feedingMethods = removeEnd(detailHealthy.feedingMethods);
+
+  detailHealthy.milkState = getStringBySigleValue(milkStateArray,detailHealthy.healthyExtend.postpartumConditioningMessage.milkState);
+  detailHealthy.milkState += (detailHealthy.milkState != "" ? "，" : "") + nullToString(detailHealthy.healthyExtend.postpartumConditioningMessage.otherMilkState);
+  detailHealthy.milkState = removeEnd(detailHealthy.milkState);
+  detailHealthy.postpartumSymptoms = getStringByMuchValue(postpartumSymptomsArray,detailHealthy.healthyExtend.postpartumConditioningMessage.postpartumSymptoms);
+  
+  detailHealthy.postpartumSymptoms += (detailHealthy.postpartumSymptoms != "" ? "，" : "") + nullToString(detailHealthy.healthyExtend.postpartumConditioningMessage.otherPostpartumSymptoms);
+  detailHealthy.postpartumSymptoms = removeEnd(detailHealthy.postpartumSymptoms);
+
+  detailHealthy.productionNum = "生产次数：" + nullToString(detailHealthy.healthyExtend.postpartumConditioningMessage.productionNum);
+  detailHealthy.productionNum += "，流产次数：" + nullToString(detailHealthy.healthyExtend.postpartumConditioningMessage.abortionNum);
 }
 
 export function nullToString(val){
@@ -1022,6 +1155,16 @@ export const healthyTitleData = [
     ["月经形状","痛经情况","痛经类型"],
     ["用药情况","是否有生育计划","是否同房出血"],
     ["是否排卵期出血","是否出现胰岛素抵抗","其他补充"]
+  ],
+  [
+    ["三个月内体重变化","饮食习惯","一天食量"],
+    ["食欲情况","睡眠状况","是否放化疗以及情况"],
+    ["食物不耐受情况","",""]
+  ],
+  [
+    ["孕期增长","产后几个月","生产状况"],
+    ["孕期疾病","喂养方式","乳汁状态"],
+    ["产后症状","恢复月经","生育史"]
   ]
 ]
 
@@ -1099,6 +1242,16 @@ export const healthyValueData = [
     ["menstrualCharacter","menstrualNature","menstrualType"],
     ["medication","familyPlann","sameRoomBleed"],
     ["ovulationBleed","insulinResistanceFlag","otherDescriptions"]
+  ],
+  [
+    ["weightChangeDescribe","eatingHabits","dailyFoodIntake"],
+    ["appetite","sleepStatus","chemotherapy"],
+    ["foodIntolerance","",""]
+  ],
+  [
+    ["weightGain","postpartumMonth","productionStatus"],
+    ["pregnancyDisease","feedingMethods","milkState"],
+    ["postpartumSymptoms","resumeMenstruationFlag","productionNum"]
   ]
 ]
 
