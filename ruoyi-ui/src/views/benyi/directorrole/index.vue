@@ -8,7 +8,24 @@
 -->
 <template>
   <div class="app-activity">
-    <h2 class="title">本一园长的八种角色</h2>
+    <h2 class="title">本一园长岗位职责</h2>
+
+    <ul class="infinite-list" v-infinite-scroll="load" style="overflow: auto">
+      <li
+        v-for="(ele, i) in filesList"
+        :key="i"
+        class="flex align-center justify-between infinite-list-item"
+      >
+        <div class="left">
+          <span>{{ i + 1 }}.</span>
+          <i class="el-icon-document icon"></i>{{ ele.name }}
+        </div>
+        <a class="right" :href="apiurl + ele.fileurl">下载</a>
+        <!-- <a class="right" @click="down(ele)">下载</a> -->
+      </li>
+    </ul>
+
+    <h2 class="title">本一园长八种角色</h2>
     <p class="text indent">
       幼儿园园长是最特别的管理者。在所有的行业之中，没有任何一种能像幼儿园管理这样复杂。当然，这或许是一种特殊社会历史时期的一种特殊现象。但无论怎样，在当今中国，作为一个幼儿园园长，尤其是在市场当中为生存与发展疲于奔命的私立幼儿园园长，她或他必须在日常管理中不得不同时充当数个角色。否则，是无法胜任这一看上去甚是“美味”，实则“五味杂陈”的职位的。下面，我们就从实证的角度，描述一下一个园长应该充当的八种角色。事实上，在当今看来，如果想成为一个非常称职的优秀园长，尽管这八种角色权重不尽相同，但每一种都是非常必要的，都是不可或缺的。
     </p>
@@ -80,7 +97,7 @@
             </p>
           </div>
         </el-tab-pane>
-        <el-tab-pane label="7、(七)园长是姐姐" name="t7">
+        <el-tab-pane label="7、园长是姐姐" name="t7">
           <div class="content">
             <p class="text">
               姐姐是老大。她宽容，不计前嫌；她大度，能忍受委屈；她能够任劳任怨，默默奉献；她是最好的倾听者，并善解人意；她理性，从不煽风点火，而是循循善诱，指点迷津；她总是能承担责任，且从不抱怨；她说话不多，但总是可以说到点子上，且掷地有声。在中国的社会文化传统中，由于自然出生的位置，姐姐这个称谓，有着仅次于母亲的权威地位。这是我们为什么将园长角色确定为“姐姐”的原因之一。其二，幼儿园的主要人力资源基本上全部由女性构成。如果将园长与教师的关系比作姐妹的话，那么，“姐姐”的地位彰显一种“天赋姊权”的责任与义务。在这里，我们通过赋予园长以“姐姐”的角色，试图达到解决“女性管理女性”所产生的诸多令人头疼不已的问题。这些问题包括，由“情绪化”导致的感情用事缺乏逻辑，善人治缺法制，话太多言多必失，缺乏策略无原则；由“情感细腻”导致的不分权、不放权、事必躬亲，不大气、爱生气、不留退路，喜怒形于色、心情写在脸上；以及由“同性妒忌”导致的滥用权威，不善于进行换位思考，对错误不能容忍、缺乏弹性走极端，等等。正如幼儿园是女性管理女性事实的客观一样，女性自身的上述特点也同样是不争的客观事实。因此，我们就会遇到了一种困境：怎样才能在幼儿园管理中处理好这些有客观事实引起的诸多“纠结”？坦率地讲，迄今为止还没有看到有人能拿出一套操作性非常强的“控制流程”，让一个女性园长自然而然地在工作中克服自己的“天然弱点”。因此，我们能找到的最好的解决方案，也许就是在心理上赋予你一种可操作的“角色”，这就是“姐姐”。就是试图让你自己有一个想象中的自我定位，以便能够睿智与理性地履行自己的园长职责。总之，当好“姐姐”，你将会遭遇最少的管理困境。
@@ -96,6 +113,7 @@
         </el-tab-pane>
       </el-tabs>
     </div>
+
     <el-backtop target="body .app-activity">
       <!-- <div class="back-ball">
         Top
@@ -105,21 +123,73 @@
 </template>
 
 <script>
+import { listFiles, getFiles } from "@/api/benyi/files";
+import { downLoadUrl } from "@/utils/zipdownload";
+
 export default {
   name: "Activity",
   data() {
     return {
+      // 遮罩层
+      loading: true,
+      apiurl: process.env.VUE_APP_BASE_API,
+      filesList: [],
+      // 查询参数
+      queryParams: {
+        pageNum: 1,
+        pageSize: 50,
+        name: undefined,
+        filetype: undefined,
+        type: "10", //代表园长岗位职责系列文件
+        fileurl: undefined,
+        createuserid: undefined,
+      },
       isFixed: false,
       activeName: "t1",
     };
   },
-  created() {},
+  created() {
+    this.getList();
+  },
+  methods: {
+    /** 查询文件管理列表 */
+    getList() {
+      this.loading = true;
+      listFiles(this.queryParams).then((response) => {
+        this.filesList = response.rows;
+        this.loading = false;
+      });
+    },
+    load() {},
+    down(row) {
+      downLoadUrl(row.fileurl, row);
+    },
+  },
   mounted() {},
   computed: {},
-  methods: {},
 };
 </script>
 <style lang="scss" scoped>
+.infinite-list-item {
+  padding: 15px 15px;
+  border-bottom: 1px solid #eee;
+  &:hover {
+    background: #f8f8f8;
+  }
+  .left {
+    font-size: 14px;
+    .icon {
+      margin: 0 3px 0 5px;
+    }
+  }
+  .right {
+    font-size: 12px;
+    color: #999;
+    &:hover {
+      color: rgb(64, 158, 255);
+    }
+  }
+}
 .app-activity {
   padding: 0 10%;
   height: 100vh;
