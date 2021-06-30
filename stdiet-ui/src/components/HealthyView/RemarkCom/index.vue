@@ -12,7 +12,7 @@
         v-model="nData"
         rows="6"
         placeholder="请输入备注信息"
-        maxlength="300"
+        maxlength="600"
         show-word-limit
       />
       <span slot="reference" class="trigger">{{ title }}：</span>
