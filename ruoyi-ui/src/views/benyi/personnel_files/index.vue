@@ -34,7 +34,7 @@ import { listFiles, getFiles } from "@/api/benyi/files";
 import { downLoadUrl } from "@/utils/zipdownload";
 
 export default {
-  name: "childFiles",
+  name: "personnelFiles",
   data() {
     return {
       // 遮罩层
