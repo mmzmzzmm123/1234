@@ -154,6 +154,10 @@ public class SysCustomerServiceImpl implements ISysCustomerService {
     @Override
     public Map<String, Object> getPhysicalSignsById(Long id) {
         Map<String, Object> result = new HashMap<>();
+
+        SysCustomer customer = sysCustomerMapper.selectSysCustomerById(id);
+        result.put("customerInfo", customer);
+
         String key = "customerHealthy";
         result.put("type", 0);
         //查询健康评估信息
