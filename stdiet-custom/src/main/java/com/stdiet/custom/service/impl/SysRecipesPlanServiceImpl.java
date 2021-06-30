@@ -327,8 +327,8 @@ public class SysRecipesPlanServiceImpl implements ISysRecipesPlanService {
         SysRecipesPlan beforeOrderLastPlan = getLastDayRecipesPlan(sysOrder.getCusId(), sysOrder.getOrderTime());
         int startNumDay = 0;
         //System.out.println(sysOrder.getRecipesPlanContinue() == null);
-        int totalDays = (beforeOrderLastPlan != null ? beforeOrderLastPlan.getEndNumDay() : 0) + Integer.parseInt(sysOrder.getServeTimeId()+"");
-        System.out.println(totalDays);
+        int totalDays = (beforeOrderLastPlan != null ? beforeOrderLastPlan.getEndNumDay() : 0) + Integer.parseInt(ChronoUnit.DAYS.between(DateUtils.dateToLocalDate(sysOrder.getStartTime()), DateUtils.dateToLocalDate(sysOrder.getServerEndTime()))+"") + 1;
+        //System.out.println(totalDays);
         //之前是否存在食谱以及该订单食谱计划是否需要连续
         if (beforeOrderLastPlan != null && sysOrder.getRecipesPlanContinue().intValue() == 1) {
             long differDay = ChronoUnit.DAYS.between(DateUtils.dateToLocalDate(beforeOrderLastPlan.getEndDate()), serverStartDate);
@@ -383,9 +383,9 @@ public class SysRecipesPlanServiceImpl implements ISysRecipesPlanService {
                 planStartDate = serverEndDate;
                 breakFlag = false;
             }
-            if (planEndDate == planStartDate && StringUtils.isNotEmpty(pauseResult)) {
+            /*if (planEndDate == planStartDate && StringUtils.isNotEmpty(pauseResult)) {
                 continue;
-            }
+            }*/
             //暂停日期
             sysRecipesPlan.setPauseDate(pauseResult[3]);
             sysRecipesPlan.setStartDate(DateUtils.localDateToDate(planStartDate));
@@ -397,7 +397,7 @@ public class SysRecipesPlanServiceImpl implements ISysRecipesPlanService {
             sysRecipesPlan.setStartNumDay(startNumDay);
             long dayNumber = ChronoUnit.DAYS.between(planStartDate, planEndDate);
             startNumDay += dayNumber > 6 ? 6 : dayNumber;
-            sysRecipesPlan.setEndNumDay(startNumDay > totalDays ? totalDays : startNumDay);
+            sysRecipesPlan.setEndNumDay(startNumDay > totalDays ? totalDays : startNumDay);//
             //添加暂停范围内的日期
             planList.add(sysRecipesPlan);
             //System.out.println(DateUtils.dateTime(sysRecipesPlan.getStartDate()) + "-----" + DateUtils.dateTime(sysRecipesPlan.getEndDate()));
