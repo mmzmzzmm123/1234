@@ -10,11 +10,13 @@
         <div class="content">
           <HealthyView
             dev
+            showRemark
             :data="healthyDataType === 0 ? healthyData : {}"
             v-show="healthyDataType === 0"
           />
           <BodySignView
             dev
+            showRemark
             :data="healthyDataType === 1 ? healthyData : {}"
             v-show="healthyDataType === 1"
           />

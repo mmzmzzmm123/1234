@@ -22,7 +22,7 @@
         @onConfirm="handleOnConfirm"
       />
       <RemarkCom
-        v-if="dev"
+        v-if="dev && showRemark"
         title="营养师点评"
         :value.sync="data.recipesPlanRemark"
         @onConfirm="handleOnRemarkConfirm"
@@ -73,6 +73,10 @@ export default {
       default: {},
     },
     dev: {
+      type: Boolean,
+      default: false,
+    },
+    showRemark: {
       type: Boolean,
       default: false,
     },
@@ -256,6 +260,21 @@ export default {
           this.$message.success("修改成功");
         }
       });
+    },
+  },
+  watch: {
+    data(val, oldVal) {
+      if (
+        val &&
+        val.dietitianName &&
+        !this.basicInfo[3].some((obj) => obj.value === "dietitianName")
+      ) {
+        this.basicInfo.splice(3, 0, [
+          { title: "主营养师", value: "dietitianName" },
+          { title: "营养师助理", value: "assDietitianName" },
+          { title: "售后营养师", value: "afterDietitianName" },
+        ]);
+      }
     },
   },
 };
