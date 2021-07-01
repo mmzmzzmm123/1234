@@ -95,6 +95,7 @@ export default {
         name: null,
         phone: null,
         conditioningProjectId: 0,
+        projectDisabledFlag: false,
         sex: 1,
         age: null,
         tall: null,
@@ -211,51 +212,51 @@ export default {
             longEatDrugMessage:[],
             //高血糖评估
             bloodSugarMessage: {
-              "beforeMealBloodSugar": null,
-              "afterMealBloodSugar": null,
-              "measureBloodSugarFlag": 0,
-              "measureBloodSugarTime": null,
-              "nearBloodSugar": null,
-              "lowBloodSugarFlag": 0,
-              "lowBloodSugarTime": null,
-              "complicationFlag": 0,
-              "complication": null,
-              "inferiorSymptomFlag": 0,
-              "inferiorSymptom": [],
-              "weightChangeFlag": 0,
+              beforeMealBloodSugar: null,
+              afterMealBloodSugar: null,
+              measureBloodSugarFlag: 0,
+              measureBloodSugarTime: null,
+              nearBloodSugar: null,
+              lowBloodSugarFlag: 0,
+              lowBloodSugarTime: null,
+              complicationFlag: 0,
+              complication: null,
+              inferiorSymptomFlag: 0,
+              inferiorSymptom: [],
+              weightChangeFlag: 0,
               //糖化血红蛋白
-              "sugarHemoglobin": null,
+              sugarHemoglobin: null,
               //体重变化描述
-              "weightChangeDescribe": null
+              weightChangeDescribe: null
             },
             //高血压评估
             bloodPressureMessage:{
-              "beforeMealBloodPressure": null,
-              "afterMealBloodPressure": null,
-              "measureBloodPressureFlag": 0,
-              "measureBloodPressureTime": null,
-              "nearBloodPressure": null,
-              "lowBloodPressureFlag": 0,
-              "lowBloodPressureTime": null,
-              "complicationFlag": 0,
-              "complication": null,
-              "inferiorSymptomFlag": 0,
-              "inferiorSymptom": [],
-              "weightChangeFlag": 0
+              beforeMealBloodPressure: null,
+              afterMealBloodPressure: null,
+              measureBloodPressureFlag: 0,
+              measureBloodPressureTime: null,
+              nearBloodPressure: null,
+              lowBloodPressureFlag: 0,
+              lowBloodPressureTime: null,
+              complicationFlag: 0,
+              complication: null,
+              inferiorSymptomFlag: 0,
+              inferiorSymptom: [],
+              weightChangeFlag: 0
             },
             //焦虑情绪评估
             anxietyStateMessage:{
-                "easyAnxiousFlag": 0,
-                "upsetRecently": 0,
-                "nervousOnSpecialOccasionsFlag": 0,
-                "terrifiedFlag":0
+                easyAnxiousFlag: 0,
+                upsetRecently: 0,
+                nervousOnSpecialOccasionsFlag: 0,
+                terrifiedFlag:0
             },
             //郁抑情绪评估
             depressedStateMessage:{
-                "listlessRecentlyFlag": 0,
-                "cryRecentlyFlag":0,
-                "wakeUpEarlyRecentlyFlag":0,
-                "noFunLiving":0
+                listlessRecentlyFlag: 0,
+                cryRecentlyFlag:0,
+                wakeUpEarlyRecentlyFlag:0,
+                noFunLiving:0
             },
             //月经不调/多囊问卷信息
             menstruationMessage:{
@@ -301,6 +302,60 @@ export default {
                 insulinResistanceFlag: 0,
                 //其他补充描述
                 otherDescriptions: null
+            },
+            //胃肠肿瘤信息
+            gastrointestinalMessage:{
+                //三个月体重变化描述
+                weightChangeDescribe: null,
+                //几碗饭、几个菜、几个汤
+                riceNum: null,
+                dishNum: null,
+                soupNum: null,
+                //一天食量
+                dailyFoodIntake: null,
+                //食欲
+                appetite: null,
+                otherAppetite: null,
+                //睡觉时间、起床时间
+                sleepTime: null,
+                upTime: null,
+                //午休时间
+                lunchBreak: null,
+                //是否化疗
+                chemotherapyFlag: 0,
+                chemotherapy: null,
+                //食物不耐受
+                foodIntoleranceFlag: 0,
+                foodIntolerance: null
+            },
+            //产后调信息
+            postpartumConditioningMessage:{
+              //增长几斤
+                weightGain: null,
+                //产后几个月
+                postpartumMonth: null,
+                //生产状况
+                productionStatus: null,
+                otherProductionStatus: null,
+                //孕期疾病
+                pregnancyDisease: null,
+                otherPregnancyDisease: null,
+                //喂养方式
+                feedingMethods: null,
+                otherFeedingMethods: null,
+                //乳汁状态
+                milkState: null,
+                otherMilkState: null,
+                //产后症状
+                postpartumSymptoms: [],
+                //其他产后症状
+                otherPostpartumSymptoms: null,
+                //是否恢复月经
+                resumeMenstruationFlag: 0,
+                //生产几次
+                productionNum: null,
+                //流产次数
+                abortionNum: null
             }
         }
       },
@@ -368,6 +423,10 @@ export default {
               this.customerExistFlag = true;
               this.form.name = response.data.name;
               this.form.phone = response.data.phone;
+              this.form.conditioningProjectId = response.data.projectId == null ? 0 : response.data.projectId;
+              if(response.data.projectId != null){
+                 this.form.projectDisabledFlag = true;
+              }
             }
           }
         })

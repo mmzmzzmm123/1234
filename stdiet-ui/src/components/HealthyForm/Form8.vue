@@ -55,10 +55,10 @@
       <el-checkbox-group v-model="form.operationHistory">
         <el-checkbox v-for="(item, index) in healthyData['operationHistoryArray']" :key="index" :label="item.value" >{{item.name}}</el-checkbox>
       </el-checkbox-group>
-      <div><span>其他手术史</span>
+      <div><span>其他手术史以及手术时间</span>
         <el-input
           type="textarea"
-          placeholder="请输入其他手术史"
+          placeholder="请输入其他手术史以及手术时间"
           v-model="form.otherOperationHistory"
           maxlength="200"
           show-word-limit

@@ -175,7 +175,7 @@
               </div>
             </div>
             <div
-              v-for="(item, index) in dataList.slice(9, 14)"
+              v-for="(item, index) in dataList.slice(9, 16)"
               style="margin-bottom: 50px"
               :key="'sign'+index"
             >
@@ -322,7 +322,7 @@ export default {
       healthyTitleData: healthyData['healthyTitleData'],
       // 健康评估属性
       healthyValueData: healthyData['healthyValueData'],
-       extendedTitleArray:['十、高血糖信息评估',"十、高血压信息评估","十一、焦虑信息评估","十二、抑郁信息评估","九、月经不调、多囊信息评估"],
+       extendedTitleArray:['十、高血糖信息评估',"十、高血压信息评估","十一、焦虑信息评估","十二、抑郁信息评估","九、月经不调、多囊信息评估","九、胃肠肿瘤信息评估","九、产后调理信息评估"],
       copyValue: "",
       detailHealthy: null,
       dialogWidth: "950px",
@@ -331,7 +331,7 @@ export default {
   },
   methods: {
     getTitle(index){
-      return healthyData.getTitle(this.healthyData.conditioningProjectId, index, 1)
+      return healthyData.getShowTitle(this.healthyData.conditioningProjectId, index)
     },
     getImgUrl(idx) {
       return `${window.location.origin}${this.medicalReportPathArray[idx]}`;
@@ -680,7 +680,6 @@ export default {
       ).toFixed(1);
 
       this.detailHealthy = healthyData.dealHealthyExtend(detailHealthy);
-
       for (let i = 0; i < this.healthyTitleData.length; i++) {
         let stepArray = [];
         for (let j = 0; j < this.healthyTitleData[i].length; j++) {
@@ -701,6 +700,10 @@ export default {
              return index == 2 || index == 3 || (this.healthyData.conditioningProjectId == 5 && index == 1) || (this.healthyData.conditioningProjectId == 6 && index == 0)
          }else if(this.healthyData.conditioningProjectId == 1 || this.healthyData.conditioningProjectId == 2){
              return index == 4;
+         }else if(this.healthyData.conditioningProjectId == 13){
+           return index == 5;
+         }else if(this.healthyData.conditioningProjectId == 4){
+           return index == 6;
          }
          return false;
      },

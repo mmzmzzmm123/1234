@@ -1,6 +1,6 @@
 <template>
   <div>
-    <p class="p_title_1">九、{{healthyData.projectName[form.conditioningProjectId+'']}}信息评估</p>
+    <p class="p_title_1">{{getTitle()}}</p>
     <!--高血糖-->
     <div v-show="form.conditioningProjectId == 6 || form.conditioningProjectId == 5">
             <div v-show="form.conditioningProjectId == 6">
@@ -366,6 +366,183 @@
             </el-form-item>
 
         </div>
+         <!-- 胃肠肿瘤 -->
+        <div v-if="form.conditioningProjectId == 13">
+            <p class="p_title_2">1、体重变化情况</p>
+              <el-form-item :label="'(1) 近三个月体重变化情况'"  class="margin-left">
+                <el-input type="textarea"
+                          v-model="form.healthyExtend.gastrointestinalMessage.weightChangeDescribe"
+                          placeholder="近三个月体重变化情况"
+                          maxlength="200"
+                          show-word-limit
+                          rows="3"
+                ></el-input>
+              </el-form-item>
+              <p class="p_title_2">2、饮食习惯</p>
+              <div style="margin-top:10px">
+                  <div class="margin-left">
+                    <span class="text-span">一餐</span>
+                    <el-input placeholder="输入每餐几碗饭" maxlength="20" v-model="form.healthyExtend.gastrointestinalMessage.riceNum" style="width:50%;margin-left:10px">
+                    </el-input><span class="text-span margin-left">碗</span>
+                     
+                  </div>
+                  <div class="margin-left" style="margin-top:8px;">
+                    <span class="text-span">一餐</span>
+                    <el-input placeholder="输入每餐几个菜" maxlength="20" v-model="form.healthyExtend.gastrointestinalMessage.dishNum" style="width:50%;margin-left:10px">
+                    </el-input><span class="text-span margin-left">个菜</span>
+                  </div>
+                  <div class="margin-left" style="margin-top:8px;">
+                    <span class="text-span">一餐</span>
+                    <el-input placeholder="输入每餐几个汤" maxlength="20" v-model="form.healthyExtend.gastrointestinalMessage.soupNum" style="width:50%;margin-left:10px">
+                    </el-input><span class="text-span margin-left">个汤</span>
+                  </div>
+                  <div class="margin-left" style="margin-top:8px;">
+                    <span class="text-span">一天食量</span>
+                    <el-input placeholder="输入食量（拳头或斤作为单位）" maxlength="20" v-model="form.healthyExtend.gastrointestinalMessage.dailyFoodIntake" style="width:70%;margin-left:10px"></el-input>
+              </div>
+              <p class="p_title_2">3、食欲情况</p>
+              <el-form-item label="(1)、食欲程度" class="margin-left">
+                  <el-radio-group v-model="form.healthyExtend.gastrointestinalMessage.appetite">
+                    <el-radio  v-for="(item,index) in healthyData['appetiteArray']" :style="'width:100%;'+(index >0 ? 'margin-top:7px' : '')" :label="item.value" :key="index">{{ item.name }}</el-radio>
+                  </el-radio-group>
+                  <div style="margin-top:8px;"><span class="text-span">其他</span>
+                  <el-input maxlength="100"
+                          v-model="form.healthyExtend.gastrointestinalMessage.otherAppetite"
+                          placeholder="请输入其他食欲程度"
+                  ></el-input>
+                  </div>
+              </el-form-item>
+              <p class="p_title_2">4、睡眠状况</p>
+              <el-form-item label="(1)、睡觉、起床、午休时间" class="margin-left">
+                  <div class="margin-left">
+                    <span class="text-span">晚上几点睡觉</span>
+                    <el-input placeholder="输入睡觉时间" maxlength="20" v-model="form.healthyExtend.gastrointestinalMessage.sleepTime" style="width:60%;margin-left:10px"/>
+                  </div>
+                  <div class="margin-left" style="margin-top:8px;">
+                    <span class="text-span">早上几点起床</span>
+                    <el-input placeholder="输入起床时间" maxlength="20" v-model="form.healthyExtend.gastrointestinalMessage.upTime" style="width:60%;margin-left:10px"/>
+                  </div>
+                  <div class="margin-left" style="margin-top:8px;">
+                    <span class="text-span">午休时间</span>
+                    <el-input placeholder="输入午休时间" maxlength="20" v-model="form.healthyExtend.gastrointestinalMessage.lunchBreak" style="width:69%;margin-left:10px"/>
+                  </div>
+              </el-form-item>
+              <p class="p_title_2">5、放化疗情况</p>
+               <el-form-item label="(1)、是否放化疗" class="margin-left">
+
+              <el-radio-group  v-model="form.healthyExtend.gastrointestinalMessage.chemotherapyFlag">
+                  <el-radio  :label="1" >是</el-radio>
+                  <el-radio  :label="0" >否</el-radio>
+                </el-radio-group>
+                <div style="margin-top:8px;"><span class="text-span">若存在放化疗，请描述具体情况</span>
+                  <el-input maxlength="200"
+                          v-model="form.healthyExtend.gastrointestinalMessage.chemotherapy"
+                          placeholder="请输入放化疗情况"
+                          type="textarea"
+                            show-word-limit
+                            rows="3"
+                ></el-input>
+                </div>
+            </el-form-item>
+            <p class="p_title_2">6、食物不耐受检测</p>
+            <el-form-item label="(1)、是否食物不耐受" class="margin-left">
+
+              <el-radio-group  v-model="form.healthyExtend.gastrointestinalMessage.foodIntoleranceFlag">
+                  <el-radio  :label="1" >是</el-radio>
+                  <el-radio  :label="0" >否</el-radio>
+                </el-radio-group>
+                <div style="margin-top:8px;"><span class="text-span">若存在食物不耐受，请描述具体情况</span>
+                  <el-input maxlength="200"
+                          v-model="form.healthyExtend.gastrointestinalMessage.foodIntolerance"
+                          placeholder="请输入食物不耐受情况"
+                           type="textarea"
+                            show-word-limit
+                            rows="3"
+                ></el-input>
+                </div>
+            </el-form-item>
+        </div>
+      </div>
+      <div v-if="form.conditioningProjectId == 4">  
+            <p class="p_title_2">1、产后情况</p>
+            <div style="margin-top:10px">
+                  <div class="margin-left">
+                    <span class="text-span">(1)、孕期增长</span>
+                    <el-input placeholder="输入斤数" maxlength="20" v-model="form.healthyExtend.postpartumConditioningMessage.weightGain" style="width:50%;margin-left:10px">
+                    </el-input><span class="text-span margin-left">斤</span>
+                  </div>
+                  <div class="margin-left" style="margin-top:8px;">
+                    <span class="text-span">(2)、目前产后</span>
+                    <el-input placeholder="输入产后几个月" maxlength="20" v-model="form.healthyExtend.postpartumConditioningMessage.postpartumMonth" style="width:50%;margin-left:10px">
+                    </el-input><span class="text-span margin-left">个月</span>
+                  </div>
+                  <el-form-item label="(3)、生产状况" class="margin-left">
+                     <el-radio-group v-model="form.healthyExtend.postpartumConditioningMessage.productionStatus">
+                      <el-radio  v-for="(item,index) in healthyData['productionStatusArray']"  :label="item.value" :key="index">{{ item.name }}</el-radio>
+                    </el-radio-group>
+                    <div style="margin-top:8px;"><span class="text-span">其他状况</span>
+                      <el-input maxlength="100"
+                              v-model="form.healthyExtend.postpartumConditioningMessage.otherProductionStatus"
+                              placeholder="请输入其他状况"
+                      ></el-input>
+                    </div>
+                  </el-form-item>
+                  <el-form-item label="(4)、孕期疾病" class="margin-left">
+                     <el-radio-group v-model="form.healthyExtend.postpartumConditioningMessage.pregnancyDisease">
+                      <el-radio  v-for="(item,index) in healthyData['pregnancyDiseaseArray']"  :label="item.value" :key="index">{{ item.name }}</el-radio>
+                    </el-radio-group>
+                    <div style="margin-top:8px;"><span class="text-span">其他疾病</span>
+                      <el-input maxlength="100"
+                              v-model="form.healthyExtend.postpartumConditioningMessage.otherPregnancyDisease"
+                              placeholder="请输入其他疾病"
+                      ></el-input>
+                    </div>
+                  </el-form-item>
+                   <el-form-item label="(5)、喂养方式" class="margin-left">
+                     <el-radio-group v-model="form.healthyExtend.postpartumConditioningMessage.feedingMethods">
+                      <el-radio  v-for="(item,index) in healthyData['feedingMethodsArray']"  :label="item.value" :key="index">{{ item.name }}</el-radio>
+                    </el-radio-group>
+                    <div style="margin-top:8px;"><span class="text-span">其他喂养方式</span>
+                      <el-input maxlength="100"
+                              v-model="form.healthyExtend.postpartumConditioningMessage.otherFeedingMethods"
+                              placeholder="请输入其他喂养方式"
+                      ></el-input>
+                    </div>
+                  </el-form-item>
+                  <el-form-item label="(6)、乳汁状态" class="margin-left">
+                     <el-radio-group v-model="form.healthyExtend.postpartumConditioningMessage.milkState">
+                      <el-radio  v-for="(item,index) in healthyData['milkStateArray']"  :label="item.value" :key="index">{{ item.name }}</el-radio>
+                    </el-radio-group>
+                    <div style="margin-top:8px;"><span class="text-span">其他乳汁状态</span>
+                      <el-input maxlength="100"
+                              v-model="form.healthyExtend.postpartumConditioningMessage.otherMilkState"
+                              placeholder="请输入其他乳汁状态"
+                      ></el-input>
+                    </div>
+                  </el-form-item>
+                  <el-form-item label="(7)、产后症状" class="margin-left">
+                      <el-checkbox-group v-model="form.healthyExtend.postpartumConditioningMessage.postpartumSymptoms">
+                        <el-checkbox v-for="(item,index) in healthyData['postpartumSymptomsArray']" :label="item.value" :key="index">{{ item.name }}</el-checkbox>
+                      </el-checkbox-group>
+                    <div style="margin-top:8px;"><span class="text-span">其他产后症状</span>
+                      <el-input maxlength="100"
+                              v-model="form.healthyExtend.postpartumConditioningMessage.otherPostpartumSymptoms"
+                              placeholder="请输入其他产后症状"
+                      ></el-input>
+                    </div>
+                  </el-form-item>
+                  <p class="p_title_2">2、生育史</p>
+                  <div class="margin-left" style="margin-top:8px;">
+                    <span class="text-span">(1)、生产几次</span>
+                    <el-input placeholder="生产次数" maxlength="20" v-model="form.healthyExtend.postpartumConditioningMessage.productionNum" style="width:50%;margin-left:10px"/>
+                  </div>
+                  <div class="margin-left" style="margin-top:8px;">
+                    <span class="text-span">(2)、流产几次</span>
+                    <el-input placeholder="流产次数" maxlength="20" v-model="form.healthyExtend.postpartumConditioningMessage.abortionNum" style="width:50%;margin-left:10px"/>
+                  </div>
+                   
+            </div>
+        </div>
   </div>
 </template>
 <script>
@@ -380,7 +557,9 @@ export default {
     };
   },
   methods: {
-
+      getTitle(){
+        return (healthyData['notExperienceIndex'].indexOf(this.form.conditioningProjectId) != -1 ? "八、" : "九、") + healthyData.projectName[this.form.conditioningProjectId+""] + "信息评估（重点）";
+      }
   },
   props: {
     form: {
@@ -389,7 +568,7 @@ export default {
     }
   },
   created() {
-
+      console.log(healthyData['postpartumSymptomsArray'].length);
   },
   computed:{
 
