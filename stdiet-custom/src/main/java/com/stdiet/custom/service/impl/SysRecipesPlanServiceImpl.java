@@ -281,13 +281,19 @@ public class SysRecipesPlanServiceImpl implements ISysRecipesPlanService {
         List<SysRecipesPlan> addList = new ArrayList<>();
         List<SysRecipesPlan> updateList = new ArrayList<>();
         List<Long> delList = new ArrayList<>();
+        SysRecipesPlan tmpPlan;
         for (SysRecipesPlan plan : oldRecipesPlanList) {
             if (index < newSize) {
-                plan.setStartDate(newRecipesPlanList.get(index).getStartDate());
-                plan.setEndDate(newRecipesPlanList.get(index).getEndDate());
-                plan.setPauseDate(newRecipesPlanList.get(index).getPauseDate());
-                plan.setStartNumDay(newRecipesPlanList.get(index).getStartNumDay());
-                plan.setEndNumDay(newRecipesPlanList.get(index).getEndNumDay());
+                tmpPlan = newRecipesPlanList.get(index);
+                plan.setStartDate(tmpPlan.getStartDate());
+                plan.setEndDate(tmpPlan.getEndDate());
+                plan.setPauseDate(tmpPlan.getPauseDate());
+                plan.setStartNumDay(tmpPlan.getStartNumDay());
+                plan.setEndNumDay(tmpPlan.getEndNumDay());
+                plan.setSmsSend(tmpPlan.getSmsSend());
+                plan.setSubscribed(tmpPlan.getSubscribed());
+                plan.setSubSend(tmpPlan.getSubSend());
+                plan.setRemark(tmpPlan.getRemark());
                 updateList.add(plan);
             } else {
                 delList.add(plan.getId());
