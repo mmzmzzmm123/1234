@@ -19,6 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.temporal.ChronoUnit;
 import java.time.temporal.TemporalAdjusters;
@@ -284,6 +285,11 @@ public class SysOrderServiceImpl implements ISysOrderService {
             if(oldSysOrder.getCommissStartTime() != null && ChronoUnit.DAYS.between(monthStart, DateUtils.dateToLocalDate(oldSysOrder.getCommissStartTime())) >= 0 && ChronoUnit.DAYS.between(monthStart, DateUtils.dateToLocalDate(sysOrder.getStartTime())) >= 0){
                 sysOrder.setCommissStartTime(sysOrder.getStartTime());
             }
+        }
+        //旧开始时间为空时，提成计算时间修改为订单成交时间的后三天
+        if(oldSysOrder.getStartTime() == null){
+            LocalDate orderDate = DateUtils.dateToLocalDate(sysOrder.getOrderTime()).plusDays(3);
+            sysOrder.setCommissStartTime(DateUtils.localDateToDate(orderDate));
         }
         //更新订单
         int row = sysOrderMapper.updateSysOrder(sysOrder);

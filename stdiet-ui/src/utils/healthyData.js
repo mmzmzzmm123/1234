@@ -437,6 +437,20 @@ export const postpartumSymptomsArray = [
   {name: "虚弱怕冷", value: "11"}
 ]
 
+//服药依从性
+export const medicationComplianceArray = [
+  {name: "规律", value: "1" },
+  {name: "间断", value: "2"},
+  {name: "不服药", value: "3"}
+];
+
+//是否经常测量血压
+export const measureBloodPressureArray = [
+  {name: "规律", value: "1" },
+  {name: "偶尔", value: "2"},
+  {name: "不测量", value: "3"}
+];
+
 
 //需要将数组转成字符串的属性名称，包含对象数组、字符串数组
 export const arrayName = [
@@ -621,7 +635,9 @@ export const needJSONFieldName = [
   "depressedStateMessage",
   "menstruationMessage",
   "gastrointestinalMessage",
-  "postpartumConditioningMessage"
+  "postpartumConditioningMessage",
+  "hypertensionMessage",
+  "hyperlipidemiaMessage"
 ];
 
 //健康信息处理，将数组转为字符串
@@ -807,12 +823,12 @@ export function dealHealthy(customerHealthy) {
   return customerHealthy;
 }
 
-export const extendHealthyTitle = {"0":"减脂","5":"降血压","6":"降血糖","3": "备孕营养", "1": "月经不调", "2": "多囊调理", "11":"心脑血管调理","13":"胃肠肿瘤调理","4":"产后调理"};
-export const projectName = {"0":"减脂","5":"高血压","6":"高血糖","3": "备孕营养", "1":"月经不调", "2":"多囊卵巢综合症", "13":"胃肠肿瘤","4":"产后调理"};
+export const extendHealthyTitle = {"0":"减脂","5":"降血压","6":"降血糖","3": "备孕营养", "1": "月经不调", "2": "多囊调理", "11":"心脑血管调理","13":"胃肠肿瘤调理","4":"产后调理","7":"高血脂"};
+export const projectName = {"0":"减脂","5":"高血压","6":"高血糖","3": "备孕营养", "1":"月经不调", "2":"多囊卵巢综合症", "13":"胃肠肿瘤","4":"产后调理","7":"高血脂"};
 //需要填写慢病调查问卷的项目
-export const extendHealthyIndex = [5, 6, 1, 2, 13,4];
+export const extendHealthyIndex = [5, 6, 1, 2, 13,4,7];
 //跳过减脂经历问卷的项目
-export const notExperienceIndex = [3,1,2,13,4];
+export const notExperienceIndex = [3,1,2,13,4,7];
 
 export function getTitleKey(projectId){
     return extendHealthyTitle[projectId+""] != null ? extendHealthyTitle[projectId+""] : extendHealthyTitle["0"];
@@ -914,6 +930,7 @@ export const extendedYesNoAttrName = [
   {"targetAttrName": "foodIntoleranceFlag", "healthyAttrName": "gastrointestinalMessage,foodIntoleranceFlag"},
 
   {"targetAttrName": "resumeMenstruationFlag", "healthyAttrName": "postpartumConditioningMessage,resumeMenstruationFlag"} 
+
 ]
 
 //单选的value转成对应name
@@ -959,6 +976,11 @@ export function dealHealthyExtend(detailHealthy){
      });
   }
 
+  //服药依从性
+  detailHealthy.medicationCompliance = getStringBySigleValue(medicationComplianceArray, detailHealthy.healthyExtend.medicationCompliance);
+  detailHealthy.adverseReactionsFlag = detailHealthy.healthyExtend.adverseReactionsFlag == 0 ? "否" : "是";
+  detailHealthy.adverseReactions = detailHealthy.healthyExtend.adverseReactions;
+
   //高血糖
   detailHealthy.healthyExtend.eatFruitsMessage = eatFruitsMessage;
   detailHealthy.mealBloodSugar = "餐前血糖："+(detailHealthy.healthyExtend.bloodSugarMessage.beforeMealBloodSugar == null ? "" : (detailHealthy.healthyExtend.bloodSugarMessage.beforeMealBloodSugar+"mmol/L"))+", "
@@ -972,7 +994,7 @@ export function dealHealthyExtend(detailHealthy){
   detailHealthy.weightChangeFlag = detailHealthy.weightChangeFlag + "，具体变化情况："+detailHealthy.healthyExtend.bloodSugarMessage.weightChangeDescribe;
 
   //高血压
-  detailHealthy.mealBloodPressure = "餐前血压："+(detailHealthy.healthyExtend.bloodPressureMessage.beforeMealBloodPressure == null ? "" : (detailHealthy.healthyExtend.bloodPressureMessage.beforeMealBloodPressure+"mmHg"))+", "
+  /*detailHealthy.mealBloodPressure = "餐前血压："+(detailHealthy.healthyExtend.bloodPressureMessage.beforeMealBloodPressure == null ? "" : (detailHealthy.healthyExtend.bloodPressureMessage.beforeMealBloodPressure+"mmHg"))+", "
       +"餐后两小时血压："+(detailHealthy.healthyExtend.bloodPressureMessage.afterMealBloodPressure == null ? "" : (detailHealthy.healthyExtend.bloodPressureMessage.afterMealBloodPressure+"mmHg"));
   detailHealthy.measureBloodPressureFlag = detailHealthy.healthyExtend.bloodPressureMessage.measureBloodPressureFlag == 1 ? "是" : "否";
   detailHealthy.measureBloodPressureTime = detailHealthy.healthyExtend.bloodPressureMessage.measureBloodPressureTime;
@@ -981,7 +1003,52 @@ export function dealHealthyExtend(detailHealthy){
   detailHealthy.pressureComplicationFlag = detailHealthy.healthyExtend.bloodPressureMessage.complicationFlag == 1 ? "是" : "否";
   detailHealthy.pressureComplication = detailHealthy.healthyExtend.bloodPressureMessage.complication;
   detailHealthy.pressureInferiorSymptom = (detailHealthy.healthyExtend.bloodPressureMessage.inferiorSymptomFlag == 1 ? "是" : "否") + ", 具体症状："+getStringByMuchValue(syndromeNameArray,detailHealthy.healthyExtend.bloodPressureMessage.inferiorSymptom);
-  detailHealthy.pressureWeightChangeFlag = detailHealthy.healthyExtend.bloodPressureMessage.weightChangeFlag == 1 ? "是" : "否";
+  detailHealthy.pressureWeightChangeFlag = detailHealthy.healthyExtend.bloodPressureMessage.weightChangeFlag == 1 ? "是" : "否";*/
+
+  detailHealthy.historyOfPresentIllness = detailHealthy.healthyExtend.hypertensionMessage.historyOfPresentIllness;
+  let maxPressure = "";
+  let maxHighPressure = detailHealthy.healthyExtend.hypertensionMessage.maxHighPressure;
+  if(nullToString(maxHighPressure) != ""){
+    maxPressure += "收缩压/高压：" + maxHighPressure + " mmHg";
+  }
+  let maxLowPressure = detailHealthy.healthyExtend.hypertensionMessage.maxLowPressure;
+  if(nullToString(maxLowPressure) != ""){
+    maxPressure += (maxPressure != "" ? "，" : "") +  "舒张压/低压：" + maxLowPressure + " mmHg";
+  }
+  detailHealthy.maxPressure = maxPressure;
+  let recentPressure = "时间：" + nullToString(detailHealthy.healthyExtend.hypertensionMessage.recentTime);
+  let recentHighPressure = nullToString(detailHealthy.healthyExtend.hypertensionMessage.recentHighPressure);
+  recentPressure += "，收缩压/高压：" + recentHighPressure + (recentHighPressure != "" ? " mmHg" : "");
+  let recentLowPressure = nullToString(detailHealthy.healthyExtend.hypertensionMessage.recentLowPressure);
+  recentPressure += "，舒张压/低压：" + recentLowPressure +  (recentLowPressure != "" ? " mmHg" : "");
+  detailHealthy.recentPressure = recentPressure;
+  detailHealthy.restingHeartRate = nullToString(detailHealthy.healthyExtend.hypertensionMessage.restingHeartRate);
+  if(detailHealthy.restingHeartRate != ""){
+    detailHealthy.restingHeartRate += " 次/分"
+  }
+  detailHealthy.measureBloodPressure = getStringBySigleValue(measureBloodPressureArray, detailHealthy.healthyExtend.hypertensionMessage.measureBloodPressure);
+  detailHealthy.totalCholesterol =  nullToString(detailHealthy.healthyExtend.hypertensionMessage.totalCholesterol);
+  if(detailHealthy.totalCholesterol != ""){
+    detailHealthy.totalCholesterol += " mmol/L"
+  }
+
+  detailHealthy.highLipoproteinCholesterol =  nullToString(detailHealthy.healthyExtend.hypertensionMessage.highLipoproteinCholesterol);
+  if(detailHealthy.highLipoproteinCholesterol != ""){
+    detailHealthy.highLipoproteinCholesterol += " mmol/L"
+  }
+  detailHealthy.lowLipoproteinCholesterol =  nullToString(detailHealthy.healthyExtend.hypertensionMessage.lowLipoproteinCholesterol);
+  if(detailHealthy.lowLipoproteinCholesterol != ""){
+    detailHealthy.lowLipoproteinCholesterol += " mmol/L"
+  }
+  detailHealthy.triglyceride =  nullToString(detailHealthy.healthyExtend.hypertensionMessage.triglyceride);
+  if(detailHealthy.triglyceride != ""){
+    detailHealthy.triglyceride += " mmol/L"
+  }
+  detailHealthy.bloodSugar =  nullToString(detailHealthy.healthyExtend.hypertensionMessage.bloodSugar);
+  if(detailHealthy.bloodSugar != ""){
+    detailHealthy.bloodSugar += " mmol/L"
+  }
+  detailHealthy.urinalysis =  nullToString(detailHealthy.healthyExtend.hypertensionMessage.urinalysis);
 
   //月经不调、多囊
   detailHealthy.menstrualCycle = "生理周期：" + nullToString(detailHealthy.healthyExtend.menstruationMessage.menstrualCycle) + "，生理天数：" + nullToString(detailHealthy.healthyExtend.menstruationMessage.menstrualDays);
@@ -1063,6 +1130,26 @@ export function dealHealthyExtend(detailHealthy){
 
   detailHealthy.productionNum = "生产次数：" + nullToString(detailHealthy.healthyExtend.postpartumConditioningMessage.productionNum);
   detailHealthy.productionNum += "，流产次数：" + nullToString(detailHealthy.healthyExtend.postpartumConditioningMessage.abortionNum);
+
+
+  //高血脂
+  detailHealthy.hyperlipidemiaTotalCholesterol =  nullToString(detailHealthy.healthyExtend.hyperlipidemiaMessage.totalCholesterol);
+  if(detailHealthy.hyperlipidemiaTotalCholesterol != ""){
+    detailHealthy.hyperlipidemiaTotalCholesterol += " mmol/L"
+  }
+  detailHealthy.hyperlipidemiaHighLipoproteinCholesterol =  nullToString(detailHealthy.healthyExtend.hyperlipidemiaMessage.highLipoproteinCholesterol);
+  if(detailHealthy.hyperlipidemiaHighLipoproteinCholesterol != ""){
+    detailHealthy.hyperlipidemiaHighLipoproteinCholesterol += " mmol/L"
+  }
+  detailHealthy.hyperlipidemiaLowLipoproteinCholesterol =  nullToString(detailHealthy.healthyExtend.hyperlipidemiaMessage.lowLipoproteinCholesterol);
+  if(detailHealthy.hyperlipidemiaLowLipoproteinCholesterol != ""){
+    detailHealthy.hyperlipidemiaLowLipoproteinCholesterol += " mmol/L"
+  }
+  detailHealthy.hyperlipidemiaTriglyceride =  nullToString(detailHealthy.healthyExtend.hyperlipidemiaMessage.triglyceride);
+  if(detailHealthy.hyperlipidemiaTriglyceride != ""){
+    detailHealthy.hyperlipidemiaTriglyceride += " mmol/L"
+  }
+  detailHealthy.hyperlipidemiaLiverFunction = nullToString(detailHealthy.healthyExtend.hyperlipidemiaMessage.liverFunction);
 }
 
 export function nullToString(val){
@@ -1127,6 +1214,7 @@ export const healthyTitleData = [
     ["病史体征", "湿气数据", "气血数据"],
     ["家族疾病史", "手术史", "近期是否做过手术"],
     ["手术恢复情况", "是否长期服用药物", "长期服用的药物"],
+    ["服药依从性", "是否药物不良反应","药物不良反应"],
     ["是否出现过过敏症状", "过敏症状", "过敏源"],
   ],
   [["体检报告(1)", "体检报告(2)", "体检报告(3)"]],
@@ -1137,10 +1225,16 @@ export const healthyTitleData = [
 
   ],
   [
+    ["现病史","历史最高血压","近期血压"],
+    ["静息心率","是否规律测量血压","总胆固醇"],
+    ["高密度脂蛋白胆固醇","低密度脂蛋白胆固醇","甘油三酯"],
+    ["血糖","尿常规",""]
+  ],
+  /*[
     ["餐前餐后血压", "是否有规律测血压", "测量血压时间"],
     ["近期血压水平", "是否有低血压反应", "是否有出现并发症"],
     ["并发症情况", "存在症状", "近三个月体重是否有变化"]
-  ],
+  ],*/
   [
       ["你认为你是一个容易焦虑或紧张的人吗","最近一段时间，你是否比平时更感到焦虑或忐忑不安","是否有一些特殊场合或情景更容易使得你紧张、焦虑"],
       ["你曾经有过惊恐发作吗.即突然发生的强烈不适感或心慌、眩晕、感到憋气或呼吸困难等症状","",""]
@@ -1165,6 +1259,10 @@ export const healthyTitleData = [
     ["孕期增长","产后几个月","生产状况"],
     ["孕期疾病","喂养方式","乳汁状态"],
     ["产后症状","恢复月经","生育史"]
+  ],
+  [
+    ["总胆固醇","高密度脂蛋白胆固醇","低密度脂蛋白胆固醇"],
+    ["甘油三酯","肝功能",""]
   ]
 ]
 
@@ -1215,6 +1313,7 @@ export const healthyValueData = [
     ["physicalSigns", "moistureDate", "bloodData"],
     ["familyIllnessHistory", "operationHistory", "nearOperationFlag"],
     ["recoveryeSituation", "longEatDrugFlag", "longEatDrugClassify"],
+    ["medicationCompliance", "adverseReactionsFlag","adverseReactions"],
     ["allergyFlag", "allergySituation", "allergen"],
   ],
   [["medicalReport_one", "medicalReport_two", "medicalReport_three"]],
@@ -1223,10 +1322,16 @@ export const healthyValueData = [
     ["nearBloodSugar", "lowBloodSugarFlag", "complicationFlag"],
     ["complication", "inferiorSymptom", "weightChangeFlag"]
   ],
-  [
+  /*[
     ["mealBloodPressure", "measureBloodPressureFlag", "measureBloodPressureTime"],
     ["nearBloodPressure", "lowBloodPressureFlag", "pressureComplicationFlag"],
     ["pressureComplication", "pressureInferiorSymptom", "pressureWeightChangeFlag"],
+  ],*/
+  [
+    ["historyOfPresentIllness","maxPressure","recentPressure"],
+    ["restingHeartRate","measureBloodPressure","totalCholesterol"],
+    ["highLipoproteinCholesterol","lowLipoproteinCholesterol","triglyceride"],
+    ["bloodSugar","urinalysis",""]
   ],
   [
     ["easyAnxiousFlag","upsetRecently","nervousOnSpecialOccasionsFlag"],
@@ -1252,6 +1357,10 @@ export const healthyValueData = [
     ["weightGain","postpartumMonth","productionStatus"],
     ["pregnancyDisease","feedingMethods","milkState"],
     ["postpartumSymptoms","resumeMenstruationFlag","productionNum"]
+  ],
+  [
+    ["hyperlipidemiaTotalCholesterol","hyperlipidemiaHighLipoproteinCholesterol","hyperlipidemiaLowLipoproteinCholesterol"],
+    ["hyperlipidemiaTriglyceride","hyperlipidemiaLiverFunction",""]
   ]
 ]
 

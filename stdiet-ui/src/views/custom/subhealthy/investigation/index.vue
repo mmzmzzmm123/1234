@@ -210,6 +210,11 @@ export default {
             eatFruitsMessage:[],
             //长期服用药物JSON数组, [{'type': 1, 'drug':[{'name':'降压药1','num':'每天三粒','time':'早中晚'}]}]
             longEatDrugMessage:[],
+            //服药依从性
+            medicationCompliance: "1",
+            //药物不良反应
+            adverseReactionsFlag: 0,
+            adverseReactions: null,
             //高血糖评估
             bloodSugarMessage: {
               beforeMealBloodSugar: null,
@@ -356,6 +361,47 @@ export default {
                 productionNum: null,
                 //流产次数
                 abortionNum: null
+            },
+            //高血压（第二版）
+            hypertensionMessage:{
+                //现病史
+                historyOfPresentIllness: null,
+                maxHighPressure: null,
+                maxLowPressure: null,
+                recentTime: null,
+                recentHighPressure: null,
+                recentLowPressure: null,
+                //静息心率
+                restingHeartRate: null,
+                measureBloodPressure: "1",
+
+                totalCholesterol: null,
+                //高密度脂蛋白胆固醇
+                highLipoproteinCholesterol: null,
+                //低密度脂蛋白胆固醇
+                lowLipoproteinCholesterol: null,
+                //甘油三酯
+                triglyceride: null,
+                //血糖
+                bloodSugar: null,
+                //尿常规
+                urinalysis: null,
+                //月经史
+                menstrualHistory: null,
+                //妊娠史
+                historyOfPregnancy: null
+            },
+            //高血脂
+            hyperlipidemiaMessage:{
+                totalCholesterol: null,
+                //高密度脂蛋白胆固醇
+                highLipoproteinCholesterol: null,
+                //低密度脂蛋白胆固醇
+                lowLipoproteinCholesterol: null,
+                //甘油三酯
+                triglyceride: null,
+                //肝功能
+                liverFunction: null
             }
         }
       },

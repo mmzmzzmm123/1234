@@ -175,7 +175,7 @@
               </div>
             </div>
             <div
-              v-for="(item, index) in dataList.slice(9, 16)"
+              v-for="(item, index) in dataList.slice(9, 17)"
               style="margin-bottom: 50px"
               :key="'sign'+index"
             >
@@ -322,7 +322,7 @@ export default {
       healthyTitleData: healthyData['healthyTitleData'],
       // 健康评估属性
       healthyValueData: healthyData['healthyValueData'],
-       extendedTitleArray:['十、高血糖信息评估',"十、高血压信息评估","十一、焦虑信息评估","十二、抑郁信息评估","九、月经不调、多囊信息评估","九、胃肠肿瘤信息评估","九、产后调理信息评估"],
+       extendedTitleArray:['十、高血糖信息评估',"十、高血压信息评估","十一、焦虑信息评估","十二、抑郁信息评估","九、月经不调、多囊信息评估","九、胃肠肿瘤信息评估","九、产后调理信息评估","九、高血脂信息评估"],
       copyValue: "",
       detailHealthy: null,
       dialogWidth: "950px",
@@ -704,6 +704,8 @@ export default {
            return index == 5;
          }else if(this.healthyData.conditioningProjectId == 4){
            return index == 6;
+         }else if(this.healthyData.conditioningProjectId == 7){
+           return index == 7;
          }
          return false;
      },

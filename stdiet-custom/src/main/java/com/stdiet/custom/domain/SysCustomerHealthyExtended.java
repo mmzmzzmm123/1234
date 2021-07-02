@@ -41,6 +41,18 @@ public class SysCustomerHealthyExtended extends BaseEntity
     @Excel(name = "长时间服用药物信息：药物类型、药物名称、用药量、用药时间")
     private String longEatDrugMessage;
 
+    /** 服药依从性 */
+    @Excel(name = "服药依从性")
+    private String medicationCompliance;
+
+    /** 药物不良反应标识 */
+    @Excel(name = "药物不良反应标识")
+    private Long adverseReactionsFlag;
+
+    /** 药物不良反应 */
+    @Excel(name = "药物不良反应")
+    private String adverseReactions;
+
     /** 血糖相关信息 */
     @Excel(name = "血糖相关信息")
     private String bloodSugarMessage;
@@ -68,6 +80,14 @@ public class SysCustomerHealthyExtended extends BaseEntity
     /** 产后调理信息 */
     @Excel(name = "产后调理信息")
     private String postpartumConditioningMessage;
+
+    /** 高血压信息 */
+    @Excel(name = "高血压信息")
+    private String hypertensionMessage;
+
+    /** 高血脂信息 */
+    @Excel(name = "高血脂信息")
+    private String hyperlipidemiaMessage;
 
     /** 删除标识 0未删除 1已删除 */
     private Long delFlag;
