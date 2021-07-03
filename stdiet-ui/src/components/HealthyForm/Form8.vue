@@ -109,6 +109,26 @@
         ></el-input>
       </div>
     </el-form-item>
+    <el-form-item label="(3) 服药依从性" prop="" class="margin-left">
+      <el-radio-group v-model="form.healthyExtend.medicationCompliance">
+          <el-radio  v-for="(item,index) in healthyData['medicationComplianceArray']"  :label="item.value" :key="index">{{ item.name }}</el-radio>
+      </el-radio-group>      
+    </el-form-item>
+   <el-form-item label="(4)、是否存在药物不良反应" class="margin-left">
+      <el-radio-group  v-model="form.healthyExtend.adverseReactionsFlag">
+          <el-radio  :label="1" >是</el-radio>
+          <el-radio  :label="0" >否</el-radio>
+      </el-radio-group>        
+      <div style="margin-top:8px;"><span class="text-span">若存在药物不良反应，请描述下情况</span>
+          <el-input maxlength="200"
+              type="textarea"
+              v-model="form.healthyExtend.adverseReactions"
+              placeholder="请输入药物不良反应情况"
+              show-word-limit
+              rows="3"
+          ></el-input>
+        </div>
+    </el-form-item>         
     <p class="p_title_2">6、过敏史</p>
     <el-form-item label="(1) 曾经是否出现过过敏" prop="allergyFlag" class="margin-left">
       <el-radio-group v-model="form.allergyFlag">
@@ -278,6 +298,18 @@ export default {
     width:70%;
     margin-left: 8px;
     margin-right: 5px;
+  }
+
+  .text-span{
+    color:#606266;
+    font-weight: 700;
+    font-size: 14px
+  }
+
+  .text-span-min{
+    color:#606266;
+    font-weight: 400;
+    font-size: 13px
   }
 
 

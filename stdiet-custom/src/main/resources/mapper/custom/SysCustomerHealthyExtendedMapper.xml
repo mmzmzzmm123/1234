@@ -11,6 +11,9 @@
         <result property="hipline"    column="hipline"    />
         <result property="eatFruitsMessage"    column="eat_fruits_message"    />
         <result property="longEatDrugMessage"    column="long_eat_drug_message"    />
+        <result property="medicationCompliance"    column="medication_compliance"    />
+        <result property="adverseReactionsFlag"    column="adverse_reactions_flag"    />
+        <result property="adverseReactions"    column="adverse_reactions"    />
         <result property="bloodSugarMessage"    column="blood_sugar_message"    />
         <result property="depressedStateMessage"    column="depressed_state_message"    />
         <result property="bloodPressureMessage"    column="blood_pressure_message"    />
@@ -18,12 +21,15 @@
         <result property="menstruationMessage"    column="menstruation_message"    />
         <result property="gastrointestinalMessage"    column="gastrointestinal_message"    />
         <result property="postpartumConditioningMessage"    column="postpartum_conditioning_message"    />
+        <result property="hypertensionMessage"    column="hypertension_message"    />
+        <result property="hyperlipidemiaMessage"    column="hyperlipidemia_message"    />
         <result property="delFlag"    column="del_flag"    />
     </resultMap>
 
     <sql id="selectSysCustomerHealthyExtendedVo">
-        select id, healthy_id, waist, hipline, eat_fruits_message, long_eat_drug_message, blood_sugar_message, depressed_state_message, blood_pressure_message, anxiety_state_message, menstruation_messag,
-        gastrointestinal_message,postpartum_conditioning_message,del_flag
+        select id, healthy_id, waist, hipline, eat_fruits_message, long_eat_drug_message, medication_compliance,adverse_reactions_flag,adverse_reactions,
+        blood_sugar_message, depressed_state_message, blood_pressure_message, anxiety_state_message, menstruation_messag,
+        gastrointestinal_message,postpartum_conditioning_message,hypertension_message,hyperlipidemia_message,del_flag
          from sys_customer_healthy_extended
     </sql>
 
@@ -44,6 +50,9 @@
             <if test="hipline != null">hipline,</if>
             <if test="eatFruitsMessage != null">eat_fruits_message,</if>
             <if test="longEatDrugMessage != null">long_eat_drug_message,</if>
+            <if test="medicationCompliance != null">medication_compliance,</if>
+            <if test="adverseReactionsFlag != null">adverse_reactions_flag,</if>
+            <if test="adverseReactions != null">adverse_reactions,</if>
             <if test="bloodSugarMessage != null">blood_sugar_message,</if>
             <if test="depressedStateMessage != null">depressed_state_message,</if>
             <if test="bloodPressureMessage != null">blood_pressure_message,</if>
@@ -51,6 +60,8 @@
             <if test="menstruationMessage != null">menstruation_message,</if>
             <if test="gastrointestinalMessage != null">gastrointestinal_message,</if>
             <if test="postpartumConditioningMessage != null">postpartum_conditioning_message,</if>
+            <if test="hypertensionMessage != null">hypertension_message,</if>
+            <if test="hyperlipidemiaMessage != null">hyperlipidemia_message,</if>
             <if test="delFlag != null">del_flag,</if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
@@ -59,6 +70,9 @@
             <if test="hipline != null">#{hipline},</if>
             <if test="eatFruitsMessage != null">#{eatFruitsMessage},</if>
             <if test="longEatDrugMessage != null">#{longEatDrugMessage},</if>
+            <if test="medicationCompliance != null">#{medicationCompliance},</if>
+            <if test="adverseReactionsFlag != null">#{adverseReactionsFlag},</if>
+            <if test="adverseReactions != null">#{adverseReactions},</if>
             <if test="bloodSugarMessage != null">#{bloodSugarMessage},</if>
             <if test="depressedStateMessage != null">#{depressedStateMessage},</if>
             <if test="bloodPressureMessage != null">#{bloodPressureMessage},</if>
@@ -66,6 +80,8 @@
             <if test="menstruationMessage != null">#{menstruationMessage},</if>
             <if test="gastrointestinalMessage != null">#{gastrointestinalMessage},</if>
             <if test="postpartumConditioningMessage != null">#{postpartumConditioningMessage},</if>
+            <if test="hypertensionMessage != null">#{hypertensionMessage},</if>
+            <if test="hyperlipidemiaMessage != null">#{hyperlipidemiaMessage},</if>
             <if test="delFlag != null">#{delFlag},</if>
         </trim>
     </insert>
@@ -78,6 +94,9 @@
             <if test="hipline != null">hipline = #{hipline},</if>
             <if test="eatFruitsMessage != null">eat_fruits_message = #{eatFruitsMessage},</if>
             <if test="longEatDrugMessage != null">long_eat_drug_message = #{longEatDrugMessage},</if>
+            <if test="medicationCompliance != null">medication_compliance = #{medicationCompliance},</if>
+            <if test="adverseReactionsFlag != null">adverse_reactions_flag = #{adverseReactionsFlag},</if>
+            <if test="adverseReactions != null">adverse_reactions = #{adverseReactions},</if>
             <if test="bloodSugarMessage != null">blood_sugar_message = #{bloodSugarMessage},</if>
             <if test="depressedStateMessage != null">depressed_state_message = #{depressedStateMessage},</if>
             <if test="bloodPressureMessage != null">blood_pressure_message = #{bloodPressureMessage},</if>
@@ -85,6 +104,8 @@
             <if test="menstruationMessage != null">menstruation_message = #{menstruationMessage},</if>
             <if test="gastrointestinalMessage != null">gastrointestinal_message = #{gastrointestinalMessage},</if>
             <if test="postpartumConditioningMessage != null">postpartum_conditioning_message = #{postpartumConditioningMessage},</if>
+            <if test="hypertensionMessage != null">hypertension_message = #{hypertensionMessage},</if>
+            <if test="hyperlipidemiaMessage != null">hyperlipidemia_message = #{hyperlipidemiaMessage},</if>
             <if test="delFlag != null">del_flag = #{delFlag},</if>
         </trim>
         where id = #{id}

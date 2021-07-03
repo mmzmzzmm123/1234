@@ -61,7 +61,7 @@
 
               </div>
               </el-form-item>
-              <p class="p_title_2">2、体重变化情况</p>
+              <p class="p_title_2">3、体重变化情况</p>
               <el-form-item :label="'(1) 近三个月体重是否有变化'"  class="margin-left">
                 <el-radio-group v-model="form.healthyExtend.bloodSugarMessage.weightChangeFlag">
                   <el-radio  :label="1" >是</el-radio>
@@ -79,7 +79,7 @@
               </el-form-item>
             </div>
 
-            <div v-show="form.conditioningProjectId == 5">
+            <!--<div v-show="form.conditioningProjectId == 5">
               <p class="p_title_2">1、餐前餐后血压</p>
               <div style="margin-top:10px">
                   <div class="margin-left"><span>餐前：</span><el-input placeholder="输入血压数值" maxlength="100" v-model="form.healthyExtend.bloodPressureMessage.beforeMealBloodPressure" style="width:50%"></el-input><span class="margin-left">mmHg</span></div>
@@ -143,10 +143,103 @@
                     <el-radio  :label="0" >否</el-radio>
                   </el-radio-group>
                 </el-form-item>
+            </div>-->
+          
+            <div v-show="form.conditioningProjectId == 5">
+                <p class="p_title_2">1、现病史</p>
+                <div style="margin-top:10px">
+                <el-input type="textarea"
+                            v-model="form.healthyExtend.hypertensionMessage.historyOfPresentIllness"
+                            placeholder="请描述自己发现高血压及治疗的过程"
+                            maxlength="200"
+                            show-word-limit
+                            rows="3"
+                  ></el-input>
+                </div>
+                <p class="p_title_2">2、血压情况</p>
+                <el-form-item label="(1)、历史最高血压" class="margin-left">
+                  <div class="margin-left">
+                    <span class="text-span">收缩压/高压</span>
+                    <el-input placeholder="输入最高收缩压/高压" maxlength="20" v-model="form.healthyExtend.hypertensionMessage.maxHighPressure" style="width:50%;margin-left:10px"/>
+                    <span class="text-span margin-left" >mmHg</span>
+                  </div>
+                  <div class="margin-left" style="margin-top:8px;">
+                    <span class="text-span">舒张压/低压</span>
+                    <el-input placeholder="输入最高舒张压/低压" maxlength="20" v-model="form.healthyExtend.hypertensionMessage.maxLowPressure" style="width:50%;margin-left:10px"/>
+                    <span class="text-span margin-left" >mmHg</span>
+                  </div>
+                </el-form-item>
+                <el-form-item label="(2)、近期血压" class="margin-left">
+                  <div class="margin-left">
+                    <span class="text-span">日期</span>
+                    <el-input placeholder="输入近期血压日期" maxlength="20" v-model="form.healthyExtend.hypertensionMessage.recentTime" style="width:60%;margin-left:10px"/>
+                  </div>
+                  <div class="margin-left" style="margin-top:8px;">
+                    <span class="text-span">收缩压/高压</span>
+                    <el-input placeholder="输入近期收缩压/高压" maxlength="20" v-model="form.healthyExtend.hypertensionMessage.recentHighPressure" style="width:50%;margin-left:10px"/>
+                    <span class="text-span margin-left" >mmHg</span>
+                  </div>
+                  <div class="margin-left" style="margin-top:8px;">
+                    <span class="text-span">舒张压/低压</span>
+                    <el-input placeholder="输入近期舒张压/低压" maxlength="20" v-model="form.healthyExtend.hypertensionMessage.recentLowPressure" style="width:50%;margin-left:10px"/>
+                    <span class="text-span margin-left" >mmHg</span>
+                  </div>
+                  <div class="margin-left" style="margin-top:8px;">
+                    <span class="text-span">静息心率</span>
+                    <el-input placeholder="输入静息心率" maxlength="20" v-model="form.healthyExtend.hypertensionMessage.restingHeartRate" style="width:50%;margin-left:10px"/>
+                    <span class="text-span margin-left">次/分</span>
+                  </div>
+                </el-form-item>
+                <el-form-item label="(3)、是否规律测量血压" class="margin-left">
+                  <el-radio-group v-model="form.healthyExtend.hypertensionMessage.measureBloodPressure">
+                      <el-radio  v-for="(item,index) in healthyData['measureBloodPressureArray']" :label="item.value" :key="index">{{ item.name }}</el-radio>
+                  </el-radio-group>
+                </el-form-item>
+                <p class="p_title_2">3、实验室检查结果</p>
+                <el-form-item label="(1)、胆固醇结果" class="margin-left">
+                  <div class="margin-left">
+                    <span class="text-span">总胆固醇</span>
+                    <el-input placeholder="输入总胆固醇" maxlength="20" v-model="form.healthyExtend.hypertensionMessage.totalCholesterol" style="width:50%;margin-left:10px"/>
+                    <span class="text-span margin-left" >mmol/L</span>
+                  </div>
+                  <div class="margin-left" style="margin-top:8px;">
+                    <span class="text-span">高密度脂蛋白胆固醇</span>
+                    <el-input placeholder="输入高密度脂蛋白胆固醇" maxlength="20" v-model="form.healthyExtend.hypertensionMessage.highLipoproteinCholesterol" style="width:35%;margin-left:10px"/>
+                    <span class="text-span margin-left" >mmol/L</span>
+                  </div>
+                   <div class="margin-left" style="margin-top:8px;">
+                    <span class="text-span">低密度脂蛋白胆固醇</span>
+                    <el-input placeholder="输入低密度脂蛋白胆固醇" maxlength="20" v-model="form.healthyExtend.hypertensionMessage.lowLipoproteinCholesterol" style="width:35%;margin-left:10px"/>
+                    <span class="text-span margin-left" >mmol/L</span>
+                  </div>
+                </el-form-item>
+                <el-form-item label="(2)、甘油三酯结果" class="margin-left">
+                  <div class="margin-left">
+                    <span class="text-span">甘油三酯</span>
+                    <el-input placeholder="输入甘油三酯" maxlength="20" v-model="form.healthyExtend.hypertensionMessage.triglyceride" style="width:50%;margin-left:10px"/>
+                    <span class="text-span margin-left" >mmol/L</span>
+                  </div>
+                </el-form-item>
+                <el-form-item label="(3)、血糖结果" class="margin-left">
+                  <div class="margin-left">
+                    <span class="text-span">血糖</span>
+                    <el-input placeholder="输入血糖" maxlength="20" v-model="form.healthyExtend.hypertensionMessage.bloodSugar" style="width:50%;margin-left:10px"/>
+                    <span class="text-span margin-left" >mmol/L</span>
+                  </div>
+                </el-form-item>
+                <el-form-item label="(4)、尿常规情况" class="margin-left">
+                  <el-input type="textarea"
+                            v-model="form.healthyExtend.hypertensionMessage.urinalysis"
+                            placeholder="请描述尿常规情况"
+                            maxlength="200"
+                            show-word-limit
+                            rows="3"
+                  ></el-input>
+                </el-form-item>
             </div>
 
             <div>
-                <p class="p_title_2">3、焦虑状态评估</p>
+                <p class="p_title_2">4、焦虑状态评估</p>
               <el-form-item label="(1) 你认为你是一个容易焦虑或紧张的人吗?"  class="margin-left">
                 <el-radio-group v-model="form.healthyExtend.anxietyStateMessage.easyAnxiousFlag">
                   <el-radio  :label="1" >是</el-radio>
@@ -171,7 +264,7 @@
                   <el-radio  :label="0" >否</el-radio>
                 </el-radio-group>
               </el-form-item>
-              <p class="p_title_2">4、郁抑状态评估</p>
+              <p class="p_title_2">5、郁抑状态评估</p>
               <el-form-item label="(1) 过去几周(或几个月)是否感觉到无精打采、伤感、或对生活的乐趣减少?"  class="margin-left">
                 <el-radio-group v-model="form.healthyExtend.depressedStateMessage.listlessRecentlyFlag">
                   <el-radio  :label="1" >是</el-radio>
@@ -198,6 +291,7 @@
               </el-form-item>
             </div>
         </div>
+
         <!-- 月经不调、多囊卵巢综合症 -->
         <div v-if="form.conditioningProjectId == 1 || form.conditioningProjectId == 2">
             <p class="p_title_2">1、月经基础情况</p>
@@ -542,6 +636,44 @@
                   </div>
                    
             </div>
+        </div>
+        <!-- 高血脂 -->
+        <div v-if="form.conditioningProjectId == 7">
+          <p class="p_title_2">1、实验室检查结果</p>
+          <el-form-item label="(1)、胆固醇结果" class="margin-left">
+                  <div class="margin-left">
+                    <span class="text-span">总胆固醇</span>
+                    <el-input placeholder="输入总胆固醇" maxlength="20" v-model="form.healthyExtend.hyperlipidemiaMessage.totalCholesterol" style="width:50%;margin-left:10px"/>
+                    <span class="text-span margin-left" >mmol/L</span>
+                  </div>      
+                  <div class="margin-left" style="margin-top:8px;">
+                    <span class="text-span">高密度脂蛋白胆固醇</span>
+                    <el-input placeholder="输入高密度脂蛋白胆固醇" maxlength="20" v-model="form.healthyExtend.hyperlipidemiaMessage.highLipoproteinCholesterol" style="width:35%;margin-left:10px"/>
+                    <span class="text-span margin-left" >mmol/L</span>
+                  </div>
+                   <div class="margin-left" style="margin-top:8px;">
+                    <span class="text-span">低密度脂蛋白胆固醇</span>
+                    <el-input placeholder="输入低密度脂蛋白胆固醇" maxlength="20" v-model="form.healthyExtend.hyperlipidemiaMessage.lowLipoproteinCholesterol" style="width:35%;margin-left:10px"/>
+                    <span class="text-span margin-left" >mmol/L</span>
+                  </div>
+                </el-form-item>    
+                <el-form-item label="(2)、甘油三酯结果" class="margin-left">
+                  <div class="margin-left">
+                    <span class="text-span">甘油三酯</span>
+                    <el-input placeholder="输入甘油三酯" maxlength="20" v-model="form.healthyExtend.hyperlipidemiaMessage.triglyceride" style="width:50%;margin-left:10px"/>
+                    <span class="text-span margin-left" >mmol/L</span>
+                  </div>
+                </el-form-item>
+               
+                <el-form-item label="(3)、肝功能情况" class="margin-left">
+                  <el-input type="textarea"
+                            v-model="form.healthyExtend.hyperlipidemiaMessage.liverFunction"
+                            placeholder="请描述肝功能情况"
+                            maxlength="200"
+                            show-word-limit
+                            rows="3"
+                  ></el-input>
+                </el-form-item>
         </div>
   </div>
 </template>
