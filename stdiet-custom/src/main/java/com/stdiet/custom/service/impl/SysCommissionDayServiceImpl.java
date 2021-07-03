@@ -533,12 +533,14 @@ public class SysCommissionDayServiceImpl implements ISysCommissionDayService {
             sysOrder.setCommissStartTime(DateUtils.localDateToDate(serverStartDate));
             sysOrder.setServerEndTime(DateUtils.localDateToDate(serverEndDate));
             sysOrder.setAfterSaleId(null);
+            sysOrder.setNutritionistId(orderNutritionistId);
             sysOrderCommisionDayDetailList.add(statisticsOrderMessage(sysOrder, sysCommision.getServerScopeStartTime(), sysCommision.getServerScopeEndTime()));
         }
         if(afterSaleRecord.size() == 0){
             sysOrder.setCommissStartTime(DateUtils.localDateToDate(serverStartDate));
             sysOrder.setServerEndTime(DateUtils.localDateToDate(serverEndDate));
             sysOrder.setNutritionistId(null);
+            sysOrder.setAfterSaleId(orderAfterSaleId);
             sysOrderCommisionDayDetailList.add(statisticsOrderMessage(sysOrder, sysCommision.getServerScopeStartTime(), sysCommision.getServerScopeEndTime()));
         }
 
