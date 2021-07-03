@@ -46,6 +46,14 @@
           >
             生成7天体验计划
           </el-button>
+          <el-button
+            size="mini"
+            type="primary"
+            v-hasPermi="['recipes:plan:refresh']"
+            @click="refreshRecipesPlan()"
+          >
+            刷新食谱计划
+          </el-button>
         </section>
         <section>
           <el-button
@@ -154,6 +162,7 @@ import {
   listRecipesPlanByCusId,
   addRecipesPlan,
   updateRecipesPlan,
+  refreshRecipesPlan
 } from "@/api/custom/recipesPlan";
 import PlanPauseDrawer from "./PlanPauseDrawer";
 import VueQr from "vue-qr";
@@ -188,6 +197,7 @@ export default {
           return time.getTime() < Date.now() - 24 * 60 * 60 * 1000;
         },
       },
+      refreshFlag: false
     };
   },
   methods: {
@@ -222,6 +232,25 @@ export default {
         // console.log(this.planList);
         this.planLoading = false;
       });
+    },
+    refreshRecipesPlan(){
+      if(this.refreshFlag){
+            //请勿重复刷新
+           this.$message.error("请勿重复刷新，十秒后重试");
+           return;
+      }else{
+        this.refreshFlag = true;
+      }
+      refreshRecipesPlan(this.data.id).then((response) => {
+          //十秒之后刷新页面
+          this.$message.success("正在刷新，大概需要十秒");
+      });
+      var self = this;
+      let t = setTimeout(function(){
+          self.getList();
+           self.$message.success("食谱计划刷新成功");
+          self.refreshFlag = false;
+      }, 10000);
     },
     reset() {
       this.form = {

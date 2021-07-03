@@ -49,3 +49,11 @@ export function listRecipesPlanByCusId(id) {
     method: "get"
   });
 }
+
+export function refreshRecipesPlan(cusId){
+  return request({
+    url: "/recipes/recipesPlan/refreshRecipesPlan",
+    method: "get",
+    params: {"cusId": cusId}
+  });
+}
