@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.jxjs.mapper.TsbzYxjxdstjbMapper">
+
+    <resultMap type="TsbzYxjxdstjb" id="TsbzYxjxdstjbResult">
+        <result property="id"    column="id"    />
+        <result property="dsid"    column="dsid"    />
+        <result property="deptId"    column="dept_id"    />
+        <result property="createuserid"    column="createuserid"    />
+        <result property="nf"    column="nf"    />
+        <result property="tjly"    column="tjly"    />
+        <result property="createTime"    column="create_time"    />
+    </resultMap>
+
+    <sql id="selectTsbzYxjxdstjbVo">
+        select id, dsid, dept_id, createuserid, nf, tjly, create_time from tsbz_yxjxdstjb
+    </sql>
+
+    <select id="selectTsbzYxjxdstjbList" parameterType="TsbzYxjxdstjb" resultMap="TsbzYxjxdstjbResult">
+        <include refid="selectTsbzYxjxdstjbVo"/>
+        <where>
+            <if test="dsid != null "> and dsid = #{dsid}</if>
+            <if test="deptId != null "> and dept_id = #{deptId}</if>
+            <if test="createuserid != null "> and createuserid = #{createuserid}</if>
+            <if test="nf != null  and nf != ''"> and nf = #{nf}</if>
+            <if test="tjly != null  and tjly != ''"> and tjly = #{tjly}</if>
+        </where>
+    </select>
+
+    <select id="selectTsbzYxjxdstjbById" parameterType="Long" resultMap="TsbzYxjxdstjbResult">
+        <include refid="selectTsbzYxjxdstjbVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertTsbzYxjxdstjb" parameterType="TsbzYxjxdstjb" useGeneratedKeys="true" keyProperty="id">
+        insert into tsbz_yxjxdstjb
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="dsid != null">dsid,</if>
+            <if test="deptId != null">dept_id,</if>
+            <if test="createuserid != null">createuserid,</if>
+            <if test="nf != null">nf,</if>
+            <if test="tjly != null">tjly,</if>
+            <if test="createTime != null">create_time,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="dsid != null">#{dsid},</if>
+            <if test="deptId != null">#{deptId},</if>
+            <if test="createuserid != null">#{createuserid},</if>
+            <if test="nf != null">#{nf},</if>
+            <if test="tjly != null">#{tjly},</if>
+            <if test="createTime != null">#{createTime},</if>
+        </trim>
+    </insert>
+
+    <update id="updateTsbzYxjxdstjb" parameterType="TsbzYxjxdstjb">
+        update tsbz_yxjxdstjb
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="dsid != null">dsid = #{dsid},</if>
+            <if test="deptId != null">dept_id = #{deptId},</if>
+            <if test="createuserid != null">createuserid = #{createuserid},</if>
+            <if test="nf != null">nf = #{nf},</if>
+            <if test="tjly != null">tjly = #{tjly},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteTsbzYxjxdstjbById" parameterType="Long">
+        delete from tsbz_yxjxdstjb where id = #{id}
+    </delete>
+
+    <delete id="deleteTsbzYxjxdstjbByIds" parameterType="String">
+        delete from tsbz_yxjxdstjb where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+</mapper>
