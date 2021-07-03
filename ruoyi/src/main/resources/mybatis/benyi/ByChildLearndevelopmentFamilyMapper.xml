@@ -43,6 +43,7 @@
             <if test="jspy != null  and jspy != ''">and a.jspy = #{jspy}</if>
             <if test="jspyremarks != null  and jspyremarks != ''">and a.jspyremarks = #{jspyremarks}</if>
             <if test="createuserid != null ">and a.createuserid = #{createuserid}</if>
+            <if test="id != null ">and a.id = #{id}</if>
         </where>
     </select>
 

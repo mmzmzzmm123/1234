@@ -43,6 +43,7 @@
             <if test="jyjh != null  and jyjh != ''">and a.jyjh = #{jyjh}</if>
             <if test="jyjhremarks != null  and jyjhremarks != ''">and a.jyjhremarks = #{jyjhremarks}</if>
             <if test="createuserid != null ">and a.createuserid = #{createuserid}</if>
+            <if test="id != null ">and a.id = #{id}</if>
         </where>
     </select>
 

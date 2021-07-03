@@ -1,23 +1,29 @@
 <template>
   <div class="table-container" ref="printMe">
-    <h2 class="title">{{title}}</h2>
+    <h2 class="title">{{ title }}</h2>
     <div class="table">
       <div class="print no-print">
-        <el-button type="primary" plain size="mini" icon="el-icon-printer" @click="prints"></el-button>
+        <el-button
+          type="primary"
+          plain
+          size="mini"
+          icon="el-icon-printer"
+          @click="prints"
+        ></el-button>
       </div>
       <table>
         <tr class="align-center">
           <td class="w140">
             <b class="table-title">班级：</b>
-            {{classname}}
+            {{ classname }}
           </td>
           <td>
             <b class="table-title">学期：</b>
-            {{xnxqFormat(xnxq)}}
+            {{ xnxqFormat(xnxq) }}
           </td>
           <td class="w200">
             <b class="table-title">幼儿姓名：</b>
-            {{childFormat(childid)}}
+            {{ childFormat(childid) }}
           </td>
         </tr>
         <tr>
@@ -26,7 +32,7 @@
         </tr>
         <tr>
           <td class="align-center">备注</td>
-          <td colspan="2">{{zpimgsremarks}}</td>
+          <td colspan="2">{{ zpimgsremarks }}</td>
         </tr>
         <tr>
           <td class="align-center">生活照片</td>
@@ -34,7 +40,7 @@
         </tr>
         <tr>
           <td class="align-center">备注</td>
-          <td colspan="2">{{shimgsremarks}}</td>
+          <td colspan="2">{{ shimgsremarks }}</td>
         </tr>
         <tr>
           <td class="align-center">有趣事件</td>
@@ -42,7 +48,7 @@
         </tr>
         <tr>
           <td class="align-center">备注</td>
-          <td colspan="2">{{yqsjremarks}}</td>
+          <td colspan="2">{{ yqsjremarks }}</td>
         </tr>
         <tr>
           <td class="align-center">教师评语</td>
@@ -50,7 +56,7 @@
         </tr>
         <tr>
           <td class="align-center">备注</td>
-          <td colspan="2">{{jspyremarks}}</td>
+          <td colspan="2">{{ jspyremarks }}</td>
         </tr>
       </table>
       <!-- <p
@@ -64,9 +70,6 @@
 import {
   listFamily,
   getFamily,
-  delFamily,
-  addFamily,
-  updateFamily,
 } from "@/api/benyi/learndevelopmentfamily";
 
 import { listChild } from "@/api/benyi/child";
@@ -83,7 +86,7 @@ export default {
       title: "幼儿学习与发展档案(家长)",
       classname: "",
       childid: "",
-      xnxq:"",
+      xnxq: "",
       zpimgs: "",
       zpimgsremarks: "",
       shimgs: "",
@@ -114,13 +117,16 @@ export default {
       open: false,
       // 查询参数
       queryParams: {
-        
+        id: "",
       },
       // 表单参数
       form: {},
     };
   },
   created() {
+    const childId = this.$route.params && this.$route.params.id;
+    this.queryParams.id = childId;
+
     this.getList();
     this.getChildList();
     this.getDicts("sys_xnxq").then((response) => {

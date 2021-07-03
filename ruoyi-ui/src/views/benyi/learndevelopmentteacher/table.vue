@@ -1,23 +1,29 @@
 <template>
   <div class="table-container" ref="printMe">
-    <h2 class="title">{{title}}</h2>
+    <h2 class="title">{{ title }}</h2>
     <div class="table">
       <div class="print no-print">
-        <el-button type="primary" plain size="mini" icon="el-icon-printer" @click="prints"></el-button>
+        <el-button
+          type="primary"
+          plain
+          size="mini"
+          icon="el-icon-printer"
+          @click="prints"
+        ></el-button>
       </div>
       <table>
         <tr class="align-center">
           <td class="w140">
             <b class="table-title">班级：</b>
-            {{classname}}
+            {{ classname }}
           </td>
           <td>
             <b class="table-title">学期：</b>
-            {{xnxqFormat(xnxq)}}
+            {{ xnxqFormat(xnxq) }}
           </td>
           <td class="w200">
             <b class="table-title">幼儿姓名：</b>
-            {{childFormat(childid)}}
+            {{ childFormat(childid) }}
           </td>
         </tr>
         <tr>
@@ -26,7 +32,7 @@
         </tr>
         <tr>
           <td class="align-center">备注</td>
-          <td colspan="2">{{gcjlremarks}}</td>
+          <td colspan="2">{{ gcjlremarks }}</td>
         </tr>
         <tr>
           <td class="align-center">问题与方案</td>
@@ -34,7 +40,7 @@
         </tr>
         <tr>
           <td class="align-center">备注</td>
-          <td colspan="2">{{wtyfaremarks}}</td>
+          <td colspan="2">{{ wtyfaremarks }}</td>
         </tr>
         <tr>
           <td class="align-center">评估结果</td>
@@ -42,7 +48,7 @@
         </tr>
         <tr>
           <td class="align-center">备注</td>
-          <td colspan="2">{{pgjgremarks}}</td>
+          <td colspan="2">{{ pgjgremarks }}</td>
         </tr>
         <tr>
           <td class="align-center">教育计划</td>
@@ -50,7 +56,7 @@
         </tr>
         <tr>
           <td class="align-center">备注</td>
-          <td colspan="2">{{jyjhremarks}}</td>
+          <td colspan="2">{{ jyjhremarks }}</td>
         </tr>
       </table>
       <!-- <p
@@ -64,9 +70,6 @@
 import {
   listTeacher,
   getTeacher,
-  delTeacher,
-  addTeacher,
-  updateTeacher,
 } from "@/api/benyi/learndevelopmentteacher";
 
 import { listChild } from "@/api/benyi/child";
@@ -83,7 +86,7 @@ export default {
       title: "幼儿学习与发展档案(教师)",
       classname: "",
       childid: "",
-      xnxq:"",
+      xnxq: "",
       gcjl: "",
       gcjlremarks: "",
       wtyfa: "",
@@ -114,9 +117,15 @@ export default {
       open: false,
       // 表单参数
       form: {},
+      queryParams: {
+        id: "",
+      },
     };
   },
   created() {
+    const childId = this.$route.params && this.$route.params.id;
+    this.queryParams.id = childId;
+    //console.log(childId);
     this.getList();
     this.getChildList();
     this.getDicts("sys_xnxq").then((response) => {
@@ -152,7 +161,6 @@ export default {
         this.childOptions = response.rows;
         this.classname = response.rows[0].bjmc;
         // console.log(response.rows);
-        
       });
     },
     /** 查询儿童学习与发展档案（教师）列表 */
