@@ -9,6 +9,7 @@ import com.stdiet.common.utils.StringUtils;
 import com.stdiet.common.utils.poi.ExcelUtil;
 import com.stdiet.custom.domain.SysRecipesPlan;
 import com.stdiet.custom.service.ISysRecipesPlanService;
+import org.aspectj.weaver.loadtime.Aj;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -100,5 +101,17 @@ public class SysRecipesPlanController extends BaseController {
         }
         ExcelUtil<SysRecipesPlan> util = new ExcelUtil<SysRecipesPlan>(SysRecipesPlan.class);
         return util.exportExcel(list, "recipesPlan");
+    }
+
+    /**
+     * 刷新食谱计划
+     * @param cusId
+     * @return
+     */
+    @PreAuthorize("@ss.hasPermi('recipes:plan:refresh')")
+    @GetMapping("/refreshRecipesPlan")
+    public AjaxResult refreshRecipesPlan(@RequestParam("cusId")Long cusId) {
+        sysRecipesPlanService.regenerateRecipesPlan(cusId);
+        return AjaxResult.success();
     }
 }
