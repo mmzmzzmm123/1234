@@ -3,17 +3,16 @@ package com.stdiet.web.controller.common;
 import com.stdiet.common.core.controller.BaseController;
 import com.stdiet.common.core.domain.AjaxResult;
 import com.stdiet.common.core.page.TableDataInfo;
+import com.stdiet.common.enums.BusinessType;
 import com.stdiet.common.utils.StringUtils;
 import com.stdiet.common.utils.sign.AesUtils;
-import com.stdiet.custom.domain.SysCustomer;
-import com.stdiet.custom.domain.SysCustomerHealthy;
-import com.stdiet.custom.domain.SysOrder;
-import com.stdiet.custom.domain.SysPhysicalSigns;
+import com.stdiet.custom.domain.*;
 import com.stdiet.custom.dto.request.CustomerInvestigateRequest;
 import com.stdiet.custom.dto.request.FoodHeatCalculatorRequest;
 import com.stdiet.custom.service.*;
 import com.stdiet.system.service.ISysDictTypeService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
@@ -50,6 +49,9 @@ public class InvestigateController extends BaseController {
 
     @Autowired
     private ISysOrderService sysOrderService;
+
+    @Autowired
+    private ISysPreSaleSurveyService sysPreSaleSurveyService;
 
     /**
      * 建立客户信息档案
@@ -123,4 +125,34 @@ public class InvestigateController extends BaseController {
         return toAjax(sysFoodHeatStatisticsService.addMuchFoodHeat(foodHeatCalculatorRequest));
     }
 
+    /**
+     * 添加用户基础信息问卷调查表
+     */
+    @PostMapping(value = "/addCustomerSurvey")
+    public AjaxResult addCustomerSurvey(@RequestBody SysPreSaleSurvey sysPreSaleSurvey)
+    {
+        //判断客户唯一标识是否为空
+        if(StringUtils.isEmpty(sysPreSaleSurvey.getCustomerKey())){
+            return AjaxResult.error("操作失败，缺少必要参数");
+        }
+        SysPreSaleSurvey oldSysPreSale = sysPreSaleSurveyService.getSysPreSaleSurveyByKey(sysPreSaleSurvey.getCustomerKey());
+        if(oldSysPreSale != null){
+            return AjaxResult.error("已提交过问卷，无法重复提交");
+        }
+        return toAjax(sysPreSaleSurveyService.insertSysPreSaleSurvey(sysPreSaleSurvey));
+    }
+
+    /**
+     * 根据客户唯一标识
+     */
+    @GetMapping("/getCustomerSurvey/{customerKey}")
+    public AjaxResult getCustomerSurvey(@PathVariable("customerKey")String customerKey)
+    {
+        //判断客户唯一标识是否为空
+        if(StringUtils.isEmpty(customerKey)){
+            return AjaxResult.error("操作失败，缺少必要参数");
+        }
+        SysPreSaleSurvey preSaleSurvey = sysPreSaleSurveyService.getSysPreSaleSurveyByKey(customerKey);
+        return AjaxResult.success(preSaleSurvey);
+    }
 }

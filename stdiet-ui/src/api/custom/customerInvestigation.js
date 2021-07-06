@@ -52,3 +52,22 @@ export function addFoodHeatStatistics(data) {
   })
 }
 
+
+// 根据客户唯一标识查询对应基础信息问卷调查表
+export function getCustomerSurvey(customerKey) {
+  return request({
+    url: '/investigate/getCustomerSurvey/'+(customerKey != undefined && customerKey != null ? customerKey : ""),
+    method: 'get'
+  })
+}
+
+// 添加客户基础信息问卷，携带者客户唯一标识
+export function addCustomerSurvey(customerSurvey) {
+  return request({
+    url: '/investigate/addCustomerSurvey',
+    method: 'post',
+    data: customerSurvey
+  })
+}
+
+
