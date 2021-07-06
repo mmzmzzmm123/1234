@@ -82,4 +82,11 @@ public interface ISysCustomerCaseService {
      */
     int updateWxShowByIds(Integer wxShow, Long[] ids);
 
+    /**
+     * 随机获取指定数量的客户案例
+     * @param pageSize
+     * @return
+     */
+    public List<CustomerCaseResponse> getWxCustomerCaseByRandom(Integer pageSize);
+
 }
