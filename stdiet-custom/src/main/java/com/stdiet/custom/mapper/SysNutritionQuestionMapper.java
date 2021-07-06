@@ -2,6 +2,7 @@ package com.stdiet.custom.mapper;
 
 import java.util.List;
 import com.stdiet.custom.domain.SysNutritionQuestion;
+import com.stdiet.custom.dto.response.NutritionQuestionResponse;
 import org.apache.ibatis.annotations.Param;
 
 /**
@@ -87,4 +88,12 @@ public interface SysNutritionQuestionMapper
      * @return
      */
     public int updateWxShowByIds(@Param("wxShow")Integer wxShow, @Param("array") Long[] ids);
+
+    /**
+     * 随机获取指定数量的营养小知识
+     * @param sysNutritionQuestion
+     * @param pageSize
+     * @return
+     */
+    public List<NutritionQuestionResponse> getNutritionQuestionByRandom(SysNutritionQuestion sysNutritionQuestion, @Param("pageSize")Integer pageSize);
 }

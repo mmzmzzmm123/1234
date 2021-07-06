@@ -75,4 +75,11 @@ public interface SysCustomerCaseMapper
      * @return
      */
     public int updateWxShowByIds(@Param("wxShow")Integer wxShow, @Param("array") Long[] ids);
+
+    /**
+     * 随机获取指定数量的客户案例
+     * @param pageSize
+     * @return
+     */
+    public List<CustomerCaseResponse> getWxCustomerCaseByRandom(@Param("pageSize")Integer pageSize);
 }

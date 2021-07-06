@@ -180,4 +180,14 @@ public class SysCustomerCaseServiceImpl implements ISysCustomerCaseService
     public int updateWxShowByIds(Integer wxShow, Long[] ids){
         return sysCustomerCaseMapper.updateWxShowByIds(wxShow, ids);
     }
+
+    /**
+     * 随机获取指定数量的客户案例
+     * @param pageSize
+     * @return
+     */
+    @Override
+    public List<CustomerCaseResponse> getWxCustomerCaseByRandom(Integer pageSize){
+        return sysCustomerCaseMapper.getWxCustomerCaseByRandom(pageSize);
+    }
 }

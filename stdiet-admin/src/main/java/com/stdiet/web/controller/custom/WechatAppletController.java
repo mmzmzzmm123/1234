@@ -1,6 +1,7 @@
 package com.stdiet.web.controller.custom;
 
 import com.aliyun.vod20170321.models.GetPlayInfoResponseBody;
+import com.stdiet.common.constant.HttpStatus;
 import com.stdiet.common.core.controller.BaseController;
 import com.stdiet.common.core.domain.AjaxResult;
 import com.stdiet.common.core.domain.entity.SysDictData;
@@ -16,6 +17,7 @@ import com.stdiet.common.utils.sign.AesUtils;
 import com.stdiet.custom.domain.*;
 import com.stdiet.custom.dto.response.CustomerCaseResponse;
 import com.stdiet.custom.dto.response.MessageNoticeResponse;
+import com.stdiet.custom.dto.response.NutritionQuestionResponse;
 import com.stdiet.custom.dto.response.NutritionalVideoResponse;
 import com.stdiet.custom.page.WxLogInfo;
 import com.stdiet.custom.service.*;
@@ -77,13 +79,24 @@ public class WechatAppletController extends BaseController {
      * 查询微信小程序中展示的客户案例
      */
     @GetMapping("/caseList")
-    public TableDataInfo caseList(SysCustomerCase sysCustomerCase) {
-        startPage();
-        sysCustomerCase.setKeywordArray(StringUtils.isNotEmpty(sysCustomerCase.getKeyword()) ? sysCustomerCase.getKeyword().split(",") : null);
-        List<CustomerCaseResponse> list = sysCustomerCaseService.getWxCustomerCaseList(sysCustomerCase);
-        //处理ID加密
-        dealIdEnc(list);
-        return getDataTable(list);
+    public TableDataInfo caseList(SysCustomerCase sysCustomerCase, @RequestParam(value = "pageSize",required = false,defaultValue = "10")int pageSize,
+                                  @RequestParam(value="randomFlag",required = false,defaultValue = "false") boolean randomFlag) {
+        if(randomFlag){
+            List<CustomerCaseResponse> reponseList = sysCustomerCaseService.getWxCustomerCaseByRandom(pageSize);
+            TableDataInfo rspData = new TableDataInfo();
+            rspData.setCode(HttpStatus.SUCCESS);
+            rspData.setMsg("查询成功");
+            rspData.setRows(reponseList);
+            rspData.setTotal(pageSize);
+            return rspData;
+        }else{
+            startPage();
+            sysCustomerCase.setKeywordArray(StringUtils.isNotEmpty(sysCustomerCase.getKeyword()) ? sysCustomerCase.getKeyword().split(",") : null);
+            List<CustomerCaseResponse> list = sysCustomerCaseService.getWxCustomerCaseList(sysCustomerCase);
+            //处理ID加密
+            dealIdEnc(list);
+            return getDataTable(list);
+        }
     }
 
     /**
@@ -328,13 +341,29 @@ public class WechatAppletController extends BaseController {
     }
 
     /**
+     *
+     */
+    /**
      * 获取小程序展示的营养小知识列表
+     * @param sysNutritionQuestion 查询参数对象
+     * @param pageNum 分页当前页码
+     * @param pageSize 分页每页数量
+     * @param randomFlag 随机标识  true 随机获取指定pageSize数量的营养小知识，不支持分页、模糊查询  false 则正常查询
+     * @return
      */
     @GetMapping(value = "/getNutritionQuestionList")
-    public AjaxResult getNutritionQuestionList(SysNutritionQuestion sysNutritionQuestion, @RequestParam(value = "pageNum", defaultValue = "1") int pageNum, @RequestParam(value = "pageSize", defaultValue = "10") int pageSize) {
+    public AjaxResult getNutritionQuestionList(SysNutritionQuestion sysNutritionQuestion, @RequestParam(value = "pageNum", defaultValue = "1") int pageNum, @RequestParam(value = "pageSize", defaultValue = "10") int pageSize,
+                                               @RequestParam(value="randomFlag",required = false,defaultValue = "false") boolean randomFlag) {
         sysNutritionQuestion.setShowFlag(1);
-        Map<String, Object> result = sysNutritionQuestionService.getNutritionQuestionListByKey(sysNutritionQuestion, pageNum, pageSize);
-        return AjaxResult.success(result);
+        if(randomFlag){
+            //随机获取指定条数
+            sysNutritionQuestion.setKey(null);
+            List<NutritionQuestionResponse> list = sysNutritionQuestionService.getNutritionQuestionByRandom(sysNutritionQuestion, pageSize);
+            return AjaxResult.success(list);
+        }else{
+            Map<String, Object> result = sysNutritionQuestionService.getNutritionQuestionListByKey(sysNutritionQuestion, pageNum, pageSize);
+            return AjaxResult.success(result);
+        }
     }
 
     /**

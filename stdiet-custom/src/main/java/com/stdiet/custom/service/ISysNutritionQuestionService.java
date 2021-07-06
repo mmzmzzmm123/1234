@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.stdiet.custom.domain.SysNutritionQuestion;
+import com.stdiet.custom.dto.response.NutritionQuestionResponse;
 
 /**
  * 营养知识小问答Service接口
@@ -80,5 +81,13 @@ public interface ISysNutritionQuestionService
      * @return
      */
     public int updateWxShowByIds(Integer wxShow,  Long[] ids);
+
+    /**
+     * 随机获取指定数量的营养小知识
+     * @param sysNutritionQuestion
+     * @param pageSize
+     * @return
+     */
+    public List<NutritionQuestionResponse> getNutritionQuestionByRandom(SysNutritionQuestion sysNutritionQuestion, Integer pageSize);
 
 }

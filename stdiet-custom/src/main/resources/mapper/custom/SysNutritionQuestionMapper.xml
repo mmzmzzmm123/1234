@@ -24,7 +24,6 @@
         <result property="title"    column="title"    />
         <result property="content"    column="content"    />
         <result property="key"    column="key"    />
-        <result property="key"    column="key"    />
         <result property="showFlag"    column="show_flag"    />
         <result property="createTime"    column="create_time"    />
     </resultMap>
@@ -126,6 +125,12 @@
             #{id}
         </foreach>
     </update>
+
+    <!-- 随机获取指定数量的营养小知识 -->
+    <select id="getNutritionQuestionByRandom" resultMap="SysNutritionQuestionResultExtended">
+            SELECT * FROM sys_nutrition_question WHERE del_flag = 0 and show_flag = 1
+            and id >= ((SELECT MAX(id) FROM sys_nutrition_question )-(SELECT MIN(id) FROM sys_nutrition_question )) * RAND() + (SELECT MIN(id) FROM sys_nutrition_question ) LIMIT #{pageSize}
+    </select>
 
 
 
