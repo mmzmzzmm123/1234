@@ -33,6 +33,7 @@ import TextInfo from "@/components/TextInfo";
 import ACFCom from "@/components/HealthyView/ACFCom";
 import RemarkCom from "@/components/HealthyView/RemarkCom";
 import { editPhysicalSigns } from "@/api/custom/healthy";
+import { updateRecipesPlan } from "@/api/custom/recipesPlan";
 
 export default {
   name: "BodySignView",
@@ -119,6 +120,18 @@ export default {
   methods: {
     handleOnConfirm(data) {
       editPhysicalSigns({ id: this.data.id, ...data }).then((res) => {
+        if (res.code === 200) {
+          this.$message.success("修改成功");
+        }
+      });
+    },
+    handleOnRemarkConfirm(data) {
+      const { pathname } = window.location;
+      const recipesId = pathname.substring(pathname.lastIndexOf("/") + 1);
+      updateRecipesPlan({
+        id: recipesId,
+        ...data,
+      }).then((res) => {
         if (res.code === 200) {
           this.$message.success("修改成功");
         }

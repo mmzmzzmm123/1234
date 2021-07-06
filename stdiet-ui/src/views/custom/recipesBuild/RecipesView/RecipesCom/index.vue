@@ -100,7 +100,12 @@
           </el-popover>
         </template>
       </el-table-column>
-      <el-table-column label="菜品" prop="name" align="center">
+      <el-table-column
+        v-if="checkExport('菜品')"
+        label="菜品"
+        prop="name"
+        align="center"
+      >
         <template slot="header">
           <div class="pointer_style" @click="handleOnAdd">菜品</div>
         </template>
@@ -172,7 +177,12 @@
           </el-popover>
         </template>
       </el-table-column>
-      <el-table-column label="食材" prop="igdName" align="center">
+      <el-table-column
+        v-if="checkExport('食材')"
+        label="食材"
+        prop="igdName"
+        align="center"
+      >
         <template slot-scope="scope">
           <span
             v-if="
@@ -205,7 +215,12 @@
           </el-popover>
         </template>
       </el-table-column>
-      <el-table-column label="分量估算" :width="80" align="center">
+      <el-table-column
+        v-if="checkExport('分量估算')"
+        label="分量估算"
+        :width="80"
+        align="center"
+      >
         <template slot-scope="scope">
           <EditableUnit
             :weight="scope.row.cusWeight"
@@ -215,7 +230,13 @@
           />
         </template>
       </el-table-column>
-      <el-table-column label="重量(g)" prop="weight" :width="80" align="center">
+      <el-table-column
+        v-if="checkExport('重量(g)')"
+        label="重量(g)"
+        prop="weight"
+        :width="80"
+        align="center"
+      >
         <template slot-scope="scope">
           <EditableText
             :value="scope.row.weight"
@@ -229,7 +250,7 @@
         prop="proteinRatio"
         :width="60"
         align="center"
-        v-if="!preview"
+        v-if="!preview && checkExport('蛋白质/100g')"
       >
         <template slot="header">
           <div class="pointer_style">
@@ -243,7 +264,7 @@
         prop="fatRatio"
         :width="60"
         align="center"
-        v-if="!preview"
+        v-if="!preview && checkExport('脂肪/100g')"
       >
         <template slot="header">
           <div class="pointer_style">
@@ -257,7 +278,7 @@
         prop="carbonRatio"
         :width="60"
         align="center"
-        v-if="!preview"
+        v-if="!preview && checkExport('碳水/100g')"
       >
         <template slot="header">
           <div class="pointer_style">
@@ -272,7 +293,7 @@
         :width="60"
         align="center"
         :formatter="nutriFormatter"
-        v-if="!preview"
+        v-if="!preview && checkExport('蛋白质含量')"
       >
         <template slot="header">
           <div class="pointer_style">
@@ -287,7 +308,7 @@
         :width="60"
         align="center"
         :formatter="nutriFormatter"
-        v-if="!preview"
+        v-if="!preview && checkExport('脂肪含量')"
       >
         <template slot="header">
           <div class="pointer_style">
@@ -302,7 +323,7 @@
         :width="60"
         align="center"
         :formatter="nutriFormatter"
-        v-if="!preview"
+        v-if="!preview && checkExport('碳水含量')"
       >
         <template slot="header">
           <div class="pointer_style">
@@ -311,8 +332,16 @@
           </div>
         </template>
       </el-table-column>
-      <el-table-column label="做法" prop="methods" v-if="!preview" />
-      <el-table-column label="备注" prop="remark" v-if="!preview">
+      <el-table-column
+        label="做法"
+        prop="methods"
+        v-if="!preview && checkExport('做法')"
+      />
+      <el-table-column
+        label="备注"
+        prop="remark"
+        v-if="!preview && checkExport('备注')"
+      >
         <template slot-scope="scope">
           <div
             v-if="!scope.row.remark"
@@ -342,16 +371,10 @@
   </div>
 </template>
 <script>
-import {
-  getDishClassNameById 
-} from "@/api/custom/recipes";
+import { getDishClassNameById } from "@/api/custom/recipes";
 import { createNamespacedHelpers } from "vuex";
-const {
-  mapActions,
-  mapGetters,
-  mapState,
-  mapMutations,
-} = createNamespacedHelpers("recipes");
+const { mapActions, mapGetters, mapState, mapMutations } =
+  createNamespacedHelpers("recipes");
 
 import EditableText from "./EditableText";
 import EditableUnit from "./EditableUnit";
@@ -442,6 +465,7 @@ export default {
       "curShortCutObj",
       "healthyData",
       "templateInfo",
+      "exportCols",
     ]),
   },
   methods: {
@@ -522,9 +546,12 @@ export default {
       if (columnIndex === 0) {
         return row.typeSpan;
       } else if (
-        columnIndex === 1 ||
-        columnIndex === 11 ||
-        columnIndex === 12
+        column.label === "菜品" ||
+        column.label === "做法" ||
+        column.label === "备注"
+        // columnIndex === 1 ||
+        // columnIndex === 11 ||
+        // columnIndex === 12
       ) {
         return row.nameSpan;
       }
@@ -569,6 +596,13 @@ export default {
         .catch((err) => {
           this.$message.error(err);
         });
+    },
+    checkExport(colName) {
+      if (!this.exportCols) {
+        return true;
+      }
+
+      return this.exportCols.includes(colName);
     },
     // handleOnPaste(type) {
     //   // console.log(this.copyData);
@@ -712,7 +746,7 @@ export default {
       "setCopyData",
       "replaceMenu",
     ]),
-    ...mapMutations(["setCurrentDay", "resetCurrentDay"]),
+    ...mapMutations(["setCurrentDay", "resetCurrentDay", "setExportCols"]),
   },
 };
 </script>
