@@ -50,7 +50,8 @@ const oriState = {
   physicalSignsOptions: [],
   //
   curShortCutObj: {},
-  recipesPlanRemark: ""
+  recipesPlanRemark: "",
+  exportCols: undefined
 };
 
 const mutations = {
@@ -125,6 +126,9 @@ const mutations = {
   },
   setCurShortCutObj(state, payload) {
     state.curShortCutObj = payload.data;
+  },
+  setExportCols(state, payload) {
+    state.exportCols = payload.exportCols;
   },
   setDate(state, payload) {
     state.startDate = payload.startDate;

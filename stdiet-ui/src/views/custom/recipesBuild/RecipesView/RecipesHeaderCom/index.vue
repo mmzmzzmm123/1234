@@ -98,20 +98,23 @@
     </div>
     <!-- 模板 -->
     <TemplateDialog ref="templateRef" @onConfirm="handleOnCopy" />
+    <!-- 导出对话框 -->
+    <ExportDialog ref="exportDialogRef" @onConfirm="handleOnExportImg" />
   </div>
 </template>
 <script>
 import { addRecipesTemplate } from "@/api/custom/recipesTemplate";
 import { createNamespacedHelpers } from "vuex";
-const { mapActions, mapState, mapMutations } = createNamespacedHelpers(
-  "recipes"
-);
+const { mapActions, mapState, mapMutations } =
+  createNamespacedHelpers("recipes");
 import TemplateDialog from "@/components/TemplateDialog";
 import html2canvans from "html2canvas";
+import ExportDialog from "./ExportDialog";
 export default {
   name: "RecipesHeaderCom",
   components: {
     TemplateDialog,
+    ExportDialog,
   },
   data() {
     return {
@@ -218,16 +221,23 @@ export default {
     },
     handleOnExportStartNumConfig() {
       this.oriStartNum = this.recipesData[0].numDay;
-      this.$prompt("食谱开始天数", "导出图片", {
-        confirmButtonText: "确定",
-        inputValue: this.oriStartNum,
-        inputPattern: /^[1-9]\d*$/,
-        inputErrorMessage: "请输入正整数",
-      }).then(({ value }) => {
-        this.handleOnExportImg(parseInt(value));
+      // this.$prompt("食谱开始天数", "导出图片", {
+      //   confirmButtonText: "确定",
+      //   inputValue: this.oriStartNum,
+      //   inputPattern: /^[1-9]\d*$/,
+      //   inputErrorMessage: "请输入正整数",
+      // }).then(({ value }) => {
+      //   this.handleOnExportImg(parseInt(value));
+      // });
+      this.$refs.exportDialogRef.showDialog({
+        num: this.oriStartNum,
       });
     },
-    handleOnExportImg(startNum) {
+    handleOnExportImg({ startNum, exportCols }) {
+      // 更新导出列
+      this.setExportCols({ exportCols });
+      this.$message.warning("食谱导出中，请勿操作界面...");
+      //
       this.downloading = true;
       this.$nextTick(() => {
         const centerContentDom = document.getElementById("center_content");
@@ -256,6 +266,7 @@ export default {
           scale: 1.5,
           height: recipesDom.scrollHeight,
         }).then((canvas) => {
+          // 还原
           const { name } = this.healthyData;
           // const startNum = this.recipesData[0].numDay;
           // const endNum = this.recipesData[this.recipesData.length - 1].numDay;
@@ -279,13 +290,20 @@ export default {
             }
           });
 
+          this.setExportCols({ exportCols: undefined });
+
           this.downloading = false;
           this.$message.success("食谱导出成功");
         });
       });
     },
     ...mapActions(["saveRecipes", "updateReviewStatus"]),
-    ...mapMutations(["updateStateData", "updateFontSize", "toggleLeftShow"]),
+    ...mapMutations([
+      "updateStateData",
+      "updateFontSize",
+      "toggleLeftShow",
+      "setExportCols",
+    ]),
   },
 };
 </script>
