@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.stdiet.custom.mapper.SysPreSaleSurveyMapper">
+
+    <resultMap type="SysPreSaleSurvey" id="SysPreSaleSurveyResult">
+        <result property="id"    column="id"    />
+        <result property="customerKey"    column="customer_key"    />
+        <result property="name"    column="name"    />
+        <result property="tall"    column="tall"    />
+        <result property="weight"    column="weight"    />
+        <result property="age"    column="age"    />
+        <result property="sex"    column="sex"    />
+        <result property="phone"    column="phone"    />
+        <result property="physicalSignsId"    column="physical_signs_id"    />
+        <result property="otherPhysicalSigns"    column="other_physical_signs"    />
+        <result property="timeTable"    column="time_table"    />
+        <result property="experience"    column="experience"    />
+        <result property="occupation"    column="occupation"    />
+        <result property="bloodData"    column="blood_data"    />
+        <result property="moistureData"    column="moisture_data"    />
+        <result property="preSaleId"    column="pre_sale_id"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="delFlag"    column="del_flag"    />
+    </resultMap>
+
+    <sql id="selectSysPreSaleSurveyVo">
+        select id, customer_key, name, tall, weight, age, sex, phone, physical_signs_id, other_physical_signs, time_table, experience, occupation, blood_data, moisture_data, pre_sale_id, create_time, update_time, create_by, update_by, del_flag from sys_pre_sale_survey
+    </sql>
+
+    <select id="selectSysPreSaleSurveyList" parameterType="SysPreSaleSurvey" resultMap="SysPreSaleSurveyResult">
+        <include refid="selectSysPreSaleSurveyVo"/> where del_flag = 0
+        <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
+    </select>
+
+    <select id="selectSysPreSaleSurveyById" parameterType="Long" resultMap="SysPreSaleSurveyResult">
+        <include refid="selectSysPreSaleSurveyVo"/>
+        where id = #{id} and del_flag = 0
+    </select>
+
+    <insert id="insertSysPreSaleSurvey" parameterType="SysPreSaleSurvey" useGeneratedKeys="true" keyProperty="id">
+        insert into sys_pre_sale_survey
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="customerKey != null and customerKey != ''">customer_key,</if>
+            <if test="name != null">name,</if>
+            <if test="tall != null">tall,</if>
+            <if test="weight != null">weight,</if>
+            <if test="age != null">age,</if>
+            <if test="sex != null">sex,</if>
+            <if test="phone != null">phone,</if>
+            <if test="physicalSignsId != null">physical_signs_id,</if>
+            <if test="otherPhysicalSigns != null">other_physical_signs,</if>
+            <if test="timeTable != null">time_table,</if>
+            <if test="experience != null">experience,</if>
+            <if test="occupation != null">occupation,</if>
+            <if test="bloodData != null">blood_data,</if>
+            <if test="moistureData != null">moisture_data,</if>
+            <if test="preSaleId != null">pre_sale_id,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="delFlag != null">del_flag,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="customerKey != null and customerKey != ''">#{customerKey},</if>
+            <if test="name != null">#{name},</if>
+            <if test="tall != null">#{tall},</if>
+            <if test="weight != null">#{weight},</if>
+            <if test="age != null">#{age},</if>
+            <if test="sex != null">#{sex},</if>
+            <if test="phone != null">#{phone},</if>
+            <if test="physicalSignsId != null">#{physicalSignsId},</if>
+            <if test="otherPhysicalSigns != null">#{otherPhysicalSigns},</if>
+            <if test="timeTable != null">#{timeTable},</if>
+            <if test="experience != null">#{experience},</if>
+            <if test="occupation != null">#{occupation},</if>
+            <if test="bloodData != null">#{bloodData},</if>
+            <if test="moistureData != null">#{moistureData},</if>
+            <if test="preSaleId != null">#{preSaleId},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="delFlag != null">#{delFlag},</if>
+        </trim>
+    </insert>
+
+    <update id="updateSysPreSaleSurvey" parameterType="SysPreSaleSurvey">
+        update sys_pre_sale_survey
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="customerKey != null and customerKey != ''">customer_key = #{customerKey},</if>
+            <if test="name != null">name = #{name},</if>
+            <if test="tall != null">tall = #{tall},</if>
+            <if test="weight != null">weight = #{weight},</if>
+            <if test="age != null">age = #{age},</if>
+            <if test="sex != null">sex = #{sex},</if>
+            <if test="phone != null">phone = #{phone},</if>
+            <if test="physicalSignsId != null">physical_signs_id = #{physicalSignsId},</if>
+            <if test="otherPhysicalSigns != null">other_physical_signs = #{otherPhysicalSigns},</if>
+            <if test="timeTable != null">time_table = #{timeTable},</if>
+            <if test="experience != null">experience = #{experience},</if>
+            <if test="occupation != null">occupation = #{occupation},</if>
+            <if test="bloodData != null">blood_data = #{bloodData},</if>
+            <if test="moistureData != null">moisture_date = #{moistureData},</if>
+            <if test="preSaleId != null">pre_sale_id = #{preSaleId},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="delFlag != null">del_flag = #{delFlag},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <update id="deleteSysPreSaleSurveyById" parameterType="Long">
+       update sys_pre_sale_survey set del_flag = 1 where id = #{id}
+    </update>
+
+    <update id="deleteSysPreSaleSurveyByIds" parameterType="String">
+        update sys_pre_sale_survey set del_flag = 1 where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </update>
+
+    <!-- 根据客户唯一标识查询客户问卷是否已存在 -->
+    <select id="getSysPreSaleSurveyByKey" parameterType="String" resultMap="SysPreSaleSurveyResult">
+        <include refid="selectSysPreSaleSurveyVo"/>
+        where del_flag = 0 and customer_key = #{customerKey} limit 1
+    </select>
+
+</mapper>
