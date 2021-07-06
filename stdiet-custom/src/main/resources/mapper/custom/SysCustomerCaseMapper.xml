@@ -154,4 +154,10 @@
         </foreach>
     </update>
 
+    <!-- 随机获取指定数量可展示的客户案例 -->
+    <select id="getWxCustomerCaseByRandom" parameterType="int" resultMap="SysCustomerCaseResponseResult">
+        SELECT id, name, keyword, remark, wx_show from sys_customer_case WHERE del_flag = 0 and wx_show = 1
+        and id >= ((SELECT MAX(id) FROM sys_customer_case )-(SELECT MIN(id) FROM sys_customer_case )) * RAND() + (SELECT MIN(id) FROM sys_customer_case) LIMIT #{pageSize}
+    </select>
+
 </mapper>

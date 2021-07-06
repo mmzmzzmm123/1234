@@ -326,4 +326,14 @@ public class SysNutritionQuestionServiceImpl implements ISysNutritionQuestionSer
         }
         return 0;
     }
+
+    /**
+     * 随机获取指定数量的营养小知识
+     * @param sysNutritionQuestion
+     * @param pageSize
+     * @return
+     */
+    public List<NutritionQuestionResponse> getNutritionQuestionByRandom(SysNutritionQuestion sysNutritionQuestion, Integer pageSize){
+        return sysNutritionQuestionMapper.getNutritionQuestionByRandom(sysNutritionQuestion, pageSize);
+    }
 }
