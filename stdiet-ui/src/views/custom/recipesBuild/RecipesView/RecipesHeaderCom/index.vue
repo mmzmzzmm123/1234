@@ -221,14 +221,6 @@ export default {
     },
     handleOnExportStartNumConfig() {
       this.oriStartNum = this.recipesData[0].numDay;
-      // this.$prompt("食谱开始天数", "导出图片", {
-      //   confirmButtonText: "确定",
-      //   inputValue: this.oriStartNum,
-      //   inputPattern: /^[1-9]\d*$/,
-      //   inputErrorMessage: "请输入正整数",
-      // }).then(({ value }) => {
-      //   this.handleOnExportImg(parseInt(value));
-      // });
       this.$refs.exportDialogRef.showDialog({
         num: this.oriStartNum,
       });
@@ -239,18 +231,20 @@ export default {
       this.$message.warning("食谱导出中，请勿操作界面...");
       //
       this.downloading = true;
-      this.$nextTick(() => {
-        const centerContentDom = document.getElementById("center_content");
-        if (!centerContentDom) {
-          this.downloading = false;
-          return;
-        }
-        centerContentDom.style.overflow = "visible";
-        const recipesDom = document.getElementById("recipes_content");
-        if (!recipesDom) {
-          this.downloading = false;
-          return;
-        }
+      const centerContentDom = document.getElementById("center_content");
+      if (!centerContentDom) {
+        this.downloading = false;
+        return;
+      }
+      centerContentDom.style.overflow = "visible";
+      const recipesDom = document.getElementById("recipes_content");
+      if (!recipesDom) {
+        this.downloading = false;
+        return;
+      }
+      recipesDom.style.overflow = "visible";
+      recipesDom.style.width = this.getRecipesDomWidth(exportCols);
+      setTimeout(() => {
         Array.from({ length: this.recipesData.length }).forEach((_, idx) => {
           const tmpElm = document.getElementById(`cus_name_${idx}`);
           if (tmpElm) {
@@ -261,7 +255,7 @@ export default {
             tmpNum.innerText = `第${startNum + idx}天`;
           }
         });
-        recipesDom.style.overflow = "visible";
+
         html2canvans(recipesDom, {
           scale: 1.5,
           height: recipesDom.scrollHeight,
@@ -278,6 +272,7 @@ export default {
 
           centerContentDom.style.overflow = "auto";
           recipesDom.style.overflow = "auto";
+          recipesDom.style.width = "unset";
 
           Array.from({ length: this.recipesData.length }).forEach((_, idx) => {
             const tmpElm = document.getElementById(`cus_name_${idx}`);
@@ -295,7 +290,26 @@ export default {
           this.downloading = false;
           this.$message.success("食谱导出成功");
         });
+      }, 500);
+    },
+    getRecipesDomWidth(cols) {
+      let width = 80;
+      cols.forEach((col) => {
+        if (
+          col === "菜品" ||
+          col === "食材" ||
+          col === "做法" ||
+          col === "备注"
+        ) {
+          width += 220;
+        } else if (col === "分量估算" || col === "重量(g)") {
+          width += 80;
+        } else {
+          width += 60;
+        }
       });
+
+      return `${width}px`;
     },
     ...mapActions(["saveRecipes", "updateReviewStatus"]),
     ...mapMutations([
