@@ -39,9 +39,8 @@
       ></el-input>
     </el-form-item>
     <el-form-item label="8、病史体征(可多选)" prop="physicalSignsIdArray" >
-      <el-select v-model="form.physicalSignsIdArray" multiple placeholder="请选择">
-        <el-option
-            :disabled="submitFlag"
+      <el-select v-model="form.physicalSignsIdArray" multiple placeholder="请选择" :disabled="submitFlag">
+        <el-option 
           v-for="physicalSign in physicalSignsList"
           :key="physicalSign.id"
           :label="physicalSign.name"
@@ -51,7 +50,7 @@
       </el-select>
       <div><span class="text-span">其他病史体征</span>
         <el-input type="textarea"
-                :disabled="submitFlag"
+                  :disabled="submitFlag"
                   placeholder="请输入病史体征"
                   v-model="form.otherPhysicalSigns"
                   maxlength="200"
@@ -217,19 +216,30 @@ export default {
         this.form.timeTable = this.form.timeTableArray.join(",");
         this.form.bloodData = this.form.bloodDataArray.join(",");
         this.form.moistureData = this.form.moistureDataArray.join(",");
-        addCustomerSurvey(this.form).then((response) => {
-            if(response.code == 200){
-                 this.$notify({
-                    title: "提交成功",
-                    message: "",
-                    type: "success",
-                });
-                this.goTop();
-                this.submitFlag = true;
-            }else{
-                this.submitFlag = false;
-            }         
-        });
+        this.$refs.form.validate((valid) => {
+          if (valid){
+              addCustomerSurvey(this.form).then((response) => {
+                if(response.code == 200){
+                    this.$notify({
+                        title: "提交成功",
+                        message: "",
+                        type: "success",
+                    });
+                    this.goTop();
+                    this.submitFlag = true;
+                }else{
+                    this.submitFlag = false;
+                }         
+              });
+          }else{
+            this.$message({
+              message: "数据未填写完整",
+              type: "warning",
+            });
+            this.submitFlag = false;
+          }
+        })
+        
     },
     goTop() {
       window.scroll(0, 0);
