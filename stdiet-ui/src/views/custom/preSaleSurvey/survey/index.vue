@@ -11,35 +11,48 @@
       label-width="100px"
       style="padding: 16px"
     >
-    <p class="p_title_1 text-span-title" style="margin-top: 0px;" align="center">胜唐体控基础问卷表</p>
+    <p class="p_title_1 text-span-title" style="margin-top: 0px;" align="center">胜唐体控基础信息问卷表</p>
     <!--<p style="font-size: 15px; margin-bottom: 12px;margin-top: 10px;">请您确保下方姓名、手机号正确</p>-->
     <el-form-item label="1、真实姓名" prop="name" style="margin-top: 2px;">
-      <el-input v-model="form.name" placeholder="请输入真实姓名" maxlength="20" :disabled="submitFlag"/>
+      <el-input v-model="form.name" placeholder="请输入真实姓名" maxlength="20" :readonly="submitFlag"/>
     </el-form-item>
     <el-form-item label="2、手机号" prop="phone" >
-      <el-input v-model="form.phone" type="number" placeholder="请输入手机号" :disabled="submitFlag"/>
+      <el-input v-model="form.phone" type="number" placeholder="请输入手机号" :readonly="submitFlag"/>
     </el-form-item>
     <el-form-item label="3、性别" prop="sex">
-      <el-radio-group v-model="form.sex" size="small" :disabled="submitFlag">
+      <el-radio-group v-if="submitFlag" size="small" :value="form.sex">
+        <el-radio :label="parseInt('0')"  border>男</el-radio>
+        <el-radio :label="parseInt('1')" border>女</el-radio>
+      </el-radio-group>
+      <el-radio-group  v-else v-model="form.sex" size="small">
         <el-radio :label="parseInt('0')"  border>男</el-radio>
         <el-radio :label="parseInt('1')" border>女</el-radio>
       </el-radio-group>
     </el-form-item>
     <el-form-item label="4、年龄" prop="age" >
-      <el-input type="number" v-model="form.age" placeholder="请输入年龄（整数）" :disabled="submitFlag" autocomplete="off" ></el-input>
+      <el-input type="number" v-model="form.age" placeholder="请输入年龄（整数）" :readonly="submitFlag" autocomplete="off" ></el-input>
     </el-form-item>
     <el-form-item label="5、身高（厘米）" prop="tall" >
-      <el-input type="number" v-model="form.tall" placeholder="请输入身高（整数）" :disabled="submitFlag" autocomplete="off" ></el-input>
+      <el-input type="number" v-model="form.tall" placeholder="请输入身高（整数）" :readonly="submitFlag" autocomplete="off" ></el-input>
     </el-form-item>
     <el-form-item label="6、体重（斤）" prop="weight" >
-      <el-input v-model="form.weight" placeholder="请输入体重（可保留一位小数）" :disabled="submitFlag" autocomplete="off"></el-input>
+      <el-input v-model="form.weight" placeholder="请输入体重（可保留一位小数）" :readonly="submitFlag" autocomplete="off"></el-input>
     </el-form-item>
     <el-form-item label="7、职业" prop="occupation">
-      <el-input placeholder="请输入职业名称" :disabled="submitFlag" v-model="form.occupation" maxlength="50"
+      <el-input placeholder="请输入职业名称" :readonly="submitFlag" v-model="form.occupation" maxlength="50"
       ></el-input>
     </el-form-item>
     <el-form-item label="8、病史体征(可多选)" prop="physicalSignsIdArray" >
-      <el-select v-model="form.physicalSignsIdArray" multiple placeholder="请选择" :disabled="submitFlag">
+      <el-select v-if="submitFlag" :value="form.physicalSignsIdArray" multiple placeholder="请选择">
+        <el-option 
+          v-for="physicalSign in physicalSignsList"
+          :key="physicalSign.id"
+          :label="physicalSign.name"
+          :value="physicalSign.id+''"
+        >
+        </el-option>
+      </el-select>
+      <el-select v-else v-model="form.physicalSignsIdArray" multiple placeholder="请选择">
         <el-option 
           v-for="physicalSign in physicalSignsList"
           :key="physicalSign.id"
@@ -50,7 +63,7 @@
       </el-select>
       <div><span class="text-span">其他病史体征</span>
         <el-input type="textarea"
-                  :disabled="submitFlag"
+                  :readonly="submitFlag"
                   placeholder="请输入病史体征"
                   v-model="form.otherPhysicalSigns"
                   maxlength="200"
@@ -62,16 +75,16 @@
     <el-form-item label="9、作息时间" >
         <div class="margin-left">
             <span class="text-span">睡觉时间</span>
-            <el-input placeholder="请输入睡觉时间" maxlength="20" :disabled="submitFlag" v-model="form.timeTableArray[0]" style="width:60%;margin-left:10px"/>
+            <el-input placeholder="请输入睡觉时间" maxlength="20" :readonly="submitFlag" v-model="form.timeTableArray[0]" style="width:60%;margin-left:10px"/>
         </div>          
         <div class="margin-left" style="margin-top:8px;">
             <span class="text-span">起床时间</span>
-            <el-input placeholder="请输入起床时间" maxlength="20" :disabled="submitFlag" v-model="form.timeTableArray[1]" style="width:60%;margin-left:10px"/>
+            <el-input placeholder="请输入起床时间" maxlength="20" :readonly="submitFlag" v-model="form.timeTableArray[1]" style="width:60%;margin-left:10px"/>
         </div>
     </el-form-item>
     <el-form-item label="10、减脂经历" prop="experience" >
       <el-input
-        :disabled="submitFlag"
+        :readonly="submitFlag"
         type="textarea"
         placeholder="请描述下减脂经历"
         v-model="form.experience"
@@ -81,12 +94,18 @@
       ></el-input>
     </el-form-item>
     <el-form-item label="11、湿气测试（可多选）" prop="moistureDataArray" >
-      <el-checkbox-group v-model="form.moistureDataArray" :disabled="submitFlag">
+      <el-checkbox-group v-if="submitFlag" :value="form.moistureDataArray" >
+        <el-checkbox v-for="moistureItem in moistureDataList" :label="moistureItem.dictValue" :key="moistureItem.dictValue">{{ moistureItem.dictLabel }}</el-checkbox>
+      </el-checkbox-group>
+      <el-checkbox-group v-else v-model="form.moistureDataArray" >
         <el-checkbox v-for="moistureItem in moistureDataList" :label="moistureItem.dictValue" :key="moistureItem.dictValue">{{ moistureItem.dictLabel }}</el-checkbox>
       </el-checkbox-group>
     </el-form-item>
     <el-form-item label="12、气血测试（可多选）" prop="bloodDataArray" >
-      <el-checkbox-group v-model="form.bloodDataArray" :disabled="submitFlag">
+      <el-checkbox-group v-if="submitFlag" :value="form.bloodDataArray">
+        <el-checkbox v-for="bloodItem in bloodDataList" :label="bloodItem.dictValue" :key="bloodItem.dictValue">{{ bloodItem.dictLabel }}</el-checkbox>
+      </el-checkbox-group>
+      <el-checkbox-group v-else v-model="form.bloodDataArray" >
         <el-checkbox v-for="bloodItem in bloodDataList" :label="bloodItem.dictValue" :key="bloodItem.dictValue">{{ bloodItem.dictLabel }}</el-checkbox>
       </el-checkbox-group>
     </el-form-item>
