@@ -23,6 +23,7 @@ import com.ruoyi.framework.web.controller.BaseController;
 import com.ruoyi.framework.web.domain.AjaxResult;
 import com.ruoyi.common.utils.poi.ExcelUtil;
 import com.ruoyi.framework.web.page.TableDataInfo;
+import sun.lwawt.macosx.CSystemTray;
 
 /**
  * 幼儿园一日流程评估Controller
@@ -135,8 +136,12 @@ public class ByDayflowassessmentController extends BaseController {
                 //获取总得分
                 Double dTotal=GetDf(byDayflowassessment.getList());
                 byDayflowassessment.setZzdf(dTotal);
+                if(byClass.getZbjs()==null){
+                    return AjaxResult.error("未设置班级主班教师，请学校管理员设置班级信息");
+                }
+                System.out.println(byClass.getZbjs().longValue() == pgdx.longValue());
                 //如果评估对象非主班教师，那么对主班教师产生相同的扣分项
-                if (byClass.getZbjs() == pgdx) {
+                if (byClass.getZbjs().longValue() == pgdx.longValue()) {
                     int iRows = addDayFlowAssessment(byDayflowassessment);
                     return toAjax(iRows);
                 } else {
@@ -177,7 +182,7 @@ public class ByDayflowassessmentController extends BaseController {
             //获取班级信息
             String classId = byDayflowassessmentModel.getClassid();
             ByClass byClass = byClassService.selectByClassById(classId);
-            if (byClass.getZbjs() == pgdx) {
+            if (byClass.getZbjs().longValue() == pgdx.longValue()) {
                 //首先清除item
                 byDayflowassessmentitemService.deleteByDayflowassessmentitemByPid(byDayflowassessmentModel.getId());
                 int iRows = addDayFlowAssessment(byDayflowassessmentModel);
