@@ -24,15 +24,6 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="所在部门" prop="deptId">
-        <el-input
-          v-model="queryParams.deptId"
-          placeholder="请输入所在部门"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
       <el-form-item label="考核月份" prop="month">
         <el-input
           v-model="queryParams.month"
@@ -42,60 +33,7 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="一日流程比例" prop="yrlcbl">
-        <el-input
-          v-model="queryParams.yrlcbl"
-          placeholder="请输入一日流程比例"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="教师考勤比例" prop="jskqbl">
-        <el-input
-          v-model="queryParams.jskqbl"
-          placeholder="请输入教师考勤比例"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="幼儿考勤比例" prop="yekqbl">
-        <el-input
-          v-model="queryParams.yekqbl"
-          placeholder="请输入幼儿考勤比例"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="事故比例" prop="sgbl">
-        <el-input
-          v-model="queryParams.sgbl"
-          placeholder="请输入事故比例"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="卫生比例" prop="wsbl">
-        <el-input
-          v-model="queryParams.wsbl"
-          placeholder="请输入卫生比例"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="总分" prop="zfbl">
-        <el-input
-          v-model="queryParams.zfbl"
-          placeholder="请输入总分"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
+
       <el-form-item>
         <el-button
           type="primary"
