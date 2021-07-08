@@ -83,6 +83,8 @@ public class WechatAppletController extends BaseController {
                                   @RequestParam(value="randomFlag",required = false,defaultValue = "false") boolean randomFlag) {
         if(randomFlag){
             List<CustomerCaseResponse> reponseList = sysCustomerCaseService.getWxCustomerCaseByRandom(pageSize);
+            //处理ID加密
+            dealIdEnc(reponseList);
             TableDataInfo rspData = new TableDataInfo();
             rspData.setCode(HttpStatus.SUCCESS);
             rspData.setMsg("查询成功");
@@ -305,8 +307,10 @@ public class WechatAppletController extends BaseController {
      * @return
      */
     private void dealIdEnc(List<CustomerCaseResponse> list) {
-        for (CustomerCaseResponse cus : list) {
-            cus.setId(AesUtils.encrypt(cus.getId() + "", null));
+        if(list != null){
+            for (CustomerCaseResponse cus : list) {
+                cus.setId(AesUtils.encrypt(cus.getId() + "", null));
+            }
         }
     }
 
