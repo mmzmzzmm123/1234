@@ -138,6 +138,29 @@ public class AliyunVideoUtils {
     }
 
     /**
+     * 根据视频ID获取对应播放凭证
+     * @param videoId
+     * @return
+     * @throws Exception
+     */
+    public  static String getVideoPlayAuth(String videoId) throws Exception{
+        com.aliyun.vod20170321.Client client = AliyunVideoUtils.createClient();
+        GetVideoPlayAuthRequest getVideoPlayAuthRequest = new GetVideoPlayAuthRequest()
+                .setVideoId(videoId);
+        GetVideoPlayAuthResponse response = client.getVideoPlayAuth(getVideoPlayAuthRequest);
+        if(response != null){
+            GetVideoPlayAuthResponseBody body = response.body;
+            if(body != null && StringUtils.isNotEmpty(body.playAuth)){
+                return body.playAuth;
+            }
+        }
+        return null;
+    }
+
+
+
+
+    /**
      *
      * @param key
      * @param status

@@ -96,5 +96,14 @@ export function getVideoSnapshot(id) {
   })
 }
 
+// 查询营养视频播放凭证
+export function getVideoPlayAuth(id) {
+  return request({
+    url: '/custom/nutritionalVideo/getVideoPlayAuth/' + id,
+    method: 'get'
+  })
+}
+
+
 
 
