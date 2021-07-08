@@ -154,42 +154,6 @@
       @pagination="getList"
     />
 
-    <!-- 添加或修改见习导师分配对话框 -->
-    <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
-      <el-form ref="form" :model="form" :rules="rules" label-width="80px">
-        <el-form-item label="见习之星" prop="jxjsid">
-          <el-select
-            v-model="form.jxjsid"
-            placeholder="请选择见习之星"
-            filterable
-            size="small"
-            :disabled="true"
-          >
-            <el-option
-              v-for="dict in jxjsOptions"
-              :key="dict.id"
-              :label="dict.name"
-              :value="dict.id"
-            />
-          </el-select>
-        </el-form-item>
-        <el-form-item label="见习导师" prop="dsid" placeholder="请选择见习之星">
-          <el-radio-group v-model="form.dsid">
-            <el-radio
-              v-for="dict in dsjbxxList"
-              :key="dict.id"
-              :label="dict.id"
-              >{{ dict.jsxm + "(名下学生" + dict.dsxscount + "人)" }}</el-radio
-            >
-          </el-radio-group>
-        </el-form-item>
-      </el-form>
-      <div slot="footer" class="dialog-footer">
-        <!-- <el-button type="primary" @click="submitForm">确 定</el-button> -->
-        <el-button @click="cancel">取 消</el-button>
-      </div>
-    </el-dialog>
-
     <!-- 分配老师对话框 -->
     <el-dialog
       title="分配导师"
@@ -262,12 +226,7 @@
         @selection-change="handleSelectionChangeDsfp"
       >
         <el-table-column type="selection" width="55" align="center" />
-        <el-table-column
-          label="导师姓名"
-          align="center"
-          prop="jsxm"
-          :formatter="dsFormatNew"
-        />
+        <el-table-column label="导师姓名" align="center" prop="jsxm" />
         <el-table-column
           label="任教学段"
           align="center"
@@ -361,13 +320,6 @@ export default {
       },
       // 表单参数
       form: {},
-      // 表单校验
-      rules: {
-        jxjsid: [
-          { required: true, message: "见习教师不能为空", trigger: "blur" },
-        ],
-        dsid: [{ required: true, message: "导师不能为空", trigger: "blur" }],
-      },
     };
   },
   created() {
@@ -505,19 +457,14 @@ export default {
       this.dsidChose = selection.map((item) => item.id);
       // console.log(this.dsidChose[0]);
     },
-    /** 新增按钮操作 */
-    handleAdd() {
-      this.reset();
-      this.open = true;
-      this.title = "添加见习教师导师分配";
-    },
     /** 分配教师提交按钮 */
     submitForm_dsfp() {
       if (this.dsidChose == null || this.dsidChose == "") {
-        this.msgError("请选择要分配的教师");
+        this.msgError("请选择导师");
       } else if (this.dsidChose.length > 1) {
         this.msgError("只能选择一名导师");
       } else {
+        //console.log(this.form);
         this.form.dsid = this.dsidChose[0];
         if (this.form.id != null) {
           updateJxjsdsfp(this.form).then((response) => {
@@ -540,8 +487,9 @@ export default {
     },
     /** 分配按钮操作 */
     handleUpdate(row) {
+      this.reset();
       // 给请求导师的query赋值
-      console.log(row.rjxk);
+      //console.log(row.rjxk);
       if (row.rjxk == null) {
         this.msgError("当前学段学科没有相匹配的导师");
         return;
@@ -563,13 +511,11 @@ export default {
               this.getDsList();
               this.form.jxjsid = row.jxjsid;
               this.open_dsfp = true;
-              this.title = "添加见习教师导师分配";
             } else {
               getJxjsdsfp(id).then((response) => {
                 this.getDsList();
                 this.form = response.data;
                 this.open_dsfp = true;
-                this.title = "修改见习教师导师分配";
               });
             }
           }

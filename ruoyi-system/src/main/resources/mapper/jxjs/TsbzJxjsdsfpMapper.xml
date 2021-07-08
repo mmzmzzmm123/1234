@@ -77,7 +77,7 @@ left join tsbz_jxjsdsfp a on a.jxjsid=b.id
     
     <select id="selectTsbzJxjsdsfpById" parameterType="Long" resultMap="TsbzJxjsdsfpResult">
         <include refid="selectTsbzJxjsdsfpVo"/>
-        where id = #{id}
+        where a.id = #{id}
     </select>
         
     <insert id="insertTsbzJxjsdsfp" parameterType="TsbzJxjsdsfp" useGeneratedKeys="true" keyProperty="id">
