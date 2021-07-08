@@ -823,12 +823,12 @@ export function dealHealthy(customerHealthy) {
   return customerHealthy;
 }
 
-export const extendHealthyTitle = {"0":"减脂","5":"降血压","6":"降血糖","3": "备孕营养", "1": "月经不调", "2": "多囊调理", "11":"心脑血管调理","13":"胃肠肿瘤调理","4":"产后调理","7":"高血脂"};
-export const projectName = {"0":"减脂","5":"高血压","6":"高血糖","3": "备孕营养", "1":"月经不调", "2":"多囊卵巢综合症", "13":"胃肠肿瘤","4":"产后调理","7":"高血脂"};
+export const extendHealthyTitle = {"0":"减脂","5":"降血压","6":"降血糖","3": "备孕营养", "1": "月经不调", "2": "多囊调理", "11":"心脑血管调理","13":"胃肠肿瘤调理","4":"产后调理","7":"高血脂","10":"消化系统管理"};
+export const projectName = {"0":"减脂","5":"高血压","6":"高血糖","3": "备孕营养", "1":"月经不调", "2":"多囊卵巢综合症", "13":"胃肠肿瘤","4":"产后调理","7":"高血脂","10":"消化系统管理"};
 //需要填写慢病调查问卷的项目
 export const extendHealthyIndex = [5, 6, 1, 2, 13,4,7];
 //跳过减脂经历问卷的项目
-export const notExperienceIndex = [3,1,2,13,4,7];
+export const notExperienceIndex = [3,1,2,13,4,7,10];
 
 export function getTitleKey(projectId){
     return extendHealthyTitle[projectId+""] != null ? extendHealthyTitle[projectId+""] : extendHealthyTitle["0"];
