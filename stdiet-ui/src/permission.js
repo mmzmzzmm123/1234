@@ -64,7 +64,8 @@ router.beforeEach((to, from, next) => {
       to.path.startsWith("/f/contract/") ||
       to.path.startsWith("/recipes/detail/") ||
       to.path.startsWith("/subhealthyInvestigation/") ||
-      to.path.startsWith("/foodHeatCalculator/")
+      to.path.startsWith("/foodHeatCalculator/") ||
+      to.path.startsWith("/preSaleSurvey/")
     ) {
       // 在免登录白名单，直接进入
       next();

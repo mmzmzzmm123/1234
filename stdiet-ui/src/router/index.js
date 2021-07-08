@@ -179,7 +179,14 @@ export const constantRoutes = [
       require(["@/views/custom/foodHeatStatistics/investigate"], resolve),
     hidden: true,
     meta: { title: "外食计算器" }
-  }
+  },
+  {
+    path: "/preSaleSurvey/:customerKey",
+    component: resolve =>
+      require(["@/views/custom/preSaleSurvey/survey"], resolve),
+    hidden: true,
+    meta: { title: "胜唐体控基础问卷表" }
+  },
 ];
 
 export default new Router({

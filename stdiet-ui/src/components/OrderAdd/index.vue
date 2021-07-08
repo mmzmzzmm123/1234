@@ -275,6 +275,14 @@
             </el-date-picker>
           </el-form-item>
         </el-col>
+        <el-col :span="8">
+          <el-form-item label="食谱是否连续" prop="recipesPlanContinue">
+            <el-select v-model="form.recipesPlanContinue" placeholder="请选择食谱连续状态">
+              <el-option label="是" :value="parseInt('1')"></el-option>
+              <el-option label="否" :value="parseInt('0')"></el-option>
+            </el-select>
+          </el-form-item>
+        </el-col>
         <el-col :span="10">
           <el-form-item label="服务开始时间" prop="startTime" label-width="180">
             <el-date-picker
@@ -288,6 +296,7 @@
             </el-date-picker>
           </el-form-item>
         </el-col>
+        
         <!-- 添加时默认未审核，不能改 -->
         <el-col :span="10" v-hasPermi="['custom:order:review']" v-show="false">
           <el-form-item label="审核状态" prop="reviewStatus">
@@ -724,6 +733,7 @@ export default {
         payTypeId: defaultPayType ? parseInt(defaultPayType.dictValue) : null,
         preSaleId: defaultPresale ? parseInt(defaultPresale.dictValue) : null,
         pushPreSaleId: null,
+        recipesPlanContinue: 1,
         createBy: null,
         createTime: null,
         onSaleId: null,

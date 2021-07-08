@@ -679,7 +679,8 @@ export default {
         (detailHealthy.tall / 100)
       ).toFixed(1);
 
-      this.detailHealthy = healthyData.dealHealthyExtend(detailHealthy);
+      healthyData.dealHealthyExtend(detailHealthy);
+      this.detailHealthy = detailHealthy;
       for (let i = 0; i < this.healthyTitleData.length; i++) {
         let stepArray = [];
         for (let j = 0; j < this.healthyTitleData[i].length; j++) {
@@ -750,6 +751,7 @@ export default {
     },
     generateReport() {
       let data = this.detailHealthy;
+      console.log(this.detailHealthy);
       if (
         !this.guidanceList[0].guidanceValue ||
         this.guidanceList[0].guidanceValue.length == 0
