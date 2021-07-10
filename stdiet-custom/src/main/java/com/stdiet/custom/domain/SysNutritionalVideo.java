@@ -74,6 +74,9 @@ public class SysNutritionalVideo extends BaseEntity
 
     private String playUrl;
 
+    //播放凭证
+    private String playAuth;
+
     //文件名称
     private String fileName;
 

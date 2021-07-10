@@ -146,6 +146,14 @@ public class SysWxUserLog extends BaseEntity
     @Excel(name = "点评")
     private String comment;
 
+    /** 点赞数量 */
+    @Excel(name = "点赞数量")
+    private Long thumbsupNum;
+
+    /** 健康宣言 */
+    @Excel(name = "健康宣言")
+    private String healthManifesto;
+
     /** 删除标识 0未删除 1已删除 */
     private Long delFlag;
 
