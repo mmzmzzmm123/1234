@@ -6,32 +6,41 @@
       :inline="true"
       label-width="70px"
     >
-      <el-form-item label="教师编号" prop="jsid">
-        <el-input
-          v-model="queryParams.jsid"
-          placeholder="请输入教师编号"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
+      <el-form-item label="选择班级" prop="classid">
+        <el-select v-model="queryParams.classid" placeholder="请选择班级">
+          <el-option
+            v-for="dict in classOptions"
+            :key="dict.bjbh"
+            :label="dict.bjmc"
+            :value="dict.bjbh"
+          ></el-option>
+        </el-select>
       </el-form-item>
-      <el-form-item label="班级编号" prop="classid">
-        <el-input
-          v-model="queryParams.classid"
-          placeholder="请输入班级编号"
+      <el-form-item label="选择教师" prop="jsid">
+        <el-select
+          v-model="queryParams.jsid"
           clearable
           size="small"
-          @keyup.enter.native="handleQuery"
-        />
+          placeholder="请选择教师"
+        >
+          <el-option
+            v-for="dict in userOptions"
+            :key="dict.userId"
+            :label="dict.nickName"
+            :value="dict.userId"
+          ></el-option>
+        </el-select>
       </el-form-item>
       <el-form-item label="考核月份" prop="month">
-        <el-input
-          v-model="queryParams.month"
-          placeholder="请输入考核月份"
+        <el-date-picker
           clearable
           size="small"
-          @keyup.enter.native="handleQuery"
-        />
+          style="width: 200px"
+          v-model="queryParams.month"
+          type="month"
+          value-format="yyyy-MM"
+          placeholder="选择月份"
+        ></el-date-picker>
       </el-form-item>
 
       <el-form-item>
@@ -81,16 +90,6 @@
           >删除</el-button
         >
       </el-col>
-      <el-col :span="1.5">
-        <el-button
-          type="warning"
-          icon="el-icon-download"
-          size="mini"
-          @click="handleExport"
-          v-hasPermi="['benyi:teacherassessment:export']"
-          >导出</el-button
-        >
-      </el-col>
     </el-row>
 
     <el-table
@@ -99,16 +98,15 @@
       @selection-change="handleSelectionChange"
     >
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="编号" align="center" prop="id" />
-      <el-table-column label="教师编号" align="center" prop="jsid" />
-      <el-table-column label="班级编号" align="center" prop="classid" />
-      <el-table-column label="所在部门" align="center" prop="deptId" />
+      <!-- <el-table-column label="编号" align="center" prop="id" /> -->
+      <el-table-column label="班级" align="center" prop="classid" :formatter="classFormat" />
+      <el-table-column label="教师" align="center" prop="jsid" :formatter="userFormat"/>
       <el-table-column label="考核月份" align="center" prop="month" />
-      <el-table-column label="一日流程比例" align="center" prop="yrlcbl" />
-      <el-table-column label="教师考勤比例" align="center" prop="jskqbl" />
-      <el-table-column label="幼儿考勤比例" align="center" prop="yekqbl" />
-      <el-table-column label="事故比例" align="center" prop="sgbl" />
-      <el-table-column label="卫生比例" align="center" prop="wsbl" />
+      <el-table-column label="一日流程" align="center" prop="yrlcbl" />
+      <el-table-column label="教师出勤" align="center" prop="jskqbl" />
+      <el-table-column label="幼儿出勤" align="center" prop="yekqbl" />
+      <el-table-column label="事故" align="center" prop="sgbl" />
+      <el-table-column label="卫生" align="center" prop="wsbl" />
       <el-table-column label="总分" align="center" prop="zfbl" />
       <el-table-column
         label="操作"
@@ -147,35 +145,57 @@
     <!-- 添加或修改教师月绩效考核对话框 -->
     <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
-        <el-form-item label="教师编号" prop="jsid">
-          <el-input v-model="form.jsid" placeholder="请输入教师编号" />
-        </el-form-item>
-        <el-form-item label="班级编号" prop="classid">
-          <el-input v-model="form.classid" placeholder="请输入班级编号" />
-        </el-form-item>
-        <el-form-item label="所在部门" prop="deptId">
-          <el-input v-model="form.deptId" placeholder="请输入所在部门" />
-        </el-form-item>
         <el-form-item label="考核月份" prop="month">
-          <el-input v-model="form.month" placeholder="请输入考核月份" />
+          <el-date-picker
+            clearable
+            size="small"
+            style="width: 200px"
+            v-model="form.month"
+            type="month"
+            value-format="yyyy-MM"
+            placeholder="选择考核月份"
+          ></el-date-picker>
         </el-form-item>
-        <el-form-item label="一日流程比例" prop="yrlcbl">
-          <el-input v-model="form.yrlcbl" placeholder="请输入一日流程比例" />
+        <el-form-item label="选择班级" prop="classid">
+          <el-select v-model="form.classid" placeholder="请选择班级">
+            <el-option
+              v-for="dict in classOptions"
+              :key="dict.bjbh"
+              :label="dict.bjmc"
+              :value="dict.bjbh"
+            ></el-option>
+          </el-select>
         </el-form-item>
-        <el-form-item label="教师考勤比例" prop="jskqbl">
-          <el-input v-model="form.jskqbl" placeholder="请输入教师考勤比例" />
+        <el-form-item label="选择教师" prop="jsid">
+          <!-- <el-input v-model="form.jsid" placeholder="请输入教师编号" /> -->
+          <el-select
+            v-model="form.jsid"
+            clearable
+            size="small"
+            placeholder="请选择教师"
+          >
+            <el-option
+              v-for="dict in userOptions"
+              :key="dict.userId"
+              :label="dict.nickName"
+              :value="dict.userId"
+            ></el-option>
+          </el-select>
         </el-form-item>
-        <el-form-item label="幼儿考勤比例" prop="yekqbl">
-          <el-input v-model="form.yekqbl" placeholder="请输入幼儿考勤比例" />
+        <el-form-item label="一日流程" prop="yrlcbl">
+          <el-input-number v-model="form.yrlcbl" placeholder="请输入一日流程得分" />
         </el-form-item>
-        <el-form-item label="事故比例" prop="sgbl">
-          <el-input v-model="form.sgbl" placeholder="请输入事故比例" />
+        <el-form-item label="教师出勤" prop="jskqbl">
+          <el-input-number v-model="form.jskqbl" placeholder="请输入教师出勤得分" />
         </el-form-item>
-        <el-form-item label="卫生比例" prop="wsbl">
-          <el-input v-model="form.wsbl" placeholder="请输入卫生比例" />
+        <el-form-item label="幼儿出勤" prop="yekqbl">
+          <el-input-number v-model="form.yekqbl" placeholder="请输入幼儿出勤得分" />
         </el-form-item>
-        <el-form-item label="总分" prop="zfbl">
-          <el-input v-model="form.zfbl" placeholder="请输入总分" />
+        <el-form-item label="事故" prop="sgbl">
+          <el-input-number v-model="form.sgbl" placeholder="请输入事故得分" />
+        </el-form-item>
+        <el-form-item label="卫生" prop="wsbl">
+          <el-input-number v-model="form.wsbl" placeholder="请输入卫生得分" />
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -195,6 +215,9 @@ import {
   updateTeacherassessment,
   exportTeacherassessment,
 } from "@/api/benyi/teacherassessment";
+
+import { listClass } from "@/api/system/class";
+import { listUser } from "@/api/system/user";
 
 export default {
   name: "Teacherassessment",
@@ -216,6 +239,10 @@ export default {
       title: "",
       // 是否显示弹出层
       open: false,
+      //班级
+      classOptions: [],
+      // 所有教师
+      userOptions: [],
       // 查询参数
       queryParams: {
         pageNum: 1,
@@ -239,6 +266,8 @@ export default {
   },
   created() {
     this.getList();
+    this.getClassList();
+    this.getUserList();
   },
   methods: {
     /** 查询教师月绩效考核列表 */
@@ -249,6 +278,43 @@ export default {
         this.total = response.total;
         this.loading = false;
       });
+    },
+    getClassList() {
+      listClass(null).then((response) => {
+        this.classOptions = response.rows;
+        // console.log(response.rows[0].bjbh);
+        // this.form.classid = response.rows[0].bjbh;
+      });
+    },
+    /** 查询用户列表 */
+    getUserList() {
+      listUser(null).then((response) => {
+        this.userOptions = response.rows;
+      });
+    },
+    // 字典翻译
+    classFormat(row, column) {
+      // return this.selectDictLabel(this.classOptions, row.classid);
+      var actions = [];
+      var datas = this.classOptions;
+      Object.keys(datas).map((key) => {
+        if (datas[key].bjbh == "" + row.classid) {
+          actions.push(datas[key].bjmc);
+          return false;
+        }
+      });
+      return actions.join("");
+    },
+    userFormat(row,column){
+      var actions = [];
+      var datas = this.userOptions;
+      Object.keys(datas).map((key) => {
+        if (datas[key].userId == "" + row.jsid) {
+          actions.push(datas[key].nickName);
+          return false;
+        }
+      });
+      return actions.join("");
     },
     // 取消按钮
     cancel() {
@@ -332,37 +398,17 @@ export default {
     /** 删除按钮操作 */
     handleDelete(row) {
       const ids = row.id || this.ids;
-      this.$confirm(
-        '是否确认删除教师月绩效考核编号为"' + ids + '"的数据项?',
-        "警告",
-        {
-          confirmButtonText: "确定",
-          cancelButtonText: "取消",
-          type: "warning",
-        }
-      )
+      this.$confirm("是否确认删除教师月绩效考核的数据项?", "警告", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning",
+      })
         .then(function () {
           return delTeacherassessment(ids);
         })
         .then(() => {
           this.getList();
           this.msgSuccess("删除成功");
-        })
-        .catch(function () {});
-    },
-    /** 导出按钮操作 */
-    handleExport() {
-      const queryParams = this.queryParams;
-      this.$confirm("是否确认导出所有教师月绩效考核数据项?", "警告", {
-        confirmButtonText: "确定",
-        cancelButtonText: "取消",
-        type: "warning",
-      })
-        .then(function () {
-          return exportTeacherassessment(queryParams);
-        })
-        .then((response) => {
-          this.download(response.msg);
         })
         .catch(function () {});
     },

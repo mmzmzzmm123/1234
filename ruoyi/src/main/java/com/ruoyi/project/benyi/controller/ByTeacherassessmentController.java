@@ -2,6 +2,7 @@ package com.ruoyi.project.benyi.controller;
 
 import java.util.List;
 
+import com.ruoyi.common.utils.SecurityUtils;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -72,6 +73,9 @@ public class ByTeacherassessmentController extends BaseController {
     @Log(title = "教师月绩效考核", businessType = BusinessType.INSERT)
     @PostMapping
     public AjaxResult add(@RequestBody ByTeacherassessment byTeacherassessment) {
+        byTeacherassessment.setDeptId(SecurityUtils.getLoginUser().getUser().getDept().getDeptId());
+        Double total=(byTeacherassessment.getYrlcbl()*0.6)+(byTeacherassessment.getJskqbl()*0.1)+(byTeacherassessment.getYekqbl()*0.1)+(byTeacherassessment.getSgbl()*0.15)+(byTeacherassessment.getWsbl()*0.05);
+        byTeacherassessment.setZfbl(total);
         return toAjax(byTeacherassessmentService.insertByTeacherassessment(byTeacherassessment));
     }
 
@@ -82,6 +86,8 @@ public class ByTeacherassessmentController extends BaseController {
     @Log(title = "教师月绩效考核", businessType = BusinessType.UPDATE)
     @PutMapping
     public AjaxResult edit(@RequestBody ByTeacherassessment byTeacherassessment) {
+        Double total=(byTeacherassessment.getYrlcbl()*0.6)+(byTeacherassessment.getJskqbl()*0.1)+(byTeacherassessment.getYekqbl()*0.1)+(byTeacherassessment.getSgbl()*0.15)+(byTeacherassessment.getWsbl()*0.05);
+        byTeacherassessment.setZfbl(total);
         return toAjax(byTeacherassessmentService.updateByTeacherassessment(byTeacherassessment));
     }
 
