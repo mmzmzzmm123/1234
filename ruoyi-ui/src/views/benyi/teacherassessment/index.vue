@@ -7,7 +7,12 @@
       label-width="70px"
     >
       <el-form-item label="选择班级" prop="classid">
-        <el-select v-model="queryParams.classid" placeholder="请选择班级">
+        <el-select
+          v-model="queryParams.classid"
+          clearable
+          size="small"
+          placeholder="请选择班级"
+        >
           <el-option
             v-for="dict in classOptions"
             :key="dict.bjbh"
@@ -99,8 +104,18 @@
     >
       <el-table-column type="selection" width="55" align="center" />
       <!-- <el-table-column label="编号" align="center" prop="id" /> -->
-      <el-table-column label="班级" align="center" prop="classid" :formatter="classFormat" />
-      <el-table-column label="教师" align="center" prop="jsid" :formatter="userFormat"/>
+      <el-table-column
+        label="班级"
+        align="center"
+        prop="classid"
+        :formatter="classFormat"
+      />
+      <el-table-column
+        label="教师"
+        align="center"
+        prop="jsid"
+        :formatter="userFormat"
+      />
       <el-table-column label="考核月份" align="center" prop="month" />
       <el-table-column label="一日流程" align="center" prop="yrlcbl" />
       <el-table-column label="教师出勤" align="center" prop="jskqbl" />
@@ -157,7 +172,12 @@
           ></el-date-picker>
         </el-form-item>
         <el-form-item label="选择班级" prop="classid">
-          <el-select v-model="form.classid" placeholder="请选择班级">
+          <el-select
+            v-model="form.classid"
+            clearable
+            size="small"
+            placeholder="请选择班级"
+          >
             <el-option
               v-for="dict in classOptions"
               :key="dict.bjbh"
@@ -183,13 +203,22 @@
           </el-select>
         </el-form-item>
         <el-form-item label="一日流程" prop="yrlcbl">
-          <el-input-number v-model="form.yrlcbl" placeholder="请输入一日流程得分" />
+          <el-input-number
+            v-model="form.yrlcbl"
+            placeholder="请输入一日流程得分"
+          />
         </el-form-item>
         <el-form-item label="教师出勤" prop="jskqbl">
-          <el-input-number v-model="form.jskqbl" placeholder="请输入教师出勤得分" />
+          <el-input-number
+            v-model="form.jskqbl"
+            placeholder="请输入教师出勤得分"
+          />
         </el-form-item>
         <el-form-item label="幼儿出勤" prop="yekqbl">
-          <el-input-number v-model="form.yekqbl" placeholder="请输入幼儿出勤得分" />
+          <el-input-number
+            v-model="form.yekqbl"
+            placeholder="请输入幼儿出勤得分"
+          />
         </el-form-item>
         <el-form-item label="事故" prop="sgbl">
           <el-input-number v-model="form.sgbl" placeholder="请输入事故得分" />
@@ -216,7 +245,7 @@ import {
   exportTeacherassessment,
 } from "@/api/benyi/teacherassessment";
 
-import { listClass } from "@/api/system/class";
+import { listClass, getUserList } from "@/api/system/class";
 import { listUser } from "@/api/system/user";
 
 export default {
@@ -261,13 +290,58 @@ export default {
       // 表单参数
       form: {},
       // 表单校验
-      rules: {},
+      rules: {
+        jsid: [{ required: true, message: "教师不能为空", trigger: "blur" }],
+        classid: [{ required: true, message: "班级不能为空", trigger: "blur" }],
+        month: [{ required: true, message: "月份不能为空", trigger: "blur" }],
+        yrlcbl: [
+          {
+            required: true,
+            message: "一日流程评估得分不能为空",
+            trigger: "blur",
+          },
+        ],
+        jskqbl: [
+          { required: true, message: "教师出勤得分不能为空", trigger: "blur" },
+        ],
+        yekqbl: [
+          { required: true, message: "幼儿出勤得分不能为空", trigger: "blur" },
+        ],
+        sgbl: [
+          { required: true, message: "事故得分不能为空", trigger: "blur" },
+        ],
+        wsbl: [
+          { required: true, message: "卫生得分不能为空", trigger: "blur" },
+        ],
+      },
     };
   },
   created() {
     this.getList();
     this.getClassList();
     this.getUserList();
+  },
+  watch: {
+    "queryParams.classid": function (val) {
+      //console.log(val);
+      if (val == "undefined") {
+        getUserList(val).then((response) => {
+          //console.log(response);
+          this.userOptions = response.rows;
+        });
+      }
+    },
+    "form.classid": function (val) {
+      //console.log(val);
+      if (val == "undefined") {
+        getUserList(val)
+          .then((response) => {
+            //console.log(response);
+            this.userOptions = response.rows;
+          })
+          .catch((e) => {});
+      }
+    },
   },
   methods: {
     /** 查询教师月绩效考核列表 */
@@ -305,7 +379,7 @@ export default {
       });
       return actions.join("");
     },
-    userFormat(row,column){
+    userFormat(row, column) {
       var actions = [];
       var datas = this.userOptions;
       Object.keys(datas).map((key) => {
