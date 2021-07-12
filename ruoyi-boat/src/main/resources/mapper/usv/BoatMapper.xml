@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.apollo.usv.mapper.BoatMapper">
+    
+    <resultMap type="Boat" id="BoatResult">
+        <result property="id"    column="boat_id"    />
+        <result property="sn"    column="boat_sn"    />
+        <result property="manufacturer"    column="manufacturer"    />
+        <result property="contact"    column="contact"    />
+        <result property="purchaseDate"    column="purchase_date"    />
+        <result property="batteryPower"    column="battery_power"    />
+    </resultMap>
+
+    <sql id="selectBoatVo">
+        select boat_id, boat_sn, manufacturer, contact, purchase_date, battery_power from usv_boat
+    </sql>
+
+    <select id="selectBoatList" parameterType="Boat" resultMap="BoatResult">
+        <include refid="selectBoatVo"/>
+        <where>  
+            <if test="sn != null  and sn != ''"> and boat_sn = #{sn}</if>
+        </where>
+    </select>
+    
+    <select id="selectBoatById" parameterType="Long" resultMap="BoatResult">
+        <include refid="selectBoatVo"/>
+        where boat_id = #{id}
+    </select>
+        
+    <insert id="insertBoat" parameterType="Boat" useGeneratedKeys="true" keyProperty="id">
+        insert into usv_boat
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="sn != null and sn != ''">boat_sn,</if>
+            <if test="manufacturer != null">manufacturer,</if>
+            <if test="contact != null">contact,</if>
+            <if test="purchaseDate != null">purchase_date,</if>
+            <if test="batteryPower != null">battery_power,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="sn != null and sn != ''">#{sn},</if>
+            <if test="manufacturer != null">#{manufacturer},</if>
+            <if test="contact != null">#{contact},</if>
+            <if test="purchaseDate != null">#{purchaseDate},</if>
+            <if test="batteryPower != null">#{batteryPower},</if>
+         </trim>
+    </insert>
+
+    <update id="updateBoat" parameterType="Boat">
+        update usv_boat
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="sn != null and sn != ''">boat_sn = #{sn},</if>
+            <if test="manufacturer != null">manufacturer = #{manufacturer},</if>
+            <if test="contact != null">contact = #{contact},</if>
+            <if test="purchaseDate != null">purchase_date = #{purchaseDate},</if>
+            <if test="batteryPower != null">battery_power = #{batteryPower},</if>
+        </trim>
+        where boat_id = #{id}
+    </update>
+
+    <delete id="deleteBoatById" parameterType="Long">
+        delete from usv_boat where boat_id = #{id}
+    </delete>
+
+    <delete id="deleteBoatByIds" parameterType="String">
+        delete from usv_boat where boat_id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

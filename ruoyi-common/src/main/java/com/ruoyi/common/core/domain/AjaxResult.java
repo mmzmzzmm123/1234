@@ -1,6 +1,10 @@
 package com.ruoyi.common.core.domain;
 
 import java.util.HashMap;
+
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.PropertyNamingStrategy;
+import com.alibaba.fastjson.serializer.SerializeConfig;
 import com.ruoyi.common.constant.HttpStatus;
 import com.ruoyi.common.utils.StringUtils;
 
@@ -55,6 +59,10 @@ public class AjaxResult extends HashMap<String, Object>
         if (StringUtils.isNotNull(data))
         {
             super.put(DATA_TAG, data);
+//            SerializeConfig config = new SerializeConfig();
+//            config.propertyNamingStrategy = PropertyNamingStrategy.SnakeCase;
+//            String json = JSON.toJSONString(data, config);
+//            super.put(DATA_TAG, json);
         }
     }
 

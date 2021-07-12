@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.apollo.usv.mapper.PlanRouteMapper">
+    
+    <resultMap type="PlanRoute" id="PlanRouteResult">
+        <result property="routeId"    column="route_id"    />
+        <result property="routeSn"    column="route_sn"    />
+        <result property="speed"    column="speed"    />
+        <result property="coordinates"    column="coordinates"    />
+    </resultMap>
+
+    <sql id="selectPlanRouteVo">
+        select route_id, route_sn, speed, coordinates from usv_plan_route
+    </sql>
+
+    <select id="selectPlanRouteList" parameterType="PlanRoute" resultMap="PlanRouteResult">
+        <include refid="selectPlanRouteVo"/>
+        <where>  
+            <if test="routeSn != null  and routeSn != ''"> and route_sn = #{routeSn}</if>
+        </where>
+    </select>
+    
+    <select id="selectPlanRouteById" parameterType="Long" resultMap="PlanRouteResult">
+        <include refid="selectPlanRouteVo"/>
+        where route_id = #{routeId}
+    </select>
+        
+    <insert id="insertPlanRoute" parameterType="PlanRoute" useGeneratedKeys="true" keyProperty="routeId">
+        insert into usv_plan_route
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="routeSn != null and routeSn != ''">route_sn,</if>
+            <if test="speed != null">speed,</if>
+            <if test="coordinates != null and coordinates != ''">coordinates,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="routeSn != null and routeSn != ''">#{routeSn},</if>
+            <if test="speed != null">#{speed},</if>
+            <if test="coordinates != null and coordinates != ''">#{coordinates},</if>
+         </trim>
+    </insert>
+
+    <update id="updatePlanRoute" parameterType="PlanRoute">
+        update usv_plan_route
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="routeSn != null and routeSn != ''">route_sn = #{routeSn},</if>
+            <if test="speed != null">speed = #{speed},</if>
+            <if test="coordinates != null and coordinates != ''">coordinates = #{coordinates},</if>
+        </trim>
+        where route_id = #{routeId}
+    </update>
+
+    <delete id="deletePlanRouteById" parameterType="Long">
+        delete from usv_plan_route where route_id = #{routeId}
+    </delete>
+
+    <delete id="deletePlanRouteByIds" parameterType="String">
+        delete from usv_plan_route where route_id in 
+        <foreach item="routeId" collection="array" open="(" separator="," close=")">
+            #{routeId}
+        </foreach>
+    </delete>
+</mapper>
