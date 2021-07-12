@@ -5,15 +5,14 @@
 	<modelVersion>4.0.0</modelVersion>
 
     <artifactId>ruoyi</artifactId>
-    <groupId>com.ruoyi</groupId>
-    <version>3.5.0</version>
+    <version>3.6.0</version>
 
     <name>boat</name>
     <url>http://www.apollo-asia.com/</url>
     <description>无人船管理系统</description>
     
     <properties>
-        <ruoyi.version>3.5.0</ruoyi.version>
+        <ruoyi.version>3.6.0</ruoyi.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <java.version>1.8</java.version>
