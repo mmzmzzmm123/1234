@@ -114,6 +114,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter
                 .antMatchers("/webjars/**").anonymous()
                 .antMatchers("/*/api-docs").anonymous()
                 .antMatchers("/druid/**").anonymous()
+                .antMatchers("/app/**").anonymous()//来自App的接口请求不需要若依自身的鉴权
                 // 除上面外的所有请求全部需要鉴权认证
                 .anyRequest().authenticated()
                 .and()
