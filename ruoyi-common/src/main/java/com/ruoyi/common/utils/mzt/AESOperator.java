@@ -3,18 +3,17 @@
  * STOOGES PROPRIETARY/CONFIDENTIAL. Use is subject to license terms.
  *
  */
-package com.ruoyi.app.utils;
+package com.ruoyi.common.utils.mzt;
 
-import java.math.BigInteger;
+import org.apache.commons.codec.binary.Base64;
+import org.apache.commons.lang3.StringUtils;
+import sun.misc.BASE64Decoder;
 
 import javax.crypto.Cipher;
 import javax.crypto.KeyGenerator;
 import javax.crypto.spec.SecretKeySpec;
+import java.math.BigInteger;
 
-import org.apache.commons.codec.binary.Base64;
-import org.apache.commons.lang3.StringUtils;
-
-import sun.misc.BASE64Decoder;
 /**
  * @author 胡裕
  *

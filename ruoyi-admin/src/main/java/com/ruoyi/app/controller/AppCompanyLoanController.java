@@ -8,10 +8,7 @@ import com.ruoyi.common.enums.BusinessType;
 import com.ruoyi.system.domain.DataCompanyLoan;
 import com.ruoyi.system.service.IDataCompanyLoanService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 /**
  * 企业贷款信息Controller

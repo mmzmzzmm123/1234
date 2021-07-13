@@ -1,5 +1,6 @@
 package com.ruoyi.framework.config;
 
+import com.ruoyi.framework.interceptor.impl.AppInterceptor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -24,6 +25,9 @@ public class ResourcesConfig implements WebMvcConfigurer
     @Autowired
     private RepeatSubmitInterceptor repeatSubmitInterceptor;
 
+    @Autowired
+    private AppInterceptor appInterceptor;
+
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry)
     {
@@ -41,6 +45,7 @@ public class ResourcesConfig implements WebMvcConfigurer
     public void addInterceptors(InterceptorRegistry registry)
     {
         registry.addInterceptor(repeatSubmitInterceptor).addPathPatterns("/**");
+        registry.addInterceptor(appInterceptor).addPathPatterns("/app/**");
     }
 
     /**

@@ -1,13 +1,6 @@
-package com.ruoyi.app.utils;
+package com.ruoyi.common.utils.mzt;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-
+import com.alibaba.fastjson.JSON;
 import org.apache.http.Consts;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.ClientProtocolException;
@@ -18,7 +11,9 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.impl.conn.tsccm.ThreadSafeClientConnManager;
 import org.apache.http.message.BasicNameValuePair;
 
-import com.alibaba.fastjson.JSON;
+import java.io.IOException;
+import java.util.*;
+import java.util.Map.Entry;
 
 /**
  * @author Flex Hu
