@@ -1,12 +1,12 @@
-package com.ruoyi.app.service.impl;
+package com.ruoyi.system.service.impl;
 
 import java.util.List;
 import com.ruoyi.common.utils.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import com.ruoyi.app.mapper.DataCompanyLoanMapper;
-import com.ruoyi.app.domain.DataCompanyLoan;
-import com.ruoyi.app.service.IDataCompanyLoanService;
+import com.ruoyi.system.mapper.DataCompanyLoanMapper;
+import com.ruoyi.system.domain.DataCompanyLoan;
+import com.ruoyi.system.service.IDataCompanyLoanService;
 
 /**
  * 企业贷款信息Service业务层处理

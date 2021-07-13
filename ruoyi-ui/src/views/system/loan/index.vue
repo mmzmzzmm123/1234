@@ -146,7 +146,7 @@
           icon="el-icon-plus"
           size="mini"
           @click="handleAdd"
-          v-hasPermi="['app:loan:add']"
+          v-hasPermi="['system:loan:add']"
         >新增</el-button>
       </el-col>
       <el-col :span="1.5">
@@ -157,7 +157,7 @@
           size="mini"
           :disabled="single"
           @click="handleUpdate"
-          v-hasPermi="['app:loan:edit']"
+          v-hasPermi="['system:loan:edit']"
         >修改</el-button>
       </el-col>
       <el-col :span="1.5">
@@ -168,7 +168,7 @@
           size="mini"
           :disabled="multiple"
           @click="handleDelete"
-          v-hasPermi="['app:loan:remove']"
+          v-hasPermi="['system:loan:remove']"
         >删除</el-button>
       </el-col>
       <el-col :span="1.5">
@@ -179,7 +179,7 @@
           size="mini"
 		  :loading="exportLoading"
           @click="handleExport"
-          v-hasPermi="['app:loan:export']"
+          v-hasPermi="['system:loan:export']"
         >导出</el-button>
       </el-col>
       <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
@@ -211,14 +211,14 @@
             type="text"
             icon="el-icon-edit"
             @click="handleUpdate(scope.row)"
-            v-hasPermi="['app:loan:edit']"
+            v-hasPermi="['system:loan:edit']"
           >修改</el-button>
           <el-button
             size="mini"
             type="text"
             icon="el-icon-delete"
             @click="handleDelete(scope.row)"
-            v-hasPermi="['app:loan:remove']"
+            v-hasPermi="['system:loan:remove']"
           >删除</el-button>
         </template>
       </el-table-column>
@@ -298,7 +298,7 @@
 </template>
 
 <script>
-import { listLoan, getLoan, delLoan, addLoan, updateLoan, exportLoan } from "@/api/app/loan";
+import { listLoan, getLoan, delLoan, addLoan, updateLoan, exportLoan } from "@/api/system/loan";
 
 export default {
   name: "Loan",

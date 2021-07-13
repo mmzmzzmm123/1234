@@ -1,7 +1,7 @@
-package com.ruoyi.app.mapper;
+package com.ruoyi.system.mapper;
 
 import java.util.List;
-import com.ruoyi.app.domain.DataCompanyLoan;
+import com.ruoyi.system.domain.DataCompanyLoan;
 
 /**
  * 企业贷款信息Mapper接口

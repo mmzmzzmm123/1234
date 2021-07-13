@@ -1,7 +1,7 @@
-package com.ruoyi.app.service;
+package com.ruoyi.system.service;
 
 import java.util.List;
-import com.ruoyi.app.domain.DataCompanyLoan;
+import com.ruoyi.system.domain.DataCompanyLoan;
 
 /**
  * 企业贷款信息Service接口

@@ -1,4 +1,4 @@
-package com.ruoyi.app.controller;
+package com.ruoyi.web.controller.system;
 
 import java.util.List;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -15,8 +15,8 @@ import com.ruoyi.common.annotation.Log;
 import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.enums.BusinessType;
-import com.ruoyi.app.domain.DataCompanyLoan;
-import com.ruoyi.app.service.IDataCompanyLoanService;
+import com.ruoyi.system.domain.DataCompanyLoan;
+import com.ruoyi.system.service.IDataCompanyLoanService;
 import com.ruoyi.common.utils.poi.ExcelUtil;
 import com.ruoyi.common.core.page.TableDataInfo;
 
@@ -27,7 +27,7 @@ import com.ruoyi.common.core.page.TableDataInfo;
  * @date 2021-07-13
  */
 @RestController
-@RequestMapping("/app/loan")
+@RequestMapping("/system/loan")
 public class DataCompanyLoanController extends BaseController
 {
     @Autowired
@@ -36,7 +36,7 @@ public class DataCompanyLoanController extends BaseController
     /**
      * 查询企业贷款信息列表
      */
-    @PreAuthorize("@ss.hasPermi('app:loan:list')")
+    @PreAuthorize("@ss.hasPermi('system:loan:list')")
     @GetMapping("/list")
     public TableDataInfo list(DataCompanyLoan dataCompanyLoan)
     {
@@ -48,7 +48,7 @@ public class DataCompanyLoanController extends BaseController
     /**
      * 导出企业贷款信息列表
      */
-    @PreAuthorize("@ss.hasPermi('app:loan:export')")
+    @PreAuthorize("@ss.hasPermi('system:loan:export')")
     @Log(title = "企业贷款信息", businessType = BusinessType.EXPORT)
     @GetMapping("/export")
     public AjaxResult export(DataCompanyLoan dataCompanyLoan)
@@ -61,7 +61,7 @@ public class DataCompanyLoanController extends BaseController
     /**
      * 获取企业贷款信息详细信息
      */
-    @PreAuthorize("@ss.hasPermi('app:loan:query')")
+    @PreAuthorize("@ss.hasPermi('system:loan:query')")
     @GetMapping(value = "/{companyId}")
     public AjaxResult getInfo(@PathVariable("companyId") Long companyId)
     {
@@ -71,7 +71,7 @@ public class DataCompanyLoanController extends BaseController
     /**
      * 新增企业贷款信息
      */
-    @PreAuthorize("@ss.hasPermi('app:loan:add')")
+    @PreAuthorize("@ss.hasPermi('system:loan:add')")
     @Log(title = "企业贷款信息", businessType = BusinessType.INSERT)
     @PostMapping
     public AjaxResult add(@RequestBody DataCompanyLoan dataCompanyLoan)
@@ -82,7 +82,7 @@ public class DataCompanyLoanController extends BaseController
     /**
      * 修改企业贷款信息
      */
-    @PreAuthorize("@ss.hasPermi('app:loan:edit')")
+    @PreAuthorize("@ss.hasPermi('system:loan:edit')")
     @Log(title = "企业贷款信息", businessType = BusinessType.UPDATE)
     @PutMapping
     public AjaxResult edit(@RequestBody DataCompanyLoan dataCompanyLoan)
@@ -93,7 +93,7 @@ public class DataCompanyLoanController extends BaseController
     /**
      * 删除企业贷款信息
      */
-    @PreAuthorize("@ss.hasPermi('app:loan:remove')")
+    @PreAuthorize("@ss.hasPermi('system:loan:remove')")
     @Log(title = "企业贷款信息", businessType = BusinessType.DELETE)
 	@DeleteMapping("/{companyIds}")
     public AjaxResult remove(@PathVariable Long[] companyIds)

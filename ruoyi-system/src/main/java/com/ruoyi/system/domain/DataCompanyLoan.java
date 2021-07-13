@@ -1,4 +1,4 @@
-package com.ruoyi.app.domain;
+package com.ruoyi.system.domain;
 
 import java.math.BigDecimal;
 import org.apache.commons.lang3.builder.ToStringBuilder;
