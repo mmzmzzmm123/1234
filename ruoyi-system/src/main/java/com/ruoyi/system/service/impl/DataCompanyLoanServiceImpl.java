@@ -1,12 +1,15 @@
 package com.ruoyi.system.service.impl;
 
-import java.util.List;
+import com.ruoyi.common.constant.UserConstants;
 import com.ruoyi.common.utils.DateUtils;
+import com.ruoyi.common.utils.StringUtils;
+import com.ruoyi.system.domain.DataCompanyLoan;
+import com.ruoyi.system.mapper.DataCompanyLoanMapper;
+import com.ruoyi.system.service.IDataCompanyLoanService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import com.ruoyi.system.mapper.DataCompanyLoanMapper;
-import com.ruoyi.system.domain.DataCompanyLoan;
-import com.ruoyi.system.service.IDataCompanyLoanService;
+
+import java.util.List;
 
 /**
  * 企业贷款信息Service业务层处理
@@ -92,5 +95,15 @@ public class DataCompanyLoanServiceImpl implements IDataCompanyLoanService
     public int deleteDataCompanyLoanById(Long companyId)
     {
         return dataCompanyLoanMapper.deleteDataCompanyLoanById(companyId);
+    }
+
+    @Override
+    public String checkCompanyNameUnique(DataCompanyLoan dataCompanyLoan) {
+        DataCompanyLoan info = dataCompanyLoanMapper.checkCompanyNameUnique(dataCompanyLoan.getCompanyName());
+        if (StringUtils.isNotNull(info))
+        {
+            return UserConstants.NOT_UNIQUE;
+        }
+        return UserConstants.UNIQUE;
     }
 }

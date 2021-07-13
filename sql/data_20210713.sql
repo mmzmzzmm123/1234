@@ -14,7 +14,7 @@ create table data_company_loan (
   company_industry       varchar(64)     default ''                 comment '所在行业',
   company_business       varchar(128)    default ''                 comment '主营业务',
   loan_band              varchar(64)     default ''                 comment '意向银行（逗号隔开）',
-  loan_amount            decimal(18,2)   not null                   comment '贷款金额',
+  loan_amount            decimal(18,2)   not null                   comment '贷款金额，单位万',
   loan_first             char(1)         default '0'                comment '是否首次贷款（0是 1不是）',
   loan_purpose           varchar(64)     default ''                 comment '贷款用途',
   remark                 varchar(128)    default ''                 comment '备注说明',

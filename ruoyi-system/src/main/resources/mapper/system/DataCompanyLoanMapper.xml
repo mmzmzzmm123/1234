@@ -27,6 +27,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="updateTime"    column="update_time"    />
     </resultMap>
 
+    <select id="checkCompanyNameUnique" resultMap="DataCompanyLoanResult">
+        <include refid="selectDataCompanyLoanVo"/>
+        where company_name=#{companyName}
+    </select>
+
     <sql id="selectDataCompanyLoanVo">
         select company_id, mzt_user_id, company_name, company_credit_code, company_province, company_city, company_area, company_type, company_industry, company_business, loan_band, loan_amount, loan_first, loan_purpose, remark, contact_name, contact_phone, del_flag, create_time, update_time from data_company_loan
     </sql>
@@ -51,6 +56,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="contactPhone != null  and contactPhone != ''"> and contact_phone = #{contactPhone}</if>
         </where>
     </select>
+
     
     <select id="selectDataCompanyLoanById" parameterType="Long" resultMap="DataCompanyLoanResult">
         <include refid="selectDataCompanyLoanVo"/>

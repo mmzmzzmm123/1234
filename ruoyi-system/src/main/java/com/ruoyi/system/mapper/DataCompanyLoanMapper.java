@@ -1,7 +1,9 @@
 package com.ruoyi.system.mapper;
 
-import java.util.List;
 import com.ruoyi.system.domain.DataCompanyLoan;
+import org.apache.ibatis.annotations.Param;
+
+import java.util.List;
 
 /**
  * 企业贷款信息Mapper接口
@@ -58,4 +60,11 @@ public interface DataCompanyLoanMapper
      * @return 结果
      */
     public int deleteDataCompanyLoanByIds(Long[] companyIds);
+
+    /**
+     * 验证企业名称是否唯一
+     * @param companyName
+     * @return
+     */
+    public DataCompanyLoan checkCompanyNameUnique(@Param("companyName") String companyName);
 }

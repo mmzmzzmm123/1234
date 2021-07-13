@@ -58,4 +58,6 @@ public interface IDataCompanyLoanService
      * @return 结果
      */
     public int deleteDataCompanyLoanById(Long companyId);
+
+    public String checkCompanyNameUnique(DataCompanyLoan dataCompanyLoan);
 }
