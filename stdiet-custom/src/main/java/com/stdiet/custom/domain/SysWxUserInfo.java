@@ -74,6 +74,10 @@ public class SysWxUserInfo {
     @Excel(name = "国家")
     private String country;
 
+    /** 健康宣言 */
+    @Excel(name = "健康宣言")
+    private String healthManifesto;
+
     private Date createTime;
 
     private String createBy;

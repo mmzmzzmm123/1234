@@ -42,7 +42,7 @@
         </el-select>
       </el-form-item>
       <el-form-item label="营养师" prop="mainDietitian" v-if="!isPartner">
-        <el-select v-model="queryParams.mainDietitian" placeholder="请选择">
+        <el-select v-model="queryParams.mainDietitian" clearable filterable  placeholder="请选择">
           <el-option
             v-for="dict in nutritionistIdOptions"
             :key="dict.dictValue"
@@ -59,6 +59,8 @@
         <el-select
           v-model="queryParams.assistantDietitian"
           placeholder="请选择"
+          clearable 
+          filterable 
         >
           <el-option
             v-for="dict in nutriAssisIdOptions"
@@ -69,7 +71,7 @@
         </el-select>
       </el-form-item>
       <el-form-item label="销售人员" prop="salesman" v-if="!isPartner">
-        <el-select v-model="queryParams.salesman" placeholder="请选择">
+        <el-select v-model="queryParams.salesman" clearable filterable  placeholder="请选择">
           <el-option
             v-for="dict in preSaleIdOptions"
             :key="dict.dictValue"
@@ -78,8 +80,18 @@
           />
         </el-select>
       </el-form-item>
+       <el-form-item label="售中人员" prop="onSaleId" v-if="!isPartner">
+        <el-select v-model="queryParams.onSaleId" clearable filterable placeholder="请选择">
+          <el-option
+            v-for="dict in onSaleIdOptions"
+            :key="dict.dictValue"
+            :label="dict.dictLabel"
+            :value="parseInt(dict.dictValue)"
+          />
+        </el-select>
+      </el-form-item>
       <el-form-item label="售后营养师" prop="afterDietitian" v-if="!isPartner">
-        <el-select v-model="queryParams.afterDietitian" placeholder="请选择">
+        <el-select v-model="queryParams.afterDietitian" clearable filterable  placeholder="请选择">
           <el-option
             v-for="dict in afterSaleIdOptions"
             :key="dict.dictValue"
@@ -183,7 +195,7 @@
         :formatter="channelFormat"
       />
       <el-table-column label="客户姓名" align="center" prop="name" />
-      <el-table-column label="手机号" align="center" prop="phone" />
+      <el-table-column label="手机号" align="center" prop="phone" width="120"/>
       <el-table-column
         label="主营养师"
         align="center"
@@ -207,6 +219,12 @@
         align="center"
         prop="salesman"
         :formatter="preSaleIdFormat"
+      />
+      <el-table-column
+        label="售中人员"
+        align="center"
+        prop="onSaleId"
+        :formatter="onSaleIdFormat"
       />
       <el-table-column
         label="订单"
@@ -393,6 +411,18 @@
             </el-form-item>
           </el-col>
           <el-col :span="12">
+            <el-form-item label="售中" prop="salesman">
+              <el-select v-model="form.onSaleId" placeholder="请选择">
+                <el-option
+                  v-for="dict in onSaleIdOptions"
+                  :key="dict.dictValue"
+                  :label="dict.dictLabel"
+                  :value="parseInt(dict.dictValue)"
+                />
+              </el-select>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
             <el-form-item label="售后" prop="afterDietitian">
               <el-select v-model="form.afterDietitian" placeholder="请选择">
                 <el-option
@@ -521,6 +551,7 @@ export default {
         assistantDietitian: null,
         afterDietitian: null,
         salesman: null,
+        onSaleId: null,
         physicalSignsId: null,
       },
       // 表单参数
@@ -597,6 +628,8 @@ export default {
     ...mapGetters([
       // 售前字典
       "preSaleIdOptions",
+      //售中
+      "onSaleIdOptions",
       // 售后字典
       "afterSaleIdOptions",
       // 主营养师字典
@@ -622,6 +655,10 @@ export default {
     // 售前字典翻译
     preSaleIdFormat(row, column) {
       return this.selectDictLabel(this.preSaleIdOptions, row.salesman);
+    },
+    // 售中字典翻译
+    onSaleIdFormat(row, column) {
+      return this.selectDictLabel(this.onSaleIdOptions, row.onSaleId);
     },
     // 售后字典翻译
     afterSaleIdFormat(row, column) {
@@ -691,6 +728,7 @@ export default {
         assistantDietitian: null,
         afterDietitian: null,
         salesman: null,
+        onSaleId: null,
         chargePerson: null,
         fansChannel: 0,
         fansTime: null,

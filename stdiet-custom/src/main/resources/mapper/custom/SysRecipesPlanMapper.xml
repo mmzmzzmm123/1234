@@ -25,6 +25,7 @@
         <result property="outId" column="out_id"/>
         <result property="subSend" column="sub_send"/>
         <result property="smsSend" column="sms_send"/>
+        <result property="totalNumDay"    column="total_num_day"    />
         <!-- 非持久化字段 -->
         <!--        <result property="customerId" column="cus_id"></result>&lt;!&ndash; 客户ID &ndash;&gt;-->
         <result property="customer" column="customer"/><!-- 客户姓名 -->
@@ -41,7 +42,7 @@
 
 
     <sql id="selectSysRecipesPlanVo">
-        select id, order_id, cus_id, out_id, start_date, end_date, start_num_day, end_num_day, recipes_id, send_flag, send_time, pause_date, create_time, create_by, update_time, update_by, del_flag, review_status, sub_send, sms_send, subscribed, remark
+        select id, order_id, cus_id, out_id, start_date, end_date, start_num_day, end_num_day, recipes_id, send_flag, send_time, pause_date, create_time, create_by, update_time, update_by, del_flag, review_status, sub_send, sms_send, subscribed, remark,total_num_day
          from sys_recipes_plan
     </sql>
 
@@ -96,6 +97,7 @@
             <if test="delFlag != null">del_flag,</if>
             <if test="reviewStatus != null">review_status,</if>
             <if test="type != null">type,</if>
+            <if test="totalNumDay != null">total_num_day,</if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="orderId != null">#{orderId},</if>
@@ -116,6 +118,7 @@
             <if test="delFlag != null">#{delFlag},</if>
             <if test="reviewStatus != null">#{reviewStatus},</if>
             <if test="type != null">#{type},</if>
+            <if test="totalNumDay != null">#{totalNumDay},</if>
         </trim>
     </insert>
 
@@ -144,6 +147,7 @@
             <if test="subSend != null">sub_send = #{subSend},</if>
             <if test="smsSend != null">sms_send = #{smsSend},</if>
             <if test="remark != null">remark = #{remark},</if>
+            <if test="totalNumDay != null">total_num_day = #{totalNumDay},</if>
         </trim>
         where id = #{id} and del_flag = 0
     </update>
@@ -226,7 +230,7 @@
 
     <!-- 根据订单ID查询食谱计划 -->
     <select id="selectPlanListByOrderId" parameterType="SysRecipesPlan" resultMap="SysRecipesPlanResult">
-        SELECT srp.id,srp.order_id,sr.customer,sr.phone, srp.start_date,srp.end_date,srp.send_flag,srp.send_time
+        SELECT srp.id,srp.order_id,sr.customer,sr.phone, srp.start_date,srp.end_date,srp.send_flag,srp.send_time,srp.total_num_day
         FROM sys_recipes_plan srp
         LEFT JOIN sys_order sr ON sr.order_id = srp.order_id
         WHERE srp.del_flag = 0 AND sr.del_flag = 0 AND srp.order_id = #{orderId}

@@ -21,6 +21,7 @@
         <result property="updateTime" column="update_time"/>
         <result property="remark" column="remark"/>
         <result property="language" column="language"/>
+        <result property="healthManifesto"    column="health_manifesto"    />
     </resultMap>
 
     <sql id="selectSysWxUserInfoVo">
@@ -75,6 +76,7 @@
             <if test="updateTime != null">update_time,</if>
             <if test="remark != null">remark,</if>
             <if test="language != null">language,</if>
+            <if test="healthManifesto != null">health_manifesto,</if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="openid != null">#{openid},</if>
@@ -93,6 +95,7 @@
             <if test="updateTime != null">#{updateTime},</if>
             <if test="remark != null">#{remark},</if>
             <if test="language != null">#{language},</if>
+            <if test="healthManifesto != null">#{healthManifesto},</if>
         </trim>
     </insert>
 
@@ -114,6 +117,7 @@
             <if test="updateTime != null">update_time = #{updateTime},</if>
             <if test="remark != null">remark = #{remark},</if>
             <if test="language != null">language = #{language},</if>
+            <if test="healthManifesto != null">health_manifesto = #{healthManifesto},</if>
         </trim>
         where openid = #{openid}
     </update>
@@ -138,6 +142,11 @@
     <!-- 根据openid移除绑定的cusId -->
     <update id="removeCusIdByOpenId" parameterType="String">
         update sys_wx_user_info set cus_id = null where openid = #{openid}
+    </update>
+
+    <!-- 根据客户ID更新健康减脂宣言 -->
+    <update id="updateHealthManifestoByCusId" parameterType="SysWxUserInfo">
+        update sys_wx_user_info set health_manifesto = #{healthManifesto} where cus_id = #{cusId}
     </update>
 
 </mapper>

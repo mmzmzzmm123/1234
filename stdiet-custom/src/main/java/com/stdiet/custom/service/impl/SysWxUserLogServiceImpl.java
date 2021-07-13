@@ -11,6 +11,7 @@ import com.stdiet.common.utils.oss.AliyunOSSUtils;
 import com.stdiet.custom.domain.SysMessageNotice;
 import com.stdiet.custom.domain.SysWxUserInfo;
 import com.stdiet.custom.domain.entityEnum.MessageNoticeEnum;
+import com.stdiet.custom.dto.response.CommunityPunchReponse;
 import com.stdiet.custom.page.WxLogInfo;
 import com.stdiet.custom.service.ISysMessageNoticeService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -143,6 +144,32 @@ public class SysWxUserLogServiceImpl implements ISysWxUserLogService {
      */
     public WxLogInfo getWxLogInfoDetailById(SysWxUserLog sysWxUserLog){
         return sysWxUserLogMapper.getWxLogInfoDetailById(sysWxUserLog);
+    }
+
+    /**
+     * 查询打卡社区记录
+     * @param sysWxUserLog
+     * @return
+     */
+    public List<CommunityPunchReponse> getCommunityPunch(SysWxUserLog sysWxUserLog){
+        return sysWxUserLogMapper.getCommunityPunch(sysWxUserLog);
+    }
+
+    /**
+     * 根据打卡社区
+     * @param sysWxUserLog
+     * @return
+     */
+    public int getPunchTotalNum(SysWxUserLog sysWxUserLog){
+        return  sysWxUserLogMapper.getPunchTotalNum(sysWxUserLog);
+    }
+
+    /**
+     * 查询打卡社区总共打卡人数
+     * @return
+     */
+    public int getPunchCustomerTotalNum(){
+        return  sysWxUserLogMapper.getPunchCustomerTotalNum();
     }
 
 }

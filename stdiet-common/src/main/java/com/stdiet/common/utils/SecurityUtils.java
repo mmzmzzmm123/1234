@@ -1,11 +1,16 @@
 package com.stdiet.common.utils;
 
+import com.stdiet.common.core.domain.entity.SysRole;
+import com.stdiet.common.core.domain.entity.SysUser;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import com.stdiet.common.constant.HttpStatus;
 import com.stdiet.common.core.domain.model.LoginUser;
 import com.stdiet.common.exception.CustomException;
+
+import javax.management.relation.Role;
+import java.util.List;
 
 /**
  * 安全服务工具类
@@ -14,6 +19,8 @@ import com.stdiet.common.exception.CustomException;
  */
 public class SecurityUtils
 {
+    public static final String[] managerRolePower = {"after_sale_manager","operations","personnel","sales_manager","admin","manager","admin-dev"};
+
     /**
      * 获取用户账户
      **/
@@ -86,5 +93,33 @@ public class SecurityUtils
     public static boolean isAdmin(Long userId)
     {
         return userId != null && 1L == userId;
+    }
+
+    /**
+     * 判断是否为管理人员
+     */
+    public static boolean isManager(LoginUser loginUser)
+    {
+        try
+        {
+            if(loginUser != null && loginUser.getUser() != null){
+                SysUser user = loginUser.getUser();
+                List<SysRole> roleList = user.getRoles();
+                if(roleList != null && roleList.size() > 0){
+                    for (SysRole role : roleList) {
+                        for (String power : managerRolePower) {
+                            if(power.equals(role.getRoleKey())){
+                                return true;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        catch (Exception e)
+        {
+            throw new CustomException("操作异常", HttpStatus.UNAUTHORIZED);
+        }
+        return false;
     }
 }

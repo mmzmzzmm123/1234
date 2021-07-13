@@ -1,5 +1,6 @@
 package com.stdiet.custom.dto.response;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 
 import java.math.BigDecimal;
@@ -36,6 +37,7 @@ public class CommunityPunchReponse {
     /**
      * 打卡日期时间
      */
+    @JsonFormat(pattern = "yyyy-MM-dd")
     private Date logTime;
 
     /**
@@ -51,7 +53,7 @@ public class CommunityPunchReponse {
     /**
      * 点赞数
      */
-    private String thumbsupNum;
+    private Integer thumbsupNum;
 
     /**
      * 健康宣言
