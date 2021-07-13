@@ -29,9 +29,14 @@ public class AppCompanyLoanController extends BaseController
     @PostMapping("/add")
     public AjaxResult add(@RequestBody DataCompanyLoan dataCompanyLoan)
     {
+        //TODO:鉴权，鉴定闽政通 TOKEN、用户 ID 是否合法，剥离到shiro过滤器
         return toAjax(dataCompanyLoanService.insertDataCompanyLoan(dataCompanyLoan));
     }
 
+    /**
+     * 测试接口是否打通，随时可以删除
+     * @return
+     */
     @GetMapping("/test")
     public AjaxResult test()
     {
