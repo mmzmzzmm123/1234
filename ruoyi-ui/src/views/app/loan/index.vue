@@ -1,0 +1,493 @@
+<template>
+  <div class="app-container">
+    <el-form :model="queryParams" ref="queryForm" :inline="true" v-show="showSearch" label-width="68px">
+      <el-form-item label="闽政通用户ID" prop="mztUserId">
+        <el-input
+          v-model="queryParams.mztUserId"
+          placeholder="请输入闽政通用户ID"
+          clearable
+          size="small"
+          @keyup.enter.native="handleQuery"
+        />
+      </el-form-item>
+      <el-form-item label="企业名称" prop="companyName">
+        <el-input
+          v-model="queryParams.companyName"
+          placeholder="请输入企业名称"
+          clearable
+          size="small"
+          @keyup.enter.native="handleQuery"
+        />
+      </el-form-item>
+      <el-form-item label="统一社会信用代码" prop="companyCreditCode">
+        <el-input
+          v-model="queryParams.companyCreditCode"
+          placeholder="请输入统一社会信用代码"
+          clearable
+          size="small"
+          @keyup.enter.native="handleQuery"
+        />
+      </el-form-item>
+      <el-form-item label="省份" prop="companyProvince">
+        <el-input
+          v-model="queryParams.companyProvince"
+          placeholder="请输入省份"
+          clearable
+          size="small"
+          @keyup.enter.native="handleQuery"
+        />
+      </el-form-item>
+      <el-form-item label="市" prop="companyCity">
+        <el-input
+          v-model="queryParams.companyCity"
+          placeholder="请输入市"
+          clearable
+          size="small"
+          @keyup.enter.native="handleQuery"
+        />
+      </el-form-item>
+      <el-form-item label="区或县" prop="companyArea">
+        <el-input
+          v-model="queryParams.companyArea"
+          placeholder="请输入区或县"
+          clearable
+          size="small"
+          @keyup.enter.native="handleQuery"
+        />
+      </el-form-item>
+      <el-form-item label="企业划型" prop="companyType">
+        <el-select v-model="queryParams.companyType" placeholder="请选择企业划型" clearable size="small">
+          <el-option label="请选择字典生成" value="" />
+        </el-select>
+      </el-form-item>
+      <el-form-item label="所在行业" prop="companyIndustry">
+        <el-input
+          v-model="queryParams.companyIndustry"
+          placeholder="请输入所在行业"
+          clearable
+          size="small"
+          @keyup.enter.native="handleQuery"
+        />
+      </el-form-item>
+      <el-form-item label="主营业务" prop="companyBusiness">
+        <el-input
+          v-model="queryParams.companyBusiness"
+          placeholder="请输入主营业务"
+          clearable
+          size="small"
+          @keyup.enter.native="handleQuery"
+        />
+      </el-form-item>
+      <el-form-item label="意向银行" prop="loanBand">
+        <el-input
+          v-model="queryParams.loanBand"
+          placeholder="请输入意向银行"
+          clearable
+          size="small"
+          @keyup.enter.native="handleQuery"
+        />
+      </el-form-item>
+      <el-form-item label="贷款金额" prop="loanAmount">
+        <el-input
+          v-model="queryParams.loanAmount"
+          placeholder="请输入贷款金额"
+          clearable
+          size="small"
+          @keyup.enter.native="handleQuery"
+        />
+      </el-form-item>
+      <el-form-item label="是否首次贷款" prop="loanFirst">
+        <el-input
+          v-model="queryParams.loanFirst"
+          placeholder="请输入是否首次贷款"
+          clearable
+          size="small"
+          @keyup.enter.native="handleQuery"
+        />
+      </el-form-item>
+      <el-form-item label="贷款用途" prop="loanPurpose">
+        <el-input
+          v-model="queryParams.loanPurpose"
+          placeholder="请输入贷款用途"
+          clearable
+          size="small"
+          @keyup.enter.native="handleQuery"
+        />
+      </el-form-item>
+      <el-form-item label="联系人姓名" prop="contactName">
+        <el-input
+          v-model="queryParams.contactName"
+          placeholder="请输入联系人姓名"
+          clearable
+          size="small"
+          @keyup.enter.native="handleQuery"
+        />
+      </el-form-item>
+      <el-form-item label="联系人手机" prop="contactPhone">
+        <el-input
+          v-model="queryParams.contactPhone"
+          placeholder="请输入联系人手机"
+          clearable
+          size="small"
+          @keyup.enter.native="handleQuery"
+        />
+      </el-form-item>
+      <el-form-item>
+        <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
+        <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
+      </el-form-item>
+    </el-form>
+
+    <el-row :gutter="10" class="mb8">
+      <el-col :span="1.5">
+        <el-button
+          type="primary"
+          plain
+          icon="el-icon-plus"
+          size="mini"
+          @click="handleAdd"
+          v-hasPermi="['app:loan:add']"
+        >新增</el-button>
+      </el-col>
+      <el-col :span="1.5">
+        <el-button
+          type="success"
+          plain
+          icon="el-icon-edit"
+          size="mini"
+          :disabled="single"
+          @click="handleUpdate"
+          v-hasPermi="['app:loan:edit']"
+        >修改</el-button>
+      </el-col>
+      <el-col :span="1.5">
+        <el-button
+          type="danger"
+          plain
+          icon="el-icon-delete"
+          size="mini"
+          :disabled="multiple"
+          @click="handleDelete"
+          v-hasPermi="['app:loan:remove']"
+        >删除</el-button>
+      </el-col>
+      <el-col :span="1.5">
+        <el-button
+          type="warning"
+          plain
+          icon="el-icon-download"
+          size="mini"
+		  :loading="exportLoading"
+          @click="handleExport"
+          v-hasPermi="['app:loan:export']"
+        >导出</el-button>
+      </el-col>
+      <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
+    </el-row>
+
+    <el-table v-loading="loading" :data="loanList" @selection-change="handleSelectionChange">
+      <el-table-column type="selection" width="55" align="center" />
+      <el-table-column label="企业id" align="center" prop="companyId" />
+      <el-table-column label="闽政通用户ID" align="center" prop="mztUserId" />
+      <el-table-column label="企业名称" align="center" prop="companyName" />
+      <el-table-column label="统一社会信用代码" align="center" prop="companyCreditCode" />
+      <el-table-column label="省份" align="center" prop="companyProvince" />
+      <el-table-column label="市" align="center" prop="companyCity" />
+      <el-table-column label="区或县" align="center" prop="companyArea" />
+      <el-table-column label="企业划型" align="center" prop="companyType" />
+      <el-table-column label="所在行业" align="center" prop="companyIndustry" />
+      <el-table-column label="主营业务" align="center" prop="companyBusiness" />
+      <el-table-column label="意向银行" align="center" prop="loanBand" />
+      <el-table-column label="贷款金额" align="center" prop="loanAmount" />
+      <el-table-column label="是否首次贷款" align="center" prop="loanFirst" />
+      <el-table-column label="贷款用途" align="center" prop="loanPurpose" />
+      <el-table-column label="备注说明" align="center" prop="remark" />
+      <el-table-column label="联系人姓名" align="center" prop="contactName" />
+      <el-table-column label="联系人手机" align="center" prop="contactPhone" />
+      <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
+        <template slot-scope="scope">
+          <el-button
+            size="mini"
+            type="text"
+            icon="el-icon-edit"
+            @click="handleUpdate(scope.row)"
+            v-hasPermi="['app:loan:edit']"
+          >修改</el-button>
+          <el-button
+            size="mini"
+            type="text"
+            icon="el-icon-delete"
+            @click="handleDelete(scope.row)"
+            v-hasPermi="['app:loan:remove']"
+          >删除</el-button>
+        </template>
+      </el-table-column>
+    </el-table>
+    
+    <pagination
+      v-show="total>0"
+      :total="total"
+      :page.sync="queryParams.pageNum"
+      :limit.sync="queryParams.pageSize"
+      @pagination="getList"
+    />
+
+    <!-- 添加或修改企业贷款信息对话框 -->
+    <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
+      <el-form ref="form" :model="form" :rules="rules" label-width="80px">
+        <el-form-item label="闽政通用户ID" prop="mztUserId">
+          <el-input v-model="form.mztUserId" placeholder="请输入闽政通用户ID" />
+        </el-form-item>
+        <el-form-item label="企业名称" prop="companyName">
+          <el-input v-model="form.companyName" placeholder="请输入企业名称" />
+        </el-form-item>
+        <el-form-item label="统一社会信用代码" prop="companyCreditCode">
+          <el-input v-model="form.companyCreditCode" placeholder="请输入统一社会信用代码" />
+        </el-form-item>
+        <el-form-item label="省份" prop="companyProvince">
+          <el-input v-model="form.companyProvince" placeholder="请输入省份" />
+        </el-form-item>
+        <el-form-item label="市" prop="companyCity">
+          <el-input v-model="form.companyCity" placeholder="请输入市" />
+        </el-form-item>
+        <el-form-item label="区或县" prop="companyArea">
+          <el-input v-model="form.companyArea" placeholder="请输入区或县" />
+        </el-form-item>
+        <el-form-item label="企业划型" prop="companyType">
+          <el-select v-model="form.companyType" placeholder="请选择企业划型">
+            <el-option label="请选择字典生成" value="" />
+          </el-select>
+        </el-form-item>
+        <el-form-item label="所在行业" prop="companyIndustry">
+          <el-input v-model="form.companyIndustry" placeholder="请输入所在行业" />
+        </el-form-item>
+        <el-form-item label="主营业务" prop="companyBusiness">
+          <el-input v-model="form.companyBusiness" placeholder="请输入主营业务" />
+        </el-form-item>
+        <el-form-item label="意向银行" prop="loanBand">
+          <el-input v-model="form.loanBand" placeholder="请输入意向银行" />
+        </el-form-item>
+        <el-form-item label="贷款金额" prop="loanAmount">
+          <el-input v-model="form.loanAmount" placeholder="请输入贷款金额" />
+        </el-form-item>
+        <el-form-item label="是否首次贷款" prop="loanFirst">
+          <el-input v-model="form.loanFirst" placeholder="请输入是否首次贷款" />
+        </el-form-item>
+        <el-form-item label="贷款用途" prop="loanPurpose">
+          <el-input v-model="form.loanPurpose" placeholder="请输入贷款用途" />
+        </el-form-item>
+        <el-form-item label="备注说明" prop="remark">
+          <el-input v-model="form.remark" placeholder="请输入备注说明" />
+        </el-form-item>
+        <el-form-item label="联系人姓名" prop="contactName">
+          <el-input v-model="form.contactName" placeholder="请输入联系人姓名" />
+        </el-form-item>
+        <el-form-item label="联系人手机" prop="contactPhone">
+          <el-input v-model="form.contactPhone" placeholder="请输入联系人手机" />
+        </el-form-item>
+        <el-form-item label="删除标志" prop="delFlag">
+          <el-input v-model="form.delFlag" placeholder="请输入删除标志" />
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button type="primary" @click="submitForm">确 定</el-button>
+        <el-button @click="cancel">取 消</el-button>
+      </div>
+    </el-dialog>
+  </div>
+</template>
+
+<script>
+import { listLoan, getLoan, delLoan, addLoan, updateLoan, exportLoan } from "@/api/app/loan";
+
+export default {
+  name: "Loan",
+  data() {
+    return {
+      // 遮罩层
+      loading: true,
+      // 导出遮罩层
+      exportLoading: false,
+      // 选中数组
+      ids: [],
+      // 非单个禁用
+      single: true,
+      // 非多个禁用
+      multiple: true,
+      // 显示搜索条件
+      showSearch: true,
+      // 总条数
+      total: 0,
+      // 企业贷款信息表格数据
+      loanList: [],
+      // 弹出层标题
+      title: "",
+      // 是否显示弹出层
+      open: false,
+      // 查询参数
+      queryParams: {
+        pageNum: 1,
+        pageSize: 10,
+        mztUserId: null,
+        companyName: null,
+        companyCreditCode: null,
+        companyProvince: null,
+        companyCity: null,
+        companyArea: null,
+        companyType: null,
+        companyIndustry: null,
+        companyBusiness: null,
+        loanBand: null,
+        loanAmount: null,
+        loanFirst: null,
+        loanPurpose: null,
+        contactName: null,
+        contactPhone: null,
+      },
+      // 表单参数
+      form: {},
+      // 表单校验
+      rules: {
+        mztUserId: [
+          { required: true, message: "闽政通用户ID不能为空", trigger: "blur" }
+        ],
+        companyName: [
+          { required: true, message: "企业名称不能为空", trigger: "blur" }
+        ],
+        companyCreditCode: [
+          { required: true, message: "统一社会信用代码不能为空", trigger: "blur" }
+        ],
+        loanAmount: [
+          { required: true, message: "贷款金额不能为空", trigger: "blur" }
+        ],
+      }
+    };
+  },
+  created() {
+    this.getList();
+  },
+  methods: {
+    /** 查询企业贷款信息列表 */
+    getList() {
+      this.loading = true;
+      listLoan(this.queryParams).then(response => {
+        this.loanList = response.rows;
+        this.total = response.total;
+        this.loading = false;
+      });
+    },
+    // 取消按钮
+    cancel() {
+      this.open = false;
+      this.reset();
+    },
+    // 表单重置
+    reset() {
+      this.form = {
+        companyId: null,
+        mztUserId: null,
+        companyName: null,
+        companyCreditCode: null,
+        companyProvince: null,
+        companyCity: null,
+        companyArea: null,
+        companyType: null,
+        companyIndustry: null,
+        companyBusiness: null,
+        loanBand: null,
+        loanAmount: null,
+        loanFirst: null,
+        loanPurpose: null,
+        remark: null,
+        contactName: null,
+        contactPhone: null,
+        delFlag: null,
+        createTime: null,
+        updateTime: null
+      };
+      this.resetForm("form");
+    },
+    /** 搜索按钮操作 */
+    handleQuery() {
+      this.queryParams.pageNum = 1;
+      this.getList();
+    },
+    /** 重置按钮操作 */
+    resetQuery() {
+      this.resetForm("queryForm");
+      this.handleQuery();
+    },
+    // 多选框选中数据
+    handleSelectionChange(selection) {
+      this.ids = selection.map(item => item.companyId)
+      this.single = selection.length!==1
+      this.multiple = !selection.length
+    },
+    /** 新增按钮操作 */
+    handleAdd() {
+      this.reset();
+      this.open = true;
+      this.title = "添加企业贷款信息";
+    },
+    /** 修改按钮操作 */
+    handleUpdate(row) {
+      this.reset();
+      const companyId = row.companyId || this.ids
+      getLoan(companyId).then(response => {
+        this.form = response.data;
+        this.open = true;
+        this.title = "修改企业贷款信息";
+      });
+    },
+    /** 提交按钮 */
+    submitForm() {
+      this.$refs["form"].validate(valid => {
+        if (valid) {
+          if (this.form.companyId != null) {
+            updateLoan(this.form).then(response => {
+              this.msgSuccess("修改成功");
+              this.open = false;
+              this.getList();
+            });
+          } else {
+            addLoan(this.form).then(response => {
+              this.msgSuccess("新增成功");
+              this.open = false;
+              this.getList();
+            });
+          }
+        }
+      });
+    },
+    /** 删除按钮操作 */
+    handleDelete(row) {
+      const companyIds = row.companyId || this.ids;
+      this.$confirm('是否确认删除企业贷款信息编号为"' + companyIds + '"的数据项?', "警告", {
+          confirmButtonText: "确定",
+          cancelButtonText: "取消",
+          type: "warning"
+        }).then(function() {
+          return delLoan(companyIds);
+        }).then(() => {
+          this.getList();
+          this.msgSuccess("删除成功");
+        }).catch(() => {});
+    },
+    /** 导出按钮操作 */
+    handleExport() {
+      const queryParams = this.queryParams;
+      this.$confirm('是否确认导出所有企业贷款信息数据项?', "警告", {
+          confirmButtonText: "确定",
+          cancelButtonText: "取消",
+          type: "warning"
+        }).then(() => {
+          this.exportLoading = true;
+          return exportLoan(queryParams);
+        }).then(response => {
+          this.download(response.msg);
+          this.exportLoading = false;
+        }).catch(() => {});
+    }
+  }
+};
+</script>

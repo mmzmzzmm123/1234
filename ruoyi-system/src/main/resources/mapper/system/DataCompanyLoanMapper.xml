@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.app.mapper.DataCompanyLoanMapper">
+    
+    <resultMap type="DataCompanyLoan" id="DataCompanyLoanResult">
+        <result property="companyId"    column="company_id"    />
+        <result property="mztUserId"    column="mzt_user_id"    />
+        <result property="companyName"    column="company_name"    />
+        <result property="companyCreditCode"    column="company_credit_code"    />
+        <result property="companyProvince"    column="company_province"    />
+        <result property="companyCity"    column="company_city"    />
+        <result property="companyArea"    column="company_area"    />
+        <result property="companyType"    column="company_type"    />
+        <result property="companyIndustry"    column="company_industry"    />
+        <result property="companyBusiness"    column="company_business"    />
+        <result property="loanBand"    column="loan_band"    />
+        <result property="loanAmount"    column="loan_amount"    />
+        <result property="loanFirst"    column="loan_first"    />
+        <result property="loanPurpose"    column="loan_purpose"    />
+        <result property="remark"    column="remark"    />
+        <result property="contactName"    column="contact_name"    />
+        <result property="contactPhone"    column="contact_phone"    />
+        <result property="delFlag"    column="del_flag"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateTime"    column="update_time"    />
+    </resultMap>
+
+    <sql id="selectDataCompanyLoanVo">
+        select company_id, mzt_user_id, company_name, company_credit_code, company_province, company_city, company_area, company_type, company_industry, company_business, loan_band, loan_amount, loan_first, loan_purpose, remark, contact_name, contact_phone, del_flag, create_time, update_time from data_company_loan
+    </sql>
+
+    <select id="selectDataCompanyLoanList" parameterType="DataCompanyLoan" resultMap="DataCompanyLoanResult">
+        <include refid="selectDataCompanyLoanVo"/>
+        <where>  
+            <if test="mztUserId != null  and mztUserId != ''"> and mzt_user_id = #{mztUserId}</if>
+            <if test="companyName != null  and companyName != ''"> and company_name like concat('%', #{companyName}, '%')</if>
+            <if test="companyCreditCode != null  and companyCreditCode != ''"> and company_credit_code = #{companyCreditCode}</if>
+            <if test="companyProvince != null  and companyProvince != ''"> and company_province = #{companyProvince}</if>
+            <if test="companyCity != null  and companyCity != ''"> and company_city = #{companyCity}</if>
+            <if test="companyArea != null  and companyArea != ''"> and company_area = #{companyArea}</if>
+            <if test="companyType != null  and companyType != ''"> and company_type = #{companyType}</if>
+            <if test="companyIndustry != null  and companyIndustry != ''"> and company_industry = #{companyIndustry}</if>
+            <if test="companyBusiness != null  and companyBusiness != ''"> and company_business = #{companyBusiness}</if>
+            <if test="loanBand != null  and loanBand != ''"> and loan_band = #{loanBand}</if>
+            <if test="loanAmount != null "> and loan_amount = #{loanAmount}</if>
+            <if test="loanFirst != null  and loanFirst != ''"> and loan_first = #{loanFirst}</if>
+            <if test="loanPurpose != null  and loanPurpose != ''"> and loan_purpose = #{loanPurpose}</if>
+            <if test="contactName != null  and contactName != ''"> and contact_name like concat('%', #{contactName}, '%')</if>
+            <if test="contactPhone != null  and contactPhone != ''"> and contact_phone = #{contactPhone}</if>
+        </where>
+    </select>
+    
+    <select id="selectDataCompanyLoanById" parameterType="Long" resultMap="DataCompanyLoanResult">
+        <include refid="selectDataCompanyLoanVo"/>
+        where company_id = #{companyId}
+    </select>
+        
+    <insert id="insertDataCompanyLoan" parameterType="DataCompanyLoan" useGeneratedKeys="true" keyProperty="companyId">
+        insert into data_company_loan
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="mztUserId != null and mztUserId != ''">mzt_user_id,</if>
+            <if test="companyName != null and companyName != ''">company_name,</if>
+            <if test="companyCreditCode != null and companyCreditCode != ''">company_credit_code,</if>
+            <if test="companyProvince != null">company_province,</if>
+            <if test="companyCity != null">company_city,</if>
+            <if test="companyArea != null">company_area,</if>
+            <if test="companyType != null">company_type,</if>
+            <if test="companyIndustry != null">company_industry,</if>
+            <if test="companyBusiness != null">company_business,</if>
+            <if test="loanBand != null">loan_band,</if>
+            <if test="loanAmount != null">loan_amount,</if>
+            <if test="loanFirst != null">loan_first,</if>
+            <if test="loanPurpose != null">loan_purpose,</if>
+            <if test="remark != null">remark,</if>
+            <if test="contactName != null">contact_name,</if>
+            <if test="contactPhone != null">contact_phone,</if>
+            <if test="delFlag != null">del_flag,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateTime != null">update_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="mztUserId != null and mztUserId != ''">#{mztUserId},</if>
+            <if test="companyName != null and companyName != ''">#{companyName},</if>
+            <if test="companyCreditCode != null and companyCreditCode != ''">#{companyCreditCode},</if>
+            <if test="companyProvince != null">#{companyProvince},</if>
+            <if test="companyCity != null">#{companyCity},</if>
+            <if test="companyArea != null">#{companyArea},</if>
+            <if test="companyType != null">#{companyType},</if>
+            <if test="companyIndustry != null">#{companyIndustry},</if>
+            <if test="companyBusiness != null">#{companyBusiness},</if>
+            <if test="loanBand != null">#{loanBand},</if>
+            <if test="loanAmount != null">#{loanAmount},</if>
+            <if test="loanFirst != null">#{loanFirst},</if>
+            <if test="loanPurpose != null">#{loanPurpose},</if>
+            <if test="remark != null">#{remark},</if>
+            <if test="contactName != null">#{contactName},</if>
+            <if test="contactPhone != null">#{contactPhone},</if>
+            <if test="delFlag != null">#{delFlag},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateDataCompanyLoan" parameterType="DataCompanyLoan">
+        update data_company_loan
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="mztUserId != null and mztUserId != ''">mzt_user_id = #{mztUserId},</if>
+            <if test="companyName != null and companyName != ''">company_name = #{companyName},</if>
+            <if test="companyCreditCode != null and companyCreditCode != ''">company_credit_code = #{companyCreditCode},</if>
+            <if test="companyProvince != null">company_province = #{companyProvince},</if>
+            <if test="companyCity != null">company_city = #{companyCity},</if>
+            <if test="companyArea != null">company_area = #{companyArea},</if>
+            <if test="companyType != null">company_type = #{companyType},</if>
+            <if test="companyIndustry != null">company_industry = #{companyIndustry},</if>
+            <if test="companyBusiness != null">company_business = #{companyBusiness},</if>
+            <if test="loanBand != null">loan_band = #{loanBand},</if>
+            <if test="loanAmount != null">loan_amount = #{loanAmount},</if>
+            <if test="loanFirst != null">loan_first = #{loanFirst},</if>
+            <if test="loanPurpose != null">loan_purpose = #{loanPurpose},</if>
+            <if test="remark != null">remark = #{remark},</if>
+            <if test="contactName != null">contact_name = #{contactName},</if>
+            <if test="contactPhone != null">contact_phone = #{contactPhone},</if>
+            <if test="delFlag != null">del_flag = #{delFlag},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+        </trim>
+        where company_id = #{companyId}
+    </update>
+
+    <delete id="deleteDataCompanyLoanById" parameterType="Long">
+        delete from data_company_loan where company_id = #{companyId}
+    </delete>
+
+    <delete id="deleteDataCompanyLoanByIds" parameterType="String">
+        delete from data_company_loan where company_id in 
+        <foreach item="companyId" collection="array" open="(" separator="," close=")">
+            #{companyId}
+        </foreach>
+    </delete>
+</mapper>
