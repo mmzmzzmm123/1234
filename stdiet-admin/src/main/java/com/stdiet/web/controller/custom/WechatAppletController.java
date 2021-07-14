@@ -778,11 +778,12 @@ public class WechatAppletController extends BaseController {
             }
         }
         return AjaxResult.success(result);
-    }*/
+    }
 
 
     /**
      * 查询打卡社区
+     *
      * @return
      */
     @GetMapping("/getCommunityPunch")
@@ -801,18 +802,19 @@ public class WechatAppletController extends BaseController {
 
     /**
      * 修改健康减脂宣言
+     *
      * @return
      */
     @PostMapping("/updateHealthManifesto")
-    public AjaxResult updateHealthManifesto(@RequestParam("cusId")String cusId, @RequestParam("healthManifesto")String healthManifesto) {
-        if(StringUtils.isEmpty(healthManifesto,cusId)){
+    public AjaxResult updateHealthManifesto(@RequestParam("cusId") String cusId, @RequestParam("healthManifesto") String healthManifesto) {
+        if (StringUtils.isEmpty(healthManifesto, cusId)) {
             return AjaxResult.error("缺少必要参数");
         }
         cusId = AesUtils.decrypt(cusId);
-        if(cusId == null){
+        if (cusId == null) {
             return AjaxResult.error("参数不合法");
         }
-        if(healthManifesto.length() > 200){
+        if (healthManifesto.length() > 200) {
             return AjaxResult.error("健康宣言字数过长");
         }
         SysWxUserInfo sysWxUserInfo = new SysWxUserInfo();
@@ -823,21 +825,22 @@ public class WechatAppletController extends BaseController {
 
     /**
      * 获取个人中心数据（健康宣言、消息条数、打卡社区总打卡次数、打卡次数）
+     *
      * @return
      */
     @GetMapping("/getCustomerCenterInfo")
-    public AjaxResult getCustomerCenterInfo(@RequestParam("cusId")String cusId) {
-        if(StringUtils.isEmpty(cusId)){
+    public AjaxResult getCustomerCenterInfo(@RequestParam("cusId") String cusId) {
+        if (StringUtils.isEmpty(cusId)) {
             return AjaxResult.error("缺少必要参数");
         }
         cusId = AesUtils.decrypt(cusId);
-        if(cusId == null){
+        if (cusId == null) {
             return AjaxResult.error("参数不合法");
         }
         AjaxResult result = AjaxResult.success();
         //获取健康宣言
         SysWxUserInfo sysWxUserInfo = sysWxUserInfoService.selectSysWxUserInfoByCusId(Long.parseLong(cusId));
-        result.put("healthManifesto",sysWxUserInfo.getHealthManifesto() == null ? "" : sysWxUserInfo.getHealthManifesto());
+        result.put("healthManifesto", sysWxUserInfo.getHealthManifesto() == null ? "" : sysWxUserInfo.getHealthManifesto());
         //获取未读消息条数
         SysMessageNotice messageParam = new SysMessageNotice();
         messageParam.setReadType(0);
@@ -857,6 +860,7 @@ public class WechatAppletController extends BaseController {
 
     /**
      * 获取需要在小程序展示的Banner图
+     *
      * @return
      */
     @GetMapping("/getShowBannerImage")
