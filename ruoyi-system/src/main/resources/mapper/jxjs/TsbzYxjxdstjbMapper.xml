@@ -7,31 +7,73 @@
     <resultMap type="TsbzYxjxdstjb" id="TsbzYxjxdstjbResult">
         <result property="id"    column="id"    />
         <result property="dsid"    column="dsid"    />
+        <result property="dsxm"    column="dsxm"    />
         <result property="deptId"    column="dept_id"    />
         <result property="createuserid"    column="createuserid"    />
         <result property="nf"    column="nf"    />
         <result property="tjly"    column="tjly"    />
         <result property="createTime"    column="create_time"    />
+        <association property="tsbzDsjbxx" column="dsid" javaType="TsbzDsjbxx" resultMap="TsbzDsjbxxResult"/>
+    </resultMap>
+
+    <resultMap type="TsbzDsjbxx" id="TsbzDsjbxxResult">
+        <result property="id"    column="id"    />
+        <result property="jsid"    column="jsid"    />
+        <result property="jsxm"    column="jsxm"    />
+        <result property="xb"    column="xb"    />
+        <result property="deptid"    column="deptid"    />
+        <result property="dabh"    column="dabh"    />
+        <result property="zjlx"    column="zjlx"    />
+        <result property="zjhm"    column="zjhm"    />
+        <result property="bzzt"    column="bzzt"    />
+        <result property="gwzt"    column="gwzt"    />
+        <result property="gwlx"    column="gwlx"    />
+        <result property="csrq"    column="csrq"    />
+        <result property="rjnx"    column="rjnx"    />
+        <result property="zc"    column="zc"    />
+        <result property="zyry"    column="zyry"    />
+        <result property="tzb"    column="tzb"    />
+        <result property="zks"    column="zks"    />
+        <result property="xd"    column="xd"    />
+        <result property="xk"    column="xk"    />
+        <result property="dslx"    column="dslx"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="dsxscount"    column="dsxscount"    />
     </resultMap>
 
     <sql id="selectTsbzYxjxdstjbVo">
-        select id, dsid, dept_id, createuserid, nf, tjly, create_time from tsbz_yxjxdstjb
+        select b.id, b.dsid, b.dept_id, b.createuserid, b.nf, b.tjly, b.create_time,a.jsxm,a.id as jsid from tsbz_dsjbxx a
+        left join tsbz_yxjxdstjb b on a.id=b.dsid
     </sql>
 
     <select id="selectTsbzYxjxdstjbList" parameterType="TsbzYxjxdstjb" resultMap="TsbzYxjxdstjbResult">
         <include refid="selectTsbzYxjxdstjbVo"/>
         <where>
-            <if test="dsid != null "> and dsid = #{dsid}</if>
-            <if test="deptId != null "> and dept_id = #{deptId}</if>
-            <if test="createuserid != null "> and createuserid = #{createuserid}</if>
-            <if test="nf != null  and nf != ''"> and nf = #{nf}</if>
-            <if test="tjly != null  and tjly != ''"> and tjly = #{tjly}</if>
+            a.dslx='01'
+            <if test="dsid != null "> and b.dsid = #{dsid}</if>
+            <if test="deptId != null "> and b.dept_id = #{deptId}</if>
+            <if test="createuserid != null "> and b.createuserid = #{createuserid}</if>
+            <if test="nf != null  and nf != ''"> and b.nf = #{nf}</if>
+            <if test="tjly != null  and tjly != ''"> and b.tjly = #{tjly}</if>
+        </where>
+    </select>
+
+    <select id="selectTsbzYxjxdstjbListExport" parameterType="TsbzYxjxdstjb" resultMap="TsbzYxjxdstjbResult">
+        select a.id, a.dsid, a.dept_id, a.createuserid, a.nf, a.tjly, a.create_time,b.jsxm as dsxm,b.id as jsid from tsbz_yxjxdstjb a
+        left join tsbz_dsjbxx b on a.dsid=b.id
+        <where>
+            b.dslx='01'
+            <if test="dsid != null "> and a.dsid = #{dsid}</if>
+            <if test="deptId != null "> and a.dept_id = #{deptId}</if>
+            <if test="createuserid != null "> and a.createuserid = #{createuserid}</if>
+            <if test="nf != null  and nf != ''"> and a.nf = #{nf}</if>
+            <if test="tjly != null  and tjly != ''"> and a.tjly = #{tjly}</if>
         </where>
     </select>
 
     <select id="selectTsbzYxjxdstjbById" parameterType="Long" resultMap="TsbzYxjxdstjbResult">
         <include refid="selectTsbzYxjxdstjbVo"/>
-        where id = #{id}
+        where b.id = #{id}
     </select>
 
     <insert id="insertTsbzYxjxdstjb" parameterType="TsbzYxjxdstjb" useGeneratedKeys="true" keyProperty="id">

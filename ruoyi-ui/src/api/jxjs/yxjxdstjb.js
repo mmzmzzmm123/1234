@@ -9,6 +9,15 @@ export function listYxjxdstjb(query) {
   })
 }
 
+// 查询优秀见习导师推荐列表
+export function listYxjxdstjbexport(query) {
+  return request({
+    url: '/jxjs/yxjxdstjb/listexport',
+    method: 'get',
+    params: query
+  })
+}
+
 // 查询优秀见习导师推荐详细
 export function getYxjxdstjb(id) {
   return request({

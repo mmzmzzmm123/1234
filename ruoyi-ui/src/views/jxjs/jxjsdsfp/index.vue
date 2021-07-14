@@ -249,6 +249,7 @@
         <el-button type="primary" @click="submitForm_dsfp">确 定</el-button>
         <el-button @click="cancel_dsfp">取 消</el-button>
       </div>
+      <el-form ref="form" :model="form"> </el-form>
     </el-dialog>
   </div>
 </template>
@@ -269,6 +270,8 @@ export default {
   name: "Jxjsdsfp",
   data() {
     return {
+      //弹出窗口传值，见习教师id
+      jxjsid: null,
       // 遮罩层
       loading: true,
       // 选中数组
@@ -353,21 +356,9 @@ export default {
     // 导师字典翻译
     dsFormat(row, column) {
       var actions = [];
-      var datas = this.dsAllOptions;
+      var datas = this.dsjbxxList;
       Object.keys(datas).map((key) => {
         if (datas[key].id == "" + row.dsid) {
-          actions.push(datas[key].jsxm);
-          return false;
-        }
-      });
-      return actions.join("");
-    },
-    // 新页面导师字典翻译
-    dsFormatNew(row, column) {
-      var actions = [];
-      var datas = this.dsAllOptions;
-      Object.keys(datas).map((key) => {
-        if (datas[key].id == "" + row.id) {
           actions.push(datas[key].jsxm);
           return false;
         }
@@ -388,16 +379,11 @@ export default {
         this.dsjbxxList = response.rows;
       });
     },
-    getDsjbxxFa() {
-      getDsjbxx(null).then((response) => {
-        this.dsAllOptions = response.rows;
-      });
-    },
     /** 查询见习导师分配列表 */
     getList() {
       this.loading = true;
       listJxjsdsfp(this.queryParams).then((response) => {
-        console.log(response);
+        //console.log(response);
         this.jxjsdsfpList = response.rows;
         this.total = response.total;
         this.loading = false;
@@ -464,8 +450,10 @@ export default {
       } else if (this.dsidChose.length > 1) {
         this.msgError("只能选择一名导师");
       } else {
+        this.reset();
         //console.log(this.form);
         this.form.dsid = this.dsidChose[0];
+        this.form.jxjsid = this.jxjsid;
         if (this.form.id != null) {
           updateJxjsdsfp(this.form).then((response) => {
             if (response.code === 200) {
@@ -506,10 +494,10 @@ export default {
           if (id.length > 1) {
             this.msgError("只支持单选");
           } else {
-            this.reset();
+            console.log(row.tsbzJxjsjbxx.id);
+            this.jxjsid = row.tsbzJxjsjbxx.id;
             if (id == "" || id == null) {
               this.getDsList();
-              this.form.jxjsid = row.jxjsid;
               this.open_dsfp = true;
             } else {
               getJxjsdsfp(id).then((response) => {

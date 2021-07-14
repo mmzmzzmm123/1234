@@ -1,5 +1,6 @@
 package com.ruoyi.jxjs.domain;
 
+import com.ruoyi.jxzxkhgl.domain.TsbzDsjbxx;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import com.ruoyi.common.annotation.Excel;
@@ -22,19 +23,33 @@ public class TsbzYxjxdstjb extends BaseEntity {
     /**
      * 优秀导师
      */
-    @Excel(name = "优秀导师")
+//    @Excel(name = "优秀导师")
     private Long dsid;
+
+    public String getDsxm() {
+        return dsxm;
+    }
+
+    public void setDsxm(String dsxm) {
+        this.dsxm = dsxm;
+    }
+
+    /**
+     * 优秀导师
+     */
+    @Excel(name = "优秀导师")
+    private String dsxm;
 
     /**
      * 所属部门
      */
-    @Excel(name = "所属部门")
+//    @Excel(name = "所属部门")
     private Long deptId;
 
     /**
      * 推荐人
      */
-    @Excel(name = "推荐人")
+//    @Excel(name = "推荐人")
     private Long createuserid;
 
     /**
@@ -48,6 +63,16 @@ public class TsbzYxjxdstjb extends BaseEntity {
      */
     @Excel(name = "推荐理由")
     private String tjly;
+
+    public TsbzDsjbxx getTsbzDsjbxx() {
+        return tsbzDsjbxx;
+    }
+
+    public void setTsbzDsjbxx(TsbzDsjbxx tsbzDsjbxx) {
+        this.tsbzDsjbxx = tsbzDsjbxx;
+    }
+
+    private TsbzDsjbxx tsbzDsjbxx;
 
     public void setId(Long id) {
         this.id = id;
@@ -102,11 +127,13 @@ public class TsbzYxjxdstjb extends BaseEntity {
         return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE)
                 .append("id", getId())
                 .append("dsid", getDsid())
+                .append("dsxm", getDsxm())
                 .append("deptId", getDeptId())
                 .append("createuserid", getCreateuserid())
                 .append("nf", getNf())
                 .append("tjly", getTjly())
                 .append("createTime", getCreateTime())
+                .append("tsbzDsjbxx", getTsbzDsjbxx())
                 .toString();
     }
 }

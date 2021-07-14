@@ -27,6 +27,15 @@ public interface ITsbzYxjxdstjbService {
      */
     public List<TsbzYxjxdstjb> selectTsbzYxjxdstjbList(TsbzYxjxdstjb tsbzYxjxdstjb);
 
+
+    /**
+     * 查询优秀见习导师推荐列表
+     *
+     * @param tsbzYxjxdstjb 优秀见习导师推荐
+     * @return 优秀见习导师推荐集合
+     */
+    public List<TsbzYxjxdstjb> selectTsbzYxjxdstjbListExport(TsbzYxjxdstjb tsbzYxjxdstjb);
+
     /**
      * 新增优秀见习导师推荐
      *

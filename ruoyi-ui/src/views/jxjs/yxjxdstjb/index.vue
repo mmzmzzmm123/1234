@@ -56,7 +56,7 @@
     <el-table v-loading="loading" :data="yxjxdstjbList">
       <!-- <el-table-column type="selection" width="55" align="center" />
       <el-table-column label="编号" align="center" prop="id" /> -->
-      <el-table-column label="优秀导师" align="center" prop="dsid" />
+      <el-table-column label="优秀导师" align="center" prop="dsxm" />
       <!-- <el-table-column label="所属部门" align="center" prop="deptId" />
       <el-table-column label="推荐人" align="center" prop="createuserid" /> -->
       <el-table-column label="推荐理由" align="center" prop="tjly" />
@@ -75,7 +75,7 @@
 
 <script>
 import {
-  listYxjxdstjb,
+  listYxjxdstjbexport,
   getYxjxdstjb,
   exportYxjxdstjb,
 } from "@/api/jxjs/yxjxdstjb";
@@ -134,7 +134,7 @@ export default {
     /** 查询优秀见习导师推荐列表 */
     getList() {
       this.loading = true;
-      listYxjxdstjb(this.queryParams).then((response) => {
+      listYxjxdstjbexport(this.queryParams).then((response) => {
         this.yxjxdstjbList = response.rows;
         this.total = response.total;
         this.loading = false;

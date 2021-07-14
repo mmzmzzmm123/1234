@@ -2,6 +2,7 @@ package com.ruoyi.web.controller.jxjs;
 
 import java.util.List;
 
+import com.ruoyi.common.utils.SecurityUtils;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -45,13 +46,24 @@ public class TsbzYxjxdstjbController extends BaseController {
     }
 
     /**
+     * 查询优秀见习导师推荐列表
+     */
+    @PreAuthorize("@ss.hasPermi('jxjs:yxjxdstjb:list')")
+    @GetMapping("/listexport")
+    public TableDataInfo listexport(TsbzYxjxdstjb tsbzYxjxdstjb) {
+        startPage();
+        List<TsbzYxjxdstjb> list = tsbzYxjxdstjbService.selectTsbzYxjxdstjbListExport(tsbzYxjxdstjb);
+        return getDataTable(list);
+    }
+
+    /**
      * 导出优秀见习导师推荐列表
      */
     @PreAuthorize("@ss.hasPermi('jxjs:yxjxdstjb:export')")
     @Log(title = "优秀见习导师推荐", businessType = BusinessType.EXPORT)
     @GetMapping("/export")
     public AjaxResult export(TsbzYxjxdstjb tsbzYxjxdstjb) {
-        List<TsbzYxjxdstjb> list = tsbzYxjxdstjbService.selectTsbzYxjxdstjbList(tsbzYxjxdstjb);
+        List<TsbzYxjxdstjb> list = tsbzYxjxdstjbService.selectTsbzYxjxdstjbListExport(tsbzYxjxdstjb);
         ExcelUtil<TsbzYxjxdstjb> util = new ExcelUtil<TsbzYxjxdstjb>(TsbzYxjxdstjb.class);
         return util.exportExcel(list, "yxjxdstjb");
     }
@@ -72,6 +84,7 @@ public class TsbzYxjxdstjbController extends BaseController {
     @Log(title = "优秀见习导师推荐", businessType = BusinessType.INSERT)
     @PostMapping
     public AjaxResult add(@RequestBody TsbzYxjxdstjb tsbzYxjxdstjb) {
+        tsbzYxjxdstjb.setCreateuserid(SecurityUtils.getLoginUser().getUser().getUserId());
         return toAjax(tsbzYxjxdstjbService.insertTsbzYxjxdstjb(tsbzYxjxdstjb));
     }
 
