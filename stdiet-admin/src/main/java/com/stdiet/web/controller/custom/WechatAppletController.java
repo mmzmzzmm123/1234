@@ -789,8 +789,15 @@ public class WechatAppletController extends BaseController {
     public TableDataInfo getCommunityPunch() {
         startPage();
         List<CommunityPunchReponse> list = sysWxUserLogService.getCommunityPunch(new SysWxUserLog());
+        if(list != null && list.size() > 0){
+            for (CommunityPunchReponse comm : list) {
+                comm.setId(AesUtils.encrypt(comm.getId()));
+                comm.setCusId(AesUtils.encrypt(comm.getCusId()));
+            }
+        }
         return getDataTable(list);
     }
+
 
     /**
      * 修改健康减脂宣言

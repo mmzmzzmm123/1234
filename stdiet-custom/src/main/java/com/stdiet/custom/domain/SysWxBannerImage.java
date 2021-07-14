@@ -44,4 +44,7 @@ public class SysWxBannerImage extends BaseEntity
 
     /** 删除标识 0未删除 1已删除 */
     private Long delFlag;
+
+    //预览Banner图片地址
+    private String previewBannerUrl;
 }
