@@ -7,7 +7,7 @@
   :on-success="handleFileSuccess"
   :accept="'.png,.jpg'"
   :before-upload="beforeAvatarUpload">
-  <img v-if="imageUrl || coverUrl" :src="imageUrl || coverUrl" class="avatar">
+  <img v-if="imageUrl || coverUrl" :src="imageUrl || coverUrl" class="avatar" :style="width ? ('width: '+width+'px') : ''">
   <i v-else class="el-icon-plus avatar-uploader-icon" title="手动上传图片"></i>
   
   <div class="el-upload__tip" slot="tip" style="color:#1890ff">
@@ -61,7 +61,7 @@ export default {
     },
     removeFile(){
         this.resetUpload();
-        this.coverUrl = null;
+        //this.coverUrl = null;
         this.$emit("callbackMethod", '');
     },
     // 文件上传失败处理
@@ -92,6 +92,10 @@ export default {
     tips: {
       type: String,
       default: ""
+    },
+    width: {
+      type: Number,
+      default: undefined
     }
   }
 };

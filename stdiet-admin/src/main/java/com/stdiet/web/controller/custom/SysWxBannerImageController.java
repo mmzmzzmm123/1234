@@ -1,6 +1,9 @@
 package com.stdiet.custom.controller;
 
+import java.util.ArrayList;
 import java.util.List;
+
+import com.stdiet.common.utils.oss.AliyunOSSUtils;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -42,6 +45,17 @@ public class SysWxBannerImageController extends BaseController
     {
         startPage();
         List<SysWxBannerImage> list = sysWxBannerImageService.selectSysWxBannerImageList(sysWxBannerImage);
+        if(list != null && list.size() > 0){
+            List<String> urlList = new ArrayList<>();
+            for (SysWxBannerImage banner : list) {
+                urlList.add(banner.getBannerUrl());
+            }
+            List<String> previewBannerUrlList = AliyunOSSUtils.generatePresignedUrl(urlList);
+            int index = 0;
+            for (SysWxBannerImage banner : list) {
+                banner.setPreviewBannerUrl(previewBannerUrlList.get(index++));
+            }
+        }
         return getDataTable(list);
     }
 
@@ -65,7 +79,11 @@ public class SysWxBannerImageController extends BaseController
     @GetMapping(value = "/{id}")
     public AjaxResult getInfo(@PathVariable("id") Long id)
     {
-        return AjaxResult.success(sysWxBannerImageService.selectSysWxBannerImageById(id));
+        SysWxBannerImage sysWxBannerImage = sysWxBannerImageService.selectSysWxBannerImageById(id);
+        if(sysWxBannerImage != null){
+            sysWxBannerImage.setPreviewBannerUrl(AliyunOSSUtils.generatePresignedUrl(sysWxBannerImage.getBannerUrl()));
+        }
+        return AjaxResult.success(sysWxBannerImage);
     }
 
     /**

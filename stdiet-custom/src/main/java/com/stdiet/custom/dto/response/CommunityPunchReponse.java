@@ -14,6 +14,9 @@ import java.util.Map;
 @Data
 public class CommunityPunchReponse {
 
+    //加密ID
+    private String id;
+
     /**
      * 微信openid
      */
@@ -22,7 +25,7 @@ public class CommunityPunchReponse {
     /**
      * 客户ID
      */
-    private Long cusId;
+    private String cusId;
 
     /**
      * 昵称

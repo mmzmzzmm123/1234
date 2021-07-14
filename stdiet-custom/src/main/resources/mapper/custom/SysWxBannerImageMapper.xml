@@ -25,6 +25,12 @@
 
     <select id="selectSysWxBannerImageList" parameterType="SysWxBannerImage" resultMap="SysWxBannerImageResult">
         <include refid="selectSysWxBannerImageVo"/> where del_flag = 0
+        <if test="title != null">
+            and (title like concat('%',#{title},'%') or content like concat('%',#{title},'%'))
+        </if>
+        <if test="showFlag != null">
+            and show_flag = #{showFlag}
+        </if>
     </select>
 
     <select id="selectSysWxBannerImageById" parameterType="Long" resultMap="SysWxBannerImageResult">

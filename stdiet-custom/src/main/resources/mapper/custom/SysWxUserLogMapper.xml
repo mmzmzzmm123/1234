@@ -319,6 +319,7 @@
 
 
     <resultMap id="punchReponseMap" type="com.stdiet.custom.dto.response.CommunityPunchReponse">
+        <result property="id"    column="id"    />
         <result property="openid"    column="openid"    />
         <result property="cusId" column="cus_id"/>
         <result property="nickName" column="nick_name"/>
@@ -334,7 +335,7 @@
 
     <!--  查询打卡社区内容  -->
     <select id="getCommunityPunch" resultMap="punchReponseMap" parameterType="SysWxUserLog">
-         select wxinfo.openid,wxinfo.cus_id,wxinfo.nick_name,wxinfo.avatar_url,wxlog.log_time,wxlog.weight,wxlog.comment,wxlog.thumbsup_num,wxlog.health_manifesto from sys_wx_user_log wxlog
+         select wxlog.id,wxinfo.openid,wxinfo.cus_id,wxinfo.nick_name,wxinfo.avatar_url,wxlog.log_time,wxlog.weight,wxlog.comment,wxlog.thumbsup_num,wxlog.health_manifesto from sys_wx_user_log wxlog
          left join sys_wx_user_info wxinfo on wxinfo.openid  = wxlog.openid
          where wxlog.del_flag = 0
          order by wxlog.log_time desc
