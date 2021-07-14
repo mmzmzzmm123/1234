@@ -40,6 +40,8 @@ public class WechatAppletController extends BaseController {
     @Autowired
     ISysRecipesService iSysRecipesService;
     @Autowired
+    ISysNutritionalVideoService iSysNutritionalVideoService;
+    @Autowired
     private ISysCustomerCaseService sysCustomerCaseService;
     @Autowired
     private ISysWxUserLogService sysWxUserLogService;
@@ -79,9 +81,9 @@ public class WechatAppletController extends BaseController {
      * 查询微信小程序中展示的客户案例
      */
     @GetMapping("/caseList")
-    public TableDataInfo caseList(SysCustomerCase sysCustomerCase, @RequestParam(value = "pageSize",required = false,defaultValue = "10")int pageSize,
-                                  @RequestParam(value="randomFlag",required = false,defaultValue = "false") boolean randomFlag) {
-        if(randomFlag){
+    public TableDataInfo caseList(SysCustomerCase sysCustomerCase, @RequestParam(value = "pageSize", required = false, defaultValue = "10") int pageSize,
+                                  @RequestParam(value = "randomFlag", required = false, defaultValue = "false") boolean randomFlag) {
+        if (randomFlag) {
             List<CustomerCaseResponse> reponseList = sysCustomerCaseService.getWxCustomerCaseByRandom(pageSize);
             //处理ID加密
             dealIdEnc(reponseList);
@@ -91,7 +93,7 @@ public class WechatAppletController extends BaseController {
             rspData.setRows(reponseList);
             rspData.setTotal(pageSize);
             return rspData;
-        }else{
+        } else {
             startPage();
             sysCustomerCase.setKeywordArray(StringUtils.isNotEmpty(sysCustomerCase.getKeyword()) ? sysCustomerCase.getKeyword().split(",") : null);
             List<CustomerCaseResponse> list = sysCustomerCaseService.getWxCustomerCaseList(sysCustomerCase);
@@ -307,7 +309,7 @@ public class WechatAppletController extends BaseController {
      * @return
      */
     private void dealIdEnc(List<CustomerCaseResponse> list) {
-        if(list != null){
+        if (list != null) {
             for (CustomerCaseResponse cus : list) {
                 cus.setId(AesUtils.encrypt(cus.getId() + "", null));
             }
@@ -349,22 +351,23 @@ public class WechatAppletController extends BaseController {
      */
     /**
      * 获取小程序展示的营养小知识列表
+     *
      * @param sysNutritionQuestion 查询参数对象
-     * @param pageNum 分页当前页码
-     * @param pageSize 分页每页数量
-     * @param randomFlag 随机标识  true 随机获取指定pageSize数量的营养小知识，不支持分页、模糊查询  false 则正常查询
+     * @param pageNum              分页当前页码
+     * @param pageSize             分页每页数量
+     * @param randomFlag           随机标识  true 随机获取指定pageSize数量的营养小知识，不支持分页、模糊查询  false 则正常查询
      * @return
      */
     @GetMapping(value = "/getNutritionQuestionList")
     public AjaxResult getNutritionQuestionList(SysNutritionQuestion sysNutritionQuestion, @RequestParam(value = "pageNum", defaultValue = "1") int pageNum, @RequestParam(value = "pageSize", defaultValue = "10") int pageSize,
-                                               @RequestParam(value="randomFlag",required = false,defaultValue = "false") boolean randomFlag) {
+                                               @RequestParam(value = "randomFlag", required = false, defaultValue = "false") boolean randomFlag) {
         sysNutritionQuestion.setShowFlag(1);
-        if(randomFlag){
+        if (randomFlag) {
             //随机获取指定条数
             sysNutritionQuestion.setKey(null);
             List<NutritionQuestionResponse> list = sysNutritionQuestionService.getNutritionQuestionByRandom(sysNutritionQuestion, pageSize);
             return AjaxResult.success(list);
-        }else{
+        } else {
             Map<String, Object> result = sysNutritionQuestionService.getNutritionQuestionListByKey(sysNutritionQuestion, pageNum, pageSize);
             return AjaxResult.success(result);
         }
@@ -421,7 +424,7 @@ public class WechatAppletController extends BaseController {
                 sysNutritionalVideo.setUserType(1);
             }
         }
-        if(sysNutritionalVideo.getCateId() != null && sysNutritionalVideo.getCateId().longValue() == 0){
+        if (sysNutritionalVideo.getCateId() != null && sysNutritionalVideo.getCateId().longValue() == 0) {
             sysNutritionalVideo.setCateId(null);
         }
         startPage();
@@ -435,7 +438,6 @@ public class WechatAppletController extends BaseController {
      */
     @GetMapping(value = "/getVideoDetailById")
     public AjaxResult getVideoDetailById(@RequestParam(value = "videoId") String videoId) {
-        AjaxResult result = AjaxResult.success();
         NutritionalVideoResponse nutritionalVideoResponse = new NutritionalVideoResponse();
         try {
             SysNutritionalVideo sysNutritionalVideo = sysNutritionalVideoService.selectSysNutritionalVideByVideoId(videoId);
@@ -458,8 +460,7 @@ public class WechatAppletController extends BaseController {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        result.put("videoDetail", nutritionalVideoResponse);
-        return result;
+        return AjaxResult.success(nutritionalVideoResponse);
     }
 
     /**
@@ -742,33 +743,34 @@ public class WechatAppletController extends BaseController {
 
     /**
      * 获取视频分类
+     *
      * @param openid
      * @return
      */
-    /*@GetMapping("/getVideoClassify")
-    public AjaxResult getVideoClassify(@RequestParam("openid")String openid) {
+    @GetMapping("/getVideoClassify")
+    public AjaxResult getVideoClassify(@RequestParam("openid") String openid) {
         SysVideoClassify param = new SysVideoClassify();
         param.setParentId(0L);
         List<SysVideoClassify> list = sysVideoClassifyService.getAllClassify(param);
-        List<List<Map<String,Object>>> result = new ArrayList<>();
+        List<List<Map<String, Object>>> result = new ArrayList<>();
         int groupCount = 3;
         SysVideoClassify all = new SysVideoClassify();
         all.setId(0L);
         all.setCateName("全部内容");
         list.add(0, all);
-        if(list != null && list.size() > 0){
+        if (list != null && list.size() > 0) {
             //分成三组
-            int groupNum = list.size()/groupCount + (list.size() % groupCount > 0 ? 1 : 0);
+            int groupNum = list.size() / groupCount + (list.size() % groupCount > 0 ? 1 : 0);
             for (int i = 0; i < groupNum; i++) {
-                List<Map<String,Object>> groupList = new ArrayList<>();
-                for (int j = i * groupCount; j < (i+1)*groupCount; j++) {
-                    if(j < list.size()){
-                        Map<String,Object> videoClassifyMap = new HashMap<>();
+                List<Map<String, Object>> groupList = new ArrayList<>();
+                for (int j = i * groupCount; j < (i + 1) * groupCount; j++) {
+                    if (j < list.size()) {
+                        Map<String, Object> videoClassifyMap = new HashMap<>();
                         SysVideoClassify sysVideoClassify = list.get(j);
                         videoClassifyMap.put("cateName", sysVideoClassify.getCateName());
                         videoClassifyMap.put("cateId", sysVideoClassify.getId());
                         groupList.add(videoClassifyMap);
-                    }else{
+                    } else {
                         break;
                     }
                 }
@@ -857,6 +859,70 @@ public class WechatAppletController extends BaseController {
         sysWxBannerImage.setShowFlag(1L);
         List<BannerResponse> list = sysWxBannerImageService.getBannerListOrderByOrderNum(sysWxBannerImage);
         return AjaxResult.success(list);
+    }
+
+    @GetMapping("/studyVideoClassify")
+    public AjaxResult fetchStudyVideoClassify(@RequestParam String openid) {
+        int payed = 0;
+        SysWxUserInfo userInfo = sysWxUserInfoService.selectSysWxUserInfoById(openid);
+        if (StringUtils.isNotNull(userInfo)) {
+            List<SysOrder> orders = sysOrderService.getAllOrderByCusId(userInfo.getCusId());
+            if (StringUtils.isNotEmpty(orders)) {
+                payed = 1;
+            }
+        }
+
+        SysVideoClassify sysVideoClassify = new SysVideoClassify();
+        //父级分类ID 0表示主分类
+        sysVideoClassify.setParentId(4l);
+        //客户类型 0未付费客户-playLevel根据上传的标记  1已付费客户-playLevel全为0
+        sysVideoClassify.setUserType(payed);
+        List<VideoClassifyResponse> list = sysVideoClassifyService.getAllClassifyAndVideo(sysVideoClassify);
+
+        String imgUrl = "https://stdiet.oss-cn-shenzhen.aliyuncs.com/videoCover/2021-07-12/";
+        if (StringUtils.isNotNull(list)) {
+            for (VideoClassifyResponse res : list) {
+                List<VideoClassifyResponse> classifies = res.getChildrenClassify();
+                if (StringUtils.isEmpty(classifies)) {
+                    res.setImgUrl(AliyunOSSUtils.generatePresignedUrl(imgUrl + res.getId() + ".png"));
+                } else {
+                    for (VideoClassifyResponse twoRes : classifies) {
+                        twoRes.setImgUrl(AliyunOSSUtils.generatePresignedUrl(imgUrl + twoRes.getId() + ".png"));
+                    }
+                }
+            }
+        }
+
+        return AjaxResult.success(list);
+    }
+
+    @GetMapping("/studyVideoComments")
+    public AjaxResult fetchStudyVideoComments(@RequestParam String openid, @RequestParam String topicId) {
+        SysVideoComment videoComment = new SysVideoComment();
+        videoComment.setTopicId(topicId);
+        List<SysVideoComment> comments = iSysNutritionalVideoService.selectVideoCommentByTopicId(videoComment, openid);
+        return AjaxResult.success(comments);
+    }
+
+    @PostMapping("/video/post/comment")
+    public AjaxResult videoPostComment(@RequestBody SysVideoComment videoComment, @RequestParam String openid) {
+        SysVideoComment comment = iSysNutritionalVideoService.insertVideoComment(videoComment);
+        if (StringUtils.isNull(comment)) {
+            return AjaxResult.error();
+        }
+
+        return AjaxResult.success(comment);
+    }
+
+    @PostMapping(value = "/video/post/reply")
+    public AjaxResult videoPostReply(@RequestBody SysVideoComment videoComment, @RequestParam String openid) {
+        SysVideoComment reply = iSysNutritionalVideoService.insertVideoCommentReply(videoComment);
+
+        if (StringUtils.isNull(reply)) {
+            return AjaxResult.error();
+        }
+
+        return AjaxResult.success(reply);
     }
 }
 

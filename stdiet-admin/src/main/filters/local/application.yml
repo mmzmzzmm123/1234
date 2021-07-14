@@ -9,7 +9,7 @@ stdiet:
   # 实例演示开关
   demoEnabled: true
   # 文件路径 示例（ Windows配置D:/ruoyi/uploadPath，Linux配置 /home/ruoyi/uploadPath）
-  profile: D:/ruoyi/uploadPath
+  profile: /Users/wonder/Documents/Workspaces/java/ShengtangManage/running/uploadPath
 #  profile: D:/ruoyi/uploadPath
   # 获取ip地址开关
   addressEnabled: false
@@ -19,7 +19,7 @@ stdiet:
 # 开发环境配置
 server:
   # 服务器的HTTP端口，默认为8080
-  port: 8091
+  port: 8090
   servlet:
     # 应用的访问路径
     context-path: /

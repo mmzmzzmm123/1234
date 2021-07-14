@@ -1,14 +1,11 @@
 package com.stdiet.custom.dto.response;
 
 import lombok.Data;
-import java.io.Serializable;
+
 import java.util.List;
-import java.util.Map;
 
 @Data
-public class VideoClassifyResponse implements Serializable {
-
-    private static final long serialVersionUID = 1L;
+public class VideoClassifyResponse {
 
     //目录分类ID
     private Long id;
@@ -19,8 +16,10 @@ public class VideoClassifyResponse implements Serializable {
     //用户类型 0 普通用户 1付费客户
     private Integer userType;
 
+    private String imgUrl;
+
     //子分类
-    private List<VideoClassifyTwoResponse> childrenClassify;
+    private List<VideoClassifyResponse> childrenClassify;
 
     //子视频
     private List<VideoResponse> childrenVideo;

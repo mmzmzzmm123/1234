@@ -13,6 +13,7 @@ import com.stdiet.custom.domain.SysOrder;
 import com.stdiet.custom.domain.SysVideoClassify;
 import com.stdiet.custom.dto.response.NutritionalVideoResponse;
 import com.stdiet.custom.dto.response.VideoClassifyResponse;
+import com.stdiet.custom.dto.response.VideoClassifyTwoResponse;
 import com.stdiet.custom.service.ISysNutritionalVideoService;
 import com.stdiet.custom.service.ISysOrderService;
 import com.stdiet.custom.service.ISysVideoClassifyService;
@@ -71,6 +72,7 @@ public class VideoWebInterfaceController extends BaseController {
         //客户类型 0未付费客户-playLevel根据上传的标记  1已付费客户-playLevel全为0
         sysVideoClassify.setUserType(payed);
         List<VideoClassifyResponse> list = sysVideoClassifyService.getAllClassifyAndVideo(sysVideoClassify);
+
         return getDataTable(list);
     }
 

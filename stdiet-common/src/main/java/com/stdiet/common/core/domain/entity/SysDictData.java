@@ -2,6 +2,9 @@ package com.stdiet.common.core.domain.entity;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import com.stdiet.common.annotation.Excel;
@@ -16,6 +19,7 @@ import java.util.List;
  * 
  * @author stdiet
  */
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class SysDictData extends BaseEntity
 {
     private static final long serialVersionUID = 1L;

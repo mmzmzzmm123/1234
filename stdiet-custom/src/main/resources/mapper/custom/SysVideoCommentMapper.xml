@@ -14,9 +14,10 @@
         <result column="to_role" property="toRole"/>
         <!--        <result column="img" property="img" typeHandler="com.stdiet.custom.typehandler.ArrayJsonHandler"/>-->
         <result column="create_time" property="createTime"/>
-        <!--        <association property="fromName" column="{uid=from_uid,role=from_role}" select="selectUserInfo"/>-->
-        <!--        <association property="fromAvatar" column="{uid=from_uid,role=from_role}" select="selectUserAvatar"/>-->
-        <!--        <association property="toName" column="{uid=to_uid,role=to_role}" select="selectUserInfo"/>-->
+        <association property="fromName" column="{uid=from_uid,role=from_role}" select="selectUserInfo"/>
+        <association property="fromAvatar" column="{uid=from_uid,role=from_role}" select="selectUserAvatar"/>
+        <association property="toName" column="{uid=to_uid,role=to_role}" select="selectUserInfo"/>
+        <association property="toAvatar" column="{uid=to_uid,role=to_role}" select="selectUserAvatar"/>
         <association property="replys" column="id"
                      select="selectVideoCommentReplyByCommentId"/>
     </resultMap>
@@ -33,30 +34,33 @@
         <result column="reply_id" property="replyId"/>
         <!--        <result column="img" property="img" typeHandler="com.stdiet.custom.typehandler.ArrayJsonHandler"/>-->
         <result column="create_time" property="createTime"/>
-        <!--        <association property="fromName" column="{uid=from_uid,role=from_role}" select="selectUserInfo"/>-->
-        <!--        <association property="fromAvatar" column="{uid=from_uid,role=from_role}" select="selectUserAvatar"/>-->
-        <!--        <association property="toName" column="{uid=to_uid,role=to_role}" select="selectUserInfo"/>-->
-        <!--        <association property="toAvatar" column="{uid=to_uid,role=to_role}" select="selectUserAvatar"/>-->
+        <association property="fromName" column="{uid=from_uid,role=from_role}" select="selectUserInfo"/>
+        <association property="fromAvatar" column="{uid=from_uid,role=from_role}" select="selectUserAvatar"/>
+        <association property="toName" column="{uid=to_uid,role=to_role}" select="selectUserInfo"/>
+        <association property="toAvatar" column="{uid=to_uid,role=to_role}" select="selectUserAvatar"/>
     </resultMap>
 
     <select id="selectVideoCommentByTopicId" resultMap="SysVideoCommentResult">
         select * from sys_nutritional_video_comment where topic_id = #{topicId}  and del_flag = 0
-        order by create_time asc
+        order by create_time desc
     </select>
 
     <select id="selectVideoCommentReplyByCommentId" resultMap="SysVideoCommentReplyResult">
         select * from sys_nutritional_video_reply where comment_id = #{id} and del_flag = 0
-        order by create_time asc
+        order by create_time desc
     </select>
 
     <!--    查询人名-->
     <select id="selectUserInfo" parameterType="java.util.Map" resultType="String">
         <choose>
             <when test="_parameter.get('role') == 'customer'">
-                select name from sys_customer where id = #{uid}
+                select nick_name from sys_wx_user_info where openid = #{uid}
+            </when>
+            <when test="_parameter.get('uid') == null">
+                select "" as nick_name
             </when>
             <otherwise>
-                select nick_name from sys_user where user_id = #{uid}
+                select #{uid} as nick_name
             </otherwise>
         </choose>
     </select>
@@ -65,11 +69,10 @@
     <select id="selectUserAvatar" parameterType="java.util.Map" resultType="String">
         <choose>
             <when test="_parameter.get('role') == 'customer'">
-                select avatar_url from sys_wx_user_info where cus_id = #{uid}
+                select avatar_url from sys_wx_user_info where openid = #{uid}
             </when>
             <otherwise>
-                select IF(avatar != '', CONCAT("https://api.stdiet.top/prod-api", avatar), '') as avatar from sys_user
-                where user_id = #{uid}
+                select "" as avatar_url
             </otherwise>
         </choose>
     </select>

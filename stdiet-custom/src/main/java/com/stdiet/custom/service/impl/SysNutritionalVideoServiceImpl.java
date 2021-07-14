@@ -299,9 +299,11 @@ public class SysNutritionalVideoServiceImpl implements ISysNutritionalVideoServi
             }
             if (comment.getFromRole().equals("phone")) {
                 comment.setFromUid(StringUtils.hiddenPhoneNumber(comment.getFromUid()));
+                comment.setFromName(StringUtils.hiddenPhoneNumber(comment.getFromName()));
             }
             if (comment.getToRole().equals("phone")) {
                 comment.setToUid(StringUtils.hiddenPhoneNumber(comment.getToUid()));
+                comment.setToName(StringUtils.hiddenPhoneNumber(comment.getToName()));
             }
             List<SysVideoComment> replys = comment.getReplys();
             for (SysVideoComment reply : replys) {
@@ -312,9 +314,11 @@ public class SysNutritionalVideoServiceImpl implements ISysNutritionalVideoServi
                 }
                 if (reply.getFromRole().equals("phone")) {
                     reply.setFromUid(StringUtils.hiddenPhoneNumber(reply.getFromUid()));
+                    reply.setFromName(StringUtils.hiddenPhoneNumber(reply.getFromName()));
                 }
                 if (reply.getToRole().equals("phone")) {
                     reply.setToUid(StringUtils.hiddenPhoneNumber(reply.getToUid()));
+                    reply.setToName(StringUtils.hiddenPhoneNumber(reply.getToName()));
                 }
             }
         }
