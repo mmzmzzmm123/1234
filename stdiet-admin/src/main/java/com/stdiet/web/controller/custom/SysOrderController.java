@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSONArray;
 import com.stdiet.common.annotation.Log;
 import com.stdiet.common.core.domain.AjaxResult;
 import com.stdiet.common.core.domain.entity.SysUser;
+import com.stdiet.common.core.domain.model.LoginUser;
 import com.stdiet.common.enums.BusinessType;
 import com.stdiet.common.utils.SecurityUtils;
 import com.stdiet.common.utils.StringUtils;
@@ -59,7 +60,12 @@ public class SysOrderController extends OrderBaseController {
                 sysOrder.setAccRange(remark.split("\\|"));
             }
         }
-
+        //限制订单权限，暂时先不放开
+        /*LoginUser loginUser = SecurityUtils.getLoginUser();
+        if(!SecurityUtils.isManager(loginUser)){
+            System.out.println(loginUser.getUser().getUserId() + "-------------------------");
+            sysOrder.setLoginUserId(loginUser.getUser().getUserId());
+        }*/
         list = sysOrderService.selectSysOrderList(sysOrder);
         List<SysUser> userList = userService.selectAllUser();
         BigDecimal totalAmount = sysOrderService.selectAllOrderAmount(sysOrder);

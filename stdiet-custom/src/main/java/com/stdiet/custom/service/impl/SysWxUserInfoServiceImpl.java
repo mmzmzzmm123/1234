@@ -115,4 +115,13 @@ public class SysWxUserInfoServiceImpl implements ISysWxUserInfoService {
     public int removeCusIdByOpenId(String openid){
         return sysWxUserInfoMapper.removeCusIdByOpenId(openid);
     }
+
+    /**
+     * 根据cusId更新健康减脂宣言
+     * @param sysWxUserInfo
+     * @return
+     */
+    public int updateHealthManifestoByCusId(SysWxUserInfo sysWxUserInfo){
+        return sysWxUserInfoMapper.updateHealthManifestoByCusId(sysWxUserInfo);
+    }
 }

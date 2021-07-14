@@ -93,6 +93,9 @@ public class SysCustomer extends BaseEntity
 
     private Long salesman;
 
+    //售中
+    private Long onSaleId;
+
     /** 负责人 */
     @Excel(name = "负责人")
     private Long chargePerson;
@@ -117,5 +120,7 @@ public class SysCustomer extends BaseEntity
 
     //病史体征ID
     private String physicalSignsId;
+
+    private Long loginUserId;
 
 }

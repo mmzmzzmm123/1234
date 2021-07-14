@@ -318,17 +318,47 @@
     </select>
 
 
-
+    <resultMap id="punchReponseMap" type="com.stdiet.custom.dto.response.CommunityPunchReponse">
+        <result property="openid"    column="openid"    />
+        <result property="cusId" column="cus_id"/>
+        <result property="nickName" column="nick_name"/>
+        <result property="avatarUrl" column="avatar_url"/>
+        <result property="logTime" column="log_time"/>
+        <result property="weight" column="weight"/>
+        <result property="comment" column="comment"/>
+        <result property="thumbsupNum" column="thumbsup_num"/>
+        <result property="healthManifesto" column="health_manifesto"/>
+        <!-- 查询最近五天体重 -->
+        <association property="recentWeight" column="{cusId=cus_id,logTime=log_time}" select="getRecentWeight"/>
+    </resultMap>
 
     <!--  查询打卡社区内容  -->
-    <!--<select id="">
+    <select id="getCommunityPunch" resultMap="punchReponseMap" parameterType="SysWxUserLog">
          select wxinfo.openid,wxinfo.cus_id,wxinfo.nick_name,wxinfo.avatar_url,wxlog.log_time,wxlog.weight,wxlog.comment,wxlog.thumbsup_num,wxlog.health_manifesto from sys_wx_user_log wxlog
          left join sys_wx_user_info wxinfo on wxinfo.openid  = wxlog.openid
          where wxlog.del_flag = 0
-         <if test="logTime">
-             and wxlog.log_time >= #{logTime}
-         </if>
          order by wxlog.log_time desc
-    </select>-->
+    </select>
+
+    <!-- 查询最近一周的打卡体重 -->
+    <select id="getRecentWeight" resultType="Map">
+        select DATE_FORMAT(wxlog.log_time,'%Y-%m-%d') as logTime,wxlog.weight as weight from sys_wx_user_log wxlog
+        left join sys_wx_user_info wxinfo on wxinfo.openid  = wxlog.openid
+        where wxlog.del_flag = 0 and wxinfo.cus_id = #{cusId} and #{logTime} >= wxlog.log_time
+        order by wxlog.log_time desc limit 7
+    </select>
+
+    <!-- 根据客户ID查询总共打卡次数 -->
+    <select id="getPunchTotalNum" parameterType="SysWxUserLog" resultType="int">
+        select count(1) from sys_wx_user_log wxlog
+        left join sys_wx_user_info wxinfo on wxinfo.openid  = wxlog.openid
+        where wxlog.del_flag = 0 and wxinfo.cus_id = #{customerId}
+    </select>
+
+    <!-- 查询打卡社区总共几个人在打卡 -->
+    <select id="getPunchCustomerTotalNum" resultType="int">
+        select count(1) from (select openid from sys_wx_user_log wxlog where wxlog.del_flag =  0 group by openid) num_table
+    </select>
+
 
 </mapper>

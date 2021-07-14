@@ -4,6 +4,7 @@ import com.stdiet.common.annotation.Log;
 import com.stdiet.common.core.controller.BaseController;
 import com.stdiet.common.core.domain.AjaxResult;
 import com.stdiet.common.core.domain.entity.SysUser;
+import com.stdiet.common.core.domain.model.LoginUser;
 import com.stdiet.common.core.page.TableDataInfo;
 import com.stdiet.common.enums.BusinessType;
 import com.stdiet.common.utils.SecurityUtils;
@@ -74,6 +75,11 @@ public class SysCustomerController extends BaseController {
             }
         }
         startPage();
+        //限制客户档案权限，暂时先不放开
+        /*LoginUser loginUser = SecurityUtils.getLoginUser();
+        if(!SecurityUtils.isManager(loginUser)){
+            sysCustomer.setLoginUserId(loginUser.getUser().getUserId());
+        }*/
         list = sysCustomerService.selectSysCustomerList(sysCustomer);
         if (list != null && list.size() > 0) {
             for (SysCustomer sysCus : list) {

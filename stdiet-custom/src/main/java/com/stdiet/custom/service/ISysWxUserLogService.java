@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.stdiet.custom.domain.SysWxUserInfo;
 import com.stdiet.custom.domain.SysWxUserLog;
+import com.stdiet.custom.dto.response.CommunityPunchReponse;
 import com.stdiet.custom.page.WxLogInfo;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -93,5 +94,25 @@ public interface ISysWxUserLogService
      * @return
      */
     WxLogInfo getWxLogInfoDetailById(SysWxUserLog sysWxUserLog);
+
+    /**
+     * 查询打卡社区记录
+     * @param sysWxUserLog
+     * @return
+     */
+    List<CommunityPunchReponse> getCommunityPunch(SysWxUserLog sysWxUserLog);
+
+    /**
+     * 根据打卡社区
+     * @param sysWxUserLog
+     * @return
+     */
+    int getPunchTotalNum(SysWxUserLog sysWxUserLog);
+
+    /**
+     * 查询打卡社区总共打卡人数
+     * @return
+     */
+    int getPunchCustomerTotalNum();
 
 }

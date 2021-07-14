@@ -15,10 +15,7 @@ import com.stdiet.common.utils.file.MimeTypeUtils;
 import com.stdiet.common.utils.oss.AliyunOSSUtils;
 import com.stdiet.common.utils.sign.AesUtils;
 import com.stdiet.custom.domain.*;
-import com.stdiet.custom.dto.response.CustomerCaseResponse;
-import com.stdiet.custom.dto.response.MessageNoticeResponse;
-import com.stdiet.custom.dto.response.NutritionQuestionResponse;
-import com.stdiet.custom.dto.response.NutritionalVideoResponse;
+import com.stdiet.custom.dto.response.*;
 import com.stdiet.custom.page.WxLogInfo;
 import com.stdiet.custom.service.*;
 import com.stdiet.system.service.ISysDictTypeService;
@@ -74,6 +71,9 @@ public class WechatAppletController extends BaseController {
     private ISysServicesTopicService iSysServicesTopicService;
     @Autowired
     private ISysVideoClassifyService sysVideoClassifyService;
+
+    @Autowired
+    private ISysWxBannerImageService sysWxBannerImageService;
 
     /**
      * 查询微信小程序中展示的客户案例
@@ -745,7 +745,7 @@ public class WechatAppletController extends BaseController {
      * @param openid
      * @return
      */
-    @GetMapping("/getVideoClassify")
+    /*@GetMapping("/getVideoClassify")
     public AjaxResult getVideoClassify(@RequestParam("openid")String openid) {
         SysVideoClassify param = new SysVideoClassify();
         param.setParentId(0L);
@@ -776,6 +776,87 @@ public class WechatAppletController extends BaseController {
             }
         }
         return AjaxResult.success(result);
+    }*/
+
+
+    /**
+     * 查询打卡社区
+     * @return
+     */
+    @GetMapping("/getCommunityPunch")
+    public TableDataInfo getCommunityPunch() {
+        startPage();
+        List<CommunityPunchReponse> list = sysWxUserLogService.getCommunityPunch(new SysWxUserLog());
+        return getDataTable(list);
+    }
+
+    /**
+     * 修改健康减脂宣言
+     * @return
+     */
+    @PostMapping("/updateHealthManifesto")
+    public AjaxResult updateHealthManifesto(@RequestParam("cusId")String cusId, @RequestParam("healthManifesto")String healthManifesto) {
+        if(StringUtils.isEmpty(healthManifesto,cusId)){
+            return AjaxResult.error("缺少必要参数");
+        }
+        cusId = AesUtils.decrypt(cusId);
+        if(cusId == null){
+            return AjaxResult.error("参数不合法");
+        }
+        if(healthManifesto.length() > 200){
+            return AjaxResult.error("健康宣言字数过长");
+        }
+        SysWxUserInfo sysWxUserInfo = new SysWxUserInfo();
+        sysWxUserInfo.setCusId(Long.parseLong(cusId));
+        sysWxUserInfo.setHealthManifesto(healthManifesto);
+        return toAjax(sysWxUserInfoService.updateHealthManifestoByCusId(sysWxUserInfo));
+    }
+
+    /**
+     * 获取个人中心数据（健康宣言、消息条数、打卡社区总打卡次数、打卡次数）
+     * @return
+     */
+    @GetMapping("/getCustomerCenterInfo")
+    public AjaxResult getCustomerCenterInfo(@RequestParam("cusId")String cusId) {
+        if(StringUtils.isEmpty(cusId)){
+            return AjaxResult.error("缺少必要参数");
+        }
+        cusId = AesUtils.decrypt(cusId);
+        if(cusId == null){
+            return AjaxResult.error("参数不合法");
+        }
+        AjaxResult result = AjaxResult.success();
+        //获取健康宣言
+        SysWxUserInfo sysWxUserInfo = sysWxUserInfoService.selectSysWxUserInfoByCusId(Long.parseLong(cusId));
+        result.put("healthManifesto",sysWxUserInfo.getHealthManifesto() == null ? "" : sysWxUserInfo.getHealthManifesto());
+        //获取未读消息条数
+        SysMessageNotice messageParam = new SysMessageNotice();
+        messageParam.setReadType(0);
+        messageParam.setMessageCustomer(Long.parseLong(cusId));
+        int unReadNoticeTotal = sysMessageNoticeService.getCustomerMessageCount(messageParam);
+        result.put("unReadNoticeTotal", unReadNoticeTotal);
+        //获取已打卡几次
+        SysWxUserLog sysWxUserLog = new SysWxUserLog();
+        sysWxUserLog.setCustomerId(Long.parseLong(cusId));
+        int punchNum = sysWxUserLogService.getPunchTotalNum(sysWxUserLog);
+        result.put("customerPunchNum", unReadNoticeTotal);
+        //查询社区打卡客户数量
+        int punchCustomerNum = sysWxUserLogService.getPunchCustomerTotalNum();
+        result.put("punchCustomerNum", punchCustomerNum);
+        return result;
+    }
+
+    /**
+     * 获取需要在小程序展示的Banner图
+     * @return
+     */
+    @GetMapping("/getShowBannerImage")
+    public AjaxResult getShowBannerImage() {
+        SysWxBannerImage sysWxBannerImage = new SysWxBannerImage();
+        //获取可以显示的Banner
+        sysWxBannerImage.setShowFlag(1L);
+        List<BannerResponse> list = sysWxBannerImageService.getBannerListOrderByOrderNum(sysWxBannerImage);
+        return AjaxResult.success(list);
     }
 }
 
