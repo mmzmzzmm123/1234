@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.stdiet.custom.mapper.SysWxBannerImageMapper">
+
+    <resultMap type="SysWxBannerImage" id="SysWxBannerImageResult">
+        <result property="id"    column="id"    />
+        <result property="title"    column="title"    />
+        <result property="content"    column="content"    />
+        <result property="bannerUrl"    column="banner_url"    />
+        <result property="jumpUrl"    column="jump_url"    />
+        <result property="showFlag"    column="show_flag"    />
+        <result property="orderNum"    column="order_num"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="delFlag"    column="del_flag"    />
+    </resultMap>
+
+    <sql id="selectSysWxBannerImageVo">
+        select id, title, content, banner_url, jump_url, show_flag, order_num, create_time, create_by, update_time, update_by, del_flag from sys_wx_banner_image
+    </sql>
+
+    <select id="selectSysWxBannerImageList" parameterType="SysWxBannerImage" resultMap="SysWxBannerImageResult">
+        <include refid="selectSysWxBannerImageVo"/> where del_flag = 0
+    </select>
+
+    <select id="selectSysWxBannerImageById" parameterType="Long" resultMap="SysWxBannerImageResult">
+        <include refid="selectSysWxBannerImageVo"/>
+        where id = #{id} and del_flag = 0
+    </select>
+
+    <insert id="insertSysWxBannerImage" parameterType="SysWxBannerImage" useGeneratedKeys="true" keyProperty="id">
+        insert into sys_wx_banner_image
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="title != null">title,</if>
+            <if test="content != null">content,</if>
+            <if test="bannerUrl != null">banner_url,</if>
+            <if test="jumpUrl != null">jump_url,</if>
+            <if test="showFlag != null">show_flag,</if>
+            <if test="orderNum != null">order_num,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="delFlag != null">del_flag,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="title != null">#{title},</if>
+            <if test="content != null">#{content},</if>
+            <if test="bannerUrl != null">#{bannerUrl},</if>
+            <if test="jumpUrl != null">#{jumpUrl},</if>
+            <if test="showFlag != null">#{showFlag},</if>
+            <if test="orderNum != null">#{orderNum},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="delFlag != null">#{delFlag},</if>
+        </trim>
+    </insert>
+
+    <update id="updateSysWxBannerImage" parameterType="SysWxBannerImage">
+        update sys_wx_banner_image
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="title != null">title = #{title},</if>
+            <if test="content != null">content = #{content},</if>
+            <if test="bannerUrl != null">banner_url = #{bannerUrl},</if>
+            <if test="jumpUrl != null">jump_url = #{jumpUrl},</if>
+            <if test="showFlag != null">show_flag = #{showFlag},</if>
+            <if test="orderNum != null">order_num = #{orderNum},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="delFlag != null">del_flag = #{delFlag},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <update id="deleteSysWxBannerImageById" parameterType="Long">
+        update sys_wx_banner_image set del_flag = 1 where id = #{id}
+    </update>
+
+    <update id="deleteSysWxBannerImageByIds" parameterType="String">
+        update sys_wx_banner_image set del_flag = 1 where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </update>
+
+    <!-- 按照优先级顺序获取banner图 -->
+    <select id="getBannerListOrderByOrderNum" parameterType="SysWxBannerImage" resultType="com.stdiet.custom.dto.response.BannerResponse">
+        select title, content, banner_url as bannerUrl, jump_url as jumpUrl from sys_wx_banner_image
+        where del_flag = 0
+        <if test="showFlag != null">
+            and show_flag = #{showFlag}
+        </if>
+        order by order_num desc
+    </select>
+
+</mapper>

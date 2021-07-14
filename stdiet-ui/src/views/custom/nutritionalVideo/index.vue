@@ -208,7 +208,7 @@
             size="mini"
             type="text"
             icon="el-icon-edit"
-            @click="getVideoPlayUrl(scope.row.id)"
+            @click="showVideoPlay(scope.row)"
             v-hasPermi="['custom:nutritionalVideo:query']"
             >播放</el-button
           >
@@ -360,6 +360,9 @@
 
     <!-- 手动选择封面 -->
     <VideoSelectCover ref="videoSelectCoverRef"></VideoSelectCover>
+
+    <!-- 视频播放 -->
+    <VideoPlay ref="videoPlayRef"></VideoPlay>
   </div>
 </template>
 
@@ -373,6 +376,7 @@ import {
   exportNutritionalVideo,
   updateWxShow,
   getVideoPlayUrlById,
+  getVideoPlayAuth
 } from "@/api/custom/nutritionalVideo";
 import { getAllClassify } from "@/api/custom/videoClassify";
 import UploadVideo from "@/components/UploadVideo";
@@ -383,6 +387,7 @@ import Treeselect from "@riophae/vue-treeselect";
 import "@riophae/vue-treeselect/dist/vue-treeselect.css";
 import IconSelect from "@/components/IconSelect";
 import VideoSelectCover from "@/components/VideoSelectCover";
+import VideoPlay from "@/components/VideoPlay";
 export default {
   name: "NutritionalVideo",
   data() {
@@ -452,6 +457,7 @@ export default {
     Treeselect,
     IconSelect,
     VideoSelectCover,
+    VideoPlay
   },
   methods: {
     /** 查询营养视频列表 */
@@ -649,6 +655,16 @@ export default {
         })
         .catch(function () {});
     },
+    showVideoPlay(row){
+      getVideoPlayAuth(row.id).then((response) => {
+        row.playAuth = response.data.playAuth;;
+        if (row.playAuth != undefined && row.playAuth != null) {
+           this.$refs.videoPlayRef.showDialog(row);
+        }else{
+          this.msgError("视频资源不存在");
+        }
+      });
+    }
   },
 };
 </script>

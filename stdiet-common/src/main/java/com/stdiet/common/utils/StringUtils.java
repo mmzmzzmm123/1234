@@ -103,6 +103,21 @@ public class StringUtils extends org.apache.commons.lang3.StringUtils {
     }
 
     /**
+     * * 判断多个字符串是否为空，一个为空则返回true
+     *
+     * @param str String
+     * @return true：为空 false：非空
+     */
+    public static boolean isEmpty(String ... str) {
+        for (String value : str) {
+            if(isEmpty(value)){
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
      * * 判断一个字符串是否为非空串
      *
      * @param str String

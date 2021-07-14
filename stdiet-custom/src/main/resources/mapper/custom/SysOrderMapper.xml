@@ -95,28 +95,97 @@
         </if>
     </sql>
 
+    <sql id="searchLoginUserId">
+        <if test="loginUserId != null">
+            and (
+              sc.main_dietitian = #{loginUserId} or sc.assistant_dietitian = #{loginUserId} or sc.after_dietitian = #{loginUserId} or sc.salesman = #{loginUserId}
+              or o.pre_sale_id = #{loginUserId} or o.on_sale_id = #{loginUserId} or o.after_sale_id = #{loginUserId} or o.nutritionist_id = #{loginUserId} or
+              o.nutri_assis_id = #{loginUserId}
+            )
+        </if>
+    </sql>
+
     <select id="selectAllOrderAmount" parameterType="SysOrder" resultType="BigDecimal">
-        SELECT SUM(amount) FROM sys_order
+        SELECT SUM(amount) FROM sys_order o LEFT JOIN sys_customer sc ON sc.id = o.cus_id
         <where>
-            <if test="orderId != null  and orderId != ''">and order_id = #{orderId}</if>
+            <if test="orderId != null  and orderId != ''">and o.order_id = #{orderId}</if>
             <if test="customer != null  and customer != ''">
-                and (customer like concat('%',#{customer},'%') or phone like concat('%',#{customer},'%'))
+                and (o.customer like concat('%',#{customer},'%') or o.phone like concat('%',#{customer},'%'))
             </if>
             <if test="accRange != null">
-                and account_id in
+                and o.account_id in
                 <foreach collection="accRange" separator="," item="acc" open="(" close=")" >
                     #{acc}
                 </foreach>
             </if>
-            <if test="cusId != null  and cusId != ''">and cus_id = #{cusId}</if>
+            <if test="cusId != null  and cusId != ''">and o.cus_id = #{cusId}</if>
             <!-- <if test="phone != null  and phone != ''">and phone = #{phone}</if>-->
+            <if test="status != null ">and o.status = #{status}</if>
+            <if test="payTypeId != null ">and o.pay_type_id = #{payTypeId}</if>
+            <if test="preSaleId != null ">and o.pre_sale_id = #{preSaleId}</if>
+            <if test="pushPreSaleId != null ">and o.push_pre_sale_id = #{pushPreSaleId}</if>
+            <if test="onSaleId != null">
+                and o.on_sale_id = #{onSaleId}
+            </if>
+            <if test="afterSaleId != null ">and o.after_sale_id = #{afterSaleId}</if>
+            <if test="nutritionistId != null ">and o.nutritionist_id = #{nutritionistId}</if>
+            <if test="nutriAssisId != null ">and o.nutri_assis_id = #{nutriAssisId}</if>
+            <if test="accountId != null ">and o.account_id = #{accountId}</if>
+            <if test="plannerId != null ">and o.planner_id = #{plannerId}</if>
+            <if test="plannerAssisId != null ">and o.planner_assis_id = #{plannerAssisId}</if>
+            <if test="operatorId != null ">and o.operator_id = #{operatorId}</if>
+            <if test="operatorAssisId != null ">and o.operator_assis_id = #{operatorAssisId}</if>
+            <if test="recommender != null  and recommender != ''">and o.recommender = #{recommender}</if>
+            <if test="beginTime != null and beginTime != ''">and date_format(o.order_time,'%y%m%d') &gt;=
+                date_format(#{beginTime},'%y%m%d')
+            </if>
+            <if test="endTime != null and endTime != ''">and date_format(o.order_time,'%y%m%d') &lt;=
+                date_format(#{endTime},'%y%m%d')
+            </if>
+            <if test="serveTimeId != null ">and o.serve_time_id = #{serveTimeId}</if>
+            <if test="reviewStatus != null ">and o.review_status = #{reviewStatus}</if>
+            <if test="amountFlag != null">
+                <if test="amountFlag == 0">
+                    and o.amount >= 0
+                </if>
+                <if test="amountFlag == 1">
+                    and 0 > o.amount
+                </if>
+            </if>
+            <include refid="searchOrderType">
+                <property name="reviewStatus" value="#{searchOrderTypeArray}"/>
+            </include>
+            <include refid="searchLoginUserId">
+                <property name="loginUserId" value="#{loginUserId}"/>
+            </include>
+            <if test="true">and o.del_flag = 0</if>
+            <!-- 计算总额时需要除去二开售后提成单 -->
+            AND o.after_sale_commiss_order = 0
+        </where>
+    </select>
+
+    <select id="selectSysOrderList" parameterType="SysOrder" resultMap="SysOrderResult">
+        <include refid="selectSysOrderVo"/>
+        <where>
+            <if test="orderId != null  and orderId != ''">and sc.order_id = #{orderId}</if>
+            <if test="customer != null  and customer != ''">
+                and (sc.name like concat('%',#{customer},'%') or sc.phone like concat('%',#{customer},'%'))
+            </if>
+            <if test="accRange != null">
+                and account_id in
+                <foreach collection="accRange" separator="," item="acc" open="(" close=")">
+                    #{acc}
+                </foreach>
+            </if>
+            <if test="cusId != null  and cusId != ''">and cus_id = #{cusId}</if>
+            <if test="phone != null  and phone != ''">and sc.phone = #{phone}</if>
             <if test="status != null ">and status = #{status}</if>
             <if test="payTypeId != null ">and pay_type_id = #{payTypeId}</if>
-            <if test="preSaleId != null ">and pre_sale_id = #{preSaleId}</if>
             <if test="pushPreSaleId != null ">and push_pre_sale_id = #{pushPreSaleId}</if>
             <if test="onSaleId != null">
-                and on_sale_id = #{onSaleId}
+                and o.on_sale_id = #{onSaleId}
             </if>
+            <if test="preSaleId != null ">and pre_sale_id = #{preSaleId}</if>
             <if test="afterSaleId != null ">and after_sale_id = #{afterSaleId}</if>
             <if test="nutritionistId != null ">and nutritionist_id = #{nutritionistId}</if>
             <if test="nutriAssisId != null ">and nutri_assis_id = #{nutriAssisId}</if>
@@ -145,61 +214,8 @@
             <include refid="searchOrderType">
                 <property name="reviewStatus" value="#{searchOrderTypeArray}"/>
             </include>
-            <if test="true">and del_flag = 0</if>
-            <!-- 计算总额时需要除去二开售后提成单 -->
-            AND after_sale_commiss_order = 0
-        </where>
-    </select>
-
-    <select id="selectSysOrderList" parameterType="SysOrder" resultMap="SysOrderResult">
-        <include refid="selectSysOrderVo"/>
-        <where>
-            <if test="orderId != null  and orderId != ''">and order_id = #{orderId}</if>
-            <if test="customer != null  and customer != ''">
-                and (sc.name like concat('%',#{customer},'%') or sc.phone like concat('%',#{customer},'%'))
-            </if>
-            <if test="accRange != null">
-                and account_id in
-                <foreach collection="accRange" separator="," item="acc" open="(" close=")">
-                    #{acc}
-                </foreach>
-            </if>
-            <if test="cusId != null  and cusId != ''">and cus_id = #{cusId}</if>
-            <if test="phone != null  and phone != ''">and sc.phone = #{phone}</if>
-            <if test="status != null ">and status = #{status}</if>
-            <if test="payTypeId != null ">and pay_type_id = #{payTypeId}</if>
-            <if test="pushPreSaleId != null ">and push_pre_sale_id = #{pushPreSaleId}</if>
-            <if test="onSaleId != null">
-                and on_sale_id = #{onSaleId}
-            </if>
-            <if test="preSaleId != null ">and pre_sale_id = #{preSaleId}</if>
-            <if test="afterSaleId != null ">and after_sale_id = #{afterSaleId}</if>
-            <if test="nutritionistId != null ">and nutritionist_id = #{nutritionistId}</if>
-            <if test="nutriAssisId != null ">and nutri_assis_id = #{nutriAssisId}</if>
-            <if test="accountId != null ">and account_id = #{accountId}</if>
-            <if test="plannerId != null ">and planner_id = #{plannerId}</if>
-            <if test="plannerAssisId != null ">and planner_assis_id = #{plannerAssisId}</if>
-            <if test="operatorId != null ">and operator_id = #{operatorId}</if>
-            <if test="operatorAssisId != null ">and operator_assis_id = #{operatorAssisId}</if>
-            <if test="recommender != null  and recommender != ''">and recommender = #{recommender}</if>
-            <if test="beginTime != null and beginTime != ''">and date_format(order_time,'%y%m%d') &gt;=
-                date_format(#{beginTime},'%y%m%d')
-            </if>
-            <if test="endTime != null and endTime != ''">and date_format(order_time,'%y%m%d') &lt;=
-                date_format(#{endTime},'%y%m%d')
-            </if>
-            <if test="serveTimeId != null ">and serve_time_id = #{serveTimeId}</if>
-            <if test="reviewStatus != null ">and review_status = #{reviewStatus}</if>
-            <if test="amountFlag != null">
-                <if test="amountFlag == 0">
-                    and amount >= 0
-                </if>
-                <if test="amountFlag == 1">
-                    and 0 > amount
-                </if>
-            </if>
-            <include refid="searchOrderType">
-                <property name="reviewStatus" value="#{searchOrderTypeArray}"/>
+            <include refid="searchLoginUserId">
+                <property name="loginUserId" value="#{loginUserId}"/>
             </include>
             <if test="true">and o.del_flag = 0</if>
         </where>

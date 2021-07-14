@@ -153,6 +153,27 @@ public class SysNutritionalVideoController extends BaseController
     }
 
     /**
+     * 获取营养视频播放凭证
+     */
+    @PreAuthorize("@ss.hasPermi('custom:nutritionalVideo:query')")
+    @GetMapping(value = "/getVideoPlayAuth/{id}")
+    public AjaxResult getVideoPlayAuth(@PathVariable("id") Long id)
+    {
+        SysNutritionalVideo sysNutritionalVideos = sysNutritionalVideoService.selectSysNutritionalVideoById(id);
+        if(sysNutritionalVideos != null && StringUtils.isNotEmpty(sysNutritionalVideos.getVideoId())){
+            try{
+                String playAuth = AliyunVideoUtils.getVideoPlayAuth(sysNutritionalVideos.getVideoId());
+                sysNutritionalVideos.setPlayAuth(playAuth);
+            }catch (Exception e){
+                e.printStackTrace();
+            }
+        }
+        return AjaxResult.success(sysNutritionalVideos);
+    }
+
+
+
+    /**
      * 根据视频videoId提交视频截图请求
      */
     @PreAuthorize("@ss.hasPermi('custom:nutritionalVideo:add')")

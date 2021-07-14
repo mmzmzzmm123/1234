@@ -77,5 +77,12 @@ public interface ISysWxUserInfoService
      */
     public int removeCusIdByOpenId(String openid);
 
+    /**
+     * 根据cusId更新健康减脂宣言
+     * @param sysWxUserInfo
+     * @return
+     */
+    public int updateHealthManifestoByCusId(SysWxUserInfo sysWxUserInfo);
+
 
 }

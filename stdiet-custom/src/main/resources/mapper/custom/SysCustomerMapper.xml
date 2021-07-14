@@ -28,6 +28,7 @@
         <result property="assistantDietitian" column="assistant_dietitian"/>
         <result property="afterDietitian" column="after_dietitian"/>
         <result property="salesman" column="salesman"/>
+        <result property="onSaleId"    column="on_sale_id"    />
 
         <association property="dietitianName" column="{id=main_dietitian}" select="selectUserName"/>
         <association property="assDietitianName" column="{id=assistant_dietitian}" select="selectUserName"/>
@@ -40,14 +41,23 @@
     </select>
 
     <sql id="selectSysCustomerVo">
-        select id, name, phone, email, fans_time, fans_channel, address, pay_date, start_date, purchase_num, pay_total, main_dietitian, assistant_dietitian, after_dietitian, salesman, charge_person, follow_status, create_time, create_by, update_time, update_by, channel_id from sys_customer
+        select id, name, phone, email, fans_time, fans_channel, address, pay_date, start_date, purchase_num, pay_total, main_dietitian, assistant_dietitian, after_dietitian, salesman, on_sale_id, charge_person, follow_status, create_time, create_by, update_time, update_by, channel_id from sys_customer
+    </sql>
+
+    <sql id="searchLoginUserId">
+        <if test="loginUserId != null">
+            and (
+            sc.main_dietitian = #{loginUserId} or sc.assistant_dietitian = #{loginUserId} or sc.after_dietitian = #{loginUserId} or sc.salesman = #{loginUserId}
+            or sc.on_sale_id = #{loginUserId}
+            )
+        </if>
     </sql>
 
     <select id="selectSysCustomerList" parameterType="SysCustomer" resultMap="SysCustomerResult">
         select
         sc.id, sc.name, sc.phone, sc.email, sc.fans_time, sc.fans_channel, sc.address, sc.pay_date, sc.start_date,
         sc.purchase_num, sc.pay_total, sc.main_dietitian,
-        sc.assistant_dietitian, sc.after_dietitian, sc.salesman, sc.charge_person, sc.follow_status,
+        sc.assistant_dietitian, sc.after_dietitian, sc.on_sale_id, sc.salesman, sc.charge_person, sc.follow_status,
         sc.create_time,sc.channel_id
         from sys_customer sc
         left join sys_customer_healthy as sch
@@ -60,6 +70,7 @@
         <if test="mainDietitian == 0">and (isnull(sc.main_dietitian) or sc.main_dietitian=0)</if>
         <if test="salesman != null  and salesman != ''">and sc.salesman = #{salesman}</if>
         <if test="salesman == 0">and (isnull(sc.salesman) or sc.salesman=0)</if>
+        <if test="onSaleId != null">and sc.on_sale_id = #{onSaleId}</if>
         <if test="afterDietitian != null  and afterDietitian != ''">and sc.after_dietitian = #{afterDietitian}</if>
         <if test="afterDietitian == 0">and (isnull(sc.after_dietitian) or sc.after_dietitian=0)</if>
         <if test="assistantDietitian != null  and assistantDietitian != ''">and sc.assistant_dietitian =
@@ -82,6 +93,9 @@
             </foreach>
             )
         </if>
+        <include refid="searchLoginUserId">
+            <property name="loginUserId" value="#{loginUserId}"/>
+        </include>
         order by sc.create_time desc
     </select>
 
@@ -107,6 +121,7 @@
             <if test="assistantDietitian != null">assistant_dietitian,</if>
             <if test="afterDietitian != null">after_dietitian,</if>
             <if test="salesman != null">salesman,</if>
+            <if test="onSaleId != null">on_sale_id,</if>
             <if test="chargePerson != null">charge_person,</if>
             <if test="followStatus != null">follow_status,</if>
             <if test="createTime != null">create_time,</if>
@@ -130,6 +145,7 @@
             <if test="assistantDietitian != null">#{assistantDietitian},</if>
             <if test="afterDietitian != null">#{afterDietitian},</if>
             <if test="salesman != null">#{salesman},</if>
+            <if test="onSaleId != null">#{onSaleId},</if>
             <if test="chargePerson != null">#{chargePerson},</if>
             <if test="followStatus != null">#{followStatus},</if>
             <if test="createTime != null">#{createTime},</if>
@@ -157,6 +173,7 @@
             <if test="assistantDietitian != null">assistant_dietitian = #{assistantDietitian},</if>
             <if test="afterDietitian != null">after_dietitian = #{afterDietitian},</if>
             <if test="salesman != null">salesman = #{salesman},</if>
+            <if test="onSaleId != null">on_sale_id = #{onSaleId},</if>
             <if test="chargePerson != null">charge_person = #{chargePerson},</if>
             <if test="followStatus != null">follow_status = #{followStatus},</if>
             <if test="createTime != null">create_time = #{createTime},</if>

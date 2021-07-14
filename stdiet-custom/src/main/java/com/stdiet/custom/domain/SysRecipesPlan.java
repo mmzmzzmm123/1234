@@ -159,4 +159,8 @@ public class SysRecipesPlan {
     private Integer subSend;
 
     private Integer smsSend;
+
+    /** 食谱计划总共几天，大于0小于等于7 */
+    @Excel(name = "食谱计划总共几天，大于0小于等于7")
+    private Integer totalNumDay;
 }
