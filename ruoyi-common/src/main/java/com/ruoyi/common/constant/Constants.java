@@ -58,6 +58,11 @@ public class Constants
     public static final String CAPTCHA_CODE_KEY = "captcha_codes:";
 
     /**
+     * 短信验证码 redis key
+     */
+    public static final String SMS_CODE_KEY = "sms_codes:";
+
+    /**
      * 登录用户 redis key
      */
     public static final String LOGIN_TOKEN_KEY = "login_tokens:";
@@ -71,6 +76,11 @@ public class Constants
      * 验证码有效期（分钟）
      */
     public static final Integer CAPTCHA_EXPIRATION = 2;
+
+    /**
+     * 短信验证码有效期（分钟）
+     */
+    public static final Integer SMS_CODE_EXPIRATION = 5;
 
     /**
      * 令牌

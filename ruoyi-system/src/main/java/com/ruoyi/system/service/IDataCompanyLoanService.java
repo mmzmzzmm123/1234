@@ -2,6 +2,7 @@ package com.ruoyi.system.service;
 
 import java.util.List;
 import com.ruoyi.system.domain.DataCompanyLoan;
+import com.ruoyi.system.domain.model.DataCompanyLoaBody;
 
 /**
  * 企业贷款信息Service接口
@@ -36,6 +37,13 @@ public interface IDataCompanyLoanService
     public int insertDataCompanyLoan(DataCompanyLoan dataCompanyLoan);
 
     /**
+     * 移动端新增企业贷款信息（带手机验证码）
+     * @param dataCompanyLoan
+     * @return
+     */
+    public int insertDataCompanyLoan(DataCompanyLoaBody dataCompanyLoan);
+
+    /**
      * 修改企业贷款信息
      * 
      * @param dataCompanyLoan 企业贷款信息
@@ -59,5 +67,10 @@ public interface IDataCompanyLoanService
      */
     public int deleteDataCompanyLoanById(Long companyId);
 
-    public String checkCompanyNameUnique(DataCompanyLoan dataCompanyLoan);
+    public String checkCompanyNameUnique(String companyName);
+
+    /**
+     * 发送短信验证码
+     */
+    void senSmsCode(String phone);
 }

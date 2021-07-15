@@ -5,7 +5,7 @@ import com.ruoyi.common.constant.UserConstants;
 import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.enums.BusinessType;
-import com.ruoyi.system.domain.DataCompanyLoan;
+import com.ruoyi.system.domain.model.DataCompanyLoaBody;
 import com.ruoyi.system.service.IDataCompanyLoanService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -23,7 +23,6 @@ public class AppCompanyLoanController extends BaseController
     @Autowired
     private IDataCompanyLoanService dataCompanyLoanService;
 
-
     /**
      * 新增企业贷款信息
      */
@@ -32,17 +31,24 @@ public class AppCompanyLoanController extends BaseController
     // @PostMapping(value = "/add",consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
     // public @ResponseBody AjaxResult add( DataCompanyLoan dataCompanyLoan)
     @PostMapping( "/add")
-    public AjaxResult add(@RequestBody DataCompanyLoan dataCompanyLoan)
+    public AjaxResult add(@RequestBody DataCompanyLoaBody dataCompanyLoan)
     {
-        //TODO:鉴权，鉴定闽政通 TOKEN、用户 ID 是否合法，剥离到shiro过滤器
-        //TODO:requestBody 去掉省市区，信用码等；增加图片验证码uuid
-        if (UserConstants.NOT_UNIQUE.equals(dataCompanyLoanService.checkCompanyNameUnique(dataCompanyLoan)))
+        //TODO:后端接口如何直连？
+        if (UserConstants.NOT_UNIQUE.equals(dataCompanyLoanService.checkCompanyNameUnique(dataCompanyLoan.getCompanyName())))
         {
             return AjaxResult.error("新增'" + dataCompanyLoan.getCompanyName() + "'失败，该企业名称已存在");
         }
 
-        //TODO:组装区域等数据
         return toAjax(dataCompanyLoanService.insertDataCompanyLoan(dataCompanyLoan));
+    }
+
+    /**
+     * 获取手机验证码
+     */
+    @GetMapping("/getSMSCode")
+    public AjaxResult getCode(@RequestParam String phone){
+        dataCompanyLoanService.senSmsCode(phone);
+        return AjaxResult.success();
     }
 
     /**
