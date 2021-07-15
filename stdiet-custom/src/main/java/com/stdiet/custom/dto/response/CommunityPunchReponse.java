@@ -67,4 +67,9 @@ public class CommunityPunchReponse {
      * 近期打卡体重信息  logTime: 打卡日期  weight: 体重
      */
     private List<Map<String,Object>> recentWeight;
+
+    /**
+     * 点赞的openid
+     */
+    private List<Map<String,Object>> thumbsupOpenid;
 }
