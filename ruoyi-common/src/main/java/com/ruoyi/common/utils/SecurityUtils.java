@@ -1,11 +1,14 @@
 package com.ruoyi.common.utils;
 
+import com.ruoyi.common.core.domain.entity.SysUser;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import com.ruoyi.common.constant.HttpStatus;
 import com.ruoyi.common.core.domain.model.LoginUser;
 import com.ruoyi.common.exception.CustomException;
+
+import java.util.Optional;
 
 /**
  * 安全服务工具类
@@ -14,6 +17,19 @@ import com.ruoyi.common.exception.CustomException;
  */
 public class SecurityUtils
 {
+    /**
+     * 获取用户账户Id
+     *
+     * @return
+     */
+    public static Long getUserId() {
+        try {
+            Optional<Long> optional = Optional.ofNullable(getLoginUser()).map(LoginUser::getUser).map(SysUser::getUserId);
+            return optional.orElse(null);
+        } catch (Exception e) {
+            throw new CustomException("获取用户账户异常", HttpStatus.UNAUTHORIZED);
+        }
+    }
     /**
      * 获取用户账户
      **/
