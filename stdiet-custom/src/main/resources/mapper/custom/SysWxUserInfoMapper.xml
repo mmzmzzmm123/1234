@@ -144,9 +144,9 @@
         update sys_wx_user_info set cus_id = null where openid = #{openid}
     </update>
 
-    <!-- 根据客户ID更新健康减脂宣言 -->
+    <!-- 根据openID更新健康减脂宣言 -->
     <update id="updateHealthManifestoByCusId" parameterType="SysWxUserInfo">
-        update sys_wx_user_info set health_manifesto = #{healthManifesto} where cus_id = #{cusId}
+        update sys_wx_user_info set health_manifesto = #{healthManifesto} where openid = #{openid}
     </update>
 
 </mapper>
