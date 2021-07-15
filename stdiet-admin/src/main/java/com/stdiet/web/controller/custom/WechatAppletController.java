@@ -793,7 +793,7 @@ public class WechatAppletController extends BaseController {
     public TableDataInfo getCommunityPunch() {
         startPage();
         List<CommunityPunchReponse> list = sysWxUserLogService.getCommunityPunch(new SysWxUserLog());
-        if(list != null && list.size() > 0){
+        if (list != null && list.size() > 0) {
             for (CommunityPunchReponse comm : list) {
                 comm.setId(AesUtils.encrypt(comm.getId()));
                 comm.setCusId(AesUtils.encrypt(comm.getCusId()));
@@ -837,20 +837,14 @@ public class WechatAppletController extends BaseController {
      * @return
      */
     @PostMapping("/updateHealthManifesto")
-    public AjaxResult updateHealthManifesto(@RequestParam("cusId") String cusId, @RequestParam("healthManifesto") String healthManifesto) {
-        if (StringUtils.isEmpty(healthManifesto, cusId)) {
-            return AjaxResult.error("缺少必要参数");
-        }
-        cusId = AesUtils.decrypt(cusId);
-        if (cusId == null) {
+    public AjaxResult updateHealthManifesto(@RequestBody SysWxUserInfo sysWxUserInfo) {
+        if (StringUtils.isNull(sysWxUserInfo.getOpenid())) {
             return AjaxResult.error("参数不合法");
         }
-        if (healthManifesto.length() > 200) {
+        if (sysWxUserInfo.getHealthManifesto().length() > 200) {
             return AjaxResult.error("健康宣言字数过长");
         }
-        SysWxUserInfo sysWxUserInfo = new SysWxUserInfo();
-        sysWxUserInfo.setCusId(Long.parseLong(cusId));
-        sysWxUserInfo.setHealthManifesto(healthManifesto);
+
         return toAjax(sysWxUserInfoService.updateHealthManifestoByCusId(sysWxUserInfo));
     }
 
@@ -900,6 +894,9 @@ public class WechatAppletController extends BaseController {
         //获取可以显示的Banner
         sysWxBannerImage.setShowFlag(1L);
         List<BannerResponse> list = sysWxBannerImageService.getBannerListOrderByOrderNum(sysWxBannerImage);
+        for (BannerResponse banner : list) {
+            banner.setBannerUrl(AliyunOSSUtils.generatePresignedUrl(banner.getBannerUrl()));
+        }
         return AjaxResult.success(list);
     }
 
