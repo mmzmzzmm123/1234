@@ -23,4 +23,11 @@ public interface ISysServicesTopicService {
     List<SysServicesTopic> selectUnreadTopicCount(List<SysServicesTopic> topic);
 
     List<SysServicesTopic> selectTopicListByUid(SysServicesTopic topic);
+
+    /**
+     * 根据客户ID查询总共提交反馈意见数量
+     * @param cusId 客户ID
+     * @return
+     */
+    int getServicesTopicNum(Long cusId);
 }

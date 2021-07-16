@@ -364,9 +364,9 @@
         where wxlog.del_flag = 0 and wxinfo.cus_id = #{customerId}
     </select>
 
-    <!-- 查询打卡社区总共几个人在打卡 -->
+    <!-- 查询当天打卡社区总共几个人在打卡 -->
     <select id="getPunchCustomerTotalNum" resultType="int">
-        select count(1) from (select openid from sys_wx_user_log wxlog where wxlog.del_flag =  0 group by openid) num_table
+        select count(wxlog.openid) from sys_wx_user_log wxlog where wxlog.del_flag = 0 and to_days(log_time) = to_days(now())
     </select>
 
 

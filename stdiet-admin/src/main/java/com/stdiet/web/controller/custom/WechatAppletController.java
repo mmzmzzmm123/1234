@@ -849,7 +849,7 @@ public class WechatAppletController extends BaseController {
     }
 
     /**
-     * 获取个人中心数据（健康宣言、消息条数、打卡社区总打卡次数、打卡次数）
+     * 获取个人中心数据（健康宣言、消息条数、打卡社区总打卡次数、打卡次数、提交反馈数量）
      *
      * @return
      */
@@ -876,10 +876,13 @@ public class WechatAppletController extends BaseController {
         SysWxUserLog sysWxUserLog = new SysWxUserLog();
         sysWxUserLog.setCustomerId(Long.parseLong(cusId));
         int punchNum = sysWxUserLogService.getPunchTotalNum(sysWxUserLog);
-        result.put("customerPunchNum", unReadNoticeTotal);
-        //查询社区打卡客户数量
+        result.put("customerPunchNum", punchNum);
+        //查询当天社区打卡客户数量
         int punchCustomerNum = sysWxUserLogService.getPunchCustomerTotalNum();
         result.put("punchCustomerNum", punchCustomerNum);
+        //查询执行反馈条数
+        int topicNum = iSysServicesTopicService.getServicesTopicNum(Long.parseLong(cusId));
+        result.put("submitTopicNum", topicNum);
         return result;
     }
 
