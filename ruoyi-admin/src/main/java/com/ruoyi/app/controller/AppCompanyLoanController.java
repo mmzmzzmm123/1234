@@ -33,7 +33,6 @@ public class AppCompanyLoanController extends BaseController
     @PostMapping( "/add")
     public AjaxResult add(@RequestBody DataCompanyLoaBody dataCompanyLoan)
     {
-        //TODO:后端接口如何直连？
         if (UserConstants.NOT_UNIQUE.equals(dataCompanyLoanService.checkCompanyNameUnique(dataCompanyLoan.getCompanyName())))
         {
             return AjaxResult.error("新增'" + dataCompanyLoan.getCompanyName() + "'失败，该企业名称已存在");

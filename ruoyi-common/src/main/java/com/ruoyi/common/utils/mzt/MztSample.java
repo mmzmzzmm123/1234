@@ -61,7 +61,6 @@ public class MztSample {
      * @throws Exception 
      */
     public static void main(String[] args) throws Exception {
-        // TODO Auto-generated method stub
         String url = "https://mztapp.fujian.gov.cn:8304/"
                 + "dataset/AppSerController/invokeservice.do";
         Map<String,Object> paramsMap = new HashMap<String,Object>();
