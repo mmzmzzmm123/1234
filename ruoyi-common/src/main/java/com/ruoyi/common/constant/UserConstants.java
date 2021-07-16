@@ -3,7 +3,7 @@ package com.ruoyi.common.constant;
 /**
  * 用户常量信息
  * 
- * @author ruoyi
+ * @author zhongyou
  */
 public class UserConstants
 {
@@ -56,9 +56,6 @@ public class UserConstants
 
     /** ParentView组件标识 */
     public final static String PARENT_VIEW = "ParentView";
-
-    /** InnerLink组件标识 */
-    public final static String INNER_LINK = "InnerLink";
 
     /** 校验返回结果码 */
     public final static String UNIQUE = "0";

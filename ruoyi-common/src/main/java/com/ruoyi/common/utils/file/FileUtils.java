@@ -16,7 +16,7 @@ import com.ruoyi.common.utils.StringUtils;
 /**
  * 文件处理工具类
  * 
- * @author ruoyi
+ * @author zhongyou
  */
 public class FileUtils
 {
