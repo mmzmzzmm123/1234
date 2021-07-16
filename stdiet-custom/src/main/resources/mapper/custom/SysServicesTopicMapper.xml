@@ -320,4 +320,9 @@
             </choose>
         </foreach>
     </select>
+
+    <!-- 根据客户ID查询总共提交反馈意见数量 -->
+    <select id="getServicesTopicNum" parameterType="Long" resultType="int">
+        select count(1) from sys_services_topic where del_flag = 0 and uid = #{cusId}
+    </select>
 </mapper>

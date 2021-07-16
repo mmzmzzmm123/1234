@@ -219,4 +219,14 @@ public class SysServicesTopicServiceImp implements ISysServicesTopicService {
     public List<SysServicesTopic> selectTopicListByUid(SysServicesTopic topic) {
         return servicesTopicMapper.selectTopicListByUid(topic);
     }
+
+    /**
+     * 根据客户ID查询总共提交反馈意见数量
+     * @param cusId 客户ID
+     * @return
+     */
+    @Override
+    public int getServicesTopicNum(Long cusId){
+        return servicesTopicMapper.getServicesTopicNum(cusId);
+    }
 }

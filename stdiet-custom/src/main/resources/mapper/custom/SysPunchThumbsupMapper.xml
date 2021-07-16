@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.stdiet.custom.mapper.SysPunchThumbsupMapper">
+
+    <resultMap type="SysPunchThumbsup" id="SysPunchThumbsupResult">
+        <result property="id"    column="id"    />
+        <result property="punchId"    column="punch_id"    />
+        <result property="cusOpenid"    column="cus_openid"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="delFlag"    column="del_flag"    />
+    </resultMap>
+
+    <sql id="selectSysPunchThumbsupVo">
+        select id, punch_id, cus_openid, create_time, update_time, del_flag from sys_punch_thumbsup
+    </sql>
+
+    <select id="selectSysPunchThumbsupList" parameterType="SysPunchThumbsup" resultMap="SysPunchThumbsupResult">
+        <include refid="selectSysPunchThumbsupVo"/> where del_flag = 0
+    </select>
+
+    <select id="selectSysPunchThumbsupById" parameterType="Long" resultMap="SysPunchThumbsupResult">
+        <include refid="selectSysPunchThumbsupVo"/>
+        where id = #{id} and del_flag = 0
+    </select>
+
+    <insert id="insertSysPunchThumbsup" parameterType="SysPunchThumbsup" useGeneratedKeys="true" keyProperty="id">
+        insert into sys_punch_thumbsup
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="punchId != null">punch_id,</if>
+            <if test="cusOpenid != null">cus_openid,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="delFlag != null">del_flag,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="punchId != null">#{punchId},</if>
+            <if test="cusOpenid != null">#{cusOpenid},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="delFlag != null">#{delFlag},</if>
+        </trim>
+    </insert>
+
+    <update id="updateSysPunchThumbsup" parameterType="SysPunchThumbsup">
+        update sys_punch_thumbsup
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="punchId != null">punch_id = #{punchId},</if>
+            <if test="cusOpenid != null">cus_openid = #{cusOpenid},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="delFlag != null">del_flag = #{delFlag},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <update id="deleteSysPunchThumbsupById" parameterType="Long">
+        update sys_punch_thumbsup set del_flag = 1 where id = #{id}
+    </update>
+
+    <update id="deleteSysPunchThumbsupByIds" parameterType="String">
+        update sys_punch_thumbsup set del_flag = 1 where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </update>
+
+    <update id="deleteThumbsupByPunchIdAndOpenid" parameterType="SysPunchThumbsup">
+        update sys_punch_thumbsup set del_flag = 1 where punch_id = #{punchId} and cus_openid =#{cusOpenid}
+    </update>
+
+    <select id="getThumbsupByPunchIdAndOpenid" parameterType="SysPunchThumbsup" resultMap="SysPunchThumbsupResult">
+        <include refid="selectSysPunchThumbsupVo"/> where del_flag = 0 and punch_id = #{punchId} and cus_openid =#{cusOpenid} limit 1
+    </select>
+
+</mapper>
