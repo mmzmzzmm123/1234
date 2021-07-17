@@ -42,7 +42,12 @@
         </el-select>
       </el-form-item>
       <el-form-item label="营养师" prop="mainDietitian" v-if="!isPartner">
-        <el-select v-model="queryParams.mainDietitian" clearable filterable  placeholder="请选择">
+        <el-select
+          v-model="queryParams.mainDietitian"
+          clearable
+          filterable
+          placeholder="请选择"
+        >
           <el-option
             v-for="dict in nutritionistIdOptions"
             :key="dict.dictValue"
@@ -59,8 +64,8 @@
         <el-select
           v-model="queryParams.assistantDietitian"
           placeholder="请选择"
-          clearable 
-          filterable 
+          clearable
+          filterable
         >
           <el-option
             v-for="dict in nutriAssisIdOptions"
@@ -71,7 +76,12 @@
         </el-select>
       </el-form-item>
       <el-form-item label="销售人员" prop="salesman" v-if="!isPartner">
-        <el-select v-model="queryParams.salesman" clearable filterable  placeholder="请选择">
+        <el-select
+          v-model="queryParams.salesman"
+          clearable
+          filterable
+          placeholder="请选择"
+        >
           <el-option
             v-for="dict in preSaleIdOptions"
             :key="dict.dictValue"
@@ -80,8 +90,13 @@
           />
         </el-select>
       </el-form-item>
-       <el-form-item label="售中人员" prop="onSaleId" v-if="!isPartner">
-        <el-select v-model="queryParams.onSaleId" clearable filterable placeholder="请选择">
+      <el-form-item label="售中人员" prop="onSaleId" v-if="!isPartner">
+        <el-select
+          v-model="queryParams.onSaleId"
+          clearable
+          filterable
+          placeholder="请选择"
+        >
           <el-option
             v-for="dict in onSaleIdOptions"
             :key="dict.dictValue"
@@ -91,7 +106,12 @@
         </el-select>
       </el-form-item>
       <el-form-item label="售后营养师" prop="afterDietitian" v-if="!isPartner">
-        <el-select v-model="queryParams.afterDietitian" clearable filterable  placeholder="请选择">
+        <el-select
+          v-model="queryParams.afterDietitian"
+          clearable
+          filterable
+          placeholder="请选择"
+        >
           <el-option
             v-for="dict in afterSaleIdOptions"
             :key="dict.dictValue"
@@ -195,7 +215,7 @@
         :formatter="channelFormat"
       />
       <el-table-column label="客户姓名" align="center" prop="name" />
-      <el-table-column label="手机号" align="center" prop="phone" width="120"/>
+      <el-table-column label="手机号" align="center" prop="phone" width="120" />
       <el-table-column
         label="主营养师"
         align="center"
@@ -269,20 +289,6 @@
         </template>
       </el-table-column>
       <el-table-column
-        label="外食热量"
-        align="center"
-        v-hasPermi="['custom:foodHeatStatistics:list']"
-      >
-        <template slot-scope="scope">
-          <el-button
-            size="mini"
-            type="text"
-            @click="handleClickHeatStatistics(scope.row)"
-            >详情
-          </el-button>
-        </template>
-      </el-table-column>
-      <el-table-column
         label="食谱计划"
         align="center"
         v-hasPermi="['recipes:plan:list']"
@@ -292,6 +298,20 @@
             size="mini"
             type="text"
             @click="handleOnMenuClick(scope.row)"
+            >详情
+          </el-button>
+        </template>
+      </el-table-column>
+      <el-table-column
+        label="外食热量"
+        align="center"
+        v-hasPermi="['custom:foodHeatStatistics:list']"
+      >
+        <template slot-scope="scope">
+          <el-button
+            size="mini"
+            type="text"
+            @click="handleClickHeatStatistics(scope.row)"
             >详情
           </el-button>
         </template>
