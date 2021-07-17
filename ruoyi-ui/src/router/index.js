@@ -218,6 +218,36 @@ export const constantRoutes = [{
         component: Layout,
         hidden: true,
         children: [{
+            path: "gbjbqk/gbxxb/:id",
+            component: resolve =>
+                require(["@/views/gbxxgl/gbjbqk/gbxxb"], resolve),
+            name: "gbxxb",
+            meta: {
+                title: "干部信息表",
+                icon: ""
+            }
+        }]
+    },
+    {
+        path: "/gbxxgl",
+        component: Layout,
+        hidden: true,
+        children: [{
+            path: "gbjbqk/gbrmb/:id",
+            component: resolve =>
+                require(["@/views/gbxxgl/gbjbqk/gbrmb"], resolve),
+            name: "gbrmb",
+            meta: {
+                title: "干部任免表",
+                icon: ""
+            }
+        }]
+    },
+    {
+        path: "/gbxxgl",
+        component: Layout,
+        hidden: true,
+        children: [{
             path: "xq/data/:id",
             component: resolve =>
                 require(["@/views/gbxxgl/gbzhcx/data"], resolve),

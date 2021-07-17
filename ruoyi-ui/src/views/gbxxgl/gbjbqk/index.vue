@@ -396,32 +396,48 @@
       v-loading="loading"
       :data="gbjbqkList"
       @selection-change="handleSelectionChange"
+      style="width: 100%"
     >
       <el-table-column type="selection" width="55" align="center" />
       <el-table-column
+        fixed
         label="单位名称"
         align="center"
         prop="dept.deptName"
+        width="120"
       />
-      <el-table-column label="教师姓名" align="center" prop="name" />
+      <el-table-column
+        fixed
+        label="教师姓名"
+        align="center"
+        prop="name"
+        width="120"
+      />
       <el-table-column
         label="性别"
         align="center"
         prop="xb"
         :formatter="xbFormat"
+        width="80"
       />
       <el-table-column
         label="现任行政职务"
         align="center"
         prop="xrxzzw"
         :formatter="xrxzzwFormat"
+        width="120"
       />
-      <el-table-column label="出生日期" align="center" prop="csrq">
+      <el-table-column label="出生日期" align="center" prop="csrq" width="120">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.csrq, "{y}-{m}-{d}") }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="参加工作年月" align="center" prop="cjgzny">
+      <el-table-column
+        label="参加工作年月"
+        align="center"
+        prop="cjgzny"
+        width="120"
+      >
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.cjgzny, "{y}-{m}") }}</span>
         </template>
@@ -431,24 +447,28 @@
         align="center"
         prop="zc"
         :formatter="zcFormat"
+        width="120"
       />
       <el-table-column
         label="政治面貌"
         align="center"
         prop="zzmm"
         :formatter="zzmmFormat"
+        width="120"
       />
       <el-table-column
         label="民族"
         align="center"
         prop="mz"
         :formatter="mzFormat"
+        width="120"
       />
       <el-table-column
         label="操作"
+        fixed="right"
         align="center"
         class-name="small-padding fixed-width"
-        width="210px"
+        width="310px"
       >
         <template slot-scope="scope">
           <el-button
@@ -475,6 +495,22 @@
             v-hasPermi="['gbxxgl:gbjbqk:remove']"
             >删除</el-button
           >
+          <el-button
+            size="mini"
+            type="text"
+            icon="el-icon-printer"
+            @click="handlePrintxxb(scope.row)"
+            v-hasPermi="['gbxxgl:gbjbqk:query']"
+            >信息表</el-button
+          >
+          <el-button
+            size="mini"
+            type="text"
+            icon="el-icon-printer"
+            @click="handlePrintrmb(scope.row)"
+            v-hasPermi="['gbxxgl:gbjbqk:query']"
+            >任免表</el-button
+          >
         </template>
       </el-table-column>
     </el-table>
@@ -488,7 +524,12 @@
     />
 
     <!-- 添加或修改干部基本情况对话框 -->
-    <el-dialog class="big-dialog" :title="title" :visible.sync="open" width="980px">
+    <el-dialog
+      class="big-dialog"
+      :title="title"
+      :visible.sync="open"
+      width="980px"
+    >
       <el-form ref="form" :model="form" :rules="rules" label-width="140px">
         <el-row :gutter="10">
           <el-col :span="12">
@@ -1369,6 +1410,20 @@ export default {
       const id = row.id;
       this.$router.push({
         path: "/gbxxgl/xq/data/" + id,
+      });
+    },
+     /** 信息表按钮操作 */
+    handlePrintxxb(row) {
+      const id = row.id;
+      this.$router.push({
+        path: "/gbxxgl/gbjbqk/gbxxb/" + id,
+      });
+    },
+     /** 任免表按钮操作 */
+    handlePrintrmb(row) {
+      const id = row.id;
+      this.$router.push({
+        path: "/gbxxgl/gbjbqk/gbrmb/" + id,
       });
     },
     /** 修改按钮操作 */
