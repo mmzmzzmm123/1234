@@ -2,7 +2,7 @@ package com.ruoyi.system.service;
 
 import java.util.List;
 import com.ruoyi.system.domain.DataCompanyLoan;
-import com.ruoyi.system.domain.model.DataCompanyLoaBody;
+import com.ruoyi.system.domain.model.DataCompanyLoadBody;
 
 /**
  * 企业贷款信息Service接口
@@ -41,7 +41,7 @@ public interface IDataCompanyLoanService
      * @param dataCompanyLoan
      * @return
      */
-    public int insertDataCompanyLoan(DataCompanyLoaBody dataCompanyLoan);
+    public int insertDataCompanyLoan(DataCompanyLoadBody dataCompanyLoan);
 
     /**
      * 修改企业贷款信息
