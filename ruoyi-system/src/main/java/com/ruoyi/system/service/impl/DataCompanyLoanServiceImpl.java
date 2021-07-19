@@ -10,7 +10,7 @@ import com.ruoyi.common.utils.DateUtils;
 import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.system.domain.DataCompanyLoan;
 import com.ruoyi.system.domain.model.DataCodeMsgResponse;
-import com.ruoyi.system.domain.model.DataCompanyLoadBody;
+import com.ruoyi.system.domain.model.DataCompanyLoanBody;
 import com.ruoyi.system.mapper.DataCompanyLoanMapper;
 import com.ruoyi.system.service.IDataCompanyLoanService;
 import com.ruoyi.system.service.IDataSmsService;
@@ -77,7 +77,7 @@ public class DataCompanyLoanServiceImpl implements IDataCompanyLoanService
     }
 
     @Override
-    public int insertDataCompanyLoan(DataCompanyLoadBody dataCompanyLoanBody) {
+    public int insertDataCompanyLoan(DataCompanyLoanBody dataCompanyLoanBody) {
 
         //验证短信
         String mobile = dataCompanyLoanBody.getContactPhone();

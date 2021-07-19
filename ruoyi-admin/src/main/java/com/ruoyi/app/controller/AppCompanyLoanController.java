@@ -5,7 +5,7 @@ import com.ruoyi.common.constant.UserConstants;
 import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.enums.BusinessType;
-import com.ruoyi.system.domain.model.DataCompanyLoadBody;
+import com.ruoyi.system.domain.model.DataCompanyLoanBody;
 import com.ruoyi.system.service.IDataCompanyLoanService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -35,7 +35,7 @@ public class AppCompanyLoanController extends BaseController
     // public @ResponseBody AjaxResult add( DataCompanyLoan dataCompanyLoan)
     @PostMapping( "/add")
     @ApiOperation(value = "添加企业贷款信息接口")
-    public AjaxResult add(@RequestBody DataCompanyLoadBody dataCompanyLoan)
+    public AjaxResult add(@RequestBody DataCompanyLoanBody dataCompanyLoan)
     {
         if (UserConstants.NOT_UNIQUE.equals(dataCompanyLoanService.checkCompanyNameUnique(dataCompanyLoan.getCompanyName())))
         {

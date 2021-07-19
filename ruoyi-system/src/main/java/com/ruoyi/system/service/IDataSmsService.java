@@ -1,10 +1,6 @@
 package com.ruoyi.system.service;
 
-import com.ruoyi.system.domain.DataCompanyLoan;
 import com.ruoyi.system.domain.model.DataCodeMsgResponse;
-import com.ruoyi.system.domain.model.DataCompanyLoadBody;
-
-import java.util.List;
 
 /**
  * 短信接口服务。对接文档请参考：http://47.97.21.146:9090/doc/sms
