@@ -164,7 +164,7 @@ public class DataCompanyLoanServiceImpl implements IDataCompanyLoanService
             code = "888888";//TODO：测试用，待删除
             redisCache.setCacheObject(verifyKey, code, Constants.SMS_CODE_EXPIRATION, TimeUnit.MINUTES);
         }else {
-            throw new UserException(JSON.toJSONString(response),null);
+            throw new UserException(null, null, JSON.toJSONString(response));
         }
 
     }
