@@ -1,14 +1,20 @@
 package com.ruoyi.system.service.impl;
 
-import com.alibaba.fastjson.JSON;
-import com.ruoyi.common.utils.mzt.HttpRequest;
 import com.ruoyi.common.utils.mzt.MD5;
+import com.ruoyi.common.utils.sign.Md5Utils;
 import com.ruoyi.system.domain.model.DataCodeMsgResponse;
 import com.ruoyi.system.service.IDataSmsService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
+import org.springframework.web.client.RestTemplate;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 短信接口服务。对接文档请参考：http://47.97.21.146:9090/doc/sms#codemsg
@@ -42,33 +48,33 @@ public class DataSmsServiceImpl implements IDataSmsService {
     @Value("${hysms.notifyUrl}")
     private String notifyUrl;
 
+    @Autowired
+    private RestTemplate restTemplate;
+
+    private static final Logger log = LoggerFactory.getLogger(DataSmsServiceImpl.class);
+
     private static final String TEP_ID = "138";
     private static final String TGA_ID = "134";
 
-    private String sendCodeSms(String mobile, String tmpId, String tgaId, List<String> list) {
+    private DataCodeMsgResponse sendCodeSms(String mobile, String tmpId, String tgaId, List<String> list) {
 
         String url = domain + "sms/Service/CodeMsg";
         long timestamp = System.currentTimeMillis();
-        MD5 md5 = new MD5();
         String password = mchId + "&" + timestamp + "&" + apiKey;
-        String sign = md5.getMD5ofStr(password).toUpperCase();
+        String sign = Md5Utils.hash(password).toUpperCase();
 
-        Map<String, String> map = new HashMap<String, String>();
-        map.put("mch_id", mchId);
-        map.put("contents", list.toString());
-        map.put("tmp_id", tmpId);
-        map.put("phone_num", mobile);
-        map.put("time_stamp", timestamp + "");
-        map.put("sign", sign);
-        map.put("notify_url", notifyUrl);
-        map.put("tga_id", tgaId);
+        MultiValueMap<String, Object> map = new LinkedMultiValueMap<>();
+        map.add("mch_id", mchId);
+        map.add("contents", list.toString());
+        map.add("tmp_id", tmpId);
+        map.add("phone_num", mobile);
+        map.add("time_stamp", timestamp + "");
+        map.add("sign", sign);
+        map.add("notify_url", notifyUrl);
+        map.add("tga_id", tgaId);
 
-        System.out.println(map);
-        // TODO:httpclient换一个好一点的;日志如何打印？
-        String result = HttpRequest.sendPost(url, map);
-        System.out.println(result);
-        return result;
-
+        log.info(map.toString());
+        return restTemplate.postForObject(url, map, DataCodeMsgResponse.class);
     }
 
     @Override
@@ -78,7 +84,6 @@ public class DataSmsServiceImpl implements IDataSmsService {
         List<String> list = new ArrayList<>();
         list.add(param1);
         list.add(code);
-        String result = this.sendCodeSms(phone, TEP_ID, TGA_ID, list);
-        return JSON.parseObject(result, DataCodeMsgResponse.class);
+        return this.sendCodeSms(phone, TEP_ID, TGA_ID, list);
     }
 }
