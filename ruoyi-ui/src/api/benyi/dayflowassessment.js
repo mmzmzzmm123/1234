@@ -19,6 +19,15 @@ export function listDayflowassessmentmyself(query) {
 }
 
 // 查询幼儿园一日流程评估列表
+export function listDayflowassessmentbyJsid(query) {
+  return request({
+    url: "/benyi/dayflowassessment/listbyjsid",
+    method: "get",
+    params: query
+  });
+}
+
+// 查询幼儿园一日流程评估列表
 export function listDayflowassessmentPjf(query) {
   return request({
     url: "/benyi/dayflowassessment/listpjf",

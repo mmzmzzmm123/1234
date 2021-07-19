@@ -91,6 +91,17 @@ public class ByDayflowassessmentController extends BaseController {
     }
 
     /**
+     * 查询幼儿园一日流程评估列表
+     */
+    @PreAuthorize("@ss.hasPermi('benyi:dayflowassessment:list')")
+    @GetMapping("/listbyjsid")
+    public TableDataInfo listbyjsid(ByDayflowassessment byDayflowassessment) {
+        System.out.println(byDayflowassessment.getPgdx());
+        List<ByDayflowassessment> list = byDayflowassessmentService.selectByDayflowassessmentList(byDayflowassessment);
+        return getDataTable(list);
+    }
+
+    /**
      * 导出幼儿园一日流程评估列表
      */
     @PreAuthorize("@ss.hasPermi('benyi:dayflowassessment:export')")

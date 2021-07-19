@@ -158,7 +158,7 @@
     />
 
     <!-- 添加或修改教师月绩效考核对话框 -->
-    <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
+    <el-dialog :title="title" :visible.sync="open" width="400px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
         <el-form-item label="考核月份" prop="month">
           <el-date-picker
@@ -244,6 +244,7 @@ import {
   updateTeacherassessment,
   exportTeacherassessment,
 } from "@/api/benyi/teacherassessment";
+import { listDayflowassessmentbyJsid } from "@/api/benyi/dayflowassessment";
 
 import { listClass, getUserList } from "@/api/system/class";
 import { listUser } from "@/api/system/user";
@@ -252,6 +253,8 @@ export default {
   name: "Teacherassessment",
   data() {
     return {
+      // 监听
+      month: null,
       // 遮罩层
       loading: true,
       // 选中数组
@@ -272,6 +275,8 @@ export default {
       classOptions: [],
       // 所有教师
       userOptions: [],
+      // 日期范围
+      dateRange: [],
       // 查询参数
       queryParams: {
         pageNum: 1,
@@ -286,6 +291,10 @@ export default {
         sgbl: undefined,
         wsbl: undefined,
         zfbl: undefined,
+      },
+      // 查询参数
+      queryParams_pg: {
+        pgdx: undefined,
       },
       // 表单参数
       form: {},
@@ -318,29 +327,51 @@ export default {
   },
   created() {
     this.getList();
-    this.getClassList();
-    this.getUserList();
   },
   watch: {
     "queryParams.classid": function (val) {
-      //console.log(val);
-      if (val == "undefined") {
+      console.log(val);
+      if (val != "undefined") {
         getUserList(val).then((response) => {
           //console.log(response);
           this.userOptions = response.rows;
         });
+      } else {
       }
     },
     "form.classid": function (val) {
-      //console.log(val);
-      if (val == "undefined") {
+      console.log(val);
+      if (val != "undefined") {
         getUserList(val)
           .then((response) => {
             //console.log(response);
             this.userOptions = response.rows;
           })
           .catch((e) => {});
+      } else {
       }
+    },
+    "form.month": function (val) {
+      //console.log(val);
+      this.month = val;
+    },
+    "form.jsid": function (val) {
+      //console.log(val);
+      this.queryParams_pg.pgdx = val;
+      this.dateRange[0] = this.month + "-01";
+      this.dateRange[1] = this.month + "-31";
+      //console.log(this.dateRange);
+      listDayflowassessmentbyJsid(
+        this.addDateRange(this.queryParams_pg, this.dateRange)
+      ).then((response) => {
+        //console.log(response);
+        var total = 100;
+        response.rows.forEach((item) => {
+          total = total + item.zzdf;
+        });
+
+        this.form.yrlcbl = total;
+      });
     },
   },
   methods: {
@@ -352,6 +383,9 @@ export default {
         this.total = response.total;
         this.loading = false;
       });
+
+      this.getClassList();
+      this.getUserList();
     },
     getClassList() {
       listClass(null).then((response) => {
