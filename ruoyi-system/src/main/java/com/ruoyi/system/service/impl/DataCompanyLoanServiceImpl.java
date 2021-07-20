@@ -1,15 +1,19 @@
 package com.ruoyi.system.service.impl;
 
+import com.alibaba.fastjson.JSON;
 import com.ruoyi.common.constant.Constants;
 import com.ruoyi.common.constant.UserConstants;
 import com.ruoyi.common.core.redis.RedisCache;
 import com.ruoyi.common.exception.user.SmsException;
+import com.ruoyi.common.exception.user.UserException;
 import com.ruoyi.common.utils.DateUtils;
 import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.system.domain.DataCompanyLoan;
-import com.ruoyi.system.domain.model.DataCompanyLoaBody;
+import com.ruoyi.system.domain.model.DataCodeMsgResponse;
+import com.ruoyi.system.domain.model.DataCompanyLoanBody;
 import com.ruoyi.system.mapper.DataCompanyLoanMapper;
 import com.ruoyi.system.service.IDataCompanyLoanService;
+import com.ruoyi.system.service.IDataSmsService;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -28,6 +32,9 @@ public class DataCompanyLoanServiceImpl implements IDataCompanyLoanService
 {
     @Autowired
     private DataCompanyLoanMapper dataCompanyLoanMapper;
+
+    @Autowired
+    private IDataSmsService smsService;
 
     @Autowired
     private RedisCache redisCache;
@@ -70,7 +77,7 @@ public class DataCompanyLoanServiceImpl implements IDataCompanyLoanService
     }
 
     @Override
-    public int insertDataCompanyLoan(DataCompanyLoaBody dataCompanyLoanBody) {
+    public int insertDataCompanyLoan(DataCompanyLoanBody dataCompanyLoanBody) {
 
         //验证短信
         String mobile = dataCompanyLoanBody.getContactPhone();
@@ -152,9 +159,14 @@ public class DataCompanyLoanServiceImpl implements IDataCompanyLoanService
     public void senSmsCode(String phone) {
         String verifyKey = Constants.SMS_CODE_KEY + phone;
         String code = numRandom(6);
-        //TODO:使用短信服务发送验证码;
-        code = "888888";
-        redisCache.setCacheObject(verifyKey, code, Constants.SMS_CODE_EXPIRATION, TimeUnit.MINUTES);
+        DataCodeMsgResponse response = smsService.sendVerifyCode(phone,code);
+        if (StringUtils.equals(DataCodeMsgResponse.SUCCESS_CODE,response.getCode())){//发送短信成功
+            code = "888888";//TODO：测试用，待删除
+            redisCache.setCacheObject(verifyKey, code, Constants.SMS_CODE_EXPIRATION, TimeUnit.MINUTES);
+        }else {
+            throw new UserException(null, null, JSON.toJSONString(response));
+        }
+
     }
 
     private String numRandom(int bit) {

@@ -4,7 +4,7 @@ import com.ruoyi.common.annotation.Excel;
 
 import java.math.BigDecimal;
 
-public class DataCompanyLoaBody {
+public class DataCompanyLoanBody {
 
     private static final long serialVersionUID = 1L;
 

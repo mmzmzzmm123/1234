@@ -119,3 +119,10 @@ xss:
   excludes: /system/notice/*
   # 匹配链接
   urlPatterns: /system/*,/monitor/*,/tool/*
+
+# 短信配置
+hysms:
+  domain: http://47.97.21.146:9090/
+  mchId: sms1095d5e5da02f61a
+  apiKey: fc62c9800708778b0811419f14ea232c
+  notifyUrl:
