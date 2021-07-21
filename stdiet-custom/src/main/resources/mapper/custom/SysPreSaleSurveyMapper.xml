@@ -21,6 +21,7 @@
         <result property="bloodData"    column="blood_data"    />
         <result property="moistureData"    column="moisture_data"    />
         <result property="preSaleId"    column="pre_sale_id"    />
+        <result property="questionType"    column="question_type"    />
         <result property="createTime"    column="create_time"    />
         <result property="updateTime"    column="update_time"    />
         <result property="createBy"    column="create_by"    />
@@ -34,7 +35,10 @@
 
     <select id="selectSysPreSaleSurveyList" parameterType="SysPreSaleSurvey" resultMap="SysPreSaleSurveyResult">
         <include refid="selectSysPreSaleSurveyVo"/> where del_flag = 0
-        <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
+        <if test="questionType != null">
+            and question_type = #{questionType}
+        </if>
+        <if test="name != null  and name != ''"> and (name like concat('%', #{name}, '%') or phone like concat('%',#{name},'%'))</if>
     </select>
 
     <select id="selectSysPreSaleSurveyById" parameterType="Long" resultMap="SysPreSaleSurveyResult">
@@ -60,6 +64,7 @@
             <if test="bloodData != null">blood_data,</if>
             <if test="moistureData != null">moisture_data,</if>
             <if test="preSaleId != null">pre_sale_id,</if>
+            <if test="questionType != null">question_type,</if>
             <if test="createTime != null">create_time,</if>
             <if test="updateTime != null">update_time,</if>
             <if test="createBy != null">create_by,</if>
@@ -82,6 +87,7 @@
             <if test="bloodData != null">#{bloodData},</if>
             <if test="moistureData != null">#{moistureData},</if>
             <if test="preSaleId != null">#{preSaleId},</if>
+            <if test="questionType != null">#{questionType},</if>
             <if test="createTime != null">#{createTime},</if>
             <if test="updateTime != null">#{updateTime},</if>
             <if test="createBy != null">#{createBy},</if>
@@ -108,6 +114,7 @@
             <if test="bloodData != null">blood_data = #{bloodData},</if>
             <if test="moistureData != null">moisture_date = #{moistureData},</if>
             <if test="preSaleId != null">pre_sale_id = #{preSaleId},</if>
+            <if test="questionType != null">question_type = #{questionType},</if>
             <if test="createTime != null">create_time = #{createTime},</if>
             <if test="updateTime != null">update_time = #{updateTime},</if>
             <if test="createBy != null">create_by = #{createBy},</if>

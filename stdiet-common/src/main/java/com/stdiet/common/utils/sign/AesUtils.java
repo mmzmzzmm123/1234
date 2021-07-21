@@ -104,4 +104,8 @@ public class AesUtils {
         }
         return null;
     }
+
+    public static void main(String[] args) {
+        System.out.println(encrypt("4470"));
+    }
 }

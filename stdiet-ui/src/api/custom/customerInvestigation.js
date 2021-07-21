@@ -70,4 +70,15 @@ export function addCustomerSurvey(customerSurvey) {
   })
 }
 
+// 添加客户建议评估信息问卷，并返回标准体重，用于生成报告
+export function addSimpleCustomerSurvey(customerSurvey) {
+  return request({
+    url: '/investigate/addSimpleCustomerSurvey',
+    method: 'post',
+    data: customerSurvey
+  })
+}
+
+
+
 

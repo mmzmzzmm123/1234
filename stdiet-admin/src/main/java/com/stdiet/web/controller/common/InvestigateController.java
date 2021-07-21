@@ -4,8 +4,10 @@ import com.stdiet.common.core.controller.BaseController;
 import com.stdiet.common.core.domain.AjaxResult;
 import com.stdiet.common.core.page.TableDataInfo;
 import com.stdiet.common.enums.BusinessType;
+import com.stdiet.common.utils.HealthyUtils;
 import com.stdiet.common.utils.StringUtils;
 import com.stdiet.common.utils.sign.AesUtils;
+import com.stdiet.common.utils.uuid.IdUtils;
 import com.stdiet.custom.domain.*;
 import com.stdiet.custom.dto.request.CustomerInvestigateRequest;
 import com.stdiet.custom.dto.request.FoodHeatCalculatorRequest;
@@ -18,6 +20,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 /**
  * 客户相关信息调查Controller
@@ -139,6 +142,7 @@ public class InvestigateController extends BaseController {
         if(oldSysPreSale != null){
             return AjaxResult.error("已提交过问卷，无法重复提交");
         }
+        sysPreSaleSurvey.setQuestionType(0);
         return toAjax(sysPreSaleSurveyService.insertSysPreSaleSurvey(sysPreSaleSurvey));
     }
 
@@ -154,5 +158,22 @@ public class InvestigateController extends BaseController {
         }
         SysPreSaleSurvey preSaleSurvey = sysPreSaleSurveyService.getSysPreSaleSurveyByKey(customerKey);
         return AjaxResult.success(preSaleSurvey);
+    }
+
+    /**
+     * 添加用户简易问卷
+     */
+    @PostMapping("/addSimpleCustomerSurvey")
+    public AjaxResult addSimpleCustomerSurvey(@RequestBody SysPreSaleSurvey sysPreSaleSurvey)
+    {
+        sysPreSaleSurvey.setQuestionType(1);
+        sysPreSaleSurvey.setCustomerKey(IdUtils.fastSimpleUUID());
+        int row = sysPreSaleSurveyService.insertSysPreSaleSurvey(sysPreSaleSurvey);
+        if(row > 0){
+            //获取标准体重
+            Double standardWeight = HealthyUtils.calculateStandardWeightByBMI(sysPreSaleSurvey.getTall(), sysPreSaleSurvey.getAge(), sysPreSaleSurvey.getSex());
+            return AjaxResult.success(standardWeight);
+        }
+        return AjaxResult.error("提交失败");
     }
 }

@@ -187,6 +187,13 @@ export const constantRoutes = [
     hidden: true,
     meta: { title: "胜唐体控基础问卷表" }
   },
+  {
+    path: "/simple/preSaleSurvey",
+    component: resolve =>
+      require(["@/views/custom/preSaleSurvey/simpleSurvey"], resolve),
+    hidden: true,
+    meta: { title: "胜唐体控基础问卷表" }
+  },
 ];
 
 export default new Router({

@@ -80,6 +80,15 @@ public class SysPreSaleSurvey extends BaseEntity
     @Excel(name = "售前ID")
     private Long preSaleId;
 
+    /** 问卷类型 0售前简易问卷  1简易评估问卷 */
+    @Excel(name = "问卷类型 0售前简易问卷  1简易评估问卷")
+    private Integer questionType;
+
     /** 删除标识 0未删除 1已删除 */
     private Integer delFlag;
+
+    /**
+     * 标准体重
+     */
+    private Double standardWeight;
 }
