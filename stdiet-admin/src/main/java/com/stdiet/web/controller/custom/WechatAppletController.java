@@ -526,7 +526,7 @@ public class WechatAppletController extends BaseController {
         }
 
         // 更新时间超过7天，重新登录获取最新信息
-        if (StringUtils.isEmpty(curWxUserInfo.getAvatarUrl()) || ChronoUnit.DAYS.between(DateUtils.dateToLocalDate(curWxUserInfo.getUpdateTime()), LocalDate.now()) >= 7) {
+        if (StringUtils.isEmpty(curWxUserInfo.getAvatarUrl()) || ChronoUnit.DAYS.between(DateUtils.dateToLocalDate(curWxUserInfo.getUpdateTime()), LocalDate.now()) >= 21) {
             return AjaxResult.error(5001, "信息缺失或者过期需要重新登录");
         }
 
