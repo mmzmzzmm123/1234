@@ -507,6 +507,12 @@ public class WechatAppletController extends BaseController {
 
             sysWxUserInfo.setCusId(sysCustomer.getId());
             sysWxUserInfo.setUpdateTime(DateUtils.getNowDate());
+            //先根据cusId查询是否已经绑定过微信用户
+            SysWxUserInfo cusIdWxUserInfo = sysWxUserInfoService.selectSysWxUserInfoByCusId(sysCustomer.getId());
+            if(cusIdWxUserInfo != null && !sysWxUserInfo.getOpenid().equals(curWxUserInfo.getOpenid())){
+                //解绑之前记录
+                sysWxUserInfoService.removeCusIdByOpenId(curWxUserInfo.getOpenid());
+            }
             if (StringUtils.isNull(curWxUserInfo)) {
                 // 新增sys_wx_user_info
                 sysWxUserInfo.setCreateTime(DateUtils.getNowDate());

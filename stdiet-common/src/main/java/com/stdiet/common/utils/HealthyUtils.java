@@ -1,5 +1,9 @@
 package com.stdiet.common.utils;
 
+import com.stdiet.common.enums.AgeBMI;
+
+import java.math.BigDecimal;
+
 public class HealthyUtils {
 
     public static final long maxHeatEveryDayLess = 250;
@@ -174,4 +178,19 @@ public class HealthyUtils {
     }
 
 
+    /**
+     * 根据年龄、性别获取BMI值，再根据BMI值、身高计算标准体重
+     * @param tall 身高（厘米）
+     * @param age 年龄
+     * @param sex 性别 0男 1女
+     * @return
+     */
+    public static Double calculateStandardWeightByBMI(int tall, int age, int sex){
+        double bmi = AgeBMI.getBmiByAgeAndSex(age, sex);
+        if(bmi > 0){
+            BigDecimal standardWeight = NumberUtils.getNumberByRoundHalfUp(bmi * Math.pow(tall/100.0, 2) * 2, 2);
+            return standardWeight.doubleValue();
+        }
+        return null;
+    }
 }
