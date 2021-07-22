@@ -14,11 +14,13 @@ import com.ruoyi.system.domain.model.DataCompanyLoanBody;
 import com.ruoyi.system.mapper.DataCompanyLoanMapper;
 import com.ruoyi.system.service.IDataCompanyLoanService;
 import com.ruoyi.system.service.IDataSmsService;
+import com.ruoyi.system.utils.ShareInterface;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -82,6 +84,7 @@ public class DataCompanyLoanServiceImpl implements IDataCompanyLoanService
         //验证短信
         String mobile = dataCompanyLoanBody.getContactPhone();
         String code = dataCompanyLoanBody.getCode();
+        String mztUserId = dataCompanyLoanBody.getMztUserId();
 
         String verifyKey = Constants.SMS_CODE_KEY + mobile;
         String realCode = redisCache.getCacheObject(verifyKey);
@@ -94,6 +97,7 @@ public class DataCompanyLoanServiceImpl implements IDataCompanyLoanService
 
         DataCompanyLoan dataCompanyLoan = new DataCompanyLoan();
 
+        dataCompanyLoan.setMztUserId(mztUserId);
         dataCompanyLoan.setCreateTime(DateUtils.getNowDate());
         dataCompanyLoan.setCompanyName(dataCompanyLoanBody.getCompanyName());
         dataCompanyLoan.setContactName(dataCompanyLoanBody.getContactName());
@@ -103,7 +107,13 @@ public class DataCompanyLoanServiceImpl implements IDataCompanyLoanService
         dataCompanyLoan.setMztUserId(dataCompanyLoanBody.getMztUserId());
         dataCompanyLoan.setLoanPurpose(dataCompanyLoanBody.getLoanPurpose());
         dataCompanyLoan.setContactPhone(mobile);
+
         //TODO:根据企业名称组装企业相关数据：企业划型、所在行业、主营业务、省市区
+        Map<String,String> map = ShareInterface.queryCompanyInfo(dataCompanyLoanBody.getCompanyName());
+        dataCompanyLoan.setCompanyCreditCode(map.get("tyshxydm"));
+        dataCompanyLoan.setCompanyType(map.get("companytype"));
+        dataCompanyLoan.setCompanyIndustry(map.get("indurstryname"));
+        dataCompanyLoan.setCompanyBusiness(map.get("managerange"));
 
         return dataCompanyLoanMapper.insertDataCompanyLoan(dataCompanyLoan);
     }
@@ -156,13 +166,15 @@ public class DataCompanyLoanServiceImpl implements IDataCompanyLoanService
     }
 
     @Override
-    public void senSmsCode(String phone) {
+    public String senSmsCode(String phone) {
         String verifyKey = Constants.SMS_CODE_KEY + phone;
         String code = numRandom(6);
         DataCodeMsgResponse response = smsService.sendVerifyCode(phone,code);
+        //TODO:此为测试代码，需要删除
+        response.setCode(DataCodeMsgResponse.SUCCESS_CODE);
         if (StringUtils.equals(DataCodeMsgResponse.SUCCESS_CODE,response.getCode())){//发送短信成功
-            code = "888888";//TODO：测试用，待删除
             redisCache.setCacheObject(verifyKey, code, Constants.SMS_CODE_EXPIRATION, TimeUnit.MINUTES);
+            return code;
         }else {
             throw new UserException(null, null, JSON.toJSONString(response));
         }

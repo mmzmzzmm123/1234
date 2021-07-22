@@ -72,5 +72,5 @@ public interface IDataCompanyLoanService
     /**
      * 发送短信验证码
      */
-    void senSmsCode(String phone);
+    String senSmsCode(String phone);
 }

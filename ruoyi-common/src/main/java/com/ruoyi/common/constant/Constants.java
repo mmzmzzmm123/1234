@@ -80,7 +80,7 @@ public class Constants
     /**
      * 短信验证码有效期（分钟）
      */
-    public static final Integer SMS_CODE_EXPIRATION = 5;
+    public static final Integer SMS_CODE_EXPIRATION = 2;
 
     /**
      * 令牌

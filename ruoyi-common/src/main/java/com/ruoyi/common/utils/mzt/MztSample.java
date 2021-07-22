@@ -70,9 +70,11 @@ public class MztSample {
         paramsMap.put("USER_NAME",AESOperator.aesEncrypt("张三"));
         paramsMap.put("USER_MOBILE",AESOperator.aesEncrypt("13452031733"));*/
         
-        paramsMap.put("INVOKESERVICE_CODE","103");
-        paramsMap.put("INVOKECALLER_CODE","授权码");
-        paramsMap.put("TRUST_TICKET","34343433dddd");
+        paramsMap.put("INVOKESERVICE_CODE","033");
+        paramsMap.put("INVOKECALLER_CODE","2bf26e96740adbedda3917e8d72f1989f1d3c8d9");
+        paramsMap.put("USER_ID","1");
+        paramsMap.put("USER_TOKEN","1");
+//        paramsMap.put("TRUST_TICKET","34343433dddd");
         String POSTPARAM_JSON = JSON.toJSONString(paramsMap);
         Map<String,Object> clientParam = new HashMap<String,Object>();
         clientParam.put("POSTPARAM_JSON", POSTPARAM_JSON);

@@ -1,6 +1,5 @@
 package com.ruoyi.system.service.impl;
 
-import com.ruoyi.common.utils.mzt.MD5;
 import com.ruoyi.common.utils.sign.Md5Utils;
 import com.ruoyi.system.domain.model.DataCodeMsgResponse;
 import com.ruoyi.system.service.IDataSmsService;

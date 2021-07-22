@@ -63,6 +63,9 @@ public class ShareInterface {
 //            e.printStackTrace();
 //        }
 
+//        List<String> result =  queryCompanyName("泉州大数据");
+//        System.out.println(result);
+
         Map map = queryCompanyInfo("泉州大数据运营服务有限公司");
         if(map.isEmpty()){
             System.out.println("空");
@@ -77,6 +80,7 @@ public class ShareInterface {
 //                System.out.println(key + "  " + value);
             }
         }
+        System.out.println(map);
     }
 
     /**
@@ -88,14 +92,14 @@ public class ShareInterface {
      * @param companyName
      * @return
      */
-    public static Map queryCompanyInfo(String companyName){
+    public static Map<String,String> queryCompanyInfo(String companyName){
         String  result = getInterface("http://222.77.0.158:18081/api-gateway/gateway/u70is68s/queryAllByEnterp", companyName);
 //        System.out.println(companyNameStr);
 //        Object obj = JSONObject.parseObject(companyNameStr);
 //        System.out.println(companyNameStr);
 //        JSONArray jsonArr = null;
-        List<Map> list = new ArrayList<>();
-        Map map = new HashMap();
+        List<Map<String,String>> list = new ArrayList<>();
+        Map<String,String> map = new HashMap<>();
         if (StringUtils.isEmpty(result)){
             return map;
         }
@@ -105,17 +109,17 @@ public class ShareInterface {
         result = result.replaceAll("\\{\"code\":\"01\",\"data\":\"", "");
         result = result.replaceAll("\",\"message\":\"调用成功\"}", "");
         result = result.replaceAll(">n", ">");
-//        System.out.println(result);
+        System.out.println(result);
         try {
             Document document = DocumentHelper.parseText(result);
             // 通过document对象获取根节点bookstore
             Element bookStore = document.getRootElement();
             // 通过element对象的elementIterator方法获取迭代器
-            Iterator it = bookStore.elementIterator();
+            Iterator<Element> it = bookStore.elementIterator();
             // 遍历迭代器，获取根节点中的信息（书籍）
             while (it.hasNext()) {
                 System.out.println("=====开始遍历=====");
-                Element book = (Element) it.next();
+                Element book =  it.next();
                 // 获取book的属性名以及 属性值
                 List<Attribute> bookAttrs = book.attributes();
                 for (Attribute attr : bookAttrs) {
@@ -123,9 +127,9 @@ public class ShareInterface {
                 }
                 System.out.println("=====结束遍历=====");
                 System.out.println("======遍历子节点======");
-                Iterator iterator1 = book.elementIterator();
+                Iterator<Element> iterator1 = book.elementIterator();
                 while (iterator1.hasNext()){
-                    Element stuChild = (Element) iterator1.next();
+                    Element stuChild =  iterator1.next();
                     System.out.println("节点名："+stuChild.getName()+"---节点值："+stuChild.getStringValue());
                     if(StringUtils.isNotEmpty(stuChild.getStringValue())){
 
@@ -148,6 +152,7 @@ public class ShareInterface {
     public static List<String> queryCompanyName(String companyName){
         List<String> companyList = new ArrayList<>();
         String  companyNameStr = getInterface(ConfigInfo.QUERY_COMPANY_NAME, companyName);
+        System.out.println(companyNameStr);
         if(!companyNameStr.contains("xml")){
             return companyList;
         }
