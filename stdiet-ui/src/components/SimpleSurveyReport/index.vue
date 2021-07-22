@@ -4,7 +4,7 @@
             <div class="report_title">{{reportData.name ? reportData.name : '您的'}}身体评估报告</div>
             <div class="report_weight">
                 <div style="text-align:center">
-                    <span><span class="weight_name">{{reportData.overWeight > 0 ? '超重' : '增重'}}</span>{{Math.abs(reportData.overWeight).toFixed(2)}} 斤</span> <span style="margin-left:30px"><span class="weight_name">标准体重</span>{{reportData.standardWeight.toFixed(2)}} 斤</span>
+                    <span><span class="weight_name">{{reportData.overWeight > 0 ? '超重' : '增重'}}</span>{{Math.abs(reportData.overWeight).toFixed(2)}} 斤</span> <span style="margin-left:8px"><span class="weight_name">标准体重</span>{{reportData.standardWeight.toFixed(2)}} 斤</span>
                 </div>
             </div>
             <div>
@@ -23,10 +23,16 @@
             </div>
             <div class="blood_moisture">
                 <div style="float: left;">
-                    <div class="blood_moisture_title">湿气指数</div><div :class="getBloodMoistureIndexClass(reportData.moistureIndex)"></div>
+                    <div class="blood_moisture_title">湿气指数</div>
+                    <div :class="getBloodMoistureIndexClass(reportData.moistureIndex)">
+                      <span class="blood_moisture_index_span" :style="'margin-left:'+getBloodMoistureIndexClass(reportData.moistureIndex, 2)+'%;'">{{getBloodMoistureIndexClass(reportData.moistureIndex, 1)}}</span>
+                    </div>
                 </div>
                 <div style="float: left;margin-top:20px">
-                    <div class="blood_moisture_title">气血指数</div><div :class="getBloodMoistureIndexClass(reportData.bloodIndex)"></div>
+                    <div class="blood_moisture_title">气血指数</div>
+                    <div :class="getBloodMoistureIndexClass(reportData.bloodIndex)">
+                       <span class="blood_moisture_index_span" :style="'margin-left:'+getBloodMoistureIndexClass(reportData.bloodIndex, 2)+'%;'">{{getBloodMoistureIndexClass(reportData.bloodIndex, 1)}}</span>
+                    </div>
                 </div>
                 
                 <div class="clear"></div> 
@@ -63,7 +69,10 @@ export default {
         signTypeArray: [],
         moistureIndex: 0,
         bloodIndex: 0
-      }
+      },
+      //
+      //分别代表轻度、中度、重度的界限，如：1-3之间为轻度
+      indexRange: [1,4,7]
     };
   },
   components: {
@@ -99,16 +108,26 @@ export default {
         let signObj = this.physicalSignsList.find((obj) => obj.dictValue === value);
         return signObj != null ? signObj.dictLabel : null;
     },
-    getBloodMoistureIndexClass(num){
+    getBloodMoistureIndexClass(num, type){
       let className = "blood_moisture_value";
-      if(num <= 3){
+      let spanValue = "";
+      let marginLeft = 0;
+      if(num < this.indexRange[0]){
+        className += " none";
+      }else if(num < this.indexRange[1]){
+        spanValue = "低";
+        marginLeft = 21;
         className += " light";
-      }else if(num <= 6){
+      }else if(num < this.indexRange[2]){
+        spanValue = "中";
+        marginLeft = 55;
         className += " moderate";
       }else{
+        spanValue = "高";
+        marginLeft = 86;
         className += " severe";
       }
-      return className;
+      return (type != undefined && type > 0) ? (type == 1 ? spanValue : marginLeft) : className;
     }
   },
   created() {
@@ -149,7 +168,7 @@ export default {
       margin-top: 25px;
       border-top:2px solid #F1F1F1;
       border-bottom:2px solid #F1F1F1;
-      padding: 0px 10px;
+      padding: 0px 0px;
   }
 
   .weight_name{
@@ -158,7 +177,7 @@ export default {
       font-weight: 500;
       color: #4B8AFF;
       line-height: 50px;
-      margin-right:5px;
+      margin-right:2px;
   }
 
   .weight_value{
@@ -194,7 +213,7 @@ export default {
 
   .sign_type_div{
     height: 30px;
-    background: #F1F1F1;
+    background: #e16664;
     border-radius: 24px;
     text-align: center;
     margin:10px 5px;
@@ -208,7 +227,7 @@ export default {
     font-size: 15px;
     font-family: Source Han Sans CN;
     font-weight: 400;
-    color: #333333;
+    color: #ffffff;
     line-height: 30px;
   }
 
@@ -228,23 +247,27 @@ export default {
   .blood_moisture_value{
        margin-left:10px;
        float: left;
-       width: 220px;
+       width: 180px;
        height:30px;
        border-radius: 20px;
   }
 
   .clear{ clear:both} 
 
+  .none{
+    background: #CCCCCC
+  }
+
   .light{
-      background: #20d866;
+      background: linear-gradient(to right,#37bc02,#e6b46a 33%,#CCCCCC 35%);
   }
 
   .moderate{
-      background: #f0a70b;
+      background: linear-gradient(to right,#37bc02,#f5b95e 33%, #fa9500 67%,#CCCCCC 67%);
   }
 
   .severe{
-      background: #e94545;
+      background: linear-gradient(to right,#37bc02,#fa9500,#da302a);
   }
   
   .bottom_content{
@@ -256,6 +279,12 @@ export default {
         text-align:center;
         margin-top:20px;
   }
- 
-  
+
+  .blood_moisture_index_span{
+      font-size: 16px;
+      font-family: Source Han Sans CN;
+      font-weight: 500;
+      color: #FEFEFF;
+      line-height: 30px;
+  }
 </style>

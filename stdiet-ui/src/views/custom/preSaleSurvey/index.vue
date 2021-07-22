@@ -9,6 +9,20 @@
           size="small"
         />
       </el-form-item>
+      <el-form-item label="日期范围" prop="time">
+        
+        <el-date-picker
+                v-model="timeScope"
+                type="daterange"
+                range-separator="至"
+                start-placeholder="开始日期"
+                end-placeholder="结束日期"
+                format="yyyy-MM-dd"
+                value-format="yyyy-MM-dd"
+                :picker-options="timePickerOptions"
+              >
+        </el-date-picker>
+      </el-form-item>
       <el-form-item>
         <el-button type="cyan" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
         <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
@@ -237,6 +251,7 @@ import Clipboard from "clipboard";
 import AutoHideInfo from "@/components/AutoHideInfo";
 import AutoHideMessage from "@/components/AutoHideMessage"
 import VueQr from "vue-qr";
+import dayjs from "dayjs";
 const logo = require("@/assets/logo/logo_b.png");
 export default {
   name: "PreSaleSurvey",
@@ -276,7 +291,13 @@ export default {
       simpleSignTypeOption: [],
       moistureDataExtendedOption:[],
       bloodDataExtendedOption:[],
-      copyValue: ""
+      copyValue: "",
+      timeScope: null,
+      timePickerOptions: {
+        disabledDate(time) {
+          return time.getTime() > dayjs()
+        },
+      }
     };
   },
   created() {
@@ -300,6 +321,8 @@ export default {
     /** 查询简易问卷调查列表 */
     getList() {
       this.loading = true;
+      this.queryParams.beginTime = this.timeScope && this.timeScope.length > 0 ? this.timeScope[0] : null;
+      this.queryParams.endTime = this.timeScope && this.timeScope.length > 0 ? this.timeScope[1] : null;
       listPreSaleSurvey(this.queryParams).then(response => {
         response.rows.forEach(item => {
             item.physicalSignsIdArray = item.physicalSignsId.split(",");
@@ -406,6 +429,7 @@ export default {
     /** 重置按钮操作 */
     resetQuery() {
       this.resetForm("queryForm");
+      this.timeScope = null;
       this.handleQuery();
     },
     // 多选框选中数据
@@ -457,7 +481,13 @@ export default {
     /** 删除按钮操作 */
     handleDelete(row) {
       const ids = row.id || this.ids;
-      this.$confirm('是否确认删除简易问卷调查编号为"' + ids + '"的数据项?', "警告", {
+      let confirmTitle = "";
+      if(row != undefined && row.id != undefined){
+          confirmTitle = '是否确认删除名字为 '+row.name+' 的简易问卷信息?';
+      }else{
+          confirmTitle = '是否确认删除所勾选的 '+ids.length+' 条的简易问卷信息?';
+      }
+      this.$confirm(confirmTitle, "警告", {
           confirmButtonText: "确定",
           cancelButtonText: "取消",
           type: "warning"

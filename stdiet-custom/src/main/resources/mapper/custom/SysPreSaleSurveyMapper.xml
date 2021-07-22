@@ -39,6 +39,10 @@
             and question_type = #{questionType}
         </if>
         <if test="name != null  and name != ''"> and (name like concat('%', #{name}, '%') or phone like concat('%',#{name},'%'))</if>
+        <if test="beginTime != null and endTime != null">
+            and date_format(create_time,'%Y-%m-%d') >= #{beginTime} and #{endTime} >= date_format(create_time,'%Y-%m-%d')
+        </if>
+        order by create_time desc
     </select>
 
     <select id="selectSysPreSaleSurveyById" parameterType="Long" resultMap="SysPreSaleSurveyResult">
