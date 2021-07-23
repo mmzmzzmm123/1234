@@ -67,7 +67,6 @@ public class SysWxUserLogServiceImpl implements ISysWxUserLogService {
      */
     @Override
     public int insertSysWxUserLog(SysWxUserLog sysWxUserLog) {
-        sysWxUserLog.setCreateTime(DateUtils.getNowDate());
         return sysWxUserLogMapper.insertSysWxUserLog(sysWxUserLog);
     }
 
@@ -79,7 +78,6 @@ public class SysWxUserLogServiceImpl implements ISysWxUserLogService {
      */
     @Override
     public int updateSysWxUserLog(SysWxUserLog sysWxUserLog) {
-        sysWxUserLog.setUpdateTime(DateUtils.getNowDate());
         return sysWxUserLogMapper.updateSysWxUserLog(sysWxUserLog);
     }
 
