@@ -40,14 +40,25 @@
       ></el-input>
     </el-form-item>
     <el-form-item label="8、病史体征(可多选)" prop="physicalSignsIdArray" >
-      <el-select v-model="form.physicalSignsIdArray" multiple placeholder="请选择">
-        <el-option 
+      <el-select v-model="form.physicalSignsIdArray" multiple filterable clearable placeholder="请选择病史体征">
+        <!--<el-option 
           v-for="physicalSign in physicalSignsList"
           :key="physicalSign.dictValue"
           :label="physicalSign.dictLabel"
           :value="physicalSign.dictValue"
         >
-        </el-option>
+        </el-option>-->
+        <el-option-group
+      v-for="(group,index) in physicalSignsGroupList"
+      :key="index"
+      :label="group.label">
+      <el-option
+        v-for="(item, j) in group.options"
+        :key="index+'_'+j"
+        :label="item.label"
+        :value="item.value">
+      </el-option>
+    </el-option-group>
       </el-select>
       <div><span class="text-span">其他病史体征</span>
         <el-input type="textarea"
@@ -122,6 +133,7 @@ export default {
       moistureDataList:[],
       bloodDataList:[],
       physicalSignsList:[],
+      physicalSignsGroupList:[],
       form:{
         customerKey: null,
         name: "",
@@ -244,7 +256,29 @@ export default {
     getPhysicalSignsList() {
         getDictData("simple_sign_type").then((response) => {
           this.physicalSignsList = response.data;
+          this.physicalSignsGroupList = this.dealSignList(response.data);
         });
+    },
+    dealSignList(signList){
+        let result = [];
+        if(signList == null || signList.length == 0){
+          return result;
+        }
+        let groupObj = {};
+        let groupLabelArray = [];
+        signList.forEach(item => {
+          if(item.remark != null && item.remark != ""){
+            if(groupLabelArray.indexOf(item.remark) == -1){
+              groupLabelArray.push(item.remark);
+            }
+            groupObj[item.remark] = groupObj[item.remark] == undefined ? [] : groupObj[item.remark];
+            groupObj[item.remark].push({'value': item.dictValue, 'label': item.dictLabel});
+          }
+        });
+        groupLabelArray.forEach(item => {
+           result.push({'label': item, 'options': groupObj[item]});
+        })
+        return result;
     }
   },
   created() {
