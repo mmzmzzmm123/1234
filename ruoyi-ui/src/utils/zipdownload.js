@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { getToken } from '@/utils/auth'
+import {getToken} from '@/utils/auth'
 
 const mimeMap = {
   xlsx: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
@@ -7,17 +7,25 @@ const mimeMap = {
 }
 
 const baseUrl = process.env.VUE_APP_BASE_API
+
+//        XiaoYi 修改代码生成>>生成代码 按自定义路径生成文件的时候解决只生成java服务端代码。前端 vue、sql 同时下载文件；
 export function downLoadZip(str, filename) {
-  var url = baseUrl + str
-  axios({
-    method: 'get',
-    url: url,
-    responseType: 'blob',
-    headers: { 'Authorization': 'Bearer ' + getToken() }
-  }).then(res => {
-    resolveBlob(res, mimeMap.zip)
-  })
+  return new Promise((resolve, reject) => {
+    var url = baseUrl + str
+    axios({
+      method: 'get',
+      url: url,
+      responseType: 'blob',
+      headers: {'Authorization': 'Bearer ' + getToken()}
+    }).then(res => {
+      resolveBlob(res, mimeMap.zip)
+      resolve("succes");
+    })
+  }).catch(e => {
+
+  });
 }
+
 /**
  * 解析blob响应内容并下载
  * @param {*} res blob响应内容
@@ -25,7 +33,7 @@ export function downLoadZip(str, filename) {
  */
 export function resolveBlob(res, mimeType) {
   const aLink = document.createElement('a')
-  var blob = new Blob([res.data], { type: mimeType })
+  var blob = new Blob([res.data], {type: mimeType})
   // //从response的headers中获取filename, 后端response.setHeader("Content-disposition", "attachment; filename=xxxx.docx") 设置的文件名;
   var patt = new RegExp('filename=([^;]+\\.[^\\.;]+);*')
   var contentDisposition = decodeURI(res.headers['content-disposition'])

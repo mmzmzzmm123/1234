@@ -1,8 +1,9 @@
 package com.ruoyi.generator.service;
 
+import com.ruoyi.generator.domain.GenTable;
+
 import java.util.List;
 import java.util.Map;
-import com.ruoyi.generator.domain.GenTable;
 
 /**
  * 业务 服务层
@@ -95,7 +96,7 @@ public interface IGenTableService
      * @param tableName 表名称
      * @return 数据
      */
-    public void generatorCode(String tableName);
+    public byte[] generatorCode(String tableName);
 
     /**
      * 同步数据库
