@@ -173,39 +173,14 @@ public class WechatAppletController extends BaseController {
      * @return
      */
     @GetMapping(value = "/getPunchLogs")
-    public AjaxResult getPunchLogs(SysWxUserLog sysWxUserLog) {
-        if (StringUtils.isEmpty(sysWxUserLog.getPhone()) && StringUtils.isEmpty(sysWxUserLog.getOpenid())) {
-            return AjaxResult.error(5001, "缺少参数");
-        }
-        //查询是否下单
-        SysCustomer param = new SysCustomer();
-        param.setPhone(sysWxUserLog.getPhone());
-        int orderCount = sysOrderService.getOrderCountByCustomer(param);
-        if (orderCount > 0) {
-            Map<String, Object> result = new HashMap<>();
-            //今日是否已打卡
-            boolean isPunch = false;
-            startPage();
-            List<WxLogInfo> list = sysWxUserLogService.getWxLogInfoList(sysWxUserLog);
-            if (list.size() > 0) {
-                WxLogInfo lastLog = list.get(0);
-                if (lastLog.getDate() != null && ChronoUnit.DAYS.between(DateUtils.stringToLocalDate(lastLog.getDate(), "yyyy-MM-dd"), LocalDate.now()) == 0) {
-                    isPunch = true;
-                }
-            }
+    public TableDataInfo getPunchLogs(SysWxUserLog sysWxUserLog) {
 
-            /*for (WxLogInfo log : list) {
-                log.setId(AesUtils.encrypt(log.getId()+"", null));
-            }*/
+        startPage();
+        List<WxLogInfo> list = sysWxUserLogService.getWxLogInfoList(sysWxUserLog);
 
-            Collections.reverse(list);
-            TableDataInfo tableDataInfo = getDataTable(list);
-            result.put("isPunch", isPunch);
-            result.put("tableDataInfo", tableDataInfo);
-            return AjaxResult.success(result);
-        } else {
-            return AjaxResult.error(5002, "未查询到相关订单信息");
-        }
+
+        return getDataTable(list);
+
     }
 
     /**
@@ -232,19 +207,19 @@ public class WechatAppletController extends BaseController {
     @PostMapping(value = "/addPunchLog")
     public AjaxResult addPunchLog(@RequestBody SysWxUserLog sysWxUserLog) {
         // 查询微信用户
-        SysWxUserInfo userInfo = StringUtils.isEmpty(sysWxUserLog.getOpenid()) ? null : sysWxUserInfoService.selectSysWxUserInfoById(sysWxUserLog.getOpenid());
-        if (userInfo == null || StringUtils.isEmpty(userInfo.getPhone())) {
-            return AjaxResult.error("打卡失败");
-        }
+//        SysWxUserInfo userInfo = StringUtils.isEmpty(sysWxUserLog.getOpenid()) ? null : sysWxUserInfoService.selectSysWxUserInfoById(sysWxUserLog.getOpenid());
+//        if (userInfo == null || StringUtils.isEmpty(userInfo.getPhone())) {
+//            return AjaxResult.error("打卡失败");
+//        }
         if (sysWxUserLog.getId() == null) {
-            //查询今日是否已打卡
-            if (sysWxUserLog.getLogTime() == null) {
-                sysWxUserLog.setLogTime(new Date());
-            }
-            int count = sysWxUserLogService.checkWxLogInfoCount(sysWxUserLog);
-            if (count > 0) {
-                return AjaxResult.error("今日已打卡，不可重复打卡");
-            }
+//            //查询今日是否已打卡
+//            if (sysWxUserLog.getLogTime() == null) {
+//                sysWxUserLog.setLogTime(new Date());
+//            }
+//            int count = sysWxUserLogService.checkWxLogInfoCount(sysWxUserLog);
+//            if (count > 0) {
+//                return AjaxResult.error("今日已打卡，不可重复打卡");
+//            }
             return toAjax(sysWxUserLogService.insertSysWxUserLog(sysWxUserLog));
         } else {
             return toAjax(sysWxUserLogService.updateSysWxUserLog(sysWxUserLog));
@@ -265,42 +240,14 @@ public class WechatAppletController extends BaseController {
         if (sysWxUserLog == null) {
             return AjaxResult.error("打卡记录不存在");
         }
-        Map<String, List<String>> imageUrlMap = new HashMap<>();
-        List<String> breakfastImagesUrlList = StringUtils.isNotEmpty(sysWxUserLog.getBreakfastImages()) ? Arrays.asList(sysWxUserLog.getBreakfastImages().split("\\|")) : new ArrayList<>();
-        imageUrlMap.put(imageName[0], breakfastImagesUrlList);
 
-        List<String> lunchImagesUrlList = StringUtils.isNotEmpty(sysWxUserLog.getLunchImages()) ? Arrays.asList(sysWxUserLog.getLunchImages().split("\\|")) : new ArrayList<>();
-        imageUrlMap.put(imageName[1], lunchImagesUrlList);
-
-        List<String> dinnerImagesUrlList = StringUtils.isNotEmpty(sysWxUserLog.getDinnerImages()) ? Arrays.asList(sysWxUserLog.getDinnerImages().split("\\|")) : new ArrayList<>();
-        imageUrlMap.put(imageName[2], dinnerImagesUrlList);
-
-        List<String> extraMealImagesUrlList = StringUtils.isNotEmpty(sysWxUserLog.getExtraMealImages()) ? Arrays.asList(sysWxUserLog.getExtraMealImages().split("\\|")) : new ArrayList<>();
-        imageUrlMap.put(imageName[3], extraMealImagesUrlList);
-
-        List<String> bodyImagesUrlList = StringUtils.isNotEmpty(sysWxUserLog.getBodyImages()) ? Arrays.asList(sysWxUserLog.getBodyImages().split("\\|")) : new ArrayList<>();
-        imageUrlMap.put(imageName[4], bodyImagesUrlList);
-
-        //生成预览链接
-        Map<String, List<String>> downUrlList = AliyunOSSUtils.generatePresignedUrl(imageUrlMap);
-
-        sysWxUserLog.setBreakfastImagesUrl(downUrlList.get(imageName[0]));
-        sysWxUserLog.setLunchImagesUrl(downUrlList.get(imageName[1]));
-        sysWxUserLog.setDinnerImagesUrl(downUrlList.get(imageName[2]));
-        sysWxUserLog.setExtraMealImagesUrl(downUrlList.get(imageName[3]));
-        sysWxUserLog.setBodyImagesUrl(downUrlList.get(imageName[4]));
-
-        List<String> allImagesList = new ArrayList<>();
         List<String> allUrlList = new ArrayList<>();
-
-        for (String key : imageName) {
-            if (!"bodyImages".equals(key)) {
-                allUrlList.addAll(downUrlList.get(key));
-                allImagesList.addAll(imageUrlMap.get(key));
-            }
-        }
+        allUrlList.addAll(sysWxUserLog.getBreakfastImagesUrl());
+        allUrlList.addAll(sysWxUserLog.getLunchImagesUrl());
+        allUrlList.addAll(sysWxUserLog.getDinnerImagesUrl());
+        allUrlList.addAll(sysWxUserLog.getExtraMealImagesUrl());
         sysWxUserLog.setAllImagesUrl(allUrlList);
-        sysWxUserLog.setAllImages(StringUtils.join(allImagesList, "|"));
+        sysWxUserLog.setAllImages(StringUtils.join(allUrlList, "|"));
 
         return AjaxResult.success(sysWxUserLog);
     }
@@ -805,26 +752,27 @@ public class WechatAppletController extends BaseController {
 
     /**
      * 打卡社区点赞
+     *
      * @return
      */
     @PostMapping("/thumbsupPunch")
     public AjaxResult getCommunityPunch(@RequestBody SysPunchThumbsup sysPunchThumbsup) {
-        if(StringUtils.isEmpty(sysPunchThumbsup.getCusOpenid(),sysPunchThumbsup.getEncPunchId()) || sysPunchThumbsup.getThumbsupFlag() == null){
+        if (StringUtils.isEmpty(sysPunchThumbsup.getCusOpenid(), sysPunchThumbsup.getEncPunchId()) || sysPunchThumbsup.getThumbsupFlag() == null) {
             return AjaxResult.error("缺少必要参数");
         }
         sysPunchThumbsup.setPunchId(Long.parseLong(AesUtils.decrypt(sysPunchThumbsup.getEncPunchId())));
 
         SysPunchThumbsup existPunchThumbsup = sysPunchThumbsupService.getThumbsupByPunchIdAndOpenid(sysPunchThumbsup);
-        if(existPunchThumbsup != null && sysPunchThumbsup.getThumbsupFlag()){
+        if (existPunchThumbsup != null && sysPunchThumbsup.getThumbsupFlag()) {
             return AjaxResult.error("已点过暂，无法重复点赞");
         }
-        if(existPunchThumbsup == null && !sysPunchThumbsup.getThumbsupFlag()){
+        if (existPunchThumbsup == null && !sysPunchThumbsup.getThumbsupFlag()) {
             return AjaxResult.error("还未未点赞，无法取消点赞");
         }
         int row = 0;
-        try{
+        try {
             row = sysPunchThumbsup.getThumbsupFlag() ? sysPunchThumbsupService.insertSysPunchThumbsup(sysPunchThumbsup) : sysPunchThumbsupService.deleteThumbsupByPunchIdAndOpenid(sysPunchThumbsup);
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return toAjax(row);
