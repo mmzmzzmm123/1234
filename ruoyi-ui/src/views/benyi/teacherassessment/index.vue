@@ -100,6 +100,7 @@
     <el-table
       v-loading="loading"
       :data="teacherassessmentList"
+      border
       @selection-change="handleSelectionChange"
     >
       <el-table-column type="selection" width="55" align="center" />
@@ -109,12 +110,13 @@
         align="center"
         prop="classid"
         :formatter="classFormat"
+        fixed
       />
       <el-table-column
         label="教师"
         align="center"
         prop="sysUser.nickName"
-        
+        fixed
       />
       <el-table-column label="考核月份" align="center" prop="month" />
       <el-table-column label="一日流程" align="center" prop="yrlcbl" />
@@ -125,8 +127,9 @@
       <el-table-column label="总分" align="center" prop="zfbl" />
       <el-table-column
         label="操作"
+        fixed="right"
         align="center"
-        class-name="small-padding fixed-width"
+        class-name="small-padding fixed-width edit-btns"
       >
         <template slot-scope="scope">
           <el-button
@@ -523,3 +526,20 @@ export default {
   },
 };
 </script>
+<style lang="scss" scoped>
+.el-select {
+  width: 100%;
+}
+.my-date-picker {
+  width: 100%;
+}
+.edit-btns {
+  .el-button {
+    display: block;
+    margin: 0 auto;
+  }
+}
+.no-margin ::v-deep.el-form-item__content {
+  margin: 0 !important;
+}
+</style>

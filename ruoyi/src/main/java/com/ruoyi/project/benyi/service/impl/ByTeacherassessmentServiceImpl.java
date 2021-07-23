@@ -3,6 +3,7 @@ package com.ruoyi.project.benyi.service.impl;
 import java.util.List;
 
 import com.ruoyi.common.utils.DateUtils;
+import com.ruoyi.framework.aspectj.lang.annotation.DataScope;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.ruoyi.project.benyi.mapper.ByTeacherassessmentMapper;
@@ -38,6 +39,7 @@ public class ByTeacherassessmentServiceImpl implements IByTeacherassessmentServi
      * @return 教师月绩效考核
      */
     @Override
+    @DataScope(deptAlias = "a")
     public List<ByTeacherassessment> selectByTeacherassessmentList(ByTeacherassessment byTeacherassessment) {
         return byTeacherassessmentMapper.selectByTeacherassessmentList(byTeacherassessment);
     }

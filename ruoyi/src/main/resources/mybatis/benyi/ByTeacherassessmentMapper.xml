@@ -46,6 +46,8 @@
             <if test="wsbl != null ">and a.wsbl = #{wsbl}</if>
             <if test="zfbl != null ">and a.zfbl = #{zfbl}</if>
         </where>
+        <!-- 数据范围过滤 -->
+        ${dataScope}
         order by a.create_time desc
     </select>
 
