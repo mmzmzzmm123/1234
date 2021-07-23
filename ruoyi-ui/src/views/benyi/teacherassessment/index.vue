@@ -167,7 +167,7 @@
           <el-date-picker
             clearable
             size="small"
-            style="width: 200px"
+            class="my-date-picker"
             v-model="form.month"
             type="month"
             value-format="yyyy-MM"
