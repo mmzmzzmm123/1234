@@ -237,3 +237,42 @@
 	position: relative;
 	float: right;
 }
+
+ /* 查看详情table样式 */
+ table.gridtable {
+   font-family: verdana, arial, sans-serif;
+   font-size: 11px;
+   color: #333333;
+   border-width: 1px;
+   border-color: #bdcfe6;
+   border-collapse: collapse;
+   width: 100%;
+ }
+ table.gridtable th {
+   border-width: 1px;
+   padding: 8px;
+   border-style: solid;
+   border-color: #bdcfe6;
+   background-color: #dedede;
+ }
+ table.gridtable td:nth-child(odd) {
+   border-width: 1px;
+   padding: 8px;
+   text-align: right;
+   border-style: solid;
+   border-color: #bdcfe6;
+   background-color: #dfecf5;
+ }
+ table.gridtable td:nth-child(even) {
+   border-width: 1px;
+   padding: 8px;
+   text-align: left;
+   border-style: solid;
+   border-color: #bdcfe6;
+   background-color: #f3f2f2;
+ }
+ .table-first-td {
+   background-color: #dfecf5 !important;
+   text-align: center;
+   font-weight: bold;
+ }
