@@ -17,32 +17,41 @@
         <result property="wsbl" column="wsbl"/>
         <result property="zfbl" column="zfbl"/>
         <result property="createTime" column="create_time"/>
+        <association property="sysUser" column="jsid" javaType="SysUser" resultMap="SysUserResult"/>
+    </resultMap>
+
+    <resultMap type="SysUser" id="SysUserResult">
+        <id property="userId" column="user_id"/>
+        <result property="userName" column="user_name"/>
+        <result property="nickName" column="nick_name"/>
     </resultMap>
 
     <sql id="selectByTeacherassessmentVo">
-        select id, jsid, classid, dept_id, month, yrlcbl, jskqbl, yekqbl, sgbl, wsbl, zfbl, create_time from by_teacherassessment
+        select a.id, a.jsid, a.classid, a.dept_id, a.month, a.yrlcbl, a.jskqbl, a.yekqbl, a.sgbl, a.wsbl, a.zfbl, a.create_time,b.nick_name from by_teacherassessment a
+        left join sys_user b on a.jsid=b.user_id
     </sql>
 
     <select id="selectByTeacherassessmentList" parameterType="ByTeacherassessment"
             resultMap="ByTeacherassessmentResult">
         <include refid="selectByTeacherassessmentVo"/>
         <where>
-            <if test="jsid != null ">and jsid = #{jsid}</if>
-            <if test="classid != null  and classid != ''">and classid = #{classid}</if>
-            <if test="deptId != null ">and dept_id = #{deptId}</if>
-            <if test="month != null  and month != ''">and month = #{month}</if>
-            <if test="yrlcbl != null ">and yrlcbl = #{yrlcbl}</if>
-            <if test="jskqbl != null ">and jskqbl = #{jskqbl}</if>
-            <if test="yekqbl != null ">and yekqbl = #{yekqbl}</if>
-            <if test="sgbl != null ">and sgbl = #{sgbl}</if>
-            <if test="wsbl != null ">and wsbl = #{wsbl}</if>
-            <if test="zfbl != null ">and zfbl = #{zfbl}</if>
+            <if test="jsid != null ">and a.jsid = #{jsid}</if>
+            <if test="classid != null  and classid != ''">and a.classid = #{classid}</if>
+            <if test="deptId != null ">and a.dept_id = #{deptId}</if>
+            <if test="month != null  and month != ''">and a.month = #{month}</if>
+            <if test="yrlcbl != null ">and a.yrlcbl = #{yrlcbl}</if>
+            <if test="jskqbl != null ">and a.jskqbl = #{jskqbl}</if>
+            <if test="yekqbl != null ">and a.yekqbl = #{yekqbl}</if>
+            <if test="sgbl != null ">and a.sgbl = #{sgbl}</if>
+            <if test="wsbl != null ">and a.wsbl = #{wsbl}</if>
+            <if test="zfbl != null ">and a.zfbl = #{zfbl}</if>
         </where>
+        order by a.create_time desc
     </select>
 
     <select id="selectByTeacherassessmentById" parameterType="Long" resultMap="ByTeacherassessmentResult">
         <include refid="selectByTeacherassessmentVo"/>
-        where id = #{id}
+        where a.id = #{id}
     </select>
 
     <insert id="insertByTeacherassessment" parameterType="ByTeacherassessment" useGeneratedKeys="true" keyProperty="id">

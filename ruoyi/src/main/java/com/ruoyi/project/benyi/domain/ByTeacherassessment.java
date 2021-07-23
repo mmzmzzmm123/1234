@@ -1,5 +1,7 @@
 package com.ruoyi.project.benyi.domain;
 
+import com.ruoyi.project.system.domain.SysDept;
+import com.ruoyi.project.system.domain.SysUser;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import com.ruoyi.framework.aspectj.lang.annotation.Excel;
@@ -78,6 +80,16 @@ public class ByTeacherassessment extends BaseEntity {
      */
     @Excel(name = "总分")
     private Double zfbl;
+
+    public SysUser getSysUser() {
+        return sysUser;
+    }
+
+    public void setSysUser(SysUser sysUser) {
+        this.sysUser = sysUser;
+    }
+
+    private SysUser sysUser;
 
     public void setId(Long id) {
         this.id = id;
@@ -182,6 +194,7 @@ public class ByTeacherassessment extends BaseEntity {
                 .append("wsbl", getWsbl())
                 .append("zfbl", getZfbl())
                 .append("createTime", getCreateTime())
+                .append("sysUser",getSysUser())
                 .toString();
     }
 }

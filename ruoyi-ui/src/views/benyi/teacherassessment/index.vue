@@ -113,8 +113,8 @@
       <el-table-column
         label="教师"
         align="center"
-        prop="jsid"
-        :formatter="userFormat"
+        prop="sysUser.nickName"
+        
       />
       <el-table-column label="考核月份" align="center" prop="month" />
       <el-table-column label="一日流程" align="center" prop="yrlcbl" />

@@ -73,10 +73,20 @@ public class ByTeacherassessmentController extends BaseController {
     @Log(title = "教师月绩效考核", businessType = BusinessType.INSERT)
     @PostMapping
     public AjaxResult add(@RequestBody ByTeacherassessment byTeacherassessment) {
-        byTeacherassessment.setDeptId(SecurityUtils.getLoginUser().getUser().getDept().getDeptId());
-        Double total=(byTeacherassessment.getYrlcbl()*0.6)+(byTeacherassessment.getJskqbl()*0.1)+(byTeacherassessment.getYekqbl()*0.1)+(byTeacherassessment.getSgbl()*0.15)+(byTeacherassessment.getWsbl()*0.05);
-        byTeacherassessment.setZfbl(total);
-        return toAjax(byTeacherassessmentService.insertByTeacherassessment(byTeacherassessment));
+
+        //首先判断该教师当前月份是否已经被考核
+        ByTeacherassessment byTeacherassessmentQuery = new ByTeacherassessment();
+        byTeacherassessmentQuery.setJsid(byTeacherassessment.getJsid());
+        byTeacherassessmentQuery.setMonth(byTeacherassessment.getMonth());
+        List<ByTeacherassessment> list = byTeacherassessmentService.selectByTeacherassessmentList(byTeacherassessmentQuery);
+        if (list != null && list.size() > 0) {
+            return AjaxResult.error("该教师当前月份绩效考核以创建，无法重复创建。");
+        } else {
+            byTeacherassessment.setDeptId(SecurityUtils.getLoginUser().getUser().getDept().getDeptId());
+            Double total = (byTeacherassessment.getYrlcbl() * 0.6) + (byTeacherassessment.getJskqbl() * 0.1) + (byTeacherassessment.getYekqbl() * 0.1) + (byTeacherassessment.getSgbl() * 0.15) + (byTeacherassessment.getWsbl() * 0.05);
+            byTeacherassessment.setZfbl(total);
+            return toAjax(byTeacherassessmentService.insertByTeacherassessment(byTeacherassessment));
+        }
     }
 
     /**
@@ -86,7 +96,7 @@ public class ByTeacherassessmentController extends BaseController {
     @Log(title = "教师月绩效考核", businessType = BusinessType.UPDATE)
     @PutMapping
     public AjaxResult edit(@RequestBody ByTeacherassessment byTeacherassessment) {
-        Double total=(byTeacherassessment.getYrlcbl()*0.6)+(byTeacherassessment.getJskqbl()*0.1)+(byTeacherassessment.getYekqbl()*0.1)+(byTeacherassessment.getSgbl()*0.15)+(byTeacherassessment.getWsbl()*0.05);
+        Double total = (byTeacherassessment.getYrlcbl() * 0.6) + (byTeacherassessment.getJskqbl() * 0.1) + (byTeacherassessment.getYekqbl() * 0.1) + (byTeacherassessment.getSgbl() * 0.15) + (byTeacherassessment.getWsbl() * 0.05);
         byTeacherassessment.setZfbl(total);
         return toAjax(byTeacherassessmentService.updateByTeacherassessment(byTeacherassessment));
     }
