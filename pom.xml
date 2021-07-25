@@ -207,7 +207,7 @@
         <module>ruoyi-common</module>
         <module>ruoyi-yunbookmark</module>
         <module>ruoyi-note</module>
-
+        <module>yunpan-baidu</module>
     </modules>
     <packaging>pom</packaging>
 

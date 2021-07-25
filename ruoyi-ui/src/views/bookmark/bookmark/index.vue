@@ -10,7 +10,7 @@
             src="https://favicon.lucq.fun/?url=https://www.baidu.com"/></div>
         </div>
         <div class="sousou-input" >
-          <el-input slot="reference" @keyup.enter.native="gosousuo" placeholder="请输入要查找的关键词" v-model="sousuo"
+          <el-input slot="reference" style="width: 300px;" @keyup.enter.native="gosousuo" placeholder="请输入要查找的关键词" v-model="sousuo"
                     size="small" >
             <i slot="prefix" class="el-input__icon el-icon-search"></i>
           </el-input>
@@ -1427,8 +1427,6 @@
 
   .sousou-input {
     display: flex;
-    align-items: center;
-    justify-content: center;
     width: 100%;
   }
 

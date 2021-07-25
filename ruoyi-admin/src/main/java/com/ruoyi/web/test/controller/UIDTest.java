@@ -1,6 +1,7 @@
 package com.ruoyi.web.test.controller;
 
 import cn.hutool.core.date.DateUtil;
+import cn.hutool.http.HttpUtil;
 import com.github.wujun234.uid.UidGenerator;
 import com.ruoyi.bookmark.service.ISqMenuService;
 import com.ruoyi.common.core.redis.RedisUtil;
@@ -77,6 +78,8 @@ public class UIDTest extends BaseSpringBootTest{
            System.out.println("密码不相同!");
        }
     }
+
+
 
 
 

@@ -79,6 +79,12 @@
             <groupId>com.ruoyi</groupId>
             <artifactId>ruoyi-note</artifactId>
         </dependency>
+        <!-- 便签模块-->
+        <dependency>
+            <groupId>com.ruoyi</groupId>
+            <artifactId>yunpan-baidu</artifactId>
+            <version>3.0.0</version>
+        </dependency>
 
     </dependencies>
 
