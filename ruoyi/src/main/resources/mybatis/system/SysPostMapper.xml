@@ -47,6 +47,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	<select id="selectYeyPostAll" resultMap="SysPostResult">
 		<include refid="selectPostVo"/>
 		where purp = '1'
+		order by post_sort
 	</select>
 	
 	<select id="selectPostById" parameterType="Long" resultMap="SysPostResult">
