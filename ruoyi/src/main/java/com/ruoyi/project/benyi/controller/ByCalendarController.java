@@ -176,8 +176,6 @@ public class ByCalendarController extends BaseController {
             //根据不同的幼儿园加载幼儿园园历
             //(long)207
             listvi.addAll(getbySchoolcalendars(schoolId, formatter, hashMap));
-            //根据不同的幼儿园加载教职工
-            listvi.addAll(getbyteacherBiths(schoolId, formatter, hashMap));
         }
 //        listvi.addAll(getbySchoolcalendars((long)207,formatter,hashMap));
 //        listvi.addAll(getbyteacherBiths((long)207,formatter,hashMap));
@@ -191,13 +189,16 @@ public class ByCalendarController extends BaseController {
             listvi.addAll(getbyclassthemes(classId, formatter, hashMap));
             //根据班级加载幼儿生日
             listvi.addAll(getbychilds(classId, formatter));
+        }else{
+            Long schoolId = SecurityUtils.getLoginUser().getUser().getDeptId();
+            //幼儿一日流程评估计划
+            listvi.addAll(getdayflowdata(classId, formatter));
+            //根据不同的幼儿园加载教职工
+            listvi.addAll(getbyteacherBiths(schoolId, formatter, hashMap));
         }
 
         //幼儿出勤人数
         listvi.addAll(getbychildcheckdata(classId, formatter));
-
-        //幼儿一日流程评估计划
-        listvi.addAll(getdayflowdata(classId, formatter));
 
         //幼儿园一日流程评估结果
         Long userId = SecurityUtils.getLoginUser().getUser().getUserId();
