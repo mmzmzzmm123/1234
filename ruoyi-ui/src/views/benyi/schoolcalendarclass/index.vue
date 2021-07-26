@@ -3,23 +3,6 @@
     <el-form :model="queryParams" ref="queryForm" label-width="70px">
       <el-row :gutter="10">
         <el-col :xs="24" :ms="12" :md="5">
-          <el-form-item label="活动类型" prop="type">
-            <el-select
-              v-model="queryParams.type"
-              placeholder="请选择活动类型"
-              clearable
-              size="small"
-            >
-              <el-option
-                v-for="dict in typeOptions"
-                :key="dict.dictValue"
-                :label="dict.dictLabel"
-                :value="dict.dictValue"
-              />
-            </el-select>
-          </el-form-item>
-        </el-col>
-        <el-col :xs="24" :ms="12" :md="5">
           <!--<el-form-item label="所属班级" prop="classid">
         <el-select v-model="queryParams.classid"  placeholder="请选择班级" >
           <el-option
@@ -39,6 +22,23 @@
             >
               <el-option
                 v-for="dict in xnxqOptions"
+                :key="dict.dictValue"
+                :label="dict.dictLabel"
+                :value="dict.dictValue"
+              />
+            </el-select>
+          </el-form-item>
+        </el-col>
+        <el-col :xs="24" :ms="12" :md="5">
+          <el-form-item label="活动类型" prop="type">
+            <el-select
+              v-model="queryParams.type"
+              placeholder="请选择活动类型"
+              clearable
+              size="small"
+            >
+              <el-option
+                v-for="dict in typeOptions"
                 :key="dict.dictValue"
                 :label="dict.dictLabel"
                 :value="dict.dictValue"
@@ -140,11 +140,7 @@
         prop="xnxq"
         :formatter="xnxqFormat"
       />
-      <el-table-column
-        label="活动时间"
-        align="center"
-        prop="activitytime"
-      />
+      <el-table-column label="活动时间" align="center" prop="activitytime" />
       <!-- <el-table-column
         label="创建时间"
         align="center"
@@ -197,10 +193,7 @@
     <el-dialog :title="title" :visible.sync="open" class="v-dialog">
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
         <el-form-item label="事件名称" prop="name">
-          <el-input
-            v-model="form.name"
-            placeholder="请输入内容"
-          />
+          <el-input v-model="form.name" placeholder="请输入内容" />
         </el-form-item>
         <el-form-item label="活动类型" prop="type">
           <el-select v-model="form.type" placeholder="请选择活动类型">
@@ -311,7 +304,7 @@ export default {
   },
   created() {
     this.getList();
-    this.getListAll();
+    //this.getListAll();
     this.getDicts("sys_schoolcalendartype").then((response) => {
       this.typeOptions = response.data;
     });
@@ -330,11 +323,11 @@ export default {
       });
     },
     /** 查询所有班级名称列表 */
-    getListAll() {
-      listSchoolcalendarclassAll(this.queryParams).then((response) => {
-        this.classListAll = response.rows;
-      });
-    },
+    // getListAll() {
+    //   listSchoolcalendarclassAll(this.queryParams).then((response) => {
+    //     this.classListAll = response.rows;
+    //   });
+    // },
     // 活动类型字典翻译
     typeFormat(row, column) {
       return this.selectDictLabel(this.typeOptions, row.type);
