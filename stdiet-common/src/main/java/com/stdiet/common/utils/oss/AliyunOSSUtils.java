@@ -23,6 +23,9 @@ public class AliyunOSSUtils {
     //下载链接默认有效期
     private static final Long expire = 3600L * 1000 * 24;
 
+    //默认文件路径前缀
+    private static final String default_prefix = "https://stdiet.oss-cn-shenzhen.aliyuncs.com";
+
     public static OSS getOssClient() {
         return new OSSClientBuilder().build(AliyunOSSConfig.EndPoint, AliyunOSSConfig.AccessKeyID, AliyunOSSConfig.AccessKeySecret);
     }
@@ -50,7 +53,8 @@ public class AliyunOSSUtils {
      * @return 文件URL
      */
     private static String getRealName(String oranName) {
-        return getURLHead() + oranName;
+        String fileUrl = getURLHead() + oranName;
+        return isAliyunUrl(fileUrl) ? fileUrl : null;
     }
 
     /**
@@ -71,10 +75,10 @@ public class AliyunOSSUtils {
             //去尾
             String tail = oranName.substring(cutPoint);
             //返回正确的带路径的图片名称
-            return prefix + head + uuid + "_" + tail;
+            return prefix + head + uuid + FileUtils.getFileType(tail, true);
         }
         //不存在 直接返回
-        return prefix + uuid + "_" + oranName;
+        return prefix + uuid + FileUtils.getFileType(oranName, true);
     }
 
     /**
@@ -231,7 +235,7 @@ public class AliyunOSSUtils {
      * @return
      */
     public static String generatePresignedUrl(String fileUrl){
-        if(StringUtils.isEmpty(fileUrl)) {
+        if(!isAliyunUrl(fileUrl)) {
             return null;
         }
         // 创建OSSClient实例。
@@ -261,14 +265,25 @@ public class AliyunOSSUtils {
         Date expiration = new Date(System.currentTimeMillis() + expire);
 
         for (String fileUrl : fileUrlList) {
-            String url = ossClient.generatePresignedUrl(AliyunOSSConfig.Buckets, getObjectName(fileUrl), expiration).toString();
-            downUrlList.add(url);
+            if(isAliyunUrl(fileUrl)){
+                String url = ossClient.generatePresignedUrl(AliyunOSSConfig.Buckets, getObjectName(fileUrl), expiration).toString();
+                downUrlList.add(url);
+            }
         }
 
         // 关闭OSSClient。
         ossClient.shutdown();
 
         return downUrlList;
+    }
+
+    /**
+     * 判断是否为阿里云OSS路径格式
+     * @param fileUrl
+     * @return
+     */
+    public static boolean isAliyunUrl(String fileUrl){
+        return StringUtils.isNotEmpty(fileUrl) && fileUrl.startsWith(default_prefix);
     }
 
     /**
@@ -288,7 +303,9 @@ public class AliyunOSSUtils {
             List<String> urlList = fileUrlList.get(key);
             List<String> downList = new ArrayList<>();
             for (String fileUrl : urlList) {
-                downList.add(ossClient.generatePresignedUrl(AliyunOSSConfig.Buckets, getObjectName(fileUrl), expiration).toString());
+                if(isAliyunUrl(fileUrl)){
+                    downList.add(ossClient.generatePresignedUrl(AliyunOSSConfig.Buckets, getObjectName(fileUrl), expiration).toString());
+                }
             }
             downUrlMap.put(key, downList);
         }

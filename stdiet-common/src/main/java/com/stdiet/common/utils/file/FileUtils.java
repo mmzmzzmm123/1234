@@ -183,4 +183,17 @@ public class FileUtils extends org.apache.commons.io.FileUtils
         }
         return filename;
     }
+
+    /**
+     * 获取文件类型
+     * @param fileUrl 文件名称
+     * @param prefixFlag 是否带连接符 .
+     * @return
+     */
+    public static String getFileType(String fileUrl, boolean prefixFlag){
+        if(fileUrl == null || fileUrl.lastIndexOf(".") == -1){
+            return "";
+        }
+        return fileUrl.substring(fileUrl.lastIndexOf(".")+(prefixFlag ? 0 : 1));
+    }
 }
