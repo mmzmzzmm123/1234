@@ -5,7 +5,7 @@
 <mapper namespace="com.stdiet.custom.mapper.SysWxUserLogMapper">
 
     <resultMap type="SysWxUserLog" id="SysWxUserLogResult">
-        <result property="id"    column="id"    />
+        <result property="id" column="id"/>
         <result property="openid" column="openid"/>
         <result property="weight" column="weight"/>
         <result property="appid" column="appid"/>
@@ -25,22 +25,22 @@
         <result property="updateBy" column="update_by"/>
         <result property="updateTime" column="update_time"/>
         <result property="remark" column="remark"/>
-        <result property="emotion"    column="emotion"    />
-        <result property="slyEatFood"    column="sly_eat_food"    />
-        <result property="constipation"    column="constipation"    />
-        <result property="ingredientDescribe"    column="ingredient_describe"    />
-        <result property="breakfastImages"    column="breakfast_images"    />
-        <result property="lunchImages"    column="lunch_images"    />
-        <result property="dinnerImages"    column="dinner_images"    />
-        <result property="extraMealImages"    column="extra_meal_images"    />
-        <result property="bodyImages"    column="body_images"    />
-        <result property="suggest"    column="suggest"    />
-        <result property="targetWeight"    column="target_weight"    />
-        <result property="executionScore"    column="execution_score"    />
-        <result property="comment"    column="comment"    />
-        <result property="thumbsupNum"    column="thumbsup_num"    />
-        <result property="healthManifesto"    column="health_manifesto"    />
-        <result property="delFlag"    column="del_flag"    />
+        <result property="emotion" column="emotion"/>
+        <result property="slyEatFood" column="sly_eat_food"/>
+        <result property="constipation" column="constipation"/>
+        <result property="ingredientDescribe" column="ingredient_describe"/>
+        <result property="breakfastImages" column="breakfast_images"/>
+        <result property="lunchImages" column="lunch_images"/>
+        <result property="dinnerImages" column="dinner_images"/>
+        <result property="extraMealImages" column="extra_meal_images"/>
+        <result property="bodyImages" column="body_images"/>
+        <result property="suggest" column="suggest"/>
+        <result property="targetWeight" column="target_weight"/>
+        <result property="executionScore" column="execution_score"/>
+        <result property="comment" column="comment"/>
+        <result property="thumbsupNum" column="thumbsup_num"/>
+        <result property="healthManifesto" column="health_manifesto"/>
+        <result property="delFlag" column="del_flag"/>
         <!-- 非持久字段 -->
         <result property="customerName" column="customer_name"></result>
         <!-- 营养师 -->
@@ -49,7 +49,7 @@
     </resultMap>
 
     <resultMap type="com.stdiet.custom.page.WxLogInfo" id="WxLogInfo">
-        <result property="id"    column="id"    />
+        <result property="id" column="id"/>
         <result property="weight" column="weight"/>
         <result property="sleepTime" column="sleep_time"/>
         <result property="wakeupTime" column="wakeup_time"/>
@@ -59,27 +59,32 @@
         <result property="defecation" column="defecation"/>
         <result property="water" column="water"/>
         <result property="date" column="log_time"/>
-        <result property="emotion"    column="emotion"    />
-        <result property="slyEatFood"    column="sly_eat_food"    />
-        <result property="constipation"    column="constipation"    />
-        <result property="remark" column="remark"></result>
-        <result property="ingredientDescribe"    column="ingredient_describe"    />
-        <result property="breakfastImages"    column="breakfast_images"    />
-        <result property="lunchImages"    column="lunch_images"    />
-        <result property="dinnerImages"    column="dinner_images"    />
-        <result property="extraMealImages"    column="extra_meal_images"    />
-        <result property="bodyImages"    column="body_images"    />
-        <result property="suggest"    column="suggest"    />
-        <result property="targetWeight"    column="target_weight"    />
-        <result property="executionScore"    column="execution_score"    />
-        <result property="comment"    column="comment"    />
-        <result property="thumbsupNum"    column="thumbsup_num"    />
-        <result property="healthManifesto"    column="health_manifesto"    />
+        <result property="emotion" column="emotion"/>
+        <result property="slyEatFood" column="sly_eat_food"/>
+        <result property="constipation" column="constipation"/>
+        <result property="remark" column="remark"/>
+        <result property="ingredientDescribe" column="ingredient_describe"/>
+<!--        <result property="breakfastImages" column="breakfast_images"/>-->
+        <result property="breakfastImagesUrl" column="breakfast_images" typeHandler="com.stdiet.custom.typehandler.ImagesHandler"/>
+<!--        <result property="lunchImages" column="lunch_images"/>-->
+        <result property="lunchImagesUrl" column="lunch_images" typeHandler="com.stdiet.custom.typehandler.ImagesHandler"/>
+<!--        <result property="dinnerImages" column="dinner_images"/>-->
+        <result property="dinnerImagesUrl" column="dinner_images" typeHandler="com.stdiet.custom.typehandler.ImagesHandler"/>
+<!--        <result property="extraMealImages" column="extra_meal_images"/>-->
+        <result property="extraMealImagesUrl" column="extra_meal_images" typeHandler="com.stdiet.custom.typehandler.ImagesHandler"/>
+<!--        <result property="bodyImages" column="body_images"/>-->
+        <result property="bodyImagesUrl" column="body_images" typeHandler="com.stdiet.custom.typehandler.ImagesHandler"/>
+        <result property="suggest" column="suggest"/>
+        <result property="targetWeight" column="target_weight"/>
+        <result property="executionScore" column="execution_score"/>
+        <result property="comment" column="comment"/>
+        <result property="thumbsupNum" column="thumbsup_num"/>
+        <result property="healthManifesto" column="health_manifesto"/>
     </resultMap>
 
     <sql id="selectSysWxUserLogVo">
         select id,openid, weight, appid, phone, log_time, sleep_time, wakeup_time, sport, avatar_url, diet, insomnia, defecation, water, create_by, create_time, update_by, update_time, remark,
-         emotion,sly_eat_food,constipation,ingredient_describe,breakfast_images,lunch_images,dinner_images,extra_meal_images,body_images,suggest,execution_score,comment
+         emotion,sly_eat_food,constipation,ingredient_describe,breakfast_images,lunch_images,dinner_images,extra_meal_images,body_images,suggest,execution_score,comment,health_manifesto
          from sys_wx_user_log
     </sql>
 
@@ -89,11 +94,14 @@
 
     <!-- 后台查询 -->
     <select id="selectSysWxUserLogList" parameterType="SysWxUserLog" resultMap="SysWxUserLogResult">
-        SELECT wxlog.id,wxinfo.appid,wxinfo.openid,wxinfo.avatar_url,wxinfo.phone,wxlog.weight,wxlog.log_time,wxlog.sleep_time, wxlog.wakeup_time,wxlog.defecation, wxlog.water, wxlog.insomnia,wxlog.sport,wxlog.diet,wxlog.remark,
+        SELECT
+        wxlog.id,wxinfo.appid,wxinfo.openid,wxinfo.avatar_url,wxinfo.phone,wxlog.weight,wxlog.log_time,wxlog.sleep_time,
+        wxlog.wakeup_time,wxlog.defecation, wxlog.water, wxlog.insomnia,wxlog.sport,wxlog.diet,wxlog.remark,
         wxlog.emotion,wxlog.sly_eat_food,wxlog.constipation,wxlog.ingredient_describe,wxlog.breakfast_images,wxlog.lunch_images,wxlog.dinner_images,wxlog.extra_meal_images,wxlog.body_images,
-        wxlog.suggest,wxlog.execution_score,wxlog.comment,sc.name as customer_name, su.nick_name as nutritionist, su_atferSale.nick_name as after_nutritionist
+        wxlog.suggest,wxlog.execution_score,wxlog.comment,sc.name as customer_name, su.nick_name as nutritionist,
+        su_atferSale.nick_name as after_nutritionist, wxlog.health_manifesto, wxlog.log_time
         FROM sys_wx_user_log wxlog
-        left join sys_wx_user_info wxinfo on wxinfo.openid  = wxlog.openid
+        left join sys_wx_user_info wxinfo on wxinfo.openid = wxlog.openid
         left join sys_customer sc on sc.phone = wxinfo.phone and sc.del_flag = 0
         left join sys_user su on su.user_id = sc.main_dietitian and su.del_flag = '0'
         left join sys_user su_atferSale on su_atferSale.user_id = sc.after_dietitian and su_atferSale.del_flag = '0'
@@ -104,7 +112,9 @@
         <if test="customerId != null">
             and sc.id = #{customerId}
         </if>
-        <if test="phone != null and phone != ''">and (sc.name like concat('%',#{phone},'%') or wxinfo.phone like  concat('%',#{phone},'%') )</if>
+        <if test="phone != null and phone != ''">and (sc.name like concat('%',#{phone},'%') or wxinfo.phone like
+            concat('%',#{phone},'%') )
+        </if>
         <if test="appid != null">
             and wxinfo.appid = #{appid}
         </if>
@@ -114,8 +124,12 @@
         <if test="afterNutritionistId != null">
             and su_atferSale.user_id = #{afterNutritionistId}
         </if>
-        <if test="beginTime != null and beginTime != ''">and date_format(wxlog.log_time,'%y%m%d') &gt;= date_format(#{beginTime},'%y%m%d')</if>
-        <if test="endTime != null and endTime != ''">and date_format(wxlog.log_time,'%y%m%d') &lt;= date_format(#{endTime},'%y%m%d')</if>
+        <if test="beginTime != null and beginTime != ''">and date_format(wxlog.log_time,'%y%m%d') &gt;=
+            date_format(#{beginTime},'%y%m%d')
+        </if>
+        <if test="endTime != null and endTime != ''">and date_format(wxlog.log_time,'%y%m%d') &lt;=
+            date_format(#{endTime},'%y%m%d')
+        </if>
         order by wxlog.log_time desc
     </select>
 
@@ -145,7 +159,7 @@
             <if test="weight != null">weight,</if>
             <if test="appid != null">appid,</if>
             <if test="phone != null">phone,</if>
-            <if test="logTime != null">log_time,</if>
+            <if test="true">log_time,</if>
             <if test="sleepTime != null">sleep_time,</if>
             <if test="wakeupTime != null">wakeup_time,</if>
             <if test="sport != null">sport,</if>
@@ -155,9 +169,9 @@
             <if test="defecation != null">defecation,</if>
             <if test="water != null">water,</if>
             <if test="createBy != null">create_by,</if>
-            <if test="createTime != null">create_time,</if>
+            <if test="true">create_time,</if>
             <if test="updateBy != null">update_by,</if>
-            <if test="updateTime != null">update_time,</if>
+            <if test="true">update_time,</if>
             <if test="remark != null">remark,</if>
             <if test="emotion != null">emotion,</if>
             <if test="slyEatFood != null">sly_eat_food,</if>
@@ -181,7 +195,7 @@
             <if test="weight != null">#{weight},</if>
             <if test="appid != null">#{appid},</if>
             <if test="phone != null">#{phone},</if>
-            <if test="logTime != null">#{logTime},</if>
+            <if test="true">now(),</if>
             <if test="sleepTime != null">#{sleepTime},</if>
             <if test="wakeupTime != null">#{wakeupTime},</if>
             <if test="sport != null">#{sport},</if>
@@ -191,9 +205,9 @@
             <if test="defecation != null">#{defecation},</if>
             <if test="water != null">#{water},</if>
             <if test="createBy != null">#{createBy},</if>
-            <if test="createTime != null">#{createTime},</if>
+            <if test="true">now(),</if>
             <if test="updateBy != null">#{updateBy},</if>
-            <if test="updateTime != null">#{updateTime},</if>
+            <if test="true">now(),</if>
             <if test="remark != null">#{remark},</if>
             <if test="emotion != null">#{emotion},</if>
             <if test="slyEatFood != null">#{slyEatFood},</if>
@@ -221,7 +235,6 @@
             <if test="weight != null">weight = #{weight},</if>
             <if test="appid != null">appid = #{appid},</if>
             <if test="phone != null">phone = #{phone},</if>
-            <if test="logTime != null">log_time = #{logTime},</if>
             <if test="sleepTime != null">sleep_time = #{sleepTime},</if>
             <if test="wakeupTime != null">wakeup_time = #{wakeupTime},</if>
             <if test="sport != null">sport = #{sport},</if>
@@ -230,10 +243,8 @@
             <if test="insomnia != null">insomnia = #{insomnia},</if>
             <if test="defecation != null">defecation = #{defecation},</if>
             <if test="water != null">water = #{water},</if>
-            <if test="createBy != null">create_by = #{createBy},</if>
-            <if test="createTime != null">create_time = #{createTime},</if>
             <if test="updateBy != null">update_by = #{updateBy},</if>
-            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="updateTime != null">update_time = now(),</if>
             <if test="remark != null">remark = #{remark},</if>
             <if test="emotion != null">emotion = #{emotion},</if>
             <if test="slyEatFood != null">sly_eat_food = #{slyEatFood},</if>
@@ -260,7 +271,7 @@
     </update>
 
     <update id="deleteSysWxUserLogByIds" parameterType="String">
-        update sys_wx_user_log set del_flag = 1  where id in
+        update sys_wx_user_log set del_flag = 1 where id in
         <foreach item="id" collection="array" open="(" separator="," close=")">
             #{id}
         </foreach>
@@ -270,13 +281,13 @@
     <select id="getWxLogInfoList" parameterType="SysWxUserLog" resultMap="WxLogInfo">
         SELECT wxlog.id,wxlog.weight,wxlog.log_time,wxlog.sleep_time, wxlog.wakeup_time,wxlog.defecation, wxlog.water, wxlog.insomnia,wxlog.sport,wxlog.diet,
         wxlog.emotion,wxlog.sly_eat_food,wxlog.constipation,wxlog.ingredient_describe,wxlog.breakfast_images,wxlog.lunch_images,wxlog.dinner_images,wxlog.extra_meal_images,wxlog.body_images
-        ,wxlog.remark,wxlog.execution_score,wxlog.comment
-        FROM sys_wx_user_log wxlog left join sys_wx_user_info wxinfo on wxinfo.openid  = wxlog.openid
-        where wxlog.del_flag = 0 and (wxinfo.openid = #{openid} or wxinfo.phone = #{phone})
-        order by wxlog.log_time desc
+        ,wxlog.remark,wxlog.execution_score,wxlog.comment, wxlog.health_manifesto
+        FROM sys_wx_user_log wxlog
+        where wxlog.del_flag = 0 and wxlog.openid = #{openid}
+        order by wxlog.log_time asc
     </select>
 
-    <select id="selectSysWxUserLogByDateAndOpenId"  parameterType="SysWxUserLog" resultMap="SysWxUserLogResult">
+    <select id="selectSysWxUserLogByDateAndOpenId" parameterType="SysWxUserLog" resultMap="SysWxUserLogResult">
         select id from sys_wx_user_log where del_flag = 0 and to_days(log_time) = to_days(#{logTime}) and openid = #{openid} limit 1
     </select>
 
@@ -299,11 +310,15 @@
     <!-- 后台根据用户ID查询该用户的打卡体重 -->
     <select id="getWxUserLogListByCustomerId" parameterType="SysWxUserLog" resultMap="SysWxUserLogResult">
         SELECT wxlog.id,wxlog.log_time,wxlog.weight FROM sys_wx_user_log wxlog
-        left join sys_wx_user_info wxinfo on wxinfo.openid  = wxlog.openid
+        left join sys_wx_user_info wxinfo on wxinfo.openid = wxlog.openid
         left join sys_customer sc on sc.phone = wxinfo.phone and sc.del_flag = 0
         where wxlog.del_flag = 0 and wxinfo.phone is not null and sc.id = #{customerId}
-        <if test="beginTime != null and beginTime != ''">and date_format(wxlog.log_time,'%y%m%d') &gt;= date_format(#{beginTime},'%y%m%d')</if>
-        <if test="endTime != null and endTime != ''">and date_format(wxlog.log_time,'%y%m%d') &lt;= date_format(#{endTime},'%y%m%d')</if>
+        <if test="beginTime != null and beginTime != ''">and date_format(wxlog.log_time,'%y%m%d') &gt;=
+            date_format(#{beginTime},'%y%m%d')
+        </if>
+        <if test="endTime != null and endTime != ''">and date_format(wxlog.log_time,'%y%m%d') &lt;=
+            date_format(#{endTime},'%y%m%d')
+        </if>
         order by wxlog.log_time asc
     </select>
 
@@ -319,8 +334,8 @@
 
 
     <resultMap id="punchReponseMap" type="com.stdiet.custom.dto.response.CommunityPunchReponse">
-        <result property="id"    column="id"    />
-        <result property="openid"    column="openid"    />
+        <result property="id" column="id"/>
+        <result property="openid" column="openid"/>
         <result property="cusId" column="cus_id"/>
         <result property="nickName" column="nick_name"/>
         <result property="avatarUrl" column="avatar_url"/>
