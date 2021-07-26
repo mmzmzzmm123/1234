@@ -589,7 +589,7 @@ export default {
       //普通单、拆分单
       if(this.form.orderTypeList[0] == 0 || this.form.orderTypeList[0] == 1){
            //售前、售后、营养师助理都不能为空
-           if(this.form.preSaleId == null || this.form.preSaleId <= 0 || this.form.afterSaleId == null || this.form.afterSaleId <= 0 
+           /*if(this.form.preSaleId == null || this.form.preSaleId <= 0 || this.form.afterSaleId == null || this.form.afterSaleId <= 0 
               || this.form.nutriAssisId == null ||  this.form.nutriAssisId <= 0){
               this.$message({
                 type: 'warning',
@@ -597,7 +597,7 @@ export default {
                 center: true
               });
               return false;
-           }
+           }*/
            //根据是否拆分判断营养师
            if(this.form.orderTypeList[0] == 0){
               if(this.form.nutritionistIdList == null || this.form.nutritionistIdList.length != 1 || this.form.nutritionistIdList[0] <= 0){
@@ -633,12 +633,11 @@ export default {
       }
       //售中单
       else if(this.form.orderTypeList[0] == 3){
-          //售中、售后、营养师助理不能为空
-          if(this.form.onSaleId == null || this.form.onSaleId <= 0 || this.form.afterSaleId == null || this.form.afterSaleId <= 0 
-              || this.form.nutriAssisId == null ||  this.form.nutriAssisId <= 0){
+          //售中不能为空
+          if(this.form.onSaleId == null || this.form.onSaleId <= 0){
               this.$message({
                 type: 'warning',
-                message: '售中、售后、营养师助理不能为空',
+                message: '售中不能为空',
                 center: true
               });
               return false;
