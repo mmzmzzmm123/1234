@@ -334,15 +334,15 @@
 
 
     <resultMap id="punchReponseMap" type="com.stdiet.custom.dto.response.CommunityPunchReponse">
-        <result property="id" column="id"/>
+        <result property="id" column="id" typeHandler="com.stdiet.custom.typehandler.EncryptedIdHandler"/>
         <result property="openid" column="openid"/>
         <result property="nickName" column="nick_name"/>
         <result property="avatarUrl" column="avatar_url"/>
         <result property="logTime" column="log_time"/>
         <result property="weight" column="weight"/>
         <result property="comment" column="comment"/>
-        <result property="thumbsupNum" column="thumbsup_num"/>
         <result property="healthManifesto" column="health_manifesto"/>
+        <association property="thumbsupNum"  column="id" select="getPunchThumbsupCount"/>
         <!-- 查询最近五天体重 -->
         <association property="weightData" column="{id=openid}" select="getRecentWeight"/>
         <!-- 查询点赞的openid -->
@@ -359,18 +359,31 @@
     </select>
 
     <!-- 查询打卡社区中点赞的openid -->
-    <select id="getPunchThumbsupList" parameterType="Long" resultType="Map">
-        select * from
-        (select cus_openid as openid, DATE_FORMAT(create_time,'%Y-%m-%d %H:%i') as `time` from sys_punch_thumbsup where punch_id = #{id} and del_flag = 0 order by create_time asc) as tu
-        left join (SELECT openid, nick_name as nickName, avatar_url as avatarUrl FROM sys_wx_user_info) AS wxinfo
-        using(openid)
+<!--    <select id="getPunchThumbsupList" parameterType="Long" resultType="Map">-->
+<!--        select * from-->
+<!--        (select id, cus_openid as openid, DATE_FORMAT(create_time,'%Y-%m-%d %H:%i') as `time` from sys_punch_thumbsup where punch_id = #{id} and del_flag = 0 order by create_time asc) as tu-->
+<!--        left join (SELECT openid, nick_name as nickName, avatar_url as avatarUrl FROM sys_wx_user_info) AS wxinfo-->
+<!--        using(openid)-->
+<!--    </select>-->
+
+    <resultMap id="thumbupUserResultMap" type="Map">
+        <result property="id" column="id" typeHandler="com.stdiet.custom.typehandler.EncryptedIdHandler"/>
+        <result property="openid" column="cus_openid"/>
+    </resultMap>
+
+    <select id="getPunchThumbsupList" parameterType="Long" resultMap="thumbupUserResultMap">
+        select id, cus_openid  from sys_punch_thumbsup where punch_id = #{id} and del_flag = 0
+    </select>
+
+    <select id="getPunchThumbsupCount" parameterType="Long" resultType="Integer">
+        select count(*) from sys_punch_thumbsup where punch_id = #{id} and del_flag = 0
     </select>
 
     <!-- 查询所有打卡体重 -->
     <select id="getRecentWeight" resultType="Map">
         select DATE_FORMAT(log_time,'%Y-%m-%d') as name, weight as `value` from sys_wx_user_log
         where del_flag = 0 and openid = #{id}
-        order by log_time asc
+        order by log_time desc
     </select>
 
     <!-- 根据客户ID查询总共打卡次数 -->

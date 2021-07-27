@@ -18,6 +18,8 @@ public class SysPunchThumbsup extends BaseEntity
     /** $column.columnComment */
     private Long id;
 
+    private String encId;
+
     /** 打卡记录ID */
     @Excel(name = "打卡记录ID")
     private Long punchId;

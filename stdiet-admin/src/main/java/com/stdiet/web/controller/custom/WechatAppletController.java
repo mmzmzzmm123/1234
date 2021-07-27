@@ -715,13 +715,13 @@ public class WechatAppletController extends BaseController {
     public TableDataInfo getCommunityPunch() {
         startPage();
         List<CommunityPunchReponse> list = sysWxUserLogService.getCommunityPunch(new SysWxUserLog());
-        if (list != null && list.size() > 0) {
-            for (CommunityPunchReponse comm : list) {
-                comm.setId(AesUtils.encrypt(comm.getId()));
+//        if (list != null && list.size() > 0) {
+//            for (CommunityPunchReponse comm : list) {
+//                comm.setId(AesUtils.encrypt(comm.getId()));
 //                comm.setCusId(AesUtils.encrypt(comm.getCusId()));
 //                comm.setThumbsupNum(comm.getThumbsupOpenid() != null ? comm.getThumbsupOpenid().size() : 0);
-            }
-        }
+//            }
+//        }
         return getDataTable(list);
     }
 
@@ -732,25 +732,24 @@ public class WechatAppletController extends BaseController {
      */
     @PostMapping("/thumbsupPunch")
     public AjaxResult getCommunityPunch(@RequestBody SysPunchThumbsup sysPunchThumbsup) {
-        if (StringUtils.isEmpty(sysPunchThumbsup.getCusOpenid(), sysPunchThumbsup.getEncPunchId()) || sysPunchThumbsup.getThumbsupFlag() == null) {
-            return AjaxResult.error("缺少必要参数");
+        int rows = 0;
+        if (StringUtils.isEmpty(sysPunchThumbsup.getEncId())) {
+            // 点赞
+            sysPunchThumbsup.setPunchId(Long.parseLong(AesUtils.decrypt(sysPunchThumbsup.getEncPunchId())));
+            rows = sysPunchThumbsupService.insertSysPunchThumbsup(sysPunchThumbsup);
+            if (rows > 0) {
+                Map<String, Object> resultData = new HashMap<>();
+                resultData.put("id", AesUtils.encrypt(String.valueOf(sysPunchThumbsup.getId())));
+                resultData.put("openid", sysPunchThumbsup.getCusOpenid());
+                resultData.put("punchId", sysPunchThumbsup.getEncPunchId());
+                return AjaxResult.success(resultData);
+            }
+        } else {
+            // 取消点赞
+            rows = sysPunchThumbsupService.deleteSysPunchThumbsupById(Long.parseLong(AesUtils.decrypt(sysPunchThumbsup.getEncId())));
         }
-        sysPunchThumbsup.setPunchId(Long.parseLong(AesUtils.decrypt(sysPunchThumbsup.getEncPunchId())));
 
-        SysPunchThumbsup existPunchThumbsup = sysPunchThumbsupService.getThumbsupByPunchIdAndOpenid(sysPunchThumbsup);
-        if (existPunchThumbsup != null && sysPunchThumbsup.getThumbsupFlag()) {
-            return AjaxResult.error("已点过暂，无法重复点赞");
-        }
-        if (existPunchThumbsup == null && !sysPunchThumbsup.getThumbsupFlag()) {
-            return AjaxResult.error("还未未点赞，无法取消点赞");
-        }
-        int row = 0;
-        try {
-            row = sysPunchThumbsup.getThumbsupFlag() ? sysPunchThumbsupService.insertSysPunchThumbsup(sysPunchThumbsup) : sysPunchThumbsupService.deleteThumbsupByPunchIdAndOpenid(sysPunchThumbsup);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return toAjax(row);
+        return toAjax(rows);
     }
 
 
