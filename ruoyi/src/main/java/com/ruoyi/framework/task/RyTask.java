@@ -127,6 +127,27 @@ public class RyTask {
                 }
             }
 
+        } else if (params.equals("warnopendeadline")) {
+            System.out.println("warnopendeadline");
+            List<BySchool> list = bySchoolService.selectBySchoolWarnList(null);
+            if (list != null && list.size() > 0) {
+                for (int i = 0; i < list.size(); i++) {
+                    String tel = list.get(i).getTel();
+                    Long days = list.get(i).getDays();
+                    if (!schoolCommon.isStringEmpty(tel)) {
+                        //发送给学校联系人
+                        smsService.sendWarnSMS(tel, days.toString());
+                    }
+
+
+                    String emTel = list.get(i).getEmTel();
+                    if (!schoolCommon.isStringEmpty(emTel)) {
+                        //发送给学校紧急联系人
+                        smsService.sendWarnSMS(emTel, days.toString());
+                    }
+                }
+            }
+
         }
         System.out.println("执行有参方法：" + params);
     }

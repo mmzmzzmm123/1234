@@ -38,11 +38,11 @@
         <result property="dqxn" column="dqxn"/>
         <result property="dqxq" column="dqxq"/>
         <result property="isDel" column="is_del"/>
-
+        <result property="days" column="days"/>
     </resultMap>
 
     <sql id="selectBySchoolVo">
-        select id, xxdm, school_name, name_short, type, parent_id, province, provincename, regionid, regionname, area, areaname, address, mastername, tel, em_man, em_tel, status, scale, create_time, create_user, approval_user, approval_time, remark, location, is_demonstr, businesslicenseimg, open_book, fee_status, open_deadline, dqxn, dqxq, is_del from by_school
+        select id, xxdm, school_name, name_short, type, parent_id, province, provincename, regionid, regionname, area, areaname, address, mastername, tel, em_man, em_tel, status, scale, create_time, create_user, approval_user, approval_time, remark, location, is_demonstr, businesslicenseimg, open_book, fee_status, open_deadline, dqxn, dqxq, is_del,datediff(open_deadline,curdate()) as days from by_school
     </sql>
 
     <select id="selectBySchoolList" parameterType="BySchool" resultMap="BySchoolResult">
@@ -81,6 +81,18 @@
         <if test="openDeadline != null ">and open_deadline = #{openDeadline}</if>
         <if test="dqxn != null  and dqxn != ''">and dqxn = #{dqxn}</if>
         <if test="dqxq != null  and dqxq != ''">and dqxq = #{dqxq}</if>
+        <if test="beginTime != null and beginTime != ''"><!-- 开始时间检索 -->
+            AND date_format(open_deadline,'%y%m%d') &gt;= date_format(#{beginTime},'%y%m%d')
+        </if>
+        <if test="endTime != null and endTime != ''"><!-- 结束时间检索 -->
+            AND date_format(open_deadline,'%y%m%d') &lt;= date_format(#{endTime},'%y%m%d')
+        </if>
+    </select>
+
+
+    <select id="selectBySchoolWarnList" parameterType="BySchool" resultMap="BySchoolResult">
+      select id, xxdm, school_name, name_short, type, parent_id, province, provincename, regionid, regionname, area, areaname, address, mastername, tel, em_man, em_tel, status, scale, create_time, create_user, approval_user, approval_time, remark, location, is_demonstr, businesslicenseimg, open_book, fee_status, open_deadline, dqxn, dqxq, is_del ,datediff(open_deadline,curdate()) as days from by_school
+      where  DATE_SUB(CURDATE(), INTERVAL -15 DAY) >= date(open_deadline) and open_deadline>=curdate() and is_del='0'
     </select>
 
     <select id="selectBySchoolById" parameterType="Long" resultMap="BySchoolResult">

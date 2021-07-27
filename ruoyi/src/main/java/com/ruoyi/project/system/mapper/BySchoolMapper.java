@@ -28,6 +28,14 @@ public interface BySchoolMapper
     public List<BySchool> selectBySchoolList(BySchool bySchool);
 
     /**
+     * 查询距开通截止日期近15天的幼儿园机构列表
+     *
+     * @param bySchool 幼儿园机构
+     * @return 幼儿园机构集合
+     */
+    public List<BySchool> selectBySchoolWarnList(BySchool bySchool);
+
+    /**
      * 新增幼儿园机构
      * 
      * @param bySchool 幼儿园机构

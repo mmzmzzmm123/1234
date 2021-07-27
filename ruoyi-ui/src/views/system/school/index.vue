@@ -57,6 +57,18 @@
           />
         </el-select>
       </el-form-item>
+      <el-form-item label="截止时间">
+                  <el-date-picker
+                    v-model="dateRange"
+                    size="small"
+                    class="my-date-picker"
+                    value-format="yyyy-MM-dd"
+                    type="daterange"
+                    range-separator="-"
+                    start-placeholder="开始日期"
+                    end-placeholder="结束日期"
+                  ></el-date-picker>
+                </el-form-item>
       <el-form-item>
         <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
         <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
@@ -104,7 +116,7 @@
       </el-col>
     </el-row>
 
-    <el-table v-loading="loading" :data="schoolList" @selection-change="handleSelectionChange">
+    <el-table v-loading="loading" :data="schoolList" :default-sort = "{prop: 'days', order: 'descending'}" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
       <el-table-column label="幼儿园名称" align="center" prop="schoolName" />
       <el-table-column label="幼儿园类型" align="center" prop="type" :formatter="typeFormat" />
@@ -117,6 +129,7 @@
       <!--<el-table-column label="创建人" align="center" prop="createUser" />-->
       <el-table-column label="创建时间" align="center" prop="createTime" />
       <el-table-column label="开通截至时间" align="center" prop="openDeadline" />
+       <el-table-column label="剩余天数" align="center" prop="days" sortable />
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button
@@ -360,6 +373,8 @@ export default {
       scaleOptions: [],
       //幼儿园列表
       schoolOptions: [],
+            // 日期范围
+      dateRange: [],
       // 查询参数
       queryParams: {
         pageNum: 1,
@@ -493,7 +508,7 @@ export default {
     /** 查询幼儿园机构列表 */
     getList() {
       this.loading = true;
-      listSchool(this.queryParams).then(response => {
+      listSchool(this.addDateRange(this.queryParams, this.dateRange)).then(response => {
         this.schoolList = response.rows;
         this.total = response.total;
         this.loading = false;
@@ -563,6 +578,7 @@ export default {
     },
     /** 重置按钮操作 */
     resetQuery() {
+      this.dateRange = [];
       this.resetForm("queryForm");
       this.handleQuery();
     },
