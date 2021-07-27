@@ -70,6 +70,13 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         ${dataScope}
     </select>
 
+
+    <select id="selectByTeacherBrithList" parameterType="ByTeacherJbxx" resultMap="ByTeacherJbxxResult">
+        select t.id, t.userid, t.zjhm, t.csrq, t.byyx, t.zy, t.xl, t.xw, t.cjgzrq, t.zgzs, t.createuserid, t.createtime,
+        u.user_id, u.nick_name, u.user_name from by_teacher_jbxx t left join sys_user u on t.userid=u.user_id
+        where MONTH(t.csrq) = MONTH(NOW()) and DAY(t.csrq) = DAY(NOW()) and u.del_flag='0' and u.status='0'
+    </select>
+
     <select id="selectByTeacherJbGroupXw" parameterType="ByTeacherJbxx" resultMap="ByTeacherJbxxResult">
         select (CASE WHEN (select dict_label from sys_dict_data where dict_type='sys_jsxl' and dict_value=t.xl ) is null THEN '未设置' ELSE (select dict_label from sys_dict_data where dict_type='sys_jsxl' and dict_value=t.xl ) END )xl,count(*) byyx
         from by_teacher_jbxx t

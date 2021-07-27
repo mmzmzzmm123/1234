@@ -135,3 +135,8 @@ wx:
   appid: wx0370c4756118456a
   secret: f57143e81f3c95b0d909d91b3116cc82
   domain: https://api.weixin.qq.com/sns/oauth2/access_token
+
+#jiguang
+sms:
+  appkey: 438b95319ada13c8c6ffacfe
+  secret: c77c8aded1dd8c2fb083ebd3

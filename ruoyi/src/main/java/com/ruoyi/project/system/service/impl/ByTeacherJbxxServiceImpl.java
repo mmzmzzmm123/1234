@@ -46,6 +46,17 @@ public class ByTeacherJbxxServiceImpl implements IByTeacherJbxxService {
     /**
      * 查询教师基本信息列表
      *
+     * @param byTeacherJbxx 教师基本信息
+     * @return 教师基本信息集合
+     */
+    @Override
+    public List<ByTeacherJbxx> selectByTeacherBrithList(ByTeacherJbxx byTeacherJbxx) {
+        return byTeacherJbxxMapper.selectByTeacherBrithList(byTeacherJbxx);
+    }
+
+    /**
+     * 查询教师基本信息列表
+     *
      * @return 教师基本信息集合
      */
     @Override

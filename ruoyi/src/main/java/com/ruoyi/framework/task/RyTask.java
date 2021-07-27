@@ -1,14 +1,17 @@
 package com.ruoyi.framework.task;
 
+import com.ruoyi.common.service.impl.SMSService;
 import com.ruoyi.project.benyi.domain.BySchoolNews;
 import com.ruoyi.project.benyi.service.IBySchoolNewsService;
 import com.ruoyi.project.bysite.domain.ByNews;
 import com.ruoyi.project.bysite.service.IByNewsService;
 import com.ruoyi.project.common.SchoolCommon;
 import com.ruoyi.project.system.domain.BySchool;
+import com.ruoyi.project.system.domain.ByTeacherJbxx;
 import com.ruoyi.project.system.domain.SysDept;
 import com.ruoyi.project.system.domain.SysUser;
 import com.ruoyi.project.system.service.IBySchoolService;
+import com.ruoyi.project.system.service.IByTeacherJbxxService;
 import com.ruoyi.project.system.service.ISysDeptService;
 import com.ruoyi.project.system.service.ISysUserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,6 +41,10 @@ public class RyTask {
     private IBySchoolNewsService iBySchoolNewsService;
     @Autowired
     private IByNewsService iByNewsService;
+    @Autowired
+    private IByTeacherJbxxService iByTeacherJbxxService;
+    @Autowired
+    private SMSService smsService;
 
     public void ryMultipleParams(String s, Boolean b, Long l, Double d, Integer i) {
         System.out.println(StringUtils.format("执行多参方法： 字符串类型{}，布尔类型{}，长整型{}，浮点型{}，整形{}", s, b, l, d, i));
@@ -110,6 +117,16 @@ public class RyTask {
                     iBySchoolNewsService.updateBySchoolNews(newBySchoolNews);
                 }
             }
+        } else if (params.equals("birthteacher")) {
+            System.out.println("birthteacher");
+            List<ByTeacherJbxx> list = iByTeacherJbxxService.selectByTeacherBrithList(null);
+            if (list != null && list.size() > 0) {
+                for (int i = 0; i < list.size(); i++) {
+                    String phone = list.get(i).getUser().getUserName();
+                    smsService.sendBirthTeacherSMS(phone);
+                }
+            }
+
         }
         System.out.println("执行有参方法：" + params);
     }
