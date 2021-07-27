@@ -33,8 +33,10 @@ export function resolveBlob(res, mimeType) {
   var fileName = result[1]
   fileName = fileName.replace(/\"/g, '')
   aLink.href = URL.createObjectURL(blob)
+  aLink.style.display = 'none'
   aLink.setAttribute('download', fileName) // 设置下载文件名称
   document.body.appendChild(aLink)
   aLink.click()
+  URL.revokeObjectURL(aLink.href);//清除URL对象引用
   document.body.removeChild(aLink);
 }
