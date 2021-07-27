@@ -31,15 +31,15 @@
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="punchId != null">punch_id,</if>
             <if test="cusOpenid != null">cus_openid,</if>
-            <if test="createTime != null">create_time,</if>
-            <if test="updateTime != null">update_time,</if>
+            <if test="true">create_time,</if>
+            <if test="true">update_time,</if>
             <if test="delFlag != null">del_flag,</if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="punchId != null">#{punchId},</if>
             <if test="cusOpenid != null">#{cusOpenid},</if>
-            <if test="createTime != null">#{createTime},</if>
-            <if test="updateTime != null">#{updateTime},</if>
+            <if test="true">now(),</if>
+            <if test="true">now(),</if>
             <if test="delFlag != null">#{delFlag},</if>
         </trim>
     </insert>
