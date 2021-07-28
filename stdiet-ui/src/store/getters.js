@@ -24,6 +24,7 @@ const getters = {
   plannerAssisIdOptions: state => state.global.plannerAssisIdOptions,
   operatorIdOptions: state => state.global.operatorIdOptions,
   operatorAssisIdOptions: state => state.global.operatorAssisIdOptions,
-  pushPreSaleIdOptions: state => state.global.pushPreSaleIdOptions
+  pushPreSaleIdOptions: state => state.global.pushPreSaleIdOptions,
+  bdOptions: state => state.global.bdOptions
 };
 export default getters;

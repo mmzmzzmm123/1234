@@ -73,7 +73,7 @@ export default {
         ["订单类型","审核状态", "成交时间"],
         ["调理项目","姓名", "手机号"],
         ["金额","收款方式", "收款账号"],
-        ["服务时长","赠送时长", "售前"],
+        ["服务时长","赠送时长", "售前/商务"],
         ["售前推送","售中","售后"],
         ["营养师","助理营养师","策划"],
         ["策划助理","运营","运营助理"],
@@ -112,6 +112,9 @@ export default {
       getInfoDetail({ orderId }).then((response) => {
         response.data.weight = response.data.weight != null ? response.data.weight + "斤" : "";
         response.data.giveServeDay = response.data.giveServeDay != null ? response.data.giveServeDay + "天" : "";
+        if(response.data.orderType == 4){
+          response.data.preSale = response.data.businessAffair;
+        }
         for (let i = 0; i < this.orderTitleData.length; i++) {
           this.orderDetailList.push({
             attr_name_one: this.orderTitleData[i][0],

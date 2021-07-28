@@ -41,6 +41,7 @@
         <result property="serverEndTime" column="server_end_time"/>
         <result property="becomeFanTime" column="become_fan_time"/>
 
+        <result property="businessAffairId"    column="business_affair_id"    />
         <result property="pushPreSaleId"    column="push_pre_sale_id"    />
         <result property="onSaleId" column="on_sale_id"/>
         <result property="orderType" column="order_type"/>
@@ -64,7 +65,7 @@
         o.serve_time_id, o.pay_type_id, pay.dict_label as pay_type, o.pre_sale_id, o.create_by, o.create_time, o.after_sale_id, o.update_by, o.update_time,
         o.nutritionist_id, o.remark, o.nutri_assis_id, o.account_id, acc.dict_label as account, o.planner_id, o.planner_assis_id, o.operator_id, o.operator_assis_id,
         o.recommender, o.order_time,o.give_serve_day,o.conditioning_project_id,cp.dict_label as conditioning_project,o.server_end_time,
-        o.on_sale_id,o.order_type,o.order_count_type,o.order_money_type,o.main_order_id,o.after_sale_commiss_order,o.commiss_start_time, o.counted,o.push_pre_sale_id
+        o.on_sale_id,o.order_type,o.order_count_type,o.order_money_type,o.main_order_id,o.after_sale_commiss_order,o.commiss_start_time, o.counted,o.push_pre_sale_id,o.business_affair_id
         from sys_order o
         LEFT JOIN sys_customer sc ON sc.id = o.cus_id
         LEFT JOIN (SELECT dict_label, dict_value FROM sys_dict_data WHERE dict_type = 'cus_pay_type') AS pay ON pay.dict_value = o.pay_type_id
@@ -127,6 +128,9 @@
             <if test="onSaleId != null">
                 and o.on_sale_id = #{onSaleId}
             </if>
+            <if test="businessAffairId != null">
+                and o.business_affair_id = #{businessAffairId}
+            </if>
             <if test="afterSaleId != null ">and o.after_sale_id = #{afterSaleId}</if>
             <if test="nutritionistId != null ">and o.nutritionist_id = #{nutritionistId}</if>
             <if test="nutriAssisId != null ">and o.nutri_assis_id = #{nutriAssisId}</if>
@@ -184,6 +188,9 @@
             <if test="pushPreSaleId != null ">and push_pre_sale_id = #{pushPreSaleId}</if>
             <if test="onSaleId != null">
                 and o.on_sale_id = #{onSaleId}
+            </if>
+            <if test="businessAffairId != null">
+                and o.business_affair_id = #{businessAffairId}
             </if>
             <if test="preSaleId != null ">and pre_sale_id = #{preSaleId}</if>
             <if test="afterSaleId != null ">and after_sale_id = #{afterSaleId}</if>
@@ -252,6 +259,7 @@
             <if test="operatorId != null">operator_id,</if>
             <if test="serveTimeId != null">serve_time_id,</if>
             <if test="recommender != null">recommender,</if>
+            <if test="businessAffairId != null">business_affair_id,</if>
             <if test="pushPreSaleId != null">push_pre_sale_id,</if>
             <if test="amount != null">amount,</if>
             <if test="orderTime != null">order_time,</if>
@@ -296,6 +304,7 @@
             <if test="operatorId != null">#{operatorId},</if>
             <if test="serveTimeId != null">#{serveTimeId},</if>
             <if test="recommender != null">#{recommender},</if>
+            <if test="businessAffairId != null">#{businessAffairId},</if>
             <if test="pushPreSaleId != null">#{pushPreSaleId},</if>
             <if test="amount != null">#{amount},</if>
             <if test="orderTime != null">#{orderTime},</if>
@@ -343,6 +352,7 @@
             <if test="operatorId != null">operator_id = #{operatorId},</if>
             <if test="serveTimeId != null">serve_time_id = #{serveTimeId},</if>
             <if test="recommender != null">recommender = #{recommender},</if>
+            <if test="businessAffairId != null">business_affair_id = #{businessAffairId},</if>
             <if test="pushPreSaleId != null">push_pre_sale_id = #{pushPreSaleId},</if>
             <if test="amount != null">amount = #{amount},</if>
             <if test="orderTime != null">order_time = #{orderTime},</if>
@@ -415,6 +425,7 @@
         <result property="serverEndTime" column="server_end_time"/>
         <result property="becomeFanTime" column="become_fan_time"/>
 
+        <result property="businessAffairId"    column="business_affair_id"    />
         <result property="pushPreSaleId"    column="push_pre_sale_id"    />
         <result property="onSaleId" column="on_sale_id"/>
         <result property="orderType" column="order_type"/>

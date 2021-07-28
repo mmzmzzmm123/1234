@@ -90,7 +90,7 @@
             </el-select>
           </el-form-item>
         </el-col>
-        <el-col :span="8" v-show="preSaleShow">
+        <el-col :span="8" v-show="preSaleShow && !businessAffairShow">
           <el-form-item label="售前" prop="preSaleId">
             <el-select v-model="form.preSaleId" placeholder="请选择">
               <el-option
@@ -102,7 +102,18 @@
             </el-select>
           </el-form-item>
         </el-col>
-
+        <el-col :span="8" v-show="businessAffairShow">
+          <el-form-item label="商务" prop="businessAffairId" >
+            <el-select v-model="form.businessAffairId" placeholder="请选择" filterable clearable>
+              <el-option
+                v-for="dict in bdOptions"
+                :key="dict.dictValue"
+                :label="dict.dictLabel"
+                :value="parseInt(dict.dictValue)"
+              />
+            </el-select>
+          </el-form-item>
+        </el-col>
         <el-col :span="8" v-show="pushPreSaleShow">
           <el-form-item label="售前推送" prop="preSaleId">
             <el-select v-model="form.pushPreSaleId" placeholder="请选择">
@@ -163,7 +174,7 @@
             </el-select>
           </el-form-item>
         </el-col>
-        <el-col :span="8" v-show="planOperatorShow">
+        <el-col :span="8" v-show="planOperatorShow && !businessAffairShow">
           <el-form-item label="策划" prop="plannerId">
             <el-select v-model="form.plannerId" placeholder="请选择">
               <el-option
@@ -175,7 +186,7 @@
             </el-select>
           </el-form-item>
         </el-col>
-        <el-col :span="8" v-show="planOperatorShow">
+        <el-col :span="8" v-show="planOperatorShow && !businessAffairShow">
           <el-form-item label="策划助理" prop="plannerAssisId">
             <el-select v-model="form.plannerAssisId" placeholder="请选择">
               <el-option
@@ -187,7 +198,7 @@
             </el-select>
           </el-form-item>
         </el-col>
-        <el-col :span="8" v-show="planOperatorShow">
+        <el-col :span="8" v-show="planOperatorShow && !businessAffairShow">
           <el-form-item label="运营" prop="operatorId">
             <el-select v-model="form.operatorId" placeholder="请选择">
               <el-option
@@ -199,7 +210,7 @@
             </el-select>
           </el-form-item>
         </el-col>
-        <el-col :span="8" v-show="planOperatorShow">
+        <el-col :span="8" v-show="planOperatorShow && !businessAffairShow">
           <el-form-item label="运营助理" prop="operatorAssisId">
             <el-select v-model="form.operatorAssisId" placeholder="请选择">
               <el-option
@@ -415,6 +426,8 @@ export default {
       afterSaleNutriAssShow: true,
       //是否显示策划、策划助理、运营、运营助理
       planOperatorShow: true,
+      //商务单
+      businessAffairShow: false
     };
   },
   created() {
@@ -466,7 +479,9 @@ export default {
       // 运营助理字典
       "operatorAssisIdOptions",
       //售前推送
-      "pushPreSaleIdOptions"
+      "pushPreSaleIdOptions",
+      //商务
+      "bdOptions"
     ]),
   },
   methods: {
@@ -629,6 +644,9 @@ export default {
       if(this.form.afterSaleCommissOrder != null && this.form.afterSaleCommissOrder != 0){
         this.planOperatorShow = false;
       }
+
+      //是否商务单
+      this.businessAffairShow = this.form.orderType == "4";
 
       //console.log(this.preSaleShow + " | " + this.pushPreSaleShow + " | " + this.onSaleShow + " | " + this.afterSaleNutriAssShow + "|" + this.planOperatorShow);
     },

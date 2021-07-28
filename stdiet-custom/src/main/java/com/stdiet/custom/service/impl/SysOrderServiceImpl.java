@@ -214,6 +214,20 @@ public class SysOrderServiceImpl implements ISysOrderService {
                }
            }
         }
+        //商务订单
+        else if("4".equals(sysOrder.getOrderType())){
+            sysOrder.setNutritionistId((sysOrder.getNutritionistIdList() != null && sysOrder.getNutritionistIdList().length > 0) ? sysOrder.getNutritionistIdList()[0] : null);
+            sysOrder.setMainOrderId(0L);
+            sysOrder.setAfterSaleCommissOrder(0);
+            sysOrder.setPreSaleId(null);
+            sysOrder.setOnSaleId(null);
+            sysOrder.setPushPreSaleId(null);
+            sysOrder.setPlannerId(null);
+            sysOrder.setPlannerAssisId(null);
+            sysOrder.setOperatorId(null);
+            sysOrder.setOperatorAssisId(null);
+            row = sysOrderMapper.insertSysOrder(sysOrder);
+        }
         return row;
     }
 
@@ -272,6 +286,15 @@ public class SysOrderServiceImpl implements ISysOrderService {
         }
         if("3".equals(sysOrder.getOrderType())){
             sysOrder.setPreSaleId(null);
+        }
+        if("4".equals(sysOrder.getOrderType())){
+            sysOrder.setPreSaleId(null);
+            sysOrder.setOnSaleId(null);
+            sysOrder.setPushPreSaleId(null);
+            sysOrder.setPlannerId(null);
+            sysOrder.setPlannerAssisId(null);
+            sysOrder.setOperatorId(null);
+            sysOrder.setOperatorAssisId(null);
         }
         if(oldSysOrder.getStartTime() == null){//确保提成计算时间不为空
             sysOrder.setCommissStartTime(sysOrder.getOrderTime());

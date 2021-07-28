@@ -77,6 +77,14 @@
             <property name="postId" value="16"/>
         </include>
         UNION
+         <include refid="groupAmountVo">
+             <property name="column" value="business_affair_id"/>
+             <property name="reviewStatus" value="#{reviewStatus}"/>
+             <property name="beginTime" value="#{beginTime}"/>
+             <property name="endTime" value="#{endTime}"/>
+             <property name="postId" value="17"/>
+         </include>
+          UNION
         <include refid="groupAmountVo">
             <property name="column" value="after_sale_id"/>
             <property name="reviewStatus" value="#{reviewStatus}"/>
