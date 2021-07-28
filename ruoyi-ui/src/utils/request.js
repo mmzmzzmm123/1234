@@ -61,7 +61,7 @@ service.interceptors.response.use(res => {
         }
       ).then(() => {
         store.dispatch('LogOut').then(() => {
-          location.href = '/index';
+          this.$router.push('/login');
         })
       }).catch(() => {});
     } else if (code === 500) {
