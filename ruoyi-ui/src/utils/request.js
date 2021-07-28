@@ -61,7 +61,7 @@ service.interceptors.response.use(res => {
         }
       ).then(() => {
         store.dispatch('LogOut').then(() => {
-          location.href = '/index';
+          this.$router.push('/login');
         })
       }).catch(() => {});
       return Promise.reject('error')
