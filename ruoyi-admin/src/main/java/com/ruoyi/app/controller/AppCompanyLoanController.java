@@ -72,4 +72,13 @@ public class AppCompanyLoanController extends BaseController
         }
         return getDataTable(list);
     }
+
+    /**
+     * 测试接口是否打通，随时可以删除
+     */
+    @GetMapping("/test")
+    public AjaxResult test()
+    {
+        return AjaxResult.success();
+    }
 }
