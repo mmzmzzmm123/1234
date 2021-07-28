@@ -108,7 +108,7 @@ public class DataCompanyLoanServiceImpl implements IDataCompanyLoanService
         dataCompanyLoan.setLoanPurpose(dataCompanyLoanBody.getLoanPurpose());
         dataCompanyLoan.setContactPhone(mobile);
 
-        //TODO:根据企业名称组装企业相关数据：企业划型、所在行业、主营业务、省市区
+        //根据企业名称组装企业相关数据：企业划型、所在行业、主营业务、省市区
         Map<String,String> map = ShareInterface.queryCompanyInfo(dataCompanyLoanBody.getCompanyName());
         dataCompanyLoan.setCompanyCreditCode(map.get("tyshxydm"));
         dataCompanyLoan.setCompanyType(map.get("companytype"));
@@ -170,8 +170,6 @@ public class DataCompanyLoanServiceImpl implements IDataCompanyLoanService
         String verifyKey = Constants.SMS_CODE_KEY + phone;
         String code = numRandom(6);
         DataCodeMsgResponse response = smsService.sendVerifyCode(phone,code);
-        //TODO:此为测试代码，需要删除
-        response.setCode(DataCodeMsgResponse.SUCCESS_CODE);
         if (StringUtils.equals(DataCodeMsgResponse.SUCCESS_CODE,response.getCode())){//发送短信成功
             redisCache.setCacheObject(verifyKey, code, Constants.SMS_CODE_EXPIRATION, TimeUnit.MINUTES);
             return code;

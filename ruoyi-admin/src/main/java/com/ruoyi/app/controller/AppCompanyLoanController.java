@@ -41,10 +41,10 @@ public class AppCompanyLoanController extends BaseController
     @ApiOperation(value = "添加企业贷款信息接口")
     public AjaxResult add(@RequestBody DataCompanyLoanBody dataCompanyLoan)
     {
-        if (UserConstants.NOT_UNIQUE.equals(dataCompanyLoanService.checkCompanyNameUnique(dataCompanyLoan.getCompanyName())))
-        {
-            return AjaxResult.error("新增'" + dataCompanyLoan.getCompanyName() + "'失败，该企业名称已存在");
-        }
+//        if (UserConstants.NOT_UNIQUE.equals(dataCompanyLoanService.checkCompanyNameUnique(dataCompanyLoan.getCompanyName())))
+//        {
+//            return AjaxResult.error("新增'" + dataCompanyLoan.getCompanyName() + "'失败，该企业名称已存在");
+//        }
 
         return toAjax(dataCompanyLoanService.insertDataCompanyLoan(dataCompanyLoan));
     }
@@ -55,9 +55,8 @@ public class AppCompanyLoanController extends BaseController
     @GetMapping("/getVerifyCode")
     @ApiOperation(value = "获取验证码接口")
     public AjaxResult getCode(@RequestParam String phone){
-        String code = dataCompanyLoanService.senSmsCode(phone);
-        //TODO:返回值为演示用，待删除
-        return AjaxResult.success("操作成功",code);
+        dataCompanyLoanService.senSmsCode(phone);
+        return AjaxResult.success("操作成功");
     }
 
     /**
@@ -72,14 +71,5 @@ public class AppCompanyLoanController extends BaseController
             list = list.subList(0,20);
         }
         return getDataTable(list);
-    }
-
-    /**
-     * 测试接口是否打通，随时可以删除
-     */
-    @GetMapping("/test")
-    public AjaxResult test()
-    {
-        return AjaxResult.success();
     }
 }
