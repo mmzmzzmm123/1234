@@ -23,11 +23,6 @@ public class CommunityPunchReponse {
     private String openid;
 
     /**
-     * 客户ID
-     */
-    private String cusId;
-
-    /**
      * 昵称
      */
     private String nickName;
@@ -42,11 +37,6 @@ public class CommunityPunchReponse {
      */
     @JsonFormat(pattern = "yyyy-MM-dd")
     private Date logTime;
-
-    /**
-     * 当天打卡体重
-     */
-    private BigDecimal weight;
 
     /**
      * 营养师评论
@@ -66,10 +56,10 @@ public class CommunityPunchReponse {
     /**
      * 近期打卡体重信息  logTime: 打卡日期  weight: 体重
      */
-    private List<Map<String,Object>> recentWeight;
+    private List<Map<String,Object>> weightData;
 
     /**
      * 点赞的openid
      */
-    private List<Map<String,Object>> thumbsupOpenid;
+    private List<Map<String,Object>> thumbsupUser;
 }
