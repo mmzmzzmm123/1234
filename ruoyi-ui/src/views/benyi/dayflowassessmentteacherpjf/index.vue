@@ -1,74 +1,174 @@
 <template>
   <div class="app-container">
-    <el-form
-      :model="queryParams"
-      ref="queryForm"
-      :inline="true"
-      label-width="70px"
-    >
-      <el-form-item label="教师姓名" prop="pgdx">
-        <el-select
-          v-model="queryParams.pgdx"
-          clearable
-          size="small"
-          placeholder="请选择教师"
-        >
-          <el-option
-            v-for="dict in userOptions"
-            :key="dict.userId"
-            :label="dict.nickName"
-            :value="dict.userId"
-          ></el-option>
-        </el-select>
-      </el-form-item>
-      <el-form-item label="评估时间">
-        <el-date-picker
-          v-model="dateRange"
-          size="small"
-          class="my-date-picker"
-          value-format="yyyy-MM-dd"
-          type="daterange"
-          range-separator="-"
-          start-placeholder="开始日期"
-          end-placeholder="结束日期"
-        ></el-date-picker>
-      </el-form-item>
-      <el-form-item>
-        <el-button
-          type="primary"
-          icon="el-icon-search"
-          size="mini"
-          @click="handleQuery"
-          >搜索</el-button
-        >
-        <el-button icon="el-icon-refresh" size="mini" @click="resetQuery"
-          >重置</el-button
-        >
-      </el-form-item>
+    <el-form :model="queryParams" ref="queryForm" label-width="70px">
+      <el-row :gutter="10">
+        <el-col :xs="24" :ms="12" :md="5">
+          <el-form-item label="评估时间">
+            <el-date-picker
+              v-model="dateRange"
+              size="small"
+              class="my-date-picker"
+              value-format="yyyy-MM-dd"
+              type="daterange"
+              range-separator="-"
+              start-placeholder="开始日期"
+              end-placeholder="结束日期"
+            ></el-date-picker>
+          </el-form-item>
+        </el-col>
+        <el-col :xs="24" :ms="12" :md="5">
+          <el-form-item label="教师姓名" prop="pgdx">
+            <el-select
+              v-model="queryParams.pgdx"
+              clearable
+              size="small"
+              placeholder="请选择教师"
+            >
+              <el-option
+                v-for="dict in userOptions"
+                :key="dict.userId"
+                :label="dict.nickName"
+                :value="dict.userId"
+              ></el-option>
+            </el-select>
+          </el-form-item>
+        </el-col>
+        <el-col :xs="24" :ms="12" :md="5">
+          <el-form-item>
+            <el-button
+              type="primary"
+              icon="el-icon-search"
+              size="mini"
+              @click="handleQuery"
+              >搜索</el-button
+            >
+            <el-button icon="el-icon-refresh" size="mini" @click="resetQuery"
+              >重置</el-button
+            >
+          </el-form-item>
+        </el-col>
+      </el-row>
     </el-form>
 
-    <el-table v-loading="loading" border :default-sort = "{prop: 'bjpjf', order: 'descending'}" :data="dayflowassessmentList">
+    <el-table
+      v-loading="loading"
+      border
+      :default-sort="{ prop: 'bjpjf', order: 'descending' }"
+      :data="dayflowassessmentList"
+    >
       <el-table-column label="评估对象" align="center" prop="pgdxxm" fixed />
-      <el-table-column label="最终扣分" align="center" prop="bjpjf" sortable width="110"/>
-      <el-table-column label="早间接待" align="center" prop="zjjdpjf" sortable width="110"/>
-      <el-table-column label="用餐" align="center" prop="ycpjf" sortable width="80"/>
-      <el-table-column label="早间坐圈" align="center" prop="zjzqpjf" sortable width="110"/>
-      <el-table-column label="分组教学" align="center" prop="fzjxpjf" sortable width="110"/>
-      <el-table-column label="点心时间" align="center" prop="dxsjpjf" sortable width="110"/>
-      <el-table-column label="如厕洗手饮水" align="center" prop="rcxsyspjf" sortable width="130"/>
-      <el-table-column label="活动过渡" align="center" prop="hdgdpjf" sortable width="110"/>
-      <el-table-column label="户外活动" align="center" prop="hwhdpjf" sortable width="110"/>
-      <el-table-column label="午睡" align="center" prop="wspjf" sortable width="80"/>
-      <el-table-column label="离园再见" align="center" prop="lyzjpjf" sortable width="110"/>
-      <el-table-column label="安全" align="center" prop="aqpjf" sortable width="80"/>
-      <el-table-column label="自由活动" align="center" prop="zyhdpjf" sortable width="110"/>
+      <el-table-column
+        label="最终扣分"
+        align="center"
+        prop="bjpjf"
+        sortable
+        width="110"
+      />
+      <el-table-column
+        label="早间接待"
+        align="center"
+        prop="zjjdpjf"
+        sortable
+        width="110"
+      />
+      <el-table-column
+        label="用餐"
+        align="center"
+        prop="ycpjf"
+        sortable
+        width="80"
+      />
+      <el-table-column
+        label="早间坐圈"
+        align="center"
+        prop="zjzqpjf"
+        sortable
+        width="110"
+      />
+      <el-table-column
+        label="分组教学"
+        align="center"
+        prop="fzjxpjf"
+        sortable
+        width="110"
+      />
+      <el-table-column
+        label="点心时间"
+        align="center"
+        prop="dxsjpjf"
+        sortable
+        width="110"
+      />
+      <el-table-column
+        label="如厕洗手饮水"
+        align="center"
+        prop="rcxsyspjf"
+        sortable
+        width="130"
+      />
+      <el-table-column
+        label="活动过渡"
+        align="center"
+        prop="hdgdpjf"
+        sortable
+        width="110"
+      />
+      <el-table-column
+        label="户外活动"
+        align="center"
+        prop="hwhdpjf"
+        sortable
+        width="110"
+      />
+      <el-table-column
+        label="午睡"
+        align="center"
+        prop="wspjf"
+        sortable
+        width="80"
+      />
+      <el-table-column
+        label="离园再见"
+        align="center"
+        prop="lyzjpjf"
+        sortable
+        width="110"
+      />
+      <el-table-column
+        label="安全"
+        align="center"
+        prop="aqpjf"
+        sortable
+        width="80"
+      />
+      <el-table-column
+        label="自由活动"
+        align="center"
+        prop="zyhdpjf"
+        sortable
+        width="110"
+      />
       <el-table-column
         label="规则与纪律约束"
         align="center"
-        prop="gzyjlyspjf" sortable width="140"
+        prop="gzyjlyspjf"
+        sortable
+        width="140"
       />
-      <el-table-column label="微型课程" align="center" prop="wxkcpjf" sortable width="110"/>
-      <el-table-column label="潜课程" align="center" prop="qkcpjf" sortable width="100"/>
+      <el-table-column
+        label="微型课程"
+        align="center"
+        prop="wxkcpjf"
+        sortable
+        width="110"
+      />
+      <el-table-column
+        label="潜课程"
+        align="center"
+        prop="qkcpjf"
+        sortable
+        width="100"
+      />
     </el-table>
 
     <pagination
@@ -209,3 +309,20 @@ export default {
   },
 };
 </script>
+<style lang="scss" scoped>
+.el-select {
+  width: 100%;
+}
+.my-date-picker {
+  width: 100%;
+}
+.edit-btns {
+  .el-button {
+    display: block;
+    margin: 0 auto;
+  }
+}
+.no-margin ::v-deep.el-form-item__content {
+  margin: 0 !important;
+}
+</style>

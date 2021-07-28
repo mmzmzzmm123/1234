@@ -1,12 +1,7 @@
 <template>
   <div class="app-container">
-    <el-form
-      :model="queryParams"
-      ref="queryForm"
-      :inline="true"
-      label-width="70px"
-    >
-      <el-form-item label="学年学期" prop="xnxq">
+    <el-form :model="queryParams" ref="queryForm" label-width="70px">
+      <!-- <el-form-item label="学年学期" prop="xnxq">
         <el-select v-model="queryParams.xnxq" placeholder="请选择学年学期">
           <el-option
             v-for="dict in xnxqOptions"
@@ -15,46 +10,71 @@
             :value="dict.dictValue"
           />
         </el-select>
-      </el-form-item>
-      <el-form-item label="班级名称" prop="classid">
-        <el-select
-          v-model="queryParams.classid"
-          clearable
-          size="small"
-          placeholder="请选择班级"
-        >
-          <el-option
-            v-for="dict in classOptions"
-            :key="dict.bjbh"
-            :label="dict.bjmc"
-            :value="dict.bjbh"
-          ></el-option>
-        </el-select>
-      </el-form-item>
-      <el-form-item label="评估时间">
-        <el-date-picker
-          v-model="dateRange"
-          size="small"
-          class="my-date-picker"
-          value-format="yyyy-MM-dd"
-          type="daterange"
-          range-separator="-"
-          start-placeholder="开始日期"
-          end-placeholder="结束日期"
-        ></el-date-picker>
-      </el-form-item>
-      <el-form-item>
-        <el-button
-          type="primary"
-          icon="el-icon-search"
-          size="mini"
-          @click="handleQuery"
-          >搜索</el-button
-        >
-        <el-button icon="el-icon-refresh" size="mini" @click="resetQuery"
-          >重置</el-button
-        >
-      </el-form-item>
+      </el-form-item> -->
+      <el-row :gutter="10">
+        <el-col :xs="24" :ms="12" :md="5">
+          <el-form-item label="评估时间">
+            <el-date-picker
+              v-model="dateRange"
+              size="small"
+              class="my-date-picker"
+              value-format="yyyy-MM-dd"
+              type="daterange"
+              range-separator="-"
+              start-placeholder="开始日期"
+              end-placeholder="结束日期"
+            ></el-date-picker>
+          </el-form-item>
+        </el-col>
+        <el-col :xs="24" :ms="12" :md="5">
+          <el-form-item label="班级名称" prop="classid">
+            <el-select
+              v-model="queryParams.classid"
+              clearable
+              size="small"
+              placeholder="请选择班级"
+            >
+              <el-option
+                v-for="dict in classOptions"
+                :key="dict.bjbh"
+                :label="dict.bjmc"
+                :value="dict.bjbh"
+              ></el-option>
+            </el-select>
+          </el-form-item>
+        </el-col>
+        <el-col :xs="24" :ms="12" :md="5">
+          <el-form-item label="选择教师" prop="pgdx">
+            <el-select
+              v-model="queryParams.pgdx"
+              clearable
+              size="small"
+              placeholder="请选择教师"
+            >
+              <el-option
+                v-for="dict in userOptions"
+                :key="dict.userId"
+                :label="dict.nickName"
+                :value="dict.userId"
+              ></el-option>
+            </el-select>
+          </el-form-item>
+        </el-col>
+        <el-col :xs="24" :ms="12" :md="5">
+          <el-form-item>
+            <el-button
+              type="primary"
+              icon="el-icon-search"
+              size="mini"
+              @click="handleQuery"
+              >搜索</el-button
+            >
+            <el-button icon="el-icon-refresh" size="mini" @click="resetQuery"
+              >重置</el-button
+            >
+          </el-form-item>
+        </el-col>
+      </el-row>
     </el-form>
 
     <el-table v-loading="loading" border :data="dayflowassessmentList">
@@ -191,7 +211,7 @@ import {
   getDayflowassessment,
   delDayflowassessment,
 } from "@/api/benyi/dayflowassessment";
-import { listClass } from "@/api/system/class";
+import { listClass, getUserList } from "@/api/system/class";
 import { listUser } from "@/api/system/user";
 import { listDetail, getDetail } from "@/api/benyi/dayflow/dayflowmanger";
 
@@ -217,6 +237,8 @@ export default {
       xnxqOptions: [],
       // 所有教师
       userOptions: [],
+      // 所有教师
+      userAllOptions: [],
       // 日期范围
       dateRange: [],
       // 查询参数
@@ -245,6 +267,17 @@ export default {
       // 表单参数
       form: {},
     };
+  },
+  watch: {
+    "queryParams.classid": function (val) {
+      //console.log(val);
+      if (val != "undefined") {
+        getUserList(val).then((response) => {
+          //console.log(response);
+          this.userOptions = response.rows;
+        });
+      }
+    },
   },
   created() {
     this.getList();
@@ -292,13 +325,13 @@ export default {
     /** 查询用户列表 */
     getUserList() {
       listUser(null).then((response) => {
-        this.userOptions = response.rows;
+        this.userAllOptions = response.rows;
       });
     },
     // 教师字典翻译
     pgdxFormat(row, column) {
       var actions = [];
-      var datas = this.userOptions;
+      var datas = this.userAllOptions;
       Object.keys(datas).map((key) => {
         if (datas[key].userId == "" + row.pgdx) {
           actions.push(datas[key].nickName);
@@ -332,8 +365,26 @@ export default {
     resetQuery() {
       this.resetForm("queryForm");
       this.dateRange = [];
+      this.userOptions = this.userAllOptions;
       this.handleQuery();
     },
   },
 };
 </script>
+<style lang="scss" scoped>
+.el-select {
+  width: 100%;
+}
+.my-date-picker {
+  width: 100%;
+}
+.edit-btns {
+  .el-button {
+    display: block;
+    margin: 0 auto;
+  }
+}
+.no-margin ::v-deep.el-form-item__content {
+  margin: 0 !important;
+}
+</style>

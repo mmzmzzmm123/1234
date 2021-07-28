@@ -1,65 +1,69 @@
 <template>
   <div class="app-container">
-    <el-form
-      :model="queryParams"
-      ref="queryForm"
-      :inline="true"
-      label-width="70px"
-    >
-      <el-form-item label="选择班级" prop="classid">
-        <el-select
-          v-model="queryParams.classid"
-          clearable
-          size="small"
-          placeholder="请选择班级"
-        >
-          <el-option
-            v-for="dict in classOptions"
-            :key="dict.bjbh"
-            :label="dict.bjmc"
-            :value="dict.bjbh"
-          ></el-option>
-        </el-select>
-      </el-form-item>
-      <el-form-item label="选择教师" prop="jsid">
-        <el-select
-          v-model="queryParams.jsid"
-          clearable
-          size="small"
-          placeholder="请选择教师"
-        >
-          <el-option
-            v-for="dict in userOptions"
-            :key="dict.userId"
-            :label="dict.nickName"
-            :value="dict.userId"
-          ></el-option>
-        </el-select>
-      </el-form-item>
-      <el-form-item label="考核月份" prop="month">
-        <el-date-picker
-          clearable
-          size="small"
-          style="width: 200px"
-          v-model="queryParams.month"
-          type="month"
-          value-format="yyyy-MM"
-          placeholder="选择月份"
-        ></el-date-picker>
-      </el-form-item>
-
-      <el-form-item>
-        <el-button
-          type="primary"
-          icon="el-icon-search"
-          size="mini"
-          @click="handleQuery"
-          >搜索</el-button
-        >
-        <el-button icon="el-icon-refresh" size="mini" @click="resetQuery"
-          >重置</el-button
-        >
-      </el-form-item>
+    <el-form :model="queryParams" ref="queryForm" label-width="70px">
+      <el-row :gutter="10">
+        <el-col :xs="24" :ms="12" :md="5">
+          <el-form-item label="选择班级" prop="classid">
+            <el-select
+              v-model="queryParams.classid"
+              clearable
+              size="small"
+              placeholder="请选择班级"
+            >
+              <el-option
+                v-for="dict in classOptions"
+                :key="dict.bjbh"
+                :label="dict.bjmc"
+                :value="dict.bjbh"
+              ></el-option>
+            </el-select>
+          </el-form-item>
+        </el-col>
+        <el-col :xs="24" :ms="12" :md="5">
+          <el-form-item label="选择教师" prop="jsid">
+            <el-select
+              v-model="queryParams.jsid"
+              clearable
+              size="small"
+              placeholder="请选择教师"
+            >
+              <el-option
+                v-for="dict in userOptions"
+                :key="dict.userId"
+                :label="dict.nickName"
+                :value="dict.userId"
+              ></el-option>
+            </el-select>
+          </el-form-item>
+        </el-col>
+        <el-col :xs="24" :ms="12" :md="5">
+          <el-form-item label="考核月份" prop="month">
+            <el-date-picker
+              clearable
+              size="small"
+              class="my-date-picker"
+              v-model="queryParams.month"
+              type="month"
+              value-format="yyyy-MM"
+              placeholder="选择月份"
+            ></el-date-picker>
+          </el-form-item>
+        </el-col>
+        <el-col :xs="24" :ms="12" :md="5">
+          <el-form-item>
+            <el-button
+              type="primary"
+              icon="el-icon-search"
+              size="mini"
+              @click="handleQuery"
+              >搜索</el-button
+            >
+            <el-button icon="el-icon-refresh" size="mini" @click="resetQuery"
+              >重置</el-button
+            >
+          </el-form-item>
+        </el-col>
+      </el-row>
     </el-form>
 
     <el-row :gutter="10" class="mb8">
@@ -333,7 +337,7 @@ export default {
   },
   watch: {
     "queryParams.classid": function (val) {
-      console.log(val);
+      //console.log(val);
       if (val != "undefined") {
         getUserList(val).then((response) => {
           //console.log(response);
@@ -526,6 +530,23 @@ export default {
   },
 };
 </script>
+<style lang="scss" scoped>
+.el-select {
+  width: 100%;
+}
+.my-date-picker {
+  width: 100%;
+}
+.edit-btns {
+  .el-button {
+    display: block;
+    margin: 0 auto;
+  }
+}
+.no-margin ::v-deep.el-form-item__content {
+  margin: 0 !important;
+}
+</style>
 <style lang="scss" scoped>
 .el-select {
   width: 100%;
