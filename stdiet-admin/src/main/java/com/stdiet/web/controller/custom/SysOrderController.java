@@ -171,6 +171,9 @@ public class SysOrderController extends OrderBaseController {
             if (user.getUserId().equals(order.getPushPreSaleId())) {
                 order.setPushPreSale(user.getNickName());
             }
+            if (user.getUserId().equals(order.getBusinessAffairId())) {
+                order.setBusinessAffair(user.getNickName());
+            }
         }
         order.setOrderTypeName(OrderUtils.getOrderTypeName(order));
     }

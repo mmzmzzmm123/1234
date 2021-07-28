@@ -75,6 +75,11 @@ export const orderTypeArray = [
     value: 3,
     label: "售中单",
     children: orderCountExtendedTypeArray
+  },
+  {
+    value: 4,
+    label: "商务单",
+    children: orderCountTypeArray
   }
 ]
 

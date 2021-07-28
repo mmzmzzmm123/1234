@@ -188,6 +188,12 @@ public class SysOrder extends BaseEntity {
     @Excel(name = "运营助理")
     private String operatorAssis;
 
+    /** 商务ID */
+    private Long businessAffairId;
+
+    /** 商务*/
+    private String businessAffair;
+
     /**
      * 推荐人
      */

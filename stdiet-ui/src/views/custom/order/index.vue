@@ -89,6 +89,24 @@
           </el-form-item>
         </el-col>
         <el-col :span="6" v-if="!isPartner">
+          <el-form-item label="商务" prop="businessAffairId">
+            <el-select
+              v-model="queryParams.businessAffairId"
+              placeholder="请选择商务"
+              clearable
+              filterable
+              size="small"
+            >
+              <el-option
+                v-for="dict in bdOptions"
+                :key="dict.dictValue"
+                :label="dict.dictLabel"
+                :value="parseInt(dict.dictValue)"
+              />
+            </el-select>
+          </el-form-item>
+        </el-col>
+        <el-col :span="6" v-if="!isPartner">
           <el-form-item label="售前推送" prop="pushPreSaleId">
             <el-select
               v-model="queryParams.pushPreSaleId"
@@ -272,8 +290,8 @@
             </el-select>
           </el-form-item>
         </el-col>
-        <el-col :span="6" v-if="!isPartner">
-          <el-form-item label="订单金额" prop="amountFlag">
+        <el-col :span="33" >
+          <el-form-item label="订单金额" prop="amountFlag" v-if="!isPartner">
             <el-select
               v-model="queryParams.amountFlag"
               clearable
@@ -284,9 +302,7 @@
               <el-option :key="2" label="退款订单" :value="1" />
             </el-select>
           </el-form-item>
-        </el-col>
-        <el-col :span="26">
-          <el-form-item label="订单类型" prop="searchOrderTypeArray">
+          <el-form-item label="订单类型" prop="searchOrderTypeArray" v-if="!isPartner" style="margin-left:140px">
             <el-cascader
               placeholder="请选择订单类型"
               v-model="searchOrderTypeArray"
@@ -410,7 +426,7 @@
         width="90"
       />
       <el-table-column label="服务时长" align="center" prop="serveTime" />
-      <el-table-column label="销售/售中" align="center" prop="preSale" >
+      <el-table-column label="销售/商务/售中" align="center" prop="preSale" >
           <template slot-scope="scope">
               <div v-if="scope.row.orderType == 2">
                 <div>
@@ -419,6 +435,9 @@
                 <div>
                 {{scope.row.onSaleId ? scope.row.onSale : "无" }}
                 </div>
+              </div>
+              <div v-else-if="scope.row.orderType == 4">
+                  {{scope.row.businessAffairId ? scope.row.businessAffair : "无"}}
               </div>
               <div v-else>
                   {{scope.row.preSaleId ? scope.row.preSale : scope.row.onSale}}
@@ -636,6 +655,7 @@ export default {
         recommender: null,
         reviewStatus: null,
         serveTimeId: null,
+        businessAffairId: null
       },
       //查询时选择的订单类型数组
       searchOrderTypeArray: null,
@@ -673,6 +693,8 @@ export default {
       "operatorAssisIdOptions",
       //售前推送
       "pushPreSaleIdOptions",
+      //商务
+      "bdOptions",
       //
       "userId",
       //

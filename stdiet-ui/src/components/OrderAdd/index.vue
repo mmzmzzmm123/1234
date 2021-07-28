@@ -111,12 +111,24 @@
             </el-select>
           </el-form-item>
         </el-col>
-        <el-col :span="8" v-show="preSaleShow">
+        <el-col :span="8" v-show="preSaleShow && !businessAffairShow">
           <el-form-item label="售前" prop="preSaleId" >
             <el-select v-model="form.preSaleId" placeholder="请选择" filterable
               clearable>
               <el-option
                 v-for="dict in preSaleIdOptions"
+                :key="dict.dictValue"
+                :label="dict.dictLabel"
+                :value="parseInt(dict.dictValue)"
+              />
+            </el-select>
+          </el-form-item>
+        </el-col>
+        <el-col :span="8" v-show="businessAffairShow">
+          <el-form-item label="商务" prop="businessAffairId" >
+            <el-select v-model="form.businessAffairId" placeholder="请选择" filterable clearable>
+              <el-option
+                v-for="dict in bdOptions"
                 :key="dict.dictValue"
                 :label="dict.dictLabel"
                 :value="parseInt(dict.dictValue)"
@@ -204,7 +216,7 @@
             </el-select>
           </el-form-item>
         </el-col>
-        <el-col :span="8">
+        <el-col :span="8" v-show="!businessAffairShow">
           <el-form-item label="策划" prop="plannerId">
             <el-select v-model="form.plannerId" placeholder="请选择" filterable
               clearable> 
@@ -217,7 +229,7 @@
             </el-select>
           </el-form-item>
         </el-col>
-        <el-col :span="8">
+        <el-col :span="8" v-show="!businessAffairShow">
           <el-form-item label="策划助理" prop="plannerAssisId">
             <el-select v-model="form.plannerAssisId" placeholder="请选择" filterable
               clearable>
@@ -230,7 +242,7 @@
             </el-select>
           </el-form-item>
         </el-col>
-        <el-col :span="8">
+        <el-col :span="8" v-show="!businessAffairShow">
           <el-form-item label="运营" prop="operatorId">
             <el-select v-model="form.operatorId" placeholder="请选择" filterable
               clearable>
@@ -243,7 +255,7 @@
             </el-select>
           </el-form-item>
         </el-col>
-        <el-col :span="8">
+        <el-col :span="8" v-show="!businessAffairShow">
           <el-form-item label="运营助理" prop="operatorAssisId">
             <el-select v-model="form.operatorAssisId" placeholder="请选择" filterable
               clearable>
@@ -481,6 +493,8 @@ export default {
       pushPreSaleShow: false,
       //售后、营养师、营养师助理是否显示
       afterNutiShow: true,
+      //商务订单
+      businessAffairShow: false
     };
   },
   created() {
@@ -546,7 +560,9 @@ export default {
       // 运营助理字典
       "operatorAssisIdOptions",
       //售前推送
-      "pushPreSaleIdOptions"
+      "pushPreSaleIdOptions",
+      //商务
+      "bdOptions"
     ]),
   },
   methods: {
@@ -662,6 +678,25 @@ export default {
                 return false;
               }
            }
+      }else if(this.form.orderTypeList[0] == 4){
+          //商务不能为空
+          if(this.form.businessAffairId == null || this.form.businessAffairId <= 0){
+              this.$message({
+                type: 'warning',
+                message: '商务不能为空',
+                center: true
+              });
+              return false;
+           }
+           //营养师不能为空
+           if(this.form.nutritionistIdList == null || this.form.nutritionistIdList.length != 1 || this.form.nutritionistIdList[0] <= 0){
+                 this.$message({
+                  type: 'warning',
+                  message: '营养师不能为空，普通单只能选择一个营养师',
+                  center: true
+                });
+                return false;
+           }
       }
       return true;
     },
@@ -731,6 +766,7 @@ export default {
         pauseTime: null,
         payTypeId: defaultPayType ? parseInt(defaultPayType.dictValue) : null,
         preSaleId: defaultPresale ? parseInt(defaultPresale.dictValue) : null,
+        businessAffairId: null,
         pushPreSaleId: null,
         recipesPlanContinue: 1,
         createBy: null,
@@ -815,7 +851,7 @@ export default {
     // },
     "form.orderTypeList": function (newVal, oldVal) {
       //判断订单类型是否选择了二开
-      if (newVal[1] == 1 || newVal[1] == 3) {
+      if ((newVal[1] == 1 || newVal[1] == 3) && newVal[0] != 4) {
         this.form.secondAfterSaleFlag = 1;
         this.secondAfterSaleFlagShow = true;
       } else {
@@ -867,6 +903,8 @@ export default {
             this.onSaleShow = false;
           }
       }
+      //是否选择了商务单
+      this.businessAffairShow = newVal[0] == 4;
     },
   },
 };
