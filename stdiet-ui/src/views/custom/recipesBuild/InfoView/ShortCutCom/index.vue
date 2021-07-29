@@ -1,7 +1,13 @@
 <template>
   <div class="short_cut_com_wrapper">
-    <el-form :model="queryParams" ref="queryForm" :inline="true" v-show="showSearch" label-width="68px">
-      <el-form-item label="关键词" prop="key" >
+    <el-form
+      :model="queryParams"
+      ref="queryForm"
+      :inline="true"
+      v-show="showSearch"
+      label-width="68px"
+    >
+      <el-form-item label="关键词" prop="key">
         <el-input
           v-model.trim="queryParams.key"
           placeholder="请输入名称/种类"
@@ -12,23 +18,54 @@
         />
       </el-form-item>
       <el-form-item>
-        <el-button type="cyan" icon="el-icon-search" size="mini" @click="getList">搜索</el-button>
+        <el-button
+          type="cyan"
+          icon="el-icon-search"
+          size="mini"
+          @click="getList"
+          >搜索</el-button
+        >
       </el-form-item>
     </el-form>
-    
-      <div class="header">
-        <el-button icon="el-icon-search" size="mini" @click="showSearch = !showSearch" circle :title="showSearch ? '隐藏搜索' : '显示搜索'"/>
-        <el-button icon="el-icon-refresh" size="mini" @click="getList" circle title="刷新"/>
-        <el-button icon="el-icon-delete" size="mini" circle :title="'清空快捷列表'" @click="handleOnMuchDelete"/>
-      </div>
+
+    <div class="header">
+      <el-button
+        icon="el-icon-search"
+        size="mini"
+        @click="showSearch = !showSearch"
+        circle
+        :title="showSearch ? '隐藏搜索' : '显示搜索'"
+      />
+      <el-button
+        icon="el-icon-refresh"
+        size="mini"
+        @click="getList"
+        circle
+        title="刷新"
+      />
+      <el-button
+        icon="el-icon-delete"
+        size="mini"
+        circle
+        :title="'清空快捷列表'"
+        @click="handleOnMuchDelete"
+      />
+    </div>
     <el-table
       :data="dataList"
       ref="shortCutTable"
+      row-key="id"
       highlight-current-row
+      row-class-name="draggable"
       @current-change="handleOnCurrentChange"
       height="700"
     >
-      <el-table-column prop="name" label="对象" align="center">
+      <el-table-column
+        prop="name"
+        label="对象"
+        align="center"
+        class-name="handle"
+      >
         <template slot-scope="scope">
           <el-popover
             placement="left"
@@ -96,11 +133,7 @@
       </el-table-column>
       <el-table-column label="操作" :width="60" align="center">
         <template slot-scope="scope">
-          <el-button
-            type="text"
-            size="mini"
-            @click="handleOnDelete(scope.row)"
-          >
+          <el-button type="text" size="mini" @click="handleOnDelete(scope.row)">
             删除
           </el-button>
         </template>
@@ -109,18 +142,19 @@
   </div>
 </template>
 <script>
+import Sortable from "sortablejs";
 import {
   getShortCut,
   removeShortCut,
   editShortCut,
-  removeMuchShortCut
+  removeMuchShortCut,
+  updateSortCut,
 } from "@/utils/shortCutUtils";
 import AutoHideInfo from "@/components/AutoHideInfo";
 import { createNamespacedHelpers } from "vuex";
 import RecipesCom from "../../RecipesView/RecipesCom";
-const { mapState, mapMutations, mapGetters } = createNamespacedHelpers(
-  "recipes"
-);
+const { mapState, mapMutations, mapGetters } =
+  createNamespacedHelpers("recipes");
 import { messageTypes } from "@/utils";
 export default {
   name: "ShortCutCom",
@@ -133,9 +167,9 @@ export default {
       dataList: [],
       modifingId: 0,
       showSearch: false,
-      queryParams:{
-        key: null
-      }
+      queryParams: {
+        key: null,
+      },
     };
   },
   created() {
@@ -144,6 +178,27 @@ export default {
   mounted() {
     window.addEventListener("storage", this.storageListener);
     window.addEventListener("message", this.messageListener);
+
+    Sortable.create(
+      this.$refs.shortCutTable.$el.querySelector(".el-table__body tbody"),
+      {
+        animation: 150,
+        handle: ".handle",
+        draggable: ".draggable",
+        onEnd: (evt) => {
+          const { newIndex, oldIndex } = evt;
+          if (newIndex === oldIndex) {
+            return;
+          }
+          const newDataList = JSON.parse(JSON.stringify(this.dataList));
+          const [tarObj] = newDataList.splice(oldIndex, 1);
+          newDataList.splice(newIndex, 0, tarObj);
+
+          updateSortCut(newDataList);
+          this.dataList = newDataList;
+        },
+      }
+    );
   },
   beforeDestroy() {
     window.removeEventListener("storage", this.storageListener);
@@ -173,8 +228,8 @@ export default {
       getShortCut(this.queryParams.key).then((data) => {
         this.dataList = data;
         //超过10个就显示搜索按钮
-        if(this.dataList && this.dataList.length > 5 && !this.showSearch){
-           this.showSearch = true;
+        if (this.dataList && this.dataList.length > 5 && !this.showSearch) {
+          this.showSearch = true;
         }
         // console.log(this.dataList);
         if (setCurrent) {
@@ -191,24 +246,30 @@ export default {
       });
     },
     handleOnMuchDelete() {
-      if(this.dataList && this.dataList.length > 0){
-         let ids = [];
-         this.dataList.forEach((item,index) => {
-            ids.push(item.id);
-         });
-         this.$confirm("是否确定清除当前 "+ids.length+" 条快捷数据?", "警告", {
+      if (this.dataList && this.dataList.length > 0) {
+        let ids = [];
+        this.dataList.forEach((item, index) => {
+          ids.push(item.id);
+        });
+        this.$confirm(
+          "是否确定清除当前 " + ids.length + " 条快捷数据?",
+          "警告",
+          {
             confirmButtonText: "确定",
             cancelButtonText: "取消",
             type: "warning",
-          }).then(function () {
+          }
+        )
+          .then(function () {
             return removeMuchShortCut(ids);
-          }).then((response) => {
+          })
+          .then((response) => {
             this.getList();
             if (ids.indexOf(this.curShortCutObj.id) != -1) {
               this.setCurShortCutObj({});
             }
           })
-          .catch(function () {});     
+          .catch(function () {});
       }
     },
     handleOnCurrentChange(data) {
