@@ -3,15 +3,20 @@ export function getShortCut(key) {
     try {
       const data = JSON.parse(localStorage.getItem("shortCut") || "[]");
       //关键字检索
-      if(key != undefined && key != null && key != ""){
-          const resultData = [];
-          data.forEach((item,index) => {
-              if(item.name.indexOf(key) != -1 || (item.className != undefined && item.className != null && item.className.indexOf(key) != -1)){
-                resultData.push(item);
-              }
-          });
-          res(resultData);
-      }else{
+      if (key != undefined && key != null && key != "") {
+        const resultData = [];
+        data.forEach((item, index) => {
+          if (
+            item.name.indexOf(key) != -1 ||
+            (item.className != undefined &&
+              item.className != null &&
+              item.className.indexOf(key) != -1)
+          ) {
+            resultData.push(item);
+          }
+        });
+        res(resultData);
+      } else {
         res(data);
       }
     } catch (error) {
@@ -50,7 +55,9 @@ export async function removeMuchShortCut(ids) {
   const shortCutList = await getShortCut();
   return new Promise((res, rej) => {
     try {
-      const newShortCutList = shortCutList.filter(obj => ids.indexOf(obj.id) == -1);
+      const newShortCutList = shortCutList.filter(
+        obj => ids.indexOf(obj.id) == -1
+      );
       localStorage.setItem("shortCut", JSON.stringify(newShortCutList));
       res();
     } catch (error) {
@@ -73,4 +80,8 @@ export async function editShortCut(data) {
       rej(error);
     }
   });
+}
+
+export function updateSortCut(data) {
+  localStorage.setItem("shortCut", JSON.stringify(data));
 }
