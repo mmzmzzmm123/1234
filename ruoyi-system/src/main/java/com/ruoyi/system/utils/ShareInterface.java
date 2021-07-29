@@ -3,6 +3,7 @@ package com.ruoyi.system.utils;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.ruoyi.common.utils.StringUtils;
+import org.apache.commons.text.StringEscapeUtils;
 import org.dom4j.*;
 
 import java.util.*;
@@ -66,21 +67,72 @@ public class ShareInterface {
 //        List<String> result =  queryCompanyName("泉州大数据");
 //        System.out.println(result);
 
-        Map map = queryCompanyInfo("泉州大数据运营服务有限公司");
-        if(map.isEmpty()){
-            System.out.println("空");
-        }else {
-            Iterator<String> iterator = map.keySet().iterator();
-            while(iterator.hasNext()){
-                String key = iterator.next();
-                String value = (String) map.get(key);
-                if("tyshxydm".equals(key)){
-                    System.out.println(value);
-                }
-//                System.out.println(key + "  " + value);
-            }
+//        Map map = queryCompanyInfo("泉州大数据运营服务有限公司");
+//        if(map.isEmpty()){
+//            System.out.println("空");
+//        }else {
+//            Iterator<String> iterator = map.keySet().iterator();
+//            while(iterator.hasNext()){
+//                String key = iterator.next();
+//                String value = (String) map.get(key);
+//                if("tyshxydm".equals(key)){
+//                    System.out.println(value);
+//                }
+////                System.out.println(key + "  " + value);
+//            }
+//        }
+//        System.out.println(map);
+
+        // 失信企业
+        String xydm1 = "91350500156488989A";
+        // 无失信企业
+        String xydm2 = "91350502MA2Y3AN1X7";
+        JSONObject json1 = unTrustWorthyPersonnel(xydm1);
+        JSONObject json2 = unTrustWorthyPersonnel(xydm2);
+        System.out.println(json1.getJSONArray("data").size());
+        System.out.println(json2.getJSONArray("data").size());
+    }
+
+    /**
+     * 个人或企业失信记录查询
+     * @param xydm 身份证号码或社会信用代码
+     * @return  数据格式如下：(无失信记录时，data 节点为空数组)
+     * {
+     *   code:200,
+     *   data[{
+     *       {
+     *             "ID": "3FF69D0787624F59B1AECC50BBF04D77",
+     *             "CASE_CODE": "(2019)闽0502执882号",
+     *             "INAME": "泉州市微图五金制品有限公司",
+     *             "CARDNUM": "91350500156488989A",
+     *             "CARDTYPE": "",
+     *             "CARDNUMBER": "91350500156488989A",
+     *             "BUESINESSENTITY": "陈士聪",
+     *             "PARTY_TYPE_NAME": "",
+     *             "IS_PUBLISH": ""
+     *         },
+     *   }],
+     *   message: "调用成功"
+     * }
+     *
+     */
+    public static JSONObject unTrustWorthyPersonnel(String xydm){
+        String result = getInterface("http://222.77.0.158:18081/api-gateway/gateway/xozfst1w/api/HousingTransaction/UntrustworthyPersonnel", xydm);
+        String formatStr = StringEscapeUtils.unescapeJson(result).trim();
+        formatStr = formatStr.substring(1, formatStr.length()-1);
+        return JSONObject.parseObject(formatStr);
+    }
+
+    public static boolean isTrust(String xydm){
+        JSONObject jsonObject = unTrustWorthyPersonnel(xydm);
+        JSONArray array = jsonObject.getJSONArray("data");
+        int size = array.size();
+        if (size == 0){
+            return true;
+        }else{
+            JSONObject object = array.getJSONObject(0);
+            return object.get("ID") == null;
         }
-        System.out.println(map);
     }
 
     /**

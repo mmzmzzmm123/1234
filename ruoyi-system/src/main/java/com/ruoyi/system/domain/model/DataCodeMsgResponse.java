@@ -59,4 +59,14 @@ public class DataCodeMsgResponse {
     public void setNum(int num) {
         this.num = num;
     }
+
+    @Override
+    public String toString() {
+        return "DataCodeMsgResponse{" +
+                "code='" + code + '\'' +
+                ", msg='" + msg + '\'' +
+                ", orderNum='" + orderNum + '\'' +
+                ", num=" + num +
+                '}';
+    }
 }

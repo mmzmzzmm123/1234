@@ -72,8 +72,10 @@ public class DataSmsServiceImpl implements IDataSmsService {
         map.add("notify_url", notifyUrl);
         map.add("tga_id", tgaId);
 
-        log.info(map.toString());
-        return restTemplate.postForObject(url, map, DataCodeMsgResponse.class);
+        log.info("短信参数:" + map.toString());
+        DataCodeMsgResponse response = restTemplate.postForObject(url, map, DataCodeMsgResponse.class);
+        log.info("短信响应:" + (response != null ? response.toString() : null));
+        return response;
     }
 
     @Override

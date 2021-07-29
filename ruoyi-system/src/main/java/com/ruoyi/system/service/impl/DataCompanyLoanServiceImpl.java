@@ -109,11 +109,17 @@ public class DataCompanyLoanServiceImpl implements IDataCompanyLoanService
         dataCompanyLoan.setContactPhone(mobile);
 
         //根据企业名称组装企业相关数据：企业划型、所在行业、主营业务、省市区
-        Map<String,String> map = ShareInterface.queryCompanyInfo(dataCompanyLoanBody.getCompanyName());
-        dataCompanyLoan.setCompanyCreditCode(map.get("tyshxydm"));
+        Map<String, String> map = ShareInterface.queryCompanyInfo(dataCompanyLoanBody.getCompanyName());
+        String xydm = map.get("tyshxydm");
+        dataCompanyLoan.setCompanyCreditCode(xydm);
         dataCompanyLoan.setCompanyType(map.get("companytype"));
         dataCompanyLoan.setCompanyIndustry(map.get("indurstryname"));
         dataCompanyLoan.setCompanyBusiness(map.get("managerange"));
+
+        boolean isTrust = ShareInterface.isTrust(xydm);
+        if (!isTrust) {
+            throw new UserException(null, null, "保存'" + dataCompanyLoan.getCompanyName() + "'失败，该企业存在失信记录");
+        }
 
         return dataCompanyLoanMapper.insertDataCompanyLoan(dataCompanyLoan);
     }
