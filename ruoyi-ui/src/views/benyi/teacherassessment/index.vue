@@ -213,6 +213,7 @@
           <el-input-number
             v-model="form.yrlcbl"
             placeholder="请输入一日流程得分"
+            :disabled="true"
           />
         </el-form-item>
         <el-form-item label="教师出勤" prop="jskqbl">
@@ -337,25 +338,25 @@ export default {
   },
   watch: {
     "queryParams.classid": function (val) {
-      //console.log(val);
-      if (val != "undefined") {
+      //console.log("1");
+      if (val == "undefined" || val == "" || val == null) {
+      } else {
         getUserList(val).then((response) => {
           //console.log(response);
           this.userOptions = response.rows;
         });
-      } else {
       }
     },
     "form.classid": function (val) {
-      console.log(val);
-      if (val != "undefined") {
+      //console.log(val);
+      if (val == "undefined" || val == "" || val == null) {
+      } else {
         getUserList(val)
           .then((response) => {
             //console.log(response);
             this.userOptions = response.rows;
           })
           .catch((e) => {});
-      } else {
       }
     },
     "form.month": function (val) {
