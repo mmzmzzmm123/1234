@@ -17,8 +17,8 @@
       <el-form-item label="服务时长" style="margin: 0">
         <span>{{form.serveTimeStr}}</span>
       </el-form-item>
-      <el-form-item label="服务承诺" style="margin: 0">
-        <span>健康吃瘦{{form.servePromise}}斤</span>
+      <el-form-item label="服务承诺" style="margin: 0" v-if="form.projectId == 14 || form.projectId == 0">
+        <span>健康{{form.projectId == 0 ? '吃瘦' : '增重'}}{{form.servePromise}}斤</span>
       </el-form-item>
       <el-form-item v-if="form.remark" label="备注" style="margin: 0">
         <span>{{form.remark}}</span>
@@ -124,7 +124,76 @@
           </p>
         </div>
 
-        <div v-show="this.form.projectId != 0">
+        <div  v-show="form.projectId == 14">
+        <p>
+          <div>甲方：胜唐体控（深圳市胜唐科技有限公司）</div>
+          <div>公司地址：深圳市宝安区西乡街道宝民二路缤纷时代广场3楼318</div>
+          <div>联系电话：0755-23213903</div>
+        </p>
+        <p>
+          <div>乙方：<b>{{form.signName}}</b></div>
+          <div>身份证号：<b>{{form.cusId}}</b></div>
+          <div>联系电话：<b>{{form.phone}}</b></div>
+          </p>
+          <p>
+          <div>甲乙双方本着诚信合作、互惠互利的原则，依据中华人民共和国有相关法律，经友好协商，现就胜唐体控增重咨询指导服务合作相关事宣达成一致协议，以兹共同遵守。</div>
+          <div>若乙方为未成年，由应由乙方法定监护人代签本合同，乙方享受同等法律权益。</div>
+          </p>
+          <p>
+            第一条 甲方资质与服务保证
+          <div class="line-rule">1、甲方系经由工商部门注册、合法经营的正规公司，具备提供相关咨询服务的法定资质。</div>
+          <div class="line-rule">2、甲方在合约期内为乙方安排营养师团队提供营养增重服务。</div>
+          <div class="line-rule">3、甲方按与乙方约定事项及服务内容，通过定制营养增重饮食方案为乙方提供增重服务，服务中不使用任何仪器、针药、不使用医疗类药物等。</div>
+          <div class="line-rule">4、甲方为乙方提供专业营养指导咨询服务。</div>
+          <div class="line-rule">5、服务标准</div>
+          <div style="margin-left: 24px">5.1、甲方为乙方每周提供一对一有效咨询时间6日，每日咨询服务时间为早10:00—晚19:00。每日服务9小时（法定节假日除外）</div>
+          <div style="margin-left: 24px">5.2、乙方可享受营养学基础知识学习，过瘦与生活习惯知识学习，享受营养师亲自培训初级自我体重管理知识。</div>
+          <div style="margin-left: 24px">5.3、甲方为乙方定制营养增重饮食方案，7天为一期，每期结束前1—2天，更新发送下一期饮食增重方案。</div>
+          <div style="margin-left: 24px">5.4、甲方对乙方所做出的承诺不得超出力所能及的范围，不得夸大、吹嘘、作假服务效果，双方明确，甲方只提供咨询服务，不含任何医疗行为。</div>
+          <div style="margin-left: 24px">5.5、甲方需保证提供服务的导师具备相关的服务资质证书。</div>
+          <div style="margin-left: 24px">5.6、甲方为乙方提供的服务方式主要为网络线上进行指导服务，不涉及线下服务内容。</div>
+          <div style="margin-left: 24px">5.7、乙方不能在家佐餐，需要进行外食指导，甲方有责任及义务为乙方提供对应的指导。</div>
+          <div style="margin-left: 24px">5.8、乙方自订购服务日起，享有单一营养师的指导及咨询服务，如需中途更换指导老师，需在当期方案执行结束至少3日内告知，以便于更换指导。</div>
+          <div style="margin-left: 24px">5.9、甲方每日会敦促乙方进行服务效果反馈，一日三餐需进行打卡。</div>
+          <!--<div style="margin-left: 24px">5.10、甲方在接收到乙方发送咨询需求3.5小时内需及时为乙方解答（周日及法定节假日除外）。</div>-->
+          </p>
+
+          <p>第二条 合作内容及费用
+          <div class="line-rule">经甲乙双方协商确定，乙方向甲方购买 <b>{{form.serveTimeStr}}</b> “胜唐体控增重指导服务”（以下简称服务）。
+            经甲乙双方协商一致，确定乙方向甲方支付服务费用为人民币 <b>{{form.amount}}</b>元，大写：<b>{{form.amountUpper}}</b>。
+          </div>
+          <div><b>{{form.remark ? `（备注：${form.remark}）`:''}}</b></div>
+          </p>
+
+          <p>第三条 服务期约定
+          <div class="line-rule">1、服务时间阶段（服务指导期、服务跟踪期、免费咨询期）具体安排，由甲方根据乙方的实际情况与乙方协商确定。</div>
+          <div class="line-rule">2、因不可抗拒的因素（如意外怀孕等）而暂停服务指导，其后续服务期限由甲乙方协商确定。</div>
+          <div class="line-rule">3、增重需要双方的配合，在不是甲方技术问题的情况下，乙方不执行营养师的指导导致没有达到预期效果，责任由乙方承担。根据个人体质不同，在调理营养健康的前提下，健康增重 <b>{{form.servePromise}}</b>
+            斤
+          </div>
+          <div class="line-rule">
+            4、乙方应按甲方制定的饮食方案来饮食，承诺在未与甲方沟通前，不得擅自吃方案之外的不利于健康和增重的饮食，服务期内擅自乱吃东西导致体重没有变化或下降，次数超过3次视为乙方主动放弃营养增重，且甲方无需免费延长服务时间。
+          </div>
+          <div class="line-rule">
+            5、乙方在一个服务期内享有2次暂停服务的机会，在暂停前应与甲方沟通，确认暂停前已增重斤数，累积到总增重结果中。在暂停结束后，自新体重开始，甲方服务乙方继续完成承诺的增重斤数，即：包增斤数 - 暂停前已成功增重数。
+          </div>
+          <div class="line-rule">6、乙方隐瞒病情或身体情况误导营养师的，造成的后果由乙方承担并且甲方不予退款。</div>
+          <div class="line-rule">
+            7、乙方同意并且理解甲方定制营养方案付出的时间和智力成本，乙方在第一周营养方案定制交付之前申请退款的可退款90%，在第一周营养方案定制交付之后因个人原因，非不可抗力因素则不予退款。
+          </div>
+          <div class="line-rule">
+            8、若乙方具有特殊病史、慢病疾病、特殊药物或产品、使用激素药物、中药及其他疗程性药物调理，需在购买增重服务前告知甲方，以便于合理安排减脂计划，若乙方未告知甲方相关的疾病史以及药物使用情况，因此造成的负面效果由乙方自行承担。
+          </div>
+          <div class="line-rule">9、甲方在乙方告知所有身体情况及药物服用情况，甲方仍未做出合理安排，对乙方的身体及心理造成影响时，乙方可申请扣除已进行服务期外相应的服务款项，退还未进行服务期对应款项。</div>
+          </p>
+
+          <p>第四条 其他
+          <div class="line-rule">1、如因本合同发生争议，双方应协商解决，如协商不成，双方可向甲方所在地法院提起诉讼解决。</div>
+          <div class="line-rule">2、本合同经双方线上签字盖章后生效。</div>
+          </p>
+        </div>
+
+        <div v-show="this.form.projectId != 0 && form.projectId != 14">
           <p>
           <p>
           <div>服务公司（以下简称甲方）：{{form.companyName}}</div>
@@ -346,6 +415,10 @@ export default {
         "营养性贫血服务合同",
         "消化系统管理服务合同",
         "心脑血管系统服务合同",
+        "99元体验服务合同",
+        "胃肠肿瘤调理合同",
+        "营养增重服务合同",
+        "基因检测合同"
       ],
       //需要提交的提交报告内容
       reportcontentArray: [
