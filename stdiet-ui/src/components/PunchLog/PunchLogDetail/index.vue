@@ -4,10 +4,14 @@
     :title="title"
     append-to-body
     @closed="onClosed"
-    width="1000px"
+    :width="dialogWidth"
   >
     <div style="margin-top: -20px;">
-        <div
+        
+        <div style="display: flex; flex-direction: row">
+        <!-- 打卡信息详情 -->
+        <div :style="'float: left; width: '+(commentVisible ? '900px' : '950px')">
+            <div
           style="float: right;  margin-bottom:10px"
         >
          
@@ -21,118 +25,101 @@
           
           
         </div>
-        <!-- 打卡信息详情 -->
-        <div>
-          
             <h3>一、基础信息</h3>
             <TableDetailMessage :data="punchLogDetail"></TableDetailMessage>
             <h3>二、食物以及对比照信息</h3>
             <div style="height: 370px; overflow: auto">
-              <div v-if="punchLog != null && punchLog.ingredientDescribe != null && punchLog.ingredientDescribe != ''">
+              <!--<div v-if="punchLog != null && punchLog.ingredientDescribe != null && punchLog.ingredientDescribe != ''">
                 <h4>食物描述</h4>
                 <div>
                   {{punchLog.ingredientDescribe}}
                 </div>
-              </div>
-              <div v-if="punchLog != null && (punchLog.imagesUrl.breakfastImages.length > 0 || punchLog.imagesUrl.lunchImages.length > 0 || punchLog.imagesUrl.dinnerImages.length > 0
-                || punchLog.imagesUrl.extraMealImages.length > 0)">
-                <h4>食物照片</h4>
-                <div>
-                  <el-image v-for="(item, index) in punchLog.imagesUrl.breakfastImages" title="点击大图预览" :key="index"
-                  class="food_image_first"
-                  :src="item"
-                  :preview-src-list="imageUrl">
-                  </el-image>
-                   <el-image v-for="(item, index) in punchLog.imagesUrl.lunchImages" title="点击大图预览" :key="index"
-                  class="food_image"
-                  :src="item"
-                  :preview-src-list="imageUrl">
-                  </el-image>
-                  <el-image v-for="(item, index) in punchLog.imagesUrl.dinnerImages" title="点击大图预览" :key="index"
-                  class="food_image"
-                  :src="item"
-                  :preview-src-list="imageUrl">
-                  </el-image>
-                  <el-image v-for="(item, index) in punchLog.imagesUrl.extraMealImages" title="点击大图预览" :key="index"
-                  class="food_image"
-                  :src="item"
-                  :preview-src-list="imageUrl">
-                  </el-image>
-                </div>
-              </div>
-              <!--<div v-if="punchLog != null && punchLog.imagesUrl.lunchImages.length > 0">
-                <h4>午餐</h4>
-                <div>
-                  <el-image v-for="(item, index) in punchLog.imagesUrl.lunchImages" title="点击大图预览" :key="index"
-                  style="width: 300px; height: 300px"
-                  :src="item"
-                  :preview-src-list="imageUrl">
-                  </el-image>
-                </div>
-              </div>
-              <div v-if="punchLog != null && punchLog.imagesUrl.dinnerImages.length > 0">
-                <h4>晚餐</h4>
-                <div>
-                  <el-image v-for="(item, index) in punchLog.imagesUrl.dinnerImages" title="点击大图预览" :key="index"
-                  style="width: 300px; height: 300px"
-                  :src="item"
-                  :preview-src-list="imageUrl">
-                  </el-image>
-                </div>
-              </div>
-              <div  v-if="punchLog != null && punchLog.imagesUrl.extraMealImages.length > 0">
-                <h4>加餐</h4>
-                <div>
-                  <el-image v-for="(item, index) in punchLog.imagesUrl.extraMealImages" title="点击大图预览" :key="index"
-                  style="width: 300px; height: 300px"
-                  :src="item"
-                  :preview-src-list="imageUrl">
-                  </el-image>
-                </div>
               </div>-->
-              <div v-if="punchLog != null && punchLog.imagesUrl.bodyImages.length > 0">
-                <h4>体型对比照</h4>
-                <div>
-                  <el-image v-for="(item, index) in punchLog.imagesUrl.bodyImages" title="点击大图预览" :key="index"
-                  style="width: 300px; height: 300px"
-                  :src="item"
-                  :preview-src-list="imageUrl">
-                  </el-image>
+              <div v-if="punchLog != null">
+                <div v-if="punchLog.imagesUrl.breakfastImages.length > 0">
+                  <h4>早餐照片</h4>
+                  <div>
+                    <el-image v-for="(item, index) in punchLog.imagesUrl.breakfastImages" title="点击大图预览" :key="'breakfast'+index"
+                    class="food_image_first"
+                    :src="item"
+                    :preview-src-list="imageUrl">
+                    </el-image>
+                  </div>
+                </div>
+                <div v-if="punchLog.imagesUrl.lunchImages.length > 0">
+                  <h4>午餐照片</h4>
+                  <div>
+                    <el-image v-for="(item, index) in punchLog.imagesUrl.lunchImages" title="点击大图预览" :key="'lunch'+index"
+                    class="food_image"
+                    :src="item"
+                    :preview-src-list="imageUrl">
+                    </el-image>
+                  </div>
+                </div>
+                <div v-if="punchLog.imagesUrl.dinnerImages.length > 0">
+                  <h4>晚餐照片</h4>
+                  <div>
+                      <el-image v-for="(item, index) in punchLog.imagesUrl.dinnerImages" title="点击大图预览" :key="'dinner'+index"
+                      class="food_image"
+                      :src="item"
+                      :preview-src-list="imageUrl">
+                      </el-image>
+                  </div>
+                </div>
+                <div v-if="punchLog.imagesUrl.extraMealImages.length > 0">
+                  <h4>加餐照片</h4>
+                  <div>
+                      <el-image v-for="(item, index) in punchLog.imagesUrl.extraMealImages" title="点击大图预览" :key="'extraMeal'+index"
+                      class="food_image"
+                      :src="item"
+                      :preview-src-list="imageUrl">
+                      </el-image>
+                  </div>
+                </div>
+                <div v-if="punchLog.imagesUrl.bodyImages.length > 0">
+                  <h4>体型对比照</h4>
+                  <div>
+                    <el-image v-for="(item, index) in punchLog.imagesUrl.bodyImages" title="点击大图预览" :key="index"
+                    style="width: 300px; height: 300px"
+                    :src="item"
+                    :preview-src-list="imageUrl">
+                    </el-image>
+                  </div>
                 </div>
               </div>
+              
             </div>
         </div>
-    </div> 
-
-    <el-dialog :visible.sync="commentVisible" :title="commentTitle" width="500px" append-to-body @closed="commentClosed">
-        <el-form ref="form" :model="commentForm" :rules="commentRules" label-position="top" label-width="100px">
-            <el-form-item label="打卡评分" prop="executionScore" >
-              <el-rate
-              v-model="commentForm.executionScore"
-              show-score
-              allow-half
-              text-color="#ff9900"
-              >
-            </el-rate>
-            </el-form-item>
-          
-          <el-form-item label="点评内容" prop="comment" >
-            
-            <el-input
-              type="textarea"
-              :rows="4"
-              maxlength="200"
-              show-word-limit
-              placeholder="请输入点评内容"
-              v-model="commentForm.comment">
-            </el-input>
-          </el-form-item>
-        </el-form>
-        <div slot="footer" class="dialog-footer" >
-          <el-button type="primary" @click="commentSubmit()">确 定</el-button>
-          <el-button @click="commentClosed()">取 消</el-button>
+        <div style="width: 200px;margin-left:40px;margin-top:50px" v-show="commentVisible">
+            <h3 style="width: 200px;">{{commentTitle}}</h3>
+             <el-form ref="form" :model="commentForm" :rules="commentRules" label-position="top" label-width="100px" >
+                <el-form-item label="打卡评分" prop="executionScore" >
+                  <el-rate
+                  v-model="commentForm.executionScore"
+                  show-score
+                  allow-half
+                  text-color="#ff9900"
+                  >
+                </el-rate>
+              </el-form-item>
+              <el-form-item label="点评内容" prop="comment">
+                <el-input
+                  type="textarea"
+                  :rows="20"
+                  maxlength="200"
+                  show-word-limit
+                  placeholder="请输入点评内容"
+                  v-model="commentForm.comment">
+                </el-input>
+              </el-form-item>
+            </el-form>
+            <div slot="footer" class="dialog-footer" style="text-align:center;">
+              <el-button type="primary" @click="commentSubmit()">确 定</el-button>
+              <el-button @click="commentClosed()">取 消</el-button>
+            </div>
         </div>
-    </el-dialog>
+        </div>
+    </div> 
   </el-dialog>
 
 
@@ -181,7 +168,8 @@ export default {
       },
       commentRules:{},
       scoreArray:[0.5,1,1.5,2,2.5,3,3.5,4,4.5,5],
-      commentFlag: false, //是否更新了点评
+      commentFlag: false, //是否更新了点评,
+      dialogWidth: "1000px"
     };
   },
   methods: {
@@ -245,10 +233,14 @@ export default {
     },
     onClosed() {
       this.data = null;
-      this.callback = null;
+      //this.callback = null;
       this.punchLog = null;
       this.imageUrl = [];
       this.punchLogDetail = [];
+      if(this.commentFlag){
+        console.log("cbhdsjcsnjcsdc");
+        this.callback && this.callback();
+      }
 
     },
     clickComment(){
@@ -258,12 +250,13 @@ export default {
           comment: this.punchLog.comment,
           executionScore: this.punchLog.executionScore == null ? 0 : this.punchLog.executionScore,
         }
-        this.commentTitle = "点评「"+this.punchLog.customerName+" "+ this.punchLog.logTime +"」打卡";
+        this.commentTitle = "点评「"+ this.punchLog.logTime +"」打卡";
         this.commentVisible = true;
-        
+        this.dialogWidth = "1200px";
     },
     commentClosed(){
        this.commentVisible = false;
+       this.dialogWidth = "1000px";
     },
     commentSubmit(){
       /*if(this.commentForm.executionScore == null || this.commentForm.executionScore == 0){
@@ -273,10 +266,9 @@ export default {
       commentPunchContent(this.commentForm).then((res) => {
           if(res.code == 200){
             this.msgSuccess("点评成功");
-            this.commentVisible = false;
+            this.commentClosed();
             this.getPunchLogById();
             this.commentFlag = true;
-            this.callback && this.callback();
           }else{
             this.msgSuccess("点评失败");
           }
@@ -289,13 +281,13 @@ export default {
 <style lang="scss" scoped>
 
     .food_image_first{
-      width: 300px;
+      width: 280px;
       height: 300px;
     }
 
     .food_image{
-      width: 300px;
+      width: 280px;
       height: 300px;
-      margin-left:10px
+      //margin-left:10px
     }
 </style>
