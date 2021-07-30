@@ -274,7 +274,7 @@
         <el-form-item
           label="服务承诺"
           prop="servePromise"
-          v-show="form.projectId == 0"
+          v-show="form.projectId == 0 || form.projectId == 14"
         >
           <el-input
             style="width: 193px; margin-right: 12px"

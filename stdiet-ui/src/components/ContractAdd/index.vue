@@ -27,7 +27,7 @@
       <el-form-item
         label="服务承诺"
         prop="servePromise"
-        v-show="form.projectId == 0"
+        v-show="form.projectId == 0 || form.projectId == 14"
       >
         <el-input
           style="width: 200px"
@@ -193,7 +193,7 @@ export default {
             this.nutritionistIdOptions,
             this.form.nutritionistId
           );
-          if (this.form.projectId != 0) {
+          if (this.form.projectId != 0 && this.form.projectId != 14) {
             this.form.servePromise = null;
           }
           addContract(this.form).then((response) => {
