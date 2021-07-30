@@ -16,6 +16,9 @@ public class DataCompanyLoan extends BaseEntity implements Cloneable
 {
     private static final long serialVersionUID = 1L;
 
+    /** 插入Oracle时使用 */
+    private Long id;
+
     /** 企业id */
     private Long companyId;
 
@@ -234,6 +237,14 @@ public class DataCompanyLoan extends BaseEntity implements Cloneable
     public String getDelFlag() 
     {
         return delFlag;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     @Override

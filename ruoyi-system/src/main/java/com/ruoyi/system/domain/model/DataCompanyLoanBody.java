@@ -11,55 +11,51 @@ public class DataCompanyLoanBody {
     /**
      * 闽政通用户ID
      */
-    @Excel(name = "闽政通用户ID")
     private String mztUserId;
 
     /**
      * 企业名称
      */
-    @Excel(name = "企业名称")
     private String companyName;
 
     /**
      * 意向银行（逗号隔开）
      */
-    @Excel(name = "意向银行", readConverterExp = "逗=号隔开")
     private String loanBand;
+
+    /**
+     * 意向银行名称（逗号隔开）
+     */
+    private String loanBandNames;
 
     /**
      * 贷款金额
      */
-    @Excel(name = "贷款金额")
     private BigDecimal loanAmount;
 
     /**
      * 是否首次贷款（0是 1不是）
      */
-    @Excel(name = "是否首次贷款", readConverterExp = "0=是,1=不是")
     private String loanFirst;
 
     /**
      * 贷款用途
      */
-    @Excel(name = "贷款用途")
     private String loanPurpose;
 
     /**
      * 联系人姓名
      */
-    @Excel(name = "联系人姓名")
     private String contactName;
 
     /**
      * 联系人手机
      */
-    @Excel(name = "联系人手机")
     private String contactPhone;
 
     /**
      * 手机验证码
      */
-    @Excel(name = "手机验证码")
     private String code;
 
     public String getCode() {
@@ -134,4 +130,11 @@ public class DataCompanyLoanBody {
         return contactPhone;
     }
 
+    public String getLoanBandNames() {
+        return loanBandNames;
+    }
+
+    public void setLoanBandNames(String loanBandNames) {
+        this.loanBandNames = loanBandNames;
+    }
 }

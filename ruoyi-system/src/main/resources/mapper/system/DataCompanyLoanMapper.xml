@@ -110,18 +110,16 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </insert>
 
     <insert id="insertDataCompanyLoanOracle" parameterType="DataCompanyLoan">
-        <selectKey keyProperty="companyId" order="BEFORE" resultType="Long">
-            select seq_data_company_loan.nextval as companyId from DUAL
+        <selectKey keyProperty="id" order="BEFORE" resultType="Long">
+            select seq_data_company_loan.nextval as id from DUAL
         </selectKey>
         insert into data_company_loan
         <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null and id != 0">id,</if>
             <if test="companyId != null and companyId != 0">company_id,</if>
             <if test="mztUserId != null and mztUserId != ''">mzt_user_id,</if>
             <if test="companyName != null and companyName != ''">company_name,</if>
             <if test="companyCreditCode != null and companyCreditCode != ''">company_credit_code,</if>
-            <if test="companyProvince != null">company_province,</if>
-            <if test="companyCity != null">company_city,</if>
-            <if test="companyArea != null">company_area,</if>
             <if test="companyType != null">company_type,</if>
             <if test="companyIndustry != null">company_industry,</if>
             <if test="companyBusiness != null">company_business,</if>
@@ -132,18 +130,15 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="remark != null">remark,</if>
             <if test="contactName != null">contact_name,</if>
             <if test="contactPhone != null">contact_phone,</if>
-            <if test="delFlag != null">del_flag,</if>
             <if test="createTime != null">create_time,</if>
             <if test="updateTime != null">update_time,</if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null and id != 0">#{id},</if>
             <if test="companyId != null and companyId != 0">#{companyId},</if>
             <if test="mztUserId != null and mztUserId != ''">#{mztUserId},</if>
             <if test="companyName != null and companyName != ''">#{companyName},</if>
             <if test="companyCreditCode != null and companyCreditCode != ''">#{companyCreditCode},</if>
-            <if test="companyProvince != null">#{companyProvince},</if>
-            <if test="companyCity != null">#{companyCity},</if>
-            <if test="companyArea != null">#{companyArea},</if>
             <if test="companyType != null">#{companyType},</if>
             <if test="companyIndustry != null">#{companyIndustry},</if>
             <if test="companyBusiness != null">#{companyBusiness},</if>
@@ -154,7 +149,6 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="remark != null">#{remark},</if>
             <if test="contactName != null">#{contactName},</if>
             <if test="contactPhone != null">#{contactPhone},</if>
-            <if test="delFlag != null">#{delFlag},</if>
             <if test="createTime != null">#{createTime},</if>
             <if test="updateTime != null">#{updateTime},</if>
         </trim>

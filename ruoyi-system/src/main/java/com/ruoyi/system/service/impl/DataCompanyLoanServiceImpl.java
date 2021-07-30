@@ -135,6 +135,7 @@ public class DataCompanyLoanServiceImpl implements IDataCompanyLoanService
 
         DataCompanyLoan loanClone = (DataCompanyLoan) dataCompanyLoan.clone();
         loanClone.setCompanyId(companyId);
+        loanClone.setLoanBand(dataCompanyLoanBody.getLoanBandNames());
         loanClone.setDelFlag(null);
         //插入 Oracle 表
         return companyLoanOracleService.insertDataCompanyLoan(loanClone);

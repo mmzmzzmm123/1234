@@ -9,9 +9,10 @@ create sequence seq_data_company_loan
     cache 20;
 
 create table data_company_loan (
+  id                     number(20)       not null,
   company_id             number(20)       not null,
   mzt_user_id            varchar2(20)     not null,
-  company_name           varchar2(128)     not null,
+  company_name           varchar2(128)    not null,
   company_credit_code    varchar2(32)     default '',
   company_type           varchar2(32)     default '',
   company_industry       varchar2(64)     default '',
@@ -27,10 +28,11 @@ create table data_company_loan (
   update_time            date
 );
 
-alter table data_company_loan add constraint pk_data_company_loan primary key (company_id);
+alter table data_company_loan add constraint pk_data_company_loan primary key (id);
 
 comment on table  data_company_loan                         is '企业贷款信息';
-comment on column data_company_loan.company_id              is '企业id主键seq_data_company_loan.nextval';
+comment on column data_company_loan.id                      is 'id主键seq_data_company_loan.nextval,';
+comment on column data_company_loan.company_id              is '企业id，贷款企业数据来源的id';
 comment on column data_company_loan.mzt_user_id             is '闽政通用户ID';
 comment on column data_company_loan.company_name            is '企业名称';
 comment on column data_company_loan.company_credit_code     is '统一社会信用代码';
