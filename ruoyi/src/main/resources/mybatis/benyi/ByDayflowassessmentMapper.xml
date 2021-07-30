@@ -128,7 +128,23 @@
     </select>
 
     <select id="selectByDayflowassessmentPjf" parameterType="ByDayflowassessment" resultMap="ByDayflowassessmentResult">
-        select t.classid,e.bjmc,t.ny,avg(t.zzdf) as bjpjf,avg(t.zjjd) as zjjdpjf,avg(t.yc) as ycpjf,avg(t.zjzq) as zjzqpjf,avg(t.fzjx) as fzjxpjf,avg(t.dxsj) as dxsjpjf,avg(t.rcxsys) as rcxsyspjf,avg(t.hdgd) as hdgdpjf,avg(t.hwhd) as hwhdpjf,avg(t.ws) as wspjf,avg(t.lyzj) as lyzjpjf,avg(t.aq) as aqpjf,avg(t.zyhd) as zyhdpjf,avg(t.gzyjlys) as gzyjlyspjf,avg(t.wxkc) as wxkcpjf,avg(t.qkc) as qkcpjf from (
+        select t.classid,e.bjmc,t.ny,
+        sum(t.zzdf)/(select ifnull(ifnull(zbjs,0)/zbjs,0)+ifnull(ifnull(pbjs,0)/pbjs,0)+ifnull(ifnull(zljs,0)/zljs,0) from by_class where bjbh=t.classid) as bjpjf,
+        sum(t.zjjd)/(select ifnull(ifnull(zbjs,0)/zbjs,0)+ifnull(ifnull(pbjs,0)/pbjs,0)+ifnull(ifnull(zljs,0)/zljs,0) from by_class where bjbh=t.classid) as zjjdpjf,
+        sum(t.yc)/(select ifnull(ifnull(zbjs,0)/zbjs,0)+ifnull(ifnull(pbjs,0)/pbjs,0)+ifnull(ifnull(zljs,0)/zljs,0) from by_class where bjbh=t.classid) as ycpjf,
+        sum(t.zjzq)/(select ifnull(ifnull(zbjs,0)/zbjs,0)+ifnull(ifnull(pbjs,0)/pbjs,0)+ifnull(ifnull(zljs,0)/zljs,0) from by_class where bjbh=t.classid) as zjzqpjf,
+        sum(t.fzjx)/(select ifnull(ifnull(zbjs,0)/zbjs,0)+ifnull(ifnull(pbjs,0)/pbjs,0)+ifnull(ifnull(zljs,0)/zljs,0) from by_class where bjbh=t.classid) as fzjxpjf,
+        sum(t.dxsj)/(select ifnull(ifnull(zbjs,0)/zbjs,0)+ifnull(ifnull(pbjs,0)/pbjs,0)+ifnull(ifnull(zljs,0)/zljs,0) from by_class where bjbh=t.classid) as dxsjpjf,
+        sum(t.rcxsys)/(select ifnull(ifnull(zbjs,0)/zbjs,0)+ifnull(ifnull(pbjs,0)/pbjs,0)+ifnull(ifnull(zljs,0)/zljs,0) from by_class where bjbh=t.classid) as rcxsyspjf,
+        sum(t.hdgd)/(select ifnull(ifnull(zbjs,0)/zbjs,0)+ifnull(ifnull(pbjs,0)/pbjs,0)+ifnull(ifnull(zljs,0)/zljs,0) from by_class where bjbh=t.classid) as hdgdpjf,
+        sum(t.hwhd)/(select ifnull(ifnull(zbjs,0)/zbjs,0)+ifnull(ifnull(pbjs,0)/pbjs,0)+ifnull(ifnull(zljs,0)/zljs,0) from by_class where bjbh=t.classid) as hwhdpjf,
+        sum(t.ws)/(select ifnull(ifnull(zbjs,0)/zbjs,0)+ifnull(ifnull(pbjs,0)/pbjs,0)+ifnull(ifnull(zljs,0)/zljs,0) from by_class where bjbh=t.classid) as wspjf,
+        sum(t.lyzj)/(select ifnull(ifnull(zbjs,0)/zbjs,0)+ifnull(ifnull(pbjs,0)/pbjs,0)+ifnull(ifnull(zljs,0)/zljs,0) from by_class where bjbh=t.classid) as lyzjpjf,
+        sum(t.aq)/(select ifnull(ifnull(zbjs,0)/zbjs,0)+ifnull(ifnull(pbjs,0)/pbjs,0)+ifnull(ifnull(zljs,0)/zljs,0) from by_class where bjbh=t.classid) as aqpjf,
+        sum(t.zyhd)/(select ifnull(ifnull(zbjs,0)/zbjs,0)+ifnull(ifnull(pbjs,0)/pbjs,0)+ifnull(ifnull(zljs,0)/zljs,0) from by_class where bjbh=t.classid) as zyhdpjf,
+        sum(t.gzyjlys)/(select ifnull(ifnull(zbjs,0)/zbjs,0)+ifnull(ifnull(pbjs,0)/pbjs,0)+ifnull(ifnull(zljs,0)/zljs,0) from by_class where bjbh=t.classid) as gzyjlyspjf,
+        sum(t.wxkc)/(select ifnull(ifnull(zbjs,0)/zbjs,0)+ifnull(ifnull(pbjs,0)/pbjs,0)+ifnull(ifnull(zljs,0)/zljs,0) from by_class where bjbh=t.classid) as wxkcpjf,
+        sum(t.qkc)/(select ifnull(ifnull(zbjs,0)/zbjs,0)+ifnull(ifnull(pbjs,0)/pbjs,0)+ifnull(ifnull(zljs,0)/zljs,0) from by_class where bjbh=t.classid) as qkcpjf from (
 select a.classid,a.zzdf,a.create_time,date_format(a.create_time,'%Y-%m') as 'ny',
 (select sum(b.value) from by_dayflowassessmentitem b where a.id=b.pid and b.item in (select id from by_day_flow where name='早间接待')) as zjjd,
 (select sum(b.value) from by_dayflowassessmentitem b where a.id=b.pid and b.item in (select id from by_day_flow where name='用餐')) as yc,
