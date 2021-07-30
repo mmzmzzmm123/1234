@@ -123,6 +123,7 @@
             size="mini"
             type="text"
             icon="el-icon-delete"
+            v-show="!checkRemoveable(scope.row)"
             @click="handleDelete(scope.row)"
             v-hasPermi="['benyi:dayflowassessment:remove']"
             >删除</el-button
@@ -340,6 +341,16 @@ export default {
       //console.log(date.toLocaleDateString());
 
       return status == "1" || !this.CompareDate(row.createTime, y + "/" + m);
+    },
+    //控制按钮可用
+    checkRemoveable(row) {
+      console.log(row.remark);
+      var remark = row.remark;
+      if (remark == "" || remark == null) {
+        return false;
+      } else {
+        return true;
+      }
     },
     //比较日期大小
     CompareDate(d1, d2) {

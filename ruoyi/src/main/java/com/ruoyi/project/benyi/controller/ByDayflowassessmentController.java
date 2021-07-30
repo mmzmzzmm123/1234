@@ -137,16 +137,16 @@ public class ByDayflowassessmentController extends BaseController {
             String classId = byDayflowassessment.getClassid();
             ByClass byClass = byClassService.selectByClassById(classId);
             if (byClass != null) {
-                Long deptId=SecurityUtils.getLoginUser().getUser().getDeptId();
-                Long userId=SecurityUtils.getLoginUser().getUser().getUserId();
-                String xnXq=schoolCommon.getCurrentXnXq();
+                Long deptId = SecurityUtils.getLoginUser().getUser().getDeptId();
+                Long userId = SecurityUtils.getLoginUser().getUser().getUserId();
+                String xnXq = schoolCommon.getCurrentXnXq();
                 byDayflowassessment.setDeptId(deptId);
                 byDayflowassessment.setCreateUserid(userId);
                 byDayflowassessment.setXnxq(xnXq);
                 //获取总得分
-                Double dTotal=GetDf(byDayflowassessment.getList());
+                Double dTotal = GetDf(byDayflowassessment.getList());
                 byDayflowassessment.setZzdf(dTotal);
-                if(byClass.getZbjs()==null){
+                if (byClass.getZbjs() == null) {
                     return AjaxResult.error("未设置班级主班教师，请学校管理员设置班级信息");
                 }
                 System.out.println(byClass.getZbjs().longValue() == pgdx.longValue());
@@ -183,7 +183,7 @@ public class ByDayflowassessmentController extends BaseController {
         } else {
             //id 不为空，说明是修改
             ByDayflowassessment byDayflowassessmentModel = byDayflowassessmentService.selectByDayflowassessmentById(byDayflowassessment.getId());
-            Double dTotal=GetDf(byDayflowassessment.getList());
+            Double dTotal = GetDf(byDayflowassessment.getList());
             byDayflowassessmentModel.setZzdf(dTotal);
             byDayflowassessmentModel.setList(byDayflowassessment.getList());
             byDayflowassessmentModel.setStatus(byDayflowassessment.getStatus());
@@ -209,9 +209,9 @@ public class ByDayflowassessmentController extends BaseController {
                     System.out.println("未设置主班教师");
                 } else {
                     //主班教师被评估记录的id
-                    ByDayflowassessment byDayflowassessmentZbjs=new ByDayflowassessment();
+                    ByDayflowassessment byDayflowassessmentZbjs = new ByDayflowassessment();
                     byDayflowassessmentZbjs.setRemark(byDayflowassessmentModel.getId().toString());
-                    Long id=byDayflowassessmentService.selectByDayflowassessmentList(byDayflowassessmentZbjs).get(0).getId();
+                    Long id = byDayflowassessmentService.selectByDayflowassessmentList(byDayflowassessmentZbjs).get(0).getId();
                     //清空item
                     byDayflowassessmentitemService.deleteByDayflowassessmentitemByPid(id);
                     byDayflowassessmentNew.setId(id);
@@ -291,6 +291,19 @@ public class ByDayflowassessmentController extends BaseController {
     @Log(title = "幼儿园一日流程评估", businessType = BusinessType.DELETE)
     @DeleteMapping("/{ids}")
     public AjaxResult remove(@PathVariable Long[] ids) {
+        //判断当前评估是不是配班和助理教师评估，如果是的话，应该删除对应的主班教师评估
+        for (int i = 0; i < ids.length; i++) {
+            ByDayflowassessment byDayflowassessment = new ByDayflowassessment();
+            byDayflowassessment.setRemark(ids[i].toString());
+            List<ByDayflowassessment> list = byDayflowassessmentService.selectByDayflowassessmentList(byDayflowassessment);
+            if (list != null && list.size() > 0) {
+                Long newId=list.get(0).getId();
+                //删除item数据
+                byDayflowassessmentitemService.deleteByDayflowassessmentitemByPid(newId);
+                //删除主数据
+                byDayflowassessmentService.deleteByDayflowassessmentById(newId);
+            }
+        }
         //先删除item数据
         for (int i = 0; i < ids.length; i++) {
             byDayflowassessmentitemService.deleteByDayflowassessmentitemByPid(ids[i]);
