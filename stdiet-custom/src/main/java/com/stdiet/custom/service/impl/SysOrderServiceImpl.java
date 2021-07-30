@@ -101,6 +101,8 @@ public class SysOrderServiceImpl implements ISysOrderService {
             sysOrder.setMainOrderId(0L);
             sysOrder.setAfterSaleCommissOrder(0);
             sysOrder.setOnSaleId(null);
+            sysOrder.setPushPreSaleId(null);
+            sysOrder.setBusinessAffairId(null);
             //二开单
             if("1".equals(sysOrder.getOrderCountType())){
                 row = sysOrderMapper.insertSysOrder(sysOrder);
@@ -116,6 +118,8 @@ public class SysOrderServiceImpl implements ISysOrderService {
         else if("1".equals(sysOrder.getOrderType())){
             sysOrder.setAfterSaleCommissOrder(0);
             sysOrder.setOnSaleId(null);
+            sysOrder.setBusinessAffairId(null);
+            sysOrder.setPushPreSaleId(null);
             String rate = sysOrder.getNutritionistRate();
             if(StringUtils.isEmpty(rate) || rate.indexOf(",") == -1 || "0,10".equals(rate) || sysOrder.getNutritionistIdList().length != 2){
                 return 0;
@@ -151,7 +155,9 @@ public class SysOrderServiceImpl implements ISysOrderService {
         else if("2".equals(sysOrder.getOrderType())){
             sysOrder.setMainOrderId(0L);
             sysOrder.setAfterSaleCommissOrder(0);
+            sysOrder.setPushPreSaleId(null);
             sysOrder.setAfterSaleId(null);
+            sysOrder.setBusinessAffairId(null);
             sysOrder.setNutritionistId(null);
             sysOrder.setNutriAssisId(null);
             row = sysOrderMapper.insertSysOrder(sysOrder);
@@ -159,6 +165,7 @@ public class SysOrderServiceImpl implements ISysOrderService {
         //售中单
         else if("3".equals(sysOrder.getOrderType())){
             sysOrder.setPreSaleId(null);
+            sysOrder.setBusinessAffairId(null);
             //一开、二开
            if("0".equals(sysOrder.getOrderCountType()) || "1".equals(sysOrder.getOrderCountType())){
                 sysOrder.setNutritionistId((sysOrder.getNutritionistIdList() != null && sysOrder.getNutritionistIdList().length > 0) ? sysOrder.getNutritionistIdList()[0] : null);
@@ -227,6 +234,29 @@ public class SysOrderServiceImpl implements ISysOrderService {
             sysOrder.setOperatorId(null);
             sysOrder.setOperatorAssisId(null);
             row = sysOrderMapper.insertSysOrder(sysOrder);
+            //二开单
+            if(row > 0 && "1".equals(sysOrder.getOrderCountType()) && sysOrder.getSecondAfterSaleFlag() != null && sysOrder.getSecondAfterSaleFlag().intValue() == 1){
+                //需要自动创建售后二开提成单
+                row = autoCreateSecondAfterSaleOrder(sysOrder);
+            }
+        }
+        //基因订单
+        else if("5".equals(sysOrder.getOrderType())){
+            sysOrder.setServeTimeId(null);
+            sysOrder.setGiveServeDay(0);
+            sysOrder.setOnSaleId(null);
+            sysOrder.setPushPreSaleId(null);
+            sysOrder.setBusinessAffairId(null);
+            sysOrder.setAfterSaleId(null);
+            sysOrder.setNutritionistId(null);
+            sysOrder.setNutriAssisId(null);
+            sysOrder.setPlannerId(null);
+            sysOrder.setPlannerAssisId(null);
+            sysOrder.setOperatorId(null);
+            sysOrder.setOperatorAssisId(null);
+            sysOrder.setStartTime(sysOrder.getOrderTime());
+            sysOrder.setServerEndTime(sysOrder.getOrderTime());
+            row = sysOrderMapper.insertSysOrder(sysOrder);
         }
         return row;
     }
@@ -251,6 +281,7 @@ public class SysOrderServiceImpl implements ISysOrderService {
             sysOrder.setMainOrderId(0L);
             sysOrder.setAfterSaleCommissOrder(1);
             sysOrder.setOrderId(sysOrder.getOrderId()+1);
+            sysOrder.setBusinessAffairId(null);
             return sysOrderMapper.insertSysOrder(sysOrder);
         }
         return 0;
@@ -273,6 +304,7 @@ public class SysOrderServiceImpl implements ISysOrderService {
             sysOrder.setAfterSaleId(null);
             sysOrder.setNutritionistId(null);
             sysOrder.setNutriAssisId(null);
+            sysOrder.setBusinessAffairId(null);
         }
         //提成单
         if(sysOrder.getAfterSaleCommissOrder().intValue() == 1){
@@ -283,11 +315,17 @@ public class SysOrderServiceImpl implements ISysOrderService {
             sysOrder.setPlannerAssisId(null);
             sysOrder.setOperatorId(null);
             sysOrder.setOperatorAssisId(null);
+            sysOrder.setBusinessAffairId(null);
+            sysOrder.setOnSaleId(null);
+            sysOrder.setPushPreSaleId(null);
         }
         if("3".equals(sysOrder.getOrderType())){
             sysOrder.setPreSaleId(null);
+            sysOrder.setBusinessAffairId(null);
         }
         if("4".equals(sysOrder.getOrderType())){
+            sysOrder.setMainOrderId(0L);
+            sysOrder.setAfterSaleCommissOrder(0);
             sysOrder.setPreSaleId(null);
             sysOrder.setOnSaleId(null);
             sysOrder.setPushPreSaleId(null);
@@ -295,6 +333,22 @@ public class SysOrderServiceImpl implements ISysOrderService {
             sysOrder.setPlannerAssisId(null);
             sysOrder.setOperatorId(null);
             sysOrder.setOperatorAssisId(null);
+        }
+        if("5".equals(sysOrder.getOrderType())){
+            sysOrder.setServeTimeId(null);
+            sysOrder.setGiveServeDay(0);
+            sysOrder.setOnSaleId(null);
+            sysOrder.setPushPreSaleId(null);
+            sysOrder.setBusinessAffairId(null);
+            sysOrder.setAfterSaleId(null);
+            sysOrder.setNutritionistId(null);
+            sysOrder.setNutriAssisId(null);
+            sysOrder.setPlannerId(null);
+            sysOrder.setPlannerAssisId(null);
+            sysOrder.setOperatorId(null);
+            sysOrder.setOperatorAssisId(null);
+            sysOrder.setStartTime(sysOrder.getOrderTime());
+            sysOrder.setServerEndTime(sysOrder.getOrderTime());
         }
         if(oldSysOrder.getStartTime() == null){//确保提成计算时间不为空
             sysOrder.setCommissStartTime(sysOrder.getOrderTime());
@@ -407,7 +461,7 @@ public class SysOrderServiceImpl implements ISysOrderService {
                 LocalDate newStartTime = null;
                 //判断是否提成单，拆分单中的副单，体验单,定金单
                 if(sysOrder.getStartTime() == null || sysOrder.getAfterSaleCommissOrder().intValue() == 1 || sysOrder.getMainOrderId().intValue() != 0 ||
-                        "2".equals(sysOrder.getOrderType()) || !isNeedByOrderMoneyType(sysOrder)){
+                        "2".equals(sysOrder.getOrderType()) || !isNeedByOrderMoneyType(sysOrder) || "5".equals(sysOrder.getOrderType())){
                     //设置服务到期时间
                     setOrderServerEndDate(sysOrder);
                     sysOrder.setUpdateTime(new Date());

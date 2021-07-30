@@ -4,7 +4,7 @@ import com.stdiet.custom.domain.SysOrder;
 
 public class OrderUtils {
 
-    private static final String[] orderTypeArray = {"普通单","比例拆分单","体验单","售中单","商务单"};
+    private static final String[] orderTypeArray = {"普通单","比例拆分单","体验单","售中单","商务单","基因单"};
 
     private static final String[] orderCountTypeArray = {"一开单","二开单","一开单(拆分)","二开单(拆分)"};
 
