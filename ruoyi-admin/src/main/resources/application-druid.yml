@@ -2,7 +2,7 @@
 spring:
     datasource:
         type: com.alibaba.druid.pool.DruidDataSource
-        driverClassName: com.mysql.cj.jdbc.Driver
+#        driverClassName: com.mysql.cj.jdbc.Driver
         druid:
             # 主库数据源
             master:
@@ -16,10 +16,14 @@ spring:
             # 从库数据源
             slave:
                 # 从数据源开关/默认关闭
-                enabled: false
-                url: 
-                username: 
-                password: 
+#                enabled: true
+#                url: jdbc:oracle:thin:@172.29.131.138:1521:pdborcl
+#                username: XY_FGWXYD
+#                password: XY_FGWXYD_123456
+                enabled: true
+                url: jdbc:oracle:thin:@192.168.20.106:1521:pdborcl
+                username: SYSTEM
+                password: root
             # 初始连接数
             initialSize: 5
             # 最小连接池数量
