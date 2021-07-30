@@ -17,9 +17,9 @@ public class AliyunVideoUtils {
 
     public static final String default_stream_type = "video";
 
-    public static final String default_output_type = "oss";
+    public static final String default_output_type = "cdn"; // 改cdn，解决局部地区播放慢的问题
 
-    public static final String default_formats = "cdn";
+    public static final String default_formats = "mp4";
 
     //播放地址日期，30天
     public static final Long default_authTimeout = 2592000L;
@@ -85,7 +85,7 @@ public class AliyunVideoUtils {
         com.aliyun.vod20170321.Client client = AliyunVideoUtils.createClient();
         GetPlayInfoRequest getPlayInfoRequest = new GetPlayInfoRequest()
                 .setVideoId(videoId)
-                .setAuthTimeout(default_authTimeout)
+//                .setAuthTimeout(default_authTimeout) // 网站配置了默认3小时
                 .setStreamType(default_stream_type)
                 .setOutputType(default_output_type)
                 .setFormats(default_formats);
