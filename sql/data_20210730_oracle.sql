@@ -2,21 +2,21 @@
 -- 1、企业贷款信息表
 -- ----------------------------
 create table company_loan (
-  company_id             number(20)       not null
-  mzt_user_id            varchar2(20)     not null
-  company_name           varchar2(64)     not null
-  company_credit_code    varchar2(32)     default ''
-  company_type           varchar2(32)     default ''
-  company_industry       varchar2(64)     default ''
-  company_business       varchar2(128)    default ''
-  loan_band              varchar2(64)     default ''
-  loan_amount            number(12,2)     not null
-  loan_first             char(1)          default '0'
-  loan_purpose           varchar2(64)     default ''
-  remark                 varchar2(128)    default ''
-  contact_name           varchar2(16)     default ''
-  contact_phone          varchar2(16)     default ''
-  create_time 	         date
+  company_id             number(20)       not null,
+  mzt_user_id            varchar2(20)     not null,
+  company_name           varchar2(64)     not null,
+  company_credit_code    varchar2(32)     default '',
+  company_type           varchar2(32)     default '',
+  company_industry       varchar2(64)     default '',
+  company_business       varchar2(128)    default '',
+  loan_band              varchar2(64)     default '',
+  loan_amount            number(12,2)     not null,
+  loan_first             char(1)          default '0',
+  loan_purpose           varchar2(64)     default '',
+  remark                 varchar2(128)    default '',
+  contact_name           varchar2(16)     default '',
+  contact_phone          varchar2(16)     default '',
+  create_time 	         date,
   update_time            date
 )
 
