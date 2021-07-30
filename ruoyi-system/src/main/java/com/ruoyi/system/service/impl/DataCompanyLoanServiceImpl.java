@@ -12,15 +12,19 @@ import com.ruoyi.system.domain.DataCompanyLoan;
 import com.ruoyi.system.domain.model.DataCodeMsgResponse;
 import com.ruoyi.system.domain.model.DataCompanyLoanBody;
 import com.ruoyi.system.mapper.DataCompanyLoanMapper;
+import com.ruoyi.system.service.IDataCompanyLoanOracleService;
 import com.ruoyi.system.service.IDataCompanyLoanService;
 import com.ruoyi.system.service.IDataSmsService;
 import com.ruoyi.system.utils.ShareInterface;
+import com.sun.xml.internal.bind.v2.TODO;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -34,6 +38,9 @@ public class DataCompanyLoanServiceImpl implements IDataCompanyLoanService
 {
     @Autowired
     private DataCompanyLoanMapper dataCompanyLoanMapper;
+
+    @Autowired
+    private IDataCompanyLoanOracleService companyLoanOracleService;
 
     @Autowired
     private IDataSmsService smsService;
@@ -78,6 +85,7 @@ public class DataCompanyLoanServiceImpl implements IDataCompanyLoanService
         return dataCompanyLoanMapper.insertDataCompanyLoan(dataCompanyLoan);
     }
 
+    //TODO:多数据源的事务如何处理？
     @Override
     public int insertDataCompanyLoan(DataCompanyLoanBody dataCompanyLoanBody) {
 
@@ -89,9 +97,10 @@ public class DataCompanyLoanServiceImpl implements IDataCompanyLoanService
         String verifyKey = Constants.SMS_CODE_KEY + mobile;
         String realCode = redisCache.getCacheObject(verifyKey);
 
-        if (!StringUtils.equals(code,realCode)){
-            throw new SmsException();
-        }
+//        TODO 测试
+//        if (!StringUtils.equals(code,realCode)){
+//            throw new SmsException();
+//        }
 
         redisCache.deleteObject(verifyKey);
 
@@ -121,7 +130,14 @@ public class DataCompanyLoanServiceImpl implements IDataCompanyLoanService
             throw new UserException(null, null, "保存'" + dataCompanyLoan.getCompanyName() + "'失败，该企业存在失信记录");
         }
 
-        return dataCompanyLoanMapper.insertDataCompanyLoan(dataCompanyLoan);
+        dataCompanyLoanMapper.insertDataCompanyLoan(dataCompanyLoan);
+        Long companyId = dataCompanyLoan.getCompanyId();
+
+        DataCompanyLoan loanClone = (DataCompanyLoan) dataCompanyLoan.clone();
+        loanClone.setCompanyId(companyId);
+        loanClone.setDelFlag(null);
+        //插入 Oracle 表
+        return companyLoanOracleService.insertDataCompanyLoan(loanClone);
     }
 
     /**

@@ -37,6 +37,8 @@ public interface DataCompanyLoanMapper
      */
     public int insertDataCompanyLoan(DataCompanyLoan dataCompanyLoan);
 
+    public int insertDataCompanyLoanOracle(DataCompanyLoan dataCompanyLoan);
+
     /**
      * 修改企业贷款信息
      * 

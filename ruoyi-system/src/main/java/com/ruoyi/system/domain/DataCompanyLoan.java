@@ -12,7 +12,7 @@ import com.ruoyi.common.core.domain.BaseEntity;
  * @author genius
  * @date 2021-07-13
  */
-public class DataCompanyLoan extends BaseEntity
+public class DataCompanyLoan extends BaseEntity implements Cloneable
 {
     private static final long serialVersionUID = 1L;
 
@@ -261,4 +261,16 @@ public class DataCompanyLoan extends BaseEntity
             .append("updateTime", getUpdateTime())
             .toString();
     }
+
+    @Override
+    public Object clone() {
+        DataCompanyLoan loan = null;
+        try{
+            loan = (DataCompanyLoan)super.clone();
+        }catch(CloneNotSupportedException e) {
+            e.printStackTrace();
+        }
+        return loan;
+    }
+
 }
