@@ -86,6 +86,7 @@ public class WxLogInfo {
      * 体型对比照
      */
 //    private String bodyImages;
+    private String bodyDesc;
 
     /**
      * 服务建议
@@ -122,7 +123,7 @@ public class WxLogInfo {
     private String healthManifesto;
 
     public void setDefecation(String defecation) {
-        if (StringUtils.isAlpha(defecation)) {
+        if (defecation.equals("Y") || defecation.equals("N")) {
             this.defecation = defecation.equals("Y") ? "是" : "否";
 //            this.defecation = defecation.equals("Y") ? "顺畅" : "其他";
         } else {

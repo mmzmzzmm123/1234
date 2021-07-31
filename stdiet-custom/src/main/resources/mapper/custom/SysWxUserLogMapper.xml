@@ -18,6 +18,7 @@
         <result property="sportDesc" column="sport_desc"/>
         <result property="avatarUrl" column="avatar_url"/>
         <result property="diet" column="diet"/>
+        <result property="dietDesc" column="diet_desc"/>
         <result property="insomnia" column="insomnia"/>
         <result property="defecation" column="defecation"/>
         <result property="defecationDesc" column="defecation_desc"/>
@@ -37,6 +38,7 @@
         <result property="dinnerImages" column="dinner_images"/>
         <result property="extraMealImages" column="extra_meal_images"/>
         <result property="bodyImages" column="body_images"/>
+        <result property="bodyDesc" column="body_desc"/>
         <result property="suggest" column="suggest"/>
         <result property="targetWeight" column="target_weight"/>
         <result property="executionScore" column="execution_score"/>
@@ -59,6 +61,7 @@
         <result property="sport" column="sport"/>
         <result property="sportDesc" column="sport_desc"/>
         <result property="diet" column="diet"/>
+        <result property="dietDesc" column="diet_desc"/>
         <result property="insomnia" column="insomnia"/>
         <result property="defecation" column="defecation"/>
         <result property="defecationDesc" column="defecation_desc"/>
@@ -80,6 +83,7 @@
         <result property="extraMealImagesUrl" column="extra_meal_images" typeHandler="com.stdiet.custom.typehandler.ImagesHandler"/>
 <!--        <result property="bodyImages" column="body_images"/>-->
         <result property="bodyImagesUrl" column="body_images" typeHandler="com.stdiet.custom.typehandler.ImagesHandler"/>
+        <result property="bodyDesc" column="body_desc"/>
         <result property="suggest" column="suggest"/>
         <result property="targetWeight" column="target_weight"/>
         <result property="executionScore" column="execution_score"/>
@@ -89,8 +93,8 @@
     </resultMap>
 
     <sql id="selectSysWxUserLogVo">
-        select id,openid, weight, appid, phone, log_time, sleep_time, wakeup_time, sport, sport_desc, avatar_url, diet, insomnia, defecation, defecation_desc, water, create_by, create_time, update_by, update_time, remark,
-         emotion, emotion_desc,sly_eat_food,constipation,ingredient_desc,breakfast_images,lunch_images,dinner_images,extra_meal_images,body_images,suggest,execution_score,comment,health_manifesto
+        select id,openid, weight, appid, phone, log_time, sleep_time, wakeup_time, sport, sport_desc, avatar_url, diet, diet_desc, insomnia, defecation, defecation_desc, water, create_by, create_time, update_by, update_time, remark,
+         emotion, emotion_desc,sly_eat_food,constipation,ingredient_desc,breakfast_images,lunch_images,dinner_images,extra_meal_images,body_images,body_desc,suggest,execution_score,comment,health_manifesto
          from sys_wx_user_log
     </sql>
 
@@ -102,9 +106,9 @@
     <select id="selectSysWxUserLogList" parameterType="SysWxUserLog" resultMap="SysWxUserLogResult">
         SELECT
         wxlog.id,wxinfo.appid,wxinfo.openid,wxinfo.avatar_url,wxinfo.phone,wxlog.weight,wxlog.log_time,wxlog.sleep_time,
-        wxlog.wakeup_time,wxlog.defecation, wxlog.defecation_desc, wxlog.water, wxlog.insomnia,wxlog.sport, wxlog.sport_desc,wxlog.diet,wxlog.remark,
+        wxlog.wakeup_time,wxlog.defecation, wxlog.defecation_desc, wxlog.water, wxlog.insomnia,wxlog.sport, wxlog.sport_desc,wxlog.diet, wxlog.diet_desc,wxlog.remark,
         wxlog.emotion, wxlog.emotion_desc,wxlog.sly_eat_food,wxlog.constipation,wxlog.ingredient_desc,wxlog.breakfast_images,
-        wxlog.lunch_images,wxlog.dinner_images,wxlog.extra_meal_images,wxlog.body_images,
+        wxlog.lunch_images,wxlog.dinner_images,wxlog.extra_meal_images,wxlog.body_images,wxlog.body_desc,
         wxlog.suggest,wxlog.execution_score,wxlog.comment,sc.name as customer_name, su.nick_name as nutritionist,
         su_atferSale.nick_name as after_nutritionist, wxlog.health_manifesto, wxlog.log_time
         FROM sys_wx_user_log wxlog
@@ -173,6 +177,7 @@
             <if test="sportDesc != null">sport_desc,</if>
             <if test="avatarUrl != null">avatar_url,</if>
             <if test="diet != null">diet,</if>
+            <if test="dietDesc != null">diet_desc,</if>
             <if test="insomnia != null">insomnia,</if>
             <if test="defecation != null">defecation,</if>
             <if test="defecationDesc != null">defecation_desc,</if>
@@ -192,6 +197,7 @@
             <if test="dinnerImages != null">dinner_images,</if>
             <if test="extraMealImages != null">extra_meal_images,</if>
             <if test="bodyImages != null">body_images,</if>
+            <if test="bodyDesc != null">body_desc,</if>
             <if test="suggest != null">suggest,</if>
             <if test="targetWeight != null">target_weight,</if>
             <if test="executionScore != null">execution_score,</if>
@@ -212,6 +218,7 @@
             <if test="sportDesc != null">#{sportDesc},</if>
             <if test="avatarUrl != null">#{avatarUrl},</if>
             <if test="diet != null">#{diet},</if>
+            <if test="dietDesc != null">#{dietDesc},</if>
             <if test="insomnia != null">#{insomnia},</if>
             <if test="defecation != null">#{defecation},</if>
             <if test="defecationDesc != null">#{defecationDesc},</if>
@@ -231,6 +238,7 @@
             <if test="dinnerImages != null">#{dinnerImages},</if>
             <if test="extraMealImages != null">#{extraMealImages},</if>
             <if test="bodyImages != null">#{bodyImages},</if>
+            <if test="bodyDesc != null">#{bodyDesc},</if>
             <if test="suggest != null">suggest = #{suggest},</if>
             <if test="targetWeight != null">target_weight = #{targetWeight},</if>
             <if test="executionScore != null">execution_score = #{executionScore},</if>
@@ -254,6 +262,7 @@
             <if test="sportDesc != null">sport_desc = #{sportDesc},</if>
             <if test="avatarUrl != null">avatar_url = #{avatarUrl},</if>
             <if test="diet != null">diet = #{diet},</if>
+            <if test="dietDesc != null">diet_desc = #{dietDesc},</if>
             <if test="insomnia != null">insomnia = #{insomnia},</if>
             <if test="defecation != null">defecation = #{defecation},</if>
             <if test="defecationDesc != null">defecation_desc = #{defecationDesc},</if>
@@ -271,6 +280,7 @@
             <if test="dinnerImages != null">dinner_images = #{dinnerImages},</if>
             <if test="extraMealImages != null">extra_meal_images = #{extraMealImages},</if>
             <if test="bodyImages != null">body_images = #{bodyImages},</if>
+            <if test="bodyDesc != null">body_desc = #{bodyDesc},</if>
             <if test="suggest != null">suggest = #{suggest},</if>
             <if test="targetWeight != null">target_weight = #{targetWeight},</if>
             <if test="executionScore != null">execution_score = #{executionScore},</if>
@@ -295,8 +305,8 @@
 
     <!-- 根据openid和手机号查询对应打卡记录 -->
     <select id="getWxLogInfoList" parameterType="SysWxUserLog" resultMap="WxLogInfo">
-        SELECT wxlog.id,wxlog.weight,wxlog.log_time,wxlog.sleep_time, wxlog.wakeup_time,wxlog.defecation, wxlog.defecation_desc, wxlog.water, wxlog.insomnia,wxlog.sport, wxlog.sport_desc,wxlog.diet,
-        wxlog.emotion, wxlog.emotion_desc,wxlog.sly_eat_food,wxlog.constipation,wxlog.ingredient_desc,wxlog.breakfast_images,wxlog.lunch_images,wxlog.dinner_images,wxlog.extra_meal_images,wxlog.body_images
+        SELECT wxlog.id,wxlog.weight,wxlog.log_time,wxlog.sleep_time, wxlog.wakeup_time,wxlog.defecation, wxlog.defecation_desc, wxlog.water, wxlog.insomnia,wxlog.sport, wxlog.sport_desc,wxlog.diet, wxlog.diet_desc,
+        wxlog.emotion, wxlog.emotion_desc,wxlog.sly_eat_food,wxlog.constipation,wxlog.ingredient_desc,wxlog.breakfast_images,wxlog.lunch_images,wxlog.dinner_images,wxlog.extra_meal_images,wxlog.body_images, wxlog.body_desc
         ,wxlog.remark,wxlog.execution_score,wxlog.comment, wxlog.health_manifesto
         FROM sys_wx_user_log wxlog
         where wxlog.del_flag = 0 and wxlog.openid = #{openid}
@@ -340,8 +350,8 @@
 
     <!-- 根据openid和手机号查询对应打卡记录 -->
     <select id="getWxLogInfoDetailById" parameterType="SysWxUserLog" resultMap="WxLogInfo">
-        SELECT wxlog.id,wxlog.weight,wxlog.log_time,wxlog.sleep_time, wxlog.wakeup_time,wxlog.defecation, wxlog.defecation_desc, wxlog.water, wxlog.insomnia,wxlog.sport, wxlog.sport_desc,wxlog.diet,
-        wxlog.emotion, wxlog.emotion_desc,wxlog.sly_eat_food,wxlog.constipation,wxlog.ingredient_desc,wxlog.breakfast_images,wxlog.lunch_images,wxlog.dinner_images,wxlog.extra_meal_images,wxlog.body_images
+        SELECT wxlog.id,wxlog.weight,wxlog.log_time,wxlog.sleep_time, wxlog.wakeup_time,wxlog.defecation, wxlog.defecation_desc, wxlog.water, wxlog.insomnia,wxlog.sport, wxlog.sport_desc,wxlog.diet, wxlog.diet_desc,
+        wxlog.emotion, wxlog.emotion_desc,wxlog.sly_eat_food,wxlog.constipation,wxlog.ingredient_desc,wxlog.breakfast_images,wxlog.lunch_images,wxlog.dinner_images,wxlog.extra_meal_images,wxlog.body_images, wxlog.body_desc
         ,wxlog.remark,wxlog.execution_score,wxlog.comment
         FROM sys_wx_user_log wxlog left join sys_wx_user_info wxinfo on wxinfo.openid  = wxlog.openid
         where wxlog.del_flag = 0 and wxlog.id = #{id}
