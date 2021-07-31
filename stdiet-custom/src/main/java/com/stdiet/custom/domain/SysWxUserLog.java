@@ -2,6 +2,7 @@ package com.stdiet.custom.domain;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.stdiet.common.annotation.Excel;
+import com.stdiet.common.core.domain.BaseEntity;
 import com.stdiet.common.utils.StringUtils;
 import lombok.Data;
 
@@ -17,7 +18,7 @@ import java.util.Map;
  * @date 2020-11-29
  */
 @Data
-public class SysWxUserLog {
+public class SysWxUserLog extends BaseEntity {
 
     private Long id;
 
@@ -236,15 +237,4 @@ public class SysWxUserLog {
     //图片预览路径
     private Map<String, List<String>> imagesUrl;
 
-    private Date createTime;
-
-    private String createBy;
-
-    private Date updateTime;
-
-    private String updateBy;
-
-    private Date beginTime;
-
-    private Date endTime;
 }
