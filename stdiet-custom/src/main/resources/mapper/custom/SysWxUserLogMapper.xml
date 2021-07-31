@@ -15,10 +15,12 @@
         <result property="wakeupTime" column="wakeup_time"/>
         <result property="sleepTime" column="sleep_time"/>
         <result property="sport" column="sport"/>
+        <result property="sportDesc" column="sport_desc"/>
         <result property="avatarUrl" column="avatar_url"/>
         <result property="diet" column="diet"/>
         <result property="insomnia" column="insomnia"/>
         <result property="defecation" column="defecation"/>
+        <result property="defecationDesc" column="defecation_desc"/>
         <result property="water" column="water"/>
         <result property="createBy" column="create_by"/>
         <result property="createTime" column="create_time"/>
@@ -26,9 +28,10 @@
         <result property="updateTime" column="update_time"/>
         <result property="remark" column="remark"/>
         <result property="emotion" column="emotion"/>
+        <result property="emotionDesc" column="emotion_desc"/>
         <result property="slyEatFood" column="sly_eat_food"/>
         <result property="constipation" column="constipation"/>
-        <result property="ingredientDescribe" column="ingredient_describe"/>
+        <result property="ingredientDesc" column="ingredient_desc"/>
         <result property="breakfastImages" column="breakfast_images"/>
         <result property="lunchImages" column="lunch_images"/>
         <result property="dinnerImages" column="dinner_images"/>
@@ -54,16 +57,19 @@
         <result property="sleepTime" column="sleep_time"/>
         <result property="wakeupTime" column="wakeup_time"/>
         <result property="sport" column="sport"/>
+        <result property="sportDesc" column="sport_desc"/>
         <result property="diet" column="diet"/>
         <result property="insomnia" column="insomnia"/>
         <result property="defecation" column="defecation"/>
+        <result property="defecationDesc" column="defecation_desc"/>
         <result property="water" column="water"/>
         <result property="date" column="log_time"/>
         <result property="emotion" column="emotion"/>
+        <result property="emotionDesc" column="emotion_desc"/>
         <result property="slyEatFood" column="sly_eat_food"/>
         <result property="constipation" column="constipation"/>
         <result property="remark" column="remark"/>
-        <result property="ingredientDescribe" column="ingredient_describe"/>
+        <result property="ingredientDesc" column="ingredient_desc"/>
 <!--        <result property="breakfastImages" column="breakfast_images"/>-->
         <result property="breakfastImagesUrl" column="breakfast_images" typeHandler="com.stdiet.custom.typehandler.ImagesHandler"/>
 <!--        <result property="lunchImages" column="lunch_images"/>-->
@@ -83,8 +89,8 @@
     </resultMap>
 
     <sql id="selectSysWxUserLogVo">
-        select id,openid, weight, appid, phone, log_time, sleep_time, wakeup_time, sport, avatar_url, diet, insomnia, defecation, water, create_by, create_time, update_by, update_time, remark,
-         emotion,sly_eat_food,constipation,ingredient_describe,breakfast_images,lunch_images,dinner_images,extra_meal_images,body_images,suggest,execution_score,comment,health_manifesto
+        select id,openid, weight, appid, phone, log_time, sleep_time, wakeup_time, sport, sport_desc, avatar_url, diet, insomnia, defecation, defecation_desc, water, create_by, create_time, update_by, update_time, remark,
+         emotion, emotion_desc,sly_eat_food,constipation,ingredient_desc,breakfast_images,lunch_images,dinner_images,extra_meal_images,body_images,suggest,execution_score,comment,health_manifesto
          from sys_wx_user_log
     </sql>
 
@@ -96,8 +102,9 @@
     <select id="selectSysWxUserLogList" parameterType="SysWxUserLog" resultMap="SysWxUserLogResult">
         SELECT
         wxlog.id,wxinfo.appid,wxinfo.openid,wxinfo.avatar_url,wxinfo.phone,wxlog.weight,wxlog.log_time,wxlog.sleep_time,
-        wxlog.wakeup_time,wxlog.defecation, wxlog.water, wxlog.insomnia,wxlog.sport,wxlog.diet,wxlog.remark,
-        wxlog.emotion,wxlog.sly_eat_food,wxlog.constipation,wxlog.ingredient_describe,wxlog.breakfast_images,wxlog.lunch_images,wxlog.dinner_images,wxlog.extra_meal_images,wxlog.body_images,
+        wxlog.wakeup_time,wxlog.defecation, wxlog.defecation_desc, wxlog.water, wxlog.insomnia,wxlog.sport, wxlog.sport_desc,wxlog.diet,wxlog.remark,
+        wxlog.emotion, wxlog.emotion_desc,wxlog.sly_eat_food,wxlog.constipation,wxlog.ingredient_desc,wxlog.breakfast_images,
+        wxlog.lunch_images,wxlog.dinner_images,wxlog.extra_meal_images,wxlog.body_images,
         wxlog.suggest,wxlog.execution_score,wxlog.comment,sc.name as customer_name, su.nick_name as nutritionist,
         su_atferSale.nick_name as after_nutritionist, wxlog.health_manifesto, wxlog.log_time
         FROM sys_wx_user_log wxlog
@@ -163,10 +170,12 @@
             <if test="sleepTime != null">sleep_time,</if>
             <if test="wakeupTime != null">wakeup_time,</if>
             <if test="sport != null">sport,</if>
+            <if test="sportDesc != null">sport_desc,</if>
             <if test="avatarUrl != null">avatar_url,</if>
             <if test="diet != null">diet,</if>
             <if test="insomnia != null">insomnia,</if>
             <if test="defecation != null">defecation,</if>
+            <if test="defecationDesc != null">defecation_desc,</if>
             <if test="water != null">water,</if>
             <if test="createBy != null">create_by,</if>
             <if test="true">create_time,</if>
@@ -174,9 +183,10 @@
             <if test="true">update_time,</if>
             <if test="remark != null">remark,</if>
             <if test="emotion != null">emotion,</if>
+            <if test="emotionDesc != null">emotion_desc,</if>
             <if test="slyEatFood != null">sly_eat_food,</if>
             <if test="constipation != null">constipation,</if>
-            <if test="ingredientDescribe != null">ingredient_describe,</if>
+            <if test="ingredientDesc != null">ingredient_desc,</if>
             <if test="breakfastImages != null">breakfast_images,</if>
             <if test="lunchImages != null">lunch_images,</if>
             <if test="dinnerImages != null">dinner_images,</if>
@@ -199,10 +209,12 @@
             <if test="sleepTime != null">#{sleepTime},</if>
             <if test="wakeupTime != null">#{wakeupTime},</if>
             <if test="sport != null">#{sport},</if>
+            <if test="sportDesc != null">#{sportDesc},</if>
             <if test="avatarUrl != null">#{avatarUrl},</if>
             <if test="diet != null">#{diet},</if>
             <if test="insomnia != null">#{insomnia},</if>
             <if test="defecation != null">#{defecation},</if>
+            <if test="defecationDesc != null">#{defecationDesc},</if>
             <if test="water != null">#{water},</if>
             <if test="createBy != null">#{createBy},</if>
             <if test="true">now(),</if>
@@ -210,9 +222,10 @@
             <if test="true">now(),</if>
             <if test="remark != null">#{remark},</if>
             <if test="emotion != null">#{emotion},</if>
+            <if test="emotionDesc != null">#{emotionDesc},</if>
             <if test="slyEatFood != null">#{slyEatFood},</if>
             <if test="constipation != null">#{constipation},</if>
-            <if test="ingredientDescribe != null">#{ingredientDescribe},</if>
+            <if test="ingredientDesc != null">#{ingredientDesc},</if>
             <if test="breakfastImages != null">#{breakfastImages},</if>
             <if test="lunchImages != null">#{lunchImages},</if>
             <if test="dinnerImages != null">#{dinnerImages},</if>
@@ -238,18 +251,21 @@
             <if test="sleepTime != null">sleep_time = #{sleepTime},</if>
             <if test="wakeupTime != null">wakeup_time = #{wakeupTime},</if>
             <if test="sport != null">sport = #{sport},</if>
+            <if test="sportDesc != null">sport_desc = #{sportDesc},</if>
             <if test="avatarUrl != null">avatar_url = #{avatarUrl},</if>
             <if test="diet != null">diet = #{diet},</if>
             <if test="insomnia != null">insomnia = #{insomnia},</if>
             <if test="defecation != null">defecation = #{defecation},</if>
+            <if test="defecationDesc != null">defecation_desc = #{defecationDesc},</if>
             <if test="water != null">water = #{water},</if>
             <if test="updateBy != null">update_by = #{updateBy},</if>
             <if test="updateTime != null">update_time = now(),</if>
             <if test="remark != null">remark = #{remark},</if>
             <if test="emotion != null">emotion = #{emotion},</if>
+            <if test="emotionDesc != null">emotion_desc = #{emotionDesc},</if>
             <if test="slyEatFood != null">sly_eat_food = #{slyEatFood},</if>
             <if test="constipation != null">constipation = #{constipation},</if>
-            <if test="ingredientDescribe != null">ingredient_describe = #{ingredientDescribe},</if>
+            <if test="ingredientDesc != null">ingredient_desc = #{ingredientDesc},</if>
             <if test="breakfastImages != null">breakfast_images = #{breakfastImages},</if>
             <if test="lunchImages != null">lunch_images = #{lunchImages},</if>
             <if test="dinnerImages != null">dinner_images = #{dinnerImages},</if>
@@ -279,8 +295,8 @@
 
     <!-- 根据openid和手机号查询对应打卡记录 -->
     <select id="getWxLogInfoList" parameterType="SysWxUserLog" resultMap="WxLogInfo">
-        SELECT wxlog.id,wxlog.weight,wxlog.log_time,wxlog.sleep_time, wxlog.wakeup_time,wxlog.defecation, wxlog.water, wxlog.insomnia,wxlog.sport,wxlog.diet,
-        wxlog.emotion,wxlog.sly_eat_food,wxlog.constipation,wxlog.ingredient_describe,wxlog.breakfast_images,wxlog.lunch_images,wxlog.dinner_images,wxlog.extra_meal_images,wxlog.body_images
+        SELECT wxlog.id,wxlog.weight,wxlog.log_time,wxlog.sleep_time, wxlog.wakeup_time,wxlog.defecation, wxlog.defecation_desc, wxlog.water, wxlog.insomnia,wxlog.sport, wxlog.sport_desc,wxlog.diet,
+        wxlog.emotion, wxlog.emotion_desc,wxlog.sly_eat_food,wxlog.constipation,wxlog.ingredient_desc,wxlog.breakfast_images,wxlog.lunch_images,wxlog.dinner_images,wxlog.extra_meal_images,wxlog.body_images
         ,wxlog.remark,wxlog.execution_score,wxlog.comment, wxlog.health_manifesto
         FROM sys_wx_user_log wxlog
         where wxlog.del_flag = 0 and wxlog.openid = #{openid}
@@ -324,8 +340,8 @@
 
     <!-- 根据openid和手机号查询对应打卡记录 -->
     <select id="getWxLogInfoDetailById" parameterType="SysWxUserLog" resultMap="WxLogInfo">
-        SELECT wxlog.id,wxlog.weight,wxlog.log_time,wxlog.sleep_time, wxlog.wakeup_time,wxlog.defecation, wxlog.water, wxlog.insomnia,wxlog.sport,wxlog.diet,
-        wxlog.emotion,wxlog.sly_eat_food,wxlog.constipation,wxlog.ingredient_describe,wxlog.breakfast_images,wxlog.lunch_images,wxlog.dinner_images,wxlog.extra_meal_images,wxlog.body_images
+        SELECT wxlog.id,wxlog.weight,wxlog.log_time,wxlog.sleep_time, wxlog.wakeup_time,wxlog.defecation, wxlog.defecation_desc, wxlog.water, wxlog.insomnia,wxlog.sport, wxlog.sport_desc,wxlog.diet,
+        wxlog.emotion, wxlog.emotion_desc,wxlog.sly_eat_food,wxlog.constipation,wxlog.ingredient_desc,wxlog.breakfast_images,wxlog.lunch_images,wxlog.dinner_images,wxlog.extra_meal_images,wxlog.body_images
         ,wxlog.remark,wxlog.execution_score,wxlog.comment
         FROM sys_wx_user_log wxlog left join sys_wx_user_info wxinfo on wxinfo.openid  = wxlog.openid
         where wxlog.del_flag = 0 and wxlog.id = #{id}
