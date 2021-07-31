@@ -8,11 +8,22 @@
       <!-- 筛选 -->
       <el-form :model="queryParams" ref="queryForm" :inline="true">
         <el-form-item label="搜索内容" prop="name">
-          <el-input
-            v-model="queryParams.name"
-            placeholder="请输入模板名称或备注"
-            @keyup.enter.native="handleQuery"
-          />
+          <el-select
+          v-model="queryParams.keys"
+          multiple
+          filterable
+          allow-create
+          clearable
+          default-first-option
+           @keyup.enter.native="handleQuery"
+          placeholder="请输入或选择关键字">
+          <!--<el-option
+            v-for="item in options"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value">
+          </el-option>-->
+        </el-select>
         </el-form-item>
         <el-form-item label="营养师" prop="nutritionistId">
           <el-select
@@ -67,7 +78,16 @@
         <el-table-column label="模板名称" align="center" prop="name" />
         <el-table-column label="营养师" align="center" prop="nutritionist" />
         <el-table-column label="营养师助理" align="center" prop="nutriAssis" />
-        <el-table-column label="备注" prop="remark" align="center" />
+        <el-table-column label="关键词" align="center" prop="keyWord">
+           <template slot-scope="scope">
+           <AutoHideMessage :data="scope.row.keyWord" :maxLength="20"></AutoHideMessage>
+        </template>
+        </el-table-column>
+        <el-table-column label="备注" prop="remark" align="center" >
+          <template slot-scope="scope">
+           <AutoHideMessage :data="scope.row.remark" :maxLength="20"></AutoHideMessage>
+        </template>
+        </el-table-column>
       </el-table>
 
       <pagination
@@ -83,6 +103,7 @@
 <script>
 import { listRecipesTemplate } from "@/api/custom/recipesTemplate";
 import { mapState } from "vuex";
+import AutoHideMessage from "@/components/AutoHideMessage";
 export default {
   name: "TemplateView",
   data() {
@@ -97,8 +118,12 @@ export default {
         pageNum: 1,
         pageSize: 10,
         reviewStatus: 2,
+        keys: null
       },
     };
+  },
+  components:{
+    AutoHideMessage
   },
   props: ["view"],
   computed: {
@@ -119,6 +144,7 @@ export default {
     /** 重置按钮操作 */
     resetQuery() {
       this.resetForm("queryForm");
+      this.queryParams.keys = null;
       this.handleQuery();
     },
     handleOnBackClick() {
@@ -132,7 +158,7 @@ export default {
     getList() {
       this.loading = true;
       const params = JSON.parse(JSON.stringify(this.queryParams));
-      params.keys = (params.name || "").split(" ");
+      //params.keys = (params.name || "").split(" ");
       listRecipesTemplate(params).then((res) => {
         if (res.code === 200) {
           this.dataList = res.rows;

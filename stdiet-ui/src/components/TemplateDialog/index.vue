@@ -29,6 +29,27 @@
           ></el-option>
         </el-select>
       </el-form-item>
+      <el-form-item label="关键词" prop="keyWordArray" label-width="100px">
+          <el-select
+            v-model="form.keyWordArray"
+            multiple
+            filterable
+            clearable
+            allow-create
+            default-first-option
+            placeholder="请创建模板关键词，用于模板检索，按回车创建"
+            style="width:100%"
+          >
+            <el-option
+              v-for="dict in keyOptions"
+              :key="dict.dictValue"
+              :label="dict.dictLabel"
+              :value="dict.dictValue"
+            >
+            </el-option>
+          </el-select>
+        </el-form-item>
+        
       <el-form-item label="备注" prop="remark" label-width="100px">
         <el-input
           v-model="form.remark"
@@ -58,6 +79,8 @@ export default {
         nutriAssisId: null,
         nutritionistId: null,
         remark: null,
+        keyWordArray: null,
+        keyWord: null
       },
       // 表单校验
       rules: {
@@ -70,6 +93,16 @@ export default {
         ],
       },
       visible: false,
+      keyOptions:[
+        {
+          dictLabel: "1-7",
+          dictValue: "1-7"
+        },
+        {
+          dictLabel: "高血压",
+          dictValue: "高血压"
+        }
+      ]
     };
   },
   computed: {
@@ -87,6 +120,7 @@ export default {
       this.reset();
       if (data) {
         this.title = "修改模板";
+        data.keyWordArray = (data.keyWord != null && data.keyWord != "") ? data.keyWord.split(",") : null;
         this.form = data;
       } else {
         this.title = "创建模板";
@@ -94,7 +128,9 @@ export default {
     },
     submitForm() {
       this.$refs["form"].validate((valid) => {
-        if (valid) {
+        if (valid && this.checkFormat(this.form.keyWordArray)) {
+          this.form.keyWord = (this.form.keyWordArray != null && this.form.keyWordArray.length > 0) ? this.form.keyWordArray.join(",") : null;
+          this.form.keyWord = this.form.keyWord.replace("，",",");
           this.$emit("onConfirm", this.form);
           this.visible = false;
         }
@@ -108,12 +144,30 @@ export default {
         nutriAssisId: null,
         nutritionistId: null,
         remark: null,
+        keyWordArray: null,
+        keyWord: null
       };
       this.resetForm("form");
     },
     cancel() {
       this.visible = false;
     },
+    checkFormat(keyWordArray){
+      let flag = true;
+      let msg = "";
+      if(keyWordArray != null && keyWordArray.length > 0){
+          keyWordArray.forEach((item,index) => {
+             if(item.indexOf(",") != -1 || item.indexOf("，") != -1 || item.indexOf(" ") != -1){
+                 msg = "关键词中不能含有逗号和空格";
+                 flag = false;
+             }
+          });
+      }
+      if(!flag){
+          this.msgError(msg);
+      }
+      return flag;
+    }
   },
 };
 </script>
