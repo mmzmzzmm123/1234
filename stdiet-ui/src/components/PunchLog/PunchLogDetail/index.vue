@@ -10,28 +10,28 @@
         <div
           style="float: right;  margin-bottom:10px"
         >
-         
-         <el-button 
+
+         <el-button
             v-hasPermi="['custom:wxUserLog:query']"
             type="primary"
             plain
             @click="clickComment()"
             >打卡点评</el-button
           >
-          
-          
+
+
         </div>
         <!-- 打卡信息详情 -->
         <div>
-          
+
             <h3>一、基础信息</h3>
             <TableDetailMessage :data="punchLogDetail"></TableDetailMessage>
             <h3>二、食物以及对比照信息</h3>
             <div style="height: 370px; overflow: auto">
-              <div v-if="punchLog != null && punchLog.ingredientDescribe != null && punchLog.ingredientDescribe != ''">
+              <div v-if="punchLog != null && punchLog.ingredientDesc != null && punchLog.ingredientDesc != ''">
                 <h4>食物描述</h4>
                 <div>
-                  {{punchLog.ingredientDescribe}}
+                  {{punchLog.ingredientDesc}}
                 </div>
               </div>
               <div v-if="punchLog != null && (punchLog.imagesUrl.breakfastImages.length > 0 || punchLog.imagesUrl.lunchImages.length > 0 || punchLog.imagesUrl.dinnerImages.length > 0
@@ -102,7 +102,7 @@
               </div>
             </div>
         </div>
-    </div> 
+    </div>
 
     <el-dialog :visible.sync="commentVisible" :title="commentTitle" width="500px" append-to-body @closed="commentClosed">
         <el-form ref="form" :model="commentForm" :rules="commentRules" label-position="top" label-width="100px">
@@ -115,9 +115,9 @@
               >
             </el-rate>
             </el-form-item>
-          
+
           <el-form-item label="点评内容" prop="comment" >
-            
+
             <el-input
               type="textarea"
               :rows="4"
@@ -154,7 +154,7 @@ export default {
       title: "",
       data: null,
       callback: null,
-      punchLog: null,  
+      punchLog: null,
       imageUrl: [],
       punchLogDetail: [],
       //打卡详情的标题，按竖显示
@@ -185,7 +185,7 @@ export default {
     };
   },
   methods: {
-    
+
     // 自定义列背景色
     columnStyle({ row, column, rowIndex, columnIndex }) {
       if (columnIndex % 2 === 0) {
@@ -260,7 +260,7 @@ export default {
         }
         this.commentTitle = "点评「"+this.punchLog.customerName+" "+ this.punchLog.logTime +"」打卡";
         this.commentVisible = true;
-        
+
     },
     commentClosed(){
        this.commentVisible = false;

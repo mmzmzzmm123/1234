@@ -1,6 +1,7 @@
 package com.stdiet.custom.page;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.stdiet.common.utils.StringUtils;
 import lombok.Data;
 
 import java.math.BigDecimal;
@@ -115,7 +116,12 @@ public class WxLogInfo {
     private String healthManifesto;
 
     public void setDefecation(String defecation) {
-        this.defecation = defecation.equals("Y") ? "是" : "否";
+        if (StringUtils.isAlpha(defecation)) {
+//            this.defecation = defecation.equals("Y") ? "是" : "否";
+            this.defecation = defecation.equals("Y") ? "顺畅" : "其他";
+        } else {
+            this.defecation = defecation;
+        }
     }
 
     public void setDiet(String diet) {
