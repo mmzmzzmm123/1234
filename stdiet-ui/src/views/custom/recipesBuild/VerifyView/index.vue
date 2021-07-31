@@ -19,31 +19,53 @@
           @onClick="handleOnClick"
         />
       </el-tab-pane>
+      <el-tab-pane label="客户信息" name="2" v-if="!temId">
+        <div class="content">
+          <HealthyView
+            dev
+            showRemark
+            :data="healthyDataType === 0 ? healthyData : {}"
+            v-show="healthyDataType === 0"
+          />
+          <BodySignView
+            dev
+            showRemark
+            :data="healthyDataType === 1 ? healthyData : {}"
+            v-show="healthyDataType === 1"
+          />
+        </div>
+      </el-tab-pane>
     </el-tabs>
   </div>
 </template>
 <script>
 import VueScrollTo from "vue-scrollto";
 import { createNamespacedHelpers } from "vuex";
-const {
-  mapActions,
-  mapState,
-  mapGetters,
-  mapMutations,
-} = createNamespacedHelpers("recipes");
+import HealthyView from "@/components/HealthyView";
+import BodySignView from "@/components/BodySignView";
+const { mapActions, mapState, mapGetters, mapMutations } =
+  createNamespacedHelpers("recipes");
 import IngredientSearchCom from "./IngredientSearchCom";
 import PhysicalSignCom from "./PhysicalSignCom";
 export default {
   name: "VerifyView",
   data() {
+    const { temId } = this.$route.query;
     return {
+      temId,
       activeName: "0",
       selectedIgd: 0,
     };
   },
-  components: { IngredientSearchCom, PhysicalSignCom },
+  components: {
+    HealthyView,
+    BodySignView,
+    IngredientSearchCom,
+    PhysicalSignCom,
+  },
   computed: {
     ...mapGetters(["verifyNotRecData"]),
+    ...mapState(["healthyDataType", "healthyData"]),
   },
   methods: {
     handleOnTabClick(tab) {
