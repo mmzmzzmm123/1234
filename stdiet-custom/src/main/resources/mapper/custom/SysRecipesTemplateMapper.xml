@@ -10,6 +10,7 @@
         <result property="planId" column="plan_id"/>
         <result property="nutritionistId" column="nutritionist_id"/>
         <result property="nutriAssisId" column="nutri_assis_id"/>
+        <result property="keyWord"    column="key_word"    />
         <result property="remark" column="remark"/>
         <result property="createTime" column="create_time"/>
         <result property="createBy" column="create_by"/>
@@ -23,7 +24,7 @@
     </resultMap>
 
     <select id="selectRecipesTemplateListByCondition" parameterType="SysRecipesTemplate" resultMap="SysRecipesTemplateResult">
-        select srt.id, srt.name, srt.nutritionist_id, srt.nutri_assis_id, srt.remark, srt.update_time,
+        select srt.id, srt.name, srt.nutritionist_id, srt.nutri_assis_id, srt.key_word, srt.remark, srt.update_time,
             srt.create_time, srt.update_by, srt.create_by, srt.plan_id, srp.recipes_id, srp.review_status,
             su_nutritionist.nick_name as nutritionist, su_nutritionist_assis.nick_name as nutritionist_assis
         from sys_recipes_template srt
@@ -31,19 +32,31 @@
         left join sys_user su_nutritionist on su_nutritionist.user_id = srt.nutritionist_id and su_nutritionist.del_flag = 0
         left join sys_user su_nutritionist_assis on su_nutritionist_assis.user_id = srt.nutri_assis_id and su_nutritionist_assis.del_flag = 0
         where srt.del_flag = 0
-        <if test="keys != null">and
+        <if test="keys != null and keys.length > 0">and
             <foreach collection="keys" item="key" separator="and" open="(" close=")">
-                srt.name like concat('%', #{key}, '%') or srt.remark like concat('%', #{key}, '%')
+                (
+                  srt.name like concat('%', #{key}, '%') or srt.remark like concat('%', #{key}, '%')
+                  or FIND_IN_SET(#{key}, srt.key_word)
+                )
             </foreach>
         </if>
         <if test="nutriAssisId != null ">and srt.nutri_assis_id = #{nutriAssisId}</if>
         <if test="nutritionistId != null ">and srt.nutritionist_id = #{nutritionistId}</if>
         <if test="reviewStatus != null ">and srp.review_status = #{reviewStatus}</if>
-        order by srt.id desc
+        order by
+        <if test="keys != null and keys.length > 0">
+            FIND_IN_SET(srt.id, (
+              SELECT group_concat(t.id Separator ',') from sys_recipes_template t WHERE
+                <foreach collection="keys" item="key" separator="and" open="(" close=")">
+                       FIND_IN_SET(#{key}, srt.key_word)
+                </foreach>
+            )) desc,
+        </if>
+        srt.id desc
     </select>
 
     <select id="getRecipesTemplateById" parameterType="Long" resultType="SysRecipesTemplate">
-         select srt.id, srt.name, srt.nutritionist_id as nutritionistId, srt.nutri_assis_id as nutriAssisId, srt.remark, srt.update_time as updateTime,
+         select srt.id, srt.name, srt.nutritionist_id as nutritionistId, srt.nutri_assis_id as nutriAssisId, srt.key_word, srt.remark, srt.update_time as updateTime,
             srt.create_time as createTime, srt.update_by as updateBy, srt.create_by as createBy, srt.plan_id as planId,
             su_nutritionist.nick_name as nutritionist, su_nutritionist_assis.nick_name as nutriAssis
         from sys_recipes_template srt
@@ -59,6 +72,7 @@
             <if test="planId != null">plan_id,</if>
             <if test="nutriAssisId != null">nutri_assis_id,</if>
             <if test="nutritionistId != null">nutritionist_id,</if>
+            <if test="keyWord != null">key_word,</if>
             <if test="createTime != null">create_time,</if>
             <if test="createBy != null">create_by,</if>
             <if test="updateTime != null">update_time,</if>
@@ -70,6 +84,7 @@
             <if test="planId != null">#{planId},</if>
             <if test="nutriAssisId != null">#{nutriAssisId},</if>
             <if test="nutritionistId != null">#{nutritionistId},</if>
+            <if test="keyWord != null">#{keyWord},</if>
             <if test="createTime != null">#{createTime},</if>
             <if test="createBy != null">#{createBy},</if>
             <if test="updateTime != null">#{updateTime},</if>
@@ -84,6 +99,7 @@
             <if test="name != null">name = #{name},</if>
             <if test="nutriAssisId != null">nutri_assis_id = #{nutriAssisId},</if>
             <if test="nutritionistId != null">nutritionist_id = #{nutritionistId},</if>
+            <if test="keyWord != null">key_word = #{keyWord},</if>
             <if test="createTime != null">create_time = #{createTime},</if>
             <if test="createBy != null">create_by = #{createBy},</if>
             <if test="updateTime != null">update_time = #{updateTime},</if>

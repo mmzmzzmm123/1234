@@ -7,11 +7,28 @@
       v-show="showSearch"
     >
       <el-form-item label="搜索内容" prop="name">
-        <el-input
+        <!--<el-input
+          clearable
           v-model="queryParams.name"
           placeholder="请输入模板名称或备注"
           @keyup.enter.native="handleQuery"
-        />
+        />-->
+        <el-select
+          v-model="queryParams.keys"
+          multiple
+          filterable
+          allow-create
+          clearable
+          default-first-option
+           @keyup.enter.native="handleQuery"
+          placeholder="请输入或选择关键字">
+          <!--<el-option
+            v-for="item in options"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value">
+          </el-option>-->
+        </el-select>
       </el-form-item>
       <el-form-item label="营养师" prop="nutritionistId">
         <el-select
@@ -117,12 +134,29 @@
         :formatter="nutriAssisIdFormat"
       />
       <el-table-column
+        label="关键词"
+        align="center"
+        width="200"
+        prop="kwyWordArray"
+      >
+          <!--<template slot-scope="scope">
+             <AutoHideInfo :data="scope.row.keyWordArray" :line="2"> </AutoHideInfo>
+          </template>-->
+          <template slot-scope="scope">
+           <AutoHideMessage :data="scope.row.keyWord" :maxLength="20"></AutoHideMessage>
+        </template>
+      </el-table-column>
+      <el-table-column label="备注" prop="remark" align="center" >
+        <template slot-scope="scope">
+           <AutoHideMessage :data="scope.row.remark" :maxLength="20"></AutoHideMessage>
+        </template>
+      </el-table-column>
+      <el-table-column
         label="创建时间"
         align="center"
         width="180"
         prop="createTime"
       />
-      <el-table-column label="备注" prop="remark" align="center" />
       <el-table-column
         label="操作"
         align="center"
@@ -181,6 +215,8 @@ import {
   deleteRecipesTemplate,
 } from "@/api/custom/recipesTemplate";
 import TemplateDialog from "@/components/TemplateDialog";
+import AutoHideInfo from "@/components/AutoHideInfo";
+import AutoHideMessage from "@/components/AutoHideMessage";
 import { mapGetters, mapState } from "vuex";
 
 export default {
@@ -210,6 +246,7 @@ export default {
         nutritionistId: null,
         nutriAssisId: null,
         reviewStatus: null,
+        keys: null
       },
       open: false,
       title: "",
@@ -231,6 +268,8 @@ export default {
   },
   components: {
     TemplateDialog,
+    AutoHideInfo,
+    AutoHideMessage
     // "order-dialog": OrderDetail,
     // body_sign_dialog: BodySignDetail,
   },
@@ -270,8 +309,11 @@ export default {
     getList() {
       this.loading = true;
       const params = JSON.parse(JSON.stringify(this.queryParams));
-      params.keys = params.name ? params.name.split(" ") : null;
+      //params.keys = params.name ? params.name.split(" ") : null;
       listRecipesTemplate(params).then((response) => {
+        response.rows.forEach((item,index) => {
+            item.keyWordArray = (item.keyWord != null && item.keyWord != "") ? item.keyWord.split(",") : [];
+        });
         this.recipesTemplateList = response.rows;
         this.total = response.total;
         this.loading = false;
@@ -289,6 +331,7 @@ export default {
     /** 重置按钮操作 */
     resetQuery() {
       this.resetForm("queryForm");
+      this.queryParams.keys = null;
       this.handleQuery();
     },
     getReviewStatusName(status) {

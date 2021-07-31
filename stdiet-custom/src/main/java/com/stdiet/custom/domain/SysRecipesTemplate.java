@@ -1,6 +1,7 @@
 package com.stdiet.custom.domain;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.stdiet.common.annotation.Excel;
 import lombok.Data;
 
 import java.util.Date;
@@ -20,6 +21,9 @@ public class SysRecipesTemplate {
     String nutriAssis;
 
     Long planId;
+
+    /** 关键词，使用 , 隔开 */
+    private String keyWord;
 
     String remark;
 
