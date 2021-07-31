@@ -51,7 +51,7 @@ public class WxLogInfo {
     /**
      * 食材描述
      */
-    private String ingredientDescribe;
+    private String ingredientDesc;
 
     //全部食材照片
     private String allImages;
