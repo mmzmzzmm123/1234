@@ -1,14 +1,15 @@
 package com.stdiet.custom.domain;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.stdiet.common.annotation.Excel;
+import com.stdiet.common.core.domain.BaseEntity;
+import com.stdiet.common.utils.StringUtils;
+import lombok.Data;
+
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
-
-import com.fasterxml.jackson.annotation.JsonFormat;
-import lombok.Data;
-import com.stdiet.common.annotation.Excel;
-import com.stdiet.common.core.domain.BaseEntity;
 
 /**
  * 微信用户记录对象 sys_wx_user_log
@@ -17,56 +18,91 @@ import com.stdiet.common.core.domain.BaseEntity;
  * @date 2020-11-29
  */
 @Data
-public class SysWxUserLog extends BaseEntity
-{
-    private static final long serialVersionUID = 1L;
+public class SysWxUserLog extends BaseEntity {
 
     private Long id;
 
-    /** 微信openid */
+    /**
+     * 微信openid
+     */
     private String openid;
 
-    /** 体重 */
+    /**
+     * 体重
+     */
     @Excel(name = "体重")
     private BigDecimal weight;
 
-    /** 微信appid */
+    /**
+     * 微信appid
+     */
     @Excel(name = "微信appid")
     private String appid;
 
-    /** 电话 */
+    /**
+     * 电话
+     */
     @Excel(name = "电话")
     private String phone;
 
-    /** 睡觉时间 */
+    /**
+     * 睡觉时间
+     */
     @Excel(name = "睡觉时间")
     private String sleepTime;
 
-    /** 起床时间 */
+    /**
+     * 起床时间
+     */
     @Excel(name = "起床时间")
     private String wakeupTime;
 
-    /** 运动情况（Y是 N否） */
+    /**
+     * 运动情况（Y是 N否）
+     */
     @Excel(name = "运动情况", readConverterExp = "Y=是,N=否")
     private String sport;
 
-    /** 用户头像 */
+    private String sportDesc;
+
+    /**
+     * 用户头像
+     */
     @Excel(name = "用户头像")
     private String avatarUrl;
 
-    /** 饮食情况（Y是 N否） */
+    /**
+     * 饮食情况（Y是 N否）
+     */
     @Excel(name = "饮食情况", readConverterExp = "Y=是,N=否")
     private String diet;
 
-    /** 熬夜失眠（Y是 N否） */
+    /**
+     * 熬夜失眠（Y是 N否）
+     */
     @Excel(name = "熬夜失眠", readConverterExp = "Y=是,N=否")
     private String insomnia;
 
-    /** 排便情况（Y是 N否） */
+    /**
+     * 排便情况（Y是 N否）
+     */
     @Excel(name = "排便情况", readConverterExp = "Y=是,N=否")
     private String defecation;
 
-    /** 饮水量 */
+    public void setDefecation(String defecation) {
+        if (StringUtils.isAlpha(defecation)) {
+//            this.defecation = defecation.equals("Y") ? "是" : "否";
+            this.defecation = defecation.equals("Y") ? "顺畅" : "其他";
+        } else {
+            this.defecation = defecation;
+        }
+    }
+
+    private String defecationDesc;
+
+    /**
+     * 饮水量
+     */
     @Excel(name = "饮水量")
     private Long water;
 
@@ -94,67 +130,101 @@ public class SysWxUserLog extends BaseEntity
     @Excel(name = "营养师")
     private String nutritionist;
 
-    /** 情绪 */
+    /**
+     * 情绪
+     */
     @Excel(name = "情绪")
     private String emotion;
 
-    /** 食谱之外的食物 */
+    private String emotionDesc;
+
+    /**
+     * 食谱之外的食物
+     */
     @Excel(name = "食谱之外的食物")
     private String slyEatFood;
 
-    /** 是否便秘（Y是 N否） */
+    /**
+     * 是否便秘（Y是 N否）
+     */
     @Excel(name = "是否便秘", readConverterExp = "Y=是,N=否")
     private String constipation;
 
-    /** 食材描述 */
+    /**
+     * 食材描述
+     */
     @Excel(name = "食材描述")
-    private String ingredientDescribe;
+    private String ingredientDesc;
 
-    /** 早餐照片 */
+    /**
+     * 早餐照片
+     */
     @Excel(name = "早餐照片")
     private String breakfastImages;
 
-    /** 午餐照片 */
+    /**
+     * 午餐照片
+     */
     @Excel(name = "午餐照片")
     private String lunchImages;
 
-    /** 午餐照片 */
+    /**
+     * 午餐照片
+     */
     @Excel(name = "午餐照片")
     private String dinnerImages;
 
-    /** 加餐照片 */
+    /**
+     * 加餐照片
+     */
     @Excel(name = "加餐照片")
     private String extraMealImages;
 
-    /** 体型对比照 */
+    /**
+     * 体型对比照
+     */
     @Excel(name = "体型对比照")
     private String bodyImages;
 
-    /** 服务建议 */
+    /**
+     * 服务建议
+     */
     @Excel(name = "服务建议")
     private String suggest;
 
-    /** 目标体重 */
+    /**
+     * 目标体重
+     */
     @Excel(name = "目标体重")
     private BigDecimal targetWeight;
 
-    /** 执行评分，五分制 */
+    /**
+     * 执行评分，五分制
+     */
     @Excel(name = "执行评分，五分制")
     private BigDecimal executionScore;
 
-    /** 点评 */
+    /**
+     * 点评
+     */
     @Excel(name = "点评")
     private String comment;
 
-    /** 点赞数量 */
+    /**
+     * 点赞数量
+     */
     @Excel(name = "点赞数量")
     private Long thumbsupNum;
 
-    /** 健康宣言 */
+    /**
+     * 健康宣言
+     */
     @Excel(name = "健康宣言")
     private String healthManifesto;
 
-    /** 删除标识 0未删除 1已删除 */
+    /**
+     * 删除标识 0未删除 1已删除
+     */
     private Long delFlag;
 
     //售后营养师ID
@@ -166,4 +236,5 @@ public class SysWxUserLog extends BaseEntity
 
     //图片预览路径
     private Map<String, List<String>> imagesUrl;
+
 }
