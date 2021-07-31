@@ -65,15 +65,15 @@ public class GenUtils
             {
                 column.setJavaType(GenConstants.TYPE_BIGDECIMAL);
             }
-            // 如果是整形
-            else if (str != null && str.length == 1 && Integer.parseInt(str[0]) <= 10)
-            {
-                column.setJavaType(GenConstants.TYPE_INTEGER);
-            }
-            // 长整形
-            else
+            // 如果是长整型
+            else if (str != null && str.length == 1 && str[0].equals("bigint"))
             {
                 column.setJavaType(GenConstants.TYPE_LONG);
+            }
+            // 整型
+            else
+            {
+                column.setJavaType(GenConstants.TYPE_INTEGER);
             }
         }
 
