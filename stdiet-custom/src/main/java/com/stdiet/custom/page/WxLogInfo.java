@@ -123,8 +123,8 @@ public class WxLogInfo {
 
     public void setDefecation(String defecation) {
         if (StringUtils.isAlpha(defecation)) {
-//            this.defecation = defecation.equals("Y") ? "是" : "否";
-            this.defecation = defecation.equals("Y") ? "顺畅" : "其他";
+            this.defecation = defecation.equals("Y") ? "是" : "否";
+//            this.defecation = defecation.equals("Y") ? "顺畅" : "其他";
         } else {
             this.defecation = defecation;
         }
