@@ -9,7 +9,7 @@
   >
     <el-row :gutter="15">
       <el-form ref="form" :model="form" :rules="rules" label-width="100px">
-        <el-col :span="12">
+        <el-col :span="12" v-show="orderModuleshow.orderTypeShow">
           <el-form-item label="订单类型" prop="orderTypeList">
             <el-cascader
               v-model="form.orderTypeList"
@@ -19,7 +19,7 @@
             </el-cascader>
           </el-form-item>
         </el-col>
-        <el-col :span="8" v-show="secondAfterSaleFlagShow">
+        <el-col :span="8" v-show="orderModuleshow.secondAfterSaleFlagShow">
           <el-form-item
             label="自动创建售后提成订单"
             prop="secondAfterSaleFlag"
@@ -35,12 +35,12 @@
             </el-select>
           </el-form-item>
         </el-col>
-        <el-col :span="8">
-          <el-form-item label="成交金额" prop="amount">
+        <el-col :span="8" v-show="orderModuleshow.amountShow">
+          <el-form-item label="成交金额" prop="amount" >
             <el-input v-model.trim="form.amount" placeholder="请输入金额" />
           </el-form-item>
         </el-col>
-        <el-col :span="8">
+        <el-col :span="8" v-show="orderModuleshow.payTypeShow">
           <el-form-item label="收款方式" prop="payTypeId">
             <el-select v-model="form.payTypeId" placeholder="请选择">
               <el-option
@@ -52,7 +52,7 @@
             </el-select>
           </el-form-item>
         </el-col>
-        <el-col :span="8">
+        <el-col :span="8" v-show="orderModuleshow.accountShow">
           <el-form-item label="进粉渠道" prop="accountId">
             <el-select
               v-model="form.accountId"
@@ -70,7 +70,7 @@
             </el-select>
           </el-form-item>
         </el-col>
-        <el-col :span="8">
+        <el-col :span="8"  v-show="orderModuleshow.serveTimeShow">
           <el-form-item label="服务时长" prop="serveTime">
             <el-select v-model="form.serveTimeId" placeholder="请选服">
               <el-option
@@ -82,8 +82,8 @@
             </el-select>
           </el-form-item>
         </el-col>
-        <el-col :span="8">
-          <el-form-item label="赠送时长" prop="serveTime">
+        <el-col :span="8" v-show="orderModuleshow.giveServeDayShow">
+          <el-form-item label="赠送时长" prop="giveServeDay">
             <el-select v-model="form.giveServeDay" placeholder="请选择">
               <el-option
                 v-for="dict in giveTimeIdOption"
@@ -94,7 +94,7 @@
             </el-select>
           </el-form-item>
         </el-col>
-        <el-col :span="8">
+        <el-col :span="8" v-show="orderModuleshow.conditioningProjectShow">
           <el-form-item label="调理项目" prop="conditioningProjectId">
             <el-select
               v-model="form.conditioningProjectId"
@@ -111,7 +111,7 @@
             </el-select>
           </el-form-item>
         </el-col>
-        <el-col :span="8" v-show="preSaleShow && !businessAffairShow">
+        <el-col :span="8" v-show="orderModuleshow.preSaleShow">
           <el-form-item label="售前" prop="preSaleId" >
             <el-select v-model="form.preSaleId" placeholder="请选择" filterable
               clearable>
@@ -124,7 +124,7 @@
             </el-select>
           </el-form-item>
         </el-col>
-        <el-col :span="8" v-show="businessAffairShow">
+        <el-col :span="8" v-show="orderModuleshow.businessAffairShow">
           <el-form-item label="商务" prop="businessAffairId" >
             <el-select v-model="form.businessAffairId" placeholder="请选择" filterable clearable>
               <el-option
@@ -136,7 +136,7 @@
             </el-select>
           </el-form-item>
         </el-col>
-        <el-col :span="8" v-show="pushPreSaleShow">
+        <el-col :span="8" v-show="orderModuleshow.pushPreSaleShow">
           <el-form-item label="售前推送" prop="preSaleId" title="售前推送人就是该客户体验单的销售，只有售中一开单需要选择">
             <el-select v-model="form.pushPreSaleId" placeholder="请选择" filterable
               clearable>
@@ -149,7 +149,7 @@
             </el-select>
           </el-form-item>
         </el-col>
-        <el-col :span="8" v-show="onSaleShow">
+        <el-col :span="8" v-show="orderModuleshow.onSaleShow">
           <el-form-item label="售中" prop="onSaleId">
             <el-select v-model="form.onSaleId" placeholder="请选择">
               <el-option
@@ -161,7 +161,7 @@
             </el-select>
           </el-form-item>
         </el-col>
-        <el-col :span="8" v-show="afterNutiShow">
+        <el-col :span="8" v-show="orderModuleshow.afterSaleShow">
           <el-form-item label="售后" prop="afterSaleId">
             <el-select v-model="form.afterSaleId" placeholder="请选择" filterable
               clearable>
@@ -174,7 +174,7 @@
             </el-select>
           </el-form-item>
         </el-col>
-        <el-col :span="8" v-show="afterNutiShow">
+        <el-col :span="8" v-show="orderModuleshow.nutritionistShow">
           <el-form-item label="主营养师" prop="nutritionistIdList">
             <el-select
               v-model="form.nutritionistIdList"
@@ -191,7 +191,7 @@
             </el-select>
           </el-form-item>
         </el-col>
-        <el-col :span="8" v-show="orderRateOptionsShow">
+        <el-col :span="8" v-show="orderModuleshow.nutritionistRateShow">
           <el-form-item label="拆分比例" prop="nutritionistRate">
             <el-select v-model="form.nutritionistRate" placeholder="请选择">
               <el-option
@@ -203,7 +203,7 @@
             </el-select>
           </el-form-item>
         </el-col>
-        <el-col :span="8" v-show="afterNutiShow">
+        <el-col :span="8" v-show="orderModuleshow.nutriAssisShow">
           <el-form-item label="助理营养师" prop="nutriAssisId">
             <el-select v-model="form.nutriAssisId" placeholder="请选择" filterable
               clearable>
@@ -216,7 +216,7 @@
             </el-select>
           </el-form-item>
         </el-col>
-        <el-col :span="8" v-show="!businessAffairShow">
+        <el-col :span="8" v-show="orderModuleshow.plannerShow">
           <el-form-item label="策划" prop="plannerId">
             <el-select v-model="form.plannerId" placeholder="请选择" filterable
               clearable> 
@@ -229,7 +229,7 @@
             </el-select>
           </el-form-item>
         </el-col>
-        <el-col :span="8" v-show="!businessAffairShow">
+        <el-col :span="8" v-show="orderModuleshow.plannerAssisShow">
           <el-form-item label="策划助理" prop="plannerAssisId">
             <el-select v-model="form.plannerAssisId" placeholder="请选择" filterable
               clearable>
@@ -242,7 +242,7 @@
             </el-select>
           </el-form-item>
         </el-col>
-        <el-col :span="8" v-show="!businessAffairShow">
+        <el-col :span="8" v-show="orderModuleshow.operatorShow">
           <el-form-item label="运营" prop="operatorId">
             <el-select v-model="form.operatorId" placeholder="请选择" filterable
               clearable>
@@ -255,7 +255,7 @@
             </el-select>
           </el-form-item>
         </el-col>
-        <el-col :span="8" v-show="!businessAffairShow">
+        <el-col :span="8" v-show="orderModuleshow.operatorAssisShow">
           <el-form-item label="运营助理" prop="operatorAssisId">
             <el-select v-model="form.operatorAssisId" placeholder="请选择" filterable
               clearable>
@@ -273,7 +273,7 @@
             <el-input v-model="form.recommender" placeholder="请输入推荐人" />
           </el-form-item>
         </el-col>-->
-        <el-col :span="10">
+        <el-col :span="10" v-show="orderModuleshow.orderTimeShow">
           <el-form-item label="成交时间" prop="orderTime">
             <el-date-picker
               style="width: 182.5px"
@@ -295,7 +295,7 @@
             </el-select>
           </el-form-item>
         </el-col>-->
-        <el-col :span="10">
+        <el-col :span="10" v-show="orderModuleshow.startTimeShow">
           <el-form-item label="服务开始时间" prop="startTime" label-width="180">
             <el-date-picker
               style="width: 182.5px"
@@ -310,7 +310,7 @@
         </el-col>
         
         <!-- 添加时默认未审核，不能改 -->
-        <el-col :span="10" v-hasPermi="['custom:order:review']" v-show="false">
+        <el-col :span="10" v-hasPermi="['custom:order:review']" v-show="false && orderModuleshow.reviewStatusShow">
           <el-form-item label="审核状态" prop="reviewStatus">
             <el-select v-model="form.reviewStatus" placeholder="请选择审核状态">
               <el-option
@@ -322,7 +322,7 @@
             </el-select>
           </el-form-item>
         </el-col>
-        <el-col>
+        <el-col v-show="orderModuleshow.remarkShow">
           <el-form-item label="备注" prop="remark">
             <el-input
               v-model="form.remark"
@@ -483,19 +483,11 @@ export default {
       secondAfterSaleFlagShow: false,
       //分成比例
       orderRateOptions: orderTypeData["orderRateArray"],
-      //比例是否显示
-      orderRateOptionsShow: false,
-      //售前是否显示
-      preSaleShow: true,
-      //售中是否显示
-      onSaleShow: false,
-      //售前推送人是否显示(售中一开单才存在)
-      pushPreSaleShow: false,
-      //售后、营养师、营养师助理是否显示
-      afterNutiShow: true,
-      //商务订单
-      businessAffairShow: false
-    };
+      
+
+      //订单模块控制
+      orderModuleshow: Object.assign({}, orderTypeData.orderModuleshow)
+    }      
   },
   created() {
     this.getDicts("cus_pay_type").then((response) => {
@@ -850,61 +842,10 @@ export default {
     //   this.initPlanningAndOperation();
     // },
     "form.orderTypeList": function (newVal, oldVal) {
-      //判断订单类型是否选择了二开
-      if ((newVal[1] == 1 || newVal[1] == 3) && newVal[0] != 4) {
-        this.form.secondAfterSaleFlag = 1;
-        this.secondAfterSaleFlagShow = true;
-      } else {
-        this.form.secondAfterSaleFlag = 0;
-        this.secondAfterSaleFlagShow = false;
-      }
-      //判断是否选择了比例拆分单
-      if (newVal[0] == 1 || newVal[1] == 2 || newVal[1] == 3) {
-        this.orderRateOptionsShow = true;
-        this.form.nutritionistRate = "2,8";
-      } else {
-        this.orderRateOptionsShow = false;
-        this.form.nutritionistRate = "0,10";
-      }
-      //判断是否选择了体验单
-      if (newVal[0] == 2) {
-        this.form.serveTimeId = 7;
-        this.form.conditioningProjectId = 12;
-        this.onSaleShow = true;
-        this.afterNutiShow = false;
-      } else {
-        this.form.onSaleId = null;
-        this.form.serveTimeId = 90;
-        this.form.conditioningProjectId = 0;
-        this.onSaleShow = false;
-        this.afterNutiShow = true;
-      }
-      //判断是否选择了售中单
-      if(newVal[0] == 3){
-        //不需要选择销售,需要选择售中
-        this.form.preSaleId = null;
-        this.onSaleShow = true;
-        this.preSaleShow = false;
-        //一开单
-        if(newVal[1] == 0 || newVal[1] == 2){
-          this.form.pushPreSaleId = (this.data && this.data.preSaleId != null) ? this.data.preSaleId : null;
-            this.pushPreSaleShow = true;
-        }else{
-            this.pushPreSaleShow = false;
-            this.form.pushPreSaleId = null;
-        }
-      }else{
-          this.form.pushPreSaleId = null;
-          this.pushPreSaleShow = false;
-          this.preSaleShow = true;
-          //需要判断是否为体验单
-          if (newVal[0] != 2) {
-            this.form.onSaleId = null;
-            this.onSaleShow = false;
-          }
-      }
-      //是否选择了商务单
-      this.businessAffairShow = newVal[0] == 4;
+       let resultArray = orderTypeData.dealOrderModuleshowByOrderType(newVal, this.orderModuleshow, this.form);
+       this.orderModuleshow = resultArray[0];
+       this.form = resultArray[1];
+       
     },
   },
 };

@@ -113,7 +113,7 @@ export default {
         response.data.weight = response.data.weight != null ? response.data.weight + "斤" : "";
         response.data.giveServeDay = response.data.giveServeDay != null ? response.data.giveServeDay + "天" : "";
         if(response.data.orderType == 4){
-          response.data.preSale = response.data.businessAffair;
+          response.data.preSale = response.data.preSale != null ? response.data.preSale : response.data.businessAffair;
         }
         for (let i = 0; i < this.orderTitleData.length; i++) {
           this.orderDetailList.push({

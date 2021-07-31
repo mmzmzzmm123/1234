@@ -9,7 +9,7 @@
   >
     <el-row :gutter="15">
       <el-form ref="form" :model="form" :rules="rules" label-width="90px">
-        <el-col :span="16">
+        <el-col :span="16" v-show="orderModuleshow.orderTypeShow">
           <el-form-item label="订单类型" prop="orderTypeName">
             <el-input
               v-model="form.orderTypeName"
@@ -18,12 +18,12 @@
             />
           </el-form-item>
         </el-col>
-        <el-col :span="8">
+        <el-col :span="8" v-show="orderModuleshow.amountShow">
           <el-form-item label="成交金额" prop="amount">
             <el-input v-model.trim="form.amount" placeholder="请输入金额" />
           </el-form-item>
         </el-col>
-        <el-col :span="8">
+        <el-col :span="8" v-show="orderModuleshow.payTypeShow">
           <el-form-item label="收款方式" prop="payTypeId">
             <el-select v-model="form.payTypeId" placeholder="请选择">
               <el-option
@@ -35,7 +35,7 @@
             </el-select>
           </el-form-item>
         </el-col>
-        <el-col :span="8">
+        <el-col :span="8" v-show="orderModuleshow.accountShow">
           <el-form-item label="进粉渠道" prop="accountId">
             <el-select
               v-model="form.accountId"
@@ -51,7 +51,7 @@
             </el-select>
           </el-form-item>
         </el-col>
-        <el-col :span="8">
+        <el-col :span="8"  v-show="orderModuleshow.serveTimeShow">
           <el-form-item label="服务时长" prop="serveTime">
             <el-select v-model="form.serveTimeId" placeholder="请选服">
               <el-option
@@ -63,8 +63,8 @@
             </el-select>
           </el-form-item>
         </el-col>
-        <el-col :span="8">
-          <el-form-item label="赠送时长" prop="serveTime">
+        <el-col :span="8" v-show="orderModuleshow.giveServeDayShow">
+          <el-form-item label="赠送时长" prop="giveServeDay">
             <el-select v-model="form.giveServeDay" placeholder="请选择">
               <el-option
                 v-for="dict in giveTimeIdOption"
@@ -75,7 +75,7 @@
             </el-select>
           </el-form-item>
         </el-col>
-        <el-col :span="8">
+        <el-col :span="8" v-show="orderModuleshow.conditioningProjectShow">
           <el-form-item label="调理项目" prop="conditioningProjectId">
             <el-select
               v-model="form.conditioningProjectId"
@@ -90,7 +90,7 @@
             </el-select>
           </el-form-item>
         </el-col>
-        <el-col :span="8" v-show="preSaleShow && !businessAffairShow">
+        <el-col :span="8" v-show="orderModuleshow.preSaleShow">
           <el-form-item label="售前" prop="preSaleId">
             <el-select v-model="form.preSaleId" placeholder="请选择">
               <el-option
@@ -102,7 +102,7 @@
             </el-select>
           </el-form-item>
         </el-col>
-        <el-col :span="8" v-show="businessAffairShow">
+        <el-col :span="8" v-show="orderModuleshow.businessAffairShow">
           <el-form-item label="商务" prop="businessAffairId" >
             <el-select v-model="form.businessAffairId" placeholder="请选择" filterable clearable>
               <el-option
@@ -114,7 +114,7 @@
             </el-select>
           </el-form-item>
         </el-col>
-        <el-col :span="8" v-show="pushPreSaleShow">
+        <el-col :span="8" v-show="orderModuleshow.pushPreSaleShow">
           <el-form-item label="售前推送" prop="preSaleId">
             <el-select v-model="form.pushPreSaleId" placeholder="请选择">
               <el-option
@@ -126,7 +126,7 @@
             </el-select>
           </el-form-item>
         </el-col>
-        <el-col :span="8" v-show="onSaleShow">
+        <el-col :span="8" v-show="orderModuleshow.onSaleShow">
           <el-form-item label="售中" prop="onSaleId">
             <el-select v-model="form.onSaleId" placeholder="请选择">
               <el-option
@@ -138,7 +138,7 @@
             </el-select>
           </el-form-item>
         </el-col>
-        <el-col :span="8" v-show="afterSaleNutriAssShow">
+        <el-col :span="8" v-show="orderModuleshow.afterSaleShow">
           <el-form-item label="售后" prop="afterSaleId">
             <el-select v-model="form.afterSaleId" placeholder="请选择">
               <el-option
@@ -150,7 +150,7 @@
             </el-select>
           </el-form-item>
         </el-col>
-        <el-col :span="8" v-show="afterSaleNutriAssShow">
+        <el-col :span="8" v-show="orderModuleshow.nutritionistShow">
           <el-form-item label="主营养师" prop="nutritionistId">
             <el-select v-model="form.nutritionistId" placeholder="请选择">
               <el-option
@@ -162,7 +162,7 @@
             </el-select>
           </el-form-item>
         </el-col>
-        <el-col :span="8" v-show="afterSaleNutriAssShow">
+        <el-col :span="8" v-show="orderModuleshow.nutriAssisShow">
           <el-form-item label="助理营养师" prop="nutriAssisId">
             <el-select v-model="form.nutriAssisId" placeholder="请选择">
               <el-option
@@ -174,7 +174,7 @@
             </el-select>
           </el-form-item>
         </el-col>
-        <el-col :span="8" v-show="planOperatorShow && !businessAffairShow">
+        <el-col :span="8" v-show="orderModuleshow.plannerShow">
           <el-form-item label="策划" prop="plannerId">
             <el-select v-model="form.plannerId" placeholder="请选择">
               <el-option
@@ -186,7 +186,7 @@
             </el-select>
           </el-form-item>
         </el-col>
-        <el-col :span="8" v-show="planOperatorShow && !businessAffairShow">
+        <el-col :span="8" v-show="orderModuleshow.plannerAssisShow">
           <el-form-item label="策划助理" prop="plannerAssisId">
             <el-select v-model="form.plannerAssisId" placeholder="请选择">
               <el-option
@@ -198,7 +198,7 @@
             </el-select>
           </el-form-item>
         </el-col>
-        <el-col :span="8" v-show="planOperatorShow && !businessAffairShow">
+        <el-col :span="8" v-show="orderModuleshow.operatorShow">
           <el-form-item label="运营" prop="operatorId">
             <el-select v-model="form.operatorId" placeholder="请选择">
               <el-option
@@ -210,7 +210,7 @@
             </el-select>
           </el-form-item>
         </el-col>
-        <el-col :span="8" v-show="planOperatorShow && !businessAffairShow">
+        <el-col :span="8" v-show="orderModuleshow.operatorAssisShow">
           <el-form-item label="运营助理" prop="operatorAssisId">
             <el-select v-model="form.operatorAssisId" placeholder="请选择">
               <el-option
@@ -227,7 +227,7 @@
             <el-input v-model="form.recommender" placeholder="请输入推荐人" />
           </el-form-item>
         </el-col>-->
-        <el-col :span="10">
+        <el-col :span="10" v-show="orderModuleshow.orderTimeShow">
           <el-form-item label="成交时间" prop="orderTime">
             <el-date-picker
               style="width: 182.5px"
@@ -241,7 +241,7 @@
             </el-date-picker>
           </el-form-item>
         </el-col>
-        <el-col :span="12">
+        <el-col :span="12" v-show="orderModuleshow.startTimeShow">
           <el-form-item label="服务开始时间" prop="startTime" label-width="160">
             <el-date-picker
               style="width: 182.5px"
@@ -254,7 +254,7 @@
             </el-date-picker>
           </el-form-item>
         </el-col>
-        <el-col v-hasPermi="['custom:order:review']">
+        <el-col v-hasPermi="['custom:order:review']" v-show="orderModuleshow.reviewStatusShow">
           <el-form-item label="审核状态" prop="reviewStatus">
             <el-select v-model="form.reviewStatus" placeholder="请选择审核状态">
               <el-option
@@ -266,7 +266,7 @@
             </el-select>
           </el-form-item>
         </el-col>
-        <el-col>
+        <el-col v-show="orderModuleshow.remarkShow">
           <el-form-item label="备注" prop="remark">
             <el-input
               v-model="form.remark"
@@ -287,6 +287,7 @@
 import { addOrder, updateOrder } from "@/api/custom/order";
 import dayjs from "dayjs";
 import { mapGetters } from "vuex";
+import * as orderTypeData from "@/utils/orderType";
 
 export default {
   name: "OrderEdit",
@@ -416,18 +417,9 @@ export default {
       reviewStatusOptions: [],
       //下拉列表对应关系(用于选择收款账号自动选择策划、策划助理、运营、运营助理)
       orderDropdownCorrespondingOptions: [],
-      //售前是否显示
-      preSaleShow: true,
-      //售中是否显示
-      onSaleShow: false,
-      //售前推送人是否显示(售中一开单才存在)
-      pushPreSaleShow: false,
-      //是否显示售后、营养师、营养师助理
-      afterSaleNutriAssShow: true,
-      //是否显示策划、策划助理、运营、运营助理
-      planOperatorShow: true,
-      //商务单
-      businessAffairShow: false
+      
+      //订单模块控制
+      orderModuleshow: Object.assign({}, orderTypeData.orderModuleshow)
     };
   },
   created() {
@@ -611,44 +603,13 @@ export default {
         ...obj,
       };
       this.resetForm("form");
-
-      //售前是否显示
-      this.preSaleShow = true;
-      //售中是否显示
-      this.onSaleShow = false;
-      //售前推送人是否显示(售中一开单才存在)
-      this.pushPreSaleShow= false;
-      //是否显示售后、营养师、营养师助理
-      this.afterSaleNutriAssShow= true;
-      //是否显示策划、策划助理、运营、运营助理
-      this.planOperatorShow = true;
       
-      if(this.form.orderType == "3"){
-         //售中单的非提成单不显示售前
-         if(this.form.afterSaleCommissOrder == null || this.form.afterSaleCommissOrder == 0){
-            this.preSaleShow = false;
-         }
-         if(this.form.orderCountType == 0 || this.form.orderCountType == 2){
-           this.pushPreSaleShow = true;
-         }
-      }
+      let orderTypeList = [parseInt(this.form.orderType), parseInt(this.form.orderCountType), parseInt(this.form.orderMoneyType)];
 
-      if(this.form.orderType == "2" || (this.form.orderType == "3" && (this.form.afterSaleCommissOrder == null || this.form.afterSaleCommissOrder == 0))){
-        this.onSaleShow = true;
-      }
+      let resultArray = orderTypeData.dealOrderModuleshowByOrderType(orderTypeList, this.orderModuleshow, this.form);
+      this.orderModuleshow = resultArray[0];
 
-      if((this.form.afterSaleCommissOrder != null && this.form.afterSaleCommissOrder != 0) || this.form.orderType == "2"){
-        this.afterSaleNutriAssShow = false;
-      }
-
-      if(this.form.afterSaleCommissOrder != null && this.form.afterSaleCommissOrder != 0){
-        this.planOperatorShow = false;
-      }
-
-      //是否商务单
-      this.businessAffairShow = this.form.orderType == "4";
-
-      //console.log(this.preSaleShow + " | " + this.pushPreSaleShow + " | " + this.onSaleShow + " | " + this.afterSaleNutriAssShow + "|" + this.planOperatorShow);
+      
     },
     handleOnClosed() {
       this.reset();

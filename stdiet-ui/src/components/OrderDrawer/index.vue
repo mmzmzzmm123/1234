@@ -110,6 +110,7 @@
                 >删除</el-button
               >
               <el-button
+                 v-show="scope.row.type === 'main' && scope.row.orderType != 2 && scope.row.orderType != 5"
                 size="mini"
                 type="text"
                 icon="el-icon-edit"
