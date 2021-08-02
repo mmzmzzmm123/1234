@@ -8,6 +8,7 @@ import com.stdiet.common.utils.DateUtils;
 import com.stdiet.common.utils.file.FileUploadUtils;
 import com.stdiet.common.utils.file.MimeTypeUtils;
 import com.stdiet.common.utils.oss.AliyunOSSUtils;
+import com.stdiet.custom.domain.SysCustomer;
 import com.stdiet.custom.domain.SysMessageNotice;
 import com.stdiet.custom.domain.SysWxUserInfo;
 import com.stdiet.custom.domain.entityEnum.MessageNoticeEnum;
@@ -168,6 +169,15 @@ public class SysWxUserLogServiceImpl implements ISysWxUserLogService {
      */
     public int getPunchCustomerTotalNum(){
         return  sysWxUserLogMapper.getPunchCustomerTotalNum();
+    }
+
+    /**
+     * 根据日期、营养师、助理、售后查询指定日期未打卡的客户信息
+     * @return
+     */
+    @Override
+    public List<SysCustomer> selectNotPunchCustomerByDate(SysCustomer sysCustomer){
+        return sysWxUserLogMapper.selectNotPunchCustomerByDate(sysCustomer);
     }
 
 }

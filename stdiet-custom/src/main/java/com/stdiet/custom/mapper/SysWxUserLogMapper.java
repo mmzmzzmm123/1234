@@ -2,9 +2,11 @@ package com.stdiet.custom.mapper;
 
 import java.util.List;
 
+import com.stdiet.custom.domain.SysCustomer;
 import com.stdiet.custom.domain.SysWxUserInfo;
 import com.stdiet.custom.domain.SysWxUserLog;
 import com.stdiet.custom.dto.response.CommunityPunchReponse;
+import com.stdiet.custom.dto.response.CustomerListResponse;
 import com.stdiet.custom.page.WxLogInfo;
 
 /**
@@ -112,5 +114,11 @@ public interface SysWxUserLogMapper
      * @return
      */
     int getPunchCustomerTotalNum();
+
+    /**
+     * 根据日期、营养师、助理、售后查询指定日期未打卡的客户信息
+     * @return
+     */
+    List<SysCustomer> selectNotPunchCustomerByDate(SysCustomer sysCustomer);
 
 }

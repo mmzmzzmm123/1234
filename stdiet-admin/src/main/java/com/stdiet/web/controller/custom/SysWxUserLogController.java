@@ -10,6 +10,7 @@ import com.stdiet.common.utils.DateUtils;
 import com.stdiet.common.utils.StringUtils;
 import com.stdiet.common.utils.oss.AliyunOSSUtils;
 import com.stdiet.common.utils.poi.ExcelUtil;
+import com.stdiet.custom.domain.SysCustomer;
 import com.stdiet.custom.domain.SysWxUserInfo;
 import com.stdiet.custom.domain.SysWxUserLog;
 import com.stdiet.custom.page.WxLogInfo;
@@ -223,4 +224,16 @@ public class SysWxUserLogController extends BaseController {
         }
         return toAjax(row);
     }
+
+    /**
+     * 查询指定日期未打卡用户
+     */
+    @PreAuthorize("@ss.hasPermi('custom:wxUserLog:list')")
+    @GetMapping("/selectNotPunchCustomerByDate")
+    public TableDataInfo selectNotPunchCustomerByDate(SysCustomer sysCustomer) {
+        startPage();
+        List<SysCustomer> list = sysWxUserLogService.selectNotPunchCustomerByDate(sysCustomer);
+        return getDataTable(list);
+    }
+
 }

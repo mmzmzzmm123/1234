@@ -79,6 +79,17 @@ export function commentPunchContent(data) {
   })
 }
 
+// 查询未打卡用户列表
+export function getNotPunchCustomer(query) {
+  return request({
+    url: '/custom/wxUserLog/selectNotPunchCustomerByDate',
+    method: 'get',
+    params: query
+  })
+}
+
+
+
 
 
 
