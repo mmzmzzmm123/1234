@@ -12,14 +12,15 @@
         <result property="xnxq" column="xnxq"/>
         <result property="deptid" column="dept_id"/>
         <result property="activitytime" column="activitytime"/>
-        <result property="activityendtime"    column="activityendtime"    />
-        <result property="stylecolor"    column="stylecolor"    />
+        <result property="activityendtime" column="activityendtime"/>
+        <result property="stylecolor" column="stylecolor"/>
         <result property="createuserid" column="createuserid"/>
         <result property="createtime" column="createtime"/>
+        <result property="remark" column="remark"/>
     </resultMap>
 
     <sql id="selectBySchoolcalendarVo">
-        select id, name, type, scope, xnxq, dept_id, activitytime, activityendtime, stylecolor, createuserid, createtime from by_schoolcalendar d
+        select id, name, type, scope, xnxq, dept_id, activitytime, activityendtime, stylecolor, createuserid, createtime, remark from by_schoolcalendar d
     </sql>
 
     <select id="selectBySchoolcalendarList" parameterType="BySchoolcalendar" resultMap="BySchoolcalendarResult">
@@ -31,8 +32,8 @@
         <if test="xnxq != null  and xnxq != ''">and xnxq like concat('%', #{xnxq}, '%')</if>
         <if test="deptid != null ">and dept_id = #{deptid}</if>
         <if test="activitytime != null ">and activitytime = #{activitytime}</if>
-        <if test="activityendtime != null "> and activityendtime = #{activityendtime}</if>
-        <if test="stylecolor != null  and stylecolor != ''"> and stylecolor = #{stylecolor}</if>
+        <if test="activityendtime != null ">and activityendtime = #{activityendtime}</if>
+        <if test="stylecolor != null  and stylecolor != ''">and stylecolor = #{stylecolor}</if>
         <if test="createuserid != null ">and createuserid = #{createuserid}</if>
         <if test="beginTime != null and beginTime != ''"><!-- 开始时间检索 -->
             AND date_format(activitytime,'%y%m%d') &gt;= date_format(#{beginTime},'%y%m%d')
@@ -64,6 +65,7 @@
             <if test="stylecolor != null  and stylecolor != ''">stylecolor,</if>
             <if test="createuserid != null ">createuserid,</if>
             <if test="createtime != null ">createtime,</if>
+            <if test="remark != null  and remark != ''">remark,</if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="name != null  and name != ''">#{name},</if>
@@ -76,6 +78,7 @@
             <if test="stylecolor != null  and stylecolor != ''">#{stylecolor},</if>
             <if test="createuserid != null ">#{createuserid},</if>
             <if test="createtime != null ">#{createtime},</if>
+            <if test="remark != null  and remark != ''">#{remark},</if>
         </trim>
     </insert>
 
@@ -92,6 +95,7 @@
             <if test="stylecolor != null  and stylecolor != ''">stylecolor = #{stylecolor},</if>
             <if test="createuserid != null ">createuserid = #{createuserid},</if>
             <if test="createtime != null ">createtime = #{createtime},</if>
+            <if test="remark != null  and remark != ''">remark = #{remark},</if>
         </trim>
         where id = #{id}
     </update>

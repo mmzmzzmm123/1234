@@ -163,6 +163,7 @@
         align="center"
         prop="activityendtime"
       />
+      <el-table-column label="备注" align="center" show-overflow-tooltip prop="remark" />
       <!-- <el-table-column
         label="创建时间"
         align="center"
@@ -214,7 +215,7 @@
     <el-dialog :title="title" :visible.sync="open" class="v-dialog">
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
         <el-form-item label="事件名称" prop="name">
-          <el-input v-model="form.name" placeholder="请输入内容" />
+          <el-input v-model="form.name" size="small" placeholder="请输入内容" />
         </el-form-item>
         <el-form-item label="活动类型" prop="type">
           <el-select
@@ -261,6 +262,14 @@
             end-placeholder="结束日期"
           ></el-date-picker>
           <el-input v-model="form.activityendtime" v-if="false" />
+        </el-form-item>
+        <el-form-item label="备注" prop="remark">
+          <el-input
+            type="textarea"
+            v-model="form.remark"
+            size="small"
+            placeholder=""
+          />
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -416,6 +425,7 @@ export default {
         type: undefined,
         scope: undefined,
         activitytime: undefined,
+        remark: undefined,
       };
       this.resetForm("form");
     },

@@ -47,7 +47,7 @@
           </el-form-item>
         </el-col>
         <el-col :xs="24" :ms="12" :md="5">
-          <el-form-item label="活动时间" prop="activitytime">
+          <!-- <el-form-item label="活动时间" prop="activitytime">
             <el-date-picker
               class="my-date-picker"
               clearable
@@ -56,6 +56,18 @@
               type="date"
               value-format="yyyy-MM-dd"
               placeholder="选择活动时间"
+            ></el-date-picker>
+          </el-form-item> -->
+          <el-form-item label="活动时间" prop="activitytime">
+            <el-date-picker
+              class="my-date-picker"
+              v-model="dateRange"
+              size="small"
+              value-format="yyyy-MM-dd"
+              type="daterange"
+              range-separator="-"
+              start-placeholder="开始日期"
+              end-placeholder="结束日期"
             ></el-date-picker>
           </el-form-item>
         </el-col>
@@ -140,7 +152,17 @@
         prop="xnxq"
         :formatter="xnxqFormat"
       />
-      <el-table-column label="活动时间" align="center" prop="activitytime" />
+      <el-table-column
+        label="活动开始时间"
+        align="center"
+        prop="activitytime"
+      />
+      <el-table-column
+        label="活动截止时间"
+        align="center"
+        prop="activityendtime"
+      />
+      <el-table-column label="备注" align="center" show-overflow-tooltip prop="remark" />
       <!-- <el-table-column
         label="创建时间"
         align="center"
@@ -193,10 +215,14 @@
     <el-dialog :title="title" :visible.sync="open" class="v-dialog">
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
         <el-form-item label="事件名称" prop="name">
-          <el-input v-model="form.name" placeholder="请输入内容" />
+          <el-input v-model="form.name" size="small" placeholder="请输入内容" />
         </el-form-item>
         <el-form-item label="活动类型" prop="type">
-          <el-select v-model="form.type" placeholder="请选择活动类型">
+          <el-select
+            v-model="form.type"
+            size="small"
+            placeholder="请选择活动类型"
+          >
             <el-option
               v-for="dict in typeOptions"
               :key="dict.dictValue"
@@ -219,6 +245,14 @@
             end-placeholder="结束日期"
           ></el-date-picker>
           <el-input v-model="form.activityendtime" v-if="false" />
+        </el-form-item>
+        <el-form-item label="备注" prop="remark">
+          <el-input
+            type="textarea"
+            v-model="form.remark"
+            size="small"
+            placeholder=""
+          />
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -258,6 +292,8 @@ export default {
       schoolcalendarclassList: [],
       // 园历班级名称列表
       classListAll: [],
+      // 日期范围
+      dateRange: [],
       // 弹出层标题
       title: "",
       // 是否显示弹出层
@@ -316,7 +352,9 @@ export default {
     /** 查询园历管理(班级)列表 */
     getList() {
       this.loading = true;
-      listSchoolcalendarclass(this.queryParams).then((response) => {
+      listSchoolcalendarclass(
+        this.addDateRange(this.queryParams, this.dateRange)
+      ).then((response) => {
         this.schoolcalendarclassList = response.rows;
         this.total = response.total;
         this.loading = false;
@@ -365,6 +403,7 @@ export default {
         activitytime: undefined,
         createuserid: undefined,
         createtime: undefined,
+        remark: undefined,
       };
       this.resetForm("form");
     },
@@ -375,6 +414,7 @@ export default {
     },
     /** 重置按钮操作 */
     resetQuery() {
+      this.dateRange = [];
       this.resetForm("queryForm");
       this.handleQuery();
     },

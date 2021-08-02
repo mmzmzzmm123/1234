@@ -16,6 +16,7 @@
         <result property="stylecolor" column="stylecolor"/>
         <result property="createuserid" column="createuserid"/>
         <result property="createtime" column="createtime"/>
+        <result property="remark"    column="remark"    />
         <association property="byClass" column="bjbh" javaType="ByClass" resultMap="ByClassResult"/>
     </resultMap>
 
@@ -39,7 +40,7 @@
     </resultMap>
 
     <sql id="selectBySchoolcalendarClassVo">
-        select s.id, s.name, s.type, s.classid, s.xnxq, s.deptId, s.activitytime, s.activityendtime, s.stylecolor, s.createuserid, s.createtime,
+        select s.id, s.name, s.type, s.classid, s.xnxq, s.deptId, s.activitytime, s.activityendtime, s.stylecolor, s.createuserid, s.createtime, s.remark,
                c.bjmc
         from by_schoolcalendar_class s, by_class c
     </sql>
@@ -59,7 +60,14 @@
         <if test="stylecolor != null  and stylecolor != ''">and stylecolor = #{stylecolor}</if>
         <if test="createuserid != null ">and createuserid = #{createuserid}</if>
         <if test="createtime != null ">and createtime = #{createtime}</if>
+        <if test="beginTime != null and beginTime != ''"><!-- 开始时间检索 -->
+            AND date_format(activitytime,'%y%m%d') &gt;= date_format(#{beginTime},'%y%m%d')
+        </if>
+        <if test="endTime != null and endTime != ''"><!-- 结束时间检索 -->
+            AND date_format(activitytime,'%y%m%d') &lt;= date_format(#{endTime},'%y%m%d')
+        </if>
 
+        order by activitytime desc
     </select>
 
     <select id="selectBySchoolcalendarClassById" parameterType="Long" resultMap="BySchoolcalendarClassResult">
@@ -81,6 +89,7 @@
             <if test="stylecolor != null  and stylecolor != ''">stylecolor,</if>
             <if test="createuserid != null ">createuserid,</if>
             <if test="createtime != null ">createtime,</if>
+            <if test="remark != null  and remark != ''">remark,</if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="id != null ">#{id},</if>
@@ -94,6 +103,7 @@
             <if test="stylecolor != null  and stylecolor != ''">#{stylecolor},</if>
             <if test="createuserid != null ">#{createuserid},</if>
             <if test="createtime != null ">#{createtime},</if>
+            <if test="remark != null  and remark != ''">#{remark},</if>
         </trim>
     </insert>
 
@@ -110,6 +120,7 @@
             <if test="stylecolor != null  and stylecolor != ''">stylecolor = #{stylecolor},</if>
             <if test="createuserid != null ">createuserid = #{createuserid},</if>
             <if test="createtime != null ">createtime = #{createtime},</if>
+            <if test="remark != null  and remark != ''">remark = #{remark},</if>
         </trim>
         where id = #{id}
     </update>

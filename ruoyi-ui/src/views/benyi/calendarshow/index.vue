@@ -157,6 +157,9 @@ export default {
     //background: rgba(109, 113, 121, 0.6);
   }
 }
+.fc-time {
+  display: none;
+}
 .xs-btns-style {
   @media screen and (max-width: 768px) {
     display: flex;

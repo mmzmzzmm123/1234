@@ -184,6 +184,7 @@ public class BySchoolcalendar extends BaseEntity {
                 .append("stylecolor", getStylecolor())
                 .append("createuserid", getCreateuserid())
                 .append("createtime", getCreatetime())
+                .append("remark", getRemark())
                 .toString();
     }
 }

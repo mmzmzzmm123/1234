@@ -154,7 +154,7 @@ public class ByCalendarController extends BaseController {
         }
         //定义返回列表
         List<ByCalendarShow> listvi = new ArrayList<>();
-        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
         //加载本一园历
         List<ByCalendar> list = byCalendarService.selectByCalendarList(byCalendar);
         if (list.size() > 0) {
