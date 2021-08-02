@@ -87,7 +87,7 @@ public class BySchoolcalendarClassController extends BaseController {
     /**
      * 获取园历管理(班级)详细信息
      */
-    @PreAuthorize("@ss.hasPermi('benyi:schoolcalendarclass:query')")
+    @PreAuthorize("@ss.hasPermi('benyi:schoolcalendarclass:query')"+ "||@ss.hasPermi('benyi:schoolcalendar:query')")
     @GetMapping(value = "/{id}")
     public AjaxResult getInfo(@PathVariable("id") Long id) {
         return AjaxResult.success(bySchoolcalendarClassService.selectBySchoolcalendarClassById(id));

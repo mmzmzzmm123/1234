@@ -11,6 +11,7 @@ public class ByCalendarShow {
     private String start;
     private String end;
     private String color;
+    private String groupId;
 
     public Long getId() {
         return id;
@@ -50,5 +51,13 @@ public class ByCalendarShow {
 
     public void setColor(String color) {
         this.color = color;
+    }
+
+    public String getGroupId() {
+        return groupId;
+    }
+
+    public void setGroupId(String groupId) {
+        this.groupId = groupId;
     }
 }

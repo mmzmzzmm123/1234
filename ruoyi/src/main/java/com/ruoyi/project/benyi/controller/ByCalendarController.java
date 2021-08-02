@@ -237,6 +237,7 @@ public class ByCalendarController extends BaseController {
                 by.setStart(formatter.format(bsc.getActivitytime()));
                 by.setEnd(formatter.format(bsc.getActivityendtime()));
                 by.setColor(hashMap.get(bsc.getType()));
+                by.setGroupId("2");//代表学校园历信息
                 listvi.add(by);
             }
         }
@@ -324,6 +325,7 @@ public class ByCalendarController extends BaseController {
                 by.setStart(formatter.format(bscc.getActivitytime()));
                 by.setEnd(formatter.format(bscc.getActivityendtime()));
                 by.setColor(hashMap.get(bscc.getType()));
+                by.setGroupId("1");//代表班级园历信息
                 listvi.add(by);
             }
         }
