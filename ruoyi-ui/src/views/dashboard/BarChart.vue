@@ -29,40 +29,40 @@ import { getAllSchoolCalendars } from "@/api/benyi/calendar";
 export default {
   name: "fullcalendar_page",
   components: {
-    FullCalendar
+    FullCalendar,
   },
   props: {
     className: {
       type: String,
-      default: "chart"
+      default: "chart",
     },
     width: {
       type: String,
-      default: "100%"
+      default: "100%",
     },
     height: {
       type: String,
-      default: "480px"
-    }
+      default: "480px",
+    },
   },
   data() {
     return {
       header: {
         left: "prev,next today",
         center: "title",
-        right: "dayGridMonth, listWeek"
+        right: "dayGridMonth, listWeek",
       },
       buttonText: {
         today: "今天",
         month: "月",
-        list: "周列表"
+        list: "周列表",
       },
       calendarPlugins: [
         // plugins must be defined in the JS
         dayGridPlugin,
         //timeGridPlugin,
         //interactionPlugin, // needed for dateClick
-        listPlugin
+        listPlugin,
       ],
       calendarWeekends: true,
       calendarEvents: [
@@ -75,22 +75,22 @@ export default {
       ],
       calendarApi: null,
       calendarData: [],
-      queryParams: {}
+      queryParams: {},
     };
   },
   created() {
-    getAllSchoolCalendars(this.queryParams).then(response => {
+    getAllSchoolCalendars(this.queryParams).then((response) => {
       this.calendarEvents = response.calendarData;
     });
   },
   methods: {
     handleEventClick(info) {
       this.msgSuccess("事件: " + info.event.title);
-    }
+    },
   },
   mounted() {
     this.calendarApi = this.$refs.fullCalendar.getApi();
-  }
+  },
 };
 </script>
 
@@ -114,6 +114,9 @@ export default {
     background: rgba(245, 246, 248, 0.6);
     //background: rgba(109, 113, 121, 0.6);
   }
+}
+.fc-time {
+  display: none;
 }
 .xs-btns-style {
   @media screen and (max-width: 768px) {
