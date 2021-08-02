@@ -76,6 +76,7 @@ public class SysWxUserLog extends BaseEntity {
      */
     @Excel(name = "饮食情况", readConverterExp = "Y=是,N=否")
     private String diet;
+    private String dietDesc;
 
     /**
      * 熬夜失眠（Y是 N否）
@@ -90,9 +91,9 @@ public class SysWxUserLog extends BaseEntity {
     private String defecation;
 
     public void setDefecation(String defecation) {
-        if (StringUtils.isAlpha(defecation)) {
-//            this.defecation = defecation.equals("Y") ? "是" : "否";
-            this.defecation = defecation.equals("Y") ? "顺畅" : "其他";
+        if (defecation.equals("Y") || defecation.equals("N")) {
+            this.defecation = defecation.equals("Y") ? "是" : "否";
+//            this.defecation = defecation.equals("Y") ? "顺畅" : "其他";
         } else {
             this.defecation = defecation;
         }
@@ -185,6 +186,8 @@ public class SysWxUserLog extends BaseEntity {
      */
     @Excel(name = "体型对比照")
     private String bodyImages;
+
+    private String bodyDesc;
 
     /**
      * 服务建议

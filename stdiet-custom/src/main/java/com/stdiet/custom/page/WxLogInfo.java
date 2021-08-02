@@ -28,11 +28,11 @@ public class WxLogInfo {
     private BigDecimal weight;
 
     private String diet;
+    private String dietDesc;
 
     private String insomnia;
 
     private String defecation;
-
     private String defecationDesc;
 
     private String remark;
@@ -41,7 +41,6 @@ public class WxLogInfo {
      * 情绪
      */
     private String emotion;
-
     private String emotionDesc;
 
     /**
@@ -86,6 +85,7 @@ public class WxLogInfo {
      * 体型对比照
      */
 //    private String bodyImages;
+    private String bodyDesc;
 
     /**
      * 服务建议
@@ -122,7 +122,7 @@ public class WxLogInfo {
     private String healthManifesto;
 
     public void setDefecation(String defecation) {
-        if (StringUtils.isAlpha(defecation)) {
+        if (defecation.equals("Y") || defecation.equals("N")) {
             this.defecation = defecation.equals("Y") ? "是" : "否";
 //            this.defecation = defecation.equals("Y") ? "顺畅" : "其他";
         } else {
