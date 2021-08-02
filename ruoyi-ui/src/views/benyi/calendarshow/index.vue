@@ -196,12 +196,12 @@ export default {
   methods: {
     handleEventClick(info) {
       //console.log(info);
+      var id = info.event.id;
+      this.title = "园历详细信息";
       var group = info.event.groupId;
       //group==1 代表幼儿园班级园历信息
       //group==2 代表幼儿园园历信息
       if (group == "1") {
-        var id = info.event.id;
-        this.title = "园历详细信息";
         this.open = true;
         var myArray = new Array(2);
         getSchoolcalendarclass(id).then((response) => {
@@ -212,8 +212,6 @@ export default {
           this.form.activitytime = myArray;
         });
       } else if (group == "2") {
-        var id = info.event.id;
-        this.title = "园历详细信息";
         this.open = true;
         var myArray = new Array(2);
         getSchoolcalendar(id).then((response) => {
