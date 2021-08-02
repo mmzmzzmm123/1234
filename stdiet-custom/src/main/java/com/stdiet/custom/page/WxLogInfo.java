@@ -28,11 +28,11 @@ public class WxLogInfo {
     private BigDecimal weight;
 
     private String diet;
+    private String dietDesc;
 
     private String insomnia;
 
     private String defecation;
-
     private String defecationDesc;
 
     private String remark;
@@ -41,7 +41,6 @@ public class WxLogInfo {
      * 情绪
      */
     private String emotion;
-
     private String emotionDesc;
 
     /**
