@@ -10,20 +10,20 @@ spring:
                 username: root
                 password: coolteam123
 #            master:
-#                url: jdbc:mysql://222.77.0.192/:33196/ry-fgw?useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=true&serverTimezone=GMT%2B8
+#                url: jdbc:mysql://222.77.0.192:33196/ry-fgw?useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=true&serverTimezone=GMT%2B8
 #                username: root
 #                password: qzdsj@2021FGW
             # 从库数据源
             slave:
                 # 从数据源开关/默认关闭
-#                enabled: true
-#                url: jdbc:oracle:thin:@172.29.131.138:1521:pdborcl
-#                username: XY_FGWXYD
-#                password: XY_FGWXYD_123456
                 enabled: true
-                url: jdbc:oracle:thin:@192.168.20.106:1521:pdborcl
-                username: SYSTEM
-                password: root
+                url: jdbc:oracle:thin:@172.29.131.138:1521:pdborcl
+                username: XY_FGWXYD
+                password: XY_FGWXYD_123456
+#                enabled: true
+#                url: jdbc:oracle:thin:@192.168.20.106:1521:pdborcl
+#                username: SYSTEM
+#                password: root
             # 初始连接数
             initialSize: 5
             # 最小连接池数量
