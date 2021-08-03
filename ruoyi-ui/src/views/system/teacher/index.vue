@@ -200,6 +200,7 @@
             v-model="form.zjhm"
             placeholder="请输入证件号码"
             maxlength="18"
+            @blur.prevent="changeZjhm()"
           />
         </el-form-item>
         <el-form-item label="出生日期" prop="csrq">
@@ -419,7 +420,7 @@ export default {
       // 表单校验
       rules: {
         zjhm: [
-          { required: true, message: '请输入身份证号', trigger: 'blur' },
+          { required: true, message: "请输入身份证号", trigger: "blur" },
           {
             pattern: /(^\d{8}(0\d|10|11|12)([0-2]\d|30|31)\d{3}$)|(^\d{6}(18|19|20)\d{2}(0\d|10|11|12)([0-2]\d|30|31)\d{3}(\d|X|x)$)/,
             message: "请输入正确的身份证号",
@@ -443,6 +444,21 @@ export default {
     });
   },
   methods: {
+    //根据证件号码生成出生日期
+    changeZjhm() {
+      //console.log(this.form.zjhm);
+      let idCard = this.form.zjhm;
+      let birthday = "";
+      if (idCard != null && idCard !== "") {
+        if (idCard.length === 15) {
+          birthday = "19" + idCard.substr(6, 6);
+        } else if (idCard.length === 18) {
+          birthday = idCard.substr(6, 8);
+        }
+        birthday = birthday.replace(/(.{4})(.{2})/, "$1-$2-");
+      }
+      this.form.csrq = birthday;
+    },
     /** 查询教师基本信息列表 */
     getList() {
       this.loading = true;

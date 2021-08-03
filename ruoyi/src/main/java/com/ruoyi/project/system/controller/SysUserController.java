@@ -306,6 +306,8 @@ public class SysUserController extends BaseController {
             }
         }
 
+        user.setPhonenumber(user.getUserName());
+        user.setEmail(user.getUserName()+"@benyi.com");
         user.setUpdateBy(SecurityUtils.getUsername());
         return toAjax(userService.updateUser(user));
     }
