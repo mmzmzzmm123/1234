@@ -4,7 +4,6 @@ import com.alibaba.fastjson.JSON;
 import com.ruoyi.common.constant.Constants;
 import com.ruoyi.common.constant.UserConstants;
 import com.ruoyi.common.core.redis.RedisCache;
-import com.ruoyi.common.exception.user.SmsException;
 import com.ruoyi.common.exception.user.UserException;
 import com.ruoyi.common.utils.DateUtils;
 import com.ruoyi.common.utils.StringUtils;
@@ -16,15 +15,12 @@ import com.ruoyi.system.service.IDataCompanyLoanOracleService;
 import com.ruoyi.system.service.IDataCompanyLoanService;
 import com.ruoyi.system.service.IDataSmsService;
 import com.ruoyi.system.utils.ShareInterface;
-import com.sun.xml.internal.bind.v2.TODO;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -85,7 +81,8 @@ public class DataCompanyLoanServiceImpl implements IDataCompanyLoanService
         return dataCompanyLoanMapper.insertDataCompanyLoan(dataCompanyLoan);
     }
 
-    //TODO:多数据源的事务如何处理？
+    // @Transactional(rollbackFor = Exception.class)
+    // TODO:多数据源的事务处理
     @Override
     public int insertDataCompanyLoan(DataCompanyLoanBody dataCompanyLoanBody) {
 

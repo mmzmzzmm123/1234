@@ -2,6 +2,8 @@ package com.ruoyi.system.service;
 
 import com.ruoyi.system.domain.DataCompanyLoan;
 
+import java.util.List;
+
 /**
  * Oracle数据源
  * 
@@ -11,4 +13,6 @@ import com.ruoyi.system.domain.DataCompanyLoan;
 public interface IDataCompanyLoanOracleService
 {
     public int insertDataCompanyLoan(DataCompanyLoan dataCompanyLoan);
+
+    public List<DataCompanyLoan> selectDataCompanyLoanList(DataCompanyLoan dataCompanyLoan);
 }

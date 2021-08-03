@@ -3,7 +3,6 @@ package com.ruoyi.app.controller;
 import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.domain.entity.SysDictData;
 import com.ruoyi.common.core.page.TableDataInfo;
-import com.ruoyi.system.service.IDataCompanyLoanOracleService;
 import com.ruoyi.system.service.ISysDictDataService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -28,9 +27,6 @@ public class AppDictController extends BaseController
 
     @Autowired
     private ISysDictDataService dictDataService;
-
-    @Autowired
-    private IDataCompanyLoanOracleService companyLoanOracleService;
 
     @GetMapping("/list")
     @ApiOperation(value = "获取字典集合接口")

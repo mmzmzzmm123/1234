@@ -5,7 +5,9 @@ import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.core.page.TableDataInfo;
 import com.ruoyi.common.enums.BusinessType;
+import com.ruoyi.system.domain.DataCompanyLoan;
 import com.ruoyi.system.domain.model.DataCompanyLoanBody;
+import com.ruoyi.system.service.IDataCompanyLoanOracleService;
 import com.ruoyi.system.service.IDataCompanyLoanService;
 import com.ruoyi.system.utils.ShareInterface;
 import io.swagger.annotations.Api;
@@ -28,6 +30,8 @@ public class AppCompanyLoanController extends BaseController
 {
     @Autowired
     private IDataCompanyLoanService dataCompanyLoanService;
+    @Autowired
+    private IDataCompanyLoanOracleService dataCompanyLoanOracleService;
 
     /**
      * 新增企业贷款信息
@@ -79,5 +83,13 @@ public class AppCompanyLoanController extends BaseController
     public AjaxResult test()
     {
         return AjaxResult.success();
+    }
+
+    @GetMapping("/listOracle")
+    public TableDataInfo listOracle(DataCompanyLoan dataCompanyLoan)
+    {
+        startPage();
+        List<DataCompanyLoan> list = dataCompanyLoanOracleService.selectDataCompanyLoanList(dataCompanyLoan);
+        return getDataTable(list);
     }
 }
