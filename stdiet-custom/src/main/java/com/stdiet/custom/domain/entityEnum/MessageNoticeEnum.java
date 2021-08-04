@@ -3,8 +3,10 @@ package com.stdiet.custom.domain.entityEnum;
 public enum MessageNoticeEnum{
 
     systemMessage("系统通知", 0, 0, "系统通知"),
-    punchComment("打卡点评", 1, 1, "%s打卡点评"); //%s 为打卡时间
-
+    punchComment("打卡点评", 1, 1, "%s打卡点评"), //%s 为打卡时间
+    punchDynamicThumbsUp("打卡动态点赞", 1, 2, ""),
+    recipesPlanMessage("食谱更新通知", 1, 3, ""),
+    topicMessage("执行反馈通知", 1, 4, "");
 
     //消息名称
     private String name;

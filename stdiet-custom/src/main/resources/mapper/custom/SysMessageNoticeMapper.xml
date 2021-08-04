@@ -141,4 +141,77 @@
             and smn.message_type = #{messageType}
         </if>
     </select>
+
+    <!-- 根据客户ID查询打卡点评消息（包含点评营养师信息、客户信息、点评内容） -->
+    <select id="getPunchCommentMessageByCusId" parameterType="Long" resultType="Map">
+        select
+         message.id,message.message_type as messageType, message.message_content as content, message.read_type as readType,
+        DATE_FORMAT(message.create_time,'%Y-%m-%d %H:%i') as createTime, log.id as punchId, log.health_manifesto as healthManifesto,info.nick_name cusNickName,info.avatar_url as cusAvatar,diet.nick_name as dietNickName,diet.avatar as dietAvatar
+        from (
+            select id,message_customer,message_type,message_title,message_content,message_key,read_type,create_time from sys_message_notice
+            where del_flag = 0 and message_property = 1 and message_customer = #{cusId}
+            and message_type = 1
+        ) message
+        left join sys_wx_user_log log on log.id = message.message_key and log.del_flag = 0
+        left join sys_wx_user_info info on info.openid = log.openid
+        left join sys_customer cus on cus.del_flag = 0 and cus.id = message.message_customer
+        left join sys_user diet on diet.user_id = cus.main_dietitian and diet.del_flag = 0 and diet.status = 0
+        order by message.id desc
+    </select>
+
+    <!-- 根据用户查询打卡点评的未读消息 -->
+    <select id="getUnReadPunchMessageNum" parameterType="Long" resultType="int">
+        select count(id) from sys_message_notice
+        where del_flag = 0 and message_property = 1
+        and message_type = 1 and read_type = 0 and message_customer = #{cusId}
+    </select>
+
+    <!-- 根据打卡ID、点赞openid查询点赞消息 -->
+    <select id="getMessageByPunchIdAndOpenId" resultMap="SysMessageNoticeResult">
+         select * from sys_message_notice where message_property = 1 and del_flag = 0 and message_type = 2
+         and message_key = #{punchId} and message_content = #{openid} order by id desc  limit 1
+    </select>
+
+    <!-- 根据客户ID查询点赞消息 -->
+    <select id="getPunchDynamicThumbsUpMessage" parameterType="Long" resultType="Map">
+        select message.id,message.read_type as readType, message.message_type as messageType,DATE_FORMAT(message.create_time,'%Y-%m-%d %H:%i') as createTime, log.id as punchId, log.health_manifesto as healthManifesto,
+        thumbsUpUser.nick_name as thumbsUpUserNickName,thumbsUpUser.avatar_url as thumbsUpUserAvatar, punchUser.nick_name as cusNickName, punchUser.avatar_url as cusAvatarUrl
+        from
+        (
+            select id,message_customer,message_type,message_title,message_content,message_key,read_type,create_time from sys_message_notice
+            where del_flag = 0 and message_property = 1 and message_customer = #{cusId}
+            and message_type = 2
+        ) message
+        left join sys_wx_user_info as thumbsUpUser on thumbsUpUser.openid = message.message_content
+        left join sys_wx_user_log as log on log.id = message.message_key and log.del_flag = 0
+        left join sys_wx_user_info as punchUser on punchUser.openid = log.openid
+        order by message.id desc
+    </select>
+
+    <!-- 查询点赞未读消息数量 -->
+    <select id="getUnReadThumbsUpMessageNum"  parameterType="Long" resultType="int">
+        select count(id) from sys_message_notice
+        where del_flag = 0 and message_property = 1 and read_type = 0  and message_type = 2  and message_customer = #{cusId}
+    </select>
+
+    <!-- 查询消息是否存在 -->
+    <select id="getMessageByCusIdAndTypeKey" parameterType="SysMessageNotice" resultMap="SysMessageNoticeResult">
+        select * from sys_message_notice where del_flag = 0  and message_customer = #{messageCustomer}
+        and message_type = #{messageType} and message_key= #{messageKey} order  by id desc limit 1
+    </select>
+
+    <!-- 查询服务消息（包含食谱更新消息、意见反馈回复消息） -->
+    <select id="getServiceMessage" parameterType="Long" resultType="Map">
+        select id, message_content as content, message_key as messageKey,
+        read_type as readType, message_type as messageType, DATE_FORMAT(create_time,'%Y-%m-%d %H:%i') as createTime from sys_message_notice
+        where del_flag = 0 and message_property = 1 and message_customer = #{cusId}
+        and (message_type = 3 or message_type = 4)
+        order by id desc
+    </select>
+
+    <!-- 查询未读服务消息数量 -->
+    <select id="getUnReadServiceMessageNum"  parameterType="Long" resultType="int">
+        select count(id) from sys_message_notice
+        where del_flag = 0 and message_property = 1 and read_type = 0  and (message_type = 3 || message_type = 4)  and message_customer = #{cusId}
+    </select>
 </mapper>

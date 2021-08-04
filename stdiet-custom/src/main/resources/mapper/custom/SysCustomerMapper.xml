@@ -202,9 +202,37 @@
         where phone = #{phone} and del_flag = 0
     </select>
 
+    <resultMap type="SysCustomer" id="SysCustomerResultExtended">
+        <result property="id" column="id"/>
+        <result property="name" column="name"/>
+        <result property="phone" column="phone"/>
+        <result property="email" column="email"/>
+        <result property="address" column="address"/>
+        <result property="payDate" column="pay_date"/>
+        <result property="startDate" column="start_date"/>
+        <result property="fansTime" column="fans_time"/>
+        <result property="fansChannel" column="fans_channel"/>
+        <result property="purchaseNum" column="purchase_num"/>
+        <result property="payTotal" column="pay_total"/>
+        <result property="chargePerson" column="charge_person"/>
+        <result property="followStatus" column="follow_status"/>
+        <result property="createTime" column="create_time"/>
+        <result property="createBy" column="create_by"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="updateBy" column="update_by"/>
+        <result property="channelId" column="channel_id"/>
+
+        <result property="mainDietitian" column="main_dietitian"/>
+        <result property="assistantDietitian" column="assistant_dietitian"/>
+        <result property="afterDietitian" column="after_dietitian"/>
+        <result property="salesman" column="salesman"/>
+        <result property="onSaleId"    column="on_sale_id"    />
+    </resultMap>
+
     <!-- 根据openId查询客户 -->
-    <select id="getCustomerByOpenId" parameterType="String" resultMap="SysCustomerResult">
-        select sc.id from sys_customer sc
+    <select id="getCustomerByOpenId" parameterType="String" resultMap="SysCustomerResultExtended">
+        select sc.id, sc.name, sc.phone,  sc.main_dietitian, sc.assistant_dietitian, sc.after_dietitian, sc.salesman, sc.on_sale_id
+        from sys_customer sc
         left join sys_wx_user_info wu on wu.phone = sc.phone
         where wu.openid = #{openid} and sc.del_flag = 0 order by sc.id desc limit 1
     </select>

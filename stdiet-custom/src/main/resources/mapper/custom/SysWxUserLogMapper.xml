@@ -465,5 +465,35 @@
         select count(wxlog.openid) from sys_wx_user_log wxlog where wxlog.del_flag = 0 and to_days(log_time) = to_days(now())
     </select>
 
+    <!-- 根据日期查询该日期中未打卡客户(根据食谱计划判断今日是否需要打卡) -->
+    <select id="selectNotPunchCustomerByDate" parameterType="SysCustomer" resultType="SysCustomer">
+        select plan.cus_id as id, cus.name, cus.main_dietitian as mainDietitian, cus.assistant_dietitian as assistantDietitian,cus.after_dietitian as afterDietitian from
+
+        (
+          select DISTINCT cus_id from sys_recipes_plan where end_date >= DATE_FORMAT(#{startDate},'%Y-%m-%d') and  DATE_FORMAT(#{startDate},'%Y-%m-%d') >= start_date and del_flag = 0 and instr(pause_date, DATE_FORMAT(#{startDate},'%Y%m%d')) = 0
+        ) as plan
+
+        left join sys_customer cus on cus.id = plan.cus_id and cus.del_flag = 0
+
+        where plan.cus_id not in
+
+        (
+            select info.cus_id from sys_wx_user_log log left join sys_wx_user_info info on info.openid = log.openid
+            where log.del_flag = 0 and DATE_FORMAT(log.log_time,'%Y-%m-%d') = DATE_FORMAT(#{startDate},'%Y-%m-%d')
+        )
+
+        <if test="mainDietitian != null">
+            and cus.main_dietitian = #{mainDietitian}
+        </if>
+        <if test="assistantDietitian != null">
+            and cus.assistant_dietitian = #{assistantDietitian}
+        </if>
+        <if test="afterDietitian != null">
+            and cus.after_dietitian = #{afterDietitian}
+        </if>
+
+        order by plan.cus_id desc
+    </select>
+
 
 </mapper>

@@ -1,5 +1,6 @@
 package com.stdiet.custom.service.impl;
 
+import com.stdiet.custom.domain.SysCustomer;
 import com.stdiet.custom.domain.SysWxUserLog;
 import com.stdiet.custom.dto.response.CommunityPunchReponse;
 import com.stdiet.custom.mapper.SysWxUserLogMapper;
@@ -169,6 +170,16 @@ public class SysWxUserLogServiceImpl implements ISysWxUserLogService {
      */
     public int getPunchCustomerTotalNum() {
         return sysWxUserLogMapper.getPunchCustomerTotalNum();
+    }
+
+    /**
+     * 根据日期、营养师、助理、售后查询指定日期未打卡的客户信息
+     *
+     * @return
+     */
+    @Override
+    public List<SysCustomer> selectNotPunchCustomerByDate(SysCustomer sysCustomer) {
+        return sysWxUserLogMapper.selectNotPunchCustomerByDate(sysCustomer);
     }
 
 }

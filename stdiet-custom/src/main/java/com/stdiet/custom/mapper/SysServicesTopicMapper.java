@@ -32,4 +32,25 @@ public interface SysServicesTopicMapper {
      * @return
      */
     int getServicesTopicNum(@Param("cusId")Long cusId);
+
+    /**
+     * 根据topicId查询内容
+     * @param topicId
+     * @return
+     */
+    String getTopicContentByTopicId(String topicId);
+
+    /**
+     * 根据评论ID查询评论内容
+     * @param commentId
+     * @return
+     */
+    String getCommentContentByCommentId(String commentId);
+
+    /**
+     * 查询回复内容
+     * @param replyId
+     * @return
+     */
+    String getReplyContentByReplyId(String replyId);
 }
