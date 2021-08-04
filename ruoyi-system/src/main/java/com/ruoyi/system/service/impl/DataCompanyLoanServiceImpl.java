@@ -1,14 +1,13 @@
 package com.ruoyi.system.service.impl;
 
-import com.alibaba.fastjson.JSON;
 import com.ruoyi.common.constant.Constants;
 import com.ruoyi.common.constant.UserConstants;
+import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.core.redis.RedisCache;
 import com.ruoyi.common.exception.user.UserException;
 import com.ruoyi.common.utils.DateUtils;
 import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.system.domain.DataCompanyLoan;
-import com.ruoyi.system.domain.model.DataCodeMsgResponse;
 import com.ruoyi.system.domain.model.DataCompanyLoanBody;
 import com.ruoyi.system.mapper.DataCompanyLoanMapper;
 import com.ruoyi.system.service.IDataCompanyLoanOracleService;
@@ -22,6 +21,8 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
+
+import static com.ruoyi.system.domain.model.DataCodeMsgResponse.UMS_SUCCESS_CODE;
 
 /**
  * 企业贷款信息Service业务层处理
@@ -189,12 +190,13 @@ public class DataCompanyLoanServiceImpl implements IDataCompanyLoanService
     public String senSmsCode(String phone) {
         String verifyKey = Constants.SMS_CODE_KEY + phone;
         String code = numRandom(6);
-        DataCodeMsgResponse response = smsService.sendVerifyCode(phone,code);
-        if (StringUtils.equals(DataCodeMsgResponse.SUCCESS_CODE,response.getCode())){//发送短信成功
+        AjaxResult response = smsService.sendVerifyCodeByUMS(phone,code);
+        int resultCode = (int) response.get(AjaxResult.CODE_TAG);
+        if (UMS_SUCCESS_CODE == resultCode){//发送短信成功
             redisCache.setCacheObject(verifyKey, code, Constants.SMS_CODE_EXPIRATION, TimeUnit.MINUTES);
             return code;
         }else {
-            throw new UserException(null, null, JSON.toJSONString(response));
+            throw new UserException(null, null, response.toString());
         }
 
     }

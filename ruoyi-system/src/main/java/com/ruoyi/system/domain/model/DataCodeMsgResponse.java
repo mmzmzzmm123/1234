@@ -11,6 +11,11 @@ public class DataCodeMsgResponse {
     public static final String SUCCESS_CODE = "00000";
 
     /**
+     * 短信成功状态码（一信通平台）
+     */
+    public static final int UMS_SUCCESS_CODE = 0;
+
+    /**
      * 状态码，00000表示接收成功，其他失败
      */
     private String code;

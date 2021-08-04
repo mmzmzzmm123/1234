@@ -1,5 +1,6 @@
 package com.ruoyi.system.service;
 
+import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.system.domain.model.DataCodeMsgResponse;
 
 /**
@@ -17,4 +18,12 @@ public interface IDataSmsService
      * @return
      */
     public DataCodeMsgResponse sendVerifyCode(String phone, String code);
+
+    /**
+     * 使用一信通平台能力接口发送短信验证码
+     * @param phone
+     * @param code
+     * @return
+     */
+    public AjaxResult sendVerifyCodeByUMS(String phone, String code);
 }

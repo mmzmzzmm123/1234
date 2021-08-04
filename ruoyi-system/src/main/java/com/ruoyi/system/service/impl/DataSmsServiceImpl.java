@@ -1,5 +1,6 @@
 package com.ruoyi.system.service.impl;
 
+import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.utils.sign.Md5Utils;
 import com.ruoyi.system.domain.model.DataCodeMsgResponse;
 import com.ruoyi.system.service.IDataSmsService;
@@ -80,11 +81,40 @@ public class DataSmsServiceImpl implements IDataSmsService {
 
     @Override
     public DataCodeMsgResponse sendVerifyCode(String phone, String code) {
-        //TODO:此短信模板两个参数只允许为数字？
         String param1 = "1";
         List<String> list = new ArrayList<>();
         list.add(param1);
         list.add(code);
         return this.sendCodeSms(phone, TEP_ID, TGA_ID, list);
+    }
+
+    @Override
+    public AjaxResult sendVerifyCodeByUMS(String phone, String code) {
+        String url = "https://api.ums86.com:9600/sms/Api/Send.do";
+
+        long timestamp = System.currentTimeMillis();
+        String spCode = "000001";
+        String loginName = "admin";
+        String password = "admin";
+        MultiValueMap<String, Object> map = new LinkedMultiValueMap<>();
+        map.add("SpCode", spCode);
+        map.add("LoginName", loginName);
+        map.add("Password", password);
+        map.add("MessageContent", "你有一项编号为"+code+"的事务需要处理");
+        map.add("UserNumber", phone);
+        map.add("SerialNumber", timestamp);
+        map.add("ScheduleTime", "");
+        map.add("f", 1);
+
+        //格式为：result=2&description=账号无效或权限不足
+        String result = restTemplate.postForObject(url, map, String.class);
+
+
+        String[] results = result.split("&");
+        String resultCode = results[0].split("=")[1];
+        String resultMsg = results[1].split("=")[1];
+        AjaxResult ajaxResult = new AjaxResult(Integer.parseInt(resultCode),resultMsg);
+
+        return ajaxResult;
     }
 }
