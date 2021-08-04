@@ -76,12 +76,14 @@ public class WechatAppletController extends BaseController {
     private ISysServicesTopicService iSysServicesTopicService;
     @Autowired
     private ISysVideoClassifyService sysVideoClassifyService;
-
     @Autowired
     private ISysWxBannerImageService sysWxBannerImageService;
-
     @Autowired
     private ISysPunchThumbsupService sysPunchThumbsupService;
+    @Autowired
+    private ISysCustomerHealthyService sysCustomerHealthyService;
+    @Autowired
+    private ISysCustomerPhysicalSignsService sysCustomerPhysicalSignsService;
 
     /**
      * 查询微信小程序中展示的客户案例
@@ -446,8 +448,19 @@ public class WechatAppletController extends BaseController {
             return AjaxResult.error(5001, "信息缺失或者过期需要重新登录");
         }
 
+        SysCustomerHealthy customerHealthy = sysCustomerHealthyService.selectSysCustomerHealthyByCustomerId(curWxUserInfo.getCusId());
+        if (customerHealthy == null) {
+            SysCustomerPhysicalSigns customerPhysicalSigns = sysCustomerPhysicalSignsService.selectSysCustomerPhysicalSignsByCusId(curWxUserInfo.getCusId());
+            if (customerPhysicalSigns != null) {
+                curWxUserInfo.setSex(customerPhysicalSigns.getSex().toString());
+            }
+        } else {
+            curWxUserInfo.setSex(customerHealthy.getSex().toString());
+        }
+
         curWxUserInfo.setCustomerId(AesUtils.encrypt(curWxUserInfo.getCusId().toString()));
         curWxUserInfo.setCusId(null);
+
 
         // 并返回一系列登录后的数据
         return AjaxResult.success(curWxUserInfo);
@@ -715,14 +728,17 @@ public class WechatAppletController extends BaseController {
     public TableDataInfo getCommunityPunch() {
         startPage();
         List<CommunityPunchReponse> list = sysWxUserLogService.getCommunityPunch(new SysWxUserLog());
-//        if (list != null && list.size() > 0) {
-//            for (CommunityPunchReponse comm : list) {
-//                comm.setId(AesUtils.encrypt(comm.getId()));
-//                comm.setCusId(AesUtils.encrypt(comm.getCusId()));
-//                comm.setThumbsupNum(comm.getThumbsupOpenid() != null ? comm.getThumbsupOpenid().size() : 0);
-//            }
-//        }
         return getDataTable(list);
+    }
+
+
+    /**
+     *
+     */
+    @GetMapping("/getCustomerActivity")
+    public TableDataInfo getCustomerActivity(@RequestParam String openid){
+        startPage();
+        return getDataTable(sysWxUserLogService.getCommunityPunchByOpenid(openid));
     }
 
     /**

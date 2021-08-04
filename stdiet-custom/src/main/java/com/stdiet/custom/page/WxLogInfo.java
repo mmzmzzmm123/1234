@@ -1,7 +1,6 @@
 package com.stdiet.custom.page;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.stdiet.common.utils.StringUtils;
 import lombok.Data;
 
 import java.math.BigDecimal;
@@ -52,6 +51,11 @@ public class WxLogInfo {
      * 是否便秘（Y是 N否）
      */
     private String constipation;
+
+    /**
+     * 是否生理期
+     */
+    private String menstrualPeriod;
 
     /**
      * 食材描述
@@ -123,8 +127,8 @@ public class WxLogInfo {
 
     public void setDefecation(String defecation) {
         if (defecation.equals("Y") || defecation.equals("N")) {
-            this.defecation = defecation.equals("Y") ? "是" : "否";
-//            this.defecation = defecation.equals("Y") ? "顺畅" : "其他";
+//            this.defecation = defecation.equals("Y") ? "是" : "否";
+            this.defecation = defecation.equals("Y") ? "顺畅" : "其他";
         } else {
             this.defecation = defecation;
         }
@@ -144,6 +148,10 @@ public class WxLogInfo {
 
     public void setConstipation(String constipation) {
         this.constipation = constipation.equals("Y") ? "是" : "否";
+    }
+
+    public void setMenstrualPeriod(String menstrualPeriod) {
+        this.menstrualPeriod = menstrualPeriod.equals("Y") ? "是" : "否";
     }
 
 }

@@ -102,6 +102,8 @@ public interface ISysWxUserLogService
      */
     List<CommunityPunchReponse> getCommunityPunch(SysWxUserLog sysWxUserLog);
 
+    List<CommunityPunchReponse> getCommunityPunchByOpenid(String openid);
+
     /**
      * 根据打卡社区
      * @param sysWxUserLog

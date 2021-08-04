@@ -46,11 +46,12 @@
         <result property="thumbsupNum" column="thumbsup_num"/>
         <result property="healthManifesto" column="health_manifesto"/>
         <result property="delFlag" column="del_flag"/>
+        <result property="menstrualPeriod" column="menstrual_period"/>
         <!-- 非持久字段 -->
-        <result property="customerName" column="customer_name"></result>
+        <result property="customerName" column="customer_name"/>
         <!-- 营养师 -->
-        <result property="nutritionist" column="nutritionist"></result>
-        <result property="afterNutritionist" column="after_nutritionist"></result>
+        <result property="nutritionist" column="nutritionist"/>
+        <result property="afterNutritionist" column="after_nutritionist"/>
     </resultMap>
 
     <resultMap type="com.stdiet.custom.page.WxLogInfo" id="WxLogInfo">
@@ -73,16 +74,21 @@
         <result property="constipation" column="constipation"/>
         <result property="remark" column="remark"/>
         <result property="ingredientDesc" column="ingredient_desc"/>
-<!--        <result property="breakfastImages" column="breakfast_images"/>-->
-        <result property="breakfastImagesUrl" column="breakfast_images" typeHandler="com.stdiet.custom.typehandler.ImagesHandler"/>
-<!--        <result property="lunchImages" column="lunch_images"/>-->
-        <result property="lunchImagesUrl" column="lunch_images" typeHandler="com.stdiet.custom.typehandler.ImagesHandler"/>
-<!--        <result property="dinnerImages" column="dinner_images"/>-->
-        <result property="dinnerImagesUrl" column="dinner_images" typeHandler="com.stdiet.custom.typehandler.ImagesHandler"/>
-<!--        <result property="extraMealImages" column="extra_meal_images"/>-->
-        <result property="extraMealImagesUrl" column="extra_meal_images" typeHandler="com.stdiet.custom.typehandler.ImagesHandler"/>
-<!--        <result property="bodyImages" column="body_images"/>-->
-        <result property="bodyImagesUrl" column="body_images" typeHandler="com.stdiet.custom.typehandler.ImagesHandler"/>
+        <!--        <result property="breakfastImages" column="breakfast_images"/>-->
+        <result property="breakfastImagesUrl" column="breakfast_images"
+                typeHandler="com.stdiet.custom.typehandler.ImagesHandler"/>
+        <!--        <result property="lunchImages" column="lunch_images"/>-->
+        <result property="lunchImagesUrl" column="lunch_images"
+                typeHandler="com.stdiet.custom.typehandler.ImagesHandler"/>
+        <!--        <result property="dinnerImages" column="dinner_images"/>-->
+        <result property="dinnerImagesUrl" column="dinner_images"
+                typeHandler="com.stdiet.custom.typehandler.ImagesHandler"/>
+        <!--        <result property="extraMealImages" column="extra_meal_images"/>-->
+        <result property="extraMealImagesUrl" column="extra_meal_images"
+                typeHandler="com.stdiet.custom.typehandler.ImagesHandler"/>
+        <!--        <result property="bodyImages" column="body_images"/>-->
+        <result property="bodyImagesUrl" column="body_images"
+                typeHandler="com.stdiet.custom.typehandler.ImagesHandler"/>
         <result property="bodyDesc" column="body_desc"/>
         <result property="suggest" column="suggest"/>
         <result property="targetWeight" column="target_weight"/>
@@ -90,11 +96,12 @@
         <result property="comment" column="comment"/>
         <result property="thumbsupNum" column="thumbsup_num"/>
         <result property="healthManifesto" column="health_manifesto"/>
+        <result property="menstrualPeriod" column="menstrual_period"/>
     </resultMap>
 
     <sql id="selectSysWxUserLogVo">
         select id,openid, weight, appid, phone, log_time, sleep_time, wakeup_time, sport, sport_desc, avatar_url, diet, diet_desc, insomnia, defecation, defecation_desc, water, create_by, create_time, update_by, update_time, remark,
-         emotion, emotion_desc,sly_eat_food,constipation,ingredient_desc,breakfast_images,lunch_images,dinner_images,extra_meal_images,body_images,body_desc,suggest,execution_score,comment,health_manifesto
+         emotion, emotion_desc,sly_eat_food,constipation,ingredient_desc,breakfast_images,lunch_images,dinner_images,extra_meal_images,body_images,body_desc,suggest,execution_score,comment,health_manifesto,menstrual_period
          from sys_wx_user_log
     </sql>
 
@@ -106,8 +113,10 @@
     <select id="selectSysWxUserLogList" parameterType="SysWxUserLog" resultMap="SysWxUserLogResult">
         SELECT
         wxlog.id,wxinfo.appid,wxinfo.openid,wxinfo.avatar_url,wxinfo.phone,wxlog.weight,wxlog.log_time,wxlog.sleep_time,
-        wxlog.wakeup_time,wxlog.defecation, wxlog.defecation_desc, wxlog.water, wxlog.insomnia,wxlog.sport, wxlog.sport_desc,wxlog.diet, wxlog.diet_desc,wxlog.remark,
-        wxlog.emotion, wxlog.emotion_desc,wxlog.sly_eat_food,wxlog.constipation,wxlog.ingredient_desc,wxlog.breakfast_images,
+        wxlog.wakeup_time,wxlog.defecation, wxlog.defecation_desc, wxlog.water, wxlog.insomnia,wxlog.sport,
+        wxlog.sport_desc,wxlog.diet, wxlog.diet_desc,wxlog.remark,
+        wxlog.emotion, wxlog.menstrual_period,
+        wxlog.emotion_desc,wxlog.sly_eat_food,wxlog.constipation,wxlog.ingredient_desc,wxlog.breakfast_images,
         wxlog.lunch_images,wxlog.dinner_images,wxlog.extra_meal_images,wxlog.body_images,wxlog.body_desc,
         wxlog.suggest,wxlog.execution_score,wxlog.comment,sc.name as customer_name, su.nick_name as nutritionist,
         su_atferSale.nick_name as after_nutritionist, wxlog.health_manifesto, wxlog.log_time
@@ -205,6 +214,7 @@
             <if test="thumbsupNum != null">thumbsup_num,</if>
             <if test="healthManifesto != null">health_manifesto,</if>
             <if test="delFlag != null">del_flag,</if>
+            <if test="menstrualPeriod != null">menstrual_period,</if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="openid != null">#{openid},</if>
@@ -246,6 +256,7 @@
             <if test="thumbsupNum != null">#{thumbsupNum},</if>
             <if test="healthManifesto != null">#{healthManifesto},</if>
             <if test="delFlag != null">del_flag = #{delFlag},</if>
+            <if test="menstrualPeriod != null">menstrual_period = #{menstrualPeriod},</if>
         </trim>
     </insert>
 
@@ -288,6 +299,7 @@
             <if test="thumbsupNum != null">thumbsup_num = #{thumbsupNum},</if>
             <if test="healthManifesto != null">health_manifesto = #{healthManifesto},</if>
             <if test="delFlag != null">del_flag = #{delFlag},</if>
+            <if test="menstrualPeriod != null">menstrual_period = #{menstrualPeriod},</if>
         </trim>
         where id = #{id}
     </update>
@@ -305,9 +317,11 @@
 
     <!-- 根据openid和手机号查询对应打卡记录 -->
     <select id="getWxLogInfoList" parameterType="SysWxUserLog" resultMap="WxLogInfo">
-        SELECT wxlog.id,wxlog.weight,wxlog.log_time,wxlog.sleep_time, wxlog.wakeup_time,wxlog.defecation, wxlog.defecation_desc, wxlog.water, wxlog.insomnia,wxlog.sport, wxlog.sport_desc,wxlog.diet, wxlog.diet_desc,
-        wxlog.emotion, wxlog.emotion_desc,wxlog.sly_eat_food,wxlog.constipation,wxlog.ingredient_desc,wxlog.breakfast_images,wxlog.lunch_images,wxlog.dinner_images,wxlog.extra_meal_images,wxlog.body_images, wxlog.body_desc
-        ,wxlog.remark,wxlog.execution_score,wxlog.comment, wxlog.health_manifesto
+        SELECT wxlog.id,wxlog.weight,wxlog.log_time,wxlog.sleep_time, wxlog.wakeup_time,wxlog.defecation, wxlog.defecation_desc,
+        wxlog.water, wxlog.insomnia,wxlog.sport, wxlog.sport_desc,wxlog.diet, wxlog.diet_desc,
+        wxlog.emotion, wxlog.emotion_desc,wxlog.sly_eat_food,wxlog.constipation,wxlog.ingredient_desc,wxlog.breakfast_images,
+        wxlog.lunch_images,wxlog.dinner_images,wxlog.extra_meal_images,wxlog.body_images, wxlog.body_desc,
+        wxlog.remark,wxlog.execution_score,wxlog.comment, wxlog.health_manifesto, wxlog.menstrual_period
         FROM sys_wx_user_log wxlog
         where wxlog.del_flag = 0 and wxlog.openid = #{openid}
         order by wxlog.log_time asc
@@ -350,9 +364,11 @@
 
     <!-- 根据openid和手机号查询对应打卡记录 -->
     <select id="getWxLogInfoDetailById" parameterType="SysWxUserLog" resultMap="WxLogInfo">
-        SELECT wxlog.id,wxlog.weight,wxlog.log_time,wxlog.sleep_time, wxlog.wakeup_time,wxlog.defecation, wxlog.defecation_desc, wxlog.water, wxlog.insomnia,wxlog.sport, wxlog.sport_desc,wxlog.diet, wxlog.diet_desc,
-        wxlog.emotion, wxlog.emotion_desc,wxlog.sly_eat_food,wxlog.constipation,wxlog.ingredient_desc,wxlog.breakfast_images,wxlog.lunch_images,wxlog.dinner_images,wxlog.extra_meal_images,wxlog.body_images, wxlog.body_desc
-        ,wxlog.remark,wxlog.execution_score,wxlog.comment
+        SELECT wxlog.id,wxlog.weight,wxlog.log_time,wxlog.sleep_time, wxlog.wakeup_time,wxlog.defecation, wxlog.defecation_desc,
+        wxlog.water, wxlog.insomnia,wxlog.sport, wxlog.sport_desc,wxlog.diet, wxlog.diet_desc,
+        wxlog.emotion, wxlog.emotion_desc,wxlog.sly_eat_food,wxlog.constipation,wxlog.ingredient_desc,wxlog.breakfast_images,
+        wxlog.lunch_images,wxlog.dinner_images,wxlog.extra_meal_images,wxlog.body_images, wxlog.body_desc,
+        wxlog.remark,wxlog.execution_score,wxlog.comment,wxlog.menstrual_period
         FROM sys_wx_user_log wxlog left join sys_wx_user_info wxinfo on wxinfo.openid  = wxlog.openid
         where wxlog.del_flag = 0 and wxlog.id = #{id}
         order by wxlog.log_time desc
@@ -365,11 +381,10 @@
         <result property="nickName" column="nick_name"/>
         <result property="avatarUrl" column="avatar_url"/>
         <result property="logTime" column="log_time"/>
-        <result property="weight" column="weight"/>
         <result property="comment" column="comment"/>
         <result property="healthManifesto" column="health_manifesto"/>
-        <association property="thumbsupNum"  column="id" select="getPunchThumbsupCount"/>
-        <!-- 查询最近五天体重 -->
+        <association property="thumbsupNum" column="id" select="getPunchThumbsupCount"/>
+        <!-- 查询体重 -->
         <association property="weightData" column="{id=openid}" select="getRecentWeight"/>
         <!-- 查询点赞的openid -->
         <association property="thumbsupUser" column="id" select="getPunchThumbsupList"/>
@@ -378,19 +393,45 @@
     <!--  查询打卡社区内容  -->
     <select id="getCommunityPunch" resultMap="punchReponseMap" parameterType="SysWxUserLog">
          SELECT * FROM
-        (SELECT id, openid, `comment`, health_manifesto, log_time FROM sys_wx_user_log WHERE TO_DAYS(log_time) = TO_DAYS(NOW()) AND del_flag = 0) AS wxlog
+        (SELECT id, openid, `comment`, health_manifesto, log_time FROM sys_wx_user_log
+        WHERE TO_DAYS(log_time) = TO_DAYS(NOW()) AND del_flag = 0) AS wxlog
+        LEFT JOIN (SELECT openid, nick_name, avatar_url FROM sys_wx_user_info) AS wxinfo
+        USING(openid)
+        ORDER BY log_time DESC
+    </select>
+
+    <resultMap id="punchReponseMap2" type="com.stdiet.custom.dto.response.CommunityPunchReponse">
+        <result property="id" column="id" typeHandler="com.stdiet.custom.typehandler.EncryptedIdHandler"/>
+        <result property="openid" column="openid"/>
+        <result property="nickName" column="nick_name"/>
+        <result property="avatarUrl" column="avatar_url"/>
+        <result property="logTime" column="log_time"/>
+        <result property="comment" column="comment"/>
+        <result property="healthManifesto" column="health_manifesto"/>
+        <association property="thumbsupNum" column="id" select="getPunchThumbsupCount"/>
+        <!-- 查询体重 -->
+<!--        <association property="weightData" column="{id=openid}" select="getRecentWeight"/>-->
+        <!-- 查询点赞的openid -->
+        <association property="thumbsupUser" column="id" select="getPunchThumbsupList"/>
+    </resultMap>
+
+    <!--    客户活动-->
+    <select id="getCommunityPunchByOpenid" resultMap="punchReponseMap2" parameterType="String">
+         SELECT * FROM
+        (SELECT id, openid, `comment`, health_manifesto, log_time FROM sys_wx_user_log
+        WHERE openid = #{openid} AND del_flag = 0) AS wxlog
         LEFT JOIN (SELECT openid, nick_name, avatar_url FROM sys_wx_user_info) AS wxinfo
         USING(openid)
         ORDER BY log_time DESC
     </select>
 
     <!-- 查询打卡社区中点赞的openid -->
-<!--    <select id="getPunchThumbsupList" parameterType="Long" resultType="Map">-->
-<!--        select * from-->
-<!--        (select id, cus_openid as openid, DATE_FORMAT(create_time,'%Y-%m-%d %H:%i') as `time` from sys_punch_thumbsup where punch_id = #{id} and del_flag = 0 order by create_time asc) as tu-->
-<!--        left join (SELECT openid, nick_name as nickName, avatar_url as avatarUrl FROM sys_wx_user_info) AS wxinfo-->
-<!--        using(openid)-->
-<!--    </select>-->
+    <!--    <select id="getPunchThumbsupList" parameterType="Long" resultType="Map">-->
+    <!--        select * from-->
+    <!--        (select id, cus_openid as openid, DATE_FORMAT(create_time,'%Y-%m-%d %H:%i') as `time` from sys_punch_thumbsup where punch_id = #{id} and del_flag = 0 order by create_time asc) as tu-->
+    <!--        left join (SELECT openid, nick_name as nickName, avatar_url as avatarUrl FROM sys_wx_user_info) AS wxinfo-->
+    <!--        using(openid)-->
+    <!--    </select>-->
 
     <resultMap id="thumbupUserResultMap" type="Map">
         <result property="id" column="id" typeHandler="com.stdiet.custom.typehandler.EncryptedIdHandler"/>

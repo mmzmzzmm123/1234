@@ -1,25 +1,14 @@
 package com.stdiet.custom.service.impl;
 
-import java.util.List;
-
-import com.stdiet.common.config.AliyunOSSConfig;
-import com.stdiet.common.exception.file.FileNameLengthLimitExceededException;
-import com.stdiet.common.utils.DateUtils;
-import com.stdiet.common.utils.file.FileUploadUtils;
-import com.stdiet.common.utils.file.MimeTypeUtils;
-import com.stdiet.common.utils.oss.AliyunOSSUtils;
-import com.stdiet.custom.domain.SysMessageNotice;
-import com.stdiet.custom.domain.SysWxUserInfo;
-import com.stdiet.custom.domain.entityEnum.MessageNoticeEnum;
+import com.stdiet.custom.domain.SysWxUserLog;
 import com.stdiet.custom.dto.response.CommunityPunchReponse;
+import com.stdiet.custom.mapper.SysWxUserLogMapper;
 import com.stdiet.custom.page.WxLogInfo;
-import com.stdiet.custom.service.ISysMessageNoticeService;
+import com.stdiet.custom.service.ISysWxUserLogService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import com.stdiet.custom.mapper.SysWxUserLogMapper;
-import com.stdiet.custom.domain.SysWxUserLog;
-import com.stdiet.custom.service.ISysWxUserLogService;
-import org.springframework.web.multipart.MultipartFile;
+
+import java.util.List;
 
 /**
  * 微信用户记录Service业务层处理
@@ -56,7 +45,7 @@ public class SysWxUserLogServiceImpl implements ISysWxUserLogService {
 
     @Override
     public List<WxLogInfo> selectWxLogInfoList(SysWxUserLog sysWxUserLog) {
-        return  sysWxUserLogMapper.selectWxLogInfoList(sysWxUserLog);
+        return sysWxUserLogMapper.selectWxLogInfoList(sysWxUserLog);
     }
 
     /**
@@ -110,64 +99,76 @@ public class SysWxUserLogServiceImpl implements ISysWxUserLogService {
 
     /**
      * 根据openid和手机号查询打卡记录
+     *
      * @return
      */
     @Override
-    public List<WxLogInfo> getWxLogInfoList(SysWxUserLog sysWxUserLog){
+    public List<WxLogInfo> getWxLogInfoList(SysWxUserLog sysWxUserLog) {
         return sysWxUserLogMapper.getWxLogInfoList(sysWxUserLog);
     }
 
     /**
      * 根据日期和openid查询打卡记录
+     *
      * @param sysWxUserLog
      * @return
      */
-    public SysWxUserLog selectSysWxUserLogByDateAndOpenId(SysWxUserLog sysWxUserLog){
+    public SysWxUserLog selectSysWxUserLogByDateAndOpenId(SysWxUserLog sysWxUserLog) {
         return sysWxUserLogMapper.selectSysWxUserLogByDateAndOpenId(sysWxUserLog);
     }
 
     /**
      * 根据客户ID查询对应打卡体重数据
+     *
      * @param sysWxUserLog
      * @return
      */
-    public List<SysWxUserLog> getWxUserLogListByCustomerId(SysWxUserLog sysWxUserLog){
+    public List<SysWxUserLog> getWxUserLogListByCustomerId(SysWxUserLog sysWxUserLog) {
         return sysWxUserLogMapper.getWxUserLogListByCustomerId(sysWxUserLog);
     }
 
     /**
      * 根据ID查询打卡详情
+     *
      * @param sysWxUserLog
      * @return
      */
-    public WxLogInfo getWxLogInfoDetailById(SysWxUserLog sysWxUserLog){
+    public WxLogInfo getWxLogInfoDetailById(SysWxUserLog sysWxUserLog) {
         return sysWxUserLogMapper.getWxLogInfoDetailById(sysWxUserLog);
     }
 
     /**
      * 查询打卡社区记录
+     *
      * @param sysWxUserLog
      * @return
      */
-    public List<CommunityPunchReponse> getCommunityPunch(SysWxUserLog sysWxUserLog){
+    public List<CommunityPunchReponse> getCommunityPunch(SysWxUserLog sysWxUserLog) {
         return sysWxUserLogMapper.getCommunityPunch(sysWxUserLog);
     }
 
+    public List<CommunityPunchReponse> getCommunityPunchByOpenid(String openid) {
+        return sysWxUserLogMapper.getCommunityPunchByOpenid(openid);
+    }
+
+
     /**
      * 根据打卡社区
+     *
      * @param sysWxUserLog
      * @return
      */
-    public int getPunchTotalNum(SysWxUserLog sysWxUserLog){
-        return  sysWxUserLogMapper.getPunchTotalNum(sysWxUserLog);
+    public int getPunchTotalNum(SysWxUserLog sysWxUserLog) {
+        return sysWxUserLogMapper.getPunchTotalNum(sysWxUserLog);
     }
 
     /**
      * 查询打卡社区总共打卡人数
+     *
      * @return
      */
-    public int getPunchCustomerTotalNum(){
-        return  sysWxUserLogMapper.getPunchCustomerTotalNum();
+    public int getPunchCustomerTotalNum() {
+        return sysWxUserLogMapper.getPunchCustomerTotalNum();
     }
 
 }
