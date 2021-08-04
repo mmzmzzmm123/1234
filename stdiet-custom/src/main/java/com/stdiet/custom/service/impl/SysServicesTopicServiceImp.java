@@ -10,6 +10,7 @@ import com.stdiet.custom.domain.SysWxUserInfo;
 import com.stdiet.custom.mapper.SysCustomerMapper;
 import com.stdiet.custom.mapper.SysServicesTopicMapper;
 import com.stdiet.custom.server.WebSocketServer;
+import com.stdiet.custom.service.ISysMessageNoticeService;
 import com.stdiet.custom.service.ISysServicesTopicService;
 import com.stdiet.custom.service.ISysWxUserInfoService;
 import com.stdiet.custom.utils.WsUtils;
@@ -30,6 +31,9 @@ public class SysServicesTopicServiceImp implements ISysServicesTopicService {
 
     @Autowired
     ISysWxUserInfoService iSysWxUserInfoService;
+
+    @Autowired
+    ISysMessageNoticeService sysMessageNoticeService;
 
     @Override
     public List<SysServicesTopic> selectSysServicesTopicByUserIdAndRole(SysServicesTopic topic) {
@@ -145,6 +149,19 @@ public class SysServicesTopicServiceImp implements ISysServicesTopicService {
             status.setRole(topic.getRole());
             servicesTopicMapper.updateSysServicesTopicStatus(status);
 
+            //发送消息
+            if("customer".equals(topic.getToRole()) && StringUtils.isNotEmpty(topic.getToUid())){
+                String content = "";
+                if(StringUtils.isNotEmpty(topic.getReplyId()) ){
+                    content = servicesTopicMapper.getReplyContentByReplyId(topic.getReplyId());
+                }else if(StringUtils.isNotEmpty(topic.getCommentId())){
+                    content =  servicesTopicMapper.getCommentContentByCommentId(topic.getReplyId());
+                }
+                if(StringUtils.isNotEmpty(content)){
+                    sysMessageNoticeService.sendTopicMessage(topic, 2, content);
+                }
+            }
+
             afterReply(topic);
         }
         return topic;
@@ -163,6 +180,15 @@ public class SysServicesTopicServiceImp implements ISysServicesTopicService {
             status.setTopicId(topic.getTopicId());
             status.setRole(topic.getRole());
             servicesTopicMapper.updateSysServicesTopicStatus(status);
+
+            //发送消息
+            if("customer".equals(topic.getToRole()) && StringUtils.isNotEmpty(topic.getToUid())){
+                //查询topic内容
+                String content = servicesTopicMapper.getTopicContentByTopicId(topic.getTopicId());
+                if(StringUtils.isNotEmpty(content)){
+                    sysMessageNoticeService.sendTopicMessage(topic, 1, content);
+                }
+            }
 
             afterReply(topic);
         }
@@ -228,5 +254,14 @@ public class SysServicesTopicServiceImp implements ISysServicesTopicService {
     @Override
     public int getServicesTopicNum(Long cusId){
         return servicesTopicMapper.getServicesTopicNum(cusId);
+    }
+
+    /**
+     * 根据topicId查询内容
+     * @param topicId
+     * @return
+     */
+    public String getTopicContentByTopicId(String topicId){
+        return servicesTopicMapper.getTopicContentByTopicId(topicId);
     }
 }

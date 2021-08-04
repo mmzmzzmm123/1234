@@ -1,10 +1,15 @@
 package com.stdiet.custom.service;
 
 import java.util.List;
+import java.util.Map;
+
 import com.stdiet.custom.domain.SysMessageNotice;
+import com.stdiet.custom.domain.SysRecipesPlan;
+import com.stdiet.custom.domain.SysServicesTopic;
 import com.stdiet.custom.domain.SysWxUserLog;
 import com.stdiet.custom.domain.entityEnum.MessageNoticeEnum;
 import com.stdiet.custom.dto.response.MessageNoticeResponse;
+import org.apache.ibatis.annotations.Param;
 
 /**
  * 客户消息通知Service接口
@@ -89,4 +94,45 @@ public interface ISysMessageNoticeService
      * @param sysWxUserLog
      */
     public void sendPunchCommentMessage(SysWxUserLog sysWxUserLog);
+
+    /**
+     * 发送打卡动态点赞消息
+     * @param sysWxUserLog
+     * @param openId 点赞用户openid
+     */
+    public void sendpunchDynamicThumbsUpMessage(SysWxUserLog sysWxUserLog, String openId);
+
+    /**
+     * 发送食谱消息
+     * @param sysRecipesPlan
+     */
+    public void sendRecipesPlanMessage(SysRecipesPlan sysRecipesPlan);
+
+    /**
+     * 发送执行反馈话题消息
+     * @param topic 话题对象
+     * @param type 类型 1评论 2回复
+     * @param originalContent 话题内容或被回复的内容
+     */
+    public void sendTopicMessage(SysServicesTopic topic, int type, String originalContent);
+
+    /**
+     * 根据客户ID查询打卡点评消息以及未读消息数量（包含点评营养师信息、客户信息、点评内容）
+     * @param cusId 客户ID
+     * @return
+     */
+    Map<String,Object> getPunchCommentMessageByCusId(Long cusId);
+
+    /**
+     * 根据客户ID查询点赞消息列表
+     * @param cusId 客户ID
+     * @return
+     */
+    Map<String,Object> getPunchDynamicThumbsUpMessage(Long cusId);
+
+    /**
+     * 根据客户ID查询服务消息（食谱发送消息、执行反馈回复消息）
+     * @return
+     */
+    Map<String,Object> getServiceMessage(Long cusId);
 }

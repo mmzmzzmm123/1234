@@ -738,6 +738,10 @@ public class WechatAppletController extends BaseController {
             sysPunchThumbsup.setPunchId(Long.parseLong(AesUtils.decrypt(sysPunchThumbsup.getEncPunchId())));
             rows = sysPunchThumbsupService.insertSysPunchThumbsup(sysPunchThumbsup);
             if (rows > 0) {
+                //发送点赞消息
+                SysWxUserLog sysWxUserLog = sysWxUserLogService.selectSysWxUserLogById(sysPunchThumbsup.getPunchId()+"");
+                sysMessageNoticeService.sendpunchDynamicThumbsUpMessage(sysWxUserLog, sysPunchThumbsup.getCusOpenid());
+
                 Map<String, Object> resultData = new HashMap<>();
                 resultData.put("id", AesUtils.encrypt(String.valueOf(sysPunchThumbsup.getId())));
                 resultData.put("openid", sysPunchThumbsup.getCusOpenid());
@@ -887,6 +891,41 @@ public class WechatAppletController extends BaseController {
         }
 
         return AjaxResult.success(reply);
+    }
+
+    /**
+     * 查询消息列表
+     * @param cusId 客户ID
+     * @param messageType 0 查询全部 1 查询打卡点评消息 2 打卡动态点赞消息 3 服务消息（食谱更新、执行反馈消息）
+     * @return
+     */
+    @GetMapping("/getMessageNoticeData")
+    public AjaxResult getMessageNoticeList(@RequestParam("cusId")String cusId, @RequestParam(value = "messageType", required = false, defaultValue = "0")Integer messageType) {
+        cusId = StringUtils.isNotEmpty(cusId) ? AesUtils.decrypt(cusId) : "0";
+        Map<String, Object> result = new HashMap<>();
+        //查询打卡消息
+        if(messageType.intValue() == 0 || messageType.intValue() == 1){
+            startPage();
+            Map<String,Object> punchResult = sysMessageNoticeService.getPunchCommentMessageByCusId(Long.parseLong(cusId));
+            List<Map<String,Object>> list = (List<Map<String,Object>>)punchResult.get("data");
+            punchResult.put("data",getDataTable(list));
+            result.put("punchMessageData", punchResult);
+        }
+        if(messageType.intValue() == 0 || messageType.intValue() == 2){
+            startPage();
+            Map<String,Object> thumbsUpResult = sysMessageNoticeService.getPunchDynamicThumbsUpMessage(Long.parseLong(cusId));
+            List<Map<String,Object>> list = (List<Map<String,Object>>)thumbsUpResult.get("data");
+            thumbsUpResult.put("data",getDataTable(list));
+            result.put("thumbsUpMessageData", thumbsUpResult);
+        }
+        if(messageType.intValue() == 0 || messageType.intValue() == 3){
+            startPage();
+            Map<String,Object> serviceResult = sysMessageNoticeService.getServiceMessage(Long.parseLong(cusId));
+            List<Map<String,Object>> list = (List<Map<String,Object>>)serviceResult.get("data");
+            serviceResult.put("data",getDataTable(list));
+            result.put("serviceMessageData", serviceResult);
+        }
+        return AjaxResult.success(result);
     }
 }
 
