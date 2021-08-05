@@ -38,7 +38,7 @@ public class ByFilesController extends BaseController {
      * 查询文件管理列表
      */
     @PreAuthorize("@ss.hasPermi('benyi:files:list')")
-    @Log(title = "文件管理", businessType = BusinessType.QUERY)
+    @Log(title = "查询文件", businessType = BusinessType.QUERY)
     @GetMapping("/list")
     public TableDataInfo list(ByFiles byFiles) {
         startPage();
