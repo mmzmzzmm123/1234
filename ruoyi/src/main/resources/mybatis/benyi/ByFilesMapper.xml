@@ -27,6 +27,7 @@
             <if test="fileurl != null  and fileurl != ''">and fileurl = #{fileurl}</if>
             <if test="createuserid != null ">and createuserid = #{createuserid}</if>
         </where>
+        order by type
     </select>
 
     <select id="selectByFilesById" parameterType="Long" resultMap="ByFilesResult">
