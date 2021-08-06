@@ -140,7 +140,7 @@
 
     <select id="selectSysServicesTopicSessionByTopicId" resultMap="SysServicesTopicSessionResult"
             parameterType="String">
-        select topic_id, uid, 'customer' as role, content, img, create_time from sys_services_topic where topic_id = #{topicId}
+        select topic_id, uid, 'customer' as role, topic_type, content, img, create_time from sys_services_topic where topic_id = #{topicId}
     </select>
 
     <select id="selectServicesTopicCommentByTopicId" resultMap="ServicesTopicCommentResult">
