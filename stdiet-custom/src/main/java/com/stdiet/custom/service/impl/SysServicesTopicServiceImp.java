@@ -149,23 +149,24 @@ public class SysServicesTopicServiceImp implements ISysServicesTopicService {
             status.setRole(topic.getRole());
             servicesTopicMapper.updateSysServicesTopicStatus(status);
 
-            SysServicesTopic tp2 =  servicesTopicMapper.getTopicContentByCommentId(topic.getCommentId());
-            System.out.println(tp2.getContent() + "---------" + tp2.getTopicId());
+            /*SysServicesTopic tp2 =  servicesTopicMapper.getTopicContentByCommentId(topic.getCommentId());
+            System.out.println(tp2.getContent() + "---------" + tp2.getTopicId());*/
 
             //发送消息
             if("customer".equals(topic.getToRole()) && StringUtils.isNotEmpty(topic.getToUid())){
                 String content = "";
                 Long statusId = 0L;
+                SysServicesTopic tp = null;
                 if(StringUtils.isNotEmpty(topic.getCommentId())){
-                    SysServicesTopic tp =  servicesTopicMapper.getTopicContentByCommentId(topic.getCommentId());
+                    tp =  servicesTopicMapper.getTopicContentByCommentId(topic.getCommentId());
                     if(tp != null){
                         content = tp.getContent();
                         //查询客户对象status表的id
                         statusId = servicesTopicMapper.getStatusIdByRoleAndTopicId(tp.getTopicId(), topic.getToRole());
                     }
                 }
-                if(StringUtils.isNotEmpty(content)){
-                    sysMessageNoticeService.sendTopicMessage(topic, 2, statusId, content);
+                if(tp != null && StringUtils.isNotEmpty(content)){
+                    sysMessageNoticeService.sendTopicMessage(topic, 2, tp.getTopicId(), statusId, content);
                 }
             }
 
@@ -195,7 +196,7 @@ public class SysServicesTopicServiceImp implements ISysServicesTopicService {
                 //查询客户对象status表的id
                 Long statusId = servicesTopicMapper.getStatusIdByRoleAndTopicId(topic.getTopicId(), topic.getToRole());
                 if(StringUtils.isNotEmpty(content)){
-                    sysMessageNoticeService.sendTopicMessage(topic, 1, statusId, content);
+                    sysMessageNoticeService.sendTopicMessage(topic, 1, topic.getTopicId(), statusId, content);
                 }
             }
 
