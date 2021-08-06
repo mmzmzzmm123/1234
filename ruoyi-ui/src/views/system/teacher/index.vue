@@ -116,7 +116,7 @@
         :formatter="xlFormat"
       />
       <el-table-column
-        label="参加工作日期"
+        label="入职日期"
         align="center"
         prop="cjgzrq"
       ></el-table-column>
