@@ -49,6 +49,22 @@ public class ByFiles extends BaseEntity {
     @Excel(name = "创建人")
     private Long createuserid;
 
+    /**
+     * 适用角色
+     */
+    @Excel(name = "适用角色")
+    private String roles;
+
+    public String[] getRoleArr() {
+        return roleArr;
+    }
+
+    public void setRoleArr(String[] roleArr) {
+        this.roleArr = roleArr;
+    }
+
+    private String[] roleArr;
+
     public void setId(Long id) {
         this.id = id;
     }
@@ -97,6 +113,14 @@ public class ByFiles extends BaseEntity {
         return createuserid;
     }
 
+    public void setRoles(String roles) {
+        this.roles = roles;
+    }
+
+    public String getRoles() {
+        return roles;
+    }
+
     @Override
     public String toString() {
         return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE)
@@ -107,6 +131,8 @@ public class ByFiles extends BaseEntity {
                 .append("fileurl", getFileurl())
                 .append("createuserid", getCreateuserid())
                 .append("createTime", getCreateTime())
+                .append("roles", getRoles())
+                .append("roleArr", getRoleArr())
                 .toString();
     }
 }

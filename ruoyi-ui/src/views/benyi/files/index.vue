@@ -1,6 +1,11 @@
 <template>
   <div class="app-container">
-    <el-form :model="queryParams" ref="queryForm" :inline="true" label-width="68px">
+    <el-form
+      :model="queryParams"
+      ref="queryForm"
+      :inline="true"
+      label-width="68px"
+    >
       <el-form-item label="文件名称" prop="name">
         <el-input
           v-model="queryParams.name"
@@ -11,7 +16,12 @@
         />
       </el-form-item>
       <el-form-item label="所属类型" prop="type">
-        <el-select v-model="queryParams.type" placeholder="请选择文件所属类型" clearable size="small">
+        <el-select
+          v-model="queryParams.type"
+          placeholder="请选择文件所属类型"
+          clearable
+          size="small"
+        >
           <el-option
             v-for="dict in typeOptions"
             :key="dict.dictValue"
@@ -21,8 +31,16 @@
         </el-select>
       </el-form-item>
       <el-form-item>
-        <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
-        <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
+        <el-button
+          type="primary"
+          icon="el-icon-search"
+          size="mini"
+          @click="handleQuery"
+          >搜索</el-button
+        >
+        <el-button icon="el-icon-refresh" size="mini" @click="resetQuery"
+          >重置</el-button
+        >
       </el-form-item>
     </el-form>
 
@@ -34,7 +52,8 @@
           size="mini"
           @click="handleAdd"
           v-hasPermi="['benyi:files:add']"
-        >新增</el-button>
+          >新增</el-button
+        >
       </el-col>
       <el-col :span="1.5">
         <el-button
@@ -44,7 +63,8 @@
           :disabled="single"
           @click="handleUpdate"
           v-hasPermi="['benyi:files:edit']"
-        >修改</el-button>
+          >修改</el-button
+        >
       </el-col>
       <el-col :span="1.5">
         <el-button
@@ -54,17 +74,37 @@
           :disabled="multiple"
           @click="handleDelete"
           v-hasPermi="['benyi:files:remove']"
-        >删除</el-button>
+          >删除</el-button
+        >
       </el-col>
     </el-row>
 
-    <el-table v-loading="loading" :data="filesList" @selection-change="handleSelectionChange">
+    <el-table
+      v-loading="loading"
+      :data="filesList"
+      @selection-change="handleSelectionChange"
+    >
       <el-table-column type="selection" width="55" align="center" />
       <el-table-column label="编号" align="center" prop="id" />
       <el-table-column label="文件名称" align="center" prop="name" />
       <el-table-column label="文件类型" align="center" prop="filetype" />
-      <el-table-column label="文件所属类型" align="center" prop="type" :formatter="typeFormat" />
-      <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
+      <el-table-column
+        label="文件所属类型"
+        align="center"
+        prop="type"
+        :formatter="typeFormat"
+      />
+      <el-table-column
+        label="适用角色"
+        align="center"
+        :formatter="rolesFormat"
+        prop="roles"
+      />
+      <el-table-column
+        label="操作"
+        align="center"
+        class-name="small-padding fixed-width"
+      >
         <template slot-scope="scope">
           <el-button
             size="mini"
@@ -72,20 +112,22 @@
             icon="el-icon-edit"
             @click="handleUpdate(scope.row)"
             v-hasPermi="['benyi:files:edit']"
-          >修改</el-button>
+            >修改</el-button
+          >
           <el-button
             size="mini"
             type="text"
             icon="el-icon-delete"
             @click="handleDelete(scope.row)"
             v-hasPermi="['benyi:files:remove']"
-          >删除</el-button>
+            >删除</el-button
+          >
         </template>
       </el-table-column>
     </el-table>
 
     <pagination
-      v-show="total>0"
+      v-show="total > 0"
       :total="total"
       :page.sync="queryParams.pageNum"
       :limit.sync="queryParams.pageSize"
@@ -125,6 +167,21 @@
             <el-button size="small" type="primary">选择文件</el-button>
           </el-upload>
         </el-form-item>
+        <el-form-item label="适用角色" prop="roles">
+          <el-select
+            v-model="form.roles"
+            multiple
+            placeholder="请选择适用角色"
+            clearable
+          >
+            <el-option
+              v-for="dict in rolesOptions"
+              :key="dict.roleId"
+              :label="dict.roleName"
+              :value="dict.roleId"
+            />
+          </el-select>
+        </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button type="primary" @click="submitForm">确 定</el-button>
@@ -142,6 +199,7 @@ import {
   addFiles,
   updateFiles,
 } from "@/api/benyi/files";
+import { listRole } from "@/api/system/role";
 
 import { getToken } from "@/utils/auth";
 
@@ -162,6 +220,8 @@ export default {
       // 文件管理表格数据
       filesList: [],
       fileList: [],
+      //角色
+      rolesOptions: [],
       //文件类型
       typeOptions: [],
       uploadFileUrl: process.env.VUE_APP_BASE_API + "/common/upload", // 上传的图片服务器地址
@@ -181,6 +241,9 @@ export default {
         type: undefined,
         fileurl: undefined,
         createuserid: undefined,
+      },
+      queryParams_roles: {
+        roleKey: "school",
       },
       // 表单参数
       form: {},
@@ -203,6 +266,39 @@ export default {
     });
   },
   methods: {
+    getRoles() {
+      listRole(this.queryParams_roles).then((response) => {
+        this.rolesOptions = response.rows;
+      });
+    },
+    // 适用role--字典状态字典翻译
+    rolesFormat(row, column) {
+      //alert(row.scope.split(';').length);
+      if (row.roles == null) {
+        return "";
+      }
+      var ilength = row.roles.split(";").length;
+      var names = "";
+      for (var i = 0; i < ilength - 1; i++) {
+        names =
+          names +
+          this.selectRolesLabel(this.rolesOptions, row.roles.split(";")[i]) +
+          ";";
+      }
+      //this.selectDictLabel(this.scopeOptions, row.xnxq);
+      return names;
+    },
+    // 回显数据字典
+    selectRolesLabel(datas, value) {
+      var actions = [];
+      Object.keys(datas).map((key) => {
+        if (datas[key].roleId == "" + value) {
+          actions.push(datas[key].roleName);
+          return false;
+        }
+      });
+      return actions.join("");
+    },
     handleAvatarSuccess(res, file) {
       //console.log(res);
       if (res.code == "200") {
@@ -243,6 +339,7 @@ export default {
         this.total = response.total;
         this.loading = false;
       });
+      this.getRoles();
     },
     // 取消按钮
     cancel() {
@@ -290,7 +387,15 @@ export default {
       this.reset();
       const id = row.id || this.ids;
       getFiles(id).then((response) => {
+        console.log(response);
         this.form = response.data;
+        var roleArr = [];
+        if (response.roles != null) {
+          response.roles.forEach((element) => {
+            roleArr.push(parseInt(element));
+          });
+        }
+        this.form.roles = roleArr;
         this.open = true;
         this.title = "修改文件管理";
         this.fileList.push({
@@ -303,6 +408,8 @@ export default {
     submitForm: function () {
       this.$refs["form"].validate((valid) => {
         if (valid) {
+          var arrscope = this.form.roles;
+          this.form.roles = arrscope.join(";") + ";";
           if (this.form.id != undefined) {
             updateFiles(this.form).then((response) => {
               if (response.code === 200) {

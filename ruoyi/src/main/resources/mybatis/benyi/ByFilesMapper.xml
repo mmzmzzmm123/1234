@@ -12,20 +12,29 @@
         <result property="fileurl" column="fileurl"/>
         <result property="createuserid" column="createuserid"/>
         <result property="createTime" column="create_time"/>
+        <result property="roles" column="roles"/>
     </resultMap>
 
     <sql id="selectByFilesVo">
-        select id, name, filetype, type, fileurl, createuserid, create_time from by_files
+        select id, name, filetype, type, fileurl, createuserid, create_time, roles from by_files
     </sql>
 
     <select id="selectByFilesList" parameterType="ByFiles" resultMap="ByFilesResult">
         <include refid="selectByFilesVo"/>
         <where>
+        and 1=1
             <if test="name != null  and name != ''">and name like concat('%', #{name}, '%')</if>
             <if test="filetype != null  and filetype != ''">and filetype = #{filetype}</if>
             <if test="type != null  and type != ''">and type = #{type}</if>
             <if test="fileurl != null  and fileurl != ''">and fileurl = #{fileurl}</if>
             <if test="createuserid != null ">and createuserid = #{createuserid}</if>
+            <if test="roles != null  and roles != ''">
+            and (
+                <foreach collection="roleArr" item="item" index="index" separator=" or ">
+                    roles like concat('%', #{item}, '%')
+                </foreach>
+                )
+            </if>
         </where>
         order by type
     </select>
@@ -44,6 +53,7 @@
             <if test="fileurl != null  and fileurl != ''">fileurl,</if>
             <if test="createuserid != null ">createuserid,</if>
             <if test="createTime != null ">create_time,</if>
+            <if test="roles != null  and roles != ''">roles,</if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="name != null  and name != ''">#{name},</if>
@@ -52,6 +62,7 @@
             <if test="fileurl != null  and fileurl != ''">#{fileurl},</if>
             <if test="createuserid != null ">#{createuserid},</if>
             <if test="createTime != null ">#{createTime},</if>
+            <if test="roles != null  and roles != ''">#{roles},</if>
         </trim>
     </insert>
 
@@ -64,6 +75,7 @@
             <if test="fileurl != null  and fileurl != ''">fileurl = #{fileurl},</if>
             <if test="createuserid != null ">createuserid = #{createuserid},</if>
             <if test="createTime != null ">create_time = #{createTime},</if>
+            <if test="roles != null  and roles != ''">roles = #{roles},</if>
         </trim>
         where id = #{id}
     </update>

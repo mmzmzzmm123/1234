@@ -3,6 +3,8 @@ package com.ruoyi.project.benyi.controller;
 import java.util.List;
 
 import com.ruoyi.common.utils.SecurityUtils;
+import com.ruoyi.project.common.SchoolCommon;
+import com.ruoyi.project.system.domain.SysRole;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -33,14 +35,37 @@ import com.ruoyi.framework.web.page.TableDataInfo;
 public class ByFilesController extends BaseController {
     @Autowired
     private IByFilesService byFilesService;
+    @Autowired
+    private SchoolCommon schoolCommon;
+
+    /**
+     * 查询文件管理列表
+     */
+    @PreAuthorize("@ss.hasPermi('benyi:files:list')")
+    @GetMapping("/list")
+    public TableDataInfo list(ByFiles byFiles) {
+        startPage();
+        List<ByFiles> list = byFilesService.selectByFilesList(byFiles);
+        return getDataTable(list);
+    }
 
     /**
      * 查询文件管理列表
      */
     @PreAuthorize("@ss.hasPermi('benyi:files:list')")
     @Log(title = "查询文件", businessType = BusinessType.QUERY)
-    @GetMapping("/list")
-    public TableDataInfo list(ByFiles byFiles) {
+    @GetMapping("/listbyrole")
+    public TableDataInfo listbyrole(ByFiles byFiles) {
+
+        String strRoles = "";
+        List<SysRole> roles = SecurityUtils.getLoginUser().getUser().getRoles();
+        System.out.println(roles.size());
+        if (roles != null && roles.size() > 0) {
+                for (int i = 0; i < roles.size(); i++) {
+                    strRoles = strRoles + roles.get(i).getRoleId() + ";";
+                }
+        }
+        byFiles.setRoles(strRoles);
         startPage();
         List<ByFiles> list = byFilesService.selectByFilesList(byFiles);
         return getDataTable(list);
@@ -64,7 +89,15 @@ public class ByFilesController extends BaseController {
     @PreAuthorize("@ss.hasPermi('benyi:files:query')")
     @GetMapping(value = "/{id}")
     public AjaxResult getInfo(@PathVariable("id") Long id) {
-        return AjaxResult.success(byFilesService.selectByFilesById(id));
+        AjaxResult ajax = AjaxResult.success();
+        ByFiles byFiles = byFilesService.selectByFilesById(id);
+        ajax.put(AjaxResult.DATA_TAG, byFiles);
+        if (!schoolCommon.isStringEmpty(byFiles.getRoles())) {
+            ajax.put("roles", byFiles.getRoles().split(";"));
+        } else {
+            ajax.put("roles", null);
+        }
+        return ajax;
     }
 
     /**

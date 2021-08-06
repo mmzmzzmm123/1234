@@ -9,6 +9,15 @@ export function listFiles(query) {
   })
 }
 
+// 查询文件管理列表
+export function listFilesByRole(query) {
+  return request({
+    url: '/benyi/files/listbyrole',
+    method: 'get',
+    params: query
+  })
+}
+
 // 查询文件管理详细
 export function getFiles(id) {
   return request({

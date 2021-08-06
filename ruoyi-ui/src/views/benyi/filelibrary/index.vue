@@ -84,7 +84,7 @@
 </template>
 
 <script>
-import { listFiles, getFiles } from "@/api/benyi/files";
+import { listFilesByRole, getFiles } from "@/api/benyi/files";
 
 import { getToken } from "@/utils/auth";
 
@@ -142,7 +142,7 @@ export default {
     /** 查询文件管理列表 */
     getList() {
       this.loading = true;
-      listFiles(this.queryParams).then((response) => {
+      listFilesByRole(this.queryParams).then((response) => {
         this.filesList = response.rows;
         this.total = response.total;
         this.loading = false;

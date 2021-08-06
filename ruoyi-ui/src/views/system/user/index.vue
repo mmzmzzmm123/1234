@@ -141,7 +141,7 @@
           </div>
 
           <el-table
-          border
+            border
             v-loading="loading"
             :data="userList"
             @selection-change="handleSelectionChange"
@@ -149,7 +149,7 @@
             <el-table-column type="selection" width="40" align="center" />
             <!-- <el-table-column label="用户编号" align="center" prop="userId" /> -->
             <el-table-column
-            fixed
+              fixed
               label="登录账号"
               align="center"
               prop="userName"
@@ -188,7 +188,7 @@
               </template>
             </el-table-column>
             <el-table-column
-            fixed="right"
+              fixed="right"
               label="操作"
               align="center"
               width="60"
@@ -289,8 +289,8 @@
           </el-col>
           <el-col :span="12">
             <el-form-item label="状态">
-               <el-select v-model="form.status" placeholder="请选择">
-               <el-option
+              <el-select v-model="form.status" placeholder="请选择">
+                <el-option
                   v-for="dict in statusOptions"
                   :key="dict.dictValue"
                   :label="dict.dictLabel"

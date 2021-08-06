@@ -39,6 +39,13 @@ public class ByFilesServiceImpl implements IByFilesService {
      */
     @Override
     public List<ByFiles> selectByFilesList(ByFiles byFiles) {
+        if (byFiles.getRoles() == null || "".equals(byFiles.getRoles())) {
+
+        } else {
+            String strArr = byFiles.getRoles();
+            byFiles.setRoleArr(strArr.split(";"));
+        }
+
         return byFilesMapper.selectByFilesList(byFiles);
     }
 
