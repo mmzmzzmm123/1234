@@ -175,7 +175,7 @@
     <!-- 根据客户ID查询点赞消息 -->
     <select id="getPunchDynamicThumbsUpMessage" parameterType="Long" resultType="Map">
         select message.id,message.read_type as readType, message.message_type as messageType,DATE_FORMAT(message.create_time,'%Y-%m-%d %H:%i') as createTime, log.id as punchId, log.health_manifesto as healthManifesto,
-        thumbsUpUser.nick_name as thumbsUpUserNickName,thumbsUpUser.avatar_url as thumbsUpUserAvatar, punchUser.nick_name as cusNickName, punchUser.avatar_url as cusAvatarUrl
+        thumbsUpUser.nick_name as thumbsUpUserNickName,thumbsUpUser.avatar_url as thumbsUpUserAvatar, punchUser.nick_name as cusNickName, punchUser.avatar_url as cusAvatar
         from
         (
             select id,message_customer,message_type,message_title,message_content,message_key,read_type,create_time from sys_message_notice
