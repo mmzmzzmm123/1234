@@ -41,16 +41,17 @@ public interface SysServicesTopicMapper {
     String getTopicContentByTopicId(String topicId);
 
     /**
-     * 根据评论ID查询评论内容
+     * 根据评论ID查询话题内容
      * @param commentId
      * @return
      */
-    String getCommentContentByCommentId(String commentId);
+    SysServicesTopic getTopicContentByCommentId(String commentId);
 
     /**
-     * 查询回复内容
-     * @param replyId
+     * 根据角色和话题ID查询对应status表中的ID
+     * @param topicId
+     * @param role
      * @return
      */
-    String getReplyContentByReplyId(String replyId);
+    Long getStatusIdByRoleAndTopicId(@Param("topicId")String topicId, @Param("role")String role);
 }

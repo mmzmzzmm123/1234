@@ -206,7 +206,7 @@ public class SysMessageNoticeServiceImpl implements ISysMessageNoticeService {
      */
     @Override
     @Async
-    public void sendTopicMessage(SysServicesTopic topic, int type, String originalContent) {
+    public void sendTopicMessage(SysServicesTopic topic, int type, String topicId, Long statusId, String originalContent) {
         if (topic == null) {
             return;
         }
@@ -215,12 +215,12 @@ public class SysMessageNoticeServiceImpl implements ISysMessageNoticeService {
         content.put("replyContent", topic.getContent());
         //类型：1 评论  2回复
         content.put("type", type);
-        //评论或回复的ID
-        content.put("id", topic.getId());
+        //话题对应的状态已读未读ID
+        content.put("id", statusId);
         //评论ID
-        content.put("commentId", topic.getCommentId());
+        //content.put("commentId", topic.getCommentId());
         //回复ID
-        content.put("replyId", topic.getReplyId());
+        //content.put("replyId", topic.getReplyId());
         //topic的内容
         content.put("originalContent", originalContent);
 
@@ -231,7 +231,7 @@ public class SysMessageNoticeServiceImpl implements ISysMessageNoticeService {
         sysMessageNotice.setMessageCustomer(Long.parseLong(topic.getToUid()));
         sysMessageNotice.setMessageTitle("");
         sysMessageNotice.setMessageContent(JSONArray.toJSONString(content));
-        sysMessageNotice.setMessageKey(topic.getTopicId());
+        sysMessageNotice.setMessageKey(topicId);
         sendMessageNoticeToCustomer(MessageNoticeEnum.topicMessage, sysMessageNotice);
     }
 
