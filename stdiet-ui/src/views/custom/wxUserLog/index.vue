@@ -81,16 +81,15 @@
     </el-form>
 
     <el-row :gutter="10" class="mb8">
-      <!--<el-col :span="1.5">
+      <el-col :span="1.5">
         <el-button
           type="primary"
-          icon="el-icon-plus"
+          icon="el-icon-s-flag"
           size="mini"
-          @click="handleAdd"
-          v-hasPermi="['custom:wxUserLog:add']"
-        >新增
+          @click="showNotLunch()"
+        >未打卡客户列表
         </el-button>
-      </el-col>-->
+      </el-col>
       <!--      <el-col :span="1.5">-->
       <!--        <el-button-->
       <!--          type="success"-->
@@ -298,6 +297,8 @@
     <PunchLogEdit ref="punchLogEditRef"></PunchLogEdit>
     <!-- 详情 -->
     <PunchLogDetail ref="punchLogDetailRef"></PunchLogDetail>
+    <!-- 未打卡用户 -->
+    <NotPunchCustomer ref="notPunchCustomerRef"></NotPunchCustomer>
   </div>
 </template>
 
@@ -314,6 +315,7 @@ import { mapGetters } from "vuex";
 import PunchLogDetail from "@/components/PunchLog/PunchLogDetail";
 import PunchLogEdit from "@/components/PunchLog/PunchLogEdit";
 import AutoHideMessage from "@/components/AutoHideMessage";
+import NotPunchCustomer from "@/components/PunchLog/NotPunchCustomer"
 import dayjs from "dayjs";
 export default {
   name: "WxUserLog",
@@ -369,7 +371,7 @@ export default {
     };
   },
   components:{
-    PunchLogDetail,AutoHideMessage,PunchLogEdit
+    PunchLogDetail,AutoHideMessage,PunchLogEdit,NotPunchCustomer
   },
   created() {
     this.getList();
@@ -563,6 +565,10 @@ export default {
         })
         .catch(function () {});
     },
+    showNotLunch(){
+      this.queryParams.startDate = this.logTimeScope && this.logTimeScope.length > 0 ? this.logTimeScope[0] : null;
+      this.$refs.notPunchCustomerRef.showDialog(this.queryParams, this.nutritionistIdOptions,this.afterSaleIdOptions);
+    }
   },
 };
 </script>

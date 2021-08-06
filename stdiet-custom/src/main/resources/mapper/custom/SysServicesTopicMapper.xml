@@ -325,4 +325,19 @@
     <select id="getServicesTopicNum" parameterType="Long" resultType="int">
         select count(1) from sys_services_topic where del_flag = 0 and uid = #{cusId}
     </select>
+
+    <!-- 根据topicId查询内容 -->
+    <select id="getTopicContentByTopicId" resultType="String" parameterType="String">
+        select content from sys_services_topic where topic_id = #{topicId} limit 1
+    </select>
+
+    <!-- 根据CommentId查询评论内容 -->
+    <select id="getCommentContentByCommentId" resultType="String" parameterType="String">
+        select content from sys_services_topic_comment where id = #{commentId} limit 1
+    </select>
+
+    <!-- 根据replyId查询回复内容 -->
+    <select id="getReplyContentByReplyId" resultType="String" parameterType="String">
+        select content from sys_services_topic_reply where id = #{replyId} limit 1
+    </select>
 </mapper>

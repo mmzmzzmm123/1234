@@ -30,4 +30,11 @@ public interface ISysServicesTopicService {
      * @return
      */
     int getServicesTopicNum(Long cusId);
+
+    /**
+     * 根据topicId查询内容
+     * @param topicId
+     * @return
+     */
+    String getTopicContentByTopicId(String topicId);
 }

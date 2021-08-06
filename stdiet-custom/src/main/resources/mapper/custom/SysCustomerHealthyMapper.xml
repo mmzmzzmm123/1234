@@ -5,123 +5,123 @@
 <mapper namespace="com.stdiet.custom.mapper.SysCustomerHealthyMapper">
 
     <resultMap type="SysCustomerHealthy" id="SysCustomerHealthyResult">
-        <result property="id"    column="id"    />
-        <result property="customerId"    column="customer_id"    />
+        <result property="id" column="id"/>
+        <result property="customerId" column="customer_id"/>
         <!-- 非持久化字段，客户姓名 -->
-        <result property="name" column="name"></result>
+        <result property="name" column="name"/>
         <!-- 非持久化字段，客户手机号 -->
-        <result property="phone" column="phone"></result>
-        <result property="conditioningProjectId"    column="conditioning_project_id"    />
+        <result property="phone" column="phone"/>
+        <result property="conditioningProjectId" column="conditioning_project_id"/>
         <!-- 非持久化字段，调理项目名称 -->
-        <result property="conditioningProject"    column="conditioning_project"    />
-        <result property="sex"    column="sex"    />
-        <result property="age"    column="age"    />
-        <result property="weight"    column="weight"    />
-        <result property="tall"    column="tall"    />
-        <result property="condiment"    column="condiment"    />
-        <result property="otherCondiment"    column="other_condiment"    />
-        <result property="cookingStyle"    column="cooking_style"    />
-        <result property="cookingStyleRate"    column="cooking_style_rate"    />
-        <result property="washVegetablesStyle"    column="wash_vegetables_style"    />
-        <result property="otherWashVegetablesStyle"    column="other_wash_vegetables_style"    />
-        <result property="breakfastType"    column="breakfast_type"    />
-        <result property="breakfastFood"    column="breakfast_food"    />
-        <result property="lunchType"    column="lunch_type"    />
-        <result property="dinner"    column="dinner"    />
-        <result property="vegetableRate"    column="vegetable_rate"    />
-        <result property="commonMeat"    column="common_meat"    />
-        <result property="dinnerTime"    column="dinner_time"    />
-        <result property="supperNum"    column="supper_num"    />
-        <result property="supperFood"    column="supper_food"    />
-        <result property="dietHotAndCold"    column="diet_hot_and_cold"    />
-        <result property="dietFlavor"    column="diet_flavor"    />
-        <result property="vegetablesNum"    column="vegetables_num"    />
-        <result property="vegetablesRateType"    column="vegetables_rate_type"    />
-        <result property="fruitsNum"    column="fruits_num"    />
-        <result property="fruitsTime"    column="fruits_time"    />
-        <result property="fruitsRate"    column="fruits_rate"    />
-        <result property="riceNum"    column="rice_num"    />
-        <result property="riceFull"    column="rice_full"    />
-        <result property="eatingSpeed"    column="eating_speed"    />
-        <result property="snacks"    column="snacks"    />
-        <result property="otherSnacks"    column="other_snacks"    />
-        <result property="healthProductsFlag"    column="health_products_flag"    />
-        <result property="healthProductsBrand"    column="health_products_brand"    />
-        <result property="healthProductsName"    column="health_products_name"    />
-        <result property="healthProductsWeekRate"    column="health_products_week_rate"    />
-        <result property="healthProductsDayRate"    column="health_products_day_rate"    />
-        <result property="waterNum"    column="water_num"    />
-        <result property="waterType"    column="water_type"    />
-        <result property="waterHabit"    column="water_habit"    />
-        <result property="drinksNum"    column="drinks_num"    />
-        <result property="drinkWineFlag"    column="drink_wine_flag"    />
-        <result property="drinkWineClassify"    column="drink_wine_classify"    />
-        <result property="otherWineClassify"    column="other_wine_classify"    />
-        <result property="drinkWineAmount"    column="drink_wine_amount"    />
-        <result property="smokeFlag"    column="smoke_flag"    />
-        <result property="smokeRate"    column="smoke_rate"    />
-        <result property="secondSmoke"    column="second_smoke"    />
-        <result property="workIndustry"    column="work_industry"    />
-        <result property="workType"    column="work_type"    />
-        <result property="defecationNum"    column="defecation_num"    />
-        <result property="otherDefecationNum"    column="other_defecation_num"    />
-        <result property="defecationTime"    column="defecation_time"    />
-        <result property="defecationShape"    column="defecation_shape"    />
-        <result property="defecationSmell"    column="defecation_smell"    />
-        <result property="defecationSpeed"    column="defecation_speed"    />
-        <result property="defecationColor"    column="defecation_color"    />
-        <result property="motionNum"    column="motion_num"    />
-        <result property="motionDuration"    column="motion_duration"    />
-        <result property="motionTime"    column="motion_time"    />
-        <result property="aerobicMotionClassify"    column="aerobic_motion_classify"    />
-        <result property="anaerobicMotionClassify"    column="anaerobic_motion_classify"    />
-        <result property="anaerobicAerobicMotionClassify"    column="anaerobic_aerobic_motion_classify"    />
-        <result property="otherMotionClassify"    column="other_motion_classify"    />
-        <result property="motionField"    column="motion_field"    />
-        <result property="otherMotionField"    column="other_motion_field"    />
-        <result property="sleepTime"    column="sleep_time"    />
-        <result property="sleepQuality"    column="sleep_quality"    />
-        <result property="sleepDrugFlag"    column="sleep_drug_flag"    />
-        <result property="sleepDrug"    column="sleep_drug"    />
-        <result property="stayupLateFlag"    column="stayup_late_flag"    />
-        <result property="stayupLateWeekNum"    column="stayup_late_week_num"    />
-        <result property="familyIllnessHistory"    column="family_illness_history"    />
-        <result property="otherFamilyIllnessHistory"    column="other_family_illness_history"    />
-        <result property="operationHistory"    column="operation_history"    />
-        <result property="otherOperationHistory"    column="other_operation_history"    />
-        <result property="nearOperationFlag"    column="near_operation_flag"    />
-        <result property="recoveryeSituation"    column="recoverye_situation"    />
-        <result property="longEatDrugFlag"    column="long_eat_drug_flag"    />
-        <result property="longEatDrugClassify"    column="long_eat_drug_classify"    />
-        <result property="otherLongEatDrugClassify"    column="other_long_eat_drug_classify"    />
-        <result property="allergyFlag"    column="allergy_flag"    />
-        <result property="allergySituation"    column="allergy_situation"    />
-        <result property="allergen"    column="allergen"    />
-        <result property="otherAllergen"    column="other_allergen"    />
-        <result property="medicalReport"    column="medical_report"    />
-        <result property="medicalReportName"    column="medical_report_name"    />
-        <result property="position"    column="position"    />
-        <result property="experience"    column="experience"    />
-        <result property="rebound"    column="rebound"    />
-        <result property="difficulty"    column="difficulty"    />
-        <result property="crux"    column="crux"    />
-        <result property="dishesIngredient"    column="dishes_ingredient"    />
-        <result property="makeFoodType"    column="make_food_type"    />
-        <result property="physicalSignsId"    column="physical_signs_id"    />
-        <result property="otherPhysicalSigns"    column="other_physical_signs"    />
-        <result property="bloodData"    column="blood_data"    />
-        <result property="moistureDate"    column="moisture_date"    />
-        <result property="remark" column="remark"></result>
-        <result property="guidance"    column="guidance"    />
-        <result property="createTime"    column="create_time"    />
-        <result property="createBy"    column="create_by"    />
-        <result property="updateTime"    column="update_time"    />
-        <result property="updateBy"    column="update_by"    />
-        <result property="delFlag"    column="del_flag"    />
-        <result property="avoidFood" column="avoid_food" typeHandler="com.stdiet.custom.typehandler.ArrayJsonHandler" />
+        <result property="conditioningProject" column="conditioning_project"/>
+        <result property="sex" column="sex"/>
+        <result property="age" column="age"/>
+        <result property="weight" column="weight"/>
+        <result property="tall" column="tall"/>
+        <result property="condiment" column="condiment"/>
+        <result property="otherCondiment" column="other_condiment"/>
+        <result property="cookingStyle" column="cooking_style"/>
+        <result property="cookingStyleRate" column="cooking_style_rate"/>
+        <result property="washVegetablesStyle" column="wash_vegetables_style"/>
+        <result property="otherWashVegetablesStyle" column="other_wash_vegetables_style"/>
+        <result property="breakfastType" column="breakfast_type"/>
+        <result property="breakfastFood" column="breakfast_food"/>
+        <result property="lunchType" column="lunch_type"/>
+        <result property="dinner" column="dinner"/>
+        <result property="vegetableRate" column="vegetable_rate"/>
+        <result property="commonMeat" column="common_meat"/>
+        <result property="dinnerTime" column="dinner_time"/>
+        <result property="supperNum" column="supper_num"/>
+        <result property="supperFood" column="supper_food"/>
+        <result property="dietHotAndCold" column="diet_hot_and_cold"/>
+        <result property="dietFlavor" column="diet_flavor"/>
+        <result property="vegetablesNum" column="vegetables_num"/>
+        <result property="vegetablesRateType" column="vegetables_rate_type"/>
+        <result property="fruitsNum" column="fruits_num"/>
+        <result property="fruitsTime" column="fruits_time"/>
+        <result property="fruitsRate" column="fruits_rate"/>
+        <result property="riceNum" column="rice_num"/>
+        <result property="riceFull" column="rice_full"/>
+        <result property="eatingSpeed" column="eating_speed"/>
+        <result property="snacks" column="snacks"/>
+        <result property="otherSnacks" column="other_snacks"/>
+        <result property="healthProductsFlag" column="health_products_flag"/>
+        <result property="healthProductsBrand" column="health_products_brand"/>
+        <result property="healthProductsName" column="health_products_name"/>
+        <result property="healthProductsWeekRate" column="health_products_week_rate"/>
+        <result property="healthProductsDayRate" column="health_products_day_rate"/>
+        <result property="waterNum" column="water_num"/>
+        <result property="waterType" column="water_type"/>
+        <result property="waterHabit" column="water_habit"/>
+        <result property="drinksNum" column="drinks_num"/>
+        <result property="drinkWineFlag" column="drink_wine_flag"/>
+        <result property="drinkWineClassify" column="drink_wine_classify"/>
+        <result property="otherWineClassify" column="other_wine_classify"/>
+        <result property="drinkWineAmount" column="drink_wine_amount"/>
+        <result property="smokeFlag" column="smoke_flag"/>
+        <result property="smokeRate" column="smoke_rate"/>
+        <result property="secondSmoke" column="second_smoke"/>
+        <result property="workIndustry" column="work_industry"/>
+        <result property="workType" column="work_type"/>
+        <result property="defecationNum" column="defecation_num"/>
+        <result property="otherDefecationNum" column="other_defecation_num"/>
+        <result property="defecationTime" column="defecation_time"/>
+        <result property="defecationShape" column="defecation_shape"/>
+        <result property="defecationSmell" column="defecation_smell"/>
+        <result property="defecationSpeed" column="defecation_speed"/>
+        <result property="defecationColor" column="defecation_color"/>
+        <result property="motionNum" column="motion_num"/>
+        <result property="motionDuration" column="motion_duration"/>
+        <result property="motionTime" column="motion_time"/>
+        <result property="aerobicMotionClassify" column="aerobic_motion_classify"/>
+        <result property="anaerobicMotionClassify" column="anaerobic_motion_classify"/>
+        <result property="anaerobicAerobicMotionClassify" column="anaerobic_aerobic_motion_classify"/>
+        <result property="otherMotionClassify" column="other_motion_classify"/>
+        <result property="motionField" column="motion_field"/>
+        <result property="otherMotionField" column="other_motion_field"/>
+        <result property="sleepTime" column="sleep_time"/>
+        <result property="sleepQuality" column="sleep_quality"/>
+        <result property="sleepDrugFlag" column="sleep_drug_flag"/>
+        <result property="sleepDrug" column="sleep_drug"/>
+        <result property="stayupLateFlag" column="stayup_late_flag"/>
+        <result property="stayupLateWeekNum" column="stayup_late_week_num"/>
+        <result property="familyIllnessHistory" column="family_illness_history"/>
+        <result property="otherFamilyIllnessHistory" column="other_family_illness_history"/>
+        <result property="operationHistory" column="operation_history"/>
+        <result property="otherOperationHistory" column="other_operation_history"/>
+        <result property="nearOperationFlag" column="near_operation_flag"/>
+        <result property="recoveryeSituation" column="recoverye_situation"/>
+        <result property="longEatDrugFlag" column="long_eat_drug_flag"/>
+        <result property="longEatDrugClassify" column="long_eat_drug_classify"/>
+        <result property="otherLongEatDrugClassify" column="other_long_eat_drug_classify"/>
+        <result property="allergyFlag" column="allergy_flag"/>
+        <result property="allergySituation" column="allergy_situation"/>
+        <result property="allergen" column="allergen"/>
+        <result property="otherAllergen" column="other_allergen"/>
+        <result property="medicalReport" column="medical_report"/>
+        <result property="medicalReportName" column="medical_report_name"/>
+        <result property="position" column="position"/>
+        <result property="experience" column="experience"/>
+        <result property="rebound" column="rebound"/>
+        <result property="difficulty" column="difficulty"/>
+        <result property="crux" column="crux"/>
+        <result property="dishesIngredient" column="dishes_ingredient"/>
+        <result property="makeFoodType" column="make_food_type"/>
+        <result property="physicalSignsId" column="physical_signs_id"/>
+        <result property="otherPhysicalSigns" column="other_physical_signs"/>
+        <result property="bloodData" column="blood_data"/>
+        <result property="moistureDate" column="moisture_date"/>
+        <result property="remark" column="remark"/>
+        <result property="guidance" column="guidance"/>
+        <result property="createTime" column="create_time"/>
+        <result property="createBy" column="create_by"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="updateBy" column="update_by"/>
+        <result property="delFlag" column="del_flag"/>
+        <result property="avoidFood" column="avoid_food" typeHandler="com.stdiet.custom.typehandler.ArrayJsonHandler"/>
         <!-- column是传的参数, select是调用的查询 -->
         <association property="signList" column="physical_signs_id" select="getSignByIds"/>
-        <association property="healthyExtend" column="id" select="getHealthyExtendedByHealthyId"></association>
+        <association property="healthyExtend" column="id" select="getHealthyExtendedByHealthyId"/>
     </resultMap>
 
     <sql id="selectSysCustomerHealthyVo">
@@ -134,9 +134,10 @@
         <include refid="selectSysCustomerHealthyVo"/>,sc.name,sc.phone,cp.dict_label as conditioning_project
         from sys_customer_healthy as sch
         LEFT JOIN sys_customer sc on sc.id = sch.customer_id
-        LEFT JOIN (SELECT dict_label, dict_value FROM sys_dict_data WHERE dict_type = 'conditioning_project') AS cp ON cp.dict_value = sch.conditioning_project_id
+        LEFT JOIN (SELECT dict_label, dict_value FROM sys_dict_data WHERE dict_type = 'conditioning_project') AS cp ON
+        cp.dict_value = sch.conditioning_project_id
         where sch.del_flag = 0 and sc.del_flag = 0
-        <if test="conditioningProjectId != null "> and sch.conditioning_project_id = #{conditioningProjectId}</if>
+        <if test="conditioningProjectId != null ">and sch.conditioning_project_id = #{conditioningProjectId}</if>
         <if test="name != null and name != ''">
             and (sc.name like concat('%',#{name},'%') or sc.phone like concat('%',#{name},'%'))
         </if>
@@ -147,7 +148,8 @@
         <include refid="selectSysCustomerHealthyVo"/>,sc.name,sc.phone,cp.dict_label as conditioning_project
         from sys_customer_healthy as sch
         left join sys_customer sc on sc.id = sch.customer_id
-        LEFT JOIN (SELECT dict_label, dict_value FROM sys_dict_data WHERE dict_type = 'conditioning_project') AS cp ON cp.dict_value = sch.conditioning_project_id
+        LEFT JOIN (SELECT dict_label, dict_value FROM sys_dict_data WHERE dict_type = 'conditioning_project') AS cp ON
+        cp.dict_value = sch.conditioning_project_id
         where sch.del_flag = 0 and sc.del_flag = 0 and sch.id = #{id}
     </select>
 
@@ -156,11 +158,12 @@
         <include refid="selectSysCustomerHealthyVo"/>,sc.name,sc.phone,cp.dict_label as conditioning_project
         from sys_customer_healthy as sch
         left join sys_customer sc on sc.id = sch.customer_id
-        LEFT JOIN (SELECT dict_label, dict_value FROM sys_dict_data WHERE dict_type = 'conditioning_project') AS cp ON cp.dict_value = sch.conditioning_project_id
+        LEFT JOIN (SELECT dict_label, dict_value FROM sys_dict_data WHERE dict_type = 'conditioning_project') AS cp ON
+        cp.dict_value = sch.conditioning_project_id
         where sch.del_flag = 0 and sc.del_flag = 0 and sch.customer_id = #{customerId} order by sch.id desc limit 1
     </select>
 
-    <insert id="insertSysCustomerHealthy" parameterType="SysCustomerHealthy"  useGeneratedKeys="true" keyProperty="id">
+    <insert id="insertSysCustomerHealthy" parameterType="SysCustomerHealthy" useGeneratedKeys="true" keyProperty="id">
         insert into sys_customer_healthy
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="id != null">id,</if>
@@ -380,7 +383,9 @@
             <if test="updateTime != null">#{updateTime},</if>
             <if test="updateBy != null">#{updateBy},</if>
             <if test="delFlag != null">#{delFlag},</if>
-            <if test="avoidFood != null">#{avoid_food, jdbcType=OTHER, typeHandler=com.stdiet.custom.typehandler.ArrayJsonHandler},</if>
+            <if test="avoidFood != null">
+                #{avoid_food, jdbcType=OTHER, typeHandler=com.stdiet.custom.typehandler.ArrayJsonHandler},
+            </if>
         </trim>
     </insert>
 
@@ -450,7 +455,9 @@
             <if test="motionTime != null">motion_time = #{motionTime},</if>
             <if test="aerobicMotionClassify != null">aerobic_motion_classify = #{aerobicMotionClassify},</if>
             <if test="anaerobicMotionClassify != null">anaerobic_motion_classify = #{anaerobicMotionClassify},</if>
-            <if test="anaerobicAerobicMotionClassify != null">anaerobic_aerobic_motion_classify = #{anaerobicAerobicMotionClassify},</if>
+            <if test="anaerobicAerobicMotionClassify != null">anaerobic_aerobic_motion_classify =
+                #{anaerobicAerobicMotionClassify},
+            </if>
             <if test="otherMotionClassify != null">other_motion_classify = #{otherMotionClassify},</if>
             <if test="motionField != null">motion_field = #{motionField},</if>
             <if test="otherMotionField != null">other_motion_field = #{otherMotionField},</if>
@@ -461,7 +468,8 @@
             <if test="stayupLateFlag != null">stayup_late_flag = #{stayupLateFlag},</if>
             <if test="stayupLateWeekNum != null">stayup_late_week_num = #{stayupLateWeekNum},</if>
             <if test="familyIllnessHistory != null">family_illness_history = #{familyIllnessHistory},</if>
-            <if test="otherFamilyIllnessHistory != null">other_family_illness_history = #{otherFamilyIllnessHistory},</if>
+            <if test="otherFamilyIllnessHistory != null">other_family_illness_history = #{otherFamilyIllnessHistory},
+            </if>
             <if test="operationHistory != null">operation_history = #{operationHistory},</if>
             <if test="otherOperationHistory != null">other_operation_history = #{otherOperationHistory},</if>
             <if test="nearOperationFlag != null">near_operation_flag = #{nearOperationFlag},</if>
@@ -493,7 +501,9 @@
             <if test="updateTime != null">update_time = #{updateTime},</if>
             <if test="updateBy != null">update_by = #{updateBy},</if>
             <if test="delFlag != null">del_flag = #{delFlag},</if>
-            <if test="avoidFood != null">avoid_food = #{avoidFood, jdbcType=OTHER, typeHandler=com.stdiet.custom.typehandler.ArrayJsonHandler},</if>
+            <if test="avoidFood != null">avoid_food =
+                #{avoidFood, jdbcType=OTHER, typeHandler=com.stdiet.custom.typehandler.ArrayJsonHandler},
+            </if>
         </trim>
         where id = #{id}
     </update>
@@ -527,41 +537,43 @@
     </update>
 
     <resultMap type="SysDictData" id="SysDictDataResult">
-        <id     property="dictCode"   column="dict_code"   />
-        <result property="dictSort"   column="dict_sort"   />
-        <result property="dictLabel"  column="dict_label"  />
-        <result property="dictValue"  column="dict_value"  />
-        <result property="dictType"   column="dict_type"   />
+        <id property="dictCode" column="dict_code"/>
+        <result property="dictSort" column="dict_sort"/>
+        <result property="dictLabel" column="dict_label"/>
+        <result property="dictValue" column="dict_value"/>
+        <result property="dictType" column="dict_type"/>
     </resultMap>
 
     <select id="selectDictDataByTypeAndValue" parameterType="SysDictData" resultMap="SysDictDataResult">
         select dict_code, dict_sort, dict_label, dict_value, dict_type from sys_dict_data
         where status = '0' and dict_type = #{dictType}
-        and dict_value in <foreach collection="dictValueList" item="item" index="index"
-                                   open="(" separator="," close=")">#{item}</foreach>
+        and dict_value in
+        <foreach collection="dictValueList" item="item" index="index"
+                 open="(" separator="," close=")">#{item}
+        </foreach>
         order by dict_sort asc
     </select>
 
     <resultMap type="SysCustomerHealthyExtended" id="HealthyExtendedResult">
-        <result property="id"    column="id"    />
-        <result property="healthyId"    column="healthy_id"    />
-        <result property="waist"    column="waist"    />
-        <result property="hipline"    column="hipline"    />
-        <result property="eatFruitsMessage"    column="eat_fruits_message"    />
-        <result property="longEatDrugMessage"    column="long_eat_drug_message"    />
-        <result property="medicationCompliance"    column="medication_compliance"    />
-        <result property="adverseReactionsFlag"    column="adverse_reactions_flag"    />
-        <result property="adverseReactions"    column="adverse_reactions"    />
-        <result property="bloodSugarMessage"    column="blood_sugar_message"    />
-        <result property="depressedStateMessage"    column="depressed_state_message"    />
-        <result property="bloodPressureMessage"    column="blood_pressure_message"    />
-        <result property="anxietyStateMessage"    column="anxiety_state_message"    />
-        <result property="menstruationMessage"    column="menstruation_message"    />
-        <result property="gastrointestinalMessage"    column="gastrointestinal_message"    />
-        <result property="postpartumConditioningMessage"    column="postpartum_conditioning_message"    />
-        <result property="hypertensionMessage"    column="hypertension_message"    />
-        <result property="hyperlipidemiaMessage"    column="hyperlipidemia_message"    />
-        <result property="delFlag"    column="del_flag"    />
+        <result property="id" column="id"/>
+        <result property="healthyId" column="healthy_id"/>
+        <result property="waist" column="waist"/>
+        <result property="hipline" column="hipline"/>
+        <result property="eatFruitsMessage" column="eat_fruits_message"/>
+        <result property="longEatDrugMessage" column="long_eat_drug_message"/>
+        <result property="medicationCompliance" column="medication_compliance"/>
+        <result property="adverseReactionsFlag" column="adverse_reactions_flag"/>
+        <result property="adverseReactions" column="adverse_reactions"/>
+        <result property="bloodSugarMessage" column="blood_sugar_message"/>
+        <result property="depressedStateMessage" column="depressed_state_message"/>
+        <result property="bloodPressureMessage" column="blood_pressure_message"/>
+        <result property="anxietyStateMessage" column="anxiety_state_message"/>
+        <result property="menstruationMessage" column="menstruation_message"/>
+        <result property="gastrointestinalMessage" column="gastrointestinal_message"/>
+        <result property="postpartumConditioningMessage" column="postpartum_conditioning_message"/>
+        <result property="hypertensionMessage" column="hypertension_message"/>
+        <result property="hyperlipidemiaMessage" column="hyperlipidemia_message"/>
+        <result property="delFlag" column="del_flag"/>
     </resultMap>
 
     <select id="getHealthyExtendedByHealthyId" parameterType="Long" resultMap="HealthyExtendedResult">

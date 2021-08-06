@@ -252,7 +252,7 @@ export default {
           }
           const tmpNum = document.getElementById(`day_num_${idx}`);
           if (tmpNum) {
-            tmpNum.innerText = `第${startNum + idx}天`;
+            tmpNum.innerText = `第${parseInt(startNum) + idx}天`;
           }
         });
 

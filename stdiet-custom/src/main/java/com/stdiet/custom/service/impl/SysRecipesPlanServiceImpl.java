@@ -44,6 +44,8 @@ public class SysRecipesPlanServiceImpl implements ISysRecipesPlanService {
     private ISysCustomerService sysCustomerService;
     @Autowired
     private SysRecipesMapper sysRecipesMapper;
+    @Autowired
+    private ISysMessageNoticeService sysMessageNoticeService;
 
     //2021-06-11之后（大于等于）成交的订单，只生成定金单食谱计划，不生成尾款食谱计划，之前成交的订单还是保持之前逻辑
     public static final LocalDate newVersionPlanStartDate = DateUtils.stringToLocalDate("2021-06-01", "yyyy-MM-dd");
@@ -116,6 +118,10 @@ public class SysRecipesPlanServiceImpl implements ISysRecipesPlanService {
                     if (smsCode == 0) {
                         sysRecipesPlan.setSmsSend(1);
                     }
+                }
+                //发送食谱消息
+                if(StringUtils.isNotNull(recipesPlan)) {
+                    sysMessageNoticeService.sendRecipesPlanMessage(recipesPlan);
                 }
             }
         }

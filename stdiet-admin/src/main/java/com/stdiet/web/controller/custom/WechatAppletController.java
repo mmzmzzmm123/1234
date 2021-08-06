@@ -76,12 +76,14 @@ public class WechatAppletController extends BaseController {
     private ISysServicesTopicService iSysServicesTopicService;
     @Autowired
     private ISysVideoClassifyService sysVideoClassifyService;
-
     @Autowired
     private ISysWxBannerImageService sysWxBannerImageService;
-
     @Autowired
     private ISysPunchThumbsupService sysPunchThumbsupService;
+    @Autowired
+    private ISysCustomerHealthyService sysCustomerHealthyService;
+    @Autowired
+    private ISysCustomerPhysicalSignsService sysCustomerPhysicalSignsService;
 
     /**
      * 查询微信小程序中展示的客户案例
@@ -442,12 +444,25 @@ public class WechatAppletController extends BaseController {
         }
 
         // 更新时间超过21天，重新登录获取最新信息
-        if (StringUtils.isEmpty(curWxUserInfo.getAvatarUrl()) || ChronoUnit.DAYS.between(DateUtils.dateToLocalDate(curWxUserInfo.getUpdateTime()), LocalDate.now()) >= 21) {
+        if (
+//                StringUtils.isEmpty(curWxUserInfo.getAvatarUrl()) ||
+                ChronoUnit.DAYS.between(DateUtils.dateToLocalDate(curWxUserInfo.getUpdateTime()), LocalDate.now()) >= 21) {
             return AjaxResult.error(5001, "信息缺失或者过期需要重新登录");
+        }
+
+        SysCustomerHealthy customerHealthy = sysCustomerHealthyService.selectSysCustomerHealthyByCustomerId(curWxUserInfo.getCusId());
+        if (customerHealthy == null) {
+            SysCustomerPhysicalSigns customerPhysicalSigns = sysCustomerPhysicalSignsService.selectSysCustomerPhysicalSignsByCusId(curWxUserInfo.getCusId());
+            if (customerPhysicalSigns != null) {
+                curWxUserInfo.setSex(customerPhysicalSigns.getSex().toString());
+            }
+        } else {
+            curWxUserInfo.setSex(customerHealthy.getSex().toString());
         }
 
         curWxUserInfo.setCustomerId(AesUtils.encrypt(curWxUserInfo.getCusId().toString()));
         curWxUserInfo.setCusId(null);
+
 
         // 并返回一系列登录后的数据
         return AjaxResult.success(curWxUserInfo);
@@ -715,14 +730,17 @@ public class WechatAppletController extends BaseController {
     public TableDataInfo getCommunityPunch() {
         startPage();
         List<CommunityPunchReponse> list = sysWxUserLogService.getCommunityPunch(new SysWxUserLog());
-//        if (list != null && list.size() > 0) {
-//            for (CommunityPunchReponse comm : list) {
-//                comm.setId(AesUtils.encrypt(comm.getId()));
-//                comm.setCusId(AesUtils.encrypt(comm.getCusId()));
-//                comm.setThumbsupNum(comm.getThumbsupOpenid() != null ? comm.getThumbsupOpenid().size() : 0);
-//            }
-//        }
         return getDataTable(list);
+    }
+
+
+    /**
+     *
+     */
+    @GetMapping("/getCustomerActivity")
+    public TableDataInfo getCustomerActivity(@RequestParam String openid) {
+        startPage();
+        return getDataTable(sysWxUserLogService.getCommunityPunchByOpenid(openid));
     }
 
     /**
@@ -738,6 +756,10 @@ public class WechatAppletController extends BaseController {
             sysPunchThumbsup.setPunchId(Long.parseLong(AesUtils.decrypt(sysPunchThumbsup.getEncPunchId())));
             rows = sysPunchThumbsupService.insertSysPunchThumbsup(sysPunchThumbsup);
             if (rows > 0) {
+                //发送点赞消息
+                SysWxUserLog sysWxUserLog = sysWxUserLogService.selectSysWxUserLogById(sysPunchThumbsup.getPunchId() + "");
+                sysMessageNoticeService.sendpunchDynamicThumbsUpMessage(sysWxUserLog, sysPunchThumbsup.getCusOpenid());
+
                 Map<String, Object> resultData = new HashMap<>();
                 resultData.put("id", AesUtils.encrypt(String.valueOf(sysPunchThumbsup.getId())));
                 resultData.put("openid", sysPunchThumbsup.getCusOpenid());
@@ -887,6 +909,37 @@ public class WechatAppletController extends BaseController {
         }
 
         return AjaxResult.success(reply);
+    }
+
+    /**
+     * 查询消息列表
+     *
+     * @param cusId       客户ID
+     * @param messageType 0 查询全部 1 查询打卡点评消息 2 打卡动态点赞消息 3 服务消息（食谱更新、执行反馈消息）
+     * @return
+     */
+    @GetMapping("/getMessageNoticeData")
+    public AjaxResult getMessageNoticeList(@RequestParam("cusId") String cusId, @RequestParam(value = "messageType", required = false, defaultValue = "0") Integer messageType) {
+        cusId = StringUtils.isNotEmpty(cusId) ? AesUtils.decrypt(cusId) : "0";
+        startPage();
+        Map<String, Object> result = new HashMap<>();
+//        List<Map<String, Object>> list = new ArrayList<>();
+        //查询打卡消息
+        if (messageType.intValue() == 0 || messageType.intValue() == 1) {
+            result = sysMessageNoticeService.getPunchCommentMessageByCusId(Long.parseLong(cusId));
+//            list = (List<Map<String, Object>>) result.get("data");
+        }
+        if (messageType.intValue() == 0 || messageType.intValue() == 2) {
+            result = sysMessageNoticeService.getPunchDynamicThumbsUpMessage(Long.parseLong(cusId));
+//            list = (List<Map<String, Object>>) result.get("data");
+        }
+        if (messageType.intValue() == 0 || messageType.intValue() == 3) {
+            result = sysMessageNoticeService.getServiceMessage(Long.parseLong(cusId));
+//            list = (List<Map<String, Object>>) result.get("data");
+        }
+//        TableDataInfo tableDataInfo = getDataTable(list);
+//        result.put("total", tableDataInfo.getTotal());
+        return AjaxResult.success(result);
     }
 }
 
