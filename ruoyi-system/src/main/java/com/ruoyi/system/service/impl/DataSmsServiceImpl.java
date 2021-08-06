@@ -8,15 +8,17 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.converter.StringHttpMessageConverter;
 import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.util.UriComponentsBuilder;
 
+import java.net.URI;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * 短信接口服务。对接文档请参考：http://47.97.21.146:9090/doc/sms#codemsg
@@ -93,70 +95,37 @@ public class DataSmsServiceImpl implements IDataSmsService {
     @Override
     public AjaxResult sendVerifyCodeByUMS(String phone, String code) {
 
+        // response转码为 GBK，否则返回值出现乱码
+        restTemplate.getMessageConverters().add(1, new StringHttpMessageConverter(Charset.forName("GBK")));
+
         String spCode = "264597";
         String loginName = "qz_dsjg";
         String password = "e363da464f92ecb750cc50576c9757d8";
         long timestamp = System.currentTimeMillis();
 
         String content = "尊敬的信贷直通车用户，您本次验证码为" + code + "，请在2分钟内使用。";
-        Map<String, Object> map = new HashMap<>();
-        map.put("SpCode", spCode);
-        map.put("LoginName", loginName);
-        map.put("Password", password);
-        map.put("MessageContent", content);
-        map.put("UserNumber", phone);
-        map.put("SerialNumber", timestamp);
-        map.put("ScheduleTime", "");
-        map.put("f", 1);
-
-        String smsUrl = "https://api.ums86.com:9600/sms/Api/Send.do?SpCode={SpCode}&LoginName={LoginName}&Password={Password}&MessageContent={MessageContent}&UserNumber={UserNumber}&SerialNumber={SerialNumber}&ScheduleTime={ScheduleTime}&f={f}";
-        String result = restTemplate.getForObject(smsUrl,String.class,map);
-
-        //格式为：result=2&description=账号无效或权限不足
-        String[] results = result.split("&");
-        String resultCode = results[0].split("=")[1];
-        String resultMsg = results[1].split("=")[1];
-        AjaxResult ajaxResult = new AjaxResult(Integer.parseInt(resultCode),resultMsg);
-
-        return ajaxResult;
-    }
-
-    /*@Override
-    public AjaxResult sendVerifyCodeByUMS(String phone, String code) {
 
         String url = "https://api.ums86.com:9600/sms/Api/Send.do";
+        UriComponentsBuilder urlBuilder = UriComponentsBuilder.fromHttpUrl(url);
+        urlBuilder.queryParam("SpCode", spCode);
+        urlBuilder.queryParam("LoginName", loginName);
+        urlBuilder.queryParam("Password", password);
+        urlBuilder.queryParam("MessageContent", content);
+        urlBuilder.queryParam("UserNumber", phone);
+        urlBuilder.queryParam("SerialNumber", timestamp+"");
+        urlBuilder.queryParam("ScheduleTime", "");
+        urlBuilder.queryParam("f", "1");
 
-        long timestamp = System.currentTimeMillis();
-        String spCode = "264597";
-        String loginName = "qz_dsjg";
-        String password = "e363da464f92ecb750cc50576c9757d8";
-        String content = "尊敬的信贷直通车用户，您本次验证码为" + code + "，请在2分钟内使用。";
+        // request 编码为 GBK，否则短信服务接收参数会出现乱码
+        URI gbkUri = urlBuilder.build().encode(Charset.forName("GBK")).toUri();
 
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_JSON);
-//        headers.setContentType(MediaType.APPLICATION_JSON_UTF8)
-
-
-
-        MultiValueMap<String, Object> map = new LinkedMultiValueMap<>();
-        map.add("SpCode", spCode);
-        map.add("LoginName", loginName);
-        map.add("Password", password);
-        map.add("MessageContent", content);
-        map.add("UserNumber", phone);
-        map.add("SerialNumber", timestamp);
-        map.add("ScheduleTime", "");
-        map.add("f", 1);
+        String result = restTemplate.getForEntity(gbkUri,String.class).toString();
 
         //格式为：result=2&description=账号无效或权限不足
-        String result = restTemplate.postForObject(url, map, String.class);
-
-
         String[] results = result.split("&");
         String resultCode = results[0].split("=")[1];
         String resultMsg = results[1].split("=")[1];
-        AjaxResult ajaxResult = new AjaxResult(Integer.parseInt(resultCode),resultMsg);
 
-        return ajaxResult;
-    }*/
+        return new AjaxResult(Integer.parseInt(resultCode),resultMsg);
+    }
 }
