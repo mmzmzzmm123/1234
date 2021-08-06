@@ -30,7 +30,7 @@ CREATE TABLE `data_company_loan` (
   `company_province` varchar(30) DEFAULT '' COMMENT '省份',
   `company_city` varchar(30) DEFAULT '' COMMENT '市',
   `company_area` varchar(30) DEFAULT '' COMMENT '区或县',
-  `company_type` varchar(32) DEFAULT '' COMMENT '企业划型',
+  `company_type` varchar(128) DEFAULT '' COMMENT '企业划型',
   `company_industry` varchar(128) DEFAULT '' COMMENT '所在行业',
   `company_business` varchar(1024) DEFAULT '' COMMENT '主营业务',
   `loan_band` varchar(64) DEFAULT '' COMMENT '意向银行（逗号隔开）',

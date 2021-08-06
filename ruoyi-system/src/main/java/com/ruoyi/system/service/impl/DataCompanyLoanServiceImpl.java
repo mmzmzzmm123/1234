@@ -4,6 +4,7 @@ import com.ruoyi.common.constant.Constants;
 import com.ruoyi.common.constant.UserConstants;
 import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.core.redis.RedisCache;
+import com.ruoyi.common.exception.user.SmsException;
 import com.ruoyi.common.exception.user.UserException;
 import com.ruoyi.common.utils.DateUtils;
 import com.ruoyi.common.utils.StringUtils;
@@ -95,10 +96,9 @@ public class DataCompanyLoanServiceImpl implements IDataCompanyLoanService
         String verifyKey = Constants.SMS_CODE_KEY + mobile;
         String realCode = redisCache.getCacheObject(verifyKey);
 
-//        TODO 测试
-//        if (!StringUtils.equals(code,realCode)){
-//            throw new SmsException();
-//        }
+        if (!StringUtils.equals(code,realCode)){
+            throw new SmsException();
+        }
 
         redisCache.deleteObject(verifyKey);
 

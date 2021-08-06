@@ -14,7 +14,9 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 短信接口服务。对接文档请参考：http://47.97.21.146:9090/doc/sms#codemsg
@@ -90,17 +92,57 @@ public class DataSmsServiceImpl implements IDataSmsService {
 
     @Override
     public AjaxResult sendVerifyCodeByUMS(String phone, String code) {
+
+        String spCode = "264597";
+        String loginName = "qz_dsjg";
+        String password = "e363da464f92ecb750cc50576c9757d8";
+        long timestamp = System.currentTimeMillis();
+
+        String content = "尊敬的信贷直通车用户，您本次验证码为" + code + "，请在2分钟内使用。";
+        Map<String, Object> map = new HashMap<>();
+        map.put("SpCode", spCode);
+        map.put("LoginName", loginName);
+        map.put("Password", password);
+        map.put("MessageContent", content);
+        map.put("UserNumber", phone);
+        map.put("SerialNumber", timestamp);
+        map.put("ScheduleTime", "");
+        map.put("f", 1);
+
+        String smsUrl = "https://api.ums86.com:9600/sms/Api/Send.do?SpCode={SpCode}&LoginName={LoginName}&Password={Password}&MessageContent={MessageContent}&UserNumber={UserNumber}&SerialNumber={SerialNumber}&ScheduleTime={ScheduleTime}&f={f}";
+        String result = restTemplate.getForObject(smsUrl,String.class,map);
+
+        //格式为：result=2&description=账号无效或权限不足
+        String[] results = result.split("&");
+        String resultCode = results[0].split("=")[1];
+        String resultMsg = results[1].split("=")[1];
+        AjaxResult ajaxResult = new AjaxResult(Integer.parseInt(resultCode),resultMsg);
+
+        return ajaxResult;
+    }
+
+    /*@Override
+    public AjaxResult sendVerifyCodeByUMS(String phone, String code) {
+
         String url = "https://api.ums86.com:9600/sms/Api/Send.do";
 
         long timestamp = System.currentTimeMillis();
-        String spCode = "000001";
-        String loginName = "admin";
-        String password = "admin";
+        String spCode = "264597";
+        String loginName = "qz_dsjg";
+        String password = "e363da464f92ecb750cc50576c9757d8";
+        String content = "尊敬的信贷直通车用户，您本次验证码为" + code + "，请在2分钟内使用。";
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+//        headers.setContentType(MediaType.APPLICATION_JSON_UTF8)
+
+
+
         MultiValueMap<String, Object> map = new LinkedMultiValueMap<>();
         map.add("SpCode", spCode);
         map.add("LoginName", loginName);
         map.add("Password", password);
-        map.add("MessageContent", "你有一项编号为"+code+"的事务需要处理");
+        map.add("MessageContent", content);
         map.add("UserNumber", phone);
         map.add("SerialNumber", timestamp);
         map.add("ScheduleTime", "");
@@ -116,5 +158,5 @@ public class DataSmsServiceImpl implements IDataSmsService {
         AjaxResult ajaxResult = new AjaxResult(Integer.parseInt(resultCode),resultMsg);
 
         return ajaxResult;
-    }
+    }*/
 }
