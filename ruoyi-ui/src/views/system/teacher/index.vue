@@ -241,7 +241,7 @@
             ></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="参加工作日期" prop="cjgzrq">
+        <el-form-item label="入职日期" prop="cjgzrq">
           <el-date-picker
             clearable
             size="small"
@@ -250,7 +250,7 @@
             type="date"
             value-format="yyyy-MM-dd"
             :picker-options="pickerOptions0"
-            placeholder="选择参加工作日期"
+            placeholder="选择入职日期"
           ></el-date-picker>
         </el-form-item>
         <el-form-item label="创建人" prop="createuserid" v-show="false">

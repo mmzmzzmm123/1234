@@ -289,14 +289,22 @@
           </el-col>
           <el-col :span="12">
             <el-form-item label="状态">
-              <el-radio-group v-model="form.status">
+               <el-select v-model="form.status" placeholder="请选择">
+               <el-option
+                  v-for="dict in statusOptions"
+                  :key="dict.dictValue"
+                  :label="dict.dictLabel"
+                  :value="dict.dictValue"
+                ></el-option>
+              </el-select>
+              <!-- <el-radio-group v-model="form.status">
                 <el-radio
                   v-for="dict in statusOptions"
                   :key="dict.dictValue"
                   :label="dict.dictValue"
                   >{{ dict.dictLabel }}</el-radio
                 >
-              </el-radio-group>
+              </el-radio-group> -->
             </el-form-item>
           </el-col>
           <el-col :span="12">
