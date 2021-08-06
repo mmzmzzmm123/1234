@@ -331,13 +331,13 @@
         select content from sys_services_topic where topic_id = #{topicId} limit 1
     </select>
 
-    <!-- 根据CommentId查询评论内容 -->
-    <select id="getCommentContentByCommentId" resultType="String" parameterType="String">
-        select content from sys_services_topic_comment where id = #{commentId} limit 1
+    <!-- 根据CommentId查询话题内容 -->
+    <select id="getTopicContentByCommentId" resultType="SysServicesTopic" parameterType="String">
+        select topic_id as topicId,content from sys_services_topic where topic_id in (select topic_id from sys_services_topic_comment where id = #{commentId} ) limit 1
     </select>
 
-    <!-- 根据replyId查询回复内容 -->
-    <select id="getReplyContentByReplyId" resultType="String" parameterType="String">
-        select content from sys_services_topic_reply where id = #{replyId} limit 1
+    <!-- 根据角色和话题ID查询对应消息状态ID -->
+    <select id="getStatusIdByRoleAndTopicId" parameterType="String" resultType="Long">
+        select id from sys_services_topic_status where topic_id = #{topicId} and role = #{role} limit 1
     </select>
 </mapper>
