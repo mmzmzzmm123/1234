@@ -114,7 +114,7 @@ public interface ISysMessageNoticeService
      * @param type 类型 1评论 2回复
      * @param originalContent 话题内容或被回复的内容
      */
-    public void sendTopicMessage(SysServicesTopic topic, int type, Long statusId, String originalContent);
+    public void sendTopicMessage(SysServicesTopic topic, int type, String topicId, Long statusId, String originalContent);
 
     /**
      * 根据客户ID查询打卡点评消息以及未读消息数量（包含点评营养师信息、客户信息、点评内容）

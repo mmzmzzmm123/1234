@@ -206,7 +206,7 @@ public class SysMessageNoticeServiceImpl implements ISysMessageNoticeService {
      */
     @Override
     @Async
-    public void sendTopicMessage(SysServicesTopic topic, int type, Long statusId, String originalContent) {
+    public void sendTopicMessage(SysServicesTopic topic, int type, String topicId, Long statusId, String originalContent) {
         if (topic == null) {
             return;
         }
@@ -231,7 +231,7 @@ public class SysMessageNoticeServiceImpl implements ISysMessageNoticeService {
         sysMessageNotice.setMessageCustomer(Long.parseLong(topic.getToUid()));
         sysMessageNotice.setMessageTitle("");
         sysMessageNotice.setMessageContent(JSONArray.toJSONString(content));
-        sysMessageNotice.setMessageKey(topic.getTopicId());
+        sysMessageNotice.setMessageKey(topicId);
         sendMessageNoticeToCustomer(MessageNoticeEnum.topicMessage, sysMessageNotice);
     }
 
