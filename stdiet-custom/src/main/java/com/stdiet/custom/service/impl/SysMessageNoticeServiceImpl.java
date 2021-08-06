@@ -215,6 +215,12 @@ public class SysMessageNoticeServiceImpl implements ISysMessageNoticeService {
         content.put("replyContent", topic.getContent());
         //类型：1 评论  2回复
         content.put("type", type);
+        //评论或回复的ID
+        content.put("id", topic.getId());
+        //评论ID
+        content.put("commentId", topic.getCommentId());
+        //回复ID
+        content.put("replyId", topic.getReplyId());
         //topic的内容
         content.put("originalContent", originalContent);
 
