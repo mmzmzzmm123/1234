@@ -209,11 +209,11 @@
                 <version>${qz.version}</version>
             </dependency>
 
-           <!-- <dependency>
+            <dependency>
                 <groupId>com.ruoyi</groupId>
                 <artifactId>qz-app</artifactId>
                 <version>${qz.version}</version>
-            </dependency>-->
+            </dependency>
         </dependencies>
     </dependencyManagement>
 
