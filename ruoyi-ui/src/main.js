@@ -6,6 +6,8 @@ import 'normalize.css/normalize.css' // a modern alternative to CSS resets
 
 import Element from 'element-ui'
 import './assets/styles/element-variables.scss'
+import { Swiper, SwiperSlide } from 'vue-awesome-swiper'
+import 'swiper/css/swiper.css'
 
 import '@/assets/styles/index.scss' // global css
 import '@/assets/styles/ruoyi.scss' // ruoyi css
@@ -45,6 +47,8 @@ Vue.prototype.$video = Video
 Vue.use(VideoPlayer);
 Vue.use(Print);
 Vue.use(PrintECharts);
+Vue.component('swiper', Swiper)
+Vue.component('swiperSlide', SwiperSlide)
 Vue.prototype.$watermark = watermark
 
 import LunarFullCalendar from "vue-lunar-full-calendar";
