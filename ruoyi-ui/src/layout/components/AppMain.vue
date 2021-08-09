@@ -38,7 +38,7 @@ export default {
 .hasTagsView {
   .app-main {
     /* 84 = navbar + tags-view = 50 + 34 */
-    height: calc(100vh - 84px);
+    min-height: calc(100vh - 84px);
   }
 
   .fixed-header+.app-main {
