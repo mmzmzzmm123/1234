@@ -249,14 +249,14 @@
             <if test="extraMealImages != null">#{extraMealImages},</if>
             <if test="bodyImages != null">#{bodyImages},</if>
             <if test="bodyDesc != null">#{bodyDesc},</if>
-            <if test="suggest != null">suggest = #{suggest},</if>
-            <if test="targetWeight != null">target_weight = #{targetWeight},</if>
-            <if test="executionScore != null">execution_score = #{executionScore},</if>
-            <if test="comment != null">comment = #{comment},</if>
+            <if test="suggest != null">#{suggest},</if>
+            <if test="targetWeight != null">#{targetWeight},</if>
+            <if test="executionScore != null">#{executionScore},</if>
+            <if test="comment != null">#{comment},</if>
             <if test="thumbsupNum != null">#{thumbsupNum},</if>
             <if test="healthManifesto != null">#{healthManifesto},</if>
-            <if test="delFlag != null">del_flag = #{delFlag},</if>
-            <if test="menstrualPeriod != null">menstrual_period = #{menstrualPeriod},</if>
+            <if test="delFlag != null">#{delFlag},</if>
+            <if test="menstrualPeriod != null">#{menstrualPeriod},</if>
         </trim>
     </insert>
 
