@@ -279,16 +279,17 @@ public class SysUserController extends BaseController {
 
         //先判断前端的roleids是否有变化
         boolean isPd = true;
-        if (schoolCommon.isSchool() == true) {
-            List<Integer> roleIdsOld = roleService.selectYeyRoleListByUserId(user.getUserId());
-            if (roleIdsOld != null && roleIdsOld.size() > 0) {
-                for (int i = 0; i < roleIdsOld.size(); i++) {
-                    if (roleIdsOld.get(i) == 100) {
-                        isPd = false;
-                    }
+//        if (schoolCommon.isSchool() == true) {
+        List<Integer> roleIdsOld = roleService.selectYeyRoleListByUserId(user.getUserId());
+        if (roleIdsOld != null && roleIdsOld.size() > 0) {
+            for (int i = 0; i < roleIdsOld.size(); i++) {
+                System.out.println(roleIdsOld.get(i) == 100);
+                if (roleIdsOld.get(i) == 100) {
+                    isPd = false;
                 }
             }
         }
+//        }
         if (isPd) {
             //判断当前学校有多少个幼儿园管理员 需求至多3个幼儿园管理员
             Long[] roleIds = user.getRoleIds();
@@ -307,7 +308,7 @@ public class SysUserController extends BaseController {
         }
 
         user.setPhonenumber(user.getUserName());
-        user.setEmail(user.getUserName()+"@benyi.com");
+        user.setEmail(user.getUserName() + "@benyi.com");
         user.setUpdateBy(SecurityUtils.getUsername());
         return toAjax(userService.updateUser(user));
     }

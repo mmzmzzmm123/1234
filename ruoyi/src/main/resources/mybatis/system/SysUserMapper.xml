@@ -251,7 +251,7 @@
  	</delete>
 
     <delete id="deleteUserByIds" parameterType="Long">
-        update sys_user set del_flag = '2' where user_id in
+        update sys_user set del_flag = '2',user_name=CONCAT('del-',user_name),phonenumber=CONCAT('del-',phonenumber),email=CONCAT('del-',email) where user_id in
         <foreach collection="array" item="userId" open="(" separator="," close=")">
             #{userId}
         </foreach>
