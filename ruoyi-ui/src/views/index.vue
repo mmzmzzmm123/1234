@@ -1,7 +1,7 @@
 <template>
   <div class="dashboard-editor-container">
     <notice :message="message"></notice>
-    <el-row :gutter="30">
+    <el-row :gutter="30" style="margin-top: 15px">
       <el-col :xs="24" :sm="24" :lg="8">
         <div class="chart-wrapper">
           <raddar-chart />
@@ -144,7 +144,7 @@ export default {
 
 <style lang="scss" scoped>
 .dashboard-editor-container {
-  padding: 32px;
+  padding: 20px;
   background-color: rgb(240, 242, 245);
   position: relative;
 
