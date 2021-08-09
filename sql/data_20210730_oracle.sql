@@ -11,7 +11,7 @@ create sequence seq_data_company_loan
 create table data_company_loan (
   id                     number(20)       not null,
   company_id             number(20)       not null,
-  mzt_user_id            varchar2(20)     not null,
+  mzt_user_id            varchar2(32)     not null,
   company_name           varchar2(128)    not null,
   company_credit_code    varchar2(32)     default '',
   company_type           varchar2(128)     default '',

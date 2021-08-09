@@ -24,7 +24,7 @@ DROP TABLE IF EXISTS `data_company_loan`;
  SET character_set_client = utf8mb4 ;
 CREATE TABLE `data_company_loan` (
   `company_id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '企业id',
-  `mzt_user_id` varchar(20) NOT NULL COMMENT '闽政通用户ID',
+  `mzt_user_id` varchar(32) NOT NULL COMMENT '闽政通用户ID',
   `company_name` varchar(128) NOT NULL COMMENT '企业名称',
   `company_credit_code` varchar(32) DEFAULT NULL COMMENT '统一社会信用代码',
   `company_province` varchar(30) DEFAULT '' COMMENT '省份',
