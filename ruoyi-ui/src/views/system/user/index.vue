@@ -146,7 +146,7 @@
             :data="userList"
             @selection-change="handleSelectionChange"
           >
-            <el-table-column type="selection" width="40" align="center" />
+            <el-table-column :selectable="isShow" type="selection" width="40" align="center" />
             <!-- <el-table-column label="用户编号" align="center" prop="userId" /> -->
             <el-table-column
               fixed
@@ -173,6 +173,7 @@
                   v-model="scope.row.status"
                   active-value="0"
                   inactive-value="1"
+                  :disabled="!isShow(scope.row)"
                   @change="handleStatusChange(scope.row)"
                 ></el-switch>
               </template>
@@ -200,6 +201,7 @@
                   type="text"
                   icon="el-icon-edit"
                   @click="handleUpdate(scope.row)"
+                  v-show="isShow(scope.row)"
                   v-hasPermi="['system:user:edit']"
                   >修改</el-button
                 >
@@ -209,6 +211,7 @@
                   type="text"
                   icon="el-icon-delete"
                   @click="handleDelete(scope.row)"
+                  v-show="isShow(scope.row)"
                   v-hasPermi="['system:user:remove']"
                   >删除</el-button
                 >
@@ -217,6 +220,7 @@
                   type="text"
                   icon="el-icon-key"
                   @click="handleResetPwd(scope.row)"
+                  v-show="isShow(scope.row)"
                   v-hasPermi="['system:user:resetPwd']"
                   >重置</el-button
                 >
@@ -531,6 +535,14 @@ export default {
     });
   },
   methods: {
+    // 是否显示
+    isShow(row) {
+      if (row.remark == "xn") {
+        return false;
+      }  else {
+        return true;
+      }
+    },
     /** 查询用户列表 */
     getList() {
       this.loading = true;
