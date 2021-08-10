@@ -12,7 +12,7 @@
           <div style="color: #409eff" v-html="scope.row.role"></div>
         </template>
       </el-table-column>
-      <el-table-column label="文件权限" width="200">
+      <el-table-column label="文件权限" width="150">
         <template slot-scope="scope">
           <!-- <el-tag size="medium">{{ scope.row.file }}</el-tag> -->
           <div style="color: #409eff" v-html="scope.row.file"></div>
