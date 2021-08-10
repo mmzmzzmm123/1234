@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.QzBrithdayPuMapper">
+    
+    <resultMap type="QzBrithdayPu" id="QzBrithdayPuResult">
+        <result property="id"    column="id"    />
+        <result property="name"    column="name"    />
+        <result property="userId"    column="user_id"    />
+        <result property="solarBirthday"    column="solar_birthday"    />
+        <result property="birthday"    column="birthday"    />
+        <result property="solarFlag"    column="solar_flag"    />
+        <result property="notifyFlag"    column="notify_flag"    />
+        <result property="constellation"    column="constellation"    />
+        <result property="zodiac"    column="zodiac"    />
+        <result property="yearRepeat"    column="year_repeat"    />
+        <result property="dayRepeat"    column="day_repeat"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="status"    column="status"    />
+        <result property="remark"    column="remark"    />
+        <result property="ext1"    column="ext1"    />
+        <result property="ext2"    column="ext2"    />
+        <result property="ext3"    column="ext3"    />
+    </resultMap>
+
+    <sql id="selectQzBrithdayPuVo">
+        select id, name, user_id, solar_birthday, birthday, solar_flag, notify_flag, constellation, zodiac, year_repeat, day_repeat, create_by, create_time, update_by, update_time, status, remark, ext1, ext2, ext3 from qz_brithday_pu
+    </sql>
+
+    <select id="selectQzBrithdayPuList" parameterType="QzBrithdayPu" resultMap="QzBrithdayPuResult">
+        <include refid="selectQzBrithdayPuVo"/>
+        <where>  
+            <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
+            <if test="userId != null "> and user_id = #{userId}</if>
+            <if test="solarBirthday != null "> and solar_birthday = #{solarBirthday}</if>
+            <if test="birthday != null "> and birthday = #{birthday}</if>
+            <if test="solarFlag != null  and solarFlag != ''"> and solar_flag = #{solarFlag}</if>
+            <if test="notifyFlag != null  and notifyFlag != ''"> and notify_flag = #{notifyFlag}</if>
+            <if test="constellation != null  and constellation != ''"> and constellation = #{constellation}</if>
+            <if test="zodiac != null  and zodiac != ''"> and zodiac = #{zodiac}</if>
+            <if test="yearRepeat != null  and yearRepeat != ''"> and year_repeat = #{yearRepeat}</if>
+            <if test="dayRepeat != null  and dayRepeat != ''"> and day_repeat = #{dayRepeat}</if>
+        </where>
+    </select>
+    
+    <select id="selectQzBrithdayPuById" parameterType="Long" resultMap="QzBrithdayPuResult">
+        <include refid="selectQzBrithdayPuVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertQzBrithdayPu" parameterType="QzBrithdayPu" useGeneratedKeys="true" keyProperty="id">
+        insert into qz_brithday_pu
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="name != null and name != ''">name,</if>
+            <if test="userId != null">user_id,</if>
+            <if test="solarBirthday != null">solar_birthday,</if>
+            <if test="birthday != null">birthday,</if>
+            <if test="solarFlag != null">solar_flag,</if>
+            <if test="notifyFlag != null">notify_flag,</if>
+            <if test="constellation != null">constellation,</if>
+            <if test="zodiac != null">zodiac,</if>
+            <if test="yearRepeat != null">year_repeat,</if>
+            <if test="dayRepeat != null">day_repeat,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="status != null">status,</if>
+            <if test="remark != null">remark,</if>
+            <if test="ext1 != null">ext1,</if>
+            <if test="ext2 != null">ext2,</if>
+            <if test="ext3 != null">ext3,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="name != null and name != ''">#{name},</if>
+            <if test="userId != null">#{userId},</if>
+            <if test="solarBirthday != null">#{solarBirthday},</if>
+            <if test="birthday != null">#{birthday},</if>
+            <if test="solarFlag != null">#{solarFlag},</if>
+            <if test="notifyFlag != null">#{notifyFlag},</if>
+            <if test="constellation != null">#{constellation},</if>
+            <if test="zodiac != null">#{zodiac},</if>
+            <if test="yearRepeat != null">#{yearRepeat},</if>
+            <if test="dayRepeat != null">#{dayRepeat},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="status != null">#{status},</if>
+            <if test="remark != null">#{remark},</if>
+            <if test="ext1 != null">#{ext1},</if>
+            <if test="ext2 != null">#{ext2},</if>
+            <if test="ext3 != null">#{ext3},</if>
+         </trim>
+    </insert>
+
+    <update id="updateQzBrithdayPu" parameterType="QzBrithdayPu">
+        update qz_brithday_pu
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="name != null and name != ''">name = #{name},</if>
+            <if test="userId != null">user_id = #{userId},</if>
+            <if test="solarBirthday != null">solar_birthday = #{solarBirthday},</if>
+            <if test="birthday != null">birthday = #{birthday},</if>
+            <if test="solarFlag != null">solar_flag = #{solarFlag},</if>
+            <if test="notifyFlag != null">notify_flag = #{notifyFlag},</if>
+            <if test="constellation != null">constellation = #{constellation},</if>
+            <if test="zodiac != null">zodiac = #{zodiac},</if>
+            <if test="yearRepeat != null">year_repeat = #{yearRepeat},</if>
+            <if test="dayRepeat != null">day_repeat = #{dayRepeat},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="remark != null">remark = #{remark},</if>
+            <if test="ext1 != null">ext1 = #{ext1},</if>
+            <if test="ext2 != null">ext2 = #{ext2},</if>
+            <if test="ext3 != null">ext3 = #{ext3},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteQzBrithdayPuById" parameterType="Long">
+        delete from qz_brithday_pu where id = #{id}
+    </delete>
+
+    <delete id="deleteQzBrithdayPuByIds" parameterType="String">
+        delete from qz_brithday_pu where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

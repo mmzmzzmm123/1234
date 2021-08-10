@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.QzFeedbackMapper">
+    
+    <resultMap type="QzFeedback" id="QzFeedbackResult">
+        <result property="id"    column="id"    />
+        <result property="feedbackContent"    column="feedback_content"    />
+        <result property="answerContent"    column="answer_content"    />
+        <result property="status"    column="status"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="remark"    column="remark"    />
+        <result property="ext1"    column="ext1"    />
+        <result property="ext2"    column="ext2"    />
+        <result property="ext3"    column="ext3"    />
+    </resultMap>
+
+    <sql id="selectQzFeedbackVo">
+        select id, feedback_content, answer_content, status, create_by, create_time, update_by, update_time, remark, ext1, ext2, ext3 from qz_feedback
+    </sql>
+
+    <select id="selectQzFeedbackList" parameterType="QzFeedback" resultMap="QzFeedbackResult">
+        <include refid="selectQzFeedbackVo"/>
+        <where>  
+            <if test="feedbackContent != null  and feedbackContent != ''"> and feedback_content like concat('%', #{feedbackContent}, '%')</if>
+            <if test="status != null  and status != ''"> and status = #{status}</if>
+        </where>
+    </select>
+    
+    <select id="selectQzFeedbackById" parameterType="Long" resultMap="QzFeedbackResult">
+        <include refid="selectQzFeedbackVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertQzFeedback" parameterType="QzFeedback" useGeneratedKeys="true" keyProperty="id">
+        insert into qz_feedback
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="feedbackContent != null and feedbackContent != ''">feedback_content,</if>
+            <if test="answerContent != null and answerContent != ''">answer_content,</if>
+            <if test="status != null">status,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="remark != null">remark,</if>
+            <if test="ext1 != null">ext1,</if>
+            <if test="ext2 != null">ext2,</if>
+            <if test="ext3 != null">ext3,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="feedbackContent != null and feedbackContent != ''">#{feedbackContent},</if>
+            <if test="answerContent != null and answerContent != ''">#{answerContent},</if>
+            <if test="status != null">#{status},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="remark != null">#{remark},</if>
+            <if test="ext1 != null">#{ext1},</if>
+            <if test="ext2 != null">#{ext2},</if>
+            <if test="ext3 != null">#{ext3},</if>
+         </trim>
+    </insert>
+
+    <update id="updateQzFeedback" parameterType="QzFeedback">
+        update qz_feedback
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="feedbackContent != null and feedbackContent != ''">feedback_content = #{feedbackContent},</if>
+            <if test="answerContent != null and answerContent != ''">answer_content = #{answerContent},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="remark != null">remark = #{remark},</if>
+            <if test="ext1 != null">ext1 = #{ext1},</if>
+            <if test="ext2 != null">ext2 = #{ext2},</if>
+            <if test="ext3 != null">ext3 = #{ext3},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteQzFeedbackById" parameterType="Long">
+        delete from qz_feedback where id = #{id}
+    </delete>
+
+    <delete id="deleteQzFeedbackByIds" parameterType="String">
+        delete from qz_feedback where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

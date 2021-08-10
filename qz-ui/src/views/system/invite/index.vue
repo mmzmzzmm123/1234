@@ -1,51 +1,42 @@
 <template>
   <div class="app-container">
     <el-form :model="queryParams" ref="queryForm" :inline="true" v-show="showSearch" label-width="68px">
-      <el-form-item label="圈子ID" prop="qzId">
+      <el-form-item label="圈子id" prop="qzId">
         <el-input
           v-model="queryParams.qzId"
-          placeholder="请输入圈子ID"
+          placeholder="请输入圈子id"
           clearable
           size="small"
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="碎片ID" prop="fragmentId">
-        <el-input
-          v-model="queryParams.fragmentId"
-          placeholder="请输入碎片ID"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
+      <el-form-item label="到期日" prop="exp">
+        <el-date-picker clearable size="small"
+          v-model="queryParams.exp"
+          type="date"
+          value-format="yyyy-MM-dd"
+          placeholder="选择到期日">
+        </el-date-picker>
       </el-form-item>
-      <el-form-item label="创建人" prop="createUserId">
+      <el-form-item label="邀请用户" prop="
+createUserId">
         <el-input
           v-model="queryParams.createUserId"
-          placeholder="请输入创建人"
+          placeholder="请输入邀请用户"
           clearable
           size="small"
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="接收人" prop="receiveUserId">
+      <el-form-item label="受邀用户" prop="
+receiveUserId">
         <el-input
           v-model="queryParams.receiveUserId"
-          placeholder="请输入接收人"
+          placeholder="请输入受邀用户"
           clearable
           size="small"
           @keyup.enter.native="handleQuery"
         />
-      </el-form-item>
-      <el-form-item label="类型" prop="noticeType">
-        <el-select v-model="queryParams.noticeType" placeholder="请选择类型" clearable size="small">
-          <el-option
-            v-for="dict in noticeTypeOptions"
-            :key="dict.dictValue"
-            :label="dict.dictLabel"
-            :value="dict.dictValue"
-          />
-        </el-select>
       </el-form-item>
       <el-form-item label="状态" prop="status">
         <el-select v-model="queryParams.status" placeholder="请选择状态" clearable size="small">
@@ -71,7 +62,7 @@
           icon="el-icon-plus"
           size="mini"
           @click="handleAdd"
-          v-hasPermi="['system:notice:add']"
+          v-hasPermi="['system:invite:add']"
         >新增</el-button>
       </el-col>
       <el-col :span="1.5">
@@ -82,7 +73,7 @@
           size="mini"
           :disabled="single"
           @click="handleUpdate"
-          v-hasPermi="['system:notice:edit']"
+          v-hasPermi="['system:invite:edit']"
         >修改</el-button>
       </el-col>
       <el-col :span="1.5">
@@ -93,7 +84,7 @@
           size="mini"
           :disabled="multiple"
           @click="handleDelete"
-          v-hasPermi="['system:notice:remove']"
+          v-hasPermi="['system:invite:remove']"
         >删除</el-button>
       </el-col>
       <el-col :span="1.5">
@@ -104,22 +95,23 @@
           size="mini"
 		  :loading="exportLoading"
           @click="handleExport"
-          v-hasPermi="['system:notice:export']"
+          v-hasPermi="['system:invite:export']"
         >导出</el-button>
       </el-col>
       <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
     </el-row>
 
-    <el-table v-loading="loading" :data="noticeList" @selection-change="handleSelectionChange">
+    <el-table v-loading="loading" :data="inviteList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="消息ID" align="center" prop="noticeId" />
-      <el-table-column label="圈子ID" align="center" prop="qzId" />
-      <el-table-column label="碎片ID" align="center" prop="fragmentId" />
-      <el-table-column label="创建人" align="center" prop="createUserId" />
-      <el-table-column label="接收人" align="center" prop="receiveUserId" />
-      <el-table-column label="类型" align="center" prop="noticeType" :formatter="noticeTypeFormat" />
-      <el-table-column label="消息内容" align="center" prop="noticeContent" />
-      <el-table-column label="帖子的图片" align="center" prop="picUrl" />
+      <el-table-column label="ID" align="center" prop="id" />
+      <el-table-column label="圈子id" align="center" prop="qzId" />
+      <el-table-column label="到期日" align="center" prop="exp" width="180">
+        <template slot-scope="scope">
+          <span>{{ parseTime(scope.row.exp, '{y}-{m}-{d}') }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="邀请用户" align="center" prop="createUserId" />
+      <el-table-column label="受邀用户" align="center" prop="receiveUserId" />
       <el-table-column label="状态" align="center" prop="status" :formatter="statusFormat" />
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
@@ -128,14 +120,14 @@
             type="text"
             icon="el-icon-edit"
             @click="handleUpdate(scope.row)"
-            v-hasPermi="['system:notice:edit']"
+            v-hasPermi="['system:invite:edit']"
           >修改</el-button>
           <el-button
             size="mini"
             type="text"
             icon="el-icon-delete"
             @click="handleDelete(scope.row)"
-            v-hasPermi="['system:notice:remove']"
+            v-hasPermi="['system:invite:remove']"
           >删除</el-button>
         </template>
       </el-table-column>
@@ -149,48 +141,40 @@
       @pagination="getList"
     />
 
-    <!-- 添加或修改通知公告对话框 -->
+    <!-- 添加或修改邀请对话框 -->
     <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
-        <el-form-item label="圈子ID" prop="qzId">
-          <el-input v-model="form.qzId" placeholder="请输入圈子ID" />
+        <el-form-item label="圈子id" prop="qzId">
+          <el-input v-model="form.qzId" placeholder="请输入圈子id" />
         </el-form-item>
-        <el-form-item label="碎片ID" prop="fragmentId">
-          <el-input v-model="form.fragmentId" placeholder="请输入碎片ID" />
+        <el-form-item label="到期日" prop="exp">
+          <el-date-picker clearable size="small"
+            v-model="form.exp"
+            type="date"
+            value-format="yyyy-MM-dd"
+            placeholder="选择到期日">
+          </el-date-picker>
         </el-form-item>
-        <el-form-item label="创建人" prop="createUserId">
-          <el-input v-model="form.createUserId" placeholder="请输入创建人" />
+        <el-form-item label="邀请用户" prop="
+createUserId">
+          <el-input v-model="form.createUserId" placeholder="请输入邀请用户" />
         </el-form-item>
-        <el-form-item label="接收人" prop="receiveUserId">
-          <el-input v-model="form.receiveUserId" placeholder="请输入接收人" />
+        <el-form-item label="受邀用户" prop="
+receiveUserId">
+          <el-input v-model="form.receiveUserId" placeholder="请输入受邀用户" />
         </el-form-item>
-        <el-form-item label="类型" prop="noticeType">
-          <el-select v-model="form.noticeType" placeholder="请选择类型">
+        <el-form-item label="状态" prop="status">
+          <el-select v-model="form.status" placeholder="请选择状态">
             <el-option
-              v-for="dict in noticeTypeOptions"
+              v-for="dict in statusOptions"
               :key="dict.dictValue"
               :label="dict.dictLabel"
               :value="dict.dictValue"
             ></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="消息内容">
-          <editor v-model="form.noticeContent" :min-height="192"/>
-        </el-form-item>
-        <el-form-item label="帖子的图片">
-          <imageUpload v-model="form.picUrl"/>
-        </el-form-item>
         <el-form-item label="备注" prop="remark">
           <el-input v-model="form.remark" placeholder="请输入备注" />
-        </el-form-item>
-        <el-form-item label="状态">
-          <el-radio-group v-model="form.status">
-            <el-radio
-              v-for="dict in statusOptions"
-              :key="dict.dictValue"
-              :label="dict.dictValue"
-            >{{dict.dictLabel}}</el-radio>
-          </el-radio-group>
         </el-form-item>
         <el-form-item label="扩展字段1" prop="ext1">
           <el-input v-model="form.ext1" placeholder="请输入扩展字段1" />
@@ -211,10 +195,10 @@
 </template>
 
 <script>
-import { listNotice, getNotice, delNotice, addNotice, updateNotice, exportNotice } from "@/api/system/notice";
+import { listInvite, getInvite, delInvite, addInvite, updateInvite, exportInvite } from "@/api/system/invite";
 
 export default {
-  name: "Notice",
+  name: "Invite",
   data() {
     return {
       // 遮罩层
@@ -231,14 +215,12 @@ export default {
       showSearch: true,
       // 总条数
       total: 0,
-      // 通知公告表格数据
-      noticeList: [],
+      // 邀请表格数据
+      inviteList: [],
       // 弹出层标题
       title: "",
       // 是否显示弹出层
       open: false,
-      // 类型字典
-      noticeTypeOptions: [],
       // 状态字典
       statusOptions: [],
       // 查询参数
@@ -246,12 +228,9 @@ export default {
         pageNum: 1,
         pageSize: 10,
         qzId: null,
-        fragmentId: null,
+        exp: null,
         createUserId: null,
         receiveUserId: null,
-        noticeType: null,
-        noticeContent: null,
-        picUrl: null,
         status: null,
       },
       // 表单参数
@@ -259,45 +238,35 @@ export default {
       // 表单校验
       rules: {
         qzId: [
-          { required: true, message: "圈子ID不能为空", trigger: "blur" }
+          { required: true, message: "圈子id不能为空", trigger: "blur" }
         ],
-        fragmentId: [
-          { required: true, message: "碎片ID不能为空", trigger: "blur" }
+        exp: [
+          { required: true, message: "到期日不能为空", trigger: "blur" }
         ],
         createUserId: [
-          { required: true, message: "创建人不能为空", trigger: "blur" }
+          { required: true, message: "邀请用户不能为空", trigger: "blur" }
         ],
         receiveUserId: [
-          { required: true, message: "接收人不能为空", trigger: "blur" }
-        ],
-        noticeType: [
-          { required: true, message: "类型不能为空", trigger: "change" }
+          { required: true, message: "受邀用户不能为空", trigger: "blur" }
         ],
       }
     };
   },
   created() {
     this.getList();
-    this.getDicts("notice_type").then(response => {
-      this.noticeTypeOptions = response.data;
-    });
-    this.getDicts("notice_status").then(response => {
+    this.getDicts("invite_status").then(response => {
       this.statusOptions = response.data;
     });
   },
   methods: {
-    /** 查询通知公告列表 */
+    /** 查询邀请列表 */
     getList() {
       this.loading = true;
-      listNotice(this.queryParams).then(response => {
-        this.noticeList = response.rows;
+      listInvite(this.queryParams).then(response => {
+        this.inviteList = response.rows;
         this.total = response.total;
         this.loading = false;
       });
-    },
-    // 类型字典翻译
-    noticeTypeFormat(row, column) {
-      return this.selectDictLabel(this.noticeTypeOptions, row.noticeType);
     },
     // 状态字典翻译
     statusFormat(row, column) {
@@ -311,20 +280,17 @@ export default {
     // 表单重置
     reset() {
       this.form = {
-        noticeId: null,
+        id: null,
         qzId: null,
-        fragmentId: null,
+        exp: null,
         createUserId: null,
         receiveUserId: null,
-        noticeType: null,
-        noticeContent: null,
-        picUrl: null,
+        status: null,
         createBy: null,
         createTime: null,
         updateBy: null,
         updateTime: null,
         remark: null,
-        status: "0",
         ext1: null,
         ext2: null,
         ext3: null
@@ -343,7 +309,7 @@ export default {
     },
     // 多选框选中数据
     handleSelectionChange(selection) {
-      this.ids = selection.map(item => item.noticeId)
+      this.ids = selection.map(item => item.id)
       this.single = selection.length!==1
       this.multiple = !selection.length
     },
@@ -351,30 +317,30 @@ export default {
     handleAdd() {
       this.reset();
       this.open = true;
-      this.title = "添加通知公告";
+      this.title = "添加邀请";
     },
     /** 修改按钮操作 */
     handleUpdate(row) {
       this.reset();
-      const noticeId = row.noticeId || this.ids
-      getNotice(noticeId).then(response => {
+      const id = row.id || this.ids
+      getInvite(id).then(response => {
         this.form = response.data;
         this.open = true;
-        this.title = "修改通知公告";
+        this.title = "修改邀请";
       });
     },
     /** 提交按钮 */
     submitForm() {
       this.$refs["form"].validate(valid => {
         if (valid) {
-          if (this.form.noticeId != null) {
-            updateNotice(this.form).then(response => {
+          if (this.form.id != null) {
+            updateInvite(this.form).then(response => {
               this.msgSuccess("修改成功");
               this.open = false;
               this.getList();
             });
           } else {
-            addNotice(this.form).then(response => {
+            addInvite(this.form).then(response => {
               this.msgSuccess("新增成功");
               this.open = false;
               this.getList();
@@ -385,13 +351,13 @@ export default {
     },
     /** 删除按钮操作 */
     handleDelete(row) {
-      const noticeIds = row.noticeId || this.ids;
-      this.$confirm('是否确认删除通知公告编号为"' + noticeIds + '"的数据项?', "警告", {
+      const ids = row.id || this.ids;
+      this.$confirm('是否确认删除邀请编号为"' + ids + '"的数据项?', "警告", {
           confirmButtonText: "确定",
           cancelButtonText: "取消",
           type: "warning"
         }).then(function() {
-          return delNotice(noticeIds);
+          return delInvite(ids);
         }).then(() => {
           this.getList();
           this.msgSuccess("删除成功");
@@ -400,13 +366,13 @@ export default {
     /** 导出按钮操作 */
     handleExport() {
       const queryParams = this.queryParams;
-      this.$confirm('是否确认导出所有通知公告数据项?', "警告", {
+      this.$confirm('是否确认导出所有邀请数据项?', "警告", {
           confirmButtonText: "确定",
           cancelButtonText: "取消",
           type: "warning"
         }).then(() => {
           this.exportLoading = true;
-          return exportNotice(queryParams);
+          return exportInvite(queryParams);
         }).then(response => {
           this.download(response.msg);
           this.exportLoading = false;

@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.QzOrbitMapper">
+    
+    <resultMap type="QzOrbit" id="QzOrbitResult">
+        <result property="quanId"    column="quan_id"    />
+        <result property="quanName"    column="quan_name"    />
+        <result property="quanDesc"    column="quan_desc"    />
+        <result property="quanType"    column="quan_type"    />
+        <result property="picUrl"    column="pic_url"    />
+        <result property="membershipNum"    column="membership_num"    />
+        <result property="memJoinFlag"    column="mem_join_flag"    />
+        <result property="shareFlag"    column="share_flag"    />
+        <result property="showViewsFlag"    column="show_views_flag"    />
+        <result property="memJoinNotify"    column="mem_join_notify"    />
+        <result property="descChangNotify"    column="desc_chang_notify"    />
+        <result property="fragmentNotify"    column="fragment_notify"    />
+        <result property="fragmentTopNotify"    column="fragment_top_notify"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="status"    column="status"    />
+        <result property="remark"    column="remark"    />
+        <result property="ext1"    column="ext1"    />
+        <result property="ext2"    column="ext2"    />
+        <result property="ext3"    column="ext3"    />
+    </resultMap>
+
+    <sql id="selectQzOrbitVo">
+        select quan_id, quan_name, quan_desc, quan_type, pic_url, membership_num, mem_join_flag, share_flag, show_views_flag, mem_join_notify, desc_chang_notify, fragment_notify, fragment_top_notify, create_by, create_time, update_by, update_time, status, remark, ext1, ext2, ext3 from qz_orbit
+    </sql>
+
+    <select id="selectQzOrbitList" parameterType="QzOrbit" resultMap="QzOrbitResult">
+        <include refid="selectQzOrbitVo"/>
+        <where>  
+            <if test="quanName != null  and quanName != ''"> and quan_name like concat('%', #{quanName}, '%')</if>
+            <if test="quanDesc != null  and quanDesc != ''"> and quan_desc = #{quanDesc}</if>
+            <if test="quanType != null  and quanType != ''"> and quan_type = #{quanType}</if>
+            <if test="picUrl != null  and picUrl != ''"> and pic_url = #{picUrl}</if>
+            <if test="membershipNum != null "> and membership_num = #{membershipNum}</if>
+            <if test="memJoinFlag != null  and memJoinFlag != ''"> and mem_join_flag = #{memJoinFlag}</if>
+            <if test="shareFlag != null  and shareFlag != ''"> and share_flag = #{shareFlag}</if>
+            <if test="showViewsFlag != null  and showViewsFlag != ''"> and show_views_flag = #{showViewsFlag}</if>
+            <if test="memJoinNotify != null  and memJoinNotify != ''"> and mem_join_notify = #{memJoinNotify}</if>
+            <if test="descChangNotify != null  and descChangNotify != ''"> and desc_chang_notify = #{descChangNotify}</if>
+            <if test="fragmentNotify != null  and fragmentNotify != ''"> and fragment_notify = #{fragmentNotify}</if>
+            <if test="fragmentTopNotify != null  and fragmentTopNotify != ''"> and fragment_top_notify = #{fragmentTopNotify}</if>
+            <if test="status != null  and status != ''"> and status = #{status}</if>
+            <if test="ext1 != null  and ext1 != ''"> and ext1 = #{ext1}</if>
+            <if test="ext2 != null  and ext2 != ''"> and ext2 = #{ext2}</if>
+            <if test="ext3 != null  and ext3 != ''"> and ext3 = #{ext3}</if>
+        </where>
+    </select>
+    
+    <select id="selectQzOrbitByQuanId" parameterType="Long" resultMap="QzOrbitResult">
+        <include refid="selectQzOrbitVo"/>
+        where quan_id = #{quanId}
+    </select>
+        
+    <insert id="insertQzOrbit" parameterType="QzOrbit" useGeneratedKeys="true" keyProperty="quanId">
+        insert into qz_orbit
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="quanName != null and quanName != ''">quan_name,</if>
+            <if test="quanDesc != null and quanDesc != ''">quan_desc,</if>
+            <if test="quanType != null">quan_type,</if>
+            <if test="picUrl != null">pic_url,</if>
+            <if test="membershipNum != null">membership_num,</if>
+            <if test="memJoinFlag != null">mem_join_flag,</if>
+            <if test="shareFlag != null">share_flag,</if>
+            <if test="showViewsFlag != null">show_views_flag,</if>
+            <if test="memJoinNotify != null">mem_join_notify,</if>
+            <if test="descChangNotify != null">desc_chang_notify,</if>
+            <if test="fragmentNotify != null">fragment_notify,</if>
+            <if test="fragmentTopNotify != null">fragment_top_notify,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="status != null">status,</if>
+            <if test="remark != null">remark,</if>
+            <if test="ext1 != null">ext1,</if>
+            <if test="ext2 != null">ext2,</if>
+            <if test="ext3 != null">ext3,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="quanName != null and quanName != ''">#{quanName},</if>
+            <if test="quanDesc != null and quanDesc != ''">#{quanDesc},</if>
+            <if test="quanType != null">#{quanType},</if>
+            <if test="picUrl != null">#{picUrl},</if>
+            <if test="membershipNum != null">#{membershipNum},</if>
+            <if test="memJoinFlag != null">#{memJoinFlag},</if>
+            <if test="shareFlag != null">#{shareFlag},</if>
+            <if test="showViewsFlag != null">#{showViewsFlag},</if>
+            <if test="memJoinNotify != null">#{memJoinNotify},</if>
+            <if test="descChangNotify != null">#{descChangNotify},</if>
+            <if test="fragmentNotify != null">#{fragmentNotify},</if>
+            <if test="fragmentTopNotify != null">#{fragmentTopNotify},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="status != null">#{status},</if>
+            <if test="remark != null">#{remark},</if>
+            <if test="ext1 != null">#{ext1},</if>
+            <if test="ext2 != null">#{ext2},</if>
+            <if test="ext3 != null">#{ext3},</if>
+         </trim>
+    </insert>
+
+    <update id="updateQzOrbit" parameterType="QzOrbit">
+        update qz_orbit
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="quanName != null and quanName != ''">quan_name = #{quanName},</if>
+            <if test="quanDesc != null and quanDesc != ''">quan_desc = #{quanDesc},</if>
+            <if test="quanType != null">quan_type = #{quanType},</if>
+            <if test="picUrl != null">pic_url = #{picUrl},</if>
+            <if test="membershipNum != null">membership_num = #{membershipNum},</if>
+            <if test="memJoinFlag != null">mem_join_flag = #{memJoinFlag},</if>
+            <if test="shareFlag != null">share_flag = #{shareFlag},</if>
+            <if test="showViewsFlag != null">show_views_flag = #{showViewsFlag},</if>
+            <if test="memJoinNotify != null">mem_join_notify = #{memJoinNotify},</if>
+            <if test="descChangNotify != null">desc_chang_notify = #{descChangNotify},</if>
+            <if test="fragmentNotify != null">fragment_notify = #{fragmentNotify},</if>
+            <if test="fragmentTopNotify != null">fragment_top_notify = #{fragmentTopNotify},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="remark != null">remark = #{remark},</if>
+            <if test="ext1 != null">ext1 = #{ext1},</if>
+            <if test="ext2 != null">ext2 = #{ext2},</if>
+            <if test="ext3 != null">ext3 = #{ext3},</if>
+        </trim>
+        where quan_id = #{quanId}
+    </update>
+
+    <delete id="deleteQzOrbitByQuanId" parameterType="Long">
+        delete from qz_orbit where quan_id = #{quanId}
+    </delete>
+
+    <delete id="deleteQzOrbitByQuanIds" parameterType="String">
+        delete from qz_orbit where quan_id in 
+        <foreach item="quanId" collection="array" open="(" separator="," close=")">
+            #{quanId}
+        </foreach>
+    </delete>
+</mapper>

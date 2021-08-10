@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.QzHappyMapper">
+    
+    <resultMap type="QzHappy" id="QzHappyResult">
+        <result property="happyId"    column="happy_id"    />
+        <result property="happyContent"    column="happy_content"    />
+        <result property="releaseTime"    column="release_time"    />
+        <result property="planReleaseTime"    column="plan_release_time"    />
+        <result property="distributeFlag"    column="distribute_flag"    />
+        <result property="status"    column="status"    />
+        <result property="auditBy"    column="audit_by"    />
+        <result property="auditTime"    column="audit_time"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="signature"    column="signature"    />
+        <result property="remark"    column="remark"    />
+        <result property="ext1"    column="ext1"    />
+        <result property="ext2"    column="ext2"    />
+        <result property="ext3"    column="ext3"    />
+    </resultMap>
+
+    <sql id="selectQzHappyVo">
+        select happy_id, happy_content, release_time, plan_release_time, distribute_flag, status, audit_by, audit_time, create_by, create_time, update_by, update_time, signature, remark, ext1, ext2, ext3 from qz_happy
+    </sql>
+
+    <select id="selectQzHappyList" parameterType="QzHappy" resultMap="QzHappyResult">
+        <include refid="selectQzHappyVo"/>
+        <where>  
+            <if test="releaseTime != null "> and release_time = #{releaseTime}</if>
+            <if test="planReleaseTime != null "> and plan_release_time = #{planReleaseTime}</if>
+            <if test="distributeFlag != null  and distributeFlag != ''"> and distribute_flag = #{distributeFlag}</if>
+            <if test="status != null  and status != ''"> and status = #{status}</if>
+            <if test="auditBy != null  and auditBy != ''"> and audit_by = #{auditBy}</if>
+            <if test="auditTime != null "> and audit_time = #{auditTime}</if>
+        </where>
+    </select>
+    
+    <select id="selectQzHappyByHappyId" parameterType="Long" resultMap="QzHappyResult">
+        <include refid="selectQzHappyVo"/>
+        where happy_id = #{happyId}
+    </select>
+        
+    <insert id="insertQzHappy" parameterType="QzHappy" useGeneratedKeys="true" keyProperty="happyId">
+        insert into qz_happy
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="happyContent != null and happyContent != ''">happy_content,</if>
+            <if test="releaseTime != null">release_time,</if>
+            <if test="planReleaseTime != null">plan_release_time,</if>
+            <if test="distributeFlag != null">distribute_flag,</if>
+            <if test="status != null">status,</if>
+            <if test="auditBy != null">audit_by,</if>
+            <if test="auditTime != null">audit_time,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="signature != null">signature,</if>
+            <if test="remark != null">remark,</if>
+            <if test="ext1 != null">ext1,</if>
+            <if test="ext2 != null">ext2,</if>
+            <if test="ext3 != null">ext3,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="happyContent != null and happyContent != ''">#{happyContent},</if>
+            <if test="releaseTime != null">#{releaseTime},</if>
+            <if test="planReleaseTime != null">#{planReleaseTime},</if>
+            <if test="distributeFlag != null">#{distributeFlag},</if>
+            <if test="status != null">#{status},</if>
+            <if test="auditBy != null">#{auditBy},</if>
+            <if test="auditTime != null">#{auditTime},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="signature != null">#{signature},</if>
+            <if test="remark != null">#{remark},</if>
+            <if test="ext1 != null">#{ext1},</if>
+            <if test="ext2 != null">#{ext2},</if>
+            <if test="ext3 != null">#{ext3},</if>
+         </trim>
+    </insert>
+
+    <update id="updateQzHappy" parameterType="QzHappy">
+        update qz_happy
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="happyContent != null and happyContent != ''">happy_content = #{happyContent},</if>
+            <if test="releaseTime != null">release_time = #{releaseTime},</if>
+            <if test="planReleaseTime != null">plan_release_time = #{planReleaseTime},</if>
+            <if test="distributeFlag != null">distribute_flag = #{distributeFlag},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="auditBy != null">audit_by = #{auditBy},</if>
+            <if test="auditTime != null">audit_time = #{auditTime},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="signature != null">signature = #{signature},</if>
+            <if test="remark != null">remark = #{remark},</if>
+            <if test="ext1 != null">ext1 = #{ext1},</if>
+            <if test="ext2 != null">ext2 = #{ext2},</if>
+            <if test="ext3 != null">ext3 = #{ext3},</if>
+        </trim>
+        where happy_id = #{happyId}
+    </update>
+
+    <delete id="deleteQzHappyByHappyId" parameterType="Long">
+        delete from qz_happy where happy_id = #{happyId}
+    </delete>
+
+    <delete id="deleteQzHappyByHappyIds" parameterType="String">
+        delete from qz_happy where happy_id in 
+        <foreach item="happyId" collection="array" open="(" separator="," close=")">
+            #{happyId}
+        </foreach>
+    </delete>
+</mapper>
