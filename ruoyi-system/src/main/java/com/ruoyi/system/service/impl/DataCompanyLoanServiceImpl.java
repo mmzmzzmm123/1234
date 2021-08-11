@@ -1,5 +1,7 @@
 package com.ruoyi.system.service.impl;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.ruoyi.common.constant.Constants;
 import com.ruoyi.common.constant.UserConstants;
 import com.ruoyi.common.core.domain.AjaxResult;
@@ -19,10 +21,12 @@ import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
+import static com.ruoyi.common.utils.mzt.MztSample.sendPostParams;
 import static com.ruoyi.system.domain.model.DataCodeMsgResponse.UMS_SUCCESS_CODE;
 
 /**
@@ -95,7 +99,6 @@ public class DataCompanyLoanServiceImpl implements IDataCompanyLoanService
 
         String verifyKey = Constants.SMS_CODE_KEY + mobile;
         String realCode = redisCache.getCacheObject(verifyKey);
-
         if (!StringUtils.equals(code,realCode)){
             throw new SmsException();
         }
@@ -199,6 +202,26 @@ public class DataCompanyLoanServiceImpl implements IDataCompanyLoanService
             throw new UserException(null, null, response.toString());
         }
 
+    }
+
+    @Override
+    public JSONObject getUserInfo(String userId,String token) {
+        String url = "https://mztapp.fujian.gov.cn:8304/"
+                + "dataset/AppSerController/invokeservice.do";
+        Map<String,Object> paramsMap = new HashMap<String,Object>();
+
+        paramsMap.put("INVOKESERVICE_CODE","033");
+        paramsMap.put("INVOKECALLER_CODE","2bf26e96740adbedda3917e8d72f1989f1d3c8d9");
+        paramsMap.put("USER_ID",userId);
+        paramsMap.put("USER_TOKEN",token);
+
+        String POSTPARAM_JSON = JSON.toJSONString(paramsMap);
+        Map<String,Object> clientParam = new HashMap<String,Object>();
+        clientParam.put("POSTPARAM_JSON", POSTPARAM_JSON);
+
+        String result = sendPostParams(url, clientParam);
+        System.out.println(result);
+        return JSONObject.parseObject(result);
     }
 
     private String numRandom(int bit) {

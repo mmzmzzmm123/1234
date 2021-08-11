@@ -26,8 +26,8 @@ import java.util.Map;
 public class AppInterceptor extends HandlerInterceptorAdapter
 {
 
-    private static final String HEADER_MZT_USER_TOKEN="MZT_USER_TOKEN";
-    private static final String HEADER_MZT_USER_ID="MZT_USER_ID";
+    public static final String HEADER_MZT_USER_TOKEN="MZT_USER_TOKEN";
+    public static final String HEADER_MZT_USER_ID="MZT_USER_ID";
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception
@@ -37,17 +37,6 @@ public class AppInterceptor extends HandlerInterceptorAdapter
         String userId = request.getHeader(HEADER_MZT_USER_ID);
         if (StringUtils.isNotEmpty(token) && StringUtils.isNotEmpty(userId))
         {
-            //TODO:闽政通鉴权
-//            String url = "https://mztapp.fujian.gov.cn:8304/"
-//                    + "dataset/AppSerController/invokeservice.do";
-//            Map<String,Object> paramsMap = new HashMap<String,Object>();
-//            paramsMap.put("INVOKESERVICE_CODE","103");
-//            paramsMap.put("INVOKECALLER_CODE","授权码");
-//            paramsMap.put("TRUST_TICKET","34343433dddd");
-//            String POSTPARAM_JSON = JSON.toJSONString(paramsMap);
-//            Map<String,Object> clientParam = new HashMap<String,Object>();
-//            clientParam.put("POSTPARAM_JSON", POSTPARAM_JSON);
-//            String result = MztSample.sendPostParams(url, clientParam);
             return super.preHandle(request, response, handler);
         }
 
