@@ -122,7 +122,7 @@ export default {
     },
     // 上传成功回调
     handleUploadSuccess(res) {
-      this.fileList.push({ name: res.fileName, url: res.fileName });
+      this.fileList.push({ name: res.fileName, url: res.url });
       this.$emit("input", this.listToString(this.fileList));
       this.loading.close();
     },
