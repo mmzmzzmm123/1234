@@ -26,8 +26,8 @@ import java.util.Map;
 public class AppInterceptor extends HandlerInterceptorAdapter
 {
 
-    public static final String HEADER_MZT_USER_TOKEN="MZT_USER_TOKEN";
-    public static final String HEADER_MZT_USER_ID="MZT_USER_ID";
+    public static final String HEADER_MZT_USER_TOKEN="MZT-USER-TOKEN";
+    public static final String HEADER_MZT_USER_ID="MZT-USER-ID";
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception
