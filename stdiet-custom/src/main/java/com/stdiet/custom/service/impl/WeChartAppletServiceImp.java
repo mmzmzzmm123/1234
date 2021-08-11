@@ -27,7 +27,9 @@ import java.util.concurrent.TimeUnit;
 
 @Service
 public class WeChartAppletServiceImp implements IWechatAppletService {
-    static final String WX_TEM_ID = "Ow0j0Jt4OJhjy6GruBstOMLTGjAVagM4hTZRLAaxqJo";
+    static final String WX_LITE_SUBSCRIBE_TEM_ID = "Ow0j0Jt4OJhjy6GruBstOMLTGjAVagM4hTZRLAaxqJo";
+
+    static final String WX_PUBLIC_CUSTOMER_PUNCH_NOTICE_TEM_ID = "XapMBz6KsPW6_rK5__oxxaY8cSLyVYyoSljstZsITyo";
 
     @Autowired
     private RedisCache redisCache;
@@ -51,6 +53,8 @@ public class WeChartAppletServiceImp implements IWechatAppletService {
             String appSecret = "";
             if (appId.equals("wx26be9b2aa525fc1e")) {
                 appSecret = "de436c17e42e6fc0637bd0de169ea0c1";
+            } else if (appId.equals("wx4a9c1fc9dba53202")) {
+                appSecret = "fff029ade5d3575df755f4cf9e52f8da";
             }
             String url = "https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid={appId}&secret={appSecret}";
             Map<String, String> param = new HashMap<>();
@@ -86,7 +90,7 @@ public class WeChartAppletServiceImp implements IWechatAppletService {
         JSONObject param = new JSONObject();
         param.put("access_token", accessToken);
         param.put("touser", sysWxUserInfo.getOpenid());
-        param.put("template_id", WX_TEM_ID);
+        param.put("template_id", WX_LITE_SUBSCRIBE_TEM_ID);
         param.put("page", "pages/recipes/index");
 
 
@@ -114,7 +118,7 @@ public class WeChartAppletServiceImp implements IWechatAppletService {
         postLog.setSendTime(DateUtils.getNowDate());
         postLog.setPlanId(planId);
         //
-        dataParam.put("tmpId", WX_TEM_ID);
+        dataParam.put("tmpId", WX_LITE_SUBSCRIBE_TEM_ID);
         postLog.setData(dataParam);
         wxSubscribePostLogService.insertWxSubscribePostLog(postLog);
 
@@ -153,6 +157,53 @@ public class WeChartAppletServiceImp implements IWechatAppletService {
             System.out.println(e);
         }
         return -1;
+    }
+
+    @Override
+    public Integer postCustomerPunchNotice(String name,  String toUser) {
+        String accessToken = getAccessToken("wx4a9c1fc9dba53202");
+        if (StringUtils.isNull(accessToken)) {
+            return -1;
+        }
+        String url = "https://api.weixin.qq.com/cgi-bin/message/template/send?access_token=" + accessToken;
+
+        JSONObject param = new JSONObject();
+        param.put("touser", toUser);
+        param.put("template_id", WX_PUBLIC_CUSTOMER_PUNCH_NOTICE_TEM_ID);
+//        param.put("url", "pages/recipes/index");
+//        JSONObject miniData = new JSONObject();
+//        miniData.put("appid", "");
+//        miniData.put("pagepath", "");
+//        param.put("miniprogram", miniData);
+
+        JSONObject dataParam = new JSONObject();
+        dataParam.put("first", JSONObject.parse("{\"value\":\"完成打卡\"}"));
+        dataParam.put("keyword1", JSONObject.parse("{\"value\":\"" + name + "\"}"));
+        dataParam.put("keyword2", JSONObject.parse("{\"value\":\"" + DateUtils.getTime() + "\"}"));
+        dataParam.put("keyword3", JSONObject.parse("{\"value\":\"成功\"}"));
+        dataParam.put("remark", JSONObject.parse("{\"value\":\" \"}"));
+
+        param.put("data", dataParam);
+
+        restTemplate.getMessageConverters()
+                .add(0, new StringHttpMessageConverter(StandardCharsets.UTF_8));
+        ResponseEntity<String> entity = restTemplate.postForEntity(url, param.toJSONString(), String.class);
+
+        JSONObject resultObj = JSONObject.parseObject(entity.getBody());
+
+        WxSubscribePostLog postLog = new WxSubscribePostLog();
+        postLog.setAppid("wx4a9c1fc9dba53202");
+        postLog.setOpenid(toUser);
+        int errCode = resultObj.getInteger("errcode");
+        postLog.setType(2);
+        postLog.setResult(resultObj);
+        postLog.setSendTime(DateUtils.getNowDate());
+        //
+        dataParam.put("tmpId", WX_PUBLIC_CUSTOMER_PUNCH_NOTICE_TEM_ID);
+        postLog.setData(dataParam);
+        wxSubscribePostLogService.insertWxSubscribePostLog(postLog);
+
+        return errCode;
     }
 
 

@@ -133,6 +133,16 @@ public class SysUser extends BaseEntity {
     @Excel(name = "岗位")
     private String postName;
 
+    private String wxPublicOpenid;
+
+    public void setWxPublicOpenid(String wxPublicOpenid) {
+        this.wxPublicOpenid = wxPublicOpenid;
+    }
+
+    public String getWxPublicOpenid() {
+        return wxPublicOpenid;
+    }
+
     public SysUser() {
 
     }

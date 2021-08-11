@@ -26,6 +26,8 @@ public class SysWxUserLog extends BaseEntity {
      */
     private String openid;
 
+    private String cusId;
+
     /**
      * 体重
      */
