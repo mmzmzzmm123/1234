@@ -144,7 +144,7 @@ receiveUserId">
     <!-- 添加或修改邀请对话框 -->
     <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
-        <el-form-item label="圈子id" prop="qzId">
+       <el-form-item label="圈子id" prop="qzId">
           <el-input v-model="form.qzId" placeholder="请输入圈子id" />
         </el-form-item>
         <el-form-item label="到期日" prop="exp">
@@ -155,12 +155,10 @@ receiveUserId">
             placeholder="选择到期日">
           </el-date-picker>
         </el-form-item>
-        <el-form-item label="邀请用户" prop="
-createUserId">
+      <!--  <el-form-item label="邀请用户" prop="createUserId">
           <el-input v-model="form.createUserId" placeholder="请输入邀请用户" />
-        </el-form-item>
-        <el-form-item label="受邀用户" prop="
-receiveUserId">
+        </el-form-item> -->
+        <el-form-item label="受邀用户" prop="receiveUserId">
           <el-input v-model="form.receiveUserId" placeholder="请输入受邀用户" />
         </el-form-item>
         <el-form-item label="状态" prop="status">
@@ -173,7 +171,7 @@ receiveUserId">
             ></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="备注" prop="remark">
+<!--        <el-form-item label="备注" prop="remark">
           <el-input v-model="form.remark" placeholder="请输入备注" />
         </el-form-item>
         <el-form-item label="扩展字段1" prop="ext1">
@@ -184,7 +182,7 @@ receiveUserId">
         </el-form-item>
         <el-form-item label="扩展字段3" prop="ext3">
           <el-input v-model="form.ext3" placeholder="请输入扩展字段3" />
-        </el-form-item>
+        </el-form-item> -->
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button type="primary" @click="submitForm">确 定</el-button>

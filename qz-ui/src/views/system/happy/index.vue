@@ -92,16 +92,16 @@
 
     <el-table v-loading="loading" :data="happyList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="圈子ID" align="center" prop="happyId" />
-      <el-table-column label="快乐+1" align="center" prop="happyContent" />
-      <el-table-column label="发布时间" align="center" prop="releaseTime" width="180">
+     <!-- <el-table-column label="圈子ID" align="center" prop="happyId" /> -->
+      <el-table-column label="快乐+1" align="center" prop="happyContent" width="360"/>
+      <el-table-column label="发布时间" align="center" prop="releaseTime" width="100">
         <template slot-scope="scope">
-          <span>{{ parseTime(scope.row.releaseTime, '{y}-{m}-{d}') }}</span>
+          <span>{{ parseTime(scope.row.releaseTime, '{y}-{m}-{d} {h}:{m}:{s}') }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="计划发布时间" align="center" prop="planReleaseTime" width="180">
+      <el-table-column label="计划发布时间" align="center" prop="planReleaseTime" width="100">
         <template slot-scope="scope">
-          <span>{{ parseTime(scope.row.planReleaseTime, '{y}-{m}-{d}') }}</span>
+          <span>{{ parseTime(scope.row.planReleaseTime, '{y}-{m}-{d} {h}:{m}:{s}') }}</span>
         </template>
       </el-table-column>
       <el-table-column label="是否投稿" align="center" prop="distributeFlag" :formatter="distributeFlagFormat" />
@@ -112,26 +112,8 @@
           <span>{{ parseTime(scope.row.auditTime, '{y}-{m}-{d}') }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
-        <template slot-scope="scope">
-          <el-button
-            size="mini"
-            type="text"
-            icon="el-icon-edit"
-            @click="handleUpdate(scope.row)"
-            v-hasPermi="['system:happy:edit']"
-          >修改</el-button>
-          <el-button
-            size="mini"
-            type="text"
-            icon="el-icon-delete"
-            @click="handleDelete(scope.row)"
-            v-hasPermi="['system:happy:remove']"
-          >删除</el-button>
-        </template>
-      </el-table-column>
+	  <el-table-column label="署名" align="center" prop="signature"  width="180"/>
     </el-table>
-    
     <pagination
       v-show="total>0"
       :total="total"
@@ -146,23 +128,23 @@
         <el-form-item label="快乐+1">
           <editor v-model="form.happyContent" :min-height="192"/>
         </el-form-item>
-        <el-form-item label="发布时间" prop="releaseTime">
+       <!-- <el-form-item label="发布时间" prop="releaseTime">
           <el-date-picker clearable size="small"
             v-model="form.releaseTime"
             type="date"
             value-format="yyyy-MM-dd"
             placeholder="选择发布时间">
           </el-date-picker>
-        </el-form-item>
-        <el-form-item label="计划发布时间" prop="planReleaseTime">
+        </el-form-item> -->
+        <el-form-item label="定时推送" prop="planReleaseTime">
           <el-date-picker clearable size="small"
             v-model="form.planReleaseTime"
-            type="date"
-            value-format="yyyy-MM-dd"
+            type="datetime"
+            value-format="yyyy-MM-dd hh:MM:ss"
             placeholder="选择计划发布时间">
           </el-date-picker>
         </el-form-item>
-        <el-form-item label="是否投稿" prop="distributeFlag">
+        <!-- <el-form-item label="是否投稿" prop="distributeFlag">
           <el-select v-model="form.distributeFlag" placeholder="请选择是否投稿">
             <el-option
               v-for="dict in distributeFlagOptions"
@@ -171,8 +153,8 @@
               :value="dict.dictValue"
             ></el-option>
           </el-select>
-        </el-form-item>
-        <el-form-item label="状态" prop="status">
+        </el-form-item> -->
+       <!-- <el-form-item label="状态" prop="status">
           <el-select v-model="form.status" placeholder="请选择状态">
             <el-option
               v-for="dict in statusOptions"
@@ -181,33 +163,18 @@
               :value="dict.dictValue"
             ></el-option>
           </el-select>
+        </el-form-item> -->
+       <el-form-item label="署名" prop="signature">
+          <el-input v-model="form.signature" placeholder="请输入署名" />
         </el-form-item>
-        <el-form-item label="审批人" prop="auditBy">
-          <el-input v-model="form.auditBy" placeholder="请输入审批人" />
-        </el-form-item>
-        <el-form-item label="审批时间" prop="auditTime">
+       <!--  <el-form-item label="审批时间" prop="auditTime">
           <el-date-picker clearable size="small"
             v-model="form.auditTime"
             type="date"
             value-format="yyyy-MM-dd"
             placeholder="选择审批时间">
           </el-date-picker>
-        </el-form-item>
-        <el-form-item label="备注" prop="signature">
-          <el-input v-model="form.signature" placeholder="请输入备注" />
-        </el-form-item>
-        <el-form-item label="备注" prop="remark">
-          <el-input v-model="form.remark" placeholder="请输入备注" />
-        </el-form-item>
-        <el-form-item label="扩展字段1" prop="ext1">
-          <el-input v-model="form.ext1" placeholder="请输入扩展字段1" />
-        </el-form-item>
-        <el-form-item label="扩展字段2" prop="ext2">
-          <el-input v-model="form.ext2" placeholder="请输入扩展字段2" />
-        </el-form-item>
-        <el-form-item label="扩展字段3" prop="ext3">
-          <el-input v-model="form.ext3" placeholder="请输入扩展字段3" />
-        </el-form-item>
+        </el-form-item> -->
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button type="primary" @click="submitForm">确 定</el-button>
@@ -367,6 +334,10 @@ export default {
               this.getList();
             });
           } else {
+			  this.form.releaseTime=this.form.planReleaseTime;
+			  //表单状态为待推送
+			  this.form.status='4';
+			  this.form.distributeFlag='1';
             addHappy(this.form).then(response => {
               this.msgSuccess("新增成功");
               this.open = false;

@@ -76,9 +76,9 @@
             size="mini"
             type="text"
             icon="el-icon-edit"
-            @click="handleUpdate(scope.row)"
+            @click="handleAnswer(scope.row)"
             v-hasPermi="['system:feedback:edit']"
-          >修改</el-button>
+          >回复</el-button>
           <el-button
             size="mini"
             type="text"
@@ -135,6 +135,21 @@
         <el-button @click="cancel">取 消</el-button>
       </div>
     </el-dialog>
+	<!-- 回复意见反馈 -->
+	<el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
+	  <el-form ref="form" :model="form" :rules="rules" label-width="80px">
+	   <!-- <el-form-item label="反馈">
+	      <editor v-model="form.feedbackContent" :min-height="192"/>
+	    </el-form-item> -->
+	   <el-form-item label="回复">
+	      <editor v-model="form.answerContent" :min-height="192"/>
+	    </el-form-item>
+	  </el-form>
+	  <div slot="footer" class="dialog-footer">
+	    <el-button type="primary" @click="submitForm">确 定</el-button>
+	    <el-button @click="cancel">取 消</el-button>
+	  </div>
+	</el-dialog>
   </div>
 </template>
 
@@ -262,6 +277,17 @@ export default {
         this.title = "修改意见反馈";
       });
     },
+	/** 应答操作 */
+	handleAnswer(row) {
+	  this.reset();
+	  const id = row.id || this.ids
+	  getFeedback(id).then(response => {
+	    this.form = response.data;
+	    this.open = true;
+	    this.title = "回复反馈";
+		this.form.status='1';
+	  });
+	},
     /** 提交按钮 */
     submitForm() {
       this.$refs["form"].validate(valid => {
