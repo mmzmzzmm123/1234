@@ -24,6 +24,10 @@ public class SysWxUserInfo {
 
     private String customerId;
 
+    private Integer height;
+
+    private Integer age;
+
     /**
      * 昵称
      */

@@ -5,6 +5,7 @@ import com.stdiet.common.constant.HttpStatus;
 import com.stdiet.common.core.controller.BaseController;
 import com.stdiet.common.core.domain.AjaxResult;
 import com.stdiet.common.core.domain.entity.SysDictData;
+import com.stdiet.common.core.domain.entity.SysUser;
 import com.stdiet.common.core.page.TableDataInfo;
 import com.stdiet.common.exception.file.FileNameLengthLimitExceededException;
 import com.stdiet.common.utils.AliyunVideoUtils;
@@ -19,6 +20,7 @@ import com.stdiet.custom.dto.response.*;
 import com.stdiet.custom.page.WxLogInfo;
 import com.stdiet.custom.service.*;
 import com.stdiet.system.service.ISysDictTypeService;
+import com.stdiet.system.service.ISysUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -84,6 +86,8 @@ public class WechatAppletController extends BaseController {
     private ISysCustomerHealthyService sysCustomerHealthyService;
     @Autowired
     private ISysCustomerPhysicalSignsService sysCustomerPhysicalSignsService;
+    @Autowired
+    private ISysUserService iSysUserService;
 
     /**
      * 查询微信小程序中展示的客户案例
@@ -193,7 +197,18 @@ public class WechatAppletController extends BaseController {
     @PostMapping(value = "/addPunchLog")
     public AjaxResult addPunchLog(@RequestBody SysWxUserLog sysWxUserLog) {
         if (sysWxUserLog.getId() == null) {
-            return toAjax(sysWxUserLogService.insertSysWxUserLog(sysWxUserLog));
+            int row = sysWxUserLogService.insertSysWxUserLog(sysWxUserLog);
+            if (row > 0) {
+                Long cusId = Long.parseLong(AesUtils.decrypt(sysWxUserLog.getCusId()));
+                SysCustomer sysCustomer = iSysCustomerService.selectSysCustomerById(cusId);
+                if (StringUtils.isNotNull(sysCustomer)) {
+                    SysUser sysUser = iSysUserService.selectUserById(sysCustomer.getAfterDietitian());
+                    if (StringUtils.isNotNull(sysUser)) {
+                        iWechatAppletService.postCustomerPunchNotice(sysCustomer.getName(), sysUser.getWxPublicOpenid());
+                    }
+                }
+            }
+            return toAjax(row);
         }
         return toAjax(sysWxUserLogService.updateSysWxUserLog(sysWxUserLog));
     }
@@ -455,9 +470,13 @@ public class WechatAppletController extends BaseController {
             SysCustomerPhysicalSigns customerPhysicalSigns = sysCustomerPhysicalSignsService.selectSysCustomerPhysicalSignsByCusId(curWxUserInfo.getCusId());
             if (customerPhysicalSigns != null) {
                 curWxUserInfo.setSex(customerPhysicalSigns.getSex().toString());
+                curWxUserInfo.setHeight(customerPhysicalSigns.getTall());
+                curWxUserInfo.setAge(customerPhysicalSigns.getAge());
             }
         } else {
             curWxUserInfo.setSex(customerHealthy.getSex().toString());
+            curWxUserInfo.setHeight(customerHealthy.getTall());
+            curWxUserInfo.setAge(Math.toIntExact(customerHealthy.getAge()));
         }
 
         curWxUserInfo.setCustomerId(AesUtils.encrypt(curWxUserInfo.getCusId().toString()));
