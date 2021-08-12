@@ -1,5 +1,6 @@
 package com.ruoyi.system.service.impl;
 
+import java.util.Date;
 import java.util.List;
 import com.ruoyi.common.utils.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -92,5 +93,19 @@ public class QzHappyServiceImpl implements IQzHappyService
     public int deleteQzHappyByHappyId(Long happyId)
     {
         return qzHappyMapper.deleteQzHappyByHappyId(happyId);
+    }
+
+    @Override
+    public int sendQzHappy(Date checkdate) {
+        QzHappy qzHappy = new QzHappy();
+        qzHappy.setReleaseTime(checkdate);
+        List<QzHappy> sendQzHappyList =  qzHappyMapper.selectQzHappyList(qzHappy);
+        for(QzHappy  happy :sendQzHappyList){
+            happy.setReleaseTime(checkdate);
+            happy.setStatus("1");
+            qzHappyMapper.updateQzHappy(happy);
+
+        }
+        return 0;
     }
 }

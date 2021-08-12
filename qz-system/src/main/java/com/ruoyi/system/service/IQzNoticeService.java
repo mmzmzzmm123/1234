@@ -58,4 +58,11 @@ public interface IQzNoticeService
      * @return 结果
      */
     public int deleteQzNoticeByNoticeId(Long noticeId);
+    /**
+     * 新增通知公告
+     *
+     * @param qzNotice 通知公告
+     * @return 结果
+     */
+/*    public int insertHappyNotice(QzNotice qzNotice);*/
 }

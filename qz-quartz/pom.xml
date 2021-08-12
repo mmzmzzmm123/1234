@@ -34,7 +34,10 @@
             <groupId>com.ruoyi</groupId>
             <artifactId>qz-common</artifactId>
         </dependency>
-
+        <dependency>
+            <groupId>com.ruoyi</groupId>
+            <artifactId>qz-system</artifactId>
+        </dependency>
     </dependencies>
 
 </project>

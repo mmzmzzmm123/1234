@@ -75,9 +75,9 @@
 
     <el-table v-loading="loading" :data="birthdaypuList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="圈子ID" align="center" prop="id" />
+     <!-- <el-table-column label="ID" align="center" prop="id" /> -->
       <el-table-column label="ta的名字" align="center" prop="name" />
-      <el-table-column label="用户的id" align="center" prop="userId" />
+      <!-- <el-table-column label="用户的id" align="center" prop="userId" /> -->
       <el-table-column label="阳历生日" align="center" prop="solarBirthday" width="180">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.solarBirthday, '{y}-{m}-{d}') }}</span>
@@ -88,13 +88,13 @@
           <span>{{ parseTime(scope.row.birthday, '{y}-{m}-{d}') }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="是否阳历生日" align="center" prop="solarFlag" :formatter="solarFlagFormat" />
+      <el-table-column label="是否阳历" align="center" prop="solarFlag" :formatter="solarFlagFormat" />
       <el-table-column label="是否提醒" align="center" prop="notifyFlag" :formatter="notifyFlagFormat" />
       <el-table-column label="星座" align="center" prop="constellation" />
       <el-table-column label="生肖" align="center" prop="zodiac" />
       <el-table-column label="年重复" align="center" prop="yearRepeat" :formatter="yearRepeatFormat" />
       <el-table-column label="提前通知" align="center" prop="dayRepeat" :formatter="dayRepeatFormat" />
-      <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
+      <!-- <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button
             size="mini"
@@ -111,7 +111,7 @@
             v-hasPermi="['system:birthdaypu:remove']"
           >删除</el-button>
         </template>
-      </el-table-column>
+      </el-table-column> -->
     </el-table>
     
     <pagination
@@ -131,23 +131,23 @@
        <!-- <el-form-item label="用户的id" prop="userId">
           <el-input v-model="form.userId" placeholder="请输入用户的id" />
         </el-form-item> -->
-        <el-form-item label="阳历生日" prop="solarBirthday">
+        <el-form-item label="生日" prop="solarBirthday">
           <el-date-picker clearable size="small"
             v-model="form.solarBirthday"
             type="date"
             value-format="yyyy-MM-dd"
-            placeholder="选择阳历生日">
+            placeholder="选择生日">
           </el-date-picker>
         </el-form-item>
-        <el-form-item label="阴历生日" prop="birthday">
+       <!-- <el-form-item label="阴历生日" prop="birthday">
           <el-date-picker clearable size="small"
             v-model="form.birthday"
             type="date"
             value-format="yyyy-MM-dd"
             placeholder="选择阴历生日">
           </el-date-picker>
-        </el-form-item>
-        <el-form-item label="是否阳历生日">
+        </el-form-item> -->
+        <el-form-item label="是否阳历">
           <el-radio-group v-model="form.solarFlag">
             <el-radio
               v-for="dict in solarFlagOptions"
@@ -156,7 +156,7 @@
             >{{dict.dictLabel}}</el-radio>
           </el-radio-group>
         </el-form-item>
-        <el-form-item label="是否提醒">
+       <!-- <el-form-item label="是否提醒">
           <el-radio-group v-model="form.notifyFlag">
             <el-radio
               v-for="dict in notifyFlagOptions"
@@ -164,15 +164,25 @@
               :label="dict.dictValue"
             >{{dict.dictLabel}}</el-radio>
           </el-radio-group>
-        </el-form-item>
-        <el-form-item label="星座" prop="constellation">
+        </el-form-item> -->
+        <!-- <el-form-item label="星座" prop="constellation">
           <el-input v-model="form.constellation" placeholder="请输入星座" />
         </el-form-item>
         <el-form-item label="生肖" prop="zodiac">
           <el-input v-model="form.zodiac" placeholder="请输入生肖" />
-        </el-form-item>
-        <el-form-item label="年重复提醒" prop="yearRepeat">
-          <el-select v-model="form.yearRepeat" placeholder="请选择年重复提醒">
+        </el-form-item> -->
+		<el-form-item label="提醒" prop="dayRepeat">
+		  <el-select v-model="form.dayRepeat" placeholder="请选择提前几天通知">
+		    <el-option
+		      v-for="dict in dayRepeatOptions"
+		      :key="dict.dictValue"
+		      :label="dict.dictLabel"
+		      :value="dict.dictValue"
+		    ></el-option>
+		  </el-select>
+		</el-form-item>
+        <el-form-item label="重复" prop="yearRepeat">
+          <el-select v-model="form.yearRepeat" placeholder="请选择重复提醒频率">
             <el-option
               v-for="dict in yearRepeatOptions"
               :key="dict.dictValue"
@@ -181,21 +191,12 @@
             ></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="提前几天通知" prop="dayRepeat">
-          <el-select v-model="form.dayRepeat" placeholder="请选择提前几天通知">
-            <el-option
-              v-for="dict in dayRepeatOptions"
-              :key="dict.dictValue"
-              :label="dict.dictLabel"
-              :value="dict.dictValue"
-            ></el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item label="生日溥状态">
+       
+        <!-- <el-form-item label="生日溥状态">
           <el-radio-group v-model="form.status">
             <el-radio label="1">请选择字典生成</el-radio>
           </el-radio-group>
-        </el-form-item>
+        </el-form-item> -->
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button type="primary" @click="submitForm">确 定</el-button>

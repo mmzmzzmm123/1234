@@ -1,5 +1,6 @@
 package com.ruoyi.system.service;
 
+import java.util.Date;
 import java.util.List;
 import com.ruoyi.system.domain.QzHappy;
 
@@ -58,4 +59,11 @@ public interface IQzHappyService
      * @return 结果
      */
     public int deleteQzHappyByHappyId(Long happyId);
+    /**
+     * 修改快乐+1
+     *
+     * @param checkdate 计划发布时间
+     * @return 结果
+     */
+    public int sendQzHappy(Date checkdate);
 }
