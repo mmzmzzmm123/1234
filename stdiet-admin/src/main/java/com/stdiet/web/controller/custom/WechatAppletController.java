@@ -459,11 +459,11 @@ public class WechatAppletController extends BaseController {
         }
 
         // 更新时间超过21天，重新登录获取最新信息
-        if (
+//        if (
 //                StringUtils.isEmpty(curWxUserInfo.getAvatarUrl()) ||
-                ChronoUnit.DAYS.between(DateUtils.dateToLocalDate(curWxUserInfo.getUpdateTime()), LocalDate.now()) >= 21) {
-            return AjaxResult.error(5001, "信息缺失或者过期需要重新登录");
-        }
+//                ChronoUnit.DAYS.between(DateUtils.dateToLocalDate(curWxUserInfo.getUpdateTime()), LocalDate.now()) >= 21) {
+//            return AjaxResult.error(5001, "信息缺失或者过期需要重新登录");
+//        }
 
         SysCustomerHealthy customerHealthy = sysCustomerHealthyService.selectSysCustomerHealthyByCustomerId(curWxUserInfo.getCusId());
         if (customerHealthy == null) {
