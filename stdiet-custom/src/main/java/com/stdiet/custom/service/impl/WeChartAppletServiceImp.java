@@ -177,7 +177,7 @@ public class WeChartAppletServiceImp implements IWechatAppletService {
 //        param.put("miniprogram", miniData);
 
         JSONObject dataParam = new JSONObject();
-        dataParam.put("first", JSONObject.parse("{\"value\":\"完成打卡\"}"));
+        dataParam.put("first", JSONObject.parse("{\"value\":\"客户完成打卡通知\"}"));
         dataParam.put("keyword1", JSONObject.parse("{\"value\":\"" + name + "\"}"));
         dataParam.put("keyword2", JSONObject.parse("{\"value\":\"" + DateUtils.getTime() + "\"}"));
         dataParam.put("keyword3", JSONObject.parse("{\"value\":\"成功\"}"));
