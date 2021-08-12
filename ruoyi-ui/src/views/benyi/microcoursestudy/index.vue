@@ -152,30 +152,12 @@ export default {
     margin: 10px 0;
   }
 }
-.box-card-case {
-  margin: 0;
-  font-size: 14px;
-  font-weight: 700;
-  display: flex;
-  align-items: center;
-  &::before {
-    content: "";
-    margin-right: 8px;
-    width: 4px;
-    height: 14px;
-    background: #2c3e50;
-  }
-  &.mr {
-    margin: 10px 0;
-  }
-}
-.box-card-info {
-  font-size: 14px;
-  font-weight: 700;
-}
 .pad-left {
   padding-left: 15px;
   text-align: center;
+  font-size: 20px;
+  font-weight: 700;
+  line-height: 40px;
 }
 // 禁止复制
 div {
@@ -192,6 +174,6 @@ div {
 }
 .tree {
   overflow:auto;
-  max-height: 300px;
+  max-height: 600px;
 }
 </style>
