@@ -25,7 +25,7 @@
         </el-col>
         <el-col :span="8" v-show="orderModuleshow.payTypeShow">
           <el-form-item label="收款方式" prop="payTypeId">
-            <el-select v-model="form.payTypeId" placeholder="请选择">
+            <el-select v-model="form.payTypeId" filterable clearable placeholder="请选择">
               <el-option
                 v-for="dict in payTypeIdOptions"
                 :key="dict.dictValue"
@@ -40,6 +40,7 @@
             <el-select
               v-model="form.accountId"
               placeholder="请选择"
+              filterable clearable
               @change="handleOnChannelIdChange"
             >
               <el-option
@@ -80,6 +81,7 @@
             <el-select
               v-model="form.conditioningProjectId"
               placeholder="请选择"
+              filterable clearable
             >
               <el-option
                 v-for="dict in conditioningProjectIdOption"
@@ -92,7 +94,7 @@
         </el-col>
         <el-col :span="8" v-show="orderModuleshow.preSaleShow">
           <el-form-item label="售前" prop="preSaleId">
-            <el-select v-model="form.preSaleId" placeholder="请选择">
+            <el-select v-model="form.preSaleId" filterable clearable placeholder="请选择">
               <el-option
                 v-for="dict in preSaleIdOptions"
                 :key="dict.dictValue"
@@ -138,21 +140,9 @@
             </el-select>
           </el-form-item>
         </el-col>
-        <el-col :span="8" v-show="orderModuleshow.afterSaleShow">
-          <el-form-item label="售后" prop="afterSaleId">
-            <el-select v-model="form.afterSaleId" placeholder="请选择">
-              <el-option
-                v-for="dict in afterSaleIdOptions"
-                :key="dict.dictValue"
-                :label="dict.dictLabel"
-                :value="parseInt(dict.dictValue)"
-              />
-            </el-select>
-          </el-form-item>
-        </el-col>
         <el-col :span="8" v-show="orderModuleshow.nutritionistShow">
           <el-form-item label="主营养师" prop="nutritionistId">
-            <el-select v-model="form.nutritionistId" placeholder="请选择">
+            <el-select v-model="form.nutritionistId" filterable clearable placeholder="请选择" @change="handleOnDietIdChange">
               <el-option
                 v-for="dict in nutritionistIdOptions"
                 :key="dict.dictValue"
@@ -164,9 +154,21 @@
         </el-col>
         <el-col :span="8" v-show="orderModuleshow.nutriAssisShow">
           <el-form-item label="助理营养师" prop="nutriAssisId">
-            <el-select v-model="form.nutriAssisId" placeholder="请选择">
+            <el-select v-model="form.nutriAssisId" filterable clearable placeholder="请选择">
               <el-option
-                v-for="dict in nutriAssisIdOptions"
+                v-for="dict in (screenNutriAssisIdOptions || nutriAssisIdOptions)"
+                :key="dict.dictValue"
+                :label="dict.dictLabel"
+                :value="parseInt(dict.dictValue)"
+              />
+            </el-select>
+          </el-form-item>
+        </el-col>
+        <el-col :span="8" v-show="orderModuleshow.afterSaleShow">
+          <el-form-item label="售后"  prop="afterSaleId">
+            <el-select v-model="form.afterSaleId" filterable clearable placeholder="请选择">
+              <el-option
+                v-for="dict in (screenAfterSaleIdOptions || afterSaleIdOptions)"
                 :key="dict.dictValue"
                 :label="dict.dictLabel"
                 :value="parseInt(dict.dictValue)"
@@ -288,7 +290,7 @@ import { addOrder, updateOrder } from "@/api/custom/order";
 import dayjs from "dayjs";
 import { mapGetters } from "vuex";
 import * as orderTypeData from "@/utils/orderType";
-
+import * as orderUtils from "@/utils/orderUtils";
 export default {
   name: "OrderEdit",
   props: {
@@ -417,7 +419,12 @@ export default {
       reviewStatusOptions: [],
       //下拉列表对应关系(用于选择收款账号自动选择策划、策划助理、运营、运营助理)
       orderDropdownCorrespondingOptions: [],
-      
+      //下拉营养师对应助理、售后对于关系
+      dietitianAfterAssistantOptions: [],
+      //筛选过后的营养师助理列表
+      screenNutriAssisIdOptions: null,
+      //筛选过后面售后列表
+      screenAfterSaleIdOptions: null,
       //订单模块控制
       orderModuleshow: Object.assign({}, orderTypeData.orderModuleshow)
     };
@@ -448,6 +455,9 @@ export default {
     });
     this.getDicts("order_dropdown_corresponding").then((response) => {
       this.orderDropdownCorrespondingOptions = response.data;
+    });
+    this.getDicts("dietitian_after_assistant").then((response) => {
+      this.dietitianAfterAssistantOptions = response.data;
     });
   },
   computed: {
@@ -609,7 +619,10 @@ export default {
       let resultArray = orderTypeData.dealOrderModuleshowByOrderType(orderTypeList, this.orderModuleshow, this.form);
       this.orderModuleshow = resultArray[0];
 
-      
+      this.screenNutriAssisIdOptions = this.nutriAssisIdOptions;
+      this.screenAfterSaleIdOptions = this.afterSaleIdOptions;
+
+      console.log("重置操作");
     },
     handleOnClosed() {
       this.reset();
@@ -648,6 +661,19 @@ export default {
     handleOnChannelIdChange(val) {
       console.log(val);
       this.initPlanningAndOperation();
+    },
+    //监听营养师下拉列表
+    handleOnDietIdChange(val) {
+      console.log(val);
+       let assistantAfterArray = orderUtils.getAfterSaleAndAssistantByDietId(this.dietitianAfterAssistantOptions, val);
+       console.log(assistantAfterArray);
+       this.form = {
+          ...this.form,
+          nutriAssisId: assistantAfterArray ? orderUtils.getRandomValueByArray(assistantAfterArray[0]) : 0,
+          afterSaleId: assistantAfterArray ? orderUtils.getRandomValueByArray(assistantAfterArray[1]) : 0,
+        };
+        this.screenNutriAssisIdOptions = orderUtils.getAfterSaleOrAssistantByIds(this.nutriAssisIdOptions, assistantAfterArray[0]);
+        this.screenAfterSaleIdOptions = orderUtils.getAfterSaleOrAssistantByIds(this.afterSaleIdOptions, assistantAfterArray[1]);
     },
   },
   watch: {

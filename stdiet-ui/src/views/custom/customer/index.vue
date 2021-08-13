@@ -441,27 +441,16 @@
                 />
               </el-select>
             </el-form-item>
-          </el-col>
-          <el-col :span="12">
-            <el-form-item label="售后" prop="afterDietitian">
-              <el-select v-model="form.afterDietitian" placeholder="请选择">
-                <el-option
-                  v-for="dict in afterSaleIdOptions"
-                  :key="dict.dictValue"
-                  :label="dict.dictLabel"
-                  :value="parseInt(dict.dictValue)"
-                />
-              </el-select>
-            </el-form-item>
-          </el-col>
+          </el-col>    
           <el-col :span="12">
             <el-form-item label="主营养师" prop="mainDietitian">
-              <el-select v-model="form.mainDietitian" placeholder="请选择">
+              <el-select v-model="form.mainDietitian" placeholder="请选择" @change="handleOnDietIdChange">
                 <el-option
                   v-for="dict in nutritionistIdOptions"
                   :key="dict.dictValue"
                   :label="dict.dictLabel"
                   :value="parseInt(dict.dictValue)"
+                  
                 />
               </el-select>
             </el-form-item>
@@ -470,7 +459,19 @@
             <el-form-item label="营养师助理" prop="assistantDietitian">
               <el-select v-model="form.assistantDietitian" placeholder="请选择">
                 <el-option
-                  v-for="dict in nutriAssisIdOptions"
+                  v-for="dict in (screenNutriAssisIdOptions || nutriAssisIdOptions)"
+                  :key="dict.dictValue"
+                  :label="dict.dictLabel"
+                  :value="parseInt(dict.dictValue)"
+                />
+              </el-select>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="售后" prop="afterDietitian">
+              <el-select v-model="form.afterDietitian" placeholder="请选择">
+                <el-option
+                  v-for="dict in (screenAfterSaleIdOptions || afterSaleIdOptions)"
                   :key="dict.dictValue"
                   :label="dict.dictLabel"
                   :value="parseInt(dict.dictValue)"
@@ -523,6 +524,7 @@ import RecipesPlanDrawer from "@/components/RecipesPlanDrawer";
 import CustomerPunchLogDrawer from "@/components/PunchLog/CustomerPunchLog";
 import { listPhysicalSigns } from "@/api/custom/physicalSigns";
 import { mapGetters } from "vuex";
+import * as orderUtils from "@/utils/orderUtils";
 
 export default {
   name: "Customer",
@@ -616,6 +618,13 @@ export default {
       },
       //病史体征
       physicalSignsList: [],
+
+       //下拉营养师对应助理、售后对于关系
+      dietitianAfterAssistantOptions: [],
+      //筛选过后的营养师助理列表
+      screenNutriAssisIdOptions: null,
+      //筛选过后面售后列表
+      screenAfterSaleIdOptions: null,
     };
   },
   created() {
@@ -635,6 +644,9 @@ export default {
       } else {
         this.accountIdOptions = response.data;
       }
+    });
+    this.getDicts("dietitian_after_assistant").then((response) => {
+      this.dietitianAfterAssistantOptions = response.data;
     });
     this.getList();
     listPhysicalSigns().then((response) => {
@@ -759,6 +771,8 @@ export default {
         updateBy: null,
         delFlag: null,
       };
+      this.screenNutriAssisIdOptions = this.nutriAssisIdOptions;
+      this.screenAfterSaleIdOptions = this.afterSaleIdOptions;
       this.resetForm("form");
     },
     /** 搜索按钮操作 */
@@ -922,6 +936,18 @@ export default {
         }
       });
     },
+    //监听营养师下拉列表
+    handleOnDietIdChange(val) {
+       let assistantAfterArray = orderUtils.getAfterSaleAndAssistantByDietId(this.dietitianAfterAssistantOptions, val);
+       this.form = {
+          ...this.form,
+          assistantDietitian: assistantAfterArray ? orderUtils.getRandomValueByArray(assistantAfterArray[0]) : 0,
+          afterDietitian: assistantAfterArray ? orderUtils.getRandomValueByArray(assistantAfterArray[1]) : 0,
+        };
+        this.screenNutriAssisIdOptions = orderUtils.getAfterSaleOrAssistantByIds(this.nutriAssisIdOptions, assistantAfterArray[0]);
+        this.screenAfterSaleIdOptions = orderUtils.getAfterSaleOrAssistantByIds(this.afterSaleIdOptions, assistantAfterArray[1]);
+    }
+    
   },
 };
 </script>
