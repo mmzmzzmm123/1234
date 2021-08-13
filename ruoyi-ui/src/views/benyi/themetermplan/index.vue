@@ -115,7 +115,7 @@
       >
         <template slot-scope="scope">
           <router-link
-            :to="'/benyi_course/themetermplan/data/' + scope.row.id"
+            :to="'/benyi_course/themetermplanprint/table/' + scope.row.id"
             class="link-type"
           >
             <span>{{ scope.row.name }}</span>

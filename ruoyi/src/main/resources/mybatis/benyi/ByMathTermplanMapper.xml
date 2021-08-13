@@ -40,6 +40,7 @@
             <if test="spyj != null  and spyj != ''">and spyj = #{spyj}</if>
             <if test="createuserid != null ">and createuserid = #{createuserid}</if>
         </where>
+        order by createtime desc
     </select>
 
     <select id="selectByMathTermplanById" parameterType="String" resultMap="ByMathTermplanResult">
