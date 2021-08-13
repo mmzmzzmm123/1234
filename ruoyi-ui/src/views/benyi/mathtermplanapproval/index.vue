@@ -97,7 +97,7 @@
       >
         <template slot-scope="scope">
           <router-link
-            :to="'/benyi_course/mathtermplan/data/' + scope.row.id"
+            :to="'/benyi_course/mathtermplanprint/table/' + scope.row.id"
             class="link-type"
           >
             <span>{{ scope.row.name }}</span>

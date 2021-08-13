@@ -181,6 +181,7 @@
             <if test="otherLanguage != null  and otherLanguage != ''">and other_language = #{otherLanguage}</if>
             <if test="createuserid != null ">and createuserid = #{createuserid}</if>
         </where>
+        order by create_time desc
     </select>
 
     <select id="selectByCheckList" parameterType="ByChild" resultMap="ByChildResult">
