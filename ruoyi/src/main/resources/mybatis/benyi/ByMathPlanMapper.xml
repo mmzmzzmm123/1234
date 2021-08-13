@@ -36,7 +36,6 @@
             <if test="suggest != null  and suggest != ''">and suggest = #{suggest}</if>
             <if test="createtime != null ">and createtime = #{createtime}</if>
         </where>
-        order by createtime desc
     </select>
 
     <select id="selectByMathPlanById" parameterType="Long" resultMap="ByMathPlanResult">
