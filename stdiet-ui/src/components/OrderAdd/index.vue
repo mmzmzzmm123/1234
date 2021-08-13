@@ -161,19 +161,7 @@
             </el-select>
           </el-form-item>
         </el-col>
-        <el-col :span="8" v-show="orderModuleshow.afterSaleShow">
-          <el-form-item label="售后" prop="afterSaleId">
-            <el-select v-model="form.afterSaleId" placeholder="请选择" filterable
-              clearable>
-              <el-option
-                v-for="dict in afterSaleIdOptions"
-                :key="dict.dictValue"
-                :label="dict.dictLabel"
-                :value="parseInt(dict.dictValue)"
-              />
-            </el-select>
-          </el-form-item>
-        </el-col>
+        
         <el-col :span="8" v-show="orderModuleshow.nutritionistShow">
           <el-form-item label="主营养师" prop="nutritionistIdList">
             <el-select
@@ -181,6 +169,7 @@
               multiple
               filterable
               placeholder="请选择"
+              @change="handleOnDietIdChange"
             >
               <el-option
                 v-for="dict in nutritionistIdOptions"
@@ -208,7 +197,20 @@
             <el-select v-model="form.nutriAssisId" placeholder="请选择" filterable
               clearable>
               <el-option
-                v-for="dict in nutriAssisIdOptions"
+                v-for="dict in (screenNutriAssisIdOptions || nutriAssisIdOptions)"
+                :key="dict.dictValue"
+                :label="dict.dictLabel"
+                :value="parseInt(dict.dictValue)"
+              />
+            </el-select>
+          </el-form-item>
+        </el-col>
+        <el-col :span="8" v-show="orderModuleshow.afterSaleShow">
+          <el-form-item label="售后" prop="afterSaleId">
+            <el-select v-model="form.afterSaleId" placeholder="请选择" filterable
+              clearable>
+              <el-option
+                v-for="dict in (screenAfterSaleIdOptions || afterSaleIdOptions)"
                 :key="dict.dictValue"
                 :label="dict.dictLabel"
                 :value="parseInt(dict.dictValue)"
@@ -343,6 +345,7 @@
 import { addOrder, updateOrder } from "@/api/custom/order";
 import dayjs from "dayjs";
 import * as orderTypeData from "@/utils/orderType";
+import * as orderUtils from "@/utils/orderUtils";
 import { mapGetters } from "vuex";
 
 export default {
@@ -478,6 +481,12 @@ export default {
       reviewStatusOptions: [],
       //下拉列表对应关系(用于选择收款账号自动选择策划、策划助理、运营、运营助理)
       orderDropdownCorrespondingOptions: [],
+      //下拉营养师对应助理、售后对于关系
+      dietitianAfterAssistantOptions: [],
+      //筛选过后的营养师助理列表
+      screenNutriAssisIdOptions: null,
+      //筛选过后面售后列表
+      screenAfterSaleIdOptions: null,
       //订单类型
       orderTypeOptions: orderTypeData["orderTypeArray"],
       secondAfterSaleFlagShow: false,
@@ -515,6 +524,9 @@ export default {
     });
     this.getDicts("order_dropdown_corresponding").then((response) => {
       this.orderDropdownCorrespondingOptions = response.data;
+    });
+    this.getDicts("dietitian_after_assistant").then((response) => {
+      this.dietitianAfterAssistantOptions = response.data;
     });
     //订单类型
     /*this.getDicts("order_type").then((response) => {
@@ -793,6 +805,8 @@ export default {
         accountId,
         ...obj,
       };
+      this.screenNutriAssisIdOptions = this.nutriAssisIdOptions;
+      this.screenAfterSaleIdOptions = this.afterSaleIdOptions;
       this.resetForm("form");
     },
     handleOnClosed() {
@@ -834,6 +848,17 @@ export default {
     },
     handleOnChanelIdChange(val) {
       this.initPlanningAndOperation();
+    },
+    //监听营养师下拉列表
+    handleOnDietIdChange(val) {
+       let assistantAfterArray = orderUtils.getAfterSaleAndAssistantByDietId(this.dietitianAfterAssistantOptions, (val && val.length != null) ? val[val.length-1] : 0);
+       this.form = {
+          ...this.form,
+          nutriAssisId: assistantAfterArray ? orderUtils.getRandomValueByArray(assistantAfterArray[0]) : 0,
+          afterSaleId: assistantAfterArray ? orderUtils.getRandomValueByArray(assistantAfterArray[1]) : 0,
+        };
+        this.screenNutriAssisIdOptions = orderUtils.getAfterSaleOrAssistantByIds(this.nutriAssisIdOptions, assistantAfterArray[0]);
+        this.screenAfterSaleIdOptions = orderUtils.getAfterSaleOrAssistantByIds(this.afterSaleIdOptions, assistantAfterArray[1]);
     },
   },
   watch: {
