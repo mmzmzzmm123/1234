@@ -32,6 +32,7 @@
             <if test="createuserid != null ">and createuserid = #{createuserid}</if>
             <if test="createTime != null ">and to_days(create_time) =to_days(#{createTime})</if>
         </where>
+        order by create_time desc
     </select>
 
     <select id="selectByChildCheckinGroupDaysList" parameterType="ByChildCheckinDetail"
