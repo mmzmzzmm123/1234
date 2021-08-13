@@ -8,6 +8,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="companyId"    column="company_id"    />
         <result property="mztUserId"    column="mzt_user_id"    />
         <result property="companyName"    column="company_name"    />
+        <result property="companyAddress"    column="company_address"    />
         <result property="companyCreditCode"    column="company_credit_code"    />
         <result property="companyType"    column="company_type"    />
         <result property="companyIndustry"    column="company_industry"    />
@@ -23,7 +24,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </resultMap>
 
     <sql id="selectDataCompanyLoanVo">
-        select company_id, mzt_user_id, company_name, company_credit_code, company_type, company_industry, company_business, loan_band, loan_amount, loan_first, loan_purpose, remark, contact_name, contact_phone, create_time, update_time from data_company_loan
+        select company_id, mzt_user_id, company_name, company_address, company_credit_code, company_type, company_industry, company_business, loan_band, loan_amount, loan_first, loan_purpose, remark, contact_name, contact_phone, create_time, update_time from data_company_loan
     </sql>
 
     <select id="selectDataCompanyLoanList" parameterType="DataCompanyLoan" resultMap="DataCompanyLoanResult">

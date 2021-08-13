@@ -82,8 +82,19 @@ public class DataCompanyLoan extends BaseEntity implements Cloneable
     @Excel(name = "联系人手机")
     private String contactPhone;
 
+    private String companyAddress;
+
+    public String getCompanyAddress() {
+        return companyAddress;
+    }
+
+    public void setCompanyAddress(String companyAddress) {
+        this.companyAddress = companyAddress;
+    }
+
     /** 删除标志（0代表存在 2代表删除） */
     private String delFlag;
+
 
     public void setCompanyId(Long companyId) 
     {

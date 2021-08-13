@@ -13,6 +13,7 @@ create table data_company_loan (
   company_id             number(20)       not null,
   mzt_user_id            varchar2(32)     not null,
   company_name           varchar2(128)    not null,
+  company_address        varchar2(256)    default '',
   company_credit_code    varchar2(32)     default '',
   company_type           varchar2(128)     default '',
   company_industry       varchar2(128)     default '',
@@ -47,3 +48,5 @@ comment on column data_company_loan.contact_name            is '联系人姓名'
 comment on column data_company_loan.contact_phone           is '联系人手机';
 comment on column data_company_loan.create_time             is '创建时间';
 comment on column data_company_loan.update_time             is '更新时间';
+comment on column data_company_loan.loan_band               is '意向银行';
+comment on column data_company_loan.company_address         is '企业地址';

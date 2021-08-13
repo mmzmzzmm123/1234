@@ -125,6 +125,7 @@ public class DataCompanyLoanServiceImpl implements IDataCompanyLoanService
         dataCompanyLoan.setCompanyType(map.get("companytype"));
         dataCompanyLoan.setCompanyIndustry(map.get("indurstryname"));
         dataCompanyLoan.setCompanyBusiness(map.get("managerange"));
+        dataCompanyLoan.setCompanyAddress(map.get("regaddress"));
 
         boolean isTrust = ShareInterface.isTrust(xydm);
         if (!isTrust) {
