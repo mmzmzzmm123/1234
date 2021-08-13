@@ -35,7 +35,7 @@
             <if test="updateuserid != null ">and updateuserid = #{updateuserid}</if>
             <if test="wpid != null  and wpid != ''">and wpid = #{wpid}</if>
         </where>
-        order by zhou
+        order by daytime
     </select>
 
     <select id="selectByThemeWeekplanitemById" parameterType="Long" resultMap="ByThemeWeekplanitemResult">
