@@ -33,14 +33,12 @@ import { listWxUserLog } from "@/api/custom/wxUserLog";
 import { getCustomerPhysicalSignsByCusId } from "@/api/custom/customer";
 import LineChartView from "../LineChartView";
 import CursorChartView from "../CursorChartView";
-import TextListView from "../TextListView";
 import PunchLogDetail from "@/components/PunchLog/PunchLogDetail";
 
 export default {
   name: "punchLog",
   components: {
     LineChartView,
-    TextListView,
     CursorChartView,
     PunchLogDetail,
   },
