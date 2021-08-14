@@ -16,7 +16,7 @@
           <el-tree
             :data="treeOptions"
             :props="defaultProps"
-            :expand-on-click-node="false"
+            :expand-on-click-node="true"
             :filter-node-method="filterNode"
             ref="tree"
             default-expand-all

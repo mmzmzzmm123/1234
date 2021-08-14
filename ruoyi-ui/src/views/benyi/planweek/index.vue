@@ -173,6 +173,13 @@
           <el-button
             size="mini"
             type="text"
+            icon="el-icon-setting"
+            @click="handleActity(scope.row)"
+            >活动</el-button
+          >
+          <el-button
+            size="mini"
+            type="text"
             icon="el-icon-view"
             @click="handleView(scope.row)"
             v-hasPermi="['benyi:planweek:query']"
@@ -195,80 +202,129 @@
       :title="title"
       :visible.sync="open"
       class="v-dialog"
+      width="1024px"
       append-to-body
     >
-      <el-form ref="form" :model="form" :rules="rules" label-width="80px">
-        <el-form-item label="计划名称" prop="name">
-          <el-input v-model="form.name" placeholder="请输入计划名称" />
-        </el-form-item>
-        <el-form-item label="选择月份" prop="month">
-          <label slot="label"
-            >选择月份</label
-          >
-          <el-date-picker
-            clearable
-            size="small"
-            class="my-date-picker"
-            v-model="form.month"
-            type="month"
-            value-format="yyyy-MM"
-            placeholder="选择月份"
-          ></el-date-picker>
-        </el-form-item>
-        <el-form-item label="开始时间" prop="starttime">
-          <el-date-picker
-            clearable
-            size="small"
-            class="my-date-picker"
-            v-model="form.starttime"
-            type="date"
-            value-format="yyyy-MM-dd"
-            placeholder="选择开始时间"
-          ></el-date-picker>
-        </el-form-item>
-        <el-form-item label="结束时间" prop="endtime">
-          <el-date-picker
-            clearable
-            size="small"
-            class="my-date-picker"
-            v-model="form.endtime"
-            type="date"
-            value-format="yyyy-MM-dd"
-            placeholder="选择结束时间"
-          ></el-date-picker>
-        </el-form-item>
-        <el-form-item label="选择周次" prop="weekly">
-          <label slot="label"
-            >选择周次</label
-          >
-          <el-select v-model="form.weekly" placeholder="请选择周次">
-            <el-option
-              v-for="dict in weeklyOptions"
-              :key="dict.dictValue"
-              :label="dict.dictLabel"
-              :value="dict.dictValue"
-            ></el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item label="本周主题" prop="themeofweek">
-          <el-input v-model="form.themeofweek" placeholder="请输入本周主题" />
-        </el-form-item>
-        <el-form-item label="教学目标(社会)" prop="jxmbSh">
-          <Editor v-model="form.jxmbSh" placeholder="请输入教学目标(社会)" :quillIndex="0" toref="Editora"/>
-        </el-form-item>
-        <el-form-item label="教学目标(语言)" prop="jxmbYy">
-          <Editor v-model="form.jxmbYy" placeholder="请输入教学目标(语言)" :quillIndex="1" toref="Editora"/>
-        </el-form-item>
-        <el-form-item label="教学目标(健康)" prop="jxmbJk">
-          <Editor v-model="form.jxmbJk" placeholder="请输入教学目标(健康)" :quillIndex="2" toref="Editora"/>
-        </el-form-item>
-        <el-form-item label="教学目标(科学)" prop="jxmbKx">
-          <Editor v-model="form.jxmbKx" placeholder="请输入教学目标(科学)" :quillIndex="3" toref="Editora"/>
-        </el-form-item>
-        <el-form-item label="教学目标(艺术)" prop="jxmbYs">
-          <Editor v-model="form.jxmbYs" placeholder="请输入教学目标(艺术)" :quillIndex="4" toref="Editora"/>
-        </el-form-item>
-      </el-form>
+      <el-row :gutter="15">
+        <el-form ref="form" :model="form" :rules="rules" label-width="80px">
+          <el-col :span="12">
+            <el-form-item label="计划名称" prop="name">
+              <el-input v-model="form.name" placeholder="请输入计划名称" />
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="选择月份" prop="month">
+              <label slot="label">选择月份</label>
+              <el-date-picker
+                clearable
+                size="small"
+                class="my-date-picker"
+                v-model="form.month"
+                type="month"
+                value-format="yyyy-MM"
+                placeholder="选择月份"
+              ></el-date-picker>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="开始时间" prop="starttime">
+              <el-date-picker
+                clearable
+                size="small"
+                class="my-date-picker"
+                v-model="form.starttime"
+                type="date"
+                value-format="yyyy-MM-dd"
+                placeholder="选择开始时间"
+              ></el-date-picker>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="结束时间" prop="endtime">
+              <el-date-picker
+                clearable
+                size="small"
+                class="my-date-picker"
+                v-model="form.endtime"
+                type="date"
+                value-format="yyyy-MM-dd"
+                placeholder="选择结束时间"
+              ></el-date-picker>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="选择周次" prop="weekly">
+              <label slot="label">选择周次</label>
+              <el-select v-model="form.weekly" placeholder="请选择周次">
+                <el-option
+                  v-for="dict in weeklyOptions"
+                  :key="dict.dictValue"
+                  :label="dict.dictLabel"
+                  :value="dict.dictValue"
+                ></el-option>
+              </el-select>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="本周主题" prop="themeofweek">
+              <el-input
+                v-model="form.themeofweek"
+                placeholder="请输入本周主题"
+              />
+            </el-form-item>
+          </el-col>
+          <el-col :span="24">
+            <el-form-item label="教学目标(社会)" prop="jxmbSh">
+              <Editor
+                v-model="form.jxmbSh"
+                placeholder="请输入教学目标(社会)"
+                :quillIndex="0"
+                toref="Editora"
+              />
+            </el-form-item>
+          </el-col>
+          <el-col :span="24">
+            <el-form-item label="教学目标(语言)" prop="jxmbYy">
+              <Editor
+                v-model="form.jxmbYy"
+                placeholder="请输入教学目标(语言)"
+                :quillIndex="1"
+                toref="Editora"
+              />
+            </el-form-item>
+          </el-col>
+          <el-col :span="24">
+            <el-form-item label="教学目标(健康)" prop="jxmbJk">
+              <Editor
+                v-model="form.jxmbJk"
+                placeholder="请输入教学目标(健康)"
+                :quillIndex="2"
+                toref="Editora"
+              />
+            </el-form-item>
+          </el-col>
+          <el-col :span="24">
+            <el-form-item label="教学目标(科学)" prop="jxmbKx">
+              <Editor
+                v-model="form.jxmbKx"
+                placeholder="请输入教学目标(科学)"
+                :quillIndex="3"
+                toref="Editora"
+              />
+            </el-form-item>
+          </el-col>
+          <el-col :span="24">
+            <el-form-item label="教学目标(艺术)" prop="jxmbYs">
+              <Editor
+                v-model="form.jxmbYs"
+                placeholder="请输入教学目标(艺术)"
+                :quillIndex="4"
+                toref="Editora"
+              />
+            </el-form-item>
+          </el-col>
+        </el-form>
+      </el-row>
       <div slot="footer" class="dialog-footer">
         <el-button type="primary" @click="submitForm">确 定</el-button>
         <el-button @click="cancel">取 消</el-button>
@@ -581,6 +637,12 @@ export default {
       const id = row.id;
       this.$router.push({
         path: "/benyi_course/planweekprint/table/" + id,
+      });
+    },
+    handleActity(row) {
+      const id = row.id;
+      this.$router.push({
+        path: "/benyi_course/planweek/data/" + id,
       });
     },
   },

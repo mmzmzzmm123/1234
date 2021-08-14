@@ -161,6 +161,7 @@
       :title="title"
       :visible.sync="open"
       class="v-dialog"
+      width="900px"
       append-to-body
     >
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
