@@ -22,7 +22,7 @@
             >
           </div>
           <h3>一、基础信息</h3>
-          <TableDetailMessage :data="punchLogDetail"></TableDetailMessage>
+          <TableDetailMessage :data="punchLogDetail" :maxLength="10" />
           <h3>二、食物以及对比照信息</h3>
           <div style="height: 370px; overflow: auto">
             <div v-if="punchLog != null && punchLog.ingredientDesc">
@@ -40,6 +40,7 @@
                     title="点击大图预览"
                     :key="'breakfast' + index"
                     class="food_image_first"
+                    fit="cover"
                     :src="item"
                     :preview-src-list="imageUrl"
                   >
@@ -54,6 +55,7 @@
                     title="点击大图预览"
                     :key="'lunch' + index"
                     class="food_image"
+                    fit="cover"
                     :src="item"
                     :preview-src-list="imageUrl"
                   >
@@ -68,6 +70,7 @@
                     title="点击大图预览"
                     :key="'dinner' + index"
                     class="food_image"
+                    fit="cover"
                     :src="item"
                     :preview-src-list="imageUrl"
                   >
@@ -82,10 +85,17 @@
                     title="点击大图预览"
                     :key="'extraMeal' + index"
                     class="food_image"
+                    fit="cover"
                     :src="item"
                     :preview-src-list="imageUrl"
                   >
                   </el-image>
+                </div>
+              </div>
+              <div v-if="punchLog != null && punchLog.bodyDesc">
+                <h4>对比照描述</h4>
+                <div>
+                  {{ punchLog.bodyDesc }}
                 </div>
               </div>
               <div v-if="punchLog.imagesUrl.bodyImages.length > 0">
@@ -96,6 +106,7 @@
                     title="点击大图预览"
                     :key="index"
                     style="width: 300px; height: 300px"
+                    fit="cover"
                     :src="item"
                     :preview-src-list="imageUrl"
                   >
@@ -167,19 +178,21 @@ export default {
       punchLogDetail: [],
       //打卡详情的标题，按竖显示
       punchTitleData: [
-        ["姓名", "体重(斤)", "饮水量(ml)"],
-        ["睡觉时间", "起床时间", "运动锻炼"],
-        ["情绪", "按食谱进食", "其他食物"],
-        ["熬夜失眠", "起床排便", "是否便秘"],
-        ["服务建议", "评分", "点评内容"],
+        [],
+        ["睡觉时间", "情绪状况", "运动锻炼"],
+        ["起床时间", "情绪描述", "运动描述"],
+        ["排便情况", "按营养餐吃", "食谱外食物"],
+        ["排便描述", "营养餐感受", "熬夜失眠"],
+        ["评分", "点评内容"],
       ],
       //打卡详情的属性名称，与标题对应，按竖显示
       punchValueData: [
-        ["customerName", "weight", "water"],
-        ["sleepTime", "wakeupTime", "sport"],
-        ["emotion", "diet", "slyEatFood"],
-        ["insomnia", "defecation", "constipation"],
-        ["remark", "executionScore", "comment"],
+        [],
+        ["sleepTime", "emotion", "sport"],
+        ["wakeupTime", "emotionDesc", "sportDesc"],
+        ["defecation", "diet", "slyEatFood"],
+        ["defecationDesc", "dietDesc", "insomnia"],
+        ["executionScore", "comment"],
       ],
 
       commentVisible: false,
@@ -212,6 +225,13 @@ export default {
     },
     showDialog(data, callback) {
       this.data = data;
+      if (data.sex) {
+        this.punchTitleData[0] = ["体重(斤)", "饮水量(ml)", "生理期"];
+        this.punchValueData[0] = ["weight", "water", "menstrualPeriod"];
+      } else {
+        this.punchTitleData[0] = ["体重(斤)", "饮水量(ml)"];
+        this.punchValueData[0] = ["weight", "water"];
+      }
       this.callback = callback;
       this.commentFlag = false;
       this.title = `「${data.customerName}` + " " + `${data.logTime}」打卡记录`;
@@ -228,6 +248,9 @@ export default {
           res.data.defecation = res.data.defecation === "Y" ? "是" : "否";
           res.data.constipation = res.data.constipation === "Y" ? "是" : "否";
           res.data.isScore = res.data.executionScore == null ? "否" : "是";
+          res.data.menstrualPeriod =
+            res.data.menstrualPeriod == "N" ? "否" : "是";
+
           this.punchLogDetail = [];
           for (let i = 0; i < this.punchTitleData.length; i++) {
             this.punchLogDetail.push({
@@ -300,13 +323,17 @@ export default {
 
 <style lang="scss" scoped>
 .food_image_first {
-  width: 280px;
-  height: 300px;
+  width: 160px;
+  height: 160px;
+  border-radius: 16px;
+  margin: 8px;
 }
 
 .food_image {
-  width: 280px;
-  height: 300px;
+  width: 160px;
+  height: 160px;
   //margin-left:10px
+  margin: 8px;
+  border-radius: 16px;
 }
 </style>
