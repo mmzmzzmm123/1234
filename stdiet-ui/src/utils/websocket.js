@@ -21,7 +21,7 @@ function connect() {
       intervalRef && clearInterval(intervalRef);
 
       setInterval(() => {
-        ws.send("ping");
+        ws && ws.send("ping");
       }, 30000);
 
       window.addEventListener("message", handleOnMessageReceive);
@@ -39,7 +39,7 @@ function connect() {
 
     ws.onerror = event => {
       // console.log({ event });
-      ws.close();
+      ws && ws.close();
       ws = undefined;
       window.removeEventListener("message", handleOnMessageReceive);
 
@@ -51,7 +51,7 @@ function connect() {
       ws = undefined;
       window.removeEventListener("message", handleOnMessageReceive);
       // if (event.reason !== "unmount") {
-        // websocketInit();
+      // websocketInit();
       // }
     };
   } catch (error) {

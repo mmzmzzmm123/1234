@@ -472,11 +472,15 @@ public class WechatAppletController extends BaseController {
                 curWxUserInfo.setSex(customerPhysicalSigns.getSex().toString());
                 curWxUserInfo.setHeight(customerPhysicalSigns.getTall());
                 curWxUserInfo.setAge(customerPhysicalSigns.getAge());
+                curWxUserInfo.setStartDate(customerPhysicalSigns.getCreateTime());
+                curWxUserInfo.setWeight(customerPhysicalSigns.getWeight());
             }
         } else {
             curWxUserInfo.setSex(customerHealthy.getSex().toString());
             curWxUserInfo.setHeight(customerHealthy.getTall());
             curWxUserInfo.setAge(Math.toIntExact(customerHealthy.getAge()));
+            curWxUserInfo.setStartDate(customerHealthy.getCreateTime());
+            curWxUserInfo.setWeight(customerHealthy.getWeight());
         }
 
         curWxUserInfo.setCustomerId(AesUtils.encrypt(curWxUserInfo.getCusId().toString()));

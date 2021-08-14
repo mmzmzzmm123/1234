@@ -1,9 +1,11 @@
 package com.stdiet.custom.domain;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.stdiet.common.annotation.Excel;
 import lombok.Data;
 
+import java.math.BigDecimal;
 import java.util.Date;
 
 /**
@@ -27,6 +29,11 @@ public class SysWxUserInfo {
     private Integer height;
 
     private Integer age;
+
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    private Date startDate;
+
+    private BigDecimal weight;
 
     /**
      * 昵称
