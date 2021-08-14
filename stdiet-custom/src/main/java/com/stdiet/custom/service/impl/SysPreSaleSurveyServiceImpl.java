@@ -7,6 +7,7 @@ import java.util.Map;
 import com.stdiet.common.utils.DateUtils;
 import com.stdiet.common.utils.HealthyUtils;
 import com.stdiet.custom.utils.NutritionalUtils;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.stdiet.custom.mapper.SysPreSaleSurveyMapper;
@@ -106,5 +107,16 @@ public class SysPreSaleSurveyServiceImpl implements ISysPreSaleSurveyService
     @Override
     public SysPreSaleSurvey getSysPreSaleSurveyByKey(String customerKey){
         return sysPreSaleSurveyMapper.getSysPreSaleSurveyByKey(customerKey);
+    }
+
+    /**
+     * 查询字典Label值
+     * @param dictType
+     * @param dictValue
+     * @return
+     */
+    @Override
+    public List<Map<String,Object>> getDictLabelByIds(String dictType, String dictValue){
+        return sysPreSaleSurveyMapper.getDictLabelByIds(dictType, dictValue);
     }
 }
