@@ -22,8 +22,10 @@
     <sql id="selectByThemeVoTree">
         select dict_value+9999 id, 0 parent_id,dict_label name,dict_sort sort   from sys_dict_data where dict_type='sys_yebjlx' and dict_label !='托班（2-3岁）'
         union all
-        select id, classid+9999, name, sort from by_theme
-        order by sort
+        select id+99999, classid+9999, name, sort from by_theme
+        union all
+		select id,themeid+99999,name,sort from by_theme_activity
+		order by sort
     </sql>
 
     <select id="selectByThemeListTree" parameterType="ByTheme" resultMap="ByThemeResult">

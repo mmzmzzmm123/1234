@@ -78,7 +78,7 @@
 
 <script>
 import { treeselect, getTheme } from "@/api/benyi/theme";
-import { listActivity } from "@/api/benyi/activity";
+import { listActivity, getActivity } from "@/api/benyi/activity";
 import Editor from "@/components/Editor";
 
 export default {
@@ -119,6 +119,7 @@ export default {
       },
       // 查询参数
       queryParams: {
+        id: undefined,
         themeid: undefined,
       },
     };
@@ -181,18 +182,24 @@ export default {
     // 节点单击事件
     handleNodeClick(data) {
       this.id = data.id;
-      console.log(data.id);
-      if (data.id >= 9999) {
-      } else {
+      //console.log(data.id);
+      if (data.id >= 9999 && data.id < 99999) {
+      } else if (data.id >= 99999) {
+        //console.log("2jiedian");
+        this.id = this.id - 99999;
         this.title = data.label;
         this.getThemeDetails();
+      } else {
+        this.title = data.label;
+        this.getThemeDetail();
+        //console.log("最后节点");
       }
       // console.log(this.dayflowtaskList[date.id])
       // this.getStandardList();
     },
     getThemeDetails() {
       getTheme(this.id).then((response) => {
-        console.log(response);
+        //console.log(response);
         if (response.code == "200") {
           this.title1 = "主题网络";
           this.title2 = "家园沟通";
@@ -200,13 +207,28 @@ export default {
           this.note = response.data.content;
           this.communicate = response.data.communicate;
           this.queryParams.themeid = response.data.id;
+          this.queryParams.id = "";
 
           listActivity(this.queryParams).then((req) => {
-            console.log(req);
+            //console.log(req);
             if (req.code == "200") {
               this.activityList = req.rows;
             }
           });
+        }
+      });
+    },
+    getThemeDetail() {
+      this.title1 = "";
+      this.title2 = "";
+      this.title3 = "活动方案";
+      this.queryParams.id = this.id;
+      this.queryParams.themeid = "";
+      //console.log(this.id);
+      listActivity(this.queryParams).then((req) => {
+        //console.log(req);
+        if (req.code == "200") {
+          this.activityList = req.rows;
         }
       });
     },
