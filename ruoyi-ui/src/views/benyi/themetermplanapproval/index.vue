@@ -236,7 +236,7 @@
 
 <script>
 import {
-  listTermplan,
+  listTermplansp,
   getTermplan,
   updateTermplan,
 } from "@/api/benyi/themetermplan";
@@ -342,7 +342,7 @@ export default {
     /** 查询主题整合学期计划列表 */
     getList() {
       this.loading = true;
-      listTermplan(this.queryParams).then((response) => {
+      listTermplansp(this.queryParams).then((response) => {
         this.termplanList = response.rows;
         this.total = response.total;
         this.loading = false;

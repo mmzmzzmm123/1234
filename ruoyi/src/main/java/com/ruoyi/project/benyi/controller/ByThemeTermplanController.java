@@ -71,6 +71,19 @@ public class ByThemeTermplanController extends BaseController {
     }
 
     /**
+     * 查询主题整合学期计划列表
+     */
+    @PreAuthorize("@ss.hasPermi('benyi:themetermplan:list')")
+    @GetMapping("/listsp")
+    public TableDataInfo listsp(ByThemeTermplan byThemeTermplan) {
+        byThemeTermplan.setSchoolid(SecurityUtils.getLoginUser().getUser().getDept().getDeptId());
+        List<ByThemeTermplan> list = null;
+        startPage();
+        list = byThemeTermplanService.selectByThemeTermplanList(byThemeTermplan);
+        return getDataTable(list);
+    }
+
+    /**
      * 导出主题整合学期计划列表
      */
     @PreAuthorize("@ss.hasPermi('benyi:themetermplan:export')")

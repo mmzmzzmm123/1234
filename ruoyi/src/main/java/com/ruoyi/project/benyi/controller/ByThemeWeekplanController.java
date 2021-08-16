@@ -80,6 +80,21 @@ public class ByThemeWeekplanController extends BaseController {
     }
 
     /**
+     * 查询主题整合周计划（根据月计划明细）列表
+     */
+    @PreAuthorize("@ss.hasPermi('benyi:themeweekplan:list')")
+    @GetMapping("/listsp")
+    public TableDataInfo listsp(ByThemeWeekplan byThemeWeekplan) {
+
+        byThemeWeekplan.setSchoolid(SecurityUtils.getLoginUser().getUser().getDept().getDeptId());
+        List<ByThemeWeekplan> list = null;
+        startPage();
+        list = byThemeWeekplanService.selectByThemeWeekplanList(byThemeWeekplan);
+
+        return getDataTable(list);
+    }
+
+    /**
      * 导出主题整合周计划（根据月计划明细）列表
      */
     @PreAuthorize("@ss.hasPermi('benyi:themeweekplan:export')")

@@ -114,6 +114,7 @@ public class SchoolCommon {
     public String getClassId() {
 //        String strClassId = "-1";
         SysUser sysUser = getUser();
+
         ByClass byClass = new ByClass();
         //根据用户id来设置主班教师,配班教师,助理教师的教师id
         byClass.setZbjs(sysUser.getUserId());
@@ -144,6 +145,40 @@ public class SchoolCommon {
 //                //没设置角色
 //                strClassId = "-1";
 //            }
+        }
+        return "";
+    }
+
+    /**
+     * 判断当前用户是否拥有班级
+     **/
+    public String getClassIdOrSchoolAdmin() {
+        String strClassId = "";
+        SysUser sysUser = getUser();
+        List<SysRole> list = SecurityUtils.getLoginUser().getUser().getRoles();
+        System.out.println("roles:" + list.size());
+
+        if (list != null && list.size() > 0) {
+            for (int i = 0; i < list.size(); i++) {
+                String strKey = list.get(i).getRoleKey();
+                if (strKey.equals("school_admin") || strKey.equals("school_director")) {
+                    strClassId = "~";
+                }
+            }
+        }
+        ByClass byClass = new ByClass();
+        //根据用户id来设置主班教师,配班教师,助理教师的教师id
+        byClass.setZbjs(sysUser.getUserId());
+        byClass.setPbjs(sysUser.getUserId());
+        byClass.setZljs(sysUser.getUserId());
+        //新的返回byclassNew返回整条数据
+        ByClass byClassNew = byClassService.selectByClassByUserId(byClass);
+        //System.out.println("--------------------" + byClassNew);
+        if (byClassNew != null) {
+            //如果实体byclassnew不为空,那么取出它的班级编号
+            strClassId = strClassId + byClassNew.getBjbh();
+            return strClassId;
+        } else {
         }
         return "";
     }

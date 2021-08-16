@@ -75,6 +75,19 @@ public class ByThemeMonthplanController extends BaseController {
     }
 
     /**
+     * 查询主题整合月计划列表
+     */
+    @PreAuthorize("@ss.hasPermi('benyi:thememonthplan:list')")
+    @GetMapping("/listsp")
+    public TableDataInfo listsp(ByThemeMonthplan byThemeMonthplan) {
+        byThemeMonthplan.setSchoolid(SecurityUtils.getLoginUser().getUser().getDept().getDeptId());
+        List<ByThemeMonthplan> list = null;
+        startPage();
+        list = byThemeMonthplanService.selectByThemeMonthplanList(byThemeMonthplan);
+        return getDataTable(list);
+    }
+
+    /**
      * 导出主题整合月计划列表
      */
     @PreAuthorize("@ss.hasPermi('benyi:thememonthplan:export')")

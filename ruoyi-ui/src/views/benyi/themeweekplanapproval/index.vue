@@ -265,7 +265,7 @@
 
 <script>
 import {
-  listWeekplan,
+  listWeekplansp,
   getWeekplan,
   updateWeekplan,
 } from "@/api/benyi/themeweekplan";
@@ -373,7 +373,7 @@ export default {
     /** 查询主题整合周计划（根据月计划明细）列表 */
     getList() {
       this.loading = true;
-      listWeekplan(this.queryParams).then((response) => {
+      listWeekplansp(this.queryParams).then((response) => {
         this.weekplanList = response.rows;
         this.total = response.total;
         this.loading = false;

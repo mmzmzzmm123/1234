@@ -9,6 +9,15 @@ export function listTermplan(query) {
   })
 }
 
+// 查询主题整合学期计划列表
+export function listTermplansp(query) {
+  return request({
+    url: '/benyi/themetermplan/listsp',
+    method: 'get',
+    params: query
+  })
+}
+
 // 查询主题整合学期计划详细
 export function getTermplan(id) {
   return request({

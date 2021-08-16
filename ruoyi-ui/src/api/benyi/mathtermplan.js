@@ -9,6 +9,15 @@ export function listMathtermplan(query) {
     })
 }
 
+// 查询游戏数学学期计划列表
+export function listMathtermplansp(query) {
+    return request({
+        url: '/benyi/mathtermplan/listsp',
+        method: 'get',
+        params: query
+    })
+}
+
 // 查询游戏数学学期计划详细
 export function getMathtermplan(id) {
     return request({

@@ -9,6 +9,15 @@ export function listWeekplan(query) {
   })
 }
 
+// 查询主题整合周计划（根据月计划明细）列表
+export function listWeekplansp(query) {
+  return request({
+    url: '/benyi/themeweekplan/listsp',
+    method: 'get',
+    params: query
+  })
+}
+
 // 查询主题整合周计划（根据月计划明细）详细
 export function getWeekplan(id) {
   return request({

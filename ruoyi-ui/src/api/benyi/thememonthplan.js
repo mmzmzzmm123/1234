@@ -9,6 +9,15 @@ export function listMonthplan(query) {
   })
 }
 
+// 查询主题整合月计划列表
+export function listMonthplansp(query) {
+  return request({
+    url: '/benyi/thememonthplan/listsp',
+    method: 'get',
+    params: query
+  })
+}
+
 // 查询主题整合月计划详细
 export function getMonthplan(id) {
   return request({

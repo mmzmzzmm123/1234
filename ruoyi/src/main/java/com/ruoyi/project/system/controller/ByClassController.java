@@ -50,9 +50,15 @@ public class ByClassController extends BaseController {
     public TableDataInfo list(ByClass byClass) {
         List<ByClass> list = null;
         String classId = schoolCommon.getClassId();
+        String classIdAndschoolAdmin=schoolCommon.getClassIdOrSchoolAdmin();
         //如果是幼儿园教师 只显示当前班级
         if (schoolCommon.isSchool() && !schoolCommon.isStringEmpty(classId)) {
             byClass.setBjbh(classId);
+            //如果包含～ 说明是班级教师和管理员角色
+            if(classIdAndschoolAdmin.contains("~")){
+                System.out.println("多角色");
+                byClass.setBjbh("");
+            }
         } else {
         }
         startPage();

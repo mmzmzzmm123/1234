@@ -236,7 +236,7 @@
 
 <script>
 import {
-  listMathtermplan,
+  listMathtermplansp,
   getMathtermplan,
   delMathtermplan,
   addMathtermplan,
@@ -323,7 +323,7 @@ export default {
     /** 查询游戏数学学期计划列表 */
     getList() {
       this.loading = true;
-      listMathtermplan(this.queryParams).then((response) => {
+      listMathtermplansp(this.queryParams).then((response) => {
         this.mathtermplanList = response.rows;
         this.total = response.total;
         this.loading = false;

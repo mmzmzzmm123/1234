@@ -67,6 +67,19 @@ public class ByMathTermplanController extends BaseController {
     }
 
     /**
+     * 查询游戏数学学期计划列表
+     */
+    @PreAuthorize("@ss.hasPermi('benyi:mathtermplan:list')")
+    @GetMapping("/listsp")
+    public TableDataInfo listsp(ByMathTermplan byMathTermplan) {
+        byMathTermplan.setSchoolid(SecurityUtils.getLoginUser().getUser().getDept().getDeptId());
+        List<ByMathTermplan> list = null;
+        startPage();
+        list = byMathTermplanService.selectByMathTermplanList(byMathTermplan);
+        return getDataTable(list);
+    }
+
+    /**
      * 导出游戏数学学期计划列表
      */
     @PreAuthorize("@ss.hasPermi('benyi:mathtermplan:export')")

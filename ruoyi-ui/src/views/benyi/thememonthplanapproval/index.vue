@@ -270,7 +270,7 @@
 
 <script>
 import {
-  listMonthplan,
+  listMonthplansp,
   getMonthplan,
   updateMonthplan,
 } from "@/api/benyi/thememonthplan";
@@ -416,7 +416,7 @@ export default {
     /** 查询主题整合月计划列表 */
     getList() {
       this.loading = true;
-      listMonthplan(this.queryParams).then((response) => {
+      listMonthplansp(this.queryParams).then((response) => {
         this.monthplanList = response.rows;
         this.total = response.total;
         this.loading = false;
