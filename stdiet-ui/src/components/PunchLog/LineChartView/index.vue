@@ -69,7 +69,13 @@ export default {
       }
     },
     updateChart(source) {
-      const option = getOption(this.keyVal, source, this.label, this.unit, this.extra);
+      const option = getOption(
+        this.keyVal,
+        source,
+        this.label,
+        this.unit,
+        this.extra
+      );
       // console.log({ option });
       this.chart.clear();
       this.chart.setOption(option);
@@ -138,6 +144,6 @@ export default {
 </script>
 <style lang="scss" scoped>
 .chart_style_wrapper {
-  background: #4b8aff;
+  background: #FFECEC;
 }
 </style>
