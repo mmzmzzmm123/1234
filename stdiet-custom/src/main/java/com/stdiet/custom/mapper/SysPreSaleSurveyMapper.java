@@ -1,6 +1,8 @@
 package com.stdiet.custom.mapper;
 
 import java.util.List;
+import java.util.Map;
+
 import com.stdiet.custom.domain.SysPreSaleSurvey;
 import org.apache.ibatis.annotations.Param;
 
@@ -65,4 +67,12 @@ public interface SysPreSaleSurveyMapper
      * @return
      */
     public SysPreSaleSurvey getSysPreSaleSurveyByKey(@Param("customerKey")String customerKey);
+
+    /**
+     * 查询字典Label值
+     * @param dictType
+     * @param dictValue
+     * @return
+     */
+    public List<Map<String,Object>> getDictLabelByIds(@Param("dictType")String dictType, @Param("dictValue")String dictValue);
 }

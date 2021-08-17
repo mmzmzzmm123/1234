@@ -145,4 +145,12 @@
         where del_flag = 0 and customer_key = #{customerKey} limit 1
     </select>
 
+    <!-- 根据字典ID(可以使用，隔开的多个ID)获取对应字典值 -->
+    <select id="getDictLabelByIds" parameterType="String" resultType="Map">
+        select dict_label as dictLabel,dict_value as dictValue from sys_dict_data where status = '0' and dict_type = #{dictType}
+        <if test="dictValue != null and dictValue != ''">
+            and FIND_IN_SET(dict_value, #{dictValue})
+        </if>
+    </select>
+
 </mapper>

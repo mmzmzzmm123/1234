@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.stdiet.custom.domain.SysPreSaleSurvey;
+import org.apache.ibatis.annotations.Param;
 
 /**
  * 售前调查，销售给客户发送简易信息调查链接Service接口
@@ -66,4 +67,12 @@ public interface ISysPreSaleSurveyService
      * @return
      */
     public SysPreSaleSurvey getSysPreSaleSurveyByKey(String customerKey);
+
+    /**
+     * 查询字典Label值
+     * @param dictType
+     * @param dictValue
+     * @return
+     */
+    public List<Map<String,Object>> getDictLabelByIds(String dictType, String dictValue);
 }
