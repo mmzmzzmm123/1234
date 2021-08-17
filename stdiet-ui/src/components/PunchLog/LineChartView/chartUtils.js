@@ -7,7 +7,7 @@ function getComOption(title, data) {
       left: 5,
       top: 8,
       textStyle: {
-        color: "#fff"
+        // color: "#fff"
       }
     },
     textStyle: {
@@ -41,7 +41,7 @@ function getComOption(title, data) {
         color: "#fff"
       },
       handleStyle: {
-        borderColor: "#fff"
+        // borderColor: "#fff"
       }
       // filterMode: 'none',
     },
@@ -50,7 +50,7 @@ function getComOption(title, data) {
       type: "category",
       inverse: true,
       nameTextStyle: {
-        color: "#fff"
+        // color: "#fff"
       },
       axisLine: {
         show: false
@@ -60,7 +60,7 @@ function getComOption(title, data) {
       },
       axisLabel: {
         textStyle: {
-          color: "#fff"
+          // color: "#fff"
         },
         formatter: val => val.substr(5).replace("-", "/")
       },
@@ -73,7 +73,7 @@ function getComOption(title, data) {
       },
       axisLabel: {
         textStyle: {
-          color: "#fff"
+          // color: "#fff"
         }
       },
       axisTick: {
@@ -87,10 +87,10 @@ function getComOption(title, data) {
       {
         type: "line",
         lineStyle: {
-          color: "#fff"
+          color: "#FF6E67"
         },
         itemStyle: {
-          color: "#fff"
+          color: "#333"
         }
         // data,
       }
@@ -115,7 +115,7 @@ function getOption(type, data, title, unit, extra) {
       top: 16,
       style: {
         text: `单位：${unit}`,
-        fill: "#fff"
+        // fill: "#fff"
       }
     });
   }
@@ -126,7 +126,7 @@ function getOption(type, data, title, unit, extra) {
       top: 36,
       style: {
         text: extra,
-        fill: "#fff"
+        // fill: "#fff"
       }
     });
   }

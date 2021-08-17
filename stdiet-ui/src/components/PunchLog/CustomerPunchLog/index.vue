@@ -10,12 +10,22 @@
       <div v-if="data.length">
         <CursorChartView :data="getChartData('weight')" />
 
+        <el-button
+          icon="el-icon-view"
+          size="mini"
+          class="weigth_trend_button"
+          :style="`left: ${getTextWidth(title) + 30}px`"
+          @click="showPunchLogChart()"
+          >体重趋势图</el-button
+        >
+
         <div
           class="chart_zone_style"
           v-for="chart in chartList"
           :key="chart.keyVal"
         >
           <LineChartView
+            v-if="chart.keyVal"
             v-bind="chart"
             :data="getChartData(chart.keyVal)"
             @onClick="handleOnChartClick"
@@ -26,6 +36,8 @@
     </div>
     <!-- 详情 -->
     <PunchLogDetail ref="punchLogDetailRef"></PunchLogDetail>
+    <!-- 体重趋势图 -->
+    <PunchLogChart ref="punchLogChartRef"></PunchLogChart>
   </el-drawer>
 </template>
 <script>
@@ -34,6 +46,7 @@ import { getCustomerPhysicalSignsByCusId } from "@/api/custom/customer";
 import LineChartView from "../LineChartView";
 import CursorChartView from "../CursorChartView";
 import PunchLogDetail from "@/components/PunchLog/PunchLogDetail";
+import PunchLogChart from "@/components/PunchLog/PunchLogChart";
 
 export default {
   name: "punchLog",
@@ -41,6 +54,7 @@ export default {
     LineChartView,
     CursorChartView,
     PunchLogDetail,
+    PunchLogChart,
   },
   data() {
     return {
@@ -79,6 +93,18 @@ export default {
     },
     handleOnClosed() {
       this.userObj = undefined;
+    },
+    showPunchLogChart() {
+      this.$refs.punchLogChartRef.showDialog(this.userObj);
+    },
+    getTextWidth(text) {
+      const canvas = document.createElement("canvas");
+      document.body.appendChild(canvas);
+      const ctx = canvas.getContext("2d");
+      ctx.font = "16px Arial";
+      const { width } = ctx.measureText(text);
+      document.body.removeChild(canvas);
+      return Math.ceil(width);
     },
     fetchLogDatas() {
       this.loading = true;
@@ -146,6 +172,11 @@ export default {
 
   .empty_style {
     text-align: center;
+  }
+
+  .weigth_trend_button {
+    position: absolute;
+    top: 16px;
   }
 }
 </style>
