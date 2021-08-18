@@ -59,7 +59,7 @@
 </template>
 
 <script>
-import { unallocatedUserList, authUserSelectAll } from "@/api/system/role";
+import { unallocatedUserList, authUserSelectAll } from '@/api/system/role'
 export default {
   props: {
     // 角色编号
@@ -67,7 +67,7 @@ export default {
       type: [Number, String]
     }
   },
-  data() {
+  data () {
     return {
       // 遮罩层
       visible: false,
@@ -87,56 +87,56 @@ export default {
         userName: undefined,
         phonenumber: undefined
       }
-    };
+    }
   },
-  created() {
-    this.getDicts("sys_normal_disable").then(response => {
-      this.statusOptions = response.data;
-    });
+  created () {
+    this.getDicts('sys_normal_disable').then(response => {
+      this.statusOptions = response.data
+    })
   },
   methods: {
     // 显示弹框
-    show() {
-      this.queryParams.roleId = this.roleId;
-      this.getList();
-      this.visible = true;
+    show () {
+      this.queryParams.roleId = this.roleId
+      this.getList()
+      this.visible = true
     },
-    clickRow(row) {
-      this.$refs.table.toggleRowSelection(row);
+    clickRow (row) {
+      this.$refs.table.toggleRowSelection(row)
     },
     // 多选框选中数据
-    handleSelectionChange(selection) {
-      this.userIds = selection.map(item => item.userId);
+    handleSelectionChange (selection) {
+      this.userIds = selection.map(item => item.userId)
     },
     // 查询表数据
-    getList() {
+    getList () {
       unallocatedUserList(this.queryParams).then(res => {
-        this.userList = res.rows;
-        this.total = res.total;
-      });
+        this.userList = res.rows
+        this.total = res.total
+      })
     },
     /** 搜索按钮操作 */
-    handleQuery() {
-      this.queryParams.pageNum = 1;
-      this.getList();
+    handleQuery () {
+      this.queryParams.pageNum = 1
+      this.getList()
     },
     /** 重置按钮操作 */
-    resetQuery() {
-      this.resetForm("queryForm");
-      this.handleQuery();
+    resetQuery () {
+      this.resetForm('queryForm')
+      this.handleQuery()
     },
     /** 选择授权用户操作 */
-    handleSelectUser() {
-      const roleId = this.queryParams.roleId;
-      const userIds = this.userIds.join(",");
+    handleSelectUser () {
+      const roleId = this.queryParams.roleId
+      const userIds = this.userIds.join(',')
       authUserSelectAll({ roleId: roleId, userIds: userIds }).then(res => {
-        this.msgSuccess(res.msg);
+        this.msgSuccess(res.msg)
         if (res.code === 200) {
-          this.visible = false;
-          this.$emit("ok");
+          this.visible = false
+          this.$emit('ok')
         }
-      });
+      })
     }
   }
-};
+}
 </script>

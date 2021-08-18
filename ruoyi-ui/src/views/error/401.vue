@@ -30,13 +30,13 @@ import errGif from '@/assets/401_images/401.gif'
 
 export default {
   name: 'Page401',
-  data() {
+  data () {
     return {
       errGif: errGif + '?' + +new Date()
     }
   },
   methods: {
-    back() {
+    back () {
       if (this.$route.query.noGoBack) {
         this.$router.push({ path: '/' })
       } else {

@@ -41,7 +41,7 @@
       <el-divider/>
 
       <h3 class="drawer-title">系统布局配置</h3>
-      
+
       <div class="drawer-item">
         <span>开启 TopNav</span>
         <el-switch v-model="topNav" class="drawer-switch" />
@@ -80,18 +80,18 @@ import ThemePicker from '@/components/ThemePicker'
 
 export default {
   components: { ThemePicker },
-  data() {
+  data () {
     return {
       theme: this.$store.state.settings.theme,
       sideTheme: this.$store.state.settings.sideTheme
-    };
+    }
   },
   computed: {
     fixedHeader: {
-      get() {
+      get () {
         return this.$store.state.settings.fixedHeader
       },
-      set(val) {
+      set (val) {
         this.$store.dispatch('settings/changeSetting', {
           key: 'fixedHeader',
           value: val
@@ -99,24 +99,24 @@ export default {
       }
     },
     topNav: {
-      get() {
+      get () {
         return this.$store.state.settings.topNav
       },
-      set(val) {
+      set (val) {
         this.$store.dispatch('settings/changeSetting', {
           key: 'topNav',
           value: val
         })
         if (!val) {
-          this.$store.commit("SET_SIDEBAR_ROUTERS", this.$store.state.permission.defaultRoutes);
+          this.$store.commit('SET_SIDEBAR_ROUTERS', this.$store.state.permission.defaultRoutes)
         }
       }
     },
     tagsView: {
-      get() {
+      get () {
         return this.$store.state.settings.tagsView
       },
-      set(val) {
+      set (val) {
         this.$store.dispatch('settings/changeSetting', {
           key: 'tagsView',
           value: val
@@ -124,10 +124,10 @@ export default {
       }
     },
     sidebarLogo: {
-      get() {
+      get () {
         return this.$store.state.settings.sidebarLogo
       },
-      set(val) {
+      set (val) {
         this.$store.dispatch('settings/changeSetting', {
           key: 'sidebarLogo',
           value: val
@@ -135,42 +135,42 @@ export default {
       }
     },
     dynamicTitle: {
-      get() {
+      get () {
         return this.$store.state.settings.dynamicTitle
       },
-      set(val) {
+      set (val) {
         this.$store.dispatch('settings/changeSetting', {
           key: 'dynamicTitle',
           value: val
         })
       }
-    },
+    }
   },
   methods: {
-    themeChange(val) {
+    themeChange (val) {
       this.$store.dispatch('settings/changeSetting', {
         key: 'theme',
         value: val
       })
-      this.theme = val;
+      this.theme = val
     },
-    handleTheme(val) {
+    handleTheme (val) {
       this.$store.dispatch('settings/changeSetting', {
         key: 'sideTheme',
         value: val
       })
-      this.sideTheme = val;
+      this.sideTheme = val
     },
-    saveSetting() {
+    saveSetting () {
       const loading = this.$loading({
         lock: true,
         fullscreen: false,
-        text: "正在保存到本地，请稍后...",
-        spinner: "el-icon-loading",
-        background: "rgba(0, 0, 0, 0.7)"
-      });
+        text: '正在保存到本地，请稍后...',
+        spinner: 'el-icon-loading',
+        background: 'rgba(0, 0, 0, 0.7)'
+      })
       localStorage.setItem(
-        "layout-setting",
+        'layout-setting',
         `{
             "topNav":${this.topNav},
             "tagsView":${this.tagsView},
@@ -180,19 +180,19 @@ export default {
             "sideTheme":"${this.sideTheme}",
             "theme":"${this.theme}"
           }`
-      );
+      )
       setTimeout(loading.close(), 1000)
     },
-    resetSetting() {
+    resetSetting () {
       this.$loading({
         lock: true,
         fullscreen: false,
-        text: "正在清除设置缓存并刷新，请稍后...",
-        spinner: "el-icon-loading",
-        background: "rgba(0, 0, 0, 0.7)"
-      });
-      localStorage.removeItem("layout-setting")
-      setTimeout("window.location.reload()", 1000)
+        text: '正在清除设置缓存并刷新，请稍后...',
+        spinner: 'el-icon-loading',
+        background: 'rgba(0, 0, 0, 0.7)'
+      })
+      localStorage.removeItem('layout-setting')
+      setTimeout(window.location.reload(), 1000)
     }
   }
 }

@@ -9,34 +9,34 @@ import screenfull from 'screenfull'
 
 export default {
   name: 'Screenfull',
-  data() {
+  data () {
     return {
       isFullscreen: false
     }
   },
-  mounted() {
+  mounted () {
     this.init()
   },
-  beforeDestroy() {
+  beforeDestroy () {
     this.destroy()
   },
   methods: {
-    click() {
+    click () {
       if (!screenfull.isEnabled) {
         this.$message({ message: '你的浏览器不支持全屏', type: 'warning' })
         return false
       }
       screenfull.toggle()
     },
-    change() {
+    change () {
       this.isFullscreen = screenfull.isFullscreen
     },
-    init() {
+    init () {
       if (screenfull.isEnabled) {
         screenfull.on('change', this.change)
       }
     },
-    destroy() {
+    destroy () {
       if (screenfull.isEnabled) {
         screenfull.off('change', this.change)
       }

@@ -1,7 +1,7 @@
 import request from '@/utils/request'
 
 // 登录方法
-export function login(username, password, code, uuid) {
+export function login (username, password, code, uuid) {
   const data = {
     username,
     password,
@@ -16,7 +16,7 @@ export function login(username, password, code, uuid) {
 }
 
 // 注册方法
-export function register(data) {
+export function register (data) {
   return request({
     url: '/register',
     headers: {
@@ -28,7 +28,7 @@ export function register(data) {
 }
 
 // 获取用户详细信息
-export function getInfo() {
+export function getInfo () {
   return request({
     url: '/getInfo',
     method: 'get'
@@ -36,7 +36,7 @@ export function getInfo() {
 }
 
 // 退出方法
-export function logout() {
+export function logout () {
   return request({
     url: '/logout',
     method: 'post'
@@ -44,7 +44,7 @@ export function logout() {
 }
 
 // 获取验证码
-export function getCodeImg() {
+export function getCodeImg () {
   return request({
     url: '/captchaImage',
     method: 'get'

@@ -1,4 +1,3 @@
-import { isArray } from 'util'
 import { exportDefault, titleCase } from '@/utils/index'
 import { trigger } from './config'
 
@@ -13,8 +12,7 @@ const inheritAttrs = {
   dialog: 'inheritAttrs: false,'
 }
 
-
-export function makeUpJs(conf, type) {
+export function makeUpJs (conf, type) {
   confGlobal = conf = JSON.parse(JSON.stringify(conf))
   const dataList = []
   const ruleList = []
@@ -41,7 +39,7 @@ export function makeUpJs(conf, type) {
   return script
 }
 
-function buildAttributes(el, dataList, ruleList, optionsList, methodList, propsList, uploadVarList) {
+function buildAttributes (el, dataList, ruleList, optionsList, methodList, propsList, uploadVarList) {
   buildData(el, dataList)
   buildRules(el, ruleList)
 
@@ -76,36 +74,38 @@ function buildAttributes(el, dataList, ruleList, optionsList, methodList, propsL
   }
 }
 
-function mixinMethod(type) {
-  const list = []; const
-    minxins = {
-      file: confGlobal.formBtns ? {
-        submitForm: `submitForm() {
-        this.$refs['${confGlobal.formRef}'].validate(valid => {
-          if(!valid) return
-          // TODO 提交表单
+function mixinMethod (type) {
+  const list = []
+  const minxins = {
+    file: confGlobal.formBtns
+      ? ({
+          submitForm: `submitForm() {
+            this.$refs['${confGlobal.formRef}'].validate(valid => {
+              if(!valid) return
+              // TODO 提交表单
+            })
+          },`,
+          resetForm: `resetForm() {
+            this.$refs['${confGlobal.formRef}'].resetFields()
+          },`
         })
-      },`,
-        resetForm: `resetForm() {
-        this.$refs['${confGlobal.formRef}'].resetFields()
-      },`
-      } : null,
-      dialog: {
-        onOpen: 'onOpen() {},',
-        onClose: `onClose() {
+      : null,
+    dialog: {
+      onOpen: 'onOpen() {},',
+      onClose: `onClose() {
         this.$refs['${confGlobal.formRef}'].resetFields()
       },`,
-        close: `close() {
+      close: `close() {
         this.$emit('update:visible', false)
       },`,
-        handelConfirm: `handelConfirm() {
+      handelConfirm: `handelConfirm() {
         this.$refs['${confGlobal.formRef}'].validate(valid => {
           if(!valid) return
           this.close()
         })
       },`
-      }
     }
+  }
 
   const methods = minxins[type]
   if (methods) {
@@ -117,7 +117,7 @@ function mixinMethod(type) {
   return list
 }
 
-function buildData(conf, dataList) {
+function buildData (conf, dataList) {
   if (conf.vModel === undefined) return
   let defaultValue
   if (typeof (conf.defaultValue) === 'string' && !conf.multiple) {
@@ -128,19 +128,20 @@ function buildData(conf, dataList) {
   dataList.push(`${conf.vModel}: ${defaultValue},`)
 }
 
-function buildRules(conf, ruleList) {
+function buildRules (conf, ruleList) {
   if (conf.vModel === undefined) return
   const rules = []
   if (trigger[conf.tag]) {
     if (conf.required) {
-      const type = isArray(conf.defaultValue) ? 'type: \'array\',' : ''
-      let message = isArray(conf.defaultValue) ? `请至少选择一个${conf.vModel}` : conf.placeholder
+      const type = Array.isArray(conf.defaultValue) ? 'type: \'array\',' : ''
+      let message = Array.isArray(conf.defaultValue) ? `请至少选择一个${conf.vModel}` : conf.placeholder
       if (message === undefined) message = `${conf.label}不能为空`
       rules.push(`{ required: true, ${type} message: '${message}', trigger: '${trigger[conf.tag]}' }`)
     }
-    if (conf.regList && isArray(conf.regList)) {
+    if (conf.regList && Array.isArray(conf.regList)) {
       conf.regList.forEach(item => {
         if (item.pattern) {
+          // eslint-disable-next-line no-eval
           rules.push(`{ pattern: ${eval(item.pattern)}, message: '${item.message}', trigger: '${trigger[conf.tag]}' }`)
         }
       })
@@ -149,14 +150,16 @@ function buildRules(conf, ruleList) {
   }
 }
 
-function buildOptions(conf, optionsList) {
+function buildOptions (conf, optionsList) {
   if (conf.vModel === undefined) return
-  if (conf.dataType === 'dynamic') { conf.options = [] }
+  if (conf.dataType === 'dynamic') {
+    conf.options = []
+  }
   const str = `${conf.vModel}Options: ${JSON.stringify(conf.options)},`
   optionsList.push(str)
 }
 
-function buildProps(conf, propsList) {
+function buildProps (conf, propsList) {
   if (conf.dataType === 'dynamic') {
     conf.valueKey !== 'value' && (conf.props.props.value = conf.valueKey)
     conf.labelKey !== 'label' && (conf.props.props.label = conf.labelKey)
@@ -166,9 +169,11 @@ function buildProps(conf, propsList) {
   propsList.push(str)
 }
 
-function buildBeforeUpload(conf) {
-  const unitNum = units[conf.sizeUnit]; let rightSizeCode = ''; let acceptCode = ''; const
-    returnList = []
+function buildBeforeUpload (conf) {
+  const unitNum = units[conf.sizeUnit]
+  let rightSizeCode = ''
+  let acceptCode = ''
+  const returnList = []
   if (conf.fileSize) {
     rightSizeCode = `let isRightSize = file.size / ${unitNum} < ${conf.fileSize}
     if(!isRightSize){
@@ -191,14 +196,14 @@ function buildBeforeUpload(conf) {
   return returnList.length ? str : ''
 }
 
-function buildSubmitUpload(conf) {
+function buildSubmitUpload (conf) {
   const str = `submitUpload() {
     this.$refs['${conf.vModel}'].submit()
   },`
   return str
 }
 
-function buildOptionMethod(methodName, model, methodList) {
+function buildOptionMethod (methodName, model, methodList) {
   const str = `${methodName}() {
     // TODO 发起请求获取数据
     this.${model}
@@ -206,7 +211,7 @@ function buildOptionMethod(methodName, model, methodList) {
   methodList.push(str)
 }
 
-function buildexport(conf, type, data, rules, selectOptions, uploadVar, props, methods) {
+function buildexport (conf, type, data, rules, selectOptions, uploadVar, props, methods) {
   const str = `${exportDefault}{
   ${inheritAttrs[type]}
   components: {},

@@ -140,7 +140,6 @@ import draggable from 'vuedraggable'
 import { saveAs } from 'file-saver'
 import beautifier from 'js-beautify'
 import ClipboardJS from 'clipboard'
-import render from '@/utils/generator/render'
 import RightPanel from './RightPanel'
 import {
   inputComponents,
@@ -149,7 +148,7 @@ import {
   formConf
 } from '@/utils/generator/config'
 import {
-  exportDefault, beautifierConf, isNumberStr, titleCase
+  beautifierConf, titleCase
 } from '@/utils/index'
 import {
   makeUpHtml, vueTemplate, vueScript, cssStyle
@@ -161,19 +160,17 @@ import logo from '@/assets/logo/logo.png'
 import CodeTypeDialog from './CodeTypeDialog'
 import DraggableItem from './DraggableItem'
 
-const emptyActiveData = { style: {}, autosize: {} }
 let oldActiveId
 let tempActiveData
 
 export default {
   components: {
     draggable,
-    render,
     RightPanel,
     CodeTypeDialog,
     DraggableItem
   },
-  data() {
+  data () {
     return {
       logo,
       idGlobal: 100,
@@ -193,7 +190,7 @@ export default {
       activeData: drawingDefalut[0]
     }
   },
-  created() {
+  created () {
     // 防止 firefox 下 拖拽 会新打卡一个选项卡
     document.body.ondrop = event => {
       event.preventDefault()
@@ -201,25 +198,24 @@ export default {
     }
   },
   watch: {
-    // eslint-disable-next-line func-names
     'activeData.label': function (val, oldVal) {
       if (
-        this.activeData.placeholder === undefined
-        || !this.activeData.tag
-        || oldActiveId !== this.activeId
+        this.activeData.placeholder === undefined ||
+        !this.activeData.tag ||
+        oldActiveId !== this.activeId
       ) {
         return
       }
       this.activeData.placeholder = this.activeData.placeholder.replace(oldVal, '') + val
     },
     activeId: {
-      handler(val) {
+      handler (val) {
         oldActiveId = val
       },
       immediate: true
     }
   },
-  mounted() {
+  mounted () {
     const clipboard = new ClipboardJS('#copyNode', {
       text: trigger => {
         const codeStr = this.generateCode()
@@ -236,22 +232,22 @@ export default {
     })
   },
   methods: {
-    activeFormItem(element) {
+    activeFormItem (element) {
       this.activeData = element
       this.activeId = element.formId
     },
-    onEnd(obj, a) {
+    onEnd (obj, a) {
       if (obj.from !== obj.to) {
         this.activeData = tempActiveData
         this.activeId = this.idGlobal
       }
     },
-    addComponent(item) {
+    addComponent (item) {
       const clone = this.cloneComponent(item)
       this.drawingList.push(clone)
       this.activeFormItem(clone)
     },
-    cloneComponent(origin) {
+    cloneComponent (origin) {
       const clone = JSON.parse(JSON.stringify(origin))
       clone.formId = ++this.idGlobal
       clone.span = formConf.span
@@ -269,43 +265,43 @@ export default {
       }
       return tempActiveData
     },
-    AssembleFormData() {
+    AssembleFormData () {
       this.formData = {
         fields: JSON.parse(JSON.stringify(this.drawingList)),
         ...this.formConf
       }
     },
-    generate(data) {
+    generate (data) {
       const func = this[`exec${titleCase(this.operationType)}`]
       this.generateConf = data
       func && func(data)
     },
-    execRun(data) {
+    execRun (data) {
       this.AssembleFormData()
       this.drawerVisible = true
     },
-    execDownload(data) {
+    execDownload (data) {
       const codeStr = this.generateCode()
       const blob = new Blob([codeStr], { type: 'text/plain;charset=utf-8' })
       saveAs(blob, data.fileName)
     },
-    execCopy(data) {
+    execCopy (data) {
       document.getElementById('copyNode').click()
     },
-    empty() {
+    empty () {
       this.$confirm('确定要清空所有组件吗？', '提示', { type: 'warning' }).then(
         () => {
           this.drawingList = []
         }
       )
     },
-    drawingItemCopy(item, parent) {
+    drawingItemCopy (item, parent) {
       let clone = JSON.parse(JSON.stringify(item))
       clone = this.createIdAndKey(clone)
       parent.push(clone)
       this.activeFormItem(clone)
     },
-    createIdAndKey(item) {
+    createIdAndKey (item) {
       item.formId = ++this.idGlobal
       item.renderKey = +new Date()
       if (item.layout === 'colFormItem') {
@@ -318,7 +314,7 @@ export default {
       }
       return item
     },
-    drawingItemDelete(index, parent) {
+    drawingItemDelete (index, parent) {
       parent.splice(index, 1)
       this.$nextTick(() => {
         const len = this.drawingList.length
@@ -327,7 +323,7 @@ export default {
         }
       })
     },
-    generateCode() {
+    generateCode () {
       const { type } = this.generateConf
       this.AssembleFormData()
       const script = vueScript(makeUpJs(this.formData, type))
@@ -335,22 +331,22 @@ export default {
       const css = cssStyle(makeUpCss(this.formData))
       return beautifier.html(html + script + css, beautifierConf.html)
     },
-    download() {
+    download () {
       this.dialogVisible = true
       this.showFileName = true
       this.operationType = 'download'
     },
-    run() {
+    run () {
       this.dialogVisible = true
       this.showFileName = false
       this.operationType = 'run'
     },
-    copy() {
+    copy () {
       this.dialogVisible = true
       this.showFileName = false
       this.operationType = 'copy'
     },
-    tagChange(newTag) {
+    tagChange (newTag) {
       newTag = this.cloneComponent(newTag)
       newTag.vModel = this.activeData.vModel
       newTag.formId = this.activeId
@@ -359,15 +355,15 @@ export default {
       delete this.activeData.tagIcon
       delete this.activeData.document
       Object.keys(newTag).forEach(key => {
-        if (this.activeData[key] !== undefined
-          && typeof this.activeData[key] === typeof newTag[key]) {
+        if (this.activeData[key] !== undefined &&
+          typeof this.activeData[key] === typeof newTag[key]) {
           newTag[key] = this.activeData[key]
         }
       })
       this.activeData = newTag
       this.updateDrawingList(newTag, this.drawingList)
     },
-    updateDrawingList(newTag, list) {
+    updateDrawingList (newTag, list) {
       const index = list.findIndex(item => item.formId === this.activeId)
       if (index > -1) {
         list.splice(index, 1, newTag)
