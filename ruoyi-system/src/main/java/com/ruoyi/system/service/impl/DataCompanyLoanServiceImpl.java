@@ -6,7 +6,6 @@ import com.ruoyi.common.constant.Constants;
 import com.ruoyi.common.constant.UserConstants;
 import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.core.redis.RedisCache;
-import com.ruoyi.common.exception.user.SmsException;
 import com.ruoyi.common.exception.user.UserException;
 import com.ruoyi.common.utils.DateUtils;
 import com.ruoyi.common.utils.StringUtils;
@@ -200,7 +199,13 @@ public class DataCompanyLoanServiceImpl implements IDataCompanyLoanService
             redisCache.setCacheObject(verifyKey, code, Constants.SMS_CODE_EXPIRATION, TimeUnit.MINUTES);
             return code;
         }else {
-            throw new UserException(null, null, response.toString());
+
+            String msg = (String) response.get(AjaxResult.MSG_TAG);
+            //TODO:暂时只处理此编码的错误
+            if (32 == resultCode){
+                msg = "同一号码发送次数太多,一天内手机号码验证码最大发送次数为5次";
+            }
+            throw new UserException(null , null, msg);
         }
 
     }

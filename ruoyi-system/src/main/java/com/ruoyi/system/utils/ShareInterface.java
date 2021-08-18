@@ -119,12 +119,16 @@ public class ShareInterface {
     public static JSONObject unTrustWorthyPersonnel(String xydm){
         String result = getInterface("http://222.77.0.158:18081/api-gateway/gateway/xozfst1w/api/HousingTransaction/UntrustworthyPersonnel", xydm);
         String formatStr = StringEscapeUtils.unescapeJson(result).trim();
+        if (StringUtils.isEmpty(result) || StringUtils.isEmpty(formatStr)){
+            return null;
+        }
         formatStr = formatStr.substring(1, formatStr.length()-1);
         return JSONObject.parseObject(formatStr);
     }
 
     public static boolean isTrust(String xydm){
         JSONObject jsonObject = unTrustWorthyPersonnel(xydm);
+        if (jsonObject == null)return true;
         JSONArray array = jsonObject.getJSONArray("data");
         int size = array.size();
         if (size == 0){
