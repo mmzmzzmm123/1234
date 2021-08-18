@@ -160,12 +160,12 @@
           </el-col>
           <el-col :span="24">
             <el-form-item label="执行状态：">
-              <div v-if="form.status == 0">正常</div>
-              <div v-else-if="form.status == 1">失败</div>
+              <div v-if="form.status === 0">正常</div>
+              <div v-else-if="form.status === 1">失败</div>
             </el-form-item>
           </el-col>
           <el-col :span="24">
-            <el-form-item label="异常信息：" v-if="form.status == 1">{{ form.exceptionInfo }}</el-form-item>
+            <el-form-item label="异常信息：" v-if="form.status === 1">{{ form.exceptionInfo }}</el-form-item>
           </el-col>
         </el-row>
       </el-form>
@@ -177,12 +177,12 @@
 </template>
 
 <script>
-import { getJob} from "@/api/monitor/job";
-import { listJobLog, delJobLog, exportJobLog, cleanJobLog } from "@/api/monitor/jobLog";
+import { getJob } from '@/api/monitor/job'
+import { listJobLog, delJobLog, exportJobLog, cleanJobLog } from '@/api/monitor/jobLog'
 
 export default {
-  name: "JobLog",
-  data() {
+  name: 'JobLog',
+  data () {
     return {
       // 遮罩层
       loading: true,
@@ -216,113 +216,113 @@ export default {
         jobGroup: undefined,
         status: undefined
       }
-    };
-  },
-  created() {
-    const jobId = this.$route.query.jobId;
-    if (jobId !== undefined && jobId != 0) {
-      getJob(jobId).then(response => {
-        this.queryParams.jobName = response.data.jobName;
-        this.queryParams.jobGroup = response.data.jobGroup;
-        this.getList();
-      });
-    } else {
-      this.getList();
     }
-    this.getDicts("sys_common_status").then(response => {
-      this.statusOptions = response.data;
-    });
-    this.getDicts("sys_job_group").then(response => {
-      this.jobGroupOptions = response.data;
-    });
+  },
+  created () {
+    const jobId = this.$route.query.jobId
+    if (jobId !== undefined && jobId !== 0) {
+      getJob(jobId).then(response => {
+        this.queryParams.jobName = response.data.jobName
+        this.queryParams.jobGroup = response.data.jobGroup
+        this.getList()
+      })
+    } else {
+      this.getList()
+    }
+    this.getDicts('sys_common_status').then(response => {
+      this.statusOptions = response.data
+    })
+    this.getDicts('sys_job_group').then(response => {
+      this.jobGroupOptions = response.data
+    })
   },
   methods: {
     /** 查询调度日志列表 */
-    getList() {
-      this.loading = true;
+    getList () {
+      this.loading = true
       listJobLog(this.addDateRange(this.queryParams, this.dateRange)).then(response => {
-          this.jobLogList = response.rows;
-          this.total = response.total;
-          this.loading = false;
-        }
-      );
+        this.jobLogList = response.rows
+        this.total = response.total
+        this.loading = false
+      }
+      )
     },
     // 执行状态字典翻译
-    statusFormat(row, column) {
-      return this.selectDictLabel(this.statusOptions, row.status);
+    statusFormat (row, column) {
+      return this.selectDictLabel(this.statusOptions, row.status)
     },
     // 任务组名字典翻译
-    jobGroupFormat(row, column) {
-      return this.selectDictLabel(this.jobGroupOptions, row.jobGroup);
+    jobGroupFormat (row, column) {
+      return this.selectDictLabel(this.jobGroupOptions, row.jobGroup)
     },
     // 返回按钮
-    handleClose() {
-      this.$store.dispatch("tagsView/delView", this.$route);
-      this.$router.push({ path: "/monitor/job" });
+    handleClose () {
+      this.$store.dispatch('tagsView/delView', this.$route)
+      this.$router.push({ path: '/monitor/job' })
     },
     /** 搜索按钮操作 */
-    handleQuery() {
-      this.queryParams.pageNum = 1;
-      this.getList();
+    handleQuery () {
+      this.queryParams.pageNum = 1
+      this.getList()
     },
     /** 重置按钮操作 */
-    resetQuery() {
-      this.dateRange = [];
-      this.resetForm("queryForm");
-      this.handleQuery();
+    resetQuery () {
+      this.dateRange = []
+      this.resetForm('queryForm')
+      this.handleQuery()
     },
     // 多选框选中数据
-    handleSelectionChange(selection) {
-      this.ids = selection.map(item => item.jobLogId);
-      this.multiple = !selection.length;
+    handleSelectionChange (selection) {
+      this.ids = selection.map(item => item.jobLogId)
+      this.multiple = !selection.length
     },
     /** 详细按钮操作 */
-    handleView(row) {
-      this.open = true;
-      this.form = row;
+    handleView (row) {
+      this.open = true
+      this.form = row
     },
     /** 删除按钮操作 */
-    handleDelete(row) {
-      const jobLogIds = this.ids;
-      this.$confirm('是否确认删除调度日志编号为"' + jobLogIds + '"的数据项?', "警告", {
-          confirmButtonText: "确定",
-          cancelButtonText: "取消",
-          type: "warning"
-        }).then(function() {
-          return delJobLog(jobLogIds);
-        }).then(() => {
-          this.getList();
-          this.msgSuccess("删除成功");
-        }).catch(() => {});
+    handleDelete (row) {
+      const jobLogIds = this.ids
+      this.$confirm('是否确认删除调度日志编号为"' + jobLogIds + '"的数据项?', '警告', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(function () {
+        return delJobLog(jobLogIds)
+      }).then(() => {
+        this.getList()
+        this.msgSuccess('删除成功')
+      }).catch(() => {})
     },
     /** 清空按钮操作 */
-    handleClean() {
-      this.$confirm("是否确认清空所有调度日志数据项?", "警告", {
-          confirmButtonText: "确定",
-          cancelButtonText: "取消",
-          type: "warning"
-        }).then(function() {
-          return cleanJobLog();
-        }).then(() => {
-          this.getList();
-          this.msgSuccess("清空成功");
-        }).catch(() => {});
+    handleClean () {
+      this.$confirm('是否确认清空所有调度日志数据项?', '警告', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(function () {
+        return cleanJobLog()
+      }).then(() => {
+        this.getList()
+        this.msgSuccess('清空成功')
+      }).catch(() => {})
     },
     /** 导出按钮操作 */
-    handleExport() {
-      const queryParams = this.queryParams;
-      this.$confirm("是否确认导出所有调度日志数据项?", "警告", {
-          confirmButtonText: "确定",
-          cancelButtonText: "取消",
-          type: "warning"
-        }).then(() => {
-          this.exportLoading = true;
-          return exportJobLog(queryParams);
-        }).then(response => {
-          this.download(response.msg);
-          this.exportLoading = false;
-        }).catch(() => {});
+    handleExport () {
+      const queryParams = this.queryParams
+      this.$confirm('是否确认导出所有调度日志数据项?', '警告', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        this.exportLoading = true
+        return exportJobLog(queryParams)
+      }).then(response => {
+        this.download(response.msg)
+        this.exportLoading = false
+      }).catch(() => {})
     }
   }
-};
+}
 </script>

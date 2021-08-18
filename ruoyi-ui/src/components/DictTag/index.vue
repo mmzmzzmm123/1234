@@ -3,7 +3,7 @@
     <template v-for="(item, index) in options">
       <template v-if="values.includes(item.dictValue)">
         <span
-          v-if="item.listClass == 'default' || item.listClass == ''"
+          v-if="item.listClass === 'default' || item.listClass === ''"
           :key="item.dictValue"
           :index="index"
           :class="item.cssClass"
@@ -13,7 +13,7 @@
           v-else
           :key="item.dictValue"
           :index="index"
-          :type="item.listClass == 'primary' ? '' : item.listClass"
+          :type="item.listClass === 'primary' ? '' : item.listClass"
           :class="item.cssClass"
         >
           {{ item.dictLabel }}
@@ -25,24 +25,24 @@
 
 <script>
 export default {
-  name: "DictTag",
+  name: 'DictTag',
   props: {
     options: {
       type: Array,
-      default: null,
+      default: null
     },
-    value: [String, Array],
+    value: [String, Array]
   },
   computed: {
-    values() {
+    values () {
       if (this.value) {
-        return Array.isArray(this.value) ? this.value : [this.value];
+        return Array.isArray(this.value) ? this.value : [this.value]
       } else {
-        return [];
+        return []
       }
-    },
-  },
-};
+    }
+  }
+}
 </script>
 <style scoped>
 .el-tag + .el-tag {

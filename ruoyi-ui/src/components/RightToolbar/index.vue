@@ -23,56 +23,56 @@
 </template>
 <script>
 export default {
-  name: "RightToolbar",
-  data() {
+  name: 'RightToolbar',
+  data () {
     return {
       // 显隐数据
       value: [],
       // 弹出层标题
-      title: "显示/隐藏",
+      title: '显示/隐藏',
       // 是否显示弹出层
-      open: false,
-    };
+      open: false
+    }
   },
   props: {
     showSearch: {
       type: Boolean,
-      default: true,
+      default: true
     },
     columns: {
-      type: Array,
-    },
+      type: Array
+    }
   },
-  created() {
+  created () {
     // 显隐列初始默认隐藏列
-    for (let item in this.columns) {
+    for (const item in this.columns) {
       if (this.columns[item].visible === false) {
-        this.value.push(parseInt(item));
+        this.value.push(parseInt(item))
       }
     }
   },
   methods: {
     // 搜索
-    toggleSearch() {
-      this.$emit("update:showSearch", !this.showSearch);
+    toggleSearch () {
+      this.$emit('update:showSearch', !this.showSearch)
     },
     // 刷新
-    refresh() {
-      this.$emit("queryTable");
+    refresh () {
+      this.$emit('queryTable')
     },
     // 右侧列表元素变化
-    dataChange(data) {
-      for (var item in this.columns) {
-        const key = this.columns[item].key;
-        this.columns[item].visible = !data.includes(key);
+    dataChange (data) {
+      for (const item in this.columns) {
+        const key = this.columns[item].key
+        this.columns[item].visible = !data.includes(key)
       }
     },
     // 打开显隐列dialog
-    showColumn() {
-      this.open = true;
-    },
-  },
-};
+    showColumn () {
+      this.open = true
+    }
+  }
+}
 </script>
 <style lang="scss" scoped>
 ::v-deep .el-transfer__button {

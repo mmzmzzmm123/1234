@@ -102,13 +102,13 @@
 </template>
 
 <script>
-import { allocatedUserList, authUserCancel, authUserCancelAll } from "@/api/system/role";
-import selectUser from "./selectUser";
+import { allocatedUserList, authUserCancel, authUserCancelAll } from '@/api/system/role'
+import selectUser from './selectUser'
 
 export default {
-  name: "AuthUser",
+  name: 'AuthUser',
   components: { selectUser },
-  data() {
+  data () {
     return {
       // 遮罩层
       loading: true,
@@ -132,82 +132,82 @@ export default {
         userName: undefined,
         phonenumber: undefined
       }
-    };
+    }
   },
-  created() {
-    const roleId = this.$route.params && this.$route.params.roleId;
+  created () {
+    const roleId = this.$route.params && this.$route.params.roleId
     if (roleId) {
-      this.queryParams.roleId = roleId;
-      this.getList();
-      this.getDicts("sys_normal_disable").then(response => {
-        this.statusOptions = response.data;
-      });
+      this.queryParams.roleId = roleId
+      this.getList()
+      this.getDicts('sys_normal_disable').then(response => {
+        this.statusOptions = response.data
+      })
     }
   },
   methods: {
     /** 查询授权用户列表 */
-    getList() {
-      this.loading = true;
+    getList () {
+      this.loading = true
       allocatedUserList(this.queryParams).then(response => {
-          this.userList = response.rows;
-          this.total = response.total;
-          this.loading = false;
-        }
-      );
+        this.userList = response.rows
+        this.total = response.total
+        this.loading = false
+      }
+      )
     },
     // 返回按钮
-    handleClose() {
-      this.$store.dispatch("tagsView/delView", this.$route);
-      this.$router.push({ path: "/system/role" });
+    handleClose () {
+      this.$store.dispatch('tagsView/delView', this.$route)
+      this.$router.push({ path: '/system/role' })
     },
     /** 搜索按钮操作 */
-    handleQuery() {
-      this.queryParams.pageNum = 1;
-      this.getList();
+    handleQuery () {
+      this.queryParams.pageNum = 1
+      this.getList()
     },
     /** 重置按钮操作 */
-    resetQuery() {
-      this.resetForm("queryForm");
-      this.handleQuery();
+    resetQuery () {
+      this.resetForm('queryForm')
+      this.handleQuery()
     },
     // 多选框选中数据
-    handleSelectionChange(selection) {
+    handleSelectionChange (selection) {
       this.userIds = selection.map(item => item.userId)
       this.multiple = !selection.length
     },
     /** 打开授权用户表弹窗 */
-    openSelectUser() {
-      this.$refs.select.show();
+    openSelectUser () {
+      this.$refs.select.show()
     },
     /** 取消授权按钮操作 */
-    cancelAuthUser(row) {
-      const roleId = this.queryParams.roleId;
-      this.$confirm('确认要取消该用户"' + row.userName + '"角色吗？', "警告", {
-        confirmButtonText: "确定",
-        cancelButtonText: "取消",
-        type: "warning"
-      }).then(function() {
-        return authUserCancel({ userId: row.userId, roleId: roleId });
+    cancelAuthUser (row) {
+      const roleId = this.queryParams.roleId
+      this.$confirm('确认要取消该用户"' + row.userName + '"角色吗？', '警告', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(function () {
+        return authUserCancel({ userId: row.userId, roleId: roleId })
       }).then(() => {
-        this.getList();
-        this.msgSuccess("取消授权成功");
-      }).catch(() => {});
+        this.getList()
+        this.msgSuccess('取消授权成功')
+      }).catch(() => {})
     },
     /** 批量取消授权按钮操作 */
-    cancelAuthUserAll(row) {
-      const roleId = this.queryParams.roleId;
-      const userIds = this.userIds.join(",");
-      this.$confirm('是否取消选中用户授权数据项?', "警告", {
-          confirmButtonText: "确定",
-          cancelButtonText: "取消",
-          type: "warning"
+    cancelAuthUserAll (row) {
+      const roleId = this.queryParams.roleId
+      const userIds = this.userIds.join(',')
+      this.$confirm('是否取消选中用户授权数据项?', '警告', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
       }).then(() => {
-          return authUserCancelAll({ roleId: roleId, userIds: userIds });
+        return authUserCancelAll({ roleId: roleId, userIds: userIds })
       }).then(() => {
-        this.getList();
-        this.msgSuccess("取消授权成功");
-      }).catch(() => {});
+        this.getList()
+        this.msgSuccess('取消授权成功')
+      }).catch(() => {})
     }
   }
-};
+}
 </script>

@@ -25,7 +25,7 @@ import path from 'path'
 
 export default {
   name: 'HeaderSearch',
-  data() {
+  data () {
     return {
       search: '',
       options: [],
@@ -35,18 +35,18 @@ export default {
     }
   },
   computed: {
-    routes() {
+    routes () {
       return this.$store.getters.permission_routes
     }
   },
   watch: {
-    routes() {
+    routes () {
       this.searchPool = this.generateRoutes(this.routes)
     },
-    searchPool(list) {
+    searchPool (list) {
       this.initFuse(list)
     },
-    show(value) {
+    show (value) {
       if (value) {
         document.body.addEventListener('click', this.close)
       } else {
@@ -54,27 +54,27 @@ export default {
       }
     }
   },
-  mounted() {
+  mounted () {
     this.searchPool = this.generateRoutes(this.routes)
   },
   methods: {
-    click() {
+    click () {
       this.show = !this.show
       if (this.show) {
         this.$refs.headerSearchSelect && this.$refs.headerSearchSelect.focus()
       }
     },
-    close() {
+    close () {
       this.$refs.headerSearchSelect && this.$refs.headerSearchSelect.blur()
       this.options = []
       this.show = false
     },
-    change(val) {
-      const path = val.path;
-      if(this.ishttp(val.path)) {
+    change (val) {
+      const path = val.path
+      if (this.ishttp(val.path)) {
         // http(s):// 路径新窗口打开
-        const pindex = path.indexOf("http");
-        window.open(path.substr(pindex, path.length), "_blank");
+        const pindex = path.indexOf('http')
+        window.open(path.substr(pindex, path.length), '_blank')
       } else {
         this.$router.push(val.path)
       }
@@ -84,7 +84,7 @@ export default {
         this.show = false
       })
     },
-    initFuse(list) {
+    initFuse (list) {
       this.fuse = new Fuse(list, {
         shouldSort: true,
         threshold: 0.4,
@@ -103,7 +103,7 @@ export default {
     },
     // Filter out the routes that can be displayed in the sidebar
     // And generate the internationalized title
-    generateRoutes(routes, basePath = '/', prefixTitle = []) {
+    generateRoutes (routes, basePath = '/', prefixTitle = []) {
       let res = []
 
       for (const router of routes) {
@@ -135,14 +135,14 @@ export default {
       }
       return res
     },
-    querySearch(query) {
+    querySearch (query) {
       if (query !== '') {
         this.options = this.fuse.search(query)
       } else {
         this.options = []
       }
     },
-    ishttp(url) {
+    ishttp (url) {
       return url.indexOf('http://') !== -1 || url.indexOf('https://') !== -1
     }
   }

@@ -65,11 +65,11 @@
 </template>
 
 <script>
-import { list, forceLogout } from "@/api/monitor/online";
+import { list, forceLogout } from '@/api/monitor/online'
 
 export default {
-  name: "Online",
-  data() {
+  name: 'Online',
+  data () {
     return {
       // 遮罩层
       loading: true,
@@ -84,45 +84,44 @@ export default {
         ipaddr: undefined,
         userName: undefined
       }
-    };
+    }
   },
-  created() {
-    this.getList();
+  created () {
+    this.getList()
   },
   methods: {
     /** 查询登录日志列表 */
-    getList() {
-      this.loading = true;
+    getList () {
+      this.loading = true
       list(this.queryParams).then(response => {
-        this.list = response.rows;
-        this.total = response.total;
-        this.loading = false;
-      });
+        this.list = response.rows
+        this.total = response.total
+        this.loading = false
+      })
     },
     /** 搜索按钮操作 */
-    handleQuery() {
-      this.pageNum = 1;
-      this.getList();
+    handleQuery () {
+      this.pageNum = 1
+      this.getList()
     },
     /** 重置按钮操作 */
-    resetQuery() {
-      this.resetForm("queryForm");
-      this.handleQuery();
+    resetQuery () {
+      this.resetForm('queryForm')
+      this.handleQuery()
     },
     /** 强退按钮操作 */
-    handleForceLogout(row) {
-      this.$confirm('是否确认强退名称为"' + row.userName + '"的数据项?', "警告", {
-          confirmButtonText: "确定",
-          cancelButtonText: "取消",
-          type: "warning"
-        }).then(function() {
-          return forceLogout(row.tokenId);
-        }).then(() => {
-          this.getList();
-          this.msgSuccess("强退成功");
-        }).catch(() => {});
+    handleForceLogout (row) {
+      this.$confirm('是否确认强退名称为"' + row.userName + '"的数据项?', '警告', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(function () {
+        return forceLogout(row.tokenId)
+      }).then(() => {
+        this.getList()
+        this.msgSuccess('强退成功')
+      }).catch(() => {})
     }
   }
-};
+}
 </script>
-

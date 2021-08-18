@@ -8,7 +8,7 @@
     <div class="right-menu">
       <template v-if="device!=='mobile'">
         <search id="header-search" class="right-menu-item" />
-        
+
         <el-tooltip content="源码地址" effect="dark" placement="bottom">
           <ruo-yi-git id="ruoyi-git" class="right-menu-item hover-effect" />
         </el-tooltip>
@@ -75,10 +75,10 @@ export default {
       'device'
     ]),
     setting: {
-      get() {
+      get () {
         return this.$store.state.settings.showSettings
       },
-      set(val) {
+      set (val) {
         this.$store.dispatch('settings/changeSetting', {
           key: 'showSettings',
           value: val
@@ -86,25 +86,25 @@ export default {
       }
     },
     topNav: {
-      get() {
+      get () {
         return this.$store.state.settings.topNav
       }
     }
   },
   methods: {
-    toggleSideBar() {
+    toggleSideBar () {
       this.$store.dispatch('app/toggleSideBar')
     },
-    async logout() {
+    async logout () {
       this.$confirm('确定注销并退出系统吗？', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
         this.$store.dispatch('LogOut').then(() => {
-          location.href = '/index';
+          location.href = '/index'
         })
-      }).catch(() => {});
+      }).catch(() => {})
     }
   }
 }
