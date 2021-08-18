@@ -21,6 +21,14 @@ public interface IQzBrithdayPuService
 
     /**
      * 查询生日溥列表
+     *
+     * @param userId 此用户的生日溥
+     * @return 生日溥集合
+     */
+    public List<QzBrithdayPu> selectQzBrithdayPuListByUserId(Long userId);
+
+    /**
+     * 查询生日溥列表
      * 
      * @param qzBrithdayPu 生日溥
      * @return 生日溥集合

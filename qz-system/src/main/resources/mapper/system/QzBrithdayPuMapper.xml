@@ -31,6 +31,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         select id, name, user_id, solar_birthday, birthday, solar_flag, notify_flag, constellation, zodiac, year_repeat, day_repeat, create_by, create_time, update_by, update_time, status, remark, ext1, ext2, ext3 from qz_brithday_pu
     </sql>
 
+    <select id="selectQzBrithdayPuListByUserId" parameterType="Long" resultMap="QzBrithdayPuResult">
+        <include refid="selectQzBrithdayPuVo"/>
+        where userId = #{userId}
+    </select>
+
     <select id="selectQzBrithdayPuList" parameterType="QzBrithdayPu" resultMap="QzBrithdayPuResult">
         <include refid="selectQzBrithdayPuVo"/>
         <where>  

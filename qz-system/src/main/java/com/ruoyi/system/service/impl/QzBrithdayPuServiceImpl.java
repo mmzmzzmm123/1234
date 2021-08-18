@@ -1,5 +1,6 @@
 package com.ruoyi.system.service.impl;
 
+import java.util.Date;
 import java.util.List;
 import com.ruoyi.common.utils.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -7,6 +8,9 @@ import org.springframework.stereotype.Service;
 import com.ruoyi.system.mapper.QzBrithdayPuMapper;
 import com.ruoyi.system.domain.QzBrithdayPu;
 import com.ruoyi.system.service.IQzBrithdayPuService;
+import cn.hutool.core.date.ChineseDate;
+import cn.hutool.core.date.Zodiac;
+import cn.hutool.core.date.DateUtil;
 
 /**
  * 生日溥Service业务层处理
@@ -34,6 +38,18 @@ public class QzBrithdayPuServiceImpl implements IQzBrithdayPuService
 
     /**
      * 查询生日溥列表
+     *
+     * @param userId 此用户的生日溥
+     * @return 生日溥
+     */
+    @Override
+    public List<QzBrithdayPu> selectQzBrithdayPuListByUserId(Long userId)
+    {
+        return qzBrithdayPuMapper.selectQzBrithdayPuListByUserId(userId);
+    }
+
+    /**
+     * 查询生日溥列表
      * 
      * @param qzBrithdayPu 生日溥
      * @return 生日溥
@@ -53,7 +69,34 @@ public class QzBrithdayPuServiceImpl implements IQzBrithdayPuService
     @Override
     public int insertQzBrithdayPu(QzBrithdayPu qzBrithdayPu)
     {
+        if(qzBrithdayPu.getSolarBirthday() != null && qzBrithdayPu.getSolarFlag() == "0"){
+            //过阳历生日，计算阴历日期
+            ChineseDate cd = new ChineseDate(qzBrithdayPu.getSolarBirthday());
+            //得到农历日期
+            Date lunarDate = DateUtils.parseDate(cd.toStringNormal());
+            qzBrithdayPu.setBirthday(lunarDate);
+            //阴历对应生肖
+            qzBrithdayPu.setZodiac(cd.getChineseZodiac());
+            //阳历生日对应的星座
+            String constellation = Zodiac.getZodiac(qzBrithdayPu.getSolarBirthday());
+            qzBrithdayPu.setConstellation(constellation);
+
+        }else if(qzBrithdayPu.getBirthday() != null && qzBrithdayPu.getSolarFlag() == "1"){
+            //过阴历生日，计算阳历
+            ChineseDate cd = new ChineseDate(DateUtil.year(qzBrithdayPu.getBirthday()),
+                                             DateUtil.month(qzBrithdayPu.getBirthday()),
+                                             DateUtil.dayOfMonth(qzBrithdayPu.getBirthday()));
+            qzBrithdayPu.setSolarBirthday(cd.getGregorianDate());
+            //阴历对应生肖
+            qzBrithdayPu.setZodiac(cd.getChineseZodiac());
+            //阳历对应的星座
+            String constellation = Zodiac.getZodiac(qzBrithdayPu.getSolarBirthday());
+            qzBrithdayPu.setConstellation(constellation);
+        }else{
+            //异常，标志位、阴历阳历日期存在异常
+        }
         qzBrithdayPu.setCreateTime(DateUtils.getNowDate());
+
         return qzBrithdayPuMapper.insertQzBrithdayPu(qzBrithdayPu);
     }
 

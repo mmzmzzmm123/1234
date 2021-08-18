@@ -17,7 +17,7 @@ public class QzBrithdayPu extends BaseEntity
 {
     private static final long serialVersionUID = 1L;
 
-    /** 圈子ID */
+    /** 生日薄ID */
     private Long id;
 
     /** ta的名字 */

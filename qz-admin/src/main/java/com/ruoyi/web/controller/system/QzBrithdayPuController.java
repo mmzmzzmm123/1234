@@ -37,6 +37,18 @@ public class QzBrithdayPuController extends BaseController
      * 查询生日溥列表
      */
     @PreAuthorize("@ss.hasPermi('system:birthdaypu:list')")
+    @GetMapping(value="/list/{userId}")
+    public TableDataInfo list(@PathVariable("userId") Long userId)
+    {
+        startPage();
+        List<QzBrithdayPu> list = qzBrithdayPuService.selectQzBrithdayPuListByUserId(userId);
+        return getDataTable(list);
+    }
+
+    /**
+     * 查询生日溥列表
+     */
+    @PreAuthorize("@ss.hasPermi('system:birthdaypu:list')")
     @GetMapping("/list")
     public TableDataInfo list(QzBrithdayPu qzBrithdayPu)
     {
