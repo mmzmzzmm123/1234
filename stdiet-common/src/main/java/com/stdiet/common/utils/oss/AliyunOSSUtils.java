@@ -1,14 +1,13 @@
 package com.stdiet.common.utils.oss;
 
+import com.aliyun.oss.OSS;
+import com.aliyun.oss.OSSClientBuilder;
 import com.aliyun.oss.model.GetObjectRequest;
 import com.aliyun.oss.model.OSSObject;
 import com.stdiet.common.config.AliyunOSSConfig;
 import com.stdiet.common.utils.StringUtils;
 import com.stdiet.common.utils.file.FileUtils;
 import org.springframework.web.multipart.MultipartFile;
-
-import com.aliyun.oss.OSS;
-import com.aliyun.oss.OSSClientBuilder;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -25,6 +24,7 @@ public class AliyunOSSUtils {
 
     //默认文件路径前缀
     private static final String default_prefix = "https://stdiet.oss-cn-shenzhen.aliyuncs.com";
+    private static final String default_prefix2 = "https://v.stdiet.top";
 
     public static OSS getOssClient() {
         return new OSSClientBuilder().build(AliyunOSSConfig.EndPoint, AliyunOSSConfig.AccessKeyID, AliyunOSSConfig.AccessKeySecret);
@@ -83,6 +83,7 @@ public class AliyunOSSUtils {
 
     /**
      * MultipartFile2File
+     *
      * @param multipartFile
      * @return
      */
@@ -95,11 +96,11 @@ public class AliyunOSSUtils {
             //获取最后一个"."的位置
             int cutPoint = originalFilename.lastIndexOf(".");
             //获取文件名
-            String prefix = originalFilename.substring(0,cutPoint);
+            String prefix = originalFilename.substring(0, cutPoint);
             //获取后缀名
             String suffix = originalFilename.substring(cutPoint + 1);
             //创建临时文件,prefix最少三位
-            file = File.createTempFile((prefix != null && prefix.length() >= 3 ? prefix : prefix+"ab"), suffix);
+            file = File.createTempFile((prefix != null && prefix.length() >= 3 ? prefix : prefix + "ab"), suffix);
             //multipartFile2file
             multipartFile.transferTo(file);
             //删除临时文件
@@ -122,7 +123,8 @@ public class AliyunOSSUtils {
 
     /**
      * 上传文件流
-     * @param prefix 路径的前缀路径目录
+     *
+     * @param prefix       路径的前缀路径目录
      * @param oranFileName 上传到服务器上的文件路径和名称
      * @param file         来自本地的文件或者文件流
      */
@@ -152,7 +154,8 @@ public class AliyunOSSUtils {
 
     /**
      * 上传文件流
-     * @param prefix 路径的前缀路径目录
+     *
+     * @param prefix       路径的前缀路径目录
      * @param oranFileName 上传到服务器上的文件路径和名称
      * @param file         来自本地的文件或者文件流
      */
@@ -204,7 +207,7 @@ public class AliyunOSSUtils {
     /**
      * 从OSS中下载一个文件流
      *
-     * @param fileURL       文件的url
+     * @param fileURL 文件的url
      */
     public static void downloadFile(String fileURL, String fileName, HttpServletRequest request, HttpServletResponse response) throws IOException {
 
@@ -223,19 +226,18 @@ public class AliyunOSSUtils {
         response.setContentType("multipart/form-data");
         response.setHeader("Content-Disposition",
                 "attachment;fileName=" + FileUtils.setFileDownloadHeader(request, fileName));
-        FileUtils.writeBytes(streamData , response.getOutputStream());
+        FileUtils.writeBytes(streamData, response.getOutputStream());
 
         // 关闭OSSClient。
         ossClient.shutdown();
     }
 
     /**
-     *
      * @param fileUrl
      * @return
      */
-    public static String generatePresignedUrl(String fileUrl){
-        if(!isAliyunUrl(fileUrl)) {
+    public static String generatePresignedUrl(String fileUrl) {
+        if (!isAliyunUrl(fileUrl)) {
             return null;
         }
         // 创建OSSClient实例。
@@ -252,11 +254,10 @@ public class AliyunOSSUtils {
     }
 
     /**
-     *
      * @param fileUrlList
      * @return
      */
-    public static List<String> generatePresignedUrl(List<String> fileUrlList){
+    public static List<String> generatePresignedUrl(List<String> fileUrlList) {
         List<String> downUrlList = new ArrayList<>();
 
         // 创建OSSClient实例。
@@ -265,7 +266,7 @@ public class AliyunOSSUtils {
         Date expiration = new Date(System.currentTimeMillis() + expire);
 
         for (String fileUrl : fileUrlList) {
-            if(isAliyunUrl(fileUrl)){
+            if (isAliyunUrl(fileUrl)) {
                 String url = ossClient.generatePresignedUrl(AliyunOSSConfig.Buckets, getObjectName(fileUrl), expiration).toString();
                 downUrlList.add(url);
             }
@@ -279,19 +280,19 @@ public class AliyunOSSUtils {
 
     /**
      * 判断是否为阿里云OSS路径格式
+     *
      * @param fileUrl
      * @return
      */
-    public static boolean isAliyunUrl(String fileUrl){
-        return StringUtils.isNotEmpty(fileUrl) && fileUrl.startsWith(default_prefix);
+    public static boolean isAliyunUrl(String fileUrl) {
+        return StringUtils.isNotEmpty(fileUrl) && (fileUrl.startsWith(default_prefix) || fileUrl.startsWith(default_prefix2));
     }
 
     /**
-     *
      * @param fileUrlList
      * @return
      */
-    public static Map<String, List<String>> generatePresignedUrl(Map<String, List<String>> fileUrlList){
+    public static Map<String, List<String>> generatePresignedUrl(Map<String, List<String>> fileUrlList) {
         Map<String, List<String>> downUrlMap = new HashMap<>();
 
         // 创建OSSClient实例。
@@ -303,7 +304,7 @@ public class AliyunOSSUtils {
             List<String> urlList = fileUrlList.get(key);
             List<String> downList = new ArrayList<>();
             for (String fileUrl : urlList) {
-                if(isAliyunUrl(fileUrl)){
+                if (isAliyunUrl(fileUrl)) {
                     downList.add(ossClient.generatePresignedUrl(AliyunOSSConfig.Buckets, getObjectName(fileUrl), expiration).toString());
                 }
             }
