@@ -6,6 +6,7 @@ import com.ruoyi.common.constant.Constants;
 import com.ruoyi.common.constant.UserConstants;
 import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.core.redis.RedisCache;
+import com.ruoyi.common.exception.user.SmsException;
 import com.ruoyi.common.exception.user.UserException;
 import com.ruoyi.common.utils.DateUtils;
 import com.ruoyi.common.utils.StringUtils;
