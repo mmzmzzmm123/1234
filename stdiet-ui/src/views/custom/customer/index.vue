@@ -653,6 +653,12 @@ export default {
       this.physicalSignsList = response.rows;
     });
   },
+  activated() {
+    if (this.$route.query.cusName) {
+      this.queryParams.name = this.$route.query.cusName;
+      this.handleQuery();
+    }
+  },
   computed: {
     isPartner() {
       return this.roles && this.roles.includes("partner");

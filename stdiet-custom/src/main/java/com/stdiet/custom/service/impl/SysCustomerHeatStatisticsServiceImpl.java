@@ -208,7 +208,7 @@ public class SysCustomerHeatStatisticsServiceImpl implements ISysCustomerHeatSta
             sysCustomerHealthy.setName(sysCustomerPhysicalSigns.getName());
             sysCustomerHealthy.setTall(sysCustomerPhysicalSigns.getTall());
             sysCustomerHealthy.setAge(sysCustomerPhysicalSigns.getAge().longValue());
-            sysCustomerHealthy.setWeight(BigDecimal.valueOf(sysCustomerPhysicalSigns.getWeight()));
+            sysCustomerHealthy.setWeight(sysCustomerPhysicalSigns.getWeight());
         }
         return sysCustomerHealthy;
     }

@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.stdiet.common.annotation.Excel;
 import lombok.Data;
 
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 
@@ -62,7 +63,7 @@ public class SysCustomerPhysicalSigns {
      * 客户体重（斤）
      */
     @Excel(name = "客户体重", readConverterExp = "斤=")
-    private Integer weight;
+    private BigDecimal weight;
 
     /**
      * 客户病史体征id

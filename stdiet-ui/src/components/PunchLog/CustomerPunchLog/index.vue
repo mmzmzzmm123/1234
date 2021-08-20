@@ -6,168 +6,151 @@
     @closed="handleOnClosed"
     size="45%"
   >
-    <div class="app-container punchLog_drawer_wrapper">
-      <div class="header">
-        <section>
-          <el-button icon="el-icon-view" size="mini" @click="showPunchLogChart()"
-            >体重趋势图
-          </el-button>
-        </section>
-        <section>
-          <el-button
-            icon="el-icon-refresh"
-            size="mini"
-            @click="getList"
-            circle
-          />
-        </section>
-      </div>
+    <div class="punchLog_drawer_wrapper" v-loading="loading">
+      <div v-if="data.length">
+        <CursorChartView :data="getChartData('weight')" />
 
-      <el-table :data="punchLogList" v-loading="planLoading" height="80%">
-        <el-table-column label="打卡日期" align="center"  prop="logTime"/>
-        <el-table-column label="体重(斤)" align="center"  prop="weight"/>
-        <el-table-column label="饮水量(ml)" align="center"  prop="water"/>
-        <el-table-column label="营养师" align="center" prop="nutritionist" />
-        <el-table-column label="售后" align="center" prop="afterNutritionist" />
-        <el-table-column label="操作" align="center" width="160">
-          <template slot-scope="scope">
-            <el-button
-            size="mini"
-            type="text"
-            @click="showPunchLogDetail(scope.row)"
-            v-hasPermi="['custom:wxUserLog:query']"
-            >详情
-          </el-button>
-          <el-button
-            size="mini"
-            type="text"
-            icon="el-icon-edit"
-            @click="handleUpdate(scope.row)"
-            v-hasPermi="['custom:wxUserLog:edit']"
-            >修改
-          </el-button>
-            <el-button
-              type="text"
-              icon="el-icon-delete"
-              v-hasPermi="['custom:wxUserLog:remove']"
-              @click="handleOnDelete(scope.row)"
-              >删除</el-button
-            >
-          </template>
-        </el-table-column>
-      </el-table>
-      <pagination
-      v-show="total > 0"
-      :total="total"
-      :page.sync="queryParams.pageNum"
-      :limit.sync="queryParams.pageSize"
-      @pagination="getList"
-    />
+        <el-button
+          icon="el-icon-view"
+          size="mini"
+          class="weigth_trend_button"
+          :style="`left: ${getTextWidth(title) + 30}px`"
+          @click="showPunchLogChart()"
+          >体重趋势图</el-button
+        >
+
+        <div
+          class="chart_zone_style"
+          v-for="chart in chartList"
+          :key="chart.keyVal"
+        >
+          <LineChartView
+            v-if="chart.keyVal"
+            v-bind="chart"
+            :data="getChartData(chart.keyVal)"
+            @onClick="handleOnChartClick"
+          />
+        </div>
+      </div>
+      <div v-else class="empty_style">暂无打卡记录</div>
     </div>
     <!-- 详情 -->
     <PunchLogDetail ref="punchLogDetailRef"></PunchLogDetail>
-    <!-- 编辑 -->
-    <PunchLogEdit ref="punchLogEditRef"></PunchLogEdit>
     <!-- 体重趋势图 -->
     <PunchLogChart ref="punchLogChartRef"></PunchLogChart>
   </el-drawer>
 </template>
 <script>
-import {
-  addWxUserLog,
-  delWxUserLog,
-  exportWxUserLog,
-  getWxUserLog,
-  listWxUserLog,
-  updateWxUserLog,
-} from "@/api/custom/wxUserLog";
+import { listWxUserLog } from "@/api/custom/wxUserLog";
+import { getCustomerPhysicalSignsByCusId } from "@/api/custom/customer";
+import LineChartView from "../LineChartView";
+import CursorChartView from "../CursorChartView";
 import PunchLogDetail from "@/components/PunchLog/PunchLogDetail";
-import PunchLogEdit from "@/components/PunchLog/PunchLogEdit";
 import PunchLogChart from "@/components/PunchLog/PunchLogChart";
-import dayjs from "dayjs";
+
 export default {
-  name: "CustomerPunchLog",
+  name: "punchLog",
   components: {
-    PunchLogDetail,PunchLogEdit,PunchLogChart
+    LineChartView,
+    CursorChartView,
+    PunchLogDetail,
+    PunchLogChart,
   },
   data() {
     return {
-      open: false,
       visible: false,
       title: "",
-      planLoading: false,
-      data: null,
-      punchLogList: [],
-      total: 0,
-      // 查询参数
-      queryParams: {
-        pageNum: 1,
-        pageSize: 10,
-        customerId: null
-      },
+      loading: false,
+      userObj: null,
+      sex: 0,
+      data: [],
+      // prettier-ignore
+      chartList: [
+        {},
+        { label: "体重", keyVal: "weight", unit: "斤", extra: undefined },
+        { label: "饮水量", keyVal: "water", unit: "毫升", extra: undefined },
+        { label: "入睡时间", keyVal: "sleepTime", unit: undefined, extra: undefined },
+        { label: "起床时间", keyVal: "wakeupTime", unit: undefined, extra: undefined },
+        { label: "熬夜失眠", keyVal: "insomnia", unit: undefined, extra: undefined },
+        { label: "运动锻炼", keyVal: "sport", unit: undefined, extra: undefined },
+        { label: "情绪状况", keyVal: "emotion", unit: undefined, extra: undefined },
+        { label: "排便情况", keyVal: "defecation", unit: undefined, extra: undefined },
+        { label: "按营养餐吃", keyVal: "diet", unit: undefined, extra: undefined },
+      ],
     };
   },
   methods: {
     showDrawer(data) {
-      // console.log(data);
-      this.data = data;
-      if (this.data == undefined || this.data == null) {
-        return;     
+      if (!data) {
+        return;
       }
-      this.punchLogList = [];
-      this.total = 0;
+
       this.visible = true;
-      this.title = `「${this.data.name}」打卡记录`;
-      this.getList();
+      this.userObj = data;
+      this.title = `「${this.userObj.name}」打卡情况`;
+
+      this.fetchLogDatas();
     },
-    getList() {
-      this.planLoading = true;
-      this.queryParams.customerId = this.data.id;
-      listWxUserLog(this.queryParams).then((response) => {
-        if(response.code == 200){
-          this.punchLogList = response.rows;
-          this.total = response.total;
+    handleOnClosed() {
+      this.userObj = undefined;
+    },
+    showPunchLogChart() {
+      this.$refs.punchLogChartRef.showDialog(this.userObj);
+    },
+    getTextWidth(text) {
+      const canvas = document.createElement("canvas");
+      document.body.appendChild(canvas);
+      const ctx = canvas.getContext("2d");
+      ctx.font = "16px Arial";
+      const { width } = ctx.measureText(text);
+      document.body.removeChild(canvas);
+      return Math.ceil(width);
+    },
+    fetchLogDatas() {
+      this.loading = true;
+      getCustomerPhysicalSignsByCusId(this.userObj.id).then((res) => {
+        if (res.data.customerHealthy) {
+          this.sex = res.data.customerHealthy.sex;
+          this.chartList[0] = this.sex
+            ? {
+                label: "生理期",
+                keyVal: "menstrualPeriod",
+                unit: undefined,
+                extra: undefined,
+              }
+            : {};
+          this.chartList[1].extra = `初始体重：${res.data.customerHealthy.weight}斤`;
         }
-        this.planLoading = false;
+        listWxUserLog({
+          customerId: this.userObj.id,
+        }).then((res) => {
+          if (res.code === 200) {
+            this.data = res.rows;
+          }
+          this.loading = false;
+        });
       });
     },
-    reset() {
-      
+    getChartData(key) {
+      return this.data.map((obj) => {
+        let value = obj[key];
+        value === "Y" && (value = "是");
+        value === "N" && (value = "否");
+        return {
+          id: obj.id,
+          name: obj.logTime,
+          value,
+        };
+      });
     },
-    handleOnClosed(){
-      this.data = null
-    },
-    showPunchLogDetail(data){
-        this.$refs.punchLogDetailRef.showDialog(data);
-    },
-    showPunchLogChart(){
-        this.$refs.punchLogChartRef.showDialog(this.data);
-    },
-    handleUpdate(data){
-        this.$refs.punchLogEditRef.showDialog(data, () => {
-          this.getList();
+    handleOnChartClick(id) {
+      // console.log(id);
+      const tarData = this.data.find((obj) => obj.id === id);
+      tarData &&
+        this.$refs.punchLogDetailRef.showDialog({
+          sex: this.sex,
+          ...tarData,
         });
-    },
-    /** 删除按钮操作 */
-    handleOnDelete(row) {
-      const ids = row.id;
-      this.$confirm(
-        '是否确定删除该用户' + row.logTime + '的打卡记录?',
-        "警告",
-        {
-          confirmButtonText: "确定",
-          cancelButtonText: "取消",
-          type: "warning",
-        }
-      )
-        .then(function () {
-          return delWxUserLog(ids);
-        })
-        .then(() => {
-          this.getList();
-          this.msgSuccess("删除成功");
-        })
-        .catch(function () {});
     },
   },
 };
@@ -178,13 +161,22 @@ export default {
 }
 
 .punchLog_drawer_wrapper {
+  overflow: auto;
   height: calc(100vh - 77px);
 
-  .header {
-    margin-bottom: 8px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
+  .chart_zone_style {
+    margin: 16px;
+    border-radius: 8px;
+    overflow: hidden;
+  }
+
+  .empty_style {
+    text-align: center;
+  }
+
+  .weigth_trend_button {
+    position: absolute;
+    top: 16px;
   }
 }
 </style>

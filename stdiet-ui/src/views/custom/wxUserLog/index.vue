@@ -32,37 +32,51 @@
         />
       </el-form-item>
       <el-form-item label="营养师" prop="nutritionistId">
-        <el-select v-model="queryParams.nutritionistId" clearable filterable placeholder="请选择">
+        <el-select
+          v-model="queryParams.nutritionistId"
+          clearable
+          filterable
+          placeholder="请选择"
+        >
           <el-option
             v-for="dict in nutritionistIdOptions.slice(1)"
             :key="dict.dictValue"
             :label="dict.dictLabel"
-            :value="parseInt(dict.dictValue)" 
+            :value="parseInt(dict.dictValue)"
           />
         </el-select>
       </el-form-item>
       <el-form-item label="售后" prop="afterNutritionistId">
-        <el-select v-model="queryParams.afterNutritionistId" clearable filterable placeholder="请选择">
+        <el-select
+          v-model="queryParams.afterNutritionistId"
+          clearable
+          filterable
+          placeholder="请选择"
+        >
           <el-option
             v-for="dict in afterSaleIdOptions.slice(1)"
             :key="dict.dictValue"
             :label="dict.dictLabel"
-            :value="parseInt(dict.dictValue)" 
+            :value="parseInt(dict.dictValue)"
           />
         </el-select>
       </el-form-item>
-      
-      <el-form-item label="打卡日期" prop="logTimeScope" style="margin-left:15px">
+
+      <el-form-item
+        label="打卡日期"
+        prop="logTimeScope"
+        style="margin-left: 15px"
+      >
         <el-date-picker
-                v-model="logTimeScope"
-                type="daterange"
-                range-separator="至"
-                start-placeholder="打卡开始日期"
-                end-placeholder="打卡结束日期"
-                format="yyyy-MM-dd"
-                value-format="yyyy-MM-dd"
-                :picker-options="logTimePickerOptions"
-              >
+          v-model="logTimeScope"
+          type="daterange"
+          range-separator="至"
+          start-placeholder="打卡开始日期"
+          end-placeholder="打卡结束日期"
+          format="yyyy-MM-dd"
+          value-format="yyyy-MM-dd"
+          :picker-options="logTimePickerOptions"
+        >
         </el-date-picker>
       </el-form-item>
 
@@ -87,7 +101,7 @@
           icon="el-icon-s-flag"
           size="mini"
           @click="showNotLunch()"
-        >未打卡客户列表
+          >未打卡客户列表
         </el-button>
       </el-col>
       <!--      <el-col :span="1.5">-->
@@ -153,7 +167,16 @@
           <span>{{ parseTime(scope.row.logTime, "{y}-{m}-{d}") }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="姓名" align="center" prop="customerName" />
+      <el-table-column label="姓名" align="center" prop="customerName">
+        <template slot-scope="scope">
+          <div
+            @click="handleOnNameClick(scope.row.customerName)"
+            class="user_name_style"
+          >
+            {{ scope.row.customerName }}
+          </div>
+        </template>
+      </el-table-column>
       <el-table-column label="当天体重" align="center" prop="weight">
         <template slot-scope="scope">
           <span>{{ `${scope.row.weight} 斤` }}</span>
@@ -166,12 +189,11 @@
         width="120"
         :formatter="appidFormat"
       />-->
-      
+
       <!--<el-table-column label="手机号" align="center" prop="phone" width="180" />-->
       <el-table-column label="营养师" align="center" prop="nutritionist" />
       <el-table-column label="售后" align="center" prop="afterNutritionist" />
-      
-      
+
       <el-table-column
         label="睡觉时间"
         align="center"
@@ -192,15 +214,13 @@
         prop="sport"
         :formatter="sportFormat"
       />
-      <el-table-column
-        label="情绪"
-        align="center"
-        prop="emotion"
-        width="120"
-      >
-      <template slot-scope="scope">
-          <AutoHideMessage :maxLength="4" :data="scope.row.emotion"></AutoHideMessage>
-      </template>
+      <el-table-column label="情绪" align="center" prop="emotion" width="120">
+        <template slot-scope="scope">
+          <AutoHideMessage
+            :maxLength="4"
+            :data="scope.row.emotion"
+          ></AutoHideMessage>
+        </template>
       </el-table-column>
 
       <el-table-column
@@ -213,11 +233,14 @@
         label="其他食物"
         align="center"
         prop="slyEatFood"
-         width="120"
+        width="120"
       >
-      <template slot-scope="scope">
-          <AutoHideMessage :maxLength="4" :data="scope.row.slyEatFood"></AutoHideMessage>
-      </template>
+        <template slot-scope="scope">
+          <AutoHideMessage
+            :maxLength="4"
+            :data="scope.row.slyEatFood"
+          ></AutoHideMessage>
+        </template>
       </el-table-column>
       <el-table-column
         label="熬夜失眠"
@@ -315,7 +338,7 @@ import { mapGetters } from "vuex";
 import PunchLogDetail from "@/components/PunchLog/PunchLogDetail";
 import PunchLogEdit from "@/components/PunchLog/PunchLogEdit";
 import AutoHideMessage from "@/components/AutoHideMessage";
-import NotPunchCustomer from "@/components/PunchLog/NotPunchCustomer"
+import NotPunchCustomer from "@/components/PunchLog/NotPunchCustomer";
 import dayjs from "dayjs";
 export default {
   name: "WxUserLog",
@@ -356,7 +379,7 @@ export default {
         appid: null,
         phone: null,
         nutritionistId: null,
-        afterNutritionistId: null
+        afterNutritionistId: null,
       },
       // 表单参数
       form: {},
@@ -364,14 +387,17 @@ export default {
       rules: {},
       logTimePickerOptions: {
         disabledDate(time) {
-          return time.getTime() > dayjs()
+          return time.getTime() > dayjs();
         },
       },
-      logTimeScope: null
+      logTimeScope: null,
     };
   },
-  components:{
-    PunchLogDetail,AutoHideMessage,PunchLogEdit,NotPunchCustomer
+  components: {
+    PunchLogDetail,
+    AutoHideMessage,
+    PunchLogEdit,
+    NotPunchCustomer,
   },
   created() {
     this.getList();
@@ -396,15 +422,21 @@ export default {
       // 售后字典
       "afterSaleIdOptions",
       // 主营养师字典
-      "nutritionistIdOptions"
+      "nutritionistIdOptions",
     ]),
   },
   methods: {
     /** 查询微信用户记录列表 */
     getList() {
-      this.loading = true; 
-      this.queryParams.beginTime = this.logTimeScope && this.logTimeScope.length > 0 ? this.logTimeScope[0] : null;
-      this.queryParams.endTime = this.logTimeScope && this.logTimeScope.length > 0 ? this.logTimeScope[1] : null;
+      this.loading = true;
+      this.queryParams.beginTime =
+        this.logTimeScope && this.logTimeScope.length > 0
+          ? this.logTimeScope[0]
+          : null;
+      this.queryParams.endTime =
+        this.logTimeScope && this.logTimeScope.length > 0
+          ? this.logTimeScope[1]
+          : null;
       listWxUserLog(this.queryParams).then((response) => {
         this.wxUserLogList = response.rows;
         this.total = response.total;
@@ -495,7 +527,7 @@ export default {
     /** 修改按钮操作 */
     handleUpdate(row) {
       this.$refs.punchLogEditRef.showDialog(row, () => {
-          this.getList();
+        this.getList();
       });
     },
     /** 提交按钮 */
@@ -526,15 +558,11 @@ export default {
     /** 删除按钮操作 */
     handleDelete(row) {
       const ids = row.id || this.ids;
-      this.$confirm(
-        '是否确认删除该用户的打卡记录?',
-        "警告",
-        {
-          confirmButtonText: "确定",
-          cancelButtonText: "取消",
-          type: "warning",
-        }
-      )
+      this.$confirm("是否确认删除该用户的打卡记录?", "警告", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning",
+      })
         .then(function () {
           return delWxUserLog(ids);
         })
@@ -544,9 +572,9 @@ export default {
         })
         .catch(function () {});
     },
-    showPunchLogDetail(data){
-        this.$refs.punchLogDetailRef.showDialog(data,() => {
-          this.getList();
+    showPunchLogDetail(data) {
+      this.$refs.punchLogDetailRef.showDialog(data, () => {
+        this.getList();
       });
     },
     /** 导出按钮操作 */
@@ -565,10 +593,28 @@ export default {
         })
         .catch(function () {});
     },
-    showNotLunch(){
-      this.queryParams.startDate = this.logTimeScope && this.logTimeScope.length > 0 ? this.logTimeScope[0] : null;
-      this.$refs.notPunchCustomerRef.showDialog(this.queryParams, this.nutritionistIdOptions,this.afterSaleIdOptions);
-    }
+    handleOnNameClick(name) {
+      // console.log({ name });
+      this.$router.push(`/customer?cusName=${name}`);
+    },
+    showNotLunch() {
+      this.queryParams.startDate =
+        this.logTimeScope && this.logTimeScope.length > 0
+          ? this.logTimeScope[0]
+          : null;
+      this.$refs.notPunchCustomerRef.showDialog(
+        this.queryParams,
+        this.nutritionistIdOptions,
+        this.afterSaleIdOptions
+      );
+    },
   },
 };
 </script>
+<style lang="scss" scoped>
+.app-container {
+  .user_name_style {
+    cursor: pointer;
+  }
+}
+</style>
