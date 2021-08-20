@@ -137,19 +137,70 @@
         </template>
       </el-table-column>
       <el-table-column label="直播营养师" align="center" prop="liveNutritionistName" />
-      <el-table-column label="直播运营" align="center" prop="liveOperatorName" />
-      <el-table-column label="直播策划" align="center" prop="livePlannerName" />
+      <!--<el-table-column label="直播运营" align="center" prop="liveOperatorName" />
+      <el-table-column label="直播策划" align="center" prop="livePlannerName" />-->
       <el-table-column label="所属账号" align="center" prop="fanChannelName" />
-      <el-table-column label="接粉微信号" align="center" prop="wxAccountList">
+      <el-table-column label="导粉情况" align="center" prop="wxAccountList">
         <template slot-scope="scope">
+          <span style="margin-right:10px">{{scope.row.wxAccountList.length}}</span>
           <el-popover
           placement="left"
           width="370"
           trigger="click">
-          <el-table :data="scope.row.wxAccountList" style="width:360;height: 300px;overflow: auto;">
+          
+          <el-table :data="scope.row.wxAccountList" height="300" style="width: 100%">
             <el-table-column width="80" property="saleName" label="销售"></el-table-column>
             <el-table-column width="180" property="wxAccount" label="微信号" align="center"></el-table-column>
             <el-table-column width="80" property="fanNum" label="导粉量" align="center"></el-table-column>
+          </el-table>
+          <el-button slot="reference">详情</el-button>
+          </el-popover>
+        </template>
+      </el-table-column>
+      <el-table-column label="进粉情况" align="center" prop="addFanList">
+        <template slot-scope="scope">
+          <span style="margin-right:10px">{{scope.row.addFanList.length}}</span>
+          <el-popover
+          :title="scope.row.liveRoomName + '-'  + scope.row.fanChannelName + '-' + scope.row.liveNutritionistName + '-' + parseTime(scope.row.liveStartTime, '{h}:{i}') + '至' + parseTime(scope.row.liveEndTime, '{h}:{i}') + '直播进粉记录'"
+          placement="left"
+          width="680"
+          trigger="click">
+          <el-row :gutter="10" class="mb8">
+            <el-col :span="1.5">
+              <el-button
+                type="primary"
+                icon="el-icon-plus"
+                size="mini"
+                @click="addFanRecord(scope.row)"
+              >新增</el-button>
+              <span style="margin-left:5px;color:red">总数：{{scope.row.addFanList.length}}</span>
+            </el-col>
+          </el-row>
+          <el-table :data="scope.row.addFanList" height="250" style="width: 100%"><!-- 620;height: 300px;overflow: auto; -->
+            <el-table-column width="70" property="saleName" label="销售"></el-table-column>
+            <el-table-column width="140" property="saleWxAccount" label="销售微信号" align="center"></el-table-column>
+            <el-table-column width="140" property="fanWxNumber" label="客户微信号" align="center"></el-table-column>
+            <el-table-column width="140" property="enterFanTime" label="进粉时间" align="center"></el-table-column>
+            <el-table-column label="操作" align="center" class-name="small-padding fixed-width" width="140">
+                <template slot-scope="scope">
+                      <el-button
+                        style="margin-left:16px"
+                          size="normal"
+                          type="text"
+                          icon="el-icon-edit"
+                          @click="updateFanRecord(scope.row)"
+                      >修改</el-button>
+                      <el-popconfirm title="确定要删除吗？" @onConfirm="delFanRecord(scope.row)">
+                          <el-button
+                             slot="reference"
+                            size="normal"
+                            type="text"
+                            icon="el-icon-delete"
+                          >删除</el-button> 
+                      </el-popconfirm>
+                    
+                </template>
+            </el-table-column>
           </el-table>
           <el-button slot="reference">详情</el-button>
           </el-popover>
@@ -344,12 +395,58 @@
         <el-button @click="cancel">取 消</el-button>
       </div>
     </el-dialog>
+
+     <el-dialog :title="addEditFanRecordTitle" :visible.sync="addEditFanRecordOpen" width="600px" append-to-body :close-on-click-modal="false">
+        <el-form ref="addEditFanRecordForm" :model="addEditFanRecordForm" :rules="addEditFanRecordRules" label-width="120px">
+            <el-form-item label="销售微信号" prop="saleWxAccountId">
+            <el-select
+                v-model="addEditFanRecordForm.saleWxAccountId"
+                placeholder="请选择销售微信号"
+                clearable
+                filterable
+                size="small"
+                style="width:300px"
+              >
+              <el-option
+                v-for="dict in wxAccountList"
+                :key="dict.id"
+                :label="dict.wxAccount"
+                :value="parseInt(dict.id)"
+              />
+            </el-select>
+            </el-form-item>
+            <el-form-item label="粉丝微信号" prop="fanWxNumber">
+                <el-input
+                  v-model="addEditFanRecordForm.fanWxNumber"
+                  placeholder="请输入微信号"
+                  clearable
+                  size="small"
+                  maxlength="50"
+                  style="width:300px"
+                />
+            </el-form-item>
+            <el-form-item label="进粉时间" prop="enterFanTime">
+                <el-date-picker
+                v-model="addEditFanRecordForm.enterFanTime"
+                format="yyyy-MM-dd HH:mm"
+                value-format="yyyy-MM-dd HH:mm"
+                type="datetime"
+                style="width:300px"
+                placeholder="进粉时间">
+            </el-date-picker>
+          </el-form-item>
+        </el-form>
+        <div slot="footer" class="dialog-footer">
+          <el-button type="primary" @click="submitAddEditFanRecordForm">确 定</el-button>
+          <el-button @click="cancelAddEditFanRecordForm">取 消</el-button>
+        </div>
+    </el-dialog>
   </div>
 </template>
 
 <script>
-import { listLiveSchedul, getLiveSchedul, delLiveSchedul, addLiveSchedul, updateLiveSchedul, exportLiveSchedul,updateLiveStatus,copyLastTimeLiveSchedul } from "@/api/custom/liveSchedul";
-import { listWxAccount } from "@/api/custom/wxAccount";
+import { listLiveSchedul, getLiveSchedul, delLiveSchedul, addLiveSchedul, updateLiveSchedul, exportLiveSchedul,updateLiveStatus,copyLastTimeLiveSchedul,addOrEditSysLiveSchedulFanRecord,delSysLiveSchedulFanRecord } from "@/api/custom/liveSchedul";
+import { getAllWxAccount } from "@/api/custom/wxAccount";
 import AutoHideInfo from "@/components/AutoHideInfo";
 import dayjs from "dayjs";
 const nowDate = dayjs().format("YYYY-MM-DD");
@@ -414,7 +511,19 @@ export default {
       //接粉渠道
       fanChanneloptions: [],
       //所有微信号
-      wxAccountList:[]
+      wxAccountList:[],
+
+      addEditFanRecordTitle: "",
+      addEditFanRecordOpen: false,
+      addEditFanRecordForm: {},
+      addEditFanRecordRules: {
+        saleWxAccountId: [{ required: true, trigger: "blur", message: "请选择销售微信号" }],
+        fanWxNumber:[{ required: true, trigger: "blur", message: "请填写粉丝微信号" }],
+        enterFanTime:[{ required: true, trigger: "blur", message: "请选择进粉时间" }],
+      },
+      //记录当前添加或编辑进粉记录对应直播记录的ID
+      addOrEditSchedulId: null,
+
     };
   },
   components:{
@@ -454,16 +563,18 @@ export default {
                 item.status = (item.liveStatus == 0 || item.liveStatus == 2) ? false : true; 
                 item.statusFalseName = item.liveStatus == 0 ? '未开播' : '已下播';
                 item.statusTrueName = '已开播';
+                item.addFanVisible = this.addOrEditSchedulId == item.id;  
             });
         }
         this.total = response.total;
         this.loading = false;
+        this.addOrEditSchedulId = null;
       });
     },
     //获取所有微信号
     getListWxAccount() {
-      listWxAccount(this.queryParams).then((response) => {
-        this.wxAccountList = response.rows;
+      getAllWxAccount().then((response) => {
+        this.wxAccountList = response.data;
       });
     },
     // 取消按钮
@@ -620,6 +731,79 @@ export default {
           }
       });
       
+    },
+    addEditFanRecordFormRest(){
+        this.addEditFanRecordForm = {
+          id: null,
+          liveSchedulId: null,
+          saleWxAccountId: null,
+          fanWxNumber: null,
+          enterFanTime: nowTime
+        },
+        this.addOrEditSchedulId = null;
+    }, 
+    addFanRecord(item){
+        this.addEditFanRecordFormRest();
+        this.addEditFanRecordForm.liveSchedulId = item.id;
+        this.addEditFanRecordTitle = item.liveRoomName + "-" + item.fanChannelName + "-" + item.liveNutritionistName + "-" + this.parseTime(item.liveStartTime, '{h}:{i}') +"至" + this.parseTime(item.liveEndTime, '{h}:{i}') + "直播-添加进粉记录";
+        this.addEditFanRecordOpen = true;
+    },
+    updateFanRecord(item){
+        this.addEditFanRecordFormRest();
+        if(item.id == null){
+            return;
+        }
+        this.addEditFanRecordForm = {
+          id: item.id,
+          liveSchedulId: item.liveSchedulId,
+          saleWxAccountId: item.saleWxAccountId,
+          fanWxNumber: item.fanWxNumber,
+          enterFanTime: item.enterFanTime
+        };
+        let liveSchedul = this.getLiveSchedulById(item.liveSchedulId);
+        this.addEditFanRecordTitle = liveSchedul.liveRoomName + "-" + liveSchedul.fanChannelName + "-" + liveSchedul.liveNutritionistName + "-" + this.parseTime(liveSchedul.liveStartTime, '{h}:{i}') +"至" + this.parseTime(liveSchedul.liveEndTime, '{h}:{i}') + "直播-编辑进粉记录";
+        this.addEditFanRecordOpen = true;
+    },
+    delFanRecord(item){
+        if(item == null || item.id == null){
+          return;
+        }
+        delSysLiveSchedulFanRecord({'id': item.id}).then((reponse) => {
+            if(reponse.code == 200){
+              this.msgSuccess("删除成功");
+              this.addEditFanRecordOpen = false;
+               this.getList();
+            }else{
+              this.msgSuccess("删除失败");
+            }
+        });
+    },
+    submitAddEditFanRecordForm(){
+         this.$refs["addEditFanRecordForm"].validate(valid => {
+            if (valid) {
+                  addOrEditSysLiveSchedulFanRecord(this.addEditFanRecordForm).then((response) => {
+                      if(response.code == 200){
+                            this.msgSuccess(this.addEditFanRecordForm.id == null ? "添加成功" : "编辑成功");
+                            this.addEditFanRecordOpen = false;
+                            this.addOrEditSchedulId = this.addEditFanRecordForm.liveSchedulId;
+                            this.getList();
+                      }else{
+                         this.msgError(this.addEditFanRecordForm.id == null ? "添加失败" : "编辑失败");
+                      }
+
+                  });
+            }else{
+              this.msgError("数据未填写完整");
+            }
+         });
+    },
+    cancelAddEditFanRecordForm(){
+        this.addEditFanRecordOpen = false;
+    },
+    getLiveSchedulById(id){
+      if(this.liveSchedulList != null && this.liveSchedulList.length > 0 && id != null){
+         return this.liveSchedulList.find((opt) => opt.id === id);
+      }
     }
   }
 };

@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.stdiet.common.core.domain.AjaxResult;
 import com.stdiet.custom.domain.SysLiveSchedul;
+import com.stdiet.custom.domain.SysLiveSchedulFanRecord;
 
 /**
  * 直播排班Service接口
@@ -91,4 +92,25 @@ public interface ISysLiveSchedulService
      * @return
      */
     public SysLiveSchedul getLiveSchedulByTime(SysLiveSchedul sysLiveSchedul);
+
+
+    /**
+     * 给对应直播添加进粉记录
+     * @return
+     */
+    int addLiveSchedulFanRecord(SysLiveSchedulFanRecord sysLiveSchedulFanRecord);
+
+    /**
+     * 给对应直播更新进粉记录
+     * @param sysLiveSchedulFanRecord
+     * @return
+     */
+    int updateLiveSchedulFanRecord(SysLiveSchedulFanRecord sysLiveSchedulFanRecord);
+
+    /**
+     * 给对应直播删除进粉记录
+     * @param id
+     * @return
+     */
+    int delLiveSchedulFanRecord(Long id);
 }

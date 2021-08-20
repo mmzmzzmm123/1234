@@ -89,5 +89,23 @@ export function getLiveSchedulByTime(data) {
   })
 }
 
+//添加、编辑进粉记录
+export function addOrEditSysLiveSchedulFanRecord(data){
+  return request({
+    url: '/custom/liveSchedul/addOrEditSysLiveSchedulFanRecord',
+    method: 'post',
+    data: data
+  })
+}
+
+//删除进粉记录
+export function delSysLiveSchedulFanRecord(query){
+  return request({
+    url: '/custom/liveSchedul/delSysLiveSchedulFanRecord',
+    method: 'get',
+    params: query
+  })
+}
+
 
 
