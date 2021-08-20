@@ -148,8 +148,8 @@ public class ByCalendarController extends BaseController {
         //将类型颜色样式加载到字典
         HashMap<String, String> hashMap = new HashMap<>();
         for (SysDictData calendartype : dictDataService.selectDictDataByType("sys_schoolcalendartype")) {
-            System.out.println("====sys_yebjlx.getDictValue()" + calendartype.getDictValue());
-            System.out.println("=====calendartype.getCssClass()" + calendartype.getCssClass());
+            //System.out.println("====sys_yebjlx.getDictValue()" + calendartype.getDictValue());
+            //System.out.println("=====calendartype.getCssClass()" + calendartype.getCssClass());
             hashMap.put(calendartype.getDictValue(), calendartype.getCssClass());
         }
         //定义返回列表
@@ -162,7 +162,7 @@ public class ByCalendarController extends BaseController {
                 ByCalendarShow by = new ByCalendarShow();
                 by.setId(calendar.getId());
                 by.setTitle(calendar.getName());
-                System.out.println("title:" + calendar.getName());
+                //System.out.println("title:" + calendar.getName());
                 by.setStart(formatter.format(calendar.getActivitytime()));
                 by.setEnd(formatter.format(calendar.getActivityendtime()));
                 by.setColor(hashMap.get(calendar.getType()));
@@ -189,12 +189,15 @@ public class ByCalendarController extends BaseController {
             listvi.addAll(getbyclassthemes(classId, formatter, hashMap));
             //根据班级加载幼儿生日
             listvi.addAll(getbychilds(classId, formatter));
-        }else{
+        } else {
             Long schoolId = SecurityUtils.getLoginUser().getUser().getDeptId();
             //幼儿一日流程评估计划
             listvi.addAll(getdayflowdata(classId, formatter));
             //根据不同的幼儿园加载教职工
-            listvi.addAll(getbyteacherBiths(schoolId, formatter, hashMap));
+            //只有管理员可见
+            if (schoolCommon.isSchoolAdmin()) {
+                listvi.addAll(getbyteacherBiths(schoolId, formatter, hashMap));
+            }
         }
 
         //幼儿出勤人数
@@ -261,7 +264,7 @@ public class ByCalendarController extends BaseController {
 
         List<ByCalendarShow> listvi = new ArrayList<>();
         //系统内员工的生日、入职日期信息
-        System.out.println("listTeacherBirth.size()===" + listTeacherBirth.size());
+        //System.out.println("listTeacherBirth.size()===" + listTeacherBirth.size());
         if (listTeacherBirth != null && listTeacherBirth.size() > 0) {
             for (int i = 0; i < listTeacherBirth.size(); i++) {
 
@@ -270,7 +273,7 @@ public class ByCalendarController extends BaseController {
                 //创建一个教师实体类，并赋值
                 byTeacherJbxx = listTeacherBirth.get(i);
                 String strCurrentYear = schoolCommon.getCurrentYear();
-                System.out.println("当前年===" + strCurrentYear);
+                //System.out.println("当前年===" + strCurrentYear);
 
                 //参加工作日期
                 if (byTeacherJbxx.getCjgzrq() != null) {
@@ -285,7 +288,7 @@ public class ByCalendarController extends BaseController {
                     //教师生日颜色
                     by.setColor("#13c2c2");
                     listvi.add(by);
-                    System.out.println("当前年工作日期timefor===" + timefor + "=====" + listTeacherBirth.get(i).getUser().getNickName() + "-合同满年期限");
+                    //System.out.println("当前年工作日期timefor===" + timefor + "=====" + listTeacherBirth.get(i).getUser().getNickName() + "-合同满年期限");
                 }
                 //生日
                 if (byTeacherJbxx.getCsrq() != null) {
@@ -300,7 +303,7 @@ public class ByCalendarController extends BaseController {
                     //教师生日颜色
                     by.setColor("#722ed1");
                     listvi.add(by);
-                    System.out.println("当前年生日timefor===" + timefor + "=====" + listTeacherBirth.get(i).getUser().getNickName() + "-生日");
+                    //System.out.println("当前年生日timefor===" + timefor + "=====" + listTeacherBirth.get(i).getUser().getNickName() + "-生日");
                 }
             }
         }

@@ -69,9 +69,6 @@ public class BySchoolcalendarController extends BaseController {
         bySchoolcalendar.setXnxq(schoolCommon.getCurrentXn());
         //系统内设置的园历信息
         List<BySchoolcalendar> list = bySchoolcalendarService.selectBySchoolcalendarList(bySchoolcalendar);
-        //系统内员工生日信息  系统内员工入职日期
-        ByTeacherJbxx byTeacherJbxx = new ByTeacherJbxx();
-        List<ByTeacherJbxx> listTeacherBirth = byTeacherJbxxService.selectByTeacherJbxxList(byTeacherJbxx);
         ByThings byThings = null;
         List<ByThings> listThings = new ArrayList<>();
         //系统内设置的园历信息
@@ -90,6 +87,10 @@ public class BySchoolcalendarController extends BaseController {
             }
         }
 
+        //系统内员工生日信息  系统内员工入职日期
+        ByTeacherJbxx byTeacherJbxx = new ByTeacherJbxx();
+        List<ByTeacherJbxx> listTeacherBirth = byTeacherJbxxService.selectByTeacherJbxxList(byTeacherJbxx);
+
         //系统内员工的生日、入职日期信息
         if (listTeacherBirth != null && listTeacherBirth.size() > 0) {
             for (int i = 0; i < listTeacherBirth.size(); i++) {
@@ -97,28 +98,28 @@ public class BySchoolcalendarController extends BaseController {
                 SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 
                 //创建一个教师实体类，并赋值
-                byTeacherJbxx=listTeacherBirth.get(i);
-                String strCurrentYear=schoolCommon.getCurrentYear();
+                byTeacherJbxx = listTeacherBirth.get(i);
+                String strCurrentYear = schoolCommon.getCurrentYear();
                 System.out.println("当前年===" + strCurrentYear);
 
                 //参加工作日期
-                if(byTeacherJbxx.getCjgzrq()!=null){
+                if (byTeacherJbxx.getCjgzrq() != null) {
                     byThings = new ByThings();
                     byThings.setYears(strCurrentYear);
-                    System.out.println("参加工作日期==="+sdf.format(byTeacherJbxx.getCjgzrq()));
+                    System.out.println("参加工作日期===" + sdf.format(byTeacherJbxx.getCjgzrq()));
                     byThings.setMonths(sdf.format(byTeacherJbxx.getCjgzrq()).split("-")[1]);//2020-04-12  月
                     byThings.setDays(sdf.format(byTeacherJbxx.getCjgzrq()).split("-")[2]);//2020-04-12  日
-                    byThings.setThings(listTeacherBirth.get(i).getUser().getNickName()+"-合同满年期限");
+                    byThings.setThings(listTeacherBirth.get(i).getUser().getNickName() + "-合同满年期限");
 
                     listThings.add(byThings);
                 }
                 //生日
-                if(byTeacherJbxx.getCsrq()!=null){
+                if (byTeacherJbxx.getCsrq() != null) {
                     byThings = new ByThings();
                     byThings.setYears(strCurrentYear);
                     byThings.setMonths(sdf.format(byTeacherJbxx.getCsrq()).split("-")[1]);//2020-04-12  月
                     byThings.setDays(sdf.format(byTeacherJbxx.getCsrq()).split("-")[2]);//2020-04-12  日
-                    byThings.setThings(listTeacherBirth.get(i).getUser().getNickName()+"-生日");
+                    byThings.setThings(listTeacherBirth.get(i).getUser().getNickName() + "-生日");
 
                     listThings.add(byThings);
                 }

@@ -149,6 +149,26 @@ public class SchoolCommon {
         return "";
     }
 
+
+    /**
+     * 判断当前用户是否为学校管理员(学校管理员和教学主任)
+     **/
+    public boolean isSchoolAdmin() {
+        boolean b = false;
+        List<SysRole> list = SecurityUtils.getLoginUser().getUser().getRoles();
+        System.out.println("roles:" + list.size());
+
+        if (list != null && list.size() > 0) {
+            for (int i = 0; i < list.size(); i++) {
+                String strKey = list.get(i).getRoleKey();
+                if (strKey.equals("school_admin") || strKey.equals("school_director")) {
+                    b = true;
+                }
+            }
+        }
+        return b;
+    }
+
     /**
      * 判断当前用户是否拥有班级
      **/
