@@ -8,6 +8,8 @@ import java.util.List;
 import com.stdiet.common.core.domain.AjaxResult;
 import com.stdiet.common.utils.DateUtils;
 import com.stdiet.common.utils.SecurityUtils;
+import com.stdiet.custom.domain.SysLiveSchedulFanRecord;
+import com.stdiet.custom.mapper.SysLiveSchedulFanRecordMapper;
 import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -26,6 +28,9 @@ public class SysLiveSchedulServiceImpl implements ISysLiveSchedulService
 {
     @Autowired
     private SysLiveSchedulMapper sysLiveSchedulMapper;
+
+    @Autowired
+    private SysLiveSchedulFanRecordMapper sysLiveSchedulFanRecordMapper;
 
     /**
      * 查询直播排班
@@ -185,5 +190,30 @@ public class SysLiveSchedulServiceImpl implements ISysLiveSchedulService
      */
     public SysLiveSchedul getLiveSchedulByTime(SysLiveSchedul sysLiveSchedul){
         return sysLiveSchedulMapper.getLiveSchedulByTime(sysLiveSchedul);
+    }
+
+    /**
+     * 给对应直播添加进粉记录
+     * @return
+     */
+    public int addLiveSchedulFanRecord(SysLiveSchedulFanRecord sysLiveSchedulFanRecord){
+        return sysLiveSchedulFanRecordMapper.insertSysLiveSchedulFanRecord(sysLiveSchedulFanRecord);
+    }
+
+    /**
+     * 给对应直播修改进粉记录
+     * @return
+     */
+    public int updateLiveSchedulFanRecord(SysLiveSchedulFanRecord sysLiveSchedulFanRecord){
+        return sysLiveSchedulFanRecordMapper.updateSysLiveSchedulFanRecord(sysLiveSchedulFanRecord);
+    }
+
+    /**
+     * 给对应直播删除进粉记录
+     * @param id
+     * @return
+     */
+    public int delLiveSchedulFanRecord(Long id){
+        return sysLiveSchedulFanRecordMapper.deleteSysLiveSchedulFanRecordById(id);
     }
 }

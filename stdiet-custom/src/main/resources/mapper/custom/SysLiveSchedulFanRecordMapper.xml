@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.stdiet.custom.mapper.SysLiveSchedulFanRecordMapper">
+
+    <resultMap type="SysLiveSchedulFanRecord" id="SysLiveSchedulFanRecordResult">
+        <result property="id"    column="id"    />
+        <result property="liveSchedulId"    column="live_schedul_id"    />
+        <result property="saleWxAccountId"    column="sale_wx_account_id"    />
+        <result property="fanWxNumber"    column="fan_wx_number"    />
+        <result property="enterFanTime"    column="enter_fan_time"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="delFlag"    column="del_flag"    />
+    </resultMap>
+
+    <sql id="selectSysLiveSchedulFanRecordVo">
+        select id, live_schedul_id, sale_wx_account_id, fan_wx_number, enter_fan_time, create_time, create_by, update_time, update_by, del_flag from sys_live_schedul_fan_record
+    </sql>
+
+    <select id="selectSysLiveSchedulFanRecordList" parameterType="SysLiveSchedulFanRecord" resultMap="SysLiveSchedulFanRecordResult">
+        <include refid="selectSysLiveSchedulFanRecordVo"/> where del_flag = 0
+    </select>
+
+    <select id="selectSysLiveSchedulFanRecordById" parameterType="Long" resultMap="SysLiveSchedulFanRecordResult">
+        <include refid="selectSysLiveSchedulFanRecordVo"/>
+        where id = #{id} and del_flag = 0
+    </select>
+
+    <insert id="insertSysLiveSchedulFanRecord" parameterType="SysLiveSchedulFanRecord" useGeneratedKeys="true" keyProperty="id">
+        insert into sys_live_schedul_fan_record
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="liveSchedulId != null">live_schedul_id,</if>
+            <if test="saleWxAccountId != null">sale_wx_account_id,</if>
+            <if test="fanWxNumber != null">fan_wx_number,</if>
+            <if test="enterFanTime != null">enter_fan_time,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="delFlag != null">del_flag,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="liveSchedulId != null">#{liveSchedulId},</if>
+            <if test="saleWxAccountId != null">#{saleWxAccountId},</if>
+            <if test="fanWxNumber != null">#{fanWxNumber},</if>
+            <if test="enterFanTime != null">#{enterFanTime},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="delFlag != null">#{delFlag},</if>
+        </trim>
+    </insert>
+
+    <update id="updateSysLiveSchedulFanRecord" parameterType="SysLiveSchedulFanRecord">
+        update sys_live_schedul_fan_record
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="liveSchedulId != null">live_schedul_id = #{liveSchedulId},</if>
+            <if test="saleWxAccountId != null">sale_wx_account_id = #{saleWxAccountId},</if>
+            <if test="fanWxNumber != null">fan_wx_number = #{fanWxNumber},</if>
+            <if test="enterFanTime != null">enter_fan_time = #{enterFanTime},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="delFlag != null">del_flag = #{delFlag},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <update id="deleteSysLiveSchedulFanRecordById" parameterType="Long">
+        update sys_live_schedul_fan_record set del_flag = 1  where id = #{id}
+    </update>
+
+    <update id="deleteSysLiveSchedulFanRecordByIds" parameterType="String">
+        update sys_live_schedul_fan_record set del_flag = 1 where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </update>
+</mapper>

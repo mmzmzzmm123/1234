@@ -81,5 +81,9 @@ public class SysLiveSchedul extends BaseEntity
 
     private String fanChannelName;
 
+    //导粉情况
     private List<Map<String,Object>> wxAccountList;
+
+    //进粉情况
+    private List<Map<String,Object>> addFanList;
 }

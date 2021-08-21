@@ -119,4 +119,13 @@ public class SysWxSaleAccountController extends BaseController
     {
         return toAjax(sysWxSaleAccountService.deleteSysWxSaleAccountByIds(ids));
     }
+
+    /**
+     * 查询所有微信账号
+     */
+    @GetMapping("/getAllWxAccount")
+    public AjaxResult getAllWxAccount() {
+        List<SysWxSaleAccount> list = sysWxSaleAccountService.selectSysWxSaleAccountList(new SysWxSaleAccount());
+        return AjaxResult.success(list);
+    }
 }

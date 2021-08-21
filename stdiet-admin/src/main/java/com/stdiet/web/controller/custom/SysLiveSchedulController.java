@@ -5,16 +5,10 @@ import java.util.List;
 
 import com.stdiet.common.utils.DateUtils;
 import com.stdiet.common.utils.StringUtils;
+import com.stdiet.custom.domain.SysLiveSchedulFanRecord;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import com.stdiet.common.annotation.Log;
 import com.stdiet.common.core.controller.BaseController;
 import com.stdiet.common.core.domain.AjaxResult;
@@ -260,5 +254,22 @@ public class SysLiveSchedulController extends BaseController
             e.printStackTrace();
         }
         return AjaxResult.success(live);
+    }
+
+    /**
+     * 给对应直播添加、更新进粉记录
+     */
+    @PostMapping(value = "/addOrEditSysLiveSchedulFanRecord")
+    public AjaxResult addOrEditSysLiveSchedulFanRecord(@RequestBody  SysLiveSchedulFanRecord sysLiveSchedulFanRecord){
+        int row = sysLiveSchedulFanRecord.getId() == null ? sysLiveSchedulService.addLiveSchedulFanRecord(sysLiveSchedulFanRecord) : sysLiveSchedulService.updateLiveSchedulFanRecord(sysLiveSchedulFanRecord);
+        return toAjax(row);
+    }
+
+    /**
+     * 给对应直播删除进粉记录
+     */
+    @GetMapping(value = "/delSysLiveSchedulFanRecord")
+    public AjaxResult delSysLiveSchedulFanRecord(@RequestParam("id")Long id){
+        return toAjax(sysLiveSchedulService.delLiveSchedulFanRecord(id));
     }
 }

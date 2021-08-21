@@ -29,6 +29,8 @@
 
         <!-- 根据渠道查询对应微信号（微信账号分配表中） -->
         <association property="wxAccountList" column="id" select="getWxAccountListByLiveId"/>
+        <!-- 查询该场直播真实进粉情况 -->
+        <association property="addFanList" column="id" select="getAddFanRecordByLiveSchedulId"></association>
     </resultMap>
 
     <resultMap type="SysLiveSchedul" id="SysLiveSchedulResultSigle">
@@ -220,5 +222,16 @@
         and  #{liveStartTime} >= live_start_time order by live_start_time desc limit 1
     </select>
 
+    <!-- 根据直播记录ID查询对应进粉情况 -->
+    <select id="getAddFanRecordByLiveSchedulId" parameterType="Long" resultType="Map">
+        select
+        fr.id, fr.live_schedul_id liveSchedulId, fr.sale_wx_account_id saleWxAccountId, fr.fan_wx_number as fanWxNumber, DATE_FORMAT(fr.enter_fan_time,'%Y-%m-%d %H:%i') as enterFanTime,
+        w.wx_account as saleWxAccount, u.nick_name as saleName
+        from sys_live_schedul_fan_record as fr
+        left join sys_wx_sale_account as w on w.id = fr.sale_wx_account_id and w.del_flag = 0
+        left join sys_wx_distribution as swd on swd.wechat_account = w.id and swd.del_flag = 0
+        left join sys_user u on u.user_id = swd.user_id
+        where fr.del_flag = 0 and fr.live_schedul_id = #{id} order by fr.create_time desc
+    </select>
 
 </mapper>

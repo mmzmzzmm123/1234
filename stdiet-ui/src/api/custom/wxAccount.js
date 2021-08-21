@@ -51,3 +51,12 @@ export function exportWxAccount(query) {
     params: query
   })
 }
+
+// 查询所有微信账号
+export function getAllWxAccount() {
+  return request({
+    url: '/custom/wxAccount/getAllWxAccount',
+    method: 'get'
+  })
+}
+
