@@ -133,7 +133,9 @@ export default {
       this.$refs["form"].validate((valid) => {
         if (valid && this.checkFormat(this.form.keyWordArray)) {
           this.form.keyWord =
-            this.form.keyWordArray != null && this.form.keyWordArray.length > 0
+            this.form.keyWordArray &&
+            this.form.keyWordArray instanceof Array &&
+            this.form.keyWordArray.length
               ? this.form.keyWordArray.join(",").replaceAll("，", ",")
               : null;
           // this.form.keyWord = (this.form.keyWord || "").replace("，", ",");
