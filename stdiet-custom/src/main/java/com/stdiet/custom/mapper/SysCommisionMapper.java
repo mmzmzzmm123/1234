@@ -69,5 +69,7 @@ public interface SysCommisionMapper
      */
     List<SysCommision> getAfterSaleAndNutri(SysCommision sysCommision);
 
+    int getAfterSaleAndNutriCount(SysCommision sysCommision);
+
     List<Long> getAfterSaleId(SysCommision sysCommision);
 }

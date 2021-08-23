@@ -807,6 +807,10 @@ export default {
       };
       this.screenNutriAssisIdOptions = this.nutriAssisIdOptions;
       this.screenAfterSaleIdOptions = this.afterSaleIdOptions;
+
+      //处理原先设定的营养师、助理、售后绑定关系发生变化（比如原先订单的售后或助理发生变化）之后，需要自动更换
+      this.handleOnDietIdChange(this.form.nutritionistIdList);
+
       this.resetForm("form");
     },
     handleOnClosed() {
@@ -851,15 +855,21 @@ export default {
     },
     //监听营养师下拉列表
     handleOnDietIdChange(val) {
-       let assistantAfterArray = orderUtils.getAfterSaleAndAssistantByDietId(this.dietitianAfterAssistantOptions, (val && val.length != null) ? val[val.length-1] : 0);
-       this.form = {
+       let assistantAfterArray = orderUtils.getAfterSaleAndAssistantByDietId(this.dietitianAfterAssistantOptions, (val && val != null) ? val[val.length-1] : 0);
+       /*this.form = {
           ...this.form,
           nutriAssisId: assistantAfterArray ? orderUtils.getRandomValueByArray(assistantAfterArray[0]) : 0,
           afterSaleId: assistantAfterArray ? orderUtils.getRandomValueByArray(assistantAfterArray[1]) : 0,
-        };
+        };*/
+        if(this.form.nutriAssisId == null || assistantAfterArray[0].indexOf(this.form.nutriAssisId) == -1){
+           this.form.nutriAssisId = assistantAfterArray ? orderUtils.getRandomValueByArray(assistantAfterArray[0]) : 0;
+        }
+        if(this.form.afterSaleId == null || assistantAfterArray[1].indexOf(this.form.afterSaleId) == -1){
+           this.form.afterSaleId = assistantAfterArray ? orderUtils.getRandomValueByArray(assistantAfterArray[1]) : 0;
+        }
         this.screenNutriAssisIdOptions = orderUtils.getAfterSaleOrAssistantByIds(this.nutriAssisIdOptions, assistantAfterArray[0]);
         this.screenAfterSaleIdOptions = orderUtils.getAfterSaleOrAssistantByIds(this.afterSaleIdOptions, assistantAfterArray[1]);
-    },
+    }
   },
   watch: {
     // 监听收款账号的变化
