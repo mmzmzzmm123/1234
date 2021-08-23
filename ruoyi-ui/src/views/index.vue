@@ -601,19 +601,19 @@
 
 <script>
 export default {
-  name: "Index",
-  data() {
+  name: 'Index',
+  data () {
     return {
       // 版本号
-      version: "3.6.0",
-    };
+      version: '3.6.0'
+    }
   },
   methods: {
-    goTarget(href) {
-      window.open(href, "_blank");
-    },
-  },
-};
+    goTarget (href) {
+      window.open(href, '_blank')
+    }
+  }
+}
 </script>
 
 <style scoped lang="scss">
@@ -679,4 +679,3 @@ export default {
   }
 }
 </style>
-

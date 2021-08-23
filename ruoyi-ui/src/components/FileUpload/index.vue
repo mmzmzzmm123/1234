@@ -39,27 +39,27 @@
 </template>
 
 <script>
-import { getToken } from "@/utils/auth";
+import { getToken } from '@/utils/auth'
 
 export default {
-  name: "FileUpload",
+  name: 'FileUpload',
   props: {
     // 值
     value: [String, Object, Array],
     // 数量限制
     limit: {
       type: Number,
-      default: 5,
+      default: 5
     },
     // 大小限制(MB)
     fileSize: {
       type: Number,
-      default: 5,
+      default: 5
     },
     // 文件类型, 例如['png', 'jpg', 'jpeg']
     fileType: {
       type: Array,
-      default: () => ["doc", "xls", "ppt", "txt", "pdf"],
+      default: () => ['doc', 'xls', 'ppt', 'txt', 'pdf']
     },
     // 是否显示提示
     isShowTip: {
@@ -67,34 +67,34 @@ export default {
       default: true
     }
   },
-  data() {
+  data () {
     return {
       baseUrl: process.env.VUE_APP_BASE_API,
-      uploadFileUrl: process.env.VUE_APP_BASE_API + "/common/upload", // 上传的图片服务器地址
+      uploadFileUrl: process.env.VUE_APP_BASE_API + '/common/upload', // 上传的图片服务器地址
       headers: {
-        Authorization: "Bearer " + getToken(),
+        Authorization: 'Bearer ' + getToken()
       },
-      fileList: [],
-    };
+      fileList: []
+    }
   },
   watch: {
     value: {
-      handler(val) {
+      handler (val) {
         if (val) {
-          let temp = 1;
+          let temp = 1
           // 首先将值转为数组
-          const list = Array.isArray(val) ? val : this.value.split(',');
+          const list = Array.isArray(val) ? val : this.value.split(',')
           // 然后将数组转为对象数组
           this.fileList = list.map(item => {
-            if (typeof item === "string") {
-              item = { name: item, url: item };
+            if (typeof item === 'string') {
+              item = { name: item, url: item }
             }
-            item.uid = item.uid || new Date().getTime() + temp++;
-            return item;
-          });
+            item.uid = item.uid || new Date().getTime() + temp++
+            return item
+          })
         } else {
-          this.fileList = [];
-          return [];
+          this.fileList = []
+          return []
         }
       },
       deep: true,
@@ -103,77 +103,77 @@ export default {
   },
   computed: {
     // 是否显示提示
-    showTip() {
-      return this.isShowTip && (this.fileType || this.fileSize);
-    },
+    showTip () {
+      return this.isShowTip && (this.fileType || this.fileSize)
+    }
   },
   methods: {
     // 上传前校检格式和大小
-    handleBeforeUpload(file) {
+    handleBeforeUpload (file) {
       // 校检文件类型
       if (this.fileType) {
-        let fileExtension = "";
-        if (file.name.lastIndexOf(".") > -1) {
-          fileExtension = file.name.slice(file.name.lastIndexOf(".") + 1);
+        let fileExtension = ''
+        if (file.name.lastIndexOf('.') > -1) {
+          fileExtension = file.name.slice(file.name.lastIndexOf('.') + 1)
         }
         const isTypeOk = this.fileType.some((type) => {
-          if (file.type.indexOf(type) > -1) return true;
-          if (fileExtension && fileExtension.indexOf(type) > -1) return true;
-          return false;
-        });
+          if (file.type.indexOf(type) > -1) return true
+          if (fileExtension && fileExtension.indexOf(type) > -1) return true
+          return false
+        })
         if (!isTypeOk) {
-          this.$message.error(`文件格式不正确, 请上传${this.fileType.join("/")}格式文件!`);
-          return false;
+          this.$message.error(`文件格式不正确, 请上传${this.fileType.join('/')}格式文件!`)
+          return false
         }
       }
       // 校检文件大小
       if (this.fileSize) {
-        const isLt = file.size / 1024 / 1024 < this.fileSize;
+        const isLt = file.size / 1024 / 1024 < this.fileSize
         if (!isLt) {
-          this.$message.error(`上传文件大小不能超过 ${this.fileSize} MB!`);
-          return false;
+          this.$message.error(`上传文件大小不能超过 ${this.fileSize} MB!`)
+          return false
         }
       }
-      return true;
+      return true
     },
     // 文件个数超出
-    handleExceed() {
-      this.$message.error(`上传文件数量不能超过 ${this.limit} 个!`);
+    handleExceed () {
+      this.$message.error(`上传文件数量不能超过 ${this.limit} 个!`)
     },
     // 上传失败
-    handleUploadError(err) {
-      this.$message.error("上传失败, 请重试");
+    handleUploadError () {
+      this.$message.error('上传失败, 请重试')
     },
     // 上传成功回调
-    handleUploadSuccess(res, file) {
-      this.$message.success("上传成功");
-      this.fileList.push({ name: res.fileName, url: res.fileName });
-      this.$emit("input", this.listToString(this.fileList));
+    handleUploadSuccess (res, file) {
+      this.$message.success('上传成功')
+      this.fileList.push({ name: res.fileName, url: res.fileName })
+      this.$emit('input', this.listToString(this.fileList))
     },
     // 删除文件
-    handleDelete(index) {
-      this.fileList.splice(index, 1);
-      this.$emit("input", this.listToString(this.fileList));
+    handleDelete (index) {
+      this.fileList.splice(index, 1)
+      this.$emit('input', this.listToString(this.fileList))
     },
     // 获取文件名称
-    getFileName(name) {
-      if (name.lastIndexOf("/") > -1) {
-        return name.slice(name.lastIndexOf("/") + 1).toLowerCase();
+    getFileName (name) {
+      if (name.lastIndexOf('/') > -1) {
+        return name.slice(name.lastIndexOf('/') + 1).toLowerCase()
       } else {
-        return "";
+        return ''
       }
     },
     // 对象转成指定字符串分隔
-    listToString(list, separator) {
-      let strs = "";
-      separator = separator || ",";
-      for (let i in list) {
-        strs += list[i].url + separator;
+    listToString (list, separator) {
+      let strs = ''
+      separator = separator || ','
+      for (const i in list) {
+        strs += list[i].url + separator
       }
-      return strs != '' ? strs.substr(0, strs.length - 1) : '';
+      return strs !== '' ? strs.substr(0, strs.length - 1) : ''
     }
   }
-};
+}
 </script>
 
 <style scoped lang="scss">

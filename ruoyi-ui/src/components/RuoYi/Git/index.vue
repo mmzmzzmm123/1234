@@ -7,13 +7,13 @@
 <script>
 export default {
   name: 'RuoYiGit',
-  data() {
+  data () {
     return {
       url: 'https://gitee.com/y_project/RuoYi-Vue'
     }
   },
   methods: {
-    goto() {
+    goto () {
       window.open(this.url)
     }
   }

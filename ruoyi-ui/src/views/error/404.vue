@@ -30,7 +30,7 @@
 export default {
   name: 'Page404',
   computed: {
-    message() {
+    message () {
       return '找不到网页！'
     }
   }

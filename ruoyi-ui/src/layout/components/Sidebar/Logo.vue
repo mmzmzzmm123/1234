@@ -26,14 +26,14 @@ export default {
     }
   },
   computed: {
-    variables() {
-      return variables;
+    variables () {
+      return variables
     },
-	sideTheme() {
+    sideTheme () {
       return this.$store.state.settings.sideTheme
     }
   },
-  data() {
+  data () {
     return {
       title: '若依管理系统',
       logo: logoImg

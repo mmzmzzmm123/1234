@@ -4,7 +4,7 @@ import dialogDrag from './dialog/drag'
 import dialogDragWidth from './dialog/dragWidth'
 import dialogDragHeight from './dialog/dragHeight'
 
-const install = function(Vue) {
+const install = function (Vue) {
   Vue.directive('hasRole', hasRole)
   Vue.directive('hasPermi', hasPermi)
   Vue.directive('dialogDrag', dialogDrag)
@@ -13,9 +13,10 @@ const install = function(Vue) {
 }
 
 if (window.Vue) {
-  window['hasRole'] = hasRole
-  window['hasPermi'] = hasPermi
-  Vue.use(install); // eslint-disable-line
+  window.hasRole = hasRole
+  window.hasPermi = hasPermi
+  window.dialogDrag = dialogDrag
+  window.Vue.use(install)
 }
 
 export default install

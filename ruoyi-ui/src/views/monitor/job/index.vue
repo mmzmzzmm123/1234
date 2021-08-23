@@ -252,22 +252,22 @@
           </el-col>
           <el-col :span="12">
             <el-form-item label="任务状态：">
-              <div v-if="form.status == 0">正常</div>
-              <div v-else-if="form.status == 1">失败</div>
+              <div v-if="form.status === 0">正常</div>
+              <div v-else-if="form.status === 1">失败</div>
             </el-form-item>
           </el-col>
           <el-col :span="12">
             <el-form-item label="是否并发：">
-              <div v-if="form.concurrent == 0">允许</div>
-              <div v-else-if="form.concurrent == 1">禁止</div>
+              <div v-if="form.concurrent === 0">允许</div>
+              <div v-else-if="form.concurrent === 1">禁止</div>
             </el-form-item>
           </el-col>
           <el-col :span="12">
             <el-form-item label="执行策略：">
-              <div v-if="form.misfirePolicy == 0">默认策略</div>
-              <div v-else-if="form.misfirePolicy == 1">立即执行</div>
-              <div v-else-if="form.misfirePolicy == 2">执行一次</div>
-              <div v-else-if="form.misfirePolicy == 3">放弃执行</div>
+              <div v-if="form.misfirePolicy === 0">默认策略</div>
+              <div v-else-if="form.misfirePolicy === 1">立即执行</div>
+              <div v-else-if="form.misfirePolicy === 2">执行一次</div>
+              <div v-else-if="form.misfirePolicy === 3">放弃执行</div>
             </el-form-item>
           </el-col>
         </el-row>
@@ -280,11 +280,11 @@
 </template>
 
 <script>
-import { listJob, getJob, delJob, addJob, updateJob, exportJob, runJob, changeJobStatus } from "@/api/monitor/job";
+import { listJob, getJob, delJob, addJob, updateJob, exportJob, runJob, changeJobStatus } from '@/api/monitor/job'
 
 export default {
-  name: "Job",
-  data() {
+  name: 'Job',
+  data () {
     return {
       // 遮罩层
       loading: true,
@@ -303,7 +303,7 @@ export default {
       // 定时任务表格数据
       jobList: [],
       // 弹出层标题
-      title: "",
+      title: '',
       // 是否显示弹出层
       open: false,
       // 是否显示详细弹出层
@@ -325,51 +325,51 @@ export default {
       // 表单校验
       rules: {
         jobName: [
-          { required: true, message: "任务名称不能为空", trigger: "blur" }
+          { required: true, message: '任务名称不能为空', trigger: 'blur' }
         ],
         invokeTarget: [
-          { required: true, message: "调用目标字符串不能为空", trigger: "blur" }
+          { required: true, message: '调用目标字符串不能为空', trigger: 'blur' }
         ],
         cronExpression: [
-          { required: true, message: "cron执行表达式不能为空", trigger: "blur" }
+          { required: true, message: 'cron执行表达式不能为空', trigger: 'blur' }
         ]
       }
-    };
+    }
   },
-  created() {
-    this.getList();
-    this.getDicts("sys_job_group").then(response => {
-      this.jobGroupOptions = response.data;
-    });
-    this.getDicts("sys_job_status").then(response => {
-      this.statusOptions = response.data;
-    });
+  created () {
+    this.getList()
+    this.getDicts('sys_job_group').then(response => {
+      this.jobGroupOptions = response.data
+    })
+    this.getDicts('sys_job_status').then(response => {
+      this.statusOptions = response.data
+    })
   },
   methods: {
     /** 查询定时任务列表 */
-    getList() {
-      this.loading = true;
+    getList () {
+      this.loading = true
       listJob(this.queryParams).then(response => {
-        this.jobList = response.rows;
-        this.total = response.total;
-        this.loading = false;
-      });
+        this.jobList = response.rows
+        this.total = response.total
+        this.loading = false
+      })
     },
     // 任务组名字典翻译
-    jobGroupFormat(row, column) {
-      return this.selectDictLabel(this.jobGroupOptions, row.jobGroup);
+    jobGroupFormat (row, column) {
+      return this.selectDictLabel(this.jobGroupOptions, row.jobGroup)
     },
     // 状态字典翻译
-    statusFormat(row, column) {
-      return this.selectDictLabel(this.statusOptions, row.status);
+    statusFormat (row, column) {
+      return this.selectDictLabel(this.statusOptions, row.status)
     },
     // 取消按钮
-    cancel() {
-      this.open = false;
-      this.reset();
+    cancel () {
+      this.open = false
+      this.reset()
     },
     // 表单重置
-    reset() {
+    reset () {
       this.form = {
         jobId: undefined,
         jobName: undefined,
@@ -378,146 +378,146 @@ export default {
         cronExpression: undefined,
         misfirePolicy: 1,
         concurrent: 1,
-        status: "0"
-      };
-      this.resetForm("form");
+        status: '0'
+      }
+      this.resetForm('form')
     },
     /** 搜索按钮操作 */
-    handleQuery() {
-      this.queryParams.pageNum = 1;
-      this.getList();
+    handleQuery () {
+      this.queryParams.pageNum = 1
+      this.getList()
     },
     /** 重置按钮操作 */
-    resetQuery() {
-      this.resetForm("queryForm");
-      this.handleQuery();
+    resetQuery () {
+      this.resetForm('queryForm')
+      this.handleQuery()
     },
     // 多选框选中数据
-    handleSelectionChange(selection) {
-      this.ids = selection.map(item => item.jobId);
-      this.single = selection.length != 1;
-      this.multiple = !selection.length;
+    handleSelectionChange (selection) {
+      this.ids = selection.map(item => item.jobId)
+      this.single = selection.length !== 1
+      this.multiple = !selection.length
     },
     // 更多操作触发
-    handleCommand(command, row) {
+    handleCommand (command, row) {
       switch (command) {
-        case "handleRun":
-          this.handleRun(row);
-          break;
-        case "handleView":
-          this.handleView(row);
-          break;
-        case "handleJobLog":
-          this.handleJobLog(row);
-          break;
+        case 'handleRun':
+          this.handleRun(row)
+          break
+        case 'handleView':
+          this.handleView(row)
+          break
+        case 'handleJobLog':
+          this.handleJobLog(row)
+          break
         default:
-          break;
+          break
       }
     },
     // 任务状态修改
-    handleStatusChange(row) {
-      let text = row.status === "0" ? "启用" : "停用";
-      this.$confirm('确认要"' + text + '""' + row.jobName + '"任务吗?', "警告", {
-          confirmButtonText: "确定",
-          cancelButtonText: "取消",
-          type: "warning"
-        }).then(function() {
-          return changeJobStatus(row.jobId, row.status);
-        }).then(() => {
-          this.msgSuccess(text + "成功");
-        }).catch(function() {
-          row.status = row.status === "0" ? "1" : "0";
-        });
+    handleStatusChange (row) {
+      const text = row.status === '0' ? '启用' : '停用'
+      this.$confirm('确认要"' + text + '""' + row.jobName + '"任务吗?', '警告', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(function () {
+        return changeJobStatus(row.jobId, row.status)
+      }).then(() => {
+        this.msgSuccess(text + '成功')
+      }).catch(function () {
+        row.status = row.status === '0' ? '1' : '0'
+      })
     },
     /* 立即执行一次 */
-    handleRun(row) {
-      this.$confirm('确认要立即执行一次"' + row.jobName + '"任务吗?', "警告", {
-          confirmButtonText: "确定",
-          cancelButtonText: "取消",
-          type: "warning"
-        }).then(function() {
-          return runJob(row.jobId, row.jobGroup);
-        }).then(() => {
-          this.msgSuccess("执行成功");
-        }).catch(() => {});
+    handleRun (row) {
+      this.$confirm('确认要立即执行一次"' + row.jobName + '"任务吗?', '警告', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(function () {
+        return runJob(row.jobId, row.jobGroup)
+      }).then(() => {
+        this.msgSuccess('执行成功')
+      }).catch(() => {})
     },
     /** 任务详细信息 */
-    handleView(row) {
+    handleView (row) {
       getJob(row.jobId).then(response => {
-        this.form = response.data;
-        this.openView = true;
-      });
+        this.form = response.data
+        this.openView = true
+      })
     },
     /** 任务日志列表查询 */
-    handleJobLog(row) {
-      const jobId = row.jobId || 0;
+    handleJobLog (row) {
+      const jobId = row.jobId || 0
       this.$router.push({ path: '/monitor/job-log/index', query: { jobId: jobId } })
     },
     /** 新增按钮操作 */
-    handleAdd() {
-      this.reset();
-      this.open = true;
-      this.title = "添加任务";
+    handleAdd () {
+      this.reset()
+      this.open = true
+      this.title = '添加任务'
     },
     /** 修改按钮操作 */
-    handleUpdate(row) {
-      this.reset();
-      const jobId = row.jobId || this.ids;
+    handleUpdate (row) {
+      this.reset()
+      const jobId = row.jobId || this.ids
       getJob(jobId).then(response => {
-        this.form = response.data;
-        this.open = true;
-        this.title = "修改任务";
-      });
+        this.form = response.data
+        this.open = true
+        this.title = '修改任务'
+      })
     },
     /** 提交按钮 */
-    submitForm: function() {
-      this.$refs["form"].validate(valid => {
+    submitForm: function () {
+      this.$refs.form.validate(valid => {
         if (valid) {
-          if (this.form.jobId != undefined) {
+          if (this.form.jobId !== undefined) {
             updateJob(this.form).then(response => {
-              this.msgSuccess("修改成功");
-              this.open = false;
-              this.getList();
-            });
+              this.msgSuccess('修改成功')
+              this.open = false
+              this.getList()
+            })
           } else {
             addJob(this.form).then(response => {
-              this.msgSuccess("新增成功");
-              this.open = false;
-              this.getList();
-            });
+              this.msgSuccess('新增成功')
+              this.open = false
+              this.getList()
+            })
           }
         }
-      });
+      })
     },
     /** 删除按钮操作 */
-    handleDelete(row) {
-      const jobIds = row.jobId || this.ids;
-      this.$confirm('是否确认删除定时任务编号为"' + jobIds + '"的数据项?', "警告", {
-          confirmButtonText: "确定",
-          cancelButtonText: "取消",
-          type: "warning"
-        }).then(function() {
-          return delJob(jobIds);
-        }).then(() => {
-          this.getList();
-          this.msgSuccess("删除成功");
-        }).catch(() => {});
+    handleDelete (row) {
+      const jobIds = row.jobId || this.ids
+      this.$confirm('是否确认删除定时任务编号为"' + jobIds + '"的数据项?', '警告', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(function () {
+        return delJob(jobIds)
+      }).then(() => {
+        this.getList()
+        this.msgSuccess('删除成功')
+      }).catch(() => {})
     },
     /** 导出按钮操作 */
-    handleExport() {
-      const queryParams = this.queryParams;
-      this.$confirm("是否确认导出所有定时任务数据项?", "警告", {
-          confirmButtonText: "确定",
-          cancelButtonText: "取消",
-          type: "warning"
-        }).then(() => {
-          this.exportLoading = true;
-          return exportJob(queryParams);
-        }).then(response => {
-          this.download(response.msg);
-          this.exportLoading = false;
-        }).catch(() => {});
+    handleExport () {
+      const queryParams = this.queryParams
+      this.$confirm('是否确认导出所有定时任务数据项?', '警告', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        this.exportLoading = true
+        return exportJob(queryParams)
+      }).then(response => {
+        this.download(response.msg)
+        this.exportLoading = false
+      }).catch(() => {})
     }
   }
-};
+}
 </script>

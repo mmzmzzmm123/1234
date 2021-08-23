@@ -572,15 +572,13 @@
 </template>
 
 <script>
-import { isArray } from 'util'
 import draggable from 'vuedraggable'
 import TreeNodeDialog from './TreeNodeDialog'
 import { isNumberStr } from '@/utils/index'
 import IconsDialog from './IconsDialog'
 import {
   inputComponents,
-  selectComponents,
-  layoutComponents
+  selectComponents
 } from '@/utils/generator/config'
 
 const dateTimeFormat = {
@@ -601,7 +599,7 @@ export default {
     IconsDialog
   },
   props: ['showField', 'activeData', 'formConf'],
-  data() {
+  data () {
     return {
       currentTab: 'field',
       currentNode: null,
@@ -689,23 +687,23 @@ export default {
         }
       ],
       layoutTreeProps: {
-        label(data, node) {
+        label (data, node) {
           return data.componentName || `${data.label}: ${data.vModel}`
         }
       }
     }
   },
   computed: {
-    documentLink() {
+    documentLink () {
       return (
-        this.activeData.document
-        || 'https://element.eleme.cn/#/zh-CN/component/installation'
+        this.activeData.document ||
+        'https://element.eleme.cn/#/zh-CN/component/installation'
       )
     },
-    dateOptions() {
+    dateOptions () {
       if (
-        this.activeData.type !== undefined
-        && this.activeData.tag === 'el-date-picker'
+        this.activeData.type !== undefined &&
+        this.activeData.tag === 'el-date-picker'
       ) {
         if (this.activeData['start-placeholder'] === undefined) {
           return this.dateTypeOptions
@@ -714,7 +712,7 @@ export default {
       }
       return []
     },
-    tagList() {
+    tagList () {
       return [
         {
           label: '输入型组件',
@@ -728,24 +726,24 @@ export default {
     }
   },
   methods: {
-    addReg() {
+    addReg () {
       this.activeData.regList.push({
         pattern: '',
         message: ''
       })
     },
-    addSelectItem() {
+    addSelectItem () {
       this.activeData.options.push({
         label: '',
         value: ''
       })
     },
-    addTreeItem() {
+    addTreeItem () {
       ++this.idGlobal
       this.dialogVisible = true
       this.currentNode = this.activeData.options
     },
-    renderContent(h, { node, data, store }) {
+    renderContent (h, { node, data, store }) {
       return (
         <div class="custom-tree-node">
           <span>{node.label}</span>
@@ -762,26 +760,26 @@ export default {
         </div>
       )
     },
-    append(data) {
+    append (data) {
       if (!data.children) {
         this.$set(data, 'children', [])
       }
       this.dialogVisible = true
       this.currentNode = data.children
     },
-    remove(node, data) {
+    remove (node, data) {
       const { parent } = node
       const children = parent.data.children || parent.data
       const index = children.findIndex(d => d.id === data.id)
       children.splice(index, 1)
     },
-    addNode(data) {
+    addNode (data) {
       this.currentNode.push(data)
     },
-    setOptionValue(item, val) {
+    setOptionValue (item, val) {
       item.value = isNumberStr(val) ? +val : val
     },
-    setDefaultValue(val) {
+    setDefaultValue (val) {
       if (Array.isArray(val)) {
         return val.join(',')
       }
@@ -793,8 +791,8 @@ export default {
       }
       return val
     },
-    onDefaultValueInput(str) {
-      if (isArray(this.activeData.defaultValue)) {
+    onDefaultValueInput (str) {
+      if (Array.isArray(this.activeData.defaultValue)) {
         // 数组
         this.$set(
           this.activeData,
@@ -813,54 +811,54 @@ export default {
         )
       }
     },
-    onSwitchValueInput(val, name) {
+    onSwitchValueInput (val, name) {
       if (['true', 'false'].indexOf(val) > -1) {
         this.$set(this.activeData, name, JSON.parse(val))
       } else {
         this.$set(this.activeData, name, isNumberStr(val) ? +val : val)
       }
     },
-    setTimeValue(val, type) {
+    setTimeValue (val, type) {
       const valueFormat = type === 'week' ? dateTimeFormat.date : val
       this.$set(this.activeData, 'defaultValue', null)
       this.$set(this.activeData, 'value-format', valueFormat)
       this.$set(this.activeData, 'format', val)
     },
-    spanChange(val) {
+    spanChange (val) {
       this.formConf.span = val
     },
-    multipleChange(val) {
+    multipleChange (val) {
       this.$set(this.activeData, 'defaultValue', val ? [] : '')
     },
-    dateTypeChange(val) {
+    dateTypeChange (val) {
       this.setTimeValue(dateTimeFormat[val], val)
     },
-    rangeChange(val) {
+    rangeChange (val) {
       this.$set(
         this.activeData,
         'defaultValue',
         val ? [this.activeData.min, this.activeData.max] : this.activeData.min
       )
     },
-    rateTextChange(val) {
+    rateTextChange (val) {
       if (val) this.activeData['show-score'] = false
     },
-    rateScoreChange(val) {
+    rateScoreChange (val) {
       if (val) this.activeData['show-text'] = false
     },
-    colorFormatChange(val) {
+    colorFormatChange (val) {
       this.activeData.defaultValue = null
       this.activeData['show-alpha'] = val.indexOf('a') > -1
       this.activeData.renderKey = +new Date() // 更新renderKey,重新渲染该组件
     },
-    openIconsDialog(model) {
+    openIconsDialog (model) {
       this.iconsVisible = true
       this.currentIconModel = model
     },
-    setIcon(val) {
+    setIcon (val) {
       this.activeData[this.currentIconModel] = val
     },
-    tagChange(tagIcon) {
+    tagChange (tagIcon) {
       let target = inputComponents.find(item => item.tagIcon === tagIcon)
       if (!target) target = selectComponents.find(item => item.tagIcon === tagIcon)
       this.$emit('tag-change', target)

@@ -178,27 +178,27 @@
 </template>
 
 <script>
-import { listTable, previewTable, delTable, genCode, synchDb } from "@/api/tool/gen";
-import importTable from "./importTable";
-import { downLoadZip } from "@/utils/zipdownload";
-import hljs from "highlight.js/lib/highlight";
-import "highlight.js/styles/github-gist.css";
-hljs.registerLanguage("java", require("highlight.js/lib/languages/java"));
-hljs.registerLanguage("xml", require("highlight.js/lib/languages/xml"));
-hljs.registerLanguage("html", require("highlight.js/lib/languages/xml"));
-hljs.registerLanguage("vue", require("highlight.js/lib/languages/xml"));
-hljs.registerLanguage("javascript", require("highlight.js/lib/languages/javascript"));
-hljs.registerLanguage("sql", require("highlight.js/lib/languages/sql"));
+import { listTable, previewTable, delTable, genCode, synchDb } from '@/api/tool/gen'
+import importTable from './importTable'
+import { downLoadZip } from '@/utils/zipdownload'
+import hljs from 'highlight.js/lib/highlight'
+import 'highlight.js/styles/github-gist.css'
+hljs.registerLanguage('java', require('highlight.js/lib/languages/java'))
+hljs.registerLanguage('xml', require('highlight.js/lib/languages/xml'))
+hljs.registerLanguage('html', require('highlight.js/lib/languages/xml'))
+hljs.registerLanguage('vue', require('highlight.js/lib/languages/xml'))
+hljs.registerLanguage('javascript', require('highlight.js/lib/languages/javascript'))
+hljs.registerLanguage('sql', require('highlight.js/lib/languages/sql'))
 
 export default {
-  name: "Gen",
+  name: 'Gen',
   components: { importTable },
-  data() {
+  data () {
     return {
       // 遮罩层
       loading: true,
       // 唯一标识符
-      uniqueId: "",
+      uniqueId: '',
       // 选中数组
       ids: [],
       // 选中表数组
@@ -214,7 +214,7 @@ export default {
       // 表数据
       tableList: [],
       // 日期范围
-      dateRange: "",
+      dateRange: '',
       // 查询参数
       queryParams: {
         pageNum: 1,
@@ -225,116 +225,116 @@ export default {
       // 预览参数
       preview: {
         open: false,
-        title: "代码预览",
+        title: '代码预览',
         data: {},
-        activeName: "domain.java"
+        activeName: 'domain.java'
       }
-    };
+    }
   },
-  created() {
-    this.getList();
+  created () {
+    this.getList()
   },
-  activated() {
-    const time = this.$route.query.t;
-    if (time != null && time != this.uniqueId) {
-      this.uniqueId = time;
-      this.resetQuery();
+  activated () {
+    const time = this.$route.query.t
+    if (time !== null && time !== this.uniqueId) {
+      this.uniqueId = time
+      this.resetQuery()
     }
   },
   methods: {
     /** 查询表集合 */
-    getList() {
-      this.loading = true;
+    getList () {
+      this.loading = true
       listTable(this.addDateRange(this.queryParams, this.dateRange)).then(response => {
-          this.tableList = response.rows;
-          this.total = response.total;
-          this.loading = false;
-        }
-      );
+        this.tableList = response.rows
+        this.total = response.total
+        this.loading = false
+      }
+      )
     },
     /** 搜索按钮操作 */
-    handleQuery() {
-      this.queryParams.pageNum = 1;
-      this.getList();
+    handleQuery () {
+      this.queryParams.pageNum = 1
+      this.getList()
     },
     /** 生成代码操作 */
-    handleGenTable(row) {
-      const tableNames = row.tableName || this.tableNames;
-      if (tableNames == "") {
-        this.msgError("请选择要生成的数据");
-        return;
+    handleGenTable (row) {
+      const tableNames = row.tableName || this.tableNames
+      if (tableNames === '') {
+        this.msgError('请选择要生成的数据')
+        return
       }
-      if(row.genType === "1") {
+      if (row.genType === '1') {
         genCode(row.tableName).then(response => {
-          this.msgSuccess("成功生成到自定义路径：" + row.genPath);
-        });
+          this.msgSuccess('成功生成到自定义路径：' + row.genPath)
+        })
       } else {
-        downLoadZip("/tool/gen/batchGenCode?tables=" + tableNames, "ruoyi");
+        downLoadZip('/tool/gen/batchGenCode?tables=' + tableNames, 'ruoyi')
       }
     },
     /** 同步数据库操作 */
-    handleSynchDb(row) {
-      const tableName = row.tableName;
-      this.$confirm('确认要强制同步"' + tableName + '"表结构吗？', "警告", {
-        confirmButtonText: "确定",
-        cancelButtonText: "取消",
-        type: "warning"
-      }).then(function() {
-          return synchDb(tableName);
+    handleSynchDb (row) {
+      const tableName = row.tableName
+      this.$confirm('确认要强制同步"' + tableName + '"表结构吗？', '警告', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(function () {
+        return synchDb(tableName)
       }).then(() => {
-          this.msgSuccess("同步成功");
-      }).catch(() => {});
+        this.msgSuccess('同步成功')
+      }).catch(() => {})
     },
     /** 打开导入表弹窗 */
-    openImportTable() {
-      this.$refs.import.show();
+    openImportTable () {
+      this.$refs.import.show()
     },
     /** 重置按钮操作 */
-    resetQuery() {
-      this.dateRange = [];
-      this.resetForm("queryForm");
-      this.handleQuery();
+    resetQuery () {
+      this.dateRange = []
+      this.resetForm('queryForm')
+      this.handleQuery()
     },
     /** 预览按钮 */
-    handlePreview(row) {
+    handlePreview (row) {
       previewTable(row.tableId).then(response => {
-        this.preview.data = response.data;
-        this.preview.open = true;
-      });
+        this.preview.data = response.data
+        this.preview.open = true
+      })
     },
     /** 高亮显示 */
-    highlightedCode(code, key) {
-      const vmName = key.substring(key.lastIndexOf("/") + 1, key.indexOf(".vm"));
-      var language = vmName.substring(vmName.indexOf(".") + 1, vmName.length);
-      const result = hljs.highlight(language, code || "", true);
-      return result.value || '&nbsp;';
+    highlightedCode (code, key) {
+      const vmName = key.substring(key.lastIndexOf('/') + 1, key.indexOf('.vm'))
+      const language = vmName.substring(vmName.indexOf('.') + 1, vmName.length)
+      const result = hljs.highlight(language, code || '', true)
+      return result.value || '&nbsp;'
     },
     // 多选框选中数据
-    handleSelectionChange(selection) {
-      this.ids = selection.map(item => item.tableId);
-      this.tableNames = selection.map(item => item.tableName);
-      this.single = selection.length != 1;
-      this.multiple = !selection.length;
+    handleSelectionChange (selection) {
+      this.ids = selection.map(item => item.tableId)
+      this.tableNames = selection.map(item => item.tableName)
+      this.single = selection.length !== 1
+      this.multiple = !selection.length
     },
     /** 修改按钮操作 */
-    handleEditTable(row) {
-      const tableId = row.tableId || this.ids[0];
-      this.$router.push("/tool/gen-edit/index/" + tableId);
+    handleEditTable (row) {
+      const tableId = row.tableId || this.ids[0]
+      this.$router.push('/tool/gen-edit/index/' + tableId)
     },
     /** 删除按钮操作 */
-    handleDelete(row) {
-      const tableIds = row.tableId || this.ids;
-      this.$confirm('是否确认删除表编号为"' + tableIds + '"的数据项?', "警告", {
-        confirmButtonText: "确定",
-        cancelButtonText: "取消",
-        type: "warning"
-      }).then(function() {
-          return delTable(tableIds);
+    handleDelete (row) {
+      const tableIds = row.tableId || this.ids
+      this.$confirm('是否确认删除表编号为"' + tableIds + '"的数据项?', '警告', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(function () {
+        return delTable(tableIds)
       }).then(() => {
-          this.getList();
-          this.msgSuccess("删除成功");
-      }).catch(() => {});
+        this.getList()
+        this.msgSuccess('删除成功')
+      }).catch(() => {})
     }
   }
-};
+}
 </script>

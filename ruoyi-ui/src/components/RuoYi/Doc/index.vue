@@ -7,13 +7,13 @@
 <script>
 export default {
   name: 'RuoYiDoc',
-  data() {
+  data () {
     return {
       url: 'http://doc.ruoyi.vip/ruoyi-vue'
     }
   },
   methods: {
-    goto() {
+    goto () {
       window.open(this.url)
     }
   }

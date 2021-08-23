@@ -176,11 +176,11 @@
 </template>
 
 <script>
-import { listNotice, getNotice, delNotice, addNotice, updateNotice } from "@/api/system/notice";
+import { listNotice, getNotice, delNotice, addNotice, updateNotice } from '@/api/system/notice'
 
 export default {
-  name: "Notice",
-  data() {
+  name: 'Notice',
+  data () {
     return {
       // 遮罩层
       loading: true,
@@ -197,7 +197,7 @@ export default {
       // 公告表格数据
       noticeList: [],
       // 弹出层标题
-      title: "",
+      title: '',
       // 是否显示弹出层
       open: false,
       // 类型数据字典
@@ -217,123 +217,123 @@ export default {
       // 表单校验
       rules: {
         noticeTitle: [
-          { required: true, message: "公告标题不能为空", trigger: "blur" }
+          { required: true, message: '公告标题不能为空', trigger: 'blur' }
         ],
         noticeType: [
-          { required: true, message: "公告类型不能为空", trigger: "change" }
+          { required: true, message: '公告类型不能为空', trigger: 'change' }
         ]
       }
-    };
+    }
   },
-  created() {
-    this.getList();
-    this.getDicts("sys_notice_status").then(response => {
-      this.statusOptions = response.data;
-    });
-    this.getDicts("sys_notice_type").then(response => {
-      this.typeOptions = response.data;
-    });
+  created () {
+    this.getList()
+    this.getDicts('sys_notice_status').then(response => {
+      this.statusOptions = response.data
+    })
+    this.getDicts('sys_notice_type').then(response => {
+      this.typeOptions = response.data
+    })
   },
   methods: {
     /** 查询公告列表 */
-    getList() {
-      this.loading = true;
+    getList () {
+      this.loading = true
       listNotice(this.queryParams).then(response => {
-        this.noticeList = response.rows;
-        this.total = response.total;
-        this.loading = false;
-      });
+        this.noticeList = response.rows
+        this.total = response.total
+        this.loading = false
+      })
     },
     // 公告状态字典翻译
-    statusFormat(row, column) {
-      return this.selectDictLabel(this.statusOptions, row.status);
+    statusFormat (row, column) {
+      return this.selectDictLabel(this.statusOptions, row.status)
     },
     // 公告状态字典翻译
-    typeFormat(row, column) {
-      return this.selectDictLabel(this.typeOptions, row.noticeType);
+    typeFormat (row, column) {
+      return this.selectDictLabel(this.typeOptions, row.noticeType)
     },
     // 取消按钮
-    cancel() {
-      this.open = false;
-      this.reset();
+    cancel () {
+      this.open = false
+      this.reset()
     },
     // 表单重置
-    reset() {
+    reset () {
       this.form = {
         noticeId: undefined,
         noticeTitle: undefined,
         noticeType: undefined,
         noticeContent: undefined,
-        status: "0"
-      };
-      this.resetForm("form");
+        status: '0'
+      }
+      this.resetForm('form')
     },
     /** 搜索按钮操作 */
-    handleQuery() {
-      this.queryParams.pageNum = 1;
-      this.getList();
+    handleQuery () {
+      this.queryParams.pageNum = 1
+      this.getList()
     },
     /** 重置按钮操作 */
-    resetQuery() {
-      this.resetForm("queryForm");
-      this.handleQuery();
+    resetQuery () {
+      this.resetForm('queryForm')
+      this.handleQuery()
     },
     // 多选框选中数据
-    handleSelectionChange(selection) {
+    handleSelectionChange (selection) {
       this.ids = selection.map(item => item.noticeId)
-      this.single = selection.length!=1
+      this.single = selection.length !== 1
       this.multiple = !selection.length
     },
     /** 新增按钮操作 */
-    handleAdd() {
-      this.reset();
-      this.open = true;
-      this.title = "添加公告";
+    handleAdd () {
+      this.reset()
+      this.open = true
+      this.title = '添加公告'
     },
     /** 修改按钮操作 */
-    handleUpdate(row) {
-      this.reset();
+    handleUpdate (row) {
+      this.reset()
       const noticeId = row.noticeId || this.ids
       getNotice(noticeId).then(response => {
-        this.form = response.data;
-        this.open = true;
-        this.title = "修改公告";
-      });
+        this.form = response.data
+        this.open = true
+        this.title = '修改公告'
+      })
     },
     /** 提交按钮 */
-    submitForm: function() {
-      this.$refs["form"].validate(valid => {
+    submitForm: function () {
+      this.$refs.form.validate(valid => {
         if (valid) {
-          if (this.form.noticeId != undefined) {
+          if (this.form.noticeId !== undefined) {
             updateNotice(this.form).then(response => {
-              this.msgSuccess("修改成功");
-              this.open = false;
-              this.getList();
-            });
+              this.msgSuccess('修改成功')
+              this.open = false
+              this.getList()
+            })
           } else {
             addNotice(this.form).then(response => {
-              this.msgSuccess("新增成功");
-              this.open = false;
-              this.getList();
-            });
+              this.msgSuccess('新增成功')
+              this.open = false
+              this.getList()
+            })
           }
         }
-      });
+      })
     },
     /** 删除按钮操作 */
-    handleDelete(row) {
+    handleDelete (row) {
       const noticeIds = row.noticeId || this.ids
-      this.$confirm('是否确认删除公告编号为"' + noticeIds + '"的数据项?', "警告", {
-          confirmButtonText: "确定",
-          cancelButtonText: "取消",
-          type: "warning"
-        }).then(function() {
-          return delNotice(noticeIds);
-        }).then(() => {
-          this.getList();
-          this.msgSuccess("删除成功");
-        }).catch(() => {});
+      this.$confirm('是否确认删除公告编号为"' + noticeIds + '"的数据项?', '警告', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(function () {
+        return delNotice(noticeIds)
+      }).then(() => {
+        this.getList()
+        this.msgSuccess('删除成功')
+      }).catch(() => {})
     }
   }
-};
+}
 </script>

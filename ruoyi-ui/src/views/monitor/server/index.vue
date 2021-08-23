@@ -153,7 +153,7 @@
                 </tr>
               </thead>
               <tbody v-if="server.sysFiles">
-                <tr v-for="sysFile in server.sysFiles">
+                <tr v-for="sysFile in server.sysFiles" v-bind:key="sysFile.name">
                   <td><div class="cell">{{ sysFile.dirName }}</div></td>
                   <td><div class="cell">{{ sysFile.sysTypeName }}</div></td>
                   <td><div class="cell">{{ sysFile.typeName }}</div></td>
@@ -172,39 +172,39 @@
 </template>
 
 <script>
-import { getServer } from "@/api/monitor/server";
+import { getServer } from '@/api/monitor/server'
 
 export default {
-  name: "Server",
-  data() {
+  name: 'Server',
+  data () {
     return {
       // 加载层信息
       loading: [],
       // 服务器信息
       server: []
-    };
+    }
   },
-  created() {
-    this.getList();
-    this.openLoading();
+  created () {
+    this.getList()
+    this.openLoading()
   },
   methods: {
     /** 查询服务器信息 */
-    getList() {
+    getList () {
       getServer().then(response => {
-        this.server = response.data;
-        this.loading.close();
-      });
+        this.server = response.data
+        this.loading.close()
+      })
     },
     // 打开加载层
-    openLoading() {
+    openLoading () {
       this.loading = this.$loading({
         lock: true,
-        text: "拼命读取中",
-        spinner: "el-icon-loading",
-        background: "rgba(0, 0, 0, 0.7)"
-      });
+        text: '拼命读取中',
+        spinner: 'el-icon-loading',
+        background: 'rgba(0, 0, 0, 0.7)'
+      })
     }
   }
-};
+}
 </script>
