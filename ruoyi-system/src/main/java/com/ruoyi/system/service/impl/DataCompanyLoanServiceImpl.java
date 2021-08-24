@@ -205,6 +205,8 @@ public class DataCompanyLoanServiceImpl implements IDataCompanyLoanService
             //TODO:暂时只处理此编码的错误
             if (32 == resultCode){
                 msg = "同一号码发送次数太多,一天内手机号码验证码最大发送次数为5次";
+            }else if(33 == resultCode){
+                msg = "同一号码验证码提交过快";
             }
             throw new UserException(null , null, msg);
         }
