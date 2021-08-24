@@ -1,5 +1,6 @@
 package com.stdiet.web.controller.custom;
 
+import com.alibaba.fastjson.JSONObject;
 import com.aliyun.vod20170321.models.GetPlayInfoResponseBody;
 import com.stdiet.common.constant.HttpStatus;
 import com.stdiet.common.core.controller.BaseController;
@@ -22,12 +23,12 @@ import com.stdiet.custom.service.*;
 import com.stdiet.system.service.ISysDictTypeService;
 import com.stdiet.system.service.ISysUserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
-import java.time.LocalDate;
-import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -88,6 +89,8 @@ public class WechatAppletController extends BaseController {
     private ISysCustomerPhysicalSignsService sysCustomerPhysicalSignsService;
     @Autowired
     private ISysUserService iSysUserService;
+    @Autowired
+    private RestTemplate restTemplate;
 
     /**
      * 查询微信小程序中展示的客户案例
@@ -963,6 +966,33 @@ public class WechatAppletController extends BaseController {
 //        TableDataInfo tableDataInfo = getDataTable(list);
 //        result.put("total", tableDataInfo.getTotal());
         return AjaxResult.success(result);
+    }
+
+    @GetMapping("/getBodyData")
+    public AjaxResult getBodyData(@RequestParam String age, @RequestParam String height, @RequestParam String impedance, @RequestParam String sex, @RequestParam String weightKg, @RequestParam String heartRate) {
+        String url = "https://tp.lefuenergy.com/quick-app/api/getStandardBodyData?token={token}&age={age}&sex={sex}&height={height}&impedance={impedance}&weightKg={weightKg}&heartRate={heartRate}";
+
+        Map<String, String> param = new HashMap<>();
+        param.put("token", "e5f6cf82b0dbdeba316ea3c095598e39");
+        param.put("age", age);
+        param.put("sex", sex);
+        param.put("height", height);
+        param.put("impedance", impedance);
+        param.put("weightKg", weightKg);
+        param.put("heartRate", heartRate);
+
+        ResponseEntity<String> entity = restTemplate.getForEntity(url, String.class, param);
+        JSONObject resultObj = JSONObject.parseObject(entity.getBody());
+
+        int resultCode = resultObj.getInteger("code");
+        String resultMsg = resultObj.getString("msg");
+
+        if (resultCode == 200) {
+            return AjaxResult.success(resultMsg, resultObj.get("obj"));
+        }
+
+        return AjaxResult.error(resultCode, resultMsg);
+
     }
 }
 
