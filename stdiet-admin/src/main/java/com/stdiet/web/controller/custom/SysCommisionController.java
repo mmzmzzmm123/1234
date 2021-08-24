@@ -267,8 +267,15 @@ public class SysCommisionController extends BaseController {
     @PreAuthorize("@ss.hasPermi('commisionDay:detail:list')")
     @GetMapping("/detailDay")
     public TableDataInfo getDetailDay(SysCommision sysCommision) {
-        startPage();
-        return getDataTable(sysCommissionDayService.calculateCommissionByDay(sysCommision));
+        int count = sysCommissionDayService.getAfterSaleAndNutriCount(sysCommision);
+        List<SysCommissionDayDetail> list = null;
+        if(count > 0){
+            startPage();
+            list = sysCommissionDayService.calculateCommissionByDay(sysCommision);
+        }else{
+            list = new ArrayList<>();
+        }
+        return new TableDataInfo(list, count);
     }
 
     /**

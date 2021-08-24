@@ -261,6 +261,7 @@ export default {
       this.queryParam.userId = this.data.userId;
       this.queryParam.reviewStatus = this.data.reviewStatus;
       this.queryParam.endTime = this.data.endTime;
+      this.serverDateScope = this.data.serverDateScope;
       this.title = `「${this.data.name}`;
       this.fileName = this.data.name;
       if (this.data.yearMonth) {

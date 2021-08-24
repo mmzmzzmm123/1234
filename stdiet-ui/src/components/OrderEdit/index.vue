@@ -664,7 +664,7 @@ export default {
     },
     //监听营养师下拉列表
     handleOnDietIdChange(val) {
-      console.log(val);
+       //console.log(val);
        let assistantAfterArray = orderUtils.getAfterSaleAndAssistantByDietId(this.dietitianAfterAssistantOptions, val);
        console.log(assistantAfterArray);
        this.form = {

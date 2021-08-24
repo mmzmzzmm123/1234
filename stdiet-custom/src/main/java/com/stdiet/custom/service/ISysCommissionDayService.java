@@ -46,4 +46,11 @@ public interface ISysCommissionDayService {
      */
     Map<String, List<SysCommision>> getRateMapByStartTime(List<SysCommision> tmpComList);
 
+    /**
+     * 查询营养师、售后数量
+     * @param sysCommision
+     * @return
+     */
+    int getAfterSaleAndNutriCount(SysCommision sysCommision);
+
 }

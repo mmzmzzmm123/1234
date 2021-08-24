@@ -39,7 +39,7 @@
           />
         </el-select>
       </el-form-item>
-      <el-form-item label="截止月份" prop="month">
+      <el-form-item label="截止订单成交月份" prop="month" label-width="140px">
         <el-date-picker
           v-model="month"
           @change="monthRangeChange"
@@ -48,6 +48,7 @@
         >
         </el-date-picker>
       </el-form-item>
+      
       <el-form-item label="订单状态" prop="reviewStatus">
         <el-select
           v-model="queryParams.reviewStatus"
@@ -63,7 +64,19 @@
           />
         </el-select>
       </el-form-item>
-      <el-form-item>
+      <el-form-item label="服务时间" prop="dateScope">
+              <el-date-picker
+                v-model="serverDateScope"
+                type="daterange"
+                range-separator="至"
+                start-placeholder="开始日期"
+                end-placeholder="结束日期"
+                format="yyyy-MM-dd"
+                value-format="yyyy-MM-dd"
+              >
+              </el-date-picker>
+      </el-form-item>
+      <el-form-item style="margin-left:25lpx">
         <el-button
           type="cyan"
           icon="el-icon-search"
@@ -283,6 +296,7 @@ export default {
       sendCommissionPlanTable: false,
       sendCommissionPlan: {},
       fixLength: 2,
+      serverDateScope: null
     };
   },
   components: {
@@ -332,12 +346,17 @@ export default {
     /** 查询业务提成比例列表 */
     getList() {
       this.loading = true;
-      const dateRange = [
-        dayjs(this.month).startOf("month").format("YYYY-MM-DD"),
-        dayjs(this.month).endOf("month").format("YYYY-MM-DD"),
-      ];
+      let dateRange = null;
+      if(this.month && this.month != null){
+          dateRange = [
+            dayjs(this.month).startOf("month").format("YYYY-MM-DD"),
+            dayjs(this.month).endOf("month").format("YYYY-MM-DD"),
+          ];
+      }
+      this.queryParams.serverScopeStartTime = this.serverDateScope && this.serverDateScope.length > 0 ? this.serverDateScope[0] : null;
+      this.queryParams.serverScopeEndTime = this.serverDateScope && this.serverDateScope.length > 0 ? this.serverDateScope[1] : null;
       // console.log(dateRange)
-      detailDayCommision(this.addDateRange(this.queryParams, dateRange)).then(
+      detailDayCommision(dateRange != null ? this.addDateRange(this.queryParams, dateRange) : this.queryParams).then(
         (response) => {
           this.commisionList = response.rows;
           this.total = response.total;
@@ -416,11 +435,21 @@ export default {
     },
     handleDetailClick(row) {
       // console.log(row);
-      const dateRange = [
-        dayjs(this.month).startOf("month").format("YYYY-MM-DD"),
-        dayjs(this.month).endOf("month").format("YYYY-MM-DD"),
-      ];
-      this.$refs["ordercommissDetailRef"].showDrawer(this.addDateRange({'yearMonth': dayjs(this.month).endOf("month").format("YYYY-MM-DD"),'name': row.nickName, 'userId': row.userId, 'reviewStatus': this.queryParams.reviewStatus}, dateRange));
+      let dateRange = null;
+      if(this.month && this.month != null){
+           dateRange = [
+            dayjs(this.month).startOf("month").format("YYYY-MM-DD"),
+            dayjs(this.month).endOf("month").format("YYYY-MM-DD"),
+          ];
+      }
+      let param = {
+          'name': row.nickName, 
+          'userId': row.userId, 
+          'reviewStatus': this.queryParams.reviewStatus,
+          'yearMonth': this.month == null ? null : dayjs(this.month).endOf("month").format("YYYY-MM-DD"),
+          'serverDateScope': this.serverDateScope
+      } 
+      this.$refs["ordercommissDetailRef"].showDrawer(dateRange != null ? this.addDateRange(param, dateRange) : param);
     },
     getSummaries(param) {
       //param 是固定的对象，里面包含 columns与 data参数的对象 {columns: Array[4], data: Array[5]},包含了表格的所有的列与数据信息

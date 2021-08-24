@@ -969,4 +969,9 @@ public class SysCommissionDayServiceImpl implements ISysCommissionDayService {
         }
     }
 
+    @Override
+    public int getAfterSaleAndNutriCount(SysCommision sysCommision){
+        return sysCommisionMapper.getAfterSaleAndNutriCount(sysCommision);
+    }
+
 }
