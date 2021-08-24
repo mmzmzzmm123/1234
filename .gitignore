@@ -42,3 +42,11 @@ nbdist/
 !*/build/*.java
 !*/build/*.html
 !*/build/*.xml
+
+# IDEA的相关文件需要过滤掉
+.idea
+*/*.iml
+*/*/*.iml
+# 代码编译文件都需要过滤掉
+*/target
+*/*/target
