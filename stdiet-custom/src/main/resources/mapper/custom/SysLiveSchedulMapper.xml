@@ -67,8 +67,11 @@
         left join sys_user su_plan on su_plan.user_id = slc.live_planner_id and su_plan.del_flag = 0
         left join sys_user su_operator on su_operator.user_id = slc.live_operator_id and su_operator.del_flag = 0
         where slc.del_flag = 0
-        <if test="liveSchedulDate != null">
-            and date_format(slc.live_schedul_date,'%y%m%d') = date_format(#{liveSchedulDate},'%y%m%d')
+        <if test="liveStartTime != null and liveEndTime != null">
+            and (
+              date_format(slc.live_schedul_date,'%y%m%d') >= date_format(#{liveStartTime},'%y%m%d')
+              and date_format(#{liveEndTime},'%y%m%d') >= date_format(slc.live_schedul_date,'%y%m%d')
+            )
         </if>
         <if test="liveRoom != null">
             and slc.live_room = #{liveRoom}
@@ -76,9 +79,10 @@
         <if test="fanChannel != null">
             and slc.fan_channel = #{fanChannel}
         </if>
-        <!--<if test="wxAccountId != null">
-            and slc.fan_channel = (SELECT swd.account_id FROM sys_wx_distribution AS swd where swd.wechat_account = #{wxAccountId} and swd.del_flag = 0 limit 1)
-        </if>-->
+        <if test="liveNutritionistId != null">
+            and slc.live_nutritionist_id = #{liveNutritionistId}
+        </if>
+
         order by slc.live_schedul_date desc,slc.live_start_time desc ,slc.live_room asc
     </select>
 
@@ -175,6 +179,31 @@
       group by w.wx_account,su.nick_name
     </select>
 
+    <!-- 查询直播列表中导粉总数量 -->
+    <select id="getTotalImportFanNumByLiveSchedul" parameterType="SysLiveSchedul" resultType="int">
+        SELECT ifnull(sum(wa.import_fan_num),0) as fanNum from sys_import_fan_record as fc
+        left join sys_import_fan_wx_account as wa on wa.import_fan_record_id = fc.id and wa.del_flag = 0
+        where fc.del_flag = 0 and fc.import_fan_live in (
+          select slc.id from sys_live_schedul slc
+          where slc.del_flag = 0
+            <if test="liveStartTime != null and liveEndTime != null">
+                    and (
+                      date_format(slc.live_schedul_date,'%y%m%d') >= date_format(#{liveStartTime},'%y%m%d')
+                      and date_format(#{liveEndTime},'%y%m%d') >= date_format(slc.live_schedul_date,'%y%m%d')
+                    )
+            </if>
+            <if test="liveRoom != null">
+                and slc.live_room = #{liveRoom}
+            </if>
+            <if test="fanChannel != null">
+                and slc.fan_channel = #{fanChannel}
+            </if>
+            <if test="liveNutritionistId != null">
+                and slc.live_nutritionist_id = #{liveNutritionistId}
+            </if>
+        )
+    </select>
+
     <!-- 查询直播时间范围是否重叠 -->
     <select id="getLiveSchedulByLiveTime" parameterType="SysLiveSchedul" resultMap="SysLiveSchedulResultSigle">
         select
@@ -232,6 +261,54 @@
         left join sys_wx_distribution as swd on swd.wechat_account = w.id and swd.del_flag = 0
         left join sys_user u on u.user_id = swd.user_id
         where fr.del_flag = 0 and fr.live_schedul_id = #{id} order by fr.create_time desc
+    </select>
+
+    <!-- 查询总进粉量 -->
+    <select id="getTotalAddFanNumByLiveSchedul" parameterType="SysLiveSchedul" resultType="int">
+        select
+        count(fr.id)
+        from sys_live_schedul_fan_record as fr
+        where fr.del_flag = 0 and fr.live_schedul_id in
+        (
+            select slc.id from sys_live_schedul slc
+            where slc.del_flag = 0
+            <if test="liveStartTime != null and liveEndTime != null">
+                and (
+                date_format(slc.live_schedul_date,'%y%m%d') >= date_format(#{liveStartTime},'%y%m%d')
+                and date_format(#{liveEndTime},'%y%m%d') >= date_format(slc.live_schedul_date,'%y%m%d')
+                )
+            </if>
+            <if test="liveRoom != null">
+                and slc.live_room = #{liveRoom}
+            </if>
+            <if test="fanChannel != null">
+                and slc.fan_channel = #{fanChannel}
+            </if>
+            <if test="liveNutritionistId != null">
+                and slc.live_nutritionist_id = #{liveNutritionistId}
+            </if>
+        )
+    </select>
+
+    <!-- 查询总直播时长(分钟) -->
+    <select id="getLiveTotalTimeByLiveSchedul" parameterType="SysLiveSchedul" resultType="int">
+        select ifnull(sum(TIMESTAMPDIFF(minute,slc.live_start_time,slc.live_end_time)),0) from sys_live_schedul as slc
+        where slc.del_flag = 0 and slc.live_start_time is not null and slc.live_end_time is not null
+        <if test="liveStartTime != null and liveEndTime != null">
+            and (
+            date_format(slc.live_schedul_date,'%y%m%d') >= date_format(#{liveStartTime},'%y%m%d')
+            and date_format(#{liveEndTime},'%y%m%d') >= date_format(slc.live_schedul_date,'%y%m%d')
+            )
+        </if>
+        <if test="liveRoom != null">
+            and slc.live_room = #{liveRoom}
+        </if>
+        <if test="fanChannel != null">
+            and slc.fan_channel = #{fanChannel}
+        </if>
+        <if test="liveNutritionistId != null">
+            and slc.live_nutritionist_id = #{liveNutritionistId}
+        </if>
     </select>
 
 </mapper>

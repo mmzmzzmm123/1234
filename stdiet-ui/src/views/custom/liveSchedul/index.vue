@@ -2,13 +2,27 @@
   <div class="app-container">
     <el-form :model="queryParams" ref="queryForm" :inline="true" v-show="showSearch" label-width="68px">
         <el-form-item label="直播日期" prop="liveSchedulDate">
-          <el-date-picker clearable size="small" style="width: 200px"
+          <!--<el-date-picker clearable size="small" style="width: 200px"
             v-model="queryParams.liveSchedulDate"
             type="date"
             value-format="yyyy-MM-dd"
             placeholder="选择直播日期">
-          </el-date-picker>
+          </el-date-picker>-->
+          <el-date-picker
+                v-model="liveDateScope"
+                type="daterange"
+                range-separator="至"
+                start-placeholder="开始日期"
+                end-placeholder="结束日期"
+                format="yyyy-MM-dd"
+                value-format="yyyy-MM-dd"
+                :picker-options="liveDatePickerOptions"
+                
+              >
+              </el-date-picker>
         </el-form-item>
+
+        
         <el-form-item label="直播间" prop="liveRoom">
           <el-select
               v-model="queryParams.liveRoom"
@@ -33,8 +47,24 @@
               filterable
               size="small"
             >
-              <el-option
+              <el-option 
                 v-for="dict in fanChanneloptions"
+                :key="dict.dictValue"
+                :label="dict.dictLabel"
+                :value="parseInt(dict.dictValue)"
+              />
+            </el-select>
+        </el-form-item>
+        <el-form-item label="营养师" prop="liveNutritionistId">
+            <el-select
+              v-model="queryParams.liveNutritionistId"
+              placeholder="请选择营养师"
+              clearable
+              filterable
+              size="small"
+            >
+              <el-option
+                v-for="dict in nutritionistIdOptions.slice(1)"
                 :key="dict.dictValue"
                 :label="dict.dictLabel"
                 :value="parseInt(dict.dictValue)"
@@ -105,7 +135,7 @@
         >一键复制上次记录</el-button>
       </el-col>
       
-      <!--<el-col :span="1.5">
+      <el-col :span="1.5">
         <el-button
           type="warning"
           icon="el-icon-download"
@@ -113,7 +143,7 @@
           @click="handleExport"
           v-hasPermi="['custom:liveSchedul:export']"
         >导出</el-button>
-      </el-col>-->
+      </el-col>
 	  <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
     </el-row>
 
@@ -142,7 +172,7 @@
       <el-table-column label="所属账号" align="center" prop="fanChannelName" />
       <el-table-column label="导粉情况" align="center" prop="wxAccountList">
         <template slot-scope="scope">
-          <span style="margin-right:10px">{{scope.row.wxAccountList.length}}</span>
+          <span style="margin-right:10px">{{getTotalImportFanNum(scope.row.wxAccountList)}}</span>
           <el-popover
           placement="left"
           width="370"
@@ -241,7 +271,12 @@
       :page.sync="queryParams.pageNum"
       :limit.sync="queryParams.pageSize"
       @pagination="getList"
-    />
+      :layout="'total, slot, sizes, prev, pager, next, jumper'"
+    >
+      <span class="totalSpan">总导粉量：{{totalImportNum}}</span>
+      <span class="totalSpan">总进粉量：{{totalAddFanNum}}</span>
+      <span class="totalSpan" style="margin-right:10px">总直播时长：{{totalLiveTime}}小时</span>
+    </pagination>
 
     <!-- 添加或修改直播排班对话框 -->
     <el-dialog :title="title" :visible.sync="open" width="600px" append-to-body>
@@ -487,9 +522,10 @@ export default {
       queryParams: {
         pageNum: 1,
         pageSize: 10,
-        liveSchedulDate: nowDate,
+        liveSchedulDate: null,
         liveRoom: null,
         fanChannel: null,
+        liveNutritionistId: null,
         wxAccountId: null
       },
       // 表单参数
@@ -523,7 +559,21 @@ export default {
       },
       //记录当前添加或编辑进粉记录对应直播记录的ID
       addOrEditSchedulId: null,
+      //直播范围查询
+      liveDateScope: [nowDate, nowDate],
 
+      //总导粉量
+      totalImportNum: null,
+      //总进粉量
+      totalAddFanNum: null,
+      //总直播时长
+      totalLiveTime: null,
+
+      liveDatePickerOptions: {
+        disabledDate(time) {
+          return time.getTime() > dayjs()
+        },
+      }
     };
   },
   components:{
@@ -556,8 +606,10 @@ export default {
     /** 查询直播排班列表 */
     getList() {
       this.loading = true;
+      this.queryParams.liveStartTime = this.liveDateScope && this.liveDateScope.length > 0 ? this.liveDateScope[0] : null;
+      this.queryParams.liveEndTime = this.liveDateScope && this.liveDateScope.length > 0 ? this.liveDateScope[1] : null;
       listLiveSchedul(this.queryParams).then(response => {
-        this.liveSchedulList = response.rows;
+        this.liveSchedulList = response.data.tableDataInfo.rows;
         if(this.liveSchedulList != null && this.liveSchedulList.length > 0){
             this.liveSchedulList.forEach((item,index) => {
                 item.status = (item.liveStatus == 0 || item.liveStatus == 2) ? false : true; 
@@ -566,7 +618,14 @@ export default {
                 item.addFanVisible = this.addOrEditSchedulId == item.id;  
             });
         }
-        this.total = response.total;
+        //总导粉量
+        this.totalImportNum = response.data.totalImportNum;
+        //总进粉量
+        this.totalAddFanNum = response.data.totalAddFanNum;
+        //总直播时长
+        this.totalLiveTime = response.data.totalLiveTime;
+
+        this.total = response.data.tableDataInfo.total;
         this.loading = false;
         this.addOrEditSchedulId = null;
       });
@@ -700,6 +759,37 @@ export default {
     },
     /** 导出按钮操作 */
     handleExport() {
+      this.queryParams.liveStartTime = this.liveDateScope && this.liveDateScope.length > 0 ? this.liveDateScope[0] : null;
+      this.queryParams.liveEndTime = this.liveDateScope && this.liveDateScope.length > 0 ? this.liveDateScope[1] : null;
+      let fileName = '';
+      if(this.queryParams.liveStartTime != null && this.queryParams.liveEndTime != null){
+        if(this.queryParams.liveStartTime != this.queryParams.liveEndTime){
+            fileName += this.queryParams.liveStartTime + "至" + this.queryParams.liveEndTime;
+        }else{
+            fileName += this.queryParams.liveStartTime;
+        } 
+      }
+      if(this.queryParams.liveRoom && this.queryParams.liveRoom != null){
+          let liveType = this.liveTypeOptions.find(
+            (opt) => opt.dictValue == this.queryParams.liveRoom
+          );
+          console.log(liveType);
+          fileName += liveType ? liveType.dictLabel : "";
+      }
+      if(this.queryParams.fanChannel && this.queryParams.fanChannel != null){
+          let channel = this.fanChanneloptions.find(
+            (opt) => opt.dictValue == this.queryParams.fanChannel
+          );
+          fileName += channel ? channel.dictLabel : "";
+      }
+      if(this.queryParams.liveNutritionistId && this.queryParams.liveNutritionistId != null){
+          let nutritionist = this.nutritionistIdOptions.find(
+            (opt) => opt.dictValue == this.queryParams.liveNutritionistId
+          );
+          fileName += nutritionist ? nutritionist.dictLabel : "";
+      }   
+      fileName += "直播记录.xlsx"
+
       const queryParams = this.queryParams;
       this.$confirm('是否确认导出所有直播排班数据项?', "警告", {
           confirmButtonText: "确定",
@@ -708,7 +798,7 @@ export default {
         }).then(function() {
           return exportLiveSchedul(queryParams);
         }).then(response => {
-          this.download(response.msg);
+          this.download(response.msg, fileName);
         }).catch(function() {});
     },
     objectSpanMethod({ row, column, rowIndex, columnIndex }) {
@@ -804,7 +894,26 @@ export default {
       if(this.liveSchedulList != null && this.liveSchedulList.length > 0 && id != null){
          return this.liveSchedulList.find((opt) => opt.id === id);
       }
+    },
+    getTotalImportFanNum(list){
+       if(!list || list == null || list.length == 0){
+          return 0;
+       }
+       let num = 0;
+       list.forEach((item,index) => {
+          num += item.fanNum;
+       });
+       return num;
     }
   }
 };
 </script>
+
+<style lang="scss" scoped>
+  .totalSpan{
+    margin-left: 10px;
+    color: #606266;
+    font-weight: normal;
+    font-size:13px;
+  }
+</style>
