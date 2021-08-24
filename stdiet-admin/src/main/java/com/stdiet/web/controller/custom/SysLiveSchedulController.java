@@ -1,9 +1,13 @@
 package com.stdiet.web.controller.custom;
 
+import java.math.BigDecimal;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import com.stdiet.common.utils.DateUtils;
+import com.stdiet.common.utils.NumberUtils;
 import com.stdiet.common.utils.StringUtils;
 import com.stdiet.custom.domain.SysLiveSchedulFanRecord;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -36,11 +40,30 @@ public class SysLiveSchedulController extends BaseController
      */
     @PreAuthorize("@ss.hasPermi('custom:liveSchedul:list')")
     @GetMapping("/list")
-    public TableDataInfo list(SysLiveSchedul sysLiveSchedul)
+    public AjaxResult list(SysLiveSchedul sysLiveSchedul)
     {
         startPage();
         List<SysLiveSchedul> list = sysLiveSchedulService.selectSysLiveSchedulList(sysLiveSchedul);
-        return getDataTable(list);
+
+        int totalImportNum = 0;
+        int totalAddFanNum = 0;
+        double totalLiveTime = 0;
+        if(list != null && list.size() > 0){
+            //查询总共导粉量
+            totalImportNum = sysLiveSchedulService.getTotalImportFanNumByLiveSchedul(sysLiveSchedul);
+            //查询总共进粉量
+            totalAddFanNum = sysLiveSchedulService.getTotalAddFanNumByLiveSchedul(sysLiveSchedul);
+            //查询总直播时长(小时)
+            totalLiveTime = NumberUtils.getNumberByRoundHalfUp(sysLiveSchedulService.getLiveTotalTimeByLiveSchedul(sysLiveSchedul)/60.0,2).doubleValue();
+        }
+
+        Map<String, Object> result = new HashMap<>();
+        result.put("tableDataInfo", getDataTable(list));
+        result.put("totalImportNum", totalImportNum);
+        result.put("totalAddFanNum", totalAddFanNum);
+        result.put("totalLiveTime", totalLiveTime);
+
+        return AjaxResult.success(result);
     }
 
     /**
@@ -52,6 +75,29 @@ public class SysLiveSchedulController extends BaseController
     public AjaxResult export(SysLiveSchedul sysLiveSchedul)
     {
         List<SysLiveSchedul> list = sysLiveSchedulService.selectSysLiveSchedulList(sysLiveSchedul);
+        for (SysLiveSchedul live : list) {
+            live.setImportFanSize(0);
+            if(live.getWxAccountList() != null && live.getWxAccountList().size() > 0){
+                for (Map<String,Object> map : live.getWxAccountList()
+                     ) {
+                   live.setImportFanSize(live.getImportFanSize() + (map.containsKey("fanNum") ? ((BigDecimal) map.get("fanNum")).intValue() : 0));
+                }
+            }
+            live.setAddFanSize(live.getAddFanList() != null ? live.getAddFanList().size() : 0);
+            String liveTimeStr = "";
+            if(live.getLiveStartTime() != null){
+                liveTimeStr = DateUtils.getHourMinuteByDate(live.getLiveStartTime());
+            }
+            if(live.getLiveEndTime() != null){
+                liveTimeStr += "-" + DateUtils.getHourMinuteByDate(live.getLiveEndTime());
+            }
+            live.setLiveStartTimeString(liveTimeStr);
+            //计算直播时长
+            if(live.getLiveStartTime() != null && live.getLiveEndTime() != null){
+                double t = (live.getLiveEndTime().getTime() - live.getLiveStartTime().getTime())/1000.0/60/60;
+                live.setLiveTotalHour(t > 0 ? NumberUtils.getNumberByRoundHalfUp(t,2) : new BigDecimal(0));
+            }
+        }
         ExcelUtil<SysLiveSchedul> util = new ExcelUtil<SysLiveSchedul>(SysLiveSchedul.class);
         return util.exportExcel(list, "liveSchedul");
     }

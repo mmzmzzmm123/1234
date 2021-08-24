@@ -96,4 +96,25 @@ public interface SysLiveSchedulMapper
      * @return
      */
     public SysLiveSchedul getLiveSchedulByTime(SysLiveSchedul sysLiveSchedul);
+
+    /**
+     * 查询导粉总量
+     * @param sysLiveSchedul
+     * @return
+     */
+    int getTotalImportFanNumByLiveSchedul(SysLiveSchedul sysLiveSchedul);
+
+    /**
+     * 查询总进粉量
+     * @param sysLiveSchedul
+     * @return
+     */
+    int getTotalAddFanNumByLiveSchedul(SysLiveSchedul sysLiveSchedul);
+
+    /**
+     * 查询总直播时长
+     * @param sysLiveSchedul
+     * @return
+     */
+    int getLiveTotalTimeByLiveSchedul(SysLiveSchedul sysLiveSchedul);
 }

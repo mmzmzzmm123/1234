@@ -27,6 +27,8 @@ public class DateUtils extends org.apache.commons.lang3.time.DateUtils
     public static String YYYYMMDDHHMMSS = "yyyyMMddHHmmss";
 
     public static String YYYY_MM_DD_HH_MM_SS = "yyyy-MM-dd HH:mm:ss";
+
+    public static String YYYY_MM_DD_HH_MM = "yyyy-MM-dd HH:mm";
     
     private static String[] parsePatterns = {
             "yyyy-MM-dd", "yyyy-MM-dd HH:mm:ss", "yyyy-MM-dd HH:mm", "yyyy-MM", 
@@ -230,5 +232,15 @@ public class DateUtils extends org.apache.commons.lang3.time.DateUtils
      */
     public static Date getLastMinuteDate(Date date){
         return new Date(dateToDate(date).getTime()+(24 * 60 * 60 * 1000 - 1000));
+    }
+
+    /**
+     * 获取日期的小时和分钟
+     * @param date
+     * @return
+     */
+    public static String getHourMinuteByDate(Date date){
+        String dateStr = DateFormatUtils.format(date, YYYY_MM_DD_HH_MM);
+        return dateStr.substring(dateStr.length()-5);
     }
 }

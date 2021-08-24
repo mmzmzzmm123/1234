@@ -216,4 +216,31 @@ public class SysLiveSchedulServiceImpl implements ISysLiveSchedulService
     public int delLiveSchedulFanRecord(Long id){
         return sysLiveSchedulFanRecordMapper.deleteSysLiveSchedulFanRecordById(id);
     }
+
+    /**
+     * 查询导粉总量
+     * @param sysLiveSchedul
+     * @return
+     */
+    public int getTotalImportFanNumByLiveSchedul(SysLiveSchedul sysLiveSchedul){
+        return sysLiveSchedulMapper.getTotalImportFanNumByLiveSchedul(sysLiveSchedul);
+    }
+
+    /**
+     * 查询总进粉量
+     * @param sysLiveSchedul
+     * @return
+     */
+    public int getTotalAddFanNumByLiveSchedul(SysLiveSchedul sysLiveSchedul){
+        return sysLiveSchedulMapper.getTotalAddFanNumByLiveSchedul(sysLiveSchedul);
+    }
+
+    /**
+     * 查询总直播时长
+     * @param sysLiveSchedul
+     * @return
+     */
+    public int getLiveTotalTimeByLiveSchedul(SysLiveSchedul sysLiveSchedul){
+        return sysLiveSchedulMapper.getLiveTotalTimeByLiveSchedul(sysLiveSchedul);
+    }
 }
