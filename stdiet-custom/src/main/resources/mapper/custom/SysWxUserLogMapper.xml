@@ -53,6 +53,7 @@
         <!-- 营养师 -->
         <result property="nutritionist" column="nutritionist"/>
         <result property="afterNutritionist" column="after_nutritionist"/>
+        <result column="scale_body_data" property="scaleBodyData" typeHandler="com.stdiet.custom.typehandler.ArrayJsonHandler"/>
     </resultMap>
 
     <resultMap type="com.stdiet.custom.page.WxLogInfo" id="WxLogInfo">
@@ -98,6 +99,7 @@
         <result property="thumbsupNum" column="thumbsup_num"/>
         <result property="healthManifesto" column="health_manifesto"/>
         <result property="menstrualPeriod" column="menstrual_period"/>
+        <result column="scale_body_data" property="scaleBodyData" typeHandler="com.stdiet.custom.typehandler.ArrayJsonHandler"/>
     </resultMap>
 
     <sql id="selectSysWxUserLogVo">
@@ -216,6 +218,7 @@
             <if test="healthManifesto != null">health_manifesto,</if>
             <if test="delFlag != null">del_flag,</if>
             <if test="menstrualPeriod != null">menstrual_period,</if>
+            <if test="scaleBodyData != null">scale_body_data</if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="openid != null">#{openid},</if>
@@ -258,6 +261,7 @@
             <if test="healthManifesto != null">#{healthManifesto},</if>
             <if test="delFlag != null">#{delFlag},</if>
             <if test="menstrualPeriod != null">#{menstrualPeriod},</if>
+            <if test="scaleBodyData != null">#{scaleBodyData, jdbcType=OTHER, typeHandler=com.stdiet.custom.typehandler.ArrayJsonHandler},</if>
         </trim>
     </insert>
 
@@ -301,6 +305,7 @@
             <if test="healthManifesto != null">health_manifesto = #{healthManifesto},</if>
             <if test="delFlag != null">del_flag = #{delFlag},</if>
             <if test="menstrualPeriod != null">menstrual_period = #{menstrualPeriod},</if>
+            <if test="scaleBodyData != null">scale_body_data = #{scaleBodyData, jdbcType=OTHER, typeHandler=com.stdiet.custom.typehandler.ArrayJsonHandler}</if>
         </trim>
         where id = #{id}
     </update>
@@ -322,7 +327,7 @@
         wxlog.water, wxlog.insomnia,wxlog.sport, wxlog.sport_desc,wxlog.diet, wxlog.diet_desc,
         wxlog.emotion, wxlog.emotion_desc,wxlog.sly_eat_food,wxlog.constipation,wxlog.ingredient_desc,wxlog.breakfast_images,
         wxlog.lunch_images,wxlog.dinner_images,wxlog.extra_meal_images,wxlog.body_images, wxlog.body_desc,
-        wxlog.remark,wxlog.execution_score,wxlog.comment, wxlog.health_manifesto, wxlog.menstrual_period
+        wxlog.remark,wxlog.execution_score,wxlog.comment, wxlog.health_manifesto, wxlog.menstrual_period, wxlog.scale_body_data
         FROM sys_wx_user_log wxlog
         where wxlog.del_flag = 0 and wxlog.openid = #{openid}
         order by wxlog.log_time asc
