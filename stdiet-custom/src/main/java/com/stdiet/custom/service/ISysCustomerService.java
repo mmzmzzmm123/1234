@@ -88,4 +88,11 @@ public interface ISysCustomerService
      */
     SysCustomer getCustomerByOpenId(String openid);
 
+    /**
+     * 根据客户ID查询性别
+     * @param cusId 客户ID
+     * @return
+     */
+    Integer getCustomerSex(Long cusId);
+
 }

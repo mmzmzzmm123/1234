@@ -206,6 +206,12 @@ public class SysWxUserLog extends BaseEntity {
     //图片预览路径
     private Map<String, List<String>> imagesUrl;
 
+    //获取详情标识
+    private Integer nextFlag;
+
+    //客户性别
+    private Integer sex;
+
     public void setDefecation(String defecation) {
         if (defecation.equals("Y") || defecation.equals("N")) {
 //            this.defecation = defecation.equals("Y") ? "是" : "否";

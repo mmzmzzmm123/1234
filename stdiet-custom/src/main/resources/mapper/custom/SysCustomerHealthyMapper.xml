@@ -583,4 +583,9 @@
        from sys_customer_healthy_extended where del_flag = 0 and  healthy_id = #{id} limit 1
     </select>
 
+    <!-- 查询客户性别 -->
+    <select id="getCustomerSexByCusId" parameterType="Long" resultType="Integer">
+        select sex from sys_customer_healthy where del_flag = 0 and customer_id = #{cusId} limit 1
+    </select>
+
 </mapper>

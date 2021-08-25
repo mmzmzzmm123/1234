@@ -12,7 +12,7 @@
         <div
           :style="'float: left; width: ' + (commentVisible ? '900px' : '950px')"
         >
-          <div style="float: right; margin-bottom: 10px">
+          <div style="float: right;  margin-right:30px;">
             <el-button
               v-hasPermi="['custom:wxUserLog:query']"
               type="primary"
@@ -21,10 +21,11 @@
               >打卡点评</el-button
             >
           </div>
+          <div style="height: 600px; overflow: auto; width:100%">
           <h3>一、基础信息</h3>
           <TableDetailMessage :data="punchLogDetail" :maxLength="10" />
           <h3>二、食物以及对比照信息</h3>
-          <div style="height: 370px; overflow: auto">
+          <div>
             <div v-if="punchLog != null && punchLog.ingredientDesc">
               <h4>食物描述</h4>
               <div>
@@ -115,6 +116,7 @@
               </div>
             </div>
           </div>
+          </div>
         </div>
         <div
           style="width: 200px; margin-left: 40px; margin-top: 50px"
@@ -140,7 +142,7 @@
             <el-form-item label="点评内容" prop="comment">
               <el-input
                 type="textarea"
-                :rows="20"
+                :rows="15"
                 maxlength="200"
                 show-word-limit
                 placeholder="请输入点评内容"
@@ -155,7 +157,12 @@
           </div>
         </div>
       </div>
+       
     </div>
+    <div slot="footer" class="dialog-footer">
+          <el-button type="primary" plain style="float:left" @click="getPunchLogById(punchLog.customerId, -1)">前一天</el-button>
+          <el-button type="primary" plain @click="getPunchLogById(punchLog.customerId,1)">后一天</el-button>
+      </div>
   </el-dialog>
 </template>
 <script>
@@ -225,23 +232,38 @@ export default {
     },
     showDialog(data, callback) {
       this.data = data;
-      if (data.sex) {
+      //性别判断改为根据id查询时返回的性别为准
+      /*if (data.sex) {
         this.punchTitleData[0] = ["体重(斤)", "饮水量(ml)", "生理期"];
         this.punchValueData[0] = ["weight", "water", "menstrualPeriod"];
       } else {
         this.punchTitleData[0] = ["体重(斤)", "饮水量(ml)"];
         this.punchValueData[0] = ["weight", "water"];
-      }
+      }*/
       this.callback = callback;
       this.commentFlag = false;
       this.title = `「${data.customerName}` + " " + `${data.logTime}」打卡记录`;
       this.getPunchLogById();
     },
-    getPunchLogById() {
-      getPunchLogDetail(this.data.id).then((res) => {
+    getPunchLogById(cusId, nextFlag) {
+      getPunchLogDetail(this.punchLog == null ? this.data.id : this.punchLog.id, cusId, nextFlag).then((res) => {
         if (res.code == 200) {
+          if(res.data == null){
+              if(nextFlag && nextFlag != null){
+                  this.msgInfo("打卡记录已到尽头");
+              }
+              return;
+          }
           this.visible = true;
           this.punchLog = res.data;
+          this.title = `「${res.data.customerName}` + " " + `${res.data.logTime}」打卡记录`;
+          if (res.data.sex != null && res.data.sex == 1) {
+            this.punchTitleData[0] = ["体重(斤)", "饮水量(ml)", "生理期"];
+            this.punchValueData[0] = ["weight", "water", "menstrualPeriod"];
+          } else {
+            this.punchTitleData[0] = ["体重(斤)", "饮水量(ml)"];
+            this.punchValueData[0] = ["weight", "water"];
+          }
           res.data.sport = res.data.sport === "Y" ? "是" : "否";
           res.data.diet = res.data.diet === "Y" ? "是" : "否";
           res.data.insomnia = res.data.insomnia === "Y" ? "是" : "否";

@@ -88,4 +88,11 @@ public interface SysCustomerHealthyMapper
      * @return
      */
     public  List<SysDictData> selectDictDataByTypeAndValue(SysDictData sysDictData);
+
+    /**
+     * 查询客户性别
+     * @param cusId
+     * @return
+     */
+    Integer getCustomerSexByCusId(Long cusId);
 }

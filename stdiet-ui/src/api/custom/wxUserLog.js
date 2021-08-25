@@ -53,11 +53,11 @@ export function exportWxUserLog(query) {
 }
 
 // 根据ID查询打卡日志详情
-export function getPunchLogDetail(id) {
+export function getPunchLogDetail(id, cusId, nextFlag) {
   return request({
     url: '/custom/wxUserLog/getPunchLogDetail/' + id,
     method: 'get',
-    params: {}
+    params: {'cusId': cusId ? cusId : null, 'nextFlag': nextFlag ? nextFlag : 0}
   })
 }
 

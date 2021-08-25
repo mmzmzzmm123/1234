@@ -73,4 +73,11 @@ public interface SysCustomerPhysicalSignsMapper
      * @return
      */
     int delCustomerSignByCustomerId(@Param("customerId")Long customerId);
+
+    /**
+     * 查询客户性别
+     * @param cusId
+     * @return
+     */
+    Integer getCustomerSexByCusId(Long cusId);
 }

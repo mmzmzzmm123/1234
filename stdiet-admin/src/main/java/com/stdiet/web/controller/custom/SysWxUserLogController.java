@@ -14,10 +14,7 @@ import com.stdiet.custom.domain.SysCustomer;
 import com.stdiet.custom.domain.SysWxUserInfo;
 import com.stdiet.custom.domain.SysWxUserLog;
 import com.stdiet.custom.page.WxLogInfo;
-import com.stdiet.custom.service.ISysMessageNoticeService;
-import com.stdiet.custom.service.ISysOrderService;
-import com.stdiet.custom.service.ISysWxUserInfoService;
-import com.stdiet.custom.service.ISysWxUserLogService;
+import com.stdiet.custom.service.*;
 import org.aspectj.weaver.loadtime.Aj;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -47,6 +44,9 @@ public class SysWxUserLogController extends BaseController {
 
     @Autowired
     private ISysMessageNoticeService sysMessageNoticeService;
+
+    @Autowired
+    private ISysCustomerService sysCustomerService;
 
     /**
      * 查询微信用户记录列表
@@ -164,40 +164,50 @@ public class SysWxUserLogController extends BaseController {
 
     /**
      * 获取微信用户记录详细信息
+     * @param id 打卡记录ID
+     * @param nextFlag 0当前  -1上一条  1下一条
+     * @return
      */
     @PreAuthorize("@ss.hasPermi('custom:wxUserLog:query')")
     @GetMapping(value = "/getPunchLogDetail/{id}")
-    public AjaxResult getPunchLogDetail(@PathVariable("id") String id) {
+    public AjaxResult getPunchLogDetail(@PathVariable("id") String id,
+                                        @RequestParam(value = "cusId", required = false)Long cusId,
+                                        @RequestParam(value = "nextFlag", required = false, defaultValue = "0")int nextFlag) {
         SysWxUserLog sysWxUserLog = null;
         //根据ID查询
         SysWxUserLog param = new SysWxUserLog();
         param.setId(Long.parseLong(id));
-        List<SysWxUserLog> sysWxUserLogList = sysWxUserLogService.selectSysWxUserLogList(param);
-        if(sysWxUserLogList != null && sysWxUserLogList.size() > 0){
-            sysWxUserLog = sysWxUserLogList.get(0);
+        param.setNextFlag(nextFlag);
+        param.setCustomerId(cusId);
+        sysWxUserLog = sysWxUserLogService.getPunchLogDetail(param);
+
+        if(sysWxUserLog != null){
+            Map<String, List<String>> imageUrlMap = new HashMap<>();
+            List<String> breakfastImagesUrlList = StringUtils.isNotEmpty(sysWxUserLog.getBreakfastImages()) ? Arrays.asList(sysWxUserLog.getBreakfastImages().split("\\|")) : new ArrayList<>();
+            imageUrlMap.put("breakfastImages", breakfastImagesUrlList);
+
+            List<String> lunchImagesUrlList = StringUtils.isNotEmpty(sysWxUserLog.getLunchImages()) ? Arrays.asList(sysWxUserLog.getLunchImages().split("\\|")) : new ArrayList<>();
+            imageUrlMap.put("lunchImages", lunchImagesUrlList);
+
+            List<String> dinnerImagesUrlList = StringUtils.isNotEmpty(sysWxUserLog.getDinnerImages()) ? Arrays.asList(sysWxUserLog.getDinnerImages().split("\\|")) : new ArrayList<>();
+            imageUrlMap.put("dinnerImages", dinnerImagesUrlList);
+
+            List<String> extraMealImagesUrlList = StringUtils.isNotEmpty(sysWxUserLog.getExtraMealImages()) ? Arrays.asList(sysWxUserLog.getExtraMealImages().split("\\|")) : new ArrayList<>();
+            imageUrlMap.put("extraMealImages", extraMealImagesUrlList);
+
+            List<String> bodyImagesUrlList = StringUtils.isNotEmpty(sysWxUserLog.getBodyImages()) ? Arrays.asList(sysWxUserLog.getBodyImages().split("\\|")) : new ArrayList<>();
+            imageUrlMap.put("bodyImages", bodyImagesUrlList );
+
+            //生成预览链接
+            Map<String,List<String>> downUrlList = AliyunOSSUtils.generatePresignedUrl(imageUrlMap);
+            sysWxUserLog.setImagesUrl(downUrlList);
+
+            //查询对应对应客户性别
+            if(sysWxUserLog.getCustomerId() != null){
+                sysWxUserLog.setSex( sysCustomerService.getCustomerSex(sysWxUserLog.getCustomerId()));
+            }
         }
-        if(sysWxUserLog == null){
-            return AjaxResult.error("打卡记录不存在");
-        }
-        Map<String, List<String>> imageUrlMap = new HashMap<>();
-        List<String> breakfastImagesUrlList = StringUtils.isNotEmpty(sysWxUserLog.getBreakfastImages()) ? Arrays.asList(sysWxUserLog.getBreakfastImages().split("\\|")) : new ArrayList<>();
-        imageUrlMap.put("breakfastImages", breakfastImagesUrlList);
 
-        List<String> lunchImagesUrlList = StringUtils.isNotEmpty(sysWxUserLog.getLunchImages()) ? Arrays.asList(sysWxUserLog.getLunchImages().split("\\|")) : new ArrayList<>();
-        imageUrlMap.put("lunchImages", lunchImagesUrlList);
-
-        List<String> dinnerImagesUrlList = StringUtils.isNotEmpty(sysWxUserLog.getDinnerImages()) ? Arrays.asList(sysWxUserLog.getDinnerImages().split("\\|")) : new ArrayList<>();
-        imageUrlMap.put("dinnerImages", dinnerImagesUrlList);
-
-        List<String> extraMealImagesUrlList = StringUtils.isNotEmpty(sysWxUserLog.getExtraMealImages()) ? Arrays.asList(sysWxUserLog.getExtraMealImages().split("\\|")) : new ArrayList<>();
-        imageUrlMap.put("extraMealImages", extraMealImagesUrlList);
-
-        List<String> bodyImagesUrlList = StringUtils.isNotEmpty(sysWxUserLog.getBodyImages()) ? Arrays.asList(sysWxUserLog.getBodyImages().split("\\|")) : new ArrayList<>();
-        imageUrlMap.put("bodyImages", bodyImagesUrlList );
-
-        //生成预览链接
-        Map<String,List<String>> downUrlList = AliyunOSSUtils.generatePresignedUrl(imageUrlMap);
-        sysWxUserLog.setImagesUrl(downUrlList);
         return AjaxResult.success(sysWxUserLog);
     }
 
