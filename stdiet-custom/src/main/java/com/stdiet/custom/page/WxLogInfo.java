@@ -1,5 +1,6 @@
 package com.stdiet.custom.page;
 
+import com.alibaba.fastjson.JSONArray;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 
@@ -124,6 +125,8 @@ public class WxLogInfo {
     private List<String> bodyImagesUrl;
 
     private String healthManifesto;
+
+    private JSONArray scaleBodyData;
 
     public void setDefecation(String defecation) {
         if (defecation.equals("Y") || defecation.equals("N")) {
