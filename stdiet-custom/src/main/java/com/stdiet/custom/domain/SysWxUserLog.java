@@ -1,5 +1,7 @@
 package com.stdiet.custom.domain;
 
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.stdiet.common.annotation.Excel;
 import com.stdiet.common.core.domain.BaseEntity;
@@ -205,6 +207,8 @@ public class SysWxUserLog extends BaseEntity {
     private String afterNutritionist;
     //图片预览路径
     private Map<String, List<String>> imagesUrl;
+
+    private JSONArray scaleBodyData;
 
     public void setDefecation(String defecation) {
         if (defecation.equals("Y") || defecation.equals("N")) {
