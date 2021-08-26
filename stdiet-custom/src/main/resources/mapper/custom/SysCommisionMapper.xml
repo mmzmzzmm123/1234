@@ -44,7 +44,7 @@
         </if>
         <!-- 因为体验单、售中单都存在售中，存在两种情况需要计算提成，1、售中单  2、售中自己开的体验单（通过售前是否为NULL或0判断，售前不为空则表示售前开的体验单，不计算售中提成） -->
         <if test="postCode != null and postCode == 'on_sale_id'">
-            AND (order_type = 3 OR (order_type = 2 AND (pre_sale_id IS NULL || pre_sale_id = 0)))
+            AND (order_type = 3 OR order_type = 4 OR (order_type = 2 AND (pre_sale_id IS NULL || pre_sale_id = 0)))
         </if>
         GROUP BY ${column}
     </sql>
