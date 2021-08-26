@@ -182,4 +182,13 @@ public class SysWxUserLogServiceImpl implements ISysWxUserLogService {
         return sysWxUserLogMapper.selectNotPunchCustomerByDate(sysCustomer);
     }
 
+    /**
+     * 查询打卡详情（下一条、上一条）
+     * @param sysWxUserLog
+     * @return
+     */
+    public SysWxUserLog getPunchLogDetail(SysWxUserLog sysWxUserLog){
+        return sysWxUserLogMapper.getPunchLogDetail(sysWxUserLog);
+    }
+
 }

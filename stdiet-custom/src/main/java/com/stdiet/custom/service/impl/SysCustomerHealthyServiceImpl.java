@@ -272,4 +272,13 @@ public class SysCustomerHealthyServiceImpl implements ISysCustomerHealthyService
     public List<SysDictData> selectDictDataByTypeAndValue(SysDictData sysDictData){
         return sysCustomerHealthyMapper.selectDictDataByTypeAndValue(sysDictData);
     }
+
+    /**
+     * 查询客户性别
+     * @param cusId
+     * @return
+     */
+    public Integer getCustomerSexByCusId(Long cusId){
+        return sysCustomerHealthyMapper.getCustomerSexByCusId(cusId);
+    }
 }

@@ -92,4 +92,11 @@ public interface ISysCustomerPhysicalSignsService {
      */
     int delCustomerSignByCustomerId(Long customerId);
 
+    /**
+     * 获取客户性别
+     * @param cusId
+     * @return
+     */
+    Integer getCustomerSexByCusId(Long cusId);
+
 }

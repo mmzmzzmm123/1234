@@ -227,7 +227,6 @@ public class SysOrderServiceImpl implements ISysOrderService {
             sysOrder.setMainOrderId(0L);
             sysOrder.setAfterSaleCommissOrder(0);
             sysOrder.setPreSaleId(null);
-            sysOrder.setOnSaleId(null);
             sysOrder.setPushPreSaleId(null);
             sysOrder.setPlannerId(null);
             sysOrder.setPlannerAssisId(null);
@@ -327,7 +326,6 @@ public class SysOrderServiceImpl implements ISysOrderService {
             sysOrder.setMainOrderId(0L);
             sysOrder.setAfterSaleCommissOrder(0);
             sysOrder.setPreSaleId(null);
-            sysOrder.setOnSaleId(null);
             sysOrder.setPushPreSaleId(null);
             sysOrder.setPlannerId(null);
             sysOrder.setPlannerAssisId(null);

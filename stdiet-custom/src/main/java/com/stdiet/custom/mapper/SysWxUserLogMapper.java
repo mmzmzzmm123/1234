@@ -123,4 +123,11 @@ public interface SysWxUserLogMapper
      */
     List<SysCustomer> selectNotPunchCustomerByDate(SysCustomer sysCustomer);
 
+    /**
+     * 查询打卡详情（下一条、上一条）
+     * @param sysWxUserLog
+     * @return
+     */
+    SysWxUserLog getPunchLogDetail(SysWxUserLog sysWxUserLog);
+
 }

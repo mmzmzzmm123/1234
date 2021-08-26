@@ -49,6 +49,7 @@
         <result property="menstrualPeriod" column="menstrual_period"/>
         <!-- 非持久字段 -->
         <result property="customerName" column="customer_name"/>
+        <result property="customerId" column="cus_id"/>
         <!-- 营养师 -->
         <result property="nutritionist" column="nutritionist"/>
         <result property="afterNutritionist" column="after_nutritionist"/>
@@ -498,6 +499,42 @@
         </if>
 
         order by plan.cus_id desc
+    </select>
+
+    <!-- 获取打卡详情（上一天、下一天） -->
+    <select id="getPunchLogDetail" parameterType="SysWxUserLog" resultMap="SysWxUserLogResult">
+        SELECT
+        wxlog.id,wxinfo.appid,wxinfo.openid,wxinfo.avatar_url,wxinfo.phone,wxlog.weight,wxlog.log_time,wxlog.sleep_time,
+        wxlog.wakeup_time,wxlog.defecation, wxlog.defecation_desc, wxlog.water, wxlog.insomnia,wxlog.sport,
+        wxlog.sport_desc,wxlog.diet, wxlog.diet_desc,wxlog.remark,
+        wxlog.emotion, wxlog.menstrual_period,
+        wxlog.emotion_desc,wxlog.sly_eat_food,wxlog.constipation,wxlog.ingredient_desc,wxlog.breakfast_images,
+        wxlog.lunch_images,wxlog.dinner_images,wxlog.extra_meal_images,wxlog.body_images,wxlog.body_desc,
+        wxlog.suggest,wxlog.execution_score,wxlog.comment,wxlog.health_manifesto, wxlog.log_time,
+		sc.id as cus_id,sc.name as customer_name
+        FROM sys_wx_user_log wxlog
+        left join sys_wx_user_info wxinfo on wxinfo.openid = wxlog.openid
+        left join sys_customer sc on sc.id = wxinfo.cus_id and sc.del_flag = 0
+        where wxlog.del_flag = 0
+        <if test="nextFlag == 0">
+            and wxlog.id = #{id}
+        </if>
+        <if test="nextFlag == -1">
+            and #{id} > wxlog.id
+        </if>
+        <if test="nextFlag == 1">
+            and wxlog.id > #{id}
+        </if>
+        <if test="customerId != null">
+            and sc.id = #{customerId}
+        </if>
+        <if test="nextFlag == -1">
+            order by id desc
+        </if>
+        <if test="nextFlag == 1">
+            order by id asc
+        </if>
+        limit 1
     </select>
 
 

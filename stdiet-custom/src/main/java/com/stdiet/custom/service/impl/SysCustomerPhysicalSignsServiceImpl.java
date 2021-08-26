@@ -192,4 +192,14 @@ public class SysCustomerPhysicalSignsServiceImpl implements ISysCustomerPhysical
     public int delCustomerSignByCustomerId(Long customerId){
         return sysCustomerPhysicalSignsMapper.delCustomerSignByCustomerId(customerId);
     }
+
+    /**
+     * 查询客户性别
+     * @param cusId
+     * @return
+     */
+    @Override
+    public Integer getCustomerSexByCusId(Long cusId){
+        return sysCustomerPhysicalSignsMapper.getCustomerSexByCusId(cusId);
+    }
 }

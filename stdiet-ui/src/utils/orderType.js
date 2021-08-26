@@ -233,7 +233,7 @@ export function dealOrderModuleshowByOrderType(orderType, moduleshow, form){
           form.operatorId = null;
           form.operatorAssisId = null;
         }
-        
+        moduleshow.onSaleShow = true;
         moduleshow.preSaleShow = false;
         moduleshow.plannerShow = false;
         moduleshow.plannerAssisShow = false;

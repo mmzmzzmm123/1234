@@ -222,4 +222,9 @@
         update sys_customer_physical_signs set del_flag = 1 where customer_id = #{customerId}
     </update>
 
+    <!-- 查询客户性别 -->
+    <select id="getCustomerSexByCusId" parameterType="Long" resultType="Integer">
+        select sex from sys_customer_physical_signs where del_flag = 0 and customer_id = #{cusId} limit 1
+    </select>
+
 </mapper>

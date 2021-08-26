@@ -231,4 +231,17 @@ public class SysCustomerServiceImpl implements ISysCustomerService {
             }
         }
     }
+
+    /**
+     * 根据客户ID查询性别
+     * @param cusId 客户ID
+     * @return
+     */
+    public Integer getCustomerSex(Long cusId){
+        Integer sex = sysCustomerHealthyService.getCustomerSexByCusId(cusId);
+        if(sex == null){
+            sex = sysCustomerPhysicalSignsService.getCustomerSexByCusId(cusId);
+        }
+        return sex;
+    }
 }
