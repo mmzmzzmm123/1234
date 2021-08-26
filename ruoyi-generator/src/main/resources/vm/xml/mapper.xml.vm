@@ -12,8 +12,14 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 #if($table.sub)
 
     <resultMap id="${ClassName}${subClassName}Result" type="${ClassName}" extends="${ClassName}Result">
-        <collection property="${subclassName}List" notNullColumn="sub_${subTable.pkColumn.columnName}" javaType="java.util.List" resultMap="${subClassName}Result" />
+        <collection property="${subclassName}List" ofType="${subClassName}" column="${subTable.pkColumn.columnName}" select="get${subClassName}List" />
     </resultMap>
+
+    <select id="get${subClassName}List" resultType="${subClassName}" resultMap="${subClassName}Result">
+        select#foreach ($column in $subTable.columns) $column.columnName AS sub_$column.columnName#if($velocityCount != $subTable.columns.size()),#end#end
+        from ${subTableName}
+        where sub_${subTable.pkColumn.columnName} = #{${subTable.pkColumn.columnName}}
+    </select>
 
     <resultMap type="${subClassName}" id="${subClassName}Result">
 #foreach ($column in $subTable.columns)
