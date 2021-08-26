@@ -226,7 +226,6 @@ public class SysOrderServiceImpl implements ISysOrderService {
             sysOrder.setNutritionistId((sysOrder.getNutritionistIdList() != null && sysOrder.getNutritionistIdList().length > 0) ? sysOrder.getNutritionistIdList()[0] : null);
             sysOrder.setMainOrderId(0L);
             sysOrder.setAfterSaleCommissOrder(0);
-            sysOrder.setPreSaleId(null);
             sysOrder.setPushPreSaleId(null);
             sysOrder.setPlannerId(null);
             sysOrder.setPlannerAssisId(null);
@@ -325,7 +324,6 @@ public class SysOrderServiceImpl implements ISysOrderService {
         if("4".equals(sysOrder.getOrderType())){
             sysOrder.setMainOrderId(0L);
             sysOrder.setAfterSaleCommissOrder(0);
-            sysOrder.setPreSaleId(null);
             sysOrder.setPushPreSaleId(null);
             sysOrder.setPlannerId(null);
             sysOrder.setPlannerAssisId(null);

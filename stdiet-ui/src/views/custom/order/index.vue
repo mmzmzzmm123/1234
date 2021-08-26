@@ -437,7 +437,15 @@
                 </div>
               </div>
               <div v-else-if="scope.row.orderType == 4">
-                  {{scope.row.businessAffairId ? scope.row.businessAffair : "无"}}
+                  <div>
+                    {{scope.row.preSaleId ? scope.row.preSale : "无" }}
+                  </div>
+                  <div>
+                    {{scope.row.businessAffairId ? scope.row.businessAffair : "无"}}
+                  </div>
+                  <div>
+                    {{scope.row.onSaleId ? scope.row.onSale : "无"}}
+                  </div>
               </div>
               <div v-else>
                   {{scope.row.preSaleId ? scope.row.preSale : scope.row.onSale}}

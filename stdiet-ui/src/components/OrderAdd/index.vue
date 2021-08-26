@@ -111,6 +111,18 @@
             </el-select>
           </el-form-item>
         </el-col>
+        <el-col :span="8" v-show="orderModuleshow.businessAffairShow">
+          <el-form-item label="商务" prop="businessAffairId" >
+            <el-select v-model="form.businessAffairId" placeholder="请选择" filterable clearable>
+              <el-option
+                v-for="dict in bdOptions"
+                :key="dict.dictValue"
+                :label="dict.dictLabel"
+                :value="parseInt(dict.dictValue)"
+              />
+            </el-select>
+          </el-form-item>
+        </el-col>
         <el-col :span="8" v-show="orderModuleshow.preSaleShow">
           <el-form-item label="售前" prop="preSaleId" >
             <el-select v-model="form.preSaleId" placeholder="请选择" filterable
@@ -124,18 +136,7 @@
             </el-select>
           </el-form-item>
         </el-col>
-        <el-col :span="8" v-show="orderModuleshow.businessAffairShow">
-          <el-form-item label="商务" prop="businessAffairId" >
-            <el-select v-model="form.businessAffairId" placeholder="请选择" filterable clearable>
-              <el-option
-                v-for="dict in bdOptions"
-                :key="dict.dictValue"
-                :label="dict.dictLabel"
-                :value="parseInt(dict.dictValue)"
-              />
-            </el-select>
-          </el-form-item>
-        </el-col>
+        
         <el-col :span="8" v-show="orderModuleshow.pushPreSaleShow">
           <el-form-item label="售前推送" prop="preSaleId" title="售前推送人就是该客户体验单的销售，只有售中一开单需要选择">
             <el-select v-model="form.pushPreSaleId" placeholder="请选择" filterable
