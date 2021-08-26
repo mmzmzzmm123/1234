@@ -227,14 +227,12 @@ export function dealOrderModuleshowByOrderType(orderType, moduleshow, form){
       //商务单
       case 4:
         if(addFlag){
-          form.preSaleId = null;
           form.plannerId = null;
           form.plannerAssisId = null;
           form.operatorId = null;
           form.operatorAssisId = null;
         }
         moduleshow.onSaleShow = true;
-        moduleshow.preSaleShow = false;
         moduleshow.plannerShow = false;
         moduleshow.plannerAssisShow = false;
         moduleshow.operatorShow = false;

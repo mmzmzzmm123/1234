@@ -92,11 +92,12 @@
             </el-select>
           </el-form-item>
         </el-col>
-        <el-col :span="8" v-show="orderModuleshow.preSaleShow">
-          <el-form-item label="售前" prop="preSaleId">
-            <el-select v-model="form.preSaleId" filterable clearable placeholder="请选择">
+        
+        <el-col :span="8" v-show="orderModuleshow.businessAffairShow">
+          <el-form-item label="商务" prop="businessAffairId" >
+            <el-select v-model="form.businessAffairId" placeholder="请选择" filterable clearable>
               <el-option
-                v-for="dict in preSaleIdOptions"
+                v-for="dict in bdOptions"
                 :key="dict.dictValue"
                 :label="dict.dictLabel"
                 :value="parseInt(dict.dictValue)"
@@ -104,11 +105,11 @@
             </el-select>
           </el-form-item>
         </el-col>
-        <el-col :span="8" v-show="orderModuleshow.businessAffairShow">
-          <el-form-item label="商务" prop="businessAffairId" >
-            <el-select v-model="form.businessAffairId" placeholder="请选择" filterable clearable>
+        <el-col :span="8" v-show="orderModuleshow.preSaleShow">
+          <el-form-item label="售前" prop="preSaleId">
+            <el-select v-model="form.preSaleId" filterable clearable placeholder="请选择">
               <el-option
-                v-for="dict in bdOptions"
+                v-for="dict in preSaleIdOptions"
                 :key="dict.dictValue"
                 :label="dict.dictLabel"
                 :value="parseInt(dict.dictValue)"
