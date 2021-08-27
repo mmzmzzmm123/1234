@@ -115,6 +115,7 @@ public class SysNutritionQuestionController extends BaseController
     /**
      * 重新生成知识问答索引
      */
+    @PreAuthorize("@ss.hasPermi('custom:nutritionQuestion:regenerateIndex')")
     @Log(title = "重新生成知识问答索引", businessType = BusinessType.UPDATE)
     @GetMapping("/regenerateNutritionQuestionIndex")
     public AjaxResult regenerateNutritionQuestionIndex()

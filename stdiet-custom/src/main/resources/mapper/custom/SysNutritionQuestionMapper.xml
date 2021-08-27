@@ -16,6 +16,7 @@
         <result property="updateTime"    column="update_time"    />
         <result property="updateBy"    column="update_by"    />
         <result property="delFlag"    column="del_flag"    />
+        <result property="createByName" column="createByName"></result>
     </resultMap>
 
     <!-- 部分字段resultMap -->
@@ -28,6 +29,10 @@
         <result property="createTime"    column="create_time"    />
     </resultMap>
 
+    <sql id="base_field">
+        id, title, content, `key`, title_content_index, show_flag, create_time, create_by, update_time, update_by, del_flag
+    </sql>
+
     <sql id="selectSysNutritionQuestionVo">
         select id, title, content, `key`, title_content_index, show_flag, create_time, create_by, update_time, update_by, del_flag from sys_nutrition_question
     </sql>
@@ -37,8 +42,11 @@
     </select>
 
     <select id="selectSysNutritionQuestionById" parameterType="Long" resultMap="SysNutritionQuestionResult">
-        <include refid="selectSysNutritionQuestionVo"/>
-        where id = #{id} and del_flag = 0
+        select
+        nq.*,u.nick_name as createByName
+        from sys_nutrition_question nq
+        left join sys_user u on u.user_id = nq.create_by
+        where nq.del_flag = 0 and nq.id = #{id}
     </select>
 
     <insert id="insertSysNutritionQuestion" parameterType="SysNutritionQuestion" useGeneratedKeys="true" keyProperty="id">
@@ -115,7 +123,11 @@
 
     <!-- 分页查询-->
     <select id="getNutritionQuestionListByPage" resultMap="SysNutritionQuestionResult">
-      select * from sys_nutrition_question where del_flag = 0 order by id asc limit #{start},#{pageSize}
+      select
+        nq.*,u.nick_name as createByName
+        from sys_nutrition_question nq
+        left join sys_user u on u.user_id = nq.create_by
+        where nq.del_flag = 0 order by id asc limit #{start},#{pageSize}
     </select>
 
 

@@ -28,4 +28,7 @@ public class NutritionQuestionResponse implements Serializable {
     private String showFlag;
 
     private String createTime;
+
+    //创建人
+    private String createByName;
 }

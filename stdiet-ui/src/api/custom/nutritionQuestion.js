@@ -60,3 +60,14 @@ export function updateWxShow(data){
     params: data
   })
 }
+
+//重新生成索引
+export function regenerateQuestionIndex(){
+  return request({
+    url: '/custom/nutritionQuestion/regenerateNutritionQuestionIndex',
+    method: 'get',
+    params: {}
+  })
+}
+
+
