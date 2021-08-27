@@ -36,6 +36,7 @@
               v-model="queryParams.zbjs"
               filterable
               placeholder="请选择主班教师"
+              size="small"
             >
               <el-option
                 v-for="item in zbjsOptions"
@@ -53,6 +54,7 @@
               v-model="queryParams.pbjs"
               filterable
               placeholder="请选择配班教师"
+              size="small"
             >
               <el-option
                 v-for="item in pbjsOptions"
@@ -70,6 +72,7 @@
               v-model="queryParams.zljs"
               filterable
               placeholder="请选择助理教师"
+              size="small"
             >
               <el-option
                 v-for="item in zljsOptions"

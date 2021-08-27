@@ -8,6 +8,7 @@
               v-model="queryParams.userid"
               filterable
               placeholder="请选择用户"
+              size="small"
             >
               <el-option
                 v-for="item in teacherListAll"

@@ -4,7 +4,11 @@
       <el-row :gutter="10">
         <el-col :xs="24" :ms="12" :md="5">
           <el-form-item label="选择班级" prop="classid">
-            <el-select v-model="queryParams.classid" placeholder="请选择班级">
+            <el-select
+              v-model="queryParams.classid"
+              size="small"
+              placeholder="请选择班级"
+            >
               <el-option
                 v-for="dict in classOptions"
                 :key="dict.bjbh"

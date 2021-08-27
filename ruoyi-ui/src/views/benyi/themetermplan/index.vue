@@ -4,7 +4,11 @@
       <el-row :gutter="10">
         <el-col :xs="24" :ms="12" :md="5">
           <el-form-item label="选择班级" prop="classid">
-            <el-select v-model="queryParams.classid" placeholder="请选择班级">
+            <el-select
+              v-model="queryParams.classid"
+              size="small"
+              placeholder="请选择班级"
+            >
               <el-option
                 v-for="dict in classOptions"
                 :key="dict.bjbh"
@@ -95,7 +99,7 @@
     </div>
 
     <el-table
-    border
+      border
       v-loading="loading"
       :data="termplanList"
       @selection-change="handleSelectionChange"
@@ -107,7 +111,7 @@
         :selectable="isShow"
       />
       <el-table-column
-      fixed
+        fixed
         label="计划名称"
         align="center"
         prop="name"
@@ -128,20 +132,12 @@
         prop="classid"
         :formatter="classFormat"
       />
-      <el-table-column
-        label="开始月份"
-        align="center"
-        prop="startmonth"
-      >
+      <el-table-column label="开始月份" align="center" prop="startmonth">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.startmonth, "{y}-{m}") }}</span>
         </template>
       </el-table-column>
-      <el-table-column
-        label="结束月份"
-        align="center"
-        prop="endmonth"
-      >
+      <el-table-column label="结束月份" align="center" prop="endmonth">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.endmonth, "{y}-{m}") }}</span>
         </template>
@@ -224,11 +220,16 @@
     />
 
     <!-- 添加或修改主题整合学期计划对话框 -->
-    <el-dialog :title="title" :visible.sync="open" class="v-dialog" append-to-body>
+    <el-dialog
+      :title="title"
+      :visible.sync="open"
+      class="v-dialog"
+      append-to-body
+    >
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
         <el-form-item label="选择月份" prop="startmonth">
           <el-date-picker
-          class="my-date-picker"
+            class="my-date-picker"
             v-model="form.startmonth"
             type="monthrange"
             range-separator="至"

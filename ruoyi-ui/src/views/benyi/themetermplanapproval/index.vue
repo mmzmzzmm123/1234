@@ -4,7 +4,11 @@
       <el-row :gutter="10">
         <el-col :xs="24" :ms="12" :md="5">
           <el-form-item label="选择班级" prop="classid">
-            <el-select v-model="queryParams.classid" placeholder="请选择班级">
+            <el-select
+              v-model="queryParams.classid"
+              size="small"
+              placeholder="请选择班级"
+            >
               <el-option
                 v-for="dict in classOptions"
                 :key="dict.bjbh"
@@ -83,11 +87,7 @@
       :data="termplanList"
       @selection-change="handleSelectionChange"
     >
-      <el-table-column
-        type="selection"
-        width="55"
-        align="center"
-      />
+      <el-table-column type="selection" width="55" align="center" />
       <el-table-column
         fixed
         label="计划名称"
@@ -104,11 +104,7 @@
           </router-link>
         </template>
       </el-table-column>
-      <el-table-column
-        label="班级名称"
-        align="center"
-        prop="byClass.bjmc"
-      />
+      <el-table-column label="班级名称" align="center" prop="byClass.bjmc" />
       <el-table-column label="开始月份" align="center" prop="startmonth">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.startmonth, "{y}-{m}") }}</span>
