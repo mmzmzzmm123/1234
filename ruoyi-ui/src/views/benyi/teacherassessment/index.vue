@@ -22,7 +22,6 @@
         <el-col :xs="24" :ms="12" :md="5">
           <el-form-item label="选择教师" prop="jsid">
             <el-select
-              ref="fieldSelect"
               v-model="queryParams.jsid"
               clearable
               size="small"
@@ -383,13 +382,6 @@ export default {
       });
     },
   },
-  mounted() {
-    this.$nextTick(function () {
-      this.$refs.fieldSelect.$refs.scrollbar.$el.classList.add(
-        "scroll-opacity"
-      );
-    });
-  },
   methods: {
     /** 查询教师月绩效考核列表 */
     getList() {
@@ -571,10 +563,5 @@ export default {
 }
 .no-margin ::v-deep.el-form-item__content {
   margin: 0 !important;
-}
-.el-select-dropdown
-  .scroll-opacity.el-scrollbar
-  .el-scrollbar__bar.is-vertical {
-  opacity: 1; //改为0不显示滚动条
 }
 </style>

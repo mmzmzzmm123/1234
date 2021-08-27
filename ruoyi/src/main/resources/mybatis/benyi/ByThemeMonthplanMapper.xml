@@ -5,54 +5,72 @@
 <mapper namespace="com.ruoyi.project.benyi.mapper.ByThemeMonthplanMapper">
 
     <resultMap type="ByThemeMonthplan" id="ByThemeMonthplanResult">
-        <result property="id"    column="id"    />
-        <result property="name"    column="name"    />
-        <result property="schoolid"    column="schoolid"    />
-        <result property="classid"    column="classid"    />
-        <result property="xnxq"    column="xnxq"    />
-        <result property="month"    column="month"    />
-        <result property="themes"    column="themes"    />
-        <result property="selfthemes"    column="selfthemes"    />
-        <result property="wxkc"    column="wxkc"    />
-        <result property="support"    column="support"    />
-        <result property="remarks"    column="remarks"    />
-        <result property="createuserid"    column="createuserid"    />
-        <result property="createTime"    column="create_time"    />
-        <result property="spr"    column="spr"    />
-        <result property="sptime"    column="sptime"    />
-        <result property="spyj"    column="spyj"    />
-        <result property="status"    column="status"    />
+        <result property="id" column="id"/>
+        <result property="name" column="name"/>
+        <result property="schoolid" column="schoolid"/>
+        <result property="classid" column="classid"/>
+        <result property="xnxq" column="xnxq"/>
+        <result property="month" column="month"/>
+        <result property="themes" column="themes"/>
+        <result property="selfthemes" column="selfthemes"/>
+        <result property="wxkc" column="wxkc"/>
+        <result property="support" column="support"/>
+        <result property="remarks" column="remarks"/>
+        <result property="createuserid" column="createuserid"/>
+        <result property="createTime" column="create_time"/>
+        <result property="spr" column="spr"/>
+        <result property="sptime" column="sptime"/>
+        <result property="spyj" column="spyj"/>
+        <result property="status" column="status"/>
+        <association property="byClass" column="classid" javaType="ByClass" resultMap="ByClassResult"/>
+    </resultMap>
+
+    <resultMap type="ByClass" id="ByClassResult">
+        <result property="bjbh" column="bjbh"/>
+        <result property="deptId" column="dept_id"/>
+        <result property="bjtype" column="bjtype"/>
+        <result property="bhxh" column="bhxh"/>
+        <result property="xn" column="xn"/>
+        <result property="bjmc" column="bjmc"/>
+        <result property="bjrych" column="bjrych"/>
+        <result property="jbny" column="jbny"/>
+        <result property="zbjs" column="zbjs"/>
+        <result property="pbjs" column="pbjs"/>
+        <result property="zljs" column="zljs"/>
+        <result property="isdel" column="isdel"/>
+        <result property="createtime" column="createtime"/>
     </resultMap>
 
     <sql id="selectByThemeMonthplanVo">
-        select id, name, schoolid, classid, xnxq, month, themes, selfthemes, wxkc, support, remarks, createuserid, create_time, spr, sptime, spyj, status from by_theme_monthplan
+        select a.id, a.name, a.schoolid, a.classid, b.bjmc,a.xnxq, a.month, a.themes, a.selfthemes, a.wxkc, a.support, a.remarks, a.createuserid, a.create_time, a.spr, a.sptime, a.spyj, a.status from by_theme_monthplan a
+        left join by_class b on a.classid=b.bjbh
     </sql>
 
     <select id="selectByThemeMonthplanList" parameterType="ByThemeMonthplan" resultMap="ByThemeMonthplanResult">
         <include refid="selectByThemeMonthplanVo"/>
         <where>
-            <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
-            <if test="schoolid != null "> and schoolid = #{schoolid}</if>
-            <if test="classid != null  and classid != ''"> and classid = #{classid}</if>
-            <if test="xnxq != null  and xnxq != ''"> and xnxq = #{xnxq}</if>
-            <if test="month != null "> and month = #{month}</if>
-            <if test="themes != null  and themes != ''"> and themes = #{themes}</if>
-            <if test="selfthemes != null  and selfthemes != ''"> and selfthemes = #{selfthemes}</if>
-            <if test="wxkc != null  and wxkc != ''"> and wxkc = #{wxkc}</if>
-            <if test="support != null  and support != ''"> and support = #{support}</if>
-            <if test="remarks != null  and remarks != ''"> and remarks = #{remarks}</if>
-            <if test="createuserid != null "> and createuserid = #{createuserid}</if>
-            <if test="spr != null "> and spr = #{spr}</if>
-            <if test="sptime != null "> and sptime = #{sptime}</if>
-            <if test="spyj != null  and spyj != ''"> and spyj = #{spyj}</if>
-            <if test="status != null  and status != ''"> and status = #{status}</if>
+            <if test="name != null  and name != ''">and a.name like concat('%', #{name}, '%')</if>
+            <if test="schoolid != null ">and a.schoolid = #{schoolid}</if>
+            <if test="classid != null  and classid != ''">and a.classid = #{classid}</if>
+            <if test="xnxq != null  and xnxq != ''">and a.xnxq = #{xnxq}</if>
+            <if test="month != null ">and a.month = #{month}</if>
+            <if test="themes != null  and themes != ''">and a.themes = #{themes}</if>
+            <if test="selfthemes != null  and selfthemes != ''">and a.selfthemes = #{selfthemes}</if>
+            <if test="wxkc != null  and wxkc != ''">and a.wxkc = #{wxkc}</if>
+            <if test="support != null  and support != ''">and a.support = #{support}</if>
+            <if test="remarks != null  and remarks != ''">and a.remarks = #{remarks}</if>
+            <if test="createuserid != null ">and a.createuserid = #{createuserid}</if>
+            <if test="spr != null ">and a.spr = #{spr}</if>
+            <if test="sptime != null ">and a.sptime = #{sptime}</if>
+            <if test="spyj != null  and spyj != ''">and a.spyj = #{spyj}</if>
+            <if test="status != null  and status != ''">and a.status = #{status}</if>
         </where>
-        order by month desc
+        order by a.month desc
     </select>
 
     <select id="selectByThemeMonthplanById" parameterType="String" resultMap="ByThemeMonthplanResult">
         <include refid="selectByThemeMonthplanVo"/>
-        where id = #{id}
+        where a.id = #{id}
     </select>
 
     <insert id="insertByThemeMonthplan" parameterType="ByThemeMonthplan">

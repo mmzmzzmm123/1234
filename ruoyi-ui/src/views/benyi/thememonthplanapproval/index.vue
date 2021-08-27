@@ -131,8 +131,7 @@
       <el-table-column
         label="班级名称"
         align="center"
-        prop="classid"
-        :formatter="classFormat"
+        prop="byClass.bjmc"
       />
       <el-table-column
         label="学年学期"
@@ -389,19 +388,6 @@ export default {
         //console.log(response.rows);
         this.themeOptions = response.rows;
       });
-    },
-    // 字典翻译
-    classFormat(row, column) {
-      // return this.selectDictLabel(this.classOptions, row.classid);
-      var actions = [];
-      var datas = this.classOptions;
-      Object.keys(datas).map((key) => {
-        if (datas[key].bjbh == "" + row.classid) {
-          actions.push(datas[key].bjmc);
-          return false;
-        }
-      });
-      return actions.join("");
     },
     // 学年学期类型--字典状态字典翻译
     xnxqFormat(row, column) {

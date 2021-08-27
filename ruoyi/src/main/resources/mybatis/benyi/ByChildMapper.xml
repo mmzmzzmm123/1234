@@ -403,6 +403,14 @@
         where id = #{id}
     </update>
 
+    <update id="updateByChildClassId" parameterType="ByChild">
+        update by_child
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="classid != null  and classid != ''">classid = #{classid},</if>
+        </trim>
+        where classid = #{phone}
+    </update>
+
     <delete id="deleteByChildById" parameterType="Long">
         delete from by_child where id = #{id}
     </delete>

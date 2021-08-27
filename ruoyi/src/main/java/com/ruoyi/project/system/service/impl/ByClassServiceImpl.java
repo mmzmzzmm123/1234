@@ -49,6 +49,18 @@ public class ByClassServiceImpl implements IByClassService {
     }
 
     /**
+     * 查询班级信息列表
+     *
+     * @param byClass 班级信息
+     * @return 班级信息集合
+     */
+    @Override
+    @DataScope(deptAlias = "d")
+    public List<ByClass> selectByClassListAll(ByClass byClass) {
+        return byClassMapper.selectByClassListAll(byClass);
+    }
+
+    /**
      * 新增班级信息
      *
      * @param byClass 班级信息

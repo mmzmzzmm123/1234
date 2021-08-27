@@ -52,6 +52,14 @@ public interface ByChildMapper {
     public int updateByChild(ByChild byChild);
 
     /**
+     * 修改幼儿信息
+     *
+     * @param byChild 幼儿信息
+     * @return 结果
+     */
+    public int updateByChildClassId(ByChild byChild);
+
+    /**
      * 删除幼儿信息
      *
      * @param id 幼儿信息ID

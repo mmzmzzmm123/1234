@@ -19,33 +19,51 @@
         <result property="remark" column="remark"/>
         <result property="createuserid" column="createuserid"/>
         <result property="createTime" column="create_time"/>
+        <association property="byClass" column="classid" javaType="ByClass" resultMap="ByClassResult"/>
+    </resultMap>
+
+    <resultMap type="ByClass" id="ByClassResult">
+        <result property="bjbh" column="bjbh"/>
+        <result property="deptId" column="dept_id"/>
+        <result property="bjtype" column="bjtype"/>
+        <result property="bhxh" column="bhxh"/>
+        <result property="xn" column="xn"/>
+        <result property="bjmc" column="bjmc"/>
+        <result property="bjrych" column="bjrych"/>
+        <result property="jbny" column="jbny"/>
+        <result property="zbjs" column="zbjs"/>
+        <result property="pbjs" column="pbjs"/>
+        <result property="zljs" column="zljs"/>
+        <result property="isdel" column="isdel"/>
+        <result property="createtime" column="createtime"/>
     </resultMap>
 
     <sql id="selectByMathTermplanVo">
-        select id, schoolid, classid, name, startmonth, endmonth, xnxq, status, spr, sptime, spyj, remark, createuserid, create_time from by_math_termplan
+        select a.id, a.schoolid, a.classid, b.bjmc,a.name, a.startmonth, a.endmonth, a.xnxq, a.status, a.spr, a.sptime, a.spyj, a.remark, a.createuserid, a.create_time from by_math_termplan a
+        left join by_class b on a.classid=b.bjbh
     </sql>
 
     <select id="selectByMathTermplanList" parameterType="ByMathTermplan" resultMap="ByMathTermplanResult">
         <include refid="selectByMathTermplanVo"/>
         <where>
-            <if test="schoolid != null ">and schoolid = #{schoolid}</if>
-            <if test="classid != null  and classid != ''">and classid = #{classid}</if>
-            <if test="name != null  and name != ''">and name like concat('%', #{name}, '%')</if>
-            <if test="startmonth != null ">and startmonth = #{startmonth}</if>
-            <if test="endmonth != null ">and endmonth = #{endmonth}</if>
-            <if test="xnxq != null  and xnxq != ''">and xnxq = #{xnxq}</if>
-            <if test="status != null  and status != ''">and status = #{status}</if>
-            <if test="spr != null ">and spr = #{spr}</if>
-            <if test="sptime != null ">and sptime = #{sptime}</if>
-            <if test="spyj != null  and spyj != ''">and spyj = #{spyj}</if>
-            <if test="createuserid != null ">and createuserid = #{createuserid}</if>
+            <if test="schoolid != null ">and a.schoolid = #{schoolid}</if>
+            <if test="classid != null  and classid != ''">and a.classid = #{classid}</if>
+            <if test="name != null  and name != ''">and a.name like concat('%', #{name}, '%')</if>
+            <if test="startmonth != null ">and a.startmonth = #{startmonth}</if>
+            <if test="endmonth != null ">and a.endmonth = #{endmonth}</if>
+            <if test="xnxq != null  and xnxq != ''">and a.xnxq = #{xnxq}</if>
+            <if test="status != null  and status != ''">and a.status = #{status}</if>
+            <if test="spr != null ">and a.spr = #{spr}</if>
+            <if test="sptime != null ">and a.sptime = #{sptime}</if>
+            <if test="spyj != null  and spyj != ''">and a.spyj = #{spyj}</if>
+            <if test="createuserid != null ">and a.createuserid = #{createuserid}</if>
         </where>
-        order by create_time desc
+        order by a.create_time desc
     </select>
 
     <select id="selectByMathTermplanById" parameterType="String" resultMap="ByMathTermplanResult">
         <include refid="selectByMathTermplanVo"/>
-        where id = #{id}
+        where a.id = #{id}
     </select>
 
     <insert id="insertByMathTermplan" parameterType="ByMathTermplan">

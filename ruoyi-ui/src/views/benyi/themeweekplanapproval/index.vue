@@ -132,8 +132,7 @@
       <el-table-column
         label="班级名称"
         align="center"
-        prop="classid"
-        :formatter="classFormat"
+        prop="byClass.bjmc"
       />
       <el-table-column label="所属月份" align="center" prop="month">
         <template slot-scope="scope">
@@ -356,19 +355,6 @@ export default {
     // 学年学期类型--字典状态字典翻译
     xnxqFormat(row, column) {
       return this.selectDictLabel(this.xnxqOptions, row.xnxq);
-    },
-    // 字典翻译
-    classFormat(row, column) {
-      // return this.selectDictLabel(this.classOptions, row.classid);
-      var actions = [];
-      var datas = this.classOptions;
-      Object.keys(datas).map((key) => {
-        if (datas[key].bjbh == "" + row.classid) {
-          actions.push(datas[key].bjmc);
-          return false;
-        }
-      });
-      return actions.join("");
     },
     /** 查询主题整合周计划（根据月计划明细）列表 */
     getList() {

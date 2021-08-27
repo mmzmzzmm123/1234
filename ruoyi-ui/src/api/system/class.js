@@ -9,6 +9,15 @@ export function listClass(query) {
     })
 }
 
+// 查询班级信息列表
+export function listClassAll(query) {
+    return request({
+        url: '/system/class/listall',
+        method: 'get',
+        params: query
+    })
+}
+
 // 查询班级信息详细
 export function getClass(bjbh) {
     return request({

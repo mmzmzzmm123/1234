@@ -19,33 +19,51 @@
         <result property="createuserid" column="createuserid"/>
         <result property="createTime" column="create_time"/>
         <result property="xnxq" column="xnxq"/>
+        <association property="byClass" column="classid" javaType="ByClass" resultMap="ByClassResult"/>
+    </resultMap>
+
+    <resultMap type="ByClass" id="ByClassResult">
+        <result property="bjbh" column="bjbh"/>
+        <result property="deptId" column="dept_id"/>
+        <result property="bjtype" column="bjtype"/>
+        <result property="bhxh" column="bhxh"/>
+        <result property="xn" column="xn"/>
+        <result property="bjmc" column="bjmc"/>
+        <result property="bjrych" column="bjrych"/>
+        <result property="jbny" column="jbny"/>
+        <result property="zbjs" column="zbjs"/>
+        <result property="pbjs" column="pbjs"/>
+        <result property="zljs" column="zljs"/>
+        <result property="isdel" column="isdel"/>
+        <result property="createtime" column="createtime"/>
     </resultMap>
 
     <sql id="selectByThemeWeekplanVo">
-        select id, name, schoolid, classid, month, zc, remark, status, spr, sptime, shyj, createuserid, create_time, xnxq from by_theme_weekplan
+        select a.id, a.name, a.schoolid, a.classid, b.bjmc, a.month, a.zc, a.remark, a.status, a.spr, a.sptime, a.shyj, a.createuserid, a.create_time, a.xnxq from by_theme_weekplan a
+        left join by_class b on a.classid=b.bjbh
     </sql>
 
     <select id="selectByThemeWeekplanList" parameterType="ByThemeWeekplan" resultMap="ByThemeWeekplanResult">
         <include refid="selectByThemeWeekplanVo"/>
         <where>
-            <if test="name != null  and name != ''">and name like concat('%', #{name}, '%')</if>
-            <if test="schoolid != null ">and schoolid = #{schoolid}</if>
-            <if test="classid != null  and classid != ''">and classid = #{classid}</if>
-            <if test="month != null ">and month = #{month}</if>
-            <if test="zc != null ">and zc = #{zc}</if>
-            <if test="status != null  and status != ''">and status = #{status}</if>
-            <if test="spr != null ">and spr = #{spr}</if>
-            <if test="sptime != null ">and sptime = #{sptime}</if>
-            <if test="shyj != null  and shyj != ''">and shyj = #{shyj}</if>
-            <if test="createuserid != null ">and createuserid = #{createuserid}</if>
-            <if test="xnxq != null  and xnxq != ''">and xnxq = #{xnxq}</if>
+            <if test="name != null  and name != ''">and a.name like concat('%', #{name}, '%')</if>
+            <if test="schoolid != null ">and a.schoolid = #{schoolid}</if>
+            <if test="classid != null  and classid != ''">and a.classid = #{classid}</if>
+            <if test="month != null ">and a.month = #{month}</if>
+            <if test="zc != null ">and a.zc = #{zc}</if>
+            <if test="status != null  and status != ''">and a.status = #{status}</if>
+            <if test="spr != null ">and a.spr = #{spr}</if>
+            <if test="sptime != null ">and a.sptime = #{sptime}</if>
+            <if test="shyj != null  and shyj != ''">and a.shyj = #{shyj}</if>
+            <if test="createuserid != null ">and a.createuserid = #{createuserid}</if>
+            <if test="xnxq != null  and xnxq != ''">and a.xnxq = #{xnxq}</if>
         </where>
-        order by create_time desc
+        order by a.create_time desc
     </select>
 
     <select id="selectByThemeWeekplanById" parameterType="String" resultMap="ByThemeWeekplanResult">
         <include refid="selectByThemeWeekplanVo"/>
-        where id = #{id}
+        where a.id = #{id}
     </select>
 
     <insert id="insertByThemeWeekplan" parameterType="ByThemeWeekplan">

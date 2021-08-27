@@ -50,12 +50,12 @@ public class ByClassController extends BaseController {
     public TableDataInfo list(ByClass byClass) {
         List<ByClass> list = null;
         String classId = schoolCommon.getClassId();
-        String classIdAndschoolAdmin=schoolCommon.getClassIdOrSchoolAdmin();
+        String classIdAndschoolAdmin = schoolCommon.getClassIdOrSchoolAdmin();
         //如果是幼儿园教师 只显示当前班级
         if (schoolCommon.isSchool() && !schoolCommon.isStringEmpty(classId)) {
             byClass.setBjbh(classId);
             //如果包含～ 说明是班级教师和管理员角色
-            if(classIdAndschoolAdmin.contains("~")){
+            if (classIdAndschoolAdmin.contains("~")) {
                 System.out.println("多角色");
                 byClass.setBjbh("");
             }
@@ -63,6 +63,29 @@ public class ByClassController extends BaseController {
         }
         startPage();
         list = byClassService.selectByClassList(byClass);
+        return getDataTable(list);
+    }
+
+    /**
+     * 所有班级信息 包括已删除
+     */
+    @GetMapping("/listall")
+    public TableDataInfo listall(ByClass byClass) {
+        List<ByClass> list = null;
+        String classId = schoolCommon.getClassId();
+        String classIdAndschoolAdmin = schoolCommon.getClassIdOrSchoolAdmin();
+        //如果是幼儿园教师 只显示当前班级
+        if (schoolCommon.isSchool() && !schoolCommon.isStringEmpty(classId)) {
+            byClass.setBjbh(classId);
+            //如果包含～ 说明是班级教师和管理员角色
+            if (classIdAndschoolAdmin.contains("~")) {
+                System.out.println("多角色");
+                byClass.setBjbh("");
+            }
+        } else {
+        }
+        startPage();
+        list = byClassService.selectByClassListAll(byClass);
         return getDataTable(list);
     }
 
@@ -135,6 +158,7 @@ public class ByClassController extends BaseController {
             byClass.setBjbh(strBjbh);
             byClass.setDeptId(SecurityUtils.getLoginUser().getUser().getDept().getDeptId());
             byClass.setXn(schoolCommon.getCurrentXn());
+            byClass.setJbny(new Date());
             byClass.setCreatetime(new Date());
             return toAjax(byClassService.insertByClass(byClass));
         } else {
@@ -149,11 +173,14 @@ public class ByClassController extends BaseController {
     @Log(title = "班级信息", businessType = BusinessType.UPDATE)
     @PutMapping
     public AjaxResult edit(@RequestBody ByClass byClass) {
+        int iRows = 0;
         //首先判断 当前用户是否为学校
         if (schoolCommon.isSchool()) {
 
             //判断主班教师、配班教师、助理教师的值是否有变化
+            String newClassName = byClass.getBjmc();
             ByClass byClassNew = byClassService.selectByClassById(byClass.getBjbh());
+            byClass.setBjmc(byClassNew.getBjmc());//暂时班级名称不变
             if (byClass.getZbjs() != null) {
                 if (byClassNew.getZbjs() == null || !byClassNew.getZbjs().equals(byClass.getZbjs())) {
                     ByClass byClassInfoNew = new ByClass();
@@ -190,9 +217,41 @@ public class ByClassController extends BaseController {
                     }
                 }
             }
+            iRows = iRows + byClassService.updateByClass(byClass);
+
+            //如果班级类型或班级名称发生变化认为是升班级 小班->中班
+            String strClassId = byClass.getBjbh();
+            String oldClassName = byClassNew.getBjmc();
+            String oldClassType = byClassNew.getBjtype();
+            if (!oldClassName.equals(newClassName) || !oldClassType.equals(byClass.getBjtype())) {
+                System.out.println("班级名称或类型发生改变");
+                //新建班级，删除旧班级
+                ByClass byClassCreate = byClassService.selectByClassById(strClassId);
+                String strClassNewBjbh = schoolCommon.getUuid();
+                byClassCreate.setBjbh(strClassNewBjbh);
+                byClassCreate.setBjmc(newClassName);
+                byClassCreate.setXn(schoolCommon.getCurrentXn());
+                byClassCreate.setJbny(new Date());
+                byClassCreate.setCreatetime(new Date());
+
+                iRows = iRows + byClassService.insertByClass(byClassCreate);
+                //此时应该降该班级下的幼儿转到新班级
+                ByChild byChild = new ByChild();
+                byChild.setClassid(strClassId);
+                List<ByChild> list = byChildService.selectByChildList(byChild);
+                if (list != null && list.size() > 0) {
+                    ByChild byChildNew = new ByChild();
+                    byChildNew.setPhone(strClassId);//暂用phone传值，旧班级id
+                    byChildNew.setClassid(strClassNewBjbh);
+                    //更新到新班级
+                    byChildService.updateByChildClassId(byChildNew);
+                }
+
+                iRows = iRows + byClassService.deleteByClassById(strClassId);
+            }
 
 
-            return toAjax(byClassService.updateByClass(byClass));
+            return toAjax(iRows);
         }
         return AjaxResult.error("当前用户非幼儿园，无法编辑班级");
     }

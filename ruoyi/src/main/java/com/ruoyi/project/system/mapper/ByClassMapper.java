@@ -27,6 +27,14 @@ public interface ByClassMapper
      */
     public List<ByClass> selectByClassList(ByClass byClass);
 
+    /**
+     * 查询班级信息列表
+     *
+     * @param byClass 班级信息
+     * @return 班级信息集合
+     */
+    public List<ByClass> selectByClassListAll(ByClass byClass);
+
     //通过userID查询class
     public ByClass selectByClassByUserId(ByClass byClass);
 

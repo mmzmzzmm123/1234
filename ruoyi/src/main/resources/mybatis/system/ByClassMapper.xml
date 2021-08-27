@@ -93,6 +93,30 @@
         order by createtime desc
     </select>
 
+    <select id="selectByClassListAll" parameterType="ByClass" resultMap="ByClassResult">
+        <include refid="selectByClassVo"/>
+        <if test="bjbh != null  and bjbh != ''">and bjbh = #{bjbh}</if>
+        <if test="deptId != null  and deptId != ''">and dept_id = #{deptId}</if>
+        <if test="bjtype != null  and bjtype != ''">and bjtype = #{bjtype}</if>
+        <if test="bhxh != null ">and bhxh = #{bhxh}</if>
+        <if test="xn != null  and xn != ''">and xn = #{xn}</if>
+        <if test="bjmc != null  and bjmc != ''">and bjmc like concat('%', #{bjmc}, '%')</if>
+        <if test="bjrych != null  and bjrych != ''">and bjrych = #{bjrych}</if>
+        <if test="jbny != null ">and jbny = #{jbny}</if>
+        <if test="zbjs != null ">and zbjs = #{zbjs}</if>
+        <if test="pbjs != null ">and pbjs = #{pbjs}</if>
+        <if test="zljs != null ">and zljs = #{zljs}</if>
+        <if test="zbjsxm != null and zbjsxm != ''">and zbjsxm like concat('%', #{zbjsxm}, '%')</if>
+        <if test="pbjsxm != null and pbjsxm != ''">and pbjsxm like concat('%', #{pbjsxm}, '%')</if>
+        <if test="zljsxm != null and zljsxm != ''">and zljsxm like concat('%', #{zljsxm}, '%')</if>
+        <if test="isdel != null  and isdel != ''">and isdel = #{isdel}</if>
+        <if test="createtime != null ">and createtime = #{createtime}</if>
+        <!-- 数据范围过滤 -->
+        ${dataScope}
+
+        order by createtime desc
+    </select>
+
     <select id="selectByClassById" parameterType="String" resultMap="ByClassResult">
         <include refid="selectByClassVo"/>
         where bjbh = #{bjbh}

@@ -3,6 +3,7 @@ package com.ruoyi.project.benyi.domain;
 import java.util.Date;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.ruoyi.project.system.domain.ByClass;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import com.ruoyi.framework.aspectj.lang.annotation.Excel;
@@ -89,6 +90,16 @@ public class ByThemeWeekplan extends BaseEntity {
      */
     @Excel(name = "学年学期")
     private String xnxq;
+
+    public ByClass getByClass() {
+        return byClass;
+    }
+
+    public void setByClass(ByClass byClass) {
+        this.byClass = byClass;
+    }
+
+    private ByClass byClass;
 
     public void setId(String id) {
         this.id = id;
@@ -203,6 +214,7 @@ public class ByThemeWeekplan extends BaseEntity {
                 .append("createuserid", getCreateuserid())
                 .append("createTime", getCreateTime())
                 .append("xnxq", getXnxq())
+                .append("byClass", getByClass())
                 .toString();
     }
 }

@@ -86,6 +86,17 @@ public class ByChildServiceImpl implements IByChildService {
     }
 
     /**
+     * 修改幼儿信息
+     *
+     * @param byChild 幼儿信息
+     * @return 结果
+     */
+    @Override
+    public int updateByChildClassId(ByChild byChild){
+        return byChildMapper.updateByChildClassId(byChild);
+    }
+
+    /**
      * 批量删除幼儿信息
      *
      * @param ids 需要删除的幼儿信息ID
