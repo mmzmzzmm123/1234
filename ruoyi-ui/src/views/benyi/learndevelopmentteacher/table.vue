@@ -23,7 +23,7 @@
           </td>
           <td class="w200">
             <b class="table-title">幼儿姓名：</b>
-            {{ childFormat(childid) }}
+            {{ childname }}
           </td>
         </tr>
         <tr>
@@ -67,12 +67,7 @@
 </template>
 
 <script>
-import {
-  listTeacher,
-  getTeacher,
-} from "@/api/benyi/learndevelopmentteacher";
-
-import { listChild } from "@/api/benyi/child";
+import { listTeacher, getTeacher } from "@/api/benyi/learndevelopmentteacher";
 
 import Editor from "@/components/Editor";
 
@@ -86,6 +81,7 @@ export default {
       title: "幼儿学习与发展档案(教师)",
       classname: "",
       childid: "",
+      childname: "",
       xnxq: "",
       gcjl: "",
       gcjlremarks: "",
@@ -127,25 +123,11 @@ export default {
     this.queryParams.id = childId;
     //console.log(childId);
     this.getList();
-    this.getChildList();
     this.getDicts("sys_xnxq").then((response) => {
       this.xnxqOptions = response.data;
     });
   },
   methods: {
-    // 字典翻译
-    childFormat(childid) {
-      // return this.selectDictLabel(this.classOptions, row.classid);
-      var actions = [];
-      var datas = this.childOptions;
-      Object.keys(datas).map((key) => {
-        if (datas[key].id == "" + childid) {
-          actions.push(datas[key].name);
-          return false;
-        }
-      });
-      return actions.join("");
-    },
     // 学年学期类型--字典状态字典翻译
     xnxqFormat(xnxq) {
       return this.selectDictLabel(this.xnxqOptions, xnxq);
@@ -155,18 +137,13 @@ export default {
       //console.log(this.$refs.printMe);
       this.$print(this.$refs.printMe);
     },
-    //获取幼儿列表
-    getChildList() {
-      listChild(null).then((response) => {
-        this.childOptions = response.rows;
-        this.classname = response.rows[0].bjmc;
-        // console.log(response.rows);
-      });
-    },
     /** 查询儿童学习与发展档案（教师）列表 */
     getList() {
       this.loading = true;
       listTeacher(this.queryParams).then((response) => {
+        //console.log(response);
+        this.classname = response.rows[0].byClass.bjmc;
+        this.childname = response.rows[0].byChild.name;
         this.teacherList = response.rows;
         this.xnxq = response.rows[0].xnxq;
         this.childid = response.rows[0].childid;

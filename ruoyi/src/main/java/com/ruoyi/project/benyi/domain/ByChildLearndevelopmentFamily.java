@@ -1,5 +1,6 @@
 package com.ruoyi.project.benyi.domain;
 
+import com.ruoyi.project.system.domain.ByClass;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import com.ruoyi.framework.aspectj.lang.annotation.Excel;
@@ -96,6 +97,26 @@ public class ByChildLearndevelopmentFamily extends BaseEntity {
      */
     @Excel(name = "创建人")
     private Long createuserid;
+
+    public ByClass getByClass() {
+        return byClass;
+    }
+
+    public void setByClass(ByClass byClass) {
+        this.byClass = byClass;
+    }
+
+    private ByClass byClass;
+
+    public ByChild getByChild() {
+        return byChild;
+    }
+
+    public void setByChild(ByChild byChild) {
+        this.byChild = byChild;
+    }
+
+    private ByChild byChild;
 
     public void setId(Long id) {
         this.id = id;
@@ -227,6 +248,8 @@ public class ByChildLearndevelopmentFamily extends BaseEntity {
                 .append("jspyremarks", getJspyremarks())
                 .append("createuserid", getCreateuserid())
                 .append("createTime", getCreateTime())
+                .append("byClass", getByClass())
+                .append("byChild", getByChild())
                 .toString();
     }
 }

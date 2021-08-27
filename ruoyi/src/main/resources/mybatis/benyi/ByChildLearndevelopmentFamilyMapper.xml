@@ -20,10 +20,38 @@
         <result property="jspyremarks" column="jspyremarks"/>
         <result property="createuserid" column="createuserid"/>
         <result property="createTime" column="create_time"/>
+        <association property="byClass" column="classid" javaType="ByClass" resultMap="ByClassResult"/>
+        <association property="byChild" column="childid" javaType="ByChild" resultMap="ByChildResult"/>
+    </resultMap>
+
+    <resultMap type="ByClass" id="ByClassResult">
+        <result property="bjbh" column="bjbh"/>
+        <result property="deptId" column="dept_id"/>
+        <result property="bjtype" column="bjtype"/>
+        <result property="bhxh" column="bhxh"/>
+        <result property="xn" column="xn"/>
+        <result property="bjmc" column="bjmc"/>
+        <result property="bjrych" column="bjrych"/>
+        <result property="jbny" column="jbny"/>
+        <result property="zbjs" column="zbjs"/>
+        <result property="pbjs" column="pbjs"/>
+        <result property="zljs" column="zljs"/>
+        <result property="isdel" column="isdel"/>
+        <result property="createtime" column="createtime"/>
+    </resultMap>
+
+    <resultMap type="ByChild" id="ByChildResult">
+        <result property="id" column="id"/>
+        <result property="schoolid" column="schoolid"/>
+        <result property="classid" column="classid"/>
+        <result property="name" column="name"/>
+        <result property="enName" column="en_name"/>
     </resultMap>
 
     <sql id="selectByChildLearndevelopmentFamilyVo">
-        select a.id, a.childid, a.xnxq, a.zpimgs, a.zpimgremarks, a.shimgs, a.shimgsremarks, a.yqsj, a.yqsjremarks, a.jspy, a.jspyremarks, a.createuserid, a.create_time,b.schoolid, b.classid from by_child_learndevelopment_family  a left join by_child b on a.childid=b.id
+        select a.id, a.childid, b.name, a.xnxq, a.zpimgs, a.zpimgremarks, a.shimgs, a.shimgsremarks, a.yqsj, a.yqsjremarks, a.jspy, a.jspyremarks, a.createuserid, a.create_time,b.schoolid, a.classid,c.bjmc from by_child_learndevelopment_family  a
+        left join by_child b on a.childid=b.id
+        left join by_class c on a.classid=c.bjbh
     </sql>
 
     <select id="selectByChildLearndevelopmentFamilyList" parameterType="ByChildLearndevelopmentFamily"
@@ -60,6 +88,7 @@
             <if test="id != null ">id,</if>
             <if test="childid != null ">childid,</if>
             <if test="xnxq != null  and xnxq != ''">xnxq,</if>
+            <if test="classid != null  and classid != ''">classid,</if>
             <if test="zpimgs != null  and zpimgs != ''">zpimgs,</if>
             <if test="zpimgremarks != null  and zpimgremarks != ''">zpimgremarks,</if>
             <if test="shimgs != null  and shimgs != ''">shimgs,</if>
@@ -75,6 +104,7 @@
             <if test="id != null ">#{id},</if>
             <if test="childid != null ">#{childid},</if>
             <if test="xnxq != null  and xnxq != ''">#{xnxq},</if>
+            <if test="classid != null  and classid != ''">#{classid},</if>
             <if test="zpimgs != null  and zpimgs != ''">#{zpimgs},</if>
             <if test="zpimgremarks != null  and zpimgremarks != ''">#{zpimgremarks},</if>
             <if test="shimgs != null  and shimgs != ''">#{shimgs},</if>

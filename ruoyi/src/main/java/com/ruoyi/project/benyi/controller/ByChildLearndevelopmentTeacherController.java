@@ -3,6 +3,8 @@ package com.ruoyi.project.benyi.controller;
 import java.util.List;
 
 import com.ruoyi.common.utils.SecurityUtils;
+import com.ruoyi.project.benyi.domain.ByChild;
+import com.ruoyi.project.benyi.service.IByChildService;
 import com.ruoyi.project.common.SchoolCommon;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,6 +36,8 @@ import com.ruoyi.framework.web.page.TableDataInfo;
 public class ByChildLearndevelopmentTeacherController extends BaseController {
     @Autowired
     private IByChildLearndevelopmentTeacherService byChildLearndevelopmentTeacherService;
+    @Autowired
+    private IByChildService byChildService;
     @Autowired
     private SchoolCommon schoolCommon;
 
@@ -87,12 +91,21 @@ public class ByChildLearndevelopmentTeacherController extends BaseController {
             ByChildLearndevelopmentTeacher byChildLearndevelopmentTeacherNew = new ByChildLearndevelopmentTeacher();
             byChildLearndevelopmentTeacherNew.setXnxq(byChildLearndevelopmentTeacher.getXnxq());
             byChildLearndevelopmentTeacherNew.setChildid(byChildLearndevelopmentTeacher.getChildid());
-            List<ByChildLearndevelopmentTeacher> list = byChildLearndevelopmentTeacherService.selectByChildLearndevelopmentTeacherList(byChildLearndevelopmentTeacherNew);
-            if (list != null && list.size() > 0) {
-                return AjaxResult.error("当前学期的幼儿档案已创建，无法重复创建");
+
+            //幼儿信息 需要班级id
+            ByChild byChild = byChildService.selectByChildById(byChildLearndevelopmentTeacher.getChildid());
+            String strClassId = byChild.getClassid();
+            if (byChild != null && !schoolCommon.isStringEmpty(strClassId)) {
+                List<ByChildLearndevelopmentTeacher> list = byChildLearndevelopmentTeacherService.selectByChildLearndevelopmentTeacherList(byChildLearndevelopmentTeacherNew);
+                if (list != null && list.size() > 0) {
+                    return AjaxResult.error("当前学期的幼儿档案已创建，无法重复创建");
+                }
+                byChildLearndevelopmentTeacher.setClassid(strClassId);
+                byChildLearndevelopmentTeacher.setCreateuserid(SecurityUtils.getLoginUser().getUser().getUserId());
+                return toAjax(byChildLearndevelopmentTeacherService.insertByChildLearndevelopmentTeacher(byChildLearndevelopmentTeacher));
+            } else {
+                return AjaxResult.error("当前幼儿没有班级信息");
             }
-            byChildLearndevelopmentTeacher.setCreateuserid(SecurityUtils.getLoginUser().getUser().getUserId());
-            return toAjax(byChildLearndevelopmentTeacherService.insertByChildLearndevelopmentTeacher(byChildLearndevelopmentTeacher));
         } else {
             return AjaxResult.error("当前用户非幼儿园，无法添加幼儿档案");
         }

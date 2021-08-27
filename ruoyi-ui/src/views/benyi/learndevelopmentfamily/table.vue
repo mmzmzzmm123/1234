@@ -23,7 +23,7 @@
           </td>
           <td class="w200">
             <b class="table-title">幼儿姓名：</b>
-            {{ childFormat(childid) }}
+            {{ childname }}
           </td>
         </tr>
         <tr>
@@ -67,12 +67,7 @@
 </template>
 
 <script>
-import {
-  listFamily,
-  getFamily,
-} from "@/api/benyi/learndevelopmentfamily";
-
-import { listChild } from "@/api/benyi/child";
+import { listFamily, getFamily } from "@/api/benyi/learndevelopmentfamily";
 
 import Editor from "@/components/Editor";
 
@@ -86,6 +81,7 @@ export default {
       title: "幼儿学习与发展档案(家长)",
       classname: "",
       childid: "",
+      childname: "",
       xnxq: "",
       zpimgs: "",
       zpimgsremarks: "",
@@ -128,40 +124,22 @@ export default {
     this.queryParams.id = childId;
 
     this.getList();
-    this.getChildList();
     this.getDicts("sys_xnxq").then((response) => {
       this.xnxqOptions = response.data;
     });
   },
   methods: {
     // 字典翻译
-    childFormat(childid) {
-      // return this.selectDictLabel(this.classOptions, row.classid);
-      var actions = [];
-      var datas = this.childOptions;
-      Object.keys(datas).map((key) => {
-        if (datas[key].id == "" + childid) {
-          actions.push(datas[key].name);
-          return false;
-        }
-      });
-      return actions.join("");
-    },
-    // 字典翻译
     xnxqFormat(xnxq) {
       return this.selectDictLabel(this.xnxqOptions, xnxq);
-    },
-    //获取幼儿列表
-    getChildList() {
-      listChild(null).then((response) => {
-        this.childOptions = response.rows;
-        this.classname = response.rows[0].bjmc;
-      });
     },
     /** 查询儿童学习与发展档案（家长）列表 */
     getList() {
       this.loading = true;
       listFamily(this.queryParams).then((response) => {
+        //console.log(response);
+        this.classname = response.rows[0].byClass.bjmc;
+        this.childname = response.rows[0].byChild.name;
         this.familyList = response.rows;
         this.xnxq = response.rows[0].xnxq;
         this.childid = response.rows[0].childid;

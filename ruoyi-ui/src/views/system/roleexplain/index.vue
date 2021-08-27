@@ -6,7 +6,7 @@
           <span>{{ scope.row.name }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="拥有权限" :show-overflow-tooltip="true">
+      <el-table-column label="拥有权限">
         <template slot-scope="scope">
           <!-- <el-tag size="medium">{{ scope.row.role }}</el-tag> -->
           <div style="color: #409eff" v-html="scope.row.role"></div>
