@@ -60,13 +60,21 @@
       </el-col>
       <el-col :span="1.5">
         <el-button
+          type="success"
+          size="mini"
+          @click="regenerateIndex"
+          v-hasPermi="['custom:nutritionQuestion:regenerateIndex']"
+        >重新生成索引</el-button>
+      </el-col>
+      <!--<el-col :span="1.5">
+        <el-button
           type="primary"
           size="mini"
           icon="el-icon-question"
           @click="handleAskQuestion"
           v-hasPermi="['custom:askQuestion:list']"
         >问题解答</el-button>
-      </el-col>
+      </el-col>-->
       <!--<el-col :span="1.5">
         <el-button
           type="warning"
@@ -116,6 +124,9 @@
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.createTime, "{y}-{m}-{d} {h}:{i}") }}</span>
         </template>
+      </el-table-column>
+      <el-table-column label="创建人" align="center" prop="createByName">
+
       </el-table-column>
       
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
@@ -212,7 +223,7 @@
 </template>
 
 <script>
-import { listNutritionQuestion, getNutritionQuestion, delNutritionQuestion, addNutritionQuestion, updateNutritionQuestion, exportNutritionQuestion,updateWxShow } from "@/api/custom/nutritionQuestion";
+import { listNutritionQuestion, getNutritionQuestion, delNutritionQuestion, addNutritionQuestion, updateNutritionQuestion, exportNutritionQuestion,updateWxShow,regenerateQuestionIndex } from "@/api/custom/nutritionQuestion";
 import Editor from '@/components/Wangeditor';
 import AutoHideMessage from "@/components/AutoHideMessage";
 import AskQuestion from "../askQuestion";
@@ -437,6 +448,14 @@ export default {
     },
     onClosedAskQuestion(){
        console.log(this.$refs.askQuestionListRef.isUpdateFlag);
+    },
+    regenerateIndex(){
+        regenerateQuestionIndex().then(response => {
+            if(response.code == 200){
+                 this.msgSuccess("生成成功");
+                 this.getList();
+            }
+        });
     }
   }
 };

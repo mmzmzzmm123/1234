@@ -45,4 +45,7 @@ public class SysNutritionQuestion extends BaseEntity
 
     //解答问题对应的ID
     private Long askQuestionId;
+
+    //创建人名称
+    private String createByName;
 }

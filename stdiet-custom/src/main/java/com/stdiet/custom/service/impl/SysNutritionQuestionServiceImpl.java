@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.stdiet.common.utils.DateUtils;
+import com.stdiet.common.utils.SecurityUtils;
 import com.stdiet.common.utils.StringUtils;
 import com.stdiet.common.utils.reflect.ReflectUtils;
 import com.stdiet.custom.dto.response.NutritionQuestionResponse;
@@ -40,7 +41,7 @@ public class SysNutritionQuestionServiceImpl implements ISysNutritionQuestionSer
     public String index_path;
 
     //建立索引的字段名称
-    public static final String[] index_field_array = {"id", "title", "content", "key", "showFlag", "createTime"};
+    public static final String[] index_field_array = {"id", "title", "content", "key", "showFlag", "createTime", "createByName"};
     //查询字段
     public static final String[] index_select_field_array = {"title", "content", "key"};
 
@@ -87,6 +88,7 @@ public class SysNutritionQuestionServiceImpl implements ISysNutritionQuestionSer
     public int insertSysNutritionQuestion(SysNutritionQuestion sysNutritionQuestion)
     {
         sysNutritionQuestion.setCreateTime(DateUtils.getNowDate());
+        sysNutritionQuestion.setCreateBy(String.valueOf(SecurityUtils.getLoginUser().getUser().getUserId()));
         if(sysNutritionQuestionMapper.insertSysNutritionQuestion(sysNutritionQuestion) > 0){
             return createNutritionQuestionIndex(sysNutritionQuestion.getId()) ? 1 : 0;
         }
@@ -291,9 +293,10 @@ public class SysNutritionQuestionServiceImpl implements ISysNutritionQuestionSer
         for (String fieldName : index_field_array) {
             TextField field = null;
             if("createTime".equals(fieldName)){
-                field = new TextField(fieldName, DateUtils.parseDateToStr(DateUtils.YYYY_MM_DD_HH_MM_SS,sysNutritionQuestion.getCreateTime()), Field.Store.YES);
+                field = new TextField(fieldName, sysNutritionQuestion.getCreateTime() == null ? "" : DateUtils.parseDateToStr(DateUtils.YYYY_MM_DD_HH_MM_SS,sysNutritionQuestion.getCreateTime()), Field.Store.YES);
             } else{
-                field = new TextField(fieldName, ReflectUtils.getFieldValue(sysNutritionQuestion, fieldName)+"", Field.Store.YES);
+                Object v = ReflectUtils.getFieldValue(sysNutritionQuestion, fieldName);
+                field = new TextField(fieldName, v == null ? "" : String.valueOf(v) , Field.Store.YES);
             }
             if(nutritionQuestionBoostMap.containsKey(fieldName)){
                 field.setBoost(nutritionQuestionBoostMap.get(fieldName).floatValue());

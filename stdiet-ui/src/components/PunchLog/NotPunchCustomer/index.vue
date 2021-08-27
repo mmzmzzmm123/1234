@@ -70,7 +70,16 @@
     </el-form>
         <div style="height: 550px; overflow: auto">
             <el-table v-loading="loading" :data="notPunchCustomerList">
-                <el-table-column label="客户姓名" align="center" prop="name" />
+                <el-table-column label="客户姓名" align="center" prop="name">
+                  <template slot-scope="scope">
+                     <div
+                      @click="handleOnNameClick(scope.row.name)"
+                      class="user_name_style"
+                    >
+                      {{ scope.row.name }}
+                    </div>
+                  </template>
+                </el-table-column>
                 <el-table-column label="营养师" align="center" prop="mainDietitian" :formatter="nutritionistFormat"/>
                 <el-table-column label="售后营养师" align="center" prop="afterDietitian" :formatter="afterDietitianFormat"/>
             </el-table>
@@ -199,10 +208,16 @@ export default {
     afterDietitianFormat(row, column) {
       return this.selectDictLabel(this.afterSaleIdOptions, row.afterDietitian);
     },
+    handleOnNameClick(name) {
+      // console.log({ name });
+      this.$router.push(`/customer?cusName=${name}`);
+    },
   }
 };
 </script>
 
 <style lang="scss" scoped>
-
+  .user_name_style {
+    cursor: pointer;
+  }
 </style>
