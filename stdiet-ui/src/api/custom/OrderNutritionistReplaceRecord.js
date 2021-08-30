@@ -51,3 +51,20 @@ export function exportOrderNutritionistReplaceRecord(query) {
     params: query
   })
 }
+
+//批量导入更换记录
+export function addMuchReplaceRecord(data){
+  return request({
+    url: '/custom/orderNutritionistReplaceRecord/addMuchReplaceRecord',
+    method: 'post',
+    params: data
+  })
+}
+
+// 下载导入模板
+export function downImportTemplate() {
+  return request({
+    url: '/custom/orderNutritionistReplaceRecord/downAddMuchReplaceRecordTemplate',
+    method: 'get'
+  })
+}

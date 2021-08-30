@@ -140,8 +140,10 @@
 
     <!-- 随机获取指定数量的营养小知识 -->
     <select id="getNutritionQuestionByRandom" resultMap="SysNutritionQuestionResultExtended">
-            SELECT * FROM sys_nutrition_question WHERE del_flag = 0 and show_flag = 1
+            <!--SELECT * FROM sys_nutrition_question WHERE del_flag = 0 and show_flag = 1
             and id >= ((SELECT MAX(id) FROM sys_nutrition_question )-(SELECT MIN(id) FROM sys_nutrition_question )) * RAND() + (SELECT MIN(id) FROM sys_nutrition_question ) LIMIT #{pageSize}
+            -->
+        select s.* from (select snq.* from sys_nutrition_question snq where snq.del_flag = 0 and snq.show_flag = 1 order by snq.id desc limit 100 ) s ORDER BY RAND() limit #{pageSize}
     </select>
 
 

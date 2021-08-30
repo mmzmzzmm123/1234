@@ -73,4 +73,25 @@ public interface SysOrderNutritionistReplaceRecordMapper
      * @return
      */
     List<SysOrderNutritionistReplaceRecord> getSysOrderReplaceRecordByUserId(@Param("userId")Long userId);
+
+    /**
+     * 根据订单ID、营养师ID、售后ID、助理ID、开始时间查询对应记录数量
+     * @param sysOrderNutritionistReplaceRecord
+     * @return
+     */
+    int getReplaceRecordByReplaceRecord(SysOrderNutritionistReplaceRecord sysOrderNutritionistReplaceRecord);
+
+    /**
+     * 批量添加
+     * @param list
+     * @return
+     */
+    int batchInsertReplaceRecord(List<SysOrderNutritionistReplaceRecord> list);
+
+    /**
+     * 根据订单ID查询营养师、助理、售后更换记录数量
+     * @param
+     * @return
+     */
+    int getReplaceRecordCount(@Param("orderId")Long orderId, @Param("type")Integer type);
 }

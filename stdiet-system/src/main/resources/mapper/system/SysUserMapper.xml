@@ -227,4 +227,9 @@
         </foreach>
     </delete>
 
+    <!-- 根据昵称查询用户列表 -->
+    <select id="getUserByNickName" parameterType="String" resultType="SysUser">
+		select user_id as userId from sys_user where del_flag = 0 and status = 0  and nick_name = #{nickName}
+	</select>
+
 </mapper> 

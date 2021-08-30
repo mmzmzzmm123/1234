@@ -114,4 +114,11 @@ public interface SysUserMapper
      * @return 结果
      */
     public SysUser checkEmailUnique(String email);
+
+    /**
+     * 根据昵称查询客户列表
+     * @param nickName
+     * @return
+     */
+    public List<SysUser> getUserByNickName(String nickName);
 }

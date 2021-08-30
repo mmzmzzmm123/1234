@@ -74,4 +74,11 @@ public interface SysCustomerMapper
      * @return
      */
     SysCustomer getCustomerByOpenId(@Param("openid")String openid);
+
+    /**
+     * 根据客户姓名查询客户列表
+     * @param name
+     * @return
+     */
+    List<SysCustomer> getCustomerByName(String name);
 }

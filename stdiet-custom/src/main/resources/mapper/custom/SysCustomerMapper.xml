@@ -199,7 +199,7 @@
     <!-- 根据手机号查询客户 -->
     <select id="getCustomerByPhone" parameterType="String" resultMap="SysCustomerResult">
         <include refid="selectSysCustomerVo"/>
-        where phone = #{phone} and del_flag = 0
+        where phone = #{phone} and del_flag = 0 limit 1
     </select>
 
     <resultMap type="SysCustomer" id="SysCustomerResultExtended">
@@ -235,6 +235,12 @@
         from sys_customer sc
         left join sys_wx_user_info wu on wu.phone = sc.phone
         where wu.openid = #{openid} and sc.del_flag = 0 order by sc.id desc limit 1
+    </select>
+
+    <!-- 根据姓名查询客户 -->
+    <select id="getCustomerByName" parameterType="String" resultMap="SysCustomerResultExtended">
+        <include refid="selectSysCustomerVo"/>
+        where name = #{name} and del_flag = 0
     </select>
 
 

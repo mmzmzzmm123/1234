@@ -95,4 +95,11 @@ public interface ISysCustomerService
      */
     Integer getCustomerSex(Long cusId);
 
+    /**
+     * 根据客户姓名查询客户列表
+     * @param name
+     * @return
+     */
+    List<SysCustomer> getCustomerByName(String name);
+
 }

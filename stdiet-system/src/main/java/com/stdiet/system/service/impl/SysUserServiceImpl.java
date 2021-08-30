@@ -416,4 +416,14 @@ public class SysUserServiceImpl implements ISysUserService {
         }
         return successMsg.toString();
     }
+
+    /**
+     * 根据昵称查询客户列表
+     * @param nickName
+     * @return
+     */
+    @Override
+    public List<SysUser> getUserByNickName(String nickName){
+        return userMapper.getUserByNickName(nickName);
+    }
 }

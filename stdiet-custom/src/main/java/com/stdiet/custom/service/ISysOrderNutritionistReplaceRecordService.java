@@ -1,7 +1,10 @@
 package com.stdiet.custom.service;
 
 import java.util.List;
+
+import com.stdiet.common.core.domain.AjaxResult;
 import com.stdiet.custom.domain.SysOrderNutritionistReplaceRecord;
+import com.stdiet.custom.dto.request.AddMuchReplaceRecordRequest;
 
 /**
  * 订单营养师、售后更换记录Service接口
@@ -72,4 +75,11 @@ public interface ISysOrderNutritionistReplaceRecordService
      * @return
      */
     List<SysOrderNutritionistReplaceRecord> getSysOrderReplaceRecordByUserId(Long userId);
+
+    /**
+     * 批量添加更换记录
+     * @param addMuchReplaceRecordRequestList
+     */
+    AjaxResult addMuchReplaceRecord(List<AddMuchReplaceRecordRequest> addMuchReplaceRecordRequestList);
+
 }

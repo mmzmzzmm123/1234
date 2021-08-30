@@ -169,4 +169,11 @@ public interface ISysUserService
      * @return 结果
      */
     public String importUser(List<SysUser> userList, Boolean isUpdateSupport, String operName);
+
+    /**
+     * 根据昵称查询客户列表
+     * @param nickName
+     * @return
+     */
+    public List<SysUser> getUserByNickName(String nickName);
 }

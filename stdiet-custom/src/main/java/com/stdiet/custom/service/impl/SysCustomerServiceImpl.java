@@ -244,4 +244,13 @@ public class SysCustomerServiceImpl implements ISysCustomerService {
         }
         return sex;
     }
+
+    /**
+     * 根据客户姓名查询客户列表
+     * @param name
+     * @return
+     */
+    public List<SysCustomer> getCustomerByName(String name){
+        return sysCustomerMapper.getCustomerByName(name);
+    }
 }

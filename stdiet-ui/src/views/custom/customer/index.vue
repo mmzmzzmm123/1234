@@ -169,6 +169,16 @@
           >导出
         </el-button>
       </el-col>
+      <el-col :span="1.5">
+        <el-button
+          type="primary"
+          size="mini"
+          @click="showImportOrderReplaceRecord"
+          v-hasPermi="['custom:orderNutritionistReplaceRecord:muchAdd']"
+          >批量导入订单更换记录
+        </el-button>
+      </el-col>
+      
       <right-toolbar
         :showSearch.sync="showSearch"
         @queryTable="getList"
@@ -501,6 +511,8 @@
     <CustomerPunchLogDrawer
       ref="customerPunchLogDrawerRef"
     ></CustomerPunchLogDrawer>
+    <!-- 批量导入订单营养师、售后更换记录 -->
+    <ImportOrderReplaceRecord ref="importOrderReplaceRecordRef"> </ImportOrderReplaceRecord>
   </div>
 </template>
 
@@ -525,6 +537,7 @@ import CustomerPunchLogDrawer from "@/components/PunchLog/CustomerPunchLog";
 import { listPhysicalSigns } from "@/api/custom/physicalSigns";
 import { mapGetters } from "vuex";
 import * as orderUtils from "@/utils/orderUtils";
+import ImportOrderReplaceRecord from "@/components/ImportOrderReplaceRecord";
 
 export default {
   name: "Customer",
@@ -535,6 +548,7 @@ export default {
     heatStatisticsDrawer: HeatStatisticsDrawer,
     RecipesPlanDrawer,
     CustomerPunchLogDrawer,
+    ImportOrderReplaceRecord
   },
   data() {
     const userId = store.getters && store.getters.userId;
@@ -952,6 +966,9 @@ export default {
         };
         this.screenNutriAssisIdOptions = orderUtils.getAfterSaleOrAssistantByIds(this.nutriAssisIdOptions, assistantAfterArray[0]);
         this.screenAfterSaleIdOptions = orderUtils.getAfterSaleOrAssistantByIds(this.afterSaleIdOptions, assistantAfterArray[1]);
+    },
+    showImportOrderReplaceRecord(){
+       this.$refs.importOrderReplaceRecordRef.showDialog();
     }
     
   },

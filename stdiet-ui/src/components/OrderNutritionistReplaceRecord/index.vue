@@ -28,17 +28,17 @@
       <el-table v-loading="loading" :data="orderNutritionistReplaceRecordList">
         <el-table-column label="营养师" align="center" prop="nutritionist">
           <template slot-scope="scope">
-            {{ `${orderData.nutritionist} -> ${scope.row.nutritionist}` }}
+            {{ getNewAndOldTip(scope.row, 1) }}
           </template>
         </el-table-column>
         <el-table-column label="营养师助理" align="center" prop="nutriAssis">
           <template slot-scope="scope">
-            {{ `${orderData.nutriAssis} -> ${scope.row.nutriAssis}` }}
+            {{ getNewAndOldTip(scope.row, 2) }}
           </template>
         </el-table-column>
         <el-table-column label="售后" align="center" prop="afterSale">
           <template slot-scope="scope">
-            {{ `${orderData.afterSale} -> ${scope.row.afterSale}` }}
+            {{ getNewAndOldTip(scope.row, 3) }}
           </template>
         </el-table-column>
         <el-table-column
@@ -228,7 +228,11 @@ export default {
     getList() {
       this.loading = true;
       listOrderNutritionistReplaceRecord(this.queryParams).then((response) => {
+        response.rows.forEach((item,index) => {
+          item.index = index;
+        });
         this.orderNutritionistReplaceRecordList = response.rows;
+        
         this.total = response.total;
         this.loading = false;
       });
@@ -346,6 +350,45 @@ export default {
       this.orderData = null;
       this.visible = false;
     },
+    getNewAndOldTip(row, type){
+      let tip = "";
+      if(this.orderData == null || row == null){
+        return tip;
+      }
+      let orderOldId = type == 1 ? this.orderData.nutritionistId : (type == 2 ? this.orderData.nutriAssisId : this.orderData.afterSaleId);
+      let orderOldName = type == 1 ? this.orderData.nutritionist : (type == 2 ? this.orderData.nutriAssis : this.orderData.afterSale);
+      let replaceRecordId = type == 1 ? row.nutritionistId : (type == 2 ? row.nutriAssisId : row.afterSaleId);
+      let replaceRecordName = type == 1 ? row.nutritionist : (type == 2 ? row.nutriAssis : row.afterSale);
+      if(replaceRecordId == null || replaceRecordId == 0){
+          return tip;
+      }
+      if(row.index == 0){
+          tip += orderOldId != null && orderOldId > 0 ? (orderOldName == null ? orderOldId : orderOldName) : "无";
+      }else{
+          //获取上一个更换记录的营养师或助理或售后
+          let preName = this.getPreName(row.index, type);
+          if(preName == null){
+             tip += orderOldId != null && orderOldId > 0 ? (orderOldName == null ? orderOldId : orderOldName) : "无";
+          }else{
+            tip += preName;
+          }
+      }
+      tip += " -> " + (replaceRecordName == null ? replaceRecordId : replaceRecordName);
+      return tip;
+    },
+    getPreName(index, type){
+        let name = null;
+        for(let i = index-1; i >= 0; i--){
+           let record = this.orderNutritionistReplaceRecordList[i];
+           let replaceRecordId = type == 1 ? record.nutritionistId : (type == 2 ? record.nutriAssisId : record.afterSaleId);
+           let replaceRecordName = type == 1 ? record.nutritionist : (type == 2 ? record.nutriAssis : record.afterSale);
+           if(replaceRecordId != null && replaceRecordId > 0){
+              name = replaceRecordName == null ? replaceRecordId : replaceRecordName;
+              break;
+           }
+        }
+        return name;
+    }
   },
 };
 </script>
