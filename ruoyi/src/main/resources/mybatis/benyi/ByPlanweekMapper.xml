@@ -53,6 +53,7 @@
             <if test="weekly != null  and weekly != ''"> and weekly = #{weekly}</if>
             <if test="month != null ">and month = #{month}</if>
         </where>
+        order by create_time  desc
     </select>
 
     <select id="selectByPlanweekById" parameterType="String" resultMap="ByPlanweekResult">

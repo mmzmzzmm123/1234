@@ -32,6 +32,8 @@
             <if test="updateuserid != null ">and updateuserid = #{updateuserid}</if>
             <if test="day != null  and day != ''">and day = #{day}</if>
         </where>
+
+        order by day
     </select>
 
     <select id="selectByPlanweekitemById" parameterType="Long" resultMap="ByPlanweekitemResult">

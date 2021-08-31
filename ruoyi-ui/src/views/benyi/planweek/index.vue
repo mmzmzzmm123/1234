@@ -202,19 +202,62 @@
       :title="title"
       :visible.sync="open"
       class="v-dialog"
-      width="1024px"
+      width="960px"
       append-to-body
     >
       <el-row :gutter="15">
         <el-form ref="form" :model="form" :rules="rules" label-width="80px">
           <el-col :span="12">
             <el-form-item label="计划名称" prop="name">
-              <el-input v-model="form.name" placeholder="请输入计划名称" />
+              <el-input
+                size="small"
+                v-model="form.name"
+                placeholder="请输入计划名称"
+              />
             </el-form-item>
           </el-col>
+
+          <el-col :span="12">
+            <el-form-item label="开始时间" prop="starttime">
+              <!-- <el-date-picker
+                clearable
+                size="small"
+                class="my-date-picker"
+                v-model="form.starttime"
+                type="date"
+                value-format="yyyy-MM-dd"
+                placeholder="选择开始时间"
+              ></el-date-picker> -->
+              <el-date-picker
+                v-model="form.starttime"
+                clearable
+                size="small"
+                class="my-date-picker"
+                type="daterange"
+                value-format="yyyy-MM-dd"
+                range-separator="至"
+                start-placeholder="开始日期"
+                end-placeholder="结束日期"
+                v-on:change="change()"
+              >
+              </el-date-picker>
+            </el-form-item>
+          </el-col>
+          <!-- <el-col :span="12">
+            <el-form-item label="结束时间" prop="endtime">
+              <el-date-picker
+                clearable
+                size="small"
+                class="my-date-picker"
+                v-model="form.endtime"
+                type="date"
+                value-format="yyyy-MM-dd"
+                placeholder="选择结束时间"
+              ></el-date-picker>
+            </el-form-item>
+          </el-col> -->
           <el-col :span="12">
             <el-form-item label="选择月份" prop="month">
-              <label slot="label">选择月份</label>
               <el-date-picker
                 clearable
                 size="small"
@@ -227,35 +270,12 @@
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item label="开始时间" prop="starttime">
-              <el-date-picker
-                clearable
-                size="small"
-                class="my-date-picker"
-                v-model="form.starttime"
-                type="date"
-                value-format="yyyy-MM-dd"
-                placeholder="选择开始时间"
-              ></el-date-picker>
-            </el-form-item>
-          </el-col>
-          <el-col :span="12">
-            <el-form-item label="结束时间" prop="endtime">
-              <el-date-picker
-                clearable
-                size="small"
-                class="my-date-picker"
-                v-model="form.endtime"
-                type="date"
-                value-format="yyyy-MM-dd"
-                placeholder="选择结束时间"
-              ></el-date-picker>
-            </el-form-item>
-          </el-col>
-          <el-col :span="12">
             <el-form-item label="选择周次" prop="weekly">
-              <label slot="label">选择周次</label>
-              <el-select v-model="form.weekly" placeholder="请选择周次">
+              <el-select
+                size="small"
+                v-model="form.weekly"
+                placeholder="请选择周次"
+              >
                 <el-option
                   v-for="dict in weeklyOptions"
                   :key="dict.dictValue"
@@ -268,6 +288,7 @@
           <el-col :span="12">
             <el-form-item label="本周主题" prop="themeofweek">
               <el-input
+                size="small"
                 v-model="form.themeofweek"
                 placeholder="请输入本周主题"
               />
@@ -409,9 +430,9 @@ export default {
         starttime: [
           { required: true, message: "开始时间不能为空", trigger: "blur" },
         ],
-        endtime: [
-          { required: true, message: "结束时间不能为空", trigger: "blur" },
-        ],
+        // endtime: [
+        //   { required: true, message: "结束时间不能为空", trigger: "blur" },
+        // ],
         themeofweek: [
           { required: true, message: "本周主题不能为空", trigger: "blur" },
         ],
@@ -467,6 +488,10 @@ export default {
     });
   },
   methods: {
+    change: function () {
+      //console.log(this.form.starttime);
+      this.form.month=this.form.starttime[0].slice(0,7);
+    },
     /** 查询周计划(家长和教育部门)列表 */
     getList() {
       this.loading = true;
@@ -560,9 +585,13 @@ export default {
     /** 修改按钮操作 */
     handleUpdate(row) {
       this.reset();
+      let timeArr = [];
       const id = row.id || this.ids;
       getPlanweek(id).then((response) => {
         this.form = response.data;
+        timeArr.push(response.data.starttime);
+        timeArr.push(response.data.endtime);
+        this.form.starttime = timeArr;
         this.open = true;
         this.title = "修改周计划(家长和教育部门)";
       });
@@ -595,6 +624,12 @@ export default {
     submitForm: function () {
       this.$refs["form"].validate((valid) => {
         if (valid) {
+          let timeArr = this.form.starttime;
+          this.form.starttime = timeArr[0];
+          this.form.endtime = timeArr[1];
+          // console.log(this.form.starttime);
+          // console.log(this.form.endtime);
+          // console.log(this.form.month);
           if (this.form.id != undefined) {
             updatePlanweek(this.form).then((response) => {
               if (response.code === 200) {

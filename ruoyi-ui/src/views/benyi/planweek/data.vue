@@ -194,8 +194,7 @@
             type="date"
             value-format="yyyy-MM-dd"
             placeholder="选择活动时间"
-            >></el-date-picker
-          >
+          ></el-date-picker>
         </el-form-item>
         <el-form-item label="活动内容" prop="content">
           <Editor v-model="form.content" placeholder="请输入活动内容" />
@@ -242,6 +241,8 @@ export default {
   },
   data() {
     return {
+      starttime: null,
+      endtime: null,
       // 遮罩层
       loading: true,
       // 选中数组
@@ -276,17 +277,6 @@ export default {
         updateuserid: undefined,
         day: undefined,
       },
-      // 日期控件 只显示今天和今天以后一周时间区间
-      pickerOptions7: {
-        disabledDate(time) {
-          let curDate = new Date().getTime();
-          let three = 7 * 24 * 3600 * 1000;
-          let threeMonths = curDate + three;
-          let datestart = Date.now() - 86400000;
-          return time.getTime() < datestart || time.getTime() > threeMonths;
-        },
-      },
-
       // 表单参数
       form: {},
       // 表单校验
@@ -318,6 +308,9 @@ export default {
     // 周计划
     getPlanweek2(planweekid) {
       getPlanweek(planweekid).then((response) => {
+        //console.log(response.data);
+        this.starttime = response.data.starttime;
+        this.endtime = response.data.endtime;
         this.queryParams.wid = response.data.id;
         this.defaultWeekType = response.data.id;
         this.getList();
@@ -399,6 +392,7 @@ export default {
       this.open = true;
       this.title = "添加周计划(家长和教育部门)细化";
       this.form.wid = this.queryParams.wid;
+      this.form.activitytime = this.starttime;
     },
     /** 修改按钮操作 */
     handleUpdate(row) {
