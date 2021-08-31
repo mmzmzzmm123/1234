@@ -223,6 +223,7 @@ export default {
       getTheme(this.id).then((response) => {
         //console.log(response);
         if (response.code == "200") {
+          this.title = response.data.name;
           this.title1 = "主题网络";
           this.title2 = "家园沟通";
           this.title3 = "活动方案";
