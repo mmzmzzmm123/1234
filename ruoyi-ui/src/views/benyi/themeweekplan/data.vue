@@ -418,9 +418,9 @@ export default {
         this.queryParams.wpid = response.data.id;
         this.defaultThemeweekType = response.data.id;
 
-        console.log(
-          "月份：" + response.data.month + "   " + "周次:" + response.data.zc
-        );
+        // console.log(
+        //   "月份：" + response.data.month + "   " + "周次:" + response.data.zc
+        // );
 
         //查找活动id
         this.queryParams_MonPlan.month = response.data.month;
@@ -431,7 +431,7 @@ export default {
           this.queryParams_MonPlanItem.zc = response.data.zc;
           listMonthplanitem(this.queryParams_MonPlanItem).then(
             (resMonPlanItem) => {
-              console.log(resMonPlanItem.rows);
+              //console.log(resMonPlanItem.rows);
               var activityids = resMonPlanItem.rows[0].activityid.split(";");
               var array = [];
               //console.log(arr);

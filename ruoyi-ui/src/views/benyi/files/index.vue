@@ -387,7 +387,7 @@ export default {
       this.reset();
       const id = row.id || this.ids;
       getFiles(id).then((response) => {
-        console.log(response);
+        //console.log(response);
         this.form = response.data;
         var roleArr = [];
         if (response.roles != null) {

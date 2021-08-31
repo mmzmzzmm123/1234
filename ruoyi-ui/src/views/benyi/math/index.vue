@@ -276,7 +276,7 @@ export default {
       const id = row.id || this.ids;
       getMath(id).then(response => {
         this.form = response.data;
-        console.log(this.form);
+        //console.log(this.form);
         this.open = true;
         this.title = "修改游戏数学";
       });

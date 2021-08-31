@@ -344,7 +344,7 @@ export default {
     },
     //控制按钮可用
     checkRemoveable(row) {
-      console.log(row.remark);
+      //console.log(row.remark);
       var remark = row.remark;
       if (remark == "" || remark == null) {
         return false;

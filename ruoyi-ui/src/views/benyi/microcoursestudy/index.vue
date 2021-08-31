@@ -96,7 +96,7 @@ export default {
     // 节点单击事件
     handleNodeClick(data) {
       this.id = data.id;
-      console.log(data.id);
+      //console.log(data.id);
       if (data.id >= 9999) {
       } else {
         this.title = data.label;

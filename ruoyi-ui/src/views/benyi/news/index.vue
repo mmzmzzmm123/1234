@@ -293,7 +293,7 @@ export default {
     getDeptList() {
       listDept(null).then((response) => {
         this.deptOptions = response.data;
-        console.log(response.data);
+        //console.log(response.data);
       });
     },
     // 用户列表

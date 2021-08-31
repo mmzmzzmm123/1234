@@ -224,7 +224,7 @@ export default {
   methods: {
     handleAvatarSuccess(res, file) {
       this.imageUrl = URL.createObjectURL(file.raw);
-      console.log(res);
+      //console.log(res);
       if (res.code == "200") {
         this.form.imgurl = res.fileName;
       } else {
@@ -311,7 +311,7 @@ export default {
     submitForm: function() {
       this.$refs["form"].validate(valid => {
         if (valid) {
-          console.log(this.form.imgurl);
+          //console.log(this.form.imgurl);
           if (this.form.id != undefined) {
             updateLecturer(this.form).then(response => {
               if (response.code === 200) {
