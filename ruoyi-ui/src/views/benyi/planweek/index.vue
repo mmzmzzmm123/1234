@@ -205,19 +205,15 @@
       width="960px"
       append-to-body
     >
-      <el-row :gutter="15">
-        <el-form ref="form" :model="form" :rules="rules" label-width="80px">
-          <el-col :span="12">
+      <el-form ref="form" :model="form" :rules="rules" label-width="80px">
+        <el-row :gutter="16">
+          <el-col :xs="24" :ms="24" :md="12">
             <el-form-item label="计划名称" prop="name">
-              <el-input
-                size="small"
-                v-model="form.name"
-                placeholder="请输入计划名称"
-              />
+              <el-input v-model="form.name" placeholder="请输入计划名称" />
             </el-form-item>
           </el-col>
 
-          <el-col :span="12">
+          <el-col :xs="24" :ms="24" :md="12">
             <el-form-item label="开始时间" prop="starttime">
               <!-- <el-date-picker
                 clearable
@@ -231,7 +227,6 @@
               <el-date-picker
                 v-model="form.starttime"
                 clearable
-                size="small"
                 class="my-date-picker"
                 type="daterange"
                 value-format="yyyy-MM-dd"
@@ -256,11 +251,10 @@
               ></el-date-picker>
             </el-form-item>
           </el-col> -->
-          <el-col :span="12">
+          <el-col :xs="24" :ms="24" :md="12">
             <el-form-item label="选择月份" prop="month">
               <el-date-picker
                 clearable
-                size="small"
                 class="my-date-picker"
                 v-model="form.month"
                 type="month"
@@ -269,13 +263,9 @@
               ></el-date-picker>
             </el-form-item>
           </el-col>
-          <el-col :span="12">
+          <el-col :xs="24" :ms="24" :md="12">
             <el-form-item label="选择周次" prop="weekly">
-              <el-select
-                size="small"
-                v-model="form.weekly"
-                placeholder="请选择周次"
-              >
+              <el-select v-model="form.weekly" placeholder="请选择周次">
                 <el-option
                   v-for="dict in weeklyOptions"
                   :key="dict.dictValue"
@@ -285,10 +275,9 @@
               </el-select>
             </el-form-item>
           </el-col>
-          <el-col :span="12">
+          <el-col :xs="24" :ms="24" :md="12">
             <el-form-item label="本周主题" prop="themeofweek">
               <el-input
-                size="small"
                 v-model="form.themeofweek"
                 placeholder="请输入本周主题"
               />
@@ -344,8 +333,9 @@
               />
             </el-form-item>
           </el-col>
-        </el-form>
-      </el-row>
+        </el-row>
+      </el-form>
+
       <div slot="footer" class="dialog-footer">
         <el-button type="primary" @click="submitForm">确 定</el-button>
         <el-button @click="cancel">取 消</el-button>
@@ -490,7 +480,7 @@ export default {
   methods: {
     change: function () {
       //console.log(this.form.starttime);
-      this.form.month=this.form.starttime[0].slice(0,7);
+      this.form.month = this.form.starttime[0].slice(0, 7);
     },
     /** 查询周计划(家长和教育部门)列表 */
     getList() {
