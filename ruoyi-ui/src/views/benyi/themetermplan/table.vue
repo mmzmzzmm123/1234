@@ -1,9 +1,15 @@
 <template>
   <div class="table-container" ref="printMe">
-    <h2 class="title">{{title}}</h2>
+    <h2 class="title">{{ title }}</h2>
     <div class="table">
       <div class="print no-print">
-        <el-button type="primary" plain size="mini" icon="el-icon-printer" @click="prints"></el-button>
+        <el-button
+          type="primary"
+          plain
+          size="mini"
+          icon="el-icon-printer"
+          @click="prints"
+        ></el-button>
       </div>
       <table>
         <tr class="align-center">
@@ -13,32 +19,36 @@
           </td>-->
           <td class="w140">
             <b class="table-title">班级：</b>
-            {{classname}}
+            {{ classname }}
           </td>
           <td>
             <b class="table-title">学期：</b>
-            {{xnxqFormat(xnxq)}}
+            {{ xnxqFormat(xnxq) }}
           </td>
           <td class="w200">
             <b class="table-title">制定人：</b>
-            {{tbr}}
+            {{ tbr }}
           </td>
         </tr>
         <tr class="align-center table-bg">
           <td v-for="h in bodyData.title" :key="h.prop">
-            <b>{{h.label}}</b>
+            <b>{{ h.label }}</b>
           </td>
         </tr>
         <tr v-for="item in bodyData.termplanitemList" :key="item.id">
           <td class="align-center">
-            <span>{{item.month}}</span>
+            <span>{{ item.month }}</span>
           </td>
-          <td class="align-center">{{themeFormat(item.themeconent)}}</td>
-          <td>{{item.remark}}</td>
+          <td class="align-center" v-html="themeFormat(item.themeconent)"></td>
+          <td>{{ item.remark }}</td>
+        </tr>
+        <tr>
+          <td class="align-center">备注</td>
+          <td colspan="2">{{ remark }}</td>
         </tr>
         <tr>
           <td class="align-center">教学主管审批</td>
-          <td colspan="2">{{spyj}}</td>
+          <td colspan="2">{{ spyj }}</td>
         </tr>
       </table>
       <!-- <p
@@ -68,6 +78,7 @@ export default {
       xnxq: "",
       classname: "",
       tbr: "",
+      remark: "",
       spyj: "",
       bodyData: {
         title: [
@@ -112,9 +123,14 @@ export default {
         var ilength = themeids.split(";").length - 1;
         var names = "";
         for (var i = 1; i < ilength; i++) {
+          var themeId = themeids.split(";")[i];
           names =
             names +
-            this.selectMoeDictLabel(this.themeOptions, themeids.split(";")[i]) +
+            "<a target='_bank' href='/benyi_course/tremplan/themestudy/" +
+            (Number(99999) + Number(themeId)) +
+            "'>" +
+            this.selectMoeDictLabel(this.themeOptions, themeId) +
+            "</a>" +
             " ";
         }
         //this.selectDictLabel(this.scopeOptions, row.xnxq);
@@ -138,6 +154,7 @@ export default {
         this.classname = response.classname;
         this.xnxq = response.data.xnxq;
         this.spyj = response.data.shyj;
+        this.remark = response.data.remark;
       });
       this.getThemeTermItemPlan();
     },

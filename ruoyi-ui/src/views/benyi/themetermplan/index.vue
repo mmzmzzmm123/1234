@@ -428,6 +428,8 @@ export default {
     handleAdd() {
       this.reset();
       this.open = true;
+      //console.log(this.xnxqOptions);
+      this.form.xnxq = this.xnxqOptions[0].dictValue;
       this.title = "添加主题整合学期计划";
     },
     /** 修改按钮操作 */

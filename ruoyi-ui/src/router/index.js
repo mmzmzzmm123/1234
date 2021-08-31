@@ -298,6 +298,22 @@ export const constantRoutes = [
     ]
   },
   {
+    path: "/benyi_course/tremplan",
+    component: Layout,
+    hidden: true,
+    children: [
+      {
+        path: "themestudy/:id(\\d+)",
+        component: () => import("@/views/benyi/themestudy_tremplan"),
+        name: "Theme2",
+        meta: {
+          title: "主题整合学习",
+          icon: ""
+        }
+      }
+    ]
+  },
+  {
     path: "/benyi_course/mathtermplan",
     component: Layout,
     hidden: true,
