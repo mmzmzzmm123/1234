@@ -41,7 +41,7 @@
           </td>
           <td class="align-center">
             <router-link
-              style="margin: 10px"
+              style="margin: 10px; color: blue"
               v-for="(index, item) in item.themeconent.split(';')"
               :key="item"
               :to="url + (Number(index) + Number(99999))"
