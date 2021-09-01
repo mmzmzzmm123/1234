@@ -251,13 +251,13 @@
       :title="title"
       :visible.sync="open"
       class="v-dialog"
+      width="600px"
       append-to-body
     >
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
         <el-form-item label="计划月份" prop="month">
           <el-date-picker
             clearable
-            size="small"
             class="my-date-picker"
             v-model="form.month"
             type="month"
@@ -515,6 +515,7 @@ export default {
       this.reset();
       this.open = true;
       this.title = "添加主题整合月计划";
+      this.form.xnxq = this.xnxqOptions[0].dictValue;
       this.disable = false;
     },
     /** 修改按钮操作 */

@@ -438,6 +438,7 @@ export default {
       this.reset();
       this.open = true;
       this.title = "添加游戏数学学期计划";
+      this.form.xnxq = this.xnxqOptions[0].dictValue;
     },
     /** 修改按钮操作 */
     handleUpdate(row) {

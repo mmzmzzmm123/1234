@@ -1,9 +1,15 @@
 <template>
   <div class="table-container" ref="printMe">
-    <h2 class="title">{{title}}</h2>
+    <h2 class="title">{{ title }}</h2>
     <div class="table">
       <div class="print no-print">
-        <el-button type="primary" plain size="mini" icon="el-icon-printer" @click="prints"></el-button>
+        <el-button
+          type="primary"
+          plain
+          size="mini"
+          icon="el-icon-printer"
+          @click="prints"
+        ></el-button>
       </div>
       <table>
         <tr class="align-center">
@@ -11,67 +17,78 @@
             <b class="table-title">{{h.title}}</b>
             {{h.name}}
           </td>-->
-          <td style="width:20%">
+          <td style="width: 20%">
             <b class="table-title">班级：</b>
-            {{classname}}
+            {{ classname }}
           </td>
-          <td style="width:20%">
+          <td style="width: 20%">
             <b class="table-title">月份：</b>
-            {{month}}
+            {{ month }}
           </td>
-          <td style="width:20%">
+          <td style="width: 20%">
             <b class="table-title">周次：</b>
-            第{{zc}}周
+            第{{ zc }}周
           </td>
-          <td colspan="3" style="width:40%">
+          <td colspan="3" style="width: 40%">
             <b class="table-title">月主题：</b>
-            {{monththeme}}
+            {{ monththeme }}
           </td>
         </tr>
-        
+
         <tr class="align-center">
           <td rowspan="5">
             <span>周教学目标</span>
           </td>
-          <td style="width: 140px;">社会</td>
-          <td v-html="sh" colspan="5"></td>
-        </tr>
-        <tr class="align-center"> 
-          <td>语言</td>
-          <td v-html="yy" colspan="5"></td>
+
+          <td>健康</td>
+          <td class="align-left" v-html="jk" colspan="5"></td>
         </tr>
         <tr class="align-center">
-          <td>健康</td>
-          <td v-html="jk" colspan="5"></td>
+          <td>语言</td>
+          <td lass="align-left" v-html="yy" colspan="5"></td>
+        </tr>
+        <tr class="align-center">
+          <td>社会</td>
+          <td lass="align-left" v-html="sh" colspan="5"></td>
         </tr>
         <tr class="align-center">
           <td>科学</td>
-          <td v-html="kx" colspan="5"></td>
+          <td lass="align-left" v-html="kx" colspan="5"></td>
         </tr>
         <tr class="align-center">
           <td>艺术</td>
-          <td v-html="ys" colspan="5"></td>
+          <td lass="align-left" v-html="ys" colspan="5"></td>
         </tr>
 
         <tr v-for="item in planweekitemList" :key="item.id">
-          <td v-if="item.activitytime" :rowspan="bodyData.planweekitemList.length" class="align-center">
-            <span>{{item.activitytime}}</span>
+          <td
+            v-if="item.activitytime"
+            :rowspan="bodyData.planweekitemList.length"
+            class="align-center"
+          >
+            <span>{{ item.activitytime }}</span>
           </td>
-          <td class="align-center">{{item.activitytime}}</td>
-          <td colspan="4">{{item.activitytime}}</td>
+          <td class="align-center">{{ item.activitytime }}</td>
+          <td colspan="4">{{ item.activitytime }}</td>
         </tr>
         <tr class="align-center table-bg">
           <td v-for="h in bodyData.title" :key="h.prop">
-            <b>{{h.label}}</b>
+            <b>{{ h.label }}</b>
           </td>
         </tr>
         <tr v-for="item in bodyData.planweekitemList" :key="item.id">
-          <td v-if="item.theme" :rowspan="bodyData.planweekitemList.length" class="align-center">
-            <span>{{item.theme}}</span>
+          <td
+            v-if="item.theme"
+            :rowspan="bodyData.planweekitemList.length"
+            class="align-center"
+          >
+            <span>{{ item.theme }}</span>
           </td>
-          <td class="align-center">{{item.activitytime}}</td>
-          <td class="align-center">{{item.day}}</td>
-          <td class="align-center">{{activitytypeFormat(item.activitytype)}}</td>
+          <td class="align-center">{{ item.activitytime }}</td>
+          <td class="align-center">{{ item.day }}</td>
+          <td class="align-center">
+            {{ activitytypeFormat(item.activitytype) }}
+          </td>
           <td class="align-center" v-html="item.content"></td>
         </tr>
       </table>
@@ -89,7 +106,7 @@ import {
   delPlanweekitem,
   addPlanweekitem,
   updatePlanweekitem,
-  exportPlanweekitem
+  exportPlanweekitem,
 } from "@/api/benyi/planweekitem";
 
 import { getPlanweek, listPlanweek } from "@/api/benyi/planweek";
@@ -137,7 +154,7 @@ export default {
             label: "活动详情",
             prop: "content",
           },
-          
+
           // {
           //   label: "周四",
           //   prop: "help",
@@ -157,7 +174,6 @@ export default {
       queryParams: {
         wid: undefined,
       },
-      
     };
   },
   created() {
@@ -166,7 +182,7 @@ export default {
     this.getDicts("sys_dm_fzxz").then((response) => {
       this.fzxzOptions = response.data;
     });
-    this.getDicts("sys_dm_qyhdxs").then(response => {
+    this.getDicts("sys_dm_qyhdxs").then((response) => {
       this.activitytypeOptions = response.data;
     });
   },
@@ -221,7 +237,7 @@ export default {
       }
       return "";
     },
-    
+
     //获取周教学计划详情
     getWPlanweek(planweekid) {
       getPlanweek(planweekid).then((response) => {
@@ -240,7 +256,7 @@ export default {
 
         this.queryParams.wpid = response.data.id;
         this.title = response.data.name;
-        
+
         //this.month = response.data.month;
         this.classname = response.classname;
         this.tbr = response.createusername;
@@ -272,7 +288,7 @@ export default {
         });
       });
     },
-    
+
     prints() {
       //console.log(this.$refs.printMe);
       this.$print(this.$refs.printMe);
@@ -291,6 +307,9 @@ export default {
   }
   .align-center {
     text-align: center;
+  }
+  .align-left {
+    text-align: left;
   }
   .table {
     font-size: 14px;

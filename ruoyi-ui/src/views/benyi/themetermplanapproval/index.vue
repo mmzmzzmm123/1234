@@ -166,7 +166,7 @@
     />
 
     <!-- 添加或修改主题整合学期计划对话框 -->
-    <el-dialog
+    <!-- <el-dialog
       :title="title"
       :visible.sync="open"
       class="v-dialog"
@@ -225,7 +225,7 @@
         <el-button type="primary" @click="submitForm">确 定</el-button>
         <el-button @click="cancel">取 消</el-button>
       </div>
-    </el-dialog>
+    </el-dialog> -->
   </div>
 </template>
 
@@ -371,38 +371,45 @@ export default {
       this.multiple = !selection.length;
     },
     /** 修改按钮操作 */
+    // handleUpdate(row) {
+    //   this.reset();
+    //   const id = row.id || this.ids;
+    //   getTermplan(id).then((response) => {
+    //     this.form = response.data;
+    //     this.open = true;
+    //     this.title = "审批主题整合学期计划";
+    //     const time = [];
+    //     time.push(response.data.startmonth);
+    //     time.push(response.data.endmonth);
+    //     this.form.startmonth = time;
+    //   });
+    // },
+    /** 审批操作 */
     handleUpdate(row) {
-      this.reset();
-      const id = row.id || this.ids;
-      getTermplan(id).then((response) => {
-        this.form = response.data;
-        this.open = true;
-        this.title = "审批主题整合学期计划";
-        const time = [];
-        time.push(response.data.startmonth);
-        time.push(response.data.endmonth);
-        this.form.startmonth = time;
+      const id = row.id;
+      this.$router.push({
+        path: "/benyi/themetermplan/approval/" + id,
       });
     },
     /** 提交按钮 */
-    submitForm: function () {
-      this.$refs["form"].validate((valid) => {
-        if (valid) {
-          const time = this.form.startmonth;
-          this.form.startmonth = time[0];
-          this.form.endmonth = time[1];
-          if (this.form.id != undefined) {
-            updateTermplan(this.form).then((response) => {
-              if (response.code === 200) {
-                this.msgSuccess("审批成功");
-                this.open = false;
-                this.getList();
-              }
-            });
-          }
-        }
-      });
-    },
+    // submitForm: function () {
+    //   this.$refs["form"].validate((valid) => {
+    //     if (valid) {
+    //       const time = this.form.startmonth;
+    //       this.form.startmonth = time[0];
+    //       this.form.endmonth = time[1];
+    //       if (this.form.id != undefined) {
+    //         updateTermplan(this.form).then((response) => {
+    //           if (response.code === 200) {
+    //             this.msgSuccess("审批成功");
+    //             this.open = false;
+    //             this.getList();
+    //           }
+    //         });
+    //       }
+    //     }
+    //   });
+    // },
     /** 预览按钮操作 */
     handleView(row) {
       const id = row.id;

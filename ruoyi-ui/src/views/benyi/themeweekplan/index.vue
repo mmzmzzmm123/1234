@@ -261,7 +261,6 @@
         <el-form-item label="所属月份" prop="month">
           <el-date-picker
             clearable
-            size="small"
             class="my-date-picker"
             v-model="form.month"
             type="month"
@@ -275,6 +274,7 @@
             v-model="form.zc"
             placeholder="周次"
             class="my-date-picker"
+            :min="1"
             :disabled="disable"
           />
         </el-form-item>
@@ -436,7 +436,7 @@ export default {
         schoolid: undefined,
         classid: undefined,
         month: undefined,
-        zc: undefined,
+        zc: 1,
         remark: undefined,
         status: "0",
         spr: undefined,
@@ -469,6 +469,7 @@ export default {
       this.reset();
       this.open = true;
       this.title = "添加主题整合周计划";
+      this.form.xnxq = this.xnxqOptions[0].dictValue;
       this.disable = false;
     },
     /** 修改按钮操作 */

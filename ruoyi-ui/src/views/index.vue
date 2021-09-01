@@ -98,7 +98,7 @@ export default {
     /** 查询公告列表 */
     getList() {
       listNotice(this.queryParams_note).then((response) => {
-        console.log(response.rows);
+        //console.log(response.rows);
         if (response.rows.length > 0) {
           var msg = "";
           response.rows.forEach((element) => {

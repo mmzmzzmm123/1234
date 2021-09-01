@@ -284,11 +284,23 @@
             </el-form-item>
           </el-col>
           <el-col :span="24">
-            <el-form-item label="教学目标(社会)" prop="jxmbSh">
+            <router-link
+              to="/benyi_assessment/assessmentstudy"
+              style="
+                color: #545454;
+                font-size: 10px;
+                text-decoration: underline;
+              "
+              >去学习五大领域（健康、语言、社会、科学、艺术）</router-link
+            >
+          </el-col>
+
+          <el-col :span="24">
+            <el-form-item label="教学目标(健康)" prop="jxmbJk">
               <Editor
-                v-model="form.jxmbSh"
-                placeholder="请输入教学目标(社会)"
-                :quillIndex="0"
+                v-model="form.jxmbJk"
+                placeholder="请输入教学目标(健康)"
+                :quillIndex="2"
                 toref="Editora"
               />
             </el-form-item>
@@ -304,11 +316,11 @@
             </el-form-item>
           </el-col>
           <el-col :span="24">
-            <el-form-item label="教学目标(健康)" prop="jxmbJk">
+            <el-form-item label="教学目标(社会)" prop="jxmbSh">
               <Editor
-                v-model="form.jxmbJk"
-                placeholder="请输入教学目标(健康)"
-                :quillIndex="2"
+                v-model="form.jxmbSh"
+                placeholder="请输入教学目标(社会)"
+                :quillIndex="0"
                 toref="Editora"
               />
             </el-form-item>
@@ -426,41 +438,41 @@ export default {
         themeofweek: [
           { required: true, message: "本周主题不能为空", trigger: "blur" },
         ],
-        jxmbSh: [
-          {
-            required: true,
-            message: "教学目标(社会)不能为空",
-            trigger: "blur",
-          },
-        ],
-        jxmbYy: [
-          {
-            required: true,
-            message: "教学目标(语言)不能为空",
-            trigger: "blur",
-          },
-        ],
-        jxmbJk: [
-          {
-            required: true,
-            message: "教学目标(健康)不能为空",
-            trigger: "blur",
-          },
-        ],
-        jxmbKx: [
-          {
-            required: true,
-            message: "教学目标(科学)不能为空",
-            trigger: "blur",
-          },
-        ],
-        jxmbYs: [
-          {
-            required: true,
-            message: "教学目标(艺术)不能为空",
-            trigger: "blur",
-          },
-        ],
+        // jxmbSh: [
+        //   {
+        //     required: true,
+        //     message: "教学目标(社会)不能为空",
+        //     trigger: "blur",
+        //   },
+        // ],
+        // jxmbYy: [
+        //   {
+        //     required: true,
+        //     message: "教学目标(语言)不能为空",
+        //     trigger: "blur",
+        //   },
+        // ],
+        // jxmbJk: [
+        //   {
+        //     required: true,
+        //     message: "教学目标(健康)不能为空",
+        //     trigger: "blur",
+        //   },
+        // ],
+        // jxmbKx: [
+        //   {
+        //     required: true,
+        //     message: "教学目标(科学)不能为空",
+        //     trigger: "blur",
+        //   },
+        // ],
+        // jxmbYs: [
+        //   {
+        //     required: true,
+        //     message: "教学目标(艺术)不能为空",
+        //     trigger: "blur",
+        //   },
+        // ],
         weekly: [{ required: true, message: "周次不能为空", trigger: "blur" }],
         month: [{ required: true, message: "月份不能为空", trigger: "blur" }],
       },

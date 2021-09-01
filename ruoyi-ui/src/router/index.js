@@ -419,7 +419,7 @@ export const constantRoutes = [
         component: () => import("@/views/benyi/planweek/table"),
         name: "planweek2",
         meta: {
-          title: "主题整合周计划(表格)",
+          title: "周计划(表格)",
           icon: ""
         }
       }
@@ -452,6 +452,22 @@ export const constantRoutes = [
         name: "Themetermplan2",
         meta: {
           title: "主题整合学期计划(表格)",
+          icon: ""
+        }
+      }
+    ]
+  },
+  {
+    path: "/benyi/themetermplan",
+    component: Layout,
+    hidden: true,
+    children: [
+      {
+        path: "approval/:id",
+        component: () => import("@/views/benyi/themetermplanapproval/approval"),
+        name: "ThemetermplanApproval",
+        meta: {
+          title: "主题整合学期计划审批",
           icon: ""
         }
       }
