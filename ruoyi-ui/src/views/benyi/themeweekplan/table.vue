@@ -1,9 +1,15 @@
 <template>
   <div class="table-container" ref="printMe">
-    <h2 class="title">{{title}}</h2>
+    <h2 class="title">{{ title }}</h2>
     <div class="table">
       <div class="print no-print">
-        <el-button type="primary" plain size="mini" icon="el-icon-printer" @click="prints"></el-button>
+        <el-button
+          type="primary"
+          plain
+          size="mini"
+          icon="el-icon-printer"
+          @click="prints"
+        ></el-button>
       </div>
       <table>
         <tr class="align-center">
@@ -11,48 +17,52 @@
             <b class="table-title">{{h.title}}</b>
             {{h.name}}
           </td>-->
-          <td>
+          <td style="width: 15%">
             <b class="table-title">班级：</b>
-            {{classname}}
+            {{ classname }}
           </td>
-          <td>
-            <b class="table-title">月份：</b>
-            {{month}}
-          </td>
-          <td>
-            <b class="table-title">周次：</b>
-            第{{zc}}周
-          </td>
-          <td>
-            <b class="table-title">月主题：</b>
-            {{monththeme}}
-          </td>
-          <td>
+          <td style="width: 15%">
             <b class="table-title">制表人：</b>
-            {{tbr}}
+            {{ tbr }}
+          </td>
+          <td style="width: 35%">
+            <b class="table-title">月主题：</b>
+            {{ monththeme }}
+          </td>
+          <td style="width: 15%">
+            <b class="table-title">月份：</b>
+            {{ month }}
+          </td>
+          <td style="width: 20%">
+            <b class="table-title">周次：</b>
+            第{{ zc }}周
           </td>
         </tr>
         <tr class="align-center table-bg">
           <td v-for="h in bodyData.title" :key="h.prop">
-            <b>{{h.label}}</b>
+            <b>{{ h.label }}</b>
           </td>
         </tr>
         <tr v-for="item in bodyData.weekplanitemList" :key="item.daytime">
-          <td v-if="item.theme" :rowspan="bodyData.weekplanitemList.length" class="align-center">
-            <span>{{item.theme}}</span>
+          <td
+            v-if="item.theme"
+            :rowspan="bodyData.weekplanitemList.length"
+            class="align-center"
+          >
+            <span>{{ item.theme }}</span>
           </td>
-          <td class="align-center">{{item.daytime}} / 星期{{item.zhou}}</td>
-          <td>{{themeactivityFormat(item.activityid)}}</td>
-          <td class="align-center">{{fzxzFormat(item.fzxz)}}</td>
-          <td>{{item.jzzc}}</td>
+          <td class="align-center">{{ item.daytime }} / 星期{{ item.zhou }}</td>
+          <td>{{ themeactivityFormat(item.activityid) }}</td>
+          <td class="align-center">{{ fzxzFormat(item.fzxz) }}</td>
+          <td>{{ item.jzzc }}</td>
         </tr>
         <tr>
           <td class="align-center">备注</td>
-          <td colspan="4">{{bz}}</td>
+          <td colspan="4">{{ bz }}</td>
         </tr>
         <tr>
           <td class="align-center">主管审批</td>
-          <td colspan="4">{{spyj}}</td>
+          <td colspan="4">{{ spyj }}</td>
         </tr>
       </table>
       <!-- <p
@@ -150,7 +160,7 @@ export default {
       queryParams_MonPlan: {
         xnxq: undefined,
         month: undefined,
-        classid:undefined,
+        classid: undefined,
         status: "2",
       },
       queryParams_MonPlanItem: {
@@ -236,7 +246,7 @@ export default {
         //查找活动id
         this.queryParams_MonPlan.month = response.data.month;
         this.queryParams_MonPlan.xnxq = response.data.xnxq;
-        this.queryParams_MonPlan.classid=response.data.classid;
+        this.queryParams_MonPlan.classid = response.data.classid;
         listMonthplan(this.queryParams_MonPlan).then((resMonPlan) => {
           //console.log(resMonPlan.rows);
           //获取的月主题

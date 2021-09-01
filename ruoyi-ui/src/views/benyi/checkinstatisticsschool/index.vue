@@ -43,8 +43,8 @@
 
     <div ref="printMe" class="print-me">
       <h2 style="text-align: center">{{ this.deptName }}班级儿童考勤表</h2>
-      <h4 style="text-align: left">
-        考勤月份：{{ this.month }} ---- 班级总数：{{ this.classcount }} ----
+      <h4 style="text-align: right">
+        考勤月份：{{ this.month }} ------ 班级总数：{{ this.classcount }} ------
         幼儿总数：{{ this.chilidcount }}
       </h4>
       <el-table
@@ -97,7 +97,7 @@ export default {
       // 遮罩层
       loading: true,
       // 总条数
-      total: 0,
+      //total: 0,
       //javascript
       // 表头数据
       tableHead: [
@@ -361,7 +361,7 @@ export default {
                 : parseFloat((res.day31 * 100).toFixed(2)) + "%",
           });
         });
-        this.total = response.total;
+        //this.total = response.total;
         this.loading = false;
       });
     },

@@ -17,15 +17,15 @@
             <b class="table-title">{{h.title}}</b>
             {{h.name}}
           </td>-->
-          <td class="w140">
+          <td style="width: 20%">
             <b class="table-title">班级：</b>
             {{ classname }}
           </td>
-          <td>
+          <td style="width: 60%">
             <b class="table-title">学期：</b>
             {{ xnxqFormat(xnxq) }}
           </td>
-          <td class="w200">
+          <td style="width: 20%">
             <b class="table-title">制定人：</b>
             {{ tbr }}
           </td>
@@ -39,7 +39,15 @@
           <td class="align-center">
             <span>{{ item.month }}</span>
           </td>
-          <td class="align-center" v-html="themeFormat(item.themeconent)"></td>
+          <td class="align-center">
+            <router-link
+            style="margin:10px"
+              v-for="(index, item) in item.themeconent.split(';')"
+              :key="item"
+              :to="url + (Number(index) + Number(99999))"
+              >{{ themeFormat(index) }}</router-link
+            >
+          </td>
           <td>{{ item.remark }}</td>
         </tr>
         <tr>
@@ -70,6 +78,8 @@ export default {
   name: "TermTable",
   data() {
     return {
+      //url
+      url: "/benyi_course/tremplan/themestudy/",
       //学年学期
       xnxqOptions: [],
       //主题
@@ -118,23 +128,11 @@ export default {
       return this.selectDictLabel(this.xnxqOptions, xnxq);
     },
     // 主题--字典状态字典翻译
-    themeFormat(themeids) {
-      if (themeids != "" && themeids != null) {
-        var ilength = themeids.split(";").length - 1;
-        var names = "";
-        for (var i = 1; i < ilength; i++) {
-          var themeId = themeids.split(";")[i];
-          names =
-            names +
-            "<a target='_bank' href='/benyi_course/tremplan/themestudy/" +
-            (Number(99999) + Number(themeId)) +
-            "'>" +
-            this.selectMoeDictLabel(this.themeOptions, themeId) +
-            "</a>" +
-            " ";
-        }
-        //this.selectDictLabel(this.scopeOptions, row.xnxq);
-        return names;
+    themeFormat(themeid) {
+      if (themeid != "" && themeid != null) {
+        //console.log(themeid);
+        var name = this.selectMoeDictLabel(this.themeOptions, themeid);
+        return name;
       }
       return "";
     },
@@ -176,12 +174,6 @@ export default {
 <style lang="scss">
 .table-container {
   padding: 30px 10%;
-  .w140 {
-    width: 140px;
-  }
-  .w200 {
-    width: 200px;
-  }
   .title {
     margin: 0;
     font-size: 18px;

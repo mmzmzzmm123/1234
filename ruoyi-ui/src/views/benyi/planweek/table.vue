@@ -11,19 +11,19 @@
             <b class="table-title">{{h.title}}</b>
             {{h.name}}
           </td>-->
-          <td class="w140">
+          <td style="width:20%">
             <b class="table-title">班级：</b>
             {{classname}}
           </td>
-          <td>
+          <td style="width:20%">
             <b class="table-title">月份：</b>
             {{month}}
           </td>
-          <td>
+          <td style="width:20%">
             <b class="table-title">周次：</b>
             第{{zc}}周
           </td>
-          <td colspan="3">
+          <td colspan="3" style="width:40%">
             <b class="table-title">月主题：</b>
             {{monththeme}}
           </td>
@@ -283,12 +283,6 @@ export default {
 <style lang="scss">
 .table-container {
   padding: 30px 10%;
-  .w140 {
-    width: 140px;
-  }
-  .w200 {
-    width: 200px;
-  }
   .title {
     margin: 0;
     font-size: 18px;

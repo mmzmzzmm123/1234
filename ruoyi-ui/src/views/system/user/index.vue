@@ -252,7 +252,7 @@
     <!-- 添加或修改参数配置对话框 -->
     <el-dialog :title="title" :visible.sync="open" class="v-dialog u-dialog">
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
-        <el-row :gutter="10">
+        <el-row :gutter="16">
           <el-col :xs="24" :sm="24" :md="12">
             <el-form-item label="用户姓名" prop="nickName">
               <el-input v-model="form.nickName" placeholder="请输入用户姓名" />

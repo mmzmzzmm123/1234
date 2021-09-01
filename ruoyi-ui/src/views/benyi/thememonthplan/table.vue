@@ -17,19 +17,19 @@
             <b class="table-title">{{h.title}}</b>
             {{h.name}}
           </td>-->
-          <td>
+          <td style="width: 20%">
             <b class="table-title">班级：</b>
             {{ classname }}
           </td>
-          <td>
+          <td style="width: 15%">
             <b class="table-title">月份：</b>
             {{ month }}
           </td>
-          <td colspan="2">
+          <td colspan="2" style="width: 45%">
             <b class="table-title">月主题：</b>
             {{ monththeme }}
           </td>
-          <td>
+          <td style="width: 20%">
             <b class="table-title">制表人：</b>
             {{ tbr }}
           </td>
@@ -48,9 +48,7 @@
             <span>{{ monththeme }}</span>
           </td>
           <td class="align-center">{{ item.zc }}</td>
-          <td class="align-center">
-            {{ item.starttime }}---{{ item.endtime }}
-          </td>
+          <td class="align-center">{{ item.starttime }}至{{ item.endtime }}</td>
           <td class="align-center">
             {{ themeactivityFormat(item.activityid) }}
           </td>
