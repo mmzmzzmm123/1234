@@ -49,8 +49,15 @@
           </td>
           <td class="align-center">{{ item.zc }}</td>
           <td class="align-center">{{ item.starttime }}至{{ item.endtime }}</td>
-          <td class="align-center">
-            {{ themeactivityFormat(item.activityid) }}
+          <td class="align-center" v-if="item.activityid != undefined">
+            <!-- {{ themeactivityFormat(item.activityid) }} -->
+            <router-link
+              style="color: blue"
+              v-for="(index, item) in item.activityid.split(';')"
+              :key="item"
+              :to="url + index"
+              ><p>{{ themeactivityFormat(index) }}</p></router-link
+            >
           </td>
           <td>{{ item.jzzc }}</td>
         </tr>
@@ -84,6 +91,8 @@ export default {
   name: "MonthTable",
   data() {
     return {
+      //url
+      url: "/benyi_course/tremplan/themestudy/",
       tableData: [],
       title: "",
       month: "",
@@ -228,24 +237,34 @@ export default {
       });
     },
     // 主题--字典状态字典翻译
+    // themeactivityFormat(activityid) {
+    //   if (activityid != null) {
+    //     var ilength = activityid.split(";").length - 1;
+    //     var names = "";
+    //     for (var i = 1; i < ilength; i++) {
+    //       // console.log(activityid.split(";")[i]);
+    //       // console.log(this.themeactivityOptions);
+    //       names =
+    //         names +
+    //         this.selectMoeDictLabel(
+    //           this.themeactivityOptions,
+    //           activityid.split(";")[i]
+    //         ) +
+    //         "；";
+    //     }
+    //     //this.selectDictLabel(this.scopeOptions, row.xnxq);
+    //     // console.log(names);
+    //     return names;
+    //   }
+    //   return "";
+    // },
     themeactivityFormat(activityid) {
-      if (activityid != null) {
-        var ilength = activityid.split(";").length - 1;
-        var names = "";
-        for (var i = 1; i < ilength; i++) {
-          // console.log(activityid.split(";")[i]);
-          // console.log(this.themeactivityOptions);
-          names =
-            names +
-            this.selectMoeDictLabel(
-              this.themeactivityOptions,
-              activityid.split(";")[i]
-            ) +
-            "；";
-        }
-        //this.selectDictLabel(this.scopeOptions, row.xnxq);
-        // console.log(names);
-        return names;
+      if (activityid != "" && activityid != null) {
+        var name = this.selectMoeDictLabel(
+          this.themeactivityOptions,
+          activityid
+        );
+        return name;
       }
       return "";
     },

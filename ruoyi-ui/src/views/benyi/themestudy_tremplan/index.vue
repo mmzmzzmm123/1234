@@ -249,6 +249,7 @@ export default {
       this.queryParams.themeid = "";
       //console.log(this.id);
       listActivity(this.queryParams).then((req) => {
+        this.title = req.rows[0].name;
         //console.log(req);
         if (req.code == "200") {
           this.activityList = req.rows;

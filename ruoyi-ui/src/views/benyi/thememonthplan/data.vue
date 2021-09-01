@@ -21,6 +21,7 @@
               placeholder="周次"
               clearable
               size="small"
+              :min="1"
               class="my-date-picker"
               @keyup.enter.native="handleQuery"
             />
@@ -156,7 +157,7 @@
     >
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
         <el-form-item label="月计划" prop="mpid">
-          <el-select v-model="form.mpid" size="small" :disabled="true">
+          <el-select v-model="form.mpid" :disabled="true">
             <el-option
               v-for="item in themeMonthPlanOptions"
               :key="item.id"
@@ -166,30 +167,44 @@
           </el-select>
         </el-form-item>
         <el-form-item label="周次" prop="zc">
-          <el-input-number class="my-date-picker" v-model="form.zc" placeholder="请输入周次" />
+          <el-input-number
+            class="my-date-picker"
+            v-model="form.zc"
+            :min="1"
+            placeholder="请输入周次"
+          />
         </el-form-item>
-        <el-form-item label="开始时间" prop="starttime">
-          <el-date-picker
+        <el-form-item label="起止时间" prop="starttime">
+          <!-- <el-date-picker
             clearable
-            size="small"
             class="my-date-picker"
             v-model="form.starttime"
             type="date"
             value-format="yyyy-MM-dd"
             placeholder="选择开始时间"
-          ></el-date-picker>
+          ></el-date-picker> -->
+          <el-date-picker
+            v-model="form.starttime"
+            clearable
+            class="my-date-picker"
+            type="daterange"
+            value-format="yyyy-MM-dd"
+            range-separator="至"
+            start-placeholder="开始日期"
+            end-placeholder="结束日期"
+          >
+          </el-date-picker>
         </el-form-item>
-        <el-form-item label="结束时间" prop="endtime">
+        <!-- <el-form-item label="结束时间" prop="endtime">
           <el-date-picker
             clearable
-            size="small"
             class="my-date-picker"
             v-model="form.endtime"
             type="date"
             value-format="yyyy-MM-dd"
             placeholder="选择结束时间"
           ></el-date-picker>
-        </el-form-item>
+        </el-form-item> -->
         <el-form-item label="选择活动" prop="activityid">
           <el-checkbox-group
             v-model="themeactivityList"
@@ -396,7 +411,7 @@ export default {
       this.form = {
         id: undefined,
         mpid: undefined,
-        zc: 0,
+        zc: 1,
         starttime: undefined,
         endtime: undefined,
         activityid: undefined,
@@ -439,6 +454,10 @@ export default {
         this.form = response.data;
         this.open = true;
         this.title = "填充主题整合周计划明细";
+        let arrTime = [];
+        arrTime.push(response.data.starttime);
+        arrTime.push(response.data.endtime);
+        this.form.starttime = arrTime;
         var activityid = response.data.activityid.split(";");
         var array = [];
         //console.log(arr);
@@ -455,6 +474,9 @@ export default {
     submitForm: function () {
       this.$refs["form"].validate((valid) => {
         if (valid) {
+          let arrTime = this.form.starttime;
+          this.form.starttime = arrTime[0];
+          this.form.endtime = arrTime[1];
           if (this.form.id != undefined) {
             updateMonthplanitem(this.form).then((response) => {
               if (response.code === 200) {
@@ -479,7 +501,7 @@ export default {
     handleDelete(row) {
       const ids = row.id || this.ids;
       this.$confirm(
-        '是否确认删除主题整合周计划编号为"' + ids + '"的数据项?',
+        '是否确认删除主题整合周计划明细的数据项?',
         "警告",
         {
           confirmButtonText: "确定",
@@ -493,22 +515,6 @@ export default {
         .then(() => {
           this.getList();
           this.msgSuccess("删除成功");
-        })
-        .catch(function () {});
-    },
-    /** 导出按钮操作 */
-    handleExport() {
-      const queryParams = this.queryParams;
-      this.$confirm("是否确认导出所有主题整合周计划数据项?", "警告", {
-        confirmButtonText: "确定",
-        cancelButtonText: "取消",
-        type: "warning",
-      })
-        .then(function () {
-          return exportWeekplan(queryParams);
-        })
-        .then((response) => {
-          this.download(response.msg);
         })
         .catch(function () {});
     },
