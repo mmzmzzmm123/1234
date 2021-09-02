@@ -598,23 +598,23 @@ export default {
         this.title = "修改周计划(家长和教育部门)";
       });
     },
-    /** 审核提交按钮操作 */
-    handleCheck(row) {
-      const ids = row.id || this.ids;
-      this.$confirm('确认提交周计划编号为"' + ids + '"的数据项?', "警告", {
-        confirmButtonText: "确定",
-        cancelButtonText: "取消",
-        type: "warning",
-      })
-        .then(function () {
-          return checkPlanweek(ids);
-        })
-        .then(() => {
-          this.getList();
-          this.msgSuccess("提交成功");
-        })
-        .catch(function () {});
-    },
+    // /** 审核提交按钮操作 */
+    // handleCheck(row) {
+    //   const ids = row.id || this.ids;
+    //   this.$confirm('确认提交周计划编号为"' + ids + '"的数据项?', "警告", {
+    //     confirmButtonText: "确定",
+    //     cancelButtonText: "取消",
+    //     type: "warning",
+    //   })
+    //     .then(function () {
+    //       return checkPlanweek(ids);
+    //     })
+    //     .then(() => {
+    //       this.getList();
+    //       this.msgSuccess("提交成功");
+    //     })
+    //     .catch(function () {});
+    // },
     isShow(row) {
       if (row.status == "1" || row.status == "2") {
         return false;

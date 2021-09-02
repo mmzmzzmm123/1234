@@ -443,7 +443,7 @@ export default {
     handleDelete(row) {
       const ids = row.id || this.ids;
       this.$confirm(
-        '是否确认删除儿童学习与发展档案（教师）编号为"' + ids + '"的数据项?',
+        '是否确认删除儿童学习与发展档案（教师）数据项?',
         "警告",
         {
           confirmButtonText: "确定",

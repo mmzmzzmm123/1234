@@ -321,7 +321,7 @@ export const constantRoutes = [
       {
         path: "data/:id",
         component: () => import("@/views/benyi/mathtermplan/data"),
-        name: "Mathtermplan1",
+        name: "Mathtermplanitem",
         meta: {
           title: "游戏数学学期计划(明细)",
           icon: ""
@@ -337,7 +337,7 @@ export const constantRoutes = [
       {
         path: "table/:id",
         component: () => import("@/views/benyi/mathtermplan/table"),
-        name: "Mathtermplan2",
+        name: "MathTermTable",
         meta: {
           title: "游戏数学学期计划(表格)",
           icon: ""

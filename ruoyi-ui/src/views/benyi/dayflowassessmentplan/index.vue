@@ -467,7 +467,7 @@ export default {
     handleDelete(row) {
       const ids = row.id || this.ids;
       this.$confirm(
-        '是否确认删除幼儿园一日流程评估计划编号为"' + ids + '"的数据项?',
+        '是否确认删除幼儿园一日流程评估计划数据项?',
         "警告",
         {
           confirmButtonText: "确定",

@@ -450,7 +450,7 @@ export default {
     handleDelete(row) {
       const ids = row.id || this.ids;
       this.$confirm(
-        '是否确认删除游戏数学方案编号为"' + ids + '"的数据项?',
+        '是否确认删除游戏数学方案数据项?',
         "警告",
         {
           confirmButtonText: "确定",

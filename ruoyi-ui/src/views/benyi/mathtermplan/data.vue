@@ -64,16 +64,6 @@
         v-show="isShow"
         >填充</el-button
       >
-      <el-button
-        type="danger"
-        icon="el-icon-delete"
-        size="mini"
-        :disabled="multiple"
-        @click="handleDelete"
-        v-hasPermi="['benyi:mathtermplan:remove']"
-        v-show="isShow"
-        >删除</el-button
-      >
     </div>
 
     <el-table
@@ -115,15 +105,6 @@
             v-show="isShow"
             >填充</el-button
           >
-          <el-button
-            size="mini"
-            type="text"
-            icon="el-icon-delete"
-            @click="handleDelete(scope.row)"
-            v-hasPermi="['benyi:mathtermplan:remove']"
-            v-show="isShow"
-            >删除</el-button
-          >
         </template>
       </el-table-column>
     </el-table>
@@ -156,6 +137,7 @@
             value-format="yyyy-MM"
             placeholder="选择月份"
             class="my-date-picker"
+            :disabled="true"
           >
           </el-date-picker>
         </el-form-item>
@@ -464,27 +446,27 @@ export default {
         }
       });
     },
-    /** 删除按钮操作 */
-    handleDelete(row) {
-      const ids = row.id || this.ids;
-      this.$confirm(
-        '是否确认删除游戏数学学期计划明细编号为"' + ids + '"的数据项?',
-        "警告",
-        {
-          confirmButtonText: "确定",
-          cancelButtonText: "取消",
-          type: "warning",
-        }
-      )
-        .then(function () {
-          return delMathtermplanitem(ids);
-        })
-        .then(() => {
-          this.getList();
-          this.msgSuccess("删除成功");
-        })
-        .catch(function () {});
-    },
+    // /** 删除按钮操作 */
+    // handleDelete(row) {
+    //   const ids = row.id || this.ids;
+    //   this.$confirm(
+    //     '是否确认删除游戏数学学期计划明细编号为"' + ids + '"的数据项?',
+    //     "警告",
+    //     {
+    //       confirmButtonText: "确定",
+    //       cancelButtonText: "取消",
+    //       type: "warning",
+    //     }
+    //   )
+    //     .then(function () {
+    //       return delMathtermplanitem(ids);
+    //     })
+    //     .then(() => {
+    //       this.getList();
+    //       this.msgSuccess("删除成功");
+    //     })
+    //     .catch(function () {});
+    // },
   },
 };
 </script>

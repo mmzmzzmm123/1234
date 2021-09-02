@@ -482,7 +482,7 @@ export default {
     handleDelete(row) {
       const ids = row.id || this.ids;
       this.$confirm(
-        '是否确认删除园历管理(班级)编号为"' + ids + '"的数据项?',
+        '是否确认删除园历管理(班级)数据项?',
         "警告",
         {
           confirmButtonText: "确定",
