@@ -490,6 +490,22 @@ export const constantRoutes = [
     ]
   },
   {
+    path: "/benyi/themeweekplan",
+    component: Layout,
+    hidden: true,
+    children: [
+      {
+        path: "approval/:id",
+        component: () => import("@/views/benyi/themeweekplanapproval/approval"),
+        name: "ThemeweekplanApproval",
+        meta: {
+          title: "主题整合月计划审批",
+          icon: ""
+        }
+      }
+    ]
+  },
+  {
     path: "/benyi_course/learndevelopmentteacherprint",
     component: Layout,
     hidden: true,

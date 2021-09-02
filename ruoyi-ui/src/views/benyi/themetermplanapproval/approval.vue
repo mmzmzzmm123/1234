@@ -186,6 +186,10 @@ export default {
         this.spyj = response.data.shyj;
         this.remark = response.data.remark;
         this.form = response.data;
+        if (response.data.status == "1") {
+          this.form.status = null;
+        }
+
       });
       this.getThemeTermItemPlan();
     },

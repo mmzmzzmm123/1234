@@ -191,7 +191,7 @@
     />
 
     <!-- 添加或修改主题整合周计划（根据月计划明细）对话框 -->
-    <el-dialog
+    <!-- <el-dialog
       :title="title"
       :visible.sync="open"
       class="v-dialog"
@@ -258,7 +258,7 @@
         <el-button type="primary" @click="submitForm">确 定</el-button>
         <el-button @click="cancel">取 消</el-button>
       </div>
-    </el-dialog>
+    </el-dialog> -->
   </div>
 </template>
 
@@ -407,32 +407,38 @@ export default {
       this.multiple = !selection.length;
     },
     /** 修改按钮操作 */
+    // handleUpdate(row) {
+    //   this.reset();
+    //   const id = row.id || this.ids;
+    //   getWeekplan(id).then((response) => {
+    //     this.form = response.data;
+    //     this.open = true;
+    //     this.title = "审批主题整合周计划";
+    //     this.disable = true;
+    //   });
+    // },
     handleUpdate(row) {
-      this.reset();
       const id = row.id || this.ids;
-      getWeekplan(id).then((response) => {
-        this.form = response.data;
-        this.open = true;
-        this.title = "审批主题整合周计划";
-        this.disable = true;
+      this.$router.push({
+        path: "/benyi/themeweekplan/approval/" + id,
       });
     },
     /** 提交按钮 */
-    submitForm: function () {
-      this.$refs["form"].validate((valid) => {
-        if (valid) {
-          if (this.form.id != undefined) {
-            updateWeekplan(this.form).then((response) => {
-              if (response.code === 200) {
-                this.msgSuccess("审批成功");
-                this.open = false;
-                this.getList();
-              }
-            });
-          }
-        }
-      });
-    },
+    // submitForm: function () {
+    //   this.$refs["form"].validate((valid) => {
+    //     if (valid) {
+    //       if (this.form.id != undefined) {
+    //         updateWeekplan(this.form).then((response) => {
+    //           if (response.code === 200) {
+    //             this.msgSuccess("审批成功");
+    //             this.open = false;
+    //             this.getList();
+    //           }
+    //         });
+    //       }
+    //     }
+    //   });
+    // },
     /** 预览按钮操作 */
     handleView(row) {
       const id = row.id;
