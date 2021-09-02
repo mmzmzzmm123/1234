@@ -544,7 +544,7 @@ export default {
           } else {
             addMonthplan(this.form).then((response) => {
               if (response.code === 200) {
-                this.msgSuccess("新增成功");
+                this.msgSuccess("新增成功,记得点击<设置>每周的活动。");
                 this.open = false;
                 this.getList();
               }

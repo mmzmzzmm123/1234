@@ -464,7 +464,7 @@ export default {
           } else {
             addTermplan(this.form).then((response) => {
               if (response.code === 200) {
-                this.msgSuccess("新增成功");
+                this.msgSuccess("新增成功,记得点击<设置>每月的主题。");
                 this.open = false;
                 this.getList();
               }
