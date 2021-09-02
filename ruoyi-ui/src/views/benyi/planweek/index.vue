@@ -214,7 +214,7 @@
           </el-col>
 
           <el-col :xs="24" :ms="24" :md="12">
-            <el-form-item label="开始时间" prop="starttime">
+            <el-form-item label="起止时间" prop="starttime">
               <!-- <el-date-picker
                 clearable
                 size="small"
@@ -643,7 +643,7 @@ export default {
           } else {
             addPlanweek(this.form).then((response) => {
               if (response.code === 200) {
-                this.msgSuccess("新增成功");
+                this.msgSuccess("保存成功，记得去<活动>按钮设置每天活动。");
                 this.open = false;
                 this.getList();
               }
