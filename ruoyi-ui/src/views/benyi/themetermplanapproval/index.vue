@@ -238,7 +238,7 @@ import {
 import { listClass } from "@/api/system/class";
 
 export default {
-  name: "Termplan",
+  name: "Themetermplanapproval",
   data() {
     return {
       // 遮罩层

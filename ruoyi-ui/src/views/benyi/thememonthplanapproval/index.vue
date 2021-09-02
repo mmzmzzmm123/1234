@@ -107,11 +107,7 @@
       :data="monthplanList"
       @selection-change="handleSelectionChange"
     >
-      <el-table-column
-        type="selection"
-        width="55"
-        align="center"
-      />
+      <el-table-column type="selection" width="55" align="center" />
       <el-table-column
         fixed
         label="计划名称"
@@ -128,11 +124,7 @@
           </router-link>
         </template>
       </el-table-column>
-      <el-table-column
-        label="班级名称"
-        align="center"
-        prop="byClass.bjmc"
-      />
+      <el-table-column label="班级名称" align="center" prop="byClass.bjmc" />
       <el-table-column
         label="学年学期"
         align="center"
@@ -201,7 +193,7 @@
     />
 
     <!-- 添加或修改主题整合月计划对话框 -->
-    <el-dialog
+    <!-- <el-dialog
       :title="title"
       :visible.sync="open"
       class="big-dialog"
@@ -263,7 +255,7 @@
         <el-button type="primary" @click="submitForm">确 定</el-button>
         <el-button @click="cancel">取 消</el-button>
       </div>
-    </el-dialog>
+    </el-dialog> -->
   </div>
 </template>
 
@@ -278,7 +270,7 @@ import { listClass } from "@/api/system/class";
 import { listTheme } from "@/api/benyi/theme";
 
 export default {
-  name: "Monthplan",
+  name: "Thememonthplanapproval",
   components: {
     Editor,
   },
@@ -453,32 +445,38 @@ export default {
       this.multiple = !selection.length;
     },
     /** 修改按钮操作 */
+    // handleUpdate(row) {
+    //   this.reset();
+    //   const id = row.id || this.ids;
+    //   getMonthplan(id).then((response) => {
+    //     this.form = response.data;
+    //     this.open = true;
+    //     this.title = "审批主题整合月计划";
+    //     this.disable = true;
+    //   });
+    // },
     handleUpdate(row) {
-      this.reset();
-      const id = row.id || this.ids;
-      getMonthplan(id).then((response) => {
-        this.form = response.data;
-        this.open = true;
-        this.title = "审批主题整合月计划";
-        this.disable = true;
+      const id = row.id;
+      this.$router.push({
+        path: "/benyi/thememonthplan/approval/" + id,
       });
     },
-    /** 提交按钮 */
-    submitForm: function () {
-      this.$refs["form"].validate((valid) => {
-        if (valid) {
-          if (this.form.id != undefined) {
-            updateMonthplan(this.form).then((response) => {
-              if (response.code === 200) {
-                this.msgSuccess("审批成功");
-                this.open = false;
-                this.getList();
-              }
-            });
-          }
-        }
-      });
-    },
+    // /** 提交按钮 */
+    // submitForm: function () {
+    //   this.$refs["form"].validate((valid) => {
+    //     if (valid) {
+    //       if (this.form.id != undefined) {
+    //         updateMonthplan(this.form).then((response) => {
+    //           if (response.code === 200) {
+    //             this.msgSuccess("审批成功");
+    //             this.open = false;
+    //             this.getList();
+    //           }
+    //         });
+    //       }
+    //     }
+    //   });
+    // },
     /** 预览按钮操作 */
     handleView(row) {
       const id = row.id;

@@ -248,7 +248,7 @@ import { listMonthplan, getMonthplan } from "@/api/benyi/thememonthplan";
 import { listActivityByThemeId } from "@/api/benyi/activity";
 
 export default {
-  name: "Weekplan",
+  name: "Monthplanitem",
   data() {
     return {
       isShow: true,

@@ -52,8 +52,19 @@
             <span>{{ item.theme }}</span>
           </td>
           <td class="align-center">{{ item.daytime }} / 星期{{ item.zhou }}</td>
-          <td>{{ themeactivityFormat(item.activityid) }}</td>
-          <td class="align-center">{{ fzxzFormat(item.fzxz) }}</td>
+          <td v-if="item.activityid != undefined">
+            <!-- {{ themeactivityFormat(item.activityid) }} -->
+            <router-link
+              style="margin: 5px; color: blue; text-decoration: underline"
+              v-for="(index, item) in item.activityid.split(';')"
+              :key="item"
+              :to="url + index"
+              >{{ themeactivityFormat(index) }}</router-link
+            >
+          </td>
+          <td class="align-center">
+            {{ fzxzFormat(item.fzxz) }}
+          </td>
           <td>{{ item.jzzc }}</td>
         </tr>
         <tr>
@@ -88,6 +99,8 @@ export default {
   name: "WeekTable",
   data() {
     return {
+      //url
+      url: "/benyi_course/tremplan/themestudy/",
       tableData: [],
       title: "",
       zc: "",
@@ -202,20 +215,12 @@ export default {
     },
     // 主题--字典状态字典翻译
     themeactivityFormat(activityid) {
-      if (activityid != null) {
-        var ilength = activityid.split(";").length - 1;
-        var names = "";
-        for (var i = 1; i < ilength; i++) {
-          names =
-            names +
-            this.selectMoeDictLabel(
-              this.themeactivityOptions,
-              activityid.split(";")[i]
-            ) +
-            "；";
-        }
-        //this.selectDictLabel(this.scopeOptions, row.xnxq);
-        return names;
+      if (activityid != null && activityid != "") {
+        var name = this.selectMoeDictLabel(
+          this.themeactivityOptions,
+          activityid
+        );
+        return name;
       }
       return "";
     },

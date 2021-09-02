@@ -49,7 +49,7 @@
           </td>
           <td class="align-center">{{ item.zc }}</td>
           <td class="align-center">{{ item.starttime }}至{{ item.endtime }}</td>
-          <td v-if="item.activityid != undefined">
+          <td class="align-center" v-if="item.activityid != undefined">
             <!-- {{ themeactivityFormat(item.activityid) }} -->
             <router-link
               style="margin: 5px; color: blue; text-decoration: underline"
@@ -78,17 +78,41 @@
         class="warning"
       >注：此周计划表不需要发给家长，只需上报教学主管。制定班级一周教学与活动计划表，请使用班级管理模块中“教学与游戏活动周计划表”，以上报教学主管和作为周计划通知发给家长。</p>-->
     </div>
+    <div class="no-print" style="padding-top: 20px">
+      <el-form ref="form" :model="form" :rules="rules" label-width="80px">
+        <el-form-item label="审批意见" prop="status">
+          <el-radio-group v-model="form.status">
+            <el-radio label="0">退回</el-radio>
+            <el-radio label="2">通过</el-radio>
+          </el-radio-group>
+        </el-form-item>
+        <el-form-item label="审批建议" prop="spyj">
+          <el-input
+            v-model="form.spyj"
+            type="textarea"
+            placeholder="请输入审核建议"
+          />
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button type="primary" @click="submitForm">确 定</el-button>
+      </div>
+    </div>
   </div>
 </template>
 
 <script>
 import { listActivityById } from "@/api/benyi/activity";
-import { listMonthplan, getMonthplan } from "@/api/benyi/thememonthplan";
+import {
+  listMonthplan,
+  getMonthplan,
+  updateMonthplan,
+} from "@/api/benyi/thememonthplan";
 import { listMonthplanitem } from "@/api/benyi/thememonthplanitem";
 import { listThemeByIds, listThemeByActivityIds } from "@/api/benyi/theme";
 
 export default {
-  name: "MonthTable",
+  name: "ThememonthplanApproval",
   data() {
     return {
       //url
@@ -159,6 +183,14 @@ export default {
       queryParams: {
         mpid: undefined,
       },
+      // 表单参数
+      form: {},
+      // 表单校验
+      rules: {
+        status: [
+          { required: true, message: "审批意见不能为空", trigger: "blur" },
+        ],
+      },
     };
   },
   created() {
@@ -178,6 +210,8 @@ export default {
         this.spyj = response.data.spyj;
 
         this.themeFormat(response.data.themes);
+
+        this.form = response.data;
 
         this.getList();
       });
@@ -280,6 +314,21 @@ export default {
     prints() {
       //console.log(this.$refs.printMe);
       this.$print(this.$refs.printMe);
+    },
+    /** 提交按钮 */
+    submitForm: function () {
+      this.$refs["form"].validate((valid) => {
+        if (valid) {
+          if (this.form.id != undefined) {
+            console.log(this.form);
+            updateMonthplan(this.form).then((response) => {
+              if (response.code === 200) {
+                this.msgSuccess("审批成功");
+              }
+            });
+          }
+        }
+      });
     },
   },
 };

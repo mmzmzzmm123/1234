@@ -49,6 +49,7 @@
               v-model="queryParams.zc"
               placeholder="周次"
               clearable
+              :min="1"
               size="small"
               class="my-date-picker"
               @keyup.enter.native="handleQuery"

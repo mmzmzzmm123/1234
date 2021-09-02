@@ -34,12 +34,14 @@
               placeholder="星期"
               clearable
               size="small"
+              :min="1"
+              :max="7"
               class="my-date-picker"
               @keyup.enter.native="handleQuery"
             />
           </el-form-item>
         </el-col>
-        <el-col :xs="24" :ms="12" :md="5">
+        <!-- <el-col :xs="24" :ms="12" :md="5">
           <el-form-item label="活动" prop="activityid">
             <el-input
               v-model="queryParams.activityid"
@@ -49,7 +51,7 @@
               @keyup.enter.native="handleQuery"
             />
           </el-form-item>
-        </el-col>
+        </el-col> -->
         <el-col :xs="24" :ms="12" :md="5">
           <el-form-item label="分组性质" prop="fzxz">
             <el-select v-model="queryParams.fzxz" size="small">

@@ -273,7 +273,7 @@ export const constantRoutes = [
       {
         path: "data/:id",
         component: () => import("@/views/benyi/planweek/data"),
-        name: "planweek1",
+        name: "Planweekitem",
         meta: {
           title: "周计划(明细)",
           icon: ""
@@ -353,7 +353,7 @@ export const constantRoutes = [
       {
         path: "data/:id",
         component: () => import("@/views/benyi/themetermplan/data"),
-        name: "Themetermplan1",
+        name: "Termplanitem",
         meta: {
           title: "主题整合学期计划(明细)",
           icon: ""
@@ -369,7 +369,7 @@ export const constantRoutes = [
       {
         path: "data/:id",
         component: () => import("@/views/benyi/thememonthplan/data"),
-        name: "Thememonthplan1",
+        name: "Monthplanitem",
         meta: {
           title: "主题整合月计划(明细)",
           icon: ""
@@ -385,7 +385,7 @@ export const constantRoutes = [
       {
         path: "data/:id",
         component: () => import("@/views/benyi/themeweekplan/data"),
-        name: "Themeweekplan1",
+        name: "Weekplanitem",
         meta: {
           title: "主题整合周计划(明细)",
           icon: ""
@@ -401,7 +401,7 @@ export const constantRoutes = [
       {
         path: "table/:id",
         component: () => import("@/views/benyi/themeweekplan/table"),
-        name: "Themeweekplan2",
+        name: "WeekTable",
         meta: {
           title: "主题整合周计划(表格)",
           icon: ""
@@ -417,7 +417,7 @@ export const constantRoutes = [
       {
         path: "table/:id",
         component: () => import("@/views/benyi/planweek/table"),
-        name: "planweek2",
+        name: "PlayTable",
         meta: {
           title: "周计划(表格)",
           icon: ""
@@ -433,7 +433,7 @@ export const constantRoutes = [
       {
         path: "table/:id",
         component: () => import("@/views/benyi/thememonthplan/table"),
-        name: "Thememonthplan2",
+        name: "MonthTable",
         meta: {
           title: "主题整合月计划(表格)",
           icon: ""
@@ -449,7 +449,7 @@ export const constantRoutes = [
       {
         path: "table/:id",
         component: () => import("@/views/benyi/themetermplan/table"),
-        name: "Themetermplan2",
+        name: "TermTable",
         meta: {
           title: "主题整合学期计划(表格)",
           icon: ""
@@ -468,6 +468,22 @@ export const constantRoutes = [
         name: "ThemetermplanApproval",
         meta: {
           title: "主题整合学期计划审批",
+          icon: ""
+        }
+      }
+    ]
+  },
+  {
+    path: "/benyi/thememonthplan",
+    component: Layout,
+    hidden: true,
+    children: [
+      {
+        path: "approval/:id",
+        component: () => import("@/views/benyi/thememonthplanapproval/approval"),
+        name: "ThememonthplanApproval",
+        meta: {
+          title: "主题整合月计划审批",
           icon: ""
         }
       }

@@ -271,7 +271,7 @@ import {
 import { listClass } from "@/api/system/class";
 
 export default {
-  name: "Weekplan",
+  name: "Themeweekplanapproval",
   data() {
     return {
       disable: false,
