@@ -279,6 +279,8 @@ export default {
   name: "Termplan",
   data() {
     return {
+      smonth: null,
+      emonth: null,
       // 遮罩层
       loading: true,
       // 选中数组
@@ -444,6 +446,8 @@ export default {
         time.push(response.data.startmonth);
         time.push(response.data.endmonth);
         this.form.startmonth = time;
+        this.smonth = time[0];
+        this.emonth = time[1];
       });
     },
     /** 提交按钮 */
@@ -451,16 +455,41 @@ export default {
       this.$refs["form"].validate((valid) => {
         if (valid) {
           const time = this.form.startmonth;
+          let timeArr = this.form.startmonth;
           this.form.startmonth = time[0];
           this.form.endmonth = time[1];
           if (this.form.id != undefined) {
-            updateTermplan(this.form).then((response) => {
-              if (response.code === 200) {
-                this.msgSuccess("修改成功");
-                this.open = false;
-                this.getList();
-              }
-            });
+            if (
+              this.smonth != this.form.startmonth ||
+              this.emonth != this.form.endmonth
+            ) {
+              this.$confirm("如果修改月份,设置的月份主题会被清空?", "警告", {
+                confirmButtonText: "确定",
+                cancelButtonText: "取消",
+                type: "warning",
+              })
+                .then(() => {
+                  //console.log(this.form.startmonth);
+                  updateTermplan(this.form).then((response) => {
+                    if (response.code === 200) {
+                      this.msgSuccess("修改成功");
+                      this.open = false;
+                      this.getList();
+                    }
+                  });
+                })
+                .catch((_) => {
+                  this.form.startmonth = timeArr;
+                });
+            } else {
+              updateTermplan(this.form).then((response) => {
+                if (response.code === 200) {
+                  this.msgSuccess("修改成功");
+                  this.open = false;
+                  this.getList();
+                }
+              });
+            }
           } else {
             addTermplan(this.form).then((response) => {
               if (response.code === 200) {
