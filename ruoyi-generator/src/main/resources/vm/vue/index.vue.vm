@@ -144,8 +144,15 @@
       <el-table-column label="${comment}" align="center" prop="${javaField}" />
 #end
 #end
-      <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
+      <el-table-column label="操作" align="center" width="180" class-name="small-padding fixed-width">
         <template slot-scope="scope">
+          <el-button
+            size="mini"
+            type="text"
+            icon="el-icon-view"
+            class="text-lvse"
+            @click="handleView(scope.row)"
+            >查看</el-button>
           <el-button
             size="mini"
             type="text"
@@ -163,7 +170,7 @@
         </template>
       </el-table-column>
     </el-table>
-    
+
     <pagination
       v-show="total>0"
       :total="total"
@@ -309,6 +316,47 @@
         <el-button @click="cancel">取 消</el-button>
       </div>
     </el-dialog>
+      <!-- 查看${functionName}对话框 -->
+      <el-dialog :title="viewDetails.title" :visible.sync="viewDetails.open" width="1000px" append-to-body :close-on-click-modal="false">
+          <div style="max-height: 600px; overflow: auto; padding: 5px;">
+              <table class="gridtable">
+                  <tr>
+                      <td colspan="2" class="table-first-td" style="text-align: center">
+                          基本信息
+                      </td>
+                  </tr>
+                  <tbody>
+                      #foreach($column in $columns)
+                          #set($field=$column.javaField)
+                          #if($column.insert && !$column.pk)
+                              #if(($column.usableColumn) || (!$column.superColumn))
+                                  #set($parentheseIndex=$column.columnComment.indexOf("（"))
+                                  #if($parentheseIndex != -1)
+                                      #set($comment=$column.columnComment.substring(0, $parentheseIndex))
+                                  #else
+                                      #set($comment=$column.columnComment)
+                                  #end
+                                  #if($column.javaField != 'deptId')
+                                  <tr>
+                                      <td class="td-width">${comment}:</td>
+                                      <td>{{form.${field}}}</td>
+                                  </tr>
+                                  #end
+                              #end
+                          #end
+                      #end
+                  <tr>
+                      <td class="td-width">录入系统时间:</td>
+                      <td>{{form.createTime}}</td>
+                  </tr>
+                  <tr>
+                      <td class="td-width">备注:</td>
+                      <td>{{form.remark}}</td>
+                  </tr>
+                  </tbody>
+              </table>
+          </div>
+      </el-dialog>
   </div>
 </template>
 
@@ -337,6 +385,11 @@ export default {
       showSearch: true,
       // 总条数
       total: 0,
+      // 查看详情
+      viewDetails: {
+        open: false,
+        title: "",
+      },
       // ${functionName}表格数据
       ${businessName}List: [],
 #if($table.sub)
@@ -502,6 +555,16 @@ export default {
         this.title = "修改${functionName}";
       });
     },
+    /** 查看按钮操作 */
+    handleView(row) {
+      this.reset();
+      const ${pkColumn.javaField} = row.${pkColumn.javaField} || this.ids
+      get${BusinessName}(${pkColumn.javaField}).then(response => {
+      this.form = response.data;
+         this.viewDetails.open = true;
+         this.viewDetails.title = "查看${functionName}";
+      });
+      },
     /** 提交按钮 */
     submitForm() {
       this.#[[$]]#refs["form"].validate(valid => {
