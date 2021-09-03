@@ -67,19 +67,27 @@
     </div>
 
     <el-table
-    border
+      border
       v-loading="loading"
       :data="mathtermplanitemList"
       @selection-change="handleSelectionChange"
     >
       <el-table-column type="selection" width="55" align="center" />
       <el-table-column
-      fixed
+        fixed
         label="游戏数学内容"
         align="center"
         prop="mathconent"
-        :formatter="mathFaFormat"
-      />
+      >
+        <template slot-scope="scope" v-if="scope.row.mathconent != undefined">
+          <p
+            v-for="(item, index) in scope.row.mathconent.split(';')"
+            :key="index"
+          >
+            {{ mathFaFormat(item) }}
+          </p>
+        </template></el-table-column
+      >
       <el-table-column
         label="所属计划"
         align="center"
@@ -118,7 +126,12 @@
     />
 
     <!-- 添加或修改游戏数学学期计划明细对话框 -->
-    <el-dialog :title="title" :visible.sync="open" class="v-dialog" append-to-body>
+    <el-dialog
+      :title="title"
+      :visible.sync="open"
+      class="v-dialog"
+      append-to-body
+    >
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
         <el-form-item label="所属计划" prop="tpid">
           <el-select v-model="form.tpid" size="small" :disabled="true">
@@ -340,24 +353,33 @@ export default {
       });
       return actions.join("");
     },
+    // // 游戏数学方案--字典状态字典翻译
+    // mathFaFormat(row, column) {
+    //   if (row.mathconent != null) {
+    //     var ilength = row.mathconent.split(";").length - 1;
+    //     var names = "";
+    //     for (var i = 1; i < ilength; i++) {
+    //       names =
+    //         names +
+    //         this.selectMoeDictLabel(
+    //           this.mathFaOptions,
+    //           row.mathconent.split(";")[i]
+    //         ) +
+    //         "；";
+    //     }
+    //     //this.selectDictLabel(this.scopeOptions, row.xnxq);
+    //     return names;
+    //   }
+    //   return "";
+    // },
     // 游戏数学方案--字典状态字典翻译
-    mathFaFormat(row, column) {
-      if (row.mathconent != null) {
-        var ilength = row.mathconent.split(";").length - 1;
-        var names = "";
-        for (var i = 1; i < ilength; i++) {
-          names =
-            names +
-            this.selectMoeDictLabel(
-              this.mathFaOptions,
-              row.mathconent.split(";")[i]
-            ) +
-            "；";
-        }
-        //this.selectDictLabel(this.scopeOptions, row.xnxq);
-        return names;
+    mathFaFormat(id) {
+      var name = "";
+      if (id != null && id != "") {
+        name = this.selectMoeDictLabel(this.mathFaOptions, id);
       }
-      return "";
+      //this.selectDictLabel(this.scopeOptions, row.xnxq);
+      return name;
     },
     // 取消按钮
     cancel() {

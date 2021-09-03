@@ -45,7 +45,7 @@
             :rowspan="bodyData.monthplanitemList.length"
             class="align-center"
           >
-            <span>{{ monththeme }}</span>
+            <span v-html="monththemes"></span>
           </td>
           <td class="align-center">{{ item.zc }}</td>
           <td class="align-center">{{ item.starttime }}至{{ item.endtime }}</td>
@@ -99,6 +99,7 @@ export default {
       classname: "",
       tbr: "",
       monththeme: "",
+      monththemes: "",
       wxkc: "",
       bz: "",
       spyj: "",
@@ -185,6 +186,7 @@ export default {
     //主题翻译
     async themeFormat(themeids) {
       var themename = "";
+      var themenames = "";
       var ids = themeids.split(";");
       var array = [];
       //console.log(ids);
@@ -199,10 +201,12 @@ export default {
         await listThemeByIds(array).then((response) => {
           response.rows.forEach(function (value1, key1, arr1) {
             themename = themename + value1.name + ";";
+            themenames = themenames + "<p>" + value1.name + "</p>";
           });
         });
         //(themename);
         this.monththeme = themename;
+        this.monththemes = themenames;
       }
     },
     /** 查询主题整合周计划明细列表 */

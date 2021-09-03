@@ -84,13 +84,16 @@
     >
       <el-table-column type="selection" width="55" align="center" />
       <!-- <el-table-column label="编号" align="center" prop="id" /> -->
-      <el-table-column
-        fixed
-        label="活动"
-        align="center"
-        prop="activityid"
-        :formatter="themeactivityFormat"
-      />
+      <el-table-column fixed label="活动" align="center" prop="activityid">
+        <template slot-scope="scope" v-if="scope.row.activityid != undefined">
+          <p
+            v-for="(item, index) in scope.row.activityid.split(';')"
+            :key="index"
+          >
+            {{ themeactivityFormat(item) }}
+          </p>
+        </template></el-table-column
+      >
       <el-table-column
         label="所属月计划"
         align="center"
@@ -313,23 +316,31 @@ export default {
   },
   methods: {
     // 主题--字典状态字典翻译
-    themeactivityFormat(row, column) {
-      if (row.activityid != null) {
-        var ilength = row.activityid.split(";").length - 1;
-        var names = "";
-        for (var i = 1; i < ilength; i++) {
-          names =
-            names +
-            this.selectMoeDictLabel(
-              this.themeactivityOptions,
-              row.activityid.split(";")[i]
-            ) +
-            "；";
-        }
-        //this.selectDictLabel(this.scopeOptions, row.xnxq);
-        return names;
+    // themeactivityFormat(row, column) {
+    //   if (row.activityid != null) {
+    //     var ilength = row.activityid.split(";").length - 1;
+    //     var names = "";
+    //     for (var i = 1; i < ilength; i++) {
+    //       names =
+    //         names +
+    //         this.selectMoeDictLabel(
+    //           this.themeactivityOptions,
+    //           row.activityid.split(";")[i]
+    //         ) +
+    //         "；";
+    //     }
+    //     //this.selectDictLabel(this.scopeOptions, row.xnxq);
+    //     return names;
+    //   }
+    //   return "";
+    // },
+    themeactivityFormat(activityid) {
+      var name = "";
+      if (activityid != null && activityid != "") {
+        name = this.selectMoeDictLabel(this.themeactivityOptions, activityid);
       }
-      return "";
+      //this.selectDictLabel(this.scopeOptions, row.xnxq);
+      return name;
     },
     //获取选中的checkbox
     getThemeActivityIdValue() {
@@ -500,15 +511,11 @@ export default {
     /** 删除按钮操作 */
     handleDelete(row) {
       const ids = row.id || this.ids;
-      this.$confirm(
-        '是否确认删除主题整合周计划明细的数据项?',
-        "警告",
-        {
-          confirmButtonText: "确定",
-          cancelButtonText: "取消",
-          type: "warning",
-        }
-      )
+      this.$confirm("是否确认删除主题整合周计划明细的数据项?", "警告", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning",
+      })
         .then(function () {
           return delMonthplanitem(ids);
         })

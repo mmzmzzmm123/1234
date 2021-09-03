@@ -163,12 +163,13 @@
           <span>{{ parseTime(scope.row.month, "{y}-{m}") }}</span>
         </template>
       </el-table-column>
-      <el-table-column
-        label="本月主题"
-        align="center"
-        prop="themes"
-        :formatter="themeFormat"
-      />
+      <el-table-column label="本月主题" align="center" prop="themes">
+        <template slot-scope="scope" v-if="scope.row.themes != undefined">
+          <p v-for="(item, index) in scope.row.themes.split(';')" :key="index">
+            {{ themeFormat(item) }}
+          </p>
+        </template></el-table-column
+      >
       <el-table-column prop="wxkc" label="微型课程">
         <template slot-scope="scope">
           <div v-html="scope.row.wxkc"></div>
@@ -409,23 +410,31 @@ export default {
       return this.selectDictLabel(this.statusOptions, row.status);
     },
     // 主题--字典状态字典翻译
-    themeFormat(row, column) {
-      if (row.themes != null) {
-        var ilength = row.themes.split(";").length - 1;
-        var names = "";
-        for (var i = 1; i < ilength; i++) {
-          names =
-            names +
-            this.selectMoeDictLabel(
-              this.themeOptions,
-              row.themes.split(";")[i]
-            ) +
-            " ";
-        }
-        //this.selectDictLabel(this.scopeOptions, row.xnxq);
-        return names;
+    // themeFormat(row, column) {
+    //   if (row.themes != null) {
+    //     var ilength = row.themes.split(";").length - 1;
+    //     var names = "";
+    //     for (var i = 1; i < ilength; i++) {
+    //       names =
+    //         names +
+    //         this.selectMoeDictLabel(
+    //           this.themeOptions,
+    //           row.themes.split(";")[i]
+    //         ) +
+    //         " ";
+    //     }
+    //     //this.selectDictLabel(this.scopeOptions, row.xnxq);
+    //     return names;
+    //   }
+    //   return "";
+    // },
+    themeFormat(themeid) {
+      var name = "";
+      if (themeid != null && themeid != "") {
+        name = this.selectMoeDictLabel(this.themeOptions, themeid);
       }
-      return "";
+      //this.selectDictLabel(this.scopeOptions, row.xnxq);
+      return name;
     },
     //主题
     getThemeList() {

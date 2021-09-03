@@ -49,7 +49,9 @@
             :rowspan="bodyData.weekplanitemList.length"
             class="align-center"
           >
-            <span>{{ item.theme }}</span>
+            <p v-for="(item, index) in item.theme.split(';')" :key="index">
+              {{ item }}
+            </p>
           </td>
           <td class="align-center">{{ item.daytime }} / 星期{{ item.zhou }}</td>
           <td v-if="item.activityid != undefined">

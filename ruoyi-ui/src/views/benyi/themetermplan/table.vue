@@ -39,7 +39,7 @@
           <td class="align-center">
             <span>{{ item.month }}</span>
           </td>
-          <td class="align-center">
+          <td class="align-center" v-if="item.themeconent != undefined">
             <router-link
               style="margin: 10px; color: blue"
               v-for="(index, item) in item.themeconent.split(';')"
@@ -48,6 +48,7 @@
               >{{ themeFormat(index) }}</router-link
             >
           </td>
+          <td v-else></td>
           <td>{{ item.remark }}</td>
         </tr>
         <tr>

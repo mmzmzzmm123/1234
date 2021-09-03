@@ -74,13 +74,17 @@
     >
       <el-table-column type="selection" width="55" align="center" />
       <!-- <el-table-column label="编号" align="center" prop="id" /> -->
-      <el-table-column
-        fixed
-        label="主题内容"
-        align="center"
-        prop="themeconent"
-        :formatter="themeFormat"
-      />
+      <el-table-column fixed label="主题内容" align="center" prop="themeconent"
+        ><template slot-scope="scope" v-if="scope.row.themeconent != undefined">
+          <p
+            v-for="(item, index) in scope.row.themeconent.split(';')"
+            :key="index"
+          >
+            {{ themeFormat(item) }}
+          </p>
+        </template></el-table-column
+      >
+
       <el-table-column
         label="学期计划"
         align="center"
@@ -264,23 +268,30 @@ export default {
   },
   methods: {
     // 主题--字典状态字典翻译
-    themeFormat(row, column) {
-      if (row.themeconent != null) {
-        var ilength = row.themeconent.split(";").length - 1;
-        var names = "";
-        for (var i = 1; i < ilength; i++) {
-          names =
-            names +
-            this.selectMoeDictLabel(
-              this.themeOptions,
-              row.themeconent.split(";")[i]
-            ) +
-            " ";
-        }
-        //this.selectDictLabel(this.scopeOptions, row.xnxq);
-        return names;
+    // themeFormat(row, column) {
+    //   if (row.themeconent != null) {
+    //     var ilength = row.themeconent.split(";").length - 1;
+    //     var names = "";
+    //     for (var i = 1; i < ilength; i++) {
+    //       names =
+    //         names +
+    //         this.selectMoeDictLabel(
+    //           this.themeOptions,
+    //           row.themeconent.split(";")[i]
+    //         ) +
+    //         " ";
+    //     }
+    //     //this.selectDictLabel(this.scopeOptions, row.xnxq);
+    //     return names;
+    //   }
+    //   return "";
+    // },
+    themeFormat(themeid) {
+      var name = "";
+      if (themeid != null && themeid != "") {
+        name = this.selectMoeDictLabel(this.themeOptions, themeid);
       }
-      return "";
+      return name;
     },
     //获取选中的checkbox
     getThemeconentValue() {
@@ -440,15 +451,11 @@ export default {
     /** 删除按钮操作 */
     handleDelete(row) {
       const ids = row.id || this.ids;
-      this.$confirm(
-        '是否确认删除主题整合学期计划明细的数据项?',
-        "警告",
-        {
-          confirmButtonText: "确定",
-          cancelButtonText: "取消",
-          type: "warning",
-        }
-      )
+      this.$confirm("是否确认删除主题整合学期计划明细的数据项?", "警告", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning",
+      })
         .then(function () {
           return delTermplanitem(ids);
         })
