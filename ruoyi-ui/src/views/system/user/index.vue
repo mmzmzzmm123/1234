@@ -290,7 +290,7 @@
             </el-form-item>
           </el-col>
           <el-col :xs="24" :sm="24" :md="12">
-            <el-form-item label="用户性别">
+            <el-form-item label="用户性别" prop="sex">
               <el-select v-model="form.sex" placeholder="请选择">
                 <el-option
                   v-for="dict in sexOptions"
@@ -302,7 +302,7 @@
             </el-form-item>
           </el-col>
           <el-col :xs="24" :sm="24" :md="12">
-            <el-form-item label="状态">
+            <el-form-item label="状态" prop="status">
               <el-select v-model="form.status" placeholder="请选择">
                 <el-option
                   v-for="dict in statusOptions"
@@ -322,7 +322,7 @@
             </el-form-item>
           </el-col>
           <el-col :xs="24" :sm="24" :md="12">
-            <el-form-item label="岗位">
+            <el-form-item label="岗位" prop="postIds">
               <el-select v-model="form.postIds" multiple placeholder="请选择">
                 <el-option
                   v-for="item in postOptions"
@@ -335,7 +335,7 @@
             </el-form-item>
           </el-col>
           <el-col :xs="24" :sm="24" :md="12">
-            <el-form-item label="角色">
+            <el-form-item label="角色" prop="roleIds">
               <el-select v-model="form.roleIds" multiple placeholder="请选择">
                 <el-option
                   v-for="item in roleOptions"
@@ -361,7 +361,7 @@
             </el-form-item>
           </el-col>
           <el-col :xs="24" :sm="24" :md="24">
-            <el-form-item label="备注">
+            <el-form-item label="备注" prop="remark">
               <el-input
                 v-model="form.remark"
                 type="textarea"
@@ -521,6 +521,9 @@ export default {
         ],
         password: [
           { required: true, message: "用户密码不能为空", trigger: "blur" },
+        ],
+        roleIds: [
+          { required: true, message: "角色不能为空", trigger: "blur" },
         ],
       },
     };
