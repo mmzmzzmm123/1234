@@ -87,4 +87,15 @@ public class ByThemeWeekplanitemServiceImpl implements IByThemeWeekplanitemServi
     public int deleteByThemeWeekplanitemById(Long id) {
         return byThemeWeekplanitemMapper.deleteByThemeWeekplanitemById(id);
     }
+
+    /**
+     * 删除主题整合周计划明细信息
+     *
+     * @param pid 主题周计划主键
+     * @return 结果
+     */
+    @Override
+    public int deleteByThemeWeekplanitemByPId(String pid) {
+        return byThemeWeekplanitemMapper.deleteByThemeWeekplanitemByPId(pid);
+    }
 }
