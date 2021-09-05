@@ -52,7 +52,7 @@ public class ByThemeMonthplanitemController extends BaseController {
      * 导出主题整合周计划列表
      */
     @PreAuthorize("@ss.hasPermi('benyi:thememonthplan:export')")
-    @Log(title = "主题整合周计划", businessType = BusinessType.EXPORT)
+    @Log(title = "主题整合月计划", businessType = BusinessType.EXPORT)
     @GetMapping("/export")
     public AjaxResult export(ByThemeMonthplanitem byThemeMonthplanitem) {
         List<ByThemeMonthplanitem> list = byThemeWeekplanService.selectByThemeMonthplanitemList(byThemeMonthplanitem);
@@ -73,7 +73,7 @@ public class ByThemeMonthplanitemController extends BaseController {
      * 新增主题整合周计划
      */
     @PreAuthorize("@ss.hasPermi('benyi:thememonthplan:add')")
-    @Log(title = "主题整合周计划", businessType = BusinessType.INSERT)
+    @Log(title = "主题整合月计划", businessType = BusinessType.INSERT)
     @PostMapping
     public AjaxResult add(@RequestBody ByThemeMonthplanitem byThemeMonthplanitem) {
         String uuid = schoolCommon.getUuid();
@@ -86,7 +86,7 @@ public class ByThemeMonthplanitemController extends BaseController {
      * 修改主题整合周计划
      */
     @PreAuthorize("@ss.hasPermi('benyi:thememonthplan:edit')")
-    @Log(title = "主题整合周计划", businessType = BusinessType.UPDATE)
+    @Log(title = "主题整合月计划", businessType = BusinessType.UPDATE)
     @PutMapping
     public AjaxResult edit(@RequestBody ByThemeMonthplanitem byThemeMonthplanitem) {
         return toAjax(byThemeWeekplanService.updateByThemeMonthplanitem(byThemeMonthplanitem));
@@ -96,7 +96,7 @@ public class ByThemeMonthplanitemController extends BaseController {
      * 删除主题整合周计划
      */
     @PreAuthorize("@ss.hasPermi('benyi:thememonthplan:remove')")
-    @Log(title = "主题整合周计划", businessType = BusinessType.DELETE)
+    @Log(title = "主题整合月计划", businessType = BusinessType.DELETE)
     @DeleteMapping("/{ids}")
     public AjaxResult remove(@PathVariable String[] ids) {
         return toAjax(byThemeWeekplanService.deleteByThemeMonthplanitemByIds(ids));
