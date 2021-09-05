@@ -73,8 +73,6 @@ public class ByThemeMonthplanController extends BaseController {
             if (schoolCommon.isSchool() && !schoolCommon.isStringEmpty(classId)) {
                 byThemeMonthplan.setClassid(classId);
             }
-        }else{
-            byThemeMonthplan.setClassid(strClassId);
         }
         startPage();
         list = byThemeMonthplanService.selectByThemeMonthplanList(byThemeMonthplan);

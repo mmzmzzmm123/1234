@@ -45,7 +45,7 @@
         </el-col>
         <el-col :xs="24" :ms="12" :md="5">
           <el-form-item label="主题内容" prop="themes">
-            <el-select v-model="queryParams.themes" size="small">
+            <el-select v-model="queryParams.themes" filterable size="small">
               <el-option
                 v-for="item in themeOptions"
                 :key="item.id"
