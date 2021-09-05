@@ -43,20 +43,20 @@
           <td>健康</td>
           <td class="align-left" v-html="jk" colspan="5"></td>
         </tr>
-        <tr class="align-center">
-          <td>语言</td>
+        <tr>
+          <td class="align-center">语言</td>
           <td lass="align-left" v-html="yy" colspan="5"></td>
         </tr>
-        <tr class="align-center">
-          <td>社会</td>
+        <tr>
+          <td class="align-center">社会</td>
           <td lass="align-left" v-html="sh" colspan="5"></td>
         </tr>
-        <tr class="align-center">
-          <td>科学</td>
+        <tr>
+          <td class="align-center">科学</td>
           <td lass="align-left" v-html="kx" colspan="5"></td>
         </tr>
-        <tr class="align-center">
-          <td>艺术</td>
+        <tr>
+          <td class="align-center">艺术</td>
           <td lass="align-left" v-html="ys" colspan="5"></td>
         </tr>
 
