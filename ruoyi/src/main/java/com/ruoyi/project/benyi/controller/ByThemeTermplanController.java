@@ -151,7 +151,7 @@ public class ByThemeTermplanController extends BaseController {
                 }
             }
         } else {
-            return AjaxResult.error("当前用户非幼儿园教师，无法创建计划");
+            return AjaxResult.error("当前用户非幼儿园班级教师，无法创建计划");
         }
 
     }

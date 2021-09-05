@@ -203,7 +203,7 @@ public class ByThemeWeekplanController extends BaseController {
                 return toAjax(byThemeWeekplanService.insertByThemeWeekplan(byThemeWeekplan));
             }
         } else {
-            return AjaxResult.error("当前用户非幼儿园教师，无法创建周计划");
+            return AjaxResult.error("当前用户非幼儿园班级教师，无法创建周计划");
         }
     }
 
