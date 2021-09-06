@@ -173,6 +173,17 @@ public class ByThemeMonthplanController extends BaseController {
                 byThemeMonthplan.setCreateuserid(SecurityUtils.getLoginUser().getUser().getUserId());
                 SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM");
                 byThemeMonthplan.setName(byClassService.selectByClassById(classId).getBjmc() + "-主题整合月计划" + "(" + sdf.format(byThemeMonthplan.getMonth()) + ")");
+
+                // 默认创建4个周内容项，如果当前月份5个周 那么由用户自己删 或 增
+                ByThemeMonthplanitem byThemeMonthplanitem=null;
+                for(int i=1;i<5;i++){
+                    byThemeMonthplanitem=new ByThemeMonthplanitem();
+                    byThemeMonthplanitem.setId(schoolCommon.getUuid());
+                    byThemeMonthplanitem.setMpid(uuid);
+                    byThemeMonthplanitem.setZc(Long.valueOf(i));
+                    byThemeonthplanitemService.insertByThemeMonthplanitem(byThemeMonthplanitem);
+                }
+
                 return toAjax(byThemeMonthplanService.insertByThemeMonthplan(byThemeMonthplan));
             }
         } else {

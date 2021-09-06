@@ -36,7 +36,17 @@
               size="mini"
               icon="el-icon-printer"
               @click="prints"
+              v-show="enable"
               >打印</el-button
+            >
+            <el-button
+              type="primary"
+              plain
+              size="mini"
+              icon="el-icon-document-copy"
+              @click="copy(note)"
+              v-show="enable"
+              >复制</el-button
             >
             <div class="pad-left" v-html="note" ref="printMe"></div>
           </div>
@@ -48,11 +58,14 @@
 
 <script>
 import { treeselect, getMicrocourse } from "@/api/benyi/microcourse";
+// 点击复制
+import Clipboard from "clipboard";
 
 export default {
   name: "Microcoursestudy",
   data() {
     return {
+      enable: false,
       // 主题整合名称
       name: undefined,
       // 主题整合id
@@ -107,6 +120,7 @@ export default {
     },
     getMicrocourseDetails() {
       getMicrocourse(this.id).then((response) => {
+        this.enable = true;
         this.title1 = response.data.title;
         this.note = response.data.contents;
       });
@@ -115,6 +129,32 @@ export default {
     prints() {
       //console.log(this.$refs.printMe);
       this.$print(this.$refs.printMe);
+    },
+    copy(data) {
+      let url = this.filter(data);
+      let oInput = document.createElement("input");
+      oInput.value = url;
+      document.body.appendChild(oInput);
+      oInput.select(); // 选择对象;
+      //console.log(oInput.value);
+      document.execCommand("Copy"); // 执行浏览器复制命令
+      this.$message({
+        message: "复制成功",
+        type: "success",
+      });
+      oInput.remove();
+    },
+    //过滤html标签
+    filter: function (html) {
+      return html
+        .replace(/<(?:.|\n)*?>/gm, "")
+        .replace(/(&rdquo;)/g, '"')
+        .replace(/&ldquo;/g, '"')
+        .replace(/&mdash;/g, "-")
+        .replace(/&nbsp;/g, "")
+        .replace(/&gt;/g, ">")
+        .replace(/&lt;/g, "<")
+        .replace(/<[\w\s"':=\/]*/, "");
     },
   },
 };
@@ -160,20 +200,20 @@ export default {
   line-height: 40px;
 }
 // 禁止复制
-div {
-  -webkit-touch-callout: none;
-  -webkit-user-select: none;
-  -khtml-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  user-select: none;
-}
+// div {
+//   -webkit-touch-callout: none;
+//   -webkit-user-select: none;
+//   -khtml-user-select: none;
+//   -moz-user-select: none;
+//   -ms-user-select: none;
+//   user-select: none;
+// }
 .el-tree {
   min-width: 100%;
   display: inline-block;
 }
 .tree {
-  overflow:auto;
+  overflow: auto;
   max-height: 600px;
 }
 </style>
