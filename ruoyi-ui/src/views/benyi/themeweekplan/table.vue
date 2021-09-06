@@ -58,9 +58,9 @@
             <!-- {{ themeactivityFormat(item.activityid) }} -->
             <router-link
               style="margin: 5px; color: blue; text-decoration: underline"
-              v-for="(index, item) in item.activityid.split(';')"
-              :key="item"
-              :to="url + index"
+              v-for="(index, item1) in item.activityid.split(';')"
+              :key="item1"
+              :to="url + index + '/' + item.id"
               >{{ themeactivityFormat(index) }}</router-link
             >
           </td>
@@ -102,7 +102,7 @@ export default {
   data() {
     return {
       //url
-      url: "/benyi_course/tremplan/themestudy/",
+      url: "/benyi_course/weekplan/themestudy/",
       tableData: [],
       title: "",
       zc: "",
@@ -287,6 +287,7 @@ export default {
     async getList() {
       //console.log(this.queryParams.wpid);
       await listWeekplanitem(this.queryParams).then((response) => {
+        //console.log(response.rows);
         this.bodyData.weekplanitemList = response.rows;
 
         //获取所有的活动id

@@ -314,6 +314,22 @@ export const constantRoutes = [
     ]
   },
   {
+    path: "/benyi_course/weekplan",
+    component: Layout,
+    hidden: true,
+    children: [
+      {
+        path: "themestudy/:id(\\d+)/:wid(\\d+)",
+        component: () => import("@/views/benyi/themestudy_weekplan"),
+        name: "Theme3",
+        meta: {
+          title: "主题整合周计划详情",
+          icon: ""
+        }
+      }
+    ]
+  },
+  {
     path: "/benyi_course/mathtermplan",
     component: Layout,
     hidden: true,
@@ -480,7 +496,8 @@ export const constantRoutes = [
     children: [
       {
         path: "approval/:id",
-        component: () => import("@/views/benyi/thememonthplanapproval/approval"),
+        component: () =>
+          import("@/views/benyi/thememonthplanapproval/approval"),
         name: "ThememonthplanApproval",
         meta: {
           title: "主题整合月计划审批",

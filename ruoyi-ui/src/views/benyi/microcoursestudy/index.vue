@@ -58,8 +58,6 @@
 
 <script>
 import { treeselect, getMicrocourse } from "@/api/benyi/microcourse";
-// 点击复制
-import Clipboard from "clipboard";
 
 export default {
   name: "Microcoursestudy",
