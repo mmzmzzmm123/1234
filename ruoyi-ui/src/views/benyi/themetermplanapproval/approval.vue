@@ -270,6 +270,7 @@ export default {
   //   color: #666;
   // }
 }
+
 @media print {
   .table-container {
     padding: 30px 0;
@@ -311,9 +312,6 @@ export default {
         background: #f8f8f8;
       }
     }
-  }
-  .print {
-    opacity: 0;
   }
 }
 /*去除页眉页脚*/
