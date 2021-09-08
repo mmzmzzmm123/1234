@@ -264,15 +264,53 @@ export default {
       background: #f8f8f8;
     }
   }
-  .warning {
-    padding-top: 20px;
-    font-size: 12px;
-    color: #666;
-  }
+  // .warning {
+  //   padding-top: 20px;
+  //   font-size: 12px;
+  //   color: #666;
+  // }
 }
 @media print {
   .table-container {
     padding: 30px 0;
+    .title {
+      margin: 0;
+      font-size: 18px;
+      text-align: center;
+      padding: 15px 0;
+    }
+    .title2 {
+      padding: 0;
+    }
+    .align-center {
+      text-align: center;
+    }
+    .table {
+      font-size: 14px;
+      .print {
+        display: flex;
+        justify-content: flex-end;
+        padding-bottom: 10px;
+      }
+      p {
+        margin: 0;
+      }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+      }
+      table td {
+        border: #ccc solid 1px;
+        line-height: 24px;
+        padding: 8px 5px;
+      }
+      .table-title {
+        font-size: 16px;
+      }
+      .table-bg {
+        background: #f8f8f8;
+      }
+    }
   }
   .print {
     opacity: 0;
