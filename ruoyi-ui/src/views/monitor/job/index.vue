@@ -352,7 +352,7 @@ export default {
           { required: true, message: "调用目标字符串不能为空", trigger: "blur" }
         ],
         cronExpression: [
-          { required: true, message: "cron执行表达式不能为空", trigger: "blur" }
+          { required: true, message: "cron执行表达式不能为空", trigger: "blur, change" }
         ]
       }
     };

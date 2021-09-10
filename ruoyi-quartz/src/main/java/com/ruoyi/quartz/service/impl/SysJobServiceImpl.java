@@ -194,7 +194,6 @@ public class SysJobServiceImpl implements ISysJobService
     @Transactional(rollbackFor = Exception.class)
     public int insertJob(SysJob job) throws SchedulerException, TaskException
     {
-        job.setStatus(ScheduleConstants.Status.PAUSE.getValue());
         int rows = jobMapper.insertJob(job);
         if (rows > 0)
         {
