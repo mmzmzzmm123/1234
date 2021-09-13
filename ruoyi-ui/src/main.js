@@ -30,6 +30,7 @@ import ImageUpload from "@/components/ImageUpload"
 import DictTag from '@/components/DictTag'
 // 头部标签组件
 import VueMeta from 'vue-meta'
+import Dict from '@/components/Dict'
 
 // 全局方法挂载
 Vue.prototype.getDicts = getDicts
@@ -64,6 +65,7 @@ Vue.component('ImageUpload', ImageUpload)
 
 Vue.use(directive)
 Vue.use(VueMeta)
+Dict.install()
 
 /**
  * If you don't want to use mock-server

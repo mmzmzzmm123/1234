@@ -1,22 +1,22 @@
 <template>
   <div>
     <template v-for="(item, index) in options">
-      <template v-if="values.includes(item.dictValue)">
+      <template v-if="values.includes(item.value)">
         <span
           v-if="item.listClass == 'default' || item.listClass == ''"
-          :key="item.dictValue"
+          :key="item.value"
           :index="index"
           :class="item.cssClass"
-          >{{ item.dictLabel }}</span
+          >{{ item.label }}</span
         >
         <el-tag
           v-else
-          :key="item.dictValue"
+          :key="item.value"
           :index="index"
           :type="item.listClass == 'primary' ? '' : item.listClass"
           :class="item.cssClass"
         >
-          {{ item.dictLabel }}
+          {{ item.label }}
         </el-tag>
       </template>
     </template>
