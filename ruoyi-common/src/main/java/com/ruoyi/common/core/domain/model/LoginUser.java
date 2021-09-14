@@ -2,6 +2,8 @@ package com.ruoyi.common.core.domain.model;
 
 import java.util.Collection;
 import java.util.Set;
+
+import com.ruoyi.common.core.domain.entity.WxUser;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -71,6 +73,11 @@ public class LoginUser implements UserDetails
      */
     private SysUser user;
 
+    /**
+     * 微信用户信息
+     */
+    private WxUser wxUser;
+
     public Long getUserId()
     {
         return userId;
@@ -119,17 +126,21 @@ public class LoginUser implements UserDetails
         this.permissions = permissions;
     }
 
+    public LoginUser(WxUser wxUser){
+        this.wxUser = wxUser;
+    }
+
     @JsonIgnore
     @Override
     public String getPassword()
     {
-        return user.getPassword();
+        return user!=null ? user.getPassword() : wxUser.getPassword();
     }
 
     @Override
     public String getUsername()
     {
-        return user.getUserName();
+        return user!=null ? user.getUserName() : wxUser.getOpenId();
     }
 
     /**
@@ -256,6 +267,14 @@ public class LoginUser implements UserDetails
     public void setUser(SysUser user)
     {
         this.user = user;
+    }
+
+    public WxUser getWxUser() {
+        return wxUser;
+    }
+
+    public void setWxUser(WxUser wxUser) {
+        this.wxUser = wxUser;
     }
 
     @Override
