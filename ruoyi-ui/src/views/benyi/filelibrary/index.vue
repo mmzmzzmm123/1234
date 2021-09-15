@@ -193,7 +193,7 @@ export default {
     handleView(row) {
       var url = row.fileurl;
       window.open(
-        "https://view.officeapps.live.com/op/view.aspx?src=" +
+        "https://view.officeapps.live.com/op/view.aspx?src=http://system.benyiedu.com" +
           this.apiurl +
           url,
         "_blank"
