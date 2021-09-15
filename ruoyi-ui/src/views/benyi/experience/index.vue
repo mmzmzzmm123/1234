@@ -359,7 +359,7 @@ import { getUserProfile } from "@/api/system/user";
 import Clipboard from "clipboard";
 
 export default {
-  name: "Experience",
+  name: "Experience1",
   data() {
     return {
       inviteCode: "",
