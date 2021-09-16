@@ -117,6 +117,7 @@ export default {
     // 删除图片
     handleRemove(file, fileList) {
       const findex = this.fileList.map(f => f.name).indexOf(file.name);
+      //修复多图组件验证失败被删除问题
       if(findex > -1) {
         this.fileList.splice(findex, 1);
         this.$emit("input", this.listToString(this.fileList));
