@@ -1,5 +1,6 @@
 package com.ruoyi.project.benyi.domain;
 
+import com.ruoyi.project.system.domain.ByClass;
 import com.ruoyi.project.system.domain.SysDept;
 import com.ruoyi.project.system.domain.SysUser;
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -90,6 +91,16 @@ public class ByTeacherassessment extends BaseEntity {
     }
 
     private SysUser sysUser;
+
+    public ByClass getByClass() {
+        return byClass;
+    }
+
+    public void setByClass(ByClass byClass) {
+        this.byClass = byClass;
+    }
+
+    private ByClass byClass;
 
     public void setId(Long id) {
         this.id = id;
@@ -194,7 +205,8 @@ public class ByTeacherassessment extends BaseEntity {
                 .append("wsbl", getWsbl())
                 .append("zfbl", getZfbl())
                 .append("createTime", getCreateTime())
-                .append("sysUser",getSysUser())
+                .append("sysUser", getSysUser())
+                .append("byClass", getByClass())
                 .toString();
     }
 }

@@ -77,14 +77,12 @@
       <el-table-column
         label="班级名称"
         align="center"
-        prop="classid"
-        :formatter="classFormat"
+        prop="byClass.bjmc"
       />
       <el-table-column
         label="评估对象"
         align="center"
-        prop="pgdx"
-        :formatter="pgdxFormat"
+        prop="pgdxxm"
       />
       <el-table-column label="最终扣分" align="center" prop="zzdf" />
       <el-table-column
@@ -226,18 +224,6 @@ export default {
         this.classOptions = response.rows;
       });
     },
-    // 班级字典翻译
-    classFormat(row, column) {
-      var actions = [];
-      var datas = this.classOptions;
-      Object.keys(datas).map((key) => {
-        if (datas[key].bjbh == "" + row.classid) {
-          actions.push(datas[key].bjmc);
-          return false;
-        }
-      });
-      return actions.join("");
-    },
     // 学年学期类型--字典状态字典翻译
     xnxqFormat(row, column) {
       return this.selectDictLabel(this.xnxqOptions, row.xnxq);
@@ -247,18 +233,6 @@ export default {
       listUser(null).then((response) => {
         this.userOptions = response.rows;
       });
-    },
-    // 教师字典翻译
-    pgdxFormat(row, column) {
-      var actions = [];
-      var datas = this.userOptions;
-      Object.keys(datas).map((key) => {
-        if (datas[key].userId == "" + row.pgdx) {
-          actions.push(datas[key].nickName);
-          return false;
-        }
-      });
-      return actions.join("");
     },
     // 教师字典翻译
     createUserFormat(row, column) {
