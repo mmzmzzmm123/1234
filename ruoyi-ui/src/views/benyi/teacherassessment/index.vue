@@ -342,7 +342,7 @@ export default {
       }
     },
     "form.classid": function (val) {
-      console.log(val);
+      //console.log(val);
       if (val == "undefined" || val == "" || val == null) {
       } else {
         getUserList(val)
@@ -354,11 +354,11 @@ export default {
       }
     },
     "form.month": function (val) {
-      console.log(val);
+      //console.log(val);
       this.month = val;
     },
     "form.jsid": function (val) {
-      console.log(val);
+      //console.log(val);
       this.queryParams_pg.pgdx = val;
       this.dateRange[0] = this.month + "-01";
       var y = this.month.split("-")[0];
@@ -387,7 +387,7 @@ export default {
       listDayflowassessmentbyJsid(
         this.addDateRange(this.queryParams_pg, this.dateRange)
       ).then((response) => {
-        console.log(response);
+        //console.log(response);
         var total = 100;
         response.rows.forEach((item) => {
           total = total + item.zzdf;
