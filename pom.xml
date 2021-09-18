@@ -4,16 +4,16 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	
-    <groupId>com.ruoyi</groupId>
-    <artifactId>ruoyi</artifactId>
-    <version>3.7.0</version>
+    <groupId>com.xiaobear</groupId>
+    <artifactId>xiaobear</artifactId>
+    <version>3.5.0</version>
 
-    <name>ruoyi</name>
-    <url>http://www.ruoyi.vip</url>
+    <name>xiaobear</name>
+    <url>http://www.xiaobear.vip</url>
     <description>若依管理系统</description>
     
     <properties>
-        <ruoyi.version>3.7.0</ruoyi.version>
+        <xiaobear.version>3.5.0</xiaobear.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <java.version>1.8</java.version>
@@ -25,9 +25,9 @@
 		<mybatis-spring-boot.version>2.1.4</mybatis-spring-boot.version>
         <pagehelper.boot.version>1.3.1</pagehelper.boot.version>
         <fastjson.version>1.2.76</fastjson.version>
-        <oshi.version>5.8.0</oshi.version>
+        <oshi.version>5.7.4</oshi.version>
         <jna.version>5.8.0</jna.version>
-        <commons.io.version>2.11.0</commons.io.version>
+        <commons.io.version>2.10.0</commons.io.version>
         <commons.fileupload.version>1.4</commons.fileupload.version>
         <commons.collections.version>3.2.2</commons.collections.version>
         <poi.version>4.1.2</poi.version>
@@ -172,49 +172,49 @@
 
             <!-- 定时任务-->
             <dependency>
-                <groupId>com.ruoyi</groupId>
-                <artifactId>ruoyi-quartz</artifactId>
-                <version>${ruoyi.version}</version>
+                <groupId>com.xiaobear</groupId>
+                <artifactId>xiaobear-quartz</artifactId>
+                <version>${xiaobear.version}</version>
             </dependency>
 
             <!-- 代码生成-->
             <dependency>
-                <groupId>com.ruoyi</groupId>
-                <artifactId>ruoyi-generator</artifactId>
-                <version>${ruoyi.version}</version>
+                <groupId>com.xiaobear</groupId>
+                <artifactId>xiaobear-generator</artifactId>
+                <version>${xiaobear.version}</version>
             </dependency>
 
             <!-- 核心模块-->
             <dependency>
-                <groupId>com.ruoyi</groupId>
-                <artifactId>ruoyi-framework</artifactId>
-                <version>${ruoyi.version}</version>
+                <groupId>com.xiaobear</groupId>
+                <artifactId>xiaobear-framework</artifactId>
+                <version>${xiaobear.version}</version>
             </dependency>
 
             <!-- 系统模块-->
             <dependency>
-                <groupId>com.ruoyi</groupId>
-                <artifactId>ruoyi-system</artifactId>
-                <version>${ruoyi.version}</version>
+                <groupId>com.xiaobear</groupId>
+                <artifactId>xiaobear-system</artifactId>
+                <version>${xiaobear.version}</version>
             </dependency>
 
             <!-- 通用工具-->
             <dependency>
-                <groupId>com.ruoyi</groupId>
-                <artifactId>ruoyi-common</artifactId>
-                <version>${ruoyi.version}</version>
+                <groupId>com.xiaobear</groupId>
+                <artifactId>xiaobear-common</artifactId>
+                <version>${xiaobear.version}</version>
             </dependency>
 
         </dependencies>
     </dependencyManagement>
 
     <modules>
-        <module>ruoyi-admin</module>
-        <module>ruoyi-framework</module>
-        <module>ruoyi-system</module>
-        <module>ruoyi-quartz</module>
-        <module>ruoyi-generator</module>
-        <module>ruoyi-common</module>
+        <module>xiaobear-admin</module>
+        <module>xiaobear-framework</module>
+        <module>xiaobear-system</module>
+        <module>xiaobear-quartz</module>
+        <module>xiaobear-generator</module>
+        <module>xiaobear-common</module>
     </modules>
     <packaging>pom</packaging>
 
