@@ -1,7 +1,7 @@
 @echo off
 
 rem jar平级目录
-set AppName=ruoyi-admin.jar
+set AppName=xiaobear-admin.jar
 
 rem JVM参数
 set JVM_OPTS="-Dname=%AppName%  -Duser.timezone=Asia/Shanghai -Xms512M -Xmx512M -XX:PermSize=256M -XX:MaxPermSize=512M -XX:+HeapDumpOnOutOfMemoryError -XX:+PrintGCDateStamps  -XX:+PrintGCDetails -XX:NewRatio=1 -XX:SurvivorRatio=30 -XX:+UseParallelGC -XX:+UseParallelOldGC"
@@ -33,7 +33,7 @@ PAUSE
 		PAUSE 
 	) 
 
-start javaw -jar %JAVA_OPTS% ruoyi-admin.jar
+start javaw -jar %JAVA_OPTS% xiaobear-admin.jar
 
 echo  starting……
 echo  Start %AppName% success...
