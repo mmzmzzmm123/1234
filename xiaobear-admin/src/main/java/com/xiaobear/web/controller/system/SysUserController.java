@@ -2,7 +2,6 @@ package com.xiaobear.web.controller.system;
 
 import java.util.List;
 import java.util.stream.Collectors;
-import org.apache.commons.lang3.ArrayUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
@@ -21,11 +20,14 @@ import com.xiaobear.common.core.controller.BaseController;
 import com.xiaobear.common.core.domain.AjaxResult;
 import com.xiaobear.common.core.domain.entity.SysRole;
 import com.xiaobear.common.core.domain.entity.SysUser;
+import com.xiaobear.common.core.domain.model.LoginUser;
 import com.xiaobear.common.core.page.TableDataInfo;
 import com.xiaobear.common.enums.BusinessType;
 import com.xiaobear.common.utils.SecurityUtils;
+import com.xiaobear.common.utils.ServletUtils;
 import com.xiaobear.common.utils.StringUtils;
 import com.xiaobear.common.utils.poi.ExcelUtil;
+import com.xiaobear.framework.web.service.TokenService;
 import com.xiaobear.system.service.ISysPostService;
 import com.xiaobear.system.service.ISysRoleService;
 import com.xiaobear.system.service.ISysUserService;
@@ -33,7 +35,7 @@ import com.xiaobear.system.service.ISysUserService;
 /**
  * 用户信息
  * 
- * @author ruoyi
+ * @author xiaobear
  */
 @RestController
 @RequestMapping("/system/user")
@@ -47,6 +49,9 @@ public class SysUserController extends BaseController
 
     @Autowired
     private ISysPostService postService;
+
+    @Autowired
+    private TokenService tokenService;
 
     /**
      * 获取用户列表
@@ -77,7 +82,8 @@ public class SysUserController extends BaseController
     {
         ExcelUtil<SysUser> util = new ExcelUtil<SysUser>(SysUser.class);
         List<SysUser> userList = util.importExcel(file.getInputStream());
-        String operName = getUsername();
+        LoginUser loginUser = tokenService.getLoginUser(ServletUtils.getRequest());
+        String operName = loginUser.getUsername();
         String message = userService.importUser(userList, updateSupport, operName);
         return AjaxResult.success(message);
     }
@@ -96,7 +102,6 @@ public class SysUserController extends BaseController
     @GetMapping(value = { "/", "/{userId}" })
     public AjaxResult getInfo(@PathVariable(value = "userId", required = false) Long userId)
     {
-        userService.checkUserDataScope(userId);
         AjaxResult ajax = AjaxResult.success();
         List<SysRole> roles = roleService.selectRoleAll();
         ajax.put("roles", SysUser.isAdmin(userId) ? roles : roles.stream().filter(r -> !r.isAdmin()).collect(Collectors.toList()));
@@ -132,7 +137,7 @@ public class SysUserController extends BaseController
         {
             return AjaxResult.error("新增用户'" + user.getUserName() + "'失败，邮箱账号已存在");
         }
-        user.setCreateBy(getUsername());
+        user.setCreateBy(SecurityUtils.getUsername());
         user.setPassword(SecurityUtils.encryptPassword(user.getPassword()));
         return toAjax(userService.insertUser(user));
     }
@@ -156,7 +161,7 @@ public class SysUserController extends BaseController
         {
             return AjaxResult.error("修改用户'" + user.getUserName() + "'失败，邮箱账号已存在");
         }
-        user.setUpdateBy(getUsername());
+        user.setUpdateBy(SecurityUtils.getUsername());
         return toAjax(userService.updateUser(user));
     }
 
@@ -168,10 +173,6 @@ public class SysUserController extends BaseController
     @DeleteMapping("/{userIds}")
     public AjaxResult remove(@PathVariable Long[] userIds)
     {
-        if (ArrayUtils.contains(userIds, getUserId()))
-        {
-            return error("当前用户不能删除");
-        }
         return toAjax(userService.deleteUserByIds(userIds));
     }
 
@@ -185,7 +186,7 @@ public class SysUserController extends BaseController
     {
         userService.checkUserAllowed(user);
         user.setPassword(SecurityUtils.encryptPassword(user.getPassword()));
-        user.setUpdateBy(getUsername());
+        user.setUpdateBy(SecurityUtils.getUsername());
         return toAjax(userService.resetPwd(user));
     }
 
@@ -198,34 +199,7 @@ public class SysUserController extends BaseController
     public AjaxResult changeStatus(@RequestBody SysUser user)
     {
         userService.checkUserAllowed(user);
-        user.setUpdateBy(getUsername());
+        user.setUpdateBy(SecurityUtils.getUsername());
         return toAjax(userService.updateUserStatus(user));
-    }
-
-    /**
-     * 根据用户编号获取授权角色
-     */
-    @PreAuthorize("@ss.hasPermi('system:user:query')")
-    @GetMapping("/authRole/{userId}")
-    public AjaxResult authRole(@PathVariable("userId") Long userId)
-    {
-        AjaxResult ajax = AjaxResult.success();
-        SysUser user = userService.selectUserById(userId);
-        List<SysRole> roles = roleService.selectRolesByUserId(userId);
-        ajax.put("user", user);
-        ajax.put("roles", SysUser.isAdmin(userId) ? roles : roles.stream().filter(r -> !r.isAdmin()).collect(Collectors.toList()));
-        return ajax;
-    }
-
-    /**
-     * 用户授权角色
-     */
-    @PreAuthorize("@ss.hasPermi('system:user:edit')")
-    @Log(title = "用户管理", businessType = BusinessType.GRANT)
-    @PutMapping("/authRole")
-    public AjaxResult insertAuthRole(Long userId, Long[] roleIds)
-    {
-        userService.insertUserAuth(userId, roleIds);
-        return success();
     }
 }

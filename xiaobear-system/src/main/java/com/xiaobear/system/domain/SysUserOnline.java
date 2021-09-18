@@ -3,7 +3,7 @@ package com.xiaobear.system.domain;
 /**
  * 当前在线会话
  * 
- * @author ruoyi
+ * @author xiaobear
  */
 public class SysUserOnline
 {

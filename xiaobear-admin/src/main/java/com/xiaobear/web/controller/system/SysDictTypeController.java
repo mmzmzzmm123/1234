@@ -19,13 +19,14 @@ import com.xiaobear.common.core.domain.AjaxResult;
 import com.xiaobear.common.core.domain.entity.SysDictType;
 import com.xiaobear.common.core.page.TableDataInfo;
 import com.xiaobear.common.enums.BusinessType;
+import com.xiaobear.common.utils.SecurityUtils;
 import com.xiaobear.common.utils.poi.ExcelUtil;
 import com.xiaobear.system.service.ISysDictTypeService;
 
 /**
  * 数据字典信息
  * 
- * @author ruoyi
+ * @author xiaobear
  */
 @RestController
 @RequestMapping("/system/dict/type")
@@ -75,7 +76,7 @@ public class SysDictTypeController extends BaseController
         {
             return AjaxResult.error("新增字典'" + dict.getDictName() + "'失败，字典类型已存在");
         }
-        dict.setCreateBy(getUsername());
+        dict.setCreateBy(SecurityUtils.getUsername());
         return toAjax(dictTypeService.insertDictType(dict));
     }
 
@@ -91,7 +92,7 @@ public class SysDictTypeController extends BaseController
         {
             return AjaxResult.error("修改字典'" + dict.getDictName() + "'失败，字典类型已存在");
         }
-        dict.setUpdateBy(getUsername());
+        dict.setUpdateBy(SecurityUtils.getUsername());
         return toAjax(dictTypeService.updateDictType(dict));
     }
 

@@ -9,7 +9,7 @@ import com.xiaobear.common.utils.spring.SpringUtils;
 /**
  * 异步任务管理器
  * 
- * @author ruoyi
+ * @author xiaobear
  */
 public class AsyncManager
 {

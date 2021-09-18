@@ -12,15 +12,17 @@ import com.xiaobear.common.core.domain.AjaxResult;
 import com.xiaobear.common.core.domain.entity.SysMenu;
 import com.xiaobear.common.core.domain.entity.SysUser;
 import com.xiaobear.common.core.domain.model.LoginBody;
-import com.xiaobear.common.utils.SecurityUtils;
+import com.xiaobear.common.core.domain.model.LoginUser;
+import com.xiaobear.common.utils.ServletUtils;
 import com.xiaobear.framework.web.service.SysLoginService;
 import com.xiaobear.framework.web.service.SysPermissionService;
+import com.xiaobear.framework.web.service.TokenService;
 import com.xiaobear.system.service.ISysMenuService;
 
 /**
  * 登录验证
  * 
- * @author ruoyi
+ * @author xiaobear
  */
 @RestController
 public class SysLoginController
@@ -33,6 +35,9 @@ public class SysLoginController
 
     @Autowired
     private SysPermissionService permissionService;
+
+    @Autowired
+    private TokenService tokenService;
 
     /**
      * 登录方法
@@ -59,7 +64,8 @@ public class SysLoginController
     @GetMapping("getInfo")
     public AjaxResult getInfo()
     {
-        SysUser user = SecurityUtils.getLoginUser().getUser();
+        LoginUser loginUser = tokenService.getLoginUser(ServletUtils.getRequest());
+        SysUser user = loginUser.getUser();
         // 角色集合
         Set<String> roles = permissionService.getRolePermission(user);
         // 权限集合
@@ -79,8 +85,10 @@ public class SysLoginController
     @GetMapping("getRouters")
     public AjaxResult getRouters()
     {
-        Long userId = SecurityUtils.getUserId();
-        List<SysMenu> menus = menuService.selectMenuTreeByUserId(userId);
+        LoginUser loginUser = tokenService.getLoginUser(ServletUtils.getRequest());
+        // 用户信息
+        SysUser user = loginUser.getUser();
+        List<SysMenu> menus = menuService.selectMenuTreeByUserId(user.getUserId());
         return AjaxResult.success(menuService.buildMenus(menus));
     }
 }

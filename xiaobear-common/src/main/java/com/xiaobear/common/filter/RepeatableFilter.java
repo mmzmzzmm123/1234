@@ -14,7 +14,7 @@ import com.xiaobear.common.utils.StringUtils;
 /**
  * Repeatable 过滤器
  * 
- * @author ruoyi
+ * @author xiaobear
  */
 public class RepeatableFilter implements Filter
 {

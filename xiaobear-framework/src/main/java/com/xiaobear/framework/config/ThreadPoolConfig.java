@@ -12,7 +12,7 @@ import com.xiaobear.common.utils.Threads;
 /**
  * 线程池配置
  *
- * @author ruoyi
+ * @author xiaobear
  **/
 @Configuration
 public class ThreadPoolConfig

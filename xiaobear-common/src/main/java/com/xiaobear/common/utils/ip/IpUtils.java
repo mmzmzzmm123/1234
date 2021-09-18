@@ -9,7 +9,7 @@ import com.xiaobear.common.utils.html.EscapeUtil;
 /**
  * 获取IP方法
  * 
- * @author ruoyi
+ * @author xiaobear
  */
 public class IpUtils
 {

@@ -1,26 +1,26 @@
 package com.xiaobear.system.service.impl;
 
+import java.util.Collection;
+import java.util.List;
+import javax.annotation.PostConstruct;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import com.xiaobear.common.annotation.DataSource;
 import com.xiaobear.common.constant.Constants;
 import com.xiaobear.common.constant.UserConstants;
 import com.xiaobear.common.core.redis.RedisCache;
 import com.xiaobear.common.core.text.Convert;
 import com.xiaobear.common.enums.DataSourceType;
-import com.xiaobear.common.exception.ServiceException;
+import com.xiaobear.common.exception.CustomException;
 import com.xiaobear.common.utils.StringUtils;
 import com.xiaobear.system.domain.SysConfig;
 import com.xiaobear.system.mapper.SysConfigMapper;
 import com.xiaobear.system.service.ISysConfigService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import javax.annotation.PostConstruct;
-import java.util.Collection;
-import java.util.List;
 
 /**
  * 参数配置 服务层实现
  * 
- * @author ruoyi
+ * @author xiaobear
  */
 @Service
 public class SysConfigServiceImpl implements ISysConfigService
@@ -78,22 +78,6 @@ public class SysConfigServiceImpl implements ISysConfigService
             return retConfig.getConfigValue();
         }
         return StringUtils.EMPTY;
-    }
-
-    /**
-     * 获取验证码开关
-     * 
-     * @return true开启，false关闭
-     */
-    @Override
-    public boolean selectCaptchaOnOff()
-    {
-        String captchaOnOff = selectConfigByKey("sys.account.captchaOnOff");
-        if (StringUtils.isEmpty(captchaOnOff))
-        {
-            return true;
-        }
-        return Convert.toBool(captchaOnOff);
     }
 
     /**
@@ -156,7 +140,7 @@ public class SysConfigServiceImpl implements ISysConfigService
             SysConfig config = selectConfigById(configId);
             if (StringUtils.equals(UserConstants.YES, config.getConfigType()))
             {
-                throw new ServiceException(String.format("内置参数【%1$s】不能删除 ", config.getConfigKey()));
+                throw new CustomException(String.format("内置参数【%1$s】不能删除 ", config.getConfigKey()));
             }
             configMapper.deleteConfigById(configId);
             redisCache.deleteObject(getCacheKey(config.getConfigKey()));

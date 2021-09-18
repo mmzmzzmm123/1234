@@ -45,7 +45,7 @@ export default {
       if (!name) {
         return false
       }
-      return name.trim() === 'Index'
+      return name.trim() === '首页'
     },
     handleLink(item) {
       const { redirect, path } = item

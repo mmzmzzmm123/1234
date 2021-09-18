@@ -3,7 +3,7 @@ package com.xiaobear.common.utils.sign;
 /**
  * Base64工具类
  * 
- * @author ruoyi
+ * @author xiaobear
  */
 public final class Base64
 {

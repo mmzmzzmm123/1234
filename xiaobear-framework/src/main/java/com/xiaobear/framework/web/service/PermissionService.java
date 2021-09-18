@@ -1,17 +1,18 @@
 package com.xiaobear.framework.web.service;
 
 import java.util.Set;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 import com.xiaobear.common.core.domain.entity.SysRole;
 import com.xiaobear.common.core.domain.model.LoginUser;
-import com.xiaobear.common.utils.SecurityUtils;
+import com.xiaobear.common.utils.ServletUtils;
 import com.xiaobear.common.utils.StringUtils;
 
 /**
  * RuoYi首创 自定义权限实现，ss取自SpringSecurity首字母
  * 
- * @author ruoyi
+ * @author xiaobear
  */
 @Service("ss")
 public class PermissionService
@@ -26,6 +27,9 @@ public class PermissionService
 
     private static final String PERMISSION_DELIMETER = ",";
 
+    @Autowired
+    private TokenService tokenService;
+
     /**
      * 验证用户是否具备某权限
      * 
@@ -38,7 +42,7 @@ public class PermissionService
         {
             return false;
         }
-        LoginUser loginUser = SecurityUtils.getLoginUser();
+        LoginUser loginUser = tokenService.getLoginUser(ServletUtils.getRequest());
         if (StringUtils.isNull(loginUser) || CollectionUtils.isEmpty(loginUser.getPermissions()))
         {
             return false;
@@ -69,7 +73,7 @@ public class PermissionService
         {
             return false;
         }
-        LoginUser loginUser = SecurityUtils.getLoginUser();
+        LoginUser loginUser = tokenService.getLoginUser(ServletUtils.getRequest());
         if (StringUtils.isNull(loginUser) || CollectionUtils.isEmpty(loginUser.getPermissions()))
         {
             return false;
@@ -97,7 +101,7 @@ public class PermissionService
         {
             return false;
         }
-        LoginUser loginUser = SecurityUtils.getLoginUser();
+        LoginUser loginUser = tokenService.getLoginUser(ServletUtils.getRequest());
         if (StringUtils.isNull(loginUser) || CollectionUtils.isEmpty(loginUser.getUser().getRoles()))
         {
             return false;
@@ -136,7 +140,7 @@ public class PermissionService
         {
             return false;
         }
-        LoginUser loginUser = SecurityUtils.getLoginUser();
+        LoginUser loginUser = tokenService.getLoginUser(ServletUtils.getRequest());
         if (StringUtils.isNull(loginUser) || CollectionUtils.isEmpty(loginUser.getUser().getRoles()))
         {
             return false;

@@ -9,7 +9,7 @@ import com.xiaobear.system.domain.vo.RouterVo;
 /**
  * 菜单 业务层
  * 
- * @author ruoyi
+ * @author xiaobear
  */
 public interface ISysMenuService
 {

@@ -1,11 +1,11 @@
 package com.xiaobear.common.exception.user;
 
-import com.xiaobear.common.exception.base.BaseException;
+import com.xiaobear.common.exception.BaseException;
 
 /**
  * 用户信息异常类
  * 
- * @author ruoyi
+ * @author xiaobear
  */
 public class UserException extends BaseException
 {

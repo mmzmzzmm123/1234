@@ -2,7 +2,6 @@ import { constantRoutes } from '@/router'
 import { getRouters } from '@/api/menu'
 import Layout from '@/layout/index'
 import ParentView from '@/components/ParentView';
-import InnerLink from '@/layout/components/InnerLink'
 
 const permission = {
   state: {
@@ -66,8 +65,6 @@ function filterAsyncRouter(asyncRouterMap, lastRouter = false, type = false) {
         route.component = Layout
       } else if (route.component === 'ParentView') {
         route.component = ParentView
-      } else if (route.component === 'InnerLink') {
-        route.component = InnerLink
       } else {
         route.component = loadView(route.component)
       }

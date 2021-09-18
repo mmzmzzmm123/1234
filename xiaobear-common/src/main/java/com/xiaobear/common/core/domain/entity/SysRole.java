@@ -11,7 +11,7 @@ import com.xiaobear.common.core.domain.BaseEntity;
 /**
  * 角色表 sys_role
  * 
- * @author ruoyi
+ * @author xiaobear
  */
 public class SysRole extends BaseEntity
 {

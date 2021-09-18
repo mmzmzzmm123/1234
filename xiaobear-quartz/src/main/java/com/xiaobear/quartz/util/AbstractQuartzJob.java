@@ -19,7 +19,7 @@ import com.xiaobear.quartz.service.ISysJobLogService;
 /**
  * 抽象quartz调用
  *
- * @author ruoyi
+ * @author xiaobear
  */
 public abstract class AbstractQuartzJob implements Job
 {

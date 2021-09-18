@@ -5,7 +5,7 @@ import com.xiaobear.common.utils.StringUtils;
 /**
  * 字符串格式化
  * 
- * @author ruoyi
+ * @author xiaobear
  */
 public class StrFormatter
 {

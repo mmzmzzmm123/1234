@@ -11,12 +11,9 @@ import com.xiaobear.common.constant.UserConstants;
 import com.xiaobear.common.core.domain.TreeSelect;
 import com.xiaobear.common.core.domain.entity.SysDept;
 import com.xiaobear.common.core.domain.entity.SysRole;
-import com.xiaobear.common.core.domain.entity.SysUser;
 import com.xiaobear.common.core.text.Convert;
-import com.xiaobear.common.exception.ServiceException;
-import com.xiaobear.common.utils.SecurityUtils;
+import com.xiaobear.common.exception.CustomException;
 import com.xiaobear.common.utils.StringUtils;
-import com.xiaobear.common.utils.spring.SpringUtils;
 import com.xiaobear.system.mapper.SysDeptMapper;
 import com.xiaobear.system.mapper.SysRoleMapper;
 import com.xiaobear.system.service.ISysDeptService;
@@ -24,7 +21,7 @@ import com.xiaobear.system.service.ISysDeptService;
 /**
  * 部门管理 服务实现
  * 
- * @author ruoyi
+ * @author xiaobear
  */
 @Service
 public class SysDeptServiceImpl implements ISysDeptService
@@ -175,26 +172,6 @@ public class SysDeptServiceImpl implements ISysDeptService
     }
 
     /**
-     * 校验部门是否有数据权限
-     * 
-     * @param deptId 部门id
-     */
-    @Override
-    public void checkDeptDataScope(Long deptId)
-    {
-        if (!SysUser.isAdmin(SecurityUtils.getUserId()))
-        {
-            SysDept dept = new SysDept();
-            dept.setDeptId(deptId);
-            List<SysDept> depts = SpringUtils.getAopProxy(this).selectDeptList(dept);
-            if (StringUtils.isEmpty(depts))
-            {
-                throw new ServiceException("没有权限访问部门数据！");
-            }
-        }
-    }
-
-    /**
      * 新增保存部门信息
      * 
      * @param dept 部门信息
@@ -207,7 +184,7 @@ public class SysDeptServiceImpl implements ISysDeptService
         // 如果父节点不为正常状态,则不允许新增子节点
         if (!UserConstants.DEPT_NORMAL.equals(info.getStatus()))
         {
-            throw new ServiceException("部门停用，不允许新增");
+            throw new CustomException("部门停用，不允许新增");
         }
         dept.setAncestors(info.getAncestors() + "," + dept.getParentId());
         return deptMapper.insertDept(dept);
@@ -232,8 +209,7 @@ public class SysDeptServiceImpl implements ISysDeptService
             updateDeptChildren(dept.getDeptId(), newAncestors, oldAncestors);
         }
         int result = deptMapper.updateDept(dept);
-        if (UserConstants.DEPT_NORMAL.equals(dept.getStatus()) && StringUtils.isNotEmpty(dept.getAncestors())
-                && !StringUtils.equals("0", dept.getAncestors()))
+        if (UserConstants.DEPT_NORMAL.equals(dept.getStatus()))
         {
             // 如果该部门是启用状态，则启用该部门的所有上级部门
             updateParentDeptStatusNormal(dept);

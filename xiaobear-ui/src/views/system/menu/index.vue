@@ -13,10 +13,10 @@
       <el-form-item label="状态" prop="status">
         <el-select v-model="queryParams.status" placeholder="菜单状态" clearable size="small">
           <el-option
-            v-for="dict in dict.type.sys_normal_disable"
-            :key="dict.value"
-            :label="dict.label"
-            :value="dict.value"
+            v-for="dict in statusOptions"
+            :key="dict.dictValue"
+            :label="dict.dictLabel"
+            :value="dict.dictValue"
           />
         </el-select>
       </el-form-item>
@@ -37,24 +37,13 @@
           v-hasPermi="['system:menu:add']"
         >新增</el-button>
       </el-col>
-      <el-col :span="1.5">
-        <el-button
-          type="info"
-          plain
-          icon="el-icon-sort"
-          size="mini"
-          @click="toggleExpandAll"
-        >展开/折叠</el-button>
-      </el-col>
       <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
     </el-row>
 
     <el-table
-      v-if="refreshTable"
       v-loading="loading"
       :data="menuList"
       row-key="menuId"
-      :default-expand-all="isExpandAll"
       :tree-props="{children: 'children', hasChildren: 'hasChildren'}"
     >
       <el-table-column prop="menuName" label="菜单名称" :show-overflow-tooltip="true" width="160"></el-table-column>
@@ -66,11 +55,7 @@
       <el-table-column prop="orderNum" label="排序" width="60"></el-table-column>
       <el-table-column prop="perms" label="权限标识" :show-overflow-tooltip="true"></el-table-column>
       <el-table-column prop="component" label="组件路径" :show-overflow-tooltip="true"></el-table-column>
-      <el-table-column prop="status" label="状态" width="80">
-        <template slot-scope="scope">
-          <dict-tag :options="dict.type.sys_normal_disable" :value="scope.row.status"/>
-        </template>
-      </el-table-column>
+      <el-table-column prop="status" label="状态" :formatter="statusFormat" width="80"></el-table-column>
       <el-table-column label="创建时间" align="center" prop="createTime">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.createTime) }}</span>
@@ -78,16 +63,16 @@
       </el-table-column>
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
-          <el-button size="mini"
-            type="text"
-            icon="el-icon-edit"
+          <el-button size="mini" 
+            type="text" 
+            icon="el-icon-edit" 
             @click="handleUpdate(scope.row)"
             v-hasPermi="['system:menu:edit']"
           >修改</el-button>
-          <el-button
-            size="mini"
-            type="text"
-            icon="el-icon-plus"
+          <el-button 
+            size="mini" 
+            type="text" 
+            icon="el-icon-plus" 
             @click="handleAdd(scope.row)"
             v-hasPermi="['system:menu:add']"
           >新增</el-button>
@@ -103,8 +88,8 @@
     </el-table>
 
     <!-- 添加或修改菜单对话框 -->
-    <el-dialog :title="title" :visible.sync="open" width="680px" append-to-body>
-      <el-form ref="form" :model="form" :rules="rules" label-width="100px">
+    <el-dialog :title="title" :visible.sync="open" width="600px" append-to-body>
+      <el-form ref="form" :model="form" :rules="rules" label-width="80px">
         <el-row>
           <el-col :span="24">
             <el-form-item label="上级菜单">
@@ -159,13 +144,7 @@
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item v-if="form.menuType != 'F'">
-              <span slot="label">
-                <el-tooltip content="选择是外链则路由地址需要以`http(s)://`开头" placement="top">
-                <i class="el-icon-question"></i>
-                </el-tooltip>
-                是否外链
-              </span>
+            <el-form-item v-if="form.menuType != 'F'" label="是否外链">
               <el-radio-group v-model="form.isFrame">
                 <el-radio label="0">是</el-radio>
                 <el-radio label="1">否</el-radio>
@@ -173,94 +152,47 @@
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item v-if="form.menuType != 'F'" prop="path">
-              <span slot="label">
-                <el-tooltip content="访问的路由地址，如：`user`，如外网地址需内链访问则以`http(s)://`开头" placement="top">
-                <i class="el-icon-question"></i>
-                </el-tooltip>
-                路由地址
-              </span>
+            <el-form-item v-if="form.menuType != 'F'" label="路由地址" prop="path">
               <el-input v-model="form.path" placeholder="请输入路由地址" />
             </el-form-item>
           </el-col>
           <el-col :span="12" v-if="form.menuType == 'C'">
-            <el-form-item prop="component">
-              <span slot="label">
-                <el-tooltip content="访问的组件路径，如：`system/user/index`，默认在`views`目录下" placement="top">
-                <i class="el-icon-question"></i>
-                </el-tooltip>
-                组件路径
-              </span>
+            <el-form-item label="组件路径" prop="component">
               <el-input v-model="form.component" placeholder="请输入组件路径" />
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item v-if="form.menuType != 'M'">
+            <el-form-item v-if="form.menuType != 'M'" label="权限标识">
               <el-input v-model="form.perms" placeholder="请输入权限标识" maxlength="100" />
-              <span slot="label">
-                <el-tooltip content="控制器中定义的权限字符，如：@PreAuthorize(`@ss.hasPermi('system:user:list')`)" placement="top">
-                <i class="el-icon-question"></i>
-                </el-tooltip>
-                权限字符
-              </span>
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item v-if="form.menuType == 'C'">
-              <el-input v-model="form.query" placeholder="请输入路由参数" maxlength="255" />
-              <span slot="label">
-                <el-tooltip content='访问路由的默认传递参数，如：`{"id": 1, "name": "ry"}`' placement="top">
-                <i class="el-icon-question"></i>
-                </el-tooltip>
-                路由参数
-              </span>
+            <el-form-item v-if="form.menuType != 'F'" label="显示状态">
+              <el-radio-group v-model="form.visible">
+                <el-radio
+                  v-for="dict in visibleOptions"
+                  :key="dict.dictValue"
+                  :label="dict.dictValue"
+                >{{dict.dictLabel}}</el-radio>
+              </el-radio-group>
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item v-if="form.menuType == 'C'">
-              <span slot="label">
-                <el-tooltip content="选择是则会被`keep-alive`缓存，需要匹配组件的`name`和地址保持一致" placement="top">
-                <i class="el-icon-question"></i>
-                </el-tooltip>
-                是否缓存
-              </span>
+            <el-form-item v-if="form.menuType != 'F'" label="菜单状态">
+              <el-radio-group v-model="form.status">
+                <el-radio
+                  v-for="dict in statusOptions"
+                  :key="dict.dictValue"
+                  :label="dict.dictValue"
+                >{{dict.dictLabel}}</el-radio>
+              </el-radio-group>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item v-if="form.menuType == 'C'" label="是否缓存">
               <el-radio-group v-model="form.isCache">
                 <el-radio label="0">缓存</el-radio>
                 <el-radio label="1">不缓存</el-radio>
-              </el-radio-group>
-            </el-form-item>
-          </el-col>
-          <el-col :span="12">
-            <el-form-item v-if="form.menuType != 'F'">
-              <span slot="label">
-                <el-tooltip content="选择隐藏则路由将不会出现在侧边栏，但仍然可以访问" placement="top">
-                <i class="el-icon-question"></i>
-                </el-tooltip>
-                显示状态
-              </span>
-              <el-radio-group v-model="form.visible">
-                <el-radio
-                  v-for="dict in dict.type.sys_show_hide"
-                  :key="dict.value"
-                  :label="dict.value"
-                >{{dict.label}}</el-radio>
-              </el-radio-group>
-            </el-form-item>
-          </el-col>
-          <el-col :span="12">
-            <el-form-item v-if="form.menuType != 'F'">
-              <span slot="label">
-                <el-tooltip content="选择停用则路由将不会出现在侧边栏，也不能被访问" placement="top">
-                <i class="el-icon-question"></i>
-                </el-tooltip>
-                菜单状态
-              </span>
-              <el-radio-group v-model="form.status">
-                <el-radio
-                  v-for="dict in dict.type.sys_normal_disable"
-                  :key="dict.value"
-                  :label="dict.value"
-                >{{dict.label}}</el-radio>
               </el-radio-group>
             </el-form-item>
           </el-col>
@@ -282,7 +214,6 @@ import IconSelect from "@/components/IconSelect";
 
 export default {
   name: "Menu",
-  dicts: ['sys_show_hide', 'sys_normal_disable'],
   components: { Treeselect, IconSelect },
   data() {
     return {
@@ -298,10 +229,10 @@ export default {
       title: "",
       // 是否显示弹出层
       open: false,
-      // 是否展开，默认全部折叠
-      isExpandAll: false,
-      // 重新渲染表格状态
-      refreshTable: true,
+      // 显示状态数据字典
+      visibleOptions: [],
+      // 菜单状态数据字典
+      statusOptions: [],
       // 查询参数
       queryParams: {
         menuName: undefined,
@@ -325,6 +256,12 @@ export default {
   },
   created() {
     this.getList();
+    this.getDicts("sys_show_hide").then(response => {
+      this.visibleOptions = response.data;
+    });
+    this.getDicts("sys_normal_disable").then(response => {
+      this.statusOptions = response.data;
+    });
   },
   methods: {
     // 选择图标
@@ -358,6 +295,20 @@ export default {
         menu.children = this.handleTree(response.data, "menuId");
         this.menuOptions.push(menu);
       });
+    },
+    // 显示状态字典翻译
+    visibleFormat(row, column) {
+      if (row.menuType == "F") {
+        return "";
+      }
+      return this.selectDictLabel(this.visibleOptions, row.visible);
+    },
+    // 菜单状态字典翻译
+    statusFormat(row, column) {
+      if (row.menuType == "F") {
+        return "";
+      }
+      return this.selectDictLabel(this.statusOptions, row.status);
     },
     // 取消按钮
     cancel() {
@@ -400,14 +351,6 @@ export default {
       }
       this.open = true;
       this.title = "添加菜单";
-    },
-    /** 展开/折叠操作 */
-    toggleExpandAll() {
-      this.refreshTable = false;
-      this.isExpandAll = !this.isExpandAll;
-      this.$nextTick(() => {
-        this.refreshTable = true;
-      });
     },
     /** 修改按钮操作 */
     handleUpdate(row) {

@@ -15,7 +15,7 @@ import com.xiaobear.common.utils.html.EscapeUtil;
 /**
  * XSS过滤处理
  * 
- * @author ruoyi
+ * @author xiaobear
  */
 public class XssHttpServletRequestWrapper extends HttpServletRequestWrapper
 {
@@ -63,8 +63,7 @@ public class XssHttpServletRequestWrapper extends HttpServletRequestWrapper
 
         // xss过滤
         json = EscapeUtil.clean(json).trim();
-        byte[] jsonBytes = json.getBytes("utf-8");
-        final ByteArrayInputStream bis = new ByteArrayInputStream(jsonBytes);
+        final ByteArrayInputStream bis = new ByteArrayInputStream(json.getBytes("utf-8"));
         return new ServletInputStream()
         {
             @Override
@@ -77,12 +76,6 @@ public class XssHttpServletRequestWrapper extends HttpServletRequestWrapper
             public boolean isReady()
             {
                 return true;
-            }
-
-            @Override
-            public int available() throws IOException
-            {
-                return jsonBytes.length;
             }
 
             @Override

@@ -1,24 +1,24 @@
 package com.xiaobear.system.service.impl;
 
+import java.util.List;
+import javax.annotation.PostConstruct;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import com.xiaobear.common.constant.UserConstants;
 import com.xiaobear.common.core.domain.entity.SysDictData;
 import com.xiaobear.common.core.domain.entity.SysDictType;
-import com.xiaobear.common.exception.ServiceException;
+import com.xiaobear.common.exception.CustomException;
 import com.xiaobear.common.utils.DictUtils;
 import com.xiaobear.common.utils.StringUtils;
 import com.xiaobear.system.mapper.SysDictDataMapper;
 import com.xiaobear.system.mapper.SysDictTypeMapper;
 import com.xiaobear.system.service.ISysDictTypeService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-import javax.annotation.PostConstruct;
-import java.util.List;
 
 /**
  * 字典 业务层处理
  * 
- * @author ruoyi
+ * @author xiaobear
  */
 @Service
 public class SysDictTypeServiceImpl implements ISysDictTypeService
@@ -122,7 +122,7 @@ public class SysDictTypeServiceImpl implements ISysDictTypeService
             SysDictType dictType = selectDictTypeById(dictId);
             if (dictDataMapper.countDictDataByType(dictType.getDictType()) > 0)
             {
-                throw new ServiceException(String.format("%1$s已分配,不能删除", dictType.getDictName()));
+                throw new CustomException(String.format("%1$s已分配,不能删除", dictType.getDictName()));
             }
             dictTypeMapper.deleteDictTypeById(dictId);
             DictUtils.removeDictCache(dictType.getDictType());
@@ -132,7 +132,6 @@ public class SysDictTypeServiceImpl implements ISysDictTypeService
     /**
      * 加载字典缓存数据
      */
-    @Override
     public void loadingDictCache()
     {
         List<SysDictType> dictTypeList = dictTypeMapper.selectDictTypeAll();
@@ -146,7 +145,6 @@ public class SysDictTypeServiceImpl implements ISysDictTypeService
     /**
      * 清空字典缓存数据
      */
-    @Override
     public void clearDictCache()
     {
         DictUtils.clearDictCache();
@@ -155,7 +153,6 @@ public class SysDictTypeServiceImpl implements ISysDictTypeService
     /**
      * 重置字典缓存数据
      */
-    @Override
     public void resetDictCache()
     {
         clearDictCache();

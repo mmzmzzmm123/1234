@@ -11,7 +11,7 @@ import com.xiaobear.common.utils.StringUtils;
 /**
  * 业务表 gen_table
  * 
- * @author ruoyi
+ * @author xiaobear
  */
 public class GenTable extends BaseEntity
 {

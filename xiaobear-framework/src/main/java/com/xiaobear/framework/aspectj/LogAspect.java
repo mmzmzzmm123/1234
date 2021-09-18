@@ -27,15 +27,16 @@ import com.xiaobear.common.enums.HttpMethod;
 import com.xiaobear.common.utils.ServletUtils;
 import com.xiaobear.common.utils.StringUtils;
 import com.xiaobear.common.utils.ip.IpUtils;
-import com.xiaobear.common.utils.SecurityUtils;
+import com.xiaobear.common.utils.spring.SpringUtils;
 import com.xiaobear.framework.manager.AsyncManager;
 import com.xiaobear.framework.manager.factory.AsyncFactory;
+import com.xiaobear.framework.web.service.TokenService;
 import com.xiaobear.system.domain.SysOperLog;
 
 /**
  * 操作日志记录处理
  * 
- * @author ruoyi
+ * @author xiaobear
  */
 @Aspect
 @Component
@@ -84,7 +85,7 @@ public class LogAspect
             }
 
             // 获取当前的用户
-            LoginUser loginUser = SecurityUtils.getLoginUser();
+            LoginUser loginUser = SpringUtils.getBean(TokenService.class).getLoginUser(ServletUtils.getRequest());
 
             // *========数据库日志=========*//
             SysOperLog operLog = new SysOperLog();
@@ -92,6 +93,9 @@ public class LogAspect
             // 请求的地址
             String ip = IpUtils.getIpAddr(ServletUtils.getRequest());
             operLog.setOperIp(ip);
+            // 返回参数
+            operLog.setJsonResult(JSON.toJSONString(jsonResult));
+
             operLog.setOperUrl(ServletUtils.getRequest().getRequestURI());
             if (loginUser != null)
             {
@@ -110,7 +114,7 @@ public class LogAspect
             // 设置请求方式
             operLog.setRequestMethod(ServletUtils.getRequest().getMethod());
             // 处理设置注解上的参数
-            getControllerMethodDescription(joinPoint, controllerLog, operLog, jsonResult);
+            getControllerMethodDescription(joinPoint, controllerLog, operLog);
             // 保存数据库
             AsyncManager.me().execute(AsyncFactory.recordOper(operLog));
         }
@@ -130,7 +134,7 @@ public class LogAspect
      * @param operLog 操作日志
      * @throws Exception
      */
-    public void getControllerMethodDescription(JoinPoint joinPoint, Log log, SysOperLog operLog, Object jsonResult) throws Exception
+    public void getControllerMethodDescription(JoinPoint joinPoint, Log log, SysOperLog operLog) throws Exception
     {
         // 设置action动作
         operLog.setBusinessType(log.businessType().ordinal());
@@ -143,11 +147,6 @@ public class LogAspect
         {
             // 获取参数的信息，传入到数据库中。
             setRequestValue(joinPoint, operLog);
-        }
-        // 是否需要保存response，参数和值
-        if (log.isSaveResponseData() && StringUtils.isNotNull(jsonResult))
-        {
-            operLog.setJsonResult(StringUtils.substring(JSON.toJSONString(jsonResult), 0, 2000));
         }
     }
 

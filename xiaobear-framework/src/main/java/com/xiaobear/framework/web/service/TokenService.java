@@ -23,7 +23,7 @@ import io.jsonwebtoken.SignatureAlgorithm;
 /**
  * token验证处理
  *
- * @author ruoyi
+ * @author xiaobear
  */
 @Component
 public class TokenService
@@ -60,18 +60,12 @@ public class TokenService
         String token = getToken(request);
         if (StringUtils.isNotEmpty(token))
         {
-            try
-            {
-                Claims claims = parseToken(token);
-                // 解析对应的权限以及用户信息
-                String uuid = (String) claims.get(Constants.LOGIN_USER_KEY);
-                String userKey = getTokenKey(uuid);
-                LoginUser user = redisCache.getCacheObject(userKey);
-                return user;
-            }
-            catch (Exception e)
-            {
-            }
+            Claims claims = parseToken(token);
+            // 解析对应的权限以及用户信息
+            String uuid = (String) claims.get(Constants.LOGIN_USER_KEY);
+            String userKey = getTokenKey(uuid);
+            LoginUser user = redisCache.getCacheObject(userKey);
+            return user;
         }
         return null;
     }

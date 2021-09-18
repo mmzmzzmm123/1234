@@ -18,6 +18,7 @@ import com.xiaobear.common.core.controller.BaseController;
 import com.xiaobear.common.core.domain.AjaxResult;
 import com.xiaobear.common.core.page.TableDataInfo;
 import com.xiaobear.common.enums.BusinessType;
+import com.xiaobear.common.utils.SecurityUtils;
 import com.xiaobear.common.utils.poi.ExcelUtil;
 import com.xiaobear.system.domain.SysPost;
 import com.xiaobear.system.service.ISysPostService;
@@ -25,7 +26,7 @@ import com.xiaobear.system.service.ISysPostService;
 /**
  * 岗位信息操作处理
  * 
- * @author ruoyi
+ * @author xiaobear
  */
 @RestController
 @RequestMapping("/system/post")
@@ -82,7 +83,7 @@ public class SysPostController extends BaseController
         {
             return AjaxResult.error("新增岗位'" + post.getPostName() + "'失败，岗位编码已存在");
         }
-        post.setCreateBy(getUsername());
+        post.setCreateBy(SecurityUtils.getUsername());
         return toAjax(postService.insertPost(post));
     }
 
@@ -102,7 +103,7 @@ public class SysPostController extends BaseController
         {
             return AjaxResult.error("修改岗位'" + post.getPostName() + "'失败，岗位编码已存在");
         }
-        post.setUpdateBy(getUsername());
+        post.setUpdateBy(SecurityUtils.getUsername());
         return toAjax(postService.updatePost(post));
     }
 

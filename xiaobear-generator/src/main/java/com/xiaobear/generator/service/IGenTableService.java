@@ -7,7 +7,7 @@ import com.xiaobear.generator.domain.GenTable;
 /**
  * 业务 服务层
  * 
- * @author ruoyi
+ * @author xiaobear
  */
 public interface IGenTableService
 {

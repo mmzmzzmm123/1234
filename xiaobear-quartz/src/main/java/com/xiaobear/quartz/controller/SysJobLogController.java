@@ -20,7 +20,7 @@ import com.xiaobear.quartz.service.ISysJobLogService;
 /**
  * 调度日志操作处理
  * 
- * @author ruoyi
+ * @author xiaobear
  */
 @RestController
 @RequestMapping("/monitor/jobLog")

@@ -3,7 +3,7 @@ package com.xiaobear.common.utils.uuid;
 /**
  * ID生成器工具类
  * 
- * @author ruoyi
+ * @author xiaobear
  */
 public class IdUtils
 {

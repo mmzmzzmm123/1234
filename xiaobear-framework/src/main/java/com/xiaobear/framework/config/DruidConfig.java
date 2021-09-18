@@ -27,7 +27,7 @@ import com.xiaobear.framework.datasource.DynamicDataSource;
 /**
  * druid 配置多数据源
  * 
- * @author ruoyi
+ * @author xiaobear
  */
 @Configuration
 public class DruidConfig

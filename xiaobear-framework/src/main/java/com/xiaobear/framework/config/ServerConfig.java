@@ -7,7 +7,7 @@ import com.xiaobear.common.utils.ServletUtils;
 /**
  * 服务相关配置
  * 
- * @author ruoyi
+ * @author xiaobear
  */
 @Component
 public class ServerConfig

@@ -3,7 +3,7 @@ package com.xiaobear.common.enums;
 /**
  * 操作人类别
  * 
- * @author ruoyi
+ * @author xiaobear
  */
 public enum OperatorType
 {

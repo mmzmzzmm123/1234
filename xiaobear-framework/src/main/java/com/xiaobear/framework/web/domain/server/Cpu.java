@@ -5,7 +5,7 @@ import com.xiaobear.common.utils.Arith;
 /**
  * CPU相关信息
  * 
- * @author ruoyi
+ * @author xiaobear
  */
 public class Cpu
 {

@@ -6,7 +6,7 @@ import org.springframework.stereotype.Component;
 /**
  * 读取项目相关配置
  * 
- * @author ruoyi
+ * @author xiaobear
  */
 @Component
 @ConfigurationProperties(prefix = "ruoyi")
@@ -88,14 +88,6 @@ public class RuoYiConfig
     public void setAddressEnabled(boolean addressEnabled)
     {
         RuoYiConfig.addressEnabled = addressEnabled;
-    }
-
-    /**
-     * 获取导入上传路径
-     */
-    public static String getImportPath()
-    {
-        return getProfile() + "/import";
     }
 
     /**

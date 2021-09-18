@@ -1,11 +1,11 @@
 package com.xiaobear.common.exception.file;
 
-import com.xiaobear.common.exception.base.BaseException;
+import com.xiaobear.common.exception.BaseException;
 
 /**
  * 文件信息异常类
  * 
- * @author ruoyi
+ * @author xiaobear
  */
 public class FileException extends BaseException
 {

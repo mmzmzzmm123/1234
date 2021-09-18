@@ -4,7 +4,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.xiaobear.common.constant.UserConstants;
-import com.xiaobear.common.exception.ServiceException;
+import com.xiaobear.common.exception.CustomException;
 import com.xiaobear.common.utils.StringUtils;
 import com.xiaobear.system.domain.SysPost;
 import com.xiaobear.system.mapper.SysPostMapper;
@@ -14,7 +14,7 @@ import com.xiaobear.system.service.ISysPostService;
 /**
  * 岗位信息 服务层处理
  * 
- * @author ruoyi
+ * @author xiaobear
  */
 @Service
 public class SysPostServiceImpl implements ISysPostService
@@ -147,7 +147,7 @@ public class SysPostServiceImpl implements ISysPostService
             SysPost post = selectPostById(postId);
             if (countUserPostById(postId) > 0)
             {
-                throw new ServiceException(String.format("%1$s已分配,不能删除", post.getPostName()));
+                throw new CustomException(String.format("%1$s已分配,不能删除", post.getPostName()));
             }
         }
         return postMapper.deletePostByIds(postIds);

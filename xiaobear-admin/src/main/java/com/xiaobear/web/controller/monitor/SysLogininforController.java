@@ -20,7 +20,7 @@ import com.xiaobear.system.service.ISysLogininforService;
 /**
  * 系统访问记录
  * 
- * @author ruoyi
+ * @author xiaobear
  */
 @RestController
 @RequestMapping("/monitor/logininfor")

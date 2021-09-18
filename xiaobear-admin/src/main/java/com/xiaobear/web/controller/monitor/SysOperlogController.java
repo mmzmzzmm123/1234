@@ -20,7 +20,7 @@ import com.xiaobear.system.service.ISysOperLogService;
 /**
  * 操作日志记录
  * 
- * @author ruoyi
+ * @author xiaobear
  */
 @RestController
 @RequestMapping("/monitor/operlog")

@@ -3,12 +3,11 @@ package com.xiaobear.system.service;
 import java.util.List;
 import java.util.Set;
 import com.xiaobear.common.core.domain.entity.SysRole;
-import com.xiaobear.system.domain.SysUserRole;
 
 /**
  * 角色业务层
  * 
- * @author ruoyi
+ * @author xiaobear
  */
 public interface ISysRoleService
 {
@@ -21,15 +20,7 @@ public interface ISysRoleService
     public List<SysRole> selectRoleList(SysRole role);
 
     /**
-     * 根据用户ID查询角色列表
-     * 
-     * @param userId 用户ID
-     * @return 角色列表
-     */
-    public List<SysRole> selectRolesByUserId(Long userId);
-
-    /**
-     * 根据用户ID查询角色权限
+     * 根据用户ID查询角色
      * 
      * @param userId 用户ID
      * @return 权限列表
@@ -81,13 +72,6 @@ public interface ISysRoleService
      * @param role 角色信息
      */
     public void checkRoleAllowed(SysRole role);
-
-    /**
-     * 校验角色是否有数据权限
-     * 
-     * @param roleId 角色id
-     */
-    public void checkRoleDataScope(Long roleId);
 
     /**
      * 通过角色ID查询角色使用数量
@@ -144,30 +128,4 @@ public interface ISysRoleService
      * @return 结果
      */
     public int deleteRoleByIds(Long[] roleIds);
-
-    /**
-     * 取消授权用户角色
-     * 
-     * @param userRole 用户和角色关联信息
-     * @return 结果
-     */
-    public int deleteAuthUser(SysUserRole userRole);
-
-    /**
-     * 批量取消授权用户角色
-     * 
-     * @param roleId 角色ID
-     * @param userIds 需要取消授权的用户数据ID
-     * @return 结果
-     */
-    public int deleteAuthUsers(Long roleId, Long[] userIds);
-
-    /**
-     * 批量选择授权用户角色
-     * 
-     * @param roleId 角色ID
-     * @param userIds 需要删除的用户数据ID
-     * @return 结果
-     */
-    public int insertAuthUsers(Long roleId, Long[] userIds);
 }

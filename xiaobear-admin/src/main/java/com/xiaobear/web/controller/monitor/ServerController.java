@@ -10,7 +10,7 @@ import com.xiaobear.framework.web.domain.Server;
 /**
  * 服务器监控
  * 
- * @author ruoyi
+ * @author xiaobear
  */
 @RestController
 @RequestMapping("/monitor/server")

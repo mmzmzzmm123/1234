@@ -17,12 +17,11 @@ import com.xiaobear.common.core.domain.AjaxResult;
 import com.xiaobear.common.core.redis.RedisCache;
 import com.xiaobear.common.utils.sign.Base64;
 import com.xiaobear.common.utils.uuid.IdUtils;
-import com.xiaobear.system.service.ISysConfigService;
 
 /**
  * 验证码操作处理
  * 
- * @author ruoyi
+ * @author xiaobear
  */
 @RestController
 public class CaptchaController
@@ -39,23 +38,13 @@ public class CaptchaController
     // 验证码类型
     @Value("${ruoyi.captchaType}")
     private String captchaType;
-    
-    @Autowired
-    private ISysConfigService configService;
+
     /**
      * 生成验证码
      */
     @GetMapping("/captchaImage")
     public AjaxResult getCode(HttpServletResponse response) throws IOException
     {
-        AjaxResult ajax = AjaxResult.success();
-        boolean captchaOnOff = configService.selectCaptchaOnOff();
-        ajax.put("captchaOnOff", captchaOnOff);
-        if (!captchaOnOff)
-        {
-            return ajax;
-        }
-
         // 保存验证码信息
         String uuid = IdUtils.simpleUUID();
         String verifyKey = Constants.CAPTCHA_CODE_KEY + uuid;
@@ -89,6 +78,7 @@ public class CaptchaController
             return AjaxResult.error(e.getMessage());
         }
 
+        AjaxResult ajax = AjaxResult.success();
         ajax.put("uuid", uuid);
         ajax.put("img", Base64.encode(os.toByteArray()));
         return ajax;

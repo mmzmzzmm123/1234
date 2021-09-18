@@ -6,7 +6,7 @@ import com.xiaobear.system.domain.SysUserOnline;
 /**
  * 在线用户 服务层
  * 
- * @author ruoyi
+ * @author xiaobear
  */
 public interface ISysUserOnlineService
 {

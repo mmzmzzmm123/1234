@@ -12,7 +12,7 @@ import com.xiaobear.common.core.text.Convert;
 /**
  * 客户端工具类
  * 
- * @author ruoyi
+ * @author xiaobear
  */
 public class ServletUtils
 {
@@ -46,22 +46,6 @@ public class ServletUtils
     public static Integer getParameterToInt(String name, Integer defaultValue)
     {
         return Convert.toInt(getRequest().getParameter(name), defaultValue);
-    }
-
-    /**
-     * 获取Boolean参数
-     */
-    public static Boolean getParameterToBool(String name)
-    {
-        return Convert.toBool(getRequest().getParameter(name));
-    }
-
-    /**
-     * 获取Boolean参数
-     */
-    public static Boolean getParameterToBool(String name, Boolean defaultValue)
-    {
-        return Convert.toBool(getRequest().getParameter(name), defaultValue);
     }
 
     /**

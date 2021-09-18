@@ -6,7 +6,7 @@ import com.xiaobear.common.core.domain.entity.SysUser;
 /**
  * 用户 业务层
  * 
- * @author ruoyi
+ * @author xiaobear
  */
 public interface ISysUserService
 {
@@ -17,22 +17,6 @@ public interface ISysUserService
      * @return 用户信息集合信息
      */
     public List<SysUser> selectUserList(SysUser user);
-
-    /**
-     * 根据条件分页查询已分配用户角色列表
-     * 
-     * @param user 用户信息
-     * @return 用户信息集合信息
-     */
-    public List<SysUser> selectAllocatedList(SysUser user);
-
-    /**
-     * 根据条件分页查询未分配用户角色列表
-     * 
-     * @param user 用户信息
-     * @return 用户信息集合信息
-     */
-    public List<SysUser> selectUnallocatedList(SysUser user);
 
     /**
      * 通过用户名查询用户
@@ -98,13 +82,6 @@ public interface ISysUserService
     public void checkUserAllowed(SysUser user);
 
     /**
-     * 校验用户是否有数据权限
-     * 
-     * @param userId 用户id
-     */
-    public void checkUserDataScope(Long userId);
-
-    /**
      * 新增用户信息
      * 
      * @param user 用户信息
@@ -113,28 +90,12 @@ public interface ISysUserService
     public int insertUser(SysUser user);
 
     /**
-     * 注册用户信息
-     * 
-     * @param user 用户信息
-     * @return 结果
-     */
-    public boolean registerUser(SysUser user);
-
-    /**
      * 修改用户信息
      * 
      * @param user 用户信息
      * @return 结果
      */
     public int updateUser(SysUser user);
-
-    /**
-     * 用户授权角色
-     * 
-     * @param userId 用户ID
-     * @param roleIds 角色组
-     */
-    public void insertUserAuth(Long userId, Long[] roleIds);
 
     /**
      * 修改用户状态

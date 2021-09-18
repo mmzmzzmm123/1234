@@ -120,9 +120,9 @@
             <p>
               <i class="el-icon-user-solid"></i> QQ群：<s>满937441</s>
               <s>满887144332</s> <s>满180251782</s> <s>满104180207</s>
-              <s>满186866453</s> <s>满201396349</s>
-              <a href="https://jq.qq.com/?_wv=1027&k=TULPgzYe" target="_blank">
-                101456076</a
+              <s>满186866453</s>
+              <a href="https://jq.qq.com/?_wv=1027&k=5vYAqA05" target="_blank">
+                201396349</a
               >
             </p>
             <p>
@@ -147,104 +147,6 @@
             <span>更新日志</span>
           </div>
           <el-collapse accordion>
-            <el-collapse-item title="v3.7.0 - 2021-09-13">
-              <ol>
-                <li>参数管理支持配置验证码开关</li>
-                <li>新增是否开启用户注册功能</li>
-                <li>定时任务支持在线生成cron表达式</li>
-                <li>菜单管理支持配置路由参数</li>
-                <li>支持自定义注解实现接口限流</li>
-                <li>Excel注解支持Image图片导入</li>
-                <li>自定义弹层溢出滚动样式</li>
-                <li>自定义可拖动弹窗宽度指令</li>
-                <li>自定义可拖动弹窗高度指令</li>
-                <li>修复任意账户越权问题</li>
-                <li>修改时检查用户数据权限范围</li>
-                <li>修复保存配置主题颜色失效问题</li>
-                <li>新增暗色菜单风格主题</li>
-                <li>菜单&部门新增展开/折叠功能</li>
-                <li>页签新增关闭左侧&添加图标</li>
-                <li>顶部菜单排除隐藏的默认路由</li>
-                <li>顶部菜单同步系统主题样式</li>
-                <li>跳转路由高亮相对应的菜单栏</li>
-                <li>代码生成主子表多选行数据</li>
-                <li>日期范围支持添加多组</li>
-                <li>升级element-ui到最新版本2.15.5</li>
-                <li>升级oshi到最新版本v5.8.0</li>
-                <li>升级commons.io到最新版本v2.11.0</li>
-                <li>定时任务屏蔽ldap远程调用</li>
-                <li>定时任务屏蔽http(s)远程调用</li>
-                <li>补充定时任务表字段注释</li>
-                <li>定时任务对检查异常进行事务回滚</li>
-                <li>启用父部门状态排除顶级节点</li>
-                <li>富文本新增上传文件大小限制</li>
-                <li>默认首页使用keep-alive缓存</li>
-                <li>修改代码生成字典回显样式</li>
-                <li>自定义分页合理化传入参数</li>
-                <li>修复字典组件值为整形不显示问题</li>
-                <li>修复定时任务日志执行状态显示</li>
-                <li>角色&菜单新增字段属性提示信息</li>
-                <li>修复角色分配用户页面参数类型错误提醒</li>
-                <li>优化布局设置动画特效</li>
-                <li>优化异常处理信息</li>
-                <li>优化错误token导致的解析异常</li>
-                <li>密码框新增显示切换密码图标</li>
-                <li>定时任务新增更多操作</li>
-                <li>更多操作按钮添加权限控制</li>
-                <li>导入用户样式优化</li>
-                <li>提取通用方法到基类控制器</li>
-                <li>优化使用权限工具获取用户信息</li>
-                <li>优化用户不能删除自己</li>
-                <li>优化XSS跨站脚本过滤</li>
-                <li>优化代码生成模板</li>
-                <li>验证码默认20s超时</li>
-                <li>BLOB下载时清除URL对象引用</li>
-                <li>代码生成导入表按创建时间排序</li>
-                <li>修复代码生成页面数据编辑保存之后总是跳转第一页的问题</li>
-                <li>修复带safari浏览器无法格式化utc日期格式yyyy-MM-dd'T'HH:mm:ss.SSS问题</li>
-                <li>多图上传组件移除多余的api地址&验证失败导致图片删除问题&无法删除相应图片修复</li>
-                <li>其他细节优化</li>
-              </ol>
-            </el-collapse-item>
-            <el-collapse-item title="v3.6.0 - 2021-07-12">
-              <ol>
-                <li>角色管理新增分配用户功能</li>
-                <li>用户管理新增分配角色功能</li>
-                <li>日志列表支持排序操作</li>
-                <li>优化参数&字典缓存操作</li>
-                <li>系统布局配置支持动态标题开关</li>
-                <li>菜单路由配置支持内链访问</li>
-                <li>默认访问后端首页新增提示语</li>
-                <li>富文本默认上传返回url类型</li>
-                <li>新增自定义弹窗拖拽指令</li>
-                <li>全局注册常用通用组件</li>
-                <li>全局挂载字典标签组件</li>
-                <li>ImageUpload组件支持多图片上传</li>
-                <li>FileUpload组件支持多文件上传</li>
-                <li>文件上传组件添加数量限制属性</li>
-                <li>富文本编辑组件添加类型属性</li>
-                <li>富文本组件工具栏配置视频</li>
-                <li>封装通用iframe组件</li>
-                <li>限制超级管理员不允许操作</li>
-                <li>用户信息长度校验限制</li>
-                <li>分页组件新增pagerCount属性</li>
-                <li>添加bat脚本执行应用</li>
-                <li>升级oshi到最新版本v5.7.4</li>
-                <li>升级element-ui到最新版本2.15.2</li>
-                <li>升级pagehelper到最新版1.3.1</li>
-                <li>升级commons.io到最新版本v2.10.0</li>
-                <li>升级commons.fileupload到最新版本v1.4</li>
-                <li>升级swagger到最新版本v3.0.0</li>
-                <li>修复关闭confirm提示框控制台报错问题</li>
-                <li>修复存在的SQL注入漏洞问题</li>
-                <li>定时任务屏蔽rmi远程调用</li>
-                <li>修复用户搜索分页变量错误</li>
-                <li>修复导出角色数据范围翻译缺少仅本人</li>
-                <li>修复表单构建选择下拉选择控制台报错问题</li>
-                <li>优化图片工具类读取文件</li>
-                <li>其他细节优化</li>
-              </ol>
-            </el-collapse-item>
             <el-collapse-item title="v3.5.0 - 2021-05-25">
               <ol>
                 <li>新增菜单导航显示风格TopNav（false为左侧导航菜单，true为顶部导航菜单）</li>
@@ -660,11 +562,11 @@
 
 <script>
 export default {
-  name: "Index",
+  name: "index",
   data() {
     return {
       // 版本号
-      version: "3.7.0",
+      version: "3.5.0",
     };
   },
   methods: {

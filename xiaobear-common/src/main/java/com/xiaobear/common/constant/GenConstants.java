@@ -3,7 +3,7 @@ package com.xiaobear.common.constant;
 /**
  * 代码生成通用常量
  * 
- * @author ruoyi
+ * @author xiaobear
  */
 public class GenConstants
 {

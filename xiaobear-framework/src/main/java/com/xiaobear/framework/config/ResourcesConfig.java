@@ -16,7 +16,7 @@ import com.xiaobear.framework.interceptor.RepeatSubmitInterceptor;
 /**
  * 通用配置
  * 
- * @author ruoyi
+ * @author xiaobear
  */
 @Configuration
 public class ResourcesConfig implements WebMvcConfigurer

@@ -25,7 +25,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.xiaobear.common.constant.Constants;
 import com.xiaobear.common.constant.GenConstants;
 import com.xiaobear.common.core.text.CharsetKit;
-import com.xiaobear.common.exception.ServiceException;
+import com.xiaobear.common.exception.CustomException;
 import com.xiaobear.common.utils.SecurityUtils;
 import com.xiaobear.common.utils.StringUtils;
 import com.xiaobear.generator.domain.GenTable;
@@ -39,7 +39,7 @@ import com.xiaobear.generator.util.VelocityUtils;
 /**
  * 业务 服务层实现
  * 
- * @author ruoyi
+ * @author xiaobear
  */
 @Service
 public class GenTableServiceImpl implements IGenTableService
@@ -180,7 +180,7 @@ public class GenTableServiceImpl implements IGenTableService
         }
         catch (Exception e)
         {
-            throw new ServiceException("导入失败：" + e.getMessage());
+            throw new CustomException("导入失败：" + e.getMessage());
         }
     }
 
@@ -269,7 +269,7 @@ public class GenTableServiceImpl implements IGenTableService
                 }
                 catch (IOException e)
                 {
-                    throw new ServiceException("渲染模板失败，表名：" + table.getTableName());
+                    throw new CustomException("渲染模板失败，表名：" + table.getTableName());
                 }
             }
         }
@@ -291,7 +291,7 @@ public class GenTableServiceImpl implements IGenTableService
         List<GenTableColumn> dbTableColumns = genTableColumnMapper.selectDbTableColumnsByName(tableName);
         if (StringUtils.isEmpty(dbTableColumns))
         {
-            throw new ServiceException("同步数据失败，原表结构不存在");
+            throw new CustomException("同步数据失败，原表结构不存在");
         }
         List<String> dbTableColumnNames = dbTableColumns.stream().map(GenTableColumn::getColumnName).collect(Collectors.toList());
 
@@ -383,25 +383,25 @@ public class GenTableServiceImpl implements IGenTableService
             JSONObject paramsObj = JSONObject.parseObject(options);
             if (StringUtils.isEmpty(paramsObj.getString(GenConstants.TREE_CODE)))
             {
-                throw new ServiceException("树编码字段不能为空");
+                throw new CustomException("树编码字段不能为空");
             }
             else if (StringUtils.isEmpty(paramsObj.getString(GenConstants.TREE_PARENT_CODE)))
             {
-                throw new ServiceException("树父编码字段不能为空");
+                throw new CustomException("树父编码字段不能为空");
             }
             else if (StringUtils.isEmpty(paramsObj.getString(GenConstants.TREE_NAME)))
             {
-                throw new ServiceException("树名称字段不能为空");
+                throw new CustomException("树名称字段不能为空");
             }
             else if (GenConstants.TPL_SUB.equals(genTable.getTplCategory()))
             {
                 if (StringUtils.isEmpty(genTable.getSubTableName()))
                 {
-                    throw new ServiceException("关联子表的表名不能为空");
+                    throw new CustomException("关联子表的表名不能为空");
                 }
                 else if (StringUtils.isEmpty(genTable.getSubTableFkName()))
                 {
-                    throw new ServiceException("子表关联的外键名不能为空");
+                    throw new CustomException("子表关联的外键名不能为空");
                 }
             }
         }

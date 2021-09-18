@@ -11,7 +11,7 @@ import com.xiaobear.quartz.domain.SysJob;
 /**
  * 任务执行工具
  *
- * @author ruoyi
+ * @author xiaobear
  */
 public class JobInvokeUtil
 {

@@ -27,7 +27,7 @@ import com.xiaobear.common.utils.StringUtils;
 /**
  * Mybatis支持*匹配扫描包
  * 
- * @author ruoyi
+ * @author xiaobear
  */
 @Configuration
 public class MyBatisConfig

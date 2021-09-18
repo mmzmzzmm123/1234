@@ -10,7 +10,7 @@ import com.xiaobear.common.utils.spring.SpringUtils;
 /**
  * 字典工具类
  * 
- * @author ruoyi
+ * @author xiaobear
  */
 public class DictUtils
 {

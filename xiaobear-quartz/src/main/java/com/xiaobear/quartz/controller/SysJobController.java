@@ -19,6 +19,7 @@ import com.xiaobear.common.core.domain.AjaxResult;
 import com.xiaobear.common.core.page.TableDataInfo;
 import com.xiaobear.common.enums.BusinessType;
 import com.xiaobear.common.exception.job.TaskException;
+import com.xiaobear.common.utils.SecurityUtils;
 import com.xiaobear.common.utils.StringUtils;
 import com.xiaobear.common.utils.poi.ExcelUtil;
 import com.xiaobear.quartz.domain.SysJob;
@@ -28,7 +29,7 @@ import com.xiaobear.quartz.util.CronUtils;
 /**
  * 调度任务信息操作处理
  * 
- * @author ruoyi
+ * @author xiaobear
  */
 @RestController
 @RequestMapping("/monitor/job")
@@ -78,26 +79,18 @@ public class SysJobController extends BaseController
     @PreAuthorize("@ss.hasPermi('monitor:job:add')")
     @Log(title = "定时任务", businessType = BusinessType.INSERT)
     @PostMapping
-    public AjaxResult add(@RequestBody SysJob job) throws SchedulerException, TaskException
+    public AjaxResult add(@RequestBody SysJob sysJob) throws SchedulerException, TaskException
     {
-        if (!CronUtils.isValid(job.getCronExpression()))
+        if (!CronUtils.isValid(sysJob.getCronExpression()))
         {
-            return error("新增任务'" + job.getJobName() + "'失败，Cron表达式不正确");
+            return AjaxResult.error("新增任务'" + sysJob.getJobName() + "'失败，Cron表达式不正确");
         }
-        else if (StringUtils.containsIgnoreCase(job.getInvokeTarget(), Constants.LOOKUP_RMI))
+        else if (StringUtils.containsIgnoreCase(sysJob.getInvokeTarget(), Constants.LOOKUP_RMI))
         {
-            return error("新增任务'" + job.getJobName() + "'失败，目标字符串不允许'rmi://'调用");
+            return AjaxResult.error("新增任务'" + sysJob.getJobName() + "'失败，目标字符串不允许'rmi://'调用");
         }
-        else if (StringUtils.containsIgnoreCase(job.getInvokeTarget(), Constants.LOOKUP_LDAP))
-        {
-            return error("新增任务'" + job.getJobName() + "'失败，目标字符串不允许'ldap://'调用");
-        }
-        else if (StringUtils.containsAnyIgnoreCase(job.getInvokeTarget(), new String[] { Constants.HTTP, Constants.HTTPS }))
-        {
-            return error("新增任务'" + job.getJobName() + "'失败，目标字符串不允许'http(s)//'调用");
-        }
-        job.setCreateBy(getUsername());
-        return toAjax(jobService.insertJob(job));
+        sysJob.setCreateBy(SecurityUtils.getUsername());
+        return toAjax(jobService.insertJob(sysJob));
     }
 
     /**
@@ -106,26 +99,18 @@ public class SysJobController extends BaseController
     @PreAuthorize("@ss.hasPermi('monitor:job:edit')")
     @Log(title = "定时任务", businessType = BusinessType.UPDATE)
     @PutMapping
-    public AjaxResult edit(@RequestBody SysJob job) throws SchedulerException, TaskException
+    public AjaxResult edit(@RequestBody SysJob sysJob) throws SchedulerException, TaskException
     {
-        if (!CronUtils.isValid(job.getCronExpression()))
+        if (!CronUtils.isValid(sysJob.getCronExpression()))
         {
-            return error("修改任务'" + job.getJobName() + "'失败，Cron表达式不正确");
+            return AjaxResult.error("修改任务'" + sysJob.getJobName() + "'失败，Cron表达式不正确");
         }
-        else if (StringUtils.containsIgnoreCase(job.getInvokeTarget(), Constants.LOOKUP_RMI))
+        else if (StringUtils.containsIgnoreCase(sysJob.getInvokeTarget(), Constants.LOOKUP_RMI))
         {
-            return error("修改任务'" + job.getJobName() + "'失败，目标字符串不允许'rmi://'调用");
+            return AjaxResult.error("修改任务'" + sysJob.getJobName() + "'失败，目标字符串不允许'rmi://'调用");
         }
-        else if (StringUtils.containsIgnoreCase(job.getInvokeTarget(), Constants.LOOKUP_LDAP))
-        {
-            return error("修改任务'" + job.getJobName() + "'失败，目标字符串不允许'ldap://'调用");
-        }
-        else if (StringUtils.containsAnyIgnoreCase(job.getInvokeTarget(), new String[] { Constants.HTTP, Constants.HTTPS }))
-        {
-            return error("修改任务'" + job.getJobName() + "'失败，目标字符串不允许'http(s)//'调用");
-        }
-        job.setUpdateBy(getUsername());
-        return toAjax(jobService.updateJob(job));
+        sysJob.setUpdateBy(SecurityUtils.getUsername());
+        return toAjax(jobService.updateJob(sysJob));
     }
 
     /**

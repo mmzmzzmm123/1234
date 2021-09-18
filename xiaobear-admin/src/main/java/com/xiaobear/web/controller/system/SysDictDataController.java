@@ -19,6 +19,7 @@ import com.xiaobear.common.core.domain.AjaxResult;
 import com.xiaobear.common.core.domain.entity.SysDictData;
 import com.xiaobear.common.core.page.TableDataInfo;
 import com.xiaobear.common.enums.BusinessType;
+import com.xiaobear.common.utils.SecurityUtils;
 import com.xiaobear.common.utils.StringUtils;
 import com.xiaobear.common.utils.poi.ExcelUtil;
 import com.xiaobear.system.service.ISysDictDataService;
@@ -27,7 +28,7 @@ import com.xiaobear.system.service.ISysDictTypeService;
 /**
  * 数据字典信息
  * 
- * @author ruoyi
+ * @author xiaobear
  */
 @RestController
 @RequestMapping("/system/dict/data")
@@ -90,7 +91,7 @@ public class SysDictDataController extends BaseController
     @PostMapping
     public AjaxResult add(@Validated @RequestBody SysDictData dict)
     {
-        dict.setCreateBy(getUsername());
+        dict.setCreateBy(SecurityUtils.getUsername());
         return toAjax(dictDataService.insertDictData(dict));
     }
 
@@ -102,7 +103,7 @@ public class SysDictDataController extends BaseController
     @PutMapping
     public AjaxResult edit(@Validated @RequestBody SysDictData dict)
     {
-        dict.setUpdateBy(getUsername());
+        dict.setUpdateBy(SecurityUtils.getUsername());
         return toAjax(dictDataService.updateDictData(dict));
     }
 

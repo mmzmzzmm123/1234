@@ -11,7 +11,7 @@ import com.xiaobear.system.service.ISysDictDataService;
 /**
  * 字典 业务层处理
  * 
- * @author ruoyi
+ * @author xiaobear
  */
 @Service
 public class SysDictDataServiceImpl implements ISysDictDataService

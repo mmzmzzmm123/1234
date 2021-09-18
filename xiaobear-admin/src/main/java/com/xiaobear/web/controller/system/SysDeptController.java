@@ -20,13 +20,14 @@ import com.xiaobear.common.core.controller.BaseController;
 import com.xiaobear.common.core.domain.AjaxResult;
 import com.xiaobear.common.core.domain.entity.SysDept;
 import com.xiaobear.common.enums.BusinessType;
+import com.xiaobear.common.utils.SecurityUtils;
 import com.xiaobear.common.utils.StringUtils;
 import com.xiaobear.system.service.ISysDeptService;
 
 /**
  * 部门信息
  * 
- * @author ruoyi
+ * @author xiaobear
  */
 @RestController
 @RequestMapping("/system/dept")
@@ -74,7 +75,6 @@ public class SysDeptController extends BaseController
     @GetMapping(value = "/{deptId}")
     public AjaxResult getInfo(@PathVariable Long deptId)
     {
-        deptService.checkDeptDataScope(deptId);
         return AjaxResult.success(deptService.selectDeptById(deptId));
     }
 
@@ -113,7 +113,7 @@ public class SysDeptController extends BaseController
         {
             return AjaxResult.error("新增部门'" + dept.getDeptName() + "'失败，部门名称已存在");
         }
-        dept.setCreateBy(getUsername());
+        dept.setCreateBy(SecurityUtils.getUsername());
         return toAjax(deptService.insertDept(dept));
     }
 
@@ -138,7 +138,7 @@ public class SysDeptController extends BaseController
         {
             return AjaxResult.error("该部门包含未停用的子部门！");
         }
-        dept.setUpdateBy(getUsername());
+        dept.setUpdateBy(SecurityUtils.getUsername());
         return toAjax(deptService.updateDept(dept));
     }
 

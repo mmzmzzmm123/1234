@@ -5,7 +5,7 @@ import com.xiaobear.common.utils.StringUtils;
 /**
  * 分页数据
  * 
- * @author ruoyi
+ * @author xiaobear
  */
 public class PageDomain
 {
@@ -20,9 +20,6 @@ public class PageDomain
 
     /** 排序的方向desc或者asc */
     private String isAsc = "asc";
-
-    /** 分页参数合理化 */
-    private Boolean reasonable = true;
 
     public String getOrderBy()
     {
@@ -83,19 +80,5 @@ public class PageDomain
             }
             this.isAsc = isAsc;
         }
-    }
-
-    public Boolean getReasonable()
-    {
-        if (StringUtils.isNull(reasonable))
-        {
-            return Boolean.TRUE;
-        }
-        return reasonable;
-    }
-
-    public void setReasonable(Boolean reasonable)
-    {
-        this.reasonable = reasonable;
     }
 }

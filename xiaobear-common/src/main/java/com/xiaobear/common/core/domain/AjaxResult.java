@@ -7,7 +7,7 @@ import com.xiaobear.common.utils.StringUtils;
 /**
  * 操作消息提醒
  * 
- * @author ruoyi
+ * @author xiaobear
  */
 public class AjaxResult extends HashMap<String, Object>
 {

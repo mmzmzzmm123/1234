@@ -30,10 +30,10 @@
           style="width: 240px"
         >
           <el-option
-            v-for="dict in dict.type.sys_common_status"
-            :key="dict.value"
-            :label="dict.label"
-            :value="dict.value"
+            v-for="dict in statusOptions"
+            :key="dict.dictValue"
+            :label="dict.dictLabel"
+            :value="dict.dictValue"
           />
         </el-select>
       </el-form-item>
@@ -99,11 +99,7 @@
       <el-table-column label="登录地点" align="center" prop="loginLocation" :show-overflow-tooltip="true" />
       <el-table-column label="浏览器" align="center" prop="browser" :show-overflow-tooltip="true" />
       <el-table-column label="操作系统" align="center" prop="os" />
-      <el-table-column label="登录状态" align="center" prop="status">
-        <template slot-scope="scope">
-          <dict-tag :options="dict.type.sys_common_status" :value="scope.row.status"/>
-        </template>
-      </el-table-column>
+      <el-table-column label="登录状态" align="center" prop="status" :formatter="statusFormat" />
       <el-table-column label="操作信息" align="center" prop="msg" />
       <el-table-column label="登录日期" align="center" prop="loginTime" sortable="custom" :sort-orders="['descending', 'ascending']" width="180">
         <template slot-scope="scope">
@@ -127,7 +123,6 @@ import { list, delLogininfor, cleanLogininfor, exportLogininfor } from "@/api/mo
 
 export default {
   name: "Logininfor",
-  dicts: ['sys_common_status'],
   data() {
     return {
       // 遮罩层
@@ -144,6 +139,8 @@ export default {
       total: 0,
       // 表格数据
       list: [],
+      // 状态数据字典
+      statusOptions: [],
       // 日期范围
       dateRange: [],
       // 默认排序
@@ -160,6 +157,9 @@ export default {
   },
   created() {
     this.getList();
+    this.getDicts("sys_common_status").then(response => {
+      this.statusOptions = response.data;
+    });
   },
   methods: {
     /** 查询登录日志列表 */
@@ -171,6 +171,10 @@ export default {
           this.loading = false;
         }
       );
+    },
+    // 登录状态字典翻译
+    statusFormat(row, column) {
+      return this.selectDictLabel(this.statusOptions, row.status);
     },
     /** 搜索按钮操作 */
     handleQuery() {

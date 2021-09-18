@@ -5,7 +5,7 @@ import com.xiaobear.common.utils.StringUtils;
 /**
  * 转义和反转义工具类
  * 
- * @author ruoyi
+ * @author xiaobear
  */
 public class EscapeUtil
 {

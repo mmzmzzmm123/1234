@@ -3,7 +3,7 @@ package com.xiaobear.common.enums;
 /**
  * 操作状态
  * 
- * @author ruoyi
+ * @author xiaobear
  *
  */
 public enum BusinessStatus

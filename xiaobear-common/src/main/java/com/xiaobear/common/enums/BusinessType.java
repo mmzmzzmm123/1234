@@ -3,7 +3,7 @@ package com.xiaobear.common.enums;
 /**
  * 业务操作类型
  * 
- * @author ruoyi
+ * @author xiaobear
  */
 public enum BusinessType
 {

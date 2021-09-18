@@ -6,7 +6,7 @@ import com.xiaobear.system.domain.SysConfig;
 /**
  * 参数配置 服务层
  * 
- * @author ruoyi
+ * @author xiaobear
  */
 public interface ISysConfigService
 {
@@ -25,13 +25,6 @@ public interface ISysConfigService
      * @return 参数键值
      */
     public String selectConfigByKey(String configKey);
-
-    /**
-     * 获取验证码开关
-     * 
-     * @return true开启，false关闭
-     */
-    public boolean selectCaptchaOnOff();
 
     /**
      * 查询参数配置列表

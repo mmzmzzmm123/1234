@@ -6,7 +6,7 @@ import java.util.List;
 /**
  * 路由配置信息
  * 
- * @author ruoyi
+ * @author xiaobear
  */
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
 public class RouterVo
@@ -35,11 +35,6 @@ public class RouterVo
      * 组件地址
      */
     private String component;
-
-    /**
-     * 路由参数：如 {"id": 1, "name": "ry"}
-     */
-    private String query;
 
     /**
      * 当你一个路由下面的 children 声明的路由大于1个时，自动会变成嵌套的模式--如组件页面
@@ -104,16 +99,6 @@ public class RouterVo
     public void setComponent(String component)
     {
         this.component = component;
-    }
-
-    public String getQuery()
-    {
-        return query;
-    }
-
-    public void setQuery(String query)
-    {
-        this.query = query;
     }
 
     public Boolean getAlwaysShow()

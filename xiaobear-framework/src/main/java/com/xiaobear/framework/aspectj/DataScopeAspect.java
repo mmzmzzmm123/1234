@@ -13,13 +13,15 @@ import com.xiaobear.common.core.domain.BaseEntity;
 import com.xiaobear.common.core.domain.entity.SysRole;
 import com.xiaobear.common.core.domain.entity.SysUser;
 import com.xiaobear.common.core.domain.model.LoginUser;
+import com.xiaobear.common.utils.ServletUtils;
 import com.xiaobear.common.utils.StringUtils;
-import com.xiaobear.common.utils.SecurityUtils;
+import com.xiaobear.common.utils.spring.SpringUtils;
+import com.xiaobear.framework.web.service.TokenService;
 
 /**
  * 数据过滤处理
  *
- * @author ruoyi
+ * @author xiaobear
  */
 @Aspect
 @Component
@@ -77,7 +79,7 @@ public class DataScopeAspect
             return;
         }
         // 获取当前的用户
-        LoginUser loginUser = SecurityUtils.getLoginUser();
+        LoginUser loginUser = SpringUtils.getBean(TokenService.class).getLoginUser(ServletUtils.getRequest());
         if (StringUtils.isNotNull(loginUser))
         {
             SysUser currentUser = loginUser.getUser();

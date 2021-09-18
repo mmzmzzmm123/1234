@@ -1,12 +1,12 @@
 package com.xiaobear.common.utils.sql;
 
-import com.xiaobear.common.exception.UtilException;
+import com.xiaobear.common.exception.BaseException;
 import com.xiaobear.common.utils.StringUtils;
 
 /**
  * sql操作工具类
  * 
- * @author ruoyi
+ * @author xiaobear
  */
 public class SqlUtil
 {
@@ -22,7 +22,7 @@ public class SqlUtil
     {
         if (StringUtils.isNotEmpty(value) && !isValidOrderBySql(value))
         {
-            throw new UtilException("参数不符合规范，不能进行查询");
+            throw new BaseException("参数不符合规范，不能进行查询");
         }
         return value;
     }

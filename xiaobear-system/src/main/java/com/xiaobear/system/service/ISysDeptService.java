@@ -7,7 +7,7 @@ import com.xiaobear.common.core.domain.entity.SysDept;
 /**
  * 部门管理 服务层
  * 
- * @author ruoyi
+ * @author xiaobear
  */
 public interface ISysDeptService
 {
@@ -82,13 +82,6 @@ public interface ISysDeptService
      * @return 结果
      */
     public String checkDeptNameUnique(SysDept dept);
-
-    /**
-     * 校验部门是否有数据权限
-     * 
-     * @param deptId 部门id
-     */
-    public void checkDeptDataScope(Long deptId);
 
     /**
      * 新增保存部门信息

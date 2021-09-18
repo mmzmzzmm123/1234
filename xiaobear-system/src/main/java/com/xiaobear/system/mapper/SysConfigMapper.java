@@ -6,7 +6,7 @@ import com.xiaobear.system.domain.SysConfig;
 /**
  * 参数配置 数据层
  * 
- * @author ruoyi
+ * @author xiaobear
  */
 public interface SysConfigMapper
 {

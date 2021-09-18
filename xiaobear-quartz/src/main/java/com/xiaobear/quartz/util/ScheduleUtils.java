@@ -18,7 +18,7 @@ import com.xiaobear.quartz.domain.SysJob;
 /**
  * 定时任务工具类
  * 
- * @author ruoyi
+ * @author xiaobear
  *
  */
 public class ScheduleUtils

@@ -6,7 +6,7 @@ import com.xiaobear.quartz.domain.SysJob;
 /**
  * 调度任务信息 数据层
  * 
- * @author ruoyi
+ * @author xiaobear
  */
 public interface SysJobMapper
 {

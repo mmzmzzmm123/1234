@@ -17,13 +17,14 @@ import com.xiaobear.common.core.controller.BaseController;
 import com.xiaobear.common.core.domain.AjaxResult;
 import com.xiaobear.common.core.page.TableDataInfo;
 import com.xiaobear.common.enums.BusinessType;
+import com.xiaobear.common.utils.SecurityUtils;
 import com.xiaobear.system.domain.SysNotice;
 import com.xiaobear.system.service.ISysNoticeService;
 
 /**
  * 公告 信息操作处理
  * 
- * @author ruoyi
+ * @author xiaobear
  */
 @RestController
 @RequestMapping("/system/notice")
@@ -62,7 +63,7 @@ public class SysNoticeController extends BaseController
     @PostMapping
     public AjaxResult add(@Validated @RequestBody SysNotice notice)
     {
-        notice.setCreateBy(getUsername());
+        notice.setCreateBy(SecurityUtils.getUsername());
         return toAjax(noticeService.insertNotice(notice));
     }
 
@@ -74,7 +75,7 @@ public class SysNoticeController extends BaseController
     @PutMapping
     public AjaxResult edit(@Validated @RequestBody SysNotice notice)
     {
-        notice.setUpdateBy(getUsername());
+        notice.setUpdateBy(SecurityUtils.getUsername());
         return toAjax(noticeService.updateNotice(notice));
     }
 

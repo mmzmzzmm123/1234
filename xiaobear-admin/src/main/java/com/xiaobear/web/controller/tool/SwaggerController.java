@@ -9,7 +9,7 @@ import com.xiaobear.common.core.controller.BaseController;
 /**
  * swagger 接口
  * 
- * @author ruoyi
+ * @author xiaobear
  */
 @Controller
 @RequestMapping("/tool/swagger")

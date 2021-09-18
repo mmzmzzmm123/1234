@@ -9,7 +9,7 @@ import com.xiaobear.common.core.domain.BaseEntity;
 /**
  * 通知公告表 sys_notice
  * 
- * @author ruoyi
+ * @author xiaobear
  */
 public class SysNotice extends BaseEntity
 {

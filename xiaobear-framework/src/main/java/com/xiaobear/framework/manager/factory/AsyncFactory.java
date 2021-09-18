@@ -6,7 +6,6 @@ import org.slf4j.LoggerFactory;
 import com.xiaobear.common.constant.Constants;
 import com.xiaobear.common.utils.LogUtils;
 import com.xiaobear.common.utils.ServletUtils;
-import com.xiaobear.common.utils.StringUtils;
 import com.xiaobear.common.utils.ip.AddressUtils;
 import com.xiaobear.common.utils.ip.IpUtils;
 import com.xiaobear.common.utils.spring.SpringUtils;
@@ -19,7 +18,7 @@ import eu.bitwalker.useragentutils.UserAgent;
 /**
  * 异步工厂（产生任务用）
  * 
- * @author ruoyi
+ * @author xiaobear
  */
 public class AsyncFactory
 {
@@ -66,7 +65,7 @@ public class AsyncFactory
                 logininfor.setOs(os);
                 logininfor.setMsg(message);
                 // 日志状态
-                if (StringUtils.equalsAny(status, Constants.LOGIN_SUCCESS, Constants.LOGOUT, Constants.REGISTER))
+                if (Constants.LOGIN_SUCCESS.equals(status) || Constants.LOGOUT.equals(status))
                 {
                     logininfor.setStatus(Constants.SUCCESS);
                 }

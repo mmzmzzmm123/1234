@@ -11,7 +11,7 @@ import com.xiaobear.common.core.domain.BaseEntity;
 /**
  * 字典类型表 sys_dict_type
  * 
- * @author ruoyi
+ * @author xiaobear
  */
 public class SysDictType extends BaseEntity
 {

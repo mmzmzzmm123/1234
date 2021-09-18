@@ -6,7 +6,7 @@ import com.xiaobear.generator.domain.GenTableColumn;
 /**
  * 业务字段 服务层
  * 
- * @author ruoyi
+ * @author xiaobear
  */
 public interface IGenTableColumnService
 {

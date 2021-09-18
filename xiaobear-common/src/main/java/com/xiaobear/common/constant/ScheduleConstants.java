@@ -3,7 +3,7 @@ package com.xiaobear.common.constant;
 /**
  * 任务调度通用常量
  * 
- * @author ruoyi
+ * @author xiaobear
  */
 public class ScheduleConstants
 {

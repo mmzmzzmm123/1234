@@ -30,10 +30,10 @@
           style="width: 240px"
         >
           <el-option
-            v-for="dict in dict.type.sys_normal_disable"
-            :key="dict.value"
-            :label="dict.label"
-            :value="dict.value"
+            v-for="dict in statusOptions"
+            :key="dict.dictValue"
+            :label="dict.dictLabel"
+            :value="dict.dictValue"
           />
         </el-select>
       </el-form-item>
@@ -118,14 +118,14 @@
       <el-table-column label="字典名称" align="center" prop="dictName" :show-overflow-tooltip="true" />
       <el-table-column label="字典类型" align="center" :show-overflow-tooltip="true">
         <template slot-scope="scope">
-          <router-link :to="'/system/dict-data/index/' + scope.row.dictId" class="link-type">
+          <router-link :to="'/dict/type/data/' + scope.row.dictId" class="link-type">
             <span>{{ scope.row.dictType }}</span>
           </router-link>
         </template>
       </el-table-column>
       <el-table-column label="状态" align="center" prop="status">
         <template slot-scope="scope">
-          <dict-tag :options="dict.type.sys_normal_disable" :value="scope.row.status"/>
+          <dict-tag :options="statusOptions" :value="scope.row.status"/>
         </template>
       </el-table-column>
       <el-table-column label="备注" align="center" prop="remark" :show-overflow-tooltip="true" />
@@ -174,10 +174,10 @@
         <el-form-item label="状态" prop="status">
           <el-radio-group v-model="form.status">
             <el-radio
-              v-for="dict in dict.type.sys_normal_disable"
-              :key="dict.value"
-              :label="dict.value"
-            >{{dict.label}}</el-radio>
+              v-for="dict in statusOptions"
+              :key="dict.dictValue"
+              :label="dict.dictValue"
+            >{{dict.dictLabel}}</el-radio>
           </el-radio-group>
         </el-form-item>
         <el-form-item label="备注" prop="remark">
@@ -197,7 +197,6 @@ import { listType, getType, delType, addType, updateType, exportType, refreshCac
 
 export default {
   name: "Dict",
-  dicts: ['sys_normal_disable'],
   data() {
     return {
       // 遮罩层
@@ -220,6 +219,8 @@ export default {
       title: "",
       // 是否显示弹出层
       open: false,
+      // 状态数据字典
+      statusOptions: [],
       // 日期范围
       dateRange: [],
       // 查询参数
@@ -245,6 +246,9 @@ export default {
   },
   created() {
     this.getList();
+    this.getDicts("sys_normal_disable").then(response => {
+      this.statusOptions = response.data;
+    });
   },
   methods: {
     /** 查询字典类型列表 */

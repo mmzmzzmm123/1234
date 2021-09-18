@@ -3,7 +3,7 @@ package com.xiaobear.common.constant;
 /**
  * 返回状态码
  * 
- * @author ruoyi
+ * @author xiaobear
  */
 public class HttpStatus
 {

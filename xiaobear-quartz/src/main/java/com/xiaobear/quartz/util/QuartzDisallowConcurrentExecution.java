@@ -7,7 +7,7 @@ import com.xiaobear.quartz.domain.SysJob;
 /**
  * 定时任务处理（禁止并发执行）
  * 
- * @author ruoyi
+ * @author xiaobear
  *
  */
 @DisallowConcurrentExecution

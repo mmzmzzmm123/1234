@@ -7,7 +7,7 @@ import com.xiaobear.common.utils.DateUtils;
 /**
  * JVM相关信息
  * 
- * @author ruoyi
+ * @author xiaobear
  */
 public class Jvm
 {
