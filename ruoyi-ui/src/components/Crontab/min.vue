@@ -50,11 +50,15 @@ export default {
 	name: 'crontab-min',
 	props: ['check', 'cron'],
 	methods: {
+    init() {
+      this.cycle01 = 1
+      this.cycle02 = 2
+      this.average01 = 0
+      this.average02 = 1
+      this.checkboxList = []
+    },
 		// 单选按钮值变化时
 		radioChange() {
-			if (this.radioValue !== 1 && this.cron.second === '*') {
-				this.$emit('update', 'second', '0', 'min');
-			}
 			switch (this.radioValue) {
 				case 1:
 					this.$emit('update', 'min', '*', 'min');

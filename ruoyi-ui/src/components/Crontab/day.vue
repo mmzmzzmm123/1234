@@ -15,23 +15,28 @@
 		<el-form-item>
 			<el-radio v-model='radioValue' :label="3">
 				周期从
-				<el-input-number v-model='cycle01' :min="0" :max="31" /> -
-				<el-input-number v-model='cycle02' :min="0" :max="31" /> 日
+				<el-input-number v-model='cycle01' :min="0" :max="31"/>
+				-
+				<el-input-number v-model='cycle02' :min="0" :max="31"/>
+				日
 			</el-radio>
 		</el-form-item>
 
 		<el-form-item>
 			<el-radio v-model='radioValue' :label="4">
 				从
-				<el-input-number v-model='average01' :min="0" :max="31" /> 号开始，每
-				<el-input-number v-model='average02' :min="0" :max="31" /> 日执行一次
+				<el-input-number v-model='average01' :min="0" :max="31"/>
+				号开始，每
+				<el-input-number v-model='average02' :min="0" :max="31"/>
+				日执行一次
 			</el-radio>
 		</el-form-item>
 
 		<el-form-item>
 			<el-radio v-model='radioValue' :label="5">
 				每月
-				<el-input-number v-model='workday' :min="0" :max="31" /> 号最近的那个工作日
+				<el-input-number v-model='workday' :min="0" :max="31"/>
+				号最近的那个工作日
 			</el-radio>
 		</el-form-item>
 
@@ -45,7 +50,7 @@
 			<el-radio v-model='radioValue' :label="7">
 				指定
 				<el-select clearable v-model="checkboxList" placeholder="可多选" multiple style="width:100%">
-					<el-option v-for="item in 31" :key="item" :value="item">{{item}}</el-option>
+					<el-option v-for="item in 31" :key="item" :value="item">{{ item }}</el-option>
 				</el-select>
 			</el-radio>
 		</el-form-item>
@@ -69,23 +74,19 @@ export default {
 	name: 'crontab-day',
 	props: ['check', 'cron'],
 	methods: {
+		init() {
+			this.workday = 1
+			this.cycle01 = 1
+			this.cycle02 = 2
+			this.average01 = 1
+			this.average02 = 1
+			this.checkboxList = []
+		},
 		// 单选按钮值变化时
 		radioChange() {
 			('day rachange');
 			if (this.radioValue === 1) {
 				this.$emit('update', 'day', '*', 'day');
-				this.$emit('update', 'week', '?', 'day');
-				this.$emit('update', 'month', '*', 'day');
-			} else {
-				if (this.cron.hour === '*') {
-					this.$emit('update', 'hour', '0', 'day');
-				}
-				if (this.cron.min === '*') {
-					this.$emit('update', 'min', '0', 'day');
-				}
-				if (this.cron.second === '*') {
-					this.$emit('update', 'second', '0', 'day');
-				}
 			}
 
 			switch (this.radioValue) {

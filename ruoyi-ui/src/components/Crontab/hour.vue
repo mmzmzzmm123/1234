@@ -9,16 +9,20 @@
 		<el-form-item>
 			<el-radio v-model='radioValue' :label="2">
 				周期从
-				<el-input-number v-model='cycle01' :min="0" :max="60" /> -
-				<el-input-number v-model='cycle02' :min="0" :max="60" /> 小时
+				<el-input-number v-model='cycle01' :min="0" :max="60"/>
+				-
+				<el-input-number v-model='cycle02' :min="0" :max="60"/>
+				小时
 			</el-radio>
 		</el-form-item>
 
 		<el-form-item>
 			<el-radio v-model='radioValue' :label="3">
 				从
-				<el-input-number v-model='average01' :min="0" :max="60" /> 小时开始，每
-				<el-input-number v-model='average02' :min="0" :max="60" /> 小时执行一次
+				<el-input-number v-model='average01' :min="0" :max="60"/>
+				小时开始，每
+				<el-input-number v-model='average02' :min="0" :max="60"/>
+				小时执行一次
 			</el-radio>
 		</el-form-item>
 
@@ -26,7 +30,7 @@
 			<el-radio v-model='radioValue' :label="4">
 				指定
 				<el-select clearable v-model="checkboxList" placeholder="可多选" multiple style="width:100%">
-					<el-option v-for="item in 60" :key="item" :value="item-1">{{item-1}}</el-option>
+					<el-option v-for="item in 60" :key="item" :value="item-1">{{ item - 1 }}</el-option>
 				</el-select>
 			</el-radio>
 		</el-form-item>
@@ -49,18 +53,17 @@ export default {
 	name: 'crontab-hour',
 	props: ['check', 'cron'],
 	methods: {
+		init() {
+			this.cycle01 = 0
+			this.cycle02 = 1
+			this.average01 = 0
+			this.average02 = 1
+			this.checkboxList = []
+		},
 		// 单选按钮值变化时
 		radioChange() {
 			if (this.radioValue === 1) {
 				this.$emit('update', 'hour', '*', 'hour');
-				this.$emit('update', 'day', '*', 'hour');
-			} else {
-				if (this.cron.min === '*') {
-					this.$emit('update', 'min', '0', 'hour');
-				}
-				if (this.cron.second === '*') {
-					this.$emit('update', 'second', '0', 'hour');
-				}
 			}
 			switch (this.radioValue) {
 				case 2:
