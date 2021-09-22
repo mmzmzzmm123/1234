@@ -3,7 +3,7 @@
 		<p class="title">最近5次运行时间</p>
 		<ul class="popup-result-scroll">
 			<template v-if='isShow'>
-				<li v-for='item in resultList' :key="item">{{item}}</li>
+				<li v-for='item in resultList' :key="item">{{ item }}</li>
 			</template>
 			<li v-else>计算结果中...</li>
 		</ul>
@@ -25,7 +25,6 @@ export default {
 	methods: {
 		// 表达式值变化时，开始去计算结果
 		expressionChange() {
-
 			// 计算开始-隐藏结果
 			this.isShow = false;
 			// 获取规则数组[0秒、1分、2时、3日、4月、5星期、6年]
@@ -151,7 +150,6 @@ export default {
 							}
 							continue;
 						}
-
 						// 判断日期的合法性，不合法的话也是跳出当前循环
 						if (this.checkDate(YY + '-' + MM + '-' + thisDD + ' 00:00:00') !== true && this.dayRule !== 'workDay' && this.dayRule !== 'lastWeek' && this.dayRule !== 'lastDay') {
 							resetDay();
@@ -160,7 +158,6 @@ export default {
 						// 如果日期规则中有值时
 						if (this.dayRule == 'lastDay') {
 							// 如果不是合法日期则需要将前将日期调到合法日期即月末最后一天
-
 							if (this.checkDate(YY + '-' + MM + '-' + thisDD + ' 00:00:00') !== true) {
 								while (DD > 0 && this.checkDate(YY + '-' + MM + '-' + thisDD + ' 00:00:00') !== true) {
 									DD--;
@@ -200,7 +197,7 @@ export default {
 							// 获取当前日期是属于星期几
 							let thisWeek = this.formatDate(new Date(YY + '-' + MM + '-' + DD + ' 00:00:00'), 'week');
 							// 校验当前星期是否在星期池（dayRuleSup）中
-							if (Array.indexOf(this.dayRuleSup, thisWeek) < 0) {
+							if (this.dayRuleSup.indexOf(thisWeek) < 0) {
 								// 如果到达最大值时
 								if (Di == DDate.length - 1) {
 									resetDay();
@@ -241,11 +238,9 @@ export default {
 						}
 						// 判断时间值是否小于10置换成“05”这种格式
 						DD = DD < 10 ? '0' + DD : DD;
-
 						// 循环“时”数组
 						goHour: for (let hi = hIdx; hi < hDate.length; hi++) {
 							let hh = hDate[hi] < 10 ? '0' + hDate[hi] : hDate[hi]
-
 							// 如果到达最大值时
 							if (nMin > mDate[mDate.length - 1]) {
 								resetMin();
@@ -266,7 +261,6 @@ export default {
 							// 循环"分"数组
 							goMin: for (let mi = mIdx; mi < mDate.length; mi++) {
 								let mm = mDate[mi] < 10 ? '0' + mDate[mi] : mDate[mi];
-
 								// 如果到达最大值时
 								if (nSecond > sDate[sDate.length - 1]) {
 									resetSecond();
