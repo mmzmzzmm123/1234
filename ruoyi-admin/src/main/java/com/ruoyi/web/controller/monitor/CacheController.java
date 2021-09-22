@@ -9,9 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisCallback;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.utils.StringUtils;
 
@@ -48,6 +46,19 @@ public class CacheController
             pieList.add(data);
         });
         result.put("commandStats", pieList);
+        result.put("allKeys", redisTemplate.keys("*"));
         return AjaxResult.success(result);
+    }
+
+    @PreAuthorize("@ss.hasPermi('monitor:cache:remove')")
+    @DeleteMapping("/{key}")
+    public AjaxResult delRedisCache(@PathVariable("key") String key)
+    {
+        try {
+            redisTemplate.delete(key);
+            return AjaxResult.success();
+        } catch (Exception exception) {
+            return AjaxResult.error("删除失败，请告知管理员，说明这个错误：" + exception.getMessage());
+        }
     }
 }

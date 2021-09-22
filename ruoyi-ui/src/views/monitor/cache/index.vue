@@ -63,6 +63,30 @@
         </el-card>
       </el-col>
     </el-row>
+    <el-row>
+      <el-col :xs="8" :sm="8" :md="8" :lg="6" :xl="3" v-for="key in cache.allKeys" :key="key" >
+        <div  class="grid-content bg-purple" style="width: 95%; display: flex; justify-content: space-between; margin-bottom: 10px; font-size: 16px;">
+          <div style="width: 10%; line-height: 36px; text-align: center;">
+            <i class="el-icon-cpu" />
+          </div>
+          <div :title="key" style="line-height: 36px; width: 80%; height: 36px; overflow: hidden; text-overflow:ellipsis; white-space:nowrap;">
+            <label>{{ key }}</label>
+          </div>
+          <div style="width: 10%; line-height: 36px; cursor: pointer;" @click="delCache(key)">
+            <i class="el-icon-delete-solid" />
+          </div>
+        </div>
+      </el-col>
+    </el-row>
+    <el-row>
+      <el-alert
+        title="点击清空缓存，是把当前系统所用的整个index缓存库，直接清空，该操作不可逆，请慎重操作！"
+        type="error">
+      </el-alert>
+    </el-row>
+    <el-row>
+      <el-button type="danger" icon="el-icon-delete" @click="clearCache" style="float: right" round>清空缓存</el-button>
+    </el-row>
   </div>
 </template>
 
@@ -148,6 +172,32 @@ export default {
         background: "rgba(0, 0, 0, 0.7)",
       });
     },
+    // 删除缓存
+    delCache(key) {
+      this.$confirm('是否确认删除缓存"' + key + '"的数据项?', "警告", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
+      }).then(function() {
+        return delRedisCache(key);
+      }).then(() => {
+        this.getList();
+        this.msgSuccess("删除成功");
+      })
+    },
+    // 删除缓存
+    clearCache() {
+      this.$confirm('是否确认清空缓存? 该操作不可逆，请慎重操作!', "警告", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
+      }).then(function() {
+        return clearRedisCache();
+      }).then(() => {
+        this.getList();
+        this.msgSuccess("删除成功");
+      })
+    }
   },
 };
 </script>

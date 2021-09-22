@@ -7,3 +7,19 @@ export function getCache() {
     method: 'get'
   })
 }
+
+// 删除缓存
+export function delRedisCache(key) {
+  return request({
+    url: '/monitor/cache/'+key,
+    method: 'delete'
+  })
+}
+
+// 清空缓存
+export function clearRedisCache() {
+  return request({
+    url: '/monitor/cache/clear',
+    method: 'delete'
+  })
+}
