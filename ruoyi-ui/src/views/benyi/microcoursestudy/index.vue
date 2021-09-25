@@ -38,7 +38,9 @@
               @click="prints"
               >打印</el-button
             >
-            <div class="pad-left" v-html="note" ref="printMe"></div>
+            <div class="pad-left" ref="printMe">
+              <div v-html="note"></div>
+            </div>
           </div>
         </el-card>
       </el-col>
@@ -61,7 +63,7 @@ export default {
       title: "微型课程",
       title1: "概论",
       //目的
-      note: "微 型 课 程     王东异  主编",
+      note: "微型课程 — 王东异 <span style='font-size: 14px'>主编</span>",
       // 树状显示类型
       treeOptions: [],
       // 树结构
@@ -120,6 +122,9 @@ export default {
 };
 </script>
 <style lang="scss" scoped>
+.app-container, .el-row {
+  height: 100%;
+}
 .text {
   font-size: 14px;
 }
@@ -174,6 +179,6 @@ div {
 }
 .tree {
   overflow:auto;
-  max-height: 600px;
+  height: calc(100% - 52px);
 }
 </style>

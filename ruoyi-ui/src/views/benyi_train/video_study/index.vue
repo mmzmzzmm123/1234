@@ -2,8 +2,18 @@
   <div class="app-container" @contextmenu.prevent="">
     <el-form :model="queryParams" ref="queryForm" label-width="70px">
       <el-row :gutter="10">
-        <el-col :xs="24" :ms="12" :md="5">
-          <el-form-item label="视频类别" prop="type">
+        <el-col>
+          <el-form-item style="margin-bottom: 5px" label="视频类型" prop="type">
+            <div class="flex wrap btns">
+              <el-button 
+                v-for="ele in optionTypes" 
+                size="mini"
+                :key="ele.id"
+                :type="ele.id === type ? 'primary' : ''"
+                @click="changeType(ele)">{{ele.name}}</el-button>
+            </div>
+          </el-form-item>
+          <!-- <el-form-item label="视频类别" prop="type">
             <el-cascader
               placeholder="请选择视频类别"
               ref="example"
@@ -13,7 +23,7 @@
               clearable
               @change="exampleChange"
             ></el-cascader>
-          </el-form-item>
+          </el-form-item> -->
           <!-- 博士要求注释掉，不需要该过滤条件 2020-05-30 zlp -->
           <!-- <el-form-item label="讲师姓名" prop="lecturer">
         <el-select v-model="queryParams.lecturer" filterable placeholder="请选择讲师">
@@ -35,7 +45,7 @@
         />
       </el-form-item>-->
         </el-col>
-        <el-col :xs="24" :ms="12" :md="6">
+        <!-- <el-col :xs="24" :ms="12" :md="6">
           <el-form-item class="no-margin">
             <el-button
               type="primary"
@@ -47,6 +57,19 @@
             <el-button icon="el-icon-refresh" size="mini" @click="resetQuery"
               >重置</el-button
             >
+          </el-form-item>
+        </el-col> -->
+        <el-col>
+          <el-form-item  style="margin-bottom: 5px" label="详细分类" prop="type">
+            <div class="flex wrap btns">
+              <el-button 
+                v-for="ele in getVideoTypes"
+                round
+                size="mini"
+                :key="ele.id"
+                :type="ele.id === ancestors ? 'primary' : ''"
+                @click="changeTypeDetail(ele)">{{ele.name}}</el-button>
+            </div>
           </el-form-item>
         </el-col>
       </el-row>
@@ -135,10 +158,24 @@ export default {
         pageNum: 1,
         pageSize: 8,
       },
+      type: 1,
+      ancestors: '',
+      videoTypes: []
     };
   },
+  computed: {
+    getVideoTypes(){
+      let arr = [];
+      for(let ele of this.optionTypes) {
+        if (ele.id === this.type) {
+          arr = ele.children;
+        }
+      }
+      return arr;
+    }
+  },
   created() {
-    this.getList();
+    // this.getList();
     listAllLecturer().then((response) => {
       //console.log(response.lecturer);
       this.lecturerOptions = response.lecturer;
@@ -148,12 +185,22 @@ export default {
       this.optionTypes = this.handleTree(response.data, "id", "pid");
       //第二步移除children为0的数组，也就是将children为0 设置为undefined
       this.optionTypes = this.getTreeData(this.optionTypes);
+      console.log(this.optionTypes)
     });
   },
-  // mounted() {
-  //   this.$watermark.set("测试专用");
-  // },
+  mounted() {
+    this.handleQuery();
+  },
   methods: {
+    changeType(btn) {
+      this.type = btn.id;
+      this.ancestors = '';
+      this.handleQuery(btn);
+    },
+    changeTypeDetail(btn) {
+      this.ancestors = (this.ancestors && btn.id === this.ancestors) ? '' : btn.id;
+      this.handleQuery(btn);
+    },
     exampleChange(e) {
       // console.log(e);
       // 目的是选择之后将下拉界面收起
@@ -209,11 +256,13 @@ export default {
     },
     /** 搜索按钮操作 */
     handleQuery() {
-      if (this.queryParams.type == null) {
-        this.queryParams.type = "";
-      } else {
-        this.queryParams.type = this.queryParams.type.toString();
-      }
+      // if (this.queryParams.type == null) {
+      //   this.queryParams.type = "";
+      // } else {
+      //   // this.queryParams.type = this.queryParams.type.toString();
+      //   this.queryParams.type = ancestors;
+      // }
+      this.queryParams.type = [this.type, this.ancestors].join(',');
       //console.log(this.queryParams.type);
       this.queryParams.pageNum = 1;
       this.getList();
@@ -227,7 +276,7 @@ export default {
 };
 </script>
 
-<style>
+<style lang="scss">
 .time {
   line-height: 12px;
   font-size: 12px;
@@ -263,6 +312,12 @@ export default {
 }
 .no-margin ::v-deep.el-form-item__content {
   margin: 0 !important;
+}
+
+.btns {
+  .el-button {
+    margin: 2px;
+  }
 }
 
 @media (max-width: 768.98px) {

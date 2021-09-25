@@ -206,6 +206,10 @@ aside {
 .flex {
   display: flex;
 
+  &.wrap {
+    flex-wrap: wrap;
+  }
+
   &.center {
     align-items: center;
     justify-content: center;

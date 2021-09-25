@@ -182,11 +182,13 @@ export default {
       }
       listChildCheck(this.queryParams).then((response) => {
         // console.log(response.rows);
-        this.bjmc = response.rows[0].bjmc;
-        this.childcount = response.rows.length - 1;
-        this.jsmc = response.rows[0].zbjsmc;
+        const {rows = []} = response;
+        const first = (rows && rows[0]) || {};
+        this.bjmc = first.bjmc || '';
+        this.childcount = rows.length > 0 ? rows.length - 1 : 0;
+        this.jsmc = first.zbjsmc || '';
         //  this.tableData = response.rows;
-        response.rows.forEach((res) => {
+        rows.forEach((res) => {
           this.tableData.push({
             name: res.name,
             zj: this.avg([
