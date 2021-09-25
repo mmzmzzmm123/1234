@@ -473,8 +473,8 @@ public class ExcelUtil<T>
     public void writeSheet()
     {
         // 取出一共有多少个sheet.
-        double sheetNo = Math.ceil(list.size() / sheetSize);
-        for (int index = 0; index <= sheetNo; index++)
+        int sheetNo = Math.max(1, (int)Math.ceil(list.size() * 1.0 / sheetSize));
+        for (int index = 0; index < sheetNo; index++)
         {
             createSheet(sheetNo, index);
 
@@ -1125,12 +1125,12 @@ public class ExcelUtil<T>
      * @param sheetNo sheet数量
      * @param index 序号
      */
-    public void createSheet(double sheetNo, int index)
+    public void createSheet(int sheetNo, int index)
     {
         this.sheet = wb.createSheet();
         this.styles = createStyles(wb);
         // 设置工作表的名称.
-        if (sheetNo == 0)
+        if (sheetNo == 1)
         {
             wb.setSheetName(index, sheetName);
         }
