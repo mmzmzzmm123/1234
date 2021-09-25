@@ -58,4 +58,12 @@ public interface ByThemeWeekplanitemMapper {
      * @return 结果
      */
     public int deleteByThemeWeekplanitemByIds(Long[] ids);
+
+    /**
+     * 删除主题整合周计划明细信息
+     *
+     * @param pid 主题周计划主键
+     * @return 结果
+     */
+    public int deleteByThemeWeekplanitemByPId(String pid);
 }

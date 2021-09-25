@@ -63,11 +63,16 @@ public class ByThemeMonthplanController extends BaseController {
     @GetMapping("/list")
     public TableDataInfo list(ByThemeMonthplan byThemeMonthplan) {
         byThemeMonthplan.setSchoolid(SecurityUtils.getLoginUser().getUser().getDept().getDeptId());
-        String classId = schoolCommon.getClassId();
+        //参数传进来的班级编号
+        String strClassId = byThemeMonthplan.getClassid();
         List<ByThemeMonthplan> list = null;
-        //首先判断当前账户是否为幼儿园账号
-        if (schoolCommon.isSchool() && !schoolCommon.isStringEmpty(classId)) {
-            byThemeMonthplan.setClassid(classId);
+        //如果传进来的班级编号为空，那么就认为是本身查询
+        if (schoolCommon.isStringEmpty(strClassId)) {
+            String classId = schoolCommon.getClassId();
+            //首先判断当前账户是否为幼儿园账号
+            if (schoolCommon.isSchool() && !schoolCommon.isStringEmpty(classId)) {
+                byThemeMonthplan.setClassid(classId);
+            }
         }
         startPage();
         list = byThemeMonthplanService.selectByThemeMonthplanList(byThemeMonthplan);
@@ -105,11 +110,11 @@ public class ByThemeMonthplanController extends BaseController {
     @PreAuthorize("@ss.hasPermi('benyi:thememonthplan:query')")
     @GetMapping(value = "/{id}")
     public AjaxResult getInfo(@PathVariable("id") String id) {
-        AjaxResult ajax=AjaxResult.success();
-        ByThemeMonthplan byThemeMonthplan=byThemeMonthplanService.selectByThemeMonthplanById(id);
+        AjaxResult ajax = AjaxResult.success();
+        ByThemeMonthplan byThemeMonthplan = byThemeMonthplanService.selectByThemeMonthplanById(id);
         ajax.put(AjaxResult.DATA_TAG, byThemeMonthplan);
-        ajax.put("classname",byClassService.selectByClassById(byThemeMonthplan.getClassid()).getBjmc());
-        ajax.put("createusername",userService.selectUserById(byThemeMonthplan.getCreateuserid()).getNickName());
+        ajax.put("classname", byClassService.selectByClassById(byThemeMonthplan.getClassid()).getBjmc());
+        ajax.put("createusername", userService.selectUserById(byThemeMonthplan.getCreateuserid()).getNickName());
         return ajax;
     }
 
@@ -127,7 +132,7 @@ public class ByThemeMonthplanController extends BaseController {
             String bjtypeNew = byClassService.selectByClassById(classId).getBjtype();
             if (bjtypeNew.equals("1")) {
                 return AjaxResult.error("当前班级为托班，无法创建计划");
-            }else {
+            } else {
                 //根据当前月份 查找学期计划的主题
                 ByThemeTermplan byThemeTermplan = new ByThemeTermplan();
                 byThemeTermplan.setSchoolid(SecurityUtils.getLoginUser().getUser().getDept().getDeptId());
@@ -168,10 +173,21 @@ public class ByThemeMonthplanController extends BaseController {
                 byThemeMonthplan.setCreateuserid(SecurityUtils.getLoginUser().getUser().getUserId());
                 SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM");
                 byThemeMonthplan.setName(byClassService.selectByClassById(classId).getBjmc() + "-主题整合月计划" + "(" + sdf.format(byThemeMonthplan.getMonth()) + ")");
+
+                // 默认创建4个周内容项，如果当前月份5个周 那么由用户自己删 或 增
+                ByThemeMonthplanitem byThemeMonthplanitem=null;
+                for(int i=1;i<5;i++){
+                    byThemeMonthplanitem=new ByThemeMonthplanitem();
+                    byThemeMonthplanitem.setId(schoolCommon.getUuid());
+                    byThemeMonthplanitem.setMpid(uuid);
+                    byThemeMonthplanitem.setZc(Long.valueOf(i));
+                    byThemeonthplanitemService.insertByThemeMonthplanitem(byThemeMonthplanitem);
+                }
+
                 return toAjax(byThemeMonthplanService.insertByThemeMonthplan(byThemeMonthplan));
             }
         } else {
-            return AjaxResult.error("当前用户非幼儿园教师，无法创建月计划");
+            return AjaxResult.error("当前用户非幼儿园班级教师，无法创建月计划");
         }
     }
 

@@ -46,6 +46,8 @@
       <el-table-column label="伙食费（小班）/天" align="center" prop="hsfX" />
       <el-table-column label="保育费（托班）/月" align="center" prop="byfT" />
       <el-table-column label="伙食费（托班）/天" align="center" prop="hsfT" />
+      <el-table-column label="开始时间" align="center" prop="startTime" />
+      <el-table-column label="截止时间" align="center" prop="endtime" />
       <el-table-column
         label="操作"
         align="center"
@@ -141,6 +143,18 @@
             placeholder="请输入伙食费"
           />
         </el-form-item>
+        <el-form-item label="起止时间" prop="startTime">
+          <el-date-picker
+            clearable
+            class="my-date-picker"
+            v-model="form.startTime"
+            type="daterange"
+            value-format="yyyy-MM-dd"
+            range-separator="-"
+            start-placeholder="开始日期"
+            end-placeholder="结束日期"
+          ></el-date-picker>
+        </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button type="primary" @click="submitForm">确 定</el-button>
@@ -191,7 +205,11 @@ export default {
       // 表单参数
       form: {},
       // 表单校验
-      rules: {},
+      rules: {
+        startTime: [
+          { required: true, message: "起止时间不能为空", trigger: "blur" },
+        ],
+      },
     };
   },
   created() {
@@ -227,6 +245,8 @@ export default {
         hsfT: undefined,
         createUserid: undefined,
         createTime: undefined,
+        startTime: undefined,
+        endtime: undefined,
       };
       this.resetForm("form");
     },
@@ -244,8 +264,16 @@ export default {
         this.title = "添加园所收费标准";
       } else {
         const id = row.id || this.ids;
+        var myArray = new Array(2);
         getSchoolcharge(id).then((response) => {
           this.form = response.data;
+          //console.log(response.data);
+          if (response.data.endtime != null) {
+            myArray[0] = response.data.startTime;
+            myArray[1] = response.data.endtime;
+            this.form.startTime = myArray;
+          }
+
           this.open = true;
           this.title = "设置园所收费标准";
         });
@@ -255,6 +283,10 @@ export default {
     submitForm: function () {
       this.$refs["form"].validate((valid) => {
         if (valid) {
+          var v1 = this.form.startTime[0];
+          var v2 = this.form.startTime[1];
+          this.form.startTime = v1;
+          this.form.endtime = v2;
           if (this.form.id != undefined) {
             updateSchoolcharge(this.form).then((response) => {
               if (response.code === 200) {
@@ -302,4 +334,8 @@ export default {
     margin: 0 auto;
   }
 }
+.my-date-picker {
+  width: 100%;
+}
 </style>
+

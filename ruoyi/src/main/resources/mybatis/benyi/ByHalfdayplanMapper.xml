@@ -27,7 +27,7 @@
         <if test="content != null  and content != ''">and content = #{content}</if>
         <if test="type != null  and type != ''">and type = #{type}</if>
 
-        order by type
+        order by create_time desc
     </select>
 
     <select id="selectByHalfdayplanById" parameterType="String" resultMap="ByHalfdayplanResult">

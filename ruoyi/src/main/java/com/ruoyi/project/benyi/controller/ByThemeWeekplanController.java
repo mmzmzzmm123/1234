@@ -112,11 +112,11 @@ public class ByThemeWeekplanController extends BaseController {
     @PreAuthorize("@ss.hasPermi('benyi:themeweekplan:query')")
     @GetMapping(value = "/{id}")
     public AjaxResult getInfo(@PathVariable("id") String id) {
-        AjaxResult ajax=AjaxResult.success();
-        ByThemeWeekplan byThemeWeekplan=byThemeWeekplanService.selectByThemeWeekplanById(id);
+        AjaxResult ajax = AjaxResult.success();
+        ByThemeWeekplan byThemeWeekplan = byThemeWeekplanService.selectByThemeWeekplanById(id);
         ajax.put(AjaxResult.DATA_TAG, byThemeWeekplan);
-        ajax.put("classname",byClassService.selectByClassById(byThemeWeekplan.getClassid()).getBjmc());
-        ajax.put("createusername",userService.selectUserById(byThemeWeekplan.getCreateuserid()).getNickName());
+        ajax.put("classname", byClassService.selectByClassById(byThemeWeekplan.getClassid()).getBjmc());
+        ajax.put("createusername", userService.selectUserById(byThemeWeekplan.getCreateuserid()).getNickName());
         return ajax;
     }
 
@@ -134,7 +134,7 @@ public class ByThemeWeekplanController extends BaseController {
             String bjtypeNew = byClassService.selectByClassById(classId).getBjtype();
             if (bjtypeNew.equals("1")) {
                 return AjaxResult.error("当前班级为托班，无法创建计划");
-            }else {
+            } else {
                 //判断当前班级是否创建月计划
                 ByThemeMonthplan byThemeMonthplan = new ByThemeMonthplan();
                 byThemeMonthplan.setSchoolid(SecurityUtils.getLoginUser().getUser().getDept().getDeptId());
@@ -203,7 +203,7 @@ public class ByThemeWeekplanController extends BaseController {
                 return toAjax(byThemeWeekplanService.insertByThemeWeekplan(byThemeWeekplan));
             }
         } else {
-            return AjaxResult.error("当前用户非幼儿园教师，无法创建周计划");
+            return AjaxResult.error("当前用户非幼儿园班级教师，无法创建周计划");
         }
     }
 
@@ -224,6 +224,10 @@ public class ByThemeWeekplanController extends BaseController {
     @Log(title = "主题整合周计划（根据月计划明细）", businessType = BusinessType.DELETE)
     @DeleteMapping("/{ids}")
     public AjaxResult remove(@PathVariable String[] ids) {
+        //先删除子项
+        for (int i = 0; i < ids.length; i++) {
+            byThemeWeekplanitemService.deleteByThemeWeekplanitemByPId(ids[i]);
+        }
         return toAjax(byThemeWeekplanService.deleteByThemeWeekplanByIds(ids));
     }
 

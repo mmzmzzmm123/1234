@@ -102,7 +102,7 @@
         v-show="isShow"
         >填充</el-button
       >
-      <el-button
+      <!-- <el-button
         type="danger"
         icon="el-icon-delete"
         size="mini"
@@ -111,7 +111,7 @@
         v-hasPermi="['benyi:themeweekplan:remove']"
         v-show="isShow"
         >删除</el-button
-      >
+      > -->
     </div>
 
     <el-table
@@ -168,7 +168,7 @@
             v-show="isShow"
             >填充</el-button
           >
-          <el-button
+          <!-- <el-button
             size="mini"
             type="text"
             icon="el-icon-delete"
@@ -176,7 +176,7 @@
             v-hasPermi="['benyi:themeweekplan:remove']"
             v-show="isShow"
             >删除</el-button
-          >
+          > -->
         </template>
       </el-table-column>
     </el-table>

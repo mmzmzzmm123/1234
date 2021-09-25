@@ -266,7 +266,8 @@
                 placeholder="请选择归属部门"
               />
             </el-form-item>
-          </el-col>
+          </el-col> </el-row
+        ><el-row :gutter="16">
           <el-col :xs="24" :sm="24" :md="12">
             <el-form-item label="登录账号" prop="userName">
               <el-input
@@ -288,7 +289,8 @@
                 type="password"
               />
             </el-form-item>
-          </el-col>
+          </el-col> </el-row
+        ><el-row :gutter="16">
           <el-col :xs="24" :sm="24" :md="12">
             <el-form-item label="用户性别" prop="sex">
               <el-select v-model="form.sex" placeholder="请选择">
@@ -320,7 +322,8 @@
                 >
               </el-radio-group> -->
             </el-form-item>
-          </el-col>
+          </el-col> </el-row
+        ><el-row :gutter="16">
           <el-col :xs="24" :sm="24" :md="12">
             <el-form-item label="岗位" prop="postIds">
               <el-select v-model="form.postIds" multiple placeholder="请选择">
@@ -346,7 +349,8 @@
                 ></el-option>
               </el-select>
             </el-form-item>
-          </el-col>
+          </el-col> </el-row
+        ><el-row :gutter="16">
           <el-col :xs="24" :sm="24" :md="12">
             <el-form-item v-if="isSchool" label="多幼儿园">
               <el-select v-model="form.deptIds" multiple placeholder="请选择">
@@ -359,7 +363,8 @@
                 ></el-option>
               </el-select>
             </el-form-item>
-          </el-col>
+          </el-col> </el-row
+        ><el-row :gutter="16">
           <el-col :xs="24" :sm="24" :md="24">
             <el-form-item label="备注" prop="remark">
               <el-input
@@ -522,9 +527,7 @@ export default {
         password: [
           { required: true, message: "用户密码不能为空", trigger: "blur" },
         ],
-        roleIds: [
-          { required: true, message: "角色不能为空", trigger: "blur" },
-        ],
+        roleIds: [{ required: true, message: "角色不能为空", trigger: "blur" }],
       },
     };
   },

@@ -59,13 +59,20 @@
         label="操作"
         align="center"
         fixed="right"
-        class-name="small-padding fixed-width edit-btns"
+        class-name="small-padding fixed-width"
       >
         <template slot-scope="scope">
           <el-button
             size="mini"
             type="text"
-            icon="el-icon-down"
+            icon="el-icon-view"
+            @click="handleView(scope.row)"
+            >预览</el-button
+          >
+          <el-button
+            size="mini"
+            type="text"
+            icon="el-icon-download"
             @click="handleDown(scope.row)"
             >下载</el-button
           >
@@ -177,9 +184,20 @@ export default {
       this.resetForm("queryForm");
       this.handleQuery();
     },
+    //下载
     handleDown(row) {
       var url = row.fileurl;
       window.open(this.apiurl + url);
+    },
+    //预览
+    handleView(row) {
+      var url = row.fileurl;
+      window.open(
+        "https://view.officeapps.live.com/op/view.aspx?src=http://system.benyiedu.com" +
+          this.apiurl +
+          url,
+        "_blank"
+      );
     },
   },
 };
@@ -187,12 +205,6 @@ export default {
 <style lang="scss" scoped>
 .el-select {
   width: 100%;
-}
-.edit-btns {
-  .el-button {
-    display: block;
-    margin: 0 auto;
-  }
 }
 .no-margin ::v-deep.el-form-item__content {
   margin: 0 !important;

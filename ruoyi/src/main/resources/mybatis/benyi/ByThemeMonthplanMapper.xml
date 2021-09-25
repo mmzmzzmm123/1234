@@ -54,7 +54,7 @@
             <if test="classid != null  and classid != ''">and a.classid = #{classid}</if>
             <if test="xnxq != null  and xnxq != ''">and a.xnxq = #{xnxq}</if>
             <if test="month != null ">and a.month = #{month}</if>
-            <if test="themes != null  and themes != ''">and a.themes = #{themes}</if>
+            <if test="themes != null  and themes != ''">and a.themes like concat('%;', #{themes}, ';%')</if>
             <if test="selfthemes != null  and selfthemes != ''">and a.selfthemes = #{selfthemes}</if>
             <if test="wxkc != null  and wxkc != ''">and a.wxkc = #{wxkc}</if>
             <if test="support != null  and support != ''">and a.support = #{support}</if>

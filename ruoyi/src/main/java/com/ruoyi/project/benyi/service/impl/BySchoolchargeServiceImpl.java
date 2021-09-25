@@ -52,8 +52,20 @@ public class BySchoolchargeServiceImpl implements IBySchoolchargeService {
      */
     @Override
     @DataScope(deptAlias = "b")
-    public List<BySchoolcharge> selectByChildchargeList(BySchoolcharge bySchoolcharge){
+    public List<BySchoolcharge> selectByChildchargeList(BySchoolcharge bySchoolcharge) {
         return bySchoolchargeMapper.selectByChildchargeList(bySchoolcharge);
+    }
+
+    /**
+     * 查询幼儿收费列表
+     *
+     * @param bySchoolcharge 收费标准
+     * @return 幼儿收费集合
+     */
+    @Override
+    @DataScope(deptAlias = "b")
+    public List<BySchoolcharge> selectByChildchargeListByMonth(BySchoolcharge bySchoolcharge) {
+        return bySchoolchargeMapper.selectByChildchargeListByMonth(bySchoolcharge);
     }
 
     /**

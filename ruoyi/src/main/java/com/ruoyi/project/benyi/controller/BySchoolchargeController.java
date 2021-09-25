@@ -51,14 +51,24 @@ public class BySchoolchargeController extends BaseController {
     @PreAuthorize("@ss.hasPermi('benyi:schoolcharge:list')")
     @GetMapping("/child/list")
     public TableDataInfo childlist(BySchoolcharge bySchoolcharge) {
-        startPage();
-        List<BySchoolcharge> list = bySchoolchargeService.selectByChildchargeList(bySchoolcharge);
-        if (list != null && list.size() > 0) {
-            for (int i = 0; i < list.size(); i++) {
-                list.get(i).setZj(getZongji(list.get(i)));
+        System.out.println("month---" + bySchoolcharge.getMonth());
+        bySchoolcharge.setMonthday(bySchoolcharge.getMonth() + "-15");
+        List<BySchoolcharge> listScope = bySchoolchargeService.selectByChildchargeListByMonth(bySchoolcharge);
+        if (listScope != null && listScope.size() > 0) {
+            bySchoolcharge.setId(listScope.get(0).getId());
+            startPage();
+            List<BySchoolcharge> list = bySchoolchargeService.selectByChildchargeList(bySchoolcharge);
+            if (list != null && list.size() > 0) {
+                for (int i = 0; i < list.size(); i++) {
+                    list.get(i).setZj(getZongji(list.get(i)));
+                }
             }
+            return getDataTable(list);
+        } else {
+            bySchoolcharge.setId(Long.valueOf(0));
+            List<BySchoolcharge> list = bySchoolchargeService.selectByChildchargeList(bySchoolcharge);
+            return getDataTable(list);
         }
-        return getDataTable(list);
     }
 
     //根据每条幼儿统计数计算总费用
@@ -154,7 +164,23 @@ public class BySchoolchargeController extends BaseController {
     @Log(title = "园所收费标准", businessType = BusinessType.UPDATE)
     @PutMapping
     public AjaxResult edit(@RequestBody BySchoolcharge bySchoolcharge) {
-        return toAjax(bySchoolchargeService.updateBySchoolcharge(bySchoolcharge));
+        int iCount = 0;
+        BySchoolcharge bySchoolchargeNew = bySchoolchargeService.selectBySchoolchargeById(bySchoolcharge.getId());
+        if (bySchoolcharge.getStartTime().equals(bySchoolchargeNew.getStartTime())) {
+            if (bySchoolcharge.getEndtime().equals(bySchoolchargeNew.getEndtime())) {
+                iCount = iCount + bySchoolchargeService.updateBySchoolcharge(bySchoolcharge);
+            } else {
+                bySchoolchargeNew.setIsdel("1");
+                iCount = iCount + bySchoolchargeService.updateBySchoolcharge(bySchoolchargeNew);
+                iCount = iCount + bySchoolchargeService.insertBySchoolcharge(bySchoolcharge);
+            }
+        } else {
+            bySchoolchargeNew.setIsdel("1");
+            iCount = iCount + bySchoolchargeService.updateBySchoolcharge(bySchoolchargeNew);
+            iCount = iCount + bySchoolchargeService.insertBySchoolcharge(bySchoolcharge);
+        }
+
+        return toAjax(iCount);
     }
 
     /**

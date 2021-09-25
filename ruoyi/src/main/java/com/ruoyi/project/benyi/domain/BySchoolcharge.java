@@ -1,10 +1,13 @@
 package com.ruoyi.project.benyi.domain;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.ruoyi.project.system.domain.SysDept;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import com.ruoyi.framework.aspectj.lang.annotation.Excel;
 import com.ruoyi.framework.web.domain.BaseEntity;
+
+import java.util.Date;
 
 /**
  * 园所收费标准对象 by_schoolcharge
@@ -80,10 +83,58 @@ public class BySchoolcharge extends BaseEntity {
     @Excel(name = "伙食费中班")
     private Double hsfZ;
 
+    /**
+     * 起止时间
+     */
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    private Date startTime;
+
+    public Date getStartTime() {
+        return startTime;
+    }
+
+    public void setStartTime(Date startTime) {
+        this.startTime = startTime;
+    }
+
+    public Date getEndtime() {
+        return endtime;
+    }
+
+    public void setEndtime(Date endtime) {
+        this.endtime = endtime;
+    }
+
+    /**
+     * 起止时间
+     */
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    private Date endtime;
+
+    public String getIsdel() {
+        return isdel;
+    }
+
+    public void setIsdel(String isdel) {
+        this.isdel = isdel;
+    }
+
+    private String isdel;
+
     private SysDept dept;
 
     // 幼儿考勤系统属性
     private String month;
+
+    public String getMonthday() {
+        return monthday;
+    }
+
+    public void setMonthday(String monthday) {
+        this.monthday = monthday;
+    }
+
+    private String monthday;
     private String name;
     private String classid;
     private Long days;
@@ -256,6 +307,10 @@ public class BySchoolcharge extends BaseEntity {
                 .append("bjtype", getBjtype())
                 .append("days", getDays())
                 .append("zj", getZj())
+                .append("startTime",getStartTime())
+                .append("endtime",getEndtime())
+                .append("isdel",getIsdel())
+                .append("monthday",getMonthday())
                 .toString();
     }
 }

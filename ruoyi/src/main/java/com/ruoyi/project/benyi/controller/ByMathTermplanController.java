@@ -119,7 +119,7 @@ public class ByMathTermplanController extends BaseController {
             String bjtypeNew = byClassService.selectByClassById(classId).getBjtype();
             if (bjtypeNew.equals("1")) {
                 return AjaxResult.error("当前班级为托班，无法创建计划");
-            }else {
+            } else {
                 int iCount = schoolCommon.getDifMonth(byMathTermplan.getStartmonth(), byMathTermplan.getEndmonth());
                 System.out.println("月份差=" + iCount);
                 String uuid = schoolCommon.getUuid();
@@ -144,7 +144,7 @@ public class ByMathTermplanController extends BaseController {
                 return toAjax(byMathTermplanService.insertByMathTermplan(byMathTermplan));
             }
         } else {
-            return AjaxResult.error("当前用户非幼儿园教师，无法创建计划");
+            return AjaxResult.error("当前用户非幼儿园班级教师，无法创建计划");
         }
     }
 
@@ -171,7 +171,10 @@ public class ByMathTermplanController extends BaseController {
             byMathTermplanitem.setTpid(ids[i]);
             List<ByMathTermplanitem> list = byMathTermplanitemService.selectByMathTermplanitemList(byMathTermplanitem);
             if (list != null && list.size() > 0) {
-                return AjaxResult.error("选中的计划下存在计划明细，无法删除");
+                //return AjaxResult.error("选中的计划下存在计划明细，无法删除");
+                for (int j = 0; j < list.size(); j++) {
+                    byMathTermplanitemService.deleteByMathTermplanitemById(list.get(j).getId());
+                }
             }
         }
         return toAjax(byMathTermplanService.deleteByMathTermplanByIds(ids));

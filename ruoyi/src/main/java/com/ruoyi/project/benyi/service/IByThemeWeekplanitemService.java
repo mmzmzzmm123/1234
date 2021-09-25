@@ -58,4 +58,13 @@ public interface IByThemeWeekplanitemService {
      * @return 结果
      */
     public int deleteByThemeWeekplanitemById(Long id);
+
+
+    /**
+     * 删除主题整合周计划明细信息
+     *
+     * @param pid 主题周计划主键
+     * @return 结果
+     */
+    public int deleteByThemeWeekplanitemByPId(String pid);
 }

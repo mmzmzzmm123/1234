@@ -37,6 +37,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="classtype != null  and classtype != ''"> and classtype = #{classtype}</if>
             <if test="createuserid != null "> and createuserid = #{createuserid}</if>
             <if test="createtime != null "> and createtime = #{createtime}</if>
+            <if test="id != null "> and id = #{id}</if>
         </where>
     </select>
     

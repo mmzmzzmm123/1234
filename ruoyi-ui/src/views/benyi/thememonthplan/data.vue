@@ -466,19 +466,25 @@ export default {
         this.open = true;
         this.title = "填充主题整合周计划明细";
         let arrTime = [];
-        arrTime.push(response.data.starttime);
-        arrTime.push(response.data.endtime);
+        if (response.data.starttime == null) {
+        } else {
+          arrTime.push(response.data.starttime);
+          arrTime.push(response.data.endtime);
+        }
         this.form.starttime = arrTime;
-        var activityid = response.data.activityid.split(";");
-        var array = [];
-        //console.log(arr);
-        activityid.forEach(function (value, key, arr) {
-          //console.log(value); // 结果依次为1，2，3
-          if (value != "") {
-            array.push(parseInt(value));
-          }
-        });
-        this.themeactivityList = array;
+        if (activityid == null) {
+        } else {
+          var activityid = response.data.activityid.split(";");
+          var array = [];
+          //console.log(arr);
+          activityid.forEach(function (value, key, arr) {
+            //console.log(value); // 结果依次为1，2，3
+            if (value != "") {
+              array.push(parseInt(value));
+            }
+          });
+          this.themeactivityList = array;
+        }
       });
     },
     /** 提交按钮 */

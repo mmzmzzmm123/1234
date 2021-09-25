@@ -109,13 +109,7 @@
     >
       <el-table-column type="selection" width="55" align="center" />
       <!-- <el-table-column label="编号" align="center" prop="id" /> -->
-      <el-table-column
-        label="班级"
-        align="center"
-        prop="classid"
-        :formatter="classFormat"
-        fixed
-      />
+      <el-table-column label="班级" align="center" prop="byClass.bjmc" fixed />
       <el-table-column
         label="教师"
         align="center"
@@ -367,7 +361,28 @@ export default {
       //console.log(val);
       this.queryParams_pg.pgdx = val;
       this.dateRange[0] = this.month + "-01";
-      this.dateRange[1] = this.month + "-31";
+      var y = this.month.split("-")[0];
+      var m = this.month.split("-")[1];
+      if (
+        m == "01" ||
+        m == "03" ||
+        m == "05" ||
+        m == "07" ||
+        m == "08" ||
+        m == "10" ||
+        m == "12"
+      ) {
+        this.dateRange[1] = this.month + "-31";
+      } else if (m == "04" || m == "06" || m == "09" || m == "11") {
+        this.dateRange[1] = this.month + "-30";
+      }else{
+        if(y % 4 == 0 && y % 100 !== 0 || y % 400 == 0){
+          this.dateRange[1] = this.month + "-29";
+        }else{
+          this.dateRange[1] = this.month + "-28";
+        }
+      }
+
       //console.log(this.dateRange);
       listDayflowassessmentbyJsid(
         this.addDateRange(this.queryParams_pg, this.dateRange)
@@ -387,6 +402,7 @@ export default {
     getList() {
       this.loading = true;
       listTeacherassessment(this.queryParams).then((response) => {
+        //console.log(response.rows);
         this.teacherassessmentList = response.rows;
         this.total = response.total;
         this.loading = false;
@@ -407,19 +423,6 @@ export default {
       listUser(null).then((response) => {
         this.userOptions = response.rows;
       });
-    },
-    // 字典翻译
-    classFormat(row, column) {
-      // return this.selectDictLabel(this.classOptions, row.classid);
-      var actions = [];
-      var datas = this.classOptions;
-      Object.keys(datas).map((key) => {
-        if (datas[key].bjbh == "" + row.classid) {
-          actions.push(datas[key].bjmc);
-          return false;
-        }
-      });
-      return actions.join("");
     },
     userFormat(row, column) {
       var actions = [];

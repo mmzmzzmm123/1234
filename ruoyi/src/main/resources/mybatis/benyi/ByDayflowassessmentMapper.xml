@@ -85,7 +85,9 @@
 (select sum(b.value) from by_dayflowassessmentitem b where d.id=b.pid and b.item in (select id from by_day_flow where name='规则与纪律约束')) as gzyjlyspjf,
 (select sum(b.value) from by_dayflowassessmentitem b where d.id=b.pid and b.item in (select id from by_day_flow where name='微型课程')) as wxkcpjf,
 (select sum(b.value) from by_dayflowassessmentitem b where d.id=b.pid and b.item in (select id from by_day_flow where name='潜课程')) as qkcpjf
-         from by_dayflowassessment d left join by_class e on d.classid=e.bjbh left join sys_user f on d.pgdx=f.user_id
+         from by_dayflowassessment d
+         left join by_class e on d.classid=e.bjbh
+         left join sys_user f on d.pgdx=f.user_id
     </sql>
 
     <select id="selectByDayflowassessmentList" parameterType="ByDayflowassessment"

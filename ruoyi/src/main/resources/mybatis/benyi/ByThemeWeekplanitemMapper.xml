@@ -92,6 +92,10 @@
         delete from by_theme_weekplanitem where id = #{id}
     </delete>
 
+    <delete id="deleteByThemeWeekplanitemByPId" parameterType="String">
+        delete from by_theme_weekplanitem where wpid = #{wpid}
+    </delete>
+
     <delete id="deleteByThemeWeekplanitemByIds" parameterType="String">
         delete from by_theme_weekplanitem where id in
         <foreach item="id" collection="array" open="(" separator="," close=")">

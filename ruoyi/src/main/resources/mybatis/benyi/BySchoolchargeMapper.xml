@@ -17,7 +17,11 @@
         <result property="hsfT" column="hsf_t"/>
         <result property="byfZ" column="byf_z"/>
         <result property="hsfZ" column="hsf_z"/>
+        <result property="startTime" column="start_time"/>
+        <result property="endtime" column="endtime"/>
+        <result property="isdel" column="isdel"/>
         <result property="month" column="month"/>
+        <result property="monthday" column="monthday"/>
         <result property="name" column="name"/>
         <result property="classid" column="classid"/>
         <result property="days" column="days"/>
@@ -35,16 +39,29 @@
     </resultMap>
 
     <sql id="selectBySchoolchargeVo">
-        select a.id, a.dept_id, a.byf, a.hsf, a.create_userid, a.create_time,a.byf_x, a.hsf_x, a.byf_t, a.hsf_t, a.byf_z, a.hsf_z,b.dept_name from by_schoolcharge a
+        select a.id, a.dept_id, a.byf, a.hsf, a.create_userid, a.create_time,a.byf_x, a.hsf_x, a.byf_t, a.hsf_t, a.byf_z, a.hsf_z,a.start_time,a.endtime,a.isdel,b.dept_name from by_schoolcharge a
         right join sys_dept b on a.dept_id=b.dept_id
     </sql>
 
     <select id="selectBySchoolchargeList" parameterType="BySchoolcharge" resultMap="BySchoolchargeResult">
         <include refid="selectBySchoolchargeVo"/>
-        where school_id is not null and del_flag=0
+        where school_id is not null and del_flag=0 and isdel=0
         <if test="byf != null ">and byf = #{byf}</if>
         <if test="hsf != null ">and hsf = #{hsf}</if>
         <if test="createUserid != null ">and create_userid = #{createUserid}</if>
+        <!-- 数据范围过滤 -->
+        ${dataScope}
+    </select>
+
+    <select id="selectByChildchargeListByMonth" parameterType="BySchoolcharge" resultMap="BySchoolchargeResult">
+        <include refid="selectBySchoolchargeVo"/>
+        where school_id is not null and del_flag=0
+        <if test="monthday != null and monthday != ''"><!-- 开始时间检索 -->
+            AND date_format(start_time,'%y%m%d') &lt;= date_format(#{monthday},'%y%m%d')
+        </if>
+        <if test="monthday != null and monthday != ''"><!-- 结束时间检索 -->
+            AND date_format(endtime,'%y%m%d') &gt;= date_format(#{monthday},'%y%m%d')
+        </if>
         <!-- 数据范围过滤 -->
         ${dataScope}
     </select>
@@ -59,7 +76,7 @@
         from by_child a
         left join by_class c on a.classid=c.bjbh
         left join by_schoolcharge b on a.schoolid=b.dept_id
-        where c.bjbh = #{classid}
+        where c.bjbh = #{classid} and b.id=#{id}
         <!-- 数据范围过滤 -->
         ${dataScope}
     </select>
@@ -83,6 +100,9 @@
             <if test="hsfT != null ">hsf_t,</if>
             <if test="byfZ != null  and byfZ != ''">byf_z,</if>
             <if test="hsfZ != null ">hsf_z,</if>
+            <if test="startTime != null ">start_time,</if>
+            <if test="endtime != null ">endtime,</if>
+            <if test="isdel != null  and isdel != ''">isdel,</if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="deptId != null ">#{deptId},</if>
@@ -96,6 +116,9 @@
             <if test="hsfT != null ">#{hsfT},</if>
             <if test="byfZ != null  and byfZ != ''">#{byfZ},</if>
             <if test="hsfZ != null ">#{hsfZ},</if>
+            <if test="startTime != null ">#{startTime},</if>
+            <if test="endtime != null ">#{endtime},</if>
+            <if test="isdel != null  and isdel != ''">#{isdel},</if>
         </trim>
     </insert>
 
@@ -113,6 +136,9 @@
             <if test="hsfT != null ">hsf_t = #{hsfT},</if>
             <if test="byfZ != null  and byfZ != ''">byf_z = #{byfZ},</if>
             <if test="hsfZ != null ">hsf_z = #{hsfZ},</if>
+            <if test="startTime != null ">start_time = #{startTime},</if>
+            <if test="endtime != null ">endtime = #{endtime},</if>
+            <if test="isdel != null  and isdel != ''">isdel = #{isdel},</if>
         </trim>
         where id = #{id}
     </update>
