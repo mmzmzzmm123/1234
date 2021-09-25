@@ -214,12 +214,8 @@ export default {
   display: inline-block;
 }
 .tree {
-<<<<<<< HEAD
   overflow:auto;
   height: calc(100% - 52px);
-=======
-  overflow: auto;
   max-height: 600px;
->>>>>>> master
 }
 </style>
