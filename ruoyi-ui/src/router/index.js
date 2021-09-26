@@ -257,7 +257,7 @@ export const constantRoutes = [
       {
         path: "study/detail/:id(\\d+)",
         component: () => import("@/views/benyi_train/video_study/detail"),
-        name: "Detail",
+        name: "VideoDetail",
         meta: {
           title: "培训视频详情",
           icon: ""

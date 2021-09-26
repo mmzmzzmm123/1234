@@ -55,7 +55,11 @@ public class ByTrainVideoController extends BaseController {
     public TableDataInfo list(ByTrainVideo byTrainVideo) {
         //判断type是否为空
         if (!schoolCommon.isStringEmpty(byTrainVideo.getType())) {
-            byTrainVideo.setType(byTrainVideo.getType() + ",");
+            if (byTrainVideo.getType().endsWith(",")) {
+                System.out.println("最后一位是,");
+            } else {
+                byTrainVideo.setType(byTrainVideo.getType() + ",");
+            }
         }
         startPage();
         List<ByTrainVideo> list = byTrainVideoService.selectByTrainVideoList(byTrainVideo);
@@ -77,7 +81,7 @@ public class ByTrainVideoController extends BaseController {
     @GetMapping("/listscoreandfree/{id}")
     public TableDataInfo listscoreandfree(@PathVariable("id") Long id) {
         startPage();
-        ByTrainVideoScore byTrainVideoScore=new ByTrainVideoScore();
+        ByTrainVideoScore byTrainVideoScore = new ByTrainVideoScore();
         byTrainVideoScore.setVideoid(id);
         List<ByTrainVideoScore> list = byTrainVideoScoreService.selectByTrainVideoScoreList(byTrainVideoScore);
         return getDataTable(list);

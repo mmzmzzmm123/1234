@@ -133,7 +133,7 @@ import { listMoedata } from "@/api/system/moedata";
 import { downLoadVideoUrl } from "@/utils/zipdownload";
 
 export default {
-  name: "VideoStudy",
+  name: "Video_study",
   data() {
     return {
       // 遮罩层
@@ -176,16 +176,16 @@ export default {
   },
   created() {
     // this.getList();
-    listAllLecturer().then((response) => {
-      //console.log(response.lecturer);
-      this.lecturerOptions = response.lecturer;
-    });
+    // listAllLecturer().then((response) => {
+    //   //console.log(response.lecturer);
+    //   this.lecturerOptions = response.lecturer;
+    // });
     listMoedata(this.queryParams).then((response) => {
       //第一步转换数组
       this.optionTypes = this.handleTree(response.data, "id", "pid");
       //第二步移除children为0的数组，也就是将children为0 设置为undefined
       this.optionTypes = this.getTreeData(this.optionTypes);
-      console.log(this.optionTypes)
+      //console.log(this.optionTypes)
     });
   },
   mounted() {
@@ -193,6 +193,7 @@ export default {
   },
   methods: {
     changeType(btn) {
+      console.log(btn);
       this.type = btn.id;
       this.ancestors = '';
       this.handleQuery(btn);
@@ -263,7 +264,7 @@ export default {
       //   this.queryParams.type = ancestors;
       // }
       this.queryParams.type = [this.type, this.ancestors].join(',');
-      //console.log(this.queryParams.type);
+      console.log(this.queryParams.type);
       this.queryParams.pageNum = 1;
       this.getList();
     },

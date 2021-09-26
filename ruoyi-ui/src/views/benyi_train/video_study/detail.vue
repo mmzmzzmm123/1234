@@ -68,7 +68,7 @@ import { getScoreByVideo, addScore } from "@/api/benyi_train/score";
 import { addFeedback } from "@/api/benyi_train/feedback";
 
 export default {
-  name: "detail",
+  name: "VideoDetail",
   data() {
     return {
       title: "",
