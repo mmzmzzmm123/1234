@@ -49,6 +49,7 @@
     <!--  底部  -->
     <div class="el-login-footer">
       <span>Copyright © 2018-2019 benyiedu.com All Rights Reserved.</span>
+      <p>技术服务：<svg-icon icon-class="wechat"/> 18633313157</p>
     </div>
   </div>
 </template>
@@ -190,7 +191,7 @@ export default {
 }
 .el-login-footer {
   height: 40px;
-  line-height: 40px;
+  line-height: 15px;
   position: fixed;
   bottom: 0;
   width: 100%;
@@ -199,5 +200,8 @@ export default {
   font-family: Arial;
   font-size: 12px;
   letter-spacing: 1px;
+  p {
+    opacity: .8;
+  }
 }
 </style>
