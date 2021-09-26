@@ -1,4 +1,5 @@
 import axios from 'axios'
+import { Message } from 'element-ui'
 import { getToken } from '@/utils/auth'
 
 const mimeMap = {
@@ -15,7 +16,16 @@ export function downLoadZip(str, filename) {
     responseType: 'blob',
     headers: { 'Authorization': 'Bearer ' + getToken() }
   }).then(res => {
-    resolveBlob(res, mimeMap.zip)
+    let fileReader = new FileReader();
+    fileReader.onload = () => {
+      try {
+        let { code, msg } = JSON.parse(fileReader.result);
+        if (code !== 200) Message.error(msg || '下载失败')
+      } catch (err) {
+        resolveBlob(res, mimeMap.zip)
+      }
+    };
+    fileReader.readAsText(res.data);
   })
 }
 /**
