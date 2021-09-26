@@ -264,7 +264,7 @@ export default {
       //   this.queryParams.type = ancestors;
       // }
       this.queryParams.type = [this.type, this.ancestors].join(',');
-      console.log(this.queryParams.type);
+      //console.log(this.queryParams.type);
       this.queryParams.pageNum = 1;
       this.getList();
     },
