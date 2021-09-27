@@ -206,6 +206,7 @@
         <el-form-item label="一日流程" prop="yrlcbl">
           <el-input-number
             v-model="form.yrlcbl"
+            style="width: 100%"
             placeholder="请输入一日流程得分"
             :disabled="true"
           />
@@ -213,20 +214,30 @@
         <el-form-item label="教师出勤" prop="jskqbl">
           <el-input-number
             v-model="form.jskqbl"
+            style="width: 100%"
             placeholder="请输入教师出勤得分"
           />
         </el-form-item>
         <el-form-item label="幼儿出勤" prop="yekqbl">
           <el-input-number
             v-model="form.yekqbl"
+            style="width: 100%"
             placeholder="请输入幼儿出勤得分"
           />
         </el-form-item>
         <el-form-item label="事故" prop="sgbl">
-          <el-input-number v-model="form.sgbl" placeholder="请输入事故得分" />
+          <el-input-number
+            v-model="form.sgbl"
+            style="width: 100%"
+            placeholder="请输入事故得分"
+          />
         </el-form-item>
         <el-form-item label="卫生" prop="wsbl">
-          <el-input-number v-model="form.wsbl" placeholder="请输入卫生得分" />
+          <el-input-number
+            v-model="form.wsbl"
+            style="width: 100%"
+            placeholder="请输入卫生得分"
+          />
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -375,10 +386,10 @@ export default {
         this.dateRange[1] = this.month + "-31";
       } else if (m == "04" || m == "06" || m == "09" || m == "11") {
         this.dateRange[1] = this.month + "-30";
-      }else{
-        if(y % 4 == 0 && y % 100 !== 0 || y % 400 == 0){
+      } else {
+        if ((y % 4 == 0 && y % 100 !== 0) || y % 400 == 0) {
           this.dateRange[1] = this.month + "-29";
-        }else{
+        } else {
           this.dateRange[1] = this.month + "-28";
         }
       }

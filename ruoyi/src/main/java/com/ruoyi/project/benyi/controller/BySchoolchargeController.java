@@ -40,6 +40,7 @@ public class BySchoolchargeController extends BaseController {
     @PreAuthorize("@ss.hasPermi('benyi:schoolcharge:list')")
     @GetMapping("/list")
     public TableDataInfo list(BySchoolcharge bySchoolcharge) {
+        //System.out.println("1111");
         startPage();
         List<BySchoolcharge> list = bySchoolchargeService.selectBySchoolchargeList(bySchoolcharge);
         return getDataTable(list);
@@ -51,8 +52,9 @@ public class BySchoolchargeController extends BaseController {
     @PreAuthorize("@ss.hasPermi('benyi:schoolcharge:list')")
     @GetMapping("/child/list")
     public TableDataInfo childlist(BySchoolcharge bySchoolcharge) {
-        System.out.println("month---" + bySchoolcharge.getMonth());
+        //System.out.println("month---" + bySchoolcharge.getMonth());
         bySchoolcharge.setMonthday(bySchoolcharge.getMonth() + "-15");
+        //System.out.println(bySchoolcharge.toString());
         List<BySchoolcharge> listScope = bySchoolchargeService.selectByChildchargeListByMonth(bySchoolcharge);
         if (listScope != null && listScope.size() > 0) {
             bySchoolcharge.setId(listScope.get(0).getId());

@@ -234,9 +234,9 @@ export default {
         this.classOptions = response.rows;
         this.queryParams.classid = response.rows[0].bjbh;
         this.className = response.rows[0].bjmc;
-      });
 
-      this.getList();
+        this.getList();
+      });
     },
     /** 查询幼儿收费列表 */
     getList() {
@@ -244,7 +244,9 @@ export default {
       if (this.queryParams.month == "") {
         this.queryParams.month = this.month;
       }
+      console.log(this.queryParams);
       listChildcharge(this.queryParams).then((response) => {
+        console.log(response.rows);
         if (response.rows.length == 0) {
           this.msgError("请检查当前班级是否存在幼儿或是否已经设置托费");
         }
