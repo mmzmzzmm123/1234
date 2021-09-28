@@ -232,9 +232,9 @@
           <el-input v-model="form.bjmc" placeholder="请输入班级名称" />
         </el-form-item>
         <el-form-item label="主班教师" prop="zbjs">
-          <el-select v-model="form.zbjs" placeholder="请选择主班教师">
+          <el-select v-model="form.zbjs" clearable placeholder="请选择主班教师">
             <el-option
-              v-for="item in zbjsOptions"
+              v-for="item in zbjsOptionsnotclass"
               :key="item.userId"
               :label="item.nickName"
               :value="item.userId"
@@ -243,9 +243,9 @@
           </el-select>
         </el-form-item>
         <el-form-item label="配班教师" prop="pbjs">
-          <el-select v-model="form.pbjs" placeholder="请选择配班教师">
+          <el-select v-model="form.pbjs" clearable placeholder="请选择配班教师">
             <el-option
-              v-for="item in pbjsOptions"
+              v-for="item in pbjsOptionsnotclass"
               :key="item.userId"
               :label="item.nickName"
               :value="item.userId"
@@ -254,9 +254,9 @@
           </el-select>
         </el-form-item>
         <el-form-item label="助理教师" prop="zljs">
-          <el-select v-model="form.zljs" placeholder="请选择助理教师">
+          <el-select v-model="form.zljs" clearable placeholder="请选择助理教师">
             <el-option
-              v-for="item in zljsOptions"
+              v-for="item in zljsOptionsnotclass"
               :key="item.userId"
               :label="item.nickName"
               :value="item.userId"
@@ -313,6 +313,12 @@ export default {
       pbjsOptions: [],
       //助理教师角色用户
       zljsOptions: [],
+      //主班教师角色用户
+      zbjsOptionsnotclass: [],
+      //配班教师角色用户
+      pbjsOptionsnotclass: [],
+      //助理教师角色用户
+      zljsOptionsnotclass: [],
       // 查询参数
       queryParams: {
         pageNum: 1,
@@ -327,6 +333,18 @@ export default {
         pbjsxm: undefined,
         zljsxm: undefined,
         createtime: undefined,
+      },
+      updateZbUserPush: {
+        nickName: null,
+        userId: null,
+      },
+      updatePbUserPush: {
+        nickName: null,
+        userId: null,
+      },
+      updateZlUserPush: {
+        nickName: null,
+        userId: null,
       },
       // 表单参数
       form: {},
@@ -351,6 +369,9 @@ export default {
       this.zbjsOptions = response.zbjs;
       this.pbjsOptions = response.pbjs;
       this.zljsOptions = response.zljs;
+      this.zbjsOptionsnotclass = response.zbjsnotclass;
+      this.pbjsOptionsnotclass = response.pbjsnotclass;
+      this.zljsOptionsnotclass = response.zljsnotclass;
     });
   },
   methods: {
@@ -409,10 +430,14 @@ export default {
       this.open = true;
       this.title = "添加班级信息";
       //获取主班教师角色用户列表
+      //获取主班教师角色用户列表
       getUsersByRoleId().then((response) => {
         this.zbjsOptions = response.zbjs;
         this.pbjsOptions = response.pbjs;
         this.zljsOptions = response.zljs;
+        this.zbjsOptionsnotclass = response.zbjsnotclass;
+        this.pbjsOptionsnotclass = response.pbjsnotclass;
+        this.zljsOptionsnotclass = response.zljsnotclass;
       });
     },
     /** 修改按钮操作 */
@@ -423,12 +448,34 @@ export default {
         this.form = response.data;
         this.open = true;
         this.title = "修改班级信息";
+        //console.log(response.data);
+        this.updateZbUserPush.nickName = response.data.zbjsxm;
+        this.updateZbUserPush.userId = response.data.zbjs;
 
+        this.updatePbUserPush.nickName = response.data.pbjsxm;
+        this.updatePbUserPush.userId = response.data.pbjs;
+
+        this.updateZlUserPush.nickName = response.data.zljsxm;
+        this.updateZlUserPush.userId = response.data.zljs;
+
+        //获取主班教师角色用户列表
         //获取主班教师角色用户列表
         getUsersByRoleId().then((response) => {
           this.zbjsOptions = response.zbjs;
           this.pbjsOptions = response.pbjs;
           this.zljsOptions = response.zljs;
+          this.zbjsOptionsnotclass = response.zbjsnotclass;
+          if (this.updateZbUserPush.nickName != null) {
+            this.zbjsOptionsnotclass.push(this.updateZbUserPush);
+          }
+          this.pbjsOptionsnotclass = response.pbjsnotclass;
+          if (this.updatePbUserPush.nickName != null) {
+            this.pbjsOptionsnotclass.push(this.updatePbUserPush);
+          }
+          this.zljsOptionsnotclass = response.zljsnotclass;
+          if (this.updateZlUserPush.nickName != null) {
+            this.zljsOptionsnotclass.push(this.updateZlUserPush);
+          }
         });
       });
     },

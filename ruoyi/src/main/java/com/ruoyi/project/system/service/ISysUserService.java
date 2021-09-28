@@ -70,6 +70,30 @@ public interface ISysUserService
     /**
      * 根据roleId查询用户列表
      *
+     * @param sysUser 用户信息
+     * @return 用户信息集合信息
+     */
+    public List<SysUser> selectUserListByRoleIdNotZbClass(SysUser user);
+
+    /**
+     * 根据roleId查询用户列表
+     *
+     * @param sysUser 用户信息
+     * @return 用户信息集合信息
+     */
+    public List<SysUser> selectUserListByRoleIdNotPbClass(SysUser user);
+
+    /**
+     * 根据roleId查询用户列表
+     *
+     * @param sysUser 用户信息
+     * @return 用户信息集合信息
+     */
+    public List<SysUser> selectUserListByRoleIdNotZlClass(SysUser user);
+
+    /**
+     * 根据roleId查询用户列表
+     *
      * @param roleId 用户信息
      * @return 用户信息集合信息
      */

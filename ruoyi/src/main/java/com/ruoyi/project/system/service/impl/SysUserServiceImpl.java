@@ -128,6 +128,39 @@ public class SysUserServiceImpl implements ISysUserService {
     /**
      * 根据roleId查询用户列表
      *
+     * @param sysUser 用户信息
+     * @return 用户信息集合信息
+     */
+    @Override
+    public List<SysUser> selectUserListByRoleIdNotZbClass(SysUser user){
+        return userMapper.selectUserListByRoleIdNotZbClass(user);
+    }
+
+    /**
+     * 根据roleId查询用户列表
+     *
+     * @param sysUser 用户信息
+     * @return 用户信息集合信息
+     */
+    @Override
+    public List<SysUser> selectUserListByRoleIdNotPbClass(SysUser user){
+        return userMapper.selectUserListByRoleIdNotPbClass(user);
+    }
+
+    /**
+     * 根据roleId查询用户列表
+     *
+     * @param sysUser 用户信息
+     * @return 用户信息集合信息
+     */
+    @Override
+    public List<SysUser> selectUserListByRoleIdNotZlClass(SysUser user){
+        return userMapper.selectUserListByRoleIdNotZlClass(user);
+    }
+
+    /**
+     * 根据roleId查询用户列表
+     *
      * @param roleId 用户信息
      * @return 用户信息集合信息
      */

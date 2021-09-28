@@ -187,16 +187,19 @@ public class SysUserController extends BaseController {
         user.setUserId((long) 102);
         user.setDeptId(deptId);
         ajax.put("zbjs", userService.selectUserListByRoleId(user));
+        ajax.put("zbjsnotclass", userService.selectUserListByRoleIdNotZbClass(user));
         //配班教师
         user = new SysUser();
         user.setUserId((long) 104);
         user.setDeptId(deptId);
         ajax.put("pbjs", userService.selectUserListByRoleId(user));
+        ajax.put("pbjsnotclass", userService.selectUserListByRoleIdNotPbClass(user));
         //助理教师
         user = new SysUser();
         user.setUserId((long) 105);
         user.setDeptId(deptId);
         ajax.put("zljs", userService.selectUserListByRoleId(user));
+        ajax.put("zljsnotclass", userService.selectUserListByRoleIdNotZlClass(user));
 
         return ajax;
     }
