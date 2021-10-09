@@ -32,14 +32,14 @@
               <span>稍后看</span>
               <span class="menuCount">5</span>
             </div>
-            <div class="aside-title"><i class="el-icon-view"></i>
-              <span>发现</span>
-              <span class="menuCount"></span>
-            </div>
-            <div class="aside-title"><i class="el-icon-message"></i>
-              <span>收件箱</span>
-              <span class="menuCount">5</span>
-            </div>
+<!--            <div class="aside-title"><i class="el-icon-view"></i>-->
+<!--              <span>发现</span>-->
+<!--              <span class="menuCount"></span>-->
+<!--            </div>-->
+<!--            <div class="aside-title"><i class="el-icon-message"></i>-->
+<!--              <span>收件箱</span>-->
+<!--              <span class="menuCount">5</span>-->
+<!--            </div>-->
 
 
             <div class="aside-titleB"  @mouseenter="eidtMenuText=!eidtMenuText" @mouseleave="eidtMenuText=!eidtMenuText">

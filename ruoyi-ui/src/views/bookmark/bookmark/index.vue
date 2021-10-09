@@ -71,29 +71,29 @@
                     </el-dropdown-item>
                     <el-dropdown-item class="filter-item" command="1"><i class="el-icon-bottom"></i>按时间排序(反)
                     </el-dropdown-item>
-                    <el-dropdown-item class="filter-item" command="2"><i class="el-icon-bottom"></i>按标题A-Z排序(正)
-                    </el-dropdown-item>
-                    <el-dropdown-item class="filter-item" command="3"><i class="el-icon-bottom"></i>按标题A-Z排序(反)
-                    </el-dropdown-item>
+<!--                    <el-dropdown-item class="filter-item" command="2"><i class="el-icon-bottom"></i>按标题A-Z排序(正)-->
+<!--                    </el-dropdown-item>-->
+<!--                    <el-dropdown-item class="filter-item" command="3"><i class="el-icon-bottom"></i>按标题A-Z排序(反)-->
+<!--                    </el-dropdown-item>-->
                   </el-dropdown-menu>
                 </el-dropdown>
 
               </div>
-              <div class="filter-content">
-                <el-dropdown trigger="hover" size="small">
-                  <div class="el-dropdown-link dropdownList">
-                    <el-button icon="el-icon-tickets" style="border:0px;font-size: 18px;" size="mini"></el-button>
-                  </div>
-                  <el-dropdown-menu slot="dropdown" class="filter-sort-dropdown">
-                    <el-dropdown-item class="filter-item"><i class="el-icon-bottom"></i>按时间排序(正)</el-dropdown-item>
-                    <el-dropdown-item class="filter-item"><i class="el-icon-bottom"></i>按时间排序(反)</el-dropdown-item>
-                    <el-dropdown-item class="filter-item"><i class="el-icon-bottom"></i>按字母A-Z排序</el-dropdown-item>
-                    <el-dropdown-item class="filter-item"><i class="el-icon-bottom"></i>按字母A-Z排序</el-dropdown-item>
-                    <el-dropdown-item class="filter-item"><i class="el-icon-bottom"></i>按网站A-Z排序</el-dropdown-item>
-                  </el-dropdown-menu>
-                </el-dropdown>
+<!--              <div class="filter-content">-->
+<!--                <el-dropdown trigger="hover" size="small">-->
+<!--                  <div class="el-dropdown-link dropdownList">-->
+<!--                    <el-button icon="el-icon-tickets" style="border:0px;font-size: 18px;" size="mini"></el-button>-->
+<!--                  </div>-->
+<!--                  <el-dropdown-menu slot="dropdown" class="filter-sort-dropdown">-->
+<!--                    <el-dropdown-item class="filter-item"><i class="el-icon-bottom"></i>按时间排序(正)</el-dropdown-item>-->
+<!--                    <el-dropdown-item class="filter-item"><i class="el-icon-bottom"></i>按时间排序(反)</el-dropdown-item>-->
+<!--                    <el-dropdown-item class="filter-item"><i class="el-icon-bottom"></i>按字母A-Z排序</el-dropdown-item>-->
+<!--                    <el-dropdown-item class="filter-item"><i class="el-icon-bottom"></i>按字母A-Z排序</el-dropdown-item>-->
+<!--                    <el-dropdown-item class="filter-item"><i class="el-icon-bottom"></i>按网站A-Z排序</el-dropdown-item>-->
+<!--                  </el-dropdown-menu>-->
+<!--                </el-dropdown>-->
 
-              </div>
+<!--              </div>-->
 
             </div>
           </div>
@@ -362,6 +362,7 @@
         Ueditor:undefined,//点击的编辑器文章id
         noteId:undefined, //点击的noteId
         user:'',//登陆的用户信息
+        sortState:true,//是否进行请求书签的拼接,切换排序规则时,不能进行拼接，重新渲染数据  false表示切换了 true没切换
 
 
 
@@ -744,7 +745,13 @@
         this.queryParams.bkOrderBy="";
         listByUserAndPolymerization(this.queryParams).then(response => {
             if (response.code == 200) {
-              this.bookmarkList = this.bookmarkList.concat(response.rows);
+              //如果进行了排序切换 就不能进行拼接
+              if (this.sortState){
+                  this.bookmarkList = this.bookmarkList.concat(response.rows);
+              }else{
+                  this.bookmarkList = response.rows;
+                  this.sortState = false;
+              }
               this.total = response.total;
               this.listloading = false
               this.loading = false;
@@ -787,7 +794,11 @@
 
       /**切换排序规则**/
       handleCommand(command) {
+        if (this.queryParams.sort != command){
+          this.sortState = false;//是否切换了新的排序规则方式 false表示切换了 true没切换
+        }
         this.queryParams.sort = command;
+
         this.getBypropertyList(this.property);
 
       },

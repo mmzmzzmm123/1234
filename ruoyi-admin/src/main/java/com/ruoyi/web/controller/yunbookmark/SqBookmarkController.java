@@ -6,6 +6,7 @@ import java.util.Date;
 import java.util.List;
 
 import com.ruoyi.bookmark.domain.SqBookmark;
+import com.ruoyi.bookmark.pojo.SqBookmarkReq;
 import com.ruoyi.bookmark.service.ISqBookmarkService;
 import com.ruoyi.common.core.domain.entity.SysUser;
 import com.ruoyi.common.utils.bookmarkhtml.ImportHtml;
@@ -13,14 +14,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import com.ruoyi.common.annotation.Log;
 import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.domain.AjaxResult;
@@ -126,7 +120,6 @@ public class SqBookmarkController extends BaseController
     /**
      * 查询书签管理列表 聚合>> 星标 稍后看 最新书签
      */
-//    @PreAuthorize("@ss.hasPermi('bookmark:bookmark:list')")
     @GetMapping("/listByUserAndPolymerization")
     public TableDataInfo listByUserAndPolymerization(SqBookmark sqBookmark)
     {
@@ -206,5 +199,16 @@ public class SqBookmarkController extends BaseController
     public AjaxResult remove(@PathVariable Long[] bookmarkIds)
     {
         return toAjax(sqBookmarkService.deleteSqBookmarkByIds(bookmarkIds));
+    }
+
+
+    /**
+     * 用户-根据标签查询书签分页
+     */
+    @GetMapping(value = "/listByTag")
+    public TableDataInfo listByTag(SqBookmarkReq sqBookmarkReq){
+        sqBookmarkReq.setUserid(getAuthUser().getUserId());
+        startPage();
+        return getDataTable(sqBookmarkService.getlistByTag(sqBookmarkReq));
     }
 }

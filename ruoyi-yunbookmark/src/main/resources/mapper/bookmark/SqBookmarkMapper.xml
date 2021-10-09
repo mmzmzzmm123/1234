@@ -210,4 +210,28 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             </choose>
         </where>
     </select>
+
+
+    <select id="getlistByTag" parameterType="com.ruoyi.bookmark.pojo.SqBookmarkReq" resultMap="SqBookmarkResult">
+    SELECT sb.* FROM sq_bookmark_tag as sbt LEFT JOIN sq_bookmark as sb ON sbt.bookmark_id = sb.bookmark_id
+    WHERE sbt.tag_id = #{tagId} AND sb.userid = #{userid} AND sb.idelete = 0
+    ORDER BY
+        <choose>
+            <when test="sort == 0">
+                sb.create_time desc
+            </when>
+            <when test="sort == 1">
+                sb.create_time asc
+            </when>
+            <when test="sort == 2">
+                sb.CONVERT(sb.title USING GBK) asc
+            </when>
+            <when test="sort == 3">
+                sb.CONVERT(sb.title USING GBK) desc
+            </when>
+            <otherwise>
+                sb.create_time desc
+            </otherwise>
+        </choose>
+    </select>
 </mapper>

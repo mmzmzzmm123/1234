@@ -2,7 +2,9 @@ package com.ruoyi.web.controller.yunbookmark;
 
 import java.util.List;
 
+import com.ruoyi.bookmark.pojo.SqTagReq;
 import com.ruoyi.common.core.domain.entity.SysUser;
+import org.springframework.beans.BeanUtils;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -53,14 +55,40 @@ public class SqTagController extends BaseController
      * 模糊查书签TAG
      */
     @GetMapping("/listByUserLike")
-    public TableDataInfo listByUserLike()
+    public TableDataInfo listByUserLike(SqTagReq req)
     {
+        SqTag sqTag =  new SqTag();
+        BeanUtils.copyProperties(req,sqTag);
+        sqTag.setUserId(getAuthUser().getUserId());
         startPage();
-        List<SqTag> list = sqTagService.selectSqTagList(new SqTag(getAuthUser().getUserId()));
+        List<SqTag> list = sqTagService.selectSqTagList(sqTag);
         return getDataTable(list);
     }
 
 
+    /**
+     * 新增书签_标签
+     */
+    @PostMapping("/addByUser")
+    public AjaxResult addByUser(SqTagReq req)
+    {
+        SqTag sqTag =  new SqTag();
+        BeanUtils.copyProperties(req,sqTag);
+        sqTag.setUserId(getAuthUser().getUserId());
+        return toAjax(sqTagService.insertSqTag(sqTag));
+    }
+
+    /**
+     * 修改书签_标签
+     */
+    @PutMapping("/editByUser")
+    public AjaxResult editByUser(SqTagReq req)
+    {
+        SqTag sqTag =  new SqTag();
+        BeanUtils.copyProperties(req,sqTag);
+        sqTag.setUserId(getAuthUser().getUserId());
+        return toAjax(sqTagService.updateSqTag(sqTag));
+    }
 
 
 

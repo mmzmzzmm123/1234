@@ -24,7 +24,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <select id="selectSqTagList" parameterType="SqTag" resultMap="SqTagResult">
         <include refid="selectSqTagVo"/>
         <where>
-            <if test="name != null  and name != ''"> and name =  #{name}</if>
+            <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
             <if test="icount != null "> and icount = #{icount}</if>
             <if test="userId != null "> and user_Id = #{userId}</if>
             <if test="isFontColor != null  and isFontColor != ''"> and is_font_color = #{isFontColor}</if>

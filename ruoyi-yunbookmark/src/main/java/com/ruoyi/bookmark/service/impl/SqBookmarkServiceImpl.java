@@ -19,6 +19,7 @@ import com.ruoyi.bookmark.mapper.SqBookmarkTagMapper;
 import com.ruoyi.bookmark.mapper.SqMenuMapper;
 import com.ruoyi.bookmark.mapper.SqTagMapper;
 
+import com.ruoyi.bookmark.pojo.SqBookmarkReq;
 import com.ruoyi.bookmark.service.ISqTagService;
 
 import com.ruoyi.common.utils.StringUtils;
@@ -135,7 +136,7 @@ public class SqBookmarkServiceImpl implements ISqBookmarkService
         } catch (MalformedURLException e) {
             logger.info("用户ID:"+sqBookmark.getUserid()+",新增书签"+sqBookmark.getUrl()+"获取网址的 主机信息 报错 -"+new Date());
         }
-        if(null==sqBookmark.getDescription()||"".equals(sqBookmark.getDescription())){
+        if(StringUtils.isEmpty(sqBookmark.getDescription())){
             sqBookmark.setDescription(sqBookmark.getTitle());
         }
         //转换传入的父级ID
@@ -535,6 +536,12 @@ public class SqBookmarkServiceImpl implements ISqBookmarkService
         }
 
         return sqBookmarkMapper.listByUserAndPolymerization(search);
+    }
+
+    @Override
+    public List<SqBookmark> getlistByTag(SqBookmarkReq sqBookmarkReq) {
+
+        return sqBookmarkMapper.getlistByTag(sqBookmarkReq);
     }
 
 

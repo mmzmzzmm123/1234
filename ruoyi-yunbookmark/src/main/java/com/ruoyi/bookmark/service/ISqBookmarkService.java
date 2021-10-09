@@ -2,6 +2,7 @@ package com.ruoyi.bookmark.service;
 
 import java.util.List;
 import com.ruoyi.bookmark.domain.SqBookmark;
+import com.ruoyi.bookmark.pojo.SqBookmarkReq;
 import com.ruoyi.common.utils.bookmarkhtml.HtmlName;
 
 /**
@@ -170,4 +171,12 @@ public interface ISqBookmarkService
      *
      */
     List<SqBookmark> listByUserAndPolymerization(SqBookmark sqBookmark);
+
+
+    /**
+     *  用户根据标签ID 查询对应的书签 分页
+     *  @param
+     *
+     */
+    List<SqBookmark> getlistByTag(SqBookmarkReq sqBookmarkReq);
 }

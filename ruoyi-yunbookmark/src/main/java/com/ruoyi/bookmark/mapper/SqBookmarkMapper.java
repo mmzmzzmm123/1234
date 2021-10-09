@@ -1,6 +1,7 @@
 package com.ruoyi.bookmark.mapper;
 
 import com.ruoyi.bookmark.domain.SqBookmark;
+import com.ruoyi.bookmark.pojo.SqBookmarkReq;
 import com.ruoyi.common.mybatisMapper.MyMapper;
 import org.apache.ibatis.annotations.Param;
 
@@ -120,4 +121,6 @@ public interface SqBookmarkMapper extends MyMapper<SqBookmark>
      *
      */
     List<SqBookmark> listByUserAndPolymerization(SqBookmark sqBookmark);
+
+    List<SqBookmark> getlistByTag(SqBookmarkReq sqBookmarkReq);
 }
