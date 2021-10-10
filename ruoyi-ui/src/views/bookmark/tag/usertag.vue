@@ -5,8 +5,8 @@
         <i class="el-icon-price-tag aside-titleB_childi_two"></i>
         <span >标签管理</span>
         <div style="margin-left: 40%" v-show="eidtTAGText">
-          <i class="el-icon-search" style="font-size: 19px;margin-left: 5px;margin-top: 7px" @click="searchBkTagCk"></i>
-          <i class="el-icon-folder-add" style="font-size: 19px;margin-left: 5px;margin-top: 7px" @click="addBkTagCk"></i>
+          <i class="el-icon-search title-name" @click="searchBkTagCk"></i>
+          <i class="el-icon-folder-add title-name"  @click="addBkTagCk"></i>
         </div>
       </div>
 
@@ -15,10 +15,11 @@
       <div style="display: flex;justify-items: center;align-items: center">
         <el-input
           v-if="!addBkTAG"
-          placeholder="输入书签名字"
-          v-model="input4"
+          placeholder="新增书签的名字"
+          v-model="tagName"
           size="mini"
           style="width: 80%;margin-left: 5%"
+          @keyup.enter.native ="addTag"
         >
           <i slot="prefix" class="el-input__icon el-icon-circle-plus-outline"></i>
         </el-input>
@@ -29,9 +30,10 @@
         <el-input
           v-if="!searchBkTAG"
           placeholder="搜索书签"
-          v-model="input4"
+          v-model="tagName"
           size="mini"
           style="width: 80%;margin-left: 5%"
+          @keyup.enter.native ="search"
         >
           <i slot="prefix" class="el-icon-search" style="margin-left: 5px"></i>
         </el-input>
@@ -48,10 +50,15 @@
 <!--          <el-tag type="info" size="mini">{{item.name}}</el-tag>-->
         </div>
       </div>
-      <div v-if=" !(tagList == undefined ||tagList == null || tagList.length <= 0)" class="aside-title name transition-box" >加载更多</div>
+      <div v-if=" tagList != undefined && tagList != null && total > 8 " class="aside-title name transition-box" >加载更多</div>
 
       <!-- 无标签 -->
-        <div v-if=" tagList == undefined ||tagList == null || tagList.length <= 0" class="aside-title name transition-box" >暂无标签</div>
+        <div v-if=" tagList == undefined ||tagList == null || tagList.length <= 0" class="aside-title name transition-box" >
+
+          暂无标签
+          <span v-if ="tagNameCopy != undefined && tagNameCopy != null && tagNameCopy!=''"> [{{tagNameCopy}}]</span>
+
+        </div>
         </div>
       </el-collapse-transition>
 
@@ -64,7 +71,7 @@
     </div>
 </template>
 <script>
-  import {listByUser,listByUserLike} from "@/api/bookmark/tag";
+  import {listByUser,listByUserLike,addTagByUser} from "@/api/bookmark/tag";
 
     export default {
         name: 'areaTree',
@@ -74,26 +81,97 @@
             return {
               msg:'暂无标签',
               tagList:[],
+              total:0,
               tagParams: {
                 pageNum: 1,
-                pageSize: 8
+                pageSize: 8,
+                name:undefined
               },
 
               addBkTAG:true,//添加书TAG
               searchBkTAG:true,//搜索TAG
               tagListShow:false,//TAGlist
               eidtTAGText:false,//我的TAG
+              tagName:undefined,//新增书签 - 搜索的输入框
+              tagNameCopy:''//用于提示
             }
         },
       created(){
-          this.listByUser();
+        var that = this;
+        that.listByUsers();
       },
         methods: {
+          // 统一的表单重置
+          reset() {
+            this.form = {
+              pageNum: 1,
+              pageSize: 8,
+              name: undefined,
+            };
+          },
+          /**回车搜索**/
+          search(){
+            if (this.tagName == undefined || this.tagName == null ||this.tagName.trim() == ''){
+              this.msgInfo("标签名称不能为空")
+              return;
+            }
+            if (this.tagName.trim().length > 10){
+              this.msgInfo("标签名称太长了")
+              return;
+            }
+            this.reset();
+            this.tagParams.name = this.tagName;
+            console.log("回车搜索",this.tagParams);
+            //初始化
+            this.tagList = null;
+            this.total = 0;
+            listByUserLike(this.tagParams).then(response => {
+              if (response.code === 200) {
+                this.tagList=response.rows;
+                this.total = response.total;
+                if (this.total == 0){
+                  this.tagNameCopy = this.tagName;
+                }
+              }
+            });
+
+          },
+          /**回车新增标签**/
+          addTag(){
+            if (this.tagName == undefined || this.tagName == null ||this.tagName.trim() == ''){
+              this.msgInfo("标签名称不能为空!")
+              return;
+            }
+            if (this.tagName.trim().length > 10){
+              this.msgInfo("标签名称太长了")
+              return;
+            }
+            let tagParams = {
+              name:this.tagName
+            };
+
+            addTagByUser(tagParams).then(response => {
+              if (response.code === 200) {
+                this.msgSuccess("新增标签【"+ this.tagName +"】成功");
+                //新增成功后 重新获取
+                this.reset();
+                this.tagName = undefined;
+                this.listByUsers();
+              }else {
+                this.msgError("新增标签【"+ this.tagName +"】失败,系统错误!");
+              }
+            });
+
+          },
+
           /** 查询书签 */
-          listByUser: function () {
-            listByUser(this.tagParams).then(response => {
+          listByUsers() {
+            var that = this;
+            //初始化
+            listByUser(that.tagParams).then(response => {
                   if (response.code === 200) {
-                    this.tagList=response.rows;
+                    that.tagList=response.rows;
+                    that.total = response.total;
                   }
                 });
           },
@@ -109,6 +187,12 @@
             this.searchBkTAG = this.searchBkTAG?false:true;
             this.addBkTAG = true;
             this.tagListShow = true;
+            if(this.searchBkTAG){
+              console.log("关闭搜索")
+              this.reset();
+              this.tagName = undefined;
+              this.listByUsers();
+            }
           },
           /**搜索书签目录**/
           tagListShowCk(){
@@ -122,6 +206,9 @@
     }
 </script>
 <style scoped>
+  .title-name{
+    font-size: 19px;margin-left: 5px;margin-top: 7px
+  }
   .name{
     padding-left: 50px;
   }

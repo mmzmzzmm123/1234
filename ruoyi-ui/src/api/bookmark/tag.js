@@ -18,6 +18,15 @@ export function listByUserLike(query) {
   })
 }
 
+// 新增书签管理
+export function addTagByUser(data) {
+  return request({
+    url: '/system/tag/addByUser',
+    method: 'post',
+    data: data
+  })
+}
+
 
 
 
