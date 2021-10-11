@@ -42,3 +42,7 @@ nbdist/
 !*/build/*.java
 !*/build/*.html
 !*/build/*.xml
+
+ruoyi-ui/node/
+ruoyi-ui/node_modules/
+ruoyi-admin/src/main/resources/public/

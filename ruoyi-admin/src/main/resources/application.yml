@@ -33,8 +33,8 @@ server:
 # 日志配置
 logging:
   level:
-    com.ruoyi: debug
-    org.springframework: warn
+    com.ruoyi: info
+    org.springframework: info
 
 # Spring配置
 spring:
@@ -59,7 +59,7 @@ spring:
   # redis 配置
   redis:
     # 地址
-    host: localhost
+    host: 192.168.56.101
     # 端口，默认为6379
     port: 6379
     # 数据库索引
@@ -108,13 +108,13 @@ swagger:
   # 是否开启swagger
   enabled: true
   # 请求前缀
-  pathMapping: /dev-api
+  pathMapping: /
 
 # 防止XSS攻击
 xss: 
   # 过滤开关
   enabled: true
   # 排除链接（多个用逗号分隔）
-  excludes: /system/notice
+  excludes: /api/system/notice
   # 匹配链接
-  urlPatterns: /system/*,/monitor/*,/tool/*
+  urlPatterns: /api/system/*,/api/monitor/*,/api/tool/*

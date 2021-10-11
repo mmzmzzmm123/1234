@@ -26,7 +26,7 @@ import com.ruoyi.system.service.ISysNoticeService;
  * @author ruoyi
  */
 @RestController
-@RequestMapping("/system/notice")
+@RequestMapping("/api/system/notice")
 public class SysNoticeController extends BaseController
 {
     @Autowired

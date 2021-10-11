@@ -61,6 +61,12 @@
             <artifactId>ruoyi-generator</artifactId>
         </dependency>
 
+        <!-- 前端代码 -->
+        <dependency>
+            <groupId>com.ruoyi</groupId>
+            <artifactId>ruoyi-ui</artifactId>
+        </dependency>
+
     </dependencies>
 
     <build>
@@ -88,7 +94,47 @@
                     <failOnMissingWebXml>false</failOnMissingWebXml>
                     <warName>${project.artifactId}</warName>
                 </configuration>   
-           </plugin>   
+           </plugin>
+            <plugin>
+                <artifactId>maven-clean-plugin</artifactId>
+                <version>3.0.0</version>
+                <configuration>
+                    <filesets>
+                        <fileset>
+                            <directory>src/main/resources/public</directory>
+                        </fileset>
+                    </filesets>
+                </configuration>
+            </plugin>
+            <plugin>
+                <artifactId>maven-resources-plugin</artifactId>
+                <version>3.0.2</version>
+                <executions>
+                    <execution>
+                        <id>copy Vue.js frontend content</id>
+                        <phase>generate-resources</phase>
+                        <goals>
+                            <goal>copy-resources</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>src/main/resources/public</outputDirectory>
+                            <overwrite>true</overwrite>
+                            <resources>
+                                <resource>
+                                    <directory>${project.parent.basedir}/ruoyi-ui/dist</directory>
+                                    <includes>
+                                        <include>static/</include>
+                                        <include>html/</include>
+                                        <include>index.html</include>
+                                        <include>favicon.ico</include>
+                                        <include>robots.txt</include>
+                                    </includes>
+                                </resource>
+                            </resources>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
         </plugins>
         <finalName>${project.artifactId}</finalName>
     </build>

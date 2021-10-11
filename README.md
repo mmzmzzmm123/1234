@@ -42,6 +42,14 @@
 演示地址：http://vue.ruoyi.vip  
 文档地址：http://doc.ruoyi.vip
 
+## 快速开始
+1. 准备好mysql和redis
+2. mysql导入sql目录下的所有sql文件
+3. 修改ruoyi-admin/src/main/resources/application.yml的redis连接信息
+4. 修改ruoyi-admin/src/main/resources/application-druid.yml的mysql连接信息
+5. 执行maven命令构建 ```mvn clean package```
+6. 执行命令启动 ```java -jar ruoyi-admin/target/ruoyi-admin.jar```
+
 ## 演示图
 
 <table>
