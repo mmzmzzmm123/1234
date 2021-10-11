@@ -20,8 +20,12 @@
           <span>{{ i + 1 }}.</span>
           <i class="el-icon-document icon"></i>{{ ele.name }}
         </div>
-        <a class="right" :href="apiurl + ele.fileurl">下载</a>
+         <div class="right">
+         <!-- <a class="right" :href="apiurl + ele.fileurl">预览</a> -->
+          <a class="right" @click="handleView(ele.fileurl)">预览</a>
+        <a class="right" @click="handleDown(ele.fileurl,ele.name)">下载</a>
         <!-- <a class="right" @click="down(ele)">下载</a> -->
+         </div>
       </li>
     </ul>
 
@@ -161,8 +165,22 @@ export default {
       });
     },
     load() {},
-    down(row) {
-      downLoadUrl(row.fileurl, row);
+    // down(row) {
+    //   downLoadUrl(row.fileurl, row);
+    // },
+     //下载
+    handleDown(fileurl,name) {
+      //window.open(this.apiurl + url);
+      this.download(name,fileurl);
+    },
+    //预览
+    handleView(fileurl) {
+      window.open(
+        "https://view.officeapps.live.com/op/view.aspx?src=http://system.benyiedu.com" +
+          this.apiurl +
+          fileurl,
+        "_blank"
+      );
     },
   },
   mounted() {},
