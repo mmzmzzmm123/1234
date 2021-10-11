@@ -187,7 +187,8 @@ export default {
     //下载
     handleDown(row) {
       var url = row.fileurl;
-      window.open(this.apiurl + url);
+      //window.open(this.apiurl + url);
+      this.download(row.name,row.fileurl);
     },
     //预览
     handleView(row) {

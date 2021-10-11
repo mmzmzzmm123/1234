@@ -54,22 +54,25 @@ public class CommonController {
      * @param delete   是否删除
      */
     @GetMapping("common/download")
-    public void fileDownload(String fileName, Boolean delete, HttpServletResponse response, HttpServletRequest request) {
+    public void fileDownload(String fileName,String fileUrlPath ,Boolean delete, HttpServletResponse response, HttpServletRequest request) {
         try {
             if (!FileUtils.isValidFilename(fileName)) {
                 throw new Exception(StringUtils.format("文件名称({})非法，不允许下载。 ", fileName));
             }
-            String realFileName = System.currentTimeMillis() + fileName.substring(fileName.indexOf("_") + 1);
-            String filePath = RuoYiConfig.getDownloadPath() + fileName;
+            //String realFileName = System.currentTimeMillis() + fileName.substring(fileName.indexOf("_") + 1);
+            String filePath = RuoYiConfig.getDownuploadPath() + fileUrlPath;
+            filePath=filePath.replace("/profile/","");
+
+            System.out.println("filepath"+filePath);
 
             response.setCharacterEncoding("utf-8");
             response.setContentType("multipart/form-data");
             response.setHeader("Content-Disposition",
-                    "attachment;fileName=" + FileUtils.setFileDownloadHeader(request, realFileName));
+                    "attachment;fileName=" + FileUtils.setFileDownloadHeader(request, fileName));
             FileUtils.writeBytes(filePath, response.getOutputStream());
-            if (delete) {
-                FileUtils.deleteFile(filePath);
-            }
+//            if (delete) {
+//                FileUtils.deleteFile(filePath);
+//            }
         } catch (Exception e) {
             log.error("下载文件失败", e);
         }

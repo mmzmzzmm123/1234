@@ -107,6 +107,14 @@ public class RuoYiConfig
     }
 
     /**
+     * 获取下载路径
+     */
+    public static String getDownuploadPath()
+    {
+        return getProfile() + "/";
+    }
+
+    /**
      * 获取上传路径
      */
     public static String getUploadPath()

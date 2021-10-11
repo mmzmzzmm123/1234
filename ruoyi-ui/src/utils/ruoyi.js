@@ -106,13 +106,15 @@ export function selectMoeDictLabel(datas, value) {
 }
 
 // 通用下载方法
-export function download(fileName) {
+export function download(fileName, fileUrlPath) {
   window.location.href =
     baseURL +
     "/common/download?fileName=" +
     encodeURI(fileName) +
+    "&fileUrlPath=" +
+    encodeURI(fileUrlPath) +
     "&delete=" +
-    true;
+    false;
 }
 
 // 字符串格式化(%s )
