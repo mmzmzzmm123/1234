@@ -6,7 +6,7 @@ import com.ruoyi.common.annotation.Excel;
 import com.ruoyi.common.core.domain.BaseEntity;
 
 /**
- * 标准信息对象 standard_info
+ * 试验标准管理对象 standard_info
  * 
  * @author ruoyi
  * @date 2021-10-13

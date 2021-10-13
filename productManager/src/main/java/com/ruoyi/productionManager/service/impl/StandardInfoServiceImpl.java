@@ -2,14 +2,14 @@ package com.ruoyi.productionManager.service.impl;
 
 import java.util.List;
 import com.ruoyi.common.utils.DateUtils;
-import com.ruoyi.productionManager.domain.StandardInfo;
-import com.ruoyi.productionManager.mapper.StandardInfoMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import com.ruoyi.productionManager.mapper.StandardInfoMapper;
+import com.ruoyi.productionManager.domain.StandardInfo;
 import com.ruoyi.productionManager.service.IStandardInfoService;
 
 /**
- * 标准信息Service业务层处理
+ * 试验标准管理Service业务层处理
  * 
  * @author ruoyi
  * @date 2021-10-13
@@ -21,10 +21,10 @@ public class StandardInfoServiceImpl implements IStandardInfoService
     private StandardInfoMapper standardInfoMapper;
 
     /**
-     * 查询标准信息
+     * 查询试验标准管理
      * 
-     * @param standardId 标准信息主键
-     * @return 标准信息
+     * @param standardId 试验标准管理主键
+     * @return 试验标准管理
      */
     @Override
     public StandardInfo selectStandardInfoByStandardId(Long standardId)
@@ -33,10 +33,10 @@ public class StandardInfoServiceImpl implements IStandardInfoService
     }
 
     /**
-     * 查询标准信息列表
+     * 查询试验标准管理列表
      * 
-     * @param standardInfo 标准信息
-     * @return 标准信息
+     * @param standardInfo 试验标准管理
+     * @return 试验标准管理
      */
     @Override
     public List<StandardInfo> selectStandardInfoList(StandardInfo standardInfo)
@@ -45,9 +45,9 @@ public class StandardInfoServiceImpl implements IStandardInfoService
     }
 
     /**
-     * 新增标准信息
+     * 新增试验标准管理
      * 
-     * @param standardInfo 标准信息
+     * @param standardInfo 试验标准管理
      * @return 结果
      */
     @Override
@@ -58,9 +58,9 @@ public class StandardInfoServiceImpl implements IStandardInfoService
     }
 
     /**
-     * 修改标准信息
+     * 修改试验标准管理
      * 
-     * @param standardInfo 标准信息
+     * @param standardInfo 试验标准管理
      * @return 结果
      */
     @Override
@@ -71,9 +71,9 @@ public class StandardInfoServiceImpl implements IStandardInfoService
     }
 
     /**
-     * 批量删除标准信息
+     * 批量删除试验标准管理
      * 
-     * @param standardIds 需要删除的标准信息主键
+     * @param standardIds 需要删除的试验标准管理主键
      * @return 结果
      */
     @Override
@@ -83,9 +83,9 @@ public class StandardInfoServiceImpl implements IStandardInfoService
     }
 
     /**
-     * 删除标准信息信息
+     * 删除试验标准管理信息
      * 
-     * @param standardId 标准信息主键
+     * @param standardId 试验标准管理主键
      * @return 结果
      */
     @Override
