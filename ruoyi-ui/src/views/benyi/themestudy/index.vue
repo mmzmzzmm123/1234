@@ -12,7 +12,7 @@
             style="margin-bottom: 20px"
           />
         </div>
-        <div class="head-container">
+        <div class="head-container tree">
           <el-tree
             :data="treeOptions"
             :props="defaultProps"
@@ -82,7 +82,7 @@ import { listActivity, getActivity } from "@/api/benyi/activity";
 import Editor from "@/components/Editor";
 
 export default {
-  name: "Detail",
+  name: "Themestudy",
   components: {
     Editor,
   },
@@ -300,5 +300,14 @@ div {
   -moz-user-select: none;
   -ms-user-select: none;
   user-select: none;
+}
+.el-tree {
+  min-width: 100%;
+  display: inline-block;
+}
+.tree {
+  overflow:auto;
+  height: calc(100% - 52px);
+  max-height: 600px;
 }
 </style>

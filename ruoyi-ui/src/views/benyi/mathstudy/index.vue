@@ -75,7 +75,7 @@ import { treeselect, getMath } from "@/api/benyi/math";
 import { listPlan } from "@/api/benyi/plan";
 
 export default {
-  name: "Detail",
+  name: "Mathstudy",
   data() {
     return {
       // 游戏数学名称

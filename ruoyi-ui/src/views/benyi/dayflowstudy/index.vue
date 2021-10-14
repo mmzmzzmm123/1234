@@ -69,7 +69,7 @@ import { listUnscramble } from "@/api/benyi/dayflow/unscramble";
 import { treeselect, getDetail } from "@/api/benyi/dayflow/dayflowmanger";
 
 export default {
-  name: "Detail",
+  name: "Dayflowstudy",
   data() {
     return {
       // 一日流程名称
