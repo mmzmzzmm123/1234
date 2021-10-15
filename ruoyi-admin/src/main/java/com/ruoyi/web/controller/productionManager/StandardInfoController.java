@@ -3,6 +3,7 @@ package com.ruoyi.web.controller.productionManager;
 import java.util.List;
 
 import com.ruoyi.common.config.RuoYiConfig;
+import com.ruoyi.common.constant.Constants;
 import com.ruoyi.common.utils.file.FileUploadUtils;
 import com.ruoyi.framework.config.ServerConfig;
 import com.ruoyi.productionManager.domain.StandardInfo;
@@ -111,18 +112,22 @@ public class StandardInfoController extends BaseController
 
     @PostMapping("/upload")
     public AjaxResult getFiles(@Param("file") MultipartFile file){
-        try{
-            String filePath = RuoYiConfig.getUploadPath();
-            // 上传并返回新文件名称
-            String fileName = FileUploadUtils.upload(filePath, file);
+//            String filePath = RuoYiConfig.getUploadPath();
+//            // 上传并返回新文件名称
+//            String fileName = FileUploadUtils.upload(filePath, file);
+            String fileName = standardInfoService.uploadFile(file);
             String url = serverConfig.getUrl() + fileName;
             AjaxResult ajax = AjaxResult.success();
             ajax.put("fileName", fileName);
-            ajax.put("url", url);
+            url.split("/");
+            String path ="";
+            for(String s:url.split("/",4)){
+                System.out.println("path>>>"+s);
+                path = s;
+            }
+            ajax.put("url", path);
             return ajax;
-        }catch (Exception e){
-            return AjaxResult.error(e.getMessage());
-        }
 
     }
+
 }

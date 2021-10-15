@@ -2,6 +2,7 @@ package com.ruoyi.productionManager.service;
 
 import java.util.List;
 import com.ruoyi.productionManager.domain.StandardInfo;
+import org.springframework.web.multipart.MultipartFile;
 
 /**
  * 试验标准管理Service接口
@@ -58,4 +59,11 @@ public interface IStandardInfoService
      * @return 结果
      */
     public int deleteStandardInfoByStandardId(Long standardId);
+
+    /**
+     * 上传文件
+     * @param file
+     * @return
+     */
+    public String uploadFile(MultipartFile file);
 }

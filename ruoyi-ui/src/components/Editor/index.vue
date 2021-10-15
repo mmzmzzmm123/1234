@@ -1,19 +1,19 @@
 <template>
   <div>
-    <el-upload
-      :action="uploadUrl"
-      :before-upload="handleBeforeUpload"
-      :on-success="handleUploadSuccess"
-      :on-error="handleUploadError"
-      name="file"
-      :show-file-list="false"
-      :headers="headers"
-      style="display: none"
-      ref="upload"
-      v-if="this.type == 'url'"
-    >
+    <el-upload :action="uploadUrl"
+               :before-upload="handleBeforeUpload"
+               :on-success="handleUploadSuccess"
+               :on-error="handleUploadError"
+               name="file"
+               :show-file-list="false"
+               :headers="headers"
+               style="display: none"
+               ref="upload"
+               v-if="this.type == 'url'">
     </el-upload>
-    <div class="editor" ref="editor" :style="styles"></div>
+    <div class="editor"
+         ref="editor"
+         :style="styles"></div>
   </div>
 </template>
 
@@ -58,7 +58,7 @@ export default {
       default: "url",
     }
   },
-  data() {
+  data () {
     return {
       uploadUrl: process.env.VUE_APP_BASE_API + "/common/upload", // 上传的图片服务器地址
       headers: {
@@ -91,7 +91,7 @@ export default {
     };
   },
   computed: {
-    styles() {
+    styles () {
       let style = {};
       if (this.minHeight) {
         style.minHeight = `${this.minHeight}px`;
@@ -104,7 +104,7 @@ export default {
   },
   watch: {
     value: {
-      handler(val) {
+      handler (val) {
         if (val !== this.currentValue) {
           this.currentValue = val === null ? "" : val;
           if (this.Quill) {
@@ -115,14 +115,14 @@ export default {
       immediate: true,
     },
   },
-  mounted() {
+  mounted () {
     this.init();
   },
-  beforeDestroy() {
+  beforeDestroy () {
     this.Quill = null;
   },
   methods: {
-    init() {
+    init () {
       const editor = this.$refs.editor;
       this.Quill = new Quill(editor, this.options);
       // 如果设置了上传地址则自定义图片上传事件
@@ -157,7 +157,7 @@ export default {
       });
     },
     // 上传前校检格式和大小
-    handleBeforeUpload(file) {
+    handleBeforeUpload (file) {
       // 校检文件大小
       if (this.fileSize) {
         const isLt = file.size / 1024 / 1024 < this.fileSize;
@@ -168,7 +168,7 @@ export default {
       }
       return true;
     },
-    handleUploadSuccess(res, file) {
+    handleUploadSuccess (res, file) {
       // 获取富文本组件实例
       let quill = this.Quill;
       // 如果上传成功
@@ -183,7 +183,7 @@ export default {
         this.$message.error("图片插入失败");
       }
     },
-    handleUploadError() {
+    handleUploadError () {
       this.$message.error("图片插入失败");
     },
   },
@@ -191,7 +191,8 @@ export default {
 </script>
 
 <style>
-.editor, .ql-toolbar {
+.editor,
+.ql-toolbar {
   white-space: pre-wrap !important;
   line-height: normal !important;
 }
