@@ -2,7 +2,11 @@ package com.ruoyi.web.controller.productionManager;
 
 import java.util.List;
 
+import com.ruoyi.common.config.RuoYiConfig;
+import com.ruoyi.common.utils.file.FileUploadUtils;
+import com.ruoyi.framework.config.ServerConfig;
 import com.ruoyi.productionManager.domain.StandardInfo;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -20,6 +24,7 @@ import com.ruoyi.common.enums.BusinessType;
 import com.ruoyi.productionManager.service.IStandardInfoService;
 import com.ruoyi.common.utils.poi.ExcelUtil;
 import com.ruoyi.common.core.page.TableDataInfo;
+import org.springframework.web.multipart.MultipartFile;
 
 /**
  * 试验标准管理Controller
@@ -33,6 +38,8 @@ public class StandardInfoController extends BaseController
 {
     @Autowired
     private IStandardInfoService standardInfoService;
+    @Autowired
+    private ServerConfig serverConfig;
 
     /**
      * 查询试验标准管理列表
@@ -100,5 +107,22 @@ public class StandardInfoController extends BaseController
     public AjaxResult remove(@PathVariable Long[] standardIds)
     {
         return toAjax(standardInfoService.deleteStandardInfoByStandardIds(standardIds));
+    }
+
+    @PostMapping("/upload")
+    public AjaxResult getFiles(@Param("file") MultipartFile file){
+        try{
+            String filePath = RuoYiConfig.getUploadPath();
+            // 上传并返回新文件名称
+            String fileName = FileUploadUtils.upload(filePath, file);
+            String url = serverConfig.getUrl() + fileName;
+            AjaxResult ajax = AjaxResult.success();
+            ajax.put("fileName", fileName);
+            ajax.put("url", url);
+            return ajax;
+        }catch (Exception e){
+            return AjaxResult.error(e.getMessage());
+        }
+
     }
 }
