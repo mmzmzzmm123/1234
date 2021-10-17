@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.project.benyi.mapper.ByAdmissioncourseMapper">
+
+    <resultMap type="ByAdmissioncourse" id="ByAdmissioncourseResult">
+        <result property="id" column="id"/>
+        <result property="parentId" column="parent_id"/>
+        <result property="titlename" column="titlename"/>
+        <result property="content" column="content"/>
+        <result property="sort" column="sort"/>
+        <result property="createTime" column="create_time"/>
+    </resultMap>
+
+    <sql id="selectByAdmissioncourseVo">
+        select id, parent_id, titlename, content, sort, create_time from by_admissioncourse
+    </sql>
+
+    <select id="selectByAdmissioncourseList" parameterType="ByAdmissioncourse" resultMap="ByAdmissioncourseResult">
+        <include refid="selectByAdmissioncourseVo"/>
+        <where>
+            <if test="parentId != null ">and parent_id = #{parentId}</if>
+            <if test="titlename != null  and titlename != ''">and titlename like concat('%', #{titlename}, '%')</if>
+            <if test="content != null  and content != ''">and content = #{content}</if>
+            <if test="sort != null ">and sort = #{sort}</if>
+        </where>
+    </select>
+
+    <select id="selectByAdmissioncourseById" parameterType="Long" resultMap="ByAdmissioncourseResult">
+        <include refid="selectByAdmissioncourseVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertByAdmissioncourse" parameterType="ByAdmissioncourse">
+        insert into by_admissioncourse
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null ">id,</if>
+            <if test="parentId != null ">parent_id,</if>
+            <if test="titlename != null  and titlename != ''">titlename,</if>
+            <if test="content != null  and content != ''">content,</if>
+            <if test="sort != null ">sort,</if>
+            <if test="createTime != null ">create_time,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null ">#{id},</if>
+            <if test="parentId != null ">#{parentId},</if>
+            <if test="titlename != null  and titlename != ''">#{titlename},</if>
+            <if test="content != null  and content != ''">#{content},</if>
+            <if test="sort != null ">#{sort},</if>
+            <if test="createTime != null ">#{createTime},</if>
+        </trim>
+    </insert>
+
+    <update id="updateByAdmissioncourse" parameterType="ByAdmissioncourse">
+        update by_admissioncourse
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="parentId != null ">parent_id = #{parentId},</if>
+            <if test="titlename != null  and titlename != ''">titlename = #{titlename},</if>
+            <if test="content != null  and content != ''">content = #{content},</if>
+            <if test="sort != null ">sort = #{sort},</if>
+            <if test="createTime != null ">create_time = #{createTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteByAdmissioncourseById" parameterType="Long">
+        delete from by_admissioncourse where id = #{id}
+    </delete>
+
+    <delete id="deleteByAdmissioncourseByIds" parameterType="String">
+        delete from by_admissioncourse where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+</mapper>
