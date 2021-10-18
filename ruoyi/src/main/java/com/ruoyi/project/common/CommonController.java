@@ -54,16 +54,23 @@ public class CommonController {
      * @param delete   是否删除
      */
     @GetMapping("common/download")
-    public void fileDownload(String fileName,String fileUrlPath ,Boolean delete, HttpServletResponse response, HttpServletRequest request) {
+    public void fileDownload(String fileName, String fileUrlPath, Boolean delete, HttpServletResponse response, HttpServletRequest request) {
         try {
             if (!FileUtils.isValidFilename(fileName)) {
                 throw new Exception(StringUtils.format("文件名称({})非法，不允许下载。 ", fileName));
             }
             //String realFileName = System.currentTimeMillis() + fileName.substring(fileName.indexOf("_") + 1);
-            String filePath = RuoYiConfig.getDownuploadPath() + fileUrlPath;
-            filePath=filePath.replace("/profile/","");
+//            String filePath = RuoYiConfig.getDownuploadPath() + fileUrlPath;
+//            filePath=filePath.replace("/profile/","");
 
-            System.out.println("filepath"+filePath);
+            String filePath = "";
+            if (fileUrlPath.equals("undefined")) {
+                filePath = RuoYiConfig.getDownloadPath() + fileName;
+            } else {
+                filePath = RuoYiConfig.getDownuploadPath() + fileUrlPath.replace("/profile/", "");
+            }
+
+            System.out.println("filepath" + filePath);
 
             response.setCharacterEncoding("utf-8");
             response.setContentType("multipart/form-data");
@@ -144,8 +151,9 @@ public class CommonController {
     }
 
     /**
-     *获取七牛资源地址
-     *@param URL 上传的资源名称
+     * 获取七牛资源地址
+     *
+     * @param URL 上传的资源名称
      */
     public String privateDownloadUrl(String URL) {
 
