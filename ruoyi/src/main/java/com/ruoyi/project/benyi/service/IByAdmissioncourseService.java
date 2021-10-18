@@ -2,7 +2,9 @@ package com.ruoyi.project.benyi.service;
 
 import java.util.List;
 
+import com.ruoyi.framework.web.domain.TreeSelect;
 import com.ruoyi.project.benyi.domain.ByAdmissioncourse;
+import com.ruoyi.project.benyi.domain.ByMicrocourse;
 
 /**
  * 入学准备课程Service接口
@@ -26,6 +28,30 @@ public interface IByAdmissioncourseService {
      * @return 入学准备课程集合
      */
     public List<ByAdmissioncourse> selectByAdmissioncourseList(ByAdmissioncourse byAdmissioncourse);
+
+    /**
+     * 查询入学准备课程列表
+     *
+     * @param byAdmissioncourse 入学准备课程
+     * @return 入学准备课程程集合
+     */
+    public List<ByAdmissioncourse> selectByAdmissioncourseListTree(ByAdmissioncourse byAdmissioncourse);
+
+    /**
+     * 构建前端所需要树结构
+     *
+     * @param byAdmissioncourses 部门列表
+     * @return 树结构列表
+     */
+    public List<ByAdmissioncourse> buildByAdmissioncourseDetailTree(List<ByAdmissioncourse> byAdmissioncourses);
+
+    /**
+     * 构建前端所需要下拉树结构
+     *
+     * @param byAdmissioncourses 部门列表
+     * @return 下拉树结构列表
+     */
+    public List<TreeSelect> buildByAdmissioncourseTreeSelect(List<ByAdmissioncourse> byAdmissioncourses);
 
     /**
      * 新增入学准备课程

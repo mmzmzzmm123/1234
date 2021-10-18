@@ -45,6 +45,16 @@ public class ByAdmissioncourseController extends BaseController {
     }
 
     /**
+     * 查询入学准备课程列表
+     */
+    @Log(title = "入学准备课程学习", businessType = BusinessType.QUERY)
+    @GetMapping("/treeselect")
+    public AjaxResult treeselect(ByAdmissioncourse byAdmissioncourse) {
+        List<ByAdmissioncourse> list = byAdmissioncourseService.selectByAdmissioncourseListTree(byAdmissioncourse);
+        return AjaxResult.success(byAdmissioncourseService.buildByAdmissioncourseTreeSelect(list));
+    }
+
+    /**
      * 导出入学准备课程列表
      */
     @PreAuthorize("@ss.hasPermi('benyi:admissioncourse:export')")

@@ -9,6 +9,14 @@ export function listAdmissioncourse(query) {
   });
 }
 
+// 查询流程下拉树结构
+export function treeselect() {
+  return request({
+      url: '/benyi/admissioncourse/treeselect',
+      method: 'get'
+  })
+}
+
 // 查询入学准备课程详细
 export function getAdmissioncourse(id) {
   return request({

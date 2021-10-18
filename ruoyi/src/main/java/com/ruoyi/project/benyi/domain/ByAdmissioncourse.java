@@ -5,6 +5,9 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 import com.ruoyi.framework.aspectj.lang.annotation.Excel;
 import com.ruoyi.framework.web.domain.BaseEntity;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * 入学准备课程对象 by_admissioncourse
  *
@@ -42,6 +45,19 @@ public class ByAdmissioncourse extends BaseEntity {
      */
     @Excel(name = "序号")
     private Long sort;
+
+    public List<ByAdmissioncourse> getChildren() {
+        return children;
+    }
+
+    public void setChildren(List<ByAdmissioncourse> children) {
+        this.children = children;
+    }
+
+    /**
+     * 树状子类
+     */
+    private List<ByAdmissioncourse> children = new ArrayList<ByAdmissioncourse>();
 
     public void setId(Long id) {
         this.id = id;

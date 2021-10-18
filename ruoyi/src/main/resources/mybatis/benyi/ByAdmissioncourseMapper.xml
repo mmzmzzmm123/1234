@@ -27,6 +27,14 @@
         </where>
     </select>
 
+    <select id="selectByAdmissioncourseListTree" parameterType="ByAdmissioncourse" resultMap="ByAdmissioncourseResult">
+        <include refid="selectByAdmissioncourseVo"/>
+        <where>
+            <if test="titlename != null  and titlename != ''">and titlename like concat('%', #{titlename}, '%')</if>
+        </where>
+        order by sort
+    </select>
+
     <select id="selectByAdmissioncourseById" parameterType="Long" resultMap="ByAdmissioncourseResult">
         <include refid="selectByAdmissioncourseVo"/>
         where id = #{id}

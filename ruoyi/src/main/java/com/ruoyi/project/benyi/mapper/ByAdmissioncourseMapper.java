@@ -28,6 +28,14 @@ public interface ByAdmissioncourseMapper {
     public List<ByAdmissioncourse> selectByAdmissioncourseList(ByAdmissioncourse byAdmissioncourse);
 
     /**
+     * 查询入学准备课程列表
+     *
+     * @param byAdmissioncourse 入学准备课程
+     * @return 入学准备课程程集合
+     */
+    public List<ByAdmissioncourse> selectByAdmissioncourseListTree(ByAdmissioncourse byAdmissioncourse);
+
+    /**
      * 新增入学准备课程
      *
      * @param byAdmissioncourse 入学准备课程
