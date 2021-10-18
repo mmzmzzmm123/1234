@@ -39,9 +39,6 @@
 </template>
 
 <script>
-import { listDayflowtask } from "@/api/benyi/dayflow/dayflowtask";
-import { listStandard } from "@/api/benyi/dayflow/biaozhun/standard";
-import { listUnscramble } from "@/api/benyi/dayflow/unscramble";
 import { treeselect, getAdmissioncourse } from "@/api/benyi/admissioncourse";
 
 export default {
@@ -94,7 +91,10 @@ export default {
     handleNodeClick(data) {
       this.queryParams.detailId = data.id;
       getAdmissioncourse(this.queryParams.detailId).then((response) => {
-        this.content = response.data.content;
+        if (response.data.content != null) {
+          this.content = response.data.content;
+          this.title = response.data.titlename;
+        }
       });
     },
   },
