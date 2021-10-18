@@ -1,16 +1,17 @@
-@import './variables.scss';
-@import './mixin.scss';
-@import './transition.scss';
-@import './element-ui.scss';
-@import './sidebar.scss';
-@import './btn.scss';
+@import "./variables.scss";
+@import "./mixin.scss";
+@import "./transition.scss";
+@import "./element-ui.scss";
+@import "./sidebar.scss";
+@import "./btn.scss";
 
 body {
   height: 100%;
   -moz-osx-font-smoothing: grayscale;
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
-  font-family: Helvetica Neue, Helvetica, PingFang SC, Hiragino Sans GB, Microsoft YaHei, Arial, sans-serif;
+  font-family: Helvetica Neue, Helvetica, PingFang SC, Hiragino Sans GB,
+    Microsoft YaHei, Arial, sans-serif;
 }
 
 label {
@@ -104,7 +105,8 @@ aside {
   display: block;
   line-height: 32px;
   font-size: 16px;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen,
+    Ubuntu, Cantarell, "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
   color: #2c3e50;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -137,7 +139,7 @@ aside {
 }
 
 .text-center {
-  text-align: center
+  text-align: center;
 }
 
 .sub-navbar {
@@ -148,7 +150,13 @@ aside {
   text-align: right;
   padding-right: 20px;
   transition: 600ms ease position;
-  background: linear-gradient(90deg, rgba(32, 182, 249, 1) 0%, rgba(32, 182, 249, 1) 0%, rgba(33, 120, 241, 1) 100%, rgba(33, 120, 241, 1) 100%);
+  background: linear-gradient(
+    90deg,
+    rgba(32, 182, 249, 1) 0%,
+    rgba(32, 182, 249, 1) 0%,
+    rgba(33, 120, 241, 1) 100%,
+    rgba(33, 120, 241, 1) 100%
+  );
 
   .subtitle {
     font-size: 20px;
@@ -239,7 +247,7 @@ p {
 
 ul,
 li {
-    list-style: none;
+  list-style: none;
 }
 
 @media (max-width: 768.98px) {
@@ -262,4 +270,28 @@ li {
   height: 34px !important;
   line-height: 34px;
   overflow: hidden;
+}
+
+@media screen and (max-width: 768px) {
+  .xs-position {
+    position: absolute;
+    left: 0;
+    top: 0;
+    background: #fff;
+    width: 50%;
+    padding-top: 15px;
+    height: calc(100vh - 96px);
+    overflow: auto;
+    transform: translate3d(-100%, 0, 0);
+    transition: all 0.5s;
+    box-shadow: 0 6px 10px rgba(0, 0, 0, 0.1);
+    &.xs-show {
+      transform: translate3d(0, 0, 0);
+    }
+  }
+  .xs-menu {
+    font-size: 14px;
+    cursor: pointer;
+    margin: 10px 15px 15px;
+  }
 }

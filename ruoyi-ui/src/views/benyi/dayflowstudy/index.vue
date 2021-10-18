@@ -1,7 +1,8 @@
 <template>
   <div class="app-container">
+    <span class="el-icon-menu xs-menu" @click="onToggleMenu">目录</span>
     <el-row :gutter="20">
-      <el-col :span="4" :xs="24">
+      <el-col class="xs-position" @click.stop="" :class="{'xs-show': isXsMenu}" :span="4" :xs="24">
         <div class="head-container">
           <el-input
             v-model="name"
@@ -27,7 +28,7 @@
       <el-col :span="20" :xs="24">
         <el-card class="box-card">
           <div slot="header" class="clearfix">
-            <span class="box-card-title">{{title}}</span>
+            <span class="box-card-title">{{ title }}</span>
           </div>
           <div class="text item">
             <h3 class="box-card-title">导言</h3>
@@ -37,22 +38,36 @@
             <h3 class="box-card-title">目的</h3>
             <div class="pad-left" v-html="note"></div>
           </div>
-          <div v-for="(item, index) in dayflowtaskList" :key="index" class="text item">
-            <h3 class="box-card-title mr">{{item.taskLable}}</h3>
-            <p class="pad-left">{{item.taskContent}}</p>
+          <div
+            v-for="(item, index) in dayflowtaskList"
+            :key="index"
+            class="text item"
+          >
+            <h3 class="box-card-title mr">{{ item.taskLable }}</h3>
+            <p class="pad-left">{{ item.taskContent }}</p>
             <div class="pad-left">
               <div
-                v-for="(item_standard, index_standard) in (dayflowstandardList.filter(p=>p.taskCode==item.code))"
+                v-for="(item_standard,
+                index_standard) in dayflowstandardList.filter(
+                  p => p.taskCode == item.code
+                )"
                 :key="index_standard"
                 class="text item"
               >
-                <h3 class="box-card-case mr">{{item_standard.standardTitle}}</h3>
+                <h3 class="box-card-case mr">
+                  {{ item_standard.standardTitle }}
+                </h3>
                 <h3 class="box-card-info">解读：</h3>
                 <div
-                  v-for="(item_unscramble, index_unscramble) in (dayflowunscrambleList.filter(p=>p.standardId==item_standard.id))"
+                  v-for="(item_unscramble,
+                  index_unscramble) in dayflowunscrambleList.filter(
+                    p => p.standardId == item_standard.id
+                  )"
                   :key="index_unscramble"
                   class="text item pad-left"
-                >{{item_unscramble.sort}}){{item_unscramble.content}}</div>
+                >
+                  {{ item_unscramble.sort }}){{ item_unscramble.content }}
+                </div>
               </div>
             </div>
           </div>
@@ -72,6 +87,7 @@ export default {
   name: "Dayflowstudy",
   data() {
     return {
+      isXsMenu: false,
       // 一日流程名称
       name: undefined,
       // 一日流程id
@@ -114,6 +130,9 @@ export default {
     this.getChildNodeList();
   },
   methods: {
+    onToggleMenu() {
+      this.isXsMenu = !this.isXsMenu;
+    },
     /** 查询部门下拉树结构 */
     getTreeselect() {
       treeselect().then(response => {
@@ -146,6 +165,7 @@ export default {
     },
     /** 查询一日流程任务列表 */
     getTaskList() {
+      this.isXsMenu = false;
       listDayflowtask(this.queryParams).then(response => {
         this.dayflowtaskList = response.rows;
       });
