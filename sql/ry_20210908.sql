@@ -686,3 +686,35 @@ create table gen_table_column (
   update_time       datetime                                   comment '更新时间',
   primary key (column_id)
 ) engine=innodb auto_increment=1 comment = '代码生成业务表字段';
+
+-- 添加业务表
+drop table if exists STANDARD_INFO;
+create table STANDARD_INFO (
+	standard_id					 bigint(20)      not null auto_increment    comment '标准id',
+    area_category                varchar(120)    not null            		comment '区域分类',
+    standard_name             	 varchar(200)    not null            		comment '标准名称',
+    standard_category            varchar(200)    not null            		comment '标准类型',
+    standard_begin_date          varchar(250)    null                		comment '标准实施日期',
+    standard_status              varchar(20)     not null             		comment '标准状态',
+	create_by        			 varchar(64)     default ''                 comment '创建者',
+	create_time      			 datetime                                   comment '创建时间',
+	update_by        			 varchar(64)     default ''                 comment '更新者',
+	update_time      			 datetime                                   comment '更新时间',
+	remark           			 varchar(500)    default null               comment '备注',
+    primary key (standard_id)
+) engine=innodb comment = '标准信息表';
+
+
+drop table if exists STANDARD_INFO_DETAILS;
+create table STANDARD_INFO_DETAILS (
+  details_id   				 bigint(20) not null 	auto_increment					comment '标准明细ID',
+  standard_id   			 bigint(20) not null  												comment '标准id',
+  file_name             	 varchar(200)    not null            		  comment '文件名称',
+  file_url             	 	 varchar(200)    not null               	comment '文件路径',
+  create_by        			 varchar(64)     default ''                 comment '创建者',
+  create_time      			 datetime                                   comment '创建时间',
+  update_by        			 varchar(64)     default ''                 comment '更新者',
+  update_time      			 datetime                                   comment '更新时间',
+  remark           			 varchar(500)    default null               comment '备注',
+  primary key (details_id,standard_id)
+) engine=innodb comment = '标准信息文件表';

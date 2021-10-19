@@ -2,7 +2,12 @@ package com.ruoyi.common.utils.file;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Base64;
+import java.util.concurrent.TimeUnit;
+
+import com.ruoyi.common.core.redis.RedisCache;
 import org.apache.commons.io.FilenameUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.multipart.MultipartFile;
 import com.ruoyi.common.config.RuoYiConfig;
 import com.ruoyi.common.constant.Constants;
@@ -12,6 +17,7 @@ import com.ruoyi.common.exception.file.InvalidExtensionException;
 import com.ruoyi.common.utils.DateUtils;
 import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.common.utils.uuid.IdUtils;
+import sun.misc.BASE64Encoder;
 
 /**
  * 文件上传工具类
@@ -20,6 +26,7 @@ import com.ruoyi.common.utils.uuid.IdUtils;
  */
 public class FileUploadUtils
 {
+
     /**
      * 默认大小 50M
      */
@@ -110,8 +117,8 @@ public class FileUploadUtils
 
         String fileName = extractFilename(file);
 
-        File desc = getAbsoluteFile(baseDir, fileName);
-        file.transferTo(desc);
+//        File desc = getAbsoluteFile(baseDir, fileName);
+//        file.transferTo(desc);
         String pathFileName = getPathFileName(baseDir, fileName);
         return pathFileName;
     }

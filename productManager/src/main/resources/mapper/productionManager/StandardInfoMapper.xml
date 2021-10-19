@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.productionManager.mapper.StandardInfoMapper">
+    
+    <resultMap type="StandardInfo" id="StandardInfoResult">
+        <result property="standardId"    column="standard_id"    />
+        <result property="areaCategory"    column="area_category"    />
+        <result property="standardName"    column="standard_name"    />
+        <result property="standardCategory"    column="standard_category"    />
+        <result property="standardBeginDate"    column="standard_begin_date"    />
+        <result property="standardStatus"    column="standard_status"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="remark"    column="remark"    />
+    </resultMap>
+
+    <sql id="selectStandardInfoVo">
+        select standard_id, area_category, standard_name, standard_category, standard_begin_date, standard_status, create_by, create_time, update_by, update_time, remark from standard_info
+    </sql>
+
+    <select id="selectStandardInfoList" parameterType="StandardInfo" resultMap="StandardInfoResult">
+        <include refid="selectStandardInfoVo"/>
+        <where>  
+            <if test="areaCategory != null  and areaCategory != ''"> and area_category = #{areaCategory}</if>
+            <if test="standardName != null  and standardName != ''"> and standard_name like concat('%', #{standardName}, '%')</if>
+            <if test="standardCategory != null  and standardCategory != ''"> and standard_category = #{standardCategory}</if>
+            <if test="standardBeginDate != null  and standardBeginDate != ''"> and standard_begin_date = #{standardBeginDate}</if>
+            <if test="standardStatus != null  and standardStatus != ''"> and standard_status = #{standardStatus}</if>
+        </where>
+    </select>
+    
+    <select id="selectStandardInfoByStandardId" parameterType="Long" resultMap="StandardInfoResult">
+        <include refid="selectStandardInfoVo"/>
+        where standard_id = #{standardId}
+    </select>
+        
+    <insert id="insertStandardInfo"
+            parameterType="StandardInfo" useGeneratedKeys="true" keyProperty="standardId">
+        <selectKey resultType="java.lang.Long" keyProperty="standardId" order="AFTER" >
+            SELECT LAST_INSERT_ID()
+        </selectKey>
+        insert into standard_info
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <!--<if test="standardId != null and standardId != ''">standard_id,</if>-->
+            <if test="areaCategory != null and areaCategory != ''">area_category,</if>
+            <if test="standardName != null and standardName != ''">standard_name,</if>
+            <if test="standardCategory != null and standardCategory != ''">standard_category,</if>
+            <if test="standardBeginDate != null">standard_begin_date,</if>
+            <if test="standardStatus != null and standardStatus != ''">standard_status,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="remark != null">remark,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="areaCategory != null and areaCategory != ''">#{areaCategory},</if>
+            <if test="standardName != null and standardName != ''">#{standardName},</if>
+            <if test="standardCategory != null and standardCategory != ''">#{standardCategory},</if>
+            <if test="standardBeginDate != null">#{standardBeginDate},</if>
+            <if test="standardStatus != null and standardStatus != ''">#{standardStatus},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="remark != null">#{remark},</if>
+         </trim>
+    </insert>
+
+    <update id="updateStandardInfo" parameterType="StandardInfo">
+        update standard_info
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="areaCategory != null and areaCategory != ''">area_category = #{areaCategory},</if>
+            <if test="standardName != null and standardName != ''">standard_name = #{standardName},</if>
+            <if test="standardCategory != null and standardCategory != ''">standard_category = #{standardCategory},</if>
+            <if test="standardBeginDate != null">standard_begin_date = #{standardBeginDate},</if>
+            <if test="standardStatus != null and standardStatus != ''">standard_status = #{standardStatus},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="remark != null">remark = #{remark},</if>
+        </trim>
+        where standard_id = #{standardId}
+    </update>
+
+    <delete id="deleteStandardInfoByStandardId" parameterType="Long">
+        delete from standard_info where standard_id = #{standardId}
+    </delete>
+
+    <delete id="deleteStandardInfoByStandardIds" parameterType="String">
+        delete from standard_info where standard_id in 
+        <foreach item="standardId" collection="array" open="(" separator="," close=")">
+            #{standardId}
+        </foreach>
+    </delete>
+</mapper>
