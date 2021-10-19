@@ -111,6 +111,7 @@ public class StandardInfoServiceImpl implements IStandardInfoService
             standardInfoDetails.setFileName(name);
             standardInfoDetails.setStandardId(standardManagerVO.getStandardId());
             standardInfoDetails.setCreateBy(SecurityUtils.getLoginUser().getUsername());
+            redisCache.deleteObject(Constants.UPLOAD_FILE+name);
             return standardInfoDetailsService.insertStandardInfoDetails(standardInfoDetails);
         }catch (Exception e){
             throw new ServiceException("新增失败：" + e.getMessage());
