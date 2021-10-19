@@ -150,7 +150,12 @@ public class Constants
     public static final String LOOKUP_LDAP = "ldap://";
 
     /**
-     * LDAP 远程方法调用
+     * 文件上传
      */
     public static final String UPLOAD_FILE = "file:";
+
+    /**
+     * 文件上传
+     */
+    public static final String UPLOAD_FILE_NAME = "filename:";
 }

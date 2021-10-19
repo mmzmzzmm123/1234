@@ -43,7 +43,7 @@ public interface IStandardInfoService
      * @param standardInfo 试验标准管理
      * @return 结果
      */
-    public int updateStandardInfo(StandardInfo standardInfo);
+    public int updateStandardInfo(StandardManagerVO standardManagerVO);
 
     /**
      * 批量删除试验标准管理

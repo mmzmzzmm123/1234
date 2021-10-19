@@ -24,6 +24,7 @@ import org.springframework.stereotype.Service;
 import com.ruoyi.productionManager.mapper.StandardInfoMapper;
 import com.ruoyi.productionManager.domain.StandardInfo;
 import com.ruoyi.productionManager.service.IStandardInfoService;
+import org.springframework.util.Assert;
 import org.springframework.web.multipart.MultipartFile;
 import org.apache.http.entity.ContentType;
 
@@ -84,19 +85,19 @@ public class StandardInfoServiceImpl implements IStandardInfoService
         String name = "";
         String fileName = "";
         StringBuffer sb = new StringBuffer();
+        Assert.notNull(standardManagerVO.getPath(),"文件未上传！");
 //        String s:standardManagerVO.getPath().split("/",9)
         String[] str = standardManagerVO.getPath().split("/",6);
         for(int i=0;i<str.length;i++){
-            System.out.println("name>>>"+str[i]);
             if(i>=2){
                 sb.append("/");
                 sb.append(str[i]);
             }
             name = str[i];
         }
-        System.out.println("sb>>>"+sb.toString());
         try{
             byte[] bytes = redisCache.getCacheObject(Constants.UPLOAD_FILE+name);
+            String s = redisCache.getCacheObject(Constants.UPLOAD_FILE_NAME+name);
             InputStream inputStream = new ByteArrayInputStream(bytes);
 //            String fileType = FileTypeUtils.getType(bytes);
             MultipartFile files = new MockMultipartFile(ContentType.APPLICATION_OCTET_STREAM.toString(), inputStream);
@@ -108,11 +109,14 @@ public class StandardInfoServiceImpl implements IStandardInfoService
             standardInfoMapper.insertStandardInfo(standardManagerVO);
             StandardInfoDetails standardInfoDetails = new StandardInfoDetails();
             standardInfoDetails.setFileUrl(filePath+fileName);
-            standardInfoDetails.setFileName(name);
+            standardInfoDetails.setFileName(s);
             standardInfoDetails.setStandardId(standardManagerVO.getStandardId());
             standardInfoDetails.setCreateBy(SecurityUtils.getLoginUser().getUsername());
             redisCache.deleteObject(Constants.UPLOAD_FILE+name);
+            redisCache.deleteObject(Constants.UPLOAD_FILE_NAME+name);
             return standardInfoDetailsService.insertStandardInfoDetails(standardInfoDetails);
+        }catch (NullPointerException e){
+            throw new ServiceException("新增失败：文件已过期重新上传！");
         }catch (Exception e){
             throw new ServiceException("新增失败：" + e.getMessage());
         }
@@ -125,10 +129,40 @@ public class StandardInfoServiceImpl implements IStandardInfoService
      * @return 结果
      */
     @Override
-    public int updateStandardInfo(StandardInfo standardInfo)
+    public int updateStandardInfo(StandardManagerVO standardManagerVO)
     {
-        standardInfo.setUpdateTime(DateUtils.getNowDate());
-        return standardInfoMapper.updateStandardInfo(standardInfo);
+        String filePath = RuoYiConfig.getUploadPath();
+        //            取出缓存数据
+        String name = "";
+        String fileName = "";
+        StringBuffer sb = new StringBuffer();
+        Assert.notNull(standardManagerVO.getPath(),"文件未上传！");
+//        String s:standardManagerVO.getPath().split("/",9)
+        String[] str = standardManagerVO.getPath().split("/",6);
+        for(int i=0;i<str.length;i++){
+            if(i>=2){
+                sb.append("/");
+                sb.append(str[i]);
+            }
+            name = str[i];
+        }
+        try {
+            byte[] bytes = redisCache.getCacheObject(Constants.UPLOAD_FILE+name);
+            InputStream inputStream = new ByteArrayInputStream(bytes);
+//            String fileType = FileTypeUtils.getType(bytes);
+            MultipartFile files = new MockMultipartFile(ContentType.APPLICATION_OCTET_STREAM.toString(), inputStream);
+            fileName = sb.toString();
+            File desc = FileUploadUtils.getAbsoluteFile(filePath, fileName);
+            files.transferTo(desc);
+
+            standardManagerVO.setUpdateBy(SecurityUtils.getLoginUser().getUsername());
+            standardManagerVO.setUpdateTime(DateUtils.getNowDate());
+            return standardInfoMapper.updateStandardInfo(standardManagerVO);
+        }catch (NullPointerException e){
+            throw new ServiceException("修改失败：文件已过期重新上传！");
+        }catch (Exception e){
+            throw new ServiceException("修改失败：" + e.getMessage());
+        }
     }
 
     /**
@@ -172,6 +206,7 @@ public class StandardInfoServiceImpl implements IStandardInfoService
 
             redisCache.setCacheObject(Constants.UPLOAD_FILE+name,
                     data, 30, TimeUnit.MINUTES);
+            redisCache.setCacheObject(Constants.UPLOAD_FILE_NAME+name,file.getOriginalFilename(),30,TimeUnit.MINUTES);
 //            byte[] bytes = redisCache.getCacheObject(Constants.UPLOAD_FILE+name);
 //            InputStream inputStream = new ByteArrayInputStream(bytes);
 //            String fileType = FileTypeUtils.getType(bytes);

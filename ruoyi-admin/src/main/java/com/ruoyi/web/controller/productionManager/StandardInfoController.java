@@ -96,7 +96,7 @@ public class StandardInfoController extends BaseController
     @PreAuthorize("@ss.hasPermi('productionManager:standard:edit')")
     @Log(title = "试验标准管理", businessType = BusinessType.UPDATE)
     @PutMapping
-    public AjaxResult edit(@RequestBody StandardInfo standardInfo)
+    public AjaxResult edit(@RequestBody StandardManagerVO standardInfo)
     {
         return toAjax(standardInfoService.updateStandardInfo(standardInfo));
     }
