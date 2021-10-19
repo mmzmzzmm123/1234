@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.productionManager.mapper.StandardInfoDetailsMapper">
+    
+    <resultMap type="StandardInfoDetails" id="StandardInfoDetailsResult">
+        <result property="detailsId"    column="details_id"    />
+        <result property="standardId"    column="standard_id"    />
+        <result property="fileName"    column="file_name"    />
+        <result property="fileUrl"    column="file_url"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="remark"    column="remark"    />
+    </resultMap>
+
+    <sql id="selectStandardInfoDetailsVo">
+        select details_id, standard_id, file_name, file_url, create_by, create_time, update_by, update_time, remark from standard_info_details
+    </sql>
+
+    <select id="selectStandardInfoDetailsList" parameterType="StandardInfoDetails" resultMap="StandardInfoDetailsResult">
+        <include refid="selectStandardInfoDetailsVo"/>
+        <where>  
+            <if test="fileName != null  and fileName != ''"> and file_name like concat('%', #{fileName}, '%')</if>
+            <if test="fileUrl != null  and fileUrl != ''"> and file_url = #{fileUrl}</if>
+        </where>
+    </select>
+    
+    <select id="selectStandardInfoDetailsByDetailsId" parameterType="Long" resultMap="StandardInfoDetailsResult">
+        <include refid="selectStandardInfoDetailsVo"/>
+        where details_id = #{detailsId}
+    </select>
+        
+    <insert id="insertStandardInfoDetails" parameterType="StandardInfoDetails" useGeneratedKeys="true" keyProperty="detailsId">
+        insert into standard_info_details
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="standardId != null">standard_id,</if>
+            <if test="fileName != null and fileName != ''">file_name,</if>
+            <if test="fileUrl != null and fileUrl != ''">file_url,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="remark != null">remark,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="standardId != null">#{standardId},</if>
+            <if test="fileName != null and fileName != ''">#{fileName},</if>
+            <if test="fileUrl != null and fileUrl != ''">#{fileUrl},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="remark != null">#{remark},</if>
+         </trim>
+    </insert>
+
+    <update id="updateStandardInfoDetails" parameterType="StandardInfoDetails">
+        update standard_info_details
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="standardId != null">standard_id = #{standardId},</if>
+            <if test="fileName != null and fileName != ''">file_name = #{fileName},</if>
+            <if test="fileUrl != null and fileUrl != ''">file_url = #{fileUrl},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="remark != null">remark = #{remark},</if>
+        </trim>
+        where details_id = #{detailsId}
+    </update>
+
+    <delete id="deleteStandardInfoDetailsByDetailsId" parameterType="Long">
+        delete from standard_info_details where details_id = #{detailsId}
+    </delete>
+
+    <delete id="deleteStandardInfoDetailsByDetailsIds" parameterType="String">
+        delete from standard_info_details where details_id in 
+        <foreach item="detailsId" collection="array" open="(" separator="," close=")">
+            #{detailsId}
+        </foreach>
+    </delete>
+</mapper>

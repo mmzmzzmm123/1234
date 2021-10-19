@@ -2,6 +2,7 @@ package com.ruoyi.productionManager.service;
 
 import java.util.List;
 import com.ruoyi.productionManager.domain.StandardInfo;
+import com.ruoyi.productionManager.vo.StandardManagerVO;
 import org.springframework.web.multipart.MultipartFile;
 
 /**
@@ -34,7 +35,7 @@ public interface IStandardInfoService
      * @param standardInfo 试验标准管理
      * @return 结果
      */
-    public int insertStandardInfo(StandardInfo standardInfo);
+    public int insertStandardInfo(StandardManagerVO standardManagerVO);
 
     /**
      * 修改试验标准管理

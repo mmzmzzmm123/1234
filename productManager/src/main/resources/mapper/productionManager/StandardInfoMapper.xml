@@ -38,9 +38,14 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         where standard_id = #{standardId}
     </select>
         
-    <insert id="insertStandardInfo" parameterType="StandardInfo" useGeneratedKeys="true" keyProperty="standardId">
+    <insert id="insertStandardInfo"
+            parameterType="StandardInfo" useGeneratedKeys="true" keyProperty="standardId">
+        <selectKey resultType="java.lang.Long" keyProperty="standardId" order="AFTER" >
+            SELECT LAST_INSERT_ID()
+        </selectKey>
         insert into standard_info
         <trim prefix="(" suffix=")" suffixOverrides=",">
+            <!--<if test="standardId != null and standardId != ''">standard_id,</if>-->
             <if test="areaCategory != null and areaCategory != ''">area_category,</if>
             <if test="standardName != null and standardName != ''">standard_name,</if>
             <if test="standardCategory != null and standardCategory != ''">standard_category,</if>

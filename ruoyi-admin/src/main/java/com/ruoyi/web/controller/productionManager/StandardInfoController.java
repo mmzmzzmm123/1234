@@ -7,6 +7,7 @@ import com.ruoyi.common.constant.Constants;
 import com.ruoyi.common.utils.file.FileUploadUtils;
 import com.ruoyi.framework.config.ServerConfig;
 import com.ruoyi.productionManager.domain.StandardInfo;
+import com.ruoyi.productionManager.vo.StandardManagerVO;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -83,8 +84,9 @@ public class StandardInfoController extends BaseController
     @PreAuthorize("@ss.hasPermi('productionManager:standard:add')")
     @Log(title = "试验标准管理", businessType = BusinessType.INSERT)
     @PostMapping
-    public AjaxResult add(@RequestBody StandardInfo standardInfo)
+    public AjaxResult add(@RequestBody StandardManagerVO standardInfo)
     {
+        standardInfo.setCreateBy(getUsername());
         return toAjax(standardInfoService.insertStandardInfo(standardInfo));
     }
 
