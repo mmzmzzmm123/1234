@@ -12,6 +12,7 @@ import com.ruoyi.common.utils.DateUtils;
 import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.system.domain.DataCompanyLoan;
 import com.ruoyi.system.domain.model.DataCompanyLoanBody;
+import com.ruoyi.system.domain.model.DataMatchCompany;
 import com.ruoyi.system.mapper.DataCompanyLoanMapper;
 import com.ruoyi.system.service.IDataCompanyLoanOracleService;
 import com.ruoyi.system.service.IDataCompanyLoanService;
@@ -21,6 +22,7 @@ import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -99,9 +101,10 @@ public class DataCompanyLoanServiceImpl implements IDataCompanyLoanService
 
         String verifyKey = Constants.SMS_CODE_KEY + mobile;
         String realCode = redisCache.getCacheObject(verifyKey);
-        if (!StringUtils.equals(code,realCode)){
-            throw new SmsException();
-        }
+        //TODO
+//        if (!StringUtils.equals(code,realCode)){
+//            throw new SmsException();
+//        }
 
         redisCache.deleteObject(verifyKey);
 
@@ -117,6 +120,11 @@ public class DataCompanyLoanServiceImpl implements IDataCompanyLoanService
         dataCompanyLoan.setMztUserId(dataCompanyLoanBody.getMztUserId());
         dataCompanyLoan.setLoanPurpose(dataCompanyLoanBody.getLoanPurpose());
         dataCompanyLoan.setContactPhone(mobile);
+
+        //TODO:增加字段，ORACLE增加字段
+        dataCompanyLoan.setBankBranch(dataCompanyLoanBody.getBankBranch());
+        dataCompanyLoan.setCustomerManager(dataCompanyLoanBody.getCustomerManager());
+//        dataCompanyLoan.setLoanObjectType();
 
         //根据企业名称组装企业相关数据：企业划型、所在行业、主营业务、省市区
         Map<String, String> map = ShareInterface.queryCompanyInfo(dataCompanyLoanBody.getCompanyName());
@@ -231,6 +239,22 @@ public class DataCompanyLoanServiceImpl implements IDataCompanyLoanService
         String result = sendPostParams(url, clientParam);
         System.out.println(result);
         return JSONObject.parseObject(result);
+    }
+
+    @Override
+    public List<DataMatchCompany> matchCompanyName(String companyName) {
+
+        List<DataMatchCompany> list = new ArrayList<>();
+
+        List<String> companyNameList = ShareInterface.queryCompanyName(companyName);
+        for (String name : companyNameList){
+            DataMatchCompany company = new DataMatchCompany();
+            company.setName(name);
+            company.setType(DataMatchCompany.TYPE_COMPANY);
+            list.add(company);
+        }
+
+        return list;
     }
 
     private String numRandom(int bit) {

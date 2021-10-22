@@ -3,6 +3,7 @@ package com.ruoyi.system.utils;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.ruoyi.common.utils.StringUtils;
+import com.ruoyi.system.domain.model.DataGTGSH;
 import org.apache.commons.text.StringEscapeUtils;
 import org.dom4j.*;
 
@@ -83,14 +84,20 @@ public class ShareInterface {
 //        }
 //        System.out.println(map);
 
-        // 失信企业
-        String xydm1 = "91350500156488989A";
-        // 无失信企业
-        String xydm2 = "91350502MA2Y3AN1X7";
-        JSONObject json1 = unTrustWorthyPersonnel(xydm1);
-        JSONObject json2 = unTrustWorthyPersonnel(xydm2);
-        System.out.println(json1.getJSONArray("data").size());
-        System.out.println(json2.getJSONArray("data").size());
+//        // 失信企业
+//        String xydm1 = "91350500156488989A";
+//        // 无失信企业
+//        String xydm2 = "91350502MA2Y3AN1X7";
+//        JSONObject json1 = unTrustWorthyPersonnel(xydm1);
+//        JSONObject json2 = unTrustWorthyPersonnel(xydm2);
+//        System.out.println(json1.getJSONArray("data").size());
+//        System.out.println(json2.getJSONArray("data").size());
+        List<DataGTGSH> list = queryGTGSHByName("恒言");
+        System.out.println(list);
+
+
+//        Map map = queryCompanyInfo("泉州大数据运营服务有限公司");
+//        queryGTGSHByXYDM("92350521MA2Y11HY6E");
     }
 
     /**
@@ -154,6 +161,7 @@ public class ShareInterface {
 //        Object obj = JSONObject.parseObject(companyNameStr);
 //        System.out.println(companyNameStr);
 //        JSONArray jsonArr = null;
+        System.out.println(result);
         List<Map<String,String>> list = new ArrayList<>();
         Map<String,String> map = new HashMap<>();
         if (StringUtils.isEmpty(result)){
@@ -242,6 +250,69 @@ public class ShareInterface {
         return companyList;
     }
 
+    /**
+     * 根据名称模糊匹配个体工商户
+     * @param name
+     * @return
+     */
+    public static List<DataGTGSH> queryGTGSHByName(String name){
+
+        List<DataGTGSH> list = new ArrayList<>();
+
+        String result = getInterface(ConfigInfo.QUERY_GTGSH_NAME, name);
+        String formatStr = StringEscapeUtils.unescapeJson(result).trim();
+        if (StringUtils.isEmpty(result) || StringUtils.isEmpty(formatStr)){
+            return null;
+        }
+
+        if (formatStr.contains("\"message：\":\"未找到匹配的信息\"")){
+            return null;
+        }
+        formatStr = formatStr.substring(1, formatStr.length()-1);
+
+        formatStr = formatStr.replaceAll("\\{\"code：\":\"200\",\"data：\":\\[\"", "");
+        formatStr = formatStr.replaceAll("\"],\"message：\":\"调用成功\"}", "");
+
+        String xydmMatch = "<NodeRemark=\"tyshxydm\">";
+        String companyNameMatch = "<NodeRemark=\"traname\">";
+        String jyfwMatch = "<NodeRemark=\"jyfw\">";
+        int count = StringUtils.countMatches(formatStr, xydmMatch);
+
+        for (int i=0;i<count;i++){
+            String xydm = getXmlValue(formatStr,xydmMatch,"</Node>");
+            String companyName = getXmlValue(formatStr,companyNameMatch,"</Node>");
+            String jyfw = getXmlValue(formatStr,jyfwMatch,"</Node>");
+
+            DataGTGSH gtgsh = new DataGTGSH();
+            gtgsh.setXydm(xydm);
+            gtgsh.setName(companyName);
+            gtgsh.setJyfw(jyfw);
+            list.add(gtgsh);
+
+            formatStr = formatStr.replaceFirst(xydmMatch,"");
+            formatStr = formatStr.replaceFirst(companyNameMatch,"");
+            formatStr = formatStr.replaceFirst(jyfwMatch,"");
+        }
+        return list;
+
+    }
+
+    /**
+     * 由于接口返回的 XML 格式有误，暂时硬编码处理。考虑方法不可靠，因此用异常处理，一旦解析出错，返回空
+     * @param xml
+     * @param begineMatch
+     * @param endMacth
+     * @return
+     */
+    private static String getXmlValue(String xml,String begineMatch,String endMacth){
+        try {
+            String xydm = xml.substring(xml.indexOf(begineMatch)+begineMatch.length());
+            return xydm.substring(0, xydm.indexOf(endMacth));
+        }catch (Exception e){
+            e.printStackTrace();
+            return null;
+        }
+    }
 
     /**
      * 截取字符串
@@ -294,6 +365,7 @@ public class ShareInterface {
 
             //拼接调用地址参数
             url += "/" + companyName;
+            System.out.println(url);
             //调用共享云接口
             result = HttpUtil.sendGet(url, authorization);
             if (StringUtils.isNotEmpty(result)) {

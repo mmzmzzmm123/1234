@@ -26,6 +26,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="createTime"    column="create_time"    />
         <result property="updateTime"    column="update_time"    />
         <result property="companyAddress"    column="company_address"    />
+        <result property="bankBranch"    column="bank_branch"    />
+        <result property="customerManager"    column="customer_manager"    />
+        <result property="loanObjectType"    column="loan_object_type"    />
     </resultMap>
 
     <select id="checkCompanyNameUnique" resultMap="DataCompanyLoanResult">
@@ -87,6 +90,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="createTime != null">create_time,</if>
             <if test="updateTime != null">update_time,</if>
             <if test="companyAddress != null">company_address,</if>
+            <if test="bankBranch != null">bank_branch,</if>
+            <if test="customerManager != null">customer_manager,</if>
+            <if test="loanObjectType != null">loan_object_type,</if>
          </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="mztUserId != null and mztUserId != ''">#{mztUserId},</if>
@@ -109,6 +115,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="createTime != null">#{createTime},</if>
             <if test="updateTime != null">#{updateTime},</if>
             <if test="companyAddress != null">#{companyAddress},</if>
+            <if test="bankBranch != null">#{bankBranch},</if>
+            <if test="customerManager != null">#{customerManager},</if>
+            <if test="loanObjectType != null">#{loanObjectType},</if>
          </trim>
     </insert>
 
@@ -135,7 +144,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="contactPhone != null">contact_phone,</if>
             <if test="createTime != null">create_time,</if>
             <if test="updateTime != null">update_time,</if>
-            <if test="companyAddress != null">company_address,</if>
+            <if test="companyAddress != null">company_address,
+            <if test="bankBranch != null">bank_branch,</if>
+            <if test="customerManager != null">customer_manager,</if>
+            <if test="loanObjectType != null">loan_object_type,</if></if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="id != null and id != 0">#{id},</if>
@@ -156,6 +168,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="createTime != null">#{createTime},</if>
             <if test="updateTime != null">#{updateTime},</if>
             <if test="companyAddress != null">#{companyAddress},</if>
+            <if test="bankBranch != null">#{bankBranch},</if>
+            <if test="customerManager != null">#{customerManager},</if>
+            <if test="loanObjectType != null">#{loanObjectType},</if>
         </trim>
     </insert>
 

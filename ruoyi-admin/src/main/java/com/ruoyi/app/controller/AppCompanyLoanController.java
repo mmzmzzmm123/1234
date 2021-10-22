@@ -9,6 +9,7 @@ import com.ruoyi.common.enums.BusinessType;
 import com.ruoyi.framework.interceptor.impl.AppInterceptor;
 import com.ruoyi.system.domain.DataCompanyLoan;
 import com.ruoyi.system.domain.model.DataCompanyLoanBody;
+import com.ruoyi.system.domain.model.DataMatchCompany;
 import com.ruoyi.system.service.IDataCompanyLoanOracleService;
 import com.ruoyi.system.service.IDataCompanyLoanService;
 import com.ruoyi.system.utils.ShareInterface;
@@ -88,6 +89,7 @@ public class AppCompanyLoanController extends BaseController
     /**
      * 根据企业名称匹配对应的企业完整名称
      */
+    @Deprecated
     @GetMapping("/match")
     @ApiOperation(value = "根据企业名称匹配对应的企业完整名称")
     public TableDataInfo match(@RequestParam String companyName)
@@ -96,7 +98,22 @@ public class AppCompanyLoanController extends BaseController
         if (list.size()>20){
             list = list.subList(0,20);
         }
+
         return getDataTable(list);
+    }
+
+    /**
+     * 根据企业名称匹配对应的企业完整名称
+     */
+    @GetMapping("/match/v2")
+    @ApiOperation(value = "根据企业名称匹配对应的企业完整名称")
+    public TableDataInfo matchV2(@RequestParam String companyName)
+    {
+        List<DataMatchCompany> companyList = dataCompanyLoanService.matchCompanyName(companyName);
+        if (companyList.size()>20){
+            companyList = companyList.subList(0,20);
+        }
+        return getDataTable(companyList);
     }
 
     /**

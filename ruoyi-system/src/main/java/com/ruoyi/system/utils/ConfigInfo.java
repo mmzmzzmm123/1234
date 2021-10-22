@@ -31,6 +31,9 @@ public class ConfigInfo {
 
     /** （全省）根据企业模糊名称（不拆词匹配）查询企业名称 */
     public static final String QUERY_COMPANY_NAME = "http://222.77.0.158:18081/api-gateway/gateway/u70is68s/EnterpInfo/GetNameByNotRemoveWordFuzzySearch";
-
+    /** （全市）根据店铺名字(模糊)查询个体工商户基本信息 */
+    public static final String QUERY_GTGSH_NAME = "http://222.77.0.158:18081/api-gateway/gateway/tiswdspt/queryByName";
+    /** （全省）根据统一社会信用代码查询个体工商户基本信息 */
+    public static final String QUERY_GTGSH_XYDM = "http://222.77.0.158:18081/api-gateway/gateway/u70is68s/IndivBusinessInfo/queryBytyshxydm";
 
 }

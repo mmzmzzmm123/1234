@@ -84,6 +84,20 @@ public class DataCompanyLoan extends BaseEntity implements Cloneable
 
     private String companyAddress;
 
+    /**
+     * 银行网点
+     */
+    private String bankBranch;
+
+    /**
+     * 客户经理
+     */
+    private String customerManager;
+    /**
+     * 贷款对象类型:法人企业和个体工商户
+     */
+    private String loanObjectType;
+
     public String getCompanyAddress() {
         return companyAddress;
     }
@@ -256,6 +270,30 @@ public class DataCompanyLoan extends BaseEntity implements Cloneable
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public String getBankBranch() {
+        return bankBranch;
+    }
+
+    public void setBankBranch(String bankBranch) {
+        this.bankBranch = bankBranch;
+    }
+
+    public String getCustomerManager() {
+        return customerManager;
+    }
+
+    public void setCustomerManager(String customerManager) {
+        this.customerManager = customerManager;
+    }
+
+    public String getLoanObjectType() {
+        return loanObjectType;
+    }
+
+    public void setLoanObjectType(String loanObjectType) {
+        this.loanObjectType = loanObjectType;
     }
 
     @Override

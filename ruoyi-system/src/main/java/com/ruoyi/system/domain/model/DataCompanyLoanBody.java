@@ -54,6 +54,16 @@ public class DataCompanyLoanBody {
     private String contactPhone;
 
     /**
+     * 银行网点
+     */
+    private String bankBranch;
+
+    /**
+     * 客户经理
+     */
+    private String customerManager;
+
+    /**
      * 手机验证码
      */
     private String code;
@@ -136,5 +146,21 @@ public class DataCompanyLoanBody {
 
     public void setLoanBandNames(String loanBandNames) {
         this.loanBandNames = loanBandNames;
+    }
+
+    public String getBankBranch() {
+        return bankBranch;
+    }
+
+    public void setBankBranch(String bankBranch) {
+        this.bankBranch = bankBranch;
+    }
+
+    public String getCustomerManager() {
+        return customerManager;
+    }
+
+    public void setCustomerManager(String customerManager) {
+        this.customerManager = customerManager;
     }
 }

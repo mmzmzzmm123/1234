@@ -1,11 +1,11 @@
 package com.ruoyi.system.service;
 
-import java.io.UnsupportedEncodingException;
-import java.util.List;
-
 import com.alibaba.fastjson.JSONObject;
 import com.ruoyi.system.domain.DataCompanyLoan;
 import com.ruoyi.system.domain.model.DataCompanyLoanBody;
+import com.ruoyi.system.domain.model.DataMatchCompany;
+
+import java.util.List;
 
 /**
  * 企业贷款信息Service接口
@@ -78,4 +78,6 @@ public interface IDataCompanyLoanService
     String senSmsCode(String phone);
 
     JSONObject getUserInfo(String userID,String token);
+
+    List<DataMatchCompany> matchCompanyName(String companyName);
 }
