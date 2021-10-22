@@ -12,6 +12,7 @@ import com.ruoyi.common.utils.DateUtils;
 import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.system.domain.DataCompanyLoan;
 import com.ruoyi.system.domain.model.DataCompanyLoanBody;
+import com.ruoyi.system.domain.model.DataGTGSH;
 import com.ruoyi.system.domain.model.DataMatchCompany;
 import com.ruoyi.system.mapper.DataCompanyLoanMapper;
 import com.ruoyi.system.service.IDataCompanyLoanOracleService;
@@ -242,7 +243,7 @@ public class DataCompanyLoanServiceImpl implements IDataCompanyLoanService
     }
 
     @Override
-    public List<DataMatchCompany> matchCompanyName(String companyName) {
+    public List<DataMatchCompany> matchCompanyName(String companyName,int count) {
 
         List<DataMatchCompany> list = new ArrayList<>();
 
@@ -252,6 +253,23 @@ public class DataCompanyLoanServiceImpl implements IDataCompanyLoanService
             company.setName(name);
             company.setType(DataMatchCompany.TYPE_COMPANY);
             list.add(company);
+        }
+
+        if (list.size()>count){
+            list = list.subList(0,count);
+        }
+
+        List<DataGTGSH> gtgshes = ShareInterface.queryGTGSHByName(companyName);
+        for (DataGTGSH gtgsh : gtgshes){
+            DataMatchCompany company = new DataMatchCompany();
+            company.setName(gtgsh.getName());
+            company.setType(DataMatchCompany.TYPE_PERSON);
+            list.add(company);
+        }
+
+
+        if (list.size()>count){
+            list = list.subList(0,count);
         }
 
         return list;

@@ -109,7 +109,7 @@ public class AppCompanyLoanController extends BaseController
     @ApiOperation(value = "根据企业名称匹配对应的企业完整名称")
     public TableDataInfo matchV2(@RequestParam String companyName)
     {
-        List<DataMatchCompany> companyList = dataCompanyLoanService.matchCompanyName(companyName);
+        List<DataMatchCompany> companyList = dataCompanyLoanService.matchCompanyName(companyName,20);
         if (companyList.size()>20){
             companyList = companyList.subList(0,20);
         }

@@ -79,5 +79,11 @@ public interface IDataCompanyLoanService
 
     JSONObject getUserInfo(String userID,String token);
 
-    List<DataMatchCompany> matchCompanyName(String companyName);
+    /**
+     * 模糊匹配
+     * @param companyName 企业名称
+     * @param count 企业法人和个体工商户各取20条
+     * @return
+     */
+    List<DataMatchCompany> matchCompanyName(String companyName,int count);
 }

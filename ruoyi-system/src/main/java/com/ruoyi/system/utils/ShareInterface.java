@@ -262,11 +262,11 @@ public class ShareInterface {
         String result = getInterface(ConfigInfo.QUERY_GTGSH_NAME, name);
         String formatStr = StringEscapeUtils.unescapeJson(result).trim();
         if (StringUtils.isEmpty(result) || StringUtils.isEmpty(formatStr)){
-            return null;
+            return list;
         }
 
         if (formatStr.contains("\"message：\":\"未找到匹配的信息\"")){
-            return null;
+            return list;
         }
         formatStr = formatStr.substring(1, formatStr.length()-1);
 
