@@ -75,12 +75,12 @@ public class ${ClassName} extends ${Entity}
 #end
 
 #if($table.sub)
-    public List<${subClassName}> get${subClassName}List()
+    public List<${subClassName}> get${subclassName}List()
     {
         return ${subclassName}List;
     }
 
-    public void set${subClassName}List(List<${subClassName}> ${subclassName}List)
+    public void set${subclassName}List(List<${subClassName}> ${subclassName}List)
     {
         this.${subclassName}List = ${subclassName}List;
     }
@@ -98,7 +98,7 @@ public class ${ClassName} extends ${Entity}
             .append("${column.javaField}", get${AttrName}())
 #end
 #if($table.sub)
-            .append("${subclassName}List", get${subClassName}List())
+            .append("${subclassName}List", get${subclassName}List())
 #end
             .toString();
     }
