@@ -42,7 +42,7 @@
         指定
         <el-select clearable v-model="checkboxDescribeList" placeholder="可多选" multiple style="width:100%"
                    @change="selectChange">
-          <el-option v-for="(item,index) of weekList" :key="index" :value="index+1">{{ item }}</el-option>
+          <el-option v-for="(item,index) of weekList" :key="index" :value="item">{{ item }}</el-option>
         </el-select>
       </el-radio>
     </el-form-item>
@@ -70,15 +70,11 @@ export default {
   props: ['check', 'cron'],
   methods: {
     selectChange(data) {
-      console.log(data);
       this.radioValue = 6
       this.checkboxList = []
-      this.checkboxDescribeList = []
       data.forEach(value => {
         this.weekList.forEach((item,index) => {
-          if (index+1 === value) {
-            console.log((item));
-            this.checkboxDescribeList.push(this.weekList[index])
+          if (item === value) {
             this.checkboxList.push(index + 1)
           }
         })
