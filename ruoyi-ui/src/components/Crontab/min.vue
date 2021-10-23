@@ -25,7 +25,7 @@
 		<el-form-item>
 			<el-radio v-model='radioValue' :label="4">
 				指定
-				<el-select clearable v-model="checkboxList" placeholder="可多选" multiple style="width:100%">
+				<el-select clearable v-model="checkboxList" placeholder="可多选" multiple style="width:100%" @change="selectChange">
 					<el-option v-for="item in 60" :key="item" :value="item-1">{{item-1}}</el-option>
 				</el-select>
 			</el-radio>
@@ -50,6 +50,9 @@ export default {
 	name: 'crontab-min',
 	props: ['check', 'cron'],
 	methods: {
+    selectChange() {
+      this.radioValue = 4
+    },
     init() {
       this.cycle01 = 1
       this.cycle02 = 2

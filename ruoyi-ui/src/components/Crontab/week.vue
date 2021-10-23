@@ -40,7 +40,8 @@
     <el-form-item>
       <el-radio v-model='radioValue' :label="6">
         指定
-        <el-select clearable v-model="checkboxDescribeList" placeholder="可多选" multiple style="width:100%">
+        <el-select clearable v-model="checkboxDescribeList" placeholder="可多选" multiple style="width:100%"
+                   @change="selectChange">
           <el-option v-for="(item,index) of weekList" :key="index" :value="index+1">{{ item }}</el-option>
         </el-select>
       </el-radio>
@@ -68,11 +69,16 @@ export default {
   name: 'crontab-week',
   props: ['check', 'cron'],
   methods: {
-    checkChange(data) {
+    selectChange(data) {
+      console.log(data);
+      this.radioValue = 6
       this.checkboxList = []
+      this.checkboxDescribeList = []
       data.forEach(value => {
-        this.weekList.find((item, index) => {
-          if (item === value) {
+        this.weekList.forEach((item,index) => {
+          if (index+1 === value) {
+            console.log((item));
+            this.checkboxDescribeList.push(this.weekList[index])
             this.checkboxList.push(index + 1)
           }
         })
@@ -89,7 +95,6 @@ export default {
     },
     // 单选按钮值变化时
     radioChange() {
-
 
       switch (this.radioValue) {
         case 1:
