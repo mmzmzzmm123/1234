@@ -146,7 +146,7 @@ public class ${ClassName}ServiceImpl implements I${ClassName}Service
      */
     public void insert${subClassName}(${ClassName} ${className})
     {
-        List<${subClassName}> ${subclassName}List = ${className}.get${subClassName}List();
+        List<${subClassName}> ${subclassName}List = ${className}.get${subclassName}List();
         ${pkColumn.javaType} ${pkColumn.javaField} = ${className}.get${pkColumn.capJavaField}();
         if (StringUtils.isNotNull(${subclassName}List))
         {
