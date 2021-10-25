@@ -109,11 +109,13 @@ public class DataCompanyLoanServiceImpl implements IDataCompanyLoanService
 
         redisCache.deleteObject(verifyKey);
 
+        String companyNameFromRequest = dataCompanyLoanBody.getCompanyName();
+
         DataCompanyLoan dataCompanyLoan = new DataCompanyLoan();
 
         dataCompanyLoan.setMztUserId(mztUserId);
         dataCompanyLoan.setCreateTime(DateUtils.getNowDate());
-        dataCompanyLoan.setCompanyName(dataCompanyLoanBody.getCompanyName());
+        dataCompanyLoan.setCompanyName(companyNameFromRequest);
         dataCompanyLoan.setContactName(dataCompanyLoanBody.getContactName());
         dataCompanyLoan.setLoanBand(dataCompanyLoanBody.getLoanBand());
         dataCompanyLoan.setLoanAmount(dataCompanyLoanBody.getLoanAmount());
@@ -122,25 +124,40 @@ public class DataCompanyLoanServiceImpl implements IDataCompanyLoanService
         dataCompanyLoan.setLoanPurpose(dataCompanyLoanBody.getLoanPurpose());
         dataCompanyLoan.setContactPhone(mobile);
 
-        //TODO:增加字段，ORACLE增加字段
         dataCompanyLoan.setBankBranch(dataCompanyLoanBody.getBankBranch());
         dataCompanyLoan.setCustomerManager(dataCompanyLoanBody.getCustomerManager());
-//        dataCompanyLoan.setLoanObjectType();
+        dataCompanyLoan.setLoanObjectType(dataCompanyLoanBody.getLoanObjectType() == DataMatchCompany.TYPE_PERSON ? "个体工商户" : "企业法人");
+        String xydm = "";
 
-        //根据企业名称组装企业相关数据：企业划型、所在行业、主营业务、省市区
-        Map<String, String> map = ShareInterface.queryCompanyInfo(dataCompanyLoanBody.getCompanyName());
-        String xydm = map.get("tyshxydm");
-        dataCompanyLoan.setCompanyCreditCode(xydm);
-        dataCompanyLoan.setCompanyType(map.get("companytype"));
-        dataCompanyLoan.setCompanyIndustry(map.get("indurstryname"));
-        dataCompanyLoan.setCompanyBusiness(map.get("managerange"));
-        dataCompanyLoan.setCompanyAddress(map.get("regaddress"));
-
-        boolean isTrust = ShareInterface.isTrust(xydm);
-        if (!isTrust) {
-            throw new UserException(null, null, "保存'" + dataCompanyLoan.getCompanyName() + "'失败，该企业存在失信记录");
+        if (DataMatchCompany.TYPE_PERSON  == dataCompanyLoanBody.getLoanObjectType()){
+            xydm = dataCompanyLoanBody.getXydm();
+            JSONObject jsonObject = ShareInterface.queryGTGSHByXydm(xydm);
+            if (jsonObject != null){
+                String name = jsonObject.getString("traname");
+                // 用户上传的企业名称与接口匹配数据一致或者包含关系，才进行相关信息补充。
+                if (name != null && (StringUtils.equals(name, companyNameFromRequest) || name.contains(companyNameFromRequest))){
+                    dataCompanyLoan.setCompanyCreditCode(xydm);
+                    dataCompanyLoan.setCompanyBusiness(jsonObject.getString("jyfw"));
+                    dataCompanyLoan.setCompanyAddress(jsonObject.getString("jycsdz"));
+                }
+            }
+        }else {
+            //根据企业名称组装企业相关数据：企业划型、所在行业、主营业务、省市区
+            Map<String, String> map = ShareInterface.queryCompanyInfo(companyNameFromRequest);
+            xydm = map.get("tyshxydm");
+            dataCompanyLoan.setCompanyCreditCode(xydm);
+            dataCompanyLoan.setCompanyType(map.get("companytype"));
+            dataCompanyLoan.setCompanyIndustry(map.get("indurstryname"));
+            dataCompanyLoan.setCompanyBusiness(map.get("managerange"));
+            dataCompanyLoan.setCompanyAddress(map.get("regaddress"));
         }
 
+        if (StringUtils.isNotEmpty(xydm)){
+            boolean isTrust = ShareInterface.isTrust(xydm);
+            if (!isTrust) {
+                throw new UserException(null, null, "保存'" + dataCompanyLoan.getCompanyName() + "'失败，该企业存在失信记录");
+            }
+        }
         dataCompanyLoanMapper.insertDataCompanyLoan(dataCompanyLoan);
         Long companyId = dataCompanyLoan.getCompanyId();
 
@@ -263,6 +280,7 @@ public class DataCompanyLoanServiceImpl implements IDataCompanyLoanService
         for (DataGTGSH gtgsh : gtgshes){
             DataMatchCompany company = new DataMatchCompany();
             company.setName(gtgsh.getName());
+            company.setXydm(gtgsh.getXydm());
             company.setType(DataMatchCompany.TYPE_PERSON);
             list.add(company);
         }

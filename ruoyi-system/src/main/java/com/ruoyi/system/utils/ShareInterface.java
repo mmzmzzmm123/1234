@@ -92,8 +92,9 @@ public class ShareInterface {
 //        JSONObject json2 = unTrustWorthyPersonnel(xydm2);
 //        System.out.println(json1.getJSONArray("data").size());
 //        System.out.println(json2.getJSONArray("data").size());
-        List<DataGTGSH> list = queryGTGSHByName("恒言");
-        System.out.println(list);
+//        List<DataGTGSH> list = queryGTGSHByName("惠安县崇武恒言书店");
+        JSONObject jsonObject = queryGTGSHByXydm("92350521MA2Y11HY6E");
+        System.out.println(jsonObject);
 
 
 //        Map map = queryCompanyInfo("泉州大数据运营服务有限公司");
@@ -273,9 +274,10 @@ public class ShareInterface {
         formatStr = formatStr.replaceAll("\\{\"code：\":\"200\",\"data：\":\\[\"", "");
         formatStr = formatStr.replaceAll("\"],\"message：\":\"调用成功\"}", "");
 
-        String xydmMatch = "<NodeRemark=\"tyshxydm\">";
-        String companyNameMatch = "<NodeRemark=\"traname\">";
-        String jyfwMatch = "<NodeRemark=\"jyfw\">";
+        String xydmMatch = "<Node Remark=\"tyshxydm\">";
+        String companyNameMatch = "<Node Remark=\"traname\">";
+        String jyfwMatch = "<Node Remark=\"jyfw\">";
+
         int count = StringUtils.countMatches(formatStr, xydmMatch);
 
         for (int i=0;i<count;i++){
@@ -295,6 +297,24 @@ public class ShareInterface {
         }
         return list;
 
+    }
+
+    public static JSONObject queryGTGSHByXydm(String xydm){
+        String result = getInterface(ConfigInfo.QUERY_GTGSH_XYDM, xydm);
+
+        String formatStr = StringEscapeUtils.unescapeJson(result).trim();
+        if (StringUtils.isEmpty(result) || StringUtils.isEmpty(formatStr)){
+            return null;
+        }
+        formatStr = formatStr.substring(1, formatStr.length()-1);
+        JSONObject jsonObject = JSONObject.parseObject(formatStr);
+
+        JSONArray jsonArray = jsonObject.getJSONArray("data");
+
+        if (jsonArray.size() > 0){
+            return jsonArray.getJSONObject(0);
+        }
+        return null;
     }
 
     /**

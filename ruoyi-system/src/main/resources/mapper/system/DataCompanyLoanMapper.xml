@@ -144,10 +144,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="contactPhone != null">contact_phone,</if>
             <if test="createTime != null">create_time,</if>
             <if test="updateTime != null">update_time,</if>
-            <if test="companyAddress != null">company_address,
+            <if test="companyAddress != null">company_address,</if>
             <if test="bankBranch != null">bank_branch,</if>
             <if test="customerManager != null">customer_manager,</if>
-            <if test="loanObjectType != null">loan_object_type,</if></if>
+            <if test="loanObjectType != null">loan_object_type,</if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="id != null and id != 0">#{id},</if>

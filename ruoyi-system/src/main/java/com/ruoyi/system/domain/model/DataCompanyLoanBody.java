@@ -1,7 +1,5 @@
 package com.ruoyi.system.domain.model;
 
-import com.ruoyi.common.annotation.Excel;
-
 import java.math.BigDecimal;
 
 public class DataCompanyLoanBody {
@@ -62,6 +60,15 @@ public class DataCompanyLoanBody {
      * 客户经理
      */
     private String customerManager;
+    /**
+     * 贷款对象类型：0为企业，1为个体工商户
+     */
+    private int loanObjectType;
+
+    /**
+     *  信用代码
+     */
+    private String xydm;
 
     /**
      * 手机验证码
@@ -148,6 +155,14 @@ public class DataCompanyLoanBody {
         this.loanBandNames = loanBandNames;
     }
 
+    public int getLoanObjectType() {
+        return loanObjectType;
+    }
+
+    public void setLoanObjectType(int loanObjectType) {
+        this.loanObjectType = loanObjectType;
+    }
+
     public String getBankBranch() {
         return bankBranch;
     }
@@ -162,5 +177,13 @@ public class DataCompanyLoanBody {
 
     public void setCustomerManager(String customerManager) {
         this.customerManager = customerManager;
+    }
+
+    public String getXydm() {
+        return xydm;
+    }
+
+    public void setXydm(String xydm) {
+        this.xydm = xydm;
     }
 }

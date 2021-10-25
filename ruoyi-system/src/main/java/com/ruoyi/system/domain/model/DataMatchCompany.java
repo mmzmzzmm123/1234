@@ -19,6 +19,10 @@ public class DataMatchCompany {
      * 企业类型：0为企业，1为个体工商户
      */
     private int type;
+    /**
+     * 信用代码
+     */
+    private String xydm;
 
     public String getName() {
         return name;
@@ -34,5 +38,13 @@ public class DataMatchCompany {
 
     public void setType(int type) {
         this.type = type;
+    }
+
+    public String getXydm() {
+        return xydm;
+    }
+
+    public void setXydm(String xydm) {
+        this.xydm = xydm;
     }
 }
