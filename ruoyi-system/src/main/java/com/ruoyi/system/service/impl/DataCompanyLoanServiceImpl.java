@@ -102,10 +102,9 @@ public class DataCompanyLoanServiceImpl implements IDataCompanyLoanService
 
         String verifyKey = Constants.SMS_CODE_KEY + mobile;
         String realCode = redisCache.getCacheObject(verifyKey);
-        //TODO
-//        if (!StringUtils.equals(code,realCode)){
-//            throw new SmsException();
-//        }
+        if (!StringUtils.equals(code,realCode)){
+            throw new SmsException();
+        }
 
         redisCache.deleteObject(verifyKey);
 
