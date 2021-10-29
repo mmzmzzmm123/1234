@@ -2,6 +2,7 @@ package com.ruoyi.web.controller.system;
 
 import java.io.File;
 import java.io.FileOutputStream;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
@@ -9,6 +10,7 @@ import com.ruoyi.common.core.page.VisualRespEmbData;
 import com.ruoyi.system.service.impl.BladeVisualConfigServiceImpl;
 import com.ruoyi.web.param.BladeVisualParam;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import com.ruoyi.common.annotation.Log;
 import com.ruoyi.common.core.controller.BaseController;
@@ -100,7 +102,12 @@ public class BladeVisualController extends BaseController
     @PostMapping("/update")
     public AjaxResult edit(@RequestBody BladeVisualParam param)
     {
+        String name = SecurityContextHolder.getContext().getAuthentication().getName();
+        param.getVisual().setUpdateBy(name);
+        param.getVisual().setUpdateTime(new Date());
+        
         int i = bladeVisualService.updateBladeVisual(param.getVisual());
+
         int j = configService.updateBladeVisualConfig(param.getConfig());
         return toAjax(i > 0 && j > 0);
     }
