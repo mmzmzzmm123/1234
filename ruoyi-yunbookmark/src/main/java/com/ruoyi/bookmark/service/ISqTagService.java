@@ -69,4 +69,9 @@ public interface ISqTagService
     public Map<String,Object> addtag(String tagName, Long userId);
 
 
+    /**
+     * @auther: 获取当前用户的总标签数量
+     * @date: 2021/10/29 17:54
+     */
+    int countByuserId(Long userId);
 }

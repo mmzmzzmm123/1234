@@ -3,11 +3,12 @@ package com.ruoyi.web.controller.yunbookmark;
 import java.util.List;
 
 import com.ruoyi.bookmark.pojo.SqTagReq;
-import com.ruoyi.common.core.domain.entity.SysUser;
+import com.ruoyi.common.core.redis.RedisUtil;
+import com.ruoyi.common.utils.redis.KeyAll;
+import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import com.ruoyi.common.annotation.Log;
 import com.ruoyi.common.core.controller.BaseController;
@@ -30,6 +31,9 @@ public class SqTagController extends BaseController
 {
     @Autowired
     private ISqTagService sqTagService;
+
+    @Autowired
+    private RedisUtil redisUtil;
 
 
 
@@ -67,20 +71,41 @@ public class SqTagController extends BaseController
     public AjaxResult addByUser(@RequestBody SqTagReq req)
     {
         logger.info("[addByUser] 新增标签入参:"+ req.toString());
+
+        //判断是否存在
+        SqTag sqTagGet = new SqTag();
+        sqTagGet.setUserId(getAuthUser().getUserId());
+        sqTagGet.setName(req.getName());
+        List<SqTag> list = sqTagService.selectSqTagList(sqTagGet);
+        if (!CollectionUtils.isEmpty(list)){
+            return new AjaxResult(600,"该书签已经存在!");
+        }
+
         SqTag sqTag = new SqTag();
-        BeanUtils.copyProperties(req,sqTag);
         sqTag.setUserId(getAuthUser().getUserId());
+        BeanUtils.copyProperties(req,sqTag);
         logger.info("[addByUser] 新增标签:"+ sqTag.toString());
         sqTagService.insertSqTag(sqTag);
+
         return new AjaxResult(200,"操作成功");
     }
 
     /**
      * 修改书签_标签
      */
-    @PutMapping("/editByUser")
-    public AjaxResult editByUser(SqTagReq req)
+    @PostMapping("/editByUser")
+    public AjaxResult editByUser(@RequestBody SqTagReq req)
     {
+        logger.info("[editByUser] 修改书签_标签入参:"+ req.toString());
+        //判断是否存在
+        SqTag sqTagGet = new SqTag();
+        sqTagGet.setUserId(getAuthUser().getUserId());
+        sqTagGet.setName(req.getName());
+        List<SqTag> list = sqTagService.selectSqTagList(sqTagGet);
+        if (!CollectionUtils.isEmpty(list)){
+            return new AjaxResult(600,"该书签已经存在!");
+        }
+
         SqTag sqTag =  new SqTag();
         BeanUtils.copyProperties(req,sqTag);
         sqTag.setUserId(getAuthUser().getUserId());

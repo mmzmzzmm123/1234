@@ -133,8 +133,12 @@ public class SqTagServiceImpl implements ISqTagService
         return map;
     }
 
-
-
+    @Override
+    public int countByuserId(Long userId) {
+        SqTag sqTag = new SqTag();
+        sqTag.setUserId(userId);
+        return sqTagMapper.selectCount(sqTag);
+    }
 
 
 }

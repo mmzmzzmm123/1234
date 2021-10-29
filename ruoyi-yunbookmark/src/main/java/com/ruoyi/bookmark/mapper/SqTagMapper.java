@@ -2,7 +2,6 @@ package com.ruoyi.bookmark.mapper;
 
 import java.util.List;
 
-import com.ruoyi.bookmark.domain.SqBookmarkTag;
 import com.ruoyi.bookmark.domain.SqTag;
 import com.ruoyi.common.mybatisMapper.MyMapper;
 import org.apache.ibatis.annotations.Param;
