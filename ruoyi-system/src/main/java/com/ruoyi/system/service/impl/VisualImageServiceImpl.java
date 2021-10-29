@@ -3,13 +3,19 @@ package com.ruoyi.system.service.impl;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.*;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import com.ruoyi.common.config.RuoYiConfig;
+import com.ruoyi.common.constant.Constants;
 import com.ruoyi.common.utils.DateUtils;
 import com.ruoyi.common.utils.uuid.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import com.ruoyi.system.mapper.VisualImageMapper;
 import com.ruoyi.system.domain.VisualImage;
@@ -135,7 +141,8 @@ public class VisualImageServiceImpl implements IVisualImageService {
     }
 
     @Override
-    public int divideImage(VisualImage visualImage) {
+    @Async
+    public void divideImage(VisualImage visualImage) {
         String rootPath = RuoYiConfig.getProfile() + imageDir;
         String newFileName = rootPath + "/" + visualImage.getNewName();
         // 读入大图
@@ -179,7 +186,7 @@ public class VisualImageServiceImpl implements IVisualImageService {
                     gr.dispose();
 
                     // 输出小图
-                    String outFileName = outputDir + "/" + x + "_" + y + "." +  split[split.length - 1];
+                    String outFileName = outputDir + "/" + x + "_" + y + "." + split[split.length - 1];
                     ImageIO.write(imgs[count], split[split.length - 1], new File(outFileName));
                     count++;
                 }
@@ -190,6 +197,81 @@ public class VisualImageServiceImpl implements IVisualImageService {
         }
 
 
-        return 0;
+    }
+
+    @Value("${imageDir.width}")
+    private Integer thumbWidth;
+
+    @Value("${imageDir.height}")
+    private Integer thumbHeigth;
+
+    @Async
+    @Override
+    public void saveThumb(VisualImage visualImage) {
+        String rootPath = RuoYiConfig.getProfile() + imageDir;
+        String newFileName = rootPath + "/" + visualImage.getNewName();
+        // 读入大图
+        File file = new File(newFileName);
+        FileInputStream fis;
+        try {
+            fis = new FileInputStream(file);
+            BufferedImage image = ImageIO.read(fis);
+
+            // 新建文件夹存放子图
+            String[] split = visualImage.getNewName().split("\\.");
+            String outputDir = rootPath + "/" + split[0];
+            File targetFile = new File(outputDir);
+            if (!targetFile.exists()) {
+                targetFile.mkdirs();
+            }
+
+            //设置小图的大小和类型
+            BufferedImage imgs = new BufferedImage(thumbWidth, thumbHeigth, image.getType());
+
+            //写入图像内容
+            Graphics2D gr = imgs.createGraphics();
+            gr.drawImage(image, 0, 0, thumbWidth, thumbHeigth, null);
+            gr.dispose();
+
+            // 输出小图
+            String outFileName = outputDir +"/thumb."+ split[split.length - 1];
+            ImageIO.write(imgs, split[split.length - 1], new File(outFileName));
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Value("${server.port}")
+    private int serverPort;
+
+    @Value("${imageDir.visualImage}")
+    private String imagePrefix;
+
+    public String getUrl() {
+        InetAddress address = null;
+        try {
+            address = InetAddress.getLocalHost();
+        } catch ( UnknownHostException e) {
+            e.printStackTrace();
+        }
+        return "http://"+address.getHostAddress() +":"+this.serverPort;
+    }
+
+    @Override
+    public Map<String, String> getLink(String fileName) {
+        // todo 这里应该查找数据库或本地资源，判断图片是否存在
+
+        HashMap<String, String> map = new HashMap<>();
+        String[] split = fileName.split("\\.");
+        if (split.length != 2) {
+            return null;
+        }
+        String rootDir = this.getUrl() + Constants.RESOURCE_PREFIX +imagePrefix +"/";
+        map.put("subRoot",rootDir + split[0] + "/");
+        map.put("original",rootDir+fileName);
+        map.put("thumb",rootDir+"thumb."+ split[1]);
+
+        return map;
     }
 }

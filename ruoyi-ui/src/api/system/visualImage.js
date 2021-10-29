@@ -60,3 +60,12 @@ export function uploadImage(query) {
     params: query
   })
 }
+
+// 获取link
+export function getLink(name) {
+  return request({
+    url: '/system/visualImage/link',
+    method: 'get',
+    params: name
+  })
+}

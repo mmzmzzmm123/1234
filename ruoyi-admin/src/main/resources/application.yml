@@ -9,8 +9,8 @@ ruoyi:
   # 实例演示开关
   demoEnabled: true
   # 文件路径 示例（ Windows配置D:/ruoyi/uploadPath，Linux配置 /home/ruoyi/uploadPath）
-#  profile: F:/ruoyi/uploadPath
-  profile: /home/yangsj/bigScreen
+  profile: F:/ruoyi/uploadPath
+#  profile: /home/yangsj/bigScreen
   # 获取ip地址开关
   addressEnabled: false
   # 验证码类型 math 数组计算 char 字符验证
@@ -21,6 +21,11 @@ imageDir:
   bigScreen: /overview
   # 其他图片存放文件夹名
   visualImage: /images
+  # 缩略图宽高
+  width: 100
+  height: 100
+  # 上传图片最大（MB）
+  maxImageMB: 300
 
 
 # 开发环境配置

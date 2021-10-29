@@ -5,14 +5,22 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import com.ruoyi.common.config.RuoYiConfig;
+import com.ruoyi.common.utils.spring.SpringUtils;
 import com.ruoyi.common.utils.uuid.UUID;
+import com.ruoyi.system.service.impl.VisualImageServiceImpl;
 import com.ruoyi.web.param.VisualImageAddParam;
+import org.aspectj.weaver.loadtime.Aj;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.web.servlet.MultipartConfigFactory;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.Bean;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.util.unit.DataSize;
 import org.springframework.web.bind.annotation.*;
 import com.ruoyi.common.annotation.Log;
 import com.ruoyi.common.core.controller.BaseController;
@@ -23,6 +31,8 @@ import com.ruoyi.system.service.IVisualImageService;
 import com.ruoyi.common.utils.poi.ExcelUtil;
 import com.ruoyi.common.core.page.TableDataInfo;
 import org.springframework.web.multipart.MultipartFile;
+
+import javax.servlet.MultipartConfigElement;
 
 /**
  * 图片管理。管理上传的图片Controller
@@ -83,12 +93,26 @@ public class VisualImageController extends BaseController
     {
         String name = SecurityContextHolder.getContext().getAuthentication().getName();
         visualImage.setCreateBy(name);
+        visualImageService.saveThumb(visualImage);
+        // 切割图片是异步进行的
         visualImageService.divideImage(visualImage);
+
         return toAjax(visualImageService.insertVisualImage(visualImage));
     }
 
 //    @Value("${imageDir.visualImage}")
 //    private String imageDir;
+
+    @PreAuthorize("@ss.hasPermi('system:image:query')")
+    @GetMapping("/link")
+    private AjaxResult getLink(@RequestParam String fileName){
+        IVisualImageService vService = SpringUtils.getBean(IVisualImageService.class);
+        Map<String, String> map = vService.getLink(fileName);
+        if (map == null) {
+            return AjaxResult.error("文件名错误");
+        }
+        return AjaxResult.success(map);
+    }
 
 
 //    @PreAuthorize("@ss.hasPermi('system:image:add')")
@@ -143,6 +167,20 @@ public class VisualImageController extends BaseController
 	@DeleteMapping("/{ids}")
     public AjaxResult remove(@PathVariable Long[] ids)
     {
+        // todo 删除本地图片
         return toAjax(visualImageService.deleteVisualImageByIds(ids));
     }
+
+    @Value("${imageDir.maxImageMB}")
+    private Integer maxImage;
+
+    @Bean
+    public MultipartConfigElement multipartConfigElement() {
+        MultipartConfigFactory factory = new MultipartConfigFactory();
+        factory.setMaxRequestSize(DataSize.ofMegabytes(maxImage));
+        factory.setMaxFileSize(DataSize.ofMegabytes(maxImage));
+        return factory.createMultipartConfig();
+    }
+
+
 }

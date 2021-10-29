@@ -108,6 +108,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter
                         "/profile/**"
                 ).permitAll()
                 .antMatchers("/avue/api/category/list").permitAll()
+//                .antMatchers("/system/visualImage/link").permitAll()  // 测试
                 .antMatchers("/avue/api/visual/put-file").permitAll()
                 .antMatchers("/system/visualImage/upload").anonymous()
                 .antMatchers("/swagger-ui.html").anonymous()

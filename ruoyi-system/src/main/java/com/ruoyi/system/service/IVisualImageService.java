@@ -1,6 +1,8 @@
 package com.ruoyi.system.service;
 
 import java.util.List;
+import java.util.Map;
+
 import com.ruoyi.system.domain.VisualImage;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -64,5 +66,9 @@ public interface IVisualImageService
 
     String saveImageToLocal(MultipartFile file);
 
-    int divideImage(VisualImage visualImage);
+    void divideImage(VisualImage visualImage);
+
+    void saveThumb(VisualImage visualImage);
+
+    Map<String,String> getLink(String fileName);
 }

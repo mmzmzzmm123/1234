@@ -50,7 +50,7 @@
       <el-table-column label="新文件名" align="center" prop="newName" />
       <el-table-column label="切割宽高" align="center">
         <template slot-scope="scope">
-          <span >{{ scope.row.width + " × " +  scope.row.height}}</span>
+          <span>{{ scope.row.width + " × " +  scope.row.height}}</span>
         </template>
       </el-table-column>
 
@@ -121,7 +121,8 @@
     delVisualImage,
     addVisualImage,
     updateVisualImage,
-    exportVisualImage
+    exportVisualImage,
+    getLink
   } from "@/api/system/visualImage";
   // import { getToken } from '@/utils/auth'
 
@@ -160,30 +161,46 @@
         },
         // 表单参数
         form: {},
-        imageUrl:null,
+        imageUrl: null,
         uploadHeader: {},
         // 表单校验
-        rules: {}
+        rules: {},
+        loadObj:null,
       };
     },
     created() {
       this.getList();
     },
     mounted() {
+      // 测试代码
+      getLink({fileName:"test.png"})
       // this.uploadHeader['Content-Type'] = 'multipart/form-data'
       // this.uploadHeader['Authorization'] = 'Bearer ' + getToken()
       // console.log(this.uploadHeader);
     },
     methods: {
+      loadingStart() {
+        this.loadObj = this.$loading({
+          lock: true,
+          text: '正在上传',
+          spinner: 'el-icon-loading',
+          background: 'rgba(0, 0, 0, 0.7)'
+        });
+      },
+      loadingClose(){
+        this.loadObj.close();
+      },
       handleAvatarSuccess(res, file) {
         console.log(res, file);
         this.form.originName = file.name
         this.form.newName = res.data.name
         this.imageUrl = URL.createObjectURL(file.raw);
+        this.loadingClose()
       },
       beforeUpload(file) {
         //
         this.form.newName = null
+        this.loadingStart()
         return true;
       },
       /** 查询图片管理。管理上传的图片列表 */

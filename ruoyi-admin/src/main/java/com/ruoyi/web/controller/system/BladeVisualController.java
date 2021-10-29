@@ -10,7 +10,10 @@ import com.ruoyi.common.core.page.VisualRespEmbData;
 import com.ruoyi.system.service.impl.BladeVisualConfigServiceImpl;
 import com.ruoyi.web.param.BladeVisualParam;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.web.servlet.MultipartConfigFactory;
+import org.springframework.context.annotation.Bean;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.util.unit.DataSize;
 import org.springframework.web.bind.annotation.*;
 import com.ruoyi.common.annotation.Log;
 import com.ruoyi.common.core.controller.BaseController;
@@ -21,6 +24,7 @@ import com.ruoyi.system.service.IBladeVisualService;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
+import javax.servlet.MultipartConfigElement;
 import javax.servlet.http.HttpServletRequest;
 
 /**
@@ -105,7 +109,7 @@ public class BladeVisualController extends BaseController
         String name = SecurityContextHolder.getContext().getAuthentication().getName();
         param.getVisual().setUpdateBy(name);
         param.getVisual().setUpdateTime(new Date());
-        
+
         int i = bladeVisualService.updateBladeVisual(param.getVisual());
 
         int j = configService.updateBladeVisualConfig(param.getConfig());
@@ -139,5 +143,6 @@ public class BladeVisualController extends BaseController
         return bladeVisualService.uploadFile(file);
 
     }
+
 }
 
