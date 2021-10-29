@@ -9,11 +9,24 @@ ruoyi:
   # 实例演示开关
   demoEnabled: true
   # 文件路径 示例（ Windows配置D:/ruoyi/uploadPath，Linux配置 /home/ruoyi/uploadPath）
-  profile: D:/ruoyi/uploadPath
+  profile: F:/ruoyi/uploadPath
+#  profile: /home/yangsj/bigScreen
   # 获取ip地址开关
   addressEnabled: false
   # 验证码类型 math 数组计算 char 字符验证
   captchaType: math
+
+imageDir:
+  # 大屏的预览图片存放文件夹名
+  bigScreen: /overview
+  # 其他图片存放文件夹名
+  visualImage: /images
+  # 缩略图宽高
+  width: 100
+  height: 100
+  # 上传图片最大（MB）
+  maxImageMB: 300
+
 
 # 开发环境配置
 server:
@@ -42,7 +55,7 @@ spring:
   messages:
     # 国际化资源文件路径
     basename: i18n/messages
-  profiles: 
+  profiles:
     active: druid
   # 文件上传
   servlet:
@@ -59,13 +72,13 @@ spring:
   # redis 配置
   redis:
     # 地址
-    host: localhost
+    host: 172.17.172.240
     # 端口，默认为6379
     port: 6379
     # 数据库索引
-    database: 0
+    database: 4
     # 密码
-    password: 
+    password: ydd123456
     # 连接超时时间
     timeout: 10s
     lettuce:
@@ -87,7 +100,7 @@ token:
     secret: abcdefghijklmnopqrstuvwxyz
     # 令牌有效期（默认30分钟）
     expireTime: 30
-  
+
 # MyBatis配置
 mybatis:
     # 搜索指定包别名
@@ -98,10 +111,10 @@ mybatis:
     configLocation: classpath:mybatis/mybatis-config.xml
 
 # PageHelper分页插件
-pagehelper: 
+pagehelper:
   helperDialect: mysql
   supportMethodsArguments: true
-  params: count=countSql 
+  params: count=countSql
 
 # Swagger配置
 swagger:
@@ -111,10 +124,16 @@ swagger:
   pathMapping: /dev-api
 
 # 防止XSS攻击
-xss: 
+xss:
   # 过滤开关
   enabled: true
   # 排除链接（多个用逗号分隔）
   excludes: /system/notice
   # 匹配链接
   urlPatterns: /system/*,/monitor/*,/tool/*
+
+
+#bigScreen:
+#  prefix: /overview
+
+

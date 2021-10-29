@@ -150,6 +150,22 @@ export const constantRoutes = [
         meta: { title: '修改生成配置', activeMenu: '/tool/gen'}
       }
     ]
+  },
+{
+    path: '/',
+    name: '列表页',
+    component: () =>
+      import( /* webpackChunkName: "page" */ '@/views/screen/page/index')
+  }, {
+    path: '/build/:id',
+    name: 'build',
+    component: () =>
+      import( /* webpackChunkName: "page" */ '@/views/screen/page/build')
+  }, {
+    path: '/view/:id',
+    name: 'view',
+    component: () =>
+      import( /* webpackChunkName: "page" */ '@/views/screen/page/view')
   }
 ]
 
@@ -158,3 +174,4 @@ export default new Router({
   scrollBehavior: () => ({ y: 0 }),
   routes: constantRoutes
 })
+ 
