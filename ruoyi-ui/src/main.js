@@ -70,8 +70,22 @@ DictData.install()
 Vue.use(Element, {
   size: Cookies.get('size') || 'medium' // set element-ui default size
 })
+Vue.use(window.AVUE, {
+  size: 'mini'
+});
 
 Vue.config.productionTip = false
+
+//注册自定义组件
+import '@/components/'
+import { url } from '@/config'
+import 'element-ui/lib/theme-chalk/index.css';
+Vue.prototype.url = url;
+import axios from 'axios';
+window.axios = axios;
+// import '@/theme/index.js'
+// import './styles/common.scss'
+// Vue.prototype.$echarts = echarts
 
 new Vue({
   el: '#app',
