@@ -44,9 +44,17 @@
       <el-collapse-transition>
         <div v-if=" tagListShow">
       <!-- TAG标签 -->
-      <div v-if=" !(tagList == undefined ||tagList == null || tagList.length <= 0)" v-for="item in tagList"  >
-        <div class="aside-title name transition-box" id="item.id">
+      <div v-if=" !(tagList == undefined ||tagList == null || tagList.length <= 0)" v-for="item in tagList" @mouseover="enter(item.id)" @mouseleave="leave()" >
+        <div class="aside-title name transition-box" id="item.id"  >
+
          <i class="el-icon-collection-tag" style="font-size: 15px"/> {{item.name}}
+
+
+
+          <i v-show="seen&&item.id == current"  class="el-icon-delete tag_coomon" @click="updateTagOpen(item.id)"></i>
+          <i v-show="seen&&item.id == current"  class="el-icon-edit tag_coomon_eidt" @click="updateTagOpen(item.id)"></i>
+
+
 <!--          <el-tag type="info" size="mini">{{item.name}}</el-tag>-->
         </div>
       </div>
@@ -65,7 +73,17 @@
 
 
 
-
+      <el-dialog
+        title="编辑"
+        :visible.sync="dialogVisible"
+        width="30%"
+        :before-close="handleClose">
+        <el-input v-model="newName" placeholder="请输入新的标签名称"></el-input>
+        <span slot="footer" class="dialog-footer">
+    <el-button @click="dialogVisible = false">取 消</el-button>
+    <el-button type="primary" @click="dialogVisible = false">确 定</el-button>
+  </span>
+      </el-dialog>
 
 
     </div>
@@ -79,6 +97,7 @@
 
         data: function () {
             return {
+              dialogVisible: false,
               msg:'暂无标签',
               tagList:[],
               total:0,
@@ -87,13 +106,15 @@
                 pageSize: 8,
                 name:undefined
               },
-
+              newName:'',//标签名称
               addBkTAG:true,//添加书TAG
               searchBkTAG:true,//搜索TAG
               tagListShow:false,//TAGlist
               eidtTAGText:false,//我的TAG
               tagName:undefined,//新增书签 - 搜索的输入框
-              tagNameCopy:''//用于提示
+              tagNameCopy:'',//用于提示
+              seen:false,//用于展示触碰显示操作按钮
+              current:0,//用于展示触碰显示操作按钮
             }
         },
       created(){
@@ -101,6 +122,18 @@
         that.listByUsers();
       },
         methods: {
+          updateTagOpen(id){
+            this.dialogVisible = true;
+            console.log(id)
+          },
+          handleClose(done) {
+            this.$confirm('确认关闭？')
+              .then(_ => {
+                done();
+              })
+              .catch(_ => {});
+          },
+
           // 统一的表单重置
           reset() {
             this.form = {
@@ -126,8 +159,9 @@
             this.tagList = null;
             this.total = 0;
             listByUserLike(this.tagParams).then(response => {
-              if (response.code === 200) {
-                this.tagList=response.rows;
+              if (response.code === 200) {1
+
+                 this.tagList=response.rows;
                 this.total = response.total;
                 if (this.total == 0){
                   this.tagNameCopy = this.tagName;
@@ -203,14 +237,23 @@
             this.addBkTAG = true;
             this.searchBkTAG = true;
           },
-
+          enter(index){
+            this.seen = true;
+            this.current = index;
+          },
+          leave(){
+            this.seen = false;
+            this.current = null;
+          },
 
         }
     }
 </script>
 <style scoped>
   .title-name{
-    font-size: 19px;margin-left: 5px;margin-top: 7px
+    font-size: 16px;
+    margin-left: 5px;
+    margin-top: 9px
   }
   .name{
     padding-left: 50px;
@@ -244,6 +287,18 @@
   }
   .aside-titleB span{
     font-size: 14px;
+  }
+  .tag_coomon{
+    float: right;
+    margin-right: 15px;
+    margin-top: 9px;
+    font-size: 16px;
+  }
+  .tag_coomon_eidt{
+    float: right;
+    margin-right: 5px;
+    margin-top: 9px;
+    font-size: 16px;
   }
 
 </style>

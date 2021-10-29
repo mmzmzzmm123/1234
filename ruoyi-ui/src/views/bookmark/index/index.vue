@@ -766,7 +766,7 @@
         //if (treeNode.parentNode && treeNode.parentNode.id!=1) return;
         var switchObjspan = $("#" + treeNode.tId + "_span");
         // onmouseout='removeHoverDoms(this)' //选中删除切换
-        var editStr = "<span  class=" + treeNode.tId + "_sz data-parentId=" + treeNode.parentId + " data-menuId=" + treeNode.menuId + " data-treetId="+ treeNode.tId +" data-bookmarkCount="+treeNode.bookmarkCount+" onclick='editBookmark(this)' style='color: #9e9e9e;float:right;display: inline-block;margin-right: 15px;font-size:0.8rem' onfocus='this.blur();'><i class='el-icon-edit'></i></span>";
+        var editStr = "<span  class=" + treeNode.tId + "_sz data-parentId=" + treeNode.parentId + " data-menuId=" + treeNode.menuId + " data-treetId="+ treeNode.tId +" data-bookmarkCount="+treeNode.bookmarkCount+" onclick='editBookmark(this)' style='color: #9e9e9e;float:right;display: inline-block;margin-right: 15px;font-size:0.8rem' onfocus='this.blur();'><i style='margin-top: 9px;font-size: 16px' class='el-icon-edit'></i></span>";
         switchObjspan.after(editStr);
       },
 
