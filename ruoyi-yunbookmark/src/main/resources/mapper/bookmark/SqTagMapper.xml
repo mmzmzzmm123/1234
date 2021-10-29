@@ -87,6 +87,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         delete from sq_tag where id = #{id}
     </delete>
 
+    <delete id="delteTagByidAndUserId" parameterType="Long">
+        delete from sq_tag where id = #{id} and user_Id =#{userId}
+    </delete>
+
     <delete id="deleteSqTagByIds" parameterType="String">
         delete from sq_tag where id in
         <foreach item="id" collection="array" open="(" separator="," close=")">

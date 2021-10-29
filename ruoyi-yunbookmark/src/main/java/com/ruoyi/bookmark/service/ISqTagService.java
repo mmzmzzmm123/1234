@@ -74,4 +74,11 @@ public interface ISqTagService
      * @date: 2021/10/29 17:54
      */
     int countByuserId(Long userId);
+
+    /**
+     *  @author: wanghao
+     *  @Date: 2021/10/29 18:11
+     *  @Description: 删除用户的标签
+     */
+    int delteTagByid(String id, Long userId);
 }

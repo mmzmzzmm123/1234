@@ -83,4 +83,11 @@ public interface SqTagMapper extends MyMapper<SqTag>
      * @return 结果
      */
     int updateBookmarkTagIdByTagId(@Param("tagId")Long tagId, @Param("toTagId")Long toTagId, @Param("userId")Long userId);
+
+    /**
+     * @auther: Wang
+     * @date: 2021/10/29 18:13
+     * 功能描述:刪除标签
+     */
+    int delteTagByidAndUserId(@Param("id")Long id, @Param("userId")Long userId);
 }

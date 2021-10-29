@@ -140,5 +140,10 @@ public class SqTagServiceImpl implements ISqTagService
         return sqTagMapper.selectCount(sqTag);
     }
 
+    @Override
+    public int delteTagByid(String id, Long userId) {
+        return sqTagMapper.delteTagByidAndUserId(Long.valueOf(id),userId);
+    }
+
 
 }

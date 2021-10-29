@@ -48,6 +48,15 @@ public class SqTagController extends BaseController
         return getDataTable(list);
     }
 
+    /**
+     * 删除书签
+     */
+    @GetMapping("/deleteTag/{id}")
+    public AjaxResult deleteTag(@PathVariable String id)
+    {
+        sqTagService.delteTagByid(id,getAuthUser().getUserId());
+        return AjaxResult.success("操作成功");
+    }
 
     /**
      * 模糊查书签TAG
