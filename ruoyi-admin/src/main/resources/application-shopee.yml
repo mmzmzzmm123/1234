@@ -1,0 +1,20 @@
+shopee:
+  partnerID: 845774
+  secrret: ea6e399abcBb69eacbeBfe38bc89a9ef35Za8Ze48a92535211c2Ъ92e18Ba52d
+  #回跳到系统
+  redirectURL: http://www.edterp.com/shop/shop
+  #shopee 认证
+  authpartner_url: https://partner.shopeemobile.com/api/v1/shop/auth partner
+  #
+  cancel_auth_partner_url:  https://partner.shopeemobile.com/api/v1/shop/cancel_auth_partner
+  #shopee 消息推送到系统
+  msgPushUrl: http://www.edterp.com/dev-dpi/orders/shop/verfiyPushMsg
+  #shopee
+  shopInfoApiUrl: https://partner.shopeemobile.com/api/v1/shop/get
+  ordersApiUrl: https://partner.shopeemobile.com/api/v1/orders/basics
+  #
+  orderDetailApiUrl:https://partner.shopeemobile.com/api/v1/orders/detail
+  #
+  orderDetailUariationspiUrl1: https://partner.shopeemobile.com/api/v1/item/tier_var/get
+  socketHost: 172.19.92.42
+  socketPort: 10000
