@@ -23,7 +23,7 @@
         >
           <i slot="prefix" class="el-input__icon el-icon-circle-plus-outline"></i>
         </el-input>
-        <i v-if="!addBkTAG" @click="addBkTagCk" class="el-icon-close" style="font-size: 25px;margin-left: 5px;margin-bottom: 2px"></i>
+        <i v-if="!addBkTAG" @click="addBkTagCk" class="el-icon-close search-close" ></i>
       </div>
 
       <div style="display: flex;justify-items: center;align-items: center">
@@ -37,7 +37,7 @@
         >
           <i slot="prefix" class="el-icon-search" style="margin-left: 5px"></i>
         </el-input>
-        <i v-if="!searchBkTAG" @click="searchBkTagCk" class="el-icon-close" style="font-size: 25px;margin-left: 5px;margin-bottom: 2px"></i>
+        <i v-if="!searchBkTAG" @click="searchBkTagCk" class="el-icon-close search-close"  ></i>
       </div>
 
 
@@ -47,7 +47,8 @@
       <div v-if=" !(tagList == undefined ||tagList == null || tagList.length <= 0)" v-for="item in tagList" @mouseover="enter(item.id)" @mouseleave="leave()" >
         <div class="aside-title name transition-box" id="item.id"  >
 
-         <i class="el-icon-collection-tag" style="font-size: 15px"/> {{item.name}}
+<!--         <i class="el-icon-collection-tag" style="font-size: 15px"/>-->
+         # {{item.name}}
 
 
 
@@ -77,12 +78,13 @@
         title="编辑"
         :visible.sync="dialogVisible"
         width="30%"
+        class="my-info-dialog"
         >
-        <el-input v-model="newName" placeholder="请输入新的标签名称"></el-input>
-        <span slot="footer" class="dialog-footer">
-    <el-button @click="dialogVisible = false">取 消</el-button>
-    <el-button type="primary" @click="editByUser()">确 定</el-button>
-  </span>
+        <el-input v-model="newName"  placeholder="请输入新的标签名称"></el-input>
+
+    <el-button class="butWidth" size="small" type="primary" @click="editByUser()">确 定</el-button>
+    <el-button class="butWidth" style="margin-left: 0px"  size="small" @click="dialogVisible = false">取 消</el-button>
+
       </el-dialog>
 
 
@@ -316,11 +318,30 @@
         }
     }
 </script>
+<style >
+  .my-info-dialog .el-dialog__body {
+    padding: 10px 20px ;
+  }
+
+</style>
+
 <style scoped>
+
+  .search-close:hover{
+    font-weight: 400;
+    color: #1c84c6;
+  }
+
+  .search-close{
+    font-size: 25px;
+    margin-left: 5px;
+    color: #9e9e9e;
+  }
   .title-name{
     font-size: 16px;
     margin-left: 5px;
-    margin-top: 9px
+    margin-top: 9px;
+
   }
   .name{
     padding-left: 50px;
@@ -360,12 +381,29 @@
     margin-right: 15px;
     margin-top: 9px;
     font-size: 16px;
+    z-index: 100;
+    color: #9e9e9e;
+  }
+  .tag_coomon:hover{
+    font-weight: 800;
+    color: red;
+  }
+  .tag_coomon_eidt:hover{
+    font-weight: 800;
+    color: #5168ff;
   }
   .tag_coomon_eidt{
     float: right;
     margin-right: 5px;
     margin-top: 9px;
     font-size: 16px;
+    color: #9e9e9e;
   }
+  .butWidth{
+    width: 100%;
+    margin-top: 10px;
+  }
+
+
 
 </style>
