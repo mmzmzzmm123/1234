@@ -36,7 +36,7 @@
 
           <div class="bookmark-time" v-if="bm.tagNameAll!=null&&bm.tagNameAll!=''"  >
             <el-tag  v-for="item in JSON.parse(bm.tagNameAll)"  class="bookmark-list-tag bookmark-list-tag-top" style="float: left"  type="info"  data-tagid="item.tagId"  size="mini">
-              {{item.name}}
+              #{{item.name}}
             </el-tag>
           </div>
         </div>

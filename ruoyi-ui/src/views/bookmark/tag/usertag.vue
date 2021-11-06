@@ -1,12 +1,12 @@
 <template>
     <div class="main" >
-      <div class="aside-titleB"  @mouseenter="eidtTAGText=!eidtTAGText" @mouseleave="eidtTAGText=!eidtTAGText">
-        <i @click="tagListShowCk" :class="tagListShow ? 'el-icon-caret-bottom aside-titleB_childi_one':'el-icon-caret-right aside-titleB_childi_one'"   ></i>
+      <div class="aside-titleB" @click="tagListShowCk"  @mouseenter="eidtTAGText=!eidtTAGText" @mouseleave="eidtTAGText=!eidtTAGText">
+        <i  :class="tagListShow ? 'el-icon-caret-bottom aside-titleB_childi_one':'el-icon-caret-right aside-titleB_childi_one'"   ></i>
         <i class="el-icon-price-tag aside-titleB_childi_two"></i>
         <span >标签管理</span>
         <div style="margin-left: 40%" v-show="eidtTAGText">
-          <i class="el-icon-search title-name" @click="searchBkTagCk"></i>
-          <i class="el-icon-folder-add title-name"  @click="addBkTagCk"></i>
+          <i class="el-icon-search title-name" @click.stop="searchBkTagCk"></i>
+          <i class="el-icon-folder-add title-name"  @click.stop="addBkTagCk"></i>
         </div>
       </div>
 
@@ -51,14 +51,14 @@
 
 
 
-          <i v-show="seen&&item.id == current"  class="el-icon-delete tag_coomon" @click="updateTagOpen(item.id)"></i>
-          <i v-show="seen&&item.id == current"  class="el-icon-edit tag_coomon_eidt" @click="updateTagOpen(item.id)"></i>
+          <i v-show="seen&&item.id == current"  class="el-icon-delete tag_coomon" @click="deleteTagOpen(item.id)"></i>
+          <i v-show="seen&&item.id == current"  class="el-icon-edit tag_coomon_eidt" @click="updateTagOpen(item.id,item.name)"></i>
 
 
 <!--          <el-tag type="info" size="mini">{{item.name}}</el-tag>-->
         </div>
       </div>
-      <div v-if=" tagList != undefined && tagList != null && total > 8 " class="aside-title name transition-box" >加载更多</div>
+      <div v-if=" tagList != undefined && tagList != null && total > 8 " class="aside-title name transition-box" @click="getListTag()">加载更多(共{{total}}条)</div>
 
       <!-- 无标签 -->
         <div v-if=" tagList == undefined ||tagList == null || tagList.length <= 0" class="aside-title name transition-box" >
@@ -77,19 +77,22 @@
         title="编辑"
         :visible.sync="dialogVisible"
         width="30%"
-        :before-close="handleClose">
+        >
         <el-input v-model="newName" placeholder="请输入新的标签名称"></el-input>
         <span slot="footer" class="dialog-footer">
     <el-button @click="dialogVisible = false">取 消</el-button>
-    <el-button type="primary" @click="dialogVisible = false">确 定</el-button>
+    <el-button type="primary" @click="editByUser()">确 定</el-button>
   </span>
       </el-dialog>
+
+
+
 
 
     </div>
 </template>
 <script>
-  import {listByUser,listByUserLike,addTagByUser} from "@/api/bookmark/tag";
+  import {listByUser,listByUserLike,addTagByUser,deleteTag,editByUser} from "@/api/bookmark/tag";
 
     export default {
         name: 'areaTree',
@@ -98,13 +101,15 @@
         data: function () {
             return {
               dialogVisible: false,
+              deleteTag:false,
               msg:'暂无标签',
               tagList:[],
               total:0,
               tagParams: {
                 pageNum: 1,
                 pageSize: 8,
-                name:undefined
+                name:undefined,
+                id:undefined
               },
               newName:'',//标签名称
               addBkTAG:true,//添加书TAG
@@ -122,9 +127,49 @@
         that.listByUsers();
       },
         methods: {
-          updateTagOpen(id){
-            this.dialogVisible = true;
-            console.log(id)
+
+          updateTagOpen(id,name){
+            var that = this;
+            that.dialogVisible = true;
+            that.newName = name;
+            that.tagParams.id = id;
+          },
+          /** 修改书签*/
+          editByUser(){
+            var that = this;
+            that.tagParams.name = that.newName;
+            editByUser(this.tagParams).then(response => {
+              if (response.code === 200) {
+                that.listByUsers();
+                that.msgSuccess("修改成功");
+              }else{
+                that.msgError("修改失败");
+              }
+            });
+            that.dialogVisible = false
+          },
+
+          /** 删除书签*/
+          deleteTagOpen(id){
+            this.$confirm('是否确认删除此条书签数据项?', "警告", {
+              confirmButtonText: "确定",
+              cancelButtonText: "取消",
+              type: "warning"
+            }).then(() => {
+              deleteTag(id).then(response => {
+                if (response.code === 200) {
+                  this.listByUsers();
+                  this.msgSuccess("删除成功");
+                }else{
+                  this.msgError("删除失败");
+                }
+              });
+
+
+            }).catch(function () {
+              // 取消删除
+            });
+
           },
           handleClose(done) {
             this.$confirm('确认关闭？')
@@ -136,10 +181,11 @@
 
           // 统一的表单重置
           reset() {
-            this.form = {
+            this.tagParams = {
               pageNum: 1,
               pageSize: 8,
               name: undefined,
+              id: undefined
             };
           },
           /**回车搜索**/
@@ -159,8 +205,7 @@
             this.tagList = null;
             this.total = 0;
             listByUserLike(this.tagParams).then(response => {
-              if (response.code === 200) {1
-
+              if (response.code === 200) {
                  this.tagList=response.rows;
                 this.total = response.total;
                 if (this.total == 0){
@@ -197,20 +242,42 @@
             });
 
           },
-          /** 修改书签*/
 
-          /** 删除书签*/
 
           /** 查询书签 */
           listByUsers() {
             var that = this;
             //初始化
-            listByUser(that.tagParams).then(response => {
+            that.reset();
+            listByUserLike(that.tagParams).then(response => {
                   if (response.code === 200) {
                     that.tagList=response.rows;
                     that.total = response.total;
                   }
                 });
+          },
+          /**加载更多*/
+          getListTag(){
+            var that = this;
+            var that = this;
+            //判断是否加载了所有数据
+            var i = that.tagParams.pageNum + 1;
+            var listcount = Math.ceil(that.total / 8);
+
+
+            if (i > listcount) {
+              this.msgSuccess("已加载全部");
+              return ;
+            }
+            that.tagParams.pageNum = i;
+            //初始化
+            listByUserLike(that.tagParams).then(response => {
+              if (response.code === 200) {
+                that.tagList=that.tagList.concat(response.rows)
+                that.total = response.total;
+              }
+            });
+
           },
 
           /**添加书签目录**/

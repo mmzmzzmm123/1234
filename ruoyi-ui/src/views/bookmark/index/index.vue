@@ -42,13 +42,13 @@
 <!--            </div>-->
 
 
-            <div class="aside-titleB"  @mouseenter="eidtMenuText=!eidtMenuText" @mouseleave="eidtMenuText=!eidtMenuText">
-              <i @click="menuListShowCk" :class="menuListShow ? 'el-icon-caret-bottom aside-titleB_childi_one':'el-icon-caret-right aside-titleB_childi_one'"   ></i>
+            <div class="aside-titleB" @click="menuListShowCk"   @mouseenter="eidtMenuText=!eidtMenuText" @mouseleave="eidtMenuText=!eidtMenuText">
+              <i :class="menuListShow ? 'el-icon-caret-bottom aside-titleB_childi_one':'el-icon-caret-right aside-titleB_childi_one'"   ></i>
               <i class="el-icon-folder-opened aside-titleB_childi_two"></i>
               <span >我的收藏</span>
               <div style="margin-left: 40%" v-show="eidtMenuText">
-                <i class="el-icon-search" style="font-size: 19px;margin-left: 5px;margin-top: 7px" @click="searchBkMenuCk"></i>
-                <i class="el-icon-folder-add" style="font-size: 19px;margin-left: 5px;margin-top: 7px" @click="addBkMenuCk"></i>
+                <i class="el-icon-search" style="font-size: 19px;margin-left: 5px;margin-top: 7px" @click.stop="searchBkMenuCk"></i>
+                <i class="el-icon-folder-add" style="font-size: 19px;margin-left: 5px;margin-top: 7px" @click.stop="addBkMenuCk"></i>
               </div>
             </div>
 

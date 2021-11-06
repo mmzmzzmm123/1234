@@ -27,6 +27,25 @@ export function addTagByUser(data) {
   })
 }
 
+// 刪除书签
+export function deleteTag(id) {
+  return request({
+    url: '/system/tag/deleteTag/' + id,
+    method: 'get'
+  })
+}
+
+// 修改书签管理
+export function editByUser(data) {
+  return request({
+    url: '/system/tag/editByUser',
+    method: 'post',
+    data: data
+  })
+}
+
+
+
 
 
 
