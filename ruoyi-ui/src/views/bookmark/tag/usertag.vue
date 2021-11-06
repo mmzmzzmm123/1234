@@ -80,8 +80,8 @@
         >
         <el-input v-model="newName" placeholder="请输入新的标签名称"></el-input>
         <span slot="footer" class="dialog-footer">
-    <el-button class="butWidth" size="small" type="primary" @click="editByUser()">确 定</el-button>
-    <el-button class="butWidth" size="small" @click="dialogVisible = false">取 消</el-button>
+    <el-button @click="dialogVisible = false">取 消</el-button>
+    <el-button type="primary" @click="editByUser()">确 定</el-button>
   </span>
       </el-dialog>
 
@@ -366,10 +366,6 @@
     margin-right: 5px;
     margin-top: 9px;
     font-size: 16px;
-  }
-  .butWidth{
-    width: 80%;
-    margin-left: 10% ;
   }
 
 </style>
