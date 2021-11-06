@@ -293,7 +293,7 @@
             }
           },
           callback: {
-            // beforeClick: this.BeforeClick,
+             beforeClick: this.BeforeClick,
             onClick: this.OnClickzTree,
             // onCheck: this.zTreeOnCheck,
             //补获展开和折叠
@@ -316,6 +316,8 @@
           }
         },
         zNodes: [],
+        //当前ztree 点击选中的 treeNode 值
+        treeNodeClick:undefined,
         bookmark: [],
         inputVisible: false, //标签
         inputValue: '', //标签
@@ -759,6 +761,11 @@
       },
 
       addHoverDom: function (treeId, treeNode) {
+        // console.log("addHoverDom...........")
+        if (this.treeNodeClick !=null && this.treeNodeClick !=undefined){
+          //解决节点选中后 移出鼠标无法触发 removeHoverDom 方法的问题
+          this.removeHoverDom(null,this.treeNodeClick);
+        }
         var confCount = $("." + treeNode.tId + "_sz").length;
         if (confCount > 0) return;
         $("." + treeNode.tId + "_sz").unbind().remove();
@@ -771,6 +778,8 @@
       },
 
       removeHoverDom: function (treeId, treeNode) {
+        // console.log("removeHoverDom...........")
+
         $("." + treeNode.tId + "_count").unbind().remove();
         $("." + treeNode.tId + "_sz").unbind().remove();
         var switchObjspan = $("#" + treeNode.tId + "_span");
@@ -781,6 +790,8 @@
       //点击展开
       BeforeClick: function (treeId, treeNode) {
         console.log("展开---")
+        this.treeNodeClick = treeNode;
+        // removeHoverDom (treeId, treeNode);
         //if (treeNode.level != 19990 ) {
         //    var zTree = $.fn.zTree.getZTreeObj("treeDemo");
         //    zTree.expandNode(treeNode);

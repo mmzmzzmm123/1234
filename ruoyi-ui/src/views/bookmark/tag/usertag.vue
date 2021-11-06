@@ -3,11 +3,12 @@
       <div class="aside-titleB" @click="tagListShowCk"  @mouseenter="eidtTAGText=!eidtTAGText" @mouseleave="eidtTAGText=!eidtTAGText">
         <i  :class="tagListShow ? 'el-icon-caret-bottom aside-titleB_childi_one':'el-icon-caret-right aside-titleB_childi_one'"   ></i>
         <i class="el-icon-price-tag aside-titleB_childi_two"></i>
-        <span >标签管理</span>
-        <div style="margin-left: 40%" v-show="eidtTAGText">
+        <span style="width: 100%">标签管理</span>
+        <span style="min-width: 70px" v-show="eidtTAGText">
           <i class="el-icon-search title-name" @click.stop="searchBkTagCk"></i>
           <i class="el-icon-folder-add title-name"  @click.stop="addBkTagCk"></i>
-        </div>
+        </span>
+         <span class="menuCount" v-show="!eidtTAGText">{{total}}</span>
       </div>
 
 
@@ -59,7 +60,7 @@
 <!--          <el-tag type="info" size="mini">{{item.name}}</el-tag>-->
         </div>
       </div>
-      <div v-if=" tagList != undefined && tagList != null && total > 8 " class="aside-title name transition-box" @click="getListTag()">加载更多(共{{total}}条)</div>
+      <div v-if=" tagList != undefined && tagList != null && total > 8 " class="aside-title name transition-box" @click="getListTag()">加载更多</div>
 
       <!-- 无标签 -->
         <div v-if=" tagList == undefined ||tagList == null || tagList.length <= 0" class="aside-title name transition-box" >
@@ -402,6 +403,10 @@
   .butWidth{
     width: 100%;
     margin-top: 10px;
+  }
+  .menuCount{
+   margin-right: 18px;
+    color: #9e9e9e;
   }
 
 
