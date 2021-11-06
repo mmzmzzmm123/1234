@@ -127,6 +127,14 @@ export const constantRoutes = [
     path: '/daohang',
     component: resolve => require(['../views/bookmark/menu/index.vue'], resolve),
     hidden: true,
+  },{
+    path: '/draggable',
+    component: resolve => require(['../views/bookmark/vuedraggable/index.vue'], resolve),
+    hidden: true,
+  },{
+    path: '/draggable2',
+    component: resolve => require(['../views/bookmark/vuedraggable/index2.vue'], resolve),
+    hidden: true,
   },
   {
     path: '/login',
