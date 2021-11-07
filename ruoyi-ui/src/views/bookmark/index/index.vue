@@ -1,10 +1,10 @@
 <template>
-  <div class="box" ref="box">
+  <div class="box" ref="box" @click="closePopup()">
 
     <el-container class="box" ref="box">
       <transition name="el-zoom-in-left">
         <el-aside :style="asideHeight" v-show="isShowZtree" class="transition-box left isaside"
-                  style="overflow-x:hidden;overflow-y: hidden;">
+                  style="overflow-x:hidden;overflow-y: hidden;" >
 
           <el-header class="aside-logo ">
             <!--        <img src="https://s1.ax1x.com/2020/08/15/dACqUO.png"/>-->
@@ -18,7 +18,7 @@
 
 
 
-          <div class="main-right">
+          <div class="main-right" >
 <!--            <svg-icon icon-class="tool" class="svgicon"/>-->
             <div class="aside-title" @click="goRouter(8)"><i class="el-icon-folder"></i>
               <span>最新</span>
@@ -42,15 +42,21 @@
 <!--            </div>-->
 
 
+
+
+
             <div class="aside-titleB" @click="menuListShowCk"   @mouseenter="eidtMenuText=!eidtMenuText" @mouseleave="eidtMenuText=!eidtMenuText">
               <i :class="menuListShow ? 'el-icon-caret-bottom aside-titleB_childi_one':'el-icon-caret-right aside-titleB_childi_one'"   ></i>
               <i class="el-icon-folder-opened aside-titleB_childi_two"></i>
-              <span >我的收藏</span>
-              <div style="margin-left: 40%" v-show="eidtMenuText">
-                <i class="el-icon-search" style="font-size: 19px;margin-left: 5px;margin-top: 7px" @click.stop="searchBkMenuCk"></i>
-                <i class="el-icon-folder-add" style="font-size: 19px;margin-left: 5px;margin-top: 7px" @click.stop="addBkMenuCk"></i>
-              </div>
+              <span  style="width: 100%">我的收藏</span>
+              <span style="display: flex;flex-direction:row;min-width: 65px" v-show="eidtMenuText">
+                <i class="el-icon-search" style="font-size: 16px;margin-left: 5px;margin-top: 1px;" @click.stop="searchBkMenuCk"></i>
+                <i class="el-icon-folder-add" style="font-size: 16px;margin-left: 5px;margin-top: 1px;" @click.stop="addBkMenuCk"></i>
+              </span>
             </div>
+
+
+
 
 
 <!--            <div class="reminder" style="display: flex;">-->
@@ -129,6 +135,10 @@
           </div>
 
 
+
+
+
+
         </el-aside>
       </transition>
 
@@ -152,29 +162,29 @@
 
     </el-container>
     <!--  编辑弹窗-->
-    <el-dialog :title="title" :visible.sync="open" width="500px" class="menuedit" append-to-body>
+    <el-dialog :title="title"  :show-close="false" :visible.sync="open" width="500px" class="menuedit" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" >
         <el-form-item prop="menuName">
-          <div class="labelname">菜单名称</div>
-          <el-input class="custom-input" v-model="form.menuName" placeholder="请输入菜单名称"/>
+          <el-input class="custom-input" v-model="form.menuName" placeholder="请输入目录名称"/>
         </el-form-item>
+        <br/>
         <el-form-item prop="menuIcon">
-          <div class="labelname">菜单图标</div>
-          <br/>
            <el-avatar :src="form.menuIcon" style="float: left"></el-avatar>
           <el-input  class="custom-input"  style="float: left;margin-left:5px;width: 90%" v-model="form.menuIcon" placeholder="请输入远程图片地址(建议高:120宽:120)"/>
         </el-form-item>
+        <br/>
         <el-form-item prop="parentId">
-          <div class="labelname">上级菜单</div>
           <treeselect class="menutreeselect" v-model="form.parentId" :options="menuOptions" :normalizer="normalizer"/>
         </el-form-item>
 
       </el-form>
-      <div slot="footer" class="dialog-footer">
-        <el-button type="danger"  @click="deleteMmenu(form.menuId)">删除</el-button>
-        <el-button type="primary"   @click="submitForm">确定</el-button>
-        <el-button  @click="cancel">取消</el-button>
-      </div>
+
+
+      <el-button class="butWidth" size="small" type="primary" @click="submitForm()">确 定</el-button>
+      <el-button class="butWidth" style="margin-left: 0px"  size="small" @click="cancel">取 消</el-button>
+
+
+<!--        <el-button type="danger"  @click="deleteMmenu(form.menuId)">删除</el-button>-->
 
     </el-dialog>
 
@@ -183,9 +193,18 @@
     <canvas id="evanyou"></canvas>
   </div>
 
+
+
+
+
+
 </template>
 <script src="http://libs.baidu.com/jquery/2.0.0/jquery.min.js"></script>
 <style scoped src="../ztree/demo.css"/>
+
+
+
+
 <script>
   // 下面的是单个Vue组件引用的外部静态文件，也可以在main.js文件中引用
   import {addBookmark} from "@/api/bookmark/bookmark";
@@ -348,9 +367,18 @@
       }
     },
     mounted() {
-      window['editBookmark'] = (e) => {
-        this.editBookmark(e)
+      window['editBookmark'] = (e,b) => {
+        this.editBookmark(e,b)
       },
+      window['deleteMmenu'] = (e) => {
+        this.deleteMmenu(e)
+      },
+      window['openPopup'] = (e) => {
+        this.openPopup(e)
+      },
+        window['closePopup'] = (e) => {
+          this.closePopup(e)
+        },
         window['removeHoverDoms'] = (e) => {
           this.removeHoverDoms(e)
         },
@@ -764,7 +792,7 @@
         // console.log("addHoverDom...........")
         if (this.treeNodeClick !=null && this.treeNodeClick !=undefined){
           //解决节点选中后 移出鼠标无法触发 removeHoverDom 方法的问题
-          this.removeHoverDom(null,this.treeNodeClick);
+          // this.removeHoverDom(null,this.treeNodeClick);
         }
         var confCount = $("." + treeNode.tId + "_sz").length;
         if (confCount > 0) return;
@@ -773,7 +801,13 @@
         //if (treeNode.parentNode && treeNode.parentNode.id!=1) return;
         var switchObjspan = $("#" + treeNode.tId + "_span");
         // onmouseout='removeHoverDoms(this)' //选中删除切换
-        var editStr = "<span  class=" + treeNode.tId + "_sz data-parentId=" + treeNode.parentId + " data-menuId=" + treeNode.menuId + " data-treetId="+ treeNode.tId +" data-bookmarkCount="+treeNode.bookmarkCount+" onclick='editBookmark(this)' style='color: #9e9e9e;float:right;display: inline-block;margin-right: 15px;font-size:0.8rem' onfocus='this.blur();'><i style='margin-top: 9px;font-size: 16px' class='el-icon-edit'></i></span>";
+        // var editStr = "<span  class=" + treeNode.tId + "_sz data-parentId=" + treeNode.parentId + " data-menuId=" + treeNode.menuId + " data-treetId="+ treeNode.tId +" data-bookmarkCount="+treeNode.bookmarkCount+" onclick='editBookmark(this)' style='color: #9e9e9e;float:right;display: inline-block;margin-right: 15px;font-size:0.8rem' onfocus='this.blur();'><i style='margin-top: 9px;font-size: 16px' class='el-icon-edit'></i></span>";
+
+        var editStr = "<span  class=" + treeNode.tId + "_sz data-parentId=" + treeNode.parentId + " data-menuId=" + treeNode.menuId + " data-treetId="+ treeNode.tId +" data-bookmarkCount="+treeNode.bookmarkCount+" onclick='openPopup(this)' style='z-index:888;color: #9e9e9e;float:right;display: inline-block;margin-right: 15px;font-size:0.8rem' onfocus='this.blur();'><i style='margin-top: 9px;font-size: 16px' class='el-icon-edit'></i></span>";
+
+
+
+        //var  editStr = "<el-popover placement='bottom-start' width='200' trigger='click' ><ul class='item-menu'><li class='item-menu-title '><span>新增嵌套目录</span></li><el-divider></el-divider><li class='item-menu-title '><span>修改名称</span></li><li class='item-menu-title '><span>修改图标</span></li><li class='item-menu-title '><span>分享</span></li></ul><el-button style='float: right' slot='reference'>click 激活</el-button></el-popover>"
         switchObjspan.after(editStr);
       },
 
@@ -960,13 +994,16 @@
             })
         }
       },
-      editBookmark: function (e) {
+      editBookmark: function (menuId,parentId) {
+        //关闭弹窗
+        this.closePopup();
         this.reset();
+        //菜单树
         this.getTreeselect();
-        if (e.getAttribute("data-menuId") != null && e.getAttribute("data-parentId") != null) {
-          this.form.parentId = e.getAttribute("data-parentId");
+        if (menuId != null && parentId != null) {
+          this.form.parentId = parentId;
         }
-        getMenu(e.getAttribute("data-menuId")).then(response => {
+        getMenu(menuId).then(response => {
           this.form = response.data;
           this.open = true;
           this.title = "修改书签菜单";
@@ -984,6 +1021,8 @@
 
       //删除书签目录
       deleteMmenu(menuId) {
+        //关闭弹窗
+        this.closePopup();
         this.$confirm('是否删除此目录菜单?', '提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
@@ -1004,6 +1043,74 @@
           });
         });
       },
+      openPopup: function(e) {
+        console.log("openPopup................")
+
+        console.log("当前菜单的目录数据............")
+
+        console.log("[data-menuId]............" + e.getAttribute("data-menuId"))
+        console.log("[data-parentId]............" + e.getAttribute("data-parentId"))
+        var menuId = e.getAttribute("data-menuId");
+        var parentId = e.getAttribute("data-parentId");
+
+        var posX = 0, posY = 0;
+        var event = event || window.event;
+        event.stopPropagation();
+        if (event.pageX || event.pageY) {
+          posX = event.pageX;
+          posY = event.pageY;
+        } else if (event.clientX || event.clientY) {
+          posX = event.clientX + document.documentElement.scrollLeft + document.body.scrollLeft;
+          posY = event.clientY + document.documentElement.scrollTop + document.body.scrollTop;
+        }
+
+        this.creatDiv(menuId,parentId);
+
+
+        //判断浏览器是否Chrome
+        var isChrome = window.navigator.userAgent.indexOf("Chrome") !== -1;
+
+        if (isChrome) {
+          document.getElementById("popupDiv").style.left = posX + "px";
+          document.getElementById("popupDiv").style.top = posY + "px";
+        } else {
+          //不是Chrome，默认为IE
+          document.getElementById("popupDiv").style.pixelLeft = posX;
+          document.getElementById("popupDiv").style.pixelTop = posY;
+        }
+      },
+      //创建弹窗DIV
+      creatDiv: function(menuIdval,parentIdval) {
+        if (document.getElementById("popupDiv")) {
+          document.getElementById("popupDiv").style.display = "block";
+        } else {
+          var s = document.createElement("div");
+          // s.innerHTML = "<div id = 'popupDiv' style = 'cursor : hand'> <div id = 'closeDiv'><img src = 'delete.png' onclick = 'closePopup()' style='cursor : hand; width:14px;'/></div><div id = 'contentDiv'><input οnclick='this.select();' type=\"text\" size = \"40\" id = \"ccomephone\" value=" + content + " style='width: 232PX;margin-top: 26px;margin-left: 13px;margin-bottom: 7px;'><input id = \"bcome\" style='margin-left: 108px;' type=\"button\" value=\"提交\" οnclick=\"doSubmit();\"/></div></div>";
+          s.innerHTML = "<div id = 'popupDiv' style=\"width:200px\">" +
+            "<ul class=\"item-menu\">" +
+            "<li class=\"item-menu-title\"><span>移动目录</span></li>" +
+            "<hr size=\"1px\" noshade=true >" +
+            "<li class=\"item-menu-title\" onclick='editBookmark(" + menuIdval + "," + parentIdval + ")'><span>新增嵌套目录</span></li>" +
+            "<hr size=\"1px\" noshade=true>" +
+            "<li class=\"item-menu-title\"><span>改名称</span></li>" +
+            "<li class=\"item-menu-title\"><span>改图标</span></li>" +
+            "<li class=\"item-menu-title\" onclick='deleteMmenu(" + menuIdval + ")'><span>刪除</span></li>" +
+            "<li class=\"item-menu-title\"><span>分享</span></li>" +
+            "</ul>" +
+            "</div>";
+
+          document.getElementsByTagName("body")[0].appendChild(s);
+        }
+      },
+      //提交数据
+      doSubmit: function() {
+        //dosomething
+        document.getElementById("popupDiv").style.display = 'none';
+      },
+      //关闭弹窗
+      closePopup: function() {
+        document.getElementById("popupDiv").style.display = 'none';
+      }
 
     },
 
@@ -1012,8 +1119,7 @@
     },
     handleCommand(command) {
       this.$message('click on item ' + command);
-    },
-
+    }
   }
 </script>
 <style scoped>
@@ -1463,8 +1569,55 @@
     z-index: -1;
   }
 
+  .butWidth{
+    width: 100%;
+    margin-top: 10px;
+  }
 
 
+</style>
+<style>
+
+  #popupDiv {
+    position: absolute;
+    z-index: 1;
+    background-color: #ffffff;
+    border:1px solid #dedede;
+    border-radius: 3px;
+  }
+
+
+
+  /** 菜单栏的弹窗*/
+  .item-menu{
+
+  }
+  .item-menu-title{
+    margin-left:-40px;
+    list-style:none;
+    height: 28px;
+    line-height: 28px;
+    font-size: 14px;
+    color: #000;
+  }
+  .item-menu-title:hover{
+    background-color: #1987e1;
+    color:#FFFFFF;
+  }
+  .item-menu-title span{
+    margin-left:15px;
+  }
+  .item-menu hr{
+    margin-left:-40px;
+    border-color:#dedede;
+
+  }
+
+
+
+
+
+  /** 菜单栏的弹窗*/
 
 </style>
 

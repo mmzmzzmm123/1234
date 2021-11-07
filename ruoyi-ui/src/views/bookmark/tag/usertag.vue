@@ -4,7 +4,7 @@
         <i  :class="tagListShow ? 'el-icon-caret-bottom aside-titleB_childi_one':'el-icon-caret-right aside-titleB_childi_one'"   ></i>
         <i class="el-icon-price-tag aside-titleB_childi_two"></i>
         <span style="width: 100%">标签管理</span>
-        <span style="min-width: 70px" v-show="eidtTAGText">
+        <span style="min-width: 65px" v-show="eidtTAGText">
           <i class="el-icon-search title-name" @click.stop="searchBkTagCk"></i>
           <i class="el-icon-folder-add title-name"  @click.stop="addBkTagCk"></i>
         </span>
@@ -48,16 +48,27 @@
       <div v-if=" !(tagList == undefined ||tagList == null || tagList.length <= 0)" v-for="item in tagList" @mouseover="enter(item.id)" @mouseleave="leave()" >
         <div class="aside-title name transition-box" id="item.id"  >
 
-<!--         <i class="el-icon-collection-tag" style="font-size: 15px"/>-->
+<!--         <i class="el-icon-collection-tag" style="font-size: 15px"/>
+         <el-tag type="info" size="mini">{{item.name}}</el-tag>
+-->
          # {{item.name}}
 
 
 
-          <i v-show="seen&&item.id == current"  class="el-icon-delete tag_coomon" @click="deleteTagOpen(item.id)"></i>
+          <el-popconfirm
+            confirm-button-text="确认"
+            cancel-button-text="取消"
+            title="确认要删除该书签？"
+            @onConfirm="deleteTagOpen(item.id)"
+          >
+            <el-button type="text" slot="reference" class="tag_coomon">
+              <i v-show="seen&&item.id == current"  class="el-icon-delete" ></i>
+            </el-button>
+          </el-popconfirm>
           <i v-show="seen&&item.id == current"  class="el-icon-edit tag_coomon_eidt" @click="updateTagOpen(item.id,item.name)"></i>
 
 
-<!--          <el-tag type="info" size="mini">{{item.name}}</el-tag>-->
+
         </div>
       </div>
       <div v-if=" tagList != undefined && tagList != null && total > 8 " class="aside-title name transition-box" @click="getListTag()">加载更多</div>
@@ -141,6 +152,14 @@
           editByUser(){
             var that = this;
             that.tagParams.name = that.newName;
+            if (that.tagParams.name == undefined || that.tagParams.name == null ||that.tagParams.name.trim() == ''){
+              this.msgInfo("标签名称不能为空!")
+              return;
+            }
+            if (that.tagParams.name.trim().length >10){
+              that.msgInfo("书签名称过长")
+              return;
+            }
             editByUser(this.tagParams).then(response => {
               if (response.code === 200) {
                 that.listByUsers();
@@ -154,11 +173,11 @@
 
           /** 删除书签*/
           deleteTagOpen(id){
-            this.$confirm('是否确认删除此条书签数据项?', "警告", {
-              confirmButtonText: "确定",
-              cancelButtonText: "取消",
-              type: "warning"
-            }).then(() => {
+            // this.$confirm('是否确认删除此条书签数据项?', "警告", {
+            //   confirmButtonText: "确定",
+            //   cancelButtonText: "取消",
+            //   type: "warning"
+            // }).then(() => {
               deleteTag(id).then(response => {
                 if (response.code === 200) {
                   this.listByUsers();
@@ -169,9 +188,9 @@
               });
 
 
-            }).catch(function () {
-              // 取消删除
-            });
+            // }).catch(function () {
+            //   // 取消删除
+            // });
 
           },
           handleClose(done) {
@@ -379,11 +398,12 @@
   }
   .tag_coomon{
     float: right;
-    margin-right: 15px;
-    margin-top: 9px;
     font-size: 16px;
     z-index: 100;
     color: #9e9e9e;
+    margin-right: 12px;
+    margin-top: -3px;
+
   }
   .tag_coomon:hover{
     font-weight: 800;
@@ -395,9 +415,9 @@
   }
   .tag_coomon_eidt{
     float: right;
-    margin-right: 5px;
-    margin-top: 9px;
+    margin-right: 8px;
     font-size: 16px;
+    margin-top: 10px;
     color: #9e9e9e;
   }
   .butWidth{

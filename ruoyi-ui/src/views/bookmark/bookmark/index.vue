@@ -1,9 +1,9 @@
 <template>
-  <div>
+  <div @click="closePopup()">
 
     <el-container class="isbookmarkContainer">
       <el-aside class="isBookmarkAside" :style="asideHeight">
-      <el-header class="header-sousou">
+      <el-header class="header-sousou" >
         <div class="sousou-left">
           <div class="sousouleft-switch" @click="drawer = true"><i class="el-icon-s-unfold"/></div>
           <div class="sousou-leftico" @click="drawer = true"><img
@@ -442,6 +442,9 @@
     mounted() {
       this.closeIsMain();
 
+      window['closePopup'] = (e) => {
+        this.closePopup(e)
+      }
     },
     methods: {
 
@@ -981,6 +984,11 @@
         //   this.title = "修改书签菜单";
         // });
       },
+      //关闭弹窗
+      closePopup: function() {
+        document.getElementById("popupDiv").style.display = 'none';
+      }
+
     },
 
 
@@ -1068,14 +1076,14 @@
     /*font-family: "Arial","Microsoft YaHei","黑体","宋体",sans-serif;*/
   }
 
-  .editBookamrk {
-    width: 270px;
-    height: 70px;
-    position: absolute;
-    background-color: #acd7ff;
-    right: 0;
-    display: none;
-  }
+  /*.editBookamrk {*/
+  /*  width: 270px;*/
+  /*  height: 70px;*/
+  /*  position: absolute;*/
+  /*  background-color: #acd7ff;*/
+  /*  right: 0;*/
+  /*  display: none;*/
+  /*}*/
 
   .editlist {
     display: flex;
