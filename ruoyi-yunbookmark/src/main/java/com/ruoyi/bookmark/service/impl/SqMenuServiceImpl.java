@@ -141,6 +141,13 @@ public class SqMenuServiceImpl implements ISqMenuService
             String  menuUplinkSeries = addMenuUplinkSeries(sqMenu.getMenuId());
             sqMenuMapper.updateSqMenu(new SqMenu(sqMenu.getMenuId(),menuUplinkSeries));
         }
+        //设置是否有下级的标识符
+        if(!"0".equals(parentId)){
+            SqMenu sm = new SqMenu();
+            sm.setMenuId(sqMenu.getParentId());
+            sm.setSubordinate(1);
+            sqMenuMapper.updateSqMenu(sm);
+        }
         return i;
     }
     /**
