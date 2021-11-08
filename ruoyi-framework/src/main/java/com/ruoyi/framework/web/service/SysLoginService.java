@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
 import com.ruoyi.common.constant.Constants;
 import com.ruoyi.common.core.domain.entity.SysUser;
 import com.ruoyi.common.core.domain.model.LoginUser;
-import com.ruoyi.common.core.redis.RedisCache;
+import com.ruoyi.common.core.redis.RedisUtils;
 import com.ruoyi.common.exception.ServiceException;
 import com.ruoyi.common.exception.user.CaptchaException;
 import com.ruoyi.common.exception.user.CaptchaExpireException;
@@ -26,7 +26,7 @@ import com.ruoyi.system.service.ISysUserService;
 
 /**
  * 登录校验方法
- * 
+ *
  * @author ruoyi
  */
 @Component
@@ -39,8 +39,8 @@ public class SysLoginService
     private AuthenticationManager authenticationManager;
 
     @Autowired
-    private RedisCache redisCache;
-    
+    private RedisUtils redisUtils;
+
     @Autowired
     private ISysUserService userService;
 
@@ -49,7 +49,7 @@ public class SysLoginService
 
     /**
      * 登录验证
-     * 
+     *
      * @param username 用户名
      * @param password 密码
      * @param code 验证码
@@ -94,7 +94,7 @@ public class SysLoginService
 
     /**
      * 校验验证码
-     * 
+     *
      * @param username 用户名
      * @param code 验证码
      * @param uuid 唯一标识
@@ -103,8 +103,8 @@ public class SysLoginService
     public void validateCaptcha(String username, String code, String uuid)
     {
         String verifyKey = Constants.CAPTCHA_CODE_KEY + uuid;
-        String captcha = redisCache.getCacheObject(verifyKey);
-        redisCache.deleteObject(verifyKey);
+        String captcha = redisUtils.getCacheObject(verifyKey);
+        redisUtils.deleteObject(verifyKey);
         if (captcha == null)
         {
             AsyncManager.me().execute(AsyncFactory.recordLogininfor(username, Constants.LOGIN_FAIL, MessageUtils.message("user.jcaptcha.expire")));

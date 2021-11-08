@@ -14,14 +14,14 @@ import org.springframework.web.bind.annotation.RestController;
 import com.google.code.kaptcha.Producer;
 import com.ruoyi.common.constant.Constants;
 import com.ruoyi.common.core.domain.AjaxResult;
-import com.ruoyi.common.core.redis.RedisCache;
+import com.ruoyi.common.core.redis.RedisUtils;
 import com.ruoyi.common.utils.sign.Base64;
 import com.ruoyi.common.utils.uuid.IdUtils;
 import com.ruoyi.system.service.ISysConfigService;
 
 /**
  * 验证码操作处理
- * 
+ *
  * @author ruoyi
  */
 @RestController
@@ -34,12 +34,12 @@ public class CaptchaController
     private Producer captchaProducerMath;
 
     @Autowired
-    private RedisCache redisCache;
-    
+    private RedisUtils redisUtils;
+
     // 验证码类型
     @Value("${ruoyi.captchaType}")
     private String captchaType;
-    
+
     @Autowired
     private ISysConfigService configService;
     /**
@@ -77,7 +77,7 @@ public class CaptchaController
             image = captchaProducer.createImage(capStr);
         }
 
-        redisCache.setCacheObject(verifyKey, code, Constants.CAPTCHA_EXPIRATION, TimeUnit.MINUTES);
+        redisUtils.setCacheObject(verifyKey, code, Constants.CAPTCHA_EXPIRATION, TimeUnit.MINUTES);
         // 转换流信息写出
         FastByteArrayOutputStream os = new FastByteArrayOutputStream();
         try

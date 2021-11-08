@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.EmrInfoOdsCopyMapper">
+    
+    <resultMap type="EmrInfoOdsCopy" id="EmrInfoOdsCopyResult">
+        <result property="id"    column="id"    />
+        <result property="emrId"    column="emr_id"    />
+        <result property="deptNumber"    column="dept_number"    />
+        <result property="treatmentDepartment"    column="treatment_department"    />
+        <result property="treatmentDate"    column="treatment_date"    />
+        <result property="sex"    column="sex"    />
+        <result property="age"    column="age"    />
+        <result property="height"    column="height"    />
+        <result property="weight"    column="weight"    />
+        <result property="chiefComplaint"    column="chief_complaint"    />
+        <result property="hsPresentIllness"    column="hs_present_illness"    />
+        <result property="physicalExamination"    column="physical_examination"    />
+        <result property="preliminaryDiagnosis"    column="preliminary_diagnosis"    />
+        <result property="icdId"    column="icd_id"    />
+        <result property="icdName"    column="icd_name"    />
+        <result property="doctorName"    column="doctor_name"    />
+        <result property="doctorNumber"    column="doctor_number"    />
+        <result property="doctorTitle"    column="doctor_title"    />
+        <result property="specialRecord"    column="special_record"    />
+        <result property="state"    column="state"    />
+        <result property="isHightDisease"    column="is_hight_disease"    />
+        <result property="isTop"    column="is_top"    />
+        <result property="isGroundless"    column="is_groundless"    />
+        <result property="xiaobuResult"    column="xiaobu_result"    />
+    </resultMap>
+
+    <sql id="selectEmrInfoOdsCopyVo">
+        select id, emr_id, dept_number, treatment_department, treatment_date, sex, age, height, weight, chief_complaint, hs_present_illness, physical_examination, preliminary_diagnosis, icd_id, icd_name, doctor_name, doctor_number, doctor_title, special_record, state, is_hight_disease, is_top, is_groundless, xiaobu_result from emr_info_ods_copy
+    </sql>
+
+    <select id="selectEmrInfoOdsCopyList" parameterType="EmrInfoOdsCopy" resultMap="EmrInfoOdsCopyResult">
+        <include refid="selectEmrInfoOdsCopyVo"/>
+        <where>  
+            <if test="emrId != null "> and emr_id = #{emrId}</if>
+            <if test="deptNumber != null  and deptNumber != ''"> and dept_number = #{deptNumber}</if>
+            <if test="treatmentDepartment != null  and treatmentDepartment != ''"> and treatment_department = #{treatmentDepartment}</if>
+            <if test="treatmentDate != null "> and treatment_date = #{treatmentDate}</if>
+            <if test="sex != null  and sex != ''"> and sex = #{sex}</if>
+            <if test="age != null  and age != ''"> and age = #{age}</if>
+            <if test="height != null  and height != ''"> and height = #{height}</if>
+            <if test="weight != null  and weight != ''"> and weight = #{weight}</if>
+            <if test="chiefComplaint != null  and chiefComplaint != ''"> and chief_complaint = #{chiefComplaint}</if>
+            <if test="hsPresentIllness != null  and hsPresentIllness != ''"> and hs_present_illness = #{hsPresentIllness}</if>
+            <if test="physicalExamination != null  and physicalExamination != ''"> and physical_examination = #{physicalExamination}</if>
+            <if test="preliminaryDiagnosis != null  and preliminaryDiagnosis != ''"> and preliminary_diagnosis = #{preliminaryDiagnosis}</if>
+            <if test="icdId != null  and icdId != ''"> and icd_id = #{icdId}</if>
+            <if test="icdName != null  and icdName != ''"> and icd_name like concat('%', #{icdName}, '%')</if>
+            <if test="doctorName != null  and doctorName != ''"> and doctor_name like concat('%', #{doctorName}, '%')</if>
+            <if test="doctorNumber != null  and doctorNumber != ''"> and doctor_number = #{doctorNumber}</if>
+            <if test="doctorTitle != null  and doctorTitle != ''"> and doctor_title = #{doctorTitle}</if>
+            <if test="specialRecord != null  and specialRecord != ''"> and special_record = #{specialRecord}</if>
+            <if test="state != null "> and state = #{state}</if>
+            <if test="isHightDisease != null "> and is_hight_disease = #{isHightDisease}</if>
+            <if test="isTop != null "> and is_top = #{isTop}</if>
+            <if test="isGroundless != null "> and is_groundless = #{isGroundless}</if>
+            <if test="xiaobuResult != null  and xiaobuResult != ''"> and xiaobu_result = #{xiaobuResult}</if>
+        </where>
+    </select>
+    
+    <select id="selectEmrInfoOdsCopyById" parameterType="Long" resultMap="EmrInfoOdsCopyResult">
+        <include refid="selectEmrInfoOdsCopyVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertEmrInfoOdsCopy" parameterType="EmrInfoOdsCopy" useGeneratedKeys="true" keyProperty="id">
+        insert into emr_info_ods_copy
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="emrId != null">emr_id,</if>
+            <if test="deptNumber != null">dept_number,</if>
+            <if test="treatmentDepartment != null">treatment_department,</if>
+            <if test="treatmentDate != null">treatment_date,</if>
+            <if test="sex != null">sex,</if>
+            <if test="age != null">age,</if>
+            <if test="height != null">height,</if>
+            <if test="weight != null">weight,</if>
+            <if test="chiefComplaint != null">chief_complaint,</if>
+            <if test="hsPresentIllness != null">hs_present_illness,</if>
+            <if test="physicalExamination != null">physical_examination,</if>
+            <if test="preliminaryDiagnosis != null">preliminary_diagnosis,</if>
+            <if test="icdId != null">icd_id,</if>
+            <if test="icdName != null">icd_name,</if>
+            <if test="doctorName != null">doctor_name,</if>
+            <if test="doctorNumber != null">doctor_number,</if>
+            <if test="doctorTitle != null">doctor_title,</if>
+            <if test="specialRecord != null">special_record,</if>
+            <if test="state != null">state,</if>
+            <if test="isHightDisease != null">is_hight_disease,</if>
+            <if test="isTop != null">is_top,</if>
+            <if test="isGroundless != null">is_groundless,</if>
+            <if test="xiaobuResult != null">xiaobu_result,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="emrId != null">#{emrId},</if>
+            <if test="deptNumber != null">#{deptNumber},</if>
+            <if test="treatmentDepartment != null">#{treatmentDepartment},</if>
+            <if test="treatmentDate != null">#{treatmentDate},</if>
+            <if test="sex != null">#{sex},</if>
+            <if test="age != null">#{age},</if>
+            <if test="height != null">#{height},</if>
+            <if test="weight != null">#{weight},</if>
+            <if test="chiefComplaint != null">#{chiefComplaint},</if>
+            <if test="hsPresentIllness != null">#{hsPresentIllness},</if>
+            <if test="physicalExamination != null">#{physicalExamination},</if>
+            <if test="preliminaryDiagnosis != null">#{preliminaryDiagnosis},</if>
+            <if test="icdId != null">#{icdId},</if>
+            <if test="icdName != null">#{icdName},</if>
+            <if test="doctorName != null">#{doctorName},</if>
+            <if test="doctorNumber != null">#{doctorNumber},</if>
+            <if test="doctorTitle != null">#{doctorTitle},</if>
+            <if test="specialRecord != null">#{specialRecord},</if>
+            <if test="state != null">#{state},</if>
+            <if test="isHightDisease != null">#{isHightDisease},</if>
+            <if test="isTop != null">#{isTop},</if>
+            <if test="isGroundless != null">#{isGroundless},</if>
+            <if test="xiaobuResult != null">#{xiaobuResult},</if>
+         </trim>
+    </insert>
+
+    <update id="updateEmrInfoOdsCopy" parameterType="EmrInfoOdsCopy">
+        update emr_info_ods_copy
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="emrId != null">emr_id = #{emrId},</if>
+            <if test="deptNumber != null">dept_number = #{deptNumber},</if>
+            <if test="treatmentDepartment != null">treatment_department = #{treatmentDepartment},</if>
+            <if test="treatmentDate != null">treatment_date = #{treatmentDate},</if>
+            <if test="sex != null">sex = #{sex},</if>
+            <if test="age != null">age = #{age},</if>
+            <if test="height != null">height = #{height},</if>
+            <if test="weight != null">weight = #{weight},</if>
+            <if test="chiefComplaint != null">chief_complaint = #{chiefComplaint},</if>
+            <if test="hsPresentIllness != null">hs_present_illness = #{hsPresentIllness},</if>
+            <if test="physicalExamination != null">physical_examination = #{physicalExamination},</if>
+            <if test="preliminaryDiagnosis != null">preliminary_diagnosis = #{preliminaryDiagnosis},</if>
+            <if test="icdId != null">icd_id = #{icdId},</if>
+            <if test="icdName != null">icd_name = #{icdName},</if>
+            <if test="doctorName != null">doctor_name = #{doctorName},</if>
+            <if test="doctorNumber != null">doctor_number = #{doctorNumber},</if>
+            <if test="doctorTitle != null">doctor_title = #{doctorTitle},</if>
+            <if test="specialRecord != null">special_record = #{specialRecord},</if>
+            <if test="state != null">state = #{state},</if>
+            <if test="isHightDisease != null">is_hight_disease = #{isHightDisease},</if>
+            <if test="isTop != null">is_top = #{isTop},</if>
+            <if test="isGroundless != null">is_groundless = #{isGroundless},</if>
+            <if test="xiaobuResult != null">xiaobu_result = #{xiaobuResult},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteEmrInfoOdsCopyById" parameterType="Long">
+        delete from emr_info_ods_copy where id = #{id}
+    </delete>
+
+    <delete id="deleteEmrInfoOdsCopyByIds" parameterType="String">
+        delete from emr_info_ods_copy where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>
