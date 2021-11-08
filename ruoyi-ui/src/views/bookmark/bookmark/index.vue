@@ -55,9 +55,9 @@
 
           <div class="filter-tbar">
             <div class="filter-classification">
-              <div  :class="['classification',property=='0'?' classification-click':'']" @click="showopen(0)"><span>网页</span></div>
+<!--              <div  :class="['classification',property=='0'?' classification-click':'']" @click="showopen(0)"><span>网页</span></div>-->
 <!--              <div :class="['classification',property=='1'?' classification-click':'']" @click="showopen(1)"><span>文本</span></div>-->
-              <div :class="['classification',property=='2'?' classification-click':'']" @click="showopen(2)"><span>其他</span></div>
+<!--              <div :class="['classification',property=='2'?' classification-click':'']" @click="showopen(2)"><span>其他</span></div>-->
             </div>
             <div class="setUpThe">
               <div class="filter-content">

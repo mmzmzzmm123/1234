@@ -9,7 +9,7 @@
     </div>
     <div class="mid">
       <!--右侧div内容-->
-      <svg-icon icon-class="eye-open" />
+      <svg-icon icon-class="gd" />
       <br/>
       <svg-icon icon-class="notebook_1" />
       <br/>

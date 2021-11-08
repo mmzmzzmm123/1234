@@ -45,9 +45,9 @@
       <!--编辑  -->
       <div class="editAllBookMark"  v-show="seen&&bm.bookmarkId==current">
           <el-button slot="reference" @click.stop="updateStarById(bm.bookmarkId,bm.bookmarkStar)"   v-bind:class="{ activeClass: bm.bookmarkStar ==1  }"   plain size="mini" icon="el-icon-star-off"></el-button>
-          <el-button  plain size="mini" icon="el-icon-share" ></el-button>
-          <el-button  plain size="mini" icon="el-icon-edit" @click.stop="handleUpdate(bm.bookmarkId)"></el-button>
-          <el-button  plain size="mini" icon="el-icon-delete" @click.stop="handleDelete(bm.bookmarkId)"></el-button>
+          <el-button style="color: #000000;" plain size="mini" icon="el-icon-share" ></el-button>
+          <el-button style="color: #000000" plain size="mini" icon="el-icon-edit" @click.stop="handleUpdate(bm.bookmarkId)"></el-button>
+          <el-button style="color: #000000" plain size="mini" icon="el-icon-delete" @click.stop="handleDelete(bm.bookmarkId)"></el-button>
           <div style="width: 10px"></div>
       </div>
     </div>
@@ -272,7 +272,7 @@
   }
 
   .bookmark:hover {
-    background-color: #E6E6E6;
+    background-color: #F2F2F2;
 
   }
 
@@ -284,7 +284,8 @@
 
   .bookmark-title {
     display: inline-block;
-    color: #393939;
+    /*color: #393939;*/
+    color: #191919;
     flex: 1;
     -webkit-flex: 1;
     white-space: nowrap;
@@ -312,6 +313,7 @@
   }
   .bookmark-official {
     float: left;
+    color: #c2c2c2;
   }
 
   .info {

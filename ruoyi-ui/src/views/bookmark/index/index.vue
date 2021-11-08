@@ -794,7 +794,7 @@
         // onmouseout='removeHoverDoms(this)' //选中删除切换
         // var editStr = "<span  class=" + treeNode.tId + "_sz data-parentId=" + treeNode.parentId + " data-menuId=" + treeNode.menuId + " data-treetId="+ treeNode.tId +" data-bookmarkCount="+treeNode.bookmarkCount+" onclick='editBookmark(this)' style='color: #9e9e9e;float:right;display: inline-block;margin-right: 15px;font-size:0.8rem' onfocus='this.blur();'><i style='margin-top: 9px;font-size: 16px' class='el-icon-edit'></i></span>";
 
-        var editStr = "<span  class=" + treeNode.tId + "_sz data-parentId=" + treeNode.parentId + " data-menuId=" + treeNode.menuId + " data-treetId="+ treeNode.tId +" data-bookmarkCount="+treeNode.bookmarkCount+" onclick='openPopup(this)' style='z-index:888;color: #9e9e9e;float:right;display: inline-block;margin-right: 15px;font-size:0.8rem' onfocus='this.blur();'><i style='margin-top: 9px;font-size: 16px' class='el-icon-edit'></i></span>";
+        var editStr = "<span  class=" + treeNode.tId + "_sz data-parentId=" + treeNode.parentId + " data-menuId=" + treeNode.menuId + " data-treetId="+ treeNode.tId +" data-bookmarkCount="+treeNode.bookmarkCount+" onclick='openPopup(this)' style='z-index:888;color: #9e9e9e;float:right;display: inline-block;margin-right: 15px;font-size:0.8rem' onfocus='this.blur();'><i style='margin-top: 9px;font-size: 16px' class='el-icon-more'></i></span>";
 
 
 
@@ -1118,8 +1118,9 @@
           "<hr size=\"1px\" noshade=true>" +
           "<li class=\"item-menu-title\" onclick='editBookmark(" + menuIdval + "," + parentIdval + ",1)'><span>改名称</span></li>" +
           "<li class=\"item-menu-title\" onclick='editBookmark(" + menuIdval + "," + parentIdval + ",2)'><span>改图标</span></li>" +
-          "<li class=\"item-menu-title\" onclick='deleteMmenu(" + menuIdval + ")'><span>刪除</span></li>" +
-          "<li class=\"item-menu-title\" style='margin-bottom: -8px;' ><span>分享</span></li>" +
+          "<li class=\"item-menu-title\" ><span>加密</span></li>" +
+          "<li class=\"item-menu-title\" ><span>分享</span></li>" +
+          "<li class=\"item-menu-title\" style='margin-bottom: -8px;' onclick='deleteMmenu(" + menuIdval + ")'><span>刪除</span></li>" +
           "</ul>" +
           "</div>";
 
