@@ -1603,7 +1603,7 @@
 
 
 </style>
-<style>
+<style scoped>
 
   #popupDiv {
     position: absolute;

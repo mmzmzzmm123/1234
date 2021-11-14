@@ -1,5 +1,4 @@
 <template>
-<!--  <div :style="imageStr">-->
   <div :style="imageStr">
 <!--    <div :style="imageStr"></div>-->
 
@@ -73,15 +72,12 @@
           <div class="label-title">
             <div class="title">
               <el-dropdown trigger="click">
-      <span class="el-dropdown-link menu-list" >
-        最新书签<i class="el-icon-caret-bottom el-icon--right"></i>
-      </span>
+              <span class="el-dropdown-link menu-list" >
+                最新收藏<i class="el-icon-caret-bottom el-icon--right"></i>
+                </span>
                 <el-dropdown-menu slot="dropdown">
-                  <el-dropdown-item icon="el-icon-plus">黄金糕</el-dropdown-item>
-                  <el-dropdown-item icon="el-icon-circle-plus">狮子头</el-dropdown-item>
-                  <el-dropdown-item icon="el-icon-circle-plus-outline">螺蛳粉</el-dropdown-item>
-                  <el-dropdown-item icon="el-icon-check">双皮奶</el-dropdown-item>
-                  <el-dropdown-item icon="el-icon-circle-check">蚵仔煎</el-dropdown-item>
+                  <el-dropdown-item icon="el-icon-star-off">我的星标</el-dropdown-item>
+                  <el-dropdown-item icon="el-icon-reading">稍后再读</el-dropdown-item>
                 </el-dropdown-menu>
               </el-dropdown>
             </div>
@@ -118,12 +114,21 @@
         <el-main class="mains mbl" width="500px" >
           <div class="mains-title">
             <div class="title">
-              常用导航
+              <el-dropdown trigger="click">
+              <span class="el-dropdown-link menu-list" >
+               常用导航<i class="el-icon-caret-bottom el-icon--right"></i>
+                </span>
+                <el-dropdown-menu slot="dropdown">
+                  <el-dropdown-item icon="el-icon-star-off">我的星标</el-dropdown-item>
+                  <el-dropdown-item icon="el-icon-reading">稍后再读</el-dropdown-item>
+                </el-dropdown-menu>
+              </el-dropdown>
+
             </div>
             <div class="status">
-              <span>旧故</span>
+              <span>最新</span>
               <el-divider direction="vertical"></el-divider>
-              <span>草木</span>
+              <span>热度</span>
             </div>
           </div>
           <el-divider class="mians-hr"></el-divider>
@@ -161,7 +166,43 @@
 
         <!-- 右侧-->
         <el-aside class="mains-right mbl" width="400px">
-<!--          <div :style="imageStr"></div>-->
+          <div class="label-title">
+            <div class="title">
+              <el-dropdown trigger="click">
+              <span class="el-dropdown-link menu-list" >
+                发现推荐<i class="el-icon-caret-bottom el-icon--right"></i>
+                </span>
+                <el-dropdown-menu slot="dropdown">
+                  <el-dropdown-item icon="el-icon-star-off">我的星标</el-dropdown-item>
+                  <el-dropdown-item icon="el-icon-reading">稍后再读</el-dropdown-item>
+                </el-dropdown-menu>
+              </el-dropdown>
+            </div>
+
+            <div class="status">
+              <span>最新</span>
+              <el-divider direction="vertical"></el-divider>
+              <span>热度</span>
+            </div>
+          </div>
+          <el-divider class="mians-hr"></el-divider>
+          <div class="contenList" v-infinite-scroll="load" style="overflow:auto">
+            <div v-for="o in count" :key="o" class="bookmarContext item">
+
+              <div class="bookmar-title text-lenght">
+                {{'阿达瓦发我的发我法师法师法师法师法挖的挖的挖的挖的挖的挖的挖列表内容 ' + o }}
+              </div>
+              <div class="bookmark-tag-Time">
+                <div class="b-left text-lenght">#java #php 我是个簡介</div>
+                <div class="b-center">22小时前</div>
+                <div class="b-right">
+                  <i class="el-icon-view">22</i>
+                </div>
+
+              </div>
+
+            </div>
+          </div>
         </el-aside>
 
       </el-container>
@@ -218,11 +259,18 @@
           {iconID: "7", icon: "https://movie.douban.com/", title: "豆瓣电影"},
         ],
         imageStr: {
-          backgroundImage: 'url(https://images.unsplash.com/photo-1574001412367-cf5f9756bb32?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=MnwyMTQ5NzR8MHwxfGFsbHwzfHx8fHx8MXx8MTYzNjczODIwMw)',
+          backgroundImage: 'url(https://img-operation.csdnimg.cn/csdn/silkroad/img/1633686296539.jpg)',
           width: '100%',
           height: '100%',
           backgroundRepeat: 'no-repeat',
-          backgroundSize: '100% 100%'
+          backgroundSize: '100% 100%',
+        },
+        imageStrOne: {
+          backgroundColor: '#D4D4D4',
+          width: '100%',
+          height: '100%',
+          backgroundRepeat: 'no-repeat',
+          backgroundSize: '100% 100%',
         }
       }
     },
@@ -343,7 +391,9 @@
     background:rgba(255,255,255,0.4);
 }
 
-
+  .el-divider{
+    background: rgba(255,255,255,0.2);
+}
 
 
 
@@ -384,6 +434,10 @@
   }
 
   .mains-title .status {
+    position: absolute;
+    right: 0;
+    margin-right: 11px;
+
 
   }
 
@@ -391,7 +445,6 @@
     padding: 7px 7px;
     margin-left: 10px;
     margin-right: 10px;
-    /*background-color: #ffffff;*/
 
   }
 
@@ -456,7 +509,7 @@
     width: 100%;
     display: flex;
     height: 30px;
-    color: #909AA5;
+    color: #50565c;
   }
   .bookmark-tag-Time .b-right{
 
@@ -583,8 +636,7 @@
 
   .choice {
     margin: 5px 5px 5px 5px;
-    background-color: #FFFFFF;
-
+    background:rgba(255,255,255,0.2);
   }
 
   .choice div {
@@ -680,7 +732,8 @@
 
   ::-webkit-scrollbar-track {
     width: 6px;
-    background-color: #fff;
+    /*background-color: #fff;*/
+    background:rgba(255,255,255,0.2);
     -webkit-border-radius: 2em;
     -moz-border-radius: 2em;
     border-radius: 2em;
@@ -689,7 +742,8 @@
   /*滚动条的设置*/
 
   ::-webkit-scrollbar-thumb {
-    background-color: #606d71;
+    /*background-color: #606d71;*/
+    background: rgba(218, 219, 222, 0.6);
     background-clip: padding-box;
     min-height: 28px;
     -webkit-border-radius: 2em;

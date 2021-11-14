@@ -1382,47 +1382,7 @@
   }
 
 
-  /**滚动条美化*/
 
-  /*滚动条的宽度*/
-
-  ::-webkit-scrollbar {
-    width: 5px;
-    height: 3px;
-    /*background-color: red;*/
-  }
-
-  /*外层轨道。可以用display:none让其不显示，也可以添加背景图片，颜色改变显示效果*/
-
-  ::-webkit-scrollbar-track {
-    width: 6px;
-    background-color: transparent;
-    -webkit-border-radius: 2em;
-    -moz-border-radius: 2em;
-    border-radius: 2em;
-  }
-
-  /*滚动条的设置*/
-
-  ::-webkit-scrollbar-thumb {
-    /*设置为透明 隐藏掉*/
-    background-color: #606d71;
-    /*background-color: transparent;*/
-    background-clip: padding-box;
-    min-height: 28px;
-    -webkit-border-radius: 2em;
-    -moz-border-radius: 2em;
-    border-radius: 2em;
-
-  }
-
-  /*滚动条移上去的背景*/
-
-  ::-webkit-scrollbar-thumb:hover {
-    background-color: #7c6fff;
-  }
-
-  /*滚动条美化结束*/
 
 
   .sousuoContent {
@@ -1645,5 +1605,51 @@
     margin-bottom: 13px;
   }
 
+
+</style>
+
+<style scoped>
+
+  /**滚动条美化*/
+
+  /*滚动条的宽度*/
+
+  ::-webkit-scrollbar {
+    width: 5px;
+    height: 3px;
+    /*background-color: red;*/
+  }
+
+  /*外层轨道。可以用display:none让其不显示，也可以添加背景图片，颜色改变显示效果*/
+
+  ::-webkit-scrollbar-track {
+    width: 6px;
+    background-color: transparent;
+    -webkit-border-radius: 2em;
+    -moz-border-radius: 2em;
+    border-radius: 2em;
+  }
+
+  /*滚动条的设置*/
+
+  ::-webkit-scrollbar-thumb {
+    /*设置为透明 隐藏掉*/
+    background-color: #606d71;
+    /*background-color: transparent;*/
+    background-clip: padding-box;
+    min-height: 28px;
+    -webkit-border-radius: 2em;
+    -moz-border-radius: 2em;
+    border-radius: 2em;
+
+  }
+
+  /*滚动条移上去的背景*/
+
+  ::-webkit-scrollbar-thumb:hover {
+    background-color: #7c6fff;
+  }
+
+  /*滚动条美化结束*/
 
 </style>
