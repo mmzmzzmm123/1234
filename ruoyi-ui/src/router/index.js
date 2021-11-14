@@ -8,7 +8,7 @@ import Layout from '@/layout'
 
 
 // 导航首页
-import bookmarkmenu from '@/views/bookmark/menu';
+// import bookmarkmenu from '@/views/bookmark/menu';
 
 import index3 from '@/views/bookmark/index';
  // import content from '../views/bookmark/content/index';
@@ -125,7 +125,7 @@ export const constantRoutes = [
   }
   ,{
     path: '/daohang',
-    component: resolve => require(['../views/bookmark/menu/index.vue'], resolve),
+    component: resolve => require(['../views/daohang/index/index.vue'], resolve),
     hidden: true,
   },{
     path: '/draggable',

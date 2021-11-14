@@ -871,7 +871,7 @@
           property=0;
         }
         //如果当前的节点已经展开了 收缩的时候就不请求了
-        if (!treeNode.open){
+        // if (!treeNode.open){
         that.$router.push({
           path: "/content",
           query: {
@@ -880,15 +880,15 @@
             t:Date.now(),
           }
         })
-        }
+        // }
 
         $("." + treeNode.tId + "_sz").unbind().remove();
         var switchObjspan = $("#" + treeNode.tId + "_span");
         var editStr = "<span class=" + treeNode.tId + "_count  style='color: #9e9e9e;float:right;display: inline-block;margin-right: 15px;font-size:0.8rem' onfocus='this.blur();'>" + treeNode.bookmarkCount + "</span>";
         switchObjspan.after(editStr);
         //展开当前菜单
-        var zTree = $.fn.zTree.getZTreeObj("treeDemo");
-        zTree.expandNode(treeNode);
+        // var zTree = $.fn.zTree.getZTreeObj("treeDemo");
+        // zTree.expandNode(treeNode);
 
         // console.log("当前节点已经展开:"+treeNode.open)
 

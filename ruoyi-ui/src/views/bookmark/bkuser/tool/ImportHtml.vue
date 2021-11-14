@@ -1,10 +1,13 @@
 <template>
-  <div >
+  <div class="app-container">
 
 
+    <div class="label-title">
+      <span>导入书签</span>
+    </div>
 
+    <div style="width:360px;height:260px;;">
 
-    <div style="width:360px;height:260px;margin: 0 auto;margin-top: 40px">
       <el-upload
         ref="upload"
         :limit="1"
@@ -42,8 +45,6 @@
 
 
 
-    <el-row  >
-      <el-col :xs="{span: 22, push: 1}" :sm="{span: 16, push: 4}" :md="{span: 16, push: 4}"  :xl="{span: 12, push: 6}"  >
     <div class="text">
       <ul>
         <li>注意事项</li>
@@ -57,8 +58,6 @@
         <li>4、支持浏览器的目录结构,本站目录支持无限级别分类</li>
       </ul>
     </div>
-      </el-col>
-    </el-row>
 
 
   </div>
@@ -126,8 +125,9 @@
   .text{
     border: #cecece 1px solid;
     border-radius: 10px;
-    background-color: #fafcff;
     margin-top:  40px;
+    width: 800px;
+    font-size: 15px;
   }
 
   .structure {
@@ -157,5 +157,19 @@
   .isbutton{
   margin-top: 10px;
 
+  }
+  .app-container{
+    width: 700px;
+    margin-left: 50px;
+  }
+  .label-title{
+    margin-bottom: 25px;
+    font-weight: 900;
+    font-size: 22px;
+    min-width: 100px;
+  }
+
+  .label-title-two{
+    margin-top: 20px;
   }
 </style>

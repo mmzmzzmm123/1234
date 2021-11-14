@@ -52,7 +52,7 @@
          <el-tag type="info" size="mini">{{item.name}}</el-tag>
 -->
          # {{item.name}}
-
+          <div v-show="!(seen&&item.id == current)" class="menuCount-icount">{{item.icount}}</div>
 
 
           <el-popconfirm
@@ -428,6 +428,13 @@
    margin-right: 18px;
     color: #9e9e9e;
   }
+  .menuCount-icount{
+    margin-right: 18px;
+    color: #9e9e9e;
+    float: right;
+  }
+
+
 
 
 

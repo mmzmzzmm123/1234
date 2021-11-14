@@ -1,21 +1,33 @@
 
 <template>
-  <div class="box" ref="box">
-    <div class="left">
-      <!--左侧div内容-->
-    </div>
-    <div class="resize" title="收缩侧边栏">
-      ⋮
-    </div>
-    <div class="mid">
-      <!--右侧div内容-->
-      <svg-icon icon-class="gd" />
-      <br/>
-      <svg-icon icon-class="notebook_1" />
-      <br/>
-      <svg-icon icon-class="tool" style="width: 50px;height: 50px" />
+  <div class="background" style="background-color: #1f2d3d ">
+<!--    <div class="left">-->
+<!--      &lt;!&ndash;左侧div内容&ndash;&gt;-->
+<!--    </div>-->
+<!--    <div class="resize" title="收缩侧边栏">-->
+<!--      ⋮-->
+<!--    </div>-->
+<!--    <div class="mid">-->
+<!--      &lt;!&ndash;右侧div内容&ndash;&gt;-->
+<!--      <svg-icon icon-class="gd" />-->
+<!--      <br/>-->
+<!--      <svg-icon icon-class="notebook_1" />-->
+<!--      <br/>-->
+<!--      <svg-icon icon-class="tool" style="width: 50px;height: 50px" />-->
+<!--    </div>-->
+
+
+    <div class="background">
+      <img :src="imgSrc" width="100px" height="100px" alt="" />
     </div>
 
+    <div class="content">
+      <h2>标题</h2>
+      <p>其实毛玻璃的模糊效果技术上比较简单，只是用到了 css 滤镜（filter）中的 blur 属性。但是要做一个好的毛玻璃效果，需要注意很多细节。其实毛玻璃的模糊效果技术上比较简单，只是用到了 css 滤镜（filter）中的 blur 属性。但是要做一个好的毛玻璃效果，需要注意很多细节。</p>
+      <p>其实毛玻璃的模糊效果技术上比较简单，只是用到了 css 滤镜（filter）中的 blur 属性。但是要做一个好的毛玻璃效果，需要注意很多细节。其实毛玻璃的模糊效果技术上比较简单，只是用到了 css 滤镜（filter）中的 blur 属性。但是要做一个好的毛玻璃效果，需要注意很多细节。</p>
+      <p>其实毛玻璃的模糊效果技术上比较简单，只是用到了 css 滤镜（filter）中的 blur 属性。但是要做一个好的毛玻璃效果，需要注意很多细节。其实毛玻璃的模糊效果技术上比较简单，只是用到了 css 滤镜（filter）中的 blur 属性。但是要做一个好的毛玻璃效果，需要注意很多细节。</p>
+      <p>其实毛玻璃的模糊效果技术上比较简单，只是用到了 css 滤镜（filter）中的 blur 属性。但是要做一个好的毛玻璃效果，需要注意很多细节。其实毛玻璃的模糊效果技术上比较简单，只是用到了 css 滤镜（filter）中的 blur 属性。但是要做一个好的毛玻璃效果，需要注意很多细节。</p>
+    </div>
 
   </div>
 </template>
@@ -24,8 +36,18 @@
 
   export default {
     name: 'Dashboard',
+    data() {
+      return {
+        note: {
+          backgroundImage : "url('http://www.jq22.com/img/cs/500x300-9.png')",
+          backgroundRepeat:'no-repeat',
+          backgroundSize:'100% 100%',
+        },
+        imgSrc:'http://img.netbian.com/file/2020/0904/de2f77ed1090735b441ba5e4c2b460ca.jpg',
+      }
+      },
     mounted () {
-      this.dragControllerDiv();
+      // this.dragControllerDiv();
 
 
     },
@@ -131,5 +153,47 @@
   }
 
 
+
+
+  .background {
+    position: fixed;
+  }
+
+
+  .content {
+    width:800px;
+    position:relative;
+    margin:2rem auto;
+    padding:1em;
+    background:hsla(0,0%,100%,.25) border-box;
+    overflow:hidden;
+    border-radius:8px;
+    box-shadow:0 0 0 1px hsla(0,0%,100%,.3) inset,0 .5em 1em rgba(0,0,0,0.6);
+    text-shadow:0 1px 1px hsla(0,0%,100%,.3);
+    color: #ffffff;
+  }
+  .content::before {
+    content:'';
+    position:absolute;
+    top:0;
+    right:0;
+    bottom:0;
+    left:0;
+    margin:-30px;
+    z-index:-1;
+    -webkit-filter:blur(10px);
+    filter:blur(10px);
+  }
+
+
+
+  .note {
+    background: url("http://www.jq22.com/img/cs/500x300-9.png") no-repeat;
+    background-position: center;
+    height: 100%;
+    width: 100%;
+    background-size: cover;
+    position: fixed;
+  }
 
 </style>

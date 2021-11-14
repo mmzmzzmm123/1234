@@ -1,19 +1,12 @@
 <template>
   <div class="app-container ">
-    <el-row  >
-      <el-col :xs="24" :sm="{span: 18, push: 3}" :md="{span: 18, push: 3}"  :xl="{span: 18, push: 3}"  >
-        <el-card class="box-card">
-          <div slot="header" class="clearfix">
-            <span>关于我们</span>
-          </div>
-          <p class="text item" v-html = 'hello'>
+    <div class="label-title">
+        <span>关于我们</span>
+    </div>
 
-             </p>
+        <el-card class="box-card" >
+          <p class="text item" v-html = 'hello'> </p>
         </el-card>
-
-      </el-col>
-
-    </el-row>
   </div>
 
 
@@ -38,6 +31,9 @@
   }
 </script>
 <style scoped>
+  .box-card{
+    min-width: 700px;
+  }
   .text {
     font-size: 14px;
   }
@@ -55,5 +51,14 @@
     clear: both
   }
 
+  .label-title{
+    margin-bottom: 25px;
+    font-weight: 900;
+    font-size: 22px;
+    min-width: 100px;
+  }
+  .label-title-two{
+    margin-top: 20px;
+  }
 
 </style>

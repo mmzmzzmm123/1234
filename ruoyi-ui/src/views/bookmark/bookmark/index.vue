@@ -55,10 +55,13 @@
 
           <div class="filter-tbar">
             <div class="filter-classification">
-<!--              <div  :class="['classification',property=='0'?' classification-click':'']" @click="showopen(0)"><span>网页</span></div>-->
-<!--              <div :class="['classification',property=='1'?' classification-click':'']" @click="showopen(1)"><span>文本</span></div>-->
-<!--              <div :class="['classification',property=='2'?' classification-click':'']" @click="showopen(2)"><span>其他</span></div>-->
+              <div  :class="['classification',property=='0'?' classification-click':'']" @click="showopen(0)"><span>全部</span></div>
+              <div  :class="['classification',property=='4'?' classification-click':'']" @click="showopen(4)"><span>书签</span></div>
+              <div :class="['classification',property=='1'?' classification-click':'']" @click="showopen(1)"><span>文本</span></div>
+              <div :class="['classification',property=='2'?' classification-click':'']" @click="showopen(2)"><span>图片</span></div>
+<!--              <div :class="['classification',property=='3'?' classification-click':'']" @click="showopen(3)"><span>其他</span></div>-->
             </div>
+
             <div class="setUpThe">
               <div class="filter-content">
                 <el-dropdown trigger="hover" size="small" @command="handleCommand">
@@ -79,21 +82,19 @@
                 </el-dropdown>
 
               </div>
-<!--              <div class="filter-content">-->
-<!--                <el-dropdown trigger="hover" size="small">-->
-<!--                  <div class="el-dropdown-link dropdownList">-->
-<!--                    <el-button icon="el-icon-tickets" style="border:0px;font-size: 18px;" size="mini"></el-button>-->
-<!--                  </div>-->
-<!--                  <el-dropdown-menu slot="dropdown" class="filter-sort-dropdown">-->
-<!--                    <el-dropdown-item class="filter-item"><i class="el-icon-bottom"></i>按时间排序(正)</el-dropdown-item>-->
-<!--                    <el-dropdown-item class="filter-item"><i class="el-icon-bottom"></i>按时间排序(反)</el-dropdown-item>-->
-<!--                    <el-dropdown-item class="filter-item"><i class="el-icon-bottom"></i>按字母A-Z排序</el-dropdown-item>-->
-<!--                    <el-dropdown-item class="filter-item"><i class="el-icon-bottom"></i>按字母A-Z排序</el-dropdown-item>-->
-<!--                    <el-dropdown-item class="filter-item"><i class="el-icon-bottom"></i>按网站A-Z排序</el-dropdown-item>-->
-<!--                  </el-dropdown-menu>-->
-<!--                </el-dropdown>-->
+              <div class="filter-content">
+                <el-dropdown trigger="hover" size="small" @command="showPatternState">
+                  <div class="el-dropdown-link dropdownList">
+                    <el-button icon="el-icon-tickets" style="border:0px;font-size: 18px;" size="mini"></el-button>
+                  </div>
+                  <el-dropdown-menu slot="dropdown" class="filter-sort-dropdown">
+                    <el-dropdown-item class="filter-item" command="0"><i class="el-icon-bottom"></i>默认模式</el-dropdown-item>
+                    <el-dropdown-item class="filter-item" command="1"><i class="el-icon-bottom"></i>简洁模式</el-dropdown-item>
+                    <el-dropdown-item class="filter-item" command="2" ><i class="el-icon-bottom"></i>卡片模式</el-dropdown-item>
+                  </el-dropdown-menu>
+                </el-dropdown>
 
-<!--              </div>-->
+              </div>
 
 
             </div>
@@ -118,7 +119,7 @@
         <div class="bookmarklist" :style="datalist"  infinite-scroll-distance="10" v-loading="loading" v-if="!showimg"
              v-infinite-scroll="load"
              infinite-scroll-disabled="disabled" style="overflow:auto;" infinite-scroll-immediate="false">
-    <BookmarkOne @on-windowurl="windowurl" @on-handleUpdate="handleUpdate" @on-handleDelete="handleDelete" :key="property" :property="property"  :highlighted="highlighted" :sousuo="sousuo"  :listloading="listloading" :loading="loading" :bookmarkList="bookmarkList"></BookmarkOne>
+    <BookmarkOne @on-windowurl="windowurl" @on-handleUpdate="handleUpdate" @on-handleDelete="handleDelete" :key="property +'-'+ showPattern" :property="property" :showPattern="showPattern"  :highlighted="highlighted" :sousuo="sousuo"  :listloading="listloading" :loading="loading" :bookmarkList="bookmarkList"></BookmarkOne>
 
           <p v-if="listloading" class="listhint"><i class="el-icon-loading"></i>加载中...</p>
           <p v-if="listnoMore&&!showimg" class="listhint">没有更多了</p>
@@ -192,10 +193,88 @@
 
             </el-form>
             <div slot="footer" class="dialog-footer">
-              <el-button type="primary" @click="submitForm">确 定</el-button>
-              <el-button @click="cancel">取 消</el-button>
+
+              <el-button class="butWidth" size="small" type="primary" @click="submitForm">确 定</el-button>
+              <el-button class="butWidth" style="margin-left: 0px"  size="small" @click="cancel">取 消</el-button>
+
             </div>
           </el-dialog>
+
+
+
+        <!-- 添加或修改书签管理对话框 -->
+        <el-dialog :title="title"  :visible.sync="addBookMakrUrlOpen" width="600px" append-to-body>
+          <el-form ref="form" :model="form" :rules="rules" >
+            <el-input v-model="form.url" placeholder="请输入书签地址" class="addUrl-input"/>
+            <el-input v-model="form.title" placeholder="请输入书签标题" class="addUrl-input"/>
+            <el-form-item label="书签标签:" prop="label">
+              <el-tag
+                class="bookmarktag"
+                v-for="tag in form.sqTags"
+                :key="tag.tagId"
+                closable
+                type="success"
+                :disable-transitions="false"
+                @close="taghandleClose(tag.tagId)"
+                v-if="tag.name!='TAGDELETE'"
+              >
+                {{tag.name}}
+              </el-tag>
+              <el-input
+                class="input-new-tag"
+                v-if="inputVisible"
+                v-model="inputValue"
+                ref="saveTagInput"
+                size="small"
+                @keyup.enter.native="handleInputConfirm"
+                @blur="handleInputConfirm"
+              >
+              </el-input>
+              <el-button v-else class="button-new-tag" size="small" @click="showInput">+ 新增标签</el-button>
+
+            </el-form-item>
+
+            <!--        0公开显示 1隐藏显示 2好友显示-->
+<!--            <el-form-item label="选择状态" prop="start">-->
+<!--              <el-radio-group v-model="form.start" size="medium">-->
+<!--                <el-radio v-for="(item, index) in bookmarkstatus" :key="index" :label="item.value"-->
+<!--                          :disabled="item.disabled">{{item.name}}-->
+<!--                </el-radio>-->
+<!--              </el-radio-group>-->
+<!--            </el-form-item>-->
+<!--            &lt;!&ndash;           1.未读稍后再看 2 已读 2.續看&ndash;&gt;-->
+<!--            <el-form-item label="选择类型" prop="type">-->
+<!--              <el-radio-group v-model="form.type" size="medium">-->
+<!--                <el-radio v-for="(item, index) in bookmarktype" :key="index" :label="item.value"-->
+<!--                          :disabled="item.disabled">{{item.name}}-->
+<!--                </el-radio>-->
+<!--              </el-radio-group>-->
+<!--            </el-form-item>-->
+
+
+          </el-form>
+<!--          <div slot="footer" class="dialog-footer">-->
+
+            <el-button class="butWidth" size="small" type="primary" @click="submitForm">确 定</el-button>
+            <el-button class="butWidth" style="margin-left: 0px"  size="small" @click="cancel">取 消</el-button>
+
+<!--          </div>-->
+        </el-dialog>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
         </el-aside>
 
         <el-main class="isBookmarkMain" v-if="isMain">
@@ -261,6 +340,8 @@
       return {
         //网页0 文本1 其他1
         property:0,
+        //列表展示的模式
+        showPattern:0,
         sousuo: '',
         drawer: false,
         // 遮罩层
@@ -269,6 +350,8 @@
         title: "",
         // 是否显示弹出层
         open: false,
+        //是否弹窗收藏书签
+        addBookMakrUrlOpen:false,
         busy: false,
         showimg: false,
         loading: false,
@@ -527,6 +610,15 @@
         this.getBypropertyList(e);
 
       },
+      /**切换显示 全部 网页 文本 其他**/
+      showPatternState(e) {
+        var that=this;
+        that.showPattern=e;
+        console.log("showPattern =" +e)
+        // //缓存状态
+        // that.$store.state.showPattern=e;
+
+      },
       /** 转换书签菜单数据结构 */
       normalizer(node) {
         if (node.children && !node.children.length) {
@@ -655,7 +747,7 @@
       },
       // 取消按钮
       cancel() {
-        this.open = false;
+        this.addBookMakrUrlOpen = false;
         this.reset();
       },
       // 统一的表单重置
@@ -975,8 +1067,8 @@
       /** 新增书签Url操作 */
       addbookmarkurl: function () {
         this.reset();
-        this.getTreeselect();
-        this.open = true;
+        // this.getTreeselect();
+        this.addBookMakrUrlOpen = true;
 
         // getMenu(e.getAttribute("data-menuId")).then(response => {
         //   this.form = response.data;
@@ -986,7 +1078,9 @@
       },
       //关闭弹窗
       closePopup: function() {
+        if (document.getElementById("popupDiv")){
         document.getElementById("popupDiv").style.display = 'none';
+        }
       }
 
     },
@@ -1006,9 +1100,9 @@
 /*}*/
 
   .button-new-tag {
-    margin-left: 10px;
-    height: 32px;
-    line-height: 30px;
+    margin-left: 5px;
+    height: 30px;
+    line-height: 28px;
     padding-top: 0;
     padding-bottom: 0;
   }
@@ -1197,11 +1291,12 @@
 
   .classification-click {
     border-radius: 19px;
-    background: #606c88; /* fallback for old browsers */
-    background: -webkit-linear-gradient(to right, #3f4c6b, #606c88); /* Chrome 10-25, Safari 5.1-6 */
-    background: linear-gradient(to right, #3f4c6b, #606c88); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
-    color: #FFFFFF;
-    box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.4)
+    /*background: #606c88; !* fallback for old browsers *!*/
+    /*background: -webkit-linear-gradient(to right, #3f4c6b, #606c88); !* Chrome 10-25, Safari 5.1-6 *!*/
+    /*background: linear-gradient(to right, #3f4c6b, #606c88); !* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ *!*/
+    background-color: #ffffff;
+    color: #a4a4a4;
+    box-shadow: 0 1px 4px 0 rgba(0, 0, 0, 0.4)
   }
 
   .bookmark-list-tag {
@@ -1541,6 +1636,13 @@
     width: 100%;
     color: #565656;
     text-indent: 15px;
+  }
+.butWidth{
+  width: 100%;
+  margin-top: 10px;
+}
+  .addUrl-input{
+    margin-bottom: 13px;
   }
 
 

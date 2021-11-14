@@ -1,24 +1,36 @@
 <template>
   <div>
-<!--    STYLE="position: relative"-->
+
     <div v-for="bm in bookmarkList"  class="bookmark"    @click="winurl(bm.noteId,bm.tiymceUeditor,bm.bookmarkId,bm.url)" @mouseover="enter(bm.bookmarkId)" @mouseleave="leave()" >
+
+       <el-checkbox v-model="checked" v-show="seen&&bm.bookmarkId==current" :key="bm.bookmarkId" @click.stop.native="" class="check-bookmark"></el-checkbox>
+
       <div class="bookmark-item" >
-         <span class="bookmark-title" v-if="highlighted" v-html="highLight(bm.title,sousuo)"/>
+        <div class="" style="margin-right: 10px;line-height: 32px" v-show="noteTime">
+          <img style="width: 20px;height: 20px" :ng-src="'https://favicon.lucq.fun/?url=http://'+bm.urls"
+               :src="'https://favicon.lucq.fun/?url=http://'+bm.urls"
+               onerror="this.src='data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQEAYAAABPYyMiAAAABGdBTUEAALGPC/xhBQAAAAFzUkdCAK7OHOkAAAAgY0hSTQAAeiYAAICEAAD6AAAAgOgAAHUwAADqYAAAOpgAABdwnLpRPAAAAAZiS0dEAAAAAAAA+UO7fwAAAAlwSFlzAAAASAAAAEgARslrPgAAAmVJREFUSMftlG1IU2EUx8+5jRHzg+5OiD64WTBBjSY5ZybUJMaMiIUICUKFIGmoIIogYWKFBmtDxN1tBKIWvlS6SR+iLFDBXqSMgmzbvQ7fkAjcINmQ5u7pQwyCiOvWx/p/fPj9/5znnPM8AP+VolRTjjHhTlmZipzEk9GYao4sVaMYxXp62NgIdpLBCuLP05mZZHOYZA3p5KgMjBcUwCmw4PfVVYiBGmbW1zMzOU4QCgtTvdAeRESEyNZyJbx+dDTjVv/9YFSjSScnfabsbPYMF+AbxsYS3F5TfwPZAacpMNfUBEAljK24mMJwlLIUClTAdfwok9FXWBTtc3Phzqv7c/RWa8KnrHZM8VltbRjC92AxGkEPRpSJInjJQPpIBJoZC6nn50M19dM5J/v6/lhRxgXXDX9Qp1POcmHh2sTEQbfbvVmrUCTbr4RPaeMe8Q0eTyI36VkrW50mftjrPWCyDn9oSUuTdj4Y/1Qpl7NdzkNC98iIqsIxHdQVFaU8eWW1U1guLy1lr3Acr3O7pXi227EhDLpcCZ8UL/kK8LIYjxtDIRhEP8xGIlI8bcAKvY3FGB/zYvf81pYUL/0PvGTKoTUvjzbgCx5ZWlJq3a5lQa1Ge3yTWnp64ASYqVcUoXn3Jtja2/EpRtHj89FF8Tb25ufDOwCo8/lSL0BF/eDPzcVXeA7WDAa6J9rES1VVdJqx41JHBwCE8BgA3JU9B+3AACziMwjv7MAaPQb/wgIAnP2rDpCWtpkncjm+Ro34bWgo3FkX0O6bnARARCT6hSR6YzazXa7DfLyigo7TNtObxNb/s/oB7V8JFvW/8IQAAAAldEVYdGRhdGU6Y3JlYXRlADIwMjAtMDItMDJUMTg6MTE6NTgrMDg6MDCoc6tpAAAAJXRFWHRkYXRlOm1vZGlmeQAyMDIwLTAyLTAyVDE4OjExOjU4KzA4OjAw2S4T1QAAAGd0RVh0c3ZnOmJhc2UtdXJpAGZpbGU6Ly8vaG9tZS9hZG1pbi9pY29uLWZvbnQvdG1wL2ljb25fNWhyOG55Nmo1bWMvamluZ2RpYW5hbmxpX2tvbmd3dWppYW94aW5nX3Nob3VjYW5nLnN2Z4/vilwAAAAASUVORK5CYII='"
+               alt="" ng-show="bm.urls">
+        </div>
+       <span class="bookmark-title" v-if="highlighted" v-html="highLight(bm.title,sousuo)"/>
 
         <span class="bookmark-title" v-if="!highlighted">{{bm.title}}</span>
-        <div class="bookmark-time" v-if="noteTime">{{bm.createTime|changeTime}}</div>
+
+
+        <div class="title-url main-font-color"  v-show="noteTime  && !(seen&&bm.bookmarkId==current)">{{bm.urls}}</div>
+        <div class="bookmark-time main-font-color" v-show="noteTime && !(seen&&bm.bookmarkId==current)">{{bm.createTime|changeTime}}</div>
       </div>
 
 
 
-      <div class="bookmark-description" v-if="isdescription" >
+      <div class="bookmark-description" v-show="isdescription" >
         <span v-if="highlighted" v-html="highLight(bm.description,sousuo)"></span>
         <span v-if="!highlighted">{{bm.description}}</span>
       </div>
 
 
 
-      <div class="info-wrap" v-if="isBookmarkIcon">
+      <div class="info-wrap" v-show="isBookmarkIcon">
         <div class="info" >
           <div class="bookmark-icon bookmark-list-tag-top">
             <img :ng-src="'https://favicon.lucq.fun/?url=http://'+bm.urls"
@@ -29,11 +41,10 @@
           <div class="bookmark-official bookmark-list-tag-top">{{bm.urls}}&nbsp;·&nbsp;</div>
           <div class="bookmark-time bookmark-list-tag-top">{{bm.createTime|changeTime}}</div>
           <div class="bookmark-time bookmark-list-tag-top" v-if="bm.bookmarkStar == 1">
-            <svg-icon slot="prefix" icon-class="str" style="font-size: 18px;"/>
-<!--            <i class="el-icon-star-on" style="color: #569cd5;font-size: 18px;margin-top: 4px"></i>-->
+            <svg-icon slot="prefix" icon-class="str" style="font-size: 20px;margin-top: 1px"/>
           </div>
 
-
+        <!--标签-->
           <div class="bookmark-time" v-if="bm.tagNameAll!=null&&bm.tagNameAll!=''"  >
             <el-tag  v-for="item in JSON.parse(bm.tagNameAll)"  class="bookmark-list-tag bookmark-list-tag-top" style="float: left"  type="info"  data-tagid="item.tagId"  size="mini">
               #{{item.name}}
@@ -42,14 +53,19 @@
         </div>
       </div>
 
+
+
+
+
       <!--编辑  -->
       <div class="editAllBookMark"  v-show="seen&&bm.bookmarkId==current">
-          <el-button slot="reference" @click.stop="updateStarById(bm.bookmarkId,bm.bookmarkStar)"   v-bind:class="{ activeClass: bm.bookmarkStar ==1  }"   plain size="mini" icon="el-icon-star-off"></el-button>
-          <el-button style="color: #000000;" plain size="mini" icon="el-icon-share" ></el-button>
-          <el-button style="color: #000000" plain size="mini" icon="el-icon-edit" @click.stop="handleUpdate(bm.bookmarkId)"></el-button>
-          <el-button style="color: #000000" plain size="mini" icon="el-icon-delete" @click.stop="handleDelete(bm.bookmarkId)"></el-button>
+          <el-button style="" slot="reference" @click.stop="updateStarById(bm.bookmarkId,bm.bookmarkStar)"   v-bind:class="{ activeClass: bm.bookmarkStar ==1  }"   plain size="mini" >  <i class="el-icon-star-off book-eidt-All" />  </el-button>
+          <el-button style="color: #000000" plain size="mini"  @click.stop="handleUpdate(bm.bookmarkId)"> <i class="el-icon-edit book-eidt-All"></i></el-button>
+          <el-button style="color: #000000" plain size="mini"  @click.stop="handleDelete(bm.bookmarkId)"> <i class="el-icon-delete book-eidt-All"></i></el-button>
           <div style="width: 10px"></div>
       </div>
+
+
     </div>
 
   </div>
@@ -65,6 +81,7 @@
       property: null,
       highlighted: null,//搜索是否高亮
       sousuo:null,
+      showPattern:null,//页面展示模式
     },
     data: function () {
       return {
@@ -77,10 +94,14 @@
       }
     },
     mounted(){
-      this.showView(this.property);
+       this.showView(this.property);
+       this.showlistView(this.showPattern);
+      // console.log("property222:"+this.property);
+      // console.log("showPattern222:"+this.showPattern);
     },
     updated(){
-      // this.showView(this.property);
+       // this.showView(this.property);
+      //this.showlistView(this.showPattern);
      },
     created() {
       // var that=this;
@@ -153,22 +174,52 @@
       showView(e) {
         var that=this;
         switch (e) {
-          case 0:
+          case '0':
             //网页模式
             that.isdescription = true;
             that.noteTime = false;
             that.isBookmarkIcon = true;
             break;
-          case 1:
+          case '1':
             //便签模式
             that.isdescription = false;
             that.noteTime = true;
             that.isBookmarkIcon = false;
             break;
           default:
-
+            that.isdescription = true;
+            that.noteTime = false;
+            that.isBookmarkIcon = true;
         }
-
+      },
+      /**渲染模式**/
+      showlistView(e) {
+        var that=this;
+        console.log("showlistView"+e)
+        switch (e) {
+          case '0':
+            //默认模式
+            that.isdescription = true;
+            that.noteTime = false;
+            that.isBookmarkIcon = true;
+            console.log("默认模式")
+            break;
+          case '1':
+            //简洁模式
+            that.isdescription = false;
+            that.noteTime = true;
+            that.isBookmarkIcon = false;
+            console.log("简洁模式")
+            break;
+          case '2':
+            //简洁模式
+            that.isdescription = false;
+            that.noteTime = false;
+            that.isBookmarkIcon = true;
+            console.log("简洁模式2")
+            break;
+          default:
+        }
       },
 
       /**搜索高亮 开始**/
@@ -293,8 +344,8 @@
     -webkit-text-overflow: ellipsis;
     overflow: hidden;
     position: relative;
-    font-size: 1.05rem;
-    font-weight: 500;
+    font-size: 0.93rem;
+    font-weight: 400;
   }
 
   .bookmark-time {
@@ -345,6 +396,24 @@
     display:inline-flex;
     justify-content:flex-end;
     align-items:center;
+  }
+  .book-eidt-All{
+    font-size: 14px;
+    font-weight: 600;
+  }
+  .title-url{
+    width:150px;overflow:hidden;text-overflow:ellipsis;margin-right: 10px
+  }
+
+  .main-font-color{
+    color: #b1b1b1;
+    font-size: 14px;
+  }
+  .check-bookmark{
+    position: absolute;
+    top: 0px;
+    left: 3px;
+    zoom: 120%;
   }
 
 </style>

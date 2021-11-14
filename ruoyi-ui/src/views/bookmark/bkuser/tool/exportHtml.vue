@@ -1,11 +1,10 @@
 <template>
   <div class="app-container ">
-    <el-row :gutter="20" >
-      <el-col :xs="24" :sm="{span: 16, push: 4}" :md="{span: 14, push: 5}"  :xl="{span: 10, push: 7}"  >
+    <div class="label-title">
+      <span>备份/导出</span>
+    </div>
         <el-card class="box-card">
-          <div slot="header" class="clearfix">
-            <span>备份/导出</span>
-          </div>
+
           <div class="exportList">
             <div class="exportList-main">
               <div class="exportList-main-text">
@@ -43,9 +42,10 @@
 
           </div>
         </el-card>
-      </el-col>
 
-    </el-row>
+
+
+
   </div>
 </template>
 <script>
@@ -105,7 +105,7 @@
         }
     }
 </script>
-<style>
+<style scoped>
 
   .exportList{
     display:flex;flex-direction:column;
@@ -124,4 +124,18 @@
     flex-direction:column-reverse;
   }
 
+  .app-container{
+    width: 700px;
+    margin-left: 50px;
+  }
+
+  .label-title{
+    margin-bottom: 25px;
+    font-weight: 900;
+    font-size: 22px;
+    min-width: 100px;
+  }
+  .label-title-two{
+    margin-top: 20px;
+  }
 </style>

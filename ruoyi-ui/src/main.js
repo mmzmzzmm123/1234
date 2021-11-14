@@ -27,6 +27,9 @@ import 'element-ui/lib/theme-chalk/index.css'
 //媒体查詢
 import '@/assets/styles/base.css'
 
+//elemntUI 自定义的主题目录
+import './assets/theme/index.css'
+
 // 引入
 import draggable from "vuedraggable";
 

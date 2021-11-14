@@ -1,11 +1,10 @@
 <template>
-  <div class="app-container ">
-    <el-row :gutter="20" >
-      <el-col :xs="24" :sm="{span: 16, push: 4}" :md="{span: 14, push: 5}"  :xl="{span: 10, push: 7}"  >
-        <el-card class="box-card">
-          <div slot="header" class="clearfix">
-            <span>个人信息</span>
-          </div>
+  <div class="app-container " style="width: 870px;margin-left: 50px">
+        <div class="label-title">
+            <span>用户配置</span>
+        </div>
+
+        <el-card class="box-card" style="background-color: #ffffff">
           <div>
             <div class="text-center">
               <userAvatar :user="user" />
@@ -47,6 +46,9 @@
           </div>
         </el-card>
 
+    <div class="label-title label-title-two">
+      <span>用户配置</span>
+    </div>
         <el-card style="margin-top: 8px">
           <div slot="header" class="clearfix">
             <span>基本资料</span>
@@ -60,9 +62,7 @@
             </el-tab-pane>
           </el-tabs>
         </el-card>
-      </el-col>
 
-    </el-row>
   </div>
 </template>
 
@@ -97,5 +97,18 @@
     }
   };
 </script>
+<style scoped>
+  .pull-right{
 
+  }
+  .label-title{
+    margin-bottom: 25px;
+    font-weight: 900;
+    font-size: 22px;
+  }
+  .label-title-two{
+    margin-top: 20px;
+  }
+
+</style>
 
