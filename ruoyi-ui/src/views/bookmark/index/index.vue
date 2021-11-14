@@ -118,6 +118,7 @@
 <!--            <div class="aside-title"><i class="el-icon-s-flag" style="color: #569cd5"></i><span>RSS订阅</span></div>-->
 <!--            <div class="aside-title" @click="goRouter(7)"><i class="el-icon-collection"></i><span>功能管理</span></div>-->
             <div class="aside-title" @click="goRouter(6)"><i class="el-icon-delete" ></i><span>垃圾桶</span></div>
+            <div class="aside-title" @click="goRouter(12)"><i class="el-icon-house" ></i><span>我的导航</span></div>
 <!--            <div class="aside-title"><i class="el-icon-chat-dot-square"></i><span>意见反馈</span></div>-->
 <!--            <div class="aside-title" @click="goRouter(2)"><i class="el-icon-suitcase"></i><span>小工具</span></div>-->
             <div class="aside-title " style="margin-bottom: 100px"  @click="goRouter(11)"><i class="el-icon-setting"></i><span>更多设置</span></div>
@@ -984,6 +985,12 @@
               path: "/bkindex",
             })
             break;
+          case 12:
+            //用户中心
+            that.$router.push({
+              path: "/daohang",
+            })
+            break;
           default:
             that.$router.push({
               path: "/content",
@@ -1603,7 +1610,8 @@
 
 
 </style>
-<style scoped>
+<!--这里不能scoped-->
+<style >
 
   #popupDiv {
     position: absolute;

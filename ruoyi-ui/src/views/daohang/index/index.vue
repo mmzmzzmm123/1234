@@ -1,6 +1,6 @@
 <template>
   <div :style="imageStr">
-<!--    <div :style="imageStr"></div>-->
+    <!--    <div :style="imageStr"></div>-->
 
     <!--    <div class="index-top"></div>-->
 
@@ -49,6 +49,7 @@
           <i class="el-icon-setting"></i>
           <i class="el-icon-sunrise-1"></i>
           <i class="el-icon-moon-night"></i>
+          <i class="el-icon-price-tag" @click="goRouter(3)"></i>
         </div>
 
       </el-header>
@@ -65,19 +66,19 @@
         </div>
 
       </el-header>
-      <el-container style=" padding-top: 15px"  >
+      <el-container style=" padding-top: 15px">
 
         <!-- 左侧-->
-        <el-aside class="mains-left mbl" width="400px" >
+        <el-aside class="mains-left mbl" width="400px">
           <div class="label-title">
             <div class="title">
-              <el-dropdown trigger="click">
-              <span class="el-dropdown-link menu-list" >
+              <el-dropdown trigger="click"  @command="handleCommand">
+              <span class="el-dropdown-link menu-list">
                 最新收藏<i class="el-icon-caret-bottom el-icon--right"></i>
                 </span>
                 <el-dropdown-menu slot="dropdown">
-                  <el-dropdown-item icon="el-icon-star-off">我的星标</el-dropdown-item>
-                  <el-dropdown-item icon="el-icon-reading">稍后再读</el-dropdown-item>
+                  <el-dropdown-item icon="el-icon-star-off" command="asterisk">我的星标</el-dropdown-item>
+                  <el-dropdown-item icon="el-icon-reading" command="seeYouLater">稍后再读</el-dropdown-item>
                 </el-dropdown-menu>
               </el-dropdown>
             </div>
@@ -90,32 +91,30 @@
           </div>
           <el-divider class="mians-hr"></el-divider>
           <div class="contenList" v-infinite-scroll="load" style="overflow:auto">
-            <div v-for="o in count" :key="o" class="bookmarContext item">
+            <div v-for="item in bookmarkList" :key="item.bookmarkId" class="bookmarContext item">
 
               <div class="bookmar-title text-lenght">
-                {{'阿达瓦发我的发我法师法师法师法师法挖的挖的挖的挖的挖的挖的挖列表内容 ' + o }}
+                {{item.title}}
               </div>
               <div class="bookmark-tag-Time">
-                <div class="b-left text-lenght">#java #php 我是个簡介</div>
+                <div class="b-left text-lenght">{{item.description}}</div>
                 <div class="b-center">22小时前</div>
                 <div class="b-right">
                   <i class="el-icon-view">22</i>
                 </div>
 
               </div>
-
             </div>
           </div>
         </el-aside>
 
 
-
-      <!-- 中间-->
-        <el-main class="mains mbl" width="500px" >
+        <!-- 中间-->
+        <el-main class="mains mbl" width="500px">
           <div class="mains-title">
             <div class="title">
               <el-dropdown trigger="click">
-              <span class="el-dropdown-link menu-list" >
+              <span class="el-dropdown-link menu-list">
                常用导航<i class="el-icon-caret-bottom el-icon--right"></i>
                 </span>
                 <el-dropdown-menu slot="dropdown">
@@ -123,7 +122,6 @@
                   <el-dropdown-item icon="el-icon-reading">稍后再读</el-dropdown-item>
                 </el-dropdown-menu>
               </el-dropdown>
-
             </div>
             <div class="status">
               <span>最新</span>
@@ -132,7 +130,7 @@
             </div>
           </div>
           <el-divider class="mians-hr"></el-divider>
-          <div class="contenList" v-infinite-scroll="load" style="overflow:auto;">
+          <div class="contenList" v-infinite-scroll="load" style="overflow:auto;overflow-x: hidden">
             <el-row :gutter="10">
               <draggable
                 class="dragArea list-group"
@@ -140,24 +138,18 @@
                 :group="people"
                 @change="log"
               >
-
-              <el-col  :xs="12" :sm="4" v-for="item in iconlist" :key="item.id" class="bookmarkUrl urlWd " @click.native="urlOpen(item.icon)">
-                <div class="bookmarkImg">
-                <img err-src="https://favicon.lucq.fun/?url=https://www.5118.com/" class="sousouicon"
-                     :ng-src="'https://favicon.lucq.fun/?url='+item.icon"
-                     :src="'https://favicon.lucq.fun/?url='+item.icon" />
-                </div>
-                <div class="bookmarkTitle">
-
-                  <div class="titles">{{item.title }}</div>
-                  <div class="desc text-lenght">我是个简介我是个简介我是个简介我是个简介我是个简介我是个简介我是个简介我是个简介我是个简介我是个简介我是个简介</div>
-
-
-
-                </div>
-
-              </el-col>
-
+                <el-col :xs="12" :sm="4" v-for="item in iconlist" :key="item.id" class="bookmarkUrl urlWd "
+                        @click.native="urlOpen(item.icon)">
+                  <div class="bookmarkImg">
+                    <img err-src="https://favicon.lucq.fun/?url=https://www.5118.com/" class="sousouicon"
+                         :ng-src="'https://favicon.lucq.fun/?url='+item.icon"
+                         :src="'https://favicon.lucq.fun/?url='+item.icon"/>
+                  </div>
+                  <div class="bookmarkTitle">
+                    <div class="titles">{{item.title }}</div>
+                    <div class="desc text-lenght">我是个简介我是个简介我是个简介我是个简介我是个简介我是个简介我是个简介我是个简介我是个简介我是个简介我是个简介</div>
+                  </div>
+                </el-col>
               </draggable>
             </el-row>
           </div>
@@ -169,7 +161,7 @@
           <div class="label-title">
             <div class="title">
               <el-dropdown trigger="click">
-              <span class="el-dropdown-link menu-list" >
+              <span class="el-dropdown-link menu-list">
                 发现推荐<i class="el-icon-caret-bottom el-icon--right"></i>
                 </span>
                 <el-dropdown-menu slot="dropdown">
@@ -198,9 +190,7 @@
                 <div class="b-right">
                   <i class="el-icon-view">22</i>
                 </div>
-
               </div>
-
             </div>
           </div>
         </el-aside>
@@ -214,6 +204,10 @@
 
 <script>
   import draggable from "vuedraggable";
+  import {
+    listByUserAndPolymerization
+  } from "@/api/bookmark/bookmark";
+
   export default {
     components: {draggable},
     data: function () {
@@ -271,16 +265,110 @@
           height: '100%',
           backgroundRepeat: 'no-repeat',
           backgroundSize: '100% 100%',
-        }
+        },
+        queryParams: {
+          pageNum: 1,
+          pageSize: 15,
+          userid: undefined,
+          title: undefined,
+          url: undefined,
+          urls: undefined,
+          description: undefined,
+          image: undefined,
+          label: undefined,
+          menuId: undefined,
+          zcount: undefined,
+          idelete: undefined,
+          start: undefined,
+          sqTags: [],
+          sort: 0,
+          sousuo: '',
+          type:'',
+          bkOrderBy:'',
+        },
+        bookmarkList:[],
+        sortState:true,//是否进行请求书签的拼接,切换排序规则时,不能进行拼接，重新渲染数据  false表示切换了 true没切换
+
       }
     },
     methods: {
-      urlOpen(url){
+      goRouter(e){
+        var flag=e;
+        var that = this;
+        switch (flag) {
+          case 1:
+            that.$router.push({
+              path: "/profile",
+            })
+            break;
+          case 2:
+            //工具箱
+            that.$router.push({
+              path: "/tool",
+            })
+            break;
+          case 3:
+            that.$router.push({
+              path: "/content",
+            })
+            break;
+          default:
+            that.$router.push({
+              path: "/content",
+              query: {
+                menuId: 'newest',
+                t:Date.now(),
+              }
+            })
+        }
+      },
+      /** 最新 星标 回收站 稍后看**/
+      listByUserAndPolymerization(str) {
+        console.log(" 最新 星标 回收站 稍后看");
+        // this.loading = true;
+        this.queryParams.type=str;
+        this.queryParams.bkOrderBy="";
+        listByUserAndPolymerization(this.queryParams).then(response => {
+          if (response.code == 200) {
+            //如果进行了排序切换 就不能进行拼接
+            if (this.sortState){
+              this.bookmarkList = this.bookmarkList.concat(response.rows);
+            }else{
+              this.bookmarkList = response.rows;
+              this.sortState = false;
+            }
+            this.total = response.total;
+            this.listloading = false
+            this.loading = false;
+            if (response.total == 0){
+              this.showimg = true;//空提示
+            }
+            console.log("请求完毕" + this.queryParams.pageNum)
+          } else {
+            //出错了加载完毕了 禁止滚动
+            this.noMore = true;
+            this.listloading = false
+            this.loading = false;
+            this.showimg = true;
+          }
+        });
+      },
+      /**切换排序规则**/
+      handleCommand(command) {
+        if (this.queryParams.sort != command){
+          this.sortState = false;//是否切换了新的排序规则方式 false表示切换了 true没切换
+        }
+        this.queryParams.sort = command;
+        this.bookmarkList=[]
+        this.listByUserAndPolymerization(command)
+      },
+
+      urlOpen(url) {
         console.log(url)
         window.open(url);
       },
       load() {
-        if(this.count >=40){
+        if (this.count >= 40) {
           return;
         }
         this.count += 5
@@ -330,6 +418,8 @@
       //光标自动选中
       that.$refs.sousouref.focus()
 
+      that.listByUserAndPolymerization('newest');
+
 
     },
 
@@ -342,75 +432,79 @@
     height: 70px;
     border-radius: 4px;
     line-height: 50px;
-    border: 1px solid rgba(255,255,255,0.2);
+    border: 1px solid rgba(255, 255, 255, 0.2);
     display: flex;
     padding-top: 10px;
   }
-  .bookmarkImg{
+
+  .bookmarkImg {
     width: 40px;
     height: 40px;
     /*border: 1px solid red;*/
     line-height: 30px;
     float: left;
     border-radius: 50%;
-    background:rgba(255,255,255,0.2);
+    background: rgba(255, 255, 255, 0.2);
     margin-right: 3px;
     margin-top: 4px;
   }
-  .bookmarkImg img{
+
+  .bookmarkImg img {
     margin-left: 10px;
     margin-top: 10px;
     width: 20px;
     height: 20px;
 
   }
-  .bookmarkTitle{
+
+  .bookmarkTitle {
     width: 70%;
   }
-  .bookmarkTitle .titles{
+
+  .bookmarkTitle .titles {
 
     font-size: 12px;
     height: 25px;
     line-height: 25px;
 
   }
-  .bookmarkTitle .desc{
+
+  .bookmarkTitle .desc {
     height: 25px;
     line-height: 25px;
   }
 
 
-  .bookmarkUrl:hover{
-    background:rgba(255,255,255,0.2);
+  .bookmarkUrl:hover {
+    background: rgba(255, 255, 255, 0.2);
   }
-  .bookmarContext{
+
+  .bookmarContext {
     border-radius: 2px;
     padding: 7px;
   }
-  .bookmarContext:hover{
-    background:rgba(255,255,255,0.4);
-}
 
-  .el-divider{
-    background: rgba(255,255,255,0.2);
-}
+  .bookmarContext:hover {
+    background: rgba(255, 255, 255, 0.4);
+  }
 
-
-
-
-
+  .el-divider {
+    background: rgba(255, 255, 255, 0.2);
+  }
 
 
   .mains-left {
     margin-left: 10px;
     padding: 7px 7px;
     /*background-color:transparent;*/
+    margin-bottom: 0px;
 
   }
 
   .mains-right {
     margin-right: 10px;
     padding: 7px 7px;
+    margin-bottom: 0px;
   }
 
   .header-top {
@@ -461,14 +555,15 @@
     width: 400px;
     float: left;
   }
-  .menu-list{
+
+  .menu-list {
     width: 100px;
     display: block;
     text-align: center;
     height: 30px;
     line-height: 30px;
     /*background-color: #E8F3FF;*/
-    background:rgba(255,255,255,0.2);
+    background: rgba(255, 255, 255, 0.2);
     color: #5289FF;
   }
 
@@ -479,63 +574,65 @@
 
   .contenList {
     font-size: 14px;
-    height: 580px;
-    padding-bottom: 150px;
+    height: 480px;
   }
 
   .mians-hr {
     margin-top: 2px;
     margin-bottom: 8px;
   }
-  .top-icon-list{
+
+  .top-icon-list {
     color: #ffffff;
     float: right;
-    width: 140px;
+    width: 190px;
     font-size: 30px;
     line-height: 55px;
     opacity: 0.7;
   }
-  .top-icon-list i{
+
+  .top-icon-list i {
     margin-left: 10px;
   }
 
-  .bookmar-title{
+  .bookmar-title {
     width: 100%;
     height: 30px;
   }
 
 
-  .bookmark-tag-Time{
+  .bookmark-tag-Time {
     width: 100%;
     display: flex;
     height: 30px;
     color: #50565c;
   }
-  .bookmark-tag-Time .b-right{
+
+  .bookmark-tag-Time .b-right {
 
   }
 
-  .bookmar-title{
+  .bookmar-title {
     font-size: 15px;
     font-weight: 500;
   }
 
-  .b-left{
+  .b-left {
 
   }
-
 
 
 </style>
 <style>
   /*文本超长变成点*/
-  .text-lenght{
+  .text-lenght {
     text-overflow: ellipsis;
     white-space: nowrap;
     overflow: hidden;
   }
+
   /*禁止复制*/
-  .notCopyText{
+  .notCopyText {
     -moz-user-select: none; /* Firefox私有属性 */
     -webkit-user-select: none; /* WebKit内核私有属性 */
     -ms-user-select: none; /* IE私有属性(IE10及以后) */
@@ -543,6 +640,7 @@
     -o-user-select: none; /* Opera私有属性 */
     user-select: none; /* CSS3属性 */
   }
+
   /*毛玻璃*/
   .maoboli {
     background: hsla(0, 0%, 100%, 0.11) border-box;
@@ -557,8 +655,9 @@
     -webkit-filter: blur(6.4px);
     filter: blur(10px);
   }
-  .mbl{
-    background:rgba(255,255,255,0.2);
+
+  .mbl {
+    background: rgba(255, 255, 255, 0.2);
     backdrop-filter: blur(3px);
     -webkit-backdrop-filter: blur(3px);
   }
@@ -583,6 +682,7 @@
       width: 30% !important;
     }
   }
+
   @media screen and (min-width: 1200px) and (max-width: 1399px) {
     .urlWd {
       width: 30% !important;
@@ -636,7 +736,7 @@
 
   .choice {
     margin: 5px 5px 5px 5px;
-    background:rgba(255,255,255,0.2);
+    background: rgba(255, 255, 255, 0.2);
   }
 
   .choice div {
@@ -733,7 +833,7 @@
   ::-webkit-scrollbar-track {
     width: 6px;
     /*background-color: #fff;*/
-    background:rgba(255,255,255,0.2);
+    background: rgba(255, 255, 255, 0.2);
     -webkit-border-radius: 2em;
     -moz-border-radius: 2em;
     border-radius: 2em;
@@ -755,7 +855,7 @@
   /*滚动条移上去的背景*/
 
   ::-webkit-scrollbar-thumb:hover {
-    background-color: #7c6fff;
+    background-color: #ffffff;
   }
 
   /*滚动条美化结束*/
