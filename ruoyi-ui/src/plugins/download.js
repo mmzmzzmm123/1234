@@ -17,8 +17,11 @@ export default {
     }).then(async (res) => {
       const isLogin = await this.blobValidate(res.data);
       if (isLogin) {
+        const contentDisposition = decodeURI(res.headers['content-disposition'])
+        const result = new RegExp('filename=([^;]+\\.[^\\.;]+);*').exec(contentDisposition)
+        const fileName = result[1].replace(/\"/g, '')
         const blob = new Blob([res.data])
-        this.saveAs(blob, decodeURI(res.headers['download-filename']))
+        this.saveAs(blob, fileName)
       } else {
         Message.error('无效的会话，或者会话已过期，请重新登录。');
       }
@@ -34,8 +37,11 @@ export default {
     }).then(async (res) => {
       const isLogin = await this.blobValidate(res.data);
       if (isLogin) {
+        const contentDisposition = decodeURI(res.headers['content-disposition'])
+        const result = new RegExp('filename=([^;]+\\.[^\\.;]+);*').exec(contentDisposition)
+        const fileName = result[1].replace(/\"/g, '')
         const blob = new Blob([res.data])
-        this.saveAs(blob, decodeURI(res.headers['download-filename']))
+        this.saveAs(blob, fileName)
       } else {
         Message.error('无效的会话，或者会话已过期，请重新登录。');
       }
@@ -62,4 +68,3 @@ export default {
     saveAs(text, name, opts);
   }
 }
-
