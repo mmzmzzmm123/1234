@@ -1,15 +1,16 @@
 package com.ruoyi.web.controller.system;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
 import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.core.domain.model.RegisterBody;
 import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.framework.web.service.SysRegisterService;
 import com.ruoyi.system.service.ISysConfigService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
 
 /**
  * 注册验证
@@ -34,5 +35,13 @@ public class SysRegisterController extends BaseController
         }
         String msg = registerService.register(user);
         return StringUtils.isEmpty(msg) ? success() : error(msg);
+    }
+    @GetMapping("/registerSwitch")
+    public AjaxResult registerSwitch()
+    {
+        AjaxResult ajax = AjaxResult.success();
+        String registerUser = configService.selectConfigByKey("sys.account.registerUser");
+        ajax.put("registerUser", "true".equals(registerUser) ? Boolean.TRUE : Boolean.FALSE);
+        return ajax;
     }
 }

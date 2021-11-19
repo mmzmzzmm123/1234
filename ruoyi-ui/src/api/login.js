@@ -57,3 +57,14 @@ export function getCodeImg() {
     timeout: 20000
   })
 }
+
+// 获取是否自助注册
+export function getRegisterSwitch() {
+  return request({
+    url: '/registerSwitch',
+    headers: {
+      isToken: false
+    },
+    method: 'get',
+  })
+}
