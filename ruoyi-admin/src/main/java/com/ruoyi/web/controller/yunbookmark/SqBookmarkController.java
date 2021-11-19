@@ -76,9 +76,9 @@ public class SqBookmarkController extends BaseController
         startPage();
         List<SqBookmark> list = sqBookmarkService.selectByUrlUserID(url,getAuthUser().getUserId());
         if (list!=null&&!list.isEmpty()){
-            return AjaxResult.success(list.get(0));
+            return AjaxResult.success(true);
         }
-        return AjaxResult.success(list);
+        return AjaxResult.success(false);
     }
 
 
@@ -199,6 +199,17 @@ public class SqBookmarkController extends BaseController
     public AjaxResult remove(@PathVariable Long[] bookmarkIds)
     {
         return toAjax(sqBookmarkService.deleteSqBookmarkByIds(bookmarkIds));
+    }
+
+    /**
+     * 删除书签 根据URL删除
+     */
+    @PreAuthorize("@ss.hasPermi('bookmark:bookmark:common:remove')")
+	@DeleteMapping("/deleteByurl")
+    public AjaxResult deleteByurl(String url)
+    {
+        return AjaxResult.success("success");
+//        return sqBookmarkService.deleteByUrl(getAuthUser().getUserId(),url);
     }
 
 

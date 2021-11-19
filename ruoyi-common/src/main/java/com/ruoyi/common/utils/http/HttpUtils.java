@@ -1,15 +1,10 @@
 package com.ruoyi.common.utils.http;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
-import java.net.ConnectException;
-import java.net.SocketTimeoutException;
-import java.net.URL;
-import java.net.URLConnection;
+import java.io.*;
+import java.net.*;
 import java.security.cert.X509Certificate;
+import java.util.Locale;
+import java.util.Map;
 import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.HttpsURLConnection;
 import javax.net.ssl.SSLContext;
@@ -22,7 +17,7 @@ import com.ruoyi.common.constant.Constants;
 
 /**
  * 通用http发送方法
- * 
+ *
  * @author ruoyi
  */
 public class HttpUtils
@@ -259,4 +254,34 @@ public class HttpUtils
             return true;
         }
     }
+
+
+
+
+
+    /**
+     * 格式化路径参数 可选参数
+     *
+     * @param uri uri
+     * @param map map
+     * @return initUriPathParams
+     * @throws UnsupportedEncodingException 异常
+     */
+    public static String initUriPathParams(String uri, Map<String, String> map) throws UnsupportedEncodingException {
+        String key;
+        String value;
+        StringBuilder builder = new StringBuilder();
+        builder.append(uri);
+        builder.append("?");
+        for (Map.Entry<String, String> entry : map.entrySet()) {
+            key = entry.getKey();
+            value = entry.getValue();
+            String tmpKv;
+            tmpKv = String.format(Locale.ROOT, "%s=%s&", URLEncoder.encode(key, "UTF-8"),
+                    URLEncoder.encode(value, "UTF-8"));
+            builder.append(tmpKv);
+        }
+        return builder.toString();
+    }
+
 }

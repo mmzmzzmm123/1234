@@ -22,6 +22,7 @@ import com.ruoyi.bookmark.mapper.SqTagMapper;
 import com.ruoyi.bookmark.pojo.SqBookmarkReq;
 import com.ruoyi.bookmark.service.ISqTagService;
 
+import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.common.utils.bookmarkhtml.Const;
 import com.ruoyi.common.utils.bookmarkhtml.HtmlName;
@@ -542,6 +543,24 @@ public class SqBookmarkServiceImpl implements ISqBookmarkService
     public List<SqBookmark> getlistByTag(SqBookmarkReq sqBookmarkReq) {
 
         return sqBookmarkMapper.getlistByTag(sqBookmarkReq);
+    }
+
+    @Override
+    public AjaxResult deleteByUrl(Long userId, String url) {
+        //1.根据URL查询书签 会有多条
+
+        //2.移动到回收站
+
+
+        //3.修改多个书签目录的数量
+
+//        //给原目录 -1
+//        sqMenuMapper.updateCountReduce(new Long[]{sqBookmark.getMenuId()},1);
+
+
+
+
+        return AjaxResult.success("success");
     }
 
 

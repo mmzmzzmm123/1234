@@ -1,15 +1,13 @@
-package com.ruoyi.web.test.controller;
+package com.ruoyi.web.test.controller.baiduyunpan;
 
-import cn.hutool.core.io.FileUtil;
-import cn.hutool.http.HttpRequest;
-import cn.hutool.http.HttpResponse;
 import cn.hutool.http.HttpUtil;
 import cn.hutool.json.JSONArray;
 import cn.hutool.json.JSONObject;
 import cn.hutool.log.Log;
 import cn.hutool.log.LogFactory;
+import com.ruoyi.web.test.controller.baiduyunpan.Constant;
+import com.ruoyi.web.test.controller.baiduyunpan.FileSizeUtil;
 import lombok.SneakyThrows;
-import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.http.HttpEntity;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpPost;
@@ -18,20 +16,15 @@ import org.apache.http.entity.mime.MultipartEntityBuilder;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
-import org.apache.velocity.runtime.directive.Foreach;
 
 import java.io.*;
-import java.math.BigInteger;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
 import java.nio.channels.FileChannel;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
-import java.util.Arrays;
 import java.util.HashMap;
-import java.util.LinkedList;
 
 /**
  * @Auther: Wang
@@ -45,8 +38,10 @@ public class FileUtilsBaidu {
 
     public static void main(String[] args) {
         //不能有空格
-        String filePath = "D:\\data\\ces\\";
-        String fileName = "day4_MySQL性能优化总结.zip";
+//        String filePath = "D:\\data\\ces\\";
+//        String fileName = "day4_MySQL性能优化总结.zip";
+        String filePath = "D:\\Wang\\";
+        String fileName = "22.txt";
         System.out.println(save(filePath, fileName));
     }
 
@@ -95,7 +90,7 @@ public class FileUtilsBaidu {
         Thread.sleep(3000);
         //创建文件
 
-        log.info("创建文件 fileName{} 文件大小{} md5:{}   ID:{}", fileName,FileSizeUtil.pathSize(absoluteFilePath),md5s.toString(),(String) new JSONObject(precreate).get("uploadid"));
+        log.info("创建文件 fileName{} 文件大小{} md5:{}   ID:{}", fileName, FileSizeUtil.pathSize(absoluteFilePath),md5s.toString(),(String) new JSONObject(precreate).get("uploadid"));
         String create = create(fileName, fileMax, 0, md5s.toString(),(String) new JSONObject(precreate).get("uploadid"));
         log.info("创建文件{}", create);
 
@@ -112,7 +107,9 @@ public class FileUtilsBaidu {
      * @param: fileName 文件名
      */
     private static String getDownUrl(String fileName) {
-        String fileSearch = HttpUtil.get(Constant.FILE_SEARCH + "&access_token=" + Constant.ATOKEN + "&key=" + fileName);
+        String fileSearch = HttpUtil.get(Constant.FILE_SEARCH + "&access_token=" + Constant.ATOKEN + "&key=" + fileName + "&recursion=1&dir=" + Constant.APP_PATH);
+        System.out.println("fileSearch:"+fileSearch);
+
         JSONObject jsonObject = new JSONObject(fileSearch);
         JSONArray list = jsonObject.getJSONArray("list");
         JSONObject listJSONObject = list.getJSONObject(0);
@@ -136,15 +133,11 @@ public class FileUtilsBaidu {
      */
     private static String create(String fileName, Long size, Integer isDir, String blockList, String uploadid) {
         String strURL = Constant.FILE_MANAGER_URL + "?method=create&access_token=" + Constant.ATOKEN;
-//        String params = "path=" +  Constant.APP_PATH + fileName + "&size=" + size + "&autoinit=1&block_list=[\"" + blockList + "\"]&isdir=" + isDir +"&uploadid"+uploadid;
-//        return open(strURL, params, "POST");
-//
-//        //方式一
         HashMap<String, Object> paramMap = new HashMap<>();
         paramMap.put("path", Constant.APP_PATH + fileName);
         paramMap.put("size", size);
-//        paramMap.put("autoinit", 1);
-//        paramMap.put("rtype", 1);
+        paramMap.put("autoinit", 1);
+        paramMap.put("rtype", 2);
         String str ="[\"" +blockList +"\"]";
         paramMap.put("block_list", str);
         paramMap.put("isdir",isDir);
@@ -154,7 +147,6 @@ public class FileUtilsBaidu {
         System.out.println("block_list :" + paramMap.get("block_list"));
         System.out.println("uploadid :" + paramMap.get("uploadid"));
         System.out.println("path :" + paramMap.get("path"));
-//
         return result;
     }
 
@@ -183,9 +175,7 @@ public class FileUtilsBaidu {
                 //方式二
                 String result = sendFile(url, files[i]);
                 log.info("正在上传分片文件{}{}", result, i);
-//                Thread.sleep(3000);
             }
-
             return path;
         } catch (Exception e) {
             e.printStackTrace();

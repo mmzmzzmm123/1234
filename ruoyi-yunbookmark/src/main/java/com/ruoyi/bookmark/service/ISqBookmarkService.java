@@ -3,6 +3,7 @@ package com.ruoyi.bookmark.service;
 import java.util.List;
 import com.ruoyi.bookmark.domain.SqBookmark;
 import com.ruoyi.bookmark.pojo.SqBookmarkReq;
+import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.utils.bookmarkhtml.HtmlName;
 
 /**
@@ -179,4 +180,11 @@ public interface ISqBookmarkService
      *
      */
     List<SqBookmark> getlistByTag(SqBookmarkReq sqBookmarkReq);
+
+    /**
+     *  根据URL 删除书签
+     *  @param
+     *
+     */
+    AjaxResult deleteByUrl(Long userId, String url);
 }

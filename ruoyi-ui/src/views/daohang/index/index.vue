@@ -56,13 +56,32 @@
       <el-header height="200px" class="header-below">
 
 
-        <!--        <el-input v-model="input" placeholder="请输入内容"></el-input>-->
         <div style="min-width: 500px;margin-top: 80px">
-          <el-input placeholder="百度一下" v-model="sousou" class="sousoucss notcopy " ref="sousouref">
-            <img @click="IsCord()" slot="prefix" :src="sousouicon"
-                 style="width: 20px;height: 20px;position: absolute;top: 50%;margin-top: -10px;">
+
+          <img @click="IsCord()" slot="prefix" :src="sousouicon"
+               style="" class="sousou-img">
+          <input placeholder="百度一下" v-model="sousou" class="search" ref="sousouref">
+          </input>
+<!--            <template slot="prepend">-->
+
+<!--            </template>-->
+<!--            -->
+
+<!--            <el-select v-model="select" slot="prepend" placeholder="请选择" style="width: 130px">-->
+<!--              <el-option label="餐厅名" value="1"></el-option>-->
+<!--              <el-option label="订单号" value="2"></el-option>-->
+<!--              <el-option label="用户电话" value="3"></el-option>-->
+<!--            </el-select>-->
+<!--            <el-button slot="append" icon="el-icon-search"></el-button>-->
+
+
+
+
+
             <!--            <el-button  type="primary" slot="append" icon="el-icon-search" style="width: 80px"  @click="getUrl"></el-button>-->
-          </el-input>
+
+
+
         </div>
 
       </el-header>
@@ -72,7 +91,7 @@
         <el-aside class="mains-left mbl" width="400px">
           <div class="label-title">
             <div class="title">
-              <el-dropdown trigger="click"  @command="handleCommand">
+              <el-dropdown trigger="click" @command="handleCommand">
               <span class="el-dropdown-link menu-list">
                 最新收藏<i class="el-icon-caret-bottom el-icon--right"></i>
                 </span>
@@ -209,6 +228,7 @@
   } from "@/api/bookmark/bookmark";
 
   export default {
+    name: 'app',
     components: {draggable},
     data: function () {
       return {
@@ -283,17 +303,17 @@
           sqTags: [],
           sort: 0,
           sousuo: '',
-          type:'',
-          bkOrderBy:'',
+          type: '',
+          bkOrderBy: '',
         },
-        bookmarkList:[],
-        sortState:true,//是否进行请求书签的拼接,切换排序规则时,不能进行拼接，重新渲染数据  false表示切换了 true没切换
+        bookmarkList: [],
+        sortState: true,//是否进行请求书签的拼接,切换排序规则时,不能进行拼接，重新渲染数据  false表示切换了 true没切换
 
       }
     },
     methods: {
-      goRouter(e){
-        var flag=e;
+      goRouter(e) {
+        var flag = e;
         var that = this;
         switch (flag) {
           case 1:
@@ -317,7 +337,7 @@
               path: "/content",
               query: {
                 menuId: 'newest',
-                t:Date.now(),
+                t: Date.now(),
               }
             })
         }
@@ -326,21 +346,21 @@
       listByUserAndPolymerization(str) {
         console.log(" 最新 星标 回收站 稍后看");
         // this.loading = true;
-        this.queryParams.type=str;
-        this.queryParams.bkOrderBy="";
+        this.queryParams.type = str;
+        this.queryParams.bkOrderBy = "";
         listByUserAndPolymerization(this.queryParams).then(response => {
           if (response.code == 200) {
             //如果进行了排序切换 就不能进行拼接
-            if (this.sortState){
+            if (this.sortState) {
               this.bookmarkList = this.bookmarkList.concat(response.rows);
-            }else{
+            } else {
               this.bookmarkList = response.rows;
               this.sortState = false;
             }
             this.total = response.total;
             this.listloading = false
             this.loading = false;
-            if (response.total == 0){
+            if (response.total == 0) {
               this.showimg = true;//空提示
             }
             console.log("请求完毕" + this.queryParams.pageNum)
@@ -355,11 +375,11 @@
       },
       /**切换排序规则**/
       handleCommand(command) {
-        if (this.queryParams.sort != command){
+        if (this.queryParams.sort != command) {
           this.sortState = false;//是否切换了新的排序规则方式 false表示切换了 true没切换
         }
         this.queryParams.sort = command;
-        this.bookmarkList=[]
+        this.bookmarkList = []
         this.listByUserAndPolymerization(command)
       },
 
@@ -428,7 +448,7 @@
 <style scoped>
   .bookmarkUrl {
     margin-bottom: 10px;
-    margin-left: 11px;
+    margin-left: 10px;
     height: 70px;
     border-radius: 4px;
     line-height: 50px;
@@ -699,6 +719,19 @@
 <style scoped>
 
 
+  .search{
+    width: 500px;
+    height: 45px;
+    border: 0;
+    border-radius: 50px;
+    background: rgba(255, 255, 255, 0.5);
+    padding-left: 64px ;
+  }
+  .search:focus {
+    outline:none;
+  }
+
+
   .main {
     /*font-family: "Helvetica Neue",Helvetica,"PingFang SC","Hiragino Sans GB","Microsoft YaHei","微软雅黑",Arial,sans-serif;*/
     /*display: flex;*/
@@ -719,7 +752,7 @@
   /*}*/
 
   /*.sousoucss{*/
-  /*  opacity: 0.6;*/
+  /*  background: rgba(255, 255, 255, 0.5);*/
   /*}*/
   /*.sousoucss input{*/
   /*  border:0;*/
@@ -732,6 +765,33 @@
   /*  background-color: #1f2d3d!important;*/
   /*  opacity: 0.7;*/
   /*}*/
+  .sousoucss >>> .el-select {
+    background: rgba(255, 255, 255, 0.5) !important;
+    border: none !important;
+  }
+  .sousoucss >>> .el-input--suffix {
+    background: rgba(255, 255, 255, 0.5) !important;
+    border: none !important;
+  }
+  .sousoucss >>> .el-input__inner  {
+    background: rgba(255, 255, 255, 0.5) !important;
+    border: none !important;
+    /*width: 500px !important;*/
+    /*-moz-border-radius-topright: 50px !important;*/
+    /*-moz-border-radius-bottomright: 50px !important;*/
+    /*color: #666c74 !important;*/
+    /*font-size: 16px !important;*/
+    /*height: 40px !important;*/
+  }
+
+  .sousou-img {
+    width: 30px;
+    height: 30px;
+    position: relative;
+    border-radius:50%;
+    top: 10px;
+    left: 45px;
+  }
 
 
   .choice {
@@ -833,7 +893,8 @@
   ::-webkit-scrollbar-track {
     width: 6px;
     /*background-color: #fff;*/
-    background: rgba(255, 255, 255, 0.2);
+    /*滚动条的背景颜色*/
+    /*background: rgba(255, 255, 255, 0.2);*/
     -webkit-border-radius: 2em;
     -moz-border-radius: 2em;
     border-radius: 2em;

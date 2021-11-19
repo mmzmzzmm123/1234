@@ -1,7 +1,7 @@
-package com.ruoyi.baidu.servise.impl;
+package com.ruoyi.baiduyunpan.servise.impl;
 
 import cn.hutool.http.HttpUtil;
-import com.ruoyi.baidu.servise.BaiduWangPanServise;
+import com.ruoyi.baiduyunpan.servise.BaiduWangPanServise;
 import com.ruoyi.common.constant.BaiduUrl;
 import org.springframework.stereotype.Service;
 
