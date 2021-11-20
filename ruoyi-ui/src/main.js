@@ -1,7 +1,7 @@
 import Vue from 'vue'
 
 import Cookies from 'js-cookie'
-
+import i18n from './i18n/i18n'
 import Element from 'element-ui'
 import './assets/styles/element-variables.scss'
 
@@ -79,5 +79,6 @@ new Vue({
   el: '#app',
   router,
   store,
+  i18n,
   render: h => h(App)
 })

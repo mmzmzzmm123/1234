@@ -22,7 +22,10 @@
         <el-tooltip content="布局大小" effect="dark" placement="bottom">
           <size-select id="size-select" class="right-menu-item hover-effect" />
         </el-tooltip>
-
+	<language-select
+          id="language"
+          class="right-menu-item hover-effect"
+        />
       </template>
 
       <el-dropdown class="avatar-container right-menu-item hover-effect" trigger="click">
@@ -56,6 +59,7 @@ import SizeSelect from '@/components/SizeSelect'
 import Search from '@/components/HeaderSearch'
 import RuoYiGit from '@/components/RuoYi/Git'
 import RuoYiDoc from '@/components/RuoYi/Doc'
+import LanguageSelect from '@/components/LanguageSelect'
 
 export default {
   components: {
@@ -66,7 +70,8 @@ export default {
     SizeSelect,
     Search,
     RuoYiGit,
-    RuoYiDoc
+    RuoYiDoc,
+    LanguageSelect
   },
   computed: {
     ...mapGetters([
