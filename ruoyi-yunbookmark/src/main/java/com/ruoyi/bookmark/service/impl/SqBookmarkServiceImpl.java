@@ -28,6 +28,7 @@ import com.ruoyi.common.utils.bookmarkhtml.Const;
 import com.ruoyi.common.utils.bookmarkhtml.HtmlName;
 import com.ruoyi.common.utils.bookmarkhtml.ImportHtml;
 import com.sun.org.apache.bcel.internal.generic.RETURN;
+import org.apache.commons.collections.CollectionUtils;
 import org.jacoco.agent.rt.internal_f3994fa.core.internal.flow.IFrame;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -121,12 +122,12 @@ public class SqBookmarkServiceImpl implements ISqBookmarkService
      */
     @Override
     @Transactional
-    public int insertSqBookmark(SqBookmark sqBookmark)
+    public String insertSqBookmark(SqBookmark sqBookmark)
     {
         //判断标签是否已经存在了 999
         List<SqBookmark> list = sqBookmarkMapper.select(new SqBookmark(sqBookmark.getUrl(),sqBookmark.getUserid()));
-        if (!(list==null||list.isEmpty()))
-            return 999;
+        if (CollectionUtils.isNotEmpty(list))
+            return list.get(0).getBookmarkId().toString();
 
 
         JSONArray objects = new JSONArray();
@@ -140,15 +141,25 @@ public class SqBookmarkServiceImpl implements ISqBookmarkService
         if(StringUtils.isEmpty(sqBookmark.getDescription())){
             sqBookmark.setDescription(sqBookmark.getTitle());
         }
-        //转换传入的父级ID
-        sqBookmark.setMenuId(sqBookmark.getParentId());
+
+        //todo 这里是为了兼容chrome插件的接口 忘记为什么是parentId了
+        if(sqBookmark.getParentId()== null){
+            //插件端
+            sqBookmark.setMenuId(sqBookmark.getMenuId());
+        }else {
+            //转换传入的父级ID
+           sqBookmark.setMenuId(sqBookmark.getParentId());
+        }
+
+
         //给对应目录 +1 并且设置为目录
         sqMenuMapper.updateCountAdd(new Long[]{sqBookmark.getMenuId()},1);
 
         //传入的标签
         List<Map<String, Object>> listmap = sqBookmark.getSqTags();
         if (listmap==null||listmap.isEmpty()||listmap.size()==0||listmap.size()>5){
-           return sqBookmarkMapper.insertSqBookmark(sqBookmark);
+             sqBookmarkMapper.insertSqBookmark(sqBookmark);
+           return sqBookmark.getBookmarkId().toString();
         }
 
         //给文章添加标签
@@ -174,7 +185,8 @@ public class SqBookmarkServiceImpl implements ISqBookmarkService
         }
         //TAG书签串
         sqBookmark.setTagNameAll(objects.toString());
-        return sqBookmarkMapper.insertSqBookmark(sqBookmark);
+        sqBookmarkMapper.insertSqBookmark(sqBookmark);
+        return sqBookmark.getBookmarkId().toString();
     }
 
     /**
@@ -254,6 +266,7 @@ public class SqBookmarkServiceImpl implements ISqBookmarkService
     @Override
     public int deleteSqBookmarkByIds(Long[] bookmarkIds)
     {
+
         return sqBookmarkMapper.deleteSqBookmarkByIds(bookmarkIds);
     }
 
@@ -264,9 +277,19 @@ public class SqBookmarkServiceImpl implements ISqBookmarkService
      * @return 结果
      */
     @Override
-    public int deleteSqBookmarkById(Long bookmarkId)
+    public int deleteSqBookmarkById(Long bookmarkId,Long userId)
     {
-        return sqBookmarkMapper.deleteSqBookmarkById(bookmarkId);
+        SqBookmark sqBookmark = new SqBookmark();
+        sqBookmark.setBookmarkId(bookmarkId);
+        sqBookmark.setUserid(userId);
+        sqBookmark.setIdelete(1);
+        sqBookmarkMapper.updateSqBookmark(sqBookmark);
+
+        SqBookmark sqbk= sqBookmarkMapper.selectSqBookmarkById(bookmarkId);
+        //目录减少1
+        sqMenuMapper.updateCountReduce(new Long[]{sqbk.getMenuId()},1);
+
+        return 1;
     }
 
 

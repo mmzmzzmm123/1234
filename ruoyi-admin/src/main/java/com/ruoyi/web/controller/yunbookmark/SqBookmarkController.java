@@ -5,6 +5,7 @@ import java.net.URL;
 import java.util.Date;
 import java.util.List;
 
+import com.alibaba.fastjson.JSONObject;
 import com.ruoyi.bookmark.domain.SqBookmark;
 import com.ruoyi.bookmark.pojo.SqBookmarkReq;
 import com.ruoyi.bookmark.service.ISqBookmarkService;
@@ -76,9 +77,19 @@ public class SqBookmarkController extends BaseController
         startPage();
         List<SqBookmark> list = sqBookmarkService.selectByUrlUserID(url,getAuthUser().getUserId());
         if (list!=null&&!list.isEmpty()){
-            return AjaxResult.success(true);
+            SqBookmark sqBookmark = list.get(0);
+
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put("title",sqBookmark.getTitle());
+            jsonObject.put("bookmarkId",sqBookmark.getBookmarkId());
+            jsonObject.put("menuId",sqBookmark.getMenuId());
+            jsonObject.put("description",sqBookmark.getDescription());
+            jsonObject.put("label",sqBookmark.getLabel());
+            jsonObject.put("seeYouLater",sqBookmark.getSeeYouLater());
+            jsonObject.put("url",sqBookmark.getUrl());
+            return new AjaxResult(200,jsonObject.toString());
         }
-        return AjaxResult.success(false);
+        return new AjaxResult(200,"");
     }
 
 
@@ -174,8 +185,14 @@ public class SqBookmarkController extends BaseController
     public AjaxResult add(@RequestBody SqBookmark sqBookmark)
     {
         sqBookmark.setUserid(getAuthUser().getUserId());
-        int i = sqBookmarkService.insertSqBookmark(sqBookmark);
-        return new AjaxResult(200,(i>0&&i!=999)?"success":"repetition");
+        if(sqBookmark.getBookmarkId()!=null){
+            //修改
+            sqBookmarkService.updateSqBookmark(sqBookmark);
+            return new AjaxResult(200,sqBookmark.getBookmarkId().toString());
+        }
+
+        String menuId = sqBookmarkService.insertSqBookmark(sqBookmark);
+        return new AjaxResult(200,menuId);
     }
 
     /**
@@ -196,9 +213,9 @@ public class SqBookmarkController extends BaseController
     @PreAuthorize("@ss.hasPermi('bookmark:bookmark:common:remove')")
     @Log(title = "书签管理", businessType = BusinessType.DELETE)
 	@DeleteMapping("/{bookmarkIds}")
-    public AjaxResult remove(@PathVariable Long[] bookmarkIds)
+    public AjaxResult remove(@PathVariable Long bookmarkIds)
     {
-        return toAjax(sqBookmarkService.deleteSqBookmarkByIds(bookmarkIds));
+        return toAjax(sqBookmarkService.deleteSqBookmarkById(bookmarkIds,getAuthUser().getUserId()));
     }
 
     /**

@@ -54,9 +54,9 @@ public interface ISqBookmarkService
      * 新增书签管理
      *
      * @param sqBookmark 书签管理
-     * @return 结果
+     * @return menuID
      */
-    public int insertSqBookmark(SqBookmark sqBookmark);
+    public String insertSqBookmark(SqBookmark sqBookmark);
 
     /**
      * 修改书签管理
@@ -80,7 +80,7 @@ public interface ISqBookmarkService
      * @param bookmarkId 书签管理ID
      * @return 结果
      */
-    public int deleteSqBookmarkById(Long bookmarkId);
+    public int deleteSqBookmarkById(Long bookmarkId,Long userId);
 
     /**
      * 修改目录下书签状态为 删除状态
