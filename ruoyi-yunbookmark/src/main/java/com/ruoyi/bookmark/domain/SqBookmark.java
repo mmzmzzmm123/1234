@@ -79,7 +79,7 @@ public class SqBookmark
 
     /** 0 未删除 1表示删除 */
     @Excel(name = "0 未删除 1表示删除")
-    @Column(name = "IDelete")
+    @Column(name = "idelete")
     private Integer idelete;
 
     /** 0公开显示 1隐藏显示 2好友显示 3稍后再看 */
@@ -128,4 +128,9 @@ public class SqBookmark
         this.userid = userid;
     }
 
+    public SqBookmark (String url,Long userid,Integer idelete){
+        this.url = url;
+        this.userid = userid;
+        this.idelete = idelete;
+    }
 }

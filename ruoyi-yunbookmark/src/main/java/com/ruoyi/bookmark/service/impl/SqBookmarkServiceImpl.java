@@ -125,7 +125,7 @@ public class SqBookmarkServiceImpl implements ISqBookmarkService
     public String insertSqBookmark(SqBookmark sqBookmark)
     {
         //判断标签是否已经存在了 999
-        List<SqBookmark> list = sqBookmarkMapper.select(new SqBookmark(sqBookmark.getUrl(),sqBookmark.getUserid()));
+        List<SqBookmark> list = sqBookmarkMapper.select(new SqBookmark(sqBookmark.getUrl(),sqBookmark.getUserid(),0));
         if (CollectionUtils.isNotEmpty(list))
             return list.get(0).getBookmarkId().toString();
 
@@ -353,7 +353,8 @@ public class SqBookmarkServiceImpl implements ISqBookmarkService
         // 条件查询
         example.createCriteria()
                 .andEqualTo("url", url)
-                .andEqualTo("userid",userId);
+                .andEqualTo("userid",userId)
+                .andEqualTo("idelete",0);
         return sqBookmarkMapper.selectByExample(example);
     }
 
