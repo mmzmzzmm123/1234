@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.bookmark.mapper.SqBackupBookmarkLogMapper">
+
+    <resultMap type="SqBackupBookmarkLog" id="SqBackupBookmarkLogResult">
+        <result property="id"    column="id"    />
+        <result property="userId"    column="user_id"    />
+        <result property="name"    column="name"    />
+        <result property="downUrl"    column="down_url"    />
+        <result property="type"    column="type"    />
+        <result property="result"    column="result"    />
+        <result property="createTime"    column="create_time"    />
+    </resultMap>
+
+    <sql id="selectSqBackupBookmarkLogVo">
+        select id, user_id, name, down_url, type, result, create_time from sq_backup_bookmark_log
+    </sql>
+
+    <select id="selectSqBackupBookmarkLogList" parameterType="SqBackupBookmarkLog" resultMap="SqBackupBookmarkLogResult">
+        <include refid="selectSqBackupBookmarkLogVo"/>
+        <where>
+            <if test="userId != null "> and user_id = #{userId}</if>
+            <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
+            <if test="downUrl != null  and downUrl != ''"> and down_url = #{downUrl}</if>
+            <if test="type != null "> and type = #{type}</if>
+            <if test="result != null  and result != ''"> and result = #{result}</if>
+        </where>
+        order by  create_time desc
+    </select>
+
+    <select id="selectSqBackupBookmarkLogById" parameterType="Long" resultMap="SqBackupBookmarkLogResult">
+        <include refid="selectSqBackupBookmarkLogVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertSqBackupBookmarkLog" parameterType="SqBackupBookmarkLog" useGeneratedKeys="true" keyProperty="id">
+        insert into sq_backup_bookmark_log
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="userId != null">user_id,</if>
+            <if test="name != null">name,</if>
+            <if test="downUrl != null">down_url,</if>
+            <if test="type != null">type,</if>
+            <if test="result != null">result,</if>
+            <if test="createTime != null">create_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="userId != null">#{userId},</if>
+            <if test="name != null">#{name},</if>
+            <if test="downUrl != null">#{downUrl},</if>
+            <if test="type != null">#{type},</if>
+            <if test="result != null">#{result},</if>
+            <if test="createTime != null">#{createTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateSqBackupBookmarkLog" parameterType="SqBackupBookmarkLog">
+        update sq_backup_bookmark_log
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="userId != null">user_id = #{userId},</if>
+            <if test="name != null">name = #{name},</if>
+            <if test="downUrl != null">down_url = #{downUrl},</if>
+            <if test="type != null">type = #{type},</if>
+            <if test="result != null">result = #{result},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteSqBackupBookmarkLogById" parameterType="Long">
+        delete from sq_backup_bookmark_log where id = #{id}
+    </delete>
+
+    <delete id="deleteSqBackupBookmarkLogByIds" parameterType="String">
+        delete from sq_backup_bookmark_log where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+</mapper>

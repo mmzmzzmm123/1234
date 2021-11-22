@@ -40,6 +40,10 @@
             <groupId>com.ruoyi</groupId>
             <artifactId>ruoyi-note</artifactId>
         </dependency>
+        <dependency>
+            <groupId>com.ruoyi</groupId>
+            <artifactId>ruoyi-yunbookmark</artifactId>
+        </dependency>
 
     </dependencies>
 

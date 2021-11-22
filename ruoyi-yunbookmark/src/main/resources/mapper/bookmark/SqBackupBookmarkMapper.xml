@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.bookmark.mapper.SqBackupBookmarkMapper">
+    
+    <resultMap type="SqBackupBookmark" id="SqBackupBookmarkResult">
+        <result property="id"    column="id"    />
+        <result property="userId"    column="user_id"    />
+        <result property="aliyun"    column="aliyun"    />
+        <result property="baiduyun"    column="baiduyun"    />
+        <result property="weiyun"    column="weiyun"    />
+        <result property="cycle"    column="cycle"    />
+        <result property="lastTime"    column="last_time"    />
+        <result property="backupTime"    column="backup_time"    />
+        <result property="baiduyunToken"    column="baiduyun_token"    />
+        <result property="aliyunToken"    column="aliyun_token"    />
+        <result property="weiyunToken"    column="weiyun_token"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateTime"    column="update_time"    />
+    </resultMap>
+
+    <sql id="selectSqBackupBookmarkVo">
+        select id, user_id, aliyun, baiduyun, weiyun, cycle, last_time, backup_time, baiduyun_token, aliyun_token, weiyun_token, create_time, update_time from sq_backup_bookmark
+    </sql>
+
+    <select id="selectSqBackupBookmarkList" parameterType="SqBackupBookmark" resultMap="SqBackupBookmarkResult">
+        <include refid="selectSqBackupBookmarkVo"/>
+        <where>  
+            <if test="userId != null "> and user_id = #{userId}</if>
+            <if test="aliyun != null "> and aliyun = #{aliyun}</if>
+            <if test="baiduyun != null "> and baiduyun = #{baiduyun}</if>
+            <if test="weiyun != null "> and weiyun = #{weiyun}</if>
+            <if test="cycle != null "> and cycle = #{cycle}</if>
+            <if test="lastTime != null "> and last_time = #{lastTime}</if>
+            <if test="backupTime != null "> and backup_time = #{backupTime}</if>
+            <if test="baiduyunToken != null  and baiduyunToken != ''"> and baiduyun_token = #{baiduyunToken}</if>
+            <if test="aliyunToken != null  and aliyunToken != ''"> and aliyun_token = #{aliyunToken}</if>
+            <if test="weiyunToken != null  and weiyunToken != ''"> and weiyun_token = #{weiyunToken}</if>
+        </where>
+    </select>
+    
+    <select id="selectSqBackupBookmarkById" parameterType="Long" resultMap="SqBackupBookmarkResult">
+        <include refid="selectSqBackupBookmarkVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertSqBackupBookmark" parameterType="SqBackupBookmark" useGeneratedKeys="true" keyProperty="id">
+        insert into sq_backup_bookmark
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="userId != null">user_id,</if>
+            <if test="aliyun != null">aliyun,</if>
+            <if test="baiduyun != null">baiduyun,</if>
+            <if test="weiyun != null">weiyun,</if>
+            <if test="cycle != null">cycle,</if>
+            <if test="lastTime != null">last_time,</if>
+            <if test="backupTime != null">backup_time,</if>
+            <if test="baiduyunToken != null">baiduyun_token,</if>
+            <if test="aliyunToken != null">aliyun_token,</if>
+            <if test="weiyunToken != null">weiyun_token,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateTime != null">update_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="userId != null">#{userId},</if>
+            <if test="aliyun != null">#{aliyun},</if>
+            <if test="baiduyun != null">#{baiduyun},</if>
+            <if test="weiyun != null">#{weiyun},</if>
+            <if test="cycle != null">#{cycle},</if>
+            <if test="lastTime != null">#{lastTime},</if>
+            <if test="backupTime != null">#{backupTime},</if>
+            <if test="baiduyunToken != null">#{baiduyunToken},</if>
+            <if test="aliyunToken != null">#{aliyunToken},</if>
+            <if test="weiyunToken != null">#{weiyunToken},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateSqBackupBookmark" parameterType="SqBackupBookmark">
+        update sq_backup_bookmark
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="userId != null">user_id = #{userId},</if>
+            <if test="aliyun != null">aliyun = #{aliyun},</if>
+            <if test="baiduyun != null">baiduyun = #{baiduyun},</if>
+            <if test="weiyun != null">weiyun = #{weiyun},</if>
+            <if test="cycle != null">cycle = #{cycle},</if>
+            <if test="lastTime != null">last_time = #{lastTime},</if>
+            <if test="backupTime != null">backup_time = #{backupTime},</if>
+            <if test="baiduyunToken != null">baiduyun_token = #{baiduyunToken},</if>
+            <if test="aliyunToken != null">aliyun_token = #{aliyunToken},</if>
+            <if test="weiyunToken != null">weiyun_token = #{weiyunToken},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteSqBackupBookmarkById" parameterType="Long">
+        delete from sq_backup_bookmark where id = #{id}
+    </delete>
+
+    <delete id="deleteSqBackupBookmarkByIds" parameterType="String">
+        delete from sq_backup_bookmark where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+</mapper>
