@@ -25,7 +25,7 @@
 		<el-form-item>
 			<el-radio v-model='radioValue' :label="4">
 				指定
-				<el-select clearable v-model="checkboxList" placeholder="可多选" multiple style="width:100%">
+				<el-select clearable v-model="checkboxList" placeholder="可多选" multiple style="width:100%" @change="selectChange">
 					<el-option v-for="item in 12" :key="item" :value="item">{{item}}</el-option>
 				</el-select>
 			</el-radio>
@@ -48,25 +48,20 @@ export default {
 	},
 	name: 'crontab-month',
 	props: ['check', 'cron'],
-	methods: {
+	methods: {    selectChange() {
+      this.radioValue = 4
+    },
+    init() {
+      this.cycle01 = 1
+      this.cycle02 = 2
+      this.average01 = 1
+      this.average02 = 1
+      this.checkboxList = []
+    },
 		// 单选按钮值变化时
 		radioChange() {
 			if (this.radioValue === 1) {
 				this.$emit('update', 'month', '*');
-				this.$emit('update', 'year', '*');
-			} else {
-				if (this.cron.day === '*') {
-					this.$emit('update', 'day', '0', 'month');
-				}
-				if (this.cron.hour === '*') {
-					this.$emit('update', 'hour', '0', 'month');
-				}
-				if (this.cron.min === '*') {
-					this.$emit('update', 'min', '0', 'month');
-				}
-				if (this.cron.second === '*') {
-					this.$emit('update', 'second', '0', 'month');
-				}
 			}
 			switch (this.radioValue) {
 				case 2:
