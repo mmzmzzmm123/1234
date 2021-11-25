@@ -1,15 +1,6 @@
 <template>
   <div class="app-container">
     <el-form :model="queryParams" ref="queryForm" :inline="true" v-show="showSearch" label-width="68px">
-      <el-form-item label="闽政通用户ID" prop="mztUserId">
-        <el-input
-          v-model="queryParams.mztUserId"
-          placeholder="请输入闽政通用户ID"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
       <el-form-item label="企业名称" prop="companyName">
         <el-input
           v-model="queryParams.companyName"
@@ -28,92 +19,6 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="省份" prop="companyProvince">
-        <el-input
-          v-model="queryParams.companyProvince"
-          placeholder="请输入省份"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="市" prop="companyCity">
-        <el-input
-          v-model="queryParams.companyCity"
-          placeholder="请输入市"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="区或县" prop="companyArea">
-        <el-input
-          v-model="queryParams.companyArea"
-          placeholder="请输入区或县"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="企业划型" prop="companyType">
-        <el-select v-model="queryParams.companyType" placeholder="请选择企业划型" clearable size="small">
-          <el-option label="请选择字典生成" value="" />
-        </el-select>
-      </el-form-item>
-      <el-form-item label="所在行业" prop="companyIndustry">
-        <el-input
-          v-model="queryParams.companyIndustry"
-          placeholder="请输入所在行业"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="主营业务" prop="companyBusiness">
-        <el-input
-          v-model="queryParams.companyBusiness"
-          placeholder="请输入主营业务"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="意向银行" prop="loanBand">
-        <el-input
-          v-model="queryParams.loanBand"
-          placeholder="请输入意向银行"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="贷款金额" prop="loanAmount">
-        <el-input
-          v-model="queryParams.loanAmount"
-          placeholder="请输入贷款金额"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="是否首次贷款" prop="loanFirst">
-        <el-input
-          v-model="queryParams.loanFirst"
-          placeholder="请输入是否首次贷款"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="贷款用途" prop="loanPurpose">
-        <el-input
-          v-model="queryParams.loanPurpose"
-          placeholder="请输入贷款用途"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
       <el-form-item label="联系人姓名" prop="contactName">
         <el-input
           v-model="queryParams.contactName"
@@ -127,6 +32,25 @@
         <el-input
           v-model="queryParams.contactPhone"
           placeholder="请输入联系人手机"
+          clearable
+          size="small"
+          @keyup.enter.native="handleQuery"
+        />
+      </el-form-item>
+      <el-form-item label="贷款对象类型" prop="loanObjectType">
+        <el-select v-model="queryParams.loanObjectType" placeholder="请选择贷款对象类型" clearable size="small">
+          <el-option
+            v-for="dict in loanObjectTypeOptions"
+            :key="dict.dictValue"
+            :label="dict.dictLabel"
+            :value="dict.dictValue"
+          />
+        </el-select>
+      </el-form-item>
+      <el-form-item label="客户经理" prop="customerManager">
+        <el-input
+          v-model="queryParams.customerManager"
+          placeholder="请输入客户经理"
           clearable
           size="small"
           @keyup.enter.native="handleQuery"
@@ -188,22 +112,18 @@
     <el-table v-loading="loading" :data="loanList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
       <el-table-column label="企业id" align="center" prop="companyId" />
-      <el-table-column label="闽政通用户ID" align="center" prop="mztUserId" />
       <el-table-column label="企业名称" align="center" prop="companyName" />
       <el-table-column label="统一社会信用代码" align="center" prop="companyCreditCode" />
-      <el-table-column label="省份" align="center" prop="companyProvince" />
-      <el-table-column label="市" align="center" prop="companyCity" />
-      <el-table-column label="区或县" align="center" prop="companyArea" />
-      <el-table-column label="企业划型" align="center" prop="companyType" />
-      <el-table-column label="所在行业" align="center" prop="companyIndustry" />
-      <el-table-column label="主营业务" align="center" prop="companyBusiness" />
-      <el-table-column label="意向银行" align="center" prop="loanBand" />
+      <el-table-column label="企业地址" align="center" prop="companyAddress" />
+      <el-table-column label="意向银行" align="center" prop="loanBand" :formatter="loanBandFormat" />
       <el-table-column label="贷款金额" align="center" prop="loanAmount" />
-      <el-table-column label="是否首次贷款" align="center" prop="loanFirst" />
+      <el-table-column label="是否首次贷款" align="center" prop="loanFirst" :formatter="loanFirstFormat" />
       <el-table-column label="贷款用途" align="center" prop="loanPurpose" />
-      <el-table-column label="备注说明" align="center" prop="remark" />
       <el-table-column label="联系人姓名" align="center" prop="contactName" />
       <el-table-column label="联系人手机" align="center" prop="contactPhone" />
+      <el-table-column label="银行网点" align="center" prop="bankBranch" />
+      <el-table-column label="贷款对象类型" align="center" prop="loanObjectType" :formatter="loanObjectTypeFormat" />
+      <el-table-column label="客户经理" align="center" prop="customerManager" />
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button
@@ -247,6 +167,9 @@
         <el-form-item label="省份" prop="companyProvince">
           <el-input v-model="form.companyProvince" placeholder="请输入省份" />
         </el-form-item>
+        <el-form-item label="企业地址" prop="companyAddress">
+          <el-input v-model="form.companyAddress" placeholder="请输入企业地址" />
+        </el-form-item>
         <el-form-item label="市" prop="companyCity">
           <el-input v-model="form.companyCity" placeholder="请输入市" />
         </el-form-item>
@@ -254,9 +177,7 @@
           <el-input v-model="form.companyArea" placeholder="请输入区或县" />
         </el-form-item>
         <el-form-item label="企业划型" prop="companyType">
-          <el-select v-model="form.companyType" placeholder="请选择企业划型">
-            <el-option label="请选择字典生成" value="" />
-          </el-select>
+          <el-input v-model="form.companyType" placeholder="请输入企业划型" />
         </el-form-item>
         <el-form-item label="所在行业" prop="companyIndustry">
           <el-input v-model="form.companyIndustry" placeholder="请输入所在行业" />
@@ -264,14 +185,28 @@
         <el-form-item label="主营业务" prop="companyBusiness">
           <el-input v-model="form.companyBusiness" placeholder="请输入主营业务" />
         </el-form-item>
-        <el-form-item label="意向银行" prop="loanBand">
-          <el-input v-model="form.loanBand" placeholder="请输入意向银行" />
+        <el-form-item label="意向银行">
+          <el-checkbox-group v-model="form.loanBand">
+            <el-checkbox
+              v-for="dict in loanBandOptions"
+              :key="dict.dictValue"
+              :label="dict.dictValue">
+              {{dict.dictLabel}}
+            </el-checkbox>
+          </el-checkbox-group>
         </el-form-item>
         <el-form-item label="贷款金额" prop="loanAmount">
           <el-input v-model="form.loanAmount" placeholder="请输入贷款金额" />
         </el-form-item>
         <el-form-item label="是否首次贷款" prop="loanFirst">
-          <el-input v-model="form.loanFirst" placeholder="请输入是否首次贷款" />
+          <el-select v-model="form.loanFirst" placeholder="请选择是否首次贷款">
+            <el-option
+              v-for="dict in loanFirstOptions"
+              :key="dict.dictValue"
+              :label="dict.dictLabel"
+              :value="dict.dictValue"
+            ></el-option>
+          </el-select>
         </el-form-item>
         <el-form-item label="贷款用途" prop="loanPurpose">
           <el-input v-model="form.loanPurpose" placeholder="请输入贷款用途" />
@@ -285,8 +220,21 @@
         <el-form-item label="联系人手机" prop="contactPhone">
           <el-input v-model="form.contactPhone" placeholder="请输入联系人手机" />
         </el-form-item>
-        <el-form-item label="删除标志" prop="delFlag">
-          <el-input v-model="form.delFlag" placeholder="请输入删除标志" />
+        <el-form-item label="银行网点" prop="bankBranch">
+          <el-input v-model="form.bankBranch" placeholder="请输入银行网点" />
+        </el-form-item>
+        <el-form-item label="贷款对象类型" prop="loanObjectType">
+          <el-select v-model="form.loanObjectType" placeholder="请选择贷款对象类型">
+            <el-option
+              v-for="dict in loanObjectTypeOptions"
+              :key="dict.dictValue"
+              :label="dict.dictLabel"
+              :value="dict.dictValue"
+            ></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="客户经理" prop="customerManager">
+          <el-input v-model="form.customerManager" placeholder="请输入客户经理" />
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -324,25 +272,22 @@ export default {
       title: "",
       // 是否显示弹出层
       open: false,
+      // 意向银行字典
+      loanBandOptions: [],
+      // 是否首次贷款字典
+      loanFirstOptions: [],
+      // 贷款对象类型字典
+      loanObjectTypeOptions: [],
       // 查询参数
       queryParams: {
         pageNum: 1,
         pageSize: 10,
-        mztUserId: null,
         companyName: null,
         companyCreditCode: null,
-        companyProvince: null,
-        companyCity: null,
-        companyArea: null,
-        companyType: null,
-        companyIndustry: null,
-        companyBusiness: null,
-        loanBand: null,
-        loanAmount: null,
-        loanFirst: null,
-        loanPurpose: null,
         contactName: null,
         contactPhone: null,
+        loanObjectType: null,
+        customerManager: null
       },
       // 表单参数
       form: {},
@@ -365,6 +310,15 @@ export default {
   },
   created() {
     this.getList();
+    this.getDicts("sys_user_band").then(response => {
+      this.loanBandOptions = response.data;
+    });
+    this.getDicts("data_is_loan_first").then(response => {
+      this.loanFirstOptions = response.data;
+    });
+    this.getDicts("data_loan_object_type").then(response => {
+      this.loanObjectTypeOptions = response.data;
+    });
   },
   methods: {
     /** 查询企业贷款信息列表 */
@@ -375,6 +329,18 @@ export default {
         this.total = response.total;
         this.loading = false;
       });
+    },
+    // 意向银行字典翻译
+    loanBandFormat(row, column) {
+      return this.selectDictLabels(this.loanBandOptions, row.loanBand);
+    },
+    // 是否首次贷款字典翻译
+    loanFirstFormat(row, column) {
+      return this.selectDictLabel(this.loanFirstOptions, row.loanFirst);
+    },
+    // 贷款对象类型字典翻译
+    loanObjectTypeFormat(row, column) {
+      return this.selectDictLabel(this.loanObjectTypeOptions, row.loanObjectType);
     },
     // 取消按钮
     cancel() {
@@ -389,12 +355,13 @@ export default {
         companyName: null,
         companyCreditCode: null,
         companyProvince: null,
+        companyAddress: null,
         companyCity: null,
         companyArea: null,
         companyType: null,
         companyIndustry: null,
         companyBusiness: null,
-        loanBand: null,
+        loanBand: [],
         loanAmount: null,
         loanFirst: null,
         loanPurpose: null,
@@ -403,7 +370,10 @@ export default {
         contactPhone: null,
         delFlag: null,
         createTime: null,
-        updateTime: null
+        updateTime: null,
+        bankBranch: null,
+        loanObjectType: null,
+        customerManager: null
       };
       this.resetForm("form");
     },
@@ -435,6 +405,7 @@ export default {
       const companyId = row.companyId || this.ids
       getLoan(companyId).then(response => {
         this.form = response.data;
+        this.form.loanBand = this.form.loanBand.split(",");
         this.open = true;
         this.title = "修改企业贷款信息";
       });
@@ -443,6 +414,7 @@ export default {
     submitForm() {
       this.$refs["form"].validate(valid => {
         if (valid) {
+          this.form.loanBand = this.form.loanBand.join(",");
           if (this.form.companyId != null) {
             updateLoan(this.form).then(response => {
               this.msgSuccess("修改成功");

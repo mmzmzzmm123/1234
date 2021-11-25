@@ -37,27 +37,18 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </select>
 
     <sql id="selectDataCompanyLoanVo">
-        select company_id, mzt_user_id, company_name, company_credit_code, company_province, company_city, company_area, company_type, company_industry, company_business, loan_band, loan_amount, loan_first, loan_purpose, remark, contact_name, contact_phone, del_flag, create_time, update_time from data_company_loan
+        select company_id, mzt_user_id, company_name, company_credit_code, company_province, company_address, company_city, company_area, company_type, company_industry, company_business, loan_band, loan_amount, loan_first, loan_purpose, remark, contact_name, contact_phone, del_flag, create_time, update_time, bank_branch, loan_object_type, customer_manager from data_company_loan
     </sql>
 
     <select id="selectDataCompanyLoanList" parameterType="DataCompanyLoan" resultMap="DataCompanyLoanResult">
         <include refid="selectDataCompanyLoanVo"/>
-        <where>  
-            <if test="mztUserId != null  and mztUserId != ''"> and mzt_user_id = #{mztUserId}</if>
+        <where>
             <if test="companyName != null  and companyName != ''"> and company_name like concat('%', #{companyName}, '%')</if>
             <if test="companyCreditCode != null  and companyCreditCode != ''"> and company_credit_code = #{companyCreditCode}</if>
-            <if test="companyProvince != null  and companyProvince != ''"> and company_province = #{companyProvince}</if>
-            <if test="companyCity != null  and companyCity != ''"> and company_city = #{companyCity}</if>
-            <if test="companyArea != null  and companyArea != ''"> and company_area = #{companyArea}</if>
-            <if test="companyType != null  and companyType != ''"> and company_type = #{companyType}</if>
-            <if test="companyIndustry != null  and companyIndustry != ''"> and company_industry = #{companyIndustry}</if>
-            <if test="companyBusiness != null  and companyBusiness != ''"> and company_business = #{companyBusiness}</if>
-            <if test="loanBand != null  and loanBand != ''"> and loan_band = #{loanBand}</if>
-            <if test="loanAmount != null "> and loan_amount = #{loanAmount}</if>
-            <if test="loanFirst != null  and loanFirst != ''"> and loan_first = #{loanFirst}</if>
-            <if test="loanPurpose != null  and loanPurpose != ''"> and loan_purpose = #{loanPurpose}</if>
             <if test="contactName != null  and contactName != ''"> and contact_name like concat('%', #{contactName}, '%')</if>
             <if test="contactPhone != null  and contactPhone != ''"> and contact_phone = #{contactPhone}</if>
+            <if test="loanObjectType != null  and loanObjectType != ''"> and loan_object_type = #{loanObjectType}</if>
+            <if test="customerManager != null  and customerManager != ''"> and customer_manager = #{customerManager}</if>
         </where>
     </select>
 
