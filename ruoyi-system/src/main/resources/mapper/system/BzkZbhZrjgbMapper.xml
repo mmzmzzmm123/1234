@@ -1,0 +1,203 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.BzkZbhZrjgbMapper">
+    
+    <resultMap type="BzkZbhZrjgb" id="BzkZbhZrjgbResult">
+        <result property="zjlid"    column="zjlid"    />
+        <result property="lyyyxtid"    column="lyyyxtid"    />
+        <result property="dataFrom"    column="data_from"    />
+        <result property="xxrksj"    column="xxrksj"    />
+        <result property="xxrksjTmsp"    column="xxrksj_tmsp"    />
+        <result property="bz"    column="bz"    />
+        <result property="sourceXxrksj"    column="source_xxrksj"    />
+        <result property="sourceZjlid"    column="source_zjlid"    />
+        <result property="businessFlagId"    column="business_flag_id"    />
+        <result property="businessFlagValue"    column="business_flag_value"    />
+        <result property="firstCollectTime"    column="first_collect_time"    />
+        <result property="lastCollectTime"    column="last_collect_time"    />
+        <result property="foundTimes"    column="found_times"    />
+        <result property="errorDataFlag"    column="error_data_flag"    />
+        <result property="errorData"    column="error_data"    />
+        <result property="errorElement"    column="error_element"    />
+        <result property="batchDataFlag"    column="batch_data_flag"    />
+        <result property="sjaqjbdm"    column="sjaqjbdm"    />
+        <result property="cjd"    column="cjd"    />
+        <result property="tyshxydm"    column="tyshxydm"    />
+        <result property="sbgtgshxm"    column="sbgtgshxm"    />
+        <result property="zjlx"    column="zjlx"    />
+        <result property="zjhm"    column="zjhm"    />
+        <result property="zcrq"    column="zcrq"    />
+        <result property="zcdz"    column="zcdz"    />
+        <result property="zcdzXzqh"    column="zcdz_xzqh"    />
+        <result property="regstate"    column="regstate"    />
+        <result property="zywfss"    column="zywfss"    />
+        <result property="sxbzxrah"    column="sxbzxrah"    />
+        <result property="sxhmdxxmc"    column="sxhmdxxmc"    />
+        <result property="gsycxx"    column="gsycxx"    />
+    </resultMap>
+
+    <sql id="selectBzkZbhZrjgbVo">
+        select zjlid, lyyyxtid, data_from, xxrksj, xxrksj_tmsp, bz, source_xxrksj, source_zjlid, business_flag_id, business_flag_value, first_collect_time, last_collect_time, found_times, error_data_flag, error_data, error_element, batch_data_flag, sjaqjbdm, cjd, tyshxydm, sbgtgshxm, zjlx, zjhm, zcrq, zcdz, zcdz_xzqh, regstate, zywfss, sxbzxrah, sxhmdxxmc, gsycxx from bzk_zbh_zrjgb
+    </sql>
+
+    <select id="selectBzkZbhZrjgbList" parameterType="BzkZbhZrjgb" resultMap="BzkZbhZrjgbResult">
+        <include refid="selectBzkZbhZrjgbVo"/>
+        <where>  
+            <if test="lyyyxtid != null  and lyyyxtid != ''"> and lyyyxtid = #{lyyyxtid}</if>
+            <if test="dataFrom != null  and dataFrom != ''"> and data_from = #{dataFrom}</if>
+            <if test="xxrksj != null  and xxrksj != ''"> and xxrksj = #{xxrksj}</if>
+            <if test="xxrksjTmsp != null "> and xxrksj_tmsp = #{xxrksjTmsp}</if>
+            <if test="bz != null  and bz != ''"> and bz = #{bz}</if>
+            <if test="sourceXxrksj != null  and sourceXxrksj != ''"> and source_xxrksj = #{sourceXxrksj}</if>
+            <if test="sourceZjlid != null  and sourceZjlid != ''"> and source_zjlid = #{sourceZjlid}</if>
+            <if test="businessFlagId != null  and businessFlagId != ''"> and business_flag_id = #{businessFlagId}</if>
+            <if test="businessFlagValue != null  and businessFlagValue != ''"> and business_flag_value = #{businessFlagValue}</if>
+            <if test="firstCollectTime != null "> and first_collect_time = #{firstCollectTime}</if>
+            <if test="lastCollectTime != null "> and last_collect_time = #{lastCollectTime}</if>
+            <if test="foundTimes != null "> and found_times = #{foundTimes}</if>
+            <if test="errorDataFlag != null  and errorDataFlag != ''"> and error_data_flag = #{errorDataFlag}</if>
+            <if test="errorData != null  and errorData != ''"> and error_data = #{errorData}</if>
+            <if test="errorElement != null  and errorElement != ''"> and error_element = #{errorElement}</if>
+            <if test="batchDataFlag != null  and batchDataFlag != ''"> and batch_data_flag = #{batchDataFlag}</if>
+            <if test="sjaqjbdm != null  and sjaqjbdm != ''"> and sjaqjbdm = #{sjaqjbdm}</if>
+            <if test="cjd != null  and cjd != ''"> and cjd = #{cjd}</if>
+            <if test="tyshxydm != null  and tyshxydm != ''"> and tyshxydm = #{tyshxydm}</if>
+            <if test="sbgtgshxm != null  and sbgtgshxm != ''"> and sbgtgshxm = #{sbgtgshxm}</if>
+            <if test="zjlx != null  and zjlx != ''"> and zjlx = #{zjlx}</if>
+            <if test="zjhm != null  and zjhm != ''"> and zjhm = #{zjhm}</if>
+            <if test="zcrq != null  and zcrq != ''"> and zcrq = #{zcrq}</if>
+            <if test="zcdz != null  and zcdz != ''"> and zcdz = #{zcdz}</if>
+            <if test="zcdzXzqh != null  and zcdzXzqh != ''"> and zcdz_xzqh = #{zcdzXzqh}</if>
+            <if test="regstate != null  and regstate != ''"> and regstate = #{regstate}</if>
+            <if test="zywfss != null  and zywfss != ''"> and zywfss = #{zywfss}</if>
+            <if test="sxbzxrah != null  and sxbzxrah != ''"> and sxbzxrah = #{sxbzxrah}</if>
+            <if test="sxhmdxxmc != null  and sxhmdxxmc != ''"> and sxhmdxxmc = #{sxhmdxxmc}</if>
+            <if test="gsycxx != null  and gsycxx != ''"> and gsycxx = #{gsycxx}</if>
+        </where>
+    </select>
+    
+    <select id="selectBzkZbhZrjgbById" parameterType="String" resultMap="BzkZbhZrjgbResult">
+        <include refid="selectBzkZbhZrjgbVo"/>
+        where zjlid = #{zjlid}
+    </select>
+        
+    <insert id="insertBzkZbhZrjgb" parameterType="BzkZbhZrjgb">
+        insert into bzk_zbh_zrjgb
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="zjlid != null">zjlid,</if>
+            <if test="lyyyxtid != null">lyyyxtid,</if>
+            <if test="dataFrom != null">data_from,</if>
+            <if test="xxrksj != null">xxrksj,</if>
+            <if test="xxrksjTmsp != null">xxrksj_tmsp,</if>
+            <if test="bz != null">bz,</if>
+            <if test="sourceXxrksj != null">source_xxrksj,</if>
+            <if test="sourceZjlid != null">source_zjlid,</if>
+            <if test="businessFlagId != null">business_flag_id,</if>
+            <if test="businessFlagValue != null">business_flag_value,</if>
+            <if test="firstCollectTime != null">first_collect_time,</if>
+            <if test="lastCollectTime != null">last_collect_time,</if>
+            <if test="foundTimes != null">found_times,</if>
+            <if test="errorDataFlag != null">error_data_flag,</if>
+            <if test="errorData != null">error_data,</if>
+            <if test="errorElement != null">error_element,</if>
+            <if test="batchDataFlag != null">batch_data_flag,</if>
+            <if test="sjaqjbdm != null">sjaqjbdm,</if>
+            <if test="cjd != null">cjd,</if>
+            <if test="tyshxydm != null">tyshxydm,</if>
+            <if test="sbgtgshxm != null">sbgtgshxm,</if>
+            <if test="zjlx != null">zjlx,</if>
+            <if test="zjhm != null">zjhm,</if>
+            <if test="zcrq != null">zcrq,</if>
+            <if test="zcdz != null">zcdz,</if>
+            <if test="zcdzXzqh != null">zcdz_xzqh,</if>
+            <if test="regstate != null">regstate,</if>
+            <if test="zywfss != null">zywfss,</if>
+            <if test="sxbzxrah != null">sxbzxrah,</if>
+            <if test="sxhmdxxmc != null">sxhmdxxmc,</if>
+            <if test="gsycxx != null">gsycxx,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="zjlid != null">#{zjlid},</if>
+            <if test="lyyyxtid != null">#{lyyyxtid},</if>
+            <if test="dataFrom != null">#{dataFrom},</if>
+            <if test="xxrksj != null">#{xxrksj},</if>
+            <if test="xxrksjTmsp != null">#{xxrksjTmsp},</if>
+            <if test="bz != null">#{bz},</if>
+            <if test="sourceXxrksj != null">#{sourceXxrksj},</if>
+            <if test="sourceZjlid != null">#{sourceZjlid},</if>
+            <if test="businessFlagId != null">#{businessFlagId},</if>
+            <if test="businessFlagValue != null">#{businessFlagValue},</if>
+            <if test="firstCollectTime != null">#{firstCollectTime},</if>
+            <if test="lastCollectTime != null">#{lastCollectTime},</if>
+            <if test="foundTimes != null">#{foundTimes},</if>
+            <if test="errorDataFlag != null">#{errorDataFlag},</if>
+            <if test="errorData != null">#{errorData},</if>
+            <if test="errorElement != null">#{errorElement},</if>
+            <if test="batchDataFlag != null">#{batchDataFlag},</if>
+            <if test="sjaqjbdm != null">#{sjaqjbdm},</if>
+            <if test="cjd != null">#{cjd},</if>
+            <if test="tyshxydm != null">#{tyshxydm},</if>
+            <if test="sbgtgshxm != null">#{sbgtgshxm},</if>
+            <if test="zjlx != null">#{zjlx},</if>
+            <if test="zjhm != null">#{zjhm},</if>
+            <if test="zcrq != null">#{zcrq},</if>
+            <if test="zcdz != null">#{zcdz},</if>
+            <if test="zcdzXzqh != null">#{zcdzXzqh},</if>
+            <if test="regstate != null">#{regstate},</if>
+            <if test="zywfss != null">#{zywfss},</if>
+            <if test="sxbzxrah != null">#{sxbzxrah},</if>
+            <if test="sxhmdxxmc != null">#{sxhmdxxmc},</if>
+            <if test="gsycxx != null">#{gsycxx},</if>
+         </trim>
+    </insert>
+
+    <update id="updateBzkZbhZrjgb" parameterType="BzkZbhZrjgb">
+        update bzk_zbh_zrjgb
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="lyyyxtid != null">lyyyxtid = #{lyyyxtid},</if>
+            <if test="dataFrom != null">data_from = #{dataFrom},</if>
+            <if test="xxrksj != null">xxrksj = #{xxrksj},</if>
+            <if test="xxrksjTmsp != null">xxrksj_tmsp = #{xxrksjTmsp},</if>
+            <if test="bz != null">bz = #{bz},</if>
+            <if test="sourceXxrksj != null">source_xxrksj = #{sourceXxrksj},</if>
+            <if test="sourceZjlid != null">source_zjlid = #{sourceZjlid},</if>
+            <if test="businessFlagId != null">business_flag_id = #{businessFlagId},</if>
+            <if test="businessFlagValue != null">business_flag_value = #{businessFlagValue},</if>
+            <if test="firstCollectTime != null">first_collect_time = #{firstCollectTime},</if>
+            <if test="lastCollectTime != null">last_collect_time = #{lastCollectTime},</if>
+            <if test="foundTimes != null">found_times = #{foundTimes},</if>
+            <if test="errorDataFlag != null">error_data_flag = #{errorDataFlag},</if>
+            <if test="errorData != null">error_data = #{errorData},</if>
+            <if test="errorElement != null">error_element = #{errorElement},</if>
+            <if test="batchDataFlag != null">batch_data_flag = #{batchDataFlag},</if>
+            <if test="sjaqjbdm != null">sjaqjbdm = #{sjaqjbdm},</if>
+            <if test="cjd != null">cjd = #{cjd},</if>
+            <if test="tyshxydm != null">tyshxydm = #{tyshxydm},</if>
+            <if test="sbgtgshxm != null">sbgtgshxm = #{sbgtgshxm},</if>
+            <if test="zjlx != null">zjlx = #{zjlx},</if>
+            <if test="zjhm != null">zjhm = #{zjhm},</if>
+            <if test="zcrq != null">zcrq = #{zcrq},</if>
+            <if test="zcdz != null">zcdz = #{zcdz},</if>
+            <if test="zcdzXzqh != null">zcdz_xzqh = #{zcdzXzqh},</if>
+            <if test="regstate != null">regstate = #{regstate},</if>
+            <if test="zywfss != null">zywfss = #{zywfss},</if>
+            <if test="sxbzxrah != null">sxbzxrah = #{sxbzxrah},</if>
+            <if test="sxhmdxxmc != null">sxhmdxxmc = #{sxhmdxxmc},</if>
+            <if test="gsycxx != null">gsycxx = #{gsycxx},</if>
+        </trim>
+        where zjlid = #{zjlid}
+    </update>
+
+    <delete id="deleteBzkZbhZrjgbById" parameterType="String">
+        delete from bzk_zbh_zrjgb where zjlid = #{zjlid}
+    </delete>
+
+    <delete id="deleteBzkZbhZrjgbByIds" parameterType="String">
+        delete from bzk_zbh_zrjgb where zjlid in 
+        <foreach item="zjlid" collection="array" open="(" separator="," close=")">
+            #{zjlid}
+        </foreach>
+    </delete>
+</mapper>
