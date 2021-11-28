@@ -1,6 +1,8 @@
 package com.ruoyi.framework.config;
 
+import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.jackson.Jackson2ObjectMapperBuilderCustomizer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.cors.CorsConfiguration;
@@ -15,7 +17,7 @@ import com.ruoyi.framework.interceptor.RepeatSubmitInterceptor;
 
 /**
  * 通用配置
- * 
+ *
  * @author ruoyi
  */
 @Configuration
@@ -66,5 +68,16 @@ public class ResourcesConfig implements WebMvcConfigurer
         source.registerCorsConfiguration("/**", config);
         // 返回新的CorsFilter
         return new CorsFilter(source);
+    }
+
+    /**
+     * Json自定义序列化, Long => String
+     */
+    @Bean
+    public Jackson2ObjectMapperBuilderCustomizer jackson2ObjectMapperBuilderCustomizer() {
+        return jacksonObjectMapperBuilder ->
+                jacksonObjectMapperBuilder
+                        .serializerByType(Long.class, ToStringSerializer.instance)
+                        .serializerByType(Long.TYPE, ToStringSerializer.instance);
     }
 }
