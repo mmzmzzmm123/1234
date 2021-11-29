@@ -10,7 +10,7 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="统一社会信用代码" prop="companyCreditCode">
+      <el-form-item label="统一社会信用代码" prop="companyCreditCode" label-width="125px" >
         <el-input
           v-model="queryParams.companyCreditCode"
           placeholder="请输入统一社会信用代码"
@@ -19,26 +19,28 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="联系人姓名" prop="contactName">
+      <el-form-item label="联系人姓名" prop="contactName" label-width="90px" >
         <el-input
           v-model="queryParams.contactName"
           placeholder="请输入联系人姓名"
           clearable
           size="small"
+          style="width: 160px"
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="联系人手机" prop="contactPhone">
+      <el-form-item label="联系人手机" prop="contactPhone" label-width="90px" >
         <el-input
           v-model="queryParams.contactPhone"
           placeholder="请输入联系人手机"
           clearable
           size="small"
+          style="width: 160px"
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="贷款对象类型" prop="loanObjectType">
-        <el-select v-model="queryParams.loanObjectType" placeholder="请选择贷款对象类型" clearable size="small">
+      <el-form-item label="贷款对象类型" prop="loanObjectType" label-width="100px">
+        <el-select v-model="queryParams.loanObjectType" placeholder="请选择贷款对象类型" clearable size="small" style="width: 180px">
           <el-option
             v-for="dict in loanObjectTypeOptions"
             :key="dict.dictValue"
@@ -53,6 +55,7 @@
           placeholder="请输入客户经理"
           clearable
           size="small"
+          style="width: 150px"
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
@@ -111,25 +114,26 @@
 
     <el-table v-loading="loading" :data="loanList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="企业id" align="center" prop="companyId" />
+      <el-table-column label="企业id" align="center" prop="companyId" width="58px"/>
       <el-table-column label="企业名称" align="center" prop="companyName" />
       <el-table-column label="统一社会信用代码" align="center" prop="companyCreditCode" />
-      <el-table-column label="企业地址" align="center" prop="companyAddress" />
+      <el-table-column label="企业地址" align="center" prop="companyAddress" :show-overflow-tooltip="true" />
       <el-table-column label="意向银行" align="center" prop="loanBand" :formatter="loanBandFormat" />
-      <el-table-column label="贷款金额" align="center" prop="loanAmount" />
-      <el-table-column label="是否首次贷款" align="center" prop="loanFirst" :formatter="loanFirstFormat" />
-      <el-table-column label="贷款用途" align="center" prop="loanPurpose" />
-      <el-table-column label="联系人姓名" align="center" prop="contactName" />
-      <el-table-column label="联系人手机" align="center" prop="contactPhone" />
+      <el-table-column label="贷款金额" align="center" prop="loanAmount" width="78px"/>
+      <el-table-column label="是否首次贷款" align="center" prop="loanFirst" :formatter="loanFirstFormat" width="98px"/>
+      <el-table-column label="贷款用途" align="center" prop="loanPurpose" width="78px" :show-overflow-tooltip="true"/>
+      <el-table-column label="联系人姓名" align="center" prop="contactName" width="88px"/>
+      <el-table-column label="联系人手机" align="center" prop="contactPhone" width="110px"/>
       <el-table-column label="银行网点" align="center" prop="bankBranch" />
-      <el-table-column label="贷款对象类型" align="center" prop="loanObjectType" :formatter="loanObjectTypeFormat" />
+      <el-table-column label="贷款对象类型" align="center" prop="loanObjectType" :formatter="loanObjectTypeFormat" width="98px" />
       <el-table-column label="客户经理" align="center" prop="customerManager" />
-      <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
+      <el-table-column label="操作" align="center" class-name="small-padding fixed-width" width="90px">
         <template slot-scope="scope">
           <el-button
             size="mini"
             type="text"
             icon="el-icon-document"
+            align="center"
             @click="handleReport(scope.row)"
             v-hasPermi="['system:loan:report']"
           >查看报告</el-button>
@@ -137,6 +141,8 @@
             size="mini"
             type="text"
             icon="el-icon-edit"
+            align="center"
+
             @click="handleUpdate(scope.row)"
             v-hasPermi="['system:loan:edit']"
           >修改</el-button>
@@ -144,13 +150,15 @@
             size="mini"
             type="text"
             icon="el-icon-delete"
+            align="center"
+
             @click="handleDelete(scope.row)"
             v-hasPermi="['system:loan:remove']"
           >删除</el-button>
         </template>
       </el-table-column>
     </el-table>
-    
+
     <pagination
       v-show="total>0"
       :total="total"
@@ -160,8 +168,8 @@
     />
 
     <!-- 添加或修改企业贷款信息对话框 -->
-    <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
-      <el-form ref="form" :model="form" :rules="rules" label-width="80px">
+    <el-dialog :title="title" :visible.sync="open" width="780px" append-to-body>
+      <el-form ref="form" :model="form" :rules="rules" label-width="110px">
         <el-form-item label="闽政通用户ID" prop="mztUserId">
           <el-input v-model="form.mztUserId" placeholder="请输入闽政通用户ID" />
         </el-form-item>
@@ -190,7 +198,7 @@
           <el-input v-model="form.companyIndustry" placeholder="请输入所在行业" />
         </el-form-item>
         <el-form-item label="主营业务" prop="companyBusiness">
-          <el-input v-model="form.companyBusiness" placeholder="请输入主营业务" />
+          <el-input v-model="form.companyBusiness" placeholder="请输入主营业务" type="textarea" autosize/>
         </el-form-item>
         <el-form-item label="意向银行">
           <el-checkbox-group v-model="form.loanBand">
