@@ -116,7 +116,7 @@ public class DataCompanyLoanController extends BaseController
     }
 
     @PreAuthorize("@ss.hasPermi('system:loan:report')")
-    @GetMapping("/{tyshxydm}")
+    @GetMapping("/report/{tyshxydm}")
     public AjaxResult getCreditReport(@PathVariable String tyshxydm){
 
         CreditReport creditReport = new CreditReport();

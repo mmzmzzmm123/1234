@@ -254,12 +254,103 @@
     <el-dialog :title="titleReport" :visible.sync="openReport" width="800px" append-to-body>
       <el-collapse v-model="activeNames" @change="handleChange">
           <el-collapse-item title="主题库-评分模型" name="1">
-            <div>与现实生活一致：与现实生活的流程、逻辑保持一致，遵循用户习惯的语言和概念；</div>
-            <div>在界面中一致：所有的元素和结构需保持一致，比如：设计样式、图标和文本、元素的位置等。</div>
+            <div v-if="formReport.ztkZbhZrjgb == null">暂无数据</div>
+            <el-form v-else ref="formReport" :model="formReport" :rules="rules" label-width="200px">
+                <el-form-item label="来源应用系统编号" prop="lyyyxtid">
+                  {{formReport.ztkZbhZrjgb.lyyyxtid}}
+                </el-form-item>
+                <el-form-item label="来源表" prop="dataFrom">
+                  {{formReport.ztkZbhZrjgb.dataFrom}}
+                </el-form-item>
+                <el-form-item label="信息入库时间" prop="xxrksj">
+                  <el-input v-model="form.xxrksj" type="textarea" placeholder="请输入内容" />
+                </el-form-item>
+                <el-form-item label="信息入库时间戳" prop="xxrksjTmsp">
+                  <el-input v-model="form.xxrksjTmsp" placeholder="请输入信息入库时间戳" />
+                </el-form-item>
+                <el-form-item label="标准库_备注" prop="bz">
+                  <el-input v-model="form.bz" type="textarea" placeholder="请输入内容" />
+                </el-form-item>
+                <el-form-item label="来源表信息入库时间" prop="sourceXxrksj">
+                  <el-input v-model="form.sourceXxrksj" type="textarea" placeholder="请输入内容" />
+                </el-form-item>
+                <el-form-item label="来源表主记录ID" prop="sourceZjlid">
+                  <el-input v-model="form.sourceZjlid" type="textarea" placeholder="请输入内容" />
+                </el-form-item>
+                <el-form-item label="业务标签ID" prop="businessFlagId">
+                  <el-input v-model="form.businessFlagId" type="textarea" placeholder="请输入内容" />
+                </el-form-item>
+                <el-form-item label="业务标签值" prop="businessFlagValue">
+                  <el-input v-model="form.businessFlagValue" type="textarea" placeholder="请输入内容" />
+                </el-form-item>
+                <el-form-item label="首次采集时间" prop="firstCollectTime">
+                  <el-input v-model="form.firstCollectTime" placeholder="请输入首次采集时间" />
+                </el-form-item>
+                <el-form-item label="最近采集时间" prop="lastCollectTime">
+                  <el-input v-model="form.lastCollectTime" placeholder="请输入最近采集时间" />
+                </el-form-item>
+                <el-form-item label="发现次数" prop="foundTimes">
+                  <el-input v-model="form.foundTimes" placeholder="请输入发现次数" />
+                </el-form-item>
+                <el-form-item label="错误数据标识" prop="errorDataFlag">
+                  <el-input v-model="form.errorDataFlag" type="textarea" placeholder="请输入内容" />
+                </el-form-item>
+                <el-form-item label="错误数据" prop="errorData">
+                  <el-input v-model="form.errorData" type="textarea" placeholder="请输入内容" />
+                </el-form-item>
+                <el-form-item label="异常字段编码" prop="errorElement">
+                  <el-input v-model="form.errorElement" type="textarea" placeholder="请输入内容" />
+                </el-form-item>
+                <el-form-item label="数据批次标识" prop="batchDataFlag">
+                  <el-input v-model="form.batchDataFlag" type="textarea" placeholder="请输入内容" />
+                </el-form-item>
+                <el-form-item label="数据安全级别代码" prop="sjaqjbdm">
+                  <el-input v-model="form.sjaqjbdm" type="textarea" placeholder="请输入内容" />
+                </el-form-item>
+                <el-form-item label="采集地" prop="cjd">
+                  <el-input v-model="form.cjd" type="textarea" placeholder="请输入内容" />
+                </el-form-item>
+                <el-form-item label="统一社会信用代码" prop="tyshxydm">
+                  <el-input v-model="form.tyshxydm" type="textarea" placeholder="请输入内容" />
+                </el-form-item>
+                <el-form-item label="申报个体工商户姓名" prop="sbgtgshxm">
+                  <el-input v-model="form.sbgtgshxm" type="textarea" placeholder="请输入内容" />
+                </el-form-item>
+                <el-form-item label="证件类型" prop="zjlx">
+                  <el-input v-model="form.zjlx" type="textarea" placeholder="请输入内容" />
+                </el-form-item>
+                <el-form-item label="证件号码" prop="zjhm">
+                  <el-input v-model="form.zjhm" type="textarea" placeholder="请输入内容" />
+                </el-form-item>
+                <el-form-item label="经营年限" prop="jynx">
+                  <el-input v-model="form.jynx" type="textarea" placeholder="请输入内容" />
+                </el-form-item>
+                <el-form-item label="法人年龄" prop="frnl">
+                  <el-input v-model="form.frnl" type="textarea" placeholder="请输入内容" />
+                </el-form-item>
+                <el-form-item label="注册地址" prop="zcdz">
+                  <el-input v-model="form.zcdz" type="textarea" placeholder="请输入内容" />
+                </el-form-item>
+                <el-form-item label="重大税收违法案件" prop="zdsffwaj">
+                  <el-input v-model="form.zdsffwaj" type="textarea" placeholder="请输入内容" />
+                </el-form-item>
+                <el-form-item label="失信被执行人" prop="sxbzxr">
+                  <el-input v-model="form.sxbzxr" type="textarea" placeholder="请输入内容" />
+                </el-form-item>
+                <el-form-item label="失信黑名单" prop="sfhmd">
+                  <el-input v-model="form.sfhmd" type="textarea" placeholder="请输入内容" />
+                </el-form-item>
+                <el-form-item label="国家下发工商异常名录" prop="gjxfgsycml">
+                  <el-input v-model="form.gjxfgsycml" type="textarea" placeholder="请输入内容" />
+                </el-form-item>
+                <el-form-item label="不动产查封" prop="bdccf">
+                  <el-input v-model="form.bdccf" type="textarea" placeholder="请输入内容" />
+                </el-form-item>
+            </el-form>
           </el-collapse-item>
           <el-collapse-item title="标准库-评分模型明细" name="2">
-            <div>控制反馈：通过界面样式和交互动效让用户可以清晰的感知自己的操作；</div>
-            <div>页面反馈：操作后，通过页面元素的变化清晰地展现当前状态。</div>
+            <div v-if="formReport.ztkZbhZrjgb == null">暂无数据</div>
+            <div v-else>控制反馈：通过界面样式和交互动效让用户可以清晰的感知自己的操作；</div>
           </el-collapse-item>
           <el-collapse-item title="主题库-准入监管评分" name="3">
             <div>简化流程：设计简洁直观的操作流程；</div>
@@ -276,7 +367,7 @@
 </template>
 
 <script>
-import { listLoan, getLoan, delLoan, addLoan, updateLoan, exportLoan } from "@/api/system/loan";
+import { listLoan, getLoan, delLoan, addLoan, updateLoan, exportLoan,getReport } from "@/api/system/loan";
 
 export default {
   name: "Loan",
@@ -339,7 +430,10 @@ export default {
         ],
       },
 
-      activeNames: ['1']
+      activeNames: ['1'],
+      // 报告弹出层标题
+      titleReport: "",
+      formReport:{},
     };
   },
   created() {
@@ -446,8 +540,12 @@ export default {
     },
     /** 查看报告按钮操作 */
     handleReport(row) {
-      this.openReport = true;
-      this.titleReport = "查看企业征信信息";
+      const tyshxydm = row.companyCreditCode
+      getReport(tyshxydm).then(response => {
+        this.formReport = response.data;
+        this.openReport = true;
+        this.titleReport = "查看企业征信信息";
+      });
     },
     /** 提交按钮 */
     submitForm() {

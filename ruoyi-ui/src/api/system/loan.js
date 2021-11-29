@@ -51,3 +51,11 @@ export function exportLoan(query) {
     params: query
   })
 }
+
+// 查询企业贷款信息详细
+export function getReport(tyshxydm) {
+  return request({
+    url: '/system/loan/report/' + tyshxydm,
+    method: 'get'
+  })
+}
