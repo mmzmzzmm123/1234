@@ -15,5 +15,9 @@ public enum DataSourceType
     /**
      * 从库
      */
-    SLAVE
+    SLAVE,
+    /**
+     * API数据库（用于内网api开放）
+     */
+    API
 }

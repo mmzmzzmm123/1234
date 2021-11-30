@@ -2,11 +2,13 @@ package com.ruoyi.system.service.impl;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.ruoyi.common.annotation.DataSource;
 import com.ruoyi.common.constant.Constants;
 import com.ruoyi.common.constant.HttpStatus;
 import com.ruoyi.common.constant.UserConstants;
 import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.core.redis.RedisCache;
+import com.ruoyi.common.enums.DataSourceType;
 import com.ruoyi.common.exception.user.SmsException;
 import com.ruoyi.common.exception.user.UserException;
 import com.ruoyi.common.utils.DateUtils;
@@ -299,6 +301,7 @@ public class DataCompanyLoanServiceImpl implements IDataCompanyLoanService
         return list;
     }
 
+    @DataSource(value = DataSourceType.API)
     @Override
     public CreditReport getReport(String tyshxydm) {
         TyshxydmDTO tyshxydmDTO = new TyshxydmDTO();
