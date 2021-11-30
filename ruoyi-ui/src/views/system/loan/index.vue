@@ -263,7 +263,7 @@
       <el-collapse v-model="activeNames" @change="handleChange">
           <el-collapse-item title="评分模型结果" name="1">
             <div v-if="formReport.ztkZhdPfmxjgb == null">暂无数据</div>
-            <el-form v-else ref="formReport" :model="formReport" :rules="rules" label-width="200px" :inline="true">
+            <el-form v-else ref="formReport" :model="formReport" :rules="rules" label-width="300px" :inline="false">
                 <el-form-item label="统一社会信用代码" prop="tyshxydm">
                   {{formReport.ztkZhdPfmxjgb.tyshxydm}}
                 </el-form-item>
@@ -274,52 +274,52 @@
                   {{formReport.ztkZhdPfmxjgb.zjlx}}
                 </el-form-item>
                 <el-form-item label="证件号码" prop="zjhm">
-                  <el-input v-model="form.zjhm" placeholder="请输入证件号码" />
+                  {{formReport.ztkZhdPfmxjgb.zjhm}}
                 </el-form-item>
                 <el-form-item label="营业店名" prop="yydm">
-                  <el-input v-model="form.yydm" placeholder="请输入营业店名" />
+                  {{formReport.ztkZhdPfmxjgb.yydm}}
                 </el-form-item>
-                <el-form-item label="经营场所_地址" prop="jycsDz">
-                  <el-input v-model="form.jycsDz" placeholder="请输入经营场所_地址" />
+                <el-form-item label="经营场所地址" prop="jycsDz">
+                  {{formReport.ztkZhdPfmxjgb.jycsDz}}
                 </el-form-item>
                 <el-form-item label="注册日期" prop="zcrq">
-                  <el-input v-model="form.zcrq" placeholder="请输入注册日期" />
+                  {{formReport.ztkZhdPfmxjgb.zcrq}}
                 </el-form-item>
-                <el-form-item label="经营年限_评分" prop="jynx">
-                  <el-input v-model="form.jynx" placeholder="请输入经营年限_评分" />
+                <el-form-item label="经营年限评分" prop="jynx">
+                  {{formReport.ztkZhdPfmxjgb.jynx}}
                 </el-form-item>
-                <el-form-item label="申报人固定资产情况_评分" prop="sbrgdzcqkpf">
-                  <el-input v-model="form.sbrgdzcqkpf" placeholder="请输入申报人固定资产情况_评分" />
+                <el-form-item label="申报人固定资产情况评分" prop="sbrgdzcqkpf">
+                  {{formReport.ztkZhdPfmxjgb.sbrgdzcqkpf}}
                 </el-form-item>
-                <el-form-item label="申报人最高学历_评分" prop="sbrzgxlpf">
-                  <el-input v-model="form.sbrzgxlpf" placeholder="请输入申报人最高学历_评分" />
+                <el-form-item label="申报人最高学历评分" prop="sbrzgxlpf">
+                  {{formReport.ztkZhdPfmxjgb.sbrzgxlpf}}
                 </el-form-item>
-                <el-form-item label="申报人婚姻状况_评分" prop="sbrhyzkpf">
-                  <el-input v-model="form.sbrhyzkpf" placeholder="请输入申报人婚姻状况_评分" />
+                <el-form-item label="申报人婚姻状况评分" prop="sbrhyzkpf">
+                  {{formReport.ztkZhdPfmxjgb.sbrhyzkpf}}
                 </el-form-item>
-                <el-form-item label="申报人欠税情况_评分" prop="sbrqsqkpf">
-                  <el-input v-model="form.sbrqsqkpf" placeholder="请输入申报人欠税情况_评分" />
+                <el-form-item label="申报人欠税情况评分" prop="sbrqsqkpf">
+                  {{formReport.ztkZhdPfmxjgb.sbrqsqkpf}}
                 </el-form-item>
-                <el-form-item label="个体工商户欠税情况_评分" prop="gtgshqsqkpf">
-                  <el-input v-model="form.gtgshqsqkpf" placeholder="请输入个体工商户欠税情况_评分" />
+                <el-form-item label="个体工商户欠税情况评分" prop="gtgshqsqkpf">
+                  {{formReport.ztkZhdPfmxjgb.gtgshqsqkpf}}
                 </el-form-item>
-                <el-form-item label="个体工商户激励情况_评分" prop="gtgshjlqkpf">
-                  <el-input v-model="form.gtgshjlqkpf" placeholder="请输入个体工商户激励情况_评分" />
+                <el-form-item label="个体工商户激励情况评分" prop="gtgshjlqkpf">
+                  {{formReport.ztkZhdPfmxjgb.gtgshjlqkpf}}
                 </el-form-item>
-                <el-form-item label="个体工商户享受扶持情况_评分" prop="gtgshxsfcqkpf">
-                  <el-input v-model="form.gtgshxsfcqkpf" placeholder="请输入个体工商户享受扶持情况_评分" />
+                <el-form-item label="个体工商户享受扶持情况评分" prop="gtgshxsfcqkpf">
+                  {{formReport.ztkZhdPfmxjgb.gtgshxsfcqkpf}}
                 </el-form-item>
                 <el-form-item label="总评分" prop="zpf">
-                  <el-input v-model="form.zpf" placeholder="请输入总评分" />
+                  {{formReport.ztkZhdPfmxjgb.zpf}}
                 </el-form-item>
                 <el-form-item label="风险等级" prop="fxdj">
-                  <el-input v-model="form.fxdj" placeholder="请输入风险等级" />
+                  {{formReport.ztkZhdPfmxjgb.fxdj}}
                 </el-form-item>
             </el-form>
           </el-collapse-item>
           <el-collapse-item title="准入监管结果" name="2">
             <div v-if="formReport.ztkZhdZrjgjgb == null">暂无数据</div>
-            <el-form v-else :model="queryParams" ref="formReport" :inline="true" v-show="showSearch" label-width="200px">
+            <el-form v-else :model="queryParams" ref="formReport" :inline="false" v-show="showSearch" label-width="300px">
               <el-form-item label="统一社会信用代码" prop="tyshxydm">
                 {{formReport.ztkZhdZrjgjgb.tyshxydm}}
               </el-form-item>
@@ -327,122 +327,50 @@
                 {{formReport.ztkZhdZrjgjgb.sbgtgshxm}}
               </el-form-item>
               <el-form-item label="证件类型" prop="zjlx">
-                <el-input
-                  v-model="queryParams.zjlx"
-                  placeholder="请输入证件类型"
-                  clearable
-                  size="small"
-                  @keyup.enter.native="handleQuery"
-                />
+                {{formReport.ztkZhdZrjgjgb.zjlx}}
               </el-form-item>
               <el-form-item label="证件号码" prop="zjhm">
-                <el-input
-                  v-model="queryParams.zjhm"
-                  placeholder="请输入证件号码"
-                  clearable
-                  size="small"
-                  @keyup.enter.native="handleQuery"
-                />
+                {{formReport.ztkZhdZrjgjgb.zjhm}}
               </el-form-item>
               <el-form-item label="经营年限大于1年(0否1是)" prop="jynx">
-                <el-input
-                  v-model="queryParams.jynx"
-                  placeholder="请输入经营年限大于1年(0否1是)"
-                  clearable
-                  size="small"
-                  @keyup.enter.native="handleQuery"
-                />
+                {{formReport.ztkZhdZrjgjgb.jynx}}
               </el-form-item>
-              <el-form-item label="准入年龄_18至60男_55女(0否1是)" prop="zrnl">
-                <el-input
-                  v-model="queryParams.zrnl"
-                  placeholder="请输入准入年龄_18至60男_55女(0否1是)"
-                  clearable
-                  size="small"
-                  @keyup.enter.native="handleQuery"
-                />
+              <el-form-item label="准入年龄_18至60男55女(0否1是)" prop="zrnl">
+                {{formReport.ztkZhdZrjgjgb.zrnl}}
               </el-form-item>
               <el-form-item label="非异地贷款_泉州市内(0否1是)" prop="fyddk">
-                <el-input
-                  v-model="queryParams.fyddk"
-                  placeholder="请输入非异地贷款_泉州市内(0否1是)"
-                  clearable
-                  size="small"
-                  @keyup.enter.native="handleQuery"
-                />
+                {{formReport.ztkZhdZrjgjgb.fyddk}}
               </el-form-item>
-              <el-form-item label="营业执照状态非吊销_停业_清算_注销(0否1是)" prop="regstate">
-                <el-input
-                  v-model="queryParams.regstate"
-                  placeholder="请输入营业执照状态非吊销_停业_清算_注销(0否1是)"
-                  clearable
-                  size="small"
-                  @keyup.enter.native="handleQuery"
-                />
+              <el-form-item label="营业执照状态非吊销停业清算注销(0否1是)" prop="regstate">
+                {{formReport.ztkZhdZrjgjgb.regstate}}
               </el-form-item>
               <el-form-item label="不存在重大税收违法案件(0否1是)" prop="zdsffwaj">
-                <el-input
-                  v-model="queryParams.zdsffwaj"
-                  placeholder="请输入不存在重大税收违法案件(0否1是)"
-                  clearable
-                  size="small"
-                  @keyup.enter.native="handleQuery"
-                />
+                {{formReport.ztkZhdZrjgjgb.zdsffwaj}}
               </el-form-item>
               <el-form-item label="非失信被执行人(0否1是)" prop="sxbzxr">
-                <el-input
-                  v-model="queryParams.sxbzxr"
-                  placeholder="请输入非失信被执行人(0否1是)"
-                  clearable
-                  size="small"
-                  @keyup.enter.native="handleQuery"
-                />
+                {{formReport.ztkZhdZrjgjgb.sxbzxr}}
               </el-form-item>
               <el-form-item label="不存在失信黑名单(0否1是)" prop="sxhmd">
-                <el-input
-                  v-model="queryParams.sxhmd"
-                  placeholder="请输入不存在失信黑名单(0否1是)"
-                  clearable
-                  size="small"
-                  @keyup.enter.native="handleQuery"
-                />
+                {{formReport.ztkZhdZrjgjgb.sxhmd}}
               </el-form-item>
               <el-form-item label="不存在国家下发工商异常名录(0否1是)" prop="gjxfgsycml">
-                <el-input
-                  v-model="queryParams.gjxfgsycml"
-                  placeholder="请输入不存在国家下发工商异常名录(0否1是)"
-                  clearable
-                  size="small"
-                  @keyup.enter.native="handleQuery"
-                />
+                {{formReport.ztkZhdZrjgjgb.gjxfgsycml}}
               </el-form-item>
               <el-form-item label="不存在不动产查封(0否1是)" prop="bdccf">
-                <el-input
-                  v-model="queryParams.bdccf"
-                  placeholder="请输入不存在不动产查封(0否1是)"
-                  clearable
-                  size="small"
-                  @keyup.enter.native="handleQuery"
-                />
+                {{formReport.ztkZhdZrjgjgb.bdccf}}
               </el-form-item>
               <el-form-item label="是否准入(0否1是)" prop="sfzr">
-                <el-input
-                  v-model="queryParams.sfzr"
-                  placeholder="请输入是否准入(0否1是)"
-                  clearable
-                  size="small"
-                  @keyup.enter.native="handleQuery"
-                />
+                {{formReport.ztkZhdZrjgjgb.sfzr}}
               </el-form-item>
-              <el-form-item>
-                <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
-                <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
-              </el-form-item>
+<!--              <el-form-item>-->
+<!--                <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>-->
+<!--                <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>-->
+<!--              </el-form-item>-->
             </el-form>
           </el-collapse-item>
           <el-collapse-item title="评分模型明细" name="3">
             <div v-if="formReport.bzkZhdPfmxmxb == null">暂无数据</div>
-            <el-form v-else ref="formReport" :model="formReport" :rules="rules" label-width="200px">
+            <el-form v-else ref="formReport" :model="formReport" :rules="rules" label-width="300px">
               <el-form-item label="统一社会信用代码" prop="tyshxydm">
                 {{formReport.bzkZhdPfmxmxb.tyshxydm}}
               </el-form-item>
@@ -450,103 +378,103 @@
                 {{formReport.bzkZhdPfmxmxb.sbgtgshxm}}
               </el-form-item>
               <el-form-item label="证件类型" prop="zjlx">
-                <el-input v-model="form.zjlx" placeholder="请输入证件类型" />
+                {{formReport.bzkZhdPfmxmxb.zjlx}}
               </el-form-item>
               <el-form-item label="证件号码" prop="zjhm">
-                <el-input v-model="form.zjhm" placeholder="请输入证件号码" />
+                {{formReport.bzkZhdPfmxmxb.zjhm}}
               </el-form-item>
               <el-form-item label="营业店名" prop="yydm">
-                <el-input v-model="form.yydm" placeholder="请输入营业店名" />
+                {{formReport.bzkZhdPfmxmxb.yydm}}
               </el-form-item>
               <el-form-item label="经营场所_地址" prop="jycsDz">
-                <el-input v-model="form.jycsDz" placeholder="请输入经营场所_地址" />
+                {{formReport.bzkZhdPfmxmxb.jycsDz}}
               </el-form-item>
               <el-form-item label="注册日期" prop="zcrq">
-                <el-input v-model="form.zcrq" placeholder="请输入注册日期" />
+                {{formReport.bzkZhdPfmxmxb.zcrq}}
               </el-form-item>
               <el-form-item label="经营年限" prop="jynx">
-                <el-input v-model="form.jynx" placeholder="请输入经营年限" />
+                {{formReport.bzkZhdPfmxmxb.jynx}}
               </el-form-item>
               <el-form-item label="不动产权证号" prop="bdcqzh">
-                <el-input v-model="form.bdcqzh" placeholder="请输入不动产权证号" />
+                {{formReport.bzkZhdPfmxmxb.bdcqzh}}
               </el-form-item>
               <el-form-item label="不动产共有方式" prop="bdcgyfs">
-                <el-input v-model="form.bdcgyfs" placeholder="请输入不动产共有方式" />
+                {{formReport.bzkZhdPfmxmxb.bdcgyfs}}
               </el-form-item>
               <el-form-item label="不动产坐落" prop="bdczl">
-                <el-input v-model="form.bdczl" placeholder="请输入不动产坐落" />
+                {{formReport.bzkZhdPfmxmxb.bdczl}}
               </el-form-item>
               <el-form-item label="不动产产权状态" prop="bdccqzt">
-                <el-input v-model="form.bdccqzt" placeholder="请输入不动产产权状态" />
+                {{formReport.bzkZhdPfmxmxb.bdccqzt}}
               </el-form-item>
               <el-form-item label="不动产建筑面积" prop="bdcjzmj">
-                <el-input v-model="form.bdcjzmj" placeholder="请输入不动产建筑面积" />
+                {{formReport.bzkZhdPfmxmxb.bdcjzmj}}
               </el-form-item>
               <el-form-item label="不动产用途" prop="bdcyt">
-                <el-input v-model="form.bdcyt" placeholder="请输入不动产用途" />
+                {{formReport.bzkZhdPfmxmxb.bdcyt}}
               </el-form-item>
               <el-form-item label="最高学历" prop="zgxl">
-                <el-input v-model="form.zgxl" placeholder="请输入最高学历" />
+                {{formReport.bzkZhdPfmxmxb.zgxl}}
               </el-form-item>
               <el-form-item label="婚姻状况" prop="hyzk">
-                <el-input v-model="form.hyzk" placeholder="请输入婚姻状况" />
+                {{formReport.bzkZhdPfmxmxb.hyzk}}
               </el-form-item>
               <el-form-item label="自然人欠税税种" prop="zrrqssz">
-                <el-input v-model="form.zrrqssz" placeholder="请输入自然人欠税税种" />
+                {{formReport.bzkZhdPfmxmxb.zrrqssz}}
               </el-form-item>
               <el-form-item label="自然人欠税统计开始日期" prop="zrrqstjksrq">
-                <el-input v-model="form.zrrqstjksrq" placeholder="请输入自然人欠税统计开始日期" />
+                {{formReport.bzkZhdPfmxmxb.zrrqstjksrq}}
               </el-form-item>
               <el-form-item label="自然人欠税统计截止日期" prop="zrrqstjjzrq">
-                <el-input v-model="form.zrrqstjjzrq" placeholder="请输入自然人欠税统计截止日期" />
+                {{formReport.bzkZhdPfmxmxb.zrrqstjjzrq}}
               </el-form-item>
               <el-form-item label="自然人欠税余额(元)" prop="zrrqsye">
-                <el-input v-model="form.zrrqsye" placeholder="请输入自然人欠税余额(元)" />
+                {{formReport.bzkZhdPfmxmxb.zrrqsye}}
               </el-form-item>
               <el-form-item label="自然人是否补缴" prop="zrrsfbj">
-                <el-input v-model="form.zrrsfbj" placeholder="请输入自然人是否补缴" />
+                {{formReport.bzkZhdPfmxmxb.zrrsfbj}}
               </el-form-item>
               <el-form-item label="法人欠税税种" prop="frqssz">
-                <el-input v-model="form.frqssz" placeholder="请输入法人欠税税种" />
+                {{formReport.bzkZhdPfmxmxb.frqssz}}
               </el-form-item>
               <el-form-item label="法人欠税统计开始日期" prop="frqstjksrq">
-                <el-input v-model="form.frqstjksrq" placeholder="请输入法人欠税统计开始日期" />
+                {{formReport.bzkZhdPfmxmxb.frqstjksrq}}
               </el-form-item>
               <el-form-item label="法人欠税统计截止日期" prop="frqstjjzrq">
-                <el-input v-model="form.frqstjjzrq" placeholder="请输入法人欠税统计截止日期" />
+                {{formReport.bzkZhdPfmxmxb.frqstjjzrq}}
               </el-form-item>
               <el-form-item label="法人当前欠税金额(元)" prop="frdqqsje">
-                <el-input v-model="form.frdqqsje" placeholder="请输入法人当前欠税金额(元)" />
+                {{formReport.bzkZhdPfmxmxb.frdqqsje}}
               </el-form-item>
               <el-form-item label="法人是否补缴" prop="frsfbj">
-                <el-input v-model="form.frsfbj" placeholder="请输入法人是否补缴" />
+                {{formReport.bzkZhdPfmxmxb.frsfbj}}
               </el-form-item>
               <el-form-item label="激励措施内容" prop="jlcsnr">
-                <el-input v-model="form.jlcsnr" placeholder="请输入激励措施内容" />
+                {{formReport.bzkZhdPfmxmxb.jlcsnr}}
               </el-form-item>
               <el-form-item label="激励名单名称" prop="jlmdmc">
-                <el-input v-model="form.jlmdmc" placeholder="请输入激励名单名称" />
+                {{formReport.bzkZhdPfmxmxb.jlmdmc}}
               </el-form-item>
               <el-form-item label="享受扶持政策依据" prop="xsfczcyj">
-                <el-input v-model="form.xsfczcyj" placeholder="请输入享受扶持政策依据" />
+                {{formReport.bzkZhdPfmxmxb.xsfczcyj}}
               </el-form-item>
               <el-form-item label="享受扶持政策内容" prop="xsfczcnr">
-                <el-input v-model="form.xsfczcnr" placeholder="请输入享受扶持政策内容" />
+                {{formReport.bzkZhdPfmxmxb.xsfczcnr}}
               </el-form-item>
               <el-form-item label="享受扶持政策的数额" prop="xsfczcdse">
-                <el-input v-model="form.xsfczcdse" placeholder="请输入享受扶持政策的数额" />
+                {{formReport.bzkZhdPfmxmxb.xsfczcdse}}
               </el-form-item>
               <el-form-item label="享受扶持政策的部门" prop="xsfczcdbm">
-                <el-input v-model="form.xsfczcdbm" placeholder="请输入享受扶持政策的部门" />
+                {{formReport.bzkZhdPfmxmxb.xsfczcdbm}}
               </el-form-item>
               <el-form-item label="实施扶持政策日期" prop="ssfczcrq">
-                <el-input v-model="form.ssfczcrq" placeholder="请输入实施扶持政策日期" />
+                {{formReport.bzkZhdPfmxmxb.ssfczcrq}}
               </el-form-item>
             </el-form>
           </el-collapse-item>
           <el-collapse-item title="准入监管结果明细" name="4">
             <div v-if="formReport.bzkZhdZrjgmxb == null">暂无数据</div>
-            <el-form v-else ref="formReport" :model="formReport" :rules="rules" label-width="200px">
+            <el-form v-else ref="formReport" :model="formReport" :rules="rules" label-width="300px">
                 <el-form-item label="统一社会信用代码" prop="tyshxydm">
                   {{formReport.bzkZhdZrjgmxb.tyshxydm}}
                 </el-form-item>
@@ -554,43 +482,43 @@
                   {{formReport.bzkZhdZrjgmxb.sbgtgshxm}}
                 </el-form-item>
                 <el-form-item label="证件类型" prop="zjlx">
-                  <el-input v-model="form.zjlx" placeholder="请输入证件类型" />
+                  {{formReport.bzkZhdZrjgmxb.zjlx}}
                 </el-form-item>
                 <el-form-item label="证件号码" prop="zjhm">
-                  <el-input v-model="form.zjhm" placeholder="请输入证件号码" />
+                  {{formReport.bzkZhdZrjgmxb.zjhm}}
                 </el-form-item>
                 <el-form-item label="性别名称" prop="xb">
-                  <el-input v-model="form.xb" placeholder="请输入性别名称" />
+                  {{formReport.bzkZhdZrjgmxb.xb}}
                 </el-form-item>
                 <el-form-item label="年龄" prop="nl">
-                  <el-input v-model="form.nl" placeholder="请输入年龄" />
+                  {{formReport.bzkZhdZrjgmxb.nl}}
                 </el-form-item>
                 <el-form-item label="注册日期" prop="zcrq">
-                  <el-input v-model="form.zcrq" placeholder="请输入注册日期" />
+                  {{formReport.bzkZhdZrjgmxb.zcrq}}
                 </el-form-item>
                 <el-form-item label="注册地址" prop="zcdz">
-                  <el-input v-model="form.zcdz" placeholder="请输入注册地址" />
+                  {{formReport.bzkZhdZrjgmxb.zcdz}}
                 </el-form-item>
-                <el-form-item label="注册地址_行政区划" prop="zcdzXzqh">
-                  <el-input v-model="form.zcdzXzqh" placeholder="请输入注册地址_行政区划" />
+                <el-form-item label="注册地址行政区划" prop="zcdzXzqh">
+                  {{formReport.bzkZhdZrjgmxb.zcdzXzqh}}
                 </el-form-item>
                 <el-form-item label="登记状态名称" prop="regstate">
-                  <el-input v-model="form.regstate" placeholder="请输入登记状态名称" />
+                  {{formReport.bzkZhdZrjgmxb.regstate}}
                 </el-form-item>
-                <el-form-item label="重大税收违法案件_主要违法事实" prop="zywfss">
-                  <el-input v-model="form.zywfss" placeholder="请输入重大税收违法案件_主要违法事实" />
+                <el-form-item label="重大税收违法案件主要违法事实" prop="zywfss">
+                  {{formReport.bzkZhdZrjgmxb.zywfss}}
                 </el-form-item>
                 <el-form-item label="失信被执行人案号" prop="sxbzxrah">
-                  <el-input v-model="form.sxbzxrah" placeholder="请输入失信被执行人案号" />
+                  {{formReport.bzkZhdZrjgmxb.sxbzxrah}}
                 </el-form-item>
                 <el-form-item label="失信黑名单信息名称" prop="sxhmdxxmc">
-                  <el-input v-model="form.sxhmdxxmc" placeholder="请输入失信黑名单信息名称" />
+                  {{formReport.bzkZhdZrjgmxb.sxhmdxxmc}}
                 </el-form-item>
                 <el-form-item label="工商异常信息" prop="gsycxx">
-                  <el-input v-model="form.gsycxx" placeholder="请输入工商异常信息" />
+                  {{formReport.bzkZhdZrjgmxb.gsycxx}}
                 </el-form-item>
                 <el-form-item label="不动产查封" prop="bdccf">
-                  <el-input v-model="form.bdccf" placeholder="请输入不动产查封" />
+                  {{formReport.bzkZhdZrjgmxb.bdccf}}
                 </el-form-item>
               </el-form>
           </el-collapse-item>
