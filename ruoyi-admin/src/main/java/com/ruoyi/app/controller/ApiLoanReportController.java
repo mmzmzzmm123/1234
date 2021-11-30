@@ -1,5 +1,7 @@
 package com.ruoyi.app.controller;
 
+import cn.shuibo.annotation.Decrypt;
+import cn.shuibo.annotation.Encrypt;
 import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.system.domain.BzkZhdPfmxmxb;
@@ -42,6 +44,8 @@ public class ApiLoanReportController extends BaseController
     @Autowired
     private IZtkZhdPfmxjgbService ztkZhdPfmxjgbService;
 
+    @Encrypt
+    @Decrypt
     @PostMapping("/report")
     public AjaxResult getCreditReport(@RequestBody Map<String,String> tyshxydmMap){
 

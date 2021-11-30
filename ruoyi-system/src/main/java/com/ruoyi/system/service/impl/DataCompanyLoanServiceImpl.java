@@ -1,5 +1,8 @@
 package com.ruoyi.system.service.impl;
 
+import cn.shuibo.config.SecretKeyConfig;
+import cn.shuibo.util.Base64Util;
+import cn.shuibo.util.RSAUtil;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.ruoyi.common.annotation.DataSource;
@@ -61,6 +64,9 @@ public class DataCompanyLoanServiceImpl implements IDataCompanyLoanService
 
     @Value("${api.domain}")
     private String domain;
+
+    @Autowired
+    private SecretKeyConfig secretKeyConfig;
 
     /**
      * 查询企业贷款信息
@@ -303,11 +309,18 @@ public class DataCompanyLoanServiceImpl implements IDataCompanyLoanService
 
     @DataSource(value = DataSourceType.API)
     @Override
-    public CreditReport getReport(String tyshxydm) {
+    public CreditReport getReport(String tyshxydm)  {
         TyshxydmDTO tyshxydmDTO = new TyshxydmDTO();
         tyshxydmDTO.setTyshxydm(tyshxydm);
         String url = domain + "api/loan/report";
-        CreditReportWrapper creditReportWrapper = restTemplate.postForObject(url, tyshxydmDTO, CreditReportWrapper.class);
+        String response = restTemplate.postForObject(url, tyshxydmDTO, String.class);
+        //解密
+        try {
+            response = new String(RSAUtil.decrypt(Base64Util.decode(response), secretKeyConfig.getPrivateKey()), secretKeyConfig.getCharset());
+        } catch (Exception e) {
+            throw new UserException(null, null,"解密异常");
+        }
+        CreditReportWrapper creditReportWrapper = JSON.parseObject(response,CreditReportWrapper.class);
         if (HttpStatus.SUCCESS == creditReportWrapper.getCode()){
             return creditReportWrapper.getData();
         }else {
