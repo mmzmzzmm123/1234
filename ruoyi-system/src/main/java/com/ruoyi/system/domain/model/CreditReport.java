@@ -1,8 +1,9 @@
 package com.ruoyi.system.domain.model;
 
-import com.ruoyi.system.domain.BzkZbhZrjgb;
-import com.ruoyi.system.domain.ZtkZbhZrjgb;
-import com.ruoyi.system.domain.ZtkZhdPfmxb;
+import com.ruoyi.system.domain.BzkZhdPfmxmxb;
+import com.ruoyi.system.domain.BzkZhdZrjgmxb;
+import com.ruoyi.system.domain.ZtkZhdPfmxjgb;
+import com.ruoyi.system.domain.ZtkZhdZrjgjgb;
 
 /**
  * 信用报告
@@ -10,39 +11,51 @@ import com.ruoyi.system.domain.ZtkZhdPfmxb;
 public class CreditReport {
 
     /**
-     * 个体工商户信贷_标准库_准入监管对象
+     * 个体工商户信贷_标准库_评分模型明细对象
      */
-    private BzkZbhZrjgb bzkZbhZrjgb;
+    private BzkZhdPfmxmxb bzkZhdPfmxmxb;
     /**
-     * 个体工商户信贷_主题库_准入监管对象
+     * 个体工商户信贷_标准库_准入监管明细对象
      */
-    private ZtkZbhZrjgb ztkZbhZrjgb;
+    private BzkZhdZrjgmxb bzkZhdZrjgmxb;
     /**
-     * 福建省泉州市个体工商户信贷_主题库_评分模型对象
+     * 个体工商户信贷_主题库_评分模型结果对象
      */
-    private ZtkZhdPfmxb ztkZhdPfmxb;
+    private ZtkZhdPfmxjgb ztkZhdPfmxjgb;
+    /**
+     * 个体工商户信贷_主题库_准入监管结果对象
+     */
+    private ZtkZhdZrjgjgb ztkZhdZrjgjgb;
 
-    public BzkZbhZrjgb getBzkZbhZrjgb() {
-        return bzkZbhZrjgb;
+    public BzkZhdPfmxmxb getBzkZhdPfmxmxb() {
+        return bzkZhdPfmxmxb;
     }
 
-    public void setBzkZbhZrjgb(BzkZbhZrjgb bzkZbhZrjgb) {
-        this.bzkZbhZrjgb = bzkZbhZrjgb;
+    public void setBzkZhdPfmxmxb(BzkZhdPfmxmxb bzkZhdPfmxmxb) {
+        this.bzkZhdPfmxmxb = bzkZhdPfmxmxb;
     }
 
-    public ZtkZbhZrjgb getZtkZbhZrjgb() {
-        return ztkZbhZrjgb;
+    public BzkZhdZrjgmxb getBzkZhdZrjgmxb() {
+        return bzkZhdZrjgmxb;
     }
 
-    public void setZtkZbhZrjgb(ZtkZbhZrjgb ztkZbhZrjgb) {
-        this.ztkZbhZrjgb = ztkZbhZrjgb;
+    public void setBzkZhdZrjgmxb(BzkZhdZrjgmxb bzkZhdZrjgmxb) {
+        this.bzkZhdZrjgmxb = bzkZhdZrjgmxb;
     }
 
-    public ZtkZhdPfmxb getZtkZhdPfmxb() {
-        return ztkZhdPfmxb;
+    public ZtkZhdPfmxjgb getZtkZhdPfmxjgb() {
+        return ztkZhdPfmxjgb;
     }
 
-    public void setZtkZhdPfmxb(ZtkZhdPfmxb ztkZhdPfmxb) {
-        this.ztkZhdPfmxb = ztkZhdPfmxb;
+    public void setZtkZhdPfmxjgb(ZtkZhdPfmxjgb ztkZhdPfmxjgb) {
+        this.ztkZhdPfmxjgb = ztkZhdPfmxjgb;
+    }
+
+    public ZtkZhdZrjgjgb getZtkZhdZrjgjgb() {
+        return ztkZhdZrjgjgb;
+    }
+
+    public void setZtkZhdZrjgjgb(ZtkZhdZrjgjgb ztkZhdZrjgjgb) {
+        this.ztkZhdZrjgjgb = ztkZhdZrjgjgb;
     }
 }

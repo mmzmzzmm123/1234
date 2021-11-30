@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.ZtkZhdZrjgjgbMapper">
+    
+    <resultMap type="ZtkZhdZrjgjgb" id="ZtkZhdZrjgjgbResult">
+        <result property="tyshxydm"    column="tyshxydm"    />
+        <result property="sbgtgshxm"    column="sbgtgshxm"    />
+        <result property="zjlx"    column="zjlx"    />
+        <result property="zjhm"    column="zjhm"    />
+        <result property="jynx"    column="jynx"    />
+        <result property="zrnl"    column="zrnl"    />
+        <result property="fyddk"    column="fyddk"    />
+        <result property="regstate"    column="regstate"    />
+        <result property="zdsffwaj"    column="zdsffwaj"    />
+        <result property="sxbzxr"    column="sxbzxr"    />
+        <result property="sxhmd"    column="sxhmd"    />
+        <result property="gjxfgsycml"    column="gjxfgsycml"    />
+        <result property="bdccf"    column="bdccf"    />
+        <result property="sfzr"    column="sfzr"    />
+    </resultMap>
+
+    <sql id="selectZtkZhdZrjgjgbVo">
+        select tyshxydm, sbgtgshxm, zjlx, zjhm, jynx, zrnl, fyddk, regstate, zdsffwaj, sxbzxr, sxhmd, gjxfgsycml, bdccf, sfzr from ztk_zhd_zrjgjgb
+    </sql>
+
+    <select id="selectZtkZhdZrjgjgbList" parameterType="ZtkZhdZrjgjgb" resultMap="ZtkZhdZrjgjgbResult">
+        <include refid="selectZtkZhdZrjgjgbVo"/>
+        <where>  
+            <if test="tyshxydm != null  and tyshxydm != ''"> and tyshxydm = #{tyshxydm}</if>
+            <if test="sbgtgshxm != null  and sbgtgshxm != ''"> and sbgtgshxm = #{sbgtgshxm}</if>
+            <if test="zjlx != null  and zjlx != ''"> and zjlx = #{zjlx}</if>
+            <if test="zjhm != null  and zjhm != ''"> and zjhm = #{zjhm}</if>
+            <if test="jynx != null "> and jynx = #{jynx}</if>
+            <if test="zrnl != null "> and zrnl = #{zrnl}</if>
+            <if test="fyddk != null "> and fyddk = #{fyddk}</if>
+            <if test="regstate != null "> and regstate = #{regstate}</if>
+            <if test="zdsffwaj != null "> and zdsffwaj = #{zdsffwaj}</if>
+            <if test="sxbzxr != null "> and sxbzxr = #{sxbzxr}</if>
+            <if test="sxhmd != null "> and sxhmd = #{sxhmd}</if>
+            <if test="gjxfgsycml != null "> and gjxfgsycml = #{gjxfgsycml}</if>
+            <if test="bdccf != null "> and bdccf = #{bdccf}</if>
+            <if test="sfzr != null "> and sfzr = #{sfzr}</if>
+        </where>
+    </select>
+    
+    <select id="selectZtkZhdZrjgjgbById" parameterType="String" resultMap="ZtkZhdZrjgjgbResult">
+        <include refid="selectZtkZhdZrjgjgbVo"/>
+        where tyshxydm = #{tyshxydm}
+    </select>
+        
+    <insert id="insertZtkZhdZrjgjgb" parameterType="ZtkZhdZrjgjgb">
+        insert into ztk_zhd_zrjgjgb
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="tyshxydm != null">tyshxydm,</if>
+            <if test="sbgtgshxm != null">sbgtgshxm,</if>
+            <if test="zjlx != null">zjlx,</if>
+            <if test="zjhm != null">zjhm,</if>
+            <if test="jynx != null">jynx,</if>
+            <if test="zrnl != null">zrnl,</if>
+            <if test="fyddk != null">fyddk,</if>
+            <if test="regstate != null">regstate,</if>
+            <if test="zdsffwaj != null">zdsffwaj,</if>
+            <if test="sxbzxr != null">sxbzxr,</if>
+            <if test="sxhmd != null">sxhmd,</if>
+            <if test="gjxfgsycml != null">gjxfgsycml,</if>
+            <if test="bdccf != null">bdccf,</if>
+            <if test="sfzr != null">sfzr,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="tyshxydm != null">#{tyshxydm},</if>
+            <if test="sbgtgshxm != null">#{sbgtgshxm},</if>
+            <if test="zjlx != null">#{zjlx},</if>
+            <if test="zjhm != null">#{zjhm},</if>
+            <if test="jynx != null">#{jynx},</if>
+            <if test="zrnl != null">#{zrnl},</if>
+            <if test="fyddk != null">#{fyddk},</if>
+            <if test="regstate != null">#{regstate},</if>
+            <if test="zdsffwaj != null">#{zdsffwaj},</if>
+            <if test="sxbzxr != null">#{sxbzxr},</if>
+            <if test="sxhmd != null">#{sxhmd},</if>
+            <if test="gjxfgsycml != null">#{gjxfgsycml},</if>
+            <if test="bdccf != null">#{bdccf},</if>
+            <if test="sfzr != null">#{sfzr},</if>
+         </trim>
+    </insert>
+
+    <update id="updateZtkZhdZrjgjgb" parameterType="ZtkZhdZrjgjgb">
+        update ztk_zhd_zrjgjgb
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="sbgtgshxm != null">sbgtgshxm = #{sbgtgshxm},</if>
+            <if test="zjlx != null">zjlx = #{zjlx},</if>
+            <if test="zjhm != null">zjhm = #{zjhm},</if>
+            <if test="jynx != null">jynx = #{jynx},</if>
+            <if test="zrnl != null">zrnl = #{zrnl},</if>
+            <if test="fyddk != null">fyddk = #{fyddk},</if>
+            <if test="regstate != null">regstate = #{regstate},</if>
+            <if test="zdsffwaj != null">zdsffwaj = #{zdsffwaj},</if>
+            <if test="sxbzxr != null">sxbzxr = #{sxbzxr},</if>
+            <if test="sxhmd != null">sxhmd = #{sxhmd},</if>
+            <if test="gjxfgsycml != null">gjxfgsycml = #{gjxfgsycml},</if>
+            <if test="bdccf != null">bdccf = #{bdccf},</if>
+            <if test="sfzr != null">sfzr = #{sfzr},</if>
+        </trim>
+        where tyshxydm = #{tyshxydm}
+    </update>
+
+    <delete id="deleteZtkZhdZrjgjgbById" parameterType="String">
+        delete from ztk_zhd_zrjgjgb where tyshxydm = #{tyshxydm}
+    </delete>
+
+    <delete id="deleteZtkZhdZrjgjgbByIds" parameterType="String">
+        delete from ztk_zhd_zrjgjgb where tyshxydm in 
+        <foreach item="tyshxydm" collection="array" open="(" separator="," close=")">
+            #{tyshxydm}
+        </foreach>
+    </delete>
+</mapper>
