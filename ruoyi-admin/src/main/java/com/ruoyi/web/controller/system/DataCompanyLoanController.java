@@ -21,6 +21,7 @@ import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.enums.BusinessType;
 import com.ruoyi.common.utils.poi.ExcelUtil;
 import com.ruoyi.common.core.page.TableDataInfo;
+import org.springframework.web.client.RestTemplate;
 
 /**
  * 企业贷款信息Controller
@@ -42,6 +43,9 @@ public class DataCompanyLoanController extends BaseController
     private IZtkZhdZrjgjgbService ztkZhdZrjgjgbService;
     @Autowired
     private IZtkZhdPfmxjgbService ztkZhdPfmxjgbService;
+
+    @Autowired
+    private RestTemplate restTemplate;
 
     /**
      * 查询企业贷款信息列表
@@ -114,42 +118,6 @@ public class DataCompanyLoanController extends BaseController
     @PreAuthorize("@ss.hasPermi('system:loan:report')")
     @GetMapping("/report/{tyshxydm}")
     public AjaxResult getCreditReport(@PathVariable String tyshxydm){
-
-        CreditReport creditReport = new CreditReport();
-
-        ZtkZhdPfmxjgb ztkZhdPfmxjgb = new ZtkZhdPfmxjgb();
-        ztkZhdPfmxjgb.setTyshxydm(tyshxydm);
-
-        ZtkZhdZrjgjgb ztkZhdZrjgjgb = new ZtkZhdZrjgjgb();
-        ztkZhdZrjgjgb.setTyshxydm(tyshxydm);
-
-        BzkZhdPfmxmxb bzkZhdPfmxmxb = new BzkZhdPfmxmxb();
-        bzkZhdPfmxmxb.setTyshxydm(tyshxydm);
-
-        BzkZhdZrjgmxb bzkZhdZrjgmxb = new BzkZhdZrjgmxb();
-        bzkZhdZrjgmxb.setTyshxydm(tyshxydm);
-
-        List<BzkZhdPfmxmxb> bzkZhdPfmxmxbs = bzkZhdPfmxmxbService.selectBzkZhdPfmxmxbList(bzkZhdPfmxmxb);
-        List<BzkZhdZrjgmxb> bzkZhdZrjgmxbs = bzkZhdZrjgmxbService.selectBzkZhdZrjgmxbList(bzkZhdZrjgmxb);
-        List<ZtkZhdPfmxjgb> ztkZhdPfmxjgbs = ztkZhdPfmxjgbService.selectZtkZhdPfmxjgbList(ztkZhdPfmxjgb);
-        List<ZtkZhdZrjgjgb> ztkZhdZrjgjgbs = ztkZhdZrjgjgbService.selectZtkZhdZrjgjgbList(ztkZhdZrjgjgb);
-
-        if (bzkZhdPfmxmxbs!=null && bzkZhdPfmxmxbs.size()>0){
-            creditReport.setBzkZhdPfmxmxb(bzkZhdPfmxmxbs.get(0));
-        }
-
-        if (bzkZhdZrjgmxbs!=null && bzkZhdZrjgmxbs.size()>0){
-            creditReport.setBzkZhdZrjgmxb(bzkZhdZrjgmxbs.get(0));
-        }
-
-        if (ztkZhdPfmxjgbs!=null && ztkZhdPfmxjgbs.size()>0){
-            creditReport.setZtkZhdPfmxjgb(ztkZhdPfmxjgbs.get(0));
-        }
-
-        if (ztkZhdZrjgjgbs!=null && ztkZhdZrjgjgbs.size()>0){
-            creditReport.setZtkZhdZrjgjgb(ztkZhdZrjgjgbs.get(0));
-        }
-
-        return AjaxResult.success(creditReport);
+        return AjaxResult.success(dataCompanyLoanService.getReport(tyshxydm));
     }
 }

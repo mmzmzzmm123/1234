@@ -3,6 +3,7 @@ package com.ruoyi.system.service.impl;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.ruoyi.common.constant.Constants;
+import com.ruoyi.common.constant.HttpStatus;
 import com.ruoyi.common.constant.UserConstants;
 import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.core.redis.RedisCache;
@@ -11,9 +12,7 @@ import com.ruoyi.common.exception.user.UserException;
 import com.ruoyi.common.utils.DateUtils;
 import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.system.domain.DataCompanyLoan;
-import com.ruoyi.system.domain.model.DataCompanyLoanBody;
-import com.ruoyi.system.domain.model.DataGTGSH;
-import com.ruoyi.system.domain.model.DataMatchCompany;
+import com.ruoyi.system.domain.model.*;
 import com.ruoyi.system.mapper.DataCompanyLoanMapper;
 import com.ruoyi.system.service.IDataCompanyLoanOracleService;
 import com.ruoyi.system.service.IDataCompanyLoanService;
@@ -21,7 +20,9 @@ import com.ruoyi.system.service.IDataSmsService;
 import com.ruoyi.system.utils.ShareInterface;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -52,6 +53,12 @@ public class DataCompanyLoanServiceImpl implements IDataCompanyLoanService
 
     @Autowired
     private RedisCache redisCache;
+
+    @Autowired
+    private RestTemplate restTemplate;
+
+    @Value("${api.domain}")
+    private String domain;
 
     /**
      * 查询企业贷款信息
@@ -290,6 +297,20 @@ public class DataCompanyLoanServiceImpl implements IDataCompanyLoanService
         }
 
         return list;
+    }
+
+    @Override
+    public CreditReport getReport(String tyshxydm) {
+        TyshxydmDTO tyshxydmDTO = new TyshxydmDTO();
+        tyshxydmDTO.setTyshxydm(tyshxydm);
+        String url = domain + "api/loan/report";
+        CreditReportWrapper creditReportWrapper = restTemplate.postForObject(url, tyshxydmDTO, CreditReportWrapper.class);
+        if (HttpStatus.SUCCESS == creditReportWrapper.getCode()){
+            return creditReportWrapper.getData();
+        }else {
+            throw new UserException(null, null,creditReportWrapper.getMsg());
+        }
+
     }
 
     private String numRandom(int bit) {

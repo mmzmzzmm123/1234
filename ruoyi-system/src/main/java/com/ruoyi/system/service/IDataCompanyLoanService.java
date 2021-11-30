@@ -2,6 +2,7 @@ package com.ruoyi.system.service;
 
 import com.alibaba.fastjson.JSONObject;
 import com.ruoyi.system.domain.DataCompanyLoan;
+import com.ruoyi.system.domain.model.CreditReport;
 import com.ruoyi.system.domain.model.DataCompanyLoanBody;
 import com.ruoyi.system.domain.model.DataMatchCompany;
 
@@ -86,4 +87,7 @@ public interface IDataCompanyLoanService
      * @return
      */
     List<DataMatchCompany> matchCompanyName(String companyName,int count);
+
+    CreditReport getReport(String tyshxydm);
+
 }
