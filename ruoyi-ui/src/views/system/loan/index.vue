@@ -140,6 +140,14 @@
           <el-button
             size="mini"
             type="text"
+            icon="el-icon-document"
+            align="center"
+            @click="handleSimpleReport(scope.row)"
+            v-hasPermi="['system:loan:report']"
+          >查看报告2</el-button>
+          <el-button
+            size="mini"
+            type="text"
             icon="el-icon-edit"
             align="center"
 
@@ -524,6 +532,20 @@
           </el-collapse-item>
       </el-collapse>
     </el-dialog>
+
+    <el-dialog :title="titleSimpleReport" :visible.sync="openSimpleReport" width="800px" append-to-body>
+        
+        <div v-for="report in reportWrapper">
+          <h2>{{report.num}}、{{report.title}}{{report.showCount?"(共"+report.count+"条)":""}}</h2>
+          <ol style="border:1px solid #000;padding-top:12px;padding-bottom:12px;padding-left:30px;min-height:100px">
+            <div style="margin-bottom:8px">{{report.subTitle}}</div>
+            <li v-for="item in report.item">
+              {{item.name+":"+item.value}}
+            </li>
+          </ol>
+        </div>
+    </el-dialog>
+
   </div>
 </template>
 
@@ -595,6 +617,10 @@ export default {
       // 报告弹出层标题
       titleReport: "",
       formReport:{},
+
+      titleSimpleReport: "",
+      openSimpleReport: false,
+      reportWrapper: [],
     };
   },
   created() {
@@ -706,6 +732,147 @@ export default {
         this.formReport = response.data;
         this.openReport = true;
         this.titleReport = "查看企业征信信息";
+      });
+    },
+    /** 查看报告按钮操作 */
+    handleSimpleReport(row) {
+      const tyshxydm = row.companyCreditCode
+      const idxArray = ['一','二','三','四','五','六','七','八','九','十','十一','十二','十三','十四','十五','十六','十七','十八','十九'];
+      var reportWrapper = [
+        {
+          title:"基础信息",
+          subTitle:"法人和非法人组织在注册登记部门和税务、海关、社保、公 积金管理等部门的基础登记信息，以及有关年报信息;自然人的 身份信息以及在各有关部门的基础登记信息。",
+          showCount:true,
+          count:0,
+          item:[],
+        },
+        {
+          title:"行政许可信息",
+          subTitle:"各级行政机关依法对信用主体作出的行政许可信息。",
+          showCount:true,
+          count:0,
+          item:[],
+        },
+        {
+          title:"行政处罚信息",
+          subTitle:"各级行政机关依法对信用主体作出的行政处罚信息。",
+          showCount:true,
+          count:0,
+          item:[],
+        },
+        {
+          title:"守信激励信息",
+          subTitle:"各有关部门将信用主体列为守信激励对象信息。",
+          showCount:true,
+          count:0,
+          item:[],
+        },
+        {
+          title:"失信惩戒信息",
+          subTitle:"各有关部门将信用主体列为失信惩戒对象信息。",
+          showCount:true,
+          count:0,
+          item:[],
+        },
+        {
+          title:"重点关注信息",
+          subTitle:"各有关部门将信用主体列为重点关注名单信息。",
+          showCount:true,
+          count:0,
+          item:[],
+        },
+        {
+          title:"资质/资格信息",
+          subTitle:"除行政许可外，信用主体获得的其他资质或资格信息。",
+          showCount:true,
+          count:0,
+          item:[],
+        },
+        {
+          title:"风险提示信息",
+          subTitle:"各有关部门依法依规发布的涉及信用主体的风险预警信息。",
+          showCount:true,
+          count:0,
+          item:[],
+        },
+        {
+          title:"其他信息",
+          subTitle:"涉及信用主体的信用评价信息(如公共信用综合评价信息、 行业信用评价信息等)、信用修复信息、信用承诺信息以及其他 与信用主体信用状况相关的信息。",
+          showCount:true,
+          count:0,
+          item:[],
+        },
+        {
+          title:"综合信用状况分析",
+          subTitle:"结合信用主体相关信用信息对其信用状况进行全面、客观描述和综合分析。",
+          showCount:false,
+          count:0,
+          item:[],
+        },
+        {
+          title:"信用状况提升建议",
+          subTitle:"对信用主体践行社会主义核心价值观、依法合规经营、增强 诚信守法意识等方面提出意见建议。",
+          showCount:false,
+          count:0,
+          item:[],
+        },
+        {
+          title:"地方信用网站公共信用信息报告补充内容(如有)",
+          subTitle:"",
+          showCount:false,
+          count:0,
+          item:[],
+        }];
+
+      getReport(tyshxydm).then(response => {
+        var formReport = response.data;
+        
+        //基础信息
+        var reportItem0 = reportWrapper[0].item;
+        //TODO-插入实际业务数据
+        if(formReport.bzkZhdPfmxmxb != null){
+
+          if(formReport.bzkZhdPfmxmxb.tyshxydm){
+            reportItem0.push({
+              "name":"统一社会信用代码",
+              "value":formReport.bzkZhdPfmxmxb.tyshxydm
+            });
+          }
+
+          if(formReport.bzkZhdPfmxmxb.sbgtgshxm){
+            reportItem0.push({
+              "name":"申报个体工商户姓名",
+              "value":formReport.bzkZhdPfmxmxb.sbgtgshxm
+            });
+          }
+
+          reportWrapper[0].count = reportItem0.length;
+          reportWrapper[0].num = idxArray[0];
+        }
+
+        // 行政处罚信息
+        var reportItem1 = reportWrapper[1].item;
+        if(formReport.bzkZhdPfmxmxb != null){
+          if(formReport.bzkZhdZrjgmxb.zywfss){
+            reportItem1.push({
+              "name":"重大税收违法案件主要违法事实",
+              "value":formReport.bzkZhdZrjgmxb.zywfss
+            });
+          }
+
+          if(formReport.bzkZhdZrjgmxb.sxbzxrah){
+            reportItem1.push({
+              "name":"失信被执行人案号",
+              "value":formReport.bzkZhdZrjgmxb.sxbzxrah
+            });
+          }
+          reportWrapper[1].count = reportItem1.length;
+          reportWrapper[1].num = idxArray[1];
+        }
+
+        this.reportWrapper = reportWrapper;
+        this.openSimpleReport = true;
+        this.titleSimpleReport = "查看企业征信信息";
       });
     },
     /** 提交按钮 */
