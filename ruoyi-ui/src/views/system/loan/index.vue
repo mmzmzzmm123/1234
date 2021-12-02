@@ -535,8 +535,8 @@
 
     <el-dialog :title="titleSimpleReport" :visible.sync="openSimpleReport" width="800px" append-to-body>
         
-        <div v-for="report in reportWrapper">
-          <h2>{{report.num}}、{{report.title}}{{report.showCount?"(共"+report.count+"条)":""}}</h2>
+        <div v-for="(report,index) in reportWrapper">
+          <h2>{{idxArray[index]}}、{{report.title}}{{report.showCount?"(共"+report.count+"条)":""}}</h2>
           <ol style="border:1px solid #000;padding-top:12px;padding-bottom:12px;padding-left:30px;min-height:100px">
             <div style="margin-bottom:8px">{{report.subTitle}}</div>
             <li v-for="item in report.item">
@@ -621,6 +621,8 @@ export default {
       titleSimpleReport: "",
       openSimpleReport: false,
       reportWrapper: [],
+      idxArray : ['一','二','三','四','五','六','七','八','九','十','十一','十二','十三','十四','十五','十六','十七','十八','十九'],
+
     };
   },
   created() {
@@ -737,7 +739,6 @@ export default {
     /** 查看报告按钮操作 */
     handleSimpleReport(row) {
       const tyshxydm = row.companyCreditCode
-      const idxArray = ['一','二','三','四','五','六','七','八','九','十','十一','十二','十三','十四','十五','十六','十七','十八','十九'];
       var reportWrapper = [
         {
           title:"基础信息",
@@ -847,7 +848,6 @@ export default {
           }
 
           reportWrapper[0].count = reportItem0.length;
-          reportWrapper[0].num = idxArray[0];
         }
 
         // 行政处罚信息
@@ -867,7 +867,6 @@ export default {
             });
           }
           reportWrapper[1].count = reportItem1.length;
-          reportWrapper[1].num = idxArray[1];
         }
 
         this.reportWrapper = reportWrapper;
