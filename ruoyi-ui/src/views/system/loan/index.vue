@@ -267,7 +267,7 @@
     </el-dialog>
 
     <!-- 征信报告对话框 -->
-    <el-dialog :title="titleReport" :visible.sync="openReport" width="700px" append-to-body :before-close="handleClose" >
+    <el-dialog :title="titleReport" :visible.sync="openReport" width="700px" append-to-body >
       <el-collapse v-model="activeNames" @change="handleChange">
           <el-collapse-item title="评分模型结果" name="1" >
             <div v-if="formReport.ztkZhdPfmxjgb == null">暂无数据</div>
@@ -387,52 +387,52 @@
                   </el-form-item>
                 </el-col>
                 <el-col :span="12">
-                  <el-form-item label="经营年限大于1年(0否1是)" prop="jynx">
+                  <el-form-item label="经营年限大于1年" prop="jynx">
                     <dict-tag :options="loanYesOrNoOptions" :value="formReport.ztkZhdZrjgjgb.jynx.toString()"/>
                   </el-form-item>
                 </el-col>
                 <el-col :span="12">
-                  <el-form-item label="准入年龄18至60男55女(0否1是)" prop="zrnl">
+                  <el-form-item label="准入年龄18至60男55女" prop="zrnl">
                     <dict-tag :options="loanYesOrNoOptions" :value="formReport.ztkZhdZrjgjgb.zrnl.toString()"/>
                   </el-form-item>
                 </el-col>
                 <el-col :span="12">
-                  <el-form-item label="非异地贷款泉州市内(0否1是)" prop="fyddk">
+                  <el-form-item label="非异地贷款泉州市内" prop="fyddk">
                     <dict-tag :options="loanYesOrNoOptions" :value="formReport.ztkZhdZrjgjgb.fyddk.toString()"/>
                   </el-form-item>
                 </el-col>
                 <el-col :span="12">
-                  <el-form-item label="营业执照状态非吊销停业清算注销(0否1是)" prop="regstate">
+                  <el-form-item label="营业执照状态非吊销停业清算注销" prop="regstate">
                     <dict-tag :options="loanYesOrNoOptions" :value="formReport.ztkZhdZrjgjgb.regstate.toString()"/>
                   </el-form-item>
                 </el-col>
                 <el-col :span="12">
-                  <el-form-item label="不存在重大税收违法案件(0否1是)" prop="zdsffwaj">
+                  <el-form-item label="不存在重大税收违法案件" prop="zdsffwaj">
                     <dict-tag :options="loanYesOrNoOptions" :value="formReport.ztkZhdZrjgjgb.zdsffwaj.toString()"/>
                   </el-form-item>
                 </el-col>
                 <el-col :span="12">
-                  <el-form-item label="非失信被执行人(0否1是)" prop="sxbzxr">
+                  <el-form-item label="非失信被执行人" prop="sxbzxr">
                     <dict-tag :options="loanYesOrNoOptions" :value="formReport.ztkZhdZrjgjgb.sxbzxr.toString()"/>
                   </el-form-item>
                 </el-col>
                 <el-col :span="12">
-                  <el-form-item label="不存在失信黑名单(0否1是)" prop="sxhmd">
+                  <el-form-item label="不存在失信黑名单" prop="sxhmd">
                     <dict-tag :options="loanYesOrNoOptions" :value="formReport.ztkZhdZrjgjgb.sxhmd.toString()"/>
                   </el-form-item>
                 </el-col>
                 <el-col :span="12">
-                  <el-form-item label="不存在国家下发工商异常名录(0否1是)" prop="gjxfgsycml">
+                  <el-form-item label="不存在国家下发工商异常名录" prop="gjxfgsycml">
                     <dict-tag :options="loanYesOrNoOptions" :value="formReport.ztkZhdZrjgjgb.gjxfgsycml.toString()"/>
                   </el-form-item>
                 </el-col>
                 <el-col :span="12">
-                  <el-form-item label="不存在不动产查封(0否1是)" prop="bdccf">
+                  <el-form-item label="不存在不动产查封" prop="bdccf">
                     <dict-tag :options="loanYesOrNoOptions" :value="formReport.ztkZhdZrjgjgb.bdccf.toString()"/>
                   </el-form-item>
                 </el-col>
                 <el-col :span="12">
-                  <el-form-item label="是否准入(0否1是)" prop="sfzr">
+                  <el-form-item label="是否准入" prop="sfzr">
                     <dict-tag :options="loanYesOrNoOptions" :value="formReport.ztkZhdZrjgjgb.sfzr.toString()"/>
                   </el-form-item>
                 </el-col>
@@ -703,8 +703,8 @@
 
     <el-dialog :title="titleSimpleReport" :visible.sync="openSimpleReport" width="800px" append-to-body>
 
-        <div v-for="report in reportWrapper">
-          <h2>{{report.num}}、{{report.title}}{{report.showCount?"(共"+report.count+"条)":""}}</h2>
+        <div v-for="(report,index) in reportWrapper">
+          <h2>{{idxArray[index]}}、{{report.title}}{{report.showCount?"(共"+report.count+"条)":""}}</h2>
           <ol style="border:1px solid #000;padding-top:12px;padding-bottom:12px;padding-left:30px;min-height:100px">
             <div style="margin-bottom:8px">{{report.subTitle}}</div>
             <li v-for="item in report.item">
@@ -791,6 +791,8 @@ export default {
       titleSimpleReport: "",
       openSimpleReport: false,
       reportWrapper: [],
+      idxArray : ['一','二','三','四','五','六','七','八','九','十','十一','十二','十三','十四','十五','十六','十七','十八','十九'],
+
     };
   },
   created() {
@@ -915,7 +917,6 @@ export default {
     /** 查看报告按钮操作 */
     handleSimpleReport(row) {
       const tyshxydm = row.companyCreditCode
-      const idxArray = ['一','二','三','四','五','六','七','八','九','十','十一','十二','十三','十四','十五','十六','十七','十八','十九'];
       var reportWrapper = [
         {
           title:"基础信息",
@@ -924,20 +925,20 @@ export default {
           count:0,
           item:[],
         },
-        {
-          title:"行政许可信息",
-          subTitle:"各级行政机关依法对信用主体作出的行政许可信息。",
-          showCount:true,
-          count:0,
-          item:[],
-        },
-        {
-          title:"行政处罚信息",
-          subTitle:"各级行政机关依法对信用主体作出的行政处罚信息。",
-          showCount:true,
-          count:0,
-          item:[],
-        },
+        // {
+        //   title:"行政许可信息",
+        //   subTitle:"各级行政机关依法对信用主体作出的行政许可信息。",
+        //   showCount:true,
+        //   count:0,
+        //   item:[],
+        // },
+        // {
+        //   title:"行政处罚信息",
+        //   subTitle:"各级行政机关依法对信用主体作出的行政处罚信息。",
+        //   showCount:true,
+        //   count:0,
+        //   item:[],
+        // },
         {
           title:"守信激励信息",
           subTitle:"各有关部门将信用主体列为守信激励对象信息。",
@@ -952,13 +953,13 @@ export default {
           count:0,
           item:[],
         },
-        {
-          title:"重点关注信息",
-          subTitle:"各有关部门将信用主体列为重点关注名单信息。",
-          showCount:true,
-          count:0,
-          item:[],
-        },
+        // {
+        //   title:"重点关注信息",
+        //   subTitle:"各有关部门将信用主体列为重点关注名单信息。",
+        //   showCount:true,
+        //   count:0,
+        //   item:[],
+        // },
         {
           title:"资质/资格信息",
           subTitle:"除行政许可外，信用主体获得的其他资质或资格信息。",
@@ -973,34 +974,35 @@ export default {
           count:0,
           item:[],
         },
-        {
-          title:"其他信息",
-          subTitle:"涉及信用主体的信用评价信息(如公共信用综合评价信息、 行业信用评价信息等)、信用修复信息、信用承诺信息以及其他 与信用主体信用状况相关的信息。",
-          showCount:true,
-          count:0,
-          item:[],
-        },
-        {
-          title:"综合信用状况分析",
-          subTitle:"结合信用主体相关信用信息对其信用状况进行全面、客观描述和综合分析。",
-          showCount:false,
-          count:0,
-          item:[],
-        },
-        {
-          title:"信用状况提升建议",
-          subTitle:"对信用主体践行社会主义核心价值观、依法合规经营、增强 诚信守法意识等方面提出意见建议。",
-          showCount:false,
-          count:0,
-          item:[],
-        },
-        {
-          title:"地方信用网站公共信用信息报告补充内容(如有)",
-          subTitle:"",
-          showCount:false,
-          count:0,
-          item:[],
-        }];
+        // {
+        //   title:"其他信息",
+        //   subTitle:"涉及信用主体的信用评价信息(如公共信用综合评价信息、 行业信用评价信息等)、信用修复信息、信用承诺信息以及其他 与信用主体信用状况相关的信息。",
+        //   showCount:true,
+        //   count:0,
+        //   item:[],
+        // },
+        // {
+        //   title:"综合信用状况分析",
+        //   subTitle:"结合信用主体相关信用信息对其信用状况进行全面、客观描述和综合分析。",
+        //   showCount:false,
+        //   count:0,
+        //   item:[],
+        // },
+        // {
+        //   title:"信用状况提升建议",
+        //   subTitle:"对信用主体践行社会主义核心价值观、依法合规经营、增强 诚信守法意识等方面提出意见建议。",
+        //   showCount:false,
+        //   count:0,
+        //   item:[],
+        // },
+        // {
+        //   title:"地方信用网站公共信用信息报告补充内容(如有)",
+        //   subTitle:"",
+        //   showCount:false,
+        //   count:0,
+        //   item:[],
+        // }
+        ];
 
       getReport(tyshxydm).then(response => {
         var formReport = response.data;
@@ -1024,28 +1026,152 @@ export default {
             });
           }
 
-          reportWrapper[0].count = reportItem0.length;
-          reportWrapper[0].num = idxArray[0];
-        }
-
-        // 行政处罚信息
-        var reportItem1 = reportWrapper[1].item;
-        if(formReport.bzkZhdPfmxmxb != null){
-          if(formReport.bzkZhdZrjgmxb.zywfss){
-            reportItem1.push({
-              "name":"重大税收违法案件主要违法事实",
-              "value":formReport.bzkZhdZrjgmxb.zywfss
+          if(formReport.bzkZhdPfmxmxb.zjlx){
+            reportItem0.push({
+              "name":"证件类型",
+              "value":formReport.bzkZhdPfmxmxb.zjlx
             });
           }
 
-          if(formReport.bzkZhdZrjgmxb.sxbzxrah){
+          if(formReport.bzkZhdPfmxmxb.zjhm){
+            reportItem0.push({
+              "name":"证件号码",
+              "value":formReport.bzkZhdPfmxmxb.zjhm
+            });
+          }
+
+          if(formReport.bzkZhdPfmxmxb.yydm){
+            reportItem0.push({
+              "name":"营业店名",
+              "value":formReport.bzkZhdPfmxmxb.yydm
+            });
+          }
+
+          if(formReport.bzkZhdPfmxmxb.jycsDz){
+            reportItem0.push({
+              "name":"经营场所地址",
+              "value":formReport.bzkZhdPfmxmxb.jycsDz
+            });
+          }
+
+          if(formReport.bzkZhdPfmxmxb.zcrq){
+            reportItem0.push({
+              "name":"注册日期",
+              "value":formReport.bzkZhdPfmxmxb.zcrq
+            });
+          }
+          reportWrapper[0].count = reportItem0.length;
+        }
+
+        // 守信激励信息
+        var reportItem1 = reportWrapper[1].item;
+        if(formReport.bzkZhdPfmxmxb != null){
+          if (formReport.bzkZhdPfmxmxb.zrrsfbj) {
             reportItem1.push({
-              "name":"失信被执行人案号",
-              "value":formReport.bzkZhdZrjgmxb.sxbzxrah
+              "name": "自然人是否补缴",
+              "value": formReport.bzkZhdPfmxmxb.zrrsfbj
+            });
+          }
+
+          if (formReport.bzkZhdPfmxmxb.jlcsnr) {
+            reportItem1.push({
+              "name": "激励措施内容",
+              "value": formReport.bzkZhdPfmxmxb.jlcsnr
+            });
+          }
+
+          if (formReport.bzkZhdPfmxmxb.jlmdmc) {
+            reportItem1.push({
+              "name": "激励名单名称",
+              "value": formReport.bzkZhdPfmxmxb.jlmdmc
             });
           }
           reportWrapper[1].count = reportItem1.length;
-          reportWrapper[1].num = idxArray[1];
+        }
+
+        // 失信惩戒信息
+        var reportItem2 = reportWrapper[2].item;
+        if(formReport.bzkZhdZrjgmxb != null) {
+          if (formReport.bzkZhdZrjgmxb.zywfss) {
+            reportItem2.push({
+              "name": "重大税收违法案件主要违法事实",
+              "value": formReport.bzkZhdZrjgmxb.zywfss
+            });
+          }
+
+          if (formReport.bzkZhdZrjgmxb.sxbzxrah) {
+            reportItem2.push({
+              "name": "失信被执行人案号",
+              "value": formReport.bzkZhdZrjgmxb.sxbzxrah
+            });
+          }
+
+          if (formReport.bzkZhdZrjgmxb.sxhmdxxmc) {
+            reportItem2.push({
+              "name": "失信黑名单信息名称",
+              "value": formReport.bzkZhdZrjgmxb.sxhmdxxmc
+            });
+          }
+          reportWrapper[2].count = reportItem2.length;
+        }
+
+          // 资质/资格信息
+          var reportItem3 = reportWrapper[3].item;
+          if(formReport.bzkZhdPfmxmxb != null) {
+            if (formReport.bzkZhdPfmxmxb.xsfczcyj) {
+              reportItem3.push({
+                "name": "享受扶持政策依据",
+                "value": formReport.bzkZhdPfmxmxb.xsfczcyj
+              });
+            }
+
+            if (formReport.bzkZhdPfmxmxb.xsfczcnr) {
+              reportItem3.push({
+                "name": "享受扶持政策内容",
+                "value": formReport.bzkZhdPfmxmxb.xsfczcnr
+              });
+            }
+
+            if (formReport.bzkZhdPfmxmxb.xsfczcdse) {
+              reportItem3.push({
+                "name": "享受扶持政策的数额",
+                "value": formReport.bzkZhdPfmxmxb.xsfczcdse
+              });
+            }
+
+            if (formReport.bzkZhdPfmxmxb.xsfczcdbm) {
+              reportItem3.push({
+                "name": "享受扶持政策的部门",
+                "value": formReport.bzkZhdPfmxmxb.xsfczcdbm
+              });
+            }
+
+            if (formReport.bzkZhdPfmxmxb.ssfczcrq) {
+              reportItem3.push({
+                "name": "实施扶持政策日期",
+                "value": formReport.bzkZhdPfmxmxb.ssfczcrq
+              });
+            }
+            reportWrapper[3].count = reportItem3.length;
+          }
+
+        // 风险提示信息
+        var reportItem4 = reportWrapper[4].item;
+        if(formReport.bzkZhdZrjgmxb != null) {
+          if (formReport.bzkZhdZrjgmxb.gsycxx) {
+            reportItem4.push({
+              "name": "工商异常信息",
+              "value": formReport.bzkZhdZrjgmxb.gsycxx
+            });
+          }
+
+          if (formReport.bzkZhdZrjgmxb.bdccf) {
+            reportItem4.push({
+              "name": "不动产查封",
+              "value": formReport.bzkZhdZrjgmxb.bdccf
+            });
+          }
+          reportWrapper[4].count = reportItem4.length;
         }
 
         this.reportWrapper = reportWrapper;
@@ -1108,11 +1234,11 @@ export default {
       console.log(val);
     },
     //关闭弹窗判断
-    handleClose(done){
-      this.$confirm('是否关闭当前页面？').then(() => {
-        done();
-      }).catch(() => {});
-    }
+    // handleClose(done){
+    //   this.$confirm('是否关闭当前页面？').then(() => {
+    //     done();
+    //   }).catch(() => {});
+    // }
   }
 };
 </script>
