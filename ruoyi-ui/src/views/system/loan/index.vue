@@ -119,14 +119,14 @@
       <el-table-column label="统一社会信用代码" align="center" prop="companyCreditCode" />
       <el-table-column label="企业地址" align="center" prop="companyAddress" :show-overflow-tooltip="true" />
       <el-table-column label="意向银行" align="center" prop="loanBand" :formatter="loanBandFormat" />
-      <el-table-column label="贷款金额" align="center" prop="loanAmount" width="78px"/>
+      <el-table-column label="贷款金额(万)" align="center" prop="loanAmount" width="98px"/>
       <el-table-column label="是否首次贷款" align="center" prop="loanFirst" :formatter="loanFirstFormat" width="98px"/>
       <el-table-column label="贷款用途" align="center" prop="loanPurpose" width="78px" :show-overflow-tooltip="true"/>
       <el-table-column label="联系人姓名" align="center" prop="contactName" width="88px"/>
       <el-table-column label="联系人手机" align="center" prop="contactPhone" width="110px"/>
-      <el-table-column label="银行网点" align="center" prop="bankBranch" />
-      <el-table-column label="贷款对象类型" align="center" prop="loanObjectType" :formatter="loanObjectTypeFormat" width="98px" />
-      <el-table-column label="客户经理" align="center" prop="customerManager" />
+<!--      <el-table-column label="银行网点" align="center" prop="bankBranch" />-->
+<!--      <el-table-column label="贷款对象类型" align="center" prop="loanObjectType" :formatter="loanObjectTypeFormat" width="98px" />-->
+<!--      <el-table-column label="客户经理" align="center" prop="customerManager" />-->
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width" width="90px">
         <template slot-scope="scope">
           <el-button
@@ -218,7 +218,7 @@
             </el-checkbox>
           </el-checkbox-group>
         </el-form-item>
-        <el-form-item label="贷款金额" prop="loanAmount">
+        <el-form-item label="贷款金额(万)" prop="loanAmount">
           <el-input v-model="form.loanAmount" placeholder="请输入贷款金额" />
         </el-form-item>
         <el-form-item label="是否首次贷款" prop="loanFirst">
@@ -267,276 +267,444 @@
     </el-dialog>
 
     <!-- 征信报告对话框 -->
-    <el-dialog :title="titleReport" :visible.sync="openReport" width="800px" append-to-body>
+    <el-dialog :title="titleReport" :visible.sync="openReport" width="700px" append-to-body :before-close="handleClose" >
       <el-collapse v-model="activeNames" @change="handleChange">
-          <el-collapse-item title="评分模型结果" name="1">
+          <el-collapse-item title="评分模型结果" name="1" >
             <div v-if="formReport.ztkZhdPfmxjgb == null">暂无数据</div>
-            <el-form v-else ref="formReport" :model="formReport" :rules="rules" label-width="300px" :inline="false">
-                <el-form-item label="统一社会信用代码" prop="tyshxydm">
-                  {{formReport.ztkZhdPfmxjgb.tyshxydm}}
-                </el-form-item>
-                <el-form-item label="申报个体工商户姓名" prop="sbgtgshxm">
-                  {{formReport.ztkZhdPfmxjgb.sbgtgshxm}}
-                </el-form-item>
-                <el-form-item label="证件类型" prop="zjlx">
-                  {{formReport.ztkZhdPfmxjgb.zjlx}}
-                </el-form-item>
-                <el-form-item label="证件号码" prop="zjhm">
-                  {{formReport.ztkZhdPfmxjgb.zjhm}}
-                </el-form-item>
-                <el-form-item label="营业店名" prop="yydm">
-                  {{formReport.ztkZhdPfmxjgb.yydm}}
-                </el-form-item>
-                <el-form-item label="经营场所地址" prop="jycsDz">
-                  {{formReport.ztkZhdPfmxjgb.jycsDz}}
-                </el-form-item>
-                <el-form-item label="注册日期" prop="zcrq">
-                  {{formReport.ztkZhdPfmxjgb.zcrq}}
-                </el-form-item>
-                <el-form-item label="经营年限评分" prop="jynx">
-                  {{formReport.ztkZhdPfmxjgb.jynx}}
-                </el-form-item>
-                <el-form-item label="申报人固定资产情况评分" prop="sbrgdzcqkpf">
-                  {{formReport.ztkZhdPfmxjgb.sbrgdzcqkpf}}
-                </el-form-item>
-                <el-form-item label="申报人最高学历评分" prop="sbrzgxlpf">
-                  {{formReport.ztkZhdPfmxjgb.sbrzgxlpf}}
-                </el-form-item>
-                <el-form-item label="申报人婚姻状况评分" prop="sbrhyzkpf">
-                  {{formReport.ztkZhdPfmxjgb.sbrhyzkpf}}
-                </el-form-item>
-                <el-form-item label="申报人欠税情况评分" prop="sbrqsqkpf">
-                  {{formReport.ztkZhdPfmxjgb.sbrqsqkpf}}
-                </el-form-item>
-                <el-form-item label="个体工商户欠税情况评分" prop="gtgshqsqkpf">
-                  {{formReport.ztkZhdPfmxjgb.gtgshqsqkpf}}
-                </el-form-item>
-                <el-form-item label="个体工商户激励情况评分" prop="gtgshjlqkpf">
-                  {{formReport.ztkZhdPfmxjgb.gtgshjlqkpf}}
-                </el-form-item>
-                <el-form-item label="个体工商户享受扶持情况评分" prop="gtgshxsfcqkpf">
-                  {{formReport.ztkZhdPfmxjgb.gtgshxsfcqkpf}}
-                </el-form-item>
-                <el-form-item label="总评分" prop="zpf">
-                  {{formReport.ztkZhdPfmxjgb.zpf}}
-                </el-form-item>
-                <el-form-item label="风险等级" prop="fxdj">
-                  {{formReport.ztkZhdPfmxjgb.fxdj}}
-                </el-form-item>
+            <el-form v-else ref="formReport" :model="formReport" :rules="rules" style="margin-left: 30px">
+              <el-row>
+                <el-col :span="12">
+                  <el-form-item label="统一社会信用代码" prop="tyshxydm" >
+                    {{formReport.ztkZhdPfmxjgb.tyshxydm}}
+                  </el-form-item>
+                </el-col>
+                <el-col :span="12">
+                  <el-form-item label="申报个体工商户姓名" prop="sbgtgshxm">
+                    {{formReport.ztkZhdPfmxjgb.sbgtgshxm}}
+                  </el-form-item>
+                </el-col>
+                <el-col :span="12">
+                  <el-form-item label="证件类型" prop="zjlx">
+                    {{formReport.ztkZhdPfmxjgb.zjlx}}
+                  </el-form-item>
+                </el-col>
+                <el-col :span="12">
+                  <el-form-item label="证件号码" prop="zjhm">
+                    {{formReport.ztkZhdPfmxjgb.zjhm}}
+                  </el-form-item>
+                </el-col>
+                <el-col :span="12">
+                  <el-form-item label="营业店名" prop="yydm">
+                    {{formReport.ztkZhdPfmxjgb.yydm}}
+                  </el-form-item>
+                </el-col>
+                <el-col :span="12">
+                  <el-form-item label="经营场所地址" prop="jycsDz">
+                    {{formReport.ztkZhdPfmxjgb.jycsDz}}
+                  </el-form-item>
+                </el-col>
+                <el-col :span="12">
+                  <el-form-item label="注册日期" prop="zcrq">
+                    {{formReport.ztkZhdPfmxjgb.zcrq}}
+                  </el-form-item>
+                </el-col>
+                <el-col :span="12">
+                  <el-form-item label="经营年限评分" prop="jynx">
+                    {{formReport.ztkZhdPfmxjgb.jynx}}
+                  </el-form-item>
+                </el-col>
+                <el-col :span="12">
+                  <el-form-item label="申报人固定资产情况评分" prop="sbrgdzcqkpf">
+                    {{formReport.ztkZhdPfmxjgb.sbrgdzcqkpf}}
+                  </el-form-item>
+                </el-col>
+                <el-col :span="12">
+                  <el-form-item label="申报人最高学历评分" prop="sbrzgxlpf">
+                    {{formReport.ztkZhdPfmxjgb.sbrzgxlpf}}
+                  </el-form-item>
+                </el-col>
+                <el-col :span="12">
+                  <el-form-item label="申报人婚姻状况评分" prop="sbrhyzkpf">
+                    {{formReport.ztkZhdPfmxjgb.sbrhyzkpf}}
+                  </el-form-item>
+                </el-col>
+                <el-col :span="12">
+                  <el-form-item label="申报人欠税情况评分" prop="sbrqsqkpf">
+                    {{formReport.ztkZhdPfmxjgb.sbrqsqkpf}}
+                  </el-form-item>
+                </el-col>
+                <el-col :span="12">
+                  <el-form-item label="个体工商户欠税情况评分" prop="gtgshqsqkpf">
+                    {{formReport.ztkZhdPfmxjgb.gtgshqsqkpf}}
+                  </el-form-item>
+                </el-col>
+                <el-col :span="12">
+                  <el-form-item label="个体工商户激励情况评分" prop="gtgshjlqkpf">
+                    {{formReport.ztkZhdPfmxjgb.gtgshjlqkpf}}
+                  </el-form-item>
+                </el-col>
+                <el-col :span="12">
+                  <el-form-item label="个体工商户享受扶持情况评分" prop="gtgshxsfcqkpf">
+                    {{formReport.ztkZhdPfmxjgb.gtgshxsfcqkpf}}
+                  </el-form-item>
+                </el-col>
+                <el-col :span="12">
+                  <el-form-item label="总评分" prop="zpf">
+                    {{formReport.ztkZhdPfmxjgb.zpf}}
+                  </el-form-item>
+                </el-col>
+                <el-col :span="12">
+                  <el-form-item label="风险等级" prop="fxdj">
+                    {{formReport.ztkZhdPfmxjgb.fxdj}}
+                  </el-form-item>
+                </el-col>
+
+              </el-row>
             </el-form>
           </el-collapse-item>
           <el-collapse-item title="准入监管结果" name="2">
             <div v-if="formReport.ztkZhdZrjgjgb == null">暂无数据</div>
-            <el-form v-else :model="queryParams" ref="formReport" :inline="false" v-show="showSearch" label-width="300px">
-              <el-form-item label="统一社会信用代码" prop="tyshxydm">
-                {{formReport.ztkZhdZrjgjgb.tyshxydm}}
-              </el-form-item>
-              <el-form-item label="申报个体工商户姓名" prop="sbgtgshxm">
-                {{formReport.ztkZhdZrjgjgb.sbgtgshxm}}
-              </el-form-item>
-              <el-form-item label="证件类型" prop="zjlx">
-                {{formReport.ztkZhdZrjgjgb.zjlx}}
-              </el-form-item>
-              <el-form-item label="证件号码" prop="zjhm">
-                {{formReport.ztkZhdZrjgjgb.zjhm}}
-              </el-form-item>
-              <el-form-item label="经营年限大于1年(0否1是)" prop="jynx">
-                {{formReport.ztkZhdZrjgjgb.jynx}}
-              </el-form-item>
-              <el-form-item label="准入年龄_18至60男55女(0否1是)" prop="zrnl">
-                {{formReport.ztkZhdZrjgjgb.zrnl}}
-              </el-form-item>
-              <el-form-item label="非异地贷款_泉州市内(0否1是)" prop="fyddk">
-                {{formReport.ztkZhdZrjgjgb.fyddk}}
-              </el-form-item>
-              <el-form-item label="营业执照状态非吊销停业清算注销(0否1是)" prop="regstate">
-                {{formReport.ztkZhdZrjgjgb.regstate}}
-              </el-form-item>
-              <el-form-item label="不存在重大税收违法案件(0否1是)" prop="zdsffwaj">
-                {{formReport.ztkZhdZrjgjgb.zdsffwaj}}
-              </el-form-item>
-              <el-form-item label="非失信被执行人(0否1是)" prop="sxbzxr">
-                {{formReport.ztkZhdZrjgjgb.sxbzxr}}
-              </el-form-item>
-              <el-form-item label="不存在失信黑名单(0否1是)" prop="sxhmd">
-                {{formReport.ztkZhdZrjgjgb.sxhmd}}
-              </el-form-item>
-              <el-form-item label="不存在国家下发工商异常名录(0否1是)" prop="gjxfgsycml">
-                {{formReport.ztkZhdZrjgjgb.gjxfgsycml}}
-              </el-form-item>
-              <el-form-item label="不存在不动产查封(0否1是)" prop="bdccf">
-                {{formReport.ztkZhdZrjgjgb.bdccf}}
-              </el-form-item>
-              <el-form-item label="是否准入(0否1是)" prop="sfzr">
-                {{formReport.ztkZhdZrjgjgb.sfzr}}
-              </el-form-item>
-<!--              <el-form-item>-->
-<!--                <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>-->
-<!--                <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>-->
-<!--              </el-form-item>-->
+            <el-form v-else :model="queryParams" ref="formReport" :inline="false" v-show="showSearch" style="margin-left: 30px" >
+              <el-row>
+                <el-col :span="12">
+                  <el-form-item label="统一社会信用代码" prop="tyshxydm">
+                    {{formReport.ztkZhdZrjgjgb.tyshxydm}}
+                  </el-form-item>
+                </el-col>
+                <el-col :span="12">
+                  <el-form-item label="申报个体工商户姓名" prop="sbgtgshxm">
+                    {{formReport.ztkZhdZrjgjgb.sbgtgshxm}}
+                  </el-form-item>
+                </el-col>
+                <el-col :span="12">
+                  <el-form-item label="证件类型" prop="zjlx">
+                    {{formReport.ztkZhdZrjgjgb.zjlx}}
+                  </el-form-item>
+                </el-col>
+                <el-col :span="12">
+                  <el-form-item label="证件号码" prop="zjhm">
+                    {{formReport.ztkZhdZrjgjgb.zjhm}}
+                  </el-form-item>
+                </el-col>
+                <el-col :span="12">
+                  <el-form-item label="经营年限大于1年(0否1是)" prop="jynx">
+                    <dict-tag :options="loanYesOrNoOptions" :value="formReport.ztkZhdZrjgjgb.jynx.toString()"/>
+                  </el-form-item>
+                </el-col>
+                <el-col :span="12">
+                  <el-form-item label="准入年龄18至60男55女(0否1是)" prop="zrnl">
+                    <dict-tag :options="loanYesOrNoOptions" :value="formReport.ztkZhdZrjgjgb.zrnl.toString()"/>
+                  </el-form-item>
+                </el-col>
+                <el-col :span="12">
+                  <el-form-item label="非异地贷款泉州市内(0否1是)" prop="fyddk">
+                    <dict-tag :options="loanYesOrNoOptions" :value="formReport.ztkZhdZrjgjgb.fyddk.toString()"/>
+                  </el-form-item>
+                </el-col>
+                <el-col :span="12">
+                  <el-form-item label="营业执照状态非吊销停业清算注销(0否1是)" prop="regstate">
+                    <dict-tag :options="loanYesOrNoOptions" :value="formReport.ztkZhdZrjgjgb.regstate.toString()"/>
+                  </el-form-item>
+                </el-col>
+                <el-col :span="12">
+                  <el-form-item label="不存在重大税收违法案件(0否1是)" prop="zdsffwaj">
+                    <dict-tag :options="loanYesOrNoOptions" :value="formReport.ztkZhdZrjgjgb.zdsffwaj.toString()"/>
+                  </el-form-item>
+                </el-col>
+                <el-col :span="12">
+                  <el-form-item label="非失信被执行人(0否1是)" prop="sxbzxr">
+                    <dict-tag :options="loanYesOrNoOptions" :value="formReport.ztkZhdZrjgjgb.sxbzxr.toString()"/>
+                  </el-form-item>
+                </el-col>
+                <el-col :span="12">
+                  <el-form-item label="不存在失信黑名单(0否1是)" prop="sxhmd">
+                    <dict-tag :options="loanYesOrNoOptions" :value="formReport.ztkZhdZrjgjgb.sxhmd.toString()"/>
+                  </el-form-item>
+                </el-col>
+                <el-col :span="12">
+                  <el-form-item label="不存在国家下发工商异常名录(0否1是)" prop="gjxfgsycml">
+                    <dict-tag :options="loanYesOrNoOptions" :value="formReport.ztkZhdZrjgjgb.gjxfgsycml.toString()"/>
+                  </el-form-item>
+                </el-col>
+                <el-col :span="12">
+                  <el-form-item label="不存在不动产查封(0否1是)" prop="bdccf">
+                    <dict-tag :options="loanYesOrNoOptions" :value="formReport.ztkZhdZrjgjgb.bdccf.toString()"/>
+                  </el-form-item>
+                </el-col>
+                <el-col :span="12">
+                  <el-form-item label="是否准入(0否1是)" prop="sfzr">
+                    <dict-tag :options="loanYesOrNoOptions" :value="formReport.ztkZhdZrjgjgb.sfzr.toString()"/>
+                  </el-form-item>
+                </el-col>
+    <!--              <el-form-item>-->
+    <!--                <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>-->
+    <!--                <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>-->
+    <!--              </el-form-item>-->
+              </el-row>
             </el-form>
           </el-collapse-item>
           <el-collapse-item title="评分模型明细" name="3">
             <div v-if="formReport.bzkZhdPfmxmxb == null">暂无数据</div>
-            <el-form v-else ref="formReport" :model="formReport" :rules="rules" label-width="300px">
-              <el-form-item label="统一社会信用代码" prop="tyshxydm">
-                {{formReport.bzkZhdPfmxmxb.tyshxydm}}
-              </el-form-item>
-              <el-form-item label="申报个体工商户姓名" prop="sbgtgshxm">
-                {{formReport.bzkZhdPfmxmxb.sbgtgshxm}}
-              </el-form-item>
-              <el-form-item label="证件类型" prop="zjlx">
-                {{formReport.bzkZhdPfmxmxb.zjlx}}
-              </el-form-item>
-              <el-form-item label="证件号码" prop="zjhm">
-                {{formReport.bzkZhdPfmxmxb.zjhm}}
-              </el-form-item>
-              <el-form-item label="营业店名" prop="yydm">
-                {{formReport.bzkZhdPfmxmxb.yydm}}
-              </el-form-item>
-              <el-form-item label="经营场所_地址" prop="jycsDz">
-                {{formReport.bzkZhdPfmxmxb.jycsDz}}
-              </el-form-item>
-              <el-form-item label="注册日期" prop="zcrq">
-                {{formReport.bzkZhdPfmxmxb.zcrq}}
-              </el-form-item>
-              <el-form-item label="经营年限" prop="jynx">
-                {{formReport.bzkZhdPfmxmxb.jynx}}
-              </el-form-item>
-              <el-form-item label="不动产权证号" prop="bdcqzh">
-                {{formReport.bzkZhdPfmxmxb.bdcqzh}}
-              </el-form-item>
-              <el-form-item label="不动产共有方式" prop="bdcgyfs">
-                {{formReport.bzkZhdPfmxmxb.bdcgyfs}}
-              </el-form-item>
-              <el-form-item label="不动产坐落" prop="bdczl">
-                {{formReport.bzkZhdPfmxmxb.bdczl}}
-              </el-form-item>
-              <el-form-item label="不动产产权状态" prop="bdccqzt">
-                {{formReport.bzkZhdPfmxmxb.bdccqzt}}
-              </el-form-item>
-              <el-form-item label="不动产建筑面积" prop="bdcjzmj">
-                {{formReport.bzkZhdPfmxmxb.bdcjzmj}}
-              </el-form-item>
-              <el-form-item label="不动产用途" prop="bdcyt">
-                {{formReport.bzkZhdPfmxmxb.bdcyt}}
-              </el-form-item>
-              <el-form-item label="最高学历" prop="zgxl">
-                {{formReport.bzkZhdPfmxmxb.zgxl}}
-              </el-form-item>
-              <el-form-item label="婚姻状况" prop="hyzk">
-                {{formReport.bzkZhdPfmxmxb.hyzk}}
-              </el-form-item>
-              <el-form-item label="自然人欠税税种" prop="zrrqssz">
-                {{formReport.bzkZhdPfmxmxb.zrrqssz}}
-              </el-form-item>
-              <el-form-item label="自然人欠税统计开始日期" prop="zrrqstjksrq">
-                {{formReport.bzkZhdPfmxmxb.zrrqstjksrq}}
-              </el-form-item>
-              <el-form-item label="自然人欠税统计截止日期" prop="zrrqstjjzrq">
-                {{formReport.bzkZhdPfmxmxb.zrrqstjjzrq}}
-              </el-form-item>
-              <el-form-item label="自然人欠税余额(元)" prop="zrrqsye">
-                {{formReport.bzkZhdPfmxmxb.zrrqsye}}
-              </el-form-item>
-              <el-form-item label="自然人是否补缴" prop="zrrsfbj">
-                {{formReport.bzkZhdPfmxmxb.zrrsfbj}}
-              </el-form-item>
-              <el-form-item label="法人欠税税种" prop="frqssz">
-                {{formReport.bzkZhdPfmxmxb.frqssz}}
-              </el-form-item>
-              <el-form-item label="法人欠税统计开始日期" prop="frqstjksrq">
-                {{formReport.bzkZhdPfmxmxb.frqstjksrq}}
-              </el-form-item>
-              <el-form-item label="法人欠税统计截止日期" prop="frqstjjzrq">
-                {{formReport.bzkZhdPfmxmxb.frqstjjzrq}}
-              </el-form-item>
-              <el-form-item label="法人当前欠税金额(元)" prop="frdqqsje">
-                {{formReport.bzkZhdPfmxmxb.frdqqsje}}
-              </el-form-item>
-              <el-form-item label="法人是否补缴" prop="frsfbj">
-                {{formReport.bzkZhdPfmxmxb.frsfbj}}
-              </el-form-item>
-              <el-form-item label="激励措施内容" prop="jlcsnr">
-                {{formReport.bzkZhdPfmxmxb.jlcsnr}}
-              </el-form-item>
-              <el-form-item label="激励名单名称" prop="jlmdmc">
-                {{formReport.bzkZhdPfmxmxb.jlmdmc}}
-              </el-form-item>
-              <el-form-item label="享受扶持政策依据" prop="xsfczcyj">
-                {{formReport.bzkZhdPfmxmxb.xsfczcyj}}
-              </el-form-item>
-              <el-form-item label="享受扶持政策内容" prop="xsfczcnr">
-                {{formReport.bzkZhdPfmxmxb.xsfczcnr}}
-              </el-form-item>
-              <el-form-item label="享受扶持政策的数额" prop="xsfczcdse">
-                {{formReport.bzkZhdPfmxmxb.xsfczcdse}}
-              </el-form-item>
-              <el-form-item label="享受扶持政策的部门" prop="xsfczcdbm">
-                {{formReport.bzkZhdPfmxmxb.xsfczcdbm}}
-              </el-form-item>
-              <el-form-item label="实施扶持政策日期" prop="ssfczcrq">
-                {{formReport.bzkZhdPfmxmxb.ssfczcrq}}
-              </el-form-item>
+            <el-form v-else ref="formReport" :model="formReport" :rules="rules" style="margin-left: 30px" >
+              <el-row>
+                <el-col>
+                  <el-form-item label="统一社会信用代码" prop="tyshxydm">
+                    {{formReport.bzkZhdPfmxmxb.tyshxydm}}
+                  </el-form-item>
+                </el-col>
+                <el-col :span="12">
+                  <el-form-item label="申报个体工商户姓名" prop="sbgtgshxm">
+                    {{formReport.bzkZhdPfmxmxb.sbgtgshxm}}
+                  </el-form-item>
+                </el-col>
+                <el-col :span="12">
+                  <el-form-item label="证件类型" prop="zjlx">
+                    {{formReport.bzkZhdPfmxmxb.zjlx}}
+                  </el-form-item>
+                </el-col>
+                <el-col :span="12">
+                  <el-form-item label="证件号码" prop="zjhm">
+                    {{formReport.bzkZhdPfmxmxb.zjhm}}
+                  </el-form-item>
+                </el-col>
+                <el-col :span="12">
+                  <el-form-item label="营业店名" prop="yydm">
+                    {{formReport.bzkZhdPfmxmxb.yydm}}
+                  </el-form-item>
+                </el-col>
+                <el-col :span="12">
+                  <el-form-item label="经营场所地址" prop="jycsDz">
+                    {{formReport.bzkZhdPfmxmxb.jycsDz}}
+                  </el-form-item>
+                </el-col>
+                <el-col :span="12">
+                  <el-form-item label="注册日期" prop="zcrq">
+                    {{formReport.bzkZhdPfmxmxb.zcrq}}
+                  </el-form-item>
+                </el-col>
+                <el-col :span="12">
+                  <el-form-item label="经营年限" prop="jynx">
+                    {{formReport.bzkZhdPfmxmxb.jynx}}
+                  </el-form-item>
+                </el-col>
+                <el-col :span="12">
+                  <el-form-item label="不动产权证号" prop="bdcqzh">
+                    {{formReport.bzkZhdPfmxmxb.bdcqzh}}
+                  </el-form-item>
+                </el-col>
+                <el-col :span="12">
+                  <el-form-item label="不动产共有方式" prop="bdcgyfs">
+                    {{formReport.bzkZhdPfmxmxb.bdcgyfs}}
+                  </el-form-item>
+                </el-col>
+                <el-col :span="12">
+                  <el-form-item label="不动产坐落" prop="bdczl">
+                    {{formReport.bzkZhdPfmxmxb.bdczl}}
+                  </el-form-item>
+                </el-col>
+                <el-col :span="12">
+                  <el-form-item label="不动产产权状态" prop="bdccqzt">
+                    {{formReport.bzkZhdPfmxmxb.bdccqzt}}
+                  </el-form-item>
+                </el-col>
+                <el-col :span="12">
+                  <el-form-item label="不动产建筑面积" prop="bdcjzmj">
+                    {{formReport.bzkZhdPfmxmxb.bdcjzmj}}
+                  </el-form-item>
+                </el-col>
+                <el-col :span="12">
+                  <el-form-item label="不动产用途" prop="bdcyt">
+                    {{formReport.bzkZhdPfmxmxb.bdcyt}}
+                  </el-form-item>
+                </el-col>
+                <el-col :span="12">
+                  <el-form-item label="最高学历" prop="zgxl">
+                    {{formReport.bzkZhdPfmxmxb.zgxl}}
+                  </el-form-item>
+                </el-col>
+                <el-col :span="12">
+                  <el-form-item label="婚姻状况" prop="hyzk">
+                    {{formReport.bzkZhdPfmxmxb.hyzk}}
+                  </el-form-item>
+                </el-col>
+                <el-col :span="12">
+                  <el-form-item label="自然人欠税税种" prop="zrrqssz">
+                    {{formReport.bzkZhdPfmxmxb.zrrqssz}}
+                  </el-form-item>
+                </el-col>
+                <el-col :span="12">
+                  <el-form-item label="自然人欠税统计开始日期" prop="zrrqstjksrq">
+                    {{formReport.bzkZhdPfmxmxb.zrrqstjksrq}}
+                  </el-form-item>
+                </el-col>
+                <el-col :span="12">
+                  <el-form-item label="自然人欠税统计截止日期" prop="zrrqstjjzrq">
+                    {{formReport.bzkZhdPfmxmxb.zrrqstjjzrq}}
+                  </el-form-item>
+                </el-col>
+                <el-col :span="12">
+                  <el-form-item label="自然人欠税余额(元)" prop="zrrqsye">
+                    {{formReport.bzkZhdPfmxmxb.zrrqsye}}
+                  </el-form-item>
+                </el-col>
+                <el-col :span="12">
+                  <el-form-item label="自然人是否补缴" prop="zrrsfbj">
+                    {{formReport.bzkZhdPfmxmxb.zrrsfbj}}
+                  </el-form-item>
+                </el-col>
+                <el-col :span="12">
+                  <el-form-item label="法人欠税税种" prop="frqssz">
+                    {{formReport.bzkZhdPfmxmxb.frqssz}}
+                  </el-form-item>
+                </el-col>
+                <el-col :span="12">
+                  <el-form-item label="法人欠税统计开始日期" prop="frqstjksrq">
+                    {{formReport.bzkZhdPfmxmxb.frqstjksrq}}
+                  </el-form-item>
+                </el-col>
+                <el-col :span="12">
+                  <el-form-item label="法人欠税统计截止日期" prop="frqstjjzrq">
+                    {{formReport.bzkZhdPfmxmxb.frqstjjzrq}}
+                  </el-form-item>
+                </el-col>
+                <el-col :span="12">
+                  <el-form-item label="法人当前欠税金额(元)" prop="frdqqsje">
+                    {{formReport.bzkZhdPfmxmxb.frdqqsje}}
+                  </el-form-item>
+                </el-col>
+                <el-col :span="12">
+                  <el-form-item label="法人是否补缴" prop="frsfbj">
+                    {{formReport.bzkZhdPfmxmxb.frsfbj}}
+                  </el-form-item>
+                </el-col>
+                <el-col :span="12">
+                  <el-form-item label="激励措施内容" prop="jlcsnr">
+                    {{formReport.bzkZhdPfmxmxb.jlcsnr}}
+                  </el-form-item>
+                </el-col>
+                <el-col :span="12">
+                  <el-form-item label="激励名单名称" prop="jlmdmc">
+                    {{formReport.bzkZhdPfmxmxb.jlmdmc}}
+                  </el-form-item>
+                </el-col>
+                <el-col :span="12">
+                  <el-form-item label="享受扶持政策依据" prop="xsfczcyj">
+                    {{formReport.bzkZhdPfmxmxb.xsfczcyj}}
+                  </el-form-item>
+                </el-col>
+                <el-col :span="12">
+                  <el-form-item label="享受扶持政策内容" prop="xsfczcnr">
+                    {{formReport.bzkZhdPfmxmxb.xsfczcnr}}
+                  </el-form-item>
+                </el-col>
+                <el-col :span="12">
+                  <el-form-item label="享受扶持政策的数额" prop="xsfczcdse">
+                    {{formReport.bzkZhdPfmxmxb.xsfczcdse}}
+                  </el-form-item>
+                </el-col>
+                <el-col :span="12">
+                  <el-form-item label="享受扶持政策的部门" prop="xsfczcdbm">
+                    {{formReport.bzkZhdPfmxmxb.xsfczcdbm}}
+                  </el-form-item>
+                </el-col>
+                <el-col :span="12">
+                  <el-form-item label="实施扶持政策日期" prop="ssfczcrq">
+                    {{formReport.bzkZhdPfmxmxb.ssfczcrq}}
+                  </el-form-item>
+                </el-col>
+              </el-row>
+
             </el-form>
           </el-collapse-item>
           <el-collapse-item title="准入监管结果明细" name="4">
             <div v-if="formReport.bzkZhdZrjgmxb == null">暂无数据</div>
-            <el-form v-else ref="formReport" :model="formReport" :rules="rules" label-width="300px">
-                <el-form-item label="统一社会信用代码" prop="tyshxydm">
-                  {{formReport.bzkZhdZrjgmxb.tyshxydm}}
-                </el-form-item>
-                <el-form-item label="申报个体工商户姓名" prop="sbgtgshxm">
-                  {{formReport.bzkZhdZrjgmxb.sbgtgshxm}}
-                </el-form-item>
-                <el-form-item label="证件类型" prop="zjlx">
-                  {{formReport.bzkZhdZrjgmxb.zjlx}}
-                </el-form-item>
-                <el-form-item label="证件号码" prop="zjhm">
-                  {{formReport.bzkZhdZrjgmxb.zjhm}}
-                </el-form-item>
-                <el-form-item label="性别名称" prop="xb">
-                  {{formReport.bzkZhdZrjgmxb.xb}}
-                </el-form-item>
-                <el-form-item label="年龄" prop="nl">
-                  {{formReport.bzkZhdZrjgmxb.nl}}
-                </el-form-item>
-                <el-form-item label="注册日期" prop="zcrq">
-                  {{formReport.bzkZhdZrjgmxb.zcrq}}
-                </el-form-item>
-                <el-form-item label="注册地址" prop="zcdz">
-                  {{formReport.bzkZhdZrjgmxb.zcdz}}
-                </el-form-item>
-                <el-form-item label="注册地址行政区划" prop="zcdzXzqh">
-                  {{formReport.bzkZhdZrjgmxb.zcdzXzqh}}
-                </el-form-item>
-                <el-form-item label="登记状态名称" prop="regstate">
-                  {{formReport.bzkZhdZrjgmxb.regstate}}
-                </el-form-item>
-                <el-form-item label="重大税收违法案件主要违法事实" prop="zywfss">
-                  {{formReport.bzkZhdZrjgmxb.zywfss}}
-                </el-form-item>
-                <el-form-item label="失信被执行人案号" prop="sxbzxrah">
-                  {{formReport.bzkZhdZrjgmxb.sxbzxrah}}
-                </el-form-item>
-                <el-form-item label="失信黑名单信息名称" prop="sxhmdxxmc">
-                  {{formReport.bzkZhdZrjgmxb.sxhmdxxmc}}
-                </el-form-item>
-                <el-form-item label="工商异常信息" prop="gsycxx">
-                  {{formReport.bzkZhdZrjgmxb.gsycxx}}
-                </el-form-item>
-                <el-form-item label="不动产查封" prop="bdccf">
-                  {{formReport.bzkZhdZrjgmxb.bdccf}}
-                </el-form-item>
+            <el-form v-else ref="formReport" :model="formReport" :rules="rules" style="margin-left: 30px">
+              <el-row >
+                <el-col :span="12">
+                  <el-form-item label="统一社会信用代码" prop="tyshxydm">
+                    {{formReport.bzkZhdZrjgmxb.tyshxydm}}
+                  </el-form-item>
+                </el-col>
+                <el-col :span="12">
+                  <el-form-item label="申报个体工商户姓名" prop="sbgtgshxm">
+                    {{formReport.bzkZhdZrjgmxb.sbgtgshxm}}
+                  </el-form-item>
+                </el-col>
+                <el-col :span="12">
+                  <el-form-item label="证件类型" prop="zjlx">
+                    {{formReport.bzkZhdZrjgmxb.zjlx}}
+                  </el-form-item>
+                </el-col>
+                <el-col :span="12">
+                  <el-form-item label="证件号码" prop="zjhm">
+                    {{formReport.bzkZhdZrjgmxb.zjhm}}
+                  </el-form-item>
+                </el-col>
+                <el-col :span="12">
+                  <el-form-item label="性别名称" prop="xb">
+                    {{formReport.bzkZhdZrjgmxb.xb}}
+                  </el-form-item>
+                </el-col>
+                <el-col :span="12">
+                  <el-form-item label="年龄" prop="nl">
+                    {{formReport.bzkZhdZrjgmxb.nl}}
+                  </el-form-item>
+                </el-col>
+                <el-col :span="12">
+                  <el-form-item label="注册日期" prop="zcrq">
+                    {{formReport.bzkZhdZrjgmxb.zcrq}}
+                  </el-form-item>
+                </el-col>
+                <el-col :span="12">
+                  <el-form-item label="注册地址" prop="zcdz">
+                    {{formReport.bzkZhdZrjgmxb.zcdz}}
+                  </el-form-item>
+                </el-col>
+                <el-col :span="12">
+                  <el-form-item label="注册地址行政区划" prop="zcdzXzqh">
+                    {{formReport.bzkZhdZrjgmxb.zcdzXzqh}}
+                  </el-form-item>
+                </el-col>
+                <el-col :span="12">
+                  <el-form-item label="登记状态名称" prop="regstate">
+                    {{formReport.bzkZhdZrjgmxb.regstate}}
+                  </el-form-item>
+                </el-col>
+                <el-col :span="12">
+                  <el-form-item label="重大税收违法案件主要违法事实" prop="zywfss">
+                    {{formReport.bzkZhdZrjgmxb.zywfss}}
+                  </el-form-item>
+                </el-col>
+                <el-col :span="12">
+                  <el-form-item label="失信被执行人案号" prop="sxbzxrah">
+                    {{formReport.bzkZhdZrjgmxb.sxbzxrah}}
+                  </el-form-item>
+                </el-col>
+                <el-col :span="12">
+                  <el-form-item label="失信黑名单信息名称" prop="sxhmdxxmc">
+                    {{formReport.bzkZhdZrjgmxb.sxhmdxxmc}}
+                  </el-form-item>
+                </el-col>
+                <el-col :span="12">
+                  <el-form-item label="工商异常信息" prop="gsycxx">
+                    {{formReport.bzkZhdZrjgmxb.gsycxx}}
+                  </el-form-item>
+                </el-col>
+                <el-col :span="12">
+                  <el-form-item label="不动产查封" prop="bdccf">
+                    {{formReport.bzkZhdZrjgmxb.bdccf}}
+                  </el-form-item>
+                </el-col>
+              </el-row>
               </el-form>
           </el-collapse-item>
       </el-collapse>
     </el-dialog>
 
     <el-dialog :title="titleSimpleReport" :visible.sync="openSimpleReport" width="800px" append-to-body>
-        
-        <div v-for="(report,index) in reportWrapper">
-          <h2>{{idxArray[index]}}、{{report.title}}{{report.showCount?"(共"+report.count+"条)":""}}</h2>
+
+        <div v-for="report in reportWrapper">
+          <h2>{{report.num}}、{{report.title}}{{report.showCount?"(共"+report.count+"条)":""}}</h2>
           <ol style="border:1px solid #000;padding-top:12px;padding-bottom:12px;padding-left:30px;min-height:100px">
             <div style="margin-bottom:8px">{{report.subTitle}}</div>
             <li v-for="item in report.item">
@@ -584,6 +752,8 @@ export default {
       loanFirstOptions: [],
       // 贷款对象类型字典
       loanObjectTypeOptions: [],
+      //是否字典
+      loanYesOrNoOptions:[],
       // 查询参数
       queryParams: {
         pageNum: 1,
@@ -621,8 +791,6 @@ export default {
       titleSimpleReport: "",
       openSimpleReport: false,
       reportWrapper: [],
-      idxArray : ['一','二','三','四','五','六','七','八','九','十','十一','十二','十三','十四','十五','十六','十七','十八','十九'],
-
     };
   },
   created() {
@@ -635,6 +803,9 @@ export default {
     });
     this.getDicts("data_loan_object_type").then(response => {
       this.loanObjectTypeOptions = response.data;
+    });
+    this.getDicts("data_loan_yes_no").then(response => {
+      this.loanYesOrNoOptions = response.data;
     });
   },
   methods: {
@@ -658,6 +829,10 @@ export default {
     // 贷款对象类型字典翻译
     loanObjectTypeFormat(row, column) {
       return this.selectDictLabel(this.loanObjectTypeOptions, row.loanObjectType);
+    },
+    // 是否字典翻译
+    loanYesOrNoFormat(row, column) {
+      return this.selectDictLabel(this.loanYesOrNoOptions, row.loanYesOrNo);
     },
     // 取消按钮
     cancel() {
@@ -690,7 +865,8 @@ export default {
         updateTime: null,
         bankBranch: null,
         loanObjectType: null,
-        customerManager: null
+        customerManager: null,
+        loanYesOrNo: null
       };
       this.resetForm("form");
     },
@@ -739,6 +915,7 @@ export default {
     /** 查看报告按钮操作 */
     handleSimpleReport(row) {
       const tyshxydm = row.companyCreditCode
+      const idxArray = ['一','二','三','四','五','六','七','八','九','十','十一','十二','十三','十四','十五','十六','十七','十八','十九'];
       var reportWrapper = [
         {
           title:"基础信息",
@@ -827,7 +1004,7 @@ export default {
 
       getReport(tyshxydm).then(response => {
         var formReport = response.data;
-        
+
         //基础信息
         var reportItem0 = reportWrapper[0].item;
         //TODO-插入实际业务数据
@@ -848,6 +1025,7 @@ export default {
           }
 
           reportWrapper[0].count = reportItem0.length;
+          reportWrapper[0].num = idxArray[0];
         }
 
         // 行政处罚信息
@@ -867,6 +1045,7 @@ export default {
             });
           }
           reportWrapper[1].count = reportItem1.length;
+          reportWrapper[1].num = idxArray[1];
         }
 
         this.reportWrapper = reportWrapper;
@@ -927,6 +1106,12 @@ export default {
 
     handleChange(val) {
       console.log(val);
+    },
+    //关闭弹窗判断
+    handleClose(done){
+      this.$confirm('是否关闭当前页面？').then(() => {
+        done();
+      }).catch(() => {});
     }
   }
 };
