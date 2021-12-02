@@ -925,20 +925,20 @@ export default {
           count:0,
           item:[],
         },
-        // {
-        //   title:"行政许可信息",
-        //   subTitle:"各级行政机关依法对信用主体作出的行政许可信息。",
-        //   showCount:true,
-        //   count:0,
-        //   item:[],
-        // },
-        // {
-        //   title:"行政处罚信息",
-        //   subTitle:"各级行政机关依法对信用主体作出的行政处罚信息。",
-        //   showCount:true,
-        //   count:0,
-        //   item:[],
-        // },
+        {
+          title:"行政许可信息",
+          subTitle:"各级行政机关依法对信用主体作出的行政许可信息。",
+          showCount:true,
+          count:0,
+          item:[],
+        },
+        {
+          title:"行政处罚信息",
+          subTitle:"各级行政机关依法对信用主体作出的行政处罚信息。",
+          showCount:true,
+          count:0,
+          item:[],
+        },
         {
           title:"守信激励信息",
           subTitle:"各有关部门将信用主体列为守信激励对象信息。",
@@ -953,13 +953,13 @@ export default {
           count:0,
           item:[],
         },
-        // {
-        //   title:"重点关注信息",
-        //   subTitle:"各有关部门将信用主体列为重点关注名单信息。",
-        //   showCount:true,
-        //   count:0,
-        //   item:[],
-        // },
+        {
+          title:"重点关注信息",
+          subTitle:"各有关部门将信用主体列为重点关注名单信息。",
+          showCount:true,
+          count:0,
+          item:[],
+        },
         {
           title:"资质/资格信息",
           subTitle:"除行政许可外，信用主体获得的其他资质或资格信息。",
@@ -974,34 +974,34 @@ export default {
           count:0,
           item:[],
         },
-        // {
-        //   title:"其他信息",
-        //   subTitle:"涉及信用主体的信用评价信息(如公共信用综合评价信息、 行业信用评价信息等)、信用修复信息、信用承诺信息以及其他 与信用主体信用状况相关的信息。",
-        //   showCount:true,
-        //   count:0,
-        //   item:[],
-        // },
-        // {
-        //   title:"综合信用状况分析",
-        //   subTitle:"结合信用主体相关信用信息对其信用状况进行全面、客观描述和综合分析。",
-        //   showCount:false,
-        //   count:0,
-        //   item:[],
-        // },
-        // {
-        //   title:"信用状况提升建议",
-        //   subTitle:"对信用主体践行社会主义核心价值观、依法合规经营、增强 诚信守法意识等方面提出意见建议。",
-        //   showCount:false,
-        //   count:0,
-        //   item:[],
-        // },
-        // {
-        //   title:"地方信用网站公共信用信息报告补充内容(如有)",
-        //   subTitle:"",
-        //   showCount:false,
-        //   count:0,
-        //   item:[],
-        // }
+        {
+          title:"其他信息",
+          subTitle:"涉及信用主体的信用评价信息(如公共信用综合评价信息、 行业信用评价信息等)、信用修复信息、信用承诺信息以及其他 与信用主体信用状况相关的信息。",
+          showCount:true,
+          count:0,
+          item:[],
+        },
+        {
+          title:"综合信用状况分析",
+          subTitle:"结合信用主体相关信用信息对其信用状况进行全面、客观描述和综合分析。",
+          showCount:false,
+          count:0,
+          item:[],
+        },
+        {
+          title:"信用状况提升建议",
+          subTitle:"对信用主体践行社会主义核心价值观、依法合规经营、增强 诚信守法意识等方面提出意见建议。",
+          showCount:false,
+          count:0,
+          item:[],
+        },
+        {
+          title:"地方信用网站公共信用信息报告补充内容(如有)",
+          subTitle:"",
+          showCount:false,
+          count:0,
+          item:[],
+        }
         ];
 
       getReport(tyshxydm).then(response => {
@@ -1064,114 +1064,114 @@ export default {
         }
 
         // 守信激励信息
-        var reportItem1 = reportWrapper[1].item;
+        var reportItem3 = reportWrapper[3].item;
         if(formReport.bzkZhdPfmxmxb != null){
           if (formReport.bzkZhdPfmxmxb.zrrsfbj) {
-            reportItem1.push({
+            reportItem3.push({
               "name": "自然人是否补缴",
               "value": formReport.bzkZhdPfmxmxb.zrrsfbj
             });
           }
 
           if (formReport.bzkZhdPfmxmxb.jlcsnr) {
-            reportItem1.push({
+            reportItem3.push({
               "name": "激励措施内容",
               "value": formReport.bzkZhdPfmxmxb.jlcsnr
             });
           }
 
           if (formReport.bzkZhdPfmxmxb.jlmdmc) {
-            reportItem1.push({
+            reportItem3.push({
               "name": "激励名单名称",
               "value": formReport.bzkZhdPfmxmxb.jlmdmc
             });
           }
-          reportWrapper[1].count = reportItem1.length;
+          reportWrapper[3].count = reportItem3.length;
         }
 
         // 失信惩戒信息
-        var reportItem2 = reportWrapper[2].item;
+        var reportItem4 = reportWrapper[4].item;
         if(formReport.bzkZhdZrjgmxb != null) {
           if (formReport.bzkZhdZrjgmxb.zywfss) {
-            reportItem2.push({
+            reportItem4.push({
               "name": "重大税收违法案件主要违法事实",
               "value": formReport.bzkZhdZrjgmxb.zywfss
             });
           }
 
           if (formReport.bzkZhdZrjgmxb.sxbzxrah) {
-            reportItem2.push({
+            reportItem4.push({
               "name": "失信被执行人案号",
               "value": formReport.bzkZhdZrjgmxb.sxbzxrah
             });
           }
 
           if (formReport.bzkZhdZrjgmxb.sxhmdxxmc) {
-            reportItem2.push({
+            reportItem4.push({
               "name": "失信黑名单信息名称",
               "value": formReport.bzkZhdZrjgmxb.sxhmdxxmc
             });
           }
-          reportWrapper[2].count = reportItem2.length;
+          reportWrapper[4].count = reportItem4.length;
         }
 
           // 资质/资格信息
-          var reportItem3 = reportWrapper[3].item;
+          var reportItem6 = reportWrapper[6].item;
           if(formReport.bzkZhdPfmxmxb != null) {
             if (formReport.bzkZhdPfmxmxb.xsfczcyj) {
-              reportItem3.push({
+              reportItem6.push({
                 "name": "享受扶持政策依据",
                 "value": formReport.bzkZhdPfmxmxb.xsfczcyj
               });
             }
 
             if (formReport.bzkZhdPfmxmxb.xsfczcnr) {
-              reportItem3.push({
+              reportItem6.push({
                 "name": "享受扶持政策内容",
                 "value": formReport.bzkZhdPfmxmxb.xsfczcnr
               });
             }
 
             if (formReport.bzkZhdPfmxmxb.xsfczcdse) {
-              reportItem3.push({
+              reportItem6.push({
                 "name": "享受扶持政策的数额",
                 "value": formReport.bzkZhdPfmxmxb.xsfczcdse
               });
             }
 
             if (formReport.bzkZhdPfmxmxb.xsfczcdbm) {
-              reportItem3.push({
+              reportItem6.push({
                 "name": "享受扶持政策的部门",
                 "value": formReport.bzkZhdPfmxmxb.xsfczcdbm
               });
             }
 
             if (formReport.bzkZhdPfmxmxb.ssfczcrq) {
-              reportItem3.push({
+              reportItem6.push({
                 "name": "实施扶持政策日期",
                 "value": formReport.bzkZhdPfmxmxb.ssfczcrq
               });
             }
-            reportWrapper[3].count = reportItem3.length;
+            reportWrapper[6].count = reportItem6.length;
           }
 
         // 风险提示信息
-        var reportItem4 = reportWrapper[4].item;
+        var reportItem7 = reportWrapper[7].item;
         if(formReport.bzkZhdZrjgmxb != null) {
           if (formReport.bzkZhdZrjgmxb.gsycxx) {
-            reportItem4.push({
+            reportItem7.push({
               "name": "工商异常信息",
               "value": formReport.bzkZhdZrjgmxb.gsycxx
             });
           }
 
           if (formReport.bzkZhdZrjgmxb.bdccf) {
-            reportItem4.push({
+            reportItem7.push({
               "name": "不动产查封",
               "value": formReport.bzkZhdZrjgmxb.bdccf
             });
           }
-          reportWrapper[4].count = reportItem4.length;
+          reportWrapper[7].count = reportItem7.length;
         }
 
         this.reportWrapper = reportWrapper;
