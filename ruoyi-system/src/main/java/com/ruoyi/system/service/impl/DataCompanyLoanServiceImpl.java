@@ -307,7 +307,6 @@ public class DataCompanyLoanServiceImpl implements IDataCompanyLoanService
         return list;
     }
 
-    @DataSource(value = DataSourceType.API)
     @Override
     public CreditReport getReport(String tyshxydm)  {
         TyshxydmDTO tyshxydmDTO = new TyshxydmDTO();
