@@ -298,7 +298,7 @@
                     {{formReport.ztkZhdPfmxjgb.yydm}}
                   </el-form-item>
                 </el-col>
-                <el-col :span="12">
+                <el-col :span="24">
                   <el-form-item label="经营场所地址" prop="jycsDz">
                     {{formReport.ztkZhdPfmxjgb.jycsDz}}
                   </el-form-item>
@@ -473,11 +473,6 @@
                   </el-form-item>
                 </el-col>
                 <el-col :span="12">
-                  <el-form-item label="经营场所地址" prop="jycsDz">
-                    {{formReport.bzkZhdPfmxmxb.jycsDz}}
-                  </el-form-item>
-                </el-col>
-                <el-col :span="12">
                   <el-form-item label="注册日期" prop="zcrq">
                     {{formReport.bzkZhdPfmxmxb.zcrq}}
                   </el-form-item>
@@ -487,7 +482,12 @@
                     {{formReport.bzkZhdPfmxmxb.jynx}}
                   </el-form-item>
                 </el-col>
-                <el-col :span="12">
+                <el-col :span="24">
+                  <el-form-item label="经营场所地址" prop="jycsDz">
+                    {{formReport.bzkZhdPfmxmxb.jycsDz}}
+                  </el-form-item>
+                </el-col>
+                <el-col :span="24">
                   <el-form-item label="不动产权证号" prop="bdcqzh">
                     {{formReport.bzkZhdPfmxmxb.bdcqzh}}
                   </el-form-item>
@@ -656,13 +656,13 @@
                   </el-form-item>
                 </el-col>
                 <el-col :span="12">
-                  <el-form-item label="注册地址" prop="zcdz">
-                    {{formReport.bzkZhdZrjgmxb.zcdz}}
-                  </el-form-item>
-                </el-col>
-                <el-col :span="12">
                   <el-form-item label="注册地址行政区划" prop="zcdzXzqh">
                     {{formReport.bzkZhdZrjgmxb.zcdzXzqh}}
+                  </el-form-item>
+                </el-col>
+                <el-col :span="24">
+                  <el-form-item label="注册地址" prop="zcdz">
+                    {{formReport.bzkZhdZrjgmxb.zcdz}}
                   </el-form-item>
                 </el-col>
                 <el-col :span="12">
