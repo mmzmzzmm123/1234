@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.carpool.mapper.POrderMapper">
+    
+    <resultMap type="POrder" id="POrderResult">
+        <result property="id"    column="id"    />
+        <result property="orderNum"    column="order_num"    />
+        <result property="departure"    column="departure"    />
+        <result property="destination"    column="destination"    />
+        <result property="departureTime"    column="departure_time"    />
+        <result property="member"    column="member"    />
+        <result property="state"    column="state"    />
+        <result property="isdelete"    column="isDelete"    />
+        <result property="isTake"    column="is_take"    />
+        <result property="driverId"    column="driver_id"    />
+        <result property="driverName"    column="driver_name"    />
+        <result property="createUser"    column="create_user"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateUser"    column="update_user"    />
+        <result property="updateTime"    column="update_time"    />
+    </resultMap>
+
+    <sql id="selectPOrderVo">
+        select id, order_num, departure, destination, departure_time, member, state, isDelete, create_user, create_time, update_user, update_time from p_order
+    </sql>
+
+    <select id="selectPOrderList" parameterType="POrder" resultMap="POrderResult">
+<!--        <include refid="selectPOrderVo"/>-->
+<!--        <where>  -->
+<!--            <if test="orderNum != null  and orderNum != ''"> and order_num = #{orderNum}</if>-->
+<!--            <if test="departure != null  and departure != ''"> and departure = #{departure}</if>-->
+<!--            <if test="destination != null  and destination != ''"> and destination = #{destination}</if>-->
+<!--            <if test="departureTime != null "> and departure_time = #{departureTime}</if>-->
+<!--            <if test="member != null "> and member = #{member}</if>-->
+<!--            <if test="state != null "> and state = #{state}</if>-->
+<!--            <if test="isdelete != null "> and isDelete = #{isdelete}</if>-->
+<!--            <if test="createUser != null  and createUser != ''"> and create_user = #{createUser}</if>-->
+<!--            <if test="updateUser != null  and updateUser != ''"> and update_user = #{updateUser}</if>-->
+<!--        </where>-->
+        SELECT A.* , B.name as driver_name FROM p_order  A
+        LEFT JOIN p_driver B ON A.driver_id = B.driver_id
+        where 1=1
+        <if test="orderNum != null  and orderNum != ''"> and A.order_num = #{orderNum}</if>
+        <if test="departure != null  and departure != ''"> and A.departure = #{departure}</if>
+        <if test="destination != null  and destination != ''"> and A.destination = #{destination}</if>
+        <if test="departureTime != null "> and A.departure_time = #{departureTime}</if>
+        <if test="member != null "> and A.member = #{member}</if>
+        <if test="state != null "> and A.state = #{state}</if>
+        <if test="isdelete != null "> and A.isDelete = #{isdelete}</if>
+        <if test="isTake != null "> and A.is_take = #{isTake}</if>
+        <if test="driverName != null "> and  B.name = #{driverName}</if>
+        <if test="createUser != null  and createUser != ''"> and A.create_user = #{createUser}</if>
+        <if test="updateUser != null  and updateUser != ''"> and A.update_user = #{updateUser}</if>
+
+    </select>
+    
+    <select id="selectPOrderById" parameterType="Long" resultMap="POrderResult">
+        <include refid="selectPOrderVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertPOrder" parameterType="POrder" useGeneratedKeys="true" keyProperty="id">
+        insert into p_order
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="orderNum != null">order_num,</if>
+            <if test="departure != null">departure,</if>
+            <if test="destination != null">destination,</if>
+            <if test="departureTime != null">departure_time,</if>
+            <if test="member != null">member,</if>
+            <if test="state != null">state,</if>
+            <if test="isdelete != null">isDelete,</if>
+            <if test="createUser != null">create_user,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateUser != null">update_user,</if>
+            <if test="updateTime != null">update_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="orderNum != null">#{orderNum},</if>
+            <if test="departure != null">#{departure},</if>
+            <if test="destination != null">#{destination},</if>
+            <if test="departureTime != null">#{departureTime},</if>
+            <if test="member != null">#{member},</if>
+            <if test="state != null">#{state},</if>
+            <if test="isdelete != null">#{isdelete},</if>
+            <if test="createUser != null">#{createUser},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateUser != null">#{updateUser},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updatePOrder" parameterType="POrder">
+        update p_order
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="orderNum != null">order_num = #{orderNum},</if>
+            <if test="departure != null">departure = #{departure},</if>
+            <if test="destination != null">destination = #{destination},</if>
+            <if test="departureTime != null">departure_time = #{departureTime},</if>
+            <if test="member != null">member = #{member},</if>
+            <if test="state != null">state = #{state},</if>
+            <if test="isdelete != null">isDelete = #{isdelete},</if>
+            <if test="createUser != null">create_user = #{createUser},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateUser != null">update_user = #{updateUser},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deletePOrderById" parameterType="Long">
+        delete from p_order where id = #{id}
+    </delete>
+
+    <delete id="deletePOrderByIds" parameterType="String">
+        delete from p_order where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+
+    <update id="takeOrderById" parameterType="POrder">
+        update p_order
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="isTake != null">is_take = #{isTake},</if>
+            <if test="driverId != null">driver_id = #{driverId},</if>
+        </trim>
+        where orderNum = #{orderNum}
+    </update>
+
+</mapper>
