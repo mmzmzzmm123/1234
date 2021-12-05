@@ -205,6 +205,14 @@
                 <version>${ruoyi.version}</version>
             </dependency>
 
+            <!-- 拼车小程序模块 -->
+            <dependency>
+                <groupId>com.ruoyi</groupId>
+                <artifactId>ruiyi-carpool</artifactId>
+                <version>${ruoyi.version}</version>
+            </dependency>
+
+
         </dependencies>
     </dependencyManagement>
 
@@ -215,6 +223,7 @@
         <module>ruoyi-quartz</module>
         <module>ruoyi-generator</module>
         <module>ruoyi-common</module>
+        <module>ruiyi-carpool</module>
     </modules>
     <packaging>pom</packaging>
 

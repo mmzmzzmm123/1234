@@ -61,6 +61,11 @@
             <artifactId>ruoyi-generator</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>com.ruoyi</groupId>
+            <artifactId>ruiyi-carpool</artifactId>
+        </dependency>
+
     </dependencies>
 
     <build>
