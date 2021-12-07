@@ -1,88 +1,35 @@
 <template>
   <div class="app-container">
     <el-form :model="queryParams" ref="queryForm" :inline="true" v-show="showSearch" label-width="68px">
-      <el-form-item label="平台ID" prop="driverId">
-        <el-input
-          v-model="queryParams.driverId"
-          placeholder="平台ID"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
+      <!-- <el-form-item label="平台ID" prop="driverId">
+        <el-input v-model="queryParams.driverId" placeholder="平台ID" clearable size="small" @keyup.enter.native="handleQuery" />
+      </el-form-item> -->
       <el-form-item label="司机姓名" prop="name">
-        <el-input
-          v-model="queryParams.name"
-          placeholder="请输入司机姓名"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
+        <el-input v-model="queryParams.name" placeholder="请输入司机姓名" clearable size="small" @keyup.enter.native="handleQuery" />
       </el-form-item>
-      <el-form-item label="性别：" prop="sex">
+      <!-- <el-form-item label="性别：" prop="sex">
         <el-select v-model="queryParams.sex" placeholder="请选择性别：" clearable size="small">
-          <el-option
-            v-for="dict in dict.type.sys_user_sex"
-            :key="dict.value"
-            :label="dict.label"
-            :value="dict.value"
-          />
+          <el-option v-for="dict in dict.type.sys_user_sex" :key="dict.value" :label="dict.label" :value="dict.value" />
         </el-select>
       </el-form-item>
       <el-form-item label="身份证号" prop="idCard">
-        <el-input
-          v-model="queryParams.idCard"
-          placeholder="请输入身份证号码"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
+        <el-input v-model="queryParams.idCard" placeholder="请输入身份证号码" clearable size="small" @keyup.enter.native="handleQuery" />
       </el-form-item>
       <el-form-item label="年龄" prop="age">
-        <el-input
-          v-model="queryParams.age"
-          placeholder="请输入年龄"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
+        <el-input v-model="queryParams.age" placeholder="请输入年龄" clearable size="small" @keyup.enter.native="handleQuery" />
+      </el-form-item> -->
       <el-form-item label="手机号码" prop="phone">
-        <el-input
-          v-model="queryParams.phone"
-          placeholder="请输入手机号码"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
+        <el-input v-model="queryParams.phone" placeholder="请输入手机号码" clearable size="small" @keyup.enter.native="handleQuery" />
       </el-form-item>
-      <el-form-item label="所在城市" prop="city">
-        <el-input
-          v-model="queryParams.city"
-          placeholder="请输入所在城市"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
+      <!-- <el-form-item label="所在城市" prop="city">
+        <el-input v-model="queryParams.city" placeholder="请输入所在城市" clearable size="small" @keyup.enter.native="handleQuery" />
       </el-form-item>
       <el-form-item label="所在省份" prop="province">
-        <el-input
-          v-model="queryParams.province"
-          placeholder="请输入所在省份"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
+        <el-input v-model="queryParams.province" placeholder="请输入所在省份" clearable size="small" @keyup.enter.native="handleQuery" />
       </el-form-item>
       <el-form-item label="所在国家" prop="country">
-        <el-input
-          v-model="queryParams.country"
-          placeholder="请输入所在国家"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
+        <el-input v-model="queryParams.country" placeholder="请输入所在国家" clearable size="small" @keyup.enter.native="handleQuery" />
+      </el-form-item> -->
       <el-form-item>
         <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
         <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
@@ -91,46 +38,16 @@
 
     <el-row :gutter="10" class="mb8">
       <el-col :span="1.5">
-        <el-button
-          type="primary"
-          plain
-          icon="el-icon-plus"
-          size="mini"
-          @click="handleAdd"
-          v-hasPermi="['carpool:driver:add']"
-        >新增</el-button>
+        <el-button type="primary" plain icon="el-icon-plus" size="mini" @click="handleAdd" v-hasPermi="['carpool:driver:add']">新增</el-button>
       </el-col>
       <el-col :span="1.5">
-        <el-button
-          type="success"
-          plain
-          icon="el-icon-edit"
-          size="mini"
-          :disabled="single"
-          @click="handleUpdate"
-          v-hasPermi="['carpool:driver:edit']"
-        >修改</el-button>
+        <el-button type="success" plain icon="el-icon-edit" size="mini" :disabled="single" @click="handleUpdate" v-hasPermi="['carpool:driver:edit']">修改</el-button>
       </el-col>
       <el-col :span="1.5">
-        <el-button
-          type="danger"
-          plain
-          icon="el-icon-delete"
-          size="mini"
-          :disabled="multiple"
-          @click="handleDelete"
-          v-hasPermi="['carpool:driver:remove']"
-        >删除</el-button>
+        <el-button type="danger" plain icon="el-icon-delete" size="mini" :disabled="multiple" @click="handleDelete" v-hasPermi="['carpool:driver:remove']">删除</el-button>
       </el-col>
       <el-col :span="1.5">
-        <el-button
-          type="warning"
-          plain
-          icon="el-icon-download"
-          size="mini"
-          @click="handleExport"
-          v-hasPermi="['carpool:driver:export']"
-        >导出</el-button>
+        <el-button type="warning" plain icon="el-icon-download" size="mini" @click="handleExport" v-hasPermi="['carpool:driver:export']">导出</el-button>
       </el-col>
       <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
     </el-row>
@@ -141,54 +58,30 @@
       <el-table-column label="司机姓名" align="center" prop="name" />
       <el-table-column label="性别" align="center" prop="sex">
         <template slot-scope="scope">
-          <dict-tag :options="dict.type.sys_user_sex" :value="scope.row.sex"/>
+          <dict-tag :options="dict.type.sys_user_sex" :value="scope.row.sex" />
         </template>
       </el-table-column>
-      <el-table-column label="身份证号码" align="center" prop="idCard" />
+      <!-- <el-table-column label="身份证号码" align="center" prop="idCard" /> -->
       <el-table-column label="年龄" align="center" prop="age" />
       <el-table-column label="手机号码" align="center" prop="phone" />
-      <el-table-column label="所在城市" align="center" prop="city" />
-      <el-table-column label="所在省份" align="center" prop="province" />
-      <el-table-column label="所在国家" align="center" prop="country" />
-      <el-table-column label="是否黑名单用户" align="center" prop="isBlacklist" >
+      <!-- <el-table-column label="所在城市" align="center" prop="city" /> -->
+      <!-- <el-table-column label="所在省份" align="center" prop="province" /> -->
+      <!-- <el-table-column label="所在国家" align="center" prop="country" /> -->
+      <el-table-column label="是否黑名单用户" align="center" prop="isBlacklist">
         <template slot-scope="scope">
-          <dict-tag :options="dict.type.carpool_isblacklist" :value="scope.row.isBlacklist"/>
+          <dict-tag :options="dict.type.carpool_isblacklist" :value="scope.row.isBlacklist" />
         </template>
       </el-table-column>
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
-          <el-button
-            size="mini"
-            type="text"
-            icon="el-icon-edit"
-            @click="handleUpdate(scope.row)"
-            v-hasPermi="['carpool:driver:edit']"
-          >修改</el-button>
-          <el-button
-            size="mini"
-            type="text"
-            icon="el-icon-delete"
-            @click="handleDelete(scope.row)"
-            v-hasPermi="['carpool:driver:remove']"
-          >删除</el-button>
-          <el-button
-            size="mini"
-            type="text"
-            icon="el-icon-s-release"
-            @click="handleBlackLIst(scope.row)"
-            v-hasPermi="['carpool:driver:edit']"
-          >添加黑名单</el-button>
+          <el-button size="mini" type="text" icon="el-icon-edit" @click="handleUpdate(scope.row)" v-hasPermi="['carpool:driver:edit']">修改</el-button>
+          <el-button size="mini" type="text" icon="el-icon-delete" @click="handleDelete(scope.row)" v-hasPermi="['carpool:driver:remove']">删除</el-button>
+          <el-button size="mini" type="text" icon="el-icon-s-release" @click="handleBlackLIst(scope.row)" v-hasPermi="['carpool:driver:edit']">添加黑名单</el-button>
         </template>
       </el-table-column>
     </el-table>
 
-    <pagination
-      v-show="total>0"
-      :total="total"
-      :page.sync="queryParams.pageNum"
-      :limit.sync="queryParams.pageSize"
-      @pagination="getList"
-    />
+    <pagination v-show="total>0" :total="total" :page.sync="queryParams.pageNum" :limit.sync="queryParams.pageSize" @pagination="getList" />
 
     <!-- 添加或修改司机信息对话框 -->
     <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
@@ -198,24 +91,19 @@
         </el-form-item>
         <el-form-item label="性别" prop="sex">
           <el-select v-model="form.sex" placeholder="请选择性别" size="small">
-            <el-option
-              v-for="dict in dict.type.sys_user_sex"
-              :key="dict.value"
-              :label="dict.label"
-              :value="dict.value"
-            ></el-option>
+            <el-option v-for="dict in dict.type.sys_user_sex" :key="dict.value" :label="dict.label" :value="dict.value"></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="身份证号" prop="idCard">
+        <!-- <el-form-item label="身份证号" prop="idCard">
           <el-input v-model="form.idCard" placeholder="请输入身份证号码" />
-        </el-form-item>
+        </el-form-item> -->
         <el-form-item label="年龄" prop="age">
           <el-input v-model="form.age" placeholder="请输入年龄" />
         </el-form-item>
         <el-form-item label="手机号码" prop="phone">
           <el-input v-model="form.phone" placeholder="请输入手机号码" />
         </el-form-item>
-        <el-form-item label="所在城市" prop="city">
+        <!-- <el-form-item label="所在城市" prop="city">
           <el-input v-model="form.city" placeholder="请输入所在城市" />
         </el-form-item>
         <el-form-item label="所在省份" prop="province">
@@ -223,15 +111,10 @@
         </el-form-item>
         <el-form-item label="所在国家" prop="country">
           <el-input v-model="form.country" placeholder="请输入所在国家" />
-        </el-form-item>
+        </el-form-item> -->
         <el-form-item label="是否黑名单用户" prop="isBlacklist">
           <el-select v-model="form.isBlacklist" placeholder="请选择是否黑名单用户" size="small">
-          <el-option
-            v-for="dict in dict.type.carpool_isblacklist"
-            :key="dict.value"
-            :label="dict.label"
-            :value="dict.value"
-          ></el-option>
+            <el-option v-for="dict in dict.type.carpool_isblacklist" :key="dict.value" :label="dict.label" :value="dict.value"></el-option>
           </el-select>
         </el-form-item>
       </el-form>
@@ -244,11 +127,18 @@
 </template>
 
 <script>
-import { listDriver, getDriver, delDriver, addDriver, updateDriver , setBlacklist } from "@/api/carpool/driver";
+import {
+  listDriver,
+  getDriver,
+  delDriver,
+  addDriver,
+  updateDriver,
+  setBlacklist,
+} from "@/api/carpool/driver";
 
 export default {
   name: "Driver",
-  dicts: ['sys_user_sex' , 'carpool_isblacklist'],
+  dicts: ["sys_user_sex", "carpool_isblacklist"],
   data() {
     return {
       // 遮罩层
@@ -287,8 +177,7 @@ export default {
       // 表单参数
       form: {},
       // 表单校验
-      rules: {
-      }
+      rules: {},
     };
   },
   created() {
@@ -298,7 +187,7 @@ export default {
     /** 查询司机信息列表 */
     getList() {
       this.loading = true;
-      listDriver(this.queryParams).then(response => {
+      listDriver(this.queryParams).then((response) => {
         this.driverList = response.rows;
         this.total = response.total;
         this.loading = false;
@@ -324,7 +213,7 @@ export default {
         country: null,
         isBlacklist: null,
         createTime: null,
-        updateTime: null
+        updateTime: null,
       };
       this.resetForm("form");
     },
@@ -340,9 +229,9 @@ export default {
     },
     // 多选框选中数据
     handleSelectionChange(selection) {
-      this.ids = selection.map(item => item.id)
-      this.single = selection.length!==1
-      this.multiple = !selection.length
+      this.ids = selection.map((item) => item.id);
+      this.single = selection.length !== 1;
+      this.multiple = !selection.length;
     },
     /** 新增按钮操作 */
     handleAdd() {
@@ -353,8 +242,8 @@ export default {
     /** 修改按钮操作 */
     handleUpdate(row) {
       this.reset();
-      const id = row.id || this.ids
-      getDriver(id).then(response => {
+      const id = row.id || this.ids;
+      getDriver(id).then((response) => {
         this.form = response.data;
         this.open = true;
         this.title = "修改司机信息";
@@ -362,28 +251,32 @@ export default {
     },
     /** 添加黑名单 */
     handleBlackLIst(row) {
-      const id = row.driverId
-      const type = row.type
+      const id = row.driverId;
+      const type = row.type;
       const name = row.name || this.driverId;
-      this.$modal.confirm('是否确认将司机姓名为"' + name + '"的数据项添加至黑名单？').then(function() {
-        return setBlacklist({"userId":id ,"type" : type});
-      }).then(() => {
-        this.getList();
-        this.$modal.msgSuccess("添加黑名单成功");
-      }).catch(() => {});
+      this.$modal
+        .confirm('是否确认将司机姓名为"' + name + '"的数据项添加至黑名单？')
+        .then(function () {
+          return setBlacklist({ userId: id, type: type });
+        })
+        .then(() => {
+          this.getList();
+          this.$modal.msgSuccess("添加黑名单成功");
+        })
+        .catch(() => {});
     },
     /** 提交按钮 */
     submitForm() {
-      this.$refs["form"].validate(valid => {
+      this.$refs["form"].validate((valid) => {
         if (valid) {
           if (this.form.id != null) {
-            updateDriver(this.form).then(response => {
+            updateDriver(this.form).then((response) => {
               this.$modal.msgSuccess("修改成功");
               this.open = false;
               this.getList();
             });
           } else {
-            addDriver(this.form).then(response => {
+            addDriver(this.form).then((response) => {
               this.$modal.msgSuccess("新增成功");
               this.open = false;
               this.getList();
@@ -396,19 +289,27 @@ export default {
     handleDelete(row) {
       const ids = row.id || this.driverId;
       const name = row.name || this.driverId;
-      this.$modal.confirm('是否确认删除司机姓名为"' + name + '"的数据项？').then(function() {
-        return delDriver(ids);
-      }).then(() => {
-        this.getList();
-        this.$modal.msgSuccess("删除成功");
-      }).catch(() => {});
+      this.$modal
+        .confirm('是否确认删除司机姓名为"' + name + '"的数据项？')
+        .then(function () {
+          return delDriver(ids);
+        })
+        .then(() => {
+          this.getList();
+          this.$modal.msgSuccess("删除成功");
+        })
+        .catch(() => {});
     },
     /** 导出按钮操作 */
     handleExport() {
-      this.download('carpool/driver/export', {
-        ...this.queryParams
-      }, `driver_${new Date().getTime()}.xlsx`)
-    }
-  }
+      this.download(
+        "carpool/driver/export",
+        {
+          ...this.queryParams,
+        },
+        `driver_${new Date().getTime()}.xlsx`
+      );
+    },
+  },
 };
 </script>
