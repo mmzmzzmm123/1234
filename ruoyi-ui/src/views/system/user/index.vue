@@ -206,7 +206,7 @@
       </el-col>
     </el-row>
 
-    <!-- 添加或修改参数配置对话框 -->
+    <!-- 添加或修改用户配置对话框 -->
     <el-dialog :title="title" :visible.sync="open" width="600px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
         <el-row>
@@ -596,7 +596,7 @@ export default {
         cancelButtonText: "取消",
         closeOnClickModal: false,
         inputPattern: /^.{5,20}$/,
-        inputErrorMessage: "用户密码长度必须介于 5 和 20 之间",
+        inputErrorMessage: "用户密码长度必须介于 5 和 20 之间"
       }).then(({ value }) => {
           resetUserPwd(row.userId, value).then(response => {
             this.$modal.msgSuccess("修改成功，新密码是：" + value);
@@ -652,7 +652,6 @@ export default {
     /** 下载模板操作 */
     importTemplate() {
       this.download('system/user/importTemplate', {
-        ...this.queryParams
       }, `user_template_${new Date().getTime()}.xlsx`)
     },
     // 文件上传中处理
