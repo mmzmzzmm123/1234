@@ -472,7 +472,7 @@
                     {{formReport.bzkZhdPfmxmxb.yydm}}
                   </el-form-item>
                 </el-col>
-                <el-col :span="12">
+                <el-col :span="24">
                   <el-form-item label="经营场所地址" prop="jycsDz">
                     {{formReport.bzkZhdPfmxmxb.jycsDz}}
                   </el-form-item>
@@ -487,36 +487,75 @@
                     {{formReport.bzkZhdPfmxmxb.jynx}}
                   </el-form-item>
                 </el-col>
-                <el-col :span="12">
-                  <el-form-item label="不动产权证号" prop="bdcqzh">
-                    {{formReport.bzkZhdPfmxmxb.bdcqzh}}
-                  </el-form-item>
+                <el-col :span="24" v-if="formReport.bzkZhdPfmxmxb.bdcqs.length>1">
+                  <el-form-item label="不动产信息" />
                 </el-col>
-                <el-col :span="12">
-                  <el-form-item label="不动产共有方式" prop="bdcgyfs">
-                    {{formReport.bzkZhdPfmxmxb.bdcgyfs}}
-                  </el-form-item>
+                <el-col :span="24" v-if="formReport.bzkZhdPfmxmxb.bdcqs.length>1">
+                  <el-collapse-item :title="'不动产权'+(index+1)" :name="'3-'+index" style="margin:0 12px;" v-for="(bdcq,index) in formReport.bzkZhdPfmxmxb.bdcqs" :key="bdcq.bdcqzh">
+                    <el-col :span="24">
+                      <el-form-item label="不动产权证号" prop="bdcqzh">
+                        {{bdcq.bdcqzh}}
+                      </el-form-item>
+                    </el-col>
+                    <el-col :span="24">
+                      <el-form-item label="不动产坐落" prop="bdczl">
+                        {{bdcq.bdczl}}
+                      </el-form-item>
+                    </el-col>
+                    <el-col :span="12">
+                      <el-form-item label="不动产共有方式" prop="bdcgyfs">
+                        {{bdcq.bdcgyfs}}
+                      </el-form-item>
+                    </el-col>
+                    <el-col :span="12">
+                      <el-form-item label="不动产产权状态" prop="bdccqzt">
+                        {{bdcq.bdccqzt}}
+                      </el-form-item>
+                    </el-col>
+                    <el-col :span="12">
+                      <el-form-item label="不动产建筑面积" prop="bdcjzmj">
+                        {{bdcq.bdcjzmj}}
+                      </el-form-item>
+                    </el-col>
+                    <el-col :span="12">
+                      <el-form-item label="不动产用途" prop="bdcyt">
+                        {{bdcq.bdcyt}}
+                      </el-form-item>
+                    </el-col>
+                  </el-collapse-item>
                 </el-col>
-                <el-col :span="12">
-                  <el-form-item label="不动产坐落" prop="bdczl">
-                    {{formReport.bzkZhdPfmxmxb.bdczl}}
-                  </el-form-item>
-                </el-col>
-                <el-col :span="12">
-                  <el-form-item label="不动产产权状态" prop="bdccqzt">
-                    {{formReport.bzkZhdPfmxmxb.bdccqzt}}
-                  </el-form-item>
-                </el-col>
-                <el-col :span="12">
-                  <el-form-item label="不动产建筑面积" prop="bdcjzmj">
-                    {{formReport.bzkZhdPfmxmxb.bdcjzmj}}
-                  </el-form-item>
-                </el-col>
-                <el-col :span="12">
-                  <el-form-item label="不动产用途" prop="bdcyt">
-                    {{formReport.bzkZhdPfmxmxb.bdcyt}}
-                  </el-form-item>
-                </el-col>
+                <template v-if="formReport.bzkZhdPfmxmxb.bdcqs.length<=1">
+                   <el-col :span="24">
+                      <el-form-item label="不动产权证号" prop="bdcqzh">
+                        {{formReport.bzkZhdPfmxmxb.bdcqzh}}
+                      </el-form-item>
+                    </el-col>
+                    <el-col :span="24">
+                      <el-form-item label="不动产坐落" prop="bdczl">
+                        {{formReport.bzkZhdPfmxmxb.bdczl}}
+                      </el-form-item>
+                    </el-col>
+                    <el-col :span="12">
+                      <el-form-item label="不动产共有方式" prop="bdcgyfs">
+                        {{formReport.bzkZhdPfmxmxb.bdcgyfs}}
+                      </el-form-item>
+                    </el-col>
+                    <el-col :span="12">
+                      <el-form-item label="不动产产权状态" prop="bdccqzt">
+                        {{formReport.bzkZhdPfmxmxb.bdccqzt}}
+                      </el-form-item>
+                    </el-col>
+                    <el-col :span="12">
+                      <el-form-item label="不动产建筑面积" prop="bdcjzmj">
+                        {{formReport.bzkZhdPfmxmxb.bdcjzmj}}
+                      </el-form-item>
+                    </el-col>
+                    <el-col :span="12">
+                      <el-form-item label="不动产用途" prop="bdcyt">
+                        {{formReport.bzkZhdPfmxmxb.bdcyt}}
+                      </el-form-item>
+                    </el-col>
+                </template>
                 <el-col :span="12">
                   <el-form-item label="最高学历" prop="zgxl">
                     {{formReport.bzkZhdPfmxmxb.zgxl}}

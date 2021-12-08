@@ -47,7 +47,7 @@ public class ZtkZhdPfmxjgb extends BaseEntity
     @Excel(name = "经营年限_评分")
     private Long jynx;
 
-    /** 申报人固定资产情况_评分 */
+    /** 申报人固定资产情况_评分 一对多*/
     @Excel(name = "申报人固定资产情况_评分")
     private Long sbrgdzcqkpf;
 
@@ -60,19 +60,19 @@ public class ZtkZhdPfmxjgb extends BaseEntity
     private Long sbrhyzkpf;
 
     /** 申报人欠税情况_评分 */
-    @Excel(name = "申报人欠税情况_评分")
+    @Excel(name = "申报人欠税情况_评分 一对多")
     private Long sbrqsqkpf;
 
     /** 个体工商户欠税情况_评分 */
-    @Excel(name = "个体工商户欠税情况_评分")
+    @Excel(name = "个体工商户欠税情况_评分 一对多")
     private Long gtgshqsqkpf;
 
     /** 个体工商户激励情况_评分 */
-    @Excel(name = "个体工商户激励情况_评分")
+    @Excel(name = "个体工商户激励情况_评分 一对多")
     private Long gtgshjlqkpf;
 
     /** 个体工商户享受扶持情况_评分 */
-    @Excel(name = "个体工商户享受扶持情况_评分")
+    @Excel(name = "个体工商户享受扶持情况_评分 一对多")
     private Long gtgshxsfcqkpf;
 
     /** 总评分 */

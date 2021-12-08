@@ -4,11 +4,13 @@ import cn.shuibo.annotation.Decrypt;
 import cn.shuibo.annotation.Encrypt;
 import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.domain.AjaxResult;
+import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.system.domain.BzkZhdPfmxmxb;
 import com.ruoyi.system.domain.BzkZhdZrjgmxb;
 import com.ruoyi.system.domain.ZtkZhdPfmxjgb;
 import com.ruoyi.system.domain.ZtkZhdZrjgjgb;
 import com.ruoyi.system.domain.model.CreditReport;
+import com.ruoyi.system.domain.vo.Bdcq;
 import com.ruoyi.system.service.IBzkZhdPfmxmxbService;
 import com.ruoyi.system.service.IBzkZhdZrjgmxbService;
 import com.ruoyi.system.service.IZtkZhdPfmxjgbService;
@@ -20,8 +22,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * 企业贷款信息Controller
@@ -65,13 +66,31 @@ public class ApiLoanReportController extends BaseController
         BzkZhdZrjgmxb bzkZhdZrjgmxb = new BzkZhdZrjgmxb();
         bzkZhdZrjgmxb.setTyshxydm(tyshxydm);
 
+        // 有多条数据
         List<BzkZhdPfmxmxb> bzkZhdPfmxmxbs = bzkZhdPfmxmxbService.selectBzkZhdPfmxmxbList(bzkZhdPfmxmxb);
         List<BzkZhdZrjgmxb> bzkZhdZrjgmxbs = bzkZhdZrjgmxbService.selectBzkZhdZrjgmxbList(bzkZhdZrjgmxb);
         List<ZtkZhdPfmxjgb> ztkZhdPfmxjgbs = ztkZhdPfmxjgbService.selectZtkZhdPfmxjgbList(ztkZhdPfmxjgb);
         List<ZtkZhdZrjgjgb> ztkZhdZrjgjgbs = ztkZhdZrjgjgbService.selectZtkZhdZrjgjgbList(ztkZhdZrjgjgb);
 
         if (bzkZhdPfmxmxbs!=null && bzkZhdPfmxmxbs.size()>0){
-            creditReport.setBzkZhdPfmxmxb(bzkZhdPfmxmxbs.get(0));
+
+            BzkZhdPfmxmxb bzkZhdPfmxmxb1 = bzkZhdPfmxmxbs.get(0);
+
+            Set<Bdcq> bdcqSet = new HashSet<>();
+            for (BzkZhdPfmxmxb item : bzkZhdPfmxmxbs){
+                if (StringUtils.isEmpty(item.getBdcqzh())){
+                    continue;
+                }
+                Bdcq bdcq = new Bdcq();
+                bdcq.setBdcqzh(item.getBdcqzh());
+                bdcq.setBdccqzt(item.getBdccqzt());
+                bdcq.setBdcgyfs(item.getBdcgyfs());
+                bdcq.setBdcjzmj(item.getBdcjzmj());
+                bdcq.setBdczl(item.getBdczl());
+                bdcqSet.add(bdcq);
+            }
+            bzkZhdPfmxmxb1.setBdcqs(bdcqSet);
+            creditReport.setBzkZhdPfmxmxb(bzkZhdPfmxmxb1);
         }
 
         if (bzkZhdZrjgmxbs!=null && bzkZhdZrjgmxbs.size()>0){

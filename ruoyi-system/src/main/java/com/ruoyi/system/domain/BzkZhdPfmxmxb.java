@@ -1,9 +1,12 @@
 package com.ruoyi.system.domain;
 
+import com.ruoyi.system.domain.vo.Bdcq;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import com.ruoyi.common.annotation.Excel;
 import com.ruoyi.common.core.domain.BaseEntity;
+
+import java.util.Set;
 
 /**
  * 个体工商户信贷_标准库_评分模型明细对象 bzk_zhd_pfmxmxb
@@ -224,6 +227,11 @@ public class BzkZhdPfmxmxb extends BaseEntity
         this.bdcqzh = bdcqzh;
     }
 
+    /**
+     * 不动产权信息为一对多
+     */
+    Set<Bdcq> bdcqs;
+
     public String getBdcqzh() 
     {
         return bdcqzh;
@@ -443,6 +451,14 @@ public class BzkZhdPfmxmxb extends BaseEntity
     public String getSsfczcrq() 
     {
         return ssfczcrq;
+    }
+
+    public Set<Bdcq> getBdcqs() {
+        return bdcqs;
+    }
+
+    public void setBdcqs(Set<Bdcq> bdcqs) {
+        this.bdcqs = bdcqs;
     }
 
     @Override
