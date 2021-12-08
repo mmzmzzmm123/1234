@@ -298,7 +298,7 @@
                     {{formReport.ztkZhdPfmxjgb.yydm}}
                   </el-form-item>
                 </el-col>
-                <el-col :span="12">
+                <el-col :span="24">
                   <el-form-item label="经营场所地址" prop="jycsDz">
                     {{formReport.ztkZhdPfmxjgb.jycsDz}}
                   </el-form-item>
@@ -694,7 +694,7 @@
                     {{formReport.bzkZhdZrjgmxb.zcrq}}
                   </el-form-item>
                 </el-col>
-                <el-col :span="12">
+                <el-col :span="24">
                   <el-form-item label="注册地址" prop="zcdz">
                     {{formReport.bzkZhdZrjgmxb.zcdz}}
                   </el-form-item>
