@@ -5,30 +5,26 @@ spring:
 #        driverClassName: com.mysql.cj.jdbc.Driver
         druid:
             # 主库数据源
-            master:
-                url: jdbc:mysql://localhost:3306/company_loan?useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=true&serverTimezone=GMT%2B8
-                username: root
-                password: coolteam123
 #            master:
-#                url: jdbc:mysql://222.77.0.192:33196/ry-fgw?useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=true&serverTimezone=GMT%2B8
-#                username: root
-#                password: qzdsj@2021FGW
-            # 从库数据源
-            slave:
-                # 从数据源开关/默认关闭
-#                enabled: true
-#                url: jdbc:oracle:thin:@172.29.131.138:1521:pdborcl
-#                username: XY_FGWXYD
-#                password: XY_FGWXYD_123456
-                enabled: true
-                url: jdbc:oracle:thin:@192.168.20.11:1521:pdborcl
-                username: SYSTEM
-                password: root
-            api:
-#                enabled: true
-#                url: jdbc:mysql://10.41.0.173:3306/xdztc-report?useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=true&serverTimezone=GMT%2B8
+#                url: jdbc:mysql://localhost:3306/company_loan?useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=true&serverTimezone=GMT%2B8
 #                username: root
 #                password: coolteam123
+            master:
+                url: jdbc:mysql://172.29.131.139:33196/fgw?useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=true&serverTimezone=GMT%2B8
+                username: root
+                password: qzdsj@2021FGW
+            # 从库数据源
+            slave:
+#                enabled: true
+#                url: jdbc:oracle:thin:@192.168.20.11:1521:pdborcl
+#                username: SYSTEM
+#                password: root
+                enabled: true
+                url: jdbc:oracle:thin:@172.29.131.138:1521/pdborcl
+                username: XY_FGWXYD
+                password: XY_FGWXYD_123456
+            # 内网版本发布接口用
+            api:
                 enabled: true
                 url: jdbc:mysql://localhost:3306/xdztc-report?useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=true&serverTimezone=GMT%2B8
                 username: root
