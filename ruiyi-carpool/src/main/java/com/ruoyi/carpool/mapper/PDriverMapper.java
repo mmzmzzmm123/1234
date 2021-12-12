@@ -58,4 +58,21 @@ public interface PDriverMapper
      * @return 结果
      */
     public int deletePDriverByIds(Long[] ids);
+
+
+    /**
+     * 通过电话号码和用户名查询司机的详情
+     * @param pDriver
+     * @return
+     */
+    public PDriver getDriverInfo(PDriver pDriver);
+
+    /**
+     * 修改司机信息
+     *
+     * @param pDriver 司机信息
+     * @return 结果
+     */
+    public int agreePDriver(PDriver pDriver);
+
 }

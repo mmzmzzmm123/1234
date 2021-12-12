@@ -79,8 +79,6 @@ public class POrderController extends BaseController
     @PostMapping
     public AjaxResult add(@RequestBody POrder pOrder)
     {
-        String orderNum = DateUtils.dateTimeNow();
-        pOrder.setOrderNum("carpool_"+orderNum);
         return toAjax(pOrderService.insertPOrder(pOrder));
     }
     /**

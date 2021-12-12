@@ -66,4 +66,21 @@ public interface POrderMapper
      * @return 结果
      */
     public int takeOrderById (POrder pOrder);
+
+    /**
+     * 通过orderNum查询订单信息
+     * @param orderNum
+     * @return
+     */
+    public POrder selectPOrderByOrderNum(String orderNum);
+
+
+    /**
+     * 更新订单当前的人数
+     * @param pOrder
+     * @return
+     */
+    public int updateOrderMemberNum(POrder pOrder);
+
+
 }

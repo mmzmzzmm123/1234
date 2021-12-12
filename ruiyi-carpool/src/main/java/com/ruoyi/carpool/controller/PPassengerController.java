@@ -6,14 +6,7 @@ import javax.servlet.http.HttpServletResponse;
 import com.ruoyi.common.utils.uuid.IdUtils;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import com.ruoyi.common.annotation.Log;
 import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.domain.AjaxResult;
@@ -79,7 +72,7 @@ public class PPassengerController extends BaseController
     @PostMapping
     public AjaxResult add(@RequestBody PPassenger pPassenger)
     {
-        pPassenger.setCustId(IdUtils.randomUUID());
+        pPassenger.setCustId("passenger_"+IdUtils.randomUUID());
         return toAjax(pPassengerService.insertPPassenger(pPassenger));
     }
 
@@ -104,4 +97,17 @@ public class PPassengerController extends BaseController
     {
         return toAjax(pPassengerService.deletePPassengerByIds(ids));
     }
+
+
+    /**
+     * 获取乘客信息详细信息
+     */
+    @PreAuthorize("@ss.hasPermi('carpool:passenger:query')")
+    @PostMapping(value = "/queryUserInfo")
+    public AjaxResult queryUserInfo(@RequestBody PPassenger pPassenger)
+    {
+        return AjaxResult.success(pPassengerService.queryUserInfo(pPassenger));
+    }
+
+
 }

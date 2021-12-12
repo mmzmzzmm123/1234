@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.carpool.mapper.PCommonMapper">
+
+
+
+    <select id="queryIsTake" parameterType="String" resultType="String">
+        SELECT is_take FROM p_order WHERE order_num = #{orderNum}
+    </select>
+
+
+    <select id="queryOrderMemberState" parameterType="CommonVO"  resultType="hashmap" >
+        SELECT state,num FROM p_order_member   WHERE  order_num = #{orderNum} AND cust_id = #{userID}
+    </select>
+
+
+    <update id="updateOrderMenber" parameterType="CommonVO" >
+        UPDATE p_order_member  SET state  = 1  WHERE order_num = #{orderNum} AND cust_id = #{userID}
+    </update>
+
+    <select id="queryOrderMemberCount" parameterType="String"  resultType="integer" >
+        SELECT COUNT(1) as count   FROM p_order_member  WHERE  order_num = #{orderNum} AND  state = 0
+    </select>
+
+    <update id="updateOrderState" parameterType="String" >
+        UPDATE p_order SET state = '2' WHERE order_num = #{orderNum}
+    </update>
+
+    <update id="updateOrderIsTake" parameterType="String" >
+        UPDATE p_order SET is_take = '0' , driver_id = '' WHERE order_num = #{orderNum}
+    </update>
+
+
+    <insert id="insertOrderMemberInfo" parameterType="hashmap" >
+        insert into p_order_member
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="orderNum != null">order_num,</if>
+            <if test="custId != null">cust_id,</if>
+            <if test="num != null">num,</if>
+            <if test="state != null">state,</if>
+            <if test="createTime != null">create_time,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="orderNum != null">#{orderNum},</if>
+            <if test="custId != null">#{custId},</if>
+            <if test="num != null">#{num},</if>
+            <if test="state != null">#{state},</if>
+            <if test="createTime != null">#{createTime},</if>
+        </trim>
+    </insert>
+
+
+</mapper>

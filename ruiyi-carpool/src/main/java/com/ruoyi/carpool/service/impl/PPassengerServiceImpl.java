@@ -93,4 +93,9 @@ public class PPassengerServiceImpl implements IPPassengerService
     {
         return pPassengerMapper.deletePPassengerById(id);
     }
+
+    @Override
+    public PPassenger queryUserInfo(PPassenger pPassenger) {
+        return pPassengerMapper.queryUserInfo(pPassenger);
+    }
 }

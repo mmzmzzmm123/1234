@@ -72,6 +72,17 @@ public class PDriverController extends BaseController
         return AjaxResult.success(pDriverService.selectPDriverById(id));
     }
 
+
+    /**
+     * 获取司机信息详细信息
+     */
+    @PreAuthorize("@ss.hasPermi('carpool:driver:query')")
+    @PostMapping(value = "/queryUserInfo")
+    public AjaxResult getDriverInfo(@RequestBody PDriver pDriver)
+    {
+        return AjaxResult.success(pDriverService.getDriverInfo(pDriver));
+    }
+
     /**
      * 新增司机信息
      */
@@ -80,9 +91,21 @@ public class PDriverController extends BaseController
     @PostMapping
     public AjaxResult add(@RequestBody PDriver pDriver)
     {
-        pDriver.setDriverId(IdUtils.randomUUID());
         return toAjax(pDriverService.insertPDriver(pDriver));
     }
+
+    /**
+     * 通过审核
+     * @param pDriver
+     * @return
+     */
+    @PostMapping("/agree")
+    public AjaxResult agree(@RequestBody PDriver pDriver)
+    {
+        return toAjax(pDriverService.agreePDriver(pDriver));
+    }
+
+
 
     /**
      * 修改司机信息

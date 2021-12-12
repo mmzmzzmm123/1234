@@ -58,4 +58,20 @@ public interface IPDriverService
      * @return 结果
      */
     public int deletePDriverById(Long id);
+
+
+
+    /**
+     * 查询司机信息
+     * @return 司机信息
+     */
+    public PDriver getDriverInfo(PDriver pDriver);
+
+
+    /**
+     * 同意审核
+     * @param pDriver
+     * @return
+     */
+    public int agreePDriver(PDriver pDriver);
 }

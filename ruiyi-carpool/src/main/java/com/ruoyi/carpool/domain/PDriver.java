@@ -58,6 +58,10 @@ public class PDriver extends BaseEntity
     @Excel(name = "是否黑名单用户：0否，1是")
     private String isBlacklist;
 
+    /** 当前状态 */
+    @Excel(name = "用户当前的状态：0：审核中，1：审核通过，2：禁用")
+    private Integer state ;
+
     public void setId(Long id) 
     {
         this.id = id;
@@ -158,6 +162,14 @@ public class PDriver extends BaseEntity
         return isBlacklist;
     }
 
+    public Integer getState() {
+        return state;
+    }
+
+    public void setState(Integer state) {
+        this.state = state;
+    }
+
     @Override
     public String toString() {
         return new ToStringBuilder(this,ToStringStyle.MULTI_LINE_STYLE)
@@ -174,6 +186,7 @@ public class PDriver extends BaseEntity
             .append("isBlacklist", getIsBlacklist())
             .append("createTime", getCreateTime())
             .append("updateTime", getUpdateTime())
+            .append("state", getState())
             .toString();
     }
 }

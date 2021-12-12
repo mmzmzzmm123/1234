@@ -58,4 +58,11 @@ public interface PPassengerMapper
      * @return 结果
      */
     public int deletePPassengerByIds(Long[] ids);
+
+    /**
+     * 查询乘客详情
+     * @param pPassenger
+     * @return
+     */
+    public PPassenger queryUserInfo(PPassenger pPassenger);
 }

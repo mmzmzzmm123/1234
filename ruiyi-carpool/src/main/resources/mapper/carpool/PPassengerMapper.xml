@@ -12,6 +12,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="openId"    column="open_id"    />
         <result property="custPhone"    column="cust_phone"    />
         <result property="sex"    column="sex"    />
+        <result property="idCard"    column="id_card"    />
         <result property="age"    column="age"    />
         <result property="birthday"    column="birthday"    />
         <result property="city"    column="city"    />
@@ -22,7 +23,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </resultMap>
 
     <sql id="selectPPassengerVo">
-        select id, cust_id, cust_name, nick_name, open_id, cust_phone, sex, birthday, city, province, is_blacklist, create_time, update_time from p_passenger
+        select id, cust_id, cust_name, nick_name, open_id, cust_phone, sex, id_card, birthday, city, province, is_blacklist, create_time, update_time from p_passenger
     </sql>
 
     <select id="selectPPassengerList" parameterType="PPassenger" resultMap="PPassengerResult">
@@ -34,6 +35,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="openId != null  and openId != ''"> and open_id = #{openId}</if>
             <if test="custPhone != null  and custPhone != ''"> and cust_phone = #{custPhone}</if>
             <if test="sex != null "> and sex = #{sex}</if>
+            <if test="idCard != null and idCard != '' "> and id_card = #{idCard}</if>
             <if test="birthday != null "> and birthday = #{birthday}</if>
             <if test="city != null  and city != ''"> and city = #{city}</if>
             <if test="province != null  and province != ''"> and province = #{province}</if>
@@ -56,6 +58,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="openId != null">open_id,</if>
             <if test="custPhone != null">cust_phone,</if>
             <if test="sex != null">sex,</if>
+            <if test="idCard != null "> and id_card = #{idCard}</if>
             <if test="birthday != null">birthday,</if>
             <if test="city != null">city,</if>
             <if test="province != null">province,</if>
@@ -71,6 +74,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="openId != null">#{openId},</if>
             <if test="custPhone != null">#{custPhone},</if>
             <if test="sex != null">#{sex},</if>
+            <if test="idCard != null "> and id_card = #{idCard}</if>
             <if test="birthday != null">#{birthday},</if>
             <if test="city != null">#{city},</if>
             <if test="province != null">#{province},</if>
@@ -89,6 +93,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="openId != null">open_id = #{openId},</if>
             <if test="custPhone != null">cust_phone = #{custPhone},</if>
             <if test="sex != null">sex = #{sex},</if>
+            <if test="idCard != null "> and id_card = #{idCard}</if>
             <if test="birthday != null">birthday = #{birthday},</if>
             <if test="city != null">city = #{city},</if>
             <if test="province != null">province = #{province},</if>
@@ -109,4 +114,23 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             #{id}
         </foreach>
     </delete>
+
+
+
+    <select id="queryUserInfo" parameterType="PPassenger" resultMap="PPassengerResult">
+        <include refid="selectPPassengerVo"/>
+        <where>
+            <if test="custId != null  and custId != ''"> and cust_id = #{custId}</if>
+            <if test="custName != null  and custName != ''"> and cust_name like concat('%', #{custName}, '%')</if>
+            <if test="nickName != null  and nickName != ''"> and nick_name like concat('%', #{nickName}, '%')</if>
+            <if test="openId != null  and openId != ''"> and open_id = #{openId}</if>
+            <if test="custPhone != null  and custPhone != ''"> and cust_phone = #{custPhone}</if>
+            <if test="sex != null "> and sex = #{sex}</if>
+            <if test="idCard != null and idCard != '' "> and id_card = #{idCard}</if>
+            <if test="birthday != null "> and birthday = #{birthday}</if>
+            <if test="city != null  and city != ''"> and city = #{city}</if>
+            <if test="province != null  and province != ''"> and province = #{province}</if>
+            <if test="isBlacklist != null "> and is_blacklist = #{isBlacklist}</if>
+        </where>
+    </select>
 </mapper>

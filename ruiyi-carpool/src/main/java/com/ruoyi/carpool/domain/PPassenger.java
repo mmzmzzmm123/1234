@@ -45,6 +45,10 @@ public class PPassenger extends BaseEntity
     @Excel(name = "性别：1男性，0女性")
     private String sex;
 
+    /** 身份证号码 */
+    @Excel(name = "身份证号码")
+    private String idCard;
+
     /** 生日 */
     @JsonFormat(pattern = "yyyy-MM-dd")
     @Excel(name = "生日", width = 30, dateFormat = "yyyy-MM-dd")
@@ -174,6 +178,14 @@ public class PPassenger extends BaseEntity
         this.age = age;
     }
 
+    public String getIdCard() {
+        return idCard;
+    }
+
+    public void setIdCard(String idCard) {
+        this.idCard = idCard;
+    }
+
     @Override
     public String toString() {
         return new ToStringBuilder(this,ToStringStyle.MULTI_LINE_STYLE)
@@ -191,6 +203,7 @@ public class PPassenger extends BaseEntity
             .append("createTime", getCreateTime())
             .append("updateTime", getUpdateTime())
             .append("age", getAge())
+            .append("idCard", getIdCard())
             .toString();
     }
 }

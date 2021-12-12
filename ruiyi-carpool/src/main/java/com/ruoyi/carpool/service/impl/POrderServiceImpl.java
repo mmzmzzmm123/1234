@@ -53,6 +53,11 @@ public class POrderServiceImpl implements IPOrderService
     @Override
     public int insertPOrder(POrder pOrder)
     {
+        String orderNum = DateUtils.dateTimeNow();
+        pOrder.setOrderNum("carpool_"+orderNum);
+        pOrder.setIsTake("0");
+        pOrder.setState("0");
+        pOrder.setMember(0);
         pOrder.setCreateTime(DateUtils.getNowDate());
         return pOrderMapper.insertPOrder(pOrder);
     }

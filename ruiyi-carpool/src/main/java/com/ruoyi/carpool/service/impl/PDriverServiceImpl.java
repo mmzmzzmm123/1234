@@ -2,6 +2,8 @@ package com.ruoyi.carpool.service.impl;
 
 import java.util.List;
 import com.ruoyi.common.utils.DateUtils;
+import com.ruoyi.common.utils.StringUtils;
+import com.ruoyi.common.utils.uuid.IdUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.ruoyi.carpool.mapper.PDriverMapper;
@@ -54,6 +56,9 @@ public class PDriverServiceImpl implements IPDriverService
     public int insertPDriver(PDriver pDriver)
     {
         pDriver.setCreateTime(DateUtils.getNowDate());
+        pDriver.setDriverId("driver_"+ IdUtils.randomUUID());
+        pDriver.setState(0);
+        pDriver.setIsBlacklist("0");
         return pDriverMapper.insertPDriver(pDriver);
     }
 
@@ -92,5 +97,15 @@ public class PDriverServiceImpl implements IPDriverService
     public int deletePDriverById(Long id)
     {
         return pDriverMapper.deletePDriverById(id);
+    }
+
+    @Override
+    public PDriver getDriverInfo(PDriver pDriver) {
+        return pDriverMapper.getDriverInfo(pDriver);
+    }
+
+    @Override
+    public int agreePDriver(PDriver pDriver) {
+        return pDriverMapper.agreePDriver(pDriver);
     }
 }

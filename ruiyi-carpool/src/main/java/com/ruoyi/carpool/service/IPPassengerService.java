@@ -58,4 +58,12 @@ public interface IPPassengerService
      * @return 结果
      */
     public int deletePPassengerById(Long id);
+
+
+    /**
+     * 查询乘客详细信息
+     * @param pPassenger
+     * @return
+     */
+    public PPassenger queryUserInfo(PPassenger pPassenger);
 }
