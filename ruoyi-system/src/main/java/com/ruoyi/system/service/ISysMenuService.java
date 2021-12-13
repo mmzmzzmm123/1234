@@ -133,4 +133,13 @@ public interface ISysMenuService
      * @return 结果
      */
     public String checkMenuNameUnique(SysMenu menu);
+
+    /**
+     * 分页查询菜单树
+     *
+     * @param menu
+     * @param userId
+     * @return
+     */
+    public List<SysMenu> selectTreeByPage(SysMenu menu, Long userId);
 }
