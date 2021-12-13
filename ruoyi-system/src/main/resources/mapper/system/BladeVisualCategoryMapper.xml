@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.BladeVisualCategoryMapper">
+    
+    <resultMap type="BladeVisualCategory" id="BladeVisualCategoryResult">
+        <result property="id"    column="id"    />
+        <result property="categoryKey"    column="category_key"    />
+        <result property="categoryValue"    column="category_value"    />
+        <result property="isDeleted"    column="is_deleted"    />
+    </resultMap>
+
+    <sql id="selectBladeVisualCategoryVo">
+        select id, category_key, category_value, is_deleted from blade_visual_category
+    </sql>
+
+    <select id="selectBladeVisualCategoryList" parameterType="BladeVisualCategory" resultMap="BladeVisualCategoryResult">
+        <include refid="selectBladeVisualCategoryVo"/>
+        <where>  
+            <if test="categoryKey != null  and categoryKey != ''"> and category_key = #{categoryKey}</if>
+            <if test="categoryValue != null  and categoryValue != ''"> and category_value = #{categoryValue}</if>
+            <if test="isDeleted != null "> and is_deleted = #{isDeleted}</if>
+        </where>
+    </select>
+    
+    <select id="selectBladeVisualCategoryById" parameterType="Long" resultMap="BladeVisualCategoryResult">
+        <include refid="selectBladeVisualCategoryVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertBladeVisualCategory" parameterType="BladeVisualCategory">
+        insert into blade_visual_category
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="categoryKey != null">category_key,</if>
+            <if test="categoryValue != null">category_value,</if>
+            <if test="isDeleted != null">is_deleted,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="categoryKey != null">#{categoryKey},</if>
+            <if test="categoryValue != null">#{categoryValue},</if>
+            <if test="isDeleted != null">#{isDeleted},</if>
+         </trim>
+    </insert>
+
+    <update id="updateBladeVisualCategory" parameterType="BladeVisualCategory">
+        update blade_visual_category
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="categoryKey != null">category_key = #{categoryKey},</if>
+            <if test="categoryValue != null">category_value = #{categoryValue},</if>
+            <if test="isDeleted != null">is_deleted = #{isDeleted},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteBladeVisualCategoryById" parameterType="Long">
+        delete from blade_visual_category where id = #{id}
+    </delete>
+
+    <delete id="deleteBladeVisualCategoryByIds" parameterType="String">
+        delete from blade_visual_category where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

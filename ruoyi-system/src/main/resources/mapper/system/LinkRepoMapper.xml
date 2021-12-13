@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.LinkRepoMapper">
+
+    <resultMap type="LinkRepo" id="LinkRepoResult">
+        <result property="id"    column="id"    />
+        <result property="title"    column="title"    />
+        <result property="userId"    column="user_id"    />
+        <result property="userName" column="user_name"/>
+        <result property="descri"    column="descri"    />
+        <result property="avaTime"    column="ava_time"    />
+        <result property="panoramaId"    column="panorama_id"    />
+        <result property="panName" column="pan_name"/>
+        <result property="startTime"    column="start_time"    />
+        <result property="visualId"    column="visual_id"    />
+        <result property="visualName" column="visual_name"/>
+        <result property="endTime"    column="end_time"    />
+        <result property="delFlag"    column="del_flag"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+    </resultMap>
+
+    <sql id="selectLinkRepoVo">
+        select l.*,u.user_name,p.`name` as pan_name,v.title as visual_name
+        from link_repo l
+             INNER JOIN sys_user u ON l.user_id=u.user_id
+             INNER JOIN panorama p on l.panorama_id=p.id
+             INNER JOIN blade_visual v on l.visual_id = v.id
+    </sql>
+
+    <select id="selectLinkRepoList" parameterType="LinkRepo" resultMap="LinkRepoResult">
+        <include refid="selectLinkRepoVo"/>
+        <where>
+            <if test="userId != null "> and l.user_id = #{userId}</if>
+            <if test="descri != null  and descri != ''"> and descri = #{descri}</if>
+            <if test="panoramaId != null "> and panorama_id = #{panoramaId}</if>
+            <if test="startTime != null "> and start_time = #{startTime}</if>
+            <if test="visualId != null "> and visual_id = #{visualId}</if>
+            <if test="endTime != null "> and end_time = #{endTime}</if>
+        </where>
+    </select>
+
+    <select id="selectLinkRepoById" parameterType="Long" resultMap="LinkRepoResult">
+        <include refid="selectLinkRepoVo"/>
+        where l.id = #{id}
+    </select>
+    <select id="selectLinkRepoListOfUser" parameterType="Long" resultMap="LinkRepoResult">
+        <include refid="selectLinkRepoVo"/>
+        where l.user_id = #{userId}
+    </select>
+
+    <insert id="insertLinkRepo" parameterType="LinkRepo">
+        insert into link_repo
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="title != null">title,</if>
+            <if test="userId != null">user_id,</if>
+            <if test="descri != null">descri,</if>
+            <if test="avaTime != null">ava_time,</if>
+            <if test="panoramaId != null">panorama_id,</if>
+            <if test="startTime != null">start_time,</if>
+            <if test="visualId != null">visual_id,</if>
+            <if test="endTime != null">end_time,</if>
+            <if test="delFlag != null">del_flag,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="title != null">#{title},</if>
+            <if test="userId != null">#{userId},</if>
+            <if test="descri != null">#{descri},</if>
+            <if test="avaTime != null">#{avaTime},</if>
+            <if test="panoramaId != null">#{panoramaId},</if>
+            <if test="startTime != null">#{startTime},</if>
+            <if test="visualId != null">#{visualId},</if>
+            <if test="endTime != null">#{endTime},</if>
+            <if test="delFlag != null">#{delFlag},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+        </trim>
+    </insert>
+
+    <update id="updateLinkRepo" parameterType="LinkRepo">
+        update link_repo
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="userId != null">user_id = #{userId},</if>
+            <if test="title != null">title = #{title},</if>
+            <if test="descri != null">descri = #{descri},</if>
+            <if test="avaTime != null">ava_time = #{avaTime},</if>
+            <if test="panoramaId != null">panorama_id = #{panoramaId},</if>
+            <if test="startTime != null">start_time = #{startTime},</if>
+            <if test="visualId != null">visual_id = #{visualId},</if>
+            <if test="endTime != null">end_time = #{endTime},</if>
+            <if test="delFlag != null">del_flag = #{delFlag},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteLinkRepoById" parameterType="Long">
+        delete from link_repo where id = #{id}
+    </delete>
+
+    <delete id="deleteLinkRepoByIds" parameterType="String">
+        delete from link_repo where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

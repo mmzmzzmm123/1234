@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.VisualImageMapper">
+
+    <resultMap type="VisualImage" id="VisualImageResult">
+        <result property="id"    column="id"    />
+        <result property="originName"    column="origin_name"    />
+        <result property="newName"    column="new_name"    />
+        <result property="width"    column="width"    />
+        <result property="height"    column="height"    />
+        <result property="descri"    column="descri"    />
+        <result property="delFlag"    column="del_flag"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+    </resultMap>
+
+    <sql id="selectVisualImageVo">
+        select id, origin_name, new_name, width, height, descri, del_flag, create_by, create_time, update_by, update_time from visual_image
+    </sql>
+
+    <select id="selectVisualImageList" parameterType="VisualImage" resultMap="VisualImageResult">
+        <include refid="selectVisualImageVo"/>
+        <where>
+            <if test="originName != null  and originName != ''"> and origin_name like concat('%', #{originName}, '%')</if>
+            <if test="newName != null  and newName != ''"> and new_name like concat('%', #{newName}, '%')</if>
+            <if test="width != null "> and width = #{width}</if>
+            <if test="height != null "> and height = #{height}</if>
+            <if test="descri != null  and descri != ''"> and descri = #{descri}</if>
+        </where>
+    </select>
+
+    <select id="selectVisualImageById" parameterType="Long" resultMap="VisualImageResult">
+        <include refid="selectVisualImageVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertVisualImage" parameterType="VisualImage" useGeneratedKeys="true" keyProperty="id">
+        insert into visual_image
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="originName != null">origin_name,</if>
+            <if test="newName != null">new_name,</if>
+            <if test="width != null">width,</if>
+            <if test="height != null">height,</if>
+            <if test="descri != null">descri,</if>
+            <if test="delFlag != null">del_flag,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="originName != null">#{originName},</if>
+            <if test="newName != null">#{newName},</if>
+            <if test="width != null">#{width},</if>
+            <if test="height != null">#{height},</if>
+            <if test="descri != null">#{descri},</if>
+            <if test="delFlag != null">#{delFlag},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+        </trim>
+    </insert>
+
+    <update id="updateVisualImage" parameterType="VisualImage">
+        update visual_image
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="originName != null">origin_name = #{originName},</if>
+            <if test="newName != null">new_name = #{newName},</if>
+            <if test="width != null">width = #{width},</if>
+            <if test="height != null">height = #{height},</if>
+            <if test="descri != null">descri = #{descri},</if>
+            <if test="delFlag != null">del_flag = #{delFlag},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteVisualImageById" parameterType="Long">
+        delete from visual_image where id = #{id}
+    </delete>
+
+    <delete id="deleteVisualImageByIds" parameterType="String">
+        delete from visual_image where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

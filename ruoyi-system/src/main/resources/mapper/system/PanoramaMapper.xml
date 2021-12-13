@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.PanoramaMapper">
+
+    <resultMap type="Panorama" id="PanoramaResult">
+        <result property="id"    column="id"    />
+        <result property="name"    column="name"    />
+        <result property="descri"    column="descri"    />
+        <result property="delFlag"    column="del_flag"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="detail"    column="detail"    />
+        <result property="component"    column="component"    />
+    </resultMap>
+
+    <sql id="selectPanoramaVo">
+        select id, name, descri, del_flag, create_by, create_time, update_by, update_time, detail, component from panorama
+    </sql>
+
+    <select id="selectPanoramaList" parameterType="Panorama" resultMap="PanoramaResult">
+        <include refid="selectPanoramaVo"/>
+        <where>
+            <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
+            <if test="descri != null  and descri != ''"> and descri like concat('%', #{descri}, '%')</if>
+            <if test="detail != null  and detail != ''"> and detail = #{detail}</if>
+            <if test="component != null  and component != ''"> and component = #{component}</if>
+        </where>
+    </select>
+
+    <select id="selectPanoramaById" parameterType="Long" resultMap="PanoramaResult">
+        <include refid="selectPanoramaVo"/>
+        where id = #{id}
+    </select>
+    <select id="getIdNames" resultType="com.ruoyi.system.domain.vo.IdNameVo">
+        select id,name from panorama;
+    </select>
+
+    <insert id="insertPanorama" parameterType="Panorama" useGeneratedKeys="true" keyProperty="id">
+        insert into panorama
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="name != null">name,</if>
+            <if test="descri != null">descri,</if>
+            <if test="delFlag != null">del_flag,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="detail != null">detail,</if>
+            <if test="component != null">component,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="name != null">#{name},</if>
+            <if test="descri != null">#{descri},</if>
+            <if test="delFlag != null">#{delFlag},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="detail != null">#{detail},</if>
+            <if test="component != null">#{component},</if>
+         </trim>
+    </insert>
+
+    <update id="updatePanorama" parameterType="Panorama">
+        update panorama
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="name != null">name = #{name},</if>
+            <if test="descri != null">descri = #{descri},</if>
+            <if test="delFlag != null">del_flag = #{delFlag},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="detail != null">detail = #{detail},</if>
+            <if test="component != null">component = #{component},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deletePanoramaById" parameterType="Long">
+        delete from panorama where id = #{id}
+    </delete>
+
+    <delete id="deletePanoramaByIds" parameterType="String">
+        delete from panorama where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

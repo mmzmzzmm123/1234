@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.PanoramaInfoMapper">
+    
+    <resultMap type="PanoramaInfo" id="PanoramaInfoResult">
+        <result property="id"    column="id"    />
+        <result property="name"    column="name"    />
+        <result property="sceneNum"    column="scene_num"    />
+        <result property="sensorNum"    column="sensor_num"    />
+        <result property="descri"    column="descri"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+    </resultMap>
+
+    <sql id="selectPanoramaInfoVo">
+        select id, name, scene_num, sensor_num, descri, create_by, create_time, update_by, update_time from panorama_info
+    </sql>
+
+    <select id="selectPanoramaInfoList" parameterType="PanoramaInfo" resultMap="PanoramaInfoResult">
+        <include refid="selectPanoramaInfoVo"/>
+        <where>  
+            <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
+            <if test="sceneNum != null "> and scene_num = #{sceneNum}</if>
+            <if test="sensorNum != null "> and sensor_num = #{sensorNum}</if>
+            <if test="descri != null  and descri != ''"> and descri = #{descri}</if>
+        </where>
+    </select>
+    
+    <select id="selectPanoramaInfoById" parameterType="Long" resultMap="PanoramaInfoResult">
+        <include refid="selectPanoramaInfoVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertPanoramaInfo" parameterType="PanoramaInfo" useGeneratedKeys="true" keyProperty="id">
+        insert into panorama_info
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="name != null">name,</if>
+            <if test="sceneNum != null">scene_num,</if>
+            <if test="sensorNum != null">sensor_num,</if>
+            <if test="descri != null">descri,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="name != null">#{name},</if>
+            <if test="sceneNum != null">#{sceneNum},</if>
+            <if test="sensorNum != null">#{sensorNum},</if>
+            <if test="descri != null">#{descri},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updatePanoramaInfo" parameterType="PanoramaInfo">
+        update panorama_info
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="name != null">name = #{name},</if>
+            <if test="sceneNum != null">scene_num = #{sceneNum},</if>
+            <if test="sensorNum != null">sensor_num = #{sensorNum},</if>
+            <if test="descri != null">descri = #{descri},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deletePanoramaInfoById" parameterType="Long">
+        delete from panorama_info where id = #{id}
+    </delete>
+
+    <delete id="deletePanoramaInfoByIds" parameterType="String">
+        delete from panorama_info where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>
