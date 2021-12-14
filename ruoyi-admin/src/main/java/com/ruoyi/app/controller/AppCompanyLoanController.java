@@ -12,7 +12,6 @@ import com.ruoyi.system.domain.model.DataCompanyLoanBody;
 import com.ruoyi.system.domain.model.DataMatchCompany;
 import com.ruoyi.system.service.IDataCompanyLoanOracleService;
 import com.ruoyi.system.service.IDataCompanyLoanService;
-import com.ruoyi.system.utils.ShareInterface;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -83,22 +82,6 @@ public class AppCompanyLoanController extends BaseController
 
         JSONObject jsonObject = dataCompanyLoanService.getUserInfo(userId,token);
         return jsonObject;
-    }
-
-    /**
-     * 根据企业名称匹配对应的企业完整名称
-     */
-    @Deprecated
-    @GetMapping("/match")
-    @ApiOperation(value = "根据企业名称匹配对应的企业完整名称")
-    public TableDataInfo match(@RequestParam String companyName)
-    {
-        List<String> list = ShareInterface.queryCompanyName(companyName);
-        if (list.size()>20){
-            list = list.subList(0,20);
-        }
-
-        return getDataTable(list);
     }
 
     /**

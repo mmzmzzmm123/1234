@@ -1,11 +1,19 @@
-package com.ruoyi.system.utils;
+package com.ruoyi.system.service.impl;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.ruoyi.common.annotation.InterfaceLog;
+import com.ruoyi.common.annotation.Log;
+import com.ruoyi.common.enums.BusinessType;
 import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.system.domain.model.DataGTGSH;
+import com.ruoyi.system.utils.ConfigInfo;
+import com.ruoyi.system.utils.HttpUtil;
+import com.ruoyi.system.utils.MD5Util;
 import org.apache.commons.text.StringEscapeUtils;
 import org.dom4j.*;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.*;
 
@@ -16,90 +24,9 @@ import java.util.*;
  * @description
  * @date 2021/7/20 20:50
  */
+
+@Service
 public class ShareInterface {
-
-    public static void main(String[] args) {
-//        List<String> list = queryCompanyName("南1234威");
-//        System.out.println(list.toString());
-//        String  result = getInterface("http://222.77.0.158:18081/api-gateway/gateway/u70is68s/queryAllByEnterp", "南威软件股份有限公司");
-////        System.out.println(companyNameStr);
-////        Object obj = JSONObject.parseObject(companyNameStr);
-////        System.out.println(companyNameStr);
-////        JSONArray jsonArr = null;
-//        result = result.replace("\\" , "");
-//        result = removeCharAt(result,0);
-//        result = removeCharAt(result, result.length()-3);
-//        result = result.replaceAll("\\{\"code\":\"01\",\"data\":\"", "");
-//        result = result.replaceAll("\",\"message\":\"调用成功\"}", "");
-//        result = result.replaceAll(">n", ">");
-//        System.out.println(result);
-//        List<Map> list = new ArrayList<>();
-//        try {
-//            Document document = DocumentHelper.parseText(result);
-//            // 通过document对象获取根节点bookstore
-//            Element bookStore = document.getRootElement();
-//            // 通过element对象的elementIterator方法获取迭代器
-//            Iterator it = bookStore.elementIterator();
-//            // 遍历迭代器，获取根节点中的信息（书籍）
-//            while (it.hasNext()) {
-//                System.out.println("=====开始遍历=====");
-//                Element book = (Element) it.next();
-//                // 获取book的属性名以及 属性值
-//                List<Attribute> bookAttrs = book.attributes();
-//                for (Attribute attr : bookAttrs) {
-//                    System.out.println("属性名：" + attr.getName() + "--属性值：" + attr.getValue());
-//                }
-//                System.out.println("=====结束遍历=====");
-//                System.out.println("======遍历子节点======");
-//                Iterator iterator1 = book.elementIterator();
-//                while (iterator1.hasNext()){
-//                    Element stuChild = (Element) iterator1.next();
-//                    System.out.println("节点名："+stuChild.getName()+"---节点值："+stuChild.getStringValue());
-//                    if(StringUtils.isNotEmpty(stuChild.getStringValue())){
-//                        Map map = new HashMap();
-//                        map.put(stuChild.getName(), stuChild.getStringValue());
-//                    }
-//                }
-//            }
-//        } catch (DocumentException e) {
-//            e.printStackTrace();
-//        }
-
-//        List<String> result =  queryCompanyName("泉州大数据");
-//        System.out.println(result);
-
-//        Map map = queryCompanyInfo("泉州大数据运营服务有限公司");
-//        if(map.isEmpty()){
-//            System.out.println("空");
-//        }else {
-//            Iterator<String> iterator = map.keySet().iterator();
-//            while(iterator.hasNext()){
-//                String key = iterator.next();
-//                String value = (String) map.get(key);
-//                if("tyshxydm".equals(key)){
-//                    System.out.println(value);
-//                }
-////                System.out.println(key + "  " + value);
-//            }
-//        }
-//        System.out.println(map);
-
-//        // 失信企业
-//        String xydm1 = "91350500156488989A";
-//        // 无失信企业
-//        String xydm2 = "91350502MA2Y3AN1X7";
-//        JSONObject json1 = unTrustWorthyPersonnel(xydm1);
-//        JSONObject json2 = unTrustWorthyPersonnel(xydm2);
-//        System.out.println(json1.getJSONArray("data").size());
-//        System.out.println(json2.getJSONArray("data").size());
-//        List<DataGTGSH> list = queryGTGSHByName("惠安县崇武恒言书店");
-        JSONObject jsonObject = queryGTGSHByXydm("92350521MA2Y11HY6E");
-        System.out.println(jsonObject);
-
-
-//        Map map = queryCompanyInfo("泉州大数据运营服务有限公司");
-//        queryGTGSHByXYDM("92350521MA2Y11HY6E");
-    }
 
     /**
      * 个人或企业失信记录查询
@@ -124,8 +51,8 @@ public class ShareInterface {
      * }
      *
      */
-    public static JSONObject unTrustWorthyPersonnel(String xydm){
-        String result = getInterface("http://222.77.0.158:18081/api-gateway/gateway/xozfst1w/api/HousingTransaction/UntrustworthyPersonnel", xydm);
+    public JSONObject unTrustWorthyPersonnel(String xydm){
+        String result = getInterface(ConfigInfo.UntrustworthyPersonnel, xydm);
         String formatStr = StringEscapeUtils.unescapeJson(result).trim();
         if (StringUtils.isEmpty(result) || StringUtils.isEmpty(formatStr)){
             return null;
@@ -134,7 +61,8 @@ public class ShareInterface {
         return JSONObject.parseObject(formatStr);
     }
 
-    public static boolean isTrust(String xydm){
+    @InterfaceLog(title = "(全市)根据名称查询失信被执行人",url = ConfigInfo.UntrustworthyPersonnel,operaterName = "#name",parameter = "#xydm")
+    public boolean isTrust(String xydm,String name){
         JSONObject jsonObject = unTrustWorthyPersonnel(xydm);
         if (jsonObject == null)return true;
         JSONArray array = jsonObject.getJSONArray("data");
@@ -156,8 +84,9 @@ public class ShareInterface {
      * @param companyName
      * @return
      */
-    public static Map<String,String> queryCompanyInfo(String companyName){
-        String  result = getInterface("http://222.77.0.158:18081/api-gateway/gateway/u70is68s/queryAllByEnterp", companyName);
+    @InterfaceLog(title = "（全省）根据企业全称查询福建省内注册企业完整信息",url = ConfigInfo.queryAllByEnterp,operaterName = "#companyName",parameter = "#companyName")
+    public Map<String,String> queryCompanyInfo(String companyName){
+        String  result = getInterface(ConfigInfo.queryAllByEnterp, companyName);
 //        System.out.println(companyNameStr);
 //        Object obj = JSONObject.parseObject(companyNameStr);
 //        System.out.println(companyNameStr);
@@ -209,12 +138,8 @@ public class ShareInterface {
         return map;
     }
 
-    /**
-     *
-     * @param companyName
-     * @return
-     */
-    public static List<String> queryCompanyName(String companyName){
+    @InterfaceLog(title = "（全省）根据企业模糊名称（不拆词匹配）查询企业名称",url = ConfigInfo.QUERY_COMPANY_NAME,operaterName = "#companyName",parameter = "#companyName")
+    public List<String> queryCompanyName(String companyName){
         List<String> companyList = new ArrayList<>();
         String  companyNameStr = getInterface(ConfigInfo.QUERY_COMPANY_NAME, companyName);
         System.out.println(companyNameStr);
@@ -256,7 +181,8 @@ public class ShareInterface {
      * @param name
      * @return
      */
-    public static List<DataGTGSH> queryGTGSHByName(String name){
+    @InterfaceLog(title = "（全市）根据店铺名字(模糊)查询个体工商户基本信息",url = ConfigInfo.QUERY_GTGSH_NAME,operaterName = "#name",parameter = "#name")
+    public List<DataGTGSH> queryGTGSHByName(String name){
 
         List<DataGTGSH> list = new ArrayList<>();
 
@@ -299,7 +225,8 @@ public class ShareInterface {
 
     }
 
-    public static JSONObject queryGTGSHByXydm(String xydm){
+    @InterfaceLog(title = "（全省）根据统一社会信用代码查询个体工商户基本信息",url = ConfigInfo.QUERY_GTGSH_XYDM,operaterName = "#name",parameter = "#xydm")
+    public JSONObject queryGTGSHByXydm(String xydm,String name){
         String result = getInterface(ConfigInfo.QUERY_GTGSH_XYDM, xydm);
 
         String formatStr = StringEscapeUtils.unescapeJson(result).trim();
@@ -324,7 +251,7 @@ public class ShareInterface {
      * @param endMacth
      * @return
      */
-    private static String getXmlValue(String xml,String begineMatch,String endMacth){
+    private String getXmlValue(String xml,String begineMatch,String endMacth){
         try {
             String xydm = xml.substring(xml.indexOf(begineMatch)+begineMatch.length());
             return xydm.substring(0, xydm.indexOf(endMacth));
@@ -341,7 +268,7 @@ public class ShareInterface {
      * @param pos
      * @return
      */
-    public static String removeCharAt(String s, int pos) {
+    public String removeCharAt(String s, int pos) {
         return s.substring(0, pos) + s.substring(pos + 1);
     }
 
@@ -351,7 +278,8 @@ public class ShareInterface {
      * @param companyName
      * @return
      */
-    public static String getInterface(String url, String companyName) {
+
+    public String getInterface(String url, String companyName) {
 
         //请求返回结果数据
         String result = "";

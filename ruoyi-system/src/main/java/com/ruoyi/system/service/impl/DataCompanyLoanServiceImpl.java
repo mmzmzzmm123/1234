@@ -5,13 +5,11 @@ import cn.shuibo.util.Base64Util;
 import cn.shuibo.util.RSAUtil;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
-import com.ruoyi.common.annotation.DataSource;
 import com.ruoyi.common.constant.Constants;
 import com.ruoyi.common.constant.HttpStatus;
 import com.ruoyi.common.constant.UserConstants;
 import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.core.redis.RedisCache;
-import com.ruoyi.common.enums.DataSourceType;
 import com.ruoyi.common.exception.user.SmsException;
 import com.ruoyi.common.exception.user.UserException;
 import com.ruoyi.common.utils.DateUtils;
@@ -22,7 +20,6 @@ import com.ruoyi.system.mapper.DataCompanyLoanMapper;
 import com.ruoyi.system.service.IDataCompanyLoanOracleService;
 import com.ruoyi.system.service.IDataCompanyLoanService;
 import com.ruoyi.system.service.IDataSmsService;
-import com.ruoyi.system.utils.ShareInterface;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -61,6 +58,9 @@ public class DataCompanyLoanServiceImpl implements IDataCompanyLoanService
 
     @Autowired
     private RestTemplate restTemplate;
+
+    @Autowired
+    private ShareInterface interfaceService;
 
     @Value("${api.domain}")
     private String domain;
@@ -145,7 +145,7 @@ public class DataCompanyLoanServiceImpl implements IDataCompanyLoanService
 
         if (DataMatchCompany.TYPE_PERSON  == dataCompanyLoanBody.getLoanObjectType()){
             xydm = dataCompanyLoanBody.getXydm();
-            JSONObject jsonObject = ShareInterface.queryGTGSHByXydm(xydm);
+            JSONObject jsonObject = interfaceService.queryGTGSHByXydm(xydm,companyNameFromRequest);
             if (jsonObject != null){
                 String name = jsonObject.getString("traname");
                 // 用户上传的企业名称与接口匹配数据一致或者包含关系，才进行相关信息补充。
@@ -157,7 +157,7 @@ public class DataCompanyLoanServiceImpl implements IDataCompanyLoanService
             }
         }else {
             //根据企业名称组装企业相关数据：企业划型、所在行业、主营业务、省市区
-            Map<String, String> map = ShareInterface.queryCompanyInfo(companyNameFromRequest);
+            Map<String, String> map = interfaceService.queryCompanyInfo(companyNameFromRequest);
             xydm = map.get("tyshxydm");
             dataCompanyLoan.setCompanyCreditCode(xydm);
             dataCompanyLoan.setCompanyType(map.get("companytype"));
@@ -167,7 +167,7 @@ public class DataCompanyLoanServiceImpl implements IDataCompanyLoanService
         }
 
         if (StringUtils.isNotEmpty(xydm)){
-            boolean isTrust = ShareInterface.isTrust(xydm);
+            boolean isTrust = interfaceService.isTrust(xydm,companyNameFromRequest);
             if (!isTrust) {
                 throw new UserException(null, null, "保存'" + dataCompanyLoan.getCompanyName() + "'失败，该企业存在失信记录");
             }
@@ -278,7 +278,7 @@ public class DataCompanyLoanServiceImpl implements IDataCompanyLoanService
 
         List<DataMatchCompany> list = new ArrayList<>();
 
-        List<String> companyNameList = ShareInterface.queryCompanyName(companyName);
+        List<String> companyNameList = interfaceService.queryCompanyName(companyName);
         for (String name : companyNameList){
             DataMatchCompany company = new DataMatchCompany();
             company.setName(name);
@@ -290,7 +290,7 @@ public class DataCompanyLoanServiceImpl implements IDataCompanyLoanService
             list = list.subList(0,count);
         }
 
-        List<DataGTGSH> gtgshes = ShareInterface.queryGTGSHByName(companyName);
+        List<DataGTGSH> gtgshes = interfaceService.queryGTGSHByName(companyName);
         for (DataGTGSH gtgsh : gtgshes){
             DataMatchCompany company = new DataMatchCompany();
             company.setName(gtgsh.getName());

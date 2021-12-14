@@ -35,5 +35,8 @@ public class ConfigInfo {
     public static final String QUERY_GTGSH_NAME = "http://222.77.0.158:18081/api-gateway/gateway/tiswdspt/queryByName";
     /** （全省）根据统一社会信用代码查询个体工商户基本信息 */
     public static final String QUERY_GTGSH_XYDM = "http://222.77.0.158:18081/api-gateway/gateway/u70is68s/IndivBusinessInfo/queryBytyshxydm";
-
+    /** (全市)根据名称查询失信被执行人 */
+    public static final String UntrustworthyPersonnel= "http://222.77.0.158:18081/api-gateway/gateway/xozfst1w/api/HousingTransaction/UntrustworthyPersonnel";
+    /** （全省）根据企业全称查询福建省内注册企业完整信息 */
+    public static final String queryAllByEnterp = "http://222.77.0.158:18081/api-gateway/gateway/u70is68s/queryAllByEnterp";
 }
