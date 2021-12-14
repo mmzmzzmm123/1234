@@ -66,7 +66,7 @@ public class InterfaceLogAspect
     }
 
     /**
-     * 拦截异常操作-TODO:验证
+     * 拦截异常操作
      * 
      * @param joinPoint 切点
      * @param e 异常
