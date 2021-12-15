@@ -1,5 +1,6 @@
 package com.ruoyi.app.controller;
 
+import cn.hutool.core.util.StrUtil;
 import cn.shuibo.annotation.Decrypt;
 import cn.shuibo.annotation.Encrypt;
 import com.ruoyi.common.core.controller.BaseController;
@@ -22,7 +23,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.*;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * 企业贷款信息Controller
@@ -82,27 +86,40 @@ public class ApiLoanReportController extends BaseController
                     continue;
                 }
                 Bdcq bdcq = new Bdcq();
-                bdcq.setBdcqzh(item.getBdcqzh());
+                bdcq.setBdcqzh(StrUtil.hide(item.getBdcqzh(),8,20));
                 bdcq.setBdccqzt(item.getBdccqzt());
                 bdcq.setBdcgyfs(item.getBdcgyfs());
                 bdcq.setBdcjzmj(item.getBdcjzmj());
-                bdcq.setBdczl(item.getBdczl());
+                bdcq.setBdczl(StrUtil.hide(item.getBdczl(),10,40));
                 bdcqSet.add(bdcq);
             }
             bzkZhdPfmxmxb1.setBdcqs(bdcqSet);
+
+            //证件号
+            bzkZhdPfmxmxb1.setZjhm(StrUtil.hide(bzkZhdPfmxmxb1.getZjhm(),6,16));
+
             creditReport.setBzkZhdPfmxmxb(bzkZhdPfmxmxb1);
         }
 
         if (bzkZhdZrjgmxbs!=null && bzkZhdZrjgmxbs.size()>0){
-            creditReport.setBzkZhdZrjgmxb(bzkZhdZrjgmxbs.get(0));
+
+            BzkZhdZrjgmxb bzkZhdZrjgmxbResult = bzkZhdZrjgmxbs.get(0);
+            //证件号
+            bzkZhdZrjgmxbResult.setZjhm(StrUtil.hide(bzkZhdZrjgmxbResult.getZjhm(),6,16));
+
+            creditReport.setBzkZhdZrjgmxb(bzkZhdZrjgmxb);
         }
 
         if (ztkZhdPfmxjgbs!=null && ztkZhdPfmxjgbs.size()>0){
-            creditReport.setZtkZhdPfmxjgb(ztkZhdPfmxjgbs.get(0));
+            ZtkZhdPfmxjgb ztkZhdPfmxjgbResult = ztkZhdPfmxjgbs.get(0);
+            ztkZhdPfmxjgbResult.setZjhm(StrUtil.hide(ztkZhdPfmxjgbResult.getZjhm(),6,16));
+            creditReport.setZtkZhdPfmxjgb(ztkZhdPfmxjgbResult);
         }
 
         if (ztkZhdZrjgjgbs!=null && ztkZhdZrjgjgbs.size()>0){
-            creditReport.setZtkZhdZrjgjgb(ztkZhdZrjgjgbs.get(0));
+            ZtkZhdZrjgjgb ztkZhdZrjgjgbResult = ztkZhdZrjgjgbs.get(0);
+            ztkZhdZrjgjgbResult.setZjhm(StrUtil.hide(ztkZhdZrjgjgbResult.getZjhm(),6,16));
+            creditReport.setZtkZhdZrjgjgb(ztkZhdZrjgjgbResult);
         }
 
         return AjaxResult.success(creditReport);
