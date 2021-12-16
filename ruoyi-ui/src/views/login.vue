@@ -3,12 +3,7 @@
     <el-form ref="loginForm" :model="loginForm" :rules="loginRules" class="login-form">
       <h3 class="title">若依后台管理系统</h3>
       <el-form-item prop="username">
-        <el-input
-          v-model="loginForm.username"
-          type="text"
-          auto-complete="off"
-          placeholder="账号"
-        >
+        <el-input v-model="loginForm.username" type="text" auto-complete="off" placeholder="账号">
           <svg-icon slot="prefix" icon-class="user" class="el-input__icon input-icon" />
         </el-input>
       </el-form-item>
@@ -71,9 +66,10 @@ export default {
   data() {
     return {
       codeUrl: "",
+      cookiePassword: "",
       loginForm: {
         username: "admin",
-        password: "admin123",
+        password: "qwerasdf",
         rememberMe: false,
         code: "",
         uuid: ""

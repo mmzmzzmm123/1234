@@ -1,0 +1,187 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.carpool.mapper.PBlacklistMapper">
+    
+    <resultMap type="PBlacklist" id="PBlacklistResult">
+        <result property="id"    column="id"    />
+        <result property="userId"    column="user_id"    />
+        <result property="name"    column="name"    />
+        <result property="phone"    column="phone"    />
+        <result property="age"    column="age"    />
+        <result property="city"    column="city"    />
+        <result property="type"    column="type"    />
+        <result property="remark"    column="remark"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateTime"    column="update_time"    />
+    </resultMap>
+
+    <sql id="selectPBlacklistVo">
+        select id, user_id, name, phone, age, city, type, remark, create_time, update_time from p_blacklist
+    </sql>
+
+    <select id="selectPBlacklistList" parameterType="PBlacklist" resultMap="PBlacklistResult">
+<!--        <include refid="selectPBlacklistVo"/>-->
+<!--        <where>  -->
+<!--            <if test="userId != null  and userId != ''"> and user_id = #{userId}</if>-->
+<!--            <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>-->
+<!--            <if test="phone != null  and phone != ''"> and phone = #{phone}</if>-->
+<!--            <if test="age != null "> and age = #{age}</if>-->
+<!--            <if test="city != null  and city != ''"> and city = #{city}</if>-->
+<!--            <if test="type != null "> and type = #{type}</if>-->
+<!--        </where>-->
+        SELECT
+        cust_id as user_id,
+        cust_name as name,
+        cust_phone as phone,
+        age as age ,
+        city as city,
+        1 as type
+        FROM p_passenger
+        WHERE is_blacklist = 1
+        <if test="userId != null  and userId != ''"> and cust_id = #{userId}</if>
+        <if test="name != null  and name != ''"> and cust_name like concat('%', #{name}, '%')</if>
+        <if test="phone != null  and phone != ''"> and cust_phone = #{phone}</if>
+        <if test="age != null "> and age = #{age}</if>
+        <if test="city != null  and city != ''"> and city = #{city}</if>
+        UNION ALL
+        SELECT
+        driver_id as user_id,
+        name as name,
+        phone as phone,
+        age as age ,
+        city as city,
+        2 as type
+        FROM p_driver
+        WHERE is_blacklist = 1
+        <if test="userId != null  and userId != ''"> and driver_id = #{userId}</if>
+        <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
+        <if test="phone != null  and phone != ''"> and phone = #{phone}</if>
+        <if test="age != null "> and age = #{age}</if>
+        <if test="city != null  and city != ''"> and city = #{city}</if>
+    </select>
+
+
+    <select id="selectPBlacklistListPassenger" parameterType="PBlacklist" resultMap="PBlacklistResult">
+        SELECT
+        cust_id as user_id,
+        cust_name as name,
+        cust_phone as phone,
+        age as age ,
+        city as city,
+        1 as type
+        FROM p_passenger
+        WHERE is_blacklist = 1
+        <if test="userId != null  and userId != ''"> and cust_id = #{userId}</if>
+        <if test="name != null  and name != ''"> and cust_name like concat('%', #{name}, '%')</if>
+        <if test="phone != null  and phone != ''"> and cust_phone = #{phone}</if>
+        <if test="age != null "> and age = #{age}</if>
+        <if test="city != null  and city != ''"> and city = #{city}</if>
+    </select>
+
+
+    <select id="selectPBlacklistListDriver" parameterType="PBlacklist" resultMap="PBlacklistResult">
+        SELECT
+        driver_id as user_id,
+        name as name,
+        phone as phone,
+        age as age ,
+        city as city,
+        2 as type
+        FROM p_driver
+        WHERE is_blacklist = 1
+        <if test="userId != null  and userId != ''"> and driver_id = #{userId}</if>
+        <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
+        <if test="phone != null  and phone != ''"> and phone = #{phone}</if>
+        <if test="age != null "> and age = #{age}</if>
+        <if test="city != null  and city != ''"> and city = #{city}</if>
+    </select>
+
+
+
+
+    <select id="selectPBlacklistById" parameterType="Long" resultMap="PBlacklistResult">
+        <include refid="selectPBlacklistVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertPBlacklist" parameterType="PBlacklist">
+        insert into p_blacklist
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="userId != null">user_id,</if>
+            <if test="name != null">name,</if>
+            <if test="phone != null">phone,</if>
+            <if test="age != null">age,</if>
+            <if test="city != null">city,</if>
+            <if test="type != null">type,</if>
+            <if test="remark != null">remark,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateTime != null">update_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="userId != null">#{userId},</if>
+            <if test="name != null">#{name},</if>
+            <if test="phone != null">#{phone},</if>
+            <if test="age != null">#{age},</if>
+            <if test="city != null">#{city},</if>
+            <if test="type != null">#{type},</if>
+            <if test="remark != null">#{remark},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+         </trim>
+    </insert>
+
+
+
+    <update id="insertPBlacklistDriver" parameterType="PBlacklist">
+        update p_driver set  is_blacklist = 1 , update_time = #{updateTime}  where driver_id = #{userId}
+    </update>
+
+
+    <update id="insertPBlacklistPassenger" parameterType="PBlacklist">
+        update p_passenger set  is_blacklist = 1 , update_time = #{updateTime}  where cust_id = #{userId}
+    </update>
+
+
+
+
+
+    <update id="updatePBlacklist" parameterType="PBlacklist">
+        update p_blacklist
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="userId != null">user_id = #{userId},</if>
+            <if test="name != null">name = #{name},</if>
+            <if test="phone != null">phone = #{phone},</if>
+            <if test="age != null">age = #{age},</if>
+            <if test="city != null">city = #{city},</if>
+            <if test="type != null">type = #{type},</if>
+            <if test="remark != null">remark = #{remark},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <update id="deletePBlacklistByIdDriver" parameterType="String">
+        update p_driver set  is_blacklist = 0 where driver_id = #{userID}
+    </update>
+
+    <update id="deletePBlacklistByIdPassenger" parameterType="String">
+        update  p_passenger set is_blacklist = 0  where cust_id = #{userID}
+    </update>
+
+    <delete id="deletePBlacklistById" parameterType="Long">
+        delete from p_blacklist where driver_id = #{id}
+    </delete>
+
+
+    <delete id="deletePBlacklistByIds" parameterType="String">
+        delete from p_blacklist where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>
