@@ -64,6 +64,7 @@
       <!-- <el-table-column label="身份证号码" align="center" prop="idCard" /> -->
       <el-table-column label="年龄" align="center" prop="age" />
       <el-table-column label="手机号码" align="center" prop="phone" />
+      <el-table-column label="车牌号" align="center" prop="numberPlate" />
       <!-- <el-table-column label="所在城市" align="center" prop="city" /> -->
       <!-- <el-table-column label="所在省份" align="center" prop="province" /> -->
       <!-- <el-table-column label="所在国家" align="center" prop="country" /> -->
@@ -102,6 +103,9 @@
         </el-form-item>
         <el-form-item label="手机号码" prop="phone">
           <el-input v-model="form.phone" placeholder="请输入手机号码" />
+        </el-form-item>
+        <el-form-item label="车牌号" prop="numberPlate">
+          <el-input v-model="form.numberPlate" placeholder="请输入车牌号" />
         </el-form-item>
         <!-- <el-form-item label="所在城市" prop="city">
           <el-input v-model="form.city" placeholder="请输入所在城市" />

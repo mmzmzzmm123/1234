@@ -38,6 +38,10 @@ public class PDriver extends BaseEntity
     @Excel(name = "年龄")
     private Integer age;
 
+    /** 车牌号 */
+    @Excel(name = "车牌号")
+    private String numberPlate;
+
     /** 手机号码 */
     @Excel(name = "手机号码")
     private String phone;
@@ -170,6 +174,14 @@ public class PDriver extends BaseEntity
         this.state = state;
     }
 
+    public String getNumberPlate() {
+        return numberPlate;
+    }
+
+    public void setNumberPlate(String numberPlate) {
+        this.numberPlate = numberPlate;
+    }
+
     @Override
     public String toString() {
         return new ToStringBuilder(this,ToStringStyle.MULTI_LINE_STYLE)
@@ -187,6 +199,7 @@ public class PDriver extends BaseEntity
             .append("createTime", getCreateTime())
             .append("updateTime", getUpdateTime())
             .append("state", getState())
+            .append("numberPlate", getNumberPlate())
             .toString();
     }
 }
