@@ -1,0 +1,31 @@
+server:
+  port: 7085
+spring:
+  #启用环境(开发、测试、生产)
+  profiles:
+    active: prod
+  swagger:
+    enabled: true
+    title: 标题
+    description: 描述信息
+    version: 1.0
+    contact:
+      name: 维护者信息
+
+logging:
+  level:
+    com.abchina.api.gateway: DEBUG
+    org.springframework.web: INFO
+    com.github.binarywang.demo.wx.mp: DEBUG
+    me.chanjar.weixin: DEBUG
+
+# 农行api地址
+abchina:
+  # 名称
+  name: abchina-api-gateway
+  # 版本
+  version: 1.0.0
+  # 版权年份
+  copyrightYear: 2020
+
+mmpaymkttransfers: https://api.mch.weixin.qq.com/mmpaymkttransfers/promotion/transfers

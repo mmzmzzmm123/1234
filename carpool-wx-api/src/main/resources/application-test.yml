@@ -1,0 +1,30 @@
+wx:
+  client:
+    cert:
+      path: config/
+  # 是否开启微信真实环境
+  is-product: true
+  wbank:
+    clientId:
+    apikey:
+  pay:
+    appId:
+    mchId:
+    mchKey:
+    subAppId:
+    subMchId:
+    keyPath:
+  miniapp:
+    appid:
+    secret:
+    token:
+    aesKey:
+    msgDataFormat: JSON
+  mp:
+    configs:
+      #（一个公众号的appid）
+      - appId:
+        #（公众号的appsecret）
+        secret:
+        token:  #（接口配置里的Token值）
+        aesKey: #（接口配置里的EncodingAESKey值）
