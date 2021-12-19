@@ -830,7 +830,8 @@ public class ExcelUtil<T>
                 {
                     String valueStr = (((BigDecimal) value).setScale(attr.scale(), attr.roundingMode())).toString();
                     //增加如果设置cellType是数值格式，则设置自定义小数点的格式
-                    if (Excel.ColumnType.NUMERIC == attr.cellType()) {
+                    if (Excel.ColumnType.NUMERIC == attr.cellType()) 
+                    {
                         //需要新建个样式，直接从styles.get("data")会被后续的覆盖掉
                         CellStyle cellStyle = wb.createCellStyle();
                         cellStyle.cloneStyleFrom(styles.get("data"));
@@ -839,15 +840,13 @@ public class ExcelUtil<T>
                         cellStyle.setDataFormat(df.getFormat(precision));
                         cell.setCellStyle(cellStyle);
                         cell.setCellValue(Double.parseDouble(valueStr));
-                    } else {
+                    } 
+                    else 
+                    {
                         //否则还是字符串导出
                         cell.setCellValue(valueStr);
                     }
-                } else {
-                    // 设置列类型
-                    setCellVo(value, attr, cell);
-                }
-                }
+                } 
                 else if (!attr.handler().equals(ExcelHandlerAdapter.class))
                 {
                     cell.setCellValue(dataFormatHandlerAdapter(value, attr));
