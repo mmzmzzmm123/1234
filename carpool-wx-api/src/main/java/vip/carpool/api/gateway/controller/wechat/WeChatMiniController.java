@@ -58,4 +58,33 @@ public class WeChatMiniController {
             throw new BadRequestException("获取小程序受权失败");
         }
     }
+
+
+    /**
+     * 小程序，颁发token，暂时模拟openid
+     *
+     * @return token字符串
+     */
+    @PostMapping("/oauth/code2session")
+    @ApiOperation(value = "通过Code获取小程序session", notes = "通过code获取小程序session")
+    public ApiResult code2Session(@ApiParam(name = "code必传", required = true) @RequestParam("code") String code ) {
+        try {
+            log.info("正在获取小程序受权……");
+            WxMaJscode2SessionResult session = wxMiniService.getUserService().getSessionInfo(code);
+            log.info("正在获取小程序受权：session为：{}", session.toString());
+            // 先获取微信token
+            String sessionKey = session.getSessionKey();
+            String unionId = session.getUnionid();
+            String openId = session.getOpenid();
+            log.info("正在获取小程序受权结束：unionId为：{}，sessionKey：{}，openId：{}", unionId, sessionKey,openId);
+            return ApiResult.ok(session);
+        } catch (WxErrorException e) {
+            log.error("获取小程序受权失败 accessToken: code={}, error={}", code, e.getMessage());
+            throw new BadRequestException("获取小程序受权失败:" + e.getMessage() );
+        }
+    }
+
+
+
+
 }
