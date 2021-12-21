@@ -33,6 +33,7 @@
 </template>
 
 <script>
+import _ from 'lodash'
 import { uuid } from '@/utils/utils'
 export default {
   name: 'contentmenu',
@@ -137,7 +138,7 @@ export default {
       const params = this.contain.findnav(this.contain.active[0], true);
       this.contain.active.forEach(ele => {
         const item = this.contain.findnav(ele, true);
-        const obj = this.deepClone(item.obj);
+        const obj = _.cloneDeep(item.obj);
         obj.index = uuid();
         params.parent.push(obj)
       });

@@ -1,9 +1,9 @@
 <script>
 export default {
-  data() {
+  data () {
     return {};
   },
-  render() {
+  render (h) {
     const { $route: { meta: { link } }, } = this;
     if ({ link }.link === "") {
       return "404";

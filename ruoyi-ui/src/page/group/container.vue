@@ -12,19 +12,22 @@
              :style="styleName"
              id="container"
              ref="container">
-          <showPanoramaInScreen  v-if="handleShowPanorama()" ref="showThumbs">
+          <showPanoramaInScreen v-if="handleShowPanorama()"
+                                ref="showThumbs">
 
           </showPanoramaInScreen>
           <myDialog></myDialog>
-          <div id="snece-container" v-if="show()">
+          <div id="snece-container"
+               v-if="show()">
             <div style="text-align:center">
-              <div style="display:inline-block;width: 100px; height: 100px;margin-right: 20px;" v-for="(thumb,index) in thumbs" :key="index">
+              <div style="display:inline-block;width: 100px; height: 100px;margin-right: 20px;"
+                   v-for="(thumb,index) in thumbs"
+                   :key="index">
                 <!-- 这里index为什么不报错？ -->
-                <el-image
-                  @click="handleChangePanorama(thumb.index)"
-                  style="cursor: pointer;"
-                  :src="thumb.thumb"
-                  :fit="fits[0]">
+                <el-image @click="handleChangePanorama(thumb.index)"
+                          style="cursor: pointer;"
+                          :src="thumb.thumb"
+                          :fit="fits[0]">
                 </el-image>
               </div>
             </div>
@@ -48,7 +51,7 @@ import common from '@/config'
 import { getObj } from '@/api/visual'
 import jq from 'jquery';
 import showPanoramaInScreen from "@/page/group/showPanoramaInScreen";
-import {getPanorama} from "@/api/system/panorama";
+import { getPanorama } from "@/api/system/panorama";
 import myDialog from "@/page/group/myDialog";
 export default {
   name: 'contents',
@@ -70,11 +73,11 @@ export default {
       selectCount: {},
       scale: 1,
       gradeFlag: false,
-      dialog_visible:false,
-      panorama_visible:false,
-      thumbs:[],
+      dialog_visible: false,
+      panorama_visible: false,
+      thumbs: [],
       fits: ['fill', 'contain', 'cover', 'none', 'scale-down'],
-      ans:0,
+      ans: 0,
     }
   },
   computed: {
@@ -90,16 +93,8 @@ export default {
         width: this.setPx(this.contain.config.width),
         height: this.setPx(this.contain.config.height),
         backgroundColor: this.contain.config.backgroundColor,
-          'transform-origin': '0 0',
-        },
-      //  (() => {
-      //   if (this.contain.config.backgroundImage) {
-      //     return {
-      //       background: `url(${this.contain.config.backgroundImage}) 0% 0% / 100% 100% rgb(3, 12, 59)`,
-      //     }
-      //   }
-      //   return
-      // })()
+        'transform-origin': '0 0',
+      },
       )
     },
     gradeLenStyle () {
@@ -112,35 +107,36 @@ export default {
     this.showThumbs();
     this.initData();
     this.initFun();
+    console.log(this.contain, 'contain')
     // this.hidePanorama();
 
   },
   methods: {
 
-    handleChangePanorama(index){
+    handleChangePanorama (index) {
       // console.log(index);
       this.$refs.showThumbs.changePanorama(index);
     },
-    show(){
+    show () {
       const id = this.$route.params.panoramaId;
-      if(id==="null") return false;
+      if (id === "null") return false;
       return true;
     },
 
-    async showThumbs(){
+    async showThumbs () {
       const id = this.$route.params.panoramaId;
-      if(id==="null") return false;
+      if (id === "null") return false;
       // console.log(id);
       await getPanorama(id).then(response => {
         // console.log(response);
-        this.formDB=response.data;
+        this.formDB = response.data;
       });
-      this.message=JSON.parse(this.formDB.component) || [];
-      var objects=JSON.parse(this.formDB.component) || [];
+      this.message = JSON.parse(this.formDB.component) || [];
+      var objects = JSON.parse(this.formDB.component) || [];
       // console.log("json文件");
       // console.log(objects);
       // 先遍历场景，再遍历传感器和场景变换
-      for(var obj of objects) {
+      for (var obj of objects) {
         if (obj.type === "scene") {
           // console.log("这这里");
           obj["index"] = this.ans;
@@ -157,12 +153,12 @@ export default {
         this[ele] = this.$refs.subgroup[ele]
       });
     },
-    hidePanorama(){
-        // 原来是block
-        let canvas = jq('canvas');
-        // console.log(canvas);
-        canvas.css({"display":"none"});
-      },
+    hidePanorama () {
+      // 原来是block
+      let canvas = jq('canvas');
+      // console.log(canvas);
+      canvas.css({ "display": "none" });
+    },
     //初始化数据
     initData () {
 
@@ -318,11 +314,11 @@ export default {
         }
       })
     },
-    handleShowPanorama(){
-      const id=this.$route.params.panoramaId;
+    handleShowPanorama () {
+      const id = this.$route.params.panoramaId;
       // console.log(id);
       // console.log("这里执行了");
-      if(id==="null") return false;
+      if (id === "null") return false;
       else return true;
     }
 
@@ -331,7 +327,7 @@ export default {
 </script>
 
 <style scoped>
-#snece-container{
+#snece-container {
   position: absolute;
   bottom: 4rem;
   border-radius: 0px;
@@ -339,8 +335,7 @@ export default {
   background: rgba(39, 39, 39, 0.25);
   box-shadow: 0 3px 14px rgb(128 128 128 / 50%);
   width: 100%;
-  height:130px;
+  height: 130px;
   background-repeat: repeat-x;
 }
-
 </style>

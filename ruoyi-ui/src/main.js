@@ -6,6 +6,7 @@ import './assets/styles/element-variables.scss'
 
 import '@/assets/styles/index.scss' // global css
 import '@/assets/styles/ruoyi.scss' // ruoyi css
+import '@/styles/style.scss'
 import App from './App'
 import store from './store'
 import router from './router'
@@ -15,9 +16,20 @@ import plugins from './plugins' // plugins
 import '@/mock/'
 import './assets/icons' // icon
 import './permission' // permission control
-import { getDicts } from "@/api/system/dict/data";
-import { getConfigKey } from "@/api/system/config";
-import { parseTime, resetForm, addDateRange, selectDictLabel, selectDictLabels, handleTree } from "@/utils/ruoyi";
+import {
+  getDicts
+} from "@/api/system/dict/data";
+import {
+  getConfigKey
+} from "@/api/system/config";
+import {
+  parseTime,
+  resetForm,
+  addDateRange,
+  selectDictLabel,
+  selectDictLabels,
+  handleTree
+} from "@/utils/ruoyi";
 // 分页组件
 import Pagination from "@/components/Pagination";
 // 自定义表格工具组件
@@ -81,14 +93,16 @@ Vue.config.productionTip = false
 //注册自定义组件
 import '@/components/'
 
-import { url } from '@/config'
+import {
+  url
+} from '@/config'
 import 'element-ui/lib/theme-chalk/index.css';
 Vue.prototype.url = url;
 // import '@/theme/index.js'
 // import './styles/common.scss'
 // Vue.prototype.$echarts = echarts
 
-import  panoramaProcess  from "@/utils/panoramaProcess"
+import panoramaProcess from "@/utils/panoramaProcess"
 Vue.prototype.panoramaProcess = panoramaProcess;
 
 import echarts from 'echarts'

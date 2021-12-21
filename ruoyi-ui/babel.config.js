@@ -1,7 +1,8 @@
 module.exports = {
   presets: [
     // https://github.com/vuejs/vue-cli/tree/master/packages/@vue/babel-preset-app
-    '@vue/cli-plugin-babel/preset'
+    '@vue/cli-plugin-babel/preset',
+    // '@vue/babel-preset-jsx'
   ],
   'env': {
     'development': {
@@ -9,5 +10,5 @@ module.exports = {
       // This plugin can significantly increase the speed of hot updates, when you have a large number of pages.
       'plugins': ['dynamic-import-node']
     }
-  }
+  },
 }

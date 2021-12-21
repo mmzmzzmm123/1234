@@ -75,7 +75,8 @@
                :data="main.activeOption.column"
                @row-save="rowSave"
                @row-del="rowDel"
-               @row-update="rowUpdate">
+               @row-update="rowUpdate"
+               class="test">
       <template slot="menu"
                 slot-scope="{row,index,size,type}">
         <el-button @click="trigger(index)"
@@ -207,18 +208,6 @@ export default {
       this.allTriggerVisible = true;
 
     },
-    // rowSaveTrigger (row, done) {
-    //   console.log(this.main.activeOption.triggerColumn);
-    //   this.main.activeOption.triggerColumn.push(row);
-    //   done()
-    // },
-    // rowDelTrigger (row, index) {
-    //   this.main.activeOption.triggerColumn.splice(index, 1);
-    // },
-    // rowUpdateTrigger (row, index, done) {
-    //   this.main.activeOption.triggerColumn.splice(index, 1, row);
-    //   done()
-    // },
     rowSave (row, done) {
       console.log(this.main.activeOption.column);
       this.main.activeOption.column.push(row);
@@ -234,37 +223,4 @@ export default {
   }
 }
 </script>
-
-<style scoped>
-el-dialog__body {
-  background: #141d4d;
-}
-
-.el-table__cell {
-  background-color: #1d1f26 !important;
-  color: #bcc8d4 !important;
-}
-.el-dialog__body {
-  background-color: #1d1f26;
-  color: #bcc8d4;
-}
-.el-dialog__header {
-  background-color: #1d1f26;
-  color: #bcc8d4;
-}
-.avue-dialog .el-dialog__title,
-.avue-dialog .el-drawer__header {
-  color: #bcc8d4;
-}
-.avue-form__group--flex {
-  background-color: #1d1f26;
-  color: #bcc8d4;
-}
-.avue-dialog__footer {
-  margin-top: 10px;
-}
-.test {
-  background-color: #1d1f26;
-  color: #bcc8d4;
-}
-</style>
+<style>

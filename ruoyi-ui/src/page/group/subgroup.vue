@@ -41,18 +41,18 @@
 </template>
 
 <script>
-import {  ref  } from 'vue'
+import { ref } from 'vue'
 import { addUrlParam } from '@/utils/utils'
 import myDialog from '@/page/group/myDialog'
 import common from '@/config'
 
 import showPanoramaInScreen from "@/page/group/showPanoramaInScreen";
-import {globalBus} from "./globalBus.js"
+import { globalBus } from "./globalBus.js"
 export default {
   name: 'subgroup',
   inject: ["contain", 'container'],
   components: {
-    myDialog:myDialog
+    myDialog: myDialog
   },
   provide () {
     return {
@@ -74,18 +74,16 @@ export default {
     }
   },
   methods: {
-    showDialog(url){
-
-      globalBus.$emit("show",url);
+    showDialog (url) {
+      globalBus.$emit("show", url);
     },
-    rotation(){
+    rotation () {
       globalBus.$emit("rotation");
     },
-    music(){
+    music () {
       globalBus.$emit("music");
     },
-    fullscreen()
-    {
+    fullscreen () {
       globalBus.$emit("fullscreen");
     },
 
@@ -105,7 +103,7 @@ export default {
       if (typeof str == "string") {
         try {
           return JSON.parse(str);
-        } catch  {
+        } catch {
           return {}
         }
       }

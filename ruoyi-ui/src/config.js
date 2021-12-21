@@ -13,4 +13,4 @@ export default {
 }
 // export const url = 'https://data.bladex.vip/blade-visual'
 // export const url = 'http://localhost:8080/avue/api'
-export const url = 'http://192.168.1.183:8080/avue/api'
+export const url = 'http://172.17.172.240:8080/avue/api'

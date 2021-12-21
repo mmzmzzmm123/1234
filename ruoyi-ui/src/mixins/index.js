@@ -1,20 +1,24 @@
 // 查看页面和编辑页面公用的参数和方法
 import common from '@/config'
-import { config } from '@/option/config'
+import {
+  config
+} from '@/option/config'
 import container from '@/page/group/container'
-import { getList } from '@/api/map'
+import {
+  getList
+} from '@/api/map'
 export default {
   components: {
     container
   },
-  props:['id','panoramaId'],
-  provide () {
+  props: ['id', 'panoramaId'],
+  provide() {
     return {
       main: this,
       contain: this
     };
   },
-  data () {
+  data() {
     return {
       DIC: {
         MAP: []
@@ -31,7 +35,7 @@ export default {
     }
   },
   computed: {
-    list () {
+    list() {
       let result = [];
       //循环处理数据
       const detail = (item) => {
@@ -53,7 +57,7 @@ export default {
       return result
     }
   },
-  created () {
+  created() {
     this.initDic();
     this.handleCheckExpire()
   },
@@ -62,7 +66,7 @@ export default {
   },
   methods: {
     //初始化字典
-    initDic () {
+    initDic() {
       getList({
         pageNum: 1,
         pageSize: 100,
@@ -76,7 +80,7 @@ export default {
         });
       })
     },
-    findnav (id, type) {
+    findnav(id, type) {
       //循环处理数据
       let obj = undefined;
       let count = 0;
@@ -110,26 +114,26 @@ export default {
         parent
       }
     },
-    findlist (index) {
+    findlist(index) {
       return this.list.find(ele => ele.index == index) || {}
     },
-    handleInitActive () {
+    handleInitActive() {
       this.active = []
     },
-    handleMouseDown () {
+    handleMouseDown() {
       this.handleInitActive();
     },
-    handleCheckExpire(){
+    handleCheckExpire() {
       this.timer = setInterval(() => {
         setTimeout(() => {
-          checkExpire(this.id,this.panoramaId).then(res=>{
+          checkExpire(this.id, this.panoramaId).then(res => {
             console.log('权限正常')
-          }).catch(err=>{
+          }).catch(err => {
             alert('您的权限已过期')
             window.close()
           })
         }, 0)
-      }, 1000*60*60)
+      }, 10000 * 60 * 60)
     }
   }
 }
