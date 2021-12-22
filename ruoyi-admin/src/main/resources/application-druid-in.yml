@@ -74,3 +74,7 @@ spring:
                 wall:
                     config:
                         multi-statement-allow: true
+
+# api接口服务服务器配置
+api:
+    domain: http://localhost:8080/

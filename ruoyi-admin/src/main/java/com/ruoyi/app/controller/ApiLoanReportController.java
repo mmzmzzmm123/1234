@@ -78,9 +78,10 @@ public class ApiLoanReportController extends BaseController
 
         if (bzkZhdPfmxmxbs!=null && bzkZhdPfmxmxbs.size()>0){
 
-            BzkZhdPfmxmxb bzkZhdPfmxmxb1 = bzkZhdPfmxmxbs.get(0);
+            BzkZhdPfmxmxb bzkZhdPfmxmxbFirst = bzkZhdPfmxmxbs.get(0);
 
             Set<Bdcq> bdcqSet = new HashSet<>();
+            int index = 0;
             for (BzkZhdPfmxmxb item : bzkZhdPfmxmxbs){
                 if (StringUtils.isEmpty(item.getBdcqzh())){
                     continue;
@@ -95,17 +96,28 @@ public class ApiLoanReportController extends BaseController
                 for (int i=0;i<split.length;i++){
                     split[i] = StrUtil.hide(split[i],8,20);
                 }
-                bdcq.setBdcqzh(StringUtils.join(split,","));
 
-                bdcq.setBdczl(StrUtil.hide(item.getBdczl(),10,40));
+                String bdcqzh = StringUtils.join(split, ",");
+                String bdczl = StrUtil.hide(item.getBdczl(), 10, 40);
+
+                bdcq.setBdcqzh(bdcqzh);
+                bdcq.setBdczl(bdczl);
                 bdcqSet.add(bdcq);
+
+                if (index == 0){
+                    bzkZhdPfmxmxbFirst.setBdcqzh(bdcqzh);
+                    bzkZhdPfmxmxbFirst.setBdczl(bdczl);
+                }
+
+                index++;
             }
-            bzkZhdPfmxmxb1.setBdcqs(bdcqSet);
+
+            bzkZhdPfmxmxbFirst.setBdcqs(bdcqSet);
 
             //证件号
-            bzkZhdPfmxmxb1.setZjhm(StrUtil.hide(bzkZhdPfmxmxb1.getZjhm(),6,16));
+            bzkZhdPfmxmxbFirst.setZjhm(StrUtil.hide(bzkZhdPfmxmxbFirst.getZjhm(),6,16));
 
-            creditReport.setBzkZhdPfmxmxb(bzkZhdPfmxmxb1);
+            creditReport.setBzkZhdPfmxmxb(bzkZhdPfmxmxbFirst);
         }
 
         if (bzkZhdZrjgmxbs!=null && bzkZhdZrjgmxbs.size()>0){
