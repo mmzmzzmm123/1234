@@ -86,10 +86,17 @@ public class ApiLoanReportController extends BaseController
                     continue;
                 }
                 Bdcq bdcq = new Bdcq();
-                bdcq.setBdcqzh(StrUtil.hide(item.getBdcqzh(),8,20));
                 bdcq.setBdccqzt(item.getBdccqzt());
                 bdcq.setBdcgyfs(item.getBdcgyfs());
                 bdcq.setBdcjzmj(item.getBdcjzmj());
+
+                // 由于治理的表结构存在多个产权证号，需要依次脱敏
+                String[] split = item.getBdcqzh().split(",");
+                for (int i=0;i<split.length;i++){
+                    split[i] = StrUtil.hide(split[i],8,20);
+                }
+                bdcq.setBdcqzh(StringUtils.join(split,","));
+
                 bdcq.setBdczl(StrUtil.hide(item.getBdczl(),10,40));
                 bdcqSet.add(bdcq);
             }
