@@ -10,9 +10,9 @@
     <modelVersion>4.0.0</modelVersion>
     <packaging>jar</packaging>
 <!--    内网接口服务名-->
-    <artifactId>zx-report</artifactId>
+<!--    <artifactId>zx-report</artifactId>-->
 <!--    外网应用服务名-->
-<!--    <artifactId>ruoyi-admin</artifactId>-->
+    <artifactId>ruoyi-admin</artifactId>
 
     <description>
         web服务入口

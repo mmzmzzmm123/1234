@@ -43,7 +43,8 @@ spring:
     # 国际化资源文件路径
     basename: i18n/messages
   profiles:
-    active: druid-in-dev
+#    active: druid-dev #开发环境
+    active: druid-prod #生产环境
   # 文件上传
   servlet:
      multipart:
