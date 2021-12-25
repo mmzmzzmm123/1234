@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.carpool.mapper.PMemberMapper">
+    
+    <resultMap type="PMember" id="PMemberResult">
+        <result property="id"    column="id"    />
+        <result property="custId"    column="cust_id"    />
+        <result property="custType"    column="cust_type"    />
+        <result property="openId"    column="open_id"    />
+        <result property="unionId"    column="union_id"    />
+        <result property="custName"    column="cust_name"    />
+        <result property="nickName"    column="nick_name"    />
+        <result property="custPhoneA"    column="cust_phone_a"    />
+        <result property="custPhoneB"    column="cust_phone_b"    />
+        <result property="sex"    column="sex"    />
+        <result property="birthday"    column="birthday"    />
+        <result property="city"    column="city"    />
+        <result property="province"    column="province"    />
+        <result property="country"    column="country"    />
+        <result property="headimgurl"    column="headimgurl"    />
+        <result property="idType"    column="id_type"    />
+        <result property="idNo"    column="id_no"    />
+        <result property="remark"    column="remark"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+    </resultMap>
+
+    <sql id="selectPMemberVo">
+        select id, cust_id, cust_type, open_id, union_id, cust_name, nick_name, cust_phone_a, cust_phone_b, sex, birthday, city, province, country, headimgurl, id_type, id_no, remark, create_by, create_time, update_by, update_time from p_member
+    </sql>
+
+    <select id="selectPMemberList" parameterType="PMember" resultMap="PMemberResult">
+        <include refid="selectPMemberVo"/>
+        <where>  
+            <if test="custId != null  and custId != ''"> and cust_id = #{custId}</if>
+            <if test="custType != null  and custType != ''"> and cust_type = #{custType}</if>
+            <if test="openId != null  and openId != ''"> and open_id = #{openId}</if>
+            <if test="unionId != null "> and union_id = #{unionId}</if>
+            <if test="custName != null  and custName != ''"> and cust_name like concat('%', #{custName}, '%')</if>
+            <if test="nickName != null  and nickName != ''"> and nick_name like concat('%', #{nickName}, '%')</if>
+            <if test="custPhoneA != null  and custPhoneA != ''"> and cust_phone_a = #{custPhoneA}</if>
+            <if test="custPhoneB != null  and custPhoneB != ''"> and cust_phone_b = #{custPhoneB}</if>
+            <if test="sex != null  and sex != ''"> and sex = #{sex}</if>
+            <if test="birthday != null "> and birthday = #{birthday}</if>
+            <if test="city != null  and city != ''"> and city = #{city}</if>
+            <if test="province != null  and province != ''"> and province = #{province}</if>
+            <if test="country != null  and country != ''"> and country = #{country}</if>
+            <if test="headimgurl != null  and headimgurl != ''"> and headimgurl = #{headimgurl}</if>
+            <if test="idType != null  and idType != ''"> and id_type = #{idType}</if>
+            <if test="idNo != null  and idNo != ''"> and id_no = #{idNo}</if>
+        </where>
+    </select>
+    
+    <select id="selectPMemberById" parameterType="Integer" resultMap="PMemberResult">
+        <include refid="selectPMemberVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertPMember" parameterType="PMember" useGeneratedKeys="true" keyProperty="id">
+        insert into p_member
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="custId != null">cust_id,</if>
+            <if test="custType != null">cust_type,</if>
+            <if test="openId != null">open_id,</if>
+            <if test="unionId != null">union_id,</if>
+            <if test="custName != null">cust_name,</if>
+            <if test="nickName != null">nick_name,</if>
+            <if test="custPhoneA != null">cust_phone_a,</if>
+            <if test="custPhoneB != null">cust_phone_b,</if>
+            <if test="sex != null">sex,</if>
+            <if test="birthday != null">birthday,</if>
+            <if test="city != null">city,</if>
+            <if test="province != null">province,</if>
+            <if test="country != null">country,</if>
+            <if test="headimgurl != null">headimgurl,</if>
+            <if test="idType != null">id_type,</if>
+            <if test="idNo != null">id_no,</if>
+            <if test="remark != null">remark,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="custId != null">#{custId},</if>
+            <if test="custType != null">#{custType},</if>
+            <if test="openId != null">#{openId},</if>
+            <if test="unionId != null">#{unionId},</if>
+            <if test="custName != null">#{custName},</if>
+            <if test="nickName != null">#{nickName},</if>
+            <if test="custPhoneA != null">#{custPhoneA},</if>
+            <if test="custPhoneB != null">#{custPhoneB},</if>
+            <if test="sex != null">#{sex},</if>
+            <if test="birthday != null">#{birthday},</if>
+            <if test="city != null">#{city},</if>
+            <if test="province != null">#{province},</if>
+            <if test="country != null">#{country},</if>
+            <if test="headimgurl != null">#{headimgurl},</if>
+            <if test="idType != null">#{idType},</if>
+            <if test="idNo != null">#{idNo},</if>
+            <if test="remark != null">#{remark},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updatePMember" parameterType="PMember">
+        update p_member
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="custId != null">cust_id = #{custId},</if>
+            <if test="custType != null">cust_type = #{custType},</if>
+            <if test="openId != null">open_id = #{openId},</if>
+            <if test="unionId != null">union_id = #{unionId},</if>
+            <if test="custName != null">cust_name = #{custName},</if>
+            <if test="nickName != null">nick_name = #{nickName},</if>
+            <if test="custPhoneA != null">cust_phone_a = #{custPhoneA},</if>
+            <if test="custPhoneB != null">cust_phone_b = #{custPhoneB},</if>
+            <if test="sex != null">sex = #{sex},</if>
+            <if test="birthday != null">birthday = #{birthday},</if>
+            <if test="city != null">city = #{city},</if>
+            <if test="province != null">province = #{province},</if>
+            <if test="country != null">country = #{country},</if>
+            <if test="headimgurl != null">headimgurl = #{headimgurl},</if>
+            <if test="idType != null">id_type = #{idType},</if>
+            <if test="idNo != null">id_no = #{idNo},</if>
+            <if test="remark != null">remark = #{remark},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deletePMemberById" parameterType="Integer">
+        delete from p_member where id = #{id}
+    </delete>
+
+    <delete id="deletePMemberByIds" parameterType="String">
+        delete from p_member where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

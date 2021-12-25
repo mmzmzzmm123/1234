@@ -50,6 +50,23 @@ public class SysLoginController
         return ajax;
     }
 
+
+    /**
+     * 微信小程序登录方法
+     * @return 结果
+     */
+    @PostMapping("/weixiMiniLogin")
+    public AjaxResult weixiMiniLogin()
+    {
+        AjaxResult ajax = AjaxResult.success();
+        // 微信小程序登入生成令牌
+        String username = "weixi_mini_admin" ;
+        String password = "qwerasdf123" ;
+        String token = loginService.login(username, password, "", "");
+        ajax.put(Constants.TOKEN, token);
+        return ajax;
+    }
+
     /**
      * 获取用户信息
      * 
