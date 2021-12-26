@@ -75,4 +75,12 @@ public interface PDriverMapper
      */
     public int agreePDriver(PDriver pDriver);
 
+    /**
+     * 修改司机信息
+     *
+     * @param pDriver 司机信息
+     * @return 结果
+     */
+    public PDriver getDriverInfoByOpenId(String openid);
+
 }

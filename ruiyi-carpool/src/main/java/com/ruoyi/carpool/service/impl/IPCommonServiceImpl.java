@@ -1,9 +1,6 @@
 package com.ruoyi.carpool.service.impl;
 
-import com.ruoyi.carpool.domain.CommonVO;
-import com.ruoyi.carpool.domain.PMember;
-import com.ruoyi.carpool.domain.POrder;
-import com.ruoyi.carpool.domain.PPassenger;
+import com.ruoyi.carpool.domain.*;
 import com.ruoyi.carpool.mapper.*;
 import com.ruoyi.carpool.service.IPCommonService;
 import com.ruoyi.common.core.domain.AjaxResult;
@@ -34,10 +31,10 @@ public class IPCommonServiceImpl implements IPCommonService {
     private POrderMapper pOrderMapper;
 
     @Autowired
-    private PMemberMapper pMemberMapper;
+    private PPassengerMapper pPassengerMapper;
 
     @Autowired
-    private PPassengerMapper pPassengerMapper;
+    private PDriverMapper pDriverMapper ;
 
 
     @Override
@@ -86,6 +83,12 @@ public class IPCommonServiceImpl implements IPCommonService {
         return AjaxResult.error();
     }
 
+    @Override
+    public AjaxResult finshOrder(CommonVO commonVO) {
+        String orderNum = commonVO.getOrderNum();
+        pCommonMapper.updateOrderStateFinsh(orderNum);
+        return AjaxResult.success();
+    }
 
     @Override
     public AjaxResult joinOrderList(CommonVO commonVO) {
@@ -119,7 +122,11 @@ public class IPCommonServiceImpl implements IPCommonService {
         if(StringUtils.isEmpty(openId)) return AjaxResult.error("请求参数错误,请检查入参是否有误！");
         PPassenger passemger = pPassengerMapper.selectPPassengerByOpenId(openId);
         if(passemger != null){
-            /*TODO 需要判断当前用户是否申请成为看司机 */
+            /*如果已经申请成为看司机则返回diverID*/
+            if("1".equals(passemger.getApplyState())){
+                PDriver driverInfoByOpenId = pDriverMapper.getDriverInfoByOpenId(openId);
+                passemger.setCustId(driverInfoByOpenId.getDriverId());
+            }
             return AjaxResult.success(passemger);
         }else {
             /*系统没有用户，初始化一个乘客信息*/

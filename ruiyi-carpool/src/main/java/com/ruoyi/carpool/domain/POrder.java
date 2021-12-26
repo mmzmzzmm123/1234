@@ -98,6 +98,11 @@ public class POrder extends BaseEntity
     @ApiModelProperty(value = "发起者手机号")
     private String createrPhone;
 
+    @Excel(name = "参与者openID")
+    @ApiModelProperty(value = "参与者openID")
+    private String memberOpenId;
+
+
 
     public void setId(Long id) 
     {
@@ -247,6 +252,14 @@ public class POrder extends BaseEntity
         this.createrOpenId = createrOpenId;
     }
 
+    public String getMemberOpenId() {
+        return memberOpenId;
+    }
+
+    public void setMemberOpenId(String memberOpenId) {
+        this.memberOpenId = memberOpenId;
+    }
+
     @Override
     public String toString() {
         return new ToStringBuilder(this,ToStringStyle.MULTI_LINE_STYLE)
@@ -269,6 +282,7 @@ public class POrder extends BaseEntity
             .append("createrName", getCreaterName())
             .append("CreaterPhone", getCreaterPhone())
             .append("createrOpenId", getCreaterOpenId())
+            .append("memberOpenId", getMemberOpenId())
             .toString();
     }
 }

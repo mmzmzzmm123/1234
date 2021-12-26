@@ -28,10 +28,23 @@ public class PCommonController {
      * @return
      */
     @PostMapping(value = "/cancelOrder")
-    public AjaxResult getDriverInfo(@RequestBody CommonVO commonVO)
+    public AjaxResult cancelOrder(@RequestBody CommonVO commonVO)
     {
         return pCommonService.cancelOrder(commonVO);
     }
+
+
+    /**
+     * 乘客或者司机关闭订单
+     * @param commonVO
+     * @return
+     */
+    @PostMapping(value = "/finishOrder")
+    public AjaxResult finishOrder(@RequestBody CommonVO commonVO)
+    {
+        return pCommonService.cancelOrder(commonVO);
+    }
+
 
 
 

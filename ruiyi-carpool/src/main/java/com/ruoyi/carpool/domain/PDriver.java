@@ -66,6 +66,10 @@ public class PDriver extends BaseEntity
     @Excel(name = "用户当前的状态：0：审核中，1：审核通过，2：禁用")
     private Integer state ;
 
+    /** 当前状态 */
+    @Excel(name = "微信openId")
+    private String openId ;
+
     public void setId(Long id) 
     {
         this.id = id;
@@ -182,6 +186,14 @@ public class PDriver extends BaseEntity
         this.numberPlate = numberPlate;
     }
 
+    public String getOpenId() {
+        return openId;
+    }
+
+    public void setOpenId(String openId) {
+        this.openId = openId;
+    }
+
     @Override
     public String toString() {
         return new ToStringBuilder(this,ToStringStyle.MULTI_LINE_STYLE)
@@ -200,6 +212,7 @@ public class PDriver extends BaseEntity
             .append("updateTime", getUpdateTime())
             .append("state", getState())
             .append("numberPlate", getNumberPlate())
+            .append("OpenId", getOpenId())
             .toString();
     }
 }

@@ -53,6 +53,45 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <if test="createrPhone != null  and createrPhone != ''"> and A.creater_phone = #{createrPhone}</if>
         <if test="createrName != null  and createrName != ''"> and A.creater_name = #{createrName}</if>
     </select>
+
+
+
+    <select id="selectPOrderListContentMember" parameterType="POrder" resultMap="POrderResult">
+        SELECT A.* , B.open_id memberOpenId, C.NAME AS driver_name
+        FROM p_order A
+        LEFT JOIN p_order_member B ON A.order_num = B.order_num
+        LEFT JOIN p_driver C ON A.driver_id = C.driver_id
+        where 1=1
+        <if test="orderNum != null  and orderNum != ''"> and A.order_num = #{orderNum}</if>
+        <if test="departure != null  and departure != ''"> and A.departure = #{departure}</if>
+        <if test="destination != null  and destination != ''"> and A.destination = #{destination}</if>
+        <if test="departureTime != null "> and A.departure_time = #{departureTime}</if>
+        <if test="member != null "> and <![CDATA[ A.member <=  #{member} ]]> </if>
+        <if test="state != null "> and A.state = #{state}</if>
+        <if test="isdelete != null "> and A.isDelete = #{isdelete}</if>
+        <if test="isTake != null "> and A.is_take = #{isTake}</if>
+        <if test="driverName != null "> and  C.name = #{driverName}</if>
+        <if test="memberOpenId != null and memberOpenId != '' "> and  B.open_id = #{memberOpenId}</if>
+        <if test="createUser != null  and createUser != ''"> and A.create_user = #{createUser}</if>
+        <if test="updateUser != null  and updateUser != ''"> and A.update_user = #{updateUser}</if>
+        <if test="driverOpenId != null  and driverOpenId != ''"> and A.driver_open_id = #{driverOpenId}</if>
+        <if test="createrOpenId != null  and createrOpenId != ''"> and A.creater_openid = #{createrOpenId}</if>
+        <if test="createrPhone != null  and createrPhone != ''"> and A.creater_phone = #{createrPhone}</if>
+        <if test="createrName != null  and createrName != ''"> and A.creater_name = #{createrName}</if>
+    </select>
+
+
+
+
+
+    SELECT A.* , B.open_id memberOpenId, C.NAME AS driver_name  FROM p_order A
+    LEFT JOIN p_order_member B ON A.order_num = B.order_num
+    LEFT JOIN p_driver C ON A.driver_id = C.driver_id
+
+
+
+
+
     
     <select id="selectPOrderById" parameterType="Long" resultMap="POrderResult">
         <include refid="selectPOrderVo"/>
@@ -132,6 +171,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <trim prefix="SET" suffixOverrides=",">
             <if test="isTake != null">is_take = #{isTake},</if>
             <if test="driverId != null">driver_id = #{driverId},</if>
+            <if test="driverOpenId != null and  driverOpenId != '' ">driver_open_id = #{driverOpenId},</if>
         </trim>
         where order_num = #{orderNum}
     </update>

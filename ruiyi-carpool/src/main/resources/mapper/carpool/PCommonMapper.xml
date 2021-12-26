@@ -28,6 +28,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         UPDATE p_order SET state = '2' WHERE order_num = #{orderNum}
     </update>
 
+    <update id="updateOrderStateFinsh" parameterType="String" >
+        UPDATE p_order SET state = '1' WHERE order_num = #{orderNum}
+    </update>
+
     <update id="updateOrderIsTake" parameterType="String" >
         UPDATE p_order SET is_take = '0' , driver_id = '' WHERE order_num = #{orderNum}
     </update>

@@ -47,6 +47,15 @@ public interface PCommonMapper {
      */
     public int updateOrderState(String orderNum);
 
+
+    /**
+     * 完成订单-取消拼单
+     * @param orderNum
+     * @return
+     */
+    public int updateOrderStateFinsh(String orderNum);
+
+
     /**
      * 司机取消订单-取消拼单
      * @param orderNum

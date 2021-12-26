@@ -20,10 +20,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="isBlacklist"    column="is_blacklist"    />
         <result property="createTime"    column="create_time"    />
         <result property="updateTime"    column="update_time"    />
+        <result property="openId"    column="open_id"    />
     </resultMap>
 
     <sql id="selectPDriverVo">
-        select id, driver_id, name, sex, id_card, age, phone,number_plate,city,state, province, country, is_blacklist, create_time, update_time from p_driver
+        select id, driver_id, name, sex, id_card, age, phone,number_plate,city,state,open_id,province, country, is_blacklist, create_time, update_time from p_driver
     </sql>
 
     <select id="selectPDriverList" parameterType="PDriver" resultMap="PDriverResult">
@@ -67,6 +68,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="isBlacklist != null">is_blacklist,</if>
             <if test="createTime != null">create_time,</if>
             <if test="updateTime != null">update_time,</if>
+            <if test="openId != null and openId != '' ">open_id,</if>
          </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="id != null">#{id},</if>
@@ -84,6 +86,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="isBlacklist != null">#{isBlacklist},</if>
             <if test="createTime != null">#{createTime},</if>
             <if test="updateTime != null">#{updateTime},</if>
+            <if test="openId != null and openId != '' ">#{openId},</if>
          </trim>
     </insert>
 
@@ -135,6 +138,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="province != null  and province != ''"> and province = #{province}</if>
             <if test="country != null  and country != ''"> and country = #{country}</if>
             <if test="isBlacklist != null "> and is_blacklist = #{isBlacklist}</if>
+            <if test="openId != null  and openId != '' "> and open_id = #{openId}</if>
         </where>
     </select>
 
@@ -144,5 +148,12 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <update id="agreePDriver" parameterType="PDriver">
         update p_driver SET state = 1 where driver_id = #{driverId}
     </update>
+
+
+    <select id="getDriverInfoByOpenId" parameterType="String" resultMap="PDriverResult">
+        <include refid="selectPDriverVo"/>
+        where open_id = #{openId}
+    </select>
+
 
 </mapper>

@@ -1,5 +1,6 @@
 package com.ruoyi.carpool.service.impl;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.ruoyi.carpool.domain.PPassenger;
@@ -49,7 +50,13 @@ public class POrderServiceImpl implements IPOrderService
     @Override
     public List<POrder> selectPOrderList(POrder pOrder)
     {
-        return pOrderMapper.selectPOrderList(pOrder);
+        List<POrder> pOrders = new ArrayList<>();
+        if(StringUtils.isNotEmpty(pOrder.getMemberOpenId())){
+            pOrders = pOrderMapper.selectPOrderListContentMember(pOrder);
+        }else {
+            pOrderMapper.selectPOrderList(pOrder);
+        }
+        return pOrders;
     }
 
 

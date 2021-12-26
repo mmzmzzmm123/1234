@@ -28,6 +28,14 @@ public interface POrderMapper
     public List<POrder> selectPOrderList(POrder pOrder);
 
     /**
+     * 查询订单信息列表
+     *
+     * @param pOrder 订单信息
+     * @return 订单信息集合
+     */
+    public List<POrder> selectPOrderListContentMember(POrder pOrder);
+
+    /**
      * 新增订单信息
      * 
      * @param pOrder 订单信息

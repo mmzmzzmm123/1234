@@ -16,6 +16,13 @@ public interface IPCommonService {
 
 
     /**
+     * 完成订单
+     * @param commonVO
+     * @return
+     */
+    public AjaxResult finshOrder(CommonVO commonVO);
+
+    /**
      * 审查拼单
      * @param commonVO
      * @return
