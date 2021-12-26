@@ -50,7 +50,7 @@ public class PAddressController extends BaseController
      * 查询地址详情列表
      */
     @PreAuthorize("@ss.hasPermi('address:address:list')")
-    @GetMapping("/queryALl")
+    @PostMapping("/queryALl")
     public AjaxResult queryALl(PAddress pAddress)
     {
         List<PAddress> list = pAddressService.selectPAddressList(pAddress);
