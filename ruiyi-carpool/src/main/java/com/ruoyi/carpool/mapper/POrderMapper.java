@@ -82,5 +82,22 @@ public interface POrderMapper
      */
     public int updateOrderMemberNum(POrder pOrder);
 
+    /**
+     * 通过openID查询订单信息
+     * @param openId
+     * @return
+     */
+    public List<POrder> queryOrderInfoByOpenId(String openId);
+
+    /**
+     * 通过openID查询订单信息
+     * @param openId
+     * @return
+     */
+    public List<POrder> queryOrderInfoByOpenIdAndState(String openId);
+
+
+
+
 
 }

@@ -2,6 +2,8 @@ package com.ruoyi.carpool.domain;
 
 import java.util.Date;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import com.ruoyi.common.annotation.Excel;
@@ -14,113 +16,136 @@ import org.omg.CORBA.INTERNAL;
  * @author ruoyi
  * @date 2021-12-03
  */
+@ApiModel(value ="PPassenger" ,description = "乘客信息入参")
 public class PPassenger extends BaseEntity
 {
     private static final long serialVersionUID = 1L;
 
     /** autoID */
+    @ApiModelProperty(value = "自增id")
     private Long id;
 
     /** 用户平台唯一ID */
     @Excel(name = "用户平台唯一ID")
+    @ApiModelProperty(value = "用户平台唯一ID")
     private String custId;
 
     /** 用户名 */
     @Excel(name = "用户名")
+    @ApiModelProperty(value = "用户名")
     private String custName;
 
     /** 微信昵称 */
     @Excel(name = "微信昵称")
+    @ApiModelProperty(value = "微信昵称")
     private String nickName;
+
+    /** 用户头像 */
+    @Excel(name = "用户头像")
+    @ApiModelProperty(value = "用户头像")
+    private String headImgUrl;
 
     /** 微信用户唯一标识 */
     @Excel(name = "微信用户唯一标识")
+    @ApiModelProperty(value = "微信用户唯一标识openId")
     private String openId;
 
     /** 用户手机号码 */
     @Excel(name = "用户手机号码")
+    @ApiModelProperty(value = "用户手机号码")
     private String custPhone;
 
     /** 性别：1男性，0女性 */
     @Excel(name = "性别：1男性，0女性")
+    @ApiModelProperty(value = "性别：1男性，0女性")
     private String sex;
 
     /** 身份证号码 */
     @Excel(name = "身份证号码")
+    @ApiModelProperty(value = "身份证号码")
     private String idCard;
 
     /** 生日 */
     @JsonFormat(pattern = "yyyy-MM-dd")
     @Excel(name = "生日", width = 30, dateFormat = "yyyy-MM-dd")
+    @ApiModelProperty(value = "生日")
     private Date birthday;
 
     /** 所在城市 */
     @Excel(name = "所在城市")
+    @ApiModelProperty(value = "所在城市")
     private String city;
 
     /** 年龄 */
     @Excel(name = "年龄")
+    @ApiModelProperty(value = "年龄")
     private Integer age;
 
     /** 所在省份 */
     @Excel(name = "所在省份")
+    @ApiModelProperty(value = "所在省份")
     private String province;
 
     /** 是否黑名单用户：0否，1是s */
     @Excel(name = "是否黑名单用户：0否，1是s")
+    @ApiModelProperty(value = "是否黑名单用户：0否，1是")
     private String isBlacklist;
 
-    public void setId(Long id) 
+    @Excel(name = "当前的身份")
+    @ApiModelProperty(value = "当前的身份：0乘客 1司机")
+    private String applyState;
+
+    public void setId(Long id)
     {
         this.id = id;
     }
 
-    public Long getId() 
+    public Long getId()
     {
         return id;
     }
-    public void setCustId(String custId) 
+    public void setCustId(String custId)
     {
         this.custId = custId;
     }
 
-    public String getCustId() 
+    public String getCustId()
     {
         return custId;
     }
-    public void setCustName(String custName) 
+    public void setCustName(String custName)
     {
         this.custName = custName;
     }
 
-    public String getCustName() 
+    public String getCustName()
     {
         return custName;
     }
-    public void setNickName(String nickName) 
+    public void setNickName(String nickName)
     {
         this.nickName = nickName;
     }
 
-    public String getNickName() 
+    public String getNickName()
     {
         return nickName;
     }
-    public void setOpenId(String openId) 
+    public void setOpenId(String openId)
     {
         this.openId = openId;
     }
 
-    public String getOpenId() 
+    public String getOpenId()
     {
         return openId;
     }
-    public void setCustPhone(String custPhone) 
+    public void setCustPhone(String custPhone)
     {
         this.custPhone = custPhone;
     }
 
-    public String getCustPhone() 
+    public String getCustPhone()
     {
         return custPhone;
     }
@@ -133,30 +158,30 @@ public class PPassenger extends BaseEntity
     {
         return sex;
     }
-    public void setBirthday(Date birthday) 
+    public void setBirthday(Date birthday)
     {
         this.birthday = birthday;
     }
 
-    public Date getBirthday() 
+    public Date getBirthday()
     {
         return birthday;
     }
-    public void setCity(String city) 
+    public void setCity(String city)
     {
         this.city = city;
     }
 
-    public String getCity() 
+    public String getCity()
     {
         return city;
     }
-    public void setProvince(String province) 
+    public void setProvince(String province)
     {
         this.province = province;
     }
 
-    public String getProvince() 
+    public String getProvince()
     {
         return province;
     }
@@ -186,6 +211,22 @@ public class PPassenger extends BaseEntity
         this.idCard = idCard;
     }
 
+    public String getHeadImgUrl() {
+        return headImgUrl;
+    }
+
+    public void setHeadImgUrl(String headImgUrl) {
+        this.headImgUrl = headImgUrl;
+    }
+
+    public String getApplyState() {
+        return applyState;
+    }
+
+    public void setApplyState(String applyState) {
+        this.applyState = applyState;
+    }
+
     @Override
     public String toString() {
         return new ToStringBuilder(this,ToStringStyle.MULTI_LINE_STYLE)
@@ -204,6 +245,8 @@ public class PPassenger extends BaseEntity
             .append("updateTime", getUpdateTime())
             .append("age", getAge())
             .append("idCard", getIdCard())
+            .append("HeadImgUrl", getHeadImgUrl())
+            .append("applyState", getApplyState())
             .toString();
     }
 }

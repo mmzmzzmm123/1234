@@ -4,16 +4,12 @@ import java.util.List;
 import javax.servlet.http.HttpServletResponse;
 
 import com.ruoyi.common.utils.DateUtils;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import com.ruoyi.common.annotation.Log;
 import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.domain.AjaxResult;
@@ -31,6 +27,7 @@ import com.ruoyi.common.core.page.TableDataInfo;
  */
 @RestController
 @RequestMapping("/carpool/order")
+@Api(value = "小程序拼单-公共模块", tags = "订单模块")
 public class POrderController extends BaseController
 {
     @Autowired
@@ -47,6 +44,21 @@ public class POrderController extends BaseController
         List<POrder> list = pOrderService.selectPOrderList(pOrder);
         return getDataTable(list);
     }
+
+    /**
+     * 通过openID查询订单信息列表
+     */
+    @PreAuthorize("@ss.hasPermi('carpool:order:list')")
+    @GetMapping("/queryOrderInfo")
+    @ApiOperation(value = "carpool_04_通过openID查询当前用户的所有订单", notes = "通过openID查询当前用户的所有订单,不传则获取全都。返回参数参照 POrder 模块")
+    public TableDataInfo queryOrderInfoByOpenId(@ApiParam(name = "openId必传", required = false ) @RequestParam(value = "openId" , required = false) String  openId)
+    {
+        startPage();
+        List<POrder> list = pOrderService.queryOrderInfoByOpenId(openId);
+        return getDataTable(list);
+    }
+
+
 
     /**
      * 导出订单信息列表
@@ -77,9 +89,10 @@ public class POrderController extends BaseController
     @PreAuthorize("@ss.hasPermi('carpool:order:add')")
     @Log(title = "订单信息", businessType = BusinessType.INSERT)
     @PostMapping
+    @ApiOperation(value = "carpool_03_创建订单（发起拼单的接口）", notes = "发起拼单的接口")
     public AjaxResult add(@RequestBody POrder pOrder)
     {
-        return toAjax(pOrderService.insertPOrder(pOrder));
+        return pOrderService.insertPOrderWx(pOrder);
     }
     /**
      * 司机接单

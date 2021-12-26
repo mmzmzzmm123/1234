@@ -1,14 +1,16 @@
 package com.ruoyi.carpool.service.impl;
 
 import com.ruoyi.carpool.domain.CommonVO;
+import com.ruoyi.carpool.domain.PMember;
 import com.ruoyi.carpool.domain.POrder;
-import com.ruoyi.carpool.mapper.PCommonMapper;
-import com.ruoyi.carpool.mapper.PDriverMapper;
-import com.ruoyi.carpool.mapper.POrderMapper;
+import com.ruoyi.carpool.domain.PPassenger;
+import com.ruoyi.carpool.mapper.*;
 import com.ruoyi.carpool.service.IPCommonService;
 import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.utils.DateUtils;
 import com.ruoyi.common.utils.StringUtils;
+import com.ruoyi.common.utils.uuid.IdUtils;
+import com.ruoyi.common.utils.uuid.UUID;
 import jdk.nashorn.api.scripting.AbstractJSObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,6 +32,12 @@ public class IPCommonServiceImpl implements IPCommonService {
 
     @Autowired
     private POrderMapper pOrderMapper;
+
+    @Autowired
+    private PMemberMapper pMemberMapper;
+
+    @Autowired
+    private PPassengerMapper pPassengerMapper;
 
 
     @Override
@@ -96,9 +104,34 @@ public class IPCommonServiceImpl implements IPCommonService {
         data.put("orderNum",orderNum);
         data.put("custId" ,userId);
         data.put("num" ,num);
+        data.put("cust_name" ,commonVO.getName());
+        data.put("open_id" ,commonVO.getOpenId());
+        data.put("cust_phone" ,commonVO.getPhone());
         data.put("state" ,0);
         data.put("createTime" , DateUtils.dateTimeNow());
         pCommonMapper.insertOrderMemberInfo(data);
         return AjaxResult.success();
+    }
+
+    @Override
+    public AjaxResult initMember(PPassenger pPassenger) {
+        String openId = pPassenger.getOpenId();
+        if(StringUtils.isEmpty(openId)) return AjaxResult.error("请求参数错误！");
+        PPassenger passemger = pPassengerMapper.selectPPassengerByOpenId(openId);
+        if(passemger != null){
+            /*TODO 需要判断当前用户是否申请成为看司机 */
+            return AjaxResult.success(passemger);
+        }else {
+            /*系统没有用户，初始化一个乘客信息*/
+            pPassenger.setIsBlacklist("0");
+            if(StringUtils.isEmpty(pPassenger.getCustName())) pPassenger.setCustName(pPassenger.getNickName());/*用户名为空取昵称*/
+            if(StringUtils.isEmpty(pPassenger.getSex())) pPassenger.setSex("2");/*性别设置为未知*/
+            pPassenger.setCreateBy("weixi_mini_admin");
+            pPassenger.setCreateTime(DateUtils.getNowDate());
+            pPassenger.setCustId("wxmini"+IdUtils.simpleUUID());
+            pPassenger.setApplyState("0");/*默认是乘客*/
+            pPassengerMapper.insertPPassenger(pPassenger);
+        }
+        return AjaxResult.success(pPassenger);
     }
 }

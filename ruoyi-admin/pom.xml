@@ -37,6 +37,14 @@
             <version>1.6.2</version>
         </dependency>
 
+        <!-- swagger2-UI-->
+        <dependency>
+            <groupId>com.github.xiaoymin</groupId>
+            <artifactId>swagger-bootstrap-ui</artifactId>
+            <version>1.9.6</version>
+        </dependency>
+
+
          <!-- Mysql驱动包 -->
         <dependency>
             <groupId>mysql</groupId>
@@ -61,6 +69,7 @@
             <artifactId>ruoyi-generator</artifactId>
         </dependency>
 
+        <!--添加小程序模块的依赖-->
         <dependency>
             <groupId>com.ruoyi</groupId>
             <artifactId>ruiyi-carpool</artifactId>

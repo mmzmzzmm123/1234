@@ -93,4 +93,10 @@ public class PMemberServiceImpl implements IPMemberService
     {
         return pMemberMapper.deletePMemberById(id);
     }
+
+    @Override
+    public PMember selectPMemberByOpenId(String OpenId)
+    {
+        return pMemberMapper.selectPMemberByOpenId(OpenId);
+    }
 }

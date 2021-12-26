@@ -2,11 +2,12 @@ package com.ruoyi.web.controller.system;
 
 import java.util.List;
 import java.util.Set;
+
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.context.annotation.Description;
+import org.springframework.web.bind.annotation.*;
 import com.ruoyi.common.constant.Constants;
 import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.core.domain.entity.SysMenu;
@@ -56,7 +57,10 @@ public class SysLoginController
      * @return 结果
      */
     @PostMapping("/weixiMiniLogin")
-    public AjaxResult weixiMiniLogin()
+    @ApiOperation(value = "carpool_01_微信小程序获取后台系统token", notes = "获取小程序accessToken")
+    public AjaxResult weixiMiniLogin(
+            @ApiParam( name = "openId",value = "微信openId",required = false)  @RequestParam(value = "openId" ,required = false) String openId
+    )
     {
         AjaxResult ajax = AjaxResult.success();
         // 微信小程序登入生成令牌

@@ -10,6 +10,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="custName"    column="cust_name"    />
         <result property="nickName"    column="nick_name"    />
         <result property="openId"    column="open_id"    />
+        <result property="headImgUrl"    column="head_img_url"    />
+        <result property="applyState"    column="apply_state"    />
         <result property="custPhone"    column="cust_phone"    />
         <result property="sex"    column="sex"    />
         <result property="idCard"    column="id_card"    />
@@ -23,7 +25,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </resultMap>
 
     <sql id="selectPPassengerVo">
-        select id, cust_id, cust_name, nick_name, open_id, cust_phone, sex, id_card, birthday, city, province, is_blacklist, create_time, update_time from p_passenger
+        select id, cust_id, cust_name, nick_name, open_id,head_img_url,apply_state, cust_phone, sex, id_card, birthday, city, province, is_blacklist, create_time, update_time from p_passenger
     </sql>
 
     <select id="selectPPassengerList" parameterType="PPassenger" resultMap="PPassengerResult">
@@ -56,6 +58,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="custName != null">cust_name,</if>
             <if test="nickName != null">nick_name,</if>
             <if test="openId != null">open_id,</if>
+            <if test="headImgUrl != null">head_img_url,</if>
             <if test="custPhone != null">cust_phone,</if>
             <if test="sex != null">sex,</if>
             <if test="idCard != null "> and id_card = #{idCard}</if>
@@ -72,6 +75,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="custName != null">#{custName},</if>
             <if test="nickName != null">#{nickName},</if>
             <if test="openId != null">#{openId},</if>
+            <if test="headImgUrl != null">#{headImgUrl},</if>
             <if test="custPhone != null">#{custPhone},</if>
             <if test="sex != null">#{sex},</if>
             <if test="idCard != null "> and id_card = #{idCard}</if>
@@ -133,4 +137,12 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="isBlacklist != null "> and is_blacklist = #{isBlacklist}</if>
         </where>
     </select>
+
+    <select id="selectPPassengerByOpenId" parameterType="String" resultMap="PPassengerResult">
+        <include refid="selectPPassengerVo"/>
+        where  open_id = #{openId}
+    </select>
+
+
+
 </mapper>

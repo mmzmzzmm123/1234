@@ -58,4 +58,13 @@ public interface PMemberMapper
      * @return 结果
      */
     public int deletePMemberByIds(Integer[] ids);
+
+    /**
+     * 查询微信注册用户信息
+     *
+     * @param OpenId 微信注册用户信息主键
+     * @return 微信注册用户信息
+     */
+    public PMember selectPMemberByOpenId(String OpenId);
+
 }

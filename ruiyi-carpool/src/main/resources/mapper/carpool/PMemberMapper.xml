@@ -148,4 +148,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             #{id}
         </foreach>
     </delete>
+
+    <select id="selectPMemberByOpenId" parameterType="String" resultMap="PMemberResult">
+        <include refid="selectPMemberVo"/>
+        where open_id = #{OpenId}
+    </select>
 </mapper>

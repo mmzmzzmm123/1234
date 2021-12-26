@@ -90,7 +90,6 @@ public class SysLoginService
         // 生成token
         return tokenService.createToken(loginUser);
     }
-
     /**
      * 校验验证码
      * 

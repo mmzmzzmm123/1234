@@ -58,4 +58,12 @@ public interface IPMemberService
      * @return 结果
      */
     public int deletePMemberById(Integer id);
+
+
+    /**
+     * 通过OpenId查询用户的信息
+     * @param OpenId
+     * @return
+     */
+    public PMember selectPMemberByOpenId(String OpenId);
 }

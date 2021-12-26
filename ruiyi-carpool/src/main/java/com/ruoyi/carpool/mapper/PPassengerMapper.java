@@ -2,6 +2,7 @@ package com.ruoyi.carpool.mapper;
 
 import java.util.List;
 import com.ruoyi.carpool.domain.PPassenger;
+import org.springframework.security.core.parameters.P;
 
 /**
  * 乘客信息Mapper接口
@@ -65,4 +66,11 @@ public interface PPassengerMapper
      * @return
      */
     public PPassenger queryUserInfo(PPassenger pPassenger);
+
+    /**
+     * 通过openId查询乘客的信息
+     * @param openId
+     * @return
+     */
+    public PPassenger selectPPassengerByOpenId(String openId);
 }

@@ -41,6 +41,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="num != null">num,</if>
             <if test="state != null">state,</if>
             <if test="createTime != null">create_time,</if>
+            <if test="cust_name != null">cust_name,</if>
+            <if test="cust_phone != null">cust_phone,</if>
+            <if test="open_id != null">open_id,</if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="orderNum != null">#{orderNum},</if>
@@ -48,6 +51,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="num != null">#{num},</if>
             <if test="state != null">#{state},</if>
             <if test="createTime != null">#{createTime},</if>
+            <if test="cust_name != null">#{cust_name},</if>
+            <if test="cust_phone != null">#{cust_phone},</if>
+            <if test="open_id != null">#{open_id},</if>
         </trim>
     </insert>
 
