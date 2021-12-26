@@ -68,6 +68,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="isBlacklist != null">is_blacklist,</if>
             <if test="createTime != null">create_time,</if>
             <if test="updateTime != null">update_time,</if>
+            <if test="applyState != null">apply_state,</if>
          </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="id != null">#{id},</if>
@@ -85,6 +86,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="isBlacklist != null">#{isBlacklist},</if>
             <if test="createTime != null">#{createTime},</if>
             <if test="updateTime != null">#{updateTime},</if>
+            <if test="applyState != null">#{applyState},</if>
          </trim>
     </insert>
 

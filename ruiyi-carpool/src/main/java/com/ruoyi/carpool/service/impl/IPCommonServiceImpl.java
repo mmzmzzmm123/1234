@@ -116,7 +116,7 @@ public class IPCommonServiceImpl implements IPCommonService {
     @Override
     public AjaxResult initMember(PPassenger pPassenger) {
         String openId = pPassenger.getOpenId();
-        if(StringUtils.isEmpty(openId)) return AjaxResult.error("请求参数错误！");
+        if(StringUtils.isEmpty(openId)) return AjaxResult.error("请求参数错误,请检查入参是否有误！");
         PPassenger passemger = pPassengerMapper.selectPPassengerByOpenId(openId);
         if(passemger != null){
             /*TODO 需要判断当前用户是否申请成为看司机 */
