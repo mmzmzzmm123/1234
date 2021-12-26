@@ -54,7 +54,7 @@ public class POrderServiceImpl implements IPOrderService
         if(StringUtils.isNotEmpty(pOrder.getMemberOpenId())){
             pOrders = pOrderMapper.selectPOrderListContentMember(pOrder);
         }else {
-            pOrderMapper.selectPOrderList(pOrder);
+            pOrders = pOrderMapper.selectPOrderList(pOrder);
         }
         return pOrders;
     }
