@@ -80,19 +80,6 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <if test="createrName != null  and createrName != ''"> and A.creater_name = #{createrName}</if>
     </select>
 
-
-
-
-
-    SELECT A.* , B.open_id memberOpenId, C.NAME AS driver_name  FROM p_order A
-    LEFT JOIN p_order_member B ON A.order_num = B.order_num
-    LEFT JOIN p_driver C ON A.driver_id = C.driver_id
-
-
-
-
-
-    
     <select id="selectPOrderById" parameterType="Long" resultMap="POrderResult">
         <include refid="selectPOrderVo"/>
         where id = #{id}
@@ -164,7 +151,6 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             #{id}
         </foreach>
     </delete>
-
 
     <update id="takeOrderById" parameterType="POrder">
         update p_order

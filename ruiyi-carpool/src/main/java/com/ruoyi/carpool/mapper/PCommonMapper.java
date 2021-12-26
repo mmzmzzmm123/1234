@@ -66,7 +66,7 @@ public interface PCommonMapper {
 
     /**
      * 添加一条拼单记录
-     * @param orderNum
+     * @param
      * @return
      */
     public int insertOrderMemberInfo(Map<String,Object> orderMember);

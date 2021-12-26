@@ -81,6 +81,6 @@ public interface PDriverMapper
      * @param pDriver 司机信息
      * @return 结果
      */
-    public PDriver getDriverInfoByOpenId(String openid);
+    public PDriver getDriverInfoByOpenId(String openId);
 
 }
