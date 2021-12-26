@@ -45,7 +45,7 @@ public class PMember extends BaseEntity
     /** 微信unionId */
     @Excel(name = "微信unionId")
     @ApiModelProperty(value = "微信unionId")
-    private Long unionId;
+    private String unionId;
 
     /** 姓名 */
     @Excel(name = "姓名")
@@ -151,12 +151,12 @@ public class PMember extends BaseEntity
     {
         return openId;
     }
-    public void setUnionId(Long unionId) 
+    public void setUnionId(String unionId)
     {
         this.unionId = unionId;
     }
 
-    public Long getUnionId() 
+    public String getUnionId()
     {
         return unionId;
     }
