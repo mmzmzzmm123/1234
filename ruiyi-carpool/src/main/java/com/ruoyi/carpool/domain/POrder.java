@@ -1,6 +1,8 @@
 package com.ruoyi.carpool.domain;
 
 import java.util.Date;
+import java.util.List;
+
 import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -103,6 +105,10 @@ public class POrder extends BaseEntity
     private String memberOpenId;
 
 
+    /**
+     * 订单成员信息
+     */
+    private List<POrderMember> orderMemberList;
 
     public void setId(Long id) 
     {
@@ -258,6 +264,14 @@ public class POrder extends BaseEntity
 
     public void setMemberOpenId(String memberOpenId) {
         this.memberOpenId = memberOpenId;
+    }
+
+    public List<POrderMember> getOrderMemberList() {
+        return orderMemberList;
+    }
+
+    public void setOrderMemberList(List<POrderMember> orderMemberList) {
+        this.orderMemberList = orderMemberList;
     }
 
     @Override

@@ -3,6 +3,7 @@ package com.ruoyi.carpool.service.impl;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.ruoyi.carpool.domain.POrderMember;
 import com.ruoyi.carpool.domain.PPassenger;
 import com.ruoyi.carpool.mapper.PPassengerMapper;
 import com.ruoyi.common.core.domain.AjaxResult;
@@ -55,6 +56,11 @@ public class POrderServiceImpl implements IPOrderService
             pOrders = pOrderMapper.selectPOrderListContentMember(pOrder);
         }else {
             pOrders = pOrderMapper.selectPOrderList(pOrder);
+        }
+        /*查询成员信息*/
+        for (POrder order : pOrders) {
+            List<POrderMember> pOrderMembers = pOrderMapper.queryOrderMenberListByOrderNum(order.getOrderNum());
+            order.setOrderMemberList(pOrderMembers);
         }
         return pOrders;
     }

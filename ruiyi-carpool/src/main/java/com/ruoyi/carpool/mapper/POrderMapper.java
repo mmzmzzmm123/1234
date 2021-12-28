@@ -2,6 +2,7 @@ package com.ruoyi.carpool.mapper;
 
 import java.util.List;
 import com.ruoyi.carpool.domain.POrder;
+import com.ruoyi.carpool.domain.POrderMember;
 
 /**
  * 订单信息Mapper接口
@@ -105,6 +106,7 @@ public interface POrderMapper
     public List<POrder> queryOrderInfoByOpenIdAndState(String openId);
 
 
+    public List<POrderMember> queryOrderMenberListByOrderNum(String orderNum);
 
 
 

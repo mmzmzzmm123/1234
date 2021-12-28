@@ -35,7 +35,7 @@ public class PCommonController {
 
 
     /**
-     * 乘客或者司机关闭订单
+     * 乘客或者司机完成订单
      * @param commonVO
      * @return
      */

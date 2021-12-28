@@ -7,8 +7,6 @@ import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.utils.DateUtils;
 import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.common.utils.uuid.IdUtils;
-import com.ruoyi.common.utils.uuid.UUID;
-import jdk.nashorn.api.scripting.AbstractJSObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -80,7 +78,7 @@ public class IPCommonServiceImpl implements IPCommonService {
                 return AjaxResult.success();
             }
         }
-        return AjaxResult.error();
+        return AjaxResult.error(200 , "请求参数有误");
     }
 
     @Override
@@ -135,7 +133,7 @@ public class IPCommonServiceImpl implements IPCommonService {
             if(StringUtils.isEmpty(pPassenger.getSex())) pPassenger.setSex("2");/*性别设置为未知*/
             pPassenger.setCreateBy("weixi_mini_admin");
             pPassenger.setCreateTime(DateUtils.getNowDate());
-            pPassenger.setCustId("wxmini"+IdUtils.simpleUUID());
+            pPassenger.setCustId("wxmini_passenger_"+IdUtils.simpleUUID());
             pPassenger.setApplyState("0");/*默认是乘客*/
             pPassengerMapper.insertPPassenger(pPassenger);
         }

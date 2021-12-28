@@ -26,6 +26,17 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="driverOpenId"    column="driver_open_id"    />
     </resultMap>
 
+    <resultMap type="com.ruoyi.carpool.domain.POrderMember" id="POrderMemberResult">
+        <result property="id"    column="id"    />
+        <result property="openId"    column="open_id"    />
+        <result property="custName"    column="cust_name"    />
+        <result property="custPhone"    column="cust_phone"    />
+        <result property="custId"    column="cust_id"    />
+        <result property="num"    column="num"    />
+        <result property="index"    column="index"    />
+        <result property="state"    column="state"    />
+    </resultMap>
+
     <sql id="selectPOrderVo">
         select
         id, order_num, departure, destination, departure_time, member, state,creater_name,creater_phone,creater_openid
@@ -185,5 +196,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </select>
 
 
+
+    <select id="queryOrderMenberListByOrderNum" parameterType="String" resultMap="POrderMemberResult">
+        SELECT * FROM p_order_member WHERE order_num  =  #{orderNum} ;
+    </select>
 
 </mapper>
