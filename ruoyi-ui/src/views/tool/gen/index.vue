@@ -181,7 +181,7 @@
 <script>
 import { listTable, previewTable, delTable, genCode, synchDb } from "@/api/tool/gen";
 import importTable from "./importTable";
-import hljs from "highlight.js/lib/highlight";
+import hljs from "highlight.js";
 import "highlight.js/styles/github-gist.css";
 hljs.registerLanguage("java", require("highlight.js/lib/languages/java"));
 hljs.registerLanguage("xml", require("highlight.js/lib/languages/xml"));
@@ -304,7 +304,7 @@ export default {
     highlightedCode(code, key) {
       const vmName = key.substring(key.lastIndexOf("/") + 1, key.indexOf(".vm"));
       var language = vmName.substring(vmName.indexOf(".") + 1, vmName.length);
-      const result = hljs.highlight(language, code || "", true);
+      const result = hljs.highlight(code || "", { language: language, ignoreIllegals: true});
       return result.value || '&nbsp;';
     },
     /** 复制代码成功 */
