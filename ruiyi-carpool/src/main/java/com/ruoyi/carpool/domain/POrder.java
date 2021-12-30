@@ -84,6 +84,9 @@ public class POrder extends BaseEntity
     @ApiModelProperty(value = "司机姓名")
     private String driverName;
 
+    @ApiModelProperty(value = "司机手机号")
+    private String driverPhone;
+
     @Excel(name = "司机微信端的openid")
     @ApiModelProperty(value = "司机微信端的openid")
     private String driverOpenId;
@@ -274,6 +277,14 @@ public class POrder extends BaseEntity
         this.orderMemberList = orderMemberList;
     }
 
+    public String getDriverPhone() {
+        return driverPhone;
+    }
+
+    public void setDriverPhone(String driverPhone) {
+        this.driverPhone = driverPhone;
+    }
+
     @Override
     public String toString() {
         return new ToStringBuilder(this,ToStringStyle.MULTI_LINE_STYLE)
@@ -297,6 +308,7 @@ public class POrder extends BaseEntity
             .append("CreaterPhone", getCreaterPhone())
             .append("createrOpenId", getCreaterOpenId())
             .append("memberOpenId", getMemberOpenId())
+            .append("driverPhone", getDriverPhone())
             .toString();
     }
 }

@@ -19,6 +19,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="createrPhone"    column="creater_phone"    />
         <result property="driverId"    column="driver_id"    />
         <result property="driverName"    column="driver_name"    />
+        <result property="driverPhone"    column="driver_phone"    />
         <result property="createUser"    column="create_user"    />
         <result property="createTime"    column="create_time"    />
         <result property="updateUser"    column="update_user"    />
@@ -47,7 +48,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </sql>
 
     <select id="selectPOrderList" parameterType="POrder" resultMap="POrderResult">
-        SELECT A.* , B.name as driver_name FROM p_order  A
+        SELECT A.* , B.name as driver_name , B.phone AS driver_phone FROM p_order  A
         LEFT JOIN p_driver B ON A.driver_id = B.driver_id
         where 1=1
         <if test="orderNum != null  and orderNum != ''"> and A.order_num = #{orderNum}</if>
@@ -70,7 +71,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
 
     <select id="selectPOrderListContentMember" parameterType="POrder" resultMap="POrderResult">
-        SELECT A.* , B.open_id memberOpenId, C.NAME AS driver_name
+        SELECT A.* , B.open_id memberOpenId, C.NAME AS driver_name , C.phone AS driver_phone
         FROM p_order A
         LEFT JOIN p_order_member B ON A.order_num = B.order_num
         LEFT JOIN p_driver C ON A.driver_id = C.driver_id
