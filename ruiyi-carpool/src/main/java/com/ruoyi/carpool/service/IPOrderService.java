@@ -82,5 +82,5 @@ public interface IPOrderService
      * @param pOrder 订单信息
      * @return 结果
      */
-    public AjaxResult takeOrder(POrder pOrder);
+    public int takeOrder(POrder pOrder);
 }

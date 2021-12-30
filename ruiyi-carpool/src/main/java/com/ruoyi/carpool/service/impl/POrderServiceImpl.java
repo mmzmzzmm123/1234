@@ -181,12 +181,11 @@ public class POrderServiceImpl implements IPOrderService
      * @return 结果
      */
     @Override
-    public AjaxResult takeOrder(POrder pOrder)
+    public int takeOrder(POrder pOrder)
     {
+//        String driverOpenId = pOrder.getDriverOpenId();
         pOrder.setIsTake("1");
-        pOrderMapper.takeOrderById(pOrder);
-
-        return null ;
+        return pOrderMapper.takeOrderById(pOrder);
 
     }
 

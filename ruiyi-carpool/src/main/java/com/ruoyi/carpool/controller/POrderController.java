@@ -102,7 +102,7 @@ public class POrderController extends BaseController
     @PostMapping("/takeOrder")
     public AjaxResult takeOrder(@RequestBody POrder pOrder)
     {
-        return pOrderService.takeOrder(pOrder);
+        return toAjax(pOrderService.takeOrder(pOrder));
     }
     /**
      * 修改订单信息
