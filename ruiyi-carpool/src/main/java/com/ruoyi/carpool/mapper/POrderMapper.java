@@ -94,11 +94,20 @@ public interface POrderMapper
 
 
     /**
+     * 更新订单当前的人数和状态
+     * @param pOrder
+     * @return
+     */
+    public int updateOrderMemberNumAndSate(POrder pOrder);
+
+    /**
      * 更新订单当前的人数
      * @param pOrder
      * @return
      */
     public int updateOrderMemberNum(POrder pOrder);
+
+
 
     /**
      * 通过openID查询订单信息

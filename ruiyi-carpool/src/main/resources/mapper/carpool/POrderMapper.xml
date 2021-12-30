@@ -181,9 +181,17 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </select>
 
 
-    <update id="updateOrderMemberNum" parameterType="POrder" >
-        update p_order set member = #{member} where order_num = #{orderNum}
+    <update id="updateOrderMemberNumAndSate" parameterType="POrder" >
+        update p_order set member = #{member} , state = 2 where order_num = #{orderNum}
     </update>
+
+    <update id="updateOrderMemberNum" parameterType="POrder" >
+        update p_order set member = #{member}  where order_num = #{orderNum}
+    </update>
+
+
+
+
 
     <select id="queryOrderInfoByOpenId" parameterType="String" resultMap="POrderResult" >
         <include refid="selectPOrderVo"/>

@@ -39,6 +39,7 @@ public class IPCommonServiceImpl implements IPCommonService {
     public AjaxResult cancelOrder(CommonVO commonVO) {
         String orderNum = commonVO.getOrderNum();
         String userId = commonVO.getUserID();
+        String openID = commonVO.getOpenId();
         if (StringUtils.isEmpty(orderNum) && StringUtils.isEmpty(userId) ){
             return AjaxResult.error("请求参数错误！");
         }
@@ -57,10 +58,18 @@ public class IPCommonServiceImpl implements IPCommonService {
                     POrder pOrder = pOrderMapper.selectPOrderByOrderNum(orderNum);
                     Integer currnt = pOrder.getMember()-info.get("num");
                     pOrder.setMember(currnt);
-                    /*更新当前人数表*/
-                    pOrderMapper.updateOrderMemberNum(pOrder);
-                    /*更新订单成员信息表*/
-                    pCommonMapper.updateOrderMenber(commonVO);
+                    /*发起者取消订单*/
+                    if(pOrder!= null && openID.equals(pOrder.getCreaterOpenId())){
+                        /*更新当前人数和状态*/
+                        pOrderMapper.updateOrderMemberNumAndSate(pOrder);
+                        /*更新订单成员信息表*/
+                        pCommonMapper.updateOrderMenber(commonVO);
+                    }else {
+                        /*更新当前人数*/
+                        pOrderMapper.updateOrderMemberNum(pOrder);
+                        /*更新订单成员信息表*/
+                        pCommonMapper.updateOrderMenber(commonVO);
+                    }
                     return AjaxResult.success();
                 }
                 return AjaxResult.error(999 , "请求参数有误");
