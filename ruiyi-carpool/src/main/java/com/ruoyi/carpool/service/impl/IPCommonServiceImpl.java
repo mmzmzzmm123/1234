@@ -60,11 +60,13 @@ public class IPCommonServiceImpl implements IPCommonService {
                     pOrder.setMember(currnt);
                     /*发起者取消订单*/
                     if(pOrder!= null && openID.equals(pOrder.getCreaterOpenId())){
+                        logger.info("发起拼单者取消订单");
                         /*更新当前人数和状态*/
                         pOrderMapper.updateOrderMemberNumAndSate(pOrder);
                         /*更新订单成员信息表*/
                         pCommonMapper.updateOrderMenber(commonVO);
                     }else {
+                        logger.info("参与拼单者取消订单");
                         /*更新当前人数*/
                         pOrderMapper.updateOrderMemberNum(pOrder);
                         /*更新订单成员信息表*/

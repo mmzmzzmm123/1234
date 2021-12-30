@@ -64,7 +64,7 @@ public class PDriver extends BaseEntity
 
     /** 当前状态 */
     @Excel(name = "用户当前的状态：0：审核中，1：审核通过，2：禁用")
-    private Integer state ;
+    private String state ;
 
     /** 当前状态 */
     @Excel(name = "微信openId")
@@ -170,11 +170,11 @@ public class PDriver extends BaseEntity
         return isBlacklist;
     }
 
-    public Integer getState() {
+    public String getState() {
         return state;
     }
 
-    public void setState(Integer state) {
+    public void setState(String state) {
         this.state = state;
     }
 

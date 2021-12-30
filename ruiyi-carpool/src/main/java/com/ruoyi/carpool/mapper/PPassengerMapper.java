@@ -73,4 +73,11 @@ public interface PPassengerMapper
      * @return
      */
     public PPassenger selectPPassengerByOpenId(String openId);
+
+    /**
+     * 通过openId更新身份
+     * @param openId
+     * @return
+     */
+    public int updatePPassengerApplystate(String openId);
 }

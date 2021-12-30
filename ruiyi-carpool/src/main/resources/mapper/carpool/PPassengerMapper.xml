@@ -146,5 +146,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </select>
 
 
+    <update id="updatePPassengerApplystate" parameterType="String">
+        update p_passenger set apply_state = 1  where open_id = #{openId}
+    </update>
+
+
 
 </mapper>

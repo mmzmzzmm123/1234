@@ -181,10 +181,13 @@ public class POrderServiceImpl implements IPOrderService
      * @return 结果
      */
     @Override
-    public int takeOrder(POrder pOrder)
+    public AjaxResult takeOrder(POrder pOrder)
     {
         pOrder.setIsTake("1");
-        return pOrderMapper.takeOrderById(pOrder);
+        pOrderMapper.takeOrderById(pOrder);
+
+        return null ;
+
     }
 
 

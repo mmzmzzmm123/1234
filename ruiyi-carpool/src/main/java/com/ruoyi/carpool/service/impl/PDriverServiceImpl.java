@@ -1,6 +1,9 @@
 package com.ruoyi.carpool.service.impl;
 
 import java.util.List;
+
+import com.ruoyi.carpool.domain.PPassenger;
+import com.ruoyi.carpool.mapper.PPassengerMapper;
 import com.ruoyi.common.utils.DateUtils;
 import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.common.utils.uuid.IdUtils;
@@ -21,6 +24,10 @@ public class PDriverServiceImpl implements IPDriverService
 {
     @Autowired
     private PDriverMapper pDriverMapper;
+
+    @Autowired
+    private PPassengerMapper pPassengerMapper;
+
 
     /**
      * 查询司机信息
@@ -57,7 +64,7 @@ public class PDriverServiceImpl implements IPDriverService
     {
         pDriver.setCreateTime(DateUtils.getNowDate());
         pDriver.setDriverId("driver_"+ IdUtils.randomUUID());
-        pDriver.setState(0);
+        pDriver.setState("0");
         pDriver.setIsBlacklist("0");
         return pDriverMapper.insertPDriver(pDriver);
     }
@@ -71,7 +78,13 @@ public class PDriverServiceImpl implements IPDriverService
     @Override
     public int updatePDriver(PDriver pDriver)
     {
+        if(pDriver.getOpenId() == null) return 0;
         pDriver.setUpdateTime(DateUtils.getNowDate());
+        String state = pDriver.getState();
+        /*修改状态*/
+        if("1".equals(state)){
+            pPassengerMapper.updatePPassengerApplystate(pDriver.getOpenId());
+        }
         return pDriverMapper.updatePDriver(pDriver);
     }
 
