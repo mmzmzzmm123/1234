@@ -44,6 +44,15 @@ public interface POrderMapper
      */
     public int insertPOrder(POrder pOrder);
 
+
+    /**
+     * 新增订单成员信息
+     *
+     * @param pOrderMember 订单信息
+     * @return 结果
+     */
+    public int insertPOrderMember(POrderMember pOrderMember);
+
     /**
      * 修改订单信息
      * 

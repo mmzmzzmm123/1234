@@ -28,13 +28,15 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
     <resultMap type="com.ruoyi.carpool.domain.POrderMember" id="POrderMemberResult">
         <result property="id"    column="id"    />
+        <result property="orderNum"    column="order_num"    />
         <result property="openId"    column="open_id"    />
         <result property="custName"    column="cust_name"    />
         <result property="custPhone"    column="cust_phone"    />
         <result property="custId"    column="cust_id"    />
         <result property="num"    column="num"    />
-        <result property="index"    column="index"    />
+        <result property="index"    column="submit_index"    />
         <result property="state"    column="state"    />
+        <result property="createTime"    column="create_time"    />
     </resultMap>
 
     <sql id="selectPOrderVo">
@@ -200,5 +202,32 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <select id="queryOrderMenberListByOrderNum" parameterType="String" resultMap="POrderMemberResult">
         SELECT * FROM p_order_member WHERE order_num  =  #{orderNum} ;
     </select>
+
+
+    <insert id="insertPOrderMember" parameterType="POrderMember" useGeneratedKeys="true" keyProperty="id">
+        insert into p_order_member
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="orderNum != null">order_num,</if>
+            <if test="openId != null">open_id,</if>
+            <if test="custName != null">cust_name,</if>
+            <if test="custPhone != null">cust_phone,</if>
+            <if test="custId != null">cust_id,</if>
+            <if test="num != null">num,</if>
+            <if test="index != null ">submit_index,</if>
+            <if test="state != null ">state,</if>
+            <if test="createTime != null ">create_time,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="orderNum != null">#{orderNum},</if>
+            <if test="openId != null">#{openId},</if>
+            <if test="custName != null">#{custName},</if>
+            <if test="custPhone != null">#{custPhone},</if>
+            <if test="custId != null">#{custId},</if>
+            <if test="num != null">#{num},</if>
+            <if test="index != null ">#{index},</if>
+            <if test="state != null ">#{state},</if>
+            <if test="createTime != null ">#{createTime},</if>
+        </trim>
+    </insert>
 
 </mapper>

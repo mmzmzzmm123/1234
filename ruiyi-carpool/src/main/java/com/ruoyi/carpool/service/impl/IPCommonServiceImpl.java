@@ -51,8 +51,8 @@ public class IPCommonServiceImpl implements IPCommonService {
                 return AjaxResult.error("订单已经有司机接单，请联系司机。");
             }else {
                 /*校验是否可以取消*/
-                Map<String , Integer> info =  pCommonMapper.queryOrderMemberState(commonVO);
-                if(info.isEmpty() && info.get("state") == 0){
+                Map<String , Integer> info =  pCommonMapper.queryOrderMemberStateByOpenId(commonVO);
+                if(info != null && info.get("state") == 0){
                     /*查询订单详情*/
                     POrder pOrder = pOrderMapper.selectPOrderByOrderNum(orderNum);
                     Integer currnt = pOrder.getMember()-info.get("num");
@@ -63,7 +63,7 @@ public class IPCommonServiceImpl implements IPCommonService {
                     pCommonMapper.updateOrderMenber(commonVO);
                     return AjaxResult.success();
                 }
-                return AjaxResult.error();
+                return AjaxResult.error(999 , "请求参数有误");
             }
         }
         /*司机取消订单*/
@@ -78,7 +78,7 @@ public class IPCommonServiceImpl implements IPCommonService {
                 return AjaxResult.success();
             }
         }
-        return AjaxResult.error(200 , "请求参数有误");
+        return AjaxResult.error(999 , "请求参数有误");
     }
 
     @Override

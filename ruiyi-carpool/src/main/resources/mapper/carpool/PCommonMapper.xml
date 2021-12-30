@@ -15,9 +15,13 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         SELECT state,num FROM p_order_member   WHERE  order_num = #{orderNum} AND cust_id = #{userID}
     </select>
 
+    <select id="queryOrderMemberStateByOpenId" parameterType="CommonVO"  resultType="hashmap" >
+        SELECT state,num FROM p_order_member   WHERE  order_num = #{orderNum} AND open_id = #{openId}
+    </select>
+
 
     <update id="updateOrderMenber" parameterType="CommonVO" >
-        UPDATE p_order_member  SET state  = 1  WHERE order_num = #{orderNum} AND cust_id = #{userID}
+        UPDATE p_order_member  SET state  = 1  WHERE order_num = #{orderNum} AND open_id = #{openId}
     </update>
 
     <select id="queryOrderMemberCount" parameterType="String"  resultType="integer" >

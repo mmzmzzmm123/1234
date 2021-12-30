@@ -24,6 +24,16 @@ public interface PCommonMapper {
      */
     public Map queryOrderMemberState(CommonVO commonVO);
 
+
+    /**
+     * 查询乘客下单的状态
+     * @param commonVO
+     * @return
+     */
+    public Map queryOrderMemberStateByOpenId(CommonVO commonVO);
+
+
+
     /**
      * 乘客取消订单
      * @param commonVO

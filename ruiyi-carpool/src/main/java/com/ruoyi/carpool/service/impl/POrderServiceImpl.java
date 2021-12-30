@@ -27,6 +27,7 @@ public class POrderServiceImpl implements IPOrderService
     @Autowired
     private POrderMapper pOrderMapper;
 
+
     @Autowired
     private PPassengerMapper pPassengerMapper;
 
@@ -98,24 +99,40 @@ public class POrderServiceImpl implements IPOrderService
     @Override
     public AjaxResult insertPOrderWx(POrder pOrder)
     {
-        /*校验当前用户是否存在未完成的订单*/
-        String openId = pOrder.getCreaterOpenId();
-        if(StringUtils.isEmpty(openId)) return AjaxResult.error("openId 必传");
-        /*判断当前用户是否是黑名单*/
-        PPassenger pPassenger = pPassengerMapper.selectPPassengerByOpenId(openId);
-        if("1".equals(pPassenger.getIsBlacklist())) return AjaxResult.error("您现在处于系统黑名单，请联系管理员。");
-        /*查询当前用户是否存在拼单中的订单*/
-        List<POrder> pOrders = pOrderMapper.queryOrderInfoByOpenIdAndState(openId);
-        if(pOrders.size() > 0){
-            return AjaxResult.error("您在系统中存在拼单中的订单。");
+        try {
+            /*校验当前用户是否存在未完成的订单*/
+            String openId = pOrder.getCreaterOpenId();
+            if(StringUtils.isEmpty(openId)) return AjaxResult.error("createrOpenId 必传");
+            /*判断当前用户是否是黑名单*/
+            PPassenger pPassenger = pPassengerMapper.selectPPassengerByOpenId(openId);
+            if("1".equals(pPassenger.getIsBlacklist())) return AjaxResult.error("您现在处于系统黑名单，请联系管理员。");
+            /*查询当前用户是否存在拼单中的订单*/
+            List<POrder> pOrders = pOrderMapper.queryOrderInfoByOpenIdAndState(openId);
+            if(pOrders.size() > 0){
+                return AjaxResult.error("您在系统中存在拼单中的订单。");
+            }
+            String orderNum = DateUtils.dateTimeNow();
+            pOrder.setOrderNum("carpool_"+orderNum);
+            pOrder.setIsTake("0");
+            pOrder.setState("0");
+            pOrder.setCreateTime(DateUtils.getNowDate());
+            /*订单成员表中添加一条成员信息*/
+            POrderMember pOrderMember = new POrderMember();
+            pOrderMember.setOrderNum(pOrder.getOrderNum());
+            pOrderMember.setOpenId(openId);
+            pOrderMember.setState(0);
+            pOrderMember.setCustName(pOrder.getCreaterName());
+            pOrderMember.setCustPhone(pOrder.getCreaterPhone());
+            pOrderMember.setCreateTime(DateUtils.getNowDate());
+            pOrderMember.setIndex(1);
+            pOrderMember.setNum(pOrder.getMember());
+            pOrderMapper.insertPOrder(pOrder);
+            pOrderMapper.insertPOrderMember(pOrderMember);
+            return AjaxResult.success("发起拼单成功。");
+        }catch (Exception e){
+            e.printStackTrace();
         }
-        String orderNum = DateUtils.dateTimeNow();
-        pOrder.setOrderNum("carpool_"+orderNum);
-        pOrder.setIsTake("0");
-        pOrder.setState("0");
-        pOrder.setCreateTime(DateUtils.getNowDate());
-        pOrderMapper.insertPOrder(pOrder);
-        return AjaxResult.success("发起拼单成功。");
+        return AjaxResult.error(999 ,"发起拼单失败.");
     }
 
 
