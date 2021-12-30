@@ -42,8 +42,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
     <sql id="selectPOrderVo">
         select
-        id, order_num, departure, destination, departure_time, member, state,creater_name,creater_phone,creater_openid
-        isDelete, create_user, create_time, update_user, update_time
+        id, order_num, departure, destination, departure_time, member,state,creater_openid,isDelete,creater_name,creater_phone ,
+        driver_id, create_user, create_time, update_user, update_time ,driver_open_id
         from p_order
     </sql>
 

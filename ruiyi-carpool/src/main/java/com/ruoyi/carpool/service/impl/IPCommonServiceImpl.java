@@ -51,6 +51,7 @@ public class IPCommonServiceImpl implements IPCommonService {
                 logger.info("订单：" + orderNum+" 已经有司机接单，请联系司机。");
                 return AjaxResult.error("订单已经有司机接单，请联系司机。");
             }else {
+
                 /*校验是否可以取消*/
                 Map<String , Integer> info =  pCommonMapper.queryOrderMemberStateByOpenId(commonVO);
                 if(info != null && info.get("state") == 0){
