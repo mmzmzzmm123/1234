@@ -34,10 +34,10 @@ server:
       min-spare: 100
 
 # 日志配置
-logging:
-  level:
-    com.ruoyi: debug
-    org.springframework: warn
+#logging:
+#  level:
+#    com.ruoyi: debug
+#    org.springframework: warn
 
 # Spring配置
 spring:
@@ -68,7 +68,7 @@ spring:
     # 数据库索引
     database: 0
     # 密码
-    password: 
+    password: 123456
     # 连接超时时间
     timeout: 10s
     lettuce:
