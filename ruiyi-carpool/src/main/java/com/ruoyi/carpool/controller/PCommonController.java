@@ -42,7 +42,7 @@ public class PCommonController {
     @PostMapping(value = "/finishOrder")
     public AjaxResult finishOrder(@RequestBody CommonVO commonVO)
     {
-        return pCommonService.cancelOrder(commonVO);
+        return pCommonService.finshOrder(commonVO);
     }
 
 
