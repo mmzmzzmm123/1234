@@ -21,6 +21,13 @@
       <el-form-item label="手机号码" prop="phone">
         <el-input v-model="queryParams.phone" placeholder="请输入手机号码" clearable size="small" @keyup.enter.native="handleQuery" />
       </el-form-item>
+      <el-form-item label="申请司机">
+        <el-select v-model="queryParams.driver" placeholder="请选择" clearable>
+          <el-option label="待确认" value="0"></el-option>
+          <el-option label="通过" value="1"></el-option>
+          <el-option label="不通过" value="2"></el-option>
+        </el-select>
+      </el-form-item>
       <!-- <el-form-item label="所在城市" prop="city">
         <el-input v-model="queryParams.city" placeholder="请输入所在城市" clearable size="small" @keyup.enter.native="handleQuery" />
       </el-form-item>
@@ -121,6 +128,12 @@
             <el-option v-for="dict in dict.type.carpool_isblacklist" :key="dict.value" :label="dict.label" :value="dict.value"></el-option>
           </el-select>
         </el-form-item>
+        <el-form-item label="申请处理">
+          <el-select v-model="form.state" placeholder="请选择是否同意该申请" size="small" :disabled="disabled">
+            <el-option label="审核中" :value="0"></el-option>
+            <el-option label="审核通过" :value="1"></el-option>
+          </el-select>
+        </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button type="primary" @click="submitForm">确 定</el-button>
@@ -177,11 +190,13 @@ export default {
         province: null,
         country: null,
         isBlacklist: null,
+        driver:null,
       },
       // 表单参数
       form: {},
       // 表单校验
       rules: {},
+      disabled:false
     };
   },
   created() {
@@ -218,6 +233,8 @@ export default {
         isBlacklist: null,
         createTime: null,
         updateTime: null,
+        driver: null,
+        state: null,
       };
       this.resetForm("form");
     },
@@ -249,6 +266,7 @@ export default {
       const id = row.id || this.ids;
       getDriver(id).then((response) => {
         this.form = response.data;
+        this.disabled = response.data.state == 1?true:false
         this.open = true;
         this.title = "修改司机信息";
       });
