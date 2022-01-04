@@ -1,12 +1,18 @@
 <template>
   <div class="app-container home">
     <el-row :gutter="20">
-      <el-col :sm="24" :lg="12" style="padding-left: 20px">
-        <h2>若依后台管理框架</h2>
-        <p>
-          一直想做一款后台管理系统，看了很多优秀的开源项目但是发现没有合适自己的。于是利用空闲休息时间开始自己写一套后台系统。如此有了若依管理系统。，她可以用于所有的Web应用程序，如网站管理后台，网站会员中心，CMS，CRM，OA等等，当然，您也可以对她进行深度定制，以做出更强系统。所有前端后台代码封装过后十分精简易上手，出错概率低。同时支持移动客户端访问。系统会陆续更新一些实用功能。
-        </p>
-      </el-col>
+       <div class="index_img">
+          <p>1.客户管理类</p>
+          <img src="../../public/客户管理类.png" />
+          <p>2. 电商管理类</p>
+          <img src="../../public/电商管理类.png" />
+          <p>3. 会员管理类</p>
+          <img src="../../public/会员管理类.png" />
+          <p>4. 充值系统类</p>
+          <img src="../../public/充值系统类.png" />
+          <p>5. 商户系统类</p>
+          <img src="../../public/商户系统类.png" />
+        </div>
     </el-row>
     <el-divider />
   </div>
@@ -30,6 +36,14 @@ export default {
 </script>
 
 <style scoped lang="scss">
+
+  .index_img {
+    font-size: xx-large;
+    img {
+      width: 100%;
+      height: 100%;
+    }
+  }
 .home {
   blockquote {
     padding: 10px 20px;
