@@ -142,12 +142,12 @@ export default {
         // /redirect 路径内部打开
         this.$router.push({ path: key.replace("/redirect", "") });
       } else {
-        // 显示左侧联动菜单
-        this.activeRoutes(key);
+        // 显示左侧联动菜单顶部菜单
+        this.activeRoutes(key,true);
       }
     },
     // 当前激活的路由
-    activeRoutes(key) {
+    activeRoutes(key,isTop) {
       var routes = [];
       if (this.childrenMenus && this.childrenMenus.length > 0) {
         this.childrenMenus.map((item) => {
@@ -157,7 +157,13 @@ export default {
         });
       }
       if(routes.length > 0) {
+        //TODO 第一个默认选中
         this.$store.commit("SET_SIDEBAR_ROUTERS", routes);
+        if(isTop){
+          this.$store.commit("SET_SIDEBAR_ACTIVE_MENU", routes[0].path);
+          let that = this;
+          that.$router.push({path:routes[0].path});
+        }
       }
       return routes;
     },

@@ -11,7 +11,8 @@ const permission = {
     addRoutes: [],
     defaultRoutes: [],
     topbarRouters: [],
-    sidebarRouters: []
+    sidebarRouters: [],
+    sidebarActiveMenu: null
   },
   mutations: {
     SET_ROUTES: (state, routes) => {
@@ -31,6 +32,9 @@ const permission = {
     },
     SET_SIDEBAR_ROUTERS: (state, routes) => {
       state.sidebarRouters = routes
+    }
+    ,SET_SIDEBAR_ACTIVE_MENU: (state, sidebarActiveMenu) => {
+      state.sidebarActiveMenu = sidebarActiveMenu
     },
   },
   actions: {
