@@ -51,7 +51,7 @@ export default class Dict {
     if (dictMeta === undefined) {
       return Promise.reject(`the dict meta of ${type} was not found`)
     }
-    return loadDict(this, dictMeta)
+    return removal(this, dictMeta)
   }
 }
 
