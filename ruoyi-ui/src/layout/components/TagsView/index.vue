@@ -132,7 +132,6 @@ export default {
     addTags() {
       const { name } = this.$route
       if (name) {
-        this.$store.commit("SET_SIDEBAR_ACTIVE_MENU", this.$route.path);
         this.$store.dispatch('tagsView/addView', this.$route)
       }
       return false
@@ -191,7 +190,6 @@ export default {
       })
     },
     toLastView(visitedViews, view) {
-      console.log("打开了2")
       const latestView = visitedViews.slice(-1)[0]
       if (latestView) {
         this.$router.push(latestView.fullPath)
@@ -207,7 +205,6 @@ export default {
       }
     },
     openMenu(tag, e) {
-      console.log("打开了3",tag,e)
       const menuMinWidth = 105
       const offsetLeft = this.$el.getBoundingClientRect().left // container margin left
       const offsetWidth = this.$el.offsetWidth // container width

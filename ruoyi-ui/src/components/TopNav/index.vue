@@ -92,15 +92,13 @@ export default {
         const tmpPath = path.substring(1, path.length);
         activePath = "/" + tmpPath.substring(0, tmpPath.indexOf("/"));
       } else if ("/index" == path || "" == path) {
-        if (!this.isFrist) {
-          this.isFrist = true;
-        } else {
-          activePath = "index";
-        }
+        this.isFrist = true;
       }
       var routes = this.activeRoutes(activePath);
       if (routes.length === 0) {
-        this.$store.commit("SET_SIDEBAR_ROUTERS", routes);
+        this.$store.commit("SET_SIDEBAR_MENU_HIDE", true);
+      }else {
+        this.$store.commit("SET_SIDEBAR_MENU_HIDE", false);
       }
       return activePath;
     },
@@ -159,9 +157,7 @@ export default {
         //TODO 第一个默认选中
         this.$store.commit("SET_SIDEBAR_ROUTERS", routes);
         if(isTop){
-          this.$store.commit("SET_SIDEBAR_ACTIVE_MENU", routes[0].path);
-          let that = this;
-          that.$router.push({path:routes[0].path});
+          this.$router.push({path:routes[0].path});
         }
       }
       return routes;

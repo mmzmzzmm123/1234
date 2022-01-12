@@ -12,7 +12,7 @@ const permission = {
     defaultRoutes: [],
     topbarRouters: [],
     sidebarRouters: [],
-    sidebarActiveMenu: null
+    sidebarMenuHide: false
   },
   mutations: {
     SET_ROUTES: (state, routes) => {
@@ -28,8 +28,8 @@ const permission = {
     SET_SIDEBAR_ROUTERS: (state, routes) => {
       state.sidebarRouters = routes
     }
-    ,SET_SIDEBAR_ACTIVE_MENU: (state, sidebarActiveMenu) => {
-      state.sidebarActiveMenu = sidebarActiveMenu
+    ,SET_SIDEBAR_MENU_HIDE: (state, sidebarMenuHide) => {
+      state.sidebarMenuHide = sidebarMenuHide
     },
   },
   actions: {
