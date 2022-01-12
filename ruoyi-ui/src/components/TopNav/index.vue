@@ -100,8 +100,7 @@ export default {
       }
       var routes = this.activeRoutes(activePath);
       if (routes.length === 0) {
-        activePath = this.currentIndex || this.defaultRouter()
-        this.activeRoutes(activePath);
+        this.$store.commit("SET_SIDEBAR_ROUTERS", routes);
       }
       return activePath;
     },
@@ -151,7 +150,7 @@ export default {
       var routes = [];
       if (this.childrenMenus && this.childrenMenus.length > 0) {
         this.childrenMenus.map((item) => {
-          if (key == item.parentPath || (key == "index" && "" == item.path)) {
+          if (key == item.parentPath) {
             routes.push(item);
           }
         });
