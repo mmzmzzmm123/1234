@@ -37,7 +37,7 @@ export default class Dict {
       if (dictMeta.lazy) {
         return
       }
-      ps.push(loadDict(this, dictMeta))
+      ps.push(removal(this, dictMeta))
     })
     return Promise.all(ps)
   }
@@ -53,6 +53,26 @@ export default class Dict {
     }
     return loadDict(this, dictMeta)
   }
+}
+
+//过滤重复数据重复请求
+function removal(dict, dictMeta) {
+  const type = dictMeta.type
+  let that = dict.owner;
+  let ld;
+  if(__dictCache.get(type)){
+    ld = __dictCache.get(type)
+    ld.then(dicts=>{
+      dict.type[type].splice(0, Number.MAX_SAFE_INTEGER, ...dicts)
+      dicts.forEach(d => {
+        Vue.set(dict.label[type], d.value, d.label)
+      })
+    })
+  }else{
+    ld = loadDict(dict, dictMeta);
+    __dictCache.set(type,ld)
+  }
+  return ld
 }
 
 /**
