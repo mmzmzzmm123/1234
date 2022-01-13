@@ -3,12 +3,14 @@ package com.ruoyi;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
+import springfox.documentation.oas.annotations.EnableOpenApi;
 
 /**
  * 启动程序
  * 
  * @author ruoyi
  */
+@EnableOpenApi //开启swagger
 @SpringBootApplication(exclude = { DataSourceAutoConfiguration.class })
 public class RuoYiApplication
 {
