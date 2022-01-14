@@ -2,7 +2,7 @@
   <el-image
     :src="`${realSrc}`"
     fit="cover"
-    :style="`width:${realWidth};height:${realHeight};`"
+    :style="`width:${realWidth};height:${r45ealHeight};`"
     :preview-src-list="realSrcList"
   >
     <div slot="error" class="image-slot">
