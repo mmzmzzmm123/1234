@@ -32,6 +32,12 @@ import io.swagger.annotations.ApiOperation;
 @RequestMapping("/test/user")
 public class TestController extends BaseController
 {
+
+    public static void main(String[] args) {
+        System.out.println("2022-01-27jmyPushTest");
+    }
+
+
     private final static Map<Integer, UserEntity> users = new LinkedHashMap<Integer, UserEntity>();
     {
         users.put(1, new UserEntity(1, "admin", "admin123", "15888888888"));
