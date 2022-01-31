@@ -2,6 +2,8 @@ package com.ruoyi.web.controller.system;
 
 import java.util.List;
 import javax.servlet.http.HttpServletResponse;
+
+import com.ruoyi.common.core.redis.RedisCache;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
@@ -23,9 +25,11 @@ import com.ruoyi.common.utils.poi.ExcelUtil;
 import com.ruoyi.system.domain.SysConfig;
 import com.ruoyi.system.service.ISysConfigService;
 
+import static com.ruoyi.common.constant.Constants.SYS_CONFIG_KEY;
+
 /**
  * 参数配置 信息操作处理
- * 
+ *
  * @author ruoyi
  */
 @RestController
@@ -34,6 +38,10 @@ public class SysConfigController extends BaseController
 {
     @Autowired
     private ISysConfigService configService;
+
+
+    @Autowired
+    private RedisCache redisCache;
 
     /**
      * 获取参数配置列表
@@ -74,6 +82,16 @@ public class SysConfigController extends BaseController
     public AjaxResult getConfigKey(@PathVariable String configKey)
     {
         return AjaxResult.success(configService.selectConfigByKey(configKey));
+    }
+
+    /**
+     * 查询注册配置
+     */
+    @GetMapping(value = "/getRegisterConfig")
+    public AjaxResult getRegisterConfig()
+    {
+        String register = redisCache.getCacheObject(SYS_CONFIG_KEY + "sys.account.registerUser").toString();
+        return AjaxResult.success(register);
     }
 
     /**
