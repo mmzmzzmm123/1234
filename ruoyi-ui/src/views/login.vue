@@ -62,7 +62,7 @@
 </template>
 
 <script>
-import { getCodeImg } from "@/api/login";
+import { getCodeImg, registerConfig } from "@/api/login";
 import Cookies from "js-cookie";
 import { encrypt, decrypt } from '@/utils/jsencrypt'
 
@@ -106,8 +106,17 @@ export default {
   created() {
     this.getCode();
     this.getCookie();
+    this.getRegisterConfig()
   },
   methods: {
+    /**
+     * 获取注册配置信息
+     */
+    getRegisterConfig(){
+      registerConfig().then(res => {
+        this.register = res.msg == "true" ? true : false
+      })
+    },
     getCode() {
       getCodeImg().then(res => {
         this.captchaOnOff = res.captchaOnOff === undefined ? true : res.captchaOnOff;

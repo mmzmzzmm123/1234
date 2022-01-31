@@ -30,6 +30,17 @@ export function register(data) {
   })
 }
 
+// 注册配置获取
+export function registerConfig() {
+  return request({
+    url: '/system/config/getRegisterConfig',
+    headers: {
+      isToken: false
+    },
+    method: 'get'
+  })
+}
+
 // 获取用户详细信息
 export function getInfo() {
   return request({
