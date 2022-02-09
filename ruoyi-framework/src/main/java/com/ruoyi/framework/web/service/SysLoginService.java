@@ -1,6 +1,8 @@
 package com.ruoyi.framework.web.service;
 
 import javax.annotation.Resource;
+
+import org.apache.commons.codec.binary.Base64;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -23,6 +25,9 @@ import com.ruoyi.framework.manager.AsyncManager;
 import com.ruoyi.framework.manager.factory.AsyncFactory;
 import com.ruoyi.system.service.ISysConfigService;
 import com.ruoyi.system.service.ISysUserService;
+
+import java.security.*;
+import java.util.concurrent.TimeUnit;
 
 /**
  * 登录校验方法
@@ -129,5 +134,26 @@ public class SysLoginService
         sysUser.setLoginIp(IpUtils.getIpAddr(ServletUtils.getRequest()));
         sysUser.setLoginDate(DateUtils.getNowDate());
         userService.updateUserProfile(sysUser);
+    }
+
+    /**
+     * 生成RSA密钥对
+     * @return 公钥
+     */
+    public String generateRSA() throws NoSuchAlgorithmException, NoSuchProviderException {
+        KeyPairGenerator gen = KeyPairGenerator.getInstance("RSA", "SunRsaSign");
+        gen.initialize(512, new SecureRandom());
+        KeyPair pair = gen.generateKeyPair();
+
+        byte[] privateKey = pair.getPrivate().getEncoded();
+        byte[] publicKey = pair.getPublic().getEncoded();
+
+        privateKey = Base64.encodeBase64(privateKey);
+        publicKey = Base64.encodeBase64(publicKey);
+
+        //私钥存入缓存
+        redisCache.setCacheObject(Constants.PRE_LOGIN_KEY + new String(publicKey), new String(privateKey), 30, TimeUnit.SECONDS);
+        //返回公钥
+        return new String(publicKey);
     }
 }

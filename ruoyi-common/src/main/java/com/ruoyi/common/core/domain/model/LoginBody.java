@@ -27,6 +27,11 @@ public class LoginBody
      */
     private String uuid = "";
 
+    /**
+     * RSA公钥
+     */
+    private String publicKey;
+
     public String getUsername()
     {
         return username;
@@ -65,5 +70,9 @@ public class LoginBody
     public void setUuid(String uuid)
     {
         this.uuid = uuid;
+    }
+
+    public String getPublicKey() {
+        return publicKey;
     }
 }

@@ -1,7 +1,15 @@
 package com.ruoyi.web.controller.system;
 
+import java.security.*;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.TimeUnit;
+
+import com.ruoyi.common.annotation.DecryptLogin;
+import com.ruoyi.common.annotation.RateLimiter;
+import com.ruoyi.common.core.redis.RedisCache;
+import com.ruoyi.common.enums.LimitType;
+import org.apache.commons.codec.binary.Base64;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -35,11 +43,32 @@ public class SysLoginController
     private SysPermissionService permissionService;
 
     /**
+     * 登录前先生成一个RSA密钥，LoginBody中的账号密码进行加密。
+     * 公钥返回给前端加密使用；
+     * 私钥存入redis，等待登陆时解密使用。
+     *
+     * 这个接口需要加入白名单，所以使用限流器 RateLimiter 对IP限制每秒请求次数
+     * @return public key
+     */
+    @RateLimiter(time = 1, count = 5, limitType = LimitType.IP)
+    @GetMapping("/preLogin")
+    public AjaxResult preLogin() {
+        String publicKey;
+        try {
+            publicKey = loginService.generateRSA();
+        } catch (NoSuchAlgorithmException | NoSuchProviderException e) {
+            return AjaxResult.error("生成RSA密钥对失败");
+        }
+        return AjaxResult.success("", publicKey);
+    }
+
+    /**
      * 登录方法
      * 
      * @param loginBody 登录信息
      * @return 结果
      */
+    @DecryptLogin
     @PostMapping("/login")
     public AjaxResult login(@RequestBody LoginBody loginBody)
     {
