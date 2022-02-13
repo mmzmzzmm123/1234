@@ -1,6 +1,8 @@
 package com.ruoyi.framework.manager.factory;
 
 import java.util.TimerTask;
+
+import com.ruoyi.common.utils.UserAgentUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import com.ruoyi.common.constant.Constants;
@@ -14,7 +16,6 @@ import com.ruoyi.system.domain.SysLogininfor;
 import com.ruoyi.system.domain.SysOperLog;
 import com.ruoyi.system.service.ISysLogininforService;
 import com.ruoyi.system.service.ISysOperLogService;
-import eu.bitwalker.useragentutils.UserAgent;
 
 /**
  * 异步工厂（产生任务用）
@@ -37,7 +38,7 @@ public class AsyncFactory
     public static TimerTask recordLogininfor(final String username, final String status, final String message,
             final Object... args)
     {
-        final UserAgent userAgent = UserAgent.parseUserAgentString(ServletUtils.getRequest().getHeader("User-Agent"));
+        final UserAgentUtils userAgent = UserAgentUtils.parseUserAgentString(ServletUtils.getRequest().getHeader("User-Agent"));
         final String ip = IpUtils.getIpAddr(ServletUtils.getRequest());
         return new TimerTask()
         {
@@ -54,9 +55,9 @@ public class AsyncFactory
                 // 打印信息到日志
                 sys_user_logger.info(s.toString(), args);
                 // 获取客户端操作系统
-                String os = userAgent.getOperatingSystem().getName();
+                String os = userAgent.getOperatingSystem();
                 // 获取客户端浏览器
-                String browser = userAgent.getBrowser().getName();
+                String browser = userAgent.getBrowser();
                 // 封装对象
                 SysLogininfor logininfor = new SysLogininfor();
                 logininfor.setUserName(username);
