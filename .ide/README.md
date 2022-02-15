@@ -1,0 +1,4 @@
+## Build Sequence
+
+- ruoyi-common
+- 
