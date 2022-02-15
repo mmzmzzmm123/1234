@@ -29,7 +29,7 @@ workspace:
       volumes:
         - .:/home/project
       networks:
-        - smartide-network
+        - ruoyi-dev-network
 
     ruoyi-db:
       image: registry.cn-hangzhou.aliyuncs.com/boathouse/mysql:5.6
@@ -45,7 +45,7 @@ workspace:
       volumes:
         - './.ide/.data/mysql-data:/var/lib/mysql'
       networks:
-        - boathouse-dev-network
+        - ruoyi-dev-network
 
     ruoyi-phpmyadmin:
       image: registry.cn-hangzhou.aliyuncs.com/boathouse/phpmyadmin:5.0.4-apache
@@ -68,7 +68,7 @@ workspace:
       ports:
         - "6379:6379"
       networks:
-        - gva-dev-network
+        - ruoyi-dev-network
   networks:
-    smartide-network:
+    ruoyi-dev-network:
       external: true
