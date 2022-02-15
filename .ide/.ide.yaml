@@ -57,7 +57,7 @@ workspace:
       environment:
         PMA_ARBITRARY: "1"
       networks:
-        - boathouse-dev-network
+        - ruoyi-dev-network
     
     gruoyi-redis:
       image: registry.cn-hangzhou.aliyuncs.com/smartide/redis:6.0.6
