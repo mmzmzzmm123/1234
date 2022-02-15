@@ -28,7 +28,7 @@ workspace:
         - 6800:3000
       volumes:
         - .:/home/project
-        - $HOME/.m2/repository:/smartide/.m2/repository
+        - $HOME/.m2/repository:/home/smartide/.m2/repository
       networks:
         - ruoyi-dev-network
 
