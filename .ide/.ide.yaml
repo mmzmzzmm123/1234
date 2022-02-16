@@ -60,9 +60,8 @@ workspace:
       networks:
         - ruoyi-dev-network
     
-    gruoyi-redis:
+    ruoyi-redis:
       image: registry.cn-hangzhou.aliyuncs.com/smartide/redis:6.0.6
-      container_name: gva-redis
       restart: always
       expose:
         - 6379
