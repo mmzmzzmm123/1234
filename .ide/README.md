@@ -1,4 +1,136 @@
-## Build Sequence
+## 使用SmartIDE开发调试若依项目(前端分离版)
 
-- ruoyi-common
-- 
+SmartIDE是下一代的云原生IDE，可以帮助你一键启动项目的集成开发环境，直接进入编码调试，免除安装SDK，IDE和其他相关工具的麻烦。
+
+我们已经对Ruoyi-Vue进行了SmartIDE适配，可以一键启动包含以下工具的 **标准化全栈开发环境(SFDE - Standard Fullstack Development Environment)**：
+
+- 完整支持Vue的Node.js开发工具语言包（SDK）
+- 完整支持Java语言Spring框架的开发工具语言包（SDK）
+- 用户可以选择2种WebIDE来加载项目进行前后端联调，VSCode WebIDE，JetBrains IDE 社区版 WebIDE
+- 配置好的中间件，包括：MySQL和Redis服务器环境
+- 数据管理工具PHPMyAdmin用于管理MySQL数据库
+
+本文档对如何使用SmartIDE进行Ru o项目的前后端联调进行描述。
+
+## 1. 完整操作视频
+
+为了便于大家更直观的了解使用SmartIDE开发调试Ruoyi的过程，我们在B站提上提供了视频供大家参考，视频地址如下：
+
+TODO: 录制视频
+
+## 2. 本地模式启动项目
+
+使用SmartIDE启动RuoYi的开发调试非常简单，仅需要两个步骤
+
+1. 按照 [安装手册](https://smartide.cn/zh/docs/install/) 完成 SmartIDE 本地命令行工具的安装
+2. 使用以下命令一键启动SFDE
+
+```shell
+## SmartIDE是一款跨平台开发工具，您可以在Windows或者MacOS上执行同样的指令
+smartide start https://gitee.com/SmartIDE/RuoYi-Vue.git
+```
+
+> 注意：第一次启动因为下载容器镜像，需要较长时间，大概需要十分钟。SmartIDE所使用的容器镜像全部托管于阿里云在国内的镜像仓库上，因此一般不会出现无法拉取镜像的情况。如果你的网络过于不稳定，多尝试几次即可。
+
+以上命令会在当前目录自动完成代码克隆，拉取开发环境镜像，启动容器，自动开启VSCode WebIDE以及自动恢复vue前端项目的npm依赖包，启动前端项目等一系列动作。
+
+以上动作完成后，即可看到类似如下的WebIDE窗口，默认情况下将使用JetBrains Projector模式的IntelliJ IDEA社区版
+
+> WebIDE的地址是 https://localhost:6800
+
+![](images/vscode-webide.png)
+
+## 3. 远程主机模式启动项目
+
+以上B站操作视频中使用的是远程主机模式，远程主机模式允许你将SmartIDE的开发环境一键部署到一台安装了Docker环境的远程主机上，并使用WebIDE远程连接到这台主机进行开发，对于比较复杂的项目来说这样做可以让你扩展本地开发机的能力，实现云端开发体验。
+
+使用远程模式也仅需要两个步骤
+
+> 注意：远程主机模式下你不必在本地安装Docker环境，只需要安装好SmartIDE的命令行工具即可
+
+1. 按照 [Docker & Docker-Compose 安装手册 (Linux服务器)](https://smartide.cn/zh/docs/install/docker-install-linux/) 准备好一台远程主机，建议使用Ubuntu 18.04 LTS以上版本的Linux环境。
+2. 按照以下指令启动项目
+
+```shell
+# 将远程主机添加到SmartIDE中
+smartide host add <IpAddress> --username <SSH-UserName> --password <SSH-Password> --port <SSH-Port默认为22>
+
+# 获取主机ID
+smartide host list
+
+# 使用远程主机启动项目
+smartide start --host <主机ID> https://gitee.com/SmartIDE/RuoYi-Vue.git
+```
+
+## 4. 前后端联调
+
+使用SmartIDE启动环境后，我们即可启动前后端联调操作，为了避免SmartIDE的配置影响RuoYi的默认配置，我们扩展了application.yml中的配置，为SmartIDE单独提供了日志、MySQL和Redis配置。
+
+1. 切换spring配置使用SmartIDE环境
+
+如果要使用SmartIDE进行联调，请先打开 ==/ruoyi-admin/src/main/resources/application.yml==，将 ==spring.profiles.active== 的值设置为 smartide
+
+```yaml
+# Spring配置
+spring:
+  profiles:
+    active: smartide
+```
+
+2. 编译并安装所有RuoYi后端组件
+
+然后，我们需要打开IDEA内置的terminal，并执行以下指令以确保RuoYi所有模块都已经编译并放入共享组件库中
+
+```shell
+## 请在RuoYi项目根目录执行
+mvn package
+mvn install
+```
+
+3. 创建ry-vue数据库
+
+4. 编译并启动前端项目
+
+现在我们可以进入ruoyi-admin项目，并启动调试
+
+后端启动后，我们可以通过命令启动前端，使用内置的 terminal 运行以下命令: 进入 ruoyi-ui 项目并启动前端服务器
+
+```shell
+cd ruoyi-ui
+npm install
+npm run dev
+```
+
+5. 设置断点，进入交互式单步调试状态
+
+
+
+调试相关的入口如下：
+
+- 容器内项目目录 /home/project
+- WebIDE入口 http://localhost:6800
+- 数据库管理PHPMyAdmin http://localhost:8090
+- 前端应用入口 http://localhost:8000
+
+## 5. 技术支持
+
+**特别说明:** SmartIDE本身是开源产品，并且对独立开发者提供免费使用授权。
+
+大家可以通过以下链接获取SmartIDE的技术支持
+
+- 产品官网 https://SmartIDE.cn
+  - 通过产品官网上的二维码可以加入 [Smart早鸟群] 与其他的 Smart Developer 一起交流
+- 开源首页：SmartIDE采用GitHub和Gitee双通道开源模式（自动同步代码），方便国内开发者访问
+  - https://githbu.com/SmartIDE
+  - https://gitee.com/SmartIDE
+  
+  大家自选以上任意渠道提交Issue，产品组的小伙伴会及时给予反馈。
+
+  > 如果大家喜欢我们的产品，请给予 Star 支持
+
+- B站频道：我们定制组织直播，为大家更新产品开发进展
+  - https://space.bilibili.com/1001970523
+
+  > 如果大家喜欢我们的产品和视频，一定要记得 “三连” 
+
+谢谢你对SmartIDE的支持：Be a Smart Developer，开发从未如此简单。
