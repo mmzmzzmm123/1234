@@ -68,7 +68,7 @@ smartide start --host <主机ID> https://gitee.com/SmartIDE/RuoYi-Vue.git
 
 1. 切换spring配置使用SmartIDE环境
 
-如果要使用SmartIDE进行联调，请先打开 ==/ruoyi-admin/src/main/resources/application.yml==，将 ==spring.profiles.active== 的值设置为 smartide
+如果要使用SmartIDE进行联调，请先打开 **/ruoyi-admin/src/main/resources/application.yml**，将 **spring.profiles.active** 的值设置为 smartide
 
 ```yaml
 # Spring配置
