@@ -89,6 +89,29 @@ mvn install
 
 3. 创建ry-vue数据库
 
+> 说明：使用SmartIDE运行开发环境的一个好处就是一键启动所有相关环境，我们已经在你的环境中内置了专门用户RuoYi项目开发的MySQL数据库，并且为了你的操作方便，也提供了PhpMyAdmin这个工具方便你进行数据管理操作。
+
+打开SmartIDE内置的PHPMyAdmin工具，地址是：http://localhost:8090 
+
+- 服务器：ruoyi-db
+- 用户名：root
+- 密码：password
+
+![](images/ruoyi-db-login.png)
+
+点击 **新建** 并输入 **ry-vue** 作为数据库名称，点击 **创建**  按钮
+
+![](images/ruoyi-db-create.png)
+
+然后在这个数据库中依次执行以下两个脚本
+
+- sql/ry_20210908.sql
+- sql/quartz.sql
+
+执行完毕之后的状态如下
+
+![](images/ruoyi-db-tables.png)
+
 4. 编译并启动前端项目
 
 现在我们可以进入ruoyi-admin项目，并启动调试
