@@ -46,6 +46,14 @@ JetBrains Projector是一款基于浏览器的WebIDE，提供与桌面IDE一致�
 
 ![](images/projector-open.png)
 
+在以下对话框汇总选择 **Trust Project** 
+
+![](images/projector-trust.png)
+
+加载完毕的Web版IntelliJ IDEA如下
+
+![](images/projector-idea.png)
+
 ## 3. 远程主机模式启动项目
 
 以上B站操作视频中使用的是远程主机模式，远程主机模式允许你将SmartIDE的开发环境一键部署到一台安装了Docker环境的远程主机上，并使用WebIDE远程连接到这台主机进行开发，对于比较复杂的项目来说这样做可以让你扩展本地开发机的能力，实现云端开发体验。
