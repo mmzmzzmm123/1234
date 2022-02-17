@@ -76,7 +76,7 @@ smartide host list
 smartide start --host <主机ID> https://gitee.com/SmartIDE/RuoYi-Vue.git
 ```
 
-## 4. 前后端联调
+## 4. 启动前后端开发调试
 
 使用SmartIDE启动环境后，我们即可启动前后端联调操作，为了避免SmartIDE的配置影响RuoYi的默认配置，我们扩展了application.yml中的配置，为SmartIDE单独提供了日志、MySQL和Redis配置。
 
@@ -173,7 +173,23 @@ npm run dev
 - 数据库管理PHPMyAdmin http://localhost:8090
 - 前端应用入口 http://localhost:8000
 
-## 5. 技术支持
+## 5. 停止和恢复环境
+
+如果需要停止和恢复环境，可以使用SmartIDE的状态管理指令如下
+
+```shell
+## 获取已经创建好的开发环境列表
+smartide list
+## 停止一个开发环境
+smartide stop <ID>
+## 启动一个开发环境
+smartide start <ID>
+## 清理一个开发环境
+## 参数说明：-f 强制删除 -y 跳过确认 -p 删除磁盘上的代码库 -i 删除容器镜像
+smartide remove <ID> -fypi
+```
+
+## 6. 技术支持
 
 **特别说明:** SmartIDE本身是开源产品，并且对独立开发者提供免费使用授权。
 
