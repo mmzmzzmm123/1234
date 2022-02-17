@@ -32,13 +32,13 @@ smartide start https://gitee.com/SmartIDE/RuoYi-Vue.git
 
 > 注意：第一次启动因为下载容器镜像，需要较长时间，大概需要十分钟。SmartIDE所使用的容器镜像全部托管于阿里云在国内的镜像仓库上，因此一般不会出现无法拉取镜像的情况。如果你的网络过于不稳定，多尝试几次即可。
 
-以上命令会在当前目录自动完成代码克隆，拉取开发环境镜像，启动容器，自动开启VSCode WebIDE以及自动恢复vue前端项目的npm依赖包，启动前端项目等一系列动作。
+以上命令会在当前目录自动完成代码克隆，拉取开发环境镜像，启动容器，自动开启WebIDE的动作。
 
-以上动作完成后，即可看到类似如下的WebIDE窗口，默认情况下将使用JetBrains Projector模式的IntelliJ IDEA社区版
+以上动作完成后，即可看到类似如下的WebIDE窗口，默认情况下将使用JetBrains Projector模式的 **IntelliJ IDEA 社区版**
 
 > WebIDE的地址是 https://localhost:6800
 
-JetBrains Projector是一款基于浏览器的WebIDE，提供与桌面IDE一致的操作体验，第一次打开 JetBrains Projector 的时候需要进行简单的初始化操作如下：
+JetBrains Projector是一款基于JetBrains产品的WebIDE，提供通过浏览器操作并与桌面IDE保持一致的操作体验，第一次打开 JetBrains Projector 的时候需要进行简单的初始化操作如下：
 
 ![](images/projector-terms.png)
 
@@ -46,7 +46,7 @@ JetBrains Projector是一款基于浏览器的WebIDE，提供与桌面IDE一致�
 
 ![](images/projector-open.png)
 
-在以下对话框汇总选择 **Trust Project** 
+在以下对话框中选择 **Trust Project** 
 
 ![](images/projector-trust.png)
 
@@ -56,7 +56,7 @@ JetBrains Projector是一款基于浏览器的WebIDE，提供与桌面IDE一致�
 
 ## 3. 远程主机模式启动项目
 
-以上B站操作视频中使用的是远程主机模式，远程主机模式允许你将SmartIDE的开发环境一键部署到一台安装了Docker环境的远程主机上，并使用WebIDE远程连接到这台主机进行开发，对于比较复杂的项目来说这样做可以让你扩展本地开发机的能力，实现云端开发体验。
+远程主机模式允许你将SmartIDE的开发环境一键部署到一台安装了Docker环境的远程主机上，并远程连接到这台主机进行开发，对于比较复杂的项目来说这样做可以让你扩展本地开发机的能力，实现云端开发体验。
 
 使用远程模式也仅需要两个步骤
 
@@ -78,7 +78,7 @@ smartide start --host <主机ID> https://gitee.com/SmartIDE/RuoYi-Vue.git
 
 ## 4. 启动前后端开发调试
 
-使用SmartIDE启动环境后，我们即可启动前后端联调操作，为了避免SmartIDE的配置影响RuoYi的默认配置，我们扩展了application.yml中的配置，为SmartIDE单独提供了日志、MySQL和Redis配置。
+使用SmartIDE启动环境后，我们即可启动前后端联调操作，为了避免SmartIDE的配置影响RuoYi的默认配置，我们扩展了application.yml中的配置，为SmartIDE提供了单独的日志、MySQL和Redis配置。
 
 1. 切换spring配置使用SmartIDE环境
 
@@ -93,7 +93,7 @@ spring:
 
 2. 创建ry-vue数据库
 
-> 说明：使用SmartIDE运行开发环境的一个好处就是一键启动所有相关环境，我们已经在你的环境中内置了专门用户RuoYi项目开发的MySQL数据库，并且为了你的操作方便，也提供了PhpMyAdmin这个工具方便你进行数据管理操作。
+> 说明：使用SmartIDE运行开发环境的一个好处就是一键启动所有相关环境，我们已经在你的环境中内置了专门用于RuoYi项目开发的MySQL数据库，并且为了你的操作方便，也提供了PhpMyAdmin这个工具方便你进行数据管理操作。
 
 打开SmartIDE内置的PHPMyAdmin工具，地址是：http://localhost:8090 
 
@@ -126,7 +126,7 @@ mvn package
 mvn install
 ```
 
-点击 **File | Project Structure**  设置当前项目的JDK版本，环境中已经内置了OpenJDK-11这个版本，如果希望使用其他JDK版本也可以自行选择下载。
+点击 **File | Project Structure**  设置当前项目的JDK版本，环境中已经内置了OpenJDK-11这个版本，如果希望使用其他JDK版本也可以选择 **Add JDK** 自行下载。
 
 ![](images/ruoyi-idea-jdk.png)
 
@@ -140,9 +140,9 @@ mvn install
 
 4. 编译并启动前端项目
 
-现在我们可以进入ruoyi-admin项目，并启动调试
+现在我们可以进入 **ruoyi-ui** 项目，启动前端项目
 
-后端启动后，我们可以通过命令启动前端，使用内置的 terminal 运行以下命令: 进入 ruoyi-ui 项目并启动前端服务器
+后端启动后，我们可以通过命令启动前端，使用内置的 terminal 运行以下命令以便进入 ruoyi-ui 项目并启动前端服务器
 
 ```shell
 cd ruoyi-ui
@@ -150,9 +150,11 @@ npm install
 npm run dev
 ```
 
-执行完毕后，检查 terminal 中出入了 App running at 的字样就表示前端项目启动成功了
+执行完毕后，检查 terminal 中出现了 App running at 的字样就表示前端项目启动成功了
 
 ![](images/ruoyi-idea-node.png)
+
+> 注意：我们的环境运行在容器中，我们将容器内的80端口映射到了你本地的8000端口。
 
 现在打开 http://localhost:8000 即可访问若依项目了
 
@@ -166,12 +168,14 @@ npm run dev
 
 ![](images/ruoyi-idea-debugging.png)
 
-调试相关的入口如下：
+其他调试相关的入口如下：
 
 - 容器内项目目录 /home/project
 - WebIDE入口 http://localhost:6800
 - 数据库管理PHPMyAdmin http://localhost:8090
 - 前端应用入口 http://localhost:8000
+
+> 注意：如果你本地的以上端口有被占用的情况，SmartIDE会自动在当前端口上增加100，具体转发情况请参考SmartIDE命令的日志输出。
 
 ## 5. 停止和恢复环境
 
