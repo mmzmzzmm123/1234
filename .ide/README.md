@@ -38,7 +38,13 @@ smartide start https://gitee.com/SmartIDE/RuoYi-Vue.git
 
 > WebIDE的地址是 https://localhost:6800
 
-![](images/vscode-webide.png)
+JetBrains Projector是一款基于浏览器的WebIDE，提供与桌面IDE一致的操作体验，第一次打开 JetBrains Projector 的时候需要进行简单的初始化操作如下：
+
+![](images/projector-terms.png)
+
+在 **Welcome to IntelliJ IDEA** 页面中，点击 **Open** 然后选择 **/home/project** 目录，然后点击 **OK** 
+
+![](images/projector-open.png)
 
 ## 3. 远程主机模式启动项目
 
@@ -77,17 +83,7 @@ spring:
     active: smartide
 ```
 
-2. 编译并安装所有RuoYi后端组件
-
-然后，我们需要打开IDEA内置的terminal，并执行以下指令以确保RuoYi所有模块都已经编译并放入共享组件库中
-
-```shell
-## 请在RuoYi项目根目录执行
-mvn package
-mvn install
-```
-
-3. 创建ry-vue数据库
+2. 创建ry-vue数据库
 
 > 说明：使用SmartIDE运行开发环境的一个好处就是一键启动所有相关环境，我们已经在你的环境中内置了专门用户RuoYi项目开发的MySQL数据库，并且为了你的操作方便，也提供了PhpMyAdmin这个工具方便你进行数据管理操作。
 
@@ -112,6 +108,28 @@ mvn install
 
 ![](images/ruoyi-db-tables.png)
 
+3. 编译并安装所有RuoYi后端组件，并启动后端调试
+
+然后，我们需要打开IDEA内置的terminal，并执行以下指令以确保RuoYi所有模块都已经编译并放入共享组件库中
+
+```shell
+## 请在RuoYi项目根目录执行
+mvn package
+mvn install
+```
+
+点击 **File | Project Structure**  设置当前项目的JDK版本，环境中已经内置了OpenJDK-11这个版本，如果希望使用其他JDK版本也可以自行选择下载。
+
+![](images/ruoyi-idea-jdk.png)
+
+右键点击 **ruoyi-admin/src/main/java/com.ruoyi/RuoYiApplication.java** 文件，并启动 **Debug** 模式
+
+![](images/ruoyi-idea-debug.png)
+
+注意 Console 中出现 **若依启动成功** 的字样，表示后端应用启动成功。
+
+![](images/ruoyi-idea-console.png)
+
 4. 编译并启动前端项目
 
 现在我们可以进入ruoyi-admin项目，并启动调试
@@ -124,9 +142,21 @@ npm install
 npm run dev
 ```
 
+执行完毕后，检查 terminal 中出入了 App running at 的字样就表示前端项目启动成功了
+
+![](images/ruoyi-idea-node.png)
+
+现在打开 http://localhost:8000 即可访问若依项目了
+
+![](images/ruoyi-idea-ruoyi-ui.png)
+
 5. 设置断点，进入交互式单步调试状态
 
+如果你按照刚才的操作方式用 **Debug** 模式启动了后端项目，那么现在可以在任何位置创建断点，并进入断点调试模式
 
+比如，你可以在 **/ruoyi-admin/src/main/java/com.ruoyi/web/controllers/system/SysUserController.java** 的 **第59行** 设置断点，然后进入 **若依管理系统 ｜ 系统管理 ｜ 用户管理** 菜单，即可触发此断点，注意下图中的IDEA已经中断在代码行59.
+
+![](images/ruoyi-idea-debugging.png)
 
 调试相关的入口如下：
 
