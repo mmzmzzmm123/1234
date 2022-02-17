@@ -16,7 +16,7 @@ SmartIDE是下一代的云原生IDE，可以帮助你一键启动项目的集成
 
 为了便于大家更直观的了解使用SmartIDE开发调试Ruoyi的过程，我们在B站提上提供了视频供大家参考，视频地址如下：
 
-TODO: 录制视频
+https://www.bilibili.com/video/BV13L4y1g75S/
 
 ## 2. 本地模式启动项目
 
