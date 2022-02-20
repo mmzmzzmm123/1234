@@ -40,6 +40,11 @@ public class Constants
     public static final String FAIL = "1";
 
     /**
+     * 预登录 redis key
+     */
+    public static final String PRE_LOGIN_KEY = "pre_login_key:";
+
+    /**
      * 登录成功
      */
     public static final String LOGIN_SUCCESS = "Success";

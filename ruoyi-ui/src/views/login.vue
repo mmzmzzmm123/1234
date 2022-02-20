@@ -62,9 +62,10 @@
 </template>
 
 <script>
+import { preLogin } from "@/api/login";
 import { getCodeImg } from "@/api/login";
 import Cookies from "js-cookie";
-import { encrypt, decrypt } from '@/utils/jsencrypt'
+import { encrypt, decrypt, encryptLogin } from '@/utils/jsencrypt'
 
 export default {
   name: "Login",
@@ -127,7 +128,8 @@ export default {
         rememberMe: rememberMe === undefined ? false : Boolean(rememberMe)
       };
     },
-    handleLogin() {
+    async handleLogin() {
+      const login_public_key = await preLogin();
       this.$refs.loginForm.validate(valid => {
         if (valid) {
           this.loading = true;
@@ -140,7 +142,15 @@ export default {
             Cookies.remove("password");
             Cookies.remove('rememberMe');
           }
-          this.$store.dispatch("Login", this.loginForm).then(() => {
+          let authLoginForm = {};
+          // encrypt 加密
+          authLoginForm.username = encryptLogin(login_public_key, this.loginForm.username);
+          authLoginForm.password = encryptLogin(login_public_key, this.loginForm.password);
+          authLoginForm.code = this.loginForm.code;
+          authLoginForm.uuid = this.loginForm.uuid;
+          authLoginForm.publicKey = login_public_key;
+          console.log(authLoginForm);
+          this.$store.dispatch("Login", authLoginForm).then(() => {
             this.$router.push({ path: this.redirect || "/" }).catch(()=>{});
           }).catch(() => {
             this.loading = false;

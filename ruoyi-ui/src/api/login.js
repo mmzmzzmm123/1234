@@ -1,12 +1,28 @@
 import request from '@/utils/request'
 
+// 预登陆，获取RSA密钥
+export function preLogin() {
+  return new Promise(resolve => {
+    request({
+      url: '/preLogin',
+      headers: {
+        isToken: false
+      },
+      method: 'get'
+    }).then(res =>{
+      resolve(res.data)
+    })
+  })
+}
+
 // 登录方法
-export function login(username, password, code, uuid) {
+export function login(username, password, code, uuid, publicKey) {
   const data = {
     username,
     password,
     code,
-    uuid
+    uuid,
+    publicKey
   }
   return request({
     url: '/login',

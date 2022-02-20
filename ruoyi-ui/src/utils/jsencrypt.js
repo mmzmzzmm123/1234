@@ -28,3 +28,15 @@ export function decrypt(txt) {
   return encryptor.decrypt(txt) // 对数据进行解密
 }
 
+/**
+ * 对登录的用户名密码加密
+ * @param loginPublicKey
+ * @param txt       待加密文本
+ * @returns {Promise<ArrayBuffer>}
+ */
+export function encryptLogin(loginPublicKey, txt) {
+  const encrypt = new JSEncrypt();
+  encrypt.setPublicKey(loginPublicKey);
+  return encrypt.encrypt(txt);
+}
+
