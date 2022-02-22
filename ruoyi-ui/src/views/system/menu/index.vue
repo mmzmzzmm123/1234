@@ -129,24 +129,16 @@
           </el-col>
           <el-col :span="24" v-if="form.menuType != 'F'">
             <el-form-item label="菜单图标" prop="icon">
-              <el-popover
-                placement="bottom-start"
-                width="460"
-                trigger="click"
-                @show="$refs['iconSelect'].reset()"
-              >
-                <IconSelect ref="iconSelect" @selected="selected" />
-                <el-input slot="reference" v-model="form.icon" placeholder="点击选择图标" readonly>
-                  <svg-icon
-                    v-if="form.icon"
-                    slot="prefix"
-                    :icon-class="form.icon"
-                    class="el-input__icon"
-                    style="height: 32px;width: 16px;"
-                  />
-                  <i v-else slot="prefix" class="el-icon-search el-input__icon" />
-                </el-input>
-              </el-popover>
+              <el-input v-model="form.icon" clearable @focus="selectIcon" placeholder="菜单图标名称">
+                <svg-icon
+                  v-if="form.icon"
+                  slot="prefix"
+                  :icon-class="form.icon"
+                  class="el-input__icon"
+                  style="height: 32px;width: 16px;"
+                />
+                <i v-else slot="prefix" class="el-icon-search el-input__icon" />
+              </el-input>
             </el-form-item>
           </el-col>
           <el-col :span="12">
@@ -272,19 +264,21 @@
         <el-button @click="cancel">取 消</el-button>
       </div>
     </el-dialog>
+
+    <IconDialogSelect ref="iconDialogSelect" :value="form.icon" @getValue="value => form.icon = value"></IconDialogSelect>
   </div>
 </template>
 
 <script>
+import IconDialogSelect from '@/components/IconDialogSelect'
 import { listMenu, getMenu, delMenu, addMenu, updateMenu } from "@/api/system/menu";
 import Treeselect from "@riophae/vue-treeselect";
 import "@riophae/vue-treeselect/dist/vue-treeselect.css";
-import IconSelect from "@/components/IconSelect";
 
 export default {
   name: "Menu",
   dicts: ['sys_show_hide', 'sys_normal_disable'],
-  components: { Treeselect, IconSelect },
+  components: { Treeselect, IconDialogSelect },
   data() {
     return {
       // 遮罩层
@@ -328,9 +322,9 @@ export default {
     this.getList();
   },
   methods: {
-    // 选择图标
-    selected(name) {
-      this.form.icon = name;
+    // 弹框选择图标
+    selectIcon () {
+      this.$refs.iconDialogSelect.visible = true
     },
     /** 查询菜单列表 */
     getList() {
