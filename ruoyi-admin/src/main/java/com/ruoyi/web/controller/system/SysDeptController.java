@@ -2,6 +2,8 @@ package com.ruoyi.web.controller.system;
 
 import java.util.Iterator;
 import java.util.List;
+
+import com.ruoyi.common.core.domain.TreeSelect;
 import org.apache.commons.lang3.ArrayUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -82,10 +84,10 @@ public class SysDeptController extends BaseController
      * 获取部门下拉树列表
      */
     @GetMapping("/treeselect")
-    public AjaxResult treeselect(SysDept dept)
-    {
+    public AjaxResult treeselect(SysDept dept){
         List<SysDept> depts = deptService.selectDeptList(dept);
-        return AjaxResult.success(deptService.buildDeptTreeSelect(depts));
+        List<TreeSelect> treeSelects = deptService.buildDeptTreeSelect(depts);
+        return AjaxResult.success(treeSelects);
     }
 
     /**

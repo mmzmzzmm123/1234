@@ -4,6 +4,10 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import cn.hutool.core.lang.tree.Tree;
+import cn.hutool.core.lang.tree.TreeNodeConfig;
+import cn.hutool.core.lang.tree.TreeUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.ruoyi.common.annotation.DataScope;
@@ -55,28 +59,20 @@ public class SysDeptServiceImpl implements ISysDeptService
      * @return 树结构列表
      */
     @Override
-    public List<SysDept> buildDeptTree(List<SysDept> depts)
+    public List<Tree<Long>> buildDeptTree(List<SysDept> depts,Long parentId)
     {
-        List<SysDept> returnList = new ArrayList<SysDept>();
-        List<Long> tempList = new ArrayList<Long>();
-        for (SysDept dept : depts)
-        {
-            tempList.add(dept.getDeptId());
-        }
-        for (SysDept dept : depts)
-        {
-            // 如果是顶级节点, 遍历该父节点的所有子节点
-            if (!tempList.contains(dept.getParentId()))
-            {
-                recursionFn(depts, dept);
-                returnList.add(dept);
-            }
-        }
-        if (returnList.isEmpty())
-        {
-            returnList = depts;
-        }
-        return returnList;
+        //配置
+        TreeNodeConfig treeNodeConfig = new TreeNodeConfig();
+        treeNodeConfig.setNameKey("label");
+        // 自定义属性名 都要默认值的
+        List<Tree<Long>> treeList = TreeUtil.build(depts, parentId, treeNodeConfig,
+                (treeNode, tree) -> {
+                    tree.setId(treeNode.getDeptId());
+                    tree.setParentId(treeNode.getParentId());
+                    tree.setName(treeNode.getDeptName());
+                    tree.putExtra("value", treeNode.getDeptId());
+                });
+        return treeList;
     }
 
     /**
@@ -88,7 +84,7 @@ public class SysDeptServiceImpl implements ISysDeptService
     @Override
     public List<TreeSelect> buildDeptTreeSelect(List<SysDept> depts)
     {
-        List<SysDept> deptTrees = buildDeptTree(depts);
+        List<Tree<Long>> deptTrees = buildDeptTree(depts, 0L);
         return deptTrees.stream().map(TreeSelect::new).collect(Collectors.toList());
     }
 
