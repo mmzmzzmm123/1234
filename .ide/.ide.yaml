@@ -6,10 +6,10 @@ workspace:
   dev-container:
     service-name: ruoyi-dev
     ports:
-      webide: 6800
-      ssh: 6822
-      ruoyi-ui: 8000
-      ruoyi-admin: 8080
+      tools-webide-idea: 6800
+      tools-ssh: 6822
+      apps-ruoyi-ui: 8000
+      apps-ruoyi-admin: 8080
     ide-type: jb-projector
     volumes:
       git-config: true
