@@ -78,7 +78,7 @@
       </el-table-column>
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
-          <el-button 
+          <el-button
             size="mini"
             type="text"
             icon="el-icon-edit"
@@ -379,7 +379,9 @@ export default {
         visible: "0",
         status: "0"
       };
-      this.resetForm("form");
+      this.$nextTick(() => {
+        this.resetForm("form");
+      })
     },
     /** 搜索按钮操作 */
     handleQuery() {
