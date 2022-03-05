@@ -92,16 +92,13 @@ export default {
         const tmpPath = path.substring(1, path.length);
         activePath = "/" + tmpPath.substring(0, tmpPath.indexOf("/"));
       } else if ("/index" == path || "" == path) {
-        if (!this.isFrist) {
-          this.isFrist = true;
-        } else {
-          activePath = "index";
-        }
+        this.isFrist = true;
       }
       var routes = this.activeRoutes(activePath);
       if (routes.length === 0) {
-        activePath = this.currentIndex || this.defaultRouter()
-        this.activeRoutes(activePath);
+        this.$store.commit("SET_SIDEBAR_MENU_HIDE", true);
+      }else {
+        this.$store.commit("SET_SIDEBAR_MENU_HIDE", false);
       }
       return activePath;
     },
@@ -142,22 +139,26 @@ export default {
         // /redirect 路径内部打开
         this.$router.push({ path: key.replace("/redirect", "") });
       } else {
-        // 显示左侧联动菜单
-        this.activeRoutes(key);
+        // 显示左侧联动菜单顶部菜单
+        this.activeRoutes(key,true);
       }
     },
     // 当前激活的路由
-    activeRoutes(key) {
+    activeRoutes(key,isTop) {
       var routes = [];
       if (this.childrenMenus && this.childrenMenus.length > 0) {
         this.childrenMenus.map((item) => {
-          if (key == item.parentPath || (key == "index" && "" == item.path)) {
+          if (key == item.parentPath) {
             routes.push(item);
           }
         });
       }
       if(routes.length > 0) {
+        //TODO 第一个默认选中
         this.$store.commit("SET_SIDEBAR_ROUTERS", routes);
+        if(isTop){
+          this.$router.push({path:routes[0].path});
+        }
       }
       return routes;
     },

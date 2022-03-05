@@ -11,7 +11,8 @@ const permission = {
     addRoutes: [],
     defaultRoutes: [],
     topbarRouters: [],
-    sidebarRouters: []
+    sidebarRouters: [],
+    sidebarMenuHide: false
   },
   mutations: {
     SET_ROUTES: (state, routes) => {
@@ -22,15 +23,13 @@ const permission = {
       state.defaultRoutes = constantRoutes.concat(routes)
     },
     SET_TOPBAR_ROUTES: (state, routes) => {
-      // 顶部导航菜单默认添加统计报表栏指向首页
-      const index = [{
-        path: 'index',
-        meta: { title: '统计报表', icon: 'dashboard' }
-      }]
-      state.topbarRouters = routes.concat(index);
+      state.topbarRouters = routes;
     },
     SET_SIDEBAR_ROUTERS: (state, routes) => {
       state.sidebarRouters = routes
+    }
+    ,SET_SIDEBAR_MENU_HIDE: (state, sidebarMenuHide) => {
+      state.sidebarMenuHide = sidebarMenuHide
     },
   },
   actions: {
