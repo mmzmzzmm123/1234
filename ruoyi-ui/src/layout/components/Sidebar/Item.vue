@@ -21,7 +21,17 @@ export default {
     }
 
     if (title) {
-      vnodes.push(<span slot='title'>{(title)}</span>)
+      if (title.length > 5) {
+        vnodes.push(
+          <el-tooltip slot="title" className="item" effect="dark" content={title} placement="right">
+            <span>{(title)}</span>
+          </el-tooltip>
+        )
+      } else {
+        vnodes.push(
+          <span slot="title">{(title)}</span>
+        )
+      }
     }
     return vnodes
   }
