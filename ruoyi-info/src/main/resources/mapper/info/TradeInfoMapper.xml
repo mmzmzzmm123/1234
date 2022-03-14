@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.info.mapper.TradeInfoMapper">
+    
+    <resultMap type="TradeInfo" id="TradeInfoResult">
+        <result property="id"    column="id"    />
+        <result property="tradeNo"    column="trade_no"    />
+        <result property="operatorName"    column="operator_name"    />
+        <result property="groupNo"    column="group_no"    />
+        <result property="cardType"    column="card_type"    />
+        <result property="currencyType"    column="currency_type"    />
+        <result property="cardValue"    column="card_value"    />
+        <result property="buyCardExchangeRate"    column="buy_card_exchange_rate"    />
+        <result property="buyCost"    column="buy_cost"    />
+        <result property="nailaValue"    column="naila_value"    />
+        <result property="code"    column="code"    />
+        <result property="commGroup"    column="comm_group"    />
+        <result property="salePrice"    column="sale_price"    />
+        <result property="profit"    column="profit"    />
+        <result property="bankAccount"    column="bank_account"    />
+        <result property="payStatus"    column="pay_status"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+    </resultMap>
+
+    <sql id="selectTradeInfoVo">
+        select id, trade_no, operator_name, group_no, card_type, currency_type, card_value, buy_card_exchange_rate, buy_cost, naila_value, code, comm_group, sale_price, profit, bank_account, pay_status, create_by, create_time, update_by, update_time from trade_info
+    </sql>
+
+    <select id="selectTradeInfoList" parameterType="TradeInfo" resultMap="TradeInfoResult">
+        <include refid="selectTradeInfoVo"/>
+        <where>  
+            <if test="tradeNo != null  and tradeNo != ''"> and trade_no = #{tradeNo}</if>
+            <if test="operatorName != null  and operatorName != ''"> and operator_name like concat('%', #{operatorName}, '%')</if>
+            <if test="groupNo != null  and groupNo != ''"> and group_no = #{groupNo}</if>
+            <if test="cardType != null  and cardType != ''"> and card_type = #{cardType}</if>
+            <if test="currencyType != null  and currencyType != ''"> and currency_type = #{currencyType}</if>
+            <if test="cardValue != null "> and card_value = #{cardValue}</if>
+            <if test="buyCardExchangeRate != null "> and buy_card_exchange_rate = #{buyCardExchangeRate}</if>
+            <if test="buyCost != null "> and buy_cost = #{buyCost}</if>
+            <if test="nailaValue != null "> and naila_value = #{nailaValue}</if>
+            <if test="code != null  and code != ''"> and code = #{code}</if>
+            <if test="commGroup != null  and commGroup != ''"> and comm_group = #{commGroup}</if>
+            <if test="salePrice != null "> and sale_price = #{salePrice}</if>
+            <if test="profit != null "> and profit = #{profit}</if>
+            <if test="bankAccount != null  and bankAccount != ''"> and bank_account = #{bankAccount}</if>
+            <if test="payStatus != null  and payStatus != ''"> and pay_status = #{payStatus}</if>
+        </where>
+    </select>
+    
+    <select id="selectTradeInfoById" parameterType="Long" resultMap="TradeInfoResult">
+        <include refid="selectTradeInfoVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertTradeInfo" parameterType="TradeInfo" useGeneratedKeys="true" keyProperty="id">
+        insert into trade_info
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="tradeNo != null and tradeNo != ''">trade_no,</if>
+            <if test="operatorName != null">operator_name,</if>
+            <if test="groupNo != null">group_no,</if>
+            <if test="cardType != null">card_type,</if>
+            <if test="currencyType != null">currency_type,</if>
+            <if test="cardValue != null">card_value,</if>
+            <if test="buyCardExchangeRate != null">buy_card_exchange_rate,</if>
+            <if test="buyCost != null">buy_cost,</if>
+            <if test="nailaValue != null">naila_value,</if>
+            <if test="code != null">code,</if>
+            <if test="commGroup != null">comm_group,</if>
+            <if test="salePrice != null">sale_price,</if>
+            <if test="profit != null">profit,</if>
+            <if test="bankAccount != null">bank_account,</if>
+            <if test="payStatus != null">pay_status,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="tradeNo != null and tradeNo != ''">#{tradeNo},</if>
+            <if test="operatorName != null">#{operatorName},</if>
+            <if test="groupNo != null">#{groupNo},</if>
+            <if test="cardType != null">#{cardType},</if>
+            <if test="currencyType != null">#{currencyType},</if>
+            <if test="cardValue != null">#{cardValue},</if>
+            <if test="buyCardExchangeRate != null">#{buyCardExchangeRate},</if>
+            <if test="buyCost != null">#{buyCost},</if>
+            <if test="nailaValue != null">#{nailaValue},</if>
+            <if test="code != null">#{code},</if>
+            <if test="commGroup != null">#{commGroup},</if>
+            <if test="salePrice != null">#{salePrice},</if>
+            <if test="profit != null">#{profit},</if>
+            <if test="bankAccount != null">#{bankAccount},</if>
+            <if test="payStatus != null">#{payStatus},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateTradeInfo" parameterType="TradeInfo">
+        update trade_info
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="tradeNo != null and tradeNo != ''">trade_no = #{tradeNo},</if>
+            <if test="operatorName != null">operator_name = #{operatorName},</if>
+            <if test="groupNo != null">group_no = #{groupNo},</if>
+            <if test="cardType != null">card_type = #{cardType},</if>
+            <if test="currencyType != null">currency_type = #{currencyType},</if>
+            <if test="cardValue != null">card_value = #{cardValue},</if>
+            <if test="buyCardExchangeRate != null">buy_card_exchange_rate = #{buyCardExchangeRate},</if>
+            <if test="buyCost != null">buy_cost = #{buyCost},</if>
+            <if test="nailaValue != null">naila_value = #{nailaValue},</if>
+            <if test="code != null">code = #{code},</if>
+            <if test="commGroup != null">comm_group = #{commGroup},</if>
+            <if test="salePrice != null">sale_price = #{salePrice},</if>
+            <if test="profit != null">profit = #{profit},</if>
+            <if test="bankAccount != null">bank_account = #{bankAccount},</if>
+            <if test="payStatus != null">pay_status = #{payStatus},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteTradeInfoById" parameterType="Long">
+        delete from trade_info where id = #{id}
+    </delete>
+
+    <delete id="deleteTradeInfoByIds" parameterType="String">
+        delete from trade_info where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>
