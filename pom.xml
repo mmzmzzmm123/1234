@@ -8,11 +8,11 @@
     <artifactId>ruoyi</artifactId>
     <version>3.8.1</version>
 
-    <name>ruoyi</name>
-    <url>http://www.ruoyi.vip</url>
-    <description>若依管理系统</description>
+    <name>jlt-private-farm</name>
+    <description>私家农场管理系统</description>
     
     <properties>
+        <private-farm.version>1.0.0</private-farm.version>
         <ruoyi.version>3.8.1</ruoyi.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
@@ -199,6 +199,13 @@
                 <version>${ruoyi.version}</version>
             </dependency>
 
+            <!-- 私家农场 -->
+            <dependency>
+                <groupId>com.jlt.farming</groupId>
+                <artifactId>private-farm</artifactId>
+                <version>${private-farm.version}</version>
+            </dependency>
+
         </dependencies>
     </dependencyManagement>
 
@@ -209,6 +216,7 @@
         <module>ruoyi-quartz</module>
         <module>ruoyi-generator</module>
         <module>ruoyi-common</module>
+        <module>private-farm</module>
     </modules>
     <packaging>pom</packaging>
 

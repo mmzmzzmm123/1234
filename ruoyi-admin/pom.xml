@@ -61,6 +61,11 @@
             <artifactId>ruoyi-generator</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>com.jlt.farming</groupId>
+            <artifactId>private-farm</artifactId>
+        </dependency>
+
     </dependencies>
 
     <build>
