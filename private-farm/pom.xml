@@ -9,7 +9,7 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>com.jlt.farming</groupId>
+    <groupId>com.jlt</groupId>
     <artifactId>private-farm</artifactId>
     <version>1.0.0</version>
     <description>私家农场(社区支持农业)管理系统</description>

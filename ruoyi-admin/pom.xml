@@ -62,7 +62,7 @@
         </dependency>
 
         <dependency>
-            <groupId>com.jlt.farming</groupId>
+            <groupId>com.jlt</groupId>
             <artifactId>private-farm</artifactId>
         </dependency>
 

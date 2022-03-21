@@ -1,4 +1,4 @@
-package com.jlt.farming.crm.domain;
+package com.jlt.crm.domain;
 
 import java.util.Date;
 import com.fasterxml.jackson.annotation.JsonFormat;

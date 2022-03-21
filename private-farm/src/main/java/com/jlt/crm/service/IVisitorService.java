@@ -1,15 +1,16 @@
-package com.jlt.farming.crm.mapper;
+package com.jlt.crm.service;
 
 import java.util.List;
-import com.jlt.farming.crm.domain.Visitor;
+
+import com.jlt.crm.domain.Visitor;
 
 /**
- * 访客信息Mapper接口
+ * 访客信息Service接口
  * 
  * @author ruoyi
  * @date 2022-02-08
  */
-public interface VisitorMapper
+public interface IVisitorService 
 {
     /**
      * 查询访客信息
@@ -44,18 +45,18 @@ public interface VisitorMapper
     public int updateVisitor(Visitor Visitor);
 
     /**
-     * 删除访客信息
+     * 批量删除访客信息
+     * 
+     * @param visitorIds 需要删除的访客信息主键集合
+     * @return 结果
+     */
+    public int deleteVisitorByVisitorIds(Long[] visitorIds);
+
+    /**
+     * 删除访客信息信息
      * 
      * @param visitorId 访客信息主键
      * @return 结果
      */
     public int deleteVisitorByVisitorId(Long visitorId);
-
-    /**
-     * 批量删除访客信息
-     * 
-     * @param visitorIds 需要删除的数据主键集合
-     * @return 结果
-     */
-    public int deleteVisitorByVisitorIds(Long[] visitorIds);
 }

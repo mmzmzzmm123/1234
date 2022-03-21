@@ -2,7 +2,7 @@
 <!DOCTYPE mapper
 PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.jlt.farming.crm.mapper.VisitorMapper">
+<mapper namespace="com.jlt.crm.mapper.VisitorMapper">
     
     <resultMap type="Visitor" id="VisitorResult">
         <result property="visitorId"    column="visitor_id"    />

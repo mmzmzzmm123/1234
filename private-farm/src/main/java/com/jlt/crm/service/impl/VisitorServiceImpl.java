@@ -1,10 +1,9 @@
-package com.jlt.farming.crm.service.impl;
+package com.jlt.crm.service.impl;
 
 import java.util.List;
 
-import com.jlt.farming.crm.domain.Visitor;
-import com.jlt.farming.crm.mapper.VisitorMapper;
-import com.jlt.farming.crm.service.IVisitorService;
+import com.jlt.crm.domain.Visitor;
+import com.jlt.crm.service.IVisitorService;
 import com.ruoyi.common.utils.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -19,7 +18,7 @@ import org.springframework.stereotype.Service;
 public class VisitorServiceImpl implements IVisitorService
 {
     @Autowired
-    private VisitorMapper VisitorMapper;
+    private com.jlt.crm.mapper.VisitorMapper VisitorMapper;
 
     /**
      * 查询访客信息

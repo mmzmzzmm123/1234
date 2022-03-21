@@ -9,7 +9,7 @@
     <version>3.8.1</version>
 
     <name>jlt-private-farm</name>
-    <description>私家农场管理系统</description>
+    <description>私家农场管理系统(CSA,社区支持农业)</description>
     
     <properties>
         <private-farm.version>1.0.0</private-farm.version>
@@ -201,7 +201,7 @@
 
             <!-- 私家农场 -->
             <dependency>
-                <groupId>com.jlt.farming</groupId>
+                <groupId>com.jlt</groupId>
                 <artifactId>private-farm</artifactId>
                 <version>${private-farm.version}</version>
             </dependency>

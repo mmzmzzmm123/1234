@@ -1,10 +1,10 @@
-package com.jlt.farming.crm.controller;
+package com.jlt.crm.controller;
 
 import java.util.List;
 import javax.servlet.http.HttpServletResponse;
 
-import com.jlt.farming.crm.domain.Visitor;
-import com.jlt.farming.crm.service.IVisitorService;
+import com.jlt.crm.domain.Visitor;
+import com.jlt.crm.service.IVisitorService;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
