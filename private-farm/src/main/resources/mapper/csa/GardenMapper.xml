@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jlt.csa.mapper.GardenMapper">
+    
+    <resultMap type="Garden" id="GardenResult">
+        <result property="id"    column="id"    />
+        <result property="code"    column="code"    />
+        <result property="zoneCode"    column="zone_code"    />
+        <result property="name"    column="name"    />
+        <result property="m2"    column="m2"    />
+        <result property="memberId"    column="member_id"    />
+        <result property="managerId"    column="manager_id"    />
+        <result property="workerId"    column="worker_id"    />
+        <result property="contacterId"    column="contacter_id"    />
+        <result property="coins"    column="coins"    />
+        <result property="isFarming"    column="is_farming"    />
+        <result property="isSelled"    column="is_selled"    />
+        <result property="isCompleted"    column="is_completed"    />
+        <result property="status"    column="status"    />
+        <result property="delFlag"    column="del_flag"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="remark"    column="remark"    />
+    </resultMap>
+
+    <sql id="selectGardenVo">
+        select id, code, zone_code, name, m2, member_id, manager_id, worker_id, contacter_id, coins, is_farming, is_selled, is_completed, status, del_flag, create_by, create_time, update_by, update_time, remark from csa_garden
+    </sql>
+
+    <select id="selectGardenList" parameterType="Garden" resultMap="GardenResult">
+        <include refid="selectGardenVo"/>
+        <where>  
+            <if test="code != null  and code != ''"> and code = #{code}</if>
+            <if test="zoneCode != null  and zoneCode != ''"> and zone_code = #{zoneCode}</if>
+            <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
+            <if test="memberId != null "> and member_id = #{memberId}</if>
+            <if test="managerId != null "> and manager_id = #{managerId}</if>
+            <if test="workerId != null "> and worker_id = #{workerId}</if>
+            <if test="contacterId != null "> and contacter_id = #{contacterId}</if>
+            <if test="isFarming != null  and isFarming != ''"> and is_farming = #{isFarming}</if>
+            <if test="isSelled != null  and isSelled != ''"> and is_selled = #{isSelled}</if>
+            <if test="isCompleted != null  and isCompleted != ''"> and is_completed = #{isCompleted}</if>
+        </where>
+    </select>
+    
+    <select id="selectGardenById" parameterType="Long" resultMap="GardenResult">
+        <include refid="selectGardenVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertGarden" parameterType="Garden">
+        insert into csa_garden
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="code != null and code != ''">code,</if>
+            <if test="zoneCode != null and zoneCode != ''">zone_code,</if>
+            <if test="name != null and name != ''">name,</if>
+            <if test="m2 != null">m2,</if>
+            <if test="memberId != null">member_id,</if>
+            <if test="managerId != null">manager_id,</if>
+            <if test="workerId != null">worker_id,</if>
+            <if test="contacterId != null">contacter_id,</if>
+            <if test="coins != null">coins,</if>
+            <if test="isFarming != null">is_farming,</if>
+            <if test="isSelled != null">is_selled,</if>
+            <if test="isCompleted != null">is_completed,</if>
+            <if test="status != null">status,</if>
+            <if test="delFlag != null">del_flag,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="remark != null">remark,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="code != null and code != ''">#{code},</if>
+            <if test="zoneCode != null and zoneCode != ''">#{zoneCode},</if>
+            <if test="name != null and name != ''">#{name},</if>
+            <if test="m2 != null">#{m2},</if>
+            <if test="memberId != null">#{memberId},</if>
+            <if test="managerId != null">#{managerId},</if>
+            <if test="workerId != null">#{workerId},</if>
+            <if test="contacterId != null">#{contacterId},</if>
+            <if test="coins != null">#{coins},</if>
+            <if test="isFarming != null">#{isFarming},</if>
+            <if test="isSelled != null">#{isSelled},</if>
+            <if test="isCompleted != null">#{isCompleted},</if>
+            <if test="status != null">#{status},</if>
+            <if test="delFlag != null">#{delFlag},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="remark != null">#{remark},</if>
+         </trim>
+    </insert>
+
+    <update id="updateGarden" parameterType="Garden">
+        update csa_garden
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="code != null and code != ''">code = #{code},</if>
+            <if test="zoneCode != null and zoneCode != ''">zone_code = #{zoneCode},</if>
+            <if test="name != null and name != ''">name = #{name},</if>
+            <if test="m2 != null">m2 = #{m2},</if>
+            <if test="memberId != null">member_id = #{memberId},</if>
+            <if test="managerId != null">manager_id = #{managerId},</if>
+            <if test="workerId != null">worker_id = #{workerId},</if>
+            <if test="contacterId != null">contacter_id = #{contacterId},</if>
+            <if test="coins != null">coins = #{coins},</if>
+            <if test="isFarming != null">is_farming = #{isFarming},</if>
+            <if test="isSelled != null">is_selled = #{isSelled},</if>
+            <if test="isCompleted != null">is_completed = #{isCompleted},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="delFlag != null">del_flag = #{delFlag},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="remark != null">remark = #{remark},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteGardenById" parameterType="Long">
+        delete from csa_garden where id = #{id}
+    </delete>
+
+    <delete id="deleteGardenByIds" parameterType="String">
+        delete from csa_garden where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>
