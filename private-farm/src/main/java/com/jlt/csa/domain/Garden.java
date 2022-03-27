@@ -47,10 +47,6 @@ public class Garden extends BaseEntity
     /** 客服人员id */
     private Long contacterId;
 
-    /** 金币 */
-    @Excel(name = "金币")
-    private BigDecimal coins;
-
     /** 耕作状态 */
     private String isFarming;
 
@@ -148,15 +144,6 @@ public class Garden extends BaseEntity
     {
         return contacterId;
     }
-    public void setCoins(BigDecimal coins) 
-    {
-        this.coins = coins;
-    }
-
-    public BigDecimal getCoins() 
-    {
-        return coins;
-    }
     public void setIsFarming(String isFarming) 
     {
         this.isFarming = isFarming;
@@ -215,7 +202,6 @@ public class Garden extends BaseEntity
             .append("managerId", getManagerId())
             .append("workerId", getWorkerId())
             .append("contacterId", getContacterId())
-            .append("coins", getCoins())
             .append("isFarming", getIsFarming())
             .append("isSelled", getIsSelled())
             .append("isCompleted", getIsCompleted())

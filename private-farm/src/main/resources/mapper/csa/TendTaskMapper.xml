@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jlt.csa.mapper.TendTaskMapper">
+    
+    <resultMap type="TendTask" id="TendTaskResult">
+        <result property="id"    column="id"    />
+        <result property="gardenId"    column="garden_id"    />
+        <result property="taskType"    column="task_type"    />
+        <result property="taskSubtype"    column="task_subtype"    />
+        <result property="description"    column="description"    />
+        <result property="executionPhase"    column="execution_phase"    />
+        <result property="coins"    column="coins"    />
+        <result property="taskTime"    column="task_time"    />
+        <result property="feedbackTime"    column="feedback_time"    />
+        <result property="feedbackResult"    column="feedback_result"    />
+        <result property="executor"    column="executor"    />
+        <result property="feedbacker"    column="feedbacker"    />
+        <result property="isCompleted"    column="is_completed"    />
+        <result property="status"    column="status"    />
+        <result property="delFlag"    column="del_flag"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="remark"    column="remark"    />
+    </resultMap>
+
+    <sql id="selectTendTaskVo">
+        select id, garden_id, task_type, task_subtype, description, execution_phase, coins, task_time, feedback_time, feedback_result, executor, feedbacker, is_completed, status, del_flag, create_by, create_time, update_by, update_time, remark from csa_tend_task
+    </sql>
+
+    <select id="selectTendTaskList" parameterType="TendTask" resultMap="TendTaskResult">
+        <include refid="selectTendTaskVo"/>
+        <where>  
+            <if test="gardenId != null "> and garden_id = #{gardenId}</if>
+            <if test="taskType != null  and taskType != ''"> and task_type = #{taskType}</if>
+            <if test="executionPhase != null  and executionPhase != ''"> and execution_phase = #{executionPhase}</if>
+            <if test="executor != null "> and executor = #{executor}</if>
+            <if test="feedbacker != null "> and feedbacker = #{feedbacker}</if>
+            <if test="isCompleted != null  and isCompleted != ''"> and is_completed = #{isCompleted}</if>
+            <if test="status != null  and status != ''"> and status = #{status}</if>
+        </where>
+    </select>
+    
+    <select id="selectTendTaskById" parameterType="Long" resultMap="TendTaskResult">
+        <include refid="selectTendTaskVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertTendTask" parameterType="TendTask" useGeneratedKeys="true" keyProperty="id">
+        insert into csa_tend_task
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="gardenId != null">garden_id,</if>
+            <if test="taskType != null and taskType != ''">task_type,</if>
+            <if test="taskSubtype != null">task_subtype,</if>
+            <if test="description != null">description,</if>
+            <if test="executionPhase != null and executionPhase != ''">execution_phase,</if>
+            <if test="coins != null">coins,</if>
+            <if test="taskTime != null">task_time,</if>
+            <if test="feedbackTime != null">feedback_time,</if>
+            <if test="feedbackResult != null">feedback_result,</if>
+            <if test="executor != null">executor,</if>
+            <if test="feedbacker != null">feedbacker,</if>
+            <if test="isCompleted != null and isCompleted != ''">is_completed,</if>
+            <if test="status != null">status,</if>
+            <if test="delFlag != null">del_flag,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="remark != null">remark,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="gardenId != null">#{gardenId},</if>
+            <if test="taskType != null and taskType != ''">#{taskType},</if>
+            <if test="taskSubtype != null">#{taskSubtype},</if>
+            <if test="description != null">#{description},</if>
+            <if test="executionPhase != null and executionPhase != ''">#{executionPhase},</if>
+            <if test="coins != null">#{coins},</if>
+            <if test="taskTime != null">#{taskTime},</if>
+            <if test="feedbackTime != null">#{feedbackTime},</if>
+            <if test="feedbackResult != null">#{feedbackResult},</if>
+            <if test="executor != null">#{executor},</if>
+            <if test="feedbacker != null">#{feedbacker},</if>
+            <if test="isCompleted != null and isCompleted != ''">#{isCompleted},</if>
+            <if test="status != null">#{status},</if>
+            <if test="delFlag != null">#{delFlag},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="remark != null">#{remark},</if>
+         </trim>
+    </insert>
+
+    <update id="updateTendTask" parameterType="TendTask">
+        update csa_tend_task
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="gardenId != null">garden_id = #{gardenId},</if>
+            <if test="taskType != null and taskType != ''">task_type = #{taskType},</if>
+            <if test="taskSubtype != null">task_subtype = #{taskSubtype},</if>
+            <if test="description != null">description = #{description},</if>
+            <if test="executionPhase != null and executionPhase != ''">execution_phase = #{executionPhase},</if>
+            <if test="coins != null">coins = #{coins},</if>
+            <if test="taskTime != null">task_time = #{taskTime},</if>
+            <if test="feedbackTime != null">feedback_time = #{feedbackTime},</if>
+            <if test="feedbackResult != null">feedback_result = #{feedbackResult},</if>
+            <if test="executor != null">executor = #{executor},</if>
+            <if test="feedbacker != null">feedbacker = #{feedbacker},</if>
+            <if test="isCompleted != null and isCompleted != ''">is_completed = #{isCompleted},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="delFlag != null">del_flag = #{delFlag},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="remark != null">remark = #{remark},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteTendTaskById" parameterType="Long">
+        delete from csa_tend_task where id = #{id}
+    </delete>
+
+    <delete id="deleteTendTaskByIds" parameterType="String">
+        delete from csa_tend_task where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jlt.csa.mapper.CsaMemberCardMapper">
+    
+    <resultMap type="CsaMemberCard" id="CsaMemberCardResult">
+        <result property="id"    column="id"    />
+        <result property="cardno"    column="cardno"    />
+        <result property="passwd"    column="passwd"    />
+        <result property="activationValidity"    column="activation_validity"    />
+        <result property="usabilityStatus"    column="usability_status"    />
+        <result property="activeStatus"    column="active_status"    />
+        <result property="m2"    column="m2"    />
+        <result property="landYears"    column="land_years"    />
+        <result property="archedYears"    column="arched_years"    />
+        <result property="coins"    column="coins"    />
+        <result property="balance"    column="balance"    />
+        <result property="weight"    column="weight"    />
+        <result property="setMeal"    column="set_meal"    />
+        <result property="delFlag"    column="del_flag"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="remark"    column="remark"    />
+    </resultMap>
+
+    <sql id="selectCsaMemberCardVo">
+        select id, cardno, passwd, activation_validity, usability_status, active_status, m2, land_years, arched_years, coins, balance, weight, set_meal, del_flag, create_by, create_time, update_by, update_time, remark from csa_member_card
+    </sql>
+
+    <select id="selectCsaMemberCardList" parameterType="CsaMemberCard" resultMap="CsaMemberCardResult">
+        <include refid="selectCsaMemberCardVo"/>
+        <where>  
+            <if test="cardno != null  and cardno != ''"> and cardno = #{cardno}</if>
+            <if test="usabilityStatus != null  and usabilityStatus != ''"> and usability_status = #{usabilityStatus}</if>
+            <if test="activeStatus != null  and activeStatus != ''"> and active_status = #{activeStatus}</if>
+            <if test="landYears != null "> and land_years = #{landYears}</if>
+            <if test="archedYears != null "> and arched_years = #{archedYears}</if>
+            <if test="setMeal != null  and setMeal != ''"> and set_meal = #{setMeal}</if>
+        </where>
+    </select>
+    
+    <select id="selectCsaMemberCardById" parameterType="Long" resultMap="CsaMemberCardResult">
+        <include refid="selectCsaMemberCardVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertCsaMemberCard" parameterType="CsaMemberCard" useGeneratedKeys="true" keyProperty="id">
+        insert into csa_member_card
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="cardno != null and cardno != ''">cardno,</if>
+            <if test="passwd != null and passwd != ''">passwd,</if>
+            <if test="activationValidity != null">activation_validity,</if>
+            <if test="usabilityStatus != null">usability_status,</if>
+            <if test="activeStatus != null">active_status,</if>
+            <if test="m2 != null">m2,</if>
+            <if test="landYears != null">land_years,</if>
+            <if test="archedYears != null">arched_years,</if>
+            <if test="coins != null">coins,</if>
+            <if test="balance != null">balance,</if>
+            <if test="weight != null">weight,</if>
+            <if test="setMeal != null">set_meal,</if>
+            <if test="delFlag != null">del_flag,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="remark != null">remark,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="cardno != null and cardno != ''">#{cardno},</if>
+            <if test="passwd != null and passwd != ''">#{passwd},</if>
+            <if test="activationValidity != null">#{activationValidity},</if>
+            <if test="usabilityStatus != null">#{usabilityStatus},</if>
+            <if test="activeStatus != null">#{activeStatus},</if>
+            <if test="m2 != null">#{m2},</if>
+            <if test="landYears != null">#{landYears},</if>
+            <if test="archedYears != null">#{archedYears},</if>
+            <if test="coins != null">#{coins},</if>
+            <if test="balance != null">#{balance},</if>
+            <if test="weight != null">#{weight},</if>
+            <if test="setMeal != null">#{setMeal},</if>
+            <if test="delFlag != null">#{delFlag},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="remark != null">#{remark},</if>
+         </trim>
+    </insert>
+
+    <update id="updateCsaMemberCard" parameterType="CsaMemberCard">
+        update csa_member_card
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="cardno != null and cardno != ''">cardno = #{cardno},</if>
+            <if test="passwd != null and passwd != ''">passwd = #{passwd},</if>
+            <if test="activationValidity != null">activation_validity = #{activationValidity},</if>
+            <if test="usabilityStatus != null">usability_status = #{usabilityStatus},</if>
+            <if test="activeStatus != null">active_status = #{activeStatus},</if>
+            <if test="m2 != null">m2 = #{m2},</if>
+            <if test="landYears != null">land_years = #{landYears},</if>
+            <if test="archedYears != null">arched_years = #{archedYears},</if>
+            <if test="coins != null">coins = #{coins},</if>
+            <if test="balance != null">balance = #{balance},</if>
+            <if test="weight != null">weight = #{weight},</if>
+            <if test="setMeal != null">set_meal = #{setMeal},</if>
+            <if test="delFlag != null">del_flag = #{delFlag},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="remark != null">remark = #{remark},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteCsaMemberCardById" parameterType="Long">
+        delete from csa_member_card where id = #{id}
+    </delete>
+
+    <delete id="deleteCsaMemberCardByIds" parameterType="String">
+        delete from csa_member_card where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

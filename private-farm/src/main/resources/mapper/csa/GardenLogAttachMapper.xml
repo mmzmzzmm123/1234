@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jlt.csa.mapper.GardenLogAttachMapper">
+    
+    <resultMap type="GardenLogAttach" id="GardenLogAttachResult">
+        <result property="id"    column="id"    />
+        <result property="logId"    column="log_id"    />
+        <result property="attachType"    column="attach_type"    />
+        <result property="filename"    column="filename"    />
+        <result property="url"    column="url"    />
+        <result property="width"    column="width"    />
+        <result property="height"    column="height"    />
+        <result property="bytes"    column="bytes"    />
+        <result property="publishTime"    column="publish_time"    />
+        <result property="delFlag"    column="del_flag"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="remark"    column="remark"    />
+    </resultMap>
+
+    <sql id="selectGardenLogAttachVo">
+        select id, log_id, attach_type, filename, url, width, height, bytes, publish_time, del_flag, create_by, create_time, update_by, update_time, remark from csa_garden_log_attach
+    </sql>
+
+    <select id="selectGardenLogAttachList" parameterType="GardenLogAttach" resultMap="GardenLogAttachResult">
+        <include refid="selectGardenLogAttachVo"/>
+        <where>  
+            <if test="logId != null "> and log_id = #{logId}</if>
+            <if test="attachType != null  and attachType != ''"> and attach_type = #{attachType}</if>
+            <if test="publishTime != null "> and publish_time = #{publishTime}</if>
+        </where>
+    </select>
+    
+    <select id="selectGardenLogAttachById" parameterType="Long" resultMap="GardenLogAttachResult">
+        <include refid="selectGardenLogAttachVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertGardenLogAttach" parameterType="GardenLogAttach" useGeneratedKeys="true" keyProperty="id">
+        insert into csa_garden_log_attach
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="logId != null">log_id,</if>
+            <if test="attachType != null and attachType != ''">attach_type,</if>
+            <if test="filename != null">filename,</if>
+            <if test="url != null">url,</if>
+            <if test="width != null">width,</if>
+            <if test="height != null">height,</if>
+            <if test="bytes != null">bytes,</if>
+            <if test="publishTime != null">publish_time,</if>
+            <if test="delFlag != null">del_flag,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="remark != null">remark,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="logId != null">#{logId},</if>
+            <if test="attachType != null and attachType != ''">#{attachType},</if>
+            <if test="filename != null">#{filename},</if>
+            <if test="url != null">#{url},</if>
+            <if test="width != null">#{width},</if>
+            <if test="height != null">#{height},</if>
+            <if test="bytes != null">#{bytes},</if>
+            <if test="publishTime != null">#{publishTime},</if>
+            <if test="delFlag != null">#{delFlag},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="remark != null">#{remark},</if>
+         </trim>
+    </insert>
+
+    <update id="updateGardenLogAttach" parameterType="GardenLogAttach">
+        update csa_garden_log_attach
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="logId != null">log_id = #{logId},</if>
+            <if test="attachType != null and attachType != ''">attach_type = #{attachType},</if>
+            <if test="filename != null">filename = #{filename},</if>
+            <if test="url != null">url = #{url},</if>
+            <if test="width != null">width = #{width},</if>
+            <if test="height != null">height = #{height},</if>
+            <if test="bytes != null">bytes = #{bytes},</if>
+            <if test="publishTime != null">publish_time = #{publishTime},</if>
+            <if test="delFlag != null">del_flag = #{delFlag},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="remark != null">remark = #{remark},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteGardenLogAttachById" parameterType="Long">
+        delete from csa_garden_log_attach where id = #{id}
+    </delete>
+
+    <delete id="deleteGardenLogAttachByIds" parameterType="String">
+        delete from csa_garden_log_attach where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

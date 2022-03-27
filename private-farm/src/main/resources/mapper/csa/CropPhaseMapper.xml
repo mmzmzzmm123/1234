@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jlt.csa.mapper.CropPhaseMapper">
+    
+    <resultMap type="CropPhase" id="CropPhaseResult">
+        <result property="id"    column="id"    />
+        <result property="cropId"    column="crop_id"    />
+        <result property="name"    column="name"    />
+        <result property="production"    column="production"    />
+        <result property="picture"    column="picture"    />
+        <result property="status"    column="status"    />
+        <result property="delFlag"    column="del_flag"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="remark"    column="remark"    />
+    </resultMap>
+
+    <sql id="selectCropPhaseVo">
+        select id, crop_id, name, production, picture, status, del_flag, create_by, create_time, update_by, update_time, remark from csa_crop_phase
+    </sql>
+
+    <select id="selectCropPhaseList" parameterType="CropPhase" resultMap="CropPhaseResult">
+        <include refid="selectCropPhaseVo"/>
+        <where>  
+            <if test="cropId != null "> and crop_id = #{cropId}</if>
+            <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
+            <if test="status != null  and status != ''"> and status = #{status}</if>
+        </where>
+    </select>
+    
+    <select id="selectCropPhaseById" parameterType="Long" resultMap="CropPhaseResult">
+        <include refid="selectCropPhaseVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertCropPhase" parameterType="CropPhase" useGeneratedKeys="true" keyProperty="id">
+        insert into csa_crop_phase
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="cropId != null">crop_id,</if>
+            <if test="name != null and name != ''">name,</if>
+            <if test="production != null">production,</if>
+            <if test="picture != null">picture,</if>
+            <if test="status != null">status,</if>
+            <if test="delFlag != null">del_flag,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="remark != null">remark,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="cropId != null">#{cropId},</if>
+            <if test="name != null and name != ''">#{name},</if>
+            <if test="production != null">#{production},</if>
+            <if test="picture != null">#{picture},</if>
+            <if test="status != null">#{status},</if>
+            <if test="delFlag != null">#{delFlag},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="remark != null">#{remark},</if>
+         </trim>
+    </insert>
+
+    <update id="updateCropPhase" parameterType="CropPhase">
+        update csa_crop_phase
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="cropId != null">crop_id = #{cropId},</if>
+            <if test="name != null and name != ''">name = #{name},</if>
+            <if test="production != null">production = #{production},</if>
+            <if test="picture != null">picture = #{picture},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="delFlag != null">del_flag = #{delFlag},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="remark != null">remark = #{remark},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteCropPhaseById" parameterType="Long">
+        delete from csa_crop_phase where id = #{id}
+    </delete>
+
+    <delete id="deleteCropPhaseByIds" parameterType="String">
+        delete from csa_crop_phase where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>
