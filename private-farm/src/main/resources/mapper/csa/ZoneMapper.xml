@@ -6,6 +6,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     
     <resultMap type="Zone" id="ZoneResult">
         <result property="code"    column="code"    />
+        <result property="type"    column="type"    />
         <result property="name"    column="name"    />
         <result property="status"    column="status"    />
         <result property="delFlag"    column="del_flag"    />
@@ -17,14 +18,15 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </resultMap>
 
     <sql id="selectZoneVo">
-        select code, name, status, del_flag, create_by, create_time, update_by, update_time, remark from csa_zone
+        select code, type, name, status, del_flag, create_by, create_time, update_by, update_time, remark from csa_zone
     </sql>
 
     <select id="selectZoneList" parameterType="Zone" resultMap="ZoneResult">
         <include refid="selectZoneVo"/>
         <where>  
-            <if test="code != null  and code != ''"> and code = #{code}</if>
+            <if test="type != null  and type != ''"> and type = #{type}</if>
             <if test="name != null  and name != ''"> and name = #{name}</if>
+            <if test="status != null  and status != ''"> and status = #{status}</if>
         </where>
     </select>
     
@@ -36,7 +38,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <insert id="insertZone" parameterType="Zone">
         insert into csa_zone
         <trim prefix="(" suffix=")" suffixOverrides=",">
-            <if test="code != null and code != ''">code,</if>
+            <if test="code != null">code,</if>
+            <if test="type != null and type != ''">type,</if>
             <if test="name != null and name != ''">name,</if>
             <if test="status != null">status,</if>
             <if test="delFlag != null">del_flag,</if>
@@ -47,7 +50,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="remark != null">remark,</if>
          </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
-            <if test="code != null and code != ''">#{code},</if>
+            <if test="code != null">#{code},</if>
+            <if test="type != null and type != ''">#{type},</if>
             <if test="name != null and name != ''">#{name},</if>
             <if test="status != null">#{status},</if>
             <if test="delFlag != null">#{delFlag},</if>
@@ -62,6 +66,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <update id="updateZone" parameterType="Zone">
         update csa_zone
         <trim prefix="SET" suffixOverrides=",">
+            <if test="type != null and type != ''">type = #{type},</if>
             <if test="name != null and name != ''">name = #{name},</if>
             <if test="status != null">status = #{status},</if>
             <if test="delFlag != null">del_flag = #{delFlag},</if>

@@ -1,14 +1,6 @@
 <template>
   <div class="app-container">
     <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch" label-width="68px">
-      <el-form-item label="分区代码" prop="code">
-        <el-input
-          v-model="queryParams.code"
-          placeholder="请输入分区代码"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
       <el-form-item label="分区名称" prop="name">
         <el-input
           v-model="queryParams.name"
@@ -31,7 +23,7 @@
           icon="el-icon-plus"
           size="mini"
           @click="handleAdd"
-          v-hasPermi="['csa:zone:add']"
+          v-hasPermi="['csa:farmzone:add']"
         >新增</el-button>
       </el-col>
       <el-col :span="1.5">
@@ -42,7 +34,7 @@
           size="mini"
           :disabled="single"
           @click="handleUpdate"
-          v-hasPermi="['csa:zone:edit']"
+          v-hasPermi="['csa:farmzone:edit']"
         >修改</el-button>
       </el-col>
       <el-col :span="1.5">
@@ -53,7 +45,7 @@
           size="mini"
           :disabled="multiple"
           @click="handleDelete"
-          v-hasPermi="['csa:zone:remove']"
+          v-hasPermi="['csa:farmzone:remove']"
         >删除</el-button>
       </el-col>
       <el-col :span="1.5">
@@ -63,15 +55,16 @@
           icon="el-icon-download"
           size="mini"
           @click="handleExport"
-          v-hasPermi="['csa:zone:export']"
+          v-hasPermi="['csa:farmzone:export']"
         >导出</el-button>
       </el-col>
       <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
     </el-row>
 
-    <el-table v-loading="loading" :data="zoneList" @selection-change="handleSelectionChange">
+    <el-table v-loading="loading" :data="farmzoneList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
       <el-table-column label="分区代码" align="center" prop="code" />
+      <el-table-column label="分区类型" align="center" prop="type" />
       <el-table-column label="分区名称" align="center" prop="name" />
       <el-table-column label="状态" align="center" prop="status" />
       <el-table-column label="备注" align="center" prop="remark" />
@@ -82,19 +75,19 @@
             type="text"
             icon="el-icon-edit"
             @click="handleUpdate(scope.row)"
-            v-hasPermi="['csa:zone:edit']"
+            v-hasPermi="['csa:farmzone:edit']"
           >修改</el-button>
           <el-button
             size="mini"
             type="text"
             icon="el-icon-delete"
             @click="handleDelete(scope.row)"
-            v-hasPermi="['csa:zone:remove']"
+            v-hasPermi="['csa:farmzone:remove']"
           >删除</el-button>
         </template>
       </el-table-column>
     </el-table>
-
+    
     <pagination
       v-show="total>0"
       :total="total"
@@ -104,16 +97,16 @@
     />
 
     <!-- 添加或修改农场分区对话框 -->
-    <el-dialog :title="title" :visible.sync="open" width="350px" append-to-body>
+    <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
-        <el-form-item label="分区代码" prop="name">
-          <el-input v-model="form.code" placeholder="请输入分区代码" />
-        </el-form-item>
         <el-form-item label="分区名称" prop="name">
           <el-input v-model="form.name" placeholder="请输入分区名称" />
         </el-form-item>
+        <el-form-item label="删除标志" prop="delFlag">
+          <el-input v-model="form.delFlag" placeholder="请输入删除标志" />
+        </el-form-item>
         <el-form-item label="备注" prop="remark">
-          <el-input v-model="form.remark" type="textarea" placeholder="请输入内容" />
+          <el-input v-model="form.remark" placeholder="请输入备注" />
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -125,10 +118,10 @@
 </template>
 
 <script>
-import { listZone, getZone, delZone, addZone, updateZone } from "@/api/csa/zone";
+import { listFarmzone, getFarmzone, delFarmzone, addFarmzone, updateFarmzone } from "@/api/csa/farmzone";
 
 export default {
-  name: "Zone",
+  name: "Farmzone",
   data() {
     return {
       // 遮罩层
@@ -144,7 +137,7 @@ export default {
       // 总条数
       total: 0,
       // 农场分区表格数据
-      zoneList: [],
+      farmzoneList: [],
       // 弹出层标题
       title: "",
       // 是否显示弹出层
@@ -153,17 +146,16 @@ export default {
       queryParams: {
         pageNum: 1,
         pageSize: 10,
-        code: null,
+        type: null,
         name: null,
+        status: null,
       },
-      // 是否新增
-      isAdd: false,
       // 表单参数
       form: {},
       // 表单校验
       rules: {
-        code: [
-          { required: true, message: "分区代码不能为空", trigger: "blur" }
+        type: [
+          { required: true, message: "分区类型不能为空", trigger: "change" }
         ],
         name: [
           { required: true, message: "分区名称不能为空", trigger: "blur" }
@@ -178,8 +170,8 @@ export default {
     /** 查询农场分区列表 */
     getList() {
       this.loading = true;
-      listZone(this.queryParams).then(response => {
-        this.zoneList = response.rows;
+      listFarmzone(this.queryParams).then(response => {
+        this.farmzoneList = response.rows;
         this.total = response.total;
         this.loading = false;
       });
@@ -193,10 +185,15 @@ export default {
     reset() {
       this.form = {
         code: null,
+        type: null,
         name: null,
         status: "0",
-        delFlag: "0",
-        remark: ""
+        delFlag: null,
+        createBy: null,
+        createTime: null,
+        updateBy: null,
+        updateTime: null,
+        remark: null
       };
       this.resetForm("form");
     },
@@ -219,16 +216,14 @@ export default {
     /** 新增按钮操作 */
     handleAdd() {
       this.reset();
-      this.isAdd = true;
       this.open = true;
       this.title = "添加农场分区";
     },
     /** 修改按钮操作 */
     handleUpdate(row) {
       this.reset();
-      this.isAdd = false;
       const code = row.code || this.ids
-      getZone(code).then(response => {
+      getFarmzone(code).then(response => {
         this.form = response.data;
         this.open = true;
         this.title = "修改农场分区";
@@ -238,14 +233,14 @@ export default {
     submitForm() {
       this.$refs["form"].validate(valid => {
         if (valid) {
-          if (!this.isAdd) {
-            updateZone(this.form).then(response => {
+          if (this.form.code != null) {
+            updateFarmzone(this.form).then(response => {
               this.$modal.msgSuccess("修改成功");
               this.open = false;
               this.getList();
             });
           } else {
-            addZone(this.form).then(response => {
+            addFarmzone(this.form).then(response => {
               this.$modal.msgSuccess("新增成功");
               this.open = false;
               this.getList();
@@ -258,7 +253,7 @@ export default {
     handleDelete(row) {
       const codes = row.code || this.ids;
       this.$modal.confirm('是否确认删除农场分区编号为"' + codes + '"的数据项？').then(function() {
-        return delZone(codes);
+        return delFarmzone(codes);
       }).then(() => {
         this.getList();
         this.$modal.msgSuccess("删除成功");
@@ -266,9 +261,9 @@ export default {
     },
     /** 导出按钮操作 */
     handleExport() {
-      this.download('csa/zone/export', {
+      this.download('csa/farmzone/export', {
         ...this.queryParams
-      }, `zone_${new Date().getTime()}.xlsx`)
+      }, `farmzone_${new Date().getTime()}.xlsx`)
     }
   }
 };

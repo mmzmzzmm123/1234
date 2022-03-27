@@ -1,44 +1,44 @@
 import request from '@/utils/request'
 
 // 查询农场分区列表
-export function listZone(query) {
+export function listFarmzone(query) {
   return request({
-    url: '/csa/zone/list',
+    url: '/csa/farmzone/list',
     method: 'get',
     params: query
   })
 }
 
 // 查询农场分区详细
-export function getZone(code) {
+export function getFarmzone(code) {
   return request({
-    url: '/csa/zone/' + code,
+    url: '/csa/farmzone/' + code,
     method: 'get'
   })
 }
 
 // 新增农场分区
-export function addZone(data) {
+export function addFarmzone(data) {
   return request({
-    url: '/csa/zone',
+    url: '/csa/farmzone',
     method: 'post',
     data: data
   })
 }
 
 // 修改农场分区
-export function updateZone(data) {
+export function updateFarmzone(data) {
   return request({
-    url: '/csa/zone',
+    url: '/csa/farmzone',
     method: 'put',
     data: data
   })
 }
 
 // 删除农场分区
-export function delZone(code) {
+export function delFarmzone(code) {
   return request({
-    url: '/csa/zone/' + code,
+    url: '/csa/farmzone/' + code,
     method: 'delete'
   })
 }

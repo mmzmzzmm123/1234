@@ -25,10 +25,10 @@ import com.ruoyi.common.core.page.TableDataInfo;
  * 农场分区Controller
  * 
  * @author 郏磊涛
- * @date 2022-03-24
+ * @date 2022-03-27
  */
 @RestController
-@RequestMapping("/csa/zone")
+@RequestMapping("/csa/farmzone")
 public class ZoneController extends BaseController
 {
     @Autowired
@@ -37,7 +37,7 @@ public class ZoneController extends BaseController
     /**
      * 查询农场分区列表
      */
-    @PreAuthorize("@ss.hasPermi('csa:zone:list')")
+    @PreAuthorize("@ss.hasPermi('csa:farmzone:list')")
     @GetMapping("/list")
     public TableDataInfo list(Zone zone)
     {
@@ -49,7 +49,7 @@ public class ZoneController extends BaseController
     /**
      * 导出农场分区列表
      */
-    @PreAuthorize("@ss.hasPermi('csa:zone:export')")
+    @PreAuthorize("@ss.hasPermi('csa:farmzone:export')")
     @Log(title = "农场分区", businessType = BusinessType.EXPORT)
     @PostMapping("/export")
     public void export(HttpServletResponse response, Zone zone)
@@ -62,7 +62,7 @@ public class ZoneController extends BaseController
     /**
      * 获取农场分区详细信息
      */
-    @PreAuthorize("@ss.hasPermi('csa:zone:query')")
+    @PreAuthorize("@ss.hasPermi('csa:farmzone:query')")
     @GetMapping(value = "/{code}")
     public AjaxResult getInfo(@PathVariable("code") String code)
     {
@@ -72,7 +72,7 @@ public class ZoneController extends BaseController
     /**
      * 新增农场分区
      */
-    @PreAuthorize("@ss.hasPermi('csa:zone:add')")
+    @PreAuthorize("@ss.hasPermi('csa:farmzone:add')")
     @Log(title = "农场分区", businessType = BusinessType.INSERT)
     @PostMapping
     public AjaxResult add(@RequestBody Zone zone)
@@ -83,7 +83,7 @@ public class ZoneController extends BaseController
     /**
      * 修改农场分区
      */
-    @PreAuthorize("@ss.hasPermi('csa:zone:edit')")
+    @PreAuthorize("@ss.hasPermi('csa:farmzone:edit')")
     @Log(title = "农场分区", businessType = BusinessType.UPDATE)
     @PutMapping
     public AjaxResult edit(@RequestBody Zone zone)
@@ -94,7 +94,7 @@ public class ZoneController extends BaseController
     /**
      * 删除农场分区
      */
-    @PreAuthorize("@ss.hasPermi('csa:zone:remove')")
+    @PreAuthorize("@ss.hasPermi('csa:farmzone:remove')")
     @Log(title = "农场分区", businessType = BusinessType.DELETE)
 	@DeleteMapping("/{codes}")
     public AjaxResult remove(@PathVariable String[] codes)

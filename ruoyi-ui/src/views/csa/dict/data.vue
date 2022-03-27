@@ -190,8 +190,8 @@
 </template>
 
 <script>
-import { listData, getData, delData, addData, updateData } from "@/api/system/dict/data";
-import { listType, getType } from "@/api/system/dict/type";
+import { listData, getData, delData, addData, updateData } from "@/api/csa/dict/data";
+import { listType, getType } from "@/api/csa/dict/type";
 
 export default {
   name: "Data",
@@ -390,7 +390,7 @@ export default {
     },
     /** 导出按钮操作 */
     handleExport() {
-      this.download('csa/base/dict/data/export', {
+      this.download('system/dict/data/export', {
         ...this.queryParams
       }, `data_${new Date().getTime()}.xlsx`)
     }
