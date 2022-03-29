@@ -43,7 +43,7 @@
           icon="el-icon-plus"
           size="mini"
           @click="handleAdd"
-          v-hasPermi="['csa:garden:add']"
+          v-hasPermi="['csa:garden:update']"
         >新增</el-button>
       </el-col>
       <el-col :span="1.5">
@@ -54,7 +54,7 @@
           size="mini"
           :disabled="single"
           @click="handleUpdate"
-          v-hasPermi="['csa:garden:edit']"
+          v-hasPermi="['csa:garden:update']"
         >修改</el-button>
       </el-col>
       <el-col :span="1.5">
@@ -65,7 +65,7 @@
           size="mini"
           :disabled="multiple"
           @click="handleDelete"
-          v-hasPermi="['csa:garden:remove']"
+          v-hasPermi="['csa:garden:update']"
         >删除</el-button>
       </el-col>
       <el-col :span="1.5">
@@ -85,7 +85,7 @@
           icon="el-icon-finished"
           size="mini"
           @click="handleComplete"
-          v-hasPermi="['csa:garden:edit']"
+          v-hasPermi="['csa:garden:update']"
         >竣工</el-button>
       </el-col>
       <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
@@ -134,7 +134,7 @@
             icon="el-icon-edit"
             :disabled="scope.row.isCompleted == 'Y'"
             @click="handleUpdate(scope.row)"
-            v-hasPermi="['csa:garden:edit']"
+            v-hasPermi="['csa:garden:update']"
           >修改</el-button>
           <el-button
             size="mini"
@@ -142,7 +142,7 @@
             icon="el-icon-delete"
             :disabled="scope.row.isCompleted == 'Y'"
             @click="handleDelete(scope.row)"
-            v-hasPermi="['csa:garden:remove']"
+            v-hasPermi="['csa:garden:update']"
           >删除</el-button>
         </template>
       </el-table-column>

@@ -37,7 +37,7 @@ public class FarmZoneController extends BaseController
     /**
      * 查询农场分区列表
      */
-    @PreAuthorize("@ss.hasPermi('csa:farmzone:list')")
+    @PreAuthorize("@ss.hasPermi('csa:farmzone:query')")
     @GetMapping("/list")
     public TableDataInfo list(FarmZone farmZone)
     {
@@ -72,7 +72,7 @@ public class FarmZoneController extends BaseController
     /**
      * 新增农场分区
      */
-    @PreAuthorize("@ss.hasPermi('csa:farmzone:add')")
+    @PreAuthorize("@ss.hasPermi('csa:farmzone:update')")
     @Log(title = "农场分区", businessType = BusinessType.INSERT)
     @PostMapping
     public AjaxResult add(@RequestBody FarmZone farmZone)
@@ -83,7 +83,7 @@ public class FarmZoneController extends BaseController
     /**
      * 修改农场分区
      */
-    @PreAuthorize("@ss.hasPermi('csa:farmzone:edit')")
+    @PreAuthorize("@ss.hasPermi('csa:farmzone:update')")
     @Log(title = "农场分区", businessType = BusinessType.UPDATE)
     @PutMapping
     public AjaxResult edit(@RequestBody FarmZone farmZone)
@@ -94,7 +94,7 @@ public class FarmZoneController extends BaseController
     /**
      * 删除农场分区
      */
-    @PreAuthorize("@ss.hasPermi('csa:farmzone:remove')")
+    @PreAuthorize("@ss.hasPermi('csa:farmzone:update')")
     @Log(title = "农场分区", businessType = BusinessType.DELETE)
 	@DeleteMapping("/{ids}")
     public AjaxResult remove(@PathVariable Long[] ids)

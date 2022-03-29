@@ -43,7 +43,7 @@
           icon="el-icon-plus"
           size="mini"
           @click="handleAdd"
-          v-hasPermi="['csa:farmzone:add']"
+          v-hasPermi="['csa:farmzone:update']"
         >新增</el-button>
       </el-col>
       <el-col :span="1.5">
@@ -54,7 +54,7 @@
           size="mini"
           :disabled="single"
           @click="handleUpdate"
-          v-hasPermi="['csa:farmzone:edit']"
+          v-hasPermi="['csa:farmzone:update']"
         >修改</el-button>
       </el-col>
       <el-col :span="1.5">
@@ -65,7 +65,7 @@
           size="mini"
           :disabled="multiple"
           @click="handleDelete"
-          v-hasPermi="['csa:farmzone:remove']"
+          v-hasPermi="['csa:farmzone:update']"
         >删除</el-button>
       </el-col>
       <el-col :span="1.5">
@@ -102,14 +102,14 @@
             type="text"
             icon="el-icon-edit"
             @click="handleUpdate(scope.row)"
-            v-hasPermi="['csa:farmzone:edit']"
+            v-hasPermi="['csa:farmzone:update']"
           >修改</el-button>
           <el-button
             size="mini"
             type="text"
             icon="el-icon-delete"
             @click="handleDelete(scope.row)"
-            v-hasPermi="['csa:farmzone:remove']"
+            v-hasPermi="['csa:farmzone:update']"
           >删除</el-button>
         </template>
       </el-table-column>

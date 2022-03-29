@@ -37,7 +37,7 @@ public class GardenController extends BaseController
     /**
      * 查询菜地划分列表
      */
-    @PreAuthorize("@ss.hasPermi('csa:garden:list')")
+    @PreAuthorize("@ss.hasPermi('csa:garden:query')")
     @GetMapping("/list")
     public TableDataInfo list(Garden garden)
     {
@@ -72,7 +72,7 @@ public class GardenController extends BaseController
     /**
      * 新增菜地划分
      */
-    @PreAuthorize("@ss.hasPermi('csa:garden:add')")
+    @PreAuthorize("@ss.hasPermi('csa:garden:update')")
     @Log(title = "菜地划分", businessType = BusinessType.INSERT)
     @PostMapping
     public AjaxResult add(@RequestBody Garden garden)
@@ -83,7 +83,7 @@ public class GardenController extends BaseController
     /**
      * 修改菜地划分
      */
-    @PreAuthorize("@ss.hasPermi('csa:garden:edit')")
+    @PreAuthorize("@ss.hasPermi('csa:garden:update')")
     @Log(title = "菜地划分", businessType = BusinessType.UPDATE)
     @PutMapping
     public AjaxResult edit(@RequestBody Garden garden)
@@ -94,8 +94,8 @@ public class GardenController extends BaseController
     /**
      * 批量更新菜地状态
      */
-    @PreAuthorize("@ss.hasPermi('csa:garden:edit')")
-    @Log(title = "农场分区", businessType = BusinessType.UPDATE)
+    @PreAuthorize("@ss.hasPermi('csa:garden:update')")
+    @Log(title = "菜地划分", businessType = BusinessType.UPDATE)
     @PutMapping("/{ids}")
     public AjaxResult updateStatus(@RequestBody Garden garden, @PathVariable Long[] ids)
     {
@@ -105,7 +105,7 @@ public class GardenController extends BaseController
     /**
      * 删除菜地划分
      */
-    @PreAuthorize("@ss.hasPermi('csa:garden:remove')")
+    @PreAuthorize("@ss.hasPermi('csa:garden:update')")
     @Log(title = "菜地划分", businessType = BusinessType.DELETE)
     @DeleteMapping("/{ids}")
     public AjaxResult remove(@PathVariable Long[] ids)
