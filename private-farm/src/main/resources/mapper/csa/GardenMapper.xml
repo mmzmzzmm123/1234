@@ -26,11 +26,19 @@
         <result property="remark"    column="remark"    />
     </resultMap>
 
+    <resultMap id="GardenResultVo" type="Garden" extends="GardenResult">
+        <association property="farmZone" javaType="FarmZone" column="zone_id" select="getFarmZone" />
+    </resultMap>
+
     <sql id="selectGardenVo">
         select id, zone_id, code, name, m2, member_id, manager_id, worker_id, contacter_id, is_farming, is_selled, is_completed, status, del_flag, create_by, create_time, update_by, update_time, remark from csa_garden
     </sql>
 
-    <select id="selectGardenList" parameterType="Garden" resultMap="GardenResult">
+    <select id="getFarmZone" resultMap="com.jlt.csa.mapper.FarmZoneMapper.FarmZoneResult" parameterType="java.lang.Long">
+        select * from csa_farm_zone where id = #{zoneId, jdbcType=INTEGER}
+    </select>
+
+    <select id="selectGardenList" parameterType="Garden" resultMap="GardenResultVo">
         <include refid="selectGardenVo"/>
         <where>
             <if test="zoneId != null "> and zone_id = #{zoneId}</if>
@@ -104,7 +112,7 @@
         <trim prefix="SET" suffixOverrides=",">
             <if test="zoneId != null">zone_id = #{zoneId},</if>
             <if test="code != null and code != ''">code = #{code},</if>
-            <if test="name != null and name != ''">#{name},</if>
+            <if test="name != null and name != ''">name = #{name},</if>
             <if test="m2 != null">m2 = #{m2},</if>
             <if test="memberId != null">member_id = #{memberId},</if>
             <if test="managerId != null">manager_id = #{managerId},</if>

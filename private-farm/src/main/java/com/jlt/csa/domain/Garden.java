@@ -23,6 +23,9 @@ public class Garden extends BaseEntity
     @Excel(name = "农场分区")
     private Long zoneId;
 
+    /** 农场分区对象 */
+    private FarmZone farmZone;
+
     /** 菜地编号 */
     @Excel(name = "菜地编号")
     private String code;
@@ -91,6 +94,14 @@ public class Garden extends BaseEntity
     public void setCode(String code)
     {
         this.code = code;
+    }
+
+    public FarmZone getFarmZone() {
+        return farmZone;
+    }
+
+    public void setFarmZone(FarmZone farmZone) {
+        this.farmZone = farmZone;
     }
 
     public String getCode()

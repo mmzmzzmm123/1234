@@ -93,7 +93,7 @@
 
     <el-table v-loading="loading" :data="gardenList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="农场分区" align="center" prop="zoneId" />
+      <el-table-column label="农场分区" align="center" prop="farmZone.name" />
       <el-table-column label="菜地编号" align="center" prop="code">
         <template slot-scope="scope">
           <el-tag
@@ -105,8 +105,6 @@
       </el-table-column>
       <el-table-column label="菜地名称" align="center" prop="name" />
       <el-table-column label="平方米" align="center" prop="m2" />
-      <el-table-column label="会员" align="center" prop="memberId" />
-      <el-table-column label="管理员" align="center" prop="managerId" />
       <el-table-column label="耕作" align="center" prop="isFarming">
         <template slot-scope="scope">
           <dict-tag :options="dict.type.sys_yes_no" :value="scope.row.isFarming"/>
