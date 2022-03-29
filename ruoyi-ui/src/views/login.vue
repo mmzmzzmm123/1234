@@ -1,7 +1,7 @@
 <template>
   <div class="login">
     <el-form ref="loginForm" :model="loginForm" :rules="loginRules" class="login-form">
-      <h3 class="title">若依后台管理系统</h3>
+      <h3 class="title">阿狸云管理</h3>
       <el-form-item prop="username">
         <el-input
           v-model="loginForm.username"
@@ -56,7 +56,8 @@
     </el-form>
     <!--  底部  -->
     <div class="el-login-footer">
-      <span>Copyright © 2018-2022 ruoyi.vip All Rights Reserved.</span>
+      <span><img src="../assets/images/ba.png"/><a href="https://beian.miit.gov.cn/" target="_blank">黔ICP备2021003733号</a></span>
+      <span class="text-danger">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;技术交流QQ群：694716003</span>
     </div>
   </div>
 </template>
@@ -72,8 +73,8 @@ export default {
     return {
       codeUrl: "",
       loginForm: {
-        username: "admin",
-        password: "admin123",
+        username: "",
+        password: "",
         rememberMe: false,
         code: "",
         uuid: ""
