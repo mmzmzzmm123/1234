@@ -2,6 +2,8 @@ package com.jlt.csa.controller;
 
 import java.util.List;
 import javax.servlet.http.HttpServletResponse;
+
+import com.ruoyi.common.utils.DateUtils;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -20,6 +22,8 @@ import com.jlt.csa.domain.FarmZone;
 import com.jlt.csa.service.IFarmZoneService;
 import com.ruoyi.common.utils.poi.ExcelUtil;
 import com.ruoyi.common.core.page.TableDataInfo;
+
+import static com.ruoyi.common.utils.SecurityUtils.getUsername;
 
 /**
  * 农场分区Controller
@@ -77,6 +81,8 @@ public class FarmZoneController extends BaseController
     @PostMapping
     public AjaxResult add(@RequestBody FarmZone farmZone)
     {
+        farmZone.setCreateBy(getUsername());
+        farmZone.setCreateTime(DateUtils.getNowDate());
         return toAjax(farmZoneService.insertFarmZone(farmZone));
     }
 
@@ -88,6 +94,8 @@ public class FarmZoneController extends BaseController
     @PutMapping
     public AjaxResult edit(@RequestBody FarmZone farmZone)
     {
+        farmZone.setUpdateBy(getUsername());
+        farmZone.setUpdateTime(DateUtils.getNowDate());
         return toAjax(farmZoneService.updateFarmZone(farmZone));
     }
 

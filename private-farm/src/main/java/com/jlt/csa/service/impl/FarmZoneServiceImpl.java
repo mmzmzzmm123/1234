@@ -8,6 +8,8 @@ import com.jlt.csa.mapper.FarmZoneMapper;
 import com.jlt.csa.domain.FarmZone;
 import com.jlt.csa.service.IFarmZoneService;
 
+import static com.ruoyi.common.utils.SecurityUtils.getUsername;
+
 /**
  * 农场分区Service业务层处理
  * 
@@ -53,7 +55,6 @@ public class FarmZoneServiceImpl implements IFarmZoneService
     @Override
     public int insertFarmZone(FarmZone farmZone)
     {
-        farmZone.setCreateTime(DateUtils.getNowDate());
         return farmZoneMapper.insertFarmZone(farmZone);
     }
 
@@ -66,7 +67,6 @@ public class FarmZoneServiceImpl implements IFarmZoneService
     @Override
     public int updateFarmZone(FarmZone farmZone)
     {
-        farmZone.setUpdateTime(DateUtils.getNowDate());
         return farmZoneMapper.updateFarmZone(farmZone);
     }
 

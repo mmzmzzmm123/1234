@@ -2,6 +2,8 @@ package com.jlt.csa.controller;
 
 import java.util.List;
 import javax.servlet.http.HttpServletResponse;
+
+import com.ruoyi.common.utils.DateUtils;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -77,6 +79,8 @@ public class GardenController extends BaseController
     @PostMapping
     public AjaxResult add(@RequestBody Garden garden)
     {
+        garden.setCreateBy(getUsername());
+        garden.setCreateTime(DateUtils.getNowDate());
         return toAjax(gardenService.insertGarden(garden));
     }
 
@@ -88,6 +92,8 @@ public class GardenController extends BaseController
     @PutMapping
     public AjaxResult edit(@RequestBody Garden garden)
     {
+        garden.setUpdateBy(getUsername());
+        garden.setUpdateTime(DateUtils.getNowDate());
         return toAjax(gardenService.updateGarden(garden));
     }
 
@@ -99,6 +105,8 @@ public class GardenController extends BaseController
     @PutMapping("/{ids}")
     public AjaxResult updateStatus(@RequestBody Garden garden, @PathVariable Long[] ids)
     {
+        garden.setUpdateBy(getUsername());
+        garden.setUpdateTime(DateUtils.getNowDate());
         return toAjax(gardenService.updateGardenStatus(garden, ids));
     }
 

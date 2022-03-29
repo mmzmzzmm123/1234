@@ -66,7 +66,6 @@ public class GardenServiceImpl implements IGardenService
     @Override
     public int updateGarden(Garden garden)
     {
-        garden.setUpdateTime(DateUtils.getNowDate());
         return gardenMapper.updateGarden(garden);
     }
 
@@ -78,7 +77,6 @@ public class GardenServiceImpl implements IGardenService
      * @return 结果
      */
     public int updateGardenStatus(Garden garden, Long[] ids) {
-        garden.setUpdateTime(DateUtils.getNowDate());
         return gardenMapper.updateGardenStatus(garden, ids);
     }
 
