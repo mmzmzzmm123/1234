@@ -48,6 +48,16 @@
       </el-col>
       <el-col :span="1.5">
         <el-button
+          type="primary"
+          plain
+          icon="el-icon-folder-add"
+          size="mini"
+          @click="handleBatchAdd"
+          v-hasPermi="['csa:garden:update']"
+        >批增</el-button>
+      </el-col>
+      <el-col :span="1.5">
+        <el-button
           type="success"
           plain
           icon="el-icon-edit"
@@ -169,14 +179,17 @@
             />
           </el-select>
         </el-form-item>
-        <el-form-item label="菜地编号" prop="code">
-          <el-input v-model="form.code" placeholder="请输入菜地编号" />
+        <el-form-item :label="isBatch ? '起始编号' : '菜地编号'" prop="code">
+          <el-input v-model="form.code" :placeholder="isBatch ? '请输入菜地起始编号' : '请输入菜地编号'" />
         </el-form-item>
         <el-form-item label="平方米" prop="m2">
           <el-input v-model="form.m2" placeholder="请输入平方米" />
         </el-form-item>
         <el-form-item label="备注" prop="remark">
           <el-input v-model="form.remark" type="textarea" placeholder="请输入备注" />
+        </el-form-item>
+        <el-form-item label="菜地数量" prop="amount" v-if="isBatch">
+          <el-input-number v-model="form.amount" :min="1" :max="100" placeholder="请输入添加菜地数量" />
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -212,6 +225,8 @@
         farmzoneList: [],
         // 菜地划分表格数据
         gardenList: [],
+        // 是否批量新增
+        isBatch: false,
         // 弹出层标题
         title: "",
         // 是否显示弹出层
@@ -219,7 +234,7 @@
         // 查询参数
         queryParams: {
           pageNum: 1,
-          pageSize: 20,
+          pageSize: 10,
           zoneId: null,
           code: null,
           isCompleted: null
@@ -275,7 +290,8 @@
           code: null,
           m2: null,
           isCompleted: "N",
-          remark: null
+          remark: null,
+          amount: 1
         };
         this.resetForm("form");
       },
@@ -298,8 +314,16 @@
       /** 新增按钮操作 */
       handleAdd() {
         this.reset();
+        this.isBatch = false;
         this.open = true;
-        this.title = "添加菜地划分";
+        this.title = "添加菜地";
+      },
+      /** 批量新增按钮操作 */
+      handleBatchAdd() {
+        this.reset();
+        this.isBatch = true;
+        this.open = true;
+        this.title = "批量添加菜地";
       },
       /** 修改按钮操作 */
       handleUpdate(row) {
@@ -308,7 +332,7 @@
         getGarden(id).then(response => {
           this.form = response.data;
           this.open = true;
-          this.title = "修改菜地划分";
+          this.title = "修改菜地";
         });
       },
       /** 提交按钮 */

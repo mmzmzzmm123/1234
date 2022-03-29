@@ -1,19 +1,13 @@
 package com.jlt.csa.controller;
 
 import java.util.List;
+import java.util.Map;
 import javax.servlet.http.HttpServletResponse;
 
 import com.ruoyi.common.utils.DateUtils;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import com.ruoyi.common.annotation.Log;
 import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.domain.AjaxResult;
@@ -77,8 +71,10 @@ public class GardenController extends BaseController
     @PreAuthorize("@ss.hasPermi('csa:garden:update')")
     @Log(title = "菜地划分", businessType = BusinessType.INSERT)
     @PostMapping
-    public AjaxResult add(@RequestBody Garden garden)
+    public AjaxResult add(@RequestBody Garden garden, @RequestBody Map<String, Object> request)
     {
+        Integer amount = (Integer) request.get("amount");
+        logger.warn("菜地数量：" + amount);
         garden.setCreateBy(getUsername());
         garden.setCreateTime(DateUtils.getNowDate());
         return toAjax(gardenService.insertGarden(garden));
