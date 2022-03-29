@@ -10,9 +10,9 @@ export function listFarmzone(query) {
 }
 
 // 查询农场分区详细
-export function getFarmzone(code) {
+export function getFarmzone(id) {
   return request({
-    url: '/csa/farmzone/' + code,
+    url: '/csa/farmzone/' + id,
     method: 'get'
   })
 }
@@ -36,9 +36,9 @@ export function updateFarmzone(data) {
 }
 
 // 删除农场分区
-export function delFarmzone(code) {
+export function delFarmzone(id) {
   return request({
-    url: '/csa/farmzone/' + code,
+    url: '/csa/farmzone/' + id,
     method: 'delete'
   })
 }

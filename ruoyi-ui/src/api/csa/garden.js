@@ -35,6 +35,16 @@ export function updateGarden(data) {
   })
 }
 
+// 批量修改菜地划分状态
+export function updateGardenStatus(data, id) {
+  return request({
+    url: '/csa/garden/' + id,
+    method: 'put',
+    data: data
+  })
+}
+
+
 // 删除菜地划分
 export function delGarden(id) {
   return request({

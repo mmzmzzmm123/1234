@@ -8,24 +8,24 @@ import com.ruoyi.common.core.domain.BaseEntity;
 
 /**
  * 菜地划分对象 csa_garden
- * 
+ *
  * @author 郏磊涛
- * @date 2022-03-24
+ * @date 2022-03-29
  */
 public class Garden extends BaseEntity
 {
     private static final long serialVersionUID = 1L;
 
-    /** $column.columnComment */
+    /** 菜地id */
     private Long id;
+
+    /** 农场分区 */
+    @Excel(name = "农场分区")
+    private Long zoneId;
 
     /** 菜地编号 */
     @Excel(name = "菜地编号")
     private String code;
-
-    /** 分区代码 */
-    @Excel(name = "分区代码")
-    private String zoneCode;
 
     /** 菜地名称 */
     @Excel(name = "菜地名称")
@@ -35,157 +35,164 @@ public class Garden extends BaseEntity
     @Excel(name = "平方米")
     private BigDecimal m2;
 
-    /** 会员id */
+    /** 会员 */
+    @Excel(name = "会员")
     private Long memberId;
 
-    /** 菜地管理员id */
+    /** 菜地管理员 */
+    @Excel(name = "菜地管理员")
     private Long managerId;
 
-    /** 工人id */
+    /** 工人 */
+    @Excel(name = "工人")
     private Long workerId;
 
-    /** 客服人员id */
+    /** 客服人员 */
+    @Excel(name = "客服人员")
     private Long contacterId;
 
     /** 耕作状态 */
+    @Excel(name = "耕作状态")
     private String isFarming;
 
     /** 售出状态 */
+    @Excel(name = "售出状态")
     private String isSelled;
 
     /** 竣工状态 */
     @Excel(name = "竣工状态")
     private String isCompleted;
 
-    /** 状态（0正常 1停用） */
+    /** 状态 */
+    @Excel(name = "状态")
     private String status;
 
-    /** 删除标志（0代表存在 2代表删除） */
+    /** 删除标志 */
     private String delFlag;
 
-    public void setId(Long id) 
+    public void setId(Long id)
     {
         this.id = id;
     }
 
-    public Long getId() 
+    public Long getId()
     {
         return id;
     }
-    public void setCode(String code) 
+    public void setZoneId(Long zoneId)
+    {
+        this.zoneId = zoneId;
+    }
+
+    public Long getZoneId()
+    {
+        return zoneId;
+    }
+    public void setCode(String code)
     {
         this.code = code;
     }
 
-    public String getCode() 
+    public String getCode()
     {
         return code;
     }
-    public void setZoneCode(String zoneCode) 
-    {
-        this.zoneCode = zoneCode;
-    }
-
-    public String getZoneCode() 
-    {
-        return zoneCode;
-    }
-    public void setName(String name) 
+    public void setName(String name)
     {
         this.name = name;
     }
 
-    public String getName() 
+    public String getName()
     {
         return name;
     }
-    public void setM2(BigDecimal m2) 
+    public void setM2(BigDecimal m2)
     {
         this.m2 = m2;
     }
 
-    public BigDecimal getM2() 
+    public BigDecimal getM2()
     {
         return m2;
     }
-    public void setMemberId(Long memberId) 
+    public void setMemberId(Long memberId)
     {
         this.memberId = memberId;
     }
 
-    public Long getMemberId() 
+    public Long getMemberId()
     {
         return memberId;
     }
-    public void setManagerId(Long managerId) 
+    public void setManagerId(Long managerId)
     {
         this.managerId = managerId;
     }
 
-    public Long getManagerId() 
+    public Long getManagerId()
     {
         return managerId;
     }
-    public void setWorkerId(Long workerId) 
+    public void setWorkerId(Long workerId)
     {
         this.workerId = workerId;
     }
 
-    public Long getWorkerId() 
+    public Long getWorkerId()
     {
         return workerId;
     }
-    public void setContacterId(Long contacterId) 
+    public void setContacterId(Long contacterId)
     {
         this.contacterId = contacterId;
     }
 
-    public Long getContacterId() 
+    public Long getContacterId()
     {
         return contacterId;
     }
-    public void setIsFarming(String isFarming) 
+    public void setIsFarming(String isFarming)
     {
         this.isFarming = isFarming;
     }
 
-    public String getIsFarming() 
+    public String getIsFarming()
     {
         return isFarming;
     }
-    public void setIsSelled(String isSelled) 
+    public void setIsSelled(String isSelled)
     {
         this.isSelled = isSelled;
     }
 
-    public String getIsSelled() 
+    public String getIsSelled()
     {
         return isSelled;
     }
-    public void setIsCompleted(String isCompleted) 
+    public void setIsCompleted(String isCompleted)
     {
         this.isCompleted = isCompleted;
     }
 
-    public String getIsCompleted() 
+    public String getIsCompleted()
     {
         return isCompleted;
     }
-    public void setStatus(String status) 
+    public void setStatus(String status)
     {
         this.status = status;
     }
 
-    public String getStatus() 
+    public String getStatus()
     {
         return status;
     }
-    public void setDelFlag(String delFlag) 
+    public void setDelFlag(String delFlag)
     {
         this.delFlag = delFlag;
     }
 
-    public String getDelFlag() 
+    public String getDelFlag()
     {
         return delFlag;
     }
@@ -193,25 +200,25 @@ public class Garden extends BaseEntity
     @Override
     public String toString() {
         return new ToStringBuilder(this,ToStringStyle.MULTI_LINE_STYLE)
-            .append("id", getId())
-            .append("code", getCode())
-            .append("zoneCode", getZoneCode())
-            .append("name", getName())
-            .append("m2", getM2())
-            .append("memberId", getMemberId())
-            .append("managerId", getManagerId())
-            .append("workerId", getWorkerId())
-            .append("contacterId", getContacterId())
-            .append("isFarming", getIsFarming())
-            .append("isSelled", getIsSelled())
-            .append("isCompleted", getIsCompleted())
-            .append("status", getStatus())
-            .append("delFlag", getDelFlag())
-            .append("createBy", getCreateBy())
-            .append("createTime", getCreateTime())
-            .append("updateBy", getUpdateBy())
-            .append("updateTime", getUpdateTime())
-            .append("remark", getRemark())
-            .toString();
+                .append("id", getId())
+                .append("zoneId", getZoneId())
+                .append("code", getCode())
+                .append("name", getName())
+                .append("m2", getM2())
+                .append("memberId", getMemberId())
+                .append("managerId", getManagerId())
+                .append("workerId", getWorkerId())
+                .append("contacterId", getContacterId())
+                .append("isFarming", getIsFarming())
+                .append("isSelled", getIsSelled())
+                .append("isCompleted", getIsCompleted())
+                .append("status", getStatus())
+                .append("delFlag", getDelFlag())
+                .append("createBy", getCreateBy())
+                .append("createTime", getCreateTime())
+                .append("updateBy", getUpdateBy())
+                .append("updateTime", getUpdateTime())
+                .append("remark", getRemark())
+                .toString();
     }
 }

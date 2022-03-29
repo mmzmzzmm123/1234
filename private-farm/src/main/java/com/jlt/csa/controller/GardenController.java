@@ -23,9 +23,9 @@ import com.ruoyi.common.core.page.TableDataInfo;
 
 /**
  * 菜地划分Controller
- * 
+ *
  * @author 郏磊涛
- * @date 2022-03-24
+ * @date 2022-03-29
  */
 @RestController
 @RequestMapping("/csa/garden")
@@ -92,11 +92,22 @@ public class GardenController extends BaseController
     }
 
     /**
+     * 批量更新菜地状态
+     */
+    @PreAuthorize("@ss.hasPermi('csa:garden:edit')")
+    @Log(title = "农场分区", businessType = BusinessType.UPDATE)
+    @PutMapping("/{ids}")
+    public AjaxResult updateStatus(@RequestBody Garden garden, @PathVariable Long[] ids)
+    {
+        return toAjax(gardenService.updateGardenStatus(garden, ids));
+    }
+
+    /**
      * 删除菜地划分
      */
     @PreAuthorize("@ss.hasPermi('csa:garden:remove')")
     @Log(title = "菜地划分", businessType = BusinessType.DELETE)
-	@DeleteMapping("/{ids}")
+    @DeleteMapping("/{ids}")
     public AjaxResult remove(@PathVariable Long[] ids)
     {
         return toAjax(gardenService.deleteGardenByIds(ids));

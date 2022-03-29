@@ -10,19 +10,19 @@ import com.jlt.csa.service.IGardenService;
 
 /**
  * 菜地划分Service业务层处理
- * 
+ *
  * @author 郏磊涛
- * @date 2022-03-24
+ * @date 2022-03-29
  */
 @Service
-public class GardenServiceImpl implements IGardenService 
+public class GardenServiceImpl implements IGardenService
 {
     @Autowired
     private GardenMapper gardenMapper;
 
     /**
      * 查询菜地划分
-     * 
+     *
      * @param id 菜地划分主键
      * @return 菜地划分
      */
@@ -34,7 +34,7 @@ public class GardenServiceImpl implements IGardenService
 
     /**
      * 查询菜地划分列表
-     * 
+     *
      * @param garden 菜地划分
      * @return 菜地划分
      */
@@ -46,7 +46,7 @@ public class GardenServiceImpl implements IGardenService
 
     /**
      * 新增菜地划分
-     * 
+     *
      * @param garden 菜地划分
      * @return 结果
      */
@@ -59,7 +59,7 @@ public class GardenServiceImpl implements IGardenService
 
     /**
      * 修改菜地划分
-     * 
+     *
      * @param garden 菜地划分
      * @return 结果
      */
@@ -71,8 +71,20 @@ public class GardenServiceImpl implements IGardenService
     }
 
     /**
+     * 批量修改菜地状态
+     *
+     * @param garden 菜地划分
+     * @param ids 需要更改的菜地id集合
+     * @return 结果
+     */
+    public int updateGardenStatus(Garden garden, Long[] ids) {
+        garden.setUpdateTime(DateUtils.getNowDate());
+        return gardenMapper.updateGardenStatus(garden, ids);
+    }
+
+    /**
      * 批量删除菜地划分
-     * 
+     *
      * @param ids 需要删除的菜地划分主键
      * @return 结果
      */
@@ -84,7 +96,7 @@ public class GardenServiceImpl implements IGardenService
 
     /**
      * 删除菜地划分信息
-     * 
+     *
      * @param id 菜地划分主键
      * @return 结果
      */

@@ -2,10 +2,10 @@
 <!DOCTYPE mapper
 PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.jlt.csa.mapper.ZoneMapper">
+<mapper namespace="com.jlt.csa.mapper.FarmZoneMapper">
     
-    <resultMap type="Zone" id="ZoneResult">
-        <result property="code"    column="code"    />
+    <resultMap type="FarmZone" id="FarmZoneResult">
+        <result property="id"    column="id"    />
         <result property="type"    column="type"    />
         <result property="name"    column="name"    />
         <result property="status"    column="status"    />
@@ -17,28 +17,27 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="remark"    column="remark"    />
     </resultMap>
 
-    <sql id="selectZoneVo">
-        select code, type, name, status, del_flag, create_by, create_time, update_by, update_time, remark from csa_zone
+    <sql id="selectFarmZoneVo">
+        select id, type, name, status, del_flag, create_by, create_time, update_by, update_time, remark from csa_farm_zone
     </sql>
 
-    <select id="selectZoneList" parameterType="Zone" resultMap="ZoneResult">
-        <include refid="selectZoneVo"/>
-        <where>  
+    <select id="selectFarmZoneList" parameterType="FarmZone" resultMap="FarmZoneResult">
+        <include refid="selectFarmZoneVo"/>
+        <where>
             <if test="type != null  and type != ''"> and type = #{type}</if>
             <if test="name != null  and name != ''"> and name = #{name}</if>
             <if test="status != null  and status != ''"> and status = #{status}</if>
         </where>
     </select>
     
-    <select id="selectZoneByCode" parameterType="String" resultMap="ZoneResult">
-        <include refid="selectZoneVo"/>
-        where code = #{code}
+    <select id="selectFarmZoneById" parameterType="Long" resultMap="FarmZoneResult">
+        <include refid="selectFarmZoneVo"/>
+        where id = #{id}
     </select>
         
-    <insert id="insertZone" parameterType="Zone">
-        insert into csa_zone
+    <insert id="insertFarmZone" parameterType="FarmZone" useGeneratedKeys="true" keyProperty="id">
+        insert into csa_farm_zone
         <trim prefix="(" suffix=")" suffixOverrides=",">
-            <if test="code != null">code,</if>
             <if test="type != null and type != ''">type,</if>
             <if test="name != null and name != ''">name,</if>
             <if test="status != null">status,</if>
@@ -50,7 +49,6 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="remark != null">remark,</if>
          </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
-            <if test="code != null">#{code},</if>
             <if test="type != null and type != ''">#{type},</if>
             <if test="name != null and name != ''">#{name},</if>
             <if test="status != null">#{status},</if>
@@ -63,8 +61,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
          </trim>
     </insert>
 
-    <update id="updateZone" parameterType="Zone">
-        update csa_zone
+    <update id="updateFarmZone" parameterType="FarmZone">
+        update csa_farm_zone
         <trim prefix="SET" suffixOverrides=",">
             <if test="type != null and type != ''">type = #{type},</if>
             <if test="name != null and name != ''">name = #{name},</if>
@@ -76,17 +74,17 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="updateTime != null">update_time = #{updateTime},</if>
             <if test="remark != null">remark = #{remark},</if>
         </trim>
-        where code = #{code}
+        where id = #{id}
     </update>
 
-    <delete id="deleteZoneByCode" parameterType="String">
-        delete from csa_zone where code = #{code}
+    <delete id="deleteFarmZoneById" parameterType="Long">
+        delete from csa_farm_zone where id = #{id}
     </delete>
 
-    <delete id="deleteZoneByCodes" parameterType="String">
-        delete from csa_zone where code in 
-        <foreach item="code" collection="array" open="(" separator="," close=")">
-            #{code}
+    <delete id="deleteFarmZoneByIds" parameterType="String">
+        delete from csa_farm_zone where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
         </foreach>
     </delete>
 </mapper>

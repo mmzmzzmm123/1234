@@ -6,17 +6,17 @@ import com.ruoyi.common.annotation.Excel;
 import com.ruoyi.common.core.domain.BaseEntity;
 
 /**
- * 农场分区对象 csa_zone
+ * 农场分区对象 csa_farm_zone
  * 
  * @author 郏磊涛
- * @date 2022-03-27
+ * @date 2022-03-28
  */
-public class Zone extends BaseEntity
+public class FarmZone extends BaseEntity
 {
     private static final long serialVersionUID = 1L;
 
-    /** 分区代码 */
-    private String code;
+    /** 分区id */
+    private Long id;
 
     /** 分区类型 */
     @Excel(name = "分区类型")
@@ -26,21 +26,21 @@ public class Zone extends BaseEntity
     @Excel(name = "分区名称")
     private String name;
 
-    /** 状态（0正常 1停用） */
-    @Excel(name = "状态", readConverterExp = "0=正常,1=停用")
+    /** 状态 */
+    @Excel(name = "状态")
     private String status;
 
-    /** 删除标志（0代表存在 2代表删除） */
+    /** 删除标志 */
     private String delFlag;
 
-    public void setCode(String code) 
+    public void setId(Long id) 
     {
-        this.code = code;
+        this.id = id;
     }
 
-    public String getCode() 
+    public Long getId() 
     {
-        return code;
+        return id;
     }
     public void setType(String type) 
     {
@@ -82,7 +82,7 @@ public class Zone extends BaseEntity
     @Override
     public String toString() {
         return new ToStringBuilder(this,ToStringStyle.MULTI_LINE_STYLE)
-            .append("code", getCode())
+            .append("id", getId())
             .append("type", getType())
             .append("name", getName())
             .append("status", getStatus())

@@ -16,8 +16,8 @@ import com.ruoyi.common.annotation.Log;
 import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.enums.BusinessType;
-import com.jlt.csa.domain.Zone;
-import com.jlt.csa.service.IZoneService;
+import com.jlt.csa.domain.FarmZone;
+import com.jlt.csa.service.IFarmZoneService;
 import com.ruoyi.common.utils.poi.ExcelUtil;
 import com.ruoyi.common.core.page.TableDataInfo;
 
@@ -25,24 +25,24 @@ import com.ruoyi.common.core.page.TableDataInfo;
  * 农场分区Controller
  * 
  * @author 郏磊涛
- * @date 2022-03-27
+ * @date 2022-03-28
  */
 @RestController
 @RequestMapping("/csa/farmzone")
-public class ZoneController extends BaseController
+public class FarmZoneController extends BaseController
 {
     @Autowired
-    private IZoneService zoneService;
+    private IFarmZoneService farmZoneService;
 
     /**
      * 查询农场分区列表
      */
     @PreAuthorize("@ss.hasPermi('csa:farmzone:list')")
     @GetMapping("/list")
-    public TableDataInfo list(Zone zone)
+    public TableDataInfo list(FarmZone farmZone)
     {
         startPage();
-        List<Zone> list = zoneService.selectZoneList(zone);
+        List<FarmZone> list = farmZoneService.selectFarmZoneList(farmZone);
         return getDataTable(list);
     }
 
@@ -52,10 +52,10 @@ public class ZoneController extends BaseController
     @PreAuthorize("@ss.hasPermi('csa:farmzone:export')")
     @Log(title = "农场分区", businessType = BusinessType.EXPORT)
     @PostMapping("/export")
-    public void export(HttpServletResponse response, Zone zone)
+    public void export(HttpServletResponse response, FarmZone farmZone)
     {
-        List<Zone> list = zoneService.selectZoneList(zone);
-        ExcelUtil<Zone> util = new ExcelUtil<Zone>(Zone.class);
+        List<FarmZone> list = farmZoneService.selectFarmZoneList(farmZone);
+        ExcelUtil<FarmZone> util = new ExcelUtil<FarmZone>(FarmZone.class);
         util.exportExcel(response, list, "农场分区数据");
     }
 
@@ -63,10 +63,10 @@ public class ZoneController extends BaseController
      * 获取农场分区详细信息
      */
     @PreAuthorize("@ss.hasPermi('csa:farmzone:query')")
-    @GetMapping(value = "/{code}")
-    public AjaxResult getInfo(@PathVariable("code") String code)
+    @GetMapping(value = "/{id}")
+    public AjaxResult getInfo(@PathVariable("id") Long id)
     {
-        return AjaxResult.success(zoneService.selectZoneByCode(code));
+        return AjaxResult.success(farmZoneService.selectFarmZoneById(id));
     }
 
     /**
@@ -75,9 +75,9 @@ public class ZoneController extends BaseController
     @PreAuthorize("@ss.hasPermi('csa:farmzone:add')")
     @Log(title = "农场分区", businessType = BusinessType.INSERT)
     @PostMapping
-    public AjaxResult add(@RequestBody Zone zone)
+    public AjaxResult add(@RequestBody FarmZone farmZone)
     {
-        return toAjax(zoneService.insertZone(zone));
+        return toAjax(farmZoneService.insertFarmZone(farmZone));
     }
 
     /**
@@ -86,9 +86,9 @@ public class ZoneController extends BaseController
     @PreAuthorize("@ss.hasPermi('csa:farmzone:edit')")
     @Log(title = "农场分区", businessType = BusinessType.UPDATE)
     @PutMapping
-    public AjaxResult edit(@RequestBody Zone zone)
+    public AjaxResult edit(@RequestBody FarmZone farmZone)
     {
-        return toAjax(zoneService.updateZone(zone));
+        return toAjax(farmZoneService.updateFarmZone(farmZone));
     }
 
     /**
@@ -96,9 +96,9 @@ public class ZoneController extends BaseController
      */
     @PreAuthorize("@ss.hasPermi('csa:farmzone:remove')")
     @Log(title = "农场分区", businessType = BusinessType.DELETE)
-	@DeleteMapping("/{codes}")
-    public AjaxResult remove(@PathVariable String[] codes)
+	@DeleteMapping("/{ids}")
+    public AjaxResult remove(@PathVariable Long[] ids)
     {
-        return toAjax(zoneService.deleteZoneByCodes(codes));
+        return toAjax(farmZoneService.deleteFarmZoneByIds(ids));
     }
 }
