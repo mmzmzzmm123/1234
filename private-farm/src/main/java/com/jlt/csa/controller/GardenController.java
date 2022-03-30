@@ -73,11 +73,15 @@ public class GardenController extends BaseController
     @PostMapping
     public AjaxResult add(@RequestBody Garden garden, @RequestBody Map<String, Object> request)
     {
-        Integer amount = (Integer) request.get("amount");
-        logger.warn("菜地数量：" + amount);
+        int amount = (int) request.get("amount");
         garden.setCreateBy(getUsername());
         garden.setCreateTime(DateUtils.getNowDate());
-        return toAjax(gardenService.insertGarden(garden));
+
+        if (amount == 1) {
+            return toAjax(gardenService.insertGarden(garden));
+        } else {
+            return toAjax(gardenService.insertGardens(garden, amount));
+        }
     }
 
     /**

@@ -1,7 +1,10 @@
 package com.jlt.csa.service.impl;
 
 import java.util.List;
-import com.ruoyi.common.utils.DateUtils;
+import java.util.Map;
+
+import com.jlt.csa.utils.CommonFunctions;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.jlt.csa.mapper.GardenMapper;
@@ -53,8 +56,42 @@ public class GardenServiceImpl implements IGardenService
     @Override
     public int insertGarden(Garden garden)
     {
-        garden.setCreateTime(DateUtils.getNowDate());
         return gardenMapper.insertGarden(garden);
+    }
+
+    /**
+     * 批量新增菜地
+     *
+     * @param garden 起始菜地信息，以此地编号开始依次递增
+     * @param amount 菜地数量
+     * @return 结果
+     */
+    public int insertGardens(Garden garden, int amount) {
+        Map<String, Object> map = CommonFunctions.parseCode(garden.getCode());
+
+        if (map.isEmpty()) {
+            // 返回空map，格式不正确
+            throw new RuntimeException("菜地编号格式不正确！");
+        } else {
+            // 菜地编码前缀
+            String prefix = (String) map.get("prefix");
+            // 编码的数字部分的位数
+            int numberWidth = (int) map.get("width");
+            int startCode = (int) map.get("number");
+            Integer endCode = startCode + amount - 1;
+            // 检查批量编码是否会导致位数变长，如变长则抛出异常
+            if (endCode.toString().length() == numberWidth) {
+                for (int i = startCode; i <= endCode; i++) {
+                    garden.setCode(prefix + i);
+                    gardenMapper.insertGarden(garden);
+                }
+            } else {
+                // 出现进位导致编号变长，格式不正确
+                throw new RuntimeException("菜地编号数字部分长度不够或数量过多！");
+            }
+        }
+
+        return amount;
     }
 
     /**
