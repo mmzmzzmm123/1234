@@ -16,89 +16,89 @@ import com.ruoyi.common.annotation.Log;
 import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.enums.BusinessType;
-import com.jlt.csa.domain.CropFiles;
-import com.jlt.csa.service.ICropFilesService;
+import com.jlt.csa.domain.CropFile;
+import com.jlt.csa.service.ICropFileService;
 import com.ruoyi.common.utils.poi.ExcelUtil;
 import com.ruoyi.common.core.page.TableDataInfo;
 
 /**
  * 作物档案Controller
  * 
- * @author JiaLeitao
- * @date 2022-03-25
+ * @author 郏磊涛
+ * @date 2022-03-30
  */
 @RestController
-@RequestMapping("/csa/cropfiles")
-public class CropFilesController extends BaseController
+@RequestMapping("/csa/cropfile")
+public class CropFileController extends BaseController
 {
     @Autowired
-    private ICropFilesService cropFilesService;
+    private ICropFileService cropFileService;
 
     /**
      * 查询作物档案列表
      */
-    @PreAuthorize("@ss.hasPermi('csa:cropfiles:list')")
+    @PreAuthorize("@ss.hasPermi('csa:cropfile:query')")
     @GetMapping("/list")
-    public TableDataInfo list(CropFiles cropFiles)
+    public TableDataInfo list(CropFile cropFile)
     {
         startPage();
-        List<CropFiles> list = cropFilesService.selectCropFilesList(cropFiles);
+        List<CropFile> list = cropFileService.selectCropFileList(cropFile);
         return getDataTable(list);
     }
 
     /**
      * 导出作物档案列表
      */
-    @PreAuthorize("@ss.hasPermi('csa:cropfiles:export')")
+    @PreAuthorize("@ss.hasPermi('csa:cropfile:export')")
     @Log(title = "作物档案", businessType = BusinessType.EXPORT)
     @PostMapping("/export")
-    public void export(HttpServletResponse response, CropFiles cropFiles)
+    public void export(HttpServletResponse response, CropFile cropFile)
     {
-        List<CropFiles> list = cropFilesService.selectCropFilesList(cropFiles);
-        ExcelUtil<CropFiles> util = new ExcelUtil<CropFiles>(CropFiles.class);
+        List<CropFile> list = cropFileService.selectCropFileList(cropFile);
+        ExcelUtil<CropFile> util = new ExcelUtil<CropFile>(CropFile.class);
         util.exportExcel(response, list, "作物档案数据");
     }
 
     /**
      * 获取作物档案详细信息
      */
-    @PreAuthorize("@ss.hasPermi('csa:cropfiles:query')")
-    @GetMapping(value = "/{id}")
-    public AjaxResult getInfo(@PathVariable("id") Long id)
+    @PreAuthorize("@ss.hasPermi('csa:cropfile:query')")
+    @GetMapping(value = "/{cropId}")
+    public AjaxResult getInfo(@PathVariable("cropId") Long cropId)
     {
-        return AjaxResult.success(cropFilesService.selectCropFilesById(id));
+        return AjaxResult.success(cropFileService.selectCropFileByCropId(cropId));
     }
 
     /**
      * 新增作物档案
      */
-    @PreAuthorize("@ss.hasPermi('csa:cropfiles:add')")
+    @PreAuthorize("@ss.hasPermi('csa:cropfile:update')")
     @Log(title = "作物档案", businessType = BusinessType.INSERT)
     @PostMapping
-    public AjaxResult add(@RequestBody CropFiles cropFiles)
+    public AjaxResult add(@RequestBody CropFile cropFile)
     {
-        return toAjax(cropFilesService.insertCropFiles(cropFiles));
+        return toAjax(cropFileService.insertCropFile(cropFile));
     }
 
     /**
      * 修改作物档案
      */
-    @PreAuthorize("@ss.hasPermi('csa:cropfiles:edit')")
+    @PreAuthorize("@ss.hasPermi('csa:cropfile:update')")
     @Log(title = "作物档案", businessType = BusinessType.UPDATE)
     @PutMapping
-    public AjaxResult edit(@RequestBody CropFiles cropFiles)
+    public AjaxResult edit(@RequestBody CropFile cropFile)
     {
-        return toAjax(cropFilesService.updateCropFiles(cropFiles));
+        return toAjax(cropFileService.updateCropFile(cropFile));
     }
 
     /**
      * 删除作物档案
      */
-    @PreAuthorize("@ss.hasPermi('csa:cropfiles:remove')")
+    @PreAuthorize("@ss.hasPermi('csa:cropfile:update')")
     @Log(title = "作物档案", businessType = BusinessType.DELETE)
-	@DeleteMapping("/{ids}")
-    public AjaxResult remove(@PathVariable Long[] ids)
+	@DeleteMapping("/{cropIds}")
+    public AjaxResult remove(@PathVariable Long[] cropIds)
     {
-        return toAjax(cropFilesService.deleteCropFilesByIds(ids));
+        return toAjax(cropFileService.deleteCropFileByCropIds(cropIds));
     }
 }
