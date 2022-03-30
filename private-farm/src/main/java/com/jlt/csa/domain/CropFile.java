@@ -1,26 +1,27 @@
 package com.jlt.csa.domain;
 
+import java.util.List;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import com.ruoyi.common.annotation.Excel;
 import com.ruoyi.common.core.domain.BaseEntity;
 
 /**
- * 作物档案对象 csa_crop_files
+ * 作物档案对象 csa_crop_file
  * 
- * @author JiaLeitao
- * @date 2022-03-25
+ * @author 郏磊涛
+ * @date 2022-03-30
  */
-public class CropFiles extends BaseEntity
+public class CropFile extends BaseEntity
 {
     private static final long serialVersionUID = 1L;
 
     /** 作物档案id */
-    private Long id;
+    private Long cropId;
 
     /** 作物名称 */
     @Excel(name = "作物名称")
-    private String name;
+    private String cropName;
 
     /** 种植指南 */
     private String plantGuide;
@@ -30,6 +31,7 @@ public class CropFiles extends BaseEntity
     private String picture;
 
     /** 作物描述 */
+    @Excel(name = "作物描述")
     private String description;
 
     /** 状态 */
@@ -39,23 +41,26 @@ public class CropFiles extends BaseEntity
     /** 删除标志 */
     private String delFlag;
 
-    public void setId(Long id) 
+    /** 作物生长阶段信息 */
+    private List<CropPhase> cropPhaseList;
+
+    public void setCropId(Long cropId) 
     {
-        this.id = id;
+        this.cropId = cropId;
     }
 
-    public Long getId() 
+    public Long getCropId() 
     {
-        return id;
+        return cropId;
     }
-    public void setName(String name) 
+    public void setCropName(String cropName) 
     {
-        this.name = name;
+        this.cropName = cropName;
     }
 
-    public String getName() 
+    public String getCropName() 
     {
-        return name;
+        return cropName;
     }
     public void setPlantGuide(String plantGuide) 
     {
@@ -103,11 +108,21 @@ public class CropFiles extends BaseEntity
         return delFlag;
     }
 
+    public List<CropPhase> getCropPhaseList()
+    {
+        return cropPhaseList;
+    }
+
+    public void setCropPhaseList(List<CropPhase> cropPhaseList)
+    {
+        this.cropPhaseList = cropPhaseList;
+    }
+
     @Override
     public String toString() {
         return new ToStringBuilder(this,ToStringStyle.MULTI_LINE_STYLE)
-            .append("id", getId())
-            .append("name", getName())
+            .append("cropId", getCropId())
+            .append("cropName", getCropName())
             .append("plantGuide", getPlantGuide())
             .append("picture", getPicture())
             .append("description", getDescription())
@@ -118,6 +133,7 @@ public class CropFiles extends BaseEntity
             .append("updateBy", getUpdateBy())
             .append("updateTime", getUpdateTime())
             .append("remark", getRemark())
+            .append("cropPhaseList", getCropPhaseList())
             .toString();
     }
 }

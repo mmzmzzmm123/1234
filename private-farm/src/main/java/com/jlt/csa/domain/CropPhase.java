@@ -8,22 +8,23 @@ import com.ruoyi.common.core.domain.BaseEntity;
 /**
  * 作物生长阶段对象 csa_crop_phase
  * 
- * @author JiaLeitao
- * @date 2022-03-26
+ * @author 郏磊涛
+ * @date 2022-03-30
  */
 public class CropPhase extends BaseEntity
 {
     private static final long serialVersionUID = 1L;
 
     /** 阶段id */
-    private Long id;
+    private Long phaseId;
 
-    /** 作物id */
+    /** 作物 */
+    @Excel(name = "作物")
     private Long cropId;
 
     /** 阶段名称 */
     @Excel(name = "阶段名称")
-    private String name;
+    private String phaseName;
 
     /** 产出 */
     @Excel(name = "产出")
@@ -33,21 +34,21 @@ public class CropPhase extends BaseEntity
     @Excel(name = "代表图片")
     private String picture;
 
-    /** 状态 */
-    @Excel(name = "状态")
+    /** 状态（0正常 1停用） */
+    @Excel(name = "状态", readConverterExp = "0=正常,1=停用")
     private String status;
 
-    /** 删除标志 */
+    /** 删除标志（0代表存在 2代表删除） */
     private String delFlag;
 
-    public void setId(Long id) 
+    public void setPhaseId(Long phaseId) 
     {
-        this.id = id;
+        this.phaseId = phaseId;
     }
 
-    public Long getId() 
+    public Long getPhaseId() 
     {
-        return id;
+        return phaseId;
     }
     public void setCropId(Long cropId) 
     {
@@ -58,14 +59,14 @@ public class CropPhase extends BaseEntity
     {
         return cropId;
     }
-    public void setName(String name) 
+    public void setPhaseName(String phaseName) 
     {
-        this.name = name;
+        this.phaseName = phaseName;
     }
 
-    public String getName() 
+    public String getPhaseName() 
     {
-        return name;
+        return phaseName;
     }
     public void setProduction(String production) 
     {
@@ -107,9 +108,9 @@ public class CropPhase extends BaseEntity
     @Override
     public String toString() {
         return new ToStringBuilder(this,ToStringStyle.MULTI_LINE_STYLE)
-            .append("id", getId())
+            .append("phaseId", getPhaseId())
             .append("cropId", getCropId())
-            .append("name", getName())
+            .append("phaseName", getPhaseName())
             .append("production", getProduction())
             .append("picture", getPicture())
             .append("status", getStatus())

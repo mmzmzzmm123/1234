@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jlt.csa.mapper.CropFileMapper">
+    
+    <resultMap type="CropFile" id="CropFileResult">
+        <result property="cropId"    column="crop_id"    />
+        <result property="cropName"    column="crop_name"    />
+        <result property="plantGuide"    column="plant_guide"    />
+        <result property="picture"    column="picture"    />
+        <result property="description"    column="description"    />
+        <result property="status"    column="status"    />
+        <result property="delFlag"    column="del_flag"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="remark"    column="remark"    />
+    </resultMap>
+
+    <resultMap id="CropFileCropPhaseResult" type="CropFile" extends="CropFileResult">
+        <collection property="cropPhaseList" notNullColumn="sub_phase_id" javaType="java.util.List" resultMap="CropPhaseResult" />
+    </resultMap>
+
+    <resultMap type="CropPhase" id="CropPhaseResult">
+        <result property="phaseId"    column="sub_phase_id"    />
+        <result property="cropId"    column="sub_crop_id"    />
+        <result property="phaseName"    column="sub_phase_name"    />
+        <result property="production"    column="sub_production"    />
+        <result property="picture"    column="sub_picture"    />
+        <result property="status"    column="sub_status"    />
+        <result property="delFlag"    column="sub_del_flag"    />
+        <result property="createBy"    column="sub_create_by"    />
+        <result property="createTime"    column="sub_create_time"    />
+        <result property="updateBy"    column="sub_update_by"    />
+        <result property="updateTime"    column="sub_update_time"    />
+        <result property="remark"    column="sub_remark"    />
+    </resultMap>
+
+    <sql id="selectCropFileVo">
+        select crop_id, crop_name, plant_guide, picture, description, status, del_flag, create_by, create_time, update_by, update_time, remark from csa_crop_file
+    </sql>
+
+    <select id="selectCropFileList" parameterType="CropFile" resultMap="CropFileResult">
+        <include refid="selectCropFileVo"/>
+        <where>  
+            <if test="cropName != null  and cropName != ''"> and crop_name like concat('%', #{cropName}, '%')</if>
+            <if test="status != null  and status != ''"> and status = #{status}</if>
+        </where>
+    </select>
+    
+    <select id="selectCropFileByCropId" parameterType="Long" resultMap="CropFileCropPhaseResult">
+        select a.crop_id, a.crop_name, a.plant_guide, a.picture, a.description, a.status, a.del_flag, a.create_by, a.create_time, a.update_by, a.update_time, a.remark,
+ b.phase_id as sub_phase_id, b.crop_id as sub_crop_id, b.phase_name as sub_phase_name, b.production as sub_production, b.picture as sub_picture, b.status as sub_status, b.del_flag as sub_del_flag, b.create_by as sub_create_by, b.create_time as sub_create_time, b.update_by as sub_update_by, b.update_time as sub_update_time, b.remark as sub_remark
+        from csa_crop_file a
+        left join csa_crop_phase b on b.crop_id = a.crop_id
+        where a.crop_id = #{cropId}
+    </select>
+        
+    <insert id="insertCropFile" parameterType="CropFile" useGeneratedKeys="true" keyProperty="cropId">
+        insert into csa_crop_file
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="cropName != null and cropName != ''">crop_name,</if>
+            <if test="plantGuide != null">plant_guide,</if>
+            <if test="picture != null">picture,</if>
+            <if test="description != null">description,</if>
+            <if test="status != null">status,</if>
+            <if test="delFlag != null">del_flag,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="remark != null">remark,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="cropName != null and cropName != ''">#{cropName},</if>
+            <if test="plantGuide != null">#{plantGuide},</if>
+            <if test="picture != null">#{picture},</if>
+            <if test="description != null">#{description},</if>
+            <if test="status != null">#{status},</if>
+            <if test="delFlag != null">#{delFlag},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="remark != null">#{remark},</if>
+         </trim>
+    </insert>
+
+    <update id="updateCropFile" parameterType="CropFile">
+        update csa_crop_file
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="cropName != null and cropName != ''">crop_name = #{cropName},</if>
+            <if test="plantGuide != null">plant_guide = #{plantGuide},</if>
+            <if test="picture != null">picture = #{picture},</if>
+            <if test="description != null">description = #{description},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="delFlag != null">del_flag = #{delFlag},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="remark != null">remark = #{remark},</if>
+        </trim>
+        where crop_id = #{cropId}
+    </update>
+
+    <delete id="deleteCropFileByCropId" parameterType="Long">
+        delete from csa_crop_file where crop_id = #{cropId}
+    </delete>
+
+    <delete id="deleteCropFileByCropIds" parameterType="String">
+        delete from csa_crop_file where crop_id in 
+        <foreach item="cropId" collection="array" open="(" separator="," close=")">
+            #{cropId}
+        </foreach>
+    </delete>
+    
+    <delete id="deleteCropPhaseByCropIds" parameterType="String">
+        delete from csa_crop_phase where crop_id in 
+        <foreach item="cropId" collection="array" open="(" separator="," close=")">
+            #{cropId}
+        </foreach>
+    </delete>
+
+    <delete id="deleteCropPhaseByCropId" parameterType="Long">
+        delete from csa_crop_phase where crop_id = #{cropId}
+    </delete>
+
+    <insert id="batchCropPhase">
+        insert into csa_crop_phase( phase_id, crop_id, phase_name, production, picture, status, del_flag, create_by, create_time, update_by, update_time, remark) values
+		<foreach item="item" index="index" collection="list" separator=",">
+            ( #{item.phaseId}, #{item.cropId}, #{item.phaseName}, #{item.production}, #{item.picture}, #{item.status}, #{item.delFlag}, #{item.createBy}, #{item.createTime}, #{item.updateBy}, #{item.updateTime}, #{item.remark})
+        </foreach>
+    </insert>
+</mapper>
