@@ -7,7 +7,7 @@ import com.jlt.csa.domain.CropFile;
  * 作物档案Service接口
  * 
  * @author 郏磊涛
- * @date 2022-03-30
+ * @date 2022-03-31
  */
 public interface ICropFileService 
 {

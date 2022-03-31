@@ -1,6 +1,5 @@
 package com.jlt.csa.domain;
 
-import java.util.List;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import com.ruoyi.common.annotation.Excel;
@@ -10,7 +9,7 @@ import com.ruoyi.common.core.domain.BaseEntity;
  * 作物档案对象 csa_crop_file
  * 
  * @author 郏磊涛
- * @date 2022-03-30
+ * @date 2022-03-31
  */
 public class CropFile extends BaseEntity
 {
@@ -26,23 +25,23 @@ public class CropFile extends BaseEntity
     /** 种植指南 */
     private String plantGuide;
 
-    /** 代表图片 */
-    @Excel(name = "代表图片")
+    /** 配图 */
+    @Excel(name = "配图")
     private String picture;
+
+    /** 云配图 */
+    private String pictureOss;
 
     /** 作物描述 */
     @Excel(name = "作物描述")
     private String description;
 
-    /** 状态 */
-    @Excel(name = "状态")
+    /** 可种状态 */
+    @Excel(name = "可种状态")
     private String status;
 
     /** 删除标志 */
     private String delFlag;
-
-    /** 作物生长阶段信息 */
-    private List<CropPhase> cropPhaseList;
 
     public void setCropId(Long cropId) 
     {
@@ -80,6 +79,15 @@ public class CropFile extends BaseEntity
     {
         return picture;
     }
+    public void setPictureOss(String pictureOss) 
+    {
+        this.pictureOss = pictureOss;
+    }
+
+    public String getPictureOss() 
+    {
+        return pictureOss;
+    }
     public void setDescription(String description) 
     {
         this.description = description;
@@ -108,16 +116,6 @@ public class CropFile extends BaseEntity
         return delFlag;
     }
 
-    public List<CropPhase> getCropPhaseList()
-    {
-        return cropPhaseList;
-    }
-
-    public void setCropPhaseList(List<CropPhase> cropPhaseList)
-    {
-        this.cropPhaseList = cropPhaseList;
-    }
-
     @Override
     public String toString() {
         return new ToStringBuilder(this,ToStringStyle.MULTI_LINE_STYLE)
@@ -125,6 +123,7 @@ public class CropFile extends BaseEntity
             .append("cropName", getCropName())
             .append("plantGuide", getPlantGuide())
             .append("picture", getPicture())
+            .append("pictureOss", getPictureOss())
             .append("description", getDescription())
             .append("status", getStatus())
             .append("delFlag", getDelFlag())
@@ -133,7 +132,6 @@ public class CropFile extends BaseEntity
             .append("updateBy", getUpdateBy())
             .append("updateTime", getUpdateTime())
             .append("remark", getRemark())
-            .append("cropPhaseList", getCropPhaseList())
             .toString();
     }
 }

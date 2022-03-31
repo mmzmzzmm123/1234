@@ -61,18 +61,34 @@
       <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
     </el-row>
 
-    <el-table v-loading="loading" :data="cropfileList" @selection-change="handleSelectionChange">
+    <el-table v-loading="loading" :data="cropfileList" size="small" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="作物档案id" align="center" prop="cropId" />
-      <el-table-column label="作物名称" align="center" prop="cropName" />
-      <el-table-column label="代表图片" align="center" prop="picture" width="100">
+      <el-table-column label="配图" align="center" prop="picture" width="100">
         <template slot-scope="scope">
-          <image-preview :src="scope.row.picture" :width="50" :height="50"/>
+          <image-preview :src="scope.row.picture" :width="64" :height="64"/>
+        </template>
+      </el-table-column>
+      <el-table-column label="作物名称" align="center" prop="cropName">
+        <template slot-scope="scope">
+          <el-tag
+            :key="scope.row.id"
+            :type="scope.row.status == '0' ? 'success' : 'info'"
+            :effect="scope.row.status == '0' ? 'dark' : 'plain'">
+            {{ scope.row.cropName }}
+          </el-tag>
         </template>
       </el-table-column>
       <el-table-column label="作物描述" align="center" prop="description" />
-      <el-table-column label="状态" align="center" prop="status" />
-      <el-table-column label="备注" align="center" prop="remark" />
+      <el-table-column label="可种状态" align="center" prop="status">
+        <template slot-scope="scope">
+          <el-switch
+            v-model="scope.row.status"
+            active-value="0"
+            inactive-value="1"
+            @change="handleStatusChange(scope.row)"
+          ></el-switch>
+        </template>
+      </el-table-column>
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button
@@ -102,55 +118,17 @@
     />
 
     <!-- 添加或修改作物档案对话框 -->
-    <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
+    <el-dialog :title="title" :visible.sync="open" width="450px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
-        <el-form-item label="作物名称" prop="cropName">
+        <el-form-item label="作物名称" prop="cropName" inline-message="3333">
           <el-input v-model="form.cropName" placeholder="请输入作物名称" />
         </el-form-item>
-<!--        <el-form-item label="种植指南" prop="plantGuide">-->
-<!--          <el-input v-model="form.plantGuide" type="textarea" placeholder="请输入内容" />-->
-<!--        </el-form-item>-->
-        <el-form-item label="代表图片">
-          <image-upload v-model="form.picture"/>
-        </el-form-item>
         <el-form-item label="作物描述" prop="description">
-          <el-input v-model="form.description" type="textarea" placeholder="请输入内容" />
+          <el-input v-model="form.description" type="textarea" rows="3" placeholder="请简要描述作物" />
         </el-form-item>
-        <el-divider content-position="center">作物生长阶段信息</el-divider>
-        <el-row :gutter="10" class="mb8">
-          <el-col :span="1.5">
-            <el-button type="primary" icon="el-icon-plus" size="mini" @click="handleAddCropPhase">添加</el-button>
-          </el-col>
-          <el-col :span="1.5">
-            <el-button type="danger" icon="el-icon-delete" size="mini" @click="handleDeleteCropPhase">删除</el-button>
-          </el-col>
-        </el-row>
-        <el-table :data="cropPhaseList" :row-class-name="rowCropPhaseIndex" @selection-change="handleCropPhaseSelectionChange" ref="cropPhase">
-          <el-table-column type="selection" width="50" align="center" />
-          <el-table-column label="序号" align="center" prop="index" width="50"/>
-          <el-table-column label="阶段名称" prop="phaseName" width="150">
-            <template slot-scope="scope">
-              <el-input v-model="scope.row.phaseName" placeholder="请输入阶段名称" />
-            </template>
-          </el-table-column>
-          <el-table-column label="产出" prop="production" width="150">
-            <template slot-scope="scope">
-              <el-input v-model="scope.row.production" placeholder="请输入产出" />
-            </template>
-          </el-table-column>
-          <el-table-column label="状态" prop="status" width="150">
-            <template slot-scope="scope">
-              <el-select v-model="scope.row.status" placeholder="请选择状态">
-                <el-option label="请选择字典生成" value="" />
-              </el-select>
-            </template>
-          </el-table-column>
-          <el-table-column label="备注" prop="remark" width="150">
-            <template slot-scope="scope">
-              <el-input v-model="scope.row.remark" placeholder="请输入备注" />
-            </template>
-          </el-table-column>
-        </el-table>
+        <el-form-item label="作物配图">
+          <image-upload v-model="form.picture" limit="1" fileSize="0.3" :isShowTip="true" />
+        </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button type="primary" @click="submitForm">确 定</el-button>
@@ -161,18 +139,17 @@
 </template>
 
 <script>
-import { listCropfile, getCropfile, delCropfile, addCropfile, updateCropfile } from "@/api/csa/cropfile";
+import { listCropfile, getCropfile, delCropfile, addCropfile, updateCropfile, changeCropStatus } from "@/api/csa/cropfile";
 
 export default {
   name: "Cropfile",
+  dicts: ['sys_normal_disable'],
   data() {
     return {
       // 遮罩层
       loading: true,
       // 选中数组
       ids: [],
-      // 子表选中数据
-      checkedCropPhase: [],
       // 非单个禁用
       single: true,
       // 非多个禁用
@@ -183,8 +160,6 @@ export default {
       total: 0,
       // 作物档案表格数据
       cropfileList: [],
-      // 作物生长阶段表格数据
-      cropPhaseList: [],
       // 弹出层标题
       title: "",
       // 是否显示弹出层
@@ -229,16 +204,9 @@ export default {
       this.form = {
         cropId: null,
         cropName: null,
-        plantGuide: null,
         picture: null,
         description: null,
-        status: "0",
-        createBy: null,
-        createTime: null,
-        updateBy: null,
-        updateTime: null,
       };
-      this.cropPhaseList = [];
       this.resetForm("form");
     },
     /** 搜索按钮操作 */
@@ -269,7 +237,6 @@ export default {
       const cropId = row.cropId || this.ids
       getCropfile(cropId).then(response => {
         this.form = response.data;
-        this.cropPhaseList = response.data.cropPhaseList;
         this.open = true;
         this.title = "修改作物档案";
       });
@@ -278,7 +245,6 @@ export default {
     submitForm() {
       this.$refs["form"].validate(valid => {
         if (valid) {
-          this.form.cropPhaseList = this.cropPhaseList;
           if (this.form.cropId != null) {
             updateCropfile(this.form).then(response => {
               this.$modal.msgSuccess("修改成功");
@@ -298,42 +264,23 @@ export default {
     /** 删除按钮操作 */
     handleDelete(row) {
       const cropIds = row.cropId || this.ids;
-      this.$modal.confirm('是否确认删除作物档案编号为"' + cropIds + '"的数据项？').then(function() {
+      this.$modal.confirm('是否确认删除该作物档案？').then(function() {
         return delCropfile(cropIds);
       }).then(() => {
         this.getList();
         this.$modal.msgSuccess("删除成功");
       }).catch(() => {});
     },
-	/** 作物生长阶段序号 */
-    rowCropPhaseIndex({ row, rowIndex }) {
-      row.index = rowIndex + 1;
-    },
-    /** 作物生长阶段添加按钮操作 */
-    handleAddCropPhase() {
-      let obj = {};
-      obj.phaseName = "";
-      obj.production = "";
-      obj.picture = "";
-      obj.status = "";
-      obj.remark = "";
-      this.cropPhaseList.push(obj);
-    },
-    /** 作物生长阶段删除按钮操作 */
-    handleDeleteCropPhase() {
-      if (this.checkedCropPhase.length == 0) {
-        this.$modal.msgError("请先选择要删除的作物生长阶段数据");
-      } else {
-        const cropPhaseList = this.cropPhaseList;
-        const checkedCropPhase = this.checkedCropPhase;
-        this.cropPhaseList = cropPhaseList.filter(function(item) {
-          return checkedCropPhase.indexOf(item.index) == -1
-        });
-      }
-    },
-    /** 复选框选中数据 */
-    handleCropPhaseSelectionChange(selection) {
-      this.checkedCropPhase = selection.map(item => item.index)
+    /** 作物状态修改 */
+    handleStatusChange(row) {
+      let text = row.status === "0" ? "启用" : "停用";
+      this.$modal.confirm('确认要' + text + '"' + row.cropName + '"吗？').then(function() {
+        return changeCropStatus(row.cropId, row.status);
+      }).then(() => {
+        this.$modal.msgSuccess(text + "成功");
+      }).catch(function() {
+        row.status = row.status === "0" ? "1" : "0";
+      });
     },
     /** 导出按钮操作 */
     handleExport() {

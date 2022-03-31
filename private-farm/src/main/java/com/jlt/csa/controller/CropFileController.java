@@ -2,6 +2,8 @@ package com.jlt.csa.controller;
 
 import java.util.List;
 import javax.servlet.http.HttpServletResponse;
+
+import com.ruoyi.common.utils.DateUtils;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -25,7 +27,7 @@ import com.ruoyi.common.core.page.TableDataInfo;
  * 作物档案Controller
  * 
  * @author 郏磊涛
- * @date 2022-03-30
+ * @date 2022-03-31
  */
 @RestController
 @RequestMapping("/csa/cropfile")
@@ -37,7 +39,7 @@ public class CropFileController extends BaseController
     /**
      * 查询作物档案列表
      */
-    @PreAuthorize("@ss.hasPermi('csa:cropfile:query')")
+    @PreAuthorize("@ss.hasPermi('csa:cropfile:list')")
     @GetMapping("/list")
     public TableDataInfo list(CropFile cropFile)
     {
@@ -72,29 +74,33 @@ public class CropFileController extends BaseController
     /**
      * 新增作物档案
      */
-    @PreAuthorize("@ss.hasPermi('csa:cropfile:update')")
+    @PreAuthorize("@ss.hasPermi('csa:cropfile:add')")
     @Log(title = "作物档案", businessType = BusinessType.INSERT)
     @PostMapping
     public AjaxResult add(@RequestBody CropFile cropFile)
     {
+        cropFile.setCreateBy(getUsername());
+        cropFile.setCreateTime(DateUtils.getNowDate());
         return toAjax(cropFileService.insertCropFile(cropFile));
     }
 
     /**
      * 修改作物档案
      */
-    @PreAuthorize("@ss.hasPermi('csa:cropfile:update')")
+    @PreAuthorize("@ss.hasPermi('csa:cropfile:edit')")
     @Log(title = "作物档案", businessType = BusinessType.UPDATE)
     @PutMapping
     public AjaxResult edit(@RequestBody CropFile cropFile)
     {
+        cropFile.setUpdateBy(getUsername());
+        cropFile.setUpdateTime(DateUtils.getNowDate());
         return toAjax(cropFileService.updateCropFile(cropFile));
     }
 
     /**
      * 删除作物档案
      */
-    @PreAuthorize("@ss.hasPermi('csa:cropfile:update')")
+    @PreAuthorize("@ss.hasPermi('csa:cropfile:remove')")
     @Log(title = "作物档案", businessType = BusinessType.DELETE)
 	@DeleteMapping("/{cropIds}")
     public AjaxResult remove(@PathVariable Long[] cropIds)

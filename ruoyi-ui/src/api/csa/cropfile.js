@@ -35,6 +35,19 @@ export function updateCropfile(data) {
   })
 }
 
+// 更新作物状态
+export function changeCropStatus(cropId, status) {
+  const data = {
+    cropId: cropId,
+    status
+  }
+  return request({
+    url: '/csa/cropfile',
+    method: 'put',
+    data: data
+  })
+}
+
 // 删除作物档案
 export function delCropfile(cropId) {
   return request({
