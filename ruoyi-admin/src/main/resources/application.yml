@@ -124,3 +124,13 @@ xss:
   excludes: /system/notice
   # 匹配链接
   urlPatterns: /system/*,/monitor/*,/tool/*
+
+# 七牛云对象存储
+qiniu:
+  # 是否启用云存储，针对上传
+  enabled: true
+  # 是否读取云存储
+  isUse: false
+  accessKey: 8Qmhci_2fkwFOp2dV74TiVTG2k3IubxOd20X-KJk
+  secretKey: 3DsZ_Oq02QOp2iJbpEKvIFd4Ul3ZBs0tMPXvGUcI
+  bucket: jlt-test
