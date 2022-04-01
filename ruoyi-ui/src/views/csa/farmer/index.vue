@@ -9,6 +9,14 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
+      <el-form-item label="加入日期" prop="joinDate">
+        <el-date-picker clearable
+          v-model="queryParams.joinDate"
+          type="date"
+          value-format="yyyy-MM-dd"
+          placeholder="请选择加入日期">
+        </el-date-picker>
+      </el-form-item>
       <el-form-item label="到期日期" prop="dueDate">
         <el-date-picker clearable
           v-model="queryParams.dueDate"
@@ -16,14 +24,6 @@
           value-format="yyyy-MM-dd"
           placeholder="请选择到期日期">
         </el-date-picker>
-      </el-form-item>
-      <el-form-item label="是否过期" prop="isExpire">
-        <el-input
-          v-model="queryParams.isExpire"
-          placeholder="请输入是否过期"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
       </el-form-item>
       <el-form-item>
         <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
@@ -79,7 +79,7 @@
 
     <el-table v-loading="loading" :data="farmerList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="会员id" align="center" prop="id" />
+      <el-table-column label="会员id" align="center" prop="farmerId" />
       <el-table-column label="会员姓名" align="center" prop="name" />
       <el-table-column label="性别" align="center" prop="gender" />
       <el-table-column label="金币余额" align="center" prop="coins" />
@@ -97,7 +97,6 @@
         </template>
       </el-table-column>
       <el-table-column label="是否过期" align="center" prop="isExpire" />
-      <el-table-column label="状态" align="center" prop="status" />
       <el-table-column label="备注" align="center" prop="remark" />
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
@@ -127,7 +126,7 @@
       @pagination="getList"
     />
 
-    <!-- 添加或修改私家农场会员对话框 -->
+    <!-- 添加或修改农场会员对话框 -->
     <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
         <el-form-item label="会员姓名" prop="name">
@@ -164,9 +163,6 @@
             placeholder="请选择到期日期">
           </el-date-picker>
         </el-form-item>
-        <el-form-item label="是否过期" prop="isExpire">
-          <el-input v-model="form.isExpire" placeholder="请输入是否过期" />
-        </el-form-item>
         <el-form-item label="删除标志" prop="delFlag">
           <el-input v-model="form.delFlag" placeholder="请输入删除标志" />
         </el-form-item>
@@ -201,7 +197,7 @@ export default {
       showSearch: true,
       // 总条数
       total: 0,
-      // 私家农场会员表格数据
+      // 农场会员表格数据
       farmerList: [],
       // 弹出层标题
       title: "",
@@ -212,9 +208,9 @@ export default {
         pageNum: 1,
         pageSize: 10,
         name: null,
+        joinDate: null,
         dueDate: null,
         isExpire: null,
-        status: null,
       },
       // 表单参数
       form: {},
@@ -223,6 +219,18 @@ export default {
         name: [
           { required: true, message: "会员姓名不能为空", trigger: "blur" }
         ],
+        coins: [
+          { required: true, message: "金币余额不能为空", trigger: "blur" }
+        ],
+        balance: [
+          { required: true, message: "账户余额不能为空", trigger: "blur" }
+        ],
+        weight: [
+          { required: true, message: "重量余额不能为空", trigger: "blur" }
+        ],
+        archedYears: [
+          { required: true, message: "拱棚年限余额不能为空", trigger: "blur" }
+        ],
       }
     };
   },
@@ -230,7 +238,7 @@ export default {
     this.getList();
   },
   methods: {
-    /** 查询私家农场会员列表 */
+    /** 查询农场会员列表 */
     getList() {
       this.loading = true;
       listFarmer(this.queryParams).then(response => {
@@ -247,7 +255,7 @@ export default {
     // 表单重置
     reset() {
       this.form = {
-        id: null,
+        farmerId: null,
         name: null,
         gender: null,
         coins: null,
@@ -256,7 +264,7 @@ export default {
         archedYears: null,
         joinDate: null,
         dueDate: null,
-        isExpire: null,
+        isExpire: "0",
         status: "0",
         delFlag: null,
         createBy: null,
@@ -279,7 +287,7 @@ export default {
     },
     // 多选框选中数据
     handleSelectionChange(selection) {
-      this.ids = selection.map(item => item.id)
+      this.ids = selection.map(item => item.farmerId)
       this.single = selection.length!==1
       this.multiple = !selection.length
     },
@@ -287,23 +295,23 @@ export default {
     handleAdd() {
       this.reset();
       this.open = true;
-      this.title = "添加私家农场会员";
+      this.title = "添加农场会员";
     },
     /** 修改按钮操作 */
     handleUpdate(row) {
       this.reset();
-      const id = row.id || this.ids
-      getFarmer(id).then(response => {
+      const farmerId = row.farmerId || this.ids
+      getFarmer(farmerId).then(response => {
         this.form = response.data;
         this.open = true;
-        this.title = "修改私家农场会员";
+        this.title = "修改农场会员";
       });
     },
     /** 提交按钮 */
     submitForm() {
       this.$refs["form"].validate(valid => {
         if (valid) {
-          if (this.form.id != null) {
+          if (this.form.farmerId != null) {
             updateFarmer(this.form).then(response => {
               this.$modal.msgSuccess("修改成功");
               this.open = false;
@@ -321,9 +329,9 @@ export default {
     },
     /** 删除按钮操作 */
     handleDelete(row) {
-      const ids = row.id || this.ids;
-      this.$modal.confirm('是否确认删除私家农场会员编号为"' + ids + '"的数据项？').then(function() {
-        return delFarmer(ids);
+      const farmerIds = row.farmerId || this.ids;
+      this.$modal.confirm('是否确认删除农场会员编号为"' + farmerIds + '"的数据项？').then(function() {
+        return delFarmer(farmerIds);
       }).then(() => {
         this.getList();
         this.$modal.msgSuccess("删除成功");

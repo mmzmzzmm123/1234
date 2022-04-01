@@ -9,17 +9,17 @@ import com.ruoyi.common.annotation.Excel;
 import com.ruoyi.common.core.domain.BaseEntity;
 
 /**
- * 私家农场会员对象 csa_farmer
+ * 农场会员对象 csa_farmer
  * 
  * @author JiaLeitao
- * @date 2022-03-26
+ * @date 2022-04-01
  */
-public class CsaFarmer extends BaseEntity
+public class Farmer extends BaseEntity
 {
     private static final long serialVersionUID = 1L;
 
     /** 会员id */
-    private Long id;
+    private Long farmerId;
 
     /** 会员姓名 */
     @Excel(name = "会员姓名")
@@ -43,7 +43,7 @@ public class CsaFarmer extends BaseEntity
 
     /** 拱棚年限余额 */
     @Excel(name = "拱棚年限余额")
-    private Integer archedYears;
+    private Long archedYears;
 
     /** 加入日期 */
     @JsonFormat(pattern = "yyyy-MM-dd")
@@ -59,21 +59,20 @@ public class CsaFarmer extends BaseEntity
     @Excel(name = "是否过期")
     private String isExpire;
 
-    /** 状态（0正常 1停用） */
-    @Excel(name = "状态", readConverterExp = "0=正常,1=停用")
+    /** 状态 */
     private String status;
 
-    /** 删除标志（0代表存在 2代表删除） */
+    /** 删除标志 */
     private String delFlag;
 
-    public void setId(Long id) 
+    public void setFarmerId(Long farmerId) 
     {
-        this.id = id;
+        this.farmerId = farmerId;
     }
 
-    public Long getId() 
+    public Long getFarmerId() 
     {
-        return id;
+        return farmerId;
     }
     public void setName(String name) 
     {
@@ -120,12 +119,12 @@ public class CsaFarmer extends BaseEntity
     {
         return weight;
     }
-    public void setArchedYears(Integer archedYears) 
+    public void setArchedYears(Long archedYears) 
     {
         this.archedYears = archedYears;
     }
 
-    public Integer getArchedYears() 
+    public Long getArchedYears() 
     {
         return archedYears;
     }
@@ -178,7 +177,7 @@ public class CsaFarmer extends BaseEntity
     @Override
     public String toString() {
         return new ToStringBuilder(this,ToStringStyle.MULTI_LINE_STYLE)
-            .append("id", getId())
+            .append("farmerId", getFarmerId())
             .append("name", getName())
             .append("gender", getGender())
             .append("coins", getCoins())

@@ -2,19 +2,20 @@
 <!DOCTYPE mapper
 PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.jlt.csa.mapper.CsaFarmerMapper">
+<mapper namespace="com.jlt.csa.mapper.FarmerContractMapper">
     
-    <resultMap type="CsaFarmer" id="CsaFarmerResult">
-        <result property="id"    column="id"    />
-        <result property="name"    column="name"    />
-        <result property="gender"    column="gender"    />
+    <resultMap type="FarmerContract" id="FarmerContractResult">
+        <result property="contractId"    column="contract_id"    />
+        <result property="farmerId"    column="farmer_id"    />
+        <result property="memberName"    column="member_name"    />
         <result property="coins"    column="coins"    />
         <result property="balance"    column="balance"    />
         <result property="weight"    column="weight"    />
         <result property="archedYears"    column="arched_years"    />
+        <result property="activateMode"    column="activate_mode"    />
+        <result property="joinCredentialNo"    column="join_credential_no"    />
         <result property="joinDate"    column="join_date"    />
         <result property="dueDate"    column="due_date"    />
-        <result property="isExpire"    column="is_expire"    />
         <result property="status"    column="status"    />
         <result property="delFlag"    column="del_flag"    />
         <result property="createBy"    column="create_by"    />
@@ -24,37 +25,38 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="remark"    column="remark"    />
     </resultMap>
 
-    <sql id="selectCsaFarmerVo">
-        select id, name, gender, coins, balance, weight, arched_years, join_date, due_date, is_expire, status, del_flag, create_by, create_time, update_by, update_time, remark from csa_farmer
+    <sql id="selectFarmerContractVo">
+        select contract_id, farmer_id, member_name, coins, balance, weight, arched_years, activate_mode, join_credential_no, join_date, due_date, status, del_flag, create_by, create_time, update_by, update_time, remark from csa_farmer_contract
     </sql>
 
-    <select id="selectCsaFarmerList" parameterType="CsaFarmer" resultMap="CsaFarmerResult">
-        <include refid="selectCsaFarmerVo"/>
+    <select id="selectFarmerContractList" parameterType="FarmerContract" resultMap="FarmerContractResult">
+        <include refid="selectFarmerContractVo"/>
         <where>  
-            <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
+            <if test="memberName != null  and memberName != ''"> and member_name like concat('%', #{memberName}, '%')</if>
+            <if test="joinDate != null "> and join_date = #{joinDate}</if>
             <if test="dueDate != null "> and due_date = #{dueDate}</if>
-            <if test="isExpire != null  and isExpire != ''"> and is_expire = #{isExpire}</if>
             <if test="status != null  and status != ''"> and status = #{status}</if>
         </where>
     </select>
     
-    <select id="selectCsaFarmerById" parameterType="Long" resultMap="CsaFarmerResult">
-        <include refid="selectCsaFarmerVo"/>
-        where id = #{id}
+    <select id="selectFarmerContractByContractId" parameterType="Long" resultMap="FarmerContractResult">
+        <include refid="selectFarmerContractVo"/>
+        where contract_id = #{contractId}
     </select>
         
-    <insert id="insertCsaFarmer" parameterType="CsaFarmer" useGeneratedKeys="true" keyProperty="id">
-        insert into csa_farmer
+    <insert id="insertFarmerContract" parameterType="FarmerContract" useGeneratedKeys="true" keyProperty="contractId">
+        insert into csa_farmer_contract
         <trim prefix="(" suffix=")" suffixOverrides=",">
-            <if test="name != null and name != ''">name,</if>
-            <if test="gender != null">gender,</if>
+            <if test="farmerId != null">farmer_id,</if>
+            <if test="memberName != null and memberName != ''">member_name,</if>
             <if test="coins != null">coins,</if>
             <if test="balance != null">balance,</if>
             <if test="weight != null">weight,</if>
             <if test="archedYears != null">arched_years,</if>
+            <if test="activateMode != null and activateMode != ''">activate_mode,</if>
+            <if test="joinCredentialNo != null and joinCredentialNo != ''">join_credential_no,</if>
             <if test="joinDate != null">join_date,</if>
             <if test="dueDate != null">due_date,</if>
-            <if test="isExpire != null">is_expire,</if>
             <if test="status != null">status,</if>
             <if test="delFlag != null">del_flag,</if>
             <if test="createBy != null">create_by,</if>
@@ -64,15 +66,16 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="remark != null">remark,</if>
          </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
-            <if test="name != null and name != ''">#{name},</if>
-            <if test="gender != null">#{gender},</if>
+            <if test="farmerId != null">#{farmerId},</if>
+            <if test="memberName != null and memberName != ''">#{memberName},</if>
             <if test="coins != null">#{coins},</if>
             <if test="balance != null">#{balance},</if>
             <if test="weight != null">#{weight},</if>
             <if test="archedYears != null">#{archedYears},</if>
+            <if test="activateMode != null and activateMode != ''">#{activateMode},</if>
+            <if test="joinCredentialNo != null and joinCredentialNo != ''">#{joinCredentialNo},</if>
             <if test="joinDate != null">#{joinDate},</if>
             <if test="dueDate != null">#{dueDate},</if>
-            <if test="isExpire != null">#{isExpire},</if>
             <if test="status != null">#{status},</if>
             <if test="delFlag != null">#{delFlag},</if>
             <if test="createBy != null">#{createBy},</if>
@@ -83,18 +86,19 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
          </trim>
     </insert>
 
-    <update id="updateCsaFarmer" parameterType="CsaFarmer">
-        update csa_farmer
+    <update id="updateFarmerContract" parameterType="FarmerContract">
+        update csa_farmer_contract
         <trim prefix="SET" suffixOverrides=",">
-            <if test="name != null and name != ''">name = #{name},</if>
-            <if test="gender != null">gender = #{gender},</if>
+            <if test="farmerId != null">farmer_id = #{farmerId},</if>
+            <if test="memberName != null and memberName != ''">member_name = #{memberName},</if>
             <if test="coins != null">coins = #{coins},</if>
             <if test="balance != null">balance = #{balance},</if>
             <if test="weight != null">weight = #{weight},</if>
             <if test="archedYears != null">arched_years = #{archedYears},</if>
+            <if test="activateMode != null and activateMode != ''">activate_mode = #{activateMode},</if>
+            <if test="joinCredentialNo != null and joinCredentialNo != ''">join_credential_no = #{joinCredentialNo},</if>
             <if test="joinDate != null">join_date = #{joinDate},</if>
             <if test="dueDate != null">due_date = #{dueDate},</if>
-            <if test="isExpire != null">is_expire = #{isExpire},</if>
             <if test="status != null">status = #{status},</if>
             <if test="delFlag != null">del_flag = #{delFlag},</if>
             <if test="createBy != null">create_by = #{createBy},</if>
@@ -103,17 +107,17 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="updateTime != null">update_time = #{updateTime},</if>
             <if test="remark != null">remark = #{remark},</if>
         </trim>
-        where id = #{id}
+        where contract_id = #{contractId}
     </update>
 
-    <delete id="deleteCsaFarmerById" parameterType="Long">
-        delete from csa_farmer where id = #{id}
+    <delete id="deleteFarmerContractByContractId" parameterType="Long">
+        delete from csa_farmer_contract where contract_id = #{contractId}
     </delete>
 
-    <delete id="deleteCsaFarmerByIds" parameterType="String">
-        delete from csa_farmer where id in 
-        <foreach item="id" collection="array" open="(" separator="," close=")">
-            #{id}
+    <delete id="deleteFarmerContractByContractIds" parameterType="String">
+        delete from csa_farmer_contract where contract_id in 
+        <foreach item="contractId" collection="array" open="(" separator="," close=")">
+            #{contractId}
         </foreach>
     </delete>
 </mapper>

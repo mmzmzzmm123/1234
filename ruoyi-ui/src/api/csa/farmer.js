@@ -1,6 +1,6 @@
 import request from '@/utils/request'
 
-// 查询私家农场会员列表
+// 查询农场会员列表
 export function listFarmer(query) {
   return request({
     url: '/csa/farmer/list',
@@ -9,15 +9,15 @@ export function listFarmer(query) {
   })
 }
 
-// 查询私家农场会员详细
-export function getFarmer(id) {
+// 查询农场会员详细
+export function getFarmer(farmerId) {
   return request({
-    url: '/csa/farmer/' + id,
+    url: '/csa/farmer/' + farmerId,
     method: 'get'
   })
 }
 
-// 新增私家农场会员
+// 新增农场会员
 export function addFarmer(data) {
   return request({
     url: '/csa/farmer',
@@ -26,7 +26,7 @@ export function addFarmer(data) {
   })
 }
 
-// 修改私家农场会员
+// 修改农场会员
 export function updateFarmer(data) {
   return request({
     url: '/csa/farmer',
@@ -35,10 +35,10 @@ export function updateFarmer(data) {
   })
 }
 
-// 删除私家农场会员
-export function delFarmer(id) {
+// 删除农场会员
+export function delFarmer(farmerId) {
   return request({
-    url: '/csa/farmer/' + id,
+    url: '/csa/farmer/' + farmerId,
     method: 'delete'
   })
 }

@@ -11,7 +11,7 @@
  Target Server Version : 50731
  File Encoding         : 65001
 
- Date: 31/03/2022 22:16:47
+ Date: 01/04/2022 22:43:06
 */
 
 SET NAMES utf8mb4;
@@ -268,7 +268,7 @@ INSERT INTO `csa_farm_zone` VALUES (2, '1', '高山苹果园', '0', '0', '101', 
 -- ----------------------------
 DROP TABLE IF EXISTS `csa_farmer`;
 CREATE TABLE `csa_farmer`  (
-  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '会员id',
+  `farmer_id` int(11) NOT NULL AUTO_INCREMENT COMMENT '会员id',
   `name` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '会员姓名',
   `gender` varchar(2) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '性别',
   `coins` decimal(19, 4) NOT NULL DEFAULT 0.0000 COMMENT '金币余额',
@@ -280,17 +280,48 @@ CREATE TABLE `csa_farmer`  (
   `is_expire` varchar(1) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '是否过期',
   `status` char(1) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT '0' COMMENT '状态（0正常 1停用）',
   `del_flag` char(1) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT '0' COMMENT '删除标志（0代表存在 2代表删除）',
-  `create_by` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT '' COMMENT '创建者',
+  `create_by` varchar(30) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT '' COMMENT '创建者',
   `create_time` datetime NULL DEFAULT NULL COMMENT '创建时间',
-  `update_by` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT '' COMMENT '更新者',
+  `update_by` varchar(30) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT '' COMMENT '更新者',
   `update_time` datetime NULL DEFAULT NULL COMMENT '更新时间',
   `remark` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '备注',
-  PRIMARY KEY (`id`) USING BTREE
+  PRIMARY KEY (`farmer_id`) USING BTREE
 ) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '私家农场会员' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of csa_farmer
 -- ----------------------------
+
+-- ----------------------------
+-- Table structure for csa_farmer_contract
+-- ----------------------------
+DROP TABLE IF EXISTS `csa_farmer_contract`;
+CREATE TABLE `csa_farmer_contract`  (
+  `contract_id` int(11) NOT NULL AUTO_INCREMENT COMMENT '合约id',
+  `farmer_id` int(11) NULL DEFAULT NULL COMMENT '会员id',
+  `member_name` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '会员姓名',
+  `coins` decimal(19, 4) NOT NULL DEFAULT 0.0000 COMMENT '合约金币',
+  `balance` decimal(19, 4) NOT NULL DEFAULT 0.0000 COMMENT '合约账户金额',
+  `weight` decimal(19, 4) NOT NULL DEFAULT 0.0000 COMMENT '合约重量',
+  `arched_years` int(11) NOT NULL DEFAULT 0 COMMENT '合约拱棚年限',
+  `activate_mode` varchar(10) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '激活方式',
+  `join_credential_no` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '加入凭据号码',
+  `join_date` date NULL DEFAULT NULL COMMENT '加入日期',
+  `due_date` date NULL DEFAULT NULL COMMENT '到期日期',
+  `status` char(1) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT '0' COMMENT '状态（0正常 1停用）',
+  `del_flag` char(1) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT '0' COMMENT '删除标志（0代表存在 2代表删除）',
+  `create_by` varchar(30) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT '' COMMENT '创建者',
+  `create_time` datetime NULL DEFAULT NULL COMMENT '创建时间',
+  `update_by` varchar(30) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT '' COMMENT '更新者',
+  `update_time` datetime NULL DEFAULT NULL COMMENT '更新时间',
+  `remark` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '备注',
+  PRIMARY KEY (`contract_id`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 2 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '会员合约' ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Records of csa_farmer_contract
+-- ----------------------------
+INSERT INTO `csa_farmer_contract` VALUES (1, NULL, '李开园', 10000.0000, 0.0000, 0.0000, 0, '协议', 'No.008', '2022-03-01', '2022-05-01', '0', '0', '', '2022-04-01 22:29:42', '', NULL, NULL);
 
 -- ----------------------------
 -- Table structure for csa_garden
@@ -562,14 +593,14 @@ CREATE TABLE `gen_table`  (
   `update_time` datetime NULL DEFAULT NULL COMMENT '更新时间',
   `remark` varchar(500) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '备注',
   PRIMARY KEY (`table_id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 28 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '代码生成业务表' ROW_FORMAT = DYNAMIC;
+) ENGINE = InnoDB AUTO_INCREMENT = 29 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '代码生成业务表' ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of gen_table
 -- ----------------------------
 INSERT INTO `gen_table` VALUES (1, 'csa_farm_zone', '农场分区', NULL, NULL, 'FarmZone', 'crud', 'com.jlt.csa', 'csa', 'farmzone', '农场分区', '郏磊涛', '0', '/', '{\"parentMenuId\":\"2002\"}', 'admin', '2022-03-24 19:16:52', '', '2022-03-28 22:04:22', NULL);
 INSERT INTO `gen_table` VALUES (2, 'csa_garden', '菜地', NULL, NULL, 'Garden', 'crud', 'com.jlt.csa', 'csa', 'garden', '菜地划分', '郏磊涛', '0', '/', '{\"parentMenuId\":\"2002\"}', 'admin', '2022-03-24 22:23:32', '', '2022-03-29 12:05:51', NULL);
-INSERT INTO `gen_table` VALUES (15, 'csa_farmer', '私家农场会员', NULL, NULL, 'CsaFarmer', 'crud', 'com.jlt.csa', 'csa', 'farmer', '私家农场会员', 'JiaLeitao', '0', '/', '{\"parentMenuId\":\"2021\"}', 'admin', '2022-03-26 14:34:03', '', '2022-03-26 14:40:49', NULL);
+INSERT INTO `gen_table` VALUES (15, 'csa_farmer', '私家农场会员', NULL, NULL, 'Farmer', 'crud', 'com.jlt.csa', 'csa', 'farmer', '农场会员', 'JiaLeitao', '0', '/', '{\"parentMenuId\":\"2021\"}', 'admin', '2022-03-26 14:34:03', '', '2022-04-01 21:41:06', NULL);
 INSERT INTO `gen_table` VALUES (16, 'csa_member_card', '私家农场会员卡', NULL, NULL, 'CsaMemberCard', 'crud', 'com.jlt.csa', 'csa', 'card', '会员卡', 'JiaLeitao', '0', '/', '{\"parentMenuId\":\"2028\"}', 'admin', '2022-03-26 16:11:17', '', '2022-03-26 16:21:07', NULL);
 INSERT INTO `gen_table` VALUES (17, 'csa_arched_record', '拱棚使用记录', NULL, NULL, 'ArchedRecord', 'crud', 'com.jlt.csa', 'csa', 'archedrecord', '拱棚使用记录', 'JiaLeitao', '0', '/', '{\"parentMenuId\":\"2021\"}', 'admin', '2022-03-27 17:59:21', '', '2022-03-27 19:23:55', NULL);
 INSERT INTO `gen_table` VALUES (18, 'csa_coin_record', '金币记录', NULL, NULL, 'CoinRecord', 'crud', 'com.jlt.csa', 'csa', 'coinrecord', '金币记录', 'JiaLeitao', '0', '/', '{\"parentMenuId\":\"2021\"}', 'admin', '2022-03-27 17:59:21', '', '2022-03-27 19:00:07', NULL);
@@ -581,6 +612,7 @@ INSERT INTO `gen_table` VALUES (23, 'csa_pick_detail', '采摘任务明细', NUL
 INSERT INTO `gen_table` VALUES (24, 'csa_tend_task', '打理任务', NULL, NULL, 'TendTask', 'crud', 'com.jlt.csa', 'csa', 'task', '打理任务', 'JiaLeitao', '0', '/', '{\"parentMenuId\":\"2021\"}', 'admin', '2022-03-27 17:59:21', '', '2022-03-27 18:12:16', NULL);
 INSERT INTO `gen_table` VALUES (25, 'csa_crop_file', '作物档案', '', '', 'CropFile', 'crud', 'com.jlt.csa', 'csa', 'cropfile', '作物档案', '郏磊涛', '0', '/', '{\"parentMenuId\":\"2002\"}', 'admin', '2022-03-30 22:33:19', '', '2022-03-31 22:03:32', NULL);
 INSERT INTO `gen_table` VALUES (27, 'csa_crop_phase', '作物生长阶段', NULL, NULL, 'CropPhase', 'crud', 'com.jlt.csa', 'csa', 'cropphase', '作物生长阶段', '郏磊涛', '0', '/', '{}', 'admin', '2022-03-30 22:38:47', '', '2022-03-30 22:40:17', NULL);
+INSERT INTO `gen_table` VALUES (28, 'csa_farmer_contract', '会员合约', NULL, NULL, 'FarmerContract', 'crud', 'com.jlt.csa', 'csa', 'contract', '会员签约', '郏磊涛', '0', '/', '{\"parentMenuId\":\"2021\"}', 'admin', '2022-04-01 21:41:17', '', '2022-04-01 21:43:55', NULL);
 
 -- ----------------------------
 -- Table structure for gen_table_column
@@ -610,7 +642,7 @@ CREATE TABLE `gen_table_column`  (
   `update_by` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT '' COMMENT '更新者',
   `update_time` datetime NULL DEFAULT NULL COMMENT '更新时间',
   PRIMARY KEY (`column_id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 381 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '代码生成业务表字段' ROW_FORMAT = DYNAMIC;
+) ENGINE = InnoDB AUTO_INCREMENT = 400 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '代码生成业务表字段' ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of gen_table_column
@@ -642,23 +674,22 @@ INSERT INTO `gen_table_column` VALUES (26, '2', 'create_time', '创建时间', '
 INSERT INTO `gen_table_column` VALUES (27, '2', 'update_by', '更新者', 'varchar(64)', 'String', 'updateBy', '0', '0', NULL, '1', '1', NULL, NULL, 'EQ', 'input', NULL, 17, 'admin', '2022-03-24 22:23:32', NULL, '2022-03-29 12:05:51');
 INSERT INTO `gen_table_column` VALUES (28, '2', 'update_time', '更新时间', 'datetime', 'Date', 'updateTime', '0', '0', NULL, '1', '1', NULL, NULL, 'EQ', 'datetime', NULL, 18, 'admin', '2022-03-24 22:23:32', NULL, '2022-03-29 12:05:51');
 INSERT INTO `gen_table_column` VALUES (29, '2', 'remark', '备注', 'varchar(500)', 'String', 'remark', '0', '0', NULL, '1', '1', '1', NULL, 'EQ', 'input', '', 19, 'admin', '2022-03-24 22:23:32', NULL, '2022-03-29 12:05:51');
-INSERT INTO `gen_table_column` VALUES (174, '15', 'id', '会员id', 'int(11)', 'Long', 'id', '1', '1', NULL, '1', NULL, NULL, NULL, 'EQ', 'input', NULL, 1, 'admin', '2022-03-26 14:34:03', NULL, '2022-03-26 14:40:49');
-INSERT INTO `gen_table_column` VALUES (175, '15', 'name', '会员姓名', 'varchar(50)', 'String', 'name', '0', '0', '1', '1', '1', '1', '1', 'LIKE', 'input', '', 2, 'admin', '2022-03-26 14:34:03', NULL, '2022-03-26 14:40:49');
-INSERT INTO `gen_table_column` VALUES (176, '15', 'gender', '性别', 'varchar(2)', 'String', 'gender', '0', '0', NULL, '1', '1', '1', NULL, 'EQ', 'input', '', 3, 'admin', '2022-03-26 14:34:03', NULL, '2022-03-26 14:40:49');
-INSERT INTO `gen_table_column` VALUES (177, '15', 'coins', '金币余额', 'decimal(19,4) unsigned zerofill', 'BigDecimal', 'coins', '0', '0', NULL, '1', '1', '1', NULL, 'EQ', 'input', '', 4, 'admin', '2022-03-26 14:34:03', NULL, '2022-03-26 14:40:49');
-INSERT INTO `gen_table_column` VALUES (178, '15', 'balance', '账户余额', 'decimal(19,4) unsigned zerofill', 'BigDecimal', 'balance', '0', '0', NULL, '1', '1', '1', NULL, 'EQ', 'input', '', 5, 'admin', '2022-03-26 14:34:03', NULL, '2022-03-26 14:40:49');
-INSERT INTO `gen_table_column` VALUES (179, '15', 'weight', '重量余额', 'decimal(19,4) unsigned zerofill', 'BigDecimal', 'weight', '0', '0', NULL, '1', '1', '1', NULL, 'EQ', 'input', '', 6, 'admin', '2022-03-26 14:34:03', NULL, '2022-03-26 14:40:49');
-INSERT INTO `gen_table_column` VALUES (180, '15', 'arched_years', '拱棚年限余额', 'int(10) unsigned zerofill', 'Integer', 'archedYears', '0', '0', NULL, '1', '1', '1', NULL, 'EQ', 'input', '', 7, 'admin', '2022-03-26 14:34:03', NULL, '2022-03-26 14:40:49');
-INSERT INTO `gen_table_column` VALUES (183, '15', 'is_expire', '是否过期', 'varchar(1)', 'String', 'isExpire', '0', '0', NULL, '1', '1', '1', '1', 'EQ', 'input', '', 10, 'admin', '2022-03-26 14:34:03', NULL, '2022-03-26 14:40:49');
-INSERT INTO `gen_table_column` VALUES (184, '15', 'status', '状态（0正常 1停用）', 'char(1)', 'String', 'status', '0', '0', NULL, '1', '1', '1', '1', 'EQ', 'radio', '', 11, 'admin', '2022-03-26 14:34:03', NULL, '2022-03-26 14:40:49');
-INSERT INTO `gen_table_column` VALUES (185, '15', 'del_flag', '删除标志（0代表存在 2代表删除）', 'char(1)', 'String', 'delFlag', '0', '0', NULL, '1', NULL, NULL, NULL, 'EQ', 'input', NULL, 12, 'admin', '2022-03-26 14:34:03', NULL, '2022-03-26 14:40:49');
-INSERT INTO `gen_table_column` VALUES (186, '15', 'create_by', '创建者', 'varchar(64)', 'String', 'createBy', '0', '0', NULL, '1', NULL, NULL, NULL, 'EQ', 'input', NULL, 13, 'admin', '2022-03-26 14:34:03', NULL, '2022-03-26 14:40:49');
-INSERT INTO `gen_table_column` VALUES (187, '15', 'create_time', '创建时间', 'datetime', 'Date', 'createTime', '0', '0', NULL, '1', NULL, NULL, NULL, 'EQ', 'datetime', NULL, 14, 'admin', '2022-03-26 14:34:03', NULL, '2022-03-26 14:40:49');
-INSERT INTO `gen_table_column` VALUES (188, '15', 'update_by', '更新者', 'varchar(64)', 'String', 'updateBy', '0', '0', NULL, '1', '1', NULL, NULL, 'EQ', 'input', NULL, 15, 'admin', '2022-03-26 14:34:03', NULL, '2022-03-26 14:40:49');
-INSERT INTO `gen_table_column` VALUES (189, '15', 'update_time', '更新时间', 'datetime', 'Date', 'updateTime', '0', '0', NULL, '1', '1', NULL, NULL, 'EQ', 'datetime', NULL, 16, 'admin', '2022-03-26 14:34:03', NULL, '2022-03-26 14:40:49');
-INSERT INTO `gen_table_column` VALUES (190, '15', 'remark', '备注', 'varchar(100)', 'String', 'remark', '0', '0', NULL, '1', '1', '1', NULL, 'EQ', 'input', '', 17, 'admin', '2022-03-26 14:34:03', NULL, '2022-03-26 14:40:49');
-INSERT INTO `gen_table_column` VALUES (191, '15', 'join_date', '加入日期', 'date', 'Date', 'joinDate', '0', '0', NULL, '1', '1', '1', NULL, 'EQ', 'datetime', '', 8, '', '2022-03-26 14:39:22', '', '2022-03-26 14:40:49');
-INSERT INTO `gen_table_column` VALUES (192, '15', 'due_date', '到期日期', 'date', 'Date', 'dueDate', '0', '0', NULL, '1', '1', '1', '1', 'EQ', 'datetime', '', 9, '', '2022-03-26 14:39:22', '', '2022-03-26 14:40:49');
+INSERT INTO `gen_table_column` VALUES (175, '15', 'name', '会员姓名', 'varchar(50)', 'String', 'name', '0', '0', '1', '1', NULL, '1', '1', 'LIKE', 'input', '', 2, 'admin', '2022-03-26 14:34:03', NULL, '2022-04-01 21:41:06');
+INSERT INTO `gen_table_column` VALUES (176, '15', 'gender', '性别', 'varchar(2)', 'String', 'gender', '0', '0', NULL, '1', NULL, '1', NULL, 'EQ', 'input', '', 3, 'admin', '2022-03-26 14:34:03', NULL, '2022-04-01 21:41:06');
+INSERT INTO `gen_table_column` VALUES (177, '15', 'coins', '金币余额', 'decimal(19,4) unsigned zerofill', 'BigDecimal', 'coins', '0', '0', '1', '1', NULL, '1', NULL, 'EQ', 'input', '', 4, 'admin', '2022-03-26 14:34:03', NULL, '2022-04-01 21:41:06');
+INSERT INTO `gen_table_column` VALUES (178, '15', 'balance', '账户余额', 'decimal(19,4) unsigned zerofill', 'BigDecimal', 'balance', '0', '0', '1', '1', NULL, '1', NULL, 'EQ', 'input', '', 5, 'admin', '2022-03-26 14:34:03', NULL, '2022-04-01 21:41:06');
+INSERT INTO `gen_table_column` VALUES (179, '15', 'weight', '重量余额', 'decimal(19,4) unsigned zerofill', 'BigDecimal', 'weight', '0', '0', '1', '1', NULL, '1', NULL, 'EQ', 'input', '', 6, 'admin', '2022-03-26 14:34:03', NULL, '2022-04-01 21:41:06');
+INSERT INTO `gen_table_column` VALUES (180, '15', 'arched_years', '拱棚年限余额', 'int(10) unsigned zerofill', 'Long', 'archedYears', '0', '0', '1', '1', NULL, '1', NULL, 'EQ', 'input', '', 7, 'admin', '2022-03-26 14:34:03', NULL, '2022-04-01 21:41:06');
+INSERT INTO `gen_table_column` VALUES (183, '15', 'is_expire', '是否过期', 'varchar(1)', 'String', 'isExpire', '0', '0', NULL, '1', NULL, '1', '1', 'EQ', 'radio', '', 10, 'admin', '2022-03-26 14:34:03', NULL, '2022-04-01 21:41:06');
+INSERT INTO `gen_table_column` VALUES (184, '15', 'status', '状态', 'char(1)', 'String', 'status', '0', '0', NULL, '1', NULL, NULL, NULL, 'EQ', 'radio', '', 11, 'admin', '2022-03-26 14:34:03', NULL, '2022-04-01 21:41:06');
+INSERT INTO `gen_table_column` VALUES (185, '15', 'del_flag', '删除标志', 'char(1)', 'String', 'delFlag', '0', '0', NULL, '1', NULL, NULL, NULL, 'EQ', 'input', NULL, 12, 'admin', '2022-03-26 14:34:03', NULL, '2022-04-01 21:41:06');
+INSERT INTO `gen_table_column` VALUES (186, '15', 'create_by', '创建者', 'varchar(64)', 'String', 'createBy', '0', '0', NULL, '1', NULL, NULL, NULL, 'EQ', 'input', NULL, 13, 'admin', '2022-03-26 14:34:03', NULL, '2022-04-01 21:41:06');
+INSERT INTO `gen_table_column` VALUES (187, '15', 'create_time', '创建时间', 'datetime', 'Date', 'createTime', '0', '0', NULL, '1', NULL, NULL, NULL, 'EQ', 'datetime', NULL, 14, 'admin', '2022-03-26 14:34:03', NULL, '2022-04-01 21:41:06');
+INSERT INTO `gen_table_column` VALUES (188, '15', 'update_by', '更新者', 'varchar(64)', 'String', 'updateBy', '0', '0', NULL, '1', '1', NULL, NULL, 'EQ', 'input', NULL, 15, 'admin', '2022-03-26 14:34:03', NULL, '2022-04-01 21:41:06');
+INSERT INTO `gen_table_column` VALUES (189, '15', 'update_time', '更新时间', 'datetime', 'Date', 'updateTime', '0', '0', NULL, '1', '1', NULL, NULL, 'EQ', 'datetime', NULL, 16, 'admin', '2022-03-26 14:34:03', NULL, '2022-04-01 21:41:06');
+INSERT INTO `gen_table_column` VALUES (190, '15', 'remark', '备注', 'varchar(100)', 'String', 'remark', '0', '0', NULL, '1', '1', '1', NULL, 'EQ', 'input', '', 17, 'admin', '2022-03-26 14:34:03', NULL, '2022-04-01 21:41:06');
+INSERT INTO `gen_table_column` VALUES (191, '15', 'join_date', '加入日期', 'date', 'Date', 'joinDate', '0', '0', NULL, '1', NULL, '1', '1', 'EQ', 'datetime', '', 8, '', '2022-03-26 14:39:22', NULL, '2022-04-01 21:41:06');
+INSERT INTO `gen_table_column` VALUES (192, '15', 'due_date', '到期日期', 'date', 'Date', 'dueDate', '0', '0', NULL, '1', NULL, '1', '1', 'EQ', 'datetime', '', 9, '', '2022-03-26 14:39:22', NULL, '2022-04-01 21:41:06');
 INSERT INTO `gen_table_column` VALUES (193, '16', 'id', '卡id', 'int(11)', 'Long', 'id', '1', '1', NULL, '1', NULL, NULL, NULL, 'EQ', 'input', '', 1, 'admin', '2022-03-26 16:11:17', '', '2022-03-26 16:21:07');
 INSERT INTO `gen_table_column` VALUES (194, '16', 'cardno', '卡号', 'varchar(20)', 'String', 'cardno', '0', '0', '1', '1', '1', '1', '1', 'EQ', 'input', '', 2, 'admin', '2022-03-26 16:11:17', '', '2022-03-26 16:21:07');
 INSERT INTO `gen_table_column` VALUES (195, '16', 'passwd', '密码', 'varchar(64)', 'String', 'passwd', '0', '0', '1', '1', '1', NULL, NULL, 'EQ', 'input', '', 3, 'admin', '2022-03-26 16:11:17', '', '2022-03-26 16:21:07');
@@ -835,6 +866,25 @@ INSERT INTO `gen_table_column` VALUES (377, '27', 'update_by', '更新者', 'var
 INSERT INTO `gen_table_column` VALUES (378, '27', 'update_time', '更新时间', 'datetime', 'Date', 'updateTime', '0', '0', NULL, '1', '1', NULL, NULL, 'EQ', 'datetime', '', 11, 'admin', '2022-03-30 22:38:48', '', '2022-03-30 22:40:17');
 INSERT INTO `gen_table_column` VALUES (379, '27', 'remark', '备注', 'varchar(100)', 'String', 'remark', '0', '0', NULL, '1', '1', '1', NULL, 'EQ', 'input', '', 12, 'admin', '2022-03-30 22:38:48', '', '2022-03-30 22:40:17');
 INSERT INTO `gen_table_column` VALUES (380, '25', 'picture_oss', '云配图', 'varchar(100)', 'String', 'pictureOss', '0', '0', NULL, '1', '1', NULL, NULL, 'EQ', 'input', '', 5, '', '2022-03-31 22:02:04', '', '2022-03-31 22:03:32');
+INSERT INTO `gen_table_column` VALUES (381, '15', 'farmer_id', '会员id', 'int(11)', 'Long', 'farmerId', '1', '1', NULL, '1', NULL, NULL, NULL, 'EQ', 'input', NULL, 1, '', '2022-04-01 21:35:30', NULL, '2022-04-01 21:41:06');
+INSERT INTO `gen_table_column` VALUES (382, '28', 'contract_id', '合约id', 'int(11)', 'Long', 'contractId', '1', '1', NULL, '1', NULL, NULL, NULL, 'EQ', 'input', '', 1, 'admin', '2022-04-01 21:41:17', '', '2022-04-01 21:43:55');
+INSERT INTO `gen_table_column` VALUES (383, '28', 'farmer_id', '会员id', 'int(11)', 'Long', 'farmerId', '0', '0', NULL, '1', NULL, '1', NULL, 'EQ', 'input', '', 2, 'admin', '2022-04-01 21:41:17', '', '2022-04-01 21:43:55');
+INSERT INTO `gen_table_column` VALUES (384, '28', 'member_name', '会员姓名', 'varchar(50)', 'String', 'memberName', '0', '0', '1', '1', NULL, '1', '1', 'LIKE', 'input', '', 3, 'admin', '2022-04-01 21:41:17', '', '2022-04-01 21:43:55');
+INSERT INTO `gen_table_column` VALUES (385, '28', 'coins', '合约金币', 'decimal(19,4)', 'BigDecimal', 'coins', '0', '0', '1', '1', NULL, '1', NULL, 'EQ', 'input', '', 4, 'admin', '2022-04-01 21:41:17', '', '2022-04-01 21:43:55');
+INSERT INTO `gen_table_column` VALUES (386, '28', 'balance', '合约账户金额', 'decimal(19,4)', 'BigDecimal', 'balance', '0', '0', '1', '1', NULL, '1', NULL, 'EQ', 'input', '', 5, 'admin', '2022-04-01 21:41:17', '', '2022-04-01 21:43:55');
+INSERT INTO `gen_table_column` VALUES (387, '28', 'weight', '合约重量', 'decimal(19,4)', 'BigDecimal', 'weight', '0', '0', '1', '1', NULL, '1', NULL, 'EQ', 'input', '', 6, 'admin', '2022-04-01 21:41:17', '', '2022-04-01 21:43:55');
+INSERT INTO `gen_table_column` VALUES (388, '28', 'arched_years', '合约拱棚年限', 'int(11)', 'Long', 'archedYears', '0', '0', '1', '1', NULL, '1', NULL, 'EQ', 'input', '', 7, 'admin', '2022-04-01 21:41:17', '', '2022-04-01 21:43:55');
+INSERT INTO `gen_table_column` VALUES (389, '28', 'activate_mode', '激活方式', 'varchar(10)', 'String', 'activateMode', '0', '0', '1', '1', NULL, '1', NULL, 'EQ', 'input', '', 8, 'admin', '2022-04-01 21:41:17', '', '2022-04-01 21:43:55');
+INSERT INTO `gen_table_column` VALUES (390, '28', 'join_credential_no', '加入凭据号码', 'varchar(20)', 'String', 'joinCredentialNo', '0', '0', '1', '1', NULL, '1', NULL, 'EQ', 'input', '', 9, 'admin', '2022-04-01 21:41:17', '', '2022-04-01 21:43:55');
+INSERT INTO `gen_table_column` VALUES (391, '28', 'join_date', '加入日期', 'date', 'Date', 'joinDate', '0', '0', NULL, '1', NULL, '1', '1', 'EQ', 'datetime', '', 10, 'admin', '2022-04-01 21:41:17', '', '2022-04-01 21:43:55');
+INSERT INTO `gen_table_column` VALUES (392, '28', 'due_date', '到期日期', 'date', 'Date', 'dueDate', '0', '0', NULL, '1', NULL, '1', '1', 'EQ', 'datetime', '', 11, 'admin', '2022-04-01 21:41:17', '', '2022-04-01 21:43:55');
+INSERT INTO `gen_table_column` VALUES (393, '28', 'status', '状态（0正常 1停用）', 'char(1)', 'String', 'status', '0', '0', NULL, '1', NULL, '1', '1', 'EQ', 'radio', '', 12, 'admin', '2022-04-01 21:41:17', '', '2022-04-01 21:43:55');
+INSERT INTO `gen_table_column` VALUES (394, '28', 'del_flag', '删除标志（0代表存在 2代表删除）', 'char(1)', 'String', 'delFlag', '0', '0', NULL, '1', NULL, NULL, NULL, 'EQ', 'input', '', 13, 'admin', '2022-04-01 21:41:17', '', '2022-04-01 21:43:55');
+INSERT INTO `gen_table_column` VALUES (395, '28', 'create_by', '创建者', 'varchar(30)', 'String', 'createBy', '0', '0', NULL, '1', NULL, NULL, NULL, 'EQ', 'input', '', 14, 'admin', '2022-04-01 21:41:17', '', '2022-04-01 21:43:55');
+INSERT INTO `gen_table_column` VALUES (396, '28', 'create_time', '创建时间', 'datetime', 'Date', 'createTime', '0', '0', NULL, '1', NULL, NULL, NULL, 'EQ', 'datetime', '', 15, 'admin', '2022-04-01 21:41:17', '', '2022-04-01 21:43:55');
+INSERT INTO `gen_table_column` VALUES (397, '28', 'update_by', '更新者', 'varchar(30)', 'String', 'updateBy', '0', '0', NULL, '1', '1', NULL, NULL, 'EQ', 'input', '', 16, 'admin', '2022-04-01 21:41:17', '', '2022-04-01 21:43:55');
+INSERT INTO `gen_table_column` VALUES (398, '28', 'update_time', '更新时间', 'datetime', 'Date', 'updateTime', '0', '0', NULL, '1', '1', NULL, NULL, 'EQ', 'datetime', '', 17, 'admin', '2022-04-01 21:41:17', '', '2022-04-01 21:43:55');
+INSERT INTO `gen_table_column` VALUES (399, '28', 'remark', '备注', 'varchar(100)', 'String', 'remark', '0', '0', NULL, '1', '1', '1', NULL, 'EQ', 'input', '', 18, 'admin', '2022-04-01 21:41:17', '', '2022-04-01 21:43:55');
 
 -- ----------------------------
 -- Table structure for qrtz_blob_triggers
@@ -1225,7 +1275,7 @@ CREATE TABLE `sys_job`  (
   `update_time` datetime NULL DEFAULT NULL COMMENT '更新时间',
   `remark` varchar(500) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT '' COMMENT '备注信息',
   PRIMARY KEY (`job_id`, `job_name`, `job_group`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 100 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '定时任务调度表' ROW_FORMAT = DYNAMIC;
+) ENGINE = InnoDB AUTO_INCREMENT = 101 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '定时任务调度表' ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of sys_job
@@ -1233,6 +1283,7 @@ CREATE TABLE `sys_job`  (
 INSERT INTO `sys_job` VALUES (1, '系统默认（无参）', 'DEFAULT', 'ryTask.ryNoParams', '0/10 * * * * ?', '3', '1', '1', 'admin', '2022-03-20 21:45:31', '', NULL, '');
 INSERT INTO `sys_job` VALUES (2, '系统默认（有参）', 'DEFAULT', 'ryTask.ryParams(\'ry\')', '0/15 * * * * ?', '3', '1', '1', 'admin', '2022-03-20 21:45:31', '', NULL, '');
 INSERT INTO `sys_job` VALUES (3, '系统默认（多参）', 'DEFAULT', 'ryTask.ryMultipleParams(\'ry\', true, 2000L, 316.50D, 100)', '0/20 * * * * ?', '3', '1', '1', 'admin', '2022-03-20 21:45:31', '', NULL, '');
+INSERT INTO `sys_job` VALUES (100, '七牛上传测试', 'DEFAULT', 'qiniuTask.testUpload()', '0/5 * * * * ?', '3', '1', '1', 'admin', '2022-04-01 20:47:20', 'admin', '2022-04-01 20:53:23', '');
 
 -- ----------------------------
 -- Table structure for sys_job_log
@@ -1248,11 +1299,15 @@ CREATE TABLE `sys_job_log`  (
   `exception_info` varchar(2000) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT '' COMMENT '异常信息',
   `create_time` datetime NULL DEFAULT NULL COMMENT '创建时间',
   PRIMARY KEY (`job_log_id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '定时任务调度日志表' ROW_FORMAT = DYNAMIC;
+) ENGINE = InnoDB AUTO_INCREMENT = 5 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '定时任务调度日志表' ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of sys_job_log
 -- ----------------------------
+INSERT INTO `sys_job_log` VALUES (1, '七牛上传测试', 'DEFAULT', 'qiniuTask.testUpload()', '七牛上传测试 总共耗时：212毫秒', '1', 'java.lang.reflect.InvocationTargetException\r\n	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)\r\n	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)\r\n	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)\r\n	at java.lang.reflect.Method.invoke(Method.java:498)\r\n	at com.ruoyi.quartz.util.JobInvokeUtil.invokeMethod(JobInvokeUtil.java:61)\r\n	at com.ruoyi.quartz.util.JobInvokeUtil.invokeMethod(JobInvokeUtil.java:33)\r\n	at com.ruoyi.quartz.util.QuartzDisallowConcurrentExecution.doExecute(QuartzDisallowConcurrentExecution.java:19)\r\n	at com.ruoyi.quartz.util.AbstractQuartzJob.execute(AbstractQuartzJob.java:43)\r\n	at org.quartz.core.JobRunShell.run(JobRunShell.java:202)\r\n	at org.quartz.simpl.SimpleThreadPool$WorkerThread.run(SimpleThreadPool.java:573)\r\nCaused by: java.lang.RuntimeException: com.qiniu.common.QiniuException: java.io.FileNotFoundException: d:\\time.jpg (系统找不到指定的文件。) on upload-z1.qiniup.com/110.242.48.11:80\r\n	at com.jlt.csa.task.QiniuOssTask.uploadFile(QiniuOssTask.java:71)\r\n	at com.jlt.csa.task.QiniuOssTask.uploadFile(QiniuOssTask.java:52)\r\n	at com.jlt.csa.task.QiniuOssTask.testUpload(QiniuOssTask.java:41)\r\n	... 10 more\r\nCaused by: com.qiniu.common.QiniuException: java.io.FileNotFoundException: d:\\time.jpg (系统找不到指定的文件。) on upload-z1.qiniup.com/110.242.48.11:80\r\n	at com.qiniu.http.Client.send(Client.java:403)\r\n	at com.qiniu.http.Client.multipartPost(Client.java:332)\r\n	at com.qiniu.http.Client.multipartPost(Client.java:311)\r\n	at com.qiniu.storage.FormUploader.uploadFlows(FormUploader.java:66)\r\n	at com.qiniu.storage.BaseUploader.uploadWithRegionRetry(BaseUploader.java:38)\r\n	at com.qiniu.storage.BaseUploader.upload(BaseUploader.java:31)\r\n	at com.qiniu.storage.UploadManager.put(UploadManager.java:271)\r\n	at com.qiniu.storage.UploadManager.put(UploadManager.java:215)\r\n	at com.qiniu.storage.UploadManager.put(UploadManager.java:186)\r\n	at com.jlt.csa.task.QiniuOssTask.uploadFile(QiniuOssTask.java:65', '2022-04-01 20:47:30');
+INSERT INTO `sys_job_log` VALUES (2, '七牛上传测试', 'DEFAULT', 'qiniuTask.testUpload()', '七牛上传测试 总共耗时：175毫秒', '0', '', '2022-04-01 20:48:40');
+INSERT INTO `sys_job_log` VALUES (3, '七牛上传测试', 'DEFAULT', 'qiniuTask.testUpload()', '七牛上传测试 总共耗时：166毫秒', '0', '', '2022-04-01 20:48:45');
+INSERT INTO `sys_job_log` VALUES (4, '七牛上传测试', 'DEFAULT', 'qiniuTask.testUpload()', '七牛上传测试 总共耗时：335毫秒', '0', '', '2022-04-01 20:53:20');
 
 -- ----------------------------
 -- Table structure for sys_logininfor
@@ -1269,7 +1324,7 @@ CREATE TABLE `sys_logininfor`  (
   `msg` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT '' COMMENT '提示消息',
   `login_time` datetime NULL DEFAULT NULL COMMENT '访问时间',
   PRIMARY KEY (`info_id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 176 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '系统访问记录' ROW_FORMAT = DYNAMIC;
+) ENGINE = InnoDB AUTO_INCREMENT = 178 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '系统访问记录' ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of sys_logininfor
@@ -1350,6 +1405,8 @@ INSERT INTO `sys_logininfor` VALUES (172, 'admin', '127.0.0.1', '内网IP', 'Fir
 INSERT INTO `sys_logininfor` VALUES (173, '101', '127.0.0.1', '内网IP', 'Chrome 9', 'Windows 10', '0', '登录成功', '2022-03-30 22:05:56');
 INSERT INTO `sys_logininfor` VALUES (174, 'admin', '127.0.0.1', '内网IP', 'Chrome 9', 'Windows 10', '0', '登录成功', '2022-03-31 18:49:33');
 INSERT INTO `sys_logininfor` VALUES (175, 'admin', '127.0.0.1', '内网IP', 'Chrome 9', 'Windows 10', '0', '登录成功', '2022-03-31 20:34:10');
+INSERT INTO `sys_logininfor` VALUES (176, 'admin', '127.0.0.1', '内网IP', 'Chrome 9', 'Windows 10', '0', '登录成功', '2022-04-01 20:46:08');
+INSERT INTO `sys_logininfor` VALUES (177, 'admin', '127.0.0.1', '内网IP', 'Chrome 9', 'Windows 10', '0', '登录成功', '2022-04-01 21:35:00');
 
 -- ----------------------------
 -- Table structure for sys_menu
@@ -1376,7 +1433,7 @@ CREATE TABLE `sys_menu`  (
   `update_time` datetime NULL DEFAULT NULL COMMENT '更新时间',
   `remark` varchar(500) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT '' COMMENT '备注',
   PRIMARY KEY (`menu_id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 2089 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '菜单权限表' ROW_FORMAT = DYNAMIC;
+) ENGINE = InnoDB AUTO_INCREMENT = 2096 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '菜单权限表' ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of sys_menu
@@ -1479,8 +1536,8 @@ INSERT INTO `sys_menu` VALUES (2015, '作物档案', 2002, 30, 'cropfile', 'csa/
 INSERT INTO `sys_menu` VALUES (2016, '作物档案查询', 2015, 10, '#', '', NULL, 1, 0, 'F', '0', '0', 'csa:cropfile:query', '#', 'admin', '2022-03-25 22:25:59', 'admin', '2022-03-30 22:30:33', '');
 INSERT INTO `sys_menu` VALUES (2017, '作物档案更新', 2015, 20, '#', '', NULL, 1, 0, 'F', '0', '0', 'csa:cropfile:update', '#', 'admin', '2022-03-25 22:25:59', 'admin', '2022-03-30 22:32:35', '');
 INSERT INTO `sys_menu` VALUES (2020, '作物档案导出', 2015, 30, '#', '', NULL, 1, 0, 'F', '0', '0', 'csa:cropfile:export', '#', 'admin', '2022-03-25 22:25:59', 'admin', '2022-03-30 22:31:55', '');
-INSERT INTO `sys_menu` VALUES (2021, '会员服务', 0, 200, 'member', NULL, NULL, 1, 0, 'M', '0', '0', '', 'people', 'admin', '2022-03-25 22:43:43', 'admin', '2022-03-26 14:33:42', '');
-INSERT INTO `sys_menu` VALUES (2022, '私家农场会员', 2021, 1, 'farmer', 'csa/farmer/index', NULL, 1, 0, 'C', '0', '0', 'csa:farmer:list', '#', 'admin', '2022-03-26 14:48:06', '', NULL, '私家农场会员菜单');
+INSERT INTO `sys_menu` VALUES (2021, '会员服务', 0, 200, 'member', NULL, NULL, 1, 0, 'M', '0', '0', '', 'peoples', 'admin', '2022-03-25 22:43:43', 'admin', '2022-04-01 22:04:33', '');
+INSERT INTO `sys_menu` VALUES (2022, '农场会员', 2021, 1, 'farmer', 'csa/farmer/index', NULL, 1, 0, 'C', '0', '0', 'csa:farmer:list', 'people', 'admin', '2022-03-26 14:48:06', 'admin', '2022-04-01 22:04:24', '私家农场会员菜单');
 INSERT INTO `sys_menu` VALUES (2023, '私家农场会员查询', 2022, 1, '#', '', NULL, 1, 0, 'F', '0', '0', 'csa:farmer:query', '#', 'admin', '2022-03-26 14:48:06', '', NULL, '');
 INSERT INTO `sys_menu` VALUES (2024, '私家农场会员新增', 2022, 2, '#', '', NULL, 1, 0, 'F', '0', '0', 'csa:farmer:add', '#', 'admin', '2022-03-26 14:48:06', '', NULL, '');
 INSERT INTO `sys_menu` VALUES (2025, '私家农场会员修改', 2022, 3, '#', '', NULL, 1, 0, 'F', '0', '0', 'csa:farmer:edit', '#', 'admin', '2022-03-26 14:48:06', '', NULL, '');
@@ -1493,49 +1550,49 @@ INSERT INTO `sys_menu` VALUES (2031, '会员卡新增', 2029, 2, '#', '', NULL, 
 INSERT INTO `sys_menu` VALUES (2032, '会员卡修改', 2029, 3, '#', '', NULL, 1, 0, 'F', '0', '0', 'csa:card:edit', '#', 'admin', '2022-03-26 16:24:15', '', NULL, '');
 INSERT INTO `sys_menu` VALUES (2033, '会员卡删除', 2029, 4, '#', '', NULL, 1, 0, 'F', '0', '0', 'csa:card:remove', '#', 'admin', '2022-03-26 16:24:15', '', NULL, '');
 INSERT INTO `sys_menu` VALUES (2034, '会员卡导出', 2029, 5, '#', '', NULL, 1, 0, 'F', '0', '0', 'csa:card:export', '#', 'admin', '2022-03-26 16:24:15', '', NULL, '');
-INSERT INTO `sys_menu` VALUES (2035, '菜地品种', 2021, 1, 'strain', 'csa/strain/index', NULL, 1, 0, 'C', '0', '0', 'csa:strain:list', '#', 'admin', '2022-03-27 18:06:35', '', NULL, '菜地品种菜单');
+INSERT INTO `sys_menu` VALUES (2035, '菜地品种', 2095, 1, 'strain', 'csa/strain/index', NULL, 1, 0, 'C', '0', '0', 'csa:strain:list', '#', 'admin', '2022-03-27 18:06:35', 'admin', '2022-04-01 22:01:15', '菜地品种菜单');
 INSERT INTO `sys_menu` VALUES (2036, '菜地品种查询', 2035, 1, '#', '', NULL, 1, 0, 'F', '0', '0', 'csa:strain:query', '#', 'admin', '2022-03-27 18:06:35', '', NULL, '');
 INSERT INTO `sys_menu` VALUES (2037, '菜地品种新增', 2035, 2, '#', '', NULL, 1, 0, 'F', '0', '0', 'csa:strain:add', '#', 'admin', '2022-03-27 18:06:35', '', NULL, '');
 INSERT INTO `sys_menu` VALUES (2038, '菜地品种修改', 2035, 3, '#', '', NULL, 1, 0, 'F', '0', '0', 'csa:strain:edit', '#', 'admin', '2022-03-27 18:06:35', '', NULL, '');
 INSERT INTO `sys_menu` VALUES (2039, '菜地品种删除', 2035, 4, '#', '', NULL, 1, 0, 'F', '0', '0', 'csa:strain:remove', '#', 'admin', '2022-03-27 18:06:35', '', NULL, '');
 INSERT INTO `sys_menu` VALUES (2040, '菜地品种导出', 2035, 5, '#', '', NULL, 1, 0, 'F', '0', '0', 'csa:strain:export', '#', 'admin', '2022-03-27 18:06:35', '', NULL, '');
-INSERT INTO `sys_menu` VALUES (2041, '打理任务', 2021, 1, 'task', 'csa/task/index', NULL, 1, 0, 'C', '0', '0', 'csa:task:list', '#', 'admin', '2022-03-27 18:14:22', '', NULL, '打理任务菜单');
+INSERT INTO `sys_menu` VALUES (2041, '打理任务', 2095, 1, 'task', 'csa/task/index', NULL, 1, 0, 'C', '0', '0', 'csa:task:list', '#', 'admin', '2022-03-27 18:14:22', 'admin', '2022-04-01 22:01:25', '打理任务菜单');
 INSERT INTO `sys_menu` VALUES (2042, '打理任务查询', 2041, 1, '#', '', NULL, 1, 0, 'F', '0', '0', 'csa:task:query', '#', 'admin', '2022-03-27 18:14:22', '', NULL, '');
 INSERT INTO `sys_menu` VALUES (2043, '打理任务新增', 2041, 2, '#', '', NULL, 1, 0, 'F', '0', '0', 'csa:task:add', '#', 'admin', '2022-03-27 18:14:22', '', NULL, '');
 INSERT INTO `sys_menu` VALUES (2044, '打理任务修改', 2041, 3, '#', '', NULL, 1, 0, 'F', '0', '0', 'csa:task:edit', '#', 'admin', '2022-03-27 18:14:22', '', NULL, '');
 INSERT INTO `sys_menu` VALUES (2045, '打理任务删除', 2041, 4, '#', '', NULL, 1, 0, 'F', '0', '0', 'csa:task:remove', '#', 'admin', '2022-03-27 18:14:22', '', NULL, '');
 INSERT INTO `sys_menu` VALUES (2046, '打理任务导出', 2041, 5, '#', '', NULL, 1, 0, 'F', '0', '0', 'csa:task:export', '#', 'admin', '2022-03-27 18:14:22', '', NULL, '');
-INSERT INTO `sys_menu` VALUES (2047, '采摘任务明细', 2021, 1, 'detail', 'csa/detail/index', NULL, 1, 0, 'C', '0', '0', 'csa:detail:list', '#', 'admin', '2022-03-27 18:22:28', '', NULL, '采摘任务明细菜单');
+INSERT INTO `sys_menu` VALUES (2047, '采摘任务明细', 2095, 1, 'detail', 'csa/detail/index', NULL, 1, 0, 'C', '0', '0', 'csa:detail:list', '#', 'admin', '2022-03-27 18:22:28', 'admin', '2022-04-01 22:01:31', '采摘任务明细菜单');
 INSERT INTO `sys_menu` VALUES (2048, '采摘任务明细查询', 2047, 1, '#', '', NULL, 1, 0, 'F', '0', '0', 'csa:detail:query', '#', 'admin', '2022-03-27 18:22:28', '', NULL, '');
 INSERT INTO `sys_menu` VALUES (2049, '采摘任务明细新增', 2047, 2, '#', '', NULL, 1, 0, 'F', '0', '0', 'csa:detail:add', '#', 'admin', '2022-03-27 18:22:28', '', NULL, '');
 INSERT INTO `sys_menu` VALUES (2050, '采摘任务明细修改', 2047, 3, '#', '', NULL, 1, 0, 'F', '0', '0', 'csa:detail:edit', '#', 'admin', '2022-03-27 18:22:28', '', NULL, '');
 INSERT INTO `sys_menu` VALUES (2051, '采摘任务明细删除', 2047, 4, '#', '', NULL, 1, 0, 'F', '0', '0', 'csa:detail:remove', '#', 'admin', '2022-03-27 18:22:28', '', NULL, '');
 INSERT INTO `sys_menu` VALUES (2052, '采摘任务明细导出', 2047, 5, '#', '', NULL, 1, 0, 'F', '0', '0', 'csa:detail:export', '#', 'admin', '2022-03-27 18:22:28', '', NULL, '');
-INSERT INTO `sys_menu` VALUES (2053, '菜地日志附件', 2021, 1, 'attach', 'csa/attach/index', NULL, 1, 0, 'C', '0', '0', 'csa:attach:list', '#', 'admin', '2022-03-27 18:26:34', '', NULL, '菜地日志附件菜单');
+INSERT INTO `sys_menu` VALUES (2053, '菜地日志附件', 2095, 50, 'attach', 'csa/attach/index', NULL, 1, 0, 'C', '0', '0', 'csa:attach:list', '#', 'admin', '2022-03-27 18:26:34', 'admin', '2022-04-01 22:02:32', '菜地日志附件菜单');
 INSERT INTO `sys_menu` VALUES (2054, '菜地日志附件查询', 2053, 1, '#', '', NULL, 1, 0, 'F', '0', '0', 'csa:attach:query', '#', 'admin', '2022-03-27 18:26:34', '', NULL, '');
 INSERT INTO `sys_menu` VALUES (2055, '菜地日志附件新增', 2053, 2, '#', '', NULL, 1, 0, 'F', '0', '0', 'csa:attach:add', '#', 'admin', '2022-03-27 18:26:34', '', NULL, '');
 INSERT INTO `sys_menu` VALUES (2056, '菜地日志附件修改', 2053, 3, '#', '', NULL, 1, 0, 'F', '0', '0', 'csa:attach:edit', '#', 'admin', '2022-03-27 18:26:34', '', NULL, '');
 INSERT INTO `sys_menu` VALUES (2057, '菜地日志附件删除', 2053, 4, '#', '', NULL, 1, 0, 'F', '0', '0', 'csa:attach:remove', '#', 'admin', '2022-03-27 18:26:34', '', NULL, '');
 INSERT INTO `sys_menu` VALUES (2058, '菜地日志附件导出', 2053, 5, '#', '', NULL, 1, 0, 'F', '0', '0', 'csa:attach:export', '#', 'admin', '2022-03-27 18:26:34', '', NULL, '');
-INSERT INTO `sys_menu` VALUES (2059, '菜地日志', 2021, 1, 'log', 'csa/log/index', NULL, 1, 0, 'C', '0', '0', 'csa:log:list', '#', 'admin', '2022-03-27 18:31:22', '', NULL, '菜地日志菜单');
+INSERT INTO `sys_menu` VALUES (2059, '菜地日志', 2095, 49, 'log', 'csa/log/index', NULL, 1, 0, 'C', '0', '0', 'csa:log:list', '#', 'admin', '2022-03-27 18:31:22', 'admin', '2022-04-01 22:02:25', '菜地日志菜单');
 INSERT INTO `sys_menu` VALUES (2060, '菜地日志查询', 2059, 1, '#', '', NULL, 1, 0, 'F', '0', '0', 'csa:log:query', '#', 'admin', '2022-03-27 18:31:22', '', NULL, '');
 INSERT INTO `sys_menu` VALUES (2061, '菜地日志新增', 2059, 2, '#', '', NULL, 1, 0, 'F', '0', '0', 'csa:log:add', '#', 'admin', '2022-03-27 18:31:22', '', NULL, '');
 INSERT INTO `sys_menu` VALUES (2062, '菜地日志修改', 2059, 3, '#', '', NULL, 1, 0, 'F', '0', '0', 'csa:log:edit', '#', 'admin', '2022-03-27 18:31:22', '', NULL, '');
 INSERT INTO `sys_menu` VALUES (2063, '菜地日志删除', 2059, 4, '#', '', NULL, 1, 0, 'F', '0', '0', 'csa:log:remove', '#', 'admin', '2022-03-27 18:31:22', '', NULL, '');
 INSERT INTO `sys_menu` VALUES (2064, '菜地日志导出', 2059, 5, '#', '', NULL, 1, 0, 'F', '0', '0', 'csa:log:export', '#', 'admin', '2022-03-27 18:31:22', '', NULL, '');
-INSERT INTO `sys_menu` VALUES (2065, '金币记录', 2021, 1, 'coinrecord', 'csa/coinrecord/index', NULL, 1, 0, 'C', '0', '0', 'csa:coinrecord:list', 'radio', 'admin', '2022-03-27 18:35:32', 'admin', '2022-03-27 19:02:00', '打理任务菜单');
+INSERT INTO `sys_menu` VALUES (2065, '金币记录', 2021, 55, 'coinrecord', 'csa/coinrecord/index', NULL, 1, 0, 'C', '0', '0', 'csa:coinrecord:list', 'radio', 'admin', '2022-03-27 18:35:32', 'admin', '2022-04-01 21:58:09', '打理任务菜单');
 INSERT INTO `sys_menu` VALUES (2066, '金币记录查询', 2065, 1, '#', '', NULL, 1, 0, 'F', '0', '0', 'csa:coinrecord:query', '#', 'admin', '2022-03-27 18:35:32', 'admin', '2022-03-27 19:03:49', '');
 INSERT INTO `sys_menu` VALUES (2067, '金币记录新增', 2065, 2, '#', '', NULL, 1, 0, 'F', '0', '0', 'csa:coinrecord:add', '#', 'admin', '2022-03-27 18:35:32', 'admin', '2022-03-27 19:03:56', '');
 INSERT INTO `sys_menu` VALUES (2068, '金币记录修改', 2065, 3, '#', '', NULL, 1, 0, 'F', '0', '0', 'csa:coinrecord:edit', '#', 'admin', '2022-03-27 18:35:32', 'admin', '2022-03-27 19:04:04', '');
 INSERT INTO `sys_menu` VALUES (2069, '金币记录删除', 2065, 4, '#', '', NULL, 1, 0, 'F', '0', '0', 'csa:coinrecord:remove', '#', 'admin', '2022-03-27 18:35:32', 'admin', '2022-03-27 19:04:12', '');
 INSERT INTO `sys_menu` VALUES (2070, '金币记录导出', 2065, 5, '#', '', NULL, 1, 0, 'F', '0', '0', 'csa:coinrecord:export', '#', 'admin', '2022-03-27 18:35:32', 'admin', '2022-03-27 19:04:21', '');
-INSERT INTO `sys_menu` VALUES (2071, '沟通记录', 2021, 1, 'commrecord', 'csa/commrecord/index', NULL, 1, 0, 'C', '0', '0', 'csa:commrecord:list', '#', 'admin', '2022-03-27 18:43:39', 'admin', '2022-03-27 19:56:01', '沟通记录菜单');
+INSERT INTO `sys_menu` VALUES (2071, '沟通记录', 2021, 45, 'commrecord', 'csa/commrecord/index', NULL, 1, 0, 'C', '0', '0', 'csa:commrecord:list', 'phone', 'admin', '2022-03-27 18:43:39', 'admin', '2022-04-01 22:05:30', '沟通记录菜单');
 INSERT INTO `sys_menu` VALUES (2072, '沟通记录查询', 2071, 1, '#', '', NULL, 1, 0, 'F', '0', '0', 'csa:commrecord:query', '#', 'admin', '2022-03-27 18:43:39', 'admin', '2022-03-27 19:56:11', '');
 INSERT INTO `sys_menu` VALUES (2073, '沟通记录新增', 2071, 2, '#', '', NULL, 1, 0, 'F', '0', '0', 'csa:commrecord:add', '#', 'admin', '2022-03-27 18:43:39', 'admin', '2022-03-27 19:56:22', '');
 INSERT INTO `sys_menu` VALUES (2074, '沟通记录修改', 2071, 3, '#', '', NULL, 1, 0, 'F', '0', '0', 'csa:commrecord:edit', '#', 'admin', '2022-03-27 18:43:39', 'admin', '2022-03-27 19:56:32', '');
 INSERT INTO `sys_menu` VALUES (2075, '沟通记录删除', 2071, 4, '#', '', NULL, 1, 0, 'F', '0', '0', 'csa:commrecord:remove', '#', 'admin', '2022-03-27 18:43:39', 'admin', '2022-03-27 19:56:42', '');
 INSERT INTO `sys_menu` VALUES (2076, '沟通记录导出', 2071, 5, '#', '', NULL, 1, 0, 'F', '0', '0', 'csa:commrecord:export', '#', 'admin', '2022-03-27 18:43:39', 'admin', '2022-03-27 19:56:53', '');
-INSERT INTO `sys_menu` VALUES (2077, '拱棚使用记录', 2021, 1, 'archedrecord', 'csa/archedrecord/index', NULL, 1, 0, 'C', '0', '0', 'csa:archedrecord:list', '#', 'admin', '2022-03-27 18:46:37', 'admin', '2022-03-27 19:57:28', '拱棚使用记录菜单');
+INSERT INTO `sys_menu` VALUES (2077, '拱棚使用记录', 2095, 46, 'archedrecord', 'csa/archedrecord/index', NULL, 1, 0, 'C', '0', '0', 'csa:archedrecord:list', '#', 'admin', '2022-03-27 18:46:37', 'admin', '2022-04-01 22:02:44', '拱棚使用记录菜单');
 INSERT INTO `sys_menu` VALUES (2078, '拱棚使用记录查询', 2077, 1, '#', '', NULL, 1, 0, 'F', '0', '0', 'csa:archedrecord:query', '#', 'admin', '2022-03-27 18:46:37', 'admin', '2022-03-27 19:57:37', '');
 INSERT INTO `sys_menu` VALUES (2079, '拱棚使用记录新增', 2077, 2, '#', '', NULL, 1, 0, 'F', '0', '0', 'csa:archedrecord:add', '#', 'admin', '2022-03-27 18:46:37', 'admin', '2022-03-27 19:57:48', '');
 INSERT INTO `sys_menu` VALUES (2080, '拱棚使用记录修改', 2077, 3, '#', '', NULL, 1, 0, 'F', '0', '0', 'csa:archedrecord:edit', '#', 'admin', '2022-03-27 18:46:37', 'admin', '2022-03-27 19:57:57', '');
@@ -1547,6 +1604,13 @@ INSERT INTO `sys_menu` VALUES (2085, '字典新增', 2083, 20, '', NULL, NULL, 1
 INSERT INTO `sys_menu` VALUES (2086, '字典修改', 2083, 30, '', NULL, NULL, 1, 0, 'F', '0', '0', 'system:dict:edit', '#', 'admin', '2022-03-27 22:06:12', '', NULL, '');
 INSERT INTO `sys_menu` VALUES (2087, '字典删除', 2083, 40, '', NULL, NULL, 1, 0, 'F', '0', '0', 'system:dict:remove', '#', 'admin', '2022-03-27 22:06:33', '', NULL, '');
 INSERT INTO `sys_menu` VALUES (2088, '字典导出', 2083, 50, '', NULL, NULL, 1, 0, 'F', '0', '0', 'system:dict:export', '#', 'admin', '2022-03-27 22:06:59', '', NULL, '');
+INSERT INTO `sys_menu` VALUES (2089, '会员签约', 2021, 1, 'contract', 'csa/contract/index', NULL, 1, 0, 'C', '0', '0', 'csa:contract:list', 'edit', 'admin', '2022-04-01 21:53:16', 'admin', '2022-04-01 22:03:36', '会员签约菜单');
+INSERT INTO `sys_menu` VALUES (2090, '会员签约查询', 2089, 1, '#', '', NULL, 1, 0, 'F', '0', '0', 'csa:contract:query', '#', 'admin', '2022-04-01 21:53:16', '', NULL, '');
+INSERT INTO `sys_menu` VALUES (2091, '会员签约新增', 2089, 2, '#', '', NULL, 1, 0, 'F', '0', '0', 'csa:contract:add', '#', 'admin', '2022-04-01 21:53:16', '', NULL, '');
+INSERT INTO `sys_menu` VALUES (2092, '会员签约修改', 2089, 3, '#', '', NULL, 1, 0, 'F', '0', '0', 'csa:contract:edit', '#', 'admin', '2022-04-01 21:53:16', '', NULL, '');
+INSERT INTO `sys_menu` VALUES (2093, '会员签约删除', 2089, 4, '#', '', NULL, 1, 0, 'F', '0', '0', 'csa:contract:remove', '#', 'admin', '2022-04-01 21:53:16', '', NULL, '');
+INSERT INTO `sys_menu` VALUES (2094, '会员签约导出', 2089, 5, '#', '', NULL, 1, 0, 'F', '0', '0', 'csa:contract:export', '#', 'admin', '2022-04-01 21:53:16', '', NULL, '');
+INSERT INTO `sys_menu` VALUES (2095, '现场管理', 0, 300, 'park', NULL, NULL, 1, 0, 'M', '0', '0', NULL, 'build', 'admin', '2022-04-01 22:00:53', '', NULL, '');
 
 -- ----------------------------
 -- Table structure for sys_notice
@@ -1594,7 +1658,7 @@ CREATE TABLE `sys_oper_log`  (
   `error_msg` varchar(2000) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT '' COMMENT '错误消息',
   `oper_time` datetime NULL DEFAULT NULL COMMENT '操作时间',
   PRIMARY KEY (`oper_id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 470 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '操作日志记录' ROW_FORMAT = DYNAMIC;
+) ENGINE = InnoDB AUTO_INCREMENT = 505 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '操作日志记录' ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of sys_oper_log
@@ -1969,6 +2033,41 @@ INSERT INTO `sys_oper_log` VALUES (466, '作物档案', 2, 'com.jlt.csa.controll
 INSERT INTO `sys_oper_log` VALUES (467, '作物档案', 2, 'com.jlt.csa.controller.CropFileController.edit()', 'PUT', 1, 'admin', NULL, '/csa/cropfile', '127.0.0.1', '内网IP', '{\"cropId\":1,\"updateTime\":1648735648108,\"params\":{},\"updateBy\":\"admin\",\"status\":\"0\"}', '{\"msg\":\"操作成功\",\"code\":200}', 0, NULL, '2022-03-31 22:07:28');
 INSERT INTO `sys_oper_log` VALUES (468, '作物档案', 2, 'com.jlt.csa.controller.CropFileController.edit()', 'PUT', 1, 'admin', NULL, '/csa/cropfile', '127.0.0.1', '内网IP', '{\"cropId\":1,\"updateTime\":1648735649650,\"params\":{},\"updateBy\":\"admin\",\"status\":\"1\"}', '{\"msg\":\"操作成功\",\"code\":200}', 0, NULL, '2022-03-31 22:07:29');
 INSERT INTO `sys_oper_log` VALUES (469, '作物档案', 2, 'com.jlt.csa.controller.CropFileController.edit()', 'PUT', 1, 'admin', NULL, '/csa/cropfile', '127.0.0.1', '内网IP', '{\"cropId\":1,\"updateTime\":1648735652218,\"params\":{},\"updateBy\":\"admin\",\"status\":\"0\"}', '{\"msg\":\"操作成功\",\"code\":200}', 0, NULL, '2022-03-31 22:07:32');
+INSERT INTO `sys_oper_log` VALUES (470, '定时任务', 1, 'com.ruoyi.quartz.controller.SysJobController.add()', 'POST', 1, 'admin', NULL, '/monitor/job', '127.0.0.1', '内网IP', '{\"jobName\":\"七牛上传测试\",\"concurrent\":\"1\",\"jobGroup\":\"DEFAULT\",\"params\":{},\"cronExpression\":\"0/5 * * * * ?\",\"jobId\":100,\"createBy\":\"admin\",\"nextValidTime\":1648817245000,\"invokeTarget\":\"qiniuTask.testUpload()\",\"misfirePolicy\":\"2\",\"status\":\"1\"}', '{\"msg\":\"操作成功\",\"code\":200}', 0, NULL, '2022-04-01 20:47:20');
+INSERT INTO `sys_oper_log` VALUES (471, '定时任务', 2, 'com.ruoyi.quartz.controller.SysJobController.changeStatus()', 'PUT', 1, 'admin', NULL, '/monitor/job/changeStatus', '127.0.0.1', '内网IP', '{\"params\":{},\"jobId\":100,\"misfirePolicy\":\"0\",\"status\":\"0\"}', '{\"msg\":\"操作成功\",\"code\":200}', 0, NULL, '2022-04-01 20:47:30');
+INSERT INTO `sys_oper_log` VALUES (472, '定时任务', 2, 'com.ruoyi.quartz.controller.SysJobController.changeStatus()', 'PUT', 1, 'admin', NULL, '/monitor/job/changeStatus', '127.0.0.1', '内网IP', '{\"params\":{},\"jobId\":100,\"misfirePolicy\":\"0\",\"status\":\"1\"}', '{\"msg\":\"操作成功\",\"code\":200}', 0, NULL, '2022-04-01 20:47:34');
+INSERT INTO `sys_oper_log` VALUES (473, '定时任务', 2, 'com.ruoyi.quartz.controller.SysJobController.edit()', 'PUT', 1, 'admin', NULL, '/monitor/job', '127.0.0.1', '内网IP', '{\"jobName\":\"七牛上传测试\",\"concurrent\":\"1\",\"remark\":\"\",\"jobGroup\":\"DEFAULT\",\"params\":{},\"cronExpression\":\"0/5 * * * * ?\",\"jobId\":100,\"createBy\":\"admin\",\"nextValidTime\":1648817285000,\"createTime\":1648817240000,\"updateBy\":\"admin\",\"invokeTarget\":\"qiniuTask.testUpload()\",\"misfirePolicy\":\"3\",\"status\":\"1\"}', '{\"msg\":\"操作成功\",\"code\":200}', 0, NULL, '2022-04-01 20:48:02');
+INSERT INTO `sys_oper_log` VALUES (474, '定时任务', 2, 'com.ruoyi.quartz.controller.SysJobController.changeStatus()', 'PUT', 1, 'admin', NULL, '/monitor/job/changeStatus', '127.0.0.1', '内网IP', '{\"params\":{},\"jobId\":100,\"misfirePolicy\":\"0\",\"status\":\"0\"}', '{\"msg\":\"操作成功\",\"code\":200}', 0, NULL, '2022-04-01 20:48:38');
+INSERT INTO `sys_oper_log` VALUES (475, '定时任务', 2, 'com.ruoyi.quartz.controller.SysJobController.changeStatus()', 'PUT', 1, 'admin', NULL, '/monitor/job/changeStatus', '127.0.0.1', '内网IP', '{\"params\":{},\"jobId\":100,\"misfirePolicy\":\"0\",\"status\":\"1\"}', '{\"msg\":\"操作成功\",\"code\":200}', 0, NULL, '2022-04-01 20:48:48');
+INSERT INTO `sys_oper_log` VALUES (476, '定时任务', 2, 'com.ruoyi.quartz.controller.SysJobController.changeStatus()', 'PUT', 1, 'admin', NULL, '/monitor/job/changeStatus', '127.0.0.1', '内网IP', '{\"params\":{},\"jobId\":100,\"misfirePolicy\":\"0\",\"status\":\"0\"}', '{\"msg\":\"操作成功\",\"code\":200}', 0, NULL, '2022-04-01 20:53:18');
+INSERT INTO `sys_oper_log` VALUES (477, '定时任务', 2, 'com.ruoyi.quartz.controller.SysJobController.changeStatus()', 'PUT', 1, 'admin', NULL, '/monitor/job/changeStatus', '127.0.0.1', '内网IP', '{\"params\":{},\"jobId\":100,\"misfirePolicy\":\"0\",\"status\":\"1\"}', '{\"msg\":\"操作成功\",\"code\":200}', 0, NULL, '2022-04-01 20:53:23');
+INSERT INTO `sys_oper_log` VALUES (478, '代码生成', 2, 'com.ruoyi.generator.controller.GenController.synchDb()', 'GET', 1, 'admin', NULL, '/tool/gen/synchDb/csa_farmer', '127.0.0.1', '内网IP', '{tableName=csa_farmer}', '{\"msg\":\"操作成功\",\"code\":200}', 0, NULL, '2022-04-01 21:35:30');
+INSERT INTO `sys_oper_log` VALUES (479, '代码生成', 2, 'com.ruoyi.generator.controller.GenController.synchDb()', 'GET', 1, 'admin', NULL, '/tool/gen/synchDb/csa_farmer', '127.0.0.1', '内网IP', '{tableName=csa_farmer}', '{\"msg\":\"操作成功\",\"code\":200}', 0, NULL, '2022-04-01 21:36:05');
+INSERT INTO `sys_oper_log` VALUES (480, '代码生成', 2, 'com.ruoyi.generator.controller.GenController.editSave()', 'PUT', 1, 'admin', NULL, '/tool/gen', '127.0.0.1', '内网IP', '{\"sub\":false,\"functionAuthor\":\"JiaLeitao\",\"columns\":[{\"capJavaField\":\"FarmerId\",\"usableColumn\":false,\"columnId\":381,\"isIncrement\":\"1\",\"increment\":true,\"insert\":true,\"required\":false,\"superColumn\":false,\"isInsert\":\"1\",\"javaField\":\"farmerId\",\"htmlType\":\"input\",\"edit\":false,\"query\":false,\"columnComment\":\"会员id\",\"updateTime\":1648820165000,\"sort\":1,\"list\":false,\"params\":{},\"javaType\":\"Long\",\"queryType\":\"EQ\",\"columnType\":\"int(11)\",\"createBy\":\"\",\"isPk\":\"1\",\"createTime\":1648820130000,\"tableId\":15,\"pk\":true,\"columnName\":\"farmer_id\"},{\"capJavaField\":\"Name\",\"usableColumn\":false,\"columnId\":175,\"isIncrement\":\"0\",\"increment\":false,\"insert\":true,\"isList\":\"1\",\"dictType\":\"\",\"required\":true,\"superColumn\":false,\"isInsert\":\"1\",\"isRequired\":\"1\",\"javaField\":\"name\",\"htmlType\":\"input\",\"edit\":false,\"query\":true,\"columnComment\":\"会员姓名\",\"isQuery\":\"1\",\"updateTime\":1648820165000,\"sort\":2,\"list\":true,\"params\":{},\"javaType\":\"String\",\"queryType\":\"LIKE\",\"columnType\":\"varchar(50)\",\"createBy\":\"admin\",\"isPk\":\"0\",\"createTime\":1648276443000,\"tableId\":15,\"pk\":false,\"columnName\":\"name\"},{\"capJavaField\":\"Gender\",\"usableColumn\":false,\"columnId\":176,\"isIncrement\":\"0\",\"increment\":false,\"insert\":true,\"isList\":\"1\",\"dictType\":\"\",\"required\":false,\"superColumn\":false,\"isInsert\":\"1\",\"javaField\":\"gender\",\"htmlType\":\"input\",\"edit\":false,\"query\":false,\"columnComment\":\"性别\",\"updateTime\":1648820165000,\"sort\":3,\"list\":true,\"params\":{},\"javaType\":\"String\",\"queryType\":\"EQ\",\"columnType\":\"varchar(2)\",\"createBy\":\"admin\",\"isPk\":\"0\",\"createTime\":1648276443000,\"tableId\":15,\"pk\":false,\"columnName\":\"gender\"},{\"capJavaField\":\"Coins\",\"usableColumn\":false,\"columnId\":177,\"isIncrement\":\"0\",\"increment\":false,\"insert\":true,\"isList\":\"1\",\"dictType\":\"\",\"required\":true,\"superColumn\":false,\"isInsert\":\"1\",\"isRequired\":\"1\",\"javaField\":\"coins\",\"htmlType\":\"input\",\"edit\":false,\"query\":false,\"columnComment\":\"金币余额\",\"updateTime\":1648820165000,\"sort\":4,\"list\":true,\"params\":{},\"javaType\":\"BigDecimal\",\"queryType\":\"EQ\",\"columnType\":\"decimal(19,4) unsigned z', '{\"msg\":\"操作成功\",\"code\":200}', 0, NULL, '2022-04-01 21:40:07');
+INSERT INTO `sys_oper_log` VALUES (481, '代码生成', 2, 'com.ruoyi.generator.controller.GenController.editSave()', 'PUT', 1, 'admin', NULL, '/tool/gen', '127.0.0.1', '内网IP', '{\"sub\":false,\"functionAuthor\":\"JiaLeitao\",\"columns\":[{\"capJavaField\":\"FarmerId\",\"usableColumn\":false,\"columnId\":381,\"isIncrement\":\"1\",\"increment\":true,\"insert\":true,\"required\":false,\"superColumn\":false,\"isInsert\":\"1\",\"javaField\":\"farmerId\",\"htmlType\":\"input\",\"edit\":false,\"query\":false,\"columnComment\":\"会员id\",\"updateTime\":1648820406000,\"sort\":1,\"list\":false,\"params\":{},\"javaType\":\"Long\",\"queryType\":\"EQ\",\"columnType\":\"int(11)\",\"createBy\":\"\",\"isPk\":\"1\",\"createTime\":1648820130000,\"tableId\":15,\"pk\":true,\"columnName\":\"farmer_id\"},{\"capJavaField\":\"Name\",\"usableColumn\":false,\"columnId\":175,\"isIncrement\":\"0\",\"increment\":false,\"insert\":true,\"isList\":\"1\",\"dictType\":\"\",\"required\":true,\"superColumn\":false,\"isInsert\":\"1\",\"isRequired\":\"1\",\"javaField\":\"name\",\"htmlType\":\"input\",\"edit\":false,\"query\":true,\"columnComment\":\"会员姓名\",\"isQuery\":\"1\",\"updateTime\":1648820406000,\"sort\":2,\"list\":true,\"params\":{},\"javaType\":\"String\",\"queryType\":\"LIKE\",\"columnType\":\"varchar(50)\",\"createBy\":\"admin\",\"isPk\":\"0\",\"createTime\":1648276443000,\"tableId\":15,\"pk\":false,\"columnName\":\"name\"},{\"capJavaField\":\"Gender\",\"usableColumn\":false,\"columnId\":176,\"isIncrement\":\"0\",\"increment\":false,\"insert\":true,\"isList\":\"1\",\"dictType\":\"\",\"required\":false,\"superColumn\":false,\"isInsert\":\"1\",\"javaField\":\"gender\",\"htmlType\":\"input\",\"edit\":false,\"query\":false,\"columnComment\":\"性别\",\"updateTime\":1648820406000,\"sort\":3,\"list\":true,\"params\":{},\"javaType\":\"String\",\"queryType\":\"EQ\",\"columnType\":\"varchar(2)\",\"createBy\":\"admin\",\"isPk\":\"0\",\"createTime\":1648276443000,\"tableId\":15,\"pk\":false,\"columnName\":\"gender\"},{\"capJavaField\":\"Coins\",\"usableColumn\":false,\"columnId\":177,\"isIncrement\":\"0\",\"increment\":false,\"insert\":true,\"isList\":\"1\",\"dictType\":\"\",\"required\":true,\"superColumn\":false,\"isInsert\":\"1\",\"isRequired\":\"1\",\"javaField\":\"coins\",\"htmlType\":\"input\",\"edit\":false,\"query\":false,\"columnComment\":\"金币余额\",\"updateTime\":1648820406000,\"sort\":4,\"list\":true,\"params\":{},\"javaType\":\"BigDecimal\",\"queryType\":\"EQ\",\"columnType\":\"decimal(19,4) unsigned z', '{\"msg\":\"操作成功\",\"code\":200}', 0, NULL, '2022-04-01 21:41:06');
+INSERT INTO `sys_oper_log` VALUES (482, '代码生成', 6, 'com.ruoyi.generator.controller.GenController.importTableSave()', 'POST', 1, 'admin', NULL, '/tool/gen/importTable', '127.0.0.1', '内网IP', 'csa_farmer_contract', '{\"msg\":\"操作成功\",\"code\":200}', 0, NULL, '2022-04-01 21:41:17');
+INSERT INTO `sys_oper_log` VALUES (483, '代码生成', 2, 'com.ruoyi.generator.controller.GenController.editSave()', 'PUT', 1, 'admin', NULL, '/tool/gen', '127.0.0.1', '内网IP', '{\"sub\":false,\"functionAuthor\":\"郏磊涛\",\"columns\":[{\"capJavaField\":\"ContractId\",\"usableColumn\":false,\"columnId\":382,\"isIncrement\":\"1\",\"increment\":true,\"insert\":true,\"dictType\":\"\",\"required\":false,\"superColumn\":false,\"updateBy\":\"\",\"isInsert\":\"1\",\"javaField\":\"contractId\",\"htmlType\":\"input\",\"edit\":false,\"query\":false,\"columnComment\":\"合约id\",\"sort\":1,\"list\":false,\"params\":{},\"javaType\":\"Long\",\"queryType\":\"EQ\",\"columnType\":\"int(11)\",\"createBy\":\"admin\",\"isPk\":\"1\",\"createTime\":1648820477000,\"tableId\":28,\"pk\":true,\"columnName\":\"contract_id\"},{\"capJavaField\":\"FarmerId\",\"usableColumn\":false,\"columnId\":383,\"isIncrement\":\"0\",\"increment\":false,\"insert\":true,\"isList\":\"1\",\"dictType\":\"\",\"required\":false,\"superColumn\":false,\"updateBy\":\"\",\"isInsert\":\"1\",\"javaField\":\"farmerId\",\"htmlType\":\"input\",\"edit\":true,\"query\":true,\"columnComment\":\"会员id\",\"isQuery\":\"1\",\"sort\":2,\"list\":true,\"params\":{},\"javaType\":\"Long\",\"queryType\":\"EQ\",\"columnType\":\"int(11)\",\"createBy\":\"admin\",\"isPk\":\"0\",\"createTime\":1648820477000,\"isEdit\":\"1\",\"tableId\":28,\"pk\":false,\"columnName\":\"farmer_id\"},{\"capJavaField\":\"MemberName\",\"usableColumn\":false,\"columnId\":384,\"isIncrement\":\"0\",\"increment\":false,\"insert\":true,\"isList\":\"1\",\"dictType\":\"\",\"required\":true,\"superColumn\":false,\"updateBy\":\"\",\"isInsert\":\"1\",\"isRequired\":\"1\",\"javaField\":\"memberName\",\"htmlType\":\"input\",\"edit\":true,\"query\":true,\"columnComment\":\"会员姓名\",\"isQuery\":\"1\",\"sort\":3,\"list\":true,\"params\":{},\"javaType\":\"String\",\"queryType\":\"LIKE\",\"columnType\":\"varchar(50)\",\"createBy\":\"admin\",\"isPk\":\"0\",\"createTime\":1648820477000,\"isEdit\":\"1\",\"tableId\":28,\"pk\":false,\"columnName\":\"member_name\"},{\"capJavaField\":\"Coins\",\"usableColumn\":false,\"columnId\":385,\"isIncrement\":\"0\",\"increment\":false,\"insert\":true,\"isList\":\"1\",\"dictType\":\"\",\"required\":true,\"superColumn\":false,\"updateBy\":\"\",\"isInsert\":\"1\",\"isRequired\":\"1\",\"javaField\":\"coins\",\"htmlType\":\"input\",\"edit\":true,\"query\":true,\"columnComment\":\"合约金币\",\"isQuery\":\"1\",\"sort\":4,\"list\":true,\"params\":{},\"javaType\":\"BigDecimal\",\"queryType\":\"EQ\"', '{\"msg\":\"操作成功\",\"code\":200}', 0, NULL, '2022-04-01 21:42:21');
+INSERT INTO `sys_oper_log` VALUES (484, '代码生成', 2, 'com.ruoyi.generator.controller.GenController.editSave()', 'PUT', 1, 'admin', NULL, '/tool/gen', '127.0.0.1', '内网IP', '{\"sub\":false,\"functionAuthor\":\"郏磊涛\",\"columns\":[{\"capJavaField\":\"ContractId\",\"usableColumn\":false,\"columnId\":382,\"isIncrement\":\"1\",\"increment\":true,\"insert\":true,\"dictType\":\"\",\"required\":false,\"superColumn\":false,\"updateBy\":\"\",\"isInsert\":\"1\",\"javaField\":\"contractId\",\"htmlType\":\"input\",\"edit\":false,\"query\":false,\"columnComment\":\"合约id\",\"updateTime\":1648820541000,\"sort\":1,\"list\":false,\"params\":{},\"javaType\":\"Long\",\"queryType\":\"EQ\",\"columnType\":\"int(11)\",\"createBy\":\"admin\",\"isPk\":\"1\",\"createTime\":1648820477000,\"tableId\":28,\"pk\":true,\"columnName\":\"contract_id\"},{\"capJavaField\":\"FarmerId\",\"usableColumn\":false,\"columnId\":383,\"isIncrement\":\"0\",\"increment\":false,\"insert\":true,\"isList\":\"1\",\"dictType\":\"\",\"required\":false,\"superColumn\":false,\"updateBy\":\"\",\"isInsert\":\"1\",\"javaField\":\"farmerId\",\"htmlType\":\"input\",\"edit\":false,\"query\":false,\"columnComment\":\"会员id\",\"updateTime\":1648820541000,\"sort\":2,\"list\":true,\"params\":{},\"javaType\":\"Long\",\"queryType\":\"EQ\",\"columnType\":\"int(11)\",\"createBy\":\"admin\",\"isPk\":\"0\",\"createTime\":1648820477000,\"tableId\":28,\"pk\":false,\"columnName\":\"farmer_id\"},{\"capJavaField\":\"MemberName\",\"usableColumn\":false,\"columnId\":384,\"isIncrement\":\"0\",\"increment\":false,\"insert\":true,\"isList\":\"1\",\"dictType\":\"\",\"required\":true,\"superColumn\":false,\"updateBy\":\"\",\"isInsert\":\"1\",\"isRequired\":\"1\",\"javaField\":\"memberName\",\"htmlType\":\"input\",\"edit\":false,\"query\":true,\"columnComment\":\"会员姓名\",\"isQuery\":\"1\",\"updateTime\":1648820541000,\"sort\":3,\"list\":true,\"params\":{},\"javaType\":\"String\",\"queryType\":\"LIKE\",\"columnType\":\"varchar(50)\",\"createBy\":\"admin\",\"isPk\":\"0\",\"createTime\":1648820477000,\"tableId\":28,\"pk\":false,\"columnName\":\"member_name\"},{\"capJavaField\":\"Coins\",\"usableColumn\":false,\"columnId\":385,\"isIncrement\":\"0\",\"increment\":false,\"insert\":true,\"isList\":\"1\",\"dictType\":\"\",\"required\":true,\"superColumn\":false,\"updateBy\":\"\",\"isInsert\":\"1\",\"isRequired\":\"1\",\"javaField\":\"coins\",\"htmlType\":\"input\",\"edit\":false,\"query\":false,\"columnComment\":\"合约金币\",\"updateTime\":1648820541000,\"sort\":4,\"list', '{\"msg\":\"操作成功\",\"code\":200}', 0, NULL, '2022-04-01 21:43:55');
+INSERT INTO `sys_oper_log` VALUES (485, '代码生成', 8, 'com.ruoyi.generator.controller.GenController.batchGenCode()', 'GET', 1, 'admin', NULL, '/tool/gen/batchGenCode', '127.0.0.1', '内网IP', '{}', NULL, 0, NULL, '2022-04-01 21:44:16');
+INSERT INTO `sys_oper_log` VALUES (486, '代码生成', 8, 'com.ruoyi.generator.controller.GenController.batchGenCode()', 'GET', 1, 'admin', NULL, '/tool/gen/batchGenCode', '127.0.0.1', '内网IP', '{}', NULL, 0, NULL, '2022-04-01 21:45:15');
+INSERT INTO `sys_oper_log` VALUES (487, '菜单管理', 2, 'com.ruoyi.web.controller.system.SysMenuController.edit()', 'PUT', 1, 'admin', NULL, '/system/menu', '127.0.0.1', '内网IP', '{\"visible\":\"0\",\"icon\":\"#\",\"orderNum\":1,\"menuName\":\"农场会员\",\"params\":{},\"parentId\":2021,\"isCache\":\"0\",\"path\":\"farmer\",\"component\":\"csa/farmer/index\",\"children\":[],\"createTime\":1648277286000,\"updateBy\":\"admin\",\"isFrame\":\"1\",\"menuId\":2022,\"menuType\":\"C\",\"perms\":\"csa:farmer:list\",\"status\":\"0\"}', '{\"msg\":\"操作成功\",\"code\":200}', 0, NULL, '2022-04-01 21:54:23');
+INSERT INTO `sys_oper_log` VALUES (488, '菜单管理', 2, 'com.ruoyi.web.controller.system.SysMenuController.edit()', 'PUT', 1, 'admin', NULL, '/system/menu', '127.0.0.1', '内网IP', '{\"visible\":\"0\",\"icon\":\"#\",\"orderNum\":50,\"menuName\":\"菜地日志附件\",\"params\":{},\"parentId\":2021,\"isCache\":\"0\",\"path\":\"attach\",\"component\":\"csa/attach/index\",\"children\":[],\"createTime\":1648376794000,\"updateBy\":\"admin\",\"isFrame\":\"1\",\"menuId\":2053,\"menuType\":\"C\",\"perms\":\"csa:attach:list\",\"status\":\"0\"}', '{\"msg\":\"操作成功\",\"code\":200}', 0, NULL, '2022-04-01 21:57:44');
+INSERT INTO `sys_oper_log` VALUES (489, '菜单管理', 2, 'com.ruoyi.web.controller.system.SysMenuController.edit()', 'PUT', 1, 'admin', NULL, '/system/menu', '127.0.0.1', '内网IP', '{\"visible\":\"0\",\"icon\":\"#\",\"orderNum\":49,\"menuName\":\"菜地日志\",\"params\":{},\"parentId\":2021,\"isCache\":\"0\",\"path\":\"log\",\"component\":\"csa/log/index\",\"children\":[],\"createTime\":1648377082000,\"updateBy\":\"admin\",\"isFrame\":\"1\",\"menuId\":2059,\"menuType\":\"C\",\"perms\":\"csa:log:list\",\"status\":\"0\"}', '{\"msg\":\"操作成功\",\"code\":200}', 0, NULL, '2022-04-01 21:57:59');
+INSERT INTO `sys_oper_log` VALUES (490, '菜单管理', 2, 'com.ruoyi.web.controller.system.SysMenuController.edit()', 'PUT', 1, 'admin', NULL, '/system/menu', '127.0.0.1', '内网IP', '{\"visible\":\"0\",\"icon\":\"radio\",\"orderNum\":55,\"menuName\":\"金币记录\",\"params\":{},\"parentId\":2021,\"isCache\":\"0\",\"path\":\"coinrecord\",\"component\":\"csa/coinrecord/index\",\"children\":[],\"createTime\":1648377332000,\"updateBy\":\"admin\",\"isFrame\":\"1\",\"menuId\":2065,\"menuType\":\"C\",\"perms\":\"csa:coinrecord:list\",\"status\":\"0\"}', '{\"msg\":\"操作成功\",\"code\":200}', 0, NULL, '2022-04-01 21:58:09');
+INSERT INTO `sys_oper_log` VALUES (491, '菜单管理', 2, 'com.ruoyi.web.controller.system.SysMenuController.edit()', 'PUT', 1, 'admin', NULL, '/system/menu', '127.0.0.1', '内网IP', '{\"visible\":\"0\",\"icon\":\"#\",\"orderNum\":45,\"menuName\":\"沟通记录\",\"params\":{},\"parentId\":2021,\"isCache\":\"0\",\"path\":\"commrecord\",\"component\":\"csa/commrecord/index\",\"children\":[],\"createTime\":1648377819000,\"updateBy\":\"admin\",\"isFrame\":\"1\",\"menuId\":2071,\"menuType\":\"C\",\"perms\":\"csa:commrecord:list\",\"status\":\"0\"}', '{\"msg\":\"操作成功\",\"code\":200}', 0, NULL, '2022-04-01 21:58:22');
+INSERT INTO `sys_oper_log` VALUES (492, '菜单管理', 2, 'com.ruoyi.web.controller.system.SysMenuController.edit()', 'PUT', 1, 'admin', NULL, '/system/menu', '127.0.0.1', '内网IP', '{\"visible\":\"0\",\"icon\":\"#\",\"orderNum\":46,\"menuName\":\"拱棚使用记录\",\"params\":{},\"parentId\":2021,\"isCache\":\"0\",\"path\":\"archedrecord\",\"component\":\"csa/archedrecord/index\",\"children\":[],\"createTime\":1648377997000,\"updateBy\":\"admin\",\"isFrame\":\"1\",\"menuId\":2077,\"menuType\":\"C\",\"perms\":\"csa:archedrecord:list\",\"status\":\"0\"}', '{\"msg\":\"操作成功\",\"code\":200}', 0, NULL, '2022-04-01 21:58:30');
+INSERT INTO `sys_oper_log` VALUES (493, '菜单管理', 1, 'com.ruoyi.web.controller.system.SysMenuController.add()', 'POST', 1, 'admin', NULL, '/system/menu', '127.0.0.1', '内网IP', '{\"visible\":\"0\",\"icon\":\"build\",\"orderNum\":300,\"menuName\":\"现场管理\",\"params\":{},\"parentId\":0,\"isCache\":\"0\",\"path\":\"park\",\"createBy\":\"admin\",\"children\":[],\"isFrame\":\"1\",\"menuType\":\"M\",\"status\":\"0\"}', '{\"msg\":\"操作成功\",\"code\":200}', 0, NULL, '2022-04-01 22:00:53');
+INSERT INTO `sys_oper_log` VALUES (494, '菜单管理', 2, 'com.ruoyi.web.controller.system.SysMenuController.edit()', 'PUT', 1, 'admin', NULL, '/system/menu', '127.0.0.1', '内网IP', '{\"visible\":\"0\",\"icon\":\"#\",\"orderNum\":1,\"menuName\":\"菜地品种\",\"params\":{},\"parentId\":2095,\"isCache\":\"0\",\"path\":\"strain\",\"component\":\"csa/strain/index\",\"children\":[],\"createTime\":1648375595000,\"updateBy\":\"admin\",\"isFrame\":\"1\",\"menuId\":2035,\"menuType\":\"C\",\"perms\":\"csa:strain:list\",\"status\":\"0\"}', '{\"msg\":\"操作成功\",\"code\":200}', 0, NULL, '2022-04-01 22:01:16');
+INSERT INTO `sys_oper_log` VALUES (495, '菜单管理', 2, 'com.ruoyi.web.controller.system.SysMenuController.edit()', 'PUT', 1, 'admin', NULL, '/system/menu', '127.0.0.1', '内网IP', '{\"visible\":\"0\",\"icon\":\"#\",\"orderNum\":1,\"menuName\":\"打理任务\",\"params\":{},\"parentId\":2095,\"isCache\":\"0\",\"path\":\"task\",\"component\":\"csa/task/index\",\"children\":[],\"createTime\":1648376062000,\"updateBy\":\"admin\",\"isFrame\":\"1\",\"menuId\":2041,\"menuType\":\"C\",\"perms\":\"csa:task:list\",\"status\":\"0\"}', '{\"msg\":\"操作成功\",\"code\":200}', 0, NULL, '2022-04-01 22:01:26');
+INSERT INTO `sys_oper_log` VALUES (496, '菜单管理', 2, 'com.ruoyi.web.controller.system.SysMenuController.edit()', 'PUT', 1, 'admin', NULL, '/system/menu', '127.0.0.1', '内网IP', '{\"visible\":\"0\",\"icon\":\"#\",\"orderNum\":1,\"menuName\":\"采摘任务明细\",\"params\":{},\"parentId\":2095,\"isCache\":\"0\",\"path\":\"detail\",\"component\":\"csa/detail/index\",\"children\":[],\"createTime\":1648376548000,\"updateBy\":\"admin\",\"isFrame\":\"1\",\"menuId\":2047,\"menuType\":\"C\",\"perms\":\"csa:detail:list\",\"status\":\"0\"}', '{\"msg\":\"操作成功\",\"code\":200}', 0, NULL, '2022-04-01 22:01:32');
+INSERT INTO `sys_oper_log` VALUES (497, '菜单管理', 2, 'com.ruoyi.web.controller.system.SysMenuController.edit()', 'PUT', 1, 'admin', NULL, '/system/menu', '127.0.0.1', '内网IP', '{\"visible\":\"0\",\"icon\":\"#\",\"orderNum\":49,\"menuName\":\"菜地日志\",\"params\":{},\"parentId\":2095,\"isCache\":\"0\",\"path\":\"log\",\"component\":\"csa/log/index\",\"children\":[],\"createTime\":1648377082000,\"updateBy\":\"admin\",\"isFrame\":\"1\",\"menuId\":2059,\"menuType\":\"C\",\"perms\":\"csa:log:list\",\"status\":\"0\"}', '{\"msg\":\"操作成功\",\"code\":200}', 0, NULL, '2022-04-01 22:02:25');
+INSERT INTO `sys_oper_log` VALUES (498, '菜单管理', 2, 'com.ruoyi.web.controller.system.SysMenuController.edit()', 'PUT', 1, 'admin', NULL, '/system/menu', '127.0.0.1', '内网IP', '{\"visible\":\"0\",\"icon\":\"#\",\"orderNum\":50,\"menuName\":\"菜地日志附件\",\"params\":{},\"parentId\":2095,\"isCache\":\"0\",\"path\":\"attach\",\"component\":\"csa/attach/index\",\"children\":[],\"createTime\":1648376794000,\"updateBy\":\"admin\",\"isFrame\":\"1\",\"menuId\":2053,\"menuType\":\"C\",\"perms\":\"csa:attach:list\",\"status\":\"0\"}', '{\"msg\":\"操作成功\",\"code\":200}', 0, NULL, '2022-04-01 22:02:32');
+INSERT INTO `sys_oper_log` VALUES (499, '菜单管理', 2, 'com.ruoyi.web.controller.system.SysMenuController.edit()', 'PUT', 1, 'admin', NULL, '/system/menu', '127.0.0.1', '内网IP', '{\"visible\":\"0\",\"icon\":\"#\",\"orderNum\":46,\"menuName\":\"拱棚使用记录\",\"params\":{},\"parentId\":2095,\"isCache\":\"0\",\"path\":\"archedrecord\",\"component\":\"csa/archedrecord/index\",\"children\":[],\"createTime\":1648377997000,\"updateBy\":\"admin\",\"isFrame\":\"1\",\"menuId\":2077,\"menuType\":\"C\",\"perms\":\"csa:archedrecord:list\",\"status\":\"0\"}', '{\"msg\":\"操作成功\",\"code\":200}', 0, NULL, '2022-04-01 22:02:45');
+INSERT INTO `sys_oper_log` VALUES (500, '菜单管理', 2, 'com.ruoyi.web.controller.system.SysMenuController.edit()', 'PUT', 1, 'admin', NULL, '/system/menu', '127.0.0.1', '内网IP', '{\"visible\":\"0\",\"icon\":\"edit\",\"orderNum\":1,\"menuName\":\"会员签约\",\"params\":{},\"parentId\":2021,\"isCache\":\"0\",\"path\":\"contract\",\"component\":\"csa/contract/index\",\"children\":[],\"createTime\":1648821196000,\"updateBy\":\"admin\",\"isFrame\":\"1\",\"menuId\":2089,\"menuType\":\"C\",\"perms\":\"csa:contract:list\",\"status\":\"0\"}', '{\"msg\":\"操作成功\",\"code\":200}', 0, NULL, '2022-04-01 22:03:36');
+INSERT INTO `sys_oper_log` VALUES (501, '菜单管理', 2, 'com.ruoyi.web.controller.system.SysMenuController.edit()', 'PUT', 1, 'admin', NULL, '/system/menu', '127.0.0.1', '内网IP', '{\"visible\":\"0\",\"icon\":\"people\",\"orderNum\":1,\"menuName\":\"农场会员\",\"params\":{},\"parentId\":2021,\"isCache\":\"0\",\"path\":\"farmer\",\"component\":\"csa/farmer/index\",\"children\":[],\"createTime\":1648277286000,\"updateBy\":\"admin\",\"isFrame\":\"1\",\"menuId\":2022,\"menuType\":\"C\",\"perms\":\"csa:farmer:list\",\"status\":\"0\"}', '{\"msg\":\"操作成功\",\"code\":200}', 0, NULL, '2022-04-01 22:04:24');
+INSERT INTO `sys_oper_log` VALUES (502, '菜单管理', 2, 'com.ruoyi.web.controller.system.SysMenuController.edit()', 'PUT', 1, 'admin', NULL, '/system/menu', '127.0.0.1', '内网IP', '{\"visible\":\"0\",\"icon\":\"peoples\",\"orderNum\":200,\"menuName\":\"会员服务\",\"params\":{},\"parentId\":0,\"isCache\":\"0\",\"path\":\"member\",\"children\":[],\"createTime\":1648219423000,\"updateBy\":\"admin\",\"isFrame\":\"1\",\"menuId\":2021,\"menuType\":\"M\",\"perms\":\"\",\"status\":\"0\"}', '{\"msg\":\"操作成功\",\"code\":200}', 0, NULL, '2022-04-01 22:04:33');
+INSERT INTO `sys_oper_log` VALUES (503, '菜单管理', 2, 'com.ruoyi.web.controller.system.SysMenuController.edit()', 'PUT', 1, 'admin', NULL, '/system/menu', '127.0.0.1', '内网IP', '{\"visible\":\"0\",\"icon\":\"phone\",\"orderNum\":45,\"menuName\":\"沟通记录\",\"params\":{},\"parentId\":2021,\"isCache\":\"0\",\"path\":\"commrecord\",\"component\":\"csa/commrecord/index\",\"children\":[],\"createTime\":1648377819000,\"updateBy\":\"admin\",\"isFrame\":\"1\",\"menuId\":2071,\"menuType\":\"C\",\"perms\":\"csa:commrecord:list\",\"status\":\"0\"}', '{\"msg\":\"操作成功\",\"code\":200}', 0, NULL, '2022-04-01 22:05:30');
+INSERT INTO `sys_oper_log` VALUES (504, '会员签约', 1, 'com.jlt.csa.controller.FarmerContractController.add()', 'POST', 1, 'admin', NULL, '/csa/contract', '127.0.0.1', '内网IP', '{\"joinCredentialNo\":\"No.008\",\"coins\":10000,\"dueDate\":1651334400000,\"memberName\":\"李开园\",\"weight\":0,\"params\":{},\"activateMode\":\"协议\",\"joinDate\":1646064000000,\"balance\":0,\"createTime\":1648823382071,\"contractId\":1,\"archedYears\":0}', '{\"msg\":\"操作成功\",\"code\":200}', 0, NULL, '2022-04-01 22:29:42');
 
 -- ----------------------------
 -- Table structure for sys_post
@@ -2179,7 +2278,7 @@ CREATE TABLE `sys_user`  (
 -- ----------------------------
 -- Records of sys_user
 -- ----------------------------
-INSERT INTO `sys_user` VALUES (1, 103, 'admin', '超级管理员', '00', '', '', '1', '', '$2a$10$7JB720yubVSZvUI0rEqK/.VqGOZTH.ulu33dHOiBE8ByOhJIrdAu2', '0', '0', '127.0.0.1', '2022-03-31 20:34:10', 'admin', '2022-03-20 21:45:25', '', '2022-03-31 20:34:10', '管理员');
+INSERT INTO `sys_user` VALUES (1, 103, 'admin', '超级管理员', '00', '', '', '1', '', '$2a$10$7JB720yubVSZvUI0rEqK/.VqGOZTH.ulu33dHOiBE8ByOhJIrdAu2', '0', '0', '127.0.0.1', '2022-04-01 21:35:01', 'admin', '2022-03-20 21:45:25', '', '2022-04-01 21:35:00', '管理员');
 INSERT INTO `sys_user` VALUES (2, 101, 'boss', '农场管理员', '00', '', '', '2', '', '$2a$10$7JB720yubVSZvUI0rEqK/.VqGOZTH.ulu33dHOiBE8ByOhJIrdAu2', '0', '0', '127.0.0.1', '2022-03-20 21:45:25', 'admin', '2022-03-20 21:45:25', 'admin', '2022-03-29 17:51:59', '');
 INSERT INTO `sys_user` VALUES (100, 104, '101', '场长', '00', '88@66.com', '18888888888', '0', '', '$2a$10$7JB720yubVSZvUI0rEqK/.VqGOZTH.ulu33dHOiBE8ByOhJIrdAu2', '0', '0', '127.0.0.1', '2022-03-30 22:05:56', 'admin', '2022-03-29 18:18:00', 'admin', '2022-03-30 22:05:56', NULL);
 
