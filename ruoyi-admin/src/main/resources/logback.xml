@@ -2,15 +2,25 @@
 <configuration>
     <!-- 日志存放路径 -->
 	<property name="log.path" value="/home/ruoyi/logs" />
+    <property name="console.log.pattern"
+              value="%red(%d{yyyy-MM-dd HH:mm:ss}) %green([%thread]) %highlight(%-5level) %boldMagenta(%logger{36}%n) - %msg%n"/>
     <!-- 日志输出格式 -->
 	<property name="log.pattern" value="%d{HH:mm:ss.SSS} [%thread] %-5level %logger{20} - [%method,%line] - %msg%n" />
 
 	<!-- 控制台输出 -->
-	<appender name="console" class="ch.qos.logback.core.ConsoleAppender">
-		<encoder>
-			<pattern>${log.pattern}</pattern>
-		</encoder>
-	</appender>
+<!--	<appender name="console" class="ch.qos.logback.core.ConsoleAppender">-->
+<!--		<encoder>-->
+<!--			<pattern>${log.pattern}</pattern>-->
+<!--		</encoder>-->
+<!--	</appender>-->
+
+    <!-- 控制台输出 -->
+    <appender name="console" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder class="com.yomahub.tlog.core.enhance.logback.AspectLogbackEncoder">
+            <pattern>${console.log.pattern}</pattern>
+            <charset>utf-8</charset>
+        </encoder>
+    </appender>
 	
 	<!-- 系统日志输出 -->
 	<appender name="file_info" class="ch.qos.logback.core.rolling.RollingFileAppender">

@@ -66,6 +66,11 @@
             <artifactId>private-farm</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>com.yomahub</groupId>
+            <artifactId>tlog-web-spring-boot-starter</artifactId>
+        </dependency>
+
     </dependencies>
 
     <build>
