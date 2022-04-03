@@ -53,6 +53,7 @@ public class FarmerContractServiceImpl implements IFarmerContractService
     @Override
     public int insertFarmerContract(FarmerContract farmerContract)
     {
+        farmerContract.countDays();
         farmerContract.setCreateTime(DateUtils.getNowDate());
         return farmerContractMapper.insertFarmerContract(farmerContract);
     }
@@ -66,6 +67,7 @@ public class FarmerContractServiceImpl implements IFarmerContractService
     @Override
     public int updateFarmerContract(FarmerContract farmerContract)
     {
+        farmerContract.countDays();
         farmerContract.setUpdateTime(DateUtils.getNowDate());
         return farmerContractMapper.updateFarmerContract(farmerContract);
     }

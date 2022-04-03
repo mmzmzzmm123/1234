@@ -77,6 +77,7 @@ public class FarmerContractController extends BaseController
     @PostMapping
     public AjaxResult add(@RequestBody FarmerContract farmerContract)
     {
+        farmerContract.setCreateBy(getUsername());
         return toAjax(farmerContractService.insertFarmerContract(farmerContract));
     }
 
@@ -88,6 +89,7 @@ public class FarmerContractController extends BaseController
     @PutMapping
     public AjaxResult edit(@RequestBody FarmerContract farmerContract)
     {
+        farmerContract.setUpdateBy(getUsername());
         return toAjax(farmerContractService.updateFarmerContract(farmerContract));
     }
 

@@ -84,22 +84,23 @@
     <el-table v-loading="loading" :data="contractList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center"/>
       <el-table-column label="姓名" align="center" prop="memberName"/>
-      <el-table-column label="金币" align="center" prop="coins"/>
-      <el-table-column label="账户金额" align="center" prop="balance"/>
-      <el-table-column label="菜品重量" align="center" prop="weight"/>
-      <el-table-column label="拱棚年限" align="center" prop="archedYears"/>
-      <el-table-column label="激活方式" align="center" prop="activateMode"/>
       <el-table-column label="凭据号码" align="center" prop="joinCredentialNo"/>
-      <el-table-column label="签约日期" align="center" prop="joinDate" width="180">
+      <el-table-column label="金币数量" align="right" prop="coins" width="150"/>
+<!--      <el-table-column label="账户金额" align="center" prop="balance"/>-->
+      <el-table-column label="菜品斤数" align="right" prop="weight" width="120"/>
+      <el-table-column label="拱棚年限" align="center" prop="archedYears"/>
+      <el-table-column label="激活方式" align="center" prop="activateWay"/>
+      <el-table-column label="生效日期" align="center" prop="joinDate" width="120">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.joinDate, '{y}-{m}-{d}') }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="到期日期" align="center" prop="dueDate" width="180">
+      <el-table-column label="到期日期" align="center" prop="dueDate" width="120">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.dueDate, '{y}-{m}-{d}') }}</span>
         </template>
       </el-table-column>
+      <el-table-column label="天数" align="right" prop="days" width="80" />
       <el-table-column label="状态" align="center" prop="status"/>
       <el-table-column label="备注" align="center" prop="remark"/>
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
@@ -133,56 +134,34 @@
     />
 
     <!-- 添加或修改会员签约对话框 -->
-    <el-dialog :title="title" :visible.sync="open" width="660px" append-to-body>
-
-      <el-form ref="form" :model="form" :rules="rules" label-width="80px">
-        <el-row :gutter="20">
+    <el-dialog :title="title" :visible.sync="open" width="650px" append-to-body>
+      <el-form ref="form" :model="form" :rules="rules" label-width="90px">
+        <el-row>
           <el-col :span="12">
             <el-form-item label="姓名" prop="memberName">
               <el-input v-model="form.memberName" placeholder="请输入姓名"/>
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item label="激活方式" prop="activateMode">
-              <el-input v-model="form.activateMode" placeholder="请选择激活方式"/>
+            <el-form-item label="激活方式" prop="activateWay">
+              <el-select disabled v-model="form.activateWay" placeholder="请选择激活方式">
+                <el-option
+                  v-for="dict in dict.type.csa_activation_way"
+                  :key="dict.value"
+                  :label="dict.label"
+                  :value="dict.value" />
+              </el-select>
             </el-form-item>
           </el-col>
         </el-row>
-        <el-form-item label="凭据号码" prop="joinCredentialNo">
-          <el-input v-model="form.joinCredentialNo" placeholder="请输入签约凭据号码"/>
-        </el-form-item>
-        <el-row :gutter="20">
+        <el-row>
           <el-col :span="12">
-            <el-form-item label="金币数量" prop="coins">
-              <el-input v-model="form.coins" placeholder="请输入金币"/>
-            </el-form-item>
-          </el-col>
-          <el-col :span="12">
-            <el-form-item label="账户金额" prop="balance">
-              <el-input v-model="form.balance" placeholder="请输入账户金额"/>
-            </el-form-item>
-          </el-col>
-        </el-row>
-        <el-row :gutter="20">
-          <el-col :span="12">
-            <el-form-item label="菜品重量" prop="weight">
-              <el-input v-model="form.weight" placeholder="请输入菜品重量"/>
-            </el-form-item>
-          </el-col>
-          <el-col :span="12">
-            <el-form-item label="拱棚年限" prop="archedYears">
-              <el-input v-model="form.archedYears" placeholder="请输入拱棚年限"/>
-            </el-form-item>
-          </el-col>
-        </el-row>
-        <el-row :gutter="20">
-          <el-col :span="12">
-            <el-form-item label="开始日期" prop="joinDate">
+            <el-form-item label="生效日期" prop="joinDate">
               <el-date-picker clearable
                               v-model="form.joinDate"
                               type="date"
                               value-format="yyyy-MM-dd"
-                              placeholder="请选择开始日期">
+                              placeholder="请选择生效日期">
               </el-date-picker>
             </el-form-item>
           </el-col>
@@ -194,6 +173,41 @@
                               value-format="yyyy-MM-dd"
                               placeholder="请选择到期日期">
               </el-date-picker>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-form-item label="凭据号码" prop="joinCredentialNo">
+          <el-input v-model="form.joinCredentialNo" placeholder="请输入签约凭据编号，如合同编号、收据编号等"/>
+        </el-form-item>
+        <el-row>
+          <el-col :span="12">
+            <el-form-item label="金币数量" prop="coins">
+              <el-input v-model="form.coins" placeholder="请输入金币">
+                <template slot="append">个</template>
+              </el-input>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="账户金额" prop="balance">
+              <el-input disabled v-model="form.balance" placeholder="请输入账户金额">
+                <template slot="append">元</template>
+              </el-input>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="12">
+            <el-form-item label="菜品重量" prop="weight">
+              <el-input v-model="form.weight" placeholder="请输入菜品重量">
+                <template slot="append">斤</template>
+              </el-input>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="拱棚年限" prop="archedYears">
+              <el-input v-model="form.archedYears" placeholder="请输入拱棚年限">
+                <template slot="append">年</template>
+              </el-input>
             </el-form-item>
           </el-col>
         </el-row>
@@ -214,6 +228,7 @@
 
   export default {
     name: 'Contract',
+    dicts: ['csa_activation_way'],
     data() {
       return {
         // 遮罩层
@@ -250,20 +265,23 @@
           memberName: [
             { required: true, message: '姓名不能为空', trigger: 'blur' }
           ],
+          joinDate: [
+            { required: true, message: '生效日期必选', trigger: 'blur' }
+          ],
+          dueDate: [
+            { required: true, message: '到期日期必选', trigger: 'blur' }
+          ],
           coins: [
             { required: true, message: '金币数量不能为空', trigger: 'blur' }
           ],
-          balance: [
-            { required: true, message: '账户金额不能为空', trigger: 'blur' }
-          ],
+          // balance: [
+          //   { required: true, message: '账户金额不能为空', trigger: 'blur' }
+          // ],
           weight: [
             { required: true, message: '菜品重量不能为空', trigger: 'blur' }
           ],
           archedYears: [
             { required: true, message: '拱棚年限不能为空', trigger: 'blur' }
-          ],
-          activateMode: [
-            { required: true, message: '激活方式不能为空', trigger: 'blur' }
           ],
           joinCredentialNo: [
             { required: true, message: '凭据号码不能为空', trigger: 'blur' }
@@ -295,11 +313,11 @@
           contractId: null,
           farmerId: null,
           memberName: null,
-          coins: null,
-          balance: null,
-          weight: null,
-          archedYears: null,
-          activateMode: null,
+          coins: 0,
+          balance: 0,
+          weight: 0,
+          archedYears: 0,
+          activateWay: "QY",
           joinCredentialNo: null,
           joinDate: null,
           dueDate: null,

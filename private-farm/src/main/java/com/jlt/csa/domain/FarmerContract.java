@@ -1,7 +1,16 @@
 package com.jlt.csa.domain;
 
 import java.math.BigDecimal;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.Period;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
 import java.util.Date;
+import java.util.TimeZone;
+
 import com.fasterxml.jackson.annotation.JsonFormat;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
@@ -37,8 +46,8 @@ public class FarmerContract extends BaseEntity
     @Excel(name = "合约账户金额")
     private BigDecimal balance;
 
-    /** 合约重量 */
-    @Excel(name = "合约重量")
+    /** 合约斤数 */
+    @Excel(name = "合约斤数")
     private BigDecimal weight;
 
     /** 合约拱棚年限 */
@@ -47,15 +56,15 @@ public class FarmerContract extends BaseEntity
 
     /** 激活方式 */
     @Excel(name = "激活方式")
-    private String activateMode;
+    private String activateWay;
 
     /** 加入凭据号码 */
     @Excel(name = "加入凭据号码")
     private String joinCredentialNo;
 
-    /** 加入日期 */
+    /** 生效日期 */
     @JsonFormat(pattern = "yyyy-MM-dd")
-    @Excel(name = "加入日期", width = 30, dateFormat = "yyyy-MM-dd")
+    @Excel(name = "生效日期", width = 30, dateFormat = "yyyy-MM-dd")
     private Date joinDate;
 
     /** 到期日期 */
@@ -63,12 +72,39 @@ public class FarmerContract extends BaseEntity
     @Excel(name = "到期日期", width = 30, dateFormat = "yyyy-MM-dd")
     private Date dueDate;
 
+    /** 合约天数 */
+    @Excel(name = "合约天数")
+    private Long days;
+
     /** 状态（0正常 1停用） */
     @Excel(name = "状态", readConverterExp = "0=正常,1=停用")
     private String status;
 
     /** 删除标志（0代表存在 2代表删除） */
     private String delFlag;
+
+    /**
+     * 根据生效日期、到期天数计算天数，包含起止日，即两者相加+1
+     * @return
+     */
+    public Long countDays() {
+        if (joinDate == null) {
+            throw new RuntimeException("缺少生效日期！");
+        }
+
+        if (dueDate == null) {
+            throw new RuntimeException("缺少终止日期！");
+        }
+
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        LocalDate startDate = LocalDate.parse(simpleDateFormat.format(joinDate), dateTimeFormatter);
+        LocalDate endDate = LocalDate.parse(simpleDateFormat.format(dueDate), dateTimeFormatter);
+
+        this.days = ChronoUnit.DAYS.between(startDate, endDate) + 1;
+
+        return this.days;
+    }
 
     public void setContractId(Long contractId) 
     {
@@ -133,14 +169,14 @@ public class FarmerContract extends BaseEntity
     {
         return archedYears;
     }
-    public void setActivateMode(String activateMode) 
+    public void setActivateWay(String activateWay)
     {
-        this.activateMode = activateMode;
+        this.activateWay = activateWay;
     }
 
-    public String getActivateMode() 
+    public String getActivateWay()
     {
-        return activateMode;
+        return activateWay;
     }
     public void setJoinCredentialNo(String joinCredentialNo) 
     {
@@ -174,7 +210,15 @@ public class FarmerContract extends BaseEntity
         this.status = status;
     }
 
-    public String getStatus() 
+    public Long getDays() {
+        return days;
+    }
+
+    public void setDays(Long days) {
+        this.days = days;
+    }
+
+    public String getStatus()
     {
         return status;
     }
@@ -198,7 +242,7 @@ public class FarmerContract extends BaseEntity
             .append("balance", getBalance())
             .append("weight", getWeight())
             .append("archedYears", getArchedYears())
-            .append("activateMode", getActivateMode())
+            .append("activateMode", getActivateWay())
             .append("joinCredentialNo", getJoinCredentialNo())
             .append("joinDate", getJoinDate())
             .append("dueDate", getDueDate())
