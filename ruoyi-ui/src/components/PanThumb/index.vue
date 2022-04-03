@@ -59,7 +59,7 @@ export default {
   overflow: hidden;
   position: absolute;
   transform-origin: 95% 40%;
-  transition: all 0.3s ease-in-out;
+  /*transition: all 0.3s ease-in-out;*/
 }
 
 /* .pan-thumb:after {
@@ -123,7 +123,7 @@ export default {
   margin: 7px auto 0;
   font-family: 'Open Sans', Arial, sans-serif;
   opacity: 0;
-  transition: transform 0.3s ease-in-out 0.2s, opacity 0.3s ease-in-out 0.2s, background 0.2s linear 0s;
+  /*transition: transform 0.3s ease-in-out 0.2s, opacity 0.3s ease-in-out 0.2s, background 0.2s linear 0s;*/
   transform: translateX(60px) rotate(90deg);
 }
 

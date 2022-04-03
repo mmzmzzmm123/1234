@@ -65,7 +65,7 @@ export default {
   background-color: #ebeef5;
   box-shadow: 0 0 5px 1px #ccc;
   ::v-deep .el-image__inner {
-    transition: all 0.3s;
+    /*transition: all 0.3s;*/
     cursor: pointer;
     &:hover {
       transform: scale(1.2);

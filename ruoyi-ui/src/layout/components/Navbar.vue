@@ -8,7 +8,7 @@
     <div class="right-menu">
       <template v-if="device!=='mobile'">
         <search id="header-search" class="right-menu-item" />
-        
+
         <el-tooltip content="源码地址" effect="dark" placement="bottom">
           <ruo-yi-git id="ruoyi-git" class="right-menu-item hover-effect" />
         </el-tooltip>
@@ -123,7 +123,7 @@ export default {
     height: 100%;
     float: left;
     cursor: pointer;
-    transition: background .3s;
+    /*transition: background .3s;*/
     -webkit-tap-highlight-color:transparent;
 
     &:hover {
@@ -164,7 +164,7 @@ export default {
 
       &.hover-effect {
         cursor: pointer;
-        transition: background .3s;
+        /*transition: background 0.3s;*/
 
         &:hover {
           background: rgba(0, 0, 0, .025)

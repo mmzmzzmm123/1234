@@ -90,3 +90,20 @@
   .el-submenu__icon-arrow {
   display: none;
 }
+
+.el-menu, .el-icon-arrow-down {
+  transition: none;
+  -webkit-transition: none;
+}
+
+.el-menu--inline, .el-menu__title, .nest-menu {
+  transition: none;
+  -webkit-transition: none;
+}
+
+.el-dialog, .el-dialog__wrapper, .v-modal {
+  transition: none;
+  -webkit-transition: none;
+}
+
+//.el-menu-
