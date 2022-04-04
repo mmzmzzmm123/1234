@@ -7,7 +7,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <resultMap type="FarmerContract" id="FarmerContractResult">
         <result property="contractId"    column="contract_id"    />
         <result property="farmerId"    column="farmer_id"    />
-        <result property="memberName"    column="member_name"    />
+        <result property="contractor"    column="contractor"    />
         <result property="coins"    column="coins"    />
         <result property="balance"    column="balance"    />
         <result property="weight"    column="weight"    />
@@ -27,16 +27,18 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </resultMap>
 
     <sql id="selectFarmerContractVo">
-        select contract_id, farmer_id, member_name, coins, balance, weight, arched_years, activate_way, join_credential_no, join_date, due_date, days, status, del_flag, create_by, create_time, update_by, update_time, remark from csa_farmer_contract
+        select contract_id, farmer_id, contractor, coins, balance, weight, arched_years, activate_way, join_credential_no, join_date, due_date, days, status, del_flag, create_by, create_time, update_by, update_time, remark from csa_farmer_contract
     </sql>
 
     <select id="selectFarmerContractList" parameterType="FarmerContract" resultMap="FarmerContractResult">
         <include refid="selectFarmerContractVo"/>
         <where>  
-            <if test="memberName != null  and memberName != ''"> and member_name like concat('%', #{memberName}, '%')</if>
+            <if test="contractor != null and contractor != ''"> and contractor like concat('%', #{contractor}, '%')</if>
             <if test="joinDate != null "> and join_date = #{joinDate}</if>
             <if test="dueDate != null "> and due_date = #{dueDate}</if>
-            <if test="status != null  and status != ''"> and status = #{status}</if>
+            <if test="status != null and status != ''"> and status = #{status}</if>
+            <if test="delFlag == null or delFlag == ''"> and del_flag = '0'</if>
+            <if test="delFlag != null and delFlag != ''"> and status = #{status}</if>
         </where>
     </select>
     
@@ -49,7 +51,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         insert into csa_farmer_contract
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="farmerId != null">farmer_id,</if>
-            <if test="memberName != null and memberName != ''">member_name,</if>
+            <if test="contractor != null and contractor != ''">contractor,</if>
             <if test="coins != null">coins,</if>
             <if test="balance != null">balance,</if>
             <if test="weight != null">weight,</if>
@@ -69,7 +71,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
          </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="farmerId != null">#{farmerId},</if>
-            <if test="memberName != null and memberName != ''">#{memberName},</if>
+            <if test="contractor != null and contractor != ''">#{contractor},</if>
             <if test="coins != null">#{coins},</if>
             <if test="balance != null">#{balance},</if>
             <if test="weight != null">#{weight},</if>
@@ -93,7 +95,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         update csa_farmer_contract
         <trim prefix="SET" suffixOverrides=",">
             <if test="farmerId != null">farmer_id = #{farmerId},</if>
-            <if test="memberName != null and memberName != ''">member_name = #{memberName},</if>
+            <if test="contractor != null and contractor != ''">contractor = #{contractor},</if>
             <if test="coins != null">coins = #{coins},</if>
             <if test="balance != null">balance = #{balance},</if>
             <if test="weight != null">weight = #{weight},</if>
@@ -114,14 +116,16 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         where contract_id = #{contractId}
     </update>
 
-    <delete id="deleteFarmerContractByContractId" parameterType="Long">
-        delete from csa_farmer_contract where contract_id = #{contractId}
+    <delete id="deleteFarmerContractByContractId">
+        update csa_farmer_contract set del_flag = '2' where contract_id = #{contractId}
+        <if test="status != null and status != ''"> and status = #{status}</if>
     </delete>
 
-    <delete id="deleteFarmerContractByContractIds" parameterType="String">
-        delete from csa_farmer_contract where contract_id in 
-        <foreach item="contractId" collection="array" open="(" separator="," close=")">
+    <delete id="deleteFarmerContractByContractIds">
+        update csa_farmer_contract set del_flag = '2' where contract_id in
+        <foreach item="contractId" collection="contractIds" open="(" separator="," close=")">
             #{contractId}
         </foreach>
+        <if test="status != null and status != ''"> and status = #{status}</if>
     </delete>
 </mapper>

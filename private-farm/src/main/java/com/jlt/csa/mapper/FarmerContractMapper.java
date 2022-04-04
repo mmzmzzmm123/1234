@@ -2,6 +2,7 @@ package com.jlt.csa.mapper;
 
 import java.util.List;
 import com.jlt.csa.domain.FarmerContract;
+import org.apache.ibatis.annotations.Param;
 
 /**
  * 会员签约Mapper接口
@@ -49,7 +50,7 @@ public interface FarmerContractMapper
      * @param contractId 会员签约主键
      * @return 结果
      */
-    public int deleteFarmerContractByContractId(Long contractId);
+    public int deleteFarmerContractByContractId(@Param("contractId") Long contractId, @Param("status") String status);
 
     /**
      * 批量删除会员签约
@@ -57,5 +58,5 @@ public interface FarmerContractMapper
      * @param contractIds 需要删除的数据主键集合
      * @return 结果
      */
-    public int deleteFarmerContractByContractIds(Long[] contractIds);
+    public int deleteFarmerContractByContractIds(@Param("contractIds") Long[] contractIds, @Param("status") String status);
 }

@@ -2,16 +2,12 @@ package com.jlt.csa.controller;
 
 import java.util.List;
 import javax.servlet.http.HttpServletResponse;
+
+import com.ruoyi.common.utils.DictUtils;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.*;
 import com.ruoyi.common.annotation.Log;
 import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.domain.AjaxResult;
@@ -77,6 +73,8 @@ public class FarmerContractController extends BaseController
     @PostMapping
     public AjaxResult add(@RequestBody FarmerContract farmerContract)
     {
+        farmerContract.countDays();
+        farmerContract.setStatus(DictUtils.getDictValue("csa_contract_status", "待定"));
         farmerContract.setCreateBy(getUsername());
         return toAjax(farmerContractService.insertFarmerContract(farmerContract));
     }
@@ -89,6 +87,9 @@ public class FarmerContractController extends BaseController
     @PutMapping
     public AjaxResult edit(@RequestBody FarmerContract farmerContract)
     {
+        logger.error("--==> AAA");
+        farmerContract.countDays();
+        farmerContract.setStatus(null);
         farmerContract.setUpdateBy(getUsername());
         return toAjax(farmerContractService.updateFarmerContract(farmerContract));
     }
@@ -101,6 +102,21 @@ public class FarmerContractController extends BaseController
 	@DeleteMapping("/{contractIds}")
     public AjaxResult remove(@PathVariable Long[] contractIds)
     {
-        return toAjax(farmerContractService.deleteFarmerContractByContractIds(contractIds));
+        if (contractIds.length == 1) {
+            return toAjax(farmerContractService.deleteFarmerContractByContractId(contractIds[0]));
+        } else {
+            return toAjax(farmerContractService.deleteFarmerContractByContractIds(contractIds));
+        }
+    }
+
+    /**
+     * 审核会员合约
+     */
+    @PreAuthorize("@ss.hasPermi('csa:contract:edit')")
+    @Log(title = "会员签约", businessType = BusinessType.UPDATE)
+    @PutMapping("/audit/{contractId}")
+    public AjaxResult audit(@PathVariable Long contractId)
+    {
+        return toAjax(farmerContractService.auditContract(contractId));
     }
 }

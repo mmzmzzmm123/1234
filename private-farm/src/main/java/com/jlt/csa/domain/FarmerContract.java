@@ -1,15 +1,11 @@
 package com.jlt.csa.domain;
 
 import java.math.BigDecimal;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
-import java.time.Period;
-import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.Date;
-import java.util.TimeZone;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -34,9 +30,9 @@ public class FarmerContract extends BaseEntity
     @Excel(name = "会员id")
     private Long farmerId;
 
-    /** 会员姓名 */
-    @Excel(name = "会员姓名")
-    private String memberName;
+    /** 签约人 */
+    @Excel(name = "签约人")
+    private String contractor;
 
     /** 合约金币 */
     @Excel(name = "合约金币")
@@ -124,14 +120,14 @@ public class FarmerContract extends BaseEntity
     {
         return farmerId;
     }
-    public void setMemberName(String memberName) 
+    public void setContractor(String contractor)
     {
-        this.memberName = memberName;
+        this.contractor = contractor;
     }
 
-    public String getMemberName() 
+    public String getContractor()
     {
-        return memberName;
+        return contractor;
     }
     public void setCoins(BigDecimal coins) 
     {
@@ -237,7 +233,7 @@ public class FarmerContract extends BaseEntity
         return new ToStringBuilder(this,ToStringStyle.MULTI_LINE_STYLE)
             .append("contractId", getContractId())
             .append("farmerId", getFarmerId())
-            .append("memberName", getMemberName())
+            .append("memberName", getContractor())
             .append("coins", getCoins())
             .append("balance", getBalance())
             .append("weight", getWeight())

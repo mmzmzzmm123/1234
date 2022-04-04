@@ -35,6 +35,14 @@ export function updateContract(data) {
   })
 }
 
+// 审核会员签约
+export function auditContract(id) {
+  return request({
+    url: '/csa/contract/audit/' + id,
+    method: 'put'
+  })
+}
+
 // 删除会员签约
 export function delContract(contractId) {
   return request({

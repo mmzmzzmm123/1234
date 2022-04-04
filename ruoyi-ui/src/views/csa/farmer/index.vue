@@ -79,25 +79,24 @@
 
     <el-table v-loading="loading" :data="farmerList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="会员id" align="center" prop="farmerId" />
       <el-table-column label="会员姓名" align="center" prop="name" />
       <el-table-column label="性别" align="center" prop="gender" />
-      <el-table-column label="金币余额" align="center" prop="coins" />
+      <el-table-column label="金币" align="center" prop="coins" />
       <el-table-column label="账户余额" align="center" prop="balance" />
-      <el-table-column label="重量余额" align="center" prop="weight" />
-      <el-table-column label="拱棚年限余额" align="center" prop="archedYears" />
+      <el-table-column label="菜品斤数" align="center" prop="weight" />
+      <el-table-column label="拱棚年数" align="center" prop="archedYears" />
       <el-table-column label="加入日期" align="center" prop="joinDate" width="180">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.joinDate, '{y}-{m}-{d}') }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="到期日期" align="center" prop="dueDate" width="180">
-        <template slot-scope="scope">
-          <span>{{ parseTime(scope.row.dueDate, '{y}-{m}-{d}') }}</span>
-        </template>
-      </el-table-column>
+<!--      <el-table-column label="到期日期" align="center" prop="dueDate" width="180">-->
+<!--        <template slot-scope="scope">-->
+<!--          <span>{{ parseTime(scope.row.dueDate, '{y}-{m}-{d}') }}</span>-->
+<!--        </template>-->
+<!--      </el-table-column>-->
       <el-table-column label="是否过期" align="center" prop="isExpire" />
-      <el-table-column label="备注" align="center" prop="remark" />
+      <el-table-column label="备注" align="center" prop="remark" :show-tooltip-when-overflow="true" />
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button
@@ -117,7 +116,7 @@
         </template>
       </el-table-column>
     </el-table>
-    
+
     <pagination
       v-show="total>0"
       :total="total"

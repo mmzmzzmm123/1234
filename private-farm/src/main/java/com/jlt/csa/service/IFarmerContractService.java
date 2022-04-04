@@ -2,6 +2,9 @@ package com.jlt.csa.service;
 
 import java.util.List;
 import com.jlt.csa.domain.FarmerContract;
+import com.ruoyi.common.core.domain.AjaxResult;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.PathVariable;
 
 /**
  * 会员签约Service接口
@@ -58,4 +61,11 @@ public interface IFarmerContractService
      * @return 结果
      */
     public int deleteFarmerContractByContractId(Long contractId);
+
+    /**
+     * 审核会员签约信息
+     * @param contractId 合约id
+     * @return 受影响的记录数
+     */
+    public int auditContract(@PathVariable Long contractId);
 }
