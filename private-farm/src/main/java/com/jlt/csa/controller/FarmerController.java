@@ -2,6 +2,8 @@ package com.jlt.csa.controller;
 
 import java.util.List;
 import javax.servlet.http.HttpServletResponse;
+
+import com.jlt.csa.domain.Garden;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -67,6 +69,20 @@ public class FarmerController extends BaseController
     public AjaxResult getInfo(@PathVariable("farmerId") Long farmerId)
     {
         return AjaxResult.success(farmerService.selectFarmerByFarmerId(farmerId));
+    }
+
+    /**
+     * 获取带菜地信息的地主详细信息
+     */
+    @PreAuthorize("@ss.hasPermi('csa:farmer:query')")
+    @GetMapping(value = "/garden/{farmerId}")
+    public AjaxResult getInfoWithGarden(@PathVariable("farmerId") Long farmerId)
+    {
+        Farmer farmer = farmerService.selectFarmerWithGardenById(farmerId);
+        if (farmer.getGarden() == null)
+            farmer.setGarden(new Garden());
+
+        return AjaxResult.success(farmer);
     }
 
     /**

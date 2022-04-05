@@ -30,13 +30,23 @@ public class FarmerContract extends BaseEntity
     @Excel(name = "会员id")
     private Long farmerId;
 
+    /** 地主 */
+    private Farmer farmer;
+
+    /** 菜地id */
+    @Excel(name = "菜地id")
+    private Long gardenId;
+
+    /** 菜地 */
+    private Farmer garden;
+
     /** 签约人 */
     @Excel(name = "签约人")
     private String contractor;
 
     /** 合约金币 */
     @Excel(name = "合约金币")
-    private BigDecimal coins;
+    private Long coins;
 
     /** 合约账户金额 */
     @Excel(name = "合约账户金额")
@@ -120,6 +130,31 @@ public class FarmerContract extends BaseEntity
     {
         return farmerId;
     }
+
+    public Farmer getFarmer() {
+        return farmer;
+    }
+
+    public void setFarmer(Farmer farmer) {
+        this.farmer = farmer;
+    }
+
+    public Long getGardenId() {
+        return gardenId;
+    }
+
+    public void setGardenId(Long gardenId) {
+        this.gardenId = gardenId;
+    }
+
+    public Farmer getGarden() {
+        return garden;
+    }
+
+    public void setGarden(Farmer garden) {
+        this.garden = garden;
+    }
+
     public void setContractor(String contractor)
     {
         this.contractor = contractor;
@@ -129,12 +164,12 @@ public class FarmerContract extends BaseEntity
     {
         return contractor;
     }
-    public void setCoins(BigDecimal coins) 
+    public void setCoins(Long coins)
     {
         this.coins = coins;
     }
 
-    public BigDecimal getCoins() 
+    public Long getCoins()
     {
         return coins;
     }

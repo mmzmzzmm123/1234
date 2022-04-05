@@ -9,6 +9,14 @@ export function listGarden(query) {
   })
 }
 
+// 按代码过滤可绑定的菜地列表
+export function listCanSell(code) {
+  return request({
+    url: '/csa/garden/cansell/' + code,
+    method: 'get'
+  })
+}
+
 // 查询菜地划分详细
 export function getGarden(id) {
   return request({

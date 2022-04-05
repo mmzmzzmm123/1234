@@ -285,7 +285,7 @@
       // 表单重置
       reset() {
         this.form = {
-          id: null,
+          gardenId: null,
           zoneId: null,
           code: null,
           m2: null,
@@ -307,7 +307,7 @@
       },
       // 多选框选中数据
       handleSelectionChange(selection) {
-        this.ids = selection.map(item => item.id)
+        this.ids = selection.map(item => item.gardenId)
         this.single = selection.length!==1
         this.multiple = !selection.length
       },
@@ -328,7 +328,7 @@
       /** 修改按钮操作 */
       handleUpdate(row) {
         this.reset();
-        const id = row.id || this.ids
+        const id = row.gardenId || this.ids
         getGarden(id).then(response => {
           this.form = response.data;
           this.open = true;
@@ -339,7 +339,7 @@
       submitForm() {
         this.$refs["form"].validate(valid => {
           if (valid) {
-            if (this.form.id != null) {
+            if (this.form.gardenId != null) {
               updateGarden(this.form).then(response => {
                 this.$modal.msgSuccess("修改成功");
                 this.open = false;
@@ -357,7 +357,7 @@
       },
       /** 删除按钮操作 */
       handleDelete(row) {
-        const ids = row.id || this.ids;
+        const ids = row.gardenId || this.ids;
         this.$modal.confirm('是否确认删除选择的菜地？').then(function() {
           return delGarden(ids);
         }).then(() => {
@@ -373,7 +373,7 @@
       },
       /** 设为竣工 */
       handleComplete(row) {
-        const ids = row.id || this.ids;
+        const ids = row.gardenId || this.ids;
         this.$modal.confirm('竣工后分区、编号和面积将不可更改！是否要将选择的菜地设为竣工状态？').then(function() {
           return updateGardenStatus({isCompleted: 'Y'}, ids);
         }).then(() => {

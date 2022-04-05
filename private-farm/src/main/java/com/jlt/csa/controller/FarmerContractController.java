@@ -43,6 +43,18 @@ public class FarmerContractController extends BaseController
     }
 
     /**
+     * 查询入驻会员合约的列表
+     */
+    @PreAuthorize("@ss.hasPermi('csa:contract:list')")
+    @GetMapping("/enter/list")
+    public TableDataInfo enterList(FarmerContract farmerContract)
+    {
+        startPage();
+        List<FarmerContract> list = farmerContractService.selectEnterContractList(farmerContract);
+        return getDataTable(list);
+    }
+
+    /**
      * 导出会员签约列表
      */
     @PreAuthorize("@ss.hasPermi('csa:contract:export')")

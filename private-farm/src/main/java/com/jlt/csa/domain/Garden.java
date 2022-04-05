@@ -17,7 +17,7 @@ public class Garden extends BaseEntity
     private static final long serialVersionUID = 1L;
 
     /** 菜地id */
-    private Long id;
+    private Long gardenId;
 
     /** 农场分区 */
     @Excel(name = "农场分区")
@@ -36,11 +36,11 @@ public class Garden extends BaseEntity
 
     /** 平方米 */
     @Excel(name = "平方米")
-    private BigDecimal m2;
+    private Integer m2;
 
     /** 会员 */
-    @Excel(name = "会员")
-    private Long memberId;
+    @Excel(name = "会员id")
+    private Long farmerId;
 
     /** 菜地管理员 */
     @Excel(name = "菜地管理员")
@@ -73,14 +73,14 @@ public class Garden extends BaseEntity
     /** 删除标志 */
     private String delFlag;
 
-    public void setId(Long id)
+    public void setGardenId(Long gardenId)
     {
-        this.id = id;
+        this.gardenId = gardenId;
     }
 
-    public Long getId()
+    public Long getGardenId()
     {
-        return id;
+        return gardenId;
     }
     public void setZoneId(Long zoneId)
     {
@@ -117,23 +117,23 @@ public class Garden extends BaseEntity
     {
         return name;
     }
-    public void setM2(BigDecimal m2)
+    public void setM2(Integer m2)
     {
         this.m2 = m2;
     }
 
-    public BigDecimal getM2()
+    public Integer getM2()
     {
         return m2;
     }
-    public void setMemberId(Long memberId)
+    public void setFarmerId(Long farmerId)
     {
-        this.memberId = memberId;
+        this.farmerId = farmerId;
     }
 
-    public Long getMemberId()
+    public Long getFarmerId()
     {
-        return memberId;
+        return farmerId;
     }
     public void setManagerId(Long managerId)
     {
@@ -211,12 +211,12 @@ public class Garden extends BaseEntity
     @Override
     public String toString() {
         return new ToStringBuilder(this,ToStringStyle.MULTI_LINE_STYLE)
-                .append("id", getId())
+                .append("gardenId", getGardenId())
                 .append("zoneId", getZoneId())
                 .append("code", getCode())
                 .append("name", getName())
                 .append("m2", getM2())
-                .append("memberId", getMemberId())
+                .append("farmerId", getFarmerId())
                 .append("managerId", getManagerId())
                 .append("workerId", getWorkerId())
                 .append("contacterId", getContacterId())

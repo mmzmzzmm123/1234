@@ -43,6 +43,25 @@ public class GardenController extends BaseController
     }
 
     /**
+     * 按代码筛选可绑定的菜地列表
+     */
+    @PreAuthorize("@ss.hasPermi('csa:garden:query')")
+    @GetMapping({"/cansell/{code}", "/cansell/"})
+    public TableDataInfo listCanSell(@PathVariable(value = "code", required = false) String code)
+    {
+        logger.error("--==>" + code);
+        Garden garden = new Garden();
+        garden.setCode(code);
+        garden.setIsCompleted("Y");
+        garden.setIsSelled("N");
+        garden.setStatus("0");
+
+        List<Garden> list = gardenService.selectGardenList(garden);
+
+        return getDataTable(list);
+    }
+
+    /**
      * 导出菜地划分列表
      */
     @PreAuthorize("@ss.hasPermi('csa:garden:export')")

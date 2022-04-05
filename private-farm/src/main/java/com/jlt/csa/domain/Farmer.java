@@ -18,6 +18,9 @@ public class Farmer extends BaseEntity
 {
     private static final long serialVersionUID = 1L;
 
+    /** 菜地 */
+    private Garden garden;
+
     /** 会员id */
     private Long farmerId;
 
@@ -29,9 +32,13 @@ public class Farmer extends BaseEntity
     @Excel(name = "性别")
     private String gender;
 
+    /** 手机号码 */
+    @Excel(name = "手机号码")
+    private String mobileNumber;
+
     /** 金币余额 */
     @Excel(name = "金币余额")
-    private BigDecimal coins;
+    private Long coins;
 
     /** 账户余额 */
     @Excel(name = "账户余额")
@@ -65,7 +72,15 @@ public class Farmer extends BaseEntity
     /** 删除标志 */
     private String delFlag;
 
-    public void setFarmerId(Long farmerId) 
+    public Garden getGarden() {
+        return garden;
+    }
+
+    public void setGarden(Garden garden) {
+        this.garden = garden;
+    }
+
+    public void setFarmerId(Long farmerId)
     {
         this.farmerId = farmerId;
     }
@@ -92,12 +107,21 @@ public class Farmer extends BaseEntity
     {
         return gender;
     }
-    public void setCoins(BigDecimal coins) 
+
+    public String getMobileNumber() {
+        return mobileNumber;
+    }
+
+    public void setMobileNumber(String mobileNumber) {
+        this.mobileNumber = mobileNumber;
+    }
+
+    public void setCoins(Long coins)
     {
         this.coins = coins;
     }
 
-    public BigDecimal getCoins() 
+    public Long getCoins()
     {
         return coins;
     }

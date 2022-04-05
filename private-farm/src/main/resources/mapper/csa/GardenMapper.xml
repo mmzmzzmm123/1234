@@ -5,12 +5,12 @@
 <mapper namespace="com.jlt.csa.mapper.GardenMapper">
 
     <resultMap type="Garden" id="GardenResult">
-        <result property="id"    column="id"    />
+        <result property="gardenId"    column="garden_id"    />
         <result property="zoneId"    column="zone_id"    />
         <result property="code"    column="code"    />
         <result property="name"    column="name"    />
         <result property="m2"    column="m2"    />
-        <result property="memberId"    column="member_id"    />
+        <result property="farmerId"    column="farmer_id"    />
         <result property="managerId"    column="manager_id"    />
         <result property="workerId"    column="worker_id"    />
         <result property="contacterId"    column="contacter_id"    />
@@ -31,7 +31,7 @@
     </resultMap>
 
     <sql id="selectGardenVo">
-        select id, zone_id, code, name, m2, member_id, manager_id, worker_id, contacter_id, is_farming, is_selled, is_completed, status, del_flag, create_by, create_time, update_by, update_time, remark from csa_garden
+        select garden_id, zone_id, code, name, m2, farmer_id, manager_id, worker_id, contacter_id, is_farming, is_selled, is_completed, status, del_flag, create_by, create_time, update_by, update_time, remark from csa_garden
     </sql>
 
     <select id="getFarmZone" resultMap="com.jlt.csa.mapper.FarmZoneMapper.FarmZoneResult" parameterType="java.lang.Long">
@@ -42,10 +42,10 @@
         <include refid="selectGardenVo"/>
         <where>
             <if test="zoneId != null "> and zone_id = #{zoneId}</if>
-            <if test="code != null  and code != ''"> and code = #{code}</if>
+            <if test="code != null  and code != ''"> and code like concat('%', #{code}, '%')</if>
             <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
             <if test="m2 != null "> and m2 = #{m2}</if>
-            <if test="memberId != null "> and member_id = #{memberId}</if>
+            <if test="farmerId != null "> and farmer_id = #{farmerId}</if>
             <if test="managerId != null "> and manager_id = #{managerId}</if>
             <if test="workerId != null "> and worker_id = #{workerId}</if>
             <if test="contacterId != null "> and contacter_id = #{contacterId}</if>
@@ -58,18 +58,17 @@
 
     <select id="selectGardenById" parameterType="Long" resultMap="GardenResult">
         <include refid="selectGardenVo"/>
-        where id = #{id}
+        where garden_id =  #{gardenId}
     </select>
 
     <insert id="insertGarden" parameterType="Garden">
         insert into csa_garden
         <trim prefix="(" suffix=")" suffixOverrides=",">
-            <if test="id != null">id,</if>
             <if test="zoneId != null">zone_id,</if>
             <if test="code != null and code != ''">code,</if>
             <if test="name != null and name != ''">name,</if>
             <if test="m2 != null">m2,</if>
-            <if test="memberId != null">member_id,</if>
+            <if test="farmerId != null">farmer_id,</if>
             <if test="managerId != null">manager_id,</if>
             <if test="workerId != null">worker_id,</if>
             <if test="contacterId != null">contacter_id,</if>
@@ -85,12 +84,11 @@
             <if test="remark != null">remark,</if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
-            <if test="id != null">#{id},</if>
             <if test="zoneId != null">#{zoneId},</if>
             <if test="code != null and code != ''">#{code},</if>
             <if test="name != null and name != ''">#{name},</if>
             <if test="m2 != null">#{m2},</if>
-            <if test="memberId != null">#{memberId},</if>
+            <if test="farmerId != null">#{farmerId},</if>
             <if test="managerId != null">#{managerId},</if>
             <if test="workerId != null">#{workerId},</if>
             <if test="contacterId != null">#{contacterId},</if>
@@ -114,7 +112,7 @@
             <if test="code != null and code != ''">code = #{code},</if>
             <if test="name != null and name != ''">name = #{name},</if>
             <if test="m2 != null">m2 = #{m2},</if>
-            <if test="memberId != null">member_id = #{memberId},</if>
+            <if test="farmerId != null">farmer_id = #{farmerId},</if>
             <if test="managerId != null">manager_id = #{managerId},</if>
             <if test="workerId != null">worker_id = #{workerId},</if>
             <if test="contacterId != null">contacter_id = #{contacterId},</if>
@@ -129,7 +127,7 @@
             <if test="updateTime != null">update_time = #{updateTime},</if>
             <if test="remark != null">remark = #{remark},</if>
         </trim>
-        where id = #{id}
+        where garden_id =  #{gardenId}
     </update>
 
     <update id="updateGardenStatus">
@@ -143,20 +141,20 @@
             <if test="garden.updateBy != null">update_by = #{garden.updateBy},</if>
             <if test="garden.updateTime != null">update_time = #{garden.updateTime},</if>
         </trim>
-        where id in
-        <foreach item="id" collection="ids" open="(" separator="," close=")">
-            #{id}
+        where garden_id in
+        <foreach item="gardenId" collection="ids" open="(" separator="," close=")">
+            #{gardenId}
         </foreach>
     </update>
 
     <delete id="deleteGardenById" parameterType="Long">
-        delete from csa_garden where id = #{id}
+        delete from csa_garden where garden_id = #{gardenId}
     </delete>
 
     <delete id="deleteGardenByIds" parameterType="String">
-        delete from csa_garden where id in
-        <foreach item="id" collection="array" open="(" separator="," close=")">
-            #{id}
+        delete from csa_garden where garden_id in
+        <foreach item="gardenId" collection="array" open="(" separator="," close=")">
+             #{gardenId}
         </foreach>
     </delete>
 </mapper>

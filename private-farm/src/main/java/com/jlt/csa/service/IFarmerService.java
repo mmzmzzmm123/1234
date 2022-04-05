@@ -20,6 +20,14 @@ public interface IFarmerService
     public Farmer selectFarmerByFarmerId(Long farmerId);
 
     /**
+     * 查询带菜地信息的农场会员
+     *
+     * @param farmerId 农场会员主键
+     * @return 农场会员
+     */
+    public Farmer selectFarmerWithGardenById(Long farmerId);
+
+    /**
      * 查询农场会员列表
      * 
      * @param farmer 农场会员

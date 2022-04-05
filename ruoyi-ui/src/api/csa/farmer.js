@@ -17,6 +17,14 @@ export function getFarmer(farmerId) {
   })
 }
 
+// 查询带菜地信息的地主详细
+export function getFarmerWithGarden(farmerId) {
+  return request({
+    url: '/csa/farmer/garden/' + farmerId,
+    method: 'get'
+  })
+}
+
 // 新增农场会员
 export function addFarmer(data) {
   return request({

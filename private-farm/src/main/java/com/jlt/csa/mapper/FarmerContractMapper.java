@@ -23,10 +23,17 @@ public interface FarmerContractMapper
     /**
      * 查询会员签约列表
      * 
-     * @param farmerContract 会员签约
-     * @return 会员签约集合
+     * @param farmerContract 会员合约
+     * @return 会员合约集合
      */
     public List<FarmerContract> selectFarmerContractList(FarmerContract farmerContract);
+
+    /**
+     * 查询入驻会员合约的列表
+     * @param farmerContract 会员合约
+     * @return 会员合约集合
+     */
+    public List<FarmerContract> selectEnterContractList(FarmerContract farmerContract);
 
     /**
      * 新增会员签约

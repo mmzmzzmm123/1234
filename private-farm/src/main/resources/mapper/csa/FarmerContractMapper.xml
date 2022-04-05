@@ -7,6 +7,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <resultMap type="FarmerContract" id="FarmerContractResult">
         <result property="contractId"    column="contract_id"    />
         <result property="farmerId"    column="farmer_id"    />
+        <result property="gardenId"    column="garden_id"    />
         <result property="contractor"    column="contractor"    />
         <result property="coins"    column="coins"    />
         <result property="balance"    column="balance"    />
@@ -26,9 +27,47 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="remark"    column="remark"    />
     </resultMap>
 
+    <resultMap type="FarmerContract" id="ContractAndFarmerAndGardenResult" extends="FarmerContractResult">
+        <association property="farmer" javaType="com.jlt.csa.domain.Farmer">
+            <id property="farmerId" column="farmer_id" />
+            <result property="name"    column="name" />
+            <result property="mobileNumber"    column="mobile_number" />
+        </association>
+        <association property="garden" javaType="com.jlt.csa.domain.Garden">
+            <id property="gardenId" column="garden_id" />
+            <result property="code"    column="code" />
+            <result property="name"    column="garden_name" />
+        </association>
+    </resultMap>
+
     <sql id="selectFarmerContractVo">
-        select contract_id, farmer_id, contractor, coins, balance, weight, arched_years, activate_way, join_credential_no, join_date, due_date, days, status, del_flag, create_by, create_time, update_by, update_time, remark from csa_farmer_contract
+        select contract_id, farmer_id, garden_id, contractor, coins, balance, weight, arched_years, activate_way, join_credential_no, join_date, due_date, days, status, del_flag, create_by, create_time, update_by, update_time, remark from csa_farmer_contract
     </sql>
+
+    <sql id="selectContractAndFarmerAndGardenVo">
+        select  c.contract_id, c.farmer_id, c.garden_id, c.contractor, c.coins, c.balance, c.weight, c.arched_years,
+                c.activate_way, c.join_credential_no, c.join_date, c.due_date, c.days, c.status,
+                c.del_flag, c.create_by, c.create_time, c.update_by, c.update_time, c.remark,
+                f.name, f.mobile_number,
+                g.code, g.name as garden_name
+        from csa_farmer_contract as c
+        left join csa_farmer as f on c.farmer_id = f.farmer_id
+        left join csa_garden as g on c.garden_id = g.garden_id
+    </sql>
+
+    <select id="selectEnterContractList" parameterType="FarmerContract" resultMap="ContractAndFarmerAndGardenResult">
+        <include refid="selectContractAndFarmerAndGardenVo" />
+        <where>
+            <if test="contractor != null and contractor != ''"> and c.contractor like concat('%', #{contractor}, '%')</if>
+            <if test="joinDate != null "> and c.join_date = #{joinDate}</if>
+            <if test="dueDate != null "> and c.due_date = #{dueDate}</if>
+            <if test="status == null or status == ''"> and (c.status = '1' or c.status = '2')</if>
+            <if test="status != null and status != ''"> and status = #{status}</if>
+            <if test="delFlag == null or delFlag == ''"> and c.del_flag = '0'</if>
+            <if test="delFlag != null and delFlag != ''"> and c.del_flag = #{del_flag}</if>
+        </where>
+        order by contract_id DESC
+    </select>
 
     <select id="selectFarmerContractList" parameterType="FarmerContract" resultMap="FarmerContractResult">
         <include refid="selectFarmerContractVo"/>
@@ -38,8 +77,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="dueDate != null "> and due_date = #{dueDate}</if>
             <if test="status != null and status != ''"> and status = #{status}</if>
             <if test="delFlag == null or delFlag == ''"> and del_flag = '0'</if>
-            <if test="delFlag != null and delFlag != ''"> and status = #{status}</if>
+            <if test="delFlag != null and delFlag != ''"> and del_flag = #{del_flag}</if>
         </where>
+        order by contract_id DESC
     </select>
     
     <select id="selectFarmerContractByContractId" parameterType="Long" resultMap="FarmerContractResult">
@@ -51,6 +91,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         insert into csa_farmer_contract
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="farmerId != null">farmer_id,</if>
+            <if test="gardenId != null">garden_id,</if>
             <if test="contractor != null and contractor != ''">contractor,</if>
             <if test="coins != null">coins,</if>
             <if test="balance != null">balance,</if>
@@ -71,6 +112,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
          </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="farmerId != null">#{farmerId},</if>
+            <if test="gardenId != null">#{gardenId},</if>
             <if test="contractor != null and contractor != ''">#{contractor},</if>
             <if test="coins != null">#{coins},</if>
             <if test="balance != null">#{balance},</if>
@@ -95,6 +137,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         update csa_farmer_contract
         <trim prefix="SET" suffixOverrides=",">
             <if test="farmerId != null">farmer_id = #{farmerId},</if>
+            <if test="gardenId != null">garden_id = #{gardenId},</if>
             <if test="contractor != null and contractor != ''">contractor = #{contractor},</if>
             <if test="coins != null">coins = #{coins},</if>
             <if test="balance != null">balance = #{balance},</if>

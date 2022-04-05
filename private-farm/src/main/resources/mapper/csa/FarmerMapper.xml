@@ -8,6 +8,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="farmerId"    column="farmer_id"    />
         <result property="name"    column="name"    />
         <result property="gender"    column="gender"    />
+        <result property="mobileNumber"    column="mobile_umber"    />
         <result property="coins"    column="coins"    />
         <result property="balance"    column="balance"    />
         <result property="weight"    column="weight"    />
@@ -24,14 +25,43 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="remark"    column="remark"    />
     </resultMap>
 
+    <resultMap type="Farmer" id="FarmerWithGandenResult" extends="FarmerResult">
+        <association property="garden" javaType="com.jlt.csa.domain.Garden">
+            <id property="gardenId" column="garden_id" />
+            <result property="code"    column="code" />
+            <result property="name"    column="garden_name" />
+        </association>
+    </resultMap>
+
     <sql id="selectFarmerVo">
-        select farmer_id, name, gender, coins, balance, weight, arched_years, join_date, due_date, is_expire, status, del_flag, create_by, create_time, update_by, update_time, remark from csa_farmer
+        select farmer_id, name, gender, coins, mobile_number, balance, weight, arched_years, join_date, due_date, is_expire, status, del_flag, create_by, create_time, update_by, update_time, remark from csa_farmer
+    </sql>
+
+    <sql id="selectFarmerWithGardenVo">
+        select  f.farmer_id, f.name, f.gender, f.coins, f.mobile_number, f.balance, f.weight, f.arched_years,
+                f.join_date, f.due_date, f.is_expire, f.status,
+                f.del_flag, f.create_by, f.create_time, f.update_by, f.update_time, f.remark,
+                g.garden_id, g.code, g.name as garden_name
+        from csa_farmer f
+        left join csa_garden g on f.farmer_id = g.farmer_id
     </sql>
 
     <select id="selectFarmerList" parameterType="Farmer" resultMap="FarmerResult">
         <include refid="selectFarmerVo"/>
         <where>  
             <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
+            <if test="mobileNumber != null  and mobileNumber != ''"> and mobile_number = #{mobileNumber}</if>
+            <if test="joinDate != null "> and join_date = #{joinDate}</if>
+            <if test="dueDate != null "> and due_date = #{dueDate}</if>
+            <if test="isExpire != null  and isExpire != ''"> and is_expire = #{isExpire}</if>
+        </where>
+    </select>
+
+    <select id="selectFarmerWithGardenList" parameterType="Farmer" resultMap="FarmerWithGandenResult">
+        <include refid="selectFarmerWithGardenVo"/>
+        <where>
+            <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
+            <if test="mobileNumber != null  and mobileNumber != ''"> and mobile_number = #{mobileNumber}</if>
             <if test="joinDate != null "> and join_date = #{joinDate}</if>
             <if test="dueDate != null "> and due_date = #{dueDate}</if>
             <if test="isExpire != null  and isExpire != ''"> and is_expire = #{isExpire}</if>
@@ -42,12 +72,18 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <include refid="selectFarmerVo"/>
         where farmer_id = #{farmerId}
     </select>
+
+    <select id="selectFarmerWithGardenById" parameterType="Long" resultMap="FarmerWithGandenResult">
+        <include refid="selectFarmerWithGardenVo"/>
+        where f.farmer_id = #{farmerId}
+    </select>
         
     <insert id="insertFarmer" parameterType="Farmer" useGeneratedKeys="true" keyProperty="farmerId">
         insert into csa_farmer
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="name != null and name != ''">name,</if>
             <if test="gender != null">gender,</if>
+            <if test="mobileNumber != null">mobile_number,</if>
             <if test="coins != null">coins,</if>
             <if test="balance != null">balance,</if>
             <if test="weight != null">weight,</if>
@@ -66,6 +102,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="name != null and name != ''">#{name},</if>
             <if test="gender != null">#{gender},</if>
+            <if test="mobileNumber != null">#{mobileNumber},</if>
             <if test="coins != null">#{coins},</if>
             <if test="balance != null">#{balance},</if>
             <if test="weight != null">#{weight},</if>
@@ -88,6 +125,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <trim prefix="SET" suffixOverrides=",">
             <if test="name != null and name != ''">name = #{name},</if>
             <if test="gender != null">gender = #{gender},</if>
+            <if test="mobileNumber != null">mobile_number = #{mobileNumber},</if>
             <if test="coins != null">coins = #{coins},</if>
             <if test="balance != null">balance = #{balance},</if>
             <if test="weight != null">weight = #{weight},</if>
