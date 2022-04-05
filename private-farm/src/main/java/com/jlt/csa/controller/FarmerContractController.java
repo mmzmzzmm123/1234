@@ -74,7 +74,7 @@ public class FarmerContractController extends BaseController
     public AjaxResult add(@RequestBody FarmerContract farmerContract)
     {
         farmerContract.countDays();
-        farmerContract.setStatus(DictUtils.getDictValue("csa_contract_status", "待定"));
+        farmerContract.setStatus(DictUtils.getDictValue("csa_contract_status", "申请"));
         farmerContract.setCreateBy(getUsername());
         return toAjax(farmerContractService.insertFarmerContract(farmerContract));
     }
@@ -87,7 +87,6 @@ public class FarmerContractController extends BaseController
     @PutMapping
     public AjaxResult edit(@RequestBody FarmerContract farmerContract)
     {
-        logger.error("--==> AAA");
         farmerContract.countDays();
         farmerContract.setStatus(null);
         farmerContract.setUpdateBy(getUsername());

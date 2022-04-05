@@ -57,13 +57,15 @@ public class FarmerContractServiceImpl implements IFarmerContractService
         }
 
         // 合约不符合审核条件，返回错误提示
-        if (!contract.getStatus().equals(DictUtils.getDictValue("csa_contract_status", "待定"))) {
+        if (!contract.getStatus().equals(DictUtils.getDictValue("csa_contract_status", "申请"))) {
             throw new RuntimeException("该合约不符合审核条件！");
         }
 
+        // 是否是新地主
+        boolean isNewFarmer = contract.getFarmerId() == null;
         Farmer farmer = null;
 
-        if (contract.getFarmerId() == null) {
+        if (isNewFarmer) {
             // 如果是新签，新建地主信息
             farmer = new Farmer();
             farmer.setName("待绑定");
@@ -87,13 +89,13 @@ public class FarmerContractServiceImpl implements IFarmerContractService
         farmer.setWeight(farmer.getWeight().add(contract.getWeight()));
         farmer.setArchedYears(farmer.getArchedYears() + contract.getArchedYears());
 
-        // 构建合约更新字段
+        // 构建审核的合约更新字段
         contract = new FarmerContract();
         contract.setContractId(contractId);
-        contract.setStatus("0");
+        contract.setStatus("2");
         contract.setUpdateBy(getUsername());
 
-        if (contract.getFarmerId() == null) {
+        if (isNewFarmer) {
             // 新地主新签
             farmerService.insertFarmer(farmer);
             contract.setFarmerId(farmer.getFarmerId());
@@ -151,7 +153,6 @@ public class FarmerContractServiceImpl implements IFarmerContractService
     @Override
     public int updateFarmerContract(FarmerContract farmerContract)
     {
-        System.out.println("----------------=====> 111");
         farmerContract.setUpdateTime(DateUtils.getNowDate());
         return farmerContractMapper.updateFarmerContract(farmerContract);
     }
@@ -165,7 +166,7 @@ public class FarmerContractServiceImpl implements IFarmerContractService
     @Override
     public int deleteFarmerContractByContractIds(Long[] contractIds)
     {
-        return farmerContractMapper.deleteFarmerContractByContractIds(contractIds, "1");
+        return farmerContractMapper.deleteFarmerContractByContractIds(contractIds, "3");
     }
 
     /**
@@ -177,6 +178,6 @@ public class FarmerContractServiceImpl implements IFarmerContractService
     @Override
     public int deleteFarmerContractByContractId(Long contractId)
     {
-        return farmerContractMapper.deleteFarmerContractByContractId(contractId, "1");
+        return farmerContractMapper.deleteFarmerContractByContractId(contractId, "3");
     }
 }

@@ -138,7 +138,7 @@
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button
-            :disabled="scope.row.status != '1'"
+            :disabled="scope.row.status != '3'"
             size="mini"
             type="text"
             icon="el-icon-edit"
@@ -147,7 +147,7 @@
           >修改
           </el-button>
           <el-button
-            :disabled="scope.row.status != '1'"
+            :disabled="scope.row.status != '3'"
             size="mini"
             type="text"
             icon="el-icon-delete"
@@ -421,7 +421,7 @@
       },
       /** 审核按钮操作 */
       handleAudit(row) {
-        if (this.curRowData.status != '1') {
+        if (this.curRowData.status != '3') {
           this.$modal.alertWarning("只有待定状态的合约才可以审核！");
           return;
         }
