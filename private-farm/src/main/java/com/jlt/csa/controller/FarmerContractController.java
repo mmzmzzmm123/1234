@@ -3,6 +3,7 @@ package com.jlt.csa.controller;
 import java.util.List;
 import javax.servlet.http.HttpServletResponse;
 
+import com.jlt.csa.domain.dto.ContractClaimDto;
 import com.ruoyi.common.utils.DictUtils;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -130,4 +131,16 @@ public class FarmerContractController extends BaseController
     {
         return toAjax(farmerContractService.auditContract(contractId));
     }
+
+    /**
+     * 会员合约确认认领菜地
+     */
+    @PreAuthorize("@ss.hasPermi('csa:contract:edit')")
+    @Log(title = "会员签约", businessType = BusinessType.UPDATE)
+    @PutMapping("/claim")
+    public AjaxResult claim(@RequestBody ContractClaimDto claim)
+    {
+        return toAjax(farmerContractService.claimGarden(claim));
+    }
+
 }

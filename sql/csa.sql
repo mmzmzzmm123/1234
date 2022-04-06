@@ -11,7 +11,7 @@
  Target Server Version : 50731
  File Encoding         : 65001
 
- Date: 05/04/2022 22:43:57
+ Date: 06/04/2022 23:53:50
 */
 
 SET NAMES utf8mb4;
@@ -293,7 +293,7 @@ CREATE TABLE `csa_farmer`  (
 -- Records of csa_farmer
 -- ----------------------------
 INSERT INTO `csa_farmer` VALUES (3, '范诚诚', NULL, '13672226668', 25000, 300.0000, 20.0000, 1, '2021-05-01', NULL, 'N', '0', '0', '', '2022-04-05 13:06:27', '', '2022-04-05 13:18:27', NULL);
-INSERT INTO `csa_farmer` VALUES (5, '程开州', NULL, NULL, 15000, 0.0000, 60.0000, 2, '2021-04-05', NULL, 'N', '0', '0', '', '2022-04-05 18:57:35', '', NULL, NULL);
+INSERT INTO `csa_farmer` VALUES (5, '程开州', NULL, '13588886666', 15000, 0.0000, 60.0000, 2, '2021-04-05', NULL, 'N', '0', '0', '', '2022-04-05 18:57:35', '', '2022-04-06 23:39:10', NULL);
 
 -- ----------------------------
 -- Table structure for csa_farmer_contract
@@ -327,7 +327,7 @@ CREATE TABLE `csa_farmer_contract`  (
 -- Records of csa_farmer_contract
 -- ----------------------------
 INSERT INTO `csa_farmer_contract` VALUES (101, NULL, NULL, '王丽美', 10000, 0.0000, 0.0000, 0, 'QY', 'No.008', '2022-03-01', '2022-05-01', 62, '3', '0', 'admin', '2022-04-01 22:29:42', 'admin', '2022-04-04 14:54:20', NULL);
-INSERT INTO `csa_farmer_contract` VALUES (102, 5, NULL, '程开州', 15000, 0.0000, 60.0000, 2, 'QY', 'No.002', '2021-04-05', '2022-04-04', 365, '2', '0', 'admin', '2022-04-04 00:42:06', 'admin', '2022-04-05 18:57:35', '好朋友介绍，非常喜欢我们的农场，订嘱每次到期前都要提醒约续。');
+INSERT INTO `csa_farmer_contract` VALUES (102, 5, 6, '程开州', 15000, 0.0000, 60.0000, 2, 'QY', 'No.002', '2021-04-05', '2022-04-04', 365, '1', '0', 'admin', '2022-04-04 00:42:06', 'admin', '2022-04-06 23:39:10', '好朋友介绍，非常喜欢我们的农场，订嘱每次到期前都要提醒约续。');
 INSERT INTO `csa_farmer_contract` VALUES (103, 3, NULL, '范诚诚', 5000, 300.0000, 20.0000, 1, 'QY', 'No.003', '2021-05-01', '2022-04-30', 365, '2', '0', 'admin', '2022-04-04 14:30:01', 'admin', '2022-04-05 13:18:27', NULL);
 
 -- ----------------------------
@@ -366,7 +366,7 @@ INSERT INTO `csa_garden` VALUES (2, 1, '8002', '香草居', 30, NULL, NULL, NULL
 INSERT INTO `csa_garden` VALUES (3, 1, '8003', '', 30, NULL, NULL, NULL, NULL, 'N', 'N', 'Y', '0', '0', '101', '2022-03-07 13:15:43', 'admin', '2022-04-05 22:42:09', NULL);
 INSERT INTO `csa_garden` VALUES (4, 1, '8004', '', 30, NULL, NULL, NULL, NULL, 'N', 'N', 'Y', '0', '0', '101', '2022-03-07 13:20:38', 'admin', '2022-04-05 22:42:09', '');
 INSERT INTO `csa_garden` VALUES (5, 1, '8005', '', 30, NULL, NULL, NULL, NULL, 'N', 'N', 'Y', '0', '0', '101', '2022-03-29 21:05:48', 'admin', '2022-04-05 22:42:09', NULL);
-INSERT INTO `csa_garden` VALUES (6, 1, '8006', '', 30, NULL, NULL, NULL, NULL, 'N', 'N', 'Y', '0', '0', '101', '2022-03-29 22:07:11', 'admin', '2022-04-05 22:42:09', NULL);
+INSERT INTO `csa_garden` VALUES (6, 1, '8006', '', 30, 5, NULL, NULL, NULL, 'N', 'N', 'Y', '0', '0', '101', '2022-03-29 22:07:11', 'admin', '2022-04-05 22:42:09', NULL);
 INSERT INTO `csa_garden` VALUES (7, 1, '8007', '', 30, NULL, NULL, NULL, NULL, 'N', 'N', 'Y', '0', '0', '101', '2022-03-29 22:07:56', 'admin', '2022-04-05 22:42:09', NULL);
 INSERT INTO `csa_garden` VALUES (8, 1, '8008', '', 30, NULL, NULL, NULL, NULL, 'N', 'N', 'Y', '0', '0', '101', '2022-03-29 22:13:41', 'admin', '2022-04-05 22:42:09', NULL);
 INSERT INTO `csa_garden` VALUES (9, 1, '8009', '', 30, NULL, NULL, NULL, NULL, 'N', 'N', 'Y', '0', '0', '101', '2022-03-29 22:15:24', 'admin', '2022-04-05 22:42:09', NULL);
@@ -1341,7 +1341,7 @@ CREATE TABLE `sys_logininfor`  (
   `msg` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT '' COMMENT '提示消息',
   `login_time` datetime NULL DEFAULT NULL COMMENT '访问时间',
   PRIMARY KEY (`info_id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 214 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '系统访问记录' ROW_FORMAT = DYNAMIC;
+) ENGINE = InnoDB AUTO_INCREMENT = 217 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '系统访问记录' ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of sys_logininfor
@@ -1460,6 +1460,9 @@ INSERT INTO `sys_logininfor` VALUES (210, 'admin', '127.0.0.1', '内网IP', 'Chr
 INSERT INTO `sys_logininfor` VALUES (211, 'admin', '127.0.0.1', '内网IP', 'Chrome 9', 'Windows 10', '0', '登录成功', '2022-04-05 12:42:38');
 INSERT INTO `sys_logininfor` VALUES (212, 'admin', '127.0.0.1', '内网IP', 'Chrome 9', 'Windows 10', '0', '登录成功', '2022-04-05 18:12:36');
 INSERT INTO `sys_logininfor` VALUES (213, 'admin', '127.0.0.1', '内网IP', 'Chrome 9', 'Windows 10', '0', '登录成功', '2022-04-05 21:16:51');
+INSERT INTO `sys_logininfor` VALUES (214, 'admin', '127.0.0.1', '内网IP', 'Firefox 9', 'Windows 10', '0', '登录成功', '2022-04-06 20:25:27');
+INSERT INTO `sys_logininfor` VALUES (215, 'admin', '127.0.0.1', '内网IP', 'Chrome 9', 'Windows 10', '0', '登录成功', '2022-04-06 20:46:38');
+INSERT INTO `sys_logininfor` VALUES (216, 'admin', '127.0.0.1', '内网IP', 'Chrome 9', 'Windows 10', '0', '登录成功', '2022-04-06 23:38:25');
 
 -- ----------------------------
 -- Table structure for sys_menu
@@ -1707,7 +1710,7 @@ CREATE TABLE `sys_oper_log`  (
   `error_msg` varchar(2000) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT '' COMMENT '错误消息',
   `oper_time` datetime NULL DEFAULT NULL COMMENT '操作时间',
   PRIMARY KEY (`oper_id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 729 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '操作日志记录' ROW_FORMAT = DYNAMIC;
+) ENGINE = InnoDB AUTO_INCREMENT = 736 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '操作日志记录' ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of sys_oper_log
@@ -2341,6 +2344,13 @@ INSERT INTO `sys_oper_log` VALUES (725, '菜地划分', 2, 'com.jlt.csa.controll
 INSERT INTO `sys_oper_log` VALUES (726, '菜地划分', 2, 'com.jlt.csa.controller.GardenController.updateStatus()', 'PUT', 1, 'admin', NULL, '/csa/garden/4', '127.0.0.1', '内网IP', '{\"updateTime\":1649169724820,\"params\":{},\"updateBy\":\"admin\",\"isCompleted\":\"Y\"} [4]', '{\"msg\":\"操作成功\",\"code\":200}', 0, NULL, '2022-04-05 22:42:05');
 INSERT INTO `sys_oper_log` VALUES (727, '菜地划分', 2, 'com.jlt.csa.controller.GardenController.updateStatus()', 'PUT', 1, 'admin', NULL, '/csa/garden/1,2,3,4,5,6,7,8,9,10', '127.0.0.1', '内网IP', '{\"updateTime\":1649169729414,\"params\":{},\"updateBy\":\"admin\",\"isCompleted\":\"Y\"} [1,2,3,4,5,6,7,8,9,10]', '{\"msg\":\"操作成功\",\"code\":200}', 0, NULL, '2022-04-05 22:42:09');
 INSERT INTO `sys_oper_log` VALUES (728, '菜地划分', 2, 'com.jlt.csa.controller.GardenController.updateStatus()', 'PUT', 1, 'admin', NULL, '/csa/garden/11,12', '127.0.0.1', '内网IP', '{\"updateTime\":1649169735413,\"params\":{},\"updateBy\":\"admin\",\"isCompleted\":\"Y\"} [11,12]', '{\"msg\":\"操作成功\",\"code\":200}', 0, NULL, '2022-04-05 22:42:15');
+INSERT INTO `sys_oper_log` VALUES (729, '会员签约', 2, 'com.jlt.csa.controller.FarmerContractController.claim()', 'PUT', 1, 'admin', NULL, '/csa/contract/claim', '127.0.0.1', '内网IP', '{\"mobileNumber\":\"1112\",\"contractId\":102,\"gardenName\":\"AAAA\",\"farmerName\":\"程开州\",\"gardenId\":3}', '{\"msg\":\"操作成功\",\"code\":200}', 0, NULL, '2022-04-06 22:04:28');
+INSERT INTO `sys_oper_log` VALUES (730, '会员签约', 2, 'com.jlt.csa.controller.FarmerContractController.claim()', 'PUT', 1, 'admin', NULL, '/csa/contract/claim', '127.0.0.1', '内网IP', '{\"mobileNumber\":\"112\",\"contractId\":103,\"gardenName\":\"AAA\",\"farmerName\":\"范诚诚\",\"gardenId\":3}', '{\"msg\":\"操作成功\",\"code\":200}', 0, NULL, '2022-04-06 22:07:52');
+INSERT INTO `sys_oper_log` VALUES (731, '会员签约', 2, 'com.jlt.csa.controller.FarmerContractController.claim()', 'PUT', 1, 'admin', NULL, '/csa/contract/claim', '127.0.0.1', '内网IP', '{\"mobileNumber\":\"112\",\"contractId\":103,\"gardenName\":\"AAA\",\"farmerName\":\"范诚诚\",\"gardenId\":3}', '{\"msg\":\"操作成功\",\"code\":200}', 0, NULL, '2022-04-06 22:08:32');
+INSERT INTO `sys_oper_log` VALUES (732, '会员签约', 2, 'com.jlt.csa.controller.FarmerContractController.claim()', 'PUT', 1, 'admin', NULL, '/csa/contract/claim', '127.0.0.1', '内网IP', '{\"mobileNumber\":\"122\",\"contractId\":103,\"gardenName\":\"AAA\",\"farmerName\":\"范诚诚\",\"gardenId\":3}', '{\"msg\":\"操作成功\",\"code\":200}', 0, NULL, '2022-04-06 22:11:03');
+INSERT INTO `sys_oper_log` VALUES (733, '会员签约', 2, 'com.jlt.csa.controller.FarmerContractController.claim()', 'PUT', 1, 'admin', NULL, '/csa/contract/claim', '127.0.0.1', '内网IP', '{\"mobileNumber\":\"120\",\"contractId\":103,\"gardenName\":\"AAA\",\"farmerName\":\"范诚诚\",\"gardenId\":3}', '{\"msg\":\"操作成功\",\"code\":200}', 0, NULL, '2022-04-06 22:12:40');
+INSERT INTO `sys_oper_log` VALUES (734, '会员签约', 2, 'com.jlt.csa.controller.FarmerContractController.claim()', 'PUT', 1, 'admin', NULL, '/csa/contract/claim', '127.0.0.1', '内网IP', '{\"mobileNumber\":\"122\",\"contractId\":103,\"gardenName\":\"AAAA\",\"farmerName\":\"范诚诚\",\"gardenId\":3}', '{\"msg\":\"操作成功\",\"code\":200}', 0, NULL, '2022-04-06 22:13:50');
+INSERT INTO `sys_oper_log` VALUES (735, '会员签约', 2, 'com.jlt.csa.controller.FarmerContractController.claim()', 'PUT', 1, 'admin', NULL, '/csa/contract/claim', '127.0.0.1', '内网IP', '{\"mobileNumber\":\"13588886666\",\"contractId\":102,\"gardenName\":\"大观园\",\"farmerName\":\"程开州\",\"gardenId\":6}', '{\"msg\":\"操作成功\",\"code\":200}', 0, NULL, '2022-04-06 23:39:09');
 
 -- ----------------------------
 -- Table structure for sys_post
@@ -2551,7 +2561,7 @@ CREATE TABLE `sys_user`  (
 -- ----------------------------
 -- Records of sys_user
 -- ----------------------------
-INSERT INTO `sys_user` VALUES (1, 103, 'admin', '超级管理员', '00', '', '', '1', '', '$2a$10$7JB720yubVSZvUI0rEqK/.VqGOZTH.ulu33dHOiBE8ByOhJIrdAu2', '0', '0', '127.0.0.1', '2022-04-05 21:16:51', 'admin', '2022-03-20 21:45:25', '', '2022-04-05 21:16:51', '管理员');
+INSERT INTO `sys_user` VALUES (1, 103, 'admin', '超级管理员', '00', '', '', '1', '', '$2a$10$7JB720yubVSZvUI0rEqK/.VqGOZTH.ulu33dHOiBE8ByOhJIrdAu2', '0', '0', '127.0.0.1', '2022-04-06 23:38:25', 'admin', '2022-03-20 21:45:25', '', '2022-04-06 23:38:25', '管理员');
 INSERT INTO `sys_user` VALUES (2, 101, 'boss', '农场管理员', '00', '', '', '2', '', '$2a$10$7JB720yubVSZvUI0rEqK/.VqGOZTH.ulu33dHOiBE8ByOhJIrdAu2', '0', '0', '127.0.0.1', '2022-03-20 21:45:25', 'admin', '2022-03-20 21:45:25', 'admin', '2022-03-29 17:51:59', '');
 INSERT INTO `sys_user` VALUES (100, 104, '101', '场长', '00', '88@66.com', '18888888888', '0', '', '$2a$10$7JB720yubVSZvUI0rEqK/.VqGOZTH.ulu33dHOiBE8ByOhJIrdAu2', '0', '0', '127.0.0.1', '2022-03-30 22:05:56', 'admin', '2022-03-29 18:18:00', 'admin', '2022-03-30 22:05:56', NULL);
 

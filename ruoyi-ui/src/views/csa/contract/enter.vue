@@ -135,7 +135,7 @@
         </el-row>
         <el-row>
           <el-col :span="12">
-            <el-form-item label="菜地编号" prop="garden.code">
+            <el-form-item label="菜地编号" prop="garden.gardenId">
               <el-select v-model="form.garden.gardenId" placeholder="请选择菜地编号"
                          :loading="isQuery" loading-text="正在查找可用菜地"
                          filterable remote :remote-method="remoteQueryGarden">
@@ -154,12 +154,9 @@
             </el-form-item>
           </el-col>
         </el-row>
-        <el-form-item label="备注" prop="remark">
-          <el-input v-model="form.remark" type="textarea" rows="3" placeholder="请输入备注"/>
-        </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="submitForm">确 定</el-button>
+        <el-button type="primary" @click="submitClaimForm">确 定</el-button>
         <el-button @click="cancel">取 消</el-button>
       </div>
     </el-dialog>
@@ -167,7 +164,7 @@
 </template>
 
 <script>
-  import { listEnterContract, getContract, delContract, addContract, updateContract, auditContract } from '@/api/csa/contract'
+  import { listEnterContract, getContract, auditContract, claimFarmer } from '@/api/csa/contract'
   import { getFarmerWithGarden  } from '@/api/csa/farmer'
   import { listCanSell } from '@/api/csa/garden'
   import Dict from '../../system/dict/index'
@@ -213,7 +210,7 @@
         // 可售的菜地列表
         canSellGardens: [],
         // 表单参数
-        form: {farmer: {}, garden: {}},
+        form: {contractId: null, garden: {} },
         // 表单校验
         rules: {
           name: [
@@ -262,9 +259,7 @@
       reset() {
         this.form = {
           contractId: null,
-          farmer: {},
           garden: {},
-          remark: null
         }
         this.resetForm('form')
       },
@@ -285,12 +280,13 @@
         this.single = selection.length !== 1
         this.multiple = !selection.length
       },
-      /** 认领菜地按钮操作 */
+      /** 认领菜地对话框弹出操作 */
       handleUpdateFarmer(row) {
         this.reset()
         const farmerId = row.farmerId;
         getFarmerWithGarden(farmerId).then(response => {
           this.form = response.data
+          this.form.contractId = row.contractId
           this.open = true
           this.title = '认领菜地'
         })
@@ -319,23 +315,23 @@
           })
         })
       },
-      /** 提交按钮 */
-      submitForm() {
+      /** 认领菜地提交按钮 */
+      submitClaimForm() {
         this.$refs['form'].validate(valid => {
           if (valid) {
-            if (this.form.contractId != null) {
-              updateContract(this.form).then(response => {
-                this.$modal.msgSuccess('修改成功')
-                this.open = false
-                this.getList()
-              })
-            } else {
-              addContract(this.form).then(response => {
-                this.$modal.msgSuccess('新增成功')
-                this.open = false
-                this.getList()
-              })
+            let claim = {
+              contractId: this.form.contractId,
+              farmerName: this.form.name,
+              mobileNumber: this.form.mobileNumber,
+              gardenId: this.form.garden.gardenId,
+              gardenName: this.form.garden.name
             }
+
+            claimFarmer(claim).then(response => {
+              this.$modal.msgSuccess('修改成功')
+              this.open = false
+              this.getList()
+            })
           }
         })
       },

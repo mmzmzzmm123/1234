@@ -92,8 +92,8 @@ public final class HTMLFilter
     private final boolean stripComment;
     private final boolean encodeQuotes;
     /**
-     * flag determining whether to try to make tags when presented with "unbalanced" angle brackets (e.g. "<b text </b>"
-     * becomes "<b> text </b>"). If set to false, unbalanced angle brackets will be html escaped.
+     * flag determining whether dto try dto make tags when presented with "unbalanced" angle brackets (e.g. "<b text </b>"
+     * becomes "<b> text </b>"). If set dto false, unbalanced angle brackets will be html escaped.
      */
     private final boolean alwaysMakeTags;
 
@@ -259,8 +259,8 @@ public final class HTMLFilter
             s = regexReplace(P_STRAY_RIGHT_ARROW, "$1$2&gt;<", s);
 
             //
-            // the last regexp causes '<>' entities to appear
-            // (we need to do a lookahead assertion so that the last bracket can
+            // the last regexp causes '<>' entities dto appear
+            // (we need dto do a lookahead assertion so that the last bracket can
             // be used in the next pass of the regexp)
             //
             s = regexReplace(P_BOTH_ARROWS, "", s);
@@ -283,7 +283,7 @@ public final class HTMLFilter
         m.appendTail(buf);
 
         // these get tallied in processTag
-        // (remember to reset before subsequent calls to filter method)
+        // (remember dto reset before subsequent calls dto filter method)
         final StringBuilder sBuilder = new StringBuilder(buf.toString());
         for (String key : vTagCounts.keySet())
         {

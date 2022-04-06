@@ -36,7 +36,7 @@ public class Garden extends BaseEntity
 
     /** 平方米 */
     @Excel(name = "平方米")
-    private Integer m2;
+    private Long m2;
 
     /** 会员 */
     @Excel(name = "会员id")
@@ -117,12 +117,12 @@ public class Garden extends BaseEntity
     {
         return name;
     }
-    public void setM2(Integer m2)
+    public void setM2(Long m2)
     {
         this.m2 = m2;
     }
 
-    public Integer getM2()
+    public Long getM2()
     {
         return m2;
     }

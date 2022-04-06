@@ -52,6 +52,15 @@ export function auditContract(id) {
   })
 }
 
+// 会员合约确认认领
+export function claimFarmer(data) {
+  return request({
+    url: '/csa/contract/claim',
+    method: 'put',
+    data: data
+  })
+}
+
 // 删除会员合约
 export function delContract(contractId) {
   return request({

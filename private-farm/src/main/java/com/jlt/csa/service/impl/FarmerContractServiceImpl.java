@@ -1,10 +1,14 @@
 package com.jlt.csa.service.impl;
 
 import java.math.BigDecimal;
+import java.util.Arrays;
 import java.util.List;
 
 import com.jlt.csa.domain.Farmer;
+import com.jlt.csa.domain.Garden;
+import com.jlt.csa.domain.dto.ContractClaimDto;
 import com.jlt.csa.service.IFarmerService;
+import com.jlt.csa.service.IGardenService;
 import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.utils.DateUtils;
 import com.ruoyi.common.utils.DictUtils;
@@ -29,6 +33,7 @@ public class FarmerContractServiceImpl implements IFarmerContractService
 {
     private FarmerContractMapper farmerContractMapper;
     private IFarmerService farmerService;
+    private IGardenService gardenService;
 
     @Autowired
     public void setFarmerContractMapper(FarmerContractMapper farmerContractMapper) {
@@ -38,6 +43,83 @@ public class FarmerContractServiceImpl implements IFarmerContractService
     @Autowired
     public void setFarmerService(IFarmerService farmerService) {
         this.farmerService = farmerService;
+    }
+
+    @Autowired
+    public void setGardenService(IGardenService gardenService) {
+        this.gardenService = gardenService;
+    }
+
+    /**
+     * 会员认领菜地，更新会员姓名和电话，关联地块（不设置地块日期）
+     * @param claim 认领菜地的信息
+     * @return 受影响的记录数
+     */
+    @Override
+    @Transactional
+    public int claimGarden(ContractClaimDto claim) {
+        // 载入合约
+        FarmerContract contract = selectFarmerContractByContractId(claim.getContractId());
+
+        // 检查合约是否存在
+        if (contract == null) {
+            throw new RuntimeException("该合约不存在！");
+        }
+
+        // 获取允许认地的2种状态字典值
+        String valAudited = DictUtils.getDictValue("csa_contract_status", "已审");
+        String valClaimed = DictUtils.getDictValue("csa_contract_status", "认领");
+
+        // 判断当前合约状态是否允许认地
+        if (!Arrays.asList(valAudited, valClaimed).contains(contract.getStatus())) {
+            throw new RuntimeException("该合约的状态不允许认领菜地！");
+        }
+
+        // 载入地主信息
+        Farmer farmer = farmerService.selectFarmerWithGardenById(contract.getFarmerId());
+
+        // 检查地主是否存在
+        if (farmer == null) {
+            throw new RuntimeException("该合约对应的地主信息不存在，无法认领！");
+        }
+
+        // 已审状态的合约
+        if (contract.getStatus().equals(valAudited)) {
+            Garden garden = gardenService.selectGardenById(claim.getGardenId());
+
+            if (!garden.getIsSelled().equals("N")) {
+                // 菜地为售出状态
+                throw new RuntimeException("该菜地已被认领，无法再次认领！");
+            } else {
+                if (garden.getFarmerId() != null) {
+                    // 菜地已经有地主信息
+                    throw new RuntimeException("该菜地已被他人选定，无法认领！");
+                }
+            }
+
+            // 准备更新的字段
+            contract = new FarmerContract();
+            contract.setContractId(claim.getContractId());
+            contract.setGardenId(claim.getGardenId());
+            contract.setStatus(valClaimed);
+
+            garden = new Garden();
+            garden.setGardenId(claim.getGardenId());
+            garden.setFarmerId(farmer.getFarmerId());
+
+            farmer = new Farmer();
+            farmer.setFarmerId(garden.getFarmerId());
+            farmer.setName(claim.getFarmerName());
+            farmer.setMobileNumber(claim.getMobileNumber());
+
+            this.updateFarmerContract(contract);
+            gardenService.updateGarden(garden);
+            farmerService.updateFarmer(farmer);
+        }
+
+        // 更改已认领但未生效的合约
+
+        return 1;
     }
 
     /**
@@ -51,7 +133,7 @@ public class FarmerContractServiceImpl implements IFarmerContractService
         // 载入合约
         FarmerContract contract =  selectFarmerContractByContractId(contractId);
 
-        // 检查合约是否存在，
+        // 检查合约是否存在
         if (contract == null) {
             throw new RuntimeException("合约不存在，无法审核！");
         }

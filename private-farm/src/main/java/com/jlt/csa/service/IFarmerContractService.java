@@ -2,6 +2,7 @@ package com.jlt.csa.service;
 
 import java.util.List;
 import com.jlt.csa.domain.FarmerContract;
+import com.jlt.csa.domain.dto.ContractClaimDto;
 import com.ruoyi.common.core.domain.AjaxResult;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -74,5 +75,12 @@ public interface IFarmerContractService
      * @param contractId 合约id
      * @return 受影响的记录数
      */
-    public int auditContract(@PathVariable Long contractId);
+    public int auditContract(Long contractId);
+
+    /**
+     * 会员认领菜地
+     * @param claim 认领菜地的信息
+     * @return 受影响的记录数
+     */
+    public int claimGarden(ContractClaimDto claim);
 }

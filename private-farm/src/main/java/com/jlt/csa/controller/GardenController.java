@@ -49,7 +49,6 @@ public class GardenController extends BaseController
     @GetMapping({"/cansell/{code}", "/cansell/"})
     public TableDataInfo listCanSell(@PathVariable(value = "code", required = false) String code)
     {
-        logger.error("--==>" + code);
         Garden garden = new Garden();
         garden.setCode(code);
         garden.setIsCompleted("Y");
