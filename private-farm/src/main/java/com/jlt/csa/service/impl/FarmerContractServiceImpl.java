@@ -13,6 +13,8 @@ import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.utils.DateUtils;
 import com.ruoyi.common.utils.DictUtils;
 import com.ruoyi.common.utils.ExceptionUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.jlt.csa.mapper.FarmerContractMapper;
@@ -31,6 +33,8 @@ import static com.ruoyi.common.utils.SecurityUtils.getUsername;
 @Service
 public class FarmerContractServiceImpl implements IFarmerContractService 
 {
+    private static final Logger log = LoggerFactory.getLogger(FarmerContractServiceImpl.class);
+
     private FarmerContractMapper farmerContractMapper;
     private IFarmerService farmerService;
     private IGardenService gardenService;
@@ -83,43 +87,61 @@ public class FarmerContractServiceImpl implements IFarmerContractService
             throw new RuntimeException("该合约对应的地主信息不存在，无法认领！");
         }
 
-        // 已审状态的合约
-        if (contract.getStatus().equals(valAudited)) {
-            Garden garden = gardenService.selectGardenById(claim.getGardenId());
+        Garden garden = gardenService.selectGardenById(claim.getGardenId());
 
-            if (!garden.getIsSelled().equals("N")) {
-                // 菜地为售出状态
-                throw new RuntimeException("该菜地已被认领，无法再次认领！");
-            } else {
-                if (garden.getFarmerId() != null) {
-                    // 菜地已经有地主信息
-                    throw new RuntimeException("该菜地已被他人选定，无法认领！");
-                }
+        if (!garden.getIsSelled().equals("N")) {
+            // 菜地为售出状态
+            throw new RuntimeException("该菜地已被认领，无法再次认领！");
+        } else {
+            if (garden.getFarmerId() != null && garden.getFarmerId() != farmer.getFarmerId()) {
+                // 菜地已经有地主信息
+                throw new RuntimeException("该菜地已被他人选定，无法认领！");
             }
-
-            // 准备更新的字段
-            contract = new FarmerContract();
-            contract.setContractId(claim.getContractId());
-            contract.setGardenId(claim.getGardenId());
-            contract.setStatus(valClaimed);
-
-            garden = new Garden();
-            garden.setGardenId(claim.getGardenId());
-            garden.setFarmerId(farmer.getFarmerId());
-
-            farmer = new Farmer();
-            farmer.setFarmerId(garden.getFarmerId());
-            farmer.setName(claim.getFarmerName());
-            farmer.setMobileNumber(claim.getMobileNumber());
-
-            this.updateFarmerContract(contract);
-            gardenService.updateGarden(garden);
-            farmerService.updateFarmer(farmer);
         }
 
-        // 更改已认领但未生效的合约
+        /** 已经绑定过菜地，先取消绑定 */
+        if (contract.getStatus().equals(valClaimed)) {
+            /** 只有选定菜地发生更改的时候才进行取消操作 */
+            Garden claimedGarden = gardenService.selectGardenById(contract.getGardenId());
+            if (claimedGarden.getGardenId().longValue() != claim.getGardenId()) {
+                if (!claimedGarden.getIsSelled().equals("N")) {
+                    // 菜地为售出状态，不能取消
+                    throw new RuntimeException("现合约原有菜地的状态不允许解绑！");
+                }
 
-        return 1;
+                // 准备更新菜地字段，取消地主关联和菜地名称
+                claimedGarden = new Garden();
+                claimedGarden.setGardenId(contract.getGardenId());
+                claimedGarden.setFarmerId(0L);
+                claimedGarden.setName("");
+
+                gardenService.updateGarden(claimedGarden);
+            }
+        }
+
+        /** 将合约、菜地、地主信息相关联 */
+        // 准备更新的字段
+        String status = contract.getStatus().equals(valAudited) ? valClaimed : null;
+        contract = new FarmerContract();
+        contract.setContractId(claim.getContractId());
+        contract.setGardenId(claim.getGardenId());
+        contract.setStatus(status);
+
+        garden = new Garden();
+        garden.setGardenId(claim.getGardenId());
+        garden.setFarmerId(farmer.getFarmerId());
+        garden.setName(claim.getGardenName());
+
+        farmer = new Farmer();
+        farmer.setFarmerId(garden.getFarmerId());
+        farmer.setName(claim.getFarmerName());
+        farmer.setMobileNumber(claim.getMobileNumber());
+
+        this.updateFarmerContract(contract);
+        gardenService.updateGarden(garden);
+        farmerService.updateFarmer(farmer);
+
+        return 4;
     }
 
     /**

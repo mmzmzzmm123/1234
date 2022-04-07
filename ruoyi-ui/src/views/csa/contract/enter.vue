@@ -34,21 +34,25 @@
     <el-row :gutter="10" class="mb8">
       <el-col :span="1.5">
         <el-button
-          type="danger"
-          plain
+          type="success"
           icon="el-icon-lock"
           size="mini"
           :disabled="single"
-          @click="handleAudit"
+          @click="handleConfirmClaim"
           v-hasPermi="['csa:contract:edit']"
-        >锁定
+        >确认生效
         </el-button>
       </el-col>
       <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
     </el-row>
 
     <el-table v-loading="loading" :data="contractList" @selection-change="handleSelectionChange">
-      <el-table-column type="selection" width="55" align="center"/>
+      <el-table-column type="selection" width="55" align="center" :selectable="rowCanSelect" />
+<!--      <el-table-column type="selection" width="55" align="center">-->
+<!--        <template slot-scope="scope">-->
+<!--          <el-checkbox :disabled="scope.row.status != '1'" />-->
+<!--        </template>-->
+<!--      </el-table-column>-->
       <el-table-column label="签约人" align="center" prop="contractor"/>
       <el-table-column label="会员姓名" align="center" prop="farmer.name">
         <template slot-scope="scope">
@@ -108,13 +112,13 @@
       <el-table-column label="操作" align="center" fixed="right" width="120" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button
-            :disabled="(scope.row.status != '2' && scope.row.status == '1')"
+            :disabled="(scope.row.status != '2' && scope.row.status != '1')"
             size="mini "
             type="text"
             icon="el-icon-thumb"
             @click="handleUpdateFarmer(scope.row)"
             v-hasPermi="['csa:contract:edit']"
-          >认领菜地
+          >会员绑定
           </el-button>
         </template>
       </el-table-column>
@@ -144,15 +148,16 @@
         </el-row>
         <el-row>
           <el-col :span="12">
-            <el-form-item label="菜地编号" prop="garden.gardenId">
-              <el-select v-model="form.garden.gardenId" placeholder="请选择菜地编号"
+            <el-form-item label="菜地编号" prop="garden.code">
+              <el-select v-model="form.garden.code" value-key="code" @change="onGardenSelect" placeholder="请选择菜地编号"
                          :loading="isQuery" loading-text="正在查找可用菜地"
                          filterable remote :remote-method="remoteQueryGarden">
                 <el-option
                   v-for="garden in this.canSellGardens"
                   :key="garden.gardenId"
                   :label="garden.code"
-                  :value="garden.gardenId"
+                  :value="garden"
+                  :disabled="garden.farmerId != null && garden.farmerId != form.farmerId"
                 />
               </el-select>
             </el-form-item>
@@ -230,7 +235,7 @@
           ],
           garden: {
               code: [
-                { required: true, message: '菜地编码不能为空', trigger: 'blur' }
+                { required: true, message: '菜地编号不能为空', trigger: 'blur' }
               ],
               name: [
                 { required: true, message: '菜地名称不能为空', trigger: 'blur' }
@@ -241,6 +246,7 @@
     },
     created() {
       this.getList()
+      this.remoteQueryGarden('')
     },
     methods: {
       /** 查询会员签约列表 */
@@ -282,12 +288,19 @@
         this.resetForm('queryForm')
         this.handleQuery()
       },
+      rowCanSelect(row) {
+        return row.status == '1'
+      },
       // 多选框选中数据
       handleSelectionChange(selection) {
         this.curRowData = (selection.length == 1) ? selection[0] : null;
         this.ids = selection.map(item => item.contractId)
         this.single = selection.length !== 1
         this.multiple = !selection.length
+      },
+      onGardenSelect(val) {
+        this.form.garden.gardenId = val.gardenId
+        // console.log(val)
       },
       /** 认领菜地对话框弹出操作 */
       handleUpdateFarmer(row) {
@@ -297,16 +310,12 @@
           this.form = response.data
           this.form.contractId = row.contractId
           this.open = true
-          this.title = '认领菜地'
+          this.title = '会员绑定'
         })
       },
-      /** 审核按钮操作 */
-      handleAudit(row) {
-        if (this.curRowData.status != '3') {
-          this.$modal.alertWarning("只有待定状态的合约才可以审核！");
-          return;
-        }
-
+      /** 确认生效按钮操作 */
+      handleConfirmClaim(row) {
+        return;
         this.$modal.confirm('是否要确定审核此合约', '提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
@@ -339,7 +348,7 @@
             claimFarmer(claim).then(response => {
               this.$modal.msgSuccess('修改成功')
               this.open = false
-              this.getList()
+              this.getList();
             })
           }
         })

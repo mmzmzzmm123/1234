@@ -106,7 +106,7 @@
     </el-row>
 
     <el-table v-loading="loading" :data="contractList" @selection-change="handleSelectionChange">
-      <el-table-column type="selection" width="55" align="center"/>
+      <el-table-column type="selection" width="55" align="center" :selectable="rowCanSelect" />
       <el-table-column label="签约人" align="center" prop="contractor"/>
       <el-table-column label="合约状态" align="center" prop="status">
         <template slot-scope="scope">
@@ -396,6 +396,9 @@
         this.resetForm('queryForm')
         this.handleQuery()
       },
+      rowCanSelect(row) {
+        return row.status == '3'
+      },
       // 多选框选中数据
       handleSelectionChange(selection) {
         this.curRowData = (selection.length == 1) ? selection[0] : null;
@@ -421,11 +424,6 @@
       },
       /** 审核按钮操作 */
       handleAudit(row) {
-        if (this.curRowData.status != '3') {
-          this.$modal.alertWarning("只有待定状态的合约才可以审核！");
-          return;
-        }
-
         this.$modal.confirm('是否要确定审核此合约', '提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',

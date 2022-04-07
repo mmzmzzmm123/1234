@@ -110,9 +110,10 @@
         <trim prefix="SET" suffixOverrides=",">
             <if test="zoneId != null">zone_id = #{zoneId},</if>
             <if test="code != null and code != ''">code = #{code},</if>
-            <if test="name != null and name != ''">name = #{name},</if>
+            <if test="name != null">name = #{name},</if>
             <if test="m2 != null">m2 = #{m2},</if>
-            <if test="farmerId != null">farmer_id = #{farmerId},</if>
+            <if test="farmerId != null and farmerId > 0">farmer_id = #{farmerId},</if>
+            <if test="farmerId == 0">farmer_id = null,</if>
             <if test="managerId != null">manager_id = #{managerId},</if>
             <if test="workerId != null">worker_id = #{workerId},</if>
             <if test="contacterId != null">contacter_id = #{contacterId},</if>

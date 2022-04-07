@@ -8,7 +8,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="farmerId"    column="farmer_id"    />
         <result property="name"    column="name"    />
         <result property="gender"    column="gender"    />
-        <result property="mobileNumber"    column="mobile_umber"    />
+        <result property="mobileNumber"    column="mobile_number"    />
         <result property="coins"    column="coins"    />
         <result property="balance"    column="balance"    />
         <result property="weight"    column="weight"    />

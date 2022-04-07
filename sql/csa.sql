@@ -11,7 +11,7 @@
  Target Server Version : 50731
  File Encoding         : 65001
 
- Date: 06/04/2022 23:53:50
+ Date: 07/04/2022 23:14:58
 */
 
 SET NAMES utf8mb4;
@@ -292,8 +292,8 @@ CREATE TABLE `csa_farmer`  (
 -- ----------------------------
 -- Records of csa_farmer
 -- ----------------------------
-INSERT INTO `csa_farmer` VALUES (3, '范诚诚', NULL, '13672226668', 25000, 300.0000, 20.0000, 1, '2021-05-01', NULL, 'N', '0', '0', '', '2022-04-05 13:06:27', '', '2022-04-05 13:18:27', NULL);
-INSERT INTO `csa_farmer` VALUES (5, '程开州', NULL, '13588886666', 15000, 0.0000, 60.0000, 2, '2021-04-05', NULL, 'N', '0', '0', '', '2022-04-05 18:57:35', '', '2022-04-06 23:39:10', NULL);
+INSERT INTO `csa_farmer` VALUES (3, '范诚诚', NULL, '13672226668', 25000, 300.0000, 20.0000, 1, '2021-05-01', NULL, 'N', '0', '0', '', '2022-04-05 13:06:27', '', '2022-04-07 22:21:18', NULL);
+INSERT INTO `csa_farmer` VALUES (5, '程开州', NULL, '13588886666', 15000, 0.0000, 60.0000, 2, '2021-04-05', NULL, 'N', '0', '0', '', '2022-04-05 18:57:35', '', '2022-04-07 22:48:14', NULL);
 
 -- ----------------------------
 -- Table structure for csa_farmer_contract
@@ -327,8 +327,8 @@ CREATE TABLE `csa_farmer_contract`  (
 -- Records of csa_farmer_contract
 -- ----------------------------
 INSERT INTO `csa_farmer_contract` VALUES (101, NULL, NULL, '王丽美', 10000, 0.0000, 0.0000, 0, 'QY', 'No.008', '2022-03-01', '2022-05-01', 62, '3', '0', 'admin', '2022-04-01 22:29:42', 'admin', '2022-04-04 14:54:20', NULL);
-INSERT INTO `csa_farmer_contract` VALUES (102, 5, 6, '程开州', 15000, 0.0000, 60.0000, 2, 'QY', 'No.002', '2021-04-05', '2022-04-04', 365, '1', '0', 'admin', '2022-04-04 00:42:06', 'admin', '2022-04-06 23:39:10', '好朋友介绍，非常喜欢我们的农场，订嘱每次到期前都要提醒约续。');
-INSERT INTO `csa_farmer_contract` VALUES (103, 3, NULL, '范诚诚', 5000, 300.0000, 20.0000, 1, 'QY', 'No.003', '2021-05-01', '2022-04-30', 365, '2', '0', 'admin', '2022-04-04 14:30:01', 'admin', '2022-04-05 13:18:27', NULL);
+INSERT INTO `csa_farmer_contract` VALUES (102, 5, 8, '程开州', 15000, 0.0000, 60.0000, 2, 'QY', 'No.002', '2021-04-05', '2022-04-04', 365, '1', '0', 'admin', '2022-04-04 00:42:06', 'admin', '2022-04-07 22:48:14', '好朋友介绍，非常喜欢我们的农场，订嘱每次到期前都要提醒约续。');
+INSERT INTO `csa_farmer_contract` VALUES (103, 3, 10, '范诚诚', 5000, 300.0000, 20.0000, 1, 'QY', 'No.003', '2021-05-01', '2022-04-30', 365, '1', '0', 'admin', '2022-04-04 14:30:01', 'admin', '2022-04-07 22:21:18', NULL);
 
 -- ----------------------------
 -- Table structure for csa_garden
@@ -366,11 +366,11 @@ INSERT INTO `csa_garden` VALUES (2, 1, '8002', '香草居', 30, NULL, NULL, NULL
 INSERT INTO `csa_garden` VALUES (3, 1, '8003', '', 30, NULL, NULL, NULL, NULL, 'N', 'N', 'Y', '0', '0', '101', '2022-03-07 13:15:43', 'admin', '2022-04-05 22:42:09', NULL);
 INSERT INTO `csa_garden` VALUES (4, 1, '8004', '', 30, NULL, NULL, NULL, NULL, 'N', 'N', 'Y', '0', '0', '101', '2022-03-07 13:20:38', 'admin', '2022-04-05 22:42:09', '');
 INSERT INTO `csa_garden` VALUES (5, 1, '8005', '', 30, NULL, NULL, NULL, NULL, 'N', 'N', 'Y', '0', '0', '101', '2022-03-29 21:05:48', 'admin', '2022-04-05 22:42:09', NULL);
-INSERT INTO `csa_garden` VALUES (6, 1, '8006', '', 30, 5, NULL, NULL, NULL, 'N', 'N', 'Y', '0', '0', '101', '2022-03-29 22:07:11', 'admin', '2022-04-05 22:42:09', NULL);
+INSERT INTO `csa_garden` VALUES (6, 1, '8006', '', 30, NULL, NULL, NULL, NULL, 'N', 'N', 'Y', '0', '0', '101', '2022-03-29 22:07:11', 'admin', '2022-04-05 22:42:09', NULL);
 INSERT INTO `csa_garden` VALUES (7, 1, '8007', '', 30, NULL, NULL, NULL, NULL, 'N', 'N', 'Y', '0', '0', '101', '2022-03-29 22:07:56', 'admin', '2022-04-05 22:42:09', NULL);
-INSERT INTO `csa_garden` VALUES (8, 1, '8008', '', 30, NULL, NULL, NULL, NULL, 'N', 'N', 'Y', '0', '0', '101', '2022-03-29 22:13:41', 'admin', '2022-04-05 22:42:09', NULL);
+INSERT INTO `csa_garden` VALUES (8, 1, '8008', '梦幻乐园', 30, 5, NULL, NULL, NULL, 'N', 'N', 'Y', '0', '0', '101', '2022-03-29 22:13:41', 'admin', '2022-04-05 22:42:09', NULL);
 INSERT INTO `csa_garden` VALUES (9, 1, '8009', '', 30, NULL, NULL, NULL, NULL, 'N', 'N', 'Y', '0', '0', '101', '2022-03-29 22:15:24', 'admin', '2022-04-05 22:42:09', NULL);
-INSERT INTO `csa_garden` VALUES (10, 1, '8010', '', 30, NULL, NULL, NULL, NULL, 'N', 'N', 'Y', '0', '0', '101', '2022-03-30 22:06:38', 'admin', '2022-04-05 22:42:09', NULL);
+INSERT INTO `csa_garden` VALUES (10, 1, '8010', '绝情谷', 30, 3, NULL, NULL, NULL, 'N', 'N', 'Y', '0', '0', '101', '2022-03-30 22:06:38', 'admin', '2022-04-05 22:42:09', NULL);
 INSERT INTO `csa_garden` VALUES (11, 1, '8011', '', 30, NULL, NULL, NULL, NULL, 'N', 'N', 'Y', '0', '0', '101', '2022-03-30 22:06:38', 'admin', '2022-04-05 22:42:15', NULL);
 INSERT INTO `csa_garden` VALUES (12, 1, '8012', '', 30, NULL, NULL, NULL, NULL, 'N', 'N', 'Y', '0', '0', '101', '2022-03-30 22:06:38', 'admin', '2022-04-05 22:42:15', NULL);
 
@@ -1341,7 +1341,7 @@ CREATE TABLE `sys_logininfor`  (
   `msg` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT '' COMMENT '提示消息',
   `login_time` datetime NULL DEFAULT NULL COMMENT '访问时间',
   PRIMARY KEY (`info_id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 217 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '系统访问记录' ROW_FORMAT = DYNAMIC;
+) ENGINE = InnoDB AUTO_INCREMENT = 220 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '系统访问记录' ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of sys_logininfor
@@ -1463,6 +1463,9 @@ INSERT INTO `sys_logininfor` VALUES (213, 'admin', '127.0.0.1', '内网IP', 'Chr
 INSERT INTO `sys_logininfor` VALUES (214, 'admin', '127.0.0.1', '内网IP', 'Firefox 9', 'Windows 10', '0', '登录成功', '2022-04-06 20:25:27');
 INSERT INTO `sys_logininfor` VALUES (215, 'admin', '127.0.0.1', '内网IP', 'Chrome 9', 'Windows 10', '0', '登录成功', '2022-04-06 20:46:38');
 INSERT INTO `sys_logininfor` VALUES (216, 'admin', '127.0.0.1', '内网IP', 'Chrome 9', 'Windows 10', '0', '登录成功', '2022-04-06 23:38:25');
+INSERT INTO `sys_logininfor` VALUES (217, 'admin', '127.0.0.1', '内网IP', 'Chrome 9', 'Windows 10', '0', '登录成功', '2022-04-07 18:55:28');
+INSERT INTO `sys_logininfor` VALUES (218, 'admin', '127.0.0.1', '内网IP', 'Chrome 9', 'Windows 10', '0', '登录成功', '2022-04-07 20:14:12');
+INSERT INTO `sys_logininfor` VALUES (219, 'admin', '127.0.0.1', '内网IP', 'Chrome 9', 'Windows 10', '0', '登录成功', '2022-04-07 21:35:54');
 
 -- ----------------------------
 -- Table structure for sys_menu
@@ -1710,7 +1713,7 @@ CREATE TABLE `sys_oper_log`  (
   `error_msg` varchar(2000) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT '' COMMENT '错误消息',
   `oper_time` datetime NULL DEFAULT NULL COMMENT '操作时间',
   PRIMARY KEY (`oper_id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 736 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '操作日志记录' ROW_FORMAT = DYNAMIC;
+) ENGINE = InnoDB AUTO_INCREMENT = 778 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '操作日志记录' ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of sys_oper_log
@@ -2351,6 +2354,48 @@ INSERT INTO `sys_oper_log` VALUES (732, '会员签约', 2, 'com.jlt.csa.controll
 INSERT INTO `sys_oper_log` VALUES (733, '会员签约', 2, 'com.jlt.csa.controller.FarmerContractController.claim()', 'PUT', 1, 'admin', NULL, '/csa/contract/claim', '127.0.0.1', '内网IP', '{\"mobileNumber\":\"120\",\"contractId\":103,\"gardenName\":\"AAA\",\"farmerName\":\"范诚诚\",\"gardenId\":3}', '{\"msg\":\"操作成功\",\"code\":200}', 0, NULL, '2022-04-06 22:12:40');
 INSERT INTO `sys_oper_log` VALUES (734, '会员签约', 2, 'com.jlt.csa.controller.FarmerContractController.claim()', 'PUT', 1, 'admin', NULL, '/csa/contract/claim', '127.0.0.1', '内网IP', '{\"mobileNumber\":\"122\",\"contractId\":103,\"gardenName\":\"AAAA\",\"farmerName\":\"范诚诚\",\"gardenId\":3}', '{\"msg\":\"操作成功\",\"code\":200}', 0, NULL, '2022-04-06 22:13:50');
 INSERT INTO `sys_oper_log` VALUES (735, '会员签约', 2, 'com.jlt.csa.controller.FarmerContractController.claim()', 'PUT', 1, 'admin', NULL, '/csa/contract/claim', '127.0.0.1', '内网IP', '{\"mobileNumber\":\"13588886666\",\"contractId\":102,\"gardenName\":\"大观园\",\"farmerName\":\"程开州\",\"gardenId\":6}', '{\"msg\":\"操作成功\",\"code\":200}', 0, NULL, '2022-04-06 23:39:09');
+INSERT INTO `sys_oper_log` VALUES (736, '会员签约', 2, 'com.jlt.csa.controller.FarmerContractController.claim()', 'PUT', 1, 'admin', NULL, '/csa/contract/claim', '127.0.0.1', '内网IP', '{\"mobileNumber\":\"13588886666\",\"contractId\":102,\"gardenName\":\"AAA\",\"farmerName\":\"程开州\",\"gardenId\":6}', '{\"msg\":\"操作成功\",\"code\":200}', 0, NULL, '2022-04-07 20:46:03');
+INSERT INTO `sys_oper_log` VALUES (737, '会员签约', 2, 'com.jlt.csa.controller.FarmerContractController.claim()', 'PUT', 1, 'admin', NULL, '/csa/contract/claim', '127.0.0.1', '内网IP', '{\"mobileNumber\":\"13588886666\",\"contractId\":102,\"gardenName\":\"梦幻乐园\",\"farmerName\":\"程开州\",\"gardenId\":6}', NULL, 1, '', '2022-04-07 21:37:54');
+INSERT INTO `sys_oper_log` VALUES (738, '会员签约', 2, 'com.jlt.csa.controller.FarmerContractController.claim()', 'PUT', 1, 'admin', NULL, '/csa/contract/claim', '127.0.0.1', '内网IP', '{\"mobileNumber\":\"13588886666\",\"contractId\":102,\"gardenName\":\"梦幻乐园\",\"farmerName\":\"程开州\",\"gardenId\":6}', '{\"msg\":\"操作成功\",\"code\":200}', 0, NULL, '2022-04-07 21:39:53');
+INSERT INTO `sys_oper_log` VALUES (739, '会员签约', 2, 'com.jlt.csa.controller.FarmerContractController.claim()', 'PUT', 1, 'admin', NULL, '/csa/contract/claim', '127.0.0.1', '内网IP', '{\"mobileNumber\":\"13588886666\",\"contractId\":102,\"gardenName\":\"梦幻乐园\",\"farmerName\":\"程开州\",\"gardenId\":6}', '{\"msg\":\"操作成功\",\"code\":200}', 0, NULL, '2022-04-07 21:43:09');
+INSERT INTO `sys_oper_log` VALUES (740, '会员签约', 2, 'com.jlt.csa.controller.FarmerContractController.claim()', 'PUT', 1, 'admin', NULL, '/csa/contract/claim', '127.0.0.1', '内网IP', '{\"mobileNumber\":\"13588886666\",\"contractId\":102,\"gardenName\":\"梦幻乐园\",\"farmerName\":\"程开州\",\"gardenId\":6}', '{\"msg\":\"操作成功\",\"code\":200}', 0, NULL, '2022-04-07 21:45:48');
+INSERT INTO `sys_oper_log` VALUES (741, '会员签约', 2, 'com.jlt.csa.controller.FarmerContractController.claim()', 'PUT', 1, 'admin', NULL, '/csa/contract/claim', '127.0.0.1', '内网IP', '{\"mobileNumber\":\"13588886666\",\"contractId\":102,\"gardenName\":\"梦幻乐园\",\"farmerName\":\"程开州\",\"gardenId\":6}', '{\"msg\":\"操作成功\",\"code\":200}', 0, NULL, '2022-04-07 21:47:56');
+INSERT INTO `sys_oper_log` VALUES (742, '会员签约', 2, 'com.jlt.csa.controller.FarmerContractController.claim()', 'PUT', 1, 'admin', NULL, '/csa/contract/claim', '127.0.0.1', '内网IP', '{\"mobileNumber\":\"13588886666\",\"contractId\":102,\"gardenName\":\"梦幻乐园\",\"farmerName\":\"程开州\",\"gardenId\":6}', '{\"msg\":\"操作成功\",\"code\":200}', 0, NULL, '2022-04-07 21:50:06');
+INSERT INTO `sys_oper_log` VALUES (743, '会员签约', 2, 'com.jlt.csa.controller.FarmerContractController.claim()', 'PUT', 1, 'admin', NULL, '/csa/contract/claim', '127.0.0.1', '内网IP', '{\"mobileNumber\":\"13588886666\",\"contractId\":102,\"gardenName\":\"梦幻乐园\",\"farmerName\":\"程开州\",\"gardenId\":6}', '{\"msg\":\"操作成功\",\"code\":200}', 0, NULL, '2022-04-07 21:58:47');
+INSERT INTO `sys_oper_log` VALUES (744, '会员签约', 2, 'com.jlt.csa.controller.FarmerContractController.claim()', 'PUT', 1, 'admin', NULL, '/csa/contract/claim', '127.0.0.1', '内网IP', '{\"mobileNumber\":\"13588886666\",\"contractId\":102,\"gardenName\":\"梦幻乐园\",\"farmerName\":\"程开州\",\"gardenId\":5}', '{\"msg\":\"操作成功\",\"code\":200}', 0, NULL, '2022-04-07 21:59:27');
+INSERT INTO `sys_oper_log` VALUES (745, '会员签约', 2, 'com.jlt.csa.controller.FarmerContractController.claim()', 'PUT', 1, 'admin', NULL, '/csa/contract/claim', '127.0.0.1', '内网IP', '{\"mobileNumber\":\"13588886666\",\"contractId\":102,\"gardenName\":\"梦幻乐园\",\"farmerName\":\"程开州\",\"gardenId\":5}', '{\"msg\":\"操作成功\",\"code\":200}', 0, NULL, '2022-04-07 22:02:22');
+INSERT INTO `sys_oper_log` VALUES (746, '会员签约', 2, 'com.jlt.csa.controller.FarmerContractController.claim()', 'PUT', 1, 'admin', NULL, '/csa/contract/claim', '127.0.0.1', '内网IP', '{\"mobileNumber\":\"13588886666\",\"contractId\":102,\"gardenName\":\"梦幻乐园\",\"farmerName\":\"程开州\",\"gardenId\":5}', '{\"msg\":\"操作成功\",\"code\":200}', 0, NULL, '2022-04-07 22:03:54');
+INSERT INTO `sys_oper_log` VALUES (747, '会员签约', 2, 'com.jlt.csa.controller.FarmerContractController.claim()', 'PUT', 1, 'admin', NULL, '/csa/contract/claim', '127.0.0.1', '内网IP', '{\"mobileNumber\":\"13588886666\",\"contractId\":102,\"gardenName\":\"梦幻乐园\",\"farmerName\":\"程开州\",\"gardenId\":5}', '{\"msg\":\"操作成功\",\"code\":200}', 0, NULL, '2022-04-07 22:04:09');
+INSERT INTO `sys_oper_log` VALUES (748, '会员签约', 2, 'com.jlt.csa.controller.FarmerContractController.claim()', 'PUT', 1, 'admin', NULL, '/csa/contract/claim', '127.0.0.1', '内网IP', '{\"mobileNumber\":\"13588886666\",\"contractId\":102,\"gardenName\":\"梦幻乐园\",\"farmerName\":\"程开州\",\"gardenId\":6}', '{\"msg\":\"操作成功\",\"code\":200}', 0, NULL, '2022-04-07 22:04:35');
+INSERT INTO `sys_oper_log` VALUES (749, '会员签约', 2, 'com.jlt.csa.controller.FarmerContractController.claim()', 'PUT', 1, 'admin', NULL, '/csa/contract/claim', '127.0.0.1', '内网IP', '{\"mobileNumber\":\"13588886666\",\"contractId\":102,\"gardenName\":\"梦幻乐园\",\"farmerName\":\"程开州\",\"gardenId\":6}', '{\"msg\":\"操作成功\",\"code\":200}', 0, NULL, '2022-04-07 22:12:29');
+INSERT INTO `sys_oper_log` VALUES (750, '会员签约', 2, 'com.jlt.csa.controller.FarmerContractController.claim()', 'PUT', 1, 'admin', NULL, '/csa/contract/claim', '127.0.0.1', '内网IP', '{\"mobileNumber\":\"13588886666\",\"contractId\":102,\"gardenName\":\"梦幻乐园\",\"farmerName\":\"程开州\",\"gardenId\":5}', '{\"msg\":\"操作成功\",\"code\":200}', 0, NULL, '2022-04-07 22:13:20');
+INSERT INTO `sys_oper_log` VALUES (751, '会员签约', 2, 'com.jlt.csa.controller.FarmerContractController.claim()', 'PUT', 1, 'admin', NULL, '/csa/contract/claim', '127.0.0.1', '内网IP', '{\"mobileNumber\":\"13588886666\",\"contractId\":102,\"gardenName\":\"梦幻乐园\",\"farmerName\":\"程开州\",\"gardenId\":5}', '{\"msg\":\"操作成功\",\"code\":200}', 0, NULL, '2022-04-07 22:14:57');
+INSERT INTO `sys_oper_log` VALUES (752, '会员签约', 2, 'com.jlt.csa.controller.FarmerContractController.claim()', 'PUT', 1, 'admin', NULL, '/csa/contract/claim', '127.0.0.1', '内网IP', '{\"mobileNumber\":\"13588886666\",\"contractId\":102,\"gardenName\":\"梦幻乐园\",\"farmerName\":\"程开州\",\"gardenId\":5}', '{\"msg\":\"操作成功\",\"code\":200}', 0, NULL, '2022-04-07 22:15:00');
+INSERT INTO `sys_oper_log` VALUES (753, '会员签约', 2, 'com.jlt.csa.controller.FarmerContractController.claim()', 'PUT', 1, 'admin', NULL, '/csa/contract/claim', '127.0.0.1', '内网IP', '{\"mobileNumber\":\"13588886666\",\"contractId\":102,\"gardenName\":\"梦幻乐园\",\"farmerName\":\"程开州\",\"gardenId\":5}', '{\"msg\":\"操作成功\",\"code\":200}', 0, NULL, '2022-04-07 22:16:35');
+INSERT INTO `sys_oper_log` VALUES (754, '会员签约', 2, 'com.jlt.csa.controller.FarmerContractController.claim()', 'PUT', 1, 'admin', NULL, '/csa/contract/claim', '127.0.0.1', '内网IP', '{\"mobileNumber\":\"13588886666\",\"contractId\":102,\"gardenName\":\"梦幻乐园\",\"farmerName\":\"程开州\",\"gardenId\":5}', '{\"msg\":\"操作成功\",\"code\":200}', 0, NULL, '2022-04-07 22:16:45');
+INSERT INTO `sys_oper_log` VALUES (755, '会员签约', 2, 'com.jlt.csa.controller.FarmerContractController.claim()', 'PUT', 1, 'admin', NULL, '/csa/contract/claim', '127.0.0.1', '内网IP', '{\"mobileNumber\":\"13588886666\",\"contractId\":102,\"gardenName\":\"梦幻乐园\",\"farmerName\":\"程开州\",\"gardenId\":5}', '{\"msg\":\"操作成功\",\"code\":200}', 0, NULL, '2022-04-07 22:16:48');
+INSERT INTO `sys_oper_log` VALUES (756, '会员签约', 2, 'com.jlt.csa.controller.FarmerContractController.claim()', 'PUT', 1, 'admin', NULL, '/csa/contract/claim', '127.0.0.1', '内网IP', '{\"mobileNumber\":\"13588886666\",\"contractId\":102,\"gardenName\":\"梦幻乐园\",\"farmerName\":\"程开州\",\"gardenId\":5}', '{\"msg\":\"操作成功\",\"code\":200}', 0, NULL, '2022-04-07 22:16:51');
+INSERT INTO `sys_oper_log` VALUES (757, '会员签约', 2, 'com.jlt.csa.controller.FarmerContractController.claim()', 'PUT', 1, 'admin', NULL, '/csa/contract/claim', '127.0.0.1', '内网IP', '{\"mobileNumber\":\"13588886666\",\"contractId\":102,\"gardenName\":\"梦幻乐园\",\"farmerName\":\"程开州\",\"gardenId\":5}', '{\"msg\":\"操作成功\",\"code\":200}', 0, NULL, '2022-04-07 22:17:13');
+INSERT INTO `sys_oper_log` VALUES (758, '会员签约', 2, 'com.jlt.csa.controller.FarmerContractController.claim()', 'PUT', 1, 'admin', NULL, '/csa/contract/claim', '127.0.0.1', '内网IP', '{\"mobileNumber\":\"13588886666\",\"contractId\":102,\"gardenName\":\"梦幻乐园\",\"farmerName\":\"程开州\",\"gardenId\":5}', '{\"msg\":\"操作成功\",\"code\":200}', 0, NULL, '2022-04-07 22:17:18');
+INSERT INTO `sys_oper_log` VALUES (759, '会员签约', 2, 'com.jlt.csa.controller.FarmerContractController.claim()', 'PUT', 1, 'admin', NULL, '/csa/contract/claim', '127.0.0.1', '内网IP', '{\"mobileNumber\":\"13588886666\",\"contractId\":102,\"gardenName\":\"梦幻乐园\",\"farmerName\":\"程开州\",\"gardenId\":5}', '{\"msg\":\"操作成功\",\"code\":200}', 0, NULL, '2022-04-07 22:17:26');
+INSERT INTO `sys_oper_log` VALUES (760, '会员签约', 2, 'com.jlt.csa.controller.FarmerContractController.claim()', 'PUT', 1, 'admin', NULL, '/csa/contract/claim', '127.0.0.1', '内网IP', '{\"mobileNumber\":\"13588886666\",\"contractId\":102,\"gardenName\":\"梦幻乐园\",\"farmerName\":\"程开州\",\"gardenId\":5}', '{\"msg\":\"操作成功\",\"code\":200}', 0, NULL, '2022-04-07 22:17:30');
+INSERT INTO `sys_oper_log` VALUES (761, '会员签约', 2, 'com.jlt.csa.controller.FarmerContractController.claim()', 'PUT', 1, 'admin', NULL, '/csa/contract/claim', '127.0.0.1', '内网IP', '{\"mobileNumber\":\"13588886666\",\"contractId\":102,\"gardenName\":\"梦幻乐园\",\"farmerName\":\"程开州\",\"gardenId\":5}', '{\"msg\":\"操作成功\",\"code\":200}', 0, NULL, '2022-04-07 22:17:36');
+INSERT INTO `sys_oper_log` VALUES (762, '会员签约', 2, 'com.jlt.csa.controller.FarmerContractController.claim()', 'PUT', 1, 'admin', NULL, '/csa/contract/claim', '127.0.0.1', '内网IP', '{\"mobileNumber\":\"13588886666\",\"contractId\":102,\"gardenName\":\"梦幻乐园\",\"farmerName\":\"程开州\",\"gardenId\":5}', '{\"msg\":\"操作成功\",\"code\":200}', 0, NULL, '2022-04-07 22:18:06');
+INSERT INTO `sys_oper_log` VALUES (763, '会员签约', 2, 'com.jlt.csa.controller.FarmerContractController.claim()', 'PUT', 1, 'admin', NULL, '/csa/contract/claim', '127.0.0.1', '内网IP', '{\"mobileNumber\":\"13588886666\",\"contractId\":102,\"gardenName\":\"梦幻乐园\",\"farmerName\":\"程开州\",\"gardenId\":5}', '{\"msg\":\"操作成功\",\"code\":200}', 0, NULL, '2022-04-07 22:18:22');
+INSERT INTO `sys_oper_log` VALUES (764, '会员签约', 2, 'com.jlt.csa.controller.FarmerContractController.claim()', 'PUT', 1, 'admin', NULL, '/csa/contract/claim', '127.0.0.1', '内网IP', '{\"mobileNumber\":\"13588886666\",\"contractId\":102,\"gardenName\":\"梦幻乐园\",\"farmerName\":\"程开州\",\"gardenId\":5}', '{\"msg\":\"操作成功\",\"code\":200}', 0, NULL, '2022-04-07 22:18:26');
+INSERT INTO `sys_oper_log` VALUES (765, '会员签约', 2, 'com.jlt.csa.controller.FarmerContractController.claim()', 'PUT', 1, 'admin', NULL, '/csa/contract/claim', '127.0.0.1', '内网IP', '{\"mobileNumber\":\"13588886666\",\"contractId\":102,\"gardenName\":\"梦幻乐园\",\"farmerName\":\"程开州\",\"gardenId\":5}', '{\"msg\":\"操作成功\",\"code\":200}', 0, NULL, '2022-04-07 22:18:29');
+INSERT INTO `sys_oper_log` VALUES (766, '会员签约', 2, 'com.jlt.csa.controller.FarmerContractController.claim()', 'PUT', 1, 'admin', NULL, '/csa/contract/claim', '127.0.0.1', '内网IP', '{\"mobileNumber\":\"13588886666\",\"contractId\":102,\"gardenName\":\"梦幻乐园\",\"farmerName\":\"程开州\",\"gardenId\":5}', '{\"msg\":\"操作成功\",\"code\":200}', 0, NULL, '2022-04-07 22:19:08');
+INSERT INTO `sys_oper_log` VALUES (767, '会员签约', 2, 'com.jlt.csa.controller.FarmerContractController.claim()', 'PUT', 1, 'admin', NULL, '/csa/contract/claim', '127.0.0.1', '内网IP', '{\"mobileNumber\":\"13588886666\",\"contractId\":102,\"gardenName\":\"梦幻乐园\",\"farmerName\":\"程开州\",\"gardenId\":5}', '{\"msg\":\"操作成功\",\"code\":200}', 0, NULL, '2022-04-07 22:19:43');
+INSERT INTO `sys_oper_log` VALUES (768, '会员签约', 2, 'com.jlt.csa.controller.FarmerContractController.claim()', 'PUT', 1, 'admin', NULL, '/csa/contract/claim', '127.0.0.1', '内网IP', '{\"mobileNumber\":\"13588886666\",\"contractId\":102,\"gardenName\":\"梦幻乐园\",\"farmerName\":\"程开州\",\"gardenId\":5}', '{\"msg\":\"操作成功\",\"code\":200}', 0, NULL, '2022-04-07 22:19:48');
+INSERT INTO `sys_oper_log` VALUES (769, '会员签约', 2, 'com.jlt.csa.controller.FarmerContractController.claim()', 'PUT', 1, 'admin', NULL, '/csa/contract/claim', '127.0.0.1', '内网IP', '{\"mobileNumber\":\"13588886666\",\"contractId\":102,\"gardenName\":\"梦幻乐园\",\"farmerName\":\"程开州\",\"gardenId\":5}', '{\"msg\":\"操作成功\",\"code\":200}', 0, NULL, '2022-04-07 22:20:10');
+INSERT INTO `sys_oper_log` VALUES (770, '会员签约', 2, 'com.jlt.csa.controller.FarmerContractController.claim()', 'PUT', 1, 'admin', NULL, '/csa/contract/claim', '127.0.0.1', '内网IP', '{\"mobileNumber\":\"13588886666\",\"contractId\":102,\"gardenName\":\"梦幻乐园\",\"farmerName\":\"程开州\",\"gardenId\":5}', '{\"msg\":\"操作成功\",\"code\":200}', 0, NULL, '2022-04-07 22:20:19');
+INSERT INTO `sys_oper_log` VALUES (771, '会员签约', 2, 'com.jlt.csa.controller.FarmerContractController.claim()', 'PUT', 1, 'admin', NULL, '/csa/contract/claim', '127.0.0.1', '内网IP', '{\"mobileNumber\":\"13588886666\",\"contractId\":102,\"gardenName\":\"梦幻乐园\",\"farmerName\":\"程开州\",\"gardenId\":5}', '{\"msg\":\"操作成功\",\"code\":200}', 0, NULL, '2022-04-07 22:20:19');
+INSERT INTO `sys_oper_log` VALUES (772, '会员签约', 2, 'com.jlt.csa.controller.FarmerContractController.claim()', 'PUT', 1, 'admin', NULL, '/csa/contract/claim', '127.0.0.1', '内网IP', '{\"mobileNumber\":\"13588886666\",\"contractId\":102,\"gardenName\":\"梦幻乐园\",\"farmerName\":\"程开州\",\"gardenId\":5}', '{\"msg\":\"操作成功\",\"code\":200}', 0, NULL, '2022-04-07 22:20:23');
+INSERT INTO `sys_oper_log` VALUES (773, '会员签约', 2, 'com.jlt.csa.controller.FarmerContractController.claim()', 'PUT', 1, 'admin', NULL, '/csa/contract/claim', '127.0.0.1', '内网IP', '{\"mobileNumber\":\"13588886666\",\"contractId\":102,\"gardenName\":\"梦幻乐园\",\"farmerName\":\"程开州\",\"gardenId\":5}', '{\"msg\":\"操作成功\",\"code\":200}', 0, NULL, '2022-04-07 22:20:26');
+INSERT INTO `sys_oper_log` VALUES (774, '会员签约', 2, 'com.jlt.csa.controller.FarmerContractController.claim()', 'PUT', 1, 'admin', NULL, '/csa/contract/claim', '127.0.0.1', '内网IP', '{\"mobileNumber\":\"13672226668\",\"contractId\":103,\"gardenName\":\"绝情谷\",\"farmerName\":\"范诚诚\",\"gardenId\":10}', '{\"msg\":\"操作成功\",\"code\":200}', 0, NULL, '2022-04-07 22:21:17');
+INSERT INTO `sys_oper_log` VALUES (775, '会员签约', 2, 'com.jlt.csa.controller.FarmerContractController.claim()', 'PUT', 1, 'admin', NULL, '/csa/contract/claim', '127.0.0.1', '内网IP', '{\"mobileNumber\":\"13588886666\",\"contractId\":102,\"gardenName\":\"梦幻乐园\",\"farmerName\":\"程开州\",\"gardenId\":10}', NULL, 1, '该菜地已被他人选定，无法认领！', '2022-04-07 22:21:51');
+INSERT INTO `sys_oper_log` VALUES (776, '会员签约', 2, 'com.jlt.csa.controller.FarmerContractController.claim()', 'PUT', 1, 'admin', NULL, '/csa/contract/claim', '127.0.0.1', '内网IP', '{\"mobileNumber\":\"13588886666\",\"contractId\":102,\"gardenName\":\"梦幻乐园\",\"farmerName\":\"程开州\",\"gardenId\":5}', '{\"msg\":\"操作成功\",\"code\":200}', 0, NULL, '2022-04-07 22:47:51');
+INSERT INTO `sys_oper_log` VALUES (777, '会员签约', 2, 'com.jlt.csa.controller.FarmerContractController.claim()', 'PUT', 1, 'admin', NULL, '/csa/contract/claim', '127.0.0.1', '内网IP', '{\"mobileNumber\":\"13588886666\",\"contractId\":102,\"gardenName\":\"梦幻乐园\",\"farmerName\":\"程开州\",\"gardenId\":8}', '{\"msg\":\"操作成功\",\"code\":200}', 0, NULL, '2022-04-07 22:48:14');
 
 -- ----------------------------
 -- Table structure for sys_post
@@ -2561,7 +2606,7 @@ CREATE TABLE `sys_user`  (
 -- ----------------------------
 -- Records of sys_user
 -- ----------------------------
-INSERT INTO `sys_user` VALUES (1, 103, 'admin', '超级管理员', '00', '', '', '1', '', '$2a$10$7JB720yubVSZvUI0rEqK/.VqGOZTH.ulu33dHOiBE8ByOhJIrdAu2', '0', '0', '127.0.0.1', '2022-04-06 23:38:25', 'admin', '2022-03-20 21:45:25', '', '2022-04-06 23:38:25', '管理员');
+INSERT INTO `sys_user` VALUES (1, 103, 'admin', '超级管理员', '00', '', '', '1', '', '$2a$10$7JB720yubVSZvUI0rEqK/.VqGOZTH.ulu33dHOiBE8ByOhJIrdAu2', '0', '0', '127.0.0.1', '2022-04-07 21:35:54', 'admin', '2022-03-20 21:45:25', '', '2022-04-07 21:35:54', '管理员');
 INSERT INTO `sys_user` VALUES (2, 101, 'boss', '农场管理员', '00', '', '', '2', '', '$2a$10$7JB720yubVSZvUI0rEqK/.VqGOZTH.ulu33dHOiBE8ByOhJIrdAu2', '0', '0', '127.0.0.1', '2022-03-20 21:45:25', 'admin', '2022-03-20 21:45:25', 'admin', '2022-03-29 17:51:59', '');
 INSERT INTO `sys_user` VALUES (100, 104, '101', '场长', '00', '88@66.com', '18888888888', '0', '', '$2a$10$7JB720yubVSZvUI0rEqK/.VqGOZTH.ulu33dHOiBE8ByOhJIrdAu2', '0', '0', '127.0.0.1', '2022-03-30 22:05:56', 'admin', '2022-03-29 18:18:00', 'admin', '2022-03-30 22:05:56', NULL);
 
