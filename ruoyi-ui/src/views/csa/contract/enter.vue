@@ -63,9 +63,18 @@
       <el-table-column label="菜地编号" align="center" prop="garden.Name">
         <template slot-scope="scope">
           <el-tag
-            :key="scope.row.contractId"
+            :key="'c' + scope.row.contractId"
             :type="scope.row.status == '1' ? 'success' : 'warning'" effect="plain">
-            {{ scope.row.garden ? scope.row.garden.Name : '未认领' }}
+            {{ scope.row.garden ? scope.row.garden.code : '未认领' }}
+          </el-tag>
+        </template>
+      </el-table-column>
+      <el-table-column label="菜地名称" align="center" prop="garden.Name">
+        <template slot-scope="scope">
+          <el-tag
+            :key="'n' + scope.row.contractId"
+            :type="scope.row.status == '1' ? 'success' : 'warning'" effect="plain">
+            {{ scope.row.garden ? (scope.row.garden.name != '' ? scope.row.garden.name : '未命名' ) : '未认领' }}
           </el-tag>
         </template>
       </el-table-column>

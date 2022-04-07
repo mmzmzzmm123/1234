@@ -38,7 +38,7 @@ public class FarmerContract extends BaseEntity
     private Long gardenId;
 
     /** 菜地 */
-    private Farmer garden;
+    private Garden garden;
 
     /** 签约人 */
     @Excel(name = "签约人")
@@ -147,11 +147,11 @@ public class FarmerContract extends BaseEntity
         this.gardenId = gardenId;
     }
 
-    public Farmer getGarden() {
+    public Garden getGarden() {
         return garden;
     }
 
-    public void setGarden(Farmer garden) {
+    public void setGarden(Garden garden) {
         this.garden = garden;
     }
 
