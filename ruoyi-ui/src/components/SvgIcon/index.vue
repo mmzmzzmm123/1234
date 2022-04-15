@@ -1,5 +1,6 @@
 <template>
   <div v-if="isExternal" :style="styleExternalIcon" class="svg-external-icon svg-icon" v-on="$listeners" />
+  <i v-else-if="isFont" :class="fontClass" ></i>
   <svg v-else :class="svgClass" aria-hidden="true" v-on="$listeners">
     <use :xlink:href="iconName" />
   </svg>
@@ -24,8 +25,24 @@ export default {
     isExternal() {
       return isExternal(this.iconClass)
     },
+    isFont() {
+      let flag = false;
+      // 判断图标名前缀是否是下面情况
+      if (this.iconClass.startsWith("el-icon-") || this.iconClass.startsWith("fa fa-")) {
+        flag = true;
+      }
+
+      return flag;
+    },
     iconName() {
       return `#icon-${this.iconClass}`
+    },
+    fontClass() {
+      if (this.className) {
+        return 'svg-icon ' + this.className + ' ' + this.iconClass
+      } else {
+        return 'svg-icon' + ' ' + this.iconClass
+      }
     },
     svgClass() {
       if (this.className) {

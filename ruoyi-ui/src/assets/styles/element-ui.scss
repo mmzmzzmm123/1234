@@ -53,6 +53,22 @@
   position: relative;
   margin: 0 auto;
 }
+/** 全局修改 - 不能响应式变化窗口 */
+//.el-dialog {
+//  position: absolute;
+//  top: 50%;
+//  left: 50%;
+//  margin: 0 !important;
+//  transform: translate(-50%, -50%);
+//  max-height: calc(100% - 30px);
+//  max-width: calc(100% - 30px);
+//  display: flex;
+//  flex-direction: column;
+//  > .el-dialog__body {
+//    overflow: auto;
+//    color: #666666;
+//  }
+//}
 
 // refine element ui upload
 .upload-container {
