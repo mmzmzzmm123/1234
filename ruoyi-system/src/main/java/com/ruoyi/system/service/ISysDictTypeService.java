@@ -62,10 +62,6 @@ public interface ISysDictTypeService
      */
     public void loadingDictCache();
 
-    /**
-     * 清空字典缓存数据
-     */
-    public void clearDictCache();
 
     /**
      * 重置字典缓存数据

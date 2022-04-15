@@ -146,14 +146,6 @@ public class SysDictTypeServiceImpl implements ISysDictTypeService
         }
     }
 
-    /**
-     * 清空字典缓存数据
-     */
-    @Override
-    public void clearDictCache()
-    {
-        DictUtils.clearDictCache();
-    }
 
     /**
      * 重置字典缓存数据
@@ -161,7 +153,6 @@ public class SysDictTypeServiceImpl implements ISysDictTypeService
     @Override
     public void resetDictCache()
     {
-        clearDictCache();
         loadingDictCache();
     }
 
