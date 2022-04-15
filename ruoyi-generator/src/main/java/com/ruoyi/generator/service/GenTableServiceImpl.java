@@ -304,9 +304,10 @@ public class GenTableServiceImpl implements IGenTableService
                 column.setColumnId(prevColumn.getColumnId());
                 if (column.isList())
                 {
-                    // 如果是列表，继续保留查询方式/字典类型选项
+                    // 如果是列表，继续保留字典类型、查询方式、显示类型选项
                     column.setDictType(prevColumn.getDictType());
                     column.setQueryType(prevColumn.getQueryType());
+                    column.setHtmlType(prevColumn.getHtmlType());
                 }
                 if (StringUtils.isNotEmpty(prevColumn.getIsRequired()) && !column.isPk()
                         && (column.isInsert() || column.isEdit())
