@@ -1,6 +1,8 @@
 package com.ruoyi.generator.util;
 
 import java.util.Arrays;
+
+import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.RegExUtils;
 import com.ruoyi.common.constant.GenConstants;
 import com.ruoyi.common.utils.StringUtils;
@@ -60,14 +62,13 @@ public class GenUtils
         {
             column.setHtmlType(GenConstants.HTML_INPUT);
 
+            int index = ArrayUtils.indexOf(GenConstants.COLUMNTYPE_NUMBER, dataType);
             // 如果是浮点型 统一用BigDecimal
-            String[] str = StringUtils.split(StringUtils.substringBetween(column.getColumnType(), "(", ")"), ",");
-            if (str != null && str.length == 2 && Integer.parseInt(str[1]) > 0)
-            {
+            if (index > 6) {
                 column.setJavaType(GenConstants.TYPE_BIGDECIMAL);
             }
             // 如果是整形
-            else if (str != null && str.length == 1 && Integer.parseInt(str[0]) <= 10)
+            else if (index > 0)
             {
                 column.setJavaType(GenConstants.TYPE_INTEGER);
             }
