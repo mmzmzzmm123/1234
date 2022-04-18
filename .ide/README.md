@@ -214,4 +214,4 @@ smartide remove <ID> -fypi
 
   > 如果大家喜欢我们的产品和视频，一定要记得 “三连” 
 
-谢谢你对SmartIDE的支持：Be a Smart Developer，开发从未如此简单。
+谢谢你对SmartIDE的支持：Be a Smart Developer，开发从未如此简单。 
