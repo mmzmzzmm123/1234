@@ -35,13 +35,15 @@ EXECUTABLE=ruoyi.sh
 case "$1" in
 
 	start)
-		exec "$PRGDIR"/"$EXECUTABLE" start "$@"
 		echo "Starting Ruoyi ... "
+		exec "$PRGDIR"/"$EXECUTABLE" start "$@"
+		
 		
 	;;
 	stop)
+		echo "Stoping Ruoyi ... "
 		exec "$PRGDIR"/"$EXECUTABLE" stop "$@"
-		echo "Stoping Ruoyi"
+		
 	;;
 	
 	*)

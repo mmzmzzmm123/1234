@@ -76,9 +76,10 @@ fi
 
 # 设置 -pidfile
 test ".$RUOYI_PID" = . && RUOYI_PID="$RUOYI_BASE/logs/ruoyi.pid"
+LOGBACK="-Dlogback.configurationFile=file:$RUOYI_BASE/ruoyi-admin/src/main/resources/logback.xml"
 
-RUOYI_CMD="nohup $JAVA_BIN -jar $RUOYI_BASE/ruoyi-admin/target/ruoyi-admin.jar $JAVA_OPTS >/dev/null 2>&1 &"
-echo $RUOYI_PID
+RUOYI_CMD="nohup $JAVA_BIN -jar $RUOYI_BASE/ruoyi-admin/target/ruoyi-admin.jar $LOGBACK $JAVA_OPTS >/dev/null 2>&1 &"
+#echo $RUOYI_HOME $RUOYI_BASE $LOGBACK
 #echo $PRG $RUOYI_BASE $JAVA_OPTS $JAVA_BIN $RUOYI_PID $RUOYI_CMD
 
 touch "$RUOYI_PID"
@@ -89,9 +90,16 @@ touch "$RUOYI_PID"
 
 
 if [ "$1" = "start" ] ; then
-	eval exec  "$RUOYI_CMD" 
-	if [ ! -z "$RUOYI_PID" ]; then
+	PID=`cat $RUOYI_PID`
+	ps -p $PID >/dev/null 2>&1
+	if [ $? -eq 0 ] ; then
+		echo "RuoYi appears to still be running with PID $PID. Start aborted." 
+		echo "If the following process is not a RuoYi process, remove the PID file and try again:"
+		exit 1
+	elif [ ! -z "$RUOYI_PID" ]; then
+		eval exec  "$RUOYI_CMD"
     	echo $! > "$RUOYI_PID"
+    	#exit 1
 	fi
 
 elif [ "$1" = "stop" ] ; then
