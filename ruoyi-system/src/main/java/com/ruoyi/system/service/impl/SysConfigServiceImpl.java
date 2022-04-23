@@ -175,15 +175,7 @@ public class SysConfigServiceImpl implements ISysConfigService
         }
     }
 
-    /**
-     * 清空参数缓存数据
-     */
-    @Override
-    public void clearConfigCache()
-    {
-        Collection<String> keys = redisCache.keys(Constants.SYS_CONFIG_KEY + "*");
-        redisCache.deleteObject(keys);
-    }
+
 
     /**
      * 重置参数缓存数据
@@ -191,7 +183,6 @@ public class SysConfigServiceImpl implements ISysConfigService
     @Override
     public void resetConfigCache()
     {
-        clearConfigCache();
         loadingConfigCache();
     }
 
