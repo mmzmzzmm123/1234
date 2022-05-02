@@ -52,6 +52,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		from sys_dept d
             left join sys_role_dept rd on d.dept_id = rd.dept_id
         where rd.role_id = #{roleId}
+			and d.del_flag = '0'
             <if test="deptCheckStrictly">
               and d.dept_id not in (select d.parent_id from sys_dept d inner join sys_role_dept rd on d.dept_id = rd.dept_id and rd.role_id = #{roleId})
             </if>
@@ -60,7 +61,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     
     <select id="selectDeptById" parameterType="Long" resultMap="SysDeptResult">
 		<include refid="selectDeptVo"/>
-		where dept_id = #{deptId}
+		where d.dept_id = #{deptId} and d.del_flag = '0'
 	</select>
     
     <select id="checkDeptExistUser" parameterType="Long" resultType="int">
@@ -73,7 +74,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	</select>
 	
 	<select id="selectChildrenDeptById" parameterType="Long" resultMap="SysDeptResult">
-		select * from sys_dept where find_in_set(#{deptId}, ancestors)
+		select * from sys_dept where find_in_set(#{deptId}, ancestors)  and del_flag = '0'
 	</select>
 	
 	<select id="selectNormalChildrenDeptById" parameterType="Long" resultType="int">
@@ -82,10 +83,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	
 	<select id="checkDeptNameUnique" resultMap="SysDeptResult">
 	    <include refid="selectDeptVo"/>
-		where dept_name=#{deptName} and parent_id = #{parentId} limit 1
+		where d.dept_name=#{deptName} and d.parent_id = #{parentId}  and d.del_flag = '0' limit 1
 	</select>
     
-    <insert id="insertDept" parameterType="SysDept">
+    <insert id="insertDept" parameterType="SysDept" useGeneratedKeys="true" keyProperty="deptId">
  		insert into sys_dept(
  			<if test="deptId != null and deptId != 0">dept_id,</if>
  			<if test="parentId != null and parentId != 0">parent_id,</if>
@@ -127,7 +128,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
  			<if test="updateBy != null and updateBy != ''">update_by = #{updateBy},</if>
  			update_time = sysdate()
  		</set>
- 		where dept_id = #{deptId}
+ 		where dept_id = #{deptId}  and del_flag = '0'
 	</update>
 	
 	<update id="updateDeptChildren" parameterType="java.util.List">
@@ -141,6 +142,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	        separator="," open="(" close=")">
 	        #{item.deptId}
 	    </foreach>
+		and del_flag = '0'
 	</update>
 	 
 	<update id="updateDeptStatusNormal" parameterType="Long">
@@ -148,10 +150,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
  	    <foreach collection="array" item="deptId" open="(" separator="," close=")">
         	#{deptId}
         </foreach>
+		and del_flag = '0'
 	</update>
 	
 	<delete id="deleteDeptById" parameterType="Long">
-		update sys_dept set del_flag = '2' where dept_id = #{deptId}
+		update sys_dept set del_flag = '2' where dept_id = #{deptId}  and del_flag = '0'
 	</delete>
 
 </mapper> 
