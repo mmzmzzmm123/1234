@@ -23,12 +23,19 @@ export default {
         if (Ps.length === 0 || Rs.length === 0){
             throw new Error(`请设置操作权限标签值`);
         }
+        
+        if (roles.some((role) => (super_admin === role))){
+            return;
+        }
+        if (permissions.some((permission) => (all_permission === permission))){
+            return;
+        }
 
         var expression = value;
 
         for (let i = 0; i < Rs.length; i++) {
             const hasRole = roles.some(role => {
-                return super_admin === role || Rs[i] === `R(${role})`;
+                return Rs[i] === `R(${role})`;
             })
 
             expression = hasRole ? expression.replace(Rs[i], 'true') : expression.replace(Rs[i], 'false');
@@ -36,7 +43,7 @@ export default {
 
         for (let i = 0; i < Ps.length; i++) {
             const hasPermi = permissions.some(permission => {
-                return all_permission === permission || Ps[i] === `P(${permission})`;
+                return Ps[i] === `P(${permission})`;
             })
 
             expression = hasPermi ? expression.replace(Ps[i], 'true') : expression.replace(Ps[i], 'false');
