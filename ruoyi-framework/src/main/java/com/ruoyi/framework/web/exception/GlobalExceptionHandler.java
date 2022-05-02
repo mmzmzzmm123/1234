@@ -1,6 +1,7 @@
 package com.ruoyi.framework.web.exception;
 
 import javax.servlet.http.HttpServletRequest;
+import com.ruoyi.common.utils.ip.IpUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.access.AccessDeniedException;
@@ -9,11 +10,13 @@ import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import com.ruoyi.common.constant.HttpStatus;
 import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.exception.DemoModeException;
 import com.ruoyi.common.exception.ServiceException;
 import com.ruoyi.common.utils.StringUtils;
+import java.util.stream.Collectors;
 
 /**
  * 全局异常处理器
@@ -66,7 +69,7 @@ public class GlobalExceptionHandler
     public AjaxResult handleRuntimeException(RuntimeException e, HttpServletRequest request)
     {
         String requestURI = request.getRequestURI();
-        log.error("请求地址'{}',发生未知异常.", requestURI, e);
+        log.error("{} {} {}", IpUtils.getIpAddr(request), request.getMethod(), requestURI, e);
         return AjaxResult.error(e.getMessage());
     }
 
@@ -77,7 +80,19 @@ public class GlobalExceptionHandler
     public AjaxResult handleException(Exception e, HttpServletRequest request)
     {
         String requestURI = request.getRequestURI();
-        log.error("请求地址'{}',发生系统异常.", requestURI, e);
+        if(e instanceof MethodArgumentTypeMismatchException)
+        {
+            MethodArgumentTypeMismatchException e1 = (MethodArgumentTypeMismatchException) e;
+            String message = e.getMessage()
+                    +"\n Method: " +e1.getParameter().getMethod().toString()
+                    +"\n Parameter:["+ e1.getName() +"=" + e1.getValue() +"] ";
+            log.error("请求地址'{}',发生系统异常:{}.", requestURI, message);
+            return AjaxResult.error(message);
+        }
+        else
+        {
+            log.error("请求地址'{}',发生系统异常.", requestURI, e);
+        }
         return AjaxResult.error(e.getMessage());
     }
 
@@ -99,7 +114,7 @@ public class GlobalExceptionHandler
     public Object handleMethodArgumentNotValidException(MethodArgumentNotValidException e)
     {
         log.error(e.getMessage(), e);
-        String message = e.getBindingResult().getFieldError().getDefaultMessage();
+        String message = e.getBindingResult().getFieldErrors().stream().map(o-> (o.getField()+ " "+o.getDefaultMessage())).collect(Collectors.joining("; "));
         return AjaxResult.error(message);
     }
 
