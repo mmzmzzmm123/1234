@@ -2,20 +2,23 @@ package com.ruoyi.common.core.domain.entity;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import com.ruoyi.common.core.domain.TreeEntity;
+import com.ruoyi.common.core.domain.TreeSelect;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
-import com.ruoyi.common.core.domain.BaseEntity;
+
 
 /**
  * 部门表 sys_dept
  * 
  * @author ruoyi
  */
-public class SysDept extends BaseEntity
+public class SysDept extends TreeEntity<SysDept>
 {
     private static final long serialVersionUID = 1L;
 
@@ -179,6 +182,16 @@ public class SysDept extends BaseEntity
     public void setChildren(List<SysDept> children)
     {
         this.children = children;
+    }
+
+    @Override
+    public TreeSelect toTreeSelect(SysDept entity)
+    {
+        TreeSelect treeSelect = new TreeSelect();
+        treeSelect.setId(entity.getDeptId());
+        treeSelect.setLabel(entity.getDeptName());
+        treeSelect.setChildren(entity.getChildren().stream().map(o->o.toTreeSelect(o)).collect(Collectors.toList()));
+        return treeSelect;
     }
 
     @Override

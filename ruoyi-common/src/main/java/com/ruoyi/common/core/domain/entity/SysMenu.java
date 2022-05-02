@@ -2,9 +2,12 @@ package com.ruoyi.common.core.domain.entity;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import com.ruoyi.common.core.domain.TreeEntity;
+import com.ruoyi.common.core.domain.TreeSelect;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import com.ruoyi.common.core.domain.BaseEntity;
@@ -14,7 +17,7 @@ import com.ruoyi.common.core.domain.BaseEntity;
  * 
  * @author ruoyi
  */
-public class SysMenu extends BaseEntity
+public class SysMenu extends TreeEntity<SysMenu>
 {
     private static final long serialVersionUID = 1L;
 
@@ -232,7 +235,16 @@ public class SysMenu extends BaseEntity
     {
         this.children = children;
     }
-    
+
+    @Override
+    public TreeSelect toTreeSelect(SysMenu entity) {
+        TreeSelect treeSelect = new TreeSelect();
+        treeSelect.setId(entity.getMenuId());
+        treeSelect.setLabel(entity.getMenuName());
+        treeSelect.setChildren(entity.getChildren().stream().map(o->o.toTreeSelect(o)).collect(Collectors.toList()));
+        return treeSelect;
+    }
+
     @Override
     public String toString() {
         return new ToStringBuilder(this,ToStringStyle.MULTI_LINE_STYLE)
