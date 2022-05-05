@@ -123,7 +123,7 @@
 #else
 #set($comment=$column.columnComment)
 #end
-#if($column.pk)
+#if($column.pkColumn)
       <el-table-column label="${comment}" align="center" prop="${javaField}" />
 #elseif($column.list && $column.htmlType == "datetime")
       <el-table-column label="${comment}" align="center" prop="${javaField}" width="180">
@@ -184,7 +184,7 @@
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
 #foreach($column in $columns)
 #set($field=$column.javaField)
-#if($column.insert && !$column.pk)
+#if($column.insert && !$column.pkColumn)
 #if(($column.usableColumn) || (!$column.superColumn))
 #set($parentheseIndex=$column.columnComment.indexOf("（"))
 #if($parentheseIndex != -1)
@@ -299,7 +299,7 @@
 #else
 #set($comment=$column.columnComment)
 #end
-#if($column.pk || $javaField == ${subTableFkclassName})
+#if($column.pkColumn || $javaField == ${subTableFkclassName})
 #elseif($column.list && $column.htmlType == "input")
           <el-table-column label="$comment" prop="${javaField}" width="150">
             <template slot-scope="scope">
@@ -563,7 +563,7 @@ export default {
     handleAdd${subClassName}() {
       let obj = {};
 #foreach($column in $subTable.columns)
-#if($column.pk || $column.javaField == ${subTableFkclassName})
+#if($column.pkColumn || $column.javaField == ${subTableFkclassName})
 #elseif($column.list && "" != $javaField)
       obj.$column.javaField = "";
 #end
