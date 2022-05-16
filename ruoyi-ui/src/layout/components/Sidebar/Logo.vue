@@ -35,7 +35,7 @@ export default {
   },
   data() {
     return {
-      title: '若依管理系统',
+      title: '宇宇的小木屋',
       logo: logoImg
     }
   }
