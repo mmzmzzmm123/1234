@@ -24,6 +24,7 @@ public class request_fundamental_dateRange extends mybatisNoSpringUtils {
         String paramJson = getParam_fundamental.getSingleIndexParam_dateRangeJson(startDate);
         String resultJson = netRequest.jsonNetPost(fundamentalURL, paramJson);
         fundamentalResult_RootVO resultObj = (fundamentalResult_RootVO) getResult_fundamental.getResultObj(resultJson);
+        System.out.println(resultObj);
         return resultObj;
     }
 
