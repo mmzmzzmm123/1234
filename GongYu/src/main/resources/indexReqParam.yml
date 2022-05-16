@@ -1,0 +1,17 @@
+allIndexURL: https://open.lixinger.com/api/cn/index
+fundamentalURL: https://open.lixinger.com/api/cn/index/fundamental
+singleIndustryURL: https://open.lixinger.com/api/cn/company
+token: af111e8f-e2ae-47ee-a676-82d7caeeaafd
+startdate: 2022-01-03
+enddate: 2022-05
+stockCodes:
+  - "1000002"
+metricsList:
+  - pe_ttm.y20.median
+  - pe_ttm.y10.median
+  - pb.y10.median
+  - pb.y20.median
+  - ps_ttm.y10.median
+  - ps_ttm.y20.median
+  - cp
+fsType_bank: bank

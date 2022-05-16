@@ -1,0 +1,9 @@
+#person.yml
+--- !!cn.wolfcode.yaml.demo.domain.Person
+given  : Chris
+family : Dumars
+address:
+  lines: 458 Walkman Dr.Suite
+  city    : Royal Oak
+  state   : MI
+  postal  : 48046
