@@ -1,4 +1,4 @@
-package GYProject.mybatisTest;
+package GYProject;
 
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
