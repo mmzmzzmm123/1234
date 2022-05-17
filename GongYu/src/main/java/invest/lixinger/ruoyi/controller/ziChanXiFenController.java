@@ -27,8 +27,10 @@ public class ziChanXiFenController extends mybatisNoSpringUtils {
     public void DB2excel() {
         ziChanXiFenMapper mapper = session.getMapper(ziChanXiFenMapper.class);
         List<ziChanXiFenVO> list = mapper.selectList(new QueryWrapper<>());
-        List<List<Cell>> getZiChanXiFen = new ArrayList<>();
-        for (ziChanXiFenVO vo : list) {
+        List<List<Cell>> getZiChanXiFenExcelList = new ArrayList<>();
+
+        for (int i = 0; i < list.size(); i++) {
+            getZiChanXiFenExcelList.add(new ArrayList<>());
             String name = null;
             double huobi = 0;
             double zhaiquan = 0;
@@ -36,13 +38,30 @@ public class ziChanXiFenController extends mybatisNoSpringUtils {
             double guonei_zichan = 0;
             double lundong_zichan = 0;
             double haiwai_zichan = 0;
-            name = vo.getName();
-            huobi = vo.getHuobi();
-            yitouru = vo.getYitouru();
-            guonei_zichan = vo.getGuoneiZichan();
-            lundong_zichan = vo.getLundongZichan();
-            haiwai_zichan = vo.getHaiwaiZichan();
+            double zongji = 0;
+            name = list.get(i).getName();
+            huobi = list.get(i).getHuobi();
+            zhaiquan = list.get(i).getZhaiquan();
+            yitouru = list.get(i).getYitouru();
+            guonei_zichan = list.get(i).getGuoneiZichan();
+            lundong_zichan = list.get(i).getLundongZichan();
+            haiwai_zichan = list.get(i).getHaiwaiZichan();
+            zongji = list.get(i).getZongji();
 
+            getZiChanXiFenExcelList.get(i).get(0).setCellValue(name);
+            getZiChanXiFenExcelList.get(i).get(1).setCellValue(huobi);
+            getZiChanXiFenExcelList.get(i).get(2).setCellValue(zhaiquan);
+            getZiChanXiFenExcelList.get(i).get(3).setCellValue(yitouru);
+            getZiChanXiFenExcelList.get(i).get(4).setCellValue(guonei_zichan);
+            getZiChanXiFenExcelList.get(i).get(5).setCellValue(lundong_zichan);
+            getZiChanXiFenExcelList.get(i).get(6).setCellValue(haiwai_zichan);
+            getZiChanXiFenExcelList.get(i).get(7).setCellValue(zongji);
+
+        }
+        for (List<Cell> temp : getZiChanXiFenExcelList) {
+            for (Cell cell : temp) {
+                System.out.println(cell.getStringCellValue());
+            }
         }
     }
 
