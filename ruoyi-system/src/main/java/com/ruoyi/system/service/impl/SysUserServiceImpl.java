@@ -559,4 +559,26 @@ public class SysUserServiceImpl implements ISysUserService
         }
         return successMsg.toString();
     }
+
+    /**
+     * 修改尝试登录次数
+     * @param user 用户信息
+     * @return 结果
+     */
+    @Override
+    public int updateUserAttemptCount(SysUser user)
+    {
+        return userMapper.updateUserAttemptCount(user);
+    }
+
+    /**
+     * 锁定账户
+     * @param user 用户信息
+     * @return 结果
+     */
+    @Override
+    public int setAccountLocked(SysUser user)
+    {
+        return userMapper.setAccountLocked(user);
+    }
 }
