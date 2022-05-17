@@ -95,7 +95,7 @@ public class ExcelUtils_2 {
         if (workbook != null) {
             // 2. 创建sheet
             Sheet sheet = workbook.createSheet("sheet1");
-            // 3. 创建row: 添加属性行
+            // 3. 创建row: 添加表头
             Row row0 = sheet.createRow(0);
             for (int i = 0; i < attributes.size(); i++) {
                 Cell cell = row0.createCell(i);
