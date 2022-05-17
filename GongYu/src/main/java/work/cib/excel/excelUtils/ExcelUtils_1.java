@@ -35,20 +35,12 @@ public class ExcelUtils_1 extends ExcelUtils_1_variable {
         judgeReadPathExist(excelPath);
         return readExcel(excelPath);
     }
-    public List<List<Cell>> readExcel(String excelPath) throws IOException {
-        File file = new File(excelPath);
-        judgeReadPathExist(excelPath);
 
+    public List<List<Cell>> readExcel(String excelPath) throws IOException {
         Workbook wb = null;
         List<List<Cell>> rowList = new ArrayList<>();
-        FileInputStream fis = new FileInputStream(file);
         String ext = excelPath.substring(excelPath.lastIndexOf(".") + 1);
-        if ("xls".equals(ext)) {
-            wb = new HSSFWorkbook(fis);
-        } else if ("xlsx".equals(ext)) {
-            wb = new XSSFWorkbook(fis);
-        }
-
+        wb = ExcelUtils_1_utils.getWorkbook(new File(excelPath), ext);
         rowList = readExcel(wb);
         return rowList;
     }
@@ -114,27 +106,7 @@ public class ExcelUtils_1 extends ExcelUtils_1_variable {
         String ext = savePath.substring(savePath.lastIndexOf(".") + 1);
         Workbook toWb = null;
         // 判断文件是否存在
-        File file = new File(savePath);
-        if (file.exists()) {
-
-                if ("xls".equals(ext)) {
-                    toWb = new HSSFWorkbook(new FileInputStream(file));
-                } else if ("xlsx".equals(ext)) {
-                    toWb = new XSSFWorkbook(new FileInputStream(file));
-                }
-
-        } else {
-            if ("xls".equals(ext)) {
-                toWb = new HSSFWorkbook();
-                toWb.createSheet("Sheet1");
-//                toWb = new HSSFWorkbook(new FileInputStream(toXlsPath));
-            } else if ("xlsx".equals(ext)) {
-                toWb = new XSSFWorkbook();
-                toWb.createSheet("Sheet1");
-//                toWb = new XSSFWorkbook(new FileInputStream(toXlsPath));
-            }
-        }
-
+        toWb = ExcelUtils_1_utils.getWorkbook(new File(savePath), ext);
         // 将rowlist的内容写到Excel中
         writeExcel(toWb, fromRowList, savePath);
     }

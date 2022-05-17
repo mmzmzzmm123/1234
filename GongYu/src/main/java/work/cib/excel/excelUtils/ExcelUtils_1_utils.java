@@ -68,6 +68,7 @@ public class ExcelUtils_1_utils {
                 wb = new XSSFWorkbook(fis);
             }
         } else {
+            System.out.println("路径不存在，新创建了一个表格，表名为sheet1");
             if ("xls".equals(ext)) {
                 wb = new HSSFWorkbook();
                 wb.createSheet("Sheet1");
@@ -79,8 +80,6 @@ public class ExcelUtils_1_utils {
 
         return wb;
     }
-
-
 
     /**
      * 读取单元格的值
