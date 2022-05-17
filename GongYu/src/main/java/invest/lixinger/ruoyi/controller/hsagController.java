@@ -19,7 +19,7 @@ public class hsagController extends mybatisNoSpringUtils {
 
     @Test
     public void hsag() throws IOException {
-        Date startDate=nearestDateInDB();
+        Date startDate = nearestDateInDB();
         fundamentalResult_RootVO resultVO = getRequest_fundamental_dateRange(startDate);
         calculateFundamental(resultVO);
         System.out.println(startDate);
@@ -30,7 +30,7 @@ public class hsagController extends mybatisNoSpringUtils {
     private void calculateFundamental(fundamentalResult_RootVO resultObj) {
         hsagMapper hsagmapper = session.getMapper(hsagMapper.class);
         for (int i = 0; i < resultObj.getData().size(); i++) {
-            hsagVO vo=new hsagVO();
+            hsagVO vo = new hsagVO();
             Date currentDate = resultObj.getData().get(i).getDate();
             double spdw = resultObj.getData().get(i).getCp();
 
@@ -43,11 +43,11 @@ public class hsagController extends mybatisNoSpringUtils {
             double ps_20_cvpos = resultObj.getData().get(i).getPs_ttm().getY20().getMedian().getCvpos();
             double result = (pe_10_cvpos + pb_10_cvpos + ps_10_cvpos + pe_20_cvpos + pb_20_cvpos + ps_20_cvpos) / 6;
             // pe、pb、ps的具体数值
-            double pe_cv = Double.parseDouble(String.format("%.2f",resultObj.getData().get(i).getPe_ttm().getY10().getMedian().getCv()));
-            double pb_cv = Double.parseDouble(String.format("%.2f",resultObj.getData().get(i).getPb().getY10().getMedian().getCv()));
-            double ps_cv = Double.parseDouble(String.format("%.2f",resultObj.getData().get(i).getPs_ttm().getY10().getMedian().getCv()));
+            double pe_cv = Double.parseDouble(String.format("%.2f", resultObj.getData().get(i).getPe_ttm().getY10().getMedian().getCv()));
+            double pb_cv = Double.parseDouble(String.format("%.2f", resultObj.getData().get(i).getPb().getY10().getMedian().getCv()));
+            double ps_cv = Double.parseDouble(String.format("%.2f", resultObj.getData().get(i).getPs_ttm().getY10().getMedian().getCv()));
 
-            System.out.println(currentDate + "，的综合百分位为：" + new DecimalFormat("0.00%").format(result)+",其中："+pe_cv + "-" + pb_cv + "-" + ps_cv);
+            System.out.println(currentDate + "，的综合百分位为：" + new DecimalFormat("0.00%").format(result) + ",其中：" + pe_cv + "-" + pb_cv + "-" + ps_cv);
             vo.setSj(currentDate);
             vo.setSpdw(spdw);
             vo.setPeCv(pe_cv);
@@ -58,17 +58,19 @@ public class hsagController extends mybatisNoSpringUtils {
 
         }
     }
+
     //统计在数据库中最新的时间
-    public Date nearestDateInDB(){
+    public Date nearestDateInDB() {
         hsagMapper hsagmapper = session.getMapper(hsagMapper.class);
-        hsagVO vo=hsagmapper.nearestDateInDB();
-        Date date=vo.getSj();
-        Calendar calendar=new GregorianCalendar();
+        hsagVO vo = hsagmapper.nearestDateInDB();
+        Date date = vo.getSj();
+        Calendar calendar = new GregorianCalendar();
         calendar.setTime(date);
-        calendar.add(Calendar.DATE,1);
-        Date startDate=calendar.getTime();
+        calendar.add(Calendar.DATE, 1);
+        Date startDate = calendar.getTime();
         return startDate;
     }
+
     public hsagController() throws FileNotFoundException {
     }
 }
