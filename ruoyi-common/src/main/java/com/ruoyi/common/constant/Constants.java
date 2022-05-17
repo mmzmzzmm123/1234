@@ -63,6 +63,11 @@ public class Constants
     public static final String SMS_CODE_KEY = "sms_codes:";
 
     /**
+     * 贷款信息 redis key
+     */
+    public static final String LOAN_CODE_KEY = "loan_codes:";
+
+    /**
      * 登录用户 redis key
      */
     public static final String LOGIN_TOKEN_KEY = "login_tokens:";
@@ -81,6 +86,11 @@ public class Constants
      * 短信验证码有效期（分钟）
      */
     public static final Integer SMS_CODE_EXPIRATION = 2;
+
+    /**
+     * 是否允许贷款的期限 3天
+     */
+    public static final Integer LOAN_TIME_EXPIRATION = 3;
 
     /**
      * 令牌

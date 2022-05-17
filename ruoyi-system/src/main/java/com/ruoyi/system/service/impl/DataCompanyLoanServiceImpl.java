@@ -21,6 +21,8 @@ import com.ruoyi.system.service.IDataCompanyLoanOracleService;
 import com.ruoyi.system.service.IDataCompanyLoanService;
 import com.ruoyi.system.service.IDataSmsService;
 import org.apache.commons.lang3.RandomStringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -44,6 +46,9 @@ import static com.ruoyi.system.domain.model.DataCodeMsgResponse.UMS_SUCCESS_CODE
 @Service
 public class DataCompanyLoanServiceImpl implements IDataCompanyLoanService 
 {
+
+    private static final Logger log = LoggerFactory.getLogger(DataCompanyLoanServiceImpl.class);
+
     @Autowired
     private DataCompanyLoanMapper dataCompanyLoanMapper;
 
@@ -115,6 +120,7 @@ public class DataCompanyLoanServiceImpl implements IDataCompanyLoanService
         String code = dataCompanyLoanBody.getCode();
         String mztUserId = dataCompanyLoanBody.getMztUserId();
 
+        // 校验手机号码
         String verifyKey = Constants.SMS_CODE_KEY + mobile;
         String realCode = redisCache.getCacheObject(verifyKey);
         if (!StringUtils.equals(code,realCode)){
@@ -143,7 +149,7 @@ public class DataCompanyLoanServiceImpl implements IDataCompanyLoanService
         dataCompanyLoan.setLoanObjectType(dataCompanyLoanBody.getLoanObjectType() == DataMatchCompany.TYPE_PERSON ? "个体工商户" : "企业法人");
         String xydm = "";
 
-        if (DataMatchCompany.TYPE_PERSON  == dataCompanyLoanBody.getLoanObjectType()){
+        if (DataMatchCompany.TYPE_PERSON  == dataCompanyLoanBody.getLoanObjectType()){ // 个体工商户
             xydm = dataCompanyLoanBody.getXydm();
             JSONObject jsonObject = interfaceService.queryGTGSHByXydm(xydm,companyNameFromRequest);
             if (jsonObject != null){
@@ -154,11 +160,19 @@ public class DataCompanyLoanServiceImpl implements IDataCompanyLoanService
                     dataCompanyLoan.setCompanyBusiness(jsonObject.getString("jyfw"));
                     dataCompanyLoan.setCompanyAddress(jsonObject.getString("jycsdz"));
                 }
+            } else{
+                //没有个体工商户信息，抛出异常
+                throwCompanyNotFoundException();
+
             }
         }else {
             //根据企业名称组装企业相关数据：企业划型、所在行业、主营业务、省市区
             Map<String, String> map = interfaceService.queryCompanyInfo(companyNameFromRequest);
             xydm = map.get("tyshxydm");
+            if (StringUtils.isEmpty(xydm)){
+                //没有企业信息，抛出异常
+                throwCompanyNotFoundException();
+            }
             dataCompanyLoan.setCompanyCreditCode(xydm);
             dataCompanyLoan.setCompanyType(map.get("companytype"));
             dataCompanyLoan.setCompanyIndustry(map.get("indurstryname"));
@@ -172,6 +186,16 @@ public class DataCompanyLoanServiceImpl implements IDataCompanyLoanService
                 throw new UserException(null, null, "保存'" + dataCompanyLoan.getCompanyName() + "'失败，该企业存在失信记录");
             }
         }
+
+        //同一企业，在3天内多次提交信贷直通车需求，且银行、金额完全一致
+        String xydmCacheKey = generateXydmCacheKey(dataCompanyLoan.getCompanyCreditCode(), dataCompanyLoan.getLoanBand(), dataCompanyLoan.getLoanAmount() + "");
+        log.info("验证是否重复贷款:"+xydmCacheKey);
+        Object cacheObject = redisCache.getCacheObject(xydmCacheKey);
+        if (cacheObject != null){
+            throw new UserException(null, null, "近" + Constants.LOAN_TIME_EXPIRATION + "天内，您已提交贷款需求，请勿重复提交");
+
+        }
+
         dataCompanyLoanMapper.insertDataCompanyLoan(dataCompanyLoan);
         Long companyId = dataCompanyLoan.getCompanyId();
 
@@ -180,7 +204,21 @@ public class DataCompanyLoanServiceImpl implements IDataCompanyLoanService
         loanClone.setLoanBand(dataCompanyLoanBody.getLoanBandNames());
         loanClone.setDelFlag(null);
         //插入 Oracle 表
-        return companyLoanOracleService.insertDataCompanyLoan(loanClone);
+        int result =  companyLoanOracleService.insertDataCompanyLoan(loanClone);
+        //测试环境： 企业信用代码+银行+金额作为key，保存 redis 10分钟
+        //redisCache.setCacheObject(xydmCacheKey, true, 10, TimeUnit.MINUTES);
+        //企业信用代码+银行+金额作为key，保存 redis 三天
+        redisCache.setCacheObject(xydmCacheKey, true, Constants.LOAN_TIME_EXPIRATION, TimeUnit.DAYS);
+
+        return result;
+    }
+
+    private String generateXydmCacheKey(String xydm, String bannerIds, String amount){
+        return Constants.LOAN_CODE_KEY + xydm + "-" + bannerIds + "-" + amount;
+    }
+
+    private void throwCompanyNotFoundException(){
+        throw new UserException(null, null, "查无此企业信息，请检查企业名称是否填写完整");
     }
 
     /**
