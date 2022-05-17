@@ -17,14 +17,6 @@ public class ExcelUtils_1 extends ExcelUtils_1_variable {
     public ExcelUtils_1() {
     }
 
-    /**
-     * 还原设定（其实是重新new一个新的对象并返回）
-     */
-    public ExcelUtils_1 RestoreSettings() {
-        ExcelUtils_1 instance = new ExcelUtils_1();
-        instance.setExcelPath(this.getExcelPath());
-        return instance;
-    }
 
     public List<List<Cell>> readExcel() throws IOException {
         String excelPath = this.getExcelPath();
@@ -106,7 +98,6 @@ public class ExcelUtils_1 extends ExcelUtils_1_variable {
 
     /**
      * 通用修改Excel，并另存为
-     * fromRowList:为src数据
      */
     private void writeExcel(Workbook toWb, List<List<Cell>> fromRowList, String savePath) {
         if (toWb == null) {
@@ -160,6 +151,16 @@ public class ExcelUtils_1 extends ExcelUtils_1_variable {
         } catch (Exception e) {
             ExcelUtils_utils.out("写入Excel时发生错误！ ", true);
             e.printStackTrace();
+        }
+    }
+
+    private void writeMN2SpecifiedPosition(List<List<Cell>> toRowList, List<List<Cell>> fromRowList, String savePath, int m, int n) {
+        int height = fromRowList.size();
+        int width = fromRowList.get(0).size();
+        for (int i = m; i < m+height; i++) {
+            for (int j = n; j < n+width; j++) {
+
+            }
         }
     }
 
@@ -220,4 +221,12 @@ public class ExcelUtils_1 extends ExcelUtils_1_variable {
         }
     }
 
+    /**
+     * 还原设定（其实是重新new一个新的对象并返回）
+     */
+    public ExcelUtils_1 RestoreSettings() {
+        ExcelUtils_1 instance = new ExcelUtils_1();
+        instance.setExcelPath(this.getExcelPath());
+        return instance;
+    }
 }
