@@ -6,14 +6,10 @@ import invest.lixinger.ruoyi.entity.totalAssetVO;
 import invest.lixinger.ruoyi.entity.ziChanXiFenVO;
 import invest.lixinger.ruoyi.mapper.totalAssetMapper;
 import invest.lixinger.ruoyi.mapper.ziChanXiFenMapper;
-import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.ss.usermodel.Sheet;
-import org.apache.poi.ss.usermodel.Workbook;
 import org.junit.Test;
-import work.cib.excel.excelUtils.ExcelUtils_1;
-import work.cib.excel.excelUtils.ExcelUtils_1_utils;
+import invest.lixinger.utils.excel.excelUtils.ExcelUtils_1;
+import invest.lixinger.utils.excel.excelUtils.ExcelUtils_1_utils;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -24,8 +20,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static cn.hutool.core.util.NumberUtil.isDouble;
-import static work.cib.excel.excelUtils.ExcelUtils_1_utils.createMNCellList;
-import static work.cib.excel.excelUtils.ExcelUtils_1_utils.getDefineRC;
+import static invest.lixinger.utils.excel.excelUtils.ExcelUtils_1_utils.createMNCellList;
+import static invest.lixinger.utils.excel.excelUtils.ExcelUtils_1_utils.getDefineRC;
 
 public class ziChanXiFenController extends mybatisNoSpringUtils {
     @Test

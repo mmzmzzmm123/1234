@@ -1,4 +1,4 @@
-package work.cib.excel.excelUtils;
+package invest.lixinger.utils.excel.excelUtils;
 
 import org.apache.poi.hpsf.DocumentSummaryInformation;
 import org.apache.poi.hssf.extractor.ExcelExtractor;
