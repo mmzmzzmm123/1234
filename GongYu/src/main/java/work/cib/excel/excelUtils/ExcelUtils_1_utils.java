@@ -17,6 +17,30 @@ import java.util.List;
 
 
 public class ExcelUtils_1_utils {
+    //创建一个m行n列的cell列表
+    public static List<List<Cell>>  createMNCellList(int m,int n,String ext){
+        Workbook wb=null;
+        if ("xls".equals(ext)) {
+            wb = new HSSFWorkbook();
+            wb.createSheet("Sheet1");
+        } else if ("xlsx".equals(ext)) {
+            wb = new XSSFWorkbook();
+            wb.createSheet("Sheet1");
+        }
+
+        List<List<Cell>> getZiChanXiFenExcelList = new ArrayList<>();
+        Sheet sheet=wb.getSheetAt(0);
+        for (int i = 0; i < m; i++) {
+            getZiChanXiFenExcelList.add(new ArrayList<>());
+            for (int j = 0; j < n; j++) {
+                Row row = sheet.createRow(j);
+                Cell cell=row.createCell(j);
+                getZiChanXiFenExcelList.get(i).add(cell);
+            }
+        }
+        return getZiChanXiFenExcelList;
+    }
+    //从一个excel中得到m行n列的表格
     public static List<List<Cell>> getDefineRC(List<List<Cell>>list,int rowLen,int columnLen){
         List<List<Cell>> getZiChanXiFen = new ArrayList<>();
         for (int i = 0; i < rowLen; i++) {
