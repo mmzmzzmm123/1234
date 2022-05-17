@@ -9,7 +9,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import static invest.lixinger.utils.excel.excelUtils.ExcelUtils_1_utils.judgeReadPathExist;
+import static invest.lixinger.utils.excel.excelUtils.ExcelUtils_utils.judgeReadPathExist;
 
 
 public class ExcelUtils_1 extends ExcelUtils_1_variable {
@@ -35,7 +35,7 @@ public class ExcelUtils_1 extends ExcelUtils_1_variable {
     public List<List<Cell>> readExcel(String excelPath) throws IOException {
         Workbook wb = null;
         List<List<Cell>> rowList = new ArrayList<>();
-        wb = ExcelUtils_1_utils.getWorkbook(new File(excelPath), excelPath.substring(excelPath.lastIndexOf(".") + 1));
+        wb = ExcelUtils_utils.getWorkbook(new File(excelPath), excelPath.substring(excelPath.lastIndexOf(".") + 1));
         rowList = readExcel(wb);
         return rowList;
     }
@@ -66,7 +66,7 @@ public class ExcelUtils_1 extends ExcelUtils_1_variable {
             assert sheet != null;
             int lastRowNum = sheet.getLastRowNum();
             if (lastRowNum > 0) {    //如果>0，表示有数据
-                ExcelUtils_1_utils.out("\n开始读取名为【" + sheet.getSheetName() + "】的内容：", true);
+                ExcelUtils_utils.out("\n开始读取名为【" + sheet.getSheetName() + "】的内容：", true);
             }
 
             Row row = null;
@@ -75,20 +75,20 @@ public class ExcelUtils_1 extends ExcelUtils_1_variable {
                 allRowList.add(new ArrayList<>());
 
                 if (row != null) {
-                    ExcelUtils_1_utils.out("第" + (i + 1) + "行：", this.isPrintMsg(), false);
+                    ExcelUtils_utils.out("第" + (i + 1) + "行：", this.isPrintMsg(), false);
                     // 获取每一单元格的值
                     rowList.add(row);
                     for (int j = 0; j < row.getLastCellNum(); j++) {
                         allRowList.get(i).add(row.getCell(j));
-                        String value = ExcelUtils_1_utils.getCellValueString(row.getCell(j));
+                        String value = ExcelUtils_utils.getCellValueString(row.getCell(j));
                         //只会把非空值打印出来
                         if (!value.equals("")) {
-                            ExcelUtils_1_utils.out(value + " | ", this.isPrintMsg(), false);
+                            ExcelUtils_utils.out(value + " | ", this.isPrintMsg(), false);
                         }
                     }
-                    ExcelUtils_1_utils.out("", this.isPrintMsg());
+                    ExcelUtils_utils.out("", this.isPrintMsg());
                 } else {
-                    ExcelUtils_1_utils.out("--------------第" + (i + 1) + "行为null，已经被跳过-------------------", true);
+                    ExcelUtils_utils.out("--------------第" + (i + 1) + "行为null，已经被跳过-------------------", true);
                 }
             }
         }
@@ -97,9 +97,9 @@ public class ExcelUtils_1 extends ExcelUtils_1_variable {
 
     public void writeExcel(List<List<Cell>> fromRowList, String savePath) throws IOException {
         String toXlsPath = this.getExcelPath();
-        ExcelUtils_1_utils.judgeWritePathExist(fromRowList, toXlsPath, savePath);
+        ExcelUtils_utils.judgeWritePathExist(fromRowList, toXlsPath, savePath);
         Workbook toWb = null;
-        toWb = ExcelUtils_1_utils.getWorkbook(new File(savePath), savePath.substring(savePath.lastIndexOf(".") + 1));
+        toWb = ExcelUtils_utils.getWorkbook(new File(savePath), savePath.substring(savePath.lastIndexOf(".") + 1));
         writeExcel(toWb, fromRowList, savePath);
     }
 
@@ -110,14 +110,14 @@ public class ExcelUtils_1 extends ExcelUtils_1_variable {
      */
     private void writeExcel(Workbook toWb, List<List<Cell>> fromRowList, String savePath) {
         if (toWb == null) {
-            ExcelUtils_1_utils.out("操作文档不能为空！", true);
+            ExcelUtils_utils.out("操作文档不能为空！", true);
             return;
         }
         Sheet toSheet = toWb.getSheetAt(0);
         // 如果每次重写，那么则从开始读取的位置写，否则果获取源文件最新的行
         int lastRowNum = this.isOverWrite() ? this.getStartReadRow() : toSheet.getLastRowNum() + 1;
         int newRow = 0;  // 新添加的行数
-        ExcelUtils_1_utils.out("要添加的数据总行数为：" + fromRowList.size(), true);
+        ExcelUtils_utils.out("要添加的数据总行数为：" + fromRowList.size(), true);
         for (List<Cell> fromRow : fromRowList) {
             if (fromRow == null) continue;
             // comparePos：只比较这个常量
@@ -137,7 +137,7 @@ public class ExcelUtils_1 extends ExcelUtils_1_variable {
                 CellStyle newstyle = toWb.createCellStyle();
                 Cell toCell = toRow.createCell(i);
                 // 复制单元格的值到新的单元格
-                toCell.setCellValue(ExcelUtils_1_utils.getCellValueString(fromRow.get(i)));
+                toCell.setCellValue(ExcelUtils_utils.getCellValueString(fromRow.get(i)));
                 // 假如不用continue会出错
                 if (fromRow.get(i) == null) continue;
                 newstyle.cloneStyleFrom(fromRow.get(i).getCellStyle());
@@ -146,7 +146,7 @@ public class ExcelUtils_1 extends ExcelUtils_1_variable {
                 // sheet.autoSizeColumn(i);
             }
         }
-        ExcelUtils_1_utils.out("其中检测到重复行数为:" + (fromRowList.size() - newRow) + " ，追加行数为：" + newRow, true);
+        ExcelUtils_utils.out("其中检测到重复行数为:" + (fromRowList.size() - newRow) + " ，追加行数为：" + newRow, true);
 
         // 合并单元格
         setMergedRegion(toSheet);
@@ -158,7 +158,7 @@ public class ExcelUtils_1 extends ExcelUtils_1_variable {
             outputStream.flush();
             outputStream.close();
         } catch (Exception e) {
-            ExcelUtils_1_utils.out("写入Excel时发生错误！ ", true);
+            ExcelUtils_utils.out("写入Excel时发生错误！ ", true);
             e.printStackTrace();
         }
     }
@@ -176,8 +176,8 @@ public class ExcelUtils_1 extends ExcelUtils_1_variable {
             for (int i = this.getStartReadRow(); i <= toSheet.getLastRowNum() + this.getEndReadRow(); i++) {
                 Row toR = toSheet.getRow(i);
                 if (toR != null && fromRow != null) {
-                    String v1 = ExcelUtils_1_utils.getCellValueString(toR.getCell(this.getComparePos()));
-                    String v2 = ExcelUtils_1_utils.getCellValueString(fromRow.get(this.getComparePos()));
+                    String v1 = ExcelUtils_utils.getCellValueString(toR.getCell(this.getComparePos()));
+                    String v2 = ExcelUtils_utils.getCellValueString(fromRow.get(this.getComparePos()));
                     if (v1.equals(v2)) {
                         rowPos = i;
                         break;

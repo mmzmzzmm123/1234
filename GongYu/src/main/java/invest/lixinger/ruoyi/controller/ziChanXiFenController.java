@@ -9,7 +9,7 @@ import invest.lixinger.ruoyi.mapper.ziChanXiFenMapper;
 import org.apache.poi.ss.usermodel.Cell;
 import org.junit.Test;
 import invest.lixinger.utils.excel.excelUtils.ExcelUtils_1;
-import invest.lixinger.utils.excel.excelUtils.ExcelUtils_1_utils;
+import invest.lixinger.utils.excel.excelUtils.ExcelUtils_utils;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -20,8 +20,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static cn.hutool.core.util.NumberUtil.isDouble;
-import static invest.lixinger.utils.excel.excelUtils.ExcelUtils_1_utils.createMNCellList;
-import static invest.lixinger.utils.excel.excelUtils.ExcelUtils_1_utils.getDefineRC;
+import static invest.lixinger.utils.excel.excelUtils.ExcelUtils_utils.createMNCellList;
+import static invest.lixinger.utils.excel.excelUtils.ExcelUtils_utils.getDefineRC;
 
 public class ziChanXiFenController extends mybatisNoSpringUtils {
     @Test
@@ -65,7 +65,7 @@ public class ziChanXiFenController extends mybatisNoSpringUtils {
 
         for (List<Cell> temp : getZiChanXiFenExcelList) {
             for (Cell cell : temp) {
-                System.out.println(ExcelUtils_1_utils.getCellValueString(cell));
+                System.out.println(ExcelUtils_utils.getCellValueString(cell));
             }
         }
         ExcelUtils_1 eu = new ExcelUtils_1();
@@ -99,13 +99,13 @@ public class ziChanXiFenController extends mybatisNoSpringUtils {
 //            System.out.println("11="+getZiChanXiFen.get(i).get(4).getCellFormula());;
 //            System.out.println("22="+getZiChanXiFen.get(i).get(4).getCachedFormulaResultType());;
 //            System.out.println("33="+getZiChanXiFen.get(i).get(4).getNumericCellValue());;
-            name = (String) ExcelUtils_1_utils.getCellValueObj(getZiChanXiFen.get(i).get(0));
-            huobi = (Double) operateNumber(ExcelUtils_1_utils.getCellValueString(getZiChanXiFen.get(i).get(1)));
-            zhaiquan = (Double) operateNumber(ExcelUtils_1_utils.getCellValueString(getZiChanXiFen.get(i).get(2)));
-            yitouru = (Double) operateNumber(ExcelUtils_1_utils.getCellValueString(getZiChanXiFen.get(i).get(3)));
-            guonei_zichan = (Double) operateNumber(ExcelUtils_1_utils.getCellValueString(getZiChanXiFen.get(i).get(4)));
-            lundong_zichan = (Double) operateNumber(ExcelUtils_1_utils.getCellValueString(getZiChanXiFen.get(i).get(5)));
-            haiwai_zichan = (Double) operateNumber(ExcelUtils_1_utils.getCellValueString(getZiChanXiFen.get(i).get(6)));
+            name = (String) ExcelUtils_utils.getCellValueObj(getZiChanXiFen.get(i).get(0));
+            huobi = (Double) operateNumber(ExcelUtils_utils.getCellValueString(getZiChanXiFen.get(i).get(1)));
+            zhaiquan = (Double) operateNumber(ExcelUtils_utils.getCellValueString(getZiChanXiFen.get(i).get(2)));
+            yitouru = (Double) operateNumber(ExcelUtils_utils.getCellValueString(getZiChanXiFen.get(i).get(3)));
+            guonei_zichan = (Double) operateNumber(ExcelUtils_utils.getCellValueString(getZiChanXiFen.get(i).get(4)));
+            lundong_zichan = (Double) operateNumber(ExcelUtils_utils.getCellValueString(getZiChanXiFen.get(i).get(5)));
+            haiwai_zichan = (Double) operateNumber(ExcelUtils_utils.getCellValueString(getZiChanXiFen.get(i).get(6)));
 
             getZiChanXiFenVOList.get(i - 1).setName(name);
             getZiChanXiFenVOList.get(i - 1).setHuobi(huobi);

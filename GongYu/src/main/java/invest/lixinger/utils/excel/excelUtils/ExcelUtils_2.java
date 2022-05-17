@@ -15,18 +15,16 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
+import static invest.lixinger.utils.excel.excelUtils.ExcelUtils_utils_MultipartFile.checkFile;
+
 public class ExcelUtils_2 {
-    public ExcelUtils_2() {
-    }
-    public final static String XLS = "xls";
-    public final static String XLSX = "xlsx";
 
     public static void main(String[] args) throws IOException {
         ExcelUtils_2 eu = new ExcelUtils_2();
-        File file = new File("src/main/java/work/cib/excel/resources/cangwei.xls");
+        File file = new File("GongYu/src/main/resources/excel/importExcel/ExcelUtils_1_1.xls");
         System.out.println(file.getPath());
         System.out.println("file.length()=" + file.length());
-        MultipartFile mulFile = eu.fileToMultipartFile(file);
+        MultipartFile mulFile = ExcelUtils_utils_MultipartFile.fileToMultipartFile(file);
         List<String[]> list = readExcelFile(mulFile, 0);
         int i = 0;
         for (String[] strs : list) {
@@ -38,15 +36,11 @@ public class ExcelUtils_2 {
         }
     }
 
-    /**
-     * * 读取excel文件
-     * 会把所有的sheet都读出来
-     */
     public static List<String[]> readExcelFile(MultipartFile excelFile, int startRow) throws IOException {
         // 检查文件
         checkFile(excelFile);
         // 获得工作簿对象
-        Workbook workbook = getWorkBook(excelFile);
+        Workbook workbook = ExcelUtils_utils_MultipartFile.getWorkBook(excelFile);
         // 创建返回对象，把每行中的值作为一个数组，所有的行作为一个集合返回
         List<String[]> list = new ArrayList<>();
         if (workbook != null) {
@@ -76,7 +70,7 @@ public class ExcelUtils_2 {
                     // 循环当前行
                     for (int i = firstCellNum; i < cellNums; i++) {
                         Cell cell = row.getCell(i);
-                        cells[i] = getCellValue(cell);
+                        cells[i] = ExcelUtils_utils.getCellValueString(cell);
                     }
                     list.add(cells);
                 }
@@ -92,9 +86,9 @@ public class ExcelUtils_2 {
         if (StringUtils.isBlank(extension)) {
             return null;
         }
-        if (extension.equalsIgnoreCase(XLS)) {
+        if (extension.equalsIgnoreCase("xls")) {
             workbook = new HSSFWorkbook();
-        } else if (extension.equalsIgnoreCase(XLSX)) {
+        } else if (extension.equalsIgnoreCase("xlsx")) {
             workbook = new XSSFWorkbook();
         }
 
@@ -120,130 +114,6 @@ public class ExcelUtils_2 {
             }
         }
         return workbook;
-    }
-
-    /**
-     * 获取当前列数据
-     */
-    private static String getCellValue(Cell cell) {
-        Object cellValue = "";
-        if (cell == null) {
-            return cellValue.toString();
-        }
-
-        // 把数字当成String来读，避免出现1读成1.0的情况
-        if (cell.getCellType() == CellType.NUMERIC) {
-            cell.setCellType(CellType.STRING);
-        }
-
-        // 判断数据的类型
-        switch (cell.getCellType()) {
-            case NUMERIC:
-                cellValue = cell.getNumericCellValue();
-                break;
-            case STRING:
-                cellValue = cell.getStringCellValue();
-                break;
-            case BOOLEAN:
-                cellValue = cell.getBooleanCellValue();
-                break;
-            case FORMULA:
-                cellValue = cell.getCellFormula();
-                break;
-            case BLANK:
-                cellValue = "";
-                break;
-            case ERROR:
-                cellValue = "非法字符";
-                break;
-            default:
-                cellValue = "未知类型";
-                break;
-        }
-        return cellValue.toString();
-    }
-
-    /**
-     * 获得工作簿对象
-     *
-     * @param excelFile excel文件
-     */
-    public static Workbook getWorkBook(MultipartFile excelFile) {
-        // 获得文件名
-        String fileName = excelFile.getOriginalFilename();
-        // 创建Workbook工作簿对象，表示整个excel
-        Workbook workbook = null;
-        try {
-            // 获得excel文件的io流
-            InputStream is = excelFile.getInputStream();
-            if (fileName.endsWith(XLS)) {
-                workbook = new HSSFWorkbook(is);
-            } else if (fileName.endsWith(XLSX)) {
-                workbook = new XSSFWorkbook(is);
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return workbook;
-    }
-
-    /**
-     * 检查文件
-     *
-     * @param excelFile excel文件
-     */
-    public static void checkFile(MultipartFile excelFile) throws IOException {
-        //判断文件是否存在
-        if (null == excelFile) {
-            throw new FileNotFoundException("文件不存在");
-        }
-        //获得文件名
-        String fileName = excelFile.getOriginalFilename();
-        System.out.println("fileName=====" + fileName);
-        //判断文件是否是excel文件
-        if (!fileName.endsWith(XLS) && !fileName.endsWith(XLSX)) {
-            throw new IOException(fileName + "不是excel文件");
-        }
-    }
-
-    private File multipartFileToFile(MultipartFile multipartFile) {
-//        选择用缓冲区来实现这个转换即使用java 创建的临时文件 使用 MultipartFile.transferto()方法 。
-        File file = null;
-        try {
-            String originalFilename = multipartFile.getOriginalFilename();
-            String[] filename = originalFilename.split("\\.");
-            file = File.createTempFile(filename[0], filename[1]);
-            multipartFile.transferTo(file);
-            file.deleteOnExit();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return file;
-    }
-
-    public MultipartFile fileToMultipartFile(File file) {
-        FileItem fileItem = createFileItem(file);
-        MultipartFile multipartFile = new CommonsMultipartFile(fileItem);
-        return multipartFile;
-    }
-
-    private static FileItem createFileItem(File file) {
-        FileItemFactory factory = new DiskFileItemFactory(16, null);
-        FileItem item = factory.createItem("textField", "text/plain", true, file.getName());
-        int bytesRead = 0;
-        byte[] buffer = new byte[8192];
-        try {
-            FileInputStream fis = new FileInputStream(file);
-            OutputStream os = item.getOutputStream();
-            while ((bytesRead = fis.read(buffer, 0, 8192)) != -1) {
-                os.write(buffer, 0, bytesRead);
-            }
-            os.close();
-            fis.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return item;
     }
 
 }

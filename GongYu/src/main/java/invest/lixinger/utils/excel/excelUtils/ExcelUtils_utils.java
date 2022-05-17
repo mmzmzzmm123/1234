@@ -5,15 +5,17 @@ import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.junit.Test;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
 
-public class ExcelUtils_1_utils {
+public class ExcelUtils_utils {
     //创建一个m行n列的cell列表
     public static List<List<Cell>>  createMNCellList(int m,int n,String ext){
         Workbook wb=null;
@@ -44,11 +46,11 @@ public class ExcelUtils_1_utils {
             List<Cell> row = list.get(i);
             list.add(row);
             getZiChanXiFen.add(new ArrayList<>());
-            ExcelUtils_1_utils.out("第" + (i + 1) + "行：", true, false);
+            ExcelUtils_utils.out("第" + (i + 1) + "行：", true, false);
             for (int j = 0; j < columnLen; j++) {
-                Object value = ExcelUtils_1_utils.getCellValueObj(row.get(j));
+                Object value = ExcelUtils_utils.getCellValueObj(row.get(j));
                 getZiChanXiFen.get(i).add(row.get(j));
-                ExcelUtils_1_utils.out(value + " | ", true, false);
+                ExcelUtils_utils.out(value + " | ", true, false);
             }
             System.out.println();
         }
@@ -82,23 +84,30 @@ public class ExcelUtils_1_utils {
      * 读取单元格的值
      */
     public static String getCellValueString(Cell cell) {
-        Object result = "";
+        Object resultValue = "";
+        if (cell == null) {
+            return resultValue.toString();
+        }
+//        // 把数字当成String来读，避免出现1读成1.0的情况
+//        if (cell.getCellType() == CellType.NUMERIC) {
+//            cell.setCellType(CellType.STRING);
+//        }
         if (cell != null) {
             switch (cell.getCellType()) {
                 case STRING:
-                    result = cell.getStringCellValue();
+                    resultValue = cell.getStringCellValue();
                     break;
                 case NUMERIC:
-                    result = cell.getNumericCellValue();
+                    resultValue = cell.getNumericCellValue();
                     break;
                 case BOOLEAN:
-                    result = cell.getBooleanCellValue();
+                    resultValue = cell.getBooleanCellValue();
                     break;
                 case FORMULA:
                     if (cell.getCachedFormulaResultType() == CellType.STRING) {
-                        result = cell.getCellFormula();
+                        resultValue = cell.getCellFormula();
                     } else {
-                        result = cell.getNumericCellValue();  //Cannot get a NUMERIC value from a STRING formula cell
+                        resultValue = cell.getNumericCellValue();  //Cannot get a NUMERIC value from a STRING formula cell
                     }
 //                    System.out.println(cell.getCachedFormulaResultType());
 //                    result=cell.getStringCellValue();  //Cannot get a STRING value from a NUMERIC formula cell
@@ -107,15 +116,16 @@ public class ExcelUtils_1_utils {
 //                    System.out.println(result);
                     break;
                 case ERROR:
-                    result = cell.getErrorCellValue();
+                    resultValue = cell.getErrorCellValue();
                     break;
                 case BLANK:
                     break;
                 default:
+                    resultValue = "未知类型";
                     break;
             }
         }
-        return result.toString();
+        return resultValue.toString();
     }
 
     public static Object getCellValueObj(Cell cell) {
