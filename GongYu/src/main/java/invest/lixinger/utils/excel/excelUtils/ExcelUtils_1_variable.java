@@ -36,7 +36,7 @@ public class ExcelUtils_1_variable {
     public final static int START_READ_ROW = 0;
     // 默认结束读取的行位置为最后一行（索引值=0，用负数来表示倒数第n行）
     public final static int END_READ_ROW = 0;
-    // 默认Excel内容的开始比较列位置为第一列（索引值为0）
+    // 默认比较列位置为第一列
     public final static int COMPARE_POS = 0;
     // 默认读取第一个sheet中（只有当ONLY_ONE_SHEET = true时有效）
     public final static int SELECTED_SHEET = 0;

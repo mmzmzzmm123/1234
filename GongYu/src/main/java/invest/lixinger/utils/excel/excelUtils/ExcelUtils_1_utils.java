@@ -158,7 +158,7 @@ public class ExcelUtils_1_utils {
         }
         // 判断文件路径是否为空
         if (toXlsPath == null || toXlsPath.equals("")) {
-            out("toXlsPath,文件路径不能为空", true);
+            out("callXlsPath,文件路径不能为空", true);
             throw new IOException("文件路径不能为空");
         }
         // 判断文件路径是否为空

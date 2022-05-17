@@ -35,8 +35,7 @@ public class ExcelUtils_1 extends ExcelUtils_1_variable {
     public List<List<Cell>> readExcel(String excelPath) throws IOException {
         Workbook wb = null;
         List<List<Cell>> rowList = new ArrayList<>();
-        String ext = excelPath.substring(excelPath.lastIndexOf(".") + 1);
-        wb = ExcelUtils_1_utils.getWorkbook(new File(excelPath), ext);
+        wb = ExcelUtils_1_utils.getWorkbook(new File(excelPath), excelPath.substring(excelPath.lastIndexOf(".") + 1));
         rowList = readExcel(wb);
         return rowList;
     }
@@ -53,7 +52,7 @@ public class ExcelUtils_1 extends ExcelUtils_1_variable {
         if (this.isOnlyReadOneSheet()) {
             // 获取设定操作的sheet(如果设定了名称，按名称查，否则按索引值查)
             sheet = this.getSelectedSheetName().equals("") ? wb.getSheetAt(this.getSelectedSheetIdx()) : wb.getSheet(this.getSelectedSheetName());
-        } else {                            //操作多个sheet
+        } else {//操作多个sheet
             sheetCount = wb.getNumberOfSheets();  //获取可以操作的总数量
         }
 
@@ -99,11 +98,8 @@ public class ExcelUtils_1 extends ExcelUtils_1_variable {
     public void writeExcel(List<List<Cell>> fromRowList, String savePath) throws IOException {
         String toXlsPath = this.getExcelPath();
         ExcelUtils_1_utils.judgeWritePathExist(fromRowList, toXlsPath, savePath);
-        String ext = savePath.substring(savePath.lastIndexOf(".") + 1);
         Workbook toWb = null;
-        // 判断文件是否存在
-        toWb = ExcelUtils_1_utils.getWorkbook(new File(savePath), ext);
-        // 将rowlist的内容写到Excel中
+        toWb = ExcelUtils_1_utils.getWorkbook(new File(savePath), savePath.substring(savePath.lastIndexOf(".") + 1));
         writeExcel(toWb, fromRowList, savePath);
     }
 
@@ -120,7 +116,7 @@ public class ExcelUtils_1 extends ExcelUtils_1_variable {
         Sheet toSheet = toWb.getSheetAt(0);
         // 如果每次重写，那么则从开始读取的位置写，否则果获取源文件最新的行
         int lastRowNum = this.isOverWrite() ? this.getStartReadRow() : toSheet.getLastRowNum() + 1;
-        int newRow = 0;  // 记录最新添加的行数
+        int newRow = 0;  // 新添加的行数
         ExcelUtils_1_utils.out("要添加的数据总行数为：" + fromRowList.size(), true);
         for (List<Cell> fromRow : fromRowList) {
             if (fromRow == null) continue;
@@ -142,12 +138,11 @@ public class ExcelUtils_1 extends ExcelUtils_1_variable {
                 Cell toCell = toRow.createCell(i);
                 // 复制单元格的值到新的单元格
                 toCell.setCellValue(ExcelUtils_1_utils.getCellValueString(fromRow.get(i)));
-                //假如不用continue会出错
+                // 假如不用continue会出错
                 if (fromRow.get(i) == null) continue;
                 newstyle.cloneStyleFrom(fromRow.get(i).getCellStyle());
-//                ExcelUtils_1_utils.copyCellStyle(fromRow.getCell(i).getCellStyle(), toCell.getCellStyle());
                 toCell.setCellStyle(newstyle);
-                //自动跳转列宽度
+                // 自动宽度
                 // sheet.autoSizeColumn(i);
             }
         }
@@ -157,7 +152,7 @@ public class ExcelUtils_1 extends ExcelUtils_1_variable {
         setMergedRegion(toSheet);
 
         try {
-            // 重新将数据写入Excel中
+            // 将数据写入Excel中
             FileOutputStream outputStream = new FileOutputStream(savePath);
             toWb.write(outputStream);
             outputStream.flush();
@@ -174,7 +169,7 @@ public class ExcelUtils_1 extends ExcelUtils_1_variable {
     private int findInExcel(Sheet toSheet, List<Cell> fromRow) {
         int rowPos = -1;
         try {
-            // 如果覆写目标文件，或者不需要比较，则直接返回
+            // 如果覆写目标文件||不需要比较，则直接返回
             if (this.isOverWrite() || !this.isNeedCompare()) {
                 return rowPos;
             }

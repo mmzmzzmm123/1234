@@ -156,7 +156,7 @@ public class ExcelUtils_3 {
     }
 
     /**
-     * 导出XKS文件
+     * 导出XLS文件
      */
     public static void createXLSExcelFile1(String outPutPath, String fileName, List<List<Object>> dataList, List<Object> headList, String twoRowCell, String thirdRowCell) {
         FileOutputStream fos = null;
