@@ -157,11 +157,12 @@ public class ExcelUtils_1 extends ExcelUtils_1_variable {
     private void writeMN2SpecifiedPosition(List<List<Cell>> toRowList, List<List<Cell>> fromRowList, String savePath, int m, int n) {
         int height = fromRowList.size();
         int width = fromRowList.get(0).size();
-        for (int i = m; i < m+height; i++) {
-            for (int j = n; j < n+width; j++) {
-
+        for (int i = m; i < m + height; i++) {
+            for (int j = n; j < n + width; j++) {
+                toRowList.get(i).get(j).setCellValue(fromRowList.get(i).get(j).getStringCellValue());
             }
         }
+
     }
 
     /**
