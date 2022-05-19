@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.GetzichanxifenMapper">
+    
+    <resultMap type="Getzichanxifen" id="GetzichanxifenResult">
+        <result property="name"    column="name"    />
+        <result property="huobi"    column="huobi"    />
+        <result property="zhaiquan"    column="zhaiquan"    />
+        <result property="yitouru"    column="yitouru"    />
+        <result property="guoneiZichan"    column="guonei_zichan"    />
+        <result property="lundongZichan"    column="lundong_zichan"    />
+        <result property="haiwaiZichan"    column="haiwai_zichan"    />
+        <result property="zongji"    column="zongji"    />
+    </resultMap>
+
+    <sql id="selectGetzichanxifenVo">
+        select name, huobi, zhaiquan, yitouru, guonei_zichan, lundong_zichan, haiwai_zichan, zongji from getzichanxifen
+    </sql>
+
+    <select id="selectGetzichanxifenList" parameterType="Getzichanxifen" resultMap="GetzichanxifenResult">
+        <include refid="selectGetzichanxifenVo"/>
+        <where>  
+            <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
+            <if test="huobi != null "> and huobi = #{huobi}</if>
+            <if test="zhaiquan != null "> and zhaiquan = #{zhaiquan}</if>
+            <if test="yitouru != null "> and yitouru = #{yitouru}</if>
+            <if test="guoneiZichan != null "> and guonei_zichan = #{guoneiZichan}</if>
+            <if test="lundongZichan != null "> and lundong_zichan = #{lundongZichan}</if>
+            <if test="haiwaiZichan != null "> and haiwai_zichan = #{haiwaiZichan}</if>
+            <if test="zongji != null "> and zongji = #{zongji}</if>
+        </where>
+        order by zongji
+    </select>
+    
+    <select id="selectGetzichanxifenByName" parameterType="String" resultMap="GetzichanxifenResult">
+        <include refid="selectGetzichanxifenVo"/>
+        where name = #{name}
+    </select>
+        
+    <insert id="insertGetzichanxifen" parameterType="Getzichanxifen">
+        insert into getzichanxifen
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="name != null">name,</if>
+            <if test="huobi != null">huobi,</if>
+            <if test="zhaiquan != null">zhaiquan,</if>
+            <if test="yitouru != null">yitouru,</if>
+            <if test="guoneiZichan != null">guonei_zichan,</if>
+            <if test="lundongZichan != null">lundong_zichan,</if>
+            <if test="haiwaiZichan != null">haiwai_zichan,</if>
+            <if test="zongji != null">zongji,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="name != null">#{name},</if>
+            <if test="huobi != null">#{huobi},</if>
+            <if test="zhaiquan != null">#{zhaiquan},</if>
+            <if test="yitouru != null">#{yitouru},</if>
+            <if test="guoneiZichan != null">#{guoneiZichan},</if>
+            <if test="lundongZichan != null">#{lundongZichan},</if>
+            <if test="haiwaiZichan != null">#{haiwaiZichan},</if>
+            <if test="zongji != null">#{zongji},</if>
+         </trim>
+    </insert>
+
+    <update id="updateGetzichanxifen" parameterType="Getzichanxifen">
+        update getzichanxifen
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="huobi != null">huobi = #{huobi},</if>
+            <if test="zhaiquan != null">zhaiquan = #{zhaiquan},</if>
+            <if test="yitouru != null">yitouru = #{yitouru},</if>
+            <if test="guoneiZichan != null">guonei_zichan = #{guoneiZichan},</if>
+            <if test="lundongZichan != null">lundong_zichan = #{lundongZichan},</if>
+            <if test="haiwaiZichan != null">haiwai_zichan = #{haiwaiZichan},</if>
+            <if test="zongji != null">zongji = #{zongji},</if>
+        </trim>
+        where name = #{name}
+    </update>
+
+    <delete id="deleteGetzichanxifenByName" parameterType="String">
+        delete from getzichanxifen where name = #{name}
+    </delete>
+
+    <delete id="deleteGetzichanxifenByNames" parameterType="String">
+        delete from getzichanxifen where name in 
+        <foreach item="name" collection="array" open="(" separator="," close=")">
+            #{name}
+        </foreach>
+    </delete>
+</mapper>
