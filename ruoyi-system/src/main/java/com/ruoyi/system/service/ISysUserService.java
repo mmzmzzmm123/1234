@@ -203,4 +203,18 @@ public interface ISysUserService
      * @return 结果
      */
     public String importUser(List<SysUser> userList, Boolean isUpdateSupport, String operName);
+
+    /**
+     * 修改尝试登录次数
+     * @param user 用户信息
+     * @return 结果
+     */
+    int updateUserAttemptCount(SysUser user);
+
+    /**
+     * 锁定账号
+     * @param user 用户信息
+     * @return 结果
+     */
+    int setAccountLocked(SysUser user);
 }

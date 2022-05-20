@@ -1,6 +1,9 @@
 package com.ruoyi.web.controller.system;
 
 import java.io.IOException;
+
+import com.ruoyi.system.service.ISysPasswordService;
+import com.ruoyi.system.service.impl.SysPasswordServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -36,6 +39,8 @@ public class SysProfileController extends BaseController
     @Autowired
     private ISysUserService userService;
 
+    @Autowired
+    private  ISysPasswordService passwordService;
     @Autowired
     private TokenService tokenService;
 
@@ -106,6 +111,8 @@ public class SysProfileController extends BaseController
         {
             return AjaxResult.error("新密码不能与旧密码相同");
         }
+
+        passwordService.validatePasswordRule(newPassword);
         if (userService.resetUserPwd(userName, SecurityUtils.encryptPassword(newPassword)) > 0)
         {
             // 更新缓存用户密码

@@ -1,6 +1,11 @@
 package com.ruoyi.framework.web.service;
 
 import javax.annotation.Resource;
+
+import com.ruoyi.system.domain.PasswordConfig;
+import com.ruoyi.system.service.ISysPasswordService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -25,6 +30,8 @@ import com.ruoyi.framework.manager.factory.AsyncFactory;
 import com.ruoyi.system.service.ISysConfigService;
 import com.ruoyi.system.service.ISysUserService;
 
+import java.util.Date;
+
 /**
  * 登录校验方法
  * 
@@ -33,6 +40,7 @@ import com.ruoyi.system.service.ISysUserService;
 @Component
 public class SysLoginService
 {
+    private static final Logger log = LoggerFactory.getLogger(SysLoginService.class);
     @Autowired
     private TokenService tokenService;
 
@@ -48,6 +56,8 @@ public class SysLoginService
     @Autowired
     private ISysConfigService configService;
 
+    @Autowired
+    private ISysPasswordService passwordService;
     /**
      * 登录验证
      * 
@@ -60,6 +70,7 @@ public class SysLoginService
     public String login(String username, String password, String code, String uuid)
     {
         boolean captchaOnOff = configService.selectCaptchaOnOff();
+        SysUser user = null;
         // 验证码开关
         if (captchaOnOff)
         {
@@ -77,6 +88,25 @@ public class SysLoginService
         {
             if (e instanceof BadCredentialsException)
             {
+                user = userService.selectUserByUserName(username);
+                if (user != null) {
+                    // 用户失败次数
+                    Long fails = user.getAttemptCount();
+                    // 系统配置失败次数
+                    PasswordConfig config = passwordService.selectConfig();
+                    int fails_count = config.getMaxFailedLoginAttempts();
+                    // 超出失败次数，停用账户
+                    if (fails >= fails_count) {
+                        userService.setAccountLocked(user);
+                        throw new ServiceException("账号尝试次数超过"+fails_count+"次，将被锁定"+config.getUserLockPeriod()+"分钟");
+
+                    } else {
+                        // 失败次数++
+                        fails++;
+                        user.setAttemptCount(fails);
+                        userService.updateUserAttemptCount(user);
+                    }
+                }
                 AsyncManager.me().execute(AsyncFactory.recordLogininfor(username, Constants.LOGIN_FAIL, MessageUtils.message("user.password.not.match")));
                 throw new UserPasswordNotMatchException();
             }
@@ -86,6 +116,9 @@ public class SysLoginService
                 throw new ServiceException(e.getMessage());
             }
         }
+        user = userService.selectUserByUserName(username);
+        user.setAttemptCount(0L);
+        userService.updateUserAttemptCount(user);
         AsyncManager.me().execute(AsyncFactory.recordLogininfor(username, Constants.LOGIN_SUCCESS, MessageUtils.message("user.login.success")));
         LoginUser loginUser = (LoginUser) authentication.getPrincipal();
         recordLoginInfo(loginUser.getUserId());

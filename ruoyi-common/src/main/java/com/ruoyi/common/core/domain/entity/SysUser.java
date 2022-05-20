@@ -94,6 +94,31 @@ public class SysUser extends BaseEntity
     /** 角色ID */
     private Long roleId;
 
+    /**
+     * 尝试登录次数
+     */
+    private Long attemptCount;
+    /**
+     * 账户锁定时间
+     */
+    private Date lockTime;
+
+    public Long getAttemptCount() {
+        return attemptCount;
+    }
+
+    public void setAttemptCount(Long attemptCount) {
+        this.attemptCount = attemptCount;
+    }
+
+    public Date getLockTime() {
+        return lockTime;
+    }
+
+    public void setLockTime(Date lockTime) {
+        this.lockTime = lockTime;
+    }
+
     public SysUser()
     {
 
