@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.moon.home.mapper.HomeIpLogMapper">
+    
+    <resultMap type="com.moon.home.domain.HomeIpLog" id="HomeIpLogResult">
+        <result property="id"    column="id"    />
+        <result property="ipV4"    column="ip_v4"    />
+        <result property="ipV6"    column="ip_v6"    />
+        <result property="description"    column="description"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="createUserId"    column="create_user_id"    />
+        <result property="updateUserId"    column="update_user_id"    />
+        <result property="closed"    column="closed"    />
+        <result property="region"    column="region"    />
+    </resultMap>
+
+    <sql id="selectHomeIpLogVo">
+        select id, ip_v4, ip_v6, description, create_time, update_time, create_user_id, update_user_id, closed, region from home_ip_log
+    </sql>
+
+    <select id="selectHomeIpLogList" parameterType="com.moon.home.domain.HomeIpLog" resultMap="HomeIpLogResult">
+        <include refid="selectHomeIpLogVo"/>
+        <where>  
+            <if test="ipV4 != null  and ipV4 != ''"> and ip_v4 = #{ipV4}</if>
+            <if test="ipV6 != null  and ipV6 != ''"> and ip_v6 = #{ipV6}</if>
+            <if test="description != null  and description != ''"> and description = #{description}</if>
+            <if test="createUserId != null "> and create_user_id = #{createUserId}</if>
+            <if test="updateUserId != null "> and update_user_id = #{updateUserId}</if>
+            <if test="closed != null "> and closed = #{closed}</if>
+            <if test="region != null  and region != ''"> and region = #{region}</if>
+        </where>
+    </select>
+    
+    <select id="selectHomeIpLogById" parameterType="com.moon.home.domain.HomeIpLog" resultMap="HomeIpLogResult">
+        <include refid="selectHomeIpLogVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertHomeIpLog" parameterType="com.moon.home.domain.HomeIpLog" useGeneratedKeys="true" keyProperty="id">
+        insert into home_ip_log
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="ipV4 != null">ip_v4,</if>
+            <if test="ipV6 != null">ip_v6,</if>
+            <if test="description != null">description,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="createUserId != null">create_user_id,</if>
+            <if test="updateUserId != null">update_user_id,</if>
+            <if test="closed != null">closed,</if>
+            <if test="region != null">region,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="ipV4 != null">#{ipV4},</if>
+            <if test="ipV6 != null">#{ipV6},</if>
+            <if test="description != null">#{description},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="createUserId != null">#{createUserId},</if>
+            <if test="updateUserId != null">#{updateUserId},</if>
+            <if test="closed != null">#{closed},</if>
+            <if test="region != null">#{region},</if>
+         </trim>
+    </insert>
+
+    <update id="updateHomeIpLog" parameterType="com.moon.home.domain.HomeIpLog">
+        update home_ip_log
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="ipV4 != null">ip_v4 = #{ipV4},</if>
+            <if test="ipV6 != null">ip_v6 = #{ipV6},</if>
+            <if test="description != null">description = #{description},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="createUserId != null">create_user_id = #{createUserId},</if>
+            <if test="updateUserId != null">update_user_id = #{updateUserId},</if>
+            <if test="closed != null">closed = #{closed},</if>
+            <if test="region != null">region = #{region},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteHomeIpLogById" parameterType="Long">
+        delete from home_ip_log where id = #{id}
+    </delete>
+
+    <delete id="deleteHomeIpLogByIds" parameterType="String">
+        delete from home_ip_log where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>
