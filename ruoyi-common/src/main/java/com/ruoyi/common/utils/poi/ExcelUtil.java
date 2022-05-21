@@ -119,6 +119,11 @@ public class ExcelUtil<T>
     private Sheet sheet;
 
     /**
+     * 隐藏sheet计数
+     */
+    private int hiddenSheetNo = 0;
+
+    /**
      * 样式列表
      */
     private Map<String, CellStyle> styles;
@@ -569,7 +574,7 @@ public class ExcelUtil<T>
         for (int index = 0; index < sheetNo; index++)
         {
             createSheet(sheetNo, index);
-
+            hiddenSheetNo = index;
             // 产生一行
             Row row = sheet.createRow(rownum);
             int column = 0;
@@ -890,8 +895,17 @@ public class ExcelUtil<T>
     public void setPromptOrValidation(Sheet sheet, String[] textlist, String promptContent, int firstRow, int endRow,
             int firstCol, int endCol)
     {
+        hiddenSheetNo++;
+        Sheet hidden = wb.createSheet("hidden"+hiddenSheetNo);
+        for (int i = 0, length= textlist.length; i < length; i++) {
+            String name = textlist[i];
+            Row row = hidden.createRow(i);
+            Cell cell = row.createCell(0);
+            cell.setCellValue(name);
+        }
+
         DataValidationHelper helper = sheet.getDataValidationHelper();
-        DataValidationConstraint constraint = textlist.length > 0 ? helper.createExplicitListConstraint(textlist) : helper.createCustomConstraint("DD1");
+        DataValidationConstraint constraint = textlist.length > 0 ? helper.createFormulaListConstraint("hidden"+hiddenSheetNo+"!$A$1:$A$" + textlist.length) : helper.createCustomConstraint("DD1");
         CellRangeAddressList regions = new CellRangeAddressList(firstRow, endRow, firstCol, endCol);
         DataValidation dataValidation = helper.createValidation(constraint, regions);
         if (StringUtils.isNotEmpty(promptContent))
@@ -905,6 +919,7 @@ public class ExcelUtil<T>
         {
             dataValidation.setSuppressDropDownArrow(true);
             dataValidation.setShowErrorBox(true);
+            wb.setSheetHidden(hiddenSheetNo,true);
         }
         else
         {
