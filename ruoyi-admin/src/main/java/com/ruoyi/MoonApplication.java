@@ -17,11 +17,11 @@ public class MoonApplication {
     public static void printInfo(ConfigurableApplicationContext context) {
         if (context != null) {
             Environment environment = context.getEnvironment();
-            String info = "\n----------------------------------\n\t" +
-                    "Port:     %s \n\t" +
-                    "Host:     http://%s:%s \n\t" +
-                    "Profile:  %s \n\t" +
-                    "----------------------------------";
+            String info = "----------------------------------\n\t" +
+                            "Port:     %s \n\t" +
+                            "Host:     http://%s:%s \n\t" +
+                            "Profile:  %s \n" +
+                          "----------------------------------";
             try {
                 String hostAddress = InetAddress.getLocalHost().getHostAddress();
                 String port = environment.getProperty("server.port");
