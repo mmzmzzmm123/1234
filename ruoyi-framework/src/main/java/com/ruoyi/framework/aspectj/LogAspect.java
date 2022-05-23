@@ -149,8 +149,8 @@ public class LogAspect
         }
         else
         {
-            Map<?, ?> paramsMap = (Map<?, ?>) ServletUtils.getRequest().getAttribute(HandlerMapping.URI_TEMPLATE_VARIABLES_ATTRIBUTE);
-            operLog.setOperParam(StringUtils.substring(paramsMap.toString(), 0, 2000));
+            Map<?, ?> paramsMap = ServletUtils.getParamMap(ServletUtils.getRequest());
+            operLog.setOperParam(StringUtils.substring(JSON.toJSONString(paramsMap), 0, 2000));
         }
     }
 
