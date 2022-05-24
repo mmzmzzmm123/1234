@@ -47,6 +47,14 @@ export const constantRoutes = [
     hidden: true
   },
   {
+    path: '/user2/index',
+    name: 'user2/index',
+    component: () => import('@/views/system/user2/index'),
+    meta: {title: '资源分类'},
+    hidden: true
+  },
+
+  {
     path: '/register',
     component: () => import('@/views/register'),
     hidden: true

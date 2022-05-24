@@ -19,7 +19,7 @@
             :props="defaultProps"
             :expand-on-click-node="false"
             :filter-node-method="filterNode"
-            ref="tree"
+
             default-expand-all
             highlight-current
             @node-click="handleNodeClick"
@@ -29,7 +29,7 @@
       <!--用户数据-->
       <el-col :span="20" :xs="24">
         <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch" label-width="68px">
-          <el-form-item label="用户名称" prop="userName">
+          <el-form-item label="用户名称zz" prop="userName">
             <el-input
               v-model="queryParams.userName"
               placeholder="请输入用户名称"
