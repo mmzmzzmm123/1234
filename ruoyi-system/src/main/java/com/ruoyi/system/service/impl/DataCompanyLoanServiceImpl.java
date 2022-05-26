@@ -271,9 +271,13 @@ public class DataCompanyLoanServiceImpl implements IDataCompanyLoanService
     @Override
     public String senSmsCode(String phone) {
         String verifyKey = Constants.SMS_CODE_KEY + phone;
-        String code = numRandom(6);
-        AjaxResult response = smsService.sendVerifyCodeByUMS(phone,code);
-        int resultCode = (int) response.get(AjaxResult.CODE_TAG);
+//        String code = numRandom(6);
+//        AjaxResult response = smsService.sendVerifyCodeByUMS(phone,code);
+//        int resultCode = (int) response.get(AjaxResult.CODE_TAG);
+
+        String code = "123456";
+        AjaxResult response = null;
+        int resultCode = 0;
         if (UMS_SUCCESS_CODE == resultCode){//发送短信成功
             redisCache.setCacheObject(verifyKey, code, Constants.SMS_CODE_EXPIRATION, TimeUnit.MINUTES);
             return code;
@@ -307,7 +311,7 @@ public class DataCompanyLoanServiceImpl implements IDataCompanyLoanService
         clientParam.put("POSTPARAM_JSON", POSTPARAM_JSON);
 
         String result = sendPostParams(url, clientParam);
-        System.out.println(result);
+        log.debug(result);
         return JSONObject.parseObject(result);
     }
 
