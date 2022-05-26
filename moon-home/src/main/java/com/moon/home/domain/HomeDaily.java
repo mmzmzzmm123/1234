@@ -11,43 +11,43 @@ import com.ruoyi.common.core.domain.BaseEntity;
  * 家居对象 home_daily
  * 
  * @author fo
- * @date 2022-05-20
+ * @date 2022-05-23
  */
 public class HomeDaily extends BaseEntity
 {
     private static final long serialVersionUID = 1L;
 
-    /**  */
+    /** id */
     private Long id;
 
-    /**  */
-    @Excel(name = "")
+    /** 名称 */
+    @Excel(name = "名称")
     private String name;
 
-    /**  */
-    @Excel(name = "")
+    /** 备注 */
+    @Excel(name = "备注")
     private String description;
 
-    /**  */
-    @Excel(name = "")
+    /** 创建人 */
+    @Excel(name = "创建人")
     private Long createUserId;
 
-    /**  */
-    @Excel(name = "")
+    /** 更新人 */
+    @Excel(name = "更新人")
     private Long updateUserId;
 
-    /**  */
-    @Excel(name = "")
+    /** 类型 */
+    @Excel(name = "类型")
     private String type;
 
-    /**  */
+    /** 开始时间 */
     @JsonFormat(pattern = "yyyy-MM-dd")
-    @Excel(name = "", width = 30, dateFormat = "yyyy-MM-dd")
+    @Excel(name = "开始时间", width = 30, dateFormat = "yyyy-MM-dd")
     private Date startTime;
 
-    /**  */
+    /** 结束时间 */
     @JsonFormat(pattern = "yyyy-MM-dd")
-    @Excel(name = "", width = 30, dateFormat = "yyyy-MM-dd")
+    @Excel(name = "结束时间", width = 30, dateFormat = "yyyy-MM-dd")
     private Date endTime;
 
     public void setId(Long id) 

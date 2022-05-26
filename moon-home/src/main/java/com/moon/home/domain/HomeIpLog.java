@@ -6,44 +6,36 @@ import com.ruoyi.common.annotation.Excel;
 import com.ruoyi.common.core.domain.BaseEntity;
 
 /**
- * log对象 home_ip_log
+ * ip日志对象 home_ip_log
  * 
- * @author goo
- * @date 2022-05-19
+ * @author fo
+ * @date 2022-05-26
  */
 public class HomeIpLog extends BaseEntity
 {
     private static final long serialVersionUID = 1L;
 
-    /**  */
+    /** id */
     private Long id;
 
-    /**  */
-    @Excel(name = "")
+    /** ipV4 */
+    @Excel(name = "ipV4")
     private String ipV4;
 
-    /**  */
-    @Excel(name = "")
+    /** ipV6 */
+    @Excel(name = "ipV6")
     private String ipV6;
 
-    /**  */
-    @Excel(name = "")
+    /** 描述 */
+    @Excel(name = "描述")
     private String description;
 
-    /**  */
-    @Excel(name = "")
-    private Long createUserId;
-
-    /**  */
-    @Excel(name = "")
-    private Long updateUserId;
-
-    /**  */
-    @Excel(name = "")
+    /** 是否关闭 */
+    @Excel(name = "是否关闭")
     private Long closed;
 
-    /**  */
-    @Excel(name = "")
+    /** 区域 */
+    @Excel(name = "区域")
     private String region;
 
     public void setId(Long id) 
@@ -82,24 +74,6 @@ public class HomeIpLog extends BaseEntity
     {
         return description;
     }
-    public void setCreateUserId(Long createUserId) 
-    {
-        this.createUserId = createUserId;
-    }
-
-    public Long getCreateUserId() 
-    {
-        return createUserId;
-    }
-    public void setUpdateUserId(Long updateUserId) 
-    {
-        this.updateUserId = updateUserId;
-    }
-
-    public Long getUpdateUserId() 
-    {
-        return updateUserId;
-    }
     public void setClosed(Long closed) 
     {
         this.closed = closed;
@@ -127,9 +101,9 @@ public class HomeIpLog extends BaseEntity
             .append("ipV6", getIpV6())
             .append("description", getDescription())
             .append("createTime", getCreateTime())
+            .append("createBy", getCreateBy())
             .append("updateTime", getUpdateTime())
-            .append("createUserId", getCreateUserId())
-            .append("updateUserId", getUpdateUserId())
+            .append("updateBy", getUpdateBy())
             .append("closed", getClosed())
             .append("region", getRegion())
             .toString();

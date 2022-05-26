@@ -25,7 +25,7 @@ import com.ruoyi.common.core.page.TableDataInfo;
  * 家居Controller
  * 
  * @author fo
- * @date 2022-05-20
+ * @date 2022-05-23
  */
 @RestController
 @RequestMapping("/home/daily")

@@ -22,10 +22,10 @@ import com.ruoyi.common.utils.poi.ExcelUtil;
 import com.ruoyi.common.core.page.TableDataInfo;
 
 /**
- * logController
+ * ip日志Controller
  * 
- * @author goo
- * @date 2022-05-19
+ * @author fo
+ * @date 2022-05-26
  */
 @RestController
 @RequestMapping("/home/log")
@@ -35,7 +35,7 @@ public class HomeIpLogController extends BaseController
     private IHomeIpLogService homeIpLogService;
 
     /**
-     * 查询log列表
+     * 查询ip日志列表
      */
     @PreAuthorize("@ss.hasPermi('home:log:list')")
     @GetMapping("/list")
@@ -47,20 +47,20 @@ public class HomeIpLogController extends BaseController
     }
 
     /**
-     * 导出log列表
+     * 导出ip日志列表
      */
     @PreAuthorize("@ss.hasPermi('home:log:export')")
-    @Log(title = "log", businessType = BusinessType.EXPORT)
+    @Log(title = "ip日志", businessType = BusinessType.EXPORT)
     @PostMapping("/export")
     public void export(HttpServletResponse response, HomeIpLog homeIpLog)
     {
         List<HomeIpLog> list = homeIpLogService.selectHomeIpLogList(homeIpLog);
         ExcelUtil<HomeIpLog> util = new ExcelUtil<HomeIpLog>(HomeIpLog.class);
-        util.exportExcel(response, list, "log数据");
+        util.exportExcel(response, list, "ip日志数据");
     }
 
     /**
-     * 获取log详细信息
+     * 获取ip日志详细信息
      */
     @PreAuthorize("@ss.hasPermi('home:log:query')")
     @GetMapping(value = "/{id}")
@@ -70,10 +70,10 @@ public class HomeIpLogController extends BaseController
     }
 
     /**
-     * 新增log
+     * 新增ip日志
      */
     @PreAuthorize("@ss.hasPermi('home:log:add')")
-    @Log(title = "log", businessType = BusinessType.INSERT)
+    @Log(title = "ip日志", businessType = BusinessType.INSERT)
     @PostMapping
     public AjaxResult add(@RequestBody HomeIpLog homeIpLog)
     {
@@ -81,10 +81,10 @@ public class HomeIpLogController extends BaseController
     }
 
     /**
-     * 修改log
+     * 修改ip日志
      */
     @PreAuthorize("@ss.hasPermi('home:log:edit')")
-    @Log(title = "log", businessType = BusinessType.UPDATE)
+    @Log(title = "ip日志", businessType = BusinessType.UPDATE)
     @PutMapping
     public AjaxResult edit(@RequestBody HomeIpLog homeIpLog)
     {
@@ -92,10 +92,10 @@ public class HomeIpLogController extends BaseController
     }
 
     /**
-     * 删除log
+     * 删除ip日志
      */
     @PreAuthorize("@ss.hasPermi('home:log:remove')")
-    @Log(title = "log", businessType = BusinessType.DELETE)
+    @Log(title = "ip日志", businessType = BusinessType.DELETE)
 	@DeleteMapping("/{ids}")
     public AjaxResult remove(@PathVariable Long[] ids)
     {

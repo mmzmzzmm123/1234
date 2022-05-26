@@ -7,7 +7,7 @@ import com.moon.home.domain.HomeDaily;
  * 家居Service接口
  * 
  * @author fo
- * @date 2022-05-20
+ * @date 2022-05-23
  */
 public interface IHomeDailyService 
 {

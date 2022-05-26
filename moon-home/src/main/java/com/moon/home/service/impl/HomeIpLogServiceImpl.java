@@ -9,10 +9,10 @@ import com.moon.home.domain.HomeIpLog;
 import com.moon.home.service.IHomeIpLogService;
 
 /**
- * logService业务层处理
+ * ip日志Service业务层处理
  * 
- * @author goo
- * @date 2022-05-19
+ * @author fo
+ * @date 2022-05-26
  */
 @Service
 public class HomeIpLogServiceImpl implements IHomeIpLogService 
@@ -21,10 +21,10 @@ public class HomeIpLogServiceImpl implements IHomeIpLogService
     private HomeIpLogMapper homeIpLogMapper;
 
     /**
-     * 查询log
+     * 查询ip日志
      * 
-     * @param id log主键
-     * @return log
+     * @param id ip日志主键
+     * @return ip日志
      */
     @Override
     public HomeIpLog selectHomeIpLogById(Long id)
@@ -33,10 +33,10 @@ public class HomeIpLogServiceImpl implements IHomeIpLogService
     }
 
     /**
-     * 查询log列表
+     * 查询ip日志列表
      * 
-     * @param homeIpLog log
-     * @return log
+     * @param homeIpLog ip日志
+     * @return ip日志
      */
     @Override
     public List<HomeIpLog> selectHomeIpLogList(HomeIpLog homeIpLog)
@@ -45,9 +45,9 @@ public class HomeIpLogServiceImpl implements IHomeIpLogService
     }
 
     /**
-     * 新增log
+     * 新增ip日志
      * 
-     * @param homeIpLog log
+     * @param homeIpLog ip日志
      * @return 结果
      */
     @Override
@@ -58,9 +58,9 @@ public class HomeIpLogServiceImpl implements IHomeIpLogService
     }
 
     /**
-     * 修改log
+     * 修改ip日志
      * 
-     * @param homeIpLog log
+     * @param homeIpLog ip日志
      * @return 结果
      */
     @Override
@@ -71,9 +71,9 @@ public class HomeIpLogServiceImpl implements IHomeIpLogService
     }
 
     /**
-     * 批量删除log
+     * 批量删除ip日志
      * 
-     * @param ids 需要删除的log主键
+     * @param ids 需要删除的ip日志主键
      * @return 结果
      */
     @Override
@@ -83,9 +83,9 @@ public class HomeIpLogServiceImpl implements IHomeIpLogService
     }
 
     /**
-     * 删除log信息
+     * 删除ip日志信息
      * 
-     * @param id log主键
+     * @param id ip日志主键
      * @return 结果
      */
     @Override
