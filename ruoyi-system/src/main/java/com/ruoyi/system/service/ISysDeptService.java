@@ -1,6 +1,8 @@
 package com.ruoyi.system.service;
 
 import java.util.List;
+
+import cn.hutool.core.lang.tree.Tree;
 import com.ruoyi.common.core.domain.TreeSelect;
 import com.ruoyi.common.core.domain.entity.SysDept;
 
@@ -25,7 +27,7 @@ public interface ISysDeptService
      * @param depts 部门列表
      * @return 树结构列表
      */
-    public List<SysDept> buildDeptTree(List<SysDept> depts);
+    public List<Tree<Long>> buildDeptTree(List<SysDept> depts, Long parentId);
 
     /**
      * 构建前端所需要下拉树结构

@@ -3,6 +3,8 @@ package com.ruoyi.common.core.domain;
 import java.io.Serializable;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import cn.hutool.core.lang.tree.Tree;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.ruoyi.common.core.domain.entity.SysDept;
 import com.ruoyi.common.core.domain.entity.SysMenu;
@@ -44,6 +46,16 @@ public class TreeSelect implements Serializable
         this.label = menu.getMenuName();
         this.children = menu.getChildren().stream().map(TreeSelect::new).collect(Collectors.toList());
     }
+    public TreeSelect(Tree<Long> dept) {
+        this.id = dept.getId();
+        this.label = dept.getName().toString();
+        List<Tree<Long>> children = dept.getChildren();
+        if (children != null && !children.isEmpty()) {
+            this.children = children.stream().map(TreeSelect::new).collect(Collectors.toList());
+        }
+
+    }
+
 
     public Long getId()
     {
