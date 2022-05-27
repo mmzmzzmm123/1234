@@ -274,6 +274,7 @@ export default {
       this.drawerVisible = true
     },
     execDownload(data) {
+      console.log("zz")
       const codeStr = this.generateCode()
       const blob = new Blob([codeStr], { type: 'text/plain;charset=utf-8' })
       this.$download.saveAs(blob, data.fileName)
@@ -325,6 +326,7 @@ export default {
       return beautifier.html(html + script + css, beautifierConf.html)
     },
     download() {
+      console.log("hello")
       this.dialogVisible = true
       this.showFileName = true
       this.operationType = 'download'
