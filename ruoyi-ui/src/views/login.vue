@@ -62,7 +62,7 @@
 </template>
 
 <script>
-import { getCodeImg } from "@/api/login";
+import { getCodeImg, getRegisterSwitch } from "@/api/login";
 import Cookies from "js-cookie";
 import { encrypt, decrypt } from '@/utils/jsencrypt'
 
@@ -105,6 +105,7 @@ export default {
   },
   created() {
     this.getCode();
+    this.getRegisterUser();
     this.getCookie();
   },
   methods: {
@@ -116,6 +117,11 @@ export default {
           this.loginForm.uuid = res.uuid;
         }
       });
+    },
+    getRegisterUser() {
+      getRegisterSwitch().then(res =>{
+        this.register = res.registerUser === undefined ? false : res.registerUser;
+      })
     },
     getCookie() {
       const username = Cookies.get("username");
