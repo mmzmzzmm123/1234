@@ -19,7 +19,7 @@
             :props="defaultProps"
             :expand-on-click-node="false"
             :filter-node-method="filterNode"
-            ref="tree"
+
             default-expand-all
             highlight-current
             @node-click="handleNodeClick"
@@ -29,7 +29,7 @@
       <!--用户数据-->
       <el-col :span="20" :xs="24">
         <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch" label-width="68px">
-          <el-form-item label="用户名称" prop="userName">
+          <el-form-item label="用户名称zz" prop="userName">
             <el-input
               v-model="queryParams.userName"
               placeholder="请输入用户名称"
@@ -544,6 +544,7 @@ export default {
       this.ids = selection.map(item => item.userId);
       this.single = selection.length != 1;
       this.multiple = !selection.length;
+
     },
     // 更多操作触发
     handleCommand(command, row) {
@@ -637,9 +638,8 @@ export default {
     },
     /** 导出按钮操作 */
     handleExport() {
-      this.download('system/user/export', {
-        ...this.queryParams
-      }, `user_${new Date().getTime()}.xlsx`)
+      console.log("this.queryParams",this.queryParams)
+      this.download('system/user/export', {...this.queryParams}, `user_${new Date().getTime()}.xlsx`)
     },
     /** 导入按钮操作 */
     handleImport() {
