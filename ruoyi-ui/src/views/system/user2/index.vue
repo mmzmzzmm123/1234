@@ -30,56 +30,20 @@
       <el-col :span="20" :xs="24">
         <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch"
                  label-width="68px">
-          <el-form-item label="用户名称" prop="userName">
+          <el-form-item label="公司名称" prop="title">
             <el-input
-              v-model="queryParams.userName"
+              v-model="queryParams.title"
               placeholder="请输入用户名称"
               clearable
               style="width: 240px"
               @keyup.enter.native="handleQuery"
             />
           </el-form-item>
-          <el-form-item label="手机号码" prop="phonenumber">
-            <el-input
-              v-model="queryParams.phonenumber"
-              placeholder="请输入手机号码"
-              clearable
-              style="width: 240px"
-              @keyup.enter.native="handleQuery"
-            />
-          </el-form-item>
-          <el-form-item label="状态" prop="status">
-            <el-select
-              v-model="queryParams.status"
-              placeholder="用户状态"
-              clearable
-              style="width: 240px"
-            >
-              <el-option
-                v-for="dict in dict.type.sys_normal_disable"
-                :key="dict.value"
-                :label="dict.label"
-                :value="dict.value"
-              />
-            </el-select>
-          </el-form-item>
-          <el-form-item label="创建时间">
-            <el-date-picker
-              v-model="dateRange"
-              style="width: 240px"
-              value-format="yyyy-MM-dd"
-              type="daterange"
-              range-separator="-"
-              start-placeholder="开始日期"
-              end-placeholder="结束日期"
-            ></el-date-picker>
-          </el-form-item>
           <el-form-item>
-            <el-button type="primary" icon="el-icon-search" size="mini" @click="search">搜索</el-button>
+            <el-button type="primary" icon="el-icon-search" size="mini" @click="searchCompany">搜索</el-button>
             <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
           </el-form-item>
         </el-form>
-
         <el-row :gutter="15">
           <el-col :span="1.5">
             <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
@@ -97,50 +61,77 @@
           </el-col>
         </el-row>
 
+        <el-table v-loading="loading" :data="companyList" @selection-change="handleSelectionChange">
+          <el-table-column label="公司编号" align="center" key="id" prop="id" v-if="companyColumns[0].visible"/>
+          <el-table-column label="公司名称" align="center" key="title" prop="title" v-if="companyColumns[1].visible"
+                           :show-overflow-tooltip="true"/>
+          <el-table-column label="留言条数" align="center" key="commentCount" prop="commentCount"
+                           v-if="companyColumns[2].visible"
+                           :show-overflow-tooltip="true">
+            <template slot-scope="scope">
+              <span class="el-tag el-tag--medium el-tag--light">{{ scope.row.commentCount }}</span>
+            </template>
 
-        <el-table v-loading="loading" :data="userList" @selection-change="handleSelectionChange">
-          <el-table-column type="selection" width="200" align="center"/>
-          <el-table-column label="用户编号" align="center" key="userId" prop="userId" v-if="columns[0].visible"/>
-          <el-table-column label="用户名称" align="center" key="userName" prop="userName" v-if="columns[1].visible"
+          </el-table-column>
+
+          <el-table-column label="评价" align="center" key="description" prop="description"
+                           v-if="companyColumns[3].visible"
                            :show-overflow-tooltip="true"/>
-          <el-table-column label="用户昵称" align="center" key="nickName" prop="nickName" v-if="columns[2].visible"
-                           :show-overflow-tooltip="true"/>
-          <el-table-column label="部门" align="center" key="deptName" prop="dept.deptName" v-if="columns[3].visible"
-                           :show-overflow-tooltip="true"/>
-          <el-table-column label="手机号码" align="center" key="phonenumber" prop="phonenumber" v-if="columns[4].visible"
+
+
+          <el-table-column label="评价展开" align="center"
+                           v-if="companyColumns[4].visible"
+                           width="120">
+
+            <el-popover
+              placement="top-start"
+              title="标题"
+              width="200"
+              trigger="hover"
+              content="zzz">
+              <el-button slot="reference">hover 激活</el-button>
+            </el-popover>
+          </el-table-column>
+
+
+
+          <el-table-column label="留言详情" align="center" key="commentList" v-if="companyColumns[5].visible">
+            <template slot-scope="scope">
+              <el-button type="primary" @click="showCommentList(scope.row.commentList)">查看留言</el-button>
+            </template>
+          </el-table-column>
+
+          <el-table-column label="创建时间" align="center" key="createTime" prop="createTime"
+                           v-if="companyColumns[4].visible"
                            width="120"/>
-          <el-table-column label="状态" align="center" key="status" v-if="columns[5].visible">
-            <template slot-scope="scope">
-              <el-switch
-                v-model="scope.row.status"
-                active-value="0"
-                inactive-value="1"
-                @change="handleStatusChange(scope.row)"
-              ></el-switch>
-            </template>
-          </el-table-column>
-          <el-table-column label="创建时间" align="center" prop="createTime" v-if="columns[6].visible" width="160">
-            <template slot-scope="scope">
-              <span>{{ parseTime(scope.row.createTime) }}</span>
-            </template>
-          </el-table-column>
 
-          <el-table-column
-            fixed="right"
-            label="操作"
-            width="100">
-            <template slot-scope="scope">
-              <el-button @click="handleClick(scope.row)" type="text" size="small">查看</el-button>
-              <el-button type="text" size="small" @click="handleUpdate(scope.row)">修改</el-button>
-            </template>
-          </el-table-column>
         </el-table>
+        <pagination
+          v-show="companyTotal>0"
+          :total="companyTotal"
+          :page.sync="queryParams.pageNum"
+          :limit.sync="queryParams.pageSize"
+          @pagination="getCompanyList"
+        />
+
       </el-col>
-
-
     </el-row>
 
+    <el-dialog :title="title" :visible.sync="companyOpen" width="600px" append-to-body>
 
+      <el-card class="box-card">
+        <div slot="header" class="clearfix">
+        </div>
+        <ul v-for="o in commentList" :key="o" class="text item">
+          <li> {{ o }}</li>
+        </ul>
+      </el-card>
+
+
+      <span slot="footer" class="dialog-footer">
+    <el-button @click="companyOpen =!companyOpen">返 回</el-button>
+  </span>
+    </el-dialog>
     <el-dialog :title="title" :visible.sync="open" width="600px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
         <el-row>
@@ -241,12 +232,46 @@
   </div>
 </template>
 
+<style>
+
+.el-tooltip__popper {
+  max-width: 20%;
+}
+</style>
+
+
+<style>
+.text {
+  font-size: 14px;
+}
+
+.item {
+  margin-bottom: 18px;
+}
+
+.clearfix:before,
+.clearfix:after {
+  display: table;
+  content: "";
+}
+
+.clearfix:after {
+  clear: both
+}
+
+.box-card {
+  width: 480px;
+}
+</style>
+
 <script>
 import {addUser, changeUserStatus, delUser, getUser, listUser, resetUserPwd, updateUser} from "@/api/system/user";
+import {listCompany} from "@/api/system/company";
 import {getToken} from "@/utils/auth";
 import {treeselect} from "@/api/system/dept";
 import Treeselect from "@riophae/vue-treeselect";
 import "@riophae/vue-treeselect/dist/vue-treeselect.css";
+import item from "@/layout/components/Sidebar/Item";
 
 export default {
   name: "User",
@@ -268,6 +293,19 @@ export default {
       total: 0,
       // 用户表格数据
       userList: null,
+
+      //公司表哥数
+      companyList: null,
+
+      //公司条数
+      companyTotal: 0,
+
+      //公司是否显示
+      companyOpen: false,
+
+      //留言内容
+      commentList: [],
+
       // 弹出层标题
       title: "",
       // 部门树选项
@@ -312,7 +350,9 @@ export default {
         userName: undefined,
         phonenumber: undefined,
         status: undefined,
-        deptId: undefined
+        deptId: undefined,
+        title: undefined,
+
       },
       // 列信息
       columns: [
@@ -324,6 +364,17 @@ export default {
         {key: 5, label: `状态`, visible: true},
         {key: 6, label: `创建时间`, visible: true}
       ],
+      // 列信息
+      companyColumns: [
+        {key: 0, label: `编号`, visible: true},
+        {key: 1, label: `公司名称`, visible: true},
+        {key: 2, label: `留言条数`, visible: true},
+        {key: 3, label: `评价`, visible: true},
+        {key: 4, label: `创建时间`, visible: true},
+        {key: 5, label: `留言详情`, visible: true},
+      ],
+
+
       // 表单校验
       rules: {
         userName: [
@@ -362,6 +413,7 @@ export default {
   },
   created() {
     this.getList();
+    this.getCompanyList();
     this.getTreeselect();
     this.getConfigKey("sys.user.initPassword").then(response => {
       this.initPassword = response.msg;
@@ -377,6 +429,14 @@ export default {
     },
 
 
+    /*搜索公司*/
+    searchCompany() {
+      console.log(this.queryParams);
+      this.queryParams.pageNum = 1
+      this.getCompanyList()
+    },
+
+
     /*修改用户信息*/
     updateForm() {
       console.log(this.form)
@@ -388,7 +448,10 @@ export default {
         });
       }
     },
-
+    /**去除HTML标签**/
+    delHtmlTag(str) {
+      return str.replace(/<[^>]+>/g, "");//去掉所有的html标记
+    },
 
     /** 查询用户列表 */
     getList() {
@@ -400,6 +463,38 @@ export default {
         }
       );
     },
+    /** 查询公司列表 */
+    getCompanyList() {
+      this.loading = true;
+      listCompany(this.addDateRange(this.queryParams, this.dateRange)).then(response => {
+          response.rows.map(item => {
+            item.description = this.delHtmlTag(item.description);
+            if (item.commentList !== null) {
+              item.commentList.map(e => {
+                e.replace(/<[^>]+>/g, "")
+              })
+            }
+          })
+        response.code="200"
+        response.msg="查询成功"
+        console.log(response)
+        this.companyList = response.rows;
+        this.companyTotal = response.total;
+        this.loading = false;
+        return item;
+
+        }
+      );
+    },
+
+    /**查看留言**/
+    showCommentList(row) {
+      this.companyOpen = true;
+      this.commentList = row;
+      // console.log(row)
+    },
+
+
     /** 查询部门下拉树结构 */
     getTreeselect() {
       treeselect().then(response => {
