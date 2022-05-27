@@ -1,8 +1,12 @@
 package com.ruoyi;
 
+import org.apache.http.HttpHost;
+import org.elasticsearch.client.RestClient;
+import org.elasticsearch.client.RestHighLevelClient;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
+import org.springframework.context.annotation.Bean;
 
 /**
  * 启动程序
@@ -26,5 +30,13 @@ public class RuoYiApplication
                 " |  | \\ `'   /|   `-'  /           \n" +
                 " |  |  \\    /  \\      /           \n" +
                 " ''-'   `'-'    `-..-'              ");
+    }
+    @Bean
+    public RestHighLevelClient restHighLevelClient(){
+        return new RestHighLevelClient(RestClient.builder(
+                // HttpHost.create("http://121.5.139.66:9200")
+                HttpHost.create("http://127.0.0.1:9200")
+
+        ));
     }
 }
