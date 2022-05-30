@@ -16,7 +16,7 @@ import java.util.List;
 
 import javax.servlet.http.HttpServletResponse;
 
-import work.cib.util.DateTimeUtils;
+
 import org.apache.poi.hssf.usermodel.HSSFCell;
 import org.apache.poi.hssf.usermodel.HSSFCellStyle;
 import org.apache.poi.hssf.usermodel.HSSFDataFormat;
@@ -224,7 +224,7 @@ public class ExcelUtils_3 {
             HSSFRow thirdRow = sheet.createRow(2);
 
             HSSFCell oneCell = oneRow.createCell(0);
-            oneCell.setCellValue("发票明细_" + DateTimeUtils.formatDateTimetoString(new java.util.Date(), "yyyyMMdd"));
+//            oneCell.setCellValue("发票明细_" + DateTimeUtils.formatDateTimetoString(new java.util.Date(), "yyyyMMdd"));
             oneCell.setCellStyle(titleStyle);
 
             HSSFCell twoCell = twoRow.createCell(0);
