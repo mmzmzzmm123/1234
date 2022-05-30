@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+
+import com.ruoyi.generator.config.GenConfig;
 import org.apache.velocity.VelocityContext;
 import com.alibaba.fastjson2.JSON;
 import com.alibaba.fastjson2.JSONObject;
@@ -61,6 +63,7 @@ public class VelocityUtils
         velocityContext.put("columns", genTable.getColumns());
         velocityContext.put("table", genTable);
         velocityContext.put("dicts", getDicts(genTable));
+        velocityContext.put("dbType", GenConfig.getDbType());
         setMenuVelocityContext(velocityContext, genTable);
         if (GenConstants.TPL_TREE.equals(tplCategory))
         {

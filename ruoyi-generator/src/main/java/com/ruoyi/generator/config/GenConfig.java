@@ -27,6 +27,11 @@ public class GenConfig
     /** 表前缀(类名不会包含表前缀) */
     public static String tablePrefix;
 
+
+    /** 数据库类型 mysql/ oracle */
+    public static String dbType;
+
+
     public static String getAuthor()
     {
         return author;
@@ -69,5 +74,17 @@ public class GenConfig
     public void setTablePrefix(String tablePrefix)
     {
         GenConfig.tablePrefix = tablePrefix;
+    }
+
+
+    public static String getDbType()
+    {
+        return dbType;
+    }
+
+    @Value("${dbType}")
+    public void setDbType(String dbType)
+    {
+        GenConfig.dbType = dbType;
     }
 }

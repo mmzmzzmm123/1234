@@ -1008,7 +1008,7 @@ create table gen_table_column (
   is_query          char(1),
   query_type        varchar(200)    default 'EQ',
   html_type         varchar(200),
-  dict_type         varchar(200)    default '',
+  dict_type         varchar(200)    default ' ',
   sort              number(4),
   create_by         varchar(64)     default '',
   create_time       date ,

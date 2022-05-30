@@ -7,8 +7,8 @@ spring:
             # 主库数据源
             master:
                 url: jdbc:oracle:thin:@192.168.133.13:1521/orcl
-                username: RY-VUE
-                password: PASSWORD
+                username: BASE_PROJECT_TEST
+                password: DRAGON123
             # 从库数据源
             slave:
                 # 从数据源开关/默认关闭
