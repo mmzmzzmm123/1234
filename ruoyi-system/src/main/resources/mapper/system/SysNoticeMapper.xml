@@ -18,8 +18,15 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </resultMap>
     
     <sql id="selectNoticeVo">
-        select notice_id, notice_title, notice_type, cast(notice_content as char) as notice_content, status, create_by, create_time, update_by, update_time, remark 
-		from sys_notice
+        <if test="_databaseId == 'oracle'">
+            select notice_id, notice_title, notice_type, notice_content, status, create_by, create_time, update_by, update_time, remark
+            from sys_notice
+        </if>
+        <if test="_databaseId == 'mysql'">
+            select notice_id, notice_title, notice_type, cast(notice_content as char) as notice_content, status, create_by, create_time, update_by, update_time, remark
+            from sys_notice
+        </if>
+
     </sql>
     
     <select id="selectNoticeById" parameterType="Long" resultMap="SysNoticeResult">
@@ -43,6 +50,14 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </select>
     
     <insert id="insertNotice" parameterType="SysNotice">
+        <selectKey keyProperty="noticeId" order="BEFORE" resultType="long">
+            <if test="_databaseId == 'oracle'">
+                select seq_sys_notice.nextval as noticeId from DUAL
+            </if>
+            <if test="_databaseId == 'mysql'">
+                select nextval('seq_sys_notice') as noticeId
+            </if>
+        </selectKey>
         insert into sys_notice (
 			<if test="noticeTitle != null and noticeTitle != '' ">notice_title, </if>
 			<if test="noticeType != null and noticeType != '' ">notice_type, </if>
@@ -70,7 +85,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="noticeContent != null">notice_content = #{noticeContent}, </if>
             <if test="status != null and status != ''">status = #{status}, </if>
             <if test="updateBy != null and updateBy != ''">update_by = #{updateBy},</if>
- 			update_time = sysdate()
+ 			update_time = ${@com.ruoyi.common.utils.DBUtils@getCurrentTime()}
         </set>
         where notice_id = #{noticeId}
     </update>

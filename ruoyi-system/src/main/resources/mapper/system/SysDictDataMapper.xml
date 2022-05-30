@@ -84,7 +84,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
  			<if test="status != null">status = #{status},</if>
  			<if test="remark != null">remark = #{remark},</if>
  			<if test="updateBy != null and updateBy != ''">update_by = #{updateBy},</if>
- 			update_time = sysdate()
+			update_time = ${@com.ruoyi.common.utils.DBUtils@getCurrentTime()}
  		</set>
  		where dict_code = #{dictCode}
 	</update>
@@ -94,7 +94,16 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	</update>
  	
  	<insert id="insertDictData" parameterType="SysDictData">
+		<selectKey keyProperty="dictCode" resultType="long" order="BEFORE">
+			<if test="_databaseId == 'oracle'">
+				SELECT seq_sys_dict_data.NEXTVAL as dictCode FROM DUAL
+			</if>
+			<if test="_databaseId == 'mysql'">
+				select nextval('seq_sys_dict_data') as dictCode
+			</if>
+		</selectKey>
  		insert into sys_dict_data(
+ 			<if test="dictCode != null">dict_code,</if>
  			<if test="dictSort != null">dict_sort,</if>
  			<if test="dictLabel != null and dictLabel != ''">dict_label,</if>
  			<if test="dictValue != null and dictValue != ''">dict_value,</if>
@@ -107,6 +116,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
  			<if test="createBy != null and createBy != ''">create_by,</if>
  			create_time
  		)values(
+ 		    <if test="dictCode != null">#{dictCode},</if>
  		    <if test="dictSort != null">#{dictSort},</if>
  		    <if test="dictLabel != null and dictLabel != ''">#{dictLabel},</if>
  			<if test="dictValue != null and dictValue != ''">#{dictValue},</if>
@@ -117,7 +127,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
  			<if test="status != null">#{status},</if>
  			<if test="remark != null and remark != ''">#{remark},</if>
  			<if test="createBy != null and createBy != ''">#{createBy},</if>
- 			sysdate()
+			${@com.ruoyi.common.utils.DBUtils@getCurrentTime()}
  		)
 	</insert>
 	

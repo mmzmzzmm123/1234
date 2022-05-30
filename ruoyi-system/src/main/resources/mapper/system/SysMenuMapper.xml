@@ -28,8 +28,16 @@
 	</resultMap>
 
 	<sql id="selectMenuVo">
-        select menu_id, menu_name, parent_id, order_num, path, component, `query`, is_frame, is_cache, menu_type, visible, status, ifnull(perms,'') as perms, icon, create_time 
-		from sys_menu
+		<if test="_databaseId == 'oracle'">
+			select menu_id, menu_name, parent_id, order_num, path, component, is_frame, is_cache, menu_type, visible,
+			status, nvl(perms,'') as perms, icon, create_time
+			from sys_menu
+		</if>
+		<if test="_databaseId == 'mysql'">
+			select menu_id, menu_name, parent_id, order_num, path, component, is_frame, is_cache, menu_type, visible,
+			status, ifnull(perms,'') as perms, icon, create_time
+			from sys_menu
+		</if>
     </sql>
     
     <select id="selectMenuList" parameterType="SysMenu" resultMap="SysMenuResult">
@@ -49,13 +57,28 @@
 	</select>
 	
 	<select id="selectMenuTreeAll" resultMap="SysMenuResult">
-		select distinct m.menu_id, m.parent_id, m.menu_name, m.path, m.component, m.`query`, m.visible, m.status, ifnull(m.perms,'') as perms, m.is_frame, m.is_cache, m.menu_type, m.icon, m.order_num, m.create_time
+		<if test="_databaseId == 'oracle'">
+			select distinct m.menu_id, m.parent_id, m.menu_name, m.path, m.component, m.visible, m.status,
+			nvl(m.perms,'') as perms, m.is_frame, m.is_cache, m.menu_type, m.icon, m.order_num, m.create_time
+		</if>
+
+		<if test="_databaseId == 'mysql'">
+			select distinct m.menu_id, m.parent_id, m.menu_name, m.path, m.component, m.visible, m.status,
+			ifnull(m.perms,'') as perms, m.is_frame, m.is_cache, m.menu_type, m.icon, m.order_num, m.create_time
+		</if>
 		from sys_menu m where m.menu_type in ('M', 'C') and m.status = 0
 		order by m.parent_id, m.order_num
 	</select>
 	
 	<select id="selectMenuListByUserId" parameterType="SysMenu" resultMap="SysMenuResult">
-		select distinct m.menu_id, m.parent_id, m.menu_name, m.path, m.component, m.`query`, m.visible, m.status, ifnull(m.perms,'') as perms, m.is_frame, m.is_cache, m.menu_type, m.icon, m.order_num, m.create_time
+		<if test="_databaseId == 'oracle'">
+			select distinct m.menu_id, m.parent_id, m.menu_name, m.path, m.component, m.visible, m.status,
+			nvl(m.perms,'') as perms, m.is_frame, m.is_cache, m.menu_type, m.icon, m.order_num, m.create_time
+		</if>
+		<if test="_databaseId == 'mysql'">
+			select distinct m.menu_id, m.parent_id, m.menu_name, m.path, m.component, m.visible, m.status,
+			ifnull(m.perms,'') as perms, m.is_frame, m.is_cache, m.menu_type, m.icon, m.order_num, m.create_time
+		</if>
 		from sys_menu m
 		left join sys_role_menu rm on m.menu_id = rm.menu_id
 		left join sys_user_role ur on rm.role_id = ur.role_id
@@ -122,7 +145,12 @@
 	
 	<select id="checkMenuNameUnique" parameterType="SysMenu" resultMap="SysMenuResult">
 		<include refid="selectMenuVo"/>
-		where menu_name=#{menuName} and parent_id = #{parentId} limit 1
+		<if test="_databaseId == 'oracle'">
+			where menu_name=#{menuName} and parent_id = #{parentId} and rownum <![CDATA[ <= ]]> 1
+		</if>
+		<if test="_databaseId == 'mysql'">
+			where menu_name=#{menuName} and parent_id = #{parentId} limit 1
+		</if>
 	</select>
 	
 	<update id="updateMenu" parameterType="SysMenu">
@@ -143,12 +171,20 @@
 			<if test="icon !=null and icon != ''">icon = #{icon},</if>
 			<if test="remark != null and remark != ''">remark = #{remark},</if>
 			<if test="updateBy != null and updateBy != ''">update_by = #{updateBy},</if>
-			update_time = sysdate()
+			update_time = ${@com.ruoyi.common.utils.DBUtils@getCurrentTime()}
 		</set>
 		where menu_id = #{menuId}
 	</update>
 
 	<insert id="insertMenu" parameterType="SysMenu">
+		<selectKey keyProperty="menuId" order="BEFORE" resultType="Long">
+			<if test="_databaseId == 'oracle'">
+				select seq_sys_menu.nextval as menuId from DUAL
+			</if>
+			<if test="_databaseId == 'mysql'">
+				select nextval('seq_sys_menu') as menuId
+			</if>
+		</selectKey>
 		insert into sys_menu(
 		<if test="menuId != null and menuId != 0">menu_id,</if>
 		<if test="parentId != null and parentId != 0">parent_id,</if>
@@ -184,7 +220,7 @@
 		<if test="icon != null and icon != ''">#{icon},</if>
 		<if test="remark != null and remark != ''">#{remark},</if>
 		<if test="createBy != null and createBy != ''">#{createBy},</if>
-		sysdate()
+		${@com.ruoyi.common.utils.DBUtils@getCurrentTime()}
 		)
 	</insert>
 	

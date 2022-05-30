@@ -32,11 +32,21 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 			<if test="dictType != null and dictType != ''">
 				AND dict_type like concat('%', #{dictType}, '%')
 			</if>
-			<if test="params.beginTime != null and params.beginTime != ''"><!-- 开始时间检索 -->
-				and date_format(create_time,'%y%m%d') &gt;= date_format(#{params.beginTime},'%y%m%d')
+			<if test="_databaseId == 'oracle'">
+				<if test="params.beginTime != null and params.beginTime != ''"><!-- 开始时间检索 -->
+					AND u.create_time &gt;= to_date(#{params.beginTime},'yyyy-MM-dd HH24:mi:ss')
+				</if>
+				<if test="params.endTime != null and params.endTime != ''"><!-- 结束时间检索 -->
+					AND u.create_time &lt;= to_date(#{params.endTime},'yyyy-MM-dd HH24:mi:ss')
+				</if>
 			</if>
-			<if test="params.endTime != null and params.endTime != ''"><!-- 结束时间检索 -->
-				and date_format(create_time,'%y%m%d') &lt;= date_format(#{params.endTime},'%y%m%d')
+			<if test="_databaseId == 'mysql'">
+				<if test="params.beginTime != null and params.beginTime != ''"><!-- 开始时间检索 -->
+					AND date_format(u.create_time,'%y%m%d') &gt;= date_format(#{params.beginTime},'%y%m%d')
+				</if>
+				<if test="params.endTime != null and params.endTime != ''"><!-- 结束时间检索 -->
+					AND date_format(u.create_time,'%y%m%d') &lt;= date_format(#{params.endTime},'%y%m%d')
+				</if>
 			</if>
 	    </where>
 	</select>
@@ -57,7 +67,12 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	
 	<select id="checkDictTypeUnique" parameterType="String" resultMap="SysDictTypeResult">
 		<include refid="selectDictTypeVo"/>
-		where dict_type = #{dictType} limit 1
+		<if test="_databaseId == 'oracle'">
+			where dict_type = #{dictType} and rownum <![CDATA[ <= ]]> 1
+		</if>
+		<if test="_databaseId == 'mysql'">
+			where dict_type = #{dictType} limit 1
+		</if>
 	</select>
 	
 	<delete id="deleteDictTypeById" parameterType="Long">
@@ -79,13 +94,22 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
  			<if test="status != null">status = #{status},</if>
  			<if test="remark != null">remark = #{remark},</if>
  			<if test="updateBy != null and updateBy != ''">update_by = #{updateBy},</if>
- 			update_time = sysdate()
+			update_time = ${@com.ruoyi.common.utils.DBUtils@getCurrentTime()}
  		</set>
  		where dict_id = #{dictId}
 	</update>
  	
  	<insert id="insertDictType" parameterType="SysDictType">
+		<selectKey keyProperty="dictId" resultType="long" order="BEFORE">
+			<if test="_databaseId == 'oracle'">
+				SELECT seq_sys_dict_type.NEXTVAL as dictId FROM DUAL
+			</if>
+			<if test="_databaseId == 'mysql'">
+				select nextval('seq_sys_dict_type') as dictId
+			</if>
+		</selectKey>
  		insert into sys_dict_type(
+ 			<if test="dictId != null and dictId != ''">dict_id,</if>
  			<if test="dictName != null and dictName != ''">dict_name,</if>
  			<if test="dictType != null and dictType != ''">dict_type,</if>
  			<if test="status != null">status,</if>
@@ -93,12 +117,13 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
  			<if test="createBy != null and createBy != ''">create_by,</if>
  			create_time
  		)values(
+ 			<if test="dictId != null and dictId != ''">#{dictId},</if>
  			<if test="dictName != null and dictName != ''">#{dictName},</if>
  			<if test="dictType != null and dictType != ''">#{dictType},</if>
  			<if test="status != null">#{status},</if>
  			<if test="remark != null and remark != ''">#{remark},</if>
  			<if test="createBy != null and createBy != ''">#{createBy},</if>
- 			sysdate()
+		${@com.ruoyi.common.utils.DBUtils@getCurrentTime()}
  		)
 	</insert>
 	
