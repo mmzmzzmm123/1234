@@ -8,13 +8,14 @@ import org.yaml.snakeyaml.Yaml;
 
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
 //{"token":"af111e8f-e2ae-47ee-a676-82d7caeeaafd","date":"2022-04-22","stockCodes":["000016"],"metricsList":["pe_ttm.y10.median","pb.y10.median","ps_ttm.y10.median"]}
 //{"date":"2022-04-27","metricsList":["\"pe_ttm.y20.median\"","\"pe_ttm.y10.median\"","\"pb.y10.median\"","\"pb.y20.median\"","\"ps_ttm.y10.median\"","\"ps_ttm.y20.median\""],"stockCodes":["000016"],"token":"af111e8f-e2ae-47ee-a676-82d7caeeaafd"}
 public class getParam_fundamental {
-    public static String getSingleIndexParamJson() throws IOException {
+    public static String getSingleIndexParamJson() throws IOException, ParseException {
         String filePath = request_fundamental.class.getClassLoader().getResource("indexReqParam.yml").getPath();
         Map indexReqParam = new Yaml().load(new FileInputStream(filePath));
 
@@ -33,7 +34,7 @@ public class getParam_fundamental {
 //        System.out.println(paramJson);
         return paramJson;
     }
-    public static String getSingleIndexParam_dateRangeJson(Date startDate) throws IOException {
+    public static String getSingleIndexParam_dateRangeJson(Date startDate) throws IOException, ParseException {
         SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd");
         String filePath = request_fundamental.class.getClassLoader().getResource("indexReqParam.yml").getPath();
         Map indexReqParam = new Yaml().load(new FileInputStream(filePath));
@@ -55,7 +56,7 @@ public class getParam_fundamental {
 //        System.out.println(paramJson);
         return paramJson;
     }
-    public static String getAllIndexParamJson(List<String> stockCodes) throws IOException {
+    public static String getAllIndexParamJson(List<String> stockCodes) throws IOException, ParseException {
         String filePath = getParam_fundamental.class.getClassLoader().getResource("indexReqParam.yml").getPath();
         Map indexReqParam = new Yaml().load(new FileInputStream(filePath));
         List<String> metricsList = (List<String>) indexReqParam.get("metricsList");
@@ -78,7 +79,7 @@ public class getParam_fundamental {
         return JSON.parseObject(temp, fundamentalParam_RootVO.class);
     }
 
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) throws IOException, ParseException {
         System.out.println(getSingleIndexParamJson());
         System.out.println("11111111111111111111111111111");
         System.out.println(getParamObj(new String()));

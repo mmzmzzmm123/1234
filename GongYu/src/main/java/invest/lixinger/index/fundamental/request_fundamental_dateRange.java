@@ -21,7 +21,7 @@ public class request_fundamental_dateRange extends mybatisNoSpringUtils {
         System.out.println(vo);
     }
 
-    public static fundamentalResult_RootVO getRequest_fundamental_dateRange(Date startDate) throws IOException {
+    public static fundamentalResult_RootVO getRequest_fundamental_dateRange(Date startDate) throws IOException, ParseException {
         String filePath = request_fundamental_dateRange.class.getClassLoader().getResource("indexReqParam.yml").getPath();
         Map indexReqParam = new Yaml().load(new FileInputStream(filePath));
         String fundamentalURL = (String) indexReqParam.get("fundamentalURL");

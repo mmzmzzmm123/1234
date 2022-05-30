@@ -9,6 +9,7 @@ import org.junit.Test;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.text.DecimalFormat;
+import java.text.ParseException;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
@@ -18,7 +19,7 @@ import static invest.lixinger.index.fundamental.request_fundamental_dateRange.ge
 public class hsagController extends mybatisNoSpringUtils {
 
     @Test
-    public void hsag() throws IOException {
+    public void hsag() throws IOException, ParseException {
         Date startDate = nearestDateInDB();
         fundamentalResult_RootVO resultVO = getRequest_fundamental_dateRange(startDate);
         calculateFundamental(resultVO);

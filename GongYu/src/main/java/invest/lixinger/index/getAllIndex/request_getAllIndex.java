@@ -9,13 +9,14 @@ import org.yaml.snakeyaml.Yaml;
 
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.text.ParseException;
 import java.util.*;
 
 import static invest.lixinger.index.fundamental.getParam_fundamental.getAllIndexParamJson;
 import static invest.lixinger.index.fundamental.getResult_fundamental.getResultObj;
 
 public class request_getAllIndex {
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) throws IOException, ParseException {
         String filePath = request_getAllIndex.class.getClassLoader().getResource("indexReqParam.yml").getPath();
         Map indexReqParam = new Yaml().load(new FileInputStream(filePath));
         String allIndexURL = (String) indexReqParam.get("allIndexURL");
@@ -44,7 +45,7 @@ public class request_getAllIndex {
     }
 
     //由于只能使用100个指数，所以放弃这个操作
-    private static void getAllIndexFundamental(List<String[]> codeNameLaunchdateList, String fundamentalURL) throws IOException {
+    private static void getAllIndexFundamental(List<String[]> codeNameLaunchdateList, String fundamentalURL) throws IOException, ParseException {
         List<String> allCodeList = new ArrayList<>();
         for (int i = 0; i < codeNameLaunchdateList.size(); i++) {
             allCodeList.add(codeNameLaunchdateList.get(i)[0]);
