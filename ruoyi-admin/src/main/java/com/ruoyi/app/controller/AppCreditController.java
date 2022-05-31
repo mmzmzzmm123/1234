@@ -3,6 +3,9 @@ package com.ruoyi.app.controller;
 import com.alibaba.fastjson.JSONObject;
 import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.domain.AjaxResult;
+import com.ruoyi.system.domain.model.ComUserRegister;
+import com.ruoyi.system.domain.model.FinanceProductApply;
+import com.ruoyi.system.domain.model.FinanceProductQuery;
 import com.ruoyi.system.domain.model.credit.DishonestOrBlack;
 import com.ruoyi.system.domain.model.credit.FinanceProductResponse;
 import com.ruoyi.system.service.impl.DataCreditApi;
@@ -12,10 +15,7 @@ import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * 转发或组合信用三期的相关接口
@@ -46,13 +46,52 @@ public class AppCreditController extends BaseController {
 
     @GetMapping("/getFinanceProductList")
     @ApiOperation(value = "信贷直通车金融产品列表查询")
-    public AjaxResult getFinanceProductList(@RequestParam(name="pageNum") String pageNum,
-                                            @RequestParam(name="pageSize") String pageSize) {
-        log.info("pageNum:{}, pageSize:{}",pageNum,pageSize);
-
-        Object financeProductList = prodOpenApi.getFinanceProductList(pageNum,pageSize);
+    public AjaxResult getFinanceProductList(@RequestBody FinanceProductQuery query) {
+        Object financeProductList = prodOpenApi.getFinanceProductList(query);
 
         return AjaxResult.success(financeProductList);
+    }
+
+
+    @PostMapping("/getFinanceProductHotList")
+    @ApiOperation(value = "热门产品列表查询")
+    public AjaxResult getFinanceProductHotList(@RequestBody FinanceProductQuery query) {
+        log.info("热门产品列表查询 param {}",query);
+        Object financeProductList = prodOpenApi.getFinanceProductHotList(query);
+
+        return AjaxResult.success(financeProductList);
+    }
+
+
+//    @GetMapping("/getDict/{dictType}")
+    @GetMapping("/getDict")
+    @ApiOperation(value = "信贷直通车字典查询")
+    public AjaxResult getDict(@RequestParam(name="dictType") String dictType) {
+        log.info("信贷直通车字典查询 param dictType={}",dictType);
+
+        Object financeProductDict = prodOpenApi.getDictByDictType(dictType);
+
+        return AjaxResult.success(financeProductDict);
+    }
+
+    @PostMapping("/financeProductApply")
+    @ApiOperation(value = "金融产品申请")
+    public AjaxResult financeProductApply(@RequestBody FinanceProductApply apply) {
+        log.info("金融产品申请 param:{}",apply);
+
+        Object result = prodOpenApi.financeProductApply(apply);
+
+        return AjaxResult.success(result);
+    }
+
+    @PostMapping("/comUserReg")
+    @ApiOperation(value = "企业入驻")
+    public AjaxResult comUserReg(@RequestBody ComUserRegister register) {
+        log.info("企业入驻 param:{}",register);
+
+        Object result = prodOpenApi.comUserReg(register);
+
+        return AjaxResult.success(result);
     }
 
 }

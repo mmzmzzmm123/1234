@@ -14,7 +14,7 @@ public class FinanceProductResponse<T> {
     private String msg;
     private T data;
     private int total;
-    private T rows;
+    private List<T> rows;
 
     public int getCode() {
         return code;
@@ -48,11 +48,11 @@ public class FinanceProductResponse<T> {
         this.total = total;
     }
 
-    public T getRows() {
+    public List<T> getRows() {
         return rows;
     }
 
-    public void setRows(T rows) {
+    public void setRows(List<T> rows) {
         this.rows = rows;
     }
 
