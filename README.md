@@ -91,6 +91,33 @@
     </tr>
 </table>
 
+## SmartIDE 快速启动
+
+### 1. 本地模式：
+使用SmartIDE启动RuoYi的开发调试非常简单，仅需要两个步骤
+
+1. 按照 [安装手册](https://smartide.cn/zh/docs/install/) 完成 SmartIDE 本地命令行工具的安装
+2. 使用以下命令一键启动SFDE
+
+```shell
+## SmartIDE是一款跨平台开发工具，您可以在Windows或者MacOS上执行同样的指令
+smartide start https://gitee.com/SmartIDE/RuoYi-Vue.git
+```
+
+### 2. 远程主机模式：
+1. 按照 [Docker & Docker-Compose 安装手册 (Linux服务器)](https://smartide.cn/zh/docs/install/docker-install-linux/) 准备好一台远程主机，建议使用Ubuntu 18.04 LTS以上版本的Linux环境。
+2. 按照以下指令启动项目
+
+```shell
+# 将远程主机添加到SmartIDE中
+smartide host add <IpAddress> --username <SSH-UserName> --password <SSH-Password> --port <SSH-Port默认为22>
+
+# 获取主机ID
+smartide host list
+
+# 使用远程主机启动项目
+smartide start --host <主机ID> https://gitee.com/SmartIDE/RuoYi-Vue.git
+```
 
 ## 若依前后端分离交流群
 
