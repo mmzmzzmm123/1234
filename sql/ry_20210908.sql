@@ -1,3 +1,12 @@
+ROP DATABASE IF EXISTS `ry-vue`;
+
+CREATE DATABASE  `ry-vue` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
+
+SET NAMES utf8mb4;
+SET FOREIGN_KEY_CHECKS = 0;
+
+USE `ry-vue`;
+
 -- ----------------------------
 -- 1、部门表
 -- ----------------------------
