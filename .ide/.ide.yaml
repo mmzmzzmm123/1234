@@ -47,7 +47,7 @@ workspace:
       environment:
         MYSQL_ROOT_PASSWORD: password
       volumes:
-      #  - './.ide/.data/mysql-data:/var/lib/mysql'
+        - './.ide/.data/mysql-data:/var/lib/mysql'
       networks:
         - ruoyi-dev-network
 
