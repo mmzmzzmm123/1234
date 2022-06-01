@@ -20,6 +20,7 @@ import org.springframework.http.converter.json.GsonBuilderUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import javax.validation.constraints.NotNull;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -56,18 +57,14 @@ public class ProdOpenApi {
      * @return 信贷直通车金融产品列表
      */
     public JSONObject getFinanceProductList(FinanceProductQuery query) {
-        JSONObject returnObject = new JSONObject();
         int pageNum = query.getPageNum();
         int pageSize = query.getPageNum();
 
         String url = domain + "xdztc/financeProduct/list?pageNum=" + pageNum + "&pageSize=" + pageSize;
 
         HttpHeaders headers = OpenApiAuthUtil.generateAuthHeaders(appKey, appSecret);
-        ;
 
-        JSONObject jsonObject = new JSONObject();
-        jsonObject.put("pageNum", pageNum);
-        jsonObject.put("pageSize", pageSize);
+        JSONObject jsonObject = JSONObject.parseObject(JSON.toJSONString(query));
 
         HttpEntity<JSONObject> httpEntity = new HttpEntity<>(jsonObject, headers);
         ParameterizedTypeReference<FinanceProductResponse<FinanceProductInfo>> reference =
@@ -191,7 +188,9 @@ public class ProdOpenApi {
     private JSONObject getResult(FinanceProductResponse response) {
         JSONObject returnObject = new JSONObject();
         log.info("original response: {}",response);
-        if (Objects.equals(200, response.getCode())) {
+        if(response == null || !Objects.equals(200, response.getCode())){
+            throw new CustomException(response.getMsg(), HttpStatus.ERROR);
+        }else{
             if (!Objects.isNull(response.getData())) {
                 returnObject.put("data", response.getData());
             }
@@ -199,12 +198,10 @@ public class ProdOpenApi {
                 returnObject.put("rows", response.getRows());
                 returnObject.put("total", response.getTotal());
             }
-
-        } else {
-            throw new CustomException(response.getMsg(), HttpStatus.ERROR);
         }
         log.debug("return response data:{}",returnObject);
         return returnObject;
+
     }
 
 

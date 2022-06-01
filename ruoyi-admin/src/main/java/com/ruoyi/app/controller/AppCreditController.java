@@ -44,7 +44,7 @@ public class AppCreditController extends BaseController {
     }
 
 
-    @GetMapping("/getFinanceProductList")
+    @PostMapping("/getFinanceProductList")
     @ApiOperation(value = "信贷直通车金融产品列表查询")
     public AjaxResult getFinanceProductList(@RequestBody FinanceProductQuery query) {
         Object financeProductList = prodOpenApi.getFinanceProductList(query);
