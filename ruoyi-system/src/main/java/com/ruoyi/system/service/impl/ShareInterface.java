@@ -324,5 +324,8 @@ public class ShareInterface {
         return result;
     }
 
+    public static void main(String[] args){
+        new ShareInterface().queryCompanyInfo("泉州大数据运营服务有限公司");
+    }
 
 }

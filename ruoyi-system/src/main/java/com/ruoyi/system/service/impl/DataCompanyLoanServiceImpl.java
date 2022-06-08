@@ -123,9 +123,10 @@ public class DataCompanyLoanServiceImpl implements IDataCompanyLoanService
         // 校验手机号码
         String verifyKey = Constants.SMS_CODE_KEY + mobile;
         String realCode = redisCache.getCacheObject(verifyKey);
-        if (!StringUtils.equals(code,realCode)){
-            throw new SmsException();
-        }
+        //TODO
+//        if (!StringUtils.equals(code,realCode)){
+//            throw new SmsException();
+//        }
 
         redisCache.deleteObject(verifyKey);
 
@@ -146,44 +147,27 @@ public class DataCompanyLoanServiceImpl implements IDataCompanyLoanService
 
         dataCompanyLoan.setBankBranch(dataCompanyLoanBody.getBankBranch());
         dataCompanyLoan.setCustomerManager(dataCompanyLoanBody.getCustomerManager());
-        dataCompanyLoan.setLoanObjectType(dataCompanyLoanBody.getLoanObjectType() == DataMatchCompany.TYPE_PERSON ? "个体工商户" : "企业法人");
-        String xydm = "";
+        dataCompanyLoan.setCompanyCreditCode(dataCompanyLoanBody.getXydm());
 
-        if (DataMatchCompany.TYPE_PERSON  == dataCompanyLoanBody.getLoanObjectType()){ // 个体工商户
-            xydm = dataCompanyLoanBody.getXydm();
-            JSONObject jsonObject = interfaceService.queryGTGSHByXydm(xydm,companyNameFromRequest);
-            if (jsonObject != null){
-                String name = jsonObject.getString("traname");
-                // 用户上传的企业名称与接口匹配数据一致或者包含关系，才进行相关信息补充。
-                if (name != null && (StringUtils.equals(name, companyNameFromRequest) || name.contains(companyNameFromRequest))){
-                    dataCompanyLoan.setCompanyCreditCode(xydm);
-                    dataCompanyLoan.setCompanyBusiness(jsonObject.getString("jyfw"));
-                    dataCompanyLoan.setCompanyAddress(jsonObject.getString("jycsdz"));
-                }
-            } else{
-                //没有个体工商户信息，抛出异常
-                throwCompanyNotFoundException();
-
-            }
-        }else {
-            //根据企业名称组装企业相关数据：企业划型、所在行业、主营业务、省市区
-            Map<String, String> map = interfaceService.queryCompanyInfo(companyNameFromRequest);
-            xydm = map.get("tyshxydm");
-            if (StringUtils.isEmpty(xydm)){
-                //没有企业信息，抛出异常
-                throwCompanyNotFoundException();
-            }
-            dataCompanyLoan.setCompanyCreditCode(xydm);
+        // 尝试获取企业完整信息
+        Map<String, String> map = interfaceService.queryCompanyInfo(companyNameFromRequest);
+        String xydm = map.get("tyshxydm");
+        if (!StringUtils.isEmpty(xydm)){
             dataCompanyLoan.setCompanyType(map.get("companytype"));
             dataCompanyLoan.setCompanyIndustry(map.get("indurstryname"));
             dataCompanyLoan.setCompanyBusiness(map.get("managerange"));
             dataCompanyLoan.setCompanyAddress(map.get("regaddress"));
-        }
-
-        if (StringUtils.isNotEmpty(xydm)){
-            boolean isTrust = interfaceService.isTrust(xydm,companyNameFromRequest);
-            if (!isTrust) {
-                throw new UserException(null, null, "保存'" + dataCompanyLoan.getCompanyName() + "'失败，该企业存在失信记录");
+            dataCompanyLoan.setLoanObjectType("企业法人");
+        }else{ //  查无企业法人信息时,尝试查找个体工商户接口
+            JSONObject jsonObject = interfaceService.queryGTGSHByXydm(dataCompanyLoanBody.getXydm(),companyNameFromRequest);
+            if (jsonObject != null){
+                String name = jsonObject.getString("traname");
+                if (StringUtils.isNotEmpty(name)){
+                    dataCompanyLoan.setCompanyBusiness(jsonObject.getString("jyfw"));
+                    dataCompanyLoan.setCompanyAddress(jsonObject.getString("jycsdz"));
+                }
+            }else{
+                log.debug("查无企业或个体工商户信息："+ xydm);
             }
         }
 
@@ -271,13 +255,9 @@ public class DataCompanyLoanServiceImpl implements IDataCompanyLoanService
     @Override
     public String senSmsCode(String phone) {
         String verifyKey = Constants.SMS_CODE_KEY + phone;
-//        String code = numRandom(6);
-//        AjaxResult response = smsService.sendVerifyCodeByUMS(phone,code);
-//        int resultCode = (int) response.get(AjaxResult.CODE_TAG);
-
-        String code = "123456";
-        AjaxResult response = null;
-        int resultCode = 0;
+        String code = numRandom(6);
+        AjaxResult response = smsService.sendVerifyCodeByUMS(phone,code);
+        int resultCode = (int) response.get(AjaxResult.CODE_TAG);
         if (UMS_SUCCESS_CODE == resultCode){//发送短信成功
             redisCache.setCacheObject(verifyKey, code, Constants.SMS_CODE_EXPIRATION, TimeUnit.MINUTES);
             return code;
