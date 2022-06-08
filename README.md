@@ -35,9 +35,9 @@
 
 ```shell
 ## 使用GitHub
-smartide start https://github.com/idcf-boat-house/boathouse-calculator.git
+smartide start https://github.com/smartide/RuoYi-Vue.git
 ## 使用Gitee
-smartide start https://gitee.com/idcf-boat-house/boathouse-calculator.git
+smartide start https://gitee.com/smartide/RuoYi-Vue.git
 ```
 
 启动后的效果如下
@@ -64,9 +64,9 @@ smartide host list
 
 ## 使用主机模式启动环境
 ## 使用GitHub 
-smartide start --host <主机ID> https://github.com/idcf-boat-house/boathouse-calculator.git
+smartide start --host <主机ID> https://github.com/smartide/RuoYi-Vue.git
 ## 使用Gitee
-smartide start --host <主机ID> https://gitee.com/idcf-boat-house/boathouse-calculator.git
+smartide start --host <主机ID> https://gitee.com/smartide/RuoYi-Vue.git
 ```
 
 ### Server 模式
@@ -75,7 +75,7 @@ SmartIDE Server 为开发团队提供对开发环境的统一在线管理和访�
 
 Server一键启动按钮，点击此按钮即可启动开发调试环境
 
-[![smartide start](.ide/images/smartide-start-badge.png)](http://dev.smartide.cn/#/layout/smartide/workspace/details/157)
+[![smartide start](.ide/images/smartide-start-badge.png)](https://dev.smartide.cn/#/layout/smartide/workspace/details/158)
 
 - 在线版地址 https://dev.smartide.cn 
 - Server版快速启动手册 https://smartide.cn/zh/docs/quickstart/server/ 
