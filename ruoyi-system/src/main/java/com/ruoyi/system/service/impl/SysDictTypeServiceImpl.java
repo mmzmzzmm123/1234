@@ -17,6 +17,7 @@ import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.system.mapper.SysDictDataMapper;
 import com.ruoyi.system.mapper.SysDictTypeMapper;
 import com.ruoyi.system.service.ISysDictTypeService;
+import org.springframework.util.Assert;
 
 /**
  * 字典 业务层处理
@@ -219,5 +220,20 @@ public class SysDictTypeServiceImpl implements ISysDictTypeService
             return UserConstants.NOT_UNIQUE;
         }
         return UserConstants.UNIQUE;
+    }
+
+    /**
+     * 如果是业务字典，执行remark中sql返回字典数据
+     *
+     * @param dictId 字典ID
+     * @return 字典数据
+     */
+    @Override
+    public List<SysDictData> selectDictTypeByExec(Long dictId) {
+        SysDictType dictType = dictTypeMapper.selectDictTypeById(dictId);
+        if(dictType==null) throw new ServiceException("业务字典不存在!");
+        if(!"1".equals(dictType.getDictFrom()))throw new ServiceException("非业务字典!");
+        if(StringUtils.isEmpty(dictType.getRemark()))throw new ServiceException("备注字段需要填入查询语句！");
+        return dictDataMapper.selectDictDataByQuery(dictType.getRemark());
     }
 }

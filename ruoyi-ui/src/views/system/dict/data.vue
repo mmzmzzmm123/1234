@@ -1,6 +1,6 @@
 <template>
   <div class="app-container">
-    <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch" label-width="68px">
+    <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch&&dictFrom!='1'" label-width="68px">
       <el-form-item label="字典名称" prop="dictType">
         <el-select v-model="queryParams.dictType">
           <el-option
@@ -35,7 +35,7 @@
       </el-form-item>
     </el-form>
 
-    <el-row :gutter="10" class="mb8">
+    <el-row :gutter="10" class="mb8" v-show="dictFrom!='1'">
       <el-col :span="1.5">
         <el-button
           type="primary"
@@ -92,7 +92,7 @@
 
     <el-table v-loading="loading" :data="dataList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="字典编码" align="center" prop="dictCode" />
+      <el-table-column label="字典编码" align="center" prop="dictCode" v-if="dictFrom!='1'"/>
       <el-table-column label="字典标签" align="center" prop="dictLabel">
         <template slot-scope="scope">
           <span v-if="scope.row.listClass == '' || scope.row.listClass == 'default'">{{scope.row.dictLabel}}</span>
@@ -101,18 +101,18 @@
       </el-table-column>
       <el-table-column label="字典键值" align="center" prop="dictValue" />
       <el-table-column label="字典排序" align="center" prop="dictSort" />
-      <el-table-column label="状态" align="center" prop="status">
+      <el-table-column label="状态" align="center" prop="status" v-if="dictFrom!='1'">
         <template slot-scope="scope">
           <dict-tag :options="dict.type.sys_normal_disable" :value="scope.row.status"/>
         </template>
       </el-table-column>
-      <el-table-column label="备注" align="center" prop="remark" :show-overflow-tooltip="true" />
-      <el-table-column label="创建时间" align="center" prop="createTime" width="180">
+      <el-table-column label="备注" align="center" prop="remark" :show-overflow-tooltip="true" v-if="dictFrom!='1'" />
+      <el-table-column label="创建时间" align="center" prop="createTime" width="180" v-if="dictFrom!='1'">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.createTime) }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
+      <el-table-column label="操作" align="center" class-name="small-padding fixed-width" v-if="dictFrom!='1'">
         <template slot-scope="scope">
           <el-button
             size="mini"
@@ -191,7 +191,7 @@
 
 <script>
 import { listData, getData, delData, addData, updateData } from "@/api/system/dict/data";
-import { optionselect as getDictOptionselect, getType } from "@/api/system/dict/type";
+import { optionselect as getDictOptionselect, getType, getInfoQuery } from "@/api/system/dict/type";
 
 export default {
   name: "Data",
@@ -218,6 +218,8 @@ export default {
       title: "",
       // 是否显示弹出层
       open: false,
+      //字典来源
+      dictFrom:'0',
       // 数据标签回显样式
       listClassOptions: [
         {
@@ -273,8 +275,15 @@ export default {
   },
   created() {
     const dictId = this.$route.params && this.$route.params.dictId;
+    const dictFrom = this.$route.query && this.$route.query.dictFrom;
+    this.dictFrom = dictFrom;
+    this.dictId = dictId;
+
     this.getType(dictId);
-    this.getTypeList();
+    if('1'!=dictFrom){
+      this.getTypeList();
+    }
+
   },
   methods: {
     /** 查询字典类型详细 */
@@ -294,12 +303,21 @@ export default {
     /** 查询字典数据列表 */
     getList() {
       this.loading = true;
-      listData(this.queryParams).then(response => {
-        this.dataList = response.rows;
-        this.total = response.total;
-        this.loading = false;
-      });
+      if("1"==this.dictFrom){//业务编码
+        getInfoQuery(this.dictId).then(response => {
+          this.dataList = response.rows;
+          this.total = response.total;
+          this.loading = false;
+        });
+      }else {
+        listData(this.queryParams).then(response => {
+          this.dataList = response.rows;
+          this.total = response.total;
+          this.loading = false;
+        });
+      }
     },
+
     // 取消按钮
     cancel() {
       this.open = false;
