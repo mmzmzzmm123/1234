@@ -3,7 +3,9 @@ package com.ruoyi.system.service.impl;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.ruoyi.common.constant.HttpStatus;
+import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.exception.CustomException;
+import com.ruoyi.system.domain.DataCompanyLoan;
 import com.ruoyi.system.domain.model.*;
 import com.ruoyi.system.domain.model.credit.FinanceProductResponse;
 import com.ruoyi.system.utils.OpenApiAuthUtil;
@@ -88,7 +90,6 @@ public class ProdOpenApi {
         String url = domain + "xdztc/financeProduct/hotList";
 
         HttpHeaders headers = OpenApiAuthUtil.generateAuthHeaders(appKey, appSecret);
-        ;
 
         JSONObject jsonObject = JSONObject.parseObject(JSON.toJSONString(query));
 
@@ -114,7 +115,6 @@ public class ProdOpenApi {
         String url = domain + "xdztc/dict?dictType=" + dictType;
 
         HttpHeaders headers = OpenApiAuthUtil.generateAuthHeaders(appKey, appSecret);
-        ;
 
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("dictType", dictType);
@@ -161,7 +161,7 @@ public class ProdOpenApi {
      *
      * @return 入驻结果
      */
-    public JSONObject comUserReg(ComUserRegister register) {
+    public AjaxResult comUserReg(ComUserRegister register) {
 
         String url = domain + "xdztc/comUserReg";
 
@@ -174,14 +174,63 @@ public class ProdOpenApi {
         log.debug("req json:{}", jsonObject);
 
         HttpEntity<JSONObject> httpEntity = new HttpEntity<>(jsonObject, headers);
-        ParameterizedTypeReference<FinanceProductResponse> reference =
-                new ParameterizedTypeReference<FinanceProductResponse>() {
+        ParameterizedTypeReference<AjaxResult> reference =
+                new ParameterizedTypeReference<AjaxResult>() {
                 };
 
-        ResponseEntity<FinanceProductResponse> responseEntity = restTemplate.exchange(url,
+        ResponseEntity<AjaxResult> responseEntity = restTemplate.exchange(url,
                 HttpMethod.POST, httpEntity, reference);
 
-        return getResult(responseEntity.getBody());
+        return responseEntity.getBody();
+    }
+
+    /**
+     * 企业入驻
+     * @param userJsonObject 获取到的闽政通用户信息对象
+     * @return
+     */
+    public AjaxResult comUserReg(JSONObject userJsonObject) {
+
+        ComUserRegister register = new ComUserRegister();
+        register.setLEGALPERSON_TYPE(userJsonObject.getString("LEGALPERSON_TYPE"));//法人类型
+        register.setUSER_MOBILE(userJsonObject.getString("USER_MOBILE"));
+        register.setUSER_ID(userJsonObject.getString("USER_ID"));
+        register.setUSER_AUTHLEVEL(userJsonObject.getLong("USER_AUTHLEVEL"));
+        register.setUSER_TYPE(userJsonObject.getString("USER_TYPE"));
+        register.setLEGALPERSON_IDCARD(userJsonObject.getString("LEGALPERSON_IDCARD"));
+        register.setCARD_TYPE(userJsonObject.getString("CARD_TYPE"));
+        register.setLEGALPERSON_NAME(userJsonObject.getString("LEGALPERSON_NAME"));
+        register.setLEGALPERSON_JBRNAME(userJsonObject.getString("LEGALPERSON_JBRNAME"));
+        register.setUSER_NAME(userJsonObject.getString("USER_NAME"));
+        register.setUSER_PHOTOURL(userJsonObject.getString("USER_PHOTOURL"));
+        register.setUSER_IDCARD(userJsonObject.getString("USER_IDCARD"));
+        register.setLEGALPERSON_JBRIDCARD(userJsonObject.getString("LEGALPERSON_JBRIDCARD"));
+        register.setLEGAL_KEYID(userJsonObject.getString("LEGAL_KEYID"));
+        return this.comUserReg(register);
+    }
+
+    /**
+     * 推送贷款数据到业务方系统中
+     * @param loan 银行贷款数据
+     * @return
+     */
+    public AjaxResult pushCompanyLoan(DataCompanyLoan loan) {
+
+        String url = domain + "xdztc/push";
+
+        HttpHeaders headers = OpenApiAuthUtil.generateAuthHeaders(appKey, appSecret);
+
+        JSONObject jsonObject = JSONObject.parseObject(JSON.toJSONString(loan));
+
+        HttpEntity<JSONObject> httpEntity = new HttpEntity<>(jsonObject, headers);
+        ParameterizedTypeReference<AjaxResult> reference =
+                new ParameterizedTypeReference<AjaxResult>() {
+                };
+
+        ResponseEntity<AjaxResult> responseEntity = restTemplate.exchange(url,
+                HttpMethod.POST, httpEntity, reference);
+
+        return responseEntity.getBody();
     }
 
     // 获取接口返回信息

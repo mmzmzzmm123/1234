@@ -10,6 +10,7 @@ import com.ruoyi.common.constant.HttpStatus;
 import com.ruoyi.common.constant.UserConstants;
 import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.core.redis.RedisCache;
+import com.ruoyi.common.exception.CustomException;
 import com.ruoyi.common.exception.user.SmsException;
 import com.ruoyi.common.exception.user.UserException;
 import com.ruoyi.common.utils.DateUtils;
@@ -26,12 +27,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 import static com.ruoyi.common.utils.mzt.MztSample.sendPostParams;
@@ -73,6 +72,12 @@ public class DataCompanyLoanServiceImpl implements IDataCompanyLoanService
     @Autowired
     private SecretKeyConfig secretKeyConfig;
 
+    @Autowired
+    private ProdOpenApi prodOpenApi;
+
+    @Value("${spring.profiles.active}")
+    private String active;
+
     /**
      * 查询企业贷款信息
      * 
@@ -110,8 +115,7 @@ public class DataCompanyLoanServiceImpl implements IDataCompanyLoanService
         return dataCompanyLoanMapper.insertDataCompanyLoan(dataCompanyLoan);
     }
 
-    // @Transactional(rollbackFor = Exception.class)
-    // TODO:多数据源的事务处理
+    @Transactional(rollbackFor = Exception.class)
     @Override
     public int insertDataCompanyLoan(DataCompanyLoanBody dataCompanyLoanBody) {
 
@@ -123,10 +127,12 @@ public class DataCompanyLoanServiceImpl implements IDataCompanyLoanService
         // 校验手机号码
         String verifyKey = Constants.SMS_CODE_KEY + mobile;
         String realCode = redisCache.getCacheObject(verifyKey);
-        //TODO
-//        if (!StringUtils.equals(code,realCode)){
-//            throw new SmsException();
-//        }
+
+        if ("druid-prod".equals(active)){ // 生产环境校验短信正确性
+            if (!StringUtils.equals(code,realCode)){
+                throw new SmsException();
+            }
+        }
 
         redisCache.deleteObject(verifyKey);
 
@@ -149,16 +155,13 @@ public class DataCompanyLoanServiceImpl implements IDataCompanyLoanService
         dataCompanyLoan.setCustomerManager(dataCompanyLoanBody.getCustomerManager());
         dataCompanyLoan.setCompanyCreditCode(dataCompanyLoanBody.getXydm());
 
-        // 尝试获取企业完整信息
-        Map<String, String> map = interfaceService.queryCompanyInfo(companyNameFromRequest);
-        String xydm = map.get("tyshxydm");
-        if (!StringUtils.isEmpty(xydm)){
-            dataCompanyLoan.setCompanyType(map.get("companytype"));
-            dataCompanyLoan.setCompanyIndustry(map.get("indurstryname"));
-            dataCompanyLoan.setCompanyBusiness(map.get("managerange"));
-            dataCompanyLoan.setCompanyAddress(map.get("regaddress"));
-            dataCompanyLoan.setLoanObjectType("企业法人");
-        }else{ //  查无企业法人信息时,尝试查找个体工商户接口
+        //判断企业类型
+        String loanObjectTypeRequest = dataCompanyLoanBody.getLoanObjectType();
+        String loanObjectType = Constants.COMPANY_TYPE_MAP.get(loanObjectTypeRequest.toUpperCase());
+        dataCompanyLoan.setLoanObjectType(loanObjectType);
+
+        // 查询企业或个体工商户详细信息
+        if (StringUtils.equals(loanObjectTypeRequest,Constants.TYPE_GTGSH)){// 个体工商户
             JSONObject jsonObject = interfaceService.queryGTGSHByXydm(dataCompanyLoanBody.getXydm(),companyNameFromRequest);
             if (jsonObject != null){
                 String name = jsonObject.getString("traname");
@@ -166,8 +169,15 @@ public class DataCompanyLoanServiceImpl implements IDataCompanyLoanService
                     dataCompanyLoan.setCompanyBusiness(jsonObject.getString("jyfw"));
                     dataCompanyLoan.setCompanyAddress(jsonObject.getString("jycsdz"));
                 }
-            }else{
-                log.debug("查无企业或个体工商户信息："+ xydm);
+            }
+        }else{// 法人账号
+            Map<String, String> map = interfaceService.queryCompanyInfo(companyNameFromRequest);
+            String xydm = map.get("tyshxydm");
+            if (!StringUtils.isEmpty(xydm)){
+                dataCompanyLoan.setCompanyType(map.get("companytype"));
+                dataCompanyLoan.setCompanyIndustry(map.get("indurstryname"));
+                dataCompanyLoan.setCompanyBusiness(map.get("managerange"));
+                dataCompanyLoan.setCompanyAddress(map.get("regaddress"));
             }
         }
 
@@ -180,15 +190,27 @@ public class DataCompanyLoanServiceImpl implements IDataCompanyLoanService
 
         }
 
-        dataCompanyLoanMapper.insertDataCompanyLoan(dataCompanyLoan);
+        // 保存数据到本系统数据库中（方便数据校对）
+        int result = dataCompanyLoanMapper.insertDataCompanyLoan(dataCompanyLoan);
         Long companyId = dataCompanyLoan.getCompanyId();
 
+        // 提送贷款数据至业务方
         DataCompanyLoan loanClone = (DataCompanyLoan) dataCompanyLoan.clone();
         loanClone.setCompanyId(companyId);
         loanClone.setLoanBand(dataCompanyLoanBody.getLoanBandNames());
         loanClone.setDelFlag(null);
-        //插入 Oracle 表
-        int result =  companyLoanOracleService.insertDataCompanyLoan(loanClone);
+        loanClone.setSubmitTime(new Date());
+
+        AjaxResult ajaxResult = prodOpenApi.pushCompanyLoan(loanClone);
+
+        int responseCode = (int) ajaxResult.get(AjaxResult.CODE_TAG);
+        if (responseCode != 200){
+            log.error(ajaxResult.toString());
+            throw new CustomException("贷款数据保存失败", HttpStatus.ERROR);
+        }else{
+            log.info(ajaxResult.toString());
+        }
+
         //测试环境： 企业信用代码+银行+金额作为key，保存 redis 10分钟
         //redisCache.setCacheObject(xydmCacheKey, true, 10, TimeUnit.MINUTES);
         //企业信用代码+银行+金额作为key，保存 redis 三天

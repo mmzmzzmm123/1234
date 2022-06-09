@@ -1,6 +1,9 @@
 package com.ruoyi.system.domain;
 
 import java.math.BigDecimal;
+import java.util.Date;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import com.ruoyi.common.annotation.Excel;
@@ -97,6 +100,10 @@ public class DataCompanyLoan extends BaseEntity implements Cloneable
      * 贷款对象类型:法人企业和个体工商户
      */
     private String loanObjectType;
+
+    /** 提交时间(推送接口使用) */
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    private Date submitTime;
 
     public String getCompanyAddress() {
         return companyAddress;
@@ -294,6 +301,14 @@ public class DataCompanyLoan extends BaseEntity implements Cloneable
 
     public void setLoanObjectType(String loanObjectType) {
         this.loanObjectType = loanObjectType;
+    }
+
+    public Date getSubmitTime() {
+        return submitTime;
+    }
+
+    public void setSubmitTime(Date submitTime) {
+        this.submitTime = submitTime;
     }
 
     @Override

@@ -1,5 +1,8 @@
 package com.ruoyi.common.constant;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * 通用常量信息
  * 
@@ -151,4 +154,18 @@ public class Constants
      * RMI 远程方法调用
      */
     public static final String LOOKUP_RMI = "rmi://";
+
+    public static final String TYPE_GTGSH = "C04";
+
+    /**
+     * 用户类型
+     */
+    public static final Map<String,String> COMPANY_TYPE_MAP = new HashMap<String,String>(){
+        {
+            put("C01", "企业法人");
+            put("C02", "社会组织法人");
+            put("C03", "事业单位法人");
+            put(TYPE_GTGSH, "个体工商户");
+        }
+    };
 }

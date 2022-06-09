@@ -3,11 +3,11 @@ package com.ruoyi.app.controller;
 import com.alibaba.fastjson.JSONObject;
 import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.domain.AjaxResult;
-import com.ruoyi.system.domain.model.ComUserRegister;
+import com.ruoyi.framework.interceptor.impl.AppInterceptor;
 import com.ruoyi.system.domain.model.FinanceProductApply;
 import com.ruoyi.system.domain.model.FinanceProductQuery;
 import com.ruoyi.system.domain.model.credit.DishonestOrBlack;
-import com.ruoyi.system.domain.model.credit.FinanceProductResponse;
+import com.ruoyi.system.service.IDataCompanyLoanService;
 import com.ruoyi.system.service.impl.DataCreditApi;
 import com.ruoyi.system.service.impl.ProdOpenApi;
 import io.swagger.annotations.Api;
@@ -16,6 +16,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
+
+import javax.servlet.http.HttpServletRequest;
 
 /**
  * 转发或组合信用三期的相关接口
@@ -35,6 +39,9 @@ public class AppCreditController extends BaseController {
 
     @Autowired
     private ProdOpenApi prodOpenApi;
+
+    @Autowired
+    private IDataCompanyLoanService dataCompanyLoanService;
 
     @GetMapping("/blackOrDishonest")
     @ApiOperation(value = "验证是否在黑名单或失信执行人")
@@ -86,12 +93,20 @@ public class AppCreditController extends BaseController {
 
     @PostMapping("/comUserReg")
     @ApiOperation(value = "企业入驻")
-    public AjaxResult comUserReg(@RequestBody ComUserRegister register) {
-        log.info("企业入驻 param:{}",register);
+    public AjaxResult comUserReg() {
 
-        Object result = prodOpenApi.comUserReg(register);
+        ServletRequestAttributes servletRequestAttributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
+        HttpServletRequest request = servletRequestAttributes.getRequest();
 
-        return AjaxResult.success(result);
+        String token = request.getHeader(AppInterceptor.HEADER_MZT_USER_TOKEN);
+        String userId = request.getHeader(AppInterceptor.HEADER_MZT_USER_ID);
+
+        JSONObject jsonObject = dataCompanyLoanService.getUserInfo(userId,token);
+        if (jsonObject.getBoolean("success")){
+            return prodOpenApi.comUserReg(jsonObject.getJSONObject("data"));
+        }else {
+            return AjaxResult.error("获取用户信息失败");
+        }
     }
 
 }

@@ -61,9 +61,9 @@ public class DataCompanyLoanBody {
      */
     private String customerManager;
     /**
-     * 贷款对象类型：0为企业，1为个体工商户
+     * 贷款对象类型：法人类型(企业法人: c01 社会组织法人:c02 事业单位法人 c03 个体工商户:c04 )
      */
-    private int loanObjectType;
+    private String loanObjectType;
 
     /**
      *  信用代码
@@ -155,11 +155,11 @@ public class DataCompanyLoanBody {
         this.loanBandNames = loanBandNames;
     }
 
-    public int getLoanObjectType() {
+    public String getLoanObjectType() {
         return loanObjectType;
     }
 
-    public void setLoanObjectType(int loanObjectType) {
+    public void setLoanObjectType(String loanObjectType) {
         this.loanObjectType = loanObjectType;
     }
 
