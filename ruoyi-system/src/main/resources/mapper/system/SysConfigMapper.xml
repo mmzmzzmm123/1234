@@ -40,32 +40,56 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     
     <select id="selectConfigList" parameterType="SysConfig" resultMap="SysConfigResult">
         <include refid="selectConfigVo"/>
-        <where>
-			<if test="configName != null and configName != ''">
-				AND config_name like concat('%', #{configName}, '%')
-			</if>
-			<if test="configType != null and configType != ''">
-				AND config_type = #{configType}
-			</if>
-			<if test="configKey != null and configKey != ''">
-				AND config_key like concat('%', #{configKey}, '%')
-			</if>
-			<if test="params.beginTime != null and params.beginTime != ''"><!-- 开始时间检索 -->
-				and date_format(create_time,'%y%m%d') &gt;= date_format(#{params.beginTime},'%y%m%d')
-			</if>
-			<if test="params.endTime != null and params.endTime != ''"><!-- 结束时间检索 -->
-				and date_format(create_time,'%y%m%d') &lt;= date_format(#{params.endTime},'%y%m%d')
-			</if>
-		</where>
+            <where>
+                <if test="configName != null and configName != ''">
+                    AND config_name like concat(concat('%',#{configName}),'%')
+                </if>
+                <if test="configType != null and configType != ''">
+                    AND config_type = #{configType}
+                </if>
+                <if test="configKey != null and configKey != ''">
+                    AND config_key like concat(concat('%',#{configKey}),'%')
+                </if>
+                <if test="_databaseId == 'oracle'">
+                    <if test="params.beginTime != null and params.beginTime != ''"><!-- 开始时间检索 -->
+                        AND u.create_time &gt;= to_date(#{params.beginTime},'yyyy-MM-dd HH24:mi:ss')
+                    </if>
+                    <if test="params.endTime != null and params.endTime != ''"><!-- 结束时间检索 -->
+                        AND u.create_time &lt;= to_date(#{params.endTime},'yyyy-MM-dd HH24:mi:ss')
+                    </if>
+                </if>
+                <if test="_databaseId == 'mysql'">
+                    <if test="params.beginTime != null and params.beginTime != ''"><!-- 开始时间检索 -->
+                        AND date_format(u.create_time,'%y%m%d') &gt;= date_format(#{params.beginTime},'%y%m%d')
+                    </if>
+                    <if test="params.endTime != null and params.endTime != ''"><!-- 结束时间检索 -->
+                        AND date_format(u.create_time,'%y%m%d') &lt;= date_format(#{params.endTime},'%y%m%d')
+                    </if>
+                </if>
+            </where>
     </select>
     
     <select id="checkConfigKeyUnique" parameterType="String" resultMap="SysConfigResult">
         <include refid="selectConfigVo"/>
-        where config_key = #{configKey} limit 1
+        <if test="_databaseId == 'oracle'">
+            where config_key = #{configKey} and rownum <![CDATA[ <= ]]> 1
+        </if>
+        <if test="_databaseId == 'mysql'">
+            where config_key = #{configKey} limit 1
+        </if>
     </select>
     
     <insert id="insertConfig" parameterType="SysConfig">
+        <selectKey keyProperty="configId" resultType="long" order="BEFORE">
+            <if test="_databaseId == 'oracle'">
+                SELECT seq_sys_config.NEXTVAL as configId FROM DUAL
+            </if>
+            <if test="_databaseId == 'mysql'">
+                select nextval('seq_sys_config') as configId
+            </if>
+        </selectKey>
         insert into sys_config (
+			<if test="configId != null and configId != '' ">config_id,</if>
 			<if test="configName != null and configName != '' ">config_name,</if>
 			<if test="configKey != null and configKey != '' ">config_key,</if>
 			<if test="configValue != null and configValue != '' ">config_value,</if>
@@ -74,13 +98,14 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 			<if test="remark != null and remark != ''">remark,</if>
  			create_time
         )values(
+			<if test="configId != null and configId != ''">#{configId},</if>
 			<if test="configName != null and configName != ''">#{configName},</if>
 			<if test="configKey != null and configKey != ''">#{configKey},</if>
 			<if test="configValue != null and configValue != ''">#{configValue},</if>
 			<if test="configType != null and configType != ''">#{configType},</if>
 			<if test="createBy != null and createBy != ''">#{createBy},</if>
 			<if test="remark != null and remark != ''">#{remark},</if>
- 			sysdate()
+            ${@com.ruoyi.common.utils.DBUtils@getCurrentTime()}
 		)
     </insert>
 	 
@@ -93,7 +118,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="configType != null and configType != ''">config_type = #{configType},</if>
             <if test="updateBy != null and updateBy != ''">update_by = #{updateBy},</if>
             <if test="remark != null">remark = #{remark},</if>
- 			update_time = sysdate()
+ 			update_time = ${@com.ruoyi.common.utils.DBUtils@getCurrentTime()}
         </set>
         where config_id = #{configId}
     </update>

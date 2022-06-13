@@ -17,8 +17,16 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	</resultMap>
 
 	<insert id="insertLogininfor" parameterType="SysLogininfor">
-		insert into sys_logininfor (user_name, status, ipaddr, login_location, browser, os, msg, login_time)
-		values (#{userName}, #{status}, #{ipaddr}, #{loginLocation}, #{browser}, #{os}, #{msg}, sysdate())
+		<selectKey keyProperty="infoId" resultType="long" order="BEFORE">
+			<if test="_databaseId == 'oracle'">
+				SELECT seq_sys_logininfor.NEXTVAL as infoId FROM DUAL
+			</if>
+			<if test="_databaseId == 'mysql'">
+				select nextval('seq_sys_logininfor') as infoId
+			</if>
+		</selectKey>
+		insert into sys_logininfor (info_id,user_name, status, ipaddr, login_location, browser, os, msg, login_time)
+		values (#{infoId}, #{userName}, #{status}, #{ipaddr}, #{loginLocation}, #{browser}, #{os}, #{msg},  ${@com.ruoyi.common.utils.DBUtils@getCurrentTime()})
 	</insert>
 	
 	<select id="selectLogininforList" parameterType="SysLogininfor" resultMap="SysLogininforResult">
@@ -33,11 +41,22 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 			<if test="userName != null and userName != ''">
 				AND user_name like concat('%', #{userName}, '%')
 			</if>
-			<if test="params.beginTime != null and params.beginTime != ''"><!-- 开始时间检索 -->
-				and date_format(login_time,'%y%m%d') &gt;= date_format(#{params.beginTime},'%y%m%d')
+
+			<if test="_databaseId == 'oracle'">
+				<if test="params.beginTime != null and params.beginTime != ''"><!-- 开始时间检索 -->
+					and login_time &gt;= to_date(#{params.beginTime},'yyyy-MM-dd HH24:mi:ss')
+				</if>
+				<if test="params.endTime != null and params.endTime != ''"><!-- 结束时间检索 -->
+					and login_time &lt;= to_date(#{params.endTime},'yyyy-MM-dd HH24:mi:ss')
+				</if>
 			</if>
-			<if test="params.endTime != null and params.endTime != ''"><!-- 结束时间检索 -->
-				and date_format(login_time,'%y%m%d') &lt;= date_format(#{params.endTime},'%y%m%d')
+			<if test="_databaseId == 'mysql'">
+				<if test="params.beginTime != null and params.beginTime != ''"><!-- 开始时间检索 -->
+					and date_format(login_time,'%y%m%d') &gt;= date_format(#{params.beginTime},'%y%m%d')
+				</if>
+				<if test="params.endTime != null and params.endTime != ''"><!-- 结束时间检索 -->
+					and date_format(login_time,'%y%m%d') &lt;= date_format(#{params.endTime},'%y%m%d')
+				</if>
 			</if>
 		</where>
 		order by info_id desc

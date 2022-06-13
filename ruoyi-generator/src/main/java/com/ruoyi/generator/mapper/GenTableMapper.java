@@ -80,4 +80,11 @@ public interface GenTableMapper
      * @return 结果
      */
     public int deleteGenTableByIds(Long[] ids);
+
+    /**
+     * 获取菜单id
+     *
+     * @return seq_sys_menu.nextval
+     */
+    public long selectMenuId();
 }
