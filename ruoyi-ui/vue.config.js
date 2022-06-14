@@ -29,9 +29,9 @@ module.exports = {
   productionSourceMap: false,
   // webpack-dev-server 相关配置
   devServer: {
-    host: '0.0.0.0',
     port: port,
     open: true,
+    host: 'localhost',
     proxy: {
       // detail: https://cli.vuejs.org/config/#devserver-proxy
       [process.env.VUE_APP_BASE_API]: {
