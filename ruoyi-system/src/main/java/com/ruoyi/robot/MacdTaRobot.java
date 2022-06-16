@@ -37,7 +37,7 @@ public class MacdTaRobot {
 
     public static Map<String, Long> ALARM_CACHE = new ConcurrentHashMap<>();
 
-    public static Map<String, Double> TA_OLD = new ConcurrentHashMap<>();
+    public static Map<String, Double> TA_CACHE = new ConcurrentHashMap<>();
 
     public void execute() {
         try {
@@ -122,8 +122,12 @@ public class MacdTaRobot {
         double fastNew = eGet(ema5, 5, -1);
         double slowNew = eGet(ema10, 10, -1);
 
-        double fastOld = eGet(ema5, 5, -2);
-        double slowOld = eGet(ema10, 10, -2);
+
+        double fastOld = TA_CACHE.getOrDefault(ki.tk("ema5"), eGet(ema5, 5, -2));
+        double slowOld = TA_CACHE.getOrDefault(ki.tk("ema10"), eGet(ema10, 5, -2));
+        TA_CACHE.put(ki.tk("ema5"), eGet(ema5, 5, -2));
+        TA_CACHE.put(ki.tk("ema10"), eGet(ema10, 5, -2));
+
         return hasKdjGoldCrossed(ki) && goldCross(fastOld, slowOld, fastNew, slowNew);
     }
 
@@ -142,24 +146,12 @@ public class MacdTaRobot {
         double fastNew = eGet(ema5, 5, -1);
         double slowNew = eGet(ema10, 10, -1);
 
-        double fastOld = eGet(ema5, 5, -2);
-        double slowOld = eGet(ema10, 10, -2);
+        double fastOld = TA_CACHE.getOrDefault(ki.tk("ema5"), eGet(ema5, 5, -2));
+        double slowOld = TA_CACHE.getOrDefault(ki.tk("ema10"), eGet(ema10, 5, -2));
+        TA_CACHE.put(ki.tk("ema5"), eGet(ema5, 5, -2));
+        TA_CACHE.put(ki.tk("ema10"), eGet(ema10, 5, -2));
 
         return !hasKdjGoldCrossed(ki) && deadCross(fastOld, slowOld, fastNew, slowNew);
-    }
-
-    public static Boolean emaCross(double[] high, double[] low, double[] close) {
-        double[] ema5 = emaData(ta, 5, close);
-        double[] ema10 = emaData(ta, 10, close);
-        if(isLogDetail){
-            log.info("MacdTaRobot ema5 : {}", ema5);
-            log.info("MacdTaRobot ema10 : {}", ema10);
-        }
-        double fastNew = eGet(ema5, 5, -1);
-        double fastOld = eGet(ema5, 5, -2);
-        double slowNew = eGet(ema10, 10, -1);
-        double slowOld = eGet(ema10, 10, -2);
-        return cross(fastOld, slowOld, fastNew, slowNew);
     }
 
     public static boolean goldCross(double fastOld, double slowOld, double fastNew, double slowNew) {
@@ -297,8 +289,11 @@ public class MacdTaRobot {
         double fastNew = kData.get(kData.size() - 1);
         double slowNew = dData.get(dData.size() - 1);
 
-        double fastOld = kData.get(kData.size() - 2);
-        double slowOld = dData.get(dData.size() - 2);
+        double fastOld = TA_CACHE.getOrDefault(ki.tk("k"), kData.get(kData.size() - 2));
+        double slowOld = TA_CACHE.getOrDefault(ki.tk("d"), dData.get(dData.size() - 2));
+        TA_CACHE.put(ki.tk("k"), kData.get(kData.size() - 2));
+        TA_CACHE.put(ki.tk("d"), dData.get(dData.size() - 2));
+
         return hasEmaGoldCrossed(ki) && goldCross(fastOld, slowOld, fastNew, slowNew);
     }
 
@@ -352,8 +347,11 @@ public class MacdTaRobot {
         double fastNew = kData.get(kData.size() - 1);
         double slowNew = dData.get(dData.size() - 1);
 
-        double fastOld = kData.get(kData.size() - 2);
-        double slowOld = dData.get(dData.size() - 2);
+        double fastOld = TA_CACHE.getOrDefault(ki.tk("k"), kData.get(kData.size() - 2));
+        double slowOld = TA_CACHE.getOrDefault(ki.tk("d"), dData.get(dData.size() - 2));
+        TA_CACHE.put(ki.tk("k"), kData.get(kData.size() - 2));
+        TA_CACHE.put(ki.tk("d"), dData.get(dData.size() - 2));
+
         return !hasEmaGoldCrossed(ki) && deadCross(fastOld, slowOld, fastNew, slowNew);
     }
 
@@ -372,6 +370,10 @@ public class MacdTaRobot {
             this.symbol = symbol;
             this.interval = interval;
             return this;
+        }
+
+        public String tk(String tag) {
+            return symbol + "_" + interval + "_" + tag;
         }
     }
 

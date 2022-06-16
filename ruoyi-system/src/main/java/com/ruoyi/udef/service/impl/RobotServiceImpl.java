@@ -177,7 +177,7 @@ public class RobotServiceImpl {
             if(!balance.isPresent()) throw new CustomException("账户不存在！");
             if(Double.parseDouble(balance.get().getBalance()) == 0d) throw new CustomException("账户余额不足！");
             dfRobotOrder.setPredictBalance(balance.get().getBalance()).setRobotId(robot.getId()).setOpenSide(direction)
-                    .setSymbol(robot.getSymbol());
+                    .setSymbol(robot.getSymbol()).setCreateTime(new Date());
 
             //4. 市价开单
             log.info("》》》》》》》》》》市价正向开单");
@@ -210,9 +210,11 @@ public class RobotServiceImpl {
                                 && n.getPositionSide().equals(order.getOpenSide()))
                         .collect(Collectors.toList());
                 if(risks.isEmpty()){
+                    order.setUpdateTime(new Date());
                     order.setPosition(0);
                     order.setStatus(P_STATUS_CLOSED);
                 } else {
+                    order.setUpdateTime(new Date());
                     order.setPosition(Math.abs(Integer.parseInt(risks.get(0).getPositionAmt())));
                 }
 

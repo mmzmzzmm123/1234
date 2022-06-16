@@ -1,5 +1,8 @@
 package com.ruoyi.udef;
 
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+
 public class Konst {
     public static final String R_STATUS_INIT = "init";
     public static final String R_STATUS_RUNNING = "running";
@@ -42,5 +45,8 @@ public class Konst {
         System.out.println(padding(5, 1l));
         System.out.println(padding(5, 10000l));
         System.out.println(padding(5, 100000l));
+
+        Map<String,String> tt = new ConcurrentHashMap<>();
+        System.out.println(tt.putIfAbsent("1","1"));
     }
 }

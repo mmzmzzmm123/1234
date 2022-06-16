@@ -10,14 +10,16 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="balance"    column="balance"    />
         <result property="maxPosition"    column="max_position"    />
         <result property="position"    column="position"    />
+        <result property="symbol"    column="symbol"    />
         <result property="openSide"    column="open_side"    />
         <result property="status"    column="status"    />
         <result property="robotId"    column="robot_id"    />
-        <result property="symbol"    column="symbol"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateTime"    column="update_time"    />
     </resultMap>
 
     <sql id="selectDfRobotOrderVo">
-        select id, predict_balance, balance, max_position, position, open_side, status, robot_id, symbol from df_robot_order
+        select id, predict_balance, balance, max_position, position, symbol, open_side, status, robot_id, create_time, update_time from df_robot_order
     </sql>
 
     <select id="selectDfRobotOrderList" parameterType="DfRobotOrder" resultMap="DfRobotOrderResult">
@@ -27,10 +29,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="balance != null  and balance != ''"> and balance = #{balance}</if>
             <if test="maxPosition != null "> and max_position = #{maxPosition}</if>
             <if test="position != null "> and position = #{position}</if>
+            <if test="symbol != null  and symbol != ''"> and symbol = #{symbol}</if>
             <if test="openSide != null  and openSide != ''"> and open_side = #{openSide}</if>
             <if test="status != null  and status != ''"> and status = #{status}</if>
             <if test="robotId != null "> and robot_id = #{robotId}</if>
-            <if test="symbol != null  and symbol != ''"> and symbol = #{symbol}</if>
         </where>
         order by id desc
     </select>
@@ -47,20 +49,24 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="balance != null and balance != ''">balance,</if>
             <if test="maxPosition != null">max_position,</if>
             <if test="position != null">position,</if>
+            <if test="symbol != null and symbol != ''">symbol,</if>
             <if test="openSide != null and openSide != ''">open_side,</if>
             <if test="status != null and status != ''">status,</if>
             <if test="robotId != null">robot_id,</if>
-            <if test="symbol != null">symbol,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateTime != null">update_time,</if>
          </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="predictBalance != null and predictBalance != ''">#{predictBalance},</if>
             <if test="balance != null and balance != ''">#{balance},</if>
             <if test="maxPosition != null">#{maxPosition},</if>
             <if test="position != null">#{position},</if>
+            <if test="symbol != null and symbol != ''">#{symbol},</if>
             <if test="openSide != null and openSide != ''">#{openSide},</if>
             <if test="status != null and status != ''">#{status},</if>
             <if test="robotId != null">#{robotId},</if>
-            <if test="symbol != null">#{symbol},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateTime != null">#{updateTime},</if>
          </trim>
     </insert>
 
@@ -71,10 +77,12 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="balance != null and balance != ''">balance = #{balance},</if>
             <if test="maxPosition != null">max_position = #{maxPosition},</if>
             <if test="position != null">position = #{position},</if>
+            <if test="symbol != null and symbol != ''">symbol = #{symbol},</if>
             <if test="openSide != null and openSide != ''">open_side = #{openSide},</if>
             <if test="status != null and status != ''">status = #{status},</if>
             <if test="robotId != null">robot_id = #{robotId},</if>
-            <if test="symbol != null">symbol = #{symbol},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
         </trim>
         where id = #{id}
     </update>

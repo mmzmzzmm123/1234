@@ -11,7 +11,7 @@ import com.ruoyi.common.core.domain.BaseEntity;
  * 机器人订单对象 df_robot_order
  * 
  * @author ruoyi
- * @date 2022-06-15
+ * @date 2022-06-16
  */
 @Data
 @Accessors(chain = true)
@@ -38,6 +38,10 @@ public class DfRobotOrder extends BaseEntity
     @Excel(name = "当前持仓")
     private Integer position;
 
+    /** 交易对 */
+    @Excel(name = "交易对")
+    private String symbol;
+
     /** 开仓方向 */
     @Excel(name = "开仓方向")
     private String openSide;
@@ -50,10 +54,6 @@ public class DfRobotOrder extends BaseEntity
     @Excel(name = "机器人")
     private Long robotId;
 
-    /** 币种 */
-    @Excel(name = "币种")
-    private String symbol;
-
     @Override
     public String toString() {
         return new ToStringBuilder(this,ToStringStyle.MULTI_LINE_STYLE)
@@ -62,10 +62,12 @@ public class DfRobotOrder extends BaseEntity
             .append("balance", getBalance())
             .append("maxPosition", getMaxPosition())
             .append("position", getPosition())
+            .append("symbol", getSymbol())
             .append("openSide", getOpenSide())
             .append("status", getStatus())
             .append("robotId", getRobotId())
-            .append("symbol", getSymbol())
+            .append("createTime", getCreateTime())
+            .append("updateTime", getUpdateTime())
             .toString();
     }
 }
