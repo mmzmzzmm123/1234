@@ -50,7 +50,7 @@ public class SysUserController extends BaseController
     private ISysPostService postService;
 
     /**
-     * 获取用户列表
+     * 获取用户列表 Gitee
      */
     @PreAuthorize("@ss.hasPermi('system:user:list')")
     @GetMapping("/list")
