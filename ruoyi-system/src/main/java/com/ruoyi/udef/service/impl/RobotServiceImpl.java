@@ -176,7 +176,8 @@ public class RobotServiceImpl {
             Optional<DriverDto.UserBalance> balance = getBalance(credential, robot.getSymbol());
             if(!balance.isPresent()) throw new CustomException("账户不存在！");
             if(Double.parseDouble(balance.get().getBalance()) == 0d) throw new CustomException("账户余额不足！");
-            dfRobotOrder.setPredictBalance(balance.get().getBalance()).setRobotId(robot.getId()).setOpenSide(direction);
+            dfRobotOrder.setPredictBalance(balance.get().getBalance()).setRobotId(robot.getId()).setOpenSide(direction)
+                    .setSymbol(robot.getSymbol());
 
             //4. 市价开单
             log.info("》》》》》》》》》》市价正向开单");
@@ -234,7 +235,6 @@ public class RobotServiceImpl {
             return orderId;
         } else return null;
     }
-
 
     private Optional<DriverDto.UserBalance> getBalance(OkAgent.Credential credential, String symbol) {
         List<DriverDto.UserBalance> balances = agent.getBalance(credential);
@@ -357,8 +357,8 @@ public class RobotServiceImpl {
                     .collect(Collectors.toList());
 
             List<DfEscapeSchedule> schedules = scheduleMapper.selectDfEscapeScheduleList(new DfEscapeSchedule().setRobotId(robot.getId()));
-            List<DfEscapeSchedule> s1 = schedules.stream().filter(n -> n.getPriority().intValue() == 1).collect(Collectors.toList());
-            List<DfEscapeSchedule> s2 = schedules.stream().filter(n -> n.getPriority().intValue() == 2).collect(Collectors.toList());
+            List<DfEscapeSchedule> s1 = schedules.stream().filter(n -> n.getPriority().equals(S_PRIORITY_SOLID)).collect(Collectors.toList());
+            List<DfEscapeSchedule> s2 = schedules.stream().filter(n -> n.getPriority().equals(S_PRIORITY_WATCHER)).collect(Collectors.toList());
 
             if(risks.isEmpty()){
                 cleanPlaceOrderWithEmptyPosition(credential, robot);
@@ -404,6 +404,8 @@ public class RobotServiceImpl {
                                                 stopPrice + "").setNewClientOrderId(cltOrderId);
                                 DriverDto.OrderResp resps = agent.postOrder(credential, req);
                                 log.info(">>>>>>>>>>  止盈止损挂单挂单返回 {}", JSON.toJSONString(resps));
+                            } else {
+                                log.info("固定止盈止损已存在！ {} {} 原价 {}  {}", robot.getSymbol(), stopPrice, avg, direction);
                             }
                         }
 
@@ -413,7 +415,7 @@ public class RobotServiceImpl {
                 s2.forEach(s -> {
                     if(StringUtils.isNotEmpty(s.getEscapeType()) && s.getPriceRate() > 0 && s.getQuantityRate() > 0
                             && STOP_MARKET_PAVG.equals(s.getEscapeType())){
-                        Double stopPrice = avg;
+                        Double stopPrice = new BigDecimal(avg).setScale(getScale(robot.getSymbol()), BigDecimal.ROUND_HALF_DOWN).doubleValue();
 
                         if(!isMatchWithCon(flyOrders, robot.getSymbol(), direction, Const.O_TYPE_STOP_MARKET, stopPrice)){
                             Double quality = Math.max(Math.round(robot.getQuantity() * s.getQuantityRate()) * 1d, 1d);
@@ -422,7 +424,8 @@ public class RobotServiceImpl {
                             Optional<DriverDto.TkPrice> price = agent.getTkPrice(robot.getSymbol()).stream().findFirst();
 
                             if((direction.equals(Const.P_Side_SHORT) && price.isPresent() && Double.parseDouble(price.get().getPrice()) < monitorPrice) ||
-                                    (direction.equals(Const.P_Side_LONG) && price.isPresent() && Double.parseDouble(price.get().getPrice()) > monitorPrice)){
+                                    (direction.equals(Const.P_Side_LONG) && price.isPresent() && Double.parseDouble(price.get().getPrice()) > monitorPrice) ||
+                                    Math.abs(Integer.parseInt(position.getPositionAmt())) < robot.getQuantity()){
                                 String cltOrderId = genTriggerOrderId(robot.getId(), robotOrder.get().getId(), s.getId(), stopPrice);
                                 if(!StringUtils.isEmpty(cltOrderId)){
                                     log.info("》》》》》》》》》》原地止损挂单 {}", robot.getId());
@@ -432,6 +435,8 @@ public class RobotServiceImpl {
                                                     stopPrice + "").setNewClientOrderId(cltOrderId);
                                     DriverDto.OrderResp stopResp = agent.postOrder(credential, stopReq);
                                     log.info(">>>>>>>>>>  原地止损挂单返回 {}", JSON.toJSONString(stopResp));
+                                } else {
+                                    log.info("监控止盈止损已存在！ {} {} 原价 {}  {}", robot.getSymbol(), stopPrice, avg, direction);
                                 }
                             }
                         }

@@ -27,6 +27,8 @@ public class MacdTaRobot {
     @Autowired
     RobotServiceImpl robotService;
 
+    public static Boolean isLogDetail = false;
+
     //    public static BinanceAgent binanceAgent = new BinanceAgent();
     public static Core ta = new Core();
     public static List<String> phones_1 = Arrays.asList("18502887156");//18080855055
@@ -34,6 +36,8 @@ public class MacdTaRobot {
     public static List<String> phones_3 = Arrays.asList("18328419756");
 
     public static Map<String, Long> ALARM_CACHE = new ConcurrentHashMap<>();
+
+    public static Map<String, Double> TA_OLD = new ConcurrentHashMap<>();
 
     public void execute() {
         try {
@@ -97,8 +101,10 @@ public class MacdTaRobot {
 
         double[] ema5 = emaData(ta, 5, close);
         double[] ema10 = emaData(ta, 10, close);
-//        log.info("MacdTaRobot ema5 : {}", ema5);
-//        log.info("MacdTaRobot ema10 : {}", ema10);
+        if(isLogDetail){
+            log.info("MacdTaRobot ema5 : {}", ema5);
+            log.info("MacdTaRobot ema10 : {}", ema10);
+        }
         double fastNew = eGet(ema5, 5, -1);
         double fastOld = eGet(ema5, 5, -2);
         double slowNew = eGet(ema10, 10, -1);
@@ -109,11 +115,14 @@ public class MacdTaRobot {
     public static Boolean emaGoldCross(KI ki) {
         double[] ema5 = emaData(ta, 5, ki.close);
         double[] ema10 = emaData(ta, 10, ki.close);
-//        log.info("MacdTaRobot ema5 : {}", ema5);
-//        log.info("MacdTaRobot ema10 : {}", ema10);
+        if(isLogDetail){
+            log.info("MacdTaRobot ema5 : {}", ema5);
+            log.info("MacdTaRobot ema10 : {}", ema10);
+        }
         double fastNew = eGet(ema5, 5, -1);
-        double fastOld = eGet(ema5, 5, -2);
         double slowNew = eGet(ema10, 10, -1);
+
+        double fastOld = eGet(ema5, 5, -2);
         double slowOld = eGet(ema10, 10, -2);
         return hasKdjGoldCrossed(ki) && goldCross(fastOld, slowOld, fastNew, slowNew);
     }
@@ -126,20 +135,26 @@ public class MacdTaRobot {
 
         double[] ema5 = emaData(ta, 5, close);
         double[] ema10 = emaData(ta, 10, close);
-//        log.info("MacdTaRobot ema5 : {}", ema5);
-//        log.info("MacdTaRobot ema10 : {}", ema10);
+        if(isLogDetail){
+            log.info("MacdTaRobot ema5 : {}", ema5);
+            log.info("MacdTaRobot ema10 : {}", ema10);
+        }
         double fastNew = eGet(ema5, 5, -1);
-        double fastOld = eGet(ema5, 5, -2);
         double slowNew = eGet(ema10, 10, -1);
+
+        double fastOld = eGet(ema5, 5, -2);
         double slowOld = eGet(ema10, 10, -2);
+
         return !hasKdjGoldCrossed(ki) && deadCross(fastOld, slowOld, fastNew, slowNew);
     }
 
     public static Boolean emaCross(double[] high, double[] low, double[] close) {
         double[] ema5 = emaData(ta, 5, close);
         double[] ema10 = emaData(ta, 10, close);
-//        log.info("MacdTaRobot ema5 : {}", ema5);
-//        log.info("MacdTaRobot ema10 : {}", ema10);
+        if(isLogDetail){
+            log.info("MacdTaRobot ema5 : {}", ema5);
+            log.info("MacdTaRobot ema10 : {}", ema10);
+        }
         double fastNew = eGet(ema5, 5, -1);
         double fastOld = eGet(ema5, 5, -2);
         double slowNew = eGet(ema10, 10, -1);
@@ -219,8 +234,10 @@ public class MacdTaRobot {
             dData.add(dbg.doubleValue());
         }
 
-//        log.info("MacdTaRobot outSlowK : {}", kData);
-//        log.info("MacdTaRobot outSlowD : {}", dData);
+        if(isLogDetail){
+            log.info("MacdTaRobot outSlowK : {}", kData);
+            log.info("MacdTaRobot outSlowD : {}", dData);
+        }
 
         double fastNew = kData.get(kData.size() - 1);
         double fastOld = kData.get(kData.size() - 2);
@@ -272,12 +289,15 @@ public class MacdTaRobot {
             dData.add(dbg.doubleValue());
         }
 
-//        log.info("MacdTaRobot outSlowK : {}", kData);
-//        log.info("MacdTaRobot outSlowD : {}", dData);
+        if(isLogDetail){
+            log.info("MacdTaRobot outSlowK : {}", kData);
+            log.info("MacdTaRobot outSlowD : {}", dData);
+        }
 
         double fastNew = kData.get(kData.size() - 1);
-        double fastOld = kData.get(kData.size() - 2);
         double slowNew = dData.get(dData.size() - 1);
+
+        double fastOld = kData.get(kData.size() - 2);
         double slowOld = dData.get(dData.size() - 2);
         return hasEmaGoldCrossed(ki) && goldCross(fastOld, slowOld, fastNew, slowNew);
     }
@@ -324,73 +344,33 @@ public class MacdTaRobot {
             dData.add(dbg.doubleValue());
         }
 
-//        log.info("MacdTaRobot outSlowK : {}", kData);
-//        log.info("MacdTaRobot outSlowD : {}", dData);
-
-        double fastNew = kData.get(kData.size() - 1);
-        double fastOld = kData.get(kData.size() - 2);
-        double slowNew = dData.get(dData.size() - 1);
-        double slowOld = dData.get(dData.size() - 2);
-        return !hasEmaGoldCrossed(ki) && deadCross(fastOld, slowOld, fastNew, slowNew);
-    }
-
-    public static Boolean kdjCross2(double[] high, double[] low, double[] close) {
-        List<Double> kData = new ArrayList<>();
-        List<Double> dData = new ArrayList<>();
-        List<Double> rsvData = new ArrayList<>();
-
-        Integer N = 40;
-        Integer K = 2;
-        Integer D = 20;
-
-        for (int i = 0; i < close.length; i++) {
-            if(i < N) continue;
-
-            double H = 0d;
-            double L = 0d;
-            for (int j = i - N + 1; j <= i; j++) {
-                if(j == i - N + 1){
-                    H = high[j];
-                    L = low[j];
-                } else {
-                    H = Math.max(H, high[j]);
-                    L = Math.min(L, low[j]);
-                }
-            }
-
-            rsvData.add((close[i] - L) * 100d / (H - L));
-
-            Double preK = kData.size() == 0 ? 0d : kData.get(kData.size() - 1);
-            Double preD = dData.size() == 0 ? 0d : dData.get(dData.size() - 1);
-
-            BigDecimal kbg = new BigDecimal((K - 1d) * preK / K + 1d / K * rsvData.get(rsvData.size() - 1))
-                    .setScale(4, BigDecimal.ROUND_HALF_UP);
-            kData.add(kbg.doubleValue());
-
-            BigDecimal dbg = new BigDecimal((D - 1d) * preD / D + 1d / D * kData.get(kData.size() - 1))
-                    .setScale(4, BigDecimal.ROUND_HALF_UP);
-            dData.add(dbg.doubleValue());
+        if(isLogDetail){
+            log.info("MacdTaRobot outSlowK : {}", kData);
+            log.info("MacdTaRobot outSlowD : {}", dData);
         }
 
-//        log.info("MacdTaRobot outSlowK : {}", kData);
-//        log.info("MacdTaRobot outSlowD : {}", dData);
-
         double fastNew = kData.get(kData.size() - 1);
-        double fastOld = kData.get(kData.size() - 2);
         double slowNew = dData.get(dData.size() - 1);
+
+        double fastOld = kData.get(kData.size() - 2);
         double slowOld = dData.get(dData.size() - 2);
-        return cross(fastOld, slowOld, fastNew, slowNew);
+        return !hasEmaGoldCrossed(ki) && deadCross(fastOld, slowOld, fastNew, slowNew);
     }
 
     static class KI {
         double[] close;
         double[] high;
         double[] low;
+        String symbol;
+        Integer interval;
 
-        public KI extract(List<DriverDto.KlineItem> klines) {
+
+        public KI extract(List<DriverDto.KlineItem> klines, String symbol, Integer interval) {
             close = klines.stream().mapToDouble(n -> n.getClose()).toArray();
             high = klines.stream().mapToDouble(n -> n.getHigh()).toArray();
             low = klines.stream().mapToDouble(n -> n.getLow()).toArray();
+            this.symbol = symbol;
+            this.interval = interval;
             return this;
         }
     }
@@ -398,9 +378,9 @@ public class MacdTaRobot {
 
     public void batchCross(String symbol, Integer interval) {
         List<DriverDto.KlineItem> klinesBit = binanceAgent.getKline(interval + "", symbol, null, null);
-        KI bigKi = new KI().extract(klinesBit);
+        KI bigKi = new KI().extract(klinesBit, symbol, interval);
         List<DriverDto.KlineItem> klinesLit = binanceAgent.getKline((interval / 2) + "", symbol, null, null);
-        KI litKi = new KI().extract(klinesLit);
+        KI litKi = new KI().extract(klinesLit, symbol, (interval / 2));
 
         Boolean result;
         Boolean result3;
@@ -504,68 +484,8 @@ public class MacdTaRobot {
 
     public static void main(String[] args) {
         MacdTaRobot robot = new MacdTaRobot();
-//        robot.batchCross("BTCUSD_PERP", 3600);
-//        batchCross("BTCUSD_PERP", 1800);
-//        batchCross("ETHUSD_PERP", 3600);
-//        batchCross("ETHUSD_PERP", 1800);
-
-        Integer interval = 3600;
-        String symbol = "BTCUSD_PERP";
-        Integer N = 40;
-        Integer K = 2;
-        Integer D = 20;
-
-//        List<DriverDto.KlineItem> klines = binanceAgent.getKline(interval + "", symbol, null, null);
-//
-//        log.info(GSON.toJson(klines));
-//
-//        double[] close = klines.stream().mapToDouble(n -> n.getClose()).toArray();
-//        double[] high = klines.stream().mapToDouble(n -> n.getHigh()).toArray();
-//        double[] low = klines.stream().mapToDouble(n -> n.getLow()).toArray();
-//
-//        Boolean result2 = macdCross(close);
-
-//        List<Double> kData = new ArrayList<>();
-//        List<Double> dData = new ArrayList<>();
-//        List<Double> rsvData = new ArrayList<>();
-//        List<Double> hData = new ArrayList<>();
-//        List<Double> lData = new ArrayList<>();
-//        for (int i = 0; i < close.length; i++) {
-//            if(i < N) continue;
-//
-//            double H = 0d;
-//            double L = 0d;
-//            for (int j = i - N + 1; j <= i; j++) {
-//                if(j == i - N + 1){
-//                    H = high[j];
-//                    L = low[j];
-//                } else {
-//                    H = Math.max(H, high[j]);
-//                    L = Math.min(L, low[j]);
-//                }
-//            }
-//
-//            hData.add(H);
-//            lData.add(L);
-//            rsvData.add((close[i] - L) * 100d / (H - L));
-//
-//            Double preK = kData.size() == 0 ? 0d : kData.get(kData.size() - 1);
-//            Double preD = dData.size() == 0 ? 0d : dData.get(dData.size() - 1);
-//
-//            BigDecimal kbg = new BigDecimal((K - 1d) * preK / K + 1d / K * rsvData.get(rsvData.size() - 1))
-//                    .setScale(2,BigDecimal.ROUND_HALF_UP);
-//            kData.add(kbg.doubleValue());
-//
-//            BigDecimal dbg = new BigDecimal((D - 1d) * preD / D + 1d / D * kData.get(kData.size() - 1)).setScale(2,BigDecimal.ROUND_HALF_UP);
-//            dData.add(dbg.doubleValue());
-//        }
-//
-//        log.info("h data : {}", GSON.toJson(hData));
-//        log.info("l data : {}", GSON.toJson(lData));
-//        log.info("k data : {}", GSON.toJson(kData));
-//        log.info("d data : {}", GSON.toJson(dData));
-//
-//        kdjCross(high, low, close);
+        robot.binanceAgent = new BinanceAgent();
+        robot.batchCross("ETHUSD_PERP", 1800);
     }
 
 

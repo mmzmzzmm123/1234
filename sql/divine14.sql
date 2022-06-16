@@ -66,6 +66,8 @@ create table df_robot_order (
   open_side         varchar(15)     not null comment '开仓方向',
   status            varchar(15)     not null comment '状态',
   robot_id          bigint(20)      not null                   comment '机器人',
+  create_time       datetime                                   comment '创建时间',
+  update_time       datetime                                   comment '更新时间',
   primary key (id)
 ) engine=innodb comment = '机器人订单';
 

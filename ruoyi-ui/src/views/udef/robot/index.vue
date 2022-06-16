@@ -72,7 +72,7 @@
       <el-table-column label="id" align="center" prop="id"/>
       <el-table-column label="机器人" align="center" prop="robotName"/>
       <el-table-column label="合约名" align="center" prop="symbol"/>
-      <el-table-column label="固定开仓比" align="center" prop="quantityBase"/>
+<!--      <el-table-column label="固定开仓比" align="center" prop="quantityBase"/>-->
       <el-table-column label="固定开仓张数" align="center" prop="quantity"/>
       <el-table-column label="小周期" align="center" prop="litInterval"/>
       <el-table-column label="大周期" align="center" prop="bigInterval"/>
@@ -125,14 +125,6 @@
             v-hasPermi="['udef:robot:edit']"
           >修改
           </el-button>
-          <el-button
-            size="mini"
-            type="text"
-            icon="el-icon-delete"
-            @click="handleDelete(scope.row)"
-            v-hasPermi="['udef:robot:remove']"
-          >删除
-          </el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -146,7 +138,7 @@
     />
 
     <!-- 添加或修改机器人对话框 -->
-    <el-dialog :title="title" :visible.sync="open" width="700px" append-to-body>
+    <el-dialog :title="title" :visible.sync="open" width="750px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="100px">
         <el-form-item label="机器人" prop="robotName">
           <el-input v-model="form.robotName" placeholder="请输入机器人"/>
@@ -154,9 +146,9 @@
         <el-form-item label="合约名" prop="symbol">
           <el-input v-model="form.symbol" placeholder="请输入合约名"/>
         </el-form-item>
-        <el-form-item label="固定开仓比" prop="quantityBase">
-          <el-input v-model="form.quantityBase" placeholder="请输入固定开仓比"/>
-        </el-form-item>
+<!--        <el-form-item label="固定开仓比" prop="quantityBase">-->
+<!--          <el-input v-model="form.quantityBase" placeholder="请输入固定开仓比"/>-->
+<!--        </el-form-item>-->
         <el-form-item label="固定开仓张数" prop="quantity">
           <el-input v-model="form.quantity" placeholder="请输入固定开仓张数"/>
         </el-form-item>
@@ -236,11 +228,6 @@
               <el-input v-model="scope.row.quantityRate" placeholder="请输入平仓价格比"/>
             </template>
           </el-table-column>
-          <el-table-column label="平仓数量" prop="quantity" width="150">
-            <template slot-scope="scope">
-              <el-input v-model="scope.row.quantity" placeholder="请输入平仓数量"/>
-            </template>
-          </el-table-column>
           <el-table-column label="优先级" prop="priority" width="150">
             <template slot-scope="scope">
               <el-select v-model="scope.row.priority" placeholder="请选择优先级">
@@ -253,6 +240,11 @@
               </el-select>
             </template>
           </el-table-column>
+<!--          <el-table-column label="平仓数量" prop="quantity" width="150">-->
+<!--            <template slot-scope="scope">-->
+<!--              <el-input v-model="scope.row.quantity" placeholder="请输入平仓数量"/>-->
+<!--            </template>-->
+<!--          </el-table-column>-->
         </el-table>
       </el-form>
       <div slot="footer" class="dialog-footer">

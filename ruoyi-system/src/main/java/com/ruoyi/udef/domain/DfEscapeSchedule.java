@@ -41,7 +41,7 @@ public class DfEscapeSchedule extends BaseEntity
 
     /** 优先级 */
     @Excel(name = "优先级")
-    private Integer priority;
+    private String priority;
 
     /** api */
     @Excel(name = "api")

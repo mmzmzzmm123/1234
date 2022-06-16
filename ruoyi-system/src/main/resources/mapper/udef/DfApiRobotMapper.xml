@@ -49,7 +49,6 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="status != null  and status != ''"> and status = #{status}</if>
             <if test="apiId != null "> and api_id = #{apiId}</if>
         </where>
-        order by id desc
     </select>
     
     <select id="selectDfApiRobotById" parameterType="Long" resultMap="DfApiRobotDfEscapeScheduleResult">

@@ -31,6 +31,14 @@
           />
         </el-select>
       </el-form-item>
+      <el-form-item label="币种" prop="symbol">
+        <el-input
+          v-model="queryParams.symbol"
+          placeholder="请输入币种"
+          clearable
+          @keyup.enter.native="handleQuery"
+        />
+      </el-form-item>
       <el-form-item>
         <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
         <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
@@ -87,7 +95,9 @@
       <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
     </el-row>
 
-    <el-table v-loading="loading" :data="positionList" @selection-change="handleSelectionChange">
+    <el-table v-loading="loading" :data="positionList" @selection-change="handleSelectionChange"
+              :row-class-name="closedOrRunning" :cell-class-name="upOrDown"
+    >
       <el-table-column type="selection" width="55" align="center"/>
       <el-table-column label="id" align="center" prop="id"/>
       <el-table-column label="前置余额" align="center" prop="predictBalance"/>
@@ -109,6 +119,7 @@
           <dict-tag :options="dict.type.udef_dict_robot_key" :value="scope.row.robotId"/>
         </template>
       </el-table-column>
+      <el-table-column label="币种" align="center" prop="symbol"/>
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button
@@ -118,14 +129,6 @@
             @click="handleUpdate(scope.row)"
             v-hasPermi="['udef:position:edit']"
           >修改
-          </el-button>
-          <el-button
-            size="mini"
-            type="text"
-            icon="el-icon-delete"
-            @click="handleDelete(scope.row)"
-            v-hasPermi="['udef:position:remove']"
-          >删除
           </el-button>
         </template>
       </el-table-column>
@@ -184,6 +187,9 @@
             ></el-option>
           </el-select>
         </el-form-item>
+        <el-form-item label="币种" prop="symbol">
+          <el-input v-model="form.symbol" placeholder="请输入币种"/>
+        </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button type="primary" @click="submitForm">确 定</el-button>
@@ -192,7 +198,23 @@
     </el-dialog>
   </div>
 </template>
+<style>
+.el-table .closed-row {
+  background: #e9e9e9;
+}
 
+.el-table .running_row {
+  background: #fbfad9;
+}
+
+.el-table .cell_up {
+  color: green;
+}
+
+.el-table .cell_down {
+  color: red;
+}
+</style>
 <script>
 import { listPosition, getPosition, delPosition, addPosition, updatePosition } from '@/api/udef/position'
 
@@ -229,7 +251,8 @@ export default {
         position: null,
         openSide: null,
         status: null,
-        robotId: null
+        robotId: null,
+        symbol: null
       },
       // 表单参数
       form: {},
@@ -263,6 +286,31 @@ export default {
     this.getList()
   },
   methods: {
+    closedOrRunning({ row, rowIndex }) {
+      let status
+      if (row.status === 'closed') {
+        status = 'closed-row'
+      } else if (row.status === 'running') {
+        status = 'running_row'
+      } else {
+        status = ''
+      }
+      return status
+    },
+
+    upOrDown({ row, column, rowIndex, columnIndex }) {
+      let profit
+      if (columnIndex === 3) {
+        if (row.balance > row.predictBalance) {
+          profit = 'cell_up'
+        } else if (row.balance < row.predictBalance) {
+          profit = 'cell_down'
+        } else {
+          profit = ''
+        }
+      }
+      return profit
+    },
     /** 查询机器人订单列表 */
     getList() {
       this.loading = true
@@ -287,7 +335,8 @@ export default {
         position: null,
         openSide: null,
         status: null,
-        robotId: null
+        robotId: null,
+        symbol: null
       }
       this.resetForm('form')
     },

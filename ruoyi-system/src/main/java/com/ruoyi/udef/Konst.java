@@ -9,6 +9,9 @@ public class Konst {
     public static final String P_STATUS_TRIGGERED = "triggered";
     public static final String P_STATUS_CLOSED = "closed";
 
+    public static final String S_PRIORITY_SOLID="solid";
+    public static final String S_PRIORITY_WATCHER="watcher";
+
     public static final String DOMAIN = "divine14";
 
     public static String padding(Integer scale, Long id) {

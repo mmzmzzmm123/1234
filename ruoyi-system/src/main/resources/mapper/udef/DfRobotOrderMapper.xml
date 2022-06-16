@@ -13,10 +13,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="openSide"    column="open_side"    />
         <result property="status"    column="status"    />
         <result property="robotId"    column="robot_id"    />
+        <result property="symbol"    column="symbol"    />
     </resultMap>
 
     <sql id="selectDfRobotOrderVo">
-        select id, predict_balance, balance, max_position, position, open_side, status, robot_id from df_robot_order
+        select id, predict_balance, balance, max_position, position, open_side, status, robot_id, symbol from df_robot_order
     </sql>
 
     <select id="selectDfRobotOrderList" parameterType="DfRobotOrder" resultMap="DfRobotOrderResult">
@@ -29,7 +30,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="openSide != null  and openSide != ''"> and open_side = #{openSide}</if>
             <if test="status != null  and status != ''"> and status = #{status}</if>
             <if test="robotId != null "> and robot_id = #{robotId}</if>
+            <if test="symbol != null  and symbol != ''"> and symbol = #{symbol}</if>
         </where>
+        order by id desc
     </select>
     
     <select id="selectDfRobotOrderById" parameterType="Long" resultMap="DfRobotOrderResult">
@@ -47,6 +50,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="openSide != null and openSide != ''">open_side,</if>
             <if test="status != null and status != ''">status,</if>
             <if test="robotId != null">robot_id,</if>
+            <if test="symbol != null">symbol,</if>
          </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="predictBalance != null and predictBalance != ''">#{predictBalance},</if>
@@ -56,6 +60,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="openSide != null and openSide != ''">#{openSide},</if>
             <if test="status != null and status != ''">#{status},</if>
             <if test="robotId != null">#{robotId},</if>
+            <if test="symbol != null">#{symbol},</if>
          </trim>
     </insert>
 
@@ -69,6 +74,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="openSide != null and openSide != ''">open_side = #{openSide},</if>
             <if test="status != null and status != ''">status = #{status},</if>
             <if test="robotId != null">robot_id = #{robotId},</if>
+            <if test="symbol != null">symbol = #{symbol},</if>
         </trim>
         where id = #{id}
     </update>
