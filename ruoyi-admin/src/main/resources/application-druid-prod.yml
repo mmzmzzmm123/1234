@@ -79,3 +79,17 @@ spring:
 # api接口服务服务器配置
 api:
     domain: http://172.29.131.35:18082/report/
+
+# 信用三期的相关api接口
+credit:
+    domain: http://credit.quanzhou.gov.cn:8086
+    account: service_XYPT_DJ
+    password: e7f19f36ee1b4e73916934a533f020e6
+    appId: b392q1IW
+    code: 1111
+
+# 金融产品的相关api接口
+bankapi:
+    domain: http://credit.quanzhou.gov.cn:9081/api/interfaces/openApi/
+    appKey: a67234c358304cfb9f699e98a2f83f86
+    appSecret: 3965fcce83c64d9d87b02a7a9517bfa7
