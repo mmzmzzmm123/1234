@@ -44,8 +44,8 @@ spring:
     basename: i18n/messages
   profiles:
 #    active: druid-dev #信贷直通车服务-开发环境
-    active: druid-sit #信贷直通车服务-测试环境
-#    active: druid-prod #信贷直通车服务-生产环境
+#    active: druid-sit #信贷直通车服务-测试环境
+    active: druid-prod #信贷直通车服务-生产环境
 #    active: druid-in-dev #内网征信报告服务-开发环境
 #    active: druid-in #内网征信报告服务-生产环境
   # 文件上传

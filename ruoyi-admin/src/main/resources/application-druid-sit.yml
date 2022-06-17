@@ -85,30 +85,30 @@ spring:
 api:
     domain: http://localhost:8080/
 
-## 信用三期的相关api接口
-#credit:
-#    domain: http://dev.fjhrt.com/
-#    account: service_singleUser
-#    password: d7e5fefe300d45d09044b4abca2c5185
-#    appId: b392q1IW
-#    code: 1111
-#
-## 金融产品的相关api接口
-#bankapi:
-#    domain: http://dev.strongdata.com.cn:5222/qzh-xyd/business/api/interfaces/openApi/
-#    appKey: 6c2544dcad39441c8e81c790bf9009f1
-#    appSecret: cb8135c8442843909cf47d4c359b31a0
-
 # 信用三期的相关api接口
 credit:
-    domain: http://credit.quanzhou.gov.cn:8086
-    account: service_XYPT_DJ
-    password: e7f19f36ee1b4e73916934a533f020e6
+    domain: http://dev.fjhrt.com/
+    account: service_singleUser
+    password: d7e5fefe300d45d09044b4abca2c5185
     appId: b392q1IW
     code: 1111
 
 # 金融产品的相关api接口
 bankapi:
-    domain: http://credit.quanzhou.gov.cn:9081/api/interfaces/openApi/
-    appKey: a67234c358304cfb9f699e98a2f83f86
-    appSecret: 3965fcce83c64d9d87b02a7a9517bfa7
+    domain: http://dev.strongdata.com.cn:5222/qzh-xyd/business/api/interfaces/openApi/
+    appKey: 6c2544dcad39441c8e81c790bf9009f1
+    appSecret: cb8135c8442843909cf47d4c359b31a0
+
+## 信用三期的相关api接口
+#credit:
+#    domain: http://credit.quanzhou.gov.cn:8086
+#    account: service_XYPT_DJ
+#    password: e7f19f36ee1b4e73916934a533f020e6
+#    appId: b392q1IW
+#    code: 1111
+#
+## 金融产品的相关api接口
+#bankapi:
+#    domain: http://credit.quanzhou.gov.cn:9081/api/interfaces/openApi/
+#    appKey: a67234c358304cfb9f699e98a2f83f86
+#    appSecret: 3965fcce83c64d9d87b02a7a9517bfa7
