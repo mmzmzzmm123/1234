@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.LxHsagMapper">
+    
+    <resultMap type="LxHsag" id="LxHsagResult">
+        <result property="sj"    column="sj"    />
+        <result property="spdw"    column="spdw"    />
+        <result property="peCv"    column="pe_cv"    />
+        <result property="pbCv"    column="pb_cv"    />
+        <result property="psCv"    column="ps_cv"    />
+        <result property="pePos10"    column="pe_pos10"    />
+        <result property="pbPos10"    column="pb_pos10"    />
+        <result property="psPos10"    column="ps_pos10"    />
+        <result property="pePos20"    column="pe_pos20"    />
+        <result property="pbPos20"    column="pb_pos20"    />
+        <result property="psPos20"    column="ps_pos20"    />
+        <result property="zonghePos"    column="zonghe_pos"    />
+    </resultMap>
+
+    <sql id="selectLxHsagVo">
+        select sj, spdw, pe_cv, pb_cv, ps_cv, pe_pos10, pb_pos10, ps_pos10, pe_pos20, pb_pos20, ps_pos20, zonghe_pos from lx_hsag
+    </sql>
+
+    <select id="selectLxHsagList" parameterType="LxHsag" resultMap="LxHsagResult">
+        <include refid="selectLxHsagVo"/>
+        <where>  
+            <if test="sj != null "> and sj = #{sj}</if>
+            <if test="spdw != null "> and spdw = #{spdw}</if>
+            <if test="peCv != null "> and pe_cv = #{peCv}</if>
+            <if test="pbCv != null "> and pb_cv = #{pbCv}</if>
+            <if test="psCv != null "> and ps_cv = #{psCv}</if>
+            <if test="pePos10 != null "> and pe_pos10 = #{pePos10}</if>
+            <if test="pbPos10 != null "> and pb_pos10 = #{pbPos10}</if>
+            <if test="psPos10 != null "> and ps_pos10 = #{psPos10}</if>
+            <if test="pePos20 != null "> and pe_pos20 = #{pePos20}</if>
+            <if test="pbPos20 != null "> and pb_pos20 = #{pbPos20}</if>
+            <if test="psPos20 != null "> and ps_pos20 = #{psPos20}</if>
+            <if test="zonghePos != null "> and zonghe_pos = #{zonghePos}</if>
+        </where>
+    </select>
+    
+    <select id="selectLxHsagBySj" parameterType="Date" resultMap="LxHsagResult">
+        <include refid="selectLxHsagVo"/>
+        where sj = #{sj}
+    </select>
+        
+    <insert id="insertLxHsag" parameterType="LxHsag">
+        insert into lx_hsag
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="sj != null">sj,</if>
+            <if test="spdw != null">spdw,</if>
+            <if test="peCv != null">pe_cv,</if>
+            <if test="pbCv != null">pb_cv,</if>
+            <if test="psCv != null">ps_cv,</if>
+            <if test="pePos10 != null">pe_pos10,</if>
+            <if test="pbPos10 != null">pb_pos10,</if>
+            <if test="psPos10 != null">ps_pos10,</if>
+            <if test="pePos20 != null">pe_pos20,</if>
+            <if test="pbPos20 != null">pb_pos20,</if>
+            <if test="psPos20 != null">ps_pos20,</if>
+            <if test="zonghePos != null">zonghe_pos,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="sj != null">#{sj},</if>
+            <if test="spdw != null">#{spdw},</if>
+            <if test="peCv != null">#{peCv},</if>
+            <if test="pbCv != null">#{pbCv},</if>
+            <if test="psCv != null">#{psCv},</if>
+            <if test="pePos10 != null">#{pePos10},</if>
+            <if test="pbPos10 != null">#{pbPos10},</if>
+            <if test="psPos10 != null">#{psPos10},</if>
+            <if test="pePos20 != null">#{pePos20},</if>
+            <if test="pbPos20 != null">#{pbPos20},</if>
+            <if test="psPos20 != null">#{psPos20},</if>
+            <if test="zonghePos != null">#{zonghePos},</if>
+         </trim>
+    </insert>
+
+    <update id="updateLxHsag" parameterType="LxHsag">
+        update lx_hsag
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="spdw != null">spdw = #{spdw},</if>
+            <if test="peCv != null">pe_cv = #{peCv},</if>
+            <if test="pbCv != null">pb_cv = #{pbCv},</if>
+            <if test="psCv != null">ps_cv = #{psCv},</if>
+            <if test="pePos10 != null">pe_pos10 = #{pePos10},</if>
+            <if test="pbPos10 != null">pb_pos10 = #{pbPos10},</if>
+            <if test="psPos10 != null">ps_pos10 = #{psPos10},</if>
+            <if test="pePos20 != null">pe_pos20 = #{pePos20},</if>
+            <if test="pbPos20 != null">pb_pos20 = #{pbPos20},</if>
+            <if test="psPos20 != null">ps_pos20 = #{psPos20},</if>
+            <if test="zonghePos != null">zonghe_pos = #{zonghePos},</if>
+        </trim>
+        where sj = #{sj}
+    </update>
+
+    <delete id="deleteLxHsagBySj" parameterType="Date">
+        delete from lx_hsag where sj = #{sj}
+    </delete>
+
+    <delete id="deleteLxHsagBySjs" parameterType="String">
+        delete from lx_hsag where sj in 
+        <foreach item="sj" collection="array" open="(" separator="," close=")">
+            #{sj}
+        </foreach>
+    </delete>
+</mapper>

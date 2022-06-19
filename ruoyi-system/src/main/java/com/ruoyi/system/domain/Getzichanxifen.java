@@ -17,35 +17,35 @@ public class Getzichanxifen extends BaseEntity
     private static final long serialVersionUID = 1L;
 
     /** $column.columnComment */
-    @Excel(name = "${comment}", readConverterExp = "$column.readConverterExp()")
+    @Excel(name = "${名称}", readConverterExp = "$column.readConverterExp()")
     private String name;
 
     /** $column.columnComment */
-    @Excel(name = "${comment}", readConverterExp = "$column.readConverterExp()")
+    @Excel(name = "${货币}", readConverterExp = "$column.readConverterExp()")
     private BigDecimal huobi;
 
     /** $column.columnComment */
-    @Excel(name = "${comment}", readConverterExp = "$column.readConverterExp()")
+    @Excel(name = "${债券}", readConverterExp = "$column.readConverterExp()")
     private BigDecimal zhaiquan;
 
     /** $column.columnComment */
-    @Excel(name = "${comment}", readConverterExp = "$column.readConverterExp()")
+    @Excel(name = "${已投入}", readConverterExp = "$column.readConverterExp()")
     private BigDecimal yitouru;
 
     /** $column.columnComment */
-    @Excel(name = "${comment}", readConverterExp = "$column.readConverterExp()")
+    @Excel(name = "${国内资产}", readConverterExp = "$column.readConverterExp()")
     private BigDecimal guoneiZichan;
 
     /** $column.columnComment */
-    @Excel(name = "${comment}", readConverterExp = "$column.readConverterExp()")
+    @Excel(name = "${轮动资产}", readConverterExp = "$column.readConverterExp()")
     private BigDecimal lundongZichan;
 
     /** $column.columnComment */
-    @Excel(name = "${comment}", readConverterExp = "$column.readConverterExp()")
+    @Excel(name = "${海外资产}", readConverterExp = "$column.readConverterExp()")
     private BigDecimal haiwaiZichan;
 
     /** $column.columnComment */
-    @Excel(name = "${comment}", readConverterExp = "$column.readConverterExp()")
+    @Excel(name = "${总计}", readConverterExp = "$column.readConverterExp()")
     private BigDecimal zongji;
 
     public void setName(String name) 
