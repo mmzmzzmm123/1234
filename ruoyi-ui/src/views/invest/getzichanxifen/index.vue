@@ -1,7 +1,6 @@
 <template>
   <div class="app-container">
 
-
     <el-row :gutter="10" class="mb8">
       <el-col :span="1.5">
         <el-button
@@ -13,6 +12,7 @@
           v-hasPermi="['invest:getzichanxifen:add']"
         >新增</el-button>
       </el-col>
+      
       <el-col :span="1.5">
         <el-button
           type="success"
@@ -24,6 +24,7 @@
           v-hasPermi="['invest:getzichanxifen:edit']"
         >修改</el-button>
       </el-col>
+
       <el-col :span="1.5">
         <el-button
           type="danger"
@@ -35,6 +36,7 @@
           v-hasPermi="['invest:getzichanxifen:remove']"
         >删除</el-button>
       </el-col>
+      
       <el-col :span="1.5">
         <el-button
           type="warning"
@@ -45,6 +47,7 @@
           v-hasPermi="['invest:getzichanxifen:export']"
         >导出</el-button>
       </el-col>
+      
       <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
     </el-row>
 
@@ -86,7 +89,7 @@
       @pagination="getList"
     />
 
-    <!-- 添加或修改资产细分对话框 -->
+    <!-- 添加或修改对话框 -->
     <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
         <el-form-item label="货币" prop="huobi">
@@ -112,7 +115,7 @@
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="submitForm">确 定</el-button>
+        <el-button typetype="primary" @click="submitForm">确 定</el-button>
         <el-button @click="cancel">取 消</el-button>
       </div>
     </el-dialog>
@@ -172,6 +175,7 @@ export default {
     getList() {
       this.loading = true;
       listGetzichanxifen(this.queryParams).then(response => {
+        console.log(this.getzichanxifenList,'response')
         this.getzichanxifenList = response.rows;
         this.total = response.total;
         this.loading = false;
