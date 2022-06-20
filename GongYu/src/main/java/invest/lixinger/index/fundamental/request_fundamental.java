@@ -10,6 +10,9 @@ import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.util.Map;
 
+/**
+ * 获取单一日期的 沪深A股 信号
+ */
 public class request_fundamental {
     public static void main(String[] args) throws IOException, ParseException {
         String filePath = request_fundamental.class.getClassLoader().getResource("indexReqParam.yml").getPath();

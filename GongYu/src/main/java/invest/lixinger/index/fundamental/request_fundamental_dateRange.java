@@ -13,6 +13,9 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Map;
 
+/**
+ * 获取时间范围的 沪深A股 信号
+ */
 public class request_fundamental_dateRange extends mybatisNoSpringUtils {
     public static void main(String[] args) throws IOException, ParseException {
         SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd");

@@ -3,7 +3,7 @@ fundamentalURL: https://open.lixinger.com/api/cn/index/fundamental
 singleIndustryURL: https://open.lixinger.com/api/cn/company
 token: 11d182eb-e0ec-45bd-a928-521bc660b46f
 startdate: 2022-01-03
-enddate: 2022-05
+enddate: 2022-06
 stockCodes:
   - "1000002"
 metricsList:
