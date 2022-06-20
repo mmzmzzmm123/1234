@@ -18,6 +18,14 @@ export function login(username, password, code, uuid) {
   })
 }
 
+// 是否开放注册
+export function isRegister() {
+  return request({
+    url: '/isRegister',
+    method: 'get'
+  })
+}
+
 // 注册方法
 export function register(data) {
   return request({
