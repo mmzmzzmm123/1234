@@ -94,11 +94,11 @@ public class ProdOpenApi {
         JSONObject jsonObject = JSONObject.parseObject(JSON.toJSONString(query));
 
         HttpEntity<JSONObject> httpEntity = new HttpEntity<>(jsonObject, headers);
-        ParameterizedTypeReference<FinanceProductResponse<FinanceHotProductInfo>> reference =
-                new ParameterizedTypeReference<FinanceProductResponse<FinanceHotProductInfo>>() {
+        ParameterizedTypeReference<FinanceProductResponse<JSONObject>> reference =
+                new ParameterizedTypeReference<FinanceProductResponse<JSONObject>>() {
                 };
 
-        ResponseEntity<FinanceProductResponse<FinanceHotProductInfo>> responseEntity = restTemplate.exchange(url,
+        ResponseEntity<FinanceProductResponse<JSONObject>> responseEntity = restTemplate.exchange(url,
                 HttpMethod.POST, httpEntity, reference);
 
         return getResult(responseEntity.getBody());
