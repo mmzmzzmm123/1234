@@ -6,6 +6,8 @@ package com.ruoyi.system.domain.model;
  */
 public class FinanceProductInfo {
 
+    private Long id;
+
     private String applicationArea;
 
     private String applyCondition;
@@ -68,6 +70,43 @@ public class FinanceProductInfo {
 
     private String type;
 
+    private String applicationAreaName;
+
+    private String sectionInfoName;
+
+    private String loanPurposeName;
+
+    public String getApplicationAreaName() {
+        return applicationAreaName;
+    }
+
+    public void setApplicationAreaName(String applicationAreaName) {
+        this.applicationAreaName = applicationAreaName;
+    }
+
+    public String getSectionInfoName() {
+        return sectionInfoName;
+    }
+
+    public void setSectionInfoName(String sectionInfoName) {
+        this.sectionInfoName = sectionInfoName;
+    }
+
+    public String getLoanPurposeName() {
+        return loanPurposeName;
+    }
+
+    public void setLoanPurposeName(String loanPurposeName) {
+        this.loanPurposeName = loanPurposeName;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
 
     public String getApplicationArea() {
         return applicationArea;
@@ -320,7 +359,8 @@ public class FinanceProductInfo {
     @Override
     public String toString() {
         return "FinanceProductInfo{" +
-                "applicationArea='" + applicationArea + '\'' +
+                "id=" + id +
+                ", applicationArea='" + applicationArea + '\'' +
                 ", applyCondition='" + applyCondition + '\'' +
                 ", capAreaName='" + capAreaName + '\'' +
                 ", capOrgName='" + capOrgName + '\'' +
@@ -351,6 +391,9 @@ public class FinanceProductInfo {
                 ", state='" + state + '\'' +
                 ", subType='" + subType + '\'' +
                 ", type='" + type + '\'' +
+                ", applicationAreaName='" + applicationAreaName + '\'' +
+                ", sectionInfoName='" + sectionInfoName + '\'' +
+                ", loanPurposeName='" + loanPurposeName + '\'' +
                 '}';
     }
 }

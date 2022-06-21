@@ -6,6 +6,9 @@ package com.ruoyi.system.domain.model;
  * @date 2022年05月26日 16:13
  */
 public class FinanceHotProductInfo {
+    // id
+    private Long id;
+
     //金融信贷产品ID
     private String proId;
 
@@ -39,9 +42,18 @@ public class FinanceHotProductInfo {
     // 产品说明
     private FinanceProductInfo product ;
 
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
     @Override
     public String toString() {
         return "FinanceHotProductInfo{" +
+                "id='" + id + '\'' +
                 "proId='" + proId + '\'' +
                 ", type='" + type + '\'' +
                 ", orderNum='" + orderNum + '\'' +

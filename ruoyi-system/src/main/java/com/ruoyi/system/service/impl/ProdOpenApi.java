@@ -104,6 +104,29 @@ public class ProdOpenApi {
         return getResult(responseEntity.getBody());
     }
 
+    /**
+     * 信贷直通车金融产品详情查询
+     *
+     * @return 信贷直通车金融产品详情查询
+     */
+    public AjaxResult getFinanceProductInfo(FinanceProductQuery query) {
+        Long id = query.getId();
+        String url = domain + "xdztc/getDetailById?id="+id;
+
+        HttpHeaders headers = OpenApiAuthUtil.generateAuthHeaders(appKey, appSecret);
+
+        JSONObject jsonObject = JSONObject.parseObject(JSON.toJSONString(query));
+
+        HttpEntity<AjaxResult> httpEntity = new HttpEntity<>(null, headers);
+        ParameterizedTypeReference<AjaxResult> reference =
+                new ParameterizedTypeReference<AjaxResult>() {
+                };
+        ResponseEntity<AjaxResult> responseEntity = restTemplate.exchange(url,
+                HttpMethod.GET, httpEntity, reference);
+        log.info(String.valueOf(responseEntity.getBody()));
+        return responseEntity.getBody();
+    }
+
 
     /**
      * 信贷直通车字典查询
@@ -241,6 +264,7 @@ public class ProdOpenApi {
             throw new CustomException(response.getMsg(), HttpStatus.ERROR);
         }else{
             if (!Objects.isNull(response.getData())) {
+                log.info("original response.data: {}",response.getData());
                 returnObject.put("data", response.getData());
             }
             if (!Objects.isNull(response.getRows())) {

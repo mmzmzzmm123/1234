@@ -69,6 +69,15 @@ public class AppCreditController extends BaseController {
         return AjaxResult.success(financeProductList);
     }
 
+    @PostMapping("/getFinanceProductInfo")
+    @ApiOperation(value = "查询金融产品详情")
+    public AjaxResult getFinanceProductInfo(@RequestBody FinanceProductQuery query) {
+        log.info("查询金融产品详情 param {}",query);
+//        Object financeProduct = prodOpenApi.getFinanceProductInfo(query);
+
+        return prodOpenApi.getFinanceProductInfo(query);
+    }
+
 
 //    @GetMapping("/getDict/{dictType}")
     @GetMapping("/getDict")
