@@ -133,7 +133,7 @@ public class ProdOpenApi {
      *
      * @return 信贷直通车字典
      */
-    public JSONObject getDictByDictType(String dictType) {
+    public AjaxResult getDictByDictType(String dictType) {
 
         String url = domain + "xdztc/dict?dictType=" + dictType;
 
@@ -142,15 +142,15 @@ public class ProdOpenApi {
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("dictType", dictType);
 
-        HttpEntity<JSONObject> httpEntity = new HttpEntity<>(jsonObject, headers);
-        ParameterizedTypeReference<FinanceProductResponse<FinanceProductDictInfo>> reference =
-                new ParameterizedTypeReference<FinanceProductResponse<FinanceProductDictInfo>>() {
+        HttpEntity<AjaxResult> httpEntity = new HttpEntity<>(null, headers);
+        ParameterizedTypeReference<AjaxResult> reference =
+                new ParameterizedTypeReference<AjaxResult>() {
                 };
 
-        ResponseEntity<FinanceProductResponse<FinanceProductDictInfo>> responseEntity = restTemplate.exchange(url,
+        ResponseEntity<AjaxResult> responseEntity = restTemplate.exchange(url,
                 HttpMethod.GET, httpEntity, reference);
 
-        return getResult(responseEntity.getBody());
+        return responseEntity.getBody();
     }
 
 
@@ -261,7 +261,7 @@ public class ProdOpenApi {
         JSONObject returnObject = new JSONObject();
         log.info("original response: {}",response);
         if(response == null || !Objects.equals(200, response.getCode())){
-            throw new CustomException(response.getMsg(), HttpStatus.ERROR);
+            throw new CustomException(response == null?"接口返回异常":response.getMsg(), HttpStatus.ERROR);
         }else{
             if (!Objects.isNull(response.getData())) {
                 log.info("original response.data: {}",response.getData());

@@ -85,9 +85,9 @@ public class AppCreditController extends BaseController {
     public AjaxResult getDict(@RequestParam(name="dictType") String dictType) {
         log.info("信贷直通车字典查询 param dictType={}",dictType);
 
-        Object financeProductDict = prodOpenApi.getDictByDictType(dictType);
+//        Object financeProductDict = prodOpenApi.getDictByDictType(dictType);
 
-        return AjaxResult.success(financeProductDict);
+        return prodOpenApi.getDictByDictType(dictType);
     }
 
     @PostMapping("/financeProductApply")
