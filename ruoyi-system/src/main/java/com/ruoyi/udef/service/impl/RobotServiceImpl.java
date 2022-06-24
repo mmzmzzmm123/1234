@@ -160,6 +160,7 @@ public class RobotServiceImpl {
      * 2. 止盈止损
      * 3. 跟踪止损
      */
+    @Transactional
     public void placeIfNotPosition(OkAgent.Credential credential, DfApiRobot robot, String direction) {
         List<DriverDto.PositionRisk> risks = agent.positionRisk(credential, getPair(robot.getSymbol())).stream()
                 .filter(n -> n.getSymbol().equals(robot.getSymbol()) && Integer.parseInt(n.getPositionAmt()) != 0)
@@ -190,8 +191,7 @@ public class RobotServiceImpl {
                 dfRobotOrder.setBalance(dfRobotOrder.getPredictBalance()).setMaxPosition(robot.getQuantity())
                         .setPosition(robot.getQuantity()).setStatus(P_STATUS_RUNNING);
                 robotOrderMapper.insertDfRobotOrder(dfRobotOrder);
-
-                checkSingleFromConfig(robot, credential);
+//                checkSingleFromConfig(robot, credential);
             }
         }
 
@@ -333,15 +333,17 @@ public class RobotServiceImpl {
         RobotServiceImpl robotService = new RobotServiceImpl();
     }
 
-    public void triggerRobot(String symbol, Long interval, String direction) {
+    public void triggerRobot(String symbol, Long interval, String direction, String strategy) {
         try {
             List<DfApiRobot> robots = dfApiRobotMapper.selectDfApiRobotList(new DfApiRobot().setStatus(R_STATUS_RUNNING)
                     .setSymbol(symbol).setBigInterval(interval));
             robots.forEach(n -> {
                 try {
-                    log.info("触发机器人 {}", JSON.toJSONString(n));
-                    OkAgent.Credential credential = getCredential(n.getApiId());
-                    placeIfNotPosition(credential, n, direction);
+                    if(strategy.equals(n.getStrategy())){
+                        log.info("触发机器人 {}", JSON.toJSONString(n));
+                        OkAgent.Credential credential = getCredential(n.getApiId());
+                        placeIfNotPosition(credential, n, direction);
+                    }
                 } catch (Exception e) {
                     log.warn("Api机器人账户初始化异常 {}", JSON.toJSONString(n));
                     e.printStackTrace();

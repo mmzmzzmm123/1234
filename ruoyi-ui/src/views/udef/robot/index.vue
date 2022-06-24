@@ -11,6 +11,16 @@
           />
         </el-select>
       </el-form-item>
+      <el-form-item label="执行策略" prop="strategy">
+        <el-select v-model="queryParams.strategy" placeholder="请选择策略" clearable>
+          <el-option
+            v-for="dict in dict.type.udef_robot_strategy"
+            :key="dict.value"
+            :label="dict.label"
+            :value="dict.value"
+          />
+        </el-select>
+      </el-form-item>
       <el-form-item>
         <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
         <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
@@ -79,6 +89,11 @@
       <el-table-column label="持仓模式" align="center" prop="margin">
         <template slot-scope="scope">
           <dict-tag :options="dict.type.udef_dict_margin" :value="scope.row.margin"/>
+        </template>
+      </el-table-column>
+      <el-table-column label="策略" align="center" prop="margin">
+        <template slot-scope="scope">
+          <dict-tag :options="dict.type.udef_robot_strategy" :value="scope.row.strategy"/>
         </template>
       </el-table-column>
       <el-table-column label="杠杆" align="center" prop="leverage"/>
@@ -181,6 +196,16 @@
             ></el-option>
           </el-select>
         </el-form-item>
+        <el-form-item label="策略" prop="strategy">
+          <el-select v-model="form.strategy" placeholder="请选策略">
+            <el-option
+              v-for="dict in dict.type.udef_robot_strategy"
+              :key="dict.value"
+              :label="dict.label"
+              :value="dict.value"
+            ></el-option>
+          </el-select>
+        </el-form-item>
         <el-form-item label="API账户" prop="apiId">
           <el-select v-model="form.apiId" placeholder="请选择API账户">
             <el-option
@@ -260,7 +285,7 @@ import { listRobot, getRobot, delRobot, addRobot, updateRobot, actionOnRobot } f
 
 export default {
   name: 'Robot',
-  dicts: ['udef_escape_type', 'udef_schedule_priority', 'udef_dict_margin', 'udef_robot_status', 'udef_dict_api_key'],
+  dicts: ['udef_escape_type', 'udef_schedule_priority', 'udef_dict_margin', 'udef_robot_status', 'udef_robot_strategy', 'udef_dict_api_key'],
   data() {
     return {
       // 遮罩层
@@ -293,6 +318,7 @@ export default {
         symbol: null,
         leverage: null,
         status: null,
+        strategy: null,
         apiId: null
       },
       // 表单参数
@@ -319,6 +345,9 @@ export default {
         ],
         status: [
           { required: true, message: '状态不能为空', trigger: 'change' }
+        ],
+        strategy: [
+          { required: true, message: '策略不能为空', trigger: 'change' }
         ],
         apiId: [
           { required: true, message: 'API账户不能为空', trigger: 'change' }
@@ -357,6 +386,7 @@ export default {
         margin: null,
         leverage: null,
         status: null,
+        strategy: null,
         apiId: null,
         createTime: null,
         updateTime: null

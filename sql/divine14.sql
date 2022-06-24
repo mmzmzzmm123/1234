@@ -62,9 +62,10 @@ create table df_robot_order (
   balance           varchar(15)     not null comment '当前余额',
   max_position      int(10)         not null comment '最大持仓',
   position          int(10)         not null comment '当前持仓',
-  symbol           varchar(15)     not null        comment '交易对',
+  symbol            varchar(15)     not null        comment '交易对',
   open_side         varchar(15)     not null comment '开仓方向',
   status            varchar(15)     not null comment '状态',
+  strategy          varchar(15)     not null comment '执行策略',
   robot_id          bigint(20)      not null                   comment '机器人',
   create_time       datetime                                   comment '创建时间',
   update_time       datetime                                   comment '更新时间',
@@ -98,6 +99,7 @@ insert into sys_dict_type values(1003,  '计划类型',   'udef_escape_type',   
 insert into sys_dict_type values(1004,  '优先级', 'udef_schedule_priority',      '0', '0', 'admin', sysdate(), '', null, '计划优先级');
 insert into sys_dict_type values(1005,  '开仓方向', 'udef_open_side',      '0', '0', 'admin', sysdate(), '', null, '计划优先级');
 insert into sys_dict_type values(1006,  '运行仓位', 'udef_position_status',      '0', '0', 'admin', sysdate(), '', null, '计划优先级');
+insert into sys_dict_type values(1009,  '执行策略', 'udef_robot_strategy',      '0', '0', 'admin', sysdate(), '', null, '执行策略');
 
 -- 字典数据
 -- dict_code        bigint(20)      not null auto_increment    comment '字典编码',
@@ -147,4 +149,7 @@ insert into sys_dict_data values(1020,  2,  '开空',      'SHORT',      'udef_o
 
 insert into sys_dict_data values(1021,  1,  '运行中',      'running',      'udef_position_status',       '',   '',     'N', '0', 'admin', sysdate(), '', null, '');
 insert into sys_dict_data values(1022,  2,  '已关闭',      'closed',      'udef_position_status',       '',   '',     'N', '0', 'admin', sysdate(), '', null, '');
+
+insert into sys_dict_data values(1026,  1,  'EMA_KDJ双叉',      'ema_kdj_dbcross',      'udef_robot_strategy',       '',   '',     'N', '0', 'admin', sysdate(), '', null, '');
+insert into sys_dict_data values(1027,  2,  'EMA金叉死叉',      'ema_cross',      'udef_robot_strategy',       '',   '',     'N', '0', 'admin', sysdate(), '', null, '');
 

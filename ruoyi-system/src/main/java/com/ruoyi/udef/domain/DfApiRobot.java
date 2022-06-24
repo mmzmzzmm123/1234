@@ -60,6 +60,10 @@ public class DfApiRobot extends BaseEntity
     @Excel(name = "状态")
     private String status;
 
+    /** 状态 */
+    @Excel(name = "策略")
+    private String strategy;
+
     /** api */
     @Excel(name = "api")
     private Long apiId;
@@ -80,6 +84,7 @@ public class DfApiRobot extends BaseEntity
             .append("margin", getMargin())
             .append("leverage", getLeverage())
             .append("status", getStatus())
+            .append("strategy", getStrategy())
             .append("apiId", getApiId())
             .append("createTime", getCreateTime())
             .append("updateTime", getUpdateTime())

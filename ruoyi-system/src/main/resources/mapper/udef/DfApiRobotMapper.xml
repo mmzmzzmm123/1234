@@ -15,6 +15,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="margin"    column="margin"    />
         <result property="leverage"    column="leverage"    />
         <result property="status"    column="status"    />
+        <result property="strategy"    column="strategy"    />
         <result property="apiId"    column="api_id"    />
         <result property="createTime"    column="create_time"    />
         <result property="updateTime"    column="update_time"    />
@@ -35,7 +36,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </resultMap>
 
     <sql id="selectDfApiRobotVo">
-        select id, robot_name, symbol, quantity_base, quantity, lit_interval, big_interval, margin, leverage, status, api_id, create_time, update_time from df_api_robot
+        select id, robot_name, symbol, quantity_base, quantity, lit_interval, big_interval, margin, leverage, status, strategy, api_id, create_time, update_time from df_api_robot
     </sql>
 
     <select id="selectDfApiRobotList" parameterType="DfApiRobot" resultMap="DfApiRobotResult">
@@ -47,12 +48,13 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="bigInterval != null "> and big_interval = #{bigInterval}</if>
             <if test="litInterval != null "> and lit_interval = #{litInterval}</if>
             <if test="status != null  and status != ''"> and status = #{status}</if>
+            <if test="strategy != null  and strategy != ''"> and strategy = #{strategy}</if>
             <if test="apiId != null "> and api_id = #{apiId}</if>
         </where>
     </select>
     
     <select id="selectDfApiRobotById" parameterType="Long" resultMap="DfApiRobotDfEscapeScheduleResult">
-        select a.id, a.robot_name, a.symbol, a.quantity_base, a.quantity, a.lit_interval, a.big_interval, a.margin, a.leverage, a.status, a.api_id, a.create_time, a.update_time,
+        select a.id, a.robot_name, a.symbol, a.quantity_base, a.quantity, a.lit_interval, a.big_interval, a.margin, a.leverage, a.status, a.strategy, a.api_id, a.create_time, a.update_time,
  b.id as sub_id, b.escape_type as sub_escape_type, b.price_rate as sub_price_rate, b.quantity_rate as sub_quantity_rate, b.quantity as sub_quantity, b.priority as sub_priority, b.robot_id as sub_robot_id
         from df_api_robot a
         left join df_escape_schedule b on b.robot_id = a.id
@@ -71,6 +73,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="margin != null and margin != ''">margin,</if>
             <if test="leverage != null">leverage,</if>
             <if test="status != null and status != ''">status,</if>
+            <if test="strategy != null and strategy != ''">strategy,</if>
             <if test="apiId != null">api_id,</if>
             <if test="createTime != null">create_time,</if>
             <if test="updateTime != null">update_time,</if>
@@ -85,6 +88,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="margin != null and margin != ''">#{margin},</if>
             <if test="leverage != null">#{leverage},</if>
             <if test="status != null and status != ''">#{status},</if>
+            <if test="strategy != null and strategy != ''">#{strategy},</if>
             <if test="apiId != null">#{apiId},</if>
             <if test="createTime != null">#{createTime},</if>
             <if test="updateTime != null">#{updateTime},</if>
@@ -103,6 +107,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="margin != null and margin != ''">margin = #{margin},</if>
             <if test="leverage != null">leverage = #{leverage},</if>
             <if test="status != null and status != ''">status = #{status},</if>
+            <if test="strategy != null and strategy != ''">strategy = #{strategy},</if>
             <if test="apiId != null">api_id = #{apiId},</if>
             <if test="createTime != null">create_time = #{createTime},</if>
             <if test="updateTime != null">update_time = #{updateTime},</if>

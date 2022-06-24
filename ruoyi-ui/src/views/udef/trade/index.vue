@@ -108,7 +108,7 @@
         </template>
       </el-table-column>
       <el-table-column label="交易对" align="center" prop="symbol" />
-      <el-table-column label="时间" align="center" prop="time" />
+      <el-table-column label="时间" align="center" prop="time" :formatter="dateFormat"  />
       <el-table-column label="机器人" align="center" prop="robotId">
         <template slot-scope="scope">
           <dict-tag :options="dict.type.udef_dict_robot_key" :value="scope.row.robotId"/>
@@ -280,6 +280,14 @@ export default {
     this.getList();
   },
   methods: {
+    dateFormat:function(row, column) {
+      var date = row[column.property];
+      console.log(date)
+      if (date == undefined) {
+        return "";
+      }
+      return this.$moment(Number(date)).format("MM-DD HH:mm:ss");
+    },
     /** 查询成交订单列表 */
     getList() {
       this.loading = true;

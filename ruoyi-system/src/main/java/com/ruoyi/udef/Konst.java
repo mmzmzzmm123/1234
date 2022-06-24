@@ -17,6 +17,9 @@ public class Konst {
 
     public static final String DOMAIN = "divine14";
 
+    public static final String ST_EMA_KDJ_DBCROSS = "ema_kdj_dbcross";
+    public static final String ST_EMA_CROSS = "ema_cross";
+
     public static String padding(Integer scale, Long id) {
         StringBuilder idStr = new StringBuilder(id + "");
         if(idStr.length() > scale){
