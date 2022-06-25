@@ -222,10 +222,10 @@ public class RobotServiceImpl {
                     String status = alarm.get().getStatus();
                     if(A_STATUS_DAILY.equals(status)){
                         sendAlarm(Arrays.asList(alarm.get().getPhone()),
-                                Konst.isLong(direction) ? alarm.get().getLongCode() : alarm.get().getLongCode());
+                                Konst.isLong(direction) ? alarm.get().getLongCode() : alarm.get().getShortCode());
                     } else if(A_STATUS_WORK_TIME.equals(status)){
                         sendAlarmWorkTime(Arrays.asList(alarm.get().getPhone()),
-                                Konst.isLong(direction) ? alarm.get().getLongCode() : alarm.get().getLongCode());
+                                Konst.isLong(direction) ? alarm.get().getLongCode() : alarm.get().getShortCode());
                     } else if(A_STATUS_STOP.equals(status)){
                         log.info("当前持仓已停用通知 {}", robot.getRobotName());
                     }

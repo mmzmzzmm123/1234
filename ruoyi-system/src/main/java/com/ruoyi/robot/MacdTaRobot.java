@@ -174,7 +174,7 @@ public class MacdTaRobot {
             crossLat = klinesLit.get(klinesLit.size() - 2).getTimestamp().getTime();
         }
 
-        if(!hasEmaGoldCrossed(bigKi) && !emaOlGoldCross(litKi)){
+        if(!hasEmaGoldCrossed(bigKi) && emaOlDeadCross(litKi)){
             log.info("MacdTaRobot  币对 {} 大周期 {} 小周期_死叉_大周期同相位", symbol, interval);
             eamOlDeadCross = true;
             crossLat = klinesLit.get(klinesLit.size() - 2).getTimestamp().getTime();
