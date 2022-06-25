@@ -34,6 +34,10 @@ public class SysDictType extends BaseEntity
     @Excel(name = "状态", readConverterExp = "0=正常,1=停用")
     private String status;
 
+    /** 状态（0正常 1停用） */
+    @Excel(name = "来源", readConverterExp = "0=系统,1=业务")
+    private String dictFrom;
+
     public Long getDictId()
     {
         return dictId;
@@ -78,7 +82,17 @@ public class SysDictType extends BaseEntity
     {
         this.status = status;
     }
-    
+
+    public String getDictFrom()
+    {
+        return dictFrom;
+    }
+
+    public void setDictFrom(String dictFrom)
+    {
+        this.dictFrom = dictFrom;
+    }
+
     @Override
     public String toString() {
         return new ToStringBuilder(this,ToStringStyle.MULTI_LINE_STYLE)
@@ -86,6 +100,7 @@ public class SysDictType extends BaseEntity
             .append("dictName", getDictName())
             .append("dictType", getDictType())
             .append("status", getStatus())
+            .append("dictFrom", getDictFrom())
             .append("createBy", getCreateBy())
             .append("createTime", getCreateTime())
             .append("updateBy", getUpdateBy())

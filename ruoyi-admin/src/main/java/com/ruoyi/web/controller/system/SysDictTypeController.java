@@ -2,6 +2,8 @@ package com.ruoyi.web.controller.system;
 
 import java.util.List;
 import javax.servlet.http.HttpServletResponse;
+
+import com.ruoyi.common.core.domain.entity.SysDictData;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
@@ -62,6 +64,18 @@ public class SysDictTypeController extends BaseController
     public AjaxResult getInfo(@PathVariable Long dictId)
     {
         return AjaxResult.success(dictTypeService.selectDictTypeById(dictId));
+    }
+
+    /**
+     * 查询字典类型详细
+     */
+    @PreAuthorize("@ss.hasPermi('system:dict:query')")
+    @GetMapping(value = "/{dictId}/exec")
+    public TableDataInfo getDictDataList(@PathVariable Long dictId)
+    {
+        startPage();
+        List<SysDictData> list =dictTypeService.selectDictTypeByExec(dictId);
+        return getDataTable(list);
     }
 
     /**

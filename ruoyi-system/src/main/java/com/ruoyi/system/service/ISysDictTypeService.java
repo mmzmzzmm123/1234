@@ -95,4 +95,12 @@ public interface ISysDictTypeService
      * @return 结果
      */
     public String checkDictTypeUnique(SysDictType dictType);
+
+    /**
+     * 如果是业务字典，执行remark中sql返回字典数据
+     *
+     * @param dictId 字典ID
+     * @return 字典数据
+     */
+    public List<SysDictData>  selectDictTypeByExec(Long dictId);
 }

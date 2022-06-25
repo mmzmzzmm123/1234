@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.udef.mapper.DfApiRobotMapper">
+    
+    <resultMap type="DfApiRobot" id="DfApiRobotResult">
+        <result property="id"    column="id"    />
+        <result property="robotName"    column="robot_name"    />
+        <result property="symbol"    column="symbol"    />
+        <result property="quantityBase"    column="quantity_base"    />
+        <result property="quantity"    column="quantity"    />
+        <result property="litInterval"    column="lit_interval"    />
+        <result property="bigInterval"    column="big_interval"    />
+        <result property="margin"    column="margin"    />
+        <result property="leverage"    column="leverage"    />
+        <result property="status"    column="status"    />
+        <result property="strategy"    column="strategy"    />
+        <result property="apiId"    column="api_id"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateTime"    column="update_time"    />
+    </resultMap>
+
+    <resultMap id="DfApiRobotDfEscapeScheduleResult" type="DfApiRobot" extends="DfApiRobotResult">
+        <collection property="dfEscapeScheduleList" notNullColumn="sub_id" javaType="java.util.List" resultMap="DfEscapeScheduleResult" />
+    </resultMap>
+
+    <resultMap type="DfEscapeSchedule" id="DfEscapeScheduleResult">
+        <result property="id"    column="sub_id"    />
+        <result property="escapeType"    column="sub_escape_type"    />
+        <result property="priceRate"    column="sub_price_rate"    />
+        <result property="quantityRate"    column="sub_quantity_rate"    />
+        <result property="quantity"    column="sub_quantity"    />
+        <result property="priority"    column="sub_priority"    />
+        <result property="robotId"    column="sub_robot_id"    />
+    </resultMap>
+
+    <sql id="selectDfApiRobotVo">
+        select id, robot_name, symbol, quantity_base, quantity, lit_interval, big_interval, margin, leverage, status, strategy, api_id, create_time, update_time from df_api_robot
+    </sql>
+
+    <select id="selectDfApiRobotList" parameterType="DfApiRobot" resultMap="DfApiRobotResult">
+        <include refid="selectDfApiRobotVo"/>
+        <where>  
+            <if test="robotName != null  and robotName != ''"> and robot_name like concat('%', #{robotName}, '%')</if>
+            <if test="symbol != null  and symbol != ''"> and symbol = #{symbol}</if>
+            <if test="leverage != null "> and leverage = #{leverage}</if>
+            <if test="bigInterval != null "> and big_interval = #{bigInterval}</if>
+            <if test="litInterval != null "> and lit_interval = #{litInterval}</if>
+            <if test="status != null  and status != ''"> and status = #{status}</if>
+            <if test="strategy != null  and strategy != ''"> and strategy = #{strategy}</if>
+            <if test="apiId != null "> and api_id = #{apiId}</if>
+        </where>
+    </select>
+    
+    <select id="selectDfApiRobotById" parameterType="Long" resultMap="DfApiRobotDfEscapeScheduleResult">
+        select a.id, a.robot_name, a.symbol, a.quantity_base, a.quantity, a.lit_interval, a.big_interval, a.margin, a.leverage, a.status, a.strategy, a.api_id, a.create_time, a.update_time,
+ b.id as sub_id, b.escape_type as sub_escape_type, b.price_rate as sub_price_rate, b.quantity_rate as sub_quantity_rate, b.quantity as sub_quantity, b.priority as sub_priority, b.robot_id as sub_robot_id
+        from df_api_robot a
+        left join df_escape_schedule b on b.robot_id = a.id
+        where a.id = #{id}
+    </select>
+        
+    <insert id="insertDfApiRobot" parameterType="DfApiRobot" useGeneratedKeys="true" keyProperty="id">
+        insert into df_api_robot
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="robotName != null and robotName != ''">robot_name,</if>
+            <if test="symbol != null and symbol != ''">symbol,</if>
+            <if test="quantityBase != null">quantity_base,</if>
+            <if test="quantity != null">quantity,</if>
+            <if test="litInterval != null">lit_interval,</if>
+            <if test="bigInterval != null">big_interval,</if>
+            <if test="margin != null and margin != ''">margin,</if>
+            <if test="leverage != null">leverage,</if>
+            <if test="status != null and status != ''">status,</if>
+            <if test="strategy != null and strategy != ''">strategy,</if>
+            <if test="apiId != null">api_id,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateTime != null">update_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="robotName != null and robotName != ''">#{robotName},</if>
+            <if test="symbol != null and symbol != ''">#{symbol},</if>
+            <if test="quantityBase != null">#{quantityBase},</if>
+            <if test="quantity != null">#{quantity},</if>
+            <if test="litInterval != null">#{litInterval},</if>
+            <if test="bigInterval != null">#{bigInterval},</if>
+            <if test="margin != null and margin != ''">#{margin},</if>
+            <if test="leverage != null">#{leverage},</if>
+            <if test="status != null and status != ''">#{status},</if>
+            <if test="strategy != null and strategy != ''">#{strategy},</if>
+            <if test="apiId != null">#{apiId},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateDfApiRobot" parameterType="DfApiRobot">
+        update df_api_robot
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="robotName != null and robotName != ''">robot_name = #{robotName},</if>
+            <if test="symbol != null and symbol != ''">symbol = #{symbol},</if>
+            <if test="quantityBase != null">quantity_base = #{quantityBase},</if>
+            <if test="quantity != null">quantity = #{quantity},</if>
+            <if test="litInterval != null">lit_interval = #{litInterval},</if>
+            <if test="bigInterval != null">big_interval = #{bigInterval},</if>
+            <if test="margin != null and margin != ''">margin = #{margin},</if>
+            <if test="leverage != null">leverage = #{leverage},</if>
+            <if test="status != null and status != ''">status = #{status},</if>
+            <if test="strategy != null and strategy != ''">strategy = #{strategy},</if>
+            <if test="apiId != null">api_id = #{apiId},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteDfApiRobotById" parameterType="Long">
+        delete from df_api_robot where id = #{id}
+    </delete>
+
+    <delete id="deleteDfApiRobotByIds" parameterType="String">
+        delete from df_api_robot where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+    <delete id="deleteDfEscapeScheduleByRobotIds" parameterType="String">
+        delete from df_escape_schedule where robot_id in 
+        <foreach item="robotId" collection="array" open="(" separator="," close=")">
+            #{robotId}
+        </foreach>
+    </delete>
+
+    <delete id="deleteDfEscapeScheduleByRobotId" parameterType="Long">
+        delete from df_escape_schedule where robot_id = #{robotId}
+    </delete>
+
+    <insert id="batchDfEscapeSchedule">
+        insert into df_escape_schedule( id, escape_type, price_rate, quantity_rate, quantity, priority, robot_id) values
+		<foreach item="item" index="index" collection="list" separator=",">
+            ( #{item.id}, #{item.escapeType}, #{item.priceRate}, #{item.quantityRate}, #{item.quantity}, #{item.priority}, #{item.robotId})
+        </foreach>
+    </insert>
+</mapper>

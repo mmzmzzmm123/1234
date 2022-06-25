@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.udef.mapper.DfEscapeScheduleMapper">
+    
+    <resultMap type="DfEscapeSchedule" id="DfEscapeScheduleResult">
+        <result property="id"    column="id"    />
+        <result property="escapeType"    column="escape_type"    />
+        <result property="priceRate"    column="price_rate"    />
+        <result property="quantityRate"    column="quantity_rate"    />
+        <result property="quantity"    column="quantity"    />
+        <result property="priority"    column="priority"    />
+        <result property="robotId"    column="robot_id"    />
+    </resultMap>
+
+    <sql id="selectDfEscapeScheduleVo">
+        select id, escape_type, price_rate, quantity_rate, quantity, priority, robot_id from df_escape_schedule
+    </sql>
+
+    <select id="selectDfEscapeScheduleList" parameterType="DfEscapeSchedule" resultMap="DfEscapeScheduleResult">
+        <include refid="selectDfEscapeScheduleVo"/>
+        <where>  
+            <if test="escapeType != null  and escapeType != ''"> and escape_type = #{escapeType}</if>
+            <if test="priceRate != null "> and price_rate = #{priceRate}</if>
+            <if test="quantityRate != null "> and quantity_rate = #{quantityRate}</if>
+            <if test="quantity != null "> and quantity = #{quantity}</if>
+            <if test="priority != null "> and priority = #{priority}</if>
+            <if test="robotId != null "> and robot_id = #{robotId}</if>
+        </where>
+    </select>
+    
+    <select id="selectDfEscapeScheduleById" parameterType="Long" resultMap="DfEscapeScheduleResult">
+        <include refid="selectDfEscapeScheduleVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertDfEscapeSchedule" parameterType="DfEscapeSchedule" useGeneratedKeys="true" keyProperty="id">
+        insert into df_escape_schedule
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="escapeType != null and escapeType != ''">escape_type,</if>
+            <if test="priceRate != null">price_rate,</if>
+            <if test="quantityRate != null">quantity_rate,</if>
+            <if test="quantity != null">quantity,</if>
+            <if test="priority != null">priority,</if>
+            <if test="robotId != null">robot_id,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="escapeType != null and escapeType != ''">#{escapeType},</if>
+            <if test="priceRate != null">#{priceRate},</if>
+            <if test="quantityRate != null">#{quantityRate},</if>
+            <if test="quantity != null">#{quantity},</if>
+            <if test="priority != null">#{priority},</if>
+            <if test="robotId != null">#{robotId},</if>
+         </trim>
+    </insert>
+
+    <update id="updateDfEscapeSchedule" parameterType="DfEscapeSchedule">
+        update df_escape_schedule
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="escapeType != null and escapeType != ''">escape_type = #{escapeType},</if>
+            <if test="priceRate != null">price_rate = #{priceRate},</if>
+            <if test="quantityRate != null">quantity_rate = #{quantityRate},</if>
+            <if test="quantity != null">quantity = #{quantity},</if>
+            <if test="priority != null">priority = #{priority},</if>
+            <if test="robotId != null">robot_id = #{robotId},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteDfEscapeScheduleById" parameterType="Long">
+        delete from df_escape_schedule where id = #{id}
+    </delete>
+
+    <delete id="deleteDfEscapeScheduleByIds" parameterType="String">
+        delete from df_escape_schedule where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

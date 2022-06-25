@@ -58,3 +58,11 @@ export function optionselect() {
     method: 'get'
   })
 }
+
+// 获取业务字典数据()
+export function getInfoQuery(dictId) {
+  return request({
+      url: '/system/dict/type/'+dictId+'/exec',
+      method: 'get'
+  })
+}

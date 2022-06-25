@@ -34,6 +34,21 @@
           />
         </el-select>
       </el-form-item>
+      <el-form-item label="字典来源" prop="dictFrom">
+        <el-select
+          v-model="queryParams.dictFrom"
+          placeholder="字典来源"
+          clearable
+          style="width: 240px"
+        >
+          <el-option
+            v-for="dict in dict.type.sys_dict_from"
+            :key="dict.value"
+            :label="dict.label"
+            :value="dict.value"
+          />
+        </el-select>
+      </el-form-item>
       <el-form-item label="创建时间">
         <el-date-picker
           v-model="dateRange"
@@ -113,7 +128,7 @@
       <el-table-column label="字典名称" align="center" prop="dictName" :show-overflow-tooltip="true" />
       <el-table-column label="字典类型" align="center" :show-overflow-tooltip="true">
         <template slot-scope="scope">
-          <router-link :to="'/system/dict-data/index/' + scope.row.dictId" class="link-type">
+          <router-link :to="'/system/dict-data/index/' + scope.row.dictId+'?dictFrom='+scope.row.dictFrom" class="link-type">
             <span>{{ scope.row.dictType }}</span>
           </router-link>
         </template>
@@ -121,6 +136,11 @@
       <el-table-column label="状态" align="center" prop="status">
         <template slot-scope="scope">
           <dict-tag :options="dict.type.sys_normal_disable" :value="scope.row.status"/>
+        </template>
+      </el-table-column>
+      <el-table-column label="来源" align="center" prop="dictFrom">
+        <template slot-scope="scope">
+          <dict-tag :options="dict.type.sys_dict_from" :value="scope.row.dictFrom"/>
         </template>
       </el-table-column>
       <el-table-column label="备注" align="center" prop="remark" :show-overflow-tooltip="true" />
@@ -175,6 +195,15 @@
             >{{dict.label}}</el-radio>
           </el-radio-group>
         </el-form-item>
+        <el-form-item label="来源" prop="dictFrom">
+          <el-radio-group v-model="form.dictFrom">
+            <el-radio
+              v-for="dict in dict.type.sys_dict_from"
+              :key="dict.value"
+              :label="dict.value"
+            >{{dict.label}}</el-radio>
+          </el-radio-group>
+        </el-form-item>
         <el-form-item label="备注" prop="remark">
           <el-input v-model="form.remark" type="textarea" placeholder="请输入内容"></el-input>
         </el-form-item>
@@ -192,7 +221,7 @@ import { listType, getType, delType, addType, updateType, refreshCache } from "@
 
 export default {
   name: "Dict",
-  dicts: ['sys_normal_disable'],
+  dicts: ['sys_normal_disable','sys_dict_from'],
   data() {
     return {
       // 遮罩层
@@ -221,7 +250,8 @@ export default {
         pageSize: 10,
         dictName: undefined,
         dictType: undefined,
-        status: undefined
+        status: undefined,
+        dictFrom: undefined
       },
       // 表单参数
       form: {},
@@ -262,6 +292,7 @@ export default {
         dictName: undefined,
         dictType: undefined,
         status: "0",
+        dictFrom: "0",
         remark: undefined
       };
       this.resetForm("form");

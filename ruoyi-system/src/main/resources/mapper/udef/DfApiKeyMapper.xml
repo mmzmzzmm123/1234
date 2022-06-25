@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.udef.mapper.DfApiKeyMapper">
+    
+    <resultMap type="DfApiKey" id="DfApiKeyResult">
+        <result property="id"    column="id"    />
+        <result property="platform"    column="platform"    />
+        <result property="apiName"    column="api_name"    />
+        <result property="apiKey"    column="api_key"    />
+        <result property="apiSecret"    column="api_secret"    />
+        <result property="passphrase"    column="passphrase"    />
+        <result property="createTime"    column="create_time"    />
+    </resultMap>
+
+    <sql id="selectDfApiKeyVo">
+        select id, platform, api_name, api_key, api_secret, passphrase, create_time from df_api_key
+    </sql>
+
+    <select id="selectDfApiKeyList" parameterType="DfApiKey" resultMap="DfApiKeyResult">
+        <include refid="selectDfApiKeyVo"/>
+        <where>  
+            <if test="platform != null  and platform != ''"> and platform = #{platform}</if>
+            <if test="apiName != null  and apiName != ''"> and api_name like concat('%', #{apiName}, '%')</if>
+            <if test="apiKey != null  and apiKey != ''"> and api_key = #{apiKey}</if>
+            <if test="apiSecret != null  and apiSecret != ''"> and api_secret = #{apiSecret}</if>
+            <if test="passphrase != null  and passphrase != ''"> and passphrase = #{passphrase}</if>
+        </where>
+    </select>
+    
+    <select id="selectDfApiKeyById" parameterType="Long" resultMap="DfApiKeyResult">
+        <include refid="selectDfApiKeyVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertDfApiKey" parameterType="DfApiKey" useGeneratedKeys="true" keyProperty="id">
+        insert into df_api_key
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="platform != null">platform,</if>
+            <if test="apiName != null">api_name,</if>
+            <if test="apiKey != null">api_key,</if>
+            <if test="apiSecret != null">api_secret,</if>
+            <if test="passphrase != null">passphrase,</if>
+            <if test="createTime != null">create_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="platform != null">#{platform},</if>
+            <if test="apiName != null">#{apiName},</if>
+            <if test="apiKey != null">#{apiKey},</if>
+            <if test="apiSecret != null">#{apiSecret},</if>
+            <if test="passphrase != null">#{passphrase},</if>
+            <if test="createTime != null">#{createTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateDfApiKey" parameterType="DfApiKey">
+        update df_api_key
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="platform != null">platform = #{platform},</if>
+            <if test="apiName != null">api_name = #{apiName},</if>
+            <if test="apiKey != null">api_key = #{apiKey},</if>
+            <if test="apiSecret != null">api_secret = #{apiSecret},</if>
+            <if test="passphrase != null">passphrase = #{passphrase},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteDfApiKeyById" parameterType="Long">
+        delete from df_api_key where id = #{id}
+    </delete>
+
+    <delete id="deleteDfApiKeyByIds" parameterType="String">
+        delete from df_api_key where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

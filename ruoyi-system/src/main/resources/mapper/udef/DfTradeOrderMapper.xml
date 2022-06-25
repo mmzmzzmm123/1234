@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.udef.mapper.DfTradeOrderMapper">
+
+    <resultMap type="DfTradeOrder" id="DfTradeOrderResult">
+        <result property="id"    column="id"    />
+        <result property="orderId"    column="order_id"    />
+        <result property="price"    column="price"    />
+        <result property="qty"    column="qty"    />
+        <result property="quoteQty"    column="quote_qty"    />
+        <result property="realizedPnl"    column="realized_pnl"    />
+        <result property="side"    column="side"    />
+        <result property="positionSide"    column="position_side"    />
+        <result property="symbol"    column="symbol"    />
+        <result property="time"    column="time"    />
+        <result property="robotId"    column="robot_id"    />
+    </resultMap>
+
+    <sql id="selectDfTradeOrderVo">
+        select id, order_id, price, qty, quote_qty, realized_pnl, side, position_side, symbol, time, robot_id from df_trade_order
+    </sql>
+
+    <select id="selectDfTradeOrderList" parameterType="DfTradeOrder" resultMap="DfTradeOrderResult">
+        <include refid="selectDfTradeOrderVo"/>
+        <where>
+            <if test="orderId != null  and orderId != ''"> and order_id = #{orderId}</if>
+            <if test="price != null  and price != ''"> and price = #{price}</if>
+            <if test="qty != null  and qty != ''"> and qty = #{qty}</if>
+            <if test="quoteQty != null  and quoteQty != ''"> and quote_qty = #{quoteQty}</if>
+            <if test="realizedPnl != null  and realizedPnl != ''"> and realized_pnl = #{realizedPnl}</if>
+            <if test="side != null  and side != ''"> and side = #{side}</if>
+            <if test="positionSide != null  and positionSide != ''"> and position_side = #{positionSide}</if>
+            <if test="symbol != null  and symbol != ''"> and symbol = #{symbol}</if>
+            <if test="time != null  and time != ''"> and time = #{time}</if>
+            <if test="robotId != null "> and robot_id = #{robotId}</if>
+        </where>
+        order by time desc
+    </select>
+
+    <select id="selectDfTradeOrderLatest" parameterType="DfTradeOrder" resultMap="DfTradeOrderResult">
+        <include refid="selectDfTradeOrderVo"/>
+        <where>
+            <if test="orderId != null  and orderId != ''"> and order_id = #{orderId}</if>
+            <if test="price != null  and price != ''"> and price = #{price}</if>
+            <if test="qty != null  and qty != ''"> and qty = #{qty}</if>
+            <if test="quoteQty != null  and quoteQty != ''"> and quote_qty = #{quoteQty}</if>
+            <if test="realizedPnl != null  and realizedPnl != ''"> and realized_pnl = #{realizedPnl}</if>
+            <if test="side != null  and side != ''"> and side = #{side}</if>
+            <if test="positionSide != null  and positionSide != ''"> and position_side = #{positionSide}</if>
+            <if test="symbol != null  and symbol != ''"> and symbol = #{symbol}</if>
+            <if test="time != null  and time != ''"> and time = #{time}</if>
+            <if test="robotId != null "> and robot_id = #{robotId}</if>
+        </where>
+        order by time desc limit 10
+    </select>
+
+    <select id="selectDfTradeOrderById" parameterType="String" resultMap="DfTradeOrderResult">
+        <include refid="selectDfTradeOrderVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertDfTradeOrder" parameterType="DfTradeOrder">
+        insert into df_trade_order
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="orderId != null and orderId != ''">order_id,</if>
+            <if test="price != null and price != ''">price,</if>
+            <if test="qty != null and qty != ''">qty,</if>
+            <if test="quoteQty != null and quoteQty != ''">quote_qty,</if>
+            <if test="realizedPnl != null and realizedPnl != ''">realized_pnl,</if>
+            <if test="side != null and side != ''">side,</if>
+            <if test="positionSide != null and positionSide != ''">position_side,</if>
+            <if test="symbol != null and symbol != ''">symbol,</if>
+            <if test="time != null and time != ''">time,</if>
+            <if test="robotId != null">robot_id,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="orderId != null and orderId != ''">#{orderId},</if>
+            <if test="price != null and price != ''">#{price},</if>
+            <if test="qty != null and qty != ''">#{qty},</if>
+            <if test="quoteQty != null and quoteQty != ''">#{quoteQty},</if>
+            <if test="realizedPnl != null and realizedPnl != ''">#{realizedPnl},</if>
+            <if test="side != null and side != ''">#{side},</if>
+            <if test="positionSide != null and positionSide != ''">#{positionSide},</if>
+            <if test="symbol != null and symbol != ''">#{symbol},</if>
+            <if test="time != null and time != ''">#{time},</if>
+            <if test="robotId != null">#{robotId},</if>
+         </trim>
+    </insert>
+
+    <update id="updateDfTradeOrder" parameterType="DfTradeOrder">
+        update df_trade_order
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="orderId != null and orderId != ''">order_id = #{orderId},</if>
+            <if test="price != null and price != ''">price = #{price},</if>
+            <if test="qty != null and qty != ''">qty = #{qty},</if>
+            <if test="quoteQty != null and quoteQty != ''">quote_qty = #{quoteQty},</if>
+            <if test="realizedPnl != null and realizedPnl != ''">realized_pnl = #{realizedPnl},</if>
+            <if test="side != null and side != ''">side = #{side},</if>
+            <if test="positionSide != null and positionSide != ''">position_side = #{positionSide},</if>
+            <if test="symbol != null and symbol != ''">symbol = #{symbol},</if>
+            <if test="time != null and time != ''">time = #{time},</if>
+            <if test="robotId != null">robot_id = #{robotId},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteDfTradeOrderById" parameterType="String">
+        delete from df_trade_order where id = #{id}
+    </delete>
+
+    <delete id="deleteDfTradeOrderByIds" parameterType="String">
+        delete from df_trade_order where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>
