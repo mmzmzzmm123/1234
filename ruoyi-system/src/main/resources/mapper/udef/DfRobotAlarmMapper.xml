@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.udef.mapper.DfRobotAlarmMapper">
+    
+    <resultMap type="DfRobotAlarm" id="DfRobotAlarmResult">
+        <result property="id"    column="id"    />
+        <result property="longCode"    column="long_code"    />
+        <result property="shortCode"    column="short_code"    />
+        <result property="phone"    column="phone"    />
+        <result property="status"    column="status"    />
+        <result property="robotId"    column="robot_id"    />
+    </resultMap>
+
+    <sql id="selectDfRobotAlarmVo">
+        select id, long_code, short_code, phone, status, robot_id from df_robot_alarm
+    </sql>
+
+    <select id="selectDfRobotAlarmList" parameterType="DfRobotAlarm" resultMap="DfRobotAlarmResult">
+        <include refid="selectDfRobotAlarmVo"/>
+        <where>  
+            <if test="longCode != null  and longCode != ''"> and long_code = #{longCode}</if>
+            <if test="shortCode != null  and shortCode != ''"> and short_code = #{shortCode}</if>
+            <if test="phone != null  and phone != ''"> and phone = #{phone}</if>
+            <if test="status != null  and status != ''"> and status = #{status}</if>
+            <if test="robotId != null "> and robot_id = #{robotId}</if>
+        </where>
+    </select>
+    
+    <select id="selectDfRobotAlarmById" parameterType="Long" resultMap="DfRobotAlarmResult">
+        <include refid="selectDfRobotAlarmVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertDfRobotAlarm" parameterType="DfRobotAlarm" useGeneratedKeys="true" keyProperty="id">
+        insert into df_robot_alarm
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="longCode != null and longCode != ''">long_code,</if>
+            <if test="shortCode != null and shortCode != ''">short_code,</if>
+            <if test="phone != null and phone != ''">phone,</if>
+            <if test="status != null and status != ''">status,</if>
+            <if test="robotId != null">robot_id,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="longCode != null and longCode != ''">#{longCode},</if>
+            <if test="shortCode != null and shortCode != ''">#{shortCode},</if>
+            <if test="phone != null and phone != ''">#{phone},</if>
+            <if test="status != null and status != ''">#{status},</if>
+            <if test="robotId != null">#{robotId},</if>
+         </trim>
+    </insert>
+
+    <update id="updateDfRobotAlarm" parameterType="DfRobotAlarm">
+        update df_robot_alarm
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="longCode != null and longCode != ''">long_code = #{longCode},</if>
+            <if test="shortCode != null and shortCode != ''">short_code = #{shortCode},</if>
+            <if test="phone != null and phone != ''">phone = #{phone},</if>
+            <if test="status != null and status != ''">status = #{status},</if>
+            <if test="robotId != null">robot_id = #{robotId},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteDfRobotAlarmById" parameterType="Long">
+        delete from df_robot_alarm where id = #{id}
+    </delete>
+
+    <delete id="deleteDfRobotAlarmByIds" parameterType="String">
+        delete from df_robot_alarm where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

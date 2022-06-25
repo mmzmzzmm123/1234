@@ -7,37 +7,32 @@ import com.ruoyi.driver.binance.BinanceAgent;
 import com.ruoyi.driver.binance.Const;
 import com.ruoyi.udef.Konst;
 import com.ruoyi.udef.service.impl.RobotServiceImpl;
-import com.tictactec.ta.lib.Core;
-import com.tictactec.ta.lib.MInteger;
 import lombok.Data;
 import lombok.experimental.Accessors;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.math.BigDecimal;
-import java.util.*;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+
+import static com.ruoyi.robot.TaLib.*;
 
 @Slf4j
 @Component
 public class MacdTaRobot {
     @Autowired
-    public BinanceAgent binanceAgent;
+    private BinanceAgent binanceAgent;
 
     @Autowired
-    RobotServiceImpl robotService;
-
-    public static Boolean isLogDetail = false;
+    private RobotServiceImpl robotService;
 
     //    public static BinanceAgent binanceAgent = new BinanceAgent();
-    public static Core ta = new Core();
-    public static List<String> phones_1 = Arrays.asList("18502887156");//18080855055
-    public static List<String> phones_2 = Arrays.asList("13096371756");
-    public static List<String> phones_3 = Arrays.asList("18328419756");
 
     public static Map<String, Long> ALARM_CACHE = new ConcurrentHashMap<>();
-    public static Map<String, Double> TA_CACHE = new ConcurrentHashMap<>();
 
     @Data
     @Accessors(chain = true)
@@ -46,9 +41,7 @@ public class MacdTaRobot {
         String content;//gold or dead;
     }
 
-    public static Map<String, EmaItem> EMA_30_CACHE = new ConcurrentHashMap<>();
-
-    public static Map<String, EmaItem> EMA_30_SEND_CACHE = new ConcurrentHashMap<>();
+    public static Map<String, EmaItem> EMA_TEMP_CROSS_CACHE = new ConcurrentHashMap<>();
 
     public void execute() {
         try {
@@ -69,364 +62,9 @@ public class MacdTaRobot {
     }
 
 
-    public static void sendAlarm(List<String> phones, String code) {
-        phones.forEach(m -> {
-            try {
-                VoiceSmsAgent.send(m, "定制", code);
-                AliSmsClient.send(m, code);
-            } catch (Exception e) {
-                e.printStackTrace();
-                log.info("MacdTaRobot 短信发送异常 {} {}", m, code);
-            }
-        });
-    }
-
-
-    public static Double emaL(Core core, Integer period, double[] close) {
-        MInteger outBegIdx = new MInteger();
-        MInteger outNbElement = new MInteger();
-        double[] ema = new double[close.length];//DIF
-        core.ema(0, close.length - 1, close, period, outBegIdx, outNbElement, ema);
-        return ema[ema.length - period - 1];
-    }
-
-    public static double[] emaData(Core core, Integer period, double[] close) {
-        MInteger outBegIdx = new MInteger();
-        MInteger outNbElement = new MInteger();
-        double[] ema = new double[close.length];//DIF
-        core.ema(0, close.length - 1, close, period, outBegIdx, outNbElement, ema);
-        return ema;
-    }
-
-    public static Double eGet(double[] collection, Integer period, Integer index) {
-        return collection[collection.length - period + index + 1];
-    }
-
     public double[] getClose(String symbol, Integer interval) {
         List<DriverDto.KlineItem> klines = binanceAgent.getKline(interval + "", symbol, null, null);
         return klines.stream().mapToDouble(n -> n.getClose()).toArray();
-    }
-
-    public static Boolean hasGoldCrossLatest(String key) {
-        return EMA_30_CACHE.containsKey(key) && "gold".equals(EMA_30_CACHE.get(key).getContent()) && (System.currentTimeMillis() - EMA_30_CACHE.get(key).getTime() < 15 * 60 * 10000);
-    }
-
-    public static Boolean hasDeadCrossLatest(String key) {
-        return EMA_30_CACHE.containsKey(key) && "dead".equals(EMA_30_CACHE.get(key).getContent()) && (System.currentTimeMillis() - EMA_30_CACHE.get(key).getTime() < 15 * 60 * 10000);
-    }
-
-    public static Boolean hasEmaGoldCrossed(KI ki) {
-        double[] close = ki.close;
-
-        double[] ema5 = emaData(ta, 5, close);
-        double[] ema10 = emaData(ta, 10, close);
-        if(isLogDetail){
-            log.info("MacdTaRobot ema5 : {}", ema5);
-            log.info("MacdTaRobot ema10 : {}", ema10);
-        }
-        double fastNew = eGet(ema5, 5, -1);
-        double fastOld = eGet(ema5, 5, -2);
-        double slowNew = eGet(ema10, 10, -1);
-        double slowOld = eGet(ema10, 10, -2);
-        return fastNew > slowNew;
-    }
-
-    public static Boolean emaGoldCross(KI ki) {
-        double[] ema5 = emaData(ta, 5, ki.close);
-        double[] ema10 = emaData(ta, 10, ki.close);
-        if(isLogDetail){
-            log.info("MacdTaRobot ema5 : {}", ema5);
-            log.info("MacdTaRobot ema10 : {}", ema10);
-        }
-        double fastNew = eGet(ema5, 5, -1);
-        double slowNew = eGet(ema10, 10, -1);
-
-
-        double fastOld = TA_CACHE.getOrDefault(ki.tk("ema5"), eGet(ema5, 5, -2));
-        double slowOld = TA_CACHE.getOrDefault(ki.tk("ema10"), eGet(ema10, 10, -2));
-        TA_CACHE.put(ki.tk("ema5"), eGet(ema5, 5, -2));
-        TA_CACHE.put(ki.tk("ema10"), eGet(ema10, 10, -2));
-
-        return hasKdjGoldCrossed(ki) && goldCross(fastOld, slowOld, fastNew, slowNew);
-    }
-
-    public static Boolean emaOlGoldCross(KI ki) {
-        double[] ema5 = emaData(ta, 5, ki.close);
-        double[] ema10 = emaData(ta, 10, ki.close);
-        if(isLogDetail){
-            log.info("MacdTaRobot ema5 : {}", ema5);
-            log.info("MacdTaRobot ema10 : {}", ema10);
-        }
-        double fastNew = eGet(ema5, 5, -1);
-        double slowNew = eGet(ema10, 10, -1);
-
-
-        double fastOld = TA_CACHE.getOrDefault(ki.tk("ema5"), eGet(ema5, 5, -2));
-        double slowOld = TA_CACHE.getOrDefault(ki.tk("ema10"), eGet(ema10, 10, -2));
-        TA_CACHE.put(ki.tk("ema5"), eGet(ema5, 5, -2));
-        TA_CACHE.put(ki.tk("ema10"), eGet(ema10, 10, -2));
-
-        Boolean result = goldCross(fastOld, slowOld, fastNew, slowNew);
-        if(result){
-            String key = ki.symbol + "_ema";
-
-            if(!EMA_30_CACHE.containsKey(key) || !"gold".equals(EMA_30_CACHE.get(key).getContent()))
-                EMA_30_CACHE.put(key, new EmaItem().setTime(System.currentTimeMillis()).setContent("gold"));
-        }
-        return result;
-    }
-
-
-    public static Boolean emaDeadCross(KI ki) {
-        double[] high = ki.high;
-        double[] low = ki.low;
-        double[] close = ki.close;
-
-        double[] ema5 = emaData(ta, 5, close);
-        double[] ema10 = emaData(ta, 10, close);
-        if(isLogDetail){
-            log.info("MacdTaRobot ema5 : {}", ema5);
-            log.info("MacdTaRobot ema10 : {}", ema10);
-        }
-        double fastNew = eGet(ema5, 5, -1);
-        double slowNew = eGet(ema10, 10, -1);
-
-        double fastOld = TA_CACHE.getOrDefault(ki.tk("ema5"), eGet(ema5, 5, -2));
-        double slowOld = TA_CACHE.getOrDefault(ki.tk("ema10"), eGet(ema10, 10, -2));
-        TA_CACHE.put(ki.tk("ema5"), eGet(ema5, 5, -2));
-        TA_CACHE.put(ki.tk("ema10"), eGet(ema10, 10, -2));
-
-        return !hasKdjGoldCrossed(ki) && deadCross(fastOld, slowOld, fastNew, slowNew);
-    }
-
-    public static Boolean emaOlDeadCross(KI ki) {
-        double[] high = ki.high;
-        double[] low = ki.low;
-        double[] close = ki.close;
-
-        double[] ema5 = emaData(ta, 5, close);
-        double[] ema10 = emaData(ta, 10, close);
-        if(isLogDetail){
-            log.info("MacdTaRobot ema5 : {}", ema5);
-            log.info("MacdTaRobot ema10 : {}", ema10);
-        }
-        double fastNew = eGet(ema5, 5, -1);
-        double slowNew = eGet(ema10, 10, -1);
-
-        double fastOld = TA_CACHE.getOrDefault(ki.tk("ema5"), eGet(ema5, 5, -2));
-        double slowOld = TA_CACHE.getOrDefault(ki.tk("ema10"), eGet(ema10, 10, -2));
-        TA_CACHE.put(ki.tk("ema5"), eGet(ema5, 5, -2));
-        TA_CACHE.put(ki.tk("ema10"), eGet(ema10, 10, -2));
-
-        Boolean result = deadCross(fastOld, slowOld, fastNew, slowNew);
-        if(result){
-            String key = ki.symbol + "_ema";
-            if(!EMA_30_CACHE.containsKey(key) || !"dead".equals(EMA_30_CACHE.get(key).getContent()))
-                EMA_30_CACHE.put(key, new EmaItem().setTime(System.currentTimeMillis()).setContent("dead"));
-
-        }
-        return result;
-    }
-
-    public static boolean goldCross(double fastOld, double slowOld, double fastNew, double slowNew) {
-        log.info("MacdTaRobot 快线-2 {} 慢线-2 {} 快线-1 {} 慢线-1 {}", fastOld, slowOld, fastNew, slowNew);
-        if(fastNew > 0 && fastOld > 0 && slowNew > 0 && slowOld > 0){
-            if(fastOld < slowOld && fastNew > slowNew){
-                return true;
-            }
-        }
-        return false;
-    }
-
-    public static boolean deadCross(double fastOld, double slowOld, double fastNew, double slowNew) {
-        log.info("MacdTaRobot 快线-2 {} 慢线-2 {} 快线-1 {} 慢线-1 {}", fastOld, slowOld, fastNew, slowNew);
-        if(fastNew > 0 && fastOld > 0 && slowNew > 0 && slowOld > 0){
-            if(fastOld > slowOld && fastNew < slowNew){
-                return true;
-            }
-        }
-        return false;
-    }
-
-    public static boolean cross(double fastOld, double slowOld, double fastNew, double slowNew) {
-        log.info("MacdTaRobot 快线-2 {} 慢线-2 {} 快线-1 {} 慢线-1 {}", fastOld, slowOld, fastNew, slowNew);
-        if(fastNew > 0 && fastOld > 0 && slowNew > 0 && slowOld > 0){
-            if((fastOld > slowOld && fastNew < slowNew) || (fastOld < slowOld && fastNew > slowNew)){
-                return true;
-            }
-        }
-        return false;
-    }
-
-    public static Boolean hasKdjGoldCrossed(KI ki) {
-        double[] high = ki.high;
-        double[] low = ki.low;
-        double[] close = ki.close;
-
-        List<Double> kData = new ArrayList<>();
-        List<Double> dData = new ArrayList<>();
-        List<Double> rsvData = new ArrayList<>();
-
-        Integer N = 40;
-        Integer K = 2;
-        Integer D = 20;
-
-        for (int i = 0; i < close.length; i++) {
-            if(i < N) continue;
-
-            double H = 0d;
-            double L = 0d;
-            for (int j = i - N + 1; j <= i; j++) {
-                if(j == i - N + 1){
-                    H = high[j];
-                    L = low[j];
-                } else {
-                    H = Math.max(H, high[j]);
-                    L = Math.min(L, low[j]);
-                }
-            }
-
-            rsvData.add((close[i] - L) * 100d / (H - L));
-
-            Double preK = kData.size() == 0 ? 0d : kData.get(kData.size() - 1);
-            Double preD = dData.size() == 0 ? 0d : dData.get(dData.size() - 1);
-
-            BigDecimal kbg = new BigDecimal((K - 1d) * preK / K + 1d / K * rsvData.get(rsvData.size() - 1))
-                    .setScale(4, BigDecimal.ROUND_HALF_UP);
-            kData.add(kbg.doubleValue());
-
-            BigDecimal dbg = new BigDecimal((D - 1d) * preD / D + 1d / D * kData.get(kData.size() - 1))
-                    .setScale(4, BigDecimal.ROUND_HALF_UP);
-            dData.add(dbg.doubleValue());
-        }
-
-        if(isLogDetail){
-            log.info("MacdTaRobot outSlowK : {}", kData);
-            log.info("MacdTaRobot outSlowD : {}", dData);
-        }
-
-        double fastNew = kData.get(kData.size() - 1);
-        double fastOld = kData.get(kData.size() - 2);
-        double slowNew = dData.get(dData.size() - 1);
-        double slowOld = dData.get(dData.size() - 2);
-        return fastNew > slowNew;
-    }
-
-
-    public static Boolean kdjGoldCross(KI ki) {
-        double[] high = ki.high;
-        double[] low = ki.low;
-        double[] close = ki.close;
-
-        List<Double> kData = new ArrayList<>();
-        List<Double> dData = new ArrayList<>();
-        List<Double> rsvData = new ArrayList<>();
-
-        Integer N = 40;
-        Integer K = 2;
-        Integer D = 20;
-
-        for (int i = 0; i < close.length; i++) {
-            if(i < N) continue;
-
-            double H = 0d;
-            double L = 0d;
-            for (int j = i - N + 1; j <= i; j++) {
-                if(j == i - N + 1){
-                    H = high[j];
-                    L = low[j];
-                } else {
-                    H = Math.max(H, high[j]);
-                    L = Math.min(L, low[j]);
-                }
-            }
-
-            rsvData.add((close[i] - L) * 100d / (H - L));
-
-            Double preK = kData.size() == 0 ? 0d : kData.get(kData.size() - 1);
-            Double preD = dData.size() == 0 ? 0d : dData.get(dData.size() - 1);
-
-            BigDecimal kbg = new BigDecimal((K - 1d) * preK / K + 1d / K * rsvData.get(rsvData.size() - 1))
-                    .setScale(4, BigDecimal.ROUND_HALF_UP);
-            kData.add(kbg.doubleValue());
-
-            BigDecimal dbg = new BigDecimal((D - 1d) * preD / D + 1d / D * kData.get(kData.size() - 1))
-                    .setScale(4, BigDecimal.ROUND_HALF_UP);
-            dData.add(dbg.doubleValue());
-        }
-
-        if(isLogDetail){
-            log.info("MacdTaRobot outSlowK : {}", kData);
-            log.info("MacdTaRobot outSlowD : {}", dData);
-        }
-
-        double fastNew = kData.get(kData.size() - 1);
-        double slowNew = dData.get(dData.size() - 1);
-
-        double fastOld = TA_CACHE.getOrDefault(ki.tk("k"), kData.get(kData.size() - 2));
-        double slowOld = TA_CACHE.getOrDefault(ki.tk("d"), dData.get(dData.size() - 2));
-        TA_CACHE.put(ki.tk("k"), kData.get(kData.size() - 2));
-        TA_CACHE.put(ki.tk("d"), dData.get(dData.size() - 2));
-
-        return hasEmaGoldCrossed(ki) && goldCross(fastOld, slowOld, fastNew, slowNew);
-    }
-
-
-    public static Boolean kdjDeadCross(KI ki) {
-        double[] high = ki.high;
-        double[] low = ki.low;
-        double[] close = ki.close;
-        List<Double> kData = new ArrayList<>();
-        List<Double> dData = new ArrayList<>();
-        List<Double> rsvData = new ArrayList<>();
-
-        Integer N = 40;
-        Integer K = 2;
-        Integer D = 20;
-
-        for (int i = 0; i < close.length; i++) {
-            if(i < N) continue;
-
-            double H = 0d;
-            double L = 0d;
-            for (int j = i - N + 1; j <= i; j++) {
-                if(j == i - N + 1){
-                    H = high[j];
-                    L = low[j];
-                } else {
-                    H = Math.max(H, high[j]);
-                    L = Math.min(L, low[j]);
-                }
-            }
-
-            rsvData.add((close[i] - L) * 100d / (H - L));
-
-            Double preK = kData.size() == 0 ? 0d : kData.get(kData.size() - 1);
-            Double preD = dData.size() == 0 ? 0d : dData.get(dData.size() - 1);
-
-            BigDecimal kbg = new BigDecimal((K - 1d) * preK / K + 1d / K * rsvData.get(rsvData.size() - 1))
-                    .setScale(4, BigDecimal.ROUND_HALF_UP);
-            kData.add(kbg.doubleValue());
-
-            BigDecimal dbg = new BigDecimal((D - 1d) * preD / D + 1d / D * kData.get(kData.size() - 1))
-                    .setScale(4, BigDecimal.ROUND_HALF_UP);
-            dData.add(dbg.doubleValue());
-        }
-
-        if(isLogDetail){
-            log.info("MacdTaRobot outSlowK : {}", kData);
-            log.info("MacdTaRobot outSlowD : {}", dData);
-        }
-
-        double fastNew = kData.get(kData.size() - 1);
-        double slowNew = dData.get(dData.size() - 1);
-
-        double fastOld = TA_CACHE.getOrDefault(ki.tk("k"), kData.get(kData.size() - 2));
-        double slowOld = TA_CACHE.getOrDefault(ki.tk("d"), dData.get(dData.size() - 2));
-        TA_CACHE.put(ki.tk("k"), kData.get(kData.size() - 2));
-        TA_CACHE.put(ki.tk("d"), dData.get(dData.size() - 2));
-
-        return !hasEmaGoldCrossed(ki) && deadCross(fastOld, slowOld, fastNew, slowNew);
     }
 
     static class KI {
@@ -451,122 +89,121 @@ public class MacdTaRobot {
         }
     }
 
+    private void tempCross(KI big, KI lit) {
+        String key = big.symbol + "_" + big.interval + "_" + lit.interval;
+        EmaItem item = EMA_TEMP_CROSS_CACHE.get(key);
+        if(hasEmaGoldCrossed(big)){
+            if(emaDeadCross(lit)){
+                log.info("瞬时死叉 {}", key);
+                EmaItem current = new EmaItem().setTime(System.currentTimeMillis()).setContent("tempDead");
+                if(item == null || !item.getContent().equals("tempDead")){
+                    EMA_TEMP_CROSS_CACHE.put(key, current);
+                }
+            } else if(!hasEmaGoldCrossed(lit) && item != null){
+                log.info("瞬时死叉解除 {}", key);
+                EMA_TEMP_CROSS_CACHE.remove(key);
+            }
+        }
+
+        if(!hasEmaGoldCrossed(big)){
+            if(emaGoldCross(lit)){
+                log.info("瞬时金叉 {}", key);
+                EmaItem current = new EmaItem().setTime(System.currentTimeMillis()).setContent("tempGold");
+                if(item == null || !item.getContent().equals("tempGold")){
+                    EMA_TEMP_CROSS_CACHE.put(key, current);
+                }
+            } else if(hasEmaGoldCrossed(lit) && item != null){
+                log.info("瞬时金叉解除 {}", key);
+                EMA_TEMP_CROSS_CACHE.remove(key);
+            }
+        }
+    }
+
+    private boolean isRestore(KI big, KI lit) {
+        String key = big.symbol + "_" + big.interval + "_" + lit.interval;
+        EmaItem item = EMA_TEMP_CROSS_CACHE.get(key);
+        if(item != null){
+            Long delta = System.currentTimeMillis() - item.getTime();
+            if(delta >= 5 * 60 * 1000 && delta <= 6 * 60 * 1000){
+                if(hasEmaGoldCrossed(big) && hasEmaGoldCrossed(lit)){
+                    if("tempDead".equals(item.getContent())){
+                        return true;
+                    }
+                }
+
+                if(!hasEmaGoldCrossed(big) && !hasEmaGoldCrossed(lit)){
+                    if("tempGold".equals(item.getContent())){
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
+    }
+
 
     public void batchCross(String symbol, Integer interval) {
         List<DriverDto.KlineItem> klinesBit = binanceAgent.getKline(interval + "", symbol, null, null);
         KI bigKi = new KI().extract(klinesBit, symbol, interval);
         List<DriverDto.KlineItem> klinesLit = binanceAgent.getKline((interval / 2) + "", symbol, null, null);
         KI litKi = new KI().extract(klinesLit, symbol, (interval / 2));
-
-        Boolean result;
-        Boolean result3;
-
-        if(interval.intValue() == 1800){
-            result = (emaGoldCross(bigKi) || kdjGoldCross(bigKi)) && (hasEmaGoldCrossed(litKi) && hasKdjGoldCrossed(litKi));
-            result3 = (emaDeadCross(bigKi) || kdjDeadCross(bigKi)) && (!hasEmaGoldCrossed(litKi) && !hasKdjGoldCrossed(litKi));
-        } else {
-            result = (emaGoldCross(bigKi) || kdjGoldCross(bigKi));
-            result3 = (emaDeadCross(bigKi) || kdjDeadCross(bigKi));
-        }
+        tempCross(bigKi, litKi);
 
         Boolean eamOlGoldCross = false;
         Boolean eamOlDeadCross = false;
-        if(interval.intValue() == 1800){
-            String key = bigKi.symbol + "_ema";
-            eamOlGoldCross = (emaOlGoldCross(bigKi) && hasEmaGoldCrossed(litKi)) || (hasGoldCrossLatest(key) && hasEmaGoldCrossed(bigKi) && hasEmaGoldCrossed(litKi));
-            eamOlDeadCross = (emaOlDeadCross(bigKi) && !hasEmaGoldCrossed(litKi)) || (hasDeadCrossLatest(key) && !hasEmaGoldCrossed(bigKi) && !hasEmaGoldCrossed(litKi));
+
+        Long crossLat = null;
+
+        /********************* 策略一 大周期金叉死叉，小周期同相位 ****************************/
+        if(emaOlGoldCross(bigKi) && hasEmaGoldCrossed(litKi)){
+            log.info("MacdTaRobot  币对 {} 大周期 {} 大周期_金叉_小周期同相位", symbol, interval);
+            eamOlGoldCross = true;
+            crossLat = klinesBit.get(klinesBit.size() - 2).getTimestamp().getTime();
         }
 
-
-        if(interval.intValue() == 3600){
-            log.info("MacdTaRobot  币对 {} 周期 {} 是否金叉 {}", symbol, interval, result);
-            if(assertConfirm(result, symbol, "ema", interval, klinesBit.get(klinesBit.size() - 2).getTimestamp().getTime())){
-                robotService.triggerRobot(symbol, interval * 1l, Const.P_Side_LONG, Konst.ST_EMA_KDJ_DBCROSS);
-                sendCodeByResult(phones_3, result, symbol, isBtcSwap(symbol) ? "343434" : "787878");
-            }
-
-            log.info("MacdTaRobot  币对 {} 周期 {} 是否死叉 {}", symbol, interval, result3);
-            if(assertConfirm(result3, symbol, "kdj", interval, klinesBit.get(klinesBit.size() - 2).getTimestamp().getTime())){
-                robotService.triggerRobot(symbol, interval * 1l, Const.P_Side_SHORT, Konst.ST_EMA_KDJ_DBCROSS);
-                sendCodeByResult(phones_3, result3, symbol, isBtcSwap(symbol) ? "434343" : "878787");
-            }
-        } else if(interval.intValue() == 1800){
-            // 刘哥新策略只看ema5和ema10的金叉死叉，用小周期去同相位判断，同相位判断需要在15分钟之内
-            try {
-                String key = symbol + "_send";
-                log.info("MacdTaRobot ema_ol 币对 {} 周期 {} 是否金叉 {}", symbol, interval, eamOlGoldCross);
-                if(assertConfirm(eamOlGoldCross, symbol, "ema_ol_gc", interval, klinesBit.get(klinesBit.size() - 2).getTimestamp().getTime())){
-                    robotService.triggerRobot(symbol, interval * 1l, Const.P_Side_LONG, Konst.ST_EMA_CROSS);
-                    String code = isBtcSwap(symbol) ? "121212" : "565656";
-
-                    if(!EMA_30_SEND_CACHE.containsKey(key) || !code.equals(EMA_30_SEND_CACHE.get(key).getContent())){
-                        sendCodeByResult(phones_1, eamOlGoldCross, symbol, code);
-                        EMA_30_SEND_CACHE.put(key, new EmaItem().setContent(code).setTime(System.currentTimeMillis()));
-                    }
-                }
-
-                log.info("MacdTaRobot ema_ol 币对 {} 周期 {} 是否死叉 {}", symbol, interval, eamOlDeadCross);
-                if(assertConfirm(eamOlDeadCross, symbol, "ema_ol_dc", interval, klinesBit.get(klinesBit.size() - 2).getTimestamp().getTime())){
-                    robotService.triggerRobot(symbol, interval * 1l, Const.P_Side_SHORT, Konst.ST_EMA_CROSS);
-
-                    String code = isBtcSwap(symbol) ? "212121" : "656565";
-                    if(!EMA_30_SEND_CACHE.containsKey(key) || !code.equals(EMA_30_SEND_CACHE.get(key).getContent())){
-                        sendCodeByResult(phones_1, eamOlDeadCross, symbol, code);
-                        EMA_30_SEND_CACHE.put(key, new EmaItem().setContent(code).setTime(System.currentTimeMillis()));
-                    }
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-
-            // 老的策略不再发送报警
-            try {
-                log.info("MacdTaRobot  币对 {} 周期 {} 是否金叉 {}", symbol, interval, result);
-                if(assertConfirm(result, symbol, "ema", interval, klinesBit.get(klinesBit.size() - 2).getTimestamp().getTime())){
-                    robotService.triggerRobot(symbol, interval * 1l, Const.P_Side_LONG, Konst.ST_EMA_KDJ_DBCROSS);
-//                sendCodeByResult(phones_1, result, symbol, isBtcSwap(symbol) ? "121212" : "565656");
-                }
-
-                log.info("MacdTaRobot  币对 {} 周期 {} 是否死叉 {}", symbol, interval, result3);
-                if(assertConfirm(result3, symbol, "kdj", interval, klinesBit.get(klinesBit.size() - 2).getTimestamp().getTime())){
-                    robotService.triggerRobot(symbol, interval * 1l, Const.P_Side_SHORT, Konst.ST_EMA_KDJ_DBCROSS);
-//                sendCodeByResult(phones_1, result3, symbol, isBtcSwap(symbol) ? "212121" : "656565");
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-
-        } else if(interval.intValue() == 7200){//2h
-            log.info("MacdTaRobot  币对 {} 周期 {} 是否金叉 {}", symbol, interval, result);
-            if(assertConfirm(result, symbol, "ema", interval, klinesBit.get(klinesBit.size() - 2).getTimestamp().getTime())){
-                robotService.triggerRobot(symbol, interval * 1l, Const.P_Side_LONG, Konst.ST_EMA_KDJ_DBCROSS);
-                sendCodeByResult(phones_2, result, symbol, isBtcSwap(symbol) ? "222222" : "444444");
-            }
-
-            log.info("MacdTaRobot  币对 {} 周期 {} 是否死叉 {}", symbol, interval, result3);
-            if(assertConfirm(result3, symbol, "kdj", interval, klinesBit.get(klinesBit.size() - 2).getTimestamp().getTime())){
-                robotService.triggerRobot(symbol, interval * 1l, Const.P_Side_SHORT, Konst.ST_EMA_KDJ_DBCROSS);
-                sendCodeByResult(phones_2, result3, symbol, isBtcSwap(symbol) ? "111111" : "333333");
-            }
-
-
-        } else if(interval.intValue() == 14400){//4h
-            log.info("MacdTaRobot  币对 {} 周期 {} 是否金叉 {}", symbol, interval, result);
-            if(assertConfirm(result, symbol, "ema", interval, klinesBit.get(klinesBit.size() - 2).getTimestamp().getTime())){
-                robotService.triggerRobot(symbol, interval * 1l, Const.P_Side_LONG, Konst.ST_EMA_KDJ_DBCROSS);
-                sendCodeByResult(phones_2, result, symbol, isBtcSwap(symbol) ? "666666" : "888888");
-            }
-
-            log.info("MacdTaRobot  币对 {} 周期 {} 是否死叉 {}", symbol, interval, result3);
-            if(assertConfirm(result3, symbol, "kdj", interval, klinesBit.get(klinesBit.size() - 2).getTimestamp().getTime())){
-                robotService.triggerRobot(symbol, interval * 1l, Const.P_Side_SHORT, Konst.ST_EMA_KDJ_DBCROSS);
-                sendCodeByResult(phones_2, result3, symbol, isBtcSwap(symbol) ? "555555" : "777777");
-            }
-
-
+        if(emaOlDeadCross(bigKi) && !hasEmaGoldCrossed(litKi)){
+            log.info("MacdTaRobot  币对 {} 大周期 {} 大周期_死叉_小周期同相位", symbol, interval);
+            eamOlDeadCross = true;
+            crossLat = klinesBit.get(klinesBit.size() - 2).getTimestamp().getTime();
         }
+
+        /********************* 策略二 小周期金叉死叉，大周期同相位 ****************************/
+        if(hasEmaGoldCrossed(bigKi) && emaOlGoldCross(litKi)){
+            log.info("MacdTaRobot  币对 {} 大周期 {} 小周期_金叉_大周期同相位", symbol, interval);
+            eamOlGoldCross = true;
+            crossLat = klinesLit.get(klinesLit.size() - 2).getTimestamp().getTime();
+        }
+
+        if(!hasEmaGoldCrossed(bigKi) && !emaOlGoldCross(litKi)){
+            log.info("MacdTaRobot  币对 {} 大周期 {} 小周期_死叉_大周期同相位", symbol, interval);
+            eamOlDeadCross = true;
+            crossLat = klinesLit.get(klinesLit.size() - 2).getTimestamp().getTime();
+        }
+
+        /********************* 策略三 大周期已经金叉死叉，小周期恢复同相位 ****************************/
+        if(hasEmaGoldCrossed(bigKi) && isRestore(bigKi, litKi)){
+            log.info("MacdTaRobot  币对 {} 大周期 {} 大周期已经_金叉_小周期恢复同相位", symbol, interval);
+            eamOlGoldCross = true;
+            crossLat = klinesLit.get(klinesLit.size() - 2).getTimestamp().getTime();
+        }
+
+        if(!hasEmaGoldCrossed(bigKi) && isRestore(bigKi, litKi)){
+            log.info("MacdTaRobot  币对 {} 大周期 {} 大周期已经_死叉_小周期恢复同相位", symbol, interval);
+            eamOlDeadCross = true;
+            crossLat = klinesLit.get(klinesLit.size() - 2).getTimestamp().getTime();
+        }
+
+        /******************************触发下单*******************************************************/
+        if(assertConfirm(eamOlGoldCross, symbol, "ema_gold", interval, crossLat)){
+            robotService.triggerRobot(symbol, interval * 1l, Const.P_Side_LONG, Konst.ST_EMA_CROSS);
+        }
+
+        log.info("MacdTaRobot  币对 {} 周期 {} 是否死叉 {}", symbol, interval, eamOlDeadCross);
+        if(assertConfirm(eamOlDeadCross, symbol, "ema_dead", interval, crossLat)){
+            robotService.triggerRobot(symbol, interval * 1l, Const.P_Side_SHORT, Konst.ST_EMA_CROSS);
+        }
+
     }
-
 
     public static Boolean assertConfirm(Boolean condition, String bit, String taTag, Integer interval, Long time) {
         if(condition){
@@ -583,27 +220,33 @@ public class MacdTaRobot {
         return false;
     }
 
-    public static void sendCodeByResult(List<String> phones, Boolean result, String symbol, String code) {
-        if(result){
-            if(isBtcSwap(symbol)){
-                log.info("MacdTaRobot {} {} {} {} 发送报警", symbol, phones.get(0), code);
-                sendAlarm(phones, code);
-            } else {
-                log.info("MacdTaRobot {} {} {} {} 发送报警", symbol, phones.get(0), code);
-                sendAlarm(phones, code);
+    public static void sendAlarm(List<String> phones, String code) {
+        phones.forEach(m -> {
+            try {
+                VoiceSmsAgent.send(m, "定制", code);
+                AliSmsClient.send(m, code);
+            } catch (Exception e) {
+                e.printStackTrace();
+                log.info("MacdTaRobot 短信发送异常 {} {}", m, code);
             }
-        }
+        });
     }
 
-    public static Boolean isBtcSwap(String symbol) {
-        return symbol.equals("BTCUSD_PERP");
+    public static void sendAlarmWorkTime(List<String> phones, String code) {
+        phones.forEach(m -> {
+            try {
+                Calendar calendar = Calendar.getInstance();
+                calendar.setTime(new Date());
+                Integer hour = calendar.get(Calendar.HOUR_OF_DAY);
+                if(hour > 8 && hour < 23){
+                    VoiceSmsAgent.send(m, "定制", code);
+                    AliSmsClient.send(m, code);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+                log.info("MacdTaRobot 短信发送异常 {} {}", m, code);
+            }
+        });
     }
-
-    public static void main(String[] args) {
-        MacdTaRobot robot = new MacdTaRobot();
-        robot.binanceAgent = new BinanceAgent();
-        robot.batchCross("ETHUSD_PERP", 1800);
-    }
-
 
 }

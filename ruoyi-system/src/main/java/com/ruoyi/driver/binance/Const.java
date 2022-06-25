@@ -12,9 +12,6 @@ public class Const {
     public static final String O_TYPE_TAKE_PROFIT_MARKET = "TAKE_PROFIT_MARKET";
     public static final String O_TYPE_TRAILING_STOP_MARKET = "TRAILING_STOP_MARKET";
 
-    //自定义止盈止损，当价格超过1.5个点，进行原地止损
-    public static final String STOP_MARKET_PAVG = "STOP_MARKET_PAVG";
-
     public static final String O_SIDE_BUY = "BUY";
     public static final String O_SIDE_SELL = "SELL";
 

@@ -35,6 +35,20 @@ create table df_api_robot (
   primary key (id)
 ) engine=innodb comment = '机器人';
 
+-- ----------------------------
+-- 1、api alarm
+-- ----------------------------
+drop table if exists df_robot_alarm;
+create table df_robot_alarm (
+  id                bigint(20)      not null auto_increment    comment 'id',
+  long_code         varchar(10)     not null                   comment '开多编码',
+  short_code        varchar(10)     not null                   comment '开空编码',
+  phone             varchar(30)     not null                   comment '手机号',
+  status            varchar(15)     not null                   comment '状态',
+  robot_id          bigint(20)      not null                   comment '机器人',
+  primary key (id)
+) engine=innodb comment = '报警';
+
 
 -- ----------------------------
 -- 1、api schedule

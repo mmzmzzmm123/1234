@@ -17,13 +17,14 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import static com.ruoyi.driver.binance.Const.RESP_CODE_SUCC;
-import static com.ruoyi.driver.binance.Const.STOP_MARKET_PAVG;
+import static com.ruoyi.driver.binance.Const.*;
+import static com.ruoyi.robot.MacdTaRobot.*;
 import static com.ruoyi.udef.Konst.*;
 
 @Slf4j
@@ -46,6 +47,9 @@ public class RobotServiceImpl {
 
     @Autowired
     private DfTradeOrderMapper tradeOrderMapper;
+
+    @Autowired
+    private DfRobotAlarmMapper alarmMapper;
 
     @Autowired
     private RedisTemplate<String, String> redisTemplate;
@@ -83,9 +87,30 @@ public class RobotServiceImpl {
         if(robot == null) throw new CustomException("机器人不存在！！");
         if(!robot.getStatus().equals(R_STATUS_INIT)) throw new CustomException("机器人已初始化！！");
         OkAgent.Credential credential = getCredential(robot.getApiId());
+
+        closePosition(credential, robot.getSymbol());
         checkDuel(credential);
         checkMargin(credential, robot);
         dfApiRobotMapper.updateDfApiRobot(robot.setStatus(R_STATUS_STOPPED));
+    }
+
+    private void closePosition(OkAgent.Credential credential, String symbol) {
+        DriverDto.TkPrice tkPrice = agent.getTkPrice(symbol).get(0);
+
+        try {
+            agent.postOrder(credential, new DriverDto.OrderReq().setSide(sideClose(P_Side_SHORT))
+                    .setSymbol(symbol).setRecvWindow(5000l).setClosePosition("true").setStopPrice(tkPrice.getPrice())
+                    .setPositionSide(P_Side_SHORT).setType(Const.O_TYPE_STOP_MARKET));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        try {
+            agent.postOrder(credential, new DriverDto.OrderReq().setSide(sideClose(P_Side_LONG))
+                    .setSymbol(symbol).setRecvWindow(5000l).setClosePosition("true").setStopPrice(tkPrice.getPrice())
+                    .setPositionSide(P_Side_LONG).setType(Const.O_TYPE_STOP_MARKET));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     private void checkDuel(OkAgent.Credential credential) {
@@ -191,7 +216,21 @@ public class RobotServiceImpl {
                 dfRobotOrder.setBalance(dfRobotOrder.getPredictBalance()).setMaxPosition(robot.getQuantity())
                         .setPosition(robot.getQuantity()).setStatus(P_STATUS_RUNNING);
                 robotOrderMapper.insertDfRobotOrder(dfRobotOrder);
-//                checkSingleFromConfig(robot, credential);
+
+                Optional<DfRobotAlarm> alarm = alarmMapper.selectDfRobotAlarmList(new DfRobotAlarm().setRobotId(robot.getId())).stream().findFirst();
+                if(alarm.isPresent()){
+                    String status = alarm.get().getStatus();
+                    if(A_STATUS_DAILY.equals(status)){
+                        sendAlarm(Arrays.asList(alarm.get().getPhone()),
+                                Konst.isLong(direction) ? alarm.get().getLongCode() : alarm.get().getLongCode());
+                    } else if(A_STATUS_WORK_TIME.equals(status)){
+                        sendAlarmWorkTime(Arrays.asList(alarm.get().getPhone()),
+                                Konst.isLong(direction) ? alarm.get().getLongCode() : alarm.get().getLongCode());
+                    } else if(A_STATUS_STOP.equals(status)){
+                        log.info("当前持仓已停用通知 {}", robot.getRobotName());
+                    }
+                }
+
             }
         }
 
@@ -339,7 +378,10 @@ public class RobotServiceImpl {
                     .setSymbol(symbol).setBigInterval(interval));
             robots.forEach(n -> {
                 try {
-                    if(strategy.equals(n.getStrategy())){
+                    if(strategy.equals(n.getStrategy())
+                            && robotOrderMapper.selectDfRobotOrderList(new DfRobotOrder().setRobotId(n.getId())
+                            .setOpenSide(direction).setStatus(P_STATUS_RUNNING)).isEmpty()
+                    ){
                         log.info("触发机器人 {}", JSON.toJSONString(n));
                         OkAgent.Credential credential = getCredential(n.getApiId());
                         placeIfNotPosition(credential, n, direction);
@@ -418,8 +460,10 @@ public class RobotServiceImpl {
 
                 s2.forEach(s -> {
                     if(StringUtils.isNotEmpty(s.getEscapeType()) && s.getPriceRate() > 0 && s.getQuantityRate() > 0
-                            && STOP_MARKET_PAVG.equals(s.getEscapeType())){
-                        Double stopPrice = new BigDecimal(avg).setScale(getScale(robot.getSymbol()), BigDecimal.ROUND_HALF_DOWN).doubleValue();
+                            && s.getEscapeType().startsWith(STOP_MARKET_T_BASE)){
+                        Double stopPrice = new BigDecimal(avg * (Const.P_Side_LONG.equals(direction)
+                                ? 1 + Konst.getTRate(s.getEscapeType()) : 1 - Konst.getTRate(s.getEscapeType())))
+                                .setScale(getScale(robot.getSymbol()), BigDecimal.ROUND_HALF_DOWN).doubleValue();
 
                         if(!isMatchWithCon(flyOrders, robot.getSymbol(), direction, Const.O_TYPE_STOP_MARKET, stopPrice)){
                             Double quality = Math.max(Math.round(robot.getQuantity() * s.getQuantityRate()) * 1d, 1d);
