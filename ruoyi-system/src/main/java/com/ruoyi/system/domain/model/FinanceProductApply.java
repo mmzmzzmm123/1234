@@ -46,6 +46,9 @@ public class FinanceProductApply {
     // 社会信用代码（判断企业是否入驻平台）
     private String socialCode;
 
+    // 企业所属区域
+    private String comAreaId;
+
     public String getSource() {
         return source;
     }
@@ -148,6 +151,14 @@ public class FinanceProductApply {
 
     public void setSocialCode(String socialCode) {
         this.socialCode = socialCode;
+    }
+
+    public String getComAreaId() {
+        return comAreaId;
+    }
+
+    public void setComAreaId(String comAreaId) {
+        this.comAreaId = comAreaId;
     }
 
     @Override
