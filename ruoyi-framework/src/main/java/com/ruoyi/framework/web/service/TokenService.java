@@ -1,9 +1,14 @@
 package com.ruoyi.framework.web.service;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 import javax.servlet.http.HttpServletRequest;
+
+import com.ruoyi.common.utils.sign.Md5Utils;
+import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.BooleanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -40,6 +45,9 @@ public class TokenService
     // 令牌有效期（默认30分钟）
     @Value("${token.expireTime}")
     private int expireTime;
+
+    @Value("${token.singleEquipment}")
+    private Boolean singleEquipment;
 
     protected static final long MILLIS_SECOND = 1000;
 
@@ -108,7 +116,11 @@ public class TokenService
      */
     public String createToken(LoginUser loginUser)
     {
-        String token = IdUtils.fastUUID();
+        //如果开启只允许但设备登录 用md5加密userId做前缀 拼上UUID 作为redis缓存的key
+        String prefix = Md5Utils.hash(String.valueOf(loginUser.getUser().getUserId())).concat("-");
+        String token = BooleanUtils.isTrue(singleEquipment)
+                ? prefix.concat(IdUtils.fastUUID())
+                : IdUtils.fastUUID();
         loginUser.setToken(token);
         setUserAgent(loginUser);
         refreshToken(loginUser);
@@ -145,6 +157,17 @@ public class TokenService
         loginUser.setExpireTime(loginUser.getLoginTime() + expireTime * MILLIS_MINUTE);
         // 根据uuid将loginUser缓存
         String userKey = getTokenKey(loginUser.getToken());
+        if (BooleanUtils.isTrue(singleEquipment)) {
+            //开启单设备登录
+            String key = StringUtils.split(userKey, "-")[0];
+            //获取相同前缀的用户token 代表是同一个用户
+            Collection<String> keys = redisCache.keys(key + "*");
+            if (CollectionUtils.isNotEmpty(keys)) {
+                //清理掉同user 的token
+                //同时可以记住被踢掉的token数据 方便后期做提示用
+                keys.forEach(redisCache::deleteObject);
+            }
+        }
         redisCache.setCacheObject(userKey, loginUser, expireTime, TimeUnit.MINUTES);
     }
 
