@@ -89,49 +89,49 @@ public class MacdTaRobot {
         }
     }
 
-    private void tempCross(KI big, KI lit) {
+    private void tempCross(KI big, KI lit, Integer slowLine) {
         String key = big.symbol + "_" + big.interval + "_" + lit.interval;
         EmaItem item = EMA_TEMP_CROSS_CACHE.get(key);
-        if(hasEmaGoldCrossed(big)){
+        if(hasEmaGoldCrossed(big, slowLine)){
             if(emaDeadCross(lit)){
                 log.info("瞬时死叉 {}", key);
                 EmaItem current = new EmaItem().setTime(System.currentTimeMillis()).setContent("tempDead");
                 if(item == null || !item.getContent().equals("tempDead")){
                     EMA_TEMP_CROSS_CACHE.put(key, current);
                 }
-            } else if(!hasEmaGoldCrossed(lit) && item != null){
+            } else if(!hasEmaGoldCrossed(lit, slowLine) && item != null){
                 log.info("瞬时死叉解除 {}", key);
                 EMA_TEMP_CROSS_CACHE.remove(key);
             }
         }
 
-        if(!hasEmaGoldCrossed(big)){
+        if(!hasEmaGoldCrossed(big, slowLine)){
             if(emaGoldCross(lit)){
                 log.info("瞬时金叉 {}", key);
                 EmaItem current = new EmaItem().setTime(System.currentTimeMillis()).setContent("tempGold");
                 if(item == null || !item.getContent().equals("tempGold")){
                     EMA_TEMP_CROSS_CACHE.put(key, current);
                 }
-            } else if(hasEmaGoldCrossed(lit) && item != null){
+            } else if(hasEmaGoldCrossed(lit, slowLine) && item != null){
                 log.info("瞬时金叉解除 {}", key);
                 EMA_TEMP_CROSS_CACHE.remove(key);
             }
         }
     }
 
-    private boolean isRestore(KI big, KI lit) {
+    private boolean isRestore(KI big, KI lit, Integer slowLine) {
         String key = big.symbol + "_" + big.interval + "_" + lit.interval;
         EmaItem item = EMA_TEMP_CROSS_CACHE.get(key);
         if(item != null){
             Long delta = System.currentTimeMillis() - item.getTime();
             if(delta >= 5 * 60 * 1000 && delta <= 6 * 60 * 1000){
-                if(hasEmaGoldCrossed(big) && hasEmaGoldCrossed(lit)){
+                if(hasEmaGoldCrossed(big, slowLine) && hasEmaGoldCrossed(lit, slowLine)){
                     if("tempDead".equals(item.getContent())){
                         return true;
                     }
                 }
 
-                if(!hasEmaGoldCrossed(big) && !hasEmaGoldCrossed(lit)){
+                if(!hasEmaGoldCrossed(big, slowLine) && !hasEmaGoldCrossed(lit, slowLine)){
                     if("tempGold".equals(item.getContent())){
                         return true;
                     }
@@ -147,47 +147,49 @@ public class MacdTaRobot {
         KI bigKi = new KI().extract(klinesBit, symbol, interval);
         List<DriverDto.KlineItem> klinesLit = binanceAgent.getKline((interval / 2) + "", symbol, null, null);
         KI litKi = new KI().extract(klinesLit, symbol, (interval / 2));
-        tempCross(bigKi, litKi);
+        Integer slowLine = interval.intValue() == 1800 ? 30 : 10;
+        tempCross(bigKi, litKi, slowLine);
 
         Boolean eamOlGoldCross = false;
         Boolean eamOlDeadCross = false;
 
         Long crossLat = null;
 
+
         /********************* 策略一 大周期金叉死叉，小周期同相位 ****************************/
-        if(emaOlGoldCross(bigKi) && hasEmaGoldCrossed(litKi)){
+        if(emaOlGoldCross(bigKi, slowLine) && hasEmaGoldCrossed(litKi, slowLine)){
             log.info("MacdTaRobot  币对 {} 大周期 {} 大周期_金叉_小周期同相位", symbol, interval);
             eamOlGoldCross = true;
             crossLat = klinesBit.get(klinesBit.size() - 2).getTimestamp().getTime();
         }
 
-        if(emaOlDeadCross(bigKi) && !hasEmaGoldCrossed(litKi)){
+        if(emaOlDeadCross(bigKi) && !hasEmaGoldCrossed(litKi, slowLine)){
             log.info("MacdTaRobot  币对 {} 大周期 {} 大周期_死叉_小周期同相位", symbol, interval);
             eamOlDeadCross = true;
             crossLat = klinesBit.get(klinesBit.size() - 2).getTimestamp().getTime();
         }
 
         /********************* 策略二 小周期金叉死叉，大周期同相位 ****************************/
-        if(hasEmaGoldCrossed(bigKi) && emaOlGoldCross(litKi)){
+        if(hasEmaGoldCrossed(bigKi, slowLine) && emaOlGoldCross(litKi, slowLine)){
             log.info("MacdTaRobot  币对 {} 大周期 {} 小周期_金叉_大周期同相位", symbol, interval);
             eamOlGoldCross = true;
             crossLat = klinesLit.get(klinesLit.size() - 2).getTimestamp().getTime();
         }
 
-        if(!hasEmaGoldCrossed(bigKi) && emaOlDeadCross(litKi)){
+        if(!hasEmaGoldCrossed(bigKi, slowLine) && emaOlDeadCross(litKi)){
             log.info("MacdTaRobot  币对 {} 大周期 {} 小周期_死叉_大周期同相位", symbol, interval);
             eamOlDeadCross = true;
             crossLat = klinesLit.get(klinesLit.size() - 2).getTimestamp().getTime();
         }
 
         /********************* 策略三 大周期已经金叉死叉，小周期恢复同相位 ****************************/
-        if(hasEmaGoldCrossed(bigKi) && isRestore(bigKi, litKi)){
+        if(hasEmaGoldCrossed(bigKi, slowLine) && isRestore(bigKi, litKi, slowLine)){
             log.info("MacdTaRobot  币对 {} 大周期 {} 大周期已经_金叉_小周期恢复同相位", symbol, interval);
             eamOlGoldCross = true;
             crossLat = klinesLit.get(klinesLit.size() - 2).getTimestamp().getTime();
         }
 
-        if(!hasEmaGoldCrossed(bigKi) && isRestore(bigKi, litKi)){
+        if(!hasEmaGoldCrossed(bigKi, slowLine) && isRestore(bigKi, litKi, slowLine)){
             log.info("MacdTaRobot  币对 {} 大周期 {} 大周期已经_死叉_小周期恢复同相位", symbol, interval);
             eamOlDeadCross = true;
             crossLat = klinesLit.get(klinesLit.size() - 2).getTimestamp().getTime();

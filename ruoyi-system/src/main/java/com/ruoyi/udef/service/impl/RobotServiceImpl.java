@@ -378,13 +378,23 @@ public class RobotServiceImpl {
                     .setSymbol(symbol).setBigInterval(interval));
             robots.forEach(n -> {
                 try {
-                    if(strategy.equals(n.getStrategy())
-                            && robotOrderMapper.selectDfRobotOrderList(new DfRobotOrder().setRobotId(n.getId())
-                            .setOpenSide(direction).setStatus(P_STATUS_RUNNING)).isEmpty()
-                    ){
-                        log.info("触发机器人 {}", JSON.toJSONString(n));
-                        OkAgent.Credential credential = getCredential(n.getApiId());
-                        placeIfNotPosition(credential, n, direction);
+                    if(strategy.equals(n.getStrategy())){
+                        Optional<DfRobotOrder> running = robotOrderMapper.selectDfRobotOrderList(new DfRobotOrder()
+                                .setRobotId(n.getId()).setStatus(P_STATUS_RUNNING)).stream().findFirst();
+                        if(running.isPresent()&&running.get().getOpenSide().equals(direction)){
+                            log.info("有同向订单");
+                        }else if(running.isPresent()&&!running.get().getOpenSide().equals(direction)){
+
+
+                            log.info("触发机器人 {}", JSON.toJSONString(n));
+                            OkAgent.Credential credential = getCredential(n.getApiId());
+                            placeIfNotPosition(credential, n, direction);
+                        }else {
+                            log.info("触发机器人 {}", JSON.toJSONString(n));
+                            OkAgent.Credential credential = getCredential(n.getApiId());
+                            placeIfNotPosition(credential, n, direction);
+                        }
+
                     }
                 } catch (Exception e) {
                     log.warn("Api机器人账户初始化异常 {}", JSON.toJSONString(n));
@@ -465,18 +475,19 @@ public class RobotServiceImpl {
                                 ? 1 + Konst.getTRate(s.getEscapeType()) : 1 - Konst.getTRate(s.getEscapeType())))
                                 .setScale(getScale(robot.getSymbol()), BigDecimal.ROUND_HALF_DOWN).doubleValue();
 
-                        if(!isMatchWithCon(flyOrders, robot.getSymbol(), direction, Const.O_TYPE_STOP_MARKET, stopPrice)){
+                        if(!isMatchWithCon(flyOrders, robot.getSymbol(), direction, Const.O_TYPE_STOP_MARKET, stopPrice.doubleValue())){
                             Double quality = Math.max(Math.round(robot.getQuantity() * s.getQuantityRate()) * 1d, 1d);
                             Double monitorPrice = new BigDecimal(avg * (Const.P_Side_LONG.equals(direction) ? 1 + s.getPriceRate() : 1 - s.getPriceRate()))
                                     .setScale(getScale(robot.getSymbol()), BigDecimal.ROUND_HALF_DOWN).doubleValue();
                             Optional<DriverDto.TkPrice> price = agent.getTkPrice(robot.getSymbol()).stream().findFirst();
 
-                            if((direction.equals(Const.P_Side_SHORT) && price.isPresent() && Double.parseDouble(price.get().getPrice()) < monitorPrice) ||
-                                    (direction.equals(Const.P_Side_LONG) && price.isPresent() && Double.parseDouble(price.get().getPrice()) > monitorPrice) ||
-                                    Math.abs(Integer.parseInt(position.getPositionAmt())) < robot.getQuantity()){
+                            if((direction.equals(Const.P_Side_SHORT) && price.isPresent() && Double.parseDouble(price.get().getPrice()) < monitorPrice.doubleValue()) ||
+                                    (direction.equals(Const.P_Side_LONG) && price.isPresent() && Double.parseDouble(price.get().getPrice()) > monitorPrice.doubleValue())
+                            ){
                                 String cltOrderId = genTriggerOrderId(robot.getId(), robotOrder.get().getId(), s.getId(), stopPrice);
                                 if(!StringUtils.isEmpty(cltOrderId)){
-                                    log.info("》》》》》》》》》》原地止损挂单 {}", robot.getId());
+                                    log.info("》》》》》》》》》》原地止损挂单 {} 止损方式 {} 跟随价格 {} 止损价格 {}", robot.getId(),
+                                            s.getEscapeType(), monitorPrice, stopPrice);
                                     DriverDto.OrderReq stopReq = new DriverDto.OrderReq().setSide(sideClose(direction))
                                             .setSymbol(robot.getSymbol()).setQuantity(quality)
                                             .setPositionSide(direction).setType(Const.O_TYPE_STOP_MARKET).setStopPrice(

@@ -101,7 +101,7 @@ public class TaLib {
         TA_CACHE.put(ki.tk("k"), kData.get(kData.size() - 2));
         TA_CACHE.put(ki.tk("d"), dData.get(dData.size() - 2));
 
-        return hasEmaGoldCrossed(ki) && goldCross(fastOld, slowOld, fastNew, slowNew);
+        return hasEmaGoldCrossed(ki,10) && goldCross(fastOld, slowOld, fastNew, slowNew);
     }
 
     public static Boolean kdjDeadCross(MacdTaRobot.KI ki) {
@@ -158,22 +158,22 @@ public class TaLib {
         TA_CACHE.put(ki.tk("k"), kData.get(kData.size() - 2));
         TA_CACHE.put(ki.tk("d"), dData.get(dData.size() - 2));
 
-        return !hasEmaGoldCrossed(ki) && deadCross(fastOld, slowOld, fastNew, slowNew);
+        return !hasEmaGoldCrossed(ki,10) && deadCross(fastOld, slowOld, fastNew, slowNew);
     }
 
-    public static Boolean hasEmaGoldCrossed(MacdTaRobot.KI ki) {
+    public static Boolean hasEmaGoldCrossed(MacdTaRobot.KI ki,Integer slowLine) {
         double[] close = ki.close;
 
         double[] ema5 = emaData(ta, 5, close);
-        double[] ema10 = emaData(ta, 10, close);
+        double[] emaSlow = emaData(ta, slowLine, close);
         if(isLogDetail){
             log.info("MacdTaRobot ema5 : {}", ema5);
-            log.info("MacdTaRobot ema10 : {}", ema10);
+            log.info("MacdTaRobot ema10 : {}", emaSlow);
         }
         double fastNew = eGet(ema5, 5, -1);
         double fastOld = eGet(ema5, 5, -2);
-        double slowNew = eGet(ema10, 10, -1);
-        double slowOld = eGet(ema10, 10, -2);
+        double slowNew = eGet(emaSlow, slowLine, -1);
+        double slowOld = eGet(emaSlow, slowLine, -2);
         return fastNew > slowNew;
     }
 
@@ -196,21 +196,21 @@ public class TaLib {
         return hasKdjGoldCrossed(ki) && goldCross(fastOld, slowOld, fastNew, slowNew);
     }
 
-    public static Boolean emaOlGoldCross(MacdTaRobot.KI ki) {
+    public static Boolean emaOlGoldCross(MacdTaRobot.KI ki,Integer slowLine) {
         double[] ema5 = emaData(ta, 5, ki.close);
-        double[] ema10 = emaData(ta, 10, ki.close);
+        double[] emaSlow = emaData(ta, slowLine, ki.close);
         if(isLogDetail){
             log.info("MacdTaRobot ema5 : {}", ema5);
-            log.info("MacdTaRobot ema10 : {}", ema10);
+            log.info("MacdTaRobot ema10 : {}", emaSlow);
         }
         double fastNew = eGet(ema5, 5, -1);
-        double slowNew = eGet(ema10, 10, -1);
+        double slowNew = eGet(emaSlow, slowLine, -1);
 
 
         double fastOld = TA_CACHE.getOrDefault(ki.tk("ema5"), eGet(ema5, 5, -2));
-        double slowOld = TA_CACHE.getOrDefault(ki.tk("ema10"), eGet(ema10, 10, -2));
+        double slowOld = TA_CACHE.getOrDefault(ki.tk("emaSlow"), eGet(emaSlow, slowLine, -2));
         TA_CACHE.put(ki.tk("ema5"), eGet(ema5, 5, -2));
-        TA_CACHE.put(ki.tk("ema10"), eGet(ema10, 10, -2));
+        TA_CACHE.put(ki.tk("emaSlow"), eGet(emaSlow, slowLine, -2));
 
         Boolean result = goldCross(fastOld, slowOld, fastNew, slowNew);
         return result;
