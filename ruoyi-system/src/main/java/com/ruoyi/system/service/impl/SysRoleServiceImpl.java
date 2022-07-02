@@ -45,6 +45,8 @@ public class SysRoleServiceImpl implements ISysRoleService
     @Autowired
     private SysRoleDeptMapper roleDeptMapper;
 
+    @Autowired
+    private SysUserServiceImpl userMapper;
     /**
      * 根据条件分页查询角色数据
      * 
@@ -233,6 +235,12 @@ public class SysRoleServiceImpl implements ISysRoleService
     {
         // 新增角色信息
         roleMapper.insertRole(role);
+        Long[] roleId= {l};
+        Long userId=SecurityUtils.getUserId();
+        //不是超级管理员给自己添加角色，要不然自己添加角色居然看不见
+        if (!SysUser.isAdmin(userId)) {
+            userMapper.insertUserAuth(userId,roleId);
+        }
         return insertRoleMenu(role);
     }
 
