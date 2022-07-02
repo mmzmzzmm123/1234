@@ -6,12 +6,13 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import com.ruoyi.common.annotation.Excel;
 import com.ruoyi.common.core.domain.BaseEntity;
+import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  * 机器人订单对象 df_robot_order
  * 
  * @author ruoyi
- * @date 2022-06-16
+ * @date 2022-07-02
  */
 @Data
 @Accessors(chain = true)
@@ -50,6 +51,14 @@ public class DfRobotOrder extends BaseEntity
     @Excel(name = "状态")
     private String status;
 
+    /** 持仓均价 */
+    @Excel(name = "持仓均价")
+    private String avgPrice;
+
+    /** 退出方式 */
+    @Excel(name = "退出方式")
+    private String stopType;
+
     /** 机器人 */
     @Excel(name = "机器人")
     private Long robotId;
@@ -65,6 +74,8 @@ public class DfRobotOrder extends BaseEntity
             .append("symbol", getSymbol())
             .append("openSide", getOpenSide())
             .append("status", getStatus())
+            .append("avgPrice", getAvgPrice())
+            .append("stopType", getStopType())
             .append("robotId", getRobotId())
             .append("createTime", getCreateTime())
             .append("updateTime", getUpdateTime())

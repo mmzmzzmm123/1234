@@ -1,48 +1,67 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper
-        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
-        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.ruoyi.udef.mapper.DfRobotOrderMapper">
-
+    
     <resultMap type="DfRobotOrder" id="DfRobotOrderResult">
-        <result property="id" column="id"/>
-        <result property="predictBalance" column="predict_balance"/>
-        <result property="balance" column="balance"/>
-        <result property="maxPosition" column="max_position"/>
-        <result property="position" column="position"/>
-        <result property="symbol" column="symbol"/>
-        <result property="openSide" column="open_side"/>
-        <result property="status" column="status"/>
-        <result property="robotId" column="robot_id"/>
-        <result property="createTime" column="create_time"/>
-        <result property="updateTime" column="update_time"/>
+        <result property="id"    column="id"    />
+        <result property="predictBalance"    column="predict_balance"    />
+        <result property="balance"    column="balance"    />
+        <result property="maxPosition"    column="max_position"    />
+        <result property="position"    column="position"    />
+        <result property="symbol"    column="symbol"    />
+        <result property="openSide"    column="open_side"    />
+        <result property="status"    column="status"    />
+        <result property="avgPrice"    column="avg_price"    />
+        <result property="stopType"    column="stop_type"    />
+        <result property="robotId"    column="robot_id"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateTime"    column="update_time"    />
     </resultMap>
 
     <sql id="selectDfRobotOrderVo">
-        select id, predict_balance, balance, max_position, position, symbol, open_side, status, robot_id, create_time,
-        update_time from df_robot_order
+        select id, predict_balance, balance, max_position, position, symbol, open_side, status,  avg_price, stop_type, robot_id, create_time, update_time from df_robot_order
     </sql>
 
     <select id="selectDfRobotOrderList" parameterType="DfRobotOrder" resultMap="DfRobotOrderResult">
         <include refid="selectDfRobotOrderVo"/>
-        <where>
-            <if test="predictBalance != null  and predictBalance != ''">and predict_balance = #{predictBalance}</if>
-            <if test="balance != null  and balance != ''">and balance = #{balance}</if>
-            <if test="maxPosition != null ">and max_position = #{maxPosition}</if>
-            <if test="position != null ">and position = #{position}</if>
-            <if test="symbol != null  and symbol != ''">and symbol = #{symbol}</if>
-            <if test="openSide != null  and openSide != ''">and open_side = #{openSide}</if>
-            <if test="status != null  and status != ''">and status = #{status}</if>
-            <if test="robotId != null ">and robot_id = #{robotId}</if>
+        <where>  
+            <if test="predictBalance != null  and predictBalance != ''"> and predict_balance = #{predictBalance}</if>
+            <if test="balance != null  and balance != ''"> and balance = #{balance}</if>
+            <if test="maxPosition != null "> and max_position = #{maxPosition}</if>
+            <if test="position != null "> and position = #{position}</if>
+            <if test="symbol != null  and symbol != ''"> and symbol = #{symbol}</if>
+            <if test="openSide != null  and openSide != ''"> and open_side = #{openSide}</if>
+            <if test="status != null  and status != ''"> and status = #{status}</if>
+            <if test="avgPrice != null  and avgPrice != ''"> and avg_price = #{avgPrice}</if>
+            <if test="stopType != null  and stopType != ''"> and stop_type = #{stopType}</if>
+            <if test="robotId != null "> and robot_id = #{robotId}</if>
         </where>
-        order by status desc, id desc
     </select>
-
+    
     <select id="selectDfRobotOrderById" parameterType="Long" resultMap="DfRobotOrderResult">
         <include refid="selectDfRobotOrderVo"/>
         where id = #{id}
     </select>
 
+    <select id="selectDfRobotOrderListLatest10" parameterType="DfRobotOrder" resultMap="DfRobotOrderResult">
+        <include refid="selectDfRobotOrderVo"/>
+        <where>
+            <if test="predictBalance != null  and predictBalance != ''"> and predict_balance = #{predictBalance}</if>
+            <if test="balance != null  and balance != ''"> and balance = #{balance}</if>
+            <if test="maxPosition != null "> and max_position = #{maxPosition}</if>
+            <if test="position != null "> and position = #{position}</if>
+            <if test="symbol != null  and symbol != ''"> and symbol = #{symbol}</if>
+            <if test="openSide != null  and openSide != ''"> and open_side = #{openSide}</if>
+            <if test="status != null  and status != ''"> and status = #{status}</if>
+            <if test="avgPrice != null  and avgPrice != ''"> and avg_price = #{avgPrice}</if>
+            <if test="stopType != null  and stopType != ''"> and stop_type = #{stopType}</if>
+            <if test="robotId != null "> and robot_id = #{robotId}</if>
+        </where>
+        order by create_time desc limit 10
+    </select>
+        
     <insert id="insertDfRobotOrder" parameterType="DfRobotOrder" useGeneratedKeys="true" keyProperty="id">
         insert into df_robot_order
         <trim prefix="(" suffix=")" suffixOverrides=",">
@@ -53,10 +72,12 @@
             <if test="symbol != null and symbol != ''">symbol,</if>
             <if test="openSide != null and openSide != ''">open_side,</if>
             <if test="status != null and status != ''">status,</if>
+            <if test="avgPrice != null">avg_price,</if>
+            <if test="stopType != null">stop_type,</if>
             <if test="robotId != null">robot_id,</if>
             <if test="createTime != null">create_time,</if>
             <if test="updateTime != null">update_time,</if>
-        </trim>
+         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="predictBalance != null and predictBalance != ''">#{predictBalance},</if>
             <if test="balance != null and balance != ''">#{balance},</if>
@@ -65,10 +86,12 @@
             <if test="symbol != null and symbol != ''">#{symbol},</if>
             <if test="openSide != null and openSide != ''">#{openSide},</if>
             <if test="status != null and status != ''">#{status},</if>
+            <if test="avgPrice != null">#{avgPrice},</if>
+            <if test="stopType != null">#{stopType},</if>
             <if test="robotId != null">#{robotId},</if>
             <if test="createTime != null">#{createTime},</if>
             <if test="updateTime != null">#{updateTime},</if>
-        </trim>
+         </trim>
     </insert>
 
     <update id="updateDfRobotOrder" parameterType="DfRobotOrder">
@@ -81,6 +104,8 @@
             <if test="symbol != null and symbol != ''">symbol = #{symbol},</if>
             <if test="openSide != null and openSide != ''">open_side = #{openSide},</if>
             <if test="status != null and status != ''">status = #{status},</if>
+            <if test="avgPrice != null">avg_price = #{avgPrice},</if>
+            <if test="stopType != null">stop_type = #{stopType},</if>
             <if test="robotId != null">robot_id = #{robotId},</if>
             <if test="createTime != null">create_time = #{createTime},</if>
             <if test="updateTime != null">update_time = #{updateTime},</if>
@@ -93,7 +118,7 @@
     </delete>
 
     <delete id="deleteDfRobotOrderByIds" parameterType="String">
-        delete from df_robot_order where id in
+        delete from df_robot_order where id in 
         <foreach item="id" collection="array" open="(" separator="," close=")">
             #{id}
         </foreach>

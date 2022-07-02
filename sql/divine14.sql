@@ -30,6 +30,7 @@ create table df_api_robot (
   leverage          double           not null                   comment '杠杆',
   status            varchar(15)     not null                   comment '状态',
   api_id            bigint(20)      not null                   comment 'api',
+  strategy          bigint(20)      not null                   comment '执行策略',
   create_time 	    datetime                                   comment '创建时间',
   update_time       datetime                                   comment '更新时间',
   primary key (id)
@@ -79,7 +80,6 @@ create table df_robot_order (
   symbol            varchar(15)     not null        comment '交易对',
   open_side         varchar(15)     not null comment '开仓方向',
   status            varchar(15)     not null comment '状态',
-  strategy          varchar(15)     not null comment '执行策略',
   avg_price         varchar(15)     default null comment '持仓均价',
   stop_type         varchar(15)     default null comment '退出方式',
   robot_id          bigint(20)      not null                   comment '机器人',

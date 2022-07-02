@@ -93,7 +93,7 @@ public class MacdTaRobot {
         String key = big.symbol + "_" + big.interval + "_" + lit.interval;
         EmaItem item = EMA_TEMP_CROSS_CACHE.get(key);
         if(hasEmaGoldCrossed(big, slowLine)){
-            if(emaDeadCross(lit)){
+            if(emaOlDeadCross(lit, slowLine)){
                 log.info("瞬时死叉 {}", key);
                 EmaItem current = new EmaItem().setTime(System.currentTimeMillis()).setContent("tempDead");
                 if(item == null || !item.getContent().equals("tempDead")){
@@ -106,7 +106,7 @@ public class MacdTaRobot {
         }
 
         if(!hasEmaGoldCrossed(big, slowLine)){
-            if(emaGoldCross(lit)){
+            if(emaOlGoldCross(lit, slowLine)){
                 log.info("瞬时金叉 {}", key);
                 EmaItem current = new EmaItem().setTime(System.currentTimeMillis()).setContent("tempGold");
                 if(item == null || !item.getContent().equals("tempGold")){
@@ -141,13 +141,8 @@ public class MacdTaRobot {
         return false;
     }
 
-
-    public void batchCross(String symbol, Integer interval) {
-        List<DriverDto.KlineItem> klinesBit = binanceAgent.getKline(interval + "", symbol, null, null);
-        KI bigKi = new KI().extract(klinesBit, symbol, interval);
-        List<DriverDto.KlineItem> klinesLit = binanceAgent.getKline((interval / 2) + "", symbol, null, null);
-        KI litKi = new KI().extract(klinesLit, symbol, (interval / 2));
-        Integer slowLine = interval.intValue() == 1800 ? 30 : 10;
+    public void batchCrossWithSlowLine(List<DriverDto.KlineItem> klinesBit, List<DriverDto.KlineItem> klinesLit, KI bigKi, KI litKi,
+                                       String symbol, Integer interval, Integer slowLine) {
         tempCross(bigKi, litKi, slowLine);
 
         Boolean eamOlGoldCross = false;
@@ -163,7 +158,7 @@ public class MacdTaRobot {
             crossLat = klinesBit.get(klinesBit.size() - 2).getTimestamp().getTime();
         }
 
-        if(emaOlDeadCross(bigKi) && !hasEmaGoldCrossed(litKi, slowLine)){
+        if(emaOlDeadCross(bigKi, slowLine) && !hasEmaGoldCrossed(litKi, slowLine)){
             log.info("MacdTaRobot  币对 {} 大周期 {} 大周期_死叉_小周期同相位", symbol, interval);
             eamOlDeadCross = true;
             crossLat = klinesBit.get(klinesBit.size() - 2).getTimestamp().getTime();
@@ -176,7 +171,7 @@ public class MacdTaRobot {
             crossLat = klinesLit.get(klinesLit.size() - 2).getTimestamp().getTime();
         }
 
-        if(!hasEmaGoldCrossed(bigKi, slowLine) && emaOlDeadCross(litKi)){
+        if(!hasEmaGoldCrossed(bigKi, slowLine) && emaOlDeadCross(litKi, slowLine)){
             log.info("MacdTaRobot  币对 {} 大周期 {} 小周期_死叉_大周期同相位", symbol, interval);
             eamOlDeadCross = true;
             crossLat = klinesLit.get(klinesLit.size() - 2).getTimestamp().getTime();
@@ -197,14 +192,23 @@ public class MacdTaRobot {
 
         /******************************触发下单*******************************************************/
         if(assertConfirm(eamOlGoldCross, symbol, "ema_gold", interval, crossLat)){
-            robotService.triggerRobot(symbol, interval * 1l, Const.P_Side_LONG, Konst.ST_EMA_CROSS);
+            robotService.triggerRobot(symbol, interval * 1l, Const.P_Side_LONG, Konst.ST_EMA_CROSS_ + slowLine);
         }
 
         log.info("MacdTaRobot  币对 {} 周期 {} 是否死叉 {}", symbol, interval, eamOlDeadCross);
         if(assertConfirm(eamOlDeadCross, symbol, "ema_dead", interval, crossLat)){
-            robotService.triggerRobot(symbol, interval * 1l, Const.P_Side_SHORT, Konst.ST_EMA_CROSS);
+            robotService.triggerRobot(symbol, interval * 1l, Const.P_Side_SHORT, Konst.ST_EMA_CROSS_ + slowLine);
         }
+    }
 
+
+    public void batchCross(String symbol, Integer interval) {
+        List<DriverDto.KlineItem> klinesBit = binanceAgent.getKline(interval + "", symbol, null, null);
+        KI bigKi = new KI().extract(klinesBit, symbol, interval);
+        List<DriverDto.KlineItem> klinesLit = binanceAgent.getKline((interval / 2) + "", symbol, null, null);
+        KI litKi = new KI().extract(klinesLit, symbol, (interval / 2));
+        batchCrossWithSlowLine(klinesBit, klinesLit, bigKi, litKi, symbol, interval, 10);
+        batchCrossWithSlowLine(klinesBit, klinesLit, bigKi, litKi, symbol, interval, 30);
     }
 
     public static Boolean assertConfirm(Boolean condition, String bit, String taTag, Integer interval, Long time) {

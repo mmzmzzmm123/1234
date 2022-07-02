@@ -252,8 +252,12 @@ public class RobotServiceImpl {
                     order.setUpdateTime(new Date());
                     order.setPosition(0);
                     order.setStatus(P_STATUS_CLOSED);
+                    if(StringUtils.isEmpty(order.getStopType())){
+                        order.setStopType(STOP_LOSS);
+                    }
                 } else {
                     order.setUpdateTime(new Date());
+                    order.setAvgPrice(risks.get(0).getEntryPrice());
                     order.setPosition(Math.abs(Integer.parseInt(risks.get(0).getPositionAmt())));
                 }
 
@@ -376,21 +380,36 @@ public class RobotServiceImpl {
         try {
             List<DfApiRobot> robots = dfApiRobotMapper.selectDfApiRobotList(new DfApiRobot().setStatus(R_STATUS_RUNNING)
                     .setSymbol(symbol).setBigInterval(interval));
-            robots.forEach(n -> {
+            for (DfApiRobot n : robots) {
                 try {
                     if(strategy.equals(n.getStrategy())){
-                        Optional<DfRobotOrder> running = robotOrderMapper.selectDfRobotOrderList(new DfRobotOrder()
-                                .setRobotId(n.getId()).setStatus(P_STATUS_RUNNING)).stream().findFirst();
-                        if(running.isPresent()&&running.get().getOpenSide().equals(direction)){
-                            log.info("有同向订单");
-                        }else if(running.isPresent()&&!running.get().getOpenSide().equals(direction)){
+                        List<DfRobotOrder> orders = robotOrderMapper.selectDfRobotOrderListLatest10(new DfRobotOrder().setRobotId(n.getId()));
 
+                        if(orders.size() >= 2){
+                            if(STOP_REVERT.equals(orders.get(1).getStopType())){//反向
+                                if(P_STATUS_RUNNING.equals(orders.get(0).getStatus())){//8个周期内不能反向结束
+                                    DfRobotOrder running = orders.get(0);
 
-                            log.info("触发机器人 {}", JSON.toJSONString(n));
-                            OkAgent.Credential credential = getCredential(n.getApiId());
-                            placeIfNotPosition(credential, n, direction);
-                        }else {
-                            log.info("触发机器人 {}", JSON.toJSONString(n));
+                                    if(running.getOpenSide().equals(direction)){
+                                        log.info("有同向订单，忽略本次开单  robot{}", n.getId());
+                                    } else if(System.currentTimeMillis() - orders.get(1).getCreateTime().getTime() < n.getBigInterval() * 1000 * 8){
+                                        log.info("试图开启反向订单，当前订单8周期保护,不能再反向");
+                                    } else {
+                                        running.setUpdateTime(new Date());
+                                        running.setStopType(STOP_REVERT);
+                                        robotOrderMapper.updateDfRobotOrder(running);
+                                        log.info("保护期已过，立即反向触发机器人 {}", JSON.toJSONString(n));
+                                        OkAgent.Credential credential = getCredential(n.getApiId());
+                                        placeIfNotPosition(credential, n, direction);
+                                    }
+                                } else {
+                                    log.info("最近开单,止损出局,再次触发机器人 {}", JSON.toJSONString(n));
+                                    OkAgent.Credential credential = getCredential(n.getApiId());
+                                    placeIfNotPosition(credential, n, direction);
+                                }
+                            }
+                        } else {
+                            log.info("安全，直接触发机器人 {}", JSON.toJSONString(n));
                             OkAgent.Credential credential = getCredential(n.getApiId());
                             placeIfNotPosition(credential, n, direction);
                         }
@@ -400,7 +419,7 @@ public class RobotServiceImpl {
                     log.warn("Api机器人账户初始化异常 {}", JSON.toJSONString(n));
                     e.printStackTrace();
                 }
-            });
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }

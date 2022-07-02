@@ -23,7 +23,10 @@ public class Konst {
     public static final String A_STATUS_DAILY = "daily";
     public static final String A_STATUS_WORK_TIME = "work_time";
 
-    public static final String ST_EMA_CROSS = "ema_cross";
+    public static final String ST_EMA_CROSS_ = "ema_cross_";
+
+    public static final String STOP_LOSS = "stop_loss";
+    public static final String STOP_REVERT = "stop_revert";
 
     //自定义止盈止损，当价格超过1.5个点，进行原地止损
     public static final String STOP_MARKET_T_BASE = "STOP_MARKET_T";

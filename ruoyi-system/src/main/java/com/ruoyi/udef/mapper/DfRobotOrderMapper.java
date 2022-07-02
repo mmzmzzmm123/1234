@@ -27,6 +27,7 @@ public interface DfRobotOrderMapper
      */
     public List<DfRobotOrder> selectDfRobotOrderList(DfRobotOrder dfRobotOrder);
 
+
     /**
      * 新增机器人订单
      * 
@@ -58,4 +59,7 @@ public interface DfRobotOrderMapper
      * @return 结果
      */
     public int deleteDfRobotOrderByIds(Long[] ids);
+
+
+    public List<DfRobotOrder> selectDfRobotOrderListLatest10(DfRobotOrder dfRobotOrder);
 }
