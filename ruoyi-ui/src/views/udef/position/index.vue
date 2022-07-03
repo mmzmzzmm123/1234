@@ -101,9 +101,7 @@
       <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
     </el-row>
 
-    <el-table v-loading="loading" :data="positionList" @selection-change="handleSelectionChange">
-      <el-table-column type="selection" width="55" align="center" :row-class-name="closedOrRunning" :cell-class-name="upOrDown"/>
-      <el-table-column label="id" align="center" prop="id" />
+    <el-table v-loading="loading" :data="positionList" @selection-change="handleSelectionChange" :row-class-name="closedOrRunning" :cell-class-name="upOrDown">
       <el-table-column label="前置余额" align="center" prop="predictBalance" />
       <el-table-column label="当前余额" align="center" prop="balance" />
       <el-table-column label="最大持仓" align="center" prop="maxPosition" />

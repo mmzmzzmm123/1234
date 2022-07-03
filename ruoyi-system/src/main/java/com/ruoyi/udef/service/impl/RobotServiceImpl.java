@@ -385,8 +385,8 @@ public class RobotServiceImpl {
                     if(strategy.equals(n.getStrategy())){
                         List<DfRobotOrder> orders = robotOrderMapper.selectDfRobotOrderListLatest10(new DfRobotOrder().setRobotId(n.getId()));
 
-                        if(orders.size() >= 2){
-                            if(STOP_REVERT.equals(orders.get(1).getStopType())){//反向
+                        if(orders.size() >= 3){
+                            if(STOP_REVERT.equals(orders.get(2).getStopType())&&STOP_REVERT.equals(orders.get(1).getStopType())){//反向
                                 if(P_STATUS_RUNNING.equals(orders.get(0).getStatus())){//8个周期内不能反向结束
                                     DfRobotOrder running = orders.get(0);
 
@@ -450,7 +450,7 @@ public class RobotServiceImpl {
                         .setRobotId(robot.getId()).setStatus(P_STATUS_RUNNING).setOpenSide(direction)).stream().findFirst();
                 if(!robotOrder.isPresent()){
                     log.warn("当前无运行的机器人持仓！！！ {} 持仓 {}", robot.getId(), JSON.toJSONString(risks));
-                    throw new CustomException("当前无运行的机器人持仓");
+                   return;
                 }
 
                 s1.forEach(s -> {
