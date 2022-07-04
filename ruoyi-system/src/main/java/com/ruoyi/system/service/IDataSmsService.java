@@ -26,4 +26,13 @@ public interface IDataSmsService
      * @return
      */
     public AjaxResult sendVerifyCodeByUMS(String phone, String code);
+
+
+    /**
+     * 使用信用平台接口发送短信验证码
+     * @param phone
+     * @param code
+     * @return
+     */
+    public AjaxResult sendVerifyCodeByCredit(String phone, String code) ;
 }

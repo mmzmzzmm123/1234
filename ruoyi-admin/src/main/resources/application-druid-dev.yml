@@ -9,7 +9,7 @@ spring:
         # 数据库索引
         database: 0
         # 密码
-        password: jmspring
+        password:
         # 连接超时时间
         timeout: 10s
         lettuce:
@@ -27,9 +27,9 @@ spring:
         druid:
             # 主库数据源
             master:
-                url: jdbc:mysql://localhost:3306/company_loan?useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=true&serverTimezone=GMT%2B8
+                url: jdbc:mysql://localhost:3307/xdztc_company_loan?useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=true&serverTimezone=GMT%2B8
                 username: root
-                password: coolteam123
+                password: 123456
 #            master:
 #                url: jdbc:mysql://10.22.0.89:3306/company_loan?useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=true&serverTimezone=GMT%2B8
 #                username: root
@@ -48,9 +48,9 @@ spring:
                 
             api:
                 enabled: true
-                url: jdbc:mysql://localhost:3306/xdztc-report?useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=true&serverTimezone=GMT%2B8
+                url: jdbc:mysql://localhost:3307/xdztc-report?useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=true&serverTimezone=GMT%2B8
                 username: root
-                password: coolteam123
+                password: 123456
 #            api:
 #                enabled: true
 #                url: jdbc:mysql://10.22.0.89:3306/xdztc-report?useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=true&serverTimezone=GMT%2B8
@@ -113,3 +113,13 @@ bankapi:
     domain: http://dev.strongdata.com.cn:5222/qzh-xyd/business/api/interfaces/openApi/
     appKey: 6c2544dcad39441c8e81c790bf9009f1
     appSecret: cb8135c8442843909cf47d4c359b31a0
+
+# 信用三期短信接口配置
+creditsms:
+    domain: http://222.77.0.192:9006/api/dataApi
+    url: /sendSms/sendApi
+    merchantId: 'qzxdztc'
+    merchantName: '信贷直通车'
+    salt: 'pszx&qzxyd2022'
+    platformPublicKey: '5789037fc1b011eabc1ff6493b02338x'
+    platformPrivateKey: '578903D6C1B011EABC1FF6493B02338X'

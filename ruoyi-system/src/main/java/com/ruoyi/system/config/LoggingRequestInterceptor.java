@@ -6,11 +6,12 @@ import org.springframework.http.HttpRequest;
 import org.springframework.http.client.ClientHttpRequestExecution;
 import org.springframework.http.client.ClientHttpRequestInterceptor;
 import org.springframework.http.client.ClientHttpResponse;
+import org.springframework.stereotype.Component;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-
+@Component("loggingRequestInterceptor")
 public class LoggingRequestInterceptor implements ClientHttpRequestInterceptor {
 
     final static Logger log = LoggerFactory.getLogger(LoggingRequestInterceptor.class);

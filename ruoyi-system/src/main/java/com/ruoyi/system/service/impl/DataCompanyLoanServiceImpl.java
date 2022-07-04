@@ -274,7 +274,7 @@ public class DataCompanyLoanServiceImpl implements IDataCompanyLoanService
         return UserConstants.UNIQUE;
     }
 
-    @Override
+/*    @Override
     public String senSmsCode(String phone) {
         String verifyKey = Constants.SMS_CODE_KEY + phone;
         String code = numRandom(6);
@@ -292,6 +292,24 @@ public class DataCompanyLoanServiceImpl implements IDataCompanyLoanService
             }else if(33 == resultCode){
                 msg = "同一号码验证码提交过快";
             }
+            throw new UserException(null , null, msg);
+        }
+
+    }*/
+
+    @Override
+    public String senSmsCode(String phone) {
+        String verifyKey = Constants.SMS_CODE_KEY + phone;
+        String code = numRandom(6);
+//        AjaxResult response = smsService.sendVerifyCodeByUMS(phone,code);
+        AjaxResult response = smsService.sendVerifyCodeByCredit(phone,code);
+        int resultCode = (int) response.get(AjaxResult.CODE_TAG);
+        if (HttpStatus.SUCCESS == resultCode){//发送短信成功
+            redisCache.setCacheObject(verifyKey, code, Constants.SMS_CODE_EXPIRATION, TimeUnit.MINUTES);
+            return code;
+        }else {
+            String msg = (String) response.get(AjaxResult.MSG_TAG);
+            //TODO:暂未校验相关错误，存在安全漏洞
             throw new UserException(null , null, msg);
         }
 

@@ -18,13 +18,10 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
-import org.springframework.http.converter.json.GsonBuilderUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
-import javax.validation.constraints.NotNull;
 import java.util.Objects;
-import java.util.Optional;
 
 @Service
 public class ProdOpenApi {
@@ -272,7 +269,7 @@ public class ProdOpenApi {
                 returnObject.put("total", response.getTotal());
             }
         }
-        log.debug("return response data:{}",returnObject);
+        log.info("return response data:{}",returnObject);
         return returnObject;
 
     }

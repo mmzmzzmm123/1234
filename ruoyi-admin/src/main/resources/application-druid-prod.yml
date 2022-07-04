@@ -93,3 +93,13 @@ bankapi:
     domain: http://172.29.137.5:9080/api/interfaces/openApi/
     appKey: a67234c358304cfb9f699e98a2f83f86
     appSecret: 3965fcce83c64d9d87b02a7a9517bfa7
+    
+# 信用三期短信接口配置
+creditsms:
+    domain: http://172.29.131.141:9006/api/dataApi
+    url: /sendSms/sendApi
+    merchantId: 'qzxdztc'
+    merchantName: '信贷直通车'
+    salt: 'pszx&qzxyd2022'
+    platformPublicKey: '5789037fc1b011eabc1ff6493b02338x'
+    platformPrivateKey: '578903D6C1B011EABC1FF6493B02338X'
