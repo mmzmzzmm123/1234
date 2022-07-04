@@ -378,6 +378,7 @@ public class RobotServiceImpl {
 
     public void triggerRobot(String symbol, Long interval, String direction, String strategy) {
         try {
+            log.info("triggerRobot {} {} {] {}", symbol, interval, direction, strategy);
             List<DfApiRobot> robots = dfApiRobotMapper.selectDfApiRobotList(new DfApiRobot().setStatus(R_STATUS_RUNNING)
                     .setSymbol(symbol).setBigInterval(interval));
             for (DfApiRobot n : robots) {
@@ -386,7 +387,7 @@ public class RobotServiceImpl {
                         List<DfRobotOrder> orders = robotOrderMapper.selectDfRobotOrderListLatest10(new DfRobotOrder().setRobotId(n.getId()));
 
                         if(orders.size() >= 3){
-                            if(STOP_REVERT.equals(orders.get(2).getStopType())&&STOP_REVERT.equals(orders.get(1).getStopType())){//反向
+                            if(STOP_REVERT.equals(orders.get(2).getStopType()) && STOP_REVERT.equals(orders.get(1).getStopType())){//反向
                                 if(P_STATUS_RUNNING.equals(orders.get(0).getStatus())){//8个周期内不能反向结束
                                     DfRobotOrder running = orders.get(0);
 
@@ -407,6 +408,10 @@ public class RobotServiceImpl {
                                     OkAgent.Credential credential = getCredential(n.getApiId());
                                     placeIfNotPosition(credential, n, direction);
                                 }
+                            }else {
+                                log.info("最近开单,止损出局,再次触发机器人 {}", JSON.toJSONString(n));
+                                OkAgent.Credential credential = getCredential(n.getApiId());
+                                placeIfNotPosition(credential, n, direction);
                             }
                         } else {
                             log.info("安全，直接触发机器人 {}", JSON.toJSONString(n));
@@ -450,7 +455,7 @@ public class RobotServiceImpl {
                         .setRobotId(robot.getId()).setStatus(P_STATUS_RUNNING).setOpenSide(direction)).stream().findFirst();
                 if(!robotOrder.isPresent()){
                     log.warn("当前无运行的机器人持仓！！！ {} 持仓 {}", robot.getId(), JSON.toJSONString(risks));
-                   return;
+                    return;
                 }
 
                 s1.forEach(s -> {

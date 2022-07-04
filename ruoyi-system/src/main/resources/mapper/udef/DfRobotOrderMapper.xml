@@ -38,6 +38,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="stopType != null  and stopType != ''"> and stop_type = #{stopType}</if>
             <if test="robotId != null "> and robot_id = #{robotId}</if>
         </where>
+        order by status desc, id desc
     </select>
     
     <select id="selectDfRobotOrderById" parameterType="Long" resultMap="DfRobotOrderResult">

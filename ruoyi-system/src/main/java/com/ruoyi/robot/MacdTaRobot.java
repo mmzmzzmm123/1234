@@ -189,8 +189,10 @@ public class MacdTaRobot {
             eamOlDeadCross = true;
             crossLat = klinesLit.get(klinesLit.size() - 2).getTimestamp().getTime();
         }
+        if(eamOlGoldCross&&eamOlDeadCross)return;
 
         /******************************触发下单*******************************************************/
+        log.info("MacdTaRobot  币对 {} 周期 {} 是否金叉 {}", symbol, interval, eamOlGoldCross);
         if(assertConfirm(eamOlGoldCross, symbol, "ema_gold", interval, crossLat)){
             robotService.triggerRobot(symbol, interval * 1l, Const.P_Side_LONG, Konst.ST_EMA_CROSS_ + slowLine);
         }
@@ -216,11 +218,11 @@ public class MacdTaRobot {
             String key = bit + interval + taTag + time;
             Long hasAlarm = ALARM_CACHE.get(key);
             if(hasAlarm == null){
-                log.info("MacdTaRobot {} {} {} {}触发报警", bit, taTag, interval, time);
+                log.info("MacdTaRobot {} {} {} {}触发下单", bit, taTag, interval, time);
                 ALARM_CACHE.put(key, time);
                 return true;
             } else {
-                log.info("MacdTaRobot {} {} {} {}重复报警", bit, taTag, interval, time);
+                log.info("MacdTaRobot {} {} {} {}重复触发", bit, taTag, interval, time);
             }
         }
         return false;

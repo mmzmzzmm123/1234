@@ -334,7 +334,7 @@ export default {
 
     upOrDown({ row, column, rowIndex, columnIndex }) {
       let profit
-      if (columnIndex === 3) {
+      if (columnIndex === 1) {
         if (row.balance > row.predictBalance) {
           profit = 'cell_up'
         } else if (row.balance < row.predictBalance) {
