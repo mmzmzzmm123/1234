@@ -1,7 +1,7 @@
 allIndexURL: https://open.lixinger.com/api/cn/index
 fundamentalURL: https://open.lixinger.com/api/cn/index/fundamental
 singleIndustryURL: https://open.lixinger.com/api/cn/company
-token: 119305dd-2a31-43dc-8e2f-ff415e02c332
+token: 30c897ec-d11c-4f86-ab21-8c539f1b6e7f
 startdate: 2022-01-03
 enddate: 2022-06
 stockCodes:
