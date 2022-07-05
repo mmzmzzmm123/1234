@@ -175,6 +175,30 @@ public class ProdOpenApi {
         return getResult(responseEntity.getBody());
     }
 
+    /**
+     * 新增用户授权书同意记录
+     *
+     * @return 结果记录
+     */
+    public AjaxResult addAuthorizationRecord(CreditAuthorizationRecord record) {
+
+        String url = domain + "xdztc/addAuthorizationRecord";
+
+        HttpHeaders headers = OpenApiAuthUtil.generateAuthHeaders(appKey, appSecret);
+
+        JSONObject jsonObject = JSONObject.parseObject(JSON.toJSONString(record));
+
+        HttpEntity<JSONObject> httpEntity = new HttpEntity<>(jsonObject, headers);
+        ParameterizedTypeReference<AjaxResult> reference =
+                new ParameterizedTypeReference<AjaxResult>() {
+                };
+
+        ResponseEntity<AjaxResult> responseEntity = restTemplate.exchange(url,
+                HttpMethod.POST, httpEntity, reference);
+
+        return responseEntity.getBody();
+    }
+
 
     /**
      * 企业入驻
@@ -275,4 +299,26 @@ public class ProdOpenApi {
     }
 
 
+
+    /**
+     * 查询企业用户授权书
+     *
+     * @return 企业用户授权书
+     */
+    public AjaxResult findAuthorization() {
+
+        String url = domain + "xdztc/findAuthorization";
+
+        HttpHeaders headers = OpenApiAuthUtil.generateAuthHeaders(appKey, appSecret);
+
+        HttpEntity<AjaxResult> httpEntity = new HttpEntity<>(null, headers);
+        ParameterizedTypeReference<AjaxResult> reference =
+                new ParameterizedTypeReference<AjaxResult>() {
+                };
+
+        ResponseEntity<AjaxResult> responseEntity = restTemplate.exchange(url,
+                HttpMethod.GET, httpEntity, reference);
+
+        return responseEntity.getBody();
+    }
 }

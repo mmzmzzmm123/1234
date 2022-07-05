@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.framework.interceptor.impl.AppInterceptor;
+import com.ruoyi.system.domain.model.CreditAuthorizationRecord;
 import com.ruoyi.system.domain.model.FinanceProductApply;
 import com.ruoyi.system.domain.model.FinanceProductQuery;
 import com.ruoyi.system.domain.model.credit.DishonestOrBlack;
@@ -118,4 +119,21 @@ public class AppCreditController extends BaseController {
         }
     }
 
+
+    //    @GetMapping("/getDict/{dictType}")
+    @GetMapping("/findAuthorization")
+    @ApiOperation(value = "查询企业用户授权书")
+    public AjaxResult findAuthorization() {
+
+        return prodOpenApi.findAuthorization();
+    }
+
+
+    @PostMapping("/addAuthorizationRecord")
+    @ApiOperation(value = "新增用户授权书同意记录")
+    public AjaxResult addAuthorizationRecord(@RequestBody CreditAuthorizationRecord record) {
+        log.info("新增用户授权书同意记录 param:{}",record);
+
+        return prodOpenApi.addAuthorizationRecord(record);
+    }
 }
