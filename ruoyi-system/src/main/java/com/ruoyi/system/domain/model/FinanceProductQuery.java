@@ -1,7 +1,5 @@
 package com.ruoyi.system.domain.model;
 
-import java.math.BigDecimal;
-
 /**
  * @author renjf
  * @date 2022年05月26日 16:13
@@ -55,6 +53,9 @@ public class FinanceProductQuery {
 
     // 金融产品名称
     private  String proName;
+
+    // 区域编码
+    private String capAreaId;
 
     @Override
     public String toString() {
@@ -204,5 +205,13 @@ public class FinanceProductQuery {
 
     public void setProName(String proName) {
         this.proName = proName;
+    }
+
+    public String getCapAreaId() {
+        return capAreaId;
+    }
+
+    public void setCapAreaId(String capAreaId) {
+        this.capAreaId = capAreaId;
     }
 }
