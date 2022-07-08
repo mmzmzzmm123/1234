@@ -128,7 +128,7 @@ public class DataCompanyLoanServiceImpl implements IDataCompanyLoanService
         String verifyKey = Constants.SMS_CODE_KEY + mobile;
         String realCode = redisCache.getCacheObject(verifyKey);
 
-        if ("druid-prod".equals(active)){ // 生产环境校验短信正确性
+        if ("druid-prod".equals(active) || "druid-sit".equals(active)){ // 生产环境校验短信正确性
             if (!StringUtils.equals(code,realCode)){
                 throw new SmsException();
             }
