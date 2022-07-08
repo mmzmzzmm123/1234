@@ -300,20 +300,80 @@ public class DataCompanyLoanServiceImpl implements IDataCompanyLoanService
     @Override
     public String senSmsCode(String phone) {
         String verifyKey = Constants.SMS_CODE_KEY + phone;
+        // 短信发送限制参数校验
+        checkSmsLimit(phone);
+
         String code = numRandom(6);
 //        AjaxResult response = smsService.sendVerifyCodeByUMS(phone,code);
-        AjaxResult response = smsService.sendVerifyCodeByCredit(phone,code);
+        AjaxResult response = smsService.sendVerifyCodeByCredit(phone, code);
         int resultCode = (int) response.get(AjaxResult.CODE_TAG);
-        if (HttpStatus.SUCCESS == resultCode){//发送短信成功
-            redisCache.setCacheObject(verifyKey, code, Constants.SMS_CODE_EXPIRATION, TimeUnit.MINUTES);
+        if (HttpStatus.SUCCESS == resultCode) {//发送短信成功
+            // 短信发送限制参数设置
+            setSmsLimit(phone, code);
             return code;
         }else {
             String msg = (String) response.get(AjaxResult.MSG_TAG);
-            //TODO:暂未校验相关错误，存在安全漏洞
-            throw new UserException(null , null, msg);
+            //返回其他短信发送错误原因
+            throw new UserException(null, null, msg);
         }
 
     }
+
+    // 短信发送限制校验
+    private void checkSmsLimit(String phone) {
+        String date = DateUtils.getDate();
+
+        //校验：每日手机号最大发送量
+        String verifyCheckKey = Constants.SMS_CODE_CHECK_KEY + date + ":" + phone;
+        int sendCount = redisCache.getCacheObject(verifyCheckKey) == null ? 0 :
+                redisCache.getCacheObject(verifyCheckKey);
+        if (sendCount >= Constants.SMS_CODE_LIMIT_PERDAY) {
+            throw new UserException(null, null, "同一号码发送次数太多,一天内手机号码验证码最大发送次数为" + Constants.SMS_CODE_LIMIT_PERDAY + "次");
+
+        }
+
+        //校验： 短信发送间隔 60*1000毫秒
+        Long sendTime = System.currentTimeMillis(); // 当前计划发送时间
+
+        String lastSendTimeKey = Constants.SMS_CODE_INTERVAL_KEY + phone;
+        // 获取上次短信发送时间
+        Long lastSendTime = redisCache.getCacheObject(lastSendTimeKey) == null ? 0L :
+                redisCache.getCacheObject(lastSendTimeKey);
+
+        if ((sendTime - lastSendTime) <= Constants.SMS_CODE_LIMIT_INTERVAL) {
+            int interval = Constants.SMS_CODE_LIMIT_INTERVAL.intValue() / (60 * 1000);
+            throw new UserException(null, null, "同一号码验证码提交过快,每" + (interval == 1 ? "" : interval) +
+                    "分钟只允许提交一次");
+        }
+
+    }
+
+    // 短信发送成功设置参数
+    private void setSmsLimit(String phone, String code) {
+        String date = DateUtils.getDate();
+
+        // 设置短信验证码缓存
+        String verifyKey = Constants.SMS_CODE_KEY + phone;
+        redisCache.setCacheObject(verifyKey, code, Constants.SMS_CODE_EXPIRATION, TimeUnit.MINUTES);
+
+        //设置：每日手机号发送量
+        String verifyCheckKey = Constants.SMS_CODE_CHECK_KEY + date + ":" + phone;
+        int sendCount = redisCache.getCacheObject(verifyCheckKey) == null ? 0 :
+                redisCache.getCacheObject(verifyCheckKey);
+
+        redisCache.setCacheObject(verifyCheckKey, sendCount + 1, 24, TimeUnit.HOURS);
+
+        //设置： 短信发送间隔 60*1000毫秒
+        Long sendTime = System.currentTimeMillis(); // 当前计划发送时间
+
+        String SendTimeKey = Constants.SMS_CODE_INTERVAL_KEY + phone;
+
+        redisCache.setCacheObject(SendTimeKey, sendTime, Constants.SMS_CODE_LIMIT_INTERVAL.intValue(),
+                TimeUnit.MILLISECONDS);
+
+
+    }
+
 
     @Override
     public JSONObject getUserInfo(String userId,String token) {

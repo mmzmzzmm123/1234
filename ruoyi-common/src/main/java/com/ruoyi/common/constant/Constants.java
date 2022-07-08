@@ -66,6 +66,16 @@ public class Constants
     public static final String SMS_CODE_KEY = "sms_codes:";
 
     /**
+     * 短信验证码校验 redis key
+     */
+    public static final String SMS_CODE_CHECK_KEY = "sms_check_times_code:";
+
+    /**
+     * 短信发送间隔校验 redis key
+     */
+    public static final String SMS_CODE_INTERVAL_KEY = "sms_check_last_send_time_code:";
+
+    /**
      * 贷款信息 redis key
      */
     public static final String LOAN_CODE_KEY = "loan_codes:";
@@ -89,6 +99,16 @@ public class Constants
      * 短信验证码有效期（分钟）
      */
     public static final Integer SMS_CODE_EXPIRATION = 2;
+
+    /**
+     * 短信发送次数限制 （次/天）
+     */
+    public static final Integer SMS_CODE_LIMIT_PERDAY = 5;
+
+    /**
+     * 短信发送间隔（毫秒）
+     */
+    public static final Long SMS_CODE_LIMIT_INTERVAL = 60*1000L;
 
     /**
      * 是否允许贷款的期限 3天
