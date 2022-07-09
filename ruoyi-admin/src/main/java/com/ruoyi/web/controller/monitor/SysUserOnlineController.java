@@ -1,16 +1,5 @@
 package com.ruoyi.web.controller.monitor;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
 import com.ruoyi.common.annotation.Log;
 import com.ruoyi.common.constant.CacheConstants;
 import com.ruoyi.common.core.controller.BaseController;
@@ -22,6 +11,16 @@ import com.ruoyi.common.enums.BusinessType;
 import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.system.domain.SysUserOnline;
 import com.ruoyi.system.service.ISysUserOnlineService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.Cursor;
+import org.springframework.data.redis.core.RedisCallback;
+import org.springframework.data.redis.core.ScanOptions;
+import org.springframework.data.redis.core.StringRedisTemplate;
+import org.springframework.data.redis.serializer.RedisSerializer;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.*;
 
 /**
  * 在线用户监控
@@ -38,11 +37,14 @@ public class SysUserOnlineController extends BaseController
     @Autowired
     private RedisCache redisCache;
 
+    @Autowired
+    private StringRedisTemplate redisTemplate;
+
     @PreAuthorize("@ss.hasPermi('monitor:online:list')")
     @GetMapping("/list")
     public TableDataInfo list(String ipaddr, String userName)
     {
-        Collection<String> keys = redisCache.keys(CacheConstants.LOGIN_TOKEN_KEY + "*");
+        Collection<String> keys = this.scanKeys(CacheConstants.LOGIN_TOKEN_KEY);
         List<SysUserOnline> userOnlineList = new ArrayList<SysUserOnline>();
         for (String key : keys)
         {
@@ -77,6 +79,21 @@ public class SysUserOnlineController extends BaseController
         userOnlineList.removeAll(Collections.singleton(null));
         return getDataTable(userOnlineList);
     }
+
+    protected Set<String> scanKeys(@PathVariable String cacheName) {
+        return redisTemplate.execute((RedisCallback<Set<String>>) conn -> {
+            RedisSerializer<String> keySerializer = redisTemplate.getStringSerializer();
+            Set<String> keys = new HashSet<>(50);
+            Cursor<byte[]> cursor = conn.scan(ScanOptions.scanOptions().match(cacheName + "*")
+                    .count(50).build());
+            while (cursor.hasNext()) {
+                keys.add(keySerializer.deserialize(cursor.next()));
+            }
+
+            return keys;
+        });
+    }
+
 
     /**
      * 强退用户

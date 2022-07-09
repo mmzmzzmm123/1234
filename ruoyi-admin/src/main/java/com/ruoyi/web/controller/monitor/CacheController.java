@@ -1,25 +1,19 @@
 package com.ruoyi.web.controller.monitor;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Properties;
-import java.util.Set;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.redis.core.RedisCallback;
-import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
 import com.ruoyi.common.constant.CacheConstants;
 import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.system.domain.SysCache;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.Cursor;
+import org.springframework.data.redis.core.RedisCallback;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.ScanOptions;
+import org.springframework.data.redis.serializer.RedisSerializer;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.*;
 
 /**
  * 缓存监控
@@ -78,8 +72,8 @@ public class CacheController
     @GetMapping("/getKeys/{cacheName}")
     public AjaxResult getCacheKeys(@PathVariable String cacheName)
     {
-        Set<String> cacheKyes = redisTemplate.keys(cacheName + "*");
-        return AjaxResult.success(cacheKyes);
+        Set<String> cacheKeys = scanKeys(cacheName);
+        return AjaxResult.success(cacheKeys);
     }
 
     @PreAuthorize("@ss.hasPermi('monitor:cache:list')")
@@ -95,9 +89,22 @@ public class CacheController
     @DeleteMapping("/clearCacheName/{cacheName}")
     public AjaxResult clearCacheName(@PathVariable String cacheName)
     {
-        Collection<String> cacheKeys = redisTemplate.keys(cacheName + "*");
-        redisTemplate.delete(cacheKeys);
+        Set<String> keys = scanKeys(cacheName);
+        redisTemplate.delete(keys);
         return AjaxResult.success();
+    }
+
+    protected Set<String> scanKeys(String cacheName) {
+        return redisTemplate.execute((RedisCallback<Set<String>>) conn -> {
+            RedisSerializer<String> keySerializer = redisTemplate.getStringSerializer();
+            Set<String> keys = new HashSet<>(1000);
+            Cursor<byte[]> cursor = conn.scan(ScanOptions.scanOptions().match(cacheName + "*").count(1000).build());
+            while (cursor.hasNext()) {
+                keys.add(keySerializer.deserialize(cursor.next()));
+            }
+
+            return keys;
+        });
     }
 
     @PreAuthorize("@ss.hasPermi('monitor:cache:list')")
@@ -112,8 +119,10 @@ public class CacheController
     @DeleteMapping("/clearCacheAll")
     public AjaxResult clearCacheAll()
     {
-        Collection<String> cacheKeys = redisTemplate.keys("*");
-        redisTemplate.delete(cacheKeys);
+        for (SysCache cache : caches) {
+            Set<String> cacheKeys = scanKeys(cache.getCacheName());
+            redisTemplate.delete(cacheKeys);
+        }
         return AjaxResult.success();
     }
 }
