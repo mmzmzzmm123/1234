@@ -94,7 +94,7 @@ public class CacheController
         return AjaxResult.success();
     }
 
-    protected Set<String> scanKeys(@PathVariable String cacheName) {
+    protected Set<String> scanKeys(String cacheName) {
         return redisTemplate.execute((RedisCallback<Set<String>>) conn -> {
             RedisSerializer<String> keySerializer = redisTemplate.getStringSerializer();
             Set<String> keys = new HashSet<>(1000);
