@@ -30,6 +30,44 @@ public class request_getAllIndex {
         getAllIndexFundamental(allIndexList, fundamentalURL);
     }
 
+    //
+    private static void getAllIndexFundamental(List<String[]> codeNameLaunchdateList, String fundamentalURL) throws IOException, ParseException {
+        // 获取所有的code列表--------------------------------
+        List<String> allCodeList = new ArrayList<>();
+        List<List<String>> doubleList = new ArrayList<>();
+        getAllCodeList(codeNameLaunchdateList, allCodeList, doubleList);
+        // 请求数据 and 得到结果-------------------------
+        List<String> paramAllIndexJsonList = new ArrayList<>();
+        List<String> resultAllIndexJsonList = new ArrayList<>();
+        List<fundamentalResult_RootVO> resultObjList = new ArrayList<>();
+        getAndRequestData(doubleList, paramAllIndexJsonList, fundamentalURL, resultAllIndexJsonList, resultObjList);
+
+        // 将两个 resultObjList 进行合并--------------------
+        for (int i = 1; i < doubleList.size(); i++) {
+            resultObjList.get(0).getData().addAll(resultObjList.get(i).getData());
+        }
+        List<fundamentalReulst_DataVO> fundamentalDataVOList = new ArrayList<>();
+        fundamentalDataVOList.addAll(resultObjList.get(0).getData());
+        System.out.println("总fundamentalDataVO个数==" + fundamentalDataVOList.size());
+
+        // 获取codeNameCvpos--------------------------------------
+        List<String[]> codeNameCvposList = new ArrayList<>();
+        getCodeNameCvpos(codeNameCvposList, fundamentalDataVOList);
+
+        // 将 codeNameCvpos 和 codeNameDate 进行合并
+        for (String[] codeNameCvpos : codeNameCvposList) {
+            for (String[] codeNameDate : codeNameLaunchdateList) {
+                if (codeNameCvpos[0].equals(codeNameDate[0])) {
+                    codeNameCvpos[1] = codeNameDate[1];
+                }
+            }
+        }
+        for (int i = 0; i < codeNameCvposList.size(); i++) {
+            System.out.println("codeNameCvposList=" + Arrays.toString(codeNameCvposList.get(i)));
+        }
+    }
+
+    // 只需要某一个时间之后的数据
     private static List<String[]> getCodeNameLaucndate(allIndexResult_RootVO resultObj) {
         List<String[]> list = new ArrayList<>();
         for (allIndexResult_DataVO datavo : resultObj.getData()) {
@@ -44,18 +82,18 @@ public class request_getAllIndex {
         return list;
     }
 
-    //
-    private static void getAllIndexFundamental(List<String[]> codeNameLaunchdateList, String fundamentalURL) throws IOException, ParseException {
-        List<String> allCodeList = new ArrayList<>();
+    // 获取AllCodeList列表：包含小于指定数量的多个列表。在2022年时，每次请求只支持小于100个数据
+    private static List<List<String>> getAllCodeList(List<String[]> codeNameLaunchdateList, List<String> allCodeList, List<List<String>> doubleList) {
         for (int i = 0; i < codeNameLaunchdateList.size(); i++) {
             allCodeList.add(codeNameLaunchdateList.get(i)[0]);
         }
+        // 新建n个列表
         int singleListLength = 100;
-        List<List<String>> doubleList = new ArrayList<>();
         for (int i = 0; i < allCodeList.size() / singleListLength + 1; i++) {
             doubleList.add(new ArrayList<>());
         }
         System.out.println("allCodeList.size()=" + allCodeList.size());
+        // doubleList中的每个列表，装入小于 singleListLength 个代码
         int j = 0;
         for (int i = 1; i < allCodeList.size() + 1; i++) {
             doubleList.get(j).add(allCodeList.get(i - 1));
@@ -63,37 +101,35 @@ public class request_getAllIndex {
                 j++;
             }
         }
-        List<String> paramAllIndexJsonList = new ArrayList<>();
+        return null;
+    }
+
+    private static void getAndRequestData(List<List<String>> doubleList, List<String> paramAllIndexJsonList, String fundamentalURL, List<String> resultAllIndexJsonList, List<fundamentalResult_RootVO> resultObjList) throws IOException, ParseException {
         for (int i = 0; i < doubleList.size(); i++) {
             paramAllIndexJsonList.add(getAllIndexParamJson(doubleList.get(i)));
         }
 //        paramAllIndexJsonList.forEach(System.out::println);
         System.out.println("111111111111111111");
-        List<String> resultAllIndexJsonList = new ArrayList<>();
+        // 请求数据后，得到结果List
         for (int i = 0; i < doubleList.size(); i++) {
             resultAllIndexJsonList.add(netRequest.jsonNetPost(fundamentalURL, paramAllIndexJsonList.get(i)));
         }
 //        resultAllIndexJsonList.forEach(System.out::println);
-        System.out.println("222222222222222");
-        List<fundamentalResult_RootVO> resultObjList = new ArrayList<>();
+        System.out.println("222222222222222222");
         for (int i = 0; i < doubleList.size(); i++) {
             resultObjList.add((fundamentalResult_RootVO) getResultObj(resultAllIndexJsonList.get(i)));
         }
         System.out.println(resultObjList.size());
-        //TODO 怎么将两个对象合并为一个对象
-        for (int i = 1; i < doubleList.size(); i++) {
-            resultObjList.get(0).getData().addAll(resultObjList.get(i).getData());
-        }
-        List<fundamentalReulst_DataVO> fundamentalDataVOList = new ArrayList<>();
-        fundamentalDataVOList.addAll(resultObjList.get(0).getData());
-        System.out.println("总fundamentalDataVO个数==" + fundamentalDataVOList.size());
-        List<String[]> codeNameCvposList = new ArrayList<>();
+    }
 
+    // 获取codeNameCvpos
+    private static void getCodeNameCvpos(List<String[]> codeNameCvposList, List<fundamentalReulst_DataVO> fundamentalDataVOList) {
         for (fundamentalReulst_DataVO vo : fundamentalDataVOList) {
 //            System.out.println(vo);
             double result = calculateAllIndexFundamental(vo);
-            codeNameCvposList.add(new String[]{vo.getStockCode(),"", String.format("%.2f", result * 100)});
+            codeNameCvposList.add(new String[]{vo.getStockCode(), "", String.format("%.2f", result * 100)});
         }
+        // 按综合百分位进行升序
         Collections.sort(codeNameCvposList, new Comparator<String[]>() {
             @Override
             public int compare(String[] o1, String[] o2) {
@@ -101,17 +137,6 @@ public class request_getAllIndex {
                 return compare;
             }
         });
-
-        for (String[] codeNameCvpos : codeNameCvposList) {
-            for (String[] codeNameDate : codeNameLaunchdateList) {
-                if (codeNameCvpos[0].equals(codeNameDate[0])) {
-                    codeNameCvpos[1] = codeNameDate[1];
-                }
-            }
-        }
-        for (int i = 0; i < codeNameCvposList.size(); i++) {
-            System.out.println("codeNameCvposList=" + Arrays.toString(codeNameCvposList.get(i)));
-        }
     }
 
     // 计算综合百分位
