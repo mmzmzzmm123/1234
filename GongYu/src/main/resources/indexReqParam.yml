@@ -15,8 +15,8 @@ metricsList:
   - ps_ttm.y20.median
   - cp
 fsType_bank: bank
-allIndex:
-  - 1000009
-  - 1000008
-  - 000824
-  - 1000010
+removeCode:
+  - "1000009"
+  - "1000008"
+  - "000824"
+  - "1000010"
