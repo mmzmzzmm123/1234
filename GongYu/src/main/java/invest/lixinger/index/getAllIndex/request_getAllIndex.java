@@ -44,7 +44,7 @@ public class request_getAllIndex {
         return list;
     }
 
-    //由于只能使用100个指数，所以放弃这个操作
+    //
     private static void getAllIndexFundamental(List<String[]> codeNameLaunchdateList, String fundamentalURL) throws IOException, ParseException {
         List<String> allCodeList = new ArrayList<>();
         for (int i = 0; i < codeNameLaunchdateList.size(); i++) {
