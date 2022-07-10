@@ -21,7 +21,7 @@ public class getParam_fundamental {
 
         String token = (String) indexReqParam.get("token");
         String dateYml = (String) indexReqParam.get("enddate");
-        String date= getResult_NoHoliday.getResult_NoHoliday(Integer.parseInt(dateYml.substring(0,4)), Integer.parseInt(dateYml.substring(5,7)));
+        String date= getResult_NoHoliday.getResult_NoHoliday(Integer.parseInt(dateYml.substring(0,4)));
         List<String> stockCodes= (List<String>) indexReqParam.get("stockCodes");
         List<String> metricsList = (List<String>) indexReqParam.get("metricsList");
 
@@ -42,7 +42,7 @@ public class getParam_fundamental {
         String token = (String) indexReqParam.get("token");
         String startdate =sdf.format(startDate);
         String enddateYml = (String) indexReqParam.get("enddate");
-        String enddate= getResult_NoHoliday.getResult_NoHoliday(Integer.parseInt(enddateYml.substring(0,4)), Integer.parseInt(enddateYml.substring(5,7)));
+        String enddate= getResult_NoHoliday.getResult_NoHoliday(Integer.parseInt(enddateYml.substring(0,4)));
         List<String> stockCodes= (List<String>) indexReqParam.get("stockCodes");
         List<String> metricsList = (List<String>) indexReqParam.get("metricsList");
 
@@ -62,7 +62,7 @@ public class getParam_fundamental {
         List<String> metricsList = (List<String>) indexReqParam.get("metricsList");
         String token = (String) indexReqParam.get("token");
         String dateYml = (String) indexReqParam.get("enddate");
-        String date= getResult_NoHoliday.getResult_NoHoliday(Integer.parseInt(dateYml.substring(0,4)), Integer.parseInt(dateYml.substring(5,7)));
+        String date= getResult_NoHoliday.getResult_NoHoliday(Integer.parseInt(dateYml.substring(0,4)));
 
         fundamentalParam_RootVO paramvo = new fundamentalParam_RootVO();
         paramvo.setToken(token);

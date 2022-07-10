@@ -11,13 +11,16 @@ import static invest.lixinger.utils.HolidayUtils.isBefore3Pm;
 
 public class getResult_NoHoliday {
     public static void main(String[] args) throws ParseException {
-        getResult_NoHoliday(2022, 5);
+        getResult_NoHoliday(2022);
     }
 
-    public static String getResult_NoHoliday(int year, int month) throws ParseException {
+    public static String getResult_NoHoliday(int year) throws ParseException {
+        Calendar calendar = Calendar.getInstance();
+//        int year=calendar.get(Calendar.YEAR);
+        int month = calendar.get(Calendar.MONTH) + 1;
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         Set<String> holidayAndWeekday = JJR(year, month);
-        Calendar calendar=Calendar.getInstance();
+//        Calendar calendar=Calendar.getInstance();
         if (isBefore3Pm()) {
             calendar.add(Calendar.DAY_OF_MONTH, -1); //当前时间减去一天，即一天前的时间
         }
