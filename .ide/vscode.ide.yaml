@@ -1,0 +1,74 @@
+version: smartide/v0.1
+orchestrator:
+  type: docker-compose
+  version: 3
+workspace:
+  dev-container:
+    service-name: ruoyi-dev
+    ports:
+      webide: 6800
+      ssh: 6822
+      ruoyi-ui: 8000
+      ruoyi-admin: 8080
+    ide-type: vscode
+    volumes:
+      git-config: true
+      ssh-key: true
+  services:
+    ruoyi-dev:
+      image: registry.cn-hangzhou.aliyuncs.com/smartide/smartide-java-v2-vscode:2070
+      restart: always
+      environment:
+        ROOT_PASSWORD: root123
+        LOCAL_USER_PASSWORD: root123
+      ports:
+        - 8080:8080
+        - 8000:80
+        - 6822:22
+        - 6800:3000
+      volumes:
+        - .:/home/project
+        - $HOME/.m2/repository:/home/smartide/.m2/repository
+      networks:
+        - ruoyi-dev-network
+
+    ruoyi-db:
+      image: registry.cn-hangzhou.aliyuncs.com/smartide/mysql:8.0.21
+      command: 
+        - --default-authentication-plugin=mysql_native_password
+      restart: always
+      expose:
+        - 3306
+      ports:
+        - 3306:3306
+      environment:
+        MYSQL_ROOT_PASSWORD: password
+      volumes:
+        - './.ide/.data/mysql-data:/var/lib/mysql'
+      networks:
+        - ruoyi-dev-network
+
+    ruoyi-phpmyadmin:
+      image: registry.cn-hangzhou.aliyuncs.com/boathouse/phpmyadmin:5.0.4-apache
+      restart: always
+      expose:
+        - 8090
+      ports:
+        - 8090:80
+      environment:
+        PMA_ARBITRARY: "1"
+      networks:
+        - ruoyi-dev-network
+    
+    ruoyi-redis:
+      image: registry.cn-hangzhou.aliyuncs.com/smartide/redis:6.0.6
+      restart: always
+      expose:
+        - 6379
+      ports:
+        - "6379:6379"
+      networks:
+        - ruoyi-dev-network
+  networks:
+    ruoyi-dev-network:
+      external: true
