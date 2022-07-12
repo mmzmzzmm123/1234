@@ -124,7 +124,17 @@ public class MacdTaRobot {
         EmaItem item = EMA_TEMP_CROSS_CACHE.get(key);
         if(item != null){
             Long delta = System.currentTimeMillis() - item.getTime();
-            if(delta >= 5 * 60 * 1000 && delta <= 6 * 60 * 1000){
+            Integer minutes = 5;
+            if(big.interval.intValue() == 1800){
+                minutes = 5;
+            } else if(big.interval.intValue() == 3600){
+                minutes = 7;
+            } else if(big.interval.intValue() == 7200){
+                minutes = 10;
+            } else if(big.interval.intValue() == 14400){
+                minutes = 20;
+            }
+            if(delta >= minutes * 60 * 1000 && delta <= (minutes + 2) * 60 * 1000){
                 if(hasEmaGoldCrossed(big, slowLine) && hasEmaGoldCrossed(lit, slowLine)){
                     if("tempDead".equals(item.getContent())){
                         return true;
@@ -189,7 +199,7 @@ public class MacdTaRobot {
             eamOlDeadCross = true;
             crossLat = klinesLit.get(klinesLit.size() - 2).getTimestamp().getTime();
         }
-        if(eamOlGoldCross&&eamOlDeadCross)return;
+        if(eamOlGoldCross && eamOlDeadCross) return;
 
         /******************************触发下单*******************************************************/
         log.info("MacdTaRobot  币对 {} 周期 {} 是否金叉 {}", symbol, interval, eamOlGoldCross);

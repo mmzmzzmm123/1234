@@ -213,6 +213,10 @@ public class RobotServiceImpl {
             log.info(">>>>>>>>>>  市价正向开单 {}", JSON.toJSONString(reps));
 
             if(reps != null && StringUtils.isNotEmpty(reps.getOrderId())){
+                robotOrderMapper.selectDfRobotOrderList(new DfRobotOrder().setStatus(P_STATUS_RUNNING).setRobotId(robot.getId())
+                        .setOpenSide(revertDirection(direction))).forEach(n -> {
+                    robotOrderMapper.updateDfRobotOrder(n.setStopType(STOP_REVERT));//反向清仓
+                });
                 dfRobotOrder.setBalance(dfRobotOrder.getPredictBalance()).setMaxPosition(robot.getQuantity())
                         .setPosition(robot.getQuantity()).setStatus(P_STATUS_RUNNING);
                 robotOrderMapper.insertDfRobotOrder(dfRobotOrder);
@@ -387,28 +391,17 @@ public class RobotServiceImpl {
                         List<DfRobotOrder> orders = robotOrderMapper.selectDfRobotOrderListLatest10(new DfRobotOrder().setRobotId(n.getId()));
 
                         if(orders.size() >= 3){
-                            if(STOP_REVERT.equals(orders.get(2).getStopType()) && STOP_REVERT.equals(orders.get(1).getStopType())){//反向
-                                if(P_STATUS_RUNNING.equals(orders.get(0).getStatus())){//8个周期内不能反向结束
-                                    DfRobotOrder running = orders.get(0);
-
-                                    if(running.getOpenSide().equals(direction)){
-                                        log.info("有同向订单，忽略本次开单  robot{}", n.getId());
-                                    } else if(System.currentTimeMillis() - orders.get(1).getCreateTime().getTime() < n.getBigInterval() * 1000 * 8){
-                                        log.info("试图开启反向订单，当前订单8周期保护,不能再反向");
-                                    } else {
-                                        running.setUpdateTime(new Date());
-                                        running.setStopType(STOP_REVERT);
-                                        robotOrderMapper.updateDfRobotOrder(running);
-                                        log.info("保护期已过，立即反向触发机器人 {}", JSON.toJSONString(n));
-                                        OkAgent.Credential credential = getCredential(n.getApiId());
-                                        placeIfNotPosition(credential, n, direction);
-                                    }
+                            if((STOP_REVERT.equals(orders.get(2).getStopType()) && STOP_REVERT.equals(orders.get(1).getStopType()))
+                                    || (STOP_REVERT.equals(orders.get(1).getStopType()) && STOP_REVERT.equals(orders.get(0).getStopType()))){//反向
+                                if(System.currentTimeMillis() - orders.get(1).getCreateTime().getTime() < n.getBigInterval() * 1000 * 8){
+                                    log.info("试图开启反手订单，当前订单8周期保护,不能再反向");
+                                    break;
                                 } else {
-                                    log.info("最近开单,止损出局,再次触发机器人 {}", JSON.toJSONString(n));
+                                    log.info("保护期已过，立即反向触发机器人 {}", JSON.toJSONString(n));
                                     OkAgent.Credential credential = getCredential(n.getApiId());
                                     placeIfNotPosition(credential, n, direction);
                                 }
-                            }else {
+                            } else {
                                 log.info("最近开单,止损出局,再次触发机器人 {}", JSON.toJSONString(n));
                                 OkAgent.Credential credential = getCredential(n.getApiId());
                                 placeIfNotPosition(credential, n, direction);
