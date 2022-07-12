@@ -65,6 +65,7 @@
 import { getCodeImg } from "@/api/login";
 import Cookies from "js-cookie";
 import { encrypt, decrypt } from '@/utils/jsencrypt'
+import {tansParams} from "@/utils/ruoyi";
 
 export default {
   name: "Login",
@@ -98,7 +99,14 @@ export default {
   watch: {
     $route: {
       handler: function(route) {
-        this.redirect = route.query && route.query.redirect;
+        let re_path= route.query && route.query.re_path;
+        if (re_path) {
+          let param = JSON.parse(JSON.stringify(route.query));
+          console.log(route.query);
+          delete param.re_path;
+          re_path = `${re_path}?${tansParams(param)}`;
+        }
+        this.redirect = re_path;
       },
       immediate: true
     }
