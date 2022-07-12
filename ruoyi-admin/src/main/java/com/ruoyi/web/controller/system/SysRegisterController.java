@@ -1,6 +1,7 @@
 package com.ruoyi.web.controller.system;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -34,5 +35,11 @@ public class SysRegisterController extends BaseController
         }
         String msg = registerService.register(user);
         return StringUtils.isEmpty(msg) ? success() : error(msg);
+    }
+
+    @GetMapping("/isRegister")
+    public AjaxResult register()
+    {
+        return AjaxResult.success("操作成功",configService.selectConfigByKey("sys.account.registerUser"));
     }
 }
