@@ -47,6 +47,11 @@ public class DataScopeAspect
     public static final String DATA_SCOPE_SELF = "5";
 
     /**
+     * 同父部门数据权限
+     */
+    public static final String DATA_SCOPE_SAME_PARENT_DEPT = "6";
+
+    /**
      * 数据权限过滤关键字
      */
     public static final String DATA_SCOPE = "dataScope";
@@ -120,6 +125,11 @@ public class DataScopeAspect
                     // 数据权限为仅本人且没有userAlias别名不查询任何数据
                     sqlString.append(StringUtils.format(" OR {}.dept_id = 0 ", deptAlias));
                 }
+            }
+            else if(DATA_SCOPE_SAME_PARENT_DEPT.equals(dataScope)) {
+                sqlString.append(StringUtils.format(
+                        " OR {}.dept_id IN ( SELECT dept_id FROM sys_dept WHERE parent_id = (SELECT parent_id FROM sys_dept WHERE dept_id = {})  )",
+                        deptAlias, user.getDeptId()));
             }
         }
 

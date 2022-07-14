@@ -310,6 +310,10 @@ export default {
         {
           value: "5",
           label: "仅本人数据权限"
+        },
+        {
+          value: "6",
+          label: "同父部门数据权限"
         }
       ],
       // 菜单列表
