@@ -54,8 +54,8 @@ public class FinanceProductQuery {
     // 金融产品名称
     private  String proName;
 
-    // 区域编码
-    private String capAreaId;
+    // 适用地区Id
+    private String applicationArea;
 
     @Override
     public String toString() {
@@ -207,11 +207,11 @@ public class FinanceProductQuery {
         this.proName = proName;
     }
 
-    public String getCapAreaId() {
-        return capAreaId;
+    public String getApplicationArea() {
+        return applicationArea;
     }
 
-    public void setCapAreaId(String capAreaId) {
-        this.capAreaId = capAreaId;
+    public void setApplicationArea(String applicationArea) {
+        this.applicationArea = applicationArea;
     }
 }
