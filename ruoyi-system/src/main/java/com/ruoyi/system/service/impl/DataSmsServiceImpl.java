@@ -181,21 +181,28 @@ public class DataSmsServiceImpl implements IDataSmsService {
         // 鉴权 getHeaderData +请求body
         HttpEntity requestEntity = new HttpEntity(JSON.toJSONString(map), getAuthHeader());
 
-        log.info("信用平台三期短信接口参数:{},url:{}" , requestEntity,url);
-        CreditSmsResponse response = restTemplate.postForObject(url, requestEntity, CreditSmsResponse.class);
-        log.info("信用平台三期短信接口响应:{}" , (response != null ? response.toString() : null));
-        if (response != null) {
-            String resultCode = response.getCode();
-            String resultMsg = response.getMsg();
-            String data = response.getData();
+        log.info("信用平台三期短信接口参数:{},url:{}", requestEntity, url);
 
-            if (Objects.equals(resultCode, CreditSmsResponse.SUCCESS_CODE)) {
-                return AjaxResult.success("短信发送成功");
-            } else
-                return AjaxResult.error(resultMsg + resultCode+data);
+        try {
+            CreditSmsResponse response = restTemplate.postForObject(url, requestEntity, CreditSmsResponse.class);
 
-        } else return AjaxResult.error("短信发送失败");
+            log.info("信用平台三期短信接口响应:{}", (response != null ? response.toString() : null));
+            if (response != null) {
+                String resultCode = response.getCode();
+                String resultMsg = response.getMsg();
+                String data = response.getData();
 
+                if (Objects.equals(resultCode, CreditSmsResponse.SUCCESS_CODE)) {
+                    return AjaxResult.success("短信发送成功");
+                } else
+                    return AjaxResult.error(resultMsg + resultCode + data);
+
+            } else return AjaxResult.error("短信发送失败");
+        } catch (Exception e) {
+            // 排除网络异常问题
+            log.error(e.getMessage());
+            return AjaxResult.error("短信发送失败");
+        }
 
     }
 
@@ -216,7 +223,7 @@ public class DataSmsServiceImpl implements IDataSmsService {
 
         if (headData != null && !headData.isEmpty()) {
             headData.forEach((key, value) -> {
-                requestHeaders.add(key,value);
+                requestHeaders.add(key, value);
             });
         }
 
