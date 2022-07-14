@@ -28,7 +28,7 @@ public class RestTemplateConfig {
         /**连接超时*/
         factory.setConnectTimeout(15000);
         /**读超时*/
-        factory.setReadTimeout(5000);
+        factory.setReadTimeout(15000);
         return factory;
     }
 
