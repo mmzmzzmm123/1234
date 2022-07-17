@@ -9,6 +9,7 @@
           placeholder="请选择日期">
         </el-date-picker>
       </el-form-item>
+
       <el-form-item label="总资产" prop="totalasset">
         <el-input
           v-model="queryParams.totalasset"
@@ -17,6 +18,7 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
+
       <el-form-item>
         <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
         <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
@@ -34,6 +36,7 @@
           v-hasPermi="['invest:totalasset:add']"
         >新增</el-button>
       </el-col>
+
       <el-col :span="1.5">
         <el-button
           type="success"
@@ -45,6 +48,7 @@
           v-hasPermi="['invest:totalasset:edit']"
         >修改</el-button>
       </el-col>
+
       <el-col :span="1.5">
         <el-button
           type="danger"
@@ -73,6 +77,7 @@
             @click="handleUpdate(scope.row)"
             v-hasPermi="['invest:totalasset:edit']"
           >修改</el-button>
+          
           <el-button
             size="mini"
             type="text"
