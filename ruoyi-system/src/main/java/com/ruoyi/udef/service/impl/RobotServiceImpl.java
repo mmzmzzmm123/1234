@@ -382,7 +382,7 @@ public class RobotServiceImpl {
 
     public void triggerRobot(String symbol, Long interval, String direction, String strategy) {
         try {
-            log.info("triggerRobot {} {} {] {}", symbol, interval, direction, strategy);
+            log.info("triggerRobot {} {} {} {}", symbol, interval, direction, strategy);
             List<DfApiRobot> robots = dfApiRobotMapper.selectDfApiRobotList(new DfApiRobot().setStatus(R_STATUS_RUNNING)
                     .setSymbol(symbol).setBigInterval(interval));
             for (DfApiRobot n : robots) {

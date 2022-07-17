@@ -168,7 +168,7 @@ public class TaLib {
         double[] emaSlow = emaData(ta, slowLine, close);
         if(isLogDetail){
             log.info("MacdTaRobot ema5 : {}", ema5);
-            log.info("MacdTaRobot ema : {}", slowLine, emaSlow);
+            log.info("MacdTaRobot ema : {}  {}", slowLine, emaSlow);
         }
         double fastNew = eGet(ema5, 5, -1);
         double fastOld = eGet(ema5, 5, -2);
