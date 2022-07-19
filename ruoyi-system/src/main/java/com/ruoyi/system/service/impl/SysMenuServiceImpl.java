@@ -1,12 +1,6 @@
 package com.ruoyi.system.service.impl;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -118,7 +112,7 @@ public class SysMenuServiceImpl implements ISysMenuService
         {
             menus = menuMapper.selectMenuTreeByUserId(userId);
         }
-        return getChildPerms(menus, 0);
+        return getChildPermsByMap(menus, 0);
     }
 
     /**
@@ -453,6 +447,36 @@ public class SysMenuServiceImpl implements ISysMenuService
             }
         }
         return returnList;
+    }
+
+    /**
+     * 使用Map自底向上构造菜单树
+     * @param list 需要构造的菜单列表
+     * @param parentId 顶级菜单
+     * @return 菜单
+     */
+    public List<SysMenu> getChildPermsByMap(List<SysMenu> list, int parentId) {
+        // 转为Map，将ID作为key
+        Map<Long, SysMenu> sysMenuMap = list.stream().collect(Collectors.toMap(SysMenu::getMenuId, t -> t));
+        ArrayList<SysMenu> returnMenus = new ArrayList<>();
+        Set<Long> ids = sysMenuMap.keySet();
+        for (Long id : ids) {
+            SysMenu menu = sysMenuMap.get(id);
+            // 将这个菜单连接到Tree上
+            Long menuParentId = menu.getParentId();
+            if (menuParentId == parentId) {
+                // 如果是一级菜单，则直接加入到returnList
+                returnMenus.add(menu);
+            } else {
+                // 获取父菜单，加入到其Children
+                SysMenu parentMenu = sysMenuMap.get(menuParentId);
+                if (Objects.isNull(parentMenu.getChildren())) {
+                    parentMenu.setChildren(new ArrayList<>());
+                }
+                parentMenu.getChildren().add(menu);
+            }
+        }
+        return returnMenus;
     }
 
     /**
