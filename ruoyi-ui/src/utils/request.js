@@ -1,7 +1,7 @@
 import axios from 'axios'
 import { Notification, MessageBox, Message, Loading } from 'element-ui'
 import store from '@/store'
-import { getToken } from '@/utils/auth'
+import { getAuthorization, getToken } from '@/utils/auth'
 import errorCode from '@/utils/errorCode'
 import { tansParams, blobValidate } from "@/utils/ruoyi";
 import cache from '@/plugins/cache'
@@ -27,7 +27,7 @@ service.interceptors.request.use(config => {
   // 是否需要防止数据重复提交
   const isRepeatSubmit = (config.headers || {}).repeatSubmit === false
   if (getToken() && !isToken) {
-    config.headers['Authorization'] = 'Bearer ' + getToken() // 让每个请求携带自定义token 请根据实际情况自行修改
+    config.headers['Authorization'] = getAuthorization() // 让每个请求携带自定义token 请根据实际情况自行修改
   }
   // get请求映射params参数
   if (config.method === 'get' && config.params) {
