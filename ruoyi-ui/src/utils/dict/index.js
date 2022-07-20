@@ -1,6 +1,7 @@
 import Dict from './Dict'
 import { mergeOptions } from './DictOptions'
-
+var __dictCache = new Map();
+window.__dictCache = __dictCache;
 export default function(Vue, options) {
   mergeOptions(options)
   Vue.mixin({
