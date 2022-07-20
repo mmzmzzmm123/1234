@@ -152,9 +152,6 @@
         <el-form-item label="数据键值" prop="dictValue">
           <el-input v-model="form.dictValue" placeholder="请输入数据键值" />
         </el-form-item>
-        <el-form-item label="样式属性" prop="cssClass">
-          <el-input v-model="form.cssClass" placeholder="请输入样式属性" />
-        </el-form-item>
         <el-form-item label="显示排序" prop="dictSort">
           <el-input-number v-model="form.dictSort" controls-position="right" :min="0" />
         </el-form-item>
@@ -311,7 +308,6 @@ export default {
         dictCode: undefined,
         dictLabel: undefined,
         dictValue: undefined,
-        cssClass: undefined,
         listClass: 'default',
         dictSort: 0,
         status: "0",
