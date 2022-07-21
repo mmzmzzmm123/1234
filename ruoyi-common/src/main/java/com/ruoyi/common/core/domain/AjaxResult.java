@@ -1,6 +1,8 @@
 package com.ruoyi.common.core.domain;
 
 import java.util.HashMap;
+import java.util.Objects;
+
 import com.ruoyi.common.constant.HttpStatus;
 import com.ruoyi.common.utils.StringUtils;
 
@@ -158,5 +160,23 @@ public class AjaxResult extends HashMap<String, Object>
     {
         super.put(key, value);
         return this;
+    }
+
+    /**
+     * 是否为成功消息
+     *
+     * @return true or false
+     */
+    public boolean isSuccess() {
+        return !isError();
+    }
+
+    /**
+     * 是否为错误消息
+     *
+     * @return true or false
+     */
+    public boolean isError() {
+        return Objects.equals(HttpStatus.ERROR, this.get(CODE_TAG));
     }
 }
