@@ -41,7 +41,7 @@
           <em>点击上传</em>
         </div>
         <div class="el-upload__tip text-center" slot="tip">
-          <div class="el-upload__tip" slot="tip" style="display: none;">
+          <div class="el-upload__tip" slot="tip">
             <el-checkbox v-model="uploadParams.updateSupport" />
             覆盖更新已存在的数据
           </div>
