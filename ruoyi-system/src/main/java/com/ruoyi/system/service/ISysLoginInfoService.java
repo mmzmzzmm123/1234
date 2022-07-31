@@ -13,17 +13,17 @@ public interface ISysLoginInfoService
     /**
      * 新增系统登录日志
      * 
-     * @param logininfor 访问日志对象
+     * @param loginInfo 访问日志对象
      */
-    public void insertLoginInfo(SysLoginInfo logininfor);
+    public void insertLoginInfo(SysLoginInfo loginInfo);
 
     /**
      * 查询系统登录日志集合
      * 
-     * @param logininfor 访问日志对象
+     * @param loginInfo 访问日志对象
      * @return 登录记录集合
      */
-    public List<SysLoginInfo> selectLoginInfoList(SysLoginInfo logininfor);
+    public List<SysLoginInfo> selectLoginInfoList(SysLoginInfo loginInfo);
 
     /**
      * 批量删除系统登录日志
