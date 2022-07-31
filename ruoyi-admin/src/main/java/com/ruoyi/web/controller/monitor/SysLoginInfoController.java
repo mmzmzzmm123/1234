@@ -25,13 +25,13 @@ import com.ruoyi.system.service.ISysLoginInfoService;
  * @author ruoyi
  */
 @RestController
-@RequestMapping("/monitor/logininfor")
+@RequestMapping("/monitor/logininfo")
 public class SysLoginInfoController extends BaseController
 {
     @Autowired
     private ISysLoginInfoService loginInfoService;
 
-    @PreAuthorize("@ss.hasPermi('monitor:logininfor:list')")
+    @PreAuthorize("@ss.hasPermi('monitor:logininfo:list')")
     @GetMapping("/list")
     public TableDataInfo list(SysLoginInfo loginInfo)
     {
@@ -41,7 +41,7 @@ public class SysLoginInfoController extends BaseController
     }
 
     @Log(title = "登录日志", businessType = BusinessType.EXPORT)
-    @PreAuthorize("@ss.hasPermi('monitor:logininfor:export')")
+    @PreAuthorize("@ss.hasPermi('monitor:logininfo:export')")
     @PostMapping("/export")
     public void export(HttpServletResponse response, SysLoginInfo loginInfo)
     {
@@ -50,7 +50,7 @@ public class SysLoginInfoController extends BaseController
         util.exportExcel(response, list, "登录日志");
     }
 
-    @PreAuthorize("@ss.hasPermi('monitor:logininfor:remove')")
+    @PreAuthorize("@ss.hasPermi('monitor:logininfo:remove')")
     @Log(title = "登录日志", businessType = BusinessType.DELETE)
     @DeleteMapping("/{infoIds}")
     public AjaxResult remove(@PathVariable Long[] infoIds)
@@ -58,7 +58,7 @@ public class SysLoginInfoController extends BaseController
         return toAjax(loginInfoService.deleteLoginInfoByIds(infoIds));
     }
 
-    @PreAuthorize("@ss.hasPermi('monitor:logininfor:remove')")
+    @PreAuthorize("@ss.hasPermi('monitor:logininfo:remove')")
     @Log(title = "登录日志", businessType = BusinessType.CLEAN)
     @DeleteMapping("/clean")
     public AjaxResult clean()

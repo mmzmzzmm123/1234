@@ -33,13 +33,13 @@ public class SysLoginInfoServiceImpl implements ISysLoginInfoService
     /**
      * 查询系统登录日志集合
      * 
-     * @param logininfor 访问日志对象
+     * @param loginInfo 访问日志对象
      * @return 登录记录集合
      */
     @Override
-    public List<SysLoginInfo> selectLoginInfoList(SysLoginInfo logininfor)
+    public List<SysLoginInfo> selectLoginInfoList(SysLoginInfo loginInfo)
     {
-        return loginInfoMapper.selectLoginInfoList(logininfor);
+        return loginInfoMapper.selectLoginInfoList(loginInfo);
     }
 
     /**
