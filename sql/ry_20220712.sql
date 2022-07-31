@@ -546,8 +546,8 @@ insert into sys_config values(5, '账号自助-是否开启用户注册功能', 
 -- ----------------------------
 -- 14、系统访问记录
 -- ----------------------------
-drop table if exists sys_logininfor;
-create table sys_logininfor (
+drop table if exists sys_login_info;
+create table sys_login_info (
   info_id        bigint(20)     not null auto_increment   comment '访问ID',
   user_name      varchar(50)    default ''                comment '用户账号',
   ipaddr         varchar(128)   default ''                comment '登录IP地址',
