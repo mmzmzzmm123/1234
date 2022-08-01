@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zeroone.crm.biz.mapper.TestdzcMapper">
+    
+    <resultMap type="Testdzc" id="TestdzcResult">
+        <result property="id"    column="id"    />
+        <result property="birthday"    column="birthday"    />
+        <result property="name"    column="name"    />
+    </resultMap>
+
+    <sql id="selectTestdzcVo">
+        select id, birthday, name from test_dzc
+    </sql>
+
+    <select id="selectTestdzcList" parameterType="Testdzc" resultMap="TestdzcResult">
+        <include refid="selectTestdzcVo"/>
+        <where>  
+            <if test="birthday != null "> and birthday = #{birthday}</if>
+            <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
+        </where>
+    </select>
+    
+    <select id="selectTestdzcById" parameterType="Integer" resultMap="TestdzcResult">
+        <include refid="selectTestdzcVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertTestdzc" parameterType="Testdzc" useGeneratedKeys="true" keyProperty="id">
+        insert into test_dzc
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="birthday != null">birthday,</if>
+            <if test="name != null and name != ''">name,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="birthday != null">#{birthday},</if>
+            <if test="name != null and name != ''">#{name},</if>
+         </trim>
+    </insert>
+
+    <update id="updateTestdzc" parameterType="Testdzc">
+        update test_dzc
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="birthday != null">birthday = #{birthday},</if>
+            <if test="name != null and name != ''">name = #{name},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteTestdzcById" parameterType="Integer">
+        delete from test_dzc where id = #{id}
+    </delete>
+
+    <delete id="deleteTestdzcByIds" parameterType="String">
+        delete from test_dzc where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>
