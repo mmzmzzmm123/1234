@@ -197,6 +197,7 @@
         <module>ruoyi-generator</module>
         <module>ruoyi-common</module>
         <module>ruouyi-cs</module>
+        <module>ruoyi-cs</module>
     </modules>
     <packaging>pom</packaging>
 
