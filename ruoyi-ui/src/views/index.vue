@@ -2,8 +2,8 @@
 
 <template>
   <div class="app-container home">
-    
-    
+
+
     <el-row :gutter="20">
       <el-col :sm="24" :lg="12" style="padding-left: 20px">
         <h2>校园管理框架</h2>
@@ -12,11 +12,11 @@
         </p>
       </el-col>
 
-      
+
     </el-row>
 
 
-  
+
   </div>
 </template>
 
