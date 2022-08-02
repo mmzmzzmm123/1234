@@ -7,11 +7,14 @@
     <resultMap type="com.ruoyi.system.domain.Process" id="ProcessResult">
         <id     property="processId"      column="process_id"      />
         <result property="processName"    column="process_name"    />
-        <result property="description"     column="description"     />
+        <result property="childProcessName"    column="child_process_name"    />
+        <result property="childProcessSort"    column="child_process_sort"    />
+        <result property="precondition"     column="precondition"     />
         <result property="param"   column="param"   />
+        <result property="endif"   column="endif"   />
     </resultMap>
     <select id="selectAllProcess" resultMap="ProcessResult">
-        select process_id, process_name, description, param
+        select process_id, process_name, child_process_name, child_process_sort, precondition, param, endif
         from work_process
     </select>
 

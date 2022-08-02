@@ -14,7 +14,13 @@ public class Process {
 
     private String processName;
 
-    private String description;
+    private String childProcessName;
+
+    private String childProcessSort;
+
+    private String precondition;
 
     private String param;
+
+    private String endif;
 }
