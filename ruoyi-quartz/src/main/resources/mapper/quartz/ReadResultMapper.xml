@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.quartz.mapper.ReadResultMapper">
+
+    <resultMap type="com.ruoyi.quartz.domain.ReadResult" id="ReadResult">
+        <id     property="resultId"       column="result_id"      />
+        <result property="slaveId"        column="slave_id"        />
+        <result property="address"       column="address"       />
+        <result property="value"   column="value"   />
+    </resultMap>
+
+    <insert id="saveReadResult" parameterType="com.ruoyi.quartz.domain.ReadResult">
+        insert into work_read_result(slave_id, address, `value`)
+        values (#{slaveId}, #{address}, #{value})
+    </insert>
+
+    <update id="updateReadResult" parameterType="com.ruoyi.quartz.domain.ReadResult">
+        update work_read_result set slave_id = #{slaveId}, address = #{address}, `value` = #{value}
+        where result_id = #{resultId}
+    </update>
+
+    <select id="selectAllReadResult" resultMap="ReadResult">
+        select  result_id, slave_id, address, `value`
+        from work_read_result
+    </select>
+</mapper>

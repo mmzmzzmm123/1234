@@ -5,11 +5,18 @@ import com.intelligt.modbus.jlibmodbus.exception.ModbusIOException;
 import com.intelligt.modbus.jlibmodbus.master.ModbusMaster;
 import com.intelligt.modbus.jlibmodbus.master.ModbusMasterFactory;
 import com.intelligt.modbus.jlibmodbus.tcp.TcpParameters;
+import com.ruoyi.quartz.domain.ReadResult;
+import com.ruoyi.quartz.service.IModbusService;
+import com.ruoyi.quartz.service.IReadResultService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
 
 import java.net.InetAddress;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author wjp
@@ -20,51 +27,27 @@ import java.net.InetAddress;
 public class ModbusTask {
     private static final Logger log = LoggerFactory.getLogger(ModbusTask.class);
 
-    public void getPlc()
-    {
-        System.out.println("11212");
-        try {
-            //设置主机tcp参数
-            TcpParameters tcpParameters = new TcpParameters();
-            //设置tcp的ip地址-本地地址
-            InetAddress address = InetAddress.getByName("127.0.0.1");
-            tcpParameters.setHost(address);
-            //设置长链接
-            tcpParameters.setKeepAlive(true);
-            //设置端口，默认端口502
-            tcpParameters.setPort(502);
-            //创建主机
-            ModbusMaster master = ModbusMasterFactory.createModbusMasterTCP(tcpParameters);
-            Modbus.setAutoIncrementTransactionId(true);
+    @Autowired
+    private ApplicationContext applicationContext;
 
-            int slaveId = 1;
-            int offset = 0;
-            int quantity = 10;
-
-            try {
-                if (!master.isConnected()){
-                    master.connect();
-                }
-                //读取数据
-                //功能码01 readCoils
-                //功能码02 readDiscreteInputs
-                //功能码03 readHoldingRegisters
-                //功能码04 readInputRegisters
-                int[] registerValues = master.readHoldingRegisters(slaveId, offset, quantity);
-                for (int value : registerValues){
-                    log.info("result：{}", value);
-                }
-            } catch (Exception e){
-                log.error(e.getMessage());
-            } finally {
-                try {
-                    master.disconnect();
-                } catch (ModbusIOException e){
-
-                }
-            }
-        } catch (Exception e){
-            log.error(e.getMessage());
+    public void getPlc() {
+        IModbusService modbusService = applicationContext.getBean(IModbusService.class);
+        int[] values = modbusService.readData(1, 0, 10);
+        if (values == null){
+            return;
         }
+        List<ReadResult> readResults = new ArrayList<>();
+        int address = 0;
+        for (int value : values) {
+            ReadResult readResult = new ReadResult();
+            readResult.setSlaveId(1);
+            readResult.setAddress(address);
+            readResult.setValue(value);
+            readResults.add(readResult);
+            address++;
+        }
+        IReadResultService readResultService = applicationContext.getBean(IReadResultService.class);
+        readResultService.saveOrUpdateReadResult(readResults);
+        log.info("从设备获取数据成功");
     }
 }
