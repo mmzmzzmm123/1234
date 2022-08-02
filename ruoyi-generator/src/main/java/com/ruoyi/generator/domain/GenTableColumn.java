@@ -35,26 +35,26 @@ public class GenTableColumn extends BaseEntity
     @NotBlank(message = "Java属性不能为空")
     private String javaField;
 
-    /** 是否主键（1是） */
-    private String isPk;
+    /** 是否主键 */
+    private Boolean isPk;
 
-    /** 是否自增（1是） */
-    private String isIncrement;
+    /** 是否自增 */
+    private Boolean isIncrement;
 
-    /** 是否必填（1是） */
-    private String isRequired;
+    /** 是否必填 */
+    private Boolean isRequired;
 
-    /** 是否为插入字段（1是） */
-    private String isInsert;
+    /** 是否为插入字段 */
+    private Boolean isInsert;
 
-    /** 是否编辑字段（1是） */
-    private String isEdit;
+    /** 是否编辑字段 */
+    private Boolean isEdit;
 
-    /** 是否列表字段（1是） */
-    private String isList;
+    /** 是否列表字段 */
+    private Boolean isList;
 
-    /** 是否查询字段（1是） */
-    private String isQuery;
+    /** 是否查询字段 */
+    private Boolean isQuery;
 
     /** 查询方式（EQ等于、NE不等于、GT大于、LT小于、LIKE模糊、BETWEEN范围） */
     private String queryType;
@@ -143,144 +143,75 @@ public class GenTableColumn extends BaseEntity
         return StringUtils.capitalize(javaField);
     }
 
-    public void setIsPk(String isPk)
+    public void setIsPk(Boolean isPk)
     {
         this.isPk = isPk;
     }
 
-    public String getIsPk()
+    public Boolean getIsPk()
     {
         return isPk;
     }
 
-    public boolean isPk()
-    {
-        return isPk(this.isPk);
-    }
-
-    public boolean isPk(String isPk)
-    {
-        return isPk != null && StringUtils.equals("1", isPk);
-    }
-
-    public String getIsIncrement()
+    public Boolean getIsIncrement()
     {
         return isIncrement;
     }
 
-    public void setIsIncrement(String isIncrement)
+    public void setIsIncrement(Boolean isIncrement)
     {
         this.isIncrement = isIncrement;
     }
 
-    public boolean isIncrement()
-    {
-        return isIncrement(this.isIncrement);
-    }
 
-    public boolean isIncrement(String isIncrement)
-    {
-        return isIncrement != null && StringUtils.equals("1", isIncrement);
-    }
-
-    public void setIsRequired(String isRequired)
+    public void setIsRequired(Boolean isRequired)
     {
         this.isRequired = isRequired;
     }
 
-    public String getIsRequired()
+    public Boolean getIsRequired()
     {
         return isRequired;
     }
 
-    public boolean isRequired()
-    {
-        return isRequired(this.isRequired);
-    }
-
-    public boolean isRequired(String isRequired)
-    {
-        return isRequired != null && StringUtils.equals("1", isRequired);
-    }
-
-    public void setIsInsert(String isInsert)
+    public void setIsInsert(Boolean isInsert)
     {
         this.isInsert = isInsert;
     }
 
-    public String getIsInsert()
+    public Boolean getIsInsert()
     {
         return isInsert;
     }
 
-    public boolean isInsert()
-    {
-        return isInsert(this.isInsert);
-    }
-
-    public boolean isInsert(String isInsert)
-    {
-        return isInsert != null && StringUtils.equals("1", isInsert);
-    }
-
-    public void setIsEdit(String isEdit)
+    public void setIsEdit(Boolean isEdit)
     {
         this.isEdit = isEdit;
     }
 
-    public String getIsEdit()
+    public Boolean getIsEdit()
     {
         return isEdit;
     }
 
-    public boolean isEdit()
-    {
-        return isInsert(this.isEdit);
-    }
-
-    public boolean isEdit(String isEdit)
-    {
-        return isEdit != null && StringUtils.equals("1", isEdit);
-    }
-
-    public void setIsList(String isList)
+    public void setIsList(Boolean isList)
     {
         this.isList = isList;
     }
 
-    public String getIsList()
+    public Boolean getIsList()
     {
         return isList;
     }
 
-    public boolean isList()
-    {
-        return isList(this.isList);
-    }
-
-    public boolean isList(String isList)
-    {
-        return isList != null && StringUtils.equals("1", isList);
-    }
-
-    public void setIsQuery(String isQuery)
+    public void setIsQuery(Boolean isQuery)
     {
         this.isQuery = isQuery;
     }
 
-    public String getIsQuery()
+    public Boolean getIsQuery()
     {
         return isQuery;
-    }
-
-    public boolean isQuery()
-    {
-        return isQuery(this.isQuery);
-    }
-
-    public boolean isQuery(String isQuery)
-    {
-        return isQuery != null && StringUtils.equals("1", isQuery);
     }
 
     public void setQueryType(String queryType)
