@@ -186,6 +186,8 @@
                     v-hasPermi="['system:user:resetPwd']">重置密码</el-dropdown-item>
                   <el-dropdown-item command="handleAuthRole" icon="el-icon-circle-check"
                     v-hasPermi="['system:user:edit']">分配角色</el-dropdown-item>
+                  <el-dropdown-item command="handleSendMail" icon="el-icon-circle-check"
+                                    v-hasPermi="['system:user:edit']">发送邮件</el-dropdown-item>
                 </el-dropdown-menu>
               </el-dropdown>
             </template>
@@ -553,6 +555,9 @@ export default {
         case "handleAuthRole":
           this.handleAuthRole(row);
           break;
+        case "handleSendMail":
+          this.handleSendMail(row);
+          break;
         default:
           break;
       }
@@ -603,6 +608,18 @@ export default {
     handleAuthRole: function(row) {
       const userId = row.userId;
       this.$router.push("/system/user-auth/role/" + userId);
+    },
+    /** 发送邮件 */
+    handleSendMail(row) {
+      this.$prompt('请输入邮件内容', "发送邮件", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        closeOnClickModal: false,
+      }).then(({ value }) => {
+        resetUserPwd(row.userId, value).then(response => {
+          this.$modal.msgSuccess("修改成功，新密码是：" + value);
+        });
+      }).catch(() => {});
     },
     /** 提交按钮 */
     submitForm: function() {

@@ -6,16 +6,16 @@ spring:
         druid:
             # 主库数据源
             master:
-                url: jdbc:mysql://localhost:3306/ry-vue?useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=true&serverTimezone=GMT%2B8
+                url: jdbc:mysql://localhost:3306/Radish?useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=true&serverTimezone=GMT%2B8
                 username: root
-                password: password
+                password: root
             # 从库数据源
             slave:
                 # 从数据源开关/默认关闭
-                enabled: false
-                url: 
-                username: 
-                password: 
+                enabled: true
+                url: jdbc:mysql://localhost:3307/student?useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=true&serverTimezone=GMT%2B8
+                username: root
+                password: root
             # 初始连接数
             initialSize: 5
             # 最小连接池数量
@@ -55,3 +55,11 @@ spring:
                 wall:
                     config:
                         multi-statement-allow: true
+    # 配置flyway数据版本管理
+    flyway:
+        enabled: true
+        baseline-on-migrate: true
+        clean-on-validation-error: false
+        sql-migration-prefix: V
+        sql-migration-suffixes: .sql
+        locations: classpath:db/Radish
