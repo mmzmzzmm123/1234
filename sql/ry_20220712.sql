@@ -49,7 +49,7 @@ insert into sys_dept values(106,  101, '0,100,101',  '财务部门',   4, '若�
 insert into sys_dept values(107,  101, '0,100,101',  '运维部门',   5, '若依', '15888888888', 'ry@qq.com', '0', '0', 'admin', now(), '', null);
 insert into sys_dept values(108,  102, '0,100,102',  '市场部门',   1, '若依', '15888888888', 'ry@qq.com', '0', '0', 'admin', now(), '', null);
 insert into sys_dept values(109,  102, '0,100,102',  '财务部门',   2, '若依', '15888888888', 'ry@qq.com', '0', '0', 'admin', now(), '', null);
-
+alter sequence sys_dept_dept_id_seq restart with 110;
 
 -- ----------------------------
 -- 2、用户信息表
@@ -103,7 +103,7 @@ comment on column sys_user.remark is '备注';
 -- ----------------------------
 insert into sys_user values(1,  103, 'admin', '若依', '00', 'ry@163.com', '15888888888', '1', '', '$2a$10$7JB720yubVSZvUI0rEqK/.VqGOZTH.ulu33dHOiBE8ByOhJIrdAu2', '0', '0', '127.0.0.1', now(), 'admin', now(), '', null, '管理员');
 insert into sys_user values(2,  105, 'ry',    '若依', '00', 'ry@qq.com',  '15666666666', '1', '', '$2a$10$7JB720yubVSZvUI0rEqK/.VqGOZTH.ulu33dHOiBE8ByOhJIrdAu2', '0', '0', '127.0.0.1', now(), 'admin', now(), '', null, '测试员');
-
+alter sequence sys_user_user_id_seq restart with 3;
 
 -- ----------------------------
 -- 3、岗位信息表
@@ -143,7 +143,7 @@ insert into sys_post values(1, 'ceo',  '董事长',    1, '0', 'admin', now(), '
 insert into sys_post values(2, 'se',   '项目经理',  2, '0', 'admin', now(), '', null, '');
 insert into sys_post values(3, 'hr',   '人力资源',  3, '0', 'admin', now(), '', null, '');
 insert into sys_post values(4, 'user', '普通员工',  4, '0', 'admin', now(), '', null, '');
-
+alter sequence sys_post_post_id_seq restart with 5;
 
 -- ----------------------------
 -- 4、角色信息表
@@ -182,13 +182,12 @@ comment on column sys_role.create_time is '创建时间';
 comment on column sys_role.update_by is '更新者';
 comment on column sys_role.update_time is '更新时间';
 comment on column sys_role.remark is '备注';
-
 -- ----------------------------
 -- 初始化-角色信息表数据
 -- ----------------------------
 insert into sys_role values(1, '超级管理员',  'admin',  1, '1', true, true, '0', '0', 'admin', now(), '', null, '超级管理员');
 insert into sys_role values(2, '普通角色',    'common', 2, '2', true, true, '0', '0', 'admin', now(), '', null, '普通角色');
-
+alter sequence sys_role_role_id_seq restart with 3;
 
 -- ----------------------------
 -- 5、菜单权限表
@@ -341,7 +340,7 @@ insert into sys_menu values(1056, '生成删除', 115, 3, '#', '', '', false, tr
 insert into sys_menu values(1057, '导入代码', 115, 2, '#', '', '', false, true, 'F', '0', '0', 'tool:gen:import',            '#', 'admin', now(), '', null, '');
 insert into sys_menu values(1058, '预览代码', 115, 4, '#', '', '', false, true, 'F', '0', '0', 'tool:gen:preview',           '#', 'admin', now(), '', null, '');
 insert into sys_menu values(1059, '生成代码', 115, 5, '#', '', '', false, true, 'F', '0', '0', 'tool:gen:code',              '#', 'admin', now(), '', null, '');
-
+alter sequence sys_menu_menu_id_seq restart with 1060;
 
 -- ----------------------------
 -- 6、用户和角色关联表  用户N-1角色
@@ -592,7 +591,7 @@ insert into sys_dict_type values(7,  '通知类型', 'sys_notice_type',     '0',
 insert into sys_dict_type values(8,  '通知状态', 'sys_notice_status',   '0', 'admin', now(), '', null, '通知状态列表');
 insert into sys_dict_type values(9,  '操作类型', 'sys_oper_type',       '0', 'admin', now(), '', null, '操作类型列表');
 insert into sys_dict_type values(10, '系统状态', 'sys_common_status',   '0', 'admin', now(), '', null, '登录状态列表');
-
+alter sequence sys_dict_type_dict_id_seq restart with 11;
 
 -- ----------------------------
 -- 12、字典数据表
@@ -662,7 +661,7 @@ insert into sys_dict_data values(25, 8,  '生成代码', '8',       'sys_oper_ty
 insert into sys_dict_data values(26, 9,  '清空数据', '9',       'sys_oper_type',       '',   'danger',  false, '0', 'admin', now(), '', null, '清空操作');
 insert into sys_dict_data values(27, 1,  '成功',     '0',       'sys_common_status',   '',   'primary', false, '0', 'admin', now(), '', null, '正常状态');
 insert into sys_dict_data values(28, 2,  '失败',     '1',       'sys_common_status',   '',   'danger',  false, '0', 'admin', now(), '', null, '停用状态');
-
+alter sequence sys_dict_data_dict_code_seq restart with 29;
 
 -- ----------------------------
 -- 13、参数配置表
@@ -700,7 +699,7 @@ insert into sys_config values(2, '用户管理-账号初始密码',         'sys
 insert into sys_config values(3, '主框架页-侧边栏主题',           'sys.index.sideTheme',           'theme-dark',    'Y', 'admin', now(), '', null, '深色主题theme-dark，浅色主题theme-light' );
 insert into sys_config values(4, '账号自助-验证码开关',           'sys.account.captchaEnabled',    'true',          'Y', 'admin', now(), '', null, '是否开启验证码功能（true开启，false关闭）');
 insert into sys_config values(5, '账号自助-是否开启用户注册功能', 'sys.account.registerUser',      'false',         'Y', 'admin', now(), '', null, '是否开启注册用户功能（true开启，false关闭）');
-
+alter sequence sys_config_config_id_seq restart with 6;
 
 -- ----------------------------
 -- 14、系统访问记录
@@ -769,7 +768,7 @@ comment on column sys_job.remark is '备注';
 insert into sys_job values(1, '系统默认（无参）', 'DEFAULT', 'ryTask.ryNoParams',       '0/10 * * * * ?', '3', false, '1', 'admin', now(), '', null, '');
 insert into sys_job values(2, '系统默认（有参）', 'DEFAULT', 'ryTask.ryParams(''ry'')',  '0/15 * * * * ?', '3', false, '1', 'admin', now(), '', null, '');
 insert into sys_job values(3, '系统默认（多参）', 'DEFAULT', 'ryTask.ryMultipleParams(''ry'', true, 2000L, 316.50D, 100)',  '0/20 * * * * ?', '3', false, '1', 'admin', now(), '', null, '');
-
+alter sequence sys_job_job_id_seq restart with 4;
 
 -- ----------------------------
 -- 16、定时任务调度日志表
@@ -832,7 +831,7 @@ comment on column sys_notice.remark is '备注';
 -- ----------------------------
 insert into sys_notice values(1, '温馨提醒：2018-07-01 若依新版本发布啦', '2', '新版本内容', '0', 'admin', now(), '', null, '管理员');
 insert into sys_notice values(2, '维护通知：2018-07-01 若依系统凌晨维护', '1', '维护内容',   '0', 'admin', now(), '', null, '管理员');
-
+alter sequence sys_notice_notice_id_seq restart with 3;
 
 -- ----------------------------
 -- 18、代码生成业务表
