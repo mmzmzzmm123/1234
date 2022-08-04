@@ -42,7 +42,7 @@ public interface SysDeptMapper
      * @param deptId 部门ID
      * @return 部门列表
      */
-    public List<SysDept> selectChildrenDeptById(Long deptId);
+    public List<SysDept> selectChildrenDeptById(String deptId);
 
     /**
      * 根据ID查询所有子部门（正常状态）

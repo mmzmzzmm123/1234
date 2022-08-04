@@ -302,14 +302,14 @@ public class GenTableServiceImpl implements IGenTableService
             {
                 GenTableColumn prevColumn = tableColumnMap.get(column.getColumnName());
                 column.setColumnId(prevColumn.getColumnId());
-                if (column.isList())
+                if (column.getIsList())
                 {
                     // 如果是列表，继续保留查询方式/字典类型选项
                     column.setDictType(prevColumn.getDictType());
                     column.setQueryType(prevColumn.getQueryType());
                 }
-                if (StringUtils.isNotEmpty(prevColumn.getIsRequired()) && !column.isPk()
-                        && (column.isInsert() || column.isEdit())
+                if (prevColumn.getIsRequired() && !column.getIsPk()
+                        && (column.getIsInsert() || column.getIsEdit())
                         && ((column.isUsableColumn()) || (!column.isSuperColumn())))
                 {
                     // 如果是(新增/修改&非主键/非忽略及父属性)，继续保留必填/显示类型选项
@@ -437,7 +437,7 @@ public class GenTableServiceImpl implements IGenTableService
     {
         for (GenTableColumn column : table.getColumns())
         {
-            if (column.isPk())
+            if (column.getIsPk())
             {
                 table.setPkColumn(column);
                 break;
@@ -451,7 +451,7 @@ public class GenTableServiceImpl implements IGenTableService
         {
             for (GenTableColumn column : table.getSubTable().getColumns())
             {
-                if (column.isPk())
+                if (column.getIsPk())
                 {
                     table.getSubTable().setPkColumn(column);
                     break;

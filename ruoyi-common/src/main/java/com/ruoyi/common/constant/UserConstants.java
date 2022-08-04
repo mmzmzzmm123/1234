@@ -36,12 +36,6 @@ public class UserConstants
     /** 是否为系统默认（是） */
     public static final String YES = "Y";
 
-    /** 是否菜单外链（是） */
-    public static final String YES_FRAME = "0";
-
-    /** 是否菜单外链（否） */
-    public static final String NO_FRAME = "1";
-
     /** 菜单类型（目录） */
     public static final String TYPE_DIR = "M";
 

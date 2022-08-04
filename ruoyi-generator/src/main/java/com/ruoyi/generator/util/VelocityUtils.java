@@ -387,7 +387,7 @@ public class VelocityUtils
         int num = 0;
         for (GenTableColumn column : genTable.getColumns())
         {
-            if (column.isList())
+            if (column.getIsList())
             {
                 num++;
                 String columnName = column.getColumnName();

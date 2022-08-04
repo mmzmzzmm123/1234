@@ -214,8 +214,8 @@
           <el-col :span="12">
             <el-form-item label="是否并发" prop="concurrent">
               <el-radio-group v-model="form.concurrent" size="small">
-                <el-radio-button label="0">允许</el-radio-button>
-                <el-radio-button label="1">禁止</el-radio-button>
+                <el-radio-button :label="true">允许</el-radio-button>
+                <el-radio-button :label="false">禁止</el-radio-button>
               </el-radio-group>
             </el-form-item>
           </el-col>
@@ -271,8 +271,8 @@
           </el-col>
           <el-col :span="12">
             <el-form-item label="是否并发：">
-              <div v-if="form.concurrent == 0">允许</div>
-              <div v-else-if="form.concurrent == 1">禁止</div>
+              <div v-if="form.concurrent">允许</div>
+              <div v-else>禁止</div>
             </el-form-item>
           </el-col>
           <el-col :span="12">
@@ -381,7 +381,7 @@ export default {
         invokeTarget: undefined,
         cronExpression: undefined,
         misfirePolicy: 1,
-        concurrent: 1,
+        concurrent: false,
         status: "0"
       };
       this.resetForm("form");
