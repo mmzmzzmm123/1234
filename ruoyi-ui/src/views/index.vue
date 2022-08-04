@@ -1,87 +1,54 @@
 <template>
   <div class="app-container home">
-
+    <template>
+      <el-carousel :interval="4000" type="card" height="200px">
+        <el-carousel-item v-for="item in imgList" :key="item">
+          <img :src="item.src" style="height:100%;width:100%;" alt="图片丢失了" :title="item.title" />
+        </el-carousel-item>
+      </el-carousel>
+    </template>
   </div>
 </template>
 
 <script>
 export default {
-  name: "Index",
+  components: {},
   data() {
     return {
-      // 版本号
-      version: "3.8.3",
+      imgList: [
+        {
+          src: require("@/assets/index/3.jpg"),
+        },
+        {
+          src: require("@/assets/index/1.jpg"),
+        },
+        {
+          src: require("@/assets/index/2.jpg"),
+        }
+      ]
     };
   },
-  methods: {
-    goTarget(href) {
-      window.open(href, "_blank");
-    },
-  },
+  created() {},
+  mounted() {},
+  computed: {},
+  methods: {}
 };
 </script>
 
-<style scoped lang="scss">
-.home {
-  blockquote {
-    padding: 10px 20px;
-    margin: 0 0 20px;
-    font-size: 17.5px;
-    border-left: 5px solid #eee;
-  }
-  hr {
-    margin-top: 20px;
-    margin-bottom: 20px;
-    border: 0;
-    border-top: 1px solid #eee;
-  }
-  .col-item {
-    margin-bottom: 20px;
-  }
+<style>
+.el-carousel__item h3 {
+  color: #475669;
+  font-size: 14px;
+  opacity: 0.75;
+  line-height: 200px;
+  margin: 0;
+}
 
-  ul {
-    padding: 0;
-    margin: 0;
-  }
+.el-carousel__item:nth-child(2n) {
+  background-color: #99a9bf;
+}
 
-  font-family: "open sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
-  font-size: 13px;
-  color: #676a6c;
-  overflow-x: hidden;
-
-  ul {
-    list-style-type: none;
-  }
-
-  h4 {
-    margin-top: 0px;
-  }
-
-  h2 {
-    margin-top: 10px;
-    font-size: 26px;
-    font-weight: 100;
-  }
-
-  p {
-    margin-top: 10px;
-
-    b {
-      font-weight: 700;
-    }
-  }
-
-  .update-log {
-    ol {
-      display: block;
-      list-style-type: decimal;
-      margin-block-start: 1em;
-      margin-block-end: 1em;
-      margin-inline-start: 0;
-      margin-inline-end: 0;
-      padding-inline-start: 40px;
-    }
-  }
+.el-carousel__item:nth-child(2n+1) {
+  background-color: #d3dce6;
 }
 </style>
-
