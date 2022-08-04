@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.headmaster.mapper.HeadmasterMapper">
+    
+    <resultMap type="Headmaster" id="HeadmasterResult">
+        <result property="id"    column="id"    />
+        <result property="headmasterId"    column="headmaster_id"    />
+        <result property="headmasterName"    column="headmaster_name"    />
+        <result property="sex"    column="sex"    />
+        <result property="age"    column="age"    />
+        <result property="phone"    column="phone"    />
+        <result property="clazzId"    column="clazz_id"    />
+        <result property="gradeId"    column="grade_id"    />
+    </resultMap>
+    <resultMap type="HeadmasterVo" id="HeadmasterVoResult">
+        <result property="id"    column="id"    />
+        <result property="headmasterId"    column="headmaster_id"    />
+        <result property="headmasterName"    column="headmaster_name"    />
+        <result property="sex"    column="sex"    />
+        <result property="age"    column="age"    />
+        <result property="phone"    column="phone"    />
+        <result property="clazzName"    column="clazzName"    />
+        <result property="gradeName"    column="gradeName"    />
+    </resultMap>
+
+    <sql id="selectHeadmasterVo">
+        select id, headmaster_id, headmaster_name, sex, age, phone, clazz_id, grade_id from headmaster
+    </sql>
+
+    <select id="selectHeadmasterList" parameterType="HeadmasterVo" resultMap="HeadmasterVoResult">
+        SELECT h.id,h.headmaster_id,h.headmaster_name,h.sex,h.age,h.phone,c.name as clazzName,g.name as gradeName from headmaster h
+        inner join clazz c on c.id=h.clazz_id
+        inner join grade g on g.id=h.grade_id
+        <where>  
+            <if test="headmasterId != null "> and h.headmaster_id = #{headmasterId}</if>
+            <if test="headmasterName != null  and headmasterName != ''"> and h.headmaster_name like concat('%', #{headmasterName}, '%')</if>
+            <if test="sex != null  and sex != ''"> and h.sex = #{sex}</if>
+            <if test="gradeName != null "> and g.name = #{gradeName}</if>
+        </where>
+    </select>
+    
+    <select id="selectHeadmasterById" parameterType="Long" resultMap="HeadmasterVoResult">
+        SELECT h.id,h.headmaster_id,h.headmaster_name,h.sex,h.age,h.phone,c.name as clazzName,g.name as gradeName from headmaster h
+        inner join clazz c on c.id=h.clazz_id
+        inner join grade g on g.id=h.grade_id
+        where h.id = #{id}
+    </select>
+        
+    <insert id="insertHeadmaster" parameterType="HeadmasterVo" useGeneratedKeys="true" keyProperty="id">
+        insert into headmaster
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="headmasterId != null">headmaster_id,</if>
+            <if test="headmasterName != null">headmaster_name,</if>
+            <if test="sex != null">sex,</if>
+            <if test="age != null">age,</if>
+            <if test="phone != null">phone,</if>
+            <if test="clazzId != null">clazz_id,</if>
+            <if test="gradeId != null">grade_id,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="headmasterId != null">#{headmasterId},</if>
+            <if test="headmasterName != null">#{headmasterName},</if>
+            <if test="sex != null">#{sex},</if>
+            <if test="age != null">#{age},</if>
+            <if test="phone != null">#{phone},</if>
+            <if test="clazzId != null">(select c1.id from clazz c1 where c1.name =#{clazzName}),</if>
+            <if test="gradeId != null">(select g1.id from grade g1 where g1.name =#{gradeName}),</if>
+         </trim>
+    </insert>
+
+    <update id="updateHeadmaster" parameterType="HeadmasterVo">
+        update headmaster
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="headmasterId != null">headmaster_id = #{headmasterId},</if>
+            <if test="headmasterName != null">headmaster_name = #{headmasterName},</if>
+            <if test="sex != null">sex = #{sex},</if>
+            <if test="age != null">age = #{age},</if>
+            <if test="phone != null">phone = #{phone},</if>
+            <if test="clazzId != null">clazz_id = (select c1.id from clazz c1 where c1.name =#{clazzName}),</if>
+            <if test="gradeId != null">grade_id = (select g1.id from grade g1 where g1.name =#{gradeName}),</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteHeadmasterById" parameterType="Long">
+        delete from headmaster where id = #{id}
+    </delete>
+
+    <delete id="deleteHeadmasterByIds" parameterType="String">
+        delete from headmaster where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

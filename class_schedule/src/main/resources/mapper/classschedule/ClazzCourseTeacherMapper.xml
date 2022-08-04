@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.classschedule.mapper.ClazzCourseTeacherMapper">
+    
+    <resultMap type="ClazzCourseTeacher" id="ClazzCourseTeacherResult">
+        <result property="id"    column="id"    />
+        <result property="clazzId"    column="clazz_id"    />
+        <result property="gradeId"    column="grade_id"    />
+        <result property="courseId"    column="course_id"    />
+        <result property="teacherId"    column="teacher_id"    />
+    </resultMap>
+
+    <resultMap type="ClazzCourseTeacherVo" id="ClazzCourseTeacherVoResult">
+        <result property="id"    column="id"    />
+        <result property="clazzName"    column="clazzName"    />
+        <result property="gradeName"    column="gradeName"    />
+        <result property="courseName"    column="courseName"    />
+        <result property="teacherName"    column="teacherName"    />
+    </resultMap>
+
+    <sql id="selectClazzCourseTeacherVo">
+        select id, clazz_id, grade_id, course_id, teacher_id from clazz_course_teacher
+    </sql>
+
+    <select id="selectClazzCourseTeacherList" parameterType="ClazzCourseTeacherVo" resultMap="ClazzCourseTeacherVoResult">
+        SELECT c.id,z.name as clazzName,g.name as gradeName,s.name courseName,t.t_name as teacherName from clazz_course_teacher c
+        inner join clazz z on z.id=c.clazz_id
+        inner join grade g on g.id=c.grade_id
+        inner join course s on s.id=c.course_id
+        inner join teacher t on t.id=c.teacher_id
+        <where>  
+            <if test="clazzName != null "> and z.name = #{clazzName}</if>
+            <if test="gradeName != null "> and g.name = #{gradeName}</if>
+            <if test="courseName != null "> and s.name = #{courseName}</if>
+            <if test="teacherName != null "> and t.name = #{teacherName}</if>
+        </where>
+    </select>
+    
+    <select id="selectClazzCourseTeacherById" parameterType="Long" resultMap="ClazzCourseTeacherVoResult">
+         SELECT c.id,z.name as clazzName,g.name as gradeName,s.name courseName,t.t_name as teacherName from clazz_course_teacher c
+        inner join clazz z on z.id=c.clazz_id
+        inner join grade g on g.id=c.grade_id
+        inner join course s on s.id=c.course_id
+        inner join teacher t on t.id=c.teacher_id
+        where c.id = #{id}
+    </select>
+        
+    <insert id="insertClazzCourseTeacher" parameterType="ClazzCourseTeacher" useGeneratedKeys="true" keyProperty="id">
+        insert into clazz_course_teacher
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="clazzId != null">clazz_id,</if>
+            <if test="gradeId != null">grade_id,</if>
+            <if test="courseId != null">course_id,</if>
+            <if test="teacherId != null">teacher_id,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="clazzId != null">(select c1.id from clazz c1 where c1.name =#{clazzName}),</if>
+            <if test="gradeId != null">(select g1.id from grade g1 where g1.name =#{gradeName}),</if>
+            <if test="courseId != null">(select o1.id from course o1 where o1.name=#{courseName}),</if>
+            <if test="teacherId != null">(select t1.id from teacher t1 where t1.name=#{teacherName}),</if>
+         </trim>
+    </insert>
+
+    <update id="updateClazzCourseTeacher" parameterType="ClazzCourseTeacher">
+        update clazz_course_teacher
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="clazzId != null">clazz_id = (select c1.id from clazz c1 where c1.name =#{clazzName}),</if>
+            <if test="gradeId != null">grade_id = (select g1.id from grade g1 where g1.name =#{gradeName}),</if>
+            <if test="courseId != null">course_id = (select o1.id from course o1 where o1.name=#{courseName}),</if>
+            <if test="teacherId != null">teacher_id =(select t1.id from teacher t1 where t1.name=#{teacherName}),</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteClazzCourseTeacherById" parameterType="Long">
+        delete from clazz_course_teacher where id = #{id}
+    </delete>
+
+    <delete id="deleteClazzCourseTeacherByIds" parameterType="String">
+        delete from clazz_course_teacher where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

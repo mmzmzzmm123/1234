@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.escore.mapper.EscoreMapper">
+    
+    <resultMap type="Escore" id="EscoreResult">
+        <result property="id"    column="id"    />
+        <result property="examId"    column="exam_id"    />
+        <result property="clazzId"    column="clazz_id"    />
+        <result property="studentId"    column="student_id"    />
+        <result property="gradeId"    column="grade_id"    />
+        <result property="courseId"    column="course_id"    />
+        <result property="score"    column="score"    />
+    </resultMap>
+    <resultMap type="EscoreVo" id="EscoreVoResult">
+        <result property="id" column="id"/>
+        <result property="examName"    column="examName"    />
+        <result property="clazzName"    column="clazzName"    />
+        <result property="stuName"    column="stuName"    />
+        <result property="gradeName"    column="gradeName"    />
+        <result property="courseName"    column="courseName"    />
+        <result property="score"    column="score"    />
+    </resultMap>
+
+    <sql id="selectEscoreVo">
+        select id, exam_id, clazz_id, student_id, grade_id, course_id, score from escore
+    </sql>
+
+<!--    <select id="selectEscoreList" parameterType="Escore" resultMap="EscoreResult">-->
+<!--        <include refid="selectEscoreVo"/>-->
+<!--        <where>  -->
+<!--            <if test="examId != null "> and exam_id = #{examId}</if>-->
+<!--            <if test="clazzId != null "> and clazz_id = #{clazzId}</if>-->
+<!--            <if test="studentId != null "> and student_id = #{studentId}</if>-->
+<!--            <if test="gradeId != null "> and grade_id = #{gradeId}</if>-->
+<!--            <if test="courseId != null "> and course_id = #{courseId}</if>-->
+<!--        </where>-->
+<!--    </select>-->
+
+<!--    <select id="selectEscoreList" parameterType="Escore" resultMap="EscoreResult">-->
+<!--        <include refid="selectEscoreVo"/>-->
+<!--        <where>-->
+<!--            <if test="examId != null "> and exam_id = #{examId}</if>-->
+<!--            <if test="clazzId != null "> and clazz_id = #{clazzId}</if>-->
+<!--            <if test="studentId != null "> and student_id = #{studentId}</if>-->
+<!--            <if test="gradeId != null "> and grade_id = #{gradeId}</if>-->
+<!--            <if test="courseId != null "> and course_id = #{courseId}</if>-->
+<!--        </where>-->
+<!--    </select>-->
+    
+    <select id="selectEscoreById" parameterType="Long" resultMap="EscoreVoResult">
+         SELECT s.id,e.name as examName ,c.name as clazzName,t.stu_name as stuName,g.name as gradeName,o.name as courseName,s.score
+        FROM `escore` s inner join exam e on e.id=s.exam_id
+        inner join clazz c on c.id=s.clazz_id
+        inner join student t on t.id=s.student_id
+        inner join grade g on g.id=s.grade_id
+        inner join course o on o.id=s.course_id
+        where s.id = #{id}
+    </select>
+        
+    <insert id="insertEscore" parameterType="EscoreVo" useGeneratedKeys="true" keyProperty="id">
+        insert into escore
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="examId != null">#{examId},</if>
+            <if test="clazzId != null">#{clazzId},</if>
+            <if test="studentId != null">#{studentId},</if>
+            <if test="gradeId != null">#{gradeId},</if>
+            <if test="courseId != null">#{courseId},</if>
+            <if test="score != null">score,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="examId != null">(select e1.id from exam e1 where e1.name = #{examNaem} limit 1),</if>
+            <if test="clazzId != null">(select c1.id from clazz c1 where c1.name=#{clazzName} limit 1),</if>
+            <if test="studentId != null">(select s1.id from student s1 where s1.stu_Name=#{stuName} limit 1),</if>
+            <if test="gradeId != null">(select g1.id from grade g1 where g1.name=#{gradeName} limit 1),</if>
+            <if test="courseId != null">(select c1.id from course  c1 where c1.name=#{courseName}),</if>
+            <if test="score != null">#{score},</if>
+         </trim>
+    </insert>
+
+    <update id="updateEscore" parameterType="EscoreVo">
+        update escore
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="examId != null">exam_id = (select e1.id from exam e1 where e1.name = #{examNaem} limit 1),</if>
+            <if test="clazzId != null">clazz_id = (select c1.id from clazz c1 where c1.name=#{clazzName} limit 1),</if>
+            <if test="studentId != null">student_id = (select s1.id from student s1 where s1.stu_Name=#{stuName} limit 1),</if>
+            <if test="gradeId != null">grade_id = (select g1.id from grade g1 where g1.name=#{gradeName} limit 1),</if>
+            <if test="courseId != null">course_id = #{courseId},</if>
+            <if test="score != null">score = (select c1.id from course  c1 where c1.name=#{courseName}),</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteEscoreById" parameterType="Long">
+        delete from escore where id = #{id}
+    </delete>
+
+    <delete id="deleteEscoreByIds" parameterType="String">
+        delete from escore where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <select id="selectEscoreVoList" parameterType="EscoreVo" resultMap="EscoreVoResult">
+        SELECT s.id,e.name as examName ,c.name as clazzName,t.stu_name as stuName,g.name as gradeName,o.name as courseName,s.score
+        FROM `escore` s inner join exam e on e.id=s.exam_id
+        inner join clazz c on c.id=s.clazz_id
+        inner join student t on t.id=s.student_id
+        inner join grade g on g.id=s.grade_id
+        inner join course o on o.id=s.course_id
+        <where>
+            <if test="examName != null "> and e.name  like concat('%',#{examName},'%')</if>
+            <if test="clazzName != null "> and c.name = #{clazzName}</if>
+            <if test="stuName != null "> and t.stu_name  like concat('%',#{stuName},'%')</if>
+            <if test="gradeName != null "> and g.name=#{gradeName}</if>
+            <if test="courseName != null "> and o.name =#{courseName}</if>
+        </where>
+    </select>
+</mapper>
