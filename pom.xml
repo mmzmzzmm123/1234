@@ -203,6 +203,7 @@
         <module>escoer</module>
         <module>headmaster</module>
         <module>class_schedule</module>
+        <module>course</module>
     </modules>
     <packaging>pom</packaging>
 
