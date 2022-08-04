@@ -73,11 +73,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	</select>
 	
 	<select id="selectChildrenDeptById" parameterType="String" resultMap="SysDeptResult">
-		select * from sys_dept where #{deptId}=any(string_to_array(ancestors,','))
+		select * from sys_dept where cast(#{deptId} as varchar)=any(string_to_array(ancestors,','))
 	</select>
 	
 	<select id="selectNormalChildrenDeptById" parameterType="Long" resultType="int">
-		select count(*) from sys_dept where status = 0 and del_flag = '0' and #{deptId}=any(string_to_array(ancestors,','))
+		select count(*) from sys_dept where status = 0 and del_flag = '0' and cast(#{deptId} as varchar)=any(string_to_array(ancestors,','))
 	</select>
 	
 	<select id="checkDeptNameUnique" resultMap="SysDeptResult">
