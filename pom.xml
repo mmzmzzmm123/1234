@@ -196,10 +196,8 @@
         <module>ruoyi-quartz</module>
         <module>ruoyi-generator</module>
         <module>ruoyi-common</module>
-        <module>ruouyi-cs</module>
-        <module>ruoyi-cs</module>
         <module>teacher</module>
-        <module>escore</module>
+
         <module>escoer</module>
         <module>headmaster</module>
         <module>class_schedule</module>
