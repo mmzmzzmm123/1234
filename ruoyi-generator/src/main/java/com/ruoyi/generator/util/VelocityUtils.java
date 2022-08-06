@@ -193,9 +193,9 @@ public class VelocityUtils
         {
             fileName = StringUtils.format("{}/service/impl/{}ServiceImpl.java", javaPath, className);
         }
-        else if (template.contains("controller.java.vm"))
+        else if (template.contains("com.ruoyi.api.controller.java.vm"))
         {
-            fileName = StringUtils.format("{}/controller/{}Controller.java", javaPath, className);
+            fileName = StringUtils.format("{}/com.ruoyi.api.controller/{}Controller.java", javaPath, className);
         }
         else if (template.contains("mapper.xml.vm"))
         {

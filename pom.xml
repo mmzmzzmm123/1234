@@ -186,6 +186,20 @@
                 <version>${ruoyi.version}</version>
             </dependency>
 
+            <!-- api模块-->
+            <dependency>
+                <groupId>com.ruoyi</groupId>
+                <artifactId>ruoyi-api</artifactId>
+                <version>${ruoyi.version}</version>
+            </dependency>
+
+            <!-- data模块-->
+            <dependency>
+                <groupId>com.ruoyi</groupId>
+                <artifactId>ruoyi-data</artifactId>
+                <version>${ruoyi.version}</version>
+            </dependency>
+
         </dependencies>
     </dependencyManagement>
 
@@ -196,6 +210,8 @@
         <module>ruoyi-quartz</module>
         <module>ruoyi-generator</module>
         <module>ruoyi-common</module>
+        <module>ruoyi-data</module>
+        <module>ruoyi-api</module>
     </modules>
     <packaging>pom</packaging>
 
