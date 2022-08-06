@@ -37,7 +37,6 @@ public class UserArgumentResolver implements HandlerMethodArgumentResolver {
 
     @Override
     public boolean supportsParameter(MethodParameter parameter) {
-        log.info("parameter:{}",parameter);
         return parameter.hasParameterAnnotation(LoginUser.class);
     }
 
