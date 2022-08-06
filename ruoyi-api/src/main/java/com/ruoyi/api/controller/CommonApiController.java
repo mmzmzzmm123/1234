@@ -27,36 +27,35 @@ import java.io.InputStream;
 @Api(value = "通用",tags = {"通用接口"})
 @RestController
 @RequestMapping("/api")
-public class CommonApiController
-{
-    private static final Logger log = LoggerFactory.getLogger(CommonApiController.class);
+public class CommonApiController {
+        private static final Logger log = LoggerFactory.getLogger(CommonApiController.class);
 
 
-    @ApiOperation("通用下载")
-    @ApiImplicitParams({
-            @ApiImplicitParam(name = "fileUrl",value = "url",dataType = "string",example = "https://baidu.com/i.jpg",required = true),
-    })
-    @GetMapping("/common/download")
-    public void fileDownload(String fileUrl, HttpServletResponse response) throws IOException {
-        InputStream inputStream = null;
-        ServletOutputStream outputStream = null;
-        try {
-            String filePath = "D:/ruoyi/uploadPath" +"/"+ FileUtil.interceptUrl(fileUrl);
-            response.setHeader("Content-Disposition", "attachment;filename=" +fileUrl.substring(fileUrl.lastIndexOf("/")+1));
-            response.setContentType(MediaType.APPLICATION_OCTET_STREAM_VALUE);
-            inputStream = new FileInputStream(filePath);
-            outputStream = response.getOutputStream();
-            IOUtils.copy(inputStream, outputStream);
-            outputStream.flush();
-        }catch (Exception e) {
-            log.error("下载文件失败:{}", e.getMessage());
-        }finally {
-            assert inputStream != null;
-            assert outputStream != null;
-            inputStream.close();
-            outputStream.close();
+        @ApiOperation("通用下载")
+        @ApiImplicitParams({
+                @ApiImplicitParam(name = "fileUrl",value = "url",dataType = "string",example = "https://baidu.com/i.jpg",required = true),
+        })
+        @GetMapping("/common/download")
+        public void fileDownload(String fileUrl, HttpServletResponse response) throws IOException {
+            InputStream inputStream = null;
+            ServletOutputStream outputStream = null;
+            try {
+                String filePath = "D:/ruoyi/uploadPath" +"/"+ FileUtil.interceptUrl(fileUrl);
+                response.setHeader("Content-Disposition", "attachment;filename=" +fileUrl.substring(fileUrl.lastIndexOf("/")+1));
+                response.setContentType(MediaType.APPLICATION_OCTET_STREAM_VALUE);
+                inputStream = new FileInputStream(filePath);
+                outputStream = response.getOutputStream();
+                IOUtils.copy(inputStream, outputStream);
+                outputStream.flush();
+            }catch (Exception e) {
+                log.error("下载文件失败:{}", e.getMessage());
+            }finally {
+                assert inputStream != null;
+                assert outputStream != null;
+                inputStream.close();
+                outputStream.close();
+            }
         }
-    }
 
 
 }
