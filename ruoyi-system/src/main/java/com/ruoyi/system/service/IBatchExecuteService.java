@@ -1,6 +1,7 @@
 package com.ruoyi.system.service;
 
 import com.ruoyi.system.domain.*;
+import com.ruoyi.system.domain.vo.BatchProcessVo;
 import com.ruoyi.system.domain.vo.BatchVo;
 import com.ruoyi.system.domain.vo.RecordQueryVo;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -38,5 +39,7 @@ public interface IBatchExecuteService {
     void updateWorkConcentrateRecord(WorkConcentrateRecord workConcentrateRecord);
 
     void updateWorkGelRecord(WorkGelRecord workGelRecord);
+
+    List<BatchProcessVo> getBatchProcessList(RecordQueryVo recordQueryVo);
 
 }

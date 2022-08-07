@@ -5,6 +5,7 @@ import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.domain.R;
 import com.ruoyi.common.core.page.TableDataInfo;
 import com.ruoyi.system.domain.*;
+import com.ruoyi.system.domain.vo.BatchProcessVo;
 import com.ruoyi.system.domain.vo.BatchVo;
 import com.ruoyi.system.domain.vo.ReactionVo;
 import com.ruoyi.system.domain.vo.RecordQueryVo;
@@ -143,6 +144,14 @@ public class BatchExecuteController extends BaseController{
     @ApiOperation("完成按钮")
     public R buttonFinish(){
         return R.ok();
+    }
+
+    @PostMapping("/process/list")
+    @ApiOperation("反应过程记录表")
+    public TableDataInfo getBatchProcessList(@RequestBody RecordQueryVo recordQueryVo){
+        startPage();
+        List<BatchProcessVo> batchProcessVos = batchExecuteService.getBatchProcessList(recordQueryVo);
+        return getDataTable(batchProcessVos);
     }
 
 }

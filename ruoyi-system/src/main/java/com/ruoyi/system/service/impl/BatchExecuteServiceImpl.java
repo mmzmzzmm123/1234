@@ -3,10 +3,7 @@ package com.ruoyi.system.service.impl;
 import com.ruoyi.common.utils.DateUtils;
 import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.system.domain.*;
-import com.ruoyi.system.domain.vo.BatchReactionVo;
-import com.ruoyi.system.domain.vo.BatchVo;
-import com.ruoyi.system.domain.vo.ReactionVo;
-import com.ruoyi.system.domain.vo.RecordQueryVo;
+import com.ruoyi.system.domain.vo.*;
 import com.ruoyi.system.mapper.*;
 import com.ruoyi.system.service.IBatchExecuteService;
 import com.ruoyi.common.utils.bean.BeanUtils;
@@ -226,5 +223,10 @@ public class BatchExecuteServiceImpl implements IBatchExecuteService{
     @Override
     public void updateWorkGelRecord(WorkGelRecord workGelRecord) {
         workGelRecordMapper.updateWorkGelRecord(workGelRecord);
+    }
+
+    @Override
+    public List<BatchProcessVo> getBatchProcessList(RecordQueryVo recordQueryVo) {
+        return null;
     }
 }
