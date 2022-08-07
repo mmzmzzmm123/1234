@@ -84,7 +84,7 @@ public class SysRegisterService
             }
             else
             {
-                AsyncManager.me().execute(AsyncFactory.recordLogininfor(username, Constants.REGISTER,
+                AsyncManager.me().execute(AsyncFactory.recordLoginInfo(username, Constants.REGISTER,
                         MessageUtils.message("user.register.success")));
             }
         }
