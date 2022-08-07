@@ -12,10 +12,12 @@
         <result property="param"    column="param"    />
         <result property="unit"      column="unit"      />
         <result property="quantity"    column="quantity"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="remark"    column="remark"    />
     </resultMap>
 
     <sql id="selectStockVo">
-        select stock_id, stock_type, `name`, brand, param, unit, quantity
+        select stock_id, stock_type, `name`, brand, param, unit, quantity, create_time, remark
 		from work_stock
     </sql>
 

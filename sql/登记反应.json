@@ -1,0 +1,93 @@
+{
+  "reactionName": "化学反应名称",
+  "remark": "化学反应备注",
+  "workConcentrate": {
+    "standing": "100"
+  },
+  "workExtraction": {
+    "standing": "100"
+  },
+  "workFeeding": {
+    "interval": "10",
+    "material": "材料1:10；材料2:0.4",
+    "mode": "连续/手动"
+  },
+  "workGel": {
+
+    "material": "材料1:10；材料2:0.4",
+
+    "standing": "10"
+
+  },
+  "workHeating": {
+    "interval": "次数：2；间隔1:10；间隔2:20",
+    "mode": "自动",
+    "stirDuration": 0,
+    "temperature": 0,
+    "temperatureDuration": 0
+  },
+  "workReactionDetails": [
+    {
+
+      "endif": "结束条件",
+      "param": "发送指令",
+      "precondition": "前置条件",
+      "processCode": "1",
+      "processName": "投料",
+      "sort": 1
+
+    },
+    {
+
+      "endif": "结束条件",
+      "param": "发送指令",
+      "precondition": "前置条件",
+      "processCode": "2",
+      "processName": "搅拌加热",
+      "sort": 2
+
+    },
+    {
+
+      "endif": "结束条件",
+      "param": "发送指令",
+      "precondition": "前置条件",
+      "processCode": "2-1",
+      "processName": "取样",
+      "sort": 2
+
+    },
+    {
+
+      "endif": "结束条件",
+      "param": "发送指令",
+      "precondition": "前置条件",
+      "processCode": "2-2",
+      "processName": "稀释",
+      "sort": 2
+
+    },
+    {
+
+      "endif": "结束条件",
+      "param": "发送指令",
+      "precondition": "前置条件",
+      "processCode": "2-3",
+      "processName": "失败退出",
+      "sort": 2
+
+    },
+    {
+
+      "endif": "结束条件",
+      "param": "发送指令",
+      "precondition": "前置条件",
+      "processCode": "2-4",
+      "processName": "完成移液",
+      "sort": 2
+
+    }
+  ]
+}
+
+

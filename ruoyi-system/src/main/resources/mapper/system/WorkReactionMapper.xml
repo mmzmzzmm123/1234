@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.WorkReactionMapper">
+    
+    <resultMap type="WorkReaction" id="WorkReactionResult">
+        <result property="reactionId"    column="reaction_id"    />
+        <result property="reactionName"    column="reaction_name"    />
+        <result property="reactionCode"    column="reaction_code"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="remark"    column="remark"    />
+    </resultMap>
+
+    <sql id="selectWorkReactionVo">
+        select reaction_id, reaction_name, reaction_code, create_by, create_time, remark from work_reaction
+    </sql>
+
+    <select id="selectWorkReactionList" parameterType="WorkReaction" resultMap="WorkReactionResult">
+        <include refid="selectWorkReactionVo"/>
+        <where>  
+            <if test="reactionName != null  and reactionName != ''"> and reaction_name like concat('%', #{reactionName}, '%')</if>
+            <if test="reactionCode != null  and reactionCode != ''"> and reaction_code = #{reactionCode}</if>
+        </where>
+    </select>
+    
+    <select id="selectWorkReactionByReactionId" parameterType="Long" resultMap="WorkReactionResult">
+        <include refid="selectWorkReactionVo"/>
+        where reaction_id = #{reactionId}
+    </select>
+        
+    <insert id="insertWorkReaction" parameterType="WorkReaction" useGeneratedKeys="true" keyProperty="reactionId">
+        insert into work_reaction
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="reactionName != null">reaction_name,</if>
+            <if test="reactionCode != null">reaction_code,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="remark != null">remark,</if>
+            create_time
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="reactionName != null">#{reactionName},</if>
+            <if test="reactionCode != null">#{reactionCode},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="remark != null">#{remark},</if>
+            sysdate()
+         </trim>
+    </insert>
+
+    <update id="updateWorkReaction" parameterType="WorkReaction">
+        update work_reaction
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="reactionName != null">reaction_name = #{reactionName},</if>
+            <if test="reactionCode != null">reaction_code = #{reactionCode},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            create_time = sysdate(),
+            <if test="remark != null">remark = #{remark},</if>
+        </trim>
+        where reaction_id = #{reactionId}
+    </update>
+
+    <delete id="deleteWorkReactionByReactionId" parameterType="Long">
+        delete from work_reaction where reaction_id = #{reactionId}
+    </delete>
+
+    <delete id="deleteWorkReactionByReactionIds" parameterType="String">
+        delete from work_reaction where reaction_id in 
+        <foreach item="reactionId" collection="array" open="(" separator="," close=")">
+            #{reactionId}
+        </foreach>
+    </delete>
+</mapper>

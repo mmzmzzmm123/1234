@@ -1,6 +1,6 @@
 package com.ruoyi.system.service;
 
-import com.ruoyi.system.domain.Process;
+import com.ruoyi.system.domain.WorkProcess;
 
 import java.util.List;
 
@@ -11,5 +11,5 @@ import java.util.List;
  */
 public interface IProcessService {
 
-    List<Process> getProcessList();
+    List<WorkProcess> getProcessList();
 }

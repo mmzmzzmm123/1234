@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.WorkPutRecordMapper">
+    
+    <resultMap type="WorkPutRecord" id="WorkPutRecordResult">
+        <result property="putId"    column="put_id"    />
+        <result property="batchNo"    column="batch_no"    />
+        <result property="reactionCode"    column="reaction_code"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="result"    column="result"    />
+    </resultMap>
+
+    <sql id="selectWorkPutRecordVo">
+        select put_id, batch_no, reaction_code, create_by, create_time, result from work_put_record
+    </sql>
+
+    <select id="selectWorkPutRecordList" parameterType="WorkPutRecord" resultMap="WorkPutRecordResult">
+        <include refid="selectWorkPutRecordVo"/>
+        <where>  
+            <if test="batchNo != null  and batchNo != ''"> and batch_no = #{batchNo}</if>
+            <if test="reactionCode != null  and reactionCode != ''"> and reaction_code = #{reactionCode}</if>
+            <if test="result != null  and result != ''"> and result = #{result}</if>
+        </where>
+    </select>
+    
+    <select id="selectWorkPutRecordByPutId" parameterType="Long" resultMap="WorkPutRecordResult">
+        <include refid="selectWorkPutRecordVo"/>
+        where put_id = #{putId}
+    </select>
+        
+    <insert id="insertWorkPutRecord" parameterType="WorkPutRecord" useGeneratedKeys="true" keyProperty="putId">
+        insert into work_put_record
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="batchNo != null">batch_no,</if>
+            <if test="reactionCode != null">reaction_code,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="result != null">result,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="batchNo != null">#{batchNo},</if>
+            <if test="reactionCode != null">#{reactionCode},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="result != null">#{result},</if>
+         </trim>
+    </insert>
+
+    <update id="updateWorkPutRecord" parameterType="WorkPutRecord">
+        update work_put_record
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="batchNo != null">batch_no = #{batchNo},</if>
+            <if test="reactionCode != null">reaction_code = #{reactionCode},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="result != null">result = #{result},</if>
+        </trim>
+        where put_id = #{putId}
+    </update>
+
+    <delete id="deleteWorkPutRecordByPutId" parameterType="Long">
+        delete from work_put_record where put_id = #{putId}
+    </delete>
+
+    <delete id="deleteWorkPutRecordByPutIds" parameterType="String">
+        delete from work_put_record where put_id in 
+        <foreach item="putId" collection="array" open="(" separator="," close=")">
+            #{putId}
+        </foreach>
+    </delete>
+</mapper>

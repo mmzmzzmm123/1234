@@ -1,5 +1,6 @@
 package com.ruoyi.system.domain;
 
+import com.ruoyi.common.core.domain.BaseEntity;
 import lombok.Data;
 
 /**
@@ -8,7 +9,7 @@ import lombok.Data;
  * @description
  */
 @Data
-public class Stock {
+public class Stock extends BaseEntity{
 
     /** 库存ID */
     private Long stockId;

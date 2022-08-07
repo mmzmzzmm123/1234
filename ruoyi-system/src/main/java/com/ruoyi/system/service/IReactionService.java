@@ -1,5 +1,9 @@
 package com.ruoyi.system.service;
 
+import com.ruoyi.system.domain.vo.ReactionVo;
+
+import java.util.List;
+
 /**
  * Created by IntelliJ IDEA.
  * Author: WangJinpeng
@@ -7,4 +11,8 @@ package com.ruoyi.system.service;
  * Time: 21:29
  */
 public interface IReactionService {
+
+    void addAndUpdateReaction(ReactionVo reactionVo);
+
+    List<ReactionVo> getReactionList();
 }

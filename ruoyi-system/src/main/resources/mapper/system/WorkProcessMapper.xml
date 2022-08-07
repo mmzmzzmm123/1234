@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.WorkProcessMapper">
+    
+    <resultMap type="WorkProcess" id="WorkProcessResult">
+        <result property="processId"    column="process_id"    />
+        <result property="processName"    column="process_name"    />
+        <result property="processCode"    column="process_code"    />
+        <result property="precondition"    column="precondition"    />
+        <result property="param"    column="param"    />
+        <result property="endif"    column="endif"    />
+    </resultMap>
+
+    <sql id="selectWorkProcessVo">
+        select process_id, process_name, process_code, precondition, param, endif from work_process
+    </sql>
+
+    <select id="selectWorkProcessList" parameterType="WorkProcess" resultMap="WorkProcessResult">
+        <include refid="selectWorkProcessVo"/>
+        <where>  
+            <if test="processName != null  and processName != ''"> and process_name like concat('%', #{processName}, '%')</if>
+            <if test="processCode != null  and processCode != ''"> and process_code = #{processCode}</if>
+            <if test="precondition != null  and precondition != ''"> and precondition = #{precondition}</if>
+            <if test="param != null  and param != ''"> and param = #{param}</if>
+            <if test="endif != null  and endif != ''"> and endif = #{endif}</if>
+        </where>
+    </select>
+    
+    <select id="selectWorkProcessByProcessId" parameterType="Long" resultMap="WorkProcessResult">
+        <include refid="selectWorkProcessVo"/>
+        where process_id = #{processId}
+    </select>
+        
+    <insert id="insertWorkProcess" parameterType="WorkProcess" useGeneratedKeys="true" keyProperty="processId">
+        insert into work_process
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="processName != null">process_name,</if>
+            <if test="processCode != null">process_code,</if>
+            <if test="precondition != null">precondition,</if>
+            <if test="param != null">param,</if>
+            <if test="endif != null">endif,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="processName != null">#{processName},</if>
+            <if test="processCode != null">#{processCode},</if>
+            <if test="precondition != null">#{precondition},</if>
+            <if test="param != null">#{param},</if>
+            <if test="endif != null">#{endif},</if>
+         </trim>
+    </insert>
+
+    <update id="updateWorkProcess" parameterType="WorkProcess">
+        update work_process
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="processName != null">process_name = #{processName},</if>
+            <if test="processCode != null">process_code = #{processCode},</if>
+            <if test="precondition != null">precondition = #{precondition},</if>
+            <if test="param != null">param = #{param},</if>
+            <if test="endif != null">endif = #{endif},</if>
+        </trim>
+        where process_id = #{processId}
+    </update>
+
+    <delete id="deleteWorkProcessByProcessId" parameterType="Long">
+        delete from work_process where process_id = #{processId}
+    </delete>
+
+    <delete id="deleteWorkProcessByProcessIds" parameterType="String">
+        delete from work_process where process_id in 
+        <foreach item="processId" collection="array" open="(" separator="," close=")">
+            #{processId}
+        </foreach>
+    </delete>
+</mapper>

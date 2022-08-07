@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.WorkHeatingMapper">
+    
+    <resultMap type="WorkHeating" id="WorkHeatingResult">
+        <result property="heatingId"    column="heating_id"    />
+        <result property="reactionCode"    column="reaction_code"    />
+        <result property="mode"    column="mode"    />
+        <result property="interval"    column="interval"    />
+        <result property="temperature"    column="temperature"    />
+        <result property="temperatureDuration"    column="temperature_duration"    />
+        <result property="stirDuration"    column="stir_duration"    />
+    </resultMap>
+
+    <sql id="selectWorkHeatingVo">
+        select heating_id, reaction_code, mode, `interval`, temperature, temperature_duration, stir_duration from work_heating
+    </sql>
+
+    <select id="selectWorkHeatingList" parameterType="WorkHeating" resultMap="WorkHeatingResult">
+        <include refid="selectWorkHeatingVo"/>
+        <where>  
+            <if test="reactionCode != null  and reactionCode != ''"> and reaction_code = #{reactionCode}</if>
+            <if test="mode != null  and mode != ''"> and mode = #{mode}</if>
+            <if test="interval != null  and interval != ''"> and `interval` = #{interval}</if>
+            <if test="temperature != null "> and temperature = #{temperature}</if>
+            <if test="temperatureDuration != null "> and temperature_duration = #{temperatureDuration}</if>
+            <if test="stirDuration != null "> and stir_duration = #{stirDuration}</if>
+        </where>
+    </select>
+    
+    <select id="selectWorkHeatingByHeatingId" parameterType="Long" resultMap="WorkHeatingResult">
+        <include refid="selectWorkHeatingVo"/>
+        where heating_id = #{heatingId}
+    </select>
+        
+    <insert id="insertWorkHeating" parameterType="WorkHeating" useGeneratedKeys="true" keyProperty="heatingId">
+        insert into work_heating
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="reactionCode != null">reaction_code,</if>
+            <if test="mode != null">mode,</if>
+            <if test="interval != null">`interval`,</if>
+            <if test="temperature != null">temperature,</if>
+            <if test="temperatureDuration != null">temperature_duration,</if>
+            <if test="stirDuration != null">stir_duration,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="reactionCode != null">#{reactionCode},</if>
+            <if test="mode != null">#{mode},</if>
+            <if test="interval != null">#{interval},</if>
+            <if test="temperature != null">#{temperature},</if>
+            <if test="temperatureDuration != null">#{temperatureDuration},</if>
+            <if test="stirDuration != null">#{stirDuration},</if>
+         </trim>
+    </insert>
+
+    <update id="updateWorkHeating" parameterType="WorkHeating">
+        update work_heating
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="reactionCode != null">reaction_code = #{reactionCode},</if>
+            <if test="mode != null">mode = #{mode},</if>
+            <if test="interval != null">`interval` = #{interval},</if>
+            <if test="temperature != null">temperature = #{temperature},</if>
+            <if test="temperatureDuration != null">temperature_duration = #{temperatureDuration},</if>
+            <if test="stirDuration != null">stir_duration = #{stirDuration},</if>
+        </trim>
+        where heating_id = #{heatingId}
+    </update>
+
+    <delete id="deleteWorkHeatingByHeatingId" parameterType="Long">
+        delete from work_heating where heating_id = #{heatingId}
+    </delete>
+
+    <delete id="deleteWorkHeatingByHeatingIds" parameterType="String">
+        delete from work_heating where heating_id in 
+        <foreach item="heatingId" collection="array" open="(" separator="," close=")">
+            #{heatingId}
+        </foreach>
+    </delete>
+</mapper>

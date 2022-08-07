@@ -1,6 +1,6 @@
 package com.ruoyi.system.domain.vo;
 
-import com.ruoyi.system.domain.ProcessReaction;
+import com.ruoyi.system.domain.*;
 import lombok.Data;
 
 import java.util.List;
@@ -20,5 +20,21 @@ public class ReactionVo {
 
     private String reactionCode;
 
-    private List<ProcessReaction> processReactions;
+    private String createBy;
+
+    private String createTime;
+
+    private String remark;
+
+    private List<WorkReactionDetail> workReactionDetails;
+
+    private WorkFeeding workFeeding;
+
+    private WorkHeating workHeating;
+
+    private WorkConcentrate workConcentrate;
+
+    private WorkExtraction workExtraction;
+
+    private WorkGel workGel;
 }

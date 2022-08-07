@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.WorkFeedingMapper">
+    
+    <resultMap type="WorkFeeding" id="WorkFeedingResult">
+        <result property="feedingId"    column="feeding_id"    />
+        <result property="reactionCode"    column="reaction_code"    />
+        <result property="mode"    column="mode"    />
+        <result property="interval"    column="interval"    />
+        <result property="material"    column="material"    />
+    </resultMap>
+
+    <sql id="selectWorkFeedingVo">
+        select feeding_id, reaction_code, mode, `interval`, material from work_feeding
+    </sql>
+
+    <select id="selectWorkFeedingList" parameterType="WorkFeeding" resultMap="WorkFeedingResult">
+        <include refid="selectWorkFeedingVo"/>
+        <where>  
+            <if test="reactionCode != null  and reactionCode != ''"> and reaction_code = #{reactionCode}</if>
+            <if test="mode != null  and mode != ''"> and mode = #{mode}</if>
+            <if test="interval != null  and interval != ''"> and `interval` = #{interval}</if>
+            <if test="material != null  and material != ''"> and material = #{material}</if>
+        </where>
+    </select>
+    
+    <select id="selectWorkFeedingByFeedingId" parameterType="Long" resultMap="WorkFeedingResult">
+        <include refid="selectWorkFeedingVo"/>
+        where feeding_id = #{feedingId}
+    </select>
+        
+    <insert id="insertWorkFeeding" parameterType="WorkFeeding" useGeneratedKeys="true" keyProperty="feedingId">
+        insert into work_feeding
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="reactionCode != null">reaction_code,</if>
+            <if test="mode != null">mode,</if>
+            <if test="interval != null">`interval`,</if>
+            <if test="material != null">material,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="reactionCode != null">#{reactionCode},</if>
+            <if test="mode != null">#{mode},</if>
+            <if test="interval != null">#{interval},</if>
+            <if test="material != null">#{material},</if>
+         </trim>
+    </insert>
+
+    <update id="updateWorkFeeding" parameterType="WorkFeeding">
+        update work_feeding
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="reactionCode != null">reaction_code = #{reactionCode},</if>
+            <if test="mode != null">mode = #{mode},</if>
+            <if test="interval != null">`interval` = #{interval},</if>
+            <if test="material != null">material = #{material},</if>
+        </trim>
+        where feeding_id = #{feedingId}
+    </update>
+
+    <delete id="deleteWorkFeedingByFeedingId" parameterType="Long">
+        delete from work_feeding where feeding_id = #{feedingId}
+    </delete>
+
+    <delete id="deleteWorkFeedingByFeedingIds" parameterType="String">
+        delete from work_feeding where feeding_id in 
+        <foreach item="feedingId" collection="array" open="(" separator="," close=")">
+            #{feedingId}
+        </foreach>
+    </delete>
+</mapper>

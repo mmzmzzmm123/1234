@@ -1,7 +1,7 @@
 package com.ruoyi.system.service.impl;
 
-import com.ruoyi.system.domain.Process;
-import com.ruoyi.system.mapper.ProcessMapper;
+import com.ruoyi.system.domain.WorkProcess;
+import com.ruoyi.system.mapper.WorkProcessMapper;
 import com.ruoyi.system.service.IProcessService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -17,10 +17,11 @@ import java.util.List;
 public class ProcessServiceImpl implements IProcessService {
 
     @Autowired
-    private ProcessMapper processMapper;
+    private WorkProcessMapper processMapper;
 
     @Override
-    public List<Process> getProcessList() {
-        return processMapper.selectAllProcess();
+    public List<WorkProcess> getProcessList() {
+        WorkProcess workProcess = new WorkProcess();
+        return processMapper.selectWorkProcessList(workProcess);
     }
 }

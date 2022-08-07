@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.WorkFeedingRecordMapper">
+    
+    <resultMap type="WorkFeedingRecord" id="WorkFeedingRecordResult">
+        <result property="feedingRecordId"    column="feeding_record_id"    />
+        <result property="batchNo"    column="batch_no"    />
+        <result property="reactionCode"    column="reaction_code"    />
+        <result property="mode"    column="mode"    />
+        <result property="interval"    column="interval"    />
+        <result property="material"    column="material"    />
+        <result property="type"    column="type"    />
+    </resultMap>
+
+    <sql id="selectWorkFeedingRecordVo">
+        select feeding_record_id, batch_no, reaction_code, mode, `interval`, material, type from work_feeding_record
+    </sql>
+
+    <select id="selectWorkFeedingRecordList" parameterType="WorkFeedingRecord" resultMap="WorkFeedingRecordResult">
+        <include refid="selectWorkFeedingRecordVo"/>
+        <where>  
+            <if test="batchNo != null  and batchNo != ''"> and batch_no = #{batchNo}</if>
+            <if test="reactionCode != null  and reactionCode != ''"> and reaction_code = #{reactionCode}</if>
+            <if test="mode != null  and mode != ''"> and mode = #{mode}</if>
+            <if test="interval != null  and interval != ''"> and `interval` = #{interval}</if>
+            <if test="material != null  and material != ''"> and material = #{material}</if>
+            <if test="type != null "> and type = #{type}</if>
+        </where>
+    </select>
+    
+    <select id="selectWorkFeedingRecordByFeedingRecordId" parameterType="Long" resultMap="WorkFeedingRecordResult">
+        <include refid="selectWorkFeedingRecordVo"/>
+        where feeding_record_id = #{feedingRecordId}
+    </select>
+        
+    <insert id="insertWorkFeedingRecord" parameterType="WorkFeedingRecord" useGeneratedKeys="true" keyProperty="feedingRecordId">
+        insert into work_feeding_record
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="batchNo != null">batch_no,</if>
+            <if test="reactionCode != null">reaction_code,</if>
+            <if test="mode != null">mode,</if>
+            <if test="interval != null">`interval`,</if>
+            <if test="material != null">material,</if>
+            <if test="type != null">type,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="batchNo != null">#{batchNo},</if>
+            <if test="reactionCode != null">#{reactionCode},</if>
+            <if test="mode != null">#{mode},</if>
+            <if test="interval != null">#{interval},</if>
+            <if test="material != null">#{material},</if>
+            <if test="type != null">#{type},</if>
+         </trim>
+    </insert>
+
+    <update id="updateWorkFeedingRecord" parameterType="WorkFeedingRecord">
+        update work_feeding_record
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="batchNo != null">batch_no = #{batchNo},</if>
+            <if test="reactionCode != null">reaction_code = #{reactionCode},</if>
+            <if test="mode != null">mode = #{mode},</if>
+            <if test="interval != null">`interval` = #{interval},</if>
+            <if test="material != null">material = #{material},</if>
+            <if test="type != null">type = #{type},</if>
+        </trim>
+        where feeding_record_id = #{feedingRecordId}
+    </update>
+
+    <delete id="deleteWorkFeedingRecordByFeedingRecordId" parameterType="Long">
+        delete from work_feeding_record where feeding_record_id = #{feedingRecordId}
+    </delete>
+
+    <delete id="deleteWorkFeedingRecordByFeedingRecordIds" parameterType="String">
+        delete from work_feeding_record where feeding_record_id in 
+        <foreach item="feedingRecordId" collection="array" open="(" separator="," close=")">
+            #{feedingRecordId}
+        </foreach>
+    </delete>
+
+    <delete id="deleteWorkFeedingRecordByBatchNo" parameterType="String">
+        delete from work_feeding_record where batch_no = #{batchNo}
+    </delete>
+</mapper>

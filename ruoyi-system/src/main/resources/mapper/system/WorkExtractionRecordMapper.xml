@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.WorkExtractionRecordMapper">
+    
+    <resultMap type="WorkExtractionRecord" id="WorkExtractionRecordResult">
+        <result property="extractionRecordId"    column="extraction_record_id"    />
+        <result property="batchNo"    column="batch_no"    />
+        <result property="reactionCode"    column="reaction_code"    />
+        <result property="standing"    column="standing"    />
+        <result property="arg1"    column="arg1"    />
+        <result property="arg2"    column="arg2"    />
+        <result property="type"    column="type"    />
+    </resultMap>
+
+    <sql id="selectWorkExtractionRecordVo">
+        select extraction_record_id, batch_no, reaction_code, standing, arg1, arg2, type from work_extraction_record
+    </sql>
+
+    <select id="selectWorkExtractionRecordList" parameterType="WorkExtractionRecord" resultMap="WorkExtractionRecordResult">
+        <include refid="selectWorkExtractionRecordVo"/>
+        <where>  
+            <if test="batchNo != null  and batchNo != ''"> and batch_no = #{batchNo}</if>
+            <if test="reactionCode != null  and reactionCode != ''"> and reaction_code = #{reactionCode}</if>
+            <if test="standing != null  and standing != ''"> and standing = #{standing}</if>
+            <if test="arg1 != null  and arg1 != ''"> and arg1 = #{arg1}</if>
+            <if test="arg2 != null  and arg2 != ''"> and arg2 = #{arg2}</if>
+            <if test="type != null "> and type = #{type}</if>
+        </where>
+    </select>
+    
+    <select id="selectWorkExtractionRecordByExtractionRecordId" parameterType="Long" resultMap="WorkExtractionRecordResult">
+        <include refid="selectWorkExtractionRecordVo"/>
+        where extraction_record_id = #{extractionRecordId}
+    </select>
+        
+    <insert id="insertWorkExtractionRecord" parameterType="WorkExtractionRecord" useGeneratedKeys="true" keyProperty="extractionRecordId">
+        insert into work_extraction_record
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="batchNo != null">batch_no,</if>
+            <if test="reactionCode != null">reaction_code,</if>
+            <if test="standing != null">standing,</if>
+            <if test="arg1 != null">arg1,</if>
+            <if test="arg2 != null">arg2,</if>
+            <if test="type != null">type,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="batchNo != null">#{batchNo},</if>
+            <if test="reactionCode != null">#{reactionCode},</if>
+            <if test="standing != null">#{standing},</if>
+            <if test="arg1 != null">#{arg1},</if>
+            <if test="arg2 != null">#{arg2},</if>
+            <if test="type != null">#{type},</if>
+         </trim>
+    </insert>
+
+    <update id="updateWorkExtractionRecord" parameterType="WorkExtractionRecord">
+        update work_extraction_record
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="batchNo != null">batch_no = #{batchNo},</if>
+            <if test="reactionCode != null">reaction_code = #{reactionCode},</if>
+            <if test="standing != null">standing = #{standing},</if>
+            <if test="arg1 != null">arg1 = #{arg1},</if>
+            <if test="arg2 != null">arg2 = #{arg2},</if>
+            <if test="type != null">type = #{type},</if>
+        </trim>
+        where extraction_record_id = #{extractionRecordId}
+    </update>
+
+    <delete id="deleteWorkExtractionRecordByExtractionRecordId" parameterType="Long">
+        delete from work_extraction_record where extraction_record_id = #{extractionRecordId}
+    </delete>
+
+    <delete id="deleteWorkExtractionRecordByExtractionRecordIds" parameterType="String">
+        delete from work_extraction_record where extraction_record_id in 
+        <foreach item="extractionRecordId" collection="array" open="(" separator="," close=")">
+            #{extractionRecordId}
+        </foreach>
+    </delete>
+
+    <delete id="deleteWorkExtractionRecordByBatchNo" parameterType="String">
+        delete from work_extraction_record where batch_no = #{batchNo}
+    </delete>
+</mapper>
