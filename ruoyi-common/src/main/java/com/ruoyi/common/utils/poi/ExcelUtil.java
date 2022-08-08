@@ -54,6 +54,7 @@ import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.VerticalAlignment;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.usermodel.WorkbookFactory;
+import org.apache.poi.ss.usermodel.DataFormat;
 import org.apache.poi.ss.util.CellRangeAddress;
 import org.apache.poi.ss.util.CellRangeAddressList;
 import org.apache.poi.util.IOUtils;
@@ -1020,8 +1021,25 @@ public class ExcelUtil<T>
                 }
                 else if (value instanceof BigDecimal && -1 != attr.scale())
                 {
-                    cell.setCellValue((((BigDecimal) value).setScale(attr.scale(), attr.roundingMode())).toString());
-                }
+                    String valueStr = (((BigDecimal) value).setScale(attr.scale(), attr.roundingMode())).toString();
+                    //增加如果设置cellType是数值格式，则设置自定义小数点的格式
+                    if (Excel.ColumnType.NUMERIC == attr.cellType()) 
+                    {
+                        //需要新建个样式，直接从styles.get("data")会被后续的覆盖掉
+                        CellStyle cellStyle = wb.createCellStyle();
+                        cellStyle.cloneStyleFrom(styles.get("data"));
+                        DataFormat df = wb.createDataFormat();//此处设置数据格式
+                        String precision = "0." + StringUtils.leftPad("", attr.scale(), "0");
+                        cellStyle.setDataFormat(df.getFormat(precision));
+                        cell.setCellStyle(cellStyle);
+                        cell.setCellValue(Double.parseDouble(valueStr));
+                    } 
+                    else 
+                    {
+                        //否则还是字符串导出
+                        cell.setCellValue(valueStr);
+                    }
+                } 
                 else if (!attr.handler().equals(ExcelHandlerAdapter.class))
                 {
                     cell.setCellValue(dataFormatHandlerAdapter(value, attr));
