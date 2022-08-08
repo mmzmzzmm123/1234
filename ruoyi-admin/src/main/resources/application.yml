@@ -15,7 +15,6 @@ ruoyi:
   # 验证码类型 math 数组计算 char 字符验证
   captchaType: math
 
-# 开发环境配置
 server:
   # 服务器的HTTP端口，默认为8080
   port: 8080
@@ -70,13 +69,13 @@ spring:
   # redis 配置
   redis:
     # 地址
-    host: localhost
+    host: 150.158.27.16 # tenxun-server
     # 端口，默认为6379
-    port: 6379
+    port: 16379 #19199
     # 数据库索引
     database: 0
     # 密码
-    password: 
+    password: 575777jk
     # 连接超时时间
     timeout: 10s
     lettuce:
@@ -102,7 +101,7 @@ token:
 # MyBatis配置
 mybatis:
     # 搜索指定包别名
-    typeAliasesPackage: com.ruoyi.**.domain
+    typeAliasesPackage: com.ruoyi.**.domain,com.ruoyi.data.domain
     # 配置mapper的扫描，找到所有的mapper.xml映射文件
     mapperLocations: classpath*:mapper/**/*Mapper.xml
     # 加载全局的配置文件
@@ -119,7 +118,7 @@ swagger:
   # 是否开启swagger
   enabled: true
   # 请求前缀
-  pathMapping: /dev-api
+  pathMapping: /
 
 # 防止XSS攻击
 xss: 
@@ -129,3 +128,11 @@ xss:
   excludes: /system/notice
   # 匹配链接
   urlPatterns: /system/*,/monitor/*,/tool/*
+
+api:
+  jwt:
+    # 加密秘钥
+    secret: f4e2e52034348f86b67cde581c0f9eb5
+    # token有效时长，7天，单位秒
+    expire: 604800
+    header: Auth-Token
