@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.biz.mapper.WordMapper">
+
+    <resultMap type="Word" id="WordResult">
+        <result property="id" column="id"/>
+        <result property="title" column="title"/>
+        <result property="content" column="content"/>
+        <result property="clazzId" column="clazz_id"/>
+        <result property="teacherId" column="teacher_id"/>
+        <result property="clazzName" column="clazzName"/>
+        <result property="gradeName" column="gradeName"/>
+        <result property="teacherName" column="teacherName"/>
+    </resultMap>
+
+    <sql id="selectWordVo">
+         select w.id, title, content, clazz_id, teacher_id,c.name as clazzName,t.t_name as teacherName,g.name as gradeName  from word w
+ left join clazz c on w.clazz_id = c.id
+ left join teacher t on w.teacher_id=t.t_id
+ left join grade g on g.id=c.grade_id
+    </sql>
+
+    <select id="selectWordList" parameterType="Word" resultMap="WordResult">
+        <include refid="selectWordVo"/>
+        <where>
+            <if test="clazzName != null ">and clazz_id = #{clazzId}</if>
+            <if test="teacherName != null ">and teacher_id = #{teacherId}</if>
+        </where>
+    </select>
+
+    <select id="selectWordById" parameterType="Long" resultMap="WordResult">
+        <include refid="selectWordVo"/>
+        where w.id = #{id}
+    </select>
+
+    <insert id="insertWord" parameterType="Word" useGeneratedKeys="true" keyProperty="id">
+        insert into word
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="title != null and title != ''">title,</if>
+            <if test="content != null and content != ''">content,</if>
+            <if test="clazzName != null">clazz_id,</if>
+            <if test="teacherName != null">teacher_id,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="title != null and title != ''">#{title},</if>
+            <if test="content != null and content != ''">#{content},</if>
+            <if test="clazzName != null">(select id from clazz where name=#{clazzName} and grade_id=(SELECT id from grade where name=#{gradeName})),</if>
+            <if test="teacherName != null">(select t_id from teacher where t_name=#{teacherName}),</if>
+        </trim>
+    </insert>
+
+    <update id="updateWord" parameterType="Word">
+        update word
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="title != null and title != ''">title = #{title},</if>
+            <if test="content != null and content != ''">content = #{content},</if>
+            <if test="clazzName != null">clazz_id =(select id from clazz where name=#{clazzName} and grade_id=(select id from grade where name=#{gradeName})),</if>
+            <if test="teacherName != null">teacher_id = (SELECT t_id FROM `teacher` where t_name=#{teacherName}),</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteWordById" parameterType="Long">
+        delete from word where id = #{id}
+    </delete>
+
+    <delete id="deleteWordByIds" parameterType="String">
+        delete from word where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>
