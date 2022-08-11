@@ -42,4 +42,12 @@ public interface IBatchExecuteService {
 
     List<BatchProcessVo> getBatchProcessList(RecordQueryVo recordQueryVo);
 
+    void buttonSampling(RecordQueryVo recordQueryVo);
+
+    void buttonDilution(RecordQueryVo recordQueryVo);
+
+    void buttonExit(RecordQueryVo recordQueryVo);
+
+    void buttonFinish(RecordQueryVo recordQueryVo);
+
 }

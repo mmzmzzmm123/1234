@@ -229,4 +229,24 @@ public class BatchExecuteServiceImpl implements IBatchExecuteService{
     public List<BatchProcessVo> getBatchProcessList(RecordQueryVo recordQueryVo) {
         return null;
     }
+
+    @Override
+    public void buttonSampling(RecordQueryVo recordQueryVo) {
+
+    }
+
+    @Override
+    public void buttonDilution(RecordQueryVo recordQueryVo) {
+
+    }
+
+    @Override
+    public void buttonExit(RecordQueryVo recordQueryVo) {
+
+    }
+
+    @Override
+    public void buttonFinish(RecordQueryVo recordQueryVo) {
+
+    }
 }

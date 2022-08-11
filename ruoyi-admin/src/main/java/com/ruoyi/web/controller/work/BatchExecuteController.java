@@ -124,25 +124,29 @@ public class BatchExecuteController extends BaseController{
 
     @PostMapping("/button/sampling")
     @ApiOperation("取样按钮")
-    public R buttonSampling(){
+    public R buttonSampling(@RequestBody RecordQueryVo recordQueryVo){
+        batchExecuteService.buttonSampling(recordQueryVo);
         return R.ok();
     }
 
     @PostMapping("/button/dilution")
     @ApiOperation("稀释按钮")
-    public R buttonDilution(){
+    public R buttonDilution(@RequestBody RecordQueryVo recordQueryVo){
+        batchExecuteService.buttonDilution(recordQueryVo);
         return R.ok();
     }
 
     @PostMapping("/button/exit")
     @ApiOperation("失败退出按钮")
-    public R buttonExit(){
+    public R buttonExit(@RequestBody RecordQueryVo recordQueryVo){
+        batchExecuteService.buttonExit(recordQueryVo);
         return R.ok();
     }
 
     @PostMapping("/button/finish")
     @ApiOperation("完成按钮")
-    public R buttonFinish(){
+    public R buttonFinish(@RequestBody RecordQueryVo recordQueryVo){
+        batchExecuteService.buttonFinish(recordQueryVo);
         return R.ok();
     }
 
