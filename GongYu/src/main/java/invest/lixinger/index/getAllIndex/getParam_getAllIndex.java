@@ -12,8 +12,8 @@ public class getParam_getAllIndex {
     public static String getParamJson() throws IOException {
         String filePath = getParam_getAllIndex.class.getClassLoader().getResource("indexReqParam.yml").getPath();
         Map conf = new Yaml().load(new FileInputStream(filePath));
-        String token=(String)conf.get("token");
-        allIndexParam_RootVO paramvo=new allIndexParam_RootVO();
+        String token = (String) conf.get("token");
+        allIndexParam_RootVO paramvo = new allIndexParam_RootVO();
         paramvo.setToken(token);
         String json = JSON.toJSONString(paramvo);
 

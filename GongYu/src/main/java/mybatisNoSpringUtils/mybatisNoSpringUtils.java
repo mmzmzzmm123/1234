@@ -1,4 +1,4 @@
-package GYProject.mybatisTest.mybatisNoSpringUtils;
+package mybatisNoSpringUtils;
 
 
 import com.baomidou.mybatisplus.annotation.DbType;

@@ -1,11 +1,6 @@
-package GYProject.mybatisTest.mybatisNoSpringUtils;
+package mybatisNoSpringUtils;
 
-import invest.lixinger.index.fundamental.request_fundamental;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.context.annotation.PropertySource;
 import org.yaml.snakeyaml.Yaml;
-import sun.security.util.Password;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;

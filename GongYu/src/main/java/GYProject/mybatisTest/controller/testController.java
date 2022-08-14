@@ -1,6 +1,7 @@
 package GYProject.mybatisTest.controller;
 
 import GYProject.mybatisTest.entity.testVO;
+import GYProject.mybatisTest.mapper.testvoInterface;
 import org.junit.Test;
 
 import javax.annotation.Resource;

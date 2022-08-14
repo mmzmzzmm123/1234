@@ -7,7 +7,6 @@
           plain
           icon="el-icon-plus"
           size="mini"
-          
           @click="handleAdd"
           v-hasPermi="['invest:getzichanxifen:add']"
           >新增</el-button
@@ -33,7 +32,7 @@
           plain
           icon="el-icon-delete"
           size="mini"
-          :disabled="multiple"  
+          :disabled="multiple"
           @click="handleDelete"
           v-hasPermi="['invest:getzichanxifen:remove']"
           >删除</el-button
@@ -84,16 +83,17 @@
             icon="el-icon-edit"
             @click="handleUpdate(scope.row)"
             v-hasPermi="['invest:getzichanxifen:edit']"
-            >修改</el-button
-          >
+            >修改
+          </el-button>
+
           <el-button
             size="mini"
             type="text"
             icon="el-icon-delete"
             @click="handleDelete(scope.row)"
             v-hasPermi="['invest:getzichanxifen:remove']"
-            >删除</el-button
-          >
+            >删除
+          </el-button>
         </template>
       </el-table-column>
     </el-table>

@@ -1,6 +1,6 @@
 package invest.lixinger.index.fundamental;
 
-import GYProject.mybatisTest.mybatisNoSpringUtils.mybatisNoSpringUtils;
+import mybatisNoSpringUtils.mybatisNoSpringUtils;
 import invest.lixinger.index.fundamental.VO.fundamentalResult_RootVO;
 import invest.lixinger.utils.netRequest;
 import org.yaml.snakeyaml.Yaml;

@@ -2,7 +2,7 @@ package GYProject.mybatisTest;
 
 import GYProject.mybatisTest.entity.testNoSpringVO;
 import GYProject.mybatisTest.mapper.testNoSpringMapper;
-import GYProject.mybatisTest.mybatisNoSpringUtils.mybatisNoSpringUtils;
+import mybatisNoSpringUtils.mybatisNoSpringUtils;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -24,7 +24,6 @@ public class testMybatisNoSpring extends mybatisNoSpringUtils {
         System.out.println("数据总条数：" + pageResult.getTotal());
         System.out.println("总页数：" + pageResult.getPages());
         System.out.println("查询到的数据：" + pageResult.getRecords());
-
     }
 
     @Test

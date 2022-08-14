@@ -1,6 +1,6 @@
 package invest.lixinger.ruoyi.controller;
 
-import GYProject.mybatisTest.mybatisNoSpringUtils.mybatisNoSpringUtils;
+import mybatisNoSpringUtils.mybatisNoSpringUtils;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import invest.lixinger.ruoyi.entity.totalAssetVO;
 import invest.lixinger.ruoyi.entity.ziChanXiFenVO;
