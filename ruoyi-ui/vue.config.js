@@ -40,7 +40,14 @@ module.exports = {
         pathRewrite: {
           ['^' + process.env.VUE_APP_BASE_API]: ''
         }
-      }
+      },
+      // [process.env.VUE_APP_BASE_API]: { // 代理到官网
+      //   target: `http://vue.ruoyi.vip`,
+      //   changeOrigin: true,
+      //   pathRewrite: {
+      //     ['^' + process.env.VUE_APP_BASE_API]: '/prod-api'
+      //   }
+      // },
     },
     disableHostCheck: true
   },
