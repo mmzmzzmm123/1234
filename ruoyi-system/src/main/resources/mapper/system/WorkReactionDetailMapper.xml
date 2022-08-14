@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.WorkReactionDetailMapper">
+    
+    <resultMap type="WorkReactionDetail" id="WorkReactionDetailResult">
+        <result property="reactionDetailId"    column="reaction_detail_id"    />
+        <result property="reactionCode"    column="reaction_code"    />
+        <result property="sort"    column="sort"    />
+        <result property="processName"    column="process_name"    />
+        <result property="processCode"    column="process_code"    />
+        <result property="precondition"    column="precondition"    />
+        <result property="param"    column="param"    />
+        <result property="endif"    column="endif"    />
+    </resultMap>
+
+    <sql id="selectWorkReactionDetailVo">
+        select reaction_detail_id, reaction_code, sort, process_name, process_code, precondition, param, endif from work_reaction_detail
+    </sql>
+
+    <select id="selectWorkReactionDetailList" parameterType="WorkReactionDetail" resultMap="WorkReactionDetailResult">
+        <include refid="selectWorkReactionDetailVo"/>
+        <where>  
+            <if test="reactionCode != null  and reactionCode != ''"> and reaction_code = #{reactionCode}</if>
+            <if test="sort != null "> and sort = #{sort}</if>
+            <if test="processName != null  and processName != ''"> and process_name like concat('%', #{processName}, '%')</if>
+            <if test="processCode != null  and processCode != ''"> and process_code = #{processCode}</if>
+            <if test="precondition != null  and precondition != ''"> and precondition = #{precondition}</if>
+            <if test="param != null  and param != ''"> and param = #{param}</if>
+            <if test="endif != null  and endif != ''"> and endif = #{endif}</if>
+        </where>
+    </select>
+    
+    <select id="selectWorkReactionDetailByReactionDetailId" parameterType="Long" resultMap="WorkReactionDetailResult">
+        <include refid="selectWorkReactionDetailVo"/>
+        where reaction_detail_id = #{reactionDetailId}
+    </select>
+        
+    <insert id="insertWorkReactionDetail" parameterType="WorkReactionDetail" useGeneratedKeys="true" keyProperty="reactionDetailId">
+        insert into work_reaction_detail
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="reactionCode != null">reaction_code,</if>
+            <if test="sort != null">sort,</if>
+            <if test="processName != null">process_name,</if>
+            <if test="processCode != null">process_code,</if>
+            <if test="precondition != null">precondition,</if>
+            <if test="param != null">param,</if>
+            <if test="endif != null">endif,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="reactionCode != null">#{reactionCode},</if>
+            <if test="sort != null">#{sort},</if>
+            <if test="processName != null">#{processName},</if>
+            <if test="processCode != null">#{processCode},</if>
+            <if test="precondition != null">#{precondition},</if>
+            <if test="param != null">#{param},</if>
+            <if test="endif != null">#{endif},</if>
+         </trim>
+    </insert>
+
+    <update id="updateWorkReactionDetail" parameterType="WorkReactionDetail">
+        update work_reaction_detail
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="reactionCode != null">reaction_code = #{reactionCode},</if>
+            <if test="sort != null">sort = #{sort},</if>
+            <if test="processName != null">process_name = #{processName},</if>
+            <if test="processCode != null">process_code = #{processCode},</if>
+            <if test="precondition != null">precondition = #{precondition},</if>
+            <if test="param != null">param = #{param},</if>
+            <if test="endif != null">endif = #{endif},</if>
+        </trim>
+        where reaction_detail_id = #{reactionDetailId}
+    </update>
+
+    <delete id="deleteWorkReactionDetailByReactionDetailId" parameterType="Long">
+        delete from work_reaction_detail where reaction_detail_id = #{reactionDetailId}
+    </delete>
+
+    <delete id="deleteWorkReactionDetailByReactionDetailIds" parameterType="String">
+        delete from work_reaction_detail where reaction_detail_id in 
+        <foreach item="reactionDetailId" collection="array" open="(" separator="," close=")">
+            #{reactionDetailId}
+        </foreach>
+    </delete>
+</mapper>

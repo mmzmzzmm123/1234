@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.WorkReactionBatchMapper">
+    
+    <resultMap type="WorkReactionBatch" id="WorkReactionBatchResult">
+        <result property="batchId"    column="batch_id"    />
+        <result property="batchName"    column="batch_name"    />
+        <result property="batchNo"    column="batch_no"    />
+        <result property="reactionSort"    column="reaction_sort"    />
+        <result property="reactionCode"    column="reaction_code"    />
+        <result property="sort"    column="sort"    />
+        <result property="processName"    column="process_name"    />
+        <result property="processCode"    column="process_code"    />
+        <result property="precondition"    column="precondition"    />
+        <result property="param"    column="param"    />
+        <result property="endif"    column="endif"    />
+        <result property="status"    column="status"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+    </resultMap>
+
+    <sql id="selectWorkReactionBatchVo">
+        select batch_id, batch_name, batch_no, reaction_sort, reaction_code, sort, process_name, process_code, precondition, param, endif, status, create_by, create_time from work_reaction_batch
+    </sql>
+
+    <select id="selectWorkReactionBatchList" parameterType="WorkReactionBatch" resultMap="WorkReactionBatchResult">
+        <include refid="selectWorkReactionBatchVo"/>
+        <where>  
+            <if test="batchName != null  and batchName != ''"> and batch_name like concat('%', #{batchName}, '%')</if>
+            <if test="batchNo != null  and batchNo != ''"> and batch_no = #{batchNo}</if>
+            <if test="reactionSort != null "> and reaction_sort = #{reactionSort}</if>
+            <if test="reactionCode != null  and reactionCode != ''"> and reaction_code = #{reactionCode}</if>
+            <if test="sort != null "> and sort = #{sort}</if>
+            <if test="processName != null  and processName != ''"> and process_name like concat('%', #{processName}, '%')</if>
+            <if test="processCode != null  and processCode != ''"> and process_code = #{processCode}</if>
+            <if test="precondition != null  and precondition != ''"> and precondition = #{precondition}</if>
+            <if test="param != null  and param != ''"> and param = #{param}</if>
+            <if test="endif != null  and endif != ''"> and endif = #{endif}</if>
+            <if test="status != null "> and status = #{status}</if>
+        </where>
+    </select>
+    
+    <select id="selectWorkReactionBatchByBatchId" parameterType="Long" resultMap="WorkReactionBatchResult">
+        <include refid="selectWorkReactionBatchVo"/>
+        where batch_id = #{batchId}
+    </select>
+        
+    <insert id="insertWorkReactionBatch" parameterType="WorkReactionBatch" useGeneratedKeys="true" keyProperty="batchId">
+        insert into work_reaction_batch
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="batchName != null">batch_name,</if>
+            <if test="batchNo != null">batch_no,</if>
+            <if test="reactionSort != null">reaction_sort,</if>
+            <if test="reactionCode != null">reaction_code,</if>
+            <if test="sort != null">sort,</if>
+            <if test="processName != null">process_name,</if>
+            <if test="processCode != null">process_code,</if>
+            <if test="precondition != null">precondition,</if>
+            <if test="param != null">param,</if>
+            <if test="endif != null">endif,</if>
+            <if test="status != null">status,</if>
+            <if test="createBy != null">create_by,</if>
+            create_time
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="batchName != null">#{batchName},</if>
+            <if test="batchNo != null">#{batchNo},</if>
+            <if test="reactionSort != null">#{reactionSort},</if>
+            <if test="reactionCode != null">#{reactionCode},</if>
+            <if test="sort != null">#{sort},</if>
+            <if test="processName != null">#{processName},</if>
+            <if test="processCode != null">#{processCode},</if>
+            <if test="precondition != null">#{precondition},</if>
+            <if test="param != null">#{param},</if>
+            <if test="endif != null">#{endif},</if>
+            <if test="status != null">#{status},</if>
+            <if test="createBy != null">#{createBy},</if>
+            sysdate()
+         </trim>
+    </insert>
+
+    <update id="updateWorkReactionBatch" parameterType="WorkReactionBatch">
+        update work_reaction_batch
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="batchName != null">batch_name = #{batchName},</if>
+            <if test="batchNo != null">batch_no = #{batchNo},</if>
+            <if test="reactionSort != null">reaction_sort = #{reactionSort},</if>
+            <if test="reactionCode != null">reaction_code = #{reactionCode},</if>
+            <if test="sort != null">sort = #{sort},</if>
+            <if test="processName != null">process_name = #{processName},</if>
+            <if test="processCode != null">process_code = #{processCode},</if>
+            <if test="precondition != null">precondition = #{precondition},</if>
+            <if test="param != null">param = #{param},</if>
+            <if test="endif != null">endif = #{endif},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+        </trim>
+        where batch_id = #{batchId}
+    </update>
+
+    <delete id="deleteWorkReactionBatchByBatchId" parameterType="Long">
+        delete from work_reaction_batch where batch_id = #{batchId}
+    </delete>
+
+    <delete id="deleteWorkReactionBatchByBatchIds" parameterType="String">
+        delete from work_reaction_batch where batch_id in 
+        <foreach item="batchId" collection="array" open="(" separator="," close=")">
+            #{batchId}
+        </foreach>
+    </delete>
+
+    <delete id="deleteWorkReactionBatchByBatchNo" parameterType="String">
+        delete from work_reaction_batch where batch_no = #{batchNo}
+    </delete>
+</mapper>

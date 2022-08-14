@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.WorkHeatingRecordMapper">
+    
+    <resultMap type="WorkHeatingRecord" id="WorkHeatingRecordResult">
+        <result property="heatingRecordId"    column="heating_record_id"    />
+        <result property="batchNo"    column="batch_no"    />
+        <result property="reactionCode"    column="reaction_code"    />
+        <result property="mode"    column="mode"    />
+        <result property="interval"    column="interval"    />
+        <result property="temperature"    column="temperature"    />
+        <result property="temperatureDuration"    column="temperature_duration"    />
+        <result property="stirDuration"    column="stir_duration"    />
+        <result property="type"    column="type"    />
+    </resultMap>
+
+    <sql id="selectWorkHeatingRecordVo">
+        select heating_record_id, batch_no, reaction_code, mode, `interval`, temperature, temperature_duration, stir_duration, type from work_heating_record
+    </sql>
+
+    <select id="selectWorkHeatingRecordList" parameterType="WorkHeatingRecord" resultMap="WorkHeatingRecordResult">
+        <include refid="selectWorkHeatingRecordVo"/>
+        <where>  
+            <if test="batchNo != null  and batchNo != ''"> and batch_no = #{batchNo}</if>
+            <if test="reactionCode != null  and reactionCode != ''"> and reaction_code = #{reactionCode}</if>
+            <if test="mode != null  and mode != ''"> and mode = #{mode}</if>
+            <if test="interval != null  and interval != ''"> and `interval` = #{interval}</if>
+            <if test="temperature != null "> and temperature = #{temperature}</if>
+            <if test="temperatureDuration != null "> and temperature_duration = #{temperatureDuration}</if>
+            <if test="stirDuration != null "> and stir_duration = #{stirDuration}</if>
+            <if test="type != null "> and type = #{type}</if>
+        </where>
+    </select>
+    
+    <select id="selectWorkHeatingRecordByHeatingRecordId" parameterType="Long" resultMap="WorkHeatingRecordResult">
+        <include refid="selectWorkHeatingRecordVo"/>
+        where heating_record_id = #{heatingRecordId}
+    </select>
+        
+    <insert id="insertWorkHeatingRecord" parameterType="WorkHeatingRecord" useGeneratedKeys="true" keyProperty="heatingRecordId">
+        insert into work_heating_record
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="batchNo != null">batch_no,</if>
+            <if test="reactionCode != null">reaction_code,</if>
+            <if test="mode != null">mode,</if>
+            <if test="interval != null">`interval`,</if>
+            <if test="temperature != null">temperature,</if>
+            <if test="temperatureDuration != null">temperature_duration,</if>
+            <if test="stirDuration != null">stir_duration,</if>
+            <if test="type != null">type,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="batchNo != null">#{batchNo},</if>
+            <if test="reactionCode != null">#{reactionCode},</if>
+            <if test="mode != null">#{mode},</if>
+            <if test="interval != null">#{interval},</if>
+            <if test="temperature != null">#{temperature},</if>
+            <if test="temperatureDuration != null">#{temperatureDuration},</if>
+            <if test="stirDuration != null">#{stirDuration},</if>
+            <if test="type != null">#{type},</if>
+         </trim>
+    </insert>
+
+    <update id="updateWorkHeatingRecord" parameterType="WorkHeatingRecord">
+        update work_heating_record
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="batchNo != null">batch_no = #{batchNo},</if>
+            <if test="reactionCode != null">reaction_code = #{reactionCode},</if>
+            <if test="mode != null">mode = #{mode},</if>
+            <if test="interval != null">`interval` = #{interval},</if>
+            <if test="temperature != null">temperature = #{temperature},</if>
+            <if test="temperatureDuration != null">temperature_duration = #{temperatureDuration},</if>
+            <if test="stirDuration != null">stir_duration = #{stirDuration},</if>
+            <if test="type != null">type = #{type},</if>
+        </trim>
+        where heating_record_id = #{heatingRecordId}
+    </update>
+
+    <delete id="deleteWorkHeatingRecordByHeatingRecordId" parameterType="Long">
+        delete from work_heating_record where heating_record_id = #{heatingRecordId}
+    </delete>
+
+    <delete id="deleteWorkHeatingRecordByHeatingRecordIds" parameterType="String">
+        delete from work_heating_record where heating_record_id in 
+        <foreach item="heatingRecordId" collection="array" open="(" separator="," close=")">
+            #{heatingRecordId}
+        </foreach>
+    </delete>
+
+    <delete id="deleteWorkHeatingRecordByBatchNo" parameterType="String">
+        delete from work_heating_record where batch_no = #{batchNo}
+    </delete>
+</mapper>

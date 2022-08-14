@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.WorkProcessRecordMapper">
+    
+    <resultMap type="WorkProcessRecord" id="WorkProcessRecordResult">
+        <result property="processRecordId"    column="process_record_id"    />
+        <result property="batchNo"    column="batch_no"    />
+        <result property="reactionCode"    column="reaction_code"    />
+        <result property="startTime"    column="start_time"    />
+        <result property="endTime"    column="end_time"    />
+    </resultMap>
+
+    <sql id="selectWorkProcessRecordVo">
+        select process_record_id, batch_no, reaction_code, start_time, end_time from work_process_record
+    </sql>
+
+    <select id="selectWorkProcessRecordList" parameterType="WorkProcessRecord" resultMap="WorkProcessRecordResult">
+        <include refid="selectWorkProcessRecordVo"/>
+        <where>  
+            <if test="batchNo != null  and batchNo != ''"> and batch_no = #{batchNo}</if>
+            <if test="reactionCode != null  and reactionCode != ''"> and reaction_code = #{reactionCode}</if>
+            <if test="startTime != null "> and start_time = #{startTime}</if>
+            <if test="endTime != null "> and end_time = #{endTime}</if>
+        </where>
+    </select>
+    
+    <select id="selectWorkProcessRecordByProcessRecordId" parameterType="Long" resultMap="WorkProcessRecordResult">
+        <include refid="selectWorkProcessRecordVo"/>
+        where process_record_id = #{processRecordId}
+    </select>
+        
+    <insert id="insertWorkProcessRecord" parameterType="WorkProcessRecord" useGeneratedKeys="true" keyProperty="processRecordId">
+        insert into work_process_record
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="batchNo != null">batch_no,</if>
+            <if test="reactionCode != null">reaction_code,</if>
+            <if test="startTime != null">start_time,</if>
+            <if test="endTime != null">end_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="batchNo != null">#{batchNo},</if>
+            <if test="reactionCode != null">#{reactionCode},</if>
+            <if test="startTime != null">#{startTime},</if>
+            <if test="endTime != null">#{endTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateWorkProcessRecord" parameterType="WorkProcessRecord">
+        update work_process_record
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="batchNo != null">batch_no = #{batchNo},</if>
+            <if test="reactionCode != null">reaction_code = #{reactionCode},</if>
+            <if test="startTime != null">start_time = #{startTime},</if>
+            <if test="endTime != null">end_time = #{endTime},</if>
+        </trim>
+        where process_record_id = #{processRecordId}
+    </update>
+
+    <delete id="deleteWorkProcessRecordByProcessRecordId" parameterType="Long">
+        delete from work_process_record where process_record_id = #{processRecordId}
+    </delete>
+
+    <delete id="deleteWorkProcessRecordByProcessRecordIds" parameterType="String">
+        delete from work_process_record where process_record_id in 
+        <foreach item="processRecordId" collection="array" open="(" separator="," close=")">
+            #{processRecordId}
+        </foreach>
+    </delete>
+</mapper>

@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import Router from 'vue-router'
+import DevDefaultRoutes from './option'
 
 Vue.use(Router)
 
@@ -27,7 +28,8 @@ import Layout from '@/layout'
     activeMenu: '/system/user'      // 当路由设置了该属性，则会高亮相对应的侧边栏。
   }
  */
-
+// const DevDefaultRoutesData = process.env.NODE_ENV === 'development' ? (DevDefaultRoutes || []) : []
+const DevDefaultRoutesData = []
 // 公共路由
 export const constantRoutes = [
   {
@@ -87,7 +89,8 @@ export const constantRoutes = [
         meta: { title: '个人中心', icon: 'user' }
       }
     ]
-  }
+  },
+  ...DevDefaultRoutesData
 ]
 
 // 动态路由，基于用户权限动态去加载

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.StockMapper">
+
+    <resultMap type="com.ruoyi.system.domain.Stock" id="StockResult">
+        <id     property="stockId"      column="stock_id"      />
+        <result property="stockType"    column="stock_type"    />
+        <result property="name"     column="name"     />
+        <result property="brand"   column="brand"   />
+        <result property="param"    column="param"    />
+        <result property="unit"      column="unit"      />
+        <result property="quantity"    column="quantity"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="remark"    column="remark"    />
+    </resultMap>
+
+    <sql id="selectStockVo">
+        select stock_id, stock_type, `name`, brand, param, unit, quantity, create_time, remark
+		from work_stock
+    </sql>
+
+    <select id="selectByStockType" parameterType="com.ruoyi.system.domain.Stock" resultMap="StockResult">
+        <include refid="selectStockVo"/>
+        where stock_type = #{stockType}
+    </select>
+</mapper>

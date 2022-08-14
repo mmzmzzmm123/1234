@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.WorkGelMapper">
+    
+    <resultMap type="WorkGel" id="WorkGelResult">
+        <result property="gelId"    column="gel_id"    />
+        <result property="reactionCode"    column="reaction_code"    />
+        <result property="standing"    column="standing"    />
+        <result property="material"    column="material"    />
+        <result property="arg1"    column="arg1"    />
+        <result property="arg2"    column="arg2"    />
+    </resultMap>
+
+    <sql id="selectWorkGelVo">
+        select gel_id, reaction_code, standing, material, arg1, arg2 from work_gel
+    </sql>
+
+    <select id="selectWorkGelList" parameterType="WorkGel" resultMap="WorkGelResult">
+        <include refid="selectWorkGelVo"/>
+        <where>  
+            <if test="reactionCode != null  and reactionCode != ''"> and reaction_code = #{reactionCode}</if>
+            <if test="standing != null  and standing != ''"> and standing = #{standing}</if>
+            <if test="material != null  and material != ''"> and material = #{material}</if>
+            <if test="arg1 != null  and arg1 != ''"> and arg1 = #{arg1}</if>
+            <if test="arg2 != null  and arg2 != ''"> and arg2 = #{arg2}</if>
+        </where>
+    </select>
+    
+    <select id="selectWorkGelByGelId" parameterType="Long" resultMap="WorkGelResult">
+        <include refid="selectWorkGelVo"/>
+        where gel_id = #{gelId}
+    </select>
+        
+    <insert id="insertWorkGel" parameterType="WorkGel" useGeneratedKeys="true" keyProperty="gelId">
+        insert into work_gel
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="reactionCode != null">reaction_code,</if>
+            <if test="standing != null">standing,</if>
+            <if test="material != null">material,</if>
+            <if test="arg1 != null">arg1,</if>
+            <if test="arg2 != null">arg2,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="reactionCode != null">#{reactionCode},</if>
+            <if test="standing != null">#{standing},</if>
+            <if test="material != null">#{material},</if>
+            <if test="arg1 != null">#{arg1},</if>
+            <if test="arg2 != null">#{arg2},</if>
+         </trim>
+    </insert>
+
+    <update id="updateWorkGel" parameterType="WorkGel">
+        update work_gel
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="reactionCode != null">reaction_code = #{reactionCode},</if>
+            <if test="standing != null">standing = #{standing},</if>
+            <if test="material != null">material = #{material},</if>
+            <if test="arg1 != null">arg1 = #{arg1},</if>
+            <if test="arg2 != null">arg2 = #{arg2},</if>
+        </trim>
+        where gel_id = #{gelId}
+    </update>
+
+    <delete id="deleteWorkGelByGelId" parameterType="Long">
+        delete from work_gel where gel_id = #{gelId}
+    </delete>
+
+    <delete id="deleteWorkGelByGelIds" parameterType="String">
+        delete from work_gel where gel_id in 
+        <foreach item="gelId" collection="array" open="(" separator="," close=")">
+            #{gelId}
+        </foreach>
+    </delete>
+</mapper>

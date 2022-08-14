@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.WorkConcentrateMapper">
+    
+    <resultMap type="WorkConcentrate" id="WorkConcentrateResult">
+        <result property="concentrateId"    column="concentrate_id"    />
+        <result property="reactionCode"    column="reaction_code"    />
+        <result property="standing"    column="standing"    />
+        <result property="arg1"    column="arg1"    />
+        <result property="arg2"    column="arg2"    />
+    </resultMap>
+
+    <sql id="selectWorkConcentrateVo">
+        select concentrate_id, reaction_code, standing, arg1, arg2 from work_concentrate
+    </sql>
+
+    <select id="selectWorkConcentrateList" parameterType="WorkConcentrate" resultMap="WorkConcentrateResult">
+        <include refid="selectWorkConcentrateVo"/>
+        <where>  
+            <if test="reactionCode != null  and reactionCode != ''"> and reaction_code = #{reactionCode}</if>
+            <if test="standing != null  and standing != ''"> and standing = #{standing}</if>
+            <if test="arg1 != null  and arg1 != ''"> and arg1 = #{arg1}</if>
+            <if test="arg2 != null  and arg2 != ''"> and arg2 = #{arg2}</if>
+        </where>
+    </select>
+    
+    <select id="selectWorkConcentrateByConcentrateId" parameterType="Long" resultMap="WorkConcentrateResult">
+        <include refid="selectWorkConcentrateVo"/>
+        where concentrate_id = #{concentrateId}
+    </select>
+        
+    <insert id="insertWorkConcentrate" parameterType="WorkConcentrate" useGeneratedKeys="true" keyProperty="concentrateId">
+        insert into work_concentrate
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="reactionCode != null">reaction_code,</if>
+            <if test="standing != null">standing,</if>
+            <if test="arg1 != null">arg1,</if>
+            <if test="arg2 != null">arg2,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="reactionCode != null">#{reactionCode},</if>
+            <if test="standing != null">#{standing},</if>
+            <if test="arg1 != null">#{arg1},</if>
+            <if test="arg2 != null">#{arg2},</if>
+         </trim>
+    </insert>
+
+    <update id="updateWorkConcentrate" parameterType="WorkConcentrate">
+        update work_concentrate
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="reactionCode != null">reaction_code = #{reactionCode},</if>
+            <if test="standing != null">standing = #{standing},</if>
+            <if test="arg1 != null">arg1 = #{arg1},</if>
+            <if test="arg2 != null">arg2 = #{arg2},</if>
+        </trim>
+        where concentrate_id = #{concentrateId}
+    </update>
+
+    <delete id="deleteWorkConcentrateByConcentrateId" parameterType="Long">
+        delete from work_concentrate where concentrate_id = #{concentrateId}
+    </delete>
+
+    <delete id="deleteWorkConcentrateByConcentrateIds" parameterType="String">
+        delete from work_concentrate where concentrate_id in 
+        <foreach item="concentrateId" collection="array" open="(" separator="," close=")">
+            #{concentrateId}
+        </foreach>
+    </delete>
+</mapper>

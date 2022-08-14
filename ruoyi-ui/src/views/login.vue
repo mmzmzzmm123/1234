@@ -1,7 +1,7 @@
 <template>
   <div class="login">
     <el-form ref="loginForm" :model="loginForm" :rules="loginRules" class="login-form">
-      <h3 class="title">若依后台管理系统</h3>
+      <h3 class="title">化学反应系统</h3>
       <el-form-item prop="username">
         <el-input
           v-model="loginForm.username"
@@ -72,8 +72,6 @@ export default {
     return {
       codeUrl: "",
       loginForm: {
-        username: "admin",
-        password: "admin123",
         rememberMe: false,
         code: "",
         uuid: ""
@@ -166,8 +164,9 @@ export default {
 }
 .title {
   margin: 0px auto 30px auto;
+  font-size:30px;
   text-align: center;
-  color: #707070;
+  color: #1482f0;
 }
 
 .login-form {

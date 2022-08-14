@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.WorkGelRecordMapper">
+    
+    <resultMap type="WorkGelRecord" id="WorkGelRecordResult">
+        <result property="gelRecordId"    column="gel_record_id"    />
+        <result property="batchNo"    column="batch_no"    />
+        <result property="reactionCode"    column="reaction_code"    />
+        <result property="standing"    column="standing"    />
+        <result property="material"    column="material"    />
+        <result property="arg1"    column="arg1"    />
+        <result property="arg2"    column="arg2"    />
+        <result property="type"    column="type"    />
+    </resultMap>
+
+    <sql id="selectWorkGelRecordVo">
+        select gel_record_id, batch_no, reaction_code, standing, material, arg1, arg2, type from work_gel_record
+    </sql>
+
+    <select id="selectWorkGelRecordList" parameterType="WorkGelRecord" resultMap="WorkGelRecordResult">
+        <include refid="selectWorkGelRecordVo"/>
+        <where>  
+            <if test="batchNo != null  and batchNo != ''"> and batch_no = #{batchNo}</if>
+            <if test="reactionCode != null  and reactionCode != ''"> and reaction_code = #{reactionCode}</if>
+            <if test="standing != null  and standing != ''"> and standing = #{standing}</if>
+            <if test="material != null  and material != ''"> and material = #{material}</if>
+            <if test="arg1 != null  and arg1 != ''"> and arg1 = #{arg1}</if>
+            <if test="arg2 != null  and arg2 != ''"> and arg2 = #{arg2}</if>
+            <if test="type != null "> and type = #{type}</if>
+        </where>
+    </select>
+    
+    <select id="selectWorkGelRecordByGelRecordId" parameterType="Long" resultMap="WorkGelRecordResult">
+        <include refid="selectWorkGelRecordVo"/>
+        where gel_record_id = #{gelRecordId}
+    </select>
+        
+    <insert id="insertWorkGelRecord" parameterType="WorkGelRecord" useGeneratedKeys="true" keyProperty="gelRecordId">
+        insert into work_gel_record
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="batchNo != null">batch_no,</if>
+            <if test="reactionCode != null">reaction_code,</if>
+            <if test="standing != null">standing,</if>
+            <if test="material != null">material,</if>
+            <if test="arg1 != null">arg1,</if>
+            <if test="arg2 != null">arg2,</if>
+            <if test="type != null">type,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="batchNo != null">#{batchNo},</if>
+            <if test="reactionCode != null">#{reactionCode},</if>
+            <if test="standing != null">#{standing},</if>
+            <if test="material != null">#{material},</if>
+            <if test="arg1 != null">#{arg1},</if>
+            <if test="arg2 != null">#{arg2},</if>
+            <if test="type != null">#{type},</if>
+         </trim>
+    </insert>
+
+    <update id="updateWorkGelRecord" parameterType="WorkGelRecord">
+        update work_gel_record
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="batchNo != null">batch_no = #{batchNo},</if>
+            <if test="reactionCode != null">reaction_code = #{reactionCode},</if>
+            <if test="standing != null">standing = #{standing},</if>
+            <if test="material != null">material = #{material},</if>
+            <if test="arg1 != null">arg1 = #{arg1},</if>
+            <if test="arg2 != null">arg2 = #{arg2},</if>
+            <if test="type != null">type = #{type},</if>
+        </trim>
+        where gel_record_id = #{gelRecordId}
+    </update>
+
+    <delete id="deleteWorkGelRecordByGelRecordId" parameterType="Long">
+        delete from work_gel_record where gel_record_id = #{gelRecordId}
+    </delete>
+
+    <delete id="deleteWorkGelRecordByGelRecordIds" parameterType="String">
+        delete from work_gel_record where gel_record_id in 
+        <foreach item="gelRecordId" collection="array" open="(" separator="," close=")">
+            #{gelRecordId}
+        </foreach>
+    </delete>
+
+    <delete id="deleteWorkGelRecordByBatchNo" parameterType="String">
+        delete from work_gel_record where batch_no = #{batchNo}
+    </delete>
+</mapper>
