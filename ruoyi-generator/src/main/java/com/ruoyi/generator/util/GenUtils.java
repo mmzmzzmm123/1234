@@ -66,6 +66,11 @@ public class GenUtils
             {
                 column.setJavaType(GenConstants.TYPE_BIGDECIMAL);
             }
+            // 如果是布尔形
+            else if (str != null && StringUtils.equals("tinyint", dataType) && str.length == 1 && Integer.parseInt(str[0]) == 1)
+            {
+                column.setJavaType(GenConstants.TYPE_BOOLEAN);
+            }
             // 如果是整形
             else if (str != null && str.length == 1 && Integer.parseInt(str[0]) <= 10)
             {

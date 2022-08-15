@@ -106,6 +106,9 @@ public class GenConstants
     /** 时间类型 */
     public static final String TYPE_DATE = "Date";
 
+    /** 布尔类型 */
+    public static final String TYPE_BOOLEAN = "Boolean";
+
     /** 模糊查询 */
     public static final String QUERY_LIKE = "LIKE";
 
