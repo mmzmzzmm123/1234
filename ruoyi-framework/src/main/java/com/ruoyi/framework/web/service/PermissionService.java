@@ -6,6 +6,7 @@ import org.springframework.util.CollectionUtils;
 import com.ruoyi.common.core.domain.entity.SysRole;
 import com.ruoyi.common.core.domain.model.LoginUser;
 import com.ruoyi.common.utils.SecurityUtils;
+import com.ruoyi.common.utils.ServletUtils;
 import com.ruoyi.common.utils.StringUtils;
 
 /**
@@ -34,6 +35,7 @@ public class PermissionService
      */
     public boolean hasPermi(String permission)
     {
+        ServletUtils.getRequest().setAttribute("permission", permission);
         if (StringUtils.isEmpty(permission))
         {
             return false;

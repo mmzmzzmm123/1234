@@ -1,9 +1,11 @@
 package com.ruoyi.framework.web.service;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import com.ruoyi.common.core.domain.entity.RoleMenuPerms;
 import com.ruoyi.common.core.domain.entity.SysUser;
 import com.ruoyi.system.service.ISysMenuService;
 import com.ruoyi.system.service.ISysRoleService;
@@ -62,5 +64,16 @@ public class SysPermissionService
             perms.addAll(menuService.selectMenuPermsByUserId(user.getUserId()));
         }
         return perms;
+    }
+
+    /**
+     * 角色菜单权限关联
+     * 
+     * @param user
+     * @return
+     */
+    public List<RoleMenuPerms> getMenuPermsPermission(SysUser user) 
+    {
+        return menuService.selectRoleMenuPermsByUserId(user.getUserId());
     }
 }
