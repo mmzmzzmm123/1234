@@ -2,17 +2,20 @@ package com.ruoyi.framework.aspectj;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
 import org.springframework.stereotype.Component;
 import com.ruoyi.common.annotation.DataScope;
 import com.ruoyi.common.core.domain.BaseEntity;
+import com.ruoyi.common.core.domain.entity.RoleMenuPerms;
 import com.ruoyi.common.core.domain.entity.SysRole;
 import com.ruoyi.common.core.domain.entity.SysUser;
 import com.ruoyi.common.core.domain.model.LoginUser;
-import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.common.utils.SecurityUtils;
+import com.ruoyi.common.utils.ServletUtils;
+import com.ruoyi.common.utils.StringUtils;
 
 /**
  * 数据过滤处理
@@ -86,11 +89,23 @@ public class DataScopeAspect
      */
     public static void dataScopeFilter(JoinPoint joinPoint, SysUser user, String deptAlias, String userAlias)
     {
+        List<Long> idList = null;
+        // 权限限制
+        Object strPer = ServletUtils.getRequest().getAttribute("permission");
+        List<RoleMenuPerms> list = SecurityUtils.getLoginUser().getPermsList();
+        // 如果有权限限制，则获取权限所在的菜单所属的角色，获取该菜单所关联的数据q
+        if (null != strPer && StringUtils.isNotEmpty(String.valueOf(strPer)) && list != null) {
+            idList = list.stream().filter(one -> String.valueOf(strPer).equals(one.getPerms()))
+                    .map(RoleMenuPerms::getRoleId).collect(Collectors.toList());
+        }
         StringBuilder sqlString = new StringBuilder();
         List<String> conditions = new ArrayList<String>();
 
         for (SysRole role : user.getRoles())
         {
+            if (idList != null && !idList.contains(role.getRoleId())) {
+                continue;
+            }
             String dataScope = role.getDataScope();
             if (!DATA_SCOPE_CUSTOM.equals(dataScope) && conditions.contains(dataScope))
             {

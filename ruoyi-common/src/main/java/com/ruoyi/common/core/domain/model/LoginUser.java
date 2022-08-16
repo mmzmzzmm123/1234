@@ -1,10 +1,12 @@
 package com.ruoyi.common.core.domain.model;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.Set;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import com.alibaba.fastjson2.annotation.JSONField;
+import com.ruoyi.common.core.domain.entity.RoleMenuPerms;
 import com.ruoyi.common.core.domain.entity.SysUser;
 
 /**
@@ -67,6 +69,11 @@ public class LoginUser implements UserDetails
     private Set<String> permissions;
 
     /**
+     * 角色权限列表
+     */
+    private List<RoleMenuPerms> permsList;
+
+    /**
      * 用户信息
      */
     private SysUser user;
@@ -111,12 +118,13 @@ public class LoginUser implements UserDetails
         this.permissions = permissions;
     }
 
-    public LoginUser(Long userId, Long deptId, SysUser user, Set<String> permissions)
+    public LoginUser(Long userId, Long deptId, SysUser user, Set<String> permissions, List<RoleMenuPerms> permsList)
     {
         this.userId = userId;
         this.deptId = deptId;
         this.user = user;
         this.permissions = permissions;
+        this.permsList = permsList;
     }
 
     @JSONField(serialize = false)
@@ -246,6 +254,16 @@ public class LoginUser implements UserDetails
     public void setPermissions(Set<String> permissions)
     {
         this.permissions = permissions;
+    }
+
+    public List<RoleMenuPerms> getPermsList() 
+    {
+        return permsList;
+    }
+
+    public void setPermsList(List<RoleMenuPerms> permsList) 
+    {
+        this.permsList = permsList;
     }
 
     public SysUser getUser()

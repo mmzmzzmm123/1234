@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import com.ruoyi.common.constant.Constants;
 import com.ruoyi.common.constant.UserConstants;
 import com.ruoyi.common.core.domain.TreeSelect;
+import com.ruoyi.common.core.domain.entity.RoleMenuPerms;
 import com.ruoyi.common.core.domain.entity.SysMenu;
 import com.ruoyi.common.core.domain.entity.SysRole;
 import com.ruoyi.common.core.domain.entity.SysUser;
@@ -98,6 +99,19 @@ public class SysMenuServiceImpl implements ISysMenuService
             }
         }
         return permsSet;
+    }
+
+    /**
+     * 根据用户ID查询角色菜单权限
+     * 
+     * @param userId 用户ID
+     * @return 角色权限列表
+     */
+    @Override
+    public List<RoleMenuPerms> selectRoleMenuPermsByUserId(Long userId) 
+    {
+        List<RoleMenuPerms> perms = menuMapper.selectRoleMenuPermsByUserId(userId);
+        return perms;
     }
 
     /**
