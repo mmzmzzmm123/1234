@@ -112,7 +112,11 @@ public class WxLoginController {
 
         /**先通过openid来查询是否存在*/
         IbWxUser ibWxUser = ibWxUserService.selectIbWxUserOpenID(openid);
-
+        /**
+        *ib-wx-user表中不存在openId查询的用户，先向若依系统注册用户，同时登陆获取若依生成的token。
+         * 如果表中存在，则直接通过openId查询到用户获取userId，再向sys_user查询用户名和默认密码登陆
+         * 获取token。
+        * */
         if (ibWxUser == null) {
 
             /**
@@ -134,7 +138,6 @@ public class WxLoginController {
             //注册过若依默认用户表，再注册微信登陆用户表 ib_wx_user
             if (regFlag) {
                 /**如果不存在就插入到我们的数据库里*/
-
                 SysUser sysUser = userService.selectUserByUserName(userNameStr);
 
                 IbWxUser wxuser = new IbWxUser();
@@ -148,10 +151,7 @@ public class WxLoginController {
                 ibWxUserService.insertIbWxUser(wxuser);
             }
 
-
         } else {
-
-
             System.out.println("通openID查询到的用户如下,准备更新用户：");
             System.out.println(ibWxUser);
             //通过openId找到关闻userId,再查询到当前需要登陆用户信息，如用户名和密码
@@ -162,7 +162,6 @@ public class WxLoginController {
             token2 = sysLoginService.loginByUserNamePassword(userCurrent.getUserName(), "123456");
             data.put(Constants.TOKEN, token2);
 
-
             /**如果存在就更新数据库里原有的数据*/
             ibWxUser.setNickname(String.valueOf(object.get("nickName")));
             ibWxUser.setGender((Integer) object.get("gender"));
@@ -171,7 +170,6 @@ public class WxLoginController {
             ibWxUser.setUpdateBy("Abu");
             ibWxUserService.updateIbWxUser(ibWxUser);
         }
-
 
         /**返回结果集到前段*/
         return AjaxResult.success(data);

@@ -8,9 +8,28 @@
 
 是基于若依Ruoyi-vue3.8.3上开发，目标实现微信小程序登陆认证，同时拥有若依的全部管理权限功能。
 
+技术选项：
+
+1. 后端Spring boot框架 基于若依 [Ruoyi-Vue3.8.3](https://gitee.com/y_project/RuoYi-Vue/tree/v3.8.3)
+2. 前端 uniApp框架  是基于[RuoYi-APP V1.0.0](https://gitee.com/y_project/RuoYi-App/tree/v1.0.0/)
+
 [使用需知与文档操作说明](https://gitee.com/asplover/RuoYi-Vue-ibaiqi-wxLogin/wikis)
 
+#### 实现功能
 
+##### 后端
+
+- 接收微个code 并返回openid
+
+- 存储微信授权数据如：openId、nickname、avatar(微信头像)至表 ib-wx-user表中。
+
+- 存储微信数据前，判断ib-wx-user表中是否存在openid的值。不存在直接先通过调用若依的。
+
+##### 前端
+
+- 微信向小程序发起请求，并获取小程序返回信息
+- 通过提交返回信息到后端
+- 接收后端token
 
 
 # ruoyi-vue 平台简介
