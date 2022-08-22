@@ -64,6 +64,7 @@ public class WxLoginController {
      * 最后把userId和登陆获取的信息一并存到微信表中（ib_wx_user）
      *
      * @param object
+     * object 包括有 wx.login登陆获取code 微信官方提供的临时凭证
      * @return
      */
     @Anonymous
@@ -78,7 +79,6 @@ public class WxLoginController {
          * js_code = AppSecret 你自己的微信APP密钥
          * grant_type=authorization_code = code 微信官方提供的临时凭证
          */
-        //todo 这些下午要慢慢对着改
         IbWxAppconfig ibWxAppconfig = ibWxAppconfigService.selectIbWxappConfig();
         String params = StrUtil.format("appid={}&secret={}&js_code={}&grant_type=authorization_code", ibWxAppconfig.getAppid(), ibWxAppconfig.getAppSecret(), object.get("code"));
         //开始发起网络请求,若依管理系统自带网络请求工具，直接使用即可
