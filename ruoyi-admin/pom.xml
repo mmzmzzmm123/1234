@@ -61,12 +61,7 @@
             <artifactId>ruoyi-generator</artifactId>
         </dependency>
 
-        <!-- AbuCoder自定义模块 微信登陆管理-->
-        <dependency>
-            <groupId>com.ruoyi</groupId>
-            <artifactId>ruoyi-abuwx</artifactId>
-        </dependency>
-        <!-- AbuCoder自定义模块 微信登陆管理-->
+        <!-- ibaiqi自定义模块 微信登陆管理-->
         <dependency>
             <groupId>com.ruoyi.ibaiqi</groupId>
             <artifactId>ruoyi-ibaiqi-wxUser</artifactId>

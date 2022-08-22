@@ -2,6 +2,10 @@ package com.ruoyi.ibaiqi.wxUser.controller;
 
 import java.util.List;
 import javax.servlet.http.HttpServletResponse;
+
+import com.ruoyi.common.core.domain.model.LoginUser;
+import com.ruoyi.common.core.redis.RedisCache;
+import com.ruoyi.common.utils.SecurityUtils;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -23,26 +27,36 @@ import com.ruoyi.common.core.page.TableDataInfo;
 
 /**
  * 微信用户Controller
- * 
+ *
  * @author zhangxuDev
  * @date 2022-08-17
  */
 @RestController
 @RequestMapping("/wxUser/wxUser")
-public class IbWxUserController extends BaseController
-{
+public class IbWxUserController extends BaseController {
     @Autowired
     private IIbWxUserService ibWxUserService;
-
+    @Autowired
+    private RedisCache redisCache;
     /**
      * 查询微信用户列表
      */
     @PreAuthorize("@ss.hasPermi('wxUser:wxUser:list')")
     @GetMapping("/list")
-    public TableDataInfo list(IbWxUser ibWxUser)
-    {
+    public TableDataInfo list(IbWxUser ibWxUser) {
         startPage();
         List<IbWxUser> list = ibWxUserService.selectIbWxUserList(ibWxUser);
+//        测试redis 学习 ----------begin
+        System.out.println("列出所有用户，准备获取登陆用户信息如下:");
+        LoginUser loginUser = SecurityUtils.getLoginUser();
+        System.out.println(loginUser);
+        System.out.println(loginUser.getUser());
+        System.out.println(loginUser.getUserId());
+        Object getRedisResponse = redisCache.getCacheObject("bcdf8ac3-c323-4d19-8e47-405c2b849fdb");
+        System.out.println("getRedisResponse的值:");
+        System.out.println(getRedisResponse);
+//        测试redis 学习 ----------end
+
         return getDataTable(list);
     }
 
@@ -52,8 +66,7 @@ public class IbWxUserController extends BaseController
     @PreAuthorize("@ss.hasPermi('wxUser:wxUser:export')")
     @Log(title = "微信用户", businessType = BusinessType.EXPORT)
     @PostMapping("/export")
-    public void export(HttpServletResponse response, IbWxUser ibWxUser)
-    {
+    public void export(HttpServletResponse response, IbWxUser ibWxUser) {
         List<IbWxUser> list = ibWxUserService.selectIbWxUserList(ibWxUser);
         ExcelUtil<IbWxUser> util = new ExcelUtil<IbWxUser>(IbWxUser.class);
         util.exportExcel(response, list, "微信用户数据");
@@ -64,8 +77,7 @@ public class IbWxUserController extends BaseController
      */
     @PreAuthorize("@ss.hasPermi('wxUser:wxUser:query')")
     @GetMapping(value = "/{id}")
-    public AjaxResult getInfo(@PathVariable("id") Long id)
-    {
+    public AjaxResult getInfo(@PathVariable("id") Long id) {
         return AjaxResult.success(ibWxUserService.selectIbWxUserById(id));
     }
 
@@ -75,8 +87,7 @@ public class IbWxUserController extends BaseController
     @PreAuthorize("@ss.hasPermi('wxUser:wxUser:add')")
     @Log(title = "微信用户", businessType = BusinessType.INSERT)
     @PostMapping
-    public AjaxResult add(@RequestBody IbWxUser ibWxUser)
-    {
+    public AjaxResult add(@RequestBody IbWxUser ibWxUser) {
         return toAjax(ibWxUserService.insertIbWxUser(ibWxUser));
     }
 
@@ -86,8 +97,7 @@ public class IbWxUserController extends BaseController
     @PreAuthorize("@ss.hasPermi('wxUser:wxUser:edit')")
     @Log(title = "微信用户", businessType = BusinessType.UPDATE)
     @PutMapping
-    public AjaxResult edit(@RequestBody IbWxUser ibWxUser)
-    {
+    public AjaxResult edit(@RequestBody IbWxUser ibWxUser) {
         return toAjax(ibWxUserService.updateIbWxUser(ibWxUser));
     }
 
@@ -96,9 +106,8 @@ public class IbWxUserController extends BaseController
      */
     @PreAuthorize("@ss.hasPermi('wxUser:wxUser:remove')")
     @Log(title = "微信用户", businessType = BusinessType.DELETE)
-	@DeleteMapping("/{ids}")
-    public AjaxResult remove(@PathVariable Long[] ids)
-    {
+    @DeleteMapping("/{ids}")
+    public AjaxResult remove(@PathVariable Long[] ids) {
         return toAjax(ibWxUserService.deleteIbWxUserByIds(ids));
     }
 }

@@ -89,7 +89,12 @@
       <el-table-column type="selection" width="55" align="center" />
       <el-table-column label="ID" align="center" prop="id" />
       <el-table-column label="微信名称" align="center" prop="nickname" />
-      <el-table-column label="头像" align="center" prop="avatar" />
+<!--      <el-table-column label="头像" align="center" prop="avatar" />-->
+      <el-table-column label="头像" align="center" prop="avatar" width="100">
+        <template slot-scope="scope">
+          <image-preview :src="scope.row.avatar" :width="50" :height="50"/>
+        </template>
+      </el-table-column>
       <el-table-column label="微信唯一标识符" align="center" prop="openid" />
       <el-table-column label="性别" align="center" prop="gender" />
       <el-table-column label="备注" align="center" prop="remark" />
