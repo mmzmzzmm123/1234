@@ -6,7 +6,6 @@ import com.alibaba.fastjson2.JSONObject;
 
 import com.ruoyi.common.constant.Constants;
 import com.ruoyi.common.core.domain.entity.SysUser;
-import com.ruoyi.common.core.redis.RedisCache;
 import com.ruoyi.common.utils.SecurityUtils;
 import com.ruoyi.framework.web.service.SysLoginService;
 import com.ruoyi.ibaiqi.wxUser.domain.IbWxAppconfig;
@@ -51,7 +50,7 @@ public class WxLoginController {
      * 你自己的微信小程序APPID
      */
 
-//    private final static String AppID = "你自己的微信小程序APPID";
+   // private final static String AppID = "你自己的微信小程序APPID";
     /**
      * 你自己的微信APP密钥
      */
@@ -146,8 +145,8 @@ public class WxLoginController {
                 wxuser.setAvatar(String.valueOf(object.get("avatarUrl")));
                 wxuser.setOpenid(openid);
                 wxuser.setCreateTime(DateUtils.getNowDate());
-                //todo userID 暂时存放于此
-                wxuser.setCreateBy(sysUser.getUserId().toString());
+                wxuser.setUserId(sysUser.getUserId());
+                wxuser.setCreateBy("Abu");
                 ibWxUserService.insertIbWxUser(wxuser);
             }
 
@@ -155,10 +154,11 @@ public class WxLoginController {
             System.out.println("通openID查询到的用户如下,准备更新用户：");
             System.out.println(ibWxUser);
             //通过openId找到关闻userId,再查询到当前需要登陆用户信息，如用户名和密码
-            SysUser userCurrent = userService.selectUserById(Long.parseLong(ibWxUser.getCreateBy()));
+            SysUser userCurrent = userService.selectUserById(ibWxUser.getUserId());
 
             String token2;
             //后边密码为初始密码，不能用存储后的加密密码。
+            //todo 关于解密问题后期需要调整，否则用户改密码会导致登陆不成功，暂未开放网页端，问题不存在
             token2 = sysLoginService.loginByUserNamePassword(userCurrent.getUserName(), "123456");
             data.put(Constants.TOKEN, token2);
 

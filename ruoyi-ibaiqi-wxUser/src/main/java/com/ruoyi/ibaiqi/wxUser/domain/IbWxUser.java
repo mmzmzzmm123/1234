@@ -34,6 +34,9 @@ public class IbWxUser extends BaseEntity
     @Excel(name = "性别")
     private Integer gender;
 
+    /**  Sys_user表的user_id */
+    private Long userId;
+
     public void setId(Long id) 
     {
         this.id = id;
@@ -80,6 +83,14 @@ public class IbWxUser extends BaseEntity
         return gender;
     }
 
+    public Long getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Long userId) {
+        this.userId = userId;
+    }
+
     @Override
     public String toString() {
         return new ToStringBuilder(this,ToStringStyle.MULTI_LINE_STYLE)
@@ -88,6 +99,7 @@ public class IbWxUser extends BaseEntity
             .append("avatar", getAvatar())
             .append("openid", getOpenid())
             .append("gender", getGender())
+            .append("userId", getUserId())
             .append("createBy", getCreateBy())
             .append("createTime", getCreateTime())
             .append("updateBy", getUpdateBy())

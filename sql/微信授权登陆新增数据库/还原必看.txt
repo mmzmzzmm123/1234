@@ -1,0 +1,7 @@
+1：新项目 
+ruoyi_ibaiqi_wxlogin.sql 文件包括基于若依平台开发的表所有表
+2：在自己原有项目上
+还原如上两个表
+ib_wx_appconfig.sql 配置表
+ib_wx_user.sql 微信登陆授权信息存储表
+
