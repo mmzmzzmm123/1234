@@ -15,6 +15,7 @@ public class hsagVO {
     private Date sj;
     @TableField(value = "spdw")
     private Double spdw;
+
     @TableField(value = "pe_cv")
     private Double pe_cv;
     @TableField(value = "pb_cv")

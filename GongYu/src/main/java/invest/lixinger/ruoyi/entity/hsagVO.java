@@ -8,7 +8,7 @@ import lombok.Data;
 import java.util.Date;
 
 @Data
-@TableName("hsag")
+@TableName("lx_hsag")
 public class hsagVO {
     @TableId(value = "sj", type = IdType.INPUT)
     Date sj;
