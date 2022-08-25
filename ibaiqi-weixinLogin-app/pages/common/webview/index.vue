@@ -1,6 +1,9 @@
 <template>
-  <view v-if="params.url">
-    <web-view :webview-styles="webviewStyles" :src="`${params.url}`"></web-view>
+  <view>
+	  <view>pages/webview 的文件</view>
+	  <view v-if="params.url">
+	  	     <web-view :webview-styles="webviewStyles" :src="`${params.url}`"></web-view>
+	  </view>
   </view>
 </template>
 

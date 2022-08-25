@@ -1,6 +1,7 @@
 <template>
 	<view>
 		<view>测试header是否携带Authorization: </view>
+		<view>通过查看网络请求头可见</view>
 	</view>
 </template>
 
