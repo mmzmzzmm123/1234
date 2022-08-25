@@ -20,6 +20,7 @@
       initConfig() {
         this.globalData.config = config
       },
+	  //想跳过判断不登陆也可访问，在permisson.js的whiteList白名单中设置
       checkLogin() {
         if (!getToken()) {
           this.$tab.reLaunch('/pages/login') 

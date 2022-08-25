@@ -87,9 +87,12 @@
 				let site = this.globalConfig.appInfo.agreements[1]
 				this.$tab.navigateTo(`/pages/common/webview/index?title=${site.title}&url=${site.url}`)
 			},
+			//todo 在登陆页下边无法返回主页
 			//跳转到主页
 			goToHome(){
-				this.$tab.navigateTo(`/pages/index`)
+				console.log("准备转到主页，在未登陆情况下");
+				console.log("this.$tab的值:",this.$tab);
+				this.$tab.switchTab(`/pages/timetable/index`)
 			},
 			// 登录成功后，处理函数
 			loginSuccess(result) {
