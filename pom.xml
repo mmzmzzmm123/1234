@@ -186,6 +186,12 @@
                 <version>${ruoyi.version}</version>
             </dependency>
 
+            <!-- 微信小程序登陆模块-->
+            <dependency>
+                <groupId>com.ruoyi.ibaiqi</groupId>
+                <artifactId>ruoyi-ibaiqi-wxUser</artifactId>
+                <version>${ruoyi.version}</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 
@@ -196,6 +202,7 @@
         <module>ruoyi-quartz</module>
         <module>ruoyi-generator</module>
         <module>ruoyi-common</module>
+        <module>ruoyi-ibaiqi-wxUser</module>
     </modules>
     <packaging>pom</packaging>
 
