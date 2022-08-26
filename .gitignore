@@ -45,3 +45,6 @@ nbdist/
 !*/build/*.java
 !*/build/*.html
 !*/build/*.xml
+
+#过虑掉非后端开发跟进
+RuoYi-App-ibaiqi-edu

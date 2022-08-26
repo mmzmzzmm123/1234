@@ -1,15 +1,38 @@
-<p align="center">
-	<img alt="logo" src="https://oscimg.oschina.net/oscnet/up-d3d0a9303e11d522a06cd263f3079027715.png">
-</p>
-<h1 align="center" style="margin: 30px 0 30px; font-weight: bold;">RuoYi v3.8.3</h1>
-<h4 align="center">基于SpringBoot+Vue前后端分离的Java快速开发框架</h4>
-<p align="center">
-	<a href="https://gitee.com/y_project/RuoYi-Vue/stargazers"><img src="https://gitee.com/y_project/RuoYi-Vue/badge/star.svg?theme=dark"></a>
-	<a href="https://gitee.com/y_project/RuoYi-Vue"><img src="https://img.shields.io/badge/RuoYi-v3.8.3-brightgreen.svg"></a>
-	<a href="https://gitee.com/y_project/RuoYi-Vue/blob/master/LICENSE"><img src="https://img.shields.io/github/license/mashape/apistatus.svg"></a>
-</p>
 
-## 平台简介
+
+
+
+# ibaiqi-wxLogin简介
+
+
+
+是基于若依Ruoyi-vue3.8.3上开发，目标实现微信小程序登陆认证，同时拥有若依的全部管理权限功能。
+
+技术选项：
+
+1. 后端Spring boot框架 基于若依 [Ruoyi-Vue3.8.3](https://gitee.com/y_project/RuoYi-Vue/tree/v3.8.3)
+2. 前端 uniApp框架  是基于[RuoYi-APP V1.0.0](https://gitee.com/y_project/RuoYi-App/tree/v1.0.0/)
+
+[使用需知与文档操作说明](https://gitee.com/asplover/RuoYi-Vue-ibaiqi-wxLogin/wikis)
+
+#### 实现功能
+
+##### 后端
+
+- 接收微个code 并返回openid
+
+- 存储微信授权数据如：openId、nickname、avatar(微信头像)至表 ib-wx-user表中。
+
+- 存储微信数据前，判断ib-wx-user表中是否存在openid的值。不存在直接先通过调用若依的。
+
+##### 前端
+
+- 微信向小程序发起请求，并获取小程序返回信息
+- 通过提交返回信息到后端
+- 接收后端token
+
+
+# ruoyi-vue 平台简介
 
 若依是一套全部开源的快速开发平台，毫无保留给个人及企业免费使用。
 

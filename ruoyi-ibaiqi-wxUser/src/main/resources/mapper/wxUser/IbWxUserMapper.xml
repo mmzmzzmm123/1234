@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.ibaiqi.wxUser.mapper.IbWxUserMapper">
+    
+    <resultMap type="IbWxUser" id="IbWxUserResult">
+        <result property="id"    column="id"    />
+        <result property="nickname"    column="nickname"    />
+        <result property="avatar"    column="avatar"    />
+        <result property="openid"    column="openid"    />
+        <result property="gender"    column="gender"    />
+        <result property="userId"    column="user_id"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="remark"    column="remark"    />
+    </resultMap>
+
+    <sql id="selectIbWxUserVo">
+        select id, nickname, avatar, openid, gender, user_id, create_by, create_time, update_by, update_time, remark from ib_wx_user
+    </sql>
+
+    <select id="selectIbWxUserList" parameterType="IbWxUser" resultMap="IbWxUserResult">
+        <include refid="selectIbWxUserVo"/>
+        <where>  
+            <if test="openid != null  and openid != ''"> and openid = #{openid}</if>
+            <if test="gender != null "> and gender = #{gender}</if>
+        </where>
+    </select>
+    
+    <select id="selectIbWxUserById" parameterType="Long" resultMap="IbWxUserResult">
+        <include refid="selectIbWxUserVo"/>
+        where id = #{id}
+    </select>
+
+    <select id="selectIbWxUserOpenID" resultMap="IbWxUserResult">
+        <include refid="selectIbWxUserVo"/>
+        where openid = #{openid}
+    </select>
+        
+    <insert id="insertIbWxUser" parameterType="IbWxUser" useGeneratedKeys="true" keyProperty="id">
+        insert into ib_wx_user
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="nickname != null">nickname,</if>
+            <if test="avatar != null">avatar,</if>
+            <if test="openid != null">openid,</if>
+            <if test="gender != null">gender,</if>
+            <if test="userId != null">user_id,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="remark != null">remark,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="nickname != null">#{nickname},</if>
+            <if test="avatar != null">#{avatar},</if>
+            <if test="openid != null">#{openid},</if>
+            <if test="gender != null">#{gender},</if>
+            <if test="userId != null">#{userId},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="remark != null">#{remark},</if>
+         </trim>
+    </insert>
+
+    <update id="updateIbWxUser" parameterType="IbWxUser">
+        update ib_wx_user
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="nickname != null">nickname = #{nickname},</if>
+            <if test="avatar != null">avatar = #{avatar},</if>
+            <if test="openid != null">openid = #{openid},</if>
+            <if test="gender != null">gender = #{gender},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="remark != null">remark = #{remark},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteIbWxUserById" parameterType="Long">
+        delete from ib_wx_user where id = #{id}
+    </delete>
+
+    <delete id="deleteIbWxUserByIds" parameterType="String">
+        delete from ib_wx_user where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

@@ -101,6 +101,48 @@ public class SysLoginService
     }
 
     /**
+     * 登录验证（只需要输入用户名和密码，无需验证码和唯一标识uuid）
+     *
+     * @author zhangxuDev
+     *
+     * @param username 用户名
+     * @param password 密码
+     * @return 结果
+     */
+//    public String loginByUserNamePassword(String username, String password, String code, String uuid)
+    public String loginByUserNamePassword(String username, String password)
+    {
+        boolean captchaEnabled = configService.selectCaptchaEnabled();
+
+        // 用户验证
+        Authentication authentication = null;
+        try
+        {
+            UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(username, password);
+            AuthenticationContextHolder.setContext(authenticationToken);
+            // 该方法会去调用UserDetailsServiceImpl.loadUserByUsername
+            authentication = authenticationManager.authenticate(authenticationToken);
+        }
+        catch (Exception e)
+        {
+            if (e instanceof BadCredentialsException)
+            {
+                AsyncManager.me().execute(AsyncFactory.recordLogininfor(username, Constants.LOGIN_FAIL, MessageUtils.message("user.password.not.match")));
+                throw new UserPasswordNotMatchException();
+            }
+            else
+            {
+                AsyncManager.me().execute(AsyncFactory.recordLogininfor(username, Constants.LOGIN_FAIL, e.getMessage()));
+                throw new ServiceException(e.getMessage());
+            }
+        }
+        AsyncManager.me().execute(AsyncFactory.recordLogininfor(username, Constants.LOGIN_SUCCESS, MessageUtils.message("user.login.success")));
+        LoginUser loginUser = (LoginUser) authentication.getPrincipal();
+        recordLoginInfo(loginUser.getUserId());
+        // 生成token
+        return tokenService.createToken(loginUser);
+    }
+    /**
      * 校验验证码
      * 
      * @param username 用户名
