@@ -10,7 +10,7 @@ import com.ruoyi.common.utils.StringUtils;
 
 /**
  * 业务表 gen_table
- * 
+ *
  * @author ruoyi
  */
 public class GenTable extends BaseEntity
@@ -360,13 +360,17 @@ public class GenTable extends BaseEntity
         return isSuperColumn(this.tplCategory, javaField);
     }
 
-    public static boolean isSuperColumn(String tplCategory, String javaField)
+    public static boolean isSuperColumn(String tplCategory, String javaField, String... superColumns)
     {
-        if (isTree(tplCategory))
+        if (ArrayUtils.isEmpty(superColumns))
         {
-            return StringUtils.equalsAnyIgnoreCase(javaField,
-                    ArrayUtils.addAll(GenConstants.TREE_ENTITY, GenConstants.BASE_ENTITY));
+            if (isTree(tplCategory))
+            {
+                return StringUtils.equalsAnyIgnoreCase(javaField,
+                        ArrayUtils.addAll(GenConstants.TREE_ENTITY, GenConstants.BASE_ENTITY));
+            }
+            return StringUtils.equalsAnyIgnoreCase(javaField, GenConstants.BASE_ENTITY);
         }
-        return StringUtils.equalsAnyIgnoreCase(javaField, GenConstants.BASE_ENTITY);
+        return StringUtils.equalsAnyIgnoreCase(javaField, superColumns);
     }
 }
