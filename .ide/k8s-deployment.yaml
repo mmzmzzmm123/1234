@@ -1,125 +1,53 @@
----
-apiVersion: networking.k8s.io/v1
-kind: NetworkPolicy
-metadata:
-  name: ruoyi-network
-spec:
-  ingress:
-    - from:
-        - podSelector:
-            matchLabels:
-              ruoyi/smartide-network: "true"
-  podSelector:
-    matchLabels:
-      ruoyi/smartide-network: "true"
----
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: ruoyi-dev-deployment
+  annotations:
+    kompose.cmd: kompose -f docker-compose-RuoYi-Vue.yaml convert  
+  labels:
+    reuoyi.service: ruoyi-db
+  name: ruoyi-db
 spec:
   replicas: 1
   selector:
     matchLabels:
-      ruoyi.service: ruoyi-dev
+      reuoyi.service: ruoyi-db
   strategy:
     type: Recreate
   template:
     metadata:
+      annotations:
+        kompose.cmd: kompose -f docker-compose-RuoYi-Vue.yaml convert       
       labels:
-        ruoyi.service: ruoyi-dev
+        io.kompose.network/ruoyi-dev-network: "true"
+        reuoyi.service: ruoyi-db
     spec:
       containers:
-        - env:
-            - name: LOCAL_USER_PASSWORD
-              value: root123
-            - name: ROOT_PASSWORD
-              value: root123
-          image: registry.cn-hangzhou.aliyuncs.com/smartide/smartide-java-v2-jetbrains-idea:2021.2.3-openjdk-11-jdk-2081
-          imagePullPolicy: Always
-          name: ruoyi-dev
-          ports:
-            - containerPort: 8080
-            - containerPort: 80
-            - containerPort: 22
-            - containerPort: 8887
-          resources: {}
-status: {}
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: ruoyi-dev
-spec:
-  ports:
-    - name: "8080"
-      port: 8080
-      targetPort: 8080
-    - name: "8000"
-      port: 8000
-      targetPort: 80
-    - name: "6800"
-      port: 6800
-      targetPort: 8887
-    - name: "6822"
-      port: 6822
-      targetPort: 22
-  selector:
-    ruoyi.service: ruoyi-dev
-status:
-  loadBalancer: {}
----
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: ruoyi-mysql-configmap
-data:
-  init.sql: 
----
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: ruoyi-db-deployment
-spec:
-  replicas: 1
-  selector:
-    matchLabels:
-      ruoyi.service: ruoyi-db
-  strategy:
-    type: Recreate
-  template:
-    metadata:
-      labels:
-        ruoyi.service: ruoyi-db
-    spec:
-      containers:
-        - image: registry.cn-hangzhou.aliyuncs.com/smartide/mysql:8.0.21
-          imagePullPolicy: Always
+        - args:
+            - --default-authentication-plugin=mysql_native_password
+            - --character-set-server=utf8mb4
+            - --collation-server=utf8mb4_unicode_ci
+          env:
+            - name: MYSQL_ROOT_PASSWORD
+              value: "123"
+          image: registry.cn-hangzhou.aliyuncs.com/smartide/mysql:8.0.21
           name: ruoyi-db
           ports:
             - containerPort: 3306
           resources: {}
-          env:
-            - name: MYSQL_USER
-              value: root
-            - name: MYSQL_ROOT_PASSWORD
-              value: password
-          args:
-            - "--default-authentication-plugin=mysql_native_password"
-            - "--character-set-server=utf8mb4"
-            - "--collation-server=utf8mb4_unicode_ci"
-          volumeMounts:
-            - name: ruoyi-mysql-config
-              mountPath: /docker-entrypoint-initdb.d
-      volumes:
-        - name: ruoyi-mysql-config
-          configMap:
-            name: ruoyi-mysql-configmap
+
+      restartPolicy: Always
+
 status: {}
+
 ---
+
 apiVersion: v1
 kind: Service
 metadata:
+  annotations:
+    kompose.cmd: kompose -f docker-compose-RuoYi-Vue.yaml convert  
+  labels:
+    reuoyi.service: ruoyi-db
   name: ruoyi-db
 spec:
   ports:
@@ -127,41 +55,145 @@ spec:
       port: 3306
       targetPort: 3306
   selector:
-    ruoyi.service: ruoyi-db
+    reuoyi.service: ruoyi-db
 status:
   loadBalancer: {}
+
 ---
+
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: ruoyi-phpmyadmin-deployment
+  annotations:
+    kompose.cmd: kompose -f docker-compose-RuoYi-Vue.yaml convert  
+  labels:
+    reuoyi.service: ruoyi-dev
+  name: ruoyi-dev
 spec:
   replicas: 1
   selector:
     matchLabels:
-      ruoyi.service: ruoyi-phpmyadmin
+      reuoyi.service: ruoyi-dev
   strategy:
     type: Recreate
   template:
     metadata:
+      annotations:
+        kompose.cmd: kompose -f docker-compose-RuoYi-Vue.yaml convert      
       labels:
-        ruoyi.service: ruoyi-phpmyadmin
+        io.kompose.network/ruoyi-dev-network: "true"
+        reuoyi.service: ruoyi-dev
     spec:
       containers:
-        - image: registry.cn-hangzhou.aliyuncs.com/boathouse/phpmyadmin:5.0.4-apache
-          imagePullPolicy: Always
-          name: ruoyi-phpmyadmin
+        - env:
+            - name: LOCAL_USER_PASSWORD
+              value: root123
+            - name: ROOT_PASSWORD
+              value: root123
+          image: registry.cn-hangzhou.aliyuncs.com/smartide/smartide-java-v2-vscode:openjdk-11-jdk
+          name: ruoyi-dev
           ports:
-            - containerPort: 80
+            - containerPort: 8080
+            - containerPort: 8000
+            - containerPort: 6822
+            - containerPort: 6800
           resources: {}
-          env:
-            - name: PMA_ARBITRARY
-              value: "1"
+
+      restartPolicy: Always
+
 status: {}
----
+
+--- 
+
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:  
+  name: ruoyi-dev-network
+spec:
+  ingress:
+    - from:
+        - podSelector:
+            matchLabels:
+              io.kompose.network/ruoyi-dev-network: "true"
+  podSelector:
+    matchLabels:
+      io.kompose.network/ruoyi-dev-network: "true"
+
+--- 
+
 apiVersion: v1
 kind: Service
 metadata:
+  annotations:
+    kompose.cmd: kompose -f docker-compose-RuoYi-Vue.yaml convert
+  labels:
+    reuoyi.service: ruoyi-dev
+  name: ruoyi-dev
+spec:
+  ports:
+    - name: "8000"
+      port: 8000
+      targetPort: 80
+    - name: "8080"
+      port: 8080
+      targetPort: 8080
+    - name: "6822"
+      port: 6822
+      targetPort: 22
+    - name: "6800"
+      port: 6800
+      targetPort: 3000
+  selector:
+    reuoyi.service: ruoyi-dev
+status:
+  loadBalancer: {}
+
+--- 
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: kompose -f docker-compose-RuoYi-Vue.yaml convert
+  labels:
+    reuoyi.service: ruoyi-phpmyadmin
+  name: ruoyi-phpmyadmin
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      reuoyi.service: ruoyi-phpmyadmin
+  strategy: {}
+  template:
+    metadata:
+      annotations:
+        kompose.cmd: kompose -f docker-compose-RuoYi-Vue.yaml convert
+      labels:
+        io.kompose.network/ruoyi-dev-network: "true"
+        reuoyi.service: ruoyi-phpmyadmin
+    spec:
+      containers:
+        - env:
+            - name: PMA_ARBITRARY
+              value: "1"
+          image: registry.cn-hangzhou.aliyuncs.com/boathouse/phpmyadmin:5.0.4-apache
+          name: ruoyi-phpmyadmin
+          ports:
+            - containerPort: 80
+            - containerPort: 8090
+          resources: {}
+      restartPolicy: Always
+status: {}
+
+--- 
+
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    kompose.cmd: kompose -f docker-compose-RuoYi-Vue.yaml convert
+  labels:
+    reuoyi.service: ruoyi-phpmyadmin
   name: ruoyi-phpmyadmin
 spec:
   ports:
@@ -169,43 +201,61 @@ spec:
       port: 8090
       targetPort: 80
   selector:
-    ruoyi.service: ruoyi-phpmyadmin
+    reuoyi.service: ruoyi-phpmyadmin
 status:
   loadBalancer: {}
+
+
 ---
+
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: ruoyi-redis-deployment
+  annotations:
+    kompose.cmd: kompose -f docker-compose-RuoYi-Vue.yaml convert
+  labels:
+    reuoyi.service: ruoyi-redis
+  name: ruoyi-redis
 spec:
   replicas: 1
   selector:
     matchLabels:
-      ruoyi.service: ruoyi-redis
-  strategy:
-    type: Recreate
+      reuoyi.service: ruoyi-redis
+  strategy: {}
   template:
     metadata:
+      annotations:
+        kompose.cmd: kompose -f docker-compose-RuoYi-Vue.yaml convert
       labels:
-        ruoyi.service: ruoyi-redis
+        io.kompose.network/ruoyi-dev-network: "true"
+        reuoyi.service: ruoyi-redis
     spec:
       containers:
         - image: registry.cn-hangzhou.aliyuncs.com/smartide/redis:6.0.6
-          imagePullPolicy: Always
           name: ruoyi-redis
           ports:
             - containerPort: 6379
----
+          resources: {}
+      restartPolicy: Always
+status: {}
+
+
+--- 
+
 apiVersion: v1
 kind: Service
 metadata:
+  annotations:
+    kompose.cmd: kompose -f docker-compose-RuoYi-Vue.yaml convert
+  labels:
+    reuoyi.service: ruoyi-redis
   name: ruoyi-redis
 spec:
   ports:
-    - name: "6379"
+    - name: 6379-tcp
       port: 6379
       targetPort: 6379
   selector:
-    ruoyi.service: ruoyi-redis
+    reuoyi.service: ruoyi-redis
 status:
   loadBalancer: {}
