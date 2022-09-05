@@ -4,6 +4,7 @@ orchestrator:
   version: 3
 workspace:
   dev-container:
+    service-name: ruoyi-dev
     ports:
       tools-webide-idea: 6800
       tools-ssh: 6822
