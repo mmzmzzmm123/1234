@@ -9,6 +9,10 @@
 	<a href="https://gitee.com/y_project/RuoYi-Vue/blob/master/LICENSE"><img src="https://img.shields.io/github/license/mashape/apistatus.svg"></a>
 </p>
 
+Server一键启动按钮，点击此按钮即可启动开发调试环境
+
+[![smartide open](.ide/images/smartide-start-badge.png)](http://ws.gitee.work:8080/#https://gitee.com/SmartIDE/RuoYi-Vue.git&branch=smartide)
+
 ## 平台简介
 
 若依是一套全部开源的快速开发平台，毫无保留给个人及企业免费使用。
