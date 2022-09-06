@@ -96,7 +96,7 @@ spec:
             - containerPort: 8080
             - containerPort: 8000
             - containerPort: 6822
-            - containerPort: 6800
+            - containerPort: 8887
           resources:
             requests:
               memory: "2Gi"
@@ -148,7 +148,7 @@ spec:
       targetPort: 22
     - name: "6800"
       port: 6800
-      targetPort: 3000
+      targetPort: 8887
   selector:
     reuoyi.service: ruoyi-dev
 status:
