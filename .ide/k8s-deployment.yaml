@@ -33,13 +33,7 @@ spec:
           name: ruoyi-db
           ports:
             - containerPort: 3306
-          resources:
-            requests:
-              memory: "2Gi"
-              cpu: "500m"
-            limits:
-              memory: "4Gi"
-              cpu: "1500m"
+          resources: {}
 
       restartPolicy: Always
 
@@ -103,7 +97,13 @@ spec:
             - containerPort: 8000
             - containerPort: 6822
             - containerPort: 6800
-          resources: {}
+          resources:
+            requests:
+              memory: "2Gi"
+              cpu: "500m"
+            limits:
+              memory: "4Gi"
+              cpu: "1500m"
 
       restartPolicy: Always
 
