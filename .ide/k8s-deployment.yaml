@@ -104,7 +104,6 @@ spec:
             limits:
               memory: "4Gi"
               cpu: "1500m"
-
       restartPolicy: Always
 
 status: {}
