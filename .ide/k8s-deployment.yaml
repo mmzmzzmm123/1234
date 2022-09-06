@@ -38,8 +38,8 @@ spec:
               memory: "4Gi"
               cpu: "1000m"
             limits:
-              memory: "4Gi"
-              cpu: "1000m"
+              memory: "2Gi"
+              cpu: "500m"
 
       restartPolicy: Always
 
