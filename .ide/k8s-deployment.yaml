@@ -99,10 +99,10 @@ spec:
             - containerPort: 8887
           resources:
             requests:
-              memory: "2Gi"
-              cpu: "500m"
+              memory: "3Gi"
+              cpu: "1500m"
             limits:
-              memory: "4Gi"
+              memory: "6Gi"
               cpu: "1500m"
       restartPolicy: Always
 
