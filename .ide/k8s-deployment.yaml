@@ -28,7 +28,7 @@ spec:
             - --collation-server=utf8mb4_unicode_ci
           env:
             - name: MYSQL_ROOT_PASSWORD
-              value: "123"
+              value: "password"
           image: registry.cn-hangzhou.aliyuncs.com/smartide/mysql:8.0.21
           name: ruoyi-db
           ports:
