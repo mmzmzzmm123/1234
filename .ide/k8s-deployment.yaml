@@ -102,8 +102,8 @@ spec:
               memory: "3Gi"
               cpu: "1500m"
             limits:
-              memory: "6Gi"
-              cpu: "1500m"
+              memory: "8Gi"
+              cpu: "2000m"
       restartPolicy: Always
 
 status: {}
