@@ -3,7 +3,11 @@ package com.ruoyi.framework.web.service;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
+import javax.crypto.SecretKey;
+import javax.crypto.spec.SecretKeySpec;
 import javax.servlet.http.HttpServletRequest;
+
+import org.apache.commons.codec.binary.Base64;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -173,8 +177,19 @@ public class TokenService
     {
         String token = Jwts.builder()
                 .setClaims(claims)
-                .signWith(SignatureAlgorithm.HS512, secret).compact();
+                .signWith(generateKey(secret),SignatureAlgorithm.HS512)
+                .compact();
         return token;
+    }
+
+    /**
+     * 生成SecretKey
+     * @param secret
+     * @return
+     */
+    private static SecretKey generateKey(String secret) {
+        byte[] encodedKey = Base64.decodeBase64(secret);
+        return new SecretKeySpec(encodedKey, 0, encodedKey.length, "HmacSHA256");
     }
 
     /**
@@ -185,8 +200,9 @@ public class TokenService
      */
     private Claims parseToken(String token)
     {
-        return Jwts.parser()
-                .setSigningKey(secret)
+        return Jwts.parserBuilder()
+                .setSigningKey(Base64.decodeBase64(secret))
+                .build()
                 .parseClaimsJws(token)
                 .getBody();
     }
