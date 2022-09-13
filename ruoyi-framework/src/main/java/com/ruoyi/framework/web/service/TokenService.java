@@ -200,7 +200,10 @@ public class TokenService
     public String getUsernameFromToken(String token)
     {
         Claims claims = parseToken(token);
-        return claims.getSubject();
+        String uuid = claims.get(Constants.LOGIN_USER_KEY, String.class);
+        String userKey = getTokenKey(uuid);
+        LoginUser user = redisCache.getCacheObject(userKey);
+        return user == null ? null : user.getUsername();
     }
 
     /**
