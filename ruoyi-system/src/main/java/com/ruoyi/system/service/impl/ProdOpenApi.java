@@ -321,4 +321,26 @@ public class ProdOpenApi {
 
         return responseEntity.getBody();
     }
+
+    /**
+     * 首次登录授权书授权校验
+     * @param socialCode
+     * @return
+     */
+    public AjaxResult isExistAuth(String socialCode) {
+
+        String url = domain + "xdztc/isExistAuth?socialCode="+socialCode;
+
+        HttpHeaders headers = OpenApiAuthUtil.generateAuthHeaders(appKey, appSecret);
+
+        HttpEntity<AjaxResult> httpEntity = new HttpEntity<>(null, headers);
+        ParameterizedTypeReference<AjaxResult> reference =
+                new ParameterizedTypeReference<AjaxResult>() {
+                };
+
+        ResponseEntity<AjaxResult> responseEntity = restTemplate.exchange(url,
+                HttpMethod.GET, httpEntity, reference);
+
+        return responseEntity.getBody();
+    }
 }

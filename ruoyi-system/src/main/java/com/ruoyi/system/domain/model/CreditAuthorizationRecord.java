@@ -7,9 +7,9 @@ public class CreditAuthorizationRecord {
 
     private Long authorizationId;
 
-    private Long orgId;
+    private String socialCode;
 
-    private Long areaId;
+    private String busiType;
 
     private String userPhone;
 
@@ -21,20 +21,20 @@ public class CreditAuthorizationRecord {
         this.authorizationId = authorizationId;
     }
 
-    public Long getOrgId() {
-        return orgId;
+    public String getSocialCode() {
+        return socialCode;
     }
 
-    public void setOrgId(Long orgId) {
-        this.orgId = orgId;
+    public void setSocialCode(String socialCode) {
+        this.socialCode = socialCode;
     }
 
-    public Long getAreaId() {
-        return areaId;
+    public String getBusiType() {
+        return busiType;
     }
 
-    public void setAreaId(Long areaId) {
-        this.areaId = areaId;
+    public void setBusiType(String busiType) {
+        this.busiType = busiType;
     }
 
     public String getUserPhone() {
@@ -48,10 +48,10 @@ public class CreditAuthorizationRecord {
     @Override
     public String toString() {
         return "CreditAuthorizationRecord{" +
-                "authorizationId：" + authorizationId +
-                ", orgId：" + orgId +
-                ", areaId：" + areaId +
-                ", userPhone：'" + userPhone + '\'' +
+                "authorizationId=" + authorizationId +
+                ", socialCode='" + socialCode + '\'' +
+                ", busiType='" + busiType + '\'' +
+                ", userPhone='" + userPhone + '\'' +
                 '}';
     }
 }

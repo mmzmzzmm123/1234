@@ -119,8 +119,6 @@ public class AppCreditController extends BaseController {
         }
     }
 
-
-    //    @GetMapping("/getDict/{dictType}")
     @GetMapping("/findAuthorization")
     @ApiOperation(value = "查询企业用户授权书")
     public AjaxResult findAuthorization() {
@@ -135,5 +133,12 @@ public class AppCreditController extends BaseController {
         log.info("新增用户授权书同意记录 param:{}",record);
 
         return prodOpenApi.addAuthorizationRecord(record);
+    }
+
+    @GetMapping("/isExistAuth")
+    @ApiOperation(value = "首次登录授权书授权校验")
+    public AjaxResult isExistAuth(@RequestParam(name="socialCode") String socialCode) {
+
+        return prodOpenApi.isExistAuth(socialCode);
     }
 }
