@@ -4,9 +4,9 @@
       <router-link
         v-for="tag in visitedViews"
         ref="tag"
-        :key="tag.path"
+        :key="tag.fullPath"
         :class="isActive(tag)?'active':''"
-        :to="{ path: tag.path, query: tag.query, fullPath: tag.fullPath }"
+        :to="{ path: tag.fullPath, query: tag.query, fullPath: tag.fullPath }"
         tag="span"
         class="tags-view-item"
         :style="activeStyle(tag)"
@@ -73,7 +73,7 @@ export default {
   },
   methods: {
     isActive(route) {
-      return route.path === this.$route.path
+      return route.fullPath === this.$route.fullPath
     },
     activeStyle(tag) {
       if (!this.isActive(tag)) return {};
@@ -105,14 +105,14 @@ export default {
         if (route.meta && route.meta.affix) {
           const tagPath = path.resolve(basePath, route.path)
           tags.push({
-            fullPath: tagPath,
+            fullPath: route.fullPath,
             path: tagPath,
             name: route.name,
             meta: { ...route.meta }
           })
         }
         if (route.children) {
-          const tempTags = this.filterAffixTags(route.children, route.path)
+          const tempTags = this.filterAffixTags(route.children, route.fullPath)
           if (tempTags.length >= 1) {
             tags = [...tags, ...tempTags]
           }
@@ -123,10 +123,7 @@ export default {
     initTags() {
       const affixTags = this.affixTags = this.filterAffixTags(this.routes)
       for (const tag of affixTags) {
-        // Must have tag name
-        if (tag.name) {
-          this.$store.dispatch('tagsView/addVisitedView', tag)
-        }
+        this.$store.dispatch('tagsView/addVisitedView', tag)
       }
     },
     addTags() {
@@ -143,7 +140,7 @@ export default {
       const tags = this.$refs.tag
       this.$nextTick(() => {
         for (const tag of tags) {
-          if (tag.to.path === this.$route.path) {
+          if (tag.to.fullPath === this.$route.fullPath) {
             this.$refs.scrollPane.moveToTarget(tag)
             // when query is different then update
             if (tag.to.fullPath !== this.$route.fullPath) {
@@ -189,7 +186,7 @@ export default {
     },
     closeAllTags(view) {
       this.$tab.closeAllPage().then(({ visitedViews }) => {
-        if (this.affixTags.some(tag => tag.path === this.$route.path)) {
+        if (this.affixTags.some(tag => tag.fullPath === this.$route.fullPath)) {
           return
         }
         this.toLastView(visitedViews, view)

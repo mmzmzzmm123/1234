@@ -39,7 +39,7 @@
     "@riophae/vue-treeselect": "0.4.0",
     "axios": "0.24.0",
     "clipboard": "2.0.8",
-    "core-js": "3.19.1",
+    "core-js": "^3.25.1",
     "echarts": "4.9.0",
     "element-ui": "2.15.10",
     "file-saver": "2.0.5",
@@ -58,7 +58,8 @@
     "vue-meta": "2.4.0",
     "vue-router": "3.4.9",
     "vuedraggable": "2.24.3",
-    "vuex": "3.6.0"
+    "vuex": "3.6.0",
+    "zx-keep-alive": "^0.1.1"
   },
   "devDependencies": {
     "@vue/cli-plugin-babel": "4.4.6",
