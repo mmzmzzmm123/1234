@@ -124,7 +124,7 @@ export default {
       this.loginForm = {
         username: username === undefined ? this.loginForm.username : username,
         password: password === undefined ? this.loginForm.password : decrypt(password),
-        rememberMe: rememberMe === undefined ? false : Boolean(rememberMe)
+        rememberMe: rememberMe === undefined ? this.loginForm.rememberMe : Boolean(rememberMe)
       };
     },
     handleLogin() {
