@@ -1,7 +1,7 @@
 <template>
   <div class="register">
     <el-form ref="registerForm" :model="registerForm" :rules="registerRules" class="register-form">
-      <h3 class="title">若依后台管理系统</h3>
+      <h3 class="title">欢迎来到宇宇的小木屋</h3>
       <el-form-item prop="username">
         <el-input v-model="registerForm.username" type="text" auto-complete="off" placeholder="账号">
           <svg-icon slot="prefix" icon-class="user" class="el-input__icon input-icon" />
@@ -29,7 +29,7 @@
           <svg-icon slot="prefix" icon-class="password" class="el-input__icon input-icon" />
         </el-input>
       </el-form-item>
-      <el-form-item prop="code" v-if="captchaEnabled">
+      <el-form-item prop="code" v-if="captchaOnOff">
         <el-input
           v-model="registerForm.code"
           auto-complete="off"
@@ -104,7 +104,7 @@ export default {
         code: [{ required: true, trigger: "change", message: "请输入验证码" }]
       },
       loading: false,
-      captchaEnabled: true
+      captchaOnOff: true
     };
   },
   created() {
@@ -113,8 +113,8 @@ export default {
   methods: {
     getCode() {
       getCodeImg().then(res => {
-        this.captchaEnabled = res.captchaEnabled === undefined ? true : res.captchaEnabled;
-        if (this.captchaEnabled) {
+        this.captchaOnOff = res.captchaOnOff === undefined ? true : res.captchaOnOff;
+        if (this.captchaOnOff) {
           this.codeUrl = "data:image/gif;base64," + res.img;
           this.registerForm.uuid = res.uuid;
         }
@@ -134,7 +134,7 @@ export default {
             }).catch(() => {});
           }).catch(() => {
             this.loading = false;
-            if (this.captchaEnabled) {
+            if (this.captchaOnOff) {
               this.getCode();
             }
           })
