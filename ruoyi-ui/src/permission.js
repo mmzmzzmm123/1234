@@ -32,7 +32,7 @@ router.beforeEach((to, from, next) => {
         }).catch(err => {
             store.dispatch('LogOut').then(() => {
               Message.error(err)
-              next({ path: '/' })
+              next(`/login?redirect=${to.fullPath}`)
             })
           })
       } else {
