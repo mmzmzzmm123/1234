@@ -1,9 +1,9 @@
 <template>
   <section class="app-main">
     <transition name="fade-transform" mode="out-in">
-      <keep-alive :include="cachedViews">
+      <keepAlive :include="cachedViews">
         <router-view v-if="!$route.meta.link" :key="key" />
-      </keep-alive>
+      </keepAlive>
     </transition>
     <iframe-toggle />
   </section>
@@ -11,16 +11,16 @@
 
 <script>
 import iframeToggle from "./IframeToggle/index"
-
+import keepAlive from './keepAlive'
 export default {
   name: 'AppMain',
-  components: { iframeToggle },
+  components: { iframeToggle, keepAlive },
   computed: {
     cachedViews() {
       return this.$store.state.tagsView.cachedViews
     },
     key() {
-      return this.$route.path
+      return this.$route.fullPath
     }
   }
 }
