@@ -2,6 +2,7 @@ package com.ruoyi.system.utils;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.ruoyi.common.utils.ip.IpUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.*;
 import org.apache.http.client.HttpClient;
@@ -487,6 +488,15 @@ public class HttpUtil {
             // 设置鉴权信息
             conn.setRequestProperty("Authorization", authorization);
         }
+
+        //设置请求头部
+        // 终端IP
+        conn.setRequestProperty("datauserIp", IpUtils.getHostIp());
+        // 终端Mac
+        conn.setRequestProperty("datauserMac", LocalMACUtil.getLocalMac());
+        conn.setRequestProperty("datauserName", ConfigInfo.OPERATOR);
+        conn.setRequestProperty("datauserSfzhm", ConfigInfo.IDCARD);
+
         //发送请求
         conn.connect();
         //获取输入流

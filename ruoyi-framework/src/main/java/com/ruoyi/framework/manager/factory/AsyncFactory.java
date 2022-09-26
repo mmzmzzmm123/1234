@@ -1,6 +1,9 @@
 package com.ruoyi.framework.manager.factory;
 
+import java.util.Map;
 import java.util.TimerTask;
+
+import com.ruoyi.system.service.impl.ShareInterface;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import com.ruoyi.common.constant.Constants;
@@ -95,6 +98,21 @@ public class AsyncFactory
                 // 远程查询操作地点
                 operLog.setOperLocation(AddressUtils.getRealAddressByIP(operLog.getOperIp()));
                 SpringUtils.getBean(ISysOperLogService.class).insertOperlog(operLog);
+            }
+        };
+    }
+
+    /**
+     * 日志推送到汇聚平台
+     */
+    public static TimerTask dumpLogs(final Map<String, Object> params)
+    {
+        return new TimerTask()
+        {
+            @Override
+            public void run()
+            {
+                SpringUtils.getBean(ShareInterface.class).dumpLogs(params);
             }
         };
     }

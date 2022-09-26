@@ -10,6 +10,8 @@ import com.ruoyi.framework.manager.AsyncManager;
 import com.ruoyi.framework.manager.factory.AsyncFactory;
 import com.ruoyi.system.domain.SysOperLog;
 import com.ruoyi.system.domain.model.InterfaceLogRes;
+import com.ruoyi.system.utils.ConfigInfo;
+import com.ruoyi.system.utils.LocalMACUtil;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.Signature;
 import org.aspectj.lang.annotation.AfterReturning;
@@ -32,10 +34,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.lang.reflect.Method;
 import java.text.SimpleDateFormat;
-import java.util.Collection;
-import java.util.Date;
-import java.util.Iterator;
-import java.util.Map;
+import java.util.*;
 
 /**
  * 接口调用日志记录处理
@@ -120,6 +119,22 @@ public class InterfaceLogAspect
             interfaceLogRes.setOperater_name(operatorName);
             interfaceLogRes.setOperater_idcard(operatorIdCard);
 
+            Map<String, Object> params = new HashMap<>();
+            params.put("interface_name",interfaceLogRes.getInterface_medthod_name());
+            params.put("request_ip",ip);
+            params.put("request_net",interfaceLogRes.getRequest_network());
+            params.put("localhost_ip",IpUtils.getHostIp());// 终端的IP
+            params.put("localhost_mac", LocalMACUtil.getLocalMac());//终端mac
+            params.put("call_time",dateString);
+            params.put("call_parameters",parameter);
+            params.put("reason",interfaceLogRes.getRequest_reason());
+            params.put("organization",interfaceLogRes.getDept_name());
+            params.put("tyshxydm",interfaceLogRes.getDept_code());
+            params.put("name", ConfigInfo.OPERATOR);
+            params.put("sfzhm", ConfigInfo.IDCARD);
+
+            log.info("日志参数"+params);
+
             // 返回参数(构造共享云平台的日志规范作为响应值)
             operLog.setJsonResult(JSON.toJSONString(JSON.toJSONString(interfaceLogRes)));
 
@@ -139,6 +154,8 @@ public class InterfaceLogAspect
             operLog.setTitle(controllerLog.title());
             // 保存数据库
             AsyncManager.me().execute(AsyncFactory.recordOper(operLog));
+            // 保存数据到共享平台
+            AsyncManager.me().execute(AsyncFactory.dumpLogs(params));
         }
         catch (Exception exp)
         {
