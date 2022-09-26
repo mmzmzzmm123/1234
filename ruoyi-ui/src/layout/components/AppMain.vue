@@ -1,20 +1,20 @@
 <template>
   <section class="app-main">
     <transition name="fade-transform" mode="out-in">
-      <zxKeepAlive :include="cachedViews">
+      <keepAlive :include="cachedViews">
         <router-view v-if="!$route.meta.link" :key="key" />
-      </zxKeepAlive>
+      </keepAlive>
     </transition>
     <iframe-toggle />
   </section>
 </template>
 
 <script>
-import Vue from 'vue'
 import iframeToggle from "./IframeToggle/index"
+import keepAlive from './keepAlive'
 export default {
   name: 'AppMain',
-  components: { iframeToggle },
+  components: { iframeToggle, keepAlive },
   computed: {
     cachedViews() {
       return this.$store.state.tagsView.cachedViews
