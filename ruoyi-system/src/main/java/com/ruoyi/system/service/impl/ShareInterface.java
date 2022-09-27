@@ -12,8 +12,17 @@ import org.apache.commons.text.StringEscapeUtils;
 import org.dom4j.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
+import org.springframework.web.util.UriComponentsBuilder;
 
+import java.io.IOException;
 import java.util.*;
 
 /**
@@ -28,6 +37,9 @@ import java.util.*;
 public class ShareInterface {
 
     private static final Logger log = LoggerFactory.getLogger(ShareInterface.class);
+
+    @Autowired
+    private RestTemplate restTemplate;
 
     /**
      * 个人或企业失信记录查询
@@ -252,7 +264,32 @@ public class ShareInterface {
      */
     public String dumpLogs(Map<String, Object> params){
 
-        String result = "";
+        List<Map<String, Object>> list = new ArrayList<>();
+        list.add(params);
+
+        String authorization = null;
+        try {
+            authorization = getAuthorization();
+            HttpHeaders headers = new HttpHeaders();
+            headers.add("Authorization", authorization);
+
+            UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(ConfigInfo.dumpLogs).queryParam("list", JSONObject.toJSONString(list));
+            HttpEntity<JSONObject> httpEntity = new HttpEntity<>(null, headers);
+            ParameterizedTypeReference<String> reference =
+                    new ParameterizedTypeReference<String>() {
+                    };
+
+            ResponseEntity<String> responseEntity = restTemplate.exchange(builder.build().toUri(),
+                    HttpMethod.GET, httpEntity, reference);
+
+            return responseEntity.getBody();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return "";
+    }
+
+    private String getAuthorization() throws IOException {
         String tokenUrl = ConfigInfo.EXTRANET_TOKEN_URL;
         String app_key = ConfigInfo.EXTRANET_APP_KEY;
         String pri_key = ConfigInfo.EXTRANET_PRI_KEY;
@@ -262,23 +299,13 @@ public class ShareInterface {
         Long timestamp = System.currentTimeMillis();
         //根据私钥+时间戮MD5加密获取签名
         String sign = MD5Util.encrypt(pri_key + timestamp.toString());
-        try {
-            //get方式调用获取令牌信息
-            tokenUrl += "?app_key=" + app_key + "&sign=" + sign + "&timestamp=" + timestamp;
-            String token = HttpUtil.sendGet(tokenUrl, authorization);
 
-            //从获得的信息中获取令牌
-            JSONObject jsonObject = JSONObject.parseObject(token);
-            authorization = "Basic " + jsonObject.getString("access_token");
-            log.info("authorization:"+authorization);
-            result = HttpUtil.doPostByParamsUtf8(ConfigInfo.dumpLogs,params,authorization);
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        log.info("日志推送结果："+result);
-        return result;
-
+        tokenUrl += "?app_key=" + app_key + "&sign=" + sign + "&timestamp=" + timestamp;
+        String token = HttpUtil.sendGet(tokenUrl, authorization);
+        //从获得的信息中获取令牌
+        JSONObject jsonObject = JSONObject.parseObject(token);
+        authorization = "Basic " + jsonObject.getString("access_token");
+        return authorization;
     }
 
     /**
