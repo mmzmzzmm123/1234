@@ -1,0 +1,125 @@
+<template>
+
+  <div>
+  
+
+        <el-divider content-position="left">得分设置</el-divider>
+        <el-table :data="scoreList" style="width: 100%" size="mini">
+          <el-table-column type="expand">
+            <template slot-scope="props">
+              <el-form ref="form" label-width="80px">
+                <el-form-item label="得分范围">
+                  <el-col :span="7">
+                    <el-input-number style="width: 100%;" controls-position="right" size="small" v-model="props.row.start" @change="modifySetting(props.row)"></el-input-number>
+                  </el-col>
+                  <el-col class="line" :span="1">-</el-col>
+                  <el-col :span="7">
+                    <el-input-number style="width: 100%;" controls-position="right" size="small" v-model="props.row.end" @change="modifySetting(props.row)"></el-input-number>
+                  </el-col>
+                </el-form-item>
+                <el-form-item label="建议">
+                  <image-upload v-model="props.row.proposal" @input="modifySetting(props.row)" />
+                </el-form-item>
+
+              </el-form>
+            </template>
+          </el-table-column>
+          <el-table-column label="得分范围">
+            <template slot-scope="props">
+              {{props.row.start}}-{{props.row.end}}
+            </template>
+          </el-table-column>
+          <el-table-column label="建议" prop="proposal">
+            <template slot-scope="props" v-if="props.row.proposal!=null">
+              <image-preview v-for="url in props.row.proposal.split(',')" :key="url" :src="url" :width="50" :height="50" />
+            </template>
+          </el-table-column>
+          <el-table-column label="操作" align="center" min-width="100px" class-name="small-padding fixed-width">
+            <template slot-scope="scope">
+              <el-button size="mini" type="text" icon="el-icon-delete" @click="handleDelete(scope.row)" v-hasPermi="['gauge:setting:remove']">删除</el-button>
+            </template>
+          </el-table-column>
+        </el-table>
+        <el-button type="primary" size="small" @click="insertSetting()">增加得分</el-button>
+    
+
+  </div>
+</template>
+<script>
+import { listMultiSetting } from "@/api/gauge/multiSetting";
+import {
+  listSetting,
+  addSetting,
+  updateSetting,
+  delSetting,
+} from "@/api/gauge/setting";
+
+export default {
+  components: {},
+  props: {
+    gaugeId: {
+      type: Number,
+      default: null,
+    },
+  },
+  watch: {
+    gaugeId: {
+      handler(val) {
+        if (val !== this.currentValue) {
+          this.getSettingList(val);
+        }
+      },
+      deep: true,
+      immediate: true,
+    },
+  },
+  data() {
+    return {
+      form: {},
+      scoreList: [
+        {
+          id: "12987122",
+          start: 1,
+          end: 10,
+          proposal: "",
+        },
+      ],
+    };
+  },
+  methods: {
+    async insertSetting() {
+      //获取
+      let score = this.scoreList[this.scoreList.length - 1];
+
+      await addSetting({
+        gaugeId: this.gaugeId,
+        start: score.end,
+        end: score.end + 20,
+        proposal: "",
+      });
+      this.getSettingList();
+    },
+    async getSettingList() {
+      let res = await listSetting({ gaugeId: this.gaugeId });
+      this.scoreList = res.rows;
+    },
+    async modifySetting(data) {
+      await updateSetting(data);
+    },
+    handleDelete(data) {
+      this.$modal
+        .confirm(
+          "是否确认删除得分设置（" + data.start + "-" + data.end + "）？"
+        )
+        .then(function () {
+          return delSetting(data.id);
+        })
+        .then(() => {
+          this.getSettingList();
+          this.$modal.msgSuccess("删除成功");
+        })
+        .catch(() => {});
+    },
+  },
+};
+</script>
