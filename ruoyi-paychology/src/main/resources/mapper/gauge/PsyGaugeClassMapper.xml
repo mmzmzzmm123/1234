@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.gauge.mapper.PsyGaugeClassMapper">
+    
+    <resultMap type="PsyGaugeClass" id="PsyGaugeClassResult">
+        <result property="id"    column="id"    />
+        <result property="name"    column="name"    />
+        <result property="sort"    column="sort"    />
+
+    </resultMap>
+
+    <sql id="selectPsyGaugeClassVo">
+        select id, name, sort from psy_gauge_class
+    </sql>
+
+    <select id="selectPsyGaugeClassList" parameterType="PsyGaugeClass" resultMap="PsyGaugeClassResult">
+        <include refid="selectPsyGaugeClassVo"/>
+        <where>  
+            <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
+        </where>
+    </select>
+    
+    <select id="selectPsyGaugeClassById" parameterType="Long" resultMap="PsyGaugeClassResult">
+        <include refid="selectPsyGaugeClassVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertPsyGaugeClass" parameterType="PsyGaugeClass">
+        insert into psy_gauge_class
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="name != null">name,</if>
+            <if test="sort != null">sort,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="name != null">#{name},</if>
+            <if test="sort != null">#{sort},</if>
+         </trim>
+    </insert>
+
+    <update id="updatePsyGaugeClass" parameterType="PsyGaugeClass">
+        update psy_gauge_class
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="name != null">name = #{name},</if>
+            <if test="sort != null">name = #{sort},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deletePsyGaugeClassById" parameterType="Long">
+        delete from psy_gauge_class where id = #{id}
+    </delete>
+
+    <delete id="deletePsyGaugeClassByIds" parameterType="String">
+        delete from psy_gauge_class where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

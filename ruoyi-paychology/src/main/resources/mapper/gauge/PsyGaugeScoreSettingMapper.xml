@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.gauge.mapper.PsyGaugeScoreSettingMapper">
+    
+    <resultMap type="PsyGaugeScoreSetting" id="PsyGaugeScoreSettingResult">
+        <result property="id"    column="id"    />
+        <result property="gaugeId"    column="gauge_id"    />
+        <result property="start"    column="start"    />
+        <result property="end"    column="end"    />
+        <result property="proposal"    column="proposal"    />
+    </resultMap>
+
+    <sql id="selectPsyGaugeScoreSettingVo">
+        select id, gauge_id, start, end, proposal from psy_gauge_score_setting
+    </sql>
+
+    <select id="selectPsyGaugeScoreSettingList" parameterType="PsyGaugeScoreSetting" resultMap="PsyGaugeScoreSettingResult">
+        <include refid="selectPsyGaugeScoreSettingVo"/>
+        <where>  
+            <if test="gaugeId != null "> and gauge_id = #{gaugeId}</if>
+            <if test="start != null "> and start = #{start}</if>
+            <if test="end != null "> and end = #{end}</if>
+            <if test="proposal != null  and proposal != ''"> and proposal = #{proposal}</if>
+        </where>
+    </select>
+    <select id="selectPsyGaugeScoreSettingListByIds" parameterType="String" resultMap="PsyGaugeScoreSettingResult">
+        <include refid="selectPsyGaugeScoreSettingVo"/>
+        where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </select>
+
+    <select id="selectPsyGaugeScoreSettingById" parameterType="Long" resultMap="PsyGaugeScoreSettingResult">
+        <include refid="selectPsyGaugeScoreSettingVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertPsyGaugeScoreSetting" parameterType="PsyGaugeScoreSetting" useGeneratedKeys="true" keyProperty="id">
+        insert into psy_gauge_Score_setting
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="gaugeId != null">gauge_id,</if>
+            <if test="start != null">start,</if>
+            <if test="end != null">end,</if>
+            <if test="proposal != null">proposal,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="gaugeId != null">#{gaugeId},</if>
+            <if test="start != null">#{start},</if>
+            <if test="end != null">#{end},</if>
+            <if test="proposal != null">#{proposal},</if>
+         </trim>
+    </insert>
+
+    <update id="updatePsyGaugeScoreSetting" parameterType="PsyGaugeScoreSetting">
+        update psy_gauge_Score_setting
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="gaugeId != null">gauge_id = #{gaugeId},</if>
+            <if test="start != null">start = #{start},</if>
+            <if test="end != null">end = #{end},</if>
+            <if test="proposal != null">proposal = #{proposal},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deletePsyGaugeScoreSettingById" parameterType="Long">
+        delete from psy_gauge_Score_setting where id = #{id}
+    </delete>
+
+    <delete id="deletePsyGaugeScoreSettingByIds" parameterType="String">
+        delete from psy_gauge_Score_setting where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+</mapper>

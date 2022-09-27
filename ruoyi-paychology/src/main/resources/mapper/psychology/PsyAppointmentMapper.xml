@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.psychology.mapper.PsyAppointmentMapper">
+    
+    <resultMap type="PsyAppointment" id="PsyAppointmentResult">
+        <result property="id"    column="id"    />
+        <result property="userId"    column="user_id"    />
+        <result property="consultantId"    column="consultant_id"    />
+        <result property="day"    column="day"    />
+        <result property="timeInterval"    column="time_interval"    />
+        <result property="createTime"    column="create_time"    />
+    </resultMap>
+
+    <sql id="selectPsyAppointmentVo">
+        select id, user_id, consultant_id, day, time_interval, create_time from psy_appointment
+    </sql>
+
+    <select id="selectPsyAppointmentList" parameterType="PsyAppointment" resultMap="PsyAppointmentResult">
+        <include refid="selectPsyAppointmentVo"/>
+        <where>  
+            <if test="userId != null "> and user_id = #{userId}</if>
+            <if test="consultantId != null "> and consultant_id = #{consultantId}</if>
+            <if test="day != null  and day != ''"> and day = #{day}</if>
+            <if test="timeInterval != null  and timeInterval != ''"> and time_interval = #{timeInterval}</if>
+        </where>
+    </select>
+    
+    <select id="selectPsyAppointmentById" parameterType="Long" resultMap="PsyAppointmentResult">
+        <include refid="selectPsyAppointmentVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertPsyAppointment" parameterType="PsyAppointment" useGeneratedKeys="true" keyProperty="id">
+        insert into psy_appointment
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="userId != null">user_id,</if>
+            <if test="consultantId != null">consultant_id,</if>
+            <if test="day != null">day,</if>
+            <if test="timeInterval != null">time_interval,</if>
+            <if test="createTime != null">create_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="userId != null">#{userId},</if>
+            <if test="consultantId != null">#{consultantId},</if>
+            <if test="day != null">#{day},</if>
+            <if test="timeInterval != null">#{timeInterval},</if>
+            <if test="createTime != null">#{createTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updatePsyAppointment" parameterType="PsyAppointment">
+        update psy_appointment
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="userId != null">user_id = #{userId},</if>
+            <if test="consultantId != null">consultant_id = #{consultantId},</if>
+            <if test="day != null">day = #{day},</if>
+            <if test="timeInterval != null">time_interval = #{timeInterval},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deletePsyAppointmentById" parameterType="Long">
+        delete from psy_appointment where id = #{id}
+    </delete>
+
+    <delete id="deletePsyAppointmentByIds" parameterType="String">
+        delete from psy_appointment where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.gauge.mapper.PsyGaugeQuestionsResultMapper">
+    
+    <resultMap type="PsyGaugeQuestionsResult" id="PsyGaugeQuestionsResultResult">
+        <result property="id"    column="id"    />
+        <result property="userId"    column="user_id"    />
+        <result property="gaugeId"    column="gauge_id"    />
+        <result property="questionsId"    column="questions_id"    />
+        <result property="questionsOptionsId"    column="questions_options_id"    />
+        <result property="score"    column="score"    />
+        <result property="createTime"    column="create_time"    />
+    </resultMap>
+
+    <sql id="selectPsyGaugeQuestionsResultVo">
+        select id, user_id, gauge_id, questions_id, questions_options_id, score, create_time from psy_gauge_questions_result
+    </sql>
+
+    <select id="selectPsyGaugeQuestionsResultList" parameterType="PsyGaugeQuestionsResult" resultMap="PsyGaugeQuestionsResultResult">
+        <include refid="selectPsyGaugeQuestionsResultVo"/>
+        <where>  
+            <if test="userId != null  and userId != ''"> and user_id = #{userId}</if>
+            <if test="gaugeId != null "> and gauge_id = #{gaugeId}</if>
+            <if test="questionsId != null "> and questions_id = #{questionsId}</if>
+            <if test="questionsOptionsId != null "> and questions_options_id = #{questionsOptionsId}</if>
+            <if test="score != null  and score != ''"> and score = #{score}</if>
+        </where>
+    </select>
+    
+    <select id="selectPsyGaugeQuestionsResultById" parameterType="Long" resultMap="PsyGaugeQuestionsResultResult">
+        <include refid="selectPsyGaugeQuestionsResultVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertPsyGaugeQuestionsResult" parameterType="PsyGaugeQuestionsResult" useGeneratedKeys="true" keyProperty="id">
+        insert into psy_gauge_questions_result
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="userId != null">user_id,</if>
+            <if test="gaugeId != null">gauge_id,</if>
+            <if test="questionsId != null">questions_id,</if>
+            <if test="questionsOptionsId != null">questions_options_id,</if>
+            <if test="score != null">score,</if>
+            <if test="createTime != null">create_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="userId != null">#{userId},</if>
+            <if test="gaugeId != null">#{gaugeId},</if>
+            <if test="questionsId != null">#{questionsId},</if>
+            <if test="questionsOptionsId != null">#{questionsOptionsId},</if>
+            <if test="score != null">#{score},</if>
+            <if test="createTime != null">#{createTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updatePsyGaugeQuestionsResult" parameterType="PsyGaugeQuestionsResult">
+        update psy_gauge_questions_result
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="userId != null">user_id = #{userId},</if>
+            <if test="gaugeId != null">gauge_id = #{gaugeId},</if>
+            <if test="questionsId != null">questions_id = #{questionsId},</if>
+            <if test="questionsOptionsId != null">questions_options_id = #{questionsOptionsId},</if>
+            <if test="score != null">score = #{score},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deletePsyGaugeQuestionsResultById" parameterType="Long">
+        delete from psy_gauge_questions_result where id = #{id}
+    </delete>
+
+    <delete id="deletePsyGaugeQuestionsResultByIds" parameterType="String">
+        delete from psy_gauge_questions_result where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

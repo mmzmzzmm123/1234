@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.gauge.mapper.PsyGaugeMapper">
+    
+    <resultMap type="PsyGauge" id="PsyGaugeResult">
+        <result property="id"    column="id"    />
+        <result property="title"    column="title"    />
+        <result property="subtitle"    column="subtitle"    />
+        <result property="headPicture"    column="head_picture"    />
+        <result property="introduce"    column="introduce"    />
+        <result property="gaugeClass"    column="gauge_class"    />
+        <result property="gaugeNum"    column="gauge_num"    />
+        <result property="price"    column="price"    />
+        <result property="num"    column="num"    />
+        <result property="type"    column="type"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="createBy"      column="create_by"      />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"      column="update_by"      />
+        <result property="updateTime"    column="update_time"    />
+    </resultMap>
+
+    <sql id="selectPsyGaugeVo">
+        select id, title, subtitle, head_picture, introduce, gauge_class, gauge_num, price, num, type,create_by, create_time, update_by, update_time, remark  from psy_gauge
+    </sql>
+
+    <select id="selectPsyGaugeList" parameterType="PsyGauge" resultMap="PsyGaugeResult">
+        <include refid="selectPsyGaugeVo"/>
+        <where>  
+            <if test="title != null  and title != ''"> and title = #{title}</if>
+            <if test="subtitle != null  and subtitle != ''"> and subtitle = #{subtitle}</if>
+            <if test="headPicture != null  and headPicture != ''"> and head_picture = #{headPicture}</if>
+            <if test="introduce != null  and introduce != ''"> and introduce = #{introduce}</if>
+            <if test="gaugeClass != null "> and gauge_class = #{gaugeClass}</if>
+            <if test="gaugeNum != null "> and gauge_num = #{gaugeNum}</if>
+            <if test="price != null "> and price = #{price}</if>
+            <if test="num != null "> and num = #{num}</if>
+            <if test="type != null "> and type = #{type}</if>
+        </where>
+    </select>
+    
+    <select id="selectPsyGaugeById" parameterType="Long" resultMap="PsyGaugeResult">
+        <include refid="selectPsyGaugeVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertPsyGauge" parameterType="PsyGauge" useGeneratedKeys="true" keyProperty="id">
+        insert into psy_gauge
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="title != null">title,</if>
+            <if test="subtitle != null">subtitle,</if>
+            <if test="headPicture != null">head_picture,</if>
+            <if test="introduce != null">introduce,</if>
+            <if test="gaugeClass != null">gauge_class,</if>
+            <if test="gaugeNum != null">gauge_num,</if>
+            <if test="price != null">price,</if>
+            <if test="num != null">num,</if>
+            <if test="type != null">type,</if>
+            <if test="createBy != null and createBy != ''">create_by,</if>
+
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="title != null">#{title},</if>
+            <if test="subtitle != null">#{subtitle},</if>
+            <if test="headPicture != null">#{headPicture},</if>
+            <if test="introduce != null">#{introduce},</if>
+            <if test="gaugeClass != null">#{gaugeClass},</if>
+            <if test="gaugeNum != null">#{gaugeNum},</if>
+            <if test="price != null">#{price},</if>
+            <if test="num != null">#{num},</if>
+            <if test="type != null">type,</if>
+            <if test="createBy != null and createBy != ''">#{createBy},</if>
+         </trim>
+    </insert>
+
+    <update id="updatePsyGauge" parameterType="PsyGauge">
+        update psy_gauge
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="title != null">title = #{title},</if>
+            <if test="subtitle != null">subtitle = #{subtitle},</if>
+            <if test="headPicture != null">head_picture = #{headPicture},</if>
+            <if test="introduce != null">introduce = #{introduce},</if>
+            <if test="gaugeClass != null">gauge_class = #{gaugeClass},</if>
+            <if test="gaugeNum != null">gauge_num = #{gaugeNum},</if>
+            <if test="price != null">price = #{price},</if>
+            <if test="num != null">num = #{num},</if>
+            <if test="type != null">type = #{type},</if>
+            <if test="updateBy != null and updateBy != ''">update_by = #{updateBy},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deletePsyGaugeById" parameterType="Long">
+        delete from psy_gauge where id = #{id}
+    </delete>
+
+    <delete id="deletePsyGaugeByIds" parameterType="String">
+        delete from psy_gauge where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

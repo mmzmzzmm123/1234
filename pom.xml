@@ -186,6 +186,13 @@
                 <version>${ruoyi.version}</version>
             </dependency>
 
+            <!-- 微信支付SDK-->
+            <dependency>
+                <groupId>com.github.wechatpay-apiv3</groupId>
+                <artifactId>wechatpay-apache-httpclient</artifactId>
+                <version>0.4.8</version>
+            </dependency>
+
         </dependencies>
     </dependencyManagement>
 
@@ -196,6 +203,7 @@
         <module>ruoyi-quartz</module>
         <module>ruoyi-generator</module>
         <module>ruoyi-common</module>
+        <module>ruoyi-paychology</module>
     </modules>
     <packaging>pom</packaging>
 
