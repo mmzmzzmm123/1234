@@ -287,8 +287,6 @@ public class SysUserServiceImpl implements ISysUserService
     @Transactional
     public int updateUser(SysUser user)
     {
-        checkUserAllowed(user);
-        checkUserDataScope(user.getUserId());
         Long userId = user.getUserId();
         // 删除用户与角色关联
         userRoleMapper.deleteUserRoleByUserId(userId);
@@ -511,6 +509,8 @@ public class SysUserServiceImpl implements ISysUserService
                 {
                     BeanValidators.validateWithException(validator, user);
                     user.setUpdateBy(operName);
+                    checkUserAllowed(user);
+                    checkUserDataScope(user.getUserId());
                     this.updateUser(user);
                     successNum++;
                     successMsg.append("<br/>" + successNum + "、账号 " + user.getUserName() + " 更新成功");
