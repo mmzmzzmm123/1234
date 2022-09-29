@@ -34,6 +34,7 @@
         <jwt.version>0.9.1</jwt.version>
         <!--<spring-boot.version>2.5.14 </spring-boot.version>-->
         <spring-boot.version>2.7.4</spring-boot.version>
+        <knife4j.version>3.0.3</knife4j.version>
     </properties>
 
     <!-- 依赖声明 -->
@@ -151,6 +152,13 @@
                 <groupId>com.github.penggle</groupId>
                 <artifactId>kaptcha</artifactId>
                 <version>${kaptcha.version}</version>
+            </dependency>
+
+            <!--swagger-ui-->
+            <dependency>
+                <groupId>com.github.xiaoymin</groupId>
+                <artifactId>knife4j-spring-boot-starter</artifactId>
+                <version>${knife4j.version}</version>
             </dependency>
 
             <!-- 定时任务-->
