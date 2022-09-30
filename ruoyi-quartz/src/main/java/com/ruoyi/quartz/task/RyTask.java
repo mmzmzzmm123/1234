@@ -1,5 +1,6 @@
 package com.ruoyi.quartz.task;
 
+import com.ruoyi.common.utils.spring.SpringUtils;
 import org.springframework.stereotype.Component;
 import com.ruoyi.common.utils.StringUtils;
 
@@ -25,4 +26,7 @@ public class RyTask
     {
         System.out.println("执行无参方法");
     }
+
+
+
 }
