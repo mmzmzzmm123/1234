@@ -154,13 +154,6 @@
                 <version>${kaptcha.version}</version>
             </dependency>
 
-            <!--swagger-ui-->
-            <dependency>
-                <groupId>com.github.xiaoymin</groupId>
-                <artifactId>knife4j-spring-boot-starter</artifactId>
-                <version>${knife4j.version}</version>
-            </dependency>
-
             <!-- 定时任务-->
             <dependency>
                 <groupId>com.ruoyi</groupId>
