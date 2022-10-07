@@ -1,8 +1,8 @@
 {
-  "name": "ruoyi",
+  "name": "gongyu",
   "version": "3.8.4",
   "description": "宇宇的小木屋",
-  "author": "若依",
+  "author": "龚宇",
   "license": "MIT",
   "scripts": {
     "dev": "vue-cli-service serve",
