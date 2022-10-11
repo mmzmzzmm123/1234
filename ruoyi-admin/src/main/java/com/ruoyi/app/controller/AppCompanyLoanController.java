@@ -68,7 +68,7 @@ public class AppCompanyLoanController extends BaseController
     }
 
     /**
-     * 获取手机验证码
+     * 获取用户信息--TODO 闽商通接口改造
      */
     @GetMapping("/user")
     @ApiOperation(value = "获取用户信息")
@@ -87,7 +87,7 @@ public class AppCompanyLoanController extends BaseController
     /**
      * 根据企业名称匹配对应的企业完整名称
      */
-    @GetMapping("/match/v2")
+//    @GetMapping("/match/v2")
     @ApiOperation(value = "根据企业名称匹配对应的企业完整名称")
     public TableDataInfo matchV2(@RequestParam String companyName)
     {
@@ -98,16 +98,7 @@ public class AppCompanyLoanController extends BaseController
         return getDataTable(companyList);
     }
 
-    /**
-     * 测试接口是否打通，随时可以删除
-     */
-    @GetMapping("/test")
-    public AjaxResult test()
-    {
-        return AjaxResult.success();
-    }
-
-    @GetMapping("/listOracle")
+//    @GetMapping("/listOracle")
     public TableDataInfo listOracle(DataCompanyLoan dataCompanyLoan)
     {
         startPage();

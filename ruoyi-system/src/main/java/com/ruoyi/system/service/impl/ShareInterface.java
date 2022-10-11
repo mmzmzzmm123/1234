@@ -389,7 +389,7 @@ public class ShareInterface {
     }
 
     public static void main(String[] args){
-        new ShareInterface().queryCompanyInfo("泉州大数据运营服务有限公司");
+//        new ShareInterface().queryCompanyInfo("泉州大数据运营服务有限公司");
     }
 
 }

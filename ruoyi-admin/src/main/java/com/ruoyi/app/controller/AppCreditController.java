@@ -101,6 +101,10 @@ public class AppCreditController extends BaseController {
         return AjaxResult.success(result);
     }
 
+    /**
+     * 企业入驻--TODO 闽商通接口改造
+     * @return
+     */
     @PostMapping("/comUserReg")
     @ApiOperation(value = "企业入驻")
     public AjaxResult comUserReg() {
