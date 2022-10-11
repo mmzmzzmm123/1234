@@ -9,7 +9,7 @@ spring:
         # 数据库索引
         database: 0
         # 密码
-        password:
+        password: jmspring
         # 连接超时时间
         timeout: 10s
         lettuce:
@@ -27,9 +27,9 @@ spring:
         druid:
             # 主库数据源
             master:
-                url: jdbc:mysql://localhost:3307/xdztc_company_loan?useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=true&serverTimezone=GMT%2B8
+                url: jdbc:mysql://localhost:3306/company_loan?useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=true&serverTimezone=GMT%2B8
                 username: root
-                password: 123456
+                password: coolteam123
 #            master:
 #                url: jdbc:mysql://10.22.0.89:3306/company_loan?useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=true&serverTimezone=GMT%2B8
 #                username: root
@@ -101,16 +101,23 @@ api:
     domain: http://localhost:8080/
 
 # 信用三期的相关api接口
+#credit:
+#    domain: http://dev.fjhrt.com/
+#    account: service_singleUser
+#    password: d7e5fefe300d45d09044b4abca2c5185
+#    appId: b392q1IW
+#    code: 1111
+
 credit:
-    domain: http://dev.fjhrt.com/
-    account: service_singleUser
-    password: d7e5fefe300d45d09044b4abca2c5185
+    domain: http://credit.quanzhou.gov.cn:8086
+    account: service_XYPT_DJ
+    password: e7f19f36ee1b4e73916934a533f020e6
     appId: b392q1IW
     code: 1111
 
 # 金融产品的相关api接口
 bankapi:
-    domain: http://dev.strongdata.com.cn:5222/qzh-xyd/business/api/interfaces/openApi/
+    domain: http://qzh.58.56.115.134.nip.io:5222/qzh-xyd/business/api/interfaces/openApi/
     appKey: 6c2544dcad39441c8e81c790bf9009f1
     appSecret: cb8135c8442843909cf47d4c359b31a0
 
