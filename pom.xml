@@ -190,7 +190,13 @@
             <dependency>
                 <groupId>com.github.wechatpay-apiv3</groupId>
                 <artifactId>wechatpay-apache-httpclient</artifactId>
-                <version>0.4.8</version>
+                <version>0.4.7</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.ruoyi</groupId>
+                <artifactId>ruoyi-paychology</artifactId>
+                <version>${ruoyi.version}</version>
             </dependency>
 
         </dependencies>
