@@ -102,7 +102,7 @@ public class AppCreditController extends BaseController {
     }
 
     /**
-     * 企业入驻--TODO 闽商通接口改造
+     * 闽政通版企业入驻
      * @return
      */
     @PostMapping("/comUserReg")
@@ -121,6 +121,17 @@ public class AppCreditController extends BaseController {
         }else {
             return AjaxResult.error("获取用户信息失败");
         }
+    }
+
+    /**
+     * 闽商通版企业入驻
+     * @return
+     */
+    @PostMapping("/comUserReg4Mst")
+    @ApiOperation(value = "企业入驻(闽商通)")
+    public AjaxResult comUserReg4mst(@RequestBody JSONObject jsonObject) {
+
+        return prodOpenApi.comUserReg(jsonObject);
     }
 
     @GetMapping("/findAuthorization")

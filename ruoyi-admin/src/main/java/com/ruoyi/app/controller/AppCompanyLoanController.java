@@ -68,7 +68,7 @@ public class AppCompanyLoanController extends BaseController
     }
 
     /**
-     * 获取用户信息--TODO 闽商通接口改造
+     * 获取用户信息
      */
     @GetMapping("/user")
     @ApiOperation(value = "获取用户信息")
