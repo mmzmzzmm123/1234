@@ -160,7 +160,8 @@ public class DataCompanyLoanServiceImpl implements IDataCompanyLoanService
         String loanObjectType = Constants.COMPANY_TYPE_MAP.get(loanObjectTypeRequest.toUpperCase());
         dataCompanyLoan.setLoanObjectType(loanObjectType);
 
-        // 查询企业或个体工商户详细信息
+        // 不再调用共享云接口
+      /*  // 查询企业或个体工商户详细信息
         if (StringUtils.equals(loanObjectTypeRequest,Constants.TYPE_GTGSH)){// 个体工商户
             JSONObject jsonObject = interfaceService.queryGTGSHByXydm(dataCompanyLoanBody.getXydm(),companyNameFromRequest);
             if (jsonObject != null){
@@ -179,7 +180,7 @@ public class DataCompanyLoanServiceImpl implements IDataCompanyLoanService
                 dataCompanyLoan.setCompanyBusiness(map.get("managerange"));
                 dataCompanyLoan.setCompanyAddress(map.get("regaddress"));
             }
-        }
+        }*/
 
         //同一企业，在3天内多次提交信贷直通车需求，且银行、金额完全一致
         String xydmCacheKey = generateXydmCacheKey(dataCompanyLoan.getCompanyCreditCode(), dataCompanyLoan.getLoanBand(), dataCompanyLoan.getLoanAmount() + "");
