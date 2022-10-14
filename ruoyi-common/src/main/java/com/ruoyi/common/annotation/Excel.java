@@ -11,7 +11,7 @@ import com.ruoyi.common.utils.poi.ExcelHandlerAdapter;
 
 /**
  * 自定义导出Excel数据注解
- * 
+ *
  * @author ruoyi
  */
 @Retention(RetentionPolicy.RUNTIME)
@@ -112,6 +112,11 @@ public @interface Excel
      * 导出类型（0数字 1字符串 2图片）
      */
     public ColumnType cellType() default ColumnType.STRING;
+
+    /**
+     * 是否为纯文本单元格，避免有些数字转换为科学计数的情况
+     */
+    public boolean isTextField() default false;
 
     /**
      * 导出列头背景色
