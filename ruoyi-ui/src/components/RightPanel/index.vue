@@ -47,6 +47,7 @@ export default {
   },
   mounted() {
     this.insertToBody()
+    this.addEventClick()
   },
   beforeDestroy() {
     const elx = this.$refs.rightPanel
