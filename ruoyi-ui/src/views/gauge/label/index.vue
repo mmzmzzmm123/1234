@@ -1,38 +1,24 @@
 <template>
   <div class="app-container">
     <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch" label-width="68px">
-      <el-form-item label="用户名" prop="name">
+      <el-form-item label="量表id" prop="gaugeId">
         <el-input
-          v-model="queryParams.name"
-          placeholder="请输入"
+          v-model="queryParams.gaugeId"
+          placeholder="请输入量表id"
           clearable
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="手机号" prop="phone">
-        <el-input
-          v-model="queryParams.phone"
-          placeholder="请输入"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
+      <el-form-item label="量表标签" prop="label">
+        <el-select v-model="queryParams.label" placeholder="请选择量表标签(0-精选测评，1-热门推荐)" clearable>
+          <el-option
+            v-for="dict in dict.type.gauge_label_class"
+            :key="dict.value"
+            :label="dict.label"
+            :value="dict.value"
+          />
+        </el-select>
       </el-form-item>
-      <el-form-item label="头像地址" prop="avatar">
-        <el-input
-          v-model="queryParams.avatar"
-          placeholder="请输入头像地址"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-<!--      <el-form-item label="" prop="wxOpenid">
-        <el-input
-          v-model="queryParams.wxOpenid"
-          placeholder="请输入"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>-->
       <el-form-item>
         <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
         <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
@@ -47,7 +33,7 @@
           icon="el-icon-plus"
           size="mini"
           @click="handleAdd"
-          v-hasPermi="['psychology:user:add']"
+          v-hasPermi="['gauge:label:add']"
         >新增</el-button>
       </el-col>
       <el-col :span="1.5">
@@ -58,7 +44,7 @@
           size="mini"
           :disabled="single"
           @click="handleUpdate"
-          v-hasPermi="['psychology:user:edit']"
+          v-hasPermi="['gauge:label:edit']"
         >修改</el-button>
       </el-col>
       <el-col :span="1.5">
@@ -69,7 +55,7 @@
           size="mini"
           :disabled="multiple"
           @click="handleDelete"
-          v-hasPermi="['psychology:user:remove']"
+          v-hasPermi="['gauge:label:remove']"
         >删除</el-button>
       </el-col>
       <el-col :span="1.5">
@@ -79,24 +65,21 @@
           icon="el-icon-download"
           size="mini"
           @click="handleExport"
-          v-hasPermi="['psychology:user:export']"
+          v-hasPermi="['gauge:label:export']"
         >导出</el-button>
       </el-col>
       <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
     </el-row>
 
-    <el-table v-loading="loading" :data="userList" @selection-change="handleSelectionChange">
+    <el-table v-loading="loading" :data="labelList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="用户id" align="center" prop="id" />
-      <el-table-column label="用户名" align="center" prop="name" />
-      <el-table-column label="手机号码" align="center" prop="phone" />
-      <el-table-column label="头像地址" align="center" prop="avatar" />
-      <el-table-column label="帐号状态" align="center" prop="status" >
+      <el-table-column label="主键" align="center" prop="id" />
+      <el-table-column label="量表id" align="center" prop="gaugeId" />
+      <el-table-column label="量表标签(0-精选测评，1-热门推荐)" align="center" prop="label">
         <template slot-scope="scope">
-          {{scope.row.status==1?'停用':'正常'}}
+          <dict-tag :options="dict.type.gauge_label_class" :value="scope.row.label"/>
         </template>
       </el-table-column>
-<!--      <el-table-column label="" align="center" prop="wxOpenid" />-->
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button
@@ -104,19 +87,19 @@
             type="text"
             icon="el-icon-edit"
             @click="handleUpdate(scope.row)"
-            v-hasPermi="['psychology:user:edit']"
+            v-hasPermi="['gauge:label:edit']"
           >修改</el-button>
           <el-button
             size="mini"
             type="text"
             icon="el-icon-delete"
             @click="handleDelete(scope.row)"
-            v-hasPermi="['psychology:user:remove']"
+            v-hasPermi="['gauge:label:remove']"
           >删除</el-button>
         </template>
       </el-table-column>
     </el-table>
-
+    
     <pagination
       v-show="total>0"
       :total="total"
@@ -125,20 +108,21 @@
       @pagination="getList"
     />
 
-    <!-- 添加或修改用户对话框 -->
+    <!-- 添加或修改测评标签对话框 -->
     <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
-        <el-form-item label="用户名" prop="name">
-          <el-input v-model="form.name" placeholder="请输入" />
+        <el-form-item label="量表id" prop="gaugeId">
+          <el-input v-model="form.gaugeId" placeholder="请输入量表id" />
         </el-form-item>
-        <el-form-item label="手机号码" prop="phone">
-          <el-input v-model="form.phone" placeholder="请输入" />
-        </el-form-item>
-        <el-form-item label="头像地址" prop="avatar">
-          <el-input v-model="form.avatar" placeholder="请输入头像地址" />
-        </el-form-item>
-        <el-form-item label="微信Id" prop="wxOpenid">
-          <el-input v-model="form.wxOpenid" placeholder="请输入" />
+        <el-form-item label="量表标签" prop="label">
+          <el-select v-model="form.label" placeholder="请选择量表标签(0-精选测评，1-热门推荐)">
+            <el-option
+              v-for="dict in dict.type.gauge_label_class"
+              :key="dict.value"
+              :label="dict.label"
+:value="parseInt(dict.value)"
+            ></el-option>
+          </el-select>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -150,10 +134,11 @@
 </template>
 
 <script>
-import { listUser, getUser, delUser, addUser, updateUser } from "@/api/psychology/user";
+import { listLabel, getLabel, delLabel, addLabel, updateLabel } from "@/api/gauge/label";
 
 export default {
-  name: "User",
+  name: "Label",
+  dicts: ['gauge_label_class'],
   data() {
     return {
       // 遮罩层
@@ -168,8 +153,8 @@ export default {
       showSearch: true,
       // 总条数
       total: 0,
-      // 用户表格数据
-      userList: [],
+      // 测评标签表格数据
+      labelList: [],
       // 弹出层标题
       title: "",
       // 是否显示弹出层
@@ -178,16 +163,19 @@ export default {
       queryParams: {
         pageNum: 1,
         pageSize: 10,
-        name: null,
-        phone: null,
-        avatar: null,
-        status: null,
-        wxOpenid: null,
+        gaugeId: null,
+        label: null
       },
       // 表单参数
       form: {},
       // 表单校验
       rules: {
+        gaugeId: [
+          { required: true, message: "量表id不能为空", trigger: "blur" }
+        ],
+        label: [
+          { required: true, message: "量表标签(0-精选测评，1-热门推荐)不能为空", trigger: "change" }
+        ]
       }
     };
   },
@@ -195,11 +183,11 @@ export default {
     this.getList();
   },
   methods: {
-    /** 查询用户列表 */
+    /** 查询测评标签列表 */
     getList() {
       this.loading = true;
-      listUser(this.queryParams).then(response => {
-        this.userList = response.rows;
+      listLabel(this.queryParams).then(response => {
+        this.labelList = response.rows;
         this.total = response.total;
         this.loading = false;
       });
@@ -213,12 +201,8 @@ export default {
     reset() {
       this.form = {
         id: null,
-        name: null,
-        phone: null,
-        avatar: null,
-        status: "0",
-        wxOpenid: null,
-        createTime: null
+        gaugeId: null,
+        label: null
       };
       this.resetForm("form");
     },
@@ -242,16 +226,16 @@ export default {
     handleAdd() {
       this.reset();
       this.open = true;
-      this.title = "添加用户";
+      this.title = "添加测评标签";
     },
     /** 修改按钮操作 */
     handleUpdate(row) {
       this.reset();
       const id = row.id || this.ids
-      getUser(id).then(response => {
+      getLabel(id).then(response => {
         this.form = response.data;
         this.open = true;
-        this.title = "修改用户";
+        this.title = "修改测评标签";
       });
     },
     /** 提交按钮 */
@@ -259,13 +243,13 @@ export default {
       this.$refs["form"].validate(valid => {
         if (valid) {
           if (this.form.id != null) {
-            updateUser(this.form).then(response => {
+            updateLabel(this.form).then(response => {
               this.$modal.msgSuccess("修改成功");
               this.open = false;
               this.getList();
             });
           } else {
-            addUser(this.form).then(response => {
+            addLabel(this.form).then(response => {
               this.$modal.msgSuccess("新增成功");
               this.open = false;
               this.getList();
@@ -277,8 +261,8 @@ export default {
     /** 删除按钮操作 */
     handleDelete(row) {
       const ids = row.id || this.ids;
-      this.$modal.confirm('是否确认删除用户编号为"' + ids + '"的数据项？').then(function() {
-        return delUser(ids);
+      this.$modal.confirm('是否确认删除测评标签编号为"' + ids + '"的数据项？').then(function() {
+        return delLabel(ids);
       }).then(() => {
         this.getList();
         this.$modal.msgSuccess("删除成功");
@@ -286,9 +270,9 @@ export default {
     },
     /** 导出按钮操作 */
     handleExport() {
-      this.download('psychology/user/export', {
+      this.download('gauge/label/export', {
         ...this.queryParams
-      }, `user_${new Date().getTime()}.xlsx`)
+      }, `label_${new Date().getTime()}.xlsx`)
     }
   }
 };

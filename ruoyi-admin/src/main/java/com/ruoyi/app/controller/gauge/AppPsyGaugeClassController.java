@@ -1,18 +1,15 @@
 package com.ruoyi.app.controller.gauge;
 
-import com.ruoyi.common.annotation.Log;
 import com.ruoyi.common.core.controller.BaseController;
-import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.core.page.TableDataInfo;
-import com.ruoyi.common.enums.BusinessType;
-import com.ruoyi.common.utils.poi.ExcelUtil;
 import com.ruoyi.gauge.domain.PsyGaugeClass;
 import com.ruoyi.gauge.service.IPsyGaugeClassService;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
 /**
@@ -23,6 +20,7 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("/app/gauge/class")
+@Api(value = "AppPsyGaugeClassController" ,tags = {"测评分类api"})
 public class AppPsyGaugeClassController extends BaseController
 {
     @Autowired
@@ -31,9 +29,10 @@ public class AppPsyGaugeClassController extends BaseController
     /**
      * 查询测评分类列表
      */
-    @PreAuthorize("@ss.hasPermi('psychology:gaugeClass:list')")
+//    @PreAuthorize("@ss.hasPermi('psychology:gaugeClass:list')")
     @GetMapping("/list")
-    public TableDataInfo list(PsyGaugeClass psyGaugeClass)
+    @ApiOperation("查询测评分类列表")
+    public TableDataInfo list(@RequestBody PsyGaugeClass psyGaugeClass)
     {
         startPage();
         List<PsyGaugeClass> list = psyGaugeClassService.selectPsyGaugeClassList(psyGaugeClass);

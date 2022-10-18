@@ -108,8 +108,8 @@
 
         <el-form-item label="计算类型" prop="type">
            <el-select v-model="form.type" placeholder="请选择计算类型">
-            <el-option label="普通计算" value="1"></el-option>
-            <el-option label="多维计算" value="2"></el-option>
+            <el-option label="普通计算" :value="1"></el-option>
+            <el-option label="多维计算" :value="2"></el-option>
           </el-select>
         </el-form-item>
       </el-form>

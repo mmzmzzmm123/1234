@@ -1,8 +1,9 @@
 package com.ruoyi.psychology.domain;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.ruoyi.common.annotation.Excel;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
-import com.ruoyi.common.annotation.Excel;
 
 import java.util.Date;
 
@@ -21,11 +22,11 @@ public class PsyUser
     private String id;
 
     /**  */
-    @Excel(name = "")
+    @Excel(name = "用户名")
     private String name;
 
     /**  */
-    @Excel(name = "")
+    @Excel(name = "手机号码")
     private String phone;
 
     /** 头像地址 */
@@ -37,11 +38,11 @@ public class PsyUser
     private String status;
 
     /**  */
-    @Excel(name = "")
+//    @Excel(name = "")
     private String wxOpenid;
 
     /** 创建时间 */
-    @Excel(name = "创建时间")
+    @Excel(name = "创建时间" ,dateFormat = "yyyy-MM-dd HH:mm:SS")
     private Date createTime;
 
     public void setId(String id) 

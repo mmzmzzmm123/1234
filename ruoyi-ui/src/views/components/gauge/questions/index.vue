@@ -5,7 +5,8 @@
     <el-divider content-position="left">问题列表</el-divider>
     <draggable :list="gaugeQuestionList" :animation="340" @end="sortEnd" group="questionList" handle=".option-drag">
       <el-row :key="tag.id" v-for="tag in gaugeQuestionList" style="margin: 0 20px" class="option-drag">
-        <el-tag closable :disable-transitions="false" style="width: 100%; height: auto" @close="handleClose(tag)" :type="tag.id===questionId?'success':''" @click="queryOptionList(tag.id)">
+        <el-tag closable :disable-transitions="false" style="width: 100%; height: auto" @close="handleClose(tag)"
+                :type="tag.id===questionId?'success':''" @click="queryOptionList(tag.id)">
           {{ tag.no }}：{{ tag.title }}
         </el-tag>
         <div style="height: 20px"></div>
@@ -18,7 +19,7 @@
       <el-button v-else class="button-new-tag" style="width: 100%; margin-left: 0" size="small" @click="showInput">+ 新问题</el-button>
     </el-row>
 
-    <el-drawer :visible.sync="questionOptionOpen" size="40%" style="padding-right:35%;z-index:1005" wrapperClosable="false" :with-header="true" title="问题设置" append-to-body>
+    <el-drawer :visible.sync="questionOptionOpen" size="40%" style="padding-right:35%;z-index:1005" :wrapperClosable="false" :with-header="true" title="问题设置" append-to-body>
       <div v-for="item in gaugeQuestionList" :key="item.id" style="margin:0 20px">
         <div v-if="item.id == questionId">
           <template>
@@ -63,6 +64,7 @@
 
 <script>
 import { getToken } from "@/utils/auth";
+import { getOpenId } from "@/api/wechat/wechat"
 import {
   listQuestions,
   getQuestions,
@@ -112,6 +114,9 @@ export default {
       immediate: true,
     },
   },
+  // mounted(){
+  //   getOpenId();
+  // },
   computed: {},
   methods: {
     async getQuestions(value) {
@@ -171,7 +176,15 @@ export default {
       }
     },
     handleClose(tag) {
-      this.dynamicTags.splice(this.dynamicTags.indexOf(tag), 1);
+      console.log(this.gaugeQuestionList)
+      this.gaugeQuestionList.splice(this.gaugeQuestionList.indexOf(tag), 1);
+      delQuestions(tag.id).then((res)=>{
+        this.$message({
+          message: '删除成功',
+          type: 'success'
+        })
+        console.log(res,'******')
+      })
     },
 
     showInput() {
@@ -196,6 +209,7 @@ export default {
       this.newQuestionValue = "";
     },
     removeOption(data) {
+      console.log(data);
       delOptions(data.id);
     },
   },

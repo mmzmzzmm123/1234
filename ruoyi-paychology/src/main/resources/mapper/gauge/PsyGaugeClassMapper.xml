@@ -4,7 +4,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.ruoyi.gauge.mapper.PsyGaugeClassMapper">
     
-    <resultMap type="PsyGaugeClass" id="PsyGaugeClassResult">
+    <resultMap type="com.ruoyi.gauge.domain.PsyGaugeClass" id="PsyGaugeClassResult">
         <result property="id"    column="id"    />
         <result property="name"    column="name"    />
         <result property="sort"    column="sort"    />
@@ -15,7 +15,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         select id, name, sort from psy_gauge_class
     </sql>
 
-    <select id="selectPsyGaugeClassList" parameterType="PsyGaugeClass" resultMap="PsyGaugeClassResult">
+    <select id="selectPsyGaugeClassList" parameterType="com.ruoyi.gauge.domain.PsyGaugeClass" resultMap="PsyGaugeClassResult">
         <include refid="selectPsyGaugeClassVo"/>
         <where>  
             <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
@@ -27,7 +27,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         where id = #{id}
     </select>
         
-    <insert id="insertPsyGaugeClass" parameterType="PsyGaugeClass">
+    <insert id="insertPsyGaugeClass" parameterType="com.ruoyi.gauge.domain.PsyGaugeClass">
         insert into psy_gauge_class
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="id != null">id,</if>
@@ -41,7 +41,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
          </trim>
     </insert>
 
-    <update id="updatePsyGaugeClass" parameterType="PsyGaugeClass">
+    <update id="updatePsyGaugeClass" parameterType="com.ruoyi.gauge.domain.PsyGaugeClass">
         update psy_gauge_class
         <trim prefix="SET" suffixOverrides=",">
             <if test="name != null">name = #{name},</if>
