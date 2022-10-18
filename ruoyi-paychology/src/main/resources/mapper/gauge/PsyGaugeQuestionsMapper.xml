@@ -4,7 +4,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.ruoyi.gauge.mapper.PsyGaugeQuestionsMapper">
     
-    <resultMap type="PsyGaugeQuestions" id="PsyGaugeQuestionsResult">
+    <resultMap type="com.ruoyi.gauge.domain.PsyGaugeQuestions" id="PsyGaugeQuestionsResult">
         <result property="id"    column="id"    />
         <result property="gaugeId"    column="gauge_id"    />
         <result property="title"    column="title"    />
@@ -20,7 +20,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         select id, gauge_id, title, no, create_by, create_time, update_by, update_time, remark from psy_gauge_questions
     </sql>
 
-    <select id="selectPsyGaugeQuestionsList" parameterType="PsyGaugeQuestions" resultMap="PsyGaugeQuestionsResult">
+    <select id="selectPsyGaugeQuestionsList" parameterType="com.ruoyi.gauge.domain.PsyGaugeQuestions" resultMap="PsyGaugeQuestionsResult">
         <include refid="selectPsyGaugeQuestionsVo"/>
         <where>  
             <if test="gaugeId != null "> and gauge_id = #{gaugeId}</if>
@@ -35,7 +35,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         where id = #{id}
     </select>
         
-    <insert id="insertPsyGaugeQuestions" parameterType="PsyGaugeQuestions" useGeneratedKeys="true" keyProperty="id">
+    <insert id="insertPsyGaugeQuestions" parameterType="com.ruoyi.gauge.domain.PsyGaugeQuestions" useGeneratedKeys="true" keyProperty="id">
         insert into psy_gauge_questions
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="gaugeId != null">gauge_id,</if>
@@ -59,7 +59,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
          </trim>
     </insert>
 
-    <update id="updatePsyGaugeQuestions" parameterType="PsyGaugeQuestions">
+    <update id="updatePsyGaugeQuestions" parameterType="com.ruoyi.gauge.domain.PsyGaugeQuestions">
         update psy_gauge_questions
         <trim prefix="SET" suffixOverrides=",">
             <if test="gaugeId != null">gauge_id = #{gaugeId},</if>

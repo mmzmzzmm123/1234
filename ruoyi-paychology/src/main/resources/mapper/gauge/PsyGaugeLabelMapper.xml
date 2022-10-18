@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.gauge.mapper.PsyGaugeLabelMapper">
+
+    <resultMap type="com.ruoyi.gauge.domain.PsyGaugeLabel" id="PsyGaugeLabelResult">
+        <result property="id"    column="id"    />
+        <result property="gaugeId"    column="gauge_id"    />
+        <result property="label"    column="label"    />
+    </resultMap>
+
+    <sql id="selectPsyGaugeLabelVo">
+        select id, gauge_id, label from psy_gauge_label
+    </sql>
+
+    <select id="selectPsyGaugeLabelList" parameterType="com.ruoyi.gauge.domain.PsyGaugeLabel" resultMap="PsyGaugeLabelResult">
+        <include refid="selectPsyGaugeLabelVo"/>
+        <where>
+            <if test="gaugeId != null "> and gauge_id = #{gaugeId}</if>
+            <if test="label != null "> and label = #{label}</if>
+        </where>
+    </select>
+
+    <select id="selectPsyGaugeLabelById" parameterType="Long" resultMap="PsyGaugeLabelResult">
+        <include refid="selectPsyGaugeLabelVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertPsyGaugeLabel" parameterType="com.ruoyi.gauge.domain.PsyGaugeLabel" useGeneratedKeys="true" keyProperty="id">
+        insert into psy_gauge_label
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="gaugeId != null">gauge_id,</if>
+            <if test="label != null">label,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="gaugeId != null">#{gaugeId},</if>
+            <if test="label != null">#{label},</if>
+        </trim>
+    </insert>
+
+    <update id="updatePsyGaugeLabel" parameterType="com.ruoyi.gauge.domain.PsyGaugeLabel">
+        update psy_gauge_label
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="gaugeId != null">gauge_id = #{gaugeId},</if>
+            <if test="label != null">label = #{label},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deletePsyGaugeLabelById" parameterType="Long">
+        delete from psy_gauge_label where id = #{id}
+    </delete>
+
+    <delete id="deletePsyGaugeLabelByIds" parameterType="String">
+        delete from psy_gauge_label where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+
+    <select id="queryGaugeByLabel" parameterType="java.lang.Integer" resultType="com.ruoyi.gauge.domain.PsyGauge">
+        SELECT
+            gauge.id,
+            gauge.title,
+            gauge.subtitle,
+            gauge.head_picture,
+            gauge.introduce,
+            gauge.gauge_class,
+            gauge.remark
+        FROM
+            psy_gauge gauge left join psy_gauge_label label ON gauge.id = label.gauge_id
+        WHERE label.label = #{labelCode}
+    </select>
+
+</mapper>

@@ -26,9 +26,9 @@ public class AppPsyGaugeQuestionsController extends BaseController
     /**
      * 查询心理测评问题列表
      */
-    @PreAuthorize("@ss.hasPermi('gauge:questions:list')")
-    @PostMapping("/list")
-    public TableDataInfo list(@RequestBody PsyGaugeQuestions psyGaugeQuestions)
+//    @PreAuthorize("@ss.hasPermi('gauge:questions:list')")
+    @GetMapping("/list")
+    public TableDataInfo list(PsyGaugeQuestions psyGaugeQuestions)
     {
         startPage();
         List<PsyGaugeQuestions> list = psyGaugeQuestionsService.selectPsyGaugeQuestionsList(psyGaugeQuestions);
