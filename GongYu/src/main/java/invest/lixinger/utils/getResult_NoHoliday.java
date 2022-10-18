@@ -24,13 +24,13 @@ public class getResult_NoHoliday {
         if (isBefore3Pm()) {
             calendar.add(Calendar.DAY_OF_MONTH, -1); //当前时间减去一天，即一天前的时间
         }
-        calendar = removeHoliday(calendar,holidayAndWeekday);
+        calendar = removeHoliday(calendar, holidayAndWeekday);
         System.out.println("统计的时间为===" + sdf.format(calendar.getTime()));
 
         return sdf.format(calendar.getTime());
     }
 
-    private static Calendar removeHoliday(Calendar calendar,Set<String> holidayAndWeekday) {
+    private static Calendar removeHoliday(Calendar calendar, Set<String> holidayAndWeekday) {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 
         for (String temp : holidayAndWeekday) {

@@ -7,6 +7,7 @@ import com.alibaba.fastjson.JSONObject;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
+import sun.plugin2.os.windows.Windows;
 
 import java.io.IOException;
 import java.text.ParseException;
@@ -47,7 +48,7 @@ public class HolidayUtils {
             Map<String, Object> stringObjectMap = holiday.get(str);
             Integer wage = (Integer) stringObjectMap.get("wage");
             String date = (String) stringObjectMap.get("date");
-            //筛选掉补班
+            // 筛选掉补班
             if (wage.equals(1)) {
                 monthWekDay.remove(date);
             } else {
@@ -63,7 +64,7 @@ public class HolidayUtils {
      * 获取节假日不含周末
      */
     private static Map getJjr(int year, int month) {
-        String url = "http://timor.tech/api/holiday/year/";
+        String url = "http://timor.tech/api/holiday/year/" + year + "/";
         OkHttpClient client = new OkHttpClient();
         Response response;
         //解密数据
@@ -71,7 +72,11 @@ public class HolidayUtils {
         Request request = new Request.Builder()
                 .url(url)
                 .get()
-                .addHeader("Content-Type", "application/x-www-form-urlencoded")
+                .removeHeader("User-Agent")
+                .addHeader(
+                        "User-Agent",
+                        "Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US; rv:0.9.4)"
+                ).addHeader("Content-Type", "application/x-www-form-urlencoded")
                 .build();
         try {
             response = client.newCall(request).execute();
@@ -86,7 +91,7 @@ public class HolidayUtils {
      * 获取周末  月从0开始
      */
     public static Set<String> getMonthWekDay(int year, int month) {
-        month=month-1;
+        month = month - 1;
 
         Set<String> dateList = new HashSet<>();
         SimpleDateFormat simdf = new SimpleDateFormat("yyyy-MM-dd");
@@ -105,10 +110,11 @@ public class HolidayUtils {
         }
         return dateList;
     }
+
     // 是否在下午三点之前，即交易日
     public static boolean isBefore3Pm() throws ParseException {
         SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");//设置日期格式
-        Date nowTime =sdf.parse(sdf.format(new Date()));
+        Date nowTime = sdf.parse(sdf.format(new Date()));
 
         Date beginTime = sdf.parse("00:00");
         Date endTime = sdf.parse("15:00");

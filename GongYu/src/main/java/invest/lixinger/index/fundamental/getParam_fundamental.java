@@ -21,6 +21,7 @@ public class getParam_fundamental {
 
         String token = (String) indexReqParam.get("token");
         String dateYml = (String) indexReqParam.get("enddate");
+//        String date="2022-10-18";
         String date = getResult_NoHoliday.getResult_NoHoliday(Integer.parseInt(dateYml.substring(0, 4)));
         List<String> stockCodes = (List<String>) indexReqParam.get("stockCodes");
         List<String> metricsList = (List<String>) indexReqParam.get("metricsList");
