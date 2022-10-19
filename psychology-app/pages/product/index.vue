@@ -1,181 +1,220 @@
 <template>
-	<view>
-		<view class="product">
-			<image class="cover" src="/static/index/product/cover.jpg"></image>
-			<view class="title">潜意识投射测试</view>
-			<view class="sub-title">潜意识投射测试</view>
-			<view class="price">￥19.99</view>
-			<view class="info">
-				<view class="item">15道精选题</view>
-				<view class="item">7页专业报告</view>
-				<view class="item">2222测试过</view>
-				<view class="clear"></view>
-			</view>
-			<view style="height: 20upx;margin:40upx 20upx;background-color:#b4b4b4;clear:both"></view>
-			
-			<view class="title">测评介绍</view>
-			<image style="width: 100%;"  mode="widthFix" src="/static/index/product/product.jpg"></image>
-			
-			<!-- 底部操作菜单 -->
-			<view class="page-bottom">
-			
-				<navigator url="/pages/index/index" open-type="switchTab" class="p-b-btn">
-					<image class="yticon" src="/static/tab-home.png"></image>
-					<text>首页</text>
-				</navigator>
-				<button class="p-b-btn btn" open-type="share">
-					<image class="yticon" src="/static/icon-share.png"></image>
-					<text>分享</text>
-				</button>
-				<view class="p-b-btn" @click="">
-					<image class="yticon" src="/static/icon-cart.png"></image>
-					<text>购物车</text>
-				</view>
-			
-			
-				<view class="action-btn-group">
-					<view class=" add-cart-btn" @click="">加入购物车</view>
-					<view class=" buy-now-btn" @click="">立即购买</view>
-			
-				</view>
-			</view>
-			
+	<view class="product">
+		<image class="cover" src="/static/index/product/cover.jpg" @tap="toHome"></image>
+		<view class="title">潜意识投射测试</view>
+		<view class="sub-title">测评简介</view>
+		<view class="price"><span class="icon">￥</span>19.99</view>
+		<view class="info">
+			<view class="item">15道精选题</view>
+			<view class="item">7页专业报告</view>
+			<view class="item">2222测试过</view>
 		</view>
+		<view class="bg-line"></view>
+		<view class="info-title title">测评介绍</view>
+		<view class="img-box">
+			<image mode="widthFix" class="img-item" src="/static/1.png"></image>
+			<image mode="widthFix" class="img-item" src="/static/1.png"></image>
+		</view>
+		<view class="bg-line"></view>
+		<view class="info-title title">测评须知</view>
+		<view class="img-box">
+			<image mode="widthFix" class="img-item" src="/static/index/product/11.png"></image>
+		</view>
+		<view class="more-box">
+			<view class="more">查看更多测试 <img class="img" src="/static/index/more.png" /></view>
+		</view>
+		<!-- 底部操作菜单 -->
+		<view class="page-bottom">
+			<navigator url="/pages/index/index" open-type="switchTab" class="p-b-btn">
+				<image class="index-icon" src="/static/menu/index.png"></image>
+				<text>首页</text>
+			</navigator>
+			<view class="start-test" @tap="startTest">开始测试</view>
+		</view>
+
 	</view>
 </template>
 
 <script>
-	export default {
-		data() {
-			return {
-
-			}
+import utils from '../../utils/common'
+export default {
+	methods: {
+		startTest() {
+			uni.navigateTo({
+				url: "/pages/questionTemplate/index?productId=" + utils.getParam(location.href, "productId"),
+			});
 		},
-		methods: {
-
-
+		toHome() {
+			uni.switchTab({
+				url: "/pages/index/index",
+			});
 		}
+
 	}
+}
 </script>
 
 <style lang="scss">
-	page {
-		background: #fff;
+@import "../../style/common.scss";
 
-		.product {
-			
-			.cover {
-				width:750upx;
-				height: 450upx;
-			}
+page {
+	background: #fff;
 
-			.title {
-				font-weight: bold;
-				text-align: center;
-				font-size: 32upx;
-			}
-			.sub-title {
-				margin-top: 20upx;
-				text-align: center;
-				font-size: 28upx;
-				color: #b4b4b4;
-			}
+	.product {
+		padding-bottom: 100upx;
 
-			.price {
-				font-size: 32upx;
-				color: #f59808;
-				margin-top: 40upx;
-				text-align: center;
-			}
-			.info{
-				color: #b4b4b4;
-				font-size: 28upx;
-				margin-top: 20upx;
-				margin-bottom: 20upx;
-				
-				.item{
-					text-align: center;
-					float:left;
-					width: 33.333%;
-					
+		.cover {
+			width: 100%;
+			height: 422upx;
+		}
+
+		.title {
+			font-weight: bold;
+			text-align: center;
+			font-size: 36upx;
+			margin-top: 32upx;
+			color: #333333;
+			line-height: 50upx;
+		}
+
+		.sub-title {
+			margin-top: 8upx;
+			text-align: center;
+			font-size: 24upx;
+			color: #777777;
+		}
+
+		.price {
+			text-align: center;
+			margin-top: 16upx;
+			font-size: 32upx;
+		}
+
+		.info {
+			font-size: 24upx;
+			font-weight: 400;
+			color: #777777;
+			line-height: 34upx;
+			margin-top: 24upx;
+			margin-bottom: 16upx;
+			display: flex;
+			flex-direction: row;
+			justify-content: space-around;
+
+			.item {
+				text-align: left;
+				position: relative;
+				padding-left: 46upx;
+				flex: 1;
+
+				&::before {
+					position: absolute;
+					content: '';
+					display: block;
+					border-radius: 100%;
+					width: 12upx;
+					height: 12upx;
+					top: 11upx;
+					left: 24upx;
+					background: #AAAAAA;
+
 				}
-				.clear{clear: both;}
-			}
-			.introduce{
-				
-				
 			}
 		}
+
+		.bg-line {
+			height: 16upx;
+			background-color: #F8F8F8;
+		}
+
+		.info-title {
+			margin-bottom: 32upx;
+
+			&::after {
+				display: block;
+				width: 144upx;
+				height: 8upx;
+				background: #FF703F;
+				border-radius: 2upx;
+				content: '';
+				margin: -10upx auto 0;
+			}
+		}
+
+		.img-box {
+			margin: 30upx 24upx;
+		}
+
+		.img-item {
+			width: 100%;
+		}
+
+		.more-box {
+			background-color: #F8F8F8;
+			padding: 24upx 25upx;
+
+			.more {
+				width: 702upx;
+				height: 66upx;
+				background: #FFFFFF;
+				border-radius: 40upx;
+				font-size: 26upx;
+				color: #333;
+				line-height: 66upx;
+				text-align: center;
+				justify-content: center;
+				display: flex;
+				align-items: center;
+
+				.img {
+					margin-left: 12upx;
+					width: 12upx;
+					height: 24upx;
+				}
+			}
+		}
+
 		/* 底部操作菜单 */
 		.page-bottom {
 			position: fixed;
-			/* left: 30upx; */
 			bottom: 0upx;
-			z-index: 95;
 			display: flex;
 			justify-content: left;
 			align-items: center;
 			width: 750upx;
-			height: 98upx;
-			background: rgba(255, 255, 255, 1);
-			box-shadow: 0 0 20upx 0 rgba(0, 0, 0, .5);
-		
+			height: 100upx;
+			background-color: #fff;
+
 			.p-b-btn {
+				width: 128upx;
 				display: flex;
 				flex-direction: column;
 				align-items: center;
-				justify-content: center;
-				font-size: 24upx;
-				color: #F5A623;
-				width: 96upx;
+				font-size: 20upx;
+
+				.index-icon {
+					width: 48upx;
+					height: 48upx;
+				}
+			}
+
+			.start-test {
+				width: 600upx;
 				height: 80upx;
-		
-				.yticon {
-					width: 50upx;
-					height: 50upx;
-					color: #909399;
-				}
-		
-				&.btn {
-					border: 0upx !important;
-					margin-top: 15upx;
-				}
-		
-				.icon-shoucang {
-					font-size: 46upx;
-				}
-			}
-		
-			.action-btn-group {
-				margin-left: 20upx;
-				height: 98upx;
-				line-height: 98upx;
-				font-size: 28upx;
+				line-height: 80upx;
+				background: #FF703F;
+				border-radius: 40upx;
 				text-align: center;
-				color: #fff;
-				width: 440upx;
-				position: absolute;
-				right: 0;
-		
-				.add-cart-btn {
-					height: 98upx;
-					line-height: 98upx;
-					width: 220upx;
-					background: #F5A623;
-					float: left;
-				}
-		
-				.buy-now-btn {
-					height: 98upx;
-					line-height: 98upx;
-					width: 220upx;
-					float: left;
-					background: #FE314A;
-		
-				}
-		
-		
+				font-size: 28upx;
+				color: #FFFFFF;
+				margin: 9upx 24upx;
+				margin-left: 0;
 			}
+
+
 		}
 	}
+
+
+}
 </style>
