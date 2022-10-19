@@ -1,15 +1,13 @@
 package com.ruoyi.app.controller.gauge;
 
-import com.ruoyi.app.controller.model.dto.gauge.GaugeLabelQueryDTO;
+import com.ruoyi.gauge.dto.GaugeLabelQueryDTO;
 import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.page.TableDataInfo;
 import com.ruoyi.gauge.domain.PsyGauge;
-import com.ruoyi.gauge.domain.PsyGaugeClass;
 import com.ruoyi.gauge.service.IPsyGaugeLabelService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;

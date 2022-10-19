@@ -1,4 +1,4 @@
-package com.ruoyi.app.controller.model.dto.gauge;
+package com.ruoyi.gauge.dto;
 
 import io.swagger.annotations.ApiModel;
 import lombok.Data;

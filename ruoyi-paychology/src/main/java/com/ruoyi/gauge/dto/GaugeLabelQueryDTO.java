@@ -1,4 +1,4 @@
-package com.ruoyi.app.controller.model.dto.gauge;
+package com.ruoyi.gauge.dto;
 
 import com.ruoyi.common.core.domain.BaseEntity;
 import io.swagger.annotations.ApiModel;
