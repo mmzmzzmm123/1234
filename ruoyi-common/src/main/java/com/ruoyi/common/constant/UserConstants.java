@@ -75,4 +75,7 @@ public class UserConstants
      */
     public static final int PASSWORD_MIN_LENGTH = 5;
     public static final int PASSWORD_MAX_LENGTH = 20;
+
+    public static final String LOGIN_SMS_CODE = "login:sms:code";
+    public static final String LOGIN_USER_TOKEN = "login:user:token";
 }

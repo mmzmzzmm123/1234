@@ -98,6 +98,16 @@ token:
     secret: abcdefghijklmnopqrstuvwxyz
     # 令牌有效期（默认30分钟）
     expireTime: 30
+
+  # token配置
+app:
+  token:
+    # 令牌自定义标识
+    header: Authorization
+    # 令牌密钥
+    secret: appabcdefghijklmnopqrstuvwxyz
+    # 令牌有效期（默认30分钟）
+    expireTime: 30
   
 # MyBatis配置
 mybatis:
@@ -129,3 +139,20 @@ xss:
   excludes: /system/notice
   # 匹配链接
   urlPatterns: /system/*,/monitor/*,/tool/*
+
+#springboot集成短信
+#访问阿里云API的验证
+aliyun:
+  sms:
+    accessKeyId: LTAI4GJMgXT6x4Diu7zZTKfJ
+    #访问阿里云API的验证
+    accessKeySecret: 8cXiAMIErHUZwaOdogBp9LLn2BgeoR
+    #    accessKeySecret: lx65xmXfYLJObT66LfQrIOuzvlrcid
+    #阿里云云通信短信API产品
+    product: Dysmaspi
+    #产品域名
+    domain: dysmsapi.aliyuncs.com
+    #签名
+    signName: echo智能客服
+    #发送验证码模版CODE
+    templateCode: SMS_202813583
