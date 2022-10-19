@@ -1,5 +1,5 @@
 <template>
-  <div ref="rightPanel" class="rightPanel-container">
+  <div ref="rightPanel" :class="{show:show}" class="rightPanel-container">
     <div class="rightPanel-background" />
     <div class="rightPanel">
       <div class="rightPanel-items">
@@ -10,6 +10,8 @@
 </template>
 
 <script>
+import { addClass, removeClass } from '@/utils'
+
 export default {
   name: 'RightPanel',
   props: {
@@ -36,6 +38,11 @@ export default {
       if (value && !this.clickNotClose) {
         this.addEventClick()
       }
+      if (value) {
+        addClass(document.body, 'showRightPanel')
+      } else {
+        removeClass(document.body, 'showRightPanel')
+      }
     }
   },
   mounted() {
@@ -51,7 +58,7 @@ export default {
       window.addEventListener('click', this.closeSidebar)
     },
     closeSidebar(evt) {
-      const parent = evt.target.closest('.el-drawer__body')
+      const parent = evt.target.closest('.rightPanel')
       if (!parent) {
         this.show = false
         window.removeEventListener('click', this.closeSidebar)
@@ -65,6 +72,14 @@ export default {
   }
 }
 </script>
+
+<style>
+.showRightPanel {
+  overflow: hidden;
+  position: relative;
+  width: calc(100% - 15px);
+}
+</style>
 
 <style lang="scss" scoped>
 .rightPanel-background {
@@ -89,6 +104,21 @@ export default {
   transform: translate(100%);
   background: #fff;
   z-index: 40000;
+}
+
+.show {
+  transition: all .3s cubic-bezier(.7, .3, .1, 1);
+
+  .rightPanel-background {
+    z-index: 20000;
+    opacity: 1;
+    width: 100%;
+    height: 100%;
+  }
+
+  .rightPanel {
+    transform: translate(0);
+  }
 }
 
 .handle-button {
