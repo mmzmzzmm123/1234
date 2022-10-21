@@ -46,6 +46,24 @@
       "style": {
         "navigationBarTitleText": "知我评测"
       }
+    },
+    {
+      "path": "pages/result/index",
+      "style": {
+        "navigationBarTitleText": "知我评测"
+      }
+    },
+    {
+      "path": "pages/report/index",
+      "style": {
+        "navigationBarTitleText": "我的报告"
+      }
+    },
+    {
+      "path": "pages/order/index",
+      "style": {
+        "navigationBarTitleText": "我的订单"
+      }
     }
   ],
   "tabBar": {
