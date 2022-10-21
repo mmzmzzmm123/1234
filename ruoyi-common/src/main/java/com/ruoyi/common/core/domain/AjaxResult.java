@@ -101,6 +101,19 @@ public class AjaxResult extends HashMap<String, Object>
         return new AjaxResult(HttpStatus.SUCCESS, msg, data);
     }
 
+
+    /**
+     * 返回成功消息
+     * @param code 响应码
+     * @param msg 返回内容
+     * @param data 数据对象
+     * @return 成功消息
+     */
+    public static AjaxResult success(int code ,String msg, Object data)
+    {
+        return new AjaxResult(code, msg, data);
+    }
+
     /**
      * 返回错误消息
      * 

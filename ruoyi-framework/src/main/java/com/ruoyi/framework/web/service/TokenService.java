@@ -223,4 +223,39 @@ public class TokenService
     {
         return CacheConstants.LOGIN_TOKEN_KEY + uuid;
     }
+
+
+    /**
+     * 获取请求token
+     *
+     * @param request
+     * @return token
+     */
+    public String getType(HttpServletRequest request)
+    {
+        String userType = request.getHeader("userType");
+        /*if (Validator.isNotEmpty(userType))
+        {
+            userType = userType.replace(Constants.TOKEN_PREFIX, "");
+        }*/
+        return userType;
+    }
+
+
+    /**
+     * 验证令牌有效期，相差不足20分钟，自动刷新缓存
+     *
+     * @param loginUser
+     * @return 令牌
+     */
+    public void verifyToken2(LoginUser loginUser)
+    {
+//        long expireTime = loginUser.getExpireTime();
+//        long currentTime = System.currentTimeMillis();
+//        if (expireTime - currentTime <= MILLIS_MINUTE_TEN)
+//        {
+//            refreshToken(loginUser);
+//        }
+        refreshToken(loginUser);
+    }
 }

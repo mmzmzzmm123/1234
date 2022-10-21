@@ -4,7 +4,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.ruoyi.gauge.mapper.PsyGaugeMultiSettingMapper">
     
-    <resultMap type="PsyGaugeMultiSetting" id="PsyGaugeMultiSettingResult">
+    <resultMap type="com.ruoyi.gauge.domain.PsyGaugeMultiSetting" id="PsyGaugeMultiSettingResult">
         <result property="id"    column="id"    />
         <result property="gaugeId"    column="gauge_id"    />
         <result property="name"    column="name"    />
@@ -16,7 +16,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         select id, gauge_id, name, question_ids,score_setting_ids from psy_gauge_multi_setting
     </sql>
 
-    <select id="selectPsyGaugeMultiSettingList" parameterType="PsyGaugeMultiSetting" resultMap="PsyGaugeMultiSettingResult">
+    <select id="selectPsyGaugeMultiSettingList" parameterType="com.ruoyi.gauge.domain.PsyGaugeMultiSetting" resultMap="PsyGaugeMultiSettingResult">
         <include refid="selectPsyGaugeMultiSettingVo"/>
         <where>
             <if test="gaugeId != null "> and gauge_id = #{gaugeId}</if>
@@ -31,13 +31,13 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         where id = #{id}
     </select>
 
-    <insert id="insertPsyGaugeMultiSetting" parameterType="PsyGaugeMultiSetting" useGeneratedKeys="true" keyProperty="id">
+    <insert id="insertPsyGaugeMultiSetting" parameterType="com.ruoyi.gauge.domain.PsyGaugeMultiSetting" useGeneratedKeys="true" keyProperty="id">
         insert into psy_gauge_multi_setting
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="gaugeId != null">gauge_id,</if>
             <if test="name != null">name,</if>
             <if test="questionIds != null">question_ids,</if>
-            <if test="scoreSettingIds != null">scoreSettingIds,</if>
+            <if test="scoreSettingIds != null">score_setting_ids,</if>
          </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="gaugeId != null">#{gaugeId},</if>
@@ -47,7 +47,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
          </trim>
     </insert>
 
-    <update id="updatePsyGaugeMultiSetting" parameterType="PsyGaugeMultiSetting">
+    <update id="updatePsyGaugeMultiSetting" parameterType="com.ruoyi.gauge.domain.PsyGaugeMultiSetting">
         update psy_gauge_multi_setting
         <trim prefix="SET" suffixOverrides=",">
             <if test="gaugeId != null">gauge_id = #{gaugeId},</if>

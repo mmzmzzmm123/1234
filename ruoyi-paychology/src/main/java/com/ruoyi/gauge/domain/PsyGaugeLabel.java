@@ -19,8 +19,11 @@ public class PsyGaugeLabel extends BaseEntity
     private Long id;
 
     /** 量表id */
-    @Excel(name = "量表id")
+//    @Excel(name = "量表id")
     private Long gaugeId;
+
+    @Excel(name = "量表名称")
+    private String gaugeName;
 
     /** 量表标签(0-精选测评，1-热门推荐) */
     @Excel(name = "量表标签(0-精选测评，1-热门推荐)")
@@ -52,6 +55,14 @@ public class PsyGaugeLabel extends BaseEntity
     public Long getLabel() 
     {
         return label;
+    }
+
+    public String getGaugeName() {
+        return gaugeName;
+    }
+
+    public void setGaugeName(String gaugeName) {
+        this.gaugeName = gaugeName;
     }
 
     @Override

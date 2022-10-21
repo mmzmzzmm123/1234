@@ -26,8 +26,8 @@ public class PsyGaugeQuestionsOptions extends BaseEntity
     @Excel(name = "选项名")
     private String name;
 
-    /** 序号 */
-    @Excel(name = "序号")
+    /** 分数 */
+    @Excel(name = "分数")
     private Long value;
 
     /** 选项图片 */

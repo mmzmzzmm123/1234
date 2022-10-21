@@ -26,6 +26,16 @@ public class PsyGaugeQuestions extends BaseEntity
     @Excel(name = "标题")
     private String title;
 
+    /**
+     * 选择类型
+     * 0-单选
+     * 1-多选
+     */
+    private Long selectType;
+
+    @Excel(name = "选择类型")
+    private String selectTypeName;
+
     /** 序号 */
     @Excel(name = "序号")
     private Long no;
@@ -65,6 +75,23 @@ public class PsyGaugeQuestions extends BaseEntity
     public Long getNo() 
     {
         return no;
+    }
+
+    public Long getSelectType() {
+        return selectType;
+    }
+
+    public void setSelectType(Long selectType) {
+        this.selectType = selectType;
+        this.selectTypeName = this.selectType == 0 ? "单选" : "多选";
+    }
+
+    public String getSelectTypeName() {
+        return selectTypeName;
+    }
+
+    public void setSelectTypeName(String selectTypeName) {
+        this.selectTypeName = selectTypeName;
     }
 
     @Override

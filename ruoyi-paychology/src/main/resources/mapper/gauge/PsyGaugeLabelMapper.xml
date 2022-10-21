@@ -65,13 +65,27 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             gauge.id,
             gauge.title,
             gauge.subtitle,
-            gauge.head_picture,
+            gauge.head_picture as headPicture,
             gauge.introduce,
             gauge.gauge_class,
-            gauge.remark
+            gauge.remark,
+            gauge.price
         FROM
             psy_gauge gauge left join psy_gauge_label label ON gauge.id = label.gauge_id
         WHERE label.label = #{labelCode}
+    </select>
+
+    <select id="queryLabelPage" resultType="com.ruoyi.gauge.domain.PsyGaugeLabel">
+        select
+            label.id,
+            label.gauge_id,
+            label.label,
+            gauge.title as gaugeName
+        from psy_gauge_label label LEFT JOIN psy_gauge gauge ON label.gauge_id = gauge.id
+        <where>
+            <if test="gaugeName != null "> and gauge.title like concat('%' ,#{gaugeName} ,'%')</if>
+            <if test="label != null "> and label.label = #{label}</if>
+        </where>
     </select>
 
 </mapper>

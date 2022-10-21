@@ -5,6 +5,8 @@ import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.core.page.TableDataInfo;
 import com.ruoyi.gauge.domain.PsyGauge;
 import com.ruoyi.gauge.service.IPsyGaugeService;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -18,7 +20,8 @@ import java.util.List;
  * @date 2022-08-30
  */
 @RestController
-@RequestMapping("/app/gauge")
+@RequestMapping("/app/home/gauge")
+@Api(value = "AppPsyGaugeController" ,tags = {"测评量表api"})
 public class AppPsyGaugeController extends BaseController
 {
     @Autowired
@@ -29,6 +32,7 @@ public class AppPsyGaugeController extends BaseController
      */
 //    @PreAuthorize("@ss.hasPermi('psychology:gauge:list')")
     @GetMapping("/list")
+    @ApiOperation("查询量表数据列表")
     public TableDataInfo list(PsyGauge psyGauge)
     {
         startPage();
@@ -41,6 +45,7 @@ public class AppPsyGaugeController extends BaseController
      */
 //    @PreAuthorize("@ss.hasPermi('psychology:gauge:query')")
     @PostMapping(value = "/getInfo")
+    @ApiOperation("查询量表详细信息")
     public AjaxResult getInfo(@RequestParam("id") Long id)
     {
         return AjaxResult.success(psyGaugeService.selectPsyGaugeById(id));

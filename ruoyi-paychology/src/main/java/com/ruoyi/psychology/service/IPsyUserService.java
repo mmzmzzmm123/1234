@@ -1,6 +1,10 @@
 package com.ruoyi.psychology.service;
 
 import java.util.List;
+
+import com.alibaba.fastjson2.JSONObject;
+import com.ruoyi.common.core.domain.AjaxResult;
+import com.ruoyi.common.core.domain.dto.LoginDTO;
 import com.ruoyi.psychology.domain.PsyUser;
 
 /**
@@ -58,4 +62,10 @@ public interface IPsyUserService
      * @return 结果
      */
     public int deletePsyUserById(String id);
+
+    PsyUser queryUserByOpenId(String openId);
+
+    AjaxResult checkPsyUser(String openId, String token , JSONObject userInfo);
+
+    void bindPhone(LoginDTO loginDTO);
 }

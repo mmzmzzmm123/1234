@@ -2,6 +2,7 @@ package com.ruoyi.gauge.service.impl;
 
 import java.util.List;
 import com.ruoyi.common.utils.DateUtils;
+import com.ruoyi.gauge.vo.PsyQuestionVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.ruoyi.gauge.mapper.PsyGaugeQuestionsMapper;
@@ -92,5 +93,10 @@ public class PsyGaugeQuestionsServiceImpl implements IPsyGaugeQuestionsService
     public int deletePsyGaugeQuestionsById(Long id)
     {
         return psyGaugeQuestionsMapper.deletePsyGaugeQuestionsById(id);
+    }
+
+    @Override
+    public List<PsyQuestionVO> appQueryQuesList(PsyGaugeQuestions psyGaugeQuestions) {
+        return psyGaugeQuestionsMapper.appQueryQuesList(psyGaugeQuestions);
     }
 }

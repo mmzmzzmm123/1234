@@ -2,6 +2,7 @@ package com.ruoyi.gauge.service;
 
 import java.util.List;
 import com.ruoyi.gauge.domain.PsyGaugeQuestions;
+import com.ruoyi.gauge.vo.PsyQuestionVO;
 
 /**
  * 心理测评问题Service接口
@@ -58,4 +59,14 @@ public interface IPsyGaugeQuestionsService
      * @return 结果
      */
     public int deletePsyGaugeQuestionsById(Long id);
+
+    /**
+     * 查询问题
+     * @param psyGaugeQuestions
+     * @return
+     */
+    List<PsyQuestionVO> appQueryQuesList(PsyGaugeQuestions psyGaugeQuestions);
+
+
+
 }

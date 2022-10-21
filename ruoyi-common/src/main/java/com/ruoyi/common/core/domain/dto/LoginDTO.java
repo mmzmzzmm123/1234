@@ -68,6 +68,19 @@ public class LoginDTO implements UserDetails {
      */
     private String os;
 
+    /**
+     * 用户id
+     */
+    private String userId;
+    /**
+     * 手机号码
+     */
+    private String phone;
+    /**
+     * 微信openId
+     */
+    private String wxOpenId;
+
     @JSONField(serialize = false)
     @Override
     public String getPassword()

@@ -1,16 +1,16 @@
 <template>
   <div class="app-container">
     <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch" label-width="68px">
-      <el-form-item label="量表id" prop="gaugeId">
+      <el-form-item label="量表" prop="gaugeName">
         <el-input
-          v-model="queryParams.gaugeId"
-          placeholder="请输入量表id"
+          v-model="queryParams.gaugeName"
+          placeholder="请输入量表名称"
           clearable
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
       <el-form-item label="量表标签" prop="label">
-        <el-select v-model="queryParams.label" placeholder="请选择量表标签(0-精选测评，1-热门推荐)" clearable>
+        <el-select v-model="queryParams.label" placeholder="请选择量表标签" clearable>
           <el-option
             v-for="dict in dict.type.gauge_label_class"
             :key="dict.value"
@@ -25,7 +25,7 @@
       </el-form-item>
     </el-form>
 
-    <el-row :gutter="10" class="mb8">
+    <!-- <el-row :gutter="10" class="mb8">
       <el-col :span="1.5">
         <el-button
           type="primary"
@@ -69,18 +69,18 @@
         >导出</el-button>
       </el-col>
       <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
-    </el-row>
+    </el-row> -->
 
     <el-table v-loading="loading" :data="labelList" @selection-change="handleSelectionChange">
-      <el-table-column type="selection" width="55" align="center" />
+      <!-- <el-table-column type="selection" width="55" align="center" /> -->
       <el-table-column label="主键" align="center" prop="id" />
-      <el-table-column label="量表id" align="center" prop="gaugeId" />
-      <el-table-column label="量表标签(0-精选测评，1-热门推荐)" align="center" prop="label">
+      <el-table-column label="量表" align="center" prop="gaugeName" />
+      <el-table-column label="量表标签" align="center" prop="label">
         <template slot-scope="scope">
           <dict-tag :options="dict.type.gauge_label_class" :value="scope.row.label"/>
         </template>
       </el-table-column>
-      <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
+      <!-- <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button
             size="mini"
@@ -97,7 +97,7 @@
             v-hasPermi="['gauge:label:remove']"
           >删除</el-button>
         </template>
-      </el-table-column>
+      </el-table-column> -->
     </el-table>
     
     <pagination
@@ -115,7 +115,7 @@
           <el-input v-model="form.gaugeId" placeholder="请输入量表id" />
         </el-form-item>
         <el-form-item label="量表标签" prop="label">
-          <el-select v-model="form.label" placeholder="请选择量表标签(0-精选测评，1-热门推荐)">
+          <el-select v-model="form.label" placeholder="请选择量表标签">
             <el-option
               v-for="dict in dict.type.gauge_label_class"
               :key="dict.value"
@@ -174,7 +174,7 @@ export default {
           { required: true, message: "量表id不能为空", trigger: "blur" }
         ],
         label: [
-          { required: true, message: "量表标签(0-精选测评，1-热门推荐)不能为空", trigger: "change" }
+          { required: true, message: "量表标签不能为空", trigger: "change" }
         ]
       }
     };

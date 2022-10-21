@@ -68,4 +68,6 @@ public interface PsyGaugeLabelMapper {
      */
     List<PsyGauge> queryGaugeByLabel(Integer labelCode);
 
+    List<PsyGaugeLabel> queryLabelPage(PsyGaugeLabel psyGaugeLabel);
+
 }

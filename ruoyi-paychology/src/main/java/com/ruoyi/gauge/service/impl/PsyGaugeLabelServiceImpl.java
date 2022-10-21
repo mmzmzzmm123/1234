@@ -42,7 +42,7 @@ public class PsyGaugeLabelServiceImpl implements IPsyGaugeLabelService {
     @Override
     public List<PsyGaugeLabel> selectPsyGaugeLabelList(PsyGaugeLabel psyGaugeLabel)
     {
-        return psyGaugeLabelMapper.selectPsyGaugeLabelList(psyGaugeLabel);
+        return psyGaugeLabelMapper.queryLabelPage(psyGaugeLabel);
     }
 
     /**

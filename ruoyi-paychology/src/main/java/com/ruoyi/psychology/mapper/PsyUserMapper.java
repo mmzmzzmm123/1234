@@ -58,4 +58,8 @@ public interface PsyUserMapper
      * @return 结果
      */
     public int deletePsyUserByIds(String[] ids);
+
+    int insertOrUpdate(PsyUser psyUser);
+
+    PsyUser queryUserByAccount(String account);
 }

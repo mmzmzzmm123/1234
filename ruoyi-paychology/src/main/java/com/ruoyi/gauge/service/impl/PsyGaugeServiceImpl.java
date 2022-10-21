@@ -8,6 +8,7 @@ import com.ruoyi.gauge.mapper.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.ruoyi.gauge.service.IPsyGaugeService;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * 心理测评Service业务层处理
@@ -64,6 +65,7 @@ public class PsyGaugeServiceImpl implements IPsyGaugeService
      * @return 结果
      */
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public int insertPsyGauge(PsyGauge psyGauge)
     {
 
@@ -80,14 +82,7 @@ public class PsyGaugeServiceImpl implements IPsyGaugeService
         psyGaugeQuestions.setCreateBy(psyGauge.getCreateBy());
         psyGaugeQuestionsMapper.insertPsyGaugeQuestions(psyGaugeQuestions);
         //新增问题选项
-        PsyGaugeQuestionsOptions psyGaugeQuestionsOptions=new PsyGaugeQuestionsOptions();
-        psyGaugeQuestionsOptions.setGaugeQuestionsId(psyGaugeQuestions.getId());
-        psyGaugeQuestionsOptions.setName("默认选项1");
-        psyGaugeQuestionsOptions.setValue(1L);
-        psyGaugeQuestionsOptions.setSort(1);
-        psyGaugeQuestionsOptions.setCreateTime(date);
-        psyGaugeQuestionsOptions.setCreateBy(psyGauge.getCreateBy());
-        psyGaugeQuestionsOptionsMapper.insertPsyGaugeQuestionsOptions(psyGaugeQuestionsOptions);
+        PsyGaugeQuestionsOptions psyGaugeQuestionsOptions = getPsyGaugeQuestionsOptions(psyGauge, date, psyGaugeQuestions);
 
         psyGaugeQuestionsOptions.setId(null);
         psyGaugeQuestionsOptions.setName("默认选项2");
@@ -95,12 +90,7 @@ public class PsyGaugeServiceImpl implements IPsyGaugeService
         psyGaugeQuestionsOptionsMapper.insertPsyGaugeQuestionsOptions(psyGaugeQuestionsOptions);
 
 
-        PsyGaugeScoreSetting psyGaugeScoreSetting=new PsyGaugeScoreSetting();
-        psyGaugeScoreSetting.setGaugeId(psyGauge.getId());
-        psyGaugeScoreSetting.setStart(1l);
-        psyGaugeScoreSetting.setEnd(20l);
-        psyGaugeScoreSetting.setProposal("");
-        psyGaugeScoreSettingMapper.insertPsyGaugeScoreSetting(psyGaugeScoreSetting);
+        PsyGaugeScoreSetting psyGaugeScoreSetting = getPsyGaugeScoreSetting(psyGauge);
 
         if(psyGauge.getType()==2){
 
@@ -117,6 +107,28 @@ public class PsyGaugeServiceImpl implements IPsyGaugeService
 
 
         return result;
+    }
+
+    private PsyGaugeScoreSetting getPsyGaugeScoreSetting(PsyGauge psyGauge) {
+        PsyGaugeScoreSetting psyGaugeScoreSetting=new PsyGaugeScoreSetting();
+        psyGaugeScoreSetting.setGaugeId(psyGauge.getId());
+        psyGaugeScoreSetting.setStart(1l);
+        psyGaugeScoreSetting.setEnd(20l);
+        psyGaugeScoreSetting.setProposal("");
+        psyGaugeScoreSettingMapper.insertPsyGaugeScoreSetting(psyGaugeScoreSetting);
+        return psyGaugeScoreSetting;
+    }
+
+    private PsyGaugeQuestionsOptions getPsyGaugeQuestionsOptions(PsyGauge psyGauge, Date date, PsyGaugeQuestions psyGaugeQuestions) {
+        PsyGaugeQuestionsOptions psyGaugeQuestionsOptions=new PsyGaugeQuestionsOptions();
+        psyGaugeQuestionsOptions.setGaugeQuestionsId(psyGaugeQuestions.getId());
+        psyGaugeQuestionsOptions.setName("默认选项1");
+        psyGaugeQuestionsOptions.setValue(1L);
+        psyGaugeQuestionsOptions.setSort(1);
+        psyGaugeQuestionsOptions.setCreateTime(date);
+        psyGaugeQuestionsOptions.setCreateBy(psyGauge.getCreateBy());
+        psyGaugeQuestionsOptionsMapper.insertPsyGaugeQuestionsOptions(psyGaugeQuestionsOptions);
+        return psyGaugeQuestionsOptions;
     }
 
     /**

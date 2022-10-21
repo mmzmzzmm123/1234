@@ -40,10 +40,19 @@
               </div>
             </draggable>
             <div style="margin-left: 20px">
-              <el-button style="padding-bottom: 0" icon="el-icon-circle-plus-outline" type="text" @click="addQuestionOption({ gaugeQuestionsId:item.id,name: '选项', value: 1 })">
+              <el-button style="padding-bottom: 0" icon="el-icon-circle-plus-outline" type="text" @click="addQuestionOption({ gaugeQuestionsId:item.id,name: '选项', value: 1,sort: options.length+1})">
                 添加选项
               </el-button>
             </div>
+            <el-divider content-position="left">选择类型</el-divider>
+            <div>
+              <el-radio-group v-model="item.selectType" size="medium" @change="updateQuestion(item)">
+                <el-radio-button v-for="(selectTypeOption, index) in selectTypeOptions" :key="index" :label="selectTypeOption.value">{{selectTypeOption.label}}</el-radio-button>
+              </el-radio-group>
+            </div>
+            </template>
+            <template>
+
 
             <!-- <el-divider content-position="left">效果</el-divider>
             <el-tag type="info">{{item.title}}</el-tag>
@@ -101,6 +110,23 @@ export default {
       newQuestionValue: "",
       questionId: 0,
       questionOptionOpen: false,
+      formData: {
+        selectType: 0,
+      },
+      rules: {
+        selectType: [{
+          required: true,
+          message: '选择类型不能为空',
+          trigger: 'change'
+        }],
+      },
+      selectTypeOptions: [{
+        "label": "单选",
+        "value": 0
+      }, {
+        "label": "多选",
+        "value": 1
+      }],
     };
   },
   watch: {
@@ -139,10 +165,10 @@ export default {
         value: 1,
         sort:this.options.length+1
       };
-      await this.addQuestionOption(data);
-      data.name = "选项2";
-      data.sort=this.options.length+1
-      await this.addQuestionOption(data);
+      // await this.addQuestionOption(data);
+      // data.name = "选项2";
+      // data.sort=this.options.length+1
+      // await this.addQuestionOption(data);
     },
     async addQuestionOption(data) {
       await addOptions(data);
@@ -211,6 +237,19 @@ export default {
     removeOption(data) {
       console.log(data);
       delOptions(data.id);
+    },
+    onOpen() {},
+    onClose() {
+      this.$refs['elForm'].resetFields()
+    },
+    close() {
+      this.$emit('update:visible', false)
+    },
+    handleConfirm() {
+      this.$refs['elForm'].validate(valid => {
+        if (!valid) return
+        this.close()
+      })
     },
   },
 };

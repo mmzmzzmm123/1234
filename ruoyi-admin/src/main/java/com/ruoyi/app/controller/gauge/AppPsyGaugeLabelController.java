@@ -18,7 +18,7 @@ import java.util.List;
  * @e-mail hkcugwh@163.com
  **/
 @RestController
-@RequestMapping("/app/gauge/label")
+@RequestMapping("/app/home/gauge/label")
 @Api(value = "AppPsyGaugeLabelController" ,tags = {"测评标签api"})
 public class AppPsyGaugeLabelController extends BaseController {
 
@@ -27,7 +27,7 @@ public class AppPsyGaugeLabelController extends BaseController {
 
     @GetMapping("/list")
     @ApiOperation("查询测评标签列表")
-    public TableDataInfo list(@RequestBody GaugeLabelQueryDTO gaugeLabelQueryDTO)
+    public TableDataInfo list(GaugeLabelQueryDTO gaugeLabelQueryDTO)
     {
         startPage();
         List<PsyGauge> list = psyGaugeLabelService.queryGaugeByLabel(gaugeLabelQueryDTO.getLabelCode());
