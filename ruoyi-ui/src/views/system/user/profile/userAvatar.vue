@@ -13,6 +13,7 @@
             :autoCropHeight="options.autoCropHeight"
             :fixedBox="options.fixedBox"
             @realTime="realTime"
+            :outputType="options.outputType"
             v-if="visible"
           />
         </el-col>
@@ -78,7 +79,8 @@ export default {
         autoCrop: true, // 是否默认生成截图框
         autoCropWidth: 200, // 默认生成截图框宽度
         autoCropHeight: 200, // 默认生成截图框高度
-        fixedBox: true // 固定截图框大小 不允许改变
+        fixedBox: true, // 固定截图框大小 不允许改变
+        outputType:"png" // 默认生产截图格式png
       },
       previews: {},
       resizeHandler: null
