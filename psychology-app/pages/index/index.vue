@@ -6,8 +6,8 @@
     </view>
     <view class="banner-box index-margin">
       <swiper class="ad-swiper" indicator-dots circular>
-        <swiper-item v-for="(item, index) in adList" :key="index">
-          <image class="banner-img" :src="item.imgUrl" @tap="toProduct(1)" />
+        <swiper-item v-for="(item, index) in bannerList" :key="index">
+          <image class="banner-img" :src="item.bannerUrl" @tap="toProduct(item.linkUrl)" />
         </swiper-item>
       </swiper>
     </view>
@@ -19,8 +19,8 @@
     </view>
     <view class="banner-box banner-box1 index-margin">
       <swiper class="ad-swiper" indicator-dots circular>
-        <swiper-item v-for="(item, index) in adList1" :key="index">
-          <image class="banner-img" :src="item.imgUrl" @tap="toProduct(1)" />
+        <swiper-item v-for="(item, index) in bannerList1" :key="index">
+          <image class="banner-img" :src="item.bannerUrl" @tap="toProduct(item.linkUrl)" />
         </swiper-item>
       </swiper>
     </view>
@@ -29,7 +29,7 @@
       <view class="list-box">
         <view class="item" v-for="(item, index) in hotList">
           <view class="ranking" v-if="index < 3">Top{{ index + 1 }}</view>
-          <img class="img" :src="item.img" />
+          <img class="img" :src="item.headPicture" />
           <span class="txt txt-overflow txt-overflow-line2">{{
           item.title
           }}</span>
@@ -48,15 +48,15 @@
         </span>
       </view>
       <view class="img-item-box">
-        <view class="left-img">
-          <img src="/static/index/product/1.png" />
+        <view class="left-img" @tap="toProduct(bannerList2.length>0?bannerList2[0].linkUrl:'')">
+          <img :src="bannerList2.length>0?bannerList2[0].bannerUrl:''" />
         </view>
         <view class="right-img-box">
-          <view class="right-img">
-            <img src="/static/index/product/2.png" />
+          <view class="right-img" @tap="toProduct(bannerList2.length>1?bannerList2[1].linkUrl:'')">
+            <img :src="bannerList2.length>1?bannerList2[1].bannerUrl:''" />
           </view>
-          <view class="right-img">
-            <img src="/static/index/product/3.png" />
+          <view class="right-img" @tap="toProduct(bannerList2.length>2?bannerList2[2].linkUrl:'')">
+            <img :src="bannerList2.length>2?bannerList2[2].bannerUrl:''" />
           </view>
         </view>
       </view>
@@ -70,10 +70,7 @@
         </span>
       </view>
       <view class="img-item-box">
-        <img class="img" src="/static/index/product/4.png" />
-        <img class="img" src="/static/index/product/5.png" />
-        <img class="img" src="/static/index/product/6.png" />
-        <img class="img" src="/static/index/product/7.png" />
+        <img class="img" v-for="item in bannerList3" :src="item.bannerUrl" @tap="toProduct(item.linkUrl)" />
       </view>
     </view>
     <view class="product-box index-margin">
@@ -89,26 +86,15 @@
 </template>
 <script>
 import productListCom from '@/components/productList'
+import indexServer from '@/server/index'
 export default {
   components: { productListCom },
   data() {
     return {
-      adList: [
-        {
-          imgUrl: "/static/index/banner1.png",
-        },
-        {
-          imgUrl: "/static/index/banner1.png",
-        },
-      ],
-      adList1: [
-        {
-          imgUrl: "/static/index/index5.jpg",
-        },
-        {
-          imgUrl: "/static/index/index5.jpg",
-        },
-      ],
+      bannerList: [],
+      bannerList1: [],
+      bannerList2: [],
+      bannerList3: [],
       classList: [
         {
           classPic: "/static/index/1.png",
@@ -130,74 +116,27 @@ export default {
           id: 72,
         },
       ],
-      hotList: [
-        {
-          title:
-            "潜意识测试司法解释拉开放大镜拉萨的会计法拉萨打开副经理洒咖啡拉萨的会计法拉到",
-          num: 200,
-          price: 19.99,
-          img: "/static/index/hot/1.jpg",
-        },
-        {
-          title: "潜意识测试",
-          num: 200,
-          price: 19.99,
-          img: "/static/index/hot/1.jpg",
-        },
-        {
-          title: "潜意识测试",
-          num: 200,
-          price: 19.99,
-          img: "/static/index/hot/1.jpg",
-        },
-        {
-          title: "潜意识测试",
-          num: 200,
-          price: 19.99,
-          img: "/static/index/hot/1.jpg",
-        },
-      ],
-      productList: [
-        {
-          id: 232323,
-          title: "潜意识测试阿斯蒂芬离开家暗示分离看空间阿斯利康附近",
-          subtitle:
-            "SDK发链接as康复科健康小侄女，明显内存泄漏看是就行了开车是聚类分析开具了科学城举行开具了看",
-          price: 19.99,
-          img: "/static/index/hot/1.jpg",
-        },
-        {
-          id: 232323,
-          title: "潜意识测试阿斯蒂芬离开家暗示分离看空间阿斯利康附近",
-          subtitle:
-            "SDK发链接as康复科健康小侄女，明显内存泄漏看是就行了开车是聚类分析开具了科学城举行开具了看",
-          price: 19.99,
-          img: "/static/index/hot/1.jpg",
-        },
-        {
-          title: "潜意识测试阿斯蒂芬离开家暗示分离看空间阿斯利康附近",
-          subtitle:
-            "SDK发链接as康复科健康小侄女，明显内存泄漏看是就行了开车是聚类分析开具了科学城举行开具了看",
-          price: 19.99,
-          img: "/static/index/hot/1.jpg",
-        },
-        {
-          title:
-            "潜意识测试阿斯蒂芬离开家暗示分离看空间阿斯利康附近阿斯拉达咖啡机拉斯柯达附件拉萨科技发拉开距离拉上发电量开始",
-          subtitle:
-            "SDK发链接as康复科健康小侄女，明显内存泄漏看是就行了开车是聚类分析开具了科学城举行开具了看",
-          price: 19.99,
-          img: "/static/index/hot/1.jpg",
-        },
-      ],
+      hotList: [],
+      productList: []
     };
   },
-  onLoad() { },
+  async created() {
+    this.bannerList = await this.getBanner(0);
+    this.bannerList1 = await this.getBanner(1);
+    this.bannerList2 = await this.getBanner(2);
+    this.bannerList3 = await this.getBanner(3);
+    this.productList = await this.getProduct(0);
+    this.hotList = await this.getProduct(1);
+  },
   methods: {
-    toProduct(id) {
-      uni.navigateTo({
-        url: "/pages/product/index",
-      });
+    async getBanner(type) {
+      return await indexServer.getBannerList(type);
+    },
+    async getProduct(type) {
+      return await indexServer.getProductByLabel(type);
+    },
+    toProduct(url) {
+      uni.navigateTo({ url });
     },
     toSearch() {
       uni.navigateTo({

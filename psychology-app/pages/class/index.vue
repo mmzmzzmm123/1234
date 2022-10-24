@@ -1,24 +1,35 @@
 <template>
   <view class="class-page">
-    <view class="search-box index-margin">
+    <view class="search-box index-margin" @tap="toSearch">
       <img class="icon" src="/static/icon/search.png" />
-      <input placeholder="搜索" class="uni-input ipt" v-model="searchValue" @confirm="searchSubmit" />
-      <view @tap="clearIpt" v-show="searchValue.length>0" class="clear-icon">
-        <img src="/static/icon/clear.png" />
-      </view>
+      <span class="txt">搜索</span>
     </view>
     <view class="class-box">
       <view class="left-class-view">
         <view v-for="productClass in classList" v-bind:key="productClass.id">
           <view class="left-class" :class="
-            productClassSelectedIndex === productClass.id ? 'selected' : ''
-          " @tap="productClassSelected(productClass.id)">{{ productClass.name }}</view>
+            classSelectedIndex === productClass.id ? 'selected' : ''
+          " @tap="productClassSelected(productClass)">{{ productClass.name }}</view>
         </view>
       </view>
       <view class="item-list">
-        <product-list-com v-if=" productList.length>0" :productList="productList"></product-list-com>
+        <view class="current-class">{{className}}</view>
+        <view class="product-item" v-show=" productList.length>0" v-for="product in (productList||[])"
+          @tap="toProduct(product)">
+          <view class="txt-box">
+            <view class="title txt-overflow txt-overflow-line2">{{
+            product.title
+            }}</view>
+            <view class="sub-title txt-overflow">{{ product.subtitle }}</view>
+            <view class="price"><span class="icon">￥</span>{{ product.price }}</view>
+          </view>
+          <view class="img-box">
+            <img :src="product.headPicture" />
+          </view>
+        </view>
+        <view class="footer" v-show=" productList.length>0">已经到底了</view>
         <view v-show=" productList.length==0" class="no-data">
-          <img src="/static/nothing/search-nothing.png" />
+          <img class="img" src="/static/nothing/search-nothing.png" />
         </view>
       </view>
     </view>
@@ -27,120 +38,32 @@
 
 <script>
 import productListCom from '@/components/productList'
+import classServer from '@/server/class'
 export default {
   components: { productListCom },
   data() {
     return {
       searchValue: '',
-      productClassSelectedIndex: 1,
-      classList: [
-        {
-          id: 1,
-          name: "趣味",
-        },
-        {
-          id: 2,
-          name: "趣味评测",
-        },
-        {
-          id: 3,
-          name: "趣味评测",
-        },
-        {
-          id: 4,
-          name: "趣味测",
-        },
-        {
-          id: 5,
-          name: "趣味评测",
-        },
-        {
-          id: 6,
-          name: "趣味评测",
-        },
-        {
-          id: 7,
-          name: "趣味评测",
-        },
-        {
-          id: 8,
-          name: "趣味评测",
-        },
-        {
-          id: 9,
-          name: "趣味评测",
-        },
-      ],
-      productList1: [],
-      productList: [
-        {
-          title: "潜意识测试阿斯蒂芬离开家暗示分离看空间阿斯利康附近",
-          subtitle:
-            "SDK发链接as康复科健康小侄女，明显内存泄漏看是就行了开车是聚类分析开具了科学城举行开具了看",
-          price: 19.99,
-          img: "/static/index/hot/1.jpg",
-        },
-        {
-          title: "潜意识测试阿斯蒂芬离开家暗示分离看空间阿斯利康附近",
-          subtitle:
-            "SDK发链接as康复科健康小侄女，明显内存泄漏看是就行了开车是聚类分析开具了科学城举行开具了看",
-          price: 19.99,
-          img: "/static/index/hot/1.jpg",
-        },
-        {
-          title: "潜意识测试阿斯蒂芬离开家暗示分离看空间阿斯利康附近",
-          subtitle:
-            "SDK发链接as康复科健康小侄女，明显内存泄漏看是就行了开车是聚类分析开具了科学城举行开具了看",
-          price: 19.99,
-          img: "/static/index/hot/1.jpg",
-        },
-        {
-          title:
-            "潜意识测试阿斯蒂芬离开家暗示分离看空间阿斯利康附近阿斯拉达咖啡机拉斯柯达附件拉萨科技发拉开距离拉上发电量开始",
-          subtitle:
-            "SDK发链接as康复科健康小侄女，明显内存泄漏看是就行了开车是聚类分析开具了科学城举行开具了看",
-          price: 19.99,
-          img: "/static/index/hot/1.jpg",
-        },
-        {
-          title:
-            "潜意识测试阿斯蒂芬离开家暗示分离看空间阿斯利康附近阿斯拉达咖啡机拉斯柯达附件拉萨科技发拉开距离拉上发电量开始",
-          subtitle:
-            "SDK发链接as康复科健康小侄女，明显内存泄漏看是就行了开车是聚类分析开具了科学城举行开具了看",
-          price: 19.99,
-          img: "/static/index/hot/1.jpg",
-        },
-        {
-          title:
-            "潜意识测试阿斯蒂芬离开家暗示分离看空间阿斯利康附近阿斯拉达咖啡机拉斯柯达附件拉萨科技发拉开距离拉上发电量开始",
-          subtitle:
-            "SDK发链接as康复科健康小侄女，明显内存泄漏看是就行了开车是聚类分析开具了科学城举行开具了看",
-          price: 19.99,
-          img: "/static/index/hot/1.jpg",
-        },
-        {
-          title:
-            "潜意识测试阿斯蒂芬离开家暗示分离看空间阿斯利康附近阿斯拉达咖啡机拉斯柯达附件拉萨科技发拉开距离拉上发电量开始",
-          subtitle:
-            "SDK发链接as康复科健康小侄女，明显内存泄漏看是就行了开车是聚类分析开具了科学城举行开具了看",
-          price: 19.99,
-          img: "/static/index/hot/1.jpg",
-        },
-        {
-          title:
-            "潜意识测试阿斯蒂芬离开家暗示分离看空间阿斯利康附近阿斯拉达咖啡机拉斯柯达附件拉萨科技发拉开距离拉上发电量开始",
-          subtitle:
-            "SDK发链接as康复科健康小侄女，明显内存泄漏看是就行了开车是聚类分析开具了科学城举行开具了看",
-          price: 19.99,
-          img: "/static/index/hot/1.jpg",
-        },
-      ],
+      classSelectedIndex: null,
+      className: '全部',
+      classList: [],
+      productList: []
     };
   },
-  async onLoad() { },
+  async created() {
+    this.classList = [...[{ name: '全部', id: null }], ...await classServer.getClassList()];
+    this.productList = await classServer.getProductByClassId(this.classSelectedIndex);
+  },
   methods: {
-    productClassSelected(productClassId) {
-      this.productClassSelectedIndex = productClassId;
+    toSearch() {
+      uni.navigateTo({
+        url: "/pages/search/index",
+      });
+    },
+    async productClassSelected(currentClass) {
+      this.classSelectedIndex = currentClass.id;
+      this.className = currentClass.name;
+      this.productList = await classServer.getProductByClassId(this.classSelectedIndex);
     },
     toProductList(productClassId) {
       uni.navigateTo({
@@ -152,45 +75,32 @@ export default {
 </script>
 
 <style lang="scss">
+@import "../../style/common.scss";
+
 page {
   background-color: #f8f8f8;
 
   .search-box {
-    flex: 1;
+    margin: 32upx 24upx;
     height: 64upx;
-    background: #fff;
+    background: #ffffff;
     border-radius: 32upx;
     line-height: 64upx;
     display: flex;
     flex-direction: row;
-    padding: 0 26upx;
-    justify-content: left;
+    justify-content: center;
     align-items: center;
-    margin: 32upx 24upx 16upx;
 
     .icon {
       width: 32upx;
       height: 32upx;
+      margin-right: 28upx;
     }
 
-    .ipt {
-      margin-left: 26upx;
-      flex: 1;
-      font-size: 26upx;
-      color: #333333;
+    .txt {
+      font-size: 24upx;
+      color: #aaaaaa;
     }
-
-    .clear-icon {
-      width: 40upx;
-      height: 40upx;
-
-      img {
-        margin: 6upx;
-        width: 28upx;
-        height: 28upx;
-      }
-    }
-
   }
 
   .class-box {
@@ -207,7 +117,7 @@ page {
         line-height: 102upx;
         font-size: 26upx;
         color: #777;
-        padding: 0 24upx;
+        padding-left: 24upx;
 
         &.selected {
           color: #333333;
@@ -232,18 +142,83 @@ page {
       height: 100vh;
       overflow-y: auto;
       width: 600upx;
+      background-color: #fff;
+
+      .current-class {
+        font-size: 26upx;
+        font-weight: 400;
+        color: #777777;
+        line-height: 77upx;
+        padding-left: 24upx;
+      }
 
       .footer {
 
         &::before,
         &::after {
-          left: 197upx;
+          left: 177upx;
+          background-color: #777777;
         }
 
         &::after {
-          right: 197upx;
+          right: 177upx;
+          left: unset;
         }
       }
+    }
+  }
+
+
+  .product-item {
+    display: flex;
+    flex-direction: row;
+    width: calc(100% -48upx);
+    padding: 24upx 0;
+    background: #ffffff;
+    margin-bottom: 16upx;
+    margin: 0 16upx;
+    border-bottom: 1px solid #ccc;
+
+    .txt-box {
+      width: calc(100% - 198upx);
+      flex: 1;
+      margin-right: 15upx;
+
+      .title {
+        height: 84upx;
+        font-size: 30upx;
+        font-weight: 600;
+        color: #333333;
+        line-height: 42upx;
+      }
+
+      .sub-title {
+        font-size: 26upx;
+        font-weight: 400;
+        color: #333333;
+        height: 37upx;
+        line-height: 37upx;
+      }
+    }
+
+    .img-box {
+      width: 183upx;
+      height: 208upx;
+      border-radius: 8upx;
+    }
+
+    .price {
+      margin-top: 39upx;
+    }
+  }
+
+  .no-data {
+    width: 300upx;
+    height: 289upx;
+    margin: 160upx;
+
+    .img {
+      width: 100%;
     }
   }
 

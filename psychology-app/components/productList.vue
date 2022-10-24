@@ -9,10 +9,10 @@
                 <view class="price"><span class="icon">￥</span>{{ product.price }}</view>
             </view>
             <view class="img-box">
-                <img :src="product.img" />
+                <img :src="product.headPicture" />
             </view>
         </view>
-        <view class="footer">已经到底了</view>
+        <view class="footer" v-show="productList.length>0">已经到底了</view>
     </view>
 </template>
 <script>
@@ -65,7 +65,7 @@ export default {
     }
 
     .img-box {
-        min-width: 183upx;
+        width: 183upx;
         height: 208upx;
         border-radius: 8upx;
     }

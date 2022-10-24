@@ -49,13 +49,13 @@ img {
     position: absolute;
     width: 52upx;
     height: 1upx;
-    background: #cccccc;
+    background: #777777;
     top: 54upx;
-    left: 247upx;
+    left: 217upx;
   }
 
   &::after {
     left: unset;
-    right: 247upx;
+    right: 217upx;
   }
 }

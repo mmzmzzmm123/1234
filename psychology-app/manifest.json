@@ -81,6 +81,32 @@
         },
         "uniStatistics" : {
             "enable" : true
+        },
+        "devServer" : {
+            "https" : false,
+            "proxy" : {
+                "/app" : {
+                    "target" : "http://192.168.137.232:8080/",
+                    "changeOrigin" : true,
+                    "secure" : false
+                },
+                "/profile" : {
+                    "target" : "http://192.168.137.232:8080/",
+                    "changeOrigin" : true,
+                    "secure" : false
+                },
+                "/weixin" : {
+                    "target" : "https://api.weixin.qq.com/",
+                    "changeOrigin" : true,
+                    "secure" : false,
+                    "pathRewirte" : {
+                        "^/weixin" : ""
+                    }
+                }
+            }
+        },
+        "router" : {
+            "mode" : "history"
         }
     }
 }

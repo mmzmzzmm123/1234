@@ -37,7 +37,18 @@
 
 <script>
 import utils from '../../utils/common'
+import productServer from '@/server/product'
 export default {
+	data() {
+		return {
+			productInfo: {}
+		}
+	},
+	async created() {
+		let id = utils.getParam(location.href, "id");
+		console.log(id, '111111111111111')
+		this.productInfo = await productServer.getProductInfo(parseInt(id));
+	},
 	methods: {
 		startTest() {
 			uni.navigateTo({

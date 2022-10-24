@@ -1,7 +1,7 @@
 <template>
   <view class="index">
     <view class="search-un-bg">
-      <view class="search-box index-margin">
+      <view class="search-box">
         <img class="icon" src="/static/icon/search.png" />
         <input placeholder="搜索" class="uni-input ipt" v-model="searchValue" @confirm="searchSubmit" />
         <view @tap="clearIpt" v-show="searchValue.length>0" class="clear-icon">
@@ -15,7 +15,7 @@
           @tap="deleteHistory" />
       </view>
       <view class="list">
-        <view class="item" v-for="item in searchList" @tap="setSearchValue(item)">{{item}}</view>
+        <view class="item" v-for="item in hostoryList" @tap="setSearchValue(item)">{{item}}</view>
       </view>
     </view>
     <product-list-com v-if="productListShow && productList.length>0" :productList="productList"></product-list-com>
@@ -49,14 +49,13 @@ export default {
       historyListShow: true,
       productListShow: false,
       searchValue: '',
-      searchList: ['沙发拉萨科技发了空白水电费'
+      hostoryList: ['沙发拉萨科技发了空白水电费'
         , '记录卡'
         , '宋磊的反馈技术来看发了离开家'
         , '水电费'
         , '水电费'
         , '水电费'
       ],
-      productList1: [],
       productList: [
         {
           title: "潜意识测试阿斯蒂芬离开家暗示分离看空间阿斯利康附近",
@@ -88,11 +87,13 @@ export default {
           img: "/static/index/hot/1.jpg",
         },
       ],
+
     };
   },
   created() {
     this.deleteMessage.cancelBtn.callback = this.clearDelete;
     this.deleteMessage.submitBtn.callback = this.submitDelete;
+    this.hostoryList = uni.getStorageSync("historySearch").split(',');
   },
   methods: {
     deleteHistory() {
@@ -103,6 +104,7 @@ export default {
     },
     submitDelete() {
       this.showDeleteMessage = false;
+      uni.setStorageSync("historySearch", '');
     },
     clearIpt() {
       this.searchValue = "";
@@ -116,6 +118,7 @@ export default {
     searchSubmit() {
       this.historyListShow = false;
       this.productListShow = true;
+      this.historyList = [...[this.searchValue], ...this.historyList];
     },
     toHome() {
       uni.switchTab({
@@ -150,6 +153,7 @@ page {
       padding: 0 26upx;
       justify-content: left;
       align-items: center;
+      margin-right: 24upx;
 
       .icon {
         width: 32upx;
@@ -194,6 +198,7 @@ page {
       font-weight: 600;
       color: #333333;
       line-height: 45upx;
+      margin-bottom: 36upx;
     }
 
     .list {
