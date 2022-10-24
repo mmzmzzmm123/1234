@@ -5,7 +5,9 @@ import com.ruoyi.common.annotation.Anonymous;
 import com.ruoyi.common.constant.RespMessageConstants;
 import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.core.domain.dto.LoginDTO;
+import com.ruoyi.common.core.domain.vo.LoginVO;
 import com.ruoyi.framework.web.service.AppTokenService;
+import com.ruoyi.psychology.domain.PsyUser;
 import com.ruoyi.psychology.service.IPsyUserService;
 import com.ruoyi.wechat.utils.AuthUtil;
 import io.swagger.annotations.ApiOperation;
@@ -40,13 +42,11 @@ public class WxAuthorizeController {
 
     /**
      * Tea微信登录接口
-     *
-     * @throws IOException
      */
     @ApiOperation(value = "微信登录接口")
     @RequestMapping("wxLogin")
 //    @Anonymous
-    public AjaxResult wxLogin(HttpServletResponse response) throws IOException {
+    public AjaxResult wxLogin(){
         //这里是回调的url
         String redirect_uri = PAGE_URL + "/pages/user/index";
         String url = "https://open.weixin.qq.com/connect/oauth2/authorize?" +
@@ -69,7 +69,7 @@ public class WxAuthorizeController {
      */
     @ApiOperation(value = "微信授权回调接口")
     @RequestMapping("/callBack")
-    protected AjaxResult deGet(HttpServletRequest request, HttpServletResponse response) throws Exception {
+    protected AjaxResult deGet(HttpServletRequest request) throws Exception {
         //获取回调地址中的code
         String code = request.getParameter("code");
         //拼接url
@@ -78,23 +78,31 @@ public class WxAuthorizeController {
         JSONObject jsonObject = AuthUtil.doGetJson(url);
         //1.获取微信用户的openid
         String openId = jsonObject.getString("openid");
-        //2.获取获取access_token
+        //2.获取access_token
         String access_token = jsonObject.getString("access_token");
         String infoUrl = "https://api.weixin.qq.com/sns/userinfo?access_token=" + access_token + "&openid=" + openId
                 + "&lang=zh_CN";
         //3.获取微信用户信息
         JSONObject userInfo = AuthUtil.doGetJson(infoUrl);
         log.info("微信用户信息：{}", userInfo);
-        //至此拿到了微信用户的所有信息,剩下的就是业务逻辑处理部分了
-        //保存openid和access_token到session
-        request.getSession().setAttribute("openid", openId);
-        request.getSession().setAttribute("access_token", access_token);
 
-        //缓存用户信息，返回token
-        LoginDTO loginDTO = new LoginDTO();
-        loginDTO.setWxOpenId(openId);
-        String token = appTokenService.createToken(loginDTO);
-        return psyUserService.checkPsyUser(openId ,token ,userInfo);
+        //获取手机号登录用户
+        LoginDTO loginUser = appTokenService.getLoginUser(request);
+        PsyUser user = psyUserService.queryUserByAccount(loginUser.getPhone());
+
+        //重新缓存用户信息
+        loginUser.setWxOpenId(openId);
+        appTokenService.refreshToken(loginUser);
+
+        String nickname = userInfo.getString("nickname");
+        String headImgUrl = userInfo.getString("headimgurl");
+
+        //手机登录之后才会涉及微信登录
+        psyUserService.updatePsyUser(PsyUser.builder().id(user.getId()).wxOpenid(openId).name(nickname).avatar(headImgUrl).build());
+
+        LoginVO loginVO = LoginVO.builder().name(nickname).avatar(headImgUrl).phone(user.getPhone()).build();
+
+        return AjaxResult.success(RespMessageConstants.APP_LOGIN_SUCCESS , loginVO);
     }
 
 

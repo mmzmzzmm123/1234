@@ -105,8 +105,8 @@ public class PsyUserServiceImpl implements IPsyUserService
     }
 
     @Override
-    public PsyUser queryUserByOpenId(String openId) {
-        return psyUserMapper.queryUserByAccount(openId);
+    public PsyUser queryUserByAccount(String account) {
+        return psyUserMapper.queryUserByAccount(account);
     }
 
     @Override

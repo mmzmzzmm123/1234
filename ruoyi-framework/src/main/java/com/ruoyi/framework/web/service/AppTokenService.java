@@ -9,6 +9,7 @@ import com.ruoyi.common.utils.ServletUtils;
 import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.common.utils.ip.AddressUtils;
 import com.ruoyi.common.utils.ip.IpUtils;
+import com.ruoyi.common.utils.spring.SpringUtils;
 import com.ruoyi.common.utils.uuid.IdUtils;
 import eu.bitwalker.useragentutils.UserAgent;
 import io.jsonwebtoken.Claims;
@@ -224,5 +225,9 @@ public class AppTokenService
     private String getTokenKey(String uuid)
     {
         return CacheConstants.APP_LOGIN_TOKEN_KEY + uuid;
+    }
+
+    public static AppTokenService getInstance(){
+        return SpringUtils.getBean(AppTokenService.class);
     }
 }

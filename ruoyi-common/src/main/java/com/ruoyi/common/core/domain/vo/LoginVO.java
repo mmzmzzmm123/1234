@@ -21,5 +21,9 @@ public class LoginVO {
     private String avatar;
     @ApiModelProperty("昵称")
     private String name;
+    @ApiModelProperty("是否绑定了微信id")
+    private boolean openIdFlag;
+    @ApiModelProperty("手机号")
+    private String phone;
 
 }

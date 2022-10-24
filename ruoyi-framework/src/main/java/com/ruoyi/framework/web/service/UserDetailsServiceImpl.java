@@ -1,7 +1,5 @@
 package com.ruoyi.framework.web.service;
 
-import com.alibaba.fastjson2.JSON;
-import com.ruoyi.psychology.service.IPsyUserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,10 +31,6 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
     @Autowired
     private SysPermissionService permissionService;
-
-    @Autowired
-    private IPsyUserService psyUserService;
-
 
     /**
      *

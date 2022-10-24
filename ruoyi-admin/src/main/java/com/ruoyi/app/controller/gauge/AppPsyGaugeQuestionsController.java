@@ -1,5 +1,6 @@
 package com.ruoyi.app.controller.gauge;
 
+import com.ruoyi.common.annotation.RepeatSubmit;
 import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.core.page.TableDataInfo;
@@ -34,6 +35,7 @@ public class AppPsyGaugeQuestionsController extends BaseController
 //    @PreAuthorize("@ss.hasPermi('gauge:questions:list')")
     @GetMapping("/list")
     @ApiOperation("查询测评问题列表")
+    @RepeatSubmit
     public AjaxResult list(PsyGaugeQuestions psyGaugeQuestions)
     {
         List<PsyQuestionVO> list = psyGaugeQuestionsService.appQueryQuesList(psyGaugeQuestions);

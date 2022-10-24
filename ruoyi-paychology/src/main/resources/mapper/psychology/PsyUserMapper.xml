@@ -35,7 +35,7 @@
         where id = #{id}
     </select>
 
-    <insert id="insertPsyUser" parameterType="com.ruoyi.psychology.domain.PsyUser">
+    <insert id="insertPsyUser" parameterType="com.ruoyi.psychology.domain.PsyUser" useGeneratedKeys="true" keyProperty="id">
         insert into psy_user
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="id != null">id,</if>

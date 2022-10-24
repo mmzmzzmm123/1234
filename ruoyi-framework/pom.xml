@@ -59,10 +59,10 @@
             <artifactId>ruoyi-system</artifactId>
         </dependency>
 
-        <dependency>
+        <!--<dependency>
             <groupId>com.ruoyi</groupId>
             <artifactId>ruoyi-paychology</artifactId>
-        </dependency>
+        </dependency>-->
 
     </dependencies>
 

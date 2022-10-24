@@ -46,7 +46,7 @@ public class AppPsyGaugeController extends BaseController
 //    @PreAuthorize("@ss.hasPermi('psychology:gauge:query')")
     @PostMapping(value = "/getInfo")
     @ApiOperation("查询量表详细信息")
-    public AjaxResult getInfo(@RequestParam("id") Long id)
+    public AjaxResult getInfo(@RequestParam(value = "id") Long id)
     {
         return AjaxResult.success(psyGaugeService.selectPsyGaugeById(id));
     }
