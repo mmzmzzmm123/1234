@@ -123,7 +123,7 @@
           <el-input v-model="form.linkUrl" placeholder="请输入跳转url" />
         </el-form-item>
         <el-form-item label="banner分类" prop="bannerType">
-          <el-select v-model="form.bannerType" placeholder="请选择banner分类(0-首页一级banner页，1-首页二级banner页，2-限时福利，3-全面评估)">
+          <el-select v-model="form.bannerType" placeholder="请选择banner分类">
             <el-option
               v-for="dict in dict.type.psy_home_banner_type"
               :key="dict.value"

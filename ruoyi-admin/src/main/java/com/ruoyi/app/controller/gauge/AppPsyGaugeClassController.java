@@ -19,7 +19,7 @@ import java.util.List;
  * @date 2022-08-30
  */
 @RestController
-@RequestMapping("/app/gauge/class")
+@RequestMapping("/app/home/gauge/class")
 @Api(value = "AppPsyGaugeClassController" ,tags = {"测评分类api"})
 public class AppPsyGaugeClassController extends BaseController
 {
@@ -32,7 +32,7 @@ public class AppPsyGaugeClassController extends BaseController
 //    @PreAuthorize("@ss.hasPermi('psychology:gaugeClass:list')")
     @GetMapping("/list")
     @ApiOperation("查询测评分类列表")
-    public TableDataInfo list(@RequestBody PsyGaugeClass psyGaugeClass)
+    public TableDataInfo list(PsyGaugeClass psyGaugeClass)
     {
         startPage();
         List<PsyGaugeClass> list = psyGaugeClassService.selectPsyGaugeClassList(psyGaugeClass);

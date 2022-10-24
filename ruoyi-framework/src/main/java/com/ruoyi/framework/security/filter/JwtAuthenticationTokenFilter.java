@@ -34,6 +34,16 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter
         LoginUser loginUser = tokenService.getLoginUser(request);
         if (StringUtils.isNotNull(loginUser) && StringUtils.isNull(SecurityUtils.getAuthentication()))
         {
+//            /********添加部分***********/
+//            String typeString=tokenService.getType(request);
+//            logger.error(typeString+"：：：：：：：：：：：：类型");
+//            if(typeString.equals("appUser")){
+//                tokenService.verifyToken(loginUser);
+//            }else{
+//                tokenService.verifyToken2(loginUser);
+//            }
+//            /********添加部分***********/
+
             tokenService.verifyToken(loginUser);
             UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(loginUser, null, loginUser.getAuthorities());
             authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));

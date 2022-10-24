@@ -17,4 +17,8 @@ public interface RespMessageConstants {
 
     String SMS_CODE_NOT_MATCH = "验证码错误";
 
+    String OPERATION_SUCCESS = "操作成功";
+
+    int WX_MOBILE_CODE = -100;
+
 }

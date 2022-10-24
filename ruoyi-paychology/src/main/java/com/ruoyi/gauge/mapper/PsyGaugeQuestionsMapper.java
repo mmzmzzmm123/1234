@@ -2,6 +2,7 @@ package com.ruoyi.gauge.mapper;
 
 import java.util.List;
 import com.ruoyi.gauge.domain.PsyGaugeQuestions;
+import com.ruoyi.gauge.vo.PsyQuestionVO;
 
 /**
  * 心理测评问题Mapper接口
@@ -58,4 +59,6 @@ public interface PsyGaugeQuestionsMapper
      * @return 结果
      */
     public int deletePsyGaugeQuestionsByIds(Long[] ids);
+
+    List<PsyQuestionVO> appQueryQuesList(PsyGaugeQuestions psyGaugeQuestions);
 }

@@ -8,17 +8,13 @@ import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.core.domain.dto.LoginDTO;
 import com.ruoyi.common.core.redis.RedisCache;
 import com.ruoyi.common.exception.ServiceException;
-import com.ruoyi.common.utils.StringUtils;
-import com.ruoyi.common.utils.TokenProcessor;
 import com.ruoyi.gauge.sms.CodeUtil;
 import com.ruoyi.login.service.ILoginService;
-import io.jsonwebtoken.Jwt;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.impl.crypto.JwtSigner;
+import com.ruoyi.psychology.domain.PsyUser;
+import com.ruoyi.psychology.mapper.PsyUserMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.core.token.TokenService;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -43,6 +39,9 @@ public class LoginServiceImpl implements ILoginService {
      **/
     @Value("${login.sms.codeExpireTime:60}")
     private Integer codeExpireTime;
+
+    @Resource
+    private PsyUserMapper psyUserMapper;
 
     @Override
     public AjaxResult getSmsCode(LoginDTO loginDTO) {
@@ -70,6 +69,8 @@ public class LoginServiceImpl implements ILoginService {
         if(!cacheCode.equals(loginDTO.getValidStr())){
             throw new ServiceException(RespMessageConstants.SMS_CODE_NOT_MATCH);
         }
+        //向用户表插入一条数据
+        psyUserMapper.insertOrUpdate(PsyUser.builder().phone(loginDTO.getAccount()).build());
         return true;
     }
 

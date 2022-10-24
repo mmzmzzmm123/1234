@@ -3,6 +3,7 @@ package com.ruoyi.framework.config;
 import com.ruoyi.framework.security.filter.AppJwtAuthenticationTokenFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
+import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -27,6 +28,7 @@ import com.ruoyi.framework.security.handle.LogoutSuccessHandlerImpl;
  * @author ruoyi
  */
 @EnableGlobalMethodSecurity(prePostEnabled = true, securedEnabled = true)
+@Order(1)
 public class SecurityConfig extends WebSecurityConfigurerAdapter
 {
     /**
@@ -130,7 +132,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter
         httpSecurity.addFilterBefore(corsFilter, JwtAuthenticationTokenFilter.class);
         httpSecurity.addFilterBefore(corsFilter, LogoutFilter.class);
         // 添加app JWT filter
-        httpSecurity.addFilterBefore(appJwtAuthenticationTokenFilter, JwtAuthenticationTokenFilter.class);
+//        httpSecurity.addFilterBefore(appJwtAuthenticationTokenFilter, JwtAuthenticationTokenFilter.class);
     }
 
     /**

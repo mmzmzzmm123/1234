@@ -107,7 +107,7 @@ app:
     # 令牌密钥
     secret: appabcdefghijklmnopqrstuvwxyz
     # 令牌有效期（默认30分钟）
-    expireTime: 30
+    expireTime: 3000
   
 # MyBatis配置
 mybatis:

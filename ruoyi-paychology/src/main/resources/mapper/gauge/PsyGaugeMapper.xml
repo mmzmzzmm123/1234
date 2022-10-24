@@ -70,7 +70,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="gaugeNum != null">#{gaugeNum},</if>
             <if test="price != null">#{price},</if>
             <if test="num != null">#{num},</if>
-            <if test="type != null">type,</if>
+            <if test="type != null">#{type},</if>
             <if test="createBy != null and createBy != ''">#{createBy},</if>
          </trim>
     </insert>

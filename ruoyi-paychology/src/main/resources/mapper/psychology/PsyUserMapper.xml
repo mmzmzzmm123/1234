@@ -1,40 +1,41 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper
-PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
-"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.ruoyi.psychology.mapper.PsyUserMapper">
-    
-    <resultMap type="PsyUser" id="PsyUserResult">
-        <result property="id"    column="id"    />
-        <result property="name"    column="name"    />
-        <result property="phone"    column="phone"    />
-        <result property="avatar"    column="avatar"    />
-        <result property="status"    column="status"    />
-        <result property="wxOpenid"    column="wx_openid"    />
-        <result property="createTime"    column="create_time"    />
+
+    <resultMap type="com.ruoyi.psychology.domain.PsyUser" id="PsyUserResult">
+        <result property="id" column="id"/>
+        <result property="name" column="name"/>
+        <result property="phone" column="phone"/>
+        <result property="avatar" column="avatar"/>
+        <result property="status" column="status"/>
+        <result property="wxOpenid" column="wx_openid"/>
+        <result property="createTime" column="create_time"/>
     </resultMap>
 
     <sql id="selectPsyUserVo">
-        select id, name, phone, avatar, status, wx_openid, create_time from psy_user
+        select id, name, phone, avatar, status, wx_openid, create_time
+        from psy_user
     </sql>
 
-    <select id="selectPsyUserList" parameterType="PsyUser" resultMap="PsyUserResult">
+    <select id="selectPsyUserList" parameterType="com.ruoyi.psychology.domain.PsyUser" resultMap="PsyUserResult">
         <include refid="selectPsyUserVo"/>
-        <where>  
-            <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
-            <if test="phone != null  and phone != ''"> and phone = #{phone}</if>
-            <if test="avatar != null  and avatar != ''"> and avatar = #{avatar}</if>
-            <if test="status != null  and status != ''"> and status = #{status}</if>
-            <if test="wxOpenid != null  and wxOpenid != ''"> and wx_openid = #{wxOpenid}</if>
+        <where>
+            <if test="name != null  and name != ''">and name like concat('%', #{name}, '%')</if>
+            <if test="phone != null  and phone != ''">and phone = #{phone}</if>
+            <if test="avatar != null  and avatar != ''">and avatar = #{avatar}</if>
+            <if test="status != null  and status != ''">and status = #{status}</if>
+            <if test="wxOpenid != null  and wxOpenid != ''">and wx_openid = #{wxOpenid}</if>
         </where>
     </select>
-    
+
     <select id="selectPsyUserById" parameterType="String" resultMap="PsyUserResult">
         <include refid="selectPsyUserVo"/>
         where id = #{id}
     </select>
-        
-    <insert id="insertPsyUser" parameterType="PsyUser">
+
+    <insert id="insertPsyUser" parameterType="com.ruoyi.psychology.domain.PsyUser">
         insert into psy_user
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="id != null">id,</if>
@@ -43,8 +44,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="avatar != null">avatar,</if>
             <if test="status != null">status,</if>
             <if test="wxOpenid != null">wx_openid,</if>
-            <if test="createTime != null">create_time,</if>
-         </trim>
+            create_time,
+        </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="id != null">#{id},</if>
             <if test="name != null">#{name},</if>
@@ -52,11 +53,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="avatar != null">#{avatar},</if>
             <if test="status != null">#{status},</if>
             <if test="wxOpenid != null">#{wxOpenid},</if>
-            <if test="createTime != null">#{createTime},</if>
-         </trim>
+            now()
+        </trim>
     </insert>
 
-    <update id="updatePsyUser" parameterType="PsyUser">
+    <update id="updatePsyUser" parameterType="com.ruoyi.psychology.domain.PsyUser">
         update psy_user
         <trim prefix="SET" suffixOverrides=",">
             <if test="name != null">name = #{name},</if>
@@ -70,13 +71,45 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </update>
 
     <delete id="deletePsyUserById" parameterType="String">
-        delete from psy_user where id = #{id}
+        delete
+        from psy_user
+        where id = #{id}
     </delete>
 
     <delete id="deletePsyUserByIds" parameterType="String">
-        delete from psy_user where id in 
+        delete from psy_user where id in
         <foreach item="id" collection="array" open="(" separator="," close=")">
             #{id}
         </foreach>
     </delete>
+
+    <insert id="insertOrUpdate" parameterType="com.ruoyi.psychology.domain.PsyUser">
+        insert into psy_user
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="name != null">name,</if>
+            <if test="phone != null">phone,</if>
+            <if test="avatar != null">avatar,</if>
+            <if test="status != null">status,</if>
+            <if test="wxOpenid != null">wx_openid,</if>
+            create_time,
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="name != null">#{name},</if>
+            <if test="phone != null">#{phone},</if>
+            <if test="avatar != null">#{avatar},</if>
+            <if test="status != null">#{status},</if>
+            <if test="wxOpenid != null">#{wxOpenid},</if>
+            #{createTime},
+        </trim>
+        ON DUPLICATE KEY UPDATE create_time = now()
+        <if test="wxOpenid != null">,wx_openid = #{wxOpenid}</if>
+    </insert>
+
+    <select id="queryUserByAccount" resultType="com.ruoyi.psychology.domain.PsyUser">
+        select id, name, phone, avatar, status, wx_openid, create_time
+        from psy_user
+        where wx_openid = #{account} or phone = #{account}
+        limit 1
+    </select>
+
 </mapper>

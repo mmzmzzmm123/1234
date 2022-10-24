@@ -18,7 +18,7 @@ import java.util.List;
  * @date 2022-10-18
  */
 @RestController
-@RequestMapping("/app/banner/config")
+@RequestMapping("/app/home/banner/config")
 @Api(value = "AppPsyGaugeBannerConfigController" ,tags = {"测评banner页配置控制器"})
 public class AppPsyGaugeBannerConfigController extends BaseController
 {
