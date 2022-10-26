@@ -8,9 +8,12 @@ import com.ruoyi.common.enums.BusinessType;
 import com.ruoyi.common.utils.poi.ExcelUtil;
 import com.ruoyi.gauge.domain.PsyOrderPay;
 import com.ruoyi.gauge.service.IPsyOrderPayService;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import springfox.documentation.annotations.ApiIgnore;
 
 import javax.servlet.http.HttpServletResponse;
 import java.util.List;
@@ -23,6 +26,7 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("/app/gauge/order/pay")
+@Api(value = "AppPsyOrderPayController" ,tags = {"心理测评支付信息api"})
 public class AppPsyOrderPayController extends BaseController {
     @Autowired
     private IPsyOrderPayService psyOrderPayService;
@@ -32,6 +36,7 @@ public class AppPsyOrderPayController extends BaseController {
      */
 //    @PreAuthorize("@ss.hasPermi('system:pay:list')")
     @GetMapping("/list")
+    @ApiIgnore
     public TableDataInfo list(PsyOrderPay psyOrderPay) {
         startPage();
         List<PsyOrderPay> list = psyOrderPayService.selectPsyOrderPayList(psyOrderPay);
@@ -44,6 +49,7 @@ public class AppPsyOrderPayController extends BaseController {
 //    @PreAuthorize("@ss.hasPermi('system:pay:export')")
     @Log(title = "心理咨询订单支付信息", businessType = BusinessType.EXPORT)
     @PostMapping("/export")
+    @ApiIgnore
     public void export(HttpServletResponse response, PsyOrderPay psyOrderPay) {
         List<PsyOrderPay> list = psyOrderPayService.selectPsyOrderPayList(psyOrderPay);
         ExcelUtil<PsyOrderPay> util = new ExcelUtil<PsyOrderPay>(PsyOrderPay.class);
@@ -55,6 +61,7 @@ public class AppPsyOrderPayController extends BaseController {
      */
 //    @PreAuthorize("@ss.hasPermi('system:pay:query')")
     @GetMapping(value = "/{id}")
+    @ApiOperation("获取支付信息")
     public AjaxResult getInfo(@PathVariable("id") Long id) {
         return AjaxResult.success(psyOrderPayService.selectPsyOrderPayById(id));
     }

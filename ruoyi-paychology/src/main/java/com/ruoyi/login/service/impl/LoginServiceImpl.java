@@ -82,21 +82,23 @@ public class LoginServiceImpl implements ILoginService {
         }
 
         PsyUser user = psyUserMapper.queryUserByAccount(loginDTO.getAccount());
-        String userId = "";
         if(user == null){
             PsyUser psyUser = PsyUser.builder().phone(loginDTO.getAccount()).build();
             //向用户表插入一条数据
             psyUserMapper.insertPsyUser(psyUser);
-            userId = psyUser.getId();
-        }else {
-            userId = user.getId();
+            user = psyUser;
         }
 
         loginDTO.setPhone(loginDTO.getAccount());
-        loginDTO.setUserId(userId);
+        loginDTO.setUserId(user.getId());
         String token = appTokenService.createToken(loginDTO);
 
-        return AjaxResult.success(LoginVO.builder().token(token).phone(loginDTO.getAccount()).openIdFlag(StringUtils.isBlank(user.getWxOpenid()) ? false : true).build());
+        return AjaxResult.success(LoginVO.builder().token(token)
+                .phone(loginDTO.getAccount())
+                .openIdFlag(StringUtils.isBlank(user.getWxOpenid()) ? false : true)
+                .avatar(user.getAvatar())
+                .name(user.getName())
+                .build());
     }
 
 }
