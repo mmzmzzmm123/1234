@@ -20,11 +20,15 @@ export default {
       validStr,
     });
     if (res.code == 200) {
-      console.log(res);
       //   uni.showToast({
       //     title: res.data.msg,
       //   });
       //没有openid，获取用户信息
+      uni.setStorageSync("userInfo", {
+        phone: res.data.phone,
+        name: res.data.name,
+        avatar: res.data.avatar,
+      });
       uni.setStorageSync("type", res.data.openIdFlag);
       uni.setStorageSync("token", res.data.token);
       return 1;

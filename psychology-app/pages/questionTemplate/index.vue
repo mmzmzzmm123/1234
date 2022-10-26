@@ -13,7 +13,12 @@
             <view class="cue">请选择最贴合实际的情况：</view>
             <view class="warn-txt" v-show="checkNull">请至少选择一个选项</view>
             <view class="answer-box">
-                <view class="item" v-for="(option,index) in currentQuestion.options">{{indexArr[index]}}、{{option.txt}}
+                <view class="item" v-for="(option,index) in currentQuestion.options"
+                    @tap="currentQuestion.answers=option.id">
+                    <view class="check-box" :class="{'radio':currentQuestion.selectType==0,'check':currentQuestion.selectType==1,
+                    'active':currentQuestion.answers==option.id}
+                    "></view>
+                    {{indexArr[index]}}、{{option.name}}
                 </view>
             </view>
             <view class="btn prev-btn" @tap="toPrev" v-show="currentIndex>1">上一题</view>
@@ -28,92 +33,49 @@
 <script>
 import { callTimeLoad } from '../../utils/time'
 import utils from '../../utils/common'
+import questionServer from '@/server/question'
 export default {
     data() {
         return {
             checkNull: false,
             indexArr: ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'],
-            answerList: [],
-            questionList: [
-                {
-                    title: '当你走在街上的时候，你最害怕发生以下哪件事？',
-                    type: 1,
-                    options: [
-                        { txt: '被绊倒', index: 1 },
-                        { txt: '突然下雨', index: 6 },
-                        { txt: '看到不想见到的人', index: 2 },
-                        { txt: '其他', index: 2 },]
-                },
-                {
-                    title: '在朋友的婚礼上，你未料到会被邀请发言，在毫无准备的情况下，你：',
-                    type: 2,
-                    options: [
-                        { txt: '双手发抖，结结巴巴说不出话来', index: 1 },
-                        { txt: '感到很荣幸，简短地讲两句', index: 6 },
-                        { txt: '很平淡的谢绝了', index: 2 },
-                        { txt: '其他', index: 2 },]
-                }, {
-                    title: '当你走在街上的时候，你最害怕发生以下哪件事？',
-                    type: 1,
-                    options: [
-                        { txt: '被绊倒', index: 1 },
-                        { txt: '突然下雨', index: 6 },
-                        { txt: '看到不想见到的人', index: 2 },
-                        { txt: '其他', index: 2 },]
-                },
-                {
-                    title: '在朋友的婚礼上，你未料到会被邀请发言，在毫无准备的情况下，你：',
-                    type: 2,
-                    options: [
-                        { txt: '双手发抖，结结巴巴说不出话来', index: 1 },
-                        { txt: '感到很荣幸，简短地讲两句', index: 6 },
-                        { txt: '很平淡的谢绝了', index: 2 },
-                        { txt: '其他', index: 2 },]
-                }, {
-                    title: '当你走在街上的时候，你最害怕发生以下哪件事？',
-                    type: 1,
-                    options: [
-                        { txt: '被绊倒', index: 1 },
-                        { txt: '突然下雨', index: 6 },
-                        { txt: '看到不想见到的人', index: 2 },
-                        { txt: '其他', index: 2 },]
-                },
-                {
-                    title: '在朋友的婚礼上，你未料到会被邀请发言，在毫无准备的情况下，你：',
-                    type: 2,
-                    options: [
-                        { txt: '双手发抖，结结巴巴说不出话来', index: 1 },
-                        { txt: '感到很荣幸，简短地讲两句', index: 6 },
-                        { txt: '很平淡的谢绝了', index: 2 },
-                        { txt: '其他', index: 2 },]
-                },],
+            questionList: [],
             currentIndex: 1,
             currentQuestion: {},
-            currentAnswer: null
+            currentAnswer: null,
+            productId: 0
         }
+    },
+    async created() {
+        this.productId = utils.getParam(location.href, "productId");
+        this.questionList = await questionServer.getQuestionList(this.productId);
+        this.currentQuestion = this.questionList[this.currentIndex];
     },
     mounted() {
         callTimeLoad(document.getElementById("timerBox"), true);
-        this.currentQuestion = this.questionList[this.currentIndex];
     },
     methods: {
         //提交
         submitEvent() {
             uni.navigateTo({
-                url: "/pages/result/index?productId=" + utils.getParam(location.href, "productId"),
+                url: "/pages/result/index?productId=" + this.productId,
             });
         },
         //上一题
         toPrev() {
             this.currentIndex--;
+            this.currentQuestion = this.questionList[this.currentIndex];
         },
         //下一题
         toNext() {
             if (this.currentIndex == this.questionList.length) {
                 return;
             }
+            if (!this.currentQuestion.answers) {
+                this.checkNull = true; return;
+            }
             this.currentIndex++;
-            this.checkNull = true;
+            this.currentQuestion = this.questionList[this.currentIndex];
         }
     }
 }
@@ -216,6 +178,33 @@ page {
 
             .item {
                 margin-bottom: 24upx;
+                display: flex;
+                flex-direction: row;
+                align-items: center;
+
+                .check-box {
+                    width: 32upx;
+                    height: 32upx;
+                    margin-right: 20upx;
+                    background-size: 100% 100%;
+
+                    &.radio {
+                        background-image: url('/static/icon/radio.png');
+
+                        &.active {
+                            background-image: url('/static/icon/radio-active.png');
+                        }
+                    }
+
+                    &.check {
+                        background-image: url('/static/icon/check.png');
+
+                        &.active {
+                            background-image: url('/static/icon/check-active.png');
+                        }
+                    }
+
+                }
             }
         }
 
