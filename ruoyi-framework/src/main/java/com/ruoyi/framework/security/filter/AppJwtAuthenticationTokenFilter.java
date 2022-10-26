@@ -17,36 +17,30 @@ import java.io.IOException;
 
 /**
  * token过滤器 验证token有效性
- * 
+ *
  * @author ruoyi
  */
 @Component
-public class AppJwtAuthenticationTokenFilter extends OncePerRequestFilter
-{
+public class AppJwtAuthenticationTokenFilter extends OncePerRequestFilter {
     @Autowired
     private AppTokenService appTokenService;
 
-    private static String[] IGNORE_URLS = {"/app/**" ,"/app/image/getImage"};
+    private static String[] FILTER_URLS = {"/app/user/**"};
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
-            throws ServletException, IOException
-    {
+            throws ServletException, IOException {
         LoginDTO loginUser = appTokenService.getLoginUser(request);
         boolean flag = false;
-        for (String ignoreUrl : IGNORE_URLS) {
+        for (String filterUrl : FILTER_URLS) {
             AntPathMatcher matcher = new AntPathMatcher();
-            if(matcher.match("/app/**" ,request.getRequestURI())){
-                if(matcher.match(ignoreUrl ,request.getRequestURI())){
-                    flag = true;
-                    break;
-                }
-            }else {
+            if (matcher.match(filterUrl, request.getRequestURI())) {
                 flag = true;
+                break;
             }
         }
-        if(!flag){
-            if(StringUtils.isNull(loginUser)){
+        if (flag) {
+            if (StringUtils.isNull(loginUser)) {
                 throw new ServiceException("用户未登录");
             }
             appTokenService.verifyToken(loginUser);

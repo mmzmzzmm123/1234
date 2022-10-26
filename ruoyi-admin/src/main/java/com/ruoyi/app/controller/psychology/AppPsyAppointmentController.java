@@ -31,7 +31,7 @@ public class AppPsyAppointmentController extends BaseController
     /**
      * 查询咨询师预约列表
      */
-    @PreAuthorize("@ss.hasPermi('psychology:appointment:list')")
+    // @PreAuthorize("@ss.hasPermi('psychology:appointment:list')")
     @GetMapping("/list")
     public TableDataInfo list(PsyAppointment psyAppointment)
     {
@@ -43,7 +43,7 @@ public class AppPsyAppointmentController extends BaseController
     /**
      * 导出咨询师预约列表
      */
-    @PreAuthorize("@ss.hasPermi('psychology:appointment:export')")
+    // @PreAuthorize("@ss.hasPermi('psychology:appointment:export')")
     @Log(title = "咨询师预约", businessType = BusinessType.EXPORT)
     @PostMapping("/export")
     public void export(HttpServletResponse response, PsyAppointment psyAppointment)
@@ -56,7 +56,7 @@ public class AppPsyAppointmentController extends BaseController
     /**
      * 获取咨询师预约详细信息
      */
-    @PreAuthorize("@ss.hasPermi('psychology:appointment:query')")
+    // @PreAuthorize("@ss.hasPermi('psychology:appointment:query')")
     @GetMapping(value = "/{id}")
     public AjaxResult getInfo(@PathVariable("id") Long id)
     {
@@ -66,7 +66,7 @@ public class AppPsyAppointmentController extends BaseController
     /**
      * 新增咨询师预约
      */
-    @PreAuthorize("@ss.hasPermi('psychology:appointment:add')")
+    // @PreAuthorize("@ss.hasPermi('psychology:appointment:add')")
     @Log(title = "咨询师预约", businessType = BusinessType.INSERT)
     @PostMapping
     public AjaxResult add(@RequestBody PsyAppointment psyAppointment)
@@ -77,7 +77,7 @@ public class AppPsyAppointmentController extends BaseController
     /**
      * 修改咨询师预约
      */
-    @PreAuthorize("@ss.hasPermi('psychology:appointment:edit')")
+    // @PreAuthorize("@ss.hasPermi('psychology:appointment:edit')")
     @Log(title = "咨询师预约", businessType = BusinessType.UPDATE)
     @PutMapping
     public AjaxResult edit(@RequestBody PsyAppointment psyAppointment)
@@ -88,7 +88,7 @@ public class AppPsyAppointmentController extends BaseController
     /**
      * 删除咨询师预约
      */
-    @PreAuthorize("@ss.hasPermi('psychology:appointment:remove')")
+    // @PreAuthorize("@ss.hasPermi('psychology:appointment:remove')")
     @Log(title = "咨询师预约", businessType = BusinessType.DELETE)
 	@DeleteMapping("/{ids}")
     public AjaxResult remove(@PathVariable Long[] ids)

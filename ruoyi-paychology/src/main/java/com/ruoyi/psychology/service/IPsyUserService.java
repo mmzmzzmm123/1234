@@ -63,7 +63,7 @@ public interface IPsyUserService
      */
     public int deletePsyUserById(String id);
 
-    PsyUser queryUserByOpenId(String openId);
+    PsyUser queryUserByAccount(String account);
 
     AjaxResult checkPsyUser(String openId, String token , JSONObject userInfo);
 

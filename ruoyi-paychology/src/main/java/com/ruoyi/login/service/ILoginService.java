@@ -21,13 +21,6 @@ public interface ILoginService {
      * 校验验证码
      * @param loginDTO
      */
-    boolean verifyCode(LoginDTO loginDTO);
-
-    /**
-     * 登录
-     * @param loginDTO
-     * @return
-     */
-    String login(LoginDTO loginDTO);
+    AjaxResult verifyCode(LoginDTO loginDTO);
 
 }
