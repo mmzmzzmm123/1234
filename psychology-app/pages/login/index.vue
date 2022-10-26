@@ -14,12 +14,12 @@
             <span class="code-btn timer" v-show="timeOut">{{timer}}S后可重新获取</span>
         </view>
         <view class="error" v-show="!codeValid">验证码错误</view>
-        {{timeOut}}
         <view class="cue-txt">未注册手机号验证后将自动注册新账户</view>
         <view class="login-btn" @tap="loginSubmit">登录</view>
         <view class="agreement-txt">
             <view class="user-agree-rd" :class="{'active':userAgree}" @tap="userAgree = !userAgree"></view>
-            已阅读并同意&nbsp;<span class="link-btn">用户协议</span>、<span class="link-btn">隐私条款</span>
+            已阅读并同意&nbsp;<navigator open-type="switchTab" url="/pages/index/index" class="link-btn">用户协议</navigator>
+            、<navigator url="/pages/index/index" open-type="switchTab" class="link-btn">隐私条款</navigator>
         </view>
     </view>
 </template>
@@ -47,8 +47,17 @@ export default {
             }
         },
         async loginSubmit() {
+            console.log(this.loading, this.phoneValid == false, this.code.length == 0)
             if (this.loading || this.phoneValid == false || this.code.length == 0) return;
+            if (!this.userAgree) {
+                uni.showToast({
+                    icon: "error",
+                    title: "请先同意用户协议、隐私条款",
+                });
+                return;
+            }
             this.loading = true;
+            uni.showLoading();
             let res = await loginServer.loginByPhone(this.phone, this.code);
             if (res == 1) {
                 uni.switchTab({
@@ -57,6 +66,7 @@ export default {
             } else {
                 this.codeValid = false;
             }
+            uni.hideLoading();
             this.loading = false;
         },
         async getCode() {
@@ -64,7 +74,8 @@ export default {
             this.loading = true;
             uni.showLoading();
             let res = await loginServer.getCode(this.phone);
-            uni.hideLoading(); this.loading = false;
+            uni.hideLoading();
+            this.loading = false;
             if (res == 1) {
                 this.timeOut = setInterval(() => {
                     if (this.timer == 1) {

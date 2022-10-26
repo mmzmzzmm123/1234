@@ -4,14 +4,15 @@
       <view class="info">
         <view class="header" @tap="getUserInfo"><img class="img" :src="userInfo.avatar||'/static/header.png'" /></view>
         <view class="txt">
-          <view class="name">{{userInfo.name}}<img class="img" src="/static/user/refresh.png" v-show="userInfo.name" />
+          <view class="name">{{userInfo.name}}<img class="img" src="/static/user/refresh.png"
+              v-show="userInfo.name&&this.clientType == clientTypeObj.wx" @tap="loginWx" />
           </view>
           <view class="num"><img v-show="userInfo.phone" class="img" src="/static/user/phone.png" />{{userInfo.phone}}
           </view>
         </view>
       </view>
       <view class="link-box">
-        <view class="item" @tap="loginWx">
+        <view class="item">
           <view>我的报告</view>
           <view class="num">12</view>
         </view>
@@ -23,27 +24,30 @@
 
     </view>
     <view class="class-box index-margin">
-      <view class="item" v-for="item in classList">
+      <view class="item" v-for="item in classList" @tap="()=>{item.callback&&item.callback()}">
         <img class="class-img" :src="item.classPic" />
         <view>{{ item.className }}</view>
       </view>
     </view>
     <view class="un-test-box">
       <view class="box-title">未完成的测评</view>
-      <view class="order-item" v-for="order in orderList">
+      <view class="order-item" v-for="(order,index) in orderList" :key="'order'+index">
         <view class="title">{{order.title}}</view>
-        <view class="price">￥{{order.price}}</view>
-        <view class="buy-time">{{order.buyTime}}</view>
-        <view class="order-no">{{order.orderNo}}<img class="img" src="/static/user/copy.png" /></view>
-        <view class="btn">去测试</view>
+        <view class="price">￥{{order.amount}}</view>
+        <view class="buy-time">{{order.createTime}}</view>
+        <view class="order-no">{{order.orderId}}
+          <img class="img" src="/static/user/copy.png" @tap="copyOrderNo(order.orderId)" />
+        </view>
+        <view class="btn" @tap="toProduct(order.gaugeId)">去测试</view>
       </view>
       <view class="footer" v-show="orderList.length>0">已经到底了</view>
     </view>
   </view>
 </template>
 <script>
-import utils from '../../utils/common'
+import utils, { clientTypeObj } from '../../utils/common'
 import { wxLoginCallBakc, wxLogin } from '../../server/wxApi'
+import userServer from '@/server/user'
 export default {
   data() {
     return {
@@ -53,6 +57,7 @@ export default {
           classPic: "/static/user/order.png",
           className: "测评订单",
           id: 16,
+          callback: this.toOder
         },
         {
           classPic: "/static/user/coupon.png",
@@ -102,7 +107,19 @@ export default {
         orderNo: '218767823367836177313663',
         status: 1
       },],
+      clientType: '',
+      clientTypeObj: clientTypeObj
     }
+  },
+  async created() {
+    this.clientType = utils.getClientType()
+    this.userInfo = uni.getStorageSync("userInfo");
+    if (!this.userInfo) {
+      uni.navigateTo({
+        url: "/pages/login/index",
+      });
+    }
+    this.orderList = await userServer.getOrderList();
   },
   async mounted() {
     let code = utils.getParam(location.href, "code");
@@ -114,20 +131,50 @@ export default {
         }
       });
     }
+    this.loginWx();
   },
   methods: {
-    loginWx() {
-      wxLogin().then(res => {
-        if (res.code == 200) {
-          window.location.href = res.data;
-        }
-      });
+    toOder() {
+      uni.navigateTo({ url: '/pages/order/index' });
     },
-    // 点击授权按钮
+    toProduct(id) {
+      uni.navigateTo({ url: '/pages/product/index?id=' + id });
+    },
+    copyOrderNo(orderNo) {
+      var input = document.createElement('input');
+      document.body.appendChild(input);
+      input.setAttribute('value', orderNo);
+      input.select();
+      document.execCommand("copy"); // 执行浏览器复制命令
+      if (document.execCommand('copy')) {
+        document.execCommand('copy');
+        uni.showToast({
+          icon: 'error',
+          title: '内容复制成功',
+        });
+      }
+      document.body.removeChild(input);
+    },
+    loginWx() {
+      //微信打开
+      if (this.clientType == clientTypeObj.wx) {
+        //未绑定微信
+        if (uni.getStorageSync("type") == false) {
+          wxLogin().then(res => {
+            if (res.code == 200) {
+              window.location.href = res.data;
+            }
+          });
+        }
+      }
+    },
+    // 点击头像
     getUserInfo() {
-      uni.navigateTo({
-        url: "/pages/login/index",
-      });
+      if (!uni.getStorageSync("userInfo")) {
+        uni.navigateTo({
+          url: "/pages/login/index",
+        });
+      }
     },
 
   }

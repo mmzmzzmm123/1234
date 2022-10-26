@@ -12,14 +12,14 @@ export default {
       });
     }
   },
-  orderPay: async (gaugeId, amount) => {
-    let res = await httprequest.post("/app/wxPay/pay", { amount, gaugeId });
+  getOrderList: async () => {
+    let res = await httprequest.get("/app/gauge/order/list");
     if (res.code == 200) {
-      return 1;
+      return res.rows;
     } else {
       uni.showToast({
         icon: "error",
-        title: "提交订单出错",
+        title: "获取订单出错",
       });
     }
   },
