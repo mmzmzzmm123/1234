@@ -58,4 +58,9 @@ public interface PsyGaugeQuestionsResultMapper
      * @return 结果
      */
     public int deletePsyGaugeQuestionsResultByIds(Long[] ids);
+
+    int batchInsert(List<PsyGaugeQuestionsResult> list);
+
+    int deleteResult(PsyGaugeQuestionsResult psyGaugeQuestionsResult);
+
 }

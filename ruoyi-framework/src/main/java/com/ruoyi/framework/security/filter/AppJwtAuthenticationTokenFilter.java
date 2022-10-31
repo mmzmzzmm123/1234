@@ -25,7 +25,7 @@ public class AppJwtAuthenticationTokenFilter extends OncePerRequestFilter {
     @Autowired
     private AppTokenService appTokenService;
 
-    private static String[] FILTER_URLS = {"/app/user/**"};
+    private static String[] FILTER_URLS = {"/app/user/**" ,"/app/wxPay/**" ,"/app/gauge/result/**"};
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain)

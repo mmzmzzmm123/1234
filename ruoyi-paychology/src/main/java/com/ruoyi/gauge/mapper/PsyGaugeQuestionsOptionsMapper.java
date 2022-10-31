@@ -2,6 +2,8 @@ package com.ruoyi.gauge.mapper;
 
 import java.util.List;
 import com.ruoyi.gauge.domain.PsyGaugeQuestionsOptions;
+import com.ruoyi.gauge.domain.PsyGaugeQuestionsResult;
+import org.apache.ibatis.annotations.Param;
 
 /**
  * 心理测评问题选项Mapper接口
@@ -58,4 +60,6 @@ public interface PsyGaugeQuestionsOptionsMapper
      * @return 结果
      */
     public int deletePsyGaugeQuestionsOptionsByIds(Long[] ids);
+
+    List<PsyGaugeQuestionsOptions> queryOptionsByIds(@Param("ids") List<Long> ids);
 }

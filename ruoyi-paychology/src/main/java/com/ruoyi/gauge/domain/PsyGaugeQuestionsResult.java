@@ -1,9 +1,16 @@
 package com.ruoyi.gauge.domain;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.NoArgsConstructor;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import com.ruoyi.common.annotation.Excel;
 import com.ruoyi.common.core.domain.BaseEntity;
+
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+import java.util.List;
 
 /**
  * 心理测评问题结果对象 psy_gauge_questions_result
@@ -11,27 +18,30 @@ import com.ruoyi.common.core.domain.BaseEntity;
  * @author ruoyi
  * @date 2022-09-10
  */
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class PsyGaugeQuestionsResult extends BaseEntity
 {
     private static final long serialVersionUID = 1L;
 
-    /** $column.columnComment */
     private Long id;
 
-    /** $column.columnComment */
-    @Excel(name = "${comment}", readConverterExp = "$column.readConverterExp()")
+    @Excel(name = "用户")
     private String userId;
 
-    /** $column.columnComment */
-    @Excel(name = "${comment}", readConverterExp = "$column.readConverterExp()")
+    @Excel(name = "量表")
+    @NotNull(message = "量表id不能为空")
     private Long gaugeId;
 
-    /** $column.columnComment */
-    @Excel(name = "${comment}", readConverterExp = "$column.readConverterExp()")
+    @Excel(name = "问题")
+    @NotNull(message = "问题id不能为空")
     private Long questionsId;
 
-    /** $column.columnComment */
-    @Excel(name = "${comment}", readConverterExp = "$column.readConverterExp()")
+    @Excel(name = "问题选项集合")
+    @NotNull(message = "问题选项id集合不能为空")
+    private List<Long> questionsOptionsIdList;
+
     private Long questionsOptionsId;
 
     /** 得分 */
@@ -91,6 +101,14 @@ public class PsyGaugeQuestionsResult extends BaseEntity
     public String getScore() 
     {
         return score;
+    }
+
+    public List<Long> getQuestionsOptionsIdList() {
+        return questionsOptionsIdList;
+    }
+
+    public void setQuestionsOptionsIdList(List<Long> questionsOptionsIdList) {
+        this.questionsOptionsIdList = questionsOptionsIdList;
     }
 
     @Override

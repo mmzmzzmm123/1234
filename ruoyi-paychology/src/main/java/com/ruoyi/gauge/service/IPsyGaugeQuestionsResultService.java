@@ -1,6 +1,8 @@
 package com.ruoyi.gauge.service;
 
 import java.util.List;
+
+import com.ruoyi.common.core.domain.dto.LoginDTO;
 import com.ruoyi.gauge.domain.PsyGaugeQuestionsResult;
 
 /**
@@ -33,7 +35,7 @@ public interface IPsyGaugeQuestionsResultService
      * @param psyGaugeQuestionsResult 心理测评问题结果
      * @return 结果
      */
-    public int insertPsyGaugeQuestionsResult(PsyGaugeQuestionsResult psyGaugeQuestionsResult);
+    public int commitResult(PsyGaugeQuestionsResult psyGaugeQuestionsResult , LoginDTO loginDTO);
 
     /**
      * 修改心理测评问题结果

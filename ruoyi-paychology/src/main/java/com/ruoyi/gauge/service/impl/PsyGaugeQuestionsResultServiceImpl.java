@@ -1,12 +1,20 @@
 package com.ruoyi.gauge.service.impl;
 
-import java.util.List;
+import com.ruoyi.common.core.domain.dto.LoginDTO;
 import com.ruoyi.common.utils.DateUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import com.ruoyi.gauge.mapper.PsyGaugeQuestionsResultMapper;
+import com.ruoyi.gauge.domain.PsyGaugeQuestionsOptions;
 import com.ruoyi.gauge.domain.PsyGaugeQuestionsResult;
+import com.ruoyi.gauge.mapper.PsyGaugeQuestionsOptionsMapper;
+import com.ruoyi.gauge.mapper.PsyGaugeQuestionsResultMapper;
 import com.ruoyi.gauge.service.IPsyGaugeQuestionsResultService;
+import org.apache.commons.compress.utils.Lists;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import javax.annotation.Resource;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * 心理测评问题结果Service业务层处理
@@ -17,8 +25,11 @@ import com.ruoyi.gauge.service.IPsyGaugeQuestionsResultService;
 @Service
 public class PsyGaugeQuestionsResultServiceImpl implements IPsyGaugeQuestionsResultService 
 {
-    @Autowired
+    @Resource
     private PsyGaugeQuestionsResultMapper psyGaugeQuestionsResultMapper;
+
+    @Resource
+    private PsyGaugeQuestionsOptionsMapper psyGaugeQuestionsOptionsMapper;
 
     /**
      * 查询心理测评问题结果
@@ -51,10 +62,30 @@ public class PsyGaugeQuestionsResultServiceImpl implements IPsyGaugeQuestionsRes
      * @return 结果
      */
     @Override
-    public int insertPsyGaugeQuestionsResult(PsyGaugeQuestionsResult psyGaugeQuestionsResult)
+    @Transactional(rollbackFor = Exception.class)
+    public int commitResult(PsyGaugeQuestionsResult psyGaugeQuestionsResult ,LoginDTO loginDTO)
     {
-        psyGaugeQuestionsResult.setCreateTime(DateUtils.getNowDate());
-        return psyGaugeQuestionsResultMapper.insertPsyGaugeQuestionsResult(psyGaugeQuestionsResult);
+        //先删除该问题的答案
+        psyGaugeQuestionsResult.setUserId(loginDTO.getUserId());
+        psyGaugeQuestionsResultMapper.deleteResult(psyGaugeQuestionsResult);
+
+        //查询问题分数，进行数据绑定，插入数据
+        List<PsyGaugeQuestionsOptions> psyGaugeQuestionsOptions = psyGaugeQuestionsOptionsMapper.queryOptionsByIds(psyGaugeQuestionsResult.getQuestionsOptionsIdList());
+        Map<Long, Long> collect = psyGaugeQuestionsOptions.stream().collect(Collectors.toMap(PsyGaugeQuestionsOptions::getId, PsyGaugeQuestionsOptions::getValue));
+
+        List<PsyGaugeQuestionsResult> results = Lists.newArrayList();
+        for (Long id : psyGaugeQuestionsResult.getQuestionsOptionsIdList()) {
+            PsyGaugeQuestionsResult build = PsyGaugeQuestionsResult.builder()
+                    .gaugeId(psyGaugeQuestionsResult.getGaugeId())
+                    .questionsId(psyGaugeQuestionsResult.getQuestionsId())
+                    .questionsOptionsId(id)
+                    .score(collect.get(id).toString())
+                    .userId(loginDTO.getUserId())
+                    .build();
+            build.setCreateTime(DateUtils.getNowDate());
+            results.add(build);
+        }
+        return psyGaugeQuestionsResultMapper.batchInsert(results);
     }
 
     /**

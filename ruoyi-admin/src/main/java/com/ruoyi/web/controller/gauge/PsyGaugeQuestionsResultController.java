@@ -72,13 +72,13 @@ public class PsyGaugeQuestionsResultController extends BaseController
     /**
      * 新增心理测评问题结果
      */
-    @PreAuthorize("@ss.hasPermi('gauge:result:add')")
+    /*@PreAuthorize("@ss.hasPermi('gauge:result:add')")
     @Log(title = "心理测评问题结果", businessType = BusinessType.INSERT)
     @PostMapping
     public AjaxResult add(@RequestBody PsyGaugeQuestionsResult psyGaugeQuestionsResult)
     {
         return toAjax(psyGaugeQuestionsResultService.insertPsyGaugeQuestionsResult(psyGaugeQuestionsResult));
-    }
+    }*/
 
     /**
      * 修改心理测评问题结果

@@ -40,7 +40,17 @@ public class PsyGaugeQuestions extends BaseEntity
     @Excel(name = "序号")
     private Long no;
 
-    public void setId(Long id) 
+    private String userId;
+
+    public String getUserId() {
+        return userId;
+    }
+
+    public void setUserId(String userId) {
+        this.userId = userId;
+    }
+
+    public void setId(Long id)
     {
         this.id = id;
     }
