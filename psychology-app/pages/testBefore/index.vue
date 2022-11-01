@@ -14,15 +14,26 @@
     </view>
 </template>
 <script>
-import utils from '../../utils/common'
+import utils from '@/utils/common'
 export default {
+    data() {
+        return {
+            productId: '',
+            orderId: ''
+        }
+    },
+    created() {
+        this.productId = utils.getParam(location.href, "productId");
+        this.orderId = utils.getParam(location.href, "orderId");
+    },
     methods: {
         startTest() {
             uni.navigateTo({
-                url: "/pages/questionTemplate/index?productId=" + utils.getParam(location.href, "productId"),
+                url: `/pages/question/index?productId=${this.productId}&orderId=${this.orderId}`,
             });
-        },
-    }
+
+        }
+    },
 }
 </script>
 <style lang="scss">

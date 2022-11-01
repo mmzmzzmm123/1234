@@ -42,7 +42,7 @@
       }
     },
     {
-      "path": "pages/questionTemplate/index",
+      "path": "pages/question/index",
       "style": {
         "navigationBarTitleText": "知我评测"
       }

@@ -15,12 +15,13 @@ export default {
   orderPay: async (gaugeId, amount) => {
     let res = await httprequest.post("/app/wxPay/pay", { amount, gaugeId });
     if (res.code == 200) {
-      return 1;
+      return res;
     } else {
       uni.showToast({
         icon: "error",
         title: "提交订单出错",
       });
+      return res.code;
     }
   },
 };

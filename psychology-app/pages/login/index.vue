@@ -11,58 +11,71 @@
         <view class="ipt-box code-ipt-box">
             <input class="uni-input" placeholder="请输入验证码" maxlength="6" minlength="6" v-model="code" />
             <span class="code-btn" @tap="getCode" v-show="!timeOut">获取验证码</span>
-            <span class="code-btn timer" v-show="timeOut">{{timer}}S后可重新获取</span>
+            <span class="code-btn timer" v-show="timeOut">{{ timer }}S后可重新获取</span>
         </view>
         <view class="error" v-show="!codeValid">验证码错误</view>
         <view class="cue-txt">未注册手机号验证后将自动注册新账户</view>
         <view class="login-btn" @tap="loginSubmit">登录</view>
         <view class="agreement-txt">
-            <view class="user-agree-rd" :class="{'active':userAgree}" @tap="userAgree = !userAgree"></view>
+            <view class="user-agree-rd" :class="{ 'active': userAgree }" @tap="userAgree = !userAgree"></view>
             已阅读并同意&nbsp;<navigator open-type="switchTab" url="/pages/index/index" class="link-btn">用户协议</navigator>
             、<navigator url="/pages/index/index" open-type="switchTab" class="link-btn">隐私条款</navigator>
         </view>
     </view>
 </template>
 <script>
+import utils from '@/utils/common'
 import loginServer from '@/server/login.js'
 export default {
-    data() {
-        return {
-            userAgree: false,
-            code: '',
-            phone: '',
-            timer: 60,
-            timeOut: null,
-            loading: false,
-            phoneValid: true,
-            codeValid: true
-        }
-    },
-    methods: {
-        phoneBlur() {
-            if (!(/^1\d{10}$/).test(this.phone)) {
-                this.phoneValid = false;
-            } else {
-                this.phoneValid = true;
-            }
+      data() {
+          return {
+                userAgree: false,
+                  code: '',
+                  phone: '',
+                  timer: 60,
+                  timeOut: null,
+                  loading: false,
+                phoneValid: true,
+              codeValid: true
+          }
         },
-        async loginSubmit() {
-            console.log(this.loading, this.phoneValid == false, this.code.length == 0)
-            if (this.loading || this.phoneValid == false || this.code.length == 0) return;
-            if (!this.userAgree) {
-                uni.showToast({
-                    icon: "error",
-                    title: "请先同意用户协议、隐私条款",
-                });
-                return;
-            }
+              methods: {
+          phoneBlur() {
+                if (!(/^1\d{10}$/).test(this.phone)) {
+                      this.phoneValid = false;
+                    } else {
+                      this.phoneValid = true;
+                }
+            },
+              async loginSubmit() {
+                  console.log(this.loading, this.phoneValid == false, this.code.length == 0)
+                  if (this.loading || this.phoneValid == false || this.code.length == 0) return;
+                if (!this.userAgree) {
+                    uni.showToast({
+                          icon: "error",
+                            title: "请先同意用户协议、隐私条款",
+                      });
+                    return;
+              }
             this.loading = true;
             uni.showLoading();
             let res = await loginServer.loginByPhone(this.phone, this.code);
             if (res == 1) {
-                uni.switchTab({
-                    url: "/pages/user/index",
-                });
+                let callbacktype = utils.getParam(location.href, "callbacktype");
+
+                switch (callbacktype) {
+                    case '1':
+                        console.log(1)
+                        uni.switchTab({
+                            url: "/pages/user/index",
+                        }); break;
+                    case '2':
+                        console.log(2)
+                        uni.navigateTo({
+                            url: "/pages/product/index?payOrder=1&id=" + utils.getParam(location.href, "productId"),
+                        }); break;
+                }
+
             } else {
                 this.codeValid = false;
             }

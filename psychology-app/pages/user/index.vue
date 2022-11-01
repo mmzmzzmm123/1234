@@ -2,53 +2,57 @@
   <view class="user-page">
     <view class="user-info">
       <view class="info">
-        <view class="header" @tap="getUserInfo"><img class="img" :src="userInfo.avatar||'/static/header.png'" /></view>
+        <view class="header" @tap="getUserInfo"><img class="img" :src="userInfo.avatar || '/static/header.png'" />
+        </view>
         <view class="txt">
-          <view class="name">{{userInfo.name}}<img class="img" src="/static/user/refresh.png"
-              v-show="userInfo.name&&this.clientType == clientTypeObj.wx" @tap="loginWx" />
+          <view class="name">{{ userInfo.name }}<img class="img" src="/static/user/refresh.png"
+              v-show="userInfo.name && this.clientType == clientTypeObj.wx" @tap="loginWx" />
           </view>
-          <view class="num"><img v-show="userInfo.phone" class="img" src="/static/user/phone.png" />{{userInfo.phone}}
+          <view class="num"><img v-show="userInfo.phone" class="img" src="/static/user/phone.png" />{{ userInfo.phone }}
           </view>
         </view>
       </view>
       <view class="link-box">
-        <view class="item">
+        <view class="item" @tap="toReport">
           <view>我的报告</view>
-          <view class="num">12</view>
+          <view class="num">{{ reportNum }}</view>
         </view>
         <view class="item">
           <view>我的咨询</view>
-          <view class="num">12</view>
+          <view class="num"></view>
         </view>
       </view>
 
     </view>
     <view class="class-box index-margin">
-      <view class="item" v-for="item in classList" @tap="()=>{item.callback&&item.callback()}">
+      <view class="item" v-for="item in classList" @tap="() => { item.callback && item.callback() }">
         <img class="class-img" :src="item.classPic" />
         <view>{{ item.className }}</view>
       </view>
     </view>
     <view class="un-test-box">
       <view class="box-title">未完成的测评</view>
-      <view class="order-item" v-for="(order,index) in orderList" :key="'order'+index">
-        <view class="title">{{order.title}}</view>
-        <view class="price">￥{{order.amount}}</view>
-        <view class="buy-time">{{order.createTime}}</view>
-        <view class="order-no">{{order.orderId}}
+      <view class="order-item" v-for="(order, index) in orderList" :key="'order' + index">
+        <view class="title">{{ order.gaugeTitle }}</view>
+        <view class="price">￥{{ order.amount }}</view>
+        <view class="buy-time">{{ order.createTime }}</view>
+        <view class="order-no">{{ order.orderId }}
           <img class="img" src="/static/user/copy.png" @tap="copyOrderNo(order.orderId)" />
         </view>
-        <view class="btn" @tap="toProduct(order.gaugeId)">去测试</view>
+        <view class="btn" @tap="toProduct(order)">去测试</view>
       </view>
-      <view class="footer" v-show="orderList.length>0">已经到底了</view>
+      <no-data v-if="orderList.length == 0" :showToClass="true"></no-data>
+      <view class="footer" v-else>已经到底了</view>
     </view>
   </view>
 </template>
 <script>
-import utils, { clientTypeObj } from '../../utils/common'
-import { wxLoginCallBakc, wxLogin } from '../../server/wxApi'
+import utils, { clientTypeObj } from '@/utils/common'
+import { wxLoginCallBakc, wxLogin } from '@/server/wxApi'
+import noData from '@/components/noData'
 import userServer from '@/server/user'
 export default {
+  components: { noData },
   data() {
     return {
       userInfo: {},
@@ -70,43 +74,8 @@ export default {
           id: 72,
         }
       ],
-      orderList: [{
-        title: '焦虑测试 (专业版)',
-        price: '9.9',
-        buyTime: '2022-08-09 12:24:12',
-        orderNo: '218767823367836177313663',
-        status: 1
-      }, {
-        title: '焦虑测试 (专业版)',
-        price: '9.9',
-        buyTime: '2022-08-09 12:24:12',
-        orderNo: '218767823367836177313663',
-        status: 2
-      }, {
-        title: '焦虑测试 (专业版)',
-        price: '9.9',
-        buyTime: '2022-08-09 12:24:12',
-        orderNo: '218767823367836177313663',
-        status: 1
-      }, {
-        title: '焦虑测试 (专业版)',
-        price: '9.9',
-        buyTime: '2022-08-09 12:24:12',
-        orderNo: '218767823367836177313663',
-        status: 1
-      }, {
-        title: '焦虑测试 (专业版)',
-        price: '9.9',
-        buyTime: '2022-08-09 12:24:12',
-        orderNo: '218767823367836177313663',
-        status: 1
-      }, {
-        title: '焦虑测试 (专业版)',
-        price: '9.9',
-        buyTime: '2022-08-09 12:24:12',
-        orderNo: '218767823367836177313663',
-        status: 1
-      },],
+      reportNum: 0,
+      orderList: [],
       clientType: '',
       clientTypeObj: clientTypeObj
     }
@@ -116,12 +85,14 @@ export default {
     this.userInfo = uni.getStorageSync("userInfo");
     if (!this.userInfo) {
       uni.navigateTo({
-        url: "/pages/login/index",
+        url: "/pages/login/index?callbacktype=1",
       });
     }
-    this.orderList = await userServer.getOrderList();
+    this.orderList = await userServer.getOrderList(2);
+    this.reportNum = await userServer.getOrderListNum();
   },
   async mounted() {
+    //从微信登录返回
     let code = utils.getParam(location.href, "code");
     if (code) {
       wxLoginCallBakc(code).then(res => {
@@ -134,11 +105,14 @@ export default {
     this.loginWx();
   },
   methods: {
+    toReport() {
+      uni.navigateTo({ url: '/pages/report/index' });
+    },
     toOder() {
       uni.navigateTo({ url: '/pages/order/index' });
     },
-    toProduct(id) {
-      uni.navigateTo({ url: '/pages/product/index?id=' + id });
+    toProduct(order) {
+      uni.navigateTo({ url: `/pages/testBefore/index?productId=${order.gaugeId}&&orderId=${order.orderId}` });
     },
     copyOrderNo(orderNo) {
       var input = document.createElement('input');
@@ -181,7 +155,7 @@ export default {
 }
 </script>
 <style lang="scss">
-@import "../../style/common.scss";
+@import "@/style/common.scss";
 
 page {
   background-color: #f8f8f8;

@@ -4,7 +4,7 @@
       <view class="search-box">
         <img class="icon" src="/static/icon/search.png" />
         <input placeholder="搜索" class="uni-input ipt" v-model="searchValue" @confirm="searchSubmit" />
-        <view @tap="clearIpt" v-show="searchValue.length>0" class="clear-icon">
+        <view @tap="clearIpt" v-show="searchValue.length > 0" class="clear-icon">
           <img src="/static/icon/clear.png" />
         </view>
       </view>
@@ -15,11 +15,11 @@
           @tap="deleteHistory" />
       </view>
       <view class="list">
-        <view class="item" v-for="item in hostoryList" @tap="setSearchValue(item)">{{item}}</view>
+        <view class="item" v-for="item in hostoryList" @tap="setSearchValue(item)">{{ item }}</view>
       </view>
     </view>
-    <product-list-com v-if="productListShow && productList.length>0" :productList="productList"></product-list-com>
-    <view v-show="productListShow && productList.length==0" class="no-data">
+    <product-list-com v-if="productListShow && productList.length > 0" :productList="productList"></product-list-com>
+    <view v-show="productListShow && productList.length == 0" class="no-data">
       <img src="/static/nothing/search-nothing.png" />
     </view>
     <message-com :message="deleteMessage" v-if="showDeleteMessage"></message-com>
@@ -44,18 +44,11 @@ export default {
           text: '确认',
           callback: () => { }
         },
-
       },
       historyListShow: true,
       productListShow: false,
       searchValue: '',
-      hostoryList: ['沙发拉萨科技发了空白水电费'
-        , '记录卡'
-        , '宋磊的反馈技术来看发了离开家'
-        , '水电费'
-        , '水电费'
-        , '水电费'
-      ],
+      hostoryList: [],
       productList: [
         {
           title: "潜意识测试阿斯蒂芬离开家暗示分离看空间阿斯利康附近",
@@ -110,6 +103,7 @@ export default {
       this.searchValue = "";
       this.historyListShow = true;
       this.productListShow = false;
+      this.hostoryList = uni.getStorageSync("historySearch").split(',');
     },
     setSearchValue(item) {
       this.searchValue = item;
@@ -119,6 +113,7 @@ export default {
       this.historyListShow = false;
       this.productListShow = true;
       this.historyList = [...[this.searchValue], ...this.historyList];
+      uni.setStorageSync("historySearch", this.historyList.toString());
     },
     toHome() {
       uni.switchTab({
@@ -130,7 +125,7 @@ export default {
 </script>
 
 <style lang="scss">
-@import "../../style/common.scss";
+@import "@/style/common.scss";
 
 page {
   padding: 32upx 24upx;

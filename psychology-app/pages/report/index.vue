@@ -1,102 +1,31 @@
 <template>
     <view class="report-list">
         <view class="item" v-for="item in reportList">
-            <view class="title">{{item.title}}</view>
-            <view class="date">完成时间：{{item.createDate}}</view>
+            <view class="title">{{ item.title }}</view>
+            <view class="date">完成时间：{{ item.createDate }}</view>
             <view class="btn">查看报告</view>
         </view>
-        <view class="footer">已经到底了</view>
+        <no-data v-if="reportList.length == 0"></no-data>
+        <view class="footer" v-else>已经到底了</view>
     </view>
 </template>
 <script>
+import noData from '@/components/noData'
+import userServer from '@/server/user'
 export default {
+    components: { noData },
     data() {
         return {
-            reportList: [{
-                title: '焦虑测试 (专业版)',
-                createDate: '2022-08-09 12:24:12'
-            }, {
-                title: '焦虑测试 (专业版)',
-                createDate: '2022-08-09 12:24:12'
-            }, {
-                title: '焦虑测试 (专业版)',
-                createDate: '2022-08-09 12:24:12'
-            }, {
-                title: '焦虑测试 (专业版)',
-                createDate: '2022-08-09 12:24:12'
-            }, {
-                title: '焦虑测试 (专业版)',
-                createDate: '2022-08-09 12:24:12'
-            }, {
-                title: '焦虑测试 (专业版)',
-                createDate: '2022-08-09 12:24:12'
-            }, {
-                title: '焦虑测试 (专业版)',
-                createDate: '2022-08-09 12:24:12'
-            }, {
-                title: '焦虑测试 (专业版)',
-                createDate: '2022-08-09 12:24:12'
-            }, {
-                title: '焦虑测试 (专业版)',
-                createDate: '2022-08-09 12:24:12'
-            }, {
-                title: '焦虑测试 (专业版)',
-                createDate: '2022-08-09 12:24:12'
-            }, {
-                title: '焦虑测试 (专业版)',
-                createDate: '2022-08-09 12:24:12'
-            }, {
-                title: '焦虑测试 (专业版)',
-                createDate: '2022-08-09 12:24:12'
-            }, {
-                title: '焦虑测试 (专业版)',
-                createDate: '2022-08-09 12:24:12'
-            }, {
-                title: '焦虑测试 (专业版)',
-                createDate: '2022-08-09 12:24:12'
-            }, {
-                title: '焦虑测试 (专业版)',
-                createDate: '2022-08-09 12:24:12'
-            }, {
-                title: '焦虑测试 (专业版)',
-                createDate: '2022-08-09 12:24:12'
-            }, {
-                title: '焦虑测试 (专业版)',
-                createDate: '2022-08-09 12:24:12'
-            }, {
-                title: '焦虑测试 (专业版)',
-                createDate: '2022-08-09 12:24:12'
-            }, {
-                title: '焦虑测试 (专业版)',
-                createDate: '2022-08-09 12:24:12'
-            }, {
-                title: '焦虑测试 (专业版)',
-                createDate: '2022-08-09 12:24:12'
-            }, {
-                title: '焦虑测试 (专业版)',
-                createDate: '2022-08-09 12:24:12'
-            }, {
-                title: '焦虑测试 (专业版)',
-                createDate: '2022-08-09 12:24:12'
-            }, {
-                title: '焦虑测试 (专业版)',
-                createDate: '2022-08-09 12:24:12'
-            }, {
-                title: '焦虑测试 (专业版)',
-                createDate: '2022-08-09 12:24:12'
-            }, {
-                title: '焦虑测试 (专业版)',
-                createDate: '2022-08-09 12:24:12'
-            }, {
-                title: '焦虑测试 (专业版)',
-                createDate: '2022-08-09 12:24:12'
-            },]
+            reportList: []
         }
-    }
+    },
+    async created() {
+        this.reportList = await userServer.getOrderList(1);
+    },
 }
 </script>
 <style lang="scss">
-@import "../../style/common.scss";
+@import "@/style/common.scss";
 
 page {
     background-color: #f8f8f8;

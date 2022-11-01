@@ -1,13 +1,13 @@
 <template>
 	<view class="product">
 		<image class="cover" :src="productInfo.headPicture"></image>
-		<view class="title">{{productInfo.title}}</view>
+		<view class="title">{{ productInfo.title }}</view>
 		<view class="sub-title">测评简介</view>
-		<view class="price"><span class="icon">￥</span>{{productInfo.price}}</view>
+		<view class="price"><span class="icon">￥</span>{{ productInfo.price }}</view>
 		<view class="info">
-			<view class="item">{{productInfo.gaugeNum}}道精选题</view>
+			<view class="item">{{ productInfo.gaugeNum }}道精选题</view>
 			<view class="item">7页专业报告</view>
-			<view class="item">{{productInfo.num||10}}人已测</view>
+			<view class="item">{{ productInfo.num || 10 }}人已测</view>
 		</view>
 		<view class="bg-line"></view>
 		<view class="info-title title">测评介绍</view>
@@ -34,15 +34,15 @@
 		</view>
 		<view class="create-order-mask" v-show="payBoxShow">
 			<view class="order-info">
-				<view class="close-icon" @tap="payBoxShow=!payBoxShow"></view>
+				<view class="close-icon" @tap="payBoxShow = !payBoxShow"></view>
 				<view class="product-info">
 					<view class="info-box">
 						<img class="img left" :src="productInfo.headPicture" />
 						<view class="right">
 							<view class="name txt-overflow txt-overflow-line2">
-								{{productInfo.title}}</view>
-							<view class="num">{{productInfo.gaugeNum}}人已测</view>
-							<view class="price"><span class="icon">￥</span>{{productInfo.price}}</view>
+								{{ productInfo.title }}</view>
+							<view class="num">{{ productInfo.gaugeNum }}人已测</view>
+							<view class="price"><span class="icon">￥</span>{{ productInfo.price }}</view>
 						</view>
 					</view>
 					<view class="coupon-box">
@@ -53,7 +53,7 @@
 						<view class="coupon-cue">无可用优惠券<img class="img" src="/static/icon/more.png" /></view>
 					</view>
 				</view>
-				<view class="price-box">合计：<span class="price"><span class="icon">￥</span>{{productInfo.price}}</span>
+				<view class="price-box">合计：<span class="price"><span class="icon">￥</span>{{ productInfo.price }}</span>
 				</view>
 				<view class="submit-btn" @tap="submitPay">确认支付</view>
 				<view class="cue-txt">该款项仅供当次测试；可重复购买，购买成功后不予退款</view>
@@ -63,7 +63,7 @@
 </template>
 
 <script>
-import utils from '../../utils/common'
+import utils from '@/utils/common'
 import productServer from '@/server/product'
 export default {
 	data() {
@@ -71,25 +71,35 @@ export default {
 			productInfo: {},
 			payBoxShow: false,
 			productId: 0
-
 		}
 	},
 	async created() {
 		this.productId = parseInt(utils.getParam(location.href, "id"));
 		this.productInfo = await productServer.getProductInfo(this.productId);
+		this.payBoxShow = utils.getParam(location.href, "payOrder") == 1;
 	},
 	methods: {
 		async submitPay() {
-			let res = await productServer.orderPay(this.productInfo.id, this.productInfo.price);
-			if (res == 1) {
+			this.userInfo = uni.getStorageSync("userInfo");
+			if (!this.userInfo) {
 				uni.navigateTo({
-					url: "/pages/questionTemplate/index?productId=" + this.productId,
+					url: "/pages/login/index?callbacktype=2",
+				});
+				return;
+			}
+			let res = await productServer.orderPay(this.productInfo.id, this.productInfo.price);
+			if (res.code == 200) {
+				uni.navigateTo({
+					url: `/pages/testBefore/index?productId=${this.productId}&orderId=${res.data}`,
+				});
+			} else if (res == 401) {
+				uni.navigateTo({
+					url: "/pages/login/index?callbacktype=2&productId=" + this.productId,
 				});
 			}
 		},
 		startTest() {
 			this.payBoxShow = true;
-
 		},
 		toHome() {
 			uni.switchTab({
@@ -102,7 +112,7 @@ export default {
 </script>
 
 <style lang="scss">
-@import "../../style/common.scss";
+@import "@/style/common.scss";
 
 page {
 	background: #fff;

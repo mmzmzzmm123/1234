@@ -147,7 +147,7 @@ export default {
 };
 </script>
 <style lang="scss">
-@import "../../style/common.scss";
+@import "@/style/common.scss";
 
 page {
   background-color: #F8F8F8;
