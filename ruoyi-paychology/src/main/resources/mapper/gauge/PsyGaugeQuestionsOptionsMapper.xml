@@ -4,7 +4,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.ruoyi.gauge.mapper.PsyGaugeQuestionsOptionsMapper">
     
-    <resultMap type="PsyGaugeQuestionsOptions" id="PsyGaugeQuestionsOptionsResult">
+    <resultMap type="com.ruoyi.gauge.domain.PsyGaugeQuestionsOptions" id="PsyGaugeQuestionsOptionsResult">
         <result property="id"    column="id"    />
         <result property="gaugeQuestionsId"    column="gauge_questions_id"    />
         <result property="name"    column="name"    />
@@ -18,7 +18,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         select id, gauge_questions_id, name, value, img_url, type,sort from psy_gauge_questions_options
     </sql>
 
-    <select id="selectPsyGaugeQuestionsOptionsList" parameterType="PsyGaugeQuestionsOptions" resultMap="PsyGaugeQuestionsOptionsResult">
+    <select id="selectPsyGaugeQuestionsOptionsList" parameterType="com.ruoyi.gauge.domain.PsyGaugeQuestionsOptions" resultMap="PsyGaugeQuestionsOptionsResult">
         <include refid="selectPsyGaugeQuestionsOptionsVo"/>
         <where>  
             <if test="gaugeQuestionsId != null "> and gauge_questions_id = #{gaugeQuestionsId}</if>
@@ -35,7 +35,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         where id = #{id}
     </select>
         
-    <insert id="insertPsyGaugeQuestionsOptions" parameterType="PsyGaugeQuestionsOptions" useGeneratedKeys="true" keyProperty="id">
+    <insert id="insertPsyGaugeQuestionsOptions" parameterType="com.ruoyi.gauge.domain.PsyGaugeQuestionsOptions" useGeneratedKeys="true" keyProperty="id">
         insert into psy_gauge_questions_options
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="gaugeQuestionsId != null">gauge_questions_id,</if>
@@ -55,7 +55,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
          </trim>
     </insert>
 
-    <update id="updatePsyGaugeQuestionsOptions" parameterType="PsyGaugeQuestionsOptions">
+    <update id="updatePsyGaugeQuestionsOptions" parameterType="com.ruoyi.gauge.domain.PsyGaugeQuestionsOptions">
         update psy_gauge_questions_options
         <trim prefix="SET" suffixOverrides=",">
             <if test="gaugeQuestionsId != null">gauge_questions_id = #{gaugeQuestionsId},</if>
@@ -78,4 +78,13 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             #{id}
         </foreach>
     </delete>
+
+    <select id="queryOptionsByIds" resultType="com.ruoyi.gauge.domain.PsyGaugeQuestionsOptions" parameterType="arraylist">
+        select id, value from psy_gauge_questions_options
+            where id in
+        <foreach item="item" collection="ids" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </select>
+
 </mapper>

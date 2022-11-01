@@ -41,7 +41,21 @@ public class PsyGaugeQuestionsOptions extends BaseEntity
     @Excel(name = "排序")
     private Integer sort;
 
-    public void setId(Long id) 
+    private String selectedStr;
+
+    public static long getSerialVersionUID() {
+        return serialVersionUID;
+    }
+
+    public String getSelectedStr() {
+        return selectedStr;
+    }
+
+    public void setSelectedStr(String selectedStr) {
+        this.selectedStr = selectedStr;
+    }
+
+    public void setId(Long id)
     {
         this.id = id;
     }

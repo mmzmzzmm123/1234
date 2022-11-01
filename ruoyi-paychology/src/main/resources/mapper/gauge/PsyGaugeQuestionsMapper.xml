@@ -98,6 +98,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <result property="sort" column="sort"></result>
             <result property="type" column="type"></result>
             <result property="value" column="value"></result>
+            <result property="selectedStr" column="selectedStr"></result>
         </collection>
     </resultMap>
 
@@ -111,9 +112,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             opt.`name`,
             opt.sort,
             opt.type,
-            opt.value
+            opt.value,
+            result.option_id as selectedStr
         FROM
             psy_gauge_questions ques LEFT JOIN psy_gauge_questions_options opt ON ques.id = opt.gauge_questions_id
+            left join psy_gauge_questions_result result ON result.option_id = opt.id and result.user_id = #{userId}
         WHERE ques.gauge_id = #{gaugeId}
         order by ques.`no` ,opt.sort
     </select>

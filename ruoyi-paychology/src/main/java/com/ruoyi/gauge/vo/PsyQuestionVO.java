@@ -32,6 +32,6 @@ public class PsyQuestionVO {
     private List<PsyGaugeQuestionsOptions> options;
 
     @ApiModelProperty("答案")
-    private String answers;
+    private List<Long> answers;
 
 }
