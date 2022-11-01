@@ -75,7 +75,7 @@ export default {
 </script>
 
 <style lang="scss">
-@import "../../style/common.scss";
+@import "@/style/common.scss";
 
 page {
   background-color: #f8f8f8;

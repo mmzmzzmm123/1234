@@ -1,10 +1,10 @@
 <template>
     <view class="tab-box">
-        <view class="tab-item" v-for="(tab,index) in tabList" @tap="changeTab(tab.pagePath)">
+        <view class="tab-item" v-for="(tab, index) in tabList" @tap="changeTab(tab.pagePath)">
             <view class="icon">
-                <img :src="currentTabIndex == index ? tab.selectedIconPath:tab.iconPath" />
+                <img :src="currentTabIndex == index ? tab.selectedIconPath : tab.iconPath" />
             </view>
-            <view class="txt" :class="{'active':currentTabIndex == index}">{{tab.text}}</view>
+            <view class="txt" :class="{ 'active': currentTabIndex == index }">{{ tab.text }}</view>
         </view>
     </view>
 </template>
@@ -17,21 +17,21 @@ export default {
             tabList: [
                 {
                     pagePath: "/pages/index/index",
-                    iconPath: "static/menu/index.png",
-                    selectedIconPath: "static/menu/index-active.png",
+                    iconPath: "/static/menu/index.png",
+                    selectedIconPath: "/static/menu/index-active.png",
                     text: "首页"
                 },
                 {
                     pagePath: "/pages/class/index",
-                    iconPath: "static/menu/class.png",
-                    selectedIconPath: "static/menu/class-active.png",
+                    iconPath: "/static/menu/class.png",
+                    selectedIconPath: "/static/menu/class-active.png",
                     text: "分类"
                 },
 
                 {
                     pagePath: "/pages/user/index",
-                    iconPath: "static/menu/user.png",
-                    selectedIconPath: "static/menu/user-active.png",
+                    iconPath: "/static/menu/user.png",
+                    selectedIconPath: "/static/menu/user-active.png",
                     text: "我的"
                 }
             ]
@@ -42,7 +42,6 @@ export default {
     },
     methods: {
         changeTab(url) {
-            console.log('((((((((((((((((()))))))))))))))))', url)
             uni.switchTab({ url: url });
         }
     }

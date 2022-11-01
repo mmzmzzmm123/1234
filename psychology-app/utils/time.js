@@ -37,10 +37,13 @@ export function formatSeconds(value) {
   }
   return result;
 }
-
+export function clearTimeLoad() {
+  clearInterval(callTimesInter);
+}
 // 通话时间初始化
 export function callTimeLoad(ele, flag) {
   ele.innerHTML = "00:00";
+  clearInterval(callTimesInter);
   if (flag) {
     callTimesInter = setInterval(function () {
       secondIndex++;

@@ -1,40 +1,44 @@
 <template>
     <view class="question-template">
         <view class="speed-progress">
-            <view class="no">{{currentIndex}}/{{questionList.length}}</view>
+            <view class="no">{{ currentIndex }}/{{ questionList.length }}</view>
             <view class="progress">
-                <view class="percentage" :style="{width:parseInt(currentIndex/questionList.length*100)+'%'}"></view>
+                <view class="percentage" :style="{ width: parseInt(currentIndex / questionList.length * 100) + '%' }">
+                </view>
             </view>
             <view class="timer" id="timerBox"></view>
         </view>
         <view class="question-box">
-            <view class="type">{{currentQuestion.type==1?'单选题':'多选题'}}</view>
-            <view class="title">{{currentIndex}}、{{currentQuestion.title}}</view>
+            <view class="type">{{ currentQuestion.type == 1 ? '单选题' : '多选题' }}</view>
+            <view class="title">{{ currentIndex }}、{{ currentQuestion.title }}</view>
             <view class="cue">请选择最贴合实际的情况：</view>
             <view class="warn-txt" v-show="checkNull">请至少选择一个选项</view>
             <view class="answer-box">
-                <view class="item" v-for="(option,index) in currentQuestion.options"
-                    @tap="currentQuestion.answers=option.id">
-                    <view class="check-box" :class="{'radio':currentQuestion.selectType==0,'check':currentQuestion.selectType==1,
-                    'active':currentQuestion.answers==option.id}
-                    "></view>
-                    {{indexArr[index]}}、{{option.name}}
+                <view class="item" v-for="(option, index) in currentQuestion.options" @tap="answerOptions(option)">
+                    <view class="check-box" :class="{
+                        'radio': currentQuestion.selectType == 0, 'check': currentQuestion.selectType == 1,
+                        'active': (currentQuestion.answers || []).findIndex(i => { return option.id == i }) > -1
+                    }"></view>
+                    {{ indexArr[index] }}、{{ option.name }}
                 </view>
             </view>
-            <view class="btn prev-btn" @tap="toPrev" v-show="currentIndex>1">上一题</view>
-            <view class="btn next-btn" @tap="toNext" v-show="currentIndex<questionList.length">下一题</view>
-            <view class="btn next-btn" @tap="submitEvent" v-show="currentIndex==questionList.length">提交</view>
+            <view class="btn prev-btn" @tap="toPrev" v-show="currentIndex > 1">上一题</view>
+            <view class="btn next-btn" @tap="toNext" v-show="currentIndex < questionList.length">下一题</view>
+            <view class="btn next-btn" @tap="submitEvent" v-show="currentIndex == questionList.length">提交</view>
         </view>
         <view class="footer">
             @XXXXX 提供支持
         </view>
+        <message-com :message="confirmMessage" v-if="showMessage"></message-com>
     </view>
 </template>
 <script>
-import { callTimeLoad } from '../../utils/time'
-import utils from '../../utils/common'
+import messageCom from '@/components/message'
+import { callTimeLoad, clearTimeLoad } from '@/utils/time'
+import utils from '@/utils/common'
 import questionServer from '@/server/question'
 export default {
+    components: { messageCom },
     data() {
         return {
             checkNull: false,
@@ -43,20 +47,85 @@ export default {
             currentIndex: 1,
             currentQuestion: {},
             currentAnswer: null,
-            productId: 0
+            productId: 0,
+            orderId: '',
+            lastIndex: 0,
+            showMessage: false,
+            confirmMessage: {
+                title: '是否从上次中断的位置继续答题？',
+                cancelBtn: {
+                    text: '重做',
+                    callback: () => { }
+                },
+                submitBtn: {
+                    text: '继续答题',
+                    callback: () => { }
+                },
+            },
         }
     },
     async created() {
         this.productId = utils.getParam(location.href, "productId");
-        this.questionList = await questionServer.getQuestionList(this.productId);
-        this.currentQuestion = this.questionList[this.currentIndex];
+        this.orderId = utils.getParam(location.href, "orderId");
+        this.questionList = await questionServer.getQuestionList(this.productId, this.orderId);
+        this.questionList.forEach((question, index) => {
+            question.answers = question.options.filter(item => { return !!item.selectedFlag }).map(i => { return i.id })
+            if (question.answers.length > 0) {//上次答到第几题
+                this.lastIndex = index;
+            }
+        });
+        if (this.lastIndex + 1 > 1) {
+            this.confirmMessage.cancelBtn.callback = this.toFirstQuestion;
+            this.confirmMessage.submitBtn.callback = this.toLastQuestion;
+            this.showMessage = true;
+            this.currentQuestion = this.questionList[this.currentIndex - 1];
+        } else {
+            this.currentQuestion = this.questionList[this.currentIndex - 1];
+        }
     },
     mounted() {
-        callTimeLoad(document.getElementById("timerBox"), true);
+        if (this.lastIndex == 1) {
+            callTimeLoad(document.getElementById("timerBox"), true);
+        }
+    },
+    onBackPress() {
+        console.log('&&&&&&&&&&&&&&&&&&&&&');
+        return true;
     },
     methods: {
+        //重新答题，把之前的答案清空
+        toFirstQuestion() {
+            this.showMessage = false;
+            this.currentIndex = 1;
+            this.questionList.forEach((question, index) => {
+                question.answers = [];
+            });
+            callTimeLoad(document.getElementById("timerBox"), true);
+            this.currentQuestion = this.questionList[this.currentIndex - 1];
+        },
+        //继续答题，跳转到最后一题
+        toLastQuestion() {
+            this.showMessage = false;
+            this.currentIndex = this.lastIndex + 2;
+            callTimeLoad(document.getElementById("timerBox"), true);
+            this.currentQuestion = this.questionList[this.currentIndex - 1];
+        },
+        //答题
+        answerOptions(option) {
+            let index = (this.currentQuestion.answers || []).findIndex(i => { return option.id == i });
+            if (index > -1) {
+                this.currentQuestion.answers.splice(index, 1);
+            } else {
+                if (this.currentQuestion.selectType == 0) {
+                    this.currentQuestion.answers = [option.id];
+                } else {
+                    this.currentQuestion.answers = [...(this.currentQuestion.answers || []), ...[option.id]];
+                }
+            }
+        },
         //提交
         submitEvent() {
+            clearTimeLoad();
             uni.navigateTo({
                 url: "/pages/result/index?productId=" + this.productId,
             });
@@ -64,18 +133,23 @@ export default {
         //上一题
         toPrev() {
             this.currentIndex--;
-            this.currentQuestion = this.questionList[this.currentIndex];
+            this.currentQuestion = this.questionList[this.currentIndex - 1];
         },
         //下一题
-        toNext() {
+        async toNext() {
             if (this.currentIndex == this.questionList.length) {
                 return;
             }
-            if (!this.currentQuestion.answers) {
+            if (!this.currentQuestion.answers || this.currentQuestion.answers.length == 0) {
                 this.checkNull = true; return;
+            } else {
+                this.checkNull = false;
             }
-            this.currentIndex++;
-            this.currentQuestion = this.questionList[this.currentIndex];
+            let res = await questionServer.setAnswer(this.productId, this.currentQuestion.id, this.currentQuestion.answers, this.orderId);
+            if (res == 1) {
+                this.currentIndex++;
+                this.currentQuestion = this.questionList[this.currentIndex - 1];
+            }
         }
     }
 }

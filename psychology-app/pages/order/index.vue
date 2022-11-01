@@ -1,75 +1,47 @@
 <template>
     <view class="order-page">
         <view class="tab">
-            <span class="tab-item" v-for="tab in tabList" :class="{'active':tab.status==currentStatus}"
-                @tap="changeTab(tab.status)">{{tab.title}}</span>
+            <span class="tab-item" v-for="tab in tabList" :class="{ 'active': tab.status == currentStatus }"
+                @tap="changeTab(tab.status)">{{ tab.title }}</span>
         </view>
         <view class="order-item" v-for="order in orderList">
-            <view class="title">{{order.title}}</view>
-            <view class="price">{{order.price}}</view>
-            <view class="buy-time">{{order.buyTime}}</view>
-            <view class="order-no">{{order.orderNo}}</view>
-            <view class="btn" v-show="order.status ==1">去测试</view>
-            <view class="btn" v-show="order.status !=1">查看报告</view>
+            <view class="title">{{ order.gaugeTitle }}</view>
+            <view class="price">{{ order.amount }}</view>
+            <view class="buy-time">{{ order.createTime }}</view>
+            <view class="order-no">{{ order.orderId }}</view>
+            <view class="btn" v-show="order.status == 1">去测试</view>
+            <view class="btn" v-show="order.status != 1">查看报告</view>
         </view>
-        <view class="footer">已经到底了</view>
+        <no-data v-if="orderList.length == 0"></no-data>
+        <view class="footer" v-else>已经到底了</view>
     </view>
 </template>
 <script>
 
+import noData from '@/components/noData'
+import userServer from '@/server/user'
 export default {
+    components: { noData },
     data() {
         return {
-            currentStatus: 1,
-            tabList: [{ title: '全部', status: 1 }, { title: '未完成', status: 2 }, { title: '已完成', status: 3 }],
-            orderList: [{
-                title: '焦虑测试 (专业版)',
-                price: '9.9',
-                buyTime: '2022-08-09 12:24:12',
-                orderNo: '218767823367836177313663',
-                status: 1
-            }, {
-                title: '焦虑测试 (专业版)',
-                price: '9.9',
-                buyTime: '2022-08-09 12:24:12',
-                orderNo: '218767823367836177313663',
-                status: 2
-            }, {
-                title: '焦虑测试 (专业版)',
-                price: '9.9',
-                buyTime: '2022-08-09 12:24:12',
-                orderNo: '218767823367836177313663',
-                status: 1
-            }, {
-                title: '焦虑测试 (专业版)',
-                price: '9.9',
-                buyTime: '2022-08-09 12:24:12',
-                orderNo: '218767823367836177313663',
-                status: 1
-            }, {
-                title: '焦虑测试 (专业版)',
-                price: '9.9',
-                buyTime: '2022-08-09 12:24:12',
-                orderNo: '218767823367836177313663',
-                status: 1
-            }, {
-                title: '焦虑测试 (专业版)',
-                price: '9.9',
-                buyTime: '2022-08-09 12:24:12',
-                orderNo: '218767823367836177313663',
-                status: 1
-            },]
+            currentStatus: '',
+            tabList: [{ title: '全部', status: '' }, { title: '未完成', status: 2 }, { title: '已完成', status: 1 }],
+            orderList: []
         }
     },
+    async created() {
+        this.orderList = await userServer.getOrderList();
+    },
     methods: {
-        changeTab(status) {
+        async changeTab(status) {
             this.currentStatus = status;
+            this.orderList = await userServer.getOrderList(status);
         }
     }
 }
 </script>
 <style lang="scss">
-@import "../../style/common.scss";
+@import "@/style/common.scss";
 
 page {
     background-color: #f8f8f8;
