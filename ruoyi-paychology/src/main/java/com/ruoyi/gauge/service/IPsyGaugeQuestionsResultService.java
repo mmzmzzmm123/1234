@@ -62,5 +62,5 @@ public interface IPsyGaugeQuestionsResultService
      */
     public int deletePsyGaugeQuestionsResultById(Long id);
 
-    void commitResult(GaugeCommitResultDTO gaugeCommitResultDTO);
+    String commitResult(GaugeCommitResultDTO gaugeCommitResultDTO ,LoginDTO loginDTO);
 }

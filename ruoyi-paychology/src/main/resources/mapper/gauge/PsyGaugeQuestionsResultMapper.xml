@@ -99,6 +99,26 @@
 
 
     <delete id="deleteResult">
-        delete from psy_gauge_questions_result where user_id = #{userId} and question_id = #{questionsId} and order_id = #{orderId}
+        delete
+        from psy_gauge_questions_result
+        where user_id = #{userId}
+          and question_id = #{questionsId}
+          and order_id = #{orderId}
     </delete>
+
+    <select id="getSimpleResultByScores" resultType="java.lang.String">
+        SELECT pgss.result
+        FROM psy_gauge_score_setting pgss
+                 INNER JOIN (SELECT SUM(result.value) as score,
+                                    po.gauge_id,
+                                    po.order_id
+                             FROM psy_gauge_questions_result result
+                                      LEFT JOIN psy_order po ON result.order_id = po.order_id
+                             WHERE result.user_id = #{userId}
+                               AND result.order_id = #{orderId}
+                             GROUP BY po.order_id, po.gauge_id) tmp ON tmp.gauge_id = pgss.gauge_id
+        WHERE tmp.score >= pgss.`start`
+          AND pgss.`end` >= tmp.score
+        limit 1
+    </select>
 </mapper>
