@@ -3,7 +3,7 @@
         <view class="info-box">
             <view class="info-title">测评须知</view>
             <view class="img-box">
-                <image mode="widthFix" class="img-item" src="/static/index/product/22.png"></image>
+                {{ gaugeDes }}
             </view>
             <view class="begin-test" @tap="startTest">已了解，开始测试</view>
         </view>
@@ -19,12 +19,15 @@ export default {
     data() {
         return {
             productId: '',
-            orderId: ''
+            orderId: '',
+            gaugeDes: ''
         }
     },
     created() {
+        this.gaugeDes = uni.getStorageSync("gaugeDes");
         this.productId = utils.getParam(location.href, "productId");
         this.orderId = utils.getParam(location.href, "orderId");
+
     },
     methods: {
         startTest() {
@@ -68,6 +71,7 @@ page {
 
         .img-box {
             margin: 30upx 24upx;
+            white-space: pre-wrap;
         }
 
         .img-item {

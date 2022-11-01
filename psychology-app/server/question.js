@@ -32,4 +32,17 @@ export default {
       });
     }
   },
+  setResult: async (orderId) => {
+    let res = await httprequest.post("/app/gauge/result/commit", {
+      orderId,
+    });
+    if (res.code == 200) {
+      return res;
+    } else {
+      uni.showToast({
+        icon: "error",
+        title: "保存题目出错",
+      });
+    }
+  },
 };

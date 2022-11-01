@@ -87,6 +87,7 @@ page {
         margin: 24upx 32upx 0;
         padding: 32upx;
         box-sizing: border-box;
+        position: relative;
 
         &::before {
             content: '';

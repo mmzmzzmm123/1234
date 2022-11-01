@@ -4,7 +4,7 @@
         <view class="result-box">
             <view class="info-title">测试结果</view>
             <view class="info">
-                <image mode="widthFix" class="img-item" src="/static/index/product/33.png"></image>
+                {{ result }}
             </view>
         </view>
         <view class="submit-btn" @tap="getResult">保存结果</view>
@@ -38,11 +38,12 @@ export default {
     components: { tabBar },
     data() {
         return {
-            maskShow: false
+            maskShow: false,
+            result: ''
         }
     },
-    mounted() {
-        uni.showTabBar();
+    created() {
+        this.result = uni.getStorageSync("result");
     },
     methods: {
         getResult() {

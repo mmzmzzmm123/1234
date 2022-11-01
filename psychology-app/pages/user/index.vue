@@ -112,6 +112,7 @@ export default {
       uni.navigateTo({ url: '/pages/order/index' });
     },
     toProduct(order) {
+      uni.setStorageSync("gaugeDes", order.gaugeDes);
       uni.navigateTo({ url: `/pages/testBefore/index?productId=${order.gaugeId}&&orderId=${order.orderId}` });
     },
     copyOrderNo(orderNo) {
