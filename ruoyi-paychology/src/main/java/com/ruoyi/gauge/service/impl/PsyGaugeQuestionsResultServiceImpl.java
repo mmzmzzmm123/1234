@@ -2,11 +2,14 @@ package com.ruoyi.gauge.service.impl;
 
 import com.ruoyi.common.core.domain.dto.GaugeCommitResultDTO;
 import com.ruoyi.common.core.domain.dto.LoginDTO;
+import com.ruoyi.common.enums.GaugeStatus;
 import com.ruoyi.common.utils.DateUtils;
 import com.ruoyi.gauge.domain.PsyGaugeQuestionsOptions;
 import com.ruoyi.gauge.domain.PsyGaugeQuestionsResult;
+import com.ruoyi.gauge.domain.PsyOrder;
 import com.ruoyi.gauge.mapper.PsyGaugeQuestionsOptionsMapper;
 import com.ruoyi.gauge.mapper.PsyGaugeQuestionsResultMapper;
+import com.ruoyi.gauge.mapper.PsyOrderMapper;
 import com.ruoyi.gauge.service.IPsyGaugeQuestionsResultService;
 import org.apache.commons.compress.utils.Lists;
 import org.springframework.stereotype.Service;
@@ -31,6 +34,9 @@ public class PsyGaugeQuestionsResultServiceImpl implements IPsyGaugeQuestionsRes
 
     @Resource
     private PsyGaugeQuestionsOptionsMapper psyGaugeQuestionsOptionsMapper;
+
+    @Resource
+    private PsyOrderMapper psyOrderMapper;
 
     /**
      * 查询心理测评问题结果
@@ -127,11 +133,14 @@ public class PsyGaugeQuestionsResultServiceImpl implements IPsyGaugeQuestionsRes
     }
 
     @Override
-    public void commitResult(GaugeCommitResultDTO gaugeCommitResultDTO) {
+    public String commitResult(GaugeCommitResultDTO gaugeCommitResultDTO ,LoginDTO loginDTO) {
         //将该订单答题情况改为已完成
-
-
-
-
+        psyOrderMapper.updatePsyOrder(PsyOrder.builder()
+                .orderId(gaugeCommitResultDTO.getOrderId()).gaugeStatus(GaugeStatus.FINISHED.getValue())
+                .build());
+        //计算得分总和 得出结论
+        gaugeCommitResultDTO.setUserId(loginDTO.getUserId());
+        String result = psyGaugeQuestionsResultMapper.getSimpleResultByScores(gaugeCommitResultDTO);
+        return result;
     }
 }

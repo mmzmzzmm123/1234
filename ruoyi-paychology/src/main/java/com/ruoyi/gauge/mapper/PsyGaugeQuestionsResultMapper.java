@@ -1,6 +1,8 @@
 package com.ruoyi.gauge.mapper;
 
 import java.util.List;
+
+import com.ruoyi.common.core.domain.dto.GaugeCommitResultDTO;
 import com.ruoyi.gauge.domain.PsyGaugeQuestionsResult;
 
 /**
@@ -62,5 +64,7 @@ public interface PsyGaugeQuestionsResultMapper
     int batchInsert(List<PsyGaugeQuestionsResult> list);
 
     int deleteResult(PsyGaugeQuestionsResult psyGaugeQuestionsResult);
+
+    String getSimpleResultByScores(GaugeCommitResultDTO gaugeCommitResultDTO);
 
 }

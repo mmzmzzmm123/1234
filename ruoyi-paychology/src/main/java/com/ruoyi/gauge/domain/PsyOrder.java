@@ -51,6 +51,19 @@ public class PsyOrder extends BaseEntity
      */
     private String gaugeTitle;
 
+    /**
+     * 量表简介
+     */
+    private String gaugeDes;
+
+    public String getGaugeDes() {
+        return gaugeDes;
+    }
+
+    public void setGaugeDes(String gaugeDes) {
+        this.gaugeDes = gaugeDes;
+    }
+
     public String getGaugeTitle() {
         return gaugeTitle;
     }

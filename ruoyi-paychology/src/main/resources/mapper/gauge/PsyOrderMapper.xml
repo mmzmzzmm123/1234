@@ -1,41 +1,50 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper
-PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
-"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.ruoyi.gauge.mapper.PsyOrderMapper">
-    
+
     <resultMap type="com.ruoyi.gauge.domain.PsyOrder" id="PsyOrderResult">
-        <result property="id"    column="id"    />
-        <result property="orderId"    column="order_id"    />
-        <result property="gaugeId"    column="gauge_id"    />
-        <result property="orderStatus"    column="order_status"    />
-        <result property="amount"    column="amount"    />
-        <result property="gaugeStatus"    column="gauge_status"    />
-        <result property="createTime"    column="create_time"    />
-        <result property="createBy"    column="create_by"    />
+        <result property="id" column="id"/>
+        <result property="orderId" column="order_id"/>
+        <result property="gaugeId" column="gauge_id"/>
+        <result property="orderStatus" column="order_status"/>
+        <result property="amount" column="amount"/>
+        <result property="gaugeStatus" column="gauge_status"/>
+        <result property="createTime" column="create_time"/>
+        <result property="createBy" column="create_by"/>
     </resultMap>
 
     <sql id="selectPsyOrderVo">
-        select id, order_id, gauge_id, order_status, amount, gauge_status, create_time, create_by from psy_order
+        select id,
+               order_id,
+               gauge_id,
+               order_status,
+               amount,
+               gauge_status,
+               create_time,
+               create_by
+        from psy_order
     </sql>
 
     <select id="selectPsyOrderList" parameterType="com.ruoyi.gauge.domain.PsyOrder" resultMap="PsyOrderResult">
         <include refid="selectPsyOrderVo"/>
-        <where>  
-            <if test="orderId != null  and orderId != ''"> and order_id = #{orderId}</if>
-            <if test="gaugeId != null "> and gauge_id = #{gaugeId}</if>
-            <if test="orderStatus != null "> and order_status = #{orderStatus}</if>
-            <if test="amount != null "> and amount = #{amount}</if>
-            <if test="gaugeStatus != null "> and gauge_status = #{gaugeStatus}</if>
+        <where>
+            <if test="orderId != null  and orderId != ''">and order_id = #{orderId}</if>
+            <if test="gaugeId != null ">and gauge_id = #{gaugeId}</if>
+            <if test="orderStatus != null ">and order_status = #{orderStatus}</if>
+            <if test="amount != null ">and amount = #{amount}</if>
+            <if test="gaugeStatus != null ">and gauge_status = #{gaugeStatus}</if>
         </where>
     </select>
-    
+
     <select id="selectPsyOrderById" parameterType="Long" resultMap="PsyOrderResult">
         <include refid="selectPsyOrderVo"/>
         where id = #{id}
     </select>
-        
-    <insert id="insertPsyOrder" parameterType="com.ruoyi.gauge.domain.PsyOrder" useGeneratedKeys="true" keyProperty="id">
+
+    <insert id="insertPsyOrder" parameterType="com.ruoyi.gauge.domain.PsyOrder" useGeneratedKeys="true"
+            keyProperty="id">
         insert into psy_order
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="orderId != null and orderId != ''">order_id,</if>
@@ -45,7 +54,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="gaugeStatus != null">gauge_status,</if>
             <if test="createTime != null">create_time,</if>
             <if test="createBy != null and createBy != ''">create_by,</if>
-         </trim>
+        </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="orderId != null and orderId != ''">#{orderId},</if>
             <if test="gaugeId != null">#{gaugeId},</if>
@@ -54,7 +63,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="gaugeStatus != null">#{gaugeStatus},</if>
             <if test="createTime != null">#{createTime},</if>
             <if test="createBy != null and createBy != ''">#{createBy},</if>
-         </trim>
+        </trim>
     </insert>
 
     <update id="updatePsyOrder" parameterType="com.ruoyi.gauge.domain.PsyOrder">
@@ -68,38 +77,47 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="createTime != null">create_time = #{createTime},</if>
             <if test="createBy != null and createBy != ''">create_by = #{createBy},</if>
         </trim>
-        where id = #{id}
+
+        <trim prefix="where" prefixOverrides="and">
+            <if test="id != null">and id = #{id}</if>
+            <if test="orderId != null">and order_id = #{orderId}</if>
+        </trim>
+
     </update>
 
     <delete id="deletePsyOrderById" parameterType="Long">
-        delete from psy_order where id = #{id}
+        delete
+        from psy_order
+        where id = #{id}
     </delete>
 
     <delete id="deletePsyOrderByIds" parameterType="String">
-        delete from psy_order where id in 
+        delete from psy_order where id in
         <foreach item="id" collection="array" open="(" separator="," close=")">
             #{id}
         </foreach>
     </delete>
 
     <select id="queryOrderPage" resultType="com.ruoyi.gauge.domain.PsyOrder">
-        select po.id, po.order_id as orderId, po.gauge_id as gaugeId, gauge.title as gaugeTitle, po.order_status as orderStatus, po.amount, po.gauge_status as gaugeStatus, po.create_time as createTime, po.create_by as createBy
+        select po.id, po.order_id as orderId, po.gauge_id as gaugeId, gauge.title as gaugeTitle, po.order_status as
+        orderStatus,
+        po.amount, po.gauge_status as gaugeStatus, po.create_time as createTime, po.create_by as createBy
+        ,gauge.gauge_des as gaugeDes
         from psy_order po left join psy_gauge gauge ON po.gauge_id = gauge.id
         <where>
-            <if test="orderId != null  and orderId != ''"> and po.order_id = #{orderId}</if>
-            <if test="gaugeId != null "> and po.gauge_id = #{gaugeId}</if>
-            <if test="orderStatus != null "> and po.order_status = #{orderStatus}</if>
-            <if test="amount != null "> and po.amount = #{amount}</if>
-            <if test="gaugeStatus != null "> and po.gauge_status = #{gaugeStatus}</if>
-            <if test="createBy != null "> and po.create_by = #{createBy}</if>
+            <if test="orderId != null  and orderId != ''">and po.order_id = #{orderId}</if>
+            <if test="gaugeId != null ">and po.gauge_id = #{gaugeId}</if>
+            <if test="orderStatus != null ">and po.order_status = #{orderStatus}</if>
+            <if test="amount != null ">and po.amount = #{amount}</if>
+            <if test="gaugeStatus != null ">and po.gauge_status = #{gaugeStatus}</if>
+            <if test="createBy != null ">and po.create_by = #{createBy}</if>
         </where>
     </select>
 
     <select id="getMyReportNum" resultType="java.lang.Integer">
-        select
-            count(1)
-        from
-            psy_order
-        where create_by = #{userId} and gauge_status = 1
+        select count(1)
+        from psy_order
+        where create_by = #{userId}
+          and gauge_status = 1
     </select>
 </mapper>
