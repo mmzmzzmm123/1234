@@ -115,6 +115,7 @@
 
     <el-table v-loading="loading" :data="${businessName}List" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
+      <el-table-column label="序号" align="center" type="index" />
 #foreach($column in $columns)
 #set($javaField=$column.javaField)
 #set($parentheseIndex=$column.columnComment.indexOf("（"))
@@ -151,19 +152,17 @@
       <el-table-column label="${comment}" align="center" prop="${javaField}" />
 #end
 #end
-      <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
+      <el-table-column label="操作" align="center" width="200">
         <template slot-scope="scope">
           <el-button
             size="mini"
-            type="text"
-            icon="el-icon-edit"
+            type="primary"
             @click="handleUpdate(scope.row)"
             v-hasPermi="['${moduleName}:${businessName}:edit']"
           >修改</el-button>
           <el-button
             size="mini"
-            type="text"
-            icon="el-icon-delete"
+            type="danger"
             @click="handleDelete(scope.row)"
             v-hasPermi="['${moduleName}:${businessName}:remove']"
           >删除</el-button>
@@ -205,6 +204,10 @@
         <el-form-item label="${comment}">
           <file-upload v-model="form.${field}"/>
         </el-form-item>
+#elseif($column.htmlType == "videoUpload")
+  <el-form-item label="${comment}">
+    <video-upload v-model="form.${field}"/>
+  </el-form-item>
 #elseif($column.htmlType == "editor")
         <el-form-item label="${comment}">
           <editor v-model="form.${field}" :min-height="192"/>

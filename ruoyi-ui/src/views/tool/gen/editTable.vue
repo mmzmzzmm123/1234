@@ -93,6 +93,7 @@
                 <el-option label="日期控件" value="datetime" />
                 <el-option label="图片上传" value="imageUpload" />
                 <el-option label="文件上传" value="fileUpload" />
+                <el-option label="视频上传" value="videoUpload" />
                 <el-option label="富文本控件" value="editor" />
               </el-select>
             </template>
