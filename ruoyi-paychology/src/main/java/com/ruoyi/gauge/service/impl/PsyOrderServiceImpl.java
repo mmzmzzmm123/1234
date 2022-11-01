@@ -2,12 +2,15 @@ package com.ruoyi.gauge.service.impl;
 
 import java.util.List;
 
+import com.ruoyi.common.core.domain.dto.LoginDTO;
 import com.ruoyi.common.utils.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.ruoyi.gauge.mapper.PsyOrderMapper;
 import com.ruoyi.gauge.domain.PsyOrder;
 import com.ruoyi.gauge.service.IPsyOrderService;
+
+import javax.annotation.Resource;
 
 /**
  * 心理测评订单信息Service业务层处理
@@ -17,7 +20,7 @@ import com.ruoyi.gauge.service.IPsyOrderService;
  */
 @Service
 public class PsyOrderServiceImpl implements IPsyOrderService {
-    @Autowired
+    @Resource
     private PsyOrderMapper psyOrderMapper;
 
     /**
@@ -86,4 +89,17 @@ public class PsyOrderServiceImpl implements IPsyOrderService {
     public int deletePsyOrderById(Long id) {
         return psyOrderMapper.deletePsyOrderById(id);
     }
+
+    @Override
+    public List<PsyOrder> queryOrderInfo(PsyOrder psyOrder ,LoginDTO loginUser) {
+        psyOrder.setCreateBy(loginUser.getUserId());
+        return psyOrderMapper.queryOrderPage(psyOrder);
+    }
+
+    @Override
+    public int getMyReportNum(LoginDTO loginUser) {
+        return psyOrderMapper.getMyReportNum(loginUser);
+    }
+
+
 }

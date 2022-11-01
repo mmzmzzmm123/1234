@@ -1,5 +1,6 @@
 package com.ruoyi.gauge.domain;
 
+import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.NoArgsConstructor;
@@ -48,7 +49,20 @@ public class PsyGaugeQuestionsResult extends BaseEntity
     @Excel(name = "得分")
     private String score;
 
-    public void setId(Long id) 
+    /**
+     * 订单id
+     */
+    private String orderId;
+
+    public String getOrderId() {
+        return orderId;
+    }
+
+    public void setOrderId(String orderId) {
+        this.orderId = orderId;
+    }
+
+    public void setId(Long id)
     {
         this.id = id;
     }

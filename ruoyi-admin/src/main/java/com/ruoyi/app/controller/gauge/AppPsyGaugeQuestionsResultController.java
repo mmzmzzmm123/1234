@@ -2,6 +2,7 @@ package com.ruoyi.app.controller.gauge;
 
 import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.domain.AjaxResult;
+import com.ruoyi.common.core.domain.dto.GaugeCommitResultDTO;
 import com.ruoyi.common.core.domain.dto.LoginDTO;
 import com.ruoyi.framework.web.service.AppTokenService;
 import com.ruoyi.gauge.domain.PsyGaugeQuestionsResult;
@@ -38,10 +39,26 @@ public class AppPsyGaugeQuestionsResultController extends BaseController
      * 新增心理测评问题结果
      */
     @PostMapping
-    @ApiOperation("提交测评结果")
+    @ApiOperation("答题")
     public AjaxResult add(@RequestBody @Validated PsyGaugeQuestionsResult psyGaugeQuestionsResult , HttpServletRequest request)
     {
         LoginDTO loginUser = appTokenService.getLoginUser(request);
-        return toAjax(psyGaugeQuestionsResultService.commitResult(psyGaugeQuestionsResult ,loginUser));
+        return toAjax(psyGaugeQuestionsResultService.answer(psyGaugeQuestionsResult ,loginUser));
+    }
+
+
+    /**
+     * 新增心理测评问题结果
+     */
+    @PostMapping("/commit")
+    @ApiOperation("提交测评并生成结果")
+    public AjaxResult commitResult(@RequestBody @Validated GaugeCommitResultDTO gaugeCommitResultDTO , HttpServletRequest request)
+    {
+        //订单中答题状态改为已完成状态
+        
+
+        // todo 生成结果
+        LoginDTO loginUser = appTokenService.getLoginUser(request);
+        return null;
     }
 }

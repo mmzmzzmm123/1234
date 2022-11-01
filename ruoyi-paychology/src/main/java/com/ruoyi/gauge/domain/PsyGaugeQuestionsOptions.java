@@ -41,18 +41,18 @@ public class PsyGaugeQuestionsOptions extends BaseEntity
     @Excel(name = "排序")
     private Integer sort;
 
-    private String selectedStr;
+    private boolean selectedFlag;
 
     public static long getSerialVersionUID() {
         return serialVersionUID;
     }
 
-    public String getSelectedStr() {
-        return selectedStr;
+    public boolean isSelectedFlag() {
+        return selectedFlag;
     }
 
-    public void setSelectedStr(String selectedStr) {
-        this.selectedStr = selectedStr;
+    public void setSelectedFlag(boolean selectedFlag) {
+        this.selectedFlag = selectedFlag;
     }
 
     public void setId(Long id)

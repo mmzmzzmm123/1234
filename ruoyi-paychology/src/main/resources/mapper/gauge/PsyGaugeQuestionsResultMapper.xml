@@ -86,23 +86,19 @@
     <insert id="batchInsert">
         insert into psy_gauge_questions_result
         (user_id,
-        gauge_id,
         question_id,
         option_id,
         value,
-        create_time)
+        create_time,
+        order_id)
         values
         <foreach collection="list" item="item" separator=",">
-            (#{item.userId},#{item.gaugeId},#{item.questionsId},#{item.questionsOptionsId},#{item.score},#{item.createTime})
+            (#{item.userId},#{item.questionsId},#{item.questionsOptionsId},#{item.score},#{item.createTime},#{item.orderId})
         </foreach>
     </insert>
 
 
     <delete id="deleteResult">
-        delete from psy_gauge_questions_result where user_id = #{userId} and question_id = #{questionsId} and
-        option_id in
-        <foreach collection="questionsOptionsIdList" item="item" open="(" separator="," close=")">
-            #{item}
-        </foreach>
+        delete from psy_gauge_questions_result where user_id = #{userId} and question_id = #{questionsId} and order_id = #{orderId}
     </delete>
 </mapper>

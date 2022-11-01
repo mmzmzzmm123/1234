@@ -1,6 +1,8 @@
 package com.ruoyi.gauge.service;
 
 import java.util.List;
+
+import com.ruoyi.common.core.domain.dto.LoginDTO;
 import com.ruoyi.gauge.domain.PsyOrder;
 
 /**
@@ -58,4 +60,8 @@ public interface IPsyOrderService
      * @return 结果
      */
     public int deletePsyOrderById(Long id);
+
+    List<PsyOrder> queryOrderInfo(PsyOrder psyOrder ,LoginDTO loginUser);
+
+    int getMyReportNum(LoginDTO loginUser);
 }

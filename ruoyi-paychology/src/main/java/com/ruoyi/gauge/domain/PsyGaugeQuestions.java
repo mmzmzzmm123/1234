@@ -42,6 +42,19 @@ public class PsyGaugeQuestions extends BaseEntity
 
     private String userId;
 
+    /**
+     * 订单id
+     */
+    private String orderId;
+
+    public String getOrderId() {
+        return orderId;
+    }
+
+    public void setOrderId(String orderId) {
+        this.orderId = orderId;
+    }
+
     public String getUserId() {
         return userId;
     }

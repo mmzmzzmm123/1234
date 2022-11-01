@@ -1,6 +1,8 @@
 package com.ruoyi.gauge.mapper;
 
 import java.util.List;
+
+import com.ruoyi.common.core.domain.dto.LoginDTO;
 import com.ruoyi.gauge.domain.PsyOrder;
 
 /**
@@ -58,4 +60,8 @@ public interface PsyOrderMapper
      * @return 结果
      */
     public int deletePsyOrderByIds(Long[] ids);
+
+    List<PsyOrder> queryOrderPage(PsyOrder psyOrder);
+
+    int getMyReportNum(LoginDTO loginDTO);
 }

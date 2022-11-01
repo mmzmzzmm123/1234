@@ -105,6 +105,9 @@
         <el-form-item label="价格" prop="price">
           <el-input v-model="form.price" placeholder="请输入价格" />
         </el-form-item>
+        <el-form-item label="测评简介" prop="gaugeDes">
+          <el-input type="textarea" v-model="form.gaugeDes" placeholder="请输入测评简介" />
+        </el-form-item>
 
         <el-form-item label="计算类型" prop="type">
            <el-select v-model="form.type" placeholder="请选择计算类型">

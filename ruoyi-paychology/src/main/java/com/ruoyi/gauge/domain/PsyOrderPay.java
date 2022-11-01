@@ -2,7 +2,9 @@ package com.ruoyi.gauge.domain;
 
 import java.math.BigDecimal;
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.NoArgsConstructor;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import com.ruoyi.common.annotation.Excel;
@@ -15,6 +17,8 @@ import com.ruoyi.common.core.domain.BaseEntity;
  * @date 2022-10-12
  */
 @Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class PsyOrderPay extends BaseEntity
 {
     private static final long serialVersionUID = 1L;

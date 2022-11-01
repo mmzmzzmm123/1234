@@ -4,19 +4,20 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.ruoyi.gauge.mapper.PsyGaugeScoreSettingMapper">
     
-    <resultMap type="PsyGaugeScoreSetting" id="PsyGaugeScoreSettingResult">
+    <resultMap type="com.ruoyi.gauge.domain.PsyGaugeScoreSetting" id="PsyGaugeScoreSettingResult">
         <result property="id"    column="id"    />
         <result property="gaugeId"    column="gauge_id"    />
         <result property="start"    column="start"    />
         <result property="end"    column="end"    />
         <result property="proposal"    column="proposal"    />
+        <result property="result"    column="result"    />
     </resultMap>
 
     <sql id="selectPsyGaugeScoreSettingVo">
-        select id, gauge_id, start, end, proposal from psy_gauge_score_setting
+        select id, gauge_id, start, end, proposal,result from psy_gauge_score_setting
     </sql>
 
-    <select id="selectPsyGaugeScoreSettingList" parameterType="PsyGaugeScoreSetting" resultMap="PsyGaugeScoreSettingResult">
+    <select id="selectPsyGaugeScoreSettingList" parameterType="com.ruoyi.gauge.domain.PsyGaugeScoreSetting" resultMap="PsyGaugeScoreSettingResult">
         <include refid="selectPsyGaugeScoreSettingVo"/>
         <where>  
             <if test="gaugeId != null "> and gauge_id = #{gaugeId}</if>
@@ -38,7 +39,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         where id = #{id}
     </select>
         
-    <insert id="insertPsyGaugeScoreSetting" parameterType="PsyGaugeScoreSetting" useGeneratedKeys="true" keyProperty="id">
+    <insert id="insertPsyGaugeScoreSetting" parameterType="com.ruoyi.gauge.domain.PsyGaugeScoreSetting" useGeneratedKeys="true" keyProperty="id">
         insert into psy_gauge_Score_setting
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="gaugeId != null">gauge_id,</if>
@@ -54,13 +55,14 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
          </trim>
     </insert>
 
-    <update id="updatePsyGaugeScoreSetting" parameterType="PsyGaugeScoreSetting">
+    <update id="updatePsyGaugeScoreSetting" parameterType="com.ruoyi.gauge.domain.PsyGaugeScoreSetting">
         update psy_gauge_Score_setting
         <trim prefix="SET" suffixOverrides=",">
             <if test="gaugeId != null">gauge_id = #{gaugeId},</if>
             <if test="start != null">start = #{start},</if>
             <if test="end != null">end = #{end},</if>
             <if test="proposal != null">proposal = #{proposal},</if>
+            <if test="result != null">result = #{result},</if>
         </trim>
         where id = #{id}
     </update>

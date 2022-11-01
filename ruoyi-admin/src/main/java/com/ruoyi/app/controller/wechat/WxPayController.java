@@ -1,5 +1,6 @@
 package com.ruoyi.app.controller.wechat;
 
+import com.ruoyi.common.constant.RespMessageConstants;
 import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.core.domain.dto.LoginDTO;
 import com.ruoyi.common.core.domain.dto.WxPayDTO;
@@ -37,9 +38,7 @@ public class WxPayController {
     @PostMapping("pay")
     public AjaxResult pay(@RequestBody WxPayDTO wxPayDTO , HttpServletRequest request){
         LoginDTO loginUser = AppTokenService.getInstance().getLoginUser(request);
-        wxpayService.pay(wxPayDTO ,loginUser);
-
-        return AjaxResult.success("");
+        return AjaxResult.success(RespMessageConstants.OPERATION_SUCCESS ,wxpayService.pay(wxPayDTO ,loginUser));
     }
 
 

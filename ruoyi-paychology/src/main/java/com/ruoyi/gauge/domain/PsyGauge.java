@@ -57,7 +57,18 @@ public class PsyGauge extends BaseEntity
     @Excel(name = "测评类型")
     private Integer type;
 
-    public void setId(Long id) 
+    @Excel(name = "测评简介")
+    private String gaugeDes;
+
+    public String getGaugeDes() {
+        return gaugeDes;
+    }
+
+    public void setGaugeDes(String gaugeDes) {
+        this.gaugeDes = gaugeDes;
+    }
+
+    public void setId(Long id)
     {
         this.id = id;
     }

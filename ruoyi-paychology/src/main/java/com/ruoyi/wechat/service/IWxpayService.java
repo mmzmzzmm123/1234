@@ -14,7 +14,7 @@ public interface IWxpayService {
      * 微信支付
      * @param wxPayDTO
      */
-    void pay(WxPayDTO wxPayDTO , LoginDTO loginUser);
+    String pay(WxPayDTO wxPayDTO , LoginDTO loginUser);
 
 
 }

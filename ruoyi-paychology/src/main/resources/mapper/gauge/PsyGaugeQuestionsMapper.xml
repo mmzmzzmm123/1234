@@ -98,7 +98,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <result property="sort" column="sort"></result>
             <result property="type" column="type"></result>
             <result property="value" column="value"></result>
-            <result property="selectedStr" column="selectedStr"></result>
+            <result property="selectedFlag" column="selectedFlag"></result>
         </collection>
     </resultMap>
 
@@ -113,10 +113,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             opt.sort,
             opt.type,
             opt.value,
-            result.option_id as selectedStr
+            (CASE WHEN isnull(result.option_id) then false else true end) as selectedFlag
         FROM
             psy_gauge_questions ques LEFT JOIN psy_gauge_questions_options opt ON ques.id = opt.gauge_questions_id
-            left join psy_gauge_questions_result result ON result.option_id = opt.id and result.user_id = #{userId}
+            left join psy_gauge_questions_result result ON result.option_id = opt.id and result.user_id = #{userId} and result.order_id = #{orderId}
         WHERE ques.gauge_id = #{gaugeId}
         order by ques.`no` ,opt.sort
     </select>

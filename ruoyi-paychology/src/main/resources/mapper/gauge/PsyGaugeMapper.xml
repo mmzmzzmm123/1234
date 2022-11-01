@@ -20,10 +20,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="createTime"    column="create_time"    />
         <result property="updateBy"      column="update_by"      />
         <result property="updateTime"    column="update_time"    />
+        <result property="gaugeDes"    column="gauge_des"    />
     </resultMap>
 
     <sql id="selectPsyGaugeVo">
-        select id, title, subtitle, head_picture, introduce, gauge_class, gauge_num, price, num, type,create_by, create_time, update_by, update_time, remark  from psy_gauge
+        select id, title, subtitle, head_picture, introduce, gauge_class, gauge_num, price, num, type,create_by, create_time, update_by, update_time, remark,gauge_des  from psy_gauge
     </sql>
 
     <select id="selectPsyGaugeList" parameterType="com.ruoyi.gauge.domain.PsyGauge" resultMap="PsyGaugeResult">
@@ -38,6 +39,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="price != null "> and price = #{price}</if>
             <if test="num != null "> and num = #{num}</if>
             <if test="type != null "> and type = #{type}</if>
+            <if test="gaugeDes != null "> and gauge_des = #{gaugeDes}</if>
         </where>
     </select>
     
@@ -59,6 +61,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="num != null">num,</if>
             <if test="type != null">type,</if>
             <if test="createBy != null and createBy != ''">create_by,</if>
+            <if test="gaugeDes != null">gauge_des,</if>
 
          </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
@@ -72,6 +75,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="num != null">#{num},</if>
             <if test="type != null">#{type},</if>
             <if test="createBy != null and createBy != ''">#{createBy},</if>
+            <if test="gaugeDes != null">#{gaugeDes},</if>
          </trim>
     </insert>
 
@@ -88,6 +92,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="num != null">num = #{num},</if>
             <if test="type != null">type = #{type},</if>
             <if test="updateBy != null and updateBy != ''">update_by = #{updateBy},</if>
+            <if test="gaugeDes != null">gauge_des = #{gaugeDes},</if>
         </trim>
         where id = #{id}
     </update>

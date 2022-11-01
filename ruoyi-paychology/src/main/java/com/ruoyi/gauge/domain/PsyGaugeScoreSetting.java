@@ -34,7 +34,18 @@ public class PsyGaugeScoreSetting extends BaseEntity
     @Excel(name = "建议")
     private String proposal;
 
-    public void setId(Long id) 
+    @Excel(name = "结论")
+    private String result;
+
+    public String getResult() {
+        return result;
+    }
+
+    public void setResult(String result) {
+        this.result = result;
+    }
+
+    public void setId(Long id)
     {
         this.id = id;
     }

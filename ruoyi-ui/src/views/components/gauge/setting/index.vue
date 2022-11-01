@@ -20,6 +20,14 @@
                 <el-form-item label="建议">
                   <image-upload v-model="props.row.proposal" @input="modifySetting(props.row)" />
                 </el-form-item>
+                <el-form-item label="结论">
+                  <el-input
+                    type="textarea"
+                    :rows="2"
+                    placeholder="请输入内容"
+                    v-model="props.row.result" @blur="modifySetting(props.row)">
+                  </el-input>
+                </el-form-item>
 
               </el-form>
             </template>

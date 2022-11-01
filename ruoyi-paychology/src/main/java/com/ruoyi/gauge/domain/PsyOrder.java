@@ -2,7 +2,9 @@ package com.ruoyi.gauge.domain;
 
 import java.math.BigDecimal;
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.NoArgsConstructor;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import com.ruoyi.common.annotation.Excel;
@@ -15,6 +17,8 @@ import com.ruoyi.common.core.domain.BaseEntity;
  * @date 2022-10-12
  */
 @Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class PsyOrder extends BaseEntity
 {
     private static final long serialVersionUID = 1L;
@@ -42,7 +46,20 @@ public class PsyOrder extends BaseEntity
     @Excel(name = "测评完成情况(1-已完成，2-未完成)")
     private Integer gaugeStatus;
 
-    public void setId(Long id) 
+    /**
+     * 量表标题
+     */
+    private String gaugeTitle;
+
+    public String getGaugeTitle() {
+        return gaugeTitle;
+    }
+
+    public void setGaugeTitle(String gaugeTitle) {
+        this.gaugeTitle = gaugeTitle;
+    }
+
+    public void setId(Long id)
     {
         this.id = id;
     }

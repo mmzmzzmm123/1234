@@ -1,5 +1,6 @@
 package com.ruoyi.gauge.service.impl;
 
+import com.ruoyi.common.core.domain.dto.GaugeCommitResultDTO;
 import com.ruoyi.common.core.domain.dto.LoginDTO;
 import com.ruoyi.common.utils.DateUtils;
 import com.ruoyi.gauge.domain.PsyGaugeQuestionsOptions;
@@ -63,7 +64,7 @@ public class PsyGaugeQuestionsResultServiceImpl implements IPsyGaugeQuestionsRes
      */
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public int commitResult(PsyGaugeQuestionsResult psyGaugeQuestionsResult ,LoginDTO loginDTO)
+    public int answer(PsyGaugeQuestionsResult psyGaugeQuestionsResult ,LoginDTO loginDTO)
     {
         //先删除该问题的答案
         psyGaugeQuestionsResult.setUserId(loginDTO.getUserId());
@@ -81,6 +82,7 @@ public class PsyGaugeQuestionsResultServiceImpl implements IPsyGaugeQuestionsRes
                     .questionsOptionsId(id)
                     .score(collect.get(id).toString())
                     .userId(loginDTO.getUserId())
+                    .orderId(psyGaugeQuestionsResult.getOrderId())
                     .build();
             build.setCreateTime(DateUtils.getNowDate());
             results.add(build);
@@ -122,5 +124,14 @@ public class PsyGaugeQuestionsResultServiceImpl implements IPsyGaugeQuestionsRes
     public int deletePsyGaugeQuestionsResultById(Long id)
     {
         return psyGaugeQuestionsResultMapper.deletePsyGaugeQuestionsResultById(id);
+    }
+
+    @Override
+    public void commitResult(GaugeCommitResultDTO gaugeCommitResultDTO) {
+        //将该订单答题情况改为已完成
+
+
+
+
     }
 }

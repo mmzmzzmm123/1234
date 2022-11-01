@@ -1,11 +1,14 @@
 package com.ruoyi.app.controller.order;
 
 import com.ruoyi.common.annotation.Log;
+import com.ruoyi.common.constant.RespMessageConstants;
 import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.domain.AjaxResult;
+import com.ruoyi.common.core.domain.dto.LoginDTO;
 import com.ruoyi.common.core.page.TableDataInfo;
 import com.ruoyi.common.enums.BusinessType;
 import com.ruoyi.common.utils.poi.ExcelUtil;
+import com.ruoyi.framework.web.service.AppTokenService;
 import com.ruoyi.gauge.domain.PsyOrder;
 import com.ruoyi.gauge.service.IPsyOrderService;
 import io.swagger.annotations.Api;
@@ -15,6 +18,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
@@ -31,15 +35,19 @@ public class AppPsyOrderController extends BaseController {
     @Autowired
     private IPsyOrderService psyOrderService;
 
+    @Autowired
+    private AppTokenService appTokenService;
+
     /**
      * 查询心理测评订单信息列表
      */
 //    @PreAuthorize("@ss.hasPermi('system:order:list')")
     @GetMapping("/list")
     @ApiOperation("获取订单分页列表")
-    public TableDataInfo list(PsyOrder psyOrder) {
+    public TableDataInfo list(PsyOrder psyOrder , HttpServletRequest request) {
+        LoginDTO loginUser = appTokenService.getLoginUser(request);
         startPage();
-        List<PsyOrder> list = psyOrderService.selectPsyOrderList(psyOrder);
+        List<PsyOrder> list = psyOrderService.queryOrderInfo(psyOrder ,loginUser);
         return getDataTable(list);
     }
 
@@ -65,4 +73,16 @@ public class AppPsyOrderController extends BaseController {
     public AjaxResult getInfo(@PathVariable("id") Long id) {
         return AjaxResult.success(psyOrderService.selectPsyOrderById(id));
     }
+
+
+    /**
+     * 获取我的报告数量
+     */
+    @PostMapping(value = "/getMyReportNum")
+    @ApiOperation("获取我的报告数量")
+    public AjaxResult getMyReportNum(HttpServletRequest request) {
+        LoginDTO loginUser = appTokenService.getLoginUser(request);
+        return AjaxResult.success(RespMessageConstants.OPERATION_SUCCESS ,psyOrderService.getMyReportNum(loginUser));
+    }
+
 }
