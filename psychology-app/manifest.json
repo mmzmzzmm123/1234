@@ -86,12 +86,12 @@
       "https": false,
       "proxy": {
         "/app": {
-          "target": "http://192.168.137.198:8080/",
+          "target": "http://qe8i9y.natappfree.cc",
           "changeOrigin": true,
           "secure": false
         },
         "/profile": {
-          "target": "http://192.168.137.198:8080/",
+          "target": "http://qe8i9y.natappfree.cc",
           "changeOrigin": true,
           "secure": false
         },

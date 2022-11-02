@@ -7,7 +7,7 @@ export default {
       //   uni.showToast({
       //     title: res.data.msg,
       //   });
-      return 1;
+      return res.data.data;
     } else {
       uni.showToast({
         title: res.data.msg,

@@ -89,7 +89,8 @@ export default {
             let res = await loginServer.getCode(this.phone);
             uni.hideLoading();
             this.loading = false;
-            if (res == 1) {
+            if (res) {
+                this.code = res;
                 this.timeOut = setInterval(() => {
                     if (this.timer == 1) {
                         clearInterval(this.timeOut);
