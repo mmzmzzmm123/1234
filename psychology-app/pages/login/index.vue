@@ -27,55 +27,55 @@
 import utils from '@/utils/common'
 import loginServer from '@/server/login.js'
 export default {
-      data() {
-          return {
-                userAgree: false,
-                  code: '',
-                  phone: '',
-                  timer: 60,
-                  timeOut: null,
-                  loading: false,
-                phoneValid: true,
-              codeValid: true
-          }
+    data() {
+        return {
+            userAgree: false,
+            code: '',
+            phone: '',
+            timer: 60,
+            timeOut: null,
+            loading: false,
+            phoneValid: true,
+            codeValid: true
+        }
+    },
+    methods: {
+        phoneBlur() {
+            if (!(/^1\d{10}$/).test(this.phone)) {
+                this.phoneValid = false;
+            } else {
+                this.phoneValid = true;
+            }
         },
-              methods: {
-          phoneBlur() {
-                if (!(/^1\d{10}$/).test(this.phone)) {
-                      this.phoneValid = false;
-                    } else {
-                      this.phoneValid = true;
-                }
-            },
-              async loginSubmit() {
-                  console.log(this.loading, this.phoneValid == false, this.code.length == 0)
-                  if (this.loading || this.phoneValid == false || this.code.length == 0) return;
-                if (!this.userAgree) {
-                    uni.showToast({
-                          icon: "error",
-                            title: "请先同意用户协议、隐私条款",
-                      });
-                    return;
-              }
+        async loginSubmit() {
+            console.log(this.loading, this.phoneValid == false, this.code.length == 0)
+            if (this.loading || this.phoneValid == false || this.code.length == 0) return;
+            if (!this.userAgree) {
+                uni.showToast({
+                    icon: "error",
+                    title: "请先同意用户协议、隐私条款",
+                });
+                return;
+            }
             this.loading = true;
             uni.showLoading();
             let res = await loginServer.loginByPhone(this.phone, this.code);
             if (res == 1) {
                 let callbacktype = utils.getParam(location.href, "callbacktype");
-
                 switch (callbacktype) {
                     case '1':
-                        console.log(1)
                         uni.switchTab({
                             url: "/pages/user/index",
                         }); break;
                     case '2':
-                        console.log(2)
                         uni.navigateTo({
                             url: "/pages/product/index?payOrder=1&id=" + utils.getParam(location.href, "productId"),
                         }); break;
+                    default:
+                        uni.switchTab({
+                            url: "/pages/user/index",
+                        }); break;
                 }
-
             } else {
                 this.codeValid = false;
             }

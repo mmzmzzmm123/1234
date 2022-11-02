@@ -37,7 +37,7 @@
 				<view class="close-icon" @tap="payBoxShow = !payBoxShow"></view>
 				<view class="product-info">
 					<view class="info-box">
-						<img class="img left" :src="productInfo.headPicture" />
+						<img class="img left" :src="productInfo.listShowPicture" />
 						<view class="right">
 							<view class="name txt-overflow txt-overflow-line2">
 								{{ productInfo.title }}</view>
@@ -83,7 +83,7 @@ export default {
 			this.userInfo = uni.getStorageSync("userInfo");
 			if (!this.userInfo) {
 				uni.navigateTo({
-					url: "/pages/login/index?callbacktype=2",
+					url: "/pages/login/index?callbacktype=2&productId=" + this.productId,
 				});
 				return;
 			}

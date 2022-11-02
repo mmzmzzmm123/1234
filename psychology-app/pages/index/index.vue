@@ -27,11 +27,11 @@
     <view class="hot-box">
       <view class="index-title">热门推荐</view>
       <view class="list-box">
-        <view class="item" v-for="(item, index) in hotList" @tap="toProduct('/pages/product/index?id='+item.id)">
+        <view class="item" v-for="(item, index) in hotList" @tap="toProduct('/pages/product/index?id=' + item.id)">
           <view class="ranking" v-if="index < 3">Top{{ index + 1 }}</view>
-          <img class="img" :src="item.headPicture" />
+          <img class="img" :src="item.listShowPicture" />
           <span class="txt txt-overflow txt-overflow-line2">{{
-          item.title
+              item.title
           }}</span>
           <span class="price">
             <span class="icon">￥</span>{{ item.price }}
@@ -42,21 +42,22 @@
     <view class="img-box index-margin">
       <view class="index-title">
         限时福利
-        <span class="more">
+        <span class="more" @tap="toMore">
           更多
           <img class="img" src="/static/index/more.png" />
         </span>
       </view>
       <view class="img-item-box">
-        <view class="left-img" @tap="toProduct(bannerList2.length>0?bannerList2[0].linkUrl:'')">
-          <img :src="bannerList2.length>0?bannerList2[0].bannerUrl:''" />
+        <view class="left-img" v-show="bannerList2.length > 0"
+          @tap="toProduct(bannerList2.length > 0 ? bannerList2[0].linkUrl : '')">
+          <img :src="bannerList2.length > 0 ? bannerList2[0].bannerUrl : ''" />
         </view>
-        <view class="right-img-box">
-          <view class="right-img" @tap="toProduct(bannerList2.length>1?bannerList2[1].linkUrl:'')">
-            <img :src="bannerList2.length>1?bannerList2[1].bannerUrl:''" />
+        <view class="right-img-box" v-show="bannerList2.length > 2">
+          <view class="right-img" @tap="toProduct(bannerList2.length > 1 ? bannerList2[1].linkUrl : '')">
+            <img :src="bannerList2.length > 1 ? bannerList2[1].bannerUrl : ''" />
           </view>
-          <view class="right-img" @tap="toProduct(bannerList2.length>2?bannerList2[2].linkUrl:'')">
-            <img :src="bannerList2.length>2?bannerList2[2].bannerUrl:''" />
+          <view class="right-img" @tap="toProduct(bannerList2.length > 2 ? bannerList2[2].linkUrl : '')">
+            <img :src="bannerList2.length > 2 ? bannerList2[2].bannerUrl : ''" />
           </view>
         </view>
       </view>
@@ -64,7 +65,7 @@
     <view class="img-box index-margin">
       <view class="index-title">
         全面评估
-        <span class="more">
+        <span class="more" @tap="toMore">
           更多
           <img class="img" src="/static/index/more.png" />
         </span>
@@ -74,7 +75,7 @@
       </view>
     </view>
     <view class="product-box index-margin">
-      <view class="index-title">
+      <view class="index-title" @tap="toMore">
         精选测评
         <span class="more">
           更多
@@ -143,6 +144,11 @@ export default {
         url: "/pages/search/index",
       });
     },
+    toMore() {
+      uni.switchTab({
+        url: "/pages/class/index",
+      });
+    }
   },
 };
 </script>
@@ -219,6 +225,7 @@ page {
       display: flex;
       flex-direction: row;
       overflow-x: auto;
+      height: 350upx;
 
       .item {
         display: flex;
@@ -281,6 +288,8 @@ page {
   }
 
   .img-box {
+    min-height: 344upx;
+
     .img-item-box {
       width: 682upx;
       display: flex;

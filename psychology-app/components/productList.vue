@@ -1,18 +1,18 @@
 <template>
     <view class="product-list-box">
-        <view class="product-item" v-for="product in (productList||[])" @tap="toProduct(product)">
+        <view class="product-item" v-for="product in (productList || [])" @tap="toProduct(product)">
             <view class="txt-box">
                 <view class="title txt-overflow txt-overflow-line2">{{
-                product.title
+                        product.title
                 }}</view>
                 <view class="sub-title txt-overflow">{{ product.subtitle }}</view>
                 <view class="price"><span class="icon">￥</span>{{ product.price }}</view>
             </view>
             <view class="img-box">
-                <img :src="product.headPicture" />
+                <img :src="product.listShowPicture" />
             </view>
         </view>
-        <view class="footer" v-show="productList.length>0">已经到底了</view>
+        <view class="footer" v-show="productList.length > 0">已经到底了</view>
     </view>
 </template>
 <script>
@@ -24,7 +24,7 @@ export default {
     methods: {
         toProduct(product) {
             uni.navigateTo({
-                url: "/pages/product/index?productId=" + product.id,
+                url: "/pages/product/index?id=" + product.id,
             });
         }
     }

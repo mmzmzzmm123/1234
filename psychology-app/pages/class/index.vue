@@ -13,22 +13,22 @@
         </view>
       </view>
       <view class="item-list">
-        <view class="current-class">{{className}}</view>
-        <view class="product-item" v-show=" productList.length>0" v-for="product in (productList||[])"
-          @tap="toProduct(product)">
+        <view class="current-class">{{ className }}</view>
+        <view class="product-item" v-show="productList.length > 0" v-for="product in (productList || [])"
+          @tap="toProduct(product.id)">
           <view class="txt-box">
             <view class="title txt-overflow txt-overflow-line2">{{
-            product.title
+                product.title
             }}</view>
             <view class="sub-title txt-overflow">{{ product.subtitle }}</view>
             <view class="price"><span class="icon">￥</span>{{ product.price }}</view>
           </view>
           <view class="img-box">
-            <img :src="product.headPicture" />
+            <img :src="product.listShowPicture" />
           </view>
         </view>
-        <view class="footer" v-show=" productList.length>0">已经到底了</view>
-        <view v-show=" productList.length==0" class="no-data">
+        <view class="footer" v-show="productList.length > 0">已经到底了</view>
+        <view v-show="productList.length == 0" class="no-data">
           <img class="img" src="/static/nothing/search-nothing.png" />
         </view>
       </view>
@@ -65,9 +65,9 @@ export default {
       this.className = currentClass.name;
       this.productList = await classServer.getProductByClassId(this.classSelectedIndex);
     },
-    toProductList(productClassId) {
+    toProduct(id) {
       uni.navigateTo({
-        url: "/pages/product/productList?productClassId=" + productClassId,
+        url: "/pages/product/index?id=" + id,
       });
     },
   },

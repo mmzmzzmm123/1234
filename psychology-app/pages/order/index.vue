@@ -9,8 +9,8 @@
             <view class="price">{{ order.amount }}</view>
             <view class="buy-time">{{ order.createTime }}</view>
             <view class="order-no">{{ order.orderId }}</view>
-            <view class="btn" v-show="order.status == 1">去测试</view>
-            <view class="btn" v-show="order.status != 1">查看报告</view>
+            <view class="btn" v-show="order.status == 1" @tap="toTest(order)">去测试</view>
+            <view class="btn" v-show="order.status != 1" @tap="toResult(order)">查看报告</view>
         </view>
         <no-data v-if="orderList.length == 0"></no-data>
         <view class="footer" v-else>已经到底了</view>
@@ -20,6 +20,7 @@
 
 import noData from '@/components/noData'
 import userServer from '@/server/user'
+import questionServer from '@/server/question'
 export default {
     components: { noData },
     data() {
@@ -33,10 +34,24 @@ export default {
         this.orderList = await userServer.getOrderList();
     },
     methods: {
+        toTest(order) {
+            uni.setStorageSync("gaugeDes", order.gaugeDes);
+            uni.navigateTo({ url: `/pages/testBefore/index?productId=${order.gaugeId}&&orderId=${order.orderId}` });
+        },
         async changeTab(status) {
             this.currentStatus = status;
             this.orderList = await userServer.getOrderList(status);
-        }
+        },
+        async toResult(order) {
+            let result = await questionServer.setResult(order.orderId);
+            if (result.code == 200) {
+                uni.setStorageSync("result", result.data);
+                uni.navigateTo({
+                    url: "/pages/result/index?productId=" + order.gaugeId,
+                });
+            }
+
+        },
     }
 }
 </script>

@@ -36,7 +36,7 @@ export default {
       //   uni.showToast({
       //     title: res.data.msg,
       //   });
-      return res.data.msg;
+      return res.msg;
     }
   },
 };

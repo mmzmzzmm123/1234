@@ -22,11 +22,9 @@ export const wxLogin = () => {
     httprequest
       .get(`/app/user/wxLogin`)
       .then((res) => {
-        alert(1);
         resolve(res);
       })
       .catch((err) => {
-        alert(2);
         reject(err);
       });
   });
@@ -36,11 +34,9 @@ export const wxLoginCallBakc = (code) => {
     httprequest
       .get(`/app/user/callBack?code=` + code)
       .then((res) => {
-        alert(3);
         resolve(res);
       })
       .catch((err) => {
-        alert(5);
         reject(err);
       });
   });

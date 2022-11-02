@@ -39,7 +39,7 @@
         <view class="order-no">{{ order.orderId }}
           <img class="img" src="/static/user/copy.png" @tap="copyOrderNo(order.orderId)" />
         </view>
-        <view class="btn" @tap="toProduct(order)">去测试</view>
+        <view class="btn" @tap="toTest(order)">去测试</view>
       </view>
       <no-data v-if="orderList.length == 0" :showToClass="true"></no-data>
       <view class="footer" v-else>已经到底了</view>
@@ -87,9 +87,10 @@ export default {
       uni.navigateTo({
         url: "/pages/login/index?callbacktype=1",
       });
+    } else {
+      this.orderList = await userServer.getOrderList(2);
+      this.reportNum = await userServer.getOrderListNum();
     }
-    this.orderList = await userServer.getOrderList(2);
-    this.reportNum = await userServer.getOrderListNum();
   },
   async mounted() {
     //从微信登录返回
@@ -111,7 +112,7 @@ export default {
     toOder() {
       uni.navigateTo({ url: '/pages/order/index' });
     },
-    toProduct(order) {
+    toTest(order) {
       uni.setStorageSync("gaugeDes", order.gaugeDes);
       uni.navigateTo({ url: `/pages/testBefore/index?productId=${order.gaugeId}&&orderId=${order.orderId}` });
     },
