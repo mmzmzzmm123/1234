@@ -90,6 +90,9 @@
         <el-form-item label="头部图片">
           <image-upload v-model="form.headPicture" />
         </el-form-item>
+        <el-form-item label="列表展示图片">
+          <image-upload v-model="form.listShowPicture" />
+        </el-form-item>
         <el-form-item label="测评描述">
           <image-upload v-model="form.introduce" />
         </el-form-item>
