@@ -60,6 +60,17 @@ public class PsyGauge extends BaseEntity
     @Excel(name = "测评简介")
     private String gaugeDes;
 
+    @Excel(name = "列表展示图片")
+    private String listShowPicture;
+
+    public String getListShowPicture() {
+        return listShowPicture;
+    }
+
+    public void setListShowPicture(String listShowPicture) {
+        this.listShowPicture = listShowPicture;
+    }
+
     public String getGaugeDes() {
         return gaugeDes;
     }

@@ -67,12 +67,14 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             gauge.subtitle,
             gauge.head_picture as headPicture,
             gauge.introduce,
-            gauge.gauge_class,
+            gauge.gauge_class as gaugeClass,
             gauge.remark,
-            gauge.price
+            gauge.price,
+            gauge.list_show_picture as listShowPicture
         FROM
             psy_gauge gauge left join psy_gauge_label label ON gauge.id = label.gauge_id
         WHERE label.label = #{labelCode}
+        GROUP BY gauge.id
     </select>
 
     <select id="queryLabelPage" resultType="com.ruoyi.gauge.domain.PsyGaugeLabel">
