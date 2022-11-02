@@ -1,9 +1,9 @@
 <template>
     <view class="report-list">
         <view class="item" v-for="item in reportList">
-            <view class="title">{{ item.title }}</view>
-            <view class="date">完成时间：{{ item.createDate }}</view>
-            <view class="btn">查看报告</view>
+            <view class="title">{{ item.gaugeTitle }}</view>
+            <view class="date">完成时间：{{ item.createTime }}</view>
+            <view class="btn" @tap="toResult(item.orderId)">查看报告</view>
         </view>
         <no-data v-if="reportList.length == 0"></no-data>
         <view class="footer" v-else>已经到底了</view>
@@ -12,6 +12,7 @@
 <script>
 import noData from '@/components/noData'
 import userServer from '@/server/user'
+import questionServer from '@/server/question'
 export default {
     components: { noData },
     data() {
@@ -21,6 +22,17 @@ export default {
     },
     async created() {
         this.reportList = await userServer.getOrderList(1);
+    },
+    methods: {
+        async toResult(orderId) {
+            let result = await questionServer.setResult(orderId);
+            if (result.code == 200) {
+                uni.setStorageSync("result", result.data);
+                uni.navigateTo({
+                    url: "/pages/result/index?productId=" + this.productId,
+                });
+            }
+        }
     },
 }
 </script>

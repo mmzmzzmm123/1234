@@ -89,6 +89,7 @@ export default {
 			}
 			let res = await productServer.orderPay(this.productInfo.id, this.productInfo.price);
 			if (res.code == 200) {
+				uni.setStorageSync("gaugeDes", this.productInfo.gaugeDes);
 				uni.navigateTo({
 					url: `/pages/testBefore/index?productId=${this.productId}&orderId=${res.data}`,
 				});

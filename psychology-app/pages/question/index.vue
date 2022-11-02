@@ -89,7 +89,24 @@ export default {
         }
     },
     onBackPress() {
-        console.log('&&&&&&&&&&&&&&&&&&&&&');
+        this.confirmMessage = {
+            title: `你已完成${this.currentIndex}题，确认要退出吗？`,
+            cancelBtn: {
+                text: '狠心退出',
+                callback: () => {
+                    uni.switchTab({
+                        url: `/pages/index/index`,
+                    });
+                }
+            },
+            submitBtn: {
+                text: '继续答题',
+                callback: () => {
+                    this.showMessage = false;
+                }
+            },
+        }
+        this.showMessage = true;
         return true;
     },
     methods: {
@@ -124,11 +141,18 @@ export default {
             }
         },
         //提交
-        submitEvent() {
-            clearTimeLoad();
-            uni.navigateTo({
-                url: "/pages/result/index?productId=" + this.productId,
-            });
+        async submitEvent() {
+            let res = await questionServer.setAnswer(this.productId, this.currentQuestion.id, this.currentQuestion.answers, this.orderId);
+            if (res == 1) {
+                let result = await questionServer.setResult(this.orderId);
+                if (result.code == 200) {
+                    uni.setStorageSync("result", result.data);
+                    clearTimeLoad();
+                    uni.navigateTo({
+                        url: "/pages/result/index?productId=" + this.productId,
+                    });
+                }
+            }
         },
         //上一题
         toPrev() {
