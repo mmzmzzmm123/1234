@@ -34,9 +34,10 @@ import java.sql.ResultSetMetaData;
 import java.util.Enumeration;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
+
 //https://blog.csdn.net/qq_42413011/article/details/118640420
 //最后有一个可以测试是否可以连数据库
-public class mybatisNoSpringUtils extends  mybatisNoSpringParam{
+public class mybatisNoSpringUtils extends mybatisNoSpringParam {
     public static SqlSession session;
 
     public mybatisNoSpringUtils() throws FileNotFoundException {
@@ -84,7 +85,7 @@ public class mybatisNoSpringUtils extends  mybatisNoSpringParam{
     /**
      * 初始化配置
      */
-    private  void initConfiguration(MybatisConfiguration configuration) {
+    private void initConfiguration(MybatisConfiguration configuration) {
         configuration.setMapUnderscoreToCamelCase(true);
         configuration.setUseGeneratedKeys(true);
     }
