@@ -119,8 +119,9 @@ public class GenController extends BaseController
     @PreAuthorize("@ss.hasPermi('tool:gen:edit')")
     @Log(title = "代码生成", businessType = BusinessType.UPDATE)
     @PutMapping
-    public AjaxResult editSave(@Validated @RequestBody GenTable genTable)
-    {
+    public AjaxResult editSave(@Validated @RequestBody JSONObject jsonObject) {
+        GenTable genTable = jsonObject.to(GenTable.class);
+        genTable.setParams((Map<String, Object>) jsonObject.get("params"));
         genTableService.validateEdit(genTable);
         genTableService.updateGenTable(genTable);
         return success();
