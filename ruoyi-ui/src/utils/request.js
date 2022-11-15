@@ -6,6 +6,7 @@ import errorCode from '@/utils/errorCode'
 import { tansParams, blobValidate } from "@/utils/ruoyi";
 import cache from '@/plugins/cache'
 import { saveAs } from 'file-saver'
+import router from '../router'
 
 let downloadLoadingInstance;
 // 是否显示重新登录
@@ -86,7 +87,7 @@ service.interceptors.response.use(res => {
       ).then(() => {
         isRelogin.show = false;
         store.dispatch('LogOut').then(() => {
-          location.href = '/index';
+          router.push(`/login?redirect=${router.currentRoute.fullPath}`)
         })
       }).catch(() => {
         isRelogin.show = false;
