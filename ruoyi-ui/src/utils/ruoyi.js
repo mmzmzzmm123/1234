@@ -224,6 +224,9 @@ export function tansParams(params) {
       }
     }
   }
+  if(result){
+    result =  result.substring(0,result.lastIndexOf("&"));
+  }
   return result
 }
 
