@@ -98,7 +98,12 @@ public class SysRoleServiceImpl implements ISysRoleService
         {
             if (StringUtils.isNotNull(perm))
             {
-                permsSet.addAll(Arrays.asList(perm.getRoleKey().trim().split(",")));
+                String[] roleKeys = perm.getRoleKey().trim().split(",");
+                Set<String> tmpSet = new HashSet<>();
+                for (String roleKey : roleKeys) {
+                    tmpSet.add(roleKey.trim());
+                }
+                permsSet.addAll(tmpSet);
             }
         }
         return permsSet;
