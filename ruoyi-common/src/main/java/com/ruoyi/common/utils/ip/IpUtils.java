@@ -25,6 +25,13 @@ public class IpUtils
             return "unknown";
         }
         String ip = request.getHeader("x-forwarded-for");
+        if (StringUtils.isNotEmpty(ip) && !"unknown".equalsIgnoreCase(ip))
+        {
+            if (ip.indexOf(",") != -1)
+            {
+                ip = ip.split(",")[0];
+            }
+        }
         if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip))
         {
             ip = request.getHeader("Proxy-Client-IP");
