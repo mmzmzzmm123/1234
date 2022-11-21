@@ -1,6 +1,7 @@
 -- ----------------------------
 -- Records of sys_menu
 -- ----------------------------
+DELETE FROM `sys_menu` WHERE menu_id BETWEEN 1075 AND 1081;
 INSERT INTO `sys_menu` VALUES (1075, '学生信息', 1081, 1, 'info', 'student/info/index', NULL, 1, 0, 'C', '0', '0', 'student:info:list', 'peoples', 'admin', '2022-11-21 06:01:43', 'admin', '2022-11-21 06:03:31', '学生信息菜单');
 INSERT INTO `sys_menu` VALUES (1076, '学生信息查询', 1075, 1, '#', '', NULL, 1, 0, 'F', '0', '0', 'student:info:query', '#', 'admin', '2022-11-21 06:01:44', '', NULL, '');
 INSERT INTO `sys_menu` VALUES (1077, '学生信息新增', 1075, 2, '#', '', NULL, 1, 0, 'F', '0', '0', 'student:info:add', '#', 'admin', '2022-11-21 06:01:44', '', NULL, '');
@@ -12,6 +13,7 @@ INSERT INTO `sys_menu` VALUES (1081, '学生管理', 0, 5, 'student', NULL, NULL
 -- ----------------------------
 -- Records of sys_dict_type
 -- ----------------------------
+DELETE FROM `sys_dict_type` WHERE dict_id BETWEEN 11 AND 17;
 INSERT INTO `sys_dict_type` VALUES (11, '学生标签', 'student_tag', '0', 'admin', '2022-11-21 05:04:09', '', NULL, NULL);
 INSERT INTO `sys_dict_type` VALUES (12, '管控等级', 'control_level', '0', 'admin', '2022-11-21 05:06:32', '', NULL, NULL);
 INSERT INTO `sys_dict_type` VALUES (13, '未返校原因', 'not_school_reason', '0', 'admin', '2022-11-21 05:08:09', '', NULL, NULL);
@@ -24,6 +26,7 @@ INSERT INTO `sys_dict_type` VALUES (17, '目的地类型', 'destination_type', '
 -- ----------------------------
 -- Records of sys_dict_data
 -- ----------------------------
+DELETE FROM `sys_dict_data` WHERE dict_code BETWEEN 30 AND 49;
 INSERT INTO `sys_dict_data` VALUES (30, 0, '在校', '0', 'student_tag', NULL, 'default', 'N', '0', 'admin', '2022-11-21 05:04:27', '', NULL, NULL);
 INSERT INTO `sys_dict_data` VALUES (31, 1, '请假离校', '1', 'student_tag', NULL, 'default', 'N', '0', 'admin', '2022-11-21 05:05:08', '', NULL, NULL);
 INSERT INTO `sys_dict_data` VALUES (32, 2, '未返校', '2', 'student_tag', NULL, 'default', 'N', '0', 'admin', '2022-11-21 05:05:29', '', NULL, NULL);
@@ -44,3 +47,34 @@ INSERT INTO `sys_dict_data` VALUES (46, 1, '请假', '1', 'holiday_type', NULL, 
 INSERT INTO `sys_dict_data` VALUES (47, 0, '市内', '0', 'destination_type', NULL, 'default', 'N', '0', 'admin', '2022-11-21 05:12:19', '', NULL, NULL);
 INSERT INTO `sys_dict_data` VALUES (48, 1, '省内市外', '1', 'destination_type', NULL, 'default', 'N', '0', 'admin', '2022-11-21 05:12:37', '', NULL, NULL);
 INSERT INTO `sys_dict_data` VALUES (49, 2, '省外', '2', 'destination_type', NULL, 'default', 'N', '0', 'admin', '2022-11-21 05:12:47', '', NULL, NULL);
+
+
+-- ----------------------------
+-- Records of sys_role
+-- ----------------------------
+DELETE FROM `sys_role` WHERE role_id IN (3, 4);
+INSERT INTO `sys_role` VALUES (3, '学生数据管理', 'stu_admin', 3, '4', 1, 1, '0', '0', 'admin', '2022-11-21 09:26:58', 'admin', '2022-11-21 09:58:29', NULL);
+INSERT INTO `sys_role` VALUES (4, '学生数据查询', 'stu_query', 4, '4', 0, 0, '0', '0', 'admin', '2022-11-21 09:51:59', 'admin', '2022-11-21 10:08:31', NULL);
+
+
+-- ----------------------------
+-- Records of sys_role_menu
+-- ----------------------------
+DELETE FROM `sys_role_menu` WHERE role_id IN (2, 3, 4);
+INSERT INTO `sys_role_menu` VALUES (2, 1075);
+INSERT INTO `sys_role_menu` VALUES (2, 1076);
+INSERT INTO `sys_role_menu` VALUES (2, 1077);
+INSERT INTO `sys_role_menu` VALUES (2, 1078);
+INSERT INTO `sys_role_menu` VALUES (2, 1079);
+INSERT INTO `sys_role_menu` VALUES (2, 1080);
+INSERT INTO `sys_role_menu` VALUES (2, 1081);
+INSERT INTO `sys_role_menu` VALUES (3, 1075);
+INSERT INTO `sys_role_menu` VALUES (3, 1076);
+INSERT INTO `sys_role_menu` VALUES (3, 1077);
+INSERT INTO `sys_role_menu` VALUES (3, 1078);
+INSERT INTO `sys_role_menu` VALUES (3, 1079);
+INSERT INTO `sys_role_menu` VALUES (3, 1080);
+INSERT INTO `sys_role_menu` VALUES (3, 1081);
+INSERT INTO `sys_role_menu` VALUES (4, 1075);
+INSERT INTO `sys_role_menu` VALUES (4, 1076);
+INSERT INTO `sys_role_menu` VALUES (4, 1081);
