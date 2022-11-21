@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.student.mapper.StuInfoMapper">
+    
+    <resultMap type="StuInfo" id="StuInfoResult">
+        <result property="id"    column="id"    />
+        <result property="studentId"    column="student_id"    />
+        <result property="studentName"    column="student_name"    />
+        <result property="deptId"    column="dept_id"    />
+        <result property="deptName"    column="dept_name"    />
+        <result property="address"    column="address"    />
+        <result property="studentTag"    column="student_tag"    />
+        <result property="isOnSchool"    column="is_on_school"    />
+        <result property="controlLevel"    column="control_level"    />
+        <result property="notSchoolReason"    column="not_school_reason"    />
+        <result property="placeToSchoolLevel"    column="place_to_school_level"    />
+        <result property="placeToSchool"    column="place_to_school"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="remark"    column="remark"    />
+    </resultMap>
+
+    <sql id="selectStuInfoVo">
+        select id, student_id, student_name, dept_id, dept_name, address, student_tag, is_on_school, control_level, not_school_reason, place_to_school_level, place_to_school, create_by, create_time, update_by, update_time, remark from stu_info
+    </sql>
+
+    <select id="selectStuInfoList" parameterType="StuInfo" resultMap="StuInfoResult">
+        <include refid="selectStuInfoVo"/>
+        <where>  
+            <if test="studentId != null "> and student_id = #{studentId}</if>
+            <if test="studentName != null  and studentName != ''"> and student_name like concat('%', #{studentName}, '%')</if>
+            <if test="deptId != null "> and dept_id = #{deptId}</if>
+            <if test="deptName != null  and deptName != ''"> and dept_name like concat('%', #{deptName}, '%')</if>
+            <if test="address != null  and address != ''"> and address = #{address}</if>
+            <if test="studentTag != null  and studentTag != ''"> and student_tag = #{studentTag}</if>
+            <if test="isOnSchool != null  and isOnSchool != ''"> and is_on_school = #{isOnSchool}</if>
+            <if test="controlLevel != null  and controlLevel != ''"> and control_level = #{controlLevel}</if>
+            <if test="notSchoolReason != null  and notSchoolReason != ''"> and not_school_reason = #{notSchoolReason}</if>
+            <if test="placeToSchoolLevel != null  and placeToSchoolLevel != ''"> and place_to_school_level = #{placeToSchoolLevel}</if>
+            <if test="placeToSchool != null  and placeToSchool != ''"> and place_to_school = #{placeToSchool}</if>
+        </where>
+    </select>
+    
+    <select id="selectStuInfoById" parameterType="Long" resultMap="StuInfoResult">
+        <include refid="selectStuInfoVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertStuInfo" parameterType="StuInfo" useGeneratedKeys="true" keyProperty="id">
+        insert into stu_info
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="studentId != null">student_id,</if>
+            <if test="studentName != null and studentName != ''">student_name,</if>
+            <if test="deptId != null">dept_id,</if>
+            <if test="deptName != null">dept_name,</if>
+            <if test="address != null">address,</if>
+            <if test="studentTag != null">student_tag,</if>
+            <if test="isOnSchool != null">is_on_school,</if>
+            <if test="controlLevel != null">control_level,</if>
+            <if test="notSchoolReason != null">not_school_reason,</if>
+            <if test="placeToSchoolLevel != null">place_to_school_level,</if>
+            <if test="placeToSchool != null">place_to_school,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="remark != null">remark,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="studentId != null">#{studentId},</if>
+            <if test="studentName != null and studentName != ''">#{studentName},</if>
+            <if test="deptId != null">#{deptId},</if>
+            <if test="deptName != null">#{deptName},</if>
+            <if test="address != null">#{address},</if>
+            <if test="studentTag != null">#{studentTag},</if>
+            <if test="isOnSchool != null">#{isOnSchool},</if>
+            <if test="controlLevel != null">#{controlLevel},</if>
+            <if test="notSchoolReason != null">#{notSchoolReason},</if>
+            <if test="placeToSchoolLevel != null">#{placeToSchoolLevel},</if>
+            <if test="placeToSchool != null">#{placeToSchool},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="remark != null">#{remark},</if>
+         </trim>
+    </insert>
+
+    <update id="updateStuInfo" parameterType="StuInfo">
+        update stu_info
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="studentId != null">student_id = #{studentId},</if>
+            <if test="studentName != null and studentName != ''">student_name = #{studentName},</if>
+            <if test="deptId != null">dept_id = #{deptId},</if>
+            <if test="deptName != null">dept_name = #{deptName},</if>
+            <if test="address != null">address = #{address},</if>
+            <if test="studentTag != null">student_tag = #{studentTag},</if>
+            <if test="isOnSchool != null">is_on_school = #{isOnSchool},</if>
+            <if test="controlLevel != null">control_level = #{controlLevel},</if>
+            <if test="notSchoolReason != null">not_school_reason = #{notSchoolReason},</if>
+            <if test="placeToSchoolLevel != null">place_to_school_level = #{placeToSchoolLevel},</if>
+            <if test="placeToSchool != null">place_to_school = #{placeToSchool},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="remark != null">remark = #{remark},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteStuInfoById" parameterType="Long">
+        delete from stu_info where id = #{id}
+    </delete>
+
+    <delete id="deleteStuInfoByIds" parameterType="String">
+        delete from stu_info where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>
