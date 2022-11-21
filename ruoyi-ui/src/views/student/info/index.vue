@@ -155,10 +155,8 @@
 
     <el-table v-loading="loading" :data="infoList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
-<!--      <el-table-column label="主键ID" align="center" prop="id" />-->
       <el-table-column label="学号" align="center" prop="studentId" />
       <el-table-column label="姓名" align="center" prop="studentName" />
-      <el-table-column label="学院编号" align="center" prop="deptId" />
       <el-table-column label="学院名称" align="center" prop="deptName" />
       <el-table-column label="住址" align="center" prop="address" />
       <el-table-column label="学生标签" align="center" prop="studentTag">

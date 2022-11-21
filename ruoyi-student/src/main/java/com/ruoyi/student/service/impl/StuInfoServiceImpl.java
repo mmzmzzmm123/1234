@@ -1,6 +1,8 @@
 package com.ruoyi.student.service.impl;
 
 import java.util.List;
+
+import com.ruoyi.common.annotation.DataScope;
 import com.ruoyi.common.utils.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -38,6 +40,7 @@ public class StuInfoServiceImpl implements IStuInfoService
      * @param stuInfo 学生信息
      * @return 学生信息
      */
+    @DataScope(deptAlias = "t")
     @Override
     public List<StuInfo> selectStuInfoList(StuInfo stuInfo)
     {

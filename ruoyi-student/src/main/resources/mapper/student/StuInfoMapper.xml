@@ -25,12 +25,22 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </resultMap>
 
     <sql id="selectStuInfoVo">
-        select id, student_id, student_name, dept_id, dept_name, address, student_tag, is_on_school, control_level, not_school_reason, place_to_school_level, place_to_school, create_by, create_time, update_by, update_time, remark from stu_info
+        select
+            t.id,
+            t.student_id,
+            t.student_name,
+            t.dept_id,
+            u.dept_name,
+            t.address, student_tag, is_on_school, control_level, not_school_reason, place_to_school_level, place_to_school,
+            t.create_by, t.create_time, t.update_by, t.update_time, t.remark
+        from stu_info t
+        left join sys_dept u on t.dept_id = u.dept_id
     </sql>
 
     <select id="selectStuInfoList" parameterType="StuInfo" resultMap="StuInfoResult">
         <include refid="selectStuInfoVo"/>
-        <where>  
+        <where>
+            1=1
             <if test="studentId != null "> and student_id = #{studentId}</if>
             <if test="studentName != null  and studentName != ''"> and student_name like concat('%', #{studentName}, '%')</if>
             <if test="deptId != null "> and dept_id = #{deptId}</if>
@@ -43,6 +53,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="placeToSchoolLevel != null  and placeToSchoolLevel != ''"> and place_to_school_level = #{placeToSchoolLevel}</if>
             <if test="placeToSchool != null  and placeToSchool != ''"> and place_to_school = #{placeToSchool}</if>
         </where>
+        ${params.dataScope}
     </select>
     
     <select id="selectStuInfoById" parameterType="Long" resultMap="StuInfoResult">
