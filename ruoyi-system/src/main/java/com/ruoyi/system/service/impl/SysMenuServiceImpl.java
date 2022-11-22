@@ -1,12 +1,7 @@
 package com.ruoyi.system.service.impl;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -462,18 +457,21 @@ public class SysMenuServiceImpl implements ISysMenuService
      */
     public List<SysMenu> getChildPerms(List<SysMenu> list, int parentId)
     {
-        List<SysMenu> returnList = new ArrayList<SysMenu>();
-        for (Iterator<SysMenu> iterator = list.iterator(); iterator.hasNext();)
-        {
-            SysMenu t = (SysMenu) iterator.next();
-            // 一、根据传入的某个父节点ID,遍历该父节点的所有子节点
-            if (t.getParentId() == parentId)
-            {
-                recursionFn(list, t);
-                returnList.add(t);
+        // 建立菜单id 和菜单之间的关系
+        Map<Long, SysMenu> collect = list.stream().collect(Collectors.toMap(SysMenu::getMenuId, Function.identity()));
+        // 循环所有的数据
+        for (Map.Entry<Long, SysMenu> entry : collect.entrySet()) {
+            SysMenu value = entry.getValue();
+            Long tmpParentId = value.getParentId();
+            // 如果父id 不为0, 则将改菜单添加到父级的子节点中
+            if (tmpParentId > 0 && collect.containsKey(tmpParentId)) {
+                SysMenu tmp = collect.get(tmpParentId);
+                tmp.getChildren().add(value);
             }
         }
-        return returnList;
+
+        // 获取的返回顶级菜单列表
+        return list.stream().filter(node -> node.getParentId() - parentId == 0).collect(Collectors.toList());
     }
 
     /**
