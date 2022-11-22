@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.student.mapper.StuAccMapper">
+
+    <resultMap type="StuAccVo" id="StuAccResult">
+        <result property="deptName"    column="dept_name"    />
+        <result property="stuAcc"    column="stu_acc"    />
+        <result property="inProReturnAcc"    column="in_pro_return_acc"    />
+        <result property="outProReturnAcc"    column="out_pro_return_acc"    />
+        <result property="inProAcc"    column="in_pro_acc"    />
+        <result property="outProAcc"    column="out_pro_acc"    />
+        <result property="highLevReturnAcc"    column="high_lev_return_acc"    />
+        <result property="dormitoryTeachingAreaAcc"    column="dormitory_teaching_area_acc"    />
+        <result property="dormitoryOtherAreaAcc"    column="dormitory_other_area_acc"    />
+        <result property="familyAreaAcc"    column="family_area_acc"    />
+        <result property="dayStudentAcc"    column="day_student_acc"    />
+        <result property="inSchoolAcc"    column="in_school_acc"    />
+        <result property="typeBAcc"    column="type_b_acc"    />
+        <result property="typeCAcc"    column="type_c_acc"    />
+        <result property="toOutAcc"    column="to_out_acc"    />
+        <result property="returnAcc"    column="return_acc"    />
+        <result property="notReturnAcc"    column="not_return_acc"    />
+        <result property="leaveInCityAcc"    column="leave_in_city_acc"    />
+        <result property="leaveOutCityInProAcc"    column="leave_out_city_in_pro_acc"    />
+        <result property="leaveOutProAcc"    column="leave_out_pro_acc"    />
+        <result property="leaveTodayAcc"    column="leave_today_acc"    />
+        <result property="epidemicSusAcc"    column="epidemic_sus_acc"    />
+        <result property="practiceSusAcc"    column="practice_sus_acc"    />
+        <result property="otherSusAcc"    column="other_sus_acc"    />
+        <result property="susAcc"    column="sus_acc"    />
+        <result property="outSchCentIsolationAcc"    column="out_sch_cent_isolation_acc"    />
+        <result property="outSchHomeIsolationAcc"    column="out_sch_home_isolation_acc"    />
+        <result property="inSchHomeIsolationAcc"    column="in_sch_home_isolation_acc"    />
+    </resultMap>
+
+
+    <select id="selectStuAccList" resultMap="StuAccResult">
+        SELECT
+            t.dept_id,
+            u.dept_name,
+            count(1) stu_acc,
+            count(CASE WHEN t.student_tag = 3 AND t.place_to_school = 0 THEN 1 ELSE NULL END) in_pro_return_acc,
+            count(CASE WHEN t.student_tag = 3 AND t.place_to_school = 1 THEN 1 ELSE NULL END) out_pro_return_acc,
+            count(CASE WHEN t.student_tag != 0 AND t.place_to_school = 1 THEN NULL ELSE 1 END) in_pro_acc,
+            count(CASE WHEN t.student_tag = 0 OR t.place_to_school = 0 THEN 1 ELSE NULL END) out_pro_acc,
+            count(CASE WHEN t.place_to_school_level = 1 THEN 1 ELSE NULL END) high_lev_return_acc
+        FROM stu_info t
+        LEFT JOIN sys_dept u ON t.dept_id = u.dept_id
+        GROUP BY t.dept_id
+        <!--
+         ${params.dataScope}
+         -->
+    </select>
+    
+</mapper>

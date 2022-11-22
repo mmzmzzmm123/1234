@@ -1,0 +1,23 @@
+package com.ruoyi.student.service.impl;
+
+import com.ruoyi.common.annotation.DataScope;
+import com.ruoyi.student.domain.StuAccVo;
+import com.ruoyi.student.mapper.StuAccMapper;
+import com.ruoyi.student.service.IStuAccService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+
+@Service
+public class StuAccServiceImpl implements IStuAccService {
+
+    @Autowired
+    private StuAccMapper stuAccMapper;
+
+//    @DataScope(deptAlias = "t")
+    @Override
+    public List<StuAccVo> selectStuAccList() {
+        return stuAccMapper.selectStuAccList();
+    }
+}
