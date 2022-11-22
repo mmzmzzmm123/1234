@@ -3,15 +3,22 @@
 PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.ruoyi.student.mapper.StuInfoMapper">
-    
+
     <resultMap type="StuInfo" id="StuInfoResult">
         <result property="id"    column="id"    />
         <result property="studentId"    column="student_id"    />
         <result property="studentName"    column="student_name"    />
         <result property="deptId"    column="dept_id"    />
         <result property="deptName"    column="dept_name"    />
+        <result property="trainingLevel"    column="training_level"    />
+        <result property="grade"    column="grade"    />
         <result property="address"    column="address"    />
+        <result property="nation"    column="nation"    />
+        <result property="campus"    column="campus"    />
         <result property="studentTag"    column="student_tag"    />
+        <result property="accommodation"    column="accommodation"    />
+        <result property="accommodationPark"    column="accommodation_park"    />
+        <result property="dormitoryNo"    column="dormitory_no"    />
         <result property="isOnSchool"    column="is_on_school"    />
         <result property="controlLevel"    column="control_level"    />
         <result property="notSchoolReason"    column="not_school_reason"    />
@@ -31,7 +38,13 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             t.student_name,
             t.dept_id,
             u.dept_name,
-            t.address, student_tag, is_on_school, control_level, not_school_reason, place_to_school_level, place_to_school,
+            t.training_level,
+            t.grade,
+            t.address,
+            t.nation, t.campus,
+            t.student_tag,
+            t.accommodation, t.accommodation_park, t.dormitory_no,
+            t.is_on_school, control_level, not_school_reason, place_to_school_level, place_to_school,
             t.create_by, t.create_time, t.update_by, t.update_time, t.remark
         from stu_info t
         left join sys_dept u on t.dept_id = u.dept_id
@@ -45,8 +58,15 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="studentName != null  and studentName != ''"> and student_name like concat('%', #{studentName}, '%')</if>
             <if test="deptId != null "> and dept_id = #{deptId}</if>
             <if test="deptName != null  and deptName != ''"> and dept_name like concat('%', #{deptName}, '%')</if>
+            <if test="trainingLevel != null  and trainingLevel != ''"> and training_level = #{trainingLevel}</if>
+            <if test="grade != null  and grade != ''"> and grade = #{grade}</if>
             <if test="address != null  and address != ''"> and address = #{address}</if>
+            <if test="nation != null  and nation != ''"> and nation = #{nation}</if>
+            <if test="campus != null  and campus != ''"> and campus = #{campus}</if>
             <if test="studentTag != null  and studentTag != ''"> and student_tag = #{studentTag}</if>
+            <if test="accommodation != null  and accommodation != ''"> and accommodation = #{accommodation}</if>
+            <if test="accommodationPark != null  and accommodationPark != ''"> and accommodation_park = #{accommodationPark}</if>
+            <if test="dormitoryNo != null  and dormitoryNo != ''"> and dormitory_no = #{dormitoryNo}</if>
             <if test="isOnSchool != null  and isOnSchool != ''"> and is_on_school = #{isOnSchool}</if>
             <if test="controlLevel != null  and controlLevel != ''"> and control_level = #{controlLevel}</if>
             <if test="notSchoolReason != null  and notSchoolReason != ''"> and not_school_reason = #{notSchoolReason}</if>
@@ -60,7 +80,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <include refid="selectStuInfoVo"/>
         where id = #{id}
     </select>
-        
+
     <insert id="insertStuInfo" parameterType="StuInfo" useGeneratedKeys="true" keyProperty="id">
         insert into stu_info
         <trim prefix="(" suffix=")" suffixOverrides=",">
@@ -68,8 +88,15 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="studentName != null and studentName != ''">student_name,</if>
             <if test="deptId != null">dept_id,</if>
             <if test="deptName != null">dept_name,</if>
+            <if test="trainingLevel != null">training_level,</if>
+            <if test="grade != null">grade,</if>
             <if test="address != null">address,</if>
+            <if test="nation != null">nation,</if>
+            <if test="campus != null">campus,</if>
             <if test="studentTag != null">student_tag,</if>
+            <if test="accommodation != null">accommodation,</if>
+            <if test="accommodationPark != null">accommodation_park,</if>
+            <if test="dormitoryNo != null">dormitory_no,</if>
             <if test="isOnSchool != null">is_on_school,</if>
             <if test="controlLevel != null">control_level,</if>
             <if test="notSchoolReason != null">not_school_reason,</if>
@@ -80,14 +107,21 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="updateBy != null">update_by,</if>
             <if test="updateTime != null">update_time,</if>
             <if test="remark != null">remark,</if>
-         </trim>
+        </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="studentId != null">#{studentId},</if>
             <if test="studentName != null and studentName != ''">#{studentName},</if>
             <if test="deptId != null">#{deptId},</if>
             <if test="deptName != null">#{deptName},</if>
+            <if test="trainingLevel != null">#{trainingLevel},</if>
+            <if test="grade != null">#{grade},</if>
             <if test="address != null">#{address},</if>
+            <if test="nation != null">#{nation},</if>
+            <if test="campus != null">#{campus},</if>
             <if test="studentTag != null">#{studentTag},</if>
+            <if test="accommodation != null">#{accommodation},</if>
+            <if test="accommodationPark != null">#{accommodationPark},</if>
+            <if test="dormitoryNo != null">#{dormitoryNo},</if>
             <if test="isOnSchool != null">#{isOnSchool},</if>
             <if test="controlLevel != null">#{controlLevel},</if>
             <if test="notSchoolReason != null">#{notSchoolReason},</if>
@@ -98,7 +132,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="updateBy != null">#{updateBy},</if>
             <if test="updateTime != null">#{updateTime},</if>
             <if test="remark != null">#{remark},</if>
-         </trim>
+        </trim>
     </insert>
 
     <update id="updateStuInfo" parameterType="StuInfo">
@@ -108,8 +142,15 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="studentName != null and studentName != ''">student_name = #{studentName},</if>
             <if test="deptId != null">dept_id = #{deptId},</if>
             <if test="deptName != null">dept_name = #{deptName},</if>
+            <if test="trainingLevel != null">training_level = #{trainingLevel},</if>
+            <if test="grade != null">grade = #{grade},</if>
             <if test="address != null">address = #{address},</if>
+            <if test="nation != null">nation = #{nation},</if>
+            <if test="campus != null">campus = #{campus},</if>
             <if test="studentTag != null">student_tag = #{studentTag},</if>
+            <if test="accommodation != null">accommodation = #{accommodation},</if>
+            <if test="accommodationPark != null">accommodation_park = #{accommodationPark},</if>
+            <if test="dormitoryNo != null">dormitory_no = #{dormitoryNo},</if>
             <if test="isOnSchool != null">is_on_school = #{isOnSchool},</if>
             <if test="controlLevel != null">control_level = #{controlLevel},</if>
             <if test="notSchoolReason != null">not_school_reason = #{notSchoolReason},</if>
@@ -123,6 +164,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         </trim>
         where id = #{id}
     </update>
+
 
     <delete id="deleteStuInfoById" parameterType="Long">
         delete from stu_info where id = #{id}

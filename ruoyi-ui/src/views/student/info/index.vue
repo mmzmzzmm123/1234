@@ -33,6 +33,24 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
+      <el-form-item label="培养层次" prop="trainingLevel">
+        <el-select v-model="queryParams.trainingLevel" placeholder="请选择培养层次" clearable>
+          <el-option
+            v-for="dict in dict.type.training_level"
+            :key="dict.value"
+            :label="dict.label"
+            :value="dict.value"
+          />
+        </el-select>
+      </el-form-item>
+      <el-form-item label="年级" prop="grade">
+        <el-date-picker clearable
+                        v-model="queryParams.grade"
+                        type="year"
+                        value-format="yyyy"
+                        placeholder="请选择年级">
+        </el-date-picker>
+      </el-form-item>
       <el-form-item label="住址" prop="address">
         <el-input
           v-model="queryParams.address"
@@ -40,6 +58,26 @@
           clearable
           @keyup.enter.native="handleQuery"
         />
+      </el-form-item>
+      <el-form-item label="民族" prop="nation">
+        <el-select v-model="queryParams.nation" placeholder="请选择民族" clearable>
+          <el-option
+            v-for="dict in dict.type.nation"
+            :key="dict.value"
+            :label="dict.label"
+            :value="dict.value"
+          />
+        </el-select>
+      </el-form-item>
+      <el-form-item label="校区" prop="campus">
+        <el-select v-model="queryParams.campus" placeholder="请选择校区" clearable>
+          <el-option
+            v-for="dict in dict.type.campus"
+            :key="dict.value"
+            :label="dict.label"
+            :value="dict.value"
+          />
+        </el-select>
       </el-form-item>
       <el-form-item label="学生标签" prop="studentTag">
         <el-select v-model="queryParams.studentTag" placeholder="请选择学生标签" clearable>
@@ -50,6 +88,34 @@
             :value="dict.value"
           />
         </el-select>
+      </el-form-item>
+      <el-form-item label="住宿地点" prop="accommodation">
+        <el-select v-model="queryParams.accommodation" placeholder="请选择住宿地点" clearable>
+          <el-option
+            v-for="dict in dict.type.accommodation"
+            :key="dict.value"
+            :label="dict.label"
+            :value="dict.value"
+          />
+        </el-select>
+      </el-form-item>
+      <el-form-item label="住宿园区" prop="accommodationPark">
+        <el-select v-model="queryParams.accommodationPark" placeholder="请选择住宿园区" clearable>
+          <el-option
+            v-for="dict in dict.type.accommodation_park"
+            :key="dict.value"
+            :label="dict.label"
+            :value="dict.value"
+          />
+        </el-select>
+      </el-form-item>
+      <el-form-item label="宿舍号" prop="dormitoryNo">
+        <el-input
+          v-model="queryParams.dormitoryNo"
+          placeholder="请输入宿舍号"
+          clearable
+          @keyup.enter.native="handleQuery"
+        />
       </el-form-item>
       <el-form-item label="是否校内住宿" prop="isOnSchool">
         <el-select v-model="queryParams.isOnSchool" placeholder="请选择是否校内住宿" clearable>
@@ -158,12 +224,39 @@
       <el-table-column label="学号" align="center" prop="studentId" />
       <el-table-column label="姓名" align="center" prop="studentName" />
       <el-table-column label="学院名称" align="center" prop="deptName" />
+      <el-table-column label="培养层次" align="center" prop="trainingLevel">
+        <template slot-scope="scope">
+          <dict-tag :options="dict.type.training_level" :value="scope.row.trainingLevel"/>
+        </template>
+      </el-table-column>
+      <el-table-column label="年级" align="center" prop="grade"/>
       <el-table-column label="住址" align="center" prop="address" />
+      <el-table-column label="民族" align="center" prop="nation">
+        <template slot-scope="scope">
+          <dict-tag :options="dict.type.nation" :value="scope.row.nation"/>
+        </template>
+      </el-table-column>
+      <el-table-column label="校区" align="center" prop="campus">
+        <template slot-scope="scope">
+          <dict-tag :options="dict.type.campus" :value="scope.row.campus"/>
+        </template>
+      </el-table-column>
       <el-table-column label="学生标签" align="center" prop="studentTag">
         <template slot-scope="scope">
           <dict-tag :options="dict.type.student_tag" :value="scope.row.studentTag"/>
         </template>
       </el-table-column>
+      <el-table-column label="住宿地点" align="center" prop="accommodation">
+        <template slot-scope="scope">
+          <dict-tag :options="dict.type.accommodation" :value="scope.row.accommodation"/>
+        </template>
+      </el-table-column>
+      <el-table-column label="住宿园区" align="center" prop="accommodationPark">
+        <template slot-scope="scope">
+          <dict-tag :options="dict.type.accommodation_park" :value="scope.row.accommodationPark"/>
+        </template>
+      </el-table-column>
+      <el-table-column label="宿舍号" align="center" prop="dormitoryNo" />
       <el-table-column label="是否校内住宿" align="center" prop="isOnSchool">
         <template slot-scope="scope">
           <dict-tag :options="dict.type.sys_yes_no" :value="scope.row.isOnSchool"/>
@@ -233,8 +326,46 @@
         <el-form-item label="学院名称" prop="deptName">
           <el-input v-model="form.deptName" placeholder="请输入学院名称" />
         </el-form-item>
+        <el-form-item label="培养层次" prop="trainingLevel">
+          <el-select v-model="form.trainingLevel" placeholder="请选择培养层次">
+            <el-option
+              v-for="dict in dict.type.training_level"
+              :key="dict.value"
+              :label="dict.label"
+              :value="dict.value"
+            ></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="年级" prop="grade">
+          <el-date-picker clearable
+                          v-model="form.grade"
+                          type="year"
+                          value-format="yyyy"
+                          placeholder="请选择年级">
+          </el-date-picker>
+        </el-form-item>
         <el-form-item label="住址" prop="address">
           <el-input v-model="form.address" placeholder="请输入住址" />
+        </el-form-item>
+        <el-form-item label="民族" prop="nation">
+          <el-select v-model="form.nation" placeholder="请选择民族">
+            <el-option
+              v-for="dict in dict.type.nation"
+              :key="dict.value"
+              :label="dict.label"
+              :value="dict.value"
+            ></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="校区" prop="campus">
+          <el-select v-model="form.campus" placeholder="请选择校区">
+            <el-option
+              v-for="dict in dict.type.campus"
+              :key="dict.value"
+              :label="dict.label"
+              :value="dict.value"
+            ></el-option>
+          </el-select>
         </el-form-item>
         <el-form-item label="学生标签" prop="studentTag">
           <el-select v-model="form.studentTag" placeholder="请选择学生标签">
@@ -242,9 +373,32 @@
               v-for="dict in dict.type.student_tag"
               :key="dict.value"
               :label="dict.label"
-:value="dict.value"
+              :value="dict.value"
             ></el-option>
           </el-select>
+        </el-form-item>
+        <el-form-item label="住宿地点" prop="accommodation">
+          <el-select v-model="form.accommodation" placeholder="请选择住宿地点">
+            <el-option
+              v-for="dict in dict.type.accommodation"
+              :key="dict.value"
+              :label="dict.label"
+              :value="dict.value"
+            ></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="住宿园区" prop="accommodationPark">
+          <el-select v-model="form.accommodationPark" placeholder="请选择住宿园区">
+            <el-option
+              v-for="dict in dict.type.accommodation_park"
+              :key="dict.value"
+              :label="dict.label"
+              :value="dict.value"
+            ></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="宿舍号" prop="dormitoryNo">
+          <el-input v-model="form.dormitoryNo" placeholder="请输入宿舍号" />
         </el-form-item>
         <el-form-item label="是否校内住宿" prop="isOnSchool">
           <el-select v-model="form.isOnSchool" placeholder="请选择是否校内住宿">
@@ -252,7 +406,7 @@
               v-for="dict in dict.type.sys_yes_no"
               :key="dict.value"
               :label="dict.label"
-:value="dict.value"
+              :value="dict.value"
             ></el-option>
           </el-select>
         </el-form-item>
@@ -262,7 +416,7 @@
               v-for="dict in dict.type.control_level"
               :key="dict.value"
               :label="dict.label"
-:value="dict.value"
+              :value="dict.value"
             ></el-option>
           </el-select>
         </el-form-item>
@@ -272,7 +426,7 @@
               v-for="dict in dict.type.not_school_reason"
               :key="dict.value"
               :label="dict.label"
-:value="dict.value"
+              :value="dict.value"
             ></el-option>
           </el-select>
         </el-form-item>
@@ -282,7 +436,7 @@
               v-for="dict in dict.type.risk_level"
               :key="dict.value"
               :label="dict.label"
-:value="dict.value"
+              :value="dict.value"
             ></el-option>
           </el-select>
         </el-form-item>
@@ -292,7 +446,7 @@
               v-for="dict in dict.type.place_to_school"
               :key="dict.value"
               :label="dict.label"
-:value="dict.value"
+              :value="dict.value"
             ></el-option>
           </el-select>
         </el-form-item>
@@ -309,169 +463,183 @@
 </template>
 
 <script>
-import { listInfo, getInfo, delInfo, addInfo, updateInfo } from "@/api/student/info";
+  import { listInfo, getInfo, delInfo, addInfo, updateInfo } from "@/api/student/info";
 
-export default {
-  name: "Info",
-  dicts: ['control_level', 'place_to_school', 'sys_yes_no', 'risk_level', 'not_school_reason', 'student_tag'],
-  data() {
-    return {
-      // 遮罩层
-      loading: true,
-      // 选中数组
-      ids: [],
-      // 非单个禁用
-      single: true,
-      // 非多个禁用
-      multiple: true,
-      // 显示搜索条件
-      showSearch: true,
-      // 总条数
-      total: 0,
-      // 学生信息表格数据
-      infoList: [],
-      // 弹出层标题
-      title: "",
-      // 是否显示弹出层
-      open: false,
-      // 查询参数
-      queryParams: {
-        pageNum: 1,
-        pageSize: 10,
-        studentId: null,
-        studentName: null,
-        deptId: null,
-        deptName: null,
-        address: null,
-        studentTag: null,
-        isOnSchool: null,
-        controlLevel: null,
-        notSchoolReason: null,
-        placeToSchoolLevel: null,
-        placeToSchool: null,
-      },
-      // 表单参数
-      form: {},
-      // 表单校验
-      rules: {
-        studentId: [
-          { required: true, message: "学号不能为空", trigger: "blur" }
-        ],
-        studentName: [
-          { required: true, message: "姓名不能为空", trigger: "blur" }
-        ],
-      }
-    };
-  },
-  created() {
-    this.getList();
-  },
-  methods: {
-    /** 查询学生信息列表 */
-    getList() {
-      this.loading = true;
-      listInfo(this.queryParams).then(response => {
-        this.infoList = response.rows;
-        this.total = response.total;
-        this.loading = false;
-      });
-    },
-    // 取消按钮
-    cancel() {
-      this.open = false;
-      this.reset();
-    },
-    // 表单重置
-    reset() {
-      this.form = {
-        id: null,
-        studentId: null,
-        studentName: null,
-        deptId: null,
-        deptName: null,
-        address: null,
-        studentTag: null,
-        isOnSchool: null,
-        controlLevel: null,
-        notSchoolReason: null,
-        placeToSchoolLevel: null,
-        placeToSchool: null,
-        createBy: null,
-        createTime: null,
-        updateBy: null,
-        updateTime: null,
-        remark: null
+  export default {
+    name: "Info",
+    dicts: ['training_level', 'campus', 'control_level', 'place_to_school', 'sys_yes_no', 'risk_level', 'nation', 'accommodation_park', 'accommodation', 'not_school_reason', 'student_tag'],
+    data() {
+      return {
+        // 遮罩层
+        loading: true,
+        // 选中数组
+        ids: [],
+        // 非单个禁用
+        single: true,
+        // 非多个禁用
+        multiple: true,
+        // 显示搜索条件
+        showSearch: true,
+        // 总条数
+        total: 0,
+        // 学生信息表格数据
+        infoList: [],
+        // 弹出层标题
+        title: "",
+        // 是否显示弹出层
+        open: false,
+        // 查询参数
+        queryParams: {
+          pageNum: 1,
+          pageSize: 10,
+          studentId: null,
+          studentName: null,
+          deptId: null,
+          deptName: null,
+          trainingLevel: null,
+          grade: null,
+          address: null,
+          nation: null,
+          campus: null,
+          studentTag: null,
+          accommodation: null,
+          accommodationPark: null,
+          dormitoryNo: null,
+          isOnSchool: null,
+          controlLevel: null,
+          notSchoolReason: null,
+          placeToSchoolLevel: null,
+          placeToSchool: null,
+        },
+        // 表单参数
+        form: {},
+        // 表单校验
+        rules: {
+          studentId: [
+            { required: true, message: "学号不能为空", trigger: "blur" }
+          ],
+          studentName: [
+            { required: true, message: "姓名不能为空", trigger: "blur" }
+          ],
+        }
       };
-      this.resetForm("form");
     },
-    /** 搜索按钮操作 */
-    handleQuery() {
-      this.queryParams.pageNum = 1;
+    created() {
       this.getList();
     },
-    /** 重置按钮操作 */
-    resetQuery() {
-      this.resetForm("queryForm");
-      this.handleQuery();
-    },
-    // 多选框选中数据
-    handleSelectionChange(selection) {
-      this.ids = selection.map(item => item.id)
-      this.single = selection.length!==1
-      this.multiple = !selection.length
-    },
-    /** 新增按钮操作 */
-    handleAdd() {
-      this.reset();
-      this.open = true;
-      this.title = "添加学生信息";
-    },
-    /** 修改按钮操作 */
-    handleUpdate(row) {
-      this.reset();
-      const id = row.id || this.ids
-      getInfo(id).then(response => {
-        this.form = response.data;
-        this.open = true;
-        this.title = "修改学生信息";
-      });
-    },
-    /** 提交按钮 */
-    submitForm() {
-      this.$refs["form"].validate(valid => {
-        if (valid) {
-          if (this.form.id != null) {
-            updateInfo(this.form).then(response => {
-              this.$modal.msgSuccess("修改成功");
-              this.open = false;
-              this.getList();
-            });
-          } else {
-            addInfo(this.form).then(response => {
-              this.$modal.msgSuccess("新增成功");
-              this.open = false;
-              this.getList();
-            });
-          }
-        }
-      });
-    },
-    /** 删除按钮操作 */
-    handleDelete(row) {
-      const ids = row.id || this.ids;
-      this.$modal.confirm('是否确认删除学生信息编号为"' + ids + '"的数据项？').then(function() {
-        return delInfo(ids);
-      }).then(() => {
+    methods: {
+      /** 查询学生信息列表 */
+      getList() {
+        this.loading = true;
+        listInfo(this.queryParams).then(response => {
+          this.infoList = response.rows;
+          this.total = response.total;
+          this.loading = false;
+        });
+      },
+      // 取消按钮
+      cancel() {
+        this.open = false;
+        this.reset();
+      },
+      // 表单重置
+      reset() {
+        this.form = {
+          id: null,
+          studentId: null,
+          studentName: null,
+          deptId: null,
+          deptName: null,
+          trainingLevel: null,
+          grade: null,
+          address: null,
+          nation: null,
+          campus: null,
+          studentTag: null,
+          accommodation: null,
+          accommodationPark: null,
+          dormitoryNo: null,
+          isOnSchool: null,
+          controlLevel: null,
+          notSchoolReason: null,
+          placeToSchoolLevel: null,
+          placeToSchool: null,
+          createBy: null,
+          createTime: null,
+          updateBy: null,
+          updateTime: null,
+          remark: null
+        };
+        this.resetForm("form");
+      },
+      /** 搜索按钮操作 */
+      handleQuery() {
+        this.queryParams.pageNum = 1;
         this.getList();
-        this.$modal.msgSuccess("删除成功");
-      }).catch(() => {});
-    },
-    /** 导出按钮操作 */
-    handleExport() {
-      this.download('student/info/export', {
-        ...this.queryParams
-      }, `info_${new Date().getTime()}.xlsx`)
+      },
+      /** 重置按钮操作 */
+      resetQuery() {
+        this.resetForm("queryForm");
+        this.handleQuery();
+      },
+      // 多选框选中数据
+      handleSelectionChange(selection) {
+        this.ids = selection.map(item => item.id)
+        this.single = selection.length!==1
+        this.multiple = !selection.length
+      },
+      /** 新增按钮操作 */
+      handleAdd() {
+        this.reset();
+        this.open = true;
+        this.title = "添加学生信息";
+      },
+      /** 修改按钮操作 */
+      handleUpdate(row) {
+        this.reset();
+        const id = row.id || this.ids
+        getInfo(id).then(response => {
+          this.form = response.data;
+          this.open = true;
+          this.title = "修改学生信息";
+        });
+      },
+      /** 提交按钮 */
+      submitForm() {
+        this.$refs["form"].validate(valid => {
+          if (valid) {
+            if (this.form.id != null) {
+              updateInfo(this.form).then(response => {
+                this.$modal.msgSuccess("修改成功");
+                this.open = false;
+                this.getList();
+              });
+            } else {
+              addInfo(this.form).then(response => {
+                this.$modal.msgSuccess("新增成功");
+                this.open = false;
+                this.getList();
+              });
+            }
+          }
+        });
+      },
+      /** 删除按钮操作 */
+      handleDelete(row) {
+        const ids = row.id || this.ids;
+        this.$modal.confirm('是否确认删除学生信息编号为"' + ids + '"的数据项？').then(function() {
+          return delInfo(ids);
+        }).then(() => {
+          this.getList();
+          this.$modal.msgSuccess("删除成功");
+        }).catch(() => {});
+      },
+      /** 导出按钮操作 */
+      handleExport() {
+        this.download('student/info/export', {
+          ...this.queryParams
+        }, `info_${new Date().getTime()}.xlsx`)
+      }
     }
-  }
-};
+  };
 </script>
