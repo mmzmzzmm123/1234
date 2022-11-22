@@ -26,12 +26,14 @@
         />
       </el-form-item>
       <el-form-item label="学院名称" prop="deptName">
-        <el-input
-          v-model="queryParams.deptName"
-          placeholder="请输入学院名称"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
+        <el-select v-model="queryParams.trainingLevel" placeholder="请选择学院名称" clearable>
+                  <el-option
+                    v-for="dict in dict.type.deptName"
+                    :key="dict.value"
+                    :label="dict.label"
+                    :value="dict.value"
+                  />
+                </el-select>
       </el-form-item>
       <el-form-item label="培养层次" prop="trainingLevel">
         <el-select v-model="queryParams.trainingLevel" placeholder="请选择培养层次" clearable>
@@ -224,6 +226,10 @@
       <el-table-column label="学号" align="center" prop="studentId" />
       <el-table-column label="姓名" align="center" prop="studentName" />
       <el-table-column label="学院名称" align="center" prop="deptName" />
+              <template slot-scope="scope">
+                <dict-tag :options="dict.type.deptName" :value="scope.row.trainingLevel"/>
+              </template>
+            </el-table-column>
       <el-table-column label="培养层次" align="center" prop="trainingLevel">
         <template slot-scope="scope">
           <dict-tag :options="dict.type.training_level" :value="scope.row.trainingLevel"/>
@@ -324,7 +330,14 @@
           <el-input v-model="form.deptId" placeholder="请输入学院编号" />
         </el-form-item>
         <el-form-item label="学院名称" prop="deptName">
-          <el-input v-model="form.deptName" placeholder="请输入学院名称" />
+          <el-select v-model="form.trainingLevel" placeholder="请选择学院名称">
+                      <el-option
+                        v-for="dict in dict.type.deptName"
+                        :key="dict.value"
+                        :label="dict.label"
+                        :value="dict.value"
+                      ></el-option>
+                    </el-select>
         </el-form-item>
         <el-form-item label="培养层次" prop="trainingLevel">
           <el-select v-model="form.trainingLevel" placeholder="请选择培养层次">
@@ -467,7 +480,7 @@
 
   export default {
     name: "Info",
-    dicts: ['training_level', 'campus', 'control_level', 'place_to_school', 'sys_yes_no', 'risk_level', 'nation', 'accommodation_park', 'accommodation', 'not_school_reason', 'student_tag'],
+    dicts: ['deptName','training_level', 'campus', 'control_level', 'place_to_school', 'sys_yes_no', 'risk_level', 'nation', 'accommodation_park', 'accommodation', 'not_school_reason', 'student_tag'],
     data() {
       return {
         // 遮罩层
