@@ -1,44 +1,56 @@
 package com.ruoyi.web.core.config;
 
-import java.util.ArrayList;
-import java.util.List;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
 import com.ruoyi.common.config.RuoYiConfig;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.models.auth.In;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.actuate.autoconfigure.endpoint.web.CorsEndpointProperties;
+import org.springframework.boot.actuate.autoconfigure.endpoint.web.WebEndpointProperties;
+import org.springframework.boot.actuate.autoconfigure.web.server.ManagementPortType;
+import org.springframework.boot.actuate.endpoint.ExposableEndpoint;
+import org.springframework.boot.actuate.endpoint.web.*;
+import org.springframework.boot.actuate.endpoint.web.annotation.ControllerEndpointsSupplier;
+import org.springframework.boot.actuate.endpoint.web.annotation.ServletEndpointsSupplier;
+import org.springframework.boot.actuate.endpoint.web.servlet.WebMvcEndpointHandlerMapping;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.core.env.Environment;
+import org.springframework.util.StringUtils;
 import springfox.documentation.builders.ApiInfoBuilder;
 import springfox.documentation.builders.PathSelectors;
 import springfox.documentation.builders.RequestHandlerSelectors;
-import springfox.documentation.service.ApiInfo;
-import springfox.documentation.service.ApiKey;
-import springfox.documentation.service.AuthorizationScope;
-import springfox.documentation.service.Contact;
-import springfox.documentation.service.SecurityReference;
-import springfox.documentation.service.SecurityScheme;
+import springfox.documentation.service.*;
 import springfox.documentation.spi.DocumentationType;
 import springfox.documentation.spi.service.contexts.SecurityContext;
 import springfox.documentation.spring.web.plugins.Docket;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+
 /**
  * Swagger2的接口配置
- * 
+ *
  * @author ruoyi
  */
 @Configuration
-public class SwaggerConfig
-{
-    /** 系统基础配置 */
+public class SwaggerConfig {
+    /**
+     * 系统基础配置
+     */
     @Autowired
     private RuoYiConfig ruoyiConfig;
 
-    /** 是否开启swagger */
+    /**
+     * 是否开启swagger
+     */
     @Value("${swagger.enabled}")
     private boolean enabled;
 
-    /** 设置请求的统一前缀 */
+    /**
+     * 设置请求的统一前缀
+     */
     @Value("${swagger.pathMapping}")
     private String pathMapping;
 
@@ -46,8 +58,7 @@ public class SwaggerConfig
      * 创建API
      */
     @Bean
-    public Docket createRestApi()
-    {
+    public Docket createRestApi() {
         return new Docket(DocumentationType.OAS_30)
                 // 是否启用Swagger
                 .enable(enabled)
@@ -71,8 +82,7 @@ public class SwaggerConfig
     /**
      * 安全模式，这里指定token通过Authorization头请求头传递
      */
-    private List<SecurityScheme> securitySchemes()
-    {
+    private List<SecurityScheme> securitySchemes() {
         List<SecurityScheme> apiKeyList = new ArrayList<SecurityScheme>();
         apiKeyList.add(new ApiKey("Authorization", "Authorization", In.HEADER.toValue()));
         return apiKeyList;
@@ -81,8 +91,7 @@ public class SwaggerConfig
     /**
      * 安全上下文
      */
-    private List<SecurityContext> securityContexts()
-    {
+    private List<SecurityContext> securityContexts() {
         List<SecurityContext> securityContexts = new ArrayList<>();
         securityContexts.add(
                 SecurityContext.builder()
@@ -95,8 +104,7 @@ public class SwaggerConfig
     /**
      * 默认的安全上引用
      */
-    private List<SecurityReference> defaultAuth()
-    {
+    private List<SecurityReference> defaultAuth() {
         AuthorizationScope authorizationScope = new AuthorizationScope("global", "accessEverything");
         AuthorizationScope[] authorizationScopes = new AuthorizationScope[1];
         authorizationScopes[0] = authorizationScope;
@@ -108,8 +116,7 @@ public class SwaggerConfig
     /**
      * 添加摘要信息
      */
-    private ApiInfo apiInfo()
-    {
+    private ApiInfo apiInfo() {
         // 用ApiInfoBuilder进行定制
         return new ApiInfoBuilder()
                 // 设置标题
@@ -121,5 +128,25 @@ public class SwaggerConfig
                 // 版本
                 .version("版本号:" + ruoyiConfig.getVersion())
                 .build();
+    }
+
+    /**
+     * 兼容处理 swagger-ui 在2.7.4版本出现的兼容问题
+     */
+    @Bean
+    public WebMvcEndpointHandlerMapping webEndpointServletHandlerMapping(WebEndpointsSupplier webEndpointsSupplier, ServletEndpointsSupplier servletEndpointsSupplier, ControllerEndpointsSupplier controllerEndpointsSupplier, EndpointMediaTypes endpointMediaTypes, CorsEndpointProperties corsProperties, WebEndpointProperties webEndpointProperties, Environment environment) {
+        List<ExposableEndpoint<?>> allEndpoints = new ArrayList();
+        Collection<ExposableWebEndpoint> webEndpoints = webEndpointsSupplier.getEndpoints();
+        allEndpoints.addAll(webEndpoints);
+        allEndpoints.addAll(servletEndpointsSupplier.getEndpoints());
+        allEndpoints.addAll(controllerEndpointsSupplier.getEndpoints());
+        String basePath = webEndpointProperties.getBasePath();
+        EndpointMapping endpointMapping = new EndpointMapping(basePath);
+        boolean shouldRegisterLinksMapping = this.shouldRegisterLinksMapping(webEndpointProperties, environment, basePath);
+        return new WebMvcEndpointHandlerMapping(endpointMapping, webEndpoints, endpointMediaTypes, corsProperties.toCorsConfiguration(), new EndpointLinksResolver(allEndpoints, basePath), shouldRegisterLinksMapping, null);
+    }
+
+    private boolean shouldRegisterLinksMapping(WebEndpointProperties webEndpointProperties, Environment environment, String basePath) {
+        return webEndpointProperties.getDiscovery().isEnabled() && (StringUtils.hasText(basePath) || ManagementPortType.get(environment).equals(ManagementPortType.DIFFERENT));
     }
 }
