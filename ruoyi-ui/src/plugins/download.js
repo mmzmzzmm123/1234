@@ -18,8 +18,11 @@ export default {
     }).then(async (res) => {
       const isLogin = await blobValidate(res.data);
       if (isLogin) {
+        const contentDisposition = decodeURI(res.headers['content-disposition'])
+        const result = new RegExp('filename=([^;]+\\.[^\\.;]+);*').exec(contentDisposition)
+        const fileName = result[1].replace(/\"/g, '')
         const blob = new Blob([res.data])
-        this.saveAs(blob, decodeURI(res.headers['download-filename']))
+        this.saveAs(blob, fileName)
       } else {
         this.printErrMsg(res.data);
       }
@@ -35,8 +38,11 @@ export default {
     }).then(async (res) => {
       const isLogin = await blobValidate(res.data);
       if (isLogin) {
+        const contentDisposition = decodeURI(res.headers['content-disposition'])
+        const result = new RegExp('filename=([^;]+\\.[^\\.;]+);*').exec(contentDisposition)
+        const fileName = result[1].replace(/\"/g, '')
         const blob = new Blob([res.data])
-        this.saveAs(blob, decodeURI(res.headers['download-filename']))
+        this.saveAs(blob, fileName)
       } else {
         this.printErrMsg(res.data);
       }
@@ -69,4 +75,3 @@ export default {
     Message.error(errMsg);
   }
 }
-
