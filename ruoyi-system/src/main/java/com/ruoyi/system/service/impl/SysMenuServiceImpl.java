@@ -231,6 +231,9 @@ public class SysMenuServiceImpl implements ISysMenuService
         for (Iterator<SysMenu> iterator = menus.iterator(); iterator.hasNext();)
         {
             SysMenu menu = (SysMenu) iterator.next();
+            if (!"0".equals(menu.getVisible()) || !"0".equals(menu.getStatus())) {
+                continue;
+            }
             // 如果是顶级节点, 遍历该父节点的所有子节点
             if (!tempList.contains(menu.getParentId()))
             {
@@ -506,6 +509,9 @@ public class SysMenuServiceImpl implements ISysMenuService
         while (it.hasNext())
         {
             SysMenu n = (SysMenu) it.next();
+            if (!"0".equals(n.getVisible()) || !"0".equals(n.getStatus())) {
+                continue;
+            }
             if (n.getParentId().longValue() == t.getMenuId().longValue())
             {
                 tlist.add(n);
