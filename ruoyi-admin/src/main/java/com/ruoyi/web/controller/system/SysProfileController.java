@@ -98,8 +98,9 @@ public class SysProfileController extends BaseController
     public AjaxResult updatePwd(String oldPassword, String newPassword)
     {
         LoginUser loginUser = getLoginUser();
-        String userName = loginUser.getUsername();
-        String password = loginUser.getPassword();
+        SysUser user = userService.selectUserById(loginUser.getUserId());
+        String userName = user.getUserName();
+        String password = user.getPassword();
         if (!SecurityUtils.matchesPassword(oldPassword, password))
         {
             return error("修改密码失败，旧密码错误");
