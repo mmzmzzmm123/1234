@@ -167,6 +167,16 @@
           />
         </el-select>
       </el-form-item>
+      <el-form-item label="密接类型" prop="jointType">
+        <el-select v-model="queryParams.jointType" placeholder="请选择密接类型" clearable>
+          <el-option
+            v-for="dict in dict.type.joint_type"
+            :key="dict.value"
+            :label="dict.label"
+            :value="dict.value"
+          />
+        </el-select>
+      </el-form-item>
       <el-form-item>
         <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
         <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
@@ -280,6 +290,11 @@
       <el-table-column label="返校出发地" align="center" prop="placeToSchool">
         <template slot-scope="scope">
           <dict-tag :options="dict.type.place_to_school" :value="scope.row.placeToSchool"/>
+        </template>
+      </el-table-column>
+      <el-table-column label="密接类型" align="center" prop="jointType">
+        <template slot-scope="scope">
+          <dict-tag :options="dict.type.joint_type" :value="scope.row.jointType"/>
         </template>
       </el-table-column>
       <el-table-column label="备注" align="center" prop="remark" />
@@ -447,6 +462,16 @@
               :key="dict.value"
               :label="dict.label"
               :value="dict.value"
+            ></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="密接类型" prop="jointType">
+          <el-select v-model="form.jointType" placeholder="请选择密接类型">
+            <el-option
+              v-for="dict in dict.type.joint_type"
+              :key="dict.value"
+              :label="dict.label"
+:value="dict.value"
             ></el-option>
           </el-select>
         </el-form-item>

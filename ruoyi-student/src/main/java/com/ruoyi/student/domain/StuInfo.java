@@ -90,6 +90,10 @@ public class StuInfo extends BaseEntity
     @Excel(name = "返校出发地")
     private String placeToSchool;
 
+    /** 密接类型 */
+    @Excel(name = "密接类型")
+    private String jointType;
+
     public void setId(Long id)
     {
         this.id = id;
@@ -260,6 +264,14 @@ public class StuInfo extends BaseEntity
     public String getPlaceToSchool()
     {
         return placeToSchool;
+    }
+
+    public String getJointType() {
+        return jointType;
+    }
+
+    public void setJointType(String jointType) {
+        this.jointType = jointType;
     }
 
     @Override
