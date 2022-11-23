@@ -62,6 +62,11 @@ export const constantRoutes = [
     hidden: true
   },
   {
+    path: '/screen',
+    component: () => import('@/views/screen/index'),
+    hidden: true
+  },
+  {
     path: '',
     component: Layout,
     redirect: 'index',
