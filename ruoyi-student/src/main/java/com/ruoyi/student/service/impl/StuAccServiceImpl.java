@@ -15,9 +15,9 @@ public class StuAccServiceImpl implements IStuAccService {
     @Autowired
     private StuAccMapper stuAccMapper;
 
-//    @DataScope(deptAlias = "t")
+    @DataScope(deptAlias = "t")
     @Override
-    public List<StuAccVo> selectStuAccList() {
-        return stuAccMapper.selectStuAccList();
+    public List<StuAccVo> selectStuAccList(StuAccVo stuAccVo) {
+        return stuAccMapper.selectStuAccList(stuAccVo);
     }
 }

@@ -167,6 +167,16 @@
           />
         </el-select>
       </el-form-item>
+      <el-form-item label="离校目的地" prop="placeToLeave">
+        <el-select v-model="queryParams.placeToLeave" placeholder="请选择离校目的地" clearable>
+          <el-option
+            v-for="dict in dict.type.place_to_leave"
+            :key="dict.value"
+            :label="dict.label"
+            :value="dict.value"
+          />
+        </el-select>
+      </el-form-item>
       <el-form-item label="密接类型" prop="jointType">
         <el-select v-model="queryParams.jointType" placeholder="请选择密接类型" clearable>
           <el-option
@@ -233,6 +243,7 @@
       <el-table-column type="selection" width="55" align="center" />
       <el-table-column label="学号" align="center" prop="studentId" />
       <el-table-column label="姓名" align="center" prop="studentName" />
+      <el-table-column label="身份证号" align="center" prop="idNum" />
       <el-table-column label="学院名称" align="center" prop="deptName" />
       <el-table-column label="培养层次" align="center" prop="trainingLevel">
         <template slot-scope="scope">
@@ -292,6 +303,11 @@
           <dict-tag :options="dict.type.place_to_school" :value="scope.row.placeToSchool"/>
         </template>
       </el-table-column>
+      <el-table-column label="离校目的地" align="center" prop="placeToLeave">
+        <template slot-scope="scope">
+          <dict-tag :options="dict.type.place_to_leave" :value="scope.row.placeToLeave"/>
+        </template>
+      </el-table-column>
       <el-table-column label="密接类型" align="center" prop="jointType">
         <template slot-scope="scope">
           <dict-tag :options="dict.type.joint_type" :value="scope.row.jointType"/>
@@ -334,6 +350,9 @@
         </el-form-item>
         <el-form-item label="姓名" prop="studentName">
           <el-input v-model="form.studentName" placeholder="请输入姓名" />
+        </el-form-item>
+        <el-form-item label="身份证号" prop="idNum">
+          <el-input v-model="form.idNum" placeholder="请输入身份证号" />
         </el-form-item>
         <el-form-item label="学院编号" prop="deptId">
           <el-input v-model="form.deptId" placeholder="请输入学院编号" />
@@ -465,13 +484,23 @@
             ></el-option>
           </el-select>
         </el-form-item>
+        <el-form-item label="离校目的地" prop="placeToLeave">
+          <el-select v-model="form.placeToLeave" placeholder="请选择离校目的地">
+            <el-option
+              v-for="dict in dict.type.place_to_leave"
+              :key="dict.value"
+              :label="dict.label"
+              :value="dict.value"
+            ></el-option>
+          </el-select>
+        </el-form-item>
         <el-form-item label="密接类型" prop="jointType">
           <el-select v-model="form.jointType" placeholder="请选择密接类型">
             <el-option
               v-for="dict in dict.type.joint_type"
               :key="dict.value"
               :label="dict.label"
-:value="dict.value"
+              :value="dict.value"
             ></el-option>
           </el-select>
         </el-form-item>
@@ -519,6 +548,7 @@
           pageSize: 10,
           studentId: null,
           studentName: null,
+          idNum: null,
           deptId: null,
           deptName: null,
           trainingLevel: null,
@@ -535,6 +565,8 @@
           notSchoolReason: null,
           placeToSchoolLevel: null,
           placeToSchool: null,
+          placeToLeave: null,
+          jointType: null,
         },
         // 表单参数
         form: {},
@@ -573,6 +605,7 @@
           id: null,
           studentId: null,
           studentName: null,
+          idNum: null,
           deptId: null,
           deptName: null,
           trainingLevel: null,
@@ -589,6 +622,8 @@
           notSchoolReason: null,
           placeToSchoolLevel: null,
           placeToSchool: null,
+          placeToLeave: null,
+          jointType: null,
           createBy: null,
           createTime: null,
           updateBy: null,

@@ -6,5 +6,5 @@ import java.util.List;
 
 public interface StuAccMapper {
 
-    List<StuAccVo> selectStuAccList();
+    List<StuAccVo> selectStuAccList(StuAccVo stuAccVo);
 }

@@ -28,12 +28,12 @@ public class StuAccController extends BaseController {
     /**
      * 查询学生信息列表
      */
-    @PreAuthorize("@ss.hasPermi('student:account:list')")
+//    @PreAuthorize("@ss.hasPermi('student:account:list')")
     @GetMapping("/list")
-    public TableDataInfo list()
+    public TableDataInfo list(StuAccVo stuAccVo)
     {
         startPage();
-        List<StuAccVo> list = stuAccService.selectStuAccList();
+        List<StuAccVo> list = stuAccService.selectStuAccList(stuAccVo);
         return getDataTable(list);
     }
 }
