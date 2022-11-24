@@ -17,10 +17,6 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             SUM(CASE WHEN student_tag = 2 THEN 1 ELSE 0 END) AS '未返校学生人数',
             SUM(CASE WHEN student_tag = 3 THEN 1 ELSE 0 END) AS '当日返校'
         FROM stu_info;
-        <where>
-            1=1
-        </where>
-        ${params.dataScope}
     </select>
 
     <select id="selectPieVoResidence"  resultType="map">
