@@ -9,7 +9,7 @@ import com.ruoyi.common.core.domain.BaseEntity;
  * 学生信息对象 stu_info
  *
  * @author wangzq
- * @date 2022-11-22
+ * @date 2022-11-23
  */
 public class StuInfo extends BaseEntity
 {
@@ -25,6 +25,10 @@ public class StuInfo extends BaseEntity
     /** 姓名 */
     @Excel(name = "姓名")
     private String studentName;
+
+    /** 身份证号 */
+    @Excel(name = "身份证号")
+    private String idNum;
 
     /** 学院编号 */
     @Excel(name = "学院编号")
@@ -54,8 +58,8 @@ public class StuInfo extends BaseEntity
     @Excel(name = "校区")
     private String campus;
 
-    /** 学生标签 */
-    @Excel(name = "学生标签")
+    /** 学生标签:0在校 1当日离校 2未在校 3当日返校 */
+    @Excel(name = "学生标签:0在校 1当日离校 2未在校 3当日返校")
     private String studentTag;
 
     /** 住宿地点 */
@@ -70,25 +74,29 @@ public class StuInfo extends BaseEntity
     @Excel(name = "宿舍号")
     private String dormitoryNo;
 
-    /** 是否校内住宿 */
-    @Excel(name = "是否校内住宿")
+    /** 是否校内住宿:把在校学生分为校内住宿和其他 */
+    @Excel(name = "是否校内住宿:把在校学生分为校内住宿和其他")
     private String isOnSchool;
 
-    /** 管控等级 */
-    @Excel(name = "管控等级")
+    /** 管控等级:0无管控，1校内居家监测,2校内居家隔离,3校外集中隔离 */
+    @Excel(name = "管控等级:0无管控，1校内居家监测,2校内居家隔离,3校外集中隔离")
     private String controlLevel;
 
-    /** 未返校原因 */
-    @Excel(name = "未返校原因")
+    /** 未返校原因:0因疫暂缓,1因就业实习暂缓,2因其他暂缓返 */
+    @Excel(name = "未返校原因:0因疫暂缓,1因就业实习暂缓,2因其他暂缓返")
     private String notSchoolReason;
 
-    /** 返校出发地风险等级 */
-    @Excel(name = "返校出发地风险等级")
+    /** 返校出发地风险等级:0低风险，1高风险 */
+    @Excel(name = "返校出发地风险等级:0低风险，1高风险")
     private String placeToSchoolLevel;
 
-    /** 返校出发地 */
-    @Excel(name = "返校出发地")
+    /** 返校出发地:0省内1省外 */
+    @Excel(name = "返校出发地:0省内1省外")
     private String placeToSchool;
+
+    /** 离校目的地:0市内 1省内市外 2省外 */
+    @Excel(name = "离校目的地:0市内 1省内市外 2省外")
+    private String placeToLeave;
 
     /** 密接类型 */
     @Excel(name = "密接类型")
@@ -120,6 +128,15 @@ public class StuInfo extends BaseEntity
     public String getStudentName()
     {
         return studentName;
+    }
+    public void setIdNum(String idNum)
+    {
+        this.idNum = idNum;
+    }
+
+    public String getIdNum()
+    {
+        return idNum;
     }
     public void setDeptId(Long deptId)
     {
@@ -265,13 +282,23 @@ public class StuInfo extends BaseEntity
     {
         return placeToSchool;
     }
-
-    public String getJointType() {
-        return jointType;
+    public void setPlaceToLeave(String placeToLeave)
+    {
+        this.placeToLeave = placeToLeave;
     }
 
-    public void setJointType(String jointType) {
+    public String getPlaceToLeave()
+    {
+        return placeToLeave;
+    }
+    public void setJointType(String jointType)
+    {
         this.jointType = jointType;
+    }
+
+    public String getJointType()
+    {
+        return jointType;
     }
 
     @Override
@@ -280,6 +307,7 @@ public class StuInfo extends BaseEntity
                 .append("id", getId())
                 .append("studentId", getStudentId())
                 .append("studentName", getStudentName())
+                .append("idNum", getIdNum())
                 .append("deptId", getDeptId())
                 .append("deptName", getDeptName())
                 .append("trainingLevel", getTrainingLevel())
@@ -296,6 +324,8 @@ public class StuInfo extends BaseEntity
                 .append("notSchoolReason", getNotSchoolReason())
                 .append("placeToSchoolLevel", getPlaceToSchoolLevel())
                 .append("placeToSchool", getPlaceToSchool())
+                .append("placeToLeave", getPlaceToLeave())
+                .append("jointType", getJointType())
                 .append("createBy", getCreateBy())
                 .append("createTime", getCreateTime())
                 .append("updateBy", getUpdateBy())
