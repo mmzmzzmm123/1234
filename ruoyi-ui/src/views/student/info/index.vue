@@ -518,10 +518,11 @@
 
 <script>
   import { listInfo, getInfo, delInfo, addInfo, updateInfo } from "@/api/student/info";
+  import { getToken } from "@/utils/auth";
 
   export default {
     name: "Info",
-    dicts: ['training_level', 'campus', 'control_level', 'place_to_school', 'sys_yes_no', 'risk_level', 'nation', 'accommodation_park', 'accommodation', 'not_school_reason', 'student_tag'],
+    dicts: ['training_level', 'campus', 'control_level', 'place_to_school', 'sys_yes_no', 'risk_level', 'nation', 'accommodation_park', 'accommodation', 'not_school_reason', 'student_tag', 'joint_type', 'place_to_leave'],
     data() {
       return {
         // 遮罩层
