@@ -326,6 +326,13 @@
           <el-button
             size="mini"
             type="text"
+            icon="el-icon-edit"
+            @click="handleStateUpdate(scope.row)"
+            v-hasPermi="['student:state:edit']"
+          >状态变更</el-button>
+          <el-button
+            size="mini"
+            type="text"
             icon="el-icon-delete"
             @click="handleDelete(scope.row)"
             v-hasPermi="['student:info:remove']"
@@ -513,12 +520,184 @@
         <el-button @click="cancel">取 消</el-button>
       </div>
     </el-dialog>
+
+    <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
+      <el-form ref="stateForm" :model="stateForm" :rules="rules" label-width="80px">
+        <el-form-item label="学号" prop="studentId">
+          <el-input v-model="stateForm.studentId" placeholder="请输入学号" readonly disabled/>
+        </el-form-item>
+        <el-form-item label="姓名" prop="studentName">
+          <el-input v-model="stateForm.studentName" placeholder="请输入姓名" readonly disabled/>
+        </el-form-item>
+        <el-form-item label="身份证号" prop="idNum">
+          <el-input v-model="stateForm.idNum" placeholder="请输入身份证号" readonly disabled/>
+        </el-form-item>
+<!--        <el-form-item label="学院编号" prop="deptId">-->
+<!--          <el-input v-model="stateForm.deptId" placeholder="请输入学院编号" readonly disabled/>-->
+<!--        </el-form-item>-->
+        <el-form-item label="学院名称" prop="deptName">
+          <el-input v-model="stateForm.deptName" placeholder="请输入学院名称" readonly disabled/>
+        </el-form-item>
+        <el-form-item label="培养层次" prop="trainingLevel">
+          <el-select v-model="stateForm.trainingLevel" placeholder="请选择培养层次" readonly disabled>
+            <el-option
+              v-for="dict in dict.type.training_level"
+              :key="dict.value"
+              :label="dict.label"
+              :value="dict.value"
+            ></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="年级" prop="grade">
+          <el-date-picker clearable
+                          v-model="stateForm.grade"
+                          type="year"
+                          value-format="yyyy"
+                          placeholder="请选择年级" readonly disabled>
+          </el-date-picker>
+        </el-form-item>
+        <el-form-item label="住址" prop="address">
+          <el-input v-model="stateForm.address" placeholder="请输入住址" readonly disabled/>
+        </el-form-item>
+        <el-form-item label="民族" prop="nation">
+          <el-select v-model="stateForm.nation" placeholder="请选择民族" readonly disabled>
+            <el-option
+              v-for="dict in dict.type.nation"
+              :key="dict.value"
+              :label="dict.label"
+              :value="dict.value"
+            ></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="校区" prop="campus" readonly disabled>
+          <el-select v-model="stateForm.campus" placeholder="请选择校区">
+            <el-option
+              v-for="dict in dict.type.campus"
+              :key="dict.value"
+              :label="dict.label"
+              :value="dict.value"
+            ></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="学生标签" prop="studentTag">
+          <el-select v-model="stateForm.studentTag" placeholder="请选择学生标签">
+            <el-option
+              v-for="dict in dict.type.student_tag"
+              :key="dict.value"
+              :label="dict.label"
+              :value="dict.value"
+            ></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="住宿地点" prop="accommodation">
+          <el-select v-model="stateForm.accommodation" placeholder="请选择住宿地点" >
+            <el-option
+              v-for="dict in dict.type.accommodation"
+              :key="dict.value"
+              :label="dict.label"
+              :value="dict.value"
+            ></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="住宿园区" prop="accommodationPark">
+          <el-select v-model="stateForm.accommodationPark" placeholder="请选择住宿园区" >
+            <el-option
+              v-for="dict in dict.type.accommodation_park"
+              :key="dict.value"
+              :label="dict.label"
+              :value="dict.value"
+            ></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="宿舍号" prop="dormitoryNo">
+          <el-input v-model="stateForm.dormitoryNo" placeholder="请输入宿舍号"/>
+        </el-form-item>
+        <el-form-item label="是否校内住宿" prop="isOnSchool">
+          <el-select v-model="stateForm.isOnSchool" placeholder="请选择是否校内住宿">
+            <el-option
+              v-for="dict in dict.type.sys_yes_no"
+              :key="dict.value"
+              :label="dict.label"
+              :value="dict.value"
+            ></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="管控等级" prop="controlLevel">
+          <el-select v-model="stateForm.controlLevel" placeholder="请选择管控等级">
+            <el-option
+              v-for="dict in dict.type.control_level"
+              :key="dict.value"
+              :label="dict.label"
+              :value="dict.value"
+            ></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="未返校原因" prop="notSchoolReason">
+          <el-select v-model="stateForm.notSchoolReason" placeholder="请选择未返校原因">
+            <el-option
+              v-for="dict in dict.type.not_school_reason"
+              :key="dict.value"
+              :label="dict.label"
+              :value="dict.value"
+            ></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="返校出发地风险等级" prop="placeToSchoolLevel">
+          <el-select v-model="stateForm.placeToSchoolLevel" placeholder="请选择返校出发地风险等级">
+            <el-option
+              v-for="dict in dict.type.risk_level"
+              :key="dict.value"
+              :label="dict.label"
+              :value="dict.value"
+            ></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="返校出发地" prop="placeToSchool">
+          <el-select v-model="stateForm.placeToSchool" placeholder="请选择返校出发地">
+            <el-option
+              v-for="dict in dict.type.place_to_school"
+              :key="dict.value"
+              :label="dict.label"
+              :value="dict.value"
+            ></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="离校目的地" prop="placeToLeave">
+          <el-select v-model="stateForm.placeToLeave" placeholder="请选择离校目的地">
+            <el-option
+              v-for="dict in dict.type.place_to_leave"
+              :key="dict.value"
+              :label="dict.label"
+              :value="dict.value"
+            ></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="密接类型" prop="jointType">
+          <el-select v-model="stateForm.jointType" placeholder="请选择密接类型">
+            <el-option
+              v-for="dict in dict.type.joint_type"
+              :key="dict.value"
+              :label="dict.label"
+              :value="dict.value"
+            ></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="备注" prop="remark">
+          <el-input v-model="stateForm.remark" placeholder="请输入备注" />
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button type="primary" @click="submitStateForm">确 定</el-button>
+        <el-button @click="cancel">取 消</el-button>
+      </div>
+    </el-dialog>
+
+
   </div>
 </template>
 
 <script>
   import { listInfo, getInfo, delInfo, addInfo, updateInfo } from "@/api/student/info";
-  import { getToken } from "@/utils/auth";
 
   export default {
     name: "Info",
@@ -571,6 +750,8 @@
         },
         // 表单参数
         form: {},
+        //
+        stateForm: {},
         // 表单校验
         rules: {
           studentId: [
@@ -633,6 +814,39 @@
         };
         this.resetForm("form");
       },
+      // 表单重置
+      resetStateForm() {
+        this.stateForm = {
+          id: null,
+          studentId: null,
+          studentName: null,
+          idNum: null,
+          deptId: null,
+          deptName: null,
+          trainingLevel: null,
+          grade: null,
+          address: null,
+          nation: null,
+          campus: null,
+          studentTag: null,
+          accommodation: null,
+          accommodationPark: null,
+          dormitoryNo: null,
+          isOnSchool: null,
+          controlLevel: null,
+          notSchoolReason: null,
+          placeToSchoolLevel: null,
+          placeToSchool: null,
+          placeToLeave: null,
+          jointType: null,
+          createBy: null,
+          createTime: null,
+          updateBy: null,
+          updateTime: null,
+          remark: null
+        };
+        this.resetForm("stateForm");
+      },
       /** 搜索按钮操作 */
       handleQuery() {
         this.queryParams.pageNum = 1;
@@ -665,6 +879,16 @@
           this.title = "修改学生信息";
         });
       },
+      /** 状态变更按钮操作 */
+      handleStateUpdate(row) {
+        this.resetStateForm();
+        const id = row.id || this.ids
+        getInfo(id).then(response => {
+          this.stateForm = response.data;
+          this.open = true;
+          this.title = "变更学生状态";
+        });
+      },
       /** 提交按钮 */
       submitForm() {
         this.$refs["form"].validate(valid => {
@@ -677,6 +901,26 @@
               });
             } else {
               addInfo(this.form).then(response => {
+                this.$modal.msgSuccess("新增成功");
+                this.open = false;
+                this.getList();
+              });
+            }
+          }
+        });
+      },
+      /** 提交状态变更按钮 */
+      submitStateForm() {
+        this.$refs["stateForm"].validate(valid => {
+          if (valid) {
+            if (this.stateForm.id != null) {
+              updateInfo(this.stateForm).then(response => {
+                this.$modal.msgSuccess("修改成功");
+                this.open = false;
+                this.getList();
+              });
+            } else {
+              addInfo(this.stateForm).then(response => {
                 this.$modal.msgSuccess("新增成功");
                 this.open = false;
                 this.getList();
