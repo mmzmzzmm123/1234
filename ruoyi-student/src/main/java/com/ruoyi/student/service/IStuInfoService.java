@@ -70,4 +70,12 @@ public interface IStuInfoService
      * @return
      */
     int changeTagLeave2Out();
+
+    /**
+     *
+     * @param stuInfoList
+     * @return
+     */
+    List<StuInfo> matchDict(List<StuInfo> stuInfoList);
+
 }
