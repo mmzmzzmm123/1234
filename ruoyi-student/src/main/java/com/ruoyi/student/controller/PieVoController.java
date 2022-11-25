@@ -43,7 +43,21 @@ public class PieVoController extends BaseController
     public TableDataInfo acc()
     {
         Map<String, BigDecimal> map = pieVoService.selectPieVoAcc();
-        return mapToTable(map);
+        if(map==null){
+            List<PieVo> list = new ArrayList<>();
+            //学生标签:0在校 1当日离校 2未在校 3当日返校
+            String[] keys = {"在校","当日离校","家属未在校区","当日返校"};
+            for(int i=0;i<keys.length;i++){
+                PieVo pieVo = new PieVo();
+                pieVo.setName(keys[i]);
+                pieVo.setValueNumber(BigDecimal.valueOf(0));
+                list.add(pieVo);
+            }
+            return getDataTable(list);
+        }else{
+            return mapToTable(map);
+        }
+
     }
 
     @PreAuthorize("@ss.hasPermi('student:pie:residence')")
@@ -51,21 +65,60 @@ public class PieVoController extends BaseController
     public TableDataInfo residence()
     {
         Map<String, BigDecimal> map = pieVoService.selectPieVoResidence();
-        return mapToTable(map);
+        if(map==null){
+            List<PieVo> list = new ArrayList<>();
+            //是否校内住宿:住宿:把在校生分为0教学区宿舍，1教学区其他区2家属区3其他,
+            String[] keys = {"教学区宿舍","教学区其他区","家属区","其他"};
+            for(int i=0;i<keys.length;i++){
+                PieVo pieVo = new PieVo();
+                pieVo.setName(keys[i]);
+                pieVo.setValueNumber(BigDecimal.valueOf(0));
+                list.add(pieVo);
+            }
+            return getDataTable(list);
+        }else{
+            return mapToTable(map);
+        }
     }
     @PreAuthorize("@ss.hasPermi('student:pie:nobackschool')")
     @GetMapping("/nobackschool")
     public TableDataInfo nobackschool()
     {
         Map<String, BigDecimal> map = pieVoService.selectPieVoNoBackSchool();
-        return mapToTable(map);
+        if(map==null){
+            List<PieVo> list = new ArrayList<>();
+            //未返校原因:0因疫暂缓,1因就业实习暂缓,2因其他暂缓返
+            String[] keys = {"因疫暂缓","因就业实习暂缓","因其他暂缓返回"};
+            for(int i=0;i<keys.length;i++){
+                PieVo pieVo = new PieVo();
+                pieVo.setName(keys[i]);
+                pieVo.setValueNumber(BigDecimal.valueOf(0));
+                list.add(pieVo);
+            }
+            return getDataTable(list);
+        }else{
+            return mapToTable(map);
+        }
     }
     @PreAuthorize("@ss.hasPermi('student:pie:control')")
     @GetMapping("/control")
     public TableDataInfo control()
     {
         Map<String, BigDecimal> map = pieVoService.selectPieVoControl();
-        return mapToTable(map);
+        if(map==null){
+            List<PieVo> list = new ArrayList<>();
+            //管控等级:0无管控，1校内居家监测,2校内居家隔离,3校外集中隔离
+            String[] keys = {"无管控","校内居家监测","校内居家隔离","校外集中隔离"};
+            for(int i=0;i<keys.length;i++){
+                PieVo pieVo = new PieVo();
+                pieVo.setName(keys[i]);
+                pieVo.setValueNumber(BigDecimal.valueOf(0));
+                list.add(pieVo);
+            }
+            return getDataTable(list);
+        }else{
+            return mapToTable(map);
+        }
     }
     @PreAuthorize("@ss.hasPermi('student:pie:placetoschool')")
     @GetMapping("/placetoschool")
@@ -73,15 +126,34 @@ public class PieVoController extends BaseController
     {
         Map<String, BigDecimal> map = pieVoService.selectPieVoPlaceToSchool();
 
-        return mapToTable(map);
+        if(map==null){
+            List<PieVo> list = new ArrayList<>();
+            //返校出发地:0市内,1省内市外2省外
+            String[] keys = {"市内","省内市外","省外"};
+            for(int i=0;i<keys.length;i++){
+                PieVo pieVo = new PieVo();
+                pieVo.setName(keys[i]);
+                pieVo.setValueNumber(BigDecimal.valueOf(0));
+                list.add(pieVo);
+            }
+            return getDataTable(list);
+        }else{
+            return mapToTable(map);
+        }
     }
     public TableDataInfo mapToTable(Map<String, BigDecimal> map){
         List<PieVo> list = new ArrayList<>();
+        System.out.println(map.size());
         Set<String> keySet = map.keySet();
         for(String key :keySet){
             PieVo pieVo = new PieVo();
             pieVo.setName(key);
-            pieVo.setValueNumber(map.get(key));
+            if(map.get(key)==null){
+                pieVo.setValueNumber(BigDecimal.valueOf(0));
+            }else{
+                pieVo.setValueNumber(map.get(key));
+            }
+            System.out.println(key+map.get(key));
             list.add(pieVo);
         }
         return getDataTable(list);
