@@ -15,7 +15,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             SUM(CASE WHEN student_tag = 0 THEN 1 ELSE 0 END) AS '实际在校学生人数',
             SUM(CASE WHEN student_tag = 1 THEN 1 ELSE 0 END) AS '当日请假离校人数（不返校）',
             SUM(CASE WHEN student_tag = 2 THEN 1 ELSE 0 END) AS '未返校学生人数',
-            SUM(CASE WHEN student_tag = 3 THEN 1 ELSE 0 END) AS '当日返校'
+            SUM(CASE WHEN student_tag = 3 THEN 1 ELSE 0 END) AS '当日返校人数'
         FROM stu_info;
     </select>
 

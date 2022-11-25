@@ -128,7 +128,7 @@ public class PieVoController extends BaseController
 
         if(map==null){
             List<PieVo> list = new ArrayList<>();
-            //返校出发地:0市内,1省内市外2省外
+            //返校出发地:0市内,1省内市外2省外.
             String[] keys = {"市内","省内市外","省外"};
             for(int i=0;i<keys.length;i++){
                 PieVo pieVo = new PieVo();
