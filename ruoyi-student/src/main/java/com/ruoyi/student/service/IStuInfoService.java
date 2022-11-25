@@ -58,4 +58,24 @@ public interface IStuInfoService
      * @return 结果
      */
     public int deleteStuInfoById(Long id);
+
+    /**
+     * 变更学生标签：当日返校 → 在校
+     * @return
+     */
+    int changeTagReturn2InSchool();
+
+    /**
+     * 变更学生标签：当日离校 → 不在校
+     * @return
+     */
+    int changeTagLeave2Out();
+
+    /**
+     *
+     * @param stuInfoList
+     * @return
+     */
+    List<StuInfo> matchDict(List<StuInfo> stuInfoList);
+
 }

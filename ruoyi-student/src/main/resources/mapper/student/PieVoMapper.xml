@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.student.mapper.PieVoMapper">
+    
+    <resultMap type="PieVo" id="PieVoResult">
+        <result property="valueNumber"    column="value"    />
+        <result property="name"    column="name"    />
+    </resultMap>
+
+
+    <select id="selectPieVoAcc"  resultType="map">
+        SELECT
+            SUM(CASE WHEN student_tag = 0 THEN 1 ELSE 0 END) AS '实际在校学生人数',
+            SUM(CASE WHEN student_tag = 1 THEN 1 ELSE 0 END) AS '当日请假离校人数（不返校）',
+            SUM(CASE WHEN student_tag = 2 THEN 1 ELSE 0 END) AS '未返校学生人数',
+            SUM(CASE WHEN student_tag = 3 THEN 1 ELSE 0 END) AS '当日返校人数'
+        FROM stu_info;
+    </select>
+
+    <select id="selectPieVoResidence"  resultType="map">
+        SELECT
+            SUM(CASE WHEN is_on_school = 0 THEN 1 ELSE 0 END) AS '教学区宿舍',
+            SUM(CASE WHEN is_on_school = 1 THEN 1 ELSE 0 END) AS '教学区其他区',
+            SUM(CASE WHEN is_on_school = 2 THEN 1 ELSE 0 END) AS '家属区',
+            SUM(CASE WHEN is_on_school = 3 THEN 1 ELSE 0 END) AS '其他'
+        FROM stu_info
+        where student_tag=0;
+    </select>
+
+    <select id="selectPieVoNoBackSchool"  resultType="map">
+        SELECT
+            SUM(CASE WHEN not_school_reason = 0 THEN 1 ELSE 0 END) AS '因疫情暂缓',
+            SUM(CASE WHEN not_school_reason = 1 THEN 1 ELSE 0 END) AS '因就业实习暂缓',
+            SUM(CASE WHEN not_school_reason = 2 THEN 1 ELSE 0 END) AS '因其他暂缓返'
+        FROM stu_info
+        where student_tag=2;
+    </select>
+
+
+    <select id="selectPieVoControl"  resultType="map">
+        SELECT
+            SUM(CASE WHEN control_level = 0 THEN 1 ELSE 0 END) AS '无管控',
+            SUM(CASE WHEN control_level = 1 THEN 1 ELSE 0 END) AS '校内居家监测',
+            SUM(CASE WHEN control_level = 2 THEN 1 ELSE 0 END) AS '校内居家隔离',
+            SUM(CASE WHEN control_level = 3 THEN 1 ELSE 0 END) AS '校外集中隔离'
+        FROM stu_info
+        where student_tag=0;
+    </select>
+    <select id="selectPieVoPlaceToSchool"  resultType="map">
+        SELECT
+            SUM(CASE WHEN place_to_school = 0 THEN 1 ELSE 0 END) AS '市内',
+            SUM(CASE WHEN place_to_school = 1 THEN 1 ELSE 0 END) AS '省内市外',
+            SUM(CASE WHEN place_to_school = 2 THEN 1 ELSE 0 END) AS '省外'
+        FROM stu_info
+        where student_tag=3;
+    </select>
+
+</mapper>

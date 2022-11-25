@@ -32,21 +32,20 @@
     </el-form>
 
     <el-row :gutter="10" class="mb8">
-      <el-col :span="1.5">
-        <el-button
-          type="warning"
-          plain
-          icon="el-icon-download"
-          size="mini"
-          @click="handleExport"
-          v-hasPermi="['student:account:export']"
-        >导出</el-button>
-      </el-col>
+<!--      <el-col :span="1.5">-->
+<!--        <el-button-->
+<!--          type="warning"-->
+<!--          plain-->
+<!--          icon="el-icon-download"-->
+<!--          size="mini"-->
+<!--          @click="handleExport"-->
+<!--          v-hasPermi="['student:account:export']"-->
+<!--        >导出</el-button>-->
+<!--      </el-col>-->
       <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
     </el-row>
 
     <el-table v-loading="loading" :data="infoList" @selection-change="handleSelectionChange">
-      <el-table-column type="selection" width="55" align="center" />
       <el-table-column label="学院名称" align="center" prop="deptName" />
       <el-table-column label="学生在册总人数" align="center" prop="stuAcc" />
       <el-table-column label="当日省内返校学生" align="center" prop="inProReturnAcc" />
@@ -54,105 +53,37 @@
       <el-table-column label="省内累计学生" align="center" prop="inProAcc" />
       <el-table-column label="省外累计学生" align="center" prop="outProAcc" />
       <el-table-column label="高风险返回学生数" align="center" prop="highLevReturnAcc" />
-      <el-table-column label="教学区宿舍区" align="center" prop="dormitoryTeachingAreaAcc" />
-      <el-table-column label="教学区其他地方" align="center" prop="dormitoryOtherAreaAcc" />
-      <el-table-column label="家属区" align="center" prop="familyAreaAcc" />
-      <el-table-column label="走读生" align="center" prop="dayStudentAcc" />
-      <el-table-column label="小计" align="center" prop="inSchoolAcc" />
+      <el-table-column align="center" label="实际在校学生人数">
+      	<el-table-column label="教学区宿舍区" align="center" prop="dormitoryTeachingAreaAcc" />
+      	<el-table-column label="教学区其他地方" align="center" prop="dormitoryOtherAreaAcc" />
+      	<el-table-column label="家属区" align="center" prop="familyAreaAcc" />
+      	<el-table-column label="走读生" align="center" prop="dayStudentAcc" />
+      	<el-table-column label="小计" align="center" prop="inSchoolAcc" />
+      </el-table-column>
+
       <el-table-column label="B类密接" align="center" prop="typeBAcc" />
-      <el-table-column label="C类密接" align="center" prop="typeCAcc" />
-      <el-table-column label="外出人数" align="center" prop="toOutAcc" />
-      <el-table-column label="返回人数" align="center" prop="returnAcc" />
-      <el-table-column label="未返回人数" align="center" prop="notReturnAcc" />
-<!--      <el-table-column label="是否已联系未返回学生" align="center" prop="typeCAcc" />-->
+
+      <el-table-column align="center" label="当日请假离校人数（不返校）">
       <el-table-column label="市内" align="center" prop="leaveInCityAcc" />
       <el-table-column label="省内市外" align="center" prop="leaveOutCityInProAcc" />
       <el-table-column label="省外" align="center" prop="leaveOutProAcc" />
       <el-table-column label="小计" align="center" prop="leaveTodayAcc" />
+      </el-table-column>
+
+      <el-table-column align="center" label="未返校学生人数">
       <el-table-column label="因疫暂缓返校人数" align="center" prop="epidemicSusAcc" />
       <el-table-column label="因就业实习暂缓返校人数" align="center" prop="practiceSusAcc" />
       <el-table-column label="因其他暂缓返校人数" align="center" prop="otherSusAcc" />
       <el-table-column label="小计" align="center" prop="susAcc" />
+      </el-table-column>
+
+      <el-table-column align="center" label="重点人员管控">
       <el-table-column label="校外实际集中隔离人数" align="center" prop="outSchCentIsolationAcc" />
       <el-table-column label="校内实际居家隔离人数" align="center" prop="outSchHomeIsolationAcc" />
       <el-table-column label="校内实际居家健康监测人数" align="center" prop="inSchHomeIsolationAcc" />
-<!--      <el-table-column label="培养层次" align="center" prop="trainingLevel">-->
-<!--        <template slot-scope="scope">-->
-<!--          <dict-tag :options="dict.type.training_level" :value="scope.row.trainingLevel"/>-->
-<!--        </template>-->
-<!--      </el-table-column>-->
-<!--      <el-table-column label="年级" align="center" prop="grade"/>-->
-<!--      <el-table-column label="住址" align="center" prop="address" />-->
-<!--      <el-table-column label="民族" align="center" prop="nation">-->
-<!--        <template slot-scope="scope">-->
-<!--          <dict-tag :options="dict.type.nation" :value="scope.row.nation"/>-->
-<!--        </template>-->
-<!--      </el-table-column>-->
-<!--      <el-table-column label="校区" align="center" prop="campus">-->
-<!--        <template slot-scope="scope">-->
-<!--          <dict-tag :options="dict.type.campus" :value="scope.row.campus"/>-->
-<!--        </template>-->
-<!--      </el-table-column>-->
-<!--      <el-table-column label="学生标签" align="center" prop="studentTag">-->
-<!--        <template slot-scope="scope">-->
-<!--          <dict-tag :options="dict.type.student_tag" :value="scope.row.studentTag"/>-->
-<!--        </template>-->
-<!--      </el-table-column>-->
-<!--      <el-table-column label="住宿地点" align="center" prop="accommodation">-->
-<!--        <template slot-scope="scope">-->
-<!--          <dict-tag :options="dict.type.accommodation" :value="scope.row.accommodation"/>-->
-<!--        </template>-->
-<!--      </el-table-column>-->
-<!--      <el-table-column label="住宿园区" align="center" prop="accommodationPark">-->
-<!--        <template slot-scope="scope">-->
-<!--          <dict-tag :options="dict.type.accommodation_park" :value="scope.row.accommodationPark"/>-->
-<!--        </template>-->
-<!--      </el-table-column>-->
-<!--      <el-table-column label="宿舍号" align="center" prop="dormitoryNo" />-->
-<!--      <el-table-column label="是否校内住宿" align="center" prop="isOnSchool">-->
-<!--        <template slot-scope="scope">-->
-<!--          <dict-tag :options="dict.type.sys_yes_no" :value="scope.row.isOnSchool"/>-->
-<!--        </template>-->
-<!--      </el-table-column>-->
-<!--      <el-table-column label="管控等级" align="center" prop="controlLevel">-->
-<!--        <template slot-scope="scope">-->
-<!--          <dict-tag :options="dict.type.control_level" :value="scope.row.controlLevel"/>-->
-<!--        </template>-->
-<!--      </el-table-column>-->
-<!--      <el-table-column label="未返校原因" align="center" prop="notSchoolReason">-->
-<!--        <template slot-scope="scope">-->
-<!--          <dict-tag :options="dict.type.not_school_reason" :value="scope.row.notSchoolReason"/>-->
-<!--        </template>-->
-<!--      </el-table-column>-->
-<!--      <el-table-column label="返校出发地风险等级" align="center" prop="placeToSchoolLevel">-->
-<!--        <template slot-scope="scope">-->
-<!--          <dict-tag :options="dict.type.risk_level" :value="scope.row.placeToSchoolLevel"/>-->
-<!--        </template>-->
-<!--      </el-table-column>-->
-<!--      <el-table-column label="返校出发地" align="center" prop="placeToSchool">-->
-<!--        <template slot-scope="scope">-->
-<!--          <dict-tag :options="dict.type.place_to_school" :value="scope.row.placeToSchool"/>-->
-<!--        </template>-->
-<!--      </el-table-column>-->
-<!--      <el-table-column label="备注" align="center" prop="remark" />-->
-<!--      <el-table-column label="操作" align="center" class-name="small-padding fixed-width">-->
-<!--        <template slot-scope="scope">-->
-<!--          <el-button-->
-<!--            size="mini"-->
-<!--            type="text"-->
-<!--            icon="el-icon-edit"-->
-<!--            @click="handleUpdate(scope.row)"-->
-<!--            v-hasPermi="['student:info:edit']"-->
-<!--          >修改</el-button>-->
-<!--          <el-button-->
-<!--            size="mini"-->
-<!--            type="text"-->
-<!--            icon="el-icon-delete"-->
-<!--            @click="handleDelete(scope.row)"-->
-<!--            v-hasPermi="['student:info:remove']"-->
-<!--          >删除</el-button>-->
-<!--        </template>-->
-<!--      </el-table-column>-->
+      </el-table-column>
+
+
     </el-table>
 
     <pagination

@@ -58,4 +58,16 @@ public interface StuInfoMapper
      * @return 结果
      */
     public int deleteStuInfoByIds(Long[] ids);
+
+    /**
+     * 变更学生标签：当日返校 → 在校
+     * @return
+     */
+    int changeTagReturn2InSchool();
+
+    /**
+     * 变更学生标签：当日离校 → 不在校
+     * @return
+     */
+    int changeTagLeave2Out();
 }

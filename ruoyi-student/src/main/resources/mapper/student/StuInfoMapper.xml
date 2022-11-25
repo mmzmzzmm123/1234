@@ -8,6 +8,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="id"    column="id"    />
         <result property="studentId"    column="student_id"    />
         <result property="studentName"    column="student_name"    />
+        <result property="idNum"    column="id_num"    />
         <result property="deptId"    column="dept_id"    />
         <result property="deptName"    column="dept_name"    />
         <result property="trainingLevel"    column="training_level"    />
@@ -24,6 +25,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="notSchoolReason"    column="not_school_reason"    />
         <result property="placeToSchoolLevel"    column="place_to_school_level"    />
         <result property="placeToSchool"    column="place_to_school"    />
+        <result property="placeToLeave"    column="place_to_leave"    />
+        <result property="jointType"    column="joint_type"    />
         <result property="createBy"    column="create_by"    />
         <result property="createTime"    column="create_time"    />
         <result property="updateBy"    column="update_by"    />
@@ -36,6 +39,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             t.id,
             t.student_id,
             t.student_name,
+            t.id_num,
             t.dept_id,
             u.dept_name,
             t.training_level,
@@ -44,7 +48,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             t.nation, t.campus,
             t.student_tag,
             t.accommodation, t.accommodation_park, t.dormitory_no,
-            t.is_on_school, control_level, not_school_reason, place_to_school_level, place_to_school,
+            t.is_on_school, control_level, not_school_reason, place_to_school_level, place_to_school,place_to_leave,
+            t.joint_type,
             t.create_by, t.create_time, t.update_by, t.update_time, t.remark
         from stu_info t
         left join sys_dept u on t.dept_id = u.dept_id
@@ -56,8 +61,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             1=1
             <if test="studentId != null "> and student_id = #{studentId}</if>
             <if test="studentName != null  and studentName != ''"> and student_name like concat('%', #{studentName}, '%')</if>
-            <if test="deptId != null "> and t.dept_id = #{deptId}</if>
-            <if test="deptName != null  and deptName != ''"> and u.dept_name like concat('%', #{deptName}, '%')</if>
+            <if test="idNum != null  and idNum != ''"> and id_num = #{idNum}</if>
+            <if test="deptId != null "> and dept_id = #{deptId}</if>
+            <if test="deptName != null  and deptName != ''"> and dept_name like concat('%', #{deptName}, '%')</if>
             <if test="trainingLevel != null  and trainingLevel != ''"> and training_level = #{trainingLevel}</if>
             <if test="grade != null  and grade != ''"> and grade = #{grade}</if>
             <if test="address != null  and address != ''"> and address = #{address}</if>
@@ -72,6 +78,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="notSchoolReason != null  and notSchoolReason != ''"> and not_school_reason = #{notSchoolReason}</if>
             <if test="placeToSchoolLevel != null  and placeToSchoolLevel != ''"> and place_to_school_level = #{placeToSchoolLevel}</if>
             <if test="placeToSchool != null  and placeToSchool != ''"> and place_to_school = #{placeToSchool}</if>
+            <if test="placeToLeave != null  and placeToLeave != ''"> and place_to_leave = #{placeToLeave}</if>
+            <if test="jointType != null  and jointType != ''"> and joint_type = #{jointType}</if>
         </where>
         ${params.dataScope}
     </select>
@@ -86,6 +94,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="studentId != null">student_id,</if>
             <if test="studentName != null and studentName != ''">student_name,</if>
+            <if test="idNum != null">id_num,</if>
             <if test="deptId != null">dept_id,</if>
             <if test="deptName != null">dept_name,</if>
             <if test="trainingLevel != null">training_level,</if>
@@ -102,6 +111,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="notSchoolReason != null">not_school_reason,</if>
             <if test="placeToSchoolLevel != null">place_to_school_level,</if>
             <if test="placeToSchool != null">place_to_school,</if>
+            <if test="placeToLeave != null">place_to_leave,</if>
+            <if test="jointType != null">joint_type,</if>
             <if test="createBy != null">create_by,</if>
             <if test="createTime != null">create_time,</if>
             <if test="updateBy != null">update_by,</if>
@@ -111,6 +122,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="studentId != null">#{studentId},</if>
             <if test="studentName != null and studentName != ''">#{studentName},</if>
+            <if test="idNum != null">#{idNum},</if>
             <if test="deptId != null">#{deptId},</if>
             <if test="deptName != null">#{deptName},</if>
             <if test="trainingLevel != null">#{trainingLevel},</if>
@@ -127,6 +139,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="notSchoolReason != null">#{notSchoolReason},</if>
             <if test="placeToSchoolLevel != null">#{placeToSchoolLevel},</if>
             <if test="placeToSchool != null">#{placeToSchool},</if>
+            <if test="placeToLeave != null">#{placeToLeave},</if>
+            <if test="jointType != null">#{jointType},</if>
             <if test="createBy != null">#{createBy},</if>
             <if test="createTime != null">#{createTime},</if>
             <if test="updateBy != null">#{updateBy},</if>
@@ -140,6 +154,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <trim prefix="SET" suffixOverrides=",">
             <if test="studentId != null">student_id = #{studentId},</if>
             <if test="studentName != null and studentName != ''">student_name = #{studentName},</if>
+            <if test="idNum != null">id_num = #{idNum},</if>
             <if test="deptId != null">dept_id = #{deptId},</if>
             <if test="deptName != null">dept_name = #{deptName},</if>
             <if test="trainingLevel != null">training_level = #{trainingLevel},</if>
@@ -156,6 +171,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="notSchoolReason != null">not_school_reason = #{notSchoolReason},</if>
             <if test="placeToSchoolLevel != null">place_to_school_level = #{placeToSchoolLevel},</if>
             <if test="placeToSchool != null">place_to_school = #{placeToSchool},</if>
+            <if test="placeToLeave != null">place_to_leave = #{placeToLeave},</if>
+            <if test="jointType != null">joint_type = #{jointType},</if>
             <if test="createBy != null">create_by = #{createBy},</if>
             <if test="createTime != null">create_time = #{createTime},</if>
             <if test="updateBy != null">update_by = #{updateBy},</if>
@@ -165,13 +182,24 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         where id = #{id}
     </update>
 
+    <update id="changeTagReturn2InSchool">
+        update stu_info
+        set student_tag = 0
+        where student_tag = 3
+    </update>
+
+    <update id="changeTagLeave2Out">
+        update stu_info
+        set student_tag = 2
+        where student_tag = 1
+    </update>
 
     <delete id="deleteStuInfoById" parameterType="Long">
         delete from stu_info where id = #{id}
     </delete>
 
     <delete id="deleteStuInfoByIds" parameterType="String">
-        delete from stu_info where id in 
+        delete from stu_info where id in
         <foreach item="id" collection="array" open="(" separator="," close=")">
             #{id}
         </foreach>
