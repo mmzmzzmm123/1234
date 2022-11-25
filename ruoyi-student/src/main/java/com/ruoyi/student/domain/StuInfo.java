@@ -20,7 +20,7 @@ public class StuInfo extends BaseEntity
 
     /** 学号 */
     @Excel(name = "学号")
-    private Long studentId;
+    private String studentId;
 
     /** 姓名 */
     @Excel(name = "姓名")
@@ -125,12 +125,12 @@ public class StuInfo extends BaseEntity
     {
         return id;
     }
-    public void setStudentId(Long studentId)
+    public void setStudentId(String studentId)
     {
         this.studentId = studentId;
     }
 
-    public Long getStudentId()
+    public String getStudentId()
     {
         return studentId;
     }
