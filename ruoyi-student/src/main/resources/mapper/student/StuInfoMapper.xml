@@ -182,6 +182,18 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         where id = #{id}
     </update>
 
+    <update id="changeTagReturn2InSchool">
+        update stu_info
+        set student_tag = 0
+        where student_tag = 3
+    </update>
+
+    <update id="changeTagLeave2Out">
+        update stu_info
+        set student_tag = 2
+        where student_tag = 1
+    </update>
+
     <delete id="deleteStuInfoById" parameterType="Long">
         delete from stu_info where id = #{id}
     </delete>

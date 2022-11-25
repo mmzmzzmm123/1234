@@ -96,4 +96,14 @@ public class StuInfoServiceImpl implements IStuInfoService
     {
         return stuInfoMapper.deleteStuInfoById(id);
     }
+
+    @Override
+    public int changeTagReturn2InSchool() {
+        return stuInfoMapper.changeTagReturn2InSchool();
+    }
+
+    @Override
+    public int changeTagLeave2Out() {
+        return stuInfoMapper.changeTagLeave2Out();
+    }
 }
