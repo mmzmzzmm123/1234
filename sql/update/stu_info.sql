@@ -1,6 +1,3 @@
-SET NAMES utf8mb4;
-SET FOREIGN_KEY_CHECKS = 0;
-
 -- ----------------------------
 -- Table structure for stu_info
 -- ----------------------------
@@ -21,7 +18,7 @@ CREATE TABLE `stu_info`  (
   `accommodation` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '住宿地点',
   `accommodation_park` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '住宿园区',
   `dormitory_no` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '宿舍号',
-  `is_on_school` varchar(10) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '是否校内住宿:住宿:把在校生分为0教学区宿舍，1教学区其他区2家属区3其他,
+  `is_on_school` varchar(10) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '是否校内住宿:住宿:把在校生分为0教学区宿舍，1教学区其他区2家属区3其他,',
   `control_level` varchar(10) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '管控等级:0无管控，1校内居家监测,2校内居家隔离,3校外集中隔离',
   `not_school_reason` varchar(10) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '未返校原因:0因疫暂缓,1因就业实习暂缓,2因其他暂缓返',
   `place_to_school_level` varchar(10) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '返校出发地风险等级:0低风险，1高风险',
@@ -34,6 +31,6 @@ CREATE TABLE `stu_info`  (
   `update_time` datetime(0) NULL DEFAULT NULL COMMENT '更新时间',
   `remark` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '备注',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 8 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '学生信息' ROW_FORMAT = Dynamic;
+) COMMENT = '学生信息';
 
-SET FOREIGN_KEY_CHECKS = 1;
+
