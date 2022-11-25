@@ -5,6 +5,8 @@ import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import org.slf4j.MDC;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -24,21 +26,33 @@ import com.ruoyi.framework.web.service.TokenService;
 @Component
 public class JwtAuthenticationTokenFilter extends OncePerRequestFilter
 {
-    @Autowired
     private TokenService tokenService;
+
+    /**用作logback日志时打印用户名*/
+    public static final String AUTH_USER="AUTH_USER";
+    @Autowired
+    public JwtAuthenticationTokenFilter(TokenService tokenService) {
+        this.tokenService = tokenService;
+    }
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
             throws ServletException, IOException
     {
-        LoginUser loginUser = tokenService.getLoginUser(request);
-        if (StringUtils.isNotNull(loginUser) && StringUtils.isNull(SecurityUtils.getAuthentication()))
-        {
-            tokenService.verifyToken(loginUser);
-            UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(loginUser, null, loginUser.getAuthorities());
-            authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-            SecurityContextHolder.getContext().setAuthentication(authenticationToken);
+        try {
+            LoginUser loginUser = tokenService.getLoginUser(request);
+            if (StringUtils.isNotNull(loginUser) && StringUtils.isNull(SecurityUtils.getAuthentication())) {
+                tokenService.verifyToken(loginUser);
+                UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(loginUser, null, loginUser.getAuthorities());
+                authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+                SecurityContextHolder.getContext().setAuthentication(authenticationToken);
+                MDC.put(AUTH_USER,loginUser.getUsername());
+            }else{
+                MDC.remove(AUTH_USER);
+            }
+            chain.doFilter(request, response);
+        }finally {
+            MDC.remove(AUTH_USER);
         }
-        chain.doFilter(request, response);
     }
 }
