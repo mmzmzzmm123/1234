@@ -32,16 +32,16 @@
     </el-form>
 
     <el-row :gutter="10" class="mb8">
-      <el-col :span="1.5">
-        <el-button
-          type="warning"
-          plain
-          icon="el-icon-download"
-          size="mini"
-          @click="handleExport"
-          v-hasPermi="['student:account:export']"
-        >导出</el-button>
-      </el-col>
+<!--      <el-col :span="1.5">-->
+<!--        <el-button-->
+<!--          type="warning"-->
+<!--          plain-->
+<!--          icon="el-icon-download"-->
+<!--          size="mini"-->
+<!--          @click="handleExport"-->
+<!--          v-hasPermi="['student:account:export']"-->
+<!--        >导出</el-button>-->
+<!--      </el-col>-->
       <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
     </el-row>
 
@@ -62,7 +62,7 @@
       </el-table-column>
 
       <el-table-column label="B类密接" align="center" prop="typeBAcc" />
-      
+
       <el-table-column align="center" label="当日请假离校人数（不返校）">
       <el-table-column label="市内" align="center" prop="leaveInCityAcc" />
       <el-table-column label="省内市外" align="center" prop="leaveOutCityInProAcc" />
@@ -76,7 +76,7 @@
       <el-table-column label="因其他暂缓返校人数" align="center" prop="otherSusAcc" />
       <el-table-column label="小计" align="center" prop="susAcc" />
       </el-table-column>
-      
+
       <el-table-column align="center" label="重点人员管控">
       <el-table-column label="校外实际集中隔离人数" align="center" prop="outSchCentIsolationAcc" />
       <el-table-column label="校内实际居家隔离人数" align="center" prop="outSchHomeIsolationAcc" />
