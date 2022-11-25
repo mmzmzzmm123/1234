@@ -55,6 +55,7 @@ public class StuInfoController extends BaseController
     public void export(HttpServletResponse response, StuInfo stuInfo)
     {
         List<StuInfo> list = stuInfoService.selectStuInfoList(stuInfo);
+        list = stuInfoService.matchDict(list);
         ExcelUtil<StuInfo> util = new ExcelUtil<StuInfo>(StuInfo.class);
         util.exportExcel(response, list, "学生信息数据");
     }

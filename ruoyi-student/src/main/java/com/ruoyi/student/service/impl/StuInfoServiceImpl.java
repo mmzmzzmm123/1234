@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.ruoyi.common.annotation.DataScope;
 import com.ruoyi.common.utils.DateUtils;
+import com.ruoyi.system.service.ISysDictDataService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.ruoyi.student.mapper.StuInfoMapper;
@@ -21,6 +22,9 @@ public class StuInfoServiceImpl implements IStuInfoService
 {
     @Autowired
     private StuInfoMapper stuInfoMapper;
+
+    @Autowired
+    private ISysDictDataService sysDictDataService;
 
     /**
      * 查询学生信息
@@ -105,5 +109,38 @@ public class StuInfoServiceImpl implements IStuInfoService
     @Override
     public int changeTagLeave2Out() {
         return stuInfoMapper.changeTagLeave2Out();
+    }
+
+    @Override
+    public List<StuInfo> matchDict(List<StuInfo> stuInfoList) {
+        for (StuInfo stuInfo : stuInfoList) {
+            String nationName = sysDictDataService.selectDictLabel("nation", stuInfo.getNation());
+            stuInfo.setNationName(nationName);
+            String campusName = sysDictDataService.selectDictLabel("campus", stuInfo.getCampus());
+            stuInfo.setCampusName(campusName);
+            String trainingLevelName = sysDictDataService.selectDictLabel("training_level", stuInfo.getTrainingLevel());
+            stuInfo.setTrainingLevelName(trainingLevelName);
+            String studentTagName = sysDictDataService.selectDictLabel("student_tag", stuInfo.getStudentTag());
+            stuInfo.setStudentTagName(studentTagName);
+            String accommodationName = sysDictDataService.selectDictLabel("accommodation", stuInfo.getAccommodation());
+            stuInfo.setAccommodationName(accommodationName);
+            String accommodationParkName = sysDictDataService.selectDictLabel("accommodation_park", stuInfo.getAccommodationPark());
+            stuInfo.setAccommodationParkName(accommodationParkName);
+            String isOnSchoolName = sysDictDataService.selectDictLabel("sys_yes_no", stuInfo.getIsOnSchool());
+            stuInfo.setIsOnSchoolName(isOnSchoolName);
+            String controlLevelName = sysDictDataService.selectDictLabel("control_level", stuInfo.getControlLevel());
+            stuInfo.setControlLevelName(controlLevelName);
+            String notSchoolReasonName = sysDictDataService.selectDictLabel("not_school_reason", stuInfo.getNotSchoolReason());
+            stuInfo.setNotSchoolReasonName(notSchoolReasonName);
+            String placeToSchoolLevelName = sysDictDataService.selectDictLabel("risk_level", stuInfo.getPlaceToSchoolLevel());
+            stuInfo.setPlaceToSchoolLevelName(placeToSchoolLevelName);
+            String placeToSchoolName = sysDictDataService.selectDictLabel("place_to_school", stuInfo.getPlaceToSchool());
+            stuInfo.setPlaceToSchoolName(placeToSchoolName);
+            String placeToLeaveName = sysDictDataService.selectDictLabel("place_to_leave", stuInfo.getPlaceToLeave());
+            stuInfo.setPlaceToLeaveName(placeToLeaveName);
+            String jointTypeName = sysDictDataService.selectDictLabel("joint_type", stuInfo.getJointType());
+            stuInfo.setJointTypeName(jointTypeName);
+        }
+        return stuInfoList;
     }
 }

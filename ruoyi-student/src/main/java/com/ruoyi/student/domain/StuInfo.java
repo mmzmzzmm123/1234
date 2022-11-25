@@ -31,7 +31,7 @@ public class StuInfo extends BaseEntity
     private String idNum;
 
     /** 学院编号 */
-    @Excel(name = "学院编号")
+//    @Excel(name = "学院编号")
     private Long deptId;
 
     /** 学院名称 */
@@ -39,8 +39,9 @@ public class StuInfo extends BaseEntity
     private String deptName;
 
     /** 培养层次 */
-    @Excel(name = "培养层次")
     private String trainingLevel;
+    @Excel(name = "培养层次")
+    private String trainingLevelName;
 
     /** 年级 */
     @Excel(name = "年级")
@@ -51,56 +52,69 @@ public class StuInfo extends BaseEntity
     private String address;
 
     /** 民族 */
-    @Excel(name = "民族")
     private String nation;
+    @Excel(name = "民族")
+    private String nationName;
 
     /** 校区 */
-    @Excel(name = "校区")
     private String campus;
+    @Excel(name = "校区")
+    private String campusName;
 
     /** 学生标签:0在校 1当日离校 2未在校 3当日返校 */
-    @Excel(name = "学生标签:0在校 1当日离校 2未在校 3当日返校")
     private String studentTag;
+    @Excel(name = "学生标签")
+    private String studentTagName;
 
     /** 住宿地点 */
-    @Excel(name = "住宿地点")
     private String accommodation;
+    @Excel(name = "住宿地点")
+    private String accommodationName;
 
     /** 住宿园区 */
-    @Excel(name = "住宿园区")
     private String accommodationPark;
+    @Excel(name = "住宿园区")
+    private String accommodationParkName;
 
     /** 宿舍号 */
     @Excel(name = "宿舍号")
     private String dormitoryNo;
 
     /** 是否校内住宿:把在校学生分为校内住宿和其他 */
-    @Excel(name = "是否校内住宿:把在校学生分为校内住宿和其他")
     private String isOnSchool;
+    @Excel(name = "是否校内住宿")
+    private String isOnSchoolName;
 
     /** 管控等级:0无管控，1校内居家监测,2校内居家隔离,3校外集中隔离 */
-    @Excel(name = "管控等级:0无管控，1校内居家监测,2校内居家隔离,3校外集中隔离")
     private String controlLevel;
+    @Excel(name = "管控等级")
+    private String controlLevelName;
 
     /** 未返校原因:0因疫暂缓,1因就业实习暂缓,2因其他暂缓返 */
-    @Excel(name = "未返校原因:0因疫暂缓,1因就业实习暂缓,2因其他暂缓返")
     private String notSchoolReason;
+    @Excel(name = "未返校原因")
+    private String notSchoolReasonName;
 
     /** 返校出发地风险等级:0低风险，1高风险 */
-    @Excel(name = "返校出发地风险等级:0低风险，1高风险")
     private String placeToSchoolLevel;
+    @Excel(name = "返校出发地风险等级")
+    private String placeToSchoolLevelName;
 
     /** 返校出发地:0省内1省外 */
-    @Excel(name = "返校出发地:0省内1省外")
     private String placeToSchool;
+    @Excel(name = "返校出发地")
+    private String placeToSchoolName;
+
 
     /** 离校目的地:0市内 1省内市外 2省外 */
-    @Excel(name = "离校目的地:0市内 1省内市外 2省外")
     private String placeToLeave;
+    @Excel(name = "离校目的地")
+    private String placeToLeaveName;
 
     /** 密接类型 */
-    @Excel(name = "密接类型")
     private String jointType;
+    @Excel(name = "密接类型")
+    private String jointTypeName;
 
     public void setId(Long id)
     {
@@ -299,6 +313,110 @@ public class StuInfo extends BaseEntity
     public String getJointType()
     {
         return jointType;
+    }
+
+    public String getTrainingLevelName() {
+        return trainingLevelName;
+    }
+
+    public void setTrainingLevelName(String trainingLevelName) {
+        this.trainingLevelName = trainingLevelName;
+    }
+
+    public String getNationName() {
+        return nationName;
+    }
+
+    public void setNationName(String nationName) {
+        this.nationName = nationName;
+    }
+
+    public String getCampusName() {
+        return campusName;
+    }
+
+    public void setCampusName(String campusName) {
+        this.campusName = campusName;
+    }
+
+    public String getStudentTagName() {
+        return studentTagName;
+    }
+
+    public void setStudentTagName(String studentTagName) {
+        this.studentTagName = studentTagName;
+    }
+
+    public String getAccommodationName() {
+        return accommodationName;
+    }
+
+    public void setAccommodationName(String accommodationName) {
+        this.accommodationName = accommodationName;
+    }
+
+    public String getAccommodationParkName() {
+        return accommodationParkName;
+    }
+
+    public void setAccommodationParkName(String accommodationParkName) {
+        this.accommodationParkName = accommodationParkName;
+    }
+
+    public String getIsOnSchoolName() {
+        return isOnSchoolName;
+    }
+
+    public void setIsOnSchoolName(String isOnSchoolName) {
+        this.isOnSchoolName = isOnSchoolName;
+    }
+
+    public String getControlLevelName() {
+        return controlLevelName;
+    }
+
+    public void setControlLevelName(String controlLevelName) {
+        this.controlLevelName = controlLevelName;
+    }
+
+    public String getNotSchoolReasonName() {
+        return notSchoolReasonName;
+    }
+
+    public void setNotSchoolReasonName(String notSchoolReasonName) {
+        this.notSchoolReasonName = notSchoolReasonName;
+    }
+
+    public String getPlaceToSchoolLevelName() {
+        return placeToSchoolLevelName;
+    }
+
+    public void setPlaceToSchoolLevelName(String placeToSchoolLevelName) {
+        this.placeToSchoolLevelName = placeToSchoolLevelName;
+    }
+
+    public String getPlaceToSchoolName() {
+        return placeToSchoolName;
+    }
+
+    public void setPlaceToSchoolName(String placeToSchoolName) {
+        this.placeToSchoolName = placeToSchoolName;
+    }
+
+    public String getPlaceToLeaveName() {
+        return placeToLeaveName;
+    }
+
+    public void setPlaceToLeaveName(String placeToLeaveName) {
+        this.placeToLeaveName = placeToLeaveName;
+    }
+
+    public String getJointTypeName() {
+        return jointTypeName;
+    }
+
+    public void setJointTypeName(String jointTypeName) {
+        this.jointTypeName = jointTypeName;
     }
 
     @Override
