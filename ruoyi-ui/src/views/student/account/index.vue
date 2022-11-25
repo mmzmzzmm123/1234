@@ -53,23 +53,37 @@
       <el-table-column label="省内累计学生" align="center" prop="inProAcc" />
       <el-table-column label="省外累计学生" align="center" prop="outProAcc" />
       <el-table-column label="高风险返回学生数" align="center" prop="highLevReturnAcc" />
-      <el-table-column label="教学区宿舍区" align="center" prop="dormitoryTeachingAreaAcc" />
-      <el-table-column label="教学区其他地方" align="center" prop="dormitoryOtherAreaAcc" />
-      <el-table-column label="家属区" align="center" prop="familyAreaAcc" />
-      <el-table-column label="走读生" align="center" prop="dayStudentAcc" />
-      <el-table-column label="小计" align="center" prop="inSchoolAcc" />
+      <el-table-column align="center" label="实际在校学生人数">
+      	<el-table-column label="教学区宿舍区" align="center" prop="dormitoryTeachingAreaAcc" />
+      	<el-table-column label="教学区其他地方" align="center" prop="dormitoryOtherAreaAcc" />
+      	<el-table-column label="家属区" align="center" prop="familyAreaAcc" />
+      	<el-table-column label="走读生" align="center" prop="dayStudentAcc" />
+      	<el-table-column label="小计" align="center" prop="inSchoolAcc" />
+      </el-table-column>
+
       <el-table-column label="B类密接" align="center" prop="typeBAcc" />
+      
+      <el-table-column align="center" label="当日请假离校人数（不返校）">
       <el-table-column label="市内" align="center" prop="leaveInCityAcc" />
       <el-table-column label="省内市外" align="center" prop="leaveOutCityInProAcc" />
       <el-table-column label="省外" align="center" prop="leaveOutProAcc" />
       <el-table-column label="小计" align="center" prop="leaveTodayAcc" />
+      </el-table-column>
+
+      <el-table-column align="center" label="未返校学生人数">
       <el-table-column label="因疫暂缓返校人数" align="center" prop="epidemicSusAcc" />
       <el-table-column label="因就业实习暂缓返校人数" align="center" prop="practiceSusAcc" />
       <el-table-column label="因其他暂缓返校人数" align="center" prop="otherSusAcc" />
       <el-table-column label="小计" align="center" prop="susAcc" />
+      </el-table-column>
+      
+      <el-table-column align="center" label="重点人员管控">
       <el-table-column label="校外实际集中隔离人数" align="center" prop="outSchCentIsolationAcc" />
       <el-table-column label="校内实际居家隔离人数" align="center" prop="outSchHomeIsolationAcc" />
       <el-table-column label="校内实际居家健康监测人数" align="center" prop="inSchHomeIsolationAcc" />
+      </el-table-column>
+
+
     </el-table>
 
     <pagination
