@@ -62,8 +62,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="studentId != null "> and student_id = #{studentId}</if>
             <if test="studentName != null  and studentName != ''"> and student_name like concat('%', #{studentName}, '%')</if>
             <if test="idNum != null  and idNum != ''"> and id_num = #{idNum}</if>
-            <if test="deptId != null "> and dept_id = #{deptId}</if>
-            <if test="deptName != null  and deptName != ''"> and dept_name like concat('%', #{deptName}, '%')</if>
+            <if test="deptId != null "> and t.dept_id = #{deptId}</if>
             <if test="trainingLevel != null  and trainingLevel != ''"> and training_level = #{trainingLevel}</if>
             <if test="grade != null  and grade != ''"> and grade = #{grade}</if>
             <if test="address != null  and address != ''"> and address = #{address}</if>

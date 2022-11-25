@@ -17,21 +17,13 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="学院编号" prop="deptId">
-        <el-input
-          v-model="queryParams.deptId"
-          placeholder="请输入学院编号"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
       <el-form-item label="学院名称" prop="deptName">
-        <el-select v-model="queryParams.trainingLevel" placeholder="请选择学院名称" clearable>
+        <el-select v-model="queryParams.deptId" placeholder="请选择学院名称" clearable>
                   <el-option
-                    v-for="dict in dict.type.deptName"
-                    :key="dict.value"
-                    :label="dict.label"
-                    :value="dict.value"
+                    v-for="dept in deptList"
+                    :key="dept.deptId"
+                    :label="dept.deptName"
+                    :value="dept.deptId"
                   />
                 </el-select>
       </el-form-item>
@@ -247,10 +239,10 @@
       <el-table-column label="姓名" align="center" prop="studentName" />
       <el-table-column label="身份证号" align="center" prop="idNum" />
       <el-table-column label="学院名称" align="center" prop="deptName" />
-              <template slot-scope="scope">
-                <dict-tag :options="dict.type.deptName" :value="scope.row.trainingLevel"/>
-              </template>
-            </el-table-column>
+<!--              <template slot-scope="scope">-->
+<!--                <dict-tag :options="dict.type.deptName" :value="scope.row.trainingLevel"/>-->
+<!--              </template>-->
+<!--            </el-table-column>-->
       <el-table-column label="培养层次" align="center" prop="trainingLevel">
         <template slot-scope="scope">
           <dict-tag :options="dict.type.training_level" :value="scope.row.trainingLevel"/>
@@ -711,14 +703,11 @@
 
 <script>
   import { listInfo, getInfo, delInfo, addInfo, updateInfo } from "@/api/student/info";
+  import { listDept } from "@/api/system/dept";
 
   export default {
     name: "Info",
-<<<<<<< HEAD
-    dicts: ['deptName','training_level', 'campus', 'control_level', 'place_to_school', 'sys_yes_no', 'risk_level', 'nation', 'accommodation_park', 'accommodation', 'not_school_reason', 'student_tag'],
-=======
     dicts: ['training_level', 'campus', 'control_level', 'place_to_school', 'sys_yes_no', 'risk_level', 'nation', 'accommodation_park', 'accommodation', 'not_school_reason', 'student_tag', 'joint_type', 'place_to_leave'],
->>>>>>> origin/dev
     data() {
       return {
         // 遮罩层
@@ -777,11 +766,13 @@
           studentName: [
             { required: true, message: "姓名不能为空", trigger: "blur" }
           ],
-        }
+        },
+        deptList: []
       };
     },
     created() {
       this.getList();
+      this.getDeptList();
     },
     methods: {
       /** 查询学生信息列表 */
@@ -791,6 +782,11 @@
           this.infoList = response.rows;
           this.total = response.total;
           this.loading = false;
+        });
+      },
+      getDeptList() {
+        listDept({"parentId": 100}).then(response => {
+          this.deptList = response.data;
         });
       },
       // 取消按钮
