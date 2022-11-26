@@ -71,7 +71,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
         FROM stu_info t
         LEFT JOIN sys_dept u ON t.dept_id = u.dept_id
-        WHERE 1=1 ${params.dataScope}
+        <where>
+            1=1
+            <if test="campus != null  and campus != ''"> and campus = #{campus}</if>
+            ${params.dataScope}
+        </where>
         GROUP BY t.dept_id
 
     </select>

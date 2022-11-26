@@ -1,6 +1,35 @@
 <template>
   <div class="app-container">
+    <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch" label-width="68px">
+      <el-form-item label="校区" prop="campus">
+        <el-select v-model="queryParams.campus" placeholder="请选择校区" clearable>
+          <el-option
+            v-for="dict in dict.type.campus"
+            :key="dict.value"
+            :label="dict.label"
+            :value="dict.value"
+          />
+        </el-select>
+      </el-form-item>
+      <el-form-item>
+        <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
+        <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
+      </el-form-item>
+    </el-form>
 
+    <el-row :gutter="10" class="mb8">
+      <el-col :span="1.5">
+        <el-button
+          type="warning"
+          plain
+          icon="el-icon-download"
+          size="mini"
+          @click="handleExport"
+          v-hasPermi="['student:account:export']"
+        >导出</el-button>
+      </el-col>
+      <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
+    </el-row>
 
     <el-table v-loading="loading" :data="infoList" @selection-change="handleSelectionChange">
       <el-table-column label="学院名称" align="center" prop="deptName" />
@@ -56,6 +85,7 @@
 
 <script>
   import { listInfo, getInfo, delInfo, addInfo, updateInfo } from "@/api/student/account";
+  import { listDept } from "@/api/system/dept";
 
   export default {
     name: "Info",
@@ -76,6 +106,8 @@
         total: 0,
         // 学生信息表格数据
         infoList: [],
+        // 二级部门列表
+        deptList: [],
         // 弹出层标题
         title: "",
         // 是否显示弹出层
@@ -127,6 +159,11 @@
           this.infoList = response.rows;
           this.total = response.total;
           this.loading = false;
+        });
+      },
+      getDeptList() {
+        listDept({"parentId": 100}).then(response => {
+          this.deptList = response.data;
         });
       },
       // 取消按钮
@@ -228,7 +265,7 @@
       },
       /** 导出按钮操作 */
       handleExport() {
-        this.download('student/info/export', {
+        this.download('student/account/export', {
           ...this.queryParams
         }, `info_${new Date().getTime()}.xlsx`)
       }
