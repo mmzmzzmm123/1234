@@ -1,6 +1,16 @@
 <template>
   <div class="app-container">
     <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch" label-width="68px">
+      <el-form-item label="是否划分学院" prop="divideCollege">
+        <el-select v-model="queryParams.divideCollege" placeholder="请选择">
+          <el-option
+            v-for="dict in dict.type.sys_yes_no"
+            :key="dict.value"
+            :label="dict.label"
+            :value="dict.value"
+          ></el-option>
+        </el-select>
+      </el-form-item>
       <el-form-item label="校区" prop="campus">
         <el-select v-model="queryParams.campus" placeholder="请选择校区" clearable>
           <el-option
@@ -89,7 +99,7 @@
 
   export default {
     name: "Info",
-    dicts: ['training_level', 'campus', 'control_level', 'place_to_school', 'sys_yes_no', 'risk_level', 'nation', 'accommodation_park', 'accommodation', 'not_school_reason', 'student_tag'],
+    dicts: ['sys_yes_no', 'campus'],
     data() {
       return {
         // 遮罩层
@@ -134,6 +144,7 @@
           notSchoolReason: null,
           placeToSchoolLevel: null,
           placeToSchool: null,
+          divideCollege: null
         },
         // 表单参数
         form: {},
@@ -174,30 +185,8 @@
       // 表单重置
       reset() {
         this.form = {
-          id: null,
-          studentId: null,
-          studentName: null,
-          deptId: null,
-          deptName: null,
-          trainingLevel: null,
-          grade: null,
-          address: null,
-          nation: null,
           campus: null,
-          studentTag: null,
-          accommodation: null,
-          accommodationPark: null,
-          dormitoryNo: null,
-          isOnSchool: null,
-          controlLevel: null,
-          notSchoolReason: null,
-          placeToSchoolLevel: null,
-          placeToSchool: null,
-          createBy: null,
-          createTime: null,
-          updateBy: null,
-          updateTime: null,
-          remark: null
+          divideCollege: null
         };
         this.resetForm("form");
       },

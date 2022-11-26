@@ -19,6 +19,11 @@ public class StuAccVo extends BaseEntity {
     private String campus;
 
     /**
+     * 是否划分学院
+     */
+    private String divideCollege;
+
+    /**
      * 学生在册总人数
      */
     @Excel(name = "学生在册总人数")
@@ -407,5 +412,13 @@ public class StuAccVo extends BaseEntity {
 
     public void setInSchHomeIsolationAcc(String inSchHomeIsolationAcc) {
         this.inSchHomeIsolationAcc = inSchHomeIsolationAcc;
+    }
+
+    public String getDivideCollege() {
+        return divideCollege;
+    }
+
+    public void setDivideCollege(String divideCollege) {
+        this.divideCollege = divideCollege;
     }
 }

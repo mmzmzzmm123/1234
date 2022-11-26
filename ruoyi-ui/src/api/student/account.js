@@ -2,6 +2,7 @@ import request from '@/utils/request'
 
 // 查询学生信息列表
 export function listInfo(query) {
+  console.log(query)
   return request({
     url: '/student/account/list',
     method: 'get',

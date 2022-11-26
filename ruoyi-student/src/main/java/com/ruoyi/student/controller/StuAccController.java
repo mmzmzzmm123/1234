@@ -56,7 +56,6 @@ public class StuAccController extends BaseController {
     /**
      * 导出学生信息列表
      */
-//    @PreAuthorize("@ss.hasPermi('student:info:export')")
     @Log(title = "学生信息", businessType = BusinessType.EXPORT)
     @PostMapping("/export")
     public void export(HttpServletResponse response, StuAccVo stuAccVo)

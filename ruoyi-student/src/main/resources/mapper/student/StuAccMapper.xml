@@ -38,8 +38,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
     <select id="selectStuAccList" resultMap="StuAccResult">
         SELECT
+        <if test="divideCollege != null and divideCollege != '' and divideCollege == 'Y'.toString()">
             t.dept_id,
             u.dept_name,
+        </if>
             count(1) stu_acc,
             count(CASE WHEN t.student_tag = 3 AND t.place_to_school = 0 THEN 1 ELSE NULL END) in_pro_return_acc,
             count(CASE WHEN t.student_tag = 3 AND t.place_to_school = 1 THEN 1 ELSE NULL END) out_pro_return_acc,
@@ -76,7 +78,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="campus != null  and campus != ''"> and campus = #{campus}</if>
             ${params.dataScope}
         </where>
-        GROUP BY t.dept_id
+        <if test="divideCollege != null and divideCollege != '' and divideCollege == 'Y'.toString()">
+            GROUP BY t.dept_id
+        </if>
 
     </select>
 
