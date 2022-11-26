@@ -1,6 +1,11 @@
 import request from '@/utils/request'
-
 // 查询学生信息列表
+export function sumList() {
+  return request({
+    url: '/student/account/sumList',
+    method: 'get',
+  })
+}
 export function acc() {
   return request({
     url: '/student/pie/acc',
