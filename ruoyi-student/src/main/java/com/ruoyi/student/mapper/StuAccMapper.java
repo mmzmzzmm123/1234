@@ -7,4 +7,6 @@ import java.util.List;
 public interface StuAccMapper {
 
     List<StuAccVo> selectStuAccList(StuAccVo stuAccVo);
+
+    List<StuAccVo> selectStuAccSumList(StuAccVo stuAccVo);
 }

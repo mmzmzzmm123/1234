@@ -7,4 +7,6 @@ import java.util.List;
 public interface IStuAccService {
 
     List<StuAccVo> selectStuAccList(StuAccVo stuAccVo);
+
+    List<StuAccVo> selectStuAccSumList(StuAccVo stuAccVo);
 }

@@ -20,4 +20,9 @@ public class StuAccServiceImpl implements IStuAccService {
     public List<StuAccVo> selectStuAccList(StuAccVo stuAccVo) {
         return stuAccMapper.selectStuAccList(stuAccVo);
     }
+
+    @Override
+    public List<StuAccVo> selectStuAccSumList(StuAccVo stuAccVo) {
+        return stuAccMapper.selectStuAccSumList(stuAccVo);
+    }
 }

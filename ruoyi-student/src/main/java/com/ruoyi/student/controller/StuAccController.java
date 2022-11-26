@@ -1,6 +1,7 @@
 package com.ruoyi.student.controller;
 
 import com.ruoyi.common.core.controller.BaseController;
+import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.core.page.TableDataInfo;
 import com.ruoyi.student.domain.StuAccVo;
 import com.ruoyi.student.service.IStuAccService;
@@ -26,14 +27,23 @@ public class StuAccController extends BaseController {
     private IStuAccService stuAccService;
 
     /**
-     * 查询学生信息列表
+     * 统计学生信息（按学院分组）
      */
-//    @PreAuthorize("@ss.hasPermi('student:account:list')")
     @GetMapping("/list")
     public TableDataInfo list(StuAccVo stuAccVo)
     {
         startPage();
         List<StuAccVo> list = stuAccService.selectStuAccList(stuAccVo);
         return getDataTable(list);
+    }
+
+    /**
+     * 统计学生信息（汇总）
+     */
+    @GetMapping("/sumList")
+    public AjaxResult sumList(StuAccVo stuAccVo)
+    {
+        List<StuAccVo> list = stuAccService.selectStuAccSumList(stuAccVo);
+        return AjaxResult.success(list);
     }
 }
