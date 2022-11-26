@@ -95,7 +95,6 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="studentName != null and studentName != ''">student_name,</if>
             <if test="idNum != null">id_num,</if>
             <if test="deptId != null">dept_id,</if>
-            <if test="deptName != null">dept_name,</if>
             <if test="trainingLevel != null">training_level,</if>
             <if test="grade != null">grade,</if>
             <if test="address != null">address,</if>
@@ -123,7 +122,6 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="studentName != null and studentName != ''">#{studentName},</if>
             <if test="idNum != null">#{idNum},</if>
             <if test="deptId != null">#{deptId},</if>
-            <if test="deptName != null">#{deptName},</if>
             <if test="trainingLevel != null">#{trainingLevel},</if>
             <if test="grade != null">#{grade},</if>
             <if test="address != null">#{address},</if>
@@ -155,7 +153,6 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="studentName != null and studentName != ''">student_name = #{studentName},</if>
             <if test="idNum != null">id_num = #{idNum},</if>
             <if test="deptId != null">dept_id = #{deptId},</if>
-            <if test="deptName != null">dept_name = #{deptName},</if>
             <if test="trainingLevel != null">training_level = #{trainingLevel},</if>
             <if test="grade != null">grade = #{grade},</if>
             <if test="address != null">address = #{address},</if>
