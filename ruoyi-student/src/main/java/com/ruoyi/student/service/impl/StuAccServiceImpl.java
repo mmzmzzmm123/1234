@@ -22,6 +22,7 @@ public class StuAccServiceImpl implements IStuAccService {
     }
 
     @Override
+    @DataScope(deptAlias = "t")
     public List<StuAccVo> selectStuAccSumList(StuAccVo stuAccVo) {
         return stuAccMapper.selectStuAccSumList(stuAccVo);
     }
