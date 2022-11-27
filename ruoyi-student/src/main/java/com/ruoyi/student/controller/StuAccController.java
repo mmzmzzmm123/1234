@@ -62,6 +62,6 @@ public class StuAccController extends BaseController {
     {
         List<StuAccVo> list = stuAccService.selectStuAccList(stuAccVo);
         ExcelUtil<StuAccVo> util = new ExcelUtil<StuAccVo>(StuAccVo.class);
-        util.exportExcel(response, list, "学生台账信息数据");
+        util.exportEasyExcel(response, list, "学生台账信息数据");
     }
 }
