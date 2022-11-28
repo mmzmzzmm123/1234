@@ -186,6 +186,12 @@
                 <version>${ruoyi.version}</version>
             </dependency>
 
+            <!-- 龚宇-->
+            <dependency>
+                <groupId>com.ruoyi</groupId>
+                <artifactId>GongYu</artifactId>
+                <version>${ruoyi.version}</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 

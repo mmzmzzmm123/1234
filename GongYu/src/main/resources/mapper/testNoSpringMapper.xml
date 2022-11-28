@@ -2,10 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 
 <mapper namespace="GYProject.mybatisTest.mapper.testNoSpringMapper">
-    <select id="findAll" resultType="GYProject.mybatisTest.entity.testNoSpringVO">
-        SELECT *
-        FROM tbl_employee
-    </select>
+
 
     <select id="findAllPage" resultType="GYProject.mybatisTest.entity.testNoSpringVO">
         SELECT *

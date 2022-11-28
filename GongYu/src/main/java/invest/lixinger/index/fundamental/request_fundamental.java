@@ -28,7 +28,7 @@ public class request_fundamental {
     }
 
     // 计算综合百分位
-    private static void calculateFundamental(fundamentalResult_RootVO resultObj) {
+    public static double calculateFundamental(fundamentalResult_RootVO resultObj) {
         double pe_10_cvpos = resultObj.getData().get(0).getPe_ttm().getY10().getMedian().getCvpos();
         double pb_10_cvpos = resultObj.getData().get(0).getPb().getY10().getMedian().getCvpos();
         double ps_10_cvpos = resultObj.getData().get(0).getPs_ttm().getY10().getMedian().getCvpos();
@@ -37,7 +37,9 @@ public class request_fundamental {
         double pb_20_cvpos = resultObj.getData().get(0).getPb().getY20().getMedian().getCvpos();
         double ps_20_cvpos = resultObj.getData().get(0).getPs_ttm().getY20().getMedian().getCvpos();
         double result = (pe_10_cvpos + pb_10_cvpos + ps_10_cvpos + pe_20_cvpos + pb_20_cvpos + ps_20_cvpos) / 6;
+
         System.out.println("综合百分位为：" + new DecimalFormat("0.00%").format(result));
+        return result;
     }
 
     // 查看10年以及20年的细节
