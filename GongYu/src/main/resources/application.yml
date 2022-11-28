@@ -14,9 +14,18 @@ spring:
     properties:
       hibernate:
         format_sql: true
-
-
-
+  mail:
+    host: smtp.qq.com
+    username: q7800067@qq.com
+    password: oigeuikebnzvbhce
+    default-encoding: UTF-8
+    properties:
+      mail.smtp.auth: true
+      mail.smtp.starttls.enable: true
+      mail.smtp.starttls.required: true
+      mail.smtp.socketFactory.port: 465
+      mail.smtp.socketFactory.class: javax.net.ssl.SSLSocketFactory
+      mail.smtp.socketFactory.fallback: false
 
 #mybatis-plus:
 #  mapper-locations: classpath:mapper/**/**Mapper.xml

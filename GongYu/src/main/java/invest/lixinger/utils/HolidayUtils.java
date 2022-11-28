@@ -7,7 +7,6 @@ import com.alibaba.fastjson.JSONObject;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
-import sun.plugin2.os.windows.Windows;
 
 import java.io.IOException;
 import java.text.ParseException;
