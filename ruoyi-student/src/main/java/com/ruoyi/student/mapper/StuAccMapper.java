@@ -9,4 +9,6 @@ public interface StuAccMapper {
     List<StuAccVo> selectStuAccList(StuAccVo stuAccVo);
 
     List<StuAccVo> selectStuAccSumList(StuAccVo stuAccVo);
+
+    List<StuAccVo> selectCampStuAccSumList(StuAccVo stuAccVo);
 }

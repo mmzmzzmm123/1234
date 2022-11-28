@@ -26,6 +26,9 @@ public class StuAccVo extends BaseEntity {
      */
     private String campus;
 
+    @ExcelProperty(value  = "校区")
+    private String campusName;
+
     /**
      * 是否划分学院
      */
@@ -428,6 +431,14 @@ public class StuAccVo extends BaseEntity {
 
     public void setDivideCollege(String divideCollege) {
         this.divideCollege = divideCollege;
+    }
+
+    public String getCampusName() {
+        return campusName;
+    }
+
+    public void setCampusName(String campusName) {
+        this.campusName = campusName;
     }
 
     @Override

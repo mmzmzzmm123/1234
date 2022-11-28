@@ -6,6 +6,7 @@ import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.core.page.TableDataInfo;
 import com.ruoyi.common.enums.BusinessType;
 import com.ruoyi.common.utils.poi.ExcelUtil;
+import com.ruoyi.student.consts.StudentConstant;
 import com.ruoyi.student.domain.StuAccVo;
 import com.ruoyi.student.domain.StuInfo;
 import com.ruoyi.student.service.IStuAccService;
@@ -61,11 +62,29 @@ public class StuAccController extends BaseController {
      */
     @Log(title = "学生信息", businessType = BusinessType.EXPORT)
     @PostMapping("/export")
-    public void export(HttpServletResponse response, StuAccVo stuAccVo)
+    public void export(HttpServletResponse response)
     {
-        List<StuAccVo> list = stuAccService.selectStuAccList(stuAccVo);
+        StuAccVo stuAccVo = new StuAccVo();
+        stuAccVo.setDivideCollege("Y");
+        // 雁塔校区
+        stuAccVo.setCampus(StudentConstant.CAMPUS_YAN_TA);
+        List<StuAccVo> yantaList = stuAccService.selectStuAccList(stuAccVo);
+        for (StuAccVo stu : yantaList) {
+            stu.setCampusName("雁塔校区");
+        }
+        // 长安校区
+        stuAccVo.setCampus(StudentConstant.CAMPUS_CHANG_AN);
+        List<StuAccVo> changanList = stuAccService.selectStuAccList(stuAccVo);
+        for (StuAccVo stu : changanList) {
+            stu.setCampusName("长安校区");
+        }
+        // 两个校区
+        List<StuAccVo> campList = stuAccService.selectCampStuAccSumList(stuAccVo);
         ExcelUtil<StuAccVo> util = new ExcelUtil<StuAccVo>(StuAccVo.class);
         Map<String, List<StuAccVo>> map = new HashMap<>();
+        map.put("雁塔校区", yantaList);
+        map.put("长安校区", changanList);
+        map.put("汇总", campList);
         util.exportEasyExcel(response, map, "学生台账信息数据");
     }
 }
