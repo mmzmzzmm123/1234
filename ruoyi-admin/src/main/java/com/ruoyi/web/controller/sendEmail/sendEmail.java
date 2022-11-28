@@ -6,7 +6,10 @@ import org.springframework.stereotype.Component;
 
 import java.io.File;
 import java.io.IOException;
+import java.sql.Array;
 import java.text.ParseException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 @Component
@@ -17,16 +20,20 @@ public class sendEmail {
 
     // 每个5秒发送邮件
 //    @Scheduled(cron = "0/5 * * * * *")
-    @Scheduled(cron = "0 13 0 ? * *")
+    @Scheduled(cron = "0 0 16 ? * *")
     public void sendSimpleMail() throws IOException, ParseException {
         Map<String, String> map = sendEmailUtils.wenben();
+        List<String> list=new ArrayList<>();
+        list.add("280014580@qq.com");
+        for (int i = 0; i < list.size(); i++) {
+            sendEmailUtils.sendSimpleMail(
+                    "q7800067@qq.com",
+                    list.get(i),
+                    "280014580@qq.com",
+                    map.get("subject"),
+                    map.get("Text"));
+        }
 
-        sendEmailUtils.sendSimpleMail(
-                "q7800067@qq.com",
-                "280014580@qq.com",
-                "280014580@qq.com",
-                map.get("subject"),
-                map.get("Text"));
     }
 
     public void sendAttachFileMail() {
