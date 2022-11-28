@@ -24,6 +24,9 @@ import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
 import javax.servlet.http.HttpServletResponse;
+
+import com.alibaba.excel.ExcelWriter;
+import com.alibaba.excel.write.metadata.WriteSheet;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.RegExUtils;
 import org.apache.commons.lang3.reflect.FieldUtils;
@@ -210,22 +213,38 @@ public class ExcelUtil<T>
     /**
      * 对list数据源将其里面的数据导入到excel表单（EasyExcel）
      *
-     * @param list 导出数据集合
      * @param sheetName 工作表的名称
      * @return 结果
      */
-    public void exportEasyExcel(HttpServletResponse response, List<T> list, String sheetName)
+//    public void exportEasyExcel(HttpServletResponse response, List<T> list, String sheetName)
+//    {
+//        try
+//        {
+//            EasyExcel.write(response.getOutputStream(), clazz).sheet(sheetName).doWrite(list);
+//        }
+//        catch (IOException e)
+//        {
+//            log.error("导出EasyExcel异常{}", e.getMessage());
+//        }
+//    }
+    public void exportEasyExcel(HttpServletResponse response,Map<String, List<T>> map, String sheetName)
     {
-        try
+        try(ExcelWriter excelWriter = EasyExcel.write(response.getOutputStream(), clazz).build())
         {
-            EasyExcel.write(response.getOutputStream(), clazz).sheet(sheetName).doWrite(list);
+            Set<String> keySet = map.keySet();
+            int i=0;
+            for(String key :keySet){
+                // 每次都要创建writeSheet 这里注意必须指定sheetNo 而且sheetName必须不一样
+                WriteSheet writeSheet = EasyExcel.writerSheet(i++, key).build();
+                // 分页去数据库查询数据 这里可以去数据库查询每一页的数据
+                excelWriter.write(map.get(key), writeSheet);
+            }
         }
         catch (IOException e)
         {
             log.error("导出EasyExcel异常{}", e.getMessage());
         }
     }
-
     /**
      * 隐藏Excel中列属性
      *

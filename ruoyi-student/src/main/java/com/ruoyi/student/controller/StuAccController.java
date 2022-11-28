@@ -9,6 +9,7 @@ import com.ruoyi.common.utils.poi.ExcelUtil;
 import com.ruoyi.student.domain.StuAccVo;
 import com.ruoyi.student.domain.StuInfo;
 import com.ruoyi.student.service.IStuAccService;
+import org.apache.poi.ss.formula.functions.T;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,7 +18,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletResponse;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 学生统计Controller
@@ -62,6 +65,7 @@ public class StuAccController extends BaseController {
     {
         List<StuAccVo> list = stuAccService.selectStuAccList(stuAccVo);
         ExcelUtil<StuAccVo> util = new ExcelUtil<StuAccVo>(StuAccVo.class);
-        util.exportEasyExcel(response, list, "学生台账信息数据");
+        Map<String, List<StuAccVo>> map = new HashMap<>();
+        util.exportEasyExcel(response, map, "学生台账信息数据");
     }
 }
