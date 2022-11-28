@@ -19,6 +19,7 @@ public class request_fundamental {
         Map indexReqParam = new Yaml().load(new FileInputStream(filePath));
         String fundamentalURL = (String) indexReqParam.get("fundamentalURL");
         String paramJson = getParam_fundamental.getSingleIndexParamJson();
+        //{"date":"2022-11-28","metricsList":["pe_ttm.y20.median","pe_ttm.y10.median","pb.y10.median","pb.y20.median","ps_ttm.y10.median","ps_ttm.y20.median","cp"],"stockCodes":["1000002"],"token":"d58c3650-20f9-4387-8515-d595031c23a4"}
         String resultJson = netRequest.jsonNetPost(fundamentalURL, paramJson);
         fundamentalResult_RootVO resultObj = (fundamentalResult_RootVO) getResult_fundamental.getResultObj(resultJson);
 
