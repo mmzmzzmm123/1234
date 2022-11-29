@@ -11,4 +11,6 @@ public interface IStuAccService {
     List<StuAccVo> selectStuAccSumList(StuAccVo stuAccVo);
 
     List<StuAccVo> selectCampStuAccSumList(StuAccVo stuAccVo);
+
+    StuAccVo selectStuAccSum(StuAccVo stuAccVo);
 }

@@ -80,11 +80,22 @@ public class StuAccController extends BaseController {
         }
         // 两个校区
         List<StuAccVo> campList = stuAccService.selectCampStuAccSumList(stuAccVo);
-        ExcelUtil<StuAccVo> util = new ExcelUtil<StuAccVo>(StuAccVo.class);
+        StuAccVo accSum = stuAccService.selectStuAccSum(stuAccVo);
+        accSum.setCampusName("总计");
+        campList.add(accSum);
+
+        StuAccVo stuAccVo1 = campList.get(0);
+        stuAccVo1.setDeptName("总计");
+        StuAccVo stuAccVo2 = campList.get(1);
+        stuAccVo2.setDeptName("总计");
+        yantaList.add(stuAccVo1);
+        changanList.add(stuAccVo2);
+
         Map<String, List<StuAccVo>> map = new HashMap<>();
         map.put("雁塔校区", yantaList);
         map.put("长安校区", changanList);
         map.put("汇总", campList);
+        ExcelUtil<StuAccVo> util = new ExcelUtil<StuAccVo>(StuAccVo.class);
         util.exportEasyExcel(response, map, "学生台账信息数据");
     }
 }

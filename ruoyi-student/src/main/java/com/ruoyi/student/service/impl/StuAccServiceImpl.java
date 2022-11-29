@@ -32,4 +32,9 @@ public class StuAccServiceImpl implements IStuAccService {
     public List<StuAccVo> selectCampStuAccSumList(StuAccVo stuAccVo) {
         return stuAccMapper.selectCampStuAccSumList(stuAccVo);
     }
+
+    @Override
+    public StuAccVo selectStuAccSum(StuAccVo stuAccVo) {
+        return stuAccMapper.selectStuAccSum(stuAccVo);
+    }
 }
