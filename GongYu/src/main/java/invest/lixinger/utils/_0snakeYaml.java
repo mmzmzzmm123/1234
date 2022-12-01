@@ -1,5 +1,6 @@
 package invest.lixinger.utils;
 
+import invest.lixinger.index.fundamental.getParam_fundamental;
 import org.junit.Assert;
 import org.junit.Test;
 import org.yaml.snakeyaml.Yaml;
@@ -11,9 +12,8 @@ import java.util.*;
 public class _0snakeYaml {
     @Test
     public void test1() throws FileNotFoundException {
-        String filePath = this.getClass().getClassLoader().getResource("indexReqParam.yml").getPath();
-        System.out.println(filePath);
-        Map conf = new Yaml().load(new FileInputStream(filePath));
+        InputStream inputStream = _0snakeYaml.class.getClassLoader().getResourceAsStream("indexReqParam.yml");
+        Map conf = new Yaml().load(inputStream);
         System.out.println(conf.getOrDefault("metricsList","unknown"));  //
         List list=(List)conf.getOrDefault("metricsList","unknown");
         for(Object temp:list){

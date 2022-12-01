@@ -2,6 +2,7 @@ package invest.lixinger.index.getAllIndex;
 
 import invest.lixinger.index.fundamental.VO.fundamentalReulst_DataVO;
 import invest.lixinger.index.fundamental.VO.fundamentalResult_RootVO;
+import invest.lixinger.index.fundamental.getParam_fundamental;
 import invest.lixinger.index.fundamental.request_fundamental;
 import invest.lixinger.index.getAllIndex.VO.allIndexResult_DataVO;
 import invest.lixinger.index.getAllIndex.VO.allIndexResult_RootVO;
@@ -11,6 +12,7 @@ import org.yaml.snakeyaml.Yaml;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.text.ParseException;
@@ -21,8 +23,8 @@ import static invest.lixinger.index.fundamental.getResult_fundamental.getResultO
 
 public class request_getAllIndex {
     public static void main(String[] args) throws IOException, ParseException {
-        String filePath = request_getAllIndex.class.getClassLoader().getResource("indexReqParam.yml").getPath();
-        Map indexReqParam = new Yaml().load(new FileInputStream(filePath));
+        InputStream inputStream = request_getAllIndex.class.getClassLoader().getResourceAsStream("indexReqParam.yml");
+        Map indexReqParam = new Yaml().load(inputStream);
         String allIndexURL = (String) indexReqParam.get("allIndexURL");
         String fundamentalURL = (String) indexReqParam.get("fundamentalURL");
 

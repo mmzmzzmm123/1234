@@ -20,6 +20,8 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -141,40 +143,44 @@ public class sendEmailUtils {
     }
 
     public Map<String, String> wenben() throws IOException, ParseException {
-        String filePath = request_fundamental.class.getClassLoader().getResource("indexReqParam.yml").getPath();
-        Map indexReqParam = new Yaml().load(new FileInputStream(filePath));
-        String fundamentalURL = (String) indexReqParam.get("fundamentalURL");
-        String paramJson = getParam_fundamental.getSingleIndexParamJson();
-        String resultJson = netRequest.jsonNetPost(fundamentalURL, paramJson);
-        fundamentalResult_RootVO resultObj = (fundamentalResult_RootVO) getResult_fundamental.getResultObj(resultJson);
-        String date = paramJson.substring(paramJson.indexOf("date") + 7, paramJson.indexOf("date") + 17);
-
-        double result = calculateFundamental(resultObj);
-        String resultFormat = new DecimalFormat("0.00%").format(result);
-        String Text = null;
-        double result100 = result * 100;
-        if (result100 > 45) {
-            Text = "▶将资产投资债券或货币基金，利率高就买债券，利率低就买货币基金";
-        } else if (35 < result100 && result100 < 45) {
-            Text = "▶将资产投资债券或货币基金，利率高就买债券，利率低就买货币基金";
-        } else if (25 < result100 && result100 < 35) {
-            Text = "▶定投总资金 通过 197 个周定投，定投总资金 = 总资金 - 已投入";
-        } else if (15 < result100 && result100 < 25) {
-            Text = "▶定投总资金 通过 96 个周定投，定投总资金 = 总资金 - 已投入";
-        } else if (10 < result100 && result100 < 15) {
-            Text = "▶定投总资金 通过 18 个周定投，定投总资金=总资金-已投入";
-            Text += "\n\n▶基金备选池：科创信息、科创创业50、科创50、创业板全指、全指信息、TMT、中创400、中证500、中证军工、国证2000、全指医疗、中小企业300";
-            Text += "\n\n▶股票备选池：证券 > 银行";
-        } else if (5 < result100 && result100 < 10) {
-            Text = "▶梭哈梭哈梭哈梭哈梭哈梭哈梭哈梭哈梭哈梭哈梭哈梭哈梭哈";
-            Text += "\n\n▶基金备选池：科创信息、科创创业50、科创50、创业板全指、全指信息、TMT、中创400、中证500、中证军工、国证2000、全指医疗、中小企业300";
-            Text += "\n\n▶股票备选池：证券>银行";
-        }
-        String subject = date + "，当日综合百分位为" + resultFormat;
-        Text += "\n\n  ▶货币基金优选兴业银行，偏债类基金优选兴业银行、易方达、华夏，股票基金优选易方达 > 广发 > 天弘 > 华夏 > 博时 > 南方 > 富国";
         Map<String, String> map = new HashMap<>();
-        map.put("subject", subject);
-        map.put("Text", Text);
+        try {
+
+            String fundamentalURL = "https://open.lixinger.com/api/cn/index/fundamental";
+            String paramJson = getParam_fundamental.getSingleIndexParamJson();
+            String resultJson = netRequest.jsonNetPost(fundamentalURL, paramJson);
+            fundamentalResult_RootVO resultObj = (fundamentalResult_RootVO) getResult_fundamental.getResultObj(resultJson);
+            String date = paramJson.substring(paramJson.indexOf("date") + 7, paramJson.indexOf("date") + 17);
+
+            double result = calculateFundamental(resultObj);
+            String resultFormat = new DecimalFormat("0.00%").format(result);
+            String Text = null;
+            double result100 = result * 100;
+            if (result100 > 45) {
+                Text = "▶将资产投资债券或货币基金，利率高就买债券，利率低就买货币基金";
+            } else if (35 < result100 && result100 < 45) {
+                Text = "▶将资产投资债券或货币基金，利率高就买债券，利率低就买货币基金";
+            } else if (25 < result100 && result100 < 35) {
+                Text = "▶定投总资金 通过 197 个周定投，定投总资金 = 总资金 - 已投入";
+            } else if (15 < result100 && result100 < 25) {
+                Text = "▶定投总资金 通过 96 个周定投，定投总资金 = 总资金 - 已投入";
+            } else if (10 < result100 && result100 < 15) {
+                Text = "▶定投总资金 通过 18 个周定投，定投总资金=总资金-已投入";
+                Text += "\n\n▶基金备选池：科创信息、科创创业50、科创50、创业板全指、全指信息、TMT、中创400、中证500、中证军工、国证2000、全指医疗、中小企业300";
+                Text += "\n\n▶股票备选池：证券 > 银行";
+            } else if (5 < result100 && result100 < 10) {
+                Text = "▶梭哈梭哈梭哈梭哈梭哈梭哈梭哈梭哈梭哈梭哈梭哈梭哈梭哈";
+                Text += "\n\n▶基金备选池：科创信息、科创创业50、科创50、创业板全指、全指信息、TMT、中创400、中证500、中证军工、国证2000、全指医疗、中小企业300";
+                Text += "\n\n▶股票备选池：证券>银行";
+            }
+            String subject = date + "，当日综合百分位为" + resultFormat;
+            Text += "\n\n  ▶货币基金优选兴业银行，偏债类基金优选兴业银行、易方达、华夏，股票基金优选易方达 > 广发 > 天弘 > 华夏 > 博时 > 南方 > 富国";
+            map.put("subject", subject);
+            map.put("Text", Text);
+        } catch (Exception e) {
+            System.out.println("wenben.exception==" + e.getMessage());
+        }
+
 
         return map;
     }

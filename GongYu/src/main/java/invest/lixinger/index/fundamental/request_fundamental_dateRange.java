@@ -8,6 +8,7 @@ import org.yaml.snakeyaml.Yaml;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -25,8 +26,8 @@ public class request_fundamental_dateRange extends mybatisNoSpringUtils {
     }
 
     public static fundamentalResult_RootVO getRequest_fundamental_dateRange(Date startDate) throws IOException, ParseException {
-        String filePath = request_fundamental_dateRange.class.getClassLoader().getResource("indexReqParam.yml").getPath();
-        Map indexReqParam = new Yaml().load(new FileInputStream(filePath));
+        InputStream inputStream = request_fundamental_dateRange.class.getClassLoader().getResourceAsStream("indexReqParam.yml");
+        Map indexReqParam = new Yaml().load(inputStream);
         String fundamentalURL = (String) indexReqParam.get("fundamentalURL");
         String paramJson = getParam_fundamental.getSingleIndexParam_dateRangeJson(startDate);
         String resultJson = netRequest.jsonNetPost(fundamentalURL, paramJson);

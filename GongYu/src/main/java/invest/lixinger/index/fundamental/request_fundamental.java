@@ -6,6 +6,7 @@ import org.yaml.snakeyaml.Yaml;
 
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.util.Map;
@@ -15,8 +16,8 @@ import java.util.Map;
  */
 public class request_fundamental {
     public static void main(String[] args) throws IOException, ParseException {
-        String filePath = request_fundamental.class.getClassLoader().getResource("indexReqParam.yml").getPath();
-        Map indexReqParam = new Yaml().load(new FileInputStream(filePath));
+        InputStream inputStream = request_fundamental.class.getClassLoader().getResourceAsStream("indexReqParam.yml");
+        Map indexReqParam = new Yaml().load(inputStream);
         String fundamentalURL = (String) indexReqParam.get("fundamentalURL");
         String paramJson = getParam_fundamental.getSingleIndexParamJson();
         //{"date":"2022-11-28","metricsList":["pe_ttm.y20.median","pe_ttm.y10.median","pb.y10.median","pb.y20.median","ps_ttm.y10.median","ps_ttm.y20.median","cp"],"stockCodes":["1000002"],"token":"d58c3650-20f9-4387-8515-d595031c23a4"}
