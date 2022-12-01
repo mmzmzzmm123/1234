@@ -486,13 +486,16 @@ public class SysMenuServiceImpl implements ISysMenuService
     {
         // 得到子节点列表
         List<SysMenu> childList = getChildList(list, t);
+        if (childList.isEmpty())
+        {
+            return;
+        }
         t.setChildren(childList);
         for (SysMenu tChild : childList)
         {
-            if (hasChild(list, tChild))
-            {
-                recursionFn(list, tChild);
-            }
+
+            recursionFn(list, tChild);
+
         }
     }
 
@@ -512,14 +515,6 @@ public class SysMenuServiceImpl implements ISysMenuService
             }
         }
         return tlist;
-    }
-
-    /**
-     * 判断是否有子节点
-     */
-    private boolean hasChild(List<SysMenu> list, SysMenu t)
-    {
-        return getChildList(list, t).size() > 0;
     }
 
     /**
