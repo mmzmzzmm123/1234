@@ -73,8 +73,8 @@
           />
         </el-select>
       </el-form-item>
-      <el-form-item label="学生标签" prop="studentTag">
-        <el-select v-model="queryParams.studentTag" placeholder="请选择学生标签" clearable>
+      <el-form-item label="在校状态" prop="studentTag">
+        <el-select v-model="queryParams.studentTag" placeholder="请选择在校状态" clearable>
           <el-option
             v-for="dict in dict.type.student_tag"
             :key="dict.value"
@@ -260,7 +260,7 @@
           <dict-tag :options="dict.type.campus" :value="scope.row.campus"/>
         </template>
       </el-table-column>
-      <el-table-column label="学生标签" align="center" prop="studentTag">
+      <el-table-column label="在校状态" align="center" prop="studentTag">
         <template slot-scope="scope">
           <dict-tag :options="dict.type.student_tag" :value="scope.row.studentTag"/>
         </template>
@@ -410,8 +410,8 @@
             ></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="学生标签" prop="studentTag">
-          <el-select v-model="form.studentTag" placeholder="请选择学生标签">
+        <el-form-item label="在校状态" prop="studentTag">
+          <el-select v-model="form.studentTag" placeholder="请选择在校状态">
             <el-option
               v-for="dict in dict.type.student_tag"
               :key="dict.value"
@@ -579,8 +579,8 @@
             ></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="学生标签" prop="studentTag">
-          <el-select v-model="stateForm.studentTag" placeholder="请选择学生标签">
+        <el-form-item label="在校状态" prop="studentTag">
+          <el-select v-model="stateForm.studentTag" placeholder="请选择在校状态">
             <el-option
               v-for="dict in dict.type.student_tag"
               :key="dict.value"
