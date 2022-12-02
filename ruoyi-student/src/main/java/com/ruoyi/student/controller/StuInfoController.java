@@ -2,6 +2,8 @@ package com.ruoyi.student.controller;
 
 import java.util.List;
 import javax.servlet.http.HttpServletResponse;
+
+import com.ruoyi.common.utils.StringUtils;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -89,6 +91,43 @@ public class StuInfoController extends BaseController
     @PutMapping
     public AjaxResult edit(@RequestBody StuInfo stuInfo)
     {
+        StringBuilder msg = new StringBuilder();
+        boolean pass = true;
+        // 校验逻辑
+        String isOnSchool = stuInfo.getIsOnSchool();
+        String accommodation = stuInfo.getAccommodation();
+        String accommodationPark = stuInfo.getAccommodationPark();
+        String dormitoryNo = stuInfo.getDormitoryNo();
+        String address = stuInfo.getAddress();
+        if ("Y".equals(isOnSchool)) {
+            if (StringUtils.isEmpty(accommodation)) {
+                pass = false;
+                msg.append("请选择住宿地点;");
+            }
+            if ("0".equals(accommodation)) {
+                if (StringUtils.isEmpty(accommodationPark)) {
+                    pass = false;
+                    msg.append("请选择宿舍园区;");
+                }
+                if (StringUtils.isEmpty(dormitoryNo)) {
+                    pass = false;
+                    msg.append("请选择宿舍号;");
+                }
+            } else if ("1".equals(accommodationPark) || "2".equals(accommodationPark)) {
+                if (StringUtils.isEmpty(address)) {
+                    pass = false;
+                    msg.append("请填写住址;");
+                }
+            }
+        } else if ("N".equals(isOnSchool)) {
+            if (!"3".equals(accommodation)) {
+                pass = false;
+                msg.append("不在校时，住宿地点请选择走读;");
+            }
+        }
+        if (!pass) {
+            return AjaxResult.error(msg.toString());
+        }
         return toAjax(stuInfoService.updateStuInfo(stuInfo));
     }
 
