@@ -5,7 +5,7 @@ MySQL - 8.0.26
 */
 /*!40101 SET NAMES utf8 */;
 
-DELETE FROM `sys_menu` WHERE menu_idBETWEEN 2013 AND 2014;
+DELETE FROM `sys_menu` WHERE menu_id BETWEEN 2013 AND 2014;
 
 insert into `sys_menu` (`menu_id`, `menu_name`, `parent_id`, `order_num`, `path`, `component`, `query`, `is_frame`, `is_cache`, `menu_type`, `visible`, `status`, `perms`, `icon`, `create_by`, `create_time`, `update_by`, `update_time`, `remark`) values('2013','部门管理','0','6','department',NULL,NULL,'1','0','M','0','0',NULL,'education','admin','2022-12-02 10:10:32','',NULL,'');
 insert into `sys_menu` (`menu_id`, `menu_name`, `parent_id`, `order_num`, `path`, `component`, `query`, `is_frame`, `is_cache`, `menu_type`, `visible`, `status`, `perms`, `icon`, `create_by`, `create_time`, `update_by`, `update_time`, `remark`) values('2014','修改日志','2013','1','department','department/dept',NULL,'1','0','C','0','0',NULL,'#','',NULL,'',NULL,'');
@@ -34,4 +34,4 @@ CREATE TABLE `sys_oper_log` (
   `error_msg` varchar(2000) DEFAULT '' COMMENT '错误消息',
   `oper_time` datetime DEFAULT NULL COMMENT '操作时间',
   PRIMARY KEY (`oper_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=148 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='操作日志记录'
+)  COMMENT='操作日志记录';
