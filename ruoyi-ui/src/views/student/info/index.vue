@@ -406,6 +406,16 @@
             ></el-option>
           </el-select>
         </el-form-item>
+        <el-form-item label="是否校内住宿" prop="isOnSchool">
+          <el-select v-model="form.isOnSchool" placeholder="请选择是否校内住宿">
+            <el-option
+              v-for="dict in dict.type.sys_yes_no"
+              :key="dict.value"
+              :label="dict.label"
+              :value="dict.value"
+            ></el-option>
+          </el-select>
+        </el-form-item>
         <el-form-item label="校区" prop="campus">
           <el-select v-model="form.campus" placeholder="请选择校区">
             <el-option
@@ -449,16 +459,7 @@
         <el-form-item label="宿舍号" prop="dormitoryNo">
           <el-input v-model="form.dormitoryNo" placeholder="请输入宿舍号" />
         </el-form-item>
-        <el-form-item label="是否校内住宿" prop="isOnSchool">
-          <el-select v-model="form.isOnSchool" placeholder="请选择是否校内住宿">
-            <el-option
-              v-for="dict in dict.type.sys_yes_no"
-              :key="dict.value"
-              :label="dict.label"
-              :value="dict.value"
-            ></el-option>
-          </el-select>
-        </el-form-item>
+
         <el-form-item label="管控等级" prop="controlLevel">
           <el-select v-model="form.controlLevel" placeholder="请选择管控等级">
             <el-option
@@ -575,6 +576,16 @@
             ></el-option>
           </el-select>
         </el-form-item>
+        <el-form-item label="是否校内住宿" prop="isOnSchool">
+          <el-select v-model="stateForm.isOnSchool" placeholder="请选择是否校内住宿">
+            <el-option
+              v-for="dict in dict.type.sys_yes_no"
+              :key="dict.value"
+              :label="dict.label"
+              :value="dict.value"
+            ></el-option>
+          </el-select>
+        </el-form-item>
         <el-form-item label="校区" prop="campus" readonly disabled>
           <el-select v-model="stateForm.campus" placeholder="请选择校区">
             <el-option
@@ -618,16 +629,7 @@
         <el-form-item label="宿舍号" prop="dormitoryNo">
           <el-input v-model="stateForm.dormitoryNo" placeholder="请输入宿舍号"/>
         </el-form-item>
-        <el-form-item label="是否校内住宿" prop="isOnSchool">
-          <el-select v-model="stateForm.isOnSchool" placeholder="请选择是否校内住宿">
-            <el-option
-              v-for="dict in dict.type.sys_yes_no"
-              :key="dict.value"
-              :label="dict.label"
-              :value="dict.value"
-            ></el-option>
-          </el-select>
-        </el-form-item>
+
         <el-form-item label="管控等级" prop="controlLevel">
           <el-select v-model="stateForm.controlLevel" placeholder="请选择管控等级">
             <el-option
@@ -767,6 +769,9 @@
           ],
           studentName: [
             { required: true, message: "姓名不能为空", trigger: "blur" }
+          ],
+          isOnSchool: [
+            { required: true, message: "是否在校不能为空", trigger: "blur" }
           ],
         },
         // 二级部门列表
