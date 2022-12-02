@@ -121,4 +121,10 @@ public interface ISysDeptService
      * @return 结果
      */
     public int deleteDeptById(Long deptId);
+    /**
+     * 通过部门id查找用户所在的部门名称
+     * @param deptId
+     * @return
+     */
+    public String selectDeptNameByDeptId(Long deptId);
 }

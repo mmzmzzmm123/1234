@@ -45,4 +45,10 @@ public interface ISysOperLogService
      * 清空操作日志
      */
     public void cleanOperLog();
+
+    /**
+     * 查询每个部门最后一次操作的记录
+     * @return
+     */
+    public List<SysOperLog> selectOperLogLastList();
 }

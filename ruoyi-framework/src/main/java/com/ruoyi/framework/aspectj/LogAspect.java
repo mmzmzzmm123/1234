@@ -4,12 +4,15 @@ import java.util.Collection;
 import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import com.ruoyi.system.service.ISysDeptService;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.AfterReturning;
 import org.aspectj.lang.annotation.AfterThrowing;
 import org.aspectj.lang.annotation.Aspect;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.multipart.MultipartFile;
@@ -37,6 +40,8 @@ import com.ruoyi.system.domain.SysOperLog;
 @Component
 public class LogAspect
 {
+    @Autowired
+    private ISysDeptService  sysDeptService;
     private static final Logger log = LoggerFactory.getLogger(LogAspect.class);
 
     /** 排除敏感属性字段 */
@@ -65,15 +70,28 @@ public class LogAspect
         handleLog(joinPoint, controllerLog, e, null);
     }
 
+    /**
+     *
+     * @param joinPoint 方法的具体信息
+     * @param controllerLog 注解的信息
+     * @param e 异常
+     * @param jsonResult 方法返回的结果
+     */
+
     protected void handleLog(final JoinPoint joinPoint, Log controllerLog, final Exception e, Object jsonResult)
     {
         try
         {
             // 获取当前的用户
             LoginUser loginUser = SecurityUtils.getLoginUser();
-
+            //获取当前用户的部门id
+            Long deptId = loginUser.getDeptId();
+            System.out.println(deptId);
             // *========数据库日志=========*//
             SysOperLog operLog = new SysOperLog();
+            operLog.setDeptId(deptId);
+            operLog.setDeptName(sysDeptService.selectDeptNameByDeptId(deptId));
+            System.out.println(sysDeptService.selectDeptNameByDeptId(deptId));
             operLog.setStatus(BusinessStatus.SUCCESS.ordinal());
             // 请求的地址
             String ip = IpUtils.getIpAddr(ServletUtils.getRequest());

@@ -73,4 +73,9 @@ public class SysOperLogServiceImpl implements ISysOperLogService
     {
         operLogMapper.cleanOperLog();
     }
+
+    @Override
+    public List<SysOperLog> selectOperLogLastList() {
+        return operLogMapper.selectOperLogLastList();
+    }
 }
