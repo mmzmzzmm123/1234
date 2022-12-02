@@ -73,8 +73,8 @@
           />
         </el-select>
       </el-form-item>
-      <el-form-item label="学生标签" prop="studentTag">
-        <el-select v-model="queryParams.studentTag" placeholder="请选择学生标签" clearable>
+      <el-form-item label="在校状态" prop="studentTag">
+        <el-select v-model="queryParams.studentTag" placeholder="请选择在校状态" clearable>
           <el-option
             v-for="dict in dict.type.student_tag"
             :key="dict.value"
@@ -237,6 +237,12 @@
       <el-table-column type="selection" width="55" align="center" />
       <el-table-column label="学号" align="center" prop="studentId" />
       <el-table-column label="姓名" align="center" prop="studentName" />
+      <el-table-column label="性别" align="center" prop="studentSex" >
+        <template slot-scope="scope">
+          <dict-tag :options="dict.type.sys_user_sex" :value="scope.row.studentSex"/>
+        </template>
+      </el-table-column>
+      <el-table-column label="联系方式" align="center" prop="studentPhone" />
       <el-table-column label="身份证号" align="center" prop="idNum" />
       <el-table-column label="学院名称" align="center" prop="deptName" />
 <!--              <template slot-scope="scope">-->
@@ -260,7 +266,7 @@
           <dict-tag :options="dict.type.campus" :value="scope.row.campus"/>
         </template>
       </el-table-column>
-      <el-table-column label="学生标签" align="center" prop="studentTag">
+      <el-table-column label="在校状态" align="center" prop="studentTag">
         <template slot-scope="scope">
           <dict-tag :options="dict.type.student_tag" :value="scope.row.studentTag"/>
         </template>
@@ -410,8 +416,8 @@
             ></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="学生标签" prop="studentTag">
-          <el-select v-model="form.studentTag" placeholder="请选择学生标签">
+        <el-form-item label="在校状态" prop="studentTag">
+          <el-select v-model="form.studentTag" placeholder="请选择在校状态">
             <el-option
               v-for="dict in dict.type.student_tag"
               :key="dict.value"
@@ -579,8 +585,8 @@
             ></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="学生标签" prop="studentTag">
-          <el-select v-model="stateForm.studentTag" placeholder="请选择学生标签">
+        <el-form-item label="在校状态" prop="studentTag">
+          <el-select v-model="stateForm.studentTag" placeholder="请选择在校状态">
             <el-option
               v-for="dict in dict.type.student_tag"
               :key="dict.value"
@@ -702,7 +708,7 @@
 
   export default {
     name: "Info",
-    dicts: ['training_level', 'campus', 'control_level', 'place_to_school', 'sys_yes_no', 'risk_level', 'nation', 'accommodation_park', 'accommodation', 'not_school_reason', 'student_tag', 'joint_type', 'place_to_leave'],
+    dicts: ['training_level', 'campus', 'control_level', 'place_to_school', 'sys_yes_no', 'risk_level', 'nation', 'accommodation_park', 'accommodation', 'not_school_reason', 'student_tag', 'joint_type', 'place_to_leave','sys_user_sex'],
     data() {
       return {
         // 遮罩层
@@ -776,6 +782,7 @@
       getList() {
         this.loading = true;
         listInfo(this.queryParams).then(response => {
+          console.log("=>",response.rows)
           this.infoList = response.rows;
           this.total = response.total;
           this.loading = false;
@@ -802,6 +809,8 @@
           id: null,
           studentId: null,
           studentName: null,
+          studentSex: null,
+          studentPhone: null,
           idNum: null,
           deptId: null,
           deptName: null,
@@ -835,6 +844,8 @@
           id: null,
           studentId: null,
           studentName: null,
+          studentSex: null,
+          studentPhone: null,
           idNum: null,
           deptId: null,
           deptName: null,
