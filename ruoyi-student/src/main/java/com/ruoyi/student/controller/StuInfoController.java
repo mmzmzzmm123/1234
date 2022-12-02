@@ -93,12 +93,17 @@ public class StuInfoController extends BaseController
     {
         StringBuilder msg = new StringBuilder();
         boolean pass = true;
-        // 校验逻辑
         String isOnSchool = stuInfo.getIsOnSchool();
         String accommodation = stuInfo.getAccommodation();
         String accommodationPark = stuInfo.getAccommodationPark();
         String dormitoryNo = stuInfo.getDormitoryNo();
         String address = stuInfo.getAddress();
+        String studentTag = stuInfo.getStudentTag();
+        String placeToLeave = stuInfo.getPlaceToLeave();
+        String notSchoolReason = stuInfo.getNotSchoolReason();
+        String placeToSchool = stuInfo.getPlaceToSchool();
+        String placeToSchoolLevel = stuInfo.getPlaceToSchoolLevel();
+        // 校验逻辑1：是否在校 相关
         if ("Y".equals(isOnSchool)) {
             if (StringUtils.isEmpty(accommodation)) {
                 pass = false;
@@ -113,16 +118,45 @@ public class StuInfoController extends BaseController
                     pass = false;
                     msg.append("请选择宿舍号;");
                 }
-            } else if ("1".equals(accommodationPark) || "2".equals(accommodationPark)) {
+            } else if ("1".equals(accommodation) || "2".equals(accommodation)) {
                 if (StringUtils.isEmpty(address)) {
                     pass = false;
                     msg.append("请填写住址;");
                 }
             }
         } else if ("N".equals(isOnSchool)) {
-            if (!"3".equals(accommodation)) {
+            if ("3".equals(accommodation)) {
+                if (StringUtils.isEmpty(address)) {
+                    pass = false;
+                    msg.append("请填写住址;");
+                }
+            } else {
                 pass = false;
                 msg.append("不在校时，住宿地点请选择走读;");
+            }
+        }
+        // 校验逻辑2：在校状态 相关
+        if ("1".equals(studentTag)) {
+            // 请假离校
+            if (StringUtils.isEmpty(placeToLeave)) {
+                pass = false;
+                msg.append("请选择离校目的地;");
+            }
+        } else if ("2".equals(studentTag)) {
+            // 未返校
+            if (StringUtils.isEmpty(notSchoolReason)) {
+                pass = false;
+                msg.append("请选择未返校原因;");
+            }
+        } else if ("3".equals(studentTag)) {
+            // 当日返校
+            if (StringUtils.isEmpty(placeToSchool)) {
+                pass = false;
+                msg.append("请选择返校出发地;");
+            }
+            if (StringUtils.isEmpty(placeToSchoolLevel)) {
+                pass = false;
+                msg.append("请选择返校出发地风险等级;");
             }
         }
         if (!pass) {

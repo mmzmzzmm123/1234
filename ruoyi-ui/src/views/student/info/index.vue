@@ -407,7 +407,7 @@
           </el-select>
         </el-form-item>
         <el-form-item label="是否校内住宿" prop="isOnSchool">
-          <el-select v-model="form.isOnSchool" placeholder="请选择是否校内住宿">
+          <el-select v-model="form.isOnSchool" placeholder="请选择是否校内住宿" @change="changeIsOnSchool">
             <el-option
               v-for="dict in dict.type.sys_yes_no"
               :key="dict.value"
@@ -563,9 +563,6 @@
                           placeholder="请选择年级" readonly disabled>
           </el-date-picker>
         </el-form-item>
-        <el-form-item label="住址" prop="address">
-          <el-input v-model="stateForm.address" placeholder="请输入住址" readonly disabled/>
-        </el-form-item>
         <el-form-item label="民族" prop="nation">
           <el-select v-model="stateForm.nation" placeholder="请选择民族" readonly disabled>
             <el-option
@@ -577,7 +574,7 @@
           </el-select>
         </el-form-item>
         <el-form-item label="是否校内住宿" prop="isOnSchool">
-          <el-select v-model="stateForm.isOnSchool" placeholder="请选择是否校内住宿">
+          <el-select v-model="stateForm.isOnSchool" placeholder="请选择是否校内住宿" @change="changeIsOnSchool">
             <el-option
               v-for="dict in dict.type.sys_yes_no"
               :key="dict.value"
@@ -629,7 +626,9 @@
         <el-form-item label="宿舍号" prop="dormitoryNo">
           <el-input v-model="stateForm.dormitoryNo" placeholder="请输入宿舍号"/>
         </el-form-item>
-
+        <el-form-item label="住址" prop="address">
+          <el-input v-model="stateForm.address" placeholder="请输入住址"/>
+        </el-form-item>
         <el-form-item label="管控等级" prop="controlLevel">
           <el-select v-model="stateForm.controlLevel" placeholder="请选择管控等级">
             <el-option
@@ -975,6 +974,19 @@
         this.download('student/info/export', {
           ...this.queryParams
         }, `info_${new Date().getTime()}.xlsx`)
+      },
+      /**
+       * 变更 是否在校
+       * @param val
+       */
+      changeIsOnSchool(val) {
+        if ("Y" === val) {
+          this.form.accommodation = "0";
+          this.stateForm.accommodation = "0";
+        } else if ("N" === val) {
+          this.form.accommodation = "3";
+          this.stateForm.accommodation = "3";
+        }
       }
     }
   };
