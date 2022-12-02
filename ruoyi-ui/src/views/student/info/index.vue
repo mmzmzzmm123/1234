@@ -365,7 +365,7 @@
         <el-form-item label="身份证号" prop="idNum">
           <el-input v-model="form.idNum" placeholder="请输入身份证号" />
         </el-form-item>
-        <el-form-item label="学院名称" prop="deptName">
+        <el-form-item label="学院名称" prop="deptId">
           <el-select v-model="form.deptId" placeholder="请选择学院名称">
                       <el-option
                         v-for="dept in deptList"
@@ -393,9 +393,7 @@
                           placeholder="请选择年级">
           </el-date-picker>
         </el-form-item>
-        <el-form-item label="住址" prop="address">
-          <el-input v-model="form.address" placeholder="请输入住址" />
-        </el-form-item>
+
         <el-form-item label="民族" prop="nation">
           <el-select v-model="form.nation" placeholder="请选择民族">
             <el-option
@@ -459,7 +457,9 @@
         <el-form-item label="宿舍号" prop="dormitoryNo">
           <el-input v-model="form.dormitoryNo" placeholder="请输入宿舍号" />
         </el-form-item>
-
+        <el-form-item label="住址" prop="address">
+          <el-input v-model="form.address" placeholder="请输入住址" />
+        </el-form-item>
         <el-form-item label="管控等级" prop="controlLevel">
           <el-select v-model="form.controlLevel" placeholder="请选择管控等级">
             <el-option
@@ -769,8 +769,26 @@
           studentName: [
             { required: true, message: "姓名不能为空", trigger: "blur" }
           ],
+          idNum: [
+            { required: true, message: "身份证号不能为空", trigger: "blur" }
+          ],
+          deptId: [
+            { required: true, message: "学院不能为空", trigger: "blur" }
+          ],
+          trainingLevel: [
+            { required: true, message: "培养层次不能为空", trigger: "blur" }
+          ],
+          grade: [
+            { required: true, message: "年级不能为空", trigger: "blur" }
+          ],
+          nation: [
+            { required: true, message: "民族不能为空", trigger: "blur" }
+          ],
           isOnSchool: [
             { required: true, message: "是否在校不能为空", trigger: "blur" }
+          ],
+          studentTag: [
+            { required: true, message: "在校状态不能为空", trigger: "blur" }
           ],
         },
         // 二级部门列表
