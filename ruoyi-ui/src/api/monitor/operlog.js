@@ -8,6 +8,13 @@ export function list(query) {
     params: query
   })
 }
+// 查询操作日志列表
+export function lastlist() {
+  return request({
+    url: '/monitor/operlog/getlast',
+    method: 'get',
+  })
+}
 
 // 删除操作日志
 export function delOperlog(operId) {
