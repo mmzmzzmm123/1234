@@ -46,6 +46,10 @@ public class SysOperLog extends BaseEntity
     @Excel(name = "操作人员")
     private String operName;
 
+
+    /** 部门Id */
+    private Long deptId;
+
     /** 部门名称 */
     @Excel(name = "部门名称")
     private String deptName;
@@ -82,6 +86,14 @@ public class SysOperLog extends BaseEntity
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @Excel(name = "操作时间", width = 30, dateFormat = "yyyy-MM-dd HH:mm:ss")
     private Date operTime;
+
+    public Long getDeptId() {
+        return deptId;
+    }
+
+    public void setDeptId(Long deptId) {
+        this.deptId = deptId;
+    }
 
     public Long getOperId()
     {

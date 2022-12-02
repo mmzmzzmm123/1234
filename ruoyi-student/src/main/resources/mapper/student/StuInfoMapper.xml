@@ -8,6 +8,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="id"    column="id"    />
         <result property="studentId"    column="student_id"    />
         <result property="studentName"    column="student_name"    />
+        <result property="studentSex"    column="gender"    />
+        <result property="studentPhone"    column="phone_number"    />
         <result property="idNum"    column="id_num"    />
         <result property="deptId"    column="dept_id"    />
         <result property="deptName"    column="dept_name"    />
@@ -39,6 +41,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             t.id,
             t.student_id,
             t.student_name,
+            t.gender,
+            t.phone_number,
             t.id_num,
             t.dept_id,
             u.dept_name,

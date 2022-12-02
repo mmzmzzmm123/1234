@@ -66,4 +66,19 @@ public class SysOperlogController extends BaseController
         operLogService.cleanOperLog();
         return success();
     }
+    @GetMapping("/getlast")
+     public TableDataInfo getlast(){
+
+        List<SysOperLog> list = operLogService.selectOperLogLastList();
+        return getDataTable(list);
+     }
+
+    @Log(title = "操作日志", businessType = BusinessType.EXPORT)
+    @PostMapping("/exportlast")
+    public void exportlast(HttpServletResponse response, SysOperLog operLog)
+    {
+        List<SysOperLog> list = operLogService.selectOperLogLastList();
+        ExcelUtil<SysOperLog> util = new ExcelUtil<SysOperLog>(SysOperLog.class);
+        util.exportExcel(response, list, "操作日志");
+    }
 }

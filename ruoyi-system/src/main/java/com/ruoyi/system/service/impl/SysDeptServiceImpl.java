@@ -297,6 +297,11 @@ public class SysDeptServiceImpl implements ISysDeptService
         return deptMapper.deleteDeptById(deptId);
     }
 
+    @Override
+    public String selectDeptNameByDeptId(Long deptId) {
+        return deptMapper.selectDeptNameByDeptId(deptId);
+    }
+
     /**
      * 递归列表
      */

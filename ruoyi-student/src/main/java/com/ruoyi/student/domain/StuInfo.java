@@ -26,6 +26,14 @@ public class StuInfo extends BaseEntity
     @Excel(name = "姓名")
     private String studentName;
 
+    /** 性别 */
+    @Excel(name = "性别")
+    private String studentSex;
+
+    /** 联系方式 */
+    @Excel(name = "联系方式")
+    private String studentPhone;
+
     /** 身份证号 */
     @Excel(name = "身份证号")
     private String idNum;
@@ -115,6 +123,22 @@ public class StuInfo extends BaseEntity
     private String jointType;
     @Excel(name = "密接类型")
     private String jointTypeName;
+
+    public String getStudentSex() {
+        return studentSex;
+    }
+
+    public void setStudentSex(String studentSex) {
+        this.studentSex = studentSex;
+    }
+
+    public String getStudentPhone() {
+        return studentPhone;
+    }
+
+    public void setStudentPhone(String studentPhone) {
+        this.studentPhone = studentPhone;
+    }
 
     public void setId(Long id)
     {
