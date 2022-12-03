@@ -3,6 +3,7 @@ package invest.lixinger.macro.moneySupply;
 import invest.lixinger.macro.moneySupply.VO.moneySupplyCNParam_DataVO;
 import invest.lixinger.macro.moneySupply.VO.moneySupplyCNResult_RootVO;
 import invest.lixinger.macro.nationalDebt.us.getResult_nationDebtUS;
+import invest.lixinger.utils.netRequest;
 import org.yaml.snakeyaml.Yaml;
 
 import java.io.IOException;
@@ -17,8 +18,8 @@ public class request_moneySupplyCN {
         Map indexReqParam = new Yaml().load(inputStream);
         String moneySupplyURL = (String) indexReqParam.get("moneySupplyURL");
         String paramJson = getParam_moneySupplyCN.getParamMoneySupplyCNParamJson();
-//        String resultJson = netRequest.jsonNetPost(moneySupplyURL, paramJson);
-        String resultJson="{\"code\":1,\"message\":\"success\",\"data\":[{\"date\":\"2022-10-31T00:00:00+08:00\",\"type\":\"ms\",\"areaCode\":\"cn\",\"m\":{\"m2\":{\"t_y2y\":0.118465},\"m1\":{\"t_y2y\":0.057594}}},{\"date\":\"2022-09-30T00:00:00+08:00\",\"type\":\"ms\",\"areaCode\":\"cn\",\"m\":{\"m2\":{\"t_y2y\":0.121123},\"m1\":{\"t_y2y\":0.063859}}},{\"date\":\"2022-08-31T00:00:00+08:00\",\"type\":\"ms\",\"areaCode\":\"cn\",\"m\":{\"m2\":{\"t_y2y\":0.122304},\"m1\":{\"t_y2y\":0.060553}}},{\"date\":\"2022-07-31T00:00:00+08:00\",\"type\":\"ms\",\"areaCode\":\"cn\",\"m\":{\"m2\":{\"t_y2y\":0.119855},\"m1\":{\"t_y2y\":0.06684}}}]}";
+        String resultJson = netRequest.jsonNetPost(moneySupplyURL, paramJson);
+//        String resultJson="{\"code\":1,\"message\":\"success\",\"data\":[{\"date\":\"2022-10-31T00:00:00+08:00\",\"type\":\"ms\",\"areaCode\":\"cn\",\"m\":{\"m2\":{\"t_y2y\":0.118465},\"m1\":{\"t_y2y\":0.057594}}},{\"date\":\"2022-09-30T00:00:00+08:00\",\"type\":\"ms\",\"areaCode\":\"cn\",\"m\":{\"m2\":{\"t_y2y\":0.121123},\"m1\":{\"t_y2y\":0.063859}}},{\"date\":\"2022-08-31T00:00:00+08:00\",\"type\":\"ms\",\"areaCode\":\"cn\",\"m\":{\"m2\":{\"t_y2y\":0.122304},\"m1\":{\"t_y2y\":0.060553}}},{\"date\":\"2022-07-31T00:00:00+08:00\",\"type\":\"ms\",\"areaCode\":\"cn\",\"m\":{\"m2\":{\"t_y2y\":0.119855},\"m1\":{\"t_y2y\":0.06684}}}]}";
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         moneySupplyCNResult_RootVO resultObj = (moneySupplyCNResult_RootVO) getResult_moneySupplyCN.getResultObj(resultJson);
         moneySupplyCNParam_DataVO latestMonthData=resultObj.getData().get(0);

@@ -4,6 +4,11 @@ import invest.lixinger.index.fundamental.VO.fundamentalResult_RootVO;
 import invest.lixinger.index.fundamental.getParam_fundamental;
 import invest.lixinger.index.fundamental.getResult_fundamental;
 import invest.lixinger.index.fundamental.request_fundamental;
+import invest.lixinger.macro.moneySupply.VO.moneySupplyCNParam_DataVO;
+import invest.lixinger.macro.moneySupply.VO.moneySupplyCNResult_RootVO;
+import invest.lixinger.macro.moneySupply.getParam_moneySupplyCN;
+import invest.lixinger.macro.moneySupply.getResult_moneySupplyCN;
+import invest.lixinger.macro.moneySupply.request_moneySupplyCN;
 import invest.lixinger.macro.nationalDebt.us.VO.nationalDebtUSResult_DataVO;
 import invest.lixinger.macro.nationalDebt.us.VO.nationalDebtUSResult_RootVO;
 import invest.lixinger.macro.nationalDebt.us.getParam_nationDebtUS;
@@ -182,11 +187,20 @@ public class sendEmailUtils {
             Map<String, String> usDebtMap = getTextUSDebt();
             Text += "▶最近统计的美债为" + usDebtMap.get("meizhiariqi") + "\n\n";
             Text += "▶最近日期美债倒挂比例" + usDebtMap.get("latestDayDebt") + "。一个月钱美债倒挂比例" + usDebtMap.get("oneMonthAgoDebt") + "\n\n";
-            if(usDebtMap.get("latestDayDebt").compareTo("0")>1){
-                Text +="▶美债已经倒挂，警惕全球金融危机";
+            if (usDebtMap.get("latestDayDebt").compareTo("0") > 1) {
+                Text += "▶美债已经倒挂，警惕全球金融危机\n\n";
             }
             // m1-m2-------------------------------
-
+            Map<String, Object> cnMoneySupplymap = getTextCNMoneySupply();
+            double m1 = (double) cnMoneySupplymap.get("m1");
+            double m2 = (double) cnMoneySupplymap.get("m2");
+            String latestMonthDateMoneySupply = (String) cnMoneySupplymap.get("latestMonthDateMoneySupply");
+            double m = m1 - m2;
+            if (m < 0) {
+                Text += "▶货币宽松量统计时间为：" + latestMonthDateMoneySupply + "，实际值为：" + new DecimalFormat("0.00%").format(m) + "，当前环境适合投资股票\n\n";
+            } else {
+                Text += "▶货币宽松量统计时间为：" + latestMonthDateMoneySupply + "，实际值为：" + new DecimalFormat("0.00%").format(m) + "，当前环境不适合投资股票\n\n";
+            }
             // -------------------
             map.put("subject", subject);
             map.put("Text", Text);
@@ -211,6 +225,23 @@ public class sendEmailUtils {
         String resultFundamental = String.valueOf(calculateFundamental(resultFundamentalObj));
         map.put("fundamentalDate", fundamentalDate);
         map.put("resultFundamental", resultFundamental);
+        return map;
+    }
+
+    public static Map<String, Object> getTextCNMoneySupply() throws IOException, ParseException {
+        Map<String, Object> map = new HashMap<>();
+        InputStream inputStream = request_moneySupplyCN.class.getClassLoader().getResourceAsStream("indexReqParam.yml");
+        Map indexReqParam = new Yaml().load(inputStream);
+        String moneySupplyURL = (String) indexReqParam.get("moneySupplyURL");
+        String paramJson = getParam_moneySupplyCN.getParamMoneySupplyCNParamJson();
+        String resultJson = netRequest.jsonNetPost(moneySupplyURL, paramJson);
+//        String resultJson="{\"code\":1,\"message\":\"success\",\"data\":[{\"date\":\"2022-10-31T00:00:00+08:00\",\"type\":\"ms\",\"areaCode\":\"cn\",\"m\":{\"m2\":{\"t_y2y\":0.118465},\"m1\":{\"t_y2y\":0.057594}}},{\"date\":\"2022-09-30T00:00:00+08:00\",\"type\":\"ms\",\"areaCode\":\"cn\",\"m\":{\"m2\":{\"t_y2y\":0.121123},\"m1\":{\"t_y2y\":0.063859}}},{\"date\":\"2022-08-31T00:00:00+08:00\",\"type\":\"ms\",\"areaCode\":\"cn\",\"m\":{\"m2\":{\"t_y2y\":0.122304},\"m1\":{\"t_y2y\":0.060553}}},{\"date\":\"2022-07-31T00:00:00+08:00\",\"type\":\"ms\",\"areaCode\":\"cn\",\"m\":{\"m2\":{\"t_y2y\":0.119855},\"m1\":{\"t_y2y\":0.06684}}}]}";
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        moneySupplyCNResult_RootVO resultObj = (moneySupplyCNResult_RootVO) getResult_moneySupplyCN.getResultObj(resultJson);
+        moneySupplyCNParam_DataVO latestMonthData = resultObj.getData().get(0);
+        map.put("m1", latestMonthData.getM().getM1().getT_y2y());
+        map.put("m2", latestMonthData.getM().getM2().getT_y2y());
+        map.put("latestMonthDateMoneySupply", sdf.format(sdf.parse(latestMonthData.getDate())));
         return map;
     }
 
