@@ -98,6 +98,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="studentId != null">student_id,</if>
             <if test="studentName != null and studentName != ''">student_name,</if>
             <if test="idNum != null">id_num,</if>
+            <if test="studentPhone != null">phone_number,</if>
             <if test="deptId != null">dept_id,</if>
             <if test="trainingLevel != null">training_level,</if>
             <if test="grade != null">grade,</if>
@@ -125,6 +126,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="studentId != null">#{studentId},</if>
             <if test="studentName != null and studentName != ''">#{studentName},</if>
             <if test="idNum != null">#{idNum},</if>
+            <if test="studentPhone != null">#{studentPhone},</if>
             <if test="deptId != null">#{deptId},</if>
             <if test="trainingLevel != null">#{trainingLevel},</if>
             <if test="grade != null">#{grade},</if>
@@ -156,6 +158,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="studentId != null">student_id = #{studentId},</if>
             <if test="studentName != null and studentName != ''">student_name = #{studentName},</if>
             <if test="idNum != null">id_num = #{idNum},</if>
+            <if test="studentPhone != null">phone_number = #{studentPhone},</if>
             <if test="deptId != null">dept_id = #{deptId},</if>
             <if test="trainingLevel != null">training_level = #{trainingLevel},</if>
             <if test="grade != null">grade = #{grade},</if>
