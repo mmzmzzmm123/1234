@@ -134,6 +134,10 @@ public class StuInfoController extends BaseController
                 pass = false;
                 msg.append("请选择住宿地点;");
             }
+            if ("3".equals(accommodation)) {
+                pass = false;
+                msg.append("【是否校内住宿】为是时，【住宿地点】不能选'走读生';");
+            }
             if ("0".equals(accommodation)) {
                 if (StringUtils.isEmpty(accommodationPark)) {
                     pass = false;
