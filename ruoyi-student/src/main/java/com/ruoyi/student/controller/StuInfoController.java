@@ -3,6 +3,8 @@ package com.ruoyi.student.controller;
 import java.util.List;
 import javax.servlet.http.HttpServletResponse;
 
+import com.ruoyi.common.constant.HttpStatus;
+import com.ruoyi.common.exception.ServiceException;
 import com.ruoyi.common.utils.StringUtils;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -80,6 +82,7 @@ public class StuInfoController extends BaseController
     @PostMapping
     public AjaxResult add(@RequestBody StuInfo stuInfo)
     {
+        validateExtra(stuInfo);
         return toAjax(stuInfoService.insertStuInfo(stuInfo));
     }
 
@@ -91,6 +94,28 @@ public class StuInfoController extends BaseController
     @PutMapping
     public AjaxResult edit(@RequestBody StuInfo stuInfo)
     {
+        validateExtra(stuInfo);
+        return toAjax(stuInfoService.updateStuInfo(stuInfo));
+    }
+
+    /**
+     * 删除学生信息
+     */
+    @PreAuthorize("@ss.hasPermi('student:info:remove')")
+    @Log(title = "学生信息", businessType = BusinessType.DELETE)
+	@DeleteMapping("/{ids}")
+    public AjaxResult remove(@PathVariable Long[] ids)
+    {
+        return toAjax(stuInfoService.deleteStuInfoByIds(ids));
+    }
+
+
+    /**
+     * 额外校验规则
+     * @param stuInfo
+     * @return
+     */
+    private void validateExtra(StuInfo stuInfo) {
         StringBuilder msg = new StringBuilder();
         boolean pass = true;
         String isOnSchool = stuInfo.getIsOnSchool();
@@ -160,19 +185,7 @@ public class StuInfoController extends BaseController
             }
         }
         if (!pass) {
-            return AjaxResult.error(msg.toString());
+            throw new ServiceException(msg.toString(), HttpStatus.BAD_REQUEST);
         }
-        return toAjax(stuInfoService.updateStuInfo(stuInfo));
-    }
-
-    /**
-     * 删除学生信息
-     */
-    @PreAuthorize("@ss.hasPermi('student:info:remove')")
-    @Log(title = "学生信息", businessType = BusinessType.DELETE)
-	@DeleteMapping("/{ids}")
-    public AjaxResult remove(@PathVariable Long[] ids)
-    {
-        return toAjax(stuInfoService.deleteStuInfoByIds(ids));
     }
 }
