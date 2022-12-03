@@ -365,6 +365,9 @@
         <el-form-item label="身份证号" prop="idNum">
           <el-input v-model="form.idNum" placeholder="请输入身份证号" />
         </el-form-item>
+        <el-form-item label="联系方式" prop="studentPhone">
+          <el-input v-model="form.studentPhone" placeholder="请输入联系方式" />
+        </el-form-item>
         <el-form-item label="学院名称" prop="deptId">
           <el-select v-model="form.deptId" placeholder="请选择学院名称">
                       <el-option
@@ -541,6 +544,9 @@
         </el-form-item>
         <el-form-item label="身份证号" prop="idNum">
           <el-input v-model="stateForm.idNum" placeholder="请输入身份证号" readonly disabled/>
+        </el-form-item>
+          <el-form-item label="联系方式" prop="studentPhone">
+          <el-input v-model="stateForm.studentPhone" placeholder="请输入联系方式" readonly disabled/>
         </el-form-item>
         <el-form-item label="学院名称" prop="deptName">
           <el-input v-model="stateForm.deptName" placeholder="请输入学院名称" readonly disabled/>
@@ -790,6 +796,22 @@
           studentTag: [
             { required: true, message: "在校状态不能为空", trigger: "blur" }
           ],
+          studentPhone:[{
+              required: true, message: "在校状态不能为空", trigger: "blur" 
+          },
+          { type: 'number',
+            message: '手机号格式不正确',
+            trigger: 'blur',
+            transform(value) {
+              var phonereg = 11 && /^((13|14|15|16|17|18|19)[0-9]{1}\d{8})$/
+              if (!phonereg.test(value)) {
+                return false
+              } else {
+                return Number(value)
+              }
+            }
+          }
+          ]
         },
         // 二级部门列表
         deptList: []
