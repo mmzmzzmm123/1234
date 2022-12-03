@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+// 开机自动启动 https://blog.csdn.net/D_lunar/article/details/126358478?utm_medium=distribute.pc_relevant.none-task-blog-2~default~baidujs_baidulandingword~default-4-126358478-blog-126388954.pc_relevant_landingrelevant&spm=1001.2101.3001.4242.3&utm_relevant_index=7
 @Component
 public class sendEmail {
 
@@ -19,8 +20,8 @@ public class sendEmail {
     sendEmailUtils sendEmailUtils;
 
     // 每个5秒发送邮件
-    @Scheduled(cron = "0/5 * * * * *")
-//    @Scheduled(cron = "0 16 00 ? * *")
+//    @Scheduled(cron = "0/5 * * * * *")
+    @Scheduled(cron = "0 0 16 ? * *")
     public void sendSimpleMail() throws IOException, ParseException {
         try {
             Map<String, String> map = sendEmailUtils.wenben();

@@ -156,25 +156,32 @@ public class sendEmailUtils {
             String resultFormat = new DecimalFormat("0.00%").format(result);
             String Text = null;
             double result100 = result * 100;
+            String Textzhaiquan = "▶将资产投资债券或货币基金，利率高买债券和黄金和白银，利率低买货币基金";
+
+            String Textgupiao = "▶基金备选池：科创信息、科创创业50、科创50、创业板全指、全指信息、TMT、中创400、中证500、中证军工、国证2000、全指医疗、中小企业300、中概互联网\n\n";
+            Textgupiao += "▶股票备选池：证券 > 银行";
+
             if (result100 > 45) {
-                Text = "▶将资产投资债券或货币基金，利率高就买债券，利率低就买货币基金";
+                Text = Textzhaiquan;
             } else if (35 < result100 && result100 < 45) {
-                Text = "▶将资产投资债券或货币基金，利率高就买债券，利率低就买货币基金";
+                Text = Textzhaiquan;
             } else if (25 < result100 && result100 < 35) {
-                Text = "▶定投总资金 通过 197 个周定投，定投总资金 = 总资金 - 已投入";
+                Text = "▶定投总资金 通过 197 个周定投，其中定投总资金 = 总资金 - 已投入\n\n";
+                Text += "▶股票基金以大公司为主";
             } else if (15 < result100 && result100 < 25) {
-                Text = "▶定投总资金 通过 96 个周定投，定投总资金 = 总资金 - 已投入";
+                Text = "▶定投总资金 通过 96 个周定投，其中定投总资金 = 总资金 - 已投入";
+                Text += "▶股票基金以中型公司为主";
             } else if (10 < result100 && result100 < 15) {
-                Text = "▶定投总资金 通过 18 个周定投，定投总资金=总资金-已投入";
-                Text += "\n\n▶基金备选池：科创信息、科创创业50、科创50、创业板全指、全指信息、TMT、中创400、中证500、中证军工、国证2000、全指医疗、中小企业300";
-                Text += "\n\n▶股票备选池：证券 > 银行";
+                Text = "▶定投总资金 通过 18 个周定投，其中定投总资金 = 总资金 - 已投入\n\n";
+                Text += Textgupiao;
             } else if (5 < result100 && result100 < 10) {
-                Text = "▶梭哈梭哈梭哈梭哈梭哈梭哈梭哈梭哈梭哈梭哈梭哈梭哈梭哈";
-                Text += "\n\n▶基金备选池：科创信息、科创创业50、科创50、创业板全指、全指信息、TMT、中创400、中证500、中证军工、国证2000、全指医疗、中小企业300";
-                Text += "\n\n▶股票备选池：证券>银行";
+                Text = "▶梭哈梭哈梭哈梭哈梭哈梭哈梭哈梭哈梭哈梭哈梭哈梭哈梭哈\n\n";
+                Text += "▶现在离最低点可能还有10~20%的距离，但是为了不错过机会，只能这样\n\n";
+                Text += Textgupiao;
             }
-            String subject = date + "，当日综合百分位为" + resultFormat;
+            String subject = date + "，当日信号为" + resultFormat;
             Text += "\n\n  ▶货币基金优选兴业银行，偏债类基金优选兴业银行、易方达、华夏，股票基金优选易方达 > 广发 > 天弘 > 华夏 > 博时 > 南方 > 富国";
+            Text += "\n\n  ▶消费贷款优选工商银行（待探索），消费首优工商、招商银行（待探索），房贷优选xx银行（待探索）";
             map.put("subject", subject);
             map.put("Text", Text);
         } catch (Exception e) {
