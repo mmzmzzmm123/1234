@@ -116,7 +116,7 @@ public class StuInfoController extends BaseController
                 }
                 if (StringUtils.isEmpty(dormitoryNo)) {
                     pass = false;
-                    msg.append("请选择宿舍号;");
+                    msg.append("请填写宿舍号;");
                 }
             } else if ("1".equals(accommodation) || "2".equals(accommodation)) {
                 if (StringUtils.isEmpty(address)) {
@@ -132,7 +132,7 @@ public class StuInfoController extends BaseController
                 }
             } else {
                 pass = false;
-                msg.append("不在校时，住宿地点请选择走读;");
+                msg.append("【是否校内住宿】为否时，【住宿地点】请选择'走读生';");
             }
         }
         // 校验逻辑2：在校状态 相关
