@@ -4,6 +4,11 @@ import invest.lixinger.index.fundamental.VO.fundamentalResult_RootVO;
 import invest.lixinger.index.fundamental.getParam_fundamental;
 import invest.lixinger.index.fundamental.getResult_fundamental;
 import invest.lixinger.index.fundamental.request_fundamental;
+import invest.lixinger.macro.nationalDebt.us.VO.nationalDebtUSResult_DataVO;
+import invest.lixinger.macro.nationalDebt.us.VO.nationalDebtUSResult_RootVO;
+import invest.lixinger.macro.nationalDebt.us.getParam_nationDebtUS;
+import invest.lixinger.macro.nationalDebt.us.getResult_nationDebtUS;
+import invest.lixinger.macro.nationalDebt.us.request_nationDebtUS;
 import invest.lixinger.utils.netRequest;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,18 +21,13 @@ import org.yaml.snakeyaml.Yaml;
 
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
+import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 import static invest.lixinger.index.fundamental.request_fundamental.calculateFundamental;
 
@@ -142,25 +142,19 @@ public class sendEmailUtils {
         }
     }
 
-    public Map<String, String> wenben() throws IOException, ParseException {
+    // 产生文本
+    public static Map<String, String> getText() throws IOException, ParseException {
         Map<String, String> map = new HashMap<>();
         try {
+            // 基本面判断----------------------
+            Map<String, String> fundamentalMap = getTextFundamental();
 
-            String fundamentalURL = "https://open.lixinger.com/api/cn/index/fundamental";
-            String paramJson = getParam_fundamental.getSingleIndexParamJson();
-            String resultJson = netRequest.jsonNetPost(fundamentalURL, paramJson);
-            fundamentalResult_RootVO resultObj = (fundamentalResult_RootVO) getResult_fundamental.getResultObj(resultJson);
-            String date = paramJson.substring(paramJson.indexOf("date") + 7, paramJson.indexOf("date") + 17);
-
-            double result = calculateFundamental(resultObj);
-            String resultFormat = new DecimalFormat("0.00%").format(result);
+            double resultFundamental = Double.parseDouble(fundamentalMap.get("resultFundamental"));
             String Text = null;
-            double result100 = result * 100;
-            String Textzhaiquan = "▶将资产投资债券或货币基金，利率高买债券和黄金和白银，利率低买货币基金";
-
+            double result100 = resultFundamental * 100;
+            String Textzhaiquan = "▶将资产投资债券或货币基金，利率高买债券、黄金、白银，利率低买货币基金";
             String Textgupiao = "▶基金备选池：科创信息、科创创业50、科创50、创业板全指、全指信息、TMT、中创400、中证500、中证军工、国证2000、全指医疗、中小企业300、中概互联网\n\n";
             Textgupiao += "▶股票备选池：证券 > 银行";
-
             if (result100 > 45) {
                 Text = Textzhaiquan;
             } else if (35 < result100 && result100 < 45) {
@@ -179,9 +173,21 @@ public class sendEmailUtils {
                 Text += "▶现在离最低点可能还有10~20%的距离，但是为了不错过机会，只能这样\n\n";
                 Text += Textgupiao;
             }
-            String subject = date + "，当日信号为" + resultFormat;
-            Text += "\n\n  ▶货币基金优选兴业银行，偏债类基金优选兴业银行、易方达、华夏，股票基金优选易方达 > 广发 > 天弘 > 华夏 > 博时 > 南方 > 富国";
-            Text += "\n\n  ▶消费贷款优选工商银行（待探索），消费首优工商、招商银行（待探索），房贷优选xx银行（待探索）";
+            String resultFormat = new DecimalFormat("0.00%").format(resultFundamental);
+            String subject = fundamentalMap.get("fundamentalDate") + "，当日信号为" + resultFormat;
+            Text += "▶货币基金优选兴业银行，偏债类基金优选兴业银行、易方达、华夏，股票基金优选易方达 > 广发 > 天弘 > 华夏 > 博时 > 南方 > 富国\n\n";
+            Text += "▶消费贷款优选工商银行（待探索），消费首优工商、招商银行（待探索），房贷优选xx银行（待探索）\n\n";
+
+            // 美债-------------------------------
+            Map<String, String> usDebtMap = getTextUSDebt();
+            Text += "▶最近统计的美债为" + usDebtMap.get("meizhiariqi") + "\n\n";
+            Text += "▶最近日期美债倒挂比例" + usDebtMap.get("latestDayDebt") + "。一个月钱美债倒挂比例" + usDebtMap.get("oneMonthAgoDebt") + "\n\n";
+            if(usDebtMap.get("latestDayDebt").compareTo("0")>1){
+                Text +="▶美债已经倒挂，警惕全球金融危机";
+            }
+            // m1-m2-------------------------------
+
+            // -------------------
             map.put("subject", subject);
             map.put("Text", Text);
         } catch (Exception e) {
@@ -190,5 +196,52 @@ public class sendEmailUtils {
 
 
         return map;
+    }
+
+    // 获取每日基本百分位
+    public static Map<String, String> getTextFundamental() throws IOException, ParseException {
+        Map<String, String> map = new HashMap<>();
+        InputStream inputStream = request_fundamental.class.getClassLoader().getResourceAsStream("indexReqParam.yml");
+        Map indexReqParam = new Yaml().load(inputStream);
+        String fundamentalURL = (String) indexReqParam.get("fundamentalURL");
+        String paramJson = getParam_fundamental.getSingleIndexParamJson();
+        String resultJson = netRequest.jsonNetPost(fundamentalURL, paramJson);
+        fundamentalResult_RootVO resultFundamentalObj = (fundamentalResult_RootVO) getResult_fundamental.getResultObj(resultJson);
+        String fundamentalDate = paramJson.substring(paramJson.indexOf("date") + 7, paramJson.indexOf("date") + 17);
+        String resultFundamental = String.valueOf(calculateFundamental(resultFundamentalObj));
+        map.put("fundamentalDate", fundamentalDate);
+        map.put("resultFundamental", resultFundamental);
+        return map;
+    }
+
+    // 获取美债是否倒挂
+    public static Map<String, String> getTextUSDebt() throws IOException, ParseException {
+        Map<String, String> map = new HashMap<>();
+        InputStream inputStream = request_nationDebtUS.class.getClassLoader().getResourceAsStream("indexReqParam.yml");
+        Map indexReqParam = new Yaml().load(inputStream);
+        String nationaldebtURL = (String) indexReqParam.get("nationaldebtURL");
+        String paramJson = getParam_nationDebtUS.getNationDebtUSParamJson();
+        String resultJson = netRequest.jsonNetPost(nationaldebtURL, paramJson);
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        nationalDebtUSResult_RootVO resultObj = (nationalDebtUSResult_RootVO) getResult_nationDebtUS.getResultObj(resultJson);
+        nationalDebtUSResult_DataVO latestDayVO = resultObj.getData().get(0);
+        nationalDebtUSResult_DataVO oneMonthAgoVO = resultObj.getData().get(resultObj.getData().size() - 1);
+        map.put("meizhiariqi", sdf.format(sdf.parse(latestDayVO.getDate())));
+
+        double latestDayy2us = latestDayVO.getMir_y2();
+        double latestDayy10us = latestDayVO.getMir_y10();
+        double oneMonthAgoy2us = oneMonthAgoVO.getMir_y2();
+        double oneMonthAgoy10us = oneMonthAgoVO.getMir_y10();
+        String latestDayDebt = String.format("%.2f", (latestDayy2us - latestDayy10us) * 100);
+        String oneMonthAgoDebt = String.format("%.2f", (oneMonthAgoy2us - oneMonthAgoy10us) * 100);
+        map.put("latestDayDebt", latestDayDebt);
+        map.put("oneMonthAgoDebt", oneMonthAgoDebt);
+        return map;
+    }
+
+    public static void main(String[] args) throws IOException, ParseException {
+        Map<String, String> map = getText();
+        System.out.println("map.get(subject)===" + map.get("subject"));
+        System.out.println("map.get(Text)===" + map.get("Text"));
     }
 }

@@ -2,6 +2,7 @@ allIndexURL: https://open.lixinger.com/api/cn/index
 fundamentalURL: https://open.lixinger.com/api/cn/index/fundamental
 singleIndustryURL: https://open.lixinger.com/api/cn/company
 nationaldebtURL: https://open.lixinger.com/api/macro/national-debt
+moneySupplyURL: https://open.lixinger.com/api/macro/money-supply
 token: d58c3650-20f9-4387-8515-d595031c23a4
 startdate: 2022-01-03
 enddate: 2022-07
