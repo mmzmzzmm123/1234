@@ -90,3 +90,7 @@
   .el-submenu__icon-arrow {
   display: none;
 }
+
+.el-message-box__message {
+  word-break: break-all;
+}
