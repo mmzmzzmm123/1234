@@ -1,14 +1,14 @@
 package com.ruoyi.web.controller.sendEmail;
 
-import invest.lixinger.index.fundamentalCN.VO.fundamentalResult_RootVO;
-import invest.lixinger.index.fundamentalCN.getParam_fundamental;
-import invest.lixinger.index.fundamentalCN.getResult_fundamental;
-import invest.lixinger.index.fundamentalCN.request_fundamental;
-import invest.lixinger.index.fundamentalUS.spx.VO.fundamentalSPXResult_DataVO;
-import invest.lixinger.index.fundamentalUS.spx.VO.fundamentalSPXResult_RootVO;
-import invest.lixinger.index.fundamentalUS.spx.getParam_fundamentalSPX;
-import invest.lixinger.index.fundamentalUS.spx.getResult_fundamentalSPX;
-import invest.lixinger.index.fundamentalUS.spx.request_fundamentalSPX;
+import invest.lixinger.index.fundamental.CN.VO.fundamentalResult_RootVO;
+import invest.lixinger.index.fundamental.CN.getParam_fundamental;
+import invest.lixinger.index.fundamental.CN.getResult_fundamental;
+import invest.lixinger.index.fundamental.CN.request_fundamental;
+import invest.lixinger.index.fundamental.US.spx.VO.fundamentalSPXResult_DataVO;
+import invest.lixinger.index.fundamental.US.spx.VO.fundamentalSPXResult_RootVO;
+import invest.lixinger.index.fundamental.US.spx.getParam_fundamentalSPX;
+import invest.lixinger.index.fundamental.US.spx.getResult_fundamentalSPX;
+import invest.lixinger.index.fundamental.US.spx.request_fundamentalSPX;
 import invest.lixinger.macro.moneySupply.VO.moneySupplyCNParam_DataVO;
 import invest.lixinger.macro.moneySupply.VO.moneySupplyCNResult_RootVO;
 import invest.lixinger.macro.moneySupply.getParam_moneySupplyCN;
@@ -37,8 +37,8 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
-import static invest.lixinger.index.fundamentalCN.request_fundamental.calculateFundamental;
-import static invest.lixinger.index.fundamentalUS.spx.request_fundamentalSPX.*;
+import static invest.lixinger.index.fundamental.CN.request_fundamental.calculateFundamental;
+import static invest.lixinger.index.fundamental.US.spx.request_fundamentalSPX.*;
 
 // https://www.cnblogs.com/ooo0/p/16446829.html
 @Component
@@ -67,7 +67,7 @@ public class sendEmailUtils {
         SimpleMailMessage simpMsg = new SimpleMailMessage();
         simpMsg.setFrom(from);
         simpMsg.setTo(to);
-        simpMsg.setCc(cc);
+//        simpMsg.setCc(cc);
         simpMsg.setSubject(subject);
         simpMsg.setText(Text);
         javaMailSender.send(simpMsg);
@@ -161,7 +161,7 @@ public class sendEmailUtils {
             double resultFundamental = Double.parseDouble(fundamentalMap.get("resultFundamental"));
             String Text = null;
             double result100 = resultFundamental * 100;
-            String Textzhaiquan = "▶将资产投资债券、货币基金，利率高则买债券、黄金、白银，利率低则买货币基金\n\n";
+            String Textzhaiquan = "▶现阶段，将资产投资债券、货币基金，利率高则买债券、白银，利率低则买货币基金\n\n";
             String Textgupiao = "▶基金备选池：科创信息、科创创业50、科创50、创业板全指、全指信息、TMT、中创400、中证500、中证军工、国证2000、全指医疗、中小企业300、中概互联网\n\n";
             Textgupiao += "▶股票备选池：证券 > 银行";
             if (result100 > 45) {
@@ -169,17 +169,17 @@ public class sendEmailUtils {
             } else if (35 < result100 && result100 < 45) {
                 Text = Textzhaiquan;
             } else if (25 < result100 && result100 < 35) {
-                Text = "▶定投总资金 通过 197 个周定投，其中定投总资金 = 总资金 - 已投入\n\n";
-                Text += "▶股票基金以大公司为主";
+                Text = "\t◆定投总资金 通过 197 个周定投，其中定投总资金 = 总资金 - 已投入\n\n";
+                Text += "\t◆股票基金以大公司为主";
             } else if (15 < result100 && result100 < 25) {
-                Text = "▶定投总资金 通过 96 个周定投，其中定投总资金 = 总资金 - 已投入";
-                Text += "▶股票基金以中型公司为主";
+                Text = "\t◆定投总资金 通过 96 个周定投，其中定投总资金 = 总资金 - 已投入\n\n";
+                Text += "\t◆股票基金以中型公司为主";
             } else if (10 < result100 && result100 < 15) {
-                Text = "▶定投总资金 通过 18 个周定投，其中定投总资金 = 总资金 - 已投入\n\n";
+                Text = "\t◆定投总资金 通过 18 个周定投，其中定投总资金 = 总资金 - 已投入\n\n";
                 Text += Textgupiao;
             } else if (5 < result100 && result100 < 10) {
-                Text = "▶梭哈梭哈梭哈梭哈梭哈梭哈梭哈梭哈梭哈梭哈梭哈梭哈梭哈\n\n";
-                Text += "▶现在离最低点可能还有10~20%的幅度，但为不错过机会，我将永远相信历史会简单的重复\n\n";
+                Text = "\t◆梭哈梭哈梭哈梭哈梭哈梭哈梭哈梭哈梭哈梭哈梭哈梭哈梭哈\n\n";
+                Text += "\t◆现在离最低点可能还有10~20%的幅度，但为不错过机会，我将永远相信历史会简单的重复\n\n";
                 Text += Textgupiao;
             }
             String resultFormat = new DecimalFormat("0.00%").format(resultFundamental);
@@ -211,7 +211,7 @@ public class sendEmailUtils {
             Map<String, Object> mapSPX = getTextSPX();
             double posSPX = (double) mapSPX.get("posSPX");
             String dateSPX = (String) mapSPX.get("dateSPX");
-            Text += "▶美股最新数据日期为：" + dateSPX + "，实际值为：" + new DecimalFormat("0.00%").format(posSPX) + "\n\n";
+            Text += "▶美股最新数据日期为：" + dateSPX + "，信号为：" + new DecimalFormat("0.00%").format(posSPX) + "\n\n";
             if (posSPX < 0.3) {
                 Text += "\t结论：可考虑美股现在出现的机会\n\n";
             } else {

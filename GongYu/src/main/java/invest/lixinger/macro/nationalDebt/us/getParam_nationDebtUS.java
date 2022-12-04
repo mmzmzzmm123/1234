@@ -1,8 +1,7 @@
 package invest.lixinger.macro.nationalDebt.us;
 
 import com.alibaba.fastjson.JSON;
-import invest.lixinger.index.fundamentalCN.getParam_fundamental;
-import invest.lixinger.index.fundamentalUS.spx.VO.fundamentalSPXResult_RootVO;
+import invest.lixinger.index.fundamental.CN.getParam_fundamental;
 import invest.lixinger.macro.nationalDebt.us.VO.nationalDebtUSParam_RootVO;
 import org.yaml.snakeyaml.Yaml;
 

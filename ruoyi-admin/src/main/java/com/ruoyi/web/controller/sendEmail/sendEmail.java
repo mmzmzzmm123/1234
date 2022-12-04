@@ -28,7 +28,7 @@ public class sendEmail {
             Map<String, String> map = getText();
             List<String> list = new ArrayList<>();
             list.add("280014580@qq.com");
-            list.add("1114549265@qq.com");
+//            list.add("1114549265@qq.com");
             System.out.println("map.get(subject)===" + map.get("subject"));
             System.out.println("map.get(Text)===" + map.get("Text"));
             for (int i = 0; i < list.size(); i++) {
