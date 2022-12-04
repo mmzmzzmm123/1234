@@ -1,11 +1,10 @@
-package invest.lixinger.index.fundamental;
+package invest.lixinger.index.fundamentalCN;
 
 import mybatisNoSpringUtils.mybatisNoSpringUtils;
-import invest.lixinger.index.fundamental.VO.fundamentalResult_RootVO;
+import invest.lixinger.index.fundamentalCN.VO.fundamentalResult_RootVO;
 import invest.lixinger.utils.netRequest;
 import org.yaml.snakeyaml.Yaml;
 
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
@@ -28,9 +27,9 @@ public class request_fundamental_dateRange extends mybatisNoSpringUtils {
     public static fundamentalResult_RootVO getRequest_fundamental_dateRange(Date startDate) throws IOException, ParseException {
         InputStream inputStream = request_fundamental_dateRange.class.getClassLoader().getResourceAsStream("indexReqParam.yml");
         Map indexReqParam = new Yaml().load(inputStream);
-        String fundamentalURL = (String) indexReqParam.get("fundamentalURL");
+        String fundamentalCNURL = (String) indexReqParam.get("fundamentalCNURL");
         String paramJson = getParam_fundamental.getSingleIndexParam_dateRangeJson(startDate);
-        String resultJson = netRequest.jsonNetPost(fundamentalURL, paramJson);
+        String resultJson = netRequest.jsonNetPost(fundamentalCNURL, paramJson);
         fundamentalResult_RootVO resultObj = (fundamentalResult_RootVO) getResult_fundamental.getResultObj(resultJson);
         return resultObj;
     }

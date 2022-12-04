@@ -1,14 +1,11 @@
 package invest.lixinger.company.singleIndustry;
 
 import invest.lixinger.company.singleIndustry.VO.singleIndustryResult_RootVO;
-import invest.lixinger.index.fundamental.request_fundamental_dateRange;
 import invest.lixinger.utils.netRequest;
 import org.yaml.snakeyaml.Yaml;
 
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.text.DecimalFormat;
 import java.util.Map;
 
 public class request_singleIndustry {

@@ -1,9 +1,9 @@
-package invest.lixinger.index.fundamental;
+package invest.lixinger.index.fundamentalCN;
 
 
 
 import com.alibaba.fastjson.JSON;
-import invest.lixinger.index.fundamental.VO.fundamentalResult_RootVO;
+import invest.lixinger.index.fundamentalCN.VO.fundamentalResult_RootVO;
 
 
 public class getResult_fundamental {

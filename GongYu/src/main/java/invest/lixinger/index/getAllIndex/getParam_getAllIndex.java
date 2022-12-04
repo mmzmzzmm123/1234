@@ -1,11 +1,9 @@
 package invest.lixinger.index.getAllIndex;
 
 import com.alibaba.fastjson.JSON;
-import invest.lixinger.index.fundamental.getParam_fundamental;
 import invest.lixinger.index.getAllIndex.VO.allIndexParam_RootVO;
 import org.yaml.snakeyaml.Yaml;
 
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Map;
@@ -17,9 +15,8 @@ public class getParam_getAllIndex {
         String token = (String) conf.get("token");
         allIndexParam_RootVO paramvo = new allIndexParam_RootVO();
         paramvo.setToken(token);
-        String json = JSON.toJSONString(paramvo);
 
-        return json;
+        return JSON.toJSONString(paramvo);
     }
 
     public static Object getParamObj(String json) {
@@ -29,6 +26,6 @@ public class getParam_getAllIndex {
 
     public static void main(String[] args) throws IOException {
         System.out.println(getParamJson());
-        System.out.println(getParamObj(new String()));
+        System.out.println(getParamObj(""));
     }
 }

@@ -1,9 +1,9 @@
 package com.ruoyi.web.controller.sendEmail;
 
-import invest.lixinger.index.fundamental.VO.fundamentalResult_RootVO;
-import invest.lixinger.index.fundamental.getParam_fundamental;
-import invest.lixinger.index.fundamental.getResult_fundamental;
-import invest.lixinger.index.fundamental.request_fundamental;
+import invest.lixinger.index.fundamentalCN.VO.fundamentalResult_RootVO;
+import invest.lixinger.index.fundamentalCN.getParam_fundamental;
+import invest.lixinger.index.fundamentalCN.getResult_fundamental;
+import invest.lixinger.index.fundamentalCN.request_fundamental;
 import invest.lixinger.macro.moneySupply.VO.moneySupplyCNParam_DataVO;
 import invest.lixinger.macro.moneySupply.VO.moneySupplyCNResult_RootVO;
 import invest.lixinger.macro.moneySupply.getParam_moneySupplyCN;
@@ -27,14 +27,12 @@ import org.yaml.snakeyaml.Yaml;
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 import java.io.*;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
-import static invest.lixinger.index.fundamental.request_fundamental.calculateFundamental;
+import static invest.lixinger.index.fundamentalCN.request_fundamental.calculateFundamental;
 
 // https://www.cnblogs.com/ooo0/p/16446829.html
 @Component
@@ -157,7 +155,7 @@ public class sendEmailUtils {
             double resultFundamental = Double.parseDouble(fundamentalMap.get("resultFundamental"));
             String Text = null;
             double result100 = resultFundamental * 100;
-            String Textzhaiquan = "▶将资产投资债券或货币基金，利率高买债券、黄金、白银，利率低买货币基金";
+            String Textzhaiquan = "▶将资产投资债券、货币基金，利率高则买债券、黄金、白银，利率低则买货币基金\n\n";
             String Textgupiao = "▶基金备选池：科创信息、科创创业50、科创50、创业板全指、全指信息、TMT、中创400、中证500、中证军工、国证2000、全指医疗、中小企业300、中概互联网\n\n";
             Textgupiao += "▶股票备选池：证券 > 银行";
             if (result100 > 45) {
@@ -175,20 +173,20 @@ public class sendEmailUtils {
                 Text += Textgupiao;
             } else if (5 < result100 && result100 < 10) {
                 Text = "▶梭哈梭哈梭哈梭哈梭哈梭哈梭哈梭哈梭哈梭哈梭哈梭哈梭哈\n\n";
-                Text += "▶现在离最低点可能还有10~20%的距离，但是为了不错过机会，只能这样\n\n";
+                Text += "▶现在离最低点可能还有10~20%的幅度，但为不错过机会，我将永远相信历史会简单的重复\n\n";
                 Text += Textgupiao;
             }
             String resultFormat = new DecimalFormat("0.00%").format(resultFundamental);
             String subject = fundamentalMap.get("fundamentalDate") + "，当日信号为" + resultFormat;
             Text += "▶货币基金优选兴业银行，偏债类基金优选兴业银行、易方达、华夏，股票基金优选易方达 > 广发 > 天弘 > 华夏 > 博时 > 南方 > 富国\n\n";
-            Text += "▶消费贷款优选工商银行（待探索），消费首优工商、招商银行（待探索），房贷优选xx银行（待探索）\n\n";
+            Text += "▶信用卡优选工商银行、浦发银行、广发银行（待探索），日常消费优选工商、招商银行（待探索），房贷优选xx银行（待探索）\n\n";
 
             // 美债-------------------------------
             Map<String, String> usDebtMap = getTextUSDebt();
-            Text += "▶最近统计的美债为" + usDebtMap.get("meizhiariqi") + "\n\n";
-            Text += "▶最近日期美债倒挂比例" + usDebtMap.get("latestDayDebt") + "。一个月钱美债倒挂比例" + usDebtMap.get("oneMonthAgoDebt") + "\n\n";
+            Text += "▶美债最新数据日期为：" + usDebtMap.get("meizhiariqi");
+            Text += "，美债倒挂比例为：" + usDebtMap.get("latestDayDebt") + "。一个月前美债倒挂比例为：" + usDebtMap.get("oneMonthAgoDebt") + "\n\n";
             if (usDebtMap.get("latestDayDebt").compareTo("0") > 1) {
-                Text += "▶美债已经倒挂，警惕全球金融危机\n\n";
+                Text += "结论：美债已经倒挂，警惕全球金融危机\n\n";
             }
             // m1-m2-------------------------------
             Map<String, Object> cnMoneySupplymap = getTextCNMoneySupply();
@@ -197,9 +195,11 @@ public class sendEmailUtils {
             String latestMonthDateMoneySupply = (String) cnMoneySupplymap.get("latestMonthDateMoneySupply");
             double m = m1 - m2;
             if (m < 0) {
-                Text += "▶货币宽松量统计时间为：" + latestMonthDateMoneySupply + "，实际值为：" + new DecimalFormat("0.00%").format(m) + "，当前环境适合投资股票\n\n";
+                Text += "▶货币宽松量最新数据日期为：" + latestMonthDateMoneySupply + "，实际值为：" + new DecimalFormat("0.00%").format(m)+ "\n\n";
+                Text += "\t结论：当前环境适合投资股票";
             } else {
-                Text += "▶货币宽松量统计时间为：" + latestMonthDateMoneySupply + "，实际值为：" + new DecimalFormat("0.00%").format(m) + "，当前环境不适合投资股票\n\n";
+                Text += "▶货币宽松量最新数据日期为：" + latestMonthDateMoneySupply + "，实际值为：" + new DecimalFormat("0.00%").format(m)+ "\n\n";
+                Text += "\t结论：当前环境不适合投资股票";
             }
             // -------------------
             map.put("subject", subject);
@@ -217,9 +217,9 @@ public class sendEmailUtils {
         Map<String, String> map = new HashMap<>();
         InputStream inputStream = request_fundamental.class.getClassLoader().getResourceAsStream("indexReqParam.yml");
         Map indexReqParam = new Yaml().load(inputStream);
-        String fundamentalURL = (String) indexReqParam.get("fundamentalURL");
+        String fundamentalCNURL = (String) indexReqParam.get("fundamentalCNURL");
         String paramJson = getParam_fundamental.getSingleIndexParamJson();
-        String resultJson = netRequest.jsonNetPost(fundamentalURL, paramJson);
+        String resultJson = netRequest.jsonNetPost(fundamentalCNURL, paramJson);
         fundamentalResult_RootVO resultFundamentalObj = (fundamentalResult_RootVO) getResult_fundamental.getResultObj(resultJson);
         String fundamentalDate = paramJson.substring(paramJson.indexOf("date") + 7, paramJson.indexOf("date") + 17);
         String resultFundamental = String.valueOf(calculateFundamental(resultFundamentalObj));

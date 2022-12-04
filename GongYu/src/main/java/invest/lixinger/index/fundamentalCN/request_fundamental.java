@@ -1,10 +1,9 @@
-package invest.lixinger.index.fundamental;
+package invest.lixinger.index.fundamentalCN;
 
-import invest.lixinger.index.fundamental.VO.fundamentalResult_RootVO;
+import invest.lixinger.index.fundamentalCN.VO.fundamentalResult_RootVO;
 import invest.lixinger.utils.netRequest;
 import org.yaml.snakeyaml.Yaml;
 
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.text.DecimalFormat;
@@ -18,10 +17,10 @@ public class request_fundamental {
     public static void main(String[] args) throws IOException, ParseException {
         InputStream inputStream = request_fundamental.class.getClassLoader().getResourceAsStream("indexReqParam.yml");
         Map indexReqParam = new Yaml().load(inputStream);
-        String fundamentalURL = (String) indexReqParam.get("fundamentalURL");
+        String fundamentalCNURL = (String) indexReqParam.get("fundamentalCNURL");
         String paramJson = getParam_fundamental.getSingleIndexParamJson();
         //{"date":"2022-11-28","metricsList":["pe_ttm.y20.median","pe_ttm.y10.median","pb.y10.median","pb.y20.median","ps_ttm.y10.median","ps_ttm.y20.median","cp"],"stockCodes":["1000002"],"token":"d58c3650-20f9-4387-8515-d595031c23a4"}
-        String resultJson = netRequest.jsonNetPost(fundamentalURL, paramJson);
+        String resultJson = netRequest.jsonNetPost(fundamentalCNURL, paramJson);
         fundamentalResult_RootVO resultObj = (fundamentalResult_RootVO) getResult_fundamental.getResultObj(resultJson);
 
         calculateFundamental(resultObj);

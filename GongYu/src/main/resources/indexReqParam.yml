@@ -1,5 +1,6 @@
 allIndexURL: https://open.lixinger.com/api/cn/index
-fundamentalURL: https://open.lixinger.com/api/cn/index/fundamental
+fundamentalCNURL: https://open.lixinger.com/api/cn/index/fundamental
+fundamentalUSURL: https://open.lixinger.com/api/us/index/fundamental
 singleIndustryURL: https://open.lixinger.com/api/cn/company
 nationaldebtURL: https://open.lixinger.com/api/macro/national-debt
 moneySupplyURL: https://open.lixinger.com/api/macro/money-supply
@@ -16,6 +17,7 @@ metricsList:
   - ps_ttm.y10.median
   - ps_ttm.y20.median
   - cp
+
 fsType_bank: bank
 removeCode:
   - "1000009"

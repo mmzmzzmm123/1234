@@ -1,7 +1,6 @@
 package invest.lixinger.macro.nationalDebt.us;
 
 import com.alibaba.fastjson.JSON;
-import invest.lixinger.index.fundamental.VO.fundamentalResult_RootVO;
 import invest.lixinger.macro.nationalDebt.us.VO.nationalDebtUSResult_RootVO;
 
 public class getResult_nationDebtUS {

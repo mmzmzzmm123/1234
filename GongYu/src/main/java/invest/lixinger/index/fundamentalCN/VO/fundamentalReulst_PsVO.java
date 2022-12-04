@@ -1,4 +1,4 @@
-package invest.lixinger.index.fundamental.VO;
+package invest.lixinger.index.fundamentalCN.VO;
 
 
 import lombok.Data;

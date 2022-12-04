@@ -1,7 +1,7 @@
 package invest.lixinger.ruoyi.controller;
 
 import mybatisNoSpringUtils.mybatisNoSpringUtils;
-import invest.lixinger.index.fundamental.VO.fundamentalResult_RootVO;
+import invest.lixinger.index.fundamentalCN.VO.fundamentalResult_RootVO;
 import invest.lixinger.ruoyi.entity.hsagVO;
 import invest.lixinger.ruoyi.mapper.hsagMapper;
 import org.junit.Test;
@@ -14,7 +14,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 
-import static invest.lixinger.index.fundamental.request_fundamental_dateRange.getRequest_fundamental_dateRange;
+import static invest.lixinger.index.fundamentalCN.request_fundamental_dateRange.getRequest_fundamental_dateRange;
 
 public class hsagController extends mybatisNoSpringUtils {
 

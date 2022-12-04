@@ -1,6 +1,5 @@
 package invest.lixinger.utils;
 
-import invest.lixinger.index.fundamental.getParam_fundamental;
 import org.junit.Assert;
 import org.junit.Test;
 import org.yaml.snakeyaml.Yaml;
