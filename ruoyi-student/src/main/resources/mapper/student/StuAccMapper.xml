@@ -54,10 +54,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
     count(CASE WHEN t.joint_type = 1 THEN 1 ELSE NULL END) type_b_acc,
 
-    count(CASE WHEN t.student_tag = 3 AND t.place_to_leave = 0 THEN 1 ELSE NULL END) leave_in_city_acc,
-    count(CASE WHEN t.student_tag = 3 AND t.place_to_leave = 1 THEN 1 ELSE NULL END) leave_out_city_in_pro_acc,
-    count(CASE WHEN t.student_tag = 3 AND t.place_to_leave = 2 THEN 1 ELSE NULL END) leave_out_pro_acc,
-    count(CASE WHEN t.student_tag = 3 THEN 1 ELSE NULL END) leave_today_acc,
+    count(CASE WHEN t.student_tag = 1 AND t.place_to_leave = 0 THEN 1 ELSE NULL END) leave_in_city_acc,
+    count(CASE WHEN t.student_tag = 1 AND t.place_to_leave = 1 THEN 1 ELSE NULL END) leave_out_city_in_pro_acc,
+    count(CASE WHEN t.student_tag = 1 AND t.place_to_leave = 2 THEN 1 ELSE NULL END) leave_out_pro_acc,
+    count(CASE WHEN t.student_tag = 1 THEN 1 ELSE NULL END) leave_today_acc,
 
     count(CASE WHEN t.student_tag = 2 AND t.not_school_reason = 0 THEN 1 ELSE NULL END) epidemic_sus_acc,
     count(CASE WHEN t.student_tag = 2 AND t.not_school_reason = 1 THEN 1 ELSE NULL END) practice_sus_acc,
@@ -96,10 +96,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
             count(CASE WHEN t.joint_type = 1 THEN 1 ELSE NULL END) type_b_acc,
 
-            count(CASE WHEN t.student_tag = 3 AND t.place_to_leave = 0 THEN 1 ELSE NULL END) leave_in_city_acc,
-            count(CASE WHEN t.student_tag = 3 AND t.place_to_leave = 1 THEN 1 ELSE NULL END) leave_out_city_in_pro_acc,
-            count(CASE WHEN t.student_tag = 3 AND t.place_to_leave = 2 THEN 1 ELSE NULL END) leave_out_pro_acc,
-            count(CASE WHEN t.student_tag = 3 THEN 1 ELSE NULL END) leave_today_acc,
+            count(CASE WHEN t.student_tag = 1 AND t.place_to_leave = 0 THEN 1 ELSE NULL END) leave_in_city_acc,
+            count(CASE WHEN t.student_tag = 1 AND t.place_to_leave = 1 THEN 1 ELSE NULL END) leave_out_city_in_pro_acc,
+            count(CASE WHEN t.student_tag = 1 AND t.place_to_leave = 2 THEN 1 ELSE NULL END) leave_out_pro_acc,
+            count(CASE WHEN t.student_tag = 1 THEN 1 ELSE NULL END) leave_today_acc,
 
             count(CASE WHEN t.student_tag = 2 AND t.not_school_reason = 0 THEN 1 ELSE NULL END) epidemic_sus_acc,
             count(CASE WHEN t.student_tag = 2 AND t.not_school_reason = 1 THEN 1 ELSE NULL END) practice_sus_acc,
@@ -140,10 +140,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
             count(CASE WHEN t.joint_type = 1 THEN 1 ELSE NULL END) type_b_acc,
 
-            count(CASE WHEN t.student_tag = 3 AND t.place_to_leave = 0 THEN 1 ELSE NULL END) leave_in_city_acc,
-            count(CASE WHEN t.student_tag = 3 AND t.place_to_leave = 1 THEN 1 ELSE NULL END) leave_out_city_in_pro_acc,
-            count(CASE WHEN t.student_tag = 3 AND t.place_to_leave = 2 THEN 1 ELSE NULL END) leave_out_pro_acc,
-            count(CASE WHEN t.student_tag = 3 THEN 1 ELSE NULL END) leave_today_acc,
+            count(CASE WHEN t.student_tag = 1 AND t.place_to_leave = 0 THEN 1 ELSE NULL END) leave_in_city_acc,
+            count(CASE WHEN t.student_tag = 1 AND t.place_to_leave = 1 THEN 1 ELSE NULL END) leave_out_city_in_pro_acc,
+            count(CASE WHEN t.student_tag = 1 AND t.place_to_leave = 2 THEN 1 ELSE NULL END) leave_out_pro_acc,
+            count(CASE WHEN t.student_tag = 1 THEN 1 ELSE NULL END) leave_today_acc,
 
             count(CASE WHEN t.student_tag = 2 AND t.not_school_reason = 0 THEN 1 ELSE NULL END) epidemic_sus_acc,
             count(CASE WHEN t.student_tag = 2 AND t.not_school_reason = 1 THEN 1 ELSE NULL END) practice_sus_acc,
@@ -179,10 +179,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
         count(CASE WHEN t.joint_type = 1 THEN 1 ELSE NULL END) type_b_acc,
 
-        count(CASE WHEN t.student_tag = 3 AND t.place_to_leave = 0 THEN 1 ELSE NULL END) leave_in_city_acc,
-        count(CASE WHEN t.student_tag = 3 AND t.place_to_leave = 1 THEN 1 ELSE NULL END) leave_out_city_in_pro_acc,
-        count(CASE WHEN t.student_tag = 3 AND t.place_to_leave = 2 THEN 1 ELSE NULL END) leave_out_pro_acc,
-        count(CASE WHEN t.student_tag = 3 THEN 1 ELSE NULL END) leave_today_acc,
+        count(CASE WHEN t.student_tag = 1 AND t.place_to_leave = 0 THEN 1 ELSE NULL END) leave_in_city_acc,
+        count(CASE WHEN t.student_tag = 1 AND t.place_to_leave = 1 THEN 1 ELSE NULL END) leave_out_city_in_pro_acc,
+        count(CASE WHEN t.student_tag = 1 AND t.place_to_leave = 2 THEN 1 ELSE NULL END) leave_out_pro_acc,
+        count(CASE WHEN t.student_tag = 1 THEN 1 ELSE NULL END) leave_today_acc,
 
         count(CASE WHEN t.student_tag = 2 AND t.not_school_reason = 0 THEN 1 ELSE NULL END) epidemic_sus_acc,
         count(CASE WHEN t.student_tag = 2 AND t.not_school_reason = 1 THEN 1 ELSE NULL END) practice_sus_acc,
