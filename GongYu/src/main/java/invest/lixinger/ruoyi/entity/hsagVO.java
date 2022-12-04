@@ -16,5 +16,11 @@ public class hsagVO {
     double peCv;
     double pbCv;
     double psCv;
+    double pePos10;
+    double pbPos10;
+    double psPos10;
+    double pePos20;
+    double pbPos20;
+    double psPos20;
     double zonghePos;
 }

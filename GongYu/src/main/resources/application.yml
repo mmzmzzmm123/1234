@@ -4,7 +4,7 @@ server:
 
 spring:
   datasource:
-    url: jdbc:mysql://3ig3294254.zicp.fun:42639/gyfortest?useSSL=false&serverTimezone=Asia/Shanghai&allowPublicKeyRetrieval=true&characterEncoding=utf8
+    url: jdbc:mysql://3ig3294254.zicp.fun:42639/ry_vue?useSSL=false&serverTimezone=Asia/Shanghai&allowPublicKeyRetrieval=true&characterEncoding=utf8
     username: gongyu
     password: wtxf4949
     driver-class-name: com.mysql.cj.jdbc.Driver

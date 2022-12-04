@@ -167,7 +167,7 @@ public class sendEmailUtils {
             double resultFundamental = Double.parseDouble(fundamentalMap.get("resultFundamental"));
             String Text = null;
             double result100 = resultFundamental * 100;
-            String Textzhaiquan = "▶现阶段，将资产投资债券、货币基金，利率高则买债券、白银，利率低则买货币基金\n\n";
+            String Textzhaiquan = "▶现阶段，将资产投资债券、货币基金，利率高则买债券、黄金，利率低则买货币基金\n\n";
             String Textgupiao = "▶基金备选池：科创信息、科创创业50、科创50、创业板全指、全指信息、TMT、中创400、中证500、中证军工、国证2000、全指医疗、中小企业300、中概互联网\n\n";
             Textgupiao += "▶股票备选池：证券 > 银行";
             if (result100 > 45) {

@@ -54,13 +54,19 @@ public class hsagController extends mybatisNoSpringUtils {
             vo.setPeCv(pe_cv);
             vo.setPbCv(pb_cv);
             vo.setPsCv(ps_cv);
+            vo.setPePos10(pe_10_cvpos);
+            vo.setPbPos10(pb_10_cvpos);
+            vo.setPsPos10(ps_10_cvpos);
+            vo.setPePos20(pe_20_cvpos);
+            vo.setPbPos20(pb_20_cvpos);
+            vo.setPsPos20(ps_20_cvpos);
             vo.setZonghePos(result);
             hsagmapper.insert(vo);
 
         }
     }
 
-    //统计在数据库中最新的时间
+    // 统计在数据库中最新的时间
     public Date nearestDateInDB() {
         hsagMapper hsagmapper = session.getMapper(hsagMapper.class);
         hsagVO vo = hsagmapper.nearestDateInDB();
