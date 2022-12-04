@@ -4,6 +4,11 @@ import invest.lixinger.index.fundamentalCN.VO.fundamentalResult_RootVO;
 import invest.lixinger.index.fundamentalCN.getParam_fundamental;
 import invest.lixinger.index.fundamentalCN.getResult_fundamental;
 import invest.lixinger.index.fundamentalCN.request_fundamental;
+import invest.lixinger.index.fundamentalUS.spx.VO.fundamentalSPXResult_DataVO;
+import invest.lixinger.index.fundamentalUS.spx.VO.fundamentalSPXResult_RootVO;
+import invest.lixinger.index.fundamentalUS.spx.getParam_fundamentalSPX;
+import invest.lixinger.index.fundamentalUS.spx.getResult_fundamentalSPX;
+import invest.lixinger.index.fundamentalUS.spx.request_fundamentalSPX;
 import invest.lixinger.macro.moneySupply.VO.moneySupplyCNParam_DataVO;
 import invest.lixinger.macro.moneySupply.VO.moneySupplyCNResult_RootVO;
 import invest.lixinger.macro.moneySupply.getParam_moneySupplyCN;
@@ -33,6 +38,7 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 
 import static invest.lixinger.index.fundamentalCN.request_fundamental.calculateFundamental;
+import static invest.lixinger.index.fundamentalUS.spx.request_fundamentalSPX.*;
 
 // https://www.cnblogs.com/ooo0/p/16446829.html
 @Component
@@ -179,14 +185,14 @@ public class sendEmailUtils {
             String resultFormat = new DecimalFormat("0.00%").format(resultFundamental);
             String subject = fundamentalMap.get("fundamentalDate") + "，当日信号为" + resultFormat;
             Text += "▶货币基金优选兴业银行，偏债类基金优选兴业银行、易方达、华夏，股票基金优选易方达 > 广发 > 天弘 > 华夏 > 博时 > 南方 > 富国\n\n";
-            Text += "▶信用卡优选工商银行、浦发银行、广发银行（待探索），日常消费优选工商、招商银行（待探索），房贷优选xx银行（待探索）\n\n";
+            Text += "▶信用卡优选工商银行、浦发银行、广发银行（待和同事讨论），日常消费优选工商、招商银行（待和同事讨论），房贷优选xx银行（待和同事讨论）\n\n";
 
             // 美债-------------------------------
             Map<String, String> usDebtMap = getTextUSDebt();
             Text += "▶美债最新数据日期为：" + usDebtMap.get("meizhiariqi");
             Text += "，美债倒挂比例为：" + usDebtMap.get("latestDayDebt") + "。一个月前美债倒挂比例为：" + usDebtMap.get("oneMonthAgoDebt") + "\n\n";
             if (usDebtMap.get("latestDayDebt").compareTo("0") > 1) {
-                Text += "结论：美债已经倒挂，警惕全球金融危机\n\n";
+                Text += "\t结论：美债已经倒挂，警惕全球金融危机\n\n";
             }
             // m1-m2-------------------------------
             Map<String, Object> cnMoneySupplymap = getTextCNMoneySupply();
@@ -195,11 +201,21 @@ public class sendEmailUtils {
             String latestMonthDateMoneySupply = (String) cnMoneySupplymap.get("latestMonthDateMoneySupply");
             double m = m1 - m2;
             if (m < 0) {
-                Text += "▶货币宽松量最新数据日期为：" + latestMonthDateMoneySupply + "，实际值为：" + new DecimalFormat("0.00%").format(m)+ "\n\n";
-                Text += "\t结论：当前环境适合投资股票";
+                Text += "▶货币宽松量最新数据日期为：" + latestMonthDateMoneySupply + "，实际值为：" + new DecimalFormat("0.00%").format(m) + "\n\n";
+                Text += "\t结论：当前环境适合投资股票\n\n";
             } else {
-                Text += "▶货币宽松量最新数据日期为：" + latestMonthDateMoneySupply + "，实际值为：" + new DecimalFormat("0.00%").format(m)+ "\n\n";
-                Text += "\t结论：当前环境不适合投资股票";
+                Text += "▶货币宽松量最新数据日期为：" + latestMonthDateMoneySupply + "，实际值为：" + new DecimalFormat("0.00%").format(m) + "\n\n";
+                Text += "\t结论：当前环境不适合投资股票\n\n";
+            }
+            // SPX信号值
+            Map<String, Object> mapSPX = getTextSPX();
+            double posSPX = (double) mapSPX.get("posSPX");
+            String dateSPX = (String) mapSPX.get("dateSPX");
+            Text += "▶美股最新数据日期为：" + dateSPX + "，实际值为：" + new DecimalFormat("0.00%").format(posSPX) + "\n\n";
+            if (posSPX < 0.3) {
+                Text += "\t结论：可考虑美股现在出现的机会\n\n";
+            } else {
+                Text += "\t结论：美股暂无机会\n\n";
             }
             // -------------------
             map.put("subject", subject);
@@ -207,9 +223,24 @@ public class sendEmailUtils {
         } catch (Exception e) {
             System.out.println("wenben.exception==" + e.getMessage());
         }
-
-
         return map;
+    }
+
+    public static Map<String, Object> getTextSPX() throws IOException, ParseException {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        InputStream inputStream = request_fundamentalSPX.class.getClassLoader().getResourceAsStream("indexReqParam.yml");
+        Map indexReqParam = new Yaml().load(inputStream);
+        String fundamentalUSURL = (String) indexReqParam.get("fundamentalUSURL");
+        String paramJson = getParam_fundamentalSPX.getSingleIndexParamJson();
+        String resultJson = netRequest.jsonNetPost(fundamentalUSURL, paramJson);
+        fundamentalSPXResult_RootVO resultObj = (fundamentalSPXResult_RootVO) getResult_fundamentalSPX.getResultObj(resultJson);
+        double result = calculateFundamentalSPX(resultObj);
+        Map<String, Object> mapSPX = new HashMap<>();
+        fundamentalSPXResult_DataVO vo = resultObj.getData().get(0);
+        mapSPX.put("dateSPX", sdf.format(sdf.parse(vo.getDate())));
+        mapSPX.put("posSPX", result);
+        return mapSPX;
+
     }
 
     // 获取每日基本百分位
@@ -271,8 +302,14 @@ public class sendEmailUtils {
     }
 
     public static void main(String[] args) throws IOException, ParseException {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+
         Map<String, String> map = getText();
         System.out.println("map.get(subject)===" + map.get("subject"));
         System.out.println("map.get(Text)===" + map.get("Text"));
+//        Map<String, Object> map = getTextSPX();
+//        System.out.println("map.get(Text)===" + map.get("posSPX"));
+//        System.out.println("map.get(Text)===");
+
     }
 }

@@ -21,13 +21,14 @@ public class sendEmail {
     sendEmailUtils sendEmailUtils;
 
     // 每个5秒发送邮件
-//    @Scheduled(cron = "0/10 * * * * *")
-    @Scheduled(cron = "0 0 16 ? * *")
+    @Scheduled(cron = "0/15 * * * * *")
+//    @Scheduled(cron = "0 0 16 ? * *")
     public void sendSimpleMail() throws IOException, ParseException {
         try {
             Map<String, String> map = getText();
             List<String> list = new ArrayList<>();
             list.add("280014580@qq.com");
+            list.add("1114549265@qq.com");
             System.out.println("map.get(subject)===" + map.get("subject"));
             System.out.println("map.get(Text)===" + map.get("Text"));
             for (int i = 0; i < list.size(); i++) {
