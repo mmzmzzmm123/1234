@@ -1,9 +1,13 @@
 package invest.lixinger.index.fundamental.HK.HSI;
 
 import com.alibaba.fastjson.JSON;
+import invest.lixinger.index.fundamental.CN.VO.fundamentalCNParam_RootVO;
+import invest.lixinger.index.fundamental.CN.getParam_fundamentalCN;
 import invest.lixinger.index.fundamental.HK.HSI.VO.fundamentalHSIParam_RootVO;
+import invest.lixinger.utils.getResult_NoHoliday;
 import org.yaml.snakeyaml.Yaml;
 
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.text.ParseException;
@@ -31,7 +35,22 @@ public class getParam_fundamentalHSI {
 
         return JSON.toJSONString(paramvo);
     }
+    public static String getAllIndexParamJsonHK(List<String> stockCodes) throws IOException, ParseException {
+        InputStream inputStream = getParam_fundamentalHSI.class.getClassLoader().getResourceAsStream("indexReqParam.yml");
+        Map indexReqParam = new Yaml().load(inputStream);
+        List<String> metricsList = (List<String>) indexReqParam.get("metricsList");
+        String token = (String) indexReqParam.get("token");
+        String dateYml = (String) indexReqParam.get("enddate");
+        String date = getResult_NoHoliday.getResult_NoHoliday(Integer.parseInt(dateYml.substring(0, 4)));
 
+        fundamentalCNParam_RootVO paramvo = new fundamentalCNParam_RootVO();
+        paramvo.setToken(token);
+        paramvo.setDate(date);
+        paramvo.setMetricsList(metricsList);
+        paramvo.setStockCodes(stockCodes);
+
+        return JSON.toJSONString(paramvo);
+    }
 
     public static void main(String[] args) throws IOException, ParseException {
         System.out.println(getSingleIndexParamJson());

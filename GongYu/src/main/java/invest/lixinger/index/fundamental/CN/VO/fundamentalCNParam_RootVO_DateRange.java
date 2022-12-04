@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Data
-public class fundamentalParam_RootVO_DateRange {
+public class fundamentalCNParam_RootVO_DateRange {
     String token;
     String startDate;
     String endDate;

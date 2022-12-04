@@ -1,14 +1,11 @@
 package invest.lixinger.index.fundamental.HK.HSI;
 
-
-
 import com.alibaba.fastjson.JSON;
 import invest.lixinger.index.fundamental.HK.HSI.VO.fundamentalHSIResult_RootVO;
 import invest.lixinger.index.fundamental.US.spx.VO.fundamentalSPXResult_RootVO;
 
-
 public class getResult_fundamentalHSI {
-    public static Object getResultObj(String jsonString){
+    public static Object getAllIndexResultObjHK(String jsonString){
         return JSON.parseObject(jsonString, fundamentalHSIResult_RootVO.class);
     }
     public static void main(String[] args) {

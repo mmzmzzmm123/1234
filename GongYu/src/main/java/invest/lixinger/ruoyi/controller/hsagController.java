@@ -1,7 +1,7 @@
 package invest.lixinger.ruoyi.controller;
 
 import mybatisNoSpringUtils.mybatisNoSpringUtils;
-import invest.lixinger.index.fundamental.CN.VO.fundamentalResult_RootVO;
+import invest.lixinger.index.fundamental.CN.VO.fundamentalCNResult_RootVO;
 import invest.lixinger.ruoyi.entity.hsagVO;
 import invest.lixinger.ruoyi.mapper.hsagMapper;
 import org.junit.Test;
@@ -14,21 +14,21 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 
-import static invest.lixinger.index.fundamental.CN.request_fundamental_dateRange.getRequest_fundamental_dateRange;
+import static invest.lixinger.index.fundamental.CN.request_fundamental_dateRange.getRequest_fundamental_dateRangeCN;
 
 public class hsagController extends mybatisNoSpringUtils {
 
     @Test
     public void hsag() throws IOException, ParseException {
         Date startDate = nearestDateInDB();
-        fundamentalResult_RootVO resultVO = getRequest_fundamental_dateRange(startDate);
+        fundamentalCNResult_RootVO resultVO = getRequest_fundamental_dateRangeCN(startDate);
         calculateFundamental(resultVO);
         System.out.println(startDate);
 
     }
 
     // 计算综合百分位
-    private void calculateFundamental(fundamentalResult_RootVO resultObj) {
+    private void calculateFundamental(fundamentalCNResult_RootVO resultObj) {
         hsagMapper hsagmapper = session.getMapper(hsagMapper.class);
         for (int i = 0; i < resultObj.getData().size(); i++) {
             hsagVO vo = new hsagVO();

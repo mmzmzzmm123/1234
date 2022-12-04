@@ -5,8 +5,8 @@ import lombok.Data;
 import java.util.ArrayList;
 import java.util.List;
 @Data
-public class fundamentalResult_RootVO {
+public class fundamentalCNResult_RootVO {
     int code;
     String message;
-    List<fundamentalReulst_DataVO> data=new ArrayList<>();
+    List<fundamentalCNReulst_DataVO> data=new ArrayList<>();
 }

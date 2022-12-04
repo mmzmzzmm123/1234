@@ -4,7 +4,7 @@ package invest.lixinger.index.fundamental.CN.VO;
 import lombok.Data;
 
 @Data
-public class fundamentalReulst_MedianVO {
+public class fundamentalCNReulst_MedianVO {
     private double avgv;
     private double cv;
     private double cvpos;

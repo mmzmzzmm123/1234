@@ -5,11 +5,11 @@ import lombok.Data;
 import java.sql.Date;
 
 @Data
-public class fundamentalReulst_DataVO {
+public class fundamentalCNReulst_DataVO {
     Date date;
-    fundamentalResult_PbVO pb;
-    fundamentalReulst_PsVO ps_ttm;
-    fundamentalReulst_PeVO pe_ttm;
+    fundamentalCNResult_PbVO pb;
+    fundamentalCNReulst_PsVO ps_ttm;
+    fundamentalCNReulst_PeVO pe_ttm;
     double cp;
     String stockCode;
 }

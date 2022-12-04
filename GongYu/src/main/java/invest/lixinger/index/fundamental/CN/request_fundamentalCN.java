@@ -1,6 +1,6 @@
 package invest.lixinger.index.fundamental.CN;
 
-import invest.lixinger.index.fundamental.CN.VO.fundamentalResult_RootVO;
+import invest.lixinger.index.fundamental.CN.VO.fundamentalCNResult_RootVO;
 import invest.lixinger.utils.netRequest;
 import org.yaml.snakeyaml.Yaml;
 
@@ -13,23 +13,23 @@ import java.util.Map;
 /**
  * 获取单一日期的 沪深A股 信号
  */
-public class request_fundamental {
+public class request_fundamentalCN {
     public static void main(String[] args) throws IOException, ParseException {
-        InputStream inputStream = request_fundamental.class.getClassLoader().getResourceAsStream("indexReqParam.yml");
+        InputStream inputStream = request_fundamentalCN.class.getClassLoader().getResourceAsStream("indexReqParam.yml");
         Map indexReqParam = new Yaml().load(inputStream);
         String fundamentalCNURL = (String) indexReqParam.get("fundamentalCNURL");
-        String paramJson = getParam_fundamental.getSingleIndexParamJson();
+        String paramJson = getParam_fundamentalCN.getSingleIndexParamJsonCN();
         //{"date":"2022-11-28","metricsList":["pe_ttm.y20.median","pe_ttm.y10.median","pb.y10.median","pb.y20.median","ps_ttm.y10.median","ps_ttm.y20.median","cp"],"stockCodes":["1000002"],"token":"d58c3650-20f9-4387-8515-d595031c23a4"}
         String resultJson = netRequest.jsonNetPost(fundamentalCNURL, paramJson);
-        fundamentalResult_RootVO resultObj = (fundamentalResult_RootVO) getResult_fundamental.getResultObj(resultJson);
+        fundamentalCNResult_RootVO resultObj = (fundamentalCNResult_RootVO) getResult_fundamentalCN.getResultObjCN(resultJson);
 
-        calculateFundamental(resultObj);
+        calculateFundamentalCN(resultObj);
         detailPosition(resultObj);
         targetChange(resultObj);
     }
 
     // 计算综合百分位
-    public static double calculateFundamental(fundamentalResult_RootVO resultObj) {
+    public static double calculateFundamentalCN(fundamentalCNResult_RootVO resultObj) {
         double pe_10_cvpos = resultObj.getData().get(0).getPe_ttm().getY10().getMedian().getCvpos();
         double pb_10_cvpos = resultObj.getData().get(0).getPb().getY10().getMedian().getCvpos();
         double ps_10_cvpos = resultObj.getData().get(0).getPs_ttm().getY10().getMedian().getCvpos();
@@ -44,7 +44,7 @@ public class request_fundamental {
     }
 
     // 查看10年以及20年的细节
-    private static void detailPosition(fundamentalResult_RootVO resultObj) {
+    private static void detailPosition(fundamentalCNResult_RootVO resultObj) {
         System.out.println("20年 pe 百分位为：" + new DecimalFormat("0.00%").format(resultObj.getData().get(0).getPe_ttm().getY20().getMedian().getCvpos()));
         System.out.println("20年 pb 百分位为：" + new DecimalFormat("0.00%").format(resultObj.getData().get(0).getPb().getY20().getMedian().getCvpos()));
         System.out.println("20年 ps 百分位为：" + new DecimalFormat("0.00%").format(resultObj.getData().get(0).getPs_ttm().getY20().getMedian().getCvpos()));
@@ -57,7 +57,7 @@ public class request_fundamental {
     }
 
     // 到达目标点位需要的幅度
-    private static void targetChange(fundamentalResult_RootVO resultObj) {
+    private static void targetChange(fundamentalCNResult_RootVO resultObj) {
         //当前分位点的具体数值
         double pe_20_cv = resultObj.getData().get(0).getPe_ttm().getY20().getMedian().getCv();
         double pb_20_cv = resultObj.getData().get(0).getPb().getY20().getMedian().getCv();

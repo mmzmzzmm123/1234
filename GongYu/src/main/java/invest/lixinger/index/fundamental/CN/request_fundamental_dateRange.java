@@ -1,7 +1,7 @@
 package invest.lixinger.index.fundamental.CN;
 
 import mybatisNoSpringUtils.mybatisNoSpringUtils;
-import invest.lixinger.index.fundamental.CN.VO.fundamentalResult_RootVO;
+import invest.lixinger.index.fundamental.CN.VO.fundamentalCNResult_RootVO;
 import invest.lixinger.utils.netRequest;
 import org.yaml.snakeyaml.Yaml;
 
@@ -20,17 +20,17 @@ public class request_fundamental_dateRange extends mybatisNoSpringUtils {
     public static void main(String[] args) throws IOException, ParseException {
         SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd");
         Date startDate = sdf.parse("2022-05-01");
-        fundamentalResult_RootVO vo=getRequest_fundamental_dateRange(startDate);
+        fundamentalCNResult_RootVO vo=getRequest_fundamental_dateRangeCN(startDate);
         System.out.println(vo);
     }
 
-    public static fundamentalResult_RootVO getRequest_fundamental_dateRange(Date startDate) throws IOException, ParseException {
+    public static fundamentalCNResult_RootVO getRequest_fundamental_dateRangeCN(Date startDate) throws IOException, ParseException {
         InputStream inputStream = request_fundamental_dateRange.class.getClassLoader().getResourceAsStream("indexReqParam.yml");
         Map indexReqParam = new Yaml().load(inputStream);
         String fundamentalCNURL = (String) indexReqParam.get("fundamentalCNURL");
-        String paramJson = getParam_fundamental.getSingleIndexParam_dateRangeJson(startDate);
+        String paramJson = getParam_fundamentalCN.getSingleIndexParam_dateRangeJsonCN(startDate);
         String resultJson = netRequest.jsonNetPost(fundamentalCNURL, paramJson);
-        fundamentalResult_RootVO resultObj = (fundamentalResult_RootVO) getResult_fundamental.getResultObj(resultJson);
+        fundamentalCNResult_RootVO resultObj = (fundamentalCNResult_RootVO) getResult_fundamentalCN.getResultObjCN(resultJson);
         return resultObj;
     }
 

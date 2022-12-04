@@ -1,4 +1,6 @@
-allIndexURL: https://open.lixinger.com/api/cn/index
+allIndexURLCN: https://open.lixinger.com/api/cn/index
+allIndexURLHK: https://open.lixinger.com/api/hk/index
+
 fundamentalCNURL: https://open.lixinger.com/api/cn/index/fundamental
 fundamentalUSURL: https://open.lixinger.com/api/us/index/fundamental
 fundamentalHSIURL: https://open.lixinger.com/api/hk/index/fundamental

@@ -3,7 +3,7 @@ package invest.lixinger.index.getAllIndex.CN.VO;
 import lombok.Data;
 
 @Data
-public class allIndexResult_DataVO {
+public class allIndexCNResult_DataVO {
     private String areaCode;
     private String market;
     private String stockCode;

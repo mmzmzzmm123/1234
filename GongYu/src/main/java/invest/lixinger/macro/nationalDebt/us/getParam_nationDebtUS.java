@@ -1,7 +1,7 @@
 package invest.lixinger.macro.nationalDebt.us;
 
 import com.alibaba.fastjson.JSON;
-import invest.lixinger.index.fundamental.CN.getParam_fundamental;
+import invest.lixinger.index.fundamental.CN.getParam_fundamentalCN;
 import invest.lixinger.macro.nationalDebt.us.VO.nationalDebtUSParam_RootVO;
 import org.yaml.snakeyaml.Yaml;
 
@@ -13,7 +13,7 @@ import java.util.*;
 
 public class getParam_nationDebtUS {
     public  static String getNationDebtUSParamJson() throws IOException, ParseException {
-        InputStream inputStream = getParam_fundamental.class.getClassLoader().getResourceAsStream("indexReqParam.yml");
+        InputStream inputStream = getParam_fundamentalCN.class.getClassLoader().getResourceAsStream("indexReqParam.yml");
         Map indexReqParam = new Yaml().load(inputStream);
         String token = (String) indexReqParam.get("token");
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");//定义日期显示格式
