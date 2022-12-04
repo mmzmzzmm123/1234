@@ -1,6 +1,7 @@
 allIndexURL: https://open.lixinger.com/api/cn/index
 fundamentalCNURL: https://open.lixinger.com/api/cn/index/fundamental
 fundamentalUSURL: https://open.lixinger.com/api/us/index/fundamental
+fundamentalHSIURL: https://open.lixinger.com/api/hk/index/fundamental
 singleIndustryURL: https://open.lixinger.com/api/cn/company
 nationaldebtURL: https://open.lixinger.com/api/macro/national-debt
 moneySupplyURL: https://open.lixinger.com/api/macro/money-supply
