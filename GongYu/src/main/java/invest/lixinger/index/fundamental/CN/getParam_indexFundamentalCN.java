@@ -35,7 +35,7 @@ public class getParam_indexFundamentalCN {
     }
 
     // 时间范围内的单一指数
-    public static String getSingleIndexParam_dateRangeJsonCN(Date startDate) throws IOException, ParseException {
+    public static String getSingleIndexParam_dateRangeJsonCN(Date startDate) throws ParseException {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         InputStream inputStream = getParam_indexFundamentalCN.class.getClassLoader().getResourceAsStream("indexReqParam.yml");
         Map indexReqParam = new Yaml().load(inputStream);

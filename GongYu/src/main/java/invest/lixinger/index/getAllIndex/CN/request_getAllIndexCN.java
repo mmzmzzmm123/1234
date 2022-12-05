@@ -17,6 +17,9 @@ import static invest.lixinger.index.fundamental.CN.getResult_indexFundamentalCN.
 
 public class request_getAllIndexCN {
     public static void main(String[] args) throws IOException, ParseException {
+        requestGetAllIndexCN();
+    }
+    public static void requestGetAllIndexCN() throws IOException, ParseException {
         InputStream inputStream = request_getAllIndexCN.class.getClassLoader().getResourceAsStream("indexReqParam.yml");
         Map indexReqParam = new Yaml().load(inputStream);
         String allIndexURLCN = (String) indexReqParam.get("allIndexURLCN");

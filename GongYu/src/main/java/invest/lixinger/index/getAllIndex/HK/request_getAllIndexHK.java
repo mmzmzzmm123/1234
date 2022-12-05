@@ -19,6 +19,9 @@ import static invest.lixinger.index.getAllIndex.HK.getResult_getAllIndexHK.getRe
 
 public class request_getAllIndexHK {
     public static void main(String[] args) throws IOException, ParseException {
+        requestGetAllIndexHK();
+    }
+    public static void requestGetAllIndexHK() throws IOException, ParseException {
         InputStream inputStream = request_getAllIndexHK.class.getClassLoader().getResourceAsStream("indexReqParam.yml");
         Map indexReqParam = new Yaml().load(inputStream);
         String allIndexURLHK = (String) indexReqParam.get("allIndexURLHK");

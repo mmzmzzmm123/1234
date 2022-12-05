@@ -16,6 +16,9 @@ import java.util.Map;
  */
 public class request_indexFundamentalSPX {
     public static void main(String[] args) throws IOException, ParseException {
+        requestIndexFundamentalSPX();
+    }
+    public static void requestIndexFundamentalSPX() throws IOException, ParseException {
         InputStream inputStream = request_indexFundamentalSPX.class.getClassLoader().getResourceAsStream("indexReqParam.yml");
         Map indexReqParam = new Yaml().load(inputStream);
         String indexFundamentalUSURL = (String) indexReqParam.get("indexFundamentalUSURL");

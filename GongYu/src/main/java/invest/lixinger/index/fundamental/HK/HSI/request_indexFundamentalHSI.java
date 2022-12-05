@@ -16,6 +16,9 @@ import java.util.Map;
  */
 public class request_indexFundamentalHSI {
     public static void main(String[] args) throws IOException, ParseException {
+        requestIndexFundamentalHSI();
+    }
+    public static void requestIndexFundamentalHSI() throws IOException, ParseException {
         InputStream inputStream = request_indexFundamentalHSI.class.getClassLoader().getResourceAsStream("indexReqParam.yml");
         Map indexReqParam = new Yaml().load(inputStream);
         String indexFundamentalHSIURL = (String) indexReqParam.get("indexFundamentalHSIURL");

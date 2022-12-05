@@ -15,6 +15,9 @@ import java.util.Map;
  */
 public class request_indexFundamentalCN {
     public static void main(String[] args) throws IOException, ParseException {
+        requestIndexFundamentalCN();
+    }
+    public static void requestIndexFundamentalCN() throws IOException, ParseException {
         InputStream inputStream = request_indexFundamentalCN.class.getClassLoader().getResourceAsStream("indexReqParam.yml");
         Map indexReqParam = new Yaml().load(inputStream);
         String indexFundamentalCNURL = (String) indexReqParam.get("indexFundamentalCNURL");
