@@ -473,8 +473,8 @@
             ></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="未返校原因" prop="notSchoolReason">
-          <el-select v-model="form.notSchoolReason" placeholder="请选择未返校原因">
+        <el-form-item label="请假/未返校原因" prop="notSchoolReason">
+          <el-select v-model="form.notSchoolReason" placeholder="请选择请假/未返校原因">
             <el-option
               v-for="dict in dict.type.not_school_reason"
               :key="dict.value"
@@ -645,8 +645,8 @@
             ></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="未返校原因" prop="notSchoolReason">
-          <el-select v-model="stateForm.notSchoolReason" placeholder="请选择未返校原因">
+        <el-form-item label="请假/未返校原因" prop="notSchoolReason">
+          <el-select v-model="stateForm.notSchoolReason" placeholder="请选择请假/未返校原因">
             <el-option
               v-for="dict in dict.type.not_school_reason"
               :key="dict.value"
@@ -797,7 +797,7 @@
             { required: true, message: "在校状态不能为空", trigger: "blur" }
           ],
           studentPhone:[{
-              required: true, message: "在校状态不能为空", trigger: "blur" 
+              required: true, message: "在校状态不能为空", trigger: "blur"
           },
           { type: 'number',
             message: '手机号格式不正确',

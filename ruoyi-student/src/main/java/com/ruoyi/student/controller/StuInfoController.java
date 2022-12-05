@@ -171,6 +171,10 @@ public class StuInfoController extends BaseController
                 pass = false;
                 msg.append("请选择离校目的地;");
             }
+            if (StringUtils.isEmpty(notSchoolReason)) {
+                pass = false;
+                msg.append("请选择请假/未返校原因;");
+            }
         } else if ("2".equals(studentTag)) {
             // 未返校
             if (StringUtils.isEmpty(notSchoolReason)) {

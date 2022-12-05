@@ -31,139 +31,14 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="epidemicSusAcc"    column="epidemic_sus_acc"    />
         <result property="practiceSusAcc"    column="practice_sus_acc"    />
         <result property="otherSusAcc"    column="other_sus_acc"    />
+        <result property="illnessSusAcc"    column="illness_sus_acc"    />
         <result property="susAcc"    column="sus_acc"    />
         <result property="outSchCentIsolationAcc"    column="out_sch_cent_isolation_acc"    />
         <result property="outSchHomeIsolationAcc"    column="out_sch_home_isolation_acc"    />
         <result property="inSchHomeIsolationAcc"    column="in_sch_home_isolation_acc"    />
     </resultMap>
 
-    <select id="selectStuAccSum"  resultMap="StuAccResult">
-    SELECT
-    count(1) stu_acc,
-    count(CASE WHEN t.student_tag = 3 AND t.place_to_school = 0 THEN 1 ELSE NULL END) in_pro_return_acc,
-    count(CASE WHEN t.student_tag = 3 AND t.place_to_school = 1 THEN 1 ELSE NULL END) out_pro_return_acc,
-    count(CASE WHEN t.place_to_school = 0 THEN 1 ELSE NULL END) in_pro_acc,
-    count(CASE WHEN t.place_to_school = 1 THEN 1 ELSE NULL END) out_pro_acc,
-    count(CASE WHEN t.place_to_school_level = 1 AND t.student_tag IN (0,3) THEN 1 ELSE NULL END) high_lev_return_acc,
-
-    count(CASE WHEN t.student_tag IN (0,3) AND t.accommodation = 0 THEN 1 ELSE NULL END) dormitory_teaching_area_acc,
-    count(CASE WHEN t.student_tag IN (0,3) AND t.accommodation = 1 THEN 1 ELSE NULL END) dormitory_other_area_acc,
-    count(CASE WHEN t.student_tag IN (0,3) AND t.accommodation = 2 THEN 1 ELSE NULL END) family_area_acc,
-    count(CASE WHEN t.student_tag IN (0,3) AND t.accommodation = 3 THEN 1 ELSE NULL END) day_student_acc,
-    count(CASE WHEN t.student_tag IN (0,3) THEN 1 ELSE NULL END) in_school_acc,
-
-    count(CASE WHEN t.joint_type = 1 THEN 1 ELSE NULL END) type_b_acc,
-
-    count(CASE WHEN t.student_tag = 1 AND t.place_to_leave = 0 THEN 1 ELSE NULL END) leave_in_city_acc,
-    count(CASE WHEN t.student_tag = 1 AND t.place_to_leave = 1 THEN 1 ELSE NULL END) leave_out_city_in_pro_acc,
-    count(CASE WHEN t.student_tag = 1 AND t.place_to_leave = 2 THEN 1 ELSE NULL END) leave_out_pro_acc,
-    count(CASE WHEN t.student_tag = 1 THEN 1 ELSE NULL END) leave_today_acc,
-
-    count(CASE WHEN t.student_tag = 2 AND t.not_school_reason = 0 THEN 1 ELSE NULL END) epidemic_sus_acc,
-    count(CASE WHEN t.student_tag = 2 AND t.not_school_reason = 1 THEN 1 ELSE NULL END) practice_sus_acc,
-    count(CASE WHEN t.student_tag = 2 AND t.not_school_reason = 2 THEN 1 ELSE NULL END) other_sus_acc,
-    count(CASE WHEN t.student_tag = 2 THEN 1 ELSE NULL END) sus_acc,
-
-    count(CASE WHEN t.control_level = 3 THEN 1 ELSE NULL END) out_sch_cent_isolation_acc,
-    count(CASE WHEN t.control_level = 2 THEN 1 ELSE NULL END) out_sch_home_isolation_acc,
-    count(CASE WHEN t.control_level = 1 THEN 1 ELSE NULL END) in_sch_home_isolation_acc
-
-    FROM stu_info t
-    LEFT JOIN sys_dept u ON t.dept_id = u.dept_id
-        <where>
-            1=1
-            ${params.dataScope}
-        </where>
-</select>
-    <select id="selectStuAccList" resultMap="StuAccResult">
-        SELECT
-        <if test="divideCollege != null and divideCollege != '' and divideCollege == 'Y'.toString()">
-            t.dept_id,
-            u.dept_name,
-        </if>
-            count(1) stu_acc,
-            count(CASE WHEN t.student_tag = 3 AND t.place_to_school = 0 THEN 1 ELSE NULL END) in_pro_return_acc,
-            count(CASE WHEN t.student_tag = 3 AND t.place_to_school = 1 THEN 1 ELSE NULL END) out_pro_return_acc,
-            count(CASE WHEN t.place_to_school = 0 THEN 1 ELSE NULL END) in_pro_acc,
-            count(CASE WHEN t.place_to_school = 1 THEN 1 ELSE NULL END) out_pro_acc,
-            count(CASE WHEN t.place_to_school_level = 1 AND t.student_tag IN (0,3) THEN 1 ELSE NULL END) high_lev_return_acc,
-
-            count(CASE WHEN t.student_tag IN (0,3) AND t.accommodation = 0 THEN 1 ELSE NULL END) dormitory_teaching_area_acc,
-            count(CASE WHEN t.student_tag IN (0,3) AND t.accommodation = 1 THEN 1 ELSE NULL END) dormitory_other_area_acc,
-            count(CASE WHEN t.student_tag IN (0,3) AND t.accommodation = 2 THEN 1 ELSE NULL END) family_area_acc,
-            count(CASE WHEN t.student_tag IN (0,3) AND t.accommodation = 3 THEN 1 ELSE NULL END) day_student_acc,
-            count(CASE WHEN t.student_tag IN (0,3) THEN 1 ELSE NULL END) in_school_acc,
-
-            count(CASE WHEN t.joint_type = 1 THEN 1 ELSE NULL END) type_b_acc,
-
-            count(CASE WHEN t.student_tag = 1 AND t.place_to_leave = 0 THEN 1 ELSE NULL END) leave_in_city_acc,
-            count(CASE WHEN t.student_tag = 1 AND t.place_to_leave = 1 THEN 1 ELSE NULL END) leave_out_city_in_pro_acc,
-            count(CASE WHEN t.student_tag = 1 AND t.place_to_leave = 2 THEN 1 ELSE NULL END) leave_out_pro_acc,
-            count(CASE WHEN t.student_tag = 1 THEN 1 ELSE NULL END) leave_today_acc,
-
-            count(CASE WHEN t.student_tag = 2 AND t.not_school_reason = 0 THEN 1 ELSE NULL END) epidemic_sus_acc,
-            count(CASE WHEN t.student_tag = 2 AND t.not_school_reason = 1 THEN 1 ELSE NULL END) practice_sus_acc,
-            count(CASE WHEN t.student_tag = 2 AND t.not_school_reason = 2 THEN 1 ELSE NULL END) other_sus_acc,
-            count(CASE WHEN t.student_tag = 2 THEN 1 ELSE NULL END) sus_acc,
-
-            count(CASE WHEN t.control_level = 3 THEN 1 ELSE NULL END) out_sch_cent_isolation_acc,
-            count(CASE WHEN t.control_level = 2 THEN 1 ELSE NULL END) out_sch_home_isolation_acc,
-            count(CASE WHEN t.control_level = 1 THEN 1 ELSE NULL END) in_sch_home_isolation_acc
-
-        FROM stu_info t
-        LEFT JOIN sys_dept u ON t.dept_id = u.dept_id
-        <where>
-            1=1
-            <if test="campus != null  and campus != ''"> and campus = #{campus}</if>
-            ${params.dataScope}
-        </where>
-        <if test="divideCollege != null and divideCollege != '' and divideCollege == 'Y'.toString()">
-            GROUP BY t.dept_id
-        </if>
-
-    </select>
-
-    <select id="selectStuAccSumList" resultMap="StuAccResult">
-        SELECT
-            count(1) stu_acc,
-            count(CASE WHEN t.student_tag = 3 AND t.place_to_school = 0 THEN 1 ELSE NULL END) in_pro_return_acc,
-            count(CASE WHEN t.student_tag = 3 AND t.place_to_school = 1 THEN 1 ELSE NULL END) out_pro_return_acc,
-            count(CASE WHEN t.place_to_school = 0 THEN 1 ELSE NULL END) in_pro_acc,
-            count(CASE WHEN t.place_to_school = 1 THEN 1 ELSE NULL END) out_pro_acc,
-            count(CASE WHEN t.place_to_school_level = 1 AND t.student_tag IN (0,3) THEN 1 ELSE NULL END) high_lev_return_acc,
-
-            count(CASE WHEN t.student_tag IN (0,3) AND t.accommodation = 0 THEN 1 ELSE NULL END) dormitory_teaching_area_acc,
-            count(CASE WHEN t.student_tag IN (0,3) AND t.accommodation = 1 THEN 1 ELSE NULL END) dormitory_other_area_acc,
-            count(CASE WHEN t.student_tag IN (0,3) AND t.accommodation = 2 THEN 1 ELSE NULL END) family_area_acc,
-            count(CASE WHEN t.student_tag IN (0,3) AND t.accommodation = 3 THEN 1 ELSE NULL END) day_student_acc,
-            count(CASE WHEN t.student_tag IN (0,3) THEN 1 ELSE NULL END) in_school_acc,
-
-            count(CASE WHEN t.joint_type = 1 THEN 1 ELSE NULL END) type_b_acc,
-
-            count(CASE WHEN t.student_tag = 1 AND t.place_to_leave = 0 THEN 1 ELSE NULL END) leave_in_city_acc,
-            count(CASE WHEN t.student_tag = 1 AND t.place_to_leave = 1 THEN 1 ELSE NULL END) leave_out_city_in_pro_acc,
-            count(CASE WHEN t.student_tag = 1 AND t.place_to_leave = 2 THEN 1 ELSE NULL END) leave_out_pro_acc,
-            count(CASE WHEN t.student_tag = 1 THEN 1 ELSE NULL END) leave_today_acc,
-
-            count(CASE WHEN t.student_tag = 2 AND t.not_school_reason = 0 THEN 1 ELSE NULL END) epidemic_sus_acc,
-            count(CASE WHEN t.student_tag = 2 AND t.not_school_reason = 1 THEN 1 ELSE NULL END) practice_sus_acc,
-            count(CASE WHEN t.student_tag = 2 AND t.not_school_reason = 2 THEN 1 ELSE NULL END) other_sus_acc,
-            count(CASE WHEN t.student_tag = 2 THEN 1 ELSE NULL END) sus_acc,
-
-            count(CASE WHEN t.control_level = 3 THEN 1 ELSE NULL END) out_sch_cent_isolation_acc,
-            count(CASE WHEN t.control_level = 2 THEN 1 ELSE NULL END) out_sch_home_isolation_acc,
-            count(CASE WHEN t.control_level = 1 THEN 1 ELSE NULL END) in_sch_home_isolation_acc
-
-        FROM stu_info t
-        LEFT JOIN sys_dept u ON t.dept_id = u.dept_id
-        WHERE 1=1 ${params.dataScope}
-
-    </select>
-
-    <select id="selectCampStuAccSumList" resultMap="StuAccResult">
-        SELECT
-        t.campus,
-        (CASE WHEN t.campus = 0 THEN '雁塔校区' ELSE '长安校区' END) campus_name,
+    <sql id="countCols">
         count(1) stu_acc,
         count(CASE WHEN t.student_tag = 3 AND t.place_to_school = 0 THEN 1 ELSE NULL END) in_pro_return_acc,
         count(CASE WHEN t.student_tag = 3 AND t.place_to_school = 1 THEN 1 ELSE NULL END) out_pro_return_acc,
@@ -186,12 +61,60 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
         count(CASE WHEN t.student_tag = 2 AND t.not_school_reason = 0 THEN 1 ELSE NULL END) epidemic_sus_acc,
         count(CASE WHEN t.student_tag = 2 AND t.not_school_reason = 1 THEN 1 ELSE NULL END) practice_sus_acc,
+        count(CASE WHEN t.student_tag = 2 AND t.not_school_reason = 3 THEN 1 ELSE NULL END) illness_sus_acc,
         count(CASE WHEN t.student_tag = 2 AND t.not_school_reason = 2 THEN 1 ELSE NULL END) other_sus_acc,
         count(CASE WHEN t.student_tag = 2 THEN 1 ELSE NULL END) sus_acc,
 
         count(CASE WHEN t.control_level = 3 THEN 1 ELSE NULL END) out_sch_cent_isolation_acc,
         count(CASE WHEN t.control_level = 2 THEN 1 ELSE NULL END) out_sch_home_isolation_acc,
         count(CASE WHEN t.control_level = 1 THEN 1 ELSE NULL END) in_sch_home_isolation_acc
+    </sql>
+
+    <select id="selectStuAccSum"  resultMap="StuAccResult">
+    SELECT
+    <include refid="countCols"/>
+    FROM stu_info t
+    LEFT JOIN sys_dept u ON t.dept_id = u.dept_id
+        <where>
+            1=1
+            ${params.dataScope}
+        </where>
+</select>
+    <select id="selectStuAccList" resultMap="StuAccResult">
+        SELECT
+        <if test="divideCollege != null and divideCollege != '' and divideCollege == 'Y'.toString()">
+            t.dept_id,
+            u.dept_name,
+        </if>
+        <include refid="countCols"/>
+
+        FROM stu_info t
+        LEFT JOIN sys_dept u ON t.dept_id = u.dept_id
+        <where>
+            1=1
+            <if test="campus != null  and campus != ''"> and campus = #{campus}</if>
+            ${params.dataScope}
+        </where>
+        <if test="divideCollege != null and divideCollege != '' and divideCollege == 'Y'.toString()">
+            GROUP BY t.dept_id
+        </if>
+
+    </select>
+
+    <select id="selectStuAccSumList" resultMap="StuAccResult">
+        SELECT
+        <include refid="countCols"/>
+        FROM stu_info t
+        LEFT JOIN sys_dept u ON t.dept_id = u.dept_id
+        WHERE 1=1 ${params.dataScope}
+
+    </select>
+
+    <select id="selectCampStuAccSumList" resultMap="StuAccResult">
+        SELECT
+        t.campus,
+        (CASE WHEN t.campus = 0 THEN '雁塔校区' ELSE '长安校区' END) campus_name,
+        <include refid="countCols"/>
 
         FROM stu_info t
         LEFT JOIN sys_dept u ON t.dept_id = u.dept_id
