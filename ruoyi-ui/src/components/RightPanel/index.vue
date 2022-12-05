@@ -60,7 +60,7 @@ export default {
     insertToBody() {
       const elx = this.$refs.rightPanel
       const body = document.querySelector('body')
-      body.insertBefore(elx, body.firstChild)
+      //body.insertBefore(elx, body.firstChild)
     }
   }
 }
