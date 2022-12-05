@@ -81,6 +81,9 @@ public class DictUtils
      */
     public static String getDictLabel(String dictType, String dictValue, String separator)
     {
+        if (StringUtils.isEmpty(dictValue)) {
+            return null;
+        }
         StringBuilder propertyString = new StringBuilder();
         List<SysDictData> datas = getDictCache(dictType);
 

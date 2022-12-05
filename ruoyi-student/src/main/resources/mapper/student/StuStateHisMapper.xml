@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.student.mapper.StuStateHisMapper">
+    
+    <resultMap type="StuStateHis" id="StuStateHisResult">
+        <result property="id"    column="id"    />
+        <result property="studentId"    column="student_id"    />
+        <result property="hisState"    column="his_state"    />
+        <result property="hisStateDate"    column="his_state_date"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="remark"    column="remark"    />
+
+        <result property="studentName"    column="student_name"    />
+        <result property="studentSex"    column="gender"    />
+        <result property="studentPhone"    column="phone_number"    />
+        <result property="idNum"    column="id_num"    />
+        <result property="deptId"    column="dept_id"    />
+        <result property="deptName"    column="dept_name"    />
+        <result property="trainingLevel"    column="training_level"    />
+        <result property="grade"    column="grade"    />
+        <result property="address"    column="address"    />
+        <result property="nation"    column="nation"    />
+        <result property="campus"    column="campus"    />
+        <result property="studentTag"    column="student_tag"    />
+        <result property="accommodation"    column="accommodation"    />
+        <result property="accommodationPark"    column="accommodation_park"    />
+        <result property="dormitoryNo"    column="dormitory_no"    />
+        <result property="isOnSchool"    column="is_on_school"    />
+        <result property="controlLevel"    column="control_level"    />
+        <result property="notSchoolReason"    column="not_school_reason"    />
+        <result property="placeToSchoolLevel"    column="place_to_school_level"    />
+        <result property="placeToSchool"    column="place_to_school"    />
+        <result property="placeToLeave"    column="place_to_leave"    />
+        <result property="jointType"    column="joint_type"    />
+    </resultMap>
+
+    <sql id="selectStuStateHisVo">
+        select h.id, h.student_id, h.his_state, h.his_state_date, h.create_by, h.create_time, h.update_by, h.update_time, h.remark,
+            t.student_name,
+            t.gender,
+            t.phone_number,
+            t.id_num,
+            t.dept_id,
+            u.dept_name,
+            t.training_level,
+            t.grade,
+            t.address,
+            t.nation, t.campus,
+            t.student_tag,
+            t.accommodation, t.accommodation_park, t.dormitory_no,
+            t.is_on_school, t.control_level, t.not_school_reason, t.place_to_school_level, t.place_to_school, t.place_to_leave,
+            t.joint_type
+        from stu_state_his h
+        left join stu_info t on h.student_id = t.student_id
+        left join sys_dept u on t.dept_id = u.dept_id
+    </sql>
+
+    <select id="selectStuStateHisList" parameterType="StuStateHis" resultMap="StuStateHisResult">
+        <include refid="selectStuStateHisVo"/>
+        <where>  
+            <if test="studentId != null  and studentId != ''"> and student_id = #{studentId}</if>
+            <if test="hisState != null  and hisState != ''"> and his_state = #{hisState}</if>
+            <if test="hisStateDate != null "> and date_format(his_state_date,'%Y%m%d') = date_format(#{hisStateDate},'%Y%m%d')</if>
+
+            <if test="studentName != null  and studentName != ''"> and student_name like concat('%', #{studentName}, '%')</if>
+            <if test="idNum != null  and idNum != ''"> and id_num = #{idNum}</if>
+            <if test="deptId != null "> and t.dept_id = #{deptId}</if>
+            <if test="trainingLevel != null  and trainingLevel != ''"> and training_level = #{trainingLevel}</if>
+            <if test="grade != null  and grade != ''"> and grade = #{grade}</if>
+            <if test="address != null  and address != ''"> and address = #{address}</if>
+            <if test="nation != null  and nation != ''"> and nation = #{nation}</if>
+            <if test="campus != null  and campus != ''"> and campus = #{campus}</if>
+            <if test="studentTag != null  and studentTag != ''"> and student_tag = #{studentTag}</if>
+            <if test="accommodation != null  and accommodation != ''"> and accommodation = #{accommodation}</if>
+            <if test="accommodationPark != null  and accommodationPark != ''"> and accommodation_park = #{accommodationPark}</if>
+            <if test="dormitoryNo != null  and dormitoryNo != ''"> and dormitory_no = #{dormitoryNo}</if>
+            <if test="isOnSchool != null  and isOnSchool != ''"> and is_on_school = #{isOnSchool}</if>
+            <if test="controlLevel != null  and controlLevel != ''"> and control_level = #{controlLevel}</if>
+            <if test="notSchoolReason != null  and notSchoolReason != ''"> and not_school_reason = #{notSchoolReason}</if>
+            <if test="placeToSchoolLevel != null  and placeToSchoolLevel != ''"> and place_to_school_level = #{placeToSchoolLevel}</if>
+            <if test="placeToSchool != null  and placeToSchool != ''"> and place_to_school = #{placeToSchool}</if>
+            <if test="placeToLeave != null  and placeToLeave != ''"> and place_to_leave = #{placeToLeave}</if>
+            <if test="jointType != null  and jointType != ''"> and joint_type = #{jointType}</if>
+        </where>
+    </select>
+    
+    <select id="selectStuStateHisById" parameterType="Long" resultMap="StuStateHisResult">
+        <include refid="selectStuStateHisVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertStuStateHis" parameterType="StuStateHis">
+        insert into stu_state_his
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="studentId != null">student_id,</if>
+            <if test="hisState != null">his_state,</if>
+            <if test="hisStateDate != null">his_state_date,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="remark != null">remark,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="studentId != null">#{studentId},</if>
+            <if test="hisState != null">#{hisState},</if>
+            <if test="hisStateDate != null">#{hisStateDate},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="remark != null">#{remark},</if>
+         </trim>
+    </insert>
+
+    <update id="updateStuStateHis" parameterType="StuStateHis">
+        update stu_state_his
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="studentId != null">student_id = #{studentId},</if>
+            <if test="hisState != null">his_state = #{hisState},</if>
+            <if test="hisStateDate != null">his_state_date = #{hisStateDate},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="remark != null">remark = #{remark},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteStuStateHisById" parameterType="Long">
+        delete from stu_state_his where id = #{id}
+    </delete>
+
+    <delete id="deleteStuStateHisByIds" parameterType="String">
+        delete from stu_state_his where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

@@ -19,16 +19,17 @@ public class StuInfo extends BaseEntity
     private Long id;
 
     /** 学号 */
-    @Excel(name = "学号")
+    @Excel(name = "学号", sort = 0)
     private String studentId;
 
     /** 姓名 */
-    @Excel(name = "姓名")
+    @Excel(name = "姓名", sort = 0)
     private String studentName;
 
     /** 性别 */
-    @Excel(name = "性别")
     private String studentSex;
+    @Excel(name = "性别")
+    private String studentSexName;
 
     /** 联系方式 */
     @Excel(name = "联系方式")
@@ -39,11 +40,10 @@ public class StuInfo extends BaseEntity
     private String idNum;
 
     /** 学院编号 */
-//    @Excel(name = "学院编号")
     private Long deptId;
 
     /** 学院名称 */
-    @Excel(name = "学院名称")
+    @Excel(name = "学院名称", sort = 1)
     private String deptName;
 
     /** 培养层次 */
@@ -123,6 +123,14 @@ public class StuInfo extends BaseEntity
     private String jointType;
     @Excel(name = "密接类型")
     private String jointTypeName;
+
+    public String getStudentSexName() {
+        return studentSexName;
+    }
+
+    public void setStudentSexName(String studentSexName) {
+        this.studentSexName = studentSexName;
+    }
 
     public String getStudentSex() {
         return studentSex;

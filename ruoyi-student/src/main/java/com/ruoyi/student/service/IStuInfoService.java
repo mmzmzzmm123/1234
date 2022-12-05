@@ -2,6 +2,7 @@ package com.ruoyi.student.service;
 
 import java.util.List;
 import com.ruoyi.student.domain.StuInfo;
+import org.apache.poi.ss.formula.functions.T;
 
 /**
  * 学生信息Service接口
@@ -9,7 +10,7 @@ import com.ruoyi.student.domain.StuInfo;
  * @author wangzq
  * @date 2022-11-21
  */
-public interface IStuInfoService 
+public interface IStuInfoService <T extends StuInfo>
 {
     /**
      * 查询学生信息
@@ -76,6 +77,6 @@ public interface IStuInfoService
      * @param stuInfoList
      * @return
      */
-    List<StuInfo> matchDict(List<StuInfo> stuInfoList);
+    List<T> matchDict(List<T> stuInfoList);
 
 }

@@ -11,4 +11,14 @@ public class StudentConstant {
      * 长安校区
      */
     public static final String CAMPUS_CHANG_AN = "1";
+
+    /**
+     * 学生标签：请假离校
+     */
+    public static final String STUDENT_TAG_LEVEL = "1";
+
+    /**
+     * 学生标签：当日返校
+     */
+    public static final String STUDENT_TAG_RETURN = "3";
 }

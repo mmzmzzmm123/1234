@@ -36,7 +36,7 @@ import com.ruoyi.common.core.page.TableDataInfo;
 public class StuInfoController extends BaseController
 {
     @Autowired
-    private IStuInfoService stuInfoService;
+    private IStuInfoService<StuInfo> stuInfoService;
 
     /**
      * 查询学生信息列表
