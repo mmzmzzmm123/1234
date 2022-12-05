@@ -1,5 +1,6 @@
 package com.ruoyi.web.controller.sendEmail;
 
+import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
@@ -40,9 +41,13 @@ public class sendEmail {
                         map.get("Text"));
             }
         } catch (Exception e) {
-            System.out.println(e.getMessage());
+            System.out.println("sendSimpleMail===="+e.getMessage());
         }
 
+    }
+    @Test
+    public void manualMail() throws IOException, ParseException {
+        sendSimpleMail();
     }
 
     public void sendAttachFileMail() {

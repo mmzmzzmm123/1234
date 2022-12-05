@@ -1,7 +1,7 @@
 package invest.lixinger.index.getAllIndex.CN;
 
-import invest.lixinger.index.fundamental.CN.VO.fundamentalCNResult_RootVO;
-import invest.lixinger.index.fundamental.CN.VO.fundamentalCNReulst_DataVO;
+import invest.lixinger.index.fundamental.CN.VO.indexFundamentalCNResult_RootVO;
+import invest.lixinger.index.fundamental.CN.VO.indexFundamentalCNReulst_DataVO;
 import invest.lixinger.index.getAllIndex.CN.VO.allIndexCNResult_DataVO;
 import invest.lixinger.index.getAllIndex.CN.VO.allIndexCNResult_RootVO;
 import invest.lixinger.utils.netRequest;
@@ -12,15 +12,15 @@ import java.io.InputStream;
 import java.text.ParseException;
 import java.util.*;
 
-import static invest.lixinger.index.fundamental.CN.getParam_fundamentalCN.getAllIndexParamJsonCN;
-import static invest.lixinger.index.fundamental.CN.getResult_fundamentalCN.getResultObjCN;
+import static invest.lixinger.index.fundamental.CN.getParam_indexFundamentalCN.getAllIndexParamJsonCN;
+import static invest.lixinger.index.fundamental.CN.getResult_indexFundamentalCN.getResultObjCN;
 
 public class request_getAllIndexCN {
     public static void main(String[] args) throws IOException, ParseException {
         InputStream inputStream = request_getAllIndexCN.class.getClassLoader().getResourceAsStream("indexReqParam.yml");
         Map indexReqParam = new Yaml().load(inputStream);
         String allIndexURLCN = (String) indexReqParam.get("allIndexURLCN");
-        String fundamentalCNURL = (String) indexReqParam.get("fundamentalCNURL");
+        String indexFundamentalCNURL = (String) indexReqParam.get("indexFundamentalCNURL");
 
 //        String paramJson = getParam_getAllIndex.getParamJson();
 //        String resultAllIndexJson = netRequest.jsonNetPost(allIndexURLCN, paramJson);
@@ -29,7 +29,7 @@ public class request_getAllIndexCN {
         // 获取指数代码，名称，发布时间
         List<String[]> allIndexList = getCodeNameLaucndate(resultresultAllIndexJsonObj);
         // 获取上面获取指数的基本面信息
-        getAllIndexFundamental(allIndexList, fundamentalCNURL, indexReqParam);
+        getAllIndexFundamental(allIndexList, indexFundamentalCNURL, indexReqParam);
     }
 
     // 只返回某一时间点之后的数据
@@ -45,7 +45,7 @@ public class request_getAllIndexCN {
     }
 
     //
-    private static void getAllIndexFundamental(List<String[]> codeNameLaunchdateList, String fundamentalCNURL, Map indexReqParam) throws IOException, ParseException {
+    private static void getAllIndexFundamental(List<String[]> codeNameLaunchdateList, String indexFundamentalCNURL, Map indexReqParam) throws IOException, ParseException {
         // 获取所有的code列表--------------------------------
         List<String> allCodeList = new ArrayList<>();
         List<List<String>> doubleList = new ArrayList<>();
@@ -53,14 +53,14 @@ public class request_getAllIndexCN {
         // 请求数据 and 得到结果-------------------------
         List<String> paramAllIndexJsonList = new ArrayList<>();
         List<String> resultAllIndexJsonList = new ArrayList<>();
-        List<fundamentalCNResult_RootVO> resultObjList = new ArrayList<>();
-        getAndRequestData(doubleList, paramAllIndexJsonList, fundamentalCNURL, resultAllIndexJsonList, resultObjList);
+        List<indexFundamentalCNResult_RootVO> resultObjList = new ArrayList<>();
+        getAndRequestData(doubleList, paramAllIndexJsonList, indexFundamentalCNURL, resultAllIndexJsonList, resultObjList);
 
         // 将两个 resultObjList 进行合并--------------------
         for (int i = 1; i < doubleList.size(); i++) {
             resultObjList.get(0).getData().addAll(resultObjList.get(i).getData());
         }
-        List<fundamentalCNReulst_DataVO> fundamentalDataVOList = new ArrayList<>();
+        List<indexFundamentalCNReulst_DataVO> fundamentalDataVOList = new ArrayList<>();
         fundamentalDataVOList.addAll(resultObjList.get(0).getData());
         System.out.println("总fundamentalDataVO个数==" + fundamentalDataVOList.size());
 
@@ -118,23 +118,23 @@ public class request_getAllIndexCN {
         return null;
     }
 
-    private static void getAndRequestData(List<List<String>> doubleList, List<String> paramAllIndexJsonList, String fundamentalCNURL, List<String> resultAllIndexJsonList, List<fundamentalCNResult_RootVO> resultObjList) throws IOException, ParseException {
+    private static void getAndRequestData(List<List<String>> doubleList, List<String> paramAllIndexJsonList, String indexFundamentalCNURL, List<String> resultAllIndexJsonList, List<indexFundamentalCNResult_RootVO> resultObjList) throws IOException, ParseException {
         for (List<String> strings : doubleList) {
             paramAllIndexJsonList.add(getAllIndexParamJsonCN(strings));
         }
         // 请求数据后，得到结果List
         for (int i = 0; i < doubleList.size(); i++) {
-            resultAllIndexJsonList.add(netRequest.jsonNetPost(fundamentalCNURL, paramAllIndexJsonList.get(i)));
+            resultAllIndexJsonList.add(netRequest.jsonNetPost(indexFundamentalCNURL, paramAllIndexJsonList.get(i)));
         }
         for (int i = 0; i < doubleList.size(); i++) {
-            resultObjList.add((fundamentalCNResult_RootVO) getResultObjCN(resultAllIndexJsonList.get(i)));
+            resultObjList.add((indexFundamentalCNResult_RootVO) getResultObjCN(resultAllIndexJsonList.get(i)));
         }
 //        System.out.println(resultObjList.size());
     }
 
     // 获取codeNameCvpos
-    private static void getCodeNameCvpos(List<String[]> codeNameCvposList, List<fundamentalCNReulst_DataVO> fundamentalDataVOList) {
-        for (fundamentalCNReulst_DataVO vo : fundamentalDataVOList) {
+    private static void getCodeNameCvpos(List<String[]> codeNameCvposList, List<indexFundamentalCNReulst_DataVO> fundamentalDataVOList) {
+        for (indexFundamentalCNReulst_DataVO vo : fundamentalDataVOList) {
 //            System.out.println(vo);
             double result = calculateAllIndexFundamental(vo);
             codeNameCvposList.add(new String[]{vo.getStockCode(), "", String.format("%.2f", result * 100)});
@@ -149,7 +149,7 @@ public class request_getAllIndexCN {
     }
 
     // 计算综合百分位
-    private static double calculateAllIndexFundamental(fundamentalCNReulst_DataVO vo) {
+    private static double calculateAllIndexFundamental(indexFundamentalCNReulst_DataVO vo) {
         double pe_10_cvpos = vo.getPe_ttm().getY10().getMedian().getCvpos();
         double pb_10_cvpos = vo.getPb().getY10().getMedian().getCvpos();
         double ps_10_cvpos = vo.getPs_ttm().getY10().getMedian().getCvpos();

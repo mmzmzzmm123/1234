@@ -1,8 +1,8 @@
 package invest.lixinger.index.getAllIndex.HK;
 
-import invest.lixinger.index.fundamental.HK.HSI.VO.fundamentalHSIResult_DataVO;
-import invest.lixinger.index.fundamental.HK.HSI.VO.fundamentalHSIResult_RootVO;
-import invest.lixinger.index.fundamental.HK.HSI.getResult_fundamentalHSI;
+import invest.lixinger.index.fundamental.HK.HSI.VO.indexFundamentalHSIResult_DataVO;
+import invest.lixinger.index.fundamental.HK.HSI.VO.indexFundamentalHSIResult_RootVO;
+import invest.lixinger.index.fundamental.HK.HSI.getResult_indexFundamentalHSI;
 import invest.lixinger.index.getAllIndex.HK.VO.allIndexHKResult_DataVO;
 import invest.lixinger.index.getAllIndex.HK.VO.allIndexHKResult_RootVO;
 import invest.lixinger.utils.netRequest;
@@ -13,7 +13,7 @@ import java.io.InputStream;
 import java.text.ParseException;
 import java.util.*;
 
-import static invest.lixinger.index.fundamental.HK.HSI.getParam_fundamentalHSI.getAllIndexParamJsonHK;
+import static invest.lixinger.index.fundamental.HK.HSI.getParam_indexFundamentalHSI.getAllIndexParamJsonHK;
 import static invest.lixinger.index.getAllIndex.HK.getResult_getAllIndexHK.getResultObjHK;
 
 
@@ -30,8 +30,8 @@ public class request_getAllIndexHK {
         List<String[]> allIndexList = getCodeNameLaucndate(resultresultAllIndexJsonObj);
 //        allIndexList.forEach(System.out::println);
 //        // 获取上面获取指数的基本面信息
-        String fundamentalHSIURL = (String) indexReqParam.get("fundamentalHSIURL");
-        getAllIndexFundamental(allIndexList, fundamentalHSIURL, indexReqParam);
+        String indexFundamentalHSIURL = (String) indexReqParam.get("indexFundamentalHSIURL");
+        getAllIndexFundamental(allIndexList, indexFundamentalHSIURL, indexReqParam);
     }
 
     // 只返回某一时间点之后的数据
@@ -47,7 +47,7 @@ public class request_getAllIndexHK {
     }
 
     //
-    private static void getAllIndexFundamental(List<String[]> codeNameLaunchdateList, String fundamentalHSIURL, Map indexReqParam) throws IOException, ParseException {
+    private static void getAllIndexFundamental(List<String[]> codeNameLaunchdateList, String indexFundamentalHSIURL, Map indexReqParam) throws IOException, ParseException {
         // 获取所有的code列表--------------------------------
         List<String> allCodeList = new ArrayList<>();
         List<List<String>> doubleList = new ArrayList<>();
@@ -55,14 +55,14 @@ public class request_getAllIndexHK {
         // 请求数据 and 得到结果-------------------------
         List<String> paramAllIndexJsonList = new ArrayList<>();
         List<String> resultAllIndexJsonList = new ArrayList<>();
-        List<fundamentalHSIResult_RootVO> resultObjList = new ArrayList<>();
-        getAndRequestData(doubleList, paramAllIndexJsonList, fundamentalHSIURL, resultAllIndexJsonList, resultObjList);
+        List<indexFundamentalHSIResult_RootVO> resultObjList = new ArrayList<>();
+        getAndRequestData(doubleList, paramAllIndexJsonList, indexFundamentalHSIURL, resultAllIndexJsonList, resultObjList);
 
         // 将两个 resultObjList 进行合并--------------------
         for (int i = 1; i < doubleList.size(); i++) {
             resultObjList.get(0).getData().addAll(resultObjList.get(i).getData());
         }
-        List<fundamentalHSIResult_DataVO> fundamentalDataVOList = new ArrayList<>();
+        List<indexFundamentalHSIResult_DataVO> fundamentalDataVOList = new ArrayList<>();
         fundamentalDataVOList.addAll(resultObjList.get(0).getData());
         System.out.println("总fundamentalDataVO个数==" + fundamentalDataVOList.size());
 
@@ -120,23 +120,23 @@ public class request_getAllIndexHK {
         return null;
     }
 
-    private static void getAndRequestData(List<List<String>> doubleList, List<String> paramAllIndexJsonList, String fundamentalHSIURL, List<String> resultAllIndexJsonList, List<fundamentalHSIResult_RootVO> resultObjList) throws IOException, ParseException {
+    private static void getAndRequestData(List<List<String>> doubleList, List<String> paramAllIndexJsonList, String indexFundamentalHSIURL, List<String> resultAllIndexJsonList, List<indexFundamentalHSIResult_RootVO> resultObjList) throws IOException, ParseException {
         for (List<String> strings : doubleList) {
             paramAllIndexJsonList.add(getAllIndexParamJsonHK(strings));
         }
         // 请求数据后，得到结果List
         for (int i = 0; i < doubleList.size(); i++) {
-            resultAllIndexJsonList.add(netRequest.jsonNetPost(fundamentalHSIURL, paramAllIndexJsonList.get(i)));
+            resultAllIndexJsonList.add(netRequest.jsonNetPost(indexFundamentalHSIURL, paramAllIndexJsonList.get(i)));
         }
 
         for (int i = 0; i < doubleList.size(); i++) {
-            resultObjList.add((fundamentalHSIResult_RootVO) getResult_fundamentalHSI.getAllIndexResultObjHK(resultAllIndexJsonList.get(i)));
+            resultObjList.add((indexFundamentalHSIResult_RootVO) getResult_indexFundamentalHSI.getAllIndexResultObjHK(resultAllIndexJsonList.get(i)));
         }
     }
 
     // 获取codeNameCvpos
-    private static void getCodeNameCvpos(List<String[]> codeNameCvposList, List<fundamentalHSIResult_DataVO> fundamentalDataVOList) {
-        for (fundamentalHSIResult_DataVO vo : fundamentalDataVOList) {
+    private static void getCodeNameCvpos(List<String[]> codeNameCvposList, List<indexFundamentalHSIResult_DataVO> fundamentalDataVOList) {
+        for (indexFundamentalHSIResult_DataVO vo : fundamentalDataVOList) {
 //            System.out.println(vo);
             double result = calculateAllIndexFundamental(vo);
             codeNameCvposList.add(new String[]{vo.getStockCode(), "", String.format("%.2f", result * 100)});
@@ -151,7 +151,7 @@ public class request_getAllIndexHK {
     }
 
     // 计算综合百分位
-    private static double calculateAllIndexFundamental(fundamentalHSIResult_DataVO vo) {
+    private static double calculateAllIndexFundamental(indexFundamentalHSIResult_DataVO vo) {
         double pe_10_cvpos = vo.getPe_ttm().getY10().getMedian().getCvpos();
         double pb_10_cvpos = vo.getPb().getY10().getMedian().getCvpos();
         double ps_10_cvpos = vo.getPs_ttm().getY10().getMedian().getCvpos();

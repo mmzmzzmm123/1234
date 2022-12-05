@@ -1,18 +1,23 @@
 allIndexURLCN: https://open.lixinger.com/api/cn/index
 allIndexURLHK: https://open.lixinger.com/api/hk/index
 
-fundamentalCNURL: https://open.lixinger.com/api/cn/index/fundamental
-fundamentalUSURL: https://open.lixinger.com/api/us/index/fundamental
-fundamentalHSIURL: https://open.lixinger.com/api/hk/index/fundamental
-singleIndustryURL: https://open.lixinger.com/api/cn/company
-nationaldebtURL: https://open.lixinger.com/api/macro/national-debt
-moneySupplyURL: https://open.lixinger.com/api/macro/money-supply
+indexFundamentalCNURL: https://open.lixinger.com/api/cn/index/fundamental
+indexFundamentalUSURL: https://open.lixinger.com/api/us/index/fundamental
+indexFundamentalHSIURL: https://open.lixinger.com/api/hk/index/fundamental
+
+allCompanyURLCN: https://open.lixinger.com/api/cn/company
+
+companyFundamentalBankURLCN: https://open.lixinger.com/api/cn/company/fundamental/bank
+
+macroNationalDebtURL: https://open.lixinger.com/api/macro/national-debt
+macroMoneySupplyURL: https://open.lixinger.com/api/macro/money-supply
+
 token: d58c3650-20f9-4387-8515-d595031c23a4
 startdate: 2022-01-03
 enddate: 2022-07
 stockCodes:
   - "1000002"
-metricsList:
+indexFundamentalMetricsList:
   - pe_ttm.y20.median
   - pe_ttm.y10.median
   - pb.y10.median
@@ -21,7 +26,18 @@ metricsList:
   - ps_ttm.y20.median
   - cp
 
-fsType_bank: bank
+companyFundamentalMetricsList:
+  - d_pe_ttm
+  - d_pe_ttm_pos10
+  - pb_wo_gw
+  - pb_wo_gw_pos10
+  - ps_ttm
+  - ps_ttm_pos10
+  - mc
+  - sp
+  - dyr
+
+fsType: bank
 removeCode:
   - "1000009"
   - "1000008"

@@ -1,7 +1,7 @@
 package invest.lixinger.ruoyi.controller;
 
 import mybatisNoSpringUtils.mybatisNoSpringUtils;
-import invest.lixinger.index.fundamental.CN.VO.fundamentalCNResult_RootVO;
+import invest.lixinger.index.fundamental.CN.VO.indexFundamentalCNResult_RootVO;
 import invest.lixinger.ruoyi.entity.hsagVO;
 import invest.lixinger.ruoyi.mapper.hsagMapper;
 import org.junit.Test;
@@ -14,21 +14,21 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 
-import static invest.lixinger.index.fundamental.CN.request_fundamental_dateRange.getRequest_fundamental_dateRangeCN;
+import static invest.lixinger.index.fundamental.CN.request_indexFundamental_dateRange.getRequest_fundamental_dateRangeCN;
 
 public class hsagController extends mybatisNoSpringUtils {
 
     @Test
     public void hsag() throws IOException, ParseException {
         Date startDate = nearestDateInDB();
-        fundamentalCNResult_RootVO resultVO = getRequest_fundamental_dateRangeCN(startDate);
+        indexFundamentalCNResult_RootVO resultVO = getRequest_fundamental_dateRangeCN(startDate);
         calculateFundamental(resultVO);
         System.out.println(startDate);
 
     }
 
     // 计算综合百分位
-    private void calculateFundamental(fundamentalCNResult_RootVO resultObj) {
+    private void calculateFundamental(indexFundamentalCNResult_RootVO resultObj) {
         hsagMapper hsagmapper = session.getMapper(hsagMapper.class);
         for (int i = 0; i < resultObj.getData().size(); i++) {
             hsagVO vo = new hsagVO();
@@ -48,7 +48,7 @@ public class hsagController extends mybatisNoSpringUtils {
             double pb_cv = Double.parseDouble(String.format("%.2f", resultObj.getData().get(i).getPb().getY10().getMedian().getCv()));
             double ps_cv = Double.parseDouble(String.format("%.2f", resultObj.getData().get(i).getPs_ttm().getY10().getMedian().getCv()));
 
-            System.out.println(currentDate + "，的综合百分位为：" + new DecimalFormat("0.00%").format(result) + ",其中：" + pe_cv + "-" + pb_cv + "-" + ps_cv);
+            System.out.println(currentDate + "，的综合百分位为：" + new DecimalFormat("0.00%").format(result) );
             vo.setSj(currentDate);
             vo.setSpdw(spdw);
             vo.setPeCv(pe_cv);
@@ -62,7 +62,6 @@ public class hsagController extends mybatisNoSpringUtils {
             vo.setPsPos20(ps_20_cvpos);
             vo.setZonghePos(result);
             hsagmapper.insert(vo);
-
         }
     }
 
@@ -74,8 +73,7 @@ public class hsagController extends mybatisNoSpringUtils {
         Calendar calendar = new GregorianCalendar();
         calendar.setTime(date);
         calendar.add(Calendar.DATE, 1);
-        Date startDate = calendar.getTime();
-        return startDate;
+        return calendar.getTime();
     }
 
     public hsagController() throws FileNotFoundException {

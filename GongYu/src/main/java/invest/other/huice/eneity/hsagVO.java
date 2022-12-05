@@ -11,11 +11,10 @@ import java.sql.Date;
 @TableName("lx_hsag")
 @Data
 public class hsagVO {
-    @TableId(value = "sj")
+    @TableId(value = "sj", type = IdType.INPUT)
     private Date sj;
     @TableField(value = "spdw")
     private Double spdw;
-
     @TableField(value = "pe_cv")
     private Double pe_cv;
     @TableField(value = "pb_cv")

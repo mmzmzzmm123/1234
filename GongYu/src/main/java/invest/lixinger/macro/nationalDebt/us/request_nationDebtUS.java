@@ -15,9 +15,9 @@ public class request_nationDebtUS {
     public static void main(String[] args) throws IOException, ParseException {
         InputStream inputStream = request_nationDebtUS.class.getClassLoader().getResourceAsStream("indexReqParam.yml");
         Map indexReqParam = new Yaml().load(inputStream);
-        String nationaldebtURL = (String) indexReqParam.get("nationaldebtURL");
+        String macroNationalDebtURL = (String) indexReqParam.get("macroNationalDebtURL");
         String paramJson = getParam_nationDebtUS.getNationDebtUSParamJson();
-        String resultJson = netRequest.jsonNetPost(nationaldebtURL, paramJson);
+        String resultJson = netRequest.jsonNetPost(macroNationalDebtURL, paramJson);
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         nationalDebtUSResult_RootVO resultObj = (nationalDebtUSResult_RootVO) getResult_nationDebtUS.getResultObj(resultJson);
         nationalDebtUSResult_DataVO latestDayVO = resultObj.getData().get(0);
