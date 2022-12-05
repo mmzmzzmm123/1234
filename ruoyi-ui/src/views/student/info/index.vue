@@ -245,10 +245,6 @@
       <el-table-column label="联系方式" align="center" prop="studentPhone" />
       <el-table-column label="身份证号" align="center" prop="idNum" />
       <el-table-column label="学院名称" align="center" prop="deptName" />
-<!--              <template slot-scope="scope">-->
-<!--                <dict-tag :options="dict.type.deptName" :value="scope.row.trainingLevel"/>-->
-<!--              </template>-->
-<!--            </el-table-column>-->
       <el-table-column label="培养层次" align="center" prop="trainingLevel">
         <template slot-scope="scope">
           <dict-tag :options="dict.type.training_level" :value="scope.row.trainingLevel"/>
@@ -365,9 +361,6 @@
         <el-form-item label="身份证号" prop="idNum">
           <el-input v-model="form.idNum" placeholder="请输入身份证号" />
         </el-form-item>
-        <el-form-item label="联系方式" prop="studentPhone">
-          <el-input v-model="form.studentPhone" placeholder="请输入联系方式" />
-        </el-form-item>
         <el-form-item label="学院名称" prop="deptId">
           <el-select v-model="form.deptId" placeholder="请选择学院名称">
                       <el-option
@@ -396,7 +389,6 @@
                           placeholder="请选择年级">
           </el-date-picker>
         </el-form-item>
-
         <el-form-item label="民族" prop="nation">
           <el-select v-model="form.nation" placeholder="请选择民族">
             <el-option
@@ -406,6 +398,9 @@
               :value="dict.value"
             ></el-option>
           </el-select>
+        </el-form-item>
+        <el-form-item label="联系方式" prop="studentPhone">
+          <el-input v-model="form.studentPhone" placeholder="请输入联系方式" />
         </el-form-item>
         <el-form-item label="是否校内住宿" prop="isOnSchool">
           <el-select v-model="form.isOnSchool" placeholder="请选择是否校内住宿" @change="changeIsOnSchool">
@@ -545,9 +540,6 @@
         <el-form-item label="身份证号" prop="idNum">
           <el-input v-model="stateForm.idNum" placeholder="请输入身份证号" readonly disabled/>
         </el-form-item>
-          <el-form-item label="联系方式" prop="studentPhone">
-          <el-input v-model="stateForm.studentPhone" placeholder="请输入联系方式" readonly disabled/>
-        </el-form-item>
         <el-form-item label="学院名称" prop="deptName">
           <el-input v-model="stateForm.deptName" placeholder="请输入学院名称" readonly disabled/>
         </el-form-item>
@@ -578,6 +570,9 @@
               :value="dict.value"
             ></el-option>
           </el-select>
+        </el-form-item>
+        <el-form-item label="联系方式" prop="studentPhone">
+          <el-input v-model="stateForm.studentPhone" placeholder="请输入联系方式"/>
         </el-form-item>
         <el-form-item label="是否校内住宿" prop="isOnSchool">
           <el-select v-model="stateForm.isOnSchool" placeholder="请选择是否校内住宿" @change="changeIsOnSchool">
