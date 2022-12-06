@@ -49,7 +49,7 @@ public class request_companyFundamentalCN {
             mapTemp.put("sp", String.valueOf(vo.getSp()));
             mapTemp.put("stockcode", String.valueOf(vo.getStockCode()));
             mapTemp.put("date", dateFormat);
-            mapTemp.put("rank", "");
+            mapTemp.put("rankfund", "");
             doubleMap.put(vo.getStockCode(), mapTemp);
         }
 //        System.out.println(doubleMap.get("601997"));
@@ -61,7 +61,7 @@ public class request_companyFundamentalCN {
         for (Integer i = 0; i < voList.size(); i++) {
             String StockCode = voList.get(i).getStockCode();
             Map<String, String> mapTemp = doubleMap.get(StockCode);
-            mapTemp.put("rank", String.valueOf(i));
+            mapTemp.put("rankfund", String.valueOf(i));
             doubleMap.put(StockCode, mapTemp);
         }
 
@@ -70,7 +70,7 @@ public class request_companyFundamentalCN {
         for (int i = 0; i < voList.size(); i++) {
             String StockCode = voList.get(i).getStockCode();
             Map<String, String> mapTemp = doubleMap.get(StockCode);
-            mapTemp.put("rank", String.valueOf(Integer.parseInt(doubleMap.get(voList.get(i).getStockCode()).get("rank")) + i));
+            mapTemp.put("rankfund", String.valueOf(Integer.parseInt(doubleMap.get(voList.get(i).getStockCode()).get("rankfund")) + i));
             doubleMap.put(voList.get(i).getStockCode(), mapTemp);
         }
 
@@ -79,7 +79,7 @@ public class request_companyFundamentalCN {
         for (int i = 0; i < voList.size(); i++) {
             String StockCode = voList.get(i).getStockCode();
             Map<String, String> mapTemp = doubleMap.get(StockCode);
-            mapTemp.put("rank", String.valueOf(Integer.parseInt(doubleMap.get(voList.get(i).getStockCode()).get("rank")) + i));
+            mapTemp.put("rankfund", String.valueOf(Integer.parseInt(doubleMap.get(voList.get(i).getStockCode()).get("rankfund")) + i));
             doubleMap.put(voList.get(i).getStockCode(), mapTemp);
         }
         for (int i = 0; i < voList.size(); i++) {
