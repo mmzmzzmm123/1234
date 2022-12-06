@@ -19,7 +19,7 @@ import java.util.Map;
 import static invest.lixinger.company.fsTypeOfCompany.request_fsTypeOfCompanyCN.requestFsTypeOfCompanyCN;
 
 public class getParam_fsCompanyCN {
-    public static String getParamFsCompanyCN() throws IOException, ParseException {
+    public static String getParamFsCompanyCN(fsTypeOfCompanyCNResult_RootVO vo) throws IOException, ParseException {
         InputStream inputStream = getParam_fsCompanyCN.class.getClassLoader().getResourceAsStream("indexReqParam.yml");
         Map indexReqParam = new Yaml().load(inputStream);
         String token = (String) indexReqParam.get("token");
@@ -31,8 +31,7 @@ public class getParam_fsCompanyCN {
         fsCompanyCNParam_rootVO.setDate("latest");
         fsCompanyCNParam_rootVO.setMetricsList(companyFsMetricsList);
 
-        fsTypeOfCompanyCNResult_RootVO fsTypeOfCompanyCNResult_rootVO = requestFsTypeOfCompanyCN();
-        List<fsTypeOfCompanyCNResult_DataVO> listVO = fsTypeOfCompanyCNResult_rootVO.getData();
+        List<fsTypeOfCompanyCNResult_DataVO> listVO = vo.getData();
         List<String> listStockCodes = new ArrayList<>();
 
         for (fsTypeOfCompanyCNResult_DataVO fsTypeOfCompanyCNResult_dataVO : listVO) {
@@ -43,7 +42,8 @@ public class getParam_fsCompanyCN {
     }
 
     public static void main(String[] args) throws IOException, ParseException {
-        System.out.println(getParamFsCompanyCN());
+        fsTypeOfCompanyCNResult_RootVO vo = requestFsTypeOfCompanyCN();
+        System.out.println(getParamFsCompanyCN(vo));
     }
 
 
