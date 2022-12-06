@@ -2,17 +2,21 @@ package invest.lixinger.company.fundamental;
 
 import invest.lixinger.company.fundamental.VO.companyFundamentalCNResult_DataVO;
 import invest.lixinger.company.fundamental.VO.companyFundamentalCNResult_RootVO;
+import javassist.Loader;
 import org.yaml.snakeyaml.Yaml;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.text.DecimalFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 public class request_companyFundamentalCN {
-    public static void requestCompanyFundamentalCN() throws IOException {
+    public static void requestCompanyFundamentalCN() throws IOException, ParseException {
         InputStream inputStream = request_companyFundamentalCN.class.getClassLoader().getResourceAsStream("indexReqParam.yml");
         Map indexReqParam = new Yaml().load(inputStream);
         String companyFundamentalBankURLCN = (String) indexReqParam.get("companyFundamentalBankURLCN");
@@ -24,50 +28,31 @@ public class request_companyFundamentalCN {
 //        getAllCompany(resultObj.getData());
 //        resultObj.getData().forEach(System.out::println);
 //        System.out.println(resultObj.getData().size());
-        getdoubleMap(resultObj.getData());
+        getdoubleMap(resultObj.getData(),resultObj.getData().get(0).getDate());
     }
 
-    public static void getAllCompany(List<companyFundamentalCNResult_DataVO> voList) {
-        Map<String, Map<String, String>> doublemap = new HashMap<>();
-        Map<String, Object> map = new HashMap<>();
-        voList.sort(Comparator.comparing(companyFundamentalCNResult_DataVO::getD_pe_ttm));
-        for (int i = 0; i < voList.size(); i++) {
-            map.put(voList.get(i).getStockCode(), i);
-        }
-        System.out.println("map = " + map);
-
-        voList.sort(Comparator.comparing(companyFundamentalCNResult_DataVO::getPb_wo_gw));
-
-        for (int i = 0; i < voList.size(); i++) {
-            map.put(voList.get(i).getStockCode(), (int) map.get(voList.get(i).getStockCode()) + i);
-        }
-        System.out.println("map = " + map);
-
-        voList.sort(Comparator.comparing(companyFundamentalCNResult_DataVO::getPs_ttm));
-        voList.forEach(System.out::println);
-        for (int i = 0; i < voList.size(); i++) {
-            map.put(voList.get(i).getStockCode(), (int) map.get(voList.get(i).getStockCode()) + i);
-        }
-        System.out.println("map = " + map);
-    }
-    public static void getdoubleMap(List<companyFundamentalCNResult_DataVO> voList) {
+    public static void getdoubleMap(List<companyFundamentalCNResult_DataVO> voList,String date) throws ParseException {
+        SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd");
+        String dateFormat=sdf.format(sdf.parse(date));
         Map<String, Map<String, String>> doubleMap=new HashMap<>();
         for (int i = 0; i < voList.size(); i++) {
             companyFundamentalCNResult_DataVO vo=voList.get(i);
             Map<String, String> mapTemp = new HashMap<>();
-            mapTemp.put("pe", String.valueOf(vo.getD_pe_ttm()));
-            mapTemp.put("pb", String.valueOf(vo.getPb_wo_gw_pos10()));
-            mapTemp.put("ps", String.valueOf(vo.getPs_ttm()));
-            mapTemp.put("pepos", String.valueOf(vo.getD_pe_ttm_pos10()));
-            mapTemp.put("pbpos", String.valueOf(vo.getPb_wo_gw_pos10()));
-            mapTemp.put("pspos", String.valueOf(vo.getPs_ttm_pos10()));
-            mapTemp.put("mc", String.valueOf(vo.getMc()));
-            mapTemp.put("syr", String.valueOf(vo.getDyr()));
+            mapTemp.put("pe", String.valueOf(new DecimalFormat("0.0000").format(vo.getD_pe_ttm())));
+            mapTemp.put("pb", String.valueOf(new DecimalFormat("0.0000").format(vo.getPb_wo_gw_pos10())));
+            mapTemp.put("ps", String.valueOf(new DecimalFormat("0.0000").format(vo.getPs_ttm())));
+            mapTemp.put("pepos", String.valueOf(new DecimalFormat("0.0000").format(vo.getD_pe_ttm_pos10())));
+            mapTemp.put("pbpos", String.valueOf(new DecimalFormat("0.0000").format(vo.getPb_wo_gw_pos10())));
+            mapTemp.put("pspos", String.valueOf(new DecimalFormat("0.0000").format(vo.getPs_ttm_pos10())));
+            mapTemp.put("mc", String.valueOf(new DecimalFormat("0.00").format(vo.getMc()/100000000)));
+            mapTemp.put("syr", String.valueOf(new DecimalFormat("0.0000").format(vo.getDyr())));
             mapTemp.put("sp", String.valueOf(vo.getSp()));
+            mapTemp.put("stockcode", String.valueOf(vo.getStockCode()));
+            mapTemp.put("date", dateFormat);
             mapTemp.put("rank", "");
             doubleMap.put(vo.getStockCode(),mapTemp);
         }
-        System.out.println(doubleMap.get("601997"));
+//        System.out.println(doubleMap.get("601997"));
         getdoubleMapweight(voList,doubleMap);
     }
 
@@ -103,8 +88,31 @@ public class request_companyFundamentalCN {
 //        System.out.println("doubleMap = " + doubleMap);
 //        System.out.println(doubleMap.get("601997"));
     }
+    public static void getAllCompany(List<companyFundamentalCNResult_DataVO> voList) {
+        Map<String, Map<String, String>> doublemap = new HashMap<>();
+        Map<String, Object> map = new HashMap<>();
+        voList.sort(Comparator.comparing(companyFundamentalCNResult_DataVO::getD_pe_ttm));
+        for (int i = 0; i < voList.size(); i++) {
+            map.put(voList.get(i).getStockCode(), i);
+        }
+        System.out.println("map = " + map);
 
-    public static void main(String[] args) throws IOException {
+        voList.sort(Comparator.comparing(companyFundamentalCNResult_DataVO::getPb_wo_gw));
+
+        for (int i = 0; i < voList.size(); i++) {
+            map.put(voList.get(i).getStockCode(), (int) map.get(voList.get(i).getStockCode()) + i);
+        }
+        System.out.println("map = " + map);
+
+        voList.sort(Comparator.comparing(companyFundamentalCNResult_DataVO::getPs_ttm));
+        voList.forEach(System.out::println);
+        for (int i = 0; i < voList.size(); i++) {
+            map.put(voList.get(i).getStockCode(), (int) map.get(voList.get(i).getStockCode()) + i);
+        }
+        System.out.println("map = " + map);
+    }
+
+    public static void main(String[] args) throws IOException, ParseException {
         requestCompanyFundamentalCN();
     }
 

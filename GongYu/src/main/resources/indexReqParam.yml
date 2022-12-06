@@ -8,6 +8,7 @@ indexFundamentalHSIURL: https://open.lixinger.com/api/hk/index/fundamental
 allCompanyURLCN: https://open.lixinger.com/api/cn/company
 
 companyFundamentalBankURLCN: https://open.lixinger.com/api/cn/company/fundamental/bank
+companyFsBankURLCN: https://open.lixinger.com/api/cn/company/fs/bank
 
 macroNationalDebtURL: https://open.lixinger.com/api/macro/national-debt
 macroMoneySupplyURL: https://open.lixinger.com/api/macro/money-supply

@@ -9,7 +9,7 @@ import java.io.InputStream;
 import java.util.Map;
 
 public class getParam_getAllIndexCN {
-    public static String getParamJsonCN() throws IOException {
+    public static String getParamGetAllIndexCN() throws IOException {
         InputStream inputStream = getParam_getAllIndexCN.class.getClassLoader().getResourceAsStream("indexReqParam.yml");
         Map conf = new Yaml().load(inputStream);
         String token = (String) conf.get("token");
@@ -25,7 +25,7 @@ public class getParam_getAllIndexCN {
     }
 
     public static void main(String[] args) throws IOException {
-        System.out.println(getParamJsonCN());
+        System.out.println(getParamGetAllIndexCN());
         System.out.println(getParamObjCN(""));
     }
 }
