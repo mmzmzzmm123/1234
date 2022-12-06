@@ -37,7 +37,9 @@ companyFundamentalMetricsList:
   - mc
   - sp
   - dyr
-
+companyFsMetricsList:
+  - q.ps.npadnrpatoshaopc.t_y2y
+  - q.ps.wdroe.t
 fsType: bank
 removeCode:
   - "1000009"
