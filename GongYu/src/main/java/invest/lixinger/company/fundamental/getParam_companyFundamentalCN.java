@@ -35,9 +35,9 @@ public class getParam_companyFundamentalCN {
         companyFundamentalCNParam_rootVO.setDate(date);
         companyFundamentalCNParam_rootVO.setMetricsList(companyFundamentalMetricsList);
 
-        fsTypeOfCompanyCNResult_RootVO vo =requestFsTypeOfCompanyCN();
-        List<fsTypeOfCompanyCNResult_DataVO> listVO=vo.getData();
-        List<String>listStockCodes=new ArrayList<>();
+        fsTypeOfCompanyCNResult_RootVO vo = requestFsTypeOfCompanyCN();
+        List<fsTypeOfCompanyCNResult_DataVO> listVO = vo.getData();
+        List<String> listStockCodes = new ArrayList<>();
 
         for (fsTypeOfCompanyCNResult_DataVO fsTypeOfCompanyCNResult_dataVO : listVO) {
             listStockCodes.add(fsTypeOfCompanyCNResult_dataVO.getStockCode());
@@ -45,8 +45,6 @@ public class getParam_companyFundamentalCN {
         companyFundamentalCNParam_rootVO.setStockCodes(listStockCodes);
         return JSON.toJSONString(companyFundamentalCNParam_rootVO);
     }
-
-
 
     public static void main(String[] args) throws IOException, ParseException {
         System.out.println(getParamCompanyFundamentalCN());
