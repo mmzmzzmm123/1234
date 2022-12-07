@@ -245,10 +245,6 @@
       <el-table-column label="联系方式" align="center" prop="studentPhone" />
       <el-table-column label="身份证号" align="center" prop="idNum" />
       <el-table-column label="学院名称" align="center" prop="deptName" />
-<!--              <template slot-scope="scope">-->
-<!--                <dict-tag :options="dict.type.deptName" :value="scope.row.trainingLevel"/>-->
-<!--              </template>-->
-<!--            </el-table-column>-->
       <el-table-column label="培养层次" align="center" prop="trainingLevel">
         <template slot-scope="scope">
           <dict-tag :options="dict.type.training_level" :value="scope.row.trainingLevel"/>
@@ -393,7 +389,6 @@
                           placeholder="请选择年级">
           </el-date-picker>
         </el-form-item>
-
         <el-form-item label="民族" prop="nation">
           <el-select v-model="form.nation" placeholder="请选择民族">
             <el-option
@@ -403,6 +398,9 @@
               :value="dict.value"
             ></el-option>
           </el-select>
+        </el-form-item>
+        <el-form-item label="联系方式" prop="studentPhone">
+          <el-input v-model="form.studentPhone" placeholder="请输入联系方式" />
         </el-form-item>
         <el-form-item label="是否校内住宿" prop="isOnSchool">
           <el-select v-model="form.isOnSchool" placeholder="请选择是否校内住宿" @change="changeIsOnSchool">
@@ -470,8 +468,8 @@
             ></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="未返校原因" prop="notSchoolReason">
-          <el-select v-model="form.notSchoolReason" placeholder="请选择未返校原因">
+        <el-form-item label="请假/未返校原因" prop="notSchoolReason">
+          <el-select v-model="form.notSchoolReason" placeholder="请选择请假/未返校原因">
             <el-option
               v-for="dict in dict.type.not_school_reason"
               :key="dict.value"
@@ -573,6 +571,9 @@
             ></el-option>
           </el-select>
         </el-form-item>
+        <el-form-item label="联系方式" prop="studentPhone">
+          <el-input v-model="stateForm.studentPhone" placeholder="请输入联系方式"/>
+        </el-form-item>
         <el-form-item label="是否校内住宿" prop="isOnSchool">
           <el-select v-model="stateForm.isOnSchool" placeholder="请选择是否校内住宿" @change="changeIsOnSchool">
             <el-option
@@ -639,8 +640,8 @@
             ></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="未返校原因" prop="notSchoolReason">
-          <el-select v-model="stateForm.notSchoolReason" placeholder="请选择未返校原因">
+        <el-form-item label="请假/未返校原因" prop="notSchoolReason">
+          <el-select v-model="stateForm.notSchoolReason" placeholder="请选择请假/未返校原因">
             <el-option
               v-for="dict in dict.type.not_school_reason"
               :key="dict.value"
@@ -790,6 +791,22 @@
           studentTag: [
             { required: true, message: "在校状态不能为空", trigger: "blur" }
           ],
+          studentPhone:[{
+              required: true, message: "在校状态不能为空", trigger: "blur"
+          },
+          { type: 'number',
+            message: '手机号格式不正确',
+            trigger: 'blur',
+            transform(value) {
+              var phonereg = 11 && /^((13|14|15|16|17|18|19)[0-9]{1}\d{8})$/
+              if (!phonereg.test(value)) {
+                return false
+              } else {
+                return Number(value)
+              }
+            }
+          }
+          ]
         },
         // 二级部门列表
         deptList: []

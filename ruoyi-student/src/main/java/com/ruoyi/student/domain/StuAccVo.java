@@ -97,7 +97,7 @@ public class StuAccVo extends BaseEntity {
     /**
      * 校内小计
      */
-    @ExcelProperty({"实际在校学生人数", "实际在校人数-小计"})
+    @ExcelProperty({"实际在校学生人数", "小计"})
     private String inSchoolAcc;
 
     /**
@@ -147,31 +147,37 @@ public class StuAccVo extends BaseEntity {
     /**
      * 今日请假小计
      */
-    @ExcelProperty({"当日请假离校人数(不返校)", "今日请假-小计"})
+    @ExcelProperty({"当日请假离校人数(不返校)", "小计"})
     private String leaveTodayAcc;
 
     /**
      * 因疫暂缓返校人数
      */
-    @ExcelProperty({"未返校人数", "因疫暂缓返校人数"})
+    @ExcelProperty({"请假/未返校原因", "疫情原因"})
     private String epidemicSusAcc;
 
     /**
      * 因就业实习暂缓返校人数
      */
-    @ExcelProperty({"未返校人数", "因就业实习暂缓返校人数"})
+    @ExcelProperty({"请假/未返校原因", "就业实习"})
     private String practiceSusAcc;
+
+    /**
+     * 因病暂缓返校人数
+     */
+    @ExcelProperty({"请假/未返校原因", "因病"})
+    private String illnessSusAcc;
 
     /**
      * 因其他暂缓返校人数
      */
-    @ExcelProperty({"未返校人数", "因其他暂缓返校人数"})
+    @ExcelProperty({"请假/未返校原因", "其他原因"})
     private String otherSusAcc;
 
     /**
      * 暂缓返校小计
      */
-    @ExcelProperty({"未返校人数", "暂缓返校-小计"})
+    @ExcelProperty({"请假/未返校原因", "小计"})
     private String susAcc;
 
 
@@ -439,6 +445,14 @@ public class StuAccVo extends BaseEntity {
 
     public void setCampusName(String campusName) {
         this.campusName = campusName;
+    }
+
+    public String getIllnessSusAcc() {
+        return illnessSusAcc;
+    }
+
+    public void setIllnessSusAcc(String illnessSusAcc) {
+        this.illnessSusAcc = illnessSusAcc;
     }
 
     @Override

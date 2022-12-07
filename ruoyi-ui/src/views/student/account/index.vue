@@ -65,10 +65,11 @@
       <el-table-column label="小计" align="center" prop="leaveTodayAcc" />
       </el-table-column>
 
-      <el-table-column align="center" label="未返校学生人数">
-      <el-table-column label="因疫暂缓返校人数" align="center" prop="epidemicSusAcc" />
-      <el-table-column label="因就业实习暂缓返校人数" align="center" prop="practiceSusAcc" />
-      <el-table-column label="因其他暂缓返校人数" align="center" prop="otherSusAcc" />
+      <el-table-column align="center" label="请假/未返校原因">
+      <el-table-column label="疫情原因" align="center" prop="epidemicSusAcc" />
+      <el-table-column label="就业实习" align="center" prop="practiceSusAcc" />
+      <el-table-column label="因病" align="center" prop="illnessSusAcc" />
+      <el-table-column label="其他原因" align="center" prop="otherSusAcc" />
       <el-table-column label="小计" align="center" prop="susAcc" />
       </el-table-column>
 

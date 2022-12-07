@@ -1,10 +1,16 @@
 package com.ruoyi.student.service.impl;
 
+import java.util.Date;
 import java.util.List;
 
 import com.ruoyi.common.annotation.DataScope;
 import com.ruoyi.common.utils.DateUtils;
+import com.ruoyi.common.utils.DictUtils;
+import com.ruoyi.student.consts.StudentConstant;
+import com.ruoyi.student.domain.StuStateHis;
+import com.ruoyi.student.service.IStuStateHisService;
 import com.ruoyi.system.service.ISysDictDataService;
+import org.apache.poi.ss.formula.functions.T;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.ruoyi.student.mapper.StuInfoMapper;
@@ -18,13 +24,13 @@ import com.ruoyi.student.service.IStuInfoService;
  * @date 2022-11-21
  */
 @Service
-public class StuInfoServiceImpl implements IStuInfoService 
+public class StuInfoServiceImpl<T extends StuInfo> implements IStuInfoService<T>
 {
     @Autowired
     private StuInfoMapper stuInfoMapper;
 
     @Autowired
-    private ISysDictDataService sysDictDataService;
+    private IStuStateHisService stuStateHisService;
 
     /**
      * 查询学生信息
@@ -103,42 +109,52 @@ public class StuInfoServiceImpl implements IStuInfoService
 
     @Override
     public int changeTagReturn2InSchool() {
+        StuInfo stuInfo = new StuInfo();
+        stuInfo.setStudentTag(StudentConstant.STUDENT_TAG_RETURN);
+        List<StuInfo> list = stuInfoMapper.selectStuInfoList(stuInfo);
+        stuStateHisService.insertHis(list);
         return stuInfoMapper.changeTagReturn2InSchool();
     }
 
     @Override
     public int changeTagLeave2Out() {
+        StuInfo stuInfo = new StuInfo();
+        stuInfo.setStudentTag(StudentConstant.STUDENT_TAG_LEVEL);
+        List<StuInfo> list = stuInfoMapper.selectStuInfoList(stuInfo);
+        stuStateHisService.insertHis(list);
         return stuInfoMapper.changeTagLeave2Out();
     }
 
     @Override
-    public List<StuInfo> matchDict(List<StuInfo> stuInfoList) {
+    public List<T> matchDict(List<T> stuInfoList) {
         for (StuInfo stuInfo : stuInfoList) {
-            String nationName = sysDictDataService.selectDictLabel("nation", stuInfo.getNation());
+            String sexName = DictUtils.getDictLabel("sys_user_sex", stuInfo.getStudentSex());
+            stuInfo.setStudentSexName(sexName);
+            String nationName = DictUtils.getDictLabel("nation", stuInfo.getNation());
             stuInfo.setNationName(nationName);
-            String campusName = sysDictDataService.selectDictLabel("campus", stuInfo.getCampus());
+            String campusName = DictUtils.getDictLabel("campus", stuInfo.getCampus());
             stuInfo.setCampusName(campusName);
-            String trainingLevelName = sysDictDataService.selectDictLabel("training_level", stuInfo.getTrainingLevel());
+            String trainingLevelName = DictUtils.getDictLabel("training_level", stuInfo.getTrainingLevel());
             stuInfo.setTrainingLevelName(trainingLevelName);
-            String studentTagName = sysDictDataService.selectDictLabel("student_tag", stuInfo.getStudentTag());
+            String studentTagName = DictUtils.getDictLabel("student_tag", stuInfo.getStudentTag());
             stuInfo.setStudentTagName(studentTagName);
-            String accommodationName = sysDictDataService.selectDictLabel("accommodation", stuInfo.getAccommodation());
+            String accommodationName = DictUtils.getDictLabel("accommodation", stuInfo.getAccommodation());
             stuInfo.setAccommodationName(accommodationName);
-            String accommodationParkName = sysDictDataService.selectDictLabel("accommodation_park", stuInfo.getAccommodationPark());
+            String accommodationParkName = DictUtils.getDictLabel("accommodation_park", stuInfo.getAccommodationPark());
             stuInfo.setAccommodationParkName(accommodationParkName);
-            String isOnSchoolName = sysDictDataService.selectDictLabel("sys_yes_no", stuInfo.getIsOnSchool());
+            String isOnSchoolName = DictUtils.getDictLabel("sys_yes_no", stuInfo.getIsOnSchool());
             stuInfo.setIsOnSchoolName(isOnSchoolName);
-            String controlLevelName = sysDictDataService.selectDictLabel("control_level", stuInfo.getControlLevel());
+            String controlLevelName = DictUtils.getDictLabel("control_level", stuInfo.getControlLevel());
             stuInfo.setControlLevelName(controlLevelName);
-            String notSchoolReasonName = sysDictDataService.selectDictLabel("not_school_reason", stuInfo.getNotSchoolReason());
+            String notSchoolReasonName = DictUtils.getDictLabel("not_school_reason", stuInfo.getNotSchoolReason());
             stuInfo.setNotSchoolReasonName(notSchoolReasonName);
-            String placeToSchoolLevelName = sysDictDataService.selectDictLabel("risk_level", stuInfo.getPlaceToSchoolLevel());
+            String placeToSchoolLevelName = DictUtils.getDictLabel("risk_level", stuInfo.getPlaceToSchoolLevel());
             stuInfo.setPlaceToSchoolLevelName(placeToSchoolLevelName);
-            String placeToSchoolName = sysDictDataService.selectDictLabel("place_to_school", stuInfo.getPlaceToSchool());
+            String placeToSchoolName = DictUtils.getDictLabel("place_to_school", stuInfo.getPlaceToSchool());
             stuInfo.setPlaceToSchoolName(placeToSchoolName);
-            String placeToLeaveName = sysDictDataService.selectDictLabel("place_to_leave", stuInfo.getPlaceToLeave());
+            String placeToLeaveName = DictUtils.getDictLabel("place_to_leave", stuInfo.getPlaceToLeave());
             stuInfo.setPlaceToLeaveName(placeToLeaveName);
-            String jointTypeName = sysDictDataService.selectDictLabel("joint_type", stuInfo.getJointType());
+            String jointTypeName = DictUtils.getDictLabel("joint_type", stuInfo.getJointType());
             stuInfo.setJointTypeName(jointTypeName);
         }
         return stuInfoList;

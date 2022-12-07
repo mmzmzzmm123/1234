@@ -1,5 +1,6 @@
 package com.ruoyi.quartz.task;
 
+import com.ruoyi.student.domain.StuInfo;
 import com.ruoyi.student.service.IStuInfoService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,7 +18,7 @@ public class StudentTask {
     protected Logger logger = LoggerFactory.getLogger(getClass());
 
     @Autowired
-    private IStuInfoService stuInfoService;
+    private IStuInfoService<StuInfo> stuInfoService;
 
     public void changeStudentTag() {
         logger.info("启动定时任务 studentTask");

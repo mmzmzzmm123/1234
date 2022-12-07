@@ -36,7 +36,7 @@ import com.ruoyi.common.core.page.TableDataInfo;
 public class StuInfoController extends BaseController
 {
     @Autowired
-    private IStuInfoService stuInfoService;
+    private IStuInfoService<StuInfo> stuInfoService;
 
     /**
      * 查询学生信息列表
@@ -170,6 +170,10 @@ public class StuInfoController extends BaseController
             if (StringUtils.isEmpty(placeToLeave)) {
                 pass = false;
                 msg.append("请选择离校目的地;");
+            }
+            if (StringUtils.isEmpty(notSchoolReason)) {
+                pass = false;
+                msg.append("请选择请假/未返校原因;");
             }
         } else if ("2".equals(studentTag)) {
             // 未返校
