@@ -6,6 +6,8 @@ import invest.lixinger.company.fs.VO.fsCompanyCNParam_RootVO;
 import invest.lixinger.company.fsTypeOfCompany.VO.fsTypeOfCompanyCNParam_RootVO;
 import invest.lixinger.company.fsTypeOfCompany.VO.fsTypeOfCompanyCNResult_DataVO;
 import invest.lixinger.company.fsTypeOfCompany.VO.fsTypeOfCompanyCNResult_RootVO;
+import invest.lixinger.ruoyi.entity.codeAndNameVO;
+import invest.lixinger.ruoyi.mapper.codeAndNameMapper;
 import invest.lixinger.utils.getResult_NoHoliday;
 import org.yaml.snakeyaml.Yaml;
 
@@ -17,6 +19,7 @@ import java.util.List;
 import java.util.Map;
 
 import static invest.lixinger.company.fsTypeOfCompany.request_fsTypeOfCompanyCN.requestFsTypeOfCompanyCN;
+import static mybatisNoSpringUtils.mybatisNoSpringUtils.session;
 
 public class getParam_fsCompanyCN {
     public static String getParamFsCompanyCN(fsTypeOfCompanyCNResult_RootVO vo) throws IOException, ParseException {
@@ -43,6 +46,7 @@ public class getParam_fsCompanyCN {
 
     public static void main(String[] args) throws IOException, ParseException {
         fsTypeOfCompanyCNResult_RootVO vo = requestFsTypeOfCompanyCN();
+
         System.out.println(getParamFsCompanyCN(vo));
     }
 
