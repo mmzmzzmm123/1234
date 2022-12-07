@@ -68,7 +68,7 @@ public class SysOperlogController extends BaseController
     }
     @GetMapping("/getlast")
      public TableDataInfo getlast(){
-
+        startPage();
         List<SysOperLog> list = operLogService.selectOperLogLastList();
         return getDataTable(list);
      }
