@@ -84,11 +84,9 @@ public class request_companyFundamentalCN {
             mapTemp.put("rankfund", String.valueOf(Integer.parseInt(doubleFundMap.get(voList.get(i).getStockCode()).get("rankfund")) + i));
             doubleFundMap.put(voList.get(i).getStockCode(), mapTemp);
         }
-        for (int i = 0; i < voList.size(); i++) {
-            System.out.println(doubleFundMap.get(voList.get(i).getStockCode()));
-        }
-//        System.out.println("doubleMap = " + doubleMap);
-//        System.out.println(doubleMap.get("601997"));
+//        for (int i = 0; i < voList.size(); i++) {
+//            System.out.println(doubleFundMap.get(voList.get(i).getStockCode()));
+//        }
         return doubleFundMap;
     }
 

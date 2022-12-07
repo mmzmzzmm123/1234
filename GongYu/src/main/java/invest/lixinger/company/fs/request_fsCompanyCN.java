@@ -9,6 +9,7 @@ import org.yaml.snakeyaml.Yaml;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.HashMap;
@@ -39,8 +40,8 @@ public class request_fsCompanyCN {
             fsCompanyCNResult_PsVO ps = vo.getQ().getPs();
             Map<String, String> mapTemp = new HashMap<>();
             mapTemp.put("roe", String.valueOf(ps.getWroe().getT()));
-            mapTemp.put("income", String.valueOf(ps.getOi().getT_y2y()));
-            mapTemp.put("profit", String.valueOf(ps.getNpadnrpatoshaopc().getT_y2y()));
+            mapTemp.put("income", String.valueOf(new DecimalFormat("0.0000").format(ps.getOi().getT_y2y())));
+            mapTemp.put("profit", String.valueOf(new DecimalFormat("0.0000").format(ps.getNpadnrpatoshaopc().getT_y2y())));
             mapTemp.put("date", dateFormat);
             mapTemp.put("rankFs", "");
             doubleFsMap.put(vo.getStockCode(), mapTemp);
