@@ -1,4 +1,4 @@
-package com.ruoyi.minio.client;
+package com.ruoyi.framework.minio;
 
 import com.google.common.collect.Multimap;
 import io.minio.CreateMultipartUploadResponse;
@@ -7,6 +7,7 @@ import io.minio.MinioClient;
 import io.minio.ObjectWriteResponse;
 import io.minio.errors.*;
 import io.minio.messages.Part;
+import org.springframework.context.annotation.Configuration;
 
 import java.io.IOException;
 import java.security.InvalidKeyException;
@@ -15,6 +16,7 @@ import java.security.NoSuchAlgorithmException;
 /**
  * 自定义minio
  */
+@Configuration
 public class CustomMinIoClient extends MinioClient{
     public CustomMinIoClient(MinioClient client) {
         super(client);

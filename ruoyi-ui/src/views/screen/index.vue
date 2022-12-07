@@ -6,9 +6,11 @@
 
 <script>
 import Charts from '@jiaminghi/charts'
+import autoResize from '@/views/screen/mixins/resize'
 
 export default {
   name: "Screen",
+  mixins: [autoResize],
   data() {
     return {
       option: {
@@ -31,7 +33,7 @@ export default {
             }
           ],
           textStyle: {
-            fill: '#fff'
+            fill: '#aaa'
           }
         },
         xAxis: {
@@ -159,9 +161,14 @@ export default {
       const container = document.getElementById('container')
       const myChart = new Charts(container)
       myChart.setOption(this.option)
+    },
+    resize() {
+      const { chart } = this
+      chart && chart.resize()
     }
   }
 };
+
 </script>
 
 <style lang="scss" scoped>
@@ -170,9 +177,8 @@ export default {
   height: 100%;
   background-color: #2c3e50;
  #container {
-   width: 500px;
-   height: 500px;
-   background:#f1f1f1;
+   width: 100%;
+   height: 100%;
  }
 }
 </style>

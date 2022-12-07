@@ -1,12 +1,13 @@
-package com.ruoyi.minio.properties;
+package com.ruoyi.framework.config.properties;
 
 import lombok.Data;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.stereotype.Component;
 
 @Data
-@Component
+@Configuration
 @ConfigurationProperties(prefix = "minio")
 public class MinIoProperties implements InitializingBean {
 

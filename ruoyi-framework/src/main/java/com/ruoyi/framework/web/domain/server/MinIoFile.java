@@ -1,4 +1,4 @@
-package com.ruoyi.common.core.domain.dto;
+package com.ruoyi.framework.web.domain.server;
 
 import lombok.Builder;
 import lombok.Data;

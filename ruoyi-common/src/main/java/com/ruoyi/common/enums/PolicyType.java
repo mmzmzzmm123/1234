@@ -1,4 +1,4 @@
-package com.ruoyi.minio.enums;
+package com.ruoyi.common.enums;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

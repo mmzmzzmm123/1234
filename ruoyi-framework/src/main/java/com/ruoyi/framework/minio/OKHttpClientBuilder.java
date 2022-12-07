@@ -1,4 +1,4 @@
-package com.ruoyi.minio.client;
+package com.ruoyi.framework.minio;
 
 import okhttp3.OkHttpClient;
 

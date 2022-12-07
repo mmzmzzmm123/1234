@@ -1,8 +1,8 @@
-package com.ruoyi.common.utils.minio;
+package com.ruoyi.framework.minio;
 
 import cn.hutool.core.io.IoUtil;
-import com.ruoyi.common.core.minio.CustomMinIoClient;
 import com.ruoyi.common.enums.PolicyType;
+import com.ruoyi.framework.web.domain.server.MinIoFile;
 import io.minio.*;
 import io.minio.http.Method;
 import io.minio.messages.Bucket;
@@ -28,9 +28,6 @@ import java.util.concurrent.TimeUnit;
 @Slf4j
 public class MinIoUtil {
     public static final String SEPARATOR = "/";
-
-
-    public static final String BUCKET_NAME = "blog";
 
     public static final String KEY_ENCRYPT = "1234567890";
 
@@ -72,7 +69,8 @@ public class MinIoUtil {
         // 上传文件路径
         String rename = RenameUtil.generateFileName(fileName);
         String objectName = moduleName + SEPARATOR + RenameUtil.getFilePath(rename);
-        String fileUrl = MinIoProperties.ENDPOINT + SEPARATOR + bucketName + SEPARATOR + objectName;
+//        String fileUrl = MinIoProperties.ENDPOINT + SEPARATOR + bucketName + SEPARATOR + objectName;
+        String fileUrl = SEPARATOR + bucketName + SEPARATOR + objectName;
         String fileType = file.getContentType();
         long fileSize = file.getSize();
         PutObjectArgs objectArgs = PutObjectArgs.builder().object(objectName)
