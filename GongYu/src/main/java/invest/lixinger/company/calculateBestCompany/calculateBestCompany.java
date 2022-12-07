@@ -19,6 +19,9 @@ import static invest.lixinger.company.fs.request_fsCompanyCN.requestFsCompanyCN;
 import static invest.lixinger.company.fsTypeOfCompany.request_fsTypeOfCompanyCN.requestFsTypeOfCompanyCN;
 import static invest.lixinger.company.fundamental.request_companyFundamentalCN.requestCompanyFundamentalCN;
 
+/**
+ * 计算roe+pe+pb+ps
+ */
 public class calculateBestCompany extends mybatisNoSpringUtils {
 
     @Test
@@ -28,7 +31,7 @@ public class calculateBestCompany extends mybatisNoSpringUtils {
         // 主要是为了得到某一行业的股票代码
         fsTypeOfCompanyCNResult_RootVO fsTypeOfCompanyCNResult_rootVO = requestFsTypeOfCompanyCN();
         // 计算公司的财务报表，主要取roe、收入、利润
-        Map<String, Map<String, String>> doubleFsMap = requestFsCompanyCN(fsTypeOfCompanyCNResult_rootVO,codeAndNameList);
+        Map<String, Map<String, String>> doubleFsMap = requestFsCompanyCN(fsTypeOfCompanyCNResult_rootVO, codeAndNameList);
         // 计算pe、pb、ps
         Map<String, Map<String, String>> doubleFundMap = requestCompanyFundamentalCN(fsTypeOfCompanyCNResult_rootVO, doubleFsMap);
         List<Map.Entry<String, Map<String, String>>> listDoubleFundMap = calculateFundFs(doubleFundMap);
@@ -42,9 +45,11 @@ public class calculateBestCompany extends mybatisNoSpringUtils {
     public static List<Map.Entry<String, Map<String, String>>> calculateFundFs(Map<String, Map<String, String>> doubleFundMap) {
         for (String key : doubleFundMap.keySet()) {
             Map<String, String> mapTemp = doubleFundMap.get(key);
-            String rankFs = mapTemp.get("rankFs");
+            String rankRoe = mapTemp.get("rankRoe");
             String rankfund = mapTemp.get("rankfund");
-            double rankWeight = Double.parseDouble(rankFs) + Double.parseDouble(rankfund) / 3;
+            double rankWeight = 0;
+            rankWeight += (Double.parseDouble(rankRoe) * 0.6);
+            rankWeight += (Double.parseDouble(rankfund) / 3*0.4);
             mapTemp.put("rankWeight", String.valueOf(new DecimalFormat("0.0000").format(rankWeight)));
             doubleFundMap.put(key, mapTemp);
         }

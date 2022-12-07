@@ -57,7 +57,7 @@ public class request_fsCompanyCN extends mybatisNoSpringUtils {
                     mapTemp.put("income", String.valueOf(new DecimalFormat("0.0000").format(ps.getOi().getT_y2y())));
                     mapTemp.put("profit", String.valueOf(new DecimalFormat("0.0000").format(ps.getNpadnrpatoshaopc().getT_y2y())));
                     mapTemp.put("date", dateFormat);
-                    mapTemp.put("rankFs", "");
+                    mapTemp.put("rankRoe", "");
                     mapTemp.put("Name", codeAndNameList.get(j).getName());
                     doubleFsMap.put(vo.getStockCode(), mapTemp);
                 }
@@ -71,7 +71,7 @@ public class request_fsCompanyCN extends mybatisNoSpringUtils {
         for (Integer i = 0; i < voList.size(); i++) {
             String StockCode = voList.get(i).getStockCode();
             Map<String, String> mapTemp = doubleFsMap.get(StockCode);
-            mapTemp.put("rankFs", String.valueOf(i));
+            mapTemp.put("rankRoe", String.valueOf(i));
             doubleFsMap.put(StockCode, mapTemp);
         }
         return doubleFsMap;
