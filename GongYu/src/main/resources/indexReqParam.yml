@@ -9,8 +9,11 @@ allCompanyURLCN: https://open.lixinger.com/api/cn/company
 
 companyFundamentalBankURLCN: https://open.lixinger.com/api/cn/company/fundamental/bank
 companyFundamentalSecurityURLCN: https://open.lixinger.com/api/cn/company/fundamental/security
+companyFundamentalInsuranceURLCN: https://open.lixinger.com/api/cn/company/fundamental/insurance
+
 companyFsBankURLCN: https://open.lixinger.com/api/cn/company/fs/bank
 companyFsSecurityURLCN: https://open.lixinger.com/api/cn/company/fs/security
+companyFsInsuranceURLCN: https://open.lixinger.com/api/cn/company/fs/insurance
 
 macroNationalDebtURL: https://open.lixinger.com/api/macro/national-debt
 macroMoneySupplyURL: https://open.lixinger.com/api/macro/money-supply
@@ -45,7 +48,7 @@ companyFsMetricsList:
   - q.ps.oi.t_y2y
   - q.ps.npadnrpatoshaopc.t_y2y
 
-fsType: security
+fsType: bank # insurance/security/bank
 removeCode:
   - "1000009"
   - "1000008"

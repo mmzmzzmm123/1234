@@ -18,6 +18,7 @@ import java.util.Map;
 import static invest.lixinger.company.fsTypeOfCompany.request_fsTypeOfCompanyCN.requestFsTypeOfCompanyCN;
 
 public class getParam_companyFundamentalCN {
+
     public static String getParamCompanyFundamentalCN(fsTypeOfCompanyCNResult_RootVO vo) throws IOException, ParseException {
         InputStream inputStream = getParam_companyFundamentalCN.class.getClassLoader().getResourceAsStream("indexReqParam.yml");
         Map indexReqParam = new Yaml().load(inputStream);
