@@ -6,5 +6,4 @@ import lombok.Data;
 public class fsCompanyCNResult_PsVO {
     private fsCompanyCNResult_OiVO oi;
     private fsCompanyCNResult_NpadnrpatoshaopcVO npadnrpatoshaopc;
-    private fsCompanyCNResult_WroeVO wroe;
 }

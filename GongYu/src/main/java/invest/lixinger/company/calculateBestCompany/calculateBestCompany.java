@@ -39,18 +39,18 @@ public class calculateBestCompany extends mybatisNoSpringUtils {
         listDoubleFundMap.forEach(System.out::println);
         System.out.println(doubleFsMap.get("600000"));
 
-
     }
 
     public static List<Map.Entry<String, Map<String, String>>> calculateFundFs(Map<String, Map<String, String>> doubleFundMap) {
         for (String key : doubleFundMap.keySet()) {
             Map<String, String> mapTemp = doubleFundMap.get(key);
-            String rankRoe = mapTemp.get("rankRoe");
-            String rankfund = mapTemp.get("rankfund");
+            double rankWRoe = Double.parseDouble(mapTemp.get("rankWRoe"));
+            double rankKRoe = Double.parseDouble(mapTemp.get("rankKRoe"));
+            double rankfund = Double.parseDouble(mapTemp.get("rankfund"));
             double rankWeight = 0;
-            rankWeight += (Double.parseDouble(rankRoe) * 0.6);
-            rankWeight += (Double.parseDouble(rankfund) / 3*0.4);
-            mapTemp.put("rankWeight", String.valueOf(new DecimalFormat("0.0000").format(rankWeight)));
+            rankWeight += (rankWRoe + rankKRoe) / 2 * 0.5;
+            rankWeight += rankfund / 3 * 0.5;
+            mapTemp.put("rankWeight", String.valueOf(new DecimalFormat("0.0").format(rankWeight)));
             doubleFundMap.put(key, mapTemp);
         }
         return doubleMapSort(doubleFundMap);

@@ -5,4 +5,6 @@ import lombok.Data;
 @Data
 public class fsCompanyCNResult_QVO {
     private fsCompanyCNResult_PsVO ps;
+    private fsCompanyCNResult_MVO m;
+
 }
