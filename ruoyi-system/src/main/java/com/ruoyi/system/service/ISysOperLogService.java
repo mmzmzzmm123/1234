@@ -50,5 +50,5 @@ public interface ISysOperLogService
      * 查询每个部门最后一次操作的记录
      * @return
      */
-    public List<SysOperLog> selectOperLogLastList();
+    public List<SysOperLog> selectOperLogLastList(SysOperLog operLog);
 }
