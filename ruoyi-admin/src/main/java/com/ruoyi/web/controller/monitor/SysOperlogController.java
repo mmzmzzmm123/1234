@@ -67,9 +67,9 @@ public class SysOperlogController extends BaseController
         return success();
     }
     @GetMapping("/getlast")
-     public TableDataInfo getlast(){
+     public TableDataInfo getlast(SysOperLog operLog){
         startPage();
-        List<SysOperLog> list = operLogService.selectOperLogLastList();
+        List<SysOperLog> list = operLogService.selectOperLogLastList(operLog);
         return getDataTable(list);
      }
 
@@ -77,7 +77,7 @@ public class SysOperlogController extends BaseController
     @PostMapping("/exportlast")
     public void exportlast(HttpServletResponse response, SysOperLog operLog)
     {
-        List<SysOperLog> list = operLogService.selectOperLogLastList();
+        List<SysOperLog> list = operLogService.selectOperLogLastList(operLog);
         ExcelUtil<SysOperLog> util = new ExcelUtil<SysOperLog>(SysOperLog.class);
         util.exportExcel(response, list, "操作日志");
     }
