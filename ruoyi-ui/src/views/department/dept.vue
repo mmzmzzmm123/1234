@@ -234,7 +234,7 @@ export default {
     /** 查询登录日志 */
     getList() {
       this.loading = true;
-      lastlist().then(
+      lastlist(this.queryParams).then(
         response => {
            this.list = response.rows;
            this.total = response.total;

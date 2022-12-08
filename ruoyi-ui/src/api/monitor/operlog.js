@@ -9,10 +9,11 @@ export function list(query) {
   })
 }
 // 查询操作日志列表
-export function lastlist() {
+export function lastlist(query) {
   return request({
     url: '/monitor/operlog/getlast',
     method: 'get',
+    params: query
   })
 }
 
