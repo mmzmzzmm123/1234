@@ -17,6 +17,16 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
+      <el-form-item label="学院名称" prop="deptName">
+        <el-select v-model="queryParams.deptId" placeholder="请选择学院名称" clearable>
+                  <el-option
+                    v-for="dept in deptList"
+                    :key="dept.deptId"
+                    :label="dept.deptName"
+                    :value="dept.deptId"
+                  />
+                </el-select>
+      </el-form-item>
       <el-form-item label="培养层次" prop="trainingLevel">
         <el-select v-model="queryParams.trainingLevel" placeholder="请选择培养层次" clearable>
           <el-option
@@ -34,6 +44,142 @@
                         value-format="yyyy"
                         placeholder="请选择年级">
         </el-date-picker>
+      </el-form-item>
+      <el-form-item label="住址" prop="address">
+        <el-input
+          v-model="queryParams.address"
+          placeholder="请输入住址"
+          clearable
+          @keyup.enter.native="handleQuery"
+        />
+      </el-form-item>
+      <el-form-item label="民族" prop="nation">
+        <el-select v-model="queryParams.nation" placeholder="请选择民族" clearable>
+          <el-option
+            v-for="dict in dict.type.nation"
+            :key="dict.value"
+            :label="dict.label"
+            :value="dict.value"
+          />
+        </el-select>
+      </el-form-item>
+      <el-form-item label="校区" prop="campus">
+        <el-select v-model="queryParams.campus" placeholder="请选择校区" clearable>
+          <el-option
+            v-for="dict in dict.type.campus"
+            :key="dict.value"
+            :label="dict.label"
+            :value="dict.value"
+          />
+        </el-select>
+      </el-form-item>
+      <el-form-item label="在校状态" prop="studentTag">
+        <el-select v-model="queryParams.studentTag" placeholder="请选择在校状态" clearable>
+          <el-option
+            v-for="dict in dict.type.student_tag"
+            :key="dict.value"
+            :label="dict.label"
+            :value="dict.value"
+          />
+        </el-select>
+      </el-form-item>
+      <el-form-item label="住宿地点" prop="accommodation">
+        <el-select v-model="queryParams.accommodation" placeholder="请选择住宿地点" clearable>
+          <el-option
+            v-for="dict in dict.type.accommodation"
+            :key="dict.value"
+            :label="dict.label"
+            :value="dict.value"
+          />
+        </el-select>
+      </el-form-item>
+      <el-form-item label="住宿园区" prop="accommodationPark">
+        <el-select v-model="queryParams.accommodationPark" placeholder="请选择住宿园区" clearable>
+          <el-option
+            v-for="dict in dict.type.accommodation_park"
+            :key="dict.value"
+            :label="dict.label"
+            :value="dict.value"
+          />
+        </el-select>
+      </el-form-item>
+      <el-form-item label="宿舍号" prop="dormitoryNo">
+        <el-input
+          v-model="queryParams.dormitoryNo"
+          placeholder="请输入宿舍号"
+          clearable
+          @keyup.enter.native="handleQuery"
+        />
+      </el-form-item>
+      <el-form-item label="是否校内住宿" prop="isOnSchool">
+        <el-select v-model="queryParams.isOnSchool" placeholder="请选择是否校内住宿" clearable>
+          <el-option
+            v-for="dict in dict.type.sys_yes_no"
+            :key="dict.value"
+            :label="dict.label"
+            :value="dict.value"
+          />
+        </el-select>
+      </el-form-item>
+      <el-form-item label="管控等级" prop="controlLevel">
+        <el-select v-model="queryParams.controlLevel" placeholder="请选择管控等级" clearable>
+          <el-option
+            v-for="dict in dict.type.control_level"
+            :key="dict.value"
+            :label="dict.label"
+            :value="dict.value"
+          />
+        </el-select>
+      </el-form-item>
+      <el-form-item label="未返校原因" prop="notSchoolReason">
+        <el-select v-model="queryParams.notSchoolReason" placeholder="请选择未返校原因" clearable>
+          <el-option
+            v-for="dict in dict.type.not_school_reason"
+            :key="dict.value"
+            :label="dict.label"
+            :value="dict.value"
+          />
+        </el-select>
+      </el-form-item>
+      <el-form-item label="返校出发地风险等级" prop="placeToSchoolLevel">
+        <el-select v-model="queryParams.placeToSchoolLevel" placeholder="请选择返校出发地风险等级" clearable>
+          <el-option
+            v-for="dict in dict.type.risk_level"
+            :key="dict.value"
+            :label="dict.label"
+            :value="dict.value"
+          />
+        </el-select>
+      </el-form-item>
+      <el-form-item label="返校出发地" prop="placeToSchool">
+        <el-select v-model="queryParams.placeToSchool" placeholder="请选择返校出发地" clearable>
+          <el-option
+            v-for="dict in dict.type.place_to_school"
+            :key="dict.value"
+            :label="dict.label"
+            :value="dict.value"
+          />
+        </el-select>
+      </el-form-item>
+      <el-form-item label="离校目的地" prop="placeToLeave">
+        <el-select v-model="queryParams.placeToLeave" placeholder="请选择离校目的地" clearable>
+          <el-option
+            v-for="dict in dict.type.place_to_leave"
+            :key="dict.value"
+            :label="dict.label"
+            :value="dict.value"
+          />
+        </el-select>
+      </el-form-item>
+      <el-form-item label="密接类型" prop="jointType">
+        <el-select v-model="queryParams.jointType" placeholder="请选择密接类型" clearable>
+          <el-option
+            v-for="dict in dict.type.joint_type"
+            :key="dict.value"
+            :label="dict.label"
+            :value="dict.value"
+          />
+        </el-select>
       </el-form-item>
       <el-form-item>
         <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
