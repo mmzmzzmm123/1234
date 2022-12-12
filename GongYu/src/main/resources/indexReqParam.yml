@@ -6,6 +6,7 @@ indexFundamentalUSURL: https://open.lixinger.com/api/us/index/fundamental
 indexFundamentalHSIURL: https://open.lixinger.com/api/hk/index/fundamental
 
 allCompanyURLCN: https://open.lixinger.com/api/cn/company
+allfundCompanyURLCN: https://open.lixinger.com/api/cn/fund-company
 
 companyFundamentalBankURLCN: https://open.lixinger.com/api/cn/company/fundamental/bank
 companyFundamentalSecurityURLCN: https://open.lixinger.com/api/cn/company/fundamental/security
@@ -48,7 +49,7 @@ companyFsMetricsList:
   - q.ps.oi.t_y2y
   - q.ps.npadnrpatoshaopc.t_y2y
 
-fsType: bank # insurance/security/bank
+fsType: security # insurance/security/bank
 removeCode:
   - "1000009"
   - "1000008"

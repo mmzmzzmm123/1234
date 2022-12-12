@@ -15,6 +15,9 @@ import java.util.*;
 import static invest.lixinger.index.fundamental.CN.getParam_indexFundamentalCN.getAllIndexParamJsonCN;
 import static invest.lixinger.index.fundamental.CN.getResult_indexFundamentalCN.getResultObjCN;
 
+/**
+ * 获取所有指数
+ */
 public class request_getAllIndexCN {
     public static void main(String[] args) throws IOException, ParseException {
         requestGetAllIndexCN();
