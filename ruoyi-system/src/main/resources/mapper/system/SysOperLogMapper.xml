@@ -84,11 +84,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		SELECT a.* FROM (
 		SELECT MAX(oper_time) AS oper_time,dept_id,oper_id, title, business_type, method, request_method, operator_type, oper_name, dept_name, oper_url, oper_ip, oper_location, oper_param, json_result, STATUS, error_msg
 		FROM sys_oper_log
+		WHERE business_type IN (1,2,3)
 		GROUP BY dept_id
 		) a
 		LEFT JOIN sys_dept b
 		ON a.dept_id= b.dept_id
-		WHERE business_type IN (1,2,3)
 		ORDER BY  b.dept_id ASC
 	</select>
 </mapper> 
