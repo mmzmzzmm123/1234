@@ -81,12 +81,15 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </update>
 
 	<select id="selectOperLogLastList" parameterType="SysOperLog"  resultMap="SysOperLogResult">
-		SELECT a.* FROM (
-		SELECT MAX(oper_time) AS oper_time,dept_id,oper_id, title, business_type, method, request_method, operator_type, oper_name, dept_name, oper_url, oper_ip, oper_location, oper_param, json_result, STATUS, error_msg
-		FROM sys_oper_log
-		WHERE business_type IN (1,2,3)
-		GROUP BY dept_id
-		) a
+    SELECT a.* FROM (
+		SELECT  * FROM sys_oper_log  WHERE oper_id in
+      (
+        SELECT MAX(oper_id) AS oper_id
+		 FROM sys_oper_log
+		 WHERE business_type IN (1,2,3)
+		 GROUP BY dept_id
+      )
+   )a
 		LEFT JOIN sys_dept b
 		ON a.dept_id= b.dept_id
 		ORDER BY  b.dept_id ASC
