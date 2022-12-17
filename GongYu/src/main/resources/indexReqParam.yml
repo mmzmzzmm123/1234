@@ -5,6 +5,8 @@ indexFundamentalCNURL: https://open.lixinger.com/api/cn/index/fundamental
 indexFundamentalUSURL: https://open.lixinger.com/api/us/index/fundamental
 indexFundamentalHSIURL: https://open.lixinger.com/api/hk/index/fundamental
 
+indexHotCpCNURL: https://open.lixinger.com/api/cn/index/hot/cp
+
 allCompanyURLCN: https://open.lixinger.com/api/cn/company
 allfundCompanyURLCN: https://open.lixinger.com/api/cn/fund-company
 
