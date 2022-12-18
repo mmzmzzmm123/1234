@@ -71,7 +71,6 @@
             <artifactId>GongYu</artifactId>
         </dependency>
 
-
     </dependencies>
 
     <build>

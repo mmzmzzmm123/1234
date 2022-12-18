@@ -24,7 +24,7 @@ public class sendEmail {
     // 每个5秒发送邮件
 //    @Scheduled(cron = "0/15 * * * * *")
     @Scheduled(cron = "0 0 16 ? * *")
-    public void sendSimpleMail() throws IOException, ParseException {
+    public void sendSimpleMail() {
         try {
             Map<String, String> map = getText();
             List<String> list = new ArrayList<>();

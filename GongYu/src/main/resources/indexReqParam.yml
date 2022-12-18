@@ -53,7 +53,7 @@ companyFsMetricsList:
   - q.ps.oi.t_y2y
   - q.ps.npadnrpatoshaopc.t_y2y
 
-fsType: security # insurance/security/bank
+fsType: bank # insurance/security/bank
 removeCode:
   - "1000009"
   - "1000008"

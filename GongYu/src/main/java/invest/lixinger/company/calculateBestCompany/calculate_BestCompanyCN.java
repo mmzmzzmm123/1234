@@ -28,7 +28,7 @@ public class calculate_BestCompanyCN extends mybatisNoSpringUtils {
         List<codeAndNameVO> codeAndNameList = codeAndNameMapper.findAll();
         // 获得某一行业的股票代码
         fsTypeOfCompanyCNResult_RootVO fsTypeOfCompanyCNResult_rootVO = requestFsTypeOfCompanyCN();
-        // 计算公司的财务报表，主要取roe、收入、利润
+        // 计算公司的财务报表，主要取 roe、收入、利润
         Map<String, Map<String, String>> doubleFsMap = requestFsCompanyCN(fsTypeOfCompanyCNResult_rootVO, codeAndNameList);
         // 计算pe、pb、ps
         Map<String, Map<String, String>> doubleFundMap = requestCompanyFundamentalCN(fsTypeOfCompanyCNResult_rootVO, doubleFsMap);
@@ -64,7 +64,7 @@ public class calculate_BestCompanyCN extends mybatisNoSpringUtils {
             double rankPos = Double.parseDouble(mapTemp.get("rankPos"));
             double rankResult = 0;
             rankResult += (rankWRoe + rankKRoe) / 2 * 0.1 * weight[0];
-            rankResult += rankFund / 3 * 0.1 * weight[1] + rankPos * 0.1 * weight[2];
+            rankResult += rankFund / 3 * 0.1 * weight[1] + rankPos / 3 * 0.1 * weight[2];
             mapTemp.put("rankResult", String.valueOf(new DecimalFormat("0.0").format(rankResult)));
             doubleFundMap.put(key, mapTemp);
         }
@@ -73,6 +73,7 @@ public class calculate_BestCompanyCN extends mybatisNoSpringUtils {
 
     /**
      * 按key排序
+     *
      * @param listDoubleFundMap 未排序
      * @return 按key排序的list
      */
