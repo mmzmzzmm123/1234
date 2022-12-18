@@ -11,21 +11,20 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 
 public class getParam_indexHotCpCN {
-    public static String getParamIndexHotCpCN(List<String>stockCodes) throws IOException, ParseException {
+    public static String getParamIndexHotCpCN(List<String> stockCodesList) throws IOException, ParseException {
         InputStream inputStream = getParam_indexHotCpCN.class.getClassLoader().getResourceAsStream("indexReqParam.yml");
         Map indexReqParam = new Yaml().load(inputStream);
         String token = (String) indexReqParam.get("token");
         indexHotCpCNParam_RootVO paramvo = new indexHotCpCNParam_RootVO();
         paramvo.setToken(token);
-        paramvo.setStockCodes(stockCodes);
-
+        paramvo.setStockCodes(stockCodesList);
         return JSON.toJSONString(paramvo);
     }
 
 
     public static void main(String[] args) throws IOException, ParseException {
         List<String> list = new ArrayList<>();
-        Collections.addAll(list,  "000808");
+        Collections.addAll(list, "000808");
         System.out.println(getParamIndexHotCpCN(list));
 
     }

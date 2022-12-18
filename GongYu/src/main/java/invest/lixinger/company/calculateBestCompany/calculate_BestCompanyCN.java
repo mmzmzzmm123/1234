@@ -22,10 +22,10 @@ import static invest.lixinger.company.fundamental.request_companyFundamentalCN.r
 /**
  * 计算roe+pe+pb+ps
  */
-public class calculateBestCompany extends mybatisNoSpringUtils {
+public class calculate_BestCompanyCN extends mybatisNoSpringUtils {
 
     @Test
-    public void calculate() throws IOException, ParseException {
+    public void calculateBestCompanyCN() throws IOException, ParseException {
         codeAndNameMapper codeAndNameMapper = session.getMapper(codeAndNameMapper.class);
         List<codeAndNameVO> codeAndNameList = codeAndNameMapper.findAll();
         // 主要是为了得到某一行业的股票代码
@@ -80,7 +80,7 @@ public class calculateBestCompany extends mybatisNoSpringUtils {
         return list;
     }
 
-    public calculateBestCompany() throws FileNotFoundException {
+    public calculate_BestCompanyCN() throws FileNotFoundException {
     }
 
 
