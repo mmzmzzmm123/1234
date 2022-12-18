@@ -18,6 +18,7 @@ import java.io.InputStream;
 import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -66,6 +67,8 @@ public class request_fsCompanyCN extends mybatisNoSpringUtils {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         String dateFormat = sdf.format(sdf.parse(date));
         Map<String, Map<String, String>> doubleFsMap = new HashMap<>();
+        DecimalFormat df = new DecimalFormat("0.00%");
+
         for (int i = 0; i < voList.size(); i++) {
             for (int j = 0; j < codeAndNameList.size(); j++) {
                 fsCompanyCNResult_DataVO vo = voList.get(i);
@@ -75,12 +78,12 @@ public class request_fsCompanyCN extends mybatisNoSpringUtils {
                 // 从数据库中找到代码和股票名称对应
                 if (stockCode.equals(codeAndNameList.get(j).getCode().substring(2))) {
                     Map<String, String> mapTemp = new HashMap<>();
-                    mapTemp.put("wroe", String.valueOf(new DecimalFormat("0.0000").format(m.getWroe().getT())));
-                    mapTemp.put("kroe", String.valueOf(new DecimalFormat("0.0000").format(m.getRoe_adnrpatoshaopc().getT())));
-                    mapTemp.put("income", String.valueOf(new DecimalFormat("0.0000").format(ps.getOi().getT_y2y())));
-                    mapTemp.put("profit", String.valueOf(new DecimalFormat("0.0000").format(ps.getNpadnrpatoshaopc().getT_y2y())));
-                    mapTemp.put("date", dateFormat);
-                    mapTemp.put("Name", codeAndNameList.get(j).getName());
+                    mapTemp.put("加权roe", df.format(m.getWroe().getT()));
+                    mapTemp.put("扣非roe", df.format(m.getRoe_adnrpatoshaopc().getT()));
+                    mapTemp.put("收入增长", df.format(ps.getOi().getT_y2y()));
+                    mapTemp.put("利润增长", df.format(ps.getNpadnrpatoshaopc().getT_y2y()));
+                    mapTemp.put("日期", dateFormat);
+                    mapTemp.put("名称", codeAndNameList.get(j).getName());
                     doubleFsMap.put(vo.getStockCode(), mapTemp);
                 }
             }

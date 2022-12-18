@@ -18,6 +18,8 @@ companyFsBankURLCN: https://open.lixinger.com/api/cn/company/fs/bank
 companyFsSecurityURLCN: https://open.lixinger.com/api/cn/company/fs/security
 companyFsInsuranceURLCN: https://open.lixinger.com/api/cn/company/fs/insurance
 
+companyHotTrdriCNURL: https://open.lixinger.com/api/cn/company/hot/tr_dri
+
 macroNationalDebtURL: https://open.lixinger.com/api/macro/national-debt
 macroMoneySupplyURL: https://open.lixinger.com/api/macro/money-supply
 

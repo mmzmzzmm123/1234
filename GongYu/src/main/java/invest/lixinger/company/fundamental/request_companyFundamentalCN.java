@@ -32,8 +32,9 @@ public class request_companyFundamentalCN extends mybatisNoSpringUtils {
 
     /**
      * 返回基本面的总结果
+     *
      * @param fsTypeOfCompanyCNResult_rootVO 某一行业的所有公司，主要是用来获取股票代码
-     * @param doubleFsMap 基本面的双map
+     * @param doubleFsMap                    基本面的双map
      */
     public static Map<String, Map<String, String>> requestCompanyFundamentalCN(fsTypeOfCompanyCNResult_RootVO fsTypeOfCompanyCNResult_rootVO, Map<String, Map<String, String>> doubleFsMap) throws IOException, ParseException {
         InputStream inputStream = request_companyFundamentalCN.class.getClassLoader().getResourceAsStream("indexReqParam.yml");
@@ -44,39 +45,44 @@ public class request_companyFundamentalCN extends mybatisNoSpringUtils {
             URL = (String) indexReqParam.get("companyFundamentalBankURLCN");
         } else if (fsType.equals("security")) {
             URL = (String) indexReqParam.get("companyFundamentalSecurityURLCN");
-        }else if (fsType.equals("insurance")) {
+        } else if (fsType.equals("insurance")) {
             URL = (String) indexReqParam.get("companyFundamentalInsuranceURLCN");
         }
         String paramJson = getParam_companyFundamentalCN.getParamCompanyFundamentalCN(fsTypeOfCompanyCNResult_rootVO);
         String resultJson = netRequest.jsonNetPost(URL, paramJson);
         companyFundamentalCNResult_RootVO resultObj = (companyFundamentalCNResult_RootVO) getResult_companyFundamentalCN.getResultCompanyFundamentalCN(resultJson);
-        return getdoubleCompanyFundamentalMap(resultObj.getData(), resultObj.getData().get(0).getDate(), doubleFsMap);
+        return getdoubleCompanyFundamentalMap(resultObj, doubleFsMap);
     }
+
 
     /**
      * 获取多种指标
-     * @param voList 某一行业的基本面，未处理的数据
-     * @param date 日期
+     *
+     * @param resultObj   请求得到的基本面数据
      * @param doubleFsMap 基本面的双map
      */
-    public static Map<String, Map<String, String>> getdoubleCompanyFundamentalMap(List<companyFundamentalCNResult_DataVO> voList, String date, Map<String, Map<String, String>> doubleFsMap) throws ParseException {
+    public static Map<String, Map<String, String>> getdoubleCompanyFundamentalMap(companyFundamentalCNResult_RootVO resultObj, Map<String, Map<String, String>> doubleFsMap) throws ParseException {
+        List<companyFundamentalCNResult_DataVO> voList = resultObj.getData();
+        String date = resultObj.getData().get(0).getDate();
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         String dateFormat = sdf.format(sdf.parse(date));
         Map<String, Map<String, String>> doubleFundMap = new HashMap<>();
+        DecimalFormat df = new DecimalFormat("0.00%");
+
         for (int i = 0; i < voList.size(); i++) {
             companyFundamentalCNResult_DataVO vo = voList.get(i);
             Map<String, String> mapTemp = doubleFsMap.get(vo.getStockCode());
-            mapTemp.put("pe", String.valueOf(new DecimalFormat("0.0000").format(vo.getD_pe_ttm())));
-            mapTemp.put("pb", String.valueOf(new DecimalFormat("0.0000").format(vo.getPb_wo_gw())));
-            mapTemp.put("ps", String.valueOf(new DecimalFormat("0.0000").format(vo.getPs_ttm())));
-            mapTemp.put("pepos", String.valueOf(new DecimalFormat("0.0000").format(vo.getD_pe_ttm_pos10())));
-            mapTemp.put("pbpos", String.valueOf(new DecimalFormat("0.0000").format(vo.getPb_wo_gw_pos10())));
-            mapTemp.put("pspos", String.valueOf(new DecimalFormat("0.0000").format(vo.getPs_ttm_pos10())));
-            mapTemp.put("mc", String.valueOf(new DecimalFormat("0.00").format(vo.getMc() / 100000000)));
-            mapTemp.put("syr", String.valueOf(new DecimalFormat("0.0000").format(vo.getDyr())));
-            mapTemp.put("sp", String.valueOf(vo.getSp()));
-            mapTemp.put("stockCode", String.valueOf(vo.getStockCode()));
-            mapTemp.put("date", dateFormat);
+            mapTemp.put("pe", String.valueOf(new DecimalFormat("0.00").format(vo.getD_pe_ttm())));
+            mapTemp.put("pb", String.valueOf(new DecimalFormat("0.00").format(vo.getPb_wo_gw())));
+            mapTemp.put("ps", String.valueOf(new DecimalFormat("0.00").format(vo.getPs_ttm())));
+            mapTemp.put("pepos", df.format(vo.getD_pe_ttm_pos10()));
+            mapTemp.put("pbpos", df.format(vo.getPb_wo_gw_pos10()));
+            mapTemp.put("pspos", df.format(vo.getPs_ttm_pos10()));
+            mapTemp.put("市值/亿", String.valueOf(new DecimalFormat("0.00").format(vo.getMc() / 100000000)));
+            mapTemp.put("股息率", String.valueOf(new DecimalFormat("0.0000").format(vo.getDyr())));
+            mapTemp.put("股价", String.valueOf(vo.getSp()));
+            mapTemp.put("代码", String.valueOf(vo.getStockCode()));
+            mapTemp.put("日期", dateFormat);
             mapTemp.put("rankFund", "");
             doubleFundMap.put(vo.getStockCode(), mapTemp);
         }
@@ -87,7 +93,8 @@ public class request_companyFundamentalCN extends mybatisNoSpringUtils {
 
     /**
      * 计算pe、pb、ps排名
-     * @param voList 某一行业的基本面，未处理的数据
+     *
+     * @param voList        某一行业的基本面，未处理的数据
      * @param doubleFundMap 基本面的双map
      */
     public static Map<String, Map<String, String>> getdoubleCompanyFundamentalMapSort(List<companyFundamentalCNResult_DataVO> voList, Map<String, Map<String, String>> doubleFundMap) {
@@ -115,12 +122,13 @@ public class request_companyFundamentalCN extends mybatisNoSpringUtils {
             mapTemp.put("rankFund", String.valueOf(Integer.parseInt(doubleFundMap.get(voList.get(i).getStockCode()).get("rankFund")) + i));
             doubleFundMap.put(voList.get(i).getStockCode(), mapTemp);
         }
-        return getdoubleCompanyPosMapSort(voList,doubleFundMap);
+        return getdoubleCompanyPosMapSort(voList, doubleFundMap);
     }
 
     /**
      * 计算百分位排名
-     * @param voList 某一行业的基本面，未处理的数据
+     *
+     * @param voList        某一行业的基本面，未处理的数据
      * @param doubleFundMap 基本面的双map
      */
     public static Map<String, Map<String, String>> getdoubleCompanyPosMapSort(List<companyFundamentalCNResult_DataVO> voList, Map<String, Map<String, String>> doubleFundMap) {

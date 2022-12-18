@@ -104,14 +104,12 @@ public class mybatisNoSpringUtils extends mybatisNoSpringParam {
         dataSource.setMaximumPoolSize(5);
         dataSource.setMinimumIdle(1);
         dataSource.setMaxLifetime(60000 * 10);
-        dataSource.setConnectionTestQuery("SELECT 1");
+//        dataSource.setConnectionTestQuery("SELECT 1");
         return dataSource;
     }
 
     /**
      * 初始化拦截器
-     *
-     * @return
      */
     private static Interceptor initInterceptor() {
         //创建mybatis-plus插件对象
