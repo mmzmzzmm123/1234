@@ -202,17 +202,27 @@ public class sendEmailUtils {
             }
             // m1-m2-------------------------------
             Map<String, Object> cnMoneySupplymap = getTextCNMoneySupply();
-            double m1 = (double) cnMoneySupplymap.get("m1");
-            double m2 = (double) cnMoneySupplymap.get("m2");
-            String latestMonthDateMoneySupply = (String) cnMoneySupplymap.get("latestMonthDateMoneySupply");
-            double m = m1 - m2;
-            if (m < 0) {
-                Text += "▶货币宽松量最新数据日期为：" + latestMonthDateMoneySupply + "，实际值为：" + new DecimalFormat("0.00%").format(m) + "\n\n";
+            double m1oneMonthAgo = (double) cnMoneySupplymap.get("m1oneMonthAgo");
+            double m2oneMonthAgo = (double) cnMoneySupplymap.get("m2oneMonthAgo");
+            String oneMonthAgoDate = (String) cnMoneySupplymap.get("oneMonthAgoDate");
+            double MoneMonthAgo = m1oneMonthAgo - m2oneMonthAgo;
+
+            double m1twoMonthAgo = (double) cnMoneySupplymap.get("m1twoMonthAgo");
+            double m2twoMonthAgo = (double) cnMoneySupplymap.get("m2twoMonthAgo");
+            String twoMonthAgoDate = (String) cnMoneySupplymap.get("twoMonthAgoDate");
+            double MtwoMonthAgo = m1twoMonthAgo - m2twoMonthAgo;
+
+            if (MoneMonthAgo < 0) {
+                Text += "▶货币宽松量最新日期（" + oneMonthAgoDate + "），实际值为：" + new DecimalFormat("0.00%").format(MoneMonthAgo) + "\n\n";
+                Text += "▶货币宽松量前两个月（" + twoMonthAgoDate + "），实际值为：" + new DecimalFormat("0.00%").format(MtwoMonthAgo) + "\n\n";
                 Text += "\t结论：当前环境适合投资股票\n\n";
             } else {
-                Text += "▶货币宽松量最新数据日期为：" + latestMonthDateMoneySupply + "，实际值为：" + new DecimalFormat("0.00%").format(m) + "\n\n";
+                Text += "▶货币宽松量最新数据日期为：" + oneMonthAgoDate + "，实际值为：" + new DecimalFormat("0.00%").format(MoneMonthAgo) + "\n\n";
+                Text += "▶货币宽松量上两个月的日期为：" + twoMonthAgoDate + "，实际值为：" + new DecimalFormat("0.00%").format(MtwoMonthAgo) + "\n\n";
                 Text += "\t结论：当前环境不适合投资股票\n\n";
             }
+
+
             // SPX信号值----------------
             Map<String, Object> mapSPX = getTextSPX();
             double posSPX = (double) mapSPX.get("posSPX");
@@ -292,6 +302,13 @@ public class sendEmailUtils {
         return map;
     }
 
+    /**
+     * 获取货币供应量m1与m2
+     *
+     * @return
+     * @throws IOException
+     * @throws ParseException
+     */
     public static Map<String, Object> getTextCNMoneySupply() throws IOException, ParseException {
         Map<String, Object> map = new HashMap<>();
         InputStream inputStream = request_moneySupplyCN.class.getClassLoader().getResourceAsStream("indexReqParam.yml");
@@ -302,10 +319,15 @@ public class sendEmailUtils {
 //        String resultJson="{\"code\":1,\"message\":\"success\",\"data\":[{\"date\":\"2022-10-31T00:00:00+08:00\",\"type\":\"ms\",\"areaCode\":\"cn\",\"m\":{\"m2\":{\"t_y2y\":0.118465},\"m1\":{\"t_y2y\":0.057594}}},{\"date\":\"2022-09-30T00:00:00+08:00\",\"type\":\"ms\",\"areaCode\":\"cn\",\"m\":{\"m2\":{\"t_y2y\":0.121123},\"m1\":{\"t_y2y\":0.063859}}},{\"date\":\"2022-08-31T00:00:00+08:00\",\"type\":\"ms\",\"areaCode\":\"cn\",\"m\":{\"m2\":{\"t_y2y\":0.122304},\"m1\":{\"t_y2y\":0.060553}}},{\"date\":\"2022-07-31T00:00:00+08:00\",\"type\":\"ms\",\"areaCode\":\"cn\",\"m\":{\"m2\":{\"t_y2y\":0.119855},\"m1\":{\"t_y2y\":0.06684}}}]}";
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         moneySupplyCNResult_RootVO resultObj = (moneySupplyCNResult_RootVO) getResult_moneySupplyCN.getResultObj(resultJson);
-        moneySupplyCNParam_DataVO latestMonthData = resultObj.getData().get(0);
-        map.put("m1", latestMonthData.getM().getM1().getT_y2y());
-        map.put("m2", latestMonthData.getM().getM2().getT_y2y());
-        map.put("latestMonthDateMoneySupply", sdf.format(sdf.parse(latestMonthData.getDate())));
+        moneySupplyCNParam_DataVO oneMonthAgoData = resultObj.getData().get(0);
+        map.put("m1oneMonthAgo", oneMonthAgoData.getM().getM1().getT_y2y());
+        map.put("m2oneMonthAgo", oneMonthAgoData.getM().getM2().getT_y2y());
+        map.put("oneMonthAgoDate", sdf.format(sdf.parse(oneMonthAgoData.getDate())));
+
+        moneySupplyCNParam_DataVO twoMonthAgoData = resultObj.getData().get(1);
+        map.put("m1twoMonthAgo", twoMonthAgoData.getM().getM1().getT_y2y());
+        map.put("m2twoMonthAgo", twoMonthAgoData.getM().getM2().getT_y2y());
+        map.put("twoMonthAgoDate", sdf.format(sdf.parse(twoMonthAgoData.getDate())));
         return map;
     }
 

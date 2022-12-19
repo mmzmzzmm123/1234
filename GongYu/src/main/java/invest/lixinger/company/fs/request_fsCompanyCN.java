@@ -78,10 +78,10 @@ public class request_fsCompanyCN extends mybatisNoSpringUtils {
                 // 从数据库中找到代码和股票名称对应
                 if (stockCode.equals(codeAndNameList.get(j).getCode().substring(2))) {
                     Map<String, String> mapTemp = new HashMap<>();
-                    mapTemp.put("加权roe", df.format(m.getWroe().getT()));
-                    mapTemp.put("扣非roe", df.format(m.getRoe_adnrpatoshaopc().getT()));
-                    mapTemp.put("收入增长", df.format(ps.getOi().getT_y2y()));
-                    mapTemp.put("利润增长", df.format(ps.getNpadnrpatoshaopc().getT_y2y()));
+                    mapTemp.put("roe加权", df.format(m.getWroe().getT()));
+                    mapTemp.put("roe扣非", df.format(m.getRoe_adnrpatoshaopc().getT()));
+                    mapTemp.put("增长营收", df.format(ps.getOi().getT_y2y()));
+                    mapTemp.put("增长利润", df.format(ps.getNpadnrpatoshaopc().getT_y2y()));
                     mapTemp.put("日期", dateFormat);
                     mapTemp.put("名称", codeAndNameList.get(j).getName());
                     doubleFsMap.put(vo.getStockCode(), mapTemp);

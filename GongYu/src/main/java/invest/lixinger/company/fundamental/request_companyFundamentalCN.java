@@ -79,7 +79,7 @@ public class request_companyFundamentalCN extends mybatisNoSpringUtils {
             mapTemp.put("pbpos", df.format(vo.getPb_wo_gw_pos10()));
             mapTemp.put("pspos", df.format(vo.getPs_ttm_pos10()));
             mapTemp.put("市值/亿", String.valueOf(new DecimalFormat("0.00").format(vo.getMc() / 100000000)));
-            mapTemp.put("股息率", String.valueOf(new DecimalFormat("0.0000").format(vo.getDyr())));
+            mapTemp.put("股息率", df.format(vo.getDyr()));
             mapTemp.put("股价", String.valueOf(vo.getSp()));
             mapTemp.put("代码", String.valueOf(vo.getStockCode()));
             mapTemp.put("日期", dateFormat);
