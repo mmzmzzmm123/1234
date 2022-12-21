@@ -27,7 +27,16 @@ router.beforeEach((to, from, next) => {
           store.dispatch('GenerateRoutes').then(accessRoutes => {
             // 根据roles权限生成可访问的路由表
             router.addRoutes(accessRoutes) // 动态添加可访问路由表
-            next({ ...to, replace: true }) // hack方法 确保addRoutes已完成
+           // next({ ...to, replace: true }) // hack方法 确保addRoutes已完成
+            let path=''
+            path=accessRoutes[0].path + '/' + accessRoutes[0].children[0].path
+            if(from.path == '/login'){
+              //如果是从首页登录进来，跳转到第一个路由页面
+              next({ path, replace: true }) // hack方法 确保addRoutes已完成
+            }else{
+              //如果是点击了一个菜单，然后刷新，保持在当前页面
+              next({ ...to, replace: true }) // hack方法 确保addRoutes已完成
+            }
           })
         }).catch(err => {
             store.dispatch('LogOut').then(() => {
