@@ -4,14 +4,14 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 	
-    <groupId>com.longjian</groupId>
-    <artifactId>longjian</artifactId>
+    <groupId>com.langjian</groupId>
+    <artifactId>langjian</artifactId>
     <version>3.8.4</version>
-    <name>longjian</name>
+    <name>langjian</name>
     <description>思近致远管理系统</description>
 
     <properties>
-        <longjian.version>3.8.4</longjian.version>
+        <langjian.version>3.8.4</langjian.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <java.version>1.8</java.version>
@@ -142,50 +142,50 @@
             </dependency>
 
             <!-- 定时任务-->
-            <dependency>
-                <groupId>com.longjian</groupId>
-                <artifactId>longjian-quartz</artifactId>
-                <version>${longjian.version}</version>
+       <dependency>
+                <groupId>com.langjian</groupId>
+                <artifactId>langjian-quartz</artifactId>
+                <version>${langjian.version}</version>
             </dependency>
 
-            <!-- 代码生成-->
+
             <dependency>
-                <groupId>com.longjian</groupId>
-                <artifactId>longjian-generator</artifactId>
-                <version>${longjian.version}</version>
+                <groupId>com.langjian</groupId>
+                <artifactId>langjian-generator</artifactId>
+                <version>${langjian.version}</version>
             </dependency>
 
-            <!-- 核心模块-->
+           <!-- 核心模块-->
             <dependency>
-                <groupId>com.longjian</groupId>
-                <artifactId>longjian-framework</artifactId>
-                <version>${longjian.version}</version>
+                <groupId>com.langjian</groupId>
+                <artifactId>langjian-framework</artifactId>
+                <version>${langjian.version}</version>
             </dependency>
 
             <!-- 系统模块-->
             <dependency>
-                <groupId>com.longjian</groupId>
-                <artifactId>longjian-system</artifactId>
-                <version>${longjian.version}</version>
+                <groupId>com.langjian</groupId>
+                <artifactId>langjian-system</artifactId>
+                <version>${langjian.version}</version>
             </dependency>
 
             <!-- 通用工具-->
             <dependency>
-                <groupId>com.longjian</groupId>
-                <artifactId>longjian-common</artifactId>
-                <version>${longjian.version}</version>
+                <groupId>com.langjian</groupId>
+                <artifactId>langjian-common</artifactId>
+                <version>${langjian.version}</version>
             </dependency>
 
         </dependencies>
     </dependencyManagement>
 
     <modules>
-        <module>longjian-admin</module>
-        <module>longjian-framework</module>
-        <module>longjian-system</module>
-        <module>longjian-quartz</module>
-        <module>longjian-generator</module>
-        <module>longjian-common</module>
+        <module>langjian-admin</module>
+        <module>langjian-framework</module>
+        <module>langjian-system</module>
+        <module>langjian-quartz</module>
+        <module>langjian-generator</module>
+        <module>langjian-common</module>
     </modules>
     <packaging>pom</packaging>
 
