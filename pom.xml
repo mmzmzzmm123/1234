@@ -2,18 +2,16 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-	<modelVersion>4.0.0</modelVersion>
+    <modelVersion>4.0.0</modelVersion>
 	
-    <groupId>com.ruoyi</groupId>
-    <artifactId>ruoyi</artifactId>
+    <groupId>com.langjian</groupId>
+    <artifactId>langjian</artifactId>
     <version>3.8.4</version>
+    <name>langjian</name>
+    <description>思近致远管理系统</description>
 
-    <name>ruoyi</name>
-    <url>http://www.ruoyi.vip</url>
-    <description>若依管理系统</description>
-    
     <properties>
-        <ruoyi.version>3.8.4</ruoyi.version>
+        <langjian.version>3.8.4</langjian.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <java.version>1.8</java.version>
@@ -144,50 +142,50 @@
             </dependency>
 
             <!-- 定时任务-->
-            <dependency>
-                <groupId>com.ruoyi</groupId>
-                <artifactId>ruoyi-quartz</artifactId>
-                <version>${ruoyi.version}</version>
+       <dependency>
+                <groupId>com.langjian</groupId>
+                <artifactId>langjian-quartz</artifactId>
+                <version>${langjian.version}</version>
             </dependency>
 
-            <!-- 代码生成-->
+
             <dependency>
-                <groupId>com.ruoyi</groupId>
-                <artifactId>ruoyi-generator</artifactId>
-                <version>${ruoyi.version}</version>
+                <groupId>com.langjian</groupId>
+                <artifactId>langjian-generator</artifactId>
+                <version>${langjian.version}</version>
             </dependency>
 
-            <!-- 核心模块-->
+           <!-- 核心模块-->
             <dependency>
-                <groupId>com.ruoyi</groupId>
-                <artifactId>ruoyi-framework</artifactId>
-                <version>${ruoyi.version}</version>
+                <groupId>com.langjian</groupId>
+                <artifactId>langjian-framework</artifactId>
+                <version>${langjian.version}</version>
             </dependency>
 
             <!-- 系统模块-->
             <dependency>
-                <groupId>com.ruoyi</groupId>
-                <artifactId>ruoyi-system</artifactId>
-                <version>${ruoyi.version}</version>
+                <groupId>com.langjian</groupId>
+                <artifactId>langjian-system</artifactId>
+                <version>${langjian.version}</version>
             </dependency>
 
             <!-- 通用工具-->
             <dependency>
-                <groupId>com.ruoyi</groupId>
-                <artifactId>ruoyi-common</artifactId>
-                <version>${ruoyi.version}</version>
+                <groupId>com.langjian</groupId>
+                <artifactId>langjian-common</artifactId>
+                <version>${langjian.version}</version>
             </dependency>
 
         </dependencies>
     </dependencyManagement>
 
     <modules>
-        <module>ruoyi-admin</module>
-        <module>ruoyi-framework</module>
-        <module>ruoyi-system</module>
-        <module>ruoyi-quartz</module>
-        <module>ruoyi-generator</module>
-        <module>ruoyi-common</module>
+        <module>langjian-admin</module>
+        <module>langjian-framework</module>
+        <module>langjian-system</module>
+        <module>langjian-quartz</module>
+        <module>langjian-generator</module>
+        <module>langjian-common</module>
     </modules>
     <packaging>pom</packaging>
 
