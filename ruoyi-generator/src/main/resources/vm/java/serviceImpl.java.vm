@@ -7,6 +7,9 @@ import com.ruoyi.common.utils.DateUtils;
 #break
 #end
 #end
+
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 #if($table.sub)
@@ -26,9 +29,9 @@ import ${packageName}.service.I${ClassName}Service;
  * @date ${datetime}
  */
 @Service
-public class ${ClassName}ServiceImpl implements I${ClassName}Service 
+@AllArgsConstructor
+public class ${ClassName}ServiceImpl  extends ServiceImpl<${ClassName}Mapper, ${ClassName}> implements I${ClassName}Service
 {
-    @Autowired
     private ${ClassName}Mapper ${className}Mapper;
 
     /**
