@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.AppEntertimerationMapper">
+    
+    <resultMap type="AppEntertimeration" id="AppEntertimerationResult">
+        <result property="mId"    column="m_id"    />
+        <result property="mTimeQuantum"    column="m_time_quantum"    />
+        <result property="mTimeQuantuNum"    column="m_time_quantu_num"    />
+        <result property="mTimeQuantueRation"    column="m_time_quantue_ration"    />
+    </resultMap>
+
+    <sql id="selectAppEntertimerationVo">
+        select m_id, m_time_quantum, m_time_quantu_num, m_time_quantue_ration from app_enterTimeRation
+    </sql>
+
+    <select id="selectAppEntertimerationList" parameterType="AppEntertimeration" resultMap="AppEntertimerationResult">
+        <include refid="selectAppEntertimerationVo"/>
+        <where>  
+            <if test="mTimeQuantum != null  and mTimeQuantum != ''"> and m_time_quantum = #{mTimeQuantum}</if>
+            <if test="mTimeQuantuNum != null "> and m_time_quantu_num = #{mTimeQuantuNum}</if>
+            <if test="mTimeQuantueRation != null "> and m_time_quantue_ration = #{mTimeQuantueRation}</if>
+        </where>
+    </select>
+    
+    <select id="selectAppEntertimerationByMId" parameterType="Long" resultMap="AppEntertimerationResult">
+        <include refid="selectAppEntertimerationVo"/>
+        where m_id = #{mId}
+    </select>
+        
+    <insert id="insertAppEntertimeration" parameterType="AppEntertimeration" useGeneratedKeys="true" keyProperty="mId">
+        insert into app_enterTimeRation
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="mTimeQuantum != null">m_time_quantum,</if>
+            <if test="mTimeQuantuNum != null">m_time_quantu_num,</if>
+            <if test="mTimeQuantueRation != null">m_time_quantue_ration,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="mTimeQuantum != null">#{mTimeQuantum},</if>
+            <if test="mTimeQuantuNum != null">#{mTimeQuantuNum},</if>
+            <if test="mTimeQuantueRation != null">#{mTimeQuantueRation},</if>
+         </trim>
+    </insert>
+
+    <update id="updateAppEntertimeration" parameterType="AppEntertimeration">
+        update app_enterTimeRation
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="mTimeQuantum != null">m_time_quantum = #{mTimeQuantum},</if>
+            <if test="mTimeQuantuNum != null">m_time_quantu_num = #{mTimeQuantuNum},</if>
+            <if test="mTimeQuantueRation != null">m_time_quantue_ration = #{mTimeQuantueRation},</if>
+        </trim>
+        where m_id = #{mId}
+    </update>
+
+    <delete id="deleteAppEntertimerationByMId" parameterType="Long">
+        delete from app_enterTimeRation where m_id = #{mId}
+    </delete>
+
+    <delete id="deleteAppEntertimerationByMIds" parameterType="String">
+        delete from app_enterTimeRation where m_id in 
+        <foreach item="mId" collection="array" open="(" separator="," close=")">
+            #{mId}
+        </foreach>
+    </delete>
+</mapper>

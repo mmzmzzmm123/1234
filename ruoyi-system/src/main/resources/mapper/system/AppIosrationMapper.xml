@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.AppIosrationMapper">
+    
+    <resultMap type="AppIosration" id="AppIosrationResult">
+        <result property="mId"    column="m_id"    />
+        <result property="mIosType"    column="m_ios_type"    />
+        <result property="mIosNum"    column="m_ios_num"    />
+        <result property="mIosRation"    column="m_ios_ration"    />
+    </resultMap>
+
+    <sql id="selectAppIosrationVo">
+        select m_id, m_ios_type, m_ios_num, m_ios_ration from app_iosRation
+    </sql>
+
+    <select id="selectAppIosrationList" parameterType="AppIosration" resultMap="AppIosrationResult">
+        <include refid="selectAppIosrationVo"/>
+        <where>  
+            <if test="mIosType != null  and mIosType != ''"> and m_ios_type = #{mIosType}</if>
+            <if test="mIosNum != null "> and m_ios_num = #{mIosNum}</if>
+            <if test="mIosRation != null "> and m_ios_ration = #{mIosRation}</if>
+        </where>
+    </select>
+    
+    <select id="selectAppIosrationByMId" parameterType="Long" resultMap="AppIosrationResult">
+        <include refid="selectAppIosrationVo"/>
+        where m_id = #{mId}
+    </select>
+        
+    <insert id="insertAppIosration" parameterType="AppIosration" useGeneratedKeys="true" keyProperty="mId">
+        insert into app_iosRation
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="mIosType != null">m_ios_type,</if>
+            <if test="mIosNum != null">m_ios_num,</if>
+            <if test="mIosRation != null">m_ios_ration,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="mIosType != null">#{mIosType},</if>
+            <if test="mIosNum != null">#{mIosNum},</if>
+            <if test="mIosRation != null">#{mIosRation},</if>
+         </trim>
+    </insert>
+
+    <update id="updateAppIosration" parameterType="AppIosration">
+        update app_iosRation
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="mIosType != null">m_ios_type = #{mIosType},</if>
+            <if test="mIosNum != null">m_ios_num = #{mIosNum},</if>
+            <if test="mIosRation != null">m_ios_ration = #{mIosRation},</if>
+        </trim>
+        where m_id = #{mId}
+    </update>
+
+    <delete id="deleteAppIosrationByMId" parameterType="Long">
+        delete from app_iosRation where m_id = #{mId}
+    </delete>
+
+    <delete id="deleteAppIosrationByMIds" parameterType="String">
+        delete from app_iosRation where m_id in 
+        <foreach item="mId" collection="array" open="(" separator="," close=")">
+            #{mId}
+        </foreach>
+    </delete>
+</mapper>
