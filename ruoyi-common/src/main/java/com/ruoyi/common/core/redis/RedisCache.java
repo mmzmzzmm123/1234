@@ -354,7 +354,7 @@ public class RedisCache
      * @param max
      * @return
      */
-    public Set<String> zSetSortRange(String key, int min, int max) {
+    public Set<String> zSetSortRange(String key, double min, double max) {
         return redisTemplate.opsForZSet().rangeByScore(key, min, max);
     }
 }
