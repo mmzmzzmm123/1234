@@ -328,7 +328,7 @@ public class RedisCache
      * @param end
      * @return
      */
-    public Set<ZSetOperations.TypedTuple<String>> rangeWithScore(String key, int start, int end) {
+    public Set<ZSetOperations.TypedTuple<String>> zSetRangeWithScore(String key, int start, int end) {
         return redisTemplate.opsForZSet().rangeWithScores(key, start, end);
     }
 
