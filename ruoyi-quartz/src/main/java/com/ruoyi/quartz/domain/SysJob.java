@@ -54,6 +54,10 @@ public class SysJob extends BaseEntity
     @Excel(name = "任务状态", readConverterExp = "0=正常,1=暂停")
     private String status;
 
+    /** 启用日志（0正常 1禁止） */
+    @Excel(name = "启用日志", readConverterExp = "0=正常,1=禁止")
+    private String enabelLog;
+
     public Long getJobId()
     {
         return jobId;
@@ -150,6 +154,14 @@ public class SysJob extends BaseEntity
         this.status = status;
     }
 
+    public String getEnabelLog() {
+        return enabelLog;
+    }
+
+    public void setEnabelLog(String enabelLog) {
+        this.enabelLog = enabelLog;
+    }
+
     @Override
     public String toString() {
         return new ToStringBuilder(this,ToStringStyle.MULTI_LINE_STYLE)
@@ -161,6 +173,7 @@ public class SysJob extends BaseEntity
             .append("misfirePolicy", getMisfirePolicy())
             .append("concurrent", getConcurrent())
             .append("status", getStatus())
+            .append("enabelLog", getEnabelLog())
             .append("createBy", getCreateBy())
             .append("createTime", getCreateTime())
             .append("updateBy", getUpdateBy())

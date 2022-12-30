@@ -102,6 +102,11 @@
       </el-table-column>
       <el-table-column label="调用目标字符串" align="center" prop="invokeTarget" :show-overflow-tooltip="true" />
       <el-table-column label="cron执行表达式" align="center" prop="cronExpression" :show-overflow-tooltip="true" />
+      <el-table-column label="启用日志" align="center">
+        <template slot-scope="scope">
+          <i v-if="scope.row.enabelLog == '0'">√</i>
+        </template>
+      </el-table-column>
       <el-table-column label="状态" align="center">
         <template slot-scope="scope">
           <el-switch
@@ -209,7 +214,7 @@
               </el-radio-group>
             </el-form-item>
           </el-col>
-          <el-col :span="12">
+          <el-col :span="8">
             <el-form-item label="是否并发" prop="concurrent">
               <el-radio-group v-model="form.concurrent" size="small">
                 <el-radio-button label="0">允许</el-radio-button>
@@ -217,14 +222,22 @@
               </el-radio-group>
             </el-form-item>
           </el-col>
-          <el-col :span="12">
+          <el-col :span="8">
             <el-form-item label="状态">
-              <el-radio-group v-model="form.status">
-                <el-radio
+              <el-radio-group v-model="form.status" size="small">
+                <el-radio-button
                   v-for="dict in dict.type.sys_job_status"
                   :key="dict.value"
                   :label="dict.value"
-                >{{dict.label}}</el-radio>
+                >{{dict.label}}</el-radio-button>
+              </el-radio-group>
+            </el-form-item>
+          </el-col>
+          <el-col :span="8">
+            <el-form-item label="记录日志" prop="enabelLog">
+              <el-radio-group v-model="form.enabelLog" size="small">
+                <el-radio-button label="0">启用</el-radio-button>
+                <el-radio-button label="1">禁止</el-radio-button>
               </el-radio-group>
             </el-form-item>
           </el-col>
@@ -453,7 +466,7 @@ export default {
     },
     /** 任务日志列表查询 */
     handleJobLog(row) {
-      const jobId = row.jobId || 0;
+      const jobId = row.jobId || 0;open
       this.$router.push('/monitor/job-log/index/' + jobId)
     },
     /** 新增按钮操作 */
