@@ -316,7 +316,7 @@ public class RedisCache {
      * @param end
      * @return
      */
-    public Set<String> zSetRange(String key, int start, int end) {
+    public Set<String> zSetRange(String key, long start, long end) {
         return redisTemplate.opsForZSet().range(key, start, end);
     }
 
@@ -328,7 +328,7 @@ public class RedisCache {
      * @param end
      * @return
      */
-    public Set<ZSetOperations.TypedTuple<String>> zSetRangeWithScore(String key, int start, int end) {
+    public Set<ZSetOperations.TypedTuple<String>> zSetRangeWithScore(String key, long start, long end) {
         return redisTemplate.opsForZSet().rangeWithScores(key, start, end);
     }
 
@@ -342,7 +342,7 @@ public class RedisCache {
      * @param end
      * @return
      */
-    public Set<String> zSetRevRange(String key, int start, int end) {
+    public Set<String> zSetRevRange(String key, long start, long end) {
         return redisTemplate.opsForZSet().reverseRange(key, start, end);
     }
 
@@ -357,4 +357,15 @@ public class RedisCache {
     public Set<String> zSetSortRange(String key, double min, double max) {
         return redisTemplate.opsForZSet().rangeByScore(key, min, max);
     }
+    /**
+     * 移除有序集中，指定分数（score）区间内的所有成员 Zremrangebyscore
+     *
+     * @param key
+     * @param min
+     * @param max
+     */
+    public long removeRangeByScore(String key, double min, double max) {
+       return redisTemplate.opsForZSet().removeRangeByScore(key, min,max);
+    }
+
 }
