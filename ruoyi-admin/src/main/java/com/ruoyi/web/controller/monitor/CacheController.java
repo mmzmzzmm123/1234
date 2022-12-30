@@ -45,6 +45,8 @@ public class CacheController {
         caches.add(new SysCache(CacheConstants.PWD_ERR_CNT_KEY, "密码错误次数"));
         caches.add(new SysCache(CacheConstants.USER_KEY, "用户信息"));
         caches.add(new SysCache(CacheConstants.USER_PERM_KEY, "用户权限"));
+        caches.add(new SysCache(CacheConstants.USER_UNREAD_COUNT_KEY, "用户未读消息数量"));
+
     }
 
     @PreAuthorize("@ss.hasPermi('monitor:cache:list')")
