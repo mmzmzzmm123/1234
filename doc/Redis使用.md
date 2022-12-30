@@ -45,6 +45,8 @@ spring 节点下
 ```
 3, windows 下启动redis
 
+redis-server.exe redis.windows.conf
+
 cmd 到 D:\tools\Redis-x64-3.2.100 目录
 测试
     先 redis-cli 
