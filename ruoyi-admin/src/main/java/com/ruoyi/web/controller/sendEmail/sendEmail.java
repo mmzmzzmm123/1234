@@ -23,7 +23,7 @@ public class sendEmail {
 
     // 每个5秒发送邮件
 //    @Scheduled(cron = "0/15 * * * * *")
-    @Scheduled(cron = "0 0 16 ? * *")
+    @Scheduled(cron = "0 00 16 ? * *")
     public void sendSimpleMail() {
         try {
             Map<String, String> map = getText();

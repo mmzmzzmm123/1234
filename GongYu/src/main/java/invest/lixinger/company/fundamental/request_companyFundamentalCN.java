@@ -111,16 +111,16 @@ public class request_companyFundamentalCN extends mybatisNoSpringUtils {
         for (int i = 0; i < voList.size(); i++) {
             String StockCode = voList.get(i).getStockCode();
             Map<String, String> mapTemp = doubleFundMap.get(StockCode);
-            mapTemp.put("rankFund", String.valueOf(Integer.parseInt(doubleFundMap.get(voList.get(i).getStockCode()).get("rankFund")) + i));
-            doubleFundMap.put(voList.get(i).getStockCode(), mapTemp);
+            mapTemp.put("rankFund", String.valueOf(Integer.parseInt(doubleFundMap.get(StockCode).get("rankFund")) + i));
+            doubleFundMap.put(StockCode, mapTemp);
         }
 
         voList.sort(Comparator.comparing(companyFundamentalCNResult_DataVO::getPs_ttm));
         for (int i = 0; i < voList.size(); i++) {
             String StockCode = voList.get(i).getStockCode();
             Map<String, String> mapTemp = doubleFundMap.get(StockCode);
-            mapTemp.put("rankFund", String.valueOf(Integer.parseInt(doubleFundMap.get(voList.get(i).getStockCode()).get("rankFund")) + i));
-            doubleFundMap.put(voList.get(i).getStockCode(), mapTemp);
+            mapTemp.put("rankFund", String.valueOf(Integer.parseInt(doubleFundMap.get(StockCode).get("rankFund")) + i));
+            doubleFundMap.put(StockCode, mapTemp);
         }
         return getdoubleCompanyPosMapSort(voList, doubleFundMap);
     }
@@ -144,14 +144,14 @@ public class request_companyFundamentalCN extends mybatisNoSpringUtils {
             String StockCode = voList.get(i).getStockCode();
             Map<String, String> mapTemp = doubleFundMap.get(StockCode);
             mapTemp.put("rankPos", String.valueOf(Integer.parseInt(doubleFundMap.get(StockCode).get("rankPos")) + i));
-            doubleFundMap.put(voList.get(i).getStockCode(), mapTemp);
+            doubleFundMap.put(StockCode, mapTemp);
         }
         voList.sort(Comparator.comparing(companyFundamentalCNResult_DataVO::getPs_ttm_pos10));
         for (int i = 0; i < voList.size(); i++) {
             String StockCode = voList.get(i).getStockCode();
             Map<String, String> mapTemp = doubleFundMap.get(StockCode);
             mapTemp.put("rankPos", String.valueOf(Integer.parseInt(doubleFundMap.get(StockCode).get("rankPos")) + i));
-            doubleFundMap.put(voList.get(i).getStockCode(), mapTemp);
+            doubleFundMap.put(StockCode, mapTemp);
         }
         return doubleFundMap;
     }

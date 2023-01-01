@@ -165,26 +165,26 @@ public class sendEmailUtils {
             Map<String, String> fundamentalMap = getTextFundamentalCN();
 
             double resultFundamental = Double.parseDouble(fundamentalMap.get("resultFundamental"));
-            String Text = null;
+            String Text = "▶现阶段：\n";
             double result100 = resultFundamental * 100;
-            String Textzhaiquan = "▶现阶段，将资产投资债券、货币基金，利率高则买债券、黄金，利率低则买货币基金\n\n";
-            String Textgupiao = "▶基金备选池：科创信息、科创创业50、科创50、创业板全指、全指信息、TMT、中创400、中证500、中证军工、国证2000、全指医疗、中小企业300、中概互联网\n\n";
-            Textgupiao += "▶股票备选池：证券 > 银行";
+            String Textzhaiquan = "◆将资产投资债券、货币基金，利率高则买债券、黄金，利率低则买货币基金\n\n";
+            String Textgupiao = "◆基金备选池：科创信息、科创创业50、科创50、创业板全指、全指信息、TMT、中创400、中证500、中证军工、国证2000、全指医疗、中小企业300、中概互联网\n";
+            Textgupiao += "◆股票备选池：证券 > 银行\n\n";
             if (result100 > 45) {
-                Text = Textzhaiquan;
+                Text += Textzhaiquan;
             } else if (35 < result100 && result100 < 45) {
-                Text = Textzhaiquan;
+                Text += Textzhaiquan;
             } else if (25 < result100 && result100 < 35) {
-                Text = "\t◆定投总资金 通过 197 个周定投，其中定投总资金 = 总资金 - 已投入\n\n";
-                Text += "\t◆股票基金以大公司为主";
+                Text += "\t◆定投总资金 通过 197 个周定投，其中定投总资金 = 总资金 - 已投入\n";
+                Text += "\t◆股票基金以大公司、主动型基金为主\n\n";
             } else if (15 < result100 && result100 < 25) {
-                Text = "\t◆定投总资金 通过 96 个周定投，其中定投总资金 = 总资金 - 已投入\n\n";
-                Text += "\t◆股票基金以中型公司为主";
+                Text += "\t◆定投总资金 通过 96 个周定投，其中定投总资金 = 总资金 - 已投入\n";
+                Text += "\t◆股票基金以中型公司、主动型基金为主\n\n";
             } else if (10 < result100 && result100 < 15) {
-                Text = "\t◆定投总资金 通过 18 个周定投，其中定投总资金 = 总资金 - 已投入\n\n";
+                Text += "\t◆定投总资金 通过 18 个周定投，其中定投总资金 = 总资金 - 已投入\n";
                 Text += Textgupiao;
             } else if (5 < result100 && result100 < 10) {
-                Text = "\t◆梭哈梭哈梭哈梭哈梭哈梭哈梭哈梭哈梭哈梭哈梭哈梭哈梭哈\n\n";
+                Text += "\t◆梭哈梭哈梭哈梭哈梭哈梭哈梭哈梭哈梭哈梭哈梭哈梭哈梭哈\n";
                 Text += "\t◆现在离最低点可能还有10~20%的幅度，但为不错过机会，我将永远相信历史会简单的重复\n\n";
                 Text += Textgupiao;
             }
@@ -211,14 +211,12 @@ public class sendEmailUtils {
             double m2twoMonthAgo = (double) cnMoneySupplymap.get("m2twoMonthAgo");
             String twoMonthAgoDate = (String) cnMoneySupplymap.get("twoMonthAgoDate");
             double MtwoMonthAgo = m1twoMonthAgo - m2twoMonthAgo;
-
+            Text += "▶货币宽松量：\n";
+            Text += "\t◆最新数据（" + oneMonthAgoDate + "），实际值为：" + new DecimalFormat("0.00%").format(MoneMonthAgo) + "\n";
+            Text += "\t◆上一次（" + twoMonthAgoDate + "），实际值为：" + new DecimalFormat("0.00%").format(MtwoMonthAgo) + "\n";
             if (MoneMonthAgo < 0) {
-                Text += "▶货币宽松量最新日期（" + oneMonthAgoDate + "），实际值为：" + new DecimalFormat("0.00%").format(MoneMonthAgo) + "\n\n";
-                Text += "▶货币宽松量前两个月（" + twoMonthAgoDate + "），实际值为：" + new DecimalFormat("0.00%").format(MtwoMonthAgo) + "\n\n";
                 Text += "\t结论：当前环境适合投资股票\n\n";
             } else {
-                Text += "▶货币宽松量最新数据日期为：" + oneMonthAgoDate + "，实际值为：" + new DecimalFormat("0.00%").format(MoneMonthAgo) + "\n\n";
-                Text += "▶货币宽松量上两个月的日期为：" + twoMonthAgoDate + "，实际值为：" + new DecimalFormat("0.00%").format(MtwoMonthAgo) + "\n\n";
                 Text += "\t结论：当前环境不适合投资股票\n\n";
             }
 
@@ -360,7 +358,7 @@ public class sendEmailUtils {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 
         Map<String, String> map = getText();
-        System.out.println("map.get(subject)===" + map.get("dateHSI"));
+        System.out.println("map.get(subject)===" + map.get("subject"));
         System.out.println("map.get(Text)===" + map.get("Text"));
 //        Map<String, Object> map = getTextHSI();
 //        System.out.println("map.get(Text)===" + map.get("dateHSI"));
