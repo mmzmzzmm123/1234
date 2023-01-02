@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.AppCityrationMapper">
+    
+    <resultMap type="AppCityration" id="AppCityrationResult">
+        <result property="mId"    column="m_id"    />
+        <result property="mCityName"    column="m_city_name"    />
+        <result property="mNum"    column="m_num"    />
+        <result property="mRation"    column="m_ration"    />
+    </resultMap>
+
+    <sql id="selectAppCityrationVo">
+        select m_id, m_city_name, m_num, m_ration from app_cityRation
+    </sql>
+
+    <select id="selectAppCityrationList" parameterType="AppCityration" resultMap="AppCityrationResult">
+        <include refid="selectAppCityrationVo"/>
+        <where>  
+            <if test="mCityName != null  and mCityName != ''"> and m_city_name like concat('%', #{mCityName}, '%')</if>
+            <if test="mNum != null "> and m_num = #{mNum}</if>
+            <if test="mRation != null "> and m_ration = #{mRation}</if>
+        </where>
+    </select>
+    
+    <select id="selectAppCityrationByMId" parameterType="Long" resultMap="AppCityrationResult">
+        <include refid="selectAppCityrationVo"/>
+        where m_id = #{mId}
+    </select>
+        
+    <insert id="insertAppCityration" parameterType="AppCityration" useGeneratedKeys="true" keyProperty="mId">
+        insert into app_cityRation
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="mCityName != null">m_city_name,</if>
+            <if test="mNum != null">m_num,</if>
+            <if test="mRation != null">m_ration,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="mCityName != null">#{mCityName},</if>
+            <if test="mNum != null">#{mNum},</if>
+            <if test="mRation != null">#{mRation},</if>
+         </trim>
+    </insert>
+
+    <update id="updateAppCityration" parameterType="AppCityration">
+        update app_cityRation
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="mCityName != null">m_city_name = #{mCityName},</if>
+            <if test="mNum != null">m_num = #{mNum},</if>
+            <if test="mRation != null">m_ration = #{mRation},</if>
+        </trim>
+        where m_id = #{mId}
+    </update>
+
+    <delete id="deleteAppCityrationByMId" parameterType="Long">
+        delete from app_cityRation where m_id = #{mId}
+    </delete>
+
+    <delete id="deleteAppCityrationByMIds" parameterType="String">
+        delete from app_cityRation where m_id in 
+        <foreach item="mId" collection="array" open="(" separator="," close=")">
+            #{mId}
+        </foreach>
+    </delete>
+</mapper>

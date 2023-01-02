@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.AppNetrationMapper">
+    
+    <resultMap type="AppNetration" id="AppNetrationResult">
+        <result property="mId"    column="m_id"    />
+        <result property="mNetType"    column="m_net_type"    />
+        <result property="mNetRation"    column="m_net_ration"    />
+    </resultMap>
+
+    <sql id="selectAppNetrationVo">
+        select m_id, m_net_type, m_net_ration from app_netRation
+    </sql>
+
+    <select id="selectAppNetrationList" parameterType="AppNetration" resultMap="AppNetrationResult">
+        <include refid="selectAppNetrationVo"/>
+        <where>  
+            <if test="mNetType != null  and mNetType != ''"> and m_net_type = #{mNetType}</if>
+            <if test="mNetRation != null "> and m_net_ration = #{mNetRation}</if>
+        </where>
+    </select>
+    
+    <select id="selectAppNetrationByMId" parameterType="Long" resultMap="AppNetrationResult">
+        <include refid="selectAppNetrationVo"/>
+        where m_id = #{mId}
+    </select>
+        
+    <insert id="insertAppNetration" parameterType="AppNetration" useGeneratedKeys="true" keyProperty="mId">
+        insert into app_netRation
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="mNetType != null">m_net_type,</if>
+            <if test="mNetRation != null">m_net_ration,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="mNetType != null">#{mNetType},</if>
+            <if test="mNetRation != null">#{mNetRation},</if>
+         </trim>
+    </insert>
+
+    <update id="updateAppNetration" parameterType="AppNetration">
+        update app_netRation
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="mNetType != null">m_net_type = #{mNetType},</if>
+            <if test="mNetRation != null">m_net_ration = #{mNetRation},</if>
+        </trim>
+        where m_id = #{mId}
+    </update>
+
+    <delete id="deleteAppNetrationByMId" parameterType="Long">
+        delete from app_netRation where m_id = #{mId}
+    </delete>
+
+    <delete id="deleteAppNetrationByMIds" parameterType="String">
+        delete from app_netRation where m_id in 
+        <foreach item="mId" collection="array" open="(" separator="," close=")">
+            #{mId}
+        </foreach>
+    </delete>
+</mapper>
