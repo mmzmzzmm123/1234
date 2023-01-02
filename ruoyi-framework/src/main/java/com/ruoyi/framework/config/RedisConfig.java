@@ -78,7 +78,7 @@ public class RedisConfig extends CachingConfigurerSupport {
     public CacheManager cacheManager(LettuceConnectionFactory lettuceConnectionFactory) {
 
         RedisCacheConfiguration config = RedisCacheConfiguration.defaultCacheConfig()
-                .entryTtl(Duration.ofHours(1))
+                .entryTtl(Duration.ofHours(2))
                 //变双冒号为单冒号
                 .computePrefixWith(name -> name)
                 .serializeKeysWith(RedisSerializationContext.SerializationPair.fromSerializer(new StringRedisSerializer()))
