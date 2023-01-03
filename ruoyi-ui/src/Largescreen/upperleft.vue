@@ -1,91 +1,98 @@
 <template>
   <div>
-    <h2>
-      柱状图-行业 <a href="javascript:;" @click="initCharts(0)">2019</a>
-      <a href="javacript:;" @click="initCharts(1)"> 2020</a>
-    </h2>
+    <h2>各个时间段人数</h2>
     <div ref="barChart" class="chart" />
     <div class="panel-footer" />
   </div>
 </template>
 
 <script>
+import { listEnterTimeRation } from "@/api/system/enterTimeRation";
 export default {
   name: "AppMain",
   data() {
     return {
-      dataAll: [
-        { year: "2019", data: [200, 300, 300, 900, 1500, 1200, 600] },
-        { year: "2020", data: [300, 400, 350, 800, 1800, 1400, 700] },
-      ],
+      enterTimelist: [],
     };
   },
   mounted() {
-    this.initCharts(0);
+    listEnterTimeRation().then((res) => {
+      this.enterTimelist = res.rows;
+      this.initCharts();
+    });
   },
   methods: {
-    initCharts(index) {
-      var list = this.dataAll[index].data;
+    initCharts() {
       const myChart = this.$echarts.init(this.$refs.barChart);
       // 指定配置和数据
       var option = {
-        color: ["#2f89cf"],
         tooltip: {
           trigger: "axis",
           axisPointer: {
-            // 坐标轴指示器，坐标轴触发有效
-            type: "shadow", // 默认为直线，可选为：'line' | 'shadow'
+            lineStyle: {
+              color: "#dddc6b",
+            },
+          },
+        },
+        legend: {
+          top: "0%",
+          textStyle: {
+            color: "rgba(255,255,255,.5)",
+            fontSize: "12",
           },
         },
         grid: {
-          left: "0%",
-          top: "10px",
-          right: "0%",
-          bottom: "4%",
+          left: "10",
+          top: "30",
+          right: "10",
+          bottom: "10",
           containLabel: true,
         },
+
         xAxis: [
           {
             type: "category",
-            data: [
-              "旅游行业",
-              "教育培训",
-              "游戏行业",
-              "医疗行业",
-              "电商行业",
-              "社交行业",
-              "金融行业",
-            ],
-            axisTick: {
-              alignWithLabel: true,
-            },
+            boundaryGap: false,
             axisLabel: {
               textStyle: {
                 color: "rgba(255,255,255,.6)",
-                fontSize: "12",
-              },
-            },
-            axisLine: {
-              show: false,
-            },
-          },
-        ],
-        yAxis: [
-          {
-            type: "value",
-            axisLabel: {
-              textStyle: {
-                color: "rgba(255,255,255,.6)",
-                fontSize: "12",
+                fontSize: 12,
               },
             },
             axisLine: {
               lineStyle: {
-                color: "rgba(255,255,255,.1)",
-                // width: 1,
-                // type: "solid"
+                color: "rgba(255,255,255,.2)",
               },
             },
+
+            data: this.enterTimelist.map((item) => {
+              return item.mTimeQuantum.match(/(\S*)-/)[1] + "时";
+            }),
+          },
+          {
+            axisPointer: { show: false },
+            axisLine: { show: false },
+            position: "bottom",
+            offset: 20,
+          },
+        ],
+
+        yAxis: [
+          {
+            type: "value",
+            axisTick: { show: false },
+            axisLine: {
+              lineStyle: {
+                color: "rgba(255,255,255,.1)",
+              },
+            },
+            axisLabel: {
+              textStyle: {
+                color: "rgba(255,255,255,.6)",
+                fontSize: 12,
+              },
+            },
+
             splitLine: {
               lineStyle: {
                 color: "rgba(255,255,255,.1)",
@@ -95,16 +102,55 @@ export default {
         ],
         series: [
           {
-            name: "直接访问",
-            type: "bar",
-            barWidth: "35%",
-            data: list,
-            itemStyle: {
-              barBorderRadius: 5,
+            name: "人数",
+            type: "line",
+            smooth: true,
+            symbol: "circle",
+            symbolSize: 5,
+            showSymbol: false,
+            lineStyle: {
+              normal: {
+                color: "#00d887",
+                width: 2,
+              },
             },
+            areaStyle: {
+              normal: {
+                color: this.$echarts.graphic.LinearGradient(
+                  0,
+                  0,
+                  0,
+                  1,
+                  [
+                    {
+                      offset: 0,
+                      color: "rgba(0, 216, 135, 0.4)",
+                    },
+                    {
+                      offset: 0.8,
+                      color: "rgba(0, 216, 135, 0.1)",
+                    },
+                  ],
+                  false
+                ),
+                shadowColor: "rgba(0, 0, 0, 0.1)",
+              },
+            },
+            itemStyle: {
+              normal: {
+                color: "#00d887",
+                borderColor: "rgba(221, 220, 107, .1)",
+                borderWidth: 12,
+              },
+            },
+            data: this.enterTimelist.map((item) => {
+              return item.mTimeQuantuNum;
+            }),
           },
         ],
       };
+
+      // 使用刚指定的配置项和数据显示图表。
       myChart.setOption(option);
       window.addEventListener("resize", function () {
         myChart.resize();

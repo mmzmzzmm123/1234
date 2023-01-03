@@ -41,10 +41,10 @@ header .showTime {
   background-size: cover;
   /* 行高是字体1.15倍 */
   line-height: 1.15;
-  overflow-x: scroll;
+  overflow-x: auto;
 }
 .mainbox {
-  min-width: 900px;
+  min-width: 1024px;
   padding: 0.125rem 0.125rem 0;
   display: flex;
 }

@@ -1,7 +1,7 @@
 <template>
   <div class="mainbox-box">
     <header class="hover-header">
-      <h1>可视化展板-ECharts</h1>
+      <h1>可视化展板</h1>
       <div ref="showTime" class="showTime">{{ showTime }}</div>
     </header>
     <section class="mainbox">

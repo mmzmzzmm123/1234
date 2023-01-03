@@ -1,27 +1,29 @@
 <template>
   <div>
-    <h2>柱状图-型号</h2>
-    <div class="chart" />
+    <h2>手机型号</h2>
+    <div ref="phoneChart" class="chart" />
     <div class="panel-footer" />
   </div>
 </template>
 
 <script>
+import { listPhoneRation } from "@/api/system/phoneRation";
 export default {
   name: "AppMain",
   data() {
     return {
-      dataAll: [
-        { year: "2019", data: [200, 300, 300, 900, 1500, 1200, 600] },
-        { year: "2020", data: [300, 400, 350, 800, 1800, 1400, 700] },
-      ],
+      phoneList: [],
     };
   },
-  mounted() {},
+  mounted() {
+    listPhoneRation().then((res) => {
+      this.phoneList = res.rows;
+      this.initCharts();
+    });
+  },
   methods: {
-    initCharts(index) {
-      var list = this.dataAll[index].data;
-      const myChart = this.$echarts.init(this.$refs.barChart);
+    initCharts() {
+      const myChart = this.$echarts.init(this.$refs.phoneChart);
       // 指定配置和数据
       var option = {
         color: ["#2f89cf"],
@@ -42,15 +44,9 @@ export default {
         xAxis: [
           {
             type: "category",
-            data: [
-              "旅游行业",
-              "教育培训",
-              "游戏行业",
-              "医疗行业",
-              "电商行业",
-              "社交行业",
-              "金融行业",
-            ],
+            data: this.phoneList.map((item) => {
+              return item.mPhoneType;
+            }),
             axisTick: {
               alignWithLabel: true,
             },
@@ -90,10 +86,12 @@ export default {
         ],
         series: [
           {
-            name: "直接访问",
+            name: "使用人数",
             type: "bar",
             barWidth: "35%",
-            data: list,
+            data: this.phoneList.map((item) => {
+              return item.mPhoneNum;
+            }),
             itemStyle: {
               barBorderRadius: 5,
             },

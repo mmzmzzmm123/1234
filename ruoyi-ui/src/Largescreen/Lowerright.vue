@@ -1,107 +1,93 @@
 <template>
   <div>
-    <h2>饼形图-地区分布</h2>
-    <div class="chart" />
+    <h2>移动通信比例</h2>
+    <div ref="per1Chart" class="chart" />
     <div class="panel-footer" />
   </div>
 </template>
 
 <script>
+import { listNetRation } from "@/api/system/netRation";
 export default {
   name: "AppMain",
   data() {
     return {
-      dataAll: [
-        { year: "2019", data: [200, 300, 300, 900, 1500, 1200, 600] },
-        { year: "2020", data: [300, 400, 350, 800, 1800, 1400, 700] },
-      ],
+      areaList: [],
     };
   },
-  mounted() {},
+  mounted() {
+    listNetRation().then((res) => {
+      this.areaList = res.rows;
+      this.initCharts();
+    });
+  },
   methods: {
-    initCharts(index) {
-      var list = this.dataAll[index].data;
-      const myChart = this.$echarts.init(this.$refs.barChart);
+    initCharts() {
+      const myChart = this.$echarts.init(this.$refs.per1Chart);
       // 指定配置和数据
       var option = {
-        color: ["#2f89cf"],
+        legend: {
+          top: "90%",
+          itemWidth: 10,
+          itemHeight: 10,
+          textStyle: {
+            color: "rgba(255,255,255,.5)",
+            fontSize: "12",
+          },
+        },
         tooltip: {
-          trigger: "axis",
-          axisPointer: {
-            // 坐标轴指示器，坐标轴触发有效
-            type: "shadow", // 默认为直线，可选为：'line' | 'shadow'
-          },
+          trigger: "item",
+          formatter: "{a} <br/>{b} : {c} ({d}%)",
         },
-        grid: {
-          left: "0%",
-          top: "10px",
-          right: "0%",
-          bottom: "4%",
-          containLabel: true,
-        },
-        xAxis: [
-          {
-            type: "category",
-            data: [
-              "旅游行业",
-              "教育培训",
-              "游戏行业",
-              "医疗行业",
-              "电商行业",
-              "社交行业",
-              "金融行业",
-            ],
-            axisTick: {
-              alignWithLabel: true,
-            },
-            axisLabel: {
-              textStyle: {
-                color: "rgba(255,255,255,.6)",
-                fontSize: "12",
-              },
-            },
-            axisLine: {
-              show: false,
-            },
-          },
-        ],
-        yAxis: [
-          {
-            type: "value",
-            axisLabel: {
-              textStyle: {
-                color: "rgba(255,255,255,.6)",
-                fontSize: "12",
-              },
-            },
-            axisLine: {
-              lineStyle: {
-                color: "rgba(255,255,255,.1)",
-                // width: 1,
-                // type: "solid"
-              },
-            },
-            splitLine: {
-              lineStyle: {
-                color: "rgba(255,255,255,.1)",
-              },
-            },
-          },
+        // 注意颜色写的位置
+        color: [
+          "#006cff",
+          "#60cda0",
+          "#ed8884",
+          "#ff9f7f",
+          "#0096ff",
+          "#9fe6b8",
+          "#32c5e9",
+          "#1d9dff",
         ],
         series: [
           {
-            name: "直接访问",
-            type: "bar",
-            barWidth: "35%",
-            data: list,
-            itemStyle: {
-              barBorderRadius: 5,
+            name: "占比",
+            type: "pie",
+            // 如果radius是百分比则必须加引号
+            radius: ["10%", "70%"],
+            center: ["50%", "42%"],
+            roseType: "radius",
+            data: [
+              { value: 20, name: "云南" },
+              { value: 26, name: "北京" },
+              { value: 24, name: "山东" },
+              { value: 25, name: "河北" },
+              { value: 20, name: "江苏" },
+              { value: 25, name: "浙江" },
+              { value: 30, name: "深圳" },
+              { value: 42, name: "广东" },
+            ],
+            // 修饰饼形图文字相关的样式 label对象
+            label: {
+              fontSize: 10,
+            },
+            // 修饰引导线样式
+            labelLine: {
+              // 连接到图形的线长度
+              length: 10,
+              // 连接到文字的线长度
+              length2: 10,
             },
           },
         ],
       };
+
+      // 3. 配置项和数据给我们的实例化对象
       myChart.setOption(option);
+      // 4. 当我们浏览器缩放的时候，图表也等比例缩放
       window.addEventListener("resize", function () {
+        // 让我们的图表调用 resize这个方法
         myChart.resize();
       });
     },
