@@ -1,15 +1,11 @@
 package com.ruoyi.push.service.impl;
 
 import com.alibaba.fastjson2.JSON;
-import com.alibaba.fastjson2.JSONObject;
-import com.ruoyi.common.constant.CacheConstants;
 import com.ruoyi.common.core.redis.RedisCache;
 import com.ruoyi.common.utils.DateUtils;
-import com.ruoyi.common.utils.uuid.UUID;
 import com.ruoyi.push.consts.CommandConst;
 import com.ruoyi.push.domain.vo.CommandVo;
 import com.ruoyi.push.service.IPushService;
-import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
