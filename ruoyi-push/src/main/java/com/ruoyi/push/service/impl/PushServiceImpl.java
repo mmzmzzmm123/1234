@@ -100,8 +100,8 @@ public class PushServiceImpl implements IPushService {
     }
 
     @Override
-    public void addPullSitemsg(long userId) {
-        addCommand(CommandConst.GROUP_NAME_U + userId, new CommandVo(CommandConst.CMD_PULL_SITEMSG, ""));
+    public void addPullSitemsg(long userId, Object content) {
+        addCommand(CommandConst.GROUP_NAME_U + userId, new CommandVo(CommandConst.CMD_PULL_SITEMSG, content));
         addCommand(CommandConst.GROUP_NAME_U + userId, new CommandVo(CommandConst.CMD_PULL_SITECOUNT, ""));
     }
 
