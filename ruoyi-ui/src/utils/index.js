@@ -388,3 +388,33 @@ export function isNumberStr(str) {
   return /^[+-]?(0|([1-9]\d*))(\.\d+)?$/g.test(str)
 }
  
+/**
+ * 三位加逗号
+ * @param {*} str 
+ * @returns 
+ */
+export function formatCash(num, decimal = 2) {
+  num = num ? parseFloat(num) : 0;
+  let rnum = num - parseInt(num);
+  if (decimal <= 0) {
+    decimal = 0;
+    num = Math.ceil(num);
+  } else if (rnum > 0) {
+    rnum *= Math.pow(10, decimal);
+    let rrnum = parseInt(rnum);
+    rnum = rrnum + (rnum - rrnum > 0 ? 1 : 0);
+    num = parseInt(num) + rnum * Math.pow(10, decimal * -1);
+  }
+  return formatCashLocale(num, decimal);
+}
+
+export function formatCashLocale(num, decimal = 2, isCurrency = false) {
+  num = num ? num : 0;
+  const options = {
+    style: isCurrency ? 'currency' : 'decimal',
+    currency: 'CNY',
+    minimumFractionDigits: decimal,
+    useGrouping: true
+  };
+  return (num).toLocaleString('zh-CN', options);
+}

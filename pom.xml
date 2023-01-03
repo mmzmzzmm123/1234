@@ -208,6 +208,20 @@
                 <artifactId>lock4j-redis-template-spring-boot-starter</artifactId>
                 <version>${lock4j-redis-template.version}</version>
             </dependency>
+
+            <!-- 消息管理模块-->
+            <dependency>
+                <groupId>com.ruoyi</groupId>
+                <artifactId>ruoyi-message</artifactId>
+                <version>${ruoyi.version}</version>
+            </dependency>
+
+            <!-- 推送模块-->
+            <dependency>
+                <groupId>com.ruoyi</groupId>
+                <artifactId>ruoyi-push</artifactId>
+                <version>${ruoyi.version}</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 
@@ -218,6 +232,8 @@
         <module>ruoyi-quartz</module>
         <module>ruoyi-generator</module>
         <module>ruoyi-common</module>
+        <module>ruoyi-message</module>
+        <module>ruoyi-push</module>
     </modules>
     <packaging>pom</packaging>
 

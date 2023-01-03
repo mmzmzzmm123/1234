@@ -134,12 +134,11 @@
         prop="toUserName"
       />
       <el-table-column label="站内信标题" align="center" prop="msgSiteTitle" />
-      <el-table-column
-        label="站内信内容"
-        align="center"
-        prop="msgSiteContent"
-      />
-      <el-table-column label="是否已读" align="center" prop="hasRead" />
+      <el-table-column label="是否已读" align="center" prop="hasRead">
+        <template slot-scope="scope">
+          {{ scope.row.hasRead == "1" ? "√" : "" }}
+        </template>
+      </el-table-column>
       <el-table-column
         label="操作"
         align="center"

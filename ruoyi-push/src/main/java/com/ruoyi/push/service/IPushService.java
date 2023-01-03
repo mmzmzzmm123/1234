@@ -40,8 +40,9 @@ public interface IPushService {
     /**
      * 添加用户拉取站内消息
      * @param userId
+     * @param content
      */
-    public void addPullSitemsg(long userId);
+    public void addPullSitemsg(long userId,Object content);
 
     /**
      * 获用户取站内信未书数量

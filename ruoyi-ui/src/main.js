@@ -12,6 +12,7 @@ import store from './store'
 import router from './router'
 import directive from './directive' // directive
 import plugins from './plugins' // plugins
+import * as filters from './filters' // global filters
 import { download } from '@/utils/request'
 
 import './assets/icons' // icon
@@ -76,6 +77,11 @@ Vue.use(Element, {
   size: Cookies.get('size') || 'medium' // set element-ui default size
 })
 
+// register global utility filters
+Object.keys(filters).forEach(key => {
+  Vue.filter(key, filters[key])
+})
+
 Vue.config.productionTip = false
 
 new Vue({
@@ -84,3 +90,6 @@ new Vue({
   store,
   render: h => h(App)
 })
+
+// 初始化push
+store.dispatch("push/init");
