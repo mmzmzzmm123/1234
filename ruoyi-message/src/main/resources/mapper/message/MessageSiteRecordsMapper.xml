@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.message.mapper.MessageSiteRecordsMapper">
+    <resultMap type="MessageSiteRecords" id="MessageSiteRecordsResult">
+        <result property="msgSiteId"    column="msg_site_id"    />
+        <result property="sendUserId"    column="send_user_id"    />
+        <result property="sendUserName"    column="send_user_name"    />
+        <result property="toUserId"    column="to_user_id"    />
+        <result property="toUserName"    column="to_user_name"    />
+        <result property="msgSiteTitle"    column="msg_site_title"    />
+        <result property="msgSiteContent"    column="msg_site_content"    />
+        <result property="hasRead"    column="has_read"    />
+        <result property="createTime"    column="create_time"    />
+    </resultMap>
+
+    <sql id="selectMessageSiteRecordsVo">
+        select msg_site_id, send_user_id, send_user_name, to_user_id, to_user_name, msg_site_title, msg_site_content, has_read, create_time from message_site_records
+    </sql>
+
+    <select id="selectMessageSiteRecordsList" parameterType="MessageSiteRecords" resultMap="MessageSiteRecordsResult">
+        <include refid="selectMessageSiteRecordsVo"/>
+        <where>
+            <if test="sendUserId != null "> and send_user_id = #{sendUserId}</if>
+            <if test="sendUserName != null  and sendUserName != ''"> and send_user_name like concat('%', #{sendUserName}, '%')</if>
+            <if test="toUserId != null "> and to_user_id = #{toUserId}</if>
+            <if test="toUserName != null  and toUserName != ''"> and to_user_name like concat('%', #{toUserName}, '%')</if>
+            <if test="msgSiteTitle != null  and msgSiteTitle != ''"> and msg_site_title = #{msgSiteTitle}</if>
+            <if test="msgSiteContent != null  and msgSiteContent != ''"> and msg_site_content = #{msgSiteContent}</if>
+            <if test="hasRead != null  and hasRead != ''"> and has_read = #{hasRead}</if>
+        </where>
+        order by create_time desc
+    </select>
+
+    <select id="selectMessageSiteRecordsByMsgSiteId" parameterType="Long" resultMap="MessageSiteRecordsResult">
+        <include refid="selectMessageSiteRecordsVo"/>
+        where msg_site_id = #{msgSiteId}
+    </select>
+
+    <insert id="insertMessageSiteRecords" parameterType="MessageSiteRecords" useGeneratedKeys="true" keyProperty="msgSiteId">
+        insert into message_site_records
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="sendUserId != null">send_user_id,</if>
+            <if test="sendUserName != null and sendUserName != ''">send_user_name,</if>
+            <if test="toUserId != null">to_user_id,</if>
+            <if test="toUserName != null and toUserName != ''">to_user_name,</if>
+            <if test="msgSiteTitle != null and msgSiteTitle != ''">msg_site_title,</if>
+            <if test="msgSiteContent != null and msgSiteContent != ''">msg_site_content,</if>
+            <if test="hasRead != null and hasRead != ''">has_read,</if>
+            <if test="createTime != null">create_time,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="sendUserId != null">#{sendUserId},</if>
+            <if test="sendUserName != null and sendUserName != ''">#{sendUserName},</if>
+            <if test="toUserId != null">#{toUserId},</if>
+            <if test="toUserName != null and toUserName != ''">#{toUserName},</if>
+            <if test="msgSiteTitle != null and msgSiteTitle != ''">#{msgSiteTitle},</if>
+            <if test="msgSiteContent != null and msgSiteContent != ''">#{msgSiteContent},</if>
+            <if test="hasRead != null and hasRead != ''">#{hasRead},</if>
+            <if test="createTime != null">#{createTime},</if>
+        </trim>
+    </insert>
+
+    <update id="updateMessageSiteRecords" parameterType="MessageSiteRecords">
+        update message_site_records
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="sendUserId != null">send_user_id = #{sendUserId},</if>
+            <if test="sendUserName != null and sendUserName != ''">send_user_name = #{sendUserName},</if>
+            <if test="toUserId != null">to_user_id = #{toUserId},</if>
+            <if test="toUserName != null and toUserName != ''">to_user_name = #{toUserName},</if>
+            <if test="msgSiteTitle != null and msgSiteTitle != ''">msg_site_title = #{msgSiteTitle},</if>
+            <if test="msgSiteContent != null and msgSiteContent != ''">msg_site_content = #{msgSiteContent},</if>
+            <if test="hasRead != null and hasRead != ''">has_read = #{hasRead},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+        </trim>
+        where msg_site_id = #{msgSiteId}
+    </update>
+
+    <delete id="deleteMessageSiteRecordsByMsgSiteId" parameterType="Long">
+        delete from message_site_records where msg_site_id = #{msgSiteId}
+    </delete>
+
+    <delete id="deleteMessageSiteRecordsByMsgSiteIds" parameterType="String">
+        delete from message_site_records where msg_site_id in
+        <foreach item="msgSiteId" collection="array" open="(" separator="," close=")">
+            #{msgSiteId}
+        </foreach>
+    </delete>
+</mapper>
