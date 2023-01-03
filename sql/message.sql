@@ -81,5 +81,8 @@ values('站内信消息删除', @parentId, '4',  '#', '', 1, 0, 'F', '0', '0', '
 insert into sys_menu (menu_name, parent_id, order_num, path, component, is_frame, is_cache, menu_type, visible, status, perms, icon, create_by, create_time, update_by, update_time, remark)
 values('站内信消息导出', @parentId, '5',  '#', '', 1, 0, 'F', '0', '0', 'message:siteRecords:export',       '#', 'admin', sysdate(), '', null, '');
 
+insert into sys_menu (menu_name, parent_id, order_num, path, component, is_frame, is_cache, menu_type, visible, status, perms, icon, create_by, create_time, update_by, update_time, remark)
+values('站内信消息全体通知', @parentId, '6',  '#', '', 1, 0, 'F', '0', '0', 'message:siteRecords:sendAll',       '#', 'admin', sysdate(), '', null, '');
+
 -- 站内消息清理任务
 insert into sys_job values(default , '站内消息清理', 'DEFAULT', 'messageTask.cleanHistory',  '0 0 1 * * ?', '3', '1', '0', '0', 'admin', sysdate(), '', null, '');

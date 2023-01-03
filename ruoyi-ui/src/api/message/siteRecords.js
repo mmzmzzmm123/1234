@@ -26,6 +26,15 @@ export function addSiteRecords(data) {
   })
 }
 
+// 发送站内信消息（临时全体消息）
+export function sendAllSiteRecords(data) {
+  return request({
+    url: '/message/siteRecords/sendAll',
+    method: 'post',
+    data: data
+  })
+}
+
 // 删除站内信消息
 export function delSiteRecords(msgSiteId) {
   return request({
