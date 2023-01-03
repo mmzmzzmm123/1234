@@ -53,6 +53,6 @@ public interface IPushService {
      * 添加全局消息
      * @param content
      */
-    public void addGlobalNotice(String content);
+    public void addGlobalNotice(Object content);
 
 }

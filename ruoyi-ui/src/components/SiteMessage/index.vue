@@ -63,6 +63,11 @@ export default {
       });
       this.playNewMsg();
     },
+    // 显示全局消息
+    showNewMsgGlobal(data) {
+      data = typeof data == "string" ? JSON.parse(data) : data;
+      this.$refs.SiteMessageDialog.open(data);
+    },
   },
   created() {
     this.newMsgAudio.src = newMsgMp3;
@@ -78,6 +83,11 @@ export default {
       cmd: CMD.PULL_SITEMSG,
       fn: this.showNewMsg,
     });
+    // 监听全局站内信消息
+    this.$store.dispatch("push/addListen", {
+      cmd: CMD.GLOBAL_NOTICE,
+      fn: this.showNewMsgGlobal,
+    });
     this.loadData();
   },
   beforeDestroy() {
@@ -89,6 +99,10 @@ export default {
     this.$store.dispatch("push/removeListen", {
       cmd: CMD.PULL_SITEMSG,
       fn: this.showNewMsg,
+    });
+    this.$store.dispatch("push/removeListen", {
+      cmd: CMD.PULL_SITEMSG,
+      fn: this.showNewMsgGlobal,
     });
   },
 };

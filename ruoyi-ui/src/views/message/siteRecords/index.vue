@@ -80,6 +80,17 @@
           plain
           icon="el-icon-plus"
           size="mini"
+          @click="handleAddAll"
+          v-hasPermi="['message:siteRecords:sendAll']"
+          >新增全体消息
+        </el-button>
+      </el-col>
+      <el-col :span="1.5">
+        <el-button
+          type="primary"
+          plain
+          icon="el-icon-plus"
+          size="mini"
           @click="handleAdd"
           v-hasPermi="['message:siteRecords:add']"
           >新增</el-button
@@ -176,20 +187,23 @@
     <el-dialog :title="title" :visible.sync="open" width="800px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="120px">
         <el-form-item label="接收者用户" prop="toUserName">
-          <div v-if="form.msgSiteId">{{ form.toUserName }}</div>
-          <el-input
-            v-else
-            v-model="form.toUserName"
-            placeholder="请选择接收者用户"
-            :readonly="true"
-          >
-            <el-button
-              slot="append"
-              @click="toChooseUser"
-              v-hasPermi="['system:user:list']"
-              >选择</el-button
+          <div v-if="formShowType == 1">
+            <div v-if="form.msgSiteId">{{ form.toUserName }}</div>
+            <el-input
+              v-else
+              v-model="form.toUserName"
+              placeholder="请选择接收者用户"
+              :readonly="true"
             >
-          </el-input>
+              <el-button
+                slot="append"
+                @click="toChooseUser"
+                v-hasPermi="['system:user:list']"
+                >选择</el-button
+              >
+            </el-input>
+          </div>
+          <div v-else>【全体成员】</div>
         </el-form-item>
         <el-form-item label="站内信标题" prop="msgSiteTitle">
           <div v-if="form.msgSiteId">{{ form.msgSiteTitle }}</div>
@@ -227,7 +241,7 @@ import {
   getSiteRecords,
   delSiteRecords,
   addSiteRecords,
-  updateSiteRecords,
+  sendAllSiteRecords,
 } from "@/api/message/siteRecords";
 
 import ChooseUserDialog from "@/views/system/user/components/ChooseUserDialog";
@@ -268,6 +282,8 @@ export default {
         msgSiteContent: null,
         hasRead: null,
       },
+      // 显示类型,1 指定用户,2 全体
+      formShowType: 1,
       // 表单参数
       form: {},
       // 表单校验
@@ -337,7 +353,17 @@ export default {
     handleAdd() {
       this.reset();
       this.open = true;
+      this.formShowType = 1;
       this.title = "添加站内信消息";
+    },
+    /** 新增按钮操作(全体) */
+    handleAddAll() {
+      this.reset();
+      this.open = true;
+      this.formShowType = 2;
+      this.form.toUserId = 0;
+      this.form.toUserName = "【全体成员】";
+      this.title = "发送全体消息";
     },
     /** 查看按钮操作 */
     handleView(row) {
@@ -353,18 +379,20 @@ export default {
     submitForm() {
       this.$refs["form"].validate((valid) => {
         if (valid) {
-          if (this.form.msgSiteId != null) {
-            updateSiteRecords(this.form).then((response) => {
-              this.$modal.msgSuccess("修改成功");
-              this.open = false;
-              this.getList();
-            });
-          } else {
-            addSiteRecords(this.form).then((response) => {
-              this.$modal.msgSuccess("新增成功");
-              this.open = false;
-              this.getList();
-            });
+          if (this.form.msgSiteId == null) {
+            if (this.formShowType == 1) {
+              addSiteRecords(this.form).then((response) => {
+                this.$modal.msgSuccess("新增成功");
+                this.open = false;
+                this.getList();
+              });
+            } else {
+              sendAllSiteRecords(this.form).then((response) => {
+                this.$modal.msgSuccess("新增成功");
+                this.open = false;
+                this.getList();
+              });
+            }
           }
         }
       });

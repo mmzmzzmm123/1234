@@ -111,7 +111,7 @@ public class PushServiceImpl implements IPushService {
     }
 
     @Override
-    public void addGlobalNotice(String content) {
+    public void addGlobalNotice(Object content) {
         addCommand(CommandConst.GROUP_NAME_G, new CommandVo(CommandConst.CMD_GLOBAL_NOTICE, content));
     }
 }

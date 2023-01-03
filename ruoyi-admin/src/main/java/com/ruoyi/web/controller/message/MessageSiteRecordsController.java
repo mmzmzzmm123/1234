@@ -98,6 +98,28 @@ public class MessageSiteRecordsController extends BaseController {
     }
 
     /**
+     * 发送全体消息
+     */
+    @PreAuthorize("@ss.hasPermi('message:siteRecords:sendAll')")
+    @Log(title = "站内信消息", businessType = BusinessType.OTHER)
+    @PostMapping("/sendAll")
+    public AjaxResult sendAll(@RequestBody MessageSiteRecords messageSiteRecords) {
+        LoginUser loginUser = getLoginUser();
+        messageSiteRecords.setToUserName("【全体成员】");
+        messageSiteRecords.setToUserId(0L);
+        messageSiteRecords.setSendUserId(loginUser.getUserId());
+        messageSiteRecords.setSendUserName(loginUser.getNickName());
+        messageSiteRecords.setHasRead("1");
+        messageSiteRecords.setCreateTime(DateUtils.getNowDate());
+        int count = messageSiteRecordsService.insertMessageSiteRecords(messageSiteRecords);
+        if (count > 0) {
+            // 发送推送消息
+            pushService.addGlobalNotice(messageSiteRecords);
+        }
+        return toAjax(count);
+    }
+
+    /**
      * 删除站内信消息
      */
     @PreAuthorize("@ss.hasPermi('message:siteRecords:remove')")
