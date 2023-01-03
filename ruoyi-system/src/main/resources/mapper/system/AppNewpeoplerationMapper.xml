@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.AppNewpeoplerationMapper">
+    
+    <resultMap type="AppNewpeopleration" id="AppNewpeoplerationResult">
+        <result property="mId"    column="m_id"    />
+        <result property="mTimeQuantum"    column="m_time_quantum"    />
+        <result property="mNewpeople"    column="m_newpeople"    />
+        <result property="mTotalPeople"    column="m_total_people"    />
+        <result property="mNewpeopleRation"    column="m_newpeople_ration"    />
+    </resultMap>
+
+    <sql id="selectAppNewpeoplerationVo">
+        select m_id, m_time_quantum, m_newpeople, m_total_people, m_newpeople_ration from app_newpeopleRation
+    </sql>
+
+    <select id="selectAppNewpeoplerationList" parameterType="AppNewpeopleration" resultMap="AppNewpeoplerationResult">
+        <include refid="selectAppNewpeoplerationVo"/>
+        <where>  
+            <if test="mTimeQuantum != null  and mTimeQuantum != ''"> and m_time_quantum = #{mTimeQuantum}</if>
+            <if test="mNewpeople != null "> and m_newpeople = #{mNewpeople}</if>
+            <if test="mTotalPeople != null "> and m_total_people = #{mTotalPeople}</if>
+            <if test="mNewpeopleRation != null "> and m_newpeople_ration = #{mNewpeopleRation}</if>
+        </where>
+    </select>
+    
+    <select id="selectAppNewpeoplerationByMId" parameterType="Long" resultMap="AppNewpeoplerationResult">
+        <include refid="selectAppNewpeoplerationVo"/>
+        where m_id = #{mId}
+    </select>
+        
+    <insert id="insertAppNewpeopleration" parameterType="AppNewpeopleration" useGeneratedKeys="true" keyProperty="mId">
+        insert into app_newpeopleRation
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="mTimeQuantum != null">m_time_quantum,</if>
+            <if test="mNewpeople != null">m_newpeople,</if>
+            <if test="mTotalPeople != null">m_total_people,</if>
+            <if test="mNewpeopleRation != null">m_newpeople_ration,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="mTimeQuantum != null">#{mTimeQuantum},</if>
+            <if test="mNewpeople != null">#{mNewpeople},</if>
+            <if test="mTotalPeople != null">#{mTotalPeople},</if>
+            <if test="mNewpeopleRation != null">#{mNewpeopleRation},</if>
+         </trim>
+    </insert>
+
+    <update id="updateAppNewpeopleration" parameterType="AppNewpeopleration">
+        update app_newpeopleRation
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="mTimeQuantum != null">m_time_quantum = #{mTimeQuantum},</if>
+            <if test="mNewpeople != null">m_newpeople = #{mNewpeople},</if>
+            <if test="mTotalPeople != null">m_total_people = #{mTotalPeople},</if>
+            <if test="mNewpeopleRation != null">m_newpeople_ration = #{mNewpeopleRation},</if>
+        </trim>
+        where m_id = #{mId}
+    </update>
+
+    <delete id="deleteAppNewpeoplerationByMId" parameterType="Long">
+        delete from app_newpeopleRation where m_id = #{mId}
+    </delete>
+
+    <delete id="deleteAppNewpeoplerationByMIds" parameterType="String">
+        delete from app_newpeopleRation where m_id in 
+        <foreach item="mId" collection="array" open="(" separator="," close=")">
+            #{mId}
+        </foreach>
+    </delete>
+</mapper>

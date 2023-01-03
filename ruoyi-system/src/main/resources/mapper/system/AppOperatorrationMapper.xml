@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.AppOperatorrationMapper">
+    
+    <resultMap type="AppOperatorration" id="AppOperatorrationResult">
+        <result property="mId"    column="m_id"    />
+        <result property="mOperatorType"    column="m_operator_type"    />
+        <result property="mOperatorNum"    column="m_operator_num"    />
+        <result property="mOperatorRation"    column="m_operator_ration"    />
+    </resultMap>
+
+    <sql id="selectAppOperatorrationVo">
+        select m_id, m_operator_type, m_operator_num, m_operator_ration from app_operatorRation
+    </sql>
+
+    <select id="selectAppOperatorrationList" parameterType="AppOperatorration" resultMap="AppOperatorrationResult">
+        <include refid="selectAppOperatorrationVo"/>
+        <where>  
+            <if test="mOperatorType != null  and mOperatorType != ''"> and m_operator_type = #{mOperatorType}</if>
+            <if test="mOperatorNum != null "> and m_operator_num = #{mOperatorNum}</if>
+            <if test="mOperatorRation != null "> and m_operator_ration = #{mOperatorRation}</if>
+        </where>
+    </select>
+    
+    <select id="selectAppOperatorrationByMId" parameterType="Long" resultMap="AppOperatorrationResult">
+        <include refid="selectAppOperatorrationVo"/>
+        where m_id = #{mId}
+    </select>
+        
+    <insert id="insertAppOperatorration" parameterType="AppOperatorration" useGeneratedKeys="true" keyProperty="mId">
+        insert into app_operatorRation
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="mOperatorType != null">m_operator_type,</if>
+            <if test="mOperatorNum != null">m_operator_num,</if>
+            <if test="mOperatorRation != null">m_operator_ration,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="mOperatorType != null">#{mOperatorType},</if>
+            <if test="mOperatorNum != null">#{mOperatorNum},</if>
+            <if test="mOperatorRation != null">#{mOperatorRation},</if>
+         </trim>
+    </insert>
+
+    <update id="updateAppOperatorration" parameterType="AppOperatorration">
+        update app_operatorRation
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="mOperatorType != null">m_operator_type = #{mOperatorType},</if>
+            <if test="mOperatorNum != null">m_operator_num = #{mOperatorNum},</if>
+            <if test="mOperatorRation != null">m_operator_ration = #{mOperatorRation},</if>
+        </trim>
+        where m_id = #{mId}
+    </update>
+
+    <delete id="deleteAppOperatorrationByMId" parameterType="Long">
+        delete from app_operatorRation where m_id = #{mId}
+    </delete>
+
+    <delete id="deleteAppOperatorrationByMIds" parameterType="String">
+        delete from app_operatorRation where m_id in 
+        <foreach item="mId" collection="array" open="(" separator="," close=")">
+            #{mId}
+        </foreach>
+    </delete>
+</mapper>

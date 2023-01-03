@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.AppPhonerationMapper">
+    
+    <resultMap type="AppPhoneration" id="AppPhonerationResult">
+        <result property="mId"    column="m_id"    />
+        <result property="mPhoneType"    column="m_phone_type"    />
+        <result property="mPhoneNum"    column="m_phone_num"    />
+        <result property="mPhoneRation"    column="m_phone_ration"    />
+    </resultMap>
+
+    <sql id="selectAppPhonerationVo">
+        select m_id, m_phone_type, m_phone_num, m_phone_ration from app_phoneRation
+    </sql>
+
+    <select id="selectAppPhonerationList" parameterType="AppPhoneration" resultMap="AppPhonerationResult">
+        <include refid="selectAppPhonerationVo"/>
+        <where>  
+            <if test="mPhoneType != null  and mPhoneType != ''"> and m_phone_type = #{mPhoneType}</if>
+            <if test="mPhoneNum != null "> and m_phone_num = #{mPhoneNum}</if>
+            <if test="mPhoneRation != null "> and m_phone_ration = #{mPhoneRation}</if>
+        </where>
+    </select>
+    
+    <select id="selectAppPhonerationByMId" parameterType="Long" resultMap="AppPhonerationResult">
+        <include refid="selectAppPhonerationVo"/>
+        where m_id = #{mId}
+    </select>
+        
+    <insert id="insertAppPhoneration" parameterType="AppPhoneration" useGeneratedKeys="true" keyProperty="mId">
+        insert into app_phoneRation
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="mPhoneType != null">m_phone_type,</if>
+            <if test="mPhoneNum != null">m_phone_num,</if>
+            <if test="mPhoneRation != null">m_phone_ration,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="mPhoneType != null">#{mPhoneType},</if>
+            <if test="mPhoneNum != null">#{mPhoneNum},</if>
+            <if test="mPhoneRation != null">#{mPhoneRation},</if>
+         </trim>
+    </insert>
+
+    <update id="updateAppPhoneration" parameterType="AppPhoneration">
+        update app_phoneRation
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="mPhoneType != null">m_phone_type = #{mPhoneType},</if>
+            <if test="mPhoneNum != null">m_phone_num = #{mPhoneNum},</if>
+            <if test="mPhoneRation != null">m_phone_ration = #{mPhoneRation},</if>
+        </trim>
+        where m_id = #{mId}
+    </update>
+
+    <delete id="deleteAppPhonerationByMId" parameterType="Long">
+        delete from app_phoneRation where m_id = #{mId}
+    </delete>
+
+    <delete id="deleteAppPhonerationByMIds" parameterType="String">
+        delete from app_phoneRation where m_id in 
+        <foreach item="mId" collection="array" open="(" separator="," close=")">
+            #{mId}
+        </foreach>
+    </delete>
+</mapper>
