@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.message.mapper.MessageTemplateMapper">
+
+    <resultMap type="MessageTemplate" id="MessageTemplateResult">
+        <result property="msgTempId"    column="msg_temp_id"    />
+        <result property="msgTempPcode"    column="msg_temp_pcode"    />
+        <result property="msgTempType"    column="msg_temp_type"    />
+        <result property="msgTempTitle"    column="msg_temp_title"    />
+        <result property="msgTempContent"    column="msg_temp_content"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="remark"    column="remark"    />
+    </resultMap>
+
+    <sql id="selectMessageTemplateVo">
+        select msg_temp_id, msg_temp_pcode, msg_temp_type, msg_temp_title, msg_temp_content, create_by, create_time, update_by, update_time, remark from message_template
+    </sql>
+
+    <select id="selectMessageTemplateList" parameterType="MessageTemplate" resultMap="MessageTemplateResult">
+        <include refid="selectMessageTemplateVo"/>
+        <where>
+            <if test="msgTempPcode != null  and msgTempPcode != ''"> and msg_temp_pcode = #{msgTempPcode}</if>
+            <if test="msgTempType != null "> and msg_temp_type = #{msgTempType}</if>
+            <if test="msgTempTitle != null  and msgTempTitle != ''"> and msg_temp_title = #{msgTempTitle}</if>
+            <if test="msgTempContent != null  and msgTempContent != ''"> and msg_temp_content = #{msgTempContent}</if>
+        </where>
+    </select>
+
+    <select id="selectMessageTemplateByMsgTempId" parameterType="Long" resultMap="MessageTemplateResult">
+        <include refid="selectMessageTemplateVo"/>
+        where msg_temp_id = #{msgTempId}
+    </select>
+
+    <insert id="insertMessageTemplate" parameterType="MessageTemplate" useGeneratedKeys="true" keyProperty="msgTempId">
+        insert into message_template
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="msgTempPcode != null and msgTempPcode != ''">msg_temp_pcode,</if>
+            <if test="msgTempType != null">msg_temp_type,</if>
+            <if test="msgTempTitle != null and msgTempTitle != ''">msg_temp_title,</if>
+            <if test="msgTempContent != null and msgTempContent != ''">msg_temp_content,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="remark != null">remark,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="msgTempPcode != null and msgTempPcode != ''">#{msgTempPcode},</if>
+            <if test="msgTempType != null">#{msgTempType},</if>
+            <if test="msgTempTitle != null and msgTempTitle != ''">#{msgTempTitle},</if>
+            <if test="msgTempContent != null and msgTempContent != ''">#{msgTempContent},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="remark != null">#{remark},</if>
+        </trim>
+    </insert>
+
+    <update id="updateMessageTemplate" parameterType="MessageTemplate">
+        update message_template
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="msgTempPcode != null and msgTempPcode != ''">msg_temp_pcode = #{msgTempPcode},</if>
+            <if test="msgTempType != null">msg_temp_type = #{msgTempType},</if>
+            <if test="msgTempTitle != null and msgTempTitle != ''">msg_temp_title = #{msgTempTitle},</if>
+            <if test="msgTempContent != null and msgTempContent != ''">msg_temp_content = #{msgTempContent},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="remark != null">remark = #{remark},</if>
+        </trim>
+        where msg_temp_id = #{msgTempId}
+    </update>
+
+    <delete id="deleteMessageTemplateByMsgTempId" parameterType="Long">
+        delete from message_template where msg_temp_id = #{msgTempId}
+    </delete>
+
+    <delete id="deleteMessageTemplateByMsgTempIds" parameterType="String">
+        delete from message_template where msg_temp_id in
+        <foreach item="msgTempId" collection="array" open="(" separator="," close=")">
+            #{msgTempId}
+        </foreach>
+    </delete>
+</mapper>
