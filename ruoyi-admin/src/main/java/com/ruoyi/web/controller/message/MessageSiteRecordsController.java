@@ -1,5 +1,6 @@
 package com.ruoyi.web.controller.message;
 
+import com.alibaba.fastjson2.JSON;
 import com.ruoyi.common.annotation.Log;
 import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.domain.AjaxResult;
@@ -17,6 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 import java.util.Set;
@@ -90,7 +92,7 @@ public class MessageSiteRecordsController extends BaseController {
         int count = messageSiteRecordsService.insertMessageSiteRecords(messageSiteRecords);
         if (count > 0) {
             // 发送推送消息
-            pushService.addPullSitemsg(sysUser.getUserId());
+            pushService.addPullSitemsg(sysUser.getUserId(), messageSiteRecords);
         }
         return toAjax(count);
     }

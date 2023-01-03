@@ -5,6 +5,8 @@ import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import com.ruoyi.common.constant.CacheConstants;
 import com.ruoyi.common.core.redis.RedisCache;
 import com.ruoyi.common.utils.DateUtils;
@@ -151,8 +153,9 @@ public class MessageSiteRecordsServiceImpl extends ServiceImpl<MessageSiteRecord
     public List<MessageSiteRecords> pullLast(Long toUserId, long lastId) {
         LambdaQueryWrapper<MessageSiteRecords> lambdaQueryWrapper = new LambdaQueryWrapper<>();
         lambdaQueryWrapper.eq(MessageSiteRecords::getToUserId, toUserId).gt(MessageSiteRecords::getMsgSiteId, lastId);
-        IPage page = new Page(1, 50);
-        return this.baseMapper.selectPage(page, lambdaQueryWrapper).getRecords();
+        PageHelper.startPage(1, 50);
+        PageInfo<MessageSiteRecords> pageInfo = new PageInfo<>(this.list(lambdaQueryWrapper));
+        return pageInfo.getList();
     }
 
     @Override
@@ -160,7 +163,8 @@ public class MessageSiteRecordsServiceImpl extends ServiceImpl<MessageSiteRecord
         LambdaQueryWrapper<MessageSiteRecords> lambdaQueryWrapper = new LambdaQueryWrapper<>();
         lambdaQueryWrapper.eq(MessageSiteRecords::getToUserId, toUserId).lt(MessageSiteRecords::getMsgSiteId, lastId);
         lambdaQueryWrapper.orderByDesc(MessageSiteRecords::getMsgSiteId);
-        IPage page = new Page(1, 50);
-        return this.baseMapper.selectPage(page, lambdaQueryWrapper).getRecords();
+        PageHelper.startPage(1, 50);
+        PageInfo<MessageSiteRecords> pageInfo = new PageInfo<>(this.list(lambdaQueryWrapper));
+        return pageInfo.getList();
     }
 }

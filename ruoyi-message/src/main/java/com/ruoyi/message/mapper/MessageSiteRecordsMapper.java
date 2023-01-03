@@ -59,6 +59,4 @@ public interface MessageSiteRecordsMapper extends BaseMapper<MessageSiteRecords>
      * @return 结果
      */
     public int deleteMessageSiteRecordsByMsgSiteIds(Long[] msgSiteIds);
-
-    public List<MessageSiteRecords> pullLast(Long toUserId, long lastId)
 }
