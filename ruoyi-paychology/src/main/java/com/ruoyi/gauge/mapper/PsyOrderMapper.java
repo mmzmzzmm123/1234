@@ -1,5 +1,6 @@
 package com.ruoyi.gauge.mapper;
 
+import java.util.HashMap;
 import java.util.List;
 
 import com.ruoyi.common.core.domain.dto.LoginDTO;
@@ -64,4 +65,6 @@ public interface PsyOrderMapper
     List<PsyOrder> queryOrderPage(PsyOrder psyOrder);
 
     int getMyReportNum(LoginDTO loginDTO);
+
+    void updatePsyOrderByOrderId(HashMap<String, Object> paramMap);
 }

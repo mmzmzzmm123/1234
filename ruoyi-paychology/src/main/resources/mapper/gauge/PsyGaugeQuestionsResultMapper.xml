@@ -121,4 +121,25 @@
           AND pgss.`end` >= tmp.score
         limit 1
     </select>
+
+    <delete id="deleteAllResult" parameterType="java.util.Map">
+        delete
+        from psy_gauge_questions_result
+        where user_id = #{userId}
+          and order_id = #{orderId}
+    </delete>
+
+    <insert id="batchAllInsert">
+        insert into psy_gauge_questions_result
+        (user_id,
+        question_id,
+        option_id,
+        value,
+        create_time,
+        order_id)
+        values
+        <foreach collection="list" item="item" separator=",">
+            (#{item.userId},#{item.questionId},#{item.optionId},#{item.value},#{item.createTime},#{item.orderId})
+        </foreach>
+    </insert>
 </mapper>

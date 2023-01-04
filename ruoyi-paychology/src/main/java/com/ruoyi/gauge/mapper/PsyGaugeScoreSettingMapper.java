@@ -1,5 +1,6 @@
 package com.ruoyi.gauge.mapper;
 
+import java.util.HashMap;
 import java.util.List;
 import com.ruoyi.gauge.domain.PsyGaugeScoreSetting;
 
@@ -67,4 +68,6 @@ public interface PsyGaugeScoreSettingMapper
      * @return 结果
      */
     public int deletePsyGaugeScoreSettingByIds(Long[] ids);
+
+    PsyGaugeScoreSetting selectPsyGaugeScoreSettingByGaugeId(HashMap<String, Object> paramMap);
 }

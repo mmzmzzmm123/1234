@@ -5,6 +5,7 @@ import java.util.List;
 import com.ruoyi.common.core.domain.dto.GaugeCommitResultDTO;
 import com.ruoyi.common.core.domain.dto.LoginDTO;
 import com.ruoyi.gauge.domain.PsyGaugeQuestionsResult;
+import com.ruoyi.gauge.domain.PsyGaugeQuestionsResultAll;
 
 /**
  * 心理测评问题结果Service接口
@@ -63,4 +64,6 @@ public interface IPsyGaugeQuestionsResultService
     public int deletePsyGaugeQuestionsResultById(Long id);
 
     String commitResult(GaugeCommitResultDTO gaugeCommitResultDTO ,LoginDTO loginDTO);
+
+    int addList(List<PsyGaugeQuestionsResultAll> psyGaugeQuestionsResultAlls, LoginDTO loginUser);
 }

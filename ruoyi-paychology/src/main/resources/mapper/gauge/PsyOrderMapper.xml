@@ -120,4 +120,17 @@
         where create_by = #{userId}
           and gauge_status = 1
     </select>
+
+    <update id="updatePsyOrderByOrderId"  parameterType="java.util.Map">
+        update psy_order
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="score != null">score = #{score},</if>
+            <if test="score_url != null">score_url = #{proposal},</if>
+        </trim>
+
+        <trim prefix="where" prefixOverrides="and">
+            <if test="orderId != null">and order_id = #{orderId}</if>
+        </trim>
+
+    </update>
 </mapper>

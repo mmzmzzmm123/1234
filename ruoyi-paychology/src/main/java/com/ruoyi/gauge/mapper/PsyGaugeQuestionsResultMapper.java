@@ -1,9 +1,11 @@
 package com.ruoyi.gauge.mapper;
 
+import java.util.HashMap;
 import java.util.List;
 
 import com.ruoyi.common.core.domain.dto.GaugeCommitResultDTO;
 import com.ruoyi.gauge.domain.PsyGaugeQuestionsResult;
+import com.ruoyi.gauge.domain.PsyGaugeQuestionsResultAll;
 
 /**
  * 心理测评问题结果Mapper接口
@@ -67,4 +69,7 @@ public interface PsyGaugeQuestionsResultMapper
 
     String getSimpleResultByScores(GaugeCommitResultDTO gaugeCommitResultDTO);
 
+    void deleteAllResult(HashMap<String, Object> paramMap);
+
+    int batchAllInsert(List<PsyGaugeQuestionsResultAll> list);
 }

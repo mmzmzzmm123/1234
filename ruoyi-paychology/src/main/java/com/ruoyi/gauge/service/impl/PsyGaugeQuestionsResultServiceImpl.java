@@ -4,18 +4,20 @@ import com.ruoyi.common.core.domain.dto.GaugeCommitResultDTO;
 import com.ruoyi.common.core.domain.dto.LoginDTO;
 import com.ruoyi.common.enums.GaugeStatus;
 import com.ruoyi.common.utils.DateUtils;
-import com.ruoyi.gauge.domain.PsyGaugeQuestionsOptions;
-import com.ruoyi.gauge.domain.PsyGaugeQuestionsResult;
-import com.ruoyi.gauge.domain.PsyOrder;
+import com.ruoyi.gauge.domain.*;
 import com.ruoyi.gauge.mapper.PsyGaugeQuestionsOptionsMapper;
 import com.ruoyi.gauge.mapper.PsyGaugeQuestionsResultMapper;
+import com.ruoyi.gauge.mapper.PsyGaugeScoreSettingMapper;
 import com.ruoyi.gauge.mapper.PsyOrderMapper;
 import com.ruoyi.gauge.service.IPsyGaugeQuestionsResultService;
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.compress.utils.Lists;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -37,6 +39,9 @@ public class PsyGaugeQuestionsResultServiceImpl implements IPsyGaugeQuestionsRes
 
     @Resource
     private PsyOrderMapper psyOrderMapper;
+
+    @Resource
+    private PsyGaugeScoreSettingMapper psyGaugeScoreSettingMapper;
 
     /**
      * 查询心理测评问题结果
@@ -142,5 +147,40 @@ public class PsyGaugeQuestionsResultServiceImpl implements IPsyGaugeQuestionsRes
         gaugeCommitResultDTO.setUserId(loginDTO.getUserId());
         String result = psyGaugeQuestionsResultMapper.getSimpleResultByScores(gaugeCommitResultDTO);
         return result;
+    }
+
+    /**
+     * 新增心理测评问题结果
+     *
+     * @param psyGaugeQuestionsResultAlls 心理测评问题结果
+     * @return 结果
+     */
+
+    @Transactional(rollbackFor = Exception.class)
+    @Override
+    public int addList(List<PsyGaugeQuestionsResultAll> psyGaugeQuestionsResultAlls, LoginDTO loginUser) {
+        if(CollectionUtils.isNotEmpty(psyGaugeQuestionsResultAlls)){
+            //先删除当前订单所有问题的答案
+            HashMap<String, Object> paramMap = new HashMap<>();
+            paramMap.put("orderId",psyGaugeQuestionsResultAlls.get(0).getOrderId());
+            paramMap.put("userId",loginUser.getUserId());
+            psyGaugeQuestionsResultMapper.deleteAllResult(paramMap);
+            List<PsyGaugeQuestionsResultAll> results = Lists.newArrayList();
+            int sum=0;
+            for (PsyGaugeQuestionsResultAll psyGaugeQuestionsResultAll:psyGaugeQuestionsResultAlls) {
+                sum+=psyGaugeQuestionsResultAll.getValue();
+                psyGaugeQuestionsResultAll.setCreateTime(DateUtils.getNowDate());
+                psyGaugeQuestionsResultAll.setUserId(loginUser.getUserId());
+            }
+            paramMap.put("score",sum);
+            //获取当前得分匹配结果
+            PsyGaugeScoreSetting psyGaugeScoreSetting = psyGaugeScoreSettingMapper.selectPsyGaugeScoreSettingByGaugeId(paramMap);
+            paramMap.put("proposal",psyGaugeScoreSetting.getProposal());
+            //将该订单答题结果同步到订单表
+            psyOrderMapper.updatePsyOrderByOrderId(paramMap);
+            //保存订单选项及结果
+            return psyGaugeQuestionsResultMapper.batchAllInsert(results);
+        }
+        return 0;
     }
 }

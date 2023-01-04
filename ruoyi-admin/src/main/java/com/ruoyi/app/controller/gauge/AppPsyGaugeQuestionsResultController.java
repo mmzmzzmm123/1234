@@ -7,6 +7,7 @@ import com.ruoyi.common.core.domain.dto.GaugeCommitResultDTO;
 import com.ruoyi.common.core.domain.dto.LoginDTO;
 import com.ruoyi.framework.web.service.AppTokenService;
 import com.ruoyi.gauge.domain.PsyGaugeQuestionsResult;
+import com.ruoyi.gauge.domain.PsyGaugeQuestionsResultAll;
 import com.ruoyi.gauge.service.IPsyGaugeQuestionsResultService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 
 /**
  * 心理测评问题结果Controller
@@ -57,5 +59,16 @@ public class AppPsyGaugeQuestionsResultController extends BaseController
     {
         String result = psyGaugeQuestionsResultService.commitResult(gaugeCommitResultDTO ,appTokenService.getLoginUser(request));
         return AjaxResult.success(RespMessageConstants.OPERATION_SUCCESS ,result);
+    }
+
+    /**
+     * 测评结果保存
+     */
+    @PostMapping("/addList")
+    @ApiOperation("测评结果保存")
+    public AjaxResult addList(@RequestBody @Validated List<PsyGaugeQuestionsResultAll> psyGaugeQuestionsResultAlls , HttpServletRequest request)
+    {
+        LoginDTO loginUser = appTokenService.getLoginUser(request);
+        return toAjax(psyGaugeQuestionsResultService.addList(psyGaugeQuestionsResultAlls ,loginUser));
     }
 }
