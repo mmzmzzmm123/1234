@@ -9,6 +9,7 @@ import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.annotation.Resource;
 import java.util.List;
 
 /**
@@ -22,7 +23,7 @@ import java.util.List;
 @Api(value = "AppPsyGaugeBannerConfigController" ,tags = {"测评banner页配置控制器"})
 public class AppPsyGaugeBannerConfigController extends BaseController
 {
-    @Autowired
+    @Resource
     private IPsyGaugeBannerConfigService psyGaugeBannerConfigService;
 
     /**

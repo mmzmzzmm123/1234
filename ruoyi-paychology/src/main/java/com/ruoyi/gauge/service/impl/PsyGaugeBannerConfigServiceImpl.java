@@ -8,6 +8,8 @@ import com.ruoyi.gauge.mapper.PsyGaugeBannerConfigMapper;
 import com.ruoyi.gauge.domain.PsyGaugeBannerConfig;
 import com.ruoyi.gauge.service.IPsyGaugeBannerConfigService;
 
+import javax.annotation.Resource;
+
 /**
  * 测评banner配置Service业务层处理
  * 
@@ -17,7 +19,7 @@ import com.ruoyi.gauge.service.IPsyGaugeBannerConfigService;
 @Service
 public class PsyGaugeBannerConfigServiceImpl implements IPsyGaugeBannerConfigService 
 {
-    @Autowired
+    @Resource
     private PsyGaugeBannerConfigMapper psyGaugeBannerConfigMapper;
 
     /**

@@ -94,6 +94,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="selectType" column="select_type"></result>
         <collection property="options" ofType="com.ruoyi.gauge.domain.PsyGaugeQuestionsOptions">
             <id property="id" column="optionId"></id>
+            <result property="gaugeQuestionsId" column="gaugeQuestionsId"></result>
             <result property="name" column="name"></result>
             <result property="sort" column="sort"></result>
             <result property="type" column="type"></result>
@@ -109,6 +110,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             ques.`no`,
             ques.select_type,
             opt.id as optionId,
+            opt.gauge_questions_id as gaugeQuestionsId,
             opt.`name`,
             opt.sort,
             opt.type,

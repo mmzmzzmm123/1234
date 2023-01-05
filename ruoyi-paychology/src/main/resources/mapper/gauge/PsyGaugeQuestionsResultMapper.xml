@@ -142,4 +142,5 @@
             (#{item.userId},#{item.questionId},#{item.optionId},#{item.value},#{item.createTime},#{item.orderId})
         </foreach>
     </insert>
+
 </mapper>

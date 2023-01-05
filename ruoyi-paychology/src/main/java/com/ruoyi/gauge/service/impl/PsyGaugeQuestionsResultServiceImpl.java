@@ -171,13 +171,16 @@ public class PsyGaugeQuestionsResultServiceImpl implements IPsyGaugeQuestionsRes
                 sum+=psyGaugeQuestionsResultAll.getValue();
                 psyGaugeQuestionsResultAll.setCreateTime(DateUtils.getNowDate());
                 psyGaugeQuestionsResultAll.setUserId(loginUser.getUserId());
+                results.add(psyGaugeQuestionsResultAll);
             }
             paramMap.put("score",sum);
             //获取当前得分匹配结果
             PsyGaugeScoreSetting psyGaugeScoreSetting = psyGaugeScoreSettingMapper.selectPsyGaugeScoreSettingByGaugeId(paramMap);
-            paramMap.put("proposal",psyGaugeScoreSetting.getProposal());
-            //将该订单答题结果同步到订单表
-            psyOrderMapper.updatePsyOrderByOrderId(paramMap);
+            if(psyGaugeScoreSetting!=null){
+                paramMap.put("proposal",psyGaugeScoreSetting.getProposal());
+                //将该订单答题结果同步到订单表
+                psyOrderMapper.updatePsyOrderByOrderId(paramMap);
+            }
             //保存订单选项及结果
             return psyGaugeQuestionsResultMapper.batchAllInsert(results);
         }
