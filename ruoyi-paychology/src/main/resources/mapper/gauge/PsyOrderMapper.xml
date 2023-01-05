@@ -76,6 +76,8 @@
             <if test="gaugeStatus != null">gauge_status = #{gaugeStatus},</if>
             <if test="createTime != null">create_time = #{createTime},</if>
             <if test="createBy != null and createBy != ''">create_by = #{createBy},</if>
+            <if test="score != null and score != ''">score = #{score},</if>
+            <if test="scoreUrl != null and scoreUrl != ''">score_url = #{scoreUrl},</if>
         </trim>
 
         <trim prefix="where" prefixOverrides="and">

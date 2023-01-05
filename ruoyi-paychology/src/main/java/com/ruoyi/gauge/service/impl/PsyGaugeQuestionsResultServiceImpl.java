@@ -139,14 +139,34 @@ public class PsyGaugeQuestionsResultServiceImpl implements IPsyGaugeQuestionsRes
 
     @Override
     public String commitResult(GaugeCommitResultDTO gaugeCommitResultDTO ,LoginDTO loginDTO) {
-        //将该订单答题情况改为已完成
-        psyOrderMapper.updatePsyOrder(PsyOrder.builder()
-                .orderId(gaugeCommitResultDTO.getOrderId()).gaugeStatus(GaugeStatus.FINISHED.getValue())
-                .build());
+        //获取订单分值
+        HashMap<String, Object> paramMap = new HashMap<>();
+        paramMap.put("orderId",gaugeCommitResultDTO.getOrderId());
+        paramMap.put("userId",loginDTO.getUserId());
+        List<PsyGaugeQuestionsResultAll> psyGaugeQuestionsResults = psyGaugeQuestionsResultMapper.selectPsyGaugeQuestionsResultAll(paramMap);
+        int sum=0;
+        if(CollectionUtils.isNotEmpty(psyGaugeQuestionsResults)){
+            for (PsyGaugeQuestionsResultAll psyGaugeQuestionsResultAll:psyGaugeQuestionsResults) {
+                sum+=psyGaugeQuestionsResultAll.getValue();
+            }
+        }
+        paramMap.put("score",sum);
+        //获取当前得分匹配结果
+        PsyGaugeScoreSetting psyGaugeScoreSetting = psyGaugeScoreSettingMapper.selectPsyGaugeScoreSettingByGaugeId(paramMap);
+        if(psyGaugeScoreSetting!=null){
+            //将该订单答题情况改为已完成
+            psyOrderMapper.updatePsyOrder(PsyOrder.builder()
+                    .orderId(gaugeCommitResultDTO.getOrderId()).gaugeStatus(GaugeStatus.FINISHED.getValue())
+                    .score(String.valueOf(sum)).scoreUrl(psyGaugeScoreSetting.getProposal())
+                    .build());
+
+            return psyGaugeScoreSetting.getResult();
+        }
+
         //计算得分总和 得出结论
-        gaugeCommitResultDTO.setUserId(loginDTO.getUserId());
-        String result = psyGaugeQuestionsResultMapper.getSimpleResultByScores(gaugeCommitResultDTO);
-        return result;
+        /*gaugeCommitResultDTO.setUserId(loginDTO.getUserId());
+        String result = psyGaugeQuestionsResultMapper.getSimpleResultByScores(gaugeCommitResultDTO);*/
+        return null;
     }
 
     /**
@@ -164,7 +184,7 @@ public class PsyGaugeQuestionsResultServiceImpl implements IPsyGaugeQuestionsRes
             HashMap<String, Object> paramMap = new HashMap<>();
             paramMap.put("orderId",psyGaugeQuestionsResultAlls.get(0).getOrderId());
             paramMap.put("userId",loginUser.getUserId());
-            psyGaugeQuestionsResultMapper.deleteAllResult(paramMap);
+            //psyGaugeQuestionsResultMapper.deleteAllResult(paramMap);
             List<PsyGaugeQuestionsResultAll> results = Lists.newArrayList();
             int sum=0;
             for (PsyGaugeQuestionsResultAll psyGaugeQuestionsResultAll:psyGaugeQuestionsResultAlls) {
@@ -182,7 +202,7 @@ public class PsyGaugeQuestionsResultServiceImpl implements IPsyGaugeQuestionsRes
                 psyOrderMapper.updatePsyOrderByOrderId(paramMap);
             }
             //保存订单选项及结果
-            return psyGaugeQuestionsResultMapper.batchAllInsert(results);
+            //return psyGaugeQuestionsResultMapper.batchAllInsert(results);
         }
         return 0;
     }

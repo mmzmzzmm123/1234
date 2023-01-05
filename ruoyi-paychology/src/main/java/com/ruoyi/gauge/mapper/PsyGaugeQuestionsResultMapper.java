@@ -72,4 +72,6 @@ public interface PsyGaugeQuestionsResultMapper
     void deleteAllResult(HashMap<String, Object> paramMap);
 
     int batchAllInsert(List<PsyGaugeQuestionsResultAll> list);
+
+    List<PsyGaugeQuestionsResultAll> selectPsyGaugeQuestionsResultAll(HashMap<String, Object> paramMap);
 }
