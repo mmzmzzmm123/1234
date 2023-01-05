@@ -64,7 +64,7 @@ public class PsyOrder extends BaseEntity
     /**
      * 总得分对应图片
      */
-    private String scoreUrl;
+    private String resultUrl;
 
     public String getGaugeDes() {
         return gaugeDes;
@@ -145,12 +145,12 @@ public class PsyOrder extends BaseEntity
         this.score = score;
     }
 
-    public String getScoreUrl() {
-        return scoreUrl;
+    public String getResultUrl() {
+        return resultUrl;
     }
 
-    public void setScoreUrl(String scoreUrl) {
-        this.scoreUrl = scoreUrl;
+    public void setResultUrl(String resultUrl) {
+        this.resultUrl = resultUrl;
     }
 
     @Override

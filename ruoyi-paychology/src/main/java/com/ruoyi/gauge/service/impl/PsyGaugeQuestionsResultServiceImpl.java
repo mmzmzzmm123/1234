@@ -157,7 +157,7 @@ public class PsyGaugeQuestionsResultServiceImpl implements IPsyGaugeQuestionsRes
             //将该订单答题情况改为已完成
             psyOrderMapper.updatePsyOrder(PsyOrder.builder()
                     .orderId(gaugeCommitResultDTO.getOrderId()).gaugeStatus(GaugeStatus.FINISHED.getValue())
-                    .score(String.valueOf(sum)).scoreUrl(psyGaugeScoreSetting.getProposal())
+                    .score(String.valueOf(sum)).resultUrl(psyGaugeScoreSetting.getProposal())
                     .build());
 
             return psyGaugeScoreSetting.getResult();

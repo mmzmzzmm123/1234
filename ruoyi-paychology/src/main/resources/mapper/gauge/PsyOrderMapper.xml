@@ -77,7 +77,7 @@
             <if test="createTime != null">create_time = #{createTime},</if>
             <if test="createBy != null and createBy != ''">create_by = #{createBy},</if>
             <if test="score != null and score != ''">score = #{score},</if>
-            <if test="scoreUrl != null and scoreUrl != ''">score_url = #{scoreUrl},</if>
+            <if test="resultUrl != null and resultUrl != ''">result_url = #{resultUrl},</if>
         </trim>
 
         <trim prefix="where" prefixOverrides="and">
@@ -127,7 +127,7 @@
         update psy_order
         <trim prefix="SET" suffixOverrides=",">
             <if test="score != null">score = #{score},</if>
-            <if test="score_url != null">score_url = #{proposal},</if>
+            <if test="resultUrl != null and resultUrl != ''">result_url = #{proposal},</if>
         </trim>
 
         <trim prefix="where" prefixOverrides="and">
