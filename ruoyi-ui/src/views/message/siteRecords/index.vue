@@ -172,7 +172,7 @@
             >删除</el-button
           >
           <el-button
-            v-if="scope.row.sendUserId > 0"
+            v-if="scope.row.toUserId > 0"
             size="mini"
             type="text"
             icon="el-icon-refresh-right"
