@@ -171,6 +171,15 @@
             v-hasPermi="['message:siteRecords:remove']"
             >删除</el-button
           >
+          <el-button
+            v-if="scope.row.sendUserId > 0"
+            size="mini"
+            type="text"
+            icon="el-icon-refresh-right"
+            @click="handleRedo(scope.row)"
+            v-hasPermi="['message:siteRecords:add']"
+            >重发
+          </el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -243,7 +252,7 @@ import {
   addSiteRecords,
   sendAllSiteRecords,
 } from "@/api/message/siteRecords";
-
+import { deepClone } from "@/utils/index";
 import ChooseUserDialog from "@/views/system/user/components/ChooseUserDialog";
 export default {
   name: "SiteRecords",
@@ -364,6 +373,26 @@ export default {
       this.form.toUserId = 0;
       this.form.toUserName = "【全体成员】";
       this.title = "发送全体消息";
+    },
+    /** 重发 */
+    handleRedo(row) {
+      if (row.toUserId == 0) {
+        return;
+      }
+      let r = deepClone(row);
+      r.msgSiteId = null;
+      r.hasRead = "0";
+      r.createTime = null;
+      this.$modal
+        .confirm("是否重复发送一遍？")
+        .then(function () {
+          return addSiteRecords(r);
+        })
+        .then(() => {
+          this.getList();
+          this.$modal.msgSuccess("新增成功");
+        })
+        .catch(() => {});
     },
     /** 查看按钮操作 */
     handleView(row) {

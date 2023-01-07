@@ -106,8 +106,8 @@
     />
 
     <!-- 添加或修改消息模板对话框 -->
-    <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
-      <el-form ref="form" :model="form" :rules="rules" label-width="80px">
+    <el-dialog :title="title" :visible.sync="open" width="800px" append-to-body>
+      <el-form ref="form" :model="form" :rules="rules" label-width="120px">
         <el-form-item label="模板唯一编码" prop="msgTempPcode">
           <el-input v-model="form.msgTempPcode" placeholder="请输入模板唯一编码" />
         </el-form-item>
