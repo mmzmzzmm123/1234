@@ -57,8 +57,7 @@ CREATE TABLE `message_site_records` (
     `msg_site_content` text NOT NULL COMMENT '站内信内容',
     `read`             char(1)      NOT NULL COMMENT '是否已读',
     `create_time` datetime NOT NULL COMMENT '创建时间',
-    PRIMARY KEY (`msg_site_id`),
-    KEY `id_create_time` (`create_time` DESC)
+    PRIMARY KEY (`msg_site_id`)
 ) ENGINE=InnoDB COMMENT='站内信消息';
 
 -- 菜单 SQL

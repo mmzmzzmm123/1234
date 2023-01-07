@@ -218,6 +218,7 @@
                 <artifactId>lock4j-redis-template-spring-boot-starter</artifactId>
                 <version>${lock4j-redis-template.version}</version>
             </dependency>
+
             <!-- 消息管理模块-->
             <dependency>
                 <groupId>com.ruoyi</groupId>
