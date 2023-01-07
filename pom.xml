@@ -70,7 +70,6 @@
                 <artifactId>mybatis-spring-boot-starter</artifactId>
                 <version>${mybatis-spring-boot.version}</version>
             </dependency>-->
-
             <!-- pagehelper 分页插件 -->
             <dependency>
                 <groupId>com.github.pagehelper</groupId>
@@ -237,7 +236,7 @@
             <!-- 待办任务-->
             <dependency>
                 <groupId>com.ruoyi</groupId>
-                <artifactId>ruoyi-push</artifactId>
+                <artifactId>ruoyi-processing</artifactId>
                 <version>${ruoyi.version}</version>
             </dependency>
         </dependencies>
