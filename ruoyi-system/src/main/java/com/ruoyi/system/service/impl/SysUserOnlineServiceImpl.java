@@ -36,8 +36,10 @@ public class SysUserOnlineServiceImpl implements ISysUserOnlineService {
      * @return 在线用户信息
      */
     @Override
-    public SysUserOnline selectOnlineByUserName(String userName, LoginUser user) {
-        if (StringUtils.equals(userName, user.getUsername())) {
+    public SysUserOnline selectOnlineByUserName(String userName, LoginUser user)
+    {
+        if (StringUtils.equals(userName, user.getUsername()))
+        {
             return loginUserToUserOnline(user);
         }
         return null;
