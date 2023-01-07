@@ -59,14 +59,4 @@ public class CacheConstants {
      * 用户权限前缀
      */
     public static final String USER_PERM_KEY = "user_perm" + SEPARATE;
-
-    /**
-     * 用户未读消息数量
-     */
-    public static final String USER_UNREAD_COUNT_KEY = "user_unread_count" + SEPARATE;
-
-    /**
-     * 用户推送消息
-     */
-    public static final String USER_PUSH_MSG = "user_push_msg"+ SEPARATE;
 }
