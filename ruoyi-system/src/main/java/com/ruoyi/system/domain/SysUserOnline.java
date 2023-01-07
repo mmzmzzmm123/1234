@@ -2,7 +2,7 @@ package com.ruoyi.system.domain;
 
 /**
  * 当前在线会话
- * 
+ *
  * @author ruoyi
  */
 public class SysUserOnline
@@ -31,8 +31,12 @@ public class SysUserOnline
     /** 登录时间 */
     private Long loginTime;
 
-    public String getTokenId()
-    {
+    /**
+     * 登录昵称
+     */
+    private String nickName;
+
+    public String getTokenId() {
         return tokenId;
     }
 
@@ -110,4 +114,13 @@ public class SysUserOnline
     {
         this.loginTime = loginTime;
     }
+
+    public String getNickName() {
+        return nickName;
+    }
+
+    public void setNickName(String nickName) {
+        this.nickName = nickName;
+    }
+
 }

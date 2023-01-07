@@ -34,6 +34,13 @@ public interface ISysConfigService
     public boolean selectCaptchaEnabled();
 
     /**
+     * 获取登录客户端数量
+     *
+     * @return
+     */
+    public int selectLoginClientCount();
+
+    /**
      * 查询参数配置列表
      * 
      * @param config 参数配置信息

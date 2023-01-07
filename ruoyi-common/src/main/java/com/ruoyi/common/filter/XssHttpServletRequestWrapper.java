@@ -34,13 +34,13 @@ public class XssHttpServletRequestWrapper extends HttpServletRequestWrapper
         if (values != null)
         {
             int length = values.length;
-            String[] escapesValues = new String[length];
+            String[] escapseValues = new String[length];
             for (int i = 0; i < length; i++)
             {
                 // 防xss攻击和过滤前后空格
-                escapesValues[i] = EscapeUtil.clean(values[i]).trim();
+                escapseValues[i] = EscapeUtil.clean(values[i]).trim();
             }
-            return escapesValues;
+            return escapseValues;
         }
         return super.getParameterValues(name);
     }
@@ -100,8 +100,7 @@ public class XssHttpServletRequestWrapper extends HttpServletRequestWrapper
 
     /**
      * 是否是Json请求
-     * 
-     * @param request
+     *
      */
     public boolean isJsonRequest()
     {

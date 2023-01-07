@@ -54,7 +54,7 @@ public final class SpringUtils implements BeanFactoryPostProcessor, ApplicationC
      *
      * @param clz
      * @return
-     * @throws org.springframework.beans.BeansException
+     * @throws BeansException
      *
      */
     public static <T> T getBean(Class<T> clz) throws BeansException
