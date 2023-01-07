@@ -1,4 +1,4 @@
-## 基于RuoYi-VUE v3.8.4【改造】
+## 基于RuoYi-VUE v3.8.5【改造】
 改造后支持
 1. 支持 mybatis-plus 
 2. 支持 Lombok 
