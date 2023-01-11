@@ -2,6 +2,8 @@ package com.ruoyi.web.controller.gauge;
 
 import java.util.List;
 import javax.servlet.http.HttpServletResponse;
+
+import com.github.pagehelper.PageHelper;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -41,7 +43,8 @@ public class PsyGaugeQuestionsController extends BaseController
     @GetMapping("/list")
     public TableDataInfo list(PsyGaugeQuestions psyGaugeQuestions)
     {
-        startPage();
+        //startPage();
+        PageHelper.startPage(1, 200, "");
         List<PsyGaugeQuestions> list = psyGaugeQuestionsService.selectPsyGaugeQuestionsList(psyGaugeQuestions);
         return getDataTable(list);
     }
