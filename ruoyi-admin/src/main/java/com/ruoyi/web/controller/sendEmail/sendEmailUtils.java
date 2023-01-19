@@ -328,6 +328,11 @@ public class sendEmailUtils {
         map.put("twoMonthAgoDate", sdf.format(sdf.parse(twoMonthAgoData.getDate())));
         return map;
     }
+    // 获取
+    public static Map<String, String> getTextCNPriceIndex() throws IOException, ParseException {
+
+    }
+
 
     // 获取美债是否倒挂
     public static Map<String, String> getTextUSDebt() throws IOException, ParseException {
