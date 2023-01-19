@@ -6,7 +6,7 @@ const state = {
 
 const mutations = {
   ADD_IFRAME_VIEW: (state, view) => {
-    if (state.iframeViews.some(v => v.path === view.path)) return
+    if (state.iframeViews.some(v => v.fullPath === view.fullPath)) return
     state.iframeViews.push(
       Object.assign({}, view, {
         title: view.meta.title || 'no-name'
@@ -14,7 +14,7 @@ const mutations = {
     )
   },
   ADD_VISITED_VIEW: (state, view) => {
-    if (state.visitedViews.some(v => v.path === view.path)) return
+    if (!view.fullPath || state.visitedViews.some(v => v.fullPath === view.fullPath)) return
     state.visitedViews.push(
       Object.assign({}, view, {
         title: view.meta.title || 'no-name'
@@ -22,36 +22,36 @@ const mutations = {
     )
   },
   ADD_CACHED_VIEW: (state, view) => {
-    if (state.cachedViews.includes(view.name)) return
+    if (state.cachedViews.includes(view.fullPath)) return
     if (view.meta && !view.meta.noCache) {
-      state.cachedViews.push(view.name)
+      state.cachedViews.push(view.fullPath)
     }
   },
   DEL_VISITED_VIEW: (state, view) => {
     for (const [i, v] of state.visitedViews.entries()) {
-      if (v.path === view.path) {
+      if (v.fullPath === view.fullPath) {
         state.visitedViews.splice(i, 1)
         break
       }
     }
-    state.iframeViews = state.iframeViews.filter(item => item.path !== view.path)
+    state.iframeViews = state.iframeViews.filter(item => item.fullPath !== view.fullPath)
   },
   DEL_IFRAME_VIEW: (state, view) => {
-    state.iframeViews = state.iframeViews.filter(item => item.path !== view.path)
+    state.iframeViews = state.iframeViews.filter(item => item.fullPath !== view.fullPath)
   },
   DEL_CACHED_VIEW: (state, view) => {
-    const index = state.cachedViews.indexOf(view.name)
+    const index = state.cachedViews.indexOf(view.fullPath)
     index > -1 && state.cachedViews.splice(index, 1)
   },
 
   DEL_OTHERS_VISITED_VIEWS: (state, view) => {
     state.visitedViews = state.visitedViews.filter(v => {
-      return v.meta.affix || v.path === view.path
+      return v.meta.affix || v.fullPath === view.fullPath
     })
-    state.iframeViews = state.iframeViews.filter(item => item.path === view.path)
+    state.iframeViews = state.iframeViews.filter(item => item.fullPath === view.fullPath)
   },
   DEL_OTHERS_CACHED_VIEWS: (state, view) => {
-    const index = state.cachedViews.indexOf(view.name)
+    const index = state.cachedViews.indexOf(view.fullPath)
     if (index > -1) {
       state.cachedViews = state.cachedViews.slice(index, index + 1)
     } else {
@@ -69,14 +69,14 @@ const mutations = {
   },
   UPDATE_VISITED_VIEW: (state, view) => {
     for (let v of state.visitedViews) {
-      if (v.path === view.path) {
+      if (v.fullPath === view.fullPath) {
         v = Object.assign(v, view)
         break
       }
     }
   },
   DEL_RIGHT_VIEWS: (state, view) => {
-    const index = state.visitedViews.findIndex(v => v.path === view.path)
+    const index = state.visitedViews.findIndex(v => v.fullPath === view.fullPath)
     if (index === -1) {
       return
     }
@@ -84,19 +84,19 @@ const mutations = {
       if (idx <= index || (item.meta && item.meta.affix)) {
         return true
       }
-      const i = state.cachedViews.indexOf(item.name)
+      const i = state.cachedViews.indexOf(item.fullPath)
       if (i > -1) {
         state.cachedViews.splice(i, 1)
       }
       if(item.meta.link) {
-        const fi = state.iframeViews.findIndex(v => v.path === item.path)
+        const fi = state.iframeViews.findIndex(v => v.fullPath === item.fullPath)
         state.iframeViews.splice(fi, 1)
       }
       return false
     })
   },
   DEL_LEFT_VIEWS: (state, view) => {
-    const index = state.visitedViews.findIndex(v => v.path === view.path)
+    const index = state.visitedViews.findIndex(v => v.fullPath === view.fullPath)
     if (index === -1) {
       return
     }
@@ -104,12 +104,12 @@ const mutations = {
       if (idx >= index || (item.meta && item.meta.affix)) {
         return true
       }
-      const i = state.cachedViews.indexOf(item.name)
+      const i = state.cachedViews.indexOf(item.fullPath)
       if (i > -1) {
         state.cachedViews.splice(i, 1)
       }
       if(item.meta.link) {
-        const fi = state.iframeViews.findIndex(v => v.path === item.path)
+        const fi = state.iframeViews.findIndex(v => v.fullPath === item.fullPath)
         state.iframeViews.splice(fi, 1)
       }
       return false

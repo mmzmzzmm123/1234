@@ -11,16 +11,17 @@
 
 <script>
 import iframeToggle from "./IframeToggle/index"
+import keepAlive from './keepAlive'
 
 export default {
   name: 'AppMain',
-  components: { iframeToggle },
+  components: { iframeToggle, keepAlive },
   computed: {
     cachedViews() {
       return this.$store.state.tagsView.cachedViews
     },
     key() {
-      return this.$route.path
+      return this.$route.fullPath
     }
   }
 }
