@@ -344,6 +344,8 @@ public class ExcelUtil<T>
                 if (StringUtils.isNotNull(cell))
                 {
                     String value = this.getCellValue(heard, i).toString();
+                    // 处理excel出现表头有空的情况
+                    value = value.trim();
                     cellMap.put(value, i);
                 }
                 else
