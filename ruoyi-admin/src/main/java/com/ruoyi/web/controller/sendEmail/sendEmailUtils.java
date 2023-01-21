@@ -24,6 +24,10 @@ import invest.lixinger.macro.nationalDebt.us.VO.nationalDebtUSResult_RootVO;
 import invest.lixinger.macro.nationalDebt.us.getParam_nationDebtUS;
 import invest.lixinger.macro.nationalDebt.us.getResult_nationDebtUS;
 import invest.lixinger.macro.nationalDebt.us.request_nationDebtUS;
+import invest.lixinger.macro.priceIndex.china.VO.PriceIndexCNResult_RootVO;
+import invest.lixinger.macro.priceIndex.china.getParam_PriceIndexCN;
+import invest.lixinger.macro.priceIndex.china.getResult_PriceIndexCN;
+import invest.lixinger.macro.priceIndex.china.request_PriceIndexCN;
 import invest.lixinger.utils.netRequest;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -219,8 +223,14 @@ public class sendEmailUtils {
             } else {
                 Text += "\t结论：当前环境不适合投资股票\n\n";
             }
-
-
+            // 中国cpi
+            Map<String, Object> mapCNCPI =getTextCNPriceIndex();
+            String CNCPI0= (String) mapCNCPI.get("CNCPI0");
+            String CNCPI1= (String) mapCNCPI.get("CNCPI1");
+            String CNCPI2= (String) mapCNCPI.get("CNCPI2");
+            String CNCPI3= (String) mapCNCPI.get("CNCPI3");
+            String CNCPIDate=(String) mapCNCPI.get("CNCPIDate");
+            Text += "▶中国cpi最新数据日期为："+CNCPIDate+"，连续4个月的cpi为：" + CNCPI3 + "、"  + CNCPI2 + "、" + CNCPI1 + "、" + CNCPI0 + "\n\n";
             // SPX信号值----------------
             Map<String, Object> mapSPX = getTextSPX();
             double posSPX = (double) mapSPX.get("posSPX");
@@ -303,9 +313,6 @@ public class sendEmailUtils {
     /**
      * 获取货币供应量m1与m2
      *
-     * @return
-     * @throws IOException
-     * @throws ParseException
      */
     public static Map<String, Object> getTextCNMoneySupply() throws IOException, ParseException {
         Map<String, Object> map = new HashMap<>();
@@ -328,9 +335,23 @@ public class sendEmailUtils {
         map.put("twoMonthAgoDate", sdf.format(sdf.parse(twoMonthAgoData.getDate())));
         return map;
     }
-    // 获取
-    public static Map<String, String> getTextCNPriceIndex() throws IOException, ParseException {
 
+    // 获取cpi
+    public static Map<String, Object> getTextCNPriceIndex() throws IOException, ParseException {
+        InputStream inputStream = request_PriceIndexCN.class.getClassLoader().getResourceAsStream("indexReqParam.yml");
+        Map indexReqParam = new Yaml().load(inputStream);
+        String macroPriceIndexCNURL = (String) indexReqParam.get("macroPriceIndexCNURL");
+        String paramJson = getParam_PriceIndexCN.getParamPriceIndexCNParamJson();
+        String resultJson = netRequest.jsonNetPost(macroPriceIndexCNURL, paramJson);
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        PriceIndexCNResult_RootVO resultObj = (PriceIndexCNResult_RootVO) getResult_PriceIndexCN.getResultPriceIndexCNObj(resultJson);
+        Map<String, Object> map = new HashMap<>();
+        map.put("CNCPI0", new DecimalFormat("0.00%").format(resultObj.getData().get(0).getM().getCpi().getC_y2y()));
+        map.put("CNCPI1", new DecimalFormat("0.00%").format(resultObj.getData().get(1).getM().getCpi().getC_y2y()));
+        map.put("CNCPI2", new DecimalFormat("0.00%").format(resultObj.getData().get(2).getM().getCpi().getC_y2y()));
+        map.put("CNCPI3", new DecimalFormat("0.00%").format(resultObj.getData().get(3).getM().getCpi().getC_y2y()));
+        map.put("CNCPIDate",sdf.format(sdf.parse(resultObj.getData().get(0).getDate())));
+        return map;
     }
 
 
@@ -361,13 +382,13 @@ public class sendEmailUtils {
 
     public static void main(String[] args) throws IOException, ParseException {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-
         Map<String, String> map = getText();
+//        System.out.println("map.get(Text)===" + map.get("pringIndex1"));
+//        System.out.println("map.get(Text)===" + map.get("pringIndex2"));
+//        System.out.println("map.get(Text)===" + map.get("pringIndex3"));
         System.out.println("map.get(subject)===" + map.get("subject"));
         System.out.println("map.get(Text)===" + map.get("Text"));
-//        Map<String, Object> map = getTextHSI();
-//        System.out.println("map.get(Text)===" + map.get("dateHSI"));
-//        System.out.println("map.get(Text)==="+ map.get("posHSI"));
+
 
     }
 }

@@ -16,6 +16,9 @@ import java.util.GregorianCalendar;
 
 import static invest.lixinger.index.fundamental.CN.request_indexFundamental_dateRange.getRequest_fundamental_dateRangeCN;
 
+/**
+ * 计算百分位，并存入到数据库
+ */
 public class hsagController extends mybatisNoSpringUtils {
 
     @Test
