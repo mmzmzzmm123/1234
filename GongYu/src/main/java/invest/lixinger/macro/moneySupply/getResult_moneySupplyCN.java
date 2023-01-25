@@ -2,7 +2,6 @@ package invest.lixinger.macro.moneySupply;
 
 import com.alibaba.fastjson.JSON;
 import invest.lixinger.macro.moneySupply.VO.moneySupplyCNResult_RootVO;
-import invest.lixinger.macro.nationalDebt.us.VO.nationalDebtUSResult_RootVO;
 
 public class getResult_moneySupplyCN {
     public static Object getResultObj(String jsonString){

@@ -1,4 +1,4 @@
-package invest.lixinger.macro.nationalDebt.us.VO;
+package invest.lixinger.macro.nationalDebt.VO;
 
 import lombok.Data;
 
@@ -14,8 +14,11 @@ public class nationalDebtUSResult_DataVO {
     private double mir_y2;
     private double mir_y3;
     private double mir_y5;
+    // 这个数据在理杏仁里面为0
     private double mir_y7;
     private double mir_y10;
+    // 计算百分位数值很低
     private double mir_y20;
+    // 计算百分位数值很低
     private double mir_y30;
 }

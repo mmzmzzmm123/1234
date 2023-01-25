@@ -1,4 +1,4 @@
-package invest.lixinger.macro.nationalDebt.us.VO;
+package invest.lixinger.macro.nationalDebt.VO;
 import lombok.Data;
 
 import java.util.List;

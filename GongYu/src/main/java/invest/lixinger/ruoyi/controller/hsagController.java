@@ -27,7 +27,6 @@ public class hsagController extends mybatisNoSpringUtils {
         indexFundamentalCNResult_RootVO resultVO = getRequest_fundamental_dateRangeCN(startDate);
         calculateFundamental(resultVO);
         System.out.println(startDate);
-
     }
 
     // 计算综合百分位

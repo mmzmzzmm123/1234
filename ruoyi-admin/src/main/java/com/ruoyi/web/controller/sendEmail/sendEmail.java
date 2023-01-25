@@ -21,6 +21,7 @@ public class sendEmail {
     @Autowired
     sendEmailUtils sendEmailUtils;
 
+//    @Test
     // 每个5秒发送邮件
 //    @Scheduled(cron = "0/15 * * * * *")
     @Scheduled(cron = "0 00 16 ? * *")

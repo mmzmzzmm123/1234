@@ -1,9 +1,8 @@
-package invest.lixinger.macro.nationalDebt.us.VO;
+package invest.lixinger.macro.nationalDebt.VO;
 
 import lombok.Data;
 
 import java.util.List;
-import java.sql.Date;
 
 @Data
 public class nationalDebtUSParam_RootVO {

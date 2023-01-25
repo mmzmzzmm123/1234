@@ -2,7 +2,6 @@ package invest.lixinger.macro.moneySupply;
 
 import invest.lixinger.macro.moneySupply.VO.moneySupplyCNParam_DataVO;
 import invest.lixinger.macro.moneySupply.VO.moneySupplyCNResult_RootVO;
-import invest.lixinger.macro.nationalDebt.us.getResult_nationDebtUS;
 import invest.lixinger.utils.netRequest;
 import org.yaml.snakeyaml.Yaml;
 
