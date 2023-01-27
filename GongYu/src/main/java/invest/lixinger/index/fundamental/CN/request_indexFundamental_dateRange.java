@@ -18,13 +18,13 @@ import java.util.Map;
  */
 public class request_indexFundamental_dateRange extends mybatisNoSpringUtils {
     public static void main(String[] args) throws IOException, ParseException {
-        SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd");
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         Date startDate = sdf.parse("2022-05-01");
-        indexFundamentalCNResult_RootVO vo=getRequest_fundamental_dateRangeCN(startDate);
+        indexFundamentalCNResult_RootVO vo = request_fundamental_dateRangeCN(startDate);
         System.out.println(vo);
     }
 
-    public static indexFundamentalCNResult_RootVO getRequest_fundamental_dateRangeCN(Date startDate) throws IOException, ParseException {
+    public static indexFundamentalCNResult_RootVO request_fundamental_dateRangeCN(Date startDate) throws IOException, ParseException {
         InputStream inputStream = request_indexFundamental_dateRange.class.getClassLoader().getResourceAsStream("indexReqParam.yml");
         Map indexReqParam = new Yaml().load(inputStream);
         String indexFundamentalCNURL = (String) indexReqParam.get("indexFundamentalCNURL");

@@ -8,7 +8,6 @@ import org.yaml.snakeyaml.Yaml;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.lang.reflect.Method;
 import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -34,10 +33,17 @@ public class request_nationDebt {
         double latestDayy10us = latestDayVO.getMir_y10();
         double oneMonthAgoy2us = oneMonthAgoVO.getMir_y2();
         double oneMonthAgoy10us = oneMonthAgoVO.getMir_y10();
-        String latestDayDebt = String.format("%.2f", (latestDayy2us - latestDayy10us) * 100);
-        String oneMonthAgoDebt = String.format("%.2f", (oneMonthAgoy2us - oneMonthAgoy10us) * 100);
-        System.out.println("最近日期美债倒挂比例：" + latestDayDebt);
-        System.out.println("一个月前美债倒挂比例：" + oneMonthAgoDebt);
+
+        Map<String,String>map=new HashMap<>();
+        if ((latestDayy2us - latestDayy10us) > 0 || (oneMonthAgoy2us - oneMonthAgoy10us) > 0) {
+            String latestDayDebtInverted = String.format("%.2f", (latestDayy2us - latestDayy10us) * 100);
+            String oneMonthAgoDebtInverted = String.format("%.2f", (oneMonthAgoy2us - oneMonthAgoy10us) * 100);
+            System.out.println("最近日期国债倒挂比例：" + latestDayDebtInverted + "，一个月前国债倒挂比例：" + oneMonthAgoDebtInverted);
+            map.put("latestDayDebtInverted",latestDayDebtInverted);
+            map.put("oneMonthAgoDebtInverted",oneMonthAgoDebtInverted);
+        } else {
+            System.out.println("最近日期、一个月前，国债没有倒挂");
+        }
     }
 
     // 计算中国国债收益率
@@ -62,11 +68,11 @@ public class request_nationDebt {
         if ((latestDayy2cn - latestDayy10cn) > 0 || (oneMonthAgoy2cn - oneMonthAgoy10cn) > 0) {
             String latestDayDebtInverted = String.format("%.2f", (latestDayy2cn - latestDayy10cn) * 100);
             String oneMonthAgoDebtInverted = String.format("%.2f", (oneMonthAgoy2cn - oneMonthAgoy10cn) * 100);
-            System.out.println("最近日期中债倒挂比例：" + latestDayDebtInverted + "，一个月前中债倒挂比例：" + oneMonthAgoDebtInverted);
+            System.out.println("最近日期美债倒挂比例：" + latestDayDebtInverted + "，一个月前美债倒挂比例：" + oneMonthAgoDebtInverted);
             map.put("latestDayDebtInverted",latestDayDebtInverted);
             map.put("oneMonthAgoDebtInverted",oneMonthAgoDebtInverted);
         } else {
-            System.out.println("最近日期、一个月前，国债没有倒挂");
+            System.out.println("最近日期、一个月前，美债没有倒挂");
         }
     }
 
@@ -131,16 +137,15 @@ public class request_nationDebt {
         double averagePos = totalPos / 4;
         map.put("averagePos", String.valueOf(averagePos));
         // ----------------------------
-        System.out.println("2debtValue：" + map.get("2debtValue"));
-        System.out.println("2debtPos：" + map.get("2debtPos"));
-        System.out.println("3debtValue：" + map.get("3debtValue"));
-        System.out.println("3debtPos：" + map.get("3debtPos"));
-        System.out.println("5debtValue：" + map.get("5debtValue"));
-        System.out.println("5debtPos：" + map.get("5debtPos"));
-        System.out.println("10debtValue：" + map.get("10debtValue"));
-        System.out.println("10debtPos：" + map.get("10debtPos"));
-
-        System.out.println("averagePos：" + map.get("averagePos"));
+//        System.out.println("2debtValue：" + map.get("2debtValue"));
+//        System.out.println("2debtPos：" + map.get("2debtPos"));
+//        System.out.println("3debtValue：" + map.get("3debtValue"));
+//        System.out.println("3debtPos：" + map.get("3debtPos"));
+//        System.out.println("5debtValue：" + map.get("5debtValue"));
+//        System.out.println("5debtPos：" + map.get("5debtPos"));
+        System.out.println("10年期国债数值：" + new DecimalFormat("0.00%").format(Double.valueOf(map.get("10debtValue"))));
+        System.out.println("10年期国债百分位：" + new DecimalFormat("0.00%").format(Double.valueOf(map.get("10debtPos"))));
+        System.out.println("平均后的国债百分位为：" + new DecimalFormat("0.00%").format(Double.valueOf(map.get("averagePos"))));
 
         return map;
     }

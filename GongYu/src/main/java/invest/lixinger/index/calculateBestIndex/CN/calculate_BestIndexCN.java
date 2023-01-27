@@ -25,6 +25,9 @@ import static invest.lixinger.index.fundamental.CN.getParam_indexFundamentalCN.g
 import static invest.lixinger.index.fundamental.CN.getResult_indexFundamentalCN.getResultObjCN;
 import static invest.lixinger.index.getAllIndex.CN.request_getAllIndexCN.requestGetAllIndexCN;
 
+/**
+ *
+ */
 public class calculate_BestIndexCN {
 
     @Test

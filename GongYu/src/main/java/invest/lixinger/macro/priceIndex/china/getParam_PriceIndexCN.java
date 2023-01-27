@@ -18,7 +18,7 @@ public class getParam_PriceIndexCN {
         String token = (String) indexReqParam.get("token");
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");//定义日期显示格式
         Calendar cal = Calendar.getInstance();
-        cal.add(Calendar.MONTH, -5);
+        cal.add(Calendar.YEAR, -10);
         String fiveMonthAgo = sdf.format(cal.getTime());
         String today = sdf.format(new Date());
 

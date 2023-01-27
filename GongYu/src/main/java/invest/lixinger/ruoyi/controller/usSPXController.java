@@ -1,39 +1,52 @@
 package invest.lixinger.ruoyi.controller;
 
-import mybatisNoSpringUtils.mybatisNoSpringUtils;
 import invest.lixinger.index.fundamental.CN.VO.indexFundamentalCNResult_RootVO;
+import invest.lixinger.index.fundamental.US.spx.VO.indexFundamentalSPXResult_DataVO;
+import invest.lixinger.index.fundamental.US.spx.VO.indexFundamentalSPXResult_RootVO;
+import invest.lixinger.index.fundamental.US.spx.getParam_indexFundamentalSPX;
+import invest.lixinger.index.fundamental.US.spx.getResult_indexFundamentalSPX;
+import invest.lixinger.index.fundamental.US.spx.request_indexFundamentalSPX;
 import invest.lixinger.ruoyi.entity.hsagVO;
+import invest.lixinger.ruoyi.entity.usspxVO;
 import invest.lixinger.ruoyi.mapper.hsagMapper;
+import invest.lixinger.ruoyi.mapper.usspxMapper;
+import invest.lixinger.utils.netRequest;
+import mybatisNoSpringUtils.mybatisNoSpringUtils;
 import org.junit.Test;
+import org.yaml.snakeyaml.Yaml;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
 import java.text.DecimalFormat;
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.Map;
 
 import static invest.lixinger.index.fundamental.CN.request_indexFundamental_dateRange.request_fundamental_dateRangeCN;
+import static invest.lixinger.index.fundamental.US.spx.request_indexFundamentalSPX.requestIndexFundamentalSPX;
+import static mybatisNoSpringUtils.mybatisNoSpringUtils.session;
 
-/**
- * 计算百分位，并存入到数据库
- */
-public class hsagController extends mybatisNoSpringUtils {
+public class usSPXController extends mybatisNoSpringUtils {
 
     @Test
-    public void hsag() throws IOException, ParseException {
-        Date startDate = nearestDateInDB();
-        indexFundamentalCNResult_RootVO resultVO = request_fundamental_dateRangeCN(startDate);
-        calculateCNFundamental(resultVO);
+    public void usSPXcontroller() throws IOException, ParseException {
+        SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd");
+        String startDate = sdf.format(nearestDateInDB());
+        indexFundamentalSPXResult_RootVO resultVO = requestIndexFundamentalSPX(startDate);
+        calculateFundamentalSPX(resultVO);
         System.out.println(startDate);
     }
 
     // 计算综合百分位
-    private void calculateCNFundamental(indexFundamentalCNResult_RootVO resultObj) {
-        hsagMapper hsagmapper = session.getMapper(hsagMapper.class);
+    public static void calculateFundamentalSPX(indexFundamentalSPXResult_RootVO resultObj) {
+        usspxMapper usspxmapper = session.getMapper(usspxMapper.class);
+        SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd");
         for (int i = 0; i < resultObj.getData().size(); i++) {
-            hsagVO vo = new hsagVO();
+            usspxVO vo = new usspxVO();
             Date currentDate = resultObj.getData().get(i).getDate();
             double spdw = resultObj.getData().get(i).getCp();
 
@@ -50,7 +63,7 @@ public class hsagController extends mybatisNoSpringUtils {
             double pb_cv = Double.parseDouble(String.format("%.2f", resultObj.getData().get(i).getPb().getY10().getMedian().getCv()));
             double ps_cv = Double.parseDouble(String.format("%.2f", resultObj.getData().get(i).getPs_ttm().getY10().getMedian().getCv()));
 
-            System.out.println(currentDate + "，的综合百分位为：" + new DecimalFormat("0.00%").format(result) );
+            System.out.println(sdf.format(currentDate) + "，的综合百分位为：" + new DecimalFormat("0.00%").format(result) );
             vo.setSj(currentDate);
             vo.setSpdw(spdw);
             vo.setPeCv(pe_cv);
@@ -63,21 +76,20 @@ public class hsagController extends mybatisNoSpringUtils {
             vo.setPbPos20(pb_20_cvpos);
             vo.setPsPos20(ps_20_cvpos);
             vo.setZonghePos(result);
-            hsagmapper.insert(vo);
+            usspxmapper.insert(vo);
         }
-    }
 
+    }
     // 统计在数据库中最新的时间
-    public Date nearestDateInDB() {
-        hsagMapper hsagmapper = session.getMapper(hsagMapper.class);
-        hsagVO vo = hsagmapper.nearestDateInDB();
+    public static Date nearestDateInDB() {
+        usspxMapper usspxmapper = session.getMapper(usspxMapper.class);
+        usspxVO vo = usspxmapper.nearestDateInDB();
         Date date = vo.getSj();
         Calendar calendar = new GregorianCalendar();
         calendar.setTime(date);
         calendar.add(Calendar.DATE, 1);
         return calendar.getTime();
     }
-
-    public hsagController() throws FileNotFoundException {
+    public usSPXController() throws FileNotFoundException {
     }
 }

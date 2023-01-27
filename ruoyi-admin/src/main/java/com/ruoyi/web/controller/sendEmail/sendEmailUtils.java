@@ -25,6 +25,7 @@ import invest.lixinger.macro.nationalDebt.getParam_nationDebtCN;
 import invest.lixinger.macro.nationalDebt.getParam_nationDebtUS;
 import invest.lixinger.macro.nationalDebt.getResult_nationDebtUS;
 import invest.lixinger.macro.nationalDebt.request_nationDebt;
+import invest.lixinger.macro.priceIndex.china.VO.PriceIndexCNResult_DataVO;
 import invest.lixinger.macro.priceIndex.china.VO.PriceIndexCNResult_RootVO;
 import invest.lixinger.macro.priceIndex.china.getParam_PriceIndexCN;
 import invest.lixinger.macro.priceIndex.china.getResult_PriceIndexCN;
@@ -233,7 +234,7 @@ public class sendEmailUtils {
             } else {
                 Text += "\t结论：当前环境不适合投资股票\n\n";
             }
-            // 中国cpi
+            // ----------------中国cpi----------------
             Map<String, Object> mapCNCPI = getTextCNPriceIndex();
             String CNCPI0 = (String) mapCNCPI.get("CNCPI0");
             String CNCPI1 = (String) mapCNCPI.get("CNCPI1");
@@ -241,7 +242,8 @@ public class sendEmailUtils {
             String CNCPI3 = (String) mapCNCPI.get("CNCPI3");
             String CNCPIDate = (String) mapCNCPI.get("CNCPIDate");
             Text += "▶中国cpi最新数据日期为：" + CNCPIDate + "，连续4个月的cpi为：" + CNCPI3 + "、" + CNCPI2 + "、" + CNCPI1 + "、" + CNCPI0 + "\n\n";
-            // SPX信号值----------------
+            Text += "近10年，cpi百分位为：" + mapCNCPI.get("CPIPos") + "\n\n";
+            // ----------------SPX信号值----------------
             Map<String, Object> mapSPX = getTextSPX();
             double posSPX = (double) mapSPX.get("posSPX");
             String dateSPX = (String) mapSPX.get("dateSPX");
@@ -251,7 +253,7 @@ public class sendEmailUtils {
             } else {
                 Text += "\t结论：美股暂无机会\n\n";
             }
-            // HSI信号值----------------
+            // ----------------HSI信号值----------------
             Map<String, Object> mapHSI = getTextHSI();
             double posHSI = (double) mapHSI.get("posHSI");
             String dateHSI = (String) mapHSI.get("dateHSI");
@@ -291,7 +293,7 @@ public class sendEmailUtils {
         InputStream inputStream = request_indexFundamentalSPX.class.getClassLoader().getResourceAsStream("indexReqParam.yml");
         Map indexReqParam = new Yaml().load(inputStream);
         String indexFundamentalUSURL = (String) indexReqParam.get("indexFundamentalUSURL");
-        String paramJson = getParam_indexFundamentalSPX.getSingleIndexParamJson();
+        String paramJson = getParam_indexFundamentalSPX.getSingleIndexParamJson("");
         String resultJson = netRequest.jsonNetPost(indexFundamentalUSURL, paramJson);
         indexFundamentalSPXResult_RootVO resultObj = (indexFundamentalSPXResult_RootVO) getResult_indexFundamentalSPX.getResultObj(resultJson);
         double result = calculateFundamentalSPX(resultObj);
@@ -358,6 +360,16 @@ public class sendEmailUtils {
         map.put("CNCPI2", new DecimalFormat("0.00%").format(resultObj.getData().get(2).getM().getCpi().getC_y2y()));
         map.put("CNCPI3", new DecimalFormat("0.00%").format(resultObj.getData().get(3).getM().getCpi().getC_y2y()));
         map.put("CNCPIDate", sdf.format(sdf.parse(resultObj.getData().get(0).getDate())));
+
+        List<PriceIndexCNResult_DataVO> dataVOList = resultObj.getData();
+        List<Double> tempList = new ArrayList<>();
+        for (int i = 0; i < dataVOList.size(); i++) {
+            tempList.add(dataVOList.get(i).getM().getCpi().getC_y2y());
+        }
+        Collections.sort(tempList);
+        double nearestCpi = dataVOList.get(0).getM().getCpi().getC_y2y();
+        double cpiPos = tempList.indexOf(nearestCpi) / (double) tempList.size();
+        map.put("CPIPos", new DecimalFormat("0.00%").format(cpiPos));
         return map;
     }
 
