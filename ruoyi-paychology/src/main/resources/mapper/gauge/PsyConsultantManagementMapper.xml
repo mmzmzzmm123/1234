@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.gauge.mapper.PsyConsultantManagementMapper">
+    
+    <resultMap type="PsyConsultantManagement" id="PsyConsultantManagementResult">
+        <result property="id"    column="id"    />
+        <result property="name"    column="name"    />
+        <result property="city"    column="city"    />
+        <result property="sex"    column="sex"    />
+        <result property="consultingDirection"    column="consulting_direction"    />
+        <result property="summary"    column="summary"    />
+        <result property="consultingNum"    column="consulting_num"    />
+        <result property="serviceDuration"    column="service_duration"    />
+        <result property="employmentTime"    column="employment_time"    />
+        <result property="consultationMethods"    column="consultation_methods"    />
+        <result property="introduce"    column="introduce"    />
+        <result property="headPortrait"    column="head_portrait"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+    </resultMap>
+
+    <sql id="selectPsyConsultantManagementVo">
+        select id, name, city, sex, consulting_direction, summary, consulting_num, service_duration, employment_time, consultation_methods, introduce, head_portrait, create_by, create_time, update_by, update_time from psy_consultant_management
+    </sql>
+
+    <select id="selectPsyConsultantManagementList" parameterType="PsyConsultantManagement" resultMap="PsyConsultantManagementResult">
+        <include refid="selectPsyConsultantManagementVo"/>
+        <where>  
+            <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
+            <if test="city != null  and city != ''"> and city = #{city}</if>
+            <if test="sex != null "> and sex = #{sex}</if>
+            <if test="consultingDirection != null  and consultingDirection != ''"> and consulting_direction = #{consultingDirection}</if>
+            <if test="summary != null  and summary != ''"> and summary = #{summary}</if>
+            <if test="consultingNum != null "> and consulting_num = #{consultingNum}</if>
+            <if test="serviceDuration != null "> and service_duration = #{serviceDuration}</if>
+            <if test="employmentTime != null "> and employment_time = #{employmentTime}</if>
+            <if test="consultationMethods != null  and consultationMethods != ''"> and consultation_methods = #{consultationMethods}</if>
+            <if test="introduce != null  and introduce != ''"> and introduce = #{introduce}</if>
+            <if test="headPortrait != null  and headPortrait != ''"> and head_portrait = #{headPortrait}</if>
+        </where>
+    </select>
+    
+    <select id="selectPsyConsultantManagementById" parameterType="Long" resultMap="PsyConsultantManagementResult">
+        <include refid="selectPsyConsultantManagementVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertPsyConsultantManagement" parameterType="PsyConsultantManagement" useGeneratedKeys="true" keyProperty="id">
+        insert into psy_consultant_management
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="name != null">name,</if>
+            <if test="city != null">city,</if>
+            <if test="sex != null">sex,</if>
+            <if test="consultingDirection != null">consulting_direction,</if>
+            <if test="summary != null">summary,</if>
+            <if test="consultingNum != null">consulting_num,</if>
+            <if test="serviceDuration != null">service_duration,</if>
+            <if test="employmentTime != null">employment_time,</if>
+            <if test="consultationMethods != null">consultation_methods,</if>
+            <if test="introduce != null">introduce,</if>
+            <if test="headPortrait != null">head_portrait,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="name != null">#{name},</if>
+            <if test="city != null">#{city},</if>
+            <if test="sex != null">#{sex},</if>
+            <if test="consultingDirection != null">#{consultingDirection},</if>
+            <if test="summary != null">#{summary},</if>
+            <if test="consultingNum != null">#{consultingNum},</if>
+            <if test="serviceDuration != null">#{serviceDuration},</if>
+            <if test="employmentTime != null">#{employmentTime},</if>
+            <if test="consultationMethods != null">#{consultationMethods},</if>
+            <if test="introduce != null">#{introduce},</if>
+            <if test="headPortrait != null">#{headPortrait},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updatePsyConsultantManagement" parameterType="PsyConsultantManagement">
+        update psy_consultant_management
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="name != null">name = #{name},</if>
+            <if test="city != null">city = #{city},</if>
+            <if test="sex != null">sex = #{sex},</if>
+            <if test="consultingDirection != null">consulting_direction = #{consultingDirection},</if>
+            <if test="summary != null">summary = #{summary},</if>
+            <if test="consultingNum != null">consulting_num = #{consultingNum},</if>
+            <if test="serviceDuration != null">service_duration = #{serviceDuration},</if>
+            <if test="employmentTime != null">employment_time = #{employmentTime},</if>
+            <if test="consultationMethods != null">consultation_methods = #{consultationMethods},</if>
+            <if test="introduce != null">introduce = #{introduce},</if>
+            <if test="headPortrait != null">head_portrait = #{headPortrait},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deletePsyConsultantManagementById" parameterType="Long">
+        delete from psy_consultant_management where id = #{id}
+    </delete>
+
+    <delete id="deletePsyConsultantManagementByIds" parameterType="String">
+        delete from psy_consultant_management where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>
