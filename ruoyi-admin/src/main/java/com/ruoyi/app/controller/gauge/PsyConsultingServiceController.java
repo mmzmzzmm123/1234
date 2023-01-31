@@ -28,7 +28,7 @@ import com.ruoyi.common.core.page.TableDataInfo;
 /**
  * 咨询服务Controller
  * 
- * @author ruoyi
+ * @author yangchuang
  * @date 2023-01-31
  */
 @RestController

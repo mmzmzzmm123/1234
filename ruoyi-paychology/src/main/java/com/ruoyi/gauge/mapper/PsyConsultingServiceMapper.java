@@ -7,7 +7,7 @@ import java.util.List;
 /**
  * 咨询服务Mapper接口
  * 
- * @author ruoyi
+ * @author yangchuang
  * @date 2023-01-31
  */
 public interface PsyConsultingServiceMapper 

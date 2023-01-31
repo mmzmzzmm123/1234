@@ -7,7 +7,7 @@ import java.util.List;
 /**
  * 咨询服务Service接口
  * 
- * @author ruoyi
+ * @author yangchuang
  * @date 2023-01-31
  */
 public interface IPsyConsultingServiceService 
