@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.gauge.mapper.PsyWorkManagementMapper">
+    
+    <resultMap type="PsyWorkManagement" id="PsyWorkManagementResult">
+        <result property="id"    column="id"    />
+        <result property="consultantId"    column="consultant_id"    />
+        <result property="shift"    column="shift"    />
+        <result property="timeInterval"    column="time_interval"    />
+        <result property="time"    column="time"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+    </resultMap>
+
+    <sql id="selectPsyWorkManagementVo">
+        select id, consultant_id, shift, time_interval, time, create_by, create_time, update_by, update_time from psy_work_management
+    </sql>
+
+    <select id="selectPsyWorkManagementList" parameterType="PsyWorkManagement" resultMap="PsyWorkManagementResult">
+        <include refid="selectPsyWorkManagementVo"/>
+        <where>  
+            <if test="consultantId != null "> and consultant_id = #{consultantId}</if>
+            <if test="shift != null  and shift != ''"> and shift = #{shift}</if>
+            <if test="timeInterval != null "> and time_interval = #{timeInterval}</if>
+            <if test="time != null "> and time = #{time}</if>
+        </where>
+    </select>
+    
+    <select id="selectPsyWorkManagementById" parameterType="Long" resultMap="PsyWorkManagementResult">
+        <include refid="selectPsyWorkManagementVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertPsyWorkManagement" parameterType="PsyWorkManagement" useGeneratedKeys="true" keyProperty="id">
+        insert into psy_work_management
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="consultantId != null">consultant_id,</if>
+            <if test="shift != null">shift,</if>
+            <if test="timeInterval != null">time_interval,</if>
+            <if test="time != null">time,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="consultantId != null">#{consultantId},</if>
+            <if test="shift != null">#{shift},</if>
+            <if test="timeInterval != null">#{timeInterval},</if>
+            <if test="time != null">#{time},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updatePsyWorkManagement" parameterType="PsyWorkManagement">
+        update psy_work_management
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="consultantId != null">consultant_id = #{consultantId},</if>
+            <if test="shift != null">shift = #{shift},</if>
+            <if test="timeInterval != null">time_interval = #{timeInterval},</if>
+            <if test="time != null">time = #{time},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deletePsyWorkManagementById" parameterType="Long">
+        delete from psy_work_management where id = #{id}
+    </delete>
+
+    <delete id="deletePsyWorkManagementByIds" parameterType="String">
+        delete from psy_work_management where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>
