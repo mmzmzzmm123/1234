@@ -36,7 +36,7 @@ public class PsyConsultingService extends BaseEntity
 
     /** 描述 */
     @Excel(name = "描述")
-    private String describe;
+    private String describes;
 
     public void setId(Long id) 
     {
@@ -83,14 +83,13 @@ public class PsyConsultingService extends BaseEntity
     {
         return price;
     }
-    public void setDescribe(String describe) 
-    {
-        this.describe = describe;
+
+    public String getDescribes() {
+        return describes;
     }
 
-    public String getDescribe() 
-    {
-        return describe;
+    public void setDescribes(String describes) {
+        this.describes = describes;
     }
 
     @Override
@@ -101,7 +100,7 @@ public class PsyConsultingService extends BaseEntity
             .append("serviceId", getServiceId())
             .append("type", getType())
             .append("price", getPrice())
-            .append("describe", getDescribe())
+            .append("describes", getDescribes())
             .append("createBy", getCreateBy())
             .append("createTime", getCreateTime())
             .append("updateBy", getUpdateBy())

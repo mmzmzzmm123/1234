@@ -10,7 +10,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="serviceId"    column="service_id"    />
         <result property="type"    column="type"    />
         <result property="price"    column="price"    />
-        <result property="describe"    column="describe"    />
+        <result property="describes"    column="describes"    />
         <result property="createBy"    column="create_by"    />
         <result property="createTime"    column="create_time"    />
         <result property="updateBy"    column="update_by"    />
@@ -18,7 +18,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </resultMap>
 
     <sql id="selectPsyConsultingServiceVo">
-        select id, consultant_id, service_id, type, price, describe, create_by, create_time, update_by, update_time from psy_consulting_service
+        select id, consultant_id, service_id, type, price, describes, create_by, create_time, update_by, update_time from psy_consulting_service
     </sql>
 
     <select id="selectPsyConsultingServiceList" parameterType="PsyConsultingService" resultMap="PsyConsultingServiceResult">
@@ -28,7 +28,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="serviceId != null "> and service_id = #{serviceId}</if>
             <if test="type != null "> and type = #{type}</if>
             <if test="price != null  and price != ''"> and price = #{price}</if>
-            <if test="describe != null  and describe != ''"> and describe = #{describe}</if>
+            <if test="describes != null  and describes != ''"> and describes = #{describes}</if>
         </where>
     </select>
     
@@ -44,7 +44,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="serviceId != null">service_id,</if>
             <if test="type != null">type,</if>
             <if test="price != null">price,</if>
-            <if test="describe != null">describe,</if>
+            <if test="describes != null">describes,</if>
             <if test="createBy != null">create_by,</if>
             <if test="createTime != null">create_time,</if>
             <if test="updateBy != null">update_by,</if>
@@ -55,7 +55,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="serviceId != null">#{serviceId},</if>
             <if test="type != null">#{type},</if>
             <if test="price != null">#{price},</if>
-            <if test="describe != null">#{describe},</if>
+            <if test="describes != null">#{describes},</if>
             <if test="createBy != null">#{createBy},</if>
             <if test="createTime != null">#{createTime},</if>
             <if test="updateBy != null">#{updateBy},</if>
@@ -70,7 +70,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="serviceId != null">service_id = #{serviceId},</if>
             <if test="type != null">type = #{type},</if>
             <if test="price != null">price = #{price},</if>
-            <if test="describe != null">describe = #{describe},</if>
+            <if test="describes != null">describes = #{describes},</if>
             <if test="createBy != null">create_by = #{createBy},</if>
             <if test="createTime != null">create_time = #{createTime},</if>
             <if test="updateBy != null">update_by = #{updateBy},</if>
