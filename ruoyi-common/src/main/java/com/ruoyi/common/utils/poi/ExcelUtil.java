@@ -983,15 +983,20 @@ public class ExcelUtil<T>
         }
         if (StringUtils.isNotEmpty(attr.prompt()) || attr.combo().length > 0)
         {
-            if (attr.combo().length > 15 || StringUtils.join(attr.combo()).length() > 255)
+            String[] comboArray = attr.combo();
+            if (StringUtils.isNotEmpty(attr.dictType()))
+            {
+                comboArray = DictUtils.getDictAllLabel(attr.dictType());
+            }
+            if (comboArray.length > 15 || StringUtils.join(comboArray).length() > 255)
             {
                 // 如果下拉数大于15或字符串长度大于255，则使用一个新sheet存储，避免生成的模板下拉值获取不到
-                setXSSFValidationWithHidden(sheet, attr.combo(), attr.prompt(), 1, 100, column, column);
+                setXSSFValidationWithHidden(sheet, comboArray, attr.prompt(), 1, 100, column, column);
             }
             else
             {
                 // 提示信息或只能选择不能输入的列内容.
-                setPromptOrValidation(sheet, attr.combo(), attr.prompt(), 1, 100, column, column);
+                setPromptOrValidation(sheet, comboArray, attr.prompt(), 1, 100, column, column);
             }
         }
     }
