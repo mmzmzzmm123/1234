@@ -1,5 +1,6 @@
 package com.ruoyi.common.utils;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import com.alibaba.fastjson2.JSONArray;
@@ -152,6 +153,40 @@ public class DictUtils
             }
         }
         return StringUtils.stripEnd(propertyString.toString(), separator);
+    }
+
+    /**
+     * 根据字典类型获取字典所有值
+     *
+     * @param dictType  字典类型
+     * @return 字典值
+     */
+    public static String getDictAllValue(String dictType)
+    {
+        StringBuilder propertyString = new StringBuilder();
+        List<SysDictData> datas = getDictCache(dictType);
+        for (SysDictData dict : datas)
+        {
+            propertyString.append(dict.getDictValue()).append(SEPARATOR);
+        }
+        return StringUtils.stripEnd(propertyString.toString(), SEPARATOR);
+    }
+
+    /**
+     * 根据字典类型获取字典所有标签
+     *
+     * @param dictType  字典类型
+     * @return 字典值
+     */
+    public static String[] getDictAllLabel(String dictType)
+    {
+        List<SysDictData> datas = getDictCache(dictType);
+        List<String> labels = new ArrayList<>();
+        for (SysDictData dict : datas)
+        {
+            labels.add(dict.getDictLabel());
+        }
+        return labels.toArray(new String[0]);
     }
 
     /**
