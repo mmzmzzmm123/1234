@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.goods.mapper.GoodsClassifyMapper">
+    
+    <resultMap type="GoodsClassify" id="GoodsClassifyResult">
+        <result property="classifyId"    column="classify_id"    />
+        <result property="parentId"    column="parent_id"    />
+        <result property="ancestors"    column="ancestors"    />
+        <result property="classifyName"    column="classify_name"    />
+        <result property="orderNum"    column="order_num"    />
+        <result property="status"    column="status"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+    </resultMap>
+
+    <sql id="selectGoodsClassifyVo">
+        select classify_id, parent_id, ancestors, classify_name, order_num, status, create_by, create_time, update_by, update_time from goods_classify
+    </sql>
+
+    <select id="selectGoodsClassifyList" parameterType="GoodsClassify" resultMap="GoodsClassifyResult">
+        <include refid="selectGoodsClassifyVo"/>
+        <where>  
+            <if test="classifyName != null  and classifyName != ''"> and classify_name like concat('%', #{classifyName}, '%')</if>
+            <if test="status != null  and status != ''"> and status = #{status}</if>
+        </where>
+    </select>
+    
+    <select id="selectGoodsClassifyByClassifyId" parameterType="Long" resultMap="GoodsClassifyResult">
+        <include refid="selectGoodsClassifyVo"/>
+        where classify_id = #{classifyId}
+    </select>
+
+    <select id="selectClassifyById" parameterType="Long" resultMap="GoodsClassifyResult">
+        select d.classify_id, d.parent_id, d.ancestors, d.classify_name, d.order_num, d.status,
+               (select classify_name from goods_classify where classify_id = d.parent_id) parent_name
+        from goods_classify d
+        where d.classify_id = #{deptId}
+    </select>
+
+    <select id="selectChildrenClassifyById" parameterType="Long" resultMap="GoodsClassifyResult">
+        select * from goods_classify where find_in_set(#{classifyId}, ancestors)
+    </select>
+
+    <insert id="insertGoodsClassify" parameterType="GoodsClassify" useGeneratedKeys="true" keyProperty="classifyId">
+        insert into goods_classify
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="parentId != null">parent_id,</if>
+            <if test="ancestors != null">ancestors,</if>
+            <if test="classifyName != null">classify_name,</if>
+            <if test="orderNum != null">order_num,</if>
+            <if test="status != null">status,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="parentId != null">#{parentId},</if>
+            <if test="ancestors != null">#{ancestors},</if>
+            <if test="classifyName != null">#{classifyName},</if>
+            <if test="orderNum != null">#{orderNum},</if>
+            <if test="status != null">#{status},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateGoodsClassify" parameterType="GoodsClassify">
+        update goods_classify
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="parentId != null">parent_id = #{parentId},</if>
+            <if test="ancestors != null">ancestors = #{ancestors},</if>
+            <if test="classifyName != null">classify_name = #{classifyName},</if>
+            <if test="orderNum != null">order_num = #{orderNum},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+        </trim>
+        where classify_id = #{classifyId}
+    </update>
+
+    <delete id="deleteGoodsClassifyByClassifyId" parameterType="Long">
+        delete from goods_classify where classify_id = #{classifyId}
+    </delete>
+
+    <delete id="deleteGoodsClassifyByClassifyIds" parameterType="String">
+        delete from goods_classify where classify_id in 
+        <foreach item="classifyId" collection="array" open="(" separator="," close=")">
+            #{classifyId}
+        </foreach>
+    </delete>
+
+    <select id="hasChildByClassifyId" parameterType="Long" resultType="int">
+        select count(1) from goods_classify
+        where parent_id = #{classifyId} limit 1
+    </select>
+
+    <update id="updateClassifyChildren" parameterType="java.util.List">
+        update goods_classify set ancestors =
+        <foreach collection="classifys" item="item" index="index"
+                 separator=" " open="case classify_id" close="end">
+            when #{item.classifyId} then #{item.ancestors}
+        </foreach>
+        where classify_id in
+        <foreach collection="classifys" item="item" index="index"
+                 separator="," open="(" close=")">
+            #{item.classifyId}
+        </foreach>
+    </update>
+</mapper>

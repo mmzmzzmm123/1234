@@ -239,6 +239,13 @@
                 <artifactId>ruoyi-processing</artifactId>
                 <version>${ruoyi.version}</version>
             </dependency>
+
+            <!-- 货品管理 -->
+            <dependency>
+                <groupId>com.ruoyi</groupId>
+                <artifactId>ruoyi-goods</artifactId>
+                <version>${ruoyi.version}</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 
@@ -252,6 +259,7 @@
         <module>ruoyi-message</module>
         <module>ruoyi-push</module>
         <module>ruoyi-processing</module>
+        <module>ruoyi-goods</module>
     </modules>
     <packaging>pom</packaging>
 
