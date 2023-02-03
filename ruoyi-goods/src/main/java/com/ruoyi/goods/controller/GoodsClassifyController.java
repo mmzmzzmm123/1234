@@ -59,19 +59,6 @@ public class GoodsClassifyController extends BaseController {
         return success(classifys);
     }
 
-
-    /**
-     * 导出货品分类列表
-     */
-    @PreAuthorize("@ss.hasPermi('goods:classify:export')")
-    @Log(title = "货品分类", businessType = BusinessType.EXPORT)
-    @PostMapping("/export")
-    public void export(HttpServletResponse response, GoodsClassify goodsClassify) {
-        List<GoodsClassify> list = goodsClassifyService.selectGoodsClassifyList(goodsClassify);
-        ExcelUtil<GoodsClassify> util = new ExcelUtil<GoodsClassify>(GoodsClassify.class);
-        util.exportExcel(response, list, "货品分类数据");
-    }
-
     /**
      * 获取货品分类详细信息
      */

@@ -40,6 +40,3 @@ values('货品分类修改', @parentId, '3',  '#', '', 1, 0, 'F', '0', '0', 'goo
 
 insert into sys_menu (menu_name, parent_id, order_num, path, component, is_frame, is_cache, menu_type, visible, status, perms, icon, create_by, create_time, update_by, update_time, remark)
 values('货品分类删除', @parentId, '4',  '#', '', 1, 0, 'F', '0', '0', 'goods:classify:remove',       '#', 'admin', sysdate(), '', null, '');
-
-insert into sys_menu (menu_name, parent_id, order_num, path, component, is_frame, is_cache, menu_type, visible, status, perms, icon, create_by, create_time, update_by, update_time, remark)
-values('货品分类导出', @parentId, '5',  '#', '', 1, 0, 'F', '0', '0', 'goods:classify:export',       '#', 'admin', sysdate(), '', null, '');
