@@ -27,6 +27,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="classifyName != null  and classifyName != ''"> and classify_name like concat('%', #{classifyName}, '%')</if>
             <if test="status != null  and status != ''"> and status = #{status}</if>
         </where>
+        order by parent_id, order_num
     </select>
     
     <select id="selectGoodsClassifyByClassifyId" parameterType="Long" resultMap="GoodsClassifyResult">
