@@ -109,10 +109,22 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
                  separator=" " open="case classify_id" close="end">
             when #{item.classifyId} then #{item.ancestors}
         </foreach>
+        ,status =
+        <foreach collection="classifys" item="item" index="index"
+             separator=" " open="case classify_id" close="end">
+            when #{item.classifyId} then #{item.status}
+        </foreach>
         where classify_id in
         <foreach collection="classifys" item="item" index="index"
                  separator="," open="(" close=")">
             #{item.classifyId}
+        </foreach>
+    </update>
+
+    <update id="updateClassifyStatusNormal" parameterType="Long">
+        update goods_classify set status = '0' where classify_id in
+        <foreach collection="array" item="classifyId" open="(" separator="," close=")">
+            #{classifyId}
         </foreach>
     </update>
 </mapper>

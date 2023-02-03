@@ -56,7 +56,7 @@
       :default-expand-all="isExpandAll"
       :tree-props="{children: 'children', hasChildren: 'hasChildren'}"
     >
-      <el-table-column label="分类名称" align="center" prop="classifyName" />
+      <el-table-column label="分类名称" align="left" prop="classifyName" />
       <el-table-column label="显示顺序" align="center" prop="orderNum" />
       <el-table-column label="使用状态" align="center" prop="status">
         <template slot-scope="scope">

@@ -94,4 +94,11 @@ public interface GoodsClassifyMapper extends BaseMapper<GoodsClassify> {
      * @return 结果
      */
     public int updateClassifyChildren(@Param("classifys") List<GoodsClassify> classifys);
+
+    /**
+     * 修改所在分类正常状态
+     *
+     * @param classifyIds 分类ID组
+     */
+    public void updateClassifyStatusNormal(Long[] classifyIds);
 }

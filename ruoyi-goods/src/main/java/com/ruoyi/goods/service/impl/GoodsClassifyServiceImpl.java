@@ -1,18 +1,17 @@
 package com.ruoyi.goods.service.impl;
 
-import java.util.List;
-
-import com.ruoyi.common.core.domain.entity.SysDept;
-import com.ruoyi.common.utils.DateUtils;
-
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.ruoyi.common.constant.UserConstants;
+import com.ruoyi.common.core.text.Convert;
+import com.ruoyi.common.utils.DateUtils;
 import com.ruoyi.common.utils.StringUtils;
-import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import com.ruoyi.goods.mapper.GoodsClassifyMapper;
 import com.ruoyi.goods.domain.GoodsClassify;
+import com.ruoyi.goods.mapper.GoodsClassifyMapper;
 import com.ruoyi.goods.service.IGoodsClassifyService;
+import lombok.AllArgsConstructor;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 /**
  * 货品分类Service业务层处理
@@ -94,24 +93,33 @@ public class GoodsClassifyServiceImpl extends ServiceImpl<GoodsClassifyMapper, G
             }
             String oldAncestors = oldClassify.getAncestors();
             goodsClassify.setAncestors(newAncestors);
-            updateDeptChildren(goodsClassify.getClassifyId(), newAncestors, oldAncestors);
+            updateDeptChildren(goodsClassify.getClassifyId(), newAncestors, oldAncestors, goodsClassify.getStatus());
         }
 
         goodsClassify.setUpdateTime(DateUtils.getNowDate());
-        return goodsClassifyMapper.updateGoodsClassify(goodsClassify);
+        int result = goodsClassifyMapper.updateGoodsClassify(goodsClassify);
+
+        if (UserConstants.NORMAL.equals(goodsClassify.getStatus()) && StringUtils.isNotEmpty(goodsClassify.getAncestors())
+                && !StringUtils.equals("0", goodsClassify.getAncestors())) {
+            // 如果该分类是启用状态，则启用该分类的所有上级分类
+            updateParentClassifyStatusNormal(goodsClassify);
+        }
+        return result;
     }
 
     /**
      * 修改子元素关系
      *
-     * @param deptId       被修改的分类ID
+     * @param ClassifyId   被修改的分类ID
      * @param newAncestors 新的父ID集合
      * @param oldAncestors 旧的父ID集合
+     * @param status       状态
      */
-    public void updateDeptChildren(Long deptId, String newAncestors, String oldAncestors) {
-        List<GoodsClassify> children = goodsClassifyMapper.selectChildrenClassifyById(deptId);
+    public void updateDeptChildren(Long ClassifyId, String newAncestors, String oldAncestors, String status) {
+        List<GoodsClassify> children = goodsClassifyMapper.selectChildrenClassifyById(ClassifyId);
         for (GoodsClassify child : children) {
             child.setAncestors(child.getAncestors().replaceFirst(oldAncestors, newAncestors));
+            child.setStatus(status);
         }
         if (children.size() > 0) {
             goodsClassifyMapper.updateClassifyChildren(children);
@@ -151,5 +159,17 @@ public class GoodsClassifyServiceImpl extends ServiceImpl<GoodsClassifyMapper, G
     public boolean hasChildByClassifyId(Long classifyId) {
         int result = goodsClassifyMapper.hasChildByClassifyId(classifyId);
         return result > 0;
+    }
+
+
+    /**
+     * 修改该分类的父级部门状态
+     *
+     * @param goodsClassify 当前分类
+     */
+    private void updateParentClassifyStatusNormal(GoodsClassify goodsClassify) {
+        String ancestors = goodsClassify.getAncestors();
+        Long[] classifyIds = Convert.toLongArray(ancestors);
+        goodsClassifyMapper.updateClassifyStatusNormal(classifyIds);
     }
 }
