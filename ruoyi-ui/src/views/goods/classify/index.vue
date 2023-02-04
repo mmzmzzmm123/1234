@@ -32,7 +32,7 @@
           plain
           icon="el-icon-plus"
           size="mini"
-          @click="handleAdd"
+          @click="handleAdd(null)"
           v-hasPermi="['goods:classify:add']"
         >新增</el-button>
       </el-col>
@@ -146,7 +146,7 @@ export default {
       // 是否显示弹出层
       open: false,
       // 是否展开，默认全部展开
-      isExpandAll: true,
+      isExpandAll: false,
       // 重新渲染表格状态
       refreshTable: true,
       // 查询参数
@@ -237,6 +237,17 @@ export default {
       } else {
         this.form.parentId = 0;
       }
+      if (!row){
+        if(!this.classifyList || this.classifyList.length == 0){
+          this.form.orderNum = "1";
+        }else{
+          this.form.orderNum = this.classifyList[this.classifyList.length - 1].orderNum * 1 + 1
+        }
+      }else if(!row.children || row.children.length == 0){
+        this.form.orderNum = "1";
+      }else{
+        this.form.orderNum = row.children[row.children.length - 1].orderNum * 1 + 1
+      }     
       this.open = true;
       this.title = "添加货品分类";
     },
