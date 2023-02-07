@@ -161,6 +161,29 @@ public class GoodsClassifyServiceImpl extends ServiceImpl<GoodsClassifyMapper, G
         return result > 0;
     }
 
+    /**
+     * 查询所在层级
+     *
+     * @param classifyId
+     * @return
+     */
+    @Override
+    public Integer selectLevel(Long classifyId) {
+        return goodsClassifyMapper.selectLevel(classifyId);
+    }
+
+
+    /**
+     * 查询所在层级最大子层级
+     *
+     * @param classifyId
+     * @return
+     */
+    @Override
+    public Integer selectLevelMax(Long classifyId) {
+        return goodsClassifyMapper.selectLevelMax(classifyId);
+    }
+
 
     /**
      * 修改该分类的父级部门状态

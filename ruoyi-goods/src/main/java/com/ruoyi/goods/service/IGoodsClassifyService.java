@@ -1,11 +1,9 @@
 package com.ruoyi.goods.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.ruoyi.goods.domain.GoodsClassify;
 
 import java.util.List;
-
-import com.ruoyi.common.core.domain.entity.SysDept;
-import com.ruoyi.goods.domain.GoodsClassify;
 
 /**
  * 货品分类Service接口
@@ -77,4 +75,21 @@ public interface IGoodsClassifyService extends IService<GoodsClassify> {
      * @return 结果
      */
     public boolean hasChildByClassifyId(Long classifyId);
+
+    /**
+     * 查询所在层级
+     *
+     * @param classifyId
+     * @return
+     */
+    public Integer selectLevel(Long classifyId);
+
+
+    /**
+     * 查询所在层级最大子层级
+     *
+     * @param classifyId
+     * @return
+     */
+    public Integer selectLevelMax(Long classifyId);
 }

@@ -3,7 +3,7 @@
 PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.ruoyi.goods.mapper.GoodsClassifyMapper">
-    
+
     <resultMap type="GoodsClassify" id="GoodsClassifyResult">
         <result property="classifyId"    column="classify_id"    />
         <result property="parentId"    column="parent_id"    />
@@ -23,13 +23,13 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
     <select id="selectGoodsClassifyList" parameterType="GoodsClassify" resultMap="GoodsClassifyResult">
         <include refid="selectGoodsClassifyVo"/>
-        <where>  
+        <where>
             <if test="classifyName != null  and classifyName != ''"> and classify_name like concat('%', #{classifyName}, '%')</if>
             <if test="status != null  and status != ''"> and status = #{status}</if>
         </where>
         order by parent_id, order_num
     </select>
-    
+
     <select id="selectGoodsClassifyByClassifyId" parameterType="Long" resultMap="GoodsClassifyResult">
         <include refid="selectGoodsClassifyVo"/>
         where classify_id = #{classifyId}
@@ -93,7 +93,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </delete>
 
     <delete id="deleteGoodsClassifyByClassifyIds" parameterType="String">
-        delete from goods_classify where classify_id in 
+        delete from goods_classify where classify_id in
         <foreach item="classifyId" collection="array" open="(" separator="," close=")">
             #{classifyId}
         </foreach>
@@ -128,4 +128,35 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             #{classifyId}
         </foreach>
     </update>
+
+    <select id="selectLevel" parameterType="Long" resultType="Integer">
+        SELECT
+           length( ancestors )- length( REPLACE ( ancestors, ',', '' ))
+        FROM
+            goods_classify
+        WHERE
+            classify_id = #{classifyId}
+    </select>
+
+    <select id="selectLevelMax" parameterType="Long" resultType="Integer">
+        SELECT
+            IFNULL(
+                    Max(
+                                length(
+                                        SUBSTR( a.ancestors, length( b.ancestors ) + 2 ))- length(
+                                        REPLACE ( SUBSTR( a.ancestors, length( b.ancestors ) + 2 ), ',', '' ))
+                        ),
+                    0
+                )
+        FROM
+            goods_classify a,(
+            SELECT
+                b.ancestors
+            FROM
+                goods_classify b
+            WHERE
+                b.classify_id = #{classifyId}
+        ) b
+        WHERE a.ancestors LIKE concat(b.ancestors,",%")
+    </select>
 </mapper>

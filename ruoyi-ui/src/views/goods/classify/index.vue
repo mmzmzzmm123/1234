@@ -73,6 +73,7 @@
             v-hasPermi="['goods:classify:edit']"
           >修改</el-button>
           <el-button
+            v-if="scope.row.ancestors.split(',').length < 3"
             size="mini"
             type="text"
             icon="el-icon-plus"
@@ -80,6 +81,7 @@
             v-hasPermi="['goods:classify:add']"
           >新增</el-button>
           <el-button
+            v-if="!scope.row.children || scope.row.children.length == 0"
             size="mini"
             type="text"
             icon="el-icon-delete"

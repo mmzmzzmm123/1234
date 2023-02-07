@@ -10,7 +10,8 @@ CREATE TABLE `goods_classify`
     `create_time` datetime    DEFAULT NULL COMMENT '创建时间',
     `update_by`   varchar(64) DEFAULT '' COMMENT '更新者',
     `update_time` datetime    DEFAULT NULL COMMENT '更新时间',
-    PRIMARY KEY (`classify_id`)
+    PRIMARY KEY (`classify_id`),
+    KEY `id_ancestors` (`ancestors`)
 ) ENGINE=InnoDB AUTO_INCREMENT=100 DEFAULT COMMENT='货品分类表';
 
 

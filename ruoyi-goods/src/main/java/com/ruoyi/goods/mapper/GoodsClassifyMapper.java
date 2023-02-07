@@ -101,4 +101,21 @@ public interface GoodsClassifyMapper extends BaseMapper<GoodsClassify> {
      * @param classifyIds 分类ID组
      */
     public void updateClassifyStatusNormal(Long[] classifyIds);
+
+    /**
+     * 查询所在层级
+     *
+     * @param classifyId
+     * @return
+     */
+    public Integer selectLevel(Long classifyId);
+
+
+    /**
+     * 查询所在层级最大子层级
+     *
+     * @param classifyId
+     * @return
+     */
+    public Integer selectLevelMax(Long classifyId);
 }
