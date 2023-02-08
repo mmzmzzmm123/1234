@@ -125,7 +125,7 @@ export function download(url, params, filename, config) {
     responseType: 'blob',
     ...config
   }).then(async (data) => {
-    const isBlob = await blobValidate(data);
+    const isBlob = blobValidate(data);
     if (isBlob) {
       const blob = new Blob([data])
       saveAs(blob, filename)
