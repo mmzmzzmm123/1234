@@ -118,4 +118,11 @@ public interface GoodsClassifyMapper extends BaseMapper<GoodsClassify> {
      * @return
      */
     public Integer selectLevelMax(Long classifyId);
+
+
+    /**
+     * 更新子节点 排序
+     * @param parentClassifyId
+     */
+    public void updateChildOrderNums(Long parentClassifyId);
 }

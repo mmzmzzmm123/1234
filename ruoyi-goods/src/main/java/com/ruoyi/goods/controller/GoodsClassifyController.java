@@ -39,40 +39,6 @@ public class GoodsClassifyController extends BaseController {
     private IGoodsClassifyService goodsClassifyService;
 
     /**
-     * 层级检查
-     *
-     * @param goodsClassify
-     * @return
-     */
-    private boolean checkPassLevel(GoodsClassify goodsClassify) {
-        if (goodsClassify.getParentId() == null || goodsClassify.getParentId() <= 0) {
-            goodsClassify.setParentId(0L);
-        }
-
-        if (goodsClassify.getParentId().equals(0L)) {
-            return true;
-        }
-
-        // 父层级检查
-        Integer parentLevel = goodsClassifyService.selectLevel(goodsClassify.getParentId());
-        if (parentLevel == null) {
-            return false;
-        }
-        // 子层级检查
-        int currentLevel = parentLevel + 1;
-        Integer currentChildMaxLevel = 0;
-        if (goodsClassify.getClassifyId() != null) {
-            currentChildMaxLevel = goodsClassifyService.selectLevelMax(goodsClassify.getClassifyId());
-        }
-
-        if (currentLevel + currentChildMaxLevel > GoodsConst.CLASSIFY_MAX_LEVEL - 1) {
-            // 不允许最大层级
-            return false;
-        }
-        return true;
-    }
-
-    /**
      * 查询货品分类列表
      */
     @PreAuthorize("@ss.hasPermi('goods:classify:list')")
@@ -109,15 +75,19 @@ public class GoodsClassifyController extends BaseController {
     @Log(title = "货品分类", businessType = BusinessType.INSERT)
     @PostMapping
     public AjaxResult add(@RequestBody GoodsClassify goodsClassify) {
-        if (!checkPassLevel(goodsClassify)) {
+        if (!goodsClassifyService.checkPassLevel(goodsClassify)) {
             return error("最多" + GoodsConst.CLASSIFY_MAX_LEVEL + "层分类");
         }
         goodsClassify.setCreateBy(getUsername());
-        return toAjax(goodsClassifyService.insertGoodsClassify(goodsClassify));
+        AjaxResult ajaxResult = toAjax(goodsClassifyService.insertGoodsClassify(goodsClassify));
+
+        goodsClassifyService.updateChildOrderNums(goodsClassify.getParentId());
+        return ajaxResult;
     }
 
     /**
-     * 修改货品分类
+     * 修改货品分类0.0
+     * *0
      */
     @PreAuthorize("@ss.hasPermi('goods:classify:edit')")
     @Log(title = "货品分类", businessType = BusinessType.UPDATE)
@@ -126,11 +96,14 @@ public class GoodsClassifyController extends BaseController {
         if (goodsClassify.getParentId().equals(goodsClassify.getClassifyId())) {
             return error("修改分类'" + goodsClassify.getClassifyName() + "'失败，上级分类不能是自己");
         }
-        if (!checkPassLevel(goodsClassify)) {
+        if (!goodsClassifyService.checkPassLevel(goodsClassify)) {
             return error("最多" + GoodsConst.CLASSIFY_MAX_LEVEL + "层分类");
         }
         goodsClassify.setUpdateBy(getUsername());
-        return toAjax(goodsClassifyService.updateGoodsClassify(goodsClassify));
+        AjaxResult ajaxResult = toAjax(goodsClassifyService.updateGoodsClassify(goodsClassify));
+        
+        goodsClassifyService.updateChildOrderNums(goodsClassify.getParentId());
+        return ajaxResult;
     }
 
     /**

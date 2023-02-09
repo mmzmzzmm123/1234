@@ -159,4 +159,15 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         ) b
         WHERE a.ancestors LIKE concat(b.ancestors,",%")
     </select>
+
+    <update id="updateChildOrderNums"  parameterType="Long">
+        UPDATE goods_classify t, ( SELECT a.classify_id,( @rownum := @rownum + 1 ) rownum
+            FROM
+            ( SELECT classify_id FROM goods_classify WHERE parent_id = #{parentClassifyId} ORDER BY order_num ) a,
+            ( SELECT @rownum := - 1 ) b
+            ) t1
+        SET t.order_num = t1.rownum
+        WHERE
+            t.classify_id = t1.classify_id
+    </update>
 </mapper>

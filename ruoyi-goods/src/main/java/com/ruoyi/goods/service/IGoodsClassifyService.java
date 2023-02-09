@@ -12,6 +12,15 @@ import java.util.List;
  * @date 2023-02-02
  */
 public interface IGoodsClassifyService extends IService<GoodsClassify> {
+
+    /**
+     * 层级检查
+     *
+     * @param goodsClassify
+     * @return
+     */
+    public boolean checkPassLevel(GoodsClassify goodsClassify);
+
     /**
      * 查询货品分类
      *
@@ -92,4 +101,10 @@ public interface IGoodsClassifyService extends IService<GoodsClassify> {
      * @return
      */
     public Integer selectLevelMax(Long classifyId);
+
+    /**
+     * 更新子节点 排序
+     * @param parentClassifyId
+     */
+    public void updateChildOrderNums(Long parentClassifyId);
 }

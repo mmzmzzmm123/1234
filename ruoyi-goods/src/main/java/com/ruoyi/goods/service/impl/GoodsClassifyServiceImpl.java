@@ -5,6 +5,7 @@ import com.ruoyi.common.constant.UserConstants;
 import com.ruoyi.common.core.text.Convert;
 import com.ruoyi.common.utils.DateUtils;
 import com.ruoyi.common.utils.StringUtils;
+import com.ruoyi.goods.consts.GoodsConst;
 import com.ruoyi.goods.domain.GoodsClassify;
 import com.ruoyi.goods.mapper.GoodsClassifyMapper;
 import com.ruoyi.goods.service.IGoodsClassifyService;
@@ -23,6 +24,42 @@ import java.util.List;
 @AllArgsConstructor
 public class GoodsClassifyServiceImpl extends ServiceImpl<GoodsClassifyMapper, GoodsClassify> implements IGoodsClassifyService {
     private GoodsClassifyMapper goodsClassifyMapper;
+
+
+    /**
+     * 层级检查
+     *
+     * @param goodsClassify
+     * @return
+     */
+    @Override
+    public boolean checkPassLevel(GoodsClassify goodsClassify) {
+        if (goodsClassify.getParentId() == null || goodsClassify.getParentId() <= 0) {
+            goodsClassify.setParentId(0L);
+        }
+
+        if (goodsClassify.getParentId().equals(0L)) {
+            return true;
+        }
+
+        // 父层级检查
+        Integer parentLevel = goodsClassifyMapper.selectLevel(goodsClassify.getParentId());
+        if (parentLevel == null) {
+            return false;
+        }
+        // 子层级检查
+        int currentLevel = parentLevel + 1;
+        Integer currentChildMaxLevel = 0;
+        if (goodsClassify.getClassifyId() != null) {
+            currentChildMaxLevel = goodsClassifyMapper.selectLevelMax(goodsClassify.getClassifyId());
+        }
+
+        if (currentLevel + currentChildMaxLevel > GoodsConst.CLASSIFY_MAX_LEVEL - 1) {
+            // 不允许最大层级
+            return false;
+        }
+        return true;
+    }
 
     /**
      * 查询货品分类
@@ -182,6 +219,16 @@ public class GoodsClassifyServiceImpl extends ServiceImpl<GoodsClassifyMapper, G
     @Override
     public Integer selectLevelMax(Long classifyId) {
         return goodsClassifyMapper.selectLevelMax(classifyId);
+    }
+
+
+    /**
+     * 更新子节点 排序
+     * @param parentClassifyId
+     */
+    @Override
+    public void updateChildOrderNums(Long parentClassifyId) {
+        goodsClassifyMapper.updateChildOrderNums(parentClassifyId);
     }
 
 
