@@ -30,9 +30,9 @@ import java.io.IOException;
 @Slf4j
 public class WxAuthorizeController {
 
-    private static String APP_ID = "wx8604d98104f67e66";
-    private static String APP_SECRET = "98dca366602a0806da390ed138e4a7ea";
-    private static String PAGE_URL = "http://10.28.124.184:8080";
+    private static String APP_ID = "wx81f97b38440a3b86";
+    private static String APP_SECRET = "f259b9c0951de86bcfda3e482e7b3c45";
+    private static String PAGE_URL = "http://127.0.0.1:8089";
 
     @Autowired
     private IPsyUserService psyUserService;
