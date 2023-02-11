@@ -71,14 +71,14 @@ spring:
   redis:
     # 地址
 #    host: localhost
-    host: 192.168.10.133
+    host: 140.210.209.124
     # 端口，默认为6379
     port: 6379
     # 数据库索引
     database: 0
     # 密码
-#    password:
-    # 连接超时时间
+    password: Yl_180415
+    # 连接超时时间d
     timeout: 10s
     lettuce:
       pool:
