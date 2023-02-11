@@ -16,22 +16,6 @@ import java.util.*;
 //{"token":"af111e8f-e2ae-47ee-a676-82d7caeeaafd","date":"2022-04-22","stockCodes":["000016"],"indexFundamentalMetricsList":["pe_ttm.y10.median","pb.y10.median","ps_ttm.y10.median"]}
 //{"date":"2022-04-27","indexFundamentalMetricsList":["\"pe_ttm.y20.median\"","\"pe_ttm.y10.median\"","\"pb.y10.median\"","\"pb.y20.median\"","\"ps_ttm.y10.median\"","\"ps_ttm.y20.median\""],"stockCodes":["000016"],"token":"af111e8f-e2ae-47ee-a676-82d7caeeaafd"}
 public class getParam_indexFundamentalCN {
-//    public static String getSingleIndexParamJsonCN() throws IOException, ParseException {
-//        InputStream inputStream = getParam_indexFundamentalCN.class.getClassLoader().getResourceAsStream("indexReqParam.yml");
-//        Map indexReqParam = new Yaml().load(inputStream);
-//        String token = (String) indexReqParam.get("token");
-//        String dateYml = (String) indexReqParam.get("enddate");
-//        String date = getResult_NoHoliday.getResult_NoHoliday(Integer.parseInt(dateYml.substring(0, 4)));
-//        List<String> stockCodes = (List<String>) indexReqParam.get("stockCodes");
-//        List<String> indexFundamentalMetricsList = (List<String>) indexReqParam.get("indexFundamentalMetricsList");
-//
-//        indexFundamentalCNParam_RootVO paramvo = new indexFundamentalCNParam_RootVO();
-//        paramvo.setToken(token);
-//        paramvo.setDate(date);
-//        paramvo.setMetricsList(indexFundamentalMetricsList);
-//        paramvo.setStockCodes(stockCodes);
-//        return JSON.toJSONString(paramvo);
-//    }
 
     // 时间范围内的单一指数
     public static String getSingleIndexParam_dateRangeJsonCN(String startDate) throws ParseException {

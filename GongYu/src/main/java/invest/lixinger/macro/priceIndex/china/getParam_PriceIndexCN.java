@@ -19,12 +19,12 @@ public class getParam_PriceIndexCN {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");//定义日期显示格式
         Calendar cal = Calendar.getInstance();
         cal.add(Calendar.YEAR, -10);
-        String fiveMonthAgo = sdf.format(cal.getTime());
+        String tenYearAgo = sdf.format(cal.getTime());
         String today = sdf.format(new Date());
 
         PriceIndexCNParam_RootVO paramvo = new PriceIndexCNParam_RootVO();
         paramvo.setToken(token);
-        paramvo.setStartDate(fiveMonthAgo);
+        paramvo.setStartDate(tenYearAgo);
         paramvo.setEndDate(today);
         paramvo.setAreaCode("cn");
         String[] metricsArray = {"m.cpi.c_y2y"};
