@@ -30,8 +30,7 @@ public class getParam_indexFundamentalCN {
         paramvo.setDate(date);
         paramvo.setMetricsList(indexFundamentalMetricsList);
         paramvo.setStockCodes(stockCodes);
-        String paramJson = JSON.toJSONString(paramvo);
-        return paramJson;
+        return JSON.toJSONString(paramvo);
     }
 
     // 时间范围内的单一指数

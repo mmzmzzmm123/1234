@@ -5,7 +5,7 @@ import lombok.Data;
 import java.util.List;
 
 @Data
-public class nationalDebtUSParam_RootVO {
+public class nationalDebtParam_RootVO {
     private String token;
     private String areaCode;
     private String startDate;

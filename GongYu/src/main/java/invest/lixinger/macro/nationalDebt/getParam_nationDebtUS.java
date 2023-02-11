@@ -2,7 +2,7 @@ package invest.lixinger.macro.nationalDebt;
 
 import com.alibaba.fastjson.JSON;
 import invest.lixinger.index.fundamental.CN.getParam_indexFundamentalCN;
-import invest.lixinger.macro.nationalDebt.VO.nationalDebtUSParam_RootVO;
+import invest.lixinger.macro.nationalDebt.VO.nationalDebtParam_RootVO;
 import org.yaml.snakeyaml.Yaml;
 
 import java.io.IOException;
@@ -22,7 +22,7 @@ public class getParam_nationDebtUS {
         String lastMonthToday = sdf.format(cal.getTime());
         String today = sdf.format(new Date());
 
-        nationalDebtUSParam_RootVO paramvo = new nationalDebtUSParam_RootVO();
+        nationalDebtParam_RootVO paramvo = new nationalDebtParam_RootVO();
         paramvo.setToken(token);
         paramvo.setStartDate(lastMonthToday);
         paramvo.setEndDate(today);

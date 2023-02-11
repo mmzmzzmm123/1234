@@ -3,7 +3,7 @@ package invest.lixinger.macro.nationalDebt.VO;
 import lombok.Data;
 
 @Data
-public class nationalDebtUSResult_DataVO {
+public class nationalDebtResult_DataVO {
     private String areaCode;
     private String date;
     private String type;

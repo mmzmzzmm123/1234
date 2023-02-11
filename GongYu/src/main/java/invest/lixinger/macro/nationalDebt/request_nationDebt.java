@@ -1,7 +1,7 @@
 package invest.lixinger.macro.nationalDebt;
 
-import invest.lixinger.macro.nationalDebt.VO.nationalDebtUSResult_DataVO;
-import invest.lixinger.macro.nationalDebt.VO.nationalDebtUSResult_RootVO;
+import invest.lixinger.macro.nationalDebt.VO.nationalDebtResult_DataVO;
+import invest.lixinger.macro.nationalDebt.VO.nationalDebtResult_RootVO;
 import invest.lixinger.utils.netRequest;
 import org.junit.Test;
 import org.yaml.snakeyaml.Yaml;
@@ -17,16 +17,16 @@ public class request_nationDebt {
 
     // 计算美国国债收益率
     @Test
-    public void calculteUSDebt() throws IOException, ParseException {
+    public void requestUSDebt() throws IOException, ParseException {
         InputStream inputStream = request_nationDebt.class.getClassLoader().getResourceAsStream("indexReqParam.yml");
         Map indexReqParam = new Yaml().load(inputStream);
         String macroNationalDebtURL = (String) indexReqParam.get("macroNationalDebtURL");
         String paramJson = getParam_nationDebtUS.getNationDebtUSParamJson();
         String resultJson = netRequest.jsonNetPost(macroNationalDebtURL, paramJson);
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-        nationalDebtUSResult_RootVO resultObj = (nationalDebtUSResult_RootVO) getResult_nationDebtUS.getResultObj(resultJson);
-        nationalDebtUSResult_DataVO latestDayVO = resultObj.getData().get(0);
-        nationalDebtUSResult_DataVO oneMonthAgoVO = resultObj.getData().get(resultObj.getData().size() - 1);
+        nationalDebtResult_RootVO resultObj = (nationalDebtResult_RootVO) getResult_nationDebtUS.getResultObj(resultJson);
+        nationalDebtResult_DataVO latestDayVO = resultObj.getData().get(0);
+        nationalDebtResult_DataVO oneMonthAgoVO = resultObj.getData().get(resultObj.getData().size() - 1);
         System.out.println("统计的美债日期为：" + sdf.format(sdf.parse(latestDayVO.getDate())));
 
         double latestDayy2us = latestDayVO.getMir_y2();
@@ -47,17 +47,18 @@ public class request_nationDebt {
     }
 
     // 计算中国国债收益率
-    @Test
-    public void calculteCNDebt() throws Exception {
+//    @Test
+    public static nationalDebtResult_RootVO  requestCNDebt(String endDate) throws Exception {
         InputStream inputStream = request_nationDebt.class.getClassLoader().getResourceAsStream("indexReqParam.yml");
         Map indexReqParam = new Yaml().load(inputStream);
         String macroNationalDebtURL = (String) indexReqParam.get("macroNationalDebtURL");
-        String paramJson = getParam_nationDebtCN.getNationDebtCNParamJson();
+        String paramJson = getParam_nationDebtCN.getNationDebtCNParamJson(endDate);
+        System.out.println(paramJson);
         String resultJson = netRequest.jsonNetPost(macroNationalDebtURL, paramJson);
-        nationalDebtUSResult_RootVO resultObj = (nationalDebtUSResult_RootVO) getResult_nationDebtUS.getResultObj(resultJson);
-        List<nationalDebtUSResult_DataVO> resultData = resultObj.getData();
-        nationalDebtUSResult_DataVO latestDayVO = resultData.get(0);
-        nationalDebtUSResult_DataVO oneMonthAgoVO = resultData.get(30);
+        nationalDebtResult_RootVO resultObj = (nationalDebtResult_RootVO) getResult_nationDebtUS.getResultObj(resultJson);
+        List<nationalDebtResult_DataVO> resultData = resultObj.getData();
+        nationalDebtResult_DataVO latestDayVO = resultData.get(0);
+        nationalDebtResult_DataVO oneMonthAgoVO = resultData.get(30);
         // 计算国债---------------------------------
         Map<String, String> map = calcultePos(resultObj);
         //----------------------
@@ -68,12 +69,13 @@ public class request_nationDebt {
         if ((latestDayy2cn - latestDayy10cn) > 0 || (oneMonthAgoy2cn - oneMonthAgoy10cn) > 0) {
             String latestDayDebtInverted = String.format("%.2f", (latestDayy2cn - latestDayy10cn) * 100);
             String oneMonthAgoDebtInverted = String.format("%.2f", (oneMonthAgoy2cn - oneMonthAgoy10cn) * 100);
-            System.out.println("最近日期美债倒挂比例：" + latestDayDebtInverted + "，一个月前美债倒挂比例：" + oneMonthAgoDebtInverted);
+            System.out.println("最近日期国债倒挂比例：" + latestDayDebtInverted + "，一个月前国债倒挂比例：" + oneMonthAgoDebtInverted);
             map.put("latestDayDebtInverted",latestDayDebtInverted);
             map.put("oneMonthAgoDebtInverted",oneMonthAgoDebtInverted);
         } else {
-            System.out.println("最近日期、一个月前，美债没有倒挂");
+            System.out.println("最近日期、一个月前，国债没有倒挂");
         }
+        return resultObj;
     }
 
     /**
@@ -82,17 +84,17 @@ public class request_nationDebt {
      * 20、30年的百分位太低不适合
      * 7年期没有数据所以没有使用
      */
-    public static Map<String, String> calcultePos(nationalDebtUSResult_RootVO resultObj) throws Exception {
+    public static Map<String, String> calcultePos(nationalDebtResult_RootVO resultObj) throws Exception {
 
-        List<nationalDebtUSResult_DataVO> resultData = resultObj.getData();
+        List<nationalDebtResult_DataVO> resultData = resultObj.getData();
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-        nationalDebtUSResult_DataVO latestDayVO = resultData.get(0);
+        nationalDebtResult_DataVO latestDayVO = resultData.get(0);
         Map<String, String> map = new HashMap<>();
         // 当期日期
         map.put("date", sdf.format(sdf.parse(latestDayVO.getDate())));
         // -----------------------------------------计算2年期--------------------------------------------
         List<Double> list2 = new ArrayList<>();
-        for (nationalDebtUSResult_DataVO resultDatum : resultData) {
+        for (nationalDebtResult_DataVO resultDatum : resultData) {
             list2.add(resultDatum.getMir_y2());
         }
         Collections.sort(list2);
@@ -102,7 +104,7 @@ public class request_nationDebt {
         map.put("2debtPos", String.valueOf(list2.indexOf(latestDayVO.getMir_y2()) / (double) list2.size()));
         // -----------------------------------------计算3年期--------------------------------------------
         List<Double> list3 = new ArrayList<>();
-        for (nationalDebtUSResult_DataVO resultDatum : resultData) {
+        for (nationalDebtResult_DataVO resultDatum : resultData) {
             list3.add(resultDatum.getMir_y3());
         }
         Collections.sort(list3);
@@ -113,7 +115,7 @@ public class request_nationDebt {
 
         // -----------------------------------------计算5年期--------------------------------------------
         List<Double> list5 = new ArrayList<>();
-        for (nationalDebtUSResult_DataVO resultDatum : resultData) {
+        for (nationalDebtResult_DataVO resultDatum : resultData) {
             list5.add(resultDatum.getMir_y5());
         }
         Collections.sort(list5);
@@ -123,7 +125,7 @@ public class request_nationDebt {
         map.put("5debtPos", String.valueOf(list5.indexOf(latestDayVO.getMir_y5()) / (double) list5.size()));
         // -----------------------------------------计算10年期--------------------------------------------
         List<Double> list10 = new ArrayList<>();
-        for (nationalDebtUSResult_DataVO datum : resultData) {
+        for (nationalDebtResult_DataVO datum : resultData) {
             list10.add(datum.getMir_y10());
         }
         Collections.sort(list10);

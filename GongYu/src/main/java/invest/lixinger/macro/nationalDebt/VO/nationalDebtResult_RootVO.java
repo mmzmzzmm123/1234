@@ -3,8 +3,8 @@ import lombok.Data;
 
 import java.util.List;
 @Data
-public class nationalDebtUSResult_RootVO {
+public class nationalDebtResult_RootVO {
     private int code;
     private String message;
-    private List<nationalDebtUSResult_DataVO> data;
+    private List<nationalDebtResult_DataVO> data;
 }
