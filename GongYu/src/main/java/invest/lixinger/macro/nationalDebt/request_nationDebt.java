@@ -17,11 +17,11 @@ public class request_nationDebt {
 
     // 计算美国国债收益率
     @Test
-    public void requestUSDebt() throws IOException, ParseException {
+    public static nationalDebtResult_RootVO requestUSDebt(String startDate) throws IOException, ParseException {
         InputStream inputStream = request_nationDebt.class.getClassLoader().getResourceAsStream("indexReqParam.yml");
         Map indexReqParam = new Yaml().load(inputStream);
         String macroNationalDebtURL = (String) indexReqParam.get("macroNationalDebtURL");
-        String paramJson = getParam_nationDebtUS.getNationDebtUSParamJson();
+        String paramJson = getParam_nationDebtUS.getNationDebtUSParamJson(startDate);
         String resultJson = netRequest.jsonNetPost(macroNationalDebtURL, paramJson);
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         nationalDebtResult_RootVO resultObj = (nationalDebtResult_RootVO) getResult_nationDebtUS.getResultObj(resultJson);
@@ -34,25 +34,26 @@ public class request_nationDebt {
         double oneMonthAgoy2us = oneMonthAgoVO.getMir_y2();
         double oneMonthAgoy10us = oneMonthAgoVO.getMir_y10();
 
-        Map<String,String>map=new HashMap<>();
+        Map<String, String> map = new HashMap<>();
         if ((latestDayy2us - latestDayy10us) > 0 || (oneMonthAgoy2us - oneMonthAgoy10us) > 0) {
             String latestDayDebtInverted = String.format("%.2f", (latestDayy2us - latestDayy10us) * 100);
             String oneMonthAgoDebtInverted = String.format("%.2f", (oneMonthAgoy2us - oneMonthAgoy10us) * 100);
-            System.out.println("最近日期国债倒挂比例：" + latestDayDebtInverted + "，一个月前国债倒挂比例：" + oneMonthAgoDebtInverted);
-            map.put("latestDayDebtInverted",latestDayDebtInverted);
-            map.put("oneMonthAgoDebtInverted",oneMonthAgoDebtInverted);
+            System.out.println("最近日期美债倒挂比例：" + latestDayDebtInverted + "，一个月前美债倒挂比例：" + oneMonthAgoDebtInverted);
+            map.put("latestDayDebtInverted", latestDayDebtInverted);
+            map.put("oneMonthAgoDebtInverted", oneMonthAgoDebtInverted);
         } else {
-            System.out.println("最近日期、一个月前，国债没有倒挂");
+            System.out.println("最近日期、一个月前，美债没有倒挂");
         }
+        return resultObj;
     }
 
     // 计算中国国债收益率
 //    @Test
-    public static nationalDebtResult_RootVO  requestCNDebt(String endDate) throws Exception {
+    public static nationalDebtResult_RootVO requestCNDebt(String startDate) throws Exception {
         InputStream inputStream = request_nationDebt.class.getClassLoader().getResourceAsStream("indexReqParam.yml");
         Map indexReqParam = new Yaml().load(inputStream);
         String macroNationalDebtURL = (String) indexReqParam.get("macroNationalDebtURL");
-        String paramJson = getParam_nationDebtCN.getNationDebtCNParamJson(endDate);
+        String paramJson = getParam_nationDebtCN.getNationDebtCNParamJson(startDate);
         String resultJson = netRequest.jsonNetPost(macroNationalDebtURL, paramJson);
         nationalDebtResult_RootVO resultObj = (nationalDebtResult_RootVO) getResult_nationDebtUS.getResultObj(resultJson);
         List<nationalDebtResult_DataVO> resultData = resultObj.getData();
@@ -69,8 +70,8 @@ public class request_nationDebt {
             String latestDayDebtInverted = String.format("%.2f", (latestDayy2cn - latestDayy10cn) * 100);
             String oneMonthAgoDebtInverted = String.format("%.2f", (oneMonthAgoy2cn - oneMonthAgoy10cn) * 100);
             System.out.println("最近日期国债倒挂比例：" + latestDayDebtInverted + "，一个月前国债倒挂比例：" + oneMonthAgoDebtInverted);
-            map.put("latestDayDebtInverted",latestDayDebtInverted);
-            map.put("oneMonthAgoDebtInverted",oneMonthAgoDebtInverted);
+            map.put("latestDayDebtInverted", latestDayDebtInverted);
+            map.put("oneMonthAgoDebtInverted", oneMonthAgoDebtInverted);
         } else {
             System.out.println("最近日期、一个月前，国债没有倒挂");
         }
@@ -78,7 +79,7 @@ public class request_nationDebt {
     }
 
     /**
-     * 计算百分位位置
+     * 计算百分位位置(由于每次都是某一个时点的，所以这个方法是错误的)
      * 由于可能出现倒挂等极端情况，所以同时统计了2、3、5、10四种期限的国债，用平均更准确
      * 20、30年的百分位太低不适合
      * 7年期没有数据所以没有使用

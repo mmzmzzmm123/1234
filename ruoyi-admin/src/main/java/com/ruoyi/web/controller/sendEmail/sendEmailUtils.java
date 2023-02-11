@@ -390,7 +390,7 @@ public class sendEmailUtils {
         InputStream inputStream = request_nationDebt.class.getClassLoader().getResourceAsStream("indexReqParam.yml");
         Map indexReqParam = new Yaml().load(inputStream);
         String macroNationalDebtURL = (String) indexReqParam.get("macroNationalDebtURL");
-        String paramJson = getParam_nationDebtUS.getNationDebtUSParamJson();
+        String paramJson = getParam_nationDebtUS.getNationDebtUSParamJson("2022-01-01");
         String resultJson = netRequest.jsonNetPost(macroNationalDebtURL, paramJson);
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         nationalDebtResult_RootVO resultObj = (nationalDebtResult_RootVO) getResult_nationDebtUS.getResultObj(resultJson);
@@ -414,7 +414,7 @@ public class sendEmailUtils {
         InputStream inputStream = request_nationDebt.class.getClassLoader().getResourceAsStream("indexReqParam.yml");
         Map indexReqParam = new Yaml().load(inputStream);
         String macroNationalDebtURL = (String) indexReqParam.get("macroNationalDebtURL");
-        String paramJson = getParam_nationDebtCN.getNationDebtCNParamJson("");
+        String paramJson = getParam_nationDebtCN.getNationDebtCNParamJson("2022-01-01");
         String resultJson = netRequest.jsonNetPost(macroNationalDebtURL, paramJson);
         nationalDebtResult_RootVO resultObj = (nationalDebtResult_RootVO) getResult_nationDebtUS.getResultObj(resultJson);
         List<nationalDebtResult_DataVO> resultData = resultObj.getData();
