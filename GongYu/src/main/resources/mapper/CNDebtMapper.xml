@@ -4,7 +4,7 @@
 <mapper namespace="invest.lixinger.ruoyi.mapper.CNDebtMapper">
     <select id="nearestDateInDB" resultType="invest.lixinger.ruoyi.entity.CNDebtVO">
         SELECT *
-        FROM lx_cndebt
+        FROM lx_cndebt order by rq desc limit  1
     </select>
 
 </mapper>

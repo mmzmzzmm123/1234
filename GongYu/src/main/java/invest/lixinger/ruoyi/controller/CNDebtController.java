@@ -8,10 +8,9 @@ import mybatisNoSpringUtils.mybatisNoSpringUtils;
 import org.junit.Test;
 
 import java.io.FileNotFoundException;
-import java.util.Calendar;
-import java.util.GregorianCalendar;
-import java.util.List;
-import java.util.Map;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 import static invest.lixinger.macro.nationalDebt.request_nationDebt.calcultePos;
 import static invest.lixinger.macro.nationalDebt.request_nationDebt.requestCNDebt;
@@ -20,20 +19,20 @@ public class CNDebtController extends mybatisNoSpringUtils {
 
     @Test
     public void CNDebt() throws Exception {
-//        String startDate = nearestDateInDB();
-        String endDate = "2016-03-05";
-        nationalDebtResult_RootVO resultObj = requestCNDebt(endDate);
+        String startDate = nearestDateInDB();
+        nationalDebtResult_RootVO resultObj = requestCNDebt(startDate);
         calculateNationalDebt(resultObj);
     }
 
     public void calculateNationalDebt(nationalDebtResult_RootVO resultObj) throws Exception {
         CNDebtMapper cnDebtMapper = session.getMapper(CNDebtMapper.class);
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         for (int i = 0; i < resultObj.getData().size(); i++) {
             CNDebtVO vo = new CNDebtVO();
             List<nationalDebtResult_DataVO> listData = resultObj.getData();
             nationalDebtResult_DataVO resultVO = listData.get(i);
             String rq = resultVO.getDate();
-            vo.setRq(rq);
+            vo.setRq(sdf.format(sdf.parse(rq)));
             vo.setM1(resultVO.getMir_m1());
             vo.setM3(resultVO.getMir_m3());
             vo.setM6(resultVO.getMir_m6());
@@ -55,17 +54,17 @@ public class CNDebtController extends mybatisNoSpringUtils {
 
             cnDebtMapper.insert(vo);
         }
-
-
     }
 
-    public String nearestDateInDB() {
+    public String nearestDateInDB() throws ParseException {
+        SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd");
         CNDebtMapper hsagmapper = session.getMapper(CNDebtMapper.class);
         CNDebtVO vo = hsagmapper.nearestDateInDB();
         String date = vo.getRq();
         Calendar calendar = new GregorianCalendar();
-
-        return date;
+        calendar.setTime(sdf.parse(date));
+        calendar.add(Calendar.DATE, 1);
+        return sdf.format(calendar.getTime());
     }
 
     public CNDebtController() throws FileNotFoundException {

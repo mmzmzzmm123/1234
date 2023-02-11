@@ -53,7 +53,6 @@ public class request_nationDebt {
         Map indexReqParam = new Yaml().load(inputStream);
         String macroNationalDebtURL = (String) indexReqParam.get("macroNationalDebtURL");
         String paramJson = getParam_nationDebtCN.getNationDebtCNParamJson(endDate);
-        System.out.println(paramJson);
         String resultJson = netRequest.jsonNetPost(macroNationalDebtURL, paramJson);
         nationalDebtResult_RootVO resultObj = (nationalDebtResult_RootVO) getResult_nationDebtUS.getResultObj(resultJson);
         List<nationalDebtResult_DataVO> resultData = resultObj.getData();
