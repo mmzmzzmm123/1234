@@ -13,8 +13,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
-import static invest.lixinger.macro.nationalDebt.request_nationDebt.calcultePos;
-import static invest.lixinger.macro.nationalDebt.request_nationDebt.requestCNDebt;
+import static invest.lixinger.macro.nationalDebt.request_nationDebt.*;
 
 public class CNDebtController extends mybatisNoSpringUtils {
 

@@ -52,6 +52,7 @@ import static invest.lixinger.index.fundamental.CN.request_indexFundamentalCN.ca
 import static invest.lixinger.index.fundamental.HK.HSI.request_indexFundamentalHSI.*;
 import static invest.lixinger.index.fundamental.US.spx.request_indexFundamentalSPX.*;
 import static invest.lixinger.macro.nationalDebt.request_nationDebt.calcultePos;
+import static invest.lixinger.macro.nationalDebt.request_nationDebt.calcultePos;
 
 // https://www.cnblogs.com/ooo0/p/16446829.html
 @Component
@@ -170,13 +171,13 @@ public class sendEmailUtils {
         try {
             // 基本面判断----------------------
             Map<String, String> fundamentalMap = getTextFundamentalCN();
-
             double resultFundamental = Double.parseDouble(fundamentalMap.get("resultFundamental"));
             String Text = "▶现阶段：\n";
             double result100 = resultFundamental * 100;
             String Textzhaiquan = "  ◆将资产投资债券、货币基金，利率高则买债券、黄金，利率低则买货币基金\n\n";
             String Textgupiao = "  ◆基金备选池：科创信息、科创创业50、科创50、创业板全指、全指信息、TMT、中创400、中证500、中证军工、国证2000、全指医疗、中小企业300、中概互联网\n";
             Textgupiao += "  ◆股票备选池：证券 > 银行\n\n";
+
             if (result100 > 45) {
                 Text += Textzhaiquan;
             } else if (35 < result100 && result100 < 45) {
@@ -200,20 +201,21 @@ public class sendEmailUtils {
             // 国债----------------------------------
             Map<String, String> cnDebtMap = getTextCNDebt();
             Text += "▶国债最新数据日期为：" + cnDebtMap.get("date") + "\n";
-            Text += "  ◆2、3、5、10年期的平均信号为：" + new DecimalFormat("0.00%").format(Double.valueOf(cnDebtMap.get("averagePos"))) + "\n";
+            Text += "  ◆最近十年：2、3、5、10年期的平均信号为：" + new DecimalFormat("0.00%").format(Double.valueOf(cnDebtMap.get("averagePos"))) + "\n";
             if (cnDebtMap.containsKey("latestDayDebtCNInverted")) {
-                Text += "  ◆最近日期国债倒挂比例：" + cnDebtMap.get("latestDayDebtInverted") + "，一个月前国债倒挂比例：" + cnDebtMap.get("oneMonthAgoDebtInverted") + "\n\n";
+                Text += "  ◆最近日期国债倒挂比例：" + cnDebtMap.get("latestDayDebtCNInverted") + "，一个月前国债倒挂比例：" + cnDebtMap.get("oneMonthAgoDebtCNInverted") + "\n\n";
             } else {
                 Text += "  ◆最近日期、一个月前，国债没有倒挂\n\n";
             }
             // 美债-------------------------------
             Map<String, String> usDebtMap = getTextUSDebt();
-            Text += "▶美债最新数据日期为：" + usDebtMap.get("meizhiariqi") + "\n";
-            Text += "  ◆美债倒挂比例为：" + usDebtMap.get("latestDayDebt") + "。一个月前美债倒挂比例为：" + usDebtMap.get("oneMonthAgoDebt") + "\n";
-            if (usDebtMap.get("latestDayDebt").compareTo("0") > 1) {
-                Text += "  ◆结论：美债已经倒挂，警惕全球金融危机\n\n";
+            Text += "▶美债最新数据日期为：" + usDebtMap.get("date") + "\n";
+            Text += "  ◆最近十年：2、3、5、10年期的平均信号为：" + new DecimalFormat("0.00%").format(Double.valueOf(usDebtMap.get("averagePos"))) + "\n";
+            if (usDebtMap.containsKey("latestDayDebtUSInverted")) {
+                Text += "  ◆美债倒挂比例为：" + usDebtMap.get("latestDayDebtUSInverted") + "。一个月前美债倒挂比例为：" + usDebtMap.get("oneMonthAgoDebtUSInverted") + "\n\n";
+            } else {
+                Text += "  ◆最近日期、一个月前，美债没有倒挂\n\n";
             }
-
             // ----------------SPX信号值----------------
             Map<String, Object> mapSPX = getTextSPX();
             double posSPX = (double) mapSPX.get("posSPX");
@@ -321,10 +323,16 @@ public class sendEmailUtils {
         InputStream inputStream = request_indexFundamentalCN.class.getClassLoader().getResourceAsStream("indexReqParam.yml");
         Map indexReqParam = new Yaml().load(inputStream);
         String indexFundamentalCNURL = (String) indexReqParam.get("indexFundamentalCNURL");
-        String paramJson = getParam_indexFundamentalCN.getSingleIndexParamJsonCN();
+
+        SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd");
+        Calendar cal = Calendar.getInstance();
+        cal.add(Calendar.YEAR, -10);
+        String startDate= sdf.format(cal.getTime());
+
+        String paramJson = getParam_indexFundamentalCN.getSingleIndexParam_dateRangeJsonCN(startDate);
         String resultJson = netRequest.jsonNetPost(indexFundamentalCNURL, paramJson);
         indexFundamentalCNResult_RootVO resultFundamentalObj = (indexFundamentalCNResult_RootVO) getResult_indexFundamentalCN.getResultObjCN(resultJson);
-        String fundamentalDate = paramJson.substring(paramJson.indexOf("date") + 7, paramJson.indexOf("date") + 17);
+        String fundamentalDate = String.valueOf(resultFundamentalObj.getData().get(0).getDate());
         String resultFundamental = String.valueOf(calculateFundamentalCN(resultFundamentalObj));
         map.put("fundamentalDate", fundamentalDate);
         map.put("resultFundamental", resultFundamental);
@@ -385,27 +393,32 @@ public class sendEmailUtils {
 
 
     // 获取美债是否倒挂
-    public static Map<String, String> getTextUSDebt() throws IOException, ParseException {
-        Map<String, String> map = new HashMap<>();
+    public static Map<String, String> getTextUSDebt() throws Exception {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        Calendar cal = Calendar.getInstance();
+        cal.add(Calendar.YEAR, -10);
+
         InputStream inputStream = request_nationDebt.class.getClassLoader().getResourceAsStream("indexReqParam.yml");
         Map indexReqParam = new Yaml().load(inputStream);
         String macroNationalDebtURL = (String) indexReqParam.get("macroNationalDebtURL");
-        String paramJson = getParam_nationDebtUS.getNationDebtUSParamJson("2022-01-01");
+        String paramJson = getParam_nationDebtUS.getNationDebtUSParamJson(sdf.format(cal.getTime()));
         String resultJson = netRequest.jsonNetPost(macroNationalDebtURL, paramJson);
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         nationalDebtResult_RootVO resultObj = (nationalDebtResult_RootVO) getResult_nationDebtUS.getResultObj(resultJson);
         nationalDebtResult_DataVO latestDayVO = resultObj.getData().get(0);
-        nationalDebtResult_DataVO oneMonthAgoVO = resultObj.getData().get(resultObj.getData().size() - 1);
-        map.put("meizhiariqi", sdf.format(sdf.parse(latestDayVO.getDate())));
-
-        double latestDayy2us = latestDayVO.getMir_y2();
-        double latestDayy10us = latestDayVO.getMir_y10();
-        double oneMonthAgoy2us = oneMonthAgoVO.getMir_y2();
-        double oneMonthAgoy10us = oneMonthAgoVO.getMir_y10();
-        String latestDayDebt = String.format("%.2f", (latestDayy2us - latestDayy10us) * 100);
-        String oneMonthAgoDebt = String.format("%.2f", (oneMonthAgoy2us - oneMonthAgoy10us) * 100);
-        map.put("latestDayDebt", latestDayDebt);
-        map.put("oneMonthAgoDebt", oneMonthAgoDebt);
+        nationalDebtResult_DataVO oneMonthAgoVO = resultObj.getData().get(25);
+        // 计算美债---------------------------------
+        Map<String, String> map = calcultePos(resultObj);
+        //----------------------
+        double latestDayy2cn = latestDayVO.getMir_y2();
+        double latestDayy10cn = latestDayVO.getMir_y10();
+        double oneMonthAgoy2cn = oneMonthAgoVO.getMir_y2();
+        double oneMonthAgoy10cn = oneMonthAgoVO.getMir_y10();
+        if ((latestDayy2cn - latestDayy10cn) > 0 || (oneMonthAgoy2cn - oneMonthAgoy10cn) > 0) {
+            String latestDayDebtUSInverted = String.format("%.2f", (latestDayy2cn - latestDayy10cn) * 100);
+            String oneMonthAgoDebtUSInverted = String.format("%.2f", (oneMonthAgoy2cn - oneMonthAgoy10cn) * 100);
+            map.put("latestDayDebtUSInverted", latestDayDebtUSInverted);
+            map.put("oneMonthAgoDebtUSInverted", oneMonthAgoDebtUSInverted);
+        }
         return map;
     }
 
@@ -414,12 +427,16 @@ public class sendEmailUtils {
         InputStream inputStream = request_nationDebt.class.getClassLoader().getResourceAsStream("indexReqParam.yml");
         Map indexReqParam = new Yaml().load(inputStream);
         String macroNationalDebtURL = (String) indexReqParam.get("macroNationalDebtURL");
-        String paramJson = getParam_nationDebtCN.getNationDebtCNParamJson("2022-01-01");
+        SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd");
+        Calendar cal = Calendar.getInstance();
+        cal.add(Calendar.YEAR, -10);
+
+        String paramJson = getParam_nationDebtCN.getNationDebtCNParamJson(sdf.format(cal.getTime()));
         String resultJson = netRequest.jsonNetPost(macroNationalDebtURL, paramJson);
         nationalDebtResult_RootVO resultObj = (nationalDebtResult_RootVO) getResult_nationDebtUS.getResultObj(resultJson);
         List<nationalDebtResult_DataVO> resultData = resultObj.getData();
         nationalDebtResult_DataVO latestDayVO = resultData.get(0);
-        nationalDebtResult_DataVO oneMonthAgoVO = resultData.get(30);
+        nationalDebtResult_DataVO oneMonthAgoVO = resultData.get(25);
         // 计算国债---------------------------------
         Map<String, String> map = calcultePos(resultObj);
         //----------------------

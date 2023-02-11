@@ -8,6 +8,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.text.DecimalFormat;
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Map;
 
 /**
@@ -17,11 +19,17 @@ public class request_indexFundamentalCN {
     public static void main(String[] args) throws IOException, ParseException {
         requestIndexFundamentalCN();
     }
-    public static void requestIndexFundamentalCN() throws IOException, ParseException {
+    public static void requestIndexFundamentalCN() throws  ParseException {
         InputStream inputStream = request_indexFundamentalCN.class.getClassLoader().getResourceAsStream("indexReqParam.yml");
         Map indexReqParam = new Yaml().load(inputStream);
         String indexFundamentalCNURL = (String) indexReqParam.get("indexFundamentalCNURL");
-        String paramJson = getParam_indexFundamentalCN.getSingleIndexParamJsonCN();
+
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        Calendar cal = Calendar.getInstance();
+        cal.add(Calendar.YEAR, -10);
+        String startDate= sdf.format(cal.getTime());
+
+        String paramJson = getParam_indexFundamentalCN.getSingleIndexParam_dateRangeJsonCN(startDate);
         //{"date":"2022-11-28","metricsList":["pe_ttm.y20.median","pe_ttm.y10.median","pb.y10.median","pb.y20.median","ps_ttm.y10.median","ps_ttm.y20.median","cp"],"stockCodes":["1000002"],"token":"d58c3650-20f9-4387-8515-d595031c23a4"}
         String resultJson = netRequest.jsonNetPost(indexFundamentalCNURL, paramJson);
         indexFundamentalCNResult_RootVO resultObj = (indexFundamentalCNResult_RootVO) getResult_indexFundamentalCN.getResultObjCN(resultJson);

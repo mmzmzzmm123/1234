@@ -58,7 +58,7 @@ public class request_nationDebt {
         nationalDebtResult_RootVO resultObj = (nationalDebtResult_RootVO) getResult_nationDebtUS.getResultObj(resultJson);
         List<nationalDebtResult_DataVO> resultData = resultObj.getData();
         nationalDebtResult_DataVO latestDayVO = resultData.get(0);
-        nationalDebtResult_DataVO oneMonthAgoVO = resultData.get(30);
+        nationalDebtResult_DataVO oneMonthAgoVO = resultData.get(25);
         // 计算国债---------------------------------
         Map<String, String> map = calcultePos(resultObj);
         //----------------------
@@ -79,7 +79,7 @@ public class request_nationDebt {
     }
 
     /**
-     * 计算百分位位置(由于每次都是某一个时点的，所以这个方法是错误的)
+     * 计算国债百分位位置(由于每次都是某一个时点的，所以这个方法是错误的)
      * 由于可能出现倒挂等极端情况，所以同时统计了2、3、5、10四种期限的国债，用平均更准确
      * 20、30年的百分位太低不适合
      * 7年期没有数据所以没有使用
@@ -145,10 +145,11 @@ public class request_nationDebt {
 //        System.out.println("3debtPos：" + map.get("3debtPos"));
 //        System.out.println("5debtValue：" + map.get("5debtValue"));
 //        System.out.println("5debtPos：" + map.get("5debtPos"));
-        System.out.println("10年期国债数值：" + new DecimalFormat("0.00%").format(Double.valueOf(map.get("10debtValue"))));
-        System.out.println("10年期国债百分位：" + new DecimalFormat("0.00%").format(Double.valueOf(map.get("10debtPos"))));
-        System.out.println("平均后的国债百分位为：" + new DecimalFormat("0.00%").format(Double.valueOf(map.get("averagePos"))));
+        System.out.println("10年期债券数值：" + new DecimalFormat("0.00%").format(Double.valueOf(map.get("10debtValue"))));
+        System.out.println("10年期债券百分位：" + new DecimalFormat("0.00%").format(Double.valueOf(map.get("10debtPos"))));
+        System.out.println("平均后的债券百分位为：" + new DecimalFormat("0.00%").format(Double.valueOf(map.get("averagePos"))));
 
         return map;
     }
+
 }

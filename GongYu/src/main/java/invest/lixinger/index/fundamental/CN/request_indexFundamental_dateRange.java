@@ -25,10 +25,11 @@ public class request_indexFundamental_dateRange extends mybatisNoSpringUtils {
     }
 
     public static indexFundamentalCNResult_RootVO request_fundamental_dateRangeCN(Date startDate) throws IOException, ParseException {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         InputStream inputStream = request_indexFundamental_dateRange.class.getClassLoader().getResourceAsStream("indexReqParam.yml");
         Map indexReqParam = new Yaml().load(inputStream);
         String indexFundamentalCNURL = (String) indexReqParam.get("indexFundamentalCNURL");
-        String paramJson = getParam_indexFundamentalCN.getSingleIndexParam_dateRangeJsonCN(startDate);
+        String paramJson = getParam_indexFundamentalCN.getSingleIndexParam_dateRangeJsonCN(sdf.format(startDate));
         String resultJson = netRequest.jsonNetPost(indexFundamentalCNURL, paramJson);
         indexFundamentalCNResult_RootVO resultObj = (indexFundamentalCNResult_RootVO) getResult_indexFundamentalCN.getResultObjCN(resultJson);
         return resultObj;
