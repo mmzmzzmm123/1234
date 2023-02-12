@@ -6,17 +6,29 @@ import invest.lixinger.ruoyi.entity.CNDebtVO;
 import invest.lixinger.ruoyi.mapper.CNDebtMapper;
 import mybatisNoSpringUtils.mybatisNoSpringUtils;
 import org.junit.Test;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.io.FileNotFoundException;
 import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
+import java.util.List;
+import java.util.Map;
 
-import static invest.lixinger.macro.nationalDebt.request_nationDebt.*;
+import static invest.lixinger.macro.nationalDebt.request_nationDebt.calcultePos;
+import static invest.lixinger.macro.nationalDebt.request_nationDebt.requestCNDebt;
 
+/**
+ * 计算中国国债
+ */
+
+@RestController
+@RequestMapping("/GongYu")
 public class CNDebtController extends mybatisNoSpringUtils {
-
+//    @GetMapping("/CNDebt")
     @Test
     public void CNDebt() throws Exception {
 //        String startDate="2006-03-01";

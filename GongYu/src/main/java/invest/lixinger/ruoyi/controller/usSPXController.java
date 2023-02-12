@@ -30,6 +30,9 @@ import static invest.lixinger.index.fundamental.CN.request_indexFundamental_date
 import static invest.lixinger.index.fundamental.US.spx.request_indexFundamentalSPX.requestIndexFundamentalSPX;
 import static mybatisNoSpringUtils.mybatisNoSpringUtils.session;
 
+/**
+ * 计算标普500，并入库
+ */
 public class usSPXController extends mybatisNoSpringUtils {
 
     @Test

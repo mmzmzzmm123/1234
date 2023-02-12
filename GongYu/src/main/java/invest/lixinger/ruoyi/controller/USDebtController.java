@@ -6,6 +6,8 @@ import invest.lixinger.ruoyi.entity.USDebtVO;
 import invest.lixinger.ruoyi.mapper.USDebtMapper;
 import mybatisNoSpringUtils.mybatisNoSpringUtils;
 import org.junit.Test;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.io.FileNotFoundException;
 import java.text.DecimalFormat;
@@ -18,6 +20,11 @@ import java.util.Map;
 
 import static invest.lixinger.macro.nationalDebt.request_nationDebt.*;
 
+/**
+ * 计算美债
+ */
+@RestController
+@RequestMapping("/GongYu")
 public class USDebtController extends mybatisNoSpringUtils {
 
     @Test
@@ -60,7 +67,7 @@ public class USDebtController extends mybatisNoSpringUtils {
     }
 
     public String nearestDateInDB() throws ParseException {
-        SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd");
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         USDebtMapper hsagmapper = session.getMapper(USDebtMapper.class);
         USDebtVO vo = hsagmapper.nearestDateInDB();
         String date = vo.getRq();

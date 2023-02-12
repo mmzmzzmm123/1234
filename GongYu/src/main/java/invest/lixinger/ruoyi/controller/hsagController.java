@@ -5,6 +5,9 @@ import invest.lixinger.index.fundamental.CN.VO.indexFundamentalCNResult_RootVO;
 import invest.lixinger.ruoyi.entity.hsagVO;
 import invest.lixinger.ruoyi.mapper.hsagMapper;
 import org.junit.Test;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -17,11 +20,14 @@ import java.util.GregorianCalendar;
 import static invest.lixinger.index.fundamental.CN.request_indexFundamental_dateRange.request_fundamental_dateRangeCN;
 
 /**
- * 计算百分位，并存入到数据库
+ * 计算a股百分位，并存入到数据库
  */
+@RestController
+@RequestMapping("/GongYu")
 public class hsagController extends mybatisNoSpringUtils {
 
     @Test
+//    @GetMapping("/hsagController")
     public void hsag() throws IOException, ParseException {
         Date startDate = nearestDateInDB();
         indexFundamentalCNResult_RootVO resultVO = request_fundamental_dateRangeCN(startDate);
