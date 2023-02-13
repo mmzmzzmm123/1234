@@ -27,12 +27,43 @@ import static invest.lixinger.macro.nationalDebt.request_nationDebt.*;
 @RequestMapping("/GongYu")
 public class USDebtController extends mybatisNoSpringUtils {
 
+    /**
+     * 统计美债入库
+     */
     @Test
     public void USDebt() throws Exception {
 //        String startDate ="1962-01-02";
         String startDate = nearestDateInDB();
         nationalDebtResult_RootVO resultObj = requestUSDebt(startDate);
         calculateNationalDebt(resultObj);
+    }
+
+    /**
+     * 更新数据库中的美债百分位
+     */
+    @Test
+    public void USDebtDBPOS() throws Exception {
+        USDebtMapper hsagmapper = session.getMapper(USDebtMapper.class);
+        List<USDebtVO> allDataVOList = hsagmapper.allDataInDB();
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        for (int i = 0; i < allDataVOList.size(); i++) {
+            USDebtVO vo = allDataVOList.get(i);
+            String endDate = vo.getRq();
+            Calendar cal = new GregorianCalendar();
+            cal.setTime(sdf.parse(endDate));
+            cal.add(Calendar.YEAR, -10);
+            // 以 十年前 ~ 当前日期 为周期
+            String startDate = sdf.format(cal.getTime());
+            System.out.println(startDate + "  " + endDate);
+            List<USDebtVO> usDebtDataRangeVOList = hsagmapper.dateRangeInDB(startDate, endDate);
+            Map<String, String> mapCalculteDBPos = calculteDBPosUS(usDebtDataRangeVOList);
+            double tempAveragePos = Double.parseDouble(mapCalculteDBPos.get("averagePos"));
+            double y23510pos = Double.parseDouble(new DecimalFormat("0.0000").format(tempAveragePos));
+            vo.setY2_3_5_10pos(y23510pos);
+            hsagmapper.updateById(vo);
+
+        }
+
     }
 
     public void calculateNationalDebt(nationalDebtResult_RootVO resultObj) throws Exception {

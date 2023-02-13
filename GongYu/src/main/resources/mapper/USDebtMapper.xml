@@ -7,4 +7,16 @@
         FROM lx_usdebt order by rq desc limit  1
     </select>
 
+    <select id="dateRangeInDB" resultType="invest.lixinger.ruoyi.entity.USDebtVO">
+        SELECT *
+        FROM lx_usdebt
+        where rq between #{startDate} and #{endDate}
+    </select>
+
+    <select id="allDataInDB" resultType="invest.lixinger.ruoyi.entity.USDebtVO">
+        SELECT *
+        FROM lx_usdebt
+        where  y2_3_5_10pos=''
+    </select>
+
 </mapper>

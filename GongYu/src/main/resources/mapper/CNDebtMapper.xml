@@ -16,5 +16,7 @@
     <select id="allDataInDB" resultType="invest.lixinger.ruoyi.entity.CNDebtVO">
         SELECT *
         FROM lx_cndebt
+        where  y2_3_5_10pos=''
+
     </select>
 </mapper>

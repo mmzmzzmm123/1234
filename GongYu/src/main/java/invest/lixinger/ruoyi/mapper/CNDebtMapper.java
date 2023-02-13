@@ -9,7 +9,6 @@ import java.util.List;
 public interface CNDebtMapper extends BaseMapper<CNDebtVO> {
     CNDebtVO nearestDateInDB();
 
-
     List<CNDebtVO> dateRangeInDB(@Param("startDate") String startDate, @Param("endDate") String endDate);
 
     List<CNDebtVO> allDataInDB();
