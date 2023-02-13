@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.contest.mapper.AwardPersonMapper">
+
+    <resultMap type="AwardPerson" id="AwardPersonResult">
+        <result property="awardPersonId"    column="award_person_id"    />
+        <result property="awardId"    column="award_id"    />
+        <result property="personId"    column="person_id"    />
+        <result property="personType"    column="person_type"    />
+        <result property="orderNum"    column="order_num"    />
+        <result property="conDegree"    column="con_degree"    />
+        <result property="workContent"    column="work_content"    />
+        <result property="remark"    column="remark"    />
+        <result property="delFlag"    column="del_flag"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+    </resultMap>
+
+    <sql id="selectAwardPersonVo">
+        select award_person_id, award_id, person_id, person_type, order_num, con_degree, work_content, remark, del_flag, create_by, create_time, update_by, update_time from t_award_person
+    </sql>
+
+    <select id="selectAwardPersonList" parameterType="AwardPerson" resultMap="AwardPersonResult">
+        <include refid="selectAwardPersonVo"/>
+        <where>
+            <if test="awardId != null "> and award_id = #{awardId}</if>
+            <if test="personId != null "> and person_id = #{personId}</if>
+            <if test="personType != null  and personType != ''"> and person_type = #{personType}</if>
+            <if test="orderNum != null "> and order_num = #{orderNum}</if>
+            <if test="conDegree != null "> and con_degree = #{conDegree}</if>
+            <if test="workContent != null  and workContent != ''"> and work_content = #{workContent}</if>
+        </where>
+    </select>
+
+</mapper>

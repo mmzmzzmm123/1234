@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.contest.mapper.TeacherMapper">
+
+    <resultMap type="Teacher" id="TeacherResult">
+        <result property="teacherId"    column="teacher_id"    />
+        <result property="name"    column="name"    />
+        <result property="gender"    column="gender"    />
+        <result property="professional"    column="professional"    />
+        <result property="post"    column="post"    />
+        <result property="research"    column="research"    />
+        <result property="brief"    column="brief"    />
+        <result property="remark"    column="remark"    />
+        <result property="delFlag"    column="del_flag"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+    </resultMap>
+
+    <sql id="selectTeacherVo">
+        select teacher_id, name, gender, professional, post, research, brief, remark, del_flag, create_by, create_time, update_by, update_time from t_teacher
+    </sql>
+
+    <select id="selectTeacherList" parameterType="Teacher" resultMap="TeacherResult">
+        <include refid="selectTeacherVo"/>
+        <where>
+            <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
+            <if test="gender != null  and gender != ''"> and gender = #{gender}</if>
+            <if test="professional != null  and professional != ''"> and professional = #{professional}</if>
+            <if test="post != null  and post != ''"> and post = #{post}</if>
+            <if test="research != null  and research != ''"> and research = #{research}</if>
+            <if test="brief != null  and brief != ''"> and brief = #{brief}</if>
+        </where>
+    </select>
+
+</mapper>

@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.contest.mapper.SubContestMapper">
+
+    <resultMap type="SubContest" id="SubContestResult">
+        <result property="subContestId"    column="sub_contest_id"    />
+        <result property="contestId"    column="contest_id"    />
+        <result property="name"    column="name"    />
+        <result property="url"    column="url"    />
+        <result property="attachmentsUrl"    column="attachments_url"    />
+        <result property="year"    column="year"    />
+        <result property="rank"    column="rank"    />
+        <result property="competitionDate"    column="competition_date"    />
+        <result property="fee"    column="fee"    />
+        <result property="remark"    column="remark"    />
+        <result property="delFlag"    column="del_flag"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+    </resultMap>
+
+    <sql id="selectSubContestVo">
+        select sub_contest_id, contest_id, name, url, attachments_url, year, rank, competition_date, fee, remark, del_flag, create_by, create_time, update_by, update_time from t_sub_contest
+    </sql>
+
+    <select id="selectSubContestList" parameterType="SubContest" resultMap="SubContestResult">
+        <include refid="selectSubContestVo"/>
+        <where>
+            <if test="contestId != null "> and contest_id = #{contestId}</if>
+            <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
+            <if test="url != null  and url != ''"> and url = #{url}</if>
+            <if test="attachmentsUrl != null  and attachmentsUrl != ''"> and attachments_url = #{attachmentsUrl}</if>
+            <if test="year != null "> and year = #{year}</if>
+            <if test="rank != null  and rank != ''"> and rank = #{rank}</if>
+            <if test="competitionDate != null "> and competition_date = #{competitionDate}</if>
+            <if test="fee != null "> and fee = #{fee}</if>
+        </where>
+    </select>
+
+</mapper>
