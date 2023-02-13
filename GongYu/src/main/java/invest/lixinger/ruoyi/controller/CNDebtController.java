@@ -18,8 +18,7 @@ import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Map;
 
-import static invest.lixinger.macro.nationalDebt.request_nationDebt.calcultePos;
-import static invest.lixinger.macro.nationalDebt.request_nationDebt.requestCNDebt;
+import static invest.lixinger.macro.nationalDebt.request_nationDebt.*;
 
 /**
  * 计算中国国债
@@ -28,6 +27,9 @@ import static invest.lixinger.macro.nationalDebt.request_nationDebt.requestCNDeb
 @RestController
 @RequestMapping("/GongYu")
 public class CNDebtController extends mybatisNoSpringUtils {
+    /**
+     * 统计国债入库
+     */
 //    @GetMapping("/CNDebt")
     @Test
     public void CNDebt() throws Exception {
@@ -35,6 +37,37 @@ public class CNDebtController extends mybatisNoSpringUtils {
         String startDate = nearestDateInDB();
         nationalDebtResult_RootVO resultObj = requestCNDebt(startDate);
         calculateNationalDebt(resultObj);
+    }
+
+    /**
+     * 更新数据库中的国债百分位
+     */
+    @Test
+    public void CNDebtDBPOS() throws Exception {
+        CNDebtMapper hsagmapper = session.getMapper(CNDebtMapper.class);
+        List<CNDebtVO> allDataVOList = hsagmapper.allDataInDB();
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        System.out.println(allDataVOList);
+        for (int i = 0; i < allDataVOList.size(); i++) {
+            CNDebtVO vo = allDataVOList.get(i);
+            String endDate = vo.getRq();
+            Calendar cal = new GregorianCalendar();
+            cal.setTime(sdf.parse(endDate));
+            cal.add(Calendar.YEAR, -10);
+            // 以 十年前 ~ 当前日期 为周期
+            String startDate = sdf.format(cal.getTime());
+            System.out.println(startDate + "  " + endDate);
+            List<CNDebtVO> cnDebtDataRangeVOList = hsagmapper.dateRangeInDB(startDate, endDate);
+            Map<String, String> mapCalculteDBPos = calculteDBPos(cnDebtDataRangeVOList);
+            double tempAveragePos = Double.parseDouble(mapCalculteDBPos.get("averagePos"));
+            double y23510pos = Double.parseDouble(new DecimalFormat("0.0000").format(tempAveragePos));
+//            String y23510pos = mapCalculteDBPos.get("averagePos");
+            System.out.println(y23510pos);
+            vo.setY2_3_5_10pos(y23510pos);
+            hsagmapper.updateById(vo);
+
+        }
+
     }
 
     public void calculateNationalDebt(nationalDebtResult_RootVO resultObj) throws Exception {
@@ -68,7 +101,7 @@ public class CNDebtController extends mybatisNoSpringUtils {
     }
 
     public String nearestDateInDB() throws ParseException {
-        SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd");
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         CNDebtMapper hsagmapper = session.getMapper(CNDebtMapper.class);
         CNDebtVO vo = hsagmapper.nearestDateInDB();
         String date = vo.getRq();

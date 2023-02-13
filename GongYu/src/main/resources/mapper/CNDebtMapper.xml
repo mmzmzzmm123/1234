@@ -7,4 +7,14 @@
         FROM lx_cndebt order by rq desc limit  1
     </select>
 
+    <select id="dateRangeInDB" resultType="invest.lixinger.ruoyi.entity.CNDebtVO">
+        SELECT *
+        FROM lx_cndebt
+        where rq between #{startDate} and #{endDate}
+    </select>
+
+    <select id="allDataInDB" resultType="invest.lixinger.ruoyi.entity.CNDebtVO">
+        SELECT *
+        FROM lx_cndebt
+    </select>
 </mapper>
