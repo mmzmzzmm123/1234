@@ -43,6 +43,7 @@ public class CNDebtController extends mybatisNoSpringUtils {
         String startDate = nearestDateInDB();
         nationalDebtResult_RootVO resultObj = requestCNDebt(startDate);
         calculateNationalDebt(resultObj);
+        CNDebtDBPOS();
     }
 
     /**

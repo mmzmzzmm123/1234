@@ -36,6 +36,7 @@ public class USDebtController extends mybatisNoSpringUtils {
         String startDate = nearestDateInDB();
         nationalDebtResult_RootVO resultObj = requestUSDebt(startDate);
         calculateNationalDebt(resultObj);
+        USDebtDBPOS();
     }
 
     /**
@@ -66,6 +67,11 @@ public class USDebtController extends mybatisNoSpringUtils {
 
     }
 
+    /**
+     *
+     * @param resultObj
+     * @throws Exception
+     */
     public void calculateNationalDebt(nationalDebtResult_RootVO resultObj) throws Exception {
         USDebtMapper USDebtMapper = session.getMapper(USDebtMapper.class);
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
