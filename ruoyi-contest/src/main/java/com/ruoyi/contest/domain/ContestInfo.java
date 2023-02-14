@@ -1,5 +1,8 @@
 package com.ruoyi.contest.domain;
 
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableField;
+import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -20,6 +23,7 @@ import com.ruoyi.common.core.domain.BaseEntity;
 public class ContestInfo extends BaseEntity
 {
     /** 竞赛ID */
+    @TableId(type = IdType.AUTO)
     private Long contestId;
 
     /** 竞赛名称 */

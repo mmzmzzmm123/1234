@@ -118,7 +118,7 @@
       <el-table-column label="竞赛ID" align="center" prop="contestId" />
       <el-table-column label="竞赛名称" align="center" prop="name" />
       <el-table-column label="竞赛官网" align="center" prop="url" />
-      <el-table-column label="竞赛简介" align="center" prop="brief" />
+      <el-table-column label="竞赛简介" align="center" prop="brief" show-overflow-tooltip/>
       <el-table-column label="属于57项赛事" align="center" prop="inMinistry" />
       <el-table-column label="57项赛事中的编号" align="center" prop="ministryNo" />
       <el-table-column label="竞赛类别" align="center" prop="type">

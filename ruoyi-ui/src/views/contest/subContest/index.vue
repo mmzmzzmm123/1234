@@ -25,13 +25,15 @@
           placeholder="请选择年度">
         </el-date-picker>
       </el-form-item>
-      <el-form-item label="等级" prop="rank">
-        <el-input
-          v-model="queryParams.rank"
-          placeholder="请输入等级"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
+      <el-form-item label="级别" prop="rank">
+        <el-select v-model="queryParams.rank" placeholder="请选择级别" clearable>
+          <el-option
+            v-for="dict in dict.type.sub_contest_rank"
+            :key="dict.value"
+            :label="dict.label"
+            :value="dict.value"
+          />
+        </el-select>
       </el-form-item>
       <el-form-item label="状态" prop="delFlag">
         <el-select v-model="queryParams.delFlag" placeholder="请选择状态" clearable>
@@ -107,7 +109,7 @@
           <span>{{ parseTime(scope.row.year, '{y}-{m}-{d}') }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="等级" align="center" prop="rank">
+      <el-table-column label="级别" align="center" prop="rank">
         <template slot-scope="scope">
           <dict-tag :options="dict.type.sub_contest_rank" :value="scope.row.rank"/>
         </template>
@@ -170,13 +172,20 @@
         <el-form-item label="年度" prop="year">
           <el-date-picker clearable
             v-model="form.year"
-            type="date"
-            value-format="yyyy-MM-dd"
+            type="year"
+            value-format="yyyy"
             placeholder="请选择年度">
           </el-date-picker>
         </el-form-item>
-        <el-form-item label="等级" prop="rank">
-          <el-input v-model="form.rank" placeholder="请输入等级" />
+        <el-form-item label="级别" prop="rank">
+          <el-select v-model="form.rank" placeholder="请选择级别">
+            <el-option
+              v-for="dict in dict.type.sub_contest_rank"
+              :key="dict.value"
+              :label="dict.label"
+              :value="dict.value"
+            ></el-option>
+          </el-select>
         </el-form-item>
         <el-form-item label="竞赛日期" prop="competitionDate">
           <el-date-picker clearable
@@ -206,7 +215,7 @@ import { listSubContest, getSubContest, delSubContest, addSubContest, updateSubC
 
 export default {
   name: "SubContest",
-  dicts: ['sys_normal_disable'],
+  dicts: ['sys_normal_disable', 'sub_contest_rank'],
   data() {
     return {
       // 遮罩层

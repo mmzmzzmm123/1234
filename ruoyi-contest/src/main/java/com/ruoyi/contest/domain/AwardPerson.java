@@ -1,5 +1,7 @@
 package com.ruoyi.contest.domain;
 
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -20,6 +22,7 @@ import com.ruoyi.common.core.domain.BaseEntity;
 public class AwardPerson extends BaseEntity
 {
     /** 参赛人员信息ID */
+    @TableId(type = IdType.AUTO)
     private Long awardPersonId;
 
     /** 获奖ID */

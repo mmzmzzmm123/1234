@@ -1,6 +1,10 @@
 package com.ruoyi.contest.domain;
 
 import java.util.Date;
+
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableField;
+import com.baomidou.mybatisplus.annotation.TableId;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
@@ -22,6 +26,7 @@ import com.ruoyi.common.core.domain.BaseEntity;
 public class Award extends BaseEntity
 {
     /** 获奖ID */
+    @TableId(type = IdType.AUTO)
     private Long awardId;
 
     /** 竞赛ID */
