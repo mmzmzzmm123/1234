@@ -35,7 +35,7 @@ public class USDebtController extends mybatisNoSpringUtils {
 //        String startDate ="1962-01-02";
         String startDate = nearestDateInDB();
         nationalDebtResult_RootVO resultObj = requestUSDebt(startDate);
-        calculateNationalDebt(resultObj);
+        calculateNationalDebtUS(resultObj);
         USDebtDBPOS();
     }
 
@@ -59,7 +59,7 @@ public class USDebtController extends mybatisNoSpringUtils {
             List<USDebtVO> usDebtDataRangeVOList = hsagmapper.dateRangeInDB(startDate, endDate);
             Map<String, String> mapCalculteDBPos = calculteDBPosUS(usDebtDataRangeVOList);
             double tempAveragePos = Double.parseDouble(mapCalculteDBPos.get("averagePos"));
-            double y23510pos = Double.parseDouble(new DecimalFormat("0.0000").format(tempAveragePos));
+            String y23510pos = new DecimalFormat("0.0000").format(tempAveragePos);
             vo.setY2_3_5_10pos(y23510pos);
             hsagmapper.updateById(vo);
 
@@ -68,11 +68,9 @@ public class USDebtController extends mybatisNoSpringUtils {
     }
 
     /**
-     *
-     * @param resultObj
-     * @throws Exception
+     * 将数据机械的放入数据库
      */
-    public void calculateNationalDebt(nationalDebtResult_RootVO resultObj) throws Exception {
+    public void calculateNationalDebtUS(nationalDebtResult_RootVO resultObj) throws Exception {
         USDebtMapper USDebtMapper = session.getMapper(USDebtMapper.class);
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         for (int i = 0; i < resultObj.getData().size(); i++) {
@@ -93,9 +91,7 @@ public class USDebtController extends mybatisNoSpringUtils {
             vo.setY20(resultVO.getMir_y20());
             vo.setY30(resultVO.getMir_y30());
             // 计算国债综合百分位---------------------------------
-            Map<String, String> map = calcultePos(resultObj);
-            String averagePos = map.get("averagePos");
-//            vo.setY2_3_5_10pos(Double.parseDouble(averagePos));
+            vo.setY2_3_5_10pos("");
             // 计算2-10年期国债，查看是否倒挂--------------------
             vo.setY2minusy10(Double.parseDouble(new DecimalFormat("0.00000").format(resultVO.getMir_y2() - resultVO.getMir_y10())));
 
@@ -103,6 +99,9 @@ public class USDebtController extends mybatisNoSpringUtils {
         }
     }
 
+    /**
+     * 数据库最新的数据
+     */
     public String nearestDateInDB() throws ParseException {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         USDebtMapper hsagmapper = session.getMapper(USDebtMapper.class);

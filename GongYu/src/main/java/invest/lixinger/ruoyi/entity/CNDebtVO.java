@@ -24,7 +24,7 @@ public class CNDebtVO {
     double y20;
     double y30;
     double y2minusy10;
-    double y2_3_5_10pos;
+    String y2_3_5_10pos;
 
 
 }

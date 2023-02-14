@@ -42,7 +42,7 @@ public class CNDebtController extends mybatisNoSpringUtils {
 //        String startDate="2006-03-01";
         String startDate = nearestDateInDB();
         nationalDebtResult_RootVO resultObj = requestCNDebt(startDate);
-        calculateNationalDebt(resultObj);
+        calculateNationalDebtCN(resultObj);
         CNDebtDBPOS();
     }
 
@@ -66,8 +66,7 @@ public class CNDebtController extends mybatisNoSpringUtils {
             List<CNDebtVO> cnDebtDataRangeVOList = hsagmapper.dateRangeInDB(startDate, endDate);
             Map<String, String> mapCalculteDBPos = calculteDBPosCN(cnDebtDataRangeVOList);
             double tempAveragePos = Double.parseDouble(mapCalculteDBPos.get("averagePos"));
-            double y23510pos = Double.parseDouble(new DecimalFormat("0.0000").format(tempAveragePos));
-//            String y23510pos = mapCalculteDBPos.get("averagePos");
+            String y23510pos = new DecimalFormat("0.0000").format(tempAveragePos);
 
             vo.setY2_3_5_10pos(y23510pos);
             hsagmapper.updateById(vo);
@@ -79,7 +78,7 @@ public class CNDebtController extends mybatisNoSpringUtils {
     /**
      * 计算当天的百分位
      */
-    public void calculateNationalDebt(nationalDebtResult_RootVO resultObj) throws Exception {
+    public void calculateNationalDebtCN(nationalDebtResult_RootVO resultObj) throws Exception {
         CNDebtMapper cnDebtMapper = session.getMapper(CNDebtMapper.class);
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         for (int i = 0; i < resultObj.getData().size(); i++) {
@@ -100,9 +99,7 @@ public class CNDebtController extends mybatisNoSpringUtils {
             vo.setY20(resultVO.getMir_y20());
             vo.setY30(resultVO.getMir_y30());
             // 计算国债综合百分位---------------------------------
-            Map<String, String> map = calcultePos(resultObj);
-            String averagePos = map.get("averagePos");
-//            vo.setY2_3_5_10pos(Double.parseDouble(averagePos));
+            vo.setY2_3_5_10pos("");
             // 计算2-10年期国债，查看是否倒挂--------------------
             vo.setY2minusy10(Double.parseDouble(new DecimalFormat("0.00000").format(resultVO.getMir_y2() - resultVO.getMir_y10())));
             cnDebtMapper.insert(vo);
