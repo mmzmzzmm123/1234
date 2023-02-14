@@ -9,6 +9,15 @@ export function listSubContest(query) {
   })
 }
 
+// 查询子竞赛信息列表
+export function listWithParentContest(query) {
+  return request({
+    url: '/contest/subContest/listWithParentContest',
+    method: 'get',
+    params: query
+  })
+}
+
 // 查询子竞赛信息详细
 export function getSubContest(subContestId) {
   return request({

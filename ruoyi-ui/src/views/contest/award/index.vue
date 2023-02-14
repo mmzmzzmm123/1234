@@ -121,7 +121,7 @@
         </template>
       </el-table-column>
     </el-table>
-    
+
     <pagination
       v-show="total>0"
       :total="total"
@@ -263,9 +263,11 @@ export default {
     },
     /** 新增按钮操作 */
     handleAdd() {
-      this.reset();
-      this.open = true;
-      this.title = "添加获奖登记";
+      // this.reset();
+      // this.open = true;
+      // this.title = "添加获奖登记";
+      // this.$tab.openPage("添加获奖登记", "/contest/add-award");
+      this.$router.push({path:'/contest/add-award/index/0'})
     },
     /** 修改按钮操作 */
     handleUpdate(row) {

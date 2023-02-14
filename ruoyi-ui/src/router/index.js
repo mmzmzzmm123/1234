@@ -161,7 +161,21 @@ export const dynamicRoutes = [
         meta: { title: '修改生成配置', activeMenu: '/tool/gen' }
       }
     ]
-  }
+  },
+  {
+    path: '/contest/add-award',
+    component: Layout,
+    hidden: true,
+    permissions: ['contest:award:add'],
+    children: [
+      {
+        path: 'index/:awardId(\\d+)',
+        component: () => import('@/views/contest/award/add'),
+        name: 'AddAward',
+        meta: { title: '添加获奖登记', activeMenu: '/contest/award' }
+      }
+    ]
+  },
 ]
 
 // 防止连续点击多次路由报错

@@ -6,17 +6,15 @@ import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.core.page.TableDataInfo;
 import com.ruoyi.common.enums.BusinessType;
 import com.ruoyi.common.utils.poi.ExcelUtil;
+import com.ruoyi.contest.domain.SubContest;
+import com.ruoyi.contest.service.ISubContestService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+
 import javax.servlet.http.HttpServletResponse;
 import java.util.Arrays;
 import java.util.List;
-
-import com.ruoyi.contest.domain.SubContest;
-import com.ruoyi.contest.service.ISubContestService;
-
-import com.ruoyi.common.core.page.TableDataInfo;
 
 /**
  * 子竞赛信息Controller
@@ -97,5 +95,17 @@ public class SubContestController extends BaseController
     public AjaxResult remove(@PathVariable Long[] subContestIds)
     {
         return toAjax(subContestService.removeByIds(Arrays.asList(subContestIds)));
+    }
+
+    /**
+     * 子竞赛信息（包含父级竞赛部分信息）列表
+     */
+    @PreAuthorize("@ss.hasPermi('contest:subContest:list')")
+    @GetMapping("/listWithParentContest")
+    public TableDataInfo listWithParentContest(SubContest subContest)
+    {
+        startPage();
+        List<SubContest> list = subContestService.selectSubContestListWithParent(subContest);
+        return getDataTable(list);
     }
 }

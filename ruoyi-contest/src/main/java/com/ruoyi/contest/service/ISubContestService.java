@@ -1,9 +1,9 @@
 package com.ruoyi.contest.service;
 
-import java.util.List;
-
-import com.ruoyi.contest.domain.SubContest;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.ruoyi.contest.domain.SubContest;
+
+import java.util.List;
 
 /**
  * 子竞赛信息Service接口
@@ -20,4 +20,11 @@ public interface ISubContestService extends IService<SubContest>
      * @return 子竞赛信息集合
      */
     public List<SubContest> selectSubContestList(SubContest subContest);
+
+    /**
+     *
+     * @param subContest
+     * @return
+     */
+    List<SubContest> selectSubContestListWithParent(SubContest subContest);
 }
