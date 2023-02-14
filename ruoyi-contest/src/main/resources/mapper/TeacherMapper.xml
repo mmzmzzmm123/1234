@@ -31,9 +31,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="gender != null  and gender != ''"> and gender = #{gender}</if>
             <if test="professional != null  and professional != ''"> and professional = #{professional}</if>
             <if test="post != null  and post != ''"> and post = #{post}</if>
-            <if test="research != null  and research != ''"> and research = #{research}</if>
-            <if test="brief != null  and brief != ''"> and brief = #{brief}</if>
+            <if test="research != null  and research != ''"> and research like concat('%', #{research}, '%')</if>
+            <if test="delFlag != null  and delFlag != ''"> and del_flag = #{delFlag}</if>
         </where>
     </select>
+
+
 
 </mapper>

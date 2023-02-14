@@ -17,45 +17,31 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="竞赛通知网址" prop="url">
-        <el-input
-          v-model="queryParams.url"
-          placeholder="请输入竞赛通知网址"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
       <el-form-item label="年度" prop="year">
-        <el-input
-          v-model="queryParams.year"
-          placeholder="请输入年度"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="等级：0校赛、1省赛/区域赛、2国赛/国际赛" prop="rank">
-        <el-input
-          v-model="queryParams.rank"
-          placeholder="请输入等级：0校赛、1省赛/区域赛、2国赛/国际赛"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="竞赛日期" prop="competitionDate">
         <el-date-picker clearable
-          v-model="queryParams.competitionDate"
+          v-model="queryParams.year"
           type="date"
           value-format="yyyy-MM-dd"
-          placeholder="请选择竞赛日期">
+          placeholder="请选择年度">
         </el-date-picker>
       </el-form-item>
-      <el-form-item label="报名费用" prop="fee">
+      <el-form-item label="等级" prop="rank">
         <el-input
-          v-model="queryParams.fee"
-          placeholder="请输入报名费用"
+          v-model="queryParams.rank"
+          placeholder="请输入等级"
           clearable
           @keyup.enter.native="handleQuery"
         />
+      </el-form-item>
+      <el-form-item label="状态" prop="delFlag">
+        <el-select v-model="queryParams.delFlag" placeholder="请选择状态" clearable>
+          <el-option
+            v-for="dict in dict.type.sys_normal_disable"
+            :key="dict.value"
+            :label="dict.label"
+            :value="dict.value"
+          />
+        </el-select>
       </el-form-item>
       <el-form-item>
         <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
@@ -115,9 +101,17 @@
       <el-table-column label="竞赛ID" align="center" prop="contestId" />
       <el-table-column label="竞赛名称" align="center" prop="name" />
       <el-table-column label="竞赛通知网址" align="center" prop="url" />
-      <el-table-column label="附件上传地址" align="center" prop="attachmentsUrl" />
-      <el-table-column label="年度" align="center" prop="year" />
-      <el-table-column label="等级：0校赛、1省赛/区域赛、2国赛/国际赛" align="center" prop="rank" />
+      <el-table-column label="附件" align="center" prop="attachmentsUrl" />
+      <el-table-column label="年度" align="center" prop="year" width="180">
+        <template slot-scope="scope">
+          <span>{{ parseTime(scope.row.year, '{y}-{m}-{d}') }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="等级" align="center" prop="rank">
+        <template slot-scope="scope">
+          <dict-tag :options="dict.type.sub_contest_rank" :value="scope.row.rank"/>
+        </template>
+      </el-table-column>
       <el-table-column label="竞赛日期" align="center" prop="competitionDate" width="180">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.competitionDate, '{y}-{m}-{d}') }}</span>
@@ -125,6 +119,11 @@
       </el-table-column>
       <el-table-column label="报名费用" align="center" prop="fee" />
       <el-table-column label="备注" align="center" prop="remark" />
+      <el-table-column label="状态" align="center" prop="delFlag">
+        <template slot-scope="scope">
+          <dict-tag :options="dict.type.sys_normal_disable" :value="scope.row.delFlag"/>
+        </template>
+      </el-table-column>
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button
@@ -165,14 +164,19 @@
         <el-form-item label="竞赛通知网址" prop="url">
           <el-input v-model="form.url" placeholder="请输入竞赛通知网址" />
         </el-form-item>
-        <el-form-item label="附件上传地址" prop="attachmentsUrl">
+        <el-form-item label="附件" prop="attachmentsUrl">
           <el-input v-model="form.attachmentsUrl" type="textarea" placeholder="请输入内容" />
         </el-form-item>
         <el-form-item label="年度" prop="year">
-          <el-input v-model="form.year" placeholder="请输入年度" />
+          <el-date-picker clearable
+            v-model="form.year"
+            type="date"
+            value-format="yyyy-MM-dd"
+            placeholder="请选择年度">
+          </el-date-picker>
         </el-form-item>
-        <el-form-item label="等级：0校赛、1省赛/区域赛、2国赛/国际赛" prop="rank">
-          <el-input v-model="form.rank" placeholder="请输入等级：0校赛、1省赛/区域赛、2国赛/国际赛" />
+        <el-form-item label="等级" prop="rank">
+          <el-input v-model="form.rank" placeholder="请输入等级" />
         </el-form-item>
         <el-form-item label="竞赛日期" prop="competitionDate">
           <el-date-picker clearable
@@ -188,9 +192,6 @@
         <el-form-item label="备注" prop="remark">
           <el-input v-model="form.remark" placeholder="请输入备注" />
         </el-form-item>
-        <el-form-item label="删除标志" prop="delFlag">
-          <el-input v-model="form.delFlag" placeholder="请输入删除标志" />
-        </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button type="primary" @click="submitForm">确 定</el-button>
@@ -205,6 +206,7 @@ import { listSubContest, getSubContest, delSubContest, addSubContest, updateSubC
 
 export default {
   name: "SubContest",
+  dicts: ['sys_normal_disable'],
   data() {
     return {
       // 遮罩层
@@ -231,12 +233,9 @@ export default {
         pageSize: 10,
         contestId: null,
         name: null,
-        url: null,
-        attachmentsUrl: null,
         year: null,
         rank: null,
-        competitionDate: null,
-        fee: null,
+        delFlag: null,
       },
       // 表单参数
       form: {},

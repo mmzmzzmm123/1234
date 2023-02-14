@@ -1,18 +1,18 @@
-package com.ruoyi.contest.mapper;
+package com.ruoyi.contest.service;
 
 import java.util.List;
-import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+
 import com.ruoyi.contest.domain.AwardPerson;
+import com.baomidou.mybatisplus.extension.service.IService;
 
 /**
- * 参赛人员信息Mapper接口
+ * 参赛人员信息Service接口
  *
  * @author ruoyi
  * @date 2023-02-14
  */
-public interface AwardPersonMapper extends BaseMapper<AwardPerson>
+public interface IAwardPersonService extends IService<AwardPerson>
 {
-
     /**
      * 查询参赛人员信息列表
      *
@@ -20,5 +20,4 @@ public interface AwardPersonMapper extends BaseMapper<AwardPerson>
      * @return 参赛人员信息集合
      */
     public List<AwardPerson> selectAwardPersonList(AwardPerson awardPerson);
-
 }

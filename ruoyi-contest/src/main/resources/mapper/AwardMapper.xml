@@ -30,8 +30,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="subContestId != null "> and sub_contest_id = #{subContestId}</if>
             <if test="awardDate != null "> and award_date = #{awardDate}</if>
             <if test="awardGrade != null  and awardGrade != ''"> and award_grade = #{awardGrade}</if>
-            <if test="attachmentUrl != null  and attachmentUrl != ''"> and attachment_url = #{attachmentUrl}</if>
+            <if test="delFlag != null  and delFlag != ''"> and del_flag = #{delFlag}</if>
         </where>
     </select>
+
+
 
 </mapper>

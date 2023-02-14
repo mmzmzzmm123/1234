@@ -6,28 +6,30 @@ import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.core.page.TableDataInfo;
 import com.ruoyi.common.enums.BusinessType;
 import com.ruoyi.common.utils.poi.ExcelUtil;
-import com.ruoyi.contest.domain.Teacher;
-import com.ruoyi.contest.service.TeacherService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-
 import javax.servlet.http.HttpServletResponse;
 import java.util.Arrays;
 import java.util.List;
 
+import com.ruoyi.contest.domain.Teacher;
+import com.ruoyi.contest.service.ITeacherService;
+
+import com.ruoyi.common.core.page.TableDataInfo;
+
 /**
  * 教师信息Controller
  *
- * @author lsyonlygoddes
- * @date 2023-02-13
+ * @author ruoyi
+ * @date 2023-02-14
  */
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/contest/teacher")
 public class TeacherController extends BaseController
 {
-    private final TeacherService teacherService;
+    private final ITeacherService teacherService;
 
     /**
      * 查询教师信息列表

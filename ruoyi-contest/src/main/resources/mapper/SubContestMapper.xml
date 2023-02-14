@@ -31,13 +31,12 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <where>
             <if test="contestId != null "> and contest_id = #{contestId}</if>
             <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
-            <if test="url != null  and url != ''"> and url = #{url}</if>
-            <if test="attachmentsUrl != null  and attachmentsUrl != ''"> and attachments_url = #{attachmentsUrl}</if>
             <if test="year != null "> and year = #{year}</if>
             <if test="rank != null  and rank != ''"> and rank = #{rank}</if>
-            <if test="competitionDate != null "> and competition_date = #{competitionDate}</if>
-            <if test="fee != null "> and fee = #{fee}</if>
+            <if test="delFlag != null  and delFlag != ''"> and del_flag = #{delFlag}</if>
         </where>
     </select>
+
+
 
 </mapper>

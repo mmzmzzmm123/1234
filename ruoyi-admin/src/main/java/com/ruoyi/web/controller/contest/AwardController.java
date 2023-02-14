@@ -6,28 +6,30 @@ import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.core.page.TableDataInfo;
 import com.ruoyi.common.enums.BusinessType;
 import com.ruoyi.common.utils.poi.ExcelUtil;
-import com.ruoyi.contest.domain.Award;
-import com.ruoyi.contest.service.AwardService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-
 import javax.servlet.http.HttpServletResponse;
 import java.util.Arrays;
 import java.util.List;
+
+import com.ruoyi.contest.domain.Award;
+import com.ruoyi.contest.service.IAwardService;
+
+import com.ruoyi.common.core.page.TableDataInfo;
 
 /**
  * 获奖登记Controller
  *
  * @author lsyonlygoddes
- * @date 2023-02-13
+ * @date 2023-02-14
  */
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/contest/award")
 public class AwardController extends BaseController
 {
-    private final AwardService awardService;
+    private final IAwardService awardService;
 
     /**
      * 查询获奖登记列表

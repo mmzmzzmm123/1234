@@ -1,64 +1,72 @@
 package com.ruoyi.contest.domain;
 
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-
-import java.io.Serializable;
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
+import com.ruoyi.common.annotation.Excel;
+import com.ruoyi.common.core.domain.BaseEntity;
 
 /**
- * <p>
- * 参赛人员信息表
- * </p>
+ * 参赛人员信息对象 t_award_person
  *
- * @author lsyonlygoddes
- * @since 2023-02-13
+ * @author ruoyi
+ * @date 2023-02-14
  */
 @Data
 @EqualsAndHashCode(callSuper = false)
 @TableName("t_award_person")
-public class AwardPerson extends BaseDomain implements Serializable {
-
-    private static final long serialVersionUID = 1L;
-
-    /**
-     * 参赛人员信息ID
-     */
-      @TableId(value = "award_person_id", type = IdType.AUTO)
+public class AwardPerson extends BaseEntity
+{
+    /** 参赛人员信息ID */
     private Long awardPersonId;
 
-    /**
-     * 获奖ID
-     */
+    /** 获奖ID */
     private Long awardId;
 
-    /**
-     * 参赛人员ID
-     */
+    /** 参赛人员ID */
+    @Excel(name = "参赛人员ID")
     private Long personId;
 
-    /**
-     * 参赛人员类型：0教师、1学生
-     */
+    /** 参赛人员类型：0教师、1学生 */
+    @Excel(name = "参赛人员类型：0教师、1学生")
     private String personType;
 
-    /**
-     * 排序
-     */
-    private Integer orderNum;
+    /** 排序 */
+    @Excel(name = "排序")
+    private Long orderNum;
 
-    /**
-     * 贡献度值：1~100的整数，默认根据同类人员的数量求平均
-     */
-    private Integer conDegree;
+    /** 贡献度 */
+    @Excel(name = "贡献度")
+    private Long conDegree;
 
-    /**
-     * 该人员在竞赛过程的工作内容
-     */
+    /** 工作内容 */
+    @Excel(name = "工作内容")
     private String workContent;
 
+    /** 状态 */
+    @Excel(name = "状态")
+    private String delFlag;
 
 
+
+    @Override
+    public String toString() {
+        return new ToStringBuilder(this,ToStringStyle.MULTI_LINE_STYLE)
+            .append("awardPersonId", getAwardPersonId())
+            .append("awardId", getAwardId())
+            .append("personId", getPersonId())
+            .append("personType", getPersonType())
+            .append("orderNum", getOrderNum())
+            .append("conDegree", getConDegree())
+            .append("workContent", getWorkContent())
+            .append("remark", getRemark())
+            .append("delFlag", getDelFlag())
+            .append("createBy", getCreateBy())
+            .append("createTime", getCreateTime())
+            .append("updateBy", getUpdateBy())
+            .append("updateTime", getUpdateTime())
+            .toString();
+    }
 }

@@ -1,21 +1,15 @@
 <template>
   <div class="app-container">
     <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch" label-width="68px">
-      <el-form-item label="获奖ID" prop="awardId">
-        <el-input
-          v-model="queryParams.awardId"
-          placeholder="请输入获奖ID"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="参赛人员ID" prop="personId">
-        <el-input
-          v-model="queryParams.personId"
-          placeholder="请输入参赛人员ID"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
+      <el-form-item label="参赛人员类型：0教师、1学生" prop="personType">
+        <el-select v-model="queryParams.personType" placeholder="请选择参赛人员类型：0教师、1学生" clearable>
+          <el-option
+            v-for="dict in dict.type.person_type"
+            :key="dict.value"
+            :label="dict.label"
+            :value="dict.value"
+          />
+        </el-select>
       </el-form-item>
       <el-form-item label="排序" prop="orderNum">
         <el-input
@@ -25,13 +19,15 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="贡献度值：1~100的整数，默认根据同类人员的数量求平均" prop="conDegree">
-        <el-input
-          v-model="queryParams.conDegree"
-          placeholder="请输入贡献度值：1~100的整数，默认根据同类人员的数量求平均"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
+      <el-form-item label="状态" prop="delFlag">
+        <el-select v-model="queryParams.delFlag" placeholder="请选择状态" clearable>
+          <el-option
+            v-for="dict in dict.type.sys_normal_disable"
+            :key="dict.value"
+            :label="dict.label"
+            :value="dict.value"
+          />
+        </el-select>
       </el-form-item>
       <el-form-item>
         <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
@@ -88,13 +84,21 @@
     <el-table v-loading="loading" :data="awardPersonList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
       <el-table-column label="参赛人员信息ID" align="center" prop="awardPersonId" />
-      <el-table-column label="获奖ID" align="center" prop="awardId" />
       <el-table-column label="参赛人员ID" align="center" prop="personId" />
-      <el-table-column label="参赛人员类型：0教师、1学生" align="center" prop="personType" />
+      <el-table-column label="参赛人员类型：0教师、1学生" align="center" prop="personType">
+        <template slot-scope="scope">
+          <dict-tag :options="dict.type.person_type" :value="scope.row.personType"/>
+        </template>
+      </el-table-column>
       <el-table-column label="排序" align="center" prop="orderNum" />
-      <el-table-column label="贡献度值：1~100的整数，默认根据同类人员的数量求平均" align="center" prop="conDegree" />
-      <el-table-column label="该人员在竞赛过程的工作内容" align="center" prop="workContent" />
+      <el-table-column label="贡献度" align="center" prop="conDegree" />
+      <el-table-column label="工作内容" align="center" prop="workContent" />
       <el-table-column label="备注" align="center" prop="remark" />
+      <el-table-column label="状态" align="center" prop="delFlag">
+        <template slot-scope="scope">
+          <dict-tag :options="dict.type.sys_normal_disable" :value="scope.row.delFlag"/>
+        </template>
+      </el-table-column>
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button
@@ -126,26 +130,27 @@
     <!-- 添加或修改参赛人员信息对话框 -->
     <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
-        <el-form-item label="获奖ID" prop="awardId">
-          <el-input v-model="form.awardId" placeholder="请输入获奖ID" />
-        </el-form-item>
-        <el-form-item label="参赛人员ID" prop="personId">
-          <el-input v-model="form.personId" placeholder="请输入参赛人员ID" />
+        <el-form-item label="参赛人员类型：0教师、1学生" prop="personType">
+          <el-select v-model="form.personType" placeholder="请选择参赛人员类型：0教师、1学生">
+            <el-option
+              v-for="dict in dict.type.person_type"
+              :key="dict.value"
+              :label="dict.label"
+              :value="dict.value"
+            ></el-option>
+          </el-select>
         </el-form-item>
         <el-form-item label="排序" prop="orderNum">
           <el-input v-model="form.orderNum" placeholder="请输入排序" />
         </el-form-item>
-        <el-form-item label="贡献度值：1~100的整数，默认根据同类人员的数量求平均" prop="conDegree">
-          <el-input v-model="form.conDegree" placeholder="请输入贡献度值：1~100的整数，默认根据同类人员的数量求平均" />
+        <el-form-item label="贡献度" prop="conDegree">
+          <el-input v-model="form.conDegree" placeholder="请输入贡献度" />
         </el-form-item>
-        <el-form-item label="该人员在竞赛过程的工作内容">
+        <el-form-item label="工作内容">
           <editor v-model="form.workContent" :min-height="192"/>
         </el-form-item>
         <el-form-item label="备注" prop="remark">
           <el-input v-model="form.remark" placeholder="请输入备注" />
-        </el-form-item>
-        <el-form-item label="删除标志" prop="delFlag">
-          <el-input v-model="form.delFlag" placeholder="请输入删除标志" />
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -161,6 +166,7 @@ import { listAwardPerson, getAwardPerson, delAwardPerson, addAwardPerson, update
 
 export default {
   name: "AwardPerson",
+  dicts: ['person_type', 'sys_normal_disable'],
   data() {
     return {
       // 遮罩层
@@ -185,12 +191,9 @@ export default {
       queryParams: {
         pageNum: 1,
         pageSize: 10,
-        awardId: null,
-        personId: null,
         personType: null,
         orderNum: null,
-        conDegree: null,
-        workContent: null,
+        delFlag: null,
       },
       // 表单参数
       form: {},

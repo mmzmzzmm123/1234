@@ -6,28 +6,30 @@ import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.core.page.TableDataInfo;
 import com.ruoyi.common.enums.BusinessType;
 import com.ruoyi.common.utils.poi.ExcelUtil;
-import com.ruoyi.contest.domain.SubContest;
-import com.ruoyi.contest.service.SubContestService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-
 import javax.servlet.http.HttpServletResponse;
 import java.util.Arrays;
 import java.util.List;
 
+import com.ruoyi.contest.domain.SubContest;
+import com.ruoyi.contest.service.ISubContestService;
+
+import com.ruoyi.common.core.page.TableDataInfo;
+
 /**
  * 子竞赛信息Controller
  *
- * @author lsyonlygoddes
- * @date 2023-02-13
+ * @author ruoyi
+ * @date 2023-02-14
  */
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/contest/subContest")
 public class SubContestController extends BaseController
 {
-    private final SubContestService subContestService;
+    private final ISubContestService subContestService;
 
     /**
      * 查询子竞赛信息列表

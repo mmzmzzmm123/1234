@@ -1,22 +1,6 @@
 <template>
   <div class="app-container">
     <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch" label-width="68px">
-      <el-form-item label="竞赛ID" prop="contestId">
-        <el-input
-          v-model="queryParams.contestId"
-          placeholder="请输入竞赛ID"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="子竞赛ID" prop="subContestId">
-        <el-input
-          v-model="queryParams.subContestId"
-          placeholder="请输入子竞赛ID"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
       <el-form-item label="获奖日期" prop="awardDate">
         <el-date-picker clearable
           v-model="queryParams.awardDate"
@@ -25,21 +9,25 @@
           placeholder="请选择获奖日期">
         </el-date-picker>
       </el-form-item>
-      <el-form-item label="获奖等级：0特等奖、1一等奖、2二等奖、3三等奖、4优秀奖" prop="awardGrade">
-        <el-input
-          v-model="queryParams.awardGrade"
-          placeholder="请输入获奖等级：0特等奖、1一等奖、2二等奖、3三等奖、4优秀奖"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
+      <el-form-item label="获奖等级" prop="awardGrade">
+        <el-select v-model="queryParams.awardGrade" placeholder="请选择获奖等级" clearable>
+          <el-option
+            v-for="dict in dict.type.award_grade"
+            :key="dict.value"
+            :label="dict.label"
+            :value="dict.value"
+          />
+        </el-select>
       </el-form-item>
-      <el-form-item label="支撑材料上传地址" prop="attachmentUrl">
-        <el-input
-          v-model="queryParams.attachmentUrl"
-          placeholder="请输入支撑材料上传地址"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
+      <el-form-item label="状态" prop="delFlag">
+        <el-select v-model="queryParams.delFlag" placeholder="请选择状态" clearable>
+          <el-option
+            v-for="dict in dict.type.sys_normal_disable"
+            :key="dict.value"
+            :label="dict.label"
+            :value="dict.value"
+          />
+        </el-select>
       </el-form-item>
       <el-form-item>
         <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
@@ -96,16 +84,24 @@
     <el-table v-loading="loading" :data="awardList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
       <el-table-column label="获奖ID" align="center" prop="awardId" />
-      <el-table-column label="竞赛ID" align="center" prop="contestId" />
       <el-table-column label="子竞赛ID" align="center" prop="subContestId" />
       <el-table-column label="获奖日期" align="center" prop="awardDate" width="180">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.awardDate, '{y}-{m}-{d}') }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="获奖等级：0特等奖、1一等奖、2二等奖、3三等奖、4优秀奖" align="center" prop="awardGrade" />
-      <el-table-column label="支撑材料上传地址" align="center" prop="attachmentUrl" />
+      <el-table-column label="获奖等级" align="center" prop="awardGrade">
+        <template slot-scope="scope">
+          <dict-tag :options="dict.type.award_grade" :value="scope.row.awardGrade"/>
+        </template>
+      </el-table-column>
+      <el-table-column label="支撑材料" align="center" prop="attachmentUrl" />
       <el-table-column label="备注" align="center" prop="remark" />
+      <el-table-column label="状态" align="center" prop="delFlag">
+        <template slot-scope="scope">
+          <dict-tag :options="dict.type.sys_normal_disable" :value="scope.row.delFlag"/>
+        </template>
+      </el-table-column>
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button
@@ -137,12 +133,6 @@
     <!-- 添加或修改获奖登记对话框 -->
     <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
-        <el-form-item label="竞赛ID" prop="contestId">
-          <el-input v-model="form.contestId" placeholder="请输入竞赛ID" />
-        </el-form-item>
-        <el-form-item label="子竞赛ID" prop="subContestId">
-          <el-input v-model="form.subContestId" placeholder="请输入子竞赛ID" />
-        </el-form-item>
         <el-form-item label="获奖日期" prop="awardDate">
           <el-date-picker clearable
             v-model="form.awardDate"
@@ -151,17 +141,21 @@
             placeholder="请选择获奖日期">
           </el-date-picker>
         </el-form-item>
-        <el-form-item label="获奖等级：0特等奖、1一等奖、2二等奖、3三等奖、4优秀奖" prop="awardGrade">
-          <el-input v-model="form.awardGrade" placeholder="请输入获奖等级：0特等奖、1一等奖、2二等奖、3三等奖、4优秀奖" />
+        <el-form-item label="获奖等级" prop="awardGrade">
+          <el-select v-model="form.awardGrade" placeholder="请选择获奖等级">
+            <el-option
+              v-for="dict in dict.type.award_grade"
+              :key="dict.value"
+              :label="dict.label"
+              :value="dict.value"
+            ></el-option>
+          </el-select>
         </el-form-item>
-        <el-form-item label="支撑材料上传地址" prop="attachmentUrl">
-          <el-input v-model="form.attachmentUrl" placeholder="请输入支撑材料上传地址" />
+        <el-form-item label="支撑材料" prop="attachmentUrl">
+          <file-upload v-model="form.attachmentUrl"/>
         </el-form-item>
         <el-form-item label="备注" prop="remark">
           <el-input v-model="form.remark" placeholder="请输入备注" />
-        </el-form-item>
-        <el-form-item label="删除标志" prop="delFlag">
-          <el-input v-model="form.delFlag" placeholder="请输入删除标志" />
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -177,6 +171,7 @@ import { listAward, getAward, delAward, addAward, updateAward } from "@/api/cont
 
 export default {
   name: "Award",
+  dicts: ['award_grade', 'sys_normal_disable'],
   data() {
     return {
       // 遮罩层
@@ -205,7 +200,7 @@ export default {
         subContestId: null,
         awardDate: null,
         awardGrade: null,
-        attachmentUrl: null,
+        delFlag: null,
       },
       // 表单参数
       form: {},

@@ -9,45 +9,45 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="性别：0男、1女" prop="gender">
-        <el-input
-          v-model="queryParams.gender"
-          placeholder="请输入性别：0男、1女"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
+      <el-form-item label="性别" prop="gender">
+        <el-select v-model="queryParams.gender" placeholder="请选择性别" clearable>
+          <el-option
+            v-for="dict in dict.type.sys_user_sex"
+            :key="dict.value"
+            :label="dict.label"
+            :value="dict.value"
+          />
+        </el-select>
       </el-form-item>
-      <el-form-item label="职称：0教授、1副教授、2讲师、3助教、4高级实验师" prop="professional">
-        <el-input
-          v-model="queryParams.professional"
-          placeholder="请输入职称：0教授、1副教授、2讲师、3助教、4高级实验师"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
+      <el-form-item label="职称" prop="professional">
+        <el-select v-model="queryParams.professional" placeholder="请选择职称" clearable>
+          <el-option
+            v-for="dict in dict.type.teacher_pro"
+            :key="dict.value"
+            :label="dict.label"
+            :value="dict.value"
+          />
+        </el-select>
       </el-form-item>
-      <el-form-item label="职务：0院长、1书记、2副院长、3副书记、4教师、5行政人员" prop="post">
-        <el-input
-          v-model="queryParams.post"
-          placeholder="请输入职务：0院长、1书记、2副院长、3副书记、4教师、5行政人员"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
+      <el-form-item label="职务" prop="post">
+        <el-select v-model="queryParams.post" placeholder="请选择职务" clearable>
+          <el-option
+            v-for="dict in dict.type.teacher_post"
+            :key="dict.value"
+            :label="dict.label"
+            :value="dict.value"
+          />
+        </el-select>
       </el-form-item>
-      <el-form-item label="研究方向" prop="research">
-        <el-input
-          v-model="queryParams.research"
-          placeholder="请输入研究方向"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="简介" prop="brief">
-        <el-input
-          v-model="queryParams.brief"
-          placeholder="请输入简介"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
+      <el-form-item label="状态" prop="delFlag">
+        <el-select v-model="queryParams.delFlag" placeholder="请选择状态" clearable>
+          <el-option
+            v-for="dict in dict.type.sys_normal_disable"
+            :key="dict.value"
+            :label="dict.label"
+            :value="dict.value"
+          />
+        </el-select>
       </el-form-item>
       <el-form-item>
         <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
@@ -105,12 +105,29 @@
       <el-table-column type="selection" width="55" align="center" />
       <el-table-column label="教师ID" align="center" prop="teacherId" />
       <el-table-column label="姓名" align="center" prop="name" />
-      <el-table-column label="性别：0男、1女" align="center" prop="gender" />
-      <el-table-column label="职称：0教授、1副教授、2讲师、3助教、4高级实验师" align="center" prop="professional" />
-      <el-table-column label="职务：0院长、1书记、2副院长、3副书记、4教师、5行政人员" align="center" prop="post" />
+      <el-table-column label="性别" align="center" prop="gender">
+        <template slot-scope="scope">
+          <dict-tag :options="dict.type.sys_user_sex" :value="scope.row.gender"/>
+        </template>
+      </el-table-column>
+      <el-table-column label="职称" align="center" prop="professional">
+        <template slot-scope="scope">
+          <dict-tag :options="dict.type.teacher_pro" :value="scope.row.professional"/>
+        </template>
+      </el-table-column>
+      <el-table-column label="职务" align="center" prop="post">
+        <template slot-scope="scope">
+          <dict-tag :options="dict.type.teacher_post" :value="scope.row.post"/>
+        </template>
+      </el-table-column>
       <el-table-column label="研究方向" align="center" prop="research" />
       <el-table-column label="简介" align="center" prop="brief" />
       <el-table-column label="备注" align="center" prop="remark" />
+      <el-table-column label="状态" align="center" prop="delFlag">
+        <template slot-scope="scope">
+          <dict-tag :options="dict.type.sys_normal_disable" :value="scope.row.delFlag"/>
+        </template>
+      </el-table-column>
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button
@@ -145,26 +162,43 @@
         <el-form-item label="姓名" prop="name">
           <el-input v-model="form.name" placeholder="请输入姓名" />
         </el-form-item>
-        <el-form-item label="性别：0男、1女" prop="gender">
-          <el-input v-model="form.gender" placeholder="请输入性别：0男、1女" />
+        <el-form-item label="性别" prop="gender">
+          <el-radio-group v-model="form.gender">
+            <el-radio
+              v-for="dict in dict.type.sys_user_sex"
+              :key="dict.value"
+              :label="dict.value"
+            >{{dict.label}}</el-radio>
+          </el-radio-group>
         </el-form-item>
-        <el-form-item label="职称：0教授、1副教授、2讲师、3助教、4高级实验师" prop="professional">
-          <el-input v-model="form.professional" placeholder="请输入职称：0教授、1副教授、2讲师、3助教、4高级实验师" />
+        <el-form-item label="职称" prop="professional">
+          <el-select v-model="form.professional" placeholder="请选择职称">
+            <el-option
+              v-for="dict in dict.type.teacher_pro"
+              :key="dict.value"
+              :label="dict.label"
+              :value="dict.value"
+            ></el-option>
+          </el-select>
         </el-form-item>
-        <el-form-item label="职务：0院长、1书记、2副院长、3副书记、4教师、5行政人员" prop="post">
-          <el-input v-model="form.post" placeholder="请输入职务：0院长、1书记、2副院长、3副书记、4教师、5行政人员" />
+        <el-form-item label="职务" prop="post">
+          <el-select v-model="form.post" placeholder="请选择职务">
+            <el-option
+              v-for="dict in dict.type.teacher_post"
+              :key="dict.value"
+              :label="dict.label"
+              :value="dict.value"
+            ></el-option>
+          </el-select>
         </el-form-item>
         <el-form-item label="研究方向" prop="research">
-          <el-input v-model="form.research" placeholder="请输入研究方向" />
+          <el-input v-model="form.research" type="textarea" placeholder="请输入内容" />
         </el-form-item>
-        <el-form-item label="简介" prop="brief">
-          <el-input v-model="form.brief" placeholder="请输入简介" />
+        <el-form-item label="简介">
+          <editor v-model="form.brief" :min-height="192"/>
         </el-form-item>
         <el-form-item label="备注" prop="remark">
           <el-input v-model="form.remark" placeholder="请输入备注" />
-        </el-form-item>
-        <el-form-item label="删除标志" prop="delFlag">
-          <el-input v-model="form.delFlag" placeholder="请输入删除标志" />
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -180,6 +214,7 @@ import { listTeacher, getTeacher, delTeacher, addTeacher, updateTeacher } from "
 
 export default {
   name: "Teacher",
+  dicts: ['teacher_post', 'sys_user_sex', 'sys_normal_disable', 'teacher_pro'],
   data() {
     return {
       // 遮罩层
@@ -209,7 +244,7 @@ export default {
         professional: null,
         post: null,
         research: null,
-        brief: null,
+        delFlag: null,
       },
       // 表单参数
       form: {},

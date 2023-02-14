@@ -27,13 +27,12 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <select id="selectAwardPersonList" parameterType="AwardPerson" resultMap="AwardPersonResult">
         <include refid="selectAwardPersonVo"/>
         <where>
-            <if test="awardId != null "> and award_id = #{awardId}</if>
-            <if test="personId != null "> and person_id = #{personId}</if>
             <if test="personType != null  and personType != ''"> and person_type = #{personType}</if>
             <if test="orderNum != null "> and order_num = #{orderNum}</if>
-            <if test="conDegree != null "> and con_degree = #{conDegree}</if>
-            <if test="workContent != null  and workContent != ''"> and work_content = #{workContent}</if>
+            <if test="delFlag != null  and delFlag != ''"> and del_flag = #{delFlag}</if>
         </where>
     </select>
+
+
 
 </mapper>

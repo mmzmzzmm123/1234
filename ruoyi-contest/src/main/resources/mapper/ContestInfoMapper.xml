@@ -14,8 +14,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="type"    column="type"    />
         <result property="grade"    column="grade"    />
         <result property="freq"    column="freq"    />
-        <result property="fee1"    column="fee1"    />
-        <result property="fee2"    column="fee2"    />
+        <result property="need_fee1"    column="need_fee1"    />
+        <result property="need_fee2"    column="need_fee2"    />
         <result property="remark"    column="remark"    />
         <result property="delFlag"    column="del_flag"    />
         <result property="createBy"    column="create_by"    />
@@ -25,23 +25,23 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </resultMap>
 
     <sql id="selectContestInfoVo">
-        select contest_id, name, url, brief, in_ministry, ministry_no, type, grade, freq, fee1, fee2, remark, del_flag, create_by, create_time, update_by, update_time from t_contest_info
+        select contest_id, name, url, brief, in_ministry, ministry_no, type, grade, freq, need_fee1, need_fee2, remark, del_flag, create_by, create_time, update_by, update_time from t_contest_info
     </sql>
 
     <select id="selectContestInfoList" parameterType="ContestInfo" resultMap="ContestInfoResult">
         <include refid="selectContestInfoVo"/>
         <where>
             <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
-            <if test="url != null  and url != ''"> and url = #{url}</if>
-            <if test="brief != null  and brief != ''"> and brief = #{brief}</if>
             <if test="inMinistry != null  and inMinistry != ''"> and in_ministry = #{inMinistry}</if>
-            <if test="ministryNo != null "> and ministry_no = #{ministryNo}</if>
             <if test="type != null  and type != ''"> and type = #{type}</if>
             <if test="grade != null  and grade != ''"> and grade = #{grade}</if>
             <if test="freq != null  and freq != ''"> and freq = #{freq}</if>
-            <if test="fee1 != null "> and fee1 = #{fee1}</if>
-            <if test="fee2 != null "> and fee2 = #{fee2}</if>
+            <if test="need_fee1 != null  and need_fee1 != ''"> and need_fee1 = #{need_fee1}</if>
+            <if test="need_fee2 != null  and need_fee2 != ''"> and need_fee2 = #{need_fee2}</if>
+            <if test="delFlag != null  and delFlag != ''"> and del_flag = #{delFlag}</if>
         </where>
     </select>
+
+
 
 </mapper>

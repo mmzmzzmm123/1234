@@ -1,26 +1,34 @@
 package com.ruoyi.contest.service.impl;
 
-import com.ruoyi.contest.domain.Teacher;
-import com.ruoyi.contest.mapper.TeacherMapper;
-import com.ruoyi.contest.service.TeacherService;
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import org.springframework.stereotype.Service;
-
+import java.util.Arrays;
 import java.util.List;
 
+import com.ruoyi.contest.domain.Teacher;
+import com.ruoyi.contest.mapper.TeacherMapper;
+import com.ruoyi.contest.service.ITeacherService;
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.ruoyi.common.utils.DateUtils;
+import org.springframework.stereotype.Service;
+
 /**
- * <p>
- * 教师信息表 服务实现类
- * </p>
+ * 教师信息Service业务层处理
  *
- * @author lsyonlygoddes
- * @since 2023-02-13
+ * @author ruoyi
+ * @date 2023-02-14
  */
 @Service
-public class TeacherServiceImpl extends ServiceImpl<TeacherMapper, Teacher> implements TeacherService {
-
+public class TeacherServiceImpl extends ServiceImpl<TeacherMapper, Teacher> implements ITeacherService
+{
+    /**
+     * 查询教师信息列表
+     *
+     * @param teacher 教师信息
+     * @return 教师信息
+     */
     @Override
-    public List<Teacher> selectTeacherList(Teacher teacher) {
+    public List<Teacher> selectTeacherList(Teacher teacher)
+    {
         return baseMapper.selectTeacherList(teacher);
     }
+
 }

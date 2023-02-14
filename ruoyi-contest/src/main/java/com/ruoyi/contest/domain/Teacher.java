@@ -1,64 +1,73 @@
 package com.ruoyi.contest.domain;
 
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-
-import java.io.Serializable;
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
+import com.ruoyi.common.annotation.Excel;
+import com.ruoyi.common.core.domain.BaseEntity;
 
 /**
- * <p>
- * 教师信息表
- * </p>
+ * 教师信息对象 t_teacher
  *
- * @author lsyonlygoddes
- * @since 2023-02-13
+ * @author ruoyi
+ * @date 2023-02-14
  */
 @Data
 @EqualsAndHashCode(callSuper = false)
 @TableName("t_teacher")
-public class Teacher extends BaseDomain implements Serializable {
-
-    private static final long serialVersionUID = 1L;
-
-    /**
-     * 教师ID
-     */
-      @TableId(value = "teacher_id", type = IdType.AUTO)
+public class Teacher extends BaseEntity
+{
+    /** 教师ID */
     private Long teacherId;
 
-    /**
-     * 姓名
-     */
+    /** 姓名 */
+    @Excel(name = "姓名")
     private String name;
 
-    /**
-     * 性别：0男、1女
-     */
+    /** 性别 */
+    @Excel(name = "性别")
     private String gender;
 
-    /**
-     * 职称：0教授、1副教授、2讲师、3助教、4高级实验师
-     */
+    /** 职称 */
+    @Excel(name = "职称")
     private String professional;
 
-    /**
-     * 职务：0院长、1书记、2副院长、3副书记、4教师、5行政人员
-     */
+    /** 职务 */
+    @Excel(name = "职务")
     private String post;
 
-    /**
-     * 研究方向
-     */
+    /** 研究方向 */
+    @Excel(name = "研究方向")
     private String research;
 
-    /**
-     * 简介
-     */
+    /** 简介 */
+    @Excel(name = "简介")
     private String brief;
 
+    /** 状态 */
+    @Excel(name = "状态")
+    private String delFlag;
 
 
+
+    @Override
+    public String toString() {
+        return new ToStringBuilder(this,ToStringStyle.MULTI_LINE_STYLE)
+            .append("teacherId", getTeacherId())
+            .append("name", getName())
+            .append("gender", getGender())
+            .append("professional", getProfessional())
+            .append("post", getPost())
+            .append("research", getResearch())
+            .append("brief", getBrief())
+            .append("remark", getRemark())
+            .append("delFlag", getDelFlag())
+            .append("createBy", getCreateBy())
+            .append("createTime", getCreateTime())
+            .append("updateBy", getUpdateBy())
+            .append("updateTime", getUpdateTime())
+            .toString();
+    }
 }

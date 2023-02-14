@@ -1,18 +1,18 @@
-package com.ruoyi.contest.mapper;
+package com.ruoyi.contest.service;
 
 import java.util.List;
-import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+
 import com.ruoyi.contest.domain.SubContest;
+import com.baomidou.mybatisplus.extension.service.IService;
 
 /**
- * 子竞赛信息Mapper接口
+ * 子竞赛信息Service接口
  *
  * @author ruoyi
  * @date 2023-02-14
  */
-public interface SubContestMapper extends BaseMapper<SubContest>
+public interface ISubContestService extends IService<SubContest>
 {
-
     /**
      * 查询子竞赛信息列表
      *
@@ -20,5 +20,4 @@ public interface SubContestMapper extends BaseMapper<SubContest>
      * @return 子竞赛信息集合
      */
     public List<SubContest> selectSubContestList(SubContest subContest);
-
 }

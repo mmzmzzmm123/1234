@@ -1,53 +1,65 @@
 <template>
   <div class="app-container">
     <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch" label-width="68px">
-      <el-form-item label="在教育部认可的57项赛事内" prop="inMinistry">
-        <el-input
-          v-model="queryParams.inMinistry"
-          placeholder="请输入在教育部认可的57项赛事内"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
+      <el-form-item label="竞赛类别" prop="type">
+        <el-select v-model="queryParams.type" placeholder="请选择竞赛类别" clearable>
+          <el-option
+            v-for="dict in dict.type.contest_type"
+            :key="dict.value"
+            :label="dict.label"
+            :value="dict.value"
+          />
+        </el-select>
       </el-form-item>
-      <el-form-item label="在教育部认可的57项赛事中的编号" prop="ministryNo">
-        <el-input
-          v-model="queryParams.ministryNo"
-          placeholder="请输入在教育部认可的57项赛事中的编号"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
+      <el-form-item label="竞赛等级" prop="grade">
+        <el-select v-model="queryParams.grade" placeholder="请选择竞赛等级" clearable>
+          <el-option
+            v-for="dict in dict.type.contest_grade"
+            :key="dict.value"
+            :label="dict.label"
+            :value="dict.value"
+          />
+        </el-select>
       </el-form-item>
-      <el-form-item label="竞赛等级：A~E" prop="grade">
-        <el-input
-          v-model="queryParams.grade"
-          placeholder="请输入竞赛等级：A~E"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
+      <el-form-item label="竞赛频次" prop="freq">
+        <el-select v-model="queryParams.freq" placeholder="请选择竞赛频次" clearable>
+          <el-option
+            v-for="dict in dict.type.contest_freq"
+            :key="dict.value"
+            :label="dict.label"
+            :value="dict.value"
+          />
+        </el-select>
       </el-form-item>
-      <el-form-item label="竞赛频次：0每年一届、1每两年一届" prop="freq">
-        <el-input
-          v-model="queryParams.freq"
-          placeholder="请输入竞赛频次：0每年一届、1每两年一届"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
+      <el-form-item label="省赛/区域赛" prop="need_fee1">
+        <el-select v-model="queryParams.need_fee1" placeholder="请选择省赛/区域赛" clearable>
+          <el-option
+            v-for="dict in dict.type.contest_fee_status"
+            :key="dict.value"
+            :label="dict.label"
+            :value="dict.value"
+          />
+        </el-select>
       </el-form-item>
-      <el-form-item label="省赛/区域赛费用" prop="fee1">
-        <el-input
-          v-model="queryParams.fee1"
-          placeholder="请输入省赛/区域赛费用"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
+      <el-form-item label="国赛/决赛" prop="need_fee2">
+        <el-select v-model="queryParams.need_fee2" placeholder="请选择国赛/决赛" clearable>
+          <el-option
+            v-for="dict in dict.type.contest_fee_status"
+            :key="dict.value"
+            :label="dict.label"
+            :value="dict.value"
+          />
+        </el-select>
       </el-form-item>
-      <el-form-item label="国赛/决赛费用" prop="fee2">
-        <el-input
-          v-model="queryParams.fee2"
-          placeholder="请输入国赛/决赛费用"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
+      <el-form-item label="状态" prop="delFlag">
+        <el-select v-model="queryParams.delFlag" placeholder="请选择状态" clearable>
+          <el-option
+            v-for="dict in dict.type.sys_normal_disable"
+            :key="dict.value"
+            :label="dict.label"
+            :value="dict.value"
+          />
+        </el-select>
       </el-form-item>
       <el-form-item>
         <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
@@ -107,14 +119,38 @@
       <el-table-column label="竞赛名称" align="center" prop="name" />
       <el-table-column label="竞赛官网" align="center" prop="url" />
       <el-table-column label="竞赛简介" align="center" prop="brief" />
-      <el-table-column label="在教育部认可的57项赛事内" align="center" prop="inMinistry" />
-      <el-table-column label="在教育部认可的57项赛事中的编号" align="center" prop="ministryNo" />
-      <el-table-column label="竞赛类别：0个人、1团体、2个人与团体" align="center" prop="type" />
-      <el-table-column label="竞赛等级：A~E" align="center" prop="grade" />
-      <el-table-column label="竞赛频次：0每年一届、1每两年一届" align="center" prop="freq" />
-      <el-table-column label="省赛/区域赛费用" align="center" prop="fee1" />
-      <el-table-column label="国赛/决赛费用" align="center" prop="fee2" />
-      <el-table-column label="备注" align="center" prop="remark" />
+      <el-table-column label="属于57项赛事" align="center" prop="inMinistry" />
+      <el-table-column label="57项赛事中的编号" align="center" prop="ministryNo" />
+      <el-table-column label="竞赛类别" align="center" prop="type">
+        <template slot-scope="scope">
+          <dict-tag :options="dict.type.contest_type" :value="scope.row.type"/>
+        </template>
+      </el-table-column>
+      <el-table-column label="竞赛等级" align="center" prop="grade">
+        <template slot-scope="scope">
+          <dict-tag :options="dict.type.contest_grade" :value="scope.row.grade"/>
+        </template>
+      </el-table-column>
+      <el-table-column label="竞赛频次" align="center" prop="freq">
+        <template slot-scope="scope">
+          <dict-tag :options="dict.type.contest_freq" :value="scope.row.freq"/>
+        </template>
+      </el-table-column>
+      <el-table-column label="省赛/区域赛" align="center" prop="need_fee1">
+        <template slot-scope="scope">
+          <dict-tag :options="dict.type.contest_fee_status" :value="scope.row.need_fee1"/>
+        </template>
+      </el-table-column>
+      <el-table-column label="国赛/决赛" align="center" prop="need_fee2">
+        <template slot-scope="scope">
+          <dict-tag :options="dict.type.contest_fee_status" :value="scope.row.need_fee2"/>
+        </template>
+      </el-table-column>
+      <el-table-column label="状态" align="center" prop="delFlag">
+        <template slot-scope="scope">
+          <dict-tag :options="dict.type.sys_normal_disable" :value="scope.row.delFlag"/>
+        </template>
+      </el-table-column>
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button
@@ -152,32 +188,59 @@
         <el-form-item label="竞赛官网" prop="url">
           <el-input v-model="form.url" type="textarea" placeholder="请输入内容" />
         </el-form-item>
-        <el-form-item label="竞赛简介" prop="brief">
-          <el-input v-model="form.brief" type="textarea" placeholder="请输入内容" />
+        <el-form-item label="竞赛简介">
+          <editor v-model="form.brief" :min-height="192"/>
         </el-form-item>
-        <el-form-item label="在教育部认可的57项赛事内" prop="inMinistry">
-          <el-input v-model="form.inMinistry" placeholder="请输入在教育部认可的57项赛事内" />
+        <el-form-item label="竞赛类别" prop="type">
+          <el-select v-model="form.type" placeholder="请选择竞赛类别">
+            <el-option
+              v-for="dict in dict.type.contest_type"
+              :key="dict.value"
+              :label="dict.label"
+              :value="dict.value"
+            ></el-option>
+          </el-select>
         </el-form-item>
-        <el-form-item label="在教育部认可的57项赛事中的编号" prop="ministryNo">
-          <el-input v-model="form.ministryNo" placeholder="请输入在教育部认可的57项赛事中的编号" />
+        <el-form-item label="竞赛等级" prop="grade">
+          <el-select v-model="form.grade" placeholder="请选择竞赛等级">
+            <el-option
+              v-for="dict in dict.type.contest_grade"
+              :key="dict.value"
+              :label="dict.label"
+              :value="dict.value"
+            ></el-option>
+          </el-select>
         </el-form-item>
-        <el-form-item label="竞赛等级：A~E" prop="grade">
-          <el-input v-model="form.grade" placeholder="请输入竞赛等级：A~E" />
+        <el-form-item label="竞赛频次" prop="freq">
+          <el-select v-model="form.freq" placeholder="请选择竞赛频次">
+            <el-option
+              v-for="dict in dict.type.contest_freq"
+              :key="dict.value"
+              :label="dict.label"
+              :value="dict.value"
+            ></el-option>
+          </el-select>
         </el-form-item>
-        <el-form-item label="竞赛频次：0每年一届、1每两年一届" prop="freq">
-          <el-input v-model="form.freq" placeholder="请输入竞赛频次：0每年一届、1每两年一届" />
+        <el-form-item label="省赛/区域赛" prop="need_fee1">
+          <el-radio-group v-model="form.need_fee1">
+            <el-radio
+              v-for="dict in dict.type.contest_fee_status"
+              :key="dict.value"
+              :label="dict.value"
+            >{{dict.label}}</el-radio>
+          </el-radio-group>
         </el-form-item>
-        <el-form-item label="省赛/区域赛费用" prop="fee1">
-          <el-input v-model="form.fee1" placeholder="请输入省赛/区域赛费用" />
-        </el-form-item>
-        <el-form-item label="国赛/决赛费用" prop="fee2">
-          <el-input v-model="form.fee2" placeholder="请输入国赛/决赛费用" />
+        <el-form-item label="国赛/决赛" prop="need_fee2">
+          <el-radio-group v-model="form.need_fee2">
+            <el-radio
+              v-for="dict in dict.type.contest_fee_status"
+              :key="dict.value"
+              :label="dict.value"
+            >{{dict.label}}</el-radio>
+          </el-radio-group>
         </el-form-item>
         <el-form-item label="备注" prop="remark">
           <el-input v-model="form.remark" placeholder="请输入备注" />
-        </el-form-item>
-        <el-form-item label="删除标志" prop="delFlag">
-          <el-input v-model="form.delFlag" placeholder="请输入删除标志" />
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -193,6 +256,7 @@ import { listContestInfo, getContestInfo, delContestInfo, addContestInfo, update
 
 export default {
   name: "ContestInfo",
+  dicts: ['contest_type', 'sys_normal_disable', 'contest_grade', 'contest_freq', 'contest_fee_status'],
   data() {
     return {
       // 遮罩层
@@ -218,15 +282,13 @@ export default {
         pageNum: 1,
         pageSize: 10,
         name: null,
-        url: null,
-        brief: null,
         inMinistry: null,
-        ministryNo: null,
         type: null,
         grade: null,
         freq: null,
-        fee1: null,
-        fee2: null,
+        need_fee1: null,
+        need_fee2: null,
+        delFlag: null,
       },
       // 表单参数
       form: {},
@@ -265,8 +327,8 @@ export default {
         type: null,
         grade: null,
         freq: null,
-        fee1: null,
-        fee2: null,
+        need_fee1: null,
+        need_fee2: null,
         remark: null,
         delFlag: null,
         createBy: null,

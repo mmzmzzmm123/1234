@@ -1,61 +1,70 @@
 package com.ruoyi.contest.domain;
 
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableId;
+import java.util.Date;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-
-import java.io.Serializable;
-import java.time.LocalDateTime;
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
+import com.ruoyi.common.annotation.Excel;
+import com.ruoyi.common.core.domain.BaseEntity;
 
 /**
- * <p>
- * 获奖登记表
- * </p>
+ * 获奖登记对象 t_award
  *
  * @author lsyonlygoddes
- * @since 2023-02-13
+ * @date 2023-02-14
  */
 @Data
 @EqualsAndHashCode(callSuper = false)
 @TableName("t_award")
-public class Award extends BaseDomain implements Serializable {
-
-    private static final long serialVersionUID = 1L;
-
-    /**
-     * 获奖ID
-     */
-      @TableId(value = "award_id", type = IdType.AUTO)
+public class Award extends BaseEntity
+{
+    /** 获奖ID */
     private Long awardId;
 
-    /**
-     * 竞赛ID
-     */
+    /** 竞赛ID */
     private Long contestId;
 
-    /**
-     * 子竞赛ID
-     */
+    /** 子竞赛ID */
+    @Excel(name = "子竞赛ID")
     private Long subContestId;
 
-    /**
-     * 获奖日期
-     */
-    private LocalDateTime awardDate;
+    /** 获奖日期 */
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    @Excel(name = "获奖日期", width = 30, dateFormat = "yyyy-MM-dd")
+    private Date awardDate;
 
-    /**
-     * 获奖等级：0特等奖、1一等奖、2二等奖、3三等奖、4优秀奖
-     */
+    /** 获奖等级 */
+    @Excel(name = "获奖等级")
     private String awardGrade;
 
-    /**
-     * 支撑材料上传地址
-     */
+    /** 支撑材料 */
+    @Excel(name = "支撑材料")
     private String attachmentUrl;
 
+    /** 状态 */
+    @Excel(name = "状态")
+    private String delFlag;
 
 
 
+    @Override
+    public String toString() {
+        return new ToStringBuilder(this,ToStringStyle.MULTI_LINE_STYLE)
+            .append("awardId", getAwardId())
+            .append("contestId", getContestId())
+            .append("subContestId", getSubContestId())
+            .append("awardDate", getAwardDate())
+            .append("awardGrade", getAwardGrade())
+            .append("attachmentUrl", getAttachmentUrl())
+            .append("remark", getRemark())
+            .append("delFlag", getDelFlag())
+            .append("createBy", getCreateBy())
+            .append("createTime", getCreateTime())
+            .append("updateBy", getUpdateBy())
+            .append("updateTime", getUpdateTime())
+            .toString();
+    }
 }

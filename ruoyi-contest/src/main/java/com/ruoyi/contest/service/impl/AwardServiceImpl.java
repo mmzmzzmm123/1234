@@ -1,26 +1,34 @@
 package com.ruoyi.contest.service.impl;
 
-import com.ruoyi.contest.domain.Award;
-import com.ruoyi.contest.mapper.AwardMapper;
-import com.ruoyi.contest.service.AwardService;
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import org.springframework.stereotype.Service;
-
+import java.util.Arrays;
 import java.util.List;
 
+import com.ruoyi.contest.domain.Award;
+import com.ruoyi.contest.mapper.AwardMapper;
+import com.ruoyi.contest.service.IAwardService;
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.ruoyi.common.utils.DateUtils;
+import org.springframework.stereotype.Service;
+
 /**
- * <p>
- * 获奖登记表 服务实现类
- * </p>
+ * 获奖登记Service业务层处理
  *
  * @author lsyonlygoddes
- * @since 2023-02-13
+ * @date 2023-02-14
  */
 @Service
-public class AwardServiceImpl extends ServiceImpl<AwardMapper, Award> implements AwardService {
-
+public class AwardServiceImpl extends ServiceImpl<AwardMapper, Award> implements IAwardService
+{
+    /**
+     * 查询获奖登记列表
+     *
+     * @param award 获奖登记
+     * @return 获奖登记
+     */
     @Override
-    public List<Award> selectAwardList(Award award) {
+    public List<Award> selectAwardList(Award award)
+    {
         return baseMapper.selectAwardList(award);
     }
+
 }
