@@ -7,6 +7,7 @@ import com.ruoyi.common.core.page.TableDataInfo;
 import com.ruoyi.common.enums.BusinessType;
 import com.ruoyi.common.utils.poi.ExcelUtil;
 import com.ruoyi.contest.domain.SubContest;
+import com.ruoyi.contest.domain.vo.SubContestQueryVo;
 import com.ruoyi.contest.service.ISubContestService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -102,7 +103,7 @@ public class SubContestController extends BaseController
      */
     @PreAuthorize("@ss.hasPermi('contest:subContest:list')")
     @GetMapping("/listWithParentContest")
-    public TableDataInfo listWithParentContest(SubContest subContest)
+    public TableDataInfo listWithParentContest(SubContestQueryVo subContest)
     {
         startPage();
         List<SubContest> list = subContestService.selectSubContestListWithParent(subContest);

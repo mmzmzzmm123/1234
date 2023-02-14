@@ -26,6 +26,20 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         select sub_contest_id, contest_id, name, url, attachments_url, year, rank, competition_date, fee, remark, del_flag, create_by, create_time, update_by, update_time from t_sub_contest
     </sql>
 
+    <select id="selectSubContestList2" parameterType="SubContestQueryVo" resultMap="SubContestResult">
+        SELECT
+	        sc.*
+        FROM
+            t_sub_contest sc
+            LEFT JOIN t_contest_info c ON sc.contest_id = c.contest_id
+        <where>
+            <if test="inMinistry != null  and inMinistry != ''"> and c.in_ministry = #{inMinistry}</if>
+            <if test="grade != null  and grade != ''"> and c.grade = #{grade}</if>
+            <if test="name != null  and name != ''"> and sc.name like concat('%', #{name}, '%')</if>
+            <if test="rank != null  and rank != ''"> and sc.rank = #{rank}</if>
+        </where>
+    </select>
+
     <select id="selectSubContestList" parameterType="SubContest" resultMap="SubContestResult">
         <include refid="selectSubContestVo"/>
         <where>

@@ -3,6 +3,7 @@ package com.ruoyi.contest.service.impl;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.ruoyi.contest.domain.ContestInfo;
 import com.ruoyi.contest.domain.SubContest;
+import com.ruoyi.contest.domain.vo.SubContestQueryVo;
 import com.ruoyi.contest.mapper.ContestInfoMapper;
 import com.ruoyi.contest.mapper.SubContestMapper;
 import com.ruoyi.contest.service.ISubContestService;
@@ -40,8 +41,8 @@ public class SubContestServiceImpl extends ServiceImpl<SubContestMapper, SubCont
     }
 
     @Override
-    public List<SubContest> selectSubContestListWithParent(SubContest subContest) {
-        List<SubContest> list = baseMapper.selectSubContestList(subContest);
+    public List<SubContest> selectSubContestListWithParent(SubContestQueryVo subContest) {
+        List<SubContest> list = baseMapper.selectSubContestList2(subContest);
         if (list!=null){
             for (SubContest subContest1 : list) {
                 Map<String, Object> params=new HashMap<>();
