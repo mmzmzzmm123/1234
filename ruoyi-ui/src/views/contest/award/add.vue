@@ -41,9 +41,21 @@
           <el-table :data="guideTeacherList">
             <el-table-column type="selection" width="55" align="center"/>
             <el-table-column label="姓名" align="center" prop="name"/>
-            <el-table-column label="排序" align="center" prop="orderNum"/>
-            <el-table-column label="贡献度" align="center" prop="conDegree"/>
-            <el-table-column label="工作内容" align="center" prop="workContent"/>
+            <el-table-column label="排序" align="center">
+              <template slot-scope="scope">
+                <el-input  v-model.number="scope.row.orderNum"></el-input>
+              </template>
+            </el-table-column>
+            <el-table-column label="贡献度" align="center">
+              <template slot-scope="scope">
+                <el-input  v-model.number="scope.row.conDegree"></el-input>
+              </template>
+            </el-table-column>
+            <el-table-column label="工作内容" align="center">
+              <template slot-scope="scope">
+                <el-input  v-model="scope.row.workContent"></el-input>
+              </template>
+            </el-table-column>
             <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
               <template slot-scope="scope">
                 <el-button
@@ -57,7 +69,7 @@
           </el-table>
         </el-form-item>
         <el-form-item label="参赛学生" prop="stus">
-          <el-button>添加</el-button>
+          <el-button @click="openStuDialog=true">添加</el-button>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -176,13 +188,40 @@
         <el-button @click="cancelAddTeacher">取 消</el-button>
       </div>
     </el-dialog>
+
+    <!--添加参赛学生对话框-->
+    <el-dialog title="添加参赛学生" :visible.sync="openStuDialog" fullscreen append-to-body>
+      <el-table :data="stuList" @selection-change="multiSelStu">
+        <el-table-column type="selection" width="55" align="center" />
+        <el-table-column label="学号" align="center" prop="stuNo" width="130"/>
+        <el-table-column label="姓名" align="center" prop="name" width="70"/>
+        <el-table-column label="性别" align="center" prop="sex">
+          <template slot-scope="scope">
+            <dict-tag :options="dict.type.sys_user_sex" :value="scope.row.sex"/>
+          </template>
+        </el-table-column>
+        <el-table-column label="身份证号" align="center" prop="idNum"/>
+      </el-table>
+      <pagination
+        v-show="stuTotal>0"
+        :total="stuTotal"
+        :page.sync="queryStuParams.pageNum"
+        :limit.sync="queryStuParams.pageSize"
+        @pagination="getStuList"
+      />
+      <div slot="footer" class="dialog-footer">
+        <el-button type="primary" @click="addStu">确 定</el-button>
+        <el-button @click="cancelAddStu">取 消</el-button>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
 <script>
-  import {addType, updateType} from "@/api/system/dict/type";
   import {listWithParentContest} from "@/api/contest/subContest";
+  import axios from 'axios';
   import { listTeacher} from "@/api/contest/teacher";
+  import { listStu} from "@/api/contest/stu";
 
   export default {
     name: "AddAward",
@@ -201,12 +240,17 @@
         },
         openContestsDialog: false,
         openTeacherDialog:false,
+        openStuDialog:false,
         contestInfoList: [],
         teacherList: [],
+        stuList: [],
+        contestStuList:[],
         selectedTeacherList: [],
         guideTeacherList: [],
         contestTotal:0,
         teacherTotal:0,
+        stuTotal:0,
+        orderNum:0,
         contestNames:[],
         subContestIds:[],
         queryContestParams: {
@@ -214,32 +258,41 @@
         },
         queryTeacherParams:{
           pageSize:10
+        },
+        queryStuParams:{
+          pageNum:1,
+          pageSize:10,
+          schoolArea:1
         }
       }
     },
     created() {
       this.getContestList()
       this.getTeacherList()
+      this.getStuList()
     },
     methods: {
       submitForm() {
-        this.$refs["form"].validate(valid => {
-          if (valid) {
-            if (this.form.dictId != undefined) {
-              updateType(this.form).then(response => {
-                this.$modal.msgSuccess("修改成功");
-                this.open = false;
-                this.getList();
-              });
-            } else {
-              addType(this.form).then(response => {
-                this.$modal.msgSuccess("新增成功");
-                this.open = false;
-                this.getList();
-              });
-            }
-          }
-        });
+        this.form.guideTeacherList=this.guideTeacherList
+        this.form.contestStuList=this.contestStuList
+        console.log('this.form:',this.form)
+        // this.$refs["form"].validate(valid => {
+        //   if (valid) {
+        //     if (this.form.dictId != undefined) {
+        //       updateType(this.form).then(response => {
+        //         this.$modal.msgSuccess("修改成功");
+        //         this.open = false;
+        //         this.getList();
+        //       });
+        //     } else {
+        //       addType(this.form).then(response => {
+        //         this.$modal.msgSuccess("新增成功");
+        //         this.open = false;
+        //         this.getList();
+        //       });
+        //     }
+        //   }
+        // });
       },
       getContestList() {
         listWithParentContest(this.queryContestParams).then(res => {
@@ -253,6 +306,19 @@
           this.teacherTotal = res.total;
         });
       },
+      getStuList(){
+        // const {data:res}=await axios.get('http://140.210.209.124/prod-api/stuManage/stu/list?pageSize='+this.queryStuParams.pageSize+'&pageNum='+this.queryStuParams.pageNum,{})
+        // this.stuList = res.rows;
+        // this.stuList.forEach(item=>{
+        //   item.sex=item.sex+''
+        // })
+        // this.stuTotal = res.total;
+        // // console.log('res:',res)
+        listStu(this.queryStuParams).then(res => {
+          this.stuList = res.rows;
+          this.stuTotal = res.total;
+        });
+      },
       addContest() {
         this.form.contest=this.contestNames.toString()
         this.queryContestParams = {}
@@ -263,16 +329,38 @@
           const teacherObj={
             teacherId:item.teacherId,
             name:item.name,
-            orderNum:this.guideTeacherList.length+1,
+            // orderNum:this.guideTeacherList.length+1,
+            orderNum:this.orderNum++,
             conDegree:100,
-            workContent:''
+            workContent:'',
+            gender:item.gender,
+            professional:item.professional,
+            post:item.post,
+            research:item.research,
           }
           this.guideTeacherList.push(teacherObj)
         })
         this.openTeacherDialog=false
       },
+      addStu(){
+
+      },
+      /*cellClick(row, column, cell, event){
+          console.log('row:',row)
+      },*/
+      arrDif(arr1,arr2){
+        for (let i = 0; i < arr1.length; i++) {
+          for (let j = 0; j < arr2.length; j++) {
+            if (arr1[i].teacherId === arr2[j].teacherId) {
+              arr1 = arr1.filter(item => item.teacherId !== arr1[i].teacherId)
+            }
+          }
+        }
+        return arr1
+      },
       showTeacherDialog(){
-        this.teacherList=this.teacherList.concat(this.guideTeacherList).filter(item=>!this.guideTeacherList.includes(item))
+        // this.teacherList=this.teacherList.concat(this.guideTeacherList).filter(item=>!this.guideTeacherList.includes(item))
+        this.teacherList=this.arrDif(this.teacherList,this.guideTeacherList)
         this.openTeacherDialog=true
       },
       cancelAddContest() {
@@ -282,9 +370,28 @@
       cancelAddTeacher(){
         this.openTeacherDialog=false
       },
+      cancelAddStu(){
+        this.openStuDialog=false
+      },
       popTeacher(teacher){
-        // console.log('teacher:',teacher)
+        let tOrderNum=0
+        this.guideTeacherList.forEach(item=>{
+          if (item.teacherId!==teacher.teacherId){
+            item.orderNum=tOrderNum
+            tOrderNum++
+          }
+        })
         this.guideTeacherList=this.guideTeacherList.filter(item=>item.teacherId!==teacher.teacherId)
+        this.orderNum--
+        let exist=false
+        this.teacherList.forEach(item=>{
+          if (item.teacherId===teacher.teacherId){
+            exist=true
+          }
+        })
+        if (!exist){
+          this.teacherList.push(teacher)
+        }
       },
       multiSelContest(selection) {
         this.contestNames = selection.map(item => item.name)
@@ -292,6 +399,9 @@
       },
       multiSelTeacher(selection){
         this.selectedTeacherList=selection
+      },
+      multiSelStu(selection){
+
       },
       resetQueryContest() {
         this.queryContestParams = {}
