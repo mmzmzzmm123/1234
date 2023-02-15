@@ -37,7 +37,24 @@
           <el-input v-model="form.remark" placeholder="请输入备注"/>
         </el-form-item>
         <el-form-item label="指导教师" prop="teacher">
-          <el-button @click="openTeacherDialog=true">添加</el-button>
+          <el-button @click="showTeacherDialog">添加</el-button>
+          <el-table :data="guideTeacherList">
+            <el-table-column type="selection" width="55" align="center"/>
+            <el-table-column label="姓名" align="center" prop="name"/>
+            <el-table-column label="排序" align="center" prop="orderNum"/>
+            <el-table-column label="贡献度" align="center" prop="conDegree"/>
+            <el-table-column label="工作内容" align="center" prop="workContent"/>
+            <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
+              <template slot-scope="scope">
+                <el-button
+                  size="mini"
+                  type="text"
+                  icon="el-icon-delete"
+                  @click="popTeacher(scope.row)"
+                >删除</el-button>
+              </template>
+            </el-table-column>
+          </el-table>
         </el-form-item>
         <el-form-item label="参赛学生" prop="stus">
           <el-button>添加</el-button>
@@ -128,22 +145,32 @@
     <!--添加指导教师对话框-->
     <el-dialog title="添加指导教师" :visible.sync="openTeacherDialog" fullscreen append-to-body>
       <el-table :data="teacherList" @selection-change="multiSelTeacher">
-        <!--<el-table-column type="selection" width="55" align="center"/>-->
-        <el-table-column label="姓名" align="center" prop="name"/>
-        <el-table-column label="排序" align="center" prop="orderNum"/>
-        <el-table-column label="贡献度" align="center" prop="conDegree"/>
-        <el-table-column label="工作内容" align="center" prop="workContent"/>
-        <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
+        <el-table-column type="selection" width="55" align="center" />
+        <el-table-column label="姓名" align="center" prop="name" />
+        <el-table-column label="性别" align="center" prop="gender">
           <template slot-scope="scope">
-            <el-button
-              size="mini"
-              type="text"
-              icon="el-icon-delete"
-              @click="popTeacher(scope.row)"
-            >删除</el-button>
+            <dict-tag :options="dict.type.sys_user_sex" :value="scope.row.gender"/>
           </template>
         </el-table-column>
+        <el-table-column label="职称" align="center" prop="professional">
+          <template slot-scope="scope">
+            <dict-tag :options="dict.type.teacher_pro" :value="scope.row.professional"/>
+          </template>
+        </el-table-column>
+        <el-table-column label="职务" align="center" prop="post">
+          <template slot-scope="scope">
+            <dict-tag :options="dict.type.teacher_post" :value="scope.row.post"/>
+          </template>
+        </el-table-column>
+        <el-table-column label="研究方向" align="center" prop="research" />
       </el-table>
+      <pagination
+        v-show="teacherTotal>0"
+        :total="teacherTotal"
+        :page.sync="queryTeacherParams.pageNum"
+        :limit.sync="queryTeacherParams.pageSize"
+        @pagination="getTeacherList"
+      />
       <div slot="footer" class="dialog-footer">
         <el-button type="primary" @click="addTeacher">确 定</el-button>
         <el-button @click="cancelAddTeacher">取 消</el-button>
@@ -155,11 +182,11 @@
 <script>
   import {addType, updateType} from "@/api/system/dict/type";
   import {listWithParentContest} from "@/api/contest/subContest";
-
+  import { listTeacher} from "@/api/contest/teacher";
 
   export default {
     name: "AddAward",
-    dicts: ['sys_normal_disable', 'award_grade', 'contest_grade', 'sub_contest_rank', 'contest_in_ministry'],
+    dicts: ['sys_normal_disable', 'award_grade', 'contest_grade', 'sub_contest_rank', 'contest_in_ministry','teacher_post', 'sys_user_sex', 'teacher_pro'],
     data() {
       return {
         form: {},
@@ -176,14 +203,23 @@
         openTeacherDialog:false,
         contestInfoList: [],
         teacherList: [],
+        selectedTeacherList: [],
+        guideTeacherList: [],
         contestTotal:0,
+        teacherTotal:0,
         contestNames:[],
         subContestIds:[],
-        queryContestParams: {}
+        queryContestParams: {
+          pageSize:10
+        },
+        queryTeacherParams:{
+          pageSize:10
+        }
       }
     },
     created() {
       this.getContestList()
+      this.getTeacherList()
     },
     methods: {
       submitForm() {
@@ -211,30 +247,51 @@
           this.contestTotal = res.total;
         });
       },
+      getTeacherList() {
+        listTeacher().then(res => {
+          this.teacherList = res.rows;
+          this.teacherTotal = res.total;
+        });
+      },
       addContest() {
         this.form.contest=this.contestNames.toString()
         this.queryContestParams = {}
         this.openContestsDialog=false
       },
       addTeacher(){
-
+        this.selectedTeacherList.forEach(item=>{
+          const teacherObj={
+            teacherId:item.teacherId,
+            name:item.name,
+            orderNum:this.guideTeacherList.length+1,
+            conDegree:100,
+            workContent:''
+          }
+          this.guideTeacherList.push(teacherObj)
+        })
+        this.openTeacherDialog=false
+      },
+      showTeacherDialog(){
+        this.teacherList=this.teacherList.concat(this.guideTeacherList).filter(item=>!this.guideTeacherList.includes(item))
+        this.openTeacherDialog=true
       },
       cancelAddContest() {
         this.queryContestParams = {}
         this.openContestsDialog=false
       },
       cancelAddTeacher(){
-
+        this.openTeacherDialog=false
       },
       popTeacher(teacher){
-
+        // console.log('teacher:',teacher)
+        this.guideTeacherList=this.guideTeacherList.filter(item=>item.teacherId!==teacher.teacherId)
       },
       multiSelContest(selection) {
         this.contestNames = selection.map(item => item.name)
         this.subContestIds = selection.map(item => item.subContestId)
       },
-      multiSelTeacher(){
-
+      multiSelTeacher(selection){
+        this.selectedTeacherList=selection
       },
       resetQueryContest() {
         this.queryContestParams = {}
