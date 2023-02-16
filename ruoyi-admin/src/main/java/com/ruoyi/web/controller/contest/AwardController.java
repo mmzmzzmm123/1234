@@ -6,17 +6,16 @@ import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.core.page.TableDataInfo;
 import com.ruoyi.common.enums.BusinessType;
 import com.ruoyi.common.utils.poi.ExcelUtil;
+import com.ruoyi.contest.domain.Award;
+import com.ruoyi.contest.domain.vo.SaveAwardVo;
+import com.ruoyi.contest.service.IAwardService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+
 import javax.servlet.http.HttpServletResponse;
 import java.util.Arrays;
 import java.util.List;
-
-import com.ruoyi.contest.domain.Award;
-import com.ruoyi.contest.service.IAwardService;
-
-import com.ruoyi.common.core.page.TableDataInfo;
 
 /**
  * 获奖登记Controller
@@ -75,6 +74,17 @@ public class AwardController extends BaseController
     public AjaxResult add(@RequestBody Award award)
     {
         return toAjax(awardService.save(award));
+    }
+
+    /**
+     * 新增获奖登记by SaveAwardVo
+     */
+    @PreAuthorize("@ss.hasPermi('contest:award:add')")
+    @Log(title = "获奖登记", businessType = BusinessType.INSERT)
+    @PostMapping("/saveAwardVo")
+    public AjaxResult add(@RequestBody SaveAwardVo vo)
+    {
+        return toAjax(awardService.saveAward(vo));
     }
 
     /**

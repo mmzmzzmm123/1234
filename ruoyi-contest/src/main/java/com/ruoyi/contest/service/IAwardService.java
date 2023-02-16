@@ -1,9 +1,10 @@
 package com.ruoyi.contest.service;
 
-import java.util.List;
-
-import com.ruoyi.contest.domain.Award;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.ruoyi.contest.domain.Award;
+import com.ruoyi.contest.domain.vo.SaveAwardVo;
+
+import java.util.List;
 
 /**
  * 获奖登记Service接口
@@ -20,4 +21,6 @@ public interface IAwardService extends IService<Award>
      * @return 获奖登记集合
      */
     public List<Award> selectAwardList(Award award);
+
+    int saveAward(SaveAwardVo vo);
 }
