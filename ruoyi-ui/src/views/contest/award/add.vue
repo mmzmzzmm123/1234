@@ -8,99 +8,118 @@
               <el-input v-model="form.name"></el-input>
             </el-col>
             <el-col :span="12">
-              <el-button type="primary" @click="openContestsDialog=true">选择</el-button>
+              <el-button type="primary" style="margin-left: 5px" @click="openContestsDialog=true">选择</el-button>
             </el-col>
           </el-row>
         </el-form-item>
-        <el-form-item label="获奖日期" prop="awardDate">
-          <el-date-picker clearable
-                          v-model="form.awardDate"
-                          type="date"
-                          value-format="yyyy-MM-dd"
-                          placeholder="请选择获奖日期">
-          </el-date-picker>
-        </el-form-item>
-        <el-form-item label="获奖等级" prop="awardGrade">
-          <el-select v-model="form.awardGrade" placeholder="请选择获奖等级">
-            <el-option
-              v-for="dict in dict.type.award_grade"
-              :key="dict.value"
-              :label="dict.label"
-              :value="dict.value"
-            ></el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item label="支撑材料" prop="attachmentUrl">
-          <file-upload v-model="form.attachmentUrl"/>
-        </el-form-item>
-        <el-form-item label="备注" prop="remark">
-          <el-input v-model="form.remark" placeholder="请输入备注"/>
-        </el-form-item>
+        <el-row>
+          <el-col :span="12">
+            <el-row>
+              <el-col :span="12">
+                <el-form-item label="获奖日期" prop="awardDate">
+                  <el-date-picker clearable
+                                  v-model="form.awardDate"
+                                  type="date"
+                                  value-format="yyyy-MM-dd"
+                                  placeholder="请选择获奖日期">
+                  </el-date-picker>
+                </el-form-item>
+              </el-col>
+              <el-col :span="12">
+                <el-form-item label="获奖等级" prop="awardGrade">
+                  <el-select v-model="form.awardGrade" placeholder="请选择获奖等级">
+                    <el-option
+                      v-for="dict in dict.type.award_grade"
+                      :key="dict.value"
+                      :label="dict.label"
+                      :value="dict.value"
+                    ></el-option>
+                  </el-select>
+                </el-form-item>
+              </el-col>
+            </el-row>
+            <el-row>
+              <el-form-item label="备注" prop="remark">
+                <el-input v-model="form.remark" placeholder="请输入备注"/>
+              </el-form-item>
+            </el-row>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="支撑材料" prop="attachmentUrl">
+              <file-upload v-model="form.attachmentUrl"/>
+            </el-form-item>
+          </el-col>
+        </el-row>
         <el-form-item label="指导教师" prop="teacher">
-          <el-button @click="showTeacherDialog">添加</el-button>
-          <el-table :data="guideTeacherList">
-            <el-table-column type="selection" width="55" align="center"/>
-            <el-table-column label="姓名" align="center" prop="name"/>
-            <el-table-column label="排序" align="center">
-              <template slot-scope="scope">
-                <el-input v-model.number="scope.row.orderNum"></el-input>
-              </template>
-            </el-table-column>
-            <el-table-column label="贡献度" align="center">
-              <template slot-scope="scope">
-                <el-input v-model.number="scope.row.conDegree"></el-input>
-              </template>
-            </el-table-column>
-            <el-table-column label="工作内容" align="center">
-              <template slot-scope="scope">
-                <el-input v-model="scope.row.workContent"></el-input>
-              </template>
-            </el-table-column>
-            <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
-              <template slot-scope="scope">
-                <el-button
-                  size="mini"
-                  type="text"
-                  icon="el-icon-delete"
-                  @click="popTeacher(scope.row)"
-                >删除
-                </el-button>
-              </template>
-            </el-table-column>
-          </el-table>
+          <el-card class="box-card">
+            <div slot="header" class="clearfix">
+              <!--<span>指导教师</span>-->
+              <el-button style="float: right; padding: 3px 0" type="text" @click="remGuideTeachers">删除</el-button>
+              <el-button style="float: right; padding: 3px 0;margin-right: 5px" type="text" @click="showTeacherDialog">添加</el-button>
+            </div>
+            <div>
+              <el-table :data="guideTeacherList" @selection-change="multiSelGuideTeacher">
+                <el-table-column type="selection" width="55" align="center"/>
+                <el-table-column label="姓名" align="center" prop="name"/>
+                <el-table-column label="排序" align="center">
+                  <template slot-scope="scope">
+                    <el-input v-model.number="scope.row.orderNum"></el-input>
+                  </template>
+                </el-table-column>
+                <el-table-column label="贡献度" align="center">
+                  <template slot-scope="scope">
+                    <el-input v-model.number="scope.row.conDegree"></el-input>
+                  </template>
+                </el-table-column>
+                <el-table-column label="工作内容" align="center">
+                  <template slot-scope="scope">
+                    <el-input v-model="scope.row.workContent"></el-input>
+                  </template>
+                </el-table-column>
+              </el-table>
+            </div>
+          </el-card>
         </el-form-item>
         <el-form-item label="参赛学生" prop="stus">
-          <el-button @click="showStuDialog">添加</el-button>
-          <el-table :data="contestStuList">
-            <el-table-column type="selection" width="55" align="center"/>
-            <el-table-column label="姓名" align="center" prop="name"/>
-            <el-table-column label="排序" align="center">
-              <template slot-scope="scope">
-                <el-input v-model.number="scope.row.orderNum"></el-input>
-              </template>
-            </el-table-column>
-            <el-table-column label="贡献度" align="center">
-              <template slot-scope="scope">
-                <el-input v-model.number="scope.row.conDegree"></el-input>
-              </template>
-            </el-table-column>
-            <el-table-column label="工作内容" align="center">
-              <template slot-scope="scope">
-                <el-input v-model="scope.row.workContent"></el-input>
-              </template>
-            </el-table-column>
-            <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
-              <template slot-scope="scope">
-                <el-button
-                  size="mini"
-                  type="text"
-                  icon="el-icon-delete"
-                  @click="popStu(scope.row)"
-                >删除
-                </el-button>
-              </template>
-            </el-table-column>
-          </el-table>
+          <el-card class="box-card">
+            <div slot="header" class="clearfix">
+              <el-button style="float: right; padding: 3px 0" type="text" @click="remContestStus">删除</el-button>
+              <el-button style="float: right; padding: 3px 0;margin-right: 5px" type="text" @click="showStuDialog">添加</el-button>
+            </div>
+            <div>
+              <el-table :data="contestStuList" @selection-change="multiSelContestStu">
+                <el-table-column type="selection" width="55" align="center"/>
+                <el-table-column label="姓名" align="center" prop="name"/>
+                <el-table-column label="排序" align="center">
+                  <template slot-scope="scope">
+                    <el-input v-model.number="scope.row.orderNum"></el-input>
+                  </template>
+                </el-table-column>
+                <el-table-column label="贡献度" align="center">
+                  <template slot-scope="scope">
+                    <el-input v-model.number="scope.row.conDegree"></el-input>
+                  </template>
+                </el-table-column>
+                <el-table-column label="工作内容" align="center">
+                  <template slot-scope="scope">
+                    <el-input v-model="scope.row.workContent"></el-input>
+                  </template>
+                </el-table-column>
+                <!--<el-table-column label="操作" align="center" class-name="small-padding fixed-width">
+                  <template slot-scope="scope">
+                    <el-button
+                      size="mini"
+                      type="text"
+                      icon="el-icon-delete"
+                      @click="popStu(scope.row)"
+                    >删除
+                    </el-button>
+                  </template>
+                </el-table-column>-->
+              </el-table>
+            </div>
+          </el-card>
+          <!--<el-button @click="showStuDialog">添加</el-button>-->
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -152,8 +171,33 @@
         </el-form-item>
       </el-form>
       <!--<el-table :data="contestInfoList" @selection-change="multiSelContest" highlight-current-row @current-change="handleCurrentChange">-->
-      <el-table :data="contestInfoList" highlight-current-row @current-change="handleCurrentChange">
+      <!--<el-table :data="contestInfoList" highlight-current-row @current-change="handleCurrentChange" @row-click="rowClick">-->
+      <el-table :data="contestInfoList" highlight-current-row @current-change="handleCurrentChange" @row-click="rowClick">
         <!--<el-table-column type="selection" width="55" align="center"/>-->
+        <el-table-column type="expand">
+          <template slot-scope="props">
+            <el-form label-position="left" inline class="demo-table-expand">
+              <el-form-item label="竞赛名称">
+                <span>{{ props.row.params.parentName }}</span>
+              </el-form-item>
+              <el-form-item label="子竞赛名称">
+                <span>{{ props.row.name }}</span>
+              </el-form-item>
+              <el-form-item label="竞赛时间">
+                <span>{{ props.row.competitionDate }}</span>
+              </el-form-item>
+              <el-form-item label="竞赛通知网址">
+                <span>{{ props.row.url }}</span>
+              </el-form-item>
+              <el-form-item label="年度">
+                <span>{{ props.row.year }}</span>
+              </el-form-item>
+              <el-form-item label="报名费用">
+                <span>{{ props.row.fee }}</span>
+              </el-form-item>
+            </el-form>
+          </template>
+        </el-table-column>
         <el-table-column label="竞赛名称" align="center" prop="params.parentName"/>
         <el-table-column label="子竞赛名称" align="center" prop="name"/>
         <el-table-column label="57项赛事" align="center" prop="params.inMinistry">
@@ -292,7 +336,9 @@
         stuList: [],
         contestStuList: [],
         selectedTeacherList: [],
+        remGuideTeacherList: [],
         selectedStuList: [],
+        remContestStuList: [],
         guideTeacherList: [],
         contestTotal: 0,
         teacherTotal: 0,
@@ -408,7 +454,9 @@
             // bedId: item.bedId,
             // status: item.status,
             // isInfoErr: item.isInfoErr,
-            // sex: item.sex,
+            stuNo: item.stuNo,
+            sex: item.sex,
+            idNum: item.idNum,
             orderNum: this.orderStuNum++,
             conDegree: 100,
             workContent: '',
@@ -508,6 +556,24 @@
       multiSelTeacher(selection) {
         this.selectedTeacherList = selection
       },
+      multiSelGuideTeacher(selection){
+        this.remGuideTeacherList = selection
+      },
+      multiSelContestStu(selection){
+        this.remContestStuList = selection
+      },
+      remGuideTeachers(){
+        // console.log('this.remGuideTeacherList:',this.remGuideTeacherList)
+        this.remGuideTeacherList.forEach(item=>{
+          this.popTeacher(item)
+        })
+      },
+      remContestStus(){
+        // console.log('this.remContestStuList:',this.remContestStuList)
+        this.remContestStuList.forEach(item=>{
+          this.popStu(item)
+        })
+      },
       multiSelStu(selection) {
         this.selectedStuList = selection
       },
@@ -528,11 +594,39 @@
         this.form.contestId = val.contestId
         this.form.subContestId = val.subContestId
         this.form.name = val.name
+      },
+      rowClick(row, column, event){
+        console.log('row:',row)
       }
     }
   }
 </script>
 
 <style scoped>
+  .text {
+    font-size: 14px;
+  }
+
+  .clearfix:before,
+  .clearfix:after {
+    display: table;
+    content: "";
+  }
+  .clearfix:after {
+    clear: both
+  }
+
+  .demo-table-expand {
+    font-size: 0;
+  }
+  .demo-table-expand label {
+    width: 90px;
+    color: #99a9bf;
+  }
+  .demo-table-expand .el-form-item {
+    margin-right: 0;
+    margin-bottom: 0;
+    width: 100%;
+  }
 
 </style>
