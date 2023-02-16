@@ -176,6 +176,23 @@ export const dynamicRoutes = [
       }
     ]
   },
+  // 添加教师路由
+  {
+    path: '/teacher/add-teacher',
+    component: Layout,
+    hidden: true,
+    permissions: ['contest:teacher:add'],
+    children: [
+      {
+        path: '/',
+        component: () => import('@/views/contest/teacher/addTeacher'),
+        name: 'AddTeacher',
+        meta: { title: '添加教师', activeMenu: '/teacher/add-teacher' }
+      }
+    ]
+  },
+
+
 ]
 
 // 防止连续点击多次路由报错
