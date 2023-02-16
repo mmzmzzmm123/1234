@@ -22,7 +22,7 @@ import com.ruoyi.common.core.page.TableDataInfo;
  * 教师信息Controller
  *
  * @author ruoyi
- * @date 2023-02-14
+ * @date 2023-02-16
  */
 @RestController
 @RequiredArgsConstructor

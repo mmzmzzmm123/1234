@@ -6,6 +6,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
     <resultMap type="Teacher" id="TeacherResult">
         <result property="teacherId"    column="teacher_id"    />
+        <result property="userId"    column="user_id"    />
+        <result property="deptId"    column="dept_id"    />
         <result property="name"    column="name"    />
         <result property="gender"    column="gender"    />
         <result property="professional"    column="professional"    />
@@ -21,18 +23,17 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </resultMap>
 
     <sql id="selectTeacherVo">
-        select teacher_id, name, gender, professional, post, research, brief, remark, del_flag, create_by, create_time, update_by, update_time from t_teacher
+        select teacher_id, user_id, dept_id, name, gender, professional, post, research, brief, remark, del_flag, create_by, create_time, update_by, update_time from t_teacher
     </sql>
 
     <select id="selectTeacherList" parameterType="Teacher" resultMap="TeacherResult">
         <include refid="selectTeacherVo"/>
         <where>
+            <if test="deptId != null "> and dept_id = #{deptId}</if>
             <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
             <if test="gender != null  and gender != ''"> and gender = #{gender}</if>
             <if test="professional != null  and professional != ''"> and professional = #{professional}</if>
             <if test="post != null  and post != ''"> and post = #{post}</if>
-            <if test="research != null  and research != ''"> and research like concat('%', #{research}, '%')</if>
-            <if test="delFlag != null  and delFlag != ''"> and del_flag = #{delFlag}</if>
         </where>
     </select>
 

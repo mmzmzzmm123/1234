@@ -8,7 +8,7 @@ import com.ruoyi.contest.domain.Teacher;
  * 教师信息Mapper接口
  *
  * @author ruoyi
- * @date 2023-02-14
+ * @date 2023-02-16
  */
 public interface TeacherMapper extends BaseMapper<Teacher>
 {

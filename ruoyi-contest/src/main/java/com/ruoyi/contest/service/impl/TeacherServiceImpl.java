@@ -14,7 +14,7 @@ import org.springframework.stereotype.Service;
  * 教师信息Service业务层处理
  *
  * @author ruoyi
- * @date 2023-02-14
+ * @date 2023-02-16
  */
 @Service
 public class TeacherServiceImpl extends ServiceImpl<TeacherMapper, Teacher> implements ITeacherService

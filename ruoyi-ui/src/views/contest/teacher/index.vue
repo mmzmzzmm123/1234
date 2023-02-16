@@ -1,4 +1,4 @@
-<template xmlns="">
+<template>
   <div class="app-container">
     <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch" label-width="68px">
       <el-form-item label="姓名" prop="name">
@@ -33,16 +33,6 @@
         <el-select v-model="queryParams.post" placeholder="请选择职务" clearable>
           <el-option
             v-for="dict in dict.type.teacher_post"
-            :key="dict.value"
-            :label="dict.label"
-            :value="dict.value"
-          />
-        </el-select>
-      </el-form-item>
-      <el-form-item label="状态" prop="delFlag">
-        <el-select v-model="queryParams.delFlag" placeholder="请选择状态" clearable>
-          <el-option
-            v-for="dict in dict.type.sys_normal_disable"
             :key="dict.value"
             :label="dict.label"
             :value="dict.value"
@@ -104,6 +94,8 @@
     <el-table v-loading="loading" :data="teacherList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
       <el-table-column label="教师ID" align="center" prop="teacherId" />
+      <el-table-column label="用户ID" align="center" prop="userId" />
+      <el-table-column label="所在部门ID" align="center" prop="deptId" />
       <el-table-column label="姓名" align="center" prop="name" />
       <el-table-column label="性别" align="center" prop="gender">
         <template slot-scope="scope">
@@ -121,9 +113,7 @@
         </template>
       </el-table-column>
       <el-table-column label="研究方向" align="center" prop="research" />
-      <el-table-column label="简介" align="center" prop="brief" />
-      <el-table-column label="备注" align="center" prop="remark" />
-      <el-table-column label="状态" align="center" prop="delFlag">
+      <el-table-column label="删除标志" align="center" prop="delFlag">
         <template slot-scope="scope">
           <dict-tag :options="dict.type.sys_normal_disable" :value="scope.row.delFlag"/>
         </template>
@@ -147,7 +137,7 @@
         </template>
       </el-table-column>
     </el-table>
-
+    
     <pagination
       v-show="total>0"
       :total="total"
@@ -163,13 +153,14 @@
           <el-input v-model="form.name" placeholder="请输入姓名" />
         </el-form-item>
         <el-form-item label="性别" prop="gender">
-          <el-radio-group v-model="form.gender">
-            <el-radio
+          <el-select v-model="form.gender" placeholder="请选择性别">
+            <el-option
               v-for="dict in dict.type.sys_user_sex"
               :key="dict.value"
-              :label="dict.value"
-            >{{dict.label}}</el-radio>
-          </el-radio-group>
+              :label="dict.label"
+              :value="dict.value"
+            ></el-option>
+          </el-select>
         </el-form-item>
         <el-form-item label="职称" prop="professional">
           <el-select v-model="form.professional" placeholder="请选择职称">
@@ -226,7 +217,7 @@ export default {
       // 非多个禁用
       multiple: true,
       // 显示搜索条件
-      showSearch: false,
+      showSearch: true,
       // 总条数
       total: 0,
       // 教师信息表格数据
@@ -239,12 +230,11 @@ export default {
       queryParams: {
         pageNum: 1,
         pageSize: 10,
+        deptId: null,
         name: null,
         gender: null,
         professional: null,
         post: null,
-        research: null,
-        delFlag: null,
       },
       // 表单参数
       form: {},
@@ -275,6 +265,8 @@ export default {
     reset() {
       this.form = {
         teacherId: null,
+        userId: null,
+        deptId: null,
         name: null,
         gender: null,
         professional: null,

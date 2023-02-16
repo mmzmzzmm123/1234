@@ -9,7 +9,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
  * 教师信息Service接口
  *
  * @author ruoyi
- * @date 2023-02-14
+ * @date 2023-02-16
  */
 public interface ITeacherService extends IService<Teacher>
 {
