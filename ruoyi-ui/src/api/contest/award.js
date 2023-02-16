@@ -26,6 +26,15 @@ export function addAward(data) {
   })
 }
 
+// 新增获奖登记
+export function addAwardByVo(data) {
+  return request({
+    url: '/contest/award/saveAwardVo',
+    method: 'post',
+    data: data
+  })
+}
+
 // 修改获奖登记
 export function updateAward(data) {
   return request({

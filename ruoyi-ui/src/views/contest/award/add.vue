@@ -2,10 +2,10 @@
   <div class="app-container">
     <div>
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
-        <el-form-item label="竞赛" prop="contest">
+        <el-form-item label="竞赛">
           <el-row>
             <el-col :span="12">
-              <el-input v-model="form.contest"></el-input>
+              <el-input v-model="form.name"></el-input>
             </el-col>
             <el-col :span="12">
               <el-button type="primary" @click="openContestsDialog=true">选择</el-button>
@@ -43,17 +43,17 @@
             <el-table-column label="姓名" align="center" prop="name"/>
             <el-table-column label="排序" align="center">
               <template slot-scope="scope">
-                <el-input  v-model.number="scope.row.orderNum"></el-input>
+                <el-input v-model.number="scope.row.orderNum"></el-input>
               </template>
             </el-table-column>
             <el-table-column label="贡献度" align="center">
               <template slot-scope="scope">
-                <el-input  v-model.number="scope.row.conDegree"></el-input>
+                <el-input v-model.number="scope.row.conDegree"></el-input>
               </template>
             </el-table-column>
             <el-table-column label="工作内容" align="center">
               <template slot-scope="scope">
-                <el-input  v-model="scope.row.workContent"></el-input>
+                <el-input v-model="scope.row.workContent"></el-input>
               </template>
             </el-table-column>
             <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
@@ -63,13 +63,44 @@
                   type="text"
                   icon="el-icon-delete"
                   @click="popTeacher(scope.row)"
-                >删除</el-button>
+                >删除
+                </el-button>
               </template>
             </el-table-column>
           </el-table>
         </el-form-item>
         <el-form-item label="参赛学生" prop="stus">
-          <el-button @click="openStuDialog=true">添加</el-button>
+          <el-button @click="showStuDialog">添加</el-button>
+          <el-table :data="contestStuList">
+            <el-table-column type="selection" width="55" align="center"/>
+            <el-table-column label="姓名" align="center" prop="name"/>
+            <el-table-column label="排序" align="center">
+              <template slot-scope="scope">
+                <el-input v-model.number="scope.row.orderNum"></el-input>
+              </template>
+            </el-table-column>
+            <el-table-column label="贡献度" align="center">
+              <template slot-scope="scope">
+                <el-input v-model.number="scope.row.conDegree"></el-input>
+              </template>
+            </el-table-column>
+            <el-table-column label="工作内容" align="center">
+              <template slot-scope="scope">
+                <el-input v-model="scope.row.workContent"></el-input>
+              </template>
+            </el-table-column>
+            <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
+              <template slot-scope="scope">
+                <el-button
+                  size="mini"
+                  type="text"
+                  icon="el-icon-delete"
+                  @click="popStu(scope.row)"
+                >删除
+                </el-button>
+              </template>
+            </el-table-column>
+          </el-table>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -120,8 +151,9 @@
           <el-button icon="el-icon-refresh" size="mini" @click="resetQueryContest">重置</el-button>
         </el-form-item>
       </el-form>
-      <el-table :data="contestInfoList" @selection-change="multiSelContest">
-        <el-table-column type="selection" width="55" align="center"/>
+      <!--<el-table :data="contestInfoList" @selection-change="multiSelContest" highlight-current-row @current-change="handleCurrentChange">-->
+      <el-table :data="contestInfoList" highlight-current-row @current-change="handleCurrentChange">
+        <!--<el-table-column type="selection" width="55" align="center"/>-->
         <el-table-column label="竞赛名称" align="center" prop="params.parentName"/>
         <el-table-column label="子竞赛名称" align="center" prop="name"/>
         <el-table-column label="57项赛事" align="center" prop="params.inMinistry">
@@ -157,8 +189,8 @@
     <!--添加指导教师对话框-->
     <el-dialog title="添加指导教师" :visible.sync="openTeacherDialog" fullscreen append-to-body>
       <el-table :data="teacherList" @selection-change="multiSelTeacher">
-        <el-table-column type="selection" width="55" align="center" />
-        <el-table-column label="姓名" align="center" prop="name" />
+        <el-table-column type="selection" width="55" align="center"/>
+        <el-table-column label="姓名" align="center" prop="name"/>
         <el-table-column label="性别" align="center" prop="gender">
           <template slot-scope="scope">
             <dict-tag :options="dict.type.sys_user_sex" :value="scope.row.gender"/>
@@ -174,7 +206,7 @@
             <dict-tag :options="dict.type.teacher_post" :value="scope.row.post"/>
           </template>
         </el-table-column>
-        <el-table-column label="研究方向" align="center" prop="research" />
+        <el-table-column label="研究方向" align="center" prop="research"/>
       </el-table>
       <pagination
         v-show="teacherTotal>0"
@@ -191,8 +223,22 @@
 
     <!--添加参赛学生对话框-->
     <el-dialog title="添加参赛学生" :visible.sync="openStuDialog" fullscreen append-to-body>
+      <el-form :model="queryStuParams" size="mini" :inline="true">
+        <el-form-item label="学号" prop="stuNo">
+          <el-input
+            v-model="queryStuParams.stuNo"
+            placeholder="请输入学号"
+            clearable
+            @keyup.enter.native="getStuList"
+          />
+        </el-form-item>
+        <el-form-item>
+          <el-button type="primary" icon="el-icon-search" size="mini" @click="getStuList">搜索</el-button>
+          <el-button icon="el-icon-refresh" size="mini" @click="resetQueryStu">重置</el-button>
+        </el-form-item>
+      </el-form>
       <el-table :data="stuList" @selection-change="multiSelStu">
-        <el-table-column type="selection" width="55" align="center" />
+        <el-table-column type="selection" width="55" align="center"/>
         <el-table-column label="学号" align="center" prop="stuNo" width="130"/>
         <el-table-column label="姓名" align="center" prop="name" width="70"/>
         <el-table-column label="性别" align="center" prop="sex">
@@ -219,13 +265,13 @@
 
 <script>
   import {listWithParentContest} from "@/api/contest/subContest";
-  import axios from 'axios';
-  import { listTeacher} from "@/api/contest/teacher";
-  import { listStu} from "@/api/contest/stu";
+  import {addAwardByVo, updateAward} from "@/api/contest/award";
+  import {listTeacher} from "@/api/contest/teacher";
+  import {listStu} from "@/api/contest/stu";
 
   export default {
     name: "AddAward",
-    dicts: ['sys_normal_disable', 'award_grade', 'contest_grade', 'sub_contest_rank', 'contest_in_ministry','teacher_post', 'sys_user_sex', 'teacher_pro'],
+    dicts: ['sys_normal_disable', 'award_grade', 'contest_grade', 'sub_contest_rank', 'contest_in_ministry', 'teacher_post', 'sys_user_sex', 'teacher_pro'],
     data() {
       return {
         form: {},
@@ -239,33 +285,39 @@
           ]
         },
         openContestsDialog: false,
-        openTeacherDialog:false,
-        openStuDialog:false,
+        openTeacherDialog: false,
+        openStuDialog: false,
         contestInfoList: [],
         teacherList: [],
         stuList: [],
-        contestStuList:[],
+        contestStuList: [],
         selectedTeacherList: [],
+        selectedStuList: [],
         guideTeacherList: [],
-        contestTotal:0,
-        teacherTotal:0,
-        stuTotal:0,
-        orderNum:0,
-        contestNames:[],
-        subContestIds:[],
+        contestTotal: 0,
+        teacherTotal: 0,
+        stuTotal: 0,
+        orderTeacherNum: 0,
+        orderStuNum: 0,
+        contestNames: [],
+        subContestIds: [],
+        contestIds: [],
         queryContestParams: {
-          pageSize:10
+          pageSize: 10
         },
-        queryTeacherParams:{
-          pageSize:10
+        queryTeacherParams: {
+          pageSize: 10
         },
-        queryStuParams:{
-          pageNum:1,
-          pageSize:10,
-          schoolArea:1
-        }
+        queryStuParams: {
+          pageNum: 1,
+          pageSize: 10
+        },
+        currentRow: null
       }
     },
+    /*
+      http://localhost/dev-api/stuManage/stu/list?pageNum=1&pageSize=10&schoolAreaIds%5B0%5D=1&schoolAreaIds%5B1%5D=2&isMultiRoles=true&userRoles%5B0%5D=1-1&userRoles%5B1%5D=1-2
+    */
     created() {
       this.getContestList()
       this.getTeacherList()
@@ -273,26 +325,24 @@
     },
     methods: {
       submitForm() {
-        this.form.guideTeacherList=this.guideTeacherList
-        this.form.contestStuList=this.contestStuList
-        console.log('this.form:',this.form)
-        // this.$refs["form"].validate(valid => {
-        //   if (valid) {
-        //     if (this.form.dictId != undefined) {
-        //       updateType(this.form).then(response => {
-        //         this.$modal.msgSuccess("修改成功");
-        //         this.open = false;
-        //         this.getList();
-        //       });
-        //     } else {
-        //       addType(this.form).then(response => {
-        //         this.$modal.msgSuccess("新增成功");
-        //         this.open = false;
-        //         this.getList();
-        //       });
-        //     }
-        //   }
-        // });
+        this.form.guideTeacherList = this.guideTeacherList
+        this.form.contestStuList = this.contestStuList
+        console.log('this.form:', this.form)
+        this.$refs["form"].validate(valid => {
+          if (valid) {
+            if (this.form.awardId !== undefined) {
+              updateAward(this.form).then(response => {
+                this.$modal.msgSuccess("修改成功");
+                this.$tab.openPage("获奖登记", "/contest/award");
+              });
+            } else {
+              addAwardByVo(this.form).then(response => {
+                this.$modal.msgSuccess("新增成功");
+                this.$tab.openPage("添加获奖登记", "/contest/award");
+              });
+            }
+          }
+        });
       },
       getContestList() {
         listWithParentContest(this.queryContestParams).then(res => {
@@ -303,52 +353,74 @@
       getTeacherList() {
         listTeacher().then(res => {
           this.teacherList = res.rows;
+          this.teacherList = this.arrDif(this.teacherList, this.guideTeacherList)
           this.teacherTotal = res.total;
         });
       },
-      getStuList(){
-        // const {data:res}=await axios.get('http://140.210.209.124/prod-api/stuManage/stu/list?pageSize='+this.queryStuParams.pageSize+'&pageNum='+this.queryStuParams.pageNum,{})
-        // this.stuList = res.rows;
-        // this.stuList.forEach(item=>{
-        //   item.sex=item.sex+''
-        // })
-        // this.stuTotal = res.total;
-        // // console.log('res:',res)
+      getStuList() {
+        // this.queryStuParams.schoolAreaIds = [1,2]  // 新校区 老校区
+        // this.queryStuParams.schoolAreaIds = [1]  // 新校区
+        // this.queryStuParams.schoolAreaIds = [2]  // 老校区
         listStu(this.queryStuParams).then(res => {
-          this.stuList = res.rows;
-          this.stuTotal = res.total;
+          this.stuList = res.data.rows;
+          this.stuList.forEach(item => {
+            item.sex = item.sex + ''
+          })
+          this.stuList = this.arrDif2(this.stuList, this.contestStuList)
+          this.stuTotal = res.data.total;
         });
       },
       addContest() {
-        this.form.contest=this.contestNames.toString()
+        this.form.contest = this.contestNames.toString()
         this.queryContestParams = {}
-        this.openContestsDialog=false
+        this.openContestsDialog = false
       },
-      addTeacher(){
-        this.selectedTeacherList.forEach(item=>{
-          const teacherObj={
-            teacherId:item.teacherId,
-            name:item.name,
+      addTeacher() {
+        this.selectedTeacherList.forEach(item => {
+          const teacherObj = {
+            teacherId: item.teacherId,
+            personId: item.teacherId,
+            name: item.name,
             // orderNum:this.guideTeacherList.length+1,
-            orderNum:this.orderNum++,
-            conDegree:100,
-            workContent:'',
-            gender:item.gender,
-            professional:item.professional,
-            post:item.post,
-            research:item.research,
+            orderNum: this.orderTeacherNum++,
+            conDegree: 100,
+            workContent: '',
+            gender: item.gender,
+            professional: item.professional,
+            post: item.post,
+            research: item.research,
           }
           this.guideTeacherList.push(teacherObj)
         })
-        this.openTeacherDialog=false
+        this.openTeacherDialog = false
       },
-      addStu(){
-
+      addStu() {
+        this.selectedStuList.forEach(item => {
+          const stuObj = {
+            id: item.id,
+            personId: item.id,
+            name: item.name,
+            // collegeId: item.collegeId,
+            // schoolArea: item.schoolArea,
+            // buildingId: item.buildingId,
+            // floorId: item.floorId,
+            // roomId: item.roomId,
+            // bedId: item.bedId,
+            // status: item.status,
+            // isInfoErr: item.isInfoErr,
+            // sex: item.sex,
+            orderNum: this.orderStuNum++,
+            conDegree: 100,
+            workContent: '',
+          }
+          this.contestStuList.push(stuObj)
+        })
+        this.openStuDialog = false
       },
       /*cellClick(row, column, cell, event){
           console.log('row:',row)
       },*/
-      arrDif(arr1,arr2){
+      arrDif(arr1, arr2) {
         for (let i = 0; i < arr1.length; i++) {
           for (let j = 0; j < arr2.length; j++) {
             if (arr1[i].teacherId === arr2[j].teacherId) {
@@ -358,57 +430,104 @@
         }
         return arr1
       },
-      showTeacherDialog(){
+      arrDif2(arr1, arr2) {
+        for (let i = 0; i < arr1.length; i++) {
+          for (let j = 0; j < arr2.length; j++) {
+            if (arr1[i].id === arr2[j].id) {
+              arr1 = arr1.filter(item => item.id !== arr1[i].id)
+            }
+          }
+        }
+        return arr1
+      },
+      showTeacherDialog() {
         // this.teacherList=this.teacherList.concat(this.guideTeacherList).filter(item=>!this.guideTeacherList.includes(item))
-        this.teacherList=this.arrDif(this.teacherList,this.guideTeacherList)
-        this.openTeacherDialog=true
+        this.teacherList = this.arrDif(this.teacherList, this.guideTeacherList)
+        this.openTeacherDialog = true
+      },
+      showStuDialog() {
+        this.stuList = this.arrDif2(this.stuList, this.contestStuList)
+        this.openStuDialog = true
       },
       cancelAddContest() {
         this.queryContestParams = {}
-        this.openContestsDialog=false
+        this.openContestsDialog = false
       },
-      cancelAddTeacher(){
-        this.openTeacherDialog=false
+      cancelAddTeacher() {
+        this.openTeacherDialog = false
       },
-      cancelAddStu(){
-        this.openStuDialog=false
+      cancelAddStu() {
+        this.queryStuParams = {}
+        this.openStuDialog = false
       },
-      popTeacher(teacher){
-        let tOrderNum=0
-        this.guideTeacherList.forEach(item=>{
-          if (item.teacherId!==teacher.teacherId){
-            item.orderNum=tOrderNum
+      popTeacher(teacher) {
+        let tOrderNum = 0
+        this.guideTeacherList.forEach(item => {
+          if (item.teacherId !== teacher.teacherId) {
+            item.orderNum = tOrderNum
             tOrderNum++
           }
         })
-        this.guideTeacherList=this.guideTeacherList.filter(item=>item.teacherId!==teacher.teacherId)
-        this.orderNum--
-        let exist=false
-        this.teacherList.forEach(item=>{
-          if (item.teacherId===teacher.teacherId){
-            exist=true
+        this.guideTeacherList = this.guideTeacherList.filter(item => item.teacherId !== teacher.teacherId)
+        this.orderTeacherNum--
+        let exist = false
+        this.teacherList.forEach(item => {
+          if (item.teacherId === teacher.teacherId) {
+            exist = true
           }
         })
-        if (!exist){
+        if (!exist) {
           this.teacherList.push(teacher)
+        }
+      },
+      popStu(stu) {
+        let tOrderNum = 0
+        this.contestStuList.forEach(item => {
+          if (item.id !== stu.id) {
+            item.orderNum = tOrderNum
+            tOrderNum++
+          }
+        })
+        this.contestStuList = this.contestStuList.filter(item => item.id !== stu.id)
+        this.orderStuNum--
+        let exist = false
+        this.stuList.forEach(item => {
+          if (item.id === stu.id) {
+            exist = true
+          }
+        })
+        if (!exist) {
+          this.stuList.push(stu)
         }
       },
       multiSelContest(selection) {
         this.contestNames = selection.map(item => item.name)
         this.subContestIds = selection.map(item => item.subContestId)
+        this.contestIds = selection.map(item => item.contestId)
       },
-      multiSelTeacher(selection){
-        this.selectedTeacherList=selection
+      multiSelTeacher(selection) {
+        this.selectedTeacherList = selection
       },
-      multiSelStu(selection){
-
+      multiSelStu(selection) {
+        this.selectedStuList = selection
+      },
+      resetQueryStu() {
+        this.queryStuParams = {}
+        this.getStuList()
       },
       resetQueryContest() {
         this.queryContestParams = {}
         this.getContestList()
       },
       cancel() {
-
+        this.form = {}
+        this.$tab.openPage("获奖登记", "/contest/award");
+      },
+      handleCurrentChange(val) {
+        this.currentRow = val;
+        this.form.contestId = val.contestId
+        this.form.subContestId = val.subContestId
+        this.form.name = val.name
       }
     }
   }
