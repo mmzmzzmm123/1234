@@ -55,7 +55,9 @@
             <div slot="header" class="clearfix">
               <!--<span>指导教师</span>-->
               <el-button style="float: right; padding: 3px 0" type="text" @click="remGuideTeachers">删除</el-button>
-              <el-button style="float: right; padding: 3px 0;margin-right: 5px" type="text" @click="showTeacherDialog">添加</el-button>
+              <el-button style="float: right; padding: 3px 0;margin-right: 5px" type="text" @click="showTeacherDialog">
+                添加
+              </el-button>
             </div>
             <div>
               <el-table :data="guideTeacherList" @selection-change="multiSelGuideTeacher">
@@ -84,7 +86,8 @@
           <el-card class="box-card">
             <div slot="header" class="clearfix">
               <el-button style="float: right; padding: 3px 0" type="text" @click="remContestStus">删除</el-button>
-              <el-button style="float: right; padding: 3px 0;margin-right: 5px" type="text" @click="showStuDialog">添加</el-button>
+              <el-button style="float: right; padding: 3px 0;margin-right: 5px" type="text" @click="showStuDialog">添加
+              </el-button>
             </div>
             <div>
               <el-table :data="contestStuList" @selection-change="multiSelContestStu">
@@ -123,7 +126,7 @@
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="submitForm">确 定</el-button>
+        <el-button type="primary" :disabled="disabled" @click="submitForm">确 定</el-button>
         <el-button @click="cancel">取 消</el-button>
       </div>
     </div>
@@ -172,7 +175,8 @@
       </el-form>
       <!--<el-table :data="contestInfoList" @selection-change="multiSelContest" highlight-current-row @current-change="handleCurrentChange">-->
       <!--<el-table :data="contestInfoList" highlight-current-row @current-change="handleCurrentChange" @row-click="rowClick">-->
-      <el-table :data="contestInfoList" highlight-current-row @current-change="handleCurrentChange" @row-click="rowClick" @cell-click="cellClick">
+      <el-table :data="contestInfoList" highlight-current-row @current-change="handleCurrentChange"
+                @row-click="rowClick" @cell-click="cellClick">
         <!--<el-table-column type="selection" width="55" align="center"/>-->
         <el-table-column type="expand">
           <template slot-scope="props">
@@ -220,6 +224,7 @@
             </el-form>
           </template>
         </el-table-column>
+        <el-table-column label="年份" align="center" prop="year" width="80"/>
         <el-table-column label="竞赛名称" align="center" prop="params.parentName"/>
         <el-table-column label="子竞赛名称" align="center" prop="name"/>
         <el-table-column label="57项赛事" align="center" prop="params.inMinistry" width="80">
@@ -406,7 +411,12 @@
             <dict-tag :options="dict.type.sys_user_sex" :value="scope.row.sex"/>
           </template>
         </el-table-column>
-        <el-table-column label="身份证号" align="center" prop="idNum"/>
+        <!--<el-table-column label="身份证号" align="center" prop="idNum"/>-->
+        <el-table-column label="班级" align="center" prop="idNum">
+          <template slot-scope="scope">
+            <span>{{schoolAreaStr(scope.row.schoolArea)}}-{{ scope.row.params.college }}-{{ scope.row.params.grade }}-{{ scope.row.params.proClass }}</span>
+          </template>
+        </el-table-column>
       </el-table>
       <pagination
         v-show="stuTotal>0"
@@ -437,18 +447,16 @@
         if (schoolAreaId===2) return '老校区'
       }
     },*/
-    dicts: ['sys_normal_disable', 'award_grade', 'contest_grade', 'sub_contest_rank', 'contest_in_ministry', 'teacher_post', 'sys_user_sex', 'teacher_pro','contest_freq'],
+    dicts: ['sys_normal_disable', 'award_grade', 'contest_grade', 'sub_contest_rank', 'contest_in_ministry', 'teacher_post', 'sys_user_sex', 'teacher_pro', 'contest_freq'],
     data() {
       return {
         form: {},
         // 表单校验
         rules: {
-          dictName: [
-            {required: true, message: "字典名称不能为空", trigger: "blur"}
+          // 子竞赛名称
+          name: [
+            {required: true, message: "必须选择一项竞赛", trigger: "blur"}
           ],
-          dictType: [
-            {required: true, message: "字典类型不能为空", trigger: "blur"}
-          ]
         },
         openContestsDialog: false,
         openTeacherDialog: false,
@@ -465,8 +473,8 @@
         contestTotal: 0,
         teacherTotal: 0,
         stuTotal: 0,
-        orderTeacherNum: 0,
-        orderStuNum: 0,
+        orderTeacherNum: 1,
+        orderStuNum: 1,
         contestNames: [],
         subContestIds: [],
         contestIds: [],
@@ -480,8 +488,12 @@
           pageNum: 1,
           pageSize: 10
         },
-        currentRow: null
+        currentRow: null,
+        disabled: false
       }
+    },
+    activated() {
+      this.form={}
     },
     /*
       http://localhost/dev-api/stuManage/stu/list?pageNum=1&pageSize=10&schoolAreaIds%5B0%5D=1&schoolAreaIds%5B1%5D=2&isMultiRoles=true&userRoles%5B0%5D=1-1&userRoles%5B1%5D=1-2
@@ -492,25 +504,33 @@
       this.getStuList()
     },
     methods: {
-      schoolAreaStr(schoolAreaId){
-        if (schoolAreaId===1) return '新校区'
-        if (schoolAreaId===2) return '老校区'
+      schoolAreaStr(schoolAreaId) {
+        if (schoolAreaId === 1) return '新校区'
+        if (schoolAreaId === 2) return '老校区'
       },
       submitForm() {
         this.form.guideTeacherList = this.guideTeacherList
         this.form.contestStuList = this.contestStuList
-        console.log('this.form:', this.form)
+        // console.log('this.form:', this.form)
+        if (!this.form.name) return this.$message.error('必须选择一项竞赛')
         this.$refs["form"].validate(valid => {
           if (valid) {
-            if (this.form.awardId !== undefined) {
+            this.disabled = true
+            if (this.form.awardId) {
               updateAward(this.form).then(response => {
                 this.$modal.msgSuccess("修改成功");
                 this.$tab.openPage("获奖登记", "/contest/award");
+                // const obj = { path: "/contest/award" };
+                // this.$tab.closeOpenPage(obj);
+                this.disabled = false
               });
             } else {
               addAwardByVo(this.form).then(response => {
                 this.$modal.msgSuccess("新增成功");
-                this.$tab.openPage("添加获奖登记", "/contest/award");
+                this.$tab.openPage("获奖登记", "/contest/award")
+                // const obj = { path: "/contest/award" };
+                // this.$tab.closeOpenPage(obj);
+                this.disabled = false
               });
             }
           }
@@ -632,7 +652,7 @@
         this.openStuDialog = false
       },
       popTeacher(teacher) {
-        let tOrderNum = 0
+        let tOrderNum = 1
         this.guideTeacherList.forEach(item => {
           if (item.teacherId !== teacher.teacherId) {
             item.orderNum = tOrderNum
@@ -652,7 +672,7 @@
         }
       },
       popStu(stu) {
-        let tOrderNum = 0
+        let tOrderNum = 1
         this.contestStuList.forEach(item => {
           if (item.id !== stu.id) {
             item.orderNum = tOrderNum
@@ -679,21 +699,21 @@
       multiSelTeacher(selection) {
         this.selectedTeacherList = selection
       },
-      multiSelGuideTeacher(selection){
+      multiSelGuideTeacher(selection) {
         this.remGuideTeacherList = selection
       },
-      multiSelContestStu(selection){
+      multiSelContestStu(selection) {
         this.remContestStuList = selection
       },
-      remGuideTeachers(){
+      remGuideTeachers() {
         // console.log('this.remGuideTeacherList:',this.remGuideTeacherList)
-        this.remGuideTeacherList.forEach(item=>{
+        this.remGuideTeacherList.forEach(item => {
           this.popTeacher(item)
         })
       },
-      remContestStus(){
+      remContestStus() {
         // console.log('this.remContestStuList:',this.remContestStuList)
-        this.remContestStuList.forEach(item=>{
+        this.remContestStuList.forEach(item => {
           this.popStu(item)
         })
       },
@@ -718,11 +738,11 @@
         this.form.subContestId = val.subContestId
         this.form.name = val.name
       },
-      rowClick(row, column, event){
+      rowClick(row, column, event) {
         // console.log('row:',row)
       },
-      cellClick(row, column, cell, event){
-        console.log('row:',row)
+      cellClick(row, column, cell, event) {
+        console.log('row:', row)
         this.handleCurrentChange(row)
       }
     }
@@ -739,6 +759,7 @@
     display: table;
     content: "";
   }
+
   .clearfix:after {
     clear: both
   }
@@ -746,10 +767,12 @@
   .demo-table-expand {
     font-size: 0;
   }
+
   .demo-table-expand label {
     width: 90px;
     color: #99a9bf;
   }
+
   .demo-table-expand .el-form-item {
     margin-right: 0;
     margin-bottom: 0;

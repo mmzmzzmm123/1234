@@ -83,8 +83,9 @@
 
     <el-table v-loading="loading" :data="awardList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="获奖ID" align="center" prop="awardId" />
-      <el-table-column label="子竞赛ID" align="center" prop="subContestId" />
+      <!--<el-table-column label="获奖ID" align="center" prop="awardId" />
+      <el-table-column label="子竞赛ID" align="center" prop="subContestId" />-->
+      <el-table-column label="竞赛名称" align="center" prop="params.subContestName" />
       <el-table-column label="获奖日期" align="center" prop="awardDate" width="180">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.awardDate, '{y}-{m}-{d}') }}</span>
@@ -95,8 +96,10 @@
           <dict-tag :options="dict.type.award_grade" :value="scope.row.awardGrade"/>
         </template>
       </el-table-column>
+      <el-table-column label="指导教师" align="center" prop="params.guideTeachers" />
+      <el-table-column label="参赛学生" align="center" prop="params.contestStuNames" />
       <el-table-column label="支撑材料" align="center" prop="attachmentUrl" />
-      <el-table-column label="备注" align="center" prop="remark" />
+      <!--<el-table-column label="备注" align="center" prop="remark" />-->
       <el-table-column label="状态" align="center" prop="delFlag">
         <template slot-scope="scope">
           <dict-tag :options="dict.type.sys_normal_disable" :value="scope.row.delFlag"/>
@@ -210,6 +213,9 @@ export default {
     };
   },
   created() {
+    this.getList();
+  },
+  activated() {
     this.getList();
   },
   methods: {
