@@ -255,23 +255,30 @@
     <!--添加指导教师对话框-->
     <el-dialog title="添加指导教师" :visible.sync="openTeacherDialog" fullscreen append-to-body>
       <el-table :data="teacherList" @selection-change="multiSelTeacher">
-        <!--<el-table-column type="selection" width="55" align="center"/>-->
+        <el-table-column type="selection" width="55" align="center"/>
         <el-table-column type="expand">
           <template slot-scope="props">
             <el-form label-position="left" inline class="demo-table-expand">
-              <el-form-item label="姓名">
-                <span>{{ props.row.name }}</span>
-              </el-form-item>
-              <el-form-item label="性别">
-                <!--<span>{{ props.row.gender }}</span>-->
-                <div>
-                  <dict-tag :options="dict.type.sys_user_sex" :value="props.row.gender"/>
-                </div>
-              </el-form-item>
               <el-row>
                 <el-col :span="5">
+                  <el-form-item label="姓名">
+                    <span>{{ props.row.name }}</span>
+                  </el-form-item>
+                </el-col>
+                <el-col :span="5">
+                  <el-form-item label="性别">
+                    <div>
+                      <dict-tag :options="dict.type.sys_user_sex" :value="props.row.gender"/>
+                    </div>
+                  </el-form-item>
+                </el-col>
+                <el-col :span="5">
+                  <el-form-item label="所在部门">
+                    <span>{{ props.row.params.deptName }}</span>
+                  </el-form-item>
+                </el-col>
+                <el-col :span="4">
                   <el-form-item label="职称">
-                    <!--<span>{{ props.row.professional }}</span>-->
                     <div>
                       <dict-tag :options="dict.type.teacher_pro" :value="props.row.professional"/>
                     </div>
@@ -279,29 +286,18 @@
                 </el-col>
                 <el-col :span="5">
                   <el-form-item label="职务">
-                    <!--<span>{{ props.row.post }}</span>-->
                     <div>
                       <dict-tag :options="dict.type.teacher_post" :value="props.row.post"/>
                     </div>
                   </el-form-item>
                 </el-col>
-                <el-col :span="5">
-                  <el-form-item label="研究方向">
-                    <span>{{ props.row.research }}</span>
-                  </el-form-item>
-                </el-col>
-                <el-col :span="4">
-                  <el-form-item label="所在部门">
-                    <span>{{ props.row.params.deptName }}</span>
-                  </el-form-item>
-                </el-col>
-                <el-col :span="5">
-                  <el-form-item label="简介">
-                    <!--<span>{{ props.row.params.freq }}</span>-->
-                    <div v-html="props.row.brief"></div>
-                  </el-form-item>
-                </el-col>
               </el-row>
+              <el-form-item label="研究方向">
+                <span>{{ props.row.research }}</span>
+              </el-form-item>
+              <el-form-item label="简介">
+                <div v-html="props.row.brief"></div>
+              </el-form-item>
             </el-form>
           </template>
         </el-table-column>
@@ -354,6 +350,55 @@
       </el-form>
       <el-table :data="stuList" @selection-change="multiSelStu">
         <el-table-column type="selection" width="55" align="center"/>
+        <el-table-column type="expand">
+          <template slot-scope="props">
+            <el-form label-position="left" inline class="demo-table-expand">
+              <el-row>
+                <el-col :span="8">
+                  <el-form-item label="学号">
+                    <span>{{ props.row.stuNo }}</span>
+                  </el-form-item>
+                </el-col>
+                <el-col :span="8">
+                  <el-form-item label="姓名">
+                    <span>{{ props.row.name }}</span>
+                  </el-form-item>
+                </el-col>
+                <el-col :span="8">
+                  <el-form-item label="性别">
+                    <div>
+                      <dict-tag :options="dict.type.sys_user_sex" :value="props.row.sex"/>
+                    </div>
+                  </el-form-item>
+                </el-col>
+              </el-row>
+              <el-row>
+                <el-col :span="12">
+                  <el-form-item label="班级">
+                    <span>{{schoolAreaStr(props.row.schoolArea)}}-{{ props.row.params.college }}-{{ props.row.params.grade }}-{{ props.row.params.proClass }}</span>
+                  </el-form-item>
+                </el-col>
+                <el-col :span="12">
+                  <el-form-item label="身份证号">
+                    <span>{{ props.row.idNum }}</span>
+                  </el-form-item>
+                </el-col>
+              </el-row>
+              <el-row>
+                <el-col :span="12">
+                  <el-form-item label="宿舍">
+                    <span>{{schoolAreaStr(props.row.schoolArea)}}-{{ props.row.params.buildingNo }}-{{ props.row.params.roomNo }}-{{ props.row.params.bedNo }}</span>
+                  </el-form-item>
+                </el-col>
+                <el-col :span="12">
+                  <el-form-item label="手机号">
+                    <span>{{ props.row.phone }}</span>
+                  </el-form-item>
+                </el-col>
+              </el-row>
+            </el-form>
+          </template>
+        </el-table-column>
         <el-table-column label="学号" align="center" prop="stuNo" width="130"/>
         <el-table-column label="姓名" align="center" prop="name" width="70"/>
         <el-table-column label="性别" align="center" prop="sex">
@@ -386,6 +431,12 @@
 
   export default {
     name: "AddAward",
+    /*computed:{
+      schoolArea(schoolAreaId){
+        if (schoolAreaId===1) return '新校区'
+        if (schoolAreaId===2) return '老校区'
+      }
+    },*/
     dicts: ['sys_normal_disable', 'award_grade', 'contest_grade', 'sub_contest_rank', 'contest_in_ministry', 'teacher_post', 'sys_user_sex', 'teacher_pro','contest_freq'],
     data() {
       return {
@@ -441,6 +492,10 @@
       this.getStuList()
     },
     methods: {
+      schoolAreaStr(schoolAreaId){
+        if (schoolAreaId===1) return '新校区'
+        if (schoolAreaId===2) return '老校区'
+      },
       submitForm() {
         this.form.guideTeacherList = this.guideTeacherList
         this.form.contestStuList = this.contestStuList
@@ -498,6 +553,8 @@
             teacherId: item.teacherId,
             personId: item.teacherId,
             name: item.name,
+            brief: item.brief,
+            params: item.params,
             // orderNum:this.guideTeacherList.length+1,
             orderNum: this.orderTeacherNum++,
             conDegree: 100,
@@ -517,14 +574,9 @@
             id: item.id,
             personId: item.id,
             name: item.name,
-            // collegeId: item.collegeId,
-            // schoolArea: item.schoolArea,
-            // buildingId: item.buildingId,
-            // floorId: item.floorId,
-            // roomId: item.roomId,
-            // bedId: item.bedId,
-            // status: item.status,
-            // isInfoErr: item.isInfoErr,
+            params: item.params,
+            phone: item.phone,
+            schoolArea: item.schoolArea,
             stuNo: item.stuNo,
             sex: item.sex,
             idNum: item.idNum,
