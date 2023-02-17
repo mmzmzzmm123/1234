@@ -1,9 +1,9 @@
 package com.ruoyi.contest.service;
 
-import java.util.List;
-
-import com.ruoyi.contest.domain.Teacher;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.ruoyi.contest.domain.Teacher;
+
+import java.util.List;
 
 /**
  * 教师信息Service接口
@@ -20,4 +20,11 @@ public interface ITeacherService extends IService<Teacher>
      * @return 教师信息集合
      */
     public List<Teacher> selectTeacherList(Teacher teacher);
+
+    /**
+     *
+     * @param teacher
+     * @return
+     */
+    List<Teacher> listWithDeptName(Teacher teacher);
 }

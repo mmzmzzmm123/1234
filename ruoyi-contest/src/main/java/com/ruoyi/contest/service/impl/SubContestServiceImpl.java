@@ -48,6 +48,10 @@ public class SubContestServiceImpl extends ServiceImpl<SubContestMapper, SubCont
                 Map<String, Object> params=new HashMap<>();
                 ContestInfo parentContest = contestInfoMapper.selectById(subContest1.getContestId());
                 params.put("parentName", parentContest.getName());
+                params.put("url", parentContest.getUrl());
+                params.put("brief", parentContest.getBrief());
+                params.put("freq", parentContest.getFreq());
+                params.put("fee", subContest1.getFee());
                 params.put("inMinistry",parentContest.getInMinistry());
                 params.put("grade",parentContest.getGrade());
                 subContest1.setParams(params);

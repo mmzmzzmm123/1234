@@ -172,7 +172,7 @@
       </el-form>
       <!--<el-table :data="contestInfoList" @selection-change="multiSelContest" highlight-current-row @current-change="handleCurrentChange">-->
       <!--<el-table :data="contestInfoList" highlight-current-row @current-change="handleCurrentChange" @row-click="rowClick">-->
-      <el-table :data="contestInfoList" highlight-current-row @current-change="handleCurrentChange" @row-click="rowClick">
+      <el-table :data="contestInfoList" highlight-current-row @current-change="handleCurrentChange" @row-click="rowClick" @cell-click="cellClick">
         <!--<el-table-column type="selection" width="55" align="center"/>-->
         <el-table-column type="expand">
           <template slot-scope="props">
@@ -183,39 +183,61 @@
               <el-form-item label="子竞赛名称">
                 <span>{{ props.row.name }}</span>
               </el-form-item>
-              <el-form-item label="竞赛时间">
-                <span>{{ props.row.competitionDate }}</span>
-              </el-form-item>
-              <el-form-item label="竞赛通知网址">
-                <span>{{ props.row.url }}</span>
-              </el-form-item>
-              <el-form-item label="年度">
-                <span>{{ props.row.year }}</span>
-              </el-form-item>
-              <el-form-item label="报名费用">
-                <span>{{ props.row.fee }}</span>
+              <el-row>
+                <el-col :span="5">
+                  <el-form-item label="竞赛时间">
+                    <span>{{ props.row.competitionDate }}</span>
+                  </el-form-item>
+                </el-col>
+                <el-col :span="5">
+                  <el-form-item label="竞赛通知网址">
+                    <span>{{ props.row.params.url }}</span>
+                  </el-form-item>
+                </el-col>
+                <el-col :span="5">
+                  <el-form-item label="年度">
+                    <span>{{ props.row.year }}</span>
+                  </el-form-item>
+                </el-col>
+                <el-col :span="4">
+                  <el-form-item label="报名费用">
+                    <span>{{ props.row.params.fee }}</span>
+                  </el-form-item>
+                </el-col>
+                <el-col :span="5">
+                  <el-form-item label="竞赛频次">
+                    <!--<span>{{ props.row.params.freq }}</span>-->
+                    <div>
+                      <dict-tag :options="dict.type.contest_freq" :value="props.row.params.freq"/>
+                    </div>
+                  </el-form-item>
+                </el-col>
+              </el-row>
+              <el-form-item label="竞赛简介">
+                <div v-html="props.row.params.brief"></div>
+                <!--<span v-html>{{ props.row.params.brief }}</span>-->
               </el-form-item>
             </el-form>
           </template>
         </el-table-column>
         <el-table-column label="竞赛名称" align="center" prop="params.parentName"/>
         <el-table-column label="子竞赛名称" align="center" prop="name"/>
-        <el-table-column label="57项赛事" align="center" prop="params.inMinistry">
+        <el-table-column label="57项赛事" align="center" prop="params.inMinistry" width="80">
           <template slot-scope="scope">
             <dict-tag :options="dict.type.contest_in_ministry" :value="scope.row.params.inMinistry"/>
           </template>
         </el-table-column>
-        <el-table-column label="竞赛等次" align="center" prop="rank">
+        <el-table-column label="竞赛等次" align="center" prop="rank" width="80">
           <template slot-scope="scope">
             <dict-tag :options="dict.type.contest_grade" :value="scope.row.params.grade"/>
           </template>
         </el-table-column>
-        <el-table-column label="竞赛级别" align="center" prop="grade">
+        <el-table-column label="竞赛级别" align="center" prop="grade" width="100">
           <template slot-scope="scope">
             <dict-tag :options="dict.type.sub_contest_rank" :value="scope.row.rank"/>
           </template>
         </el-table-column>
-        <el-table-column label="竞赛时间" align="center" prop="competitionDate"/>
+        <el-table-column label="竞赛时间" align="center" prop="competitionDate" width="100"/>
       </el-table>
       <pagination
         v-show="contestTotal>0"
@@ -233,7 +255,56 @@
     <!--添加指导教师对话框-->
     <el-dialog title="添加指导教师" :visible.sync="openTeacherDialog" fullscreen append-to-body>
       <el-table :data="teacherList" @selection-change="multiSelTeacher">
-        <el-table-column type="selection" width="55" align="center"/>
+        <!--<el-table-column type="selection" width="55" align="center"/>-->
+        <el-table-column type="expand">
+          <template slot-scope="props">
+            <el-form label-position="left" inline class="demo-table-expand">
+              <el-form-item label="姓名">
+                <span>{{ props.row.name }}</span>
+              </el-form-item>
+              <el-form-item label="性别">
+                <!--<span>{{ props.row.gender }}</span>-->
+                <div>
+                  <dict-tag :options="dict.type.sys_user_sex" :value="props.row.gender"/>
+                </div>
+              </el-form-item>
+              <el-row>
+                <el-col :span="5">
+                  <el-form-item label="职称">
+                    <!--<span>{{ props.row.professional }}</span>-->
+                    <div>
+                      <dict-tag :options="dict.type.teacher_pro" :value="props.row.professional"/>
+                    </div>
+                  </el-form-item>
+                </el-col>
+                <el-col :span="5">
+                  <el-form-item label="职务">
+                    <!--<span>{{ props.row.post }}</span>-->
+                    <div>
+                      <dict-tag :options="dict.type.teacher_post" :value="props.row.post"/>
+                    </div>
+                  </el-form-item>
+                </el-col>
+                <el-col :span="5">
+                  <el-form-item label="研究方向">
+                    <span>{{ props.row.research }}</span>
+                  </el-form-item>
+                </el-col>
+                <el-col :span="4">
+                  <el-form-item label="所在部门">
+                    <span>{{ props.row.params.deptName }}</span>
+                  </el-form-item>
+                </el-col>
+                <el-col :span="5">
+                  <el-form-item label="简介">
+                    <!--<span>{{ props.row.params.freq }}</span>-->
+                    <div v-html="props.row.brief"></div>
+                  </el-form-item>
+                </el-col>
+              </el-row>
+            </el-form>
+          </template>
+        </el-table-column>
         <el-table-column label="姓名" align="center" prop="name"/>
         <el-table-column label="性别" align="center" prop="gender">
           <template slot-scope="scope">
@@ -310,12 +381,12 @@
 <script>
   import {listWithParentContest} from "@/api/contest/subContest";
   import {addAwardByVo, updateAward} from "@/api/contest/award";
-  import {listTeacher} from "@/api/contest/teacher";
+  import {listWithDeptName} from "@/api/contest/teacher";
   import {listStu} from "@/api/contest/stu";
 
   export default {
     name: "AddAward",
-    dicts: ['sys_normal_disable', 'award_grade', 'contest_grade', 'sub_contest_rank', 'contest_in_ministry', 'teacher_post', 'sys_user_sex', 'teacher_pro'],
+    dicts: ['sys_normal_disable', 'award_grade', 'contest_grade', 'sub_contest_rank', 'contest_in_ministry', 'teacher_post', 'sys_user_sex', 'teacher_pro','contest_freq'],
     data() {
       return {
         form: {},
@@ -397,7 +468,7 @@
         });
       },
       getTeacherList() {
-        listTeacher().then(res => {
+        listWithDeptName().then(res => {
           this.teacherList = res.rows;
           this.teacherList = this.arrDif(this.teacherList, this.guideTeacherList)
           this.teacherTotal = res.total;
@@ -596,7 +667,11 @@
         this.form.name = val.name
       },
       rowClick(row, column, event){
+        // console.log('row:',row)
+      },
+      cellClick(row, column, cell, event){
         console.log('row:',row)
+        this.handleCurrentChange(row)
       }
     }
   }

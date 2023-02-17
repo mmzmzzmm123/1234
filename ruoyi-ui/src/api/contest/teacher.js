@@ -9,6 +9,15 @@ export function listTeacher(query) {
   })
 }
 
+// 查询教师信息列表 含部门信息等
+export function listWithDeptName(query) {
+  return request({
+    url: '/contest/teacher/listWithDeptName',
+    method: 'get',
+    params: query
+  })
+}
+
 // 查询教师信息详细
 export function getTeacher(teacherId) {
   return request({
