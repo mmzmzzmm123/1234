@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.contest.mapper.AwardMapper">
+
+    <resultMap type="Award" id="AwardResult">
+        <result property="awardId"    column="award_id"    />
+        <result property="contestId"    column="contest_id"    />
+        <result property="subContestId"    column="sub_contest_id"    />
+        <result property="awardDate"    column="award_date"    />
+        <result property="awardGrade"    column="award_grade"    />
+        <result property="attachmentUrl"    column="attachment_url"    />
+        <result property="remark"    column="remark"    />
+        <result property="delFlag"    column="del_flag"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+    </resultMap>
+
+    <sql id="selectAwardVo">
+        select award_id, contest_id, sub_contest_id, award_date, award_grade, attachment_url, remark, del_flag, create_by, create_time, update_by, update_time from t_award
+    </sql>
+
+    <select id="selectAwardList" parameterType="Award" resultMap="AwardResult">
+        <include refid="selectAwardVo"/>
+        <where>
+            <if test="contestId != null "> and contest_id = #{contestId}</if>
+            <if test="subContestId != null "> and sub_contest_id = #{subContestId}</if>
+            <if test="awardDate != null "> and award_date = #{awardDate}</if>
+            <if test="awardGrade != null  and awardGrade != ''"> and award_grade = #{awardGrade}</if>
+            <if test="delFlag != null  and delFlag != ''"> and del_flag = #{delFlag}</if>
+        </where>
+    </select>
+
+
+
+</mapper>
