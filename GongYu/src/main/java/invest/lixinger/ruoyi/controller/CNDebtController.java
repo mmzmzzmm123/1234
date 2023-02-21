@@ -86,21 +86,21 @@ public class CNDebtController extends mybatisNoSpringUtils {
             nationalDebtResult_DataVO resultVO = listData.get(i);
             String rq = resultVO.getDate();
             vo.setRq(sdf.format(sdf.parse(rq)));
-            vo.setM1(resultVO.getMir_m1());
-            vo.setM3(resultVO.getMir_m3());
-            vo.setM6(resultVO.getMir_m6());
-            vo.setY1(resultVO.getMir_y1());
-            vo.setY2(resultVO.getMir_y2());
-            vo.setY3(resultVO.getMir_y3());
-            vo.setY5(resultVO.getMir_y5());
-            vo.setY7(resultVO.getMir_y7());
-            vo.setY10(resultVO.getMir_y10());
-            vo.setY20(resultVO.getMir_y20());
-            vo.setY30(resultVO.getMir_y30());
+            vo.setM1(resultVO.getTcm_m1());
+            vo.setM3(resultVO.getTcm_m3());
+            vo.setM6(resultVO.getTcm_m6());
+            vo.setY1(resultVO.getTcm_y1());
+            vo.setY2(resultVO.getTcm_y2());
+            vo.setY3(resultVO.getTcm_y3());
+            vo.setY5(resultVO.getTcm_y5());
+            vo.setY7(resultVO.getTcm_y7());
+            vo.setY10(resultVO.getTcm_y10());
+            vo.setY20(resultVO.getTcm_y20());
+            vo.setY30(resultVO.getTcm_y30());
             // 计算国债综合百分位---------------------------------
             vo.setY2_3_5_10pos("");
             // 计算2-10年期国债，查看是否倒挂--------------------
-            vo.setY2minusy10(Double.parseDouble(new DecimalFormat("0.00000").format(resultVO.getMir_y2() - resultVO.getMir_y10())));
+            vo.setY2minusy10(Double.parseDouble(new DecimalFormat("0.00000").format(resultVO.getTcm_y2() - resultVO.getTcm_y10())));
             cnDebtMapper.insert(vo);
         }
     }

@@ -104,7 +104,7 @@ public class sendEmailUtils {
                 String resultFormat = new DecimalFormat("0.00%").format(resultFundamental);
                 subject = fundamentalMap.get("fundamentalDate") + "，当日信号为" + resultFormat;
             } catch (Exception e) {
-                System.out.println(e.getMessage() + "基本面判断出错");
+                System.out.println(e.getMessage() + "基本面判断 出错");
             }
 
             // ----------------国债----------------------------------
@@ -119,7 +119,7 @@ public class sendEmailUtils {
                     Text += "  ◆最近日期、一个月前，国债没有倒挂\n\n";
                 }
             } catch (Exception e) {
-                System.out.println(e.getMessage() + "国债出错");
+                System.out.println(e.getMessage() + "国债 出错");
             }
 
             // --------------------美债-------------------------------
@@ -390,10 +390,10 @@ public class sendEmailUtils {
         // 计算美债---------------------------------
         Map<String, String> map = calcultePos(resultObj);
         //----------------------
-        double latestDayy2cn = latestDayVO.getMir_y2();
-        double latestDayy10cn = latestDayVO.getMir_y10();
-        double oneMonthAgoy2cn = oneMonthAgoVO.getMir_y2();
-        double oneMonthAgoy10cn = oneMonthAgoVO.getMir_y10();
+        double latestDayy2cn = latestDayVO.getTcm_y2();
+        double latestDayy10cn = latestDayVO.getTcm_y10();
+        double oneMonthAgoy2cn = oneMonthAgoVO.getTcm_y2();
+        double oneMonthAgoy10cn = oneMonthAgoVO.getTcm_y10();
         if ((latestDayy2cn - latestDayy10cn) > 0 || (oneMonthAgoy2cn - oneMonthAgoy10cn) > 0) {
             String latestDayDebtUSInverted = String.format("%.2f", (latestDayy2cn - latestDayy10cn) * 100);
             String oneMonthAgoDebtUSInverted = String.format("%.2f", (oneMonthAgoy2cn - oneMonthAgoy10cn) * 100);
@@ -423,10 +423,10 @@ public class sendEmailUtils {
         // 计算国债---------------------------------
         Map<String, String> map = calcultePos(resultObj);
         //----------------------
-        double latestDayy2cn = latestDayVO.getMir_y2();
-        double latestDayy10cn = latestDayVO.getMir_y10();
-        double oneMonthAgoy2cn = oneMonthAgoVO.getMir_y2();
-        double oneMonthAgoy10cn = oneMonthAgoVO.getMir_y10();
+        double latestDayy2cn = latestDayVO.getTcm_y2();
+        double latestDayy10cn = latestDayVO.getTcm_y10();
+        double oneMonthAgoy2cn = oneMonthAgoVO.getTcm_y2();
+        double oneMonthAgoy10cn = oneMonthAgoVO.getTcm_y10();
         if ((latestDayy2cn - latestDayy10cn) > 0 || (oneMonthAgoy2cn - oneMonthAgoy10cn) > 0) {
             String latestDayDebtCNInverted = String.format("%.2f", (latestDayy2cn - latestDayy10cn) * 100);
             String oneMonthAgoDebtCNInverted = String.format("%.2f", (oneMonthAgoy2cn - oneMonthAgoy10cn) * 100);

@@ -63,45 +63,45 @@ public class request_nationDebt {
         // -----------------------------------------计算2年期--------------------------------------------
         List<Double> list2 = new ArrayList<>();
         for (nationalDebtResult_DataVO resultDatum : resultData) {
-            list2.add(resultDatum.getMir_y2());
+            list2.add(resultDatum.getTcm_y2());
         }
         Collections.sort(list2);
         // 2年期国债，最新日期数值
-        map.put("2debtValue", String.valueOf(latestDayVO.getMir_y2()));
+        map.put("2debtValue", String.valueOf(latestDayVO.getTcm_y2()));
         // 2年期国债，最新值百分位
-        map.put("2debtPos", String.valueOf(list2.indexOf(latestDayVO.getMir_y2()) / (double) list2.size()));
+        map.put("2debtPos", String.valueOf(list2.indexOf(latestDayVO.getTcm_y2()) / (double) list2.size()));
         // -----------------------------------------计算3年期--------------------------------------------
         List<Double> list3 = new ArrayList<>();
         for (nationalDebtResult_DataVO resultDatum : resultData) {
-            list3.add(resultDatum.getMir_y3());
+            list3.add(resultDatum.getTcm_y3());
         }
         Collections.sort(list3);
         // 3年期国债，最新日期数值
-        map.put("3debtValue", String.valueOf(latestDayVO.getMir_y3()));
+        map.put("3debtValue", String.valueOf(latestDayVO.getTcm_y3()));
         // 3年期国债，最新值百分位
-        map.put("3debtPos", String.valueOf(list3.indexOf(latestDayVO.getMir_y3()) / (double) list3.size()));
+        map.put("3debtPos", String.valueOf(list3.indexOf(latestDayVO.getTcm_y3()) / (double) list3.size()));
 
         // -----------------------------------------计算5年期--------------------------------------------
         List<Double> list5 = new ArrayList<>();
         for (nationalDebtResult_DataVO resultDatum : resultData) {
-            list5.add(resultDatum.getMir_y5());
+            list5.add(resultDatum.getTcm_y5());
         }
         Collections.sort(list5);
         // 5年期国债，最新日期数值
-        map.put("5debtValue", String.valueOf(latestDayVO.getMir_y5()));
+        map.put("5debtValue", String.valueOf(latestDayVO.getTcm_y5()));
         // 5年期国债，最新值百分位
-        map.put("5debtPos", String.valueOf(list5.indexOf(latestDayVO.getMir_y5()) / (double) list5.size()));
+        map.put("5debtPos", String.valueOf(list5.indexOf(latestDayVO.getTcm_y5()) / (double) list5.size()));
         // -----------------------------------------计算10年期--------------------------------------------
         List<Double> list10 = new ArrayList<>();
         for (nationalDebtResult_DataVO datum : resultData) {
-            list10.add(datum.getMir_y10());
+            list10.add(datum.getTcm_y10());
         }
         Collections.sort(list10);
 
         // 10年期国债，最新日期数值
-        map.put("10debtValue", String.valueOf(latestDayVO.getMir_y10()));
+        map.put("10debtValue", String.valueOf(latestDayVO.getTcm_y10()));
         // 10年期国债，最新值百分位
-        map.put("10debtPos", String.valueOf(list10.indexOf(latestDayVO.getMir_y10()) / (double) list10.size()));
+        map.put("10debtPos", String.valueOf(list10.indexOf(latestDayVO.getTcm_y10()) / (double) list10.size()));
         // ------------------------------------------计算2、3、5、10期限的平均值----------------------------------
         double totalPos = Double.parseDouble(map.get("10debtPos")) + Double.parseDouble(map.get("2debtPos")) + Double.parseDouble(map.get("3debtPos")) + Double.parseDouble(map.get("5debtPos"));
         double averagePos = totalPos / 4;
@@ -236,5 +236,35 @@ public class request_nationDebt {
         System.out.println("平均后的债券百分位为：" + new DecimalFormat("0.00%").format(Double.valueOf(map.get("averagePos"))));
 
         return map;
+    }
+
+    public static void main(String[] args) throws Exception {
+        InputStream inputStream = request_nationDebt.class.getClassLoader().getResourceAsStream("indexReqParam.yml");
+        Map indexReqParam = new Yaml().load(inputStream);
+        String macroNationalDebtURL = (String) indexReqParam.get("macroNationalDebtURL");
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        Calendar cal = Calendar.getInstance();
+        cal.add(Calendar.YEAR, -10);
+
+        String paramJson = getParam_nationDebtCN.getNationDebtCNParamJson(sdf.format(cal.getTime()));
+        String resultJson = netRequest.jsonNetPost(macroNationalDebtURL, paramJson);
+        nationalDebtResult_RootVO resultObj = (nationalDebtResult_RootVO) getResult_nationDebtUS.getResultObj(resultJson);
+        List<nationalDebtResult_DataVO> resultData = resultObj.getData();
+        nationalDebtResult_DataVO latestDayVO = resultData.get(0);
+        nationalDebtResult_DataVO oneMonthAgoVO = resultData.get(25);
+        // 计算国债---------------------------------
+        Map<String, String> map = calcultePos(resultObj);
+        //----------------------
+        double latestDayy2cn = latestDayVO.getTcm_y2();
+        double latestDayy10cn = latestDayVO.getTcm_y10();
+        double oneMonthAgoy2cn = oneMonthAgoVO.getTcm_y2();
+        double oneMonthAgoy10cn = oneMonthAgoVO.getTcm_y10();
+        if ((latestDayy2cn - latestDayy10cn) > 0 || (oneMonthAgoy2cn - oneMonthAgoy10cn) > 0) {
+            String latestDayDebtCNInverted = String.format("%.2f", (latestDayy2cn - latestDayy10cn) * 100);
+            String oneMonthAgoDebtCNInverted = String.format("%.2f", (oneMonthAgoy2cn - oneMonthAgoy10cn) * 100);
+            map.put("latestDayDebtCNInverted", latestDayDebtCNInverted);
+            map.put("oneMonthAgoDebtCNInverted", oneMonthAgoDebtCNInverted);
+        }
+        System.out.println(map);
     }
 }

@@ -27,7 +27,7 @@ public class getParam_nationDebtUS {
         paramvo.setStartDate(startDate);
         paramvo.setEndDate(TenYearLater);
         paramvo.setAreaCode("us");
-        String[] metricsArray = {"mir_m1", "mir_m3", "mir_m6", "mir_y1", "mir_y2", "mir_y3", "mir_y5", "mir_y7", "mir_y10", "mir_y20", "mir_y30"};
+        String[] metricsArray = {"tcm_m1", "tcm_m3", "tcm_m6", "tcm_y1", "tcm_y2", "tcm_y3", "tcm_y5", "tcm_y7", "tcm_y10", "tcm_y20", "tcm_y30"};
         ArrayList<String> metricsList = new ArrayList<>(Arrays.asList(metricsArray));
         paramvo.setMetricsList(metricsList);
 
