@@ -29,7 +29,6 @@ import static invest.lixinger.macro.nationalDebt.request_nationDebt.*;
 /**
  * 计算中国国债
  */
-
 @RestController
 @RequestMapping("/GongYu")
 public class CNDebtController extends mybatisNoSpringUtils {
@@ -119,9 +118,6 @@ public class CNDebtController extends mybatisNoSpringUtils {
         calendar.add(Calendar.DATE, 1);
         return sdf.format(calendar.getTime());
     }
-
-
-
 
     public CNDebtController() throws FileNotFoundException {
     }

@@ -72,116 +72,156 @@ public class sendEmailUtils {
     public static Map<String, String> getText() throws IOException, ParseException {
         Map<String, String> map = new HashMap<>();
         try {
-            // 基本面判断----------------------
-            Map<String, String> fundamentalMap = getTextFundamentalCN();
-            double resultFundamental = Double.parseDouble(fundamentalMap.get("resultFundamental"));
             String Text = "▶现阶段：\n";
-            double result100 = resultFundamental * 100;
-            String Textzhaiquan = "  ◆将资产投资债券、货币基金，利率高则买债券、黄金，利率低则买货币基金\n\n";
-            String Textgupiao = "  ◆基金备选池：科创信息、科创创业50、科创50、创业板全指、全指信息、TMT、中创400、中证500、中证军工、国证2000、全指医疗、中小企业300、中概互联网\n";
-            Textgupiao += "  ◆股票备选池：证券 > 银行\n\n";
+            String subject = null;
+            // 基本面判断----------------------
+            try {
+                Map<String, String> fundamentalMap = getTextFundamentalCN();
+                double resultFundamental = Double.parseDouble(fundamentalMap.get("resultFundamental"));
+                double result100 = resultFundamental * 100;
+                String Textzhaiquan = "  ◆将资产投资债券、货币基金，利率高则买债券、黄金，利率低则买货币基金\n\n";
+                String Textgupiao = "  ◆基金备选池：科创信息、科创创业50、科创50、创业板全指、全指信息、TMT、中创400、中证500、中证军工、国证2000、全指医疗、中小企业300、中概互联网\n";
+                Textgupiao += "  ◆股票备选池：证券 > 银行\n\n";
 
-            if (result100 > 45) {
-                Text += Textzhaiquan;
-            } else if (35 < result100 && result100 < 45) {
-                Text += Textzhaiquan;
-            } else if (25 < result100 && result100 < 35) {
-                Text += "  ◆定投总资金 通过 197 个周定投，其中定投总资金 = 总资金 - 已投入\n";
-                Text += "  ◆股票基金以大公司、主动型基金为主\n\n";
-            } else if (15 < result100 && result100 < 25) {
-                Text += "  ◆定投总资金 通过 96 个周定投，其中定投总资金 = 总资金 - 已投入\n";
-                Text += "  ◆股票基金以中型公司、主动型基金为主\n\n";
-            } else if (10 < result100 && result100 < 15) {
-                Text += "  ◆定投总资金 通过 18 个周定投，其中定投总资金 = 总资金 - 已投入\n";
-                Text += Textgupiao;
-            } else if (5 < result100 && result100 < 10) {
-                Text += "  ◆梭哈梭哈梭哈梭哈梭哈梭哈梭哈梭哈梭哈梭哈梭哈梭哈梭哈\n";
-                Text += "  ◆现在离最低点可能还有10~20%的幅度，但为不错过机会，我将永远相信历史会简单的重复\n\n";
-                Text += Textgupiao;
+                if (result100 > 45) {
+                    Text += Textzhaiquan;
+                } else if (35 < result100 && result100 < 45) {
+                    Text += Textzhaiquan;
+                } else if (25 < result100 && result100 < 35) {
+                    Text += "  ◆定投总资金 通过 197 个周定投，其中定投总资金 = 总资金 - 已投入\n";
+                    Text += "  ◆股票基金以大公司、主动型基金为主\n\n";
+                } else if (15 < result100 && result100 < 25) {
+                    Text += "  ◆定投总资金 通过 96 个周定投，其中定投总资金 = 总资金 - 已投入\n";
+                    Text += "  ◆股票基金以中型公司、主动型基金为主\n\n";
+                } else if (10 < result100 && result100 < 15) {
+                    Text += "  ◆定投总资金 通过 18 个周定投，其中定投总资金 = 总资金 - 已投入\n";
+                    Text += Textgupiao;
+                } else if (5 < result100 && result100 < 10) {
+                    Text += "  ◆梭哈梭哈梭哈梭哈梭哈梭哈梭哈梭哈梭哈梭哈梭哈梭哈梭哈\n";
+                    Text += "  ◆现在离最低点可能还有10~20%的幅度，但为不错过机会，我将永远相信历史会简单的重复\n\n";
+                    Text += Textgupiao;
+                }
+                String resultFormat = new DecimalFormat("0.00%").format(resultFundamental);
+                subject = fundamentalMap.get("fundamentalDate") + "，当日信号为" + resultFormat;
+            } catch (Exception e) {
+                System.out.println(e.getMessage() + "基本面判断出错");
             }
-            String resultFormat = new DecimalFormat("0.00%").format(resultFundamental);
-            String subject = fundamentalMap.get("fundamentalDate") + "，当日信号为" + resultFormat;
+
             // ----------------国债----------------------------------
-            Map<String, String> cnDebtMap = getTextCNDebt();
-            Text += "▶国债最新数据日期为：" + cnDebtMap.get("date") + "\n";
-            Text += "  ◆最近十年：2、3、5、10年期的平均信号为：" + new DecimalFormat("0.00%").format(Double.valueOf(cnDebtMap.get("averagePos"))) + "\n";
-            if (cnDebtMap.containsKey("latestDayDebtCNInverted")) {
-                Text += "  ◆最近日期国债倒挂比例：" + cnDebtMap.get("latestDayDebtCNInverted") + "，一个月前国债倒挂比例：" + cnDebtMap.get("oneMonthAgoDebtCNInverted") + "\n\n";
-            } else {
-                Text += "  ◆最近日期、一个月前，国债没有倒挂\n\n";
+            Map<String, String> cnDebtMap = null;
+            try {
+                cnDebtMap = getTextCNDebt();
+                Text += "▶国债最新数据日期为：" + cnDebtMap.get("date") + "\n";
+                Text += "  ◆最近十年：2、3、5、10年期的平均信号为：" + new DecimalFormat("0.00%").format(Double.valueOf(cnDebtMap.get("averagePos"))) + "\n";
+                if (cnDebtMap.containsKey("latestDayDebtCNInverted")) {
+                    Text += "  ◆最近日期国债倒挂比例：" + cnDebtMap.get("latestDayDebtCNInverted") + "，一个月前国债倒挂比例：" + cnDebtMap.get("oneMonthAgoDebtCNInverted") + "\n\n";
+                } else {
+                    Text += "  ◆最近日期、一个月前，国债没有倒挂\n\n";
+                }
+            } catch (Exception e) {
+                System.out.println(e.getMessage() + "国债出错");
             }
-            // 美债-------------------------------
-            Map<String, String> usDebtMap = getTextUSDebt();
-            Text += "▶美债最新数据日期为：" + usDebtMap.get("date") + "\n";
-            Text += "  ◆最近十年：2、3、5、10年期的平均信号为：" + new DecimalFormat("0.00%").format(Double.valueOf(usDebtMap.get("averagePos"))) + "\n";
-            if (usDebtMap.containsKey("latestDayDebtUSInverted")) {
-                Text += "  ◆美债倒挂比例为：" + usDebtMap.get("latestDayDebtUSInverted") + "。一个月前美债倒挂比例为：" + usDebtMap.get("oneMonthAgoDebtUSInverted") + "\n\n";
-            } else {
-                Text += "  ◆最近日期、一个月前，美债没有倒挂\n\n";
+
+            // --------------------美债-------------------------------
+            Map<String, String> usDebtMap;
+            try {
+                usDebtMap = getTextUSDebt();
+                Text += "▶美债最新数据日期为：" + usDebtMap.get("date") + "\n";
+                Text += "  ◆最近十年：2、3、5、10年期的平均信号为：" + new DecimalFormat("0.00%").format(Double.valueOf(usDebtMap.get("averagePos"))) + "\n";
+                if (usDebtMap.containsKey("latestDayDebtUSInverted")) {
+                    Text += "  ◆美债倒挂比例为：" + usDebtMap.get("latestDayDebtUSInverted") + "。一个月前美债倒挂比例为：" + usDebtMap.get("oneMonthAgoDebtUSInverted") + "\n\n";
+                } else {
+                    Text += "  ◆最近日期、一个月前，美债没有倒挂\n\n";
+                }
+            } catch (Exception e) {
+                System.out.println(e.getMessage() + "美债 出错");
             }
+
             // ----------------SPX信号值----------------
-            Map<String, Object> mapSPX = getTextSPX();
-            double posSPX = (double) mapSPX.get("posSPX");
-            String dateSPX = (String) mapSPX.get("dateSPX");
-            Text += "▶美股最新数据日期为：" + dateSPX + "\n";
-            Text += "  ◆信号为：" + new DecimalFormat("0.00%").format(posSPX) + "\n";
-            if (posSPX < 0.3) {
-                Text += "  ◆结论：可考虑美股现在出现的机会\n\n";
-            } else {
-                Text += "  ◆结论：美股暂无机会\n\n";
+            Map<String, Object> mapSPX;
+            double posSPX = 0;
+            try {
+                mapSPX = getTextSPX();
+                posSPX = (double) mapSPX.get("posSPX");
+                String dateSPX = (String) mapSPX.get("dateSPX");
+                Text += "▶美股最新数据日期为：" + dateSPX + "\n";
+                Text += "  ◆信号为：" + new DecimalFormat("0.00%").format(posSPX) + "\n";
+                if (posSPX < 0.3) {
+                    Text += "  ◆结论：可考虑美股现在出现的机会\n\n";
+                } else {
+                    Text += "  ◆结论：美股暂无机会\n\n";
+                }
+            } catch (Exception e) {
+                System.out.println(e.getMessage() + "SPX信号值 出错");
             }
+
             // ----------------HSI信号值----------------
-            Map<String, Object> mapHSI = getTextHSI();
-            double posHSI = (double) mapHSI.get("posHSI");
-            String dateHSI = (String) mapHSI.get("dateHSI");
-            Text += "▶港股最新数据日期为：" + dateHSI + "\n";
-            Text += "  ◆信号为：" + new DecimalFormat("0.00%").format(posHSI) + "\n";
-            if (posSPX < 0.3) {
-                Text += "  ◆结论：可考虑港股现在出现的机会\n\n";
-            } else {
-                Text += "  ◆结论：港股暂无机会\n\n";
+            try {
+                Map<String, Object> mapHSI = getTextHSI();
+                double posHSI = (double) mapHSI.get("posHSI");
+                String dateHSI = (String) mapHSI.get("dateHSI");
+                Text += "▶港股最新数据日期为：" + dateHSI + "\n";
+                Text += "  ◆信号为：" + new DecimalFormat("0.00%").format(posHSI) + "\n";
+                if (posSPX < 0.3) {
+                    Text += "  ◆结论：可考虑港股现在出现的机会\n\n";
+                } else {
+                    Text += "  ◆结论：港股暂无机会\n\n";
+                }
+            } catch (Exception e) {
+                System.out.println(e.getMessage() + "HSI信号值 出错");
             }
+
             // ----------------中国cpi----------------
-            Map<String, Object> mapCNCPI = getTextCNPriceIndex();
-            String CNCPI0 = (String) mapCNCPI.get("CNCPI0");
-            String CNCPI1 = (String) mapCNCPI.get("CNCPI1");
-            String CNCPI2 = (String) mapCNCPI.get("CNCPI2");
-            String CNCPI3 = (String) mapCNCPI.get("CNCPI3");
-            String CNCPIDate = (String) mapCNCPI.get("CNCPIDate");
-            Text += "▶中国cpi最新数据日期为：" + CNCPIDate + "\n";
-            Text += "  ◆连续4个月的cpi为：" + CNCPI3 + "、" + CNCPI2 + "、" + CNCPI1 + "、" + CNCPI0 + "\n";
-            Text += "  ◆近10年，cpi信号为：" + mapCNCPI.get("CPIPos") + "\n\n";
-
-            // ------------通过cpi和国债共同计算百分位，由于cpi不太稳定，所以给予的权重较少-------
-            double CNDebtWeight = 0.8;
-            double CPIWeight = 0.2;
-            Map<String, Object> mapCPIandCNDebtPOS = calculateCPIandCNDebt(cnDebtMap, mapCNCPI, CNDebtWeight, CPIWeight);
-            String CPIandCNDebtPos = (String) mapCPIandCNDebtPOS.get("CPIandCNDebtPos");
-            Text += "▶综合" + CNDebtWeight + "的反转国债权重和" + CPIWeight + "的cpi权重，现在cpi和反转国债的综合信号值为：" + CPIandCNDebtPos + "\n";
-            Text += "  ◆ 计算公式为：" + CNDebtWeight + "*" + mapCPIandCNDebtPOS.get("CNDebtAvgPos") + " + " + CPIWeight + "*" + mapCPIandCNDebtPOS.get("CPIPosInverted") + "\n\n";
-            // ----------------------------------
-            Text += "▶货币基金优选兴业银行，偏债类基金优选兴业银行、易方达、华夏，股票基金优选易方达 > 广发 > 天弘 > 华夏 > 博时 > 南方 > 富国\n\n";
-            // ------------------------------------
-            Text += "▶信用卡优选工商银行、浦发银行、广发银行（待和同事讨论），日常消费优选工商、招商银行（待和同事讨论），房贷优选xx银行（待和同事讨论）\n\n";
-            // m1-m2-------------------------------
-            Map<String, Object> cnMoneySupplymap = getTextCNMoneySupply();
-            double m1oneMonthAgo = (double) cnMoneySupplymap.get("m1oneMonthAgo");
-            double m2oneMonthAgo = (double) cnMoneySupplymap.get("m2oneMonthAgo");
-            String oneMonthAgoDate = (String) cnMoneySupplymap.get("oneMonthAgoDate");
-            double MoneMonthAgo = m1oneMonthAgo - m2oneMonthAgo;
-
-            double m1twoMonthAgo = (double) cnMoneySupplymap.get("m1twoMonthAgo");
-            double m2twoMonthAgo = (double) cnMoneySupplymap.get("m2twoMonthAgo");
-            String twoMonthAgoDate = (String) cnMoneySupplymap.get("twoMonthAgoDate");
-            double MtwoMonthAgo = m1twoMonthAgo - m2twoMonthAgo;
-            Text += "▶货币宽松量：\n";
-            Text += "  ◆最新数据（" + oneMonthAgoDate + "），实际值为：" + new DecimalFormat("0.00%").format(MoneMonthAgo) + "\n";
-            Text += "  ◆上一次（" + twoMonthAgoDate + "），实际值为：" + new DecimalFormat("0.00%").format(MtwoMonthAgo) + "\n";
-            if (MoneMonthAgo < 0) {
-                Text += "  ◆结论：当前环境适合投资股票\n\n";
-            } else {
-                Text += "  ◆结论：当前环境不适合投资股票\n\n";
+            Map<String, Object> mapCNCPI = null;
+            try {
+                mapCNCPI = getTextCNPriceIndex();
+                String CNCPI0 = (String) mapCNCPI.get("CNCPI0");
+                String CNCPI1 = (String) mapCNCPI.get("CNCPI1");
+                String CNCPI2 = (String) mapCNCPI.get("CNCPI2");
+                String CNCPI3 = (String) mapCNCPI.get("CNCPI3");
+                String CNCPIDate = (String) mapCNCPI.get("CNCPIDate");
+                Text += "▶中国cpi最新数据日期为：" + CNCPIDate + "\n";
+                Text += "  ◆连续4个月的cpi为：" + CNCPI3 + "、" + CNCPI2 + "、" + CNCPI1 + "、" + CNCPI0 + "\n";
+                Text += "  ◆近10年，cpi信号为：" + mapCNCPI.get("CPIPos") + "\n\n";
+            } catch (Exception e) {
+                System.out.println(e.getMessage() + "中国cpi 出错");
             }
+
+            // ------------cpi和国债共同计算百分位，由于cpi不太稳定，所以给予的权重较少-------
+            try {
+                double CNDebtWeight = 0.8;
+                double CPIWeight = 0.2;
+                Map<String, Object> mapCPIandCNDebtPOS = calculateCPIandCNDebt(cnDebtMap, mapCNCPI, CNDebtWeight, CPIWeight);
+                String CPIandCNDebtPos = (String) mapCPIandCNDebtPOS.get("CPIandCNDebtPos");
+                Text += "▶综合" + CNDebtWeight + "的国债权重和" + CPIWeight + "的反转cpi权重，现在国债和反转cpi的综合信号值为：" + CPIandCNDebtPos + "\n";
+                Text += "  ◆ 计算公式为：" + CNDebtWeight + "*" + mapCPIandCNDebtPOS.get("CNDebtAvgPos") + " + " + CPIWeight + "*" + mapCPIandCNDebtPOS.get("CPIPosInverted") + "\n\n";
+                // ----------------------------------
+                Text += "▶货币基金优选兴业银行，偏债类基金优选兴业银行、易方达、华夏，股票基金优选易方达 > 广发 > 天弘 > 华夏 > 博时 > 南方 > 富国\n\n";
+                // ------------------------------------
+                Text += "▶信用卡优选工商银行、浦发银行、广发银行（待和同事讨论），日常消费优选工商、招商银行（待和同事讨论），房贷优选xx银行（待和同事讨论）\n\n";
+                // m1-m2-------------------------------
+                Map<String, Object> cnMoneySupplymap = getTextCNMoneySupply();
+                double m1oneMonthAgo = (double) cnMoneySupplymap.get("m1oneMonthAgo");
+                double m2oneMonthAgo = (double) cnMoneySupplymap.get("m2oneMonthAgo");
+                String oneMonthAgoDate = (String) cnMoneySupplymap.get("oneMonthAgoDate");
+                double MoneMonthAgo = m1oneMonthAgo - m2oneMonthAgo;
+
+                double m1twoMonthAgo = (double) cnMoneySupplymap.get("m1twoMonthAgo");
+                double m2twoMonthAgo = (double) cnMoneySupplymap.get("m2twoMonthAgo");
+                String twoMonthAgoDate = (String) cnMoneySupplymap.get("twoMonthAgoDate");
+                double MtwoMonthAgo = m1twoMonthAgo - m2twoMonthAgo;
+                Text += "▶货币宽松量：\n";
+                Text += "  ◆最新数据（" + oneMonthAgoDate + "），实际值为：" + new DecimalFormat("0.00%").format(MoneMonthAgo) + "\n";
+                Text += "  ◆上一次（" + twoMonthAgoDate + "），实际值为：" + new DecimalFormat("0.00%").format(MtwoMonthAgo) + "\n";
+                if (MoneMonthAgo < 0) {
+                    Text += "  ◆结论：当前环境适合投资股票\n\n";
+                } else {
+                    Text += "  ◆结论：当前环境不适合投资股票\n\n";
+                }
+            } catch (Exception e) {
+                System.out.println(e.getMessage() + "cpi和国债共同计算百分位 出错");
+            }
+
 
             // -------------------
             map.put("subject", subject);
@@ -207,7 +247,7 @@ public class sendEmailUtils {
         // 取cpi相反数
         double CPIPosInverted = 1 - CPIPos / 100;
         // 计算结果,给国债CNDebtWeight的权重，给cpi相反数cpiWeight的权重
-        double CPIandCNDebtPos = (CNDebtAvgPos * CNDebtWeight + CPIPosInverted * cpiWeight) ;
+        double CPIandCNDebtPos = (CNDebtAvgPos * CNDebtWeight + CPIPosInverted * cpiWeight);
         mapCPIandCNDebtPOS.put("CNDebtAvgPos", new DecimalFormat("0.0000").format(CNDebtAvgPos));
         mapCPIandCNDebtPOS.put("CPIPosInverted", new DecimalFormat("0.0000").format(CPIPosInverted));
         mapCPIandCNDebtPOS.put("CPIandCNDebtPos", new DecimalFormat("0.00%").format(CPIandCNDebtPos));
@@ -497,7 +537,6 @@ public class sendEmailUtils {
     }
 
     public static void main(String[] args) throws IOException, ParseException {
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         Map<String, String> map = getText();
 //        System.out.println("map.get(Text)===" + map.get("pringIndex1"));
         System.out.println("map.get(subject)===" + map.get("subject"));

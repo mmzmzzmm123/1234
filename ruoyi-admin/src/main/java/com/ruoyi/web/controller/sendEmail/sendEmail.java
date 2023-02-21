@@ -24,7 +24,7 @@ public class sendEmail {
 //    @Test
     // 每个5秒发送邮件
 //    @Scheduled(cron = "0/15 * * * * *")
-    @Scheduled(cron = "0 00 16 ? * *")
+    @Scheduled(cron = "0 00 17 ? * *")
     public void sendSimpleMail() {
         try {
             Map<String, String> map = getText();
