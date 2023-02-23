@@ -79,15 +79,41 @@ public class CacheController
     @GetMapping("/getKeys/{cacheName}")
     public AjaxResult getCacheKeys(@PathVariable String cacheName)
     {
-        Set<String> cacheKeys = redisTemplate.keys(cacheName + "*");
-        return AjaxResult.success(cacheKeys);
+    	DataType dt = redisTemplate.type(cacheName);
+    	Set<?> cacheKeys;
+    	if(DataType.HASH.equals(dt)) {
+    		cacheKeys = redisTemplate.opsForHash().keys(cacheName);
+    	} else if(DataType.LIST.equals(dt)) {
+    		Long size = redisTemplate.opsForList().size(cacheName);
+    		List<String> list = new ArrayList<String>();
+    		for (Long i = 0L; i < size; i++) {
+    			list.add(cacheName + i);
+			}
+    		return AjaxResult.success(list); 
+    	} else if(DataType.SET.equals(dt)) {
+    		cacheKeys = redisTemplate.opsForSet().members(cacheName);
+    	} else {
+    		cacheKeys = redisTemplate.keys(cacheName + "*");
+		}
+    	return AjaxResult.success(cacheKeys);
     }
 
     @PreAuthorize("@ss.hasPermi('monitor:cache:list')")
     @GetMapping("/getValue/{cacheName}/{cacheKey}")
     public AjaxResult getCacheValue(@PathVariable String cacheName, @PathVariable String cacheKey)
     {
-        String cacheValue = redisTemplate.opsForValue().get(cacheKey);
+        DataType dt = redisTemplate.type(cacheName);
+    	String cacheValue;
+    	if(DataType.HASH.equals(dt)) {
+    		cacheValue = redisTemplate.opsForHash().get(cacheName, cacheKey).toString();
+    	} else if(DataType.LIST.equals(dt)) {
+    		Long index = Long.valueOf(cacheKey.substring(cacheName.length()));
+    		cacheValue = redisTemplate.opsForList().index(cacheName, index);
+    	} else if(DataType.SET.equals(dt)) {
+    		cacheValue = cacheKey;
+    	} else {
+    		cacheValue = redisTemplate.opsForValue().get(cacheKey);
+    	}
         SysCache sysCache = new SysCache(cacheName, cacheKey, cacheValue);
         return AjaxResult.success(sysCache);
     }
