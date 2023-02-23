@@ -4,6 +4,9 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 import javax.servlet.http.HttpServletRequest;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -50,6 +53,8 @@ public class TokenService
     @Autowired
     private RedisCache redisCache;
 
+    private Logger logger = LoggerFactory.getLogger(getClass());
+
     /**
      * 获取用户身份信息
      *
@@ -72,8 +77,10 @@ public class TokenService
             }
             catch (Exception e)
             {
+                logger.info("token：{}已过期或不合法", token);
             }
         }
+        logger.info("token：{} 为空", token);
         return null;
     }
 
