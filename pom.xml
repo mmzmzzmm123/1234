@@ -233,6 +233,14 @@
                 <version>${ruoyi.version}</version>
             </dependency>
 
+            <!-- 站内信消息推送 -->
+            <dependency>
+                <groupId>com.ruoyi</groupId>
+                <artifactId>ruoyi-message-push</artifactId>
+                <version>${ruoyi.version}</version>
+            </dependency>
+
+
             <!-- 待办任务-->
             <dependency>
                 <groupId>com.ruoyi</groupId>
@@ -258,6 +266,7 @@
         <module>ruoyi-common</module>
         <module>ruoyi-message</module>
         <module>ruoyi-push</module>
+        <module>ruoyi-message-push</module>
         <module>ruoyi-processing</module>
         <module>ruoyi-goods</module>
     </modules>

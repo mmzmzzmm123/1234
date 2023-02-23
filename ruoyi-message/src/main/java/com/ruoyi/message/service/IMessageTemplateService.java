@@ -59,4 +59,11 @@ public interface IMessageTemplateService extends IService<MessageTemplate>
      * @return 结果
      */
     public int deleteMessageTemplateByMsgTempId(Long msgTempId);
+
+    /**
+     * 按pcode获得消息模板
+     * @param pcode
+     * @return
+     */
+    public MessageTemplate selectMessageTemplateByMsgTempPcode(String pcode);
 }

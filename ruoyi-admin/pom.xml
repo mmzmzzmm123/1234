@@ -62,17 +62,12 @@
             <scope>provided</scope>
         </dependency>
 
-        <!-- 消息管理模块-->
+        <!-- 消息管理模块&推送模块-->
         <dependency>
             <groupId>com.ruoyi</groupId>
-            <artifactId>ruoyi-message</artifactId>
+            <artifactId>ruoyi-message-push</artifactId>
         </dependency>
 
-        <!-- 推送模块-->
-        <dependency>
-            <groupId>com.ruoyi</groupId>
-            <artifactId>ruoyi-push</artifactId>
-        </dependency>
 
         <!-- 商品模块-->
         <dependency>

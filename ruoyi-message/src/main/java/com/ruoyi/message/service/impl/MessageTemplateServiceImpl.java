@@ -2,6 +2,7 @@ package com.ruoyi.message.service.impl;
 
 import java.util.List;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.ruoyi.common.utils.DateUtils;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -89,5 +90,15 @@ public class MessageTemplateServiceImpl extends ServiceImpl<MessageTemplateMappe
     @Override
     public int deleteMessageTemplateByMsgTempId(Long msgTempId) {
         return messageTemplateMapper.deleteMessageTemplateByMsgTempId(msgTempId);
+    }
+
+    /**
+     * 按pcode获得消息模板
+     * @param pcode
+     * @return
+     */
+    @Override
+    public MessageTemplate selectMessageTemplateByMsgTempPcode(String pcode) {
+        return this.lambdaQuery().eq(MessageTemplate::getMsgTempPcode, pcode).getEntity();
     }
 }

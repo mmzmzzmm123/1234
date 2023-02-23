@@ -15,9 +15,8 @@ import org.springframework.web.bind.annotation.RestController;
  * @Author lixin
  * @Date 2022/12/30 14:29
  */
-@RestController
 @RequestMapping("/push")
-public class PushController extends BaseController {
+public abstract class AbsPushController extends BaseController {
     @Autowired
     private IPushService pushService;
 

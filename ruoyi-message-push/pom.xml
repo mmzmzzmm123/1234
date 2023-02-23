@@ -9,27 +9,25 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>ruoyi-message</artifactId>
+    <artifactId>ruoyi-message-push</artifactId>
 
     <description>
-        message 站内信模块
+        站内信消息推送
     </description>
 
     <dependencies>
 
-        <!--velocity代码生成使用模板 -->
-        <dependency>
-            <groupId>org.apache.velocity</groupId>
-            <artifactId>velocity-engine-core</artifactId>
-        </dependency>
-
-        <!-- 通用工具-->
+        <!-- 推送-->
         <dependency>
             <groupId>com.ruoyi</groupId>
-            <artifactId>ruoyi-common</artifactId>
+            <artifactId>ruoyi-push</artifactId>
+        </dependency>
+
+        <!-- 站内信-->
+        <dependency>
+            <groupId>com.ruoyi</groupId>
+            <artifactId>ruoyi-message</artifactId>
         </dependency>
 
     </dependencies>
-
-
 </project>
