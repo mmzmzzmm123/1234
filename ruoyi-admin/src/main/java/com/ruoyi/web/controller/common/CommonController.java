@@ -1,5 +1,7 @@
 package com.ruoyi.web.controller.common;
 
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
 import javax.servlet.http.HttpServletRequest;
@@ -45,27 +47,26 @@ public class CommonController
      */
     @GetMapping("/download")
     public void fileDownload(String fileName, Boolean delete, HttpServletResponse response, HttpServletRequest request)
+            throws Exception
     {
-        try
+        if (!FileUtils.checkAllowDownload(fileName))
         {
-            if (!FileUtils.checkAllowDownload(fileName))
-            {
-                throw new Exception(StringUtils.format("文件名称({})非法，不允许下载。 ", fileName));
-            }
-            String realFileName = System.currentTimeMillis() + fileName.substring(fileName.indexOf("_") + 1);
-            String filePath = RuoYiConfig.getDownloadPath() + fileName;
-
-            response.setContentType(MediaType.APPLICATION_OCTET_STREAM_VALUE);
-            FileUtils.setAttachmentResponseHeader(response, realFileName);
-            FileUtils.writeBytes(filePath, response.getOutputStream());
-            if (delete)
-            {
-                FileUtils.deleteFile(filePath);
-            }
+            throw new Exception(StringUtils.format("文件名称({})非法，不允许下载。 ", fileName));
         }
-        catch (Exception e)
+        String realFileName = System.currentTimeMillis() + fileName.substring(fileName.indexOf("_") + 1);
+        String filePath = RuoYiConfig.getDownloadPath() + fileName;
+        File file = new File(filePath);
+        if (!file.exists())
         {
-            log.error("下载文件失败", e);
+            throw new FileNotFoundException(StringUtils.format("文件名称({})不存在。 ", fileName));
+        }
+
+        response.setContentType(MediaType.APPLICATION_OCTET_STREAM_VALUE);
+        FileUtils.setAttachmentResponseHeader(response, realFileName);
+        FileUtils.writeBytes(filePath, response.getOutputStream());
+        if (delete)
+        {
+            FileUtils.deleteFile(filePath);
         }
     }
 
@@ -139,25 +140,23 @@ public class CommonController
     public void resourceDownload(String resource, HttpServletRequest request, HttpServletResponse response)
             throws Exception
     {
-        try
+        if (!FileUtils.checkAllowDownload(resource))
         {
-            if (!FileUtils.checkAllowDownload(resource))
-            {
-                throw new Exception(StringUtils.format("资源文件({})非法，不允许下载。 ", resource));
-            }
-            // 本地资源路径
-            String localPath = RuoYiConfig.getProfile();
-            // 数据库资源地址
-            String downloadPath = localPath + StringUtils.substringAfter(resource, Constants.RESOURCE_PREFIX);
-            // 下载名称
-            String downloadName = StringUtils.substringAfterLast(downloadPath, "/");
-            response.setContentType(MediaType.APPLICATION_OCTET_STREAM_VALUE);
-            FileUtils.setAttachmentResponseHeader(response, downloadName);
-            FileUtils.writeBytes(downloadPath, response.getOutputStream());
+            throw new Exception(StringUtils.format("资源文件({})非法，不允许下载。 ", resource));
         }
-        catch (Exception e)
+        // 本地资源路径
+        String localPath = RuoYiConfig.getProfile();
+        // 数据库资源地址
+        String downloadPath = localPath + StringUtils.substringAfter(resource, Constants.RESOURCE_PREFIX);
+        File file = new File(downloadPath);
+        if (!file.exists())
         {
-            log.error("下载文件失败", e);
+            throw new FileNotFoundException(StringUtils.format("资源文件({})不存在。 ", resource));
         }
+        // 下载名称
+        String downloadName = StringUtils.substringAfterLast(downloadPath, "/");
+        response.setContentType(MediaType.APPLICATION_OCTET_STREAM_VALUE);
+        FileUtils.setAttachmentResponseHeader(response, downloadName);
+        FileUtils.writeBytes(downloadPath, response.getOutputStream());
     }
 }
