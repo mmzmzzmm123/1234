@@ -1,14 +1,17 @@
 import App from "./App";
 
+import evaluationTabBar from '@/components/evaluation/tabBar.vue'
+import curriculumTabBar from '@/components/curriculum/tabBar.vue'
 // #ifndef VUE3
 import Vue from "vue";
-import HttpRequest from "./server/httpRequest";
 Vue.config.productionTip = false;
 App.mpType = "app";
 const app = new Vue({
   ...App,
 });
 app.$mount();
+Vue.component('evaluationTabBar',evaluationTabBar);
+Vue.component('curriculumTabBar',curriculumTabBar);
 // #endif
 
 // #ifdef VUE3

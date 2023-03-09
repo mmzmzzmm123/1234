@@ -1,72 +1,105 @@
 {
   "pages": [
     //pages数组中第一项表示应用启动页，参考：https://uniapp.dcloud.io/collocation/pages
-
     {
-      "path": "pages/index/index",
+      "path": "pages/evaluation/index",
       "style": {
         "navigationStyle": "custom"
       }
     },
     {
-      "path": "pages/class/index",
+      "path": "pages/evaluation/class",
       "style": {
         "navigationStyle": "custom"
       }
     },
     {
-      "path": "pages/user/index",
+      "path": "pages/evaluation/user",
+      "style": {
+        "navigationStyle": "custom"
+      }
+    },
+    {
+      "path": "pages/evaluation/product",
+      "style": {
+        "navigationStyle": "custom"
+      }
+    },
+    {
+      "path": "pages/evaluation/search",
       "style": {
         "navigationStyle": "custom",
         "enablePullDownRefresh": false
       }
     },
     {
-      "path": "pages/product/index",
-      "style": {
-        "navigationStyle": "custom",
-        "enablePullDownRefresh": false
-      }
-    },
-    {
-      "path": "pages/search/index",
-      "style": {
-        "navigationStyle": "custom",
-        "enablePullDownRefresh": false
-      }
-    },
-    {
-      "path": "pages/testBefore/index",
+      "path": "pages/evaluation/testBefore",
       "style": {
         "navigationStyle": "custom"
       }
     },
     {
-      "path": "pages/question/index",
+      "path": "pages/evaluation/question",
       "style": {
         "navigationStyle": "custom"
       }
     },
     {
-      "path": "pages/result/index",
+      "path": "pages/evaluation/result",
       "style": {
         "navigationStyle": "custom"
       }
     },
     {
-      "path": "pages/report/index",
+      "path": "pages/evaluation/report",
       "style": {
         "navigationStyle": "custom"
       }
     },
     {
-      "path": "pages/order/index",
+      "path": "pages/evaluation/order",
       "style": {
         "navigationStyle": "custom"
       }
     },
     {
-      "path": "pages/login/index",
+      "path": "pages/evaluation/login",
+      "style": {
+        "navigationStyle": "custom"
+      }
+    },
+    {
+      "path": "pages/curriculum/index",
+      "style": {
+        "navigationStyle": "custom"
+      }
+    },
+    {
+      "path": "pages/curriculum/product",
+      "style": {
+        "navigationStyle": "custom"
+      }
+    },
+    {
+      "path": "pages/curriculum/learningCourse",
+      "style": {
+        "navigationStyle": "custom"
+      }
+    },
+    {
+      "path": "pages/curriculum/report",
+      "style": {
+        "navigationStyle": "custom"
+      }
+    },
+    {
+      "path": "pages/curriculum/order",
+      "style": {
+        "navigationStyle": "custom"
+      }
+    },
+    {
+      "path": "pages/curriculum/user",
       "style": {
         "navigationStyle": "custom"
       }
@@ -78,25 +111,25 @@
     "borderStyle": "black",
     "backgroundColor": "#ffffff",
     "list": [
-      {
-        "pagePath": "pages/index/index",
-        "iconPath": "static/menu/index.png",
-        "selectedIconPath": "static/menu/index-active.png",
+    /*  {
+        "pagePath": "pages/evaluation/index",
+        "iconPath": "static/evaluation/menu/index.png",
+        "selectedIconPath": "static/evaluation/menu/index-active.png",
         "text": "首页"
       },
       {
-        "pagePath": "pages/class/index",
-        "iconPath": "static/menu/class.png",
-        "selectedIconPath": "static/menu/class-active.png",
+        "pagePath": "pages/evaluation/class",
+        "iconPath": "static/evaluation/menu/class.png",
+        "selectedIconPath": "static/evaluation/menu/class-active.png",
         "text": "分类"
       },
 
       {
-        "pagePath": "pages/user/index",
-        "iconPath": "static/menu/user.png",
-        "selectedIconPath": "static/menu/user-active.png",
+        "pagePath": "pages/evaluation/user",
+        "iconPath": "static/evaluation/menu/user.png",
+        "selectedIconPath": "static/evaluation/menu/user-active.png",
         "text": "我的"
-      }
+      }*/
     ]
   },
   "globalStyle": {

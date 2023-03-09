@@ -29,7 +29,7 @@ export const wxLogin = () => {
       });
   });
 };
-export const wxLoginCallBakc = (code) => {
+export const wxLoginCallBack = (code) => {
   return new Promise((resolve, reject) => {
     httprequest
       .get(`/app/user/callBack?code=` + code)
