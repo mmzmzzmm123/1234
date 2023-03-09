@@ -156,3 +156,9 @@ aliyun:
     signName: echo智能客服
     #发送验证码模版CODE
     templateCode: SMS_202813583
+
+cos:
+  secretId: AKIDe8NM9oEYHlyud5JK5cuzotjIchaIk5B3
+  secretKey: sXHo43lDQN7amjPE0dBpHWWIsDJAsMba
+  appId: 1316267898
+  bucket: ssg-1316267898
