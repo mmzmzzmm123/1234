@@ -2,27 +2,16 @@
   <view class="user-page">
     <view class="user-info">
       <view class="info">
-        <view class="header" @tap="getUserInfo"><img class="img" :src="userInfo.avatar || '/static/evaluation/header.png'" />
+        <view class="header" @tap="getUserInfo"><img class="img" :src="userInfo.avatar || '/static/curriculum/header.png'" />
         </view>
         <view class="txt">
-          <view class="name">{{ userInfo.name }}<img class="img" src="/static/evaluation/user/refresh.png"
+          <view class="name">{{ userInfo.name }}<img class="img" src="/static/curriculum/user/refresh.png"
               v-show="userInfo.name && this.clientType == clientTypeObj.wx" @tap="loginWx" />
           </view>
-          <view class="num"><img v-show="userInfo.phone" class="img" src="/static/evaluation/user/phone.png" />{{ userInfo.phone }}
+          <view class="num"><img v-show="userInfo.phone" class="img" src="/static/curriculum/user/phone.png" />{{ userInfo.phone }}
           </view>
         </view>
       </view>
-      <view class="link-box">
-        <view class="item" @tap="toReport">
-          <view>我的报告</view>
-          <view class="num">{{ reportNum }}</view>
-        </view>
-        <view class="item">
-          <view>我的咨询</view>
-          <view class="num"></view>
-        </view>
-      </view>
-
     </view>
     <view class="class-box index-margin">
       <view class="item" v-for="item in classList" @tap="() => { item.callback && item.callback() }">
@@ -31,27 +20,27 @@
       </view>
     </view>
     <view class="un-test-box">
-      <view class="box-title">未完成的测评</view>
+      <view class="box-title">最近在学</view>
       <view class="order-item" v-for="(order, index) in orderList" :key="'order' + index">
         <view class="title">{{ order.gaugeTitle }}</view>
         <view class="price">￥{{ order.amount }}</view>
         <view class="buy-time">{{ order.createTime }}</view>
         <view class="order-no">{{ order.orderId }}
-          <img class="img" src="/static/evaluation/user/copy.png" @tap="copyOrderNo(order.orderId)" />
+          <img class="img" src="/static/curriculum/user/copy.png" @tap="copyOrderNo(order.orderId)" />
         </view>
-        <view class="btn" @tap="toTest(order)">去测试</view>
+        <view class="btn" @tap="toTest(order)">{{item.startTime?'继续学习':'进入学习'}}</view>
       </view>
       <no-data v-if="orderList.length == 0" :showToClass="true"></no-data>
       <view class="footer" v-else>已经到底了</view>
     </view>
-    <evaluation-tab-bar :currentIndex="2"></evaluation-tab-bar>
+    <curriculum-tab-bar :currentIndex="2"></curriculum-tab-bar>
   </view>
 </template>
 <script>
 import utils, { clientTypeObj } from '@/utils/common'
 import { wxLoginCallBack, wxLogin } from '@/server/wxApi'
-import noData from '@/components/evaluation/noData'
-import userServer from '@/server/evaluation/user'
+import noData from '@/components/curriculum/noData'
+import userServer from '@/server/curriculum/user'
 export default {
   components: { noData },
   data() {
@@ -59,18 +48,19 @@ export default {
       userInfo: {},
       classList: [
         {
-          classPic: "/static/evaluation/user/order.png",
-          className: "测评订单",
+          classPic: "/static/curriculum/user/course.png",
+          className: "我的课程",
           id: 16,
-          callback: this.toOder
+          callback: this.toCourse
         },
         {
-          classPic: "/static/evaluation/user/coupon.png",
-          className: "优惠券",
-          id: 36,
+          classPic: "/static/curriculum/user/order.png",
+          className: "我的订单",
+          id: 36, 
+          callback: this.toOrder
         },
         {
-          classPic: "/static/evaluation/user/customer-service.png",
+          classPic: "/static/curriculum/user/customer-service.png",
           className: "客服帮助",
           id: 72,
         }
@@ -86,7 +76,7 @@ export default {
     this.userInfo = uni.getStorageSync("userInfo");
     if (!this.userInfo) {
       uni.navigateTo({
-        url: "/pages/evaluation/login/index?callbacktype=1",
+        url: "/pages/curriculum/login/index?callbacktype=1",
       });
     } else {
       this.orderList = await userServer.getOrderList(2);
@@ -107,17 +97,17 @@ export default {
     this.loginWx();
   },
   methods: {
-    toReport() {
+    toCourse(){
       if(this.getUserInfo())
-      uni.navigateTo({ url: '/pages/evaluation/report' });
+      uni.navigateTo({ url: '/pages/curriculum/course' });
     },
-    toOder() {
+    toOrder() {
       if(this.getUserInfo())
-      uni.navigateTo({ url: '/pages/evaluation/order' });
+      uni.navigateTo({ url: '/pages/curriculum/order' });
     },
     toTest(order) {
       uni.setStorageSync("gaugeDes", order.gaugeDes);
-      uni.navigateTo({ url: `/pages/evaluation/testBefore/index?productId=${order.gaugeId}&&orderId=${order.orderId}` });
+      uni.navigateTo({ url: `/pages/curriculum/testBefore/index?productId=${order.gaugeId}&&orderId=${order.orderId}` });
     },
     copyOrderNo(orderNo) {
       var input = document.createElement('input');
@@ -151,7 +141,7 @@ export default {
     getUserInfo() {
       if (!uni.getStorageSync("userInfo")) {
         uni.navigateTo({
-          url: "/pages/evaluation/login",
+          url: "/pages/curriculum/login",
         });
         return false;
       }
@@ -169,7 +159,7 @@ page {
 
   .user-info {
     width: 750upx;
-    height: 386upx;
+    height: 186upx;
     background-color: #FFFFFF;
     padding: 42upx 30upx;
     box-sizing: border-box;
@@ -237,7 +227,7 @@ page {
       .item {
         width: 336upx;
         height: 164upx;
-        background-image: url('/static/evaluation/user/consulting-service.png');
+        background-image: url('/static/curriculum/user/consulting-service.png');
         background-size: 100% 100%;
         padding: 30upx 32upx;
         box-sizing: border-box;
@@ -248,7 +238,7 @@ page {
 
         &:first-child {
           margin-right: 26upx;
-          background-image: url('/static/evaluation/user/report.png');
+          background-image: url('/static/curriculum/user/report.png');
           color: #E2724C;
         }
 
@@ -267,7 +257,7 @@ page {
     justify-content: space-around;
     text-align: center;
     font-size: 26upx;
-    margin: 28upx auto 24upx;
+    margin: 16upx 30upx;
     width: 690upx;
     background: #FFFFFF;
     border-radius: 16upx;
@@ -281,7 +271,7 @@ page {
 
   .un-test-box {
     width: 690upx;
-    margin: 24upx auto;
+    margin: 0 auto ;
     background: #FFFFFF;
     border-radius: 16px;
     padding: 0 40upx 36upx;

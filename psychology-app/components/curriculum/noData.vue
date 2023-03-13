@@ -2,7 +2,7 @@
     <view class="no-data">
         <img class="img" src="/static/nothing/list-nothing.png" />
         <view class="txt">暂无数据</view>
-        <view class="link-btn" @tap="toClass" v-show="showToClass">查看更多测评></view>
+        <view class="link-btn" @tap="toClass" v-show="showToClass">查看更多课程></view>
     </view>
 </template>
 <script>
@@ -10,7 +10,7 @@ export default {
     props: ['showToClass'],
     methods: {
         toClass() {
-            uni.navigateTo({ url: "/pages/evaluation/class" });
+            uni.navigateTo({ url: "/pages/curriculum/class" });
         }
     }
 }

@@ -16,22 +16,22 @@ export default {
             currentTabIndex: 0,
             tabList: [
                 {
-                    pagePath: "/pages/curriculum/index",
-                    iconPath: "/static/curriculum/menu/index.png",
-                    selectedIconPath: "/static/curriculum/menu/index-active.png",
+                    pagePath: "/pages/evaluation/index",
+                    iconPath: "/static/evaluation/menu/index.png",
+                    selectedIconPath: "/static/evaluation/menu/index-active.png",
                     text: "首页"
                 },
                 {
-                    pagePath: "/pages/curriculum/class",
-                    iconPath: "/static/curriculum/menu/class.png",
-                    selectedIconPath: "/static/curriculum/menu/class-active.png",
+                    pagePath: "/pages/evaluation/class",
+                    iconPath: "/static/evaluation/menu/class.png",
+                    selectedIconPath: "/static/evaluation/menu/class-active.png",
                     text: "分类"
                 },
 
                 {
-                    pagePath: "/pages/curriculum/user",
-                    iconPath: "/static/curriculum/menu/user.png",
-                    selectedIconPath: "/static/curriculum/menu/user-active.png",
+                    pagePath: "/pages/evaluation/user",
+                    iconPath: "/static/evaluation/menu/user.png",
+                    selectedIconPath: "/static/evaluation/menu/user-active.png",
                     text: "我的"
                 }
             ]

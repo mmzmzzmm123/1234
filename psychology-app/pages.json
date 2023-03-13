@@ -87,12 +87,6 @@
       }
     },
     {
-      "path": "pages/curriculum/report",
-      "style": {
-        "navigationStyle": "custom"
-      }
-    },
-    {
       "path": "pages/curriculum/order",
       "style": {
         "navigationStyle": "custom"
@@ -100,6 +94,43 @@
     },
     {
       "path": "pages/curriculum/user",
+      "style": {
+        "navigationStyle": "custom"
+      }
+    },
+    {
+      "path": "pages/curriculum/search",
+      "style": {
+        "navigationStyle": "custom",
+        "enablePullDownRefresh": false
+      }
+    },
+    {
+      "path": "pages/curriculum/class",
+      "style": {
+        "navigationStyle": "custom"
+      }
+    },
+    {
+      "path": "pages/curriculum/user",
+      "style": {
+        "navigationStyle": "custom"
+      }
+    },
+    {
+      "path": "pages/curriculum/course",
+      "style": {
+        "navigationStyle": "custom"
+      }
+    },
+    {
+      "path": "pages/curriculum/login",
+      "style": {
+        "navigationStyle": "custom"
+      }
+    },
+    {
+      "path": "pages/curriculum/orderInfo",
       "style": {
         "navigationStyle": "custom"
       }

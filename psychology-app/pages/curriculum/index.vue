@@ -1,7 +1,7 @@
 <template>
   <view class="index">
     <view class="search-box index-margin" @tap="toSearch">
-      <img class="icon" src="/static/curriculum/icon/search.png" />
+      <img class="icon" src="/static/icon/search.png" />
       <span class="txt">搜索</span>
     </view>
     <view class="banner-box index-margin">
@@ -29,7 +29,7 @@
         限时福利
         <span class="more" @tap="toMore">
           更多
-          <img class="img" src="/static/more.png" />
+          <img class="img" src="/static/icon/more.png" />
         </span>
       </view>
       <view class="img-item-box">
@@ -52,7 +52,7 @@
         精选好课
         <span class="more">
           更多
-          <img class="img" src="/static/more.png" /></span>
+          <img class="img" src="/static/icon/more.png" /></span>
       </view>
       <product-list-com :productList="productList"></product-list-com>
     </view>

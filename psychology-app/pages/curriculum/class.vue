@@ -33,13 +33,13 @@
         </view>
       </view>
     </view>
-    <evaluation-tab-bar :currentIndex="1"></evaluation-tab-bar>
+    <curriculum-tab-bar :currentIndex="1"></curriculum-tab-bar>
   </view>
 </template>
 
 <script>
-import productListCom from '@/components/evaluation/productList'
-import classServer from '@/server/evaluation/class'
+import productListCom from '@/components/curriculum/productList'
+import classServer from '@/server/curriculum/class'
 export default {
   components: { productListCom },
   data() {
@@ -58,7 +58,7 @@ export default {
   methods: {
     toSearch() {
       uni.navigateTo({
-        url: "/pages/evaluation/search",
+        url: "/pages/curriculum/search",
       });
     },
     async productClassSelected(currentClass) {
@@ -68,7 +68,7 @@ export default {
     },
     toProduct(id) {
       uni.navigateTo({
-        url: "/pages/evaluation/product/index?id=" + id,
+        url: "/pages/curriculum/product/index?id=" + id,
       });
     },
   },

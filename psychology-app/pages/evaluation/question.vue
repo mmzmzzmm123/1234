@@ -288,18 +288,18 @@ page {
                     background-size: 100% 100%;
 
                     &.radio {
-                        background-image: url('/static/evaluation/icon/radio.png');
+                        background-image: url('/static/icon/radio.png');
 
                         &.active {
-                            background-image: url('/static/evaluation/icon/radio-active.png');
+                            background-image: url('/static/icon/radio-active.png');
                         }
                     }
 
                     &.check {
-                        background-image: url('/static/evaluation/icon/check.png');
+                        background-image: url('/static/icon/check.png');
 
                         &.active {
-                            background-image: url('/static/evaluation/icon/check-active.png');
+                            background-image: url('/static/icon/check-active.png');
                         }
                     }
 

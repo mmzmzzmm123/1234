@@ -21,13 +21,13 @@
 		</view>
 		<view class="more-box">
 			<navigator url="/pages/evaluation/class" open-type="redirect" class="more">查看更多测试 <img class="img"
-					src="/static/more.png" />
+					src="/static/icon/more.png" />
 			</navigator>
 		</view>
 		<!-- 底部操作菜单 -->
 		<view class="page-bottom">
 			<navigator url="/pages/evaluation" open-type="redirect" class="p-b-btn">
-				<image class="index-icon" src="/static/evaluation/menu.png"></image>
+				<image class="index-icon" src="/static/evaluation/menu/index.png"></image>
 				<text>首页</text>
 			</navigator>
 			<view class="start-test" @tap="startTest">开始测试</view>
@@ -47,10 +47,10 @@
 					</view>
 					<view class="coupon-box">
 						<view class="coupon-info">
-							<img class="icon" src='/static/evaluation/icon/coupon.png' />
+							<img class="icon" src='/static/icon/coupon.png' />
 							<span>优惠券</span>
 						</view>
-						<view class="coupon-cue">无可用优惠券<img class="img" src="/static/evaluation/icon/more.png" /></view>
+						<view class="coupon-cue">无可用优惠券<img class="img" src="/static/icon/icon/more.png" /></view>
 					</view>
 				</view>
 				<view class="price-box">合计：<span class="price"><span class="icon">￥</span>{{ productInfo.price }}</span>
@@ -180,11 +180,6 @@ page {
 			}
 		}
 
-		.bg-line {
-			height: 16upx;
-			background-color: #F8F8F8;
-		}
-
 		.info-title {
 			margin-bottom: 32upx;
 
@@ -290,7 +285,7 @@ page {
 			background-color: #fff;
 
 			.close-icon {
-				background-image: url('/static/evaluation/icon/close.png');
+				background-image: url('/static/icon/close.png');
 				background-size: 100% 100%;
 				width: 30upx;
 				height: 30upx;
