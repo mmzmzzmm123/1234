@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.course.mapper.CourCourseBannerConfigMapper">
+    
+    <resultMap type="CourCourseBannerConfig" id="CourCourseBannerConfigResult">
+        <result property="id"    column="id"    />
+        <result property="bannerUrl"    column="banner_url"    />
+        <result property="linkUrl"    column="link_url"    />
+        <result property="bannerType"    column="banner_type"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+    </resultMap>
+
+    <sql id="selectCourCourseBannerConfigVo">
+        select id, banner_url, link_url, banner_type, create_by, create_time from cour_course_banner_config
+    </sql>
+
+    <select id="selectCourCourseBannerConfigList" parameterType="CourCourseBannerConfig" resultMap="CourCourseBannerConfigResult">
+        <include refid="selectCourCourseBannerConfigVo"/>
+        <where>  
+            <if test="bannerUrl != null  and bannerUrl != ''"> and banner_url = #{bannerUrl}</if>
+            <if test="linkUrl != null  and linkUrl != ''"> and link_url = #{linkUrl}</if>
+            <if test="bannerType != null "> and banner_type = #{bannerType}</if>
+        </where>
+    </select>
+    
+    <select id="selectCourCourseBannerConfigById" parameterType="Long" resultMap="CourCourseBannerConfigResult">
+        <include refid="selectCourCourseBannerConfigVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertCourCourseBannerConfig" parameterType="CourCourseBannerConfig" useGeneratedKeys="true" keyProperty="id">
+        insert into cour_course_banner_config
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="bannerUrl != null and bannerUrl != ''">banner_url,</if>
+            <if test="linkUrl != null">link_url,</if>
+            <if test="bannerType != null">banner_type,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="bannerUrl != null and bannerUrl != ''">#{bannerUrl},</if>
+            <if test="linkUrl != null">#{linkUrl},</if>
+            <if test="bannerType != null">#{bannerType},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateCourCourseBannerConfig" parameterType="CourCourseBannerConfig">
+        update cour_course_banner_config
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="bannerUrl != null and bannerUrl != ''">banner_url = #{bannerUrl},</if>
+            <if test="linkUrl != null">link_url = #{linkUrl},</if>
+            <if test="bannerType != null">banner_type = #{bannerType},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteCourCourseBannerConfigById" parameterType="Long">
+        delete from cour_course_banner_config where id = #{id}
+    </delete>
+
+    <delete id="deleteCourCourseBannerConfigByIds" parameterType="String">
+        delete from cour_course_banner_config where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

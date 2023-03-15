@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.course.mapper.CourSectionMapper">
+    
+    <resultMap type="CourSection" id="CourSectionResult">
+        <result property="id"    column="id"    />
+        <result property="sectionId"    column="section_id"    />
+        <result property="topic"    column="topic"    />
+        <result property="duration"    column="duration"    />
+        <result property="type"    column="type"    />
+        <result property="content"    column="content"    />
+        <result property="contentUrl"    column="content_url"    />
+        <result property="courseid"    column="courseId"    />
+        <result property="contentType"    column="content_type"    />
+    </resultMap>
+
+    <sql id="selectCourSectionVo">
+        select id, section_id, topic, duration, type, content, content_url, courseId, content_type from cour_section
+    </sql>
+
+    <select id="selectCourSectionList" parameterType="CourSection" resultMap="CourSectionResult">
+        <include refid="selectCourSectionVo"/>
+        <where>  
+            <if test="sectionId != null  and sectionId != ''"> and section_id = #{sectionId}</if>
+            <if test="topic != null  and topic != ''"> and topic = #{topic}</if>
+            <if test="duration != null "> and duration = #{duration}</if>
+            <if test="type != null "> and type = #{type}</if>
+            <if test="content != null  and content != ''"> and content = #{content}</if>
+            <if test="contentUrl != null  and contentUrl != ''"> and content_url = #{contentUrl}</if>
+            <if test="courseid != null  and courseid != ''"> and courseId = #{courseid}</if>
+            <if test="contentType != null "> and content_type = #{contentType}</if>
+        </where>
+    </select>
+    
+    <select id="selectCourSectionById" parameterType="Long" resultMap="CourSectionResult">
+        <include refid="selectCourSectionVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertCourSection" parameterType="CourSection" useGeneratedKeys="true" keyProperty="id">
+        insert into cour_section
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="sectionId != null and sectionId != ''">section_id,</if>
+            <if test="topic != null and topic != ''">topic,</if>
+            <if test="duration != null">duration,</if>
+            <if test="type != null">type,</if>
+            <if test="content != null">content,</if>
+            <if test="contentUrl != null">content_url,</if>
+            <if test="courseid != null and courseid != ''">courseId,</if>
+            <if test="contentType != null">content_type,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="sectionId != null and sectionId != ''">#{sectionId},</if>
+            <if test="topic != null and topic != ''">#{topic},</if>
+            <if test="duration != null">#{duration},</if>
+            <if test="type != null">#{type},</if>
+            <if test="content != null">#{content},</if>
+            <if test="contentUrl != null">#{contentUrl},</if>
+            <if test="courseid != null and courseid != ''">#{courseid},</if>
+            <if test="contentType != null">#{contentType},</if>
+         </trim>
+    </insert>
+
+    <update id="updateCourSection" parameterType="CourSection">
+        update cour_section
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="sectionId != null and sectionId != ''">section_id = #{sectionId},</if>
+            <if test="topic != null and topic != ''">topic = #{topic},</if>
+            <if test="duration != null">duration = #{duration},</if>
+            <if test="type != null">type = #{type},</if>
+            <if test="content != null">content = #{content},</if>
+            <if test="contentUrl != null">content_url = #{contentUrl},</if>
+            <if test="courseid != null and courseid != ''">courseId = #{courseid},</if>
+            <if test="contentType != null">content_type = #{contentType},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteCourSectionById" parameterType="Long">
+        delete from cour_section where id = #{id}
+    </delete>
+
+    <delete id="deleteCourSectionByIds" parameterType="String">
+        delete from cour_section where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>
