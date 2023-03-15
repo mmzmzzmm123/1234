@@ -1,9 +1,12 @@
 package com.ruoyi.web.controller.common;
 
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import com.qcloud.cos.model.UploadResult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +23,7 @@ import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.common.utils.file.FileUploadUtils;
 import com.ruoyi.common.utils.file.FileUtils;
 import com.ruoyi.framework.config.ServerConfig;
+import com.ruoyi.common.utils.cos.COSClientFactory;
 
 /**
  * 通用请求处理
@@ -75,17 +79,27 @@ public class CommonController
     @PostMapping("/upload")
     public AjaxResult uploadFile(MultipartFile file) throws Exception
     {
+        UploadResult upload = null;
+        InputStream inputStream = null;
         try
         {
             // 上传文件路径
             String filePath = RuoYiConfig.getUploadPath();
             // 上传并返回新文件名称
             String fileName = FileUploadUtils.upload(filePath, file);
-            String url = serverConfig.getUrl() + fileName;
+//            String url = serverConfig.getUrl() + fileName;
+            //  调用文件服务器方法，实现文件上传改写
+            inputStream = file.getInputStream();
+            upload = COSClientFactory.upload(inputStream, FileUtils.getName(fileName));
+            String key = upload.getKey();
+            String url = COSClientFactory.getObjUrl(key);
             AjaxResult ajax = AjaxResult.success();
             ajax.put("url", url);
-            ajax.put("fileName", fileName);
-            ajax.put("newFileName", FileUtils.getName(fileName));
+//            ajax.put("fileName", fileName);
+//            ajax.put("newFileName", FileUtils.getName(fileName));
+//            ajax.put("originalFilename", file.getOriginalFilename());
+            ajax.put("fileName", url);
+            ajax.put("newFileName", key);
             ajax.put("originalFilename", file.getOriginalFilename());
             return ajax;
         }
@@ -113,10 +127,15 @@ public class CommonController
             {
                 // 上传并返回新文件名称
                 String fileName = FileUploadUtils.upload(filePath, file);
-                String url = serverConfig.getUrl() + fileName;
+//                String url = serverConfig.getUrl() + fileName;
+                //  调用ods接口
+                InputStream inputStream = file.getInputStream();
+                UploadResult upload = COSClientFactory.upload(inputStream, FileUtils.getName(fileName));
+                String key = upload.getKey();
+                String url = COSClientFactory.getObjUrl(key);
                 urls.add(url);
-                fileNames.add(fileName);
-                newFileNames.add(FileUtils.getName(fileName));
+                fileNames.add(url);
+                newFileNames.add(key);
                 originalFilenames.add(file.getOriginalFilename());
             }
             AjaxResult ajax = AjaxResult.success();
