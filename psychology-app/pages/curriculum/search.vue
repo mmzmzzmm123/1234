@@ -23,13 +23,13 @@
       <img src="/static/nothing/search-nothing.png" />
     </view>
     <message-com :message="deleteMessage" v-if="showDeleteMessage"></message-com>
-    <evaluation-tab-bar></evaluation-tab-bar>
+    <curriculum-tab-bar></curriculum-tab-bar>
   </view>
 </template>
 
 <script>
-import productListCom from '@/components/evaluation/productList'
-import messageCom from '@/components/evaluation/message'
+import productListCom from '@/components/curriculum/productList'
+import messageCom from '@/components/curriculum/message'
 export default {
   components: { productListCom, messageCom },
   data() {
@@ -56,21 +56,21 @@ export default {
           subtitle:
             "SDK发链接as康复科健康小侄女，明显内存泄漏看是就行了开车是聚类分析开具了科学城举行开具了看",
           price: 19.99,
-          img: "/static/evaluation/index/hot/1.jpg",
+          img: "/static/curriculum/index/hot/1.jpg",
         },
         {
           title: "潜意识测试阿斯蒂芬离开家暗示分离看空间阿斯利康附近",
           subtitle:
             "SDK发链接as康复科健康小侄女，明显内存泄漏看是就行了开车是聚类分析开具了科学城举行开具了看",
           price: 19.99,
-          img: "/static/evaluation/index/hot/1.jpg",
+          img: "/static/curriculum/index/hot/1.jpg",
         },
         {
           title: "潜意识测试阿斯蒂芬离开家暗示分离看空间阿斯利康附近",
           subtitle:
             "SDK发链接as康复科健康小侄女，明显内存泄漏看是就行了开车是聚类分析开具了科学城举行开具了看",
           price: 19.99,
-          img: "/static/evaluation/index/hot/1.jpg",
+          img: "/static/curriculum/index/hot/1.jpg",
         },
         {
           title:
@@ -78,7 +78,7 @@ export default {
           subtitle:
             "SDK发链接as康复科健康小侄女，明显内存泄漏看是就行了开车是聚类分析开具了科学城举行开具了看",
           price: 19.99,
-          img: "/static/evaluation/index/hot/1.jpg",
+          img: "/static/curriculum/index/hot/1.jpg",
         },
       ],
 
@@ -118,7 +118,7 @@ export default {
     },
     toHome() {
       uni.navigateTo({
-        url: "/pages/evaluation/index",
+        url: "/pages/curriculum/index",
       });
     }
   }

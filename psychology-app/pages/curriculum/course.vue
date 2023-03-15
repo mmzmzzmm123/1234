@@ -1,38 +1,35 @@
 <template>
     <view class="report-list">
-        <view class="item" v-for="item in reportList">
+        <view class="item" v-for="item in courseList">
             <view class="title">{{ item.gaugeTitle }}</view>
             <view class="date">完成时间：{{ item.createTime }}</view>
-            <view class="btn" @tap="toResult(item.orderId)">查看报告</view>
+            <view class="btn" @tap="toLearningCourse(item.productId)">{{item.startTime?'继续学习':'进入学习'}}</view>
         </view>
-        <no-data v-if="reportList.length == 0"></no-data>
+        <no-data v-if="courseList.length == 0"></no-data>
         <view class="footer" v-else>已经到底了</view>
-        <evaluation-tab-bar></evaluation-tab-bar>
+        <curriculum-tab-bar></curriculum-tab-bar>
     </view>
 </template>
 <script>
-import noData from '@/components/evaluation/noData'
-import userServer from '@/server/evaluation/user'
-import questionServer from '@/server/evaluation/question'
+import noData from '@/components/curriculum/noData'
+import userServer from '@/server/curriculum/user'
+import courseServer from '@/server/curriculum/course'
 export default {
     components: { noData },
     data() {
         return {
-            reportList: []
+            courseList: []
         }
     },
     async created() {
-        this.reportList = await userServer.getOrderList(1);
+        this.courseList = await userServer.getOrderList(1);
     },
     methods: {
-        async toResult(orderId) {
-            let result = await questionServer.setResult(orderId);
-            if (result.code == 200) {
-                uni.setStorageSync("result", result.data);
-                uni.navigateTo({
-                    url: "/pages/evaluation/result/index?productId=" + this.productId,
-                });
-            }
+        async toLearningCourse(productId) {
+            uni.navigateTo({
+                url: "/pages/curriculum/learningCourse?productId=" + productId,
+            });
+            
         }
     },
 }

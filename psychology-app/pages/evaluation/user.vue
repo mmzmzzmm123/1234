@@ -62,7 +62,7 @@ export default {
           classPic: "/static/evaluation/user/order.png",
           className: "测评订单",
           id: 16,
-          callback: this.toOder
+          callback: this.toOrder
         },
         {
           classPic: "/static/evaluation/user/coupon.png",
@@ -111,7 +111,7 @@ export default {
       if(this.getUserInfo())
       uni.navigateTo({ url: '/pages/evaluation/report' });
     },
-    toOder() {
+    toOrder() {
       if(this.getUserInfo())
       uni.navigateTo({ url: '/pages/evaluation/order' });
     },
