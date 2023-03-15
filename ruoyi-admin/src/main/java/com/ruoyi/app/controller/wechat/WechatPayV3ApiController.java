@@ -1,9 +1,6 @@
 package com.ruoyi.app.controller.wechat;
 
 import com.alibaba.fastjson2.JSONObject;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ObjectNode;
-
 import com.ruoyi.app.controller.wechat.constant.WechatConstants;
 import com.ruoyi.app.controller.wechat.constant.WechatUrlConstants;
 import com.ruoyi.app.controller.wechat.utils.WechatPayV3Utils;
@@ -18,7 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
- 
+
 import javax.servlet.http.HttpServletRequest;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -33,7 +30,7 @@ import java.util.Map;
  * 文档地址 https://pay.weixin.qq.com/wiki/doc/apiv3/apis/chapter3_5_1.shtml
  */
 @RestController
-@RequestMapping("/api/wechatPay/v3")
+@RequestMapping("/app/api/wechatPay/v3")
 public class WechatPayV3ApiController extends BaseController {
  
     protected final Logger logger = LoggerFactory.getLogger(this.getClass());
