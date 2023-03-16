@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.course.mapper.CourCourseLabelMapper">
+    
+    <resultMap type="CourCourseLabel" id="CourCourseLabelResult">
+        <result property="id"    column="id"    />
+        <result property="courseId"    column="course_id"    />
+        <result property="courseLabel"    column="course_label"    />
+    </resultMap>
+
+    <sql id="selectCourCourseLabelVo">
+        select id, course_id, course_label from cour_course_label
+    </sql>
+
+    <select id="selectCourCourseLabelList" parameterType="CourCourseLabel" resultMap="CourCourseLabelResult">
+        <include refid="selectCourCourseLabelVo"/>
+        <where>  
+            <if test="courseId != null  and courseId != ''"> and course_id = #{courseId}</if>
+            <if test="courseLabel != null "> and course_label = #{courseLabel}</if>
+        </where>
+    </select>
+    
+    <select id="selectCourCourseLabelById" parameterType="Long" resultMap="CourCourseLabelResult">
+        <include refid="selectCourCourseLabelVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertCourCourseLabel" parameterType="CourCourseLabel" useGeneratedKeys="true" keyProperty="id">
+        insert into cour_course_label
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="courseId != null and courseId != ''">course_id,</if>
+            <if test="courseLabel != null">course_label,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="courseId != null and courseId != ''">#{courseId},</if>
+            <if test="courseLabel != null">#{courseLabel},</if>
+         </trim>
+    </insert>
+
+    <update id="updateCourCourseLabel" parameterType="CourCourseLabel">
+        update cour_course_label
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="courseId != null and courseId != ''">course_id = #{courseId},</if>
+            <if test="courseLabel != null">course_label = #{courseLabel},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteCourCourseLabelById" parameterType="Long">
+        delete from cour_course_label where id = #{id}
+    </delete>
+
+    <delete id="deleteCourCourseLabelByIds" parameterType="String">
+        delete from cour_course_label where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>
