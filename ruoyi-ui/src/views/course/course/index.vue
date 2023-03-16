@@ -35,14 +35,6 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="课程图片" prop="url">
-        <el-input
-          v-model="queryParams.url"
-          placeholder="请输入课程图片"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
       <el-form-item label="课程价格" prop="price">
         <el-input
           v-model="queryParams.price"
@@ -114,7 +106,11 @@
         </template>
       </el-table-column>
       <el-table-column label="课程作者" align="center" prop="author" />
-      <el-table-column label="课程图片" align="center" prop="url" />
+      <el-table-column label="课程图片" align="center" prop="url" width="100">
+        <template slot-scope="scope">
+          <image-preview :src="scope.row.url" :width="50" :height="50"/>
+        </template>
+      </el-table-column>
       <el-table-column label="课程价格" align="center" prop="price" />
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
@@ -135,7 +131,7 @@
         </template>
       </el-table-column>
     </el-table>
-    
+
     <pagination
       v-show="total>0"
       :total="total"
@@ -166,8 +162,8 @@
         <el-form-item label="课程作者" prop="author">
           <el-input v-model="form.author" placeholder="请输入课程作者" />
         </el-form-item>
-        <el-form-item label="课程图片" prop="url">
-          <el-input v-model="form.url" placeholder="请输入课程图片" />
+        <el-form-item label="课程图片">
+          <image-upload v-model="form.url"/>
         </el-form-item>
         <el-form-item label="课程价格" prop="price">
           <el-input v-model="form.price" placeholder="请输入课程价格" />
