@@ -24,7 +24,7 @@ public class AppCourSectionController extends BaseController
      * 查询课程章节列表
      */
 //    @PreAuthorize("@ss.hasPermi('course:section:list')")
-    @GetMapping("/list")
+    @PostMapping("/list")
     @ApiOperation("查询课程章节列表")
     public TableDataInfo list(CourSection courSection)
     {
