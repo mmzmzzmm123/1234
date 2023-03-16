@@ -10,6 +10,7 @@ import com.ruoyi.course.service.ICourUserCourseSectionService;
 import com.ruoyi.course.vo.CourseVO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -56,14 +57,7 @@ public class AppCourUserSectionController extends BaseController {
             boolean hasUnFinished = courCourseService.calCourCourseList(courCourse.getCourseId());
 
             CourseVO courseVO = new CourseVO();
-            courseVO.setId(courCourse.getId());
-            courseVO.setCourseId(courCourse.getCourseId());
-            courseVO.setName(courCourse.getName());
-            courseVO.setType(courCourse.getType());
-            courseVO.setAuthor(courCourse.getAuthor());
-            courseVO.setUrl(courCourse.getUrl());
-            courseVO.setPrice(courCourse.getPrice());
-            courseVO.setDetail(courCourse.getDetail());
+            BeanUtils.copyProperties(courCourse, courseVO);
             courseVO.setFinishStatus(hasUnFinished ? 0 : 1);
 
             courseVOList.add(courseVO);
