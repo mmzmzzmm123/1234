@@ -1,14 +1,6 @@
 <template>
   <div class="app-container">
     <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch" label-width="68px">
-      <el-form-item label="banner图片地址" prop="bannerUrl">
-        <el-input
-          v-model="queryParams.bannerUrl"
-          placeholder="请输入banner图片地址"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
       <el-form-item label="跳转url" prop="linkUrl">
         <el-input
           v-model="queryParams.linkUrl"
@@ -82,7 +74,11 @@
     <el-table v-loading="loading" :data="configList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
       <el-table-column label="ID" align="center" prop="id" />
-      <el-table-column label="banner图片地址" align="center" prop="bannerUrl" />
+      <el-table-column label="banner图片地址" align="center" prop="bannerUrl" width="100">
+        <template slot-scope="scope">
+          <image-preview :src="scope.row.bannerUrl" :width="50" :height="50"/>
+        </template>
+      </el-table-column>
       <el-table-column label="跳转url" align="center" prop="linkUrl" />
       <el-table-column label="banner分类" align="center" prop="bannerType">
         <template slot-scope="scope">
@@ -120,8 +116,8 @@
     <!-- 添加或修改课程banner配置对话框 -->
     <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
-        <el-form-item label="banner图片地址" prop="bannerUrl">
-          <el-input v-model="form.bannerUrl" placeholder="请输入banner图片地址" />
+        <el-form-item label="banner图片地址">
+          <image-upload v-model="form.bannerUrl"/>
         </el-form-item>
         <el-form-item label="跳转url" prop="linkUrl">
           <el-input v-model="form.linkUrl" placeholder="请输入跳转url" />
