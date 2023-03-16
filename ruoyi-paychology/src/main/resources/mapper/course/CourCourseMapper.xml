@@ -40,6 +40,14 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <include refid="selectCourCourseVo"/>
         where id = #{id}
     </select>
+
+    <select id="selectCourCourseByType" parameterType="CourCourse" resultMap="CourCourseResult">
+        <include refid="selectCourCourseVo"/>
+        <where>
+            <if test="type != null ">  type = #{typeId}</if>
+        </where>
+    </select>
+
         
     <insert id="insertCourCourse" parameterType="CourCourse" useGeneratedKeys="true" keyProperty="id">
         insert into cour_course
