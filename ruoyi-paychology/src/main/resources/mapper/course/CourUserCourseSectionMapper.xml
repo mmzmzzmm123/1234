@@ -13,6 +13,17 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="finishStatus"    column="finish_status"    />
     </resultMap>
 
+    <resultMap type="CourCourse" id="CourCourseResult">
+        <result property="id"    column="id"    />
+        <result property="courseId"    column="course_id"    />
+        <result property="name"    column="name"    />
+        <result property="type"    column="type"    />
+        <result property="author"    column="author"    />
+        <result property="url"    column="url"    />
+        <result property="price"    column="price"    />
+        <result property="detail"    column="detail"    />
+    </resultMap>
+
     <sql id="selectCourUserCourseSectionVo">
         select id, user_id, course_id, section_id, end_time, finish_status from cour_user_course_section
     </sql>
@@ -31,6 +42,19 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <select id="selectCourUserCourseSectionById" parameterType="Long" resultMap="CourUserCourseSectionResult">
         <include refid="selectCourUserCourseSectionVo"/>
         where id = #{id}
+    </select>
+
+    <select id="getCourseListByUserId" parameterType="CourUserCourseSection" resultMap="CourCourseResult">
+        select c.id, c.course_id, c.name, c.type, c.author, c.url, c.price, c.detail
+        from cour_course c
+        where c.course_id in (
+            select cucs.course_id
+            from cour_user_course_section cucs
+            <where>
+                <if test="userId != null  and userId != ''"> and user_id = #{userId}</if>
+            </where>
+        )
+
     </select>
         
     <insert id="insertCourUserCourseSection" parameterType="CourUserCourseSection" useGeneratedKeys="true" keyProperty="id">

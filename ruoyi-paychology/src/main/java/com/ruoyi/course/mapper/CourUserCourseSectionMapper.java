@@ -1,6 +1,8 @@
 package com.ruoyi.course.mapper;
 
 import java.util.List;
+
+import com.ruoyi.course.domain.CourCourse;
 import com.ruoyi.course.domain.CourUserCourseSection;
 
 /**
@@ -26,6 +28,14 @@ public interface CourUserCourseSectionMapper
      * @return 用户-课程-章节关系集合
      */
     public List<CourUserCourseSection> selectCourUserCourseSectionList(CourUserCourseSection courUserCourseSection);
+
+    /**
+     * 根据用户查询课程列表
+     *
+     * @param courUserCourseSection 用户-课程-章节关系
+     * @return 课程集合
+     */
+    public List<CourCourse> getCourseListByUserId(CourUserCourseSection courUserCourseSection);
 
     /**
      * 新增用户-课程-章节关系

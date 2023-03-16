@@ -59,4 +59,5 @@ public interface ICourSectionService
      * @return 结果
      */
     public int deleteCourSectionById(Long id);
+
 }

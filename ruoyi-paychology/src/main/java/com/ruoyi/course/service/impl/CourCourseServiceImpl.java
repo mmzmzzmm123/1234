@@ -3,8 +3,13 @@ package com.ruoyi.course.service.impl;
 import java.util.List;
 import com.ruoyi.common.utils.DateUtils;
 import com.ruoyi.course.domain.CourCourse;
+import com.ruoyi.course.domain.CourSection;
+import com.ruoyi.course.domain.CourUserCourseSection;
 import com.ruoyi.course.mapper.CourCourseMapper;
 import com.ruoyi.course.service.ICourCourseService;
+import com.ruoyi.course.service.ICourSectionService;
+import com.ruoyi.course.service.ICourUserCourseSectionService;
+import com.ruoyi.course.vo.CourseVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -19,6 +24,12 @@ public class CourCourseServiceImpl implements ICourCourseService
 {
     @Autowired
     private CourCourseMapper courCourseMapper;
+
+    @Autowired
+    private ICourSectionService courSectionService;
+
+    @Autowired
+    private ICourUserCourseSectionService courUserCourseSectionService;
 
     /**
      * 查询课程
@@ -92,5 +103,20 @@ public class CourCourseServiceImpl implements ICourCourseService
     public int deleteCourCourseById(Long id)
     {
         return courCourseMapper.deleteCourCourseById(id);
+    }
+
+    /**
+     * 根据课程的章节判断课程是否完成
+     *
+     * @param courseId 课程编号
+     * @return 课程信息
+     */
+    public boolean calCourCourseList(String courseId) {
+        CourUserCourseSection courUserCourseSection = new CourUserCourseSection();
+        courUserCourseSection.setCourseId(courseId);
+        List<CourUserCourseSection> courUserCourseSectionList =
+                courUserCourseSectionService.selectCourUserCourseSectionList(courUserCourseSection);
+
+        return courUserCourseSectionList.stream().anyMatch(item -> item.getFinishStatus() == 0);
     }
 }

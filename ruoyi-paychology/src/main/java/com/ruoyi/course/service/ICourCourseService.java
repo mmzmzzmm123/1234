@@ -1,6 +1,7 @@
 package com.ruoyi.course.service;
 
 import com.ruoyi.course.domain.CourCourse;
+import com.ruoyi.course.vo.CourseVO;
 
 import java.util.List;
 
@@ -27,6 +28,14 @@ public interface ICourCourseService
      * @return 课程集合
      */
     public List<CourCourse> selectCourCourseList(CourCourse courCourse);
+
+    /**
+     * 根据课程的章节计算课程信息
+     *
+     * @param courseId 课程编号
+     * @return 课程信息
+     */
+    public boolean calCourCourseList(String courseId);
 
     /**
      * 新增课程

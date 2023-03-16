@@ -1,6 +1,8 @@
 package com.ruoyi.course.service.impl;
 
 import java.util.List;
+
+import com.ruoyi.course.domain.CourCourse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.ruoyi.course.mapper.CourUserCourseSectionMapper;
@@ -41,6 +43,17 @@ public class CourUserCourseSectionServiceImpl implements ICourUserCourseSectionS
     public List<CourUserCourseSection> selectCourUserCourseSectionList(CourUserCourseSection courUserCourseSection)
     {
         return courUserCourseSectionMapper.selectCourUserCourseSectionList(courUserCourseSection);
+    }
+
+    /**
+     * 根据用户查询课程列表
+     *
+     * @param courUserCourseSection 用户-课程-章节关系
+     * @return 课程集合
+     */
+    public List<CourCourse> getCourseListByUserId(CourUserCourseSection courUserCourseSection)
+    {
+        return courUserCourseSectionMapper.getCourseListByUserId(courUserCourseSection);
     }
 
     /**
