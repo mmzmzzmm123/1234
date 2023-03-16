@@ -21,6 +21,14 @@ public interface CourCourseMapper
     public CourCourse selectCourCourseById(Long id);
 
     /**
+     * 课程分类查询
+     *
+     * @param typeId 课程主键
+     * @return 课程
+     */
+    public CourCourse selectCourCourseByType(Long typeId);
+
+    /**
      * 查询课程列表
      * 
      * @param courCourse 课程
