@@ -142,7 +142,7 @@
         </template>
       </el-table-column>
     </el-table>
-    
+
     <pagination
       v-show="total>0"
       :total="total"
@@ -176,8 +176,8 @@
         <el-form-item label="章节内容">
           <editor v-model="form.content" :min-height="192"/>
         </el-form-item>
-        <el-form-item label="内容链接" prop="contentUrl">
-          <el-input v-model="form.contentUrl" placeholder="请输入内容链接" />
+        <el-form-item label="内容链接">
+          <file-upload v-model="form.contentUrl" :fileType="['mp4', 'avi']" :fileSize="100"/>
         </el-form-item>
         <el-form-item label="课程编号" prop="courseid">
           <el-input v-model="form.courseid" placeholder="请输入课程编号" />
@@ -250,6 +250,9 @@ export default {
         ],
         type: [
           { required: true, message: "章节类型不能为空", trigger: "change" }
+        ],
+        contentUrl: [
+          { required: true, message: "内容链接不能为空", trigger: "blur" }
         ],
         courseid: [
           { required: true, message: "课程编号不能为空", trigger: "blur" }
