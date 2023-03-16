@@ -3,7 +3,7 @@ import request from '@/utils/request'
 // 查询课程列表
 export function listCourse(query) {
   return request({
-    url: '/course/course/list',
+    url: '/course/list',
     method: 'get',
     params: query
   })
@@ -12,7 +12,7 @@ export function listCourse(query) {
 // 查询课程详细
 export function getCourse(id) {
   return request({
-    url: '/course/course/' + id,
+    url: '/course/' + id,
     method: 'get'
   })
 }
@@ -20,7 +20,7 @@ export function getCourse(id) {
 // 新增课程
 export function addCourse(data) {
   return request({
-    url: '/course/course',
+    url: '/course',
     method: 'post',
     data: data
   })
@@ -29,7 +29,7 @@ export function addCourse(data) {
 // 修改课程
 export function updateCourse(data) {
   return request({
-    url: '/course/course',
+    url: '/course',
     method: 'put',
     data: data
   })
@@ -38,7 +38,7 @@ export function updateCourse(data) {
 // 删除课程
 export function delCourse(id) {
   return request({
-    url: '/course/course/' + id,
+    url: '/course/' + id,
     method: 'delete'
   })
 }

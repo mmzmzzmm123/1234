@@ -22,7 +22,7 @@ import java.util.List;
  * @date 2023-03-15
  */
 @RestController
-@RequestMapping("/app/course/course")
+@RequestMapping("/app/course")
 @Api(value = "AppCourCourseController" ,tags = {"课程API"})
 public class AppCourCourseController extends BaseController
 {

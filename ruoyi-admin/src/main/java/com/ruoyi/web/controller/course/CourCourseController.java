@@ -29,7 +29,7 @@ import com.ruoyi.common.core.page.TableDataInfo;
  * @date 2023-03-14
  */
 @RestController
-@RequestMapping("/course/course")
+@RequestMapping("/course")
 public class CourCourseController extends BaseController
 {
     @Autowired
