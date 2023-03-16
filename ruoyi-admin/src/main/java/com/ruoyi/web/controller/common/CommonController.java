@@ -98,7 +98,7 @@ public class CommonController
 //            ajax.put("fileName", fileName);
 //            ajax.put("newFileName", FileUtils.getName(fileName));
 //            ajax.put("originalFilename", file.getOriginalFilename());
-            ajax.put("fileName", url);
+            ajax.put("fileName", fileName);
             ajax.put("newFileName", key);
             ajax.put("originalFilename", file.getOriginalFilename());
             return ajax;
