@@ -25,7 +25,7 @@ public class CourOrder extends BaseEntity
 
     /** 订单状态（0-创建 1-完成 2-关闭） */
     @Excel(name = "订单状态", readConverterExp = "0=-创建,1=-完成,2=-关闭")
-    private String status;
+    private Integer status;
 
     /** 用户编号 */
     @Excel(name = "用户编号")
@@ -61,12 +61,12 @@ public class CourOrder extends BaseEntity
     {
         return orderId;
     }
-    public void setStatus(String status) 
+    public void setStatus(Integer status)
     {
         this.status = status;
     }
 
-    public String getStatus() 
+    public Integer getStatus()
     {
         return status;
     }

@@ -5,6 +5,7 @@ import com.ruoyi.common.utils.DateUtils;
 import com.ruoyi.course.domain.CourOrder;
 import com.ruoyi.course.mapper.CourOrderMapper;
 import com.ruoyi.course.service.ICourOrderService;
+import com.ruoyi.course.vo.OrderVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -91,5 +92,16 @@ public class CourOrderServiceImpl implements ICourOrderService
     public int deleteCourOrderById(Long id)
     {
         return courOrderMapper.deleteCourOrderById(id);
+    }
+
+    /**
+     * 根据订单编号查询课程订单详情
+     *
+     * @param orderId 课程订单编号
+     * @return 课程订单详情
+     */
+    @Override
+    public OrderVO getOrderDetailByOrderId(String orderId) {
+        return courOrderMapper.getOrderDetailByOrderId(orderId);
     }
 }

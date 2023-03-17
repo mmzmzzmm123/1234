@@ -1,6 +1,7 @@
 package com.ruoyi.course.service;
 
 import com.ruoyi.course.domain.CourOrder;
+import com.ruoyi.course.vo.OrderVO;
 
 import java.util.List;
 
@@ -59,4 +60,12 @@ public interface ICourOrderService
      * @return 结果
      */
     public int deleteCourOrderById(Long id);
+
+    /**
+     * 根据订单编号查询课程订单详情
+     *
+     * @param orderId 课程订单编号
+     * @return 课程订单详情
+     */
+    OrderVO getOrderDetailByOrderId(String orderId);
 }
