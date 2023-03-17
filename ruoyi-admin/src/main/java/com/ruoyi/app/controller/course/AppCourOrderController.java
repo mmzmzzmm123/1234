@@ -1,66 +1,51 @@
 package com.ruoyi.app.controller.course;
 
 import com.ruoyi.common.core.controller.BaseController;
-import com.ruoyi.common.core.domain.AjaxResult;
+import com.ruoyi.common.core.domain.dto.LoginDTO;
 import com.ruoyi.common.core.page.TableDataInfo;
-import com.ruoyi.common.utils.OrderIdUtils;
-import com.ruoyi.course.domain.CourCourse;
 import com.ruoyi.course.domain.CourOrder;
 import com.ruoyi.course.service.ICourOrderService;
-import com.ruoyi.course.vo.OrderVO;
+import com.ruoyi.framework.web.service.AppTokenService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Date;
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
+/**
+ * 课程订单Controller
+ * 
+ * @author ruoyi
+ * @date 2023-03-14
+ */
 @RestController
 @RequestMapping("/app/course/order")
-@Api(value = "AppCourOrderController" ,tags = {"课程订单API"})
+@Api(value = "AppCourOrderController" ,tags = {"用户课程订单API"})
 public class AppCourOrderController extends BaseController
 {
     @Autowired
     private ICourOrderService courOrderService;
 
+    @Autowired
+    private AppTokenService appTokenService;
+
     /**
      * 查询课程订单列表
      */
-//    @PreAuthorize("@ss.hasPermi('course:course:list')")
-    @PostMapping("/list")
-    @ApiOperation("查询课程订单列表")
-    public TableDataInfo list(@RequestBody CourOrder courOrder)
+
+    @GetMapping("/list")
+    @ApiOperation("查询用户课程订单列表")
+    public TableDataInfo list(CourOrder courOrder)
     {
+//        LoginDTO loginUser = appTokenService.getLoginUser(request);
         startPage();
         List<CourOrder> list = courOrderService.selectCourOrderList(courOrder);
         return getDataTable(list);
     }
 
-    /**
-     * 根据订单编号查询课程订单详情
-     */
-//    @PreAuthorize("@ss.hasPermi('course:course:list')")
-    @PostMapping("/detail")
-    @ApiOperation("根据订单编号查询课程订单详情")
-    public AjaxResult detail(@RequestBody CourOrder courOrder)
-    {
-        OrderVO orderVO = courOrderService.getOrderDetailByOrderId(courOrder.getOrderId());
-        return AjaxResult.success(orderVO);
-    }
 
-    /**
-     * 根据订单信息生成课程订单
-     */
-    @PutMapping("/add")
-    @ApiOperation("根据订单信息生成课程订单")
-    public AjaxResult generateOrder(@RequestBody CourOrder courOrder)
-    {
 
-        courOrder.setOrderId(OrderIdUtils.getOrderId());
-        courOrder.setCreateTime(new Date());
-        courOrder.setStatus(0); // 0代表订单处于创建状态
-        
-        return AjaxResult.success(courOrderService.insertCourOrder(courOrder));
-    }
+
 }
