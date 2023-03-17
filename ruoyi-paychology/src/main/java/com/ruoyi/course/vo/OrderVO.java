@@ -1,6 +1,5 @@
 package com.ruoyi.course.vo;
 
-import com.ruoyi.common.annotation.Excel;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -28,10 +27,6 @@ public class OrderVO {
     /** 应付金额 */
     @ApiModelProperty("应付金额")
     private BigDecimal amount;
-
-    /** 支付ID */
-    @ApiModelProperty("支付ID")
-    private String payId;
 
     /** 课程编号 */
     @ApiModelProperty("课程编号")

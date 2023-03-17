@@ -38,7 +38,7 @@ export function updateOrder(data) {
 // 删除课程订单
 export function delOrder(id) {
   return request({
-    url: '/system/order/' + id,
+    url: '/course/order/' + id,
     method: 'delete'
   })
 }

@@ -10,13 +10,13 @@ import com.ruoyi.common.core.domain.BaseEntity;
  * 课程订单对象 cour_order
  * 
  * @author ruoyi
- * @date 2023-03-14
+ * @date 2023-03-17
  */
 public class CourOrder extends BaseEntity
 {
     private static final long serialVersionUID = 1L;
 
-    /** $column.columnComment */
+    /** ID */
     private Long id;
 
     /** 订单编号 */
@@ -34,10 +34,6 @@ public class CourOrder extends BaseEntity
     /** 应付金额 */
     @Excel(name = "应付金额")
     private BigDecimal amount;
-
-    /** 支付ID */
-    @Excel(name = "支付ID")
-    private String payId;
 
     /** 课程编号 */
     @Excel(name = "课程编号")
@@ -61,12 +57,12 @@ public class CourOrder extends BaseEntity
     {
         return orderId;
     }
-    public void setStatus(Integer status)
+    public void setStatus(Integer status) 
     {
         this.status = status;
     }
 
-    public Integer getStatus()
+    public Integer getStatus() 
     {
         return status;
     }
@@ -88,15 +84,6 @@ public class CourOrder extends BaseEntity
     {
         return amount;
     }
-    public void setPayId(String payId) 
-    {
-        this.payId = payId;
-    }
-
-    public String getPayId() 
-    {
-        return payId;
-    }
     public void setCourseId(String courseId) 
     {
         this.courseId = courseId;
@@ -116,7 +103,6 @@ public class CourOrder extends BaseEntity
             .append("status", getStatus())
             .append("userId", getUserId())
             .append("amount", getAmount())
-            .append("payId", getPayId())
             .append("courseId", getCourseId())
             .toString();
     }
