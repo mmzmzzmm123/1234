@@ -47,4 +47,13 @@ public class AppCourOrderController extends BaseController
         return AjaxResult.success(orderVO);
     }
 
+    /**
+     * 根据订单信息生成课程订单
+     */
+    @PutMapping("/add")
+    @ApiOperation("根据订单信息生成课程订单")
+    public AjaxResult generateOrder(@RequestBody CourOrder courOrder)
+    {
+        return AjaxResult.success(courOrderService.insertCourOrder(courOrder));
+    }
 }

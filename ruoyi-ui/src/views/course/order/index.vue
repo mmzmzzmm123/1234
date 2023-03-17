@@ -35,14 +35,6 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="支付ID" prop="payId">
-        <el-input
-          v-model="queryParams.payId"
-          placeholder="请输入支付ID"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
       <el-form-item label="课程编号" prop="courseId">
         <el-input
           v-model="queryParams.courseId"
@@ -105,7 +97,7 @@
 
     <el-table v-loading="loading" :data="orderList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="Id" align="center" prop="id" />
+      <el-table-column label="ID" align="center" prop="id" />
       <el-table-column label="订单编号" align="center" prop="orderId" />
       <el-table-column label="订单状态" align="center" prop="status">
         <template slot-scope="scope">
@@ -114,7 +106,6 @@
       </el-table-column>
       <el-table-column label="用户编号" align="center" prop="userId" />
       <el-table-column label="应付金额" align="center" prop="amount" />
-      <el-table-column label="支付ID" align="center" prop="payId" />
       <el-table-column label="课程编号" align="center" prop="courseId" />
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
@@ -165,9 +156,6 @@
         <el-form-item label="应付金额" prop="amount">
           <el-input v-model="form.amount" placeholder="请输入应付金额" />
         </el-form-item>
-        <el-form-item label="支付ID" prop="payId">
-          <el-input v-model="form.payId" placeholder="请输入支付ID" />
-        </el-form-item>
         <el-form-item label="课程编号" prop="courseId">
           <el-input v-model="form.courseId" placeholder="请输入课程编号" />
         </el-form-item>
@@ -214,7 +202,6 @@ export default {
         status: null,
         userId: null,
         amount: null,
-        payId: null,
         courseId: null
       },
       // 表单参数
@@ -260,7 +247,6 @@ export default {
         status: 0,
         userId: null,
         amount: null,
-        payId: null,
         courseId: null
       };
       this.resetForm("form");
