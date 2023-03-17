@@ -1,6 +1,7 @@
 package com.ruoyi.gauge.domain;
 
 import java.math.BigDecimal;
+import java.util.Date;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -41,6 +42,10 @@ public class PsyOrderPay extends BaseEntity
     /** 支付ID */
     @Excel(name = "支付ID")
     private String payId;
+
+    /** 支付时间 */
+    @Excel(name = "支付时间")
+    private Date payTime;
 
     public void setId(Long id) 
     {
@@ -87,7 +92,15 @@ public class PsyOrderPay extends BaseEntity
     {
         return payId;
     }
+    public void setPayTime(Date payTime)
+    {
+        this.payTime = payTime;
+    }
 
+    public Date getPayTime()
+    {
+        return payTime;
+    }
     @Override
     public String toString() {
         return new ToStringBuilder(this,ToStringStyle.MULTI_LINE_STYLE)
@@ -96,6 +109,7 @@ public class PsyOrderPay extends BaseEntity
             .append("payStatus", getPayStatus())
             .append("amount", getAmount())
             .append("payId", getPayId())
+            .append("payTime", getPayTime().toString())
             .append("createTime", getCreateTime())
             .append("createBy", getCreateBy())
             .toString();
