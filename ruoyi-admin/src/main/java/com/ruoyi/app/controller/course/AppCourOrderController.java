@@ -3,6 +3,7 @@ package com.ruoyi.app.controller.course;
 import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.core.page.TableDataInfo;
+import com.ruoyi.common.utils.OrderIdUtils;
 import com.ruoyi.course.domain.CourCourse;
 import com.ruoyi.course.domain.CourOrder;
 import com.ruoyi.course.service.ICourOrderService;
@@ -12,6 +13,7 @@ import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Date;
 import java.util.List;
 
 @RestController
@@ -54,6 +56,11 @@ public class AppCourOrderController extends BaseController
     @ApiOperation("根据订单信息生成课程订单")
     public AjaxResult generateOrder(@RequestBody CourOrder courOrder)
     {
+
+        courOrder.setOrderId(OrderIdUtils.getOrderId());
+        courOrder.setCreateTime(new Date());
+        courOrder.setStatus(0); // 0代表订单处于创建状态
+        
         return AjaxResult.success(courOrderService.insertCourOrder(courOrder));
     }
 }

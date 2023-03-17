@@ -11,22 +11,20 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="status"    column="status"    />
         <result property="userId"    column="user_id"    />
         <result property="amount"    column="amount"    />
-        <result property="payId"    column="pay_id"    />
         <result property="courseId"    column="course_id"    />
     </resultMap>
 
     <sql id="selectCourOrderVo">
-        select id, order_id, create_time, status, user_id, amount, pay_id, course_id from cour_order
+        select id, order_id, create_time, status, user_id, amount, course_id from cour_order
     </sql>
 
     <select id="selectCourOrderList" parameterType="CourOrder" resultMap="CourOrderResult">
         <include refid="selectCourOrderVo"/>
         <where>  
             <if test="orderId != null  and orderId != ''"> and order_id = #{orderId}</if>
-            <if test="status != null  and status != ''"> and status = #{status}</if>
+            <if test="status != null "> and status = #{status}</if>
             <if test="userId != null  and userId != ''"> and user_id = #{userId}</if>
             <if test="amount != null "> and amount = #{amount}</if>
-            <if test="payId != null  and payId != ''"> and pay_id = #{payId}</if>
             <if test="courseId != null  and courseId != ''"> and course_id = #{courseId}</if>
         </where>
     </select>
@@ -44,7 +42,6 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="status != null">status,</if>
             <if test="userId != null and userId != ''">user_id,</if>
             <if test="amount != null">amount,</if>
-            <if test="payId != null">pay_id,</if>
             <if test="courseId != null and courseId != ''">course_id,</if>
          </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
@@ -53,7 +50,6 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="status != null">#{status},</if>
             <if test="userId != null and userId != ''">#{userId},</if>
             <if test="amount != null">#{amount},</if>
-            <if test="payId != null">#{payId},</if>
             <if test="courseId != null and courseId != ''">#{courseId},</if>
          </trim>
     </insert>
@@ -66,7 +62,6 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="status != null">status = #{status},</if>
             <if test="userId != null and userId != ''">user_id = #{userId},</if>
             <if test="amount != null">amount = #{amount},</if>
-            <if test="payId != null">pay_id = #{payId},</if>
             <if test="courseId != null and courseId != ''">course_id = #{courseId},</if>
         </trim>
         where id = #{id}
