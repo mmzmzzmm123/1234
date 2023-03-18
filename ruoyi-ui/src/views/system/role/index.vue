@@ -217,7 +217,7 @@
           <el-input v-model="form.roleKey" :disabled="true" />
         </el-form-item>
         <el-form-item label="权限范围">
-          <el-select v-model="form.dataScope" @change="dataScopeSelectChange">
+          <el-select v-model="form.dataScope">
             <el-option
               v-for="item in dataScopeOptions"
               :key="item.value"
@@ -576,7 +576,7 @@ export default {
     /** 提交按钮（数据权限） */
     submitDataScope: function() {
       if (this.form.roleId != undefined) {
-        this.form.deptIds = this.getDeptAllCheckedKeys();
+        this.form.deptIds = this.form.dataScope === '2' ? this.getDeptAllCheckedKeys() : [];
         dataScope(this.form).then(response => {
           this.$modal.msgSuccess("修改成功");
           this.openDataScope = false;
