@@ -189,8 +189,8 @@ public class sendEmailUtils {
 
             // ------------cpi和国债共同计算百分位，由于cpi不太稳定，所以给予的权重较少-------
             try {
-                double CNDebtWeight = 0.7;
-                double CPIWeight = 0.3;
+                double CNDebtWeight = 0.75;
+                double CPIWeight = 0.25;
                 Map<String, Object> mapCPIandCNDebtPOS = calculateCPIandCNDebt(cnDebtMap, mapCNCPI, CNDebtWeight, CPIWeight);
                 String CPIandCNDebtPos = (String) mapCPIandCNDebtPOS.get("CPIandCNDebtPos");
                 Text += "▶综合" + CNDebtWeight + "的国债权重和" + CPIWeight + "的反转cpi权重，现在国债和反转cpi的综合信号值为：" + CPIandCNDebtPos + "\n";
