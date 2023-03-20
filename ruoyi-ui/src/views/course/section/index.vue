@@ -35,9 +35,9 @@
           />
         </el-select>
       </el-form-item>
-      <el-form-item label="课程编号" prop="courseid">
+      <el-form-item label="课程编号" prop="courseId">
         <el-input
-          v-model="queryParams.courseid"
+          v-model="queryParams.courseId"
           placeholder="请输入课程编号"
           clearable
           @keyup.enter.native="handleQuery"
@@ -117,7 +117,7 @@
         </template>
       </el-table-column>
       <el-table-column label="内容链接" align="center" prop="contentUrl" />
-      <el-table-column label="课程编号" align="center" prop="courseid" />
+      <el-table-column label="课程编号" align="center" prop="courseId" />
       <el-table-column label="内容类型" align="center" prop="contentType">
         <template slot-scope="scope">
           <dict-tag :options="dict.type.course_section_content_type" :value="scope.row.contentType"/>
@@ -179,8 +179,8 @@
         <el-form-item label="内容链接">
           <file-upload v-model="form.contentUrl" :fileType="['mp4', 'avi']" :fileSize="100"/>
         </el-form-item>
-        <el-form-item label="课程编号" prop="courseid">
-          <el-input v-model="form.courseid" placeholder="请输入课程编号" />
+        <el-form-item label="课程编号" prop="courseId">
+          <el-input v-model="form.courseId" placeholder="请输入课程编号" />
         </el-form-item>
         <el-form-item label="内容类型" prop="contentType">
           <el-select v-model="form.contentType" placeholder="请选择内容类型">
@@ -235,7 +235,7 @@ export default {
         topic: null,
         duration: null,
         type: null,
-        courseid: null,
+        courseId: null,
         contentType: null
       },
       // 表单参数
@@ -254,7 +254,7 @@ export default {
         contentUrl: [
           { required: true, message: "内容链接不能为空", trigger: "blur" }
         ],
-        courseid: [
+        courseId: [
           { required: true, message: "课程编号不能为空", trigger: "blur" }
         ],
       }
@@ -288,7 +288,7 @@ export default {
         type: null,
         content: null,
         contentUrl: null,
-        courseid: null,
+        courseId: null,
         contentType: null
       };
       this.resetForm("form");

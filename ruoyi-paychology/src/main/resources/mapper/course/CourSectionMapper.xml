@@ -12,12 +12,12 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="type"    column="type"    />
         <result property="content"    column="content"    />
         <result property="contentUrl"    column="content_url"    />
-        <result property="courseid"    column="courseId"    />
+        <result property="courseId"    column="course_id"    />
         <result property="contentType"    column="content_type"    />
     </resultMap>
 
     <sql id="selectCourSectionVo">
-        select id, section_id, topic, duration, type, content, content_url, courseId, content_type from cour_section
+        select id, section_id, topic, duration, type, content, content_url, course_id, content_type from cour_section
     </sql>
 
     <select id="selectCourSectionList" parameterType="CourSection" resultMap="CourSectionResult">
@@ -29,7 +29,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="type != null "> and type = #{type}</if>
             <if test="content != null  and content != ''"> and content = #{content}</if>
             <if test="contentUrl != null  and contentUrl != ''"> and content_url = #{contentUrl}</if>
-            <if test="courseid != null  and courseid != ''"> and courseId = #{courseid}</if>
+            <if test="courseId != null  and courseId != ''"> and course_id = #{courseId}</if>
             <if test="contentType != null "> and content_type = #{contentType}</if>
         </where>
     </select>
@@ -48,7 +48,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="type != null">type,</if>
             <if test="content != null">content,</if>
             <if test="contentUrl != null">content_url,</if>
-            <if test="courseid != null and courseid != ''">courseId,</if>
+            <if test="courseId != null and courseId != ''">course_id,</if>
             <if test="contentType != null">content_type,</if>
          </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
@@ -58,7 +58,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="type != null">#{type},</if>
             <if test="content != null">#{content},</if>
             <if test="contentUrl != null">#{contentUrl},</if>
-            <if test="courseid != null and courseid != ''">#{courseid},</if>
+            <if test="courseId != null and courseId != ''">#{courseId},</if>
             <if test="contentType != null">#{contentType},</if>
          </trim>
     </insert>
@@ -72,7 +72,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="type != null">type = #{type},</if>
             <if test="content != null">content = #{content},</if>
             <if test="contentUrl != null">content_url = #{contentUrl},</if>
-            <if test="courseid != null and courseid != ''">courseId = #{courseid},</if>
+            <if test="courseId != null and courseId != ''">course_id = #{courseId},</if>
             <if test="contentType != null">content_type = #{contentType},</if>
         </trim>
         where id = #{id}

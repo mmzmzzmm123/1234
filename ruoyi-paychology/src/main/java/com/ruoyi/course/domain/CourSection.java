@@ -142,7 +142,7 @@ public class CourSection extends BaseEntity
             .append("type", getType())
             .append("content", getContent())
             .append("contentUrl", getContentUrl())
-            .append("courseid", getCourseId())
+            .append("courseId", getCourseId())
             .append("contentType", getContentType())
             .toString();
     }
