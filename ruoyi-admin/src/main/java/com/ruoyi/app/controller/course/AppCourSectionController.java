@@ -4,6 +4,7 @@ import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.core.page.TableDataInfo;
 import com.ruoyi.course.domain.CourSection;
+import com.ruoyi.course.service.ICourCourseService;
 import com.ruoyi.course.service.ICourSectionService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -20,16 +21,29 @@ public class AppCourSectionController extends BaseController
     @Autowired
     private ICourSectionService courSectionService;
 
+    @Autowired
+    private ICourCourseService courCourseService;
+
     /**
      * 查询课程章节列表
      */
 //    @PreAuthorize("@ss.hasPermi('course:section:list')")
     @PostMapping("/list")
     @ApiOperation("查询课程章节列表")
-    public TableDataInfo list(CourSection courSection)
+    public TableDataInfo list(@RequestBody CourSection courSection)
     {
         startPage();
         List<CourSection> list = courSectionService.selectCourSectionList(courSection);
+
+        // 判断课程是否已经下单支付
+        if (courCourseService.getPaidCourseCount(courSection.getCourseId()) == 0) { // 未下单支付
+            list.forEach(item -> {
+                if (item.getType() == 0) { // 普通课程禁止学习
+                    item.setContentUrl(null);
+                }
+            });
+        };
+
         return getDataTable(list);
     }
 

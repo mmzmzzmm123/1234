@@ -130,4 +130,14 @@ public class CourCourseServiceImpl implements ICourCourseService
 
         return courUserCourseSectionList.stream().anyMatch(item -> item.getFinishStatus() == 0);
     }
+
+    /**
+     * 查询课程是否支付
+     *
+     * @param courseId 课程编号
+     * @return 课程支付数量
+     */
+    public int getPaidCourseCount(String courseId) {
+        return courCourseMapper.getPaidCourseCount(courseId);
+    }
 }

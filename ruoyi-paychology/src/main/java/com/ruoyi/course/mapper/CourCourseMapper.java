@@ -67,4 +67,13 @@ public interface CourCourseMapper
      * @return 结果
      */
     public int deleteCourCourseByIds(Long[] ids);
+
+
+    /**
+     * 查询课程是否支付
+     *
+     * @param courseId 课程编号
+     * @return 课程支付数量
+     */
+    public int getPaidCourseCount(String courseId);
 }

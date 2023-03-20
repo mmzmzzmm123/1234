@@ -107,4 +107,13 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             #{id}
         </foreach>
     </delete>
+
+    <!--   判断课程是否已支付     -->
+    <select id="getPaidCourseCount" parameterType="String" resultType="Integer">
+        select count(co.course_id)
+        from cour_order co
+        left join psy_order_pay pop
+        on co.id = pop.order_id
+        where pay_status = 2 and co.course_id = #{courseId}
+    </select>
 </mapper>
