@@ -44,7 +44,7 @@ public class CourSection extends BaseEntity
 
     /** 课程编号 */
     @Excel(name = "课程编号")
-    private String courseid;
+    private String courseId;
 
     /** 内容类型（0-视频，1-音频） */
     @Excel(name = "内容类型", readConverterExp = "0=-视频，1-音频")
@@ -113,14 +113,14 @@ public class CourSection extends BaseEntity
     {
         return contentUrl;
     }
-    public void setCourseid(String courseid) 
+    public void setCourseId(String courseId)
     {
-        this.courseid = courseid;
+        this.courseId = courseId;
     }
 
-    public String getCourseid() 
+    public String getCourseId()
     {
-        return courseid;
+        return courseId;
     }
     public void setContentType(Long contentType) 
     {
@@ -142,7 +142,7 @@ public class CourSection extends BaseEntity
             .append("type", getType())
             .append("content", getContent())
             .append("contentUrl", getContentUrl())
-            .append("courseid", getCourseid())
+            .append("courseid", getCourseId())
             .append("contentType", getContentType())
             .toString();
     }
