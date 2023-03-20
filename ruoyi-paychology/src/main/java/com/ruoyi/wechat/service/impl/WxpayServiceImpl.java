@@ -6,7 +6,9 @@ import com.ruoyi.common.enums.GaugeStatus;
 import com.ruoyi.common.enums.OrderPayStatus;
 import com.ruoyi.common.enums.OrderStatus;
 import com.ruoyi.common.utils.OrderIdUtils;
+import com.ruoyi.course.service.ICourOrderService;
 import com.ruoyi.gauge.domain.PsyOrder;
+import com.ruoyi.course.domain.CourOrder;
 import com.ruoyi.gauge.domain.PsyOrderPay;
 import com.ruoyi.gauge.service.IPsyOrderPayService;
 import com.ruoyi.gauge.service.IPsyOrderService;
@@ -26,24 +28,35 @@ import java.util.UUID;
 @Slf4j
 public class WxpayServiceImpl implements IWxpayService {
 
+
     @Autowired
     private IPsyOrderService psyOrderService;
 
     @Autowired
     private IPsyOrderPayService psyOrderPayService;
 
+    @Autowired
+    private ICourOrderService courOrderService;
+
     @Override
     public String pay(WxPayDTO wxPayDTO, LoginDTO loginUser) {
 
         String orderId = OrderIdUtils.getOrderId();
+        String serverName = wxPayDTO.getName();
+        int id = 0;
+        if (serverName==null){
+            id = generateOrder(wxPayDTO, loginUser, orderId);
+        }
+        if(serverName.equals("cour")){
 
+            id = generateCourseOrder(wxPayDTO, loginUser, orderId);
+        }
         //生成订单
-        int id = generateOrder(wxPayDTO, loginUser, orderId);
-
-        //生成订单支付信息
+//        //生成订单支付信息
         generatePay(wxPayDTO, loginUser, id);
 
-        return orderId;
+        return String.valueOf(id);
+
     }
 
     private void generatePay(WxPayDTO wxPayDTO, LoginDTO loginUser, int id) {
@@ -67,6 +80,19 @@ public class WxpayServiceImpl implements IWxpayService {
                 .build();
         psyOrder.setCreateBy(loginUser.getUserId());
         int id = psyOrderService.insertPsyOrder(psyOrder);
+        return id;
+    }
+
+    // 增加课程订单
+    private int generateCourseOrder(WxPayDTO wxPayDTO, LoginDTO loginUser, String orderId){
+        CourOrder courOrder = CourOrder.builder()
+                .orderId(orderId)
+                .amount(wxPayDTO.getAmount())
+                .status(OrderStatus.CREATE.getValue())
+                .courseId(String.valueOf(wxPayDTO.getGaugeId()))
+                .build();
+        courOrder.setUserId(loginUser.getUserId());
+        int id = courOrderService.insertCourOrder(courOrder);
         return id;
     }
 

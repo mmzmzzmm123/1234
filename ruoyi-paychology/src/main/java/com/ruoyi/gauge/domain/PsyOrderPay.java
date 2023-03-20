@@ -47,6 +47,10 @@ public class PsyOrderPay extends BaseEntity
     @Excel(name = "支付时间")
     private Date payTime;
 
+    /** 支付方式 */
+    @Excel(name = "支付方式")
+    private int payType;
+
     public void setId(Long id) 
     {
         this.id = id;
@@ -101,6 +105,8 @@ public class PsyOrderPay extends BaseEntity
     {
         return payTime;
     }
+
+    public int getPayType(){return payType;}
     @Override
     public String toString() {
         return new ToStringBuilder(this,ToStringStyle.MULTI_LINE_STYLE)
@@ -112,6 +118,7 @@ public class PsyOrderPay extends BaseEntity
             .append("payTime", getPayTime().toString())
             .append("createTime", getCreateTime())
             .append("createBy", getCreateBy())
+            .append("payType", getPayType())
             .toString();
     }
 }

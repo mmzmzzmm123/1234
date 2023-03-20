@@ -1,6 +1,10 @@
 package com.ruoyi.course.domain;
 
 import java.math.BigDecimal;
+
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.NoArgsConstructor;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import com.ruoyi.common.annotation.Excel;
@@ -12,6 +16,9 @@ import com.ruoyi.common.core.domain.BaseEntity;
  * @author ruoyi
  * @date 2023-03-17
  */
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class CourOrder extends BaseEntity
 {
     private static final long serialVersionUID = 1L;
@@ -75,6 +82,8 @@ public class CourOrder extends BaseEntity
     {
         return userId;
     }
+
+
     public void setAmount(BigDecimal amount) 
     {
         this.amount = amount;

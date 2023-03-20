@@ -21,4 +21,8 @@ public class WxPayDTO {
     @ApiModelProperty("支付金额")
     private BigDecimal amount;
 
+    @ApiModelProperty("模块")
+    private String name;
+
+
 }
