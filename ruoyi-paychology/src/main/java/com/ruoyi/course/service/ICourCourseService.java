@@ -7,15 +7,15 @@ import java.util.List;
 
 /**
  * 课程Service接口
- * 
+ *
  * @author ruoyi
  * @date 2023-03-14
  */
-public interface ICourCourseService 
+public interface ICourCourseService
 {
     /**
      * 查询课程
-     * 
+     *
      * @param id 课程主键
      * @return 课程
      */
@@ -31,7 +31,7 @@ public interface ICourCourseService
 
     /**
      * 查询课程列表
-     * 
+     *
      * @param courCourse 课程
      * @return 课程集合
      */

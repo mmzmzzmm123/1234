@@ -60,7 +60,7 @@ public class AppCourOrderController extends BaseController
         courOrder.setOrderId(OrderIdUtils.getOrderId());
         courOrder.setCreateTime(new Date());
         courOrder.setStatus(0); // 0代表订单处于创建状态
-        
+
         return AjaxResult.success(courOrderService.insertCourOrder(courOrder));
     }
 }
