@@ -46,6 +46,13 @@ public interface IPsyOrderService
     public int updatePsyOrder(PsyOrder psyOrder);
 
     /**
+     * 修改心理测评订单信息  by  orderId
+     *
+     * @param psyOrder 心理测评订单信息
+     * @return 结果
+     */
+    public int updatePsyOrderByOrderId(PsyOrder psyOrder);
+    /**
      * 批量删除心理测评订单信息
      * 
      * @param ids 需要删除的心理测评订单信息主键集合

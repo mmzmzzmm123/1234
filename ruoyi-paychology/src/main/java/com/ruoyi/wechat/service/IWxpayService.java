@@ -16,6 +16,8 @@ public interface IWxpayService {
      */
     String pay(WxPayDTO wxPayDTO , LoginDTO loginUser);
 
+    String payCallBack(WxPayDTO wxPayDTO , LoginDTO loginUser);
+
 
 
 

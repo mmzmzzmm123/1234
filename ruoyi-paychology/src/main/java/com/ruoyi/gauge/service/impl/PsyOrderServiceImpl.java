@@ -67,7 +67,16 @@ public class PsyOrderServiceImpl implements IPsyOrderService {
     public int updatePsyOrder(PsyOrder psyOrder) {
         return psyOrderMapper.updatePsyOrder(psyOrder);
     }
-
+    /**
+     * 修改心理测评订单信息  by  orderId
+     *
+     * @param psyOrder 心理测评订单信息
+     * @return 结果
+     */
+    @Override
+    public int updatePsyOrderByOrderId(PsyOrder psyOrder){
+        return psyOrderMapper.updatePsyOrderByOrder(psyOrder);
+    }
     /**
      * 批量删除心理测评订单信息
      *

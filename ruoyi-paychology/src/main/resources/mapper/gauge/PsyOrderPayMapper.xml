@@ -71,6 +71,14 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         where id = #{id}
     </update>
 
+    <update id="updatePsyOrderPayByOrderId" parameterType="com.ruoyi.gauge.domain.PsyOrderPay">
+        update psy_order_pay
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="payStatus != null">pay_status = #{payStatus},</if>
+        </trim>
+        where order_id = #{orderId}
+    </update>
+
     <delete id="deletePsyOrderPayById" parameterType="Long">
         delete from psy_order_pay where id = #{id}
     </delete>

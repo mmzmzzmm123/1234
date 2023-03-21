@@ -46,6 +46,8 @@ public interface PsyOrderMapper
      */
     public int updatePsyOrder(PsyOrder psyOrder);
 
+    public int updatePsyOrderByOrder(PsyOrder psyOrder);
+
     /**
      * 删除心理测评订单信息
      * 

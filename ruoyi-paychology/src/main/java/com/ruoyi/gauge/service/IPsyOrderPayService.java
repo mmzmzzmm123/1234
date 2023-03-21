@@ -44,6 +44,13 @@ public interface IPsyOrderPayService
     public int updatePsyOrderPay(PsyOrderPay psyOrderPay);
 
     /**
+     * 修改订单支付信息 by  orderId
+     *
+     * @param psyOrderPay 心理咨询订单支付信息
+     * @return 结果
+     */
+    public int updatePsyOrderPayByOrderId(PsyOrderPay psyOrderPay);
+    /**
      * 批量删除心理咨询订单支付信息
      * 
      * @param ids 需要删除的心理咨询订单支付信息主键集合

@@ -44,5 +44,12 @@ public class WxPayController {
         return AjaxResult.success(RespMessageConstants.OPERATION_SUCCESS ,wxpayService.pay(wxPayDTO ,loginUser));
     }
 
+    @ApiOperation(value = "微信支付回调")
+    @PostMapping("callback")
+    public AjaxResult payCallBack(@RequestBody WxPayDTO wxPayDTO , HttpServletRequest request){
+        LoginDTO loginUser = AppTokenService.getInstance().getLoginUser(request);
+        return AjaxResult.success(RespMessageConstants.OPERATION_SUCCESS ,wxpayService.payCallBack(wxPayDTO ,loginUser));
+    }
+
 
 }

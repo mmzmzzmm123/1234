@@ -64,7 +64,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="amount != null">amount = #{amount},</if>
             <if test="courseId != null and courseId != ''">course_id = #{courseId},</if>
         </trim>
-        where id = #{id}
+        <trim prefix="where" prefixOverrides="and">
+            <if test="id != null">and id = #{id}</if>
+            <if test="orderId != null">and order_id = #{orderId}</if>
+        </trim>
     </update>
 
     <delete id="deleteCourOrderById" parameterType="Long">
