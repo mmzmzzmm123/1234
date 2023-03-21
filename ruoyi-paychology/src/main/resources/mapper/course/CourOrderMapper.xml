@@ -23,12 +23,12 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <where>  
             <if test="orderId != null  and orderId != ''"> and order_id = #{orderId}</if>
             <if test="status != null "> and status = #{status}</if>
-            <if test="userId != null  and userId != ''"> and user_id = #{userId}</if>
+            <if test="userId != null  and userId != '' "> and user_id = #{userId}</if>
             <if test="amount != null "> and amount = #{amount}</if>
             <if test="courseId != null  and courseId != ''"> and course_id = #{courseId}</if>
         </where>
     </select>
-    
+
     <select id="selectCourOrderById" parameterType="Long" resultMap="CourOrderResult">
         <include refid="selectCourOrderVo"/>
         where id = #{id}

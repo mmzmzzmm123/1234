@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
 import javax.servlet.http.HttpServletRequest;
 
 /**
@@ -43,7 +42,6 @@ public class WxPayController {
     public AjaxResult pay(@RequestBody WxPayDTO wxPayDTO , HttpServletRequest request){
         LoginDTO loginUser = AppTokenService.getInstance().getLoginUser(request);
         return AjaxResult.success(RespMessageConstants.OPERATION_SUCCESS ,wxpayService.pay(wxPayDTO ,loginUser));
-
     }
 
 

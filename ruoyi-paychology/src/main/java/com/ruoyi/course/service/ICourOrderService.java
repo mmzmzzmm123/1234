@@ -1,5 +1,6 @@
 package com.ruoyi.course.service;
 
+import com.ruoyi.common.core.domain.dto.LoginDTO;
 import com.ruoyi.course.domain.CourOrder;
 import com.ruoyi.course.vo.OrderVO;
 
@@ -62,10 +63,23 @@ public interface ICourOrderService
     public int deleteCourOrderById(Long id);
 
     /**
+     * c查询用户是否购买该课程
+     *
+     * @param id 课程订单主键
+     * @return 结果
+     */
+    public List<CourOrder> selectCourOrderByUser(String id, LoginDTO loginUser);
+
+
+
+
+    /**
      * 根据订单编号查询课程订单详情
      *
      * @param orderId 课程订单编号
      * @return 课程订单详情
      */
     OrderVO getOrderDetailByOrderId(String orderId);
+
+
 }

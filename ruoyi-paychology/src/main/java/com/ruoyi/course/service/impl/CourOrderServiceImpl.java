@@ -1,11 +1,16 @@
 package com.ruoyi.course.service.impl;
 
 import java.util.List;
+import java.util.UUID;
+
+import com.ruoyi.common.core.domain.dto.LoginDTO;
+import com.ruoyi.common.enums.OrderPayStatus;
 import com.ruoyi.common.utils.DateUtils;
 import com.ruoyi.course.domain.CourOrder;
 import com.ruoyi.course.mapper.CourOrderMapper;
 import com.ruoyi.course.service.ICourOrderService;
 import com.ruoyi.course.vo.OrderVO;
+import com.ruoyi.gauge.domain.PsyOrderPay;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.ruoyi.course.mapper.CourOrderMapper;
@@ -95,6 +100,32 @@ public class CourOrderServiceImpl implements ICourOrderService
     public int deleteCourOrderById(Long id)
     {
         return courOrderMapper.deleteCourOrderById(id);
+    }
+
+    /**
+     * 查询用户是否购买课程
+     *
+     * @param id 课程订单主键
+     * @return 结果
+     */
+    @Override
+    public List<CourOrder> selectCourOrderByUser(String id , LoginDTO loginUser){
+
+        String userId = "";
+        if (loginUser != null){
+            userId = loginUser.getUserId();
+        }
+
+        CourOrder courOrder = CourOrder.builder()
+                .courseId(id)
+                .userId(userId)
+                .build();
+        List<CourOrder> list = courOrderMapper.selectCourOrderList(courOrder);
+        if (loginUser == null){
+            list.clear();
+        }
+        return list;
+
     }
 
     /**

@@ -6,6 +6,7 @@ import lombok.Data;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.List;
 
 @Data
 @ApiModel("课程")
@@ -50,4 +51,10 @@ public class CourseVO implements Serializable {
     /** 课程学习人数 */
     @ApiModelProperty("课程学习人数")
     private Integer studyNum;
+
+    @ApiModelProperty("是否购买")
+    private Integer isBuy;
+
+    @ApiModelProperty("章节列表")
+    private List sectionList;
 }

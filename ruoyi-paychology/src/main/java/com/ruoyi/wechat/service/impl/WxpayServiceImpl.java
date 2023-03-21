@@ -79,6 +79,7 @@ public class WxpayServiceImpl implements IWxpayService {
                 .gaugeId(wxPayDTO.getGaugeId())
                 .build();
         psyOrder.setCreateBy(loginUser.getUserId());
+
         int id = psyOrderService.insertPsyOrder(psyOrder);
         return id;
     }
@@ -95,6 +96,7 @@ public class WxpayServiceImpl implements IWxpayService {
         int id = courOrderService.insertCourOrder(courOrder);
         return id;
     }
+
 
 
 }
