@@ -91,7 +91,12 @@ public class WxpayServiceImpl implements IWxpayService {
         psyOrderPayService.insertPsyOrderPay(psyOrderPay);
     }
 
-    // 支付回调，修改支付状态
+    /**
+     *
+     * 支付回调，修改支付状态
+     * @param loginUser
+     * @param id
+     */
     private void  generatePayUpdate(WxPayDTO wxPayDTO, LoginDTO loginUser, int id){
         PsyOrderPay psyOrderPay = PsyOrderPay.builder()
                 .orderId(Long.valueOf(wxPayDTO.getOrderId()))
@@ -116,7 +121,13 @@ public class WxpayServiceImpl implements IWxpayService {
         return id;
     }
 
-    // 修改测评订单信息
+    /**
+     *
+     * 修改测评订单信息
+     * @param loginUser
+     * @param orderId
+     * @return
+     */
     private int generateOrderUpdate(WxPayDTO wxPayDTO, LoginDTO loginUser, String orderId){
         PsyOrder psyOrder = PsyOrder.builder()
                 .orderId(String.valueOf(wxPayDTO.getOrderId()))
@@ -127,7 +138,13 @@ public class WxpayServiceImpl implements IWxpayService {
 
     }
 
-    // 增加课程订单
+    /***
+     *
+     *  增加课程订单
+     * @param loginUser
+     * @param orderId
+     * @return
+     */
     private int generateCourseOrder(WxPayDTO wxPayDTO, LoginDTO loginUser, String orderId){
         CourOrder courOrder = CourOrder.builder()
                 .orderId(orderId)
@@ -140,7 +157,13 @@ public class WxpayServiceImpl implements IWxpayService {
         return id;
     }
 
-    // 修改课程订单状态
+    /**
+     *
+     * 修改课程订单状态
+     * @param loginUser
+     * @param orderId
+     * @return
+     */
     private int generateCourseOrderUpdate(WxPayDTO wxPayDTO, LoginDTO loginUser, String orderId){
         CourOrder courOrder = CourOrder.builder()
                 .orderId(orderId)
