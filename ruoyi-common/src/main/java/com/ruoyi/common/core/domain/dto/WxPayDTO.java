@@ -25,7 +25,7 @@ public class WxPayDTO {
     private String name;
 
     @ApiModelProperty("支付状态")
-    private String status;
+    private int status;
 
     @ApiModelProperty("订单id")
     private String orderId;

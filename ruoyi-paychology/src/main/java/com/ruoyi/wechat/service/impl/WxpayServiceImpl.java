@@ -94,7 +94,7 @@ public class WxpayServiceImpl implements IWxpayService {
     // 支付回调，修改支付状态
     private void  generatePayUpdate(WxPayDTO wxPayDTO, LoginDTO loginUser, int id){
         PsyOrderPay psyOrderPay = PsyOrderPay.builder()
-                .orderId(wxPayDTO.getOrderId())
+                .orderId(Long.valueOf(wxPayDTO.getOrderId()))
                 .payStatus(wxPayDTO.getStatus())
                 .build();
         psyOrderPay.setCreateBy(loginUser.getUserId());
@@ -119,7 +119,7 @@ public class WxpayServiceImpl implements IWxpayService {
     // 修改测评订单信息
     private int generateOrderUpdate(WxPayDTO wxPayDTO, LoginDTO loginUser, String orderId){
         PsyOrder psyOrder = PsyOrder.builder()
-                .orderId(wxPayDTO.getOrderId())
+                .orderId(String.valueOf(wxPayDTO.getOrderId()))
                 .orderStatus(wxPayDTO.getStatus())
                 .build();
         int id = psyOrderService.updatePsyOrder(psyOrder);
