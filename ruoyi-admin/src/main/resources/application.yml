@@ -164,3 +164,17 @@ cos:
   secretKey: sXHo43lDQN7amjPE0dBpHWWIsDJAsMba
   appId: 1316267898
   bucket: ssg-1316267898
+
+# 正式
+#wx:
+#  login:
+#    appId: wx81f97b38440a3b86
+#    appSecret: f259b9c0951de86bcfda3e482e7b3c45
+#    redirectUri: http://127.0.0.1:8089/pages/logincallback
+
+#开发
+wx:
+  login:
+    appId: wx8604d98104f67e66
+    appSecret: 98dca366602a0806da390ed138e4a7ea
+    redirectUri: http://192.168.137.215:8080/pages/logincallback
