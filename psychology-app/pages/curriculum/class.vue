@@ -6,29 +6,29 @@
     </view>
     <view class="class-box">
       <view class="left-class-view">
-        <view v-for="productClass in classList" v-bind:key="productClass.id">
+        <view v-for="courseClass in classList" v-bind:key="courseClass.id">
           <view class="left-class" :class="
-            classSelectedIndex === productClass.id ? 'selected' : ''
-          " @tap="productClassSelected(productClass)">{{ productClass.name }}</view>
+            classSelectedIndex === courseClass.typeId ? 'selected' : ''
+          " @tap="courseClassSelected(courseClass)">{{ courseClass.name }}</view>
         </view>
       </view>
       <view class="item-list">
         <view class="current-class">{{ className }}</view>
-        <view class="product-item" v-show="productList.length > 0" v-for="product in (productList || [])"
-          @tap="toProduct(product.id)">
+        <view class="course-item" v-show="courseList.length > 0" v-for="course in (courseList || [])"
+          @tap="tocourse(course.courseId)">
           <view class="txt-box">
             <view class="title txt-overflow txt-overflow-line2">{{
-                product.title
+                course.name
             }}</view>
-            <view class="sub-title txt-overflow">{{ product.subtitle }}</view>
-            <view class="price"><span class="icon">￥</span>{{ product.price }}</view>
+            <view class="sub-title txt-overflow">{{ course.author  }}</view>
+            <view class="price"><span class="icon">￥</span>{{ course.price }}</view>
           </view>
           <view class="img-box">
-            <img :src="product.listShowPicture" />
+            <img :src="course.url" />
           </view>
         </view>
-        <view class="footer" v-show="productList.length > 0">已经到底了</view>
-        <view v-show="productList.length == 0" class="no-data">
+        <view class="footer" v-show="courseList.length > 0">已经到底了</view>
+        <view v-show="courseList.length == 0" class="no-data">
           <img class="img" src="/static/nothing/search-nothing.png" />
         </view>
       </view>
@@ -38,22 +38,22 @@
 </template>
 
 <script>
-import productListCom from '@/components/curriculum/productList'
+import courseListCom from '@/components/curriculum/courseList'
 import classServer from '@/server/curriculum/class'
 export default {
-  components: { productListCom },
+  components: { courseListCom },
   data() {
     return {
       searchValue: '',
       classSelectedIndex: null,
       className: '全部',
       classList: [],
-      productList: []
+      courseList: []
     };
   },
   async created() {
-    this.classList = [...[{ name: '全部', id: null }], ...await classServer.getClassList()];
-    this.productList = await classServer.getProductByClassId(this.classSelectedIndex);
+    this.classList = [...[{ name: '全部', typeId: null }], ...await classServer.getClassList()];
+    this.courseList = await classServer.getcourseByClassId(this.classSelectedIndex);
   },
   methods: {
     toSearch() {
@@ -61,14 +61,14 @@ export default {
         url: "/pages/curriculum/search",
       });
     },
-    async productClassSelected(currentClass) {
-      this.classSelectedIndex = currentClass.id;
+    async courseClassSelected(currentClass) {
+      this.classSelectedIndex = currentClass.typeId;
       this.className = currentClass.name;
-      this.productList = await classServer.getProductByClassId(this.classSelectedIndex);
+      this.courseList = await classServer.getcourseByClassId(this.classSelectedIndex);
     },
-    toProduct(id) {
+    tocourse(courseId) {
       uni.navigateTo({
-        url: "/pages/curriculum/product/index?id=" + id,
+        url: "/pages/curriculum/course?id=" + courseId,
       });
     },
   },
@@ -170,7 +170,7 @@ page {
   }
 
 
-  .product-item {
+  .course-item {
     display: flex;
     flex-direction: row;
     width: calc(100% -48upx);

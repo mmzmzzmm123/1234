@@ -32,7 +32,7 @@
             <image
               class="lock-img"
               v-if="!courseItem.enabled"
-              src="/static/curriculum/product/lock-white.png"
+              src="/static/curriculum/course/lock-white.png"
             ></image>
           </span>
           <span class="time-txt">{{
@@ -65,13 +65,14 @@
     <cartTabBar @cartShow="cartShow"></cartTabBar>
     <cartBox
       @closeCart="cartShow"
-      v-if="cartBoxShow"
-      :productInfo="productInfo"
+      v-if="cartBoxShow&&!this.courseInfo.isBuy"
+      :courseInfo="courseInfo"
+      :redirectUri="redirectUri"
     ></cartBox>
     <view class="mask-box" v-if="moreListShow">
       <view class="catalogue-list-box">
         <view class="catalogue-num-box">
-          <span>课程列表(共12节)</span>
+          <span>课程列表(共{{catalogueList.length}}节)</span>
           <view class="close-icon" @tap="closeList"></view>
         </view>
         <customCatalogueList
@@ -82,7 +83,7 @@
 </template>
 <script>
 import utils from "@/utils/common";
-import productServer from "@/server/curriculum/product";
+import courseServer from "@/server/curriculum/course";
 import cartTabBar from "@/components/curriculum/cartTabBar";
 import cartBox from "@/components/curriculum/cartBox";
 import customCatalogueList from "@/components/curriculum/catalogueList";
@@ -93,8 +94,9 @@ export default {
       videoUrl: "",
       startTime: "",
       moreListShow: false,
-      productInfo: {},
+      courseInfo: {},
       cartBoxShow: false,
+      redirectUri:location.href,
       catalogueList: [
         {
           title:
@@ -112,15 +114,15 @@ export default {
     };
   },
   async created() {
-    this.productId = parseInt(
-      utils.getParam(location.href, "productId") ||
-        utils.getParam(location.href, "id")
-    );
-    this.productInfo = await productServer.getProductInfo(this.productId);
+    this.courseId =
+      utils.getParam(location.href, "courseId") ||
+      utils.getParam(location.href, "id");
+    this.courseInfo = await courseServer.getCourseInfo(this.courseId);
+    this.catalogueList = this.courseInfo.sectionList;
     this.cartBoxShow = utils.getParam(location.href, "payOrder") == 1;
   },
   methods: {
-    closeList(){
+    closeList() {
       this.moreListShow = !this.moreListShow;
     },
     showList() {
@@ -255,8 +257,9 @@ export default {
       position: absolute;
       bottom: 0;
       left: 0;
-      padding: 0 24upx;    width: 100%;
-    box-sizing: border-box;
+      padding: 0 24upx;
+      width: 100%;
+      box-sizing: border-box;
       .catalogue-num-box {
         line-height: 130upx;
         margin-bottom: 8upx;
@@ -265,14 +268,14 @@ export default {
         font-weight: 500;
         color: #333333;
         .close-icon {
-        background-image: url("/static/icon/close.png");
-        background-size: 100% 100%;
-        width: 30upx;
-        height: 30upx;
-        position: absolute;
-        top: 18upx;
-        right: 24upx;
-      }
+          background-image: url("/static/icon/close.png");
+          background-size: 100% 100%;
+          width: 30upx;
+          height: 30upx;
+          position: absolute;
+          top: 18upx;
+          right: 24upx;
+        }
       }
     }
   }

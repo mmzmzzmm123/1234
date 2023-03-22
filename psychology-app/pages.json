@@ -75,7 +75,7 @@
       }
     },
     {
-      "path": "pages/curriculum/product",
+      "path": "pages/curriculum/course",
       "style": {
         "navigationStyle": "custom"
       }
@@ -118,7 +118,7 @@
       }
     },
     {
-      "path": "pages/curriculum/course",
+      "path": "pages/curriculum/courseList",
       "style": {
         "navigationStyle": "custom"
       }
@@ -131,6 +131,12 @@
     },
     {
       "path": "pages/curriculum/orderInfo",
+      "style": {
+        "navigationStyle": "custom"
+      }
+    },
+    {
+      "path": "pages/logincallback",
       "style": {
         "navigationStyle": "custom"
       }

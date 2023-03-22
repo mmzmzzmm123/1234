@@ -10,7 +10,7 @@
         <view class="content-title"
           ><span v-if="catalogueItem.enabled" class="try">试听</span
           ><span class="text txt-overflow"
-            >{{ index + 1 }}、{{ catalogueItem.title }}</span
+            >{{ index + 1 }}、{{ catalogueItem.topic }}</span
           ></view
         >
         <view class="content-time">
@@ -25,7 +25,7 @@
         <image
           class="play-icon"
           :src="
-            catalogueItem.enabled
+            catalogueItem.type==1
               ? '/static/curriculum/product/play.png'
               : '/static/curriculum/product/lock.png'
           "

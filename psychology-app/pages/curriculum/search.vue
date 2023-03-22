@@ -18,8 +18,8 @@
         <view class="item" v-for="item in hostoryList" @tap="setSearchValue(item)">{{ item }}</view>
       </view>
     </view>
-    <product-list-com v-if="productListShow && productList.length > 0" :productList="productList"></product-list-com>
-    <view v-show="productListShow && productList.length == 0" class="no-data">
+    <course-list-com v-if="courseListShow && courseList.length > 0" :courseList="courseList"></course-list-com>
+    <view v-show="courseListShow && courseList.length == 0" class="no-data">
       <img src="/static/nothing/search-nothing.png" />
     </view>
     <message-com :message="deleteMessage" v-if="showDeleteMessage"></message-com>
@@ -28,10 +28,10 @@
 </template>
 
 <script>
-import productListCom from '@/components/curriculum/productList'
+import courseListCom from '@/components/curriculum/courseList'
 import messageCom from '@/components/curriculum/message'
 export default {
-  components: { productListCom, messageCom },
+  components: { courseListCom, messageCom },
   data() {
     return {
       showDeleteMessage: false,
@@ -47,10 +47,10 @@ export default {
         },
       },
       historyListShow: true,
-      productListShow: false,
+      courseListShow: false,
       searchValue: '',
       hostoryList: [],
-      productList: [
+      courseList: [
         {
           title: "潜意识测试阿斯蒂芬离开家暗示分离看空间阿斯利康附近",
           subtitle:
@@ -103,7 +103,7 @@ export default {
     clearIpt() {
       this.searchValue = "";
       this.historyListShow = true;
-      this.productListShow = false;
+      this.courseListShow = false;
       this.hostoryList = uni.getStorageSync("historySearch").split(',');
     },
     setSearchValue(item) {
@@ -112,7 +112,7 @@ export default {
     },
     searchSubmit() {
       this.historyListShow = false;
-      this.productListShow = true;
+      this.courseListShow = true;
       this.historyList = [...[this.searchValue], ...this.historyList];
       uni.setStorageSync("historySearch", this.historyList.toString());
     },

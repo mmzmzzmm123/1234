@@ -1,31 +1,31 @@
 <template>
-    <view class="product-list-box">
-        <view class="product-item" v-for="product in (productList || [])" @tap="toProduct(product)">
+    <view class="course-list-box">
+        <view class="course-item" v-for="course in (courseList || [])" @tap="tocourse(course)">
             <view class="txt-box">
                 <view class="title txt-overflow txt-overflow-line2">{{
-                        product.title
+                        course.name
                 }}</view>
-                <view class="sub-title txt-overflow">{{ product.subtitle }}</view>
-                <view class="price"><span class="icon">￥</span>{{ product.price }}</view>
+                <view class="sub-title txt-overflow">{{ course.author }}</view>
+                <view class="price"><span class="icon">￥</span>{{ course.price }}</view>
             </view>
             <view class="img-box">
-                <img :src="product.listShowPicture" />
+                <img :src="course.url" />
             </view>
         </view>
-        <view class="footer" v-show="productList.length > 0">已经到底了</view>
+        <view class="footer" v-show="courseList.length > 0">已经到底了</view>
     </view>
 </template>
 <script>
 export default {
-    props: ['productList'],
+    props: ['courseList'],
     data() {
         return {}
     },
     methods: {
-        toProduct(product) {
-            console.log(product,'****************')
+        tocourse(course) {
+            console.log(course,'****************')
             uni.navigateTo({
-                url: "/pages/curriculum/product?id=" + product.id,
+                url: "/pages/curriculum/course?id=" + course.id,
             });
         }
     }
@@ -34,7 +34,7 @@ export default {
 <style lang="scss">
 @import "@/style/common.scss";
 
-.product-item {
+.course-item {
     display: flex;
     flex-direction: row;
     width: calc(100% -48upx);

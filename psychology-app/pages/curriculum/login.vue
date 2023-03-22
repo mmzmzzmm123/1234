@@ -69,7 +69,7 @@ export default {
                         }); break;
                     case '2':
                         uni.navigateTo({
-                            url: "/pages/evaluation/product/index?payOrder=1&id=" + utils.getParam(location.href, "productId"),
+                            url: "/pages/evaluation/product/index?payOrder=1&id=" + utils.getParam(location.href, "courseId"),
                         }); break;
                     default:
                         uni.navigateTo({
