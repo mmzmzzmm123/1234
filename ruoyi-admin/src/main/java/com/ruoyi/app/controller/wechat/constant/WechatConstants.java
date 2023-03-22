@@ -44,7 +44,7 @@ public class WechatConstants {
             "-----END PRIVATE KEY-----\n";
  
     //微信小程序appid
-    public static final String WECHAT_MP_APPID = "wx81f97b38440a3b86";
+    public static final String WECHAT_MP_APPID = "wx9891e2d78c14ef94";
  
     //微信小程序密钥
     public static final String WECHAT_MP_SECRET = "f259b9c0951de86bcfda3e482e7b3c45";
