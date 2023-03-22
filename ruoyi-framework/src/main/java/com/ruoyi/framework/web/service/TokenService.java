@@ -4,13 +4,18 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 import javax.servlet.http.HttpServletRequest;
+
+import com.ruoyi.common.utils.spring.SpringUtils;
+import com.ruoyi.framework.config.SpringCacheRedisConfig;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cache.CacheManager;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
 import org.springframework.stereotype.Component;
 import com.ruoyi.common.constant.CacheConstants;
 import com.ruoyi.common.constant.Constants;
 import com.ruoyi.common.core.domain.model.LoginUser;
-import com.ruoyi.common.core.redis.RedisCache;
 import com.ruoyi.common.utils.ServletUtils;
 import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.common.utils.ip.AddressUtils;
@@ -47,8 +52,12 @@ public class TokenService
 
     private static final Long MILLIS_MINUTE_TEN = 20 * 60 * 1000L;
 
+   /* @Autowired
+    private RedisCache redisCache;*/
+
+
     @Autowired
-    private RedisCache redisCache;
+    private CacheManager cacheManager;
 
     /**
      * 获取用户身份信息
@@ -67,7 +76,7 @@ public class TokenService
                 // 解析对应的权限以及用户信息
                 String uuid = (String) claims.get(Constants.LOGIN_USER_KEY);
                 String userKey = getTokenKey(uuid);
-                LoginUser user = redisCache.getCacheObject(userKey);
+                LoginUser user =  cacheManager.getCache(CacheConstants.LOGIN_TOKEN_CACHENAME).get(uuid, LoginUser.class);
                 return user;
             }
             catch (Exception e)
@@ -91,13 +100,14 @@ public class TokenService
     /**
      * 删除用户身份信息
      */
+    @CacheEvict(cacheNames = CacheConstants.LOGIN_TOKEN_CACHENAME,key ="#token")
     public void delLoginUser(String token)
     {
-        if (StringUtils.isNotEmpty(token))
+       /* if (StringUtils.isNotEmpty(token))
         {
             String userKey = getTokenKey(token);
             redisCache.deleteObject(userKey);
-        }
+        }*/
     }
 
     /**
@@ -139,13 +149,16 @@ public class TokenService
      *
      * @param loginUser 登录信息
      */
+    /*@CachePut(cacheNames = CacheConstants.LOGIN_TOKEN_CACHENAME,key ="#loginUser.token",cacheManager = "cacheManager30m")*/
     public void refreshToken(LoginUser loginUser)
     {
         loginUser.setLoginTime(System.currentTimeMillis());
         loginUser.setExpireTime(loginUser.getLoginTime() + expireTime * MILLIS_MINUTE);
         // 根据uuid将loginUser缓存
         String userKey = getTokenKey(loginUser.getToken());
-        redisCache.setCacheObject(userKey, loginUser, expireTime, TimeUnit.MINUTES);
+        cacheManager.getCache(CacheConstants.LOGIN_TOKEN_CACHENAME).put(loginUser.getToken(),loginUser);
+  /*      return loginUser;*/
+      /*  redisCache.setCacheObject(userKey, loginUser, expireTime, TimeUnit.MINUTES);*/
     }
 
     /**

@@ -2,6 +2,7 @@ package com.ruoyi.framework.web.service;
 
 import javax.annotation.Resource;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.CacheManager;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -12,7 +13,6 @@ import com.ruoyi.common.constant.Constants;
 import com.ruoyi.common.constant.UserConstants;
 import com.ruoyi.common.core.domain.entity.SysUser;
 import com.ruoyi.common.core.domain.model.LoginUser;
-import com.ruoyi.common.core.redis.RedisCache;
 import com.ruoyi.common.exception.ServiceException;
 import com.ruoyi.common.exception.user.BlackListException;
 import com.ruoyi.common.exception.user.CaptchaException;
@@ -43,14 +43,16 @@ public class SysLoginService
     @Resource
     private AuthenticationManager authenticationManager;
 
-    @Autowired
-    private RedisCache redisCache;
+   /* @Autowired
+    private RedisCache redisCache;*/
     
     @Autowired
     private ISysUserService userService;
 
     @Autowired
     private ISysConfigService configService;
+    @Autowired
+    private CacheManager cacheManager;
 
     /**
      * 登录验证
@@ -114,8 +116,9 @@ public class SysLoginService
         if (captchaEnabled)
         {
             String verifyKey = CacheConstants.CAPTCHA_CODE_KEY + StringUtils.nvl(uuid, "");
-            String captcha = redisCache.getCacheObject(verifyKey);
-            redisCache.deleteObject(verifyKey);
+            String captcha = cacheManager.getCache(CacheConstants.CAPTCHA_CODE_CACHENAME).get( StringUtils.nvl(uuid, ""),String.class);
+            cacheManager.getCache(CacheConstants.CAPTCHA_CODE_CACHENAME).evictIfPresent( StringUtils.nvl(uuid, ""));
+            /*redisCache.deleteObject(verifyKey);*/
             if (captcha == null)
             {
                 AsyncManager.me().execute(AsyncFactory.recordLogininfor(username, Constants.LOGIN_FAIL, MessageUtils.message("user.jcaptcha.expire")));

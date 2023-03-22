@@ -47,6 +47,8 @@ user:
     # 密码锁定时间（默认10分钟）
     lockTime: 10
 
+
+
 # Spring配置
 spring:
   # 资源信息
@@ -62,6 +64,16 @@ spring:
        max-file-size:  10MB
        # 设置总上传的文件大小
        max-request-size:  20MB
+  cache:
+    #指定缓存类型
+    type: redis
+    redis:
+      #指定存活时间（ms）
+      time-to-live: 86400000
+      #指定前缀
+      use-key-prefix: true
+      #是否缓存空值，可以防止缓存穿透
+      cache-null-values: true
   # 服务模块
   devtools:
     restart:

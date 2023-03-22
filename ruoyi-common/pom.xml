@@ -23,6 +23,18 @@
             <artifactId>spring-context-support</artifactId>
         </dependency>
 
+        <!--     1.引入SpringCache依赖-->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-cache</artifactId>
+        </dependency>
+        <!-- 2.引入redis开发场景-->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-redis</artifactId>
+        </dependency>
+
+
         <!-- SpringWeb模块 -->
         <dependency>
             <groupId>org.springframework</groupId>

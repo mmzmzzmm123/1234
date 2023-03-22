@@ -1,13 +1,14 @@
 package com.ruoyi.framework.web.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.CacheManager;
 import org.springframework.stereotype.Component;
 import com.ruoyi.common.constant.CacheConstants;
 import com.ruoyi.common.constant.Constants;
 import com.ruoyi.common.constant.UserConstants;
 import com.ruoyi.common.core.domain.entity.SysUser;
 import com.ruoyi.common.core.domain.model.RegisterBody;
-import com.ruoyi.common.core.redis.RedisCache;
+
 import com.ruoyi.common.exception.user.CaptchaException;
 import com.ruoyi.common.exception.user.CaptchaExpireException;
 import com.ruoyi.common.utils.MessageUtils;
@@ -32,8 +33,11 @@ public class SysRegisterService
     @Autowired
     private ISysConfigService configService;
 
+/*    @Autowired
+    private RedisCache redisCache;*/
+
     @Autowired
-    private RedisCache redisCache;
+    private CacheManager cacheManager;
 
     /**
      * 注册
@@ -101,8 +105,9 @@ public class SysRegisterService
     public void validateCaptcha(String username, String code, String uuid)
     {
         String verifyKey = CacheConstants.CAPTCHA_CODE_KEY + StringUtils.nvl(uuid, "");
-        String captcha = redisCache.getCacheObject(verifyKey);
-        redisCache.deleteObject(verifyKey);
+        String captcha = cacheManager.getCache(CacheConstants.CAPTCHA_CODE_CACHENAME).get(StringUtils.nvl(uuid, ""), String.class);
+        cacheManager.getCache(CacheConstants.CAPTCHA_CODE_CACHENAME).evictIfPresent(StringUtils.nvl(uuid, ""));
+     /*   redisCache.deleteObject(verifyKey);*/
         if (captcha == null)
         {
             throw new CaptchaExpireException();

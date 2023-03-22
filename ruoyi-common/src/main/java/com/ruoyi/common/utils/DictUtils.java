@@ -5,8 +5,11 @@ import java.util.List;
 import com.alibaba.fastjson2.JSONArray;
 import com.ruoyi.common.constant.CacheConstants;
 import com.ruoyi.common.core.domain.entity.SysDictData;
-import com.ruoyi.common.core.redis.RedisCache;
+
 import com.ruoyi.common.utils.spring.SpringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.Cache;
+import org.springframework.cache.CacheManager;
 
 /**
  * 字典工具类
@@ -20,6 +23,7 @@ public class DictUtils
      */
     public static final String SEPARATOR = ",";
 
+
     /**
      * 设置字典缓存
      * 
@@ -28,7 +32,7 @@ public class DictUtils
      */
     public static void setDictCache(String key, List<SysDictData> dictDatas)
     {
-        SpringUtils.getBean(RedisCache.class).setCacheObject(getCacheKey(key), dictDatas);
+        getDictCacheKey().put(key, dictDatas);
     }
 
     /**
@@ -39,7 +43,7 @@ public class DictUtils
      */
     public static List<SysDictData> getDictCache(String key)
     {
-        JSONArray arrayCache = SpringUtils.getBean(RedisCache.class).getCacheObject(getCacheKey(key));
+        JSONArray arrayCache =  getDictCacheKey().get(key, JSONArray.class);
         if (StringUtils.isNotNull(arrayCache))
         {
             return arrayCache.toList(SysDictData.class);
@@ -161,7 +165,7 @@ public class DictUtils
      */
     public static void removeDictCache(String key)
     {
-        SpringUtils.getBean(RedisCache.class).deleteObject(getCacheKey(key));
+       getDictCacheKey().evict(key);
     }
 
     /**
@@ -169,8 +173,9 @@ public class DictUtils
      */
     public static void clearDictCache()
     {
-        Collection<String> keys = SpringUtils.getBean(RedisCache.class).keys(CacheConstants.SYS_DICT_KEY + "*");
-        SpringUtils.getBean(RedisCache.class).deleteObject(keys);
+        getDictCacheKey().clear();
+       /* Collection<String> keys = SpringUtils.getBean(RedisCache.class).keys(CacheConstants.SYS_DICT_KEY + "*");
+        SpringUtils.getBean(RedisCache.class).deleteObject(keys);*/
     }
 
     /**
@@ -179,8 +184,14 @@ public class DictUtils
      * @param configKey 参数键
      * @return 缓存键key
      */
-    public static String getCacheKey(String configKey)
+  /*  public static String getCacheKey(String configKey)
     {
         return CacheConstants.SYS_DICT_KEY + configKey;
+    }*/
+
+
+    public static Cache getDictCacheKey()
+    {
+        return SpringUtils.getBean(CacheManager.class).getCache(CacheConstants.SYS_DICT_CACHENAME);
     }
 }
