@@ -29,7 +29,6 @@ import javax.servlet.http.HttpServletRequest;
 @Slf4j
 @Api(value = "WxPayController" ,tags = {"微信支付api"})
 public class WxPayController {
-    private static final Logger log = LoggerFactory.getLogger(CommonCosController.class);
 
     @Autowired
     private IWxpayService wxpayService;

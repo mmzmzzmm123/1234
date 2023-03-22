@@ -91,7 +91,7 @@ public class LoginServiceImpl implements ILoginService {
 
         loginDTO.setPhone(loginDTO.getAccount());
         loginDTO.setUserId(user.getId());
-        String token = appTokenService.createToken(loginDTO);
+        String token = appTokenService.createToken(loginDTO ,null);
 
         return AjaxResult.success(LoginVO.builder().token(token)
                 .phone(loginDTO.getAccount())

@@ -21,4 +21,8 @@ public interface RespMessageConstants {
 
     int WX_MOBILE_CODE = -100;
 
+    String ACCESS_TOKEN_EXPIRED = "access_token过期";
+
+    Integer ACCESS_TOKEN_EXPIRED_CODE = 100001;
+
 }
