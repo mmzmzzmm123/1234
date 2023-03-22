@@ -45,10 +45,10 @@ public class WechatPayV3ApiController extends BaseController {
      * @return 小程序支付所需参数
      */
     @PostMapping("/wechatPay")
-    public AjaxResult wechatPay() {
+    public AjaxResult wechatPay(String openid) {
         //@TODO demo中先写死的一些参数
         Long userId = 1L; //先写死一个用户id
-        String openid = "xxx"; //先写死一个openid
+//        String openid = "ocWqt6eH1sZ_wjtIR1qPxPw3Qu8s"; //先写死一个openid
         BigDecimal amount = new BigDecimal("0.01"); //先写死一个金额 单位：元
         String content = "支付demo-买牛订金"; //先写死一个商品描述
         String attach = "我是附加数据"; //先写死一个附加数据 这是可选的 可以用来判断支付内容做支付成功后的处理
