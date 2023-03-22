@@ -43,10 +43,10 @@
           @tap="toLearningCourse(order)"
           >去学习</view
         >
-        <view class="btn cancel" v-show="order.status == 0" @tap="toPay(order)"
+        <view class="btn cancel" v-show="order.status == 0" @tap="toCancel(order)"
           >取消</view
         >
-        <view class="btn" v-show="order.status == 0" @tap="toCancel(order)"
+        <view class="btn" v-show="order.status == 0" @tap="toPay(order)"
           >支付</view
         >
       </view>
