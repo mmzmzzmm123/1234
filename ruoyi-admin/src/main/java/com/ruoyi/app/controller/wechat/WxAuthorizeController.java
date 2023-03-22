@@ -1,11 +1,12 @@
 package com.ruoyi.app.controller.wechat;
 
 import com.alibaba.fastjson2.JSONObject;
-import com.ruoyi.common.annotation.Anonymous;
 import com.ruoyi.common.constant.RespMessageConstants;
 import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.core.domain.dto.LoginDTO;
 import com.ruoyi.common.core.domain.vo.LoginVO;
+import com.ruoyi.common.enums.LoginType;
+import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.framework.web.service.AppTokenService;
 import com.ruoyi.psychology.domain.PsyUser;
 import com.ruoyi.psychology.service.IPsyUserService;
@@ -17,7 +18,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 /**
@@ -30,9 +30,14 @@ import java.io.IOException;
 @Slf4j
 public class WxAuthorizeController {
 
-    private static String APP_ID = "wx81f97b38440a3b86";
+    //正式信息
+    /*private static String APP_ID = "wx81f97b38440a3b86";
     private static String APP_SECRET = "f259b9c0951de86bcfda3e482e7b3c45";
-    private static String PAGE_URL = "http://127.0.0.1:8089";
+    private static String PAGE_URL = "http://127.0.0.1:8089";*/
+    //测试用
+    private static String APP_ID = "wx8604d98104f67e66";
+    private static String APP_SECRET = "98dca366602a0806da390ed138e4a7ea";
+    private static String PAGE_URL = "http://192.168.137.215:8080";
 
     @Autowired
     private IPsyUserService psyUserService;
@@ -41,14 +46,13 @@ public class WxAuthorizeController {
     private AppTokenService appTokenService;
 
     /**
-     * Tea微信登录接口
+     * 微信登录接口
      */
     @ApiOperation(value = "微信登录接口")
     @RequestMapping("wxLogin")
-//    @Anonymous
-    public AjaxResult wxLogin(){
+    public AjaxResult wxLogin() {
         //这里是回调的url
-        String redirect_uri = PAGE_URL + "/pages/user/index";
+        String redirect_uri = PAGE_URL + "/pages/logincallback";
         String url = "https://open.weixin.qq.com/connect/oauth2/authorize?" +
                 "appid=APPID" +
                 "&redirect_uri=REDIRECT_URI" +
@@ -61,10 +65,9 @@ public class WxAuthorizeController {
     }
 
     /**
-     * Tea微信授权成功的回调函数
+     * 微信授权成功的回调函数
      *
      * @param request
-     * @param response
      * @throws IOException
      */
     @ApiOperation(value = "微信授权回调接口")
@@ -72,37 +75,67 @@ public class WxAuthorizeController {
     protected AjaxResult deGet(HttpServletRequest request) throws Exception {
         //获取回调地址中的code
         String code = request.getParameter("code");
+        log.info("回调code为：{}", code);
         //拼接url
         String url = "https://api.weixin.qq.com/sns/oauth2/access_token?appid=" + APP_ID + "&secret="
                 + APP_SECRET + "&code=" + code + "&grant_type=authorization_code";
+        log.info("access_token请求url:{}" ,url);
         JSONObject jsonObject = AuthUtil.doGetJson(url);
         //1.获取微信用户的openid
         String openId = jsonObject.getString("openid");
-        //2.获取access_token
-        String access_token = jsonObject.getString("access_token");
-        String infoUrl = "https://api.weixin.qq.com/sns/userinfo?access_token=" + access_token + "&openid=" + openId
+        //2. 获取access_token
+        String accessToken = jsonObject.getString("access_token");
+//        Integer expiresIn = jsonObject.getInteger("expires_in");
+
+        String infoUrl = "https://api.weixin.qq.com/sns/userinfo?access_token=" + accessToken + "&openid=" + openId
                 + "&lang=zh_CN";
+        log.info("access_token_接口返回{}" ,infoUrl);
         //3.获取微信用户信息
         JSONObject userInfo = AuthUtil.doGetJson(infoUrl);
         log.info("微信用户信息：{}", userInfo);
 
+        if (null != userInfo.getInteger("errcode")) {
+            return AjaxResult.error(RespMessageConstants.ACCESS_TOKEN_EXPIRED);
+        }
+
         //获取手机号登录用户
         LoginDTO loginUser = appTokenService.getLoginUser(request);
-        PsyUser user = psyUserService.queryUserByAccount(loginUser.getPhone());
 
-        //重新缓存用户信息
-        loginUser.setWxOpenId(openId);
-        appTokenService.refreshToken(loginUser);
+        LoginVO loginVO = null;
+        //手机号已经登录过
+        if (loginUser != null && StringUtils.isNotEmpty(loginUser.getPhone())) {
+            //重新缓存用户信息
+            loginUser.setWxOpenId(openId);
+            PsyUser user = psyUserService.queryUserByAccount(loginUser.getPhone());
+            loginVO = getLoginVO(openId, userInfo, loginUser, user);
+        } else {
+            loginVO = psyUserService.checkPsyUser(openId, userInfo);
+            loginUser = new LoginDTO();
+            loginUser.setWxOpenId(openId);
+            loginUser.setAccount(openId);
+            loginUser.setLoginType(LoginType.WX);
+            loginUser.setUserId(loginVO.getUserId().toString());
+            //创建token
+            String token = appTokenService.createToken(loginUser, null);
+            loginVO.setToken(token);
+        }
 
+        return AjaxResult.success(RespMessageConstants.APP_LOGIN_SUCCESS, loginVO);
+    }
+
+    /**
+     * 手机登录之后才会涉及微信登录
+     */
+    private LoginVO getLoginVO(String openId, JSONObject userInfo, LoginDTO loginUser, PsyUser user) {
         String nickname = userInfo.getString("nickname");
         String headImgUrl = userInfo.getString("headimgurl");
 
-        //手机登录之后才会涉及微信登录
+        appTokenService.refreshToken(loginUser, null);
+
         psyUserService.updatePsyUser(PsyUser.builder().id(user.getId()).wxOpenid(openId).name(nickname).avatar(headImgUrl).build());
 
         LoginVO loginVO = LoginVO.builder().name(nickname).avatar(headImgUrl).phone(user.getPhone()).build();
-
-        return AjaxResult.success(RespMessageConstants.APP_LOGIN_SUCCESS , loginVO);
+        return loginVO;
     }
 
 

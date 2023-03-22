@@ -44,6 +44,14 @@ public interface PsyOrderPayMapper
     public int updatePsyOrderPay(PsyOrderPay psyOrderPay);
 
     /**
+     * 修改心理咨询订单支付信息
+     *
+     * @param psyOrderPay 心理咨询订单支付信息
+     * @return 结果
+     */
+    public int updatePsyOrderPayByOrderId(PsyOrderPay psyOrderPay);
+
+    /**
      * 删除心理咨询订单支付信息
      * 
      * @param id 心理咨询订单支付信息主键

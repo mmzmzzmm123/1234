@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.course.mapper.CourUserCourseSectionMapper">
+    
+    <resultMap type="CourUserCourseSection" id="CourUserCourseSectionResult">
+        <result property="id"    column="id"    />
+        <result property="userId"    column="user_id"    />
+        <result property="courseId"    column="course_id"    />
+        <result property="sectionId"    column="section_id"    />
+        <result property="endTime"    column="end_time"    />
+        <result property="finishStatus"    column="finish_status"    />
+    </resultMap>
+
+    <resultMap type="CourCourse" id="CourCourseResult">
+        <result property="id"    column="id"    />
+        <result property="courseId"    column="course_id"    />
+        <result property="name"    column="name"    />
+        <result property="type"    column="type"    />
+        <result property="author"    column="author"    />
+        <result property="url"    column="url"    />
+        <result property="price"    column="price"    />
+        <result property="detail"    column="detail"    />
+    </resultMap>
+
+    <sql id="selectCourUserCourseSectionVo">
+        select id, user_id, course_id, section_id, end_time, finish_status from cour_user_course_section
+    </sql>
+
+    <select id="selectCourUserCourseSectionList" parameterType="CourUserCourseSection" resultMap="CourUserCourseSectionResult">
+        <include refid="selectCourUserCourseSectionVo"/>
+        <where>  
+            <if test="userId != null  and userId != ''"> and user_id = #{userId}</if>
+            <if test="courseId != null  and courseId != ''"> and course_id = #{courseId}</if>
+            <if test="sectionId != null  and sectionId != ''"> and section_id = #{sectionId}</if>
+            <if test="endTime != null "> and end_time = #{endTime}</if>
+            <if test="finishStatus != null "> and finish_status = #{finishStatus}</if>
+        </where>
+    </select>
+    
+    <select id="selectCourUserCourseSectionById" parameterType="Long" resultMap="CourUserCourseSectionResult">
+        <include refid="selectCourUserCourseSectionVo"/>
+        where id = #{id}
+    </select>
+
+    <select id="getCourseListByUserId" parameterType="CourUserCourseSection" resultMap="CourCourseResult">
+        select c.id, c.course_id, c.name, c.type, c.author, c.url, c.price, c.detail
+        from cour_course c
+        where c.course_id in (
+            select cucs.course_id
+            from cour_user_course_section cucs
+            <where>
+                <if test="userId != null  and userId != ''"> and user_id = #{userId}</if>
+            </where>
+        )
+
+    </select>
+        
+    <insert id="insertCourUserCourseSection" parameterType="CourUserCourseSection" useGeneratedKeys="true" keyProperty="id">
+        insert into cour_user_course_section
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="userId != null and userId != ''">user_id,</if>
+            <if test="courseId != null and courseId != ''">course_id,</if>
+            <if test="sectionId != null and sectionId != ''">section_id,</if>
+            <if test="endTime != null">end_time,</if>
+            <if test="finishStatus != null">finish_status,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="userId != null and userId != ''">#{userId},</if>
+            <if test="courseId != null and courseId != ''">#{courseId},</if>
+            <if test="sectionId != null and sectionId != ''">#{sectionId},</if>
+            <if test="endTime != null">#{endTime},</if>
+            <if test="finishStatus != null">#{finishStatus},</if>
+         </trim>
+    </insert>
+
+    <update id="updateCourUserCourseSection" parameterType="CourUserCourseSection">
+        update cour_user_course_section
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="userId != null and userId != ''">user_id = #{userId},</if>
+            <if test="courseId != null and courseId != ''">course_id = #{courseId},</if>
+            <if test="sectionId != null and sectionId != ''">section_id = #{sectionId},</if>
+            <if test="endTime != null">end_time = #{endTime},</if>
+            <if test="finishStatus != null">finish_status = #{finishStatus},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteCourUserCourseSectionById" parameterType="Long">
+        delete from cour_user_course_section where id = #{id}
+    </delete>
+
+    <delete id="deleteCourUserCourseSectionByIds" parameterType="String">
+        delete from cour_user_course_section where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

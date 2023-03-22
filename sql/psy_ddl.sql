@@ -208,3 +208,6 @@ CREATE TABLE `psy_consultant` (
                                   `avatar` varchar(255) DEFAULT '' COMMENT '头像地址',
                                   PRIMARY KEY (`id`) USING BTREE
 ) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 ROW_FORMAT=DYNAMIC COMMENT='心理咨询师表';
+
+
+ALTER TABLE psy_user ADD CONSTRAINT psy_user_openid_uk UNIQUE KEY (wx_openid);

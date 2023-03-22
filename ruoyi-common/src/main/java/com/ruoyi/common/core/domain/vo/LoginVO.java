@@ -2,6 +2,7 @@ package com.ruoyi.common.core.domain.vo;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import io.swagger.models.auth.In;
 import lombok.Builder;
 import lombok.Data;
 
@@ -25,5 +26,8 @@ public class LoginVO {
     private boolean openIdFlag;
     @ApiModelProperty("手机号")
     private String phone;
+
+    @ApiModelProperty(hidden = true)
+    private Integer userId;
 
 }

@@ -42,6 +42,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="amount != null">amount,</if>
             <if test="payId != null">pay_id,</if>
             <if test="createTime != null">create_time,</if>
+            pay_type,
             <if test="createBy != null and createBy != ''">create_by,</if>
          </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
@@ -51,6 +52,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="amount != null">#{amount},</if>
             <if test="payId != null">#{payId},</if>
             <if test="createTime != null">#{createTime},</if>
+            <if test="pay_type == null">1,</if>
+            <if test="pay_type != null">#{pay_type},</if>
             <if test="createBy != null and createBy != ''">#{createBy},</if>
          </trim>
     </insert>
@@ -66,6 +69,14 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="createBy != null and createBy != ''">create_by = #{createBy},</if>
         </trim>
         where id = #{id}
+    </update>
+
+    <update id="updatePsyOrderPayByOrderId" parameterType="com.ruoyi.gauge.domain.PsyOrderPay">
+        update psy_order_pay
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="payStatus != null">pay_status = #{payStatus},</if>
+        </trim>
+        where order_id = #{orderId}
     </update>
 
     <delete id="deletePsyOrderPayById" parameterType="Long">

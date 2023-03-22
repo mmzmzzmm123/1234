@@ -2,6 +2,10 @@ package com.ruoyi.web.controller.gauge;
 
 import java.util.List;
 import javax.servlet.http.HttpServletResponse;
+
+import com.ruoyi.web.controller.common.CommonController;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -31,6 +35,7 @@ import com.ruoyi.common.core.page.TableDataInfo;
 @RequestMapping("/psychology/gauge")
 public class PsyGaugeController extends BaseController
 {
+    private static final Logger log = LoggerFactory.getLogger(CommonController.class);
     @Autowired
     private IPsyGaugeService psyGaugeService;
 
@@ -77,6 +82,7 @@ public class PsyGaugeController extends BaseController
     @PostMapping
     public AjaxResult add(@RequestBody PsyGauge psyGauge)
     {
+
         psyGauge.setCreateBy(getUsername());
         return toAjax(psyGaugeService.insertPsyGauge(psyGauge));
     }

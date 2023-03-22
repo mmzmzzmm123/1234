@@ -1,6 +1,7 @@
 package com.ruoyi.common.core.domain.dto;
 
 import com.alibaba.fastjson2.annotation.JSONField;
+import com.ruoyi.common.enums.LoginType;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -80,6 +81,11 @@ public class LoginDTO implements UserDetails {
      * 微信openId
      */
     private String wxOpenId;
+
+    /**
+     * 登录方式，微信等
+     */
+    private LoginType loginType;
 
     @JSONField(serialize = false)
     @Override

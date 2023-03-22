@@ -65,6 +65,10 @@ public class PsyOrderPayServiceImpl implements IPsyOrderPayService {
         return psyOrderPayMapper.updatePsyOrderPay(psyOrderPay);
     }
 
+    public int updatePsyOrderPayByOrderId(PsyOrderPay psyOrderPay){
+        return psyOrderPayMapper.updatePsyOrderPayByOrderId(psyOrderPay);
+    }
+
     /**
      * 批量删除心理咨询订单支付信息
      *

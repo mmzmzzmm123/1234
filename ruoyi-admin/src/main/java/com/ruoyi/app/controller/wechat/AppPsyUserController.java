@@ -44,7 +44,7 @@ public class AppPsyUserController extends BaseController
         LoginDTO loginUser = appTokenService.getLoginUser(request);
         loginUser.setPhone(psyUser.getPhone());
         psyUserService.bindPhone(loginUser);
-        appTokenService.refreshToken(loginUser);
+        appTokenService.refreshToken(loginUser ,null);
         return AjaxResult.success(RespMessageConstants.OPERATION_SUCCESS);
     }
 }

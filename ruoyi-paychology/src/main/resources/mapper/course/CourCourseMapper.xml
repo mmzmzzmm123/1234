@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.course.mapper.CourCourseMapper">
+    
+    <resultMap type="CourCourse" id="CourCourseResult">
+        <result property="id"    column="id"    />
+        <result property="courseId"    column="course_id"    />
+        <result property="name"    column="name"    />
+        <result property="type"    column="type"    />
+        <result property="author"    column="author"    />
+        <result property="url"    column="url"    />
+        <result property="price"    column="price"    />
+        <result property="detail"    column="detail"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="updateBy"    column="update_by"    />
+    </resultMap>
+
+    <sql id="selectCourCourseVo">
+        select id, course_id, name, type, author, url, price, detail, create_by, create_time, update_time, update_by from cour_course
+    </sql>
+
+    <select id="selectCourCourseList" parameterType="CourCourse" resultMap="CourCourseResult">
+        <include refid="selectCourCourseVo"/>
+        <where>  
+            <if test="courseId != null  and courseId != ''"> and course_id = #{courseId}</if>
+            <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
+            <if test="type != null "> and type = #{type}</if>
+            <if test="author != null  and author != ''"> and author = #{author}</if>
+            <if test="url != null  and url != ''"> and url = #{url}</if>
+            <if test="price != null "> and price = #{price}</if>
+            <if test="detail != null  and detail != ''"> and detail = #{detail}</if>
+        </where>
+    </select>
+    
+    <select id="selectCourCourseById" parameterType="Long" resultMap="CourCourseResult">
+        <include refid="selectCourCourseVo"/>
+        where id = #{id}
+    </select>
+
+    <select id="selectCourCourseByType" parameterType="CourCourse" resultMap="CourCourseResult">
+        <include refid="selectCourCourseVo"/>
+        <where>
+            <if test="type != null ">  type = #{typeId}</if>
+        </where>
+    </select>
+
+        
+    <insert id="insertCourCourse" parameterType="CourCourse" useGeneratedKeys="true" keyProperty="id">
+        insert into cour_course
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="courseId != null and courseId != ''">course_id,</if>
+            <if test="name != null and name != ''">name,</if>
+            <if test="type != null">type,</if>
+            <if test="author != null">author,</if>
+            <if test="url != null">url,</if>
+            <if test="price != null">price,</if>
+            <if test="detail != null">detail,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="updateBy != null">update_by,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="courseId != null and courseId != ''">#{courseId},</if>
+            <if test="name != null and name != ''">#{name},</if>
+            <if test="type != null">#{type},</if>
+            <if test="author != null">#{author},</if>
+            <if test="url != null">#{url},</if>
+            <if test="price != null">#{price},</if>
+            <if test="detail != null">#{detail},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+         </trim>
+    </insert>
+
+    <update id="updateCourCourse" parameterType="CourCourse">
+        update cour_course
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="courseId != null and courseId != ''">course_id = #{courseId},</if>
+            <if test="name != null and name != ''">name = #{name},</if>
+            <if test="type != null">type = #{type},</if>
+            <if test="author != null">author = #{author},</if>
+            <if test="url != null">url = #{url},</if>
+            <if test="price != null">price = #{price},</if>
+            <if test="detail != null">detail = #{detail},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteCourCourseById" parameterType="Long">
+        delete from cour_course where id = #{id}
+    </delete>
+
+    <delete id="deleteCourCourseByIds" parameterType="String">
+        delete from cour_course where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <!--   判断课程是否已支付     -->
+    <select id="getPaidCourseCount" parameterType="String" resultType="Integer">
+        select count(co.course_id)
+        from cour_order co
+        left join psy_order_pay pop
+        on co.id = pop.order_id
+        where pay_status = 2 and co.course_id = #{courseId}
+    </select>
+</mapper>

@@ -59,9 +59,9 @@ spring:
   servlet:
      multipart:
        # 单个文件大小
-       max-file-size:  10MB
+       max-file-size:  1024MB
        # 设置总上传的文件大小
-       max-request-size:  20MB
+       max-request-size:  2048MB
   # 服务模块
   devtools:
     restart:
@@ -106,8 +106,10 @@ app:
     header: Authorization
     # 令牌密钥
     secret: appabcdefghijklmnopqrstuvwxyz
-    # 令牌有效期（默认30分钟）
-    expireTime: 3000
+    # 令牌有效期（默认30分钟）单位s
+    expireTime: 1800
+  filter:
+    urls: /app/user/bindPhone,/app/wxPay/**,/app/gauge/result/**
   
 # MyBatis配置
 mybatis:
