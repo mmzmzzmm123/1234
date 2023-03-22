@@ -7,7 +7,7 @@
     <view class="banner-box index-margin">
       <swiper class="ad-swiper" indicator-dots circular>
         <swiper-item v-for="(item, index) in bannerList" :key="index">
-          <image class="banner-img" :src="item.bannerUrl" @tap="toProduct(item.linkUrl)" />
+          <image class="banner-img" :src="item.bannerUrl" @tap="tocourse(item.linkUrl)" />
         </swiper-item>
       </swiper>
     </view>
@@ -20,7 +20,7 @@
     <view class="banner-box banner-box1 index-margin">
       <swiper class="ad-swiper" indicator-dots circular>
         <swiper-item v-for="(item, index) in bannerList1" :key="index">
-          <image class="banner-img" :src="item.bannerUrl" @tap="toProduct(item.linkUrl)" />
+          <image class="banner-img" :src="item.bannerUrl" @tap="tocourse(item.linkUrl)" />
         </swiper-item>
       </swiper>
     </view>
@@ -34,36 +34,36 @@
       </view>
       <view class="img-item-box">
         <view class="left-img" v-show="bannerList2.length > 0"
-          @tap="toProduct(bannerList2.length > 0 ? bannerList2[0].linkUrl : '')">
+          @tap="tocourse(bannerList2.length > 0 ? bannerList2[0].linkUrl : '')">
           <img :src="bannerList2.length > 0 ? bannerList2[0].bannerUrl : ''" />
         </view>
-        <view class="right-img-box" v-show="bannerList2.length > 2">
-          <view class="right-img" @tap="toProduct(bannerList2.length > 1 ? bannerList2[1].linkUrl : '')">
+        <view class="right-img-box">
+          <view class="right-img"  v-if="bannerList2.length > 1" @tap="tocourse(bannerList2.length > 1 ? bannerList2[1].linkUrl : '')">
             <img :src="bannerList2.length > 1 ? bannerList2[1].bannerUrl : ''" />
           </view>
-          <view class="right-img" @tap="toProduct(bannerList2.length > 2 ? bannerList2[2].linkUrl : '')">
+          <view class="right-img" v-if="bannerList2.length > 2" @tap="tocourse(bannerList2.length > 2 ? bannerList2[2].linkUrl : '')">
             <img :src="bannerList2.length > 2 ? bannerList2[2].bannerUrl : ''" />
           </view>
         </view>
       </view>
     </view>
-    <view class="product-box index-margin">
+    <view class="course-box index-margin">
       <view class="index-title" @tap="toMore">
         精选好课
         <span class="more">
           更多
           <img class="img" src="/static/icon/more.png" /></span>
       </view>
-      <product-list-com :productList="productList"></product-list-com>
+      <course-list-com :courseList="courseList"></course-list-com>
     </view>
     <curriculum-tab-bar :currentIndex="0"></curriculum-tab-bar>
     </view>
 </template>
 <script>
-import productListCom from '@/components/curriculum/productList'
+import courseListCom from '@/components/curriculum/courseList'
 import indexServer from '@/server/curriculum/index'
 export default {
-  components: { productListCom},
+  components: { courseListCom},
   data() {
     return {
       bannerList: [],
@@ -91,26 +91,23 @@ export default {
           id: 72,
         },
       ],
-      hotList: [],
-      productList: []
+      courseList: [],
     };
   },
   async created() {
     this.bannerList = await this.getBanner(0);
-    this.bannerList1 = await this.getBanner(1);
-    this.bannerList2 = await this.getBanner(2);
-    this.bannerList3 = await this.getBanner(3);
-    this.productList = await this.getProduct(0);
-    this.hotList = await this.getProduct(1);
+    this.bannerList1 = await this.getBanner(2);
+    this.bannerList2 = await this.getBanner(1);
+    this.courseList = await this.getcourse(1);
   },
   methods: {
     async getBanner(type) {
       return await indexServer.getBannerList(type);
     },
-    async getProduct(type) {
-      return await indexServer.getProductByLabel(type);
+    async getcourse(type) {
+      return await indexServer.getcourseByLabel(type);
     },
-    toProduct(url) {
+    tocourse(url) {
       uni.navigateTo({ url });
     },
     toSearch() {

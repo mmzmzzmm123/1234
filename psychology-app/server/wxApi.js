@@ -49,40 +49,11 @@ export function getTokenFormCode(code) {
         `/weixin/sns/oauth2/access_token?appid=${APPID}&secret=${APPSECRET}&code=${code}&grant_type=authorization_code`
       )
       .then((res) => {
-        alert(1);
         resolve(res);
       })
       .catch((err) => {
-        alert(2);
         reject(err);
       });
   });
 }
-// 获取Tonken
-export function getToken() {
-  return new Promise(async (resolve, reject) => {
-    // 从缓存中读取token
-    let stroagetoken = uni.getStorageSync("accessToken");
-    // 如果缓存中有token，则直接返回缓存中的token
-    if (stroagetoken) {
-      console.log("缓存获取的token");
-      // 返回结果
-      resolve(stroagetoken);
-    } else {
-      // 如果缓存没有token，则走接口重新获取新的token
-      let token = await updateToken();
-      // 存入到缓存中
-      uni.setStorageSync("accessToken", token);
-      // 设置定时任务，每隔7000秒更新一次tonken
-      setInterval(async () => {
-        // 获取新的token
-        let token = await updateToken();
-        // 存入到缓存中
-        uni.setStorageSync("accessToken", token);
-      }, 7000000);
-      console.log("接口获取的token");
-      // 返回结果
-      resolve(token);
-    }
-  });
-}
+

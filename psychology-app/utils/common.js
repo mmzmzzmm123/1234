@@ -1,3 +1,4 @@
+import { wxLoginCallBack, wxLogin } from "@/server/wxApi";
 export const clientTypeObj = { wx: "JSAPI", zfb: "FWC", no: "unknow" };
 export default {
   getParam(path, name) {
@@ -17,5 +18,39 @@ export default {
     } else {
       return clientTypeObj.no;
     }
+  },
+  loginWx(redirectUri) {
+    uni.setStorageSync("redirectUri", redirectUri);
+    if (this.getClientType() !== clientTypeObj.wx) return;
+    //未绑定微信
+    wxLogin().then((res) => {
+      if (res.code == 200) {
+        window.location.href = res.data;
+      }
+    });
+  },
+  async loginCallback(redirectUri) {
+    //是否登录返回
+    if (!uni.getStorageSync("wxLogining")) {
+      return;
+    }
+    //从微信登录返回
+    let code = this.getParam(window.location.href, "code");
+    if (code) {
+      uni.setStorageSync("wxLogining", false);
+      let res = await wxLoginCallBack(code);
+      if (res.code == 200) {
+        uni.setStorageSync("userInfo", res.data);
+        uni.setStorageSync("token", res.data.token);
+        return true;
+      } else {
+        uni.showToast({
+          icon: "error",
+          title: "微信授权失败！",
+        });
+      }
+      return false;
+    }
+    return false;
   },
 };

@@ -96,7 +96,7 @@
                     "secure" : false
                 },
                 "/weixin" : {
-                    "target" : "https://192.168.137.1:8080",
+                    "target" : "http://192.168.137.1:8080",
                     "changeOrigin" : true,
                     "secure" : false,
                     "pathRewirte" : {

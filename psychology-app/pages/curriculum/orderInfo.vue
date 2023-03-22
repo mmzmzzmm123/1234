@@ -21,7 +21,7 @@
         ></view>
         <view class="txt-box">
           <view class="course-title">{{ orderInfo.courseInfo.name }}</view>
-          <view class="course-teacher">{{ orderInfo.courseInfo.teacher }}</view>
+          <view class="course-author">{{ orderInfo.courseInfo.author }}</view>
         </view>
       </view>
       <view class="course-price">
@@ -51,6 +51,8 @@
   </view>
 </template>
 <script>
+import utils from "@/utils/common";
+import orderServer from "@/server/curriculum/order";
 export default {
   data: () => {
     return {
@@ -68,6 +70,9 @@ export default {
         },
       },
     };
+  },
+  async created() {
+    this.orderInfo = await orderServer.getOrderDetail(utils.getParam(location.href, "orderId"));
   },
 };
 </script>
@@ -118,7 +123,7 @@ page {
             line-height: 42upx;
             margin-bottom: 50upx;
           }
-          .course-teacher {
+          .course-author {
             font-size: 26upx;
             font-weight: 400;
             color: #777777;

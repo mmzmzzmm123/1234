@@ -46,6 +46,28 @@ module.exports = {
       });
     });
   },
+  put: function (url, data, header) {
+    header = header || "application/json;charset=UTF-8";
+    url = this.config("APIHOST") + url;
+    let token = uni.getStorageSync("token");
+    return new Promise((succ, error) => {
+      uni.request({
+        url: url,
+        data: data,
+        method: "PUT",
+        header: {
+          "content-type": header,
+          Authorization: token,
+        },
+        success: function (result) {
+          succ.call(self, result.data);
+        },
+        fail: function (e) {
+          error.call(self, e);
+        },
+      });
+    });
+  },
   get: function (url, data, header) {
     header = header || "application/x-www-form-urlencoded";
     url = this.config("APIHOST") + url;
