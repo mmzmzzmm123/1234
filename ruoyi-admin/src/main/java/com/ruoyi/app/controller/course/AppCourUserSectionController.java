@@ -12,10 +12,14 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/app/course/userSection")
@@ -46,11 +50,12 @@ public class AppCourUserSectionController extends BaseController {
      */
 //    @PreAuthorize("@ss.hasPermi('course:userSection:list')")
     @PostMapping("/getCourseListByUserId")
-    @ApiOperation("根据用户编号查询课程列表")
-    public TableDataInfo getCourseListByUserId(CourUserCourseSection courUserCourseSection)
+    @ApiOperation("根据用户ID查询课程列表")
+    public TableDataInfo getCourseListByUserId(@RequestBody Map<String, Object> body)
     {
+        Integer userId = Integer.parseInt(body.get("userId").toString());
         startPage();
-        List<CourCourse> list = courUserCourseSectionService.getCourseListByUserId(courUserCourseSection);
+        List<CourCourse> list = courUserCourseSectionService.getCourseListByUserId(userId);
 
         List<CourseVO> courseVOList = new ArrayList<>();
         list.forEach(courCourse -> {

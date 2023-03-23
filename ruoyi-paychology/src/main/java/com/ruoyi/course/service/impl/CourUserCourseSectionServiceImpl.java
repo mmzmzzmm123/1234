@@ -46,14 +46,14 @@ public class CourUserCourseSectionServiceImpl implements ICourUserCourseSectionS
     }
 
     /**
-     * 根据用户查询课程列表
+     * 根据用户ID查询课程列表
      *
-     * @param courUserCourseSection 用户-课程-章节关系
+     * @param userId 用户ID
      * @return 课程集合
      */
-    public List<CourCourse> getCourseListByUserId(CourUserCourseSection courUserCourseSection)
+    public List<CourCourse> getCourseListByUserId(Integer userId)
     {
-        return courUserCourseSectionMapper.getCourseListByUserId(courUserCourseSection);
+        return courUserCourseSectionMapper.getCourseListByUserId(userId);
     }
 
     /**

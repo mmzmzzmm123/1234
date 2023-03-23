@@ -19,7 +19,7 @@ public class CourUserCourseSection extends BaseEntity
     private Long id;
 
     /** 用户编号 */
-    @Excel(name = "用户编号")
+    @Excel(name = "用户ID")
     private String userId;
 
     /** 课程编号 */
