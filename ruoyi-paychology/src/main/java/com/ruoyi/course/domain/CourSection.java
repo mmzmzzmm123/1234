@@ -21,8 +21,8 @@ public class CourSection extends BaseEntity
 {
     private static final long serialVersionUID = 1L;
 
-    /** $column.columnComment */
-    private Long id;
+    /** 章节ID */
+    private Integer id;
 
     /** 章节编号 */
     @Excel(name = "章节编号")
@@ -48,20 +48,20 @@ public class CourSection extends BaseEntity
     @Excel(name = "章节内容链接")
     private String contentUrl;
 
-    /** 课程编号 */
-    @Excel(name = "课程编号")
-    private String courseId;
+    /** 课程ID */
+    @Excel(name = "课程ID")
+    private Integer courseId;
 
     /** 内容类型（0-视频，1-音频） */
     @Excel(name = "内容类型", readConverterExp = "0=-视频，1-音频")
     private Long contentType;
 
-    public void setId(Long id) 
+    public void setId(Integer id)
     {
         this.id = id;
     }
 
-    public Long getId() 
+    public Integer getId()
     {
         return id;
     }
@@ -119,12 +119,12 @@ public class CourSection extends BaseEntity
     {
         return contentUrl;
     }
-    public void setCourseId(String courseId)
+    public void setCourseId(Integer courseId)
     {
         this.courseId = courseId;
     }
 
-    public String getCourseId()
+    public Integer getCourseId()
     {
         return courseId;
     }

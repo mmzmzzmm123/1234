@@ -17,18 +17,18 @@ public class CourCourseType extends BaseEntity
 
     /** 类型编号 */
     @Excel(name = "类型编号")
-    private Long typeId;
+    private Integer typeId;
 
     /** 类型名称 */
     @Excel(name = "类型名称")
     private String name;
 
-    public void setTypeId(Long typeId) 
+    public void setTypeId(Integer typeId)
     {
         this.typeId = typeId;
     }
 
-    public Long getTypeId() 
+    public Integer getTypeId()
     {
         return typeId;
     }

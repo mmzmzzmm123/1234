@@ -26,7 +26,7 @@ public class CourCourseLabelServiceImpl implements ICourCourseLabelService
      * @return label
      */
     @Override
-    public CourCourseLabel selectCourCourseLabelById(Long id)
+    public CourCourseLabel selectCourCourseLabelById(Integer id)
     {
         return courCourseLabelMapper.selectCourCourseLabelById(id);
     }
@@ -74,7 +74,7 @@ public class CourCourseLabelServiceImpl implements ICourCourseLabelService
      * @return 结果
      */
     @Override
-    public int deleteCourCourseLabelByIds(Long[] ids)
+    public int deleteCourCourseLabelByIds(Integer[] ids)
     {
         return courCourseLabelMapper.deleteCourCourseLabelByIds(ids);
     }
@@ -86,7 +86,7 @@ public class CourCourseLabelServiceImpl implements ICourCourseLabelService
      * @return 结果
      */
     @Override
-    public int deleteCourCourseLabelById(Long id)
+    public int deleteCourCourseLabelById(Integer id)
     {
         return courCourseLabelMapper.deleteCourCourseLabelById(id);
     }

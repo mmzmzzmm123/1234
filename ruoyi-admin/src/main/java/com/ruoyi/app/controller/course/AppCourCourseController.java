@@ -67,7 +67,7 @@ public class AppCourCourseController extends BaseController
 //    @PreAuthorize("@ss.hasPermi('course:course:query')")
     @PostMapping(value = "/getInfo")
     @ApiOperation("查询课程信息")
-    public AjaxResult getInfo(@RequestParam(value = "id") Long id)
+    public AjaxResult getInfo(@RequestParam(value = "id") Integer id)
     {
         return AjaxResult.success(courCourseService.selectCourCourseById(id));
     }
@@ -96,7 +96,7 @@ public class AppCourCourseController extends BaseController
 
         // 查询用户有没有购买该订单
         LoginDTO loginUser = AppTokenService.getInstance().getLoginUser(request);
-        List<CourOrder> courOrderList =courOrderService.selectCourOrderByUser(courCourse.getCourseId(), loginUser);
+        List<CourOrder> courOrderList = courOrderService.selectCourOrderByUser(courCourse.getId(), loginUser);
         courseVO.setIsBuy(courOrderList.size());
 
         // 增加章节列表

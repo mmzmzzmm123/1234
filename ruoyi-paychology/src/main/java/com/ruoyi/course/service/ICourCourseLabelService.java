@@ -17,7 +17,7 @@ public interface ICourCourseLabelService
      * @param id label主键
      * @return label
      */
-    public CourCourseLabel selectCourCourseLabelById(Long id);
+    public CourCourseLabel selectCourCourseLabelById(Integer id);
 
     /**
      * 查询label列表
@@ -49,7 +49,7 @@ public interface ICourCourseLabelService
      * @param ids 需要删除的label主键集合
      * @return 结果
      */
-    public int deleteCourCourseLabelByIds(Long[] ids);
+    public int deleteCourCourseLabelByIds(Integer[] ids);
 
     /**
      * 删除label信息
@@ -57,5 +57,5 @@ public interface ICourCourseLabelService
      * @param id label主键
      * @return 结果
      */
-    public int deleteCourCourseLabelById(Long id);
+    public int deleteCourCourseLabelById(Integer id);
 }

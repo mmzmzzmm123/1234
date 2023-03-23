@@ -20,7 +20,7 @@ public interface ICourOrderService
      * @param id 课程订单主键
      * @return 课程订单
      */
-    public CourOrder selectCourOrderById(Long id);
+    public CourOrder selectCourOrderById(Integer id);
 
     /**
      * 查询课程订单列表
@@ -52,7 +52,7 @@ public interface ICourOrderService
      * @param ids 需要删除的课程订单主键集合
      * @return 结果
      */
-    public int deleteCourOrderByIds(Long[] ids);
+    public int deleteCourOrderByIds(Integer[] ids);
 
     /**
      * 删除课程订单信息
@@ -60,7 +60,7 @@ public interface ICourOrderService
      * @param id 课程订单主键
      * @return 结果
      */
-    public int deleteCourOrderById(Long id);
+    public int deleteCourOrderById(Integer id);
 
     /**
      * c查询用户是否购买该课程
@@ -68,7 +68,7 @@ public interface ICourOrderService
      * @param id 课程订单主键
      * @return 结果
      */
-    public List<CourOrder> selectCourOrderByUser(String id, LoginDTO loginUser);
+    public List<CourOrder> selectCourOrderByUser(Integer id, LoginDTO loginUser);
 
 
 
@@ -79,7 +79,7 @@ public interface ICourOrderService
      * @param orderId 课程订单编号
      * @return 课程订单详情
      */
-    OrderVO getOrderDetailByOrderId(String orderId);
+    OrderVO getOrderDetailByOrderId(Integer orderId);
 
 
 }

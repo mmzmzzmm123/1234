@@ -19,7 +19,7 @@ public interface CourOrderMapper
      * @param id 课程订单主键
      * @return 课程订单
      */
-    public CourOrder selectCourOrderById(Long id);
+    public CourOrder selectCourOrderById(Integer id);
 
     /**
      * 查询课程订单列表
@@ -51,7 +51,7 @@ public interface CourOrderMapper
      * @param id 课程订单主键
      * @return 结果
      */
-    public int deleteCourOrderById(Long id);
+    public int deleteCourOrderById(Integer id);
 
     /**
      * 批量删除课程订单
@@ -59,13 +59,13 @@ public interface CourOrderMapper
      * @param ids 需要删除的数据主键集合
      * @return 结果
      */
-    public int deleteCourOrderByIds(Long[] ids);
+    public int deleteCourOrderByIds(Integer[] ids);
 
     /**
      * 根据订单编号查询课程订单详情
      *
-     * @param orderId 课程订单编号
+     * @param orderId 课程订单ID
      * @return 课程订单详情
      */
-    public OrderVO getOrderDetailByOrderId(String orderId);
+    public OrderVO getOrderDetailByOrderId(Integer orderId);
 }

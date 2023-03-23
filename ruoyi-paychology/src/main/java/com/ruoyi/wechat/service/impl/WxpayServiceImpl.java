@@ -150,9 +150,9 @@ public class WxpayServiceImpl implements IWxpayService {
                 .orderId(orderId)
                 .amount(wxPayDTO.getAmount())
                 .status(OrderStatus.CREATE.getValue())
-                .courseId(String.valueOf(wxPayDTO.getGaugeId()))
+                .courseId(Integer.parseInt(wxPayDTO.getGaugeId().toString()))
                 .build();
-        courOrder.setUserId(loginUser.getUserId());
+        courOrder.setUserId(Integer.parseInt(loginUser.getUserId()));
         int id = courOrderService.insertCourOrder(courOrder);
         return id;
     }

@@ -16,31 +16,31 @@ public class CourCourseLabel extends BaseEntity
     private static final long serialVersionUID = 1L;
 
     /** ID */
-    private Long id;
+    private Integer id;
 
     /** 课程编号 */
-    @Excel(name = "课程编号")
-    private String courseId;
+    @Excel(name = "课程ID")
+    private Integer courseId;
 
     /** 课程标签 */
     @Excel(name = "课程标签")
     private Integer courseLabel;
 
-    public void setId(Long id) 
+    public void setId(Integer id)
     {
         this.id = id;
     }
 
-    public Long getId() 
+    public Integer getId()
     {
         return id;
     }
-    public void setCourseId(String courseId) 
+    public void setCourseId(Integer courseId)
     {
         this.courseId = courseId;
     }
 
-    public String getCourseId() 
+    public Integer getCourseId()
     {
         return courseId;
     }

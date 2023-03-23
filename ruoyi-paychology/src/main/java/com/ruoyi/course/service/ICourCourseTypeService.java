@@ -18,7 +18,7 @@ public interface ICourCourseTypeService
      * @param typeId 课程类型主键
      * @return 课程类型
      */
-    public CourCourseType selectCourCourseTypeByTypeId(Long typeId);
+    public CourCourseType selectCourCourseTypeByTypeId(Integer typeId);
 
     /**
      * 查询课程类型列表
@@ -50,7 +50,7 @@ public interface ICourCourseTypeService
      * @param typeIds 需要删除的课程类型主键集合
      * @return 结果
      */
-    public int deleteCourCourseTypeByTypeIds(Long[] typeIds);
+    public int deleteCourCourseTypeByTypeIds(Integer[] typeIds);
 
     /**
      * 删除课程类型信息
@@ -58,5 +58,5 @@ public interface ICourCourseTypeService
      * @param typeId 课程类型主键
      * @return 结果
      */
-    public int deleteCourCourseTypeByTypeId(Long typeId);
+    public int deleteCourCourseTypeByTypeId(Integer typeId);
 }

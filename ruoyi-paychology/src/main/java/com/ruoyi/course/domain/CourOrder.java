@@ -24,7 +24,7 @@ public class CourOrder extends BaseEntity
     private static final long serialVersionUID = 1L;
 
     /** ID */
-    private Long id;
+    private Integer id;
 
     /** 订单编号 */
     @Excel(name = "订单编号")
@@ -35,23 +35,23 @@ public class CourOrder extends BaseEntity
     private Integer status;
 
     /** 用户编号 */
-    @Excel(name = "用户编号")
-    private String userId;
+    @Excel(name = "用户ID")
+    private Integer userId;
 
     /** 应付金额 */
     @Excel(name = "应付金额")
     private BigDecimal amount;
 
-    /** 课程编号 */
-    @Excel(name = "课程编号")
-    private String courseId;
+    /** 课程ID */
+    @Excel(name = "课程ID")
+    private Integer courseId;
 
-    public void setId(Long id) 
+    public void setId(Integer id)
     {
         this.id = id;
     }
 
-    public Long getId() 
+    public Integer getId()
     {
         return id;
     }
@@ -73,12 +73,12 @@ public class CourOrder extends BaseEntity
     {
         return status;
     }
-    public void setUserId(String userId) 
+    public void setUserId(Integer userId)
     {
         this.userId = userId;
     }
 
-    public String getUserId() 
+    public Integer getUserId()
     {
         return userId;
     }
@@ -93,12 +93,12 @@ public class CourOrder extends BaseEntity
     {
         return amount;
     }
-    public void setCourseId(String courseId) 
+    public void setCourseId(Integer courseId)
     {
         this.courseId = courseId;
     }
 
-    public String getCourseId() 
+    public Integer getCourseId()
     {
         return courseId;
     }

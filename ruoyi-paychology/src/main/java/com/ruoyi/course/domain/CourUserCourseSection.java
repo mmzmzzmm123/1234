@@ -16,70 +16,70 @@ public class CourUserCourseSection extends BaseEntity
     private static final long serialVersionUID = 1L;
 
     /** ID */
-    private Long id;
+    private Integer id;
 
     /** 用户编号 */
     @Excel(name = "用户ID")
-    private String userId;
+    private Integer userId;
 
     /** 课程编号 */
     @Excel(name = "课程编号")
-    private String courseId;
+    private Integer courseId;
 
     /** 章节编号 */
     @Excel(name = "章节编号")
-    private String sectionId;
+    private Integer sectionId;
 
     /** 上次结束时间（单位：秒） */
     @Excel(name = "上次结束时间", readConverterExp = "单=位：秒")
-    private Long endTime;
+    private Integer endTime;
 
     /** 完成状态（0-未完成， 1-已完成） */
     @Excel(name = "完成状态", readConverterExp = "0=-未完成，,1=-已完成")
     private Integer finishStatus;
 
-    public void setId(Long id) 
+    public void setId(Integer id)
     {
         this.id = id;
     }
 
-    public Long getId() 
+    public Integer getId()
     {
         return id;
     }
-    public void setUserId(String userId) 
+    public void setUserId(Integer userId)
     {
         this.userId = userId;
     }
 
-    public String getUserId() 
+    public Integer getUserId()
     {
         return userId;
     }
-    public void setCourseId(String courseId) 
+    public void setCourseId(Integer courseId)
     {
         this.courseId = courseId;
     }
 
-    public String getCourseId() 
+    public Integer getCourseId()
     {
         return courseId;
     }
-    public void setSectionId(String sectionId) 
+    public void setSectionId(Integer sectionId)
     {
         this.sectionId = sectionId;
     }
 
-    public String getSectionId() 
+    public Integer getSectionId()
     {
         return sectionId;
     }
-    public void setEndTime(Long endTime) 
+    public void setEndTime(Integer endTime)
     {
         this.endTime = endTime;
     }
 
-    public Long getEndTime() 
+    public Integer getEndTime()
     {
         return endTime;
     }

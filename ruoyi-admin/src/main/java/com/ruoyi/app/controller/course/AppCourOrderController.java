@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/app/course/order")
@@ -38,14 +39,15 @@ public class AppCourOrderController extends BaseController
     }
 
     /**
-     * 根据订单编号查询课程订单详情
+     * 根据订单ID查询课程订单详情
      */
 //    @PreAuthorize("@ss.hasPermi('course:course:list')")
     @PostMapping("/detail")
-    @ApiOperation("根据订单编号查询课程订单详情")
-    public AjaxResult detail(@RequestBody CourOrder courOrder)
+    @ApiOperation("根据订单ID查询课程订单详情")
+    public AjaxResult detail(@RequestBody Map<String, String> params)
     {
-        OrderVO orderVO = courOrderService.getOrderDetailByOrderId(courOrder.getOrderId());
+        Integer orderId = Integer.valueOf(params.get("orderId")); // 订单ID
+        OrderVO orderVO = courOrderService.getOrderDetailByOrderId(orderId);
         return AjaxResult.success(orderVO);
     }
 

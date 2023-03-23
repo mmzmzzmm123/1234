@@ -65,7 +65,7 @@ public class CourCourseController extends BaseController
      */
     @PreAuthorize("@ss.hasPermi('course:course:query')")
     @GetMapping(value = "/{id}")
-    public AjaxResult getInfo(@PathVariable("id") Long id)
+    public AjaxResult getInfo(@PathVariable("id") Integer id)
     {
         return AjaxResult.success(courCourseService.selectCourCourseById(id));
     }
@@ -98,7 +98,7 @@ public class CourCourseController extends BaseController
     @PreAuthorize("@ss.hasPermi('course:course:remove')")
     @Log(title = "课程", businessType = BusinessType.DELETE)
 	@DeleteMapping("/{ids}")
-    public AjaxResult remove(@PathVariable Long[] ids)
+    public AjaxResult remove(@PathVariable Integer[] ids)
     {
         return toAjax(courCourseService.deleteCourCourseByIds(ids));
     }

@@ -19,7 +19,7 @@ public interface ICourUserCourseSectionService
      * @param id 用户-课程-章节关系主键
      * @return 用户-课程-章节关系
      */
-    public CourUserCourseSection selectCourUserCourseSectionById(Long id);
+    public CourUserCourseSection selectCourUserCourseSectionById(Integer id);
 
     /**
      * 查询用户-课程-章节关系列表
@@ -59,7 +59,7 @@ public interface ICourUserCourseSectionService
      * @param ids 需要删除的用户-课程-章节关系主键集合
      * @return 结果
      */
-    public int deleteCourUserCourseSectionByIds(Long[] ids);
+    public int deleteCourUserCourseSectionByIds(Integer[] ids);
 
     /**
      * 删除用户-课程-章节关系信息
@@ -67,5 +67,5 @@ public interface ICourUserCourseSectionService
      * @param id 用户-课程-章节关系主键
      * @return 结果
      */
-    public int deleteCourUserCourseSectionById(Long id);
+    public int deleteCourUserCourseSectionById(Integer id);
 }

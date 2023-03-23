@@ -4,8 +4,10 @@ import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.core.page.TableDataInfo;
 import com.ruoyi.course.domain.CourCourse;
+import com.ruoyi.course.domain.CourSection;
 import com.ruoyi.course.domain.CourUserCourseSection;
 import com.ruoyi.course.service.ICourCourseService;
+import com.ruoyi.course.service.ICourSectionService;
 import com.ruoyi.course.service.ICourUserCourseSectionService;
 import com.ruoyi.course.vo.CourseVO;
 import io.swagger.annotations.Api;
@@ -31,6 +33,9 @@ public class AppCourUserSectionController extends BaseController {
 
     @Autowired
     private ICourCourseService courCourseService;
+
+    @Autowired
+    private ICourSectionService courSectionService;
 
     /**
      * 查询用户的课程列表
@@ -64,6 +69,13 @@ public class AppCourUserSectionController extends BaseController {
             CourseVO courseVO = new CourseVO();
             BeanUtils.copyProperties(courCourse, courseVO);
             courseVO.setFinishStatus(hasUnFinished ? 0 : 1);
+
+            // 增加章节列表
+            CourSection courSection = CourSection.builder()
+                    .courseId(courCourse.getCourseId())
+                    .build();
+            List<CourSection> sectionList = courSectionService.selectCourSectionList(courSection);
+            courseVO.setSectionList(sectionList);
 
             courseVOList.add(courseVO);
         });

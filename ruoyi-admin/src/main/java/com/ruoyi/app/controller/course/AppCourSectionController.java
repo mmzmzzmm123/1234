@@ -53,7 +53,7 @@ public class AppCourSectionController extends BaseController
 //    @PreAuthorize("@ss.hasPermi('course:section:query')")
     @PostMapping(value = "/getInfo")
     @ApiOperation("查询章节详情")
-    public AjaxResult getInfo(@RequestParam(value = "id") Long id)
+    public AjaxResult getInfo(@RequestParam(value = "id") Integer id)
     {
         return AjaxResult.success(courSectionService.selectCourSectionById(id));
     }

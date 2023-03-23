@@ -24,11 +24,11 @@ public class CourCourse extends BaseEntity
     private static final long serialVersionUID = 1L;
 
     /** $column.columnComment */
-    private Long id;
+    private Integer id;
 
     /** 课程编号 */
-    @Excel(name = "课程编号")
-    private String courseId;
+    @Excel(name = "课程ID")
+    private Integer courseId;
 
     /** 课程名称 */
     @Excel(name = "课程名称")
@@ -54,21 +54,21 @@ public class CourCourse extends BaseEntity
     @Excel(name = "课程详情，富文本内容")
     private String detail;
 
-    public void setId(Long id) 
+    public void setId(Integer id)
     {
         this.id = id;
     }
 
-    public Long getId() 
+    public Integer getId()
     {
         return id;
     }
-    public void setCourseId(String courseId) 
+    public void setCourseId(Integer courseId)
     {
         this.courseId = courseId;
     }
 
-    public String getCourseId() 
+    public Integer getCourseId()
     {
         return courseId;
     }

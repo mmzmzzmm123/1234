@@ -38,7 +38,7 @@ public class CourCourseServiceImpl implements ICourCourseService
      * @return 课程
      */
     @Override
-    public CourCourse selectCourCourseById(Long id)
+    public CourCourse selectCourCourseById(Integer id)
     {
         return courCourseMapper.selectCourCourseById(id);
     }
@@ -50,7 +50,7 @@ public class CourCourseServiceImpl implements ICourCourseService
      * @return 课程
      */
     @Override
-    public CourCourse selectCourCourseByType(Long typeId)
+    public CourCourse selectCourCourseByType(Integer typeId)
     {
         return courCourseMapper.selectCourCourseByType(typeId);
     }
@@ -99,7 +99,7 @@ public class CourCourseServiceImpl implements ICourCourseService
      * @return 结果
      */
     @Override
-    public int deleteCourCourseByIds(Long[] ids)
+    public int deleteCourCourseByIds(Integer[] ids)
     {
         return courCourseMapper.deleteCourCourseByIds(ids);
     }
@@ -111,7 +111,7 @@ public class CourCourseServiceImpl implements ICourCourseService
      * @return 结果
      */
     @Override
-    public int deleteCourCourseById(Long id)
+    public int deleteCourCourseById(Integer id)
     {
         return courCourseMapper.deleteCourCourseById(id);
     }
@@ -122,7 +122,7 @@ public class CourCourseServiceImpl implements ICourCourseService
      * @param courseId 课程编号
      * @return 课程信息
      */
-    public boolean calCourCourseList(String courseId) {
+    public boolean calCourCourseList(Integer courseId) {
         CourUserCourseSection courUserCourseSection = new CourUserCourseSection();
         courUserCourseSection.setCourseId(courseId);
         List<CourUserCourseSection> courUserCourseSectionList =
@@ -134,10 +134,10 @@ public class CourCourseServiceImpl implements ICourCourseService
     /**
      * 查询课程是否支付
      *
-     * @param courseId 课程编号
+     * @param courseId 课程ID
      * @return 课程支付数量
      */
-    public int getPaidCourseCount(String courseId) {
+    public int getPaidCourseCount(Integer courseId) {
         return courCourseMapper.getPaidCourseCount(courseId);
     }
 }

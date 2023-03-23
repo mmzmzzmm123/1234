@@ -50,7 +50,7 @@ public class AppOrderPayController extends BaseController {
 
         // 修改订单表的订单状态
         CourOrder courOrder = new CourOrder();
-        courOrder.setId(orderPay.getOrderId());
+        courOrder.setId(Integer.parseInt(orderPay.getOrderId().toString()));
         courOrder.setStatus(1); // 1表示订单处于完成状态
         courOrderService.updateCourOrder(courOrder);
 
@@ -69,7 +69,7 @@ public class AppOrderPayController extends BaseController {
     {
         // 修改订单表的订单状态
         CourOrder courOrder = new CourOrder();
-        courOrder.setId(orderPay.getOrderId());
+        courOrder.setId(Integer.parseInt(orderPay.getOrderId().toString()));
         courOrder.setStatus(2); // 2表示订单处于关闭状态
         courOrderService.updateCourOrder(courOrder);
 

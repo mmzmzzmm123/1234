@@ -48,6 +48,10 @@ public class CourseVO implements Serializable {
     @ApiModelProperty("课程完成情况")
     private Integer finishStatus;
 
+    /** 课程已学习时长 */
+    @ApiModelProperty("课程已学习时长（秒）")
+    private Integer studyDuration;
+
     /** 课程学习人数 */
     @ApiModelProperty("课程学习人数")
     private Integer studyNum;

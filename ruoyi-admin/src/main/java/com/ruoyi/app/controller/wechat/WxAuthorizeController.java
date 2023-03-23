@@ -21,6 +21,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 
 /**
  * @User hogan
@@ -49,13 +51,19 @@ public class WxAuthorizeController {
     @RequestMapping("wxLogin")
     public AjaxResult wxLogin() {
         //这里是回调的url
-        String redirect_uri = PAGE_URL;
+        String redirect_uri = null;
+        try {
+            redirect_uri = URLEncoder.encode(PAGE_URL, "utf-8");
+        } catch (UnsupportedEncodingException e) {
+            throw new RuntimeException(e);
+        }
         String url = "https://open.weixin.qq.com/connect/oauth2/authorize?" +
                 "appid=APPID" +
                 "&redirect_uri=REDIRECT_URI" +
                 "&response_type=code" +
                 "&scope=SCOPE" +
                 "&state=STATE#wechat_redirect";
+
         url = url.replace("APPID", APP_ID).replace("REDIRECT_URI", redirect_uri).replace("SCOPE", "snsapi_userinfo");
         log.info("wxLogin_url:{}", url);
         return AjaxResult.success(RespMessageConstants.OPERATION_SUCCESS, url);

@@ -27,7 +27,7 @@ public class CourSectionServiceImpl implements ICourSectionService
      * @return 章节
      */
     @Override
-    public CourSection selectCourSectionById(Long id)
+    public CourSection selectCourSectionById(Integer id)
     {
         return courSectionMapper.selectCourSectionById(id);
     }
@@ -75,7 +75,7 @@ public class CourSectionServiceImpl implements ICourSectionService
      * @return 结果
      */
     @Override
-    public int deleteCourSectionByIds(Long[] ids)
+    public int deleteCourSectionByIds(Integer[] ids)
     {
         return courSectionMapper.deleteCourSectionByIds(ids);
     }
@@ -87,7 +87,7 @@ public class CourSectionServiceImpl implements ICourSectionService
      * @return 结果
      */
     @Override
-    public int deleteCourSectionById(Long id)
+    public int deleteCourSectionById(Integer id)
     {
         return courSectionMapper.deleteCourSectionById(id);
     }

@@ -27,7 +27,7 @@ public class CourCourseTypeServiceImpl implements ICourCourseTypeService
      * @return 课程类型
      */
     @Override
-    public CourCourseType selectCourCourseTypeByTypeId(Long typeId)
+    public CourCourseType selectCourCourseTypeByTypeId(Integer typeId)
     {
         return courCourseTypeMapper.selectCourCourseTypeByTypeId(typeId);
     }
@@ -75,7 +75,7 @@ public class CourCourseTypeServiceImpl implements ICourCourseTypeService
      * @return 结果
      */
     @Override
-    public int deleteCourCourseTypeByTypeIds(Long[] typeIds)
+    public int deleteCourCourseTypeByTypeIds(Integer[] typeIds)
     {
         return courCourseTypeMapper.deleteCourCourseTypeByTypeIds(typeIds);
     }
@@ -87,7 +87,7 @@ public class CourCourseTypeServiceImpl implements ICourCourseTypeService
      * @return 结果
      */
     @Override
-    public int deleteCourCourseTypeByTypeId(Long typeId)
+    public int deleteCourCourseTypeByTypeId(Integer typeId)
     {
         return courCourseTypeMapper.deleteCourCourseTypeByTypeId(typeId);
     }

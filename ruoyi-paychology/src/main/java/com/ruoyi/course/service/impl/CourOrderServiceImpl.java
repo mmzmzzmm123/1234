@@ -36,7 +36,7 @@ public class CourOrderServiceImpl implements ICourOrderService
      * @return 课程订单
      */
     @Override
-    public CourOrder selectCourOrderById(Long id)
+    public CourOrder selectCourOrderById(Integer id)
     {
         return courOrderMapper.selectCourOrderById(id);
     }
@@ -85,7 +85,7 @@ public class CourOrderServiceImpl implements ICourOrderService
      * @return 结果
      */
     @Override
-    public int deleteCourOrderByIds(Long[] ids)
+    public int deleteCourOrderByIds(Integer[] ids)
     {
         return courOrderMapper.deleteCourOrderByIds(ids);
     }
@@ -97,7 +97,7 @@ public class CourOrderServiceImpl implements ICourOrderService
      * @return 结果
      */
     @Override
-    public int deleteCourOrderById(Long id)
+    public int deleteCourOrderById(Integer id)
     {
         return courOrderMapper.deleteCourOrderById(id);
     }
@@ -109,7 +109,7 @@ public class CourOrderServiceImpl implements ICourOrderService
      * @return 结果
      */
     @Override
-    public List<CourOrder> selectCourOrderByUser(String id , LoginDTO loginUser){
+    public List<CourOrder> selectCourOrderByUser(Integer id , LoginDTO loginUser){
 
         String userId = "";
         if (loginUser != null){
@@ -118,7 +118,7 @@ public class CourOrderServiceImpl implements ICourOrderService
 
         CourOrder courOrder = CourOrder.builder()
                 .courseId(id)
-                .userId(userId)
+                .userId(Integer.parseInt(userId))
                 .build();
         List<CourOrder> list = courOrderMapper.selectCourOrderList(courOrder);
         if (loginUser == null){
@@ -129,13 +129,13 @@ public class CourOrderServiceImpl implements ICourOrderService
     }
 
     /**
-     * 根据订单编号查询课程订单详情
+     * 根据订单ID查询课程订单详情
      *
-     * @param orderId 课程订单编号
+     * @param orderId 课程订单ID
      * @return 课程订单详情
      */
     @Override
-    public OrderVO getOrderDetailByOrderId(String orderId) {
+    public OrderVO getOrderDetailByOrderId(Integer orderId) {
         return courOrderMapper.getOrderDetailByOrderId(orderId);
     }
 }

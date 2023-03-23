@@ -16,7 +16,7 @@ public class CourCourseBannerConfig extends BaseEntity
     private static final long serialVersionUID = 1L;
 
     /** 主键 */
-    private Long id;
+    private Integer id;
 
     /** banner图片地址 */
     @Excel(name = "banner图片地址")
@@ -30,12 +30,12 @@ public class CourCourseBannerConfig extends BaseEntity
     @Excel(name = "banner分类(0-首页一级banner页，1-限时福利，2-精选好课)")
     private Long bannerType;
 
-    public void setId(Long id) 
+    public void setId(Integer id)
     {
         this.id = id;
     }
 
-    public Long getId() 
+    public Integer getId()
     {
         return id;
     }
