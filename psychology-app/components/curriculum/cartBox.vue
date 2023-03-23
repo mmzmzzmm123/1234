@@ -37,6 +37,7 @@
 <script>
 import orderServer from "@/server/curriculum/order";
 import utils from "@/utils/common";
+import { getPaySign, wxPay } from "@/server/wxApi";
 export default {
   props: ["courseInfo","redirectUri"],
   data() {
@@ -52,14 +53,22 @@ export default {
       this.userInfo = uni.getStorageSync("userInfo");
       if (this.userInfo && this.userInfo.userId) {
         let res = await orderServer.orderAdd(
-          this.userInfo.userId,
+          this.userInfo.userId,		  
           this.courseInfo.id,
-          this.courseInfo.price
+          this.courseInfo.price		  
         );
         if (res.code == 200) {
-          uni.navigateTo({
-            url: "/pages/curriculum/learningCourse?id=" + this.courseInfo.id,
-          });
+			let res = await getPaySign(this.userInfo.openid)
+			console.log(res)
+			if (res.code == 200) {
+				const { appId, timeStamp, nonceStr, packageInfo, paySign, signType } = res.data
+				wxPay(res.data, () => {
+					uni.navigateTo({
+								url: "/pages/curriculum/learningCourse?id=" + this.courseInfo.id,
+					});
+				})
+			}
+		  
         }
       } else {
         utils.loginWx(this.redirectUri);
