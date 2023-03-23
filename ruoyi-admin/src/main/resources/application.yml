@@ -173,8 +173,22 @@ cos:
 #    redirectUri: http://127.0.0.1:8089/pages/logincallback
 
 #开发
+#wx:
+#  login:
+#    appId: wx8604d98104f67e66
+#    appSecret: 98dca366602a0806da390ed138e4a7ea
+#    redirectUri: http://192.168.137.215:8080/pages/logincallback
+
+# 正式公众号
 wx:
   login:
-    appId: wx8604d98104f67e66
-    appSecret: 98dca366602a0806da390ed138e4a7ea
-    redirectUri: http://192.168.137.215:8080/pages/logincallback
+    appId: wx9891e2d78c14ef94
+    appSecret: daf7d8f1b2033493921f0731dc0a2876
+    redirectUri: http://www.ssgpsy.com/pages/logincallback
+
+#测试
+#wx:
+#  login:
+#    appId: wxb973c5107125a24b
+#    appSecret: ad2c1dd102b31f8d6ac942882180ae71
+#    redirectUri: http://192.168.137.1:8081/pages/logincallback
