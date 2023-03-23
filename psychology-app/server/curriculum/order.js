@@ -16,10 +16,22 @@ export default {
       });
     }
   },
-  //根据用户编号获取订单
+  //根据用户ID获取订单
   getOrderList: async (userId) => {
     let res = await httprequest.post("/app/course/order/list", {
         userId,
+    });
+    if (res.code == 200) {
+      return res.rows;
+    } else {
+      return [];
+    }
+  },
+  // 根据用户ID和订单状态获取订单
+  getOrderListByStatus: async (userId, status) => {
+    let res = await httprequest.post("/app/course/order/list", {
+        userId,
+		status
     });
     if (res.code == 200) {
       return res.rows;

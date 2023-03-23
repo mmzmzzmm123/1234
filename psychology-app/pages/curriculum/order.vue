@@ -100,7 +100,10 @@ export default {
     };
   },
   async created() {
-    // this.orderList = await orderServer.getOrderList();
+	  this.userInfo = JSON.parse(uni.getStorageSync("userInfo"))
+    if (this.userInfo && this.userInfo.userId) {
+      this.orderList = await orderServer.getOrderList(this.userInfo.userId);
+    }
   },
   methods: {
     cartShow() {
@@ -133,7 +136,10 @@ export default {
     },
     async changeTab(status) {
       this.currentStatus = status;
-      this.orderList = await orderServer.getOrderList(status);
+      this.userInfo = JSON.parse(uni.getStorageSync("userInfo"))
+      if (this.userInfo && this.userInfo.userId) {
+        this.orderList = await orderServer.getOrderListByStatus(this.userInfo.userId, status);
+      }
     },
   },
 };
