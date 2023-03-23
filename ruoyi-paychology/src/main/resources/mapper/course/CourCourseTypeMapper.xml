@@ -21,7 +21,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         </where>
     </select>
     
-    <select id="selectCourCourseTypeByTypeId" parameterType="Long" resultMap="CourCourseTypeResult">
+    <select id="selectCourCourseTypeByTypeId" parameterType="Integer" resultMap="CourCourseTypeResult">
         <include refid="selectCourCourseTypeVo"/>
         where type_id = #{typeId}
     </select>
@@ -46,7 +46,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         where type_id = #{typeId}
     </update>
 
-    <delete id="deleteCourCourseTypeByTypeId" parameterType="Long">
+    <delete id="deleteCourCourseTypeByTypeId" parameterType="Integer">
         delete from cour_course_type where type_id = #{typeId}
     </delete>
 

@@ -29,7 +29,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         </where>
     </select>
 
-    <select id="selectCourOrderById" parameterType="Long" resultMap="CourOrderResult">
+    <select id="selectCourOrderById" parameterType="Integer" resultMap="CourOrderResult">
         <include refid="selectCourOrderVo"/>
         where id = #{id}
     </select>
@@ -70,7 +70,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         </trim>
     </update>
 
-    <delete id="deleteCourOrderById" parameterType="Long">
+    <delete id="deleteCourOrderById" parameterType="Integer">
         delete from cour_order where id = #{id}
     </delete>
 
