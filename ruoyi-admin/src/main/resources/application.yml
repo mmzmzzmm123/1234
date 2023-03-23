@@ -180,15 +180,15 @@ cos:
 #    redirectUri: http://192.168.137.215:8080/pages/logincallback
 
 # 正式公众号
-wx:
-  login:
-    appId: wx9891e2d78c14ef94
-    appSecret: daf7d8f1b2033493921f0731dc0a2876
-    redirectUri: http://www.ssgpsy.com/pages/logincallback
-
-#测试
 #wx:
 #  login:
-#    appId: wxb973c5107125a24b
-#    appSecret: ad2c1dd102b31f8d6ac942882180ae71
-#    redirectUri: http://192.168.137.1:8081/pages/logincallback
+#    appId: wx9891e2d78c14ef94
+#    appSecret: daf7d8f1b2033493921f0731dc0a2876
+#    redirectUri: http://wx.ssgpsy.com/pages/logincallback
+
+#测试
+wx:
+  login:
+    appId: wxb973c5107125a24b
+    appSecret: ad2c1dd102b31f8d6ac942882180ae71
+    redirectUri: http://192.168.137.1:8081/pages/logincallback
