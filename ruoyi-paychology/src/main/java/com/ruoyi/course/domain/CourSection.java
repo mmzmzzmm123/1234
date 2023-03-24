@@ -34,11 +34,11 @@ public class CourSection extends BaseEntity
 
     /** 章节时长(单位：秒) */
     @Excel(name = "章节时长(单位：秒)")
-    private Long duration;
+    private Integer duration;
 
     /** 章节类型（0-普通，1-试听） */
     @Excel(name = "章节类型", readConverterExp = "0=-普通，1-试听")
-    private Long type;
+    private Integer type;
 
     /** 章节内容，富文本 */
     @Excel(name = "章节内容，富文本")
@@ -54,7 +54,7 @@ public class CourSection extends BaseEntity
 
     /** 内容类型（0-视频，1-音频） */
     @Excel(name = "内容类型", readConverterExp = "0=-视频，1-音频")
-    private Long contentType;
+    private Integer contentType;
 
     public void setId(Integer id)
     {
@@ -83,21 +83,21 @@ public class CourSection extends BaseEntity
     {
         return topic;
     }
-    public void setDuration(Long duration) 
+    public void setDuration(Integer duration)
     {
         this.duration = duration;
     }
 
-    public Long getDuration() 
+    public Integer getDuration()
     {
         return duration;
     }
-    public void setType(Long type) 
+    public void setType(Integer type)
     {
         this.type = type;
     }
 
-    public Long getType() 
+    public Integer getType()
     {
         return type;
     }
@@ -128,12 +128,12 @@ public class CourSection extends BaseEntity
     {
         return courseId;
     }
-    public void setContentType(Long contentType) 
+    public void setContentType(Integer contentType)
     {
         this.contentType = contentType;
     }
 
-    public Long getContentType() 
+    public Integer getContentType()
     {
         return contentType;
     }

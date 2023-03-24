@@ -47,7 +47,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <select id="getCourseListByUserId" parameterType="Integer" resultMap="CourCourseResult">
         select c.id, c.course_id, c.name, c.type, c.author, c.url, c.price, c.detail
         from cour_course c
-        where c.course_id in (
+        where c.id in (
             select cucs.course_id
             from cour_user_course_section cucs
             <where>

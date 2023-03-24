@@ -132,6 +132,30 @@ public class CourCourseServiceImpl implements ICourCourseService
     }
 
     /**
+     * 根据课程的章节计算课程学习时长
+     *
+     * @param courseId 课程ID
+     * @return 课程信息
+     */
+    public Integer calCourCourseStudyDuration(Integer courseId) {
+        Integer studyDuration = 0;
+        CourUserCourseSection courUserCourseSection = new CourUserCourseSection();
+        courUserCourseSection.setCourseId(courseId);
+        List<CourUserCourseSection> courUserCourseSectionList =
+                courUserCourseSectionService.selectCourUserCourseSectionList(courUserCourseSection);
+
+        for (CourUserCourseSection userCourseSection: courUserCourseSectionList) {
+            if(userCourseSection.getFinishStatus() == 0) { // 用户未学习完成过当前章节
+                studyDuration += userCourseSection.getEndTime();
+            } else {
+                studyDuration += courSectionService.selectCourSectionById(userCourseSection.getSectionId()).getDuration();
+            }
+        }
+
+        return studyDuration;
+    }
+
+    /**
      * 查询课程是否支付
      *
      * @param courseId 课程ID

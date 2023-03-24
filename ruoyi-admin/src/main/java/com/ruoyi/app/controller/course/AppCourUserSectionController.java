@@ -77,6 +77,10 @@ public class AppCourUserSectionController extends BaseController {
             List<CourSection> sectionList = courSectionService.selectCourSectionList(courSection);
             courseVO.setSectionList(sectionList);
 
+            // 计算课程学习时长
+            Integer studyDuration = courCourseService.calCourCourseStudyDuration(courCourse.getCourseId());
+            courseVO.setStudyDuration(studyDuration);
+
             courseVOList.add(courseVO);
         });
         return getDataTable(courseVOList);
