@@ -1,5 +1,6 @@
 package com.ruoyi.course.vo;
 
+import com.ruoyi.course.domain.CourCourse;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -31,6 +32,10 @@ public class OrderVO {
     /** 课程编号 */
     @ApiModelProperty("课程编号")
     private String courseId;
+
+    /** 课程详情 */
+    @ApiModelProperty("课程详情")
+    private CourCourse courseInfo;
 
     /** 订单支付状态 */
     @ApiModelProperty("订单支付状态")

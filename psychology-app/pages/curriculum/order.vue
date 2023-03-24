@@ -75,32 +75,13 @@ export default {
         { title: "已完成", status: 1 },
       ],
       statusTxt: ["待付款", "已完成", "已取消"],
-      orderList: [
-        {
-          createTime: "123123123",
-          status: 0,
-          amount: 222,
-          courseInfo: { url: "234234", name: "23d", author: "33" },
-        },
-        {
-          createTime: "123123123",
-          status: 2,
-          amount: 222,
-          courseInfo: { url: "234234", name: "23d", author: "33" },
-        },
-        {
-          createTime: "123123123",
-          status: 1,
-          amount: 222,
-          courseInfo: { url: "234234", name: "23d", author: "33" },
-        },
-      ],
+      orderList: [],
       courseInfo: {},
       cartBoxShow: false,
     };
   },
   async created() {
-	  this.userInfo = JSON.parse(uni.getStorageSync("userInfo"))
+	this.userInfo = JSON.parse(uni.getStorageSync("userInfo"))
     if (this.userInfo && this.userInfo.userId) {
       this.orderList = await orderServer.getOrderList(this.userInfo.userId);
     }

@@ -6,13 +6,16 @@ import com.ruoyi.common.core.page.TableDataInfo;
 import com.ruoyi.common.utils.OrderIdUtils;
 import com.ruoyi.course.domain.CourCourse;
 import com.ruoyi.course.domain.CourOrder;
+import com.ruoyi.course.service.ICourCourseService;
 import com.ruoyi.course.service.ICourOrderService;
 import com.ruoyi.course.vo.OrderVO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -25,8 +28,11 @@ public class AppCourOrderController extends BaseController
     @Autowired
     private ICourOrderService courOrderService;
 
+    @Autowired
+    private ICourCourseService courCourseService;
+
     /**
-     * 查询课程订单列表
+     * 根据用户ID查询课程订单列表
      */
 //    @PreAuthorize("@ss.hasPermi('course:course:list')")
     @PostMapping("/list")
@@ -35,7 +41,17 @@ public class AppCourOrderController extends BaseController
     {
         startPage();
         List<CourOrder> list = courOrderService.selectCourOrderList(courOrder);
-        return getDataTable(list);
+
+        List<OrderVO> orderVOList = new ArrayList<>();
+        // 返回的订单信息中需要包含课程详情信息
+        list.forEach(item -> {
+           CourCourse courCourse =  courCourseService.selectCourCourseById(item.getCourseId());
+           OrderVO orderVO = new OrderVO();
+           BeanUtils.copyProperties(item, orderVO);
+           orderVO.setCourseInfo(courCourse);
+           orderVOList.add(orderVO);
+        });
+        return getDataTable(orderVOList);
     }
 
     /**
