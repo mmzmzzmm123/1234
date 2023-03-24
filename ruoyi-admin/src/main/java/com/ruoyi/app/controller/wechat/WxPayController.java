@@ -1,5 +1,6 @@
 package com.ruoyi.app.controller.wechat;
 
+import com.ruoyi.app.controller.wechat.utils.WechatPayV3Utils;
 import com.ruoyi.common.constant.RespMessageConstants;
 import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.core.domain.dto.LoginDTO;
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import javax.servlet.http.HttpServletRequest;
+import com.alibaba.fastjson2.JSONObject;
 
 /**
  * @User hogan
@@ -33,6 +35,9 @@ public class WxPayController {
     @Autowired
     private IWxpayService wxpayService;
 
+    @Autowired
+    public WechatPayV3Utils wechatPayV3Utils;
+
     /**
      * 微信支付
      */
@@ -47,8 +52,8 @@ public class WxPayController {
     @PostMapping("callback")
     public AjaxResult payCallBack(@RequestBody WxPayDTO wxPayDTO , HttpServletRequest request){
         LoginDTO loginUser = AppTokenService.getInstance().getLoginUser(request);
+        JSONObject callBackJson = wechatPayV3Utils.getCallbackData(request);
         return AjaxResult.success(RespMessageConstants.OPERATION_SUCCESS ,wxpayService.payCallBack(wxPayDTO ,loginUser));
     }
-
-
 }
+

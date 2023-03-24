@@ -51,12 +51,13 @@ public class WxAuthorizeController {
     @RequestMapping("wxLogin")
     public AjaxResult wxLogin() {
         //这里是回调的url
-        String redirect_uri = null;
+        String redirect_uri = PAGE_URL;
         try {
             redirect_uri = URLEncoder.encode(PAGE_URL, "utf-8");
         } catch (UnsupportedEncodingException e) {
             throw new RuntimeException(e);
         }
+
         String url = "https://open.weixin.qq.com/connect/oauth2/authorize?" +
                 "appid=APPID" +
                 "&redirect_uri=REDIRECT_URI" +
