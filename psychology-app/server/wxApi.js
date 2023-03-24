@@ -81,7 +81,7 @@ function onBridgeReady(wxParam, successCallback) {
         "appId": wxParam.appId,     //公众号ID，由商户传入     
         "timeStamp": wxParam.timeStamp,     //时间戳，自1970年以来的秒数     
         "nonceStr": wxParam.nonceStr,      //随机串     
-        "package": wxParam.packageInfo,
+        "package": wxParam.package,
         "signType": wxParam.signType,     //微信签名方式：     
         "paySign": wxParam.paySign
 	},
@@ -103,6 +103,6 @@ export function wxPay(wxParam) {
 	        document.attachEvent('onWeixinJSBridgeReady', onBridgeReady(wxParam));
 	    }
 	} else {
-	    onBridgeReady();
+	    onBridgeReady(wxParam);
 	}
 }
