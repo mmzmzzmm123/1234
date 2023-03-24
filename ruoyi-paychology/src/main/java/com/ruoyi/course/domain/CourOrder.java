@@ -1,6 +1,7 @@
 package com.ruoyi.course.domain;
 
 import java.math.BigDecimal;
+import java.util.Map;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -46,7 +47,26 @@ public class CourOrder extends BaseEntity
     @Excel(name = "课程ID")
     private Integer courseId;
 
-    public void setId(Integer id)
+    /** 课程信息 */
+    @Excel(name = "课程信息")
+    private Map courseInfo;
+
+    @Excel(name = "课程图片url")
+    private String url;
+
+    @Excel(name = "课程作者")
+    private String author;
+
+    @Excel(name = "课程名字")
+    private String name;
+
+    public String getUrl(){ return url;}
+
+    public String getAuthor(){ return author;}
+
+    public String getName(){ return name;}
+
+    public void setId(int id)
     {
         this.id = id;
     }
@@ -103,6 +123,10 @@ public class CourOrder extends BaseEntity
         return courseId;
     }
 
+    public void setCourseInfo(Map courseMap){
+        this.courseInfo = courseMap;
+    }
+
     @Override
     public String toString() {
         return new ToStringBuilder(this,ToStringStyle.MULTI_LINE_STYLE)
@@ -113,6 +137,9 @@ public class CourOrder extends BaseEntity
             .append("userId", getUserId())
             .append("amount", getAmount())
             .append("courseId", getCourseId())
+            .append("url", getUrl())
+            .append("name", getName())
+            .append("author", getAuthor())
             .toString();
     }
 }
