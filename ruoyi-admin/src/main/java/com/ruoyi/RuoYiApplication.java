@@ -13,6 +13,7 @@ import org.springframework.context.annotation.EnableLoadTimeWeaving;
  * @author ruoyi
  */
 @SpringBootApplication(exclude = { DataSourceAutoConfiguration.class })
+@EnableCaching
 public class RuoYiApplication
 {
     public static void main(String[] args)

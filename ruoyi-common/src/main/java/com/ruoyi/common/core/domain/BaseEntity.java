@@ -7,6 +7,10 @@ import java.util.Map;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.ruoyi.common.core.domain.entity.SysUser;
+import com.ruoyi.common.utils.DateUtils;
+import com.ruoyi.common.utils.SecurityUtils;
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 
 /**
  * Entity基类
@@ -114,5 +118,27 @@ public class BaseEntity implements Serializable
     public void setParams(Map<String, Object> params)
     {
         this.params = params;
+    }
+
+    public void preInsert(){
+        SysUser user=  SecurityUtils.getLoginUser().getUser();
+        if(user!=null){
+            this.createBy=String.valueOf(user.getUserId());
+            this.updateBy=String.valueOf(user.getUserId());
+        }
+        this.createTime= DateUtils.getNowDate();
+        this.updateTime= DateUtils.getNowDate();
+    }
+
+    public void preUpdate(){
+        SysUser user= SecurityUtils.getLoginUser().getUser();
+        if(user!=null){
+            this.updateBy=String.valueOf(user.getUserId());
+        }
+        this.updateTime= DateUtils.getNowDate();
+    }
+
+    public String toString() {
+        return ReflectionToStringBuilder.toString(this);
     }
 }
