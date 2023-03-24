@@ -34,6 +34,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <include refid="selectCourOrderVo"/>
         where id = #{id}
     </select>
+
+    <select id="selectCourOrderByOrderId" parameterType="String" resultMap="CourOrderResult">
+        <include refid="selectCourOrderVo"/>
+        where order_id = #{orderId}
+    </select>
         
     <insert id="insertCourOrder" parameterType="CourOrder" useGeneratedKeys="true" keyProperty="id">
         insert into cour_order

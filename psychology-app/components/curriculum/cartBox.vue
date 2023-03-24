@@ -58,7 +58,7 @@ export default {
           this.courseInfo.price		  
         );
         if (res.code == 200) {
-			let res = await getPaySign(this.userInfo.userId)
+			let res = await getPaySign(this.userInfo.userId, this.courseInfo.id)
 			console.log(res)
 			if (res.code == 200) {
 				const { appId, timeStamp, nonceStr, packageInfo, paySign, signType } = res.data

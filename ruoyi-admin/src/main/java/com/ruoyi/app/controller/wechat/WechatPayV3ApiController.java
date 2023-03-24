@@ -7,6 +7,11 @@ import com.ruoyi.app.controller.wechat.utils.WechatPayV3Utils;
 import com.ruoyi.common.constant.RespMessageConstants;
 import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.domain.AjaxResult;
+import com.ruoyi.common.utils.OrderIdUtils;
+import com.ruoyi.course.domain.CourOrder;
+import com.ruoyi.course.service.ICourOrderService;
+import com.ruoyi.gauge.domain.PsyOrderPay;
+import com.ruoyi.gauge.service.IPsyOrderPayService;
 import com.ruoyi.psychology.domain.PsyUser;
 import com.ruoyi.psychology.service.IPsyUserService;
 import com.ruoyi.psychology.service.impl.PsyUserServiceImpl;
@@ -44,6 +49,13 @@ public class WechatPayV3ApiController extends BaseController {
 
     @Autowired
     private IPsyUserService psyUserService;
+
+    @Autowired
+    private ICourOrderService courOrderService;
+
+    @Autowired
+    private IPsyOrderPayService orderPayService;
+
  
     /**
      * 发起微信小程序支付
@@ -56,16 +68,33 @@ public class WechatPayV3ApiController extends BaseController {
 
         //@TODO demo中先写死的一些参数
         Long userId = Long.parseLong(map.get("userId")); //用户id
-
-        PsyUser user = psyUserService.selectPsyUserById(userId + "");
-        String openid = user.getWxOpenid(); //先写死一个openid
-        BigDecimal amount = new BigDecimal("0.01"); //先写死一个金额 单位：元
-        String content = "支付demo-买牛订金"; //先写死一个商品描述
-        String attach = "我是附加数据"; //先写死一个附加数据 这是可选的 可以用来判断支付内容做支付成功后的处理
- 
-        //@TODO 在自己的数据库中创建订单数据 待支付状态
- 
+        Integer courseId = Integer.parseInt(map.get("courseId")); //课程ID
         String out_trade_no = createOrderNo("DJ", userId); //创建商户订单号
+        BigDecimal amount = new BigDecimal("0.01"); //先写死一个金额 单位：元
+
+        // TODO: 内部生成订单
+        CourOrder courOrder = new CourOrder();
+        courOrder.setOrderId(out_trade_no);
+        courOrder.setStatus(0);
+        courOrder.setAmount(amount);
+        courOrder.setUserId(Integer.parseInt(map.get("userId")));
+        courOrder.setCourseId(courseId);
+        CourOrder newCourOrder = courOrderService.generateCourOrder(courOrder);
+
+        // TODO: 内部生成支付对象
+        PsyOrderPay orderPay = new PsyOrderPay();
+        orderPay.setOrderId(Long.parseLong(newCourOrder.getId().toString()));
+        orderPay.setPayStatus(1);
+        orderPay.setAmount(amount);
+        orderPayService.insertPsyOrderPay(orderPay);
+
+        // 根据用户ID从用户表中查询openid
+        PsyUser user = psyUserService.selectPsyUserById(userId + "");
+        String openid = user.getWxOpenid();
+
+
+        String content = "支付demo-课程金"; //先写死一个商品描述
+        String attach = "我是附加数据"; //先写死一个附加数据 这是可选的 可以用来判断支付内容做支付成功后的处理
  
         Calendar calendar = Calendar.getInstance();
         calendar.set(Calendar.MINUTE, calendar.get(Calendar.MINUTE) + 15);
@@ -172,6 +201,7 @@ public class WechatPayV3ApiController extends BaseController {
     public Map<String, String> wechatPayNotify(HttpServletRequest request) {
         Map<String, String> result = new HashMap<>(2);
         JSONObject res = wechatPayV3Utils.getCallbackData(request);
+
         if (res == null) {
             result.put("code", "FAIL");
             result.put("message", "失败");
@@ -179,6 +209,20 @@ public class WechatPayV3ApiController extends BaseController {
         }
         logger.info("最终拿到的微信支付通知数据：" + res);
         //@TODO 处理支付成功后的业务 例如 将订单状态修改为已支付 具体参数键值可参考文档 注意！！！ 微信可能会多次发送重复的通知 因此要判断业务是否已经处理过了 避免重复处理
+        // TODO: 修改订单状态为已完成
+        String out_trade_no = res.getString("out_trade_no");
+        CourOrder courOrder = courOrderService.selectCourOrderByOrderId(out_trade_no);
+        courOrder.setStatus(2);
+        courOrderService.updateCourOrder(courOrder);
+
+        // TODO: 修改支付对象状态为已支付
+        String payId = res.getString("transaction_id"); // 微信支付系统生成的订单号
+        PsyOrderPay orderPay = new PsyOrderPay();
+        orderPay.setOrderId(Long.parseLong(courOrder.getId().toString())); // 订单ID
+        orderPay.setPayStatus(2);
+        orderPay.setPayId(payId);
+        orderPayService.updatePsyOrderPay(orderPay);
+
         result.put("code", "SUCCESS");
         result.put("message", "OK");
         return result;

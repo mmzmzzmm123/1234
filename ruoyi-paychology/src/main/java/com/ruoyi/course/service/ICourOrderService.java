@@ -23,6 +23,14 @@ public interface ICourOrderService
     public CourOrder selectCourOrderById(Integer id);
 
     /**
+     * 查询课程订单
+     *
+     * @param orderId 课程订单主键
+     * @return 课程订单
+     */
+    public CourOrder selectCourOrderByOrderId(String orderId);
+
+    /**
      * 查询课程订单列表
      * 
      * @param courOrder 课程订单
@@ -72,8 +80,6 @@ public interface ICourOrderService
     public List<CourOrder> selectCourOrderByUser(Integer userId, Integer courseId);
 
 
-
-
     /**
      * 根据订单编号查询课程订单详情
      *
@@ -82,5 +88,13 @@ public interface ICourOrderService
      */
     OrderVO getOrderDetailByOrderId(Integer orderId);
 
+
+    /**
+     * 生成课程订单
+     *
+     * @param courOrder 课程订单
+     * @return 生成的订单对象
+     */
+    public CourOrder generateCourOrder(CourOrder courOrder);
 
 }

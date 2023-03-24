@@ -42,6 +42,18 @@ public class CourOrderServiceImpl implements ICourOrderService
     }
 
     /**
+     * 查询课程订单
+     *
+     * @param orderId 课程订单主键
+     * @return 课程订单
+     */
+    @Override
+    public CourOrder selectCourOrderByOrderId(String orderId)
+    {
+        return courOrderMapper.selectCourOrderByOrderId(orderId);
+    }
+
+    /**
      * 查询课程订单列表
      * 
      * @param courOrder 课程订单
@@ -119,7 +131,6 @@ public class CourOrderServiceImpl implements ICourOrderService
                 .build();
 
         return courOrderMapper.selectCourOrderList(courOrder);
-
     }
 
     /**
@@ -131,5 +142,20 @@ public class CourOrderServiceImpl implements ICourOrderService
     @Override
     public OrderVO getOrderDetailByOrderId(Integer orderId) {
         return courOrderMapper.getOrderDetailByOrderId(orderId);
+    }
+
+    /**
+     * 生成课程订单
+     *
+     * @param courOrder 课程订单
+     * @return 生成的订单对象
+     */
+    public CourOrder generateCourOrder(CourOrder courOrder) {
+        courOrder.setCreateTime(DateUtils.getNowDate()); // 下单时间
+        int code = courOrderMapper.insertCourOrder(courOrder);
+        if (code == 1) {
+            return selectCourOrderByOrderId(courOrder.getOrderId());
+        }
+        return null;
     }
 }

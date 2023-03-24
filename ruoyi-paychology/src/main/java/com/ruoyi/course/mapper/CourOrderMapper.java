@@ -22,6 +22,14 @@ public interface CourOrderMapper
     public CourOrder selectCourOrderById(Integer id);
 
     /**
+     * 查询课程订单
+     *
+     * @param orderId 课程订单编号
+     * @return 课程订单
+     */
+    public CourOrder selectCourOrderByOrderId(String orderId);
+
+    /**
      * 查询课程订单列表
      * 
      * @param courOrder 课程订单
