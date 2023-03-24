@@ -56,6 +56,7 @@ public class CourseVO implements Serializable {
     @ApiModelProperty("课程学习人数")
     private Integer studyNum;
 
+    /** 课程是否购买, 0-未购买， 1-已购买 */
     @ApiModelProperty("是否购买")
     private Integer isBuy;
 

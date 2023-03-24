@@ -7,6 +7,9 @@ import com.ruoyi.app.controller.wechat.utils.WechatPayV3Utils;
 import com.ruoyi.common.constant.RespMessageConstants;
 import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.domain.AjaxResult;
+import com.ruoyi.psychology.domain.PsyUser;
+import com.ruoyi.psychology.service.IPsyUserService;
+import com.ruoyi.psychology.service.impl.PsyUserServiceImpl;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -38,6 +41,9 @@ public class WechatPayV3ApiController extends BaseController {
  
     @Autowired
     public WechatPayV3Utils wechatPayV3Utils;
+
+    @Autowired
+    private IPsyUserService psyUserService;
  
     /**
      * 发起微信小程序支付
@@ -47,9 +53,12 @@ public class WechatPayV3ApiController extends BaseController {
      */
     @PostMapping("/wechatPay")
     public AjaxResult wechatPay(@RequestBody Map<String, String> map) {
+
         //@TODO demo中先写死的一些参数
-        Long userId = 1L; //先写死一个用户id
-        String openid = map.get("openid"); //先写死一个openid
+        Long userId = Long.parseLong(map.get("userId")); //用户id
+
+        PsyUser user = psyUserService.selectPsyUserById(userId + "");
+        String openid = user.getWxOpenid(); //先写死一个openid
         BigDecimal amount = new BigDecimal("0.01"); //先写死一个金额 单位：元
         String content = "支付demo-买牛订金"; //先写死一个商品描述
         String attach = "我是附加数据"; //先写死一个附加数据 这是可选的 可以用来判断支付内容做支付成功后的处理

@@ -96,7 +96,7 @@ export default {
   },
   async created() {
     this.clientType = utils.getClientType();
-    this.userInfo = JSON.parse(uni.getStorageSync("userInfo")) || {}
+    this.userInfo = uni.getStorageSync("userInfo")
     //从微信登录返回会有code
     let code = utils.getParam(window.location.href, "code");
     if (!this.userInfo && !code) {
@@ -110,7 +110,7 @@ export default {
   },
   async mounted() {
     if (await utils.loginCallback(this.redirectUri)) {
-      this.userInfo = JSON.parse(uni.getStorageSync("userInfo")) || {}
+      this.userInfo = uni.getStorageSync("userInfo")
     }
   },
   methods: {

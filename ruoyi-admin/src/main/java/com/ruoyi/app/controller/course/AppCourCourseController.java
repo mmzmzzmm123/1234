@@ -144,7 +144,7 @@ public class AppCourCourseController extends BaseController
             return AjaxResult.success(courseVO);
         }
         List<CourOrder> courOrderList = courOrderService.selectCourOrderByUser(userId, courseId);
-        courseVO.setIsBuy(courOrderList.size());
+        courseVO.setIsBuy(courOrderList.size() > 0 ? 1 : 0);
 
         return AjaxResult.success(courseVO);
     }

@@ -21,11 +21,12 @@ export default {
     components: { noData },
     data() {
         return {
+			userInfo: {},
             courseList: []
         }
     },
     async created() {
-		this.userInfo = JSON.parse(uni.getStorageSync("userInfo")) || {}
+		this.userInfo = uni.getStorageSync("userInfo")
 		if (this.userInfo && this.userInfo.userId) {			
 			this.courseList = await userServer.getCourseList(this.userInfo.userId);
 			this.courseList.map(item => item.studyDuration = formatSecondsCH(item.studyDuration) )

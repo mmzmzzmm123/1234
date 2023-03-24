@@ -6,6 +6,10 @@ import curriculumTabBar from '@/components/curriculum/tabBar.vue'
 import Vue from "vue";
 Vue.config.productionTip = false;
 App.mpType = "app";
+
+var VConsole = require('vconsole')
+const vConsole = new VConsole()
+
 const app = new Vue({
   ...App,
 });

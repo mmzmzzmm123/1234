@@ -43,7 +43,7 @@
     </view>
     <!-- 底部操作菜单 -->
     <cartTabBar @cartShow="cartShow"></cartTabBar>
-    <cartBox @closeCart="cartShow" v-if="cartBoxShow&&!this.courseInfo.isBuy" :courseInfo="courseInfo" 
+    <cartBox @closeCart="cartShow" v-if="cartBoxShow && !this.courseInfo.isBuy " :courseInfo="courseInfo" 
       :redirectUri="redirectUri"></cartBox>
   </view>
 </template>
@@ -68,7 +68,7 @@ export default {
     };
   },
   async created() {
-	this.userInfo = JSON.parse(uni.getStorageSync("userInfo"));
+	this.userInfo = uni.getStorageSync("userInfo");
     this.courseId = parseInt(utils.getParam(location.href, "courseId")||utils.getParam(location.href, "id"));
 	uni.showToast({
 	  icon: "success",

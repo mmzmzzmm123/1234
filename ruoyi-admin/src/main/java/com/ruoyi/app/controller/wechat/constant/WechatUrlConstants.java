@@ -27,8 +27,8 @@ public class WechatUrlConstants {
     public final static String PAY_V2_REFUND_NOTIFY = "https://xxx.com/api/wechatPay/wechatRefundNotify";
  
     //微信支付v3 支付通知接口地址
-    public final static String PAY_V3_NOTIFY = "https://xxx.com/api/wechatPay/v3/wechatPayNotify";
+    public final static String PAY_V3_NOTIFY = "https://wx.ssgpsy.com/api/wechatPay/v3/wechatPayNotify";
  
     //微信支付v3 退款通知接口地址
-    public final static String PAY_V3_REFUND_NOTIFY = "https://xxx.com/api/wechatPay/v3/wechatRefundNotify";
+    public final static String PAY_V3_REFUND_NOTIFY = "https://wx.ssgpsy.com/api/wechatPay/v3/wechatRefundNotify";
 }

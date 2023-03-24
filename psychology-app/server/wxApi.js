@@ -58,12 +58,12 @@ export function getTokenFormCode(code) {
 }
 
 // 通知后台给微信预支付下单，并返回支付签名
-export function getPaySign(openid) {
+export function getPaySign(userId) {
   return new Promise((resolve, reject) => {
 	  httprequest
 		.post(
-		  `/app/api/wechatPay/v3`, {
-			  openid
+		  `/app/api/wechatPay/v3/wechatPay`, {
+			  userId
 		  }
 		)
 		.then((res) => {

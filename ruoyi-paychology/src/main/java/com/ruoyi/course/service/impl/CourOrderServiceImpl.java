@@ -115,6 +115,7 @@ public class CourOrderServiceImpl implements ICourOrderService
         CourOrder courOrder = CourOrder.builder()
                 .courseId(courseId)
                 .userId(userId)
+                .status(1) // 订单已完成
                 .build();
 
         return courOrderMapper.selectCourOrderList(courOrder);

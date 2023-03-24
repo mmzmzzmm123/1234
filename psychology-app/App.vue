@@ -1,7 +1,12 @@
 <script>
+
 export default {
   onLaunch: function () {
-    console.log("App Launch");
+    console.log("App Launch");	
+  },
+  mounted() {
+	
+	console.log("VConsole")
   },
   onShow: function () {
     console.log("App Show");
@@ -10,6 +15,8 @@ export default {
     console.log("App Hide");
   },
 };
+
+
 </script>
 
 <style>

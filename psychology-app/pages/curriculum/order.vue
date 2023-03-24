@@ -63,11 +63,13 @@
 </template>
 <script>
 import noData from "@/components/curriculum/noData";
+import cartBox from "@/components/curriculum/cartBox.vue";
 import orderServer from "@/server/curriculum/order";
 export default {
-  components: { noData },
+  components: { noData, cartBox },
   data() {
     return {
+	  userInfo: {},
       currentStatus: "",
       tabList: [
         { title: "全部", status: "" },
@@ -81,7 +83,7 @@ export default {
     };
   },
   async created() {
-	this.userInfo = JSON.parse(uni.getStorageSync("userInfo")) || {}
+	this.userInfo = uni.getStorageSync("userInfo")
     if (this.userInfo && this.userInfo.userId) {
       this.orderList = await orderServer.getOrderList(this.userInfo.userId);
     }
@@ -96,7 +98,7 @@ export default {
       });
     },
     toPay(order) {
-      this.courseInfo = order;
+      this.courseInfo = order.courseInfo;
       this.cartShow();
     },
     async toCancel(order) {
@@ -117,7 +119,7 @@ export default {
     },
     async changeTab(status) {
       this.currentStatus = status;
-      this.userInfo = JSON.parse(uni.getStorageSync("userInfo")) || {}
+      this.userInfo = uni.getStorageSync("userInfo")
       if (this.userInfo && this.userInfo.userId) {
         this.orderList = await orderServer.getOrderListByStatus(this.userInfo.userId, status);
       }

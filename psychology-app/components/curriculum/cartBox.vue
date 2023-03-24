@@ -50,7 +50,7 @@ export default {
       this.$emit("closeCart");
     },
     async submitPay() {
-      this.userInfo = JSON.parse(uni.getStorageSync("userInfo")) || {}
+      this.userInfo = uni.getStorageSync("userInfo")
       if (this.userInfo && this.userInfo.userId) {
         let res = await orderServer.orderAdd(
           this.userInfo.userId,		  
@@ -58,7 +58,7 @@ export default {
           this.courseInfo.price		  
         );
         if (res.code == 200) {
-			let res = await getPaySign(this.userInfo.openid)
+			let res = await getPaySign(this.userInfo.userId)
 			console.log(res)
 			if (res.code == 200) {
 				const { appId, timeStamp, nonceStr, packageInfo, paySign, signType } = res.data

@@ -55,7 +55,7 @@ export default {
     position: fixed;
     left: 0;
     bottom: 0;
-    z-index: 10000000;
+    z-index: 10000;
     display: flex;
     flex-direction: row;
     padding: 10upx;
