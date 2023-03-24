@@ -99,4 +99,12 @@ public interface ICourCourseService
      * @return 课程支付数量
      */
     public int getPaidCourseCount(Integer courseId);
+
+    /**
+     * 根据用户ID查询课程列表
+     *
+     * @param userId 用户ID
+     * @return 课程集合
+     */
+    public List<CourCourse> getCourseListByUserId(Integer userId);
 }

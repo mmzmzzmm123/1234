@@ -37,6 +37,16 @@ export function formatSeconds(value) {
   }
   return result;
 }
+export function formatSecondsCH(seconds) {
+	const hour = Math.floor(seconds / 3600)
+	if (hour == 0) {
+		const minute = Math.floor((seconds - hour * 3600) / 60)
+		return minute + "分钟"
+	}
+	const minute = Math.floor((seconds - hour * 3600) / 60)
+	return hour + "小时" + minute + "分钟"
+}
+
 export function clearTimeLoad() {
   clearInterval(callTimesInter);
 }

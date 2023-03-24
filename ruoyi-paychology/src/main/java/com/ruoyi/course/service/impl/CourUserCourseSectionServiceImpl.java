@@ -45,16 +45,6 @@ public class CourUserCourseSectionServiceImpl implements ICourUserCourseSectionS
         return courUserCourseSectionMapper.selectCourUserCourseSectionList(courUserCourseSection);
     }
 
-    /**
-     * 根据用户ID查询课程列表
-     *
-     * @param userId 用户ID
-     * @return 课程集合
-     */
-    public List<CourCourse> getCourseListByUserId(Integer userId)
-    {
-        return courUserCourseSectionMapper.getCourseListByUserId(userId);
-    }
 
     /**
      * 新增用户-课程-章节关系

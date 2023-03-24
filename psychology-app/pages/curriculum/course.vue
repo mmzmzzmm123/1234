@@ -70,6 +70,10 @@ export default {
   async created() {
 	this.userInfo = JSON.parse(uni.getStorageSync("userInfo"));
     this.courseId = parseInt(utils.getParam(location.href, "courseId")||utils.getParam(location.href, "id"));
+	uni.showToast({
+	  icon: "success",
+	  title: "courseId: " + this.courseId + " userId: " + this.userInfo.userId	  
+	});
     this.courseInfo = await courseServer.getCourseInfo(this.userInfo.userId, this.courseId)||{};
     this.catalogueList = this.courseInfo.sectionList;
     this.courseInfo.totalDuration = 0;

@@ -50,7 +50,7 @@ export default {
       this.$emit("closeCart");
     },
     async submitPay() {
-      this.userInfo = uni.getStorageSync("userInfo");
+      this.userInfo = JSON.parse(uni.getStorageSync("userInfo")) || {}
       if (this.userInfo && this.userInfo.userId) {
         let res = await orderServer.orderAdd(
           this.userInfo.userId,		  

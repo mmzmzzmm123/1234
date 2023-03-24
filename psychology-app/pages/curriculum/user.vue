@@ -44,36 +44,25 @@
     </view>
     <view class="un-test-box">
       <view class="box-title">最近在学</view>
-      <view
-        class="order-item"
-        v-for="(order, index) in orderList"
-        :key="'order' + index"
-      >
-        <view class="title">{{ order.gaugeTitle }}</view>
-        <view class="price">￥{{ order.amount }}</view>
-        <view class="buy-time">{{ order.createTime }}</view>
-        <view class="order-no"
-          >{{ order.orderId }}
-          <img
-            class="img"
-            src="/static/curriculum/user/copy.png"
-            @tap="copyOrderNo(order.orderId)"
-          />
-        </view>
-        <view class="btn" @tap="toLearningCourse(order)">{{
-          item.startTime ? "继续学习" : "进入学习"
-        }}</view>
+      <view class="item" v-for="item in courseList">
+          <view class="title">{{ item.name }}</view>
+      	<view class="section">共{{ item.sectionList ? item.sectionList.length : 0 }}节</view>
+      	<view class="date" v-if="item.finishStatus == 1">已学完</view>
+          <view class="date" v-if="item.finishStatus == 0 && item.studyDuration">已学习{{ item.studyDuration }}</view>
+      	<view class="date" v-if="item.finishStatus == 0 && !item.studyDuration">未开始学习</view>
+          <view class="btn" @tap="toLearningCourse(item.id)">{{item.startTime?'继续学习':'进入学习'}}</view>
       </view>
-      <no-data v-if="orderList.length == 0" :showToClass="true"></no-data>
+      <no-data v-if="courseList.length == 0"></no-data>
       <view class="footer" v-else>已经到底了</view>
     </view>
+	
     <curriculum-tab-bar :currentIndex="2"></curriculum-tab-bar>
   </view>
 </template>
 <script>
 import utils, { clientTypeObj } from "@/utils/common";
 import noData from "@/components/curriculum/noData";
-import orderServer from "@/server/curriculum/order";
+import userServer from "@/server/curriculum/user";
 export default {
   components: { noData },
   data() {
@@ -98,7 +87,7 @@ export default {
           id: 72,
         },
       ],
-      orderList: [],
+      courseList: [],
       clientType: "",
       clientTypeObj: clientTypeObj,
       //回调地址，防止微信登录失败后再次登录将code等参数带过去了
@@ -107,7 +96,7 @@ export default {
   },
   async created() {
     this.clientType = utils.getClientType();
-    this.userInfo = uni.getStorageSync("userInfo");
+    this.userInfo = JSON.parse(uni.getStorageSync("userInfo")) || {}
     //从微信登录返回会有code
     let code = utils.getParam(window.location.href, "code");
     if (!this.userInfo && !code) {
@@ -116,12 +105,12 @@ export default {
       //添加登录标志,为callback做返回判断
       uni.setStorageSync("wxLogining", true);
     } else {
-      this.orderList = await orderServer.getOrderList(2);
+      this.courseList = await userServer.getCourseList(this.userInfo.userId);
     }
   },
   async mounted() {
     if (await utils.loginCallback(this.redirectUri)) {
-      this.userInfo = uni.getStorageSync("userInfo");
+      this.userInfo = JSON.parse(uni.getStorageSync("userInfo")) || {}
     }
   },
   methods: {
@@ -139,9 +128,9 @@ export default {
       if (this.getUserInfo())
         uni.navigateTo({ url: "/pages/curriculum/order" });
     },
-    toLearningCourse(order) {
+    toLearningCourse(courseId) {
       uni.navigateTo({
-        url: `/pages/curriculum/learningCourse?courseId=${order.courseId}&&orderId=${order.orderId}`,
+        url: `/pages/curriculum/learningCourse?courseId=${courseId}`,
       });
     },
     copyOrderNo(orderNo) {
@@ -319,56 +308,53 @@ page {
       }
     }
 
-    .order-item {
-      border-bottom: 1px solid #ccc;
-      margin: 30upx 0;
-
-      .title {
-        font-size: 32upx;
-        font-weight: 600;
-        color: #333333;
-        line-height: 45upx;
-        margin-bottom: 14upx;
-      }
-
-      .price {
-        font-size: 32upx;
-        font-weight: 600;
-        color: #ff3f64;
-        line-height: 45upx;
-        margin-bottom: 16upx;
-      }
-
-      .buy-time,
-      .order-no {
-        font-size: 28upx;
-        font-weight: 400;
-        color: #aaaaaa;
-        line-height: 40upx;
-        margin-bottom: 12upx;
-        align-items: center;
-        display: flex;
-
-        .img {
-          width: 28upx;
-          height: 28upx;
-          border-radius: 0;
-          margin-left: 12upx;
+    .item {
+        width: 646upx;
+        height: 291upx;
+        background: #FFFFFF;
+        box-shadow: 0px 4upx 28upx 0px rgba(119, 119, 119, 0.06);
+        border-radius: 16upx;
+        padding: 32upx;
+        box-sizing: border-box;
+        margin: 0 auto 24upx;
+        position: relative;
+    
+        &::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 40upx;
+            width: 6upx;
+            height: 32upx;
+            background: #FF703F;
+            border-radius: 3upx;
         }
-      }
-
-      .btn {
-        width: 611upx;
-        height: 88upx;
-        text-align: center;
-        line-height: 88upx;
-        background: rgba(255, 112, 63, 0.08);
-        border-radius: 44upx;
-        font-size: 32upx;
-        font-weight: 400;
-        color: #ff703f;
-        margin: 30upx auto 28upx;
-      }
+    
+        .title {
+            font-size: 32upx;
+            font-weight: 600;
+            color: #333333;
+            line-height: 45upx;
+            margin-bottom: 16upx;
+        }
+    
+        .date {
+            font-size: 28upx;
+            font-weight: 400;
+            color: #AAAAAA;
+            line-height: 40upx;
+        }
+    
+        .btn {
+            height: 96upx;
+            line-height: 96upx;
+            font-size: 32upx;
+            font-weight: 400;
+            color: #FF703F;
+            text-align: center;
+            margin-top: 32upx;
+            border-top: 1px solid rgba(204, 204, 204, 0.5);
+        }
     }
   }
 

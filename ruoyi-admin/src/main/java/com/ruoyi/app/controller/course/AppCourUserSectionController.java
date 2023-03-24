@@ -51,42 +51,6 @@ public class AppCourUserSectionController extends BaseController {
     }
 
     /**
-     * 查询用户的课程列表
-     */
-//    @PreAuthorize("@ss.hasPermi('course:userSection:list')")
-    @PostMapping("/getCourseListByUserId")
-    @ApiOperation("根据用户ID查询课程列表")
-    public TableDataInfo getCourseListByUserId(@RequestBody Map<String, Object> body)
-    {
-        Integer userId = Integer.parseInt(body.get("userId").toString());
-        startPage();
-        List<CourCourse> list = courUserCourseSectionService.getCourseListByUserId(userId);
-
-        List<CourseVO> courseVOList = new ArrayList<>();
-        list.forEach(courCourse -> {
-            boolean hasUnFinished = courCourseService.calCourCourseList(courCourse.getCourseId());
-
-            CourseVO courseVO = new CourseVO();
-            BeanUtils.copyProperties(courCourse, courseVO);
-            courseVO.setFinishStatus(hasUnFinished ? 0 : 1);
-
-            // 增加章节列表
-            CourSection courSection = CourSection.builder()
-                    .courseId(courCourse.getCourseId())
-                    .build();
-            List<CourSection> sectionList = courSectionService.selectCourSectionList(courSection);
-            courseVO.setSectionList(sectionList);
-
-            // 计算课程学习时长
-            Integer studyDuration = courCourseService.calCourCourseStudyDuration(courCourse.getCourseId());
-            courseVO.setStudyDuration(studyDuration);
-
-            courseVOList.add(courseVO);
-        });
-        return getDataTable(courseVOList);
-    }
-
-    /**
      * 新增或更新用户-课程-章节关系
      */
     @PostMapping("/saveUserSectionInfo")

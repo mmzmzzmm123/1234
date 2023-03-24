@@ -2,7 +2,10 @@
     <view class="report-list">
         <view class="item" v-for="item in courseList">
             <view class="title">{{ item.name }}</view>
-            <view class="date">完成时间：{{ item.createTime }}</view>
+			<view class="section">共{{ item.sectionList ? item.sectionList.length : 0 }}节</view>
+			<view class="date" v-if="item.finishStatus == 1">已学完</view>
+            <view class="date" v-if="item.finishStatus == 0 && item.studyDuration">已学习{{ item.studyDuration }}</view>
+			<view class="date" v-if="item.finishStatus == 0 && !item.studyDuration">未开始学习</view>
             <view class="btn" @tap="toLearningCourse(item.courseId)">{{item.startTime?'继续学习':'进入学习'}}</view>
         </view>
         <no-data v-if="courseList.length == 0"></no-data>
@@ -13,6 +16,7 @@
 <script>
 import noData from '@/components/curriculum/noData'
 import userServer from '@/server/curriculum/user'
+import {formatSecondsCH} from '@/utils/time.js'
 export default {
     components: { noData },
     data() {
@@ -21,7 +25,11 @@ export default {
         }
     },
     async created() {
-        this.courseList = await userServer.getCourseList(1);
+		this.userInfo = JSON.parse(uni.getStorageSync("userInfo")) || {}
+		if (this.userInfo && this.userInfo.userId) {			
+			this.courseList = await userServer.getCourseList(this.userInfo.userId);
+			this.courseList.map(item => item.studyDuration = formatSecondsCH(item.studyDuration) )
+		}
     },
     methods: {
         async toLearningCourse(courseId) {
@@ -44,7 +52,7 @@ page {
 
         .item {
             width: 686upx;
-            height: 261upx;
+            height: 291upx;
             background: #FFFFFF;
             box-shadow: 0px 4upx 28upx 0px rgba(119, 119, 119, 0.06);
             border-radius: 16upx;

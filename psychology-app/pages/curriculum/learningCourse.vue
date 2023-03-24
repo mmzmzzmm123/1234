@@ -91,6 +91,7 @@ export default {
   components: { cartTabBar, cartBox, customCatalogueList },
   data: () => {
     return {
+	  userInfo: {},
       videoUrl: "",
       startTime: "",
       moreListShow: false,
@@ -114,10 +115,11 @@ export default {
     };
   },
   async created() {
+	this.userInfo = JSON.parse(uni.getStorageSync("userInfo")) || {}
     this.courseId =
       utils.getParam(location.href, "courseId") ||
       utils.getParam(location.href, "id");
-    this.courseInfo = await courseServer.getCourseInfo(this.courseId);
+    this.courseInfo = await courseServer.getCourseInfo(this.userInfo.userId, this.courseId);
     this.catalogueList = this.courseInfo.sectionList;
     this.cartBoxShow = utils.getParam(location.href, "payOrder") == 1;
   },

@@ -113,7 +113,7 @@ export default {
     };
   },
   async created() {
-    this.userInfo = uni.getStorageSync("userInfo")||{};
+    this.userInfo = JSON.parse(uni.getStorageSync("userInfo")) || {}
     if (!this.userInfo) {
       utils.loginWx(this.redirectUri);
     } else {

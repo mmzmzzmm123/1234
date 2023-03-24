@@ -18,6 +18,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -57,6 +58,43 @@ public class AppCourCourseController extends BaseController
         startPage();
         List<CourCourse> list = courCourseService.selectCourCourseList(courCourse);
         return getDataTable(list);
+    }
+
+    /**
+     * 查询用户的课程列表
+     */
+//    @PreAuthorize("@ss.hasPermi('course:userSection:list')")
+    @PostMapping("/getCourseListByUserId")
+    @ApiOperation("根据用户ID查询课程列表")
+    public TableDataInfo getCourseListByUserId(@RequestBody Map<String, Object> body)
+    {
+        Integer userId = Integer.parseInt(body.get("userId").toString());
+        startPage();
+        List<CourCourse> list = courCourseService.getCourseListByUserId(userId);
+
+        List<CourseVO> courseVOList = new ArrayList<>();
+        list.forEach(courCourse -> {
+            CourseVO courseVO = new CourseVO();
+
+            // 计算课程完成情况
+            boolean hasUnFinished = courCourseService.calCourCourseList(courCourse.getCourseId());
+            BeanUtils.copyProperties(courCourse, courseVO);
+            courseVO.setFinishStatus(hasUnFinished ? 0 : 1);
+
+            // 增加章节列表
+            CourSection courSection = CourSection.builder()
+                    .courseId(courCourse.getCourseId())
+                    .build();
+            List<CourSection> sectionList = courSectionService.selectCourSectionList(courSection);
+            courseVO.setSectionList(sectionList);
+
+            // 计算课程学习时长
+            Integer studyDuration = courCourseService.calCourCourseStudyDuration(courCourse.getCourseId());
+            courseVO.setStudyDuration(studyDuration);
+
+            courseVOList.add(courseVO);
+        });
+        return getDataTable(courseVOList);
     }
 
     /**

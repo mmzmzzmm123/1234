@@ -167,4 +167,15 @@ public class CourCourseServiceImpl implements ICourCourseService
     public int getPaidCourseCount(Integer courseId) {
         return courCourseMapper.getPaidCourseCount(courseId);
     }
+
+    /**
+     * 根据用户ID查询课程列表
+     *
+     * @param userId 用户ID
+     * @return 课程集合
+     */
+    public List<CourCourse> getCourseListByUserId(Integer userId)
+    {
+        return courCourseMapper.getCourseListByUserId(userId);
+    }
 }

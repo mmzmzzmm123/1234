@@ -13,10 +13,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="url"    column="url"    />
         <result property="price"    column="price"    />
         <result property="detail"    column="detail"    />
-        <result property="createBy"    column="create_by"    />
-        <result property="createTime"    column="create_time"    />
-        <result property="updateTime"    column="update_time"    />
-        <result property="updateBy"    column="update_by"    />
+<!--        <result property="createBy"    column="create_by"    />-->
+<!--        <result property="createTime"    column="create_time"    />-->
+<!--        <result property="updateTime"    column="update_time"    />-->
+<!--        <result property="updateBy"    column="update_by"    />-->
     </resultMap>
 
     <sql id="selectCourCourseVo">
@@ -123,5 +123,13 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         left join psy_order_pay pop
         on co.id = pop.order_id
         where pay_status = 2 and co.course_id = #{courseId}
+    </select>
+
+    <select id="getCourseListByUserId" parameterType="Integer" resultMap="CourCourseResult">
+        select distinct c.id, c.course_id, c.name, c.type, c.author, c.url, c.price, c.detail
+        from cour_course c
+        left join cour_user_course_section cucs
+        on c.id = cucs.course_id
+        where cucs.user_id = #{userId}
     </select>
 </mapper>
