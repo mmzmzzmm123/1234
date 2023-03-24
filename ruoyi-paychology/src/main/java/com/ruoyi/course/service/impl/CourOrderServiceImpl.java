@@ -105,26 +105,19 @@ public class CourOrderServiceImpl implements ICourOrderService
     /**
      * 查询用户是否购买课程
      *
-     * @param id 课程订单主键
+     * @param userId 用户ID
+     * @param courseId 课程订单主键
      * @return 结果
      */
     @Override
-    public List<CourOrder> selectCourOrderByUser(Integer id , LoginDTO loginUser){
-
-        String userId = "";
-        if (loginUser != null){
-            userId = loginUser.getUserId();
-        }
+    public List<CourOrder> selectCourOrderByUser(Integer userId, Integer courseId) {
 
         CourOrder courOrder = CourOrder.builder()
-                .courseId(id)
-                .userId(Integer.parseInt(userId))
+                .courseId(courseId)
+                .userId(userId)
                 .build();
-        List<CourOrder> list = courOrderMapper.selectCourOrderList(courOrder);
-        if (loginUser == null){
-            list.clear();
-        }
-        return list;
+
+        return courOrderMapper.selectCourOrderList(courOrder);
 
     }
 

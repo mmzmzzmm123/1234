@@ -58,6 +58,7 @@ export default {
   components: { cartTabBar,cartBox,customCatalogueList },
   data() {
     return {
+	  userInfo: {},
       courseInfo: {},
       cartBoxShow: false,
       courseId: 0,
@@ -67,8 +68,9 @@ export default {
     };
   },
   async created() {
-    this.courseId = utils.getParam(location.href, "courseId")||utils.getParam(location.href, "id");
-    this.courseInfo = await courseServer.getCourseInfo(this.courseId)||{};
+	this.userInfo = JSON.parse(uni.getStorageSync("userInfo"));
+    this.courseId = parseInt(utils.getParam(location.href, "courseId")||utils.getParam(location.href, "id"));
+    this.courseInfo = await courseServer.getCourseInfo(this.userInfo.userId, this.courseId)||{};
     this.catalogueList = this.courseInfo.sectionList;
     this.courseInfo.totalDuration = 0;
     this.catalogueList.forEach(item => {

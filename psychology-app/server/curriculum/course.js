@@ -1,8 +1,11 @@
 import httprequest from "../httpRequest";
 export default {
     //获取课程详情
-    getCourseInfo: async (courseId) => {
-      let res = await httprequest.post("/app/course/detail",{courseId});
+    getCourseInfo: async (userId, courseId) => {
+      let res = await httprequest.post("/app/course/detail", {
+		userId,
+		courseId
+	  });
       if (res.code == 200) {
         return res.data;
       } else {

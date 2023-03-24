@@ -65,10 +65,11 @@ public interface ICourOrderService
     /**
      * c查询用户是否购买该课程
      *
-     * @param id 课程订单主键
+     * @param userId 用户ID
+     * @param courseId 课程订单主键
      * @return 结果
      */
-    public List<CourOrder> selectCourOrderByUser(Integer id, LoginDTO loginUser);
+    public List<CourOrder> selectCourOrderByUser(Integer userId, Integer courseId);
 
 
 

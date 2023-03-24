@@ -2,7 +2,6 @@ package com.ruoyi.app.controller.course;
 
 import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.domain.AjaxResult;
-import com.ruoyi.common.core.domain.dto.LoginDTO;
 import com.ruoyi.common.core.page.TableDataInfo;
 import com.ruoyi.course.domain.CourCourse;
 import com.ruoyi.course.domain.CourOrder;
@@ -13,15 +12,14 @@ import com.ruoyi.course.service.ICourOrderService;
 import com.ruoyi.course.service.ICourSectionService;
 import com.ruoyi.course.service.ICourUserCourseSectionService;
 import com.ruoyi.course.vo.CourseVO;
-import com.ruoyi.framework.web.service.AppTokenService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletRequest;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 课程Controller
@@ -73,38 +71,42 @@ public class AppCourCourseController extends BaseController
     }
 
     /**
-     * 查询课程详情
+     * 根据课程主键查询课程详情
      */
 //    @PreAuthorize("@ss.hasPermi('course:course:query')")
     @PostMapping(value = "/detail")
     @ApiOperation("查询课程详情")
-    public AjaxResult detail(@RequestBody CourCourse courCourse, HttpServletRequest request)
+    public AjaxResult detail(@RequestBody Map<String, String> map)
     {
-        CourCourse course = courCourseService.selectCourCourseList(courCourse).get(0);
+        Integer userId = Integer.parseInt(map.get("userId")); // 用户主键
+        Integer courseId = Integer.parseInt(map.get("courseId")); // 课程主键
+        CourCourse course = courCourseService.selectCourCourseById(courseId);
         if (course == null) {
             return AjaxResult.error("查询课程详情失败");
         }
 
         // 查询课程的学习人数
         CourUserCourseSection courUserCourseSection = new CourUserCourseSection();
-        courUserCourseSection.setCourseId(courCourse.getCourseId());
+        courUserCourseSection.setCourseId(courseId);
         List<CourUserCourseSection> courUserCourseSectionList = courUserCourseSectionService.selectCourUserCourseSectionList(courUserCourseSection);
 
         CourseVO courseVO = new CourseVO();
         BeanUtils.copyProperties(course, courseVO);
         courseVO.setStudyNum(courUserCourseSectionList.size());
 
-        // 查询用户有没有购买该订单
-        LoginDTO loginUser = AppTokenService.getInstance().getLoginUser(request);
-        List<CourOrder> courOrderList = courOrderService.selectCourOrderByUser(courCourse.getId(), loginUser);
-        courseVO.setIsBuy(courOrderList.size());
-
         // 增加章节列表
         CourSection courSection = CourSection.builder()
-            .courseId(courCourse.getCourseId())
-            .build();
+                .courseId(courseId)
+                .build();
         List<CourSection> list = courSectionService.selectCourSectionList(courSection);
         courseVO.setSectionList(list);
+
+        // 查询用户有没有购买该订单
+        if (userId == 0) { // 没有给出用户标识
+            return AjaxResult.success(courseVO);
+        }
+        List<CourOrder> courOrderList = courOrderService.selectCourOrderByUser(userId, courseId);
+        courseVO.setIsBuy(courOrderList.size());
 
         return AjaxResult.success(courseVO);
     }
