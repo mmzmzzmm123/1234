@@ -123,10 +123,11 @@ public class CourCourseServiceImpl implements ICourCourseService
     /**
      * 根据课程的章节判断课程是否完成
      *
+     * @param userId 用户ID
      * @param courseId 课程编号
      * @return 课程信息
      */
-    public boolean calCourCourseList(Integer courseId) {
+    public boolean calCourCourseList(Integer userId, Integer courseId) {
         CourUserCourseSection courUserCourseSection = new CourUserCourseSection();
         courUserCourseSection.setCourseId(courseId);
         List<CourUserCourseSection> courUserCourseSectionList =

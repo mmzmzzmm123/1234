@@ -48,10 +48,11 @@ public interface ICourCourseService
     /**
      * 根据课程的章节计算课程信息
      *
+     * @param userId 用户ID
      * @param courseId 课程ID
      * @return 课程信息
      */
-    public boolean calCourCourseList(Integer courseId);
+    public boolean calCourCourseList(Integer userId, Integer courseId);
 
     /**
      * 根据课程的章节计算课程学习时长
