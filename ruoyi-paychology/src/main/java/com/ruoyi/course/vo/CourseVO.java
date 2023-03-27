@@ -62,4 +62,5 @@ public class CourseVO implements Serializable {
 
     @ApiModelProperty("章节列表")
     private List sectionList;
+
 }
