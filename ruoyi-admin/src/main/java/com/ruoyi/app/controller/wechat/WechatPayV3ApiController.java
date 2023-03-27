@@ -29,11 +29,8 @@ import javax.servlet.http.HttpServletRequest;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
- 
+import java.util.*;
+
 /**
  * 微信支付相关接口demo v3版本
  * 文档地址 https://pay.weixin.qq.com/wiki/doc/apiv3/apis/chapter3_5_1.shtml
@@ -87,6 +84,7 @@ public class WechatPayV3ApiController extends BaseController {
         orderPay.setPayType(1); // 微信
         orderPay.setPayStatus(1);
         orderPay.setAmount(amount);
+        orderPay.setPayId(UUID.randomUUID().toString()); // 当前使用随机生成的支付ID，后续使用第三方支付平台返回的
         orderPayService.insertPsyOrderPay(orderPay);
 
         // 根据用户ID从用户表中查询openid
