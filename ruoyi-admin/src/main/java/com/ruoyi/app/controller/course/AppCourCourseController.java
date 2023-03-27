@@ -72,8 +72,8 @@ public class AppCourCourseController extends BaseController
         Integer userId = Integer.parseInt(body.get("userId").toString());
         startPage();
         List<CourCourse> list = courCourseService.getCourseListByUserId(userId);
-
         List<CourseVO> courseVOList = new ArrayList<>();
+        List<CourseVO> courseFinishList = new ArrayList<>();
         list.forEach(courCourse -> {
             CourseVO courseVO = new CourseVO();
 
@@ -92,9 +92,16 @@ public class AppCourCourseController extends BaseController
             // 计算课程学习时长
             Integer studyDuration = courCourseService.calCourCourseStudyDuration(courCourse.getCourseId());
             courseVO.setStudyDuration(studyDuration);
+            if(hasUnFinished){
+                        courseVOList.add(courseVO);
+                        courseVOList.stream().sorted(
+                        (a,b)->{ return a.getStudyDuration()-b.getStudyDuration();}
+                        ).forEach(s->System.out.println(s));
+                    }
+            else {courseFinishList.add(courseVO);}
 
-            courseVOList.add(courseVO);
         });
+        courseVOList.addAll(courseFinishList);
         return getDataTable(courseVOList);
     }
 
