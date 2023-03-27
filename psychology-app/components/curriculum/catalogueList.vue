@@ -25,7 +25,7 @@
         <image
           class="play-icon"
           :src="
-            catalogueItem.type==1
+            isBuy==1 || catalogueItem.type==1
               ? '/static/curriculum/product/play.png'
               : '/static/curriculum/product/lock.png'
           "
@@ -36,9 +36,9 @@
 </template>
 <script>
 export default {
-  props: ["catalogueList"],
+  props: ["catalogueList", "isBuy"],
   methods: {
-    catalogueItemClick(item) {
+    catalogueItemClick(item) {		
       this.$emit("catalogueItemClick", item);
     },
   },

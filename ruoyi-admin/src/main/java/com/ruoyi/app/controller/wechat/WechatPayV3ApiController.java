@@ -7,14 +7,13 @@ import com.ruoyi.app.controller.wechat.utils.WechatPayV3Utils;
 import com.ruoyi.common.constant.RespMessageConstants;
 import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.domain.AjaxResult;
-import com.ruoyi.common.utils.OrderIdUtils;
+import com.ruoyi.course.constant.CourConstant;
 import com.ruoyi.course.domain.CourOrder;
 import com.ruoyi.course.service.ICourOrderService;
 import com.ruoyi.gauge.domain.PsyOrderPay;
 import com.ruoyi.gauge.service.IPsyOrderPayService;
 import com.ruoyi.psychology.domain.PsyUser;
 import com.ruoyi.psychology.service.IPsyUserService;
-import com.ruoyi.psychology.service.impl.PsyUserServiceImpl;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -72,7 +71,7 @@ public class WechatPayV3ApiController extends BaseController {
         // TODO: 内部生成订单
         CourOrder courOrder = new CourOrder();
         courOrder.setOrderId(out_trade_no);
-        courOrder.setStatus(0);
+        courOrder.setStatus(CourConstant.COUR_ORDER_STATUE_CREATED);
         courOrder.setAmount(amount);
         courOrder.setUserId(Integer.parseInt(map.get("userId")));
         courOrder.setCourseId(courseId);
@@ -81,8 +80,8 @@ public class WechatPayV3ApiController extends BaseController {
         // TODO: 内部生成支付对象
         PsyOrderPay orderPay = new PsyOrderPay();
         orderPay.setOrderId(Long.parseLong(newCourOrder.getId().toString()));
-        orderPay.setPayType(1); // 微信
-        orderPay.setPayStatus(1);
+        orderPay.setPayType(CourConstant.PAY_WAY_WEIXIN); // 微信
+        orderPay.setPayStatus(CourConstant.PAY_STATUE_PENDING);
         orderPay.setAmount(amount);
         orderPay.setPayId(UUID.randomUUID().toString()); // 当前使用随机生成的支付ID，后续使用第三方支付平台返回的
         orderPayService.insertPsyOrderPay(orderPay);
@@ -211,14 +210,14 @@ public class WechatPayV3ApiController extends BaseController {
         // TODO: 修改订单状态为已完成
         String out_trade_no = res.getString("out_trade_no");
         CourOrder courOrder = courOrderService.selectCourOrderByOrderId(out_trade_no);
-        courOrder.setStatus(2);
+        courOrder.setStatus(CourConstant.COUR_ORDER_STATUE_FINISHED);
         courOrderService.updateCourOrder(courOrder);
 
         // TODO: 修改支付对象状态为已支付
         String payId = res.getString("transaction_id"); // 微信支付系统生成的订单号
         PsyOrderPay orderPay = new PsyOrderPay();
         orderPay.setOrderId(Long.parseLong(courOrder.getId().toString())); // 订单ID
-        orderPay.setPayStatus(2);
+        orderPay.setPayStatus(CourConstant.PAY_STATUE_PAID);
         orderPay.setPayId(payId);
         orderPayService.updatePsyOrderPayByOrderId(orderPay);
 

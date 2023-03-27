@@ -11,7 +11,7 @@ import java.math.BigDecimal;
 @ApiModel("课程订单")
 public class OrderVO {
     /** ID */
-    private Long id;
+    private Integer id;
 
     /** 订单编号 */
     @ApiModelProperty("订单编号")

@@ -6,6 +6,7 @@ import java.util.UUID;
 import com.ruoyi.common.core.domain.dto.LoginDTO;
 import com.ruoyi.common.enums.OrderPayStatus;
 import com.ruoyi.common.utils.DateUtils;
+import com.ruoyi.course.constant.CourConstant;
 import com.ruoyi.course.domain.CourOrder;
 import com.ruoyi.course.mapper.CourOrderMapper;
 import com.ruoyi.course.service.ICourOrderService;
@@ -127,7 +128,7 @@ public class CourOrderServiceImpl implements ICourOrderService
         CourOrder courOrder = CourOrder.builder()
                 .courseId(courseId)
                 .userId(userId)
-                .status(1) // 订单已完成
+                .status(CourConstant.COUR_ORDER_STATUE_FINISHED)
                 .build();
 
         return courOrderMapper.selectCourOrderList(courOrder);

@@ -94,7 +94,7 @@ export default {
     },
     toOrderInfo(order) {
       uni.navigateTo({
-        url: "/pages/curriculum/order?orderId=" + order.orderId,
+        url: "/pages/curriculum/orderInfo?orderId=" + order.id,
       });
     },
     toPay(order) {
@@ -102,15 +102,7 @@ export default {
       this.cartShow();
     },
     async toCancel(order) {
-      let result = await orderServer.changeOrderStatus(order.id, 0);
-      if (result.code == 200) {
-        order.status = 0;
-      } else {
-        uni.showToast({
-          icon: "error",
-          title: "取消失败",
-        });
-      }
+      await orderServer.cancelOrder(order.id);     	  
     },
     toLearningCourse(order) {
       uni.navigateTo({

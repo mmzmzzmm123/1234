@@ -8,11 +8,13 @@
       <image class="index-icon" src="/static/curriculum/menu/index.png"></image>
       <text>首页</text>
     </navigator>
-    <view class="start-test" @tap="cartShow">立即购买</view>
+    <view class="start-test" @tap="cartShow" v-if="!isBuy">立即购买</view>
+	<view class="start-test" v-else>已购买</view>
   </view>
 </template>
 <script>
 export default {
+  props: ['isBuy'],
   methods: {
     cartShow() {
       this.$emit("cartShow");
