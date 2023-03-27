@@ -1,5 +1,14 @@
 <template>
   <view class="order-info-box">
+	<view class="order-info-header">
+	  <image 
+		src="/static/curriculum/menu/arrow_left.png"
+		class="order-back-icon"
+		@tap="back"
+	  >
+	  </image>
+	  <view class="title">订单详情</view>
+	</view>
     <view class="order-status">
       <image
         :src="
@@ -74,6 +83,13 @@ export default {
   async created() {
     this.orderInfo = await orderServer.getOrderDetail(utils.getParam(location.href, "orderId"));
   },
+  methods: {
+  	back() {
+  		uni.navigateTo({
+  		  url: "/pages/curriculum/order",
+  		});
+  	}
+  },
 };
 </script>
 <style lang="scss">
@@ -82,6 +98,24 @@ page {
   background: #f8f8f8;
   .order-info-box {
     padding: 40upx 32upx;
+	.order-info-header {
+		display: flex;
+		height: 36upx;
+		font-size: 48upx;
+		margin-bottom: 20upx;
+		.order-back-icon {
+			width: 36upx;
+			height: 36upx;
+			position: absolute;
+			left: 30upx;
+			top: 50upx;
+			
+		}
+		.title {
+			width: 100%;
+			text-align: center;
+		}
+	}
     .order-status {
       margin-bottom: 32upx;
       .order-status-icon {

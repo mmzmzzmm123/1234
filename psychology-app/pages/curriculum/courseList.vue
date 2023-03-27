@@ -16,7 +16,7 @@
 <script>
 import noData from '@/components/curriculum/noData'
 import userServer from '@/server/curriculum/user'
-import {formatSecondsCH} from '@/utils/time.js'
+import formatTime from '@/utils/formatTime.js'
 export default {
     components: { noData },
     data() {
@@ -29,7 +29,7 @@ export default {
 		this.userInfo = uni.getStorageSync("userInfo")
 		if (this.userInfo && this.userInfo.userId) {			
 			this.courseList = await userServer.getCourseList(this.userInfo.userId);
-			this.courseList.map(item => item.studyDuration = formatSecondsCH(item.studyDuration) )
+			this.courseList.map(item => item.studyDuration = formatTime.formatSecondsCH(item.studyDuration))
 		}
     },
     methods: {

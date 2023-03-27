@@ -22,7 +22,7 @@ export default {
         userId,
     });
     if (res.code == 200) {
-      return res.rows;
+      return res.data;
     } else {
       return [];
     }
@@ -34,7 +34,7 @@ export default {
 		status
     });
     if (res.code == 200) {
-      return res.rows;
+      return res.data;
     } else {
       return [];
     }

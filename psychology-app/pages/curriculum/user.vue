@@ -63,6 +63,7 @@
 import utils, { clientTypeObj } from "@/utils/common";
 import noData from "@/components/curriculum/noData";
 import userServer from "@/server/curriculum/user";
+import formatTime from "@/utils/formatTime.js"
 export default {
   components: { noData },
   data() {
@@ -106,6 +107,7 @@ export default {
       uni.setStorageSync("wxLogining", true);
     } else {
       this.courseList = await userServer.getCourseList(this.userInfo.userId);
+	  this.courseList.map(item => item.studyDuration = formatTime.formatSecondsCH(item.studyDuration))
     }
   },
   async mounted() {

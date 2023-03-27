@@ -15,9 +15,11 @@
       @tap="toOrderInfo(order)"
     >
       <view class="buy-time"
-        ><span>{{ order.createTime }} </span>
+        ><span>{{ formatTime(order.createTime) }} </span>
         <span class="order-status-txt">
-          <span v-if="order.status==0">剩余 09:00</span>
+          <span v-if="order.status==0">
+			  {{ remainTime(order.createTime) }}
+		  </span>
           <span>{{statusTxt[order.status]}}</span>
         </span>
       </view>
@@ -65,6 +67,7 @@
 import noData from "@/components/curriculum/noData";
 import cartBox from "@/components/curriculum/cartBox.vue";
 import orderServer from "@/server/curriculum/order";
+import formatTime from '@/utils/formatTime.js'
 export default {
   components: { noData, cartBox },
   data() {
@@ -81,6 +84,20 @@ export default {
       courseInfo: {},
       cartBoxShow: false,
     };
+  },
+  computed: {
+  	remainTime() {
+  		return (orderTime) => {
+			if (new Date().getTime() < new Date(orderTime) + 30 * 60 * 1000) {
+				// 下单不超过30分钟
+				const remainSeconds = parseInt((new Date(orderTime) + 30 * 60 * 1000 -  new Date().getTime()) / 1000)
+				
+				return "剩余" + formatTime.formatSecondsCH(remainSeconds)
+			} else {
+				return "订单已过期"
+			}
+		} 
+  	},	  
   },
   async created() {
 	this.userInfo = uni.getStorageSync("userInfo")
@@ -102,7 +119,8 @@ export default {
       this.cartShow();
     },
     async toCancel(order) {
-      await orderServer.cancelOrder(order.id);     	  
+      await orderServer.cancelOrder(order.id);     
+	  
     },
     toLearningCourse(order) {
       uni.navigateTo({
@@ -113,9 +131,16 @@ export default {
       this.currentStatus = status;
       this.userInfo = uni.getStorageSync("userInfo")
       if (this.userInfo && this.userInfo.userId) {
-        this.orderList = await orderServer.getOrderListByStatus(this.userInfo.userId, status);
-      }
+		if (status === "") {//全部订单 			
+			this.orderList = await orderServer.getOrderList(this.userInfo.userId);
+		} else {//待支付或已支付订单			
+			this.orderList = await orderServer.getOrderListByStatus(this.userInfo.userId, status);
+		}
+      } 
     },
+	formatTime(time) {
+		return formatTime.formatTime(time)
+	}
   },
 };
 </script>

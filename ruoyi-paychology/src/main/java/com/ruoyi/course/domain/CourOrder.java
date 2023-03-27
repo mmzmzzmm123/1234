@@ -1,6 +1,7 @@
 package com.ruoyi.course.domain;
 
 import java.math.BigDecimal;
+import java.util.Date;
 import java.util.Map;
 
 import lombok.AllArgsConstructor;
@@ -30,6 +31,10 @@ public class CourOrder extends BaseEntity
     /** 订单编号 */
     @Excel(name = "订单编号")
     private String orderId;
+
+    /** 订单编号 */
+    @Excel(name = "下单时间")
+    private Date createTime;
 
     /** 订单状态（0-创建 1-完成 2-关闭） */
     @Excel(name = "订单状态", readConverterExp = "0=-创建,1=-完成,2=-关闭")
@@ -84,10 +89,21 @@ public class CourOrder extends BaseEntity
     {
         return orderId;
     }
+
+    public Date getCreateTime()
+    {
+        return createTime;
+    }
+    public void setCreateTime(Date createTime)
+    {
+        this.createTime = createTime;
+    }
+
     public void setStatus(Integer status) 
     {
         this.status = status;
     }
+
 
     public Integer getStatus() 
     {

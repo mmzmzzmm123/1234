@@ -6,6 +6,7 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 import java.math.BigDecimal;
+import java.util.Date;
 
 @Data
 @ApiModel("课程订单")
@@ -28,6 +29,10 @@ public class OrderVO {
     /** 应付金额 */
     @ApiModelProperty("应付金额")
     private BigDecimal amount;
+
+    /** 下单时间 */
+    @ApiModelProperty("下单时间")
+    private Date createTime;
 
     /** 课程编号 */
     @ApiModelProperty("课程编号")

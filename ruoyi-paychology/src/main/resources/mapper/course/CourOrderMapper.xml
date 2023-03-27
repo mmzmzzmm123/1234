@@ -19,7 +19,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </sql>
 
     <select id="selectCourOrderList" parameterType="CourOrder" resultMap="CourOrderResult">
-        select co.id,  co.order_id,  co.create_time,  co.status,  co.user_id,  co.amount,  co.course_id, cc.url, cc.name, cc.author from cour_order  co left join cour_course  cc
+        select co.id,  co.order_id,  co.create_time,  co.status,  co.user_id,  co.amount,  co.course_id, cc.url, cc.name, cc.author
+        from cour_order  co
+        left join cour_course  cc
         on co.course_id = cc.course_id
         <where>  
             <if test="orderId != null  and orderId != ''"> and co.order_id = #{orderId}</if>

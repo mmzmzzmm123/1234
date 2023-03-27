@@ -44,9 +44,20 @@ public class AppCourOrderController extends BaseController
 //    @PreAuthorize("@ss.hasPermi('course:course:list')")
     @PostMapping("/list")
     @ApiOperation("查询课程订单列表")
-    public TableDataInfo list(@RequestBody CourOrder courOrder)
+    public AjaxResult list(@RequestBody Map<String, Object> map)
     {
-        startPage();
+        CourOrder courOrder = new CourOrder();
+        if (map.get("userId") != null) {
+            Integer userId = (Integer) map.get("userId");
+            courOrder.setUserId(userId);
+        }
+
+
+        if (map.get("status") != null) {
+            Integer status = (Integer) map.get("status");
+            courOrder.setStatus(status);
+        }
+
         List<CourOrder> list = courOrderService.selectCourOrderList(courOrder);
 
         List<OrderVO> orderVOList = new ArrayList<>();
@@ -58,7 +69,7 @@ public class AppCourOrderController extends BaseController
            orderVO.setCourseInfo(courCourse);
            orderVOList.add(orderVO);
         });
-        return getDataTable(orderVOList);
+        return AjaxResult.success(orderVOList);
     }
 
     /**

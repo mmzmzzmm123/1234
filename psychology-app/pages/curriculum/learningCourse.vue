@@ -4,13 +4,14 @@
       <video
         id="myVideo"
         ref="video1"
-        :src="videoUrl"
+        :src="currentCatalogue.contentUrl"
         loop="true"
         :initial-time="startTime"
         enable-danmu
         danmu-btn
         controls
         style="width: 100%"
+		@timeupdate="videoTimeUpdateEvent"
       ></video>
     </view>
     <view class="catalogue-title">我们每个人都有自我疗愈能力</view>
@@ -25,6 +26,7 @@
         class="list-item"
         v-for="(courseItem, index) in catalogueList"
         :class="{ playing: courseItem.playing }"
+		@tap="chooseCatalogue(courseItem, index)"
       >
         <view class="status-box">
           <span class="try-txt">
@@ -47,19 +49,7 @@
     <view class="bg-line"></view>
     <view class="current-content">
       <view class="title">本期内容</view>
-      <view class="content">
-        <p>一个需要重新体验出生的五岁男孩</p>
-        · 男孩表面看是有智力缺陷，但实际上是儿童精神分裂症患者，是成熟
-        发展的第三条路线出了问题，在情感方面有了障碍，整个人处在贵乏的状态;成熟发展的第四条路线“社会化”也受到了影响
-        ·
-        治疗匮乏与治疗心智障碍非常不同，因此诊断十分关键，相同的症状可能得出不同的诊断结果
-        ·
-        男孩创造了游戏，为了满足自身需求，玩这个游戏能满足男孩的存在性需求，因此温尼科特不去限制男孩的行为。男孩玩这个游戏的目的是为了体验出生的过程
-        · 接下来的阶段，男孩破坏性地进食
-        、索取，对食物的爱驱使男孩去破坏食物，进食的过程即对食物的破坏过程，在初始阶段，爱同时具备破坏性的冲动;孩子兴奋的本能、身体机能的本能都在温尼科特的设置中表现了出来
-        ·
-        下一阶段，男孩开始退行，退行到了非常初始的出生时的阶段，重新体验了早期的婴儿经历，获得了重生，看到一个新的温尼科特所提供的环境，从而允许男孩重新成长</view
-      >
+      <view class="content"> {{ currentCatalogue.content }}</view>
     </view>
     <!-- 底部操作菜单 -->
     <cartTabBar @cartShow="cartShow"></cartTabBar>
@@ -92,6 +82,7 @@ export default {
   data: () => {
     return {
 	  userInfo: {},
+	  videoContext: {},  // 用于绑定视频标签
       videoUrl: "",
       startTime: "",
       moreListShow: false,
@@ -112,6 +103,8 @@ export default {
         { title: "课程2", time: "07:34", enabled: false, playing: false },
         { title: "课程2", time: "07:34", enabled: false, playing: false },
       ],
+	  currentIndex: 0, //
+	  currentCatalogue: {}, 
     };
   },
   async created() {
@@ -122,6 +115,12 @@ export default {
     this.courseInfo = await courseServer.getCourseInfo(this.userInfo.userId, this.courseId);
     this.catalogueList = this.courseInfo.sectionList;
     this.cartBoxShow = utils.getParam(location.href, "payOrder") == 1;
+	
+	this.videoContext = uni.createVideoContext('myVideo');
+  },
+  beforeDestroy() {
+	// 记录当前章节学习的结束时间点
+	  
   },
   methods: {
     closeList() {
@@ -133,6 +132,23 @@ export default {
     cartShow() {
       this.cartBoxShow = !this.cartBoxShow;
     },
+	videoTimeUpdateEvent(e) { // 播放进度改变
+		// e.detail.currentTime为每次触发时,视频的当前播放时间
+		let currentTime = Number(e.detail.currentTime);
+		console.log('播放进度条改变', currentTime)
+		// 试看结束 this.class_info.freed_time为试看时间
+		if (currentTime >= 600) {
+			// 试看结束,在这做一些想做的操作,例如停止视频播放
+			this.videoContext.exitFullScreen();
+			this.videoContext.pause();
+			this.videoContext.seek(0);
+		}
+	},
+	chooseCatalogue(courseItem, index) {
+		// 选中章节
+		this.currentIndex = index;
+		
+	}
   },
 };
 </script>
