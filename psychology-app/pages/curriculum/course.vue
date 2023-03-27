@@ -1,6 +1,6 @@
 <template>
   <view class="course">
-    <image class="cover" :src="courseInfo.headPicture"></image>
+    <image class="cover" :src="courseInfo.url"></image>
     <view class="title">{{ courseInfo.name }}</view>
     <view class="sub-title">{{ courseInfo.author }}</view>
     <view class="price"
