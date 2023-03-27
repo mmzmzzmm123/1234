@@ -3,6 +3,7 @@ package com.ruoyi.app.controller.course;
 import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.core.page.TableDataInfo;
+import com.ruoyi.course.constant.CourConstant;
 import com.ruoyi.course.domain.CourCourse;
 import com.ruoyi.course.domain.CourSection;
 import com.ruoyi.course.domain.CourUserCourseSection;
@@ -55,19 +56,36 @@ public class AppCourUserSectionController extends BaseController {
      */
     @PostMapping("/saveUserSectionInfo")
     @ApiOperation("记录课程章节完成情况，新增或更新用户-课程-章节关系")
-    public AjaxResult saveUserSectionInfo(@RequestBody CourUserCourseSection courUserCourseSection)
+    public AjaxResult saveUserSectionInfo(@RequestBody Map<String, Object> map)
     {
         CourUserCourseSection userCourseSection = new CourUserCourseSection();
-        userCourseSection.setUserId(courUserCourseSection.getUserId());
-        userCourseSection.setCourseId(courUserCourseSection.getCourseId());
-        userCourseSection.setSectionId(courUserCourseSection.getSectionId());
-        // 根据用户、课程、章节查询是否已有学习完成记录
-        if (this.list(userCourseSection).getTotal() == 0) {
-            // 新增
-            return AjaxResult.success(courUserCourseSectionService.insertCourUserCourseSection(courUserCourseSection));
+
+        Integer userId = Integer.parseInt(map.get("userId").toString());
+        Integer courseId = Integer.parseInt(map.get("courseId").toString());
+        Integer sectionId = Integer.parseInt(map.get("sectionId").toString());
+        Integer endTime = Integer.parseInt(map.get("endTime").toString());
+
+        userCourseSection.setUserId(userId);
+        userCourseSection.setCourseId(courseId);
+        userCourseSection.setSectionId(sectionId);
+        userCourseSection.setEndTime(endTime);
+
+        if (map.get("finishStatus") != null) {
+            Integer finishStatus = Integer.parseInt(map.get("finishStatus").toString());
+            userCourseSection.setFinishStatus(finishStatus);
         } else {
-            // 更新
-            return AjaxResult.success(courUserCourseSectionService.updateCourUserCourseSection(courUserCourseSection));
+            userCourseSection.setFinishStatus(CourConstant.SECTION_UNFINISHED);
         }
+        // 根据用户、课程、章节查询是否已有学习完成记录
+        List<CourUserCourseSection> userCourseSectionList =  courUserCourseSectionService.selectCourUserCourseSectionList(userCourseSection);
+        if (userCourseSectionList.size() == 0) {
+            // 新增
+            return AjaxResult.success(courUserCourseSectionService.insertCourUserCourseSection(userCourseSection));
+        } else if (userCourseSectionList.size() == 1){
+            // 更新
+            userCourseSection.setId(userCourseSectionList.get(0).getId());
+            return AjaxResult.success(courUserCourseSectionService.recordEndTime(userCourseSection));
+        }
+        return AjaxResult.error("记录课程章节异常");
     }
 }

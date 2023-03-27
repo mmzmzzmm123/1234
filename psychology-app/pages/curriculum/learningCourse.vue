@@ -6,10 +6,12 @@
         ref="video1"
         :src="currentCatalogue.contentUrl"
         loop="true"
-        :initial-time="startTime"
+        :initial-time="currentCatalogue.endTime"
+		:duration="currentCatalogue.duration"
         enable-danmu
         danmu-btn
         controls
+		muted="true"
         style="width: 100%"
 		@timeupdate="videoTimeUpdateEvent"
       ></video>
@@ -105,6 +107,7 @@ export default {
       ],
 	  currentIndex: 0, //
 	  currentCatalogue: {}, 
+	  secondCount: 0,
     };
   },
   async created() {
@@ -117,10 +120,13 @@ export default {
     this.cartBoxShow = utils.getParam(location.href, "payOrder") == 1;
 	
 	this.videoContext = uni.createVideoContext('myVideo');
+	this.currentIndex = 0;
+	this.currentCatalogue = this.catalogueList[0] || {}
   },
   beforeDestroy() {
-	// 记录当前章节学习的结束时间点
-	  
+	// 记录当前章节学习的结束时间点, 用戶直接关闭页面感知不到，不可靠
+	  console.log('beforeDestroy')
+	  this.recordEndTime(this.currentCatalogue.endTime)
   },
   methods: {
     closeList() {
@@ -134,20 +140,44 @@ export default {
     },
 	videoTimeUpdateEvent(e) { // 播放进度改变
 		// e.detail.currentTime为每次触发时,视频的当前播放时间
+		this.secondCount++;
 		let currentTime = Number(e.detail.currentTime);
 		console.log('播放进度条改变', currentTime)
+		this.currentCatalogue.endTime = parseInt(currentTime)
 		// 试看结束 this.class_info.freed_time为试看时间
-		if (currentTime >= 600) {
+		if (currentTime >= this.currentCatalogue.duration) {
 			// 试看结束,在这做一些想做的操作,例如停止视频播放
 			this.videoContext.exitFullScreen();
 			this.videoContext.pause();
 			this.videoContext.seek(0);
+			
+			this.recordEndTime(this.currentCatalogue.duration, 1)
+		} else {
+			if (this.secondCount === 30) {
+				this.recordEndTime(this.currentCatalogue.endTime)
+				this.secondCount = 0
+			}
 		}
 	},
 	chooseCatalogue(courseItem, index) {
+		// 记录旧章节的学习时间
+		this.recordEndTime(this.currentCatalogue.endTime)
+		
 		// 选中章节
 		this.currentIndex = index;
-		
+		this.currentCatalogue = this.catalogueList[index] || {}		
+	},
+	async recordEndTime(endTime, finishStatus) {
+		const params = {
+			userId: this.userInfo.userId,
+			courseId: this.courseId, 
+			sectionId: this.currentCatalogue.id,
+			endTime: endTime			
+		}
+		if (finishStatus === 1) {
+			params.finishStatus = finishStatus
+		}
+		await courseServer.recordEndTime(params)
 	}
   },
 };

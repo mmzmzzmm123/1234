@@ -40,4 +40,18 @@ export default {
         return res.code;
       }
     },
+	
+	// 记录用户学习课程章节的时间点
+	recordEndTime: async (data) => {
+      let res = await httprequest.post("/app/course/userSection/saveUserSectionInfo", data);
+      if (res.code == 200) {
+        console.log(res);
+        return res.data;
+      } else {
+        uni.showToast({
+          icon: "error",
+          title: "记录用户学习课程章节出错",
+        });
+      }
+    },
 };

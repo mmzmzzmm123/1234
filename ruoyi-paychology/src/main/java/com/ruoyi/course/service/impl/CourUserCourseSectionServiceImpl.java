@@ -91,7 +91,7 @@ public class CourUserCourseSectionServiceImpl implements ICourUserCourseSectionS
 
     /**
      * 删除用户-课程-章节关系信息
-     * 
+     *
      * @param id 用户-课程-章节关系主键
      * @return 结果
      */
@@ -130,5 +130,16 @@ public class CourUserCourseSectionServiceImpl implements ICourUserCourseSectionS
             }
 
         }
+    }
+
+    /**
+     * 记录用户学习课程章节的结束时间点
+     *
+     * @param userCourseSection 用户-课程-章节关系
+     * @return 结果
+     */
+    @Override
+    public int recordEndTime(CourUserCourseSection userCourseSection) {
+        return courUserCourseSectionMapper.recordEndTime(userCourseSection);
     }
 }

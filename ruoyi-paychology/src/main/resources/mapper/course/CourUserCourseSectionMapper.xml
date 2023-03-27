@@ -34,7 +34,6 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="userId != null  and userId != ''"> and user_id = #{userId}</if>
             <if test="courseId != null  and courseId != ''"> and course_id = #{courseId}</if>
             <if test="sectionId != null  and sectionId != ''"> and section_id = #{sectionId}</if>
-            <if test="endTime != null "> and end_time = #{endTime}</if>
             <if test="finishStatus != null "> and finish_status = #{finishStatus}</if>
         </where>
     </select>
@@ -84,4 +83,16 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             #{id}
         </foreach>
     </delete>
+
+    <update id="recordEndTime" parameterType="CourUserCourseSection">
+        update cour_user_course_section
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="userId != null and userId != ''">user_id = #{userId},</if>
+            <if test="courseId != null and courseId != ''">course_id = #{courseId},</if>
+            <if test="sectionId != null and sectionId != ''">section_id = #{sectionId},</if>
+            <if test="endTime != null">end_time = #{endTime},</if>
+            <if test="finishStatus != null">finish_status = #{finishStatus},</if>
+        </trim>
+        where id = #{id}
+    </update>
 </mapper>

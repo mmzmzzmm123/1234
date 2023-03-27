@@ -78,7 +78,7 @@ public class AppCourCourseController extends BaseController
             CourseVO courseVO = new CourseVO();
 
             // 计算课程完成情况
-            boolean hasUnFinished = courCourseService.calCourCourseList(courCourse.getCourseId());
+            boolean hasUnFinished = courCourseService.calCourCourseList(userId, courCourse.getCourseId());
             BeanUtils.copyProperties(courCourse, courseVO);
             courseVO.setFinishStatus(hasUnFinished ? 0 : 1);
 
