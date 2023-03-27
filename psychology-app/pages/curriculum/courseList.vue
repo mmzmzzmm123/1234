@@ -29,7 +29,12 @@ export default {
 		this.userInfo = uni.getStorageSync("userInfo")
 		if (this.userInfo && this.userInfo.userId) {			
 			this.courseList = await userServer.getCourseList(this.userInfo.userId);
-			this.courseList.map(item => item.studyDuration = formatTime.formatSecondsCH(item.studyDuration))
+			this.courseList.map(item => {
+			  if (item.studyDuration === 0) {
+				  return; 
+			  }
+			  item.studyDuration = formatTime.formatSecondsCH(item.studyDuration)
+			})
 		}
     },
     methods: {

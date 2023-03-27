@@ -90,7 +90,7 @@ public class AppCourCourseController extends BaseController
             courseVO.setSectionList(sectionList);
 
             // 计算课程学习时长
-            Integer studyDuration = courCourseService.calCourCourseStudyDuration(courCourse.getCourseId());
+            Integer studyDuration = courCourseService.calCourCourseStudyDuration(userId, courCourse.getCourseId());
             courseVO.setStudyDuration(studyDuration);
             if(hasUnFinished){
                         courseVOList.add(courseVO);

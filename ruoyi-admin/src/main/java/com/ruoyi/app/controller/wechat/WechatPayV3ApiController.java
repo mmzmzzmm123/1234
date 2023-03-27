@@ -9,7 +9,9 @@ import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.course.constant.CourConstant;
 import com.ruoyi.course.domain.CourOrder;
+import com.ruoyi.course.domain.CourUserCourseSection;
 import com.ruoyi.course.service.ICourOrderService;
+import com.ruoyi.course.service.ICourUserCourseSectionService;
 import com.ruoyi.gauge.domain.PsyOrderPay;
 import com.ruoyi.gauge.service.IPsyOrderPayService;
 import com.ruoyi.psychology.domain.PsyUser;
@@ -52,6 +54,8 @@ public class WechatPayV3ApiController extends BaseController {
     @Autowired
     private IPsyOrderPayService orderPayService;
 
+    @Autowired
+    private ICourUserCourseSectionService userCourseSectionService;
  
     /**
      * 发起微信小程序支付
@@ -212,6 +216,10 @@ public class WechatPayV3ApiController extends BaseController {
         CourOrder courOrder = courOrderService.selectCourOrderByOrderId(out_trade_no);
         courOrder.setStatus(CourConstant.COUR_ORDER_STATUE_FINISHED);
         courOrderService.updateCourOrder(courOrder);
+
+        // TODO: 将用户-课程-章节关系初始化
+
+        userCourseSectionService.initCourUserCourseSection(courOrder.getUserId(), courOrder.getCourseId());
 
         // TODO: 修改支付对象状态为已支付
         String payId = res.getString("transaction_id"); // 微信支付系统生成的订单号

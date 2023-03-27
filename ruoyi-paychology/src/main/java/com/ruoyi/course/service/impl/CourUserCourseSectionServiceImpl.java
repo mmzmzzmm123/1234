@@ -2,7 +2,11 @@ package com.ruoyi.course.service.impl;
 
 import java.util.List;
 
+import com.ruoyi.course.constant.CourConstant;
 import com.ruoyi.course.domain.CourCourse;
+import com.ruoyi.course.domain.CourSection;
+import com.ruoyi.course.service.ICourCourseService;
+import com.ruoyi.course.service.ICourSectionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.ruoyi.course.mapper.CourUserCourseSectionMapper;
@@ -20,6 +24,9 @@ public class CourUserCourseSectionServiceImpl implements ICourUserCourseSectionS
 {
     @Autowired
     private CourUserCourseSectionMapper courUserCourseSectionMapper;
+
+    @Autowired
+    private ICourSectionService courSectionService;
 
     /**
      * 查询用户-课程-章节关系
@@ -92,5 +99,36 @@ public class CourUserCourseSectionServiceImpl implements ICourUserCourseSectionS
     public int deleteCourUserCourseSectionById(Integer id)
     {
         return courUserCourseSectionMapper.deleteCourUserCourseSectionById(id);
+    }
+
+    /**
+     * 初始化用户与课程、章节的关系，记录初始的学习状态
+     *
+     * @param userId 用户ID
+     * @param courseId 课程ID
+     */
+    @Override
+    public void initCourUserCourseSection(Integer userId, Integer courseId) {
+
+        // 根据课程ID查询课程章节列表
+        CourSection courSection = new CourSection();
+        courSection.setCourseId(courseId);
+        List<CourSection> courSectionList = courSectionService.selectCourSectionList(courSection);
+
+        CourUserCourseSection courUserCourseSection = new CourUserCourseSection();
+        courUserCourseSection.setUserId(userId);
+        courUserCourseSection.setCourseId(courseId);
+        courUserCourseSection.setEndTime(0);
+        courUserCourseSection.setFinishStatus(CourConstant.SECTION_UNFINISHED);
+        for(CourSection section: courSectionList) {
+            // 记录每一章节用户初始的学习状态
+            courUserCourseSection.setSectionId(section.getId());
+            try {
+                insertCourUserCourseSection(courUserCourseSection);
+            } catch (Exception e) {
+                System.out.println(e.getMessage());
+            }
+
+        }
     }
 }

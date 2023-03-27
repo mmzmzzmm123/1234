@@ -60,4 +60,6 @@ public interface ICourUserCourseSectionService
      * @return 结果
      */
     public int deleteCourUserCourseSectionById(Integer id);
+
+    void initCourUserCourseSection(Integer userId, Integer courseId);
 }

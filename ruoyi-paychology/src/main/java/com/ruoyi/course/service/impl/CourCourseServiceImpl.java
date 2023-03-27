@@ -2,6 +2,7 @@ package com.ruoyi.course.service.impl;
 
 import java.util.List;
 import com.ruoyi.common.utils.DateUtils;
+import com.ruoyi.course.constant.CourConstant;
 import com.ruoyi.course.domain.CourCourse;
 import com.ruoyi.course.domain.CourSection;
 import com.ruoyi.course.domain.CourUserCourseSection;
@@ -137,18 +138,20 @@ public class CourCourseServiceImpl implements ICourCourseService
     /**
      * 根据课程的章节计算课程学习时长
      *
+     * @param userId 用户ID
      * @param courseId 课程ID
      * @return 课程信息
      */
-    public Integer calCourCourseStudyDuration(Integer courseId) {
+    public Integer calCourCourseStudyDuration(Integer userId, Integer courseId) {
         Integer studyDuration = 0;
         CourUserCourseSection courUserCourseSection = new CourUserCourseSection();
+        courUserCourseSection.setUserId(userId);
         courUserCourseSection.setCourseId(courseId);
         List<CourUserCourseSection> courUserCourseSectionList =
                 courUserCourseSectionService.selectCourUserCourseSectionList(courUserCourseSection);
 
         for (CourUserCourseSection userCourseSection: courUserCourseSectionList) {
-            if(userCourseSection.getFinishStatus() == 0) { // 用户未学习完成过当前章节
+            if (userCourseSection.getFinishStatus() == CourConstant.SECTION_UNFINISHED) { // 用户未学习完成过当前章节
                 studyDuration += userCourseSection.getEndTime();
             } else {
                 studyDuration += courSectionService.selectCourSectionById(userCourseSection.getSectionId()).getDuration();

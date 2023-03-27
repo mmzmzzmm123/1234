@@ -56,10 +56,11 @@ public interface ICourCourseService
     /**
      * 根据课程的章节计算课程学习时长
      *
+     * @param userId 用户ID
      * @param courseId 课程ID
      * @return 课程信息
      */
-    public Integer calCourCourseStudyDuration(Integer courseId);
+    public Integer calCourCourseStudyDuration(Integer userId, Integer courseId);
     /**
      * 新增课程
      * 
