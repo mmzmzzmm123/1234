@@ -84,6 +84,7 @@ public class WechatPayV3ApiController extends BaseController {
         // TODO: 内部生成支付对象
         PsyOrderPay orderPay = new PsyOrderPay();
         orderPay.setOrderId(Long.parseLong(newCourOrder.getId().toString()));
+        orderPay.setPayType(1); // 微信
         orderPay.setPayStatus(1);
         orderPay.setAmount(amount);
         orderPayService.insertPsyOrderPay(orderPay);

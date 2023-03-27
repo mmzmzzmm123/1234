@@ -10,12 +10,13 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="payStatus"    column="pay_status"    />
         <result property="amount"    column="amount"    />
         <result property="payId"    column="pay_id"    />
+        <result property="payType"    column="pay_type"    />
         <result property="createTime"    column="create_time"    />
         <result property="createBy"    column="create_by"    />
     </resultMap>
 
     <sql id="selectPsyOrderPayVo">
-        select id, order_id, pay_status, amount, pay_id, create_time, create_by from psy_order_pay
+        select id, order_id, pay_status, amount, pay_id, pay_type, create_time, create_by from psy_order_pay
     </sql>
 
     <select id="selectPsyOrderPayList" parameterType="com.ruoyi.gauge.domain.PsyOrderPay" resultMap="PsyOrderPayResult">
@@ -25,6 +26,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="payStatus != null "> and pay_status = #{payStatus}</if>
             <if test="amount != null "> and amount = #{amount}</if>
             <if test="payId != null  and payId != ''"> and pay_id = #{payId}</if>
+            <if test="payType != null "> and pay_type = #{payType}</if>
         </where>
     </select>
     
@@ -41,8 +43,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="payStatus != null">pay_status,</if>
             <if test="amount != null">amount,</if>
             <if test="payId != null">pay_id,</if>
+            <if test="payType != null">pay_type,</if>
             <if test="createTime != null">create_time,</if>
-            pay_type,
             <if test="createBy != null and createBy != ''">create_by,</if>
          </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
@@ -51,9 +53,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="payStatus != null">#{payStatus},</if>
             <if test="amount != null">#{amount},</if>
             <if test="payId != null">#{payId},</if>
+            <if test="payType != null">#{payType},</if>
             <if test="createTime != null">#{createTime},</if>
-            <if test="pay_type == null">1,</if>
-            <if test="pay_type != null">#{pay_type},</if>
             <if test="createBy != null and createBy != ''">#{createBy},</if>
          </trim>
     </insert>
@@ -65,6 +66,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="payStatus != null">pay_status = #{payStatus},</if>
             <if test="amount != null">amount = #{amount},</if>
             <if test="payId != null">pay_id = #{payId},</if>
+            <if test="payType != null">pay_type = #{payType},</if>
             <if test="createTime != null">create_time = #{createTime},</if>
             <if test="createBy != null and createBy != ''">create_by = #{createBy},</if>
         </trim>

@@ -107,6 +107,8 @@ public class PsyOrderPay extends BaseEntity
     }
 
     public int getPayType(){return payType;}
+
+    public void setPayType(int payType) { this.payType = payType; }
     @Override
     public String toString() {
         return new ToStringBuilder(this,ToStringStyle.MULTI_LINE_STYLE)
@@ -116,9 +118,9 @@ public class PsyOrderPay extends BaseEntity
             .append("amount", getAmount())
             .append("payId", getPayId())
             .append("payTime", getPayTime().toString())
+            .append("payType", getPayType())
             .append("createTime", getCreateTime())
             .append("createBy", getCreateBy())
-            .append("payType", getPayType())
             .toString();
     }
 }
