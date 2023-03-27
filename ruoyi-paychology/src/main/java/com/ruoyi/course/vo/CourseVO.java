@@ -18,7 +18,7 @@ public class CourseVO implements Serializable {
 
     /** 课程编号 */
     @ApiModelProperty("课程编号")
-    private String courseId;
+    private Integer courseId;
 
     /** 课程名称 */
     @ApiModelProperty("课程名称")
