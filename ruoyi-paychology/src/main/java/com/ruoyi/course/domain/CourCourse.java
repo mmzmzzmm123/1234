@@ -28,7 +28,7 @@ public class CourCourse extends BaseEntity
 
     /** 课程编号 */
     @Excel(name = "课程ID")
-    private Integer courseId;
+    private String courseId;
 
     /** 课程名称 */
     @Excel(name = "课程名称")
@@ -63,12 +63,12 @@ public class CourCourse extends BaseEntity
     {
         return id;
     }
-    public void setCourseId(Integer courseId)
+    public void setCourseId(String courseId)
     {
         this.courseId = courseId;
     }
 
-    public Integer getCourseId()
+    public String getCourseId()
     {
         return courseId;
     }
