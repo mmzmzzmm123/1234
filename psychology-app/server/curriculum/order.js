@@ -50,14 +50,16 @@ export default {
       return [];
     }
   },
-  changeOrderStatus:async ()=>{
-    let res = await httprequest.post("/app/gauge/order/changeOrderStatus");
+  cancelOrder:async (orderId)=>{
+    let res = await httprequest.post("/app/course/order/cancel", {		
+		orderId
+	});
     if (res.code == 200) {
       return res.data;
     } else {
       uni.showToast({
         icon: "error",
-        title: "获取数量出错",
+        title: "取消订单出错",
       });
     }
   }

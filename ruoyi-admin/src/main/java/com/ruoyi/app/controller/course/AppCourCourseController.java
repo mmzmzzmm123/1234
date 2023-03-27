@@ -3,6 +3,7 @@ package com.ruoyi.app.controller.course;
 import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.core.page.TableDataInfo;
+import com.ruoyi.course.constant.CourConstant;
 import com.ruoyi.course.domain.CourCourse;
 import com.ruoyi.course.domain.CourOrder;
 import com.ruoyi.course.domain.CourSection;
@@ -144,7 +145,7 @@ public class AppCourCourseController extends BaseController
             return AjaxResult.success(courseVO);
         }
         List<CourOrder> courOrderList = courOrderService.selectCourOrderByUser(userId, courseId);
-        courseVO.setIsBuy(courOrderList.size() > 0 ? 1 : 0);
+        courseVO.setIsBuy(courOrderList.size() > 0 ? CourConstant.COURSE_BUY : CourConstant.COURSE_NOT_BUY);
 
         return AjaxResult.success(courseVO);
     }

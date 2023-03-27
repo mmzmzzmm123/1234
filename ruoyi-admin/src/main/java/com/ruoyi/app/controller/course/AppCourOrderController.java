@@ -4,11 +4,14 @@ import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.core.page.TableDataInfo;
 import com.ruoyi.common.utils.OrderIdUtils;
+import com.ruoyi.course.constant.CourConstant;
 import com.ruoyi.course.domain.CourCourse;
 import com.ruoyi.course.domain.CourOrder;
 import com.ruoyi.course.service.ICourCourseService;
 import com.ruoyi.course.service.ICourOrderService;
 import com.ruoyi.course.vo.OrderVO;
+import com.ruoyi.gauge.domain.PsyOrderPay;
+import com.ruoyi.gauge.service.IPsyOrderPayService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.BeanUtils;
@@ -31,6 +34,9 @@ public class AppCourOrderController extends BaseController
 
     @Autowired
     private ICourCourseService courCourseService;
+
+    @Autowired
+    private IPsyOrderPayService psyOrderPayService;
 
     /**
      * 根据用户ID查询课程订单列表
@@ -81,5 +87,26 @@ public class AppCourOrderController extends BaseController
         courOrder.setStatus(0); // 0代表订单处于创建状态
 
         return AjaxResult.success(courOrderService.insertCourOrder(courOrder));
+    }
+
+    /**
+     * 取消订单
+     */
+    @PostMapping("/cancel")
+    @ApiOperation("根据订单信息生成课程订单")
+    public AjaxResult cancelOrder(@RequestBody Map<String, Object> map)
+    {
+        int orderId = Integer.parseInt(map.get("orderId").toString());
+        CourOrder courOrder = new CourOrder();
+        courOrder.setId(orderId);
+        courOrder.setStatus(CourConstant.COUR_ORDER_STATUE_CANCELED); // 订单处于取消状态
+
+        // 订单取消同时关闭支付信息
+        PsyOrderPay orderPay = new PsyOrderPay();
+        orderPay.setPayStatus(CourConstant.PAY_STATUE_CANCEL);
+        orderPay.setOrderId(Long.parseLong(Integer.toString(orderId)));
+        psyOrderPayService.updatePsyOrderPayByOrderId(orderPay);
+
+        return AjaxResult.success(courOrderService.updateCourOrder(courOrder));
     }
 }
