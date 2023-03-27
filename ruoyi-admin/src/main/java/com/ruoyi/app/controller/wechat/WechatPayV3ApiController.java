@@ -220,7 +220,7 @@ public class WechatPayV3ApiController extends BaseController {
         orderPay.setOrderId(Long.parseLong(courOrder.getId().toString())); // 订单ID
         orderPay.setPayStatus(2);
         orderPay.setPayId(payId);
-        orderPayService.updatePsyOrderPay(orderPay);
+        orderPayService.updatePsyOrderPayByOrderId(orderPay);
 
         result.put("code", "SUCCESS");
         result.put("message", "OK");

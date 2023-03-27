@@ -77,6 +77,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         update psy_order_pay
         <trim prefix="SET" suffixOverrides=",">
             <if test="payStatus != null">pay_status = #{payStatus},</if>
+            <if test="payId != null">pay_id = #{payId},</if>
         </trim>
         where order_id = #{orderId}
     </update>
