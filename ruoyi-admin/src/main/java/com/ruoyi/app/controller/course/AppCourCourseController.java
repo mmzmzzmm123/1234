@@ -13,6 +13,7 @@ import com.ruoyi.course.service.ICourOrderService;
 import com.ruoyi.course.service.ICourSectionService;
 import com.ruoyi.course.service.ICourUserCourseSectionService;
 import com.ruoyi.course.vo.CourseVO;
+import com.ruoyi.course.vo.SectionVO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.BeanUtils;
@@ -144,8 +145,22 @@ public class AppCourCourseController extends BaseController
         CourSection courSection = CourSection.builder()
                 .courseId(courseId)
                 .build();
-        List<CourSection> list = courSectionService.selectCourSectionList(courSection);
-        courseVO.setSectionList(list);
+        List<CourSection> sectionList = courSectionService.selectCourSectionList(courSection);
+        // 查询章节的学习情况
+        List<SectionVO> sectionVOList = new ArrayList<>();
+        SectionVO sectionVO = new SectionVO();
+        CourUserCourseSection userCourseSection = new CourUserCourseSection();
+        userCourseSection.setUserId(userId);
+        userCourseSection.setCourseId(course.getCourseId());
+
+        for (CourSection section: sectionList) {
+            BeanUtils.copyProperties(section, sectionVO);
+            userCourseSection.setSectionId(section.getId());
+            sectionVO.setEndTime(courUserCourseSectionService.findEndTime(userCourseSection));
+
+            sectionVOList.add(sectionVO);
+        }
+        courseVO.setSectionList(sectionVOList);
 
         // 查询用户有没有购买该订单
         if (userId == 0) { // 没有给出用户标识

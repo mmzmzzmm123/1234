@@ -142,4 +142,15 @@ public class CourUserCourseSectionServiceImpl implements ICourUserCourseSectionS
     public int recordEndTime(CourUserCourseSection userCourseSection) {
         return courUserCourseSectionMapper.recordEndTime(userCourseSection);
     }
+
+    /**
+     * 查询用户学习课程章节的结束时间点
+     *
+     * @param userCourseSection 用户-课程-章节关系
+     * @return 结束时间点
+     */
+    @Override
+    public Integer findEndTime(CourUserCourseSection userCourseSection) {
+        return courUserCourseSectionMapper.findEndTime(userCourseSection);
+    }
 }

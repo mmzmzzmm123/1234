@@ -5,15 +5,17 @@
         id="myVideo"
         ref="video1"
         :src="currentCatalogue.contentUrl"
-        loop="true"
+        loop="false"
         :initial-time="currentCatalogue.endTime"
 		:duration="currentCatalogue.duration"
         enable-danmu
         danmu-btn
         controls
-		muted="true"
         style="width: 100%"
 		@timeupdate="videoTimeUpdateEvent"
+		@play="play"
+		@pause="pause"
+		@ended="stop"
       ></video>
     </view>
     <view class="catalogue-title">我们每个人都有自我疗愈能力</view>
@@ -27,15 +29,15 @@
       <view
         class="list-item"
         v-for="(courseItem, index) in catalogueList"
-        :class="{ playing: courseItem.playing }"
+        :class="[{ playing: courseItem.playing }]"
 		@tap="chooseCatalogue(courseItem, index)"
       >
         <view class="status-box">
-          <span class="try-txt">
-            <span v-if="courseItem.enabled">试听</span>
+          <span class="try-txt" v-if="courseInfo.isBuy === 0">
+            <span v-if="courseItem.type === 0">试听</span>
             <image
               class="lock-img"
-              v-if="!courseItem.enabled"
+              v-if="courseItem.type === 1"
               src="/static/curriculum/course/lock-white.png"
             ></image>
           </span>
@@ -44,7 +46,7 @@
           }}</span>
         </view>
         <view class="course-title txt-overflow txt-overflow-line2"
-          >{{ index + 1 }}、{{ courseItem.title }}</view
+          >{{ index + 1 }}、{{ courseItem.topic }}</view
         >
       </view>
     </view>
@@ -54,7 +56,7 @@
       <view class="content"> {{ currentCatalogue.content }}</view>
     </view>
     <!-- 底部操作菜单 -->
-    <cartTabBar @cartShow="cartShow"></cartTabBar>
+    <cartTabBar @cartShow="cartShow" :isBuy="courseInfo.isBuy"></cartTabBar>
     <cartBox
       @closeCart="cartShow"
       v-if="cartBoxShow&&!this.courseInfo.isBuy"
@@ -69,6 +71,7 @@
         </view>
         <customCatalogueList
           :catalogueList="catalogueList"
+		  :isBuy="courseInfo.isBuy"
         ></customCatalogueList> </view
     ></view>
   </view>
@@ -91,20 +94,7 @@ export default {
       courseInfo: {},
       cartBoxShow: false,
       redirectUri:location.href,
-      catalogueList: [
-        {
-          title:
-            "课程1课程1课程1课程1课程1课程1课程1课程1课程1课程1课程1课程1课程1课程1课程1课程1课程1课程1课程1",
-          time: "10:34",
-          enabled: true,
-          playing: true,
-        },
-        { title: "课程2", time: "07:34", enabled: true, playing: false },
-        { title: "课程2", time: "07:34", enabled: false, playing: false },
-        { title: "课程2", time: "07:34", enabled: false, playing: false },
-        { title: "课程2", time: "07:34", enabled: false, playing: false },
-        { title: "课程2", time: "07:34", enabled: false, playing: false },
-      ],
+      catalogueList: [],
 	  currentIndex: 0, //
 	  currentCatalogue: {}, 
 	  secondCount: 0,
@@ -117,11 +107,14 @@ export default {
       utils.getParam(location.href, "id");
     this.courseInfo = await courseServer.getCourseInfo(this.userInfo.userId, this.courseId);
     this.catalogueList = this.courseInfo.sectionList;
-    this.cartBoxShow = utils.getParam(location.href, "payOrder") == 1;
+    this.cartBoxShow = utils.getParam(location.href, "payOrder") == 1;	
 	
-	this.videoContext = uni.createVideoContext('myVideo');
 	this.currentIndex = 0;
 	this.currentCatalogue = this.catalogueList[0] || {}
+	
+	this.videoContext = uni.createVideoContext('myVideo');
+	// initial-time属性不生效，需要直接设置
+	this.videoContext.seek(this.currentCatalogue.endTime)
   },
   beforeDestroy() {
 	// 记录当前章节学习的结束时间点, 用戶直接关闭页面感知不到，不可靠
@@ -141,8 +134,7 @@ export default {
 	videoTimeUpdateEvent(e) { // 播放进度改变
 		// e.detail.currentTime为每次触发时,视频的当前播放时间
 		this.secondCount++;
-		let currentTime = Number(e.detail.currentTime);
-		console.log('播放进度条改变', currentTime)
+		let currentTime = Number(e.detail.currentTime);		
 		this.currentCatalogue.endTime = parseInt(currentTime)
 		// 试看结束 this.class_info.freed_time为试看时间
 		if (currentTime >= this.currentCatalogue.duration) {
@@ -158,6 +150,19 @@ export default {
 				this.secondCount = 0
 			}
 		}
+	},
+	play() {
+		this.currentCatalogue.playing = true
+		this.$set(this.currentCatalogue, "playing", true)
+	},
+	pause() {
+		this.currentCatalogue.playing = false
+		this.$forceUpdate()
+	},
+	end() {
+		this.currentCatalogue.playing = false
+		this.$forceUpdate()
+		this.recordEndTime(this.currentCatalogue.duration, 1)
 	},
 	chooseCatalogue(courseItem, index) {
 		// 记录旧章节的学习时间

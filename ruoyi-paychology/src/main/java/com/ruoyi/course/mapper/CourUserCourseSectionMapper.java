@@ -69,4 +69,12 @@ public interface CourUserCourseSectionMapper
      * @return 结果
      */
     int recordEndTime(CourUserCourseSection userCourseSection);
+
+    /**
+     * 查询用户学习课程章节的结束时间点
+     *
+     * @param userCourseSection 用户-课程-章节关系
+     * @return 结束时间点
+     */
+    Integer findEndTime(CourUserCourseSection userCourseSection);
 }

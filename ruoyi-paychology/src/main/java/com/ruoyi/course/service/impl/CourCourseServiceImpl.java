@@ -121,7 +121,7 @@ public class CourCourseServiceImpl implements ICourCourseService
     }
 
     /**
-     * 根据课程的章节判断课程是否完成
+     * 根据课程的章节判断课程是否未完成
      *
      * @param userId 用户ID
      * @param courseId 课程编号
@@ -133,6 +133,9 @@ public class CourCourseServiceImpl implements ICourCourseService
         List<CourUserCourseSection> courUserCourseSectionList =
                 courUserCourseSectionService.selectCourUserCourseSectionList(courUserCourseSection);
 
+        if (courUserCourseSectionList == null || courUserCourseSectionList.size() == 0) {
+            return true; // 未完成
+        }
         return courUserCourseSectionList.stream().anyMatch(item -> item.getFinishStatus() == 0);
     }
 

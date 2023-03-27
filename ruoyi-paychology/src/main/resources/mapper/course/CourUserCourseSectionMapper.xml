@@ -95,4 +95,14 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         </trim>
         where id = #{id}
     </update>
+
+    <select id="findEndTime" parameterType="CourUserCourseSection" resultType="Integer">
+        select end_time
+        from cour_user_course_section
+        <where>
+            <if test="userId != null  and userId != ''"> and user_id = #{userId}</if>
+            <if test="courseId != null  and courseId != ''"> and course_id = #{courseId}</if>
+            <if test="sectionId != null  and sectionId != ''"> and section_id = #{sectionId}</if>
+        </where>
+    </select>
 </mapper>
