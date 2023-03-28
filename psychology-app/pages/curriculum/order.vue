@@ -42,13 +42,13 @@
         <view
           class="btn"
           v-show="order.status == 1"
-          @tap="toLearningCourse(order)"
+          @tap.stop.prevent="toLearningCourse(order)"
           >去学习</view
         >
-        <view class="btn cancel" v-show="order.status == 0" @tap="toCancel(order)"
+        <view class="btn cancel" v-show="order.status == 0" @tap.stop.prevent="toCancel(order)"
           >取消</view
         >
-        <view class="btn" v-show="order.status == 0" @tap="toPay(order)"
+        <view class="btn" v-show="order.status == 0" @tap.stop.prevent="toPay(order)"
           >支付</view
         >
       </view>
@@ -99,13 +99,16 @@ export default {
 		} 
   	},	  
   },
-  async created() {
+   created() {
 	this.userInfo = uni.getStorageSync("userInfo")
     if (this.userInfo && this.userInfo.userId) {
-      this.orderList = await orderServer.getOrderList(this.userInfo.userId);
+      this.getOrderList()
     }
   },
   methods: {
+	async getOrderList() {
+		this.orderList = await orderServer.getOrderList(this.userInfo.userId);
+	},
     cartShow() {
       this.cartBoxShow = !this.cartBoxShow;
     },
@@ -117,14 +120,15 @@ export default {
     toPay(order) {
       this.courseInfo = order.courseInfo;
       this.cartShow();
+	  this.changeTab(0)
     },
     async toCancel(order) {
       await orderServer.cancelOrder(order.id);     
-	  
+	  this.changeTab(0)
     },
     toLearningCourse(order) {
       uni.navigateTo({
-        url: "/pages/curriculum/learningCourse?courseId=" + order.courseId,
+        url: "/pages/curriculum/learningCourse?courseId=" + order.courseInfo.id,
       });
     },
     async changeTab(status) {

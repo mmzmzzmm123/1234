@@ -18,7 +18,7 @@
 		@ended="stop"
       ></video>
     </view>
-    <view class="catalogue-title">我们每个人都有自我疗愈能力</view>
+    <view class="catalogue-title">{{ courseInfo.name }}</view>
     <view class="catalogue-num">
       <span>课程列表(共12节)</span>
       <span @tap="showList"
