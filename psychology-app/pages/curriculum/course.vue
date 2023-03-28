@@ -38,7 +38,7 @@
     </view>
     <!-- 底部操作菜单 -->
     <cartTabBar @cartShow="cartShow" :isBuy="this.courseInfo.isBuy"></cartTabBar>
-    <cartBox @closeCart="cartShow" v-if="cartBoxShow && this.courseInfo.isBuy == 1" :courseInfo="courseInfo" 
+    <cartBox @closeCart="cartShow" v-if="cartBoxShow && this.courseInfo.isBuy == 0" :courseInfo="courseInfo" 
       :redirectUri="redirectUri"></cartBox>
   </view>
 </template>
@@ -85,7 +85,7 @@ export default {
         });
       }
     },
-    cartShow() {
+    cartShow() {		
       this.cartBoxShow = !this.cartBoxShow;
     },
   },

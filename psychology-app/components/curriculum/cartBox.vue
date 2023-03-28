@@ -85,14 +85,14 @@ export default {
   position: fixed;
   left: 0;
   top: 0;
-
+  z-index: 10001;	
   .order-info {
     position: absolute;
     bottom: 0;
     left: 0;
     height: 580upx;
     width: 100vw;
-    background-color: #fff;
+    background-color: #fff;	
 
     .close-icon {
       background-image: url("/static/icon/close.png");

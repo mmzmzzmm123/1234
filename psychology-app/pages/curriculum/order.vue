@@ -57,6 +57,7 @@
     <view class="footer" v-else>已经到底了</view>
     <curriculum-tab-bar :currentIndex="2"></curriculum-tab-bar>
     <cartBox
+	  class="order_cart_box"
       @closeCart="cartShow"
       v-if="cartBoxShow"
       :courseInfo="courseInfo"
@@ -299,5 +300,13 @@ page {
       }
     }
   }
+}
+</style>
+<style lang="scss" scoped> 
+.order_cart_box .order-info {
+	
+		bottom: 80upx !important;
+	
+	
 }
 </style>
