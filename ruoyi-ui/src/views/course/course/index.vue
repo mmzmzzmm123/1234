@@ -112,6 +112,11 @@
         </template>
       </el-table-column>
       <el-table-column label="课程价格" align="center" prop="price" />
+      <el-table-column label="关联章节">
+        <template slot-scope="scope">
+          <el-button type="text" icon="el-icon-plus" size="mini" @click="handleAddSection(scope.row.id)">新增章节</el-button>
+        </template>
+      </el-table-column>
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button
@@ -155,7 +160,7 @@
               v-for="dict in dict.type.course_type"
               :key="dict.value"
               :label="dict.label"
-:value="parseInt(dict.value)"
+              :value="parseInt(dict.value)"
             ></el-option>
           </el-select>
         </el-form-item>
@@ -177,11 +182,15 @@
         <el-button @click="cancel">取 消</el-button>
       </div>
     </el-dialog>
+
+    <!-- 新增关联章节弹框 -->
+    <AddSection :addSectionOpen="addSectionOpen" :addSectionCourseId="addSectionCourseId" @close="addSectionOpen = !addSectionOpen"></AddSection>
   </div>
 </template>
 
 <script>
 import { listCourse, getCourse, delCourse, addCourse, updateCourse } from "@/api/course/course";
+import AddSection from '@/views/components/course/addSection/index.vue'
 
 export default {
   name: "Course",
@@ -230,8 +239,13 @@ export default {
         type: [
           { required: true, message: "课程类型不能为空", trigger: "change" }
         ],
-      }
+      },
+      addSectionOpen: false, // 添加章节弹框标记
+      addSectionCourseId: null,
     };
+  },
+  components: {
+    AddSection,
   },
   created() {
     this.getList();
@@ -336,6 +350,10 @@ export default {
       this.download('course/course/export', {
         ...this.queryParams
       }, `course_${new Date().getTime()}.xlsx`)
+    },
+    handleAddSection(courseId) {
+      this.addSectionCourseId = courseId
+      this.addSectionOpen = !this.addSectionOpen
     }
   }
 };
