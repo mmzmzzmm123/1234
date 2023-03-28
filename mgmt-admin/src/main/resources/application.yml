@@ -74,7 +74,7 @@ spring:
     # 端口，默认为6379
     port: 6380
     # 数据库索引
-    database: 7
+    database: 6
     # 密码
     password: wtf3h9rpyjy
     # 连接超时时间
