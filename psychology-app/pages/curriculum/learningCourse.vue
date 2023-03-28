@@ -170,7 +170,8 @@ export default {
 		
 		// 选中章节
 		this.currentIndex = index;
-		this.currentCatalogue = this.catalogueList[index] || {}		
+		this.currentCatalogue = this.catalogueList[index] || {}	
+		this.videoContext.seek(this.currentCatalogue.endTime)	
 	},
 	async recordEndTime(endTime, finishStatus) {
 		const params = {
