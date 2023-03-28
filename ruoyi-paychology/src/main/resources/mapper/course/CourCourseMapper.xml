@@ -117,7 +117,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </delete>
 
     <!--   判断课程是否已支付     -->
-    <select id="getPaidCourseCount" parameterType="String" resultType="Integer">
+    <select id="getPaidCourseCount" parameterType="Integer" resultType="Integer">
         select count(co.course_id)
         from cour_order co
         left join psy_order_pay pop

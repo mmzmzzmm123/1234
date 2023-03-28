@@ -11,6 +11,7 @@
         enable-danmu
         danmu-btn
         controls
+		enable-play-gesture="true"
         style="width: 100%"
 		@timeupdate="videoTimeUpdateEvent"
 		@play="play"
@@ -170,8 +171,12 @@ export default {
 		
 		// 选中章节
 		this.currentIndex = index;
-		this.currentCatalogue = this.catalogueList[index] || {}	
-		this.videoContext.seek(this.currentCatalogue.endTime)	
+		this.currentCatalogue = this.catalogueList[index] || {}		
+		this.$nextTick(() => {
+			this.videoContext.seek(this.currentCatalogue.endTime)
+			console.log('chooseCatalogue endTime: ' + this.currentCatalogue.endTime)
+		})
+		
 	},
 	async recordEndTime(endTime, finishStatus) {
 		const params = {

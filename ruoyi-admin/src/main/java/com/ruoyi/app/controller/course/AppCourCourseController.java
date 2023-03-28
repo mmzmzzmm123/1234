@@ -154,10 +154,15 @@ public class AppCourCourseController extends BaseController
             SectionVO sectionVO = new SectionVO();
             CourUserCourseSection userCourseSection = new CourUserCourseSection();
             userCourseSection.setUserId(userId);
-            userCourseSection.setCourseId(course.getCourseId());
+            userCourseSection.setCourseId(courseId);
             BeanUtils.copyProperties(section, sectionVO);
             userCourseSection.setSectionId(section.getId());
             sectionVO.setEndTime(courUserCourseSectionService.findEndTime(userCourseSection));
+
+            // 未购买课程的普通章节不返回内容链接
+            if (courCourseService.getPaidCourseCount(courseId) == 0 && sectionVO.getType() == CourConstant.SECTION_NORMAL) {
+                sectionVO.setContentUrl(null);
+            }
 
             sectionVOList.add(sectionVO);
         }
