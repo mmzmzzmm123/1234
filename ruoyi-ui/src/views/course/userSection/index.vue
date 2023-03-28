@@ -36,7 +36,7 @@
       <el-form-item label="完成状态" prop="finishStatus">
         <el-select v-model="queryParams.finishStatus" placeholder="请选择完成状态" clearable>
           <el-option
-            v-for="dict in dict.type.course_finish_status"
+            v-for="dict in dict.type.course_section_finish_status"
             :key="dict.value"
             :label="dict.label"
             :value="dict.value"
@@ -104,7 +104,7 @@
       <el-table-column label="上次结束时间" align="center" prop="endTime" />
       <el-table-column label="完成状态" align="center" prop="finishStatus">
         <template slot-scope="scope">
-          <dict-tag :options="dict.type.course_finish_status" :value="scope.row.finishStatus"/>
+          <dict-tag :options="dict.type.course_section_finish_status" :value="scope.row.finishStatus"/>
         </template>
       </el-table-column>
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
@@ -126,7 +126,7 @@
         </template>
       </el-table-column>
     </el-table>
-    
+
     <pagination
       v-show="total>0"
       :total="total"
@@ -153,7 +153,7 @@
         <el-form-item label="完成状态">
           <el-radio-group v-model="form.finishStatus">
             <el-radio
-              v-for="dict in dict.type.course_finish_status"
+              v-for="dict in dict.type.course_section_finish_status"
               :key="dict.value"
 :label="parseInt(dict.value)"
             >{{dict.label}}</el-radio>
@@ -173,7 +173,7 @@ import { listUserSection, getUserSection, delUserSection, addUserSection, update
 
 export default {
   name: "UserSection",
-  dicts: ['course_finish_status'],
+  dicts: ['course_section_finish_status'],
   data() {
     return {
       // 遮罩层

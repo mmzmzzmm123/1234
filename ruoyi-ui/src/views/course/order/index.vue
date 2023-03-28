@@ -12,7 +12,7 @@
       <el-form-item label="订单状态" prop="status">
         <el-select v-model="queryParams.status" placeholder="请选择订单状态" clearable>
           <el-option
-            v-for="dict in dict.type.order_status"
+            v-for="dict in dict.type.course_order_status"
             :key="dict.value"
             :label="dict.label"
             :value="dict.value"
@@ -101,7 +101,7 @@
       <el-table-column label="订单编号" align="center" prop="orderId" />
       <el-table-column label="订单状态" align="center" prop="status">
         <template slot-scope="scope">
-          <dict-tag :options="dict.type.order_status" :value="scope.row.status"/>
+          <dict-tag :options="dict.type.course_order_status" :value="scope.row.status"/>
         </template>
       </el-table-column>
       <el-table-column label="用户编号" align="center" prop="userId" />
@@ -126,7 +126,7 @@
         </template>
       </el-table-column>
     </el-table>
-    
+
     <pagination
       v-show="total>0"
       :total="total"
@@ -144,7 +144,7 @@
         <el-form-item label="订单状态">
           <el-radio-group v-model="form.status">
             <el-radio
-              v-for="dict in dict.type.order_status"
+              v-for="dict in dict.type.course_order_status"
               :key="dict.value"
 :label="parseInt(dict.value)"
             >{{dict.label}}</el-radio>
@@ -173,7 +173,7 @@ import { listOrder, getOrder, delOrder, addOrder, updateOrder } from "@/api/cour
 
 export default {
   name: "Order",
-  dicts: ['order_status'],
+  dicts: ['course_order_status'],
   data() {
     return {
       // 遮罩层
