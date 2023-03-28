@@ -148,12 +148,13 @@ public class AppCourCourseController extends BaseController
         List<CourSection> sectionList = courSectionService.selectCourSectionList(courSection);
         // 查询章节的学习情况
         List<SectionVO> sectionVOList = new ArrayList<>();
-        SectionVO sectionVO = new SectionVO();
-        CourUserCourseSection userCourseSection = new CourUserCourseSection();
-        userCourseSection.setUserId(userId);
-        userCourseSection.setCourseId(course.getCourseId());
+
 
         for (CourSection section: sectionList) {
+            SectionVO sectionVO = new SectionVO();
+            CourUserCourseSection userCourseSection = new CourUserCourseSection();
+            userCourseSection.setUserId(userId);
+            userCourseSection.setCourseId(course.getCourseId());
             BeanUtils.copyProperties(section, sectionVO);
             userCourseSection.setSectionId(section.getId());
             sectionVO.setEndTime(courUserCourseSectionService.findEndTime(userCourseSection));
