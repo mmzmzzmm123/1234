@@ -34,10 +34,10 @@
       >
         <view class="status-box">
           <span class="try-txt" v-if="courseInfo.isBuy === 0">
-            <span v-if="courseItem.type === 0">试听</span>
+            <span v-if="courseItem.type === 1">试听</span>
             <image
               class="lock-img"
-              v-if="courseItem.type === 1"
+              v-if="courseItem.type === 0"
               src="/static/curriculum/course/lock-white.png"
             ></image>
           </span>

@@ -95,15 +95,15 @@ function onBridgeReady(wxParam, successCallback) {
         }
     });
 }
-export function wxPay(wxParam) {
+export function wxPay(wxParam, successCallback) {
 	if (typeof WeixinJSBridge == "undefined") {
 	    if (document.addEventListener) {
-	        document.addEventListener('WeixinJSBridgeReady', onBridgeReady(wxParam), false);
+	        document.addEventListener('WeixinJSBridgeReady', onBridgeReady(wxParam, successCallback), false);
 	    } else if (document.attachEvent) {
-	        document.attachEvent('WeixinJSBridgeReady', onBridgeReady(wxParam));
-	        document.attachEvent('onWeixinJSBridgeReady', onBridgeReady(wxParam));
+	        document.attachEvent('WeixinJSBridgeReady', onBridgeReady(wxParam, successCallback));
+	        document.attachEvent('onWeixinJSBridgeReady', onBridgeReady(wxParam, successCallback));
 	    }
 	} else {
-	    onBridgeReady(wxParam);
+	    onBridgeReady(wxParam, successCallback);
 	}
 }

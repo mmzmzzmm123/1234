@@ -52,24 +52,22 @@ export default {
     async submitPay() {
       this.userInfo = uni.getStorageSync("userInfo")
       if (this.userInfo && this.userInfo.userId) {
-        let res = await orderServer.orderAdd(
-          this.userInfo.userId,		  
-          this.courseInfo.id,
-          this.courseInfo.price		  
-        );
-        if (res.code == 200) {
-			let res = await getPaySign(this.userInfo.userId, this.courseInfo.id)
-			console.log(res)
-			if (res.code == 200) {
-				const { appId, timeStamp, nonceStr, packageInfo, paySign, signType } = res.data
-				wxPay(res.data, () => {
-					uni.navigateTo({
-								url: "/pages/curriculum/learningCourse?id=" + this.courseInfo.id,
-					});
-				})
-			}
-		  
-        }
+		let res = await getPaySign(this.userInfo.userId, this.courseInfo.id)
+		console.log(res)
+		if (res.code == 200) {
+			const { appId, timeStamp, nonceStr, packageInfo, paySign, signType } = res.data
+			wxPay(res.data, () => {
+				uni.showToast({
+				  icon: "success",
+				  title: "支付成功",
+				});
+				uni.navigateTo({
+					url: "/pages/curriculum/learningCourse?id=" + this.courseInfo.id,
+				});
+				window.reload()
+			})
+		}	  
+
       } else {
         utils.loginWx(this.redirectUri);
       }
