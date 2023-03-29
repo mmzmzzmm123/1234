@@ -100,8 +100,8 @@ public class PsyOrderServiceImpl implements IPsyOrderService {
     }
 
     @Override
-    public List<PsyOrder> queryOrderInfo(PsyOrder psyOrder ,LoginDTO loginUser) {
-        psyOrder.setCreateBy(loginUser.getUserId());
+    public List<PsyOrder> queryOrderInfo(PsyOrder psyOrder ,Integer userId) {
+        psyOrder.setCreateBy(Integer.toString(userId));
         return psyOrderMapper.queryOrderPage(psyOrder);
     }
 

@@ -75,10 +75,10 @@ public class PsyGaugeQuestionsResultServiceImpl implements IPsyGaugeQuestionsRes
      */
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public int answer(PsyGaugeQuestionsResult psyGaugeQuestionsResult ,String userId)
+    public int answer(PsyGaugeQuestionsResult psyGaugeQuestionsResult ,Integer userId)
     {
         //先删除该问题的答案
-        psyGaugeQuestionsResult.setUserId(userId);
+        psyGaugeQuestionsResult.setUserId(Integer.toString(userId));
         psyGaugeQuestionsResultMapper.deleteResult(psyGaugeQuestionsResult);
 
         //查询问题分数，进行数据绑定，插入数据
@@ -138,7 +138,7 @@ public class PsyGaugeQuestionsResultServiceImpl implements IPsyGaugeQuestionsRes
     }
 
     @Override
-    public String commitResult(GaugeCommitResultDTO gaugeCommitResultDTO ,String userId) {
+    public String commitResult(GaugeCommitResultDTO gaugeCommitResultDTO ,Integer userId) {
         //获取订单分值
         HashMap<String, Object> paramMap = new HashMap<>();
         paramMap.put("orderId",gaugeCommitResultDTO.getOrderId());

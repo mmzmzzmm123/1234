@@ -44,10 +44,10 @@ public class AppPsyOrderController extends BaseController {
 //    @PreAuthorize("@ss.hasPermi('system:order:list')")
     @GetMapping("/list")
     @ApiOperation("获取订单分页列表")
-    public TableDataInfo list(PsyOrder psyOrder , HttpServletRequest request) {
-        LoginDTO loginUser = appTokenService.getLoginUser(request);
+    public TableDataInfo list(PsyOrder psyOrder) {
+        Integer userId = Integer.parseInt(psyOrder.getUserId());
         startPage();
-        List<PsyOrder> list = psyOrderService.queryOrderInfo(psyOrder ,loginUser);
+        List<PsyOrder> list = psyOrderService.queryOrderInfo(psyOrder ,userId);
         return getDataTable(list);
     }
 

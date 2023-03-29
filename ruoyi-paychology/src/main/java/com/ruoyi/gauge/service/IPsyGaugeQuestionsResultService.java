@@ -37,7 +37,7 @@ public interface IPsyGaugeQuestionsResultService
      * @param psyGaugeQuestionsResult 心理测评问题结果
      * @return 结果
      */
-    public int answer(PsyGaugeQuestionsResult psyGaugeQuestionsResult , String userId);
+    public int answer(PsyGaugeQuestionsResult psyGaugeQuestionsResult , Integer userId);
 
     /**
      * 修改心理测评问题结果
@@ -63,7 +63,7 @@ public interface IPsyGaugeQuestionsResultService
      */
     public int deletePsyGaugeQuestionsResultById(Long id);
 
-    String commitResult(GaugeCommitResultDTO gaugeCommitResultDTO ,String userId);
+    String commitResult(GaugeCommitResultDTO gaugeCommitResultDTO ,Integer userId);
 
     int addList(List<PsyGaugeQuestionsResultAll> psyGaugeQuestionsResultAlls);
 }

@@ -46,6 +46,10 @@ public class PsyOrder extends BaseEntity
     @Excel(name = "测评完成情况(1-已完成，2-未完成)")
     private Integer gaugeStatus;
 
+    /** 用户id */
+    @Excel(name = "用户id")
+    private String userId;
+
     /**
      * 量表标题
      */
@@ -69,6 +73,8 @@ public class PsyOrder extends BaseEntity
     public String getGaugeDes() {
         return gaugeDes;
     }
+
+    public String getUserId() {return userId; }
 
     public void setGaugeDes(String gaugeDes) {
         this.gaugeDes = gaugeDes;

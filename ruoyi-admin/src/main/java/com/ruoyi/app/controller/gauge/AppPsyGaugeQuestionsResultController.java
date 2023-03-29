@@ -45,7 +45,7 @@ public class AppPsyGaugeQuestionsResultController extends BaseController
     @ApiOperation("答题")
     public AjaxResult add(@RequestBody @Validated PsyGaugeQuestionsResult psyGaugeQuestionsResult )
     {
-        String userId = psyGaugeQuestionsResult.getUserId();
+        Integer userId = Integer.parseInt(psyGaugeQuestionsResult.getUserId());
         return toAjax(psyGaugeQuestionsResultService.answer(psyGaugeQuestionsResult ,userId));
     }
 
@@ -57,7 +57,7 @@ public class AppPsyGaugeQuestionsResultController extends BaseController
     @ApiOperation("普通计算提交测评并生成结果")
     public AjaxResult commitResult(@RequestBody @Validated GaugeCommitResultDTO gaugeCommitResultDTO)
     {
-        String userId = gaugeCommitResultDTO.getUserId();
+        Integer userId = Integer.parseInt(gaugeCommitResultDTO.getUserId());
         String result = psyGaugeQuestionsResultService.commitResult(gaugeCommitResultDTO ,userId);
         return AjaxResult.success(RespMessageConstants.OPERATION_SUCCESS ,result);
     }

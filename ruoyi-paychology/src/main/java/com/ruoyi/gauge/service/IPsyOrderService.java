@@ -68,7 +68,7 @@ public interface IPsyOrderService
      */
     public int deletePsyOrderById(Long id);
 
-    List<PsyOrder> queryOrderInfo(PsyOrder psyOrder ,LoginDTO loginUser);
+    List<PsyOrder> queryOrderInfo(PsyOrder psyOrder ,Integer userId);
 
     int getMyReportNum(LoginDTO loginUser);
 }
