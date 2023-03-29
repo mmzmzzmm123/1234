@@ -112,12 +112,6 @@
       }
     },
     {
-      "path": "pages/curriculum/user",
-      "style": {
-        "navigationStyle": "custom"
-      }
-    },
-    {
       "path": "pages/curriculum/courseList",
       "style": {
         "navigationStyle": "custom"

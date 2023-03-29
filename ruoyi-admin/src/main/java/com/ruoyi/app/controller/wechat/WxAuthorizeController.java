@@ -16,6 +16,8 @@ import com.ruoyi.wechat.utils.AuthUtil;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -23,6 +25,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.util.Map;
 
 /**
  * @User hogan
@@ -48,12 +51,12 @@ public class WxAuthorizeController {
      * 微信登录接口
      */
     @ApiOperation(value = "微信登录接口")
-    @RequestMapping("wxLogin")
-    public AjaxResult wxLogin() {
+    @PostMapping("wxLogin")
+    public AjaxResult wxLogin(@RequestBody Map<String, Object> map) {
         //这里是回调的url
-        String redirect_uri = PAGE_URL;
+        String redirect_uri = map.get("redirectUri").toString();
         try {
-            redirect_uri = URLEncoder.encode(PAGE_URL, "utf-8");
+            redirect_uri = URLEncoder.encode(map.get("redirectUri").toString(), "utf-8");
         } catch (UnsupportedEncodingException e) {
             throw new RuntimeException(e);
         }

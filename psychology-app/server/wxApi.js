@@ -17,10 +17,10 @@ function updateToken() {
       });
   });
 }
-export const wxLogin = () => {
+export const wxLogin = (data) => {
   return new Promise((resolve, reject) => {
     httprequest
-      .get(`/app/user/wxLogin`)
+      .post(`/app/user/wxLogin`, data)
       .then((res) => {
         resolve(res);
       })
