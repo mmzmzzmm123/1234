@@ -92,8 +92,8 @@ public class PsyGaugeQuestionsServiceImpl implements IPsyGaugeQuestionsService {
     }
 
     @Override
-    public List<PsyQuestionVO> appQueryQuesList(PsyGaugeQuestions psyGaugeQuestions, LoginDTO loginUser) {
-        psyGaugeQuestions.setUserId(loginUser.getUserId());
+    public List<PsyQuestionVO> appQueryQuesList(PsyGaugeQuestions psyGaugeQuestions, String userId) {
+        psyGaugeQuestions.setUserId(userId);
         List<PsyQuestionVO> psyQuestionVOS = psyGaugeQuestionsMapper.appQueryQuesList(psyGaugeQuestions);
         return psyQuestionVOS;
     }

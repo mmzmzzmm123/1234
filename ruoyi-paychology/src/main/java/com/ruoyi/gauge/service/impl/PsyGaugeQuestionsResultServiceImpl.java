@@ -75,10 +75,10 @@ public class PsyGaugeQuestionsResultServiceImpl implements IPsyGaugeQuestionsRes
      */
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public int answer(PsyGaugeQuestionsResult psyGaugeQuestionsResult ,LoginDTO loginDTO)
+    public int answer(PsyGaugeQuestionsResult psyGaugeQuestionsResult ,String userId)
     {
         //先删除该问题的答案
-        psyGaugeQuestionsResult.setUserId(loginDTO.getUserId());
+        psyGaugeQuestionsResult.setUserId(userId);
         psyGaugeQuestionsResultMapper.deleteResult(psyGaugeQuestionsResult);
 
         //查询问题分数，进行数据绑定，插入数据
@@ -92,7 +92,7 @@ public class PsyGaugeQuestionsResultServiceImpl implements IPsyGaugeQuestionsRes
                     .questionsId(psyGaugeQuestionsResult.getQuestionsId())
                     .questionsOptionsId(id)
                     .score(collect.get(id).toString())
-                    .userId(loginDTO.getUserId())
+                    .userId(userId)
                     .orderId(psyGaugeQuestionsResult.getOrderId())
                     .build();
             build.setCreateTime(DateUtils.getNowDate());
@@ -138,11 +138,11 @@ public class PsyGaugeQuestionsResultServiceImpl implements IPsyGaugeQuestionsRes
     }
 
     @Override
-    public String commitResult(GaugeCommitResultDTO gaugeCommitResultDTO ,LoginDTO loginDTO) {
+    public String commitResult(GaugeCommitResultDTO gaugeCommitResultDTO ,String userId) {
         //获取订单分值
         HashMap<String, Object> paramMap = new HashMap<>();
         paramMap.put("orderId",gaugeCommitResultDTO.getOrderId());
-        paramMap.put("userId",loginDTO.getUserId());
+        paramMap.put("userId",userId);
         List<PsyGaugeQuestionsResultAll> psyGaugeQuestionsResults = psyGaugeQuestionsResultMapper.selectPsyGaugeQuestionsResultAll(paramMap);
         int sum=0;
         if(CollectionUtils.isNotEmpty(psyGaugeQuestionsResults)){
@@ -178,19 +178,19 @@ public class PsyGaugeQuestionsResultServiceImpl implements IPsyGaugeQuestionsRes
 
     @Transactional(rollbackFor = Exception.class)
     @Override
-    public int addList(List<PsyGaugeQuestionsResultAll> psyGaugeQuestionsResultAlls, LoginDTO loginUser) {
+    public int addList(List<PsyGaugeQuestionsResultAll> psyGaugeQuestionsResultAlls) {
         if(CollectionUtils.isNotEmpty(psyGaugeQuestionsResultAlls)){
             //先删除当前订单所有问题的答案
             HashMap<String, Object> paramMap = new HashMap<>();
             paramMap.put("orderId",psyGaugeQuestionsResultAlls.get(0).getOrderId());
-            paramMap.put("userId",loginUser.getUserId());
+            paramMap.put("userId",psyGaugeQuestionsResultAlls.get(0).getUserId());
             //psyGaugeQuestionsResultMapper.deleteAllResult(paramMap);
             List<PsyGaugeQuestionsResultAll> results = Lists.newArrayList();
             int sum=0;
             for (PsyGaugeQuestionsResultAll psyGaugeQuestionsResultAll:psyGaugeQuestionsResultAlls) {
                 sum+=psyGaugeQuestionsResultAll.getValue();
                 psyGaugeQuestionsResultAll.setCreateTime(DateUtils.getNowDate());
-                psyGaugeQuestionsResultAll.setUserId(loginUser.getUserId());
+                psyGaugeQuestionsResultAll.setUserId(psyGaugeQuestionsResultAlls.get(0).getUserId());
                 results.add(psyGaugeQuestionsResultAll);
             }
             paramMap.put("score",sum);
