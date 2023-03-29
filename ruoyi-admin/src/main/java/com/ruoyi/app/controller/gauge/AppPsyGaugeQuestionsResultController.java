@@ -43,10 +43,10 @@ public class AppPsyGaugeQuestionsResultController extends BaseController
      */
     @PostMapping
     @ApiOperation("答题")
-    public AjaxResult add(@RequestBody @Validated PsyGaugeQuestionsResult psyGaugeQuestionsResult , HttpServletRequest request)
+    public AjaxResult add(@RequestBody @Validated PsyGaugeQuestionsResult psyGaugeQuestionsResult )
     {
-        LoginDTO loginUser = appTokenService.getLoginUser(request);
-        return toAjax(psyGaugeQuestionsResultService.answer(psyGaugeQuestionsResult ,loginUser));
+        Integer userId = Integer.parseInt(psyGaugeQuestionsResult.getUserId());
+        return toAjax(psyGaugeQuestionsResultService.answer(psyGaugeQuestionsResult ,userId));
     }
 
 
@@ -55,9 +55,10 @@ public class AppPsyGaugeQuestionsResultController extends BaseController
      */
     @PostMapping("/commit")
     @ApiOperation("普通计算提交测评并生成结果")
-    public AjaxResult commitResult(@RequestBody @Validated GaugeCommitResultDTO gaugeCommitResultDTO , HttpServletRequest request)
+    public AjaxResult commitResult(@RequestBody @Validated GaugeCommitResultDTO gaugeCommitResultDTO)
     {
-        String result = psyGaugeQuestionsResultService.commitResult(gaugeCommitResultDTO ,appTokenService.getLoginUser(request));
+        Integer userId = Integer.parseInt(gaugeCommitResultDTO.getUserId());
+        String result = psyGaugeQuestionsResultService.commitResult(gaugeCommitResultDTO ,userId);
         return AjaxResult.success(RespMessageConstants.OPERATION_SUCCESS ,result);
     }
 
@@ -66,9 +67,8 @@ public class AppPsyGaugeQuestionsResultController extends BaseController
      */
     @PostMapping("/addList")
     @ApiOperation("测评结果保存")
-    public AjaxResult addList(@RequestBody @Validated List<PsyGaugeQuestionsResultAll> psyGaugeQuestionsResultAlls , HttpServletRequest request)
+    public AjaxResult addList(@RequestBody @Validated List<PsyGaugeQuestionsResultAll> psyGaugeQuestionsResultAlls)
     {
-        LoginDTO loginUser = appTokenService.getLoginUser(request);
-        return toAjax(psyGaugeQuestionsResultService.addList(psyGaugeQuestionsResultAlls ,loginUser));
+        return toAjax(psyGaugeQuestionsResultService.addList(psyGaugeQuestionsResultAlls));
     }
 }
