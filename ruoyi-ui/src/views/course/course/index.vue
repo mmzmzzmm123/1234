@@ -170,7 +170,7 @@
           <el-input v-model="form.author" placeholder="请输入课程作者" />
         </el-form-item>
         <el-form-item label="课程图片">
-          <image-upload v-model="form.url"/>
+          <image-upload v-model="form.url" :extraData="extraData"/>
         </el-form-item>
         <el-form-item label="课程价格" prop="price">
           <el-input v-model="form.price" placeholder="请输入课程价格" />
@@ -199,6 +199,9 @@ export default {
   dicts: ['course_type'],
   data() {
     return {
+      extraData: {
+        module: 'course'
+      },
       // 遮罩层
       loading: true,
       // 选中数组

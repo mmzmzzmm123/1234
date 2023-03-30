@@ -104,7 +104,7 @@
         </template>
       </el-table-column>
     </el-table>
-    
+
     <pagination
       v-show="total>0"
       :total="total"
@@ -117,7 +117,7 @@
     <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
         <el-form-item label="banner图片地址">
-          <image-upload v-model="form.bannerUrl"/>
+          <image-upload v-model="form.bannerUrl" :extraData="extraData" />
         </el-form-item>
         <el-form-item label="跳转url" prop="linkUrl">
           <el-input v-model="form.linkUrl" placeholder="请输入跳转url" />
@@ -149,6 +149,9 @@ export default {
   dicts: ['course_banner_type'],
   data() {
     return {
+      extraData: {
+        module: 'course'
+      },
       // 遮罩层
       loading: true,
       // 选中数组

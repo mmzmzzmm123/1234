@@ -19,7 +19,7 @@
     >
       <i class="el-icon-plus"></i>
     </el-upload>
-    
+
     <!-- 上传提示 -->
     <div class="el-upload__tip" slot="tip" v-if="showTip">
       请上传
@@ -67,6 +67,9 @@ export default {
     isShowTip: {
       type: Boolean,
       default: true
+    },
+    extraData: {
+      type: Object
     }
   },
   data() {
@@ -80,6 +83,7 @@ export default {
       uploadImgUrl: process.env.VUE_APP_BASE_API + "/common/upload", // 上传的图片服务器地址
       headers: {
         Authorization: "Bearer " + getToken(),
+        module: this.extraData.module
       },
       fileList: []
     };
@@ -223,4 +227,3 @@ export default {
     transform: translateY(0);
 }
 </style>
-

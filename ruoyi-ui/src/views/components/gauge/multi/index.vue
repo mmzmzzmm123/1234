@@ -44,7 +44,7 @@
                   </el-col>
                 </el-form-item>
                 <el-form-item label="建议">
-                  <image-upload v-model="props.row.proposal" @input="modifyScoreSetting(props.row)" />
+                  <image-upload v-model="props.row.proposal" @input="modifyScoreSetting(props.row)" :extraData="extraData" />
                 </el-form-item>
                 <el-form-item label="结论">
                   <el-input
@@ -119,6 +119,9 @@ export default {
   },
   data() {
     return {
+      extraData: {
+        module: 'gauge'
+      },
       dialogQuestionVisible: false,
       newMultiVisible: false,
       newMultiValue: "",

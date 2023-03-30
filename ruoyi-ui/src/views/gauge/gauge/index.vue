@@ -88,13 +88,13 @@
           <el-input v-model="form.subtitle" placeholder="请输入子标题" />
         </el-form-item>
         <el-form-item label="头部图片">
-          <image-upload v-model="form.headPicture" />
+          <image-upload v-model="form.headPicture" :extraData="extraData"/>
         </el-form-item>
         <el-form-item label="列表展示图片">
-          <image-upload v-model="form.listShowPicture" />
+          <image-upload v-model="form.listShowPicture" :extraData="extraData" />
         </el-form-item>
         <el-form-item label="测评描述">
-          <image-upload v-model="form.introduce" />
+          <image-upload v-model="form.introduce" :extraData="extraData" />
         </el-form-item>
         <el-form-item label="测评分类" prop="gaugeClass">
           <el-select v-model="form.gaugeClass" placeholder="请选择测评分类">
@@ -163,6 +163,9 @@ export default {
   name: "Gauge",
   data() {
     return {
+      extraData: {
+        module: 'gauge'
+      },
       activeTab: "questions",
       // 遮罩层
       loading: true,

@@ -1,7 +1,7 @@
 <template>
 
   <div>
-  
+
 
         <el-divider content-position="left">得分设置</el-divider>
         <el-table :data="scoreList" style="width: 100%" size="mini">
@@ -18,7 +18,7 @@
                   </el-col>
                 </el-form-item>
                 <el-form-item label="建议">
-                  <image-upload v-model="props.row.proposal" @input="modifySetting(props.row)" />
+                  <image-upload v-model="props.row.proposal" @input="modifySetting(props.row)" :extraData="extraData" />
                 </el-form-item>
                 <el-form-item label="结论">
                   <el-input
@@ -49,7 +49,7 @@
           </el-table-column>
         </el-table>
         <el-button type="primary" size="small" @click="insertSetting()">增加得分</el-button>
-    
+
 
   </div>
 </template>
@@ -83,6 +83,9 @@ export default {
   },
   data() {
     return {
+      extraData: {
+        module: 'gauge'
+      },
       form: {},
       scoreList: [
         {
