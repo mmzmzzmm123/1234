@@ -28,8 +28,7 @@ export default {
 		redirectUri: location.origin + location.pathname
 	}).then((res) => {
       if (res.code == 200) {
-		  console.log('res: ',res.data)
-        // window.location.href = res.data;
+        window.location.href = res.data;
       }
     });
   },

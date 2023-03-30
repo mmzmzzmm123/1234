@@ -102,7 +102,11 @@ public class PsyOrderServiceImpl implements IPsyOrderService {
 
     @Override
     public List<PsyOrder> queryOrderInfo(PsyOrder psyOrder ,Integer userId) {
-        psyOrder.setCreateBy(Integer.toString(userId));
+        if (userId == null) {
+            psyOrder.setCreateBy(null);
+        } else {
+            psyOrder.setCreateBy(userId + "");
+        }
         return psyOrderMapper.queryOrderPage(psyOrder);
     }
 

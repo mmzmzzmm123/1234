@@ -1,8 +1,12 @@
 import httprequest from "../httpRequest";
 export default {
-  getOrderList: async (gaugeStatus) => {
-    let res = await httprequest.get(
-      "/app/gauge/order/list?gaugeStatus=" + (gaugeStatus || "")
+  getOrderList: async (userId, gaugeStatus) => {
+    let res = await httprequest.post(
+      "/app/gauge/order/list",
+	  {
+		  userId,
+		  gaugeStatus
+	  }
     );
     if (res.code == 200) {
       return res.rows;

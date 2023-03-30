@@ -42,10 +42,14 @@ public class AppPsyOrderController extends BaseController {
      * 查询心理测评订单信息列表
      */
 //    @PreAuthorize("@ss.hasPermi('system:order:list')")
-    @GetMapping("/list")
+    @PostMapping("/list")
     @ApiOperation("获取订单分页列表")
-    public TableDataInfo list(PsyOrder psyOrder) {
-        Integer userId = Integer.parseInt(psyOrder.getUserId());
+    public TableDataInfo list(@RequestBody PsyOrder psyOrder) {
+        Integer userId = null;
+        if (psyOrder.getUserId() != null) {
+            userId = Integer.parseInt(psyOrder.getUserId());
+        }
+
         startPage();
         List<PsyOrder> list = psyOrderService.queryOrderInfo(psyOrder ,userId);
         return getDataTable(list);

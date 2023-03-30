@@ -120,8 +120,8 @@ export default {
       this.userInfo = {};//防止为null报错
       utils.loginWx(this.redirectUri);
     } else {
-      this.orderList = await userServer.getOrderList();
-      this.reportNum = await userServer.getOrderListNum();
+      this.orderList = await userServer.getOrderList(this.userInfo.userId, 2);
+      this.reportNum = await userServer.getOrderListNum(this.userInfo.userId);
     }
   },
   async mounted() {
