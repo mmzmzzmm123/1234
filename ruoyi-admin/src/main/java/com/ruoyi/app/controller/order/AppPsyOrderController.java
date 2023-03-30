@@ -56,7 +56,6 @@ public class AppPsyOrderController extends BaseController {
             LoginDTO loginUser = appTokenService.getLoginUser(request);
             userId = Integer.parseInt(loginUser.getUserId());
         }
-
         startPage();
         List<PsyOrder> list = psyOrderService.queryOrderInfo(psyOrder ,userId);
         return getDataTable(list);
