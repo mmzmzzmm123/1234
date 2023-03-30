@@ -79,7 +79,7 @@ public class CommonController
     {
         String module;
         if (request.getHeader("module") == null) {
-            return AjaxResult.error("上次文件请设置模块名module");
+            module = "";
         } else {
             module = request.getHeader("module");
         }
@@ -123,7 +123,7 @@ public class CommonController
         {
             String module;
             if (request.getHeader("module") == null) {
-                return AjaxResult.error("上次文件请设置模块名module");
+                module = "";
             } else {
                 module = request.getHeader("module");
             }
