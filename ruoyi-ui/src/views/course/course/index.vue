@@ -112,11 +112,6 @@
         </template>
       </el-table-column>
       <el-table-column label="课程价格" align="center" prop="price" />
-      <el-table-column label="关联章节">
-        <template slot-scope="scope">
-          <el-button type="text" icon="el-icon-plus" size="mini" @click="handleAddSection(scope.row.id)">新增章节</el-button>
-        </template>
-      </el-table-column>
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button
@@ -133,6 +128,13 @@
             @click="handleDelete(scope.row)"
             v-hasPermi="['course:course:remove']"
           >删除</el-button>
+          <el-button
+            type="text"
+            icon="el-icon-plus"
+            size="mini"
+            @click="handleSectionDrawer(scope.row.id)">
+            章节管理
+          </el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -183,14 +185,14 @@
       </div>
     </el-dialog>
 
-    <!-- 新增关联章节弹框 -->
-    <AddSection :addSectionOpen="addSectionOpen" :addSectionCourseId="addSectionCourseId" @close="addSectionOpen = !addSectionOpen"></AddSection>
+    <!-- 新增关联章节侧边栏 -->
+    <SectionDrawer :drawOpen="drawOpen" :drawCourseId="drawCourseId" @close="drawOpen = !drawOpen"></SectionDrawer>
   </div>
 </template>
 
 <script>
 import { listCourse, getCourse, delCourse, addCourse, updateCourse } from "@/api/course/course";
-import AddSection from '@/views/components/course/addSection/index.vue'
+import SectionDrawer from '@/views/components/course/sectionDrawer/index.vue'
 
 export default {
   name: "Course",
@@ -240,12 +242,12 @@ export default {
           { required: true, message: "课程类型不能为空", trigger: "change" }
         ],
       },
-      addSectionOpen: false, // 添加章节弹框标记
-      addSectionCourseId: null,
+      drawOpen: false,
+      drawCourseId: null,
     };
   },
   components: {
-    AddSection,
+    SectionDrawer,
   },
   created() {
     this.getList();
@@ -351,9 +353,9 @@ export default {
         ...this.queryParams
       }, `course_${new Date().getTime()}.xlsx`)
     },
-    handleAddSection(courseId) {
-      this.addSectionCourseId = courseId
-      this.addSectionOpen = !this.addSectionOpen
+    handleSectionDrawer(courseId) {
+      this.drawCourseId = courseId
+      this.drawOpen = !this.drawOpen
     }
   }
 };
