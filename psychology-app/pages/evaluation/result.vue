@@ -23,7 +23,7 @@
                         <view class="cue">长按识别二维码进入测试乐园</view>
                     </view>
                     <view class="qr-code-box">
-                        <image mode="widthFix" class="img-item" src="/static/evaluation/index/product/55.png"></image>
+                        <image mode="widthFix" class="img-item" :src="qrcodeUrl"></image>
                     </view>
                 </view>
                 <view class="bottom-cue">长按图片保存海报</view>
@@ -33,19 +33,27 @@
     </view>
 </template>
 <script>
+import qrcodeServer from '@/server/qrcode'
 export default {
     data() {
         return {
             maskShow: false,
-            result: ''
+            result: '',
+			qrcodeUrl: '/static/evaluation/index/product/55.png'
         }
     },
     created() {
         this.result = uni.getStorageSync("result");
     },
     methods: {
-        getResult() {
+        async getResult() {
             this.maskShow = true;
+			
+			// 生成二位码			
+			const res = await qrcodeServer.getQrcode(location.href)
+			if (res.code == 200) {
+				this.qrcodeUrl = res.data.images_url
+			}
         }
     }
 }
