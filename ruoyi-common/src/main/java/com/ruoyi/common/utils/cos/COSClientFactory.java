@@ -100,8 +100,8 @@ public class COSClientFactory {
 
     public static UploadResult upload(InputStream inputStream ,String key, String module) throws IOException {
         String bucket = null;
-        if (module.equals("course")){bucket = cosConfig.getGaugeBucket();}
-        else {bucket = cosConfig.getBucket();}
+        if (module.equals("course")){bucket = cosConfig.getBucket();}
+        else {bucket = cosConfig.getGaugeBucket();}
         // 使用高级接口必须先保证本进程存在一个 TransferManager 实例，如果没有则创建
         // 详细代码参见本页：高级接口 -> 创建 TransferManager
         TransferManager transferManager = createTransferManager();
@@ -135,8 +135,8 @@ public class COSClientFactory {
 
     public static String getObjUrl(String key, String module){
         String bucket = null;
-        if (module.equals("course")){bucket = cosConfig.getGaugeBucket();}
-        else {bucket = cosConfig.getBucket();}
+        if (module.equals("course")){bucket = cosConfig.getBucket();}
+        else {bucket = cosConfig.getGaugeBucket();}
         return cosClient.getObjectUrl(bucket, key).toString();
 //        return cosClient.getObjectUrl(cosConfig.getBucket(), key).toString();
     }
