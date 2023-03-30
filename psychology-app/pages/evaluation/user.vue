@@ -15,7 +15,7 @@
               class="img"
               src="/static/icon/refresh.png"
               v-show="userInfo.name"
-              @tap="loginWx"
+              @tap="refreshUser"
             />
           </view>
           <!-- <view class="num"
@@ -114,17 +114,28 @@ export default {
   },
   async created() {
     this.userInfo = uni.getStorageSync("userInfo")
-    if (!this.userInfo) {
+	//从微信登录返回会有code
+	let code = utils.getParam(window.location.href, "code");
+    if (!this.userInfo && !code) {
+      this.userInfo = {};//防止为null报错
       utils.loginWx(this.redirectUri);
     } else {
-      this.orderList = await userServer.getOrderList(2);
+      this.orderList = await userServer.getOrderList();
       this.reportNum = await userServer.getOrderListNum();
     }
   },
   async mounted() {
-      this.userInfo = await utils.loginCallback(this.redirectUri);
+    if (await utils.loginCallback(this.redirectUri)) {
+      this.userInfo = uni.getStorageSync("userInfo")
+    }
   },
   methods: {
+    refreshUser(){
+      uni.setStorageSync("userInfo",null);
+      utils.loginWx(this.redirectUri);
+      //添加登录标志,为callback做返回判断
+      uni.setStorageSync("wxLogining", true);
+    },
     toReport() {
       if (this.getUserInfo())
         uni.navigateTo({ url: "/pages/evaluation/report" });

@@ -1,10 +1,10 @@
 package com.ruoyi.gauge.mapper;
 
-import java.util.HashMap;
-import java.util.List;
-
 import com.ruoyi.common.core.domain.dto.LoginDTO;
 import com.ruoyi.gauge.domain.PsyOrder;
+
+import java.util.HashMap;
+import java.util.List;
 
 /**
  * 心理测评订单信息Mapper接口
@@ -69,4 +69,12 @@ public interface PsyOrderMapper
     int getMyReportNum(LoginDTO loginDTO);
 
     void updatePsyOrderByOrderId(HashMap<String, Object> paramMap);
+
+    /**
+     * 查询测评订单
+     *
+     * @param orderId 测评订单编号
+     * @return 课程订单
+     */
+    public PsyOrder selectPsyOrderByOrderId(String orderId);
 }

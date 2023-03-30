@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.ruoyi.common.core.domain.dto.LoginDTO;
 import com.ruoyi.common.utils.DateUtils;
+import com.ruoyi.course.domain.CourOrder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.ruoyi.gauge.mapper.PsyOrderMapper;
@@ -108,6 +109,34 @@ public class PsyOrderServiceImpl implements IPsyOrderService {
     @Override
     public int getMyReportNum(LoginDTO loginUser) {
         return psyOrderMapper.getMyReportNum(loginUser);
+    }
+
+    /**
+     * 查询测评订单
+     *
+     * @param orderId 测评订单主键
+     * @return 课程订单
+     */
+    @Override
+    public PsyOrder selectPsyOrderByOrderId(String orderId)
+    {
+        return psyOrderMapper.selectPsyOrderByOrderId(orderId);
+    }
+
+    /**
+     * 生成测评订单
+     *
+     * @param psyOrder 测评订单
+     * @return 生成的订单对象
+     */
+    @Override
+    public PsyOrder generatePsyOrder(PsyOrder psyOrder) {
+        psyOrder.setCreateTime(DateUtils.getNowDate());
+        int code = psyOrderMapper.insertPsyOrder(psyOrder);
+        if (code == 1) {
+            return selectPsyOrderByOrderId(psyOrder.getOrderId());
+        }
+        return null;
     }
 
 

@@ -52,7 +52,9 @@ export default {
     async submitPay() {
       this.userInfo = uni.getStorageSync("userInfo")
       if (this.userInfo && this.userInfo.userId) {
-		let res = await getPaySign(this.userInfo.userId, this.courseInfo.id)
+		let res = await getPaySign(this.userInfo.userId, this.courseInfo.id, {
+			module: 'course'
+		})
 		console.log(res)
 		if (res.code == 200) {
 			const { appId, timeStamp, nonceStr, packageInfo, paySign, signType } = res.data

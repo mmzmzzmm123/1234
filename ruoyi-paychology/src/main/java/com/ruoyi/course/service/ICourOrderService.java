@@ -25,7 +25,7 @@ public interface ICourOrderService
     /**
      * 查询课程订单
      *
-     * @param orderId 课程订单主键
+     * @param orderId 课程订单编号
      * @return 课程订单
      */
     public CourOrder selectCourOrderByOrderId(String orderId);

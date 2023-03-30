@@ -58,14 +58,25 @@ export function getTokenFormCode(code) {
 }
 
 // 通知后台给微信预支付下单，并返回支付签名
-export function getPaySign(userId, courseId) {
+export function getPaySign(userId, produteId, extra) {
   return new Promise((resolve, reject) => {
+	  let params = null
+	  if (extra.module === 'course') {
+		  params = {
+			  userId: userId,
+			  courseId: produteId,
+			  module: extra.module
+		  }
+	  } else if (extra.module === 'gauge') {
+		  params = {
+			  userId: userId,
+			  gaugeId: produteId,
+			  module: extra.module
+		  }
+	  }
 	  httprequest
 		.post(
-		  `/app/api/wechatPay/v3/wechatPay`, {
-			  userId,
-			  courseId
-		  }
+		  `/app/api/wechatPay/v3/wechatPay`, params
 		)
 		.then((res) => {
 		  resolve(res);

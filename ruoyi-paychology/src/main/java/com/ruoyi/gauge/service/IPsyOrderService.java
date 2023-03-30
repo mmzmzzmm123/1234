@@ -1,9 +1,9 @@
 package com.ruoyi.gauge.service;
 
-import java.util.List;
-
 import com.ruoyi.common.core.domain.dto.LoginDTO;
 import com.ruoyi.gauge.domain.PsyOrder;
+
+import java.util.List;
 
 /**
  * 心理测评订单信息Service接口
@@ -71,4 +71,20 @@ public interface IPsyOrderService
     List<PsyOrder> queryOrderInfo(PsyOrder psyOrder ,Integer userId);
 
     int getMyReportNum(LoginDTO loginUser);
+
+    /**
+     * 查询测评订单
+     *
+     * @param orderId 测评订单主键
+     * @return 课程订单
+     */
+    public PsyOrder selectPsyOrderByOrderId(String orderId);
+
+    /**
+     * 生成测评订单
+     *
+     * @param psyOrder 测评订单
+     * @return 生成的订单对象
+     */
+    public PsyOrder generatePsyOrder(PsyOrder psyOrder);
 }

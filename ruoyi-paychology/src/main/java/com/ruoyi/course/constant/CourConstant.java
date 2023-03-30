@@ -1,6 +1,7 @@
 package com.ruoyi.course.constant;
 
 public class CourConstant {
+    public static final String MODULE_COURSE = "course";
     public static final int COUR_ORDER_STATUE_CREATED = 0;
     public static final int COUR_ORDER_STATUE_FINISHED = 1;
     public static final int COUR_ORDER_STATUE_CANCELED = 2;

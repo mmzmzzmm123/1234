@@ -68,7 +68,7 @@ export default {
     },
     toProduct(id) {
       uni.navigateTo({
-        url: "/pages/evaluation/product/index?id=" + id,
+        url: "/pages/evaluation/product?id=" + id,
       });
     },
   },

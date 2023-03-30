@@ -157,9 +157,7 @@ export default {
     },
     // 点击头像
     getUserInfo() {
-      if (
-        !uni.getStorageSync("userInfo")
-      ) {
+      if (!uni.getStorageSync("userInfo")) {
         utils.loginWx(this.redirectUri);
         return false;
       }

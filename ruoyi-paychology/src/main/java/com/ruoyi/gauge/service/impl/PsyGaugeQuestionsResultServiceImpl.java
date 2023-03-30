@@ -92,7 +92,7 @@ public class PsyGaugeQuestionsResultServiceImpl implements IPsyGaugeQuestionsRes
                     .questionsId(psyGaugeQuestionsResult.getQuestionsId())
                     .questionsOptionsId(id)
                     .score(collect.get(id).toString())
-                    .userId(userId)
+                    .userId(userId.toString())
                     .orderId(psyGaugeQuestionsResult.getOrderId())
                     .build();
             build.setCreateTime(DateUtils.getNowDate());

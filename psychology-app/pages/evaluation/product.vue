@@ -26,7 +26,7 @@
 		</view>
 		<!-- 底部操作菜单 -->
 		<view class="page-bottom">
-			<navigator url="/pages/evaluation" open-type="redirect" class="p-b-btn">
+			<navigator url="/pages/evaluation/index" open-type="redirect" class="p-b-btn">
 				<image class="index-icon" src="/static/evaluation/menu/index.png"></image>
 				<text>首页</text>
 			</navigator>
@@ -65,6 +65,7 @@
 <script>
 import utils from '@/utils/common'
 import productServer from '@/server/evaluation/product'
+import { getPaySign, wxPay } from "@/server/wxApi";
 export default {
 	data() {
 		return {
@@ -80,24 +81,26 @@ export default {
 	},
 	methods: {
 		async submitPay() {
-			this.userInfo = uni.getStorageSync("userInfo");
-			if (!this.userInfo) {
-				uni.navigateTo({
-					url: "/pages/evaluation/login?callbacktype=2&productId=" + this.productId,
-				});
-				return;
-			}
-			let res = await productServer.orderPay(this.productInfo.id, this.productInfo.price);
+		  this.userInfo = uni.getStorageSync("userInfo")
+		  if (this.userInfo && this.userInfo.userId) {
+			let res = await getPaySign(this.userInfo.userId, this.productId, {
+				module: 'gauge'
+			})
+			console.log(res)
 			if (res.code == 200) {
-				uni.setStorageSync("gaugeDes", this.productInfo.gaugeDes);
-				uni.navigateTo({
-					url: `/pages/evaluation/testBefore?productId=${this.productId}&orderId=${res.data}`,
-				});
-			} else if (res == 401) {
-				uni.navigateTo({
-					url: "/pages/evaluation/login?callbacktype=2&productId=" + this.productId,
-				});
-			}
+				const { appId, timeStamp, nonceStr, packageInfo, paySign, signType } = res.data
+				wxPay(res.data, () => {
+					uni.showToast({
+					  icon: "success",
+					  title: "支付成功",
+					});					
+					window.reload()
+				})
+			}	  
+		
+		  } else {
+		    utils.loginWx(this.redirectUri);
+		  }
 		},
 		startTest() {
 			this.payBoxShow = true;

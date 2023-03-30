@@ -7,13 +7,19 @@ import com.ruoyi.app.controller.wechat.utils.WechatPayV3Utils;
 import com.ruoyi.common.constant.RespMessageConstants;
 import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.domain.AjaxResult;
+import com.ruoyi.common.enums.GaugeStatus;
+import com.ruoyi.common.enums.OrderPayStatus;
+import com.ruoyi.common.enums.OrderStatus;
 import com.ruoyi.course.constant.CourConstant;
 import com.ruoyi.course.domain.CourOrder;
 import com.ruoyi.course.domain.CourUserCourseSection;
 import com.ruoyi.course.service.ICourOrderService;
 import com.ruoyi.course.service.ICourUserCourseSectionService;
+import com.ruoyi.gauge.constant.GaugeConstant;
+import com.ruoyi.gauge.domain.PsyOrder;
 import com.ruoyi.gauge.domain.PsyOrderPay;
 import com.ruoyi.gauge.service.IPsyOrderPayService;
+import com.ruoyi.gauge.service.IPsyOrderService;
 import com.ruoyi.psychology.domain.PsyUser;
 import com.ruoyi.psychology.service.IPsyUserService;
 import org.apache.commons.lang3.RandomStringUtils;
@@ -56,6 +62,12 @@ public class WechatPayV3ApiController extends BaseController {
 
     @Autowired
     private ICourUserCourseSectionService userCourseSectionService;
+
+    @Autowired
+    private IPsyOrderService psyOrderService;
+
+    @Autowired
+    private IPsyOrderPayService psyOrderPayService;
  
     /**
      * 发起微信小程序支付
@@ -68,27 +80,68 @@ public class WechatPayV3ApiController extends BaseController {
 
         //@TODO demo中先写死的一些参数
         Long userId = Long.parseLong(map.get("userId")); //用户id
-        Integer courseId = Integer.parseInt(map.get("courseId")); //课程ID
-        String out_trade_no = createOrderNo("DJ", userId); //创建商户订单号
+        Integer courseId = null;
+        Long gaugeId = null;
+        String out_trade_no = null;
+        if (map.get("courseId") != null) {
+            courseId = Integer.parseInt(map.get("courseId")); //课程ID
+        }
+        if (map.get("gaugeId") != null) {
+            gaugeId = Long.parseLong(map.get("gaugeId")); //测评ID
+        }
+
         BigDecimal amount = new BigDecimal("0.01"); //先写死一个金额 单位：元
+        String module = map.get("module");
 
-        // TODO: 内部生成订单
-        CourOrder courOrder = new CourOrder();
-        courOrder.setOrderId(out_trade_no);
-        courOrder.setStatus(CourConstant.COUR_ORDER_STATUE_CREATED);
-        courOrder.setAmount(amount);
-        courOrder.setUserId(Integer.parseInt(map.get("userId")));
-        courOrder.setCourseId(courseId);
-        CourOrder newCourOrder = courOrderService.generateCourOrder(courOrder);
 
-        // TODO: 内部生成支付对象
-        PsyOrderPay orderPay = new PsyOrderPay();
-        orderPay.setOrderId(Long.parseLong(newCourOrder.getId().toString()));
-        orderPay.setPayType(CourConstant.PAY_WAY_WEIXIN); // 微信
-        orderPay.setPayStatus(CourConstant.PAY_STATUE_PENDING);
-        orderPay.setAmount(amount);
-        orderPay.setPayId(UUID.randomUUID().toString()); // 当前使用随机生成的支付ID，后续使用第三方支付平台返回的
-        orderPayService.insertPsyOrderPay(orderPay);
+        if (CourConstant.MODULE_COURSE.equals(module)) {
+            out_trade_no = createOrderNo("COU_DJ", userId); //创建商户订单号
+
+            // TODO: 内部生成订单
+            CourOrder courOrder = new CourOrder();
+            courOrder.setOrderId(out_trade_no);
+            courOrder.setStatus(CourConstant.COUR_ORDER_STATUE_CREATED);
+            courOrder.setAmount(amount);
+            courOrder.setUserId(Integer.parseInt(map.get("userId")));
+            courOrder.setCourseId(courseId);
+            CourOrder newCourOrder = courOrderService.generateCourOrder(courOrder);
+
+            // TODO: 内部生成支付对象
+            PsyOrderPay orderPay = new PsyOrderPay();
+            orderPay.setOrderId(Long.parseLong(newCourOrder.getId().toString()));
+            orderPay.setPayType(CourConstant.PAY_WAY_WEIXIN); // 微信
+            orderPay.setPayStatus(CourConstant.PAY_STATUE_PENDING);
+            orderPay.setAmount(amount);
+            orderPay.setPayId(UUID.randomUUID().toString()); // 当前使用随机生成的支付ID，后续使用第三方支付平台返回的
+            orderPayService.insertPsyOrderPay(orderPay);
+        } else if (GaugeConstant.MODULE_GAUGE.equals(module)) {
+            out_trade_no = createOrderNo("GAU_DJ", userId); //创建商户订单号
+
+            // TODO: 内部生成订单
+            PsyOrder psyOrder = PsyOrder.builder()
+                    .orderId(out_trade_no)
+                    .amount(amount)
+                    .orderStatus(OrderStatus.CREATE.getValue())
+                    .gaugeStatus(GaugeStatus.UNFINISHED.getValue())
+                    .gaugeId(gaugeId)
+                    .build();
+            psyOrder.setCreateBy(map.get("userId"));
+
+            PsyOrder newPsyOrder = psyOrderService.generatePsyOrder(psyOrder);
+
+            // TODO: 内部生成支付对象
+            PsyOrderPay psyOrderPay = PsyOrderPay.builder()
+                    .orderId(newPsyOrder.getId())
+                    .amount(amount)
+                    .payStatus(OrderPayStatus.NEED_PAY.getValue())
+                    .payId(UUID.randomUUID().toString())
+                    .build();
+            psyOrderPay.setCreateBy(map.get("userId"));
+            psyOrderPayService.insertPsyOrderPay(psyOrderPay);
+        }
+
+
+
 
         // 根据用户ID从用户表中查询openid
         PsyUser user = psyUserService.selectPsyUserById(userId + "");
@@ -211,23 +264,41 @@ public class WechatPayV3ApiController extends BaseController {
         }
         logger.info("最终拿到的微信支付通知数据：" + res);
         //@TODO 处理支付成功后的业务 例如 将订单状态修改为已支付 具体参数键值可参考文档 注意！！！ 微信可能会多次发送重复的通知 因此要判断业务是否已经处理过了 避免重复处理
-        // TODO: 修改订单状态为已完成
+
         String out_trade_no = res.getString("out_trade_no");
-        CourOrder courOrder = courOrderService.selectCourOrderByOrderId(out_trade_no);
-        courOrder.setStatus(CourConstant.COUR_ORDER_STATUE_FINISHED);
-        courOrderService.updateCourOrder(courOrder);
 
-        // TODO: 将用户-课程-章节关系初始化
+        if (out_trade_no.startsWith("COU")) {
+            // TODO: 修改订单状态为已完成
+            CourOrder courOrder = courOrderService.selectCourOrderByOrderId(out_trade_no);
+            courOrder.setStatus(CourConstant.COUR_ORDER_STATUE_FINISHED);
+            courOrderService.updateCourOrder(courOrder);
 
-        userCourseSectionService.initCourUserCourseSection(courOrder.getUserId(), courOrder.getCourseId());
+            // TODO: 将用户-课程-章节关系初始化
 
-        // TODO: 修改支付对象状态为已支付
-        String payId = res.getString("transaction_id"); // 微信支付系统生成的订单号
-        PsyOrderPay orderPay = new PsyOrderPay();
-        orderPay.setOrderId(Long.parseLong(courOrder.getId().toString())); // 订单ID
-        orderPay.setPayStatus(CourConstant.PAY_STATUE_PAID);
-        orderPay.setPayId(payId);
-        orderPayService.updatePsyOrderPayByOrderId(orderPay);
+            userCourseSectionService.initCourUserCourseSection(courOrder.getUserId(), courOrder.getCourseId());
+
+            // TODO: 修改支付对象状态为已支付
+            String payId = res.getString("transaction_id"); // 微信支付系统生成的订单号
+            PsyOrderPay orderPay = new PsyOrderPay();
+            orderPay.setOrderId(Long.parseLong(courOrder.getId().toString())); // 订单ID
+            orderPay.setPayStatus(CourConstant.PAY_STATUE_PAID);
+            orderPay.setPayId(payId);
+            orderPayService.updatePsyOrderPayByOrderId(orderPay);
+        } else if (out_trade_no.startsWith("GAU")) {
+            // TODO: 修改订单状态为已完成
+            PsyOrder psyOrder = psyOrderService.selectPsyOrderByOrderId(out_trade_no);
+            psyOrder.setOrderStatus(OrderStatus.FINISHED.getValue());
+            psyOrderService.updatePsyOrder(psyOrder);
+
+            // TODO: 修改支付对象状态为已支付
+            String payId = res.getString("transaction_id"); // 微信支付系统生成的订单号
+            PsyOrderPay orderPay = new PsyOrderPay();
+            orderPay.setOrderId(Long.parseLong(psyOrder.getId().toString())); // 订单ID
+            orderPay.setPayStatus(CourConstant.PAY_STATUE_PAID);
+            orderPay.setPayId(payId);
+            orderPayService.updatePsyOrderPayByOrderId(orderPay);
+        }
+
 
         result.put("code", "SUCCESS");
         result.put("message", "OK");
@@ -289,9 +360,9 @@ public class WechatPayV3ApiController extends BaseController {
     public String createOrderNo(String head, Long id) {
         StringBuilder uid = new StringBuilder(id.toString());
         Date date = new Date();
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmssSSS");
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmss");
         int length = uid.length();
-        for (int i = 0; i < 9 - length; i++) {
+        for (int i = 0; i < 8 - length; i++) {
             uid.insert(0, "0");
         }
         return head + sdf.format(date) + uid + (int) ((Math.random() * 9 + 1) * 1000);
