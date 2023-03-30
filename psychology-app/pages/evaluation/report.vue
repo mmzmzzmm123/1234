@@ -3,7 +3,7 @@
         <view class="item" v-for="item in reportList">
             <view class="title">{{ item.gaugeTitle }}</view>
             <view class="date">完成时间：{{ item.createTime }}</view>
-            <view class="btn" @tap="toResult(item.orderId)">查看报告</view>
+            <view class="btn" @tap="toResult(item.orderId, item.gaugeId)">查看报告</view>
         </view>
         <no-data v-if="reportList.length == 0"></no-data>
         <view class="footer" v-else>已经到底了</view>
@@ -19,7 +19,8 @@ export default {
     data() {
         return {
 			userInfo: {},
-            reportList: []
+            reportList: [],
+			productId: ''
         }
     },
     async created() {
@@ -30,12 +31,12 @@ export default {
 		});
     },
     methods: {
-        async toResult(orderId) {
+        async toResult(orderId, productId) {
             let result = await questionServer.setResult(orderId);
             if (result.code == 200) {
                 uni.setStorageSync("result", result.data);
                 uni.navigateTo({
-                    url: "/pages/evaluation/result/index?productId=" + this.productId,
+                    url: "/pages/evaluation/result?productId=" + productId,
                 });
             }
         }

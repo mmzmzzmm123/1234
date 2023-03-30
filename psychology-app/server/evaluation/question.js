@@ -24,7 +24,7 @@ export default {
       orderId,
     });
     if (res.code == 200) {
-      return 1;
+      return res;
     } else {
       uni.showToast({
         icon: "error",

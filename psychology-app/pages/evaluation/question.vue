@@ -96,7 +96,7 @@ export default {
                 text: '狠心退出',
                 callback: () => {
                     uni.navigateTo({
-                        url: `/pages/evaluation/index/index`,
+                        url: `/pages/evaluation/index`,
                     });
                 }
             },
@@ -144,13 +144,13 @@ export default {
         //提交
         async submitEvent() {
             let res = await questionServer.setAnswer(this.productId, this.currentQuestion.id, this.currentQuestion.answers, this.orderId);
-            if (res == 1) {
+            if (res.code == 200) {
                 let result = await questionServer.setResult(this.orderId);
                 if (result.code == 200) {
                     uni.setStorageSync("result", result.data);
                     clearTimeLoad();
                     uni.navigateTo({
-                        url: "/pages/evaluation/result/index?productId=" + this.productId,
+                        url: "/pages/evaluation/result?productId=" + this.productId,
                     });
                 }
             }
@@ -171,7 +171,7 @@ export default {
                 this.checkNull = false;
             }
             let res = await questionServer.setAnswer(this.productId, this.currentQuestion.id, this.currentQuestion.answers, this.orderId);
-            if (res == 1) {
+            if (res.code == 200) {
                 this.currentIndex++;
                 this.currentQuestion = this.questionList[this.currentIndex - 1];
             }
