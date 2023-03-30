@@ -96,7 +96,7 @@ public class CommonController
             inputStream = file.getInputStream();
             upload = COSClientFactory.upload(inputStream, FileUtils.getName(fileName), module);
             String key = upload.getKey();
-            String url = COSClientFactory.getObjUrl(key);
+            String url = COSClientFactory.getObjUrl(key, module);
             AjaxResult ajax = AjaxResult.success();
             ajax.put("url", url);
 //            ajax.put("fileName", fileName);
@@ -143,7 +143,7 @@ public class CommonController
                 InputStream inputStream = file.getInputStream();
                 UploadResult upload = COSClientFactory.upload(inputStream, FileUtils.getName(fileName), module);
                 String key = upload.getKey();
-                String url = COSClientFactory.getObjUrl(key);
+                String url = COSClientFactory.getObjUrl(key, module);
                 urls.add(url);
                 fileNames.add(url);
                 newFileNames.add(key);

@@ -39,8 +39,8 @@ public class CommonCosController
     }
 
     @GetMapping("/getUrl/{key}")
-    public String getUrl(@PathVariable("key")String key){
-        return COSClientFactory.getObjUrl(key);
+    public String getUrl(@PathVariable("key")String key, @RequestParam("module") String module){
+        return COSClientFactory.getObjUrl(key, module);
     }
 
 }

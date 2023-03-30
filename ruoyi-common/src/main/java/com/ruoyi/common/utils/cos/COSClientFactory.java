@@ -133,8 +133,12 @@ public class COSClientFactory {
         return uploadResult;
     }
 
-    public static String getObjUrl(String key){
-        return cosClient.getObjectUrl(cosConfig.getBucket(), key).toString();
+    public static String getObjUrl(String key, String module){
+        String bucket = null;
+        if (module.equals("course")){bucket = cosConfig.getGaugeBucket();}
+        else {bucket = cosConfig.getBucket();}
+        return cosClient.getObjectUrl(bucket, key).toString();
+//        return cosClient.getObjectUrl(cosConfig.getBucket(), key).toString();
     }
 
 
