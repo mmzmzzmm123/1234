@@ -22,7 +22,7 @@ import java.util.UUID;
 import com.ruoyi.common.utils.QrCodeUtil;
 
 @RestController
-@RequestMapping("/app/login")
+@RequestMapping("/app/gauge/qr")
 @Api(value = "登录模块", tags = {"二维码工具"})
 public class QrCode {
 
