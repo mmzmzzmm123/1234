@@ -25,13 +25,13 @@ public class CommonCosController
      * 文件上传
      */
     @PostMapping("/upload")
-    public UploadResult fileDownload(@RequestParam("file") MultipartFile file)
+    public UploadResult fileDownload(@RequestParam("file") MultipartFile file, @RequestParam("module") String module)
     {
         UploadResult upload = null;
         InputStream inputStream = null;
         try {
             inputStream = file.getInputStream();
-            upload = COSClientFactory.upload(inputStream, file.getOriginalFilename());
+            upload = COSClientFactory.upload(inputStream, file.getOriginalFilename(), module);
         } catch (IOException e) {
             log.error("文件上传失败：{}" ,e);
         }

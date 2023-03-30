@@ -46,6 +46,7 @@ public class AppPsyGaugeQuestionsResultController extends BaseController
     public AjaxResult add(@RequestBody @Validated PsyGaugeQuestionsResult psyGaugeQuestionsResult, HttpServletRequest request)
     {
         LoginDTO loginUser = appTokenService.getLoginUser(request);
+        System.out.println(loginUser);
         Integer userId = Integer.parseInt(loginUser.getUserId());
         return toAjax(psyGaugeQuestionsResultService.answer(psyGaugeQuestionsResult ,userId));
     }

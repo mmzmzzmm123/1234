@@ -56,9 +56,12 @@ public class COSClientFactory {
         return cosClient;
     }
 
-    public static Bucket createBucket() {
+    public static Bucket createBucket(String bucket) {
         //存储桶名称，格式：BucketName-APPID
-        String bucket = new StringBuilder().append(cosConfig.getBucket()).append("-").append(cosConfig.getAppId()).toString();
+//        String bucket = new StringBuilder().append(cosConfig.getBucket()).append("-").append(cosConfig.getAppId()).toString();
+        bucket = new StringBuilder().append(bucket).append("-").append(cosConfig.getAppId()).toString();
+        System.out.println("----------------");
+        System.out.println(bucket);
         CreateBucketRequest createBucketRequest = new CreateBucketRequest(bucket);
         // 设置 bucket 的权限为 Private(私有读写)、其他可选有 PublicRead（公有读私有写）、PublicReadWrite（公有读写）
         createBucketRequest.setCannedAcl(CannedAccessControlList.PublicRead);
@@ -95,7 +98,10 @@ public class COSClientFactory {
         return transferManager;
     }
 
-    public static UploadResult upload(InputStream inputStream ,String key) throws IOException {
+    public static UploadResult upload(InputStream inputStream ,String key, String module) throws IOException {
+        String bucket = null;
+        if (module.equals("course")){bucket = cosConfig.getGaugeBucket();}
+        else {bucket = cosConfig.getBucket();}
         // 使用高级接口必须先保证本进程存在一个 TransferManager 实例，如果没有则创建
         // 详细代码参见本页：高级接口 -> 创建 TransferManager
         TransferManager transferManager = createTransferManager();
@@ -105,7 +111,8 @@ public class COSClientFactory {
         // 如果确实没办法获取到，则下面这行可以省略，但同时高级接口也没办法使用分块上传了
         objectMetadata.setContentLength(inputStream.available());
 
-        PutObjectRequest putObjectRequest = new PutObjectRequest(cosConfig.getBucket(), key, inputStream, objectMetadata);
+        PutObjectRequest putObjectRequest = new PutObjectRequest(bucket, key, inputStream, objectMetadata);
+//        PutObjectRequest putObjectRequest = new PutObjectRequest(cosConfig.getBucket(), key, inputStream, objectMetadata);
 
         // 设置存储类型（如有需要，不需要请忽略此行代码）, 默认是标准(Standard), 低频(standard_ia)
         // 更多存储类型请参见 https://cloud.tencent.com/document/product/436/33417

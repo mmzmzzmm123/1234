@@ -21,4 +21,6 @@ public class COSConfig
     private String appId;
 
     private String bucket;
+
+    private String gaugeBucket;
 }

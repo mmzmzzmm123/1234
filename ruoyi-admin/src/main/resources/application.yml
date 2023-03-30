@@ -69,38 +69,15 @@ spring:
       enabled: true
   # redis 配置
 # 正式
-  redis:
-    # 地址
-    host: 10.0.24.3
-    # 端口，默认为6379
-    port: 6379
-    # 数据库索引
-    database: 5
-    # 密码
-    password: 123456
-    # 连接超时时间
-    timeout: 10s
-    lettuce:
-      pool:
-        # 连接池中的最小空闲连接
-        min-idle: 0
-        # 连接池中的最大空闲连接
-        max-idle: 8
-        # 连接池的最大数据库连接数
-        max-active: 8
-        # #连接池最大阻塞等待时间（使用负值表示没有限制）
-        max-wait: -1ms
-
-# 本地
 #  redis:
 #    # 地址
-#    host: 124.223.63.81
+#    host: 10.0.24.3
 #    # 端口，默认为6379
 #    port: 6379
 #    # 数据库索引
 #    database: 5
 #    # 密码
-#    password: 3.141592653
+#    password: 123456
 #    # 连接超时时间
 #    timeout: 10s
 #    lettuce:
@@ -113,6 +90,29 @@ spring:
 #        max-active: 8
 #        # #连接池最大阻塞等待时间（使用负值表示没有限制）
 #        max-wait: -1ms
+
+# 本地
+  redis:
+    # 地址
+    host: 124.223.63.81
+    # 端口，默认为6379
+    port: 6379
+    # 数据库索引
+    database: 5
+    # 密码
+    password: 3.141592653
+    # 连接超时时间
+    timeout: 10s
+    lettuce:
+      pool:
+        # 连接池中的最小空闲连接
+        min-idle: 0
+        # 连接池中的最大空闲连接
+        max-idle: 8
+        # 连接池的最大数据库连接数
+        max-active: 8
+        # #连接池最大阻塞等待时间（使用负值表示没有限制）
+        max-wait: -1ms
 
 
 
@@ -190,6 +190,7 @@ cos:
   secretKey: sXHo43lDQN7amjPE0dBpHWWIsDJAsMba
   appId: 1316267898
   bucket: ssg-1316267898
+  gaugeBucket: gauge-1316267898
 
 # 正式
 #wx:
