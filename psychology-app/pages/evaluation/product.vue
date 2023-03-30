@@ -94,7 +94,9 @@ export default {
 					  icon: "success",
 					  title: "支付成功",
 					});					
-					window.reload()
+					uni.navigateTo({
+						url: "/pages/evaluation/product?id=" + this.productId,
+					});
 				})
 			}	  
 		

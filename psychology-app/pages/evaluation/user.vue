@@ -119,8 +119,13 @@ export default {
     if (!this.userInfo && !code) {
       this.userInfo = {};//防止为null报错
       utils.loginWx(this.redirectUri);
+      //添加登录标志,为callback做返回判断
+      uni.setStorageSync("wxLogining", true);
     } else {
-      this.orderList = await userServer.getOrderList(this.userInfo.userId, 2);
+      this.orderList = await userServer.getOrderList({
+		  userId: this.userInfo.userId, 
+		  gaugeStatus: 2
+	  });
       this.reportNum = await userServer.getOrderListNum(this.userInfo.userId);
     }
   },
@@ -147,7 +152,7 @@ export default {
     toTest(order) {
       uni.setStorageSync("gaugeDes", order.gaugeDes);
       uni.navigateTo({
-        url: `/pages/evaluation/testBefore/index?productId=${order.gaugeId}&&orderId=${order.orderId}`,
+        url: `/pages/evaluation/testBefore?productId=${order.gaugeId}&&orderId=${order.orderId}`,
       });
     },
     copyOrderNo(orderNo) {

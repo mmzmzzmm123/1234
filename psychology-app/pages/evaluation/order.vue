@@ -25,29 +25,37 @@ export default {
     components: { noData },
     data() {
         return {
+			userInfo: {},
             currentStatus: '',
-            tabList: [{ title: '全部', status: '' }, { title: '未完成', status: 2 }, { title: '已完成', status: 1 }],
+            tabList: [{ title: '全部', status: '' }, { title: '未完成', status: 1 }, { title: '已完成', status: 2 }],
             orderList: []
         }
     },
     async created() {
-        this.orderList = await userServer.getOrderList();
+		this.userInfo = uni.getStorageSync('userInfo')
+        this.orderList = await userServer.getOrderList({
+			userId: this.userInfo.userId,
+			orderStatus: ""
+		});
     },
     methods: {
         toTest(order) {
             uni.setStorageSync("gaugeDes", order.gaugeDes);
-            uni.navigateTo({ url: `/pages/evaluation/testBefore/index?productId=${order.gaugeId}&&orderId=${order.orderId}` });
+            uni.navigateTo({ url: `/pages/evaluation/testBefore?productId=${order.gaugeId}&&orderId=${order.orderId}` });
         },
         async changeTab(status) {
             this.currentStatus = status;
-            this.orderList = await userServer.getOrderList(status);
+            this.orderList = await userServer.getOrderList({
+				userId: this.userInfo.userId,
+				orderStatus: status
+			});
         },
         async toResult(order) {
             let result = await questionServer.setResult(order.orderId);
             if (result.code == 200) {
                 uni.setStorageSync("result", result.data);
                 uni.navigateTo({
-                    url: "/pages/evaluation/result/index?productId=" + order.gaugeId,
+                    url: "/pages/evaluation/result?productId=" + order.gaugeId,
                 });
             }
 

@@ -33,7 +33,7 @@ export default {
     methods: {
         startTest() {
             uni.navigateTo({
-                url: `/pages/evaluation/question/index?productId=${this.productId}&orderId=${this.orderId}`,
+                url: `/pages/evaluation/question?productId=${this.productId}&orderId=${this.orderId}`,
             });
 
         }

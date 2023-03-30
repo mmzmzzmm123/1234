@@ -66,7 +66,6 @@ export default {
 				uni.navigateTo({
 					url: "/pages/curriculum/learningCourse?id=" + this.courseInfo.id,
 				});
-				window.reload()
 			})
 		}	  
 

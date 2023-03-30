@@ -18,11 +18,16 @@ export default {
     components: { noData },
     data() {
         return {
+			userInfo: {},
             reportList: []
         }
     },
     async created() {
-        this.reportList = await userServer.getOrderList(1);
+		this.userInfo = uni.getStorageSync('userInfo')
+        this.reportList = await userServer.getOrderList({
+			userId: this.userInfo.userId,
+			gaugeStatus: 1
+		});
     },
     methods: {
         async toResult(orderId) {

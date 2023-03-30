@@ -21,7 +21,6 @@ export default {
   },
   loginWx(redirectUri) {
     uni.setStorageSync("redirectUri", redirectUri);
-	console.log('redirectUri: ' + this.redirectUri)
     if (this.getClientType() !== clientTypeObj.wx) return;
     //未绑定微信
     wxLogin({
