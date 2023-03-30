@@ -169,15 +169,12 @@
               v-for="dict in dict.type.course_section_type"
               :key="dict.value"
               :label="dict.label"
-:value="parseInt(dict.value)"
+              :value="parseInt(dict.value)"
             ></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="章节内容">
-          <editor v-model="form.content" :min-height="192"/>
-        </el-form-item>
         <el-form-item label="内容链接">
-          <file-upload v-model="form.contentUrl" :fileType="['mp4', 'avi']" :fileSize="100"/>
+          <file-upload v-model="form.contentUrl" :fileType="fileTypes" :fileSize="100" :extraData="extraData"/>
         </el-form-item>
         <el-form-item label="课程编号" prop="courseId">
           <el-input v-model="form.courseId" placeholder="请输入课程编号" />
@@ -188,9 +185,12 @@
               v-for="dict in dict.type.course_section_content_type"
               :key="dict.value"
               :label="dict.label"
-:value="parseInt(dict.value)"
+              :value="parseInt(dict.value)"
             ></el-option>
           </el-select>
+        </el-form-item>
+        <el-form-item label="章节内容">
+          <editor v-model="form.content" :min-height="192"/>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -209,6 +209,10 @@ export default {
   dicts: ['course_section_type', 'course_section_content_type'],
   data() {
     return {
+      fileTypes: ["mp4", "avi", "rmvb", "mp3", "wma", "rm", "rmvb", "flv", "mpg", "mov", "mkv"],
+      extraData: {
+        module: 'course'
+      },
       // 遮罩层
       loading: true,
       // 选中数组

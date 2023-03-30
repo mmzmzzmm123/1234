@@ -2,6 +2,7 @@
   <div class="upload-file">
     <el-upload
       multiple
+      :http-request="httpRequest"
       :action="uploadFileUrl"
       :before-upload="handleBeforeUpload"
       :file-list="fileList"
@@ -67,6 +68,9 @@ export default {
     isShowTip: {
       type: Boolean,
       default: true
+    },
+    extraData: {
+      type: Object
     }
   },
   data() {
@@ -77,6 +81,7 @@ export default {
       uploadFileUrl: process.env.VUE_APP_BASE_API + "/common/upload", // 上传的图片服务器地址
       headers: {
         Authorization: "Bearer " + getToken(),
+        module: this.extraData.module
       },
       fileList: [],
     };
@@ -154,7 +159,7 @@ export default {
     // 上传成功回调
     handleUploadSuccess(res, file) {
       if (res.code === 200) {
-        this.uploadList.push({ name: res.fileName, url: res.fileName });
+        this.uploadList.push({ name: res.fileName, url: res.url });
         this.uploadedSuccessfully();
       } else {
         this.number--;

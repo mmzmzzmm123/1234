@@ -3,6 +3,7 @@ package com.ruoyi.web.controller.common;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -74,8 +75,14 @@ public class CommonController
      * 通用上传请求（单个）
      */
     @PostMapping("/upload")
-    public AjaxResult uploadFile(MultipartFile file, @RequestParam("module") String module) throws Exception
+    public AjaxResult uploadFile(MultipartFile file, HttpServletRequest request) throws Exception
     {
+        String module;
+        if (request.getHeader("module") == null) {
+            return AjaxResult.error("上次文件请设置模块名module");
+        } else {
+            module = request.getHeader("module");
+        }
         UploadResult upload = null;
         InputStream inputStream = null;
         try
@@ -110,10 +117,17 @@ public class CommonController
      * 通用上传请求（多个）
      */
     @PostMapping("/uploads")
-    public AjaxResult uploadFiles(List<MultipartFile> files, @RequestParam("module") String module) throws Exception
+    public AjaxResult uploadFiles(List<MultipartFile> files, HttpServletRequest request) throws Exception
     {
         try
         {
+            String module;
+            if (request.getHeader("module") == null) {
+                return AjaxResult.error("上次文件请设置模块名module");
+            } else {
+                module = request.getHeader("module");
+            }
+
             // 上传文件路径
             String filePath = RuoYiConfig.getUploadPath();
             List<String> urls = new ArrayList<String>();
