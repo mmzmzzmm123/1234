@@ -28,6 +28,7 @@ public class QrCodeUtil {
 //        String qrCodePath = "D:\\qrcode"+uuid+".png";
         String qrCodePath = "/profile/upload/"+uuid+".png";
 //        String qrCodePath = "E:\\"+uuid+".png";
+        String FileName = uuid+".png";
         File file  = new File(qrCodePath);
         if (file.exists()){
             System.out.println(qrCodePath + "已存在");
