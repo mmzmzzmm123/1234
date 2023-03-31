@@ -102,23 +102,25 @@ export default {
     let code = utils.getParam(window.location.href, "code");
     if (!this.userInfo && !code) {
       this.userInfo = {};//防止为null报错
-      utils.loginWx(this.redirectUri);
-      //添加登录标志,为callback做返回判断
-      uni.setStorageSync("wxLogining", true);
-    } else {
-      this.courseList = await userServer.getCourseList(this.userInfo.userId);
+	  //添加登录标志,为callback做返回判断
+	  uni.setStorageSync("wxLogining", true);
+      await utils.loginWx(this.redirectUri);      
+    } 	
+  },
+  async mounted() {
+    if (!this.userInfo && await utils.loginCallback(this.redirectUri)) {
+      this.userInfo = uni.getStorageSync("userInfo")
+    }
+	
+	if (this.userInfo) {
+	  this.courseList = await userServer.getCourseList(this.userInfo.userId);
 	  this.courseList.map(item => {
 		  if (item.studyDuration === 0) {
 			  return; 
 		  }
 		  item.studyDuration = formatTime.formatSecondsCH(item.studyDuration)
 	  })
-    }
-  },
-  async mounted() {
-    if (await utils.loginCallback(this.redirectUri)) {
-      this.userInfo = uni.getStorageSync("userInfo")
-    }
+	}
   },
   methods: {
     refreshUser(){

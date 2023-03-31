@@ -80,7 +80,6 @@
 </template>
 <script>
 import utils, { clientTypeObj } from "@/utils/common";
-import { wxLoginCallBack, wxLogin } from "@/server/wxApi";
 import noData from "@/components/evaluation/noData";
 import userServer from "@/server/evaluation/user";
 export default {
@@ -118,21 +117,22 @@ export default {
 	let code = utils.getParam(window.location.href, "code");
     if (!this.userInfo && !code) {
       this.userInfo = {};//防止为null报错
-      utils.loginWx(this.redirectUri);
-      //添加登录标志,为callback做返回判断
-      uni.setStorageSync("wxLogining", true);
-    } else {
-      this.orderList = await userServer.getOrderList({
+	  //添加登录标志,为callback做返回判断
+	  uni.setStorageSync("wxLogining", true);
+      await utils.loginWx(this.redirectUri);      
+    }	
+  },
+  async mounted() {
+    if (!this.userInfo && await utils.loginCallback(this.redirectUri)) {
+      this.userInfo = uni.getStorageSync("userInfo")
+    }
+	if (this.userInfo) {
+	  this.orderList = await userServer.getOrderList({
 		  userId: this.userInfo.userId, 
 		  gaugeStatus: 2
 	  });
-      this.reportNum = await userServer.getOrderListNum(this.userInfo.userId);
-    }
-  },
-  async mounted() {
-    if (await utils.loginCallback(this.redirectUri)) {
-      this.userInfo = uni.getStorageSync("userInfo")
-    }
+	  this.reportNum = await userServer.getOrderListNum(this.userInfo.userId);
+	}
   },
   methods: {
     refreshUser(){

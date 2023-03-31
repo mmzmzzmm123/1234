@@ -23,7 +23,7 @@
 					    </view>
 					    <view class="txt-box">
 					        <view class="name">{{ userInfo.name }}</view>
-					        <view class="cue" @longpress.stop.prevent="">长按识别二维码进入测试乐园</view>
+					        <view class="cue">长按识别二维码进入测试乐园</view>
 					    </view>
 					    <view class="qr-code-box">
 					        <image mode="widthFix" class="img-item" :src="qrcodeUrl"></image>
@@ -37,7 +37,7 @@
 		<view @tap="imageData = null" v-else>
 			<img class="poster" :src="imageData"  mode="widthFix" crossorigin="anonymous" />
 		</view>
-		<image ></image>
+		
         <evaluation-tab-bar></evaluation-tab-bar>
     </view>
 </template>
@@ -227,6 +227,7 @@ page {
 
             .img-box {
                 width: 560upx;
+				height: 800upx;
                 background: #FFFFFF;
                 border-radius: 8upx;
                 padding: 24upx 28upx;
@@ -290,12 +291,13 @@ page {
     }
 	
 	.poster {
+		width: 620upx;
+		max-height: 90vh;
+		position: absolute;
+		left: 65upx;
+		top: 5vh;           
 		position: fixed;
-		z-index: 100000;
-		top: 0;
-		left: 0;
-		width: 100vw;
-		height: 100vh;
+		z-index: 100000;		
 	}
 }
 </style>

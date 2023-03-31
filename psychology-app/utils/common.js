@@ -19,17 +19,17 @@ export default {
       return clientTypeObj.no;
     }
   },
-  loginWx(redirectUri) {
-    uni.setStorageSync("redirectUri", redirectUri);
-    if (this.getClientType() !== clientTypeObj.wx) return;
-    //未绑定微信
-    wxLogin({
+  async loginWx(redirectUri) {
+	uni.setStorageSync("redirectUri", redirectUri);
+	if (this.getClientType() !== clientTypeObj.wx) return;
+	//未绑定微信
+	const res = await wxLogin({
 		redirectUri: location.origin + location.pathname
-	}).then((res) => {
-      if (res.code == 200) {
-        window.location.href = res.data;
-      }
-    });
+	})
+	if (res.code == 200) {
+		window.location.href = res.data;
+	}
+    
   },
   async loginCallback(redirectUri) {
     //是否登录返回
