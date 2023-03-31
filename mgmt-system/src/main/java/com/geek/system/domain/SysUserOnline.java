@@ -3,7 +3,7 @@ package com.geek.system.domain;
 /**
  * 当前在线会话
  * 
- * @author ruoyi
+ * @author xuek
  */
 public class SysUserOnline
 {

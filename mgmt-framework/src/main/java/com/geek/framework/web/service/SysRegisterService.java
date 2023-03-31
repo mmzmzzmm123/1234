@@ -21,7 +21,7 @@ import com.geek.system.service.ISysUserService;
 /**
  * 注册校验方法
  * 
- * @author ruoyi
+ * @author xuek
  */
 @Component
 public class SysRegisterService

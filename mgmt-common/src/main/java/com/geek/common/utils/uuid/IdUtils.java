@@ -3,7 +3,7 @@ package com.geek.common.utils.uuid;
 /**
  * ID生成器工具类
  * 
- * @author ruoyi
+ * @author xuek
  */
 public class IdUtils
 {
@@ -45,5 +45,10 @@ public class IdUtils
     public static String fastSimpleUUID()
     {
         return UUID.fastUUID().toString(true);
+    }
+
+    public static void main(String[] args) {
+        String appid = simpleUUID().substring(0,12);
+        System.out.println(appid);
     }
 }

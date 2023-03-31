@@ -7,7 +7,7 @@ import com.geek.common.utils.ServletUtils;
 /**
  * 服务相关配置
  * 
- * @author ruoyi
+ * @author xuek
  */
 @Component
 public class ServerConfig

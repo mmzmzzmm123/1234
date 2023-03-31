@@ -10,7 +10,7 @@ import com.geek.framework.web.domain.Server;
 /**
  * 服务器监控
  * 
- * @author ruoyi
+ * @author xuek
  */
 @RestController
 @RequestMapping("/monitor/server")

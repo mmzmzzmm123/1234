@@ -1,6 +1,6 @@
 package com.geek.common.utils.ip;
 
-import com.geek.common.config.RuoYiConfig;
+import com.geek.common.config.MgmtConfig;
 import com.geek.common.constant.Constants;
 import com.geek.common.utils.http.HttpUtils;
 import org.slf4j.Logger;
@@ -12,7 +12,7 @@ import com.geek.common.utils.StringUtils;
 /**
  * 获取地址类
  * 
- * @author ruoyi
+ * @author xuek
  */
 public class AddressUtils
 {
@@ -31,7 +31,7 @@ public class AddressUtils
         {
             return "内网IP";
         }
-        if (RuoYiConfig.isAddressEnabled())
+        if (MgmtConfig.isAddressEnabled())
         {
             try
             {

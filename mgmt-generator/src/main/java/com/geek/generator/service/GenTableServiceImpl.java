@@ -41,7 +41,7 @@ import com.geek.common.utils.StringUtils;
 /**
  * 业务 服务层实现
  * 
- * @author ruoyi
+ * @author xuek
  */
 @Service
 public class GenTableServiceImpl implements IGenTableService

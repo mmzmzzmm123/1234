@@ -12,7 +12,7 @@ import com.geek.common.constant.CacheConstants;
 /**
  * 限流注解
  * 
- * @author ruoyi
+ * @author xuek
  */
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)

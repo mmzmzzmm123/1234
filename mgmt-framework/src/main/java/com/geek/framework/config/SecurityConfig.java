@@ -23,7 +23,7 @@ import com.geek.framework.config.properties.PermitAllUrlProperties;
 /**
  * spring security配置
  * 
- * @author ruoyi
+ * @author xuek
  */
 @EnableGlobalMethodSecurity(prePostEnabled = true, securedEnabled = true)
 public class SecurityConfig extends WebSecurityConfigurerAdapter

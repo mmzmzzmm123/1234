@@ -11,7 +11,7 @@ import com.geek.common.core.domain.BaseEntity;
 /**
  * 参数配置表 sys_config
  * 
- * @author ruoyi
+ * @author xuek
  */
 public class SysConfig extends BaseEntity
 {

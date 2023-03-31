@@ -4,57 +4,57 @@ import java.util.List;
 import com.geek.system.domain.SysNotice;
 
 /**
- * 公告 服务层
+ * 通知公告Service接口
  * 
- * @author ruoyi
+ * @author xuek
+ * @date 2023-03-29
  */
-public interface ISysNoticeService
-{
+public interface ISysNoticeService {
     /**
-     * 查询公告信息
+     * 查询通知公告
      * 
-     * @param noticeId 公告ID
-     * @return 公告信息
+     * @param noticeId 通知公告主键
+     * @return 通知公告
      */
-    public SysNotice selectNoticeById(Long noticeId);
+    public SysNotice selectSysNoticeByNoticeId(Integer noticeId);
 
     /**
-     * 查询公告列表
+     * 查询通知公告列表
      * 
-     * @param notice 公告信息
-     * @return 公告集合
+     * @param sysNotice 通知公告
+     * @return 通知公告集合
      */
-    public List<SysNotice> selectNoticeList(SysNotice notice);
+    public List<SysNotice> selectSysNoticeList(SysNotice sysNotice);
 
     /**
-     * 新增公告
+     * 新增通知公告
      * 
-     * @param notice 公告信息
+     * @param sysNotice 通知公告
      * @return 结果
      */
-    public int insertNotice(SysNotice notice);
+    public int insertSysNotice(SysNotice sysNotice);
 
     /**
-     * 修改公告
+     * 修改通知公告
      * 
-     * @param notice 公告信息
+     * @param sysNotice 通知公告
      * @return 结果
      */
-    public int updateNotice(SysNotice notice);
+    public int updateSysNotice(SysNotice sysNotice);
 
     /**
-     * 删除公告信息
+     * 批量删除通知公告
      * 
-     * @param noticeId 公告ID
+     * @param noticeIds 需要删除的通知公告主键集合
      * @return 结果
      */
-    public int deleteNoticeById(Long noticeId);
-    
+    public int deleteSysNoticeByNoticeIds(Integer[] noticeIds);
+
     /**
-     * 批量删除公告信息
+     * 删除通知公告信息
      * 
-     * @param noticeIds 需要删除的公告ID
+     * @param noticeId 通知公告主键
      * @return 结果
      */
-    public int deleteNoticeByIds(Long[] noticeIds);
+    public int deleteSysNoticeByNoticeId(Integer noticeId);
 }

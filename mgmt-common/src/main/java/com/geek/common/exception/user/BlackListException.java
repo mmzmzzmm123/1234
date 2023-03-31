@@ -3,7 +3,7 @@ package com.geek.common.exception.user;
 /**
  * 黑名单IP异常类
  * 
- * @author ruoyi
+ * @author xuek
  */
 public class BlackListException extends UserException
 {

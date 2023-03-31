@@ -6,7 +6,7 @@ import com.geek.common.core.domain.entity.SysUser;
 /**
  * 用户 业务层
  * 
- * @author ruoyi
+ * @author xuek
  */
 public interface ISysUserService
 {

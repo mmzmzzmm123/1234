@@ -20,7 +20,7 @@ import com.geek.framework.security.context.AuthenticationContextHolder;
 /**
  * 登录密码方法
  * 
- * @author ruoyi
+ * @author xuek
  */
 @Component
 public class SysPasswordService

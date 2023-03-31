@@ -20,7 +20,7 @@ import com.geek.system.service.ISysMenuService;
 /**
  * 登录验证
  * 
- * @author ruoyi
+ * @author xuek
  */
 @RestController
 public class SysLoginController

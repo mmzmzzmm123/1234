@@ -3,7 +3,7 @@ package com.geek.common.utils.sign;
 /**
  * Base64工具类
  * 
- * @author ruoyi
+ * @author xuek
  */
 public final class Base64
 {

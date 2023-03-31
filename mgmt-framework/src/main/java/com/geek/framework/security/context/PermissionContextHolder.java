@@ -7,7 +7,7 @@ import com.geek.common.core.text.Convert;
 /**
  * 权限信息
  * 
- * @author ruoyi
+ * @author xuek
  */
 public class PermissionContextHolder
 {

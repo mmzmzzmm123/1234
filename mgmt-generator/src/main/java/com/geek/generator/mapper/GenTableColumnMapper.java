@@ -7,7 +7,7 @@ import com.geek.generator.domain.GenTableColumn;
 /**
  * 业务字段 数据层
  * 
- * @author ruoyi
+ * @author xuek
  */
 public interface GenTableColumnMapper
 {

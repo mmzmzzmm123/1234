@@ -9,7 +9,7 @@ import com.geek.common.utils.spring.SpringUtils;
 /**
  * 异步任务管理器
  * 
- * @author ruoyi
+ * @author xuek
  */
 public class AsyncManager
 {

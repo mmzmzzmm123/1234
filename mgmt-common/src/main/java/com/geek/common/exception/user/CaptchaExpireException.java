@@ -3,7 +3,7 @@ package com.geek.common.exception.user;
 /**
  * 验证码失效异常类
  * 
- * @author ruoyi
+ * @author xuek
  */
 public class CaptchaExpireException extends UserException
 {

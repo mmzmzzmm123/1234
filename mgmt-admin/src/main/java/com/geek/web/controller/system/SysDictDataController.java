@@ -28,7 +28,7 @@ import com.geek.system.service.ISysDictTypeService;
 /**
  * 数据字典信息
  * 
- * @author ruoyi
+ * @author xuek
  */
 @RestController
 @RequestMapping("/system/dict/data")

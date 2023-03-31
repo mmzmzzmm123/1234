@@ -11,7 +11,7 @@ import com.geek.system.mapper.SysOperLogMapper;
 /**
  * 操作日志 服务层处理
  * 
- * @author ruoyi
+ * @author xuek
  */
 @Service
 public class SysOperLogServiceImpl implements ISysOperLogService

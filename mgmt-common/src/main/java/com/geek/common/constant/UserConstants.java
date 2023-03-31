@@ -3,7 +3,7 @@ package com.geek.common.constant;
 /**
  * 用户常量信息
  * 
- * @author ruoyi
+ * @author xuek
  */
 public class UserConstants
 {

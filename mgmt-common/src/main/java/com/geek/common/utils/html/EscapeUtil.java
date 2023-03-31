@@ -5,7 +5,7 @@ import com.geek.common.utils.StringUtils;
 /**
  * 转义和反转义工具类
  * 
- * @author ruoyi
+ * @author xuek
  */
 public class EscapeUtil
 {

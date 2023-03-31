@@ -5,7 +5,7 @@ import com.geek.common.utils.StringUtils;
 /**
  * 缓存信息
  * 
- * @author ruoyi
+ * @author xuek
  */
 public class SysCache
 {

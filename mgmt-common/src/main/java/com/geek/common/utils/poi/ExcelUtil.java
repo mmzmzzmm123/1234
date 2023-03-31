@@ -27,7 +27,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.geek.common.annotation.Excel;
 import com.geek.common.annotation.Excels;
-import com.geek.common.config.RuoYiConfig;
+import com.geek.common.config.MgmtConfig;
 import com.geek.common.core.domain.AjaxResult;
 import com.geek.common.core.text.Convert;
 import com.geek.common.exception.UtilException;
@@ -87,7 +87,7 @@ import com.geek.common.utils.StringUtils;
 /**
  * Excel相关处理
  * 
- * @author ruoyi
+ * @author xuek
  */
 public class ExcelUtil<T>
 {
@@ -1331,7 +1331,7 @@ public class ExcelUtil<T>
      */
     public String getAbsoluteFile(String filename)
     {
-        String downloadPath = RuoYiConfig.getDownloadPath() + filename;
+        String downloadPath = MgmtConfig.getDownloadPath() + filename;
         File desc = new File(downloadPath);
         if (!desc.getParentFile().exists())
         {

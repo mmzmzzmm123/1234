@@ -3,7 +3,7 @@ package com.geek.common.exception.user;
 /**
  * 用户错误最大次数异常类
  * 
- * @author ruoyi
+ * @author xuek
  */
 public class UserPasswordRetryLimitExceedException extends UserException
 {

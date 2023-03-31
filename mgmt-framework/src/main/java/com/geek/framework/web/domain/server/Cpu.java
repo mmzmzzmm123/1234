@@ -5,7 +5,7 @@ import com.geek.common.utils.Arith;
 /**
  * CPU相关信息
  * 
- * @author ruoyi
+ * @author xuek
  */
 public class Cpu
 {

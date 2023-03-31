@@ -28,7 +28,7 @@ import com.geek.framework.config.properties.DruidProperties;
 /**
  * druid 配置多数据源
  * 
- * @author ruoyi
+ * @author xuek
  */
 @Configuration
 public class DruidConfig

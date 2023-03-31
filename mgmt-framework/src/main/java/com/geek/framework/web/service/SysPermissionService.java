@@ -13,7 +13,7 @@ import com.geek.system.service.ISysRoleService;
 /**
  * 用户权限处理
  * 
- * @author ruoyi
+ * @author xuek
  */
 @Component
 public class SysPermissionService

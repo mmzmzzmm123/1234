@@ -6,7 +6,7 @@ import com.geek.common.core.domain.entity.SysDictData;
 /**
  * 字典 业务层
  * 
- * @author ruoyi
+ * @author xuek
  */
 public interface ISysDictDataService
 {

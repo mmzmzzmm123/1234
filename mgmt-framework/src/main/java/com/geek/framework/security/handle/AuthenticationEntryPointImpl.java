@@ -16,7 +16,7 @@ import com.geek.common.utils.StringUtils;
 /**
  * 认证失败处理类 返回未授权
  * 
- * @author ruoyi
+ * @author xuek
  */
 @Component
 public class AuthenticationEntryPointImpl implements AuthenticationEntryPoint, Serializable

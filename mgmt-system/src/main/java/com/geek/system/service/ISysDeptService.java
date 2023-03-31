@@ -7,7 +7,7 @@ import com.geek.common.core.domain.entity.SysDept;
 /**
  * 部门管理 服务层
  * 
- * @author ruoyi
+ * @author xuek
  */
 public interface ISysDeptService
 {

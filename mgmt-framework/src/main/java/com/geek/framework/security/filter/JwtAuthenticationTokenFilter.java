@@ -20,7 +20,7 @@ import com.geek.common.utils.StringUtils;
 /**
  * token过滤器 验证token有效性
  * 
- * @author ruoyi
+ * @author xuek
  */
 @Component
 public class JwtAuthenticationTokenFilter extends OncePerRequestFilter

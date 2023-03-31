@@ -7,7 +7,7 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.util.Arrays;
 
-import com.geek.common.config.RuoYiConfig;
+import com.geek.common.config.MgmtConfig;
 import com.geek.common.constant.Constants;
 import org.apache.poi.util.IOUtils;
 import org.slf4j.Logger;
@@ -17,7 +17,7 @@ import com.geek.common.utils.StringUtils;
 /**
  * 图片处理工具类
  *
- * @author ruoyi
+ * @author xuek
  */
 public class ImageUtils
 {
@@ -80,7 +80,7 @@ public class ImageUtils
             else
             {
                 // 本机地址
-                String localPath = RuoYiConfig.getProfile();
+                String localPath = MgmtConfig.getProfile();
                 String downloadPath = localPath + StringUtils.substringAfter(url, Constants.RESOURCE_PREFIX);
                 in = new FileInputStream(downloadPath);
             }

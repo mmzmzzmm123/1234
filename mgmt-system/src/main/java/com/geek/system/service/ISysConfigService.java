@@ -6,7 +6,7 @@ import com.geek.system.domain.SysConfig;
 /**
  * 参数配置 服务层
  * 
- * @author ruoyi
+ * @author xuek
  */
 public interface ISysConfigService
 {

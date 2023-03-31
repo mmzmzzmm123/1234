@@ -14,7 +14,7 @@ import com.geek.system.service.ISysConfigService;
 /**
  * 注册验证
  * 
- * @author ruoyi
+ * @author xuek
  */
 @RestController
 public class SysRegisterController extends BaseController

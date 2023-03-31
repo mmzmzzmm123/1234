@@ -3,7 +3,7 @@ package com.geek.common.enums;
 /**
  * 用户状态
  * 
- * @author ruoyi
+ * @author xuek
  */
 public enum UserStatus
 {

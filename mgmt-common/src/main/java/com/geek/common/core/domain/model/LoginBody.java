@@ -3,7 +3,7 @@ package com.geek.common.core.domain.model;
 /**
  * 用户登录对象
  * 
- * @author ruoyi
+ * @author xuek
  */
 public class LoginBody
 {

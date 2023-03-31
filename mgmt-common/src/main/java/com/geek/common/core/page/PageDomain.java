@@ -5,7 +5,7 @@ import com.geek.common.utils.StringUtils;
 /**
  * 分页数据
  * 
- * @author ruoyi
+ * @author xuek
  */
 public class PageDomain
 {

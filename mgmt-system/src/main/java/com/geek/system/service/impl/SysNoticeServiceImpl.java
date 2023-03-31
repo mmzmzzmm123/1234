@@ -1,92 +1,89 @@
 package com.geek.system.service.impl;
 
 import java.util.List;
+import com.geek.common.utils.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import com.geek.system.domain.SysNotice;
 import com.geek.system.mapper.SysNoticeMapper;
+import com.geek.system.domain.SysNotice;
 import com.geek.system.service.ISysNoticeService;
 
 /**
- * 公告 服务层实现
+ * 通知公告Service业务层处理
  * 
- * @author ruoyi
+ * @author xuek
+ * @date 2023-03-29
  */
 @Service
-public class SysNoticeServiceImpl implements ISysNoticeService
-{
+public class SysNoticeServiceImpl implements ISysNoticeService {
     @Autowired
-    private SysNoticeMapper noticeMapper;
+    private SysNoticeMapper sysNoticeMapper;
 
     /**
-     * 查询公告信息
+     * 查询通知公告
      * 
-     * @param noticeId 公告ID
-     * @return 公告信息
+     * @param noticeId 通知公告主键
+     * @return 通知公告
      */
     @Override
-    public SysNotice selectNoticeById(Long noticeId)
-    {
-        return noticeMapper.selectNoticeById(noticeId);
+    public SysNotice selectSysNoticeByNoticeId(Integer noticeId){
+        return sysNoticeMapper.selectSysNoticeByNoticeId(noticeId);
     }
 
     /**
-     * 查询公告列表
+     * 查询通知公告列表
      * 
-     * @param notice 公告信息
-     * @return 公告集合
+     * @param sysNotice 通知公告
+     * @return 通知公告
      */
     @Override
-    public List<SysNotice> selectNoticeList(SysNotice notice)
-    {
-        return noticeMapper.selectNoticeList(notice);
+    public List<SysNotice> selectSysNoticeList(SysNotice sysNotice){
+        return sysNoticeMapper.selectSysNoticeList(sysNotice);
     }
 
     /**
-     * 新增公告
+     * 新增通知公告
      * 
-     * @param notice 公告信息
+     * @param sysNotice 通知公告
      * @return 结果
      */
     @Override
-    public int insertNotice(SysNotice notice)
-    {
-        return noticeMapper.insertNotice(notice);
+    public int insertSysNotice(SysNotice sysNotice){
+        sysNotice.setCreateTime(DateUtils.getNowDate());
+        return sysNoticeMapper.insertSysNotice(sysNotice);
     }
 
     /**
-     * 修改公告
+     * 修改通知公告
      * 
-     * @param notice 公告信息
+     * @param sysNotice 通知公告
      * @return 结果
      */
     @Override
-    public int updateNotice(SysNotice notice)
-    {
-        return noticeMapper.updateNotice(notice);
+    public int updateSysNotice(SysNotice sysNotice){
+        sysNotice.setUpdateTime(DateUtils.getNowDate());
+        return sysNoticeMapper.updateSysNotice(sysNotice);
     }
 
     /**
-     * 删除公告对象
+     * 批量删除通知公告
      * 
-     * @param noticeId 公告ID
+     * @param noticeIds 需要删除的通知公告主键
      * @return 结果
      */
     @Override
-    public int deleteNoticeById(Long noticeId)
-    {
-        return noticeMapper.deleteNoticeById(noticeId);
+    public int deleteSysNoticeByNoticeIds(Integer[] noticeIds){
+        return sysNoticeMapper.deleteSysNoticeByNoticeIds(noticeIds);
     }
 
     /**
-     * 批量删除公告信息
+     * 删除通知公告信息
      * 
-     * @param noticeIds 需要删除的公告ID
+     * @param noticeId 通知公告主键
      * @return 结果
      */
     @Override
-    public int deleteNoticeByIds(Long[] noticeIds)
-    {
-        return noticeMapper.deleteNoticeByIds(noticeIds);
+    public int deleteSysNoticeByNoticeId(Integer noticeId){
+        return sysNoticeMapper.deleteSysNoticeByNoticeId(noticeId);
     }
 }

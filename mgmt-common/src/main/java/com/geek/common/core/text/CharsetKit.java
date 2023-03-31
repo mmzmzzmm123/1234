@@ -7,7 +7,7 @@ import com.geek.common.utils.StringUtils;
 /**
  * 字符集工具类
  * 
- * @author ruoyi
+ * @author xuek
  */
 public class CharsetKit
 {

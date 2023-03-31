@@ -34,7 +34,7 @@ import com.geek.system.service.ISysUserService;
 /**
  * 角色信息
  * 
- * @author ruoyi
+ * @author xuek
  */
 @RestController
 @RequestMapping("/system/role")
