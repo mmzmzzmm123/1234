@@ -39,6 +39,14 @@ public class QrCode {
         return AjaxResult.success(res);
     }
 
-
+    // 生成二维码
+    @PostMapping("/getBase64Code")
+    public AjaxResult getBase64Code(@RequestBody Map<String, Object> map) throws IOException {
+        String qrCodeParam = map.get("qrCodeParam").toString();
+        Map<String , String> res = new HashMap<>();
+        String base64Code = new QrCodeUtil().getBase64Code(qrCodeParam);
+        res.put("images_url", "data:image/png;base64," + base64Code);
+        return AjaxResult.success(res);
+    }
 
 }

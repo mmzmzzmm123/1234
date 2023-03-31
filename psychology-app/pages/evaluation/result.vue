@@ -8,41 +8,54 @@
             </view>
         </view>
         <view class="submit-btn" @tap="getResult">保存结果</view>
-        <view class="result-mask" v-show="maskShow" @tap="maskShow = false">
+        <view class="result-mask" v-show="maskShow" @longpress="handleLongPress" v-if="!imageData">
             <view class="mask-box">
-                <view class="title">测试结果</view>
-                <view class="img-box">
-                    <image mode="widthFix" class="img-item" src="/static/evaluation/index/product/33.png"></image>
-                </view>
-                <view class="user-info">
-                    <view class="header">
-                        <image mode="widthFix" class="img-item" src="/static/evaluation/index/product/44.png"></image>
-                    </view>
-                    <view class="txt-box">
-                        <view class="name">小赵爱测试</view>
-                        <view class="cue">长按识别二维码进入测试乐园</view>
-                    </view>
-                    <view class="qr-code-box">
-                        <image mode="widthFix" class="img-item" :src="qrcodeUrl"></image>
-                    </view>
-                </view>
-                <view class="bottom-cue">长按图片保存海报</view>
-            </view>
-        </view>
+				<view @tap="maskShow = false">
+					<image class="close" src="/static/evaluation/index/product/close.png"></image>
+				</view>
+				<view id="post">
+					<view class="title">测试结果</view>
+					<view class="img-box" v-html="result">                    
+					</view>
+					<view class="user-info">
+					    <view class="header">
+					        <image mode="widthFix" class="img-item" :src="userInfo.avatar"></image>
+					    </view>
+					    <view class="txt-box">
+					        <view class="name">{{ userInfo.name }}</view>
+					        <view class="cue" @longpress.stop.prevent="">长按识别二维码进入测试乐园</view>
+					    </view>
+					    <view class="qr-code-box">
+					        <image mode="widthFix" class="img-item" :src="qrcodeUrl"></image>
+					    </view>
+					</view>					
+				</view>				
+                
+				<view class="bottom-cue">长按图片保存海报</view>
+            </view>			
+		</view>
+		<view @tap="imageData = null" v-else>
+			<img class="poster" :src="imageData"  mode="widthFix" crossorigin="anonymous" />
+		</view>
+		<image ></image>
         <evaluation-tab-bar></evaluation-tab-bar>
     </view>
 </template>
 <script>
 import qrcodeServer from '@/server/qrcode'
+import html2canvas from '@/common/html2canvas.min.js'
 export default {
     data() {
         return {
+			userInfo: {},
             maskShow: false,
             result: '',
-			qrcodeUrl: '/static/evaluation/index/product/55.png'
+			qrcodeUrl: '/static/evaluation/index/product/55.png',
+			imageData: null // 生成的海报的url
         }
     },
     created() {
+		this.userInfo = uni.getStorageSync("userInfo");
         this.result = uni.getStorageSync("result");
     },
     methods: {
@@ -54,7 +67,56 @@ export default {
 			if (res.code == 200) {
 				this.qrcodeUrl = res.data.images_url
 			}
-        }
+        },
+		handleLongPress(e) {
+			// 生成海报
+			uni.showLoading({
+				title: '正在生成海报'
+			  })
+			  let dom = document.querySelector('#post')
+			  html2canvas(dom, {
+				width: dom.clientWidth, //dom 原始宽度
+				height: dom.clientHeight,
+				scrollY: 0,
+				scrollX: 0,
+				useCORS: true
+			  }).then((canvas) => {
+				uni.hideLoading()
+				
+				let image = new Image()
+				image.crossOrigin = '*' // 支持跨域图片
+				image.src = this.qrcodeUrl
+				
+				
+				//成功后调用返回canvas.toDataURL返回图片的imageData
+				this.imageData = canvas.toDataURL('image/png', 1)
+				// this.saveImg(this.imageData)
+				// this.saveBase64Img(this.imageData)				
+				// 关闭海报
+				// this.imageData = null
+			  })
+			
+		},
+		// 转为base64图片
+		getBase64Image(img) {
+		    let canvas = document.createElement('canvas')
+		    canvas.width = img.width
+		    canvas.height = img.height
+		    let ctx = canvas.getContext('2d')
+		    ctx.drawImage(img, 0, 0, canvas.width, canvas.height)
+		    let dataURL = canvas.toDataURL('image/png') // 可选其他值 image/jpeg
+		    return dataURL
+		},
+		saveImg(url) {
+			var oA = document.createElement("a");
+			oA.download = this.userInfo.name + '的测评海报'; // 设置下载的文件名，默认是'下载'
+			oA.href = url;
+			document.body.appendChild(oA);
+			oA.click();
+			oA.remove(); // 下载之后把创建的元素删除	
+			
+		},
+		
     }
 }
 </script>
@@ -138,12 +200,14 @@ page {
             max-height: 90vh;
             position: absolute;
             left: 65upx;
-            top: 5vh;
-            background: linear-gradient(225deg, #FF6A47 0%, #FFA522 100%);
-            border-radius: 16upx;
-            padding: 48upx 30upx 104upx;
-            box-sizing: border-box;
-
+            top: 5vh;           
+			
+			#post {
+				background: linear-gradient(225deg, #FF6A47 0%, #FFA522 100%);
+				border-radius: 8px;
+				padding: 24px 15px 52px;
+				box-sizing: border-box;
+			}
             .title {
                 font-size: 32upx;
                 font-weight: 600;
@@ -152,6 +216,14 @@ page {
                 margin-bottom: 24upx;
                 text-align: center;
             }
+			
+			.close {
+				width: 40upx;
+				height: 40upx;
+				position: absolute;
+				top: 15px;
+				right: 15px;
+			}
 
             .img-box {
                 width: 560upx;
@@ -160,6 +232,8 @@ page {
                 padding: 24upx 28upx;
                 box-sizing: border-box;
                 margin-bottom: 24upx;
+				max-height: 400px;
+				overflow: scroll;
             }
 
             .user-info {
@@ -214,5 +288,14 @@ page {
             }
         }
     }
+	
+	.poster {
+		position: fixed;
+		z-index: 100000;
+		top: 0;
+		left: 0;
+		width: 100vw;
+		height: 100vh;
+	}
 }
 </style>

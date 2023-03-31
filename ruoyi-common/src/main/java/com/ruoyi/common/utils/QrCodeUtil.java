@@ -4,9 +4,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.HttpServletResponse;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Paths;
+import java.util.Base64;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -71,6 +73,46 @@ public class QrCodeUtil {
             // 输出二维码
 //            MatrixToImageWriter.writeToStream(bitMatrix, format, response.getOutputStream());
             MatrixToImageWriter.writeToPath(bitMatrix, format, Paths.get(qrCodePath));
+
+        } catch (WriterException e) {
+
+            e.printStackTrace();
+
+        } catch (IOException e) {
+
+            e.printStackTrace();
+        }
+        return qrCodePath;
+    }
+
+    public String getBase64Code( String qrCodeParam){
+        Map<String , String> map = new HashMap<>();
+        // 二维码内容  contents  二维码连接
+        String qrCodePath = imageMake();
+        // 表示是二维码
+        BarcodeFormat qrCode = BarcodeFormat.QR_CODE;
+        // 二维码宽度
+        int width = 300;
+        // 二维码高度
+        int height = 300;
+        // 返回的图片格式
+        String format = "png";
+        try {
+            ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+
+            Map<EncodeHintType, Object> hints = new HashMap<EncodeHintType, Object>();
+            // 设置二维码编字符集
+            hints.put(EncodeHintType.CHARACTER_SET, "utf-8");
+            // 设置二维码的外间距
+            hints.put(EncodeHintType.MARGIN,0);
+            // 设置二维码容错级别
+            hints.put(EncodeHintType.ERROR_CORRECTION, ErrorCorrectionLevel.H);
+            // 创建二维码对象
+            BitMatrix bitMatrix = new MultiFormatWriter().encode(qrCodeParam , qrCode, width, height, hints);
+            // 输出二维码
+            MatrixToImageWriter.writeToStream(bitMatrix, format, byteArrayOutputStream);
+
+            return Base64.getEncoder().encodeToString(byteArrayOutputStream.toByteArray());
 
         } catch (WriterException e) {
 

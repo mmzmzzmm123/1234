@@ -21,12 +21,7 @@
                   <image-upload v-model="props.row.proposal" @input="modifySetting(props.row)" :extraData="extraData" />
                 </el-form-item>
                 <el-form-item label="结论">
-                  <el-input
-                    type="textarea"
-                    :rows="2"
-                    placeholder="请输入内容"
-                    v-model="props.row.result" @blur="modifySetting(props.row)">
-                  </el-input>
+                  <editor v-model="props.row.result" placeholder="请输入内容" @blur="modifySetting(props.row)" :min-height="192"/>
                 </el-form-item>
 
               </el-form>
