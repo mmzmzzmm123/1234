@@ -4,8 +4,7 @@ import java.util.List;
 
 import com.ruoyi.common.core.domain.dto.LoginDTO;
 import com.ruoyi.common.utils.DateUtils;
-import com.ruoyi.course.domain.CourOrder;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.ruoyi.gauge.constant.GaugeConstant;
 import org.springframework.stereotype.Service;
 import com.ruoyi.gauge.mapper.PsyOrderMapper;
 import com.ruoyi.gauge.domain.PsyOrder;
@@ -143,5 +142,42 @@ public class PsyOrderServiceImpl implements IPsyOrderService {
         return null;
     }
 
+    /**
+     * 根据测评ID查询测评是否已经购买
+     *
+     * @param userId 用户ID
+     * @param gaugeId 测评ID
+     * @return 测评是否已经购买
+     */
+    @Override
+    public Integer getGaugeIsBuy(String userId, Long gaugeId) {
+        PsyOrder psyOrder = new PsyOrder();
+        psyOrder.setCreateBy(userId);
+        psyOrder.setGaugeId(gaugeId);
+        psyOrder.setOrderStatus(GaugeConstant.GAUGE_ORDER_STATUE_FINISHED);
+        List<PsyOrder> psyOrderList = psyOrderMapper.selectPsyOrderList(psyOrder);
+        if (psyOrderList.size() == 1) {
+            return GaugeConstant.GAUGE_IS_BUY;
+        }
+        return GaugeConstant.GAUGE_NOT_BUY;
+    }
 
+    /**
+     * 根据用户ID和测评ID查询测评订单信息
+     *
+     * @param userId 用户ID
+     * @param gaugeId 测评ID
+     * @return 订单信息
+     */
+    @Override
+    public PsyOrder getPsyOrder(String userId, Long gaugeId) {
+        PsyOrder psyOrder = new PsyOrder();
+        psyOrder.setCreateBy(userId);
+        psyOrder.setGaugeId(gaugeId);
+        List<PsyOrder> psyOrderList = psyOrderMapper.selectPsyOrderList(psyOrder);
+        if (psyOrderList.size() == 1) {
+            return psyOrderList.get(0);
+        }
+        return null;
+    }
 }

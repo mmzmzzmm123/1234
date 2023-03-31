@@ -87,4 +87,22 @@ public interface IPsyOrderService
      * @return 生成的订单对象
      */
     public PsyOrder generatePsyOrder(PsyOrder psyOrder);
+
+    /**
+     * 根据用户ID和测评ID查询测评是否已经购买
+     *
+     * @param userId 用户ID
+     * @param gaugeId 测评ID
+     * @return 测评是否已经购买
+     */
+    public Integer getGaugeIsBuy(String userId, Long gaugeId);
+
+    /**
+     * 根据用户ID和测评ID查询测评订单信息
+     *
+     * @param userId 用户ID
+     * @param gaugeId 测评ID
+     * @return 订单信息
+     */
+    public PsyOrder getPsyOrder(String userId, Long gaugeId);
 }

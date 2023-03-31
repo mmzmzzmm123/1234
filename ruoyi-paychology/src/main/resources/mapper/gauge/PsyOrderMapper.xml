@@ -35,6 +35,7 @@
             <if test="orderStatus != null ">and order_status = #{orderStatus}</if>
             <if test="amount != null ">and amount = #{amount}</if>
             <if test="gaugeStatus != null ">and gauge_status = #{gaugeStatus}</if>
+            <if test="createBy != null ">and create_by = #{createBy}</if>
         </where>
     </select>
 

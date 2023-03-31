@@ -97,6 +97,7 @@ export default {
 					uni.navigateTo({
 						url: "/pages/evaluation/product?id=" + this.productId,
 					});
+					location.reload()
 				})
 			}	  
 		
@@ -105,7 +106,14 @@ export default {
 		  }
 		},
 		startTest() {
-			this.payBoxShow = true;
+			if (this.productInfo.isBuy == 0) { // 未支付
+				this.payBoxShow = true;
+			} else {
+				uni.navigateTo({
+					url: `/pages/evaluation/question?productId=${this.productId}&orderId=${this.productInfo.orderId}`,
+				});
+			}
+			
 		},
 		toHome() {
 			uni.navigateTo({
