@@ -9,8 +9,8 @@
             <view class="price">{{ order.amount }}</view>
             <view class="buy-time">{{ order.createTime }}</view>
             <view class="order-no">{{ order.orderId }}</view>
-            <view class="btn" v-show="order.status == 1" @tap="toTest(order)">去测试</view>
-            <view class="btn" v-show="order.status != 1" @tap="toResult(order)">查看报告</view>
+            <view class="btn" v-show="order.orderStatus == 1" @tap="toTest(order)">去测试</view>
+            <view class="btn" v-show="order.orderStatus != 1" @tap="toResult(order)">查看报告</view>
         </view>
         <no-data v-if="orderList.length == 0"></no-data>
         <view class="footer" v-else>已经到底了</view>
