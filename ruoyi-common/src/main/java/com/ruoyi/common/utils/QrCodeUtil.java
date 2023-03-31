@@ -25,8 +25,8 @@ public class QrCodeUtil {
         String uuid = UUID.randomUUID().toString().replace("-", "");
         System.out.println("-------------------------------------");
         System.out.println(uuid);
-//        String qrCodePath = "D:\\qrcode"+uuid+".png";
-        String qrCodePath = "/profile/upload/"+uuid+".png";
+        String qrCodePath = "D:\\qrcode"+uuid+".png";
+//        String qrCodePath = "/profile/upload/"+uuid+".png";
 //        String qrCodePath = "E:\\"+uuid+".png";
         String FileName = uuid+".png";
         File file  = new File(qrCodePath);
@@ -63,7 +63,7 @@ public class QrCodeUtil {
             // 设置二维码编字符集
             hints.put(EncodeHintType.CHARACTER_SET, "utf-8");
             // 设置二维码的外间距
-            hints.put(EncodeHintType.MARGIN, 10);
+            hints.put(EncodeHintType.MARGIN,0);
             // 设置二维码容错级别
             hints.put(EncodeHintType.ERROR_CORRECTION, ErrorCorrectionLevel.H);
             // 创建二维码对象
