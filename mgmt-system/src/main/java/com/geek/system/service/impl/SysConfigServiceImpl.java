@@ -22,7 +22,7 @@ import com.geek.system.service.ISysConfigService;
  * 
  * @author xuek
  */
-@Service
+@Service("sysConfigService")
 public class SysConfigServiceImpl implements ISysConfigService
 {
     @Autowired

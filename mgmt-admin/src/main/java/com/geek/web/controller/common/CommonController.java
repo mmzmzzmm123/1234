@@ -1,11 +1,17 @@
 package com.geek.web.controller.common;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.geek.common.config.MgmtConfig;
+import com.geek.common.exception.ServiceException;
+import com.geek.system.domain.SysOss;
+import com.geek.system.service.ISysOssService;
+import com.geek.system.service.cloud.OSSFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,6 +41,8 @@ public class CommonController
 
     @Autowired
     private ServerConfig serverConfig;
+    @Autowired
+    private ISysOssService sysOssService;
 
     private static final String FILE_DELIMETER = ",";
 
@@ -78,16 +86,26 @@ public class CommonController
     {
         try
         {
-            // 上传文件路径
-            String filePath = MgmtConfig.getUploadPath();
-            // 上传并返回新文件名称
-            String fileName = FileUploadUtils.upload(filePath, file);
-            String url = serverConfig.getUrl() + fileName;
+            if (file.isEmpty()) {
+                throw new ServiceException("上传文件不能为空");
+            }
+
+            //上传文件
+            String suffix = Objects.requireNonNull(file.getOriginalFilename()).substring(file.getOriginalFilename().lastIndexOf("."));
+            String url = Objects.requireNonNull(OSSFactory.build()).uploadSuffix(file.getBytes(), suffix);
+
+            //保存文件信息
+            SysOss ossEntity = new SysOss();
+            ossEntity.setUrl(url);
+            ossEntity.setName(file.getOriginalFilename());
+            ossEntity.setCreateDate(new Date());
+            sysOssService.insertSysOss(ossEntity);
+
             AjaxResult ajax = AjaxResult.success();
             ajax.put("url", url);
-            ajax.put("fileName", fileName);
-            ajax.put("newFileName", FileUtils.getName(fileName));
-            ajax.put("originalFilename", file.getOriginalFilename());
+            ajax.put("fileName", file.getName());
+//            ajax.put("newFileName", FileUtils.getName(fileName));
+//            ajax.put("originalFilename", file.getOriginalFilename());
             return ajax;
         }
         catch (Exception e)
@@ -95,6 +113,29 @@ public class CommonController
             return AjaxResult.error(e.getMessage());
         }
     }
+
+//    @PostMapping("/upload")
+//    public AjaxResult uploadFile(MultipartFile file) throws Exception
+//    {
+//        try
+//        {
+//            // 上传文件路径
+//            String filePath = MgmtConfig.getUploadPath();
+//            // 上传并返回新文件名称
+//            String fileName = FileUploadUtils.upload(filePath, file);
+//            String url = serverConfig.getUrl() + fileName;
+//            AjaxResult ajax = AjaxResult.success();
+//            ajax.put("url", url);
+//            ajax.put("fileName", fileName);
+//            ajax.put("newFileName", FileUtils.getName(fileName));
+//            ajax.put("originalFilename", file.getOriginalFilename());
+//            return ajax;
+//        }
+//        catch (Exception e)
+//        {
+//            return AjaxResult.error(e.getMessage());
+//        }
+//    }
 
     /**
      * 通用上传请求（多个）
