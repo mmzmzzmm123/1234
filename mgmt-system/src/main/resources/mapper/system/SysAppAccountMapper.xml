@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.geek.system.mapper.SysAppAccountMapper">
+
+    <resultMap type="SysAppAccount" id="SysAppAccountResult">
+        <result property="id"    column="id"    />
+        <result property="appid"    column="appid"    />
+        <result property="name"    column="name"    />
+        <result property="secret"    column="secret"    />
+        <result property="token"    column="token"    />
+        <result property="aesKey"    column="aes_key"    />
+        <result property="remark"    column="remark"    />
+    </resultMap>
+
+    <sql id="selectSysAppAccountVo">
+        select id, appid, name, secret, token, aes_key, remark from sys_app_account
+    </sql>
+
+    <select id="selectSysAppAccountList" parameterType="SysAppAccount" resultMap="SysAppAccountResult">
+        <include refid="selectSysAppAccountVo"/>
+        <where>
+            <if test="appid != null  and appid != ''"> and appid = #{appid}</if>
+            <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
+            <if test="secret != null  and secret != ''"> and secret = #{secret}</if>
+            <if test="token != null  and token != ''"> and token = #{token}</if>
+            <if test="aesKey != null  and aesKey != ''"> and aes_key = #{aesKey}</if>
+        </where>
+    </select>
+
+    <select id="selectSysAppAccountById" parameterType="Long" resultMap="SysAppAccountResult">
+        <include refid="selectSysAppAccountVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertSysAppAccount" parameterType="SysAppAccount">
+        insert into sys_app_account
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="appid != null and appid != ''">appid,</if>
+            <if test="name != null and name != ''">name,</if>
+            <if test="secret != null and secret != ''">secret,</if>
+            <if test="token != null">token,</if>
+            <if test="aesKey != null">aes_key,</if>
+            <if test="remark != null">remark,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="appid != null and appid != ''">#{appid},</if>
+            <if test="name != null and name != ''">#{name},</if>
+            <if test="secret != null and secret != ''">#{secret},</if>
+            <if test="token != null">#{token},</if>
+            <if test="aesKey != null">#{aesKey},</if>
+            <if test="remark != null">#{remark},</if>
+         </trim>
+    </insert>
+
+    <update id="updateSysAppAccount" parameterType="SysAppAccount">
+        update sys_app_account
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="appid != null and appid != ''">appid = #{appid},</if>
+            <if test="name != null and name != ''">name = #{name},</if>
+            <if test="secret != null and secret != ''">secret = #{secret},</if>
+            <if test="token != null">token = #{token},</if>
+            <if test="aesKey != null">aes_key = #{aesKey},</if>
+            <if test="remark != null">remark = #{remark},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteSysAppAccountById" parameterType="Long">
+        delete from sys_app_account where id = #{id}
+    </delete>
+
+    <delete id="deleteSysAppAccountByIds" parameterType="String">
+        delete from sys_app_account where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

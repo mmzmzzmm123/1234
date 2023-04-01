@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.geek.system.mapper.SysAppArticleMapper">
+    
+    <resultMap type="SysAppArticle" id="SysAppArticleResult">
+        <result property="id"    column="id"    />
+        <result property="appid"    column="appid"    />
+        <result property="articleType"    column="article_type"    />
+        <result property="smallTitle"    column="small_title"    />
+        <result property="bigTitle"    column="big_title"    />
+        <result property="faceUrl"    column="face_url"    />
+        <result property="faceThum"    column="face_thum"    />
+        <result property="articleContent"    column="article_content"    />
+        <result property="articleSource"    column="article_source"    />
+        <result property="sortNo"    column="sort_no"    />
+        <result property="starNum"    column="star_Num"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="remark"    column="remark"    />
+    </resultMap>
+
+    <sql id="selectSysAppArticleVo">
+        select id, appid, article_type, small_title, big_title, face_url, face_thum, article_content, article_source, sort_no, star_Num, create_time, create_by, update_time, update_by, remark from sys_app_article
+    </sql>
+
+    <select id="selectSysAppArticleList" parameterType="SysAppArticle" resultMap="SysAppArticleResult">
+        <include refid="selectSysAppArticleVo"/>
+        <where>  
+            <if test="appid != null  and appid != ''"> and appid = #{appid}</if>
+            <if test="articleType != null  and articleType != ''"> and article_type = #{articleType}</if>
+            <if test="smallTitle != null  and smallTitle != ''"> and small_title = #{smallTitle}</if>
+            <if test="bigTitle != null  and bigTitle != ''"> and big_title = #{bigTitle}</if>
+            <if test="faceUrl != null  and faceUrl != ''"> and face_url = #{faceUrl}</if>
+            <if test="faceThum != null  and faceThum != ''"> and face_thum = #{faceThum}</if>
+            <if test="articleContent != null  and articleContent != ''"> and article_content = #{articleContent}</if>
+            <if test="articleSource != null  and articleSource != ''"> and article_source = #{articleSource}</if>
+            <if test="sortNo != null "> and sort_no = #{sortNo}</if>
+            <if test="starNum != null "> and star_Num = #{starNum}</if>
+        </where>
+    </select>
+    
+    <select id="selectSysAppArticleById" parameterType="Long" resultMap="SysAppArticleResult">
+        <include refid="selectSysAppArticleVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertSysAppArticle" parameterType="SysAppArticle" useGeneratedKeys="true" keyProperty="id">
+        insert into sys_app_article
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="appid != null and appid != ''">appid,</if>
+            <if test="articleType != null and articleType != ''">article_type,</if>
+            <if test="smallTitle != null and smallTitle != ''">small_title,</if>
+            <if test="bigTitle != null">big_title,</if>
+            <if test="faceUrl != null">face_url,</if>
+            <if test="faceThum != null">face_thum,</if>
+            <if test="articleContent != null">article_content,</if>
+            <if test="articleSource != null">article_source,</if>
+            <if test="sortNo != null">sort_no,</if>
+            <if test="starNum != null">star_Num,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="remark != null">remark,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="appid != null and appid != ''">#{appid},</if>
+            <if test="articleType != null and articleType != ''">#{articleType},</if>
+            <if test="smallTitle != null and smallTitle != ''">#{smallTitle},</if>
+            <if test="bigTitle != null">#{bigTitle},</if>
+            <if test="faceUrl != null">#{faceUrl},</if>
+            <if test="faceThum != null">#{faceThum},</if>
+            <if test="articleContent != null">#{articleContent},</if>
+            <if test="articleSource != null">#{articleSource},</if>
+            <if test="sortNo != null">#{sortNo},</if>
+            <if test="starNum != null">#{starNum},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="remark != null">#{remark},</if>
+         </trim>
+    </insert>
+
+    <update id="updateSysAppArticle" parameterType="SysAppArticle">
+        update sys_app_article
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="appid != null and appid != ''">appid = #{appid},</if>
+            <if test="articleType != null and articleType != ''">article_type = #{articleType},</if>
+            <if test="smallTitle != null and smallTitle != ''">small_title = #{smallTitle},</if>
+            <if test="bigTitle != null">big_title = #{bigTitle},</if>
+            <if test="faceUrl != null">face_url = #{faceUrl},</if>
+            <if test="faceThum != null">face_thum = #{faceThum},</if>
+            <if test="articleContent != null">article_content = #{articleContent},</if>
+            <if test="articleSource != null">article_source = #{articleSource},</if>
+            <if test="sortNo != null">sort_no = #{sortNo},</if>
+            <if test="starNum != null">star_Num = #{starNum},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="remark != null">remark = #{remark},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteSysAppArticleById" parameterType="Long">
+        delete from sys_app_article where id = #{id}
+    </delete>
+
+    <delete id="deleteSysAppArticleByIds" parameterType="String">
+        delete from sys_app_article where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>
