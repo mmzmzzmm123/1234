@@ -147,8 +147,9 @@ page {
 
       .current-class {
         font-size: 26upx;
-        font-weight: 400;
-        color: #777777;
+        font-weight: 600;
+        color: #333333;
+        border-bottom: 1px solid #ccc;
         line-height: 77upx;
         padding-left: 24upx;
       }
@@ -204,12 +205,12 @@ page {
 
     .img-box {
       width: 183upx;
-      height: 208upx;
+      height: auto;
       border-radius: 8upx;
     }
 
     .price {
-      margin-top: 39upx;
+      margin-top: 20upx;
     }
   }
 

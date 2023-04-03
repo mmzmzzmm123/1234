@@ -2,9 +2,7 @@ import httprequest from "../httpRequest";
 export default {
    //根据用户编号查询课程列表
    getCourseList: async (userId) => {
-    let res = await httprequest.post("/app/course/getCourseListByUserId", {
-        userId,
-    });
+    let res = await httprequest.post(`/app/course/getCourseListByUserId?userId=${userId}`);
     if (res.code == 200) {
       return res.rows;
     } else {

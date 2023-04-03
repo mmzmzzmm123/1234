@@ -89,9 +89,9 @@ export default {
   computed: {
   	remainTime() {
   		return (orderTime) => {
-			if (new Date().getTime() < new Date(orderTime) + 30 * 60 * 1000) {
+			if (new Date().getTime() < new Date(orderTime).getTime() + 30 * 60 * 1000) {
 				// 下单不超过30分钟
-				const remainSeconds = parseInt((new Date(orderTime) + 30 * 60 * 1000 -  new Date().getTime()) / 1000)
+				const remainSeconds = parseInt((new Date(orderTime).getTime() + 30 * 60 * 1000 -  new Date().getTime()) / 1000)
 				
 				return "剩余" + formatTime.formatSecondsCH(remainSeconds)
 			} else {
@@ -246,11 +246,12 @@ page {
     .course-content {
       display: flex;
       flex-direction: row;
+	  align-items: center;
       margin-bottom: 14upx;
       border-bottom: 1px solid #e6e6e6;
       .course-img {
-        width: 130upx;
-        height: 130upx;
+        width: 120upx;
+        height: 120upx;
         border-radius: 7upx;
         margin-right: 24upx;
         image {
@@ -265,7 +266,8 @@ page {
           font-weight: 600;
           color: #333333;
           line-height: 42upx;
-          margin-bottom: 50upx;
+		  margin-top: 20upx;
+          margin-bottom: 20upx;
         }
         .course-author {
           font-size: 26upx;

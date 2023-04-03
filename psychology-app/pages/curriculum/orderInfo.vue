@@ -19,18 +19,18 @@
         class="order-status-icon"
       ></image>
       <span class="order-status-txt">{{
-        orderInfo.status == 1 ? "订单已完成" : "订单待支付，剩余" + orderPayTime
+        orderInfo.status == 1 ? "订单已完成" : remainTime(orderInfo.createTime)
       }}</span>
     </view>
     <view class="course-info info-box">
       <view class="title">课程信息</view>
       <view class="course-content">
         <view class="course-img">
-			<image :src="orderInfo.courseInfo.url"></image>
+			<image :src="orderInfo.courseInfo && orderInfo.courseInfo.url"></image>
 		</view>
         <view class="txt-box">
-          <view class="course-title">{{ orderInfo.courseInfo.name }}</view>
-          <view class="course-author">{{ orderInfo.courseInfo.author }}</view>
+          <view class="course-title">{{ orderInfo.courseInfo && orderInfo.courseInfo.name }}</view>
+          <view class="course-author">{{ orderInfo.courseInfo && orderInfo.courseInfo.author }}</view>
         </view>
       </view>
       <view class="course-price">
@@ -54,7 +54,7 @@
       >
       <view class="order-info-txt"
         ><span class="label">下单时间</span
-        ><span class="value">{{ orderInfo.createTime }}</span></view
+        ><span class="value">{{ formatTime(orderInfo.createTime) }}</span></view
       >
     </view>
   </view>
@@ -62,12 +62,27 @@
 <script>
 import utils from "@/utils/common";
 import orderServer from "@/server/curriculum/order";
+import formatTime from '@/utils/formatTime.js'
 export default {
   data: () => {
     return {
       orderPayTime: "00:00",
       orderInfo: {},
     };
+  },
+  computed: {
+  	remainTime() {
+  		return (orderTime) => {
+  			if (new Date().getTime() < new Date(orderTime).getTime() + 30 * 60 * 1000) {
+  				// 下单不超过30分钟
+  				const remainSeconds = parseInt((new Date(orderTime).getTime() + 30 * 60 * 1000 -  new Date().getTime()) / 1000)
+  				
+  				return "剩余" + formatTime.formatSecondsCH(remainSeconds)
+  			} else {
+  				return "订单已过期"
+  			}
+  		} 
+  	},	  
   },
   async created() {
     this.orderInfo = await orderServer.getOrderDetail(utils.getParam(location.href, "orderId"));
@@ -78,7 +93,10 @@ export default {
   		uni.navigateTo({
   		  url: "/pages/curriculum/order",
   		});
-  	}
+  	},
+	formatTime(time) {
+		return formatTime.formatTime(time)
+	}
   },
 };
 </script>
@@ -89,8 +107,7 @@ page {
   .order-info-box {
     padding: 40upx 32upx;
 	.order-info-header {
-		display: flex;
-		height: 36upx;
+		display: flex;	
 		font-size: 48upx;
 		margin-bottom: 20upx;
 		.order-back-icon {
@@ -107,16 +124,20 @@ page {
 		}
 	}
     .order-status {
+		display: flex;		
+		align-items: center;
+		background-color: #fff;
       margin-bottom: 32upx;
       .order-status-icon {
-        width: 36upx;
-        height: 36upx;
+        width: 30upx;
+        height: 30upx;
+		margin-left: 16upx;
         margin-right: 16upx;
         vertical-align: middle;
       }
       .order-status-txt {
         height: 50upx;
-        font-size: 36upx;
+        font-size: 30upx;
         font-weight: 500;
         color: #333333;
         line-height: 50upx;
