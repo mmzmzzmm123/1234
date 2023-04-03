@@ -45,13 +45,15 @@ export default {
     if (res.code == 200) {
       return res.data;
     } else {
+	  uni.showToast({
+	    icon: "error",
+	    title: "获取订单详情出错",
+	  });
       return [];
     }
   },
   cancelOrder:async (orderId)=>{
-    let res = await httprequest.post("/app/course/order/cancel", {		
-		orderId
-	});
+    let res = await httprequest.post(`/app/course/order/cancel?orderId=${orderId}`);
     if (res.code == 200) {
       return res.data;
     } else {

@@ -92,10 +92,9 @@ public class AppCourOrderController extends BaseController
      * 取消订单
      */
     @PostMapping("/cancel")
-    @ApiOperation("根据订单信息生成课程订单")
-    public AjaxResult cancelOrder(@RequestBody Map<String, Object> map)
-    {
-        int orderId = Integer.parseInt(map.get("orderId").toString());
+    @ApiOperation("取消订单")
+    public AjaxResult cancelOrder(@RequestParam Integer orderId)    {
+
         CourOrder courOrder = new CourOrder();
         courOrder.setId(orderId);
         courOrder.setStatus(CourConstant.COUR_ORDER_STATUE_CANCELED); // 订单处于取消状态
