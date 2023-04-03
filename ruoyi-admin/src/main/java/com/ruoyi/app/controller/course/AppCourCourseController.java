@@ -21,8 +21,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
-import java.util.Map;
 
 /**
  * 课程Controller
@@ -68,9 +68,8 @@ public class AppCourCourseController extends BaseController
 //    @PreAuthorize("@ss.hasPermi('course:userSection:list')")
     @PostMapping("/getCourseListByUserId")
     @ApiOperation("根据用户ID查询课程列表")
-    public TableDataInfo getCourseListByUserId(@RequestBody Map<String, Object> body)
+    public TableDataInfo getCourseListByUserId(@RequestParam Integer userId)
     {
-        Integer userId = Integer.parseInt(body.get("userId").toString());
         startPage();
         List<CourCourse> list = courCourseService.getCourseListByUserId(userId);
         List<CourseVO> courseVOList = new ArrayList<>();
@@ -93,13 +92,15 @@ public class AppCourCourseController extends BaseController
             // 计算课程学习时长
             Integer studyDuration = courCourseService.calCourCourseStudyDuration(userId, courCourse.getCourseId());
             courseVO.setStudyDuration(studyDuration);
-            if(hasUnFinished){
-                        courseVOList.add(courseVO);
-                        courseVOList.stream().sorted(
-                        (a,b)->{ return a.getStudyDuration()-b.getStudyDuration();}
-                        ).forEach(s->System.out.println(s));
-                    }
-            else {courseFinishList.add(courseVO);}
+            if (hasUnFinished) {
+                courseVOList.add(courseVO);
+                courseVOList.stream()
+                        .sorted(Comparator.comparingInt(CourseVO::getStudyDuration))
+                        .forEach(System.out::println);
+            }
+            else {
+                courseFinishList.add(courseVO);
+            }
 
         });
         courseVOList.addAll(courseFinishList);
@@ -123,10 +124,8 @@ public class AppCourCourseController extends BaseController
 //    @PreAuthorize("@ss.hasPermi('course:course:query')")
     @PostMapping(value = "/detail")
     @ApiOperation("查询课程详情")
-    public AjaxResult detail(@RequestBody Map<String, String> map)
+    public AjaxResult detail(@RequestParam Integer userId, @RequestParam Integer courseId)
     {
-        Integer userId = Integer.parseInt(map.get("userId")); // 用户主键
-        Integer courseId = Integer.parseInt(map.get("courseId")); // 课程主键
         CourCourse course = courCourseService.selectCourCourseById(courseId);
         if (course == null) {
             return AjaxResult.error("查询课程详情失败");

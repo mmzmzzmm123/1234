@@ -2,16 +2,13 @@ import httprequest from "../httpRequest";
 export default {
     //获取课程详情
     getCourseInfo: async (userId, courseId) => {
-      let res = await httprequest.post("/app/course/detail", {
-		userId,
-		courseId
-	  });
+      let res = await httprequest.post(`/app/course/detail?userId=${userId}&courseId=${courseId}`);
       if (res.code == 200) {
         return res.data;
       } else {
         uni.showToast({
           icon: "error",
-          title: "获取详情出错",
+          title: "获取课程详情出错",
         });
       }
     },
