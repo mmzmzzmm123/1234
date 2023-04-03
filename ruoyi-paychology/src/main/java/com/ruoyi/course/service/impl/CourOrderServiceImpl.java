@@ -1,22 +1,15 @@
 package com.ruoyi.course.service.impl;
 
 import java.util.List;
-import java.util.UUID;
 
-import com.ruoyi.common.core.domain.dto.LoginDTO;
-import com.ruoyi.common.enums.OrderPayStatus;
 import com.ruoyi.common.utils.DateUtils;
 import com.ruoyi.course.constant.CourConstant;
 import com.ruoyi.course.domain.CourOrder;
 import com.ruoyi.course.mapper.CourOrderMapper;
 import com.ruoyi.course.service.ICourOrderService;
 import com.ruoyi.course.vo.OrderVO;
-import com.ruoyi.gauge.domain.PsyOrderPay;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import com.ruoyi.course.mapper.CourOrderMapper;
-import com.ruoyi.course.domain.CourOrder;
-import com.ruoyi.course.service.ICourOrderService;
 
 /**
  * 课程订单Service业务层处理
@@ -137,12 +130,12 @@ public class CourOrderServiceImpl implements ICourOrderService
     /**
      * 根据订单ID查询课程订单详情
      *
-     * @param orderId 课程订单ID
+     * @param id 课程订单ID
      * @return 课程订单详情
      */
     @Override
-    public OrderVO getOrderDetailByOrderId(Integer orderId) {
-        return courOrderMapper.getOrderDetailByOrderId(orderId);
+    public OrderVO getOrderDetailById(Integer id) {
+        return courOrderMapper.getOrderDetailById(id);
     }
 
     /**

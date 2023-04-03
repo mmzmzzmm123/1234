@@ -70,10 +70,10 @@ public interface CourOrderMapper
     public int deleteCourOrderByIds(Integer[] ids);
 
     /**
-     * 根据订单编号查询课程订单详情
+     * 根据订单ID查询课程订单详情
      *
-     * @param orderId 课程订单ID
+     * @param id 课程订单ID
      * @return 课程订单详情
      */
-    public OrderVO getOrderDetailByOrderId(Integer orderId);
+    public OrderVO getOrderDetailById(Integer id);
 }

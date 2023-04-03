@@ -41,11 +41,9 @@ export default {
   },
   //根据订单获取订单详情
   getOrderDetail: async (orderId) => {
-    let res = await httprequest.post("/app/course/order/detail", {
-        orderId,
-    });
+    let res = await httprequest.post(`/app/course/order/detail?orderId=${orderId}`);
     if (res.code == 200) {
-      return res.rows;
+      return res.data;
     } else {
       return [];
     }

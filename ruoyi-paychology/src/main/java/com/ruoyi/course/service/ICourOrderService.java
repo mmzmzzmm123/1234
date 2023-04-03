@@ -1,6 +1,5 @@
 package com.ruoyi.course.service;
 
-import com.ruoyi.common.core.domain.dto.LoginDTO;
 import com.ruoyi.course.domain.CourOrder;
 import com.ruoyi.course.vo.OrderVO;
 
@@ -81,12 +80,12 @@ public interface ICourOrderService
 
 
     /**
-     * 根据订单编号查询课程订单详情
+     * 根据订单ID查询课程订单详情
      *
-     * @param orderId 课程订单编号
+     * @param id 课程订单ID
      * @return 课程订单详情
      */
-    OrderVO getOrderDetailByOrderId(Integer orderId);
+    OrderVO getOrderDetailById(Integer id);
 
 
     /**

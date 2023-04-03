@@ -89,11 +89,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         </foreach>
     </delete>
 
-    <select id="getOrderDetailByOrderId" parameterType="String" resultType="com.ruoyi.course.vo.OrderVO">
+    <select id="getOrderDetailById" parameterType="Integer" resultType="com.ruoyi.course.vo.OrderVO">
         select co.id, co.order_id, co.status, co.user_id, co.amount as amount, co.course_id, pop.pay_status , pop.amount as pay_amount
         from cour_order co
         left join psy_order_pay pop
         on co.id = pop.order_id
-        where co.order_id = #{orderId}
+        where co.id = #{id}
     </select>
 </mapper>

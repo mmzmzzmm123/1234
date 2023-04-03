@@ -1,16 +1,15 @@
 package com.ruoyi.course.domain;
 
-import java.math.BigDecimal;
-import java.util.Date;
-import java.util.Map;
-
+import com.ruoyi.common.annotation.Excel;
+import com.ruoyi.common.core.domain.BaseEntity;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.NoArgsConstructor;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
-import com.ruoyi.common.annotation.Excel;
-import com.ruoyi.common.core.domain.BaseEntity;
+
+import java.math.BigDecimal;
+import java.util.Date;
 
 /**
  * 课程订单对象 cour_order
@@ -54,23 +53,7 @@ public class CourOrder extends BaseEntity
 
     /** 课程信息 */
     @Excel(name = "课程信息")
-    private Map courseInfo;
-
-    @Excel(name = "课程图片url")
-    private String url;
-
-    @Excel(name = "课程作者")
-    private String author;
-
-    @Excel(name = "课程名字")
-    private String name;
-
-    public String getUrl(){ return url;}
-
-    public String getAuthor(){ return author;}
-
-    public String getName(){ return name;}
-
+    private CourCourse courseInfo;
     public void setId(int id)
     {
         this.id = id;
@@ -139,7 +122,8 @@ public class CourOrder extends BaseEntity
         return courseId;
     }
 
-    public void setCourseInfo(Map courseMap){
+    public CourCourse getCourseInfo() { return courseInfo; }
+    public void setCourseInfo(CourCourse courseMap){
         this.courseInfo = courseMap;
     }
 
@@ -153,9 +137,6 @@ public class CourOrder extends BaseEntity
             .append("userId", getUserId())
             .append("amount", getAmount())
             .append("courseId", getCourseId())
-            .append("url", getUrl())
-            .append("name", getName())
-            .append("author", getAuthor())
             .toString();
     }
 }

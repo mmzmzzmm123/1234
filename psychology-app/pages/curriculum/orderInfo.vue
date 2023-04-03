@@ -25,9 +25,9 @@
     <view class="course-info info-box">
       <view class="title">课程信息</view>
       <view class="course-content">
-        <view class="course-img"
-          ><image :src="orderInfo.courseInfo.url"></image
-        ></view>
+        <view class="course-img">
+			<image :src="orderInfo.courseInfo.url"></image>
+		</view>
         <view class="txt-box">
           <view class="course-title">{{ orderInfo.courseInfo.name }}</view>
           <view class="course-author">{{ orderInfo.courseInfo.author }}</view>
@@ -36,13 +36,13 @@
       <view class="course-price">
           <span class="txt">课程总价</span
           ><span class="price"
-            ><span class="icon">￥</span>{{ orderInfo.price }}</span
+            ><span class="icon">￥</span>{{ orderInfo.amount }}</span
           >
         </view>
         <view class="order-price">
           <span class="txt">需付款</span
           ><span class="price">
-            <span class="icon">￥</span>{{ orderInfo.price }}
+            <span class="icon">￥</span>{{ orderInfo.amount }}
           </span>
         </view>
     </view>
@@ -50,11 +50,11 @@
       <view class="title">订单信息</view>
       <view class="order-info-txt"
         ><span class="label">订单编号</span
-        ><span class="value">{{ orderInfo.orderNo }}</span></view
+        ><span class="value">{{ orderInfo.orderId }}</span></view
       >
       <view class="order-info-txt"
         ><span class="label">下单时间</span
-        ><span class="value">{{ orderInfo.time }}</span></view
+        ><span class="value">{{ orderInfo.createTime }}</span></view
       >
     </view>
   </view>
@@ -66,22 +66,12 @@ export default {
   data: () => {
     return {
       orderPayTime: "00:00",
-      orderInfo: {
-        price: 600,
-        status: 1,
-        orderNo: "324234253465475678",
-        time: "2023-02-18 12:44:12",
-        courseInfo: {
-          name: "课程课程课程",
-          price: 3,
-          teacher: "张三",
-          url: "/static/curriculum/1.png",
-        },
-      },
+      orderInfo: {},
     };
   },
   async created() {
     this.orderInfo = await orderServer.getOrderDetail(utils.getParam(location.href, "orderId"));
+	console.log(this.orderInfo)
   },
   methods: {
   	back() {

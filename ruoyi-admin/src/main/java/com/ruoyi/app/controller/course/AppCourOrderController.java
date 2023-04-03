@@ -2,7 +2,6 @@ package com.ruoyi.app.controller.course;
 
 import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.domain.AjaxResult;
-import com.ruoyi.common.core.page.TableDataInfo;
 import com.ruoyi.common.utils.OrderIdUtils;
 import com.ruoyi.course.constant.CourConstant;
 import com.ruoyi.course.domain.CourCourse;
@@ -19,7 +18,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
-import com.ruoyi.course.service.ICourCourseService;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -44,20 +42,8 @@ public class AppCourOrderController extends BaseController
 //    @PreAuthorize("@ss.hasPermi('course:course:list')")
     @PostMapping("/list")
     @ApiOperation("查询课程订单列表")
-    public AjaxResult list(@RequestBody Map<String, Object> map)
+    public AjaxResult list(@RequestBody CourOrder courOrder)
     {
-        CourOrder courOrder = new CourOrder();
-        if (map.get("userId") != null) {
-            Integer userId = (Integer) map.get("userId");
-            courOrder.setUserId(userId);
-        }
-
-
-        if (map.get("status") != null) {
-            Integer status = (Integer) map.get("status");
-            courOrder.setStatus(status);
-        }
-
         List<CourOrder> list = courOrderService.selectCourOrderList(courOrder);
 
         List<OrderVO> orderVOList = new ArrayList<>();
@@ -78,11 +64,13 @@ public class AppCourOrderController extends BaseController
 //    @PreAuthorize("@ss.hasPermi('course:course:list')")
     @PostMapping("/detail")
     @ApiOperation("根据订单ID查询课程订单详情")
-    public AjaxResult detail(@RequestBody Map<String, String> params)
+    public AjaxResult detail(@RequestParam(value = "orderId") Integer id)
     {
-        Integer orderId = Integer.valueOf(params.get("orderId")); // 订单ID
-        OrderVO orderVO = courOrderService.getOrderDetailByOrderId(orderId);
-        return AjaxResult.success(orderVO);
+        CourOrder courOrder = courOrderService.selectCourOrderById(id);
+        CourCourse course = courCourseService.selectCourCourseById(courOrder.getCourseId());
+        courOrder.setCourseInfo(course);
+
+        return AjaxResult.success(courOrder);
     }
 
     /**
