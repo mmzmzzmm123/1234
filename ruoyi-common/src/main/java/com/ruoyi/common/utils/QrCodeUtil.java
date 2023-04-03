@@ -27,8 +27,8 @@ public class QrCodeUtil {
         String uuid = UUID.randomUUID().toString().replace("-", "");
         System.out.println("-------------------------------------");
         System.out.println(uuid);
-        String qrCodePath = "D:\\qrcode"+uuid+".png";
-//        String qrCodePath = "/profile/upload/"+uuid+".png";
+//        String qrCodePath = "D:\\qrcode"+uuid+".png";
+        String qrCodePath = "/profile/upload/"+uuid+".png";
 //        String qrCodePath = "E:\\"+uuid+".png";
         String FileName = uuid+".png";
         File file  = new File(qrCodePath);
