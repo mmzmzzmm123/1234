@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * 课程Controller
@@ -50,7 +51,7 @@ public class AppCourCourseController extends BaseController
 
 
     /**
-     * 查询课程列表
+     * 根据课程类型查询课程列表
      */
 //    @PreAuthorize("@ss.hasPermi('course:course:list')")
     @PostMapping("/list")
@@ -60,6 +61,19 @@ public class AppCourCourseController extends BaseController
         startPage();
         List<CourCourse> list = courCourseService.selectCourCourseList(courCourse);
         return getDataTable(list);
+    }
+
+    /**
+     * 根据搜素条件查询课程列表
+     */
+    @PostMapping("/search")
+    @ApiOperation("查询课程列表")
+    public AjaxResult getList(@RequestParam String searchValue)    {
+        List<CourCourse> list = courCourseService.selectCourCourseList(null);
+        list = list.stream()
+                .filter(item -> item.getName().contains(searchValue) || item.getAuthor().contains(searchValue))
+                .collect(Collectors.toList());
+        return AjaxResult.success(list);
     }
 
     /**

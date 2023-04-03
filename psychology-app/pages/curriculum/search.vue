@@ -3,7 +3,7 @@
     <view class="search-un-bg">
       <view class="search-box">
         <img class="icon" src="/static/icon/search.png" />
-        <input placeholder="搜索" class="uni-input ipt" v-model="searchValue" @confirm="searchSubmit" />
+        <input placeholder="搜索" class="uni-input ipt" v-model="searchValue" @confirm="searchSubmit" />		
         <view @tap="clearIpt" v-show="searchValue.length > 0" class="clear-icon">
           <img src="/static/icon/clear.png" />
         </view>
@@ -15,7 +15,7 @@
           @tap="deleteHistory" />
       </view>
       <view class="list">
-        <view class="item" v-for="item in hostoryList" @tap="setSearchValue(item)">{{ item }}</view>
+        <view class="item" v-for="item in historyList" @tap="setSearchValue(item)">{{ item }}</view>
       </view>
     </view>
     <course-list-com v-if="courseListShow && courseList.length > 0" :courseList="courseList"></course-list-com>
@@ -30,6 +30,7 @@
 <script>
 import courseListCom from '@/components/curriculum/courseList'
 import messageCom from '@/components/curriculum/message'
+import searchServer from '@/server/curriculum/search'
 export default {
   components: { courseListCom, messageCom },
   data() {
@@ -49,47 +50,20 @@ export default {
       historyListShow: true,
       courseListShow: false,
       searchValue: '',
-      hostoryList: [],
-      courseList: [
-        {
-          title: "潜意识测试阿斯蒂芬离开家暗示分离看空间阿斯利康附近",
-          subtitle:
-            "SDK发链接as康复科健康小侄女，明显内存泄漏看是就行了开车是聚类分析开具了科学城举行开具了看",
-          price: 19.99,
-          img: "/static/curriculum/index/hot/1.jpg",
-        },
-        {
-          title: "潜意识测试阿斯蒂芬离开家暗示分离看空间阿斯利康附近",
-          subtitle:
-            "SDK发链接as康复科健康小侄女，明显内存泄漏看是就行了开车是聚类分析开具了科学城举行开具了看",
-          price: 19.99,
-          img: "/static/curriculum/index/hot/1.jpg",
-        },
-        {
-          title: "潜意识测试阿斯蒂芬离开家暗示分离看空间阿斯利康附近",
-          subtitle:
-            "SDK发链接as康复科健康小侄女，明显内存泄漏看是就行了开车是聚类分析开具了科学城举行开具了看",
-          price: 19.99,
-          img: "/static/curriculum/index/hot/1.jpg",
-        },
-        {
-          title:
-            "潜意识测试阿斯蒂芬离开家暗示分离看空间阿斯利康附近阿斯拉达咖啡机拉斯柯达附件拉萨科技发拉开距离拉上发电量开始",
-          subtitle:
-            "SDK发链接as康复科健康小侄女，明显内存泄漏看是就行了开车是聚类分析开具了科学城举行开具了看",
-          price: 19.99,
-          img: "/static/curriculum/index/hot/1.jpg",
-        },
-      ],
+      historyList: [],
+      courseList: [],
 
     };
   },
   created() {
     this.deleteMessage.cancelBtn.callback = this.clearDelete;
     this.deleteMessage.submitBtn.callback = this.submitDelete;
-    this.hostoryList = uni.getStorageSync("historySearch").split(',');
+    this.historyList = uni.getStorageSync("historySearch").split(',');
   },
   methods: {
+	async getCourseList() {
+		this.courseList = await searchServer.getCourseList(this.searchValue)
+	},  
     deleteHistory() {
       this.showDeleteMessage = true;
     },
@@ -104,17 +78,24 @@ export default {
       this.searchValue = "";
       this.historyListShow = true;
       this.courseListShow = false;
-      this.hostoryList = uni.getStorageSync("historySearch").split(',');
+      this.historyList = uni.getStorageSync("historySearch").split(',');
     },
     setSearchValue(item) {
       this.searchValue = item;
-      this.searchSubmit();
+	  this.historyListShow = false;
+	  this.courseListShow = true;
+	  this.historyList = [this.searchValue, ...this.historyList];
+	  
+      this.getCourseList();  
     },
-    searchSubmit() {
+    searchSubmit(event) {
+	  this.searchValue = event.detail.value
       this.historyListShow = false;
       this.courseListShow = true;
-      this.historyList = [...[this.searchValue], ...this.historyList];
+      this.historyList = [this.searchValue, ...this.historyList];
       uni.setStorageSync("historySearch", this.historyList.toString());
+	  
+	  this.getCourseList();
     },
     toHome() {
       uni.navigateTo({
