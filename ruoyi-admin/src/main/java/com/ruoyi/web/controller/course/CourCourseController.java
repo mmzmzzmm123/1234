@@ -43,8 +43,12 @@ public class CourCourseController extends BaseController
     public TableDataInfo list(CourCourse courCourse)
     {
         startPage();
-        List<CourCourse> list = courCourseService.selectCourCourseList(courCourse);
-        return getDataTable(list);
+        try {
+            List<CourCourse> list = courCourseService.selectCourCourseList(courCourse);
+            return getDataTable(list);
+        }catch (Exception e){
+            return getErrorDataTable();
+        }
     }
 
     /**

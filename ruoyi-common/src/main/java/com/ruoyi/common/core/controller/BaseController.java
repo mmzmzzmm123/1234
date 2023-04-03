@@ -89,7 +89,17 @@ public class BaseController
         rspData.setTotal(new PageInfo(list).getTotal());
         return rspData;
     }
-
+    /**
+     * 异常报错返回信息
+     */
+    @SuppressWarnings({ "rawtypes", "unchecked" })
+    protected TableDataInfo getErrorDataTable()
+    {
+        TableDataInfo rspData = new TableDataInfo();
+        rspData.setCode(500);
+        rspData.setMsg("非法输入，不可以这样查询");
+        return rspData;
+    }
     /**
      * 返回成功
      */
