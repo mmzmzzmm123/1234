@@ -128,7 +128,7 @@
             </el-select>
           </el-form-item>
 
-          <el-form-item label="内容链接">
+          <el-form-item label="内容链接" prop="contentUrl">
             <file-upload v-model="form.contentUrl" :fileType="fileTypes" :fileSize="100" :extraData="extraData"/>
           </el-form-item>
 
