@@ -23,6 +23,10 @@ import "quill/dist/quill.core.css";
 import "quill/dist/quill.snow.css";
 import "quill/dist/quill.bubble.css";
 import { getToken } from "@/utils/auth";
+import resizeImage from 'quill-image-resize-module' 
+import { ImageDrop } from 'quill-image-drop-module'; 
+Quill.register('modules/imageDrop', ImageDrop);
+Quill.register('modules/resizeImage ', resizeImage ) 
 
 export default {
   name: "Editor",
@@ -71,6 +75,15 @@ export default {
         bounds: document.body,
         debug: "warn",
         modules: {
+          // 配置支持图片缩放
+          imageDrop: true,      //图片拖拽
+          imageResize: {          //放大缩小
+            displayStyles: {
+              backgroundColor: "black",
+              border: "none",
+              color: "white"
+            },
+            modules: ["Resize", "DisplaySize", "Toolbar"]
           // 工具栏配置
           toolbar: [
             ["bold", "italic", "underline", "strike"],       // 加粗 斜体 下划线 删除线
