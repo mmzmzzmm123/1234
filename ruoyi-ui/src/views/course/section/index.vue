@@ -208,6 +208,13 @@ export default {
   name: "Section",
   dicts: ['course_section_type', 'course_section_content_type'],
   data() {
+    const validateDuration = (rule, value, callback) => {
+      if (typeof value !== "number") {
+        callback("请输入以秒为单位的数字")
+      } else {
+        callback()
+      }
+    }
     return {
       fileTypes: ["mp4", "avi", "rmvb", "mp3", "wma", "rm", "rmvb", "flv", "mpg", "mov", "mkv"],
       extraData: {
@@ -251,6 +258,9 @@ export default {
         ],
         topic: [
           { required: true, message: "章节题目不能为空", trigger: "blur" }
+        ],
+        duration: [
+          { validator: validateDuration, trigger: "blur" }
         ],
         type: [
           { required: true, message: "章节类型不能为空", trigger: "change" }

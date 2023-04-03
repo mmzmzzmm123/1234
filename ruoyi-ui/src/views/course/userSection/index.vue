@@ -25,7 +25,7 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="上次结束时间" prop="endTime">
+      <el-form-item label="上次结束时间" prop="endTime" label-width="100">
         <el-input
           v-model="queryParams.endTime"
           placeholder="请输入上次结束时间"
@@ -147,15 +147,15 @@
         <el-form-item label="章节编号" prop="sectionId">
           <el-input v-model="form.sectionId" placeholder="请输入章节编号" />
         </el-form-item>
-        <el-form-item label="上次结束时间" prop="endTime">
-          <el-input v-model="form.endTime" placeholder="请输入上次结束时间" />
+        <el-form-item label="上次结束时间" prop="endTime" label-width="100">
+          <el-input class="endTimeInput" v-model="form.endTime" placeholder="请输入上次结束时间" />
         </el-form-item>
         <el-form-item label="完成状态">
           <el-radio-group v-model="form.finishStatus">
             <el-radio
               v-for="dict in dict.type.course_section_finish_status"
               :key="dict.value"
-:label="parseInt(dict.value)"
+              :label="parseInt(dict.value)"
             >{{dict.label}}</el-radio>
           </el-radio-group>
         </el-form-item>
@@ -321,3 +321,9 @@ export default {
   }
 };
 </script>
+
+<style lang="scss" scoped>
+.endTimeInput {
+  width: 79%;
+}
+</style>

@@ -198,6 +198,15 @@ export default {
   name: "Course",
   dicts: ['course_type'],
   data() {
+    var validatePrice = (rule, value, callback) => {
+      // 保留两位小数
+      const regex = /^[0-9]+(\.[0-9]{1,2})?$/
+      if (!regex.test(value)) {
+        callback('课程价格为两位小数的数值表示')
+      } else {
+        callback()
+      }
+    }
     return {
       extraData: {
         module: 'course'
@@ -243,6 +252,10 @@ export default {
         ],
         type: [
           { required: true, message: "课程类型不能为空", trigger: "change" }
+        ],
+        price: [
+          { required: true, message: "课程价格不能为空", trigger: "blur" },
+          { validator: validatePrice, trigger: "blur" }
         ],
       },
       drawOpen: false,

@@ -175,6 +175,15 @@ export default {
   name: "Order",
   dicts: ['course_order_status'],
   data() {
+    var validatePrice = (rule, value, callback) => {
+      // 保留两位小数
+      const regex = /^[0-9]+(\.[0-9]{1,2})?$/
+      if (!regex.test(value)) {
+        callback('课程价格为两位小数的数值表示')
+      } else {
+        callback()
+      }
+    }
     return {
       // 遮罩层
       loading: true,
@@ -216,6 +225,10 @@ export default {
         ],
         courseId: [
           { required: true, message: "课程编号不能为空", trigger: "blur" }
+        ],
+        amount: [
+          { required: true, message: "应付金额不能为空", trigger: "blur" },
+          { validator: validatePrice, trigger: "blur" }
         ]
       }
     };
