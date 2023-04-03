@@ -241,7 +241,9 @@ export default {
         price: null,
       },
       // 表单参数
-      form: {},
+      form: {
+        // type: parseInt(this.dict.type.course_type[0].value),
+      },
       // 表单校验
       rules: {
         courseId: [
@@ -267,6 +269,9 @@ export default {
   },
   created() {
     this.getList();
+  },
+  mounted() {
+
   },
   methods: {
     /** 查询课程列表 */
@@ -320,6 +325,9 @@ export default {
     /** 新增按钮操作 */
     handleAdd() {
       this.reset();
+      // 课程类型默认值
+      this.form.type = parseInt(this.dict.type.course_type && this.dict.type.course_type[0].value)
+
       this.open = true;
       this.title = "添加课程";
     },

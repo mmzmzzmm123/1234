@@ -99,7 +99,7 @@
         </template>
       </el-table-column>
     </el-table>
-    
+
     <pagination
       v-show="total>0"
       :total="total"
@@ -120,7 +120,7 @@
               v-for="dict in dict.type.course_label"
               :key="dict.value"
               :label="dict.label"
-:value="parseInt(dict.value)"
+              :value="parseInt(dict.value)"
             ></el-option>
           </el-select>
         </el-form-item>
@@ -225,6 +225,9 @@ export default {
     /** 新增按钮操作 */
     handleAdd() {
       this.reset();
+      // 课程标签默认值
+      this.form.courseLabel = parseInt(this.dict.type.course_label && this.dict.type.course_label[0].value)
+
       this.open = true;
       this.title = "添加label";
     },
