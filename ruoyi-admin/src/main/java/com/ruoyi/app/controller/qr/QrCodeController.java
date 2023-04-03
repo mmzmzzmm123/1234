@@ -1,15 +1,12 @@
-package com.ruoyi.app.controller.login;
+package com.ruoyi.app.controller.qr;
 
 
 import com.qcloud.cos.model.UploadResult;
 import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.utils.QrCodeUtil;
 import com.ruoyi.common.utils.cos.COSClientFactory;
-import com.ruoyi.common.utils.file.FileUtils;
 import io.swagger.annotations.Api;
 import org.springframework.web.bind.annotation.*;
-
-import javax.servlet.http.HttpServletResponse;
 import java.io.*;
 import java.util.HashMap;
 import java.util.Map;
@@ -17,10 +14,12 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping("/app/gauge/qr")
-@Api(value = "登录模块", tags = {"二维码工具"})
-public class QrCode {
+@Api(value = "测评结果模块", tags = {"二维码工具"})
+public class QrCodeController {
 
-    // 生成二维码
+    /**
+    生成二维码文件
+     */
     @PostMapping("/getCode")
     public AjaxResult getCode(@RequestBody Map<String, Object> map) throws IOException {
         String uuid = UUID.randomUUID().toString().replace("-", "");
@@ -39,7 +38,9 @@ public class QrCode {
         return AjaxResult.success(res);
     }
 
-    // 生成二维码
+    /**
+     生成二维码
+     */
     @PostMapping("/getBase64Code")
     public AjaxResult getBase64Code(@RequestBody Map<String, Object> map) throws IOException {
         String qrCodeParam = map.get("qrCodeParam").toString();
