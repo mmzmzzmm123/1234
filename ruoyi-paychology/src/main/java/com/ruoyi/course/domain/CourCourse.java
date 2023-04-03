@@ -10,6 +10,8 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 import com.ruoyi.common.annotation.Excel;
 import com.ruoyi.common.core.domain.BaseEntity;
 
+import javax.validation.constraints.Pattern;
+
 /**
  * 课程对象 cour_course
  * 
@@ -47,6 +49,8 @@ public class CourCourse extends BaseEntity
     private String url;
 
     /** 课程价格 */
+    @Pattern(regexp = ".*[\\\\s`~!@#$%^&*()+=|{}':;',\\\\[\\\\].<>/?~！@#￥%……&*（）——+|{}【】‘；：”“’。，、？\\\\\\\\]+.*",
+            message = "非法输入，请正确输入价格")
     @Excel(name = "课程价格")
     private BigDecimal price;
 

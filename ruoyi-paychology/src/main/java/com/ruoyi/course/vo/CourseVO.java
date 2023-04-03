@@ -4,6 +4,7 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
+import javax.validation.constraints.Pattern;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.List;
@@ -37,6 +38,8 @@ public class CourseVO implements Serializable {
     private String url;
 
     /** 课程价格 */
+    @Pattern(regexp = ".*[\\\\s`~!@#$%^&*()+=|{}':;',\\\\[\\\\].<>/?~！@#￥%……&*（）——+|{}【】‘；：”“’。，、？\\\\\\\\]+.*",
+            message = "非法输入，请正确输入价格")
     @ApiModelProperty("课程价格")
     private BigDecimal price;
 
