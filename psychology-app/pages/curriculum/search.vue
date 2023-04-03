@@ -44,7 +44,7 @@ export default {
         },
         submitBtn: {
           text: '确认',
-          callback: () => { }
+          callback: () => {	}
         },
       },
       historyListShow: true,
@@ -58,27 +58,35 @@ export default {
   created() {
     this.deleteMessage.cancelBtn.callback = this.clearDelete;
     this.deleteMessage.submitBtn.callback = this.submitDelete;
-    this.historyList = uni.getStorageSync("historySearch").split(',');
+    this.historyList = this.getHistoryList();
   },
   methods: {
 	async getCourseList() {
 		this.courseList = await searchServer.getCourseList(this.searchValue)
 	},  
+	getHistoryList() {
+		const historyStr = uni.getStorageSync("historySearch")
+		if (historyStr === '') {
+			return []
+		}
+		return historyStr.split(',')
+	},
     deleteHistory() {
       this.showDeleteMessage = true;
     },
     clearDelete() {
-      this.showDeleteMessage = false;
+      this.showDeleteMessage = false;	  
     },
     submitDelete() {
       this.showDeleteMessage = false;
       uni.setStorageSync("historySearch", '');
+	  this.historyList = []
     },
     clearIpt() {
       this.searchValue = "";
       this.historyListShow = true;
       this.courseListShow = false;
-      this.historyList = uni.getStorageSync("historySearch").split(',');
+      this.historyList = this.getHistoryList();
     },
     setSearchValue(item) {
       this.searchValue = item;
@@ -92,8 +100,17 @@ export default {
 	  this.searchValue = event.detail.value
       this.historyListShow = false;
       this.courseListShow = true;
-      this.historyList = [this.searchValue, ...this.historyList];
-      uni.setStorageSync("historySearch", this.historyList.toString());
+	  if (this.searchValue != '') { // 空字符串不用存储和显示
+	    const index = this.historyList.indexOf(this.searchValue)
+		if (index !== -1) { // 已经查询过的搜索条件
+			this.historyList.splice(index, 1)
+			this.historyList = [this.searchValue, ...this.historyList];
+		} else {
+			this.historyList = [this.searchValue, ...this.historyList];
+		}
+		  
+		uni.setStorageSync("historySearch", this.historyList.toString());
+	  } 
 	  
 	  this.getCourseList();
     },
