@@ -36,6 +36,15 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         </where>
     </select>
 
+    <select id="queryCourCourseList" parameterType="com.ruoyi.course.domain.dto.CourseQueryDTO" resultMap="CourCourseResult">
+        <include refid="selectCourCourseVo"/>
+        <where>
+            <if test="nameValue != null  and nameValue != ''"> and name like concat('%', #{nameValue}, '%')</if>
+            <if test="typeValue != null "> and type = #{typeValue}</if>
+            <if test="authorValue != null  and authorValue != ''"> and author like concat('%', #{authorValue}, '%')</if>
+        </where>
+    </select>
+
     <select id="selectCourCourseByCourseId" parameterType="String" resultMap="CourCourseResult">
         <include refid="selectCourCourseVo"/>
 

@@ -1,6 +1,7 @@
 package com.ruoyi.course.service;
 
 import com.ruoyi.course.domain.CourCourse;
+import com.ruoyi.course.domain.dto.CourseQueryDTO;
 import com.ruoyi.course.vo.CourseVO;
 
 import java.util.List;
@@ -101,4 +102,9 @@ public interface ICourCourseService
      * @return 课程集合
      */
     public List<CourCourse> getCourseListByUserId(Integer userId);
+
+    /**
+     * 根据条件询课程列表
+     */
+    public List<CourCourse> queryCourCourseList(CourseQueryDTO courseQueryDTO);
 }

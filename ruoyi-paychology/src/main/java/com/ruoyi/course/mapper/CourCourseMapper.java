@@ -1,6 +1,7 @@
 package com.ruoyi.course.mapper;
 
 import com.ruoyi.course.domain.CourCourse;
+import com.ruoyi.course.domain.dto.CourseQueryDTO;
 
 import java.util.List;
 
@@ -86,4 +87,6 @@ public interface CourCourseMapper
      * @return 课程集合
      */
     public List<CourCourse> getCourseListByUserId(Integer userId);
+
+    public List<CourCourse> queryCourCourseList(CourseQueryDTO courseQueryDTO);
 }

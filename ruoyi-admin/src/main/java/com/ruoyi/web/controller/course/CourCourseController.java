@@ -1,9 +1,11 @@
 package com.ruoyi.web.controller.course;
 
 import java.util.List;
+import java.util.stream.Collectors;
 import javax.servlet.http.HttpServletResponse;
 
 import com.ruoyi.course.domain.CourCourse;
+import com.ruoyi.course.domain.dto.CourseQueryDTO;
 import com.ruoyi.course.service.ICourCourseService;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,14 +38,20 @@ public class CourCourseController extends BaseController
     private ICourCourseService courCourseService;
 
     /**
-     * 查询课程列表
+     * 根据条件询课程列表
      */
     @PreAuthorize("@ss.hasPermi('course:course:list')")
     @GetMapping("/list")
-    public TableDataInfo list(CourCourse courCourse)
+    public TableDataInfo query(CourseQueryDTO courseQueryDTO)
     {
         startPage();
-        List<CourCourse> list = courCourseService.selectCourCourseList(courCourse);
+        List<CourCourse> list = courCourseService.queryCourCourseList(courseQueryDTO);
+
+        list = list.stream().filter(item ->
+                !(courseQueryDTO.getLowPrice() != null
+                && item.getPrice().compareTo(courseQueryDTO.getLowPrice()) < 0
+                || courseQueryDTO.getHighPrice() != null
+                && item.getPrice().compareTo(courseQueryDTO.getHighPrice()) > 0)).collect(Collectors.toList());
         return getDataTable(list);
     }
 

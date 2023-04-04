@@ -1,24 +1,16 @@
 <template>
   <div class="app-container">
     <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch" label-width="68px">
-      <el-form-item label="课程编号" prop="courseId">
+      <el-form-item label="课程名称" prop="nameValue">
         <el-input
-          v-model="queryParams.courseId"
-          placeholder="请输入课程编号"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="课程名称" prop="name">
-        <el-input
-          v-model="queryParams.name"
+          v-model="queryParams.nameValue"
           placeholder="请输入课程名称"
           clearable
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="课程类型" prop="type">
-        <el-select v-model="queryParams.type" placeholder="请选择课程类型" clearable>
+      <el-form-item label="课程类型" prop="typeValue">
+        <el-select v-model="queryParams.typeValue" placeholder="请选择课程类型" clearable>
           <el-option
             v-for="dict in dict.type.course_type"
             :key="dict.value"
@@ -27,18 +19,25 @@
           />
         </el-select>
       </el-form-item>
-      <el-form-item label="课程作者" prop="author">
+      <el-form-item label="课程作者" prop="authorValue">
         <el-input
-          v-model="queryParams.author"
+          v-model="queryParams.authorValue"
           placeholder="请输入课程作者"
           clearable
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="课程价格" prop="price">
+      <el-form-item label="课程价格" class="price">
         <el-input
-          v-model="queryParams.price"
-          placeholder="请输入课程价格"
+          v-model="queryParams.lowPrice"
+          placeholder="请输入课程最低价格"
+          clearable
+          @keyup.enter.native="handleQuery"
+        />
+        <div style="margin: 0 10px">~</div>
+        <el-input
+          v-model="queryParams.highPrice"
+          placeholder="请输入课程最高价格"
           clearable
           @keyup.enter.native="handleQuery"
         />
@@ -98,7 +97,6 @@
     <el-table v-loading="loading" :data="courseList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
       <el-table-column label="ID" align="center" prop="id" />
-      <el-table-column label="课程编号" align="center" prop="courseId" />
       <el-table-column label="课程名称" align="center" prop="name" />
       <el-table-column label="课程类型" align="center" prop="type">
         <template slot-scope="scope">
@@ -233,12 +231,11 @@ export default {
       queryParams: {
         pageNum: 1,
         pageSize: 10,
-        courseId: null,
-        name: null,
-        type: null,
-        author: null,
-        url: null,
-        price: null,
+        nameValue: null,
+        typeValue: null,
+        authorValue: null,
+        lowPrice: null,
+        highPrice: null,
       },
       // 表单参数
       form: {
@@ -373,7 +370,7 @@ export default {
     },
     /** 导出按钮操作 */
     handleExport() {
-      this.download('course/course/export', {
+      this.download('course/export', {
         ...this.queryParams
       }, `course_${new Date().getTime()}.xlsx`)
     },
@@ -384,3 +381,17 @@ export default {
   }
 };
 </script>
+<style lang="scss" scoped>
+.price {
+  display: inline-block;
+  ::v-deep {
+    .el-form-item__content {
+      display: inline-flex;
+      align-items: center;
+    }
+    .el-input__inner {
+      width: 150px;
+    }
+  }
+}
+</style>

@@ -92,7 +92,7 @@
         </template>
       </el-table-column>
     </el-table>
-    
+
     <pagination
       v-show="total>0"
       :total="total"
@@ -156,7 +156,8 @@ export default {
       // 表单校验
       rules: {
         typeId: [
-          { required: true, message: "类型编号不能为空", trigger: "blur" }
+          { required: true, message: "类型编号不能为空", trigger: "blur" },
+          { type: 'number', message: "类型编号请输入数值", trigger: "blur" }
         ],
         name: [
           { required: true, message: "类型名称不能为空", trigger: "blur" }
