@@ -47,7 +47,7 @@ public class AppPsyGaugeQuestionsResultController extends BaseController
     {
         LoginDTO loginUser = appTokenService.getLoginUser(request);
         System.out.println(loginUser);
-        Integer userId = Integer.parseInt(loginUser.getUserId());
+        Integer userId = loginUser.getUserId();
         return toAjax(psyGaugeQuestionsResultService.answer(psyGaugeQuestionsResult ,userId));
     }
 
@@ -60,7 +60,7 @@ public class AppPsyGaugeQuestionsResultController extends BaseController
     public AjaxResult commitResult(@RequestBody @Validated GaugeCommitResultDTO gaugeCommitResultDTO, HttpServletRequest request)
     {
         LoginDTO loginUser = appTokenService.getLoginUser(request);
-        Integer userId = Integer.parseInt(loginUser.getUserId());
+        Integer userId = loginUser.getUserId();
         String result = psyGaugeQuestionsResultService.commitResult(gaugeCommitResultDTO ,userId);
         return AjaxResult.success(RespMessageConstants.OPERATION_SUCCESS ,result);
     }

@@ -54,7 +54,7 @@ public class AppPsyOrderController extends BaseController {
             userId = Integer.parseInt(psyOrder.getUserId());
         } else {
             LoginDTO loginUser = appTokenService.getLoginUser(request);
-            userId = Integer.parseInt(loginUser.getUserId());
+            userId = loginUser.getUserId();
         }
         startPage();
         List<PsyOrder> list = psyOrderService.queryOrderInfo(psyOrder ,userId);

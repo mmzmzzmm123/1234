@@ -21,7 +21,7 @@ public class PsyUser
     private static final long serialVersionUID = 1L;
 
     /** 用户id */
-    private String id;
+    private Integer id;
 
     /**  */
     @Excel(name = "用户名")
@@ -47,12 +47,12 @@ public class PsyUser
     @Excel(name = "创建时间" ,dateFormat = "yyyy-MM-dd HH:mm:SS")
     private Date createTime;
 
-    public void setId(String id) 
+    public void setId(Integer id)
     {
         this.id = id;
     }
 
-    public String getId() 
+    public Integer getId()
     {
         return id;
     }

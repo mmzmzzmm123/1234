@@ -123,7 +123,7 @@ public class WxAuthorizeController {
             loginUser.setWxOpenId(openId);
             loginUser.setAccount(openId);
             loginUser.setLoginType(LoginType.WX);
-            loginUser.setUserId(loginVO.getUserId().toString());
+            loginUser.setUserId(loginVO.getUserId());
             //创建token
             String token = appTokenService.createToken(loginUser, null);
             loginVO.setToken(token);

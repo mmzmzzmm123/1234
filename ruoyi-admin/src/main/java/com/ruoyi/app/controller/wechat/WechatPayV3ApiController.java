@@ -144,7 +144,7 @@ public class WechatPayV3ApiController extends BaseController {
 
 
         // 根据用户ID从用户表中查询openid
-        PsyUser user = psyUserService.selectPsyUserById(userId + "");
+        PsyUser user = psyUserService.selectPsyUserById(Integer.parseInt(userId.toString()));
         String openid = user.getWxOpenid();
 
 

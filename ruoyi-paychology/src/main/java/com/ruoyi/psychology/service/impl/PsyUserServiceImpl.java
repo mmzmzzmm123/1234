@@ -31,7 +31,7 @@ public class PsyUserServiceImpl implements IPsyUserService {
      * @return 用户
      */
     @Override
-    public PsyUser selectPsyUserById(String id) {
+    public PsyUser selectPsyUserById(Integer id) {
         return psyUserMapper.selectPsyUserById(id);
     }
 
@@ -76,7 +76,7 @@ public class PsyUserServiceImpl implements IPsyUserService {
      * @return 结果
      */
     @Override
-    public int deletePsyUserByIds(String[] ids) {
+    public int deletePsyUserByIds(Integer[] ids) {
         return psyUserMapper.deletePsyUserByIds(ids);
     }
 
@@ -87,7 +87,7 @@ public class PsyUserServiceImpl implements IPsyUserService {
      * @return 结果
      */
     @Override
-    public int deletePsyUserById(String id) {
+    public int deletePsyUserById(Integer id) {
         return psyUserMapper.deletePsyUserById(id);
     }
 
@@ -105,13 +105,15 @@ public class PsyUserServiceImpl implements IPsyUserService {
         String headImgUrl = userInfo.getString("headimgurl");
 
         //用户信息为空，则插入一条数据
-        Integer id = null;
         if (user == null) {
-            id = psyUserMapper.insertPsyUser(PsyUser.builder().wxOpenid(openId).name(nickname).avatar(headImgUrl).build());
-        } else {
-            id = Integer.valueOf(user.getId());
+            int result = psyUserMapper.insertPsyUser(PsyUser.builder().wxOpenid(openId).name(nickname).avatar(headImgUrl).build());
+            if (result != 1) {
+                System.out.println("用户信息插入失败");
+            }
+            user = psyUserMapper.queryUserByAccount(openId);
         }
-        return LoginVO.builder().userId(id).name(nickname).avatar(headImgUrl).build();
+
+        return LoginVO.builder().userId(user.getId()).name(nickname).avatar(headImgUrl).build();
     }
 
     @Override

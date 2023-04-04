@@ -64,9 +64,9 @@ public class AppPsyGaugeController extends BaseController
     {
         LoginDTO loginUser = appTokenService.getLoginUser(request);
         PsyGauge psyGauge = psyGaugeService.selectPsyGaugeById(id);
-        Integer isBuy = psyOrderService.getGaugeIsBuy(loginUser.getUserId(), id);
+        Integer isBuy = psyOrderService.getGaugeIsBuy(loginUser.getUsername(), id);
 
-        PsyOrder psyOrder = psyOrderService.getPsyOrder(loginUser.getUserId(), id);
+        PsyOrder psyOrder = psyOrderService.getPsyOrder(loginUser.getUsername(), id);
         GaugeVO gaugeVO = new GaugeVO();
         BeanUtils.copyProperties(psyGauge, gaugeVO);
         gaugeVO.setIsBuy(isBuy);

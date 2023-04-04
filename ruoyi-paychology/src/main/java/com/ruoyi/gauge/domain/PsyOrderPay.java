@@ -5,6 +5,7 @@ import java.util.Date;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
@@ -17,6 +18,7 @@ import com.ruoyi.common.core.domain.BaseEntity;
  * @author ruoyi
  * @date 2022-10-12
  */
+@Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
@@ -50,77 +52,4 @@ public class PsyOrderPay extends BaseEntity
     /** 支付方式 */
     @Excel(name = "支付方式")
     private int payType;
-
-    public void setId(Long id) 
-    {
-        this.id = id;
-    }
-
-    public Long getId() 
-    {
-        return id;
-    }
-    public void setOrderId(Long orderId) 
-    {
-        this.orderId = orderId;
-    }
-
-    public Long getOrderId() 
-    {
-        return orderId;
-    }
-    public void setPayStatus(Integer payStatus) 
-    {
-        this.payStatus = payStatus;
-    }
-
-    public Integer getPayStatus() 
-    {
-        return payStatus;
-    }
-    public void setAmount(BigDecimal amount) 
-    {
-        this.amount = amount;
-    }
-
-    public BigDecimal getAmount() 
-    {
-        return amount;
-    }
-    public void setPayId(String payId) 
-    {
-        this.payId = payId;
-    }
-
-    public String getPayId() 
-    {
-        return payId;
-    }
-    public void setPayTime(Date payTime)
-    {
-        this.payTime = payTime;
-    }
-
-    public Date getPayTime()
-    {
-        return payTime;
-    }
-
-    public int getPayType(){return payType;}
-
-    public void setPayType(int payType) { this.payType = payType; }
-    @Override
-    public String toString() {
-        return new ToStringBuilder(this,ToStringStyle.MULTI_LINE_STYLE)
-            .append("id", getId())
-            .append("orderId", getOrderId())
-            .append("payStatus", getPayStatus())
-            .append("amount", getAmount())
-            .append("payId", getPayId())
-            .append("payTime", getPayTime().toString())
-            .append("payType", getPayType())
-            .append("createTime", getCreateTime())
-            .append("createBy", getCreateBy())
-            .toString();
-    }
 }

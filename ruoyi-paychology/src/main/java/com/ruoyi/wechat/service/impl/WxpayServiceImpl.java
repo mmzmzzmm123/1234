@@ -87,7 +87,7 @@ public class WxpayServiceImpl implements IWxpayService {
                 .payStatus(OrderPayStatus.NEED_PAY.getValue())
                 .payId(UUID.randomUUID().toString())
                 .build();
-        psyOrderPay.setCreateBy(loginUser.getUserId());
+        psyOrderPay.setCreateBy(loginUser.getUsername());
         psyOrderPayService.insertPsyOrderPay(psyOrderPay);
     }
 
@@ -102,7 +102,7 @@ public class WxpayServiceImpl implements IWxpayService {
                 .orderId(Long.valueOf(wxPayDTO.getOrderId()))
                 .payStatus(wxPayDTO.getStatus())
                 .build();
-        psyOrderPay.setCreateBy(loginUser.getUserId());
+        psyOrderPay.setCreateBy(loginUser.getUsername());
         psyOrderPayService.updatePsyOrderPay(psyOrderPay);
     }
 
@@ -115,7 +115,7 @@ public class WxpayServiceImpl implements IWxpayService {
                 .gaugeStatus(GaugeStatus.UNFINISHED.getValue())
                 .gaugeId(wxPayDTO.getGaugeId())
                 .build();
-        psyOrder.setCreateBy(loginUser.getUserId());
+        psyOrder.setCreateBy(loginUser.getUsername());
 
         int id = psyOrderService.insertPsyOrder(psyOrder);
         return id;
@@ -152,7 +152,7 @@ public class WxpayServiceImpl implements IWxpayService {
                 .status(OrderStatus.CREATE.getValue())
                 .courseId(Integer.parseInt(wxPayDTO.getGaugeId().toString()))
                 .build();
-        courOrder.setUserId(Integer.parseInt(loginUser.getUserId()));
+        courOrder.setUserId(loginUser.getUserId());
         int id = courOrderService.insertCourOrder(courOrder);
         return id;
     }
