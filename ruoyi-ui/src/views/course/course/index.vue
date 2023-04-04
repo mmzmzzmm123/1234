@@ -111,7 +111,7 @@
           <image-preview :src="scope.row.url" :width="50" :height="50"/>
         </template>
       </el-table-column>
-      <el-table-column label="课程价格" align="center" prop="price" />
+      <el-table-column label="课程价格" align="center" prop="price" sortable />
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button
