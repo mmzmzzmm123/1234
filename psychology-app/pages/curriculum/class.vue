@@ -205,7 +205,7 @@ page {
 
     .img-box {
       width: 183upx;
-      height: auto;
+      height: 208upx;
       border-radius: 8upx;
     }
 

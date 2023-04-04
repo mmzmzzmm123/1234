@@ -72,7 +72,7 @@ export default {
     }
 
     .price {
-        margin-top: 39upx;
+        margin-top: 20upx;
     }
 }
 </style>
