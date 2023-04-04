@@ -135,7 +135,7 @@
 				return await indexServer.getcourseByLabel(type);
 			},
 			async tocourse(url) {
-				this.userInfo = uni.getStorageSync("userInfo")
+				// 判断是否已经登录
 				if (!this.userInfo) {
 					this.openLoginConfirm()
 					return
@@ -145,11 +145,21 @@
 				});
 			},
 			toSearch() {
+        // 判断是否已经登录
+        if (!this.userInfo) {
+        	this.openLoginConfirm()
+        	return
+        }
 				uni.navigateTo({
 					url: "/pages/curriculum/search",
 				});
 			},
 			toMore() {
+        // 判断是否已经登录
+        if (!this.userInfo) {
+        	this.openLoginConfirm()
+        	return
+        }
 				uni.navigateTo({
 					url: "/pages/curriculum/class",
 				});

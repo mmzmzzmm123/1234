@@ -2,7 +2,7 @@
   <view class="catalogue-list">
     <view
       class="catalogue-item"
-      @tap="catalogueItemClick(catalogueItem)"
+      @tap="catalogueItemClick(catalogueItem, index)"
       :class="{ 'play-item': catalogueItem.enabled }"
       v-for="(catalogueItem, index) in catalogueList"
     >
@@ -38,8 +38,8 @@
 export default {
   props: ["catalogueList", "isBuy"],
   methods: {
-    catalogueItemClick(item) {		
-      this.$emit("catalogueItemClick", item);
+    catalogueItemClick(item, index) {		
+      this.$emit("catalogueItemClick", item, index);
     },
   },
 };

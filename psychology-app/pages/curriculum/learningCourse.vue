@@ -21,7 +21,7 @@
     </view>
     <view class="catalogue-title">{{ courseInfo.name }}</view>
     <view class="catalogue-num">
-      <span>课程列表(共12节)</span>
+      <span>章节列表(共12节)</span>
       <span @tap="showList"
         >全部<img class="img" src="/static/icon/more.png"
       /></span>
@@ -31,7 +31,7 @@
         class="list-item"
         v-for="(courseItem, index) in catalogueList"
         :class="[{ playing: courseItem.playing }]"
-		@tap="chooseCatalogue(courseItem, index)"
+        @tap="chooseCatalogue(courseItem, index)"
       >
         <view class="status-box">
           <span class="try-txt" v-if="courseInfo.isBuy === 0">
@@ -67,12 +67,13 @@
     <view class="mask-box" v-if="moreListShow">
       <view class="catalogue-list-box">
         <view class="catalogue-num-box">
-          <span>课程列表(共{{catalogueList.length}}节)</span>
+          <span>章节列表(共{{catalogueList.length}}节)</span>
           <view class="close-icon" @tap="closeList"></view>
         </view>
         <customCatalogueList
           :catalogueList="catalogueList"
-		  :isBuy="courseInfo.isBuy"
+          :isBuy="courseInfo.isBuy"
+          @catalogueItemClick="(item, index) => chooseCatalogue(item, index)"
         ></customCatalogueList> </view
     ></view>
   </view>
@@ -167,6 +168,7 @@ export default {
 	},
 	chooseCatalogue(courseItem, index) {
 		// 记录旧章节的学习时间
+    this.pause()
 		this.recordEndTime(this.currentCatalogue.endTime)
 		
 		// 选中章节

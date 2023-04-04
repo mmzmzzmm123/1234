@@ -6,7 +6,7 @@
 			<view class="date" v-if="item.finishStatus == 1">已学完</view>
             <view class="date" v-if="item.finishStatus == 0 && item.studyDuration">已学习{{ item.studyDuration }}</view>
 			<view class="date" v-if="item.finishStatus == 0 && !item.studyDuration">未开始学习</view>
-            <view class="btn" @tap="toLearningCourse(item.courseId)">{{item.startTime?'继续学习':'进入学习'}}</view>
+            <view class="btn" @tap="toLearningCourse(item.id)">{{item.startTime?'继续学习':'进入学习'}}</view>
         </view>
         <no-data v-if="courseList.length == 0"></no-data>
         <view class="footer" v-else>已经到底了</view>
