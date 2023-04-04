@@ -3,7 +3,7 @@
     <view class="search-un-bg">
       <view class="search-box">
         <img class="icon" src="/static/icon/search.png" />
-        <input placeholder="搜索" class="uni-input ipt" v-model="searchValue" @confirm="searchSubmit" />		
+        <input placeholder="搜索课程名称/老师名称" class="uni-input ipt" v-model="searchValue" @confirm="searchSubmit" confirm-type="search"/>		
         <view @tap="clearIpt" v-show="searchValue.length > 0" class="clear-icon">
           <img src="/static/icon/clear.png" />
         </view>
