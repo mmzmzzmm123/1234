@@ -38,8 +38,6 @@ public class CourseVO implements Serializable {
     private String url;
 
     /** 课程价格 */
-    @Pattern(regexp = ".*[\\\\s`~!@#$%^&*()+=|{}':;',\\\\[\\\\].<>/?~！@#￥%……&*（）——+|{}【】‘；：”“’。，、？\\\\\\\\]+.*",
-            message = "非法输入，请正确输入价格")
     @ApiModelProperty("课程价格")
     private BigDecimal price;
 
