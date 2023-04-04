@@ -175,9 +175,23 @@ public class AjaxResult extends HashMap<String, Object>
      * @param key 键
      * @param value 值
      * @return 数据对象
+     * @deprecated 该方法违反了 {@link java.util.Map} 接口的约定，建议改用 {@link #putValue(String, Object)} 方法。
      */
     @Override
+    @Deprecated
     public AjaxResult put(String key, Object value)
+    {
+        return putValue(key, value);
+    }
+
+    /**
+     * 方便链式调用
+     *
+     * @param key 键
+     * @param value 值
+     * @return 数据对象
+     */
+    public AjaxResult putValue(String key, Object value)
     {
         super.put(key, value);
         return this;
