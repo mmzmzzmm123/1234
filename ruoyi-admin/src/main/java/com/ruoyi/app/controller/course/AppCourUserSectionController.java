@@ -4,25 +4,17 @@ import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.core.page.TableDataInfo;
 import com.ruoyi.course.constant.CourConstant;
-import com.ruoyi.course.domain.CourCourse;
-import com.ruoyi.course.domain.CourSection;
 import com.ruoyi.course.domain.CourUserCourseSection;
-import com.ruoyi.course.service.ICourCourseService;
-import com.ruoyi.course.service.ICourSectionService;
 import com.ruoyi.course.service.ICourUserCourseSectionService;
-import com.ruoyi.course.vo.CourseVO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 @RestController
 @RequestMapping("/app/course/userSection")
@@ -31,12 +23,6 @@ public class AppCourUserSectionController extends BaseController {
 
     @Autowired
     private ICourUserCourseSectionService courUserCourseSectionService;
-
-    @Autowired
-    private ICourCourseService courCourseService;
-
-    @Autowired
-    private ICourSectionService courSectionService;
 
     /**
      * 查询用户的课程列表
@@ -56,24 +42,9 @@ public class AppCourUserSectionController extends BaseController {
      */
     @PostMapping("/saveUserSectionInfo")
     @ApiOperation("记录课程章节完成情况，新增或更新用户-课程-章节关系")
-    public AjaxResult saveUserSectionInfo(@RequestBody Map<String, Object> map)
+    public AjaxResult saveUserSectionInfo(@RequestBody CourUserCourseSection userCourseSection)
     {
-        CourUserCourseSection userCourseSection = new CourUserCourseSection();
-
-        Integer userId = Integer.parseInt(map.get("userId").toString());
-        Integer courseId = Integer.parseInt(map.get("courseId").toString());
-        Integer sectionId = Integer.parseInt(map.get("sectionId").toString());
-        Integer endTime = Integer.parseInt(map.get("endTime").toString());
-
-        userCourseSection.setUserId(userId);
-        userCourseSection.setCourseId(courseId);
-        userCourseSection.setSectionId(sectionId);
-        userCourseSection.setEndTime(endTime);
-
-        if (map.get("finishStatus") != null) {
-            Integer finishStatus = Integer.parseInt(map.get("finishStatus").toString());
-            userCourseSection.setFinishStatus(finishStatus);
-        } else {
+        if (userCourseSection.getFinishStatus() == null) {
             userCourseSection.setFinishStatus(CourConstant.SECTION_UNFINISHED);
         }
         // 根据用户、课程、章节查询是否已有学习完成记录

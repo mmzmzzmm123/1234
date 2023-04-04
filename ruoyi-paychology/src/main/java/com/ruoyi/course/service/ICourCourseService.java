@@ -38,14 +38,6 @@ public interface ICourCourseService
     public List<CourCourse> selectCourCourseList(CourCourse courCourse);
 
     /**
-     * 查询课程
-     *
-     * @param courCourse 课程
-     * @return 课程集合
-     */
-    public CourCourse  selectCourCourseByCourseId(String courseId);
-
-    /**
      * 根据课程的章节计算课程信息
      *
      * @param userId 用户ID

@@ -92,19 +92,19 @@ public class AppCourCourseController extends BaseController
             CourseVO courseVO = new CourseVO();
 
             // 计算课程完成情况
-            boolean hasUnFinished = courCourseService.calCourCourseList(userId, courCourse.getCourseId());
+            boolean hasUnFinished = courCourseService.calCourCourseList(userId, courCourse.getId());
             BeanUtils.copyProperties(courCourse, courseVO);
             courseVO.setFinishStatus(hasUnFinished ? 0 : 1);
 
             // 增加章节列表
             CourSection courSection = CourSection.builder()
-                    .courseId(courCourse.getCourseId())
+                    .courseId(courCourse.getId())
                     .build();
             List<CourSection> sectionList = courSectionService.selectCourSectionList(courSection);
             courseVO.setSectionList(sectionList);
 
             // 计算课程学习时长
-            Integer studyDuration = courCourseService.calCourCourseStudyDuration(userId, courCourse.getCourseId());
+            Integer studyDuration = courCourseService.calCourCourseStudyDuration(userId, courCourse.getId());
             courseVO.setStudyDuration(studyDuration);
             if (hasUnFinished) {
                 courseVOList.add(courseVO);

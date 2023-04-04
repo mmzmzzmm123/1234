@@ -44,9 +44,7 @@ public class AppCourCourseLabelController extends BaseController
         List<CourCourseLabel> list = courCourseLabelService.selectCourCourseLabelList(courCourseLabel);
         List<CourCourse> courCourseList = new ArrayList<>();
         list.forEach(item -> {
-            CourCourse courCourse = new CourCourse();
-            courCourse.setCourseId(item.getCourseId());
-            courCourseList.addAll(courCourseService.selectCourCourseList(courCourse));
+            courCourseList.add(courCourseService.selectCourCourseById(item.getId()));
         });
 
         return getDataTable(courCourseList);
