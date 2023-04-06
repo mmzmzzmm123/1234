@@ -13,4 +13,11 @@ public interface IMasterplateService
      */
     public AjaxResult sendMasterplate(Object body);
 
+    /**
+     * 获取ocr信息
+     * @param img
+     * @return
+     */
+    public Object ocr(String img);
+
 }

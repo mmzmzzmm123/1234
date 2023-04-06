@@ -1,5 +1,6 @@
 package com.ruoyi.app.controller;
 
+import com.alibaba.fastjson.JSONObject;
 import com.ruoyi.common.annotation.TokenValidation;
 import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.domain.AjaxResult;
@@ -26,9 +27,17 @@ public class AppMasterplateController extends BaseController {
     @PostMapping("/route")
     @ApiOperation(value = "5g快签路由转发")
     @TokenValidation
-    public AjaxResult addAuthorizationRecord(@RequestBody Object body) {
+    public AjaxResult sendMasterplate(@RequestBody Object body) {
         log.info("5g快签路由转发 param:{}",body);
         return masterplateService.sendMasterplate(body);
+    }
+
+    @PostMapping("/ocr")
+    @ApiOperation(value = "ocr营业执照")
+    @TokenValidation
+    public AjaxResult ocr(@RequestBody JSONObject jsonObject) {
+        String img = jsonObject.getString("img");
+        return AjaxResult.success(masterplateService.ocr(img));
     }
 
 }
