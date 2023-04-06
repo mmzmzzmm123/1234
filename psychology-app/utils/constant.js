@@ -1,5 +1,5 @@
 export const pagesType = {
     evaluation:'evaluation',
-    curriculum:'curriculum',
+    course:'course',
     counselling:'counselling'
 }

@@ -76,62 +76,62 @@
 			}
 		},
 		{
-			"path": "pages/curriculum/index",
+			"path": "pages/course/index",
 			"style": {
 				"navigationStyle": "custom"
 			}
 		},
 		{
-			"path": "pages/curriculum/course",
+			"path": "pages/course/courseDetail",
 			"style": {
 				"navigationStyle": "custom"
 			}
 		},
 		{
-			"path": "pages/curriculum/learningCourse",
+			"path": "pages/course/learningCourse",
 			"style": {
 				"navigationStyle": "custom"
 			}
 		},
 		{
-			"path": "pages/curriculum/order",
+			"path": "pages/course/order",
 			"style": {
 				"navigationStyle": "custom"
 			}
 		},
 		{
-			"path": "pages/curriculum/user",
+			"path": "pages/course/user",
 			"style": {
 				"navigationStyle": "custom"
 			}
 		},
 		{
-			"path": "pages/curriculum/search",
+			"path": "pages/course/search",
 			"style": {
 				"navigationStyle": "custom",
 				"enablePullDownRefresh": false
 			}
 		},
 		{
-			"path": "pages/curriculum/class",
+			"path": "pages/course/class",
 			"style": {
 				"navigationStyle": "custom"
 			}
 		},
 		{
-			"path": "pages/curriculum/courseList",
+			"path": "pages/course/courseList",
 			"style": {
 				"navigationStyle": "custom"
 			}
 		},
 		{
-			"path": "pages/curriculum/login",
+			"path": "pages/course/login",
 			"style": {
 				"navigationStyle": "custom"
 			}
 		},
 		{
-			"path": "pages/curriculum/orderInfo",
+			"path": "pages/course/orderInfo",
 			"style": {
 				"navigationStyle": "custom"
 			}
