@@ -54,7 +54,7 @@
       >
       <view class="order-info-txt"
         ><span class="label">下单时间</span
-        ><span class="value">{{ formatTime(orderInfo.createTime) }}</span></view
+        ><span class="value">{{ orderInfo.createTime }}</span></view
       >
     </view>
   </view>
@@ -94,9 +94,6 @@ export default {
   		  url: "/pages/curriculum/order",
   		});
   	},
-	formatTime(time) {
-		return formatTime.formatTime(time)
-	}
   },
 };
 </script>

@@ -50,6 +50,7 @@ public class PsyConsultantManagement extends BaseEntity
 
     /** 从业年限（或者存从业时间） */
     @Excel(name = "从业年限", readConverterExp = "或=者存从业时间")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date employmentTime;
 
     /** 咨询服务（只存id） */

@@ -15,7 +15,7 @@
       @tap="toOrderInfo(order)"
     >
       <view class="buy-time"
-        ><span>{{ formatTime(order.createTime) }} </span>
+        ><span>{{ order.createTime }} </span>
         <span class="order-status-txt">
           <span v-if="order.status==0">
 			  {{ remainTime(order.createTime) }}
@@ -143,9 +143,6 @@ export default {
 		}
       } 
     },
-	formatTime(time) {
-		return formatTime.formatTime(time)
-	}
   },
 };
 </script>

@@ -1,5 +1,6 @@
 package com.ruoyi.course.vo;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.ruoyi.course.domain.CourCourse;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -32,6 +33,7 @@ public class OrderVO {
 
     /** 下单时间 */
     @ApiModelProperty("下单时间")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date createTime;
 
     /** 课程编号 */

@@ -45,6 +45,7 @@ public class PsyUser
 
     /** 创建时间 */
     @Excel(name = "创建时间" ,dateFormat = "yyyy-MM-dd HH:mm:SS")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date createTime;
 
     public void setId(Integer id)

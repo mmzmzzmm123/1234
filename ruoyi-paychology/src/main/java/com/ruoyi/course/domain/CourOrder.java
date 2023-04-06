@@ -1,5 +1,6 @@
 package com.ruoyi.course.domain;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.ruoyi.common.annotation.Excel;
 import com.ruoyi.common.core.domain.BaseEntity;
 import lombok.AllArgsConstructor;
@@ -33,6 +34,7 @@ public class CourOrder extends BaseEntity
 
     /** 订单编号 */
     @Excel(name = "下单时间")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date createTime;
 
     /** 订单状态（0-创建 1-完成 2-关闭） */

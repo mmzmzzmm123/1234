@@ -3,6 +3,7 @@ package com.ruoyi.gauge.domain;
 import java.math.BigDecimal;
 import java.util.Date;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -47,6 +48,7 @@ public class PsyOrderPay extends BaseEntity
 
     /** 支付时间 */
     @Excel(name = "支付时间")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date payTime;
 
     /** 支付方式 */

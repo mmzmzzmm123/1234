@@ -1,5 +1,6 @@
 package com.ruoyi.psychology.domain;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import com.ruoyi.common.annotation.Excel;
@@ -42,6 +43,7 @@ public class PsyConsultant
 
     /** 创建时间 */
     @Excel(name = "创建时间")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date createTime;
 
     public void setId(Long id) 
