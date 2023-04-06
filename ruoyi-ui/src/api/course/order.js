@@ -9,6 +9,16 @@ export function listOrder(query) {
   })
 }
 
+// 根据条件查询课程订单列表
+export function queryOrderList(query) {
+  return request({
+    url: '/course/order/query',
+    method: 'post',
+    data: query
+  })
+}
+
+
 // 查询课程订单详细
 export function getOrder(id) {
   return request({

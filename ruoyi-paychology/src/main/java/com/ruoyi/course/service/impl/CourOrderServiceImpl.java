@@ -1,12 +1,16 @@
 package com.ruoyi.course.service.impl;
 
+import java.text.SimpleDateFormat;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import com.ruoyi.common.utils.DateUtils;
 import com.ruoyi.course.constant.CourConstant;
 import com.ruoyi.course.domain.CourOrder;
+import com.ruoyi.course.domain.dto.OrderQueryDTO;
 import com.ruoyi.course.mapper.CourOrderMapper;
 import com.ruoyi.course.service.ICourOrderService;
+import com.ruoyi.course.vo.OrderQueryVO;
 import com.ruoyi.course.vo.OrderVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -144,6 +148,7 @@ public class CourOrderServiceImpl implements ICourOrderService
      * @param courOrder 课程订单
      * @return 生成的订单对象
      */
+    @Override
     public CourOrder generateCourOrder(CourOrder courOrder) {
         courOrder.setCreateTime(DateUtils.getNowDate()); // 下单时间
         int code = courOrderMapper.insertCourOrder(courOrder);
@@ -151,5 +156,13 @@ public class CourOrderServiceImpl implements ICourOrderService
             return selectCourOrderByOrderId(courOrder.getOrderId());
         }
         return null;
+    }
+
+    /**
+     * 根据条件查询课程订单列表
+     */
+    @Override
+    public List<OrderQueryVO> queryOrderList(OrderQueryDTO orderQueryDTO) {
+        return courOrderMapper.queryOrderList(orderQueryDTO);
     }
 }

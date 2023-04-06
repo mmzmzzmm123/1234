@@ -1,7 +1,12 @@
 package com.ruoyi.web.controller.course;
 
 import java.util.List;
+import java.util.stream.Collectors;
 import javax.servlet.http.HttpServletResponse;
+import javax.validation.constraints.NotNull;
+
+import com.ruoyi.course.domain.dto.OrderQueryDTO;
+import com.ruoyi.course.vo.OrderQueryVO;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -47,15 +52,38 @@ public class CourOrderController extends BaseController
     }
 
     /**
+     * 根据条件查询课程订单列表
+     */
+    @PreAuthorize("@ss.hasPermi('course:order:list')")
+    @PostMapping("/query")
+    public TableDataInfo queryOrderList(@RequestBody @NotNull OrderQueryDTO orderQueryDTO) {
+        startPage();
+        List<OrderQueryVO> list = courOrderService.queryOrderList(orderQueryDTO);
+
+        list = list.stream().filter(item ->
+                !(orderQueryDTO.getLowAmount() != null
+                        && item.getAmount().compareTo(orderQueryDTO.getLowAmount()) < 0
+                        || orderQueryDTO.getHighAmount() != null
+                        && item.getAmount().compareTo(orderQueryDTO.getHighAmount()) > 0)).collect(Collectors.toList());
+        return getDataTable(list);
+    }
+
+    /**
      * 导出课程订单列表
      */
     @PreAuthorize("@ss.hasPermi('course:order:export')")
     @Log(title = "课程订单", businessType = BusinessType.EXPORT)
     @PostMapping("/export")
-    public void export(HttpServletResponse response, CourOrder courOrder)
+    public void export(HttpServletResponse response, OrderQueryDTO orderQueryDTO)
     {
-        List<CourOrder> list = courOrderService.selectCourOrderList(courOrder);
-        ExcelUtil<CourOrder> util = new ExcelUtil<CourOrder>(CourOrder.class);
+        List<OrderQueryVO> list = courOrderService.queryOrderList(orderQueryDTO);
+
+        list = list.stream().filter(item ->
+                !(orderQueryDTO.getLowAmount() != null
+                        && item.getAmount().compareTo(orderQueryDTO.getLowAmount()) < 0
+                        || orderQueryDTO.getHighAmount() != null
+                        && item.getAmount().compareTo(orderQueryDTO.getHighAmount()) > 0)).collect(Collectors.toList());
+        ExcelUtil<OrderQueryVO> util = new ExcelUtil<OrderQueryVO>(OrderQueryVO.class);
         util.exportExcel(response, list, "课程订单数据");
     }
 

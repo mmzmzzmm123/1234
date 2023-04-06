@@ -1,6 +1,8 @@
 package com.ruoyi.course.service;
 
 import com.ruoyi.course.domain.CourOrder;
+import com.ruoyi.course.domain.dto.OrderQueryDTO;
+import com.ruoyi.course.vo.OrderQueryVO;
 import com.ruoyi.course.vo.OrderVO;
 
 import java.util.List;
@@ -96,4 +98,8 @@ public interface ICourOrderService
      */
     public CourOrder generateCourOrder(CourOrder courOrder);
 
+    /**
+     * 根据条件查询课程订单列表
+     */
+    List<OrderQueryVO> queryOrderList(OrderQueryDTO orderQueryDTO);
 }
