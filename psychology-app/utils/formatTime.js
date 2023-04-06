@@ -25,7 +25,21 @@ export function formatTime(time) {
 	return y + "-" + MM + "-" + d + " " + H + ":" + m + ':' + s;
 }
 
+// 将时长秒数转为分钟：秒的格式
+export function formatDuration(seconds) {
+  let min = Math.floor(seconds / 60)
+  let sec = seconds - min * 60
+  if (sec < 10) {
+    sec = "0" + sec
+  }
+  if (min < 10) {
+    return "0" + min + ":" + sec
+  }
+  return min + ":" + sec
+}
+    
 export default {
 	formatSecondsCH,
-	formatTime
+	formatTime,
+  formatDuration
 }
