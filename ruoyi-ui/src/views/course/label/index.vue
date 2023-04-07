@@ -1,13 +1,6 @@
 <template>
   <div class="app-container">
     <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch" label-width="68px">
-      <el-form-item label="课程编号" prop="courseId">
-        <el-input
-          v-model="queryParams.courseId"
-          placeholder="请输入课程编号"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
       </el-form-item>
       <el-form-item label="课程标签" prop="courseLabel">
         <el-select v-model="queryParams.courseLabel" placeholder="请选择课程标签" clearable>
@@ -25,7 +18,7 @@
       </el-form-item>
     </el-form>
 
-    <el-row :gutter="10" class="mb8">
+    <!-- <el-row :gutter="10" class="mb8">
       <el-col :span="1.5">
         <el-button
           type="primary"
@@ -69,18 +62,17 @@
         >导出</el-button>
       </el-col>
       <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
-    </el-row>
+    </el-row> -->
 
     <el-table v-loading="loading" :data="labelList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="ID" align="center" prop="id" />
-      <el-table-column label="课程编号" align="center" prop="courseId" />
+      <el-table-column label="课程名称" align="center" prop="courseName" />
       <el-table-column label="课程标签" align="center" prop="courseLabel">
         <template slot-scope="scope">
           <dict-tag :options="dict.type.course_label" :value="scope.row.courseLabel"/>
         </template>
       </el-table-column>
-      <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
+      <!-- <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button
             size="mini"
@@ -97,7 +89,7 @@
             v-hasPermi="['course:label:remove']"
           >删除</el-button>
         </template>
-      </el-table-column>
+      </el-table-column> -->
     </el-table>
 
     <pagination
@@ -109,10 +101,13 @@
     />
 
     <!-- 添加或修改label对话框 -->
-    <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
+    <!-- <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
-        <el-form-item label="课程编号" prop="courseId">
-          <el-input v-model="form.courseId" placeholder="请输入课程编号" />
+        <el-form-item label="课程ID" prop="courseName">
+          <el-input v-model="form.courseId" placeholder="请输入课程ID" />
+        </el-form-item>
+        <el-form-item label="课程名称" prop="courseName">
+          <el-input v-model="form.courseName" placeholder="请输入课程名称" />
         </el-form-item>
         <el-form-item label="课程标签" prop="courseLabel">
           <el-select v-model="form.courseLabel" placeholder="请选择课程标签">
@@ -129,7 +124,7 @@
         <el-button type="primary" @click="submitForm">确 定</el-button>
         <el-button @click="cancel">取 消</el-button>
       </div>
-    </el-dialog>
+    </el-dialog> -->
   </div>
 </template>
 
@@ -164,19 +159,21 @@ export default {
         pageNum: 1,
         pageSize: 10,
         courseId: null,
+        courseName: null,
         courseLabel: null
       },
       // 表单参数
       form: {},
       // 表单校验
       rules: {
-        courseId: [
-          { required: true, message: "课程编号不能为空", trigger: "blur" }
+        courseName: [
+          { required: true, message: "课程名称不能为空", trigger: "blur" }
         ],
         courseLabel: [
           { required: true, message: "课程标签不能为空", trigger: "change" }
         ]
-      }
+      },
+      courseList: [],
     };
   },
   created() {
@@ -202,6 +199,7 @@ export default {
       this.form = {
         id: null,
         courseId: null,
+        courseName: null,
         courseLabel: null
       };
       this.resetForm("form");

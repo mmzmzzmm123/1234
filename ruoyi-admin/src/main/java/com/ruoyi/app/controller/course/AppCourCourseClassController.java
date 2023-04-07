@@ -2,8 +2,8 @@ package com.ruoyi.app.controller.course;
 
 import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.page.TableDataInfo;
-import com.ruoyi.course.domain.CourCourseType;
-import com.ruoyi.course.service.ICourCourseTypeService;
+import com.ruoyi.course.domain.CourCourseClass;
+import com.ruoyi.course.service.ICourCourseClassService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,12 +14,12 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/app/course/type")
-@Api(value = "AppCourCourseTypeController" ,tags = {"课程类型API"})
-public class AppCourCourseTypeController extends BaseController
+@RequestMapping("/app/course/class")
+@Api(value = "AppCourCourseClassController" ,tags = {"课程类型API"})
+public class AppCourCourseClassController extends BaseController
 {
     @Autowired
-    private ICourCourseTypeService courCourseTypeService;
+    private ICourCourseClassService courCourseClassService;
 
     /**
      * 查询课程类型列表
@@ -27,10 +27,10 @@ public class AppCourCourseTypeController extends BaseController
 //    @PreAuthorize("@ss.hasPermi('course:type:list')")
     @GetMapping("/list")
     @ApiOperation("查询课程类型列表")
-    public TableDataInfo list(CourCourseType courCourseType)
+    public TableDataInfo list(CourCourseClass courCourseClass)
     {
         startPage();
-        List<CourCourseType> list = courCourseTypeService.selectCourCourseTypeList(courCourseType);
+        List<CourCourseClass> list = courCourseClassService.selectCourCourseClassList(courCourseClass);
         return getDataTable(list);
     }
 }

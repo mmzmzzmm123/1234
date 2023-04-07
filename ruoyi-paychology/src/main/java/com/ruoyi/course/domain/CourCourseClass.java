@@ -6,31 +6,34 @@ import com.ruoyi.common.annotation.Excel;
 import com.ruoyi.common.core.domain.BaseEntity;
 
 /**
- * 课程类型对象 cour_course_type
+ * 类型对象 cour_course_class
  * 
  * @author ruoyi
- * @date 2023-03-14
+ * @date 2023-04-07
  */
-public class CourCourseType extends BaseEntity
+public class CourCourseClass extends BaseEntity
 {
     private static final long serialVersionUID = 1L;
 
-    /** 类型编号 */
-    @Excel(name = "类型编号")
-    private Integer typeId;
+    /** 类型ID */
+    private Integer id;
 
     /** 类型名称 */
     @Excel(name = "类型名称")
     private String name;
 
-    public void setTypeId(Integer typeId)
+    /** 排序 */
+    @Excel(name = "排序")
+    private Integer sort;
+
+    public void setId(Integer id) 
     {
-        this.typeId = typeId;
+        this.id = id;
     }
 
-    public Integer getTypeId()
+    public Integer getId() 
     {
-        return typeId;
+        return id;
     }
     public void setName(String name) 
     {
@@ -41,12 +44,22 @@ public class CourCourseType extends BaseEntity
     {
         return name;
     }
+    public void setSort(Integer sort) 
+    {
+        this.sort = sort;
+    }
+
+    public Integer getSort() 
+    {
+        return sort;
+    }
 
     @Override
     public String toString() {
         return new ToStringBuilder(this,ToStringStyle.MULTI_LINE_STYLE)
-            .append("typeId", getTypeId())
+            .append("id", getId())
             .append("name", getName())
+            .append("sort", getSort())
             .toString();
     }
 }

@@ -183,9 +183,10 @@ export default {
       }).then(() => {
         let fileName = this.getFileName(this.fileList[index].url)
         deleteFile(fileName, this.extraData.module).then(res => {
+          this.$emit('deleteFile')
           this.$message({
             type: 'success',
-            message: '删除成功!'
+            message: '删除成功，请保存操作!'
           });
 
           this.fileList.splice(index, 1);

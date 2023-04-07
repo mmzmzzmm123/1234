@@ -1,7 +1,12 @@
 package com.ruoyi.web.controller.course;
 
+import java.util.ArrayList;
 import java.util.List;
 import javax.servlet.http.HttpServletResponse;
+
+import com.ruoyi.course.service.ICourCourseService;
+import com.ruoyi.course.vo.LabelVO;
+import org.springframework.beans.BeanUtils;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -34,6 +39,8 @@ public class CourCourseLabelController extends BaseController
     @Autowired
     private ICourCourseLabelService courCourseLabelService;
 
+    @Autowired
+    private ICourCourseService courCourseService;
     /**
      * 查询label列表
      */
@@ -43,9 +50,29 @@ public class CourCourseLabelController extends BaseController
     {
         startPage();
         List<CourCourseLabel> list = courCourseLabelService.selectCourCourseLabelList(courCourseLabel);
-        return getDataTable(list);
+        List<LabelVO> labelVOList = transCourCourseLabelsToLabelVOs(list);
+
+        return getDataTable(labelVOList);
     }
 
+    private List<LabelVO> transCourCourseLabelsToLabelVOs(List<CourCourseLabel> list) {
+        List<LabelVO> labelVOList = new ArrayList<>();
+        for (CourCourseLabel label : list) {
+            LabelVO labelVO = transCourCourseLabelToLabelVO(label);
+            labelVOList.add(labelVO);
+        }
+        return labelVOList;
+    }
+
+    private LabelVO transCourCourseLabelToLabelVO(CourCourseLabel label) {
+        LabelVO labelVO = new LabelVO();
+        BeanUtils.copyProperties(label, labelVO);
+        // 根据课程ID查询课程名称
+        String courseName = courCourseService.selectCourCourseById(label.getCourseId()).getName();
+
+        labelVO.setCourseName(courseName);
+        return labelVO;
+    }
     /**
      * 导出label列表
      */
@@ -55,8 +82,10 @@ public class CourCourseLabelController extends BaseController
     public void export(HttpServletResponse response, CourCourseLabel courCourseLabel)
     {
         List<CourCourseLabel> list = courCourseLabelService.selectCourCourseLabelList(courCourseLabel);
-        ExcelUtil<CourCourseLabel> util = new ExcelUtil<CourCourseLabel>(CourCourseLabel.class);
-        util.exportExcel(response, list, "label数据");
+        List<LabelVO> labelVOList = transCourCourseLabelsToLabelVOs(list);
+
+        ExcelUtil<LabelVO> util = new ExcelUtil<LabelVO>(LabelVO.class);
+        util.exportExcel(response, labelVOList, "label数据");
     }
 
     /**
@@ -66,7 +95,7 @@ public class CourCourseLabelController extends BaseController
     @GetMapping(value = "/{id}")
     public AjaxResult getInfo(@PathVariable("id") Integer id)
     {
-        return AjaxResult.success(courCourseLabelService.selectCourCourseLabelById(id));
+        return AjaxResult.success(transCourCourseLabelToLabelVO(courCourseLabelService.selectCourCourseLabelById(id)));
     }
 
     /**

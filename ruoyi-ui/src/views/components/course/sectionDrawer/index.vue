@@ -136,7 +136,15 @@
           </el-row>
 
           <el-form-item label="内容链接" prop="contentUrl">
-            <file-upload v-model="form.contentUrl" :limit="1" :fileType="fileTypes" :fileSize="100" :extraData="extraData" @input="handleFileUploadSuccess" />
+            <file-upload
+              v-model="form.contentUrl"
+              :limit="1"
+              :fileType="fileTypes"
+              :fileSize="1024"
+              :extraData="extraData"
+              @input="handleFileUploadSuccess"
+              @deleteFile="handleFileDeleteSuccess"
+             />
           </el-form-item>
 
           <el-form-item label="章节内容">
@@ -146,7 +154,7 @@
 
         <div slot="footer" class="dialog-footer">
           <el-button type="primary" @click="submitForm">确 定</el-button>
-          <el-button @click="cancel">取 消</el-button>
+          <el-button @click="cancel" v-if="!hasDeleted">取 消</el-button>
         </div>
       </el-dialog>
     </div>
@@ -220,7 +228,8 @@ export default {
         courseId: [
           { required: true, message: "课程编号不能为空", trigger: "blur" }
         ],
-      }
+      },
+      hasDeleted: false, // 有上传文件删除时，
     }
   },
   methods: {
@@ -330,6 +339,9 @@ export default {
         duration = audioElement.duration; //时长以秒作为单位
         fun(parseFloat(duration).toFixed(1))
       });
+    },
+    handleFileDeleteSuccess() {
+      this.hasDeleted = true
     }
   },
   created() {

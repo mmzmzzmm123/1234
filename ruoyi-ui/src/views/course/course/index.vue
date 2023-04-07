@@ -12,10 +12,10 @@
       <el-form-item label="课程类型" prop="typeValue">
         <el-select v-model="queryParams.typeValue" placeholder="请选择课程类型" clearable>
           <el-option
-            v-for="dict in dict.type.course_type"
-            :key="dict.value"
-            :label="dict.label"
-            :value="dict.value"
+            v-for="item in courseClassList"
+            :key="item.id"
+            :label="item.name"
+            :value="item.id"
           />
         </el-select>
       </el-form-item>
@@ -100,7 +100,7 @@
       <el-table-column label="课程名称" align="center" prop="name" />
       <el-table-column label="课程类型" align="center" prop="type">
         <template slot-scope="scope">
-          <dict-tag :options="dict.type.course_type" :value="scope.row.type"/>
+          {{ getCourseClassName(scope.row.type) }}
         </template>
       </el-table-column>
       <el-table-column label="课程作者" align="center" prop="author" />
@@ -160,7 +160,7 @@
             <el-form-item label="课程类型" prop="type">
               <el-select v-model="form.type" placeholder="请选择课程类型">
                 <el-option
-                  v-for="dict in dict.type.course_type"
+                  v-for="dict in courseClassList"
                   :key="dict.value"
                   :label="dict.label"
                   :value="parseInt(dict.value)"
@@ -199,11 +199,11 @@
 
 <script>
 import { listCourse, getCourse, delCourse, addCourse, updateCourse } from "@/api/course/course";
+import { listClass } from "@/api/course/class"
 import SectionDrawer from '@/views/components/course/sectionDrawer/index.vue'
 
 export default {
   name: "Course",
-  dicts: ['course_type'],
   data() {
     var validatePrice = (rule, value, callback) => {
       // 保留两位小数
@@ -248,7 +248,6 @@ export default {
       },
       // 表单参数
       form: {
-        // type: parseInt(this.dict.type.course_type[0].value),
       },
       // 表单校验
       rules: {
@@ -268,18 +267,30 @@ export default {
       },
       drawOpen: false,
       drawCourseId: null,
+      courseClassList: []
     };
   },
   components: {
     SectionDrawer,
   },
   created() {
+    this.getCourseClassList()
     this.getList();
   },
   mounted() {
 
   },
   methods: {
+    getCourseClassName(type) {
+      return this.courseClassList.filter(item => item.id === type)[0].name
+    },
+    getCourseClassList() {
+      this.loading = true;
+      listClass({}).then(response => {
+        this.courseClassList = response.rows;
+        this.loading = false;
+      });
+    },
     /** 查询课程列表 */
     getList() {
       this.loading = true;
@@ -332,7 +343,7 @@ export default {
     handleAdd() {
       this.reset();
       // 课程类型默认值
-      this.form.type = parseInt(this.dict.type.course_type && this.dict.type.course_type[0].value)
+      this.form.type = this.courseClassList[0].value
 
       this.open = true;
       this.title = "添加课程";
