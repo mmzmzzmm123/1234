@@ -10,6 +10,7 @@ import com.ruoyi.gauge.domain.PsyOrder;
 import com.ruoyi.gauge.service.IPsyGaugeService;
 import com.ruoyi.gauge.service.IPsyOrderService;
 import com.ruoyi.gauge.vo.GaugeVO;
+import com.ruoyi.psychology.service.IPsyUserService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.BeanUtils;
@@ -41,6 +42,9 @@ public class AppPsyGaugeController extends BaseController
     @Autowired
     private AppTokenService appTokenService;
 
+    @Autowired
+    private IPsyUserService psyUserService;
+
     /**
      * 查询心理测评列表
      */
@@ -60,17 +64,20 @@ public class AppPsyGaugeController extends BaseController
 //    @PreAuthorize("@ss.hasPermi('psychology:gauge:query')")
     @PostMapping(value = "/getInfo")
     @ApiOperation("查询量表详细信息")
-    public AjaxResult getInfo(@RequestParam(value = "id") Long id, HttpServletRequest request)
+    public AjaxResult getInfo(@RequestParam(value = "id") Integer id, HttpServletRequest request)
     {
         LoginDTO loginUser = appTokenService.getLoginUser(request);
+        Integer userId = loginUser.getUserId();
         PsyGauge psyGauge = psyGaugeService.selectPsyGaugeById(id);
-        Integer isBuy = psyOrderService.getGaugeIsBuy(loginUser.getUsername(), id);
-
-        PsyOrder psyOrder = psyOrderService.getPsyOrder(loginUser.getUsername(), id);
         GaugeVO gaugeVO = new GaugeVO();
         BeanUtils.copyProperties(psyGauge, gaugeVO);
+        Integer isBuy = psyOrderService.getGaugeIsBuy(userId, id);
         gaugeVO.setIsBuy(isBuy);
-        gaugeVO.setOrderId(psyOrder.getId());
+        PsyOrder psyOrder = psyOrderService.getPsyOrder(userId, id);
+        if (psyOrder != null) { // 用户已经下单
+            gaugeVO.setOrderId(psyOrder.getId());
+        }
+
         return AjaxResult.success(gaugeVO);
     }
 

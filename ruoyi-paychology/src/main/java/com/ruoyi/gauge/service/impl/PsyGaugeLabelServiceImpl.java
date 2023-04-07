@@ -28,7 +28,7 @@ public class PsyGaugeLabelServiceImpl implements IPsyGaugeLabelService {
      * @return 测评标签
      */
     @Override
-    public PsyGaugeLabel selectPsyGaugeLabelById(Long id)
+    public PsyGaugeLabel selectPsyGaugeLabelById(Integer id)
     {
         return psyGaugeLabelMapper.selectPsyGaugeLabelById(id);
     }
@@ -76,7 +76,7 @@ public class PsyGaugeLabelServiceImpl implements IPsyGaugeLabelService {
      * @return 结果
      */
     @Override
-    public int deletePsyGaugeLabelByIds(Long[] ids)
+    public int deletePsyGaugeLabelByIds(Integer[] ids)
     {
         return psyGaugeLabelMapper.deletePsyGaugeLabelByIds(ids);
     }
@@ -88,7 +88,7 @@ public class PsyGaugeLabelServiceImpl implements IPsyGaugeLabelService {
      * @return 结果
      */
     @Override
-    public int deletePsyGaugeLabelById(Long id)
+    public int deletePsyGaugeLabelById(Integer id)
     {
         return psyGaugeLabelMapper.deletePsyGaugeLabelById(id);
     }

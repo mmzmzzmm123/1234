@@ -45,7 +45,7 @@ public class AppPsyGaugeQuestionsController extends BaseController
     public AjaxResult list(PsyGaugeQuestions psyGaugeQuestions ,HttpServletRequest request)
     {
         LoginDTO loginUser = appTokenService.getLoginUser(request);
-        String userId = psyGaugeQuestions.getUserId();
+        Integer userId = psyGaugeQuestions.getUserId();
         List<PsyQuestionVO> list = psyGaugeQuestionsService.appQueryQuesList(psyGaugeQuestions ,userId);
         return AjaxResult.success(list);
     }

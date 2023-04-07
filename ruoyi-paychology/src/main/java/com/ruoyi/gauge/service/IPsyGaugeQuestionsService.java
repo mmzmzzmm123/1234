@@ -20,7 +20,7 @@ public interface IPsyGaugeQuestionsService
      * @param id 心理测评问题主键
      * @return 心理测评问题
      */
-    public PsyGaugeQuestions selectPsyGaugeQuestionsById(Long id);
+    public PsyGaugeQuestions selectPsyGaugeQuestionsById(Integer id);
 
     /**
      * 查询心理测评问题列表
@@ -52,7 +52,7 @@ public interface IPsyGaugeQuestionsService
      * @param ids 需要删除的心理测评问题主键集合
      * @return 结果
      */
-    public int deletePsyGaugeQuestionsByIds(Long[] ids);
+    public int deletePsyGaugeQuestionsByIds(Integer[] ids);
 
     /**
      * 删除心理测评问题信息
@@ -60,14 +60,14 @@ public interface IPsyGaugeQuestionsService
      * @param id 心理测评问题主键
      * @return 结果
      */
-    public int deletePsyGaugeQuestionsById(Long id);
+    public int deletePsyGaugeQuestionsById(Integer id);
 
     /**
      * 查询问题
      * @param psyGaugeQuestions
      * @return
      */
-    List<PsyQuestionVO> appQueryQuesList(PsyGaugeQuestions psyGaugeQuestions , String userId);
+    List<PsyQuestionVO> appQueryQuesList(PsyGaugeQuestions psyGaugeQuestions , Integer userId);
 
 
 

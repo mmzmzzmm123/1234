@@ -64,7 +64,7 @@ public class PsyGaugeClassController extends BaseController
      */
     @PreAuthorize("@ss.hasPermi('psychology:gaugeClass:query')")
     @GetMapping(value = "/{id}")
-    public AjaxResult getInfo(@PathVariable("id") Long id)
+    public AjaxResult getInfo(@PathVariable("id") Integer id)
     {
         return AjaxResult.success(psyGaugeClassService.selectPsyGaugeClassById(id));
     }
@@ -97,7 +97,7 @@ public class PsyGaugeClassController extends BaseController
     @PreAuthorize("@ss.hasPermi('psychology:gaugeClass:remove')")
     @Log(title = "测评分类", businessType = BusinessType.DELETE)
 	@DeleteMapping("/{ids}")
-    public AjaxResult remove(@PathVariable Long[] ids)
+    public AjaxResult remove(@PathVariable Integer[] ids)
     {
         return toAjax(psyGaugeClassService.deletePsyGaugeClassByIds(ids));
     }

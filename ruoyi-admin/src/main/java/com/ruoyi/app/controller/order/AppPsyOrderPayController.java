@@ -62,7 +62,7 @@ public class AppPsyOrderPayController extends BaseController {
 //    @PreAuthorize("@ss.hasPermi('system:pay:query')")
     @GetMapping(value = "/{id}")
     @ApiOperation("获取支付信息")
-    public AjaxResult getInfo(@PathVariable("id") Long id) {
+    public AjaxResult getInfo(@PathVariable("id") Integer id) {
         return AjaxResult.success(psyOrderPayService.selectPsyOrderPayById(id));
     }
 }

@@ -17,7 +17,7 @@ public interface IPsyGaugeScoreSettingService
      * @param id 心理测评普通设置主键
      * @return 心理测评普通设置
      */
-    public PsyGaugeScoreSetting selectPsyGaugeScoreSettingById(Long id);
+    public PsyGaugeScoreSetting selectPsyGaugeScoreSettingById(Integer id);
 
     /**
      * 查询心理测评普通设置列表
@@ -28,7 +28,7 @@ public interface IPsyGaugeScoreSettingService
     public List<PsyGaugeScoreSetting> selectPsyGaugeScoreSettingList(PsyGaugeScoreSetting psyGaugeScoreSetting);
 
 
-    public List<PsyGaugeScoreSetting> selectPsyGaugeScoreSettingListByIds(Long[] ids);
+    public List<PsyGaugeScoreSetting> selectPsyGaugeScoreSettingListByIds(Integer[] ids);
 
 
     /**
@@ -53,7 +53,7 @@ public interface IPsyGaugeScoreSettingService
      * @param ids 需要删除的心理测评普通设置主键集合
      * @return 结果
      */
-    public int deletePsyGaugeScoreSettingByIds(Long[] ids);
+    public int deletePsyGaugeScoreSettingByIds(Integer[] ids);
 
     /**
      * 删除心理测评普通设置信息
@@ -61,5 +61,5 @@ public interface IPsyGaugeScoreSettingService
      * @param id 心理测评普通设置主键
      * @return 结果
      */
-    public int deletePsyGaugeScoreSettingById(Long id);
+    public int deletePsyGaugeScoreSettingById(Integer id);
 }

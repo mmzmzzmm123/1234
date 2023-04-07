@@ -45,7 +45,7 @@ public class AppPsyConsultantController extends BaseController
      */
 
     @GetMapping(value = "/{id}")
-    public AjaxResult getInfo(@PathVariable("id") Long id)
+    public AjaxResult getInfo(@PathVariable("id") Integer id)
     {
         return AjaxResult.success(psyConsultantService.selectPsyConsultantById(id));
     }

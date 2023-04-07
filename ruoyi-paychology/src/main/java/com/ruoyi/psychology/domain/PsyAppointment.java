@@ -1,6 +1,7 @@
 package com.ruoyi.psychology.domain;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import lombok.Data;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import com.ruoyi.common.annotation.Excel;
@@ -14,20 +15,21 @@ import java.util.Date;
  * @author ruoyi
  * @date 2022-08-26
  */
+@Data
 public class PsyAppointment
 {
     private static final long serialVersionUID = 1L;
 
     /** $column.columnComment */
-    private Long id;
+    private Integer id;
 
     /** 用户ID */
     @Excel(name = "用户ID")
-    private Long userId;
+    private Integer userId;
 
     /** 咨询师ID */
     @Excel(name = "咨询师ID")
-    private Long consultantId;
+    private Integer consultantId;
 
     /** 那一天 */
     @Excel(name = "那一天")
@@ -43,58 +45,6 @@ public class PsyAppointment
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date createTime;
 
-    public void setId(Long id) 
-    {
-        this.id = id;
-    }
-
-    public Long getId() 
-    {
-        return id;
-    }
-    public void setUserId(Long userId) 
-    {
-        this.userId = userId;
-    }
-
-    public Long getUserId() 
-    {
-        return userId;
-    }
-    public void setConsultantId(Long consultantId) 
-    {
-        this.consultantId = consultantId;
-    }
-
-    public Long getConsultantId() 
-    {
-        return consultantId;
-    }
-    public void setDay(String day) 
-    {
-        this.day = day;
-    }
-
-    public String getDay() 
-    {
-        return day;
-    }
-    public void setTimeInterval(String timeInterval) 
-    {
-        this.timeInterval = timeInterval;
-    }
-
-    public String getTimeInterval() 
-    {
-        return timeInterval;
-    }
-    public Date getCreateTime() {
-        return createTime;
-    }
-
-    public void setCreateTime(Date createTime) {
-        this.createTime = createTime;
-    }
     @Override
     public String toString() {
         return new ToStringBuilder(this,ToStringStyle.MULTI_LINE_STYLE)

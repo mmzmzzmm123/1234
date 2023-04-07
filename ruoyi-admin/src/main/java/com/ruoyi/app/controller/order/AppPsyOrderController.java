@@ -51,7 +51,7 @@ public class AppPsyOrderController extends BaseController {
 
         Integer userId;
         if (psyOrder.getUserId() != null) {
-            userId = Integer.parseInt(psyOrder.getUserId());
+            userId = psyOrder.getUserId();
         } else {
             LoginDTO loginUser = appTokenService.getLoginUser(request);
             userId = loginUser.getUserId();
@@ -80,7 +80,7 @@ public class AppPsyOrderController extends BaseController {
 //    @PreAuthorize("@ss.hasPermi('system:order:query')")
     @GetMapping(value = "/{id}")
     @ApiOperation("获取订单详细信息")
-    public AjaxResult getInfo(@PathVariable("id") Long id) {
+    public AjaxResult getInfo(@PathVariable("id") Integer id) {
         return AjaxResult.success(psyOrderService.selectPsyOrderById(id));
     }
 

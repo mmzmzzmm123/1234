@@ -82,7 +82,7 @@ public class WxpayServiceImpl implements IWxpayService {
 
     private void generatePay(WxPayDTO wxPayDTO, LoginDTO loginUser, int id) {
         PsyOrderPay psyOrderPay = PsyOrderPay.builder()
-                .orderId(Long.valueOf(id))
+                .orderId(id)
                 .amount(wxPayDTO.getAmount())
                 .payStatus(OrderPayStatus.NEED_PAY.getValue())
                 .payId(UUID.randomUUID().toString())
@@ -99,7 +99,7 @@ public class WxpayServiceImpl implements IWxpayService {
      */
     private void  generatePayUpdate(WxPayDTO wxPayDTO, LoginDTO loginUser, int id){
         PsyOrderPay psyOrderPay = PsyOrderPay.builder()
-                .orderId(Long.valueOf(wxPayDTO.getOrderId()))
+                .orderId(Integer.valueOf(wxPayDTO.getOrderId()))
                 .payStatus(wxPayDTO.getStatus())
                 .build();
         psyOrderPay.setCreateBy(loginUser.getUsername());

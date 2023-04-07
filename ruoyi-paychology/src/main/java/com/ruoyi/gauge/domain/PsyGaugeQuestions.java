@@ -1,5 +1,6 @@
 package com.ruoyi.gauge.domain;
 
+import lombok.Data;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import com.ruoyi.common.annotation.Excel;
@@ -11,16 +12,17 @@ import com.ruoyi.common.core.domain.BaseEntity;
  * @author ruoyi
  * @date 2022-09-06
  */
+@Data
 public class PsyGaugeQuestions extends BaseEntity
 {
     private static final long serialVersionUID = 1L;
 
-    /** $column.columnComment */
-    private Long id;
+    /** ID */
+    private Integer id;
 
     /** 测评表单ID */
     @Excel(name = "测评表单ID")
-    private Long gaugeId;
+    private Integer gaugeId;
 
     /** 标题 */
     @Excel(name = "标题")
@@ -31,90 +33,30 @@ public class PsyGaugeQuestions extends BaseEntity
      * 0-单选
      * 1-多选
      */
-    private Long selectType;
+    private Integer selectType;
 
     @Excel(name = "选择类型")
     private String selectTypeName;
 
     /** 序号 */
     @Excel(name = "序号")
-    private Long no;
+    private Integer no;
 
-    private String userId;
+    private Integer userId;
 
     /**
      * 订单id
      */
-    private String orderId;
+    private Integer orderId;
 
-    public String getOrderId() {
-        return orderId;
-    }
 
-    public void setOrderId(String orderId) {
-        this.orderId = orderId;
-    }
-
-    public String getUserId() {
-        return userId;
-    }
-
-    public void setUserId(String userId) {
-        this.userId = userId;
-    }
-
-    public void setId(Long id)
-    {
-        this.id = id;
-    }
-
-    public Long getId() 
-    {
-        return id;
-    }
-    public void setGaugeId(Long gaugeId) 
-    {
-        this.gaugeId = gaugeId;
-    }
-
-    public Long getGaugeId() 
-    {
-        return gaugeId;
-    }
-    public void setTitle(String title) 
-    {
-        this.title = title;
-    }
-
-    public String getTitle() 
-    {
-        return title;
-    }
-    public void setNo(Long no) 
-    {
-        this.no = no;
-    }
-
-    public Long getNo() 
-    {
-        return no;
-    }
-
-    public Long getSelectType() {
+    public Integer getSelectType() {
         return selectType;
     }
 
-    public void setSelectType(Long selectType) {
+    public void setSelectType(Integer selectType) {
         this.selectType = selectType;
         this.selectTypeName = this.selectType == 0 ? "单选" : "多选";
-    }
-
-    public String getSelectTypeName() {
-        return selectTypeName;
-    }
-
-    public void setSelectTypeName(String selectTypeName) {
-        this.selectTypeName = selectTypeName;
     }
 
     @Override

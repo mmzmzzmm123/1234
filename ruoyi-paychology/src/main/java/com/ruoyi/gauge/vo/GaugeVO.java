@@ -8,7 +8,7 @@ import java.math.BigDecimal;
 
 @Data
 public class GaugeVO implements Serializable {
-    private Long id;
+    private Integer id;
 
     /** 测评标题 */
     private String title;
@@ -26,13 +26,13 @@ public class GaugeVO implements Serializable {
     private Integer gaugeClass;
 
     /** 测评题数 */
-    private Long gaugeNum;
+    private Integer gaugeNum;
 
     /** 价格 */
     private BigDecimal price;
 
     /** 测评次数 */
-    private Long num;
+    private Integer num;
 
     /** 测评类型 */
     private Integer type;
@@ -45,5 +45,5 @@ public class GaugeVO implements Serializable {
     private Integer isBuy;
 
     /** 测评订单ID */
-    private Long orderId;
+    private Integer orderId;
 }

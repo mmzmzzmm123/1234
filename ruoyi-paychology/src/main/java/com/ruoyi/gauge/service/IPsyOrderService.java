@@ -19,7 +19,7 @@ public interface IPsyOrderService
      * @param id 心理测评订单信息主键
      * @return 心理测评订单信息
      */
-    public PsyOrder selectPsyOrderById(Long id);
+    public PsyOrder selectPsyOrderById(Integer id);
 
     /**
      * 查询心理测评订单信息列表
@@ -58,7 +58,7 @@ public interface IPsyOrderService
      * @param ids 需要删除的心理测评订单信息主键集合
      * @return 结果
      */
-    public int deletePsyOrderByIds(Long[] ids);
+    public int deletePsyOrderByIds(Integer[] ids);
 
     /**
      * 删除心理测评订单信息信息
@@ -66,7 +66,7 @@ public interface IPsyOrderService
      * @param id 心理测评订单信息主键
      * @return 结果
      */
-    public int deletePsyOrderById(Long id);
+    public int deletePsyOrderById(Integer id);
 
     List<PsyOrder> queryOrderInfo(PsyOrder psyOrder ,Integer userId);
 
@@ -89,13 +89,13 @@ public interface IPsyOrderService
     public PsyOrder generatePsyOrder(PsyOrder psyOrder);
 
     /**
-     * 根据用户ID和测评ID查询测评是否已经购买
+     * 根据测评ID查询测评是否已经购买
      *
      * @param userId 用户ID
      * @param gaugeId 测评ID
      * @return 测评是否已经购买
      */
-    public Integer getGaugeIsBuy(String userId, Long gaugeId);
+    public Integer getGaugeIsBuy(Integer userId, Integer gaugeId);
 
     /**
      * 根据用户ID和测评ID查询测评订单信息
@@ -104,5 +104,5 @@ public interface IPsyOrderService
      * @param gaugeId 测评ID
      * @return 订单信息
      */
-    public PsyOrder getPsyOrder(String userId, Long gaugeId);
+    public PsyOrder getPsyOrder(Integer userId, Integer gaugeId);
 }

@@ -58,7 +58,7 @@ public class AppPsyAppointmentController extends BaseController
      */
     // @PreAuthorize("@ss.hasPermi('psychology:appointment:query')")
     @GetMapping(value = "/{id}")
-    public AjaxResult getInfo(@PathVariable("id") Long id)
+    public AjaxResult getInfo(@PathVariable("id") Integer id)
     {
         return AjaxResult.success(psyAppointmentService.selectPsyAppointmentById(id));
     }
@@ -91,7 +91,7 @@ public class AppPsyAppointmentController extends BaseController
     // @PreAuthorize("@ss.hasPermi('psychology:appointment:remove')")
     @Log(title = "咨询师预约", businessType = BusinessType.DELETE)
 	@DeleteMapping("/{ids}")
-    public AjaxResult remove(@PathVariable Long[] ids)
+    public AjaxResult remove(@PathVariable Integer[] ids)
     {
         return toAjax(psyAppointmentService.deletePsyAppointmentByIds(ids));
     }

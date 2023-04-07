@@ -28,7 +28,7 @@ public class PsyWorkManagementServiceImpl implements IPsyWorkManagementService
      * @return 排班管理
      */
     @Override
-    public PsyWorkManagement selectPsyWorkManagementById(Long id)
+    public PsyWorkManagement selectPsyWorkManagementById(Integer id)
     {
         return psyWorkManagementMapper.selectPsyWorkManagementById(id);
     }
@@ -78,7 +78,7 @@ public class PsyWorkManagementServiceImpl implements IPsyWorkManagementService
      * @return 结果
      */
     @Override
-    public int deletePsyWorkManagementByIds(Long[] ids)
+    public int deletePsyWorkManagementByIds(Integer[] ids)
     {
         return psyWorkManagementMapper.deletePsyWorkManagementByIds(ids);
     }
@@ -90,7 +90,7 @@ public class PsyWorkManagementServiceImpl implements IPsyWorkManagementService
      * @return 结果
      */
     @Override
-    public int deletePsyWorkManagementById(Long id)
+    public int deletePsyWorkManagementById(Integer id)
     {
         return psyWorkManagementMapper.deletePsyWorkManagementById(id);
     }

@@ -27,7 +27,7 @@ public class PsyGaugeQuestionsOptionsServiceImpl implements IPsyGaugeQuestionsOp
      * @return 心理测评问题选项
      */
     @Override
-    public PsyGaugeQuestionsOptions selectPsyGaugeQuestionsOptionsById(Long id)
+    public PsyGaugeQuestionsOptions selectPsyGaugeQuestionsOptionsById(Integer id)
     {
         return psyGaugeQuestionsOptionsMapper.selectPsyGaugeQuestionsOptionsById(id);
     }
@@ -76,7 +76,7 @@ public class PsyGaugeQuestionsOptionsServiceImpl implements IPsyGaugeQuestionsOp
      * @return 结果
      */
     @Override
-    public int deletePsyGaugeQuestionsOptionsByIds(Long[] ids)
+    public int deletePsyGaugeQuestionsOptionsByIds(Integer[] ids)
     {
         return psyGaugeQuestionsOptionsMapper.deletePsyGaugeQuestionsOptionsByIds(ids);
     }
@@ -88,7 +88,7 @@ public class PsyGaugeQuestionsOptionsServiceImpl implements IPsyGaugeQuestionsOp
      * @return 结果
      */
     @Override
-    public int deletePsyGaugeQuestionsOptionsById(Long id)
+    public int deletePsyGaugeQuestionsOptionsById(Integer id)
     {
         return psyGaugeQuestionsOptionsMapper.deletePsyGaugeQuestionsOptionsById(id);
     }

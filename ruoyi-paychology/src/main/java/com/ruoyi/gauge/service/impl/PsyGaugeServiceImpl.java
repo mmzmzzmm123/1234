@@ -41,9 +41,11 @@ public class PsyGaugeServiceImpl implements IPsyGaugeService
      * @return 心理测评
      */
     @Override
-    public PsyGauge selectPsyGaugeById(Long id)
+    public PsyGauge selectPsyGaugeById(Integer id)
     {
-        return psyGaugeMapper.selectPsyGaugeById(id);
+
+        return psyGaugeMapper.selectPsyGaugeById(id)
+                ;
     }
 
     /**
@@ -76,7 +78,7 @@ public class PsyGaugeServiceImpl implements IPsyGaugeService
         //新增问题
         PsyGaugeQuestions psyGaugeQuestions=new PsyGaugeQuestions();
         psyGaugeQuestions.setGaugeId(psyGauge.getId());
-        psyGaugeQuestions.setNo(1L);
+        psyGaugeQuestions.setNo(1);
         psyGaugeQuestions.setTitle("默认问题");
         psyGaugeQuestions.setCreateTime(date);
         psyGaugeQuestions.setCreateBy(psyGauge.getCreateBy());
@@ -112,8 +114,8 @@ public class PsyGaugeServiceImpl implements IPsyGaugeService
     private PsyGaugeScoreSetting getPsyGaugeScoreSetting(PsyGauge psyGauge) {
         PsyGaugeScoreSetting psyGaugeScoreSetting=new PsyGaugeScoreSetting();
         psyGaugeScoreSetting.setGaugeId(psyGauge.getId());
-        psyGaugeScoreSetting.setStart(1l);
-        psyGaugeScoreSetting.setEnd(20l);
+        psyGaugeScoreSetting.setStart(1);
+        psyGaugeScoreSetting.setEnd(20);
         psyGaugeScoreSetting.setProposal("");
         psyGaugeScoreSettingMapper.insertPsyGaugeScoreSetting(psyGaugeScoreSetting);
         return psyGaugeScoreSetting;
@@ -123,7 +125,7 @@ public class PsyGaugeServiceImpl implements IPsyGaugeService
         PsyGaugeQuestionsOptions psyGaugeQuestionsOptions=new PsyGaugeQuestionsOptions();
         psyGaugeQuestionsOptions.setGaugeQuestionsId(psyGaugeQuestions.getId());
         psyGaugeQuestionsOptions.setName("默认选项1");
-        psyGaugeQuestionsOptions.setValue(1L);
+        psyGaugeQuestionsOptions.setValue(1);
         psyGaugeQuestionsOptions.setSort(1);
         psyGaugeQuestionsOptions.setCreateTime(date);
         psyGaugeQuestionsOptions.setCreateBy(psyGauge.getCreateBy());
@@ -151,7 +153,7 @@ public class PsyGaugeServiceImpl implements IPsyGaugeService
      * @return 结果
      */
     @Override
-    public int deletePsyGaugeByIds(Long[] ids)
+    public int deletePsyGaugeByIds(Integer[] ids)
     {
         return psyGaugeMapper.deletePsyGaugeByIds(ids);
     }
@@ -163,7 +165,7 @@ public class PsyGaugeServiceImpl implements IPsyGaugeService
      * @return 结果
      */
     @Override
-    public int deletePsyGaugeById(Long id)
+    public int deletePsyGaugeById(Integer id)
     {
         return psyGaugeMapper.deletePsyGaugeById(id);
     }

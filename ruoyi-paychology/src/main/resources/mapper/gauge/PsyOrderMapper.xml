@@ -39,7 +39,7 @@
         </where>
     </select>
 
-    <select id="selectPsyOrderById" parameterType="Long" resultMap="PsyOrderResult">
+    <select id="selectPsyOrderById" parameterType="Integer" resultMap="PsyOrderResult">
         <include refid="selectPsyOrderVo"/>
         where id = #{id}
     </select>
@@ -93,7 +93,7 @@
 
     </update>
 
-    <delete id="deletePsyOrderById" parameterType="Long">
+    <delete id="deletePsyOrderById" parameterType="Integer">
         delete
         from psy_order
         where id = #{id}

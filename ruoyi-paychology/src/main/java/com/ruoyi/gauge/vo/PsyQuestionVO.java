@@ -17,21 +17,21 @@ import java.util.List;
 public class PsyQuestionVO {
 
     @ApiModelProperty("问题id")
-    private Long id;
+    private Integer id;
 
     @ApiModelProperty("问题描述")
     private String title;
 
     @ApiModelProperty("问题序号")
-    private Long no;
+    private Integer no;
 
     @ApiModelProperty("问题选择类型(0-单选，1-多选)")
-    private Long selectType;
+    private Integer selectType;
 
     @ApiModelProperty("问题选项")
     private List<PsyGaugeQuestionsOptions> options;
 
     @ApiModelProperty("答案")
-    private List<Long> answers;
+    private List<Integer> answers;
 
 }

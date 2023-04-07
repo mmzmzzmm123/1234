@@ -27,7 +27,7 @@ public class PsyConsultantServiceImpl implements IPsyConsultantService
      * @return 心理咨询师
      */
     @Override
-    public PsyConsultant selectPsyConsultantById(Long id)
+    public PsyConsultant selectPsyConsultantById(Integer id)
     {
         return psyConsultantMapper.selectPsyConsultantById(id);
     }
@@ -76,7 +76,7 @@ public class PsyConsultantServiceImpl implements IPsyConsultantService
      * @return 结果
      */
     @Override
-    public int deletePsyConsultantByIds(Long[] ids)
+    public int deletePsyConsultantByIds(Integer[] ids)
     {
         return psyConsultantMapper.deletePsyConsultantByIds(ids);
     }
@@ -88,7 +88,7 @@ public class PsyConsultantServiceImpl implements IPsyConsultantService
      * @return 结果
      */
     @Override
-    public int deletePsyConsultantById(Long id)
+    public int deletePsyConsultantById(Integer id)
     {
         return psyConsultantMapper.deletePsyConsultantById(id);
     }

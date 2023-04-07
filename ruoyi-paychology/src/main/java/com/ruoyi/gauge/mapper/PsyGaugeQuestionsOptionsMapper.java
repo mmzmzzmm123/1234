@@ -19,7 +19,7 @@ public interface PsyGaugeQuestionsOptionsMapper
      * @param id 心理测评问题选项主键
      * @return 心理测评问题选项
      */
-    public PsyGaugeQuestionsOptions selectPsyGaugeQuestionsOptionsById(Long id);
+    public PsyGaugeQuestionsOptions selectPsyGaugeQuestionsOptionsById(Integer id);
 
     /**
      * 查询心理测评问题选项列表
@@ -51,7 +51,7 @@ public interface PsyGaugeQuestionsOptionsMapper
      * @param id 心理测评问题选项主键
      * @return 结果
      */
-    public int deletePsyGaugeQuestionsOptionsById(Long id);
+    public int deletePsyGaugeQuestionsOptionsById(Integer id);
 
     /**
      * 批量删除心理测评问题选项
@@ -59,7 +59,7 @@ public interface PsyGaugeQuestionsOptionsMapper
      * @param ids 需要删除的数据主键集合
      * @return 结果
      */
-    public int deletePsyGaugeQuestionsOptionsByIds(Long[] ids);
+    public int deletePsyGaugeQuestionsOptionsByIds(Integer[] ids);
 
-    List<PsyGaugeQuestionsOptions> queryOptionsByIds(@Param("ids") List<Long> ids);
+    List<PsyGaugeQuestionsOptions> queryOptionsByIds(@Param("ids") List<Integer> ids);
 }

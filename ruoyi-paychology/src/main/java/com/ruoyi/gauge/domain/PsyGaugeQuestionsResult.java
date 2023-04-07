@@ -1,15 +1,14 @@
 package com.ruoyi.gauge.domain;
 
-import io.swagger.annotations.ApiModelProperty;
+import com.ruoyi.common.annotation.Excel;
+import com.ruoyi.common.core.domain.BaseEntity;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
-import com.ruoyi.common.annotation.Excel;
-import com.ruoyi.common.core.domain.BaseEntity;
 
-import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.util.List;
 
@@ -19,6 +18,7 @@ import java.util.List;
  * @author ruoyi
  * @date 2022-09-10
  */
+@Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
@@ -26,24 +26,24 @@ public class PsyGaugeQuestionsResult extends BaseEntity
 {
     private static final long serialVersionUID = 1L;
 
-    private Long id;
+    private Integer id;
 
-    @Excel(name = "用户")
-    private String userId;
+    @Excel(name = "用户ID")
+    private Integer userId;
 
     @Excel(name = "量表")
     @NotNull(message = "量表id不能为空")
-    private Long gaugeId;
+    private Integer gaugeId;
 
     @Excel(name = "问题")
     @NotNull(message = "问题id不能为空")
-    private Long questionsId;
+    private Integer questionsId;
 
     @Excel(name = "问题选项集合")
     @NotNull(message = "问题选项id集合不能为空")
-    private List<Long> questionsOptionsIdList;
+    private List<Integer> questionsOptionsIdList;
 
-    private Long questionsOptionsId;
+    private Integer questionsOptionsId;
 
     /** 得分 */
     @Excel(name = "得分")
@@ -52,78 +52,7 @@ public class PsyGaugeQuestionsResult extends BaseEntity
     /**
      * 订单id
      */
-    private String orderId;
-
-    public String getOrderId() {
-        return orderId;
-    }
-
-    public void setOrderId(String orderId) {
-        this.orderId = orderId;
-    }
-
-    public void setId(Long id)
-    {
-        this.id = id;
-    }
-
-    public Long getId() 
-    {
-        return id;
-    }
-    public void setUserId(String userId) 
-    {
-        this.userId = userId;
-    }
-
-    public String getUserId() 
-    {
-        return userId;
-    }
-    public void setGaugeId(Long gaugeId) 
-    {
-        this.gaugeId = gaugeId;
-    }
-
-    public Long getGaugeId() 
-    {
-        return gaugeId;
-    }
-    public void setQuestionsId(Long questionsId) 
-    {
-        this.questionsId = questionsId;
-    }
-
-    public Long getQuestionsId() 
-    {
-        return questionsId;
-    }
-    public void setQuestionsOptionsId(Long questionsOptionsId) 
-    {
-        this.questionsOptionsId = questionsOptionsId;
-    }
-
-    public Long getQuestionsOptionsId() 
-    {
-        return questionsOptionsId;
-    }
-    public void setScore(String score) 
-    {
-        this.score = score;
-    }
-
-    public String getScore() 
-    {
-        return score;
-    }
-
-    public List<Long> getQuestionsOptionsIdList() {
-        return questionsOptionsIdList;
-    }
-
-    public void setQuestionsOptionsIdList(List<Long> questionsOptionsIdList) {
-        this.questionsOptionsIdList = questionsOptionsIdList;
-    }
+    private Integer orderId;
 
     @Override
     public String toString() {

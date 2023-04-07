@@ -3,6 +3,7 @@ package com.ruoyi.psychology.domain;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.ruoyi.common.annotation.Excel;
 import lombok.Builder;
+import lombok.Data;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
@@ -15,6 +16,7 @@ import java.util.Date;
  * @author ruoyi
  * @date 2022-08-26
  */
+@Data
 @Builder
 public class PsyUser
 {
@@ -47,69 +49,6 @@ public class PsyUser
     @Excel(name = "创建时间" ,dateFormat = "yyyy-MM-dd HH:mm:SS")
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date createTime;
-
-    public void setId(Integer id)
-    {
-        this.id = id;
-    }
-
-    public Integer getId()
-    {
-        return id;
-    }
-    public void setName(String name) 
-    {
-        this.name = name;
-    }
-
-    public String getName() 
-    {
-        return name;
-    }
-    public void setPhone(String phone) 
-    {
-        this.phone = phone;
-    }
-
-    public String getPhone() 
-    {
-        return phone;
-    }
-    public void setAvatar(String avatar) 
-    {
-        this.avatar = avatar;
-    }
-
-    public String getAvatar() 
-    {
-        return avatar;
-    }
-    public void setStatus(String status) 
-    {
-        this.status = status;
-    }
-
-    public String getStatus() 
-    {
-        return status;
-    }
-    public void setWxOpenid(String wxOpenid) 
-    {
-        this.wxOpenid = wxOpenid;
-    }
-
-    public String getWxOpenid() 
-    {
-        return wxOpenid;
-    }
-
-    public Date getCreateTime() {
-        return createTime;
-    }
-
-    public void setCreateTime(Date createTime) {
-        this.createTime = createTime;
-    }
 
     @Override
     public String toString() {

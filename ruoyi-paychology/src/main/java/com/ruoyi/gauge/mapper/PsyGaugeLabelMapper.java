@@ -19,7 +19,7 @@ public interface PsyGaugeLabelMapper {
      * @param id 测评标签主键
      * @return 测评标签
      */
-    public PsyGaugeLabel selectPsyGaugeLabelById(Long id);
+    public PsyGaugeLabel selectPsyGaugeLabelById(Integer id);
 
     /**
      * 查询测评标签列表
@@ -51,7 +51,7 @@ public interface PsyGaugeLabelMapper {
      * @param id 测评标签主键
      * @return 结果
      */
-    public int deletePsyGaugeLabelById(Long id);
+    public int deletePsyGaugeLabelById(Integer id);
 
     /**
      * 批量删除测评标签
@@ -59,7 +59,7 @@ public interface PsyGaugeLabelMapper {
      * @param ids 需要删除的数据主键集合
      * @return 结果
      */
-    public int deletePsyGaugeLabelByIds(Long[] ids);
+    public int deletePsyGaugeLabelByIds(Integer[] ids);
 
     /**
      * 通过标签查询对应量表数据

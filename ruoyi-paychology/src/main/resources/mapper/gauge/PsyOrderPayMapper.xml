@@ -30,7 +30,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         </where>
     </select>
     
-    <select id="selectPsyOrderPayById" parameterType="Long" resultMap="PsyOrderPayResult">
+    <select id="selectPsyOrderPayById" parameterType="Integer" resultMap="PsyOrderPayResult">
         <include refid="selectPsyOrderPayVo"/>
         where id = #{id}
     </select>
@@ -82,7 +82,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         where order_id = #{orderId}
     </update>
 
-    <delete id="deletePsyOrderPayById" parameterType="Long">
+    <delete id="deletePsyOrderPayById" parameterType="Integer">
         delete from psy_order_pay where id = #{id}
     </delete>
 

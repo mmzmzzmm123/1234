@@ -17,7 +17,7 @@ public interface IPsyAppointmentService
      * @param id 咨询师预约主键
      * @return 咨询师预约
      */
-    public PsyAppointment selectPsyAppointmentById(Long id);
+    public PsyAppointment selectPsyAppointmentById(Integer id);
 
     /**
      * 查询咨询师预约列表
@@ -49,7 +49,7 @@ public interface IPsyAppointmentService
      * @param ids 需要删除的咨询师预约主键集合
      * @return 结果
      */
-    public int deletePsyAppointmentByIds(Long[] ids);
+    public int deletePsyAppointmentByIds(Integer[] ids);
 
     /**
      * 删除咨询师预约信息
@@ -57,5 +57,5 @@ public interface IPsyAppointmentService
      * @param id 咨询师预约主键
      * @return 结果
      */
-    public int deletePsyAppointmentById(Long id);
+    public int deletePsyAppointmentById(Integer id);
 }

@@ -1,5 +1,6 @@
 package com.ruoyi.gauge.domain;
 
+import lombok.Data;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import com.ruoyi.common.annotation.Excel;
@@ -11,74 +12,29 @@ import com.ruoyi.common.core.domain.BaseEntity;
  * @author ruoyi
  * @date 2023-01-30
  */
+@Data
 public class PsyWorkManagement extends BaseEntity
 {
     private static final long serialVersionUID = 1L;
 
     /** $column.columnComment */
-    private Long id;
+    private Integer id;
 
     /** 咨询师id */
     @Excel(name = "咨询师id")
-    private Long consultantId;
+    private Integer consultantId;
 
     /** 可选班次0全天1上午2下午 3晚上 */
     @Excel(name = "可选班次0全天1上午2下午 3晚上")
-    private String shift;
+    private Integer shift;
 
     /** 咨询时段 */
     @Excel(name = "咨询时段")
-    private Long timeInterval;
+    private Integer timeInterval;
 
     /** 咨询时长(分钟) */
     @Excel(name = "咨询时长(分钟)")
-    private Long time;
-
-    public void setId(Long id) 
-    {
-        this.id = id;
-    }
-
-    public Long getId() 
-    {
-        return id;
-    }
-    public void setConsultantId(Long consultantId) 
-    {
-        this.consultantId = consultantId;
-    }
-
-    public Long getConsultantId() 
-    {
-        return consultantId;
-    }
-    public void setShift(String shift) 
-    {
-        this.shift = shift;
-    }
-
-    public String getShift() 
-    {
-        return shift;
-    }
-    public void setTimeInterval(Long timeInterval) 
-    {
-        this.timeInterval = timeInterval;
-    }
-
-    public Long getTimeInterval() 
-    {
-        return timeInterval;
-    }
-    public void setTime(Long time) 
-    {
-        this.time = time;
-    }
-
-    public Long getTime() 
-    {
-        return time;
-    }
+    private Integer time;
 
     @Override
     public String toString() {

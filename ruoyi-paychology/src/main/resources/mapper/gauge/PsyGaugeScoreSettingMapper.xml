@@ -34,7 +34,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         </foreach>
     </select>
 
-    <select id="selectPsyGaugeScoreSettingById" parameterType="Long" resultMap="PsyGaugeScoreSettingResult">
+    <select id="selectPsyGaugeScoreSettingById" parameterType="Integer" resultMap="PsyGaugeScoreSettingResult">
         <include refid="selectPsyGaugeScoreSettingVo"/>
         where id = #{id}
     </select>
@@ -67,7 +67,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         where id = #{id}
     </update>
 
-    <delete id="deletePsyGaugeScoreSettingById" parameterType="Long">
+    <delete id="deletePsyGaugeScoreSettingById" parameterType="Integer">
         delete from psy_gauge_Score_setting where id = #{id}
     </delete>
 

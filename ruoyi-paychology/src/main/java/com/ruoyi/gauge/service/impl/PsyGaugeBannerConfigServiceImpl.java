@@ -29,7 +29,7 @@ public class PsyGaugeBannerConfigServiceImpl implements IPsyGaugeBannerConfigSer
      * @return 测评banner配置
      */
     @Override
-    public PsyGaugeBannerConfig selectPsyGaugeBannerConfigById(Long id)
+    public PsyGaugeBannerConfig selectPsyGaugeBannerConfigById(Integer id)
     {
         return psyGaugeBannerConfigMapper.selectPsyGaugeBannerConfigById(id);
     }
@@ -78,7 +78,7 @@ public class PsyGaugeBannerConfigServiceImpl implements IPsyGaugeBannerConfigSer
      * @return 结果
      */
     @Override
-    public int deletePsyGaugeBannerConfigByIds(Long[] ids)
+    public int deletePsyGaugeBannerConfigByIds(Integer[] ids)
     {
         return psyGaugeBannerConfigMapper.deletePsyGaugeBannerConfigByIds(ids);
     }
@@ -90,7 +90,7 @@ public class PsyGaugeBannerConfigServiceImpl implements IPsyGaugeBannerConfigSer
      * @return 结果
      */
     @Override
-    public int deletePsyGaugeBannerConfigById(Long id)
+    public int deletePsyGaugeBannerConfigById(Integer id)
     {
         return psyGaugeBannerConfigMapper.deletePsyGaugeBannerConfigById(id);
     }

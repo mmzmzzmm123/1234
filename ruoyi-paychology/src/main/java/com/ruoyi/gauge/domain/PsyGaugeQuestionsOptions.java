@@ -1,5 +1,6 @@
 package com.ruoyi.gauge.domain;
 
+import lombok.Data;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import com.ruoyi.common.annotation.Excel;
@@ -11,16 +12,17 @@ import com.ruoyi.common.core.domain.BaseEntity;
  * @author ruoyi
  * @date 2022-09-06
  */
+@Data
 public class PsyGaugeQuestionsOptions extends BaseEntity
 {
     private static final long serialVersionUID = 1L;
 
     /** $column.columnComment */
-    private Long id;
+    private Integer id;
 
     /** 测评表单题目ID */
     @Excel(name = "测评表单题目ID")
-    private Long gaugeQuestionsId;
+    private Integer gaugeQuestionsId;
 
     /** 选项名 */
     @Excel(name = "选项名")
@@ -28,7 +30,7 @@ public class PsyGaugeQuestionsOptions extends BaseEntity
 
     /** 分数 */
     @Excel(name = "分数")
-    private Long value;
+    private Integer value;
 
     /** 选项图片 */
     @Excel(name = "选项图片")
@@ -43,73 +45,6 @@ public class PsyGaugeQuestionsOptions extends BaseEntity
 
     private boolean selectedFlag;
 
-    public static long getSerialVersionUID() {
-        return serialVersionUID;
-    }
-
-    public boolean isSelectedFlag() {
-        return selectedFlag;
-    }
-
-    public void setSelectedFlag(boolean selectedFlag) {
-        this.selectedFlag = selectedFlag;
-    }
-
-    public void setId(Long id)
-    {
-        this.id = id;
-    }
-
-    public Long getId() 
-    {
-        return id;
-    }
-    public void setGaugeQuestionsId(Long gaugeQuestionsId) 
-    {
-        this.gaugeQuestionsId = gaugeQuestionsId;
-    }
-
-    public Long getGaugeQuestionsId() 
-    {
-        return gaugeQuestionsId;
-    }
-    public void setName(String name) 
-    {
-        this.name = name;
-    }
-
-    public String getName() 
-    {
-        return name;
-    }
-    public void setValue(Long value) 
-    {
-        this.value = value;
-    }
-
-    public Long getValue() 
-    {
-        return value;
-    }
-    public void setImgUrl(String imgUrl) 
-    {
-        this.imgUrl = imgUrl;
-    }
-
-    public String getImgUrl() 
-    {
-        return imgUrl;
-    }
-    public void setType(Integer type) 
-    {
-        this.type = type;
-    }
-
-    public Integer getType() 
-    {
-        return type;
-    }
-
     @Override
     public String toString() {
         return new ToStringBuilder(this,ToStringStyle.MULTI_LINE_STYLE)
@@ -121,13 +56,5 @@ public class PsyGaugeQuestionsOptions extends BaseEntity
             .append("type", getType())
             .append("sort", getSort())
             .toString();
-    }
-
-    public Integer getSort() {
-        return sort;
-    }
-
-    public void setSort(Integer sort) {
-        this.sort = sort;
     }
 }

@@ -64,7 +64,7 @@ public class PsyGaugeBannerConfigController extends BaseController
      */
     @PreAuthorize("@ss.hasPermi('banner:config:query')")
     @GetMapping(value = "/{id}")
-    public AjaxResult getInfo(@PathVariable("id") Long id)
+    public AjaxResult getInfo(@PathVariable("id") Integer id)
     {
         return AjaxResult.success(psyGaugeBannerConfigService.selectPsyGaugeBannerConfigById(id));
     }
@@ -98,7 +98,7 @@ public class PsyGaugeBannerConfigController extends BaseController
     @PreAuthorize("@ss.hasPermi('banner:config:remove')")
     @Log(title = "测评banner配置", businessType = BusinessType.DELETE)
 	@DeleteMapping("/{ids}")
-    public AjaxResult remove(@PathVariable Long[] ids)
+    public AjaxResult remove(@PathVariable Integer[] ids)
     {
         return toAjax(psyGaugeBannerConfigService.deletePsyGaugeBannerConfigByIds(ids));
     }

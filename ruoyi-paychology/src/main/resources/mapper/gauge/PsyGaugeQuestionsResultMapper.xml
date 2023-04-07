@@ -31,7 +31,7 @@
         </where>
     </select>
 
-    <select id="selectPsyGaugeQuestionsResultById" parameterType="Long" resultMap="PsyGaugeQuestionsResultResult">
+    <select id="selectPsyGaugeQuestionsResultById" parameterType="Integer" resultMap="PsyGaugeQuestionsResultResult">
         <include refid="selectPsyGaugeQuestionsResultVo"/>
         where id = #{id}
     </select>
@@ -70,7 +70,7 @@
         where id = #{id}
     </update>
 
-    <delete id="deletePsyGaugeQuestionsResultById" parameterType="Long">
+    <delete id="deletePsyGaugeQuestionsResultById" parameterType="Integer">
         delete
         from psy_gauge_questions_result
         where id = #{id}

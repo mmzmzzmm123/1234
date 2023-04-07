@@ -28,7 +28,7 @@ public class PsyConsultingOrderServiceImpl implements IPsyConsultingOrderService
      * @return 咨询订单
      */
     @Override
-    public PsyConsultingOrder selectPsyConsultingOrderById(Long id)
+    public PsyConsultingOrder selectPsyConsultingOrderById(Integer id)
     {
         return psyConsultingOrderMapper.selectPsyConsultingOrderById(id);
     }
@@ -78,7 +78,7 @@ public class PsyConsultingOrderServiceImpl implements IPsyConsultingOrderService
      * @return 结果
      */
     @Override
-    public int deletePsyConsultingOrderByIds(Long[] ids)
+    public int deletePsyConsultingOrderByIds(Integer[] ids)
     {
         return psyConsultingOrderMapper.deletePsyConsultingOrderByIds(ids);
     }
@@ -90,7 +90,7 @@ public class PsyConsultingOrderServiceImpl implements IPsyConsultingOrderService
      * @return 结果
      */
     @Override
-    public int deletePsyConsultingOrderById(Long id)
+    public int deletePsyConsultingOrderById(Integer id)
     {
         return psyConsultingOrderMapper.deletePsyConsultingOrderById(id);
     }

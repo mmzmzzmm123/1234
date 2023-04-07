@@ -26,7 +26,7 @@ public class PsyGaugeMultiSettingServiceImpl implements IPsyGaugeMultiSettingSer
      * @return 心理测评多维设置
      */
     @Override
-    public PsyGaugeMultiSetting selectPsyGaugeMultiSettingById(Long id)
+    public PsyGaugeMultiSetting selectPsyGaugeMultiSettingById(Integer id)
     {
         return psyGaugeMultiSettingMapper.selectPsyGaugeMultiSettingById(id);
     }
@@ -74,7 +74,7 @@ public class PsyGaugeMultiSettingServiceImpl implements IPsyGaugeMultiSettingSer
      * @return 结果
      */
     @Override
-    public int deletePsyGaugeMultiSettingByIds(Long[] ids)
+    public int deletePsyGaugeMultiSettingByIds(Integer[] ids)
     {
         return psyGaugeMultiSettingMapper.deletePsyGaugeMultiSettingByIds(ids);
     }
@@ -86,7 +86,7 @@ public class PsyGaugeMultiSettingServiceImpl implements IPsyGaugeMultiSettingSer
      * @return 结果
      */
     @Override
-    public int deletePsyGaugeMultiSettingById(Long id)
+    public int deletePsyGaugeMultiSettingById(Integer id)
     {
         return psyGaugeMultiSettingMapper.deletePsyGaugeMultiSettingById(id);
     }

@@ -17,7 +17,7 @@ public interface IPsyGaugeBannerConfigService
      * @param id 测评banner配置主键
      * @return 测评banner配置
      */
-    public PsyGaugeBannerConfig selectPsyGaugeBannerConfigById(Long id);
+    public PsyGaugeBannerConfig selectPsyGaugeBannerConfigById(Integer id);
 
     /**
      * 查询测评banner配置列表
@@ -49,7 +49,7 @@ public interface IPsyGaugeBannerConfigService
      * @param ids 需要删除的测评banner配置主键集合
      * @return 结果
      */
-    public int deletePsyGaugeBannerConfigByIds(Long[] ids);
+    public int deletePsyGaugeBannerConfigByIds(Integer[] ids);
 
     /**
      * 删除测评banner配置信息
@@ -57,5 +57,5 @@ public interface IPsyGaugeBannerConfigService
      * @param id 测评banner配置主键
      * @return 结果
      */
-    public int deletePsyGaugeBannerConfigById(Long id);
+    public int deletePsyGaugeBannerConfigById(Integer id);
 }

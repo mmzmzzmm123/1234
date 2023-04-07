@@ -20,7 +20,7 @@ public interface PsyOrderMapper
      * @param id 心理测评订单信息主键
      * @return 心理测评订单信息
      */
-    public PsyOrder selectPsyOrderById(Long id);
+    public PsyOrder selectPsyOrderById(Integer id);
 
     /**
      * 查询心理测评订单信息列表
@@ -54,7 +54,7 @@ public interface PsyOrderMapper
      * @param id 心理测评订单信息主键
      * @return 结果
      */
-    public int deletePsyOrderById(Long id);
+    public int deletePsyOrderById(Integer id);
 
     /**
      * 批量删除心理测评订单信息
@@ -62,7 +62,7 @@ public interface PsyOrderMapper
      * @param ids 需要删除的数据主键集合
      * @return 结果
      */
-    public int deletePsyOrderByIds(Long[] ids);
+    public int deletePsyOrderByIds(Integer[] ids);
 
     List<PsyOrder> queryOrderPage(PsyOrder psyOrder);
 

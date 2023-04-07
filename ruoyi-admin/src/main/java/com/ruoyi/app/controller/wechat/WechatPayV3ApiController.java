@@ -80,15 +80,15 @@ public class WechatPayV3ApiController extends BaseController {
     public AjaxResult wechatPay(@RequestBody WechatPayDTO wechatPayDTO) {
 
         //@TODO demo中先写死的一些参数
-        Long userId = Long.valueOf(wechatPayDTO.getUserId()); //用户id
+        Integer userId = wechatPayDTO.getUserId(); //用户id
         Integer courseId = null;
-        Long gaugeId = null;
+        Integer gaugeId = null;
         String out_trade_no = null;
         if (wechatPayDTO.getCourseId() != null) {
             courseId = wechatPayDTO.getCourseId(); //课程ID
         }
         if (wechatPayDTO.getGaugeId() != null) {
-            gaugeId = Long.valueOf(wechatPayDTO.getGaugeId()); //测评ID
+            gaugeId = wechatPayDTO.getGaugeId(); //测评ID
         }
 
         BigDecimal amount = wechatPayDTO.getAmount(); //单位：元
@@ -109,7 +109,7 @@ public class WechatPayV3ApiController extends BaseController {
 
             // TODO: 内部生成支付对象
             PsyOrderPay orderPay = new PsyOrderPay();
-            orderPay.setOrderId(Long.parseLong(newCourOrder.getId().toString()));
+            orderPay.setOrderId(newCourOrder.getId());
             orderPay.setPayType(CourConstant.PAY_WAY_WEIXIN); // 微信
             orderPay.setPayStatus(CourConstant.PAY_STATUE_PENDING);
             orderPay.setAmount(amount);
@@ -125,6 +125,7 @@ public class WechatPayV3ApiController extends BaseController {
                     .orderStatus(OrderStatus.CREATE.getValue())
                     .gaugeStatus(GaugeStatus.UNFINISHED.getValue())
                     .gaugeId(gaugeId)
+                    .userId(wechatPayDTO.getUserId())
                     .build();
             psyOrder.setCreateBy(psyUserService.selectPsyUserById(wechatPayDTO.getUserId()).getName());
 
@@ -220,7 +221,7 @@ public class WechatPayV3ApiController extends BaseController {
     @PostMapping("/wechatRefund")
     public Map<String, Object> wechatRefund(String transaction_id) {
         //@TODO demo中先写死的一些参数
-        Long userId = 1L; //先写死一个用户id
+        Integer userId = 1; //先写死一个用户id
         BigDecimal amount = new BigDecimal("0.01"); //先写死一个退款金额 单位：元
         String reason = "支付demo-退还订金"; //先写死一个退款原因 这是可选的
  
@@ -281,7 +282,7 @@ public class WechatPayV3ApiController extends BaseController {
             // TODO: 修改支付对象状态为已支付
             String payId = res.getString("transaction_id"); // 微信支付系统生成的订单号
             PsyOrderPay orderPay = new PsyOrderPay();
-            orderPay.setOrderId(Long.parseLong(courOrder.getId().toString())); // 订单ID
+            orderPay.setOrderId(courOrder.getId()); // 订单ID
             orderPay.setPayStatus(CourConstant.PAY_STATUE_PAID);
             orderPay.setPayId(payId);
             orderPayService.updatePsyOrderPayByOrderId(orderPay);
@@ -294,7 +295,7 @@ public class WechatPayV3ApiController extends BaseController {
             // TODO: 修改支付对象状态为已支付
             String payId = res.getString("transaction_id"); // 微信支付系统生成的订单号
             PsyOrderPay orderPay = new PsyOrderPay();
-            orderPay.setOrderId(Long.parseLong(psyOrder.getId().toString())); // 订单ID
+            orderPay.setOrderId(psyOrder.getId()); // 订单ID
             orderPay.setPayStatus(CourConstant.PAY_STATUE_PAID);
             orderPay.setPayId(payId);
             orderPayService.updatePsyOrderPayByOrderId(orderPay);
@@ -358,7 +359,7 @@ public class WechatPayV3ApiController extends BaseController {
      * @param id   用户id
      * @return
      */
-    public String  createOrderNo(String head, Long id) {
+    public String  createOrderNo(String head, Integer id) {
         StringBuilder uid = new StringBuilder(id.toString());
         Date date = new Date();
         SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmss");

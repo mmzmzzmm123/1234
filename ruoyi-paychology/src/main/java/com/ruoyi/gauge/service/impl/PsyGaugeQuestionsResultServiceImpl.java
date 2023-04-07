@@ -50,7 +50,7 @@ public class PsyGaugeQuestionsResultServiceImpl implements IPsyGaugeQuestionsRes
      * @return 心理测评问题结果
      */
     @Override
-    public PsyGaugeQuestionsResult selectPsyGaugeQuestionsResultById(Long id)
+    public PsyGaugeQuestionsResult selectPsyGaugeQuestionsResultById(Integer id)
     {
         return psyGaugeQuestionsResultMapper.selectPsyGaugeQuestionsResultById(id);
     }
@@ -78,21 +78,21 @@ public class PsyGaugeQuestionsResultServiceImpl implements IPsyGaugeQuestionsRes
     public int answer(PsyGaugeQuestionsResult psyGaugeQuestionsResult ,Integer userId)
     {
         //先删除该问题的答案
-        psyGaugeQuestionsResult.setUserId(Integer.toString(userId));
+        psyGaugeQuestionsResult.setUserId(userId);
         psyGaugeQuestionsResultMapper.deleteResult(psyGaugeQuestionsResult);
 
         //查询问题分数，进行数据绑定，插入数据
         List<PsyGaugeQuestionsOptions> psyGaugeQuestionsOptions = psyGaugeQuestionsOptionsMapper.queryOptionsByIds(psyGaugeQuestionsResult.getQuestionsOptionsIdList());
-        Map<Long, Long> collect = psyGaugeQuestionsOptions.stream().collect(Collectors.toMap(PsyGaugeQuestionsOptions::getId, PsyGaugeQuestionsOptions::getValue));
+        Map<Integer, Integer> collect = psyGaugeQuestionsOptions.stream().collect(Collectors.toMap(PsyGaugeQuestionsOptions::getId, PsyGaugeQuestionsOptions::getValue));
 
         List<PsyGaugeQuestionsResult> results = Lists.newArrayList();
-        for (Long id : psyGaugeQuestionsResult.getQuestionsOptionsIdList()) {
+        for (Integer id : psyGaugeQuestionsResult.getQuestionsOptionsIdList()) {
             PsyGaugeQuestionsResult build = PsyGaugeQuestionsResult.builder()
                     .gaugeId(psyGaugeQuestionsResult.getGaugeId())
                     .questionsId(psyGaugeQuestionsResult.getQuestionsId())
                     .questionsOptionsId(id)
                     .score(collect.get(id).toString())
-                    .userId(userId.toString())
+                    .userId(userId)
                     .orderId(psyGaugeQuestionsResult.getOrderId())
                     .build();
             build.setCreateTime(DateUtils.getNowDate());
@@ -120,7 +120,7 @@ public class PsyGaugeQuestionsResultServiceImpl implements IPsyGaugeQuestionsRes
      * @return 结果
      */
     @Override
-    public int deletePsyGaugeQuestionsResultByIds(Long[] ids)
+    public int deletePsyGaugeQuestionsResultByIds(Integer[] ids)
     {
         return psyGaugeQuestionsResultMapper.deletePsyGaugeQuestionsResultByIds(ids);
     }
@@ -132,7 +132,7 @@ public class PsyGaugeQuestionsResultServiceImpl implements IPsyGaugeQuestionsRes
      * @return 结果
      */
     @Override
-    public int deletePsyGaugeQuestionsResultById(Long id)
+    public int deletePsyGaugeQuestionsResultById(Integer id)
     {
         return psyGaugeQuestionsResultMapper.deletePsyGaugeQuestionsResultById(id);
     }
