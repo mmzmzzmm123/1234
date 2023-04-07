@@ -30,7 +30,7 @@
         </where>
     </select>
 
-    <select id="selectPsyUserById" parameterType="String" resultMap="PsyUserResult">
+    <select id="selectPsyUserById" parameterType="Integer" resultMap="PsyUserResult">
         <include refid="selectPsyUserVo"/>
         where id = #{id}
     </select>
@@ -70,7 +70,7 @@
         where id = #{id}
     </update>
 
-    <delete id="deletePsyUserById" parameterType="String">
+    <delete id="deletePsyUserById" parameterType="Integer">
         delete
         from psy_user
         where id = #{id}

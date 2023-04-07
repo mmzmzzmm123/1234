@@ -64,7 +64,7 @@
 
     <el-table v-loading="loading" :data="orderList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="ID" align="center" prop="id" />
+      <!-- <el-table-column label="ID" align="center" prop="id" /> -->
       <el-table-column label="订单编号" align="center" prop="orderId" width="300"/>
       <el-table-column label="订单状态" align="center" prop="status">
         <template slot-scope="scope">

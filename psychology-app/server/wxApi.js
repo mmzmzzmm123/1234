@@ -58,14 +58,15 @@ export function getTokenFormCode(code) {
 }
 
 // 通知后台给微信预支付下单，并返回支付签名
-export function getPaySign(userId, produteId, extra) {
+export function getPaySign(userId, produteId, amount, extra) {
   return new Promise((resolve, reject) => {
 	  let params = null
 	  if (extra.module === 'course') {
 		  params = {
 			  userId: userId,
 			  courseId: produteId,
-			  module: extra.module
+			  module: extra.module,
+        amount: amount
 		  }
 	  } else if (extra.module === 'gauge') {
 		  params = {

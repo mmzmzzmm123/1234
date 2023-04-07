@@ -85,7 +85,7 @@
           <el-input v-model="form.name" placeholder="请选择类型名称" />
         </el-form-item>
         <el-form-item label="排序" prop="sort">
-          <el-input v-model="form.sort" placeholder="请输入排序序号" />
+          <el-input v-model.number="form.sort" placeholder="请输入排序" />
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -134,6 +134,9 @@ export default {
         name: [
           { required: true, message: "类型名称不能为空", trigger: "change" }
         ],
+        sort: [
+          { type: 'number', message: "类型编号请输入数值"}
+        ]
       }
     };
   },

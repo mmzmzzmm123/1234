@@ -73,7 +73,7 @@
 
     <el-table v-loading="loading" :data="configList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="ID" align="center" prop="id" />
+      <!-- <el-table-column label="ID" align="center" prop="id" /> -->
       <el-table-column label="banner图片地址" align="center" prop="bannerUrl" width="120">
         <template slot-scope="scope">
           <image-preview :src="scope.row.bannerUrl" :width="50" :height="50"/>

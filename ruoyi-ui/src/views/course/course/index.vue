@@ -96,7 +96,7 @@
 
     <el-table v-loading="loading" :data="courseList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="ID" align="center" prop="id" />
+      <!-- <el-table-column label="ID" align="center" prop="id" /> -->
       <el-table-column label="课程名称" align="center" prop="name" />
       <el-table-column label="课程类型" align="center" prop="type">
         <template slot-scope="scope">
@@ -160,10 +160,10 @@
             <el-form-item label="课程类型" prop="type">
               <el-select v-model="form.type" placeholder="请选择课程类型">
                 <el-option
-                  v-for="dict in courseClassList"
-                  :key="dict.value"
-                  :label="dict.label"
-                  :value="parseInt(dict.value)"
+                  v-for="item in courseClassList"
+                  :key="item.id"
+                  :label="item.name"
+                  :value="item.id"
                 ></el-option>
               </el-select>
             </el-form-item>

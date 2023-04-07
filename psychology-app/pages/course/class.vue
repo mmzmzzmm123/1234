@@ -8,7 +8,7 @@
       <view class="left-class-view">
         <view v-for="courseClass in classList" v-bind:key="courseClass.id">
           <view class="left-class" :class="
-            classSelectedIndex === courseClass.typeId ? 'selected' : ''
+            classSelectedIndex === courseClass.id ? 'selected' : ''
           " @tap="courseClassSelected(courseClass)">{{ courseClass.name }}</view>
         </view>
       </view>
@@ -54,7 +54,7 @@ export default {
     };
   },
   async created() {
-    this.classList = [...[{ name: '全部', typeId: null }], ...await classServer.getClassList()];
+    this.classList = [...[{ name: '全部', id: null }], ...await classServer.getClassList()];
     this.courseList = await classServer.getcourseByClassId(this.classSelectedIndex);
   },
   methods: {
@@ -64,7 +64,7 @@ export default {
       });
     },
     async courseClassSelected(currentClass) {
-      this.classSelectedIndex = currentClass.typeId;
+      this.classSelectedIndex = currentClass.id;
       this.className = currentClass.name;
       this.courseList = await classServer.getcourseByClassId(this.classSelectedIndex);
     },

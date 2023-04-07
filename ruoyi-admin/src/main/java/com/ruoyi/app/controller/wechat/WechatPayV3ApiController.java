@@ -3,6 +3,7 @@ package com.ruoyi.app.controller.wechat;
 import com.alibaba.fastjson2.JSONObject;
 import com.ruoyi.app.controller.wechat.constant.WechatConstants;
 import com.ruoyi.app.controller.wechat.constant.WechatUrlConstants;
+import com.ruoyi.app.controller.wechat.dto.WechatPayDTO;
 import com.ruoyi.app.controller.wechat.utils.WechatPayV3Utils;
 import com.ruoyi.common.constant.RespMessageConstants;
 import com.ruoyi.common.core.controller.BaseController;
@@ -76,22 +77,22 @@ public class WechatPayV3ApiController extends BaseController {
      * @return 小程序支付所需参数
      */
     @PostMapping("/wechatPay")
-    public AjaxResult wechatPay(@RequestBody Map<String, String> map) {
+    public AjaxResult wechatPay(@RequestBody WechatPayDTO wechatPayDTO) {
 
         //@TODO demo中先写死的一些参数
-        Long userId = Long.parseLong(map.get("userId")); //用户id
+        Long userId = Long.valueOf(wechatPayDTO.getUserId()); //用户id
         Integer courseId = null;
         Long gaugeId = null;
         String out_trade_no = null;
-        if (map.get("courseId") != null) {
-            courseId = Integer.parseInt(map.get("courseId")); //课程ID
+        if (wechatPayDTO.getCourseId() != null) {
+            courseId = wechatPayDTO.getCourseId(); //课程ID
         }
-        if (map.get("gaugeId") != null) {
-            gaugeId = Long.parseLong(map.get("gaugeId")); //测评ID
+        if (wechatPayDTO.getGaugeId() != null) {
+            gaugeId = Long.valueOf(wechatPayDTO.getGaugeId()); //测评ID
         }
 
-        BigDecimal amount = new BigDecimal("0.01"); //先写死一个金额 单位：元
-        String module = map.get("module");
+        BigDecimal amount = wechatPayDTO.getAmount(); //单位：元
+        String module = wechatPayDTO.getModule();
 
 
         if (CourConstant.MODULE_COURSE.equals(module)) {
@@ -102,7 +103,7 @@ public class WechatPayV3ApiController extends BaseController {
             courOrder.setOrderId(out_trade_no);
             courOrder.setStatus(CourConstant.COUR_ORDER_STATUE_CREATED);
             courOrder.setAmount(amount);
-            courOrder.setUserId(Integer.parseInt(map.get("userId")));
+            courOrder.setUserId(wechatPayDTO.getUserId());
             courOrder.setCourseId(courseId);
             CourOrder newCourOrder = courOrderService.generateCourOrder(courOrder);
 
@@ -125,7 +126,7 @@ public class WechatPayV3ApiController extends BaseController {
                     .gaugeStatus(GaugeStatus.UNFINISHED.getValue())
                     .gaugeId(gaugeId)
                     .build();
-            psyOrder.setCreateBy(map.get("userId"));
+            psyOrder.setCreateBy(psyUserService.selectPsyUserById(wechatPayDTO.getUserId()).getName());
 
             PsyOrder newPsyOrder = psyOrderService.generatePsyOrder(psyOrder);
 
@@ -136,7 +137,7 @@ public class WechatPayV3ApiController extends BaseController {
                     .payStatus(OrderPayStatus.NEED_PAY.getValue())
                     .payId(UUID.randomUUID().toString())
                     .build();
-            psyOrderPay.setCreateBy(map.get("userId"));
+            psyOrderPay.setCreateBy(psyUserService.selectPsyUserById(wechatPayDTO.getUserId()).getName());
             psyOrderPayService.insertPsyOrderPay(psyOrderPay);
         }
 
