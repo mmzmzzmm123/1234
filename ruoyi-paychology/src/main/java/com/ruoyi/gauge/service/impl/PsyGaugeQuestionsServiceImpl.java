@@ -5,6 +5,7 @@ import java.util.stream.Collectors;
 
 import com.ruoyi.common.core.domain.dto.LoginDTO;
 import com.ruoyi.common.utils.DateUtils;
+import com.ruoyi.gauge.domain.PsyGaugeQuestionsOptions;
 import com.ruoyi.gauge.vo.PsyQuestionVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -95,6 +96,12 @@ public class PsyGaugeQuestionsServiceImpl implements IPsyGaugeQuestionsService {
     public List<PsyQuestionVO> appQueryQuesList(PsyGaugeQuestions psyGaugeQuestions, Integer userId) {
         psyGaugeQuestions.setUserId(userId);
         List<PsyQuestionVO> psyQuestionVOS = psyGaugeQuestionsMapper.appQueryQuesList(psyGaugeQuestions);
+        psyQuestionVOS.forEach(item ->
+            item.setAnswers(
+                item.getOptions().stream().filter(PsyGaugeQuestionsOptions::isSelectedFlag)
+                        .map(PsyGaugeQuestionsOptions::getId).collect(Collectors.toList())
+            )
+        );
         return psyQuestionVOS;
     }
 }

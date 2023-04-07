@@ -144,7 +144,7 @@ public class PsyGaugeQuestionsResultServiceImpl implements IPsyGaugeQuestionsRes
         paramMap.put("orderId",gaugeCommitResultDTO.getOrderId());
         paramMap.put("userId",userId);
         List<PsyGaugeQuestionsResultAll> psyGaugeQuestionsResults = psyGaugeQuestionsResultMapper.selectPsyGaugeQuestionsResultAll(paramMap);
-        int sum=0;
+        int sum = 0;
         if(CollectionUtils.isNotEmpty(psyGaugeQuestionsResults)){
             for (PsyGaugeQuestionsResultAll psyGaugeQuestionsResultAll:psyGaugeQuestionsResults) {
                 sum+=psyGaugeQuestionsResultAll.getValue();

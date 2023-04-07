@@ -88,29 +88,60 @@ export default {
         if (this.lastIndex == 1) {
             callTimeLoad(document.getElementById("timerBox"), true);
         }
-    },
-    onBackPress() {
-        this.confirmMessage = {
-            title: `你已完成${this.currentIndex}题，确认要退出吗？`,
-            cancelBtn: {
-                text: '狠心退出',
-                callback: () => {
-                    uni.navigateTo({
-                        url: `/pages/evaluation/index`,
+        /*
+          页面跳转拦截器
+        */
+        let list = ["navigateTo", "redirectTo", "reLaunch", "switchTab"];
+        list.forEach(item => { 
+         
+        //遍历的方式,navigateTo,redirectTo,reLaunch,switchTab这4个路由方法添加拦截器      
+        let that = this
+        uni.addInterceptor(item, {
+            invoke(e) {
+                // 调用前拦截
+                /* 获取用户的token，自己在登录接口中保存的。 */
+ 
+                // const token = uni.getStorageSync('userToken')
+ 
+                // 获取要跳转的页面路径（url去掉"?"和"?"后的参数）
+                that.showDailog()
+                return false
+ 
+            },
+            fail(err) { // 失败回调拦截 
+                console.log(err);
+                if (Debug) {
+                    uni.showModal({
+                        content: JSON.stringify(err),
+                        showCancel: false
                     });
                 }
-            },
-            submitBtn: {
-                text: '继续答题',
-                callback: () => {
-                    this.showMessage = false;
-                }
-            },
-        }
-        this.showMessage = true;
-        return true;
-    },
+            }
+        })
+    })
+    },    
     methods: {
+      showDailog() {
+          this.confirmMessage = {
+              title: `你已完成${this.currentIndex}题，确认要退出吗？`,
+              cancelBtn: {
+                  text: '狠心退出',
+                  callback: async () => {                    
+                      uni.removeInterceptor("navigateTo");
+                      uni.navigateTo({
+                          url: `/pages/evaluation/index`,
+                      });                    
+                  }
+              },
+              submitBtn: {
+                  text: '继续答题',
+                  callback: () => {
+                      this.showMessage = false;
+                  }
+              },
+          }
+          this.showMessage = true;
+      },
         //重新答题，把之前的答案清空
         toFirstQuestion() {
             this.showMessage = false;
@@ -143,6 +174,8 @@ export default {
         },
         //提交
         async submitEvent() {
+          // 已答题完成，移除页面跳转拦截器
+          uni.removeInterceptor("navigateTo");
             let res = await questionServer.setAnswer(this.productId, this.currentQuestion.id, this.currentQuestion.answers, this.orderId);
             if (res.code == 200) {
                 let result = await questionServer.setResult(this.orderId);

@@ -80,7 +80,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
     <select id="selectPsyGaugeScoreSettingByGaugeId" parameterType="java.util.Map" resultMap="PsyGaugeScoreSettingResult">
          select t1.id, t1.gauge_id, t1.start, t1.end,t1. proposal,t1.result from psy_gauge_score_setting t1
-        where t1.gauge_id = (select gauge_id from psy_order where order_id=#{orderId} ) and #{score} >= t1.start
+        where t1.gauge_id = (select gauge_id from psy_order where id=#{orderId} ) and #{score} >= t1.start
         AND t1.end >= #{score}
     </select>
 </mapper>
