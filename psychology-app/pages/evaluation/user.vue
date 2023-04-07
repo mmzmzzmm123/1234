@@ -152,7 +152,7 @@ export default {
     toTest(order) {
       uni.setStorageSync("gaugeDes", order.gaugeDes);
       uni.navigateTo({
-        url: `/pages/evaluation/testBefore?productId=${order.gaugeId}&&orderId=${order.orderId}`,
+        url: `/pages/evaluation/testBefore?productId=${order.gaugeId}&&orderId=${order.id}`,
       });
     },
     copyOrderNo(orderNo) {
