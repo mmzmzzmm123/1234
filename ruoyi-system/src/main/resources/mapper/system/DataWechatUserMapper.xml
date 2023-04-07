@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.DataWechatUserMapper">
+    
+    <resultMap type="DataWechatUser" id="DataWechatUserResult">
+        <result property="userId"    column="user_id"    />
+        <result property="nickName"    column="nick_name"    />
+        <result property="phone"    column="phone"    />
+        <result property="avatar"    column="avatar"    />
+        <result property="remark"    column="remark"    />
+        <result property="openId"    column="open_id"    />
+        <result property="companyName"    column="company_name"    />
+        <result property="tyshxydm"    column="tyshxydm"    />
+        <result property="legalPersonName"    column="legal_person_name"    />
+        <result property="legalPersonPhone"    column="legal_person_phone"    />
+        <result property="jbrName"    column="JBR_NAME"    />
+        <result property="jbrIdcard"    column="JBR_IDCARD"    />
+        <result property="jbrPhone"    column="JBR_PHONE"    />
+    </resultMap>
+
+    <sql id="selectDataWechatUserVo">
+        select user_id, nick_name, phone, avatar, remark, open_id, company_name, tyshxydm, legal_person_name, legal_person_phone, JBR_NAME, JBR_IDCARD, JBR_PHONE from data_wechat_user
+    </sql>
+
+    <select id="selectDataWechatUserList" parameterType="DataWechatUser" resultMap="DataWechatUserResult">
+        <include refid="selectDataWechatUserVo"/>
+        <where>  
+            <if test="nickName != null  and nickName != ''"> and nick_name like concat('%', #{nickName}, '%')</if>
+            <if test="phone != null  and phone != ''"> and phone = #{phone}</if>
+            <if test="avatar != null  and avatar != ''"> and avatar = #{avatar}</if>
+            <if test="openId != null  and openId != ''"> and open_id = #{openId}</if>
+            <if test="companyName != null  and companyName != ''"> and company_name like concat('%', #{companyName}, '%')</if>
+            <if test="tyshxydm != null  and tyshxydm != ''"> and tyshxydm = #{tyshxydm}</if>
+            <if test="legalPersonName != null  and legalPersonName != ''"> and legal_person_name like concat('%', #{legalPersonName}, '%')</if>
+            <if test="legalPersonPhone != null  and legalPersonPhone != ''"> and legal_person_phone = #{legalPersonPhone}</if>
+            <if test="jbrName != null  and jbrName != ''"> and JBR_NAME like concat('%', #{jbrName}, '%')</if>
+            <if test="jbrIdcard != null  and jbrIdcard != ''"> and JBR_IDCARD = #{jbrIdcard}</if>
+            <if test="jbrPhone != null  and jbrPhone != ''"> and JBR_PHONE = #{jbrPhone}</if>
+        </where>
+    </select>
+    
+    <select id="selectDataWechatUserById" parameterType="Long" resultMap="DataWechatUserResult">
+        <include refid="selectDataWechatUserVo"/>
+        where user_id = #{userId}
+    </select>
+        
+    <insert id="insertDataWechatUser" parameterType="DataWechatUser" useGeneratedKeys="true" keyProperty="userId">
+        insert into data_wechat_user
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="nickName != null">nick_name,</if>
+            <if test="phone != null">phone,</if>
+            <if test="avatar != null">avatar,</if>
+            <if test="remark != null">remark,</if>
+            <if test="openId != null and openId != ''">open_id,</if>
+            <if test="companyName != null and companyName != ''">company_name,</if>
+            <if test="tyshxydm != null and tyshxydm != ''">tyshxydm,</if>
+            <if test="legalPersonName != null and legalPersonName != ''">legal_person_name,</if>
+            <if test="legalPersonPhone != null and legalPersonPhone != ''">legal_person_phone,</if>
+            <if test="jbrName != null and jbrName != ''">JBR_NAME,</if>
+            <if test="jbrIdcard != null and jbrIdcard != ''">JBR_IDCARD,</if>
+            <if test="jbrPhone != null and jbrPhone != ''">JBR_PHONE,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="nickName != null">#{nickName},</if>
+            <if test="phone != null">#{phone},</if>
+            <if test="avatar != null">#{avatar},</if>
+            <if test="remark != null">#{remark},</if>
+            <if test="openId != null and openId != ''">#{openId},</if>
+            <if test="companyName != null and companyName != ''">#{companyName},</if>
+            <if test="tyshxydm != null and tyshxydm != ''">#{tyshxydm},</if>
+            <if test="legalPersonName != null and legalPersonName != ''">#{legalPersonName},</if>
+            <if test="legalPersonPhone != null and legalPersonPhone != ''">#{legalPersonPhone},</if>
+            <if test="jbrName != null and jbrName != ''">#{jbrName},</if>
+            <if test="jbrIdcard != null and jbrIdcard != ''">#{jbrIdcard},</if>
+            <if test="jbrPhone != null and jbrPhone != ''">#{jbrPhone},</if>
+         </trim>
+    </insert>
+
+    <update id="updateDataWechatUser" parameterType="DataWechatUser">
+        update data_wechat_user
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="nickName != null">nick_name = #{nickName},</if>
+            <if test="phone != null">phone = #{phone},</if>
+            <if test="avatar != null">avatar = #{avatar},</if>
+            <if test="remark != null">remark = #{remark},</if>
+            <if test="openId != null and openId != ''">open_id = #{openId},</if>
+            <if test="companyName != null and companyName != ''">company_name = #{companyName},</if>
+            <if test="tyshxydm != null and tyshxydm != ''">tyshxydm = #{tyshxydm},</if>
+            <if test="legalPersonName != null and legalPersonName != ''">legal_person_name = #{legalPersonName},</if>
+            <if test="legalPersonPhone != null and legalPersonPhone != ''">legal_person_phone = #{legalPersonPhone},</if>
+            <if test="jbrName != null and jbrName != ''">JBR_NAME = #{jbrName},</if>
+            <if test="jbrIdcard != null and jbrIdcard != ''">JBR_IDCARD = #{jbrIdcard},</if>
+            <if test="jbrPhone != null and jbrPhone != ''">JBR_PHONE = #{jbrPhone},</if>
+        </trim>
+        where user_id = #{userId}
+    </update>
+
+    <delete id="deleteDataWechatUserById" parameterType="Long">
+        delete from data_wechat_user where user_id = #{userId}
+    </delete>
+
+    <delete id="deleteDataWechatUserByIds" parameterType="String">
+        delete from data_wechat_user where user_id in 
+        <foreach item="userId" collection="array" open="(" separator="," close=")">
+            #{userId}
+        </foreach>
+    </delete>
+
+    <select id="selectUserByOpenId" parameterType="String" resultMap="DataWechatUserResult">
+        <include refid="selectDataWechatUserVo"/>
+        where open_id = #{openId}
+    </select>
+
+</mapper>

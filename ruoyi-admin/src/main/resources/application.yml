@@ -43,9 +43,9 @@ spring:
     # 国际化资源文件路径
     basename: i18n/messages
   profiles:
-#    active: druid-dev #信贷直通车服务-开发环境
+    active: druid-dev #信贷直通车服务-开发环境
 #    active: druid-sit #信贷直通车服务-测试环境
-    active: druid-prod #信贷直通车服务-生产环境
+#    active: druid-prod #信贷直通车服务-生产环境
 #    active: druid-in-dev #内网征信报告服务-开发环境
 #    active: druid-in #内网征信报告服务-生产环境
   # 文件上传
@@ -116,6 +116,17 @@ rsa:
     publicKey: MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAgJgSr/EwPdvXeO+zzDVUeYQQoNhCWImeHeTXI16TnMJ1CQ3iORsv2dTZ3H2h0szCI0qNKSCcE2IttFRu9bDmaZtYpITpo4sO1YSNUc8LRohd2PJTH68LOpUCRrXnXzEVUJ85+77oDHOnz/IM0lSAbRynufH3NMtdq4mRyNFSavM2nkPghYv0rraWGvvAO+1z+LZmfYuQZ4/BraUp8SnV0S1aJW8f7slJPZdg1nbjIydKxnwezoFzm9wm4cBALxpvlqxdpzNueYbY5xHId5gkw8EfL9EZEStMK6OADXGvVsjQpEg5gnbw9FN4uOfzbRtJm8CwjpfQcRicd5kjwfFB5QIDAQAB # RSA公钥
     privateKey: MIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQCAmBKv8TA929d477PMNVR5hBCg2EJYiZ4d5NcjXpOcwnUJDeI5Gy/Z1NncfaHSzMIjSo0pIJwTYi20VG71sOZpm1ikhOmjiw7VhI1RzwtGiF3Y8lMfrws6lQJGtedfMRVQnzn7vugMc6fP8gzSVIBtHKe58fc0y12riZHI0VJq8zaeQ+CFi/SutpYa+8A77XP4tmZ9i5Bnj8GtpSnxKdXRLVolbx/uyUk9l2DWduMjJ0rGfB7OgXOb3CbhwEAvGm+WrF2nM255htjnEch3mCTDwR8v0RkRK0wro4ANca9WyNCkSDmCdvD0U3i45/NtG0mbwLCOl9BxGJx3mSPB8UHlAgMBAAECggEAffR2WV8koXJz20DuG1chJuT0ZJduZMpm1WEQWNSKQUE24Wd37fdzJyoVOqLTnmZwwaCEI4SNW28O1VLeXEipZ0eBy6NkNYw/O2RaB4eEw9FOGvE/+gi6Nuc9E4WY2uR4vD85zBtxrsCZ3lR3uoyKPlWS887NFCkd1qco5EojMB0h0qpj2wF3jcHvfiX8F9s6pd1ZSbHzZMlYD2s1kijcnK8/1zY0l1A4m8f+4/nO65SC8EZO0kMxN2TC86mjy25lMfJlYri1Ol1+1ir7UGBepfS+OBFYVTnUu/cRwpyu94lQ8THSSFIsXjQxIv+P2vuyyGMs5RqDopcXkj44xviBAQKBgQDUOqpf4ZnhozEeJEmOQfe4sll6679RRjfcRdiTi/iv0j2PLj/Z5NzsBINTfeOhKC/FnxYP+qIaYgniXSbLDKC9xO/dCZVhLvoJSAWIZozT32A7VdISfTKkppOQH8y0xPyhvmwfa0gQL0kzrRx7X0jhoFqCreG1ruDZCLPCFAgDjwKBgQCbHZ3hGPMFdPWHBatTrQqWQvMAV9CY4c2SWwZAIvcGEcbXcj9OaFc+a1tpT2p49js6GI7mJbsXZaJOX+xQrgQXyLWEnX9UCuwKX9aU0qgY+Hbzf1NxXgtf1vIFI1BMa0m5gxK1S98I513s5dNvA9JZ7YdnBGojMWS1Ov8dxCzZSwKBgE8M5wc9xg6otZPvmkJVygrOy8ugYivIxufSUGBtA52h5vIdHQVxXOTArZX8zzvo9xpaLmKXTagcGmhpoBiDxJ/K6jlf53dCgznPzNfIsu38RyDyz4O5hJKVxWMqpRo0QZGRlz6AvF/i7RZFhdViYYhBLVV9pRQCZpgQyLwir/V7AoGAOGA0QFp8APC4R+GUmi3bGi+s9+PyqY3v1BCHHgpXM3qEhUs9nPapNsN4DrdRYDNF5WCFlzoBXIiQy+FrFwuX6zkEV/WSEG6DyWV5rM8/TwwG14rgPeTLR4LspVdnWM7plaYAx6mSnz7P0UjaZo/CBPMichuVo8LQ8llF3YCuOC8CgYEApCS3ACebNPTKCa1W4U5csDzBlCYr+IBicopgNCRkhE+ZjkVn8G9XYZKJZrSK0MIaHjqSbzmli7+hN8RaTbXlt9tzGHziu62kEXcXGrmrKHY4GOV8ruVileaKxK8QGWj2dSIU7bHx1g6f4r1tXsnNNCK9R0E4ihjjfFvSwRwcROc= # RSA私钥
 
+# 小程序端的token配置
+appToken:
+  # 令牌自定义标识
+  header: Authorization
+  # 令牌密钥
+  secret: edcbafghijklmnopqrstuvwxyz
+  # 令牌有效期（默认30天）
+  expireTime: 43200
 
+wechat:
+  appId: wx7d94cbbe2afbd144
+  appSecret: d9d97337b1355db137f9b6d9555928e7
 
 
