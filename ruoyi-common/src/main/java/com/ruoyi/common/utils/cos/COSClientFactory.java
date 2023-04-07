@@ -141,5 +141,22 @@ public class COSClientFactory {
 //        return cosClient.getObjectUrl(cosConfig.getBucket(), key).toString();
     }
 
+    public static void deleteObject(String module, String key) throws CosClientException {
+        // 调用 COS 接口之前必须保证本进程存在一个 COSClient 实例，如果没有则创建
+        // 详细代码参见本页：简单操作 -> 创建 COSClient
+        COSClient cosClient = getCosClient();
+        String bucket;
+        if (module.equals("course")) {
+            bucket = cosConfig.getBucket();
+        } else {
+            bucket = cosConfig.getGaugeBucket();
+        }
+
+        // 存储桶的命名格式为 BucketName-APPID，此处填写的存储桶名称必须为此格式
+        // 对象键(Key)是对象在存储桶中的唯一标识。详情请参见 [对象键](https://cloud.tencent.com/document/product/436/13324)
+
+
+        cosClient.deleteObject(bucket, key);
+    }
 
 }

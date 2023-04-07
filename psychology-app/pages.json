@@ -78,31 +78,36 @@
 		{
 			"path": "pages/course/index",
 			"style": {
-				"navigationStyle": "custom"
+				"navigationStyle": "custom",
+        "navigationBarTitleText": "三束光"
 			}
 		},
 		{
 			"path": "pages/course/courseDetail",
 			"style": {
-				"navigationStyle": "custom"
+				"navigationStyle": "custom",
+        "navigationBarTitleText": "课程详情"
 			}
 		},
 		{
 			"path": "pages/course/learningCourse",
 			"style": {
-				"navigationStyle": "custom"
+				"navigationStyle": "custom",
+        "navigationBarTitleText": "课程详情"
 			}
 		},
 		{
 			"path": "pages/course/order",
 			"style": {
-				"navigationStyle": "custom"
+				"navigationStyle": "custom",
+        "navigationBarTitleText": "我的订单"
 			}
 		},
 		{
 			"path": "pages/course/user",
 			"style": {
-				"navigationStyle": "custom"
+				"navigationStyle": "custom",
+        "navigationBarTitleText": "我的"
 			}
 		},
 		{
@@ -115,13 +120,15 @@
 		{
 			"path": "pages/course/class",
 			"style": {
-				"navigationStyle": "custom"
+				"navigationStyle": "custom",
+        "navigationBarTitleText": "全部分类"
 			}
 		},
 		{
 			"path": "pages/course/courseList",
 			"style": {
-				"navigationStyle": "custom"
+				"navigationStyle": "custom",
+        "navigationBarTitleText": "我的课程"
 			}
 		},
 		{
@@ -133,7 +140,8 @@
 		{
 			"path": "pages/course/orderInfo",
 			"style": {
-				"navigationStyle": "custom"
+				"navigationStyle": "custom",
+        "navigationBarTitleText": "三束光"
 			}
 		},
 		{

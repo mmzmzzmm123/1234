@@ -146,7 +146,7 @@
     />
 
     <!-- 添加或修改课程对话框 -->
-    <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
+    <el-dialog :title="title" :visible.sync="open" width="800px"  append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
         <el-form-item label="课程编号" prop="courseId">
           <el-input v-model="form.courseId" placeholder="请输入课程编号" />
@@ -154,25 +154,34 @@
         <el-form-item label="课程名称" prop="name">
           <el-input v-model="form.name" placeholder="请输入课程名称" />
         </el-form-item>
-        <el-form-item label="课程类型" prop="type">
-          <el-select v-model="form.type" placeholder="请选择课程类型">
-            <el-option
-              v-for="dict in dict.type.course_type"
-              :key="dict.value"
-              :label="dict.label"
-              :value="parseInt(dict.value)"
-            ></el-option>
-          </el-select>
-        </el-form-item>
+
+        <el-row>
+          <el-col :span="12">
+            <el-form-item label="课程类型" prop="type">
+              <el-select v-model="form.type" placeholder="请选择课程类型">
+                <el-option
+                  v-for="dict in dict.type.course_type"
+                  :key="dict.value"
+                  :label="dict.label"
+                  :value="parseInt(dict.value)"
+                ></el-option>
+              </el-select>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="课程价格" prop="price">
+              <el-input v-model="form.price" placeholder="请输入课程价格" />
+            </el-form-item>
+          </el-col>
+        </el-row>
+
         <el-form-item label="课程作者" prop="author">
           <el-input v-model="form.author" placeholder="请输入课程作者" />
         </el-form-item>
         <el-form-item label="课程图片">
-          <image-upload v-model="form.url" :extraData="extraData"/>
+          <image-upload v-model="form.url" :limit="1" :extraData="extraData"/>
         </el-form-item>
-        <el-form-item label="课程价格" prop="price">
-          <el-input v-model="form.price" placeholder="请输入课程价格" />
-        </el-form-item>
+
         <el-form-item label="课程详情">
           <editor v-model="form.detail" :min-height="192"/>
         </el-form-item>

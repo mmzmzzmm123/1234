@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.validation.constraints.NotNull;
 
 import com.qcloud.cos.model.UploadResult;
 import org.slf4j.Logger;
@@ -106,6 +107,21 @@ public class CommonController
             ajax.put("newFileName", key);
             ajax.put("originalFilename", file.getOriginalFilename());
             return ajax;
+        }
+        catch (Exception e)
+        {
+            return AjaxResult.error(e.getMessage());
+        }
+    }
+
+    /**
+     * 通用上传文件删除
+     */
+    @PostMapping("/upload/delete")
+    public AjaxResult deleteFile(@RequestParam @NotNull String fileKey, @RequestParam @NotNull String module) throws Exception {
+        try {
+            COSClientFactory.deleteObject(module, fileKey);
+            return AjaxResult.success("删除" + fileKey + "成功");
         }
         catch (Exception e)
         {

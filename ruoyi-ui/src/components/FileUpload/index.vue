@@ -1,8 +1,6 @@
 <template>
   <div class="upload-file">
     <el-upload
-      multiple
-      :http-request="httpRequest"
       :action="uploadFileUrl"
       :before-upload="handleBeforeUpload"
       :file-list="fileList"
@@ -14,6 +12,7 @@
       :headers="headers"
       class="upload-file-uploader"
       ref="fileUpload"
+      v-show="fileList.length == 0"
     >
       <!-- 上传按钮 -->
       <el-button size="mini" type="primary">选取文件</el-button>
@@ -28,8 +27,12 @@
 
     <!-- 文件列表 -->
     <transition-group class="upload-file-list el-upload-list el-upload-list--text" name="el-fade-in-linear" tag="ul">
-      <li :key="file.url" class="el-upload-list__item ele-upload-list__item-content" v-for="(file, index) in fileList">
-        <el-link :href="`{file.url}`" :underline="false" target="_blank">
+      <li
+        :key="file.url"
+        class="el-upload-list__item ele-upload-list__item-content"
+        v-for="(file, index) in fileList"
+        title="点击打开链接播放">
+        <el-link :href="`${file.url}`" :underline="false" target="_blank">
         <!-- <el-link :href="`${baseUrl}${file.url}`" :underline="false" target="_blank"> -->
           <span class="el-icon-document"> {{ getFileName(file.name) }} </span>
         </el-link>
@@ -43,6 +46,7 @@
 
 <script>
 import { getToken } from "@/utils/auth";
+import { deleteFile } from "@/api/upload"
 
 export default {
   name: "FileUpload",
@@ -52,7 +56,7 @@ export default {
     // 数量限制
     limit: {
       type: Number,
-      default: 5,
+      default: 1,
     },
     // 大小限制(MB)
     fileSize: {
@@ -171,8 +175,32 @@ export default {
     },
     // 删除文件
     handleDelete(index) {
-      this.fileList.splice(index, 1);
-      this.$emit("input", this.listToString(this.fileList));
+
+      this.$confirm('此操作将永久删除该文件, 文件链接将失效，是否继续?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        let fileName = this.getFileName(this.fileList[index].url)
+        deleteFile(fileName, this.extraData.module).then(res => {
+          this.$message({
+            type: 'success',
+            message: '删除成功!'
+          });
+
+          this.fileList.splice(index, 1);
+          this.$emit("input", this.listToString(this.fileList));
+        }).catch(() => {})
+
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '已取消删除'
+        });
+      });
+
+
+
     },
     // 上传结束处理
     uploadedSuccessfully() {
@@ -187,7 +215,7 @@ export default {
     // 获取文件名称
     getFileName(name) {
       if (name.lastIndexOf("/") > -1) {
-        return name.slice(name.lastIndexOf("/") + 1);
+        return decodeURI(name.slice(name.lastIndexOf("/") + 1));
       } else {
         return "";
       }

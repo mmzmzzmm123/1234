@@ -96,7 +96,7 @@
       />
 
       <!-- 添加或修改章节对话框 -->
-      <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
+      <el-dialog :title="title" :visible.sync="open" width="800px" append-to-body>
         <el-form ref="form" :model="form" :rules="rules" label-width="80px">
           <el-form-item label="章节编号" prop="sectionId">
             <el-input v-model="form.sectionId" placeholder="请输入章节编号" />
@@ -107,29 +107,36 @@
           <el-form-item label="章节时长" prop="duration">
             <el-input v-model.number="form.duration" placeholder="请输入章节时长（以秒为单位的数字）" />
           </el-form-item>
-          <el-form-item label="章节类型" prop="type">
-            <el-select v-model="form.type" placeholder="请选择章节类型">
-              <el-option
-                v-for="dict in dict.type.course_section_type"
-                :key="dict.value"
-                :label="dict.label"
-                :value="parseInt(dict.value)"
-              ></el-option>
-            </el-select>
-          </el-form-item>
-          <el-form-item label="内容类型" prop="contentType">
-            <el-select v-model="form.contentType" placeholder="请选择内容类型">
-              <el-option
-                v-for="dict in dict.type.course_section_content_type"
-                :key="dict.value"
-                :label="dict.label"
-                :value="parseInt(dict.value)"
-              ></el-option>
-            </el-select>
-          </el-form-item>
+
+          <el-row>
+            <el-col :span="12">
+              <el-form-item label="章节类型" prop="type">
+                <el-select v-model="form.type" placeholder="请选择章节类型">
+                  <el-option
+                    v-for="dict in dict.type.course_section_type"
+                    :key="dict.value"
+                    :label="dict.label"
+                    :value="parseInt(dict.value)"
+                  ></el-option>
+                </el-select>
+              </el-form-item>
+            </el-col>
+            <el-col :span="12">
+              <el-form-item label="内容类型" prop="contentType">
+                <el-select v-model="form.contentType" placeholder="请选择内容类型">
+                  <el-option
+                    v-for="dict in dict.type.course_section_content_type"
+                    :key="dict.value"
+                    :label="dict.label"
+                    :value="parseInt(dict.value)"
+                  ></el-option>
+                </el-select>
+              </el-form-item>
+            </el-col>
+          </el-row>
 
           <el-form-item label="内容链接" prop="contentUrl">
-            <file-upload v-model="form.contentUrl" :fileType="fileTypes" :fileSize="100" :extraData="extraData"/>
+            <file-upload v-model="form.contentUrl" :limit="1" :fileType="fileTypes" :fileSize="100" :extraData="extraData" @input="handleFileUploadSuccess" />
           </el-form-item>
 
           <el-form-item label="章节内容">
@@ -310,6 +317,20 @@ export default {
         }
       });
     },
+    // 文件上传完成后回调，计算视频或音频时长
+    handleFileUploadSuccess(fileUrl) {
+      console.log('fileUrl: ', fileUrl)
+      let audioElement = new Audio(fileUrl);
+      let duration;
+      let fun = (duration) => {
+        this.form.duration = parseInt(duration) || 0
+      }
+      //下面需要注意的是在监听loadedmetadata绑定的事件中对duration直接进行赋值是无效的，需要在fun回调函数中进行赋值
+      audioElement.addEventListener("loadedmetadata", function() { //音频/视频的元数据已加载时，会发生 loadedmetadata 事件
+        duration = audioElement.duration; //时长以秒作为单位
+        fun(parseFloat(duration).toFixed(1))
+      });
+    }
   },
   created() {
 
