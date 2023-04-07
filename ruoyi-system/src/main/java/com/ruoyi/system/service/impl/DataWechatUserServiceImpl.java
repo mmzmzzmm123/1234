@@ -2,9 +2,10 @@ package com.ruoyi.system.service.impl;
 
 import java.util.List;
 
+import com.ruoyi.common.exception.CustomException;
 import com.ruoyi.common.exception.user.UserException;
 import com.ruoyi.system.biz.token.LoginUser;
-import com.ruoyi.system.biz.token.TokenServiceImpl;
+import com.ruoyi.system.biz.token.WechatTokenServiceImpl;
 import com.ruoyi.system.domain.dto.WxLoginResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -41,7 +42,7 @@ public class DataWechatUserServiceImpl implements IDataWechatUserService
     private RestTemplate restTemplate;
 
     @Autowired
-    private TokenServiceImpl tokenService;
+    private WechatTokenServiceImpl tokenService;
 
     @Autowired
     private DataWechatUserMapper dataWechatUserMapper;
@@ -159,6 +160,14 @@ public class DataWechatUserServiceImpl implements IDataWechatUserService
 
     @Override
     public LoginUser register(DataWechatUser user) {
+
+        // 判断企业是否重复注册
+        DataWechatUser condition = new DataWechatUser();
+        condition.setTyshxydm(user.getTyshxydm());
+        List<DataWechatUser> dataWechatUsers = this.selectDataWechatUserList(condition);
+        if (dataWechatUsers.size() > 0){
+            throw new CustomException("该企业已经注册");
+        }
         LoginUser response = new LoginUser();
         this.insertDataWechatUser(user);
         String token = getToken(user);

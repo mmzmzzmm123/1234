@@ -1,6 +1,7 @@
 package com.ruoyi.framework.config;
 
 import com.ruoyi.framework.interceptor.impl.AppInterceptor;
+import com.ruoyi.framework.interceptor.impl.TokenInterceptor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -28,6 +29,9 @@ public class ResourcesConfig implements WebMvcConfigurer
     @Autowired
     private AppInterceptor appInterceptor;
 
+    @Autowired
+    private TokenInterceptor tokenInterceptor;
+
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry)
     {
@@ -46,6 +50,7 @@ public class ResourcesConfig implements WebMvcConfigurer
     {
         registry.addInterceptor(repeatSubmitInterceptor).addPathPatterns("/**");
         registry.addInterceptor(appInterceptor).addPathPatterns("/app/**");
+        registry.addInterceptor(tokenInterceptor).addPathPatterns("/mini/**");
     }
 
     /**

@@ -22,7 +22,7 @@ import java.util.concurrent.TimeUnit;
  * @author ruoyi
  */
 @Component
-public class TokenServiceImpl {
+public class WechatTokenServiceImpl {
     // 令牌自定义标识
     @Value("${appToken.header}")
     private String header;

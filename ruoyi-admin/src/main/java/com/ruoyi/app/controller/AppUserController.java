@@ -5,7 +5,7 @@ import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.system.biz.token.LoginUser;
 import com.ruoyi.system.biz.token.TokenAuthorize;
-import com.ruoyi.system.biz.token.TokenServiceImpl;
+import com.ruoyi.system.biz.token.WechatTokenServiceImpl;
 import com.ruoyi.system.domain.DataWechatUser;
 import com.ruoyi.system.service.IDataWechatUserService;
 import io.swagger.annotations.Api;
@@ -25,11 +25,11 @@ import javax.servlet.http.HttpServletRequest;
  */
 @RestController
 @Api(value = "用户接口")
-@RequestMapping("/app/user")
+@RequestMapping("/mini/user")
 public class AppUserController extends BaseController {
 
     @Autowired
-    private TokenServiceImpl tokenService;
+    private WechatTokenServiceImpl tokenService;
 
     @Autowired
     private IDataWechatUserService userService;

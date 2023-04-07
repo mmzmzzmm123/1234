@@ -7,7 +7,7 @@ import com.ruoyi.common.utils.ServletUtils;
 import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.system.biz.token.LoginUser;
 import com.ruoyi.system.biz.token.TokenAuthorize;
-import com.ruoyi.system.biz.token.TokenServiceImpl;
+import com.ruoyi.system.biz.token.WechatTokenServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.util.DigestUtils;
@@ -27,7 +27,7 @@ import java.lang.reflect.Method;
 public class TokenInterceptor implements HandlerInterceptor {
 
     @Autowired
-    private TokenServiceImpl tokenService;
+    private WechatTokenServiceImpl tokenService;
 
     private static final String SALT = "xdztc@qzdasj";
     private static final String HEADER_KEY_SIGN = "xdztcAuthSign";
