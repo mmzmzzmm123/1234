@@ -217,7 +217,6 @@ export default {
         ],
         duration: [
           { required: true, message: "章节时长不能为空", trigger: "blur" },
-          { type: 'number', message: '章节时长必须为数字值'}
         ],
         type: [
           { required: true, message: "章节类型不能为空", trigger: "change" }
