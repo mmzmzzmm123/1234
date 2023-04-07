@@ -273,12 +273,10 @@ export default {
   components: {
     SectionDrawer,
   },
-  created() {
+  activated() {
+    console.log('activated')
     this.getCourseClassList()
     this.getList();
-  },
-  mounted() {
-
   },
   methods: {
     getCourseClassName(type) {
