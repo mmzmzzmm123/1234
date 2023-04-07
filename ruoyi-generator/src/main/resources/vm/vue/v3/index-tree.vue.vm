@@ -262,7 +262,7 @@
       </el-form>
       <template #footer>
         <div class="dialog-footer">
-          <el-button type="primary" @click="submitForm">确 定</el-button>
+          <el-button type="primary" @click="submitForm" :loading="submitLoading">确 定</el-button>
           <el-button @click="cancel">取 消</el-button>
         </div>
       </template>
@@ -282,6 +282,7 @@ const { ${dictsNoSymbol} } = proxy.useDict(${dicts});
 const ${businessName}List = ref([]);
 const ${businessName}Options = ref([]);
 const open = ref(false);
+const submitLoading = ref(false);
 const loading = ref(true);
 const showSearch = ref(true);
 const title = ref("");
@@ -359,6 +360,7 @@ function getTreeselect() {
 // 取消按钮
 function cancel() {
   open.value = false;
+  submitLoading.value = false;
   reset();
 }
 
@@ -403,6 +405,7 @@ function handleAdd(row) {
     form.value.${treeParentCode} = 0;
   }
   open.value = true;
+  submitLoading.value = false;
   title.value = "添加${functionName}";
 }
 
@@ -430,6 +433,7 @@ async function handleUpdate(row) {
 #end
 #end
     open.value = true;
+    submitLoading.value = false;
     title.value = "修改${functionName}";
   });
 }
@@ -447,12 +451,14 @@ function submitForm() {
         update${BusinessName}(form.value).then(response => {
           proxy.#[[$modal]]#.msgSuccess("修改成功");
           open.value = false;
+          submitLoading.value = false;
           getList();
         });
       } else {
         add${BusinessName}(form.value).then(response => {
           proxy.#[[$modal]]#.msgSuccess("新增成功");
           open.value = false;
+          submitLoading.value = false;
           getList();
         });
       }
