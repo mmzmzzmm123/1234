@@ -148,13 +148,22 @@
     <!-- 添加或修改课程对话框 -->
     <el-dialog :title="title" :visible.sync="open" width="800px"  append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
-        <el-form-item label="课程编号" prop="courseId">
-          <el-input v-model="form.courseId" placeholder="请输入课程编号" />
-        </el-form-item>
+
         <el-form-item label="课程名称" prop="name">
           <el-input v-model="form.name" placeholder="请输入课程名称" />
         </el-form-item>
-
+        <el-row>
+          <el-col :span="12">
+            <el-form-item label="课程作者" prop="author" >
+              <el-input class="author_input" v-model="form.author" placeholder="请输入课程作者" />
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="课程编号" prop="courseId">
+              <el-input v-model="form.courseId" placeholder="请输入课程编号" />
+            </el-form-item>
+          </el-col>
+        </el-row>
         <el-row>
           <el-col :span="12">
             <el-form-item label="课程类型" prop="type">
@@ -175,9 +184,6 @@
           </el-col>
         </el-row>
 
-        <el-form-item label="课程作者" prop="author">
-          <el-input v-model="form.author" placeholder="请输入课程作者" />
-        </el-form-item>
         <el-form-item label="课程图片">
           <image-upload v-model="form.url" :limit="1" :extraData="extraData"/>
         </el-form-item>
@@ -283,10 +289,8 @@ export default {
       return this.courseClassList.filter(item => item.id === type)[0].name
     },
     getCourseClassList() {
-      this.loading = true;
       listClass({}).then(response => {
         this.courseClassList = response.rows;
-        this.loading = false;
       });
     },
     /** 查询课程列表 */
@@ -400,6 +404,11 @@ export default {
 };
 </script>
 <style lang="scss" scoped>
+.author_input {
+  ::v-deep .el-input__inner {
+    width: 217px;
+  }
+}
 .price {
   display: inline-block;
   ::v-deep {
