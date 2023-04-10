@@ -15,12 +15,11 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.parameters.P;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * 心理测评Controller
@@ -79,6 +78,19 @@ public class AppPsyGaugeController extends BaseController
         }
 
         return AjaxResult.success(gaugeVO);
+    }
+
+    /**
+     * 根据搜素条件查询课程列表
+     */
+    @PostMapping("/search")
+    @ApiOperation("查询课程列表")
+    public AjaxResult getList(@RequestParam String searchValue)    {
+        List<PsyGauge> list = psyGaugeService.selectPsyGaugeList(null);
+        list = list.stream()
+                .filter(item -> item.getTitle().contains(searchValue))
+                .collect(Collectors.toList());
+        return AjaxResult.success(list);
     }
 
 }

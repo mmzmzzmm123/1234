@@ -3,7 +3,7 @@
     <view class="search-un-bg">
       <view class="search-box">
         <img class="icon" src="/static/icon/search.png" />
-        <input placeholder="搜索" class="uni-input ipt" v-model="searchValue" @confirm="searchSubmit" />
+        <input placeholder="搜索" class="uni-input ipt" v-model="searchValue" @confirm="searchSubmit" confirm-type="search"/>
         <view @tap="clearIpt" v-show="searchValue.length > 0" class="clear-icon">
           <img src="/static/icon/clear.png" />
         </view>
@@ -15,7 +15,7 @@
           @tap="deleteHistory" />
       </view>
       <view class="list">
-        <view class="item" v-for="item in hostoryList" @tap="setSearchValue(item)">{{ item }}</view>
+        <view class="item" v-for="item in historyList" @tap="setSearchValue(item)">{{ item }}</view>
       </view>
     </view>
     <product-list-com v-if="productListShow && productList.length > 0" :productList="productList"></product-list-com>
@@ -30,6 +30,7 @@
 <script>
 import productListCom from '@/components/evaluation/productList'
 import messageCom from '@/components/evaluation/message'
+import searchServer from '@/server/course/search'
 export default {
   components: { productListCom, messageCom },
   data() {
@@ -49,47 +50,27 @@ export default {
       historyListShow: true,
       productListShow: false,
       searchValue: '',
-      hostoryList: [],
-      productList: [
-        {
-          title: "潜意识测试阿斯蒂芬离开家暗示分离看空间阿斯利康附近",
-          subtitle:
-            "SDK发链接as康复科健康小侄女，明显内存泄漏看是就行了开车是聚类分析开具了科学城举行开具了看",
-          price: 19.99,
-          img: "/static/evaluation/index/hot/1.jpg",
-        },
-        {
-          title: "潜意识测试阿斯蒂芬离开家暗示分离看空间阿斯利康附近",
-          subtitle:
-            "SDK发链接as康复科健康小侄女，明显内存泄漏看是就行了开车是聚类分析开具了科学城举行开具了看",
-          price: 19.99,
-          img: "/static/evaluation/index/hot/1.jpg",
-        },
-        {
-          title: "潜意识测试阿斯蒂芬离开家暗示分离看空间阿斯利康附近",
-          subtitle:
-            "SDK发链接as康复科健康小侄女，明显内存泄漏看是就行了开车是聚类分析开具了科学城举行开具了看",
-          price: 19.99,
-          img: "/static/evaluation/index/hot/1.jpg",
-        },
-        {
-          title:
-            "潜意识测试阿斯蒂芬离开家暗示分离看空间阿斯利康附近阿斯拉达咖啡机拉斯柯达附件拉萨科技发拉开距离拉上发电量开始",
-          subtitle:
-            "SDK发链接as康复科健康小侄女，明显内存泄漏看是就行了开车是聚类分析开具了科学城举行开具了看",
-          price: 19.99,
-          img: "/static/evaluation/index/hot/1.jpg",
-        },
-      ],
+      historyList: [],
+      productList: [],
 
     };
   },
   created() {
     this.deleteMessage.cancelBtn.callback = this.clearDelete;
     this.deleteMessage.submitBtn.callback = this.submitDelete;
-    this.hostoryList = uni.getStorageSync("historySearch").split(',');
+    this.historyList = this.getHistoryList();
   },
   methods: {
+	async getGaugeList() {
+		this.productList = await searchServer.getGaugeList(this.searchValue)
+	},  
+	getHistoryList() {
+		const historyStr = uni.getStorageSync("historySearch_gauge")
+		if (historyStr === '') {
+			return []
+		}
+		return historyStr.split(',')
+	},
     deleteHistory() {
       this.showDeleteMessage = true;
     },
@@ -98,23 +79,40 @@ export default {
     },
     submitDelete() {
       this.showDeleteMessage = false;
-      uni.setStorageSync("historySearch", '');
+      uni.setStorageSync("historySearch_gauge", '');
+      this.historyList = []
     },
     clearIpt() {
       this.searchValue = "";
       this.historyListShow = true;
       this.productListShow = false;
-      this.hostoryList = uni.getStorageSync("historySearch").split(',');
+      this.historyList = this.getHistoryList();
     },
     setSearchValue(item) {
       this.searchValue = item;
-      this.searchSubmit();
-    },
-    searchSubmit() {
       this.historyListShow = false;
       this.productListShow = true;
-      this.historyList = [...[this.searchValue], ...this.historyList];
-      uni.setStorageSync("historySearch", this.historyList.toString());
+      this.historyList = [this.searchValue, ...this.historyList];
+	  
+      this.getGaugeList();  
+    },
+    searchSubmit(event) {
+      this.searchValue = event.detail.value
+      this.historyListShow = false;
+      this.productListShow = true;
+	  if (this.searchValue != '') { // 空字符串不用存储和显示
+	    const index = this.historyList.indexOf(this.searchValue)
+		if (index !== -1) { // 已经查询过的搜索条件
+			this.historyList.splice(index, 1)
+			this.historyList = [this.searchValue, ...this.historyList];
+		} else {
+			this.historyList = [this.searchValue, ...this.historyList];
+		}
+		  
+		uni.setStorageSync("historySearch_gauge", this.historyList.toString());
+	  } 
+	  
+	  this.getGaugeList();
     },
     toHome() {
       uni.navigateTo({

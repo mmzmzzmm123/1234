@@ -9,4 +9,13 @@ export default {
 	    return [];
 	  }
 	},
+	//根据搜素条件查询测评列表
+	getGaugeList: async (searchValue) => {
+	  let res = await httprequest.post(`/app/home/gauge/search?searchValue=${searchValue}`);
+	  if (res.code == 200) {
+	    return res.data;
+	  } else {
+	    return [];
+	  }
+	},
 }
