@@ -56,13 +56,17 @@ export default {
     type: {
       type: String,
       default: "url",
+    },
+    extraData: {
+      type: Object
     }
   },
   data() {
     return {
       uploadUrl: process.env.VUE_APP_BASE_API + "/common/upload", // 上传的图片服务器地址
       headers: {
-        Authorization: "Bearer " + getToken()
+        Authorization: "Bearer " + getToken(),
+        module: this.extraData.module
       },
       Quill: null,
       currentValue: "",
@@ -176,7 +180,7 @@ export default {
         // 获取光标所在位置
         let length = quill.getSelection().index;
         // 插入图片  res.url为服务器返回的图片地址
-        quill.insertEmbed(length, "image", process.env.VUE_APP_BASE_API + res.fileName);
+        quill.insertEmbed(length, "image", res.url);
         // 调整光标到最后
         quill.setSelection(length + 1);
       } else {

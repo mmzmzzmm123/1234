@@ -226,7 +226,7 @@ export default {
     /** 删除按钮操作 */
     handleDelete(row) {
       const ids = row.id || this.ids;
-      this.$modal.confirm('是否确认删除测评分类编号为"' + ids + '"的数据项？').then(function() {
+      this.$modal.confirm('是否确认删除测评分类？').then(function() {
         return delGaugeClass(ids);
       }).then(() => {
         this.getList();

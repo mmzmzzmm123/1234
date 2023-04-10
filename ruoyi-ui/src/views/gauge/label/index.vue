@@ -99,7 +99,7 @@
         </template>
       </el-table-column> -->
     </el-table>
-    
+
     <pagination
       v-show="total>0"
       :total="total"
@@ -261,7 +261,7 @@ export default {
     /** 删除按钮操作 */
     handleDelete(row) {
       const ids = row.id || this.ids;
-      this.$modal.confirm('是否确认删除测评标签编号为"' + ids + '"的数据项？').then(function() {
+      this.$modal.confirm('是否确认删除测评标签？').then(function() {
         return delLabel(ids);
       }).then(() => {
         this.getList();

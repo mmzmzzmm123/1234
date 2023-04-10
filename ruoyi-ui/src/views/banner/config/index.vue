@@ -9,7 +9,7 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="banner分类" prop="bannerType">
+      <el-form-item label="banner分类" prop="bannerType" label-width="100">
         <el-select v-model="queryParams.bannerType" placeholder="请选择banner分类" clearable>
           <el-option
             v-for="dict in dict.type.psy_home_banner_type"
@@ -74,7 +74,7 @@
     <el-table v-loading="loading" :data="configList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
       <el-table-column label="主键" align="center" prop="id" />
-      <el-table-column label="banner图片地址" align="center" prop="bannerUrl" width="100">
+      <el-table-column label="图片地址" align="center" prop="bannerUrl" width="100">
         <template slot-scope="scope">
           <image-preview :src="scope.row.bannerUrl" :width="50" :height="50"/>
         </template>
@@ -115,8 +115,8 @@
 
     <!-- 添加或修改测评banner配置对话框 -->
     <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
-      <el-form ref="form" :model="form" :rules="rules" label-width="80px">
-        <el-form-item label="banner图片地址">
+      <el-form ref="form" :model="form" :rules="rules" label-width="100px">
+        <el-form-item label="图片地址">
           <image-upload v-model="form.bannerUrl" :extraData="extraData"/>
         </el-form-item>
         <el-form-item label="跳转url" prop="linkUrl">

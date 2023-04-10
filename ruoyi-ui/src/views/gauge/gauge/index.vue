@@ -52,11 +52,6 @@
           <image-preview :src="scope.row.headPicture" :width="50" :height="50" />
         </template>
       </el-table-column>
-      <el-table-column label="测评描述" align="center" prop="introduce" width="100">
-        <template slot-scope="scope">
-          <image-preview :src="scope.row.introduce" :width="50" :height="50" />
-        </template>
-      </el-table-column>
       <el-table-column label="测评分类" align="center" prop="gaugeClass" :formatter="getGaugeClassName" />
        <el-table-column label="计算类型" align="center" prop="type" width="100">
         <template slot-scope="scope">
@@ -79,7 +74,7 @@
     <pagination v-show="total > 0" :total="total" :page.sync="queryParams.pageNum" :limit.sync="queryParams.pageSize" @pagination="getList" />
 
     <!-- 添加或修改心理测评对话框 -->
-    <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
+    <el-dialog :title="title" :visible.sync="open" width="800px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
         <el-form-item label="测评标题" prop="title">
           <el-input v-model="form.title" placeholder="请输入测评标题" />
@@ -93,8 +88,8 @@
         <el-form-item label="列表展示图片">
           <image-upload v-model="form.listShowPicture" :extraData="extraData" />
         </el-form-item>
-        <el-form-item label="测评描述">
-          <image-upload v-model="form.introduce" :extraData="extraData" />
+        <el-form-item label="测评介绍">
+          <editor v-model="form.introduce" :min-height="192" :extraData="extraData"/>
         </el-form-item>
         <el-form-item label="测评分类" prop="gaugeClass">
           <el-select v-model="form.gaugeClass" placeholder="请选择测评分类">
@@ -108,8 +103,8 @@
         <el-form-item label="价格" prop="price">
           <el-input v-model="form.price" placeholder="请输入价格" />
         </el-form-item>
-        <el-form-item label="测评简介" prop="gaugeDes">
-          <el-input type="textarea" v-model="form.gaugeDes" placeholder="请输入测评简介" />
+        <el-form-item label="测评说明" prop="gaugeDes">
+          <editor v-model="form.gaugeDes" :min-height="192" :extraData="extraData"/>
         </el-form-item>
 
         <el-form-item label="计算类型" prop="type">
