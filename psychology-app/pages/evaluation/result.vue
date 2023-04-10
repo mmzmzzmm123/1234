@@ -3,8 +3,7 @@
         <view class="line-box"></view>
         <view class="result-box">
             <view class="info-title">测试结果</view>
-            <view class="info">
-                {{ result }}
+            <view class="info" v-html="result">                
             </view>
         </view>
         <view class="submit-btn" @tap="getResult">保存结果</view>
@@ -123,6 +122,7 @@ export default {
 <style lang="scss">
 page {
     background-color: #FFF9F7;
+    margin-top: 22upx;
 
     .line-box {
         width: 718upx;
@@ -136,15 +136,17 @@ page {
 
     .result-box {
         width: 686upx;
+        max-height: 950upx;
         background: #FFFFFF;
         box-shadow: 0 4upx 16upx 0 rgba(255, 112, 63, 0.16);
         border-radius: 0px 0px 16upx 16upx;
-        padding: 57upx 40upx 48upx;
+        padding: 57upx 40upx 48upx 48upx;
         box-sizing: border-box;
         z-index: 100;
         position: absolute;
         left: 32upx;
         top: 16upx;
+        overflow: auto;
     }
 
     .info-title {
@@ -182,7 +184,7 @@ page {
         font-weight: 600;
         color: #FFFFFF;
         position: absolute;
-        bottom: 130upx;
+        bottom: 200upx;
         left: 80upx;
     }
 

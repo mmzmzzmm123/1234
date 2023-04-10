@@ -8,6 +8,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 
 /**
  * @User hogan
@@ -22,11 +23,11 @@ import javax.validation.constraints.NotBlank;
 public class GaugeCommitResultDTO {
 
     @ApiModelProperty("订单id")
-    @NotBlank(message = "订单id不能为空")
-    private String orderId;
+    @NotNull(message = "订单id不能为空")
+    private Integer orderId;
 
     @ApiModelProperty("用户id")
-    private String userId;
+    private Integer userId;
 
 
 }

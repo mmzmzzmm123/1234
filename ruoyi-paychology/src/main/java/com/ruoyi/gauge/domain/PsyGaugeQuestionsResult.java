@@ -47,7 +47,7 @@ public class PsyGaugeQuestionsResult extends BaseEntity
 
     /** 得分 */
     @Excel(name = "得分")
-    private String score;
+    private Integer score;
 
     /**
      * 订单id

@@ -1,7 +1,6 @@
 package com.ruoyi.gauge.service.impl;
 
 import com.ruoyi.common.core.domain.dto.GaugeCommitResultDTO;
-import com.ruoyi.common.core.domain.dto.LoginDTO;
 import com.ruoyi.common.enums.GaugeStatus;
 import com.ruoyi.common.utils.DateUtils;
 import com.ruoyi.gauge.domain.*;
@@ -16,7 +15,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -91,7 +89,7 @@ public class PsyGaugeQuestionsResultServiceImpl implements IPsyGaugeQuestionsRes
                     .gaugeId(psyGaugeQuestionsResult.getGaugeId())
                     .questionsId(psyGaugeQuestionsResult.getQuestionsId())
                     .questionsOptionsId(id)
-                    .score(collect.get(id).toString())
+                    .score(collect.get(id))
                     .userId(userId)
                     .orderId(psyGaugeQuestionsResult.getOrderId())
                     .build();
@@ -143,11 +141,11 @@ public class PsyGaugeQuestionsResultServiceImpl implements IPsyGaugeQuestionsRes
         HashMap<String, Object> paramMap = new HashMap<>();
         paramMap.put("orderId",gaugeCommitResultDTO.getOrderId());
         paramMap.put("userId",userId);
-        List<PsyGaugeQuestionsResultAll> psyGaugeQuestionsResults = psyGaugeQuestionsResultMapper.selectPsyGaugeQuestionsResultAll(paramMap);
+        List<PsyGaugeQuestionsResult> psyGaugeQuestionsResults = psyGaugeQuestionsResultMapper.selectPsyGaugeQuestionsResult(paramMap);
         int sum = 0;
         if(CollectionUtils.isNotEmpty(psyGaugeQuestionsResults)){
-            for (PsyGaugeQuestionsResultAll psyGaugeQuestionsResultAll:psyGaugeQuestionsResults) {
-                sum+=psyGaugeQuestionsResultAll.getValue();
+            for (PsyGaugeQuestionsResult psyGaugeQuestionsResult:psyGaugeQuestionsResults) {
+                sum += psyGaugeQuestionsResult.getScore();
             }
         }
         paramMap.put("score",sum);
@@ -156,7 +154,7 @@ public class PsyGaugeQuestionsResultServiceImpl implements IPsyGaugeQuestionsRes
         if(psyGaugeScoreSetting!=null){
             //将该订单答题情况改为已完成
             psyOrderMapper.updatePsyOrder(PsyOrder.builder()
-                    .orderId(gaugeCommitResultDTO.getOrderId()).gaugeStatus(GaugeStatus.FINISHED.getValue())
+                    .id(gaugeCommitResultDTO.getOrderId()).gaugeStatus(GaugeStatus.FINISHED.getValue())
                     .score(String.valueOf(sum)).resultUrl(psyGaugeScoreSetting.getProposal())
                     .build());
 

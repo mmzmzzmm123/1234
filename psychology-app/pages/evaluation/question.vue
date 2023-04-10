@@ -9,7 +9,7 @@
             <view class="timer" id="timerBox"></view>
         </view>
         <view class="question-box">
-            <view class="type">{{ currentQuestion.type == 1 ? '单选题' : '多选题' }}</view>
+            <view class="type">{{ currentQuestion.selectType == 0 ? '单选题' : '多选题' }}</view>
             <view class="title">{{ currentIndex }}、{{ currentQuestion.title }}</view>
             <view class="cue">请选择最贴合实际的情况：</view>
             <view class="warn-txt" v-show="checkNull">请至少选择一个选项</view>
@@ -53,7 +53,8 @@ export default {
             lastIndex: 0,
             showMessage: false,
             confirmMessage: {
-                title: '是否从上次中断的位置继续答题？',
+                title: '提示',
+                subTitle: '是否从上次中断的位置继续答题？',
                 cancelBtn: {
                     text: '重做',
                     callback: () => { }
@@ -123,7 +124,8 @@ export default {
     methods: {
       showDailog() {
           this.confirmMessage = {
-              title: `你已完成${this.currentIndex - 1}题，确认要退出吗？`,
+              title: '提示',
+              subTitle: `你已完成${this.currentIndex - 1}题，确认要退出吗？`,
               cancelBtn: {
                   text: '狠心退出',
                   callback: async () => {                    

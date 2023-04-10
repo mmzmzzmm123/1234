@@ -29,7 +29,7 @@
     <view class="hot-box">
       <view class="index-title">热门推荐</view>
       <view class="list-box">
-        <view class="item" v-for="(item, index) in hotList" @tap="toProduct('/pages/evaluation/product/index?id=' + item.id)">
+        <view class="item" v-for="(item, index) in hotList" @tap="toProduct('/pages/evaluation/product?id=' + item.id)">
           <view class="ranking" v-if="index < 3">Top{{ index + 1 }}</view>
           <img class="img" :src="item.listShowPicture" />
           <span class="txt txt-overflow txt-overflow-line2">{{

@@ -5,10 +5,15 @@ import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.core.domain.dto.GaugeCommitResultDTO;
 import com.ruoyi.common.core.domain.dto.LoginDTO;
+import com.ruoyi.common.enums.GaugeStatus;
 import com.ruoyi.framework.web.service.AppTokenService;
+import com.ruoyi.gauge.domain.PsyGauge;
 import com.ruoyi.gauge.domain.PsyGaugeQuestionsResult;
 import com.ruoyi.gauge.domain.PsyGaugeQuestionsResultAll;
+import com.ruoyi.gauge.domain.PsyOrder;
 import com.ruoyi.gauge.service.IPsyGaugeQuestionsResultService;
+import com.ruoyi.gauge.service.IPsyGaugeService;
+import com.ruoyi.gauge.service.IPsyOrderService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,6 +37,9 @@ import java.util.List;
 @Api(value = "AppPsyGaugeQuestionsResultController" ,tags = {"测评结果提交"})
 public class AppPsyGaugeQuestionsResultController extends BaseController
 {
+    @Autowired
+    private IPsyOrderService psyOrderService;
+
     @Autowired
     private IPsyGaugeQuestionsResultService psyGaugeQuestionsResultService;
 
@@ -62,6 +70,13 @@ public class AppPsyGaugeQuestionsResultController extends BaseController
         LoginDTO loginUser = appTokenService.getLoginUser(request);
         Integer userId = loginUser.getUserId();
         String result = psyGaugeQuestionsResultService.commitResult(gaugeCommitResultDTO ,userId);
+
+        // 测评完成更新测评状态
+        PsyOrder psyOrder = new PsyOrder();
+        psyOrder.setUserId(userId);
+        psyOrder.setId(gaugeCommitResultDTO.getOrderId());
+        psyOrder.setGaugeStatus(GaugeStatus.FINISHED.getValue());
+        psyOrderService.updatePsyOrder(psyOrder);
         return AjaxResult.success(RespMessageConstants.OPERATION_SUCCESS ,result);
     }
 

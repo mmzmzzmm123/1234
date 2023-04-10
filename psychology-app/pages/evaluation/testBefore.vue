@@ -2,8 +2,7 @@
     <view class="test-before-page">
         <view class="info-box">
             <view class="info-title">测评须知</view>
-            <view class="img-box">
-                {{ gaugeDes }}
+            <view class="img-box" v-html="gaugeDes">                
             </view>
             <view class="begin-test" @tap="startTest">已了解，开始测试</view>
         </view>
@@ -56,6 +55,7 @@ page {
             font-weight: bold;
             text-align: center;
             margin-top: 32upx;
+            padding-top: 62upx;
             color: #333333;
             line-height: 50upx;
 
@@ -95,7 +95,8 @@ page {
     .cue-txt {
         text-align: center;
         position: fixed;
-        bottom: 42upx;
+        left: 0;
+        bottom: 120upx;
         width: 100%;
 
         .title {

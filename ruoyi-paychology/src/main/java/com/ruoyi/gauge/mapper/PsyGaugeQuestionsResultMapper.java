@@ -73,5 +73,5 @@ public interface PsyGaugeQuestionsResultMapper
 
     int batchAllInsert(List<PsyGaugeQuestionsResultAll> list);
 
-    List<PsyGaugeQuestionsResultAll> selectPsyGaugeQuestionsResultAll(HashMap<String, Object> paramMap);
+    List<PsyGaugeQuestionsResult> selectPsyGaugeQuestionsResult(HashMap<String, Object> paramMap);
 }

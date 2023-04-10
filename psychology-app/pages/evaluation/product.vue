@@ -2,22 +2,20 @@
 	<view class="product">
 		<image class="cover" :src="productInfo.headPicture"></image>
 		<view class="title">{{ productInfo.title }}</view>
-		<view class="sub-title">测评简介</view>
+		<view class="sub-title">{{ productInfo.subtitle }}</view>
 		<view class="price"><span class="icon">￥</span>{{ productInfo.price }}</view>
 		<view class="info">
 			<view class="item">{{ productInfo.gaugeNum }}道精选题</view>
-			<view class="item">7页专业报告</view>
+			<view class="item">约30分钟</view>
 			<view class="item">{{ productInfo.num || 10 }}人已测</view>
 		</view>
 		<view class="bg-line"></view>
 		<view class="info-title title">测评介绍</view>
-		<view class="img-box">
-			<image mode="widthFix" class="img-item" :src="productInfo.introduce"></image>
+		<view class="introduce" v-html="productInfo.introduce">			
 		</view>
 		<view class="bg-line"></view>
 		<view class="info-title title">测评须知</view>
-		<view class="img-box">
-			<image mode="widthFix" class="img-item" src="/static/evaluation/product/11.png"></image>
+		<view class="description" v-html="productInfo.gaugeDes">			
 		</view>
 		<view class="more-box">
 			<navigator url="/pages/evaluation/class" open-type="redirect" class="more">查看更多测试 <img class="img"
@@ -211,6 +209,17 @@ page {
 				margin: -10upx auto 0;
 			}
 		}
+    
+    .introduce, .description {
+      width: calc(100% - 48upx);
+      padding-left: 24upx;
+      padding-right: 24upx;
+      padding-bottom: 24upx;
+      
+      ::v-deep img {
+        width: 100%;
+      }
+    }
 
 		.img-box {
 			margin: 30upx 24upx;
