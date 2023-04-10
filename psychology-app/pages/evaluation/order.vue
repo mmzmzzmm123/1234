@@ -6,11 +6,11 @@
         </view>
         <view class="order-item" v-for="order in orderList">
             <view class="title">{{ order.gaugeTitle }}</view>
-            <view class="price">{{ order.amount }}</view>
-            <view class="buy-time">{{ order.createTime }}</view>
-            <view class="order-no">{{ order.orderId }}</view>
-            <view class="btn" v-show="order.orderStatus == 1" @tap="toTest(order)">去测试</view>
-            <view class="btn" v-show="order.orderStatus != 1" @tap="toResult(order)">查看报告</view>
+            <view class="price"><span class="icon">￥</span>{{ order.amount }}</view>
+            <view class="buy-time">购买时间：{{ order.createTime }}</view>
+            <view class="order-no">订单编号：{{ order.orderId }}</view>
+            <view class="btn" v-show="order.gaugeStatus == 2" @tap="toTest(order)">去测试</view>
+            <view class="btn" v-show="order.gaugeStatus == 1" @tap="toResult(order)">查看报告</view>
         </view>
         <no-data v-if="orderList.length == 0"></no-data>
         <view class="footer" v-else>已经到底了</view>
@@ -141,7 +141,7 @@ page {
 
         .buy-time,
         .order-no {
-            font-size: 28upx;
+            font-size: 24upx;
             font-weight: 400;
             color: #AAAAAA;
             line-height: 40upx;
