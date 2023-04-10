@@ -123,7 +123,7 @@ export default {
     methods: {
       showDailog() {
           this.confirmMessage = {
-              title: `你已完成${this.currentIndex}题，确认要退出吗？`,
+              title: `你已完成${this.currentIndex - 1}题，确认要退出吗？`,
               cancelBtn: {
                   text: '狠心退出',
                   callback: async () => {                    

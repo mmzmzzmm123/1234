@@ -18,13 +18,13 @@
               @tap="refreshUser"
             />
           </view>
-          <!-- <view class="num"
+          <view class="num"
             ><img
               v-show="userInfo.phone"
               class="img"
               src="/static/evaluation/user/phone.png"
             />{{ userInfo.phone }}
-          </view> -->
+          </view>
         </view>
       </view>
       <view class="link-box">
@@ -59,11 +59,15 @@
         v-for="(order, index) in orderList"
         :key="'order' + index"
       >
-        <view class="title">{{ order.gaugeTitle }}</view>
+        <view class="header">
+          <view class="title">{{ order.gaugeTitle }}</view>
+          <view class="finish-status">{{ finishStatus(order) }}</view>
+        </view>
+        
         <view class="price">￥{{ order.amount }}</view>
-        <view class="buy-time">{{ order.createTime }}</view>
+        <view class="buy-time">购买时间：{{ order.createTime }}</view>
         <view class="order-no"
-          >{{ order.orderId }}
+          >订单编号：{{ order.orderId }}
           <img
             class="img"
             src="/static/evaluation/user/copy.png"
@@ -82,6 +86,7 @@
 import utils, { clientTypeObj } from "@/utils/common";
 import noData from "@/components/evaluation/noData";
 import userServer from "@/server/evaluation/user";
+import productServer from "@/server/evaluation/product.js"
 export default {
   components: { noData },
   data() {
@@ -111,6 +116,16 @@ export default {
       redirectUri:location.href+"?t="+new Date().getTime()
     };
   },
+  computed: {
+    finishStatus() {
+      return (order) => {
+        if (!order.finishedNum || !order.gaugeNum) {
+          return "0%"
+        }
+        return (order.finishedNum / order.gaugeNum).toFixed(2) * 100 + "%"
+      }
+    }
+  },
   async created() {
     this.userInfo = uni.getStorageSync("userInfo")
 	//从微信登录返回会有code
@@ -126,13 +141,20 @@ export default {
     if (!this.userInfo && await utils.loginCallback(this.redirectUri)) {
       this.userInfo = uni.getStorageSync("userInfo")
     }
-	if (this.userInfo) {
-	  this.orderList = await userServer.getOrderList({
-		  userId: this.userInfo.userId, 
-		  gaugeStatus: 2
-	  });
-	  this.reportNum = await userServer.getOrderListNum(this.userInfo.userId);
-	}
+    if (this.userInfo) {
+      this.orderList = await userServer.getOrderList({
+        userId: this.userInfo.userId, 
+        gaugeStatus: 2
+      });
+      this.orderList.forEach(async (item, index) => {
+        let { gaugeNum, finishedNum } = await productServer.getProductInfo(item.gaugeId)
+        item.gaugeNum = gaugeNum
+        item.finishedNum = finishedNum
+        this.$set(this.orderList, index, item);
+      })
+      console.log(this.orderList)
+      this.reportNum = await userServer.getOrderListNum(this.userInfo.userId);
+    }
   },
   methods: {
     refreshUser(){
@@ -294,8 +316,8 @@ page {
     padding: 32upx 0;
 
     .class-img {
-      width: 88upx;
-      height: 88upx;
+      width: 56upx;
+      height: 56upx;
     }
   }
 
@@ -332,13 +354,19 @@ page {
       border-bottom: 1px solid #ccc;
       margin: 30upx 0;
 
-      .title {
+      .header {
+        display: flex;  
+        justify-content: space-between;
         font-size: 32upx;
         font-weight: 600;
         color: #333333;
-        line-height: 45upx;
-        margin-bottom: 14upx;
+        .title {
+          
+          line-height: 45upx;
+          margin-bottom: 14upx;
+        }
       }
+      
 
       .price {
         font-size: 32upx;
@@ -350,7 +378,7 @@ page {
 
       .buy-time,
       .order-no {
-        font-size: 28upx;
+        font-size: 24upx;
         font-weight: 400;
         color: #aaaaaa;
         line-height: 40upx;

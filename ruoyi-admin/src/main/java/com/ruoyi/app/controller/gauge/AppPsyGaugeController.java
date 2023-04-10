@@ -6,7 +6,9 @@ import com.ruoyi.common.core.domain.dto.LoginDTO;
 import com.ruoyi.common.core.page.TableDataInfo;
 import com.ruoyi.framework.web.service.AppTokenService;
 import com.ruoyi.gauge.domain.PsyGauge;
+import com.ruoyi.gauge.domain.PsyGaugeQuestionsResult;
 import com.ruoyi.gauge.domain.PsyOrder;
+import com.ruoyi.gauge.service.IPsyGaugeQuestionsResultService;
 import com.ruoyi.gauge.service.IPsyGaugeService;
 import com.ruoyi.gauge.service.IPsyOrderService;
 import com.ruoyi.gauge.vo.GaugeVO;
@@ -42,8 +44,7 @@ public class AppPsyGaugeController extends BaseController
     private AppTokenService appTokenService;
 
     @Autowired
-    private IPsyUserService psyUserService;
-
+    private IPsyGaugeQuestionsResultService psyGaugeQuestionsResultService;
     /**
      * 查询心理测评列表
      */
@@ -76,6 +77,13 @@ public class AppPsyGaugeController extends BaseController
         if (psyOrder != null) { // 用户已经下单
             gaugeVO.setOrderId(psyOrder.getId());
         }
+        PsyGaugeQuestionsResult psyGaugeQuestionsResult = new PsyGaugeQuestionsResult();
+        psyGaugeQuestionsResult.setUserId(userId);
+        psyGaugeQuestionsResult.setGaugeId(id);
+        if (psyOrder != null) {
+            psyGaugeQuestionsResult.setOrderId(psyOrder.getId());
+        }
+        gaugeVO.setFinishedNum(psyGaugeQuestionsResultService.selectPsyGaugeQuestionsResultList(psyGaugeQuestionsResult).size());
 
         return AjaxResult.success(gaugeVO);
     }

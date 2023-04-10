@@ -5,7 +5,8 @@
       <span class="txt">搜索</span>
     </view>
     <view class="banner-box index-margin">
-      <swiper class="ad-swiper" indicator-dots circular>
+			<swiper class="ad-swiper" indicator-dots circular indicator-color="rgb(255, 255, 255, .5)"
+       indicator-active-color="#FFFFFF">
         <swiper-item v-for="(item, index) in bannerList" :key="index">
           <image class="banner-img" :src="item.bannerUrl" @tap="toProduct(item.linkUrl)" />
         </swiper-item>
@@ -18,7 +19,8 @@
       </view>
     </view>
     <view class="banner-box banner-box1 index-margin">
-      <swiper class="ad-swiper" indicator-dots circular>
+      <swiper class="ad-swiper" indicator-dots circular indicator-color="rgb(255, 255, 255, .5)"
+       indicator-active-color="#FFFFFF">
         <swiper-item v-for="(item, index) in bannerList1" :key="index">
           <image class="banner-img" :src="item.bannerUrl" @tap="toProduct(item.linkUrl)" />
         </swiper-item>

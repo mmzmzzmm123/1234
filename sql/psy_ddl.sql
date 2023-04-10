@@ -124,7 +124,7 @@ CREATE TABLE `psy_gauge_questions_options` (
 CREATE TABLE `psy_gauge_questions_result` (
                                               `id` int(11) NOT NULL AUTO_INCREMENT,
                                               `user_id` varchar(255) DEFAULT NULL,
-                                              `setting_id` int(11) DEFAULT NULL,
+                                              `gauge_id` int(11) DEFAULT NULL,
                                               `question_id` int(11) DEFAULT NULL,
                                               `option_id` int(11) DEFAULT NULL,
                                               `value` int(11) DEFAULT NULL COMMENT '得分',

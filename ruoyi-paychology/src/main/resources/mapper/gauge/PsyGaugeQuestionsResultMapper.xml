@@ -86,14 +86,15 @@
     <insert id="batchInsert">
         insert into psy_gauge_questions_result
         (user_id,
-        question_id,
-        option_id,
-        value,
+        gauge_id,
+        questions_id,
+        questions_options_id,
+        score,
         create_time,
         order_id)
         values
         <foreach collection="list" item="item" separator=",">
-            (#{item.userId},#{item.questionsId},#{item.questionsOptionsId},#{item.score},#{item.createTime},#{item.orderId})
+            (#{item.userId},#{item.gaugeId},#{item.questionsId},#{item.questionsOptionsId},#{item.score},#{item.createTime},#{item.orderId})
         </foreach>
     </insert>
 
@@ -102,14 +103,14 @@
         delete
         from psy_gauge_questions_result
         where user_id = #{userId}
-          and question_id = #{questionsId}
+          and questions_id = #{questionsId}
           and order_id = #{orderId}
     </delete>
 
     <select id="getSimpleResultByScores" resultType="java.lang.String">
         SELECT pgss.result
         FROM psy_gauge_score_setting pgss
-                 INNER JOIN (SELECT SUM(result.value) as score,
+                 INNER JOIN (SELECT SUM(result.score) as score,
                                     po.gauge_id,
                                     po.order_id
                              FROM psy_gauge_questions_result result
@@ -132,9 +133,9 @@
     <insert id="batchAllInsert">
         insert into psy_gauge_questions_result
         (user_id,
-        question_id,
-        option_id,
-        value,
+        questions_id,
+        questions_options_id,
+        score,
         create_time,
         order_id)
         values
@@ -145,7 +146,8 @@
 
     <select id="selectPsyGaugeQuestionsResultAll" parameterType="map"
             resultType="com.ruoyi.gauge.domain.PsyGaugeQuestionsResultAll">
-        select t1.id as id, t1.user_id as userId, t1.question_id as questionId, t1.option_id as optionId, t1.value as value ,t1.order_id as orderId
+        <include refid="selectPsyGaugeQuestionsResultVo"/>
+#         select t1.id as id, t1.user_id as userId, t1.question_id as questionId, t1.option_id as optionId, t1.value as value ,t1.order_id as orderId
         from psy_gauge_questions_result t1
         where t1.user_id = #{userId} and t1.order_id  = #{orderId}
     </select>
