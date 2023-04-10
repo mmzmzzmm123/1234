@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
@@ -83,7 +84,10 @@ public class AppPsyGaugeController extends BaseController
         if (psyOrder != null) {
             psyGaugeQuestionsResult.setOrderId(psyOrder.getId());
         }
-        gaugeVO.setFinishedNum(psyGaugeQuestionsResultService.selectPsyGaugeQuestionsResultList(psyGaugeQuestionsResult).size());
+        List<PsyGaugeQuestionsResult> psyGaugeQuestionsResultList = psyGaugeQuestionsResultService.selectPsyGaugeQuestionsResultList(psyGaugeQuestionsResult);
+        // 将多选题的答案选项分组归并
+        Map<Integer, Long> result  = psyGaugeQuestionsResultList.stream().collect(Collectors.groupingBy(PsyGaugeQuestionsResult::getQuestionsId, Collectors.counting()));
+        gaugeVO.setFinishedNum(result.keySet().size());
 
         return AjaxResult.success(gaugeVO);
     }
