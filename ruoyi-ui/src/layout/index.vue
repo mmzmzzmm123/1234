@@ -1,27 +1,19 @@
 <template>
   <div :class="classObj" class="app-wrapper" :style="{ '--current-color': theme }">
-    <div
-      v-if="device === 'mobile' && sidebar.opened"
-      class="drawer-bg"
-      @click="handleClickOutside"
-    />
+    <div v-if="device==='mobile'&&sidebar.opened" class="drawer-bg" @click="handleClickOutside"/>
     <navbar v-if="layoutType == 'up-down'" style="position: fixed;width: 100%;z-index: 1;"/>
-    <sidebar
-      v-if="!sidebar.hide"
-      class="sidebar-container"
-      :style="layoutType == 'up-down' ? 'top: 50px;' : 'top: 0;'"
-    />
-    <div :class="{ hasTagsView: needTagsView, sidebarHide: sidebar.hide }" class="main-container"
-    :style="layoutType == 'up-down' ? 'min-height: calc(100% - 50px);top: 50px;' : 'min-height: 100%;top: 0;'"
-    >
-      <div :class="{ 'fixed-header': fixedHeader, 'fixed-header-updown': layoutType == 'up-down' }">
-        <navbar v-if="layoutType == 'left-right'" />
-        <tags-view v-if="needTagsView" />
-      </div>
-      <app-main />
-      <right-panel>
-        <settings />
-      </right-panel>
+    <sidebar v-if="!sidebar.hide" class="sidebar-container" :style="layoutType == 'up-down' ? 'top: 50px;' : 'top: 0;'"/>
+    <div :class="{ hasTagsView: needTagsView, sidebarHide: sidebar.hide }" class="main-container" :style="layoutType == 'up-down' ? 'min-height: calc(100% - 50px);top: 50px;' : 'min-height: 100%;top: 0;'">
+      <el-scrollbar>
+        <div :class="{ 'fixed-header': fixedHeader, 'fixed-header-updown': layoutType == 'up-down' }">
+          <navbar v-if="layoutType == 'left-right'" />
+          <tags-view v-if="needTagsView" />
+        </div>
+        <app-main />
+        <right-panel>
+          <settings />
+        </right-panel>
+      </el-scrollbar>
     </div>
   </div>
 </template>
