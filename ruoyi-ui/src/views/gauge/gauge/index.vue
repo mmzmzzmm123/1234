@@ -91,28 +91,44 @@
         <el-form-item label="测评介绍">
           <editor v-model="form.introduce" :min-height="192" :extraData="extraData"/>
         </el-form-item>
-        <el-form-item label="测评分类" prop="gaugeClass">
-          <el-select v-model="form.gaugeClass" placeholder="请选择测评分类">
-            <el-option v-for="item in gaugeClassList" :key="item.id" :label="item.name" :value="item.id">
-            </el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item label="测评题数" prop="gaugeNum">
-          <el-input v-model="form.gaugeNum" placeholder="请输入测评题数" />
-        </el-form-item>
-        <el-form-item label="价格" prop="price">
-          <el-input v-model="form.price" placeholder="请输入价格" />
-        </el-form-item>
+
+        <el-row>
+          <el-col :span="12">
+            <el-form-item label="测评分类" prop="gaugeClass">
+              <el-select v-model="form.gaugeClass" placeholder="请选择测评分类">
+                <el-option v-for="item in gaugeClassList" :key="item.id" :label="item.name" :value="item.id">
+                </el-option>
+              </el-select>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="计算类型" prop="type">
+              <el-select v-model="form.type" placeholder="请选择计算类型">
+                <el-option label="普通计算" :value="1"></el-option>
+                <el-option label="多维计算" :value="2"></el-option>
+              </el-select>
+            </el-form-item>
+          </el-col>
+        </el-row>
+
+        <el-row>
+          <el-col :span="12">
+            <el-form-item label="测评题数" prop="gaugeNum">
+              <el-input v-model="form.gaugeNum" placeholder="请输入测评题数" />
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="价格" prop="price">
+              <el-input v-model="form.price" placeholder="请输入价格" />
+            </el-form-item>
+          </el-col>
+        </el-row>
+
         <el-form-item label="测评说明" prop="gaugeDes">
           <editor v-model="form.gaugeDes" :min-height="192" :extraData="extraData"/>
         </el-form-item>
 
-        <el-form-item label="计算类型" prop="type">
-           <el-select v-model="form.type" placeholder="请选择计算类型">
-            <el-option label="普通计算" :value="1"></el-option>
-            <el-option label="多维计算" :value="2"></el-option>
-          </el-select>
-        </el-form-item>
+
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button type="primary" @click="submitForm">确 定</el-button>
@@ -157,6 +173,24 @@ export default {
   },
   name: "Gauge",
   data() {
+    let validatePrice = (rule, value, callback) => {
+      // 保留两位小数
+      const regex = /^[0-9]+(\.[0-9]{1,2})?$/
+      if (!regex.test(value)) {
+        callback('测评价格为两位小数的数值表示')
+      } else {
+        callback()
+      }
+    }
+    let validateNumber = (rule, value, callback) => {
+      // 整数
+      const regex = /^[0-9]+?$/
+      if (!regex.test(value)) {
+        callback('测评题数为整数的数值表示')
+      } else {
+        callback()
+      }
+    }
     return {
       extraData: {
         module: 'gauge'
@@ -218,8 +252,12 @@ export default {
         ],
         gaugeNum: [
           { required: true, message: "测评题数不能为空", trigger: "blur" },
+          { validator: validateNumber, trigger: "blur" }
         ],
-        price: [{ required: true, message: "价格不能为空", trigger: "blur" }],
+        price: [
+          { required: true, message: "价格不能为空", trigger: "blur" },
+          { validator: validatePrice, trigger: "blur" }
+        ],
         gaugeId: [
           { required: true, message: "测评表单ID不能为空", trigger: "blur" },
         ],
@@ -301,6 +339,11 @@ export default {
     /** 新增按钮操作 */
     handleAdd() {
       this.reset();
+      // 测评分类默认值
+      this.form.gaugeClass = this.gaugeClassList[0].id
+      // 计算类型默认值
+      this.form.type = 1
+
       this.open = true;
       this.title = "添加心理测评";
     },
