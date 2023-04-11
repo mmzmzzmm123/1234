@@ -1,6 +1,11 @@
 package com.ruoyi.framework.manager.factory;
 
 import java.util.TimerTask;
+
+import io.github.mngsk.devicedetector.Detection;
+import io.github.mngsk.devicedetector.DeviceDetector;
+import io.github.mngsk.devicedetector.client.Client;
+import io.github.mngsk.devicedetector.operatingsystem.OperatingSystem;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import com.ruoyi.common.constant.Constants;
@@ -14,17 +19,17 @@ import com.ruoyi.system.domain.SysLogininfor;
 import com.ruoyi.system.domain.SysOperLog;
 import com.ruoyi.system.service.ISysLogininforService;
 import com.ruoyi.system.service.ISysOperLogService;
-import eu.bitwalker.useragentutils.UserAgent;
+
 
 /**
  * 异步工厂（产生任务用）
- * 
+ *
  * @author ruoyi
  */
 public class AsyncFactory
 {
     private static final Logger sys_user_logger = LoggerFactory.getLogger("sys-user");
-
+    static DeviceDetector deviceDetector = new DeviceDetector.DeviceDetectorBuilder().build();
     /**
      * 记录登录信息
      * 
@@ -35,9 +40,8 @@ public class AsyncFactory
      * @return 任务task
      */
     public static TimerTask recordLogininfor(final String username, final String status, final String message,
-            final Object... args)
-    {
-        final UserAgent userAgent = UserAgent.parseUserAgentString(ServletUtils.getRequest().getHeader("User-Agent"));
+                                             final Object... args)  {
+        Detection userAgent = deviceDetector.detect(ServletUtils.getRequest().getHeader("User-Agent"));
         final String ip = IpUtils.getIpAddr();
         return new TimerTask()
         {
@@ -54,9 +58,9 @@ public class AsyncFactory
                 // 打印信息到日志
                 sys_user_logger.info(s.toString(), args);
                 // 获取客户端操作系统
-                String os = userAgent.getOperatingSystem().getName();
+                String os = userAgent.getOperatingSystem().map(OperatingSystem::toString).orElse("unknown");
                 // 获取客户端浏览器
-                String browser = userAgent.getBrowser().getName();
+                String browser = userAgent.getClient().map(Client::toString).orElse("unknown");
                 // 封装对象
                 SysLogininfor logininfor = new SysLogininfor();
                 logininfor.setUserName(username);
