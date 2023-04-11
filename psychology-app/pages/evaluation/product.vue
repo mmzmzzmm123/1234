@@ -76,6 +76,10 @@ export default {
 		this.productId = parseInt(utils.getParam(location.href, "id"));
 		this.productInfo = await productServer.getProductInfo(this.productId);
 		this.payBoxShow = utils.getParam(location.href, "payOrder") == 1;
+    
+    uni.setNavigationBarTitle({
+    	title: this.productInfo.title
+    });
 	},
 	methods: {
 		async submitPay() {
