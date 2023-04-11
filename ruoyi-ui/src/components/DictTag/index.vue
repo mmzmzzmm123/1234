@@ -7,7 +7,7 @@
           :key="item.value"
           :index="index"
           :class="item.raw.cssClass"
-          >{{ item.label }}</span
+          >{{ item.label + ' ' }}</span
         >
         <el-tag
           v-else
@@ -17,12 +17,12 @@
           :type="item.raw.listClass == 'primary' ? '' : item.raw.listClass"
           :class="item.raw.cssClass"
         >
-          {{ item.label }}
+          {{ item.label + ' ' }}
         </el-tag>
       </template>
     </template>
-    <template v-if="unMatch && showValue">
-      {{ value | handleValue }}
+    <template v-if="unmatch && showValue">
+      {{ unmatchArray | handleArray }}
     </template>
   </div>
 </template>
@@ -42,6 +42,11 @@ export default {
       default: true,
     }
   },
+  data() {
+    return {
+      unmatchArray: [], // 记录未匹配的项
+    }
+  },
   computed: {
     values() {
       if (this.value !== null && typeof this.value !== 'undefined') {
@@ -50,29 +55,31 @@ export default {
         return [];
       }
     },
-
-    unMatch(){
+    unmatch(){
+      this.unmatchArray = [];
       if (this.value !== null && typeof this.value !== 'undefined') {
-        if(!Array.isArray(this.value)){ // 非数组
-          for (let i = 0; i < this.options.length; i++) {
-            // 只要找到了匹配的值，就返回false，不显示value
-            if(this.options[i].value === this.value) return false;
-          }
-          // 遍历完options也没找到对应的value，显示value
+        // 传入值为非数组
+        if(!Array.isArray(this.value)){
+          if(this.options.some(v=> v.value === this.value )) return false;
+          this.unmatchArray.push(this.value);
           return true;
         }
+        // 传入值为Array
+        this.value.forEach(item => {
+          if (!this.options.some(v=> v.value === item )) this.unmatchArray.push(item)
+        });
+        return true;
       }
       // 没有value不显示
       return false;
-    }
+    },
+
   },
   filters: {
-    handleValue(value) {
-      // 非数组直接返回
-      if(!Array.isArray(value)) return value;
-      // 数组处理后返回
-      return value.reduce((pre, cur) => {
-        return pre + '、' + cur;
+    handleArray(array) {
+      if(array.length===0) return '';
+      return array.reduce((pre, cur) => {
+        return pre + ' ' + cur;
       })
     },
   }
