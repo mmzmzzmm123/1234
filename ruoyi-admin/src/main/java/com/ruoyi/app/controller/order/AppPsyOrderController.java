@@ -9,6 +9,7 @@ import com.ruoyi.common.core.page.TableDataInfo;
 import com.ruoyi.common.enums.BusinessType;
 import com.ruoyi.common.utils.poi.ExcelUtil;
 import com.ruoyi.framework.web.service.AppTokenService;
+import com.ruoyi.gauge.constant.GaugeConstant;
 import com.ruoyi.gauge.domain.PsyOrder;
 import com.ruoyi.gauge.service.IPsyOrderService;
 import io.swagger.annotations.Api;
@@ -21,6 +22,7 @@ import springfox.documentation.annotations.ApiIgnore;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * 心理测评订单信息Controller
@@ -58,6 +60,10 @@ public class AppPsyOrderController extends BaseController {
         }
         startPage();
         List<PsyOrder> list = psyOrderService.queryOrderInfo(psyOrder ,userId);
+
+        // 过滤已取消的订单
+        list = list.stream().filter(item -> item.getOrderStatus() != GaugeConstant.GAUGE_ORDER_STATUE_CANCELED)
+                .collect(Collectors.toList());
         return getDataTable(list);
     }
 

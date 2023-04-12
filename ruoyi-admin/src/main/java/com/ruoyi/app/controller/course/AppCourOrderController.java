@@ -49,11 +49,14 @@ public class AppCourOrderController extends BaseController
         List<OrderVO> orderVOList = new ArrayList<>();
         // 返回的订单信息中需要包含课程详情信息
         list.forEach(item -> {
-           CourCourse courCourse =  courCourseService.selectCourCourseById(item.getCourseId());
-           OrderVO orderVO = new OrderVO();
-           BeanUtils.copyProperties(item, orderVO);
-           orderVO.setCourseInfo(courCourse);
-           orderVOList.add(orderVO);
+            if (item.getStatus() == CourConstant.COUR_ORDER_STATUE_CANCELED) {
+                return;
+            }
+            CourCourse courCourse = courCourseService.selectCourCourseById(item.getCourseId());
+            OrderVO orderVO = new OrderVO();
+            BeanUtils.copyProperties(item, orderVO);
+            orderVO.setCourseInfo(courCourse);
+            orderVOList.add(orderVO);
         });
         return AjaxResult.success(orderVOList);
     }
