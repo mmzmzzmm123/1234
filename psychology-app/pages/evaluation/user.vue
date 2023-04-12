@@ -80,6 +80,10 @@
       <view class="footer" v-else>已经到底了</view>
     </view>
     <evaluation-tab-bar :currentIndex="2"></evaluation-tab-bar>
+		<uni-popup ref="popup" type="dialog">
+			<uni-popup-dialog mode="base" content="您尚未登录, 是否使用微信静默登录" :duration="2000" :before-close="true"
+				@close="close" @confirm="confirm"></uni-popup-dialog>
+		</uni-popup>
   </view>
 </template>
 <script>
@@ -87,8 +91,12 @@ import utils, { clientTypeObj } from "@/utils/common";
 import noData from "@/components/evaluation/noData";
 import userServer from "@/server/evaluation/user";
 import productServer from "@/server/evaluation/product.js"
+import {
+  uniPopup,
+  uniPopupDialog
+} from '@dcloudio/uni-ui'
 export default {
-  components: { noData },
+  components: { noData,  uniPopup, uniPopupDialog },
   data() {
     return {
       userInfo: {},
@@ -128,18 +136,14 @@ export default {
   },
   async created() {
     this.userInfo = uni.getStorageSync("userInfo")
-	//从微信登录返回会有code
-	let code = utils.getParam(window.location.href, "code");
-    if (!this.userInfo && !code) {
-      this.userInfo = {};//防止为null报错
-	  //添加登录标志,为callback做返回判断
-	  uni.setStorageSync("wxLogining", true);
-      await utils.loginWx(this.redirectUri);      
-    }	
+	
   },
   async mounted() {
     if (!this.userInfo && await utils.loginCallback(this.redirectUri)) {
       this.userInfo = uni.getStorageSync("userInfo")
+    }
+    if (!this.userInfo) {
+      this.openLoginConfirm()
     }
     if (this.userInfo) {
       this.orderList = await userServer.getOrderList({
@@ -158,20 +162,35 @@ export default {
   },
   methods: {
     refreshUser(){
-      uni.setStorageSync("userInfo",null);
+      uni.setStorageSync("userInfo", null);
       utils.loginWx(this.redirectUri);
       //添加登录标志,为callback做返回判断
       uni.setStorageSync("wxLogining", true);
     },
     toReport() {
+      // 判断是否已经登录
+      if (!this.userInfo) {
+        this.openLoginConfirm()
+        return
+      }
       if (this.getUserInfo())
         uni.navigateTo({ url: "/pages/evaluation/report" });
     },
     toOrder() {
+      // 判断是否已经登录
+      if (!this.userInfo) {
+        this.openLoginConfirm()
+        return
+      }
       if (this.getUserInfo())
         uni.navigateTo({ url: "/pages/evaluation/order" });
     },
     toTest(order) {
+     	// 判断是否已经登录
+      if (!this.userInfo) {
+        this.openLoginConfirm()
+        return
+      }
       uni.setStorageSync("gaugeDes", order.gaugeDes);
       uni.navigateTo({
         url: `/pages/evaluation/testBefore?productId=${order.gaugeId}&&orderId=${order.id}`,
@@ -200,6 +219,16 @@ export default {
       }
       return true;
     },
+    close() {
+      this.$refs.popup.close()
+    },
+    async confirm() {
+      await loginServer.login();
+      this.$refs.popup.close()
+    },
+    openLoginConfirm() {
+      this.$refs.popup.open();
+    }
   },
 };
 </script>

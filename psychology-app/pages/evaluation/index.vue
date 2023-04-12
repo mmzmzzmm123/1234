@@ -86,13 +86,22 @@
       <product-list-com :productList="productList"></product-list-com>
     </view>
     <evaluation-tab-bar :currentIndex="0"></evaluation-tab-bar>
+		<uni-popup ref="popup" type="dialog">
+			<uni-popup-dialog mode="base" content="您尚未登录, 是否使用微信静默登录" :duration="2000" :before-close="true"
+				@close="close" @confirm="confirm"></uni-popup-dialog>
+		</uni-popup>
     </view>
 </template>
 <script>
 import productListCom from '@/components/evaluation/productList'
 import indexServer from '@/server/evaluation/index'
+	import {
+		uniPopup,
+		uniPopupDialog
+	} from '@dcloudio/uni-ui'
+	import utils from "@/utils/common";
 export default {
-  components: { productListCom},
+  components: { productListCom, uniPopup, uniPopupDialog },
   data() {
     return {
       bannerList: [],
@@ -121,16 +130,26 @@ export default {
         },
       ],
       hotList: [],
-      productList: []
+      productList: [],
+      userInfo: {}
     };
   },
   async created() {
+    this.userInfo = uni.getStorageSync("userInfo")
     this.bannerList = await this.getBanner(0);
     this.bannerList1 = await this.getBanner(1);
     this.bannerList2 = await this.getBanner(2);
     this.bannerList3 = await this.getBanner(3);
     this.productList = await this.getProduct(0);
     this.hotList = await this.getProduct(1);
+  },
+  async mounted() {      
+    if (!this.userInfo && await utils.loginCallback(this.redirectUri)) {
+      this.userInfo = uni.getStorageSync("userInfo")			  
+    }
+    if (!this.userInfo) {
+      this.openLoginConfirm()
+    }
   },
   methods: {
     async getBanner(type) {
@@ -140,19 +159,44 @@ export default {
       return await indexServer.getProductByLabel(type);
     },
     toProduct(url) {
+    	// 判断是否已经登录
+      if (!this.userInfo) {
+        this.openLoginConfirm()
+        return
+      }
       uni.navigateTo({ url });
     },
     toSearch() {
+      // 判断是否已经登录
+      if (!this.userInfo) {
+        this.openLoginConfirm()
+        return
+      }
       uni.navigateTo({
         url: "/pages/evaluation/search",
       });
     },
     toMore() {
+      // 判断是否已经登录
+      if (!this.userInfo) {
+        this.openLoginConfirm()
+        return
+      }
       uni.navigateTo({
         url: "/pages/evaluation/class",
       });
-    }
-  },
+    },
+    close() {
+      this.$refs.popup.close()
+    },
+    async confirm() {
+      await loginServer.login();
+      this.$refs.popup.close()
+    },
+    openLoginConfirm() {
+      this.$refs.popup.open();
+    },
+  },  
 };
 </script>
 <style lang="scss">
