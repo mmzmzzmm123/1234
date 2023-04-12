@@ -15,7 +15,7 @@
       <view class="item-list">
         <view class="current-class">{{ className }}</view>
         <view class="course-item" v-show="courseList.length > 0" v-for="course in (courseList || [])"
-          @tap="tocourse(course.courseId)">
+          @tap="tocourse(course.id)">
           <view class="img-box">
             <img :src="course.url" />
           </view>
