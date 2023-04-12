@@ -91,7 +91,7 @@ export default {
 				this.productInfo.price,
 				{
 					module: 'gauge'
-				},
+				}        
 			)
 			console.log(res)
 			if (res.code == 200) {
