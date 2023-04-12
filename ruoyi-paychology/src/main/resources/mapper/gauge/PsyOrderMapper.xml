@@ -13,6 +13,7 @@
         <result property="gaugeStatus" column="gauge_status"/>
         <result property="createTime" column="create_time"/>
         <result property="createBy" column="create_by"/>
+        <result property="userId" column="user_id"/>
     </resultMap>
 
     <sql id="selectPsyOrderVo">
@@ -23,7 +24,8 @@
                amount,
                gauge_status,
                create_time,
-               create_by
+               create_by,
+               user_id
         from psy_order
     </sql>
 
@@ -36,6 +38,7 @@
             <if test="amount != null ">and amount = #{amount}</if>
             <if test="gaugeStatus != null ">and gauge_status = #{gaugeStatus}</if>
             <if test="createBy != null ">and create_by = #{createBy}</if>
+            <if test="userId != null ">and user_id = #{userId}</if>
         </where>
     </select>
 
@@ -60,6 +63,7 @@
             <if test="gaugeStatus != null">gauge_status,</if>
             <if test="createTime != null">create_time,</if>
             <if test="createBy != null and createBy != ''">create_by,</if>
+            <if test="userId != null">user_id,</if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="orderId != null and orderId != ''">#{orderId},</if>
@@ -69,6 +73,7 @@
             <if test="gaugeStatus != null">#{gaugeStatus},</if>
             <if test="createTime != null">#{createTime},</if>
             <if test="createBy != null and createBy != ''">#{createBy},</if>
+            <if test="userId != null">#{userId},</if>
         </trim>
     </insert>
 
@@ -84,6 +89,7 @@
             <if test="createBy != null and createBy != ''">create_by = #{createBy},</if>
             <if test="score != null and score != ''">score = #{score},</if>
             <if test="resultUrl != null and resultUrl != ''">result_url = #{resultUrl},</if>
+            <if test="userId != null">user_id = #{userId},</if>
         </trim>
 
         <trim prefix="where" prefixOverrides="and">
@@ -119,13 +125,14 @@
             <if test="amount != null ">and po.amount = #{amount}</if>
             <if test="gaugeStatus != null ">and po.gauge_status = #{gaugeStatus}</if>
             <if test="createBy != null ">and po.create_by = #{createBy}</if>
+            <if test="userId != null ">and po.user_id = #{userId}</if>
         </where>
     </select>
 
     <select id="getMyReportNum" resultType="java.lang.Integer">
         select count(1)
         from psy_order
-        where create_by = #{userId}
+        where user_id = #{userId}
           and gauge_status = 1
     </select>
 
