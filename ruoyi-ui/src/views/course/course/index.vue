@@ -130,7 +130,8 @@
             type="text"
             icon="el-icon-plus"
             size="mini"
-            @click="handleSectionDrawer(scope.row.id)">
+            @click="handleSectionDrawer(scope.row.id)"
+            v-hasPermi="['course:section:list']">
             章节管理
           </el-button>
         </template>
@@ -189,7 +190,7 @@
         </el-form-item>
 
         <el-form-item label="课程详情">
-          <editor v-model="form.detail" :min-height="192"/>
+          <editor v-model="form.detail" :min-height="192" :extraData="extraData"/>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">

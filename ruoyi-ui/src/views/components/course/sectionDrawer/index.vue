@@ -148,7 +148,7 @@
           </el-form-item>
 
           <el-form-item label="章节内容">
-            <editor v-model="form.content" :min-height="192"/>
+            <editor v-model="form.content" :min-height="192" :extraData="extraData"/>
           </el-form-item>
         </el-form>
 
