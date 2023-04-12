@@ -95,6 +95,7 @@ import {
   uniPopup,
   uniPopupDialog
 } from '@dcloudio/uni-ui'
+import loginServer from "@/server/login"
 export default {
   components: { noData,  uniPopup, uniPopupDialog },
   data() {

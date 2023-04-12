@@ -95,11 +95,12 @@
 <script>
 import productListCom from '@/components/evaluation/productList'
 import indexServer from '@/server/evaluation/index'
+import loginServer from "@/server/login"
 	import {
 		uniPopup,
 		uniPopupDialog
 	} from '@dcloudio/uni-ui'
-	import utils from "@/utils/common";
+import utils from "@/utils/common";
 export default {
   components: { productListCom, uniPopup, uniPopupDialog },
   data() {
