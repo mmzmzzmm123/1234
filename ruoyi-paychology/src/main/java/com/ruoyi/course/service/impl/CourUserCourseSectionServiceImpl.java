@@ -124,7 +124,14 @@ public class CourUserCourseSectionServiceImpl implements ICourUserCourseSectionS
             // 记录每一章节用户初始的学习状态
             courUserCourseSection.setSectionId(section.getId());
             try {
-                insertCourUserCourseSection(courUserCourseSection);
+                // 如果之前有下过单，直接覆盖原有记录
+                List<CourUserCourseSection> courUserCourseSectionList = selectCourUserCourseSectionList(courUserCourseSection);
+                if (courUserCourseSectionList.size() == 0) {
+                    insertCourUserCourseSection(courUserCourseSection);
+                } else  {
+                    updateCourUserCourseSection(courUserCourseSection);
+                }
+
             } catch (Exception e) {
                 System.out.println(e.getMessage());
             }
