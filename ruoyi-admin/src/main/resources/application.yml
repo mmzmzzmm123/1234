@@ -135,7 +135,7 @@ app:
     # 令牌有效期（默认30分钟）单位s
     expireTime: 1800
   filter:
-    urls: /app/user/bindPhone,/app/wxPay/**
+    urls: /app/user/bindPhone,/app/wxPay/**,/app/home/gauge/**
   
 # MyBatis配置
 mybatis:

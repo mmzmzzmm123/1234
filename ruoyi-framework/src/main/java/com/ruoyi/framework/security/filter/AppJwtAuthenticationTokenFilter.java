@@ -1,5 +1,6 @@
 package com.ruoyi.framework.security.filter;
 
+import com.alibaba.fastjson2.JSONObject;
 import com.ruoyi.common.constant.RespMessageConstants;
 import com.ruoyi.common.core.domain.dto.LoginDTO;
 import com.ruoyi.common.exception.ServiceException;
@@ -16,6 +17,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.io.PrintWriter;
 
 /**
  * token过滤器 验证token有效性
@@ -48,11 +50,24 @@ public class AppJwtAuthenticationTokenFilter extends OncePerRequestFilter {
         }
         if (flag) {
             if (StringUtils.isNull(loginUser)) {
+                JSONObject json = new JSONObject();
+                json.put("code", 401);
+                json.put("msg", "用户未登录");
+                this.output(json, request, response);
                 throw new ServiceException("用户未登录" , RespMessageConstants.ACCESS_TOKEN_EXPIRED_CODE);
             }
             appTokenService.verifyToken(loginUser);
         }
 
         chain.doFilter(request, response);
+    }
+
+    public void output(Object json, HttpServletRequest request, HttpServletResponse response) throws IOException {
+        String header = request.getHeader("Origin");
+        response.setContentType("application/json;charset=UTF-8;");
+        PrintWriter out = response.getWriter();
+        out.println(json);
+        out.flush();
+        out.close();
     }
 }

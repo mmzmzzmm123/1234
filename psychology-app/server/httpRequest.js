@@ -1,5 +1,25 @@
 import configdata from "../common/config";
 import cache from "../common/cache";
+import loginServer from "@/server/login.js"
+
+function tokenExpired(result) {    
+    
+    uni.showModal({
+      title: '提示',
+      content: '由于长时间未使用，token已过期，请重新登录',
+      showCancel: false,
+      success: function (res) {
+        // 清除本地缓存的userInfo 和 token
+        uni.setStorageSync('userInfo', null)
+        uni.setStorageSync('token', null)
+        
+        uni.redirectTo({
+          url: '/pages/evaluation/index'
+        })
+      }
+    });    
+  
+}
 
 module.exports = {
   config: function (name) {
@@ -37,7 +57,11 @@ module.exports = {
           "content-type": header,
           Authorization: token,
         },
-        success: function (result) {
+        success: function (result) { 
+          if (result.data.code == 401) {
+            tokenExpired(result)
+            return
+          }
           succ.call(self, result.data);
         },
         fail: function (e) {
@@ -82,6 +106,10 @@ module.exports = {
           Authorization: token,
         },
         success: function (result) {
+          if (result.data.code == 401) {
+            tokenExpired(result)
+            return
+          }
           succ.call(self, result.data);
         },
         fail: function (e) {

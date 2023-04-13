@@ -134,7 +134,8 @@ public class AppTokenService {
         loginUser.setExpireTime(loginUser.getLoginTime() + (ObjectUtils.isEmpty(expire) ? expireTime : expire) * MILLIS_SECOND);
         // 根据uuid将loginUser缓存
         String userKey = getTokenKey(loginUser.getToken());
-        redisCache.setCacheObject(userKey, loginUser, (ObjectUtils.isEmpty(expire) ? expireTime : expire), TimeUnit.SECONDS);
+        int expireTime = (int) (redisCache.getExpire(userKey) + this.expireTime);
+        redisCache.setCacheObject(userKey, loginUser, expireTime, TimeUnit.SECONDS);
     }
 
     /**
