@@ -6,6 +6,8 @@ import com.ruoyi.common.core.domain.dto.LoginDTO;
 import com.ruoyi.common.exception.ServiceException;
 import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.framework.web.service.AppTokenService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -18,6 +20,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.Arrays;
 
 /**
  * token过滤器 验证token有效性
@@ -26,10 +29,13 @@ import java.io.PrintWriter;
  */
 @Component
 public class AppJwtAuthenticationTokenFilter extends OncePerRequestFilter {
+
+    private static final Logger log = LoggerFactory.getLogger(AppJwtAuthenticationTokenFilter.class);
+
     @Autowired
     private AppTokenService appTokenService;
 
-    private static String[] FILTER_URLS = {"/app/user/bindPhone", "/app/wxPay/**", "/app/gauge/result/**"};
+    private static final String[] WHITELIST_URLS = {"/app/home/gauge/label/list"};
 
     @Value("${app.filter.urls}")
     private String filterUrls;
@@ -43,7 +49,7 @@ public class AppJwtAuthenticationTokenFilter extends OncePerRequestFilter {
         boolean flag = false;
         for (String filterUrl : filterUrls.split(COMMA)) {
             AntPathMatcher matcher = new AntPathMatcher();
-            if (matcher.match(filterUrl, request.getRequestURI())) {
+            if (matcher.match(filterUrl, request.getRequestURI()) && !Arrays.asList(WHITELIST_URLS).contains(request.getRequestURI())) {
                 flag = true;
                 break;
             }
@@ -54,7 +60,7 @@ public class AppJwtAuthenticationTokenFilter extends OncePerRequestFilter {
                 json.put("code", 401);
                 json.put("msg", "用户未登录");
                 this.output(json, request, response);
-                throw new ServiceException("用户未登录" , RespMessageConstants.ACCESS_TOKEN_EXPIRED_CODE);
+                log.error("用户未登录 code: {}" , RespMessageConstants.ACCESS_TOKEN_EXPIRED_CODE);
             }
             appTokenService.verifyToken(loginUser);
         }

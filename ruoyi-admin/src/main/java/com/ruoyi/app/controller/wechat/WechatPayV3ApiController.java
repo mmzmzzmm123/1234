@@ -50,7 +50,7 @@ public class WechatPayV3ApiController extends BaseController {
  
     protected final Logger logger = LoggerFactory.getLogger(this.getClass());
 
-    private static final Integer ORDER_CANCEL_TIME = 3 * 60 * 1000;
+    private static final Integer ORDER_CANCEL_TIME = 30 * 60 * 1000;
  
     @Autowired
     public WechatPayV3Utils wechatPayV3Utils;

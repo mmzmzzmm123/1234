@@ -1,12 +1,14 @@
 import configdata from "../common/config";
 import cache from "../common/cache";
-import loginServer from "@/server/login.js"
 
 function tokenExpired(result) {    
-    
+    let userInfo = uni.getStorageSync('userInfo')
+    if (!userInfo) {
+      return
+    }
     uni.showModal({
       title: '提示',
-      content: '由于长时间未使用，token已过期，请重新登录',
+      content: '由于长时间未使用token已过期，请重新登录',
       showCancel: false,
       success: function (res) {
         // 清除本地缓存的userInfo 和 token
@@ -14,8 +16,11 @@ function tokenExpired(result) {
         uni.setStorageSync('token', null)
         
         uni.redirectTo({
-          url: '/pages/evaluation/index'
-        })
+          url: '/pages/evaluation/index',
+          success() {
+            location.reload(true)
+          }
+        })        
       }
     });    
   
