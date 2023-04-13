@@ -27,6 +27,9 @@ public class CourOrderServiceImpl implements ICourOrderService
     @Autowired
     private CourOrderMapper courOrderMapper;
 
+    @Autowired
+    private ICourOrderService courOrderService;
+
     /**
      * 查询课程订单
      * 
@@ -150,6 +153,20 @@ public class CourOrderServiceImpl implements ICourOrderService
      */
     @Override
     public CourOrder generateCourOrder(CourOrder courOrder) {
+        // TODO 根据课程查询之前未支付的订单，并取消历史的未支付的订单
+        CourOrder orderWithCourseId = new CourOrder();
+        orderWithCourseId.setCourseId(courOrder.getCourseId());
+        List<CourOrder> historyCreatedOrderList = courOrderService.selectCourOrderList(orderWithCourseId)
+                .stream()
+                .filter(item -> item.getStatus() == CourConstant.COUR_ORDER_STATUE_CREATED)
+                .collect(Collectors.toList());
+        if (historyCreatedOrderList.size() > 0) {
+            historyCreatedOrderList.forEach(item -> {
+                item.setStatus(CourConstant.COUR_ORDER_STATUE_CANCELED);
+                updateCourOrder(item);
+            });
+        }
+
         courOrder.setCreateTime(DateUtils.getNowDate()); // 下单时间
         int code = courOrderMapper.insertCourOrder(courOrder);
         if (code == 1) {

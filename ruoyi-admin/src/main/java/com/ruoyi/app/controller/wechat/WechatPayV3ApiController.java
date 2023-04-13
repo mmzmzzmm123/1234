@@ -16,6 +16,7 @@ import com.ruoyi.course.domain.CourOrder;
 import com.ruoyi.course.domain.CourUserCourseSection;
 import com.ruoyi.course.service.ICourOrderService;
 import com.ruoyi.course.service.ICourUserCourseSectionService;
+import com.ruoyi.course.task.OrderCancelTask;
 import com.ruoyi.gauge.constant.GaugeConstant;
 import com.ruoyi.gauge.domain.PsyOrder;
 import com.ruoyi.gauge.domain.PsyOrderPay;
@@ -48,6 +49,8 @@ import java.util.*;
 public class WechatPayV3ApiController extends BaseController {
  
     protected final Logger logger = LoggerFactory.getLogger(this.getClass());
+
+    private static final Integer ORDER_CANCEL_TIME = 3 * 60 * 1000;
  
     @Autowired
     public WechatPayV3Utils wechatPayV3Utils;
@@ -94,6 +97,7 @@ public class WechatPayV3ApiController extends BaseController {
         BigDecimal amount = wechatPayDTO.getAmount(); //单位：元
         String module = wechatPayDTO.getModule();
 
+        OrderCancelTask orderCancelTask = new OrderCancelTask();
 
         if (CourConstant.MODULE_COURSE.equals(module)) {
             out_trade_no = createOrderNo("COU_DJ", userId); //创建商户订单号
@@ -106,6 +110,10 @@ public class WechatPayV3ApiController extends BaseController {
             courOrder.setUserId(wechatPayDTO.getUserId());
             courOrder.setCourseId(courseId);
             CourOrder newCourOrder = courOrderService.generateCourOrder(courOrder);
+
+            // TODO: 定时将未支付的订单取消任务
+            orderCancelTask.setOrderId(newCourOrder.getId());
+            orderCancelTask.setModule(module);
 
             // TODO: 内部生成支付对象
             PsyOrderPay orderPay = new PsyOrderPay();
@@ -131,6 +139,10 @@ public class WechatPayV3ApiController extends BaseController {
 
             PsyOrder newPsyOrder = psyOrderService.generatePsyOrder(psyOrder);
 
+            // TODO: 定时将未支付的订单取消任务
+            orderCancelTask.setOrderId(newPsyOrder.getId());
+            orderCancelTask.setModule(module);
+
             // TODO: 内部生成支付对象
             PsyOrderPay psyOrderPay = PsyOrderPay.builder()
                     .orderId(newPsyOrder.getId())
@@ -142,7 +154,8 @@ public class WechatPayV3ApiController extends BaseController {
             psyOrderPayService.insertPsyOrderPay(psyOrderPay);
         }
 
-
+        Timer timer = new Timer();
+        timer.schedule(orderCancelTask, ORDER_CANCEL_TIME);
 
 
         // 根据用户ID从用户表中查询openid
