@@ -16,12 +16,13 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="legalPersonName"    column="legal_person_name"    />
         <result property="legalPersonPhone"    column="legal_person_phone"    />
         <result property="jbrName"    column="JBR_NAME"    />
+        <result property="legalPersonIdcard"    column="legal_person_idcard"    />
         <result property="jbrIdcard"    column="JBR_IDCARD"    />
         <result property="jbrPhone"    column="JBR_PHONE"    />
     </resultMap>
 
     <sql id="selectDataWechatUserVo">
-        select user_id, nick_name, phone, avatar, remark, open_id, company_name, tyshxydm, legal_person_name, legal_person_phone, JBR_NAME, JBR_IDCARD, JBR_PHONE from data_wechat_user
+        select user_id, nick_name, phone, avatar, remark, open_id, company_name, tyshxydm, legal_person_name, legal_person_phone, JBR_NAME, legal_person_idcard, JBR_IDCARD, JBR_PHONE from data_wechat_user
     </sql>
 
     <select id="selectDataWechatUserList" parameterType="DataWechatUser" resultMap="DataWechatUserResult">
@@ -36,6 +37,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="legalPersonName != null  and legalPersonName != ''"> and legal_person_name like concat('%', #{legalPersonName}, '%')</if>
             <if test="legalPersonPhone != null  and legalPersonPhone != ''"> and legal_person_phone = #{legalPersonPhone}</if>
             <if test="jbrName != null  and jbrName != ''"> and JBR_NAME like concat('%', #{jbrName}, '%')</if>
+            <if test="legalPersonIdcard != null  and legalPersonIdcard != ''"> and legal_person_idcard = #{legalPersonIdcard}</if>
             <if test="jbrIdcard != null  and jbrIdcard != ''"> and JBR_IDCARD = #{jbrIdcard}</if>
             <if test="jbrPhone != null  and jbrPhone != ''"> and JBR_PHONE = #{jbrPhone}</if>
         </where>
@@ -59,6 +61,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="legalPersonName != null and legalPersonName != ''">legal_person_name,</if>
             <if test="legalPersonPhone != null and legalPersonPhone != ''">legal_person_phone,</if>
             <if test="jbrName != null and jbrName != ''">JBR_NAME,</if>
+            <if test="legalPersonIdcard != null and legalPersonIdcard != ''">legal_person_idcard,</if>
             <if test="jbrIdcard != null and jbrIdcard != ''">JBR_IDCARD,</if>
             <if test="jbrPhone != null and jbrPhone != ''">JBR_PHONE,</if>
          </trim>
@@ -73,6 +76,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="legalPersonName != null and legalPersonName != ''">#{legalPersonName},</if>
             <if test="legalPersonPhone != null and legalPersonPhone != ''">#{legalPersonPhone},</if>
             <if test="jbrName != null and jbrName != ''">#{jbrName},</if>
+            <if test="legalPersonIdcard != null and legalPersonIdcard != ''">#{legalPersonIdcard},</if>
             <if test="jbrIdcard != null and jbrIdcard != ''">#{jbrIdcard},</if>
             <if test="jbrPhone != null and jbrPhone != ''">#{jbrPhone},</if>
          </trim>
@@ -91,6 +95,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="legalPersonName != null and legalPersonName != ''">legal_person_name = #{legalPersonName},</if>
             <if test="legalPersonPhone != null and legalPersonPhone != ''">legal_person_phone = #{legalPersonPhone},</if>
             <if test="jbrName != null and jbrName != ''">JBR_NAME = #{jbrName},</if>
+            <if test="legalPersonIdcard != null and legalPersonIdcard != ''">legal_person_idcard = #{legalPersonIdcard},</if>
             <if test="jbrIdcard != null and jbrIdcard != ''">JBR_IDCARD = #{jbrIdcard},</if>
             <if test="jbrPhone != null and jbrPhone != ''">JBR_PHONE = #{jbrPhone},</if>
         </trim>

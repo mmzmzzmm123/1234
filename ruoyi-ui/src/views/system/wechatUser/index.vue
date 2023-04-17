@@ -82,6 +82,15 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
+      <el-form-item label="法人身份证号码" prop="legalPersonIdcard">
+        <el-input
+          v-model="queryParams.legalPersonIdcard"
+          placeholder="请输入法人身份证号码"
+          clearable
+          size="small"
+          @keyup.enter.native="handleQuery"
+        />
+      </el-form-item>
       <el-form-item label="经办人身份证号码" prop="jbrIdcard">
         <el-input
           v-model="queryParams.jbrIdcard"
@@ -166,6 +175,7 @@
       <el-table-column label="法人姓名" align="center" prop="legalPersonName" />
       <el-table-column label="法人手机号码" align="center" prop="legalPersonPhone" />
       <el-table-column label="经办人姓名" align="center" prop="jbrName" />
+      <el-table-column label="法人身份证号码" align="center" prop="legalPersonIdcard" />
       <el-table-column label="经办人身份证号码" align="center" prop="jbrIdcard" />
       <el-table-column label="经办人手机号码" align="center" prop="jbrPhone" />
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
@@ -229,6 +239,9 @@
         <el-form-item label="经办人姓名" prop="jbrName">
           <el-input v-model="form.jbrName" placeholder="请输入经办人姓名" />
         </el-form-item>
+        <el-form-item label="法人身份证号码" prop="legalPersonIdcard">
+          <el-input v-model="form.legalPersonIdcard" placeholder="请输入法人身份证号码" />
+        </el-form-item>
         <el-form-item label="经办人身份证号码" prop="jbrIdcard">
           <el-input v-model="form.jbrIdcard" placeholder="请输入经办人身份证号码" />
         </el-form-item>
@@ -284,6 +297,7 @@ export default {
         legalPersonName: null,
         legalPersonPhone: null,
         jbrName: null,
+        legalPersonIdcard: null,
         jbrIdcard: null,
         jbrPhone: null
       },
@@ -308,6 +322,9 @@ export default {
         ],
         jbrName: [
           { required: true, message: "经办人姓名不能为空", trigger: "blur" }
+        ],
+        legalPersonIdcard: [
+          { required: true, message: "法人身份证号码不能为空", trigger: "blur" }
         ],
         jbrIdcard: [
           { required: true, message: "经办人身份证号码不能为空", trigger: "blur" }
@@ -350,6 +367,7 @@ export default {
         legalPersonName: null,
         legalPersonPhone: null,
         jbrName: null,
+        legalPersonIdcard: null,
         jbrIdcard: null,
         jbrPhone: null
       };

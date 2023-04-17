@@ -11,7 +11,7 @@ import javax.validation.constraints.NotBlank;
  * 微信用户信息对象 data_wechat_user
  * 
  * @author genius
- * @date 2023-04-06
+ * @date 2023-04-17
  */
 public class DataWechatUser extends BaseEntity
 {
@@ -61,6 +61,11 @@ public class DataWechatUser extends BaseEntity
     @NotBlank(message = "经办人姓名不能为空")
     @Excel(name = "经办人姓名")
     private String jbrName;
+
+    /** 法人身份证号码 */
+    @NotBlank(message = "法人身份证号码不能为空")
+    @Excel(name = "法人身份证号码")
+    private String legalPersonIdcard;
 
     /** 经办人身份证号码 */
     @NotBlank(message = "经办人身份证号码不能为空")
@@ -162,6 +167,15 @@ public class DataWechatUser extends BaseEntity
     {
         return jbrName;
     }
+    public void setLegalPersonIdcard(String legalPersonIdcard) 
+    {
+        this.legalPersonIdcard = legalPersonIdcard;
+    }
+
+    public String getLegalPersonIdcard() 
+    {
+        return legalPersonIdcard;
+    }
     public void setJbrIdcard(String jbrIdcard) 
     {
         this.jbrIdcard = jbrIdcard;
@@ -195,6 +209,7 @@ public class DataWechatUser extends BaseEntity
             .append("legalPersonName", getLegalPersonName())
             .append("legalPersonPhone", getLegalPersonPhone())
             .append("jbrName", getJbrName())
+            .append("legalPersonIdcard", getLegalPersonIdcard())
             .append("jbrIdcard", getJbrIdcard())
             .append("jbrPhone", getJbrPhone())
             .toString();

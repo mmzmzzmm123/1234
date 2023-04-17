@@ -36,7 +36,7 @@ public class DataWechatUserController extends BaseController
     /**
      * 查询微信用户信息列表
      */
-    @PreAuthorize("@ss.hasPermi('system:user:list')")
+    @PreAuthorize("@ss.hasPermi('system:wechatUser:list')")
     @GetMapping("/list")
     public TableDataInfo list(DataWechatUser dataWechatUser)
     {
@@ -48,7 +48,7 @@ public class DataWechatUserController extends BaseController
     /**
      * 导出微信用户信息列表
      */
-    @PreAuthorize("@ss.hasPermi('system:user:export')")
+    @PreAuthorize("@ss.hasPermi('system:wechatUser:export')")
     @Log(title = "微信用户信息", businessType = BusinessType.EXPORT)
     @GetMapping("/export")
     public AjaxResult export(DataWechatUser dataWechatUser)
@@ -61,7 +61,7 @@ public class DataWechatUserController extends BaseController
     /**
      * 获取微信用户信息详细信息
      */
-    @PreAuthorize("@ss.hasPermi('system:user:query')")
+    @PreAuthorize("@ss.hasPermi('system:wechatUser:query')")
     @GetMapping(value = "/{userId}")
     public AjaxResult getInfo(@PathVariable("userId") Long userId)
     {
@@ -71,7 +71,7 @@ public class DataWechatUserController extends BaseController
     /**
      * 新增微信用户信息
      */
-    @PreAuthorize("@ss.hasPermi('system:user:add')")
+    @PreAuthorize("@ss.hasPermi('system:wechatUser:add')")
     @Log(title = "微信用户信息", businessType = BusinessType.INSERT)
     @PostMapping
     public AjaxResult add(@RequestBody DataWechatUser dataWechatUser)
@@ -82,7 +82,7 @@ public class DataWechatUserController extends BaseController
     /**
      * 修改微信用户信息
      */
-    @PreAuthorize("@ss.hasPermi('system:user:edit')")
+    @PreAuthorize("@ss.hasPermi('system:wechatUser:edit')")
     @Log(title = "微信用户信息", businessType = BusinessType.UPDATE)
     @PutMapping
     public AjaxResult edit(@RequestBody DataWechatUser dataWechatUser)
@@ -93,7 +93,7 @@ public class DataWechatUserController extends BaseController
     /**
      * 删除微信用户信息
      */
-    @PreAuthorize("@ss.hasPermi('system:user:remove')")
+    @PreAuthorize("@ss.hasPermi('system:wechatUser:remove')")
     @Log(title = "微信用户信息", businessType = BusinessType.DELETE)
 	@DeleteMapping("/{userIds}")
     public AjaxResult remove(@PathVariable Long[] userIds)

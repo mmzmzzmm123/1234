@@ -40,17 +40,17 @@ spring:
 #                url: jdbc:oracle:thin:@192.168.20.11:1521:pdborcl
 #                username: SYSTEM
 #                password: root
-            slave:
-                enabled: true
-                url: jdbc:oracle:thin:@39.129.163.118:1521/XE
-                username: XY_FGWXYD
-                password: XY_FGWXYD_123456
+#            slave:
+#                enabled: true
+#                url: jdbc:oracle:thin:@39.129.163.118:1521/XE
+#                username: XY_FGWXYD
+#                password: XY_FGWXYD_123456
                 
-            api:
-                enabled: true
-                url: jdbc:mysql://localhost:3307/xdztc-report?useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=true&serverTimezone=GMT%2B8
-                username: root
-                password: 123456
+#            api:
+#                enabled: true
+#                url: jdbc:mysql://localhost:3307/xdztc-report?useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=true&serverTimezone=GMT%2B8
+#                username: root
+#                password: 123456
 #            api:
 #                enabled: true
 #                url: jdbc:mysql://10.22.0.89:3306/xdztc-report?useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=true&serverTimezone=GMT%2B8
