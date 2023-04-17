@@ -56,7 +56,7 @@ export default {
 
         .title {
             height: 84upx;
-            font-size: 30upx;
+            font-size: 14px;
             font-weight: 600;
             color: #333333;
             line-height: 42upx;
@@ -67,14 +67,14 @@ export default {
           align-items: center;
           justify-content: space-between;
           .author {
-              font-size: 26upx;
+              font-size: 12px;
               font-weight: 400;
               color: #777777;
               height: 37upx;
               line-height: 37upx;
           }
           .price {
-              font-size: 22upx;
+              font-size: 12px;
           }
         }
         

@@ -225,7 +225,7 @@ page {
     }
 
     .txt {
-      font-size: 24upx;
+      font-size: 12px;
       color: #aaaaaa;
     }
   }
@@ -256,7 +256,7 @@ page {
     flex-direction: row;
     justify-content: space-around;
     text-align: center;
-    font-size: 26upx;
+    font-size: 24upx;
     margin-bottom: 32upx;
     margin-top: 21upx;
 
@@ -292,7 +292,7 @@ page {
           height: 32upx;
           background: #ffee23;
           border-radius: 0 100upx 100upx 0;
-          font-size: 22upx;
+          font-size: 20upx;
           padding-left: 10upx;
         }
 
@@ -305,6 +305,7 @@ page {
         .txt {
           height: 80upx;
           line-height: 40upx;
+          font-size: 12px;
         }
       }
     }
@@ -313,7 +314,7 @@ page {
   .index-title {
     margin-top: 32upx;
     margin-bottom: 16upx;
-    font-size: 32upx;
+    font-size: 30upx;
     font-weight: 600;
     color: #333333;
     line-height: 45upx;
@@ -321,7 +322,7 @@ page {
     justify-content: space-between;
 
     .more {
-      font-size: 24upx;
+      font-size: 12px;
       font-weight: 400;
       color: #333333;
       align-items: center;

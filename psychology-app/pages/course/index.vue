@@ -204,7 +204,7 @@
 			}
 
 			.txt {
-				font-size: 24upx;
+				font-size: 12px;
 				color: #aaaaaa;
 			}
 		}
@@ -235,7 +235,7 @@
 			flex-direction: row;
 			justify-content: space-around;
 			text-align: center;
-			font-size: 26upx;
+			font-size: 12px;
 			margin-bottom: 32upx;
 			margin-top: 21upx;
 
@@ -292,7 +292,7 @@
 		.index-title {
 			margin-top: 32upx;
 			margin-bottom: 16upx;
-			font-size: 32upx;
+			font-size: 15px;
 			font-weight: 600;
 			color: #333333;
 			line-height: 45upx;
@@ -300,7 +300,7 @@
 			justify-content: space-between;
 
 			.more {
-				font-size: 24upx;
+				font-size: 12px;
 				font-weight: 400;
 				color: #333333;
 				align-items: center;
