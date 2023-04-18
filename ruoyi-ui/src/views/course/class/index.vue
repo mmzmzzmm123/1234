@@ -49,6 +49,11 @@
       <el-table-column type="selection" width="55" align="center" />
       <el-table-column label="类型名称" align="center" prop="name">
       </el-table-column>
+      <el-table-column label="图标地址" align="center" prop="url" width="120">
+        <template slot-scope="scope">
+          <image-preview :src="scope.row.url" :width="50" :height="50"/>
+        </template>
+      </el-table-column>
       <el-table-column label="排序" align="center" prop="sort" sortable />
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
@@ -84,6 +89,9 @@
         <el-form-item label="类型名称" prop="name">
           <el-input v-model="form.name" placeholder="请选择类型名称" />
         </el-form-item>
+        <el-form-item label="图标地址">
+          <image-upload v-model="form.url" :extraData="extraData" />
+        </el-form-item>
         <el-form-item label="排序" prop="sort">
           <el-input v-model.number="form.sort" placeholder="请输入排序" />
         </el-form-item>
@@ -104,6 +112,9 @@ export default {
   dicts: ['course_type'],
   data() {
     return {
+      extraData: {
+        module: 'course'
+      },
       // 遮罩层
       loading: true,
       // 选中数组
@@ -163,6 +174,7 @@ export default {
       this.form = {
         id: null,
         name: null,
+        url: null,
         sort: null
       };
       this.resetForm("form");

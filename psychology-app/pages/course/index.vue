@@ -13,9 +13,9 @@
 			</swiper>
 		</view>
 		<view class="class-box index-margin">
-			<view class="item" v-for="item in classList">
-				<img class="class-img" :src="item.classPic" />
-				<view>{{ item.className }}</view>
+			<view class="item" v-for="item in classList" @tap="toClass(item.id)">
+				<img class="class-img" :src="item.url" />
+				<view>{{ item.name }}</view>
 			</view>
 		</view>
 		<!-- <view class="banner-box banner-box1 index-margin">
@@ -77,6 +77,7 @@
 		uniPopupDialog
 	} from '@dcloudio/uni-ui'
 	import utils from "@/utils/common";
+  import classServer from '@/server/course/class'
 	export default {
 		components: {
 			courseListCom,
@@ -89,26 +90,7 @@
 				bannerList1: [],
 				bannerList2: [],
 				bannerList3: [],
-				classList: [{
-						classPic: "/static/course/index/1.png",
-						className: "能力提升",
-						id: 1,
-					},
-					{
-						classPic: "/static/course/index/2.png",
-						className: "情感困扰",
-						id: 2,
-					},
-					{
-						classPic: "/static/course/index/3.png",
-						className: "自我探索",
-						id: 3,
-					}, {
-						classPic: "/static/course/index/4.png",
-						className: "超值课程",
-						id: 4,
-					},
-				],
+				classList: [],
 				courseList: [],
 				userInfo: {}
 			};
@@ -119,6 +101,8 @@
 			this.bannerList1 = await this.getBanner(2);
 			this.bannerList2 = await this.getBanner(1);
 			this.courseList = await this.getcourse(1);			
+      const classData = await classServer.getClassList()
+      this.classList = classData.slice(0, 4) // 取前4个类别
 		},
 		async mounted() {      
 			if (!this.userInfo && await utils.loginCallback(this.redirectUri)) {
@@ -143,9 +127,19 @@
 					return
 				}
 				uni.navigateTo({
-					url
+					url: "/pages/course/courseDetail"
 				});
 			},
+      toClass(classId) {
+        // 判断是否已经登录
+        if (!this.userInfo) {
+        	this.openLoginConfirm()
+        	return
+        }
+        uni.navigateTo({
+        	url: "/pages/course/class?classId=" + classId
+        });
+      },
 			toSearch() {
         // 判断是否已经登录
         if (!this.userInfo) {

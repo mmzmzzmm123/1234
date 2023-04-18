@@ -11,7 +11,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </resultMap>
 
     <sql id="selectCourCourseClassVo">
-        select id, name, sort from cour_course_class
+        select id, name, url, sort from cour_course_class
     </sql>
 
     <select id="selectCourCourseClassList" parameterType="CourCourseClass" resultMap="CourCourseClassResult">
@@ -30,6 +30,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         insert into cour_course_class
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="name != null and name != ''">name,</if>
+            <if test="url != null and url != ''">url,</if>
             <if test="sort != null">sort,</if>
          </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
@@ -42,6 +43,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         update cour_course_class
         <trim prefix="SET" suffixOverrides=",">
             <if test="name != null and name != ''">name = #{name},</if>
+            <if test="url != null and url != ''">url = #{url},</if>
             <if test="sort != null">sort = #{sort},</if>
         </trim>
         where id = #{id}
