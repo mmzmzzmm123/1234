@@ -17,7 +17,7 @@
         <view class="course-item" v-show="courseList.length > 0" v-for="course in (courseList || [])"
           @tap="tocourse(course.id)">
           <view class="img-box">
-            <img :src="course.url" />
+            <img :src="course.iconUrl" />
           </view>
           <view class="txt-box">
             <view class="title txt-overflow txt-overflow-line2">{{

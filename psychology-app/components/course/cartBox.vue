@@ -4,7 +4,7 @@
       <view class="close-icon" @tap="closeCart"></view>
       <view class="course-info">
         <view class="info-box">
-          <img class="img left" :src="courseInfo.url" />
+          <img class="img left" :src="courseInfo.iconUrl" />
           <view class="right">
             <view class="name txt-overflow txt-overflow-line2">
               {{ courseInfo.name }}</view

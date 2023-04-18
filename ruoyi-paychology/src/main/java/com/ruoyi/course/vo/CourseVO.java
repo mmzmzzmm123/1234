@@ -37,6 +37,10 @@ public class CourseVO implements Serializable {
     @ApiModelProperty("课程图片")
     private String url;
 
+    /** 课程列表图标 */
+    @ApiModelProperty("课程列表图标")
+    private String iconUrl;
+
     /** 课程价格 */
     @ApiModelProperty("课程价格")
     private BigDecimal price;

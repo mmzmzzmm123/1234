@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
@@ -18,6 +19,7 @@ import javax.validation.constraints.Pattern;
  * @author ruoyi
  * @date 2023-03-14
  */
+@Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
@@ -37,7 +39,7 @@ public class CourCourse extends BaseEntity
     private String name;
 
     /** 课程类型，取值根据课程类型表 */
-    @Excel(name = "课程类型，取值根据课程类型表")
+    @Excel(name = "课程类型")
     private Integer type;
 
     /** 课程作者 */
@@ -48,6 +50,10 @@ public class CourCourse extends BaseEntity
     @Excel(name = "课程图片")
     private String url;
 
+    /** 课程列表图标、购买图标 */
+    @Excel(name = "课程列表图标")
+    private String iconUrl;
+
     /** 课程价格 */
     @Excel(name = "课程价格")
     private BigDecimal price;
@@ -55,79 +61,6 @@ public class CourCourse extends BaseEntity
     /** 课程详情，富文本内容 */
     @Excel(name = "课程详情，富文本内容")
     private String detail;
-
-    public void setId(Integer id)
-    {
-        this.id = id;
-    }
-
-    public Integer getId()
-    {
-        return id;
-    }
-    public void setCourseId(String courseId)
-    {
-        this.courseId = courseId;
-    }
-
-    public String getCourseId()
-    {
-        return courseId;
-    }
-    public void setName(String name) 
-    {
-        this.name = name;
-    }
-
-    public String getName() 
-    {
-        return name;
-    }
-    public void setType(Integer type)
-    {
-        this.type = type;
-    }
-
-    public Integer getType()
-    {
-        return type;
-    }
-    public void setAuthor(String author) 
-    {
-        this.author = author;
-    }
-
-    public String getAuthor() 
-    {
-        return author;
-    }
-    public void setUrl(String url) 
-    {
-        this.url = url;
-    }
-
-    public String getUrl() 
-    {
-        return url;
-    }
-    public void setPrice(BigDecimal price) 
-    {
-        this.price = price;
-    }
-
-    public BigDecimal getPrice() 
-    {
-        return price;
-    }
-    public void setDetail(String detail) 
-    {
-        this.detail = detail;
-    }
-
-    public String getDetail() 
-    {
-        return detail;
-    }
 
     @Override
     public String toString() {

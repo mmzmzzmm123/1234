@@ -21,8 +21,10 @@ public class CourConstant {
 
     public static final int LABEL_GOOD_COURSE = 1;
 
-    public static final int SECTION_NORMAL = 0;
-    public static final int SECTION_TRIAL = 1;
+    public static final int SECTION_NORMAL = 0; // 付费
+    public static final int SECTION_TRIAL = 1; // 试听
+    public static final int SECTION_FREE = 2; // 免费
+
     public static final int SECTION_CONTENT_VIDEO = 0;
     public static final int SECTION_CONTENT_AUDIO = 1;
 

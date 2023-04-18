@@ -96,19 +96,23 @@
 
     <el-table v-loading="loading" :data="courseList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
-      <!-- <el-table-column label="ID" align="center" prop="id" /> -->
       <el-table-column label="课程名称" align="center" prop="name" />
       <el-table-column label="课程类型" align="center" prop="type">
         <template slot-scope="scope">
           {{ getCourseClassName(scope.row.type) }}
         </template>
       </el-table-column>
-      <el-table-column label="课程作者" align="center" prop="author" />
       <el-table-column label="课程图片" align="center" prop="url" width="100">
         <template slot-scope="scope">
           <image-preview :src="scope.row.url" :width="50" :height="50"/>
         </template>
       </el-table-column>
+      <el-table-column label="课程列表图标" align="center" prop="iconUrl" width="120">
+        <template slot-scope="scope">
+          <image-preview :src="scope.row.iconUrl" :width="50" :height="50"/>
+        </template>
+      </el-table-column>
+      <el-table-column label="课程作者" align="center" prop="author" />
       <el-table-column label="课程价格" align="center" prop="price" sortable />
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
@@ -187,6 +191,10 @@
 
         <el-form-item label="课程图片">
           <image-upload v-model="form.url" :limit="1" :extraData="extraData"/>
+        </el-form-item>
+
+        <el-form-item label="课程图标">
+          <image-upload v-model="form.iconUrl" :limit="1" :extraData="extraData"/>
         </el-form-item>
 
         <el-form-item label="课程详情">
@@ -317,6 +325,7 @@ export default {
         type: null,
         author: null,
         url: null,
+        iconUrl: null,
         price: null,
         detail: null,
         createBy: null,
