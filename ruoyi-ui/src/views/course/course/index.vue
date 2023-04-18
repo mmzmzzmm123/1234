@@ -107,7 +107,7 @@
           <image-preview :src="scope.row.url" :width="50" :height="50"/>
         </template>
       </el-table-column>
-      <el-table-column label="课程列表图标" align="center" prop="iconUrl" width="120">
+      <el-table-column label="列表图片" align="center" prop="iconUrl" width="100">
         <template slot-scope="scope">
           <image-preview :src="scope.row.iconUrl" :width="50" :height="50"/>
         </template>
@@ -193,7 +193,7 @@
           <image-upload v-model="form.url" :limit="1" :extraData="extraData"/>
         </el-form-item>
 
-        <el-form-item label="课程图标">
+        <el-form-item label="列表图片">
           <image-upload v-model="form.iconUrl" :limit="1" :extraData="extraData"/>
         </el-form-item>
 
