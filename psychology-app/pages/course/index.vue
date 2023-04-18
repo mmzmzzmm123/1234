@@ -102,7 +102,7 @@
 			this.bannerList2 = await this.getBanner(1);
 			this.courseList = await this.getcourse(1);			
       const classData = await classServer.getClassList()
-      this.classList = classData.slice(0, 4) // 取前4个类别
+      this.classList = classData.slice(0, 8) // 取前8个类别
 		},
 		async mounted() {      
 			if (!this.userInfo && await utils.loginCallback(this.redirectUri)) {
@@ -227,12 +227,15 @@
 		.class-box {
 			display: flex;
 			flex-direction: row;
+      flex-wrap: wrap;
 			justify-content: space-around;
 			text-align: center;
 			font-size: 12px;
 			margin-bottom: 32upx;
 			margin-top: 21upx;
-
+      .item {        
+        margin: 20upx;
+      }
 			.class-img {
 				width: 88upx;
 				height: 88upx;
