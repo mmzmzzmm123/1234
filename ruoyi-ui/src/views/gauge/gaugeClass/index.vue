@@ -64,6 +64,12 @@
     <el-table v-loading="loading" :data="gaugeClassList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
       <el-table-column label="分类名" align="center" prop="name" />
+      <el-table-column label="图标地址" align="center" prop="url" width="120">
+        <template slot-scope="scope">
+          <image-preview :src="scope.row.url" :width="50" :height="50"/>
+        </template>
+      </el-table-column>
+      <el-table-column label="排序" align="center" prop="sort" sortable />
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button
@@ -98,6 +104,12 @@
         <el-form-item label="分类名" prop="name">
           <el-input v-model="form.name" placeholder="请输入分类名" />
         </el-form-item>
+        <el-form-item label="图标地址">
+          <image-upload v-model="form.url" :extraData="extraData" />
+        </el-form-item>
+        <el-form-item label="排序" prop="sort">
+          <el-input v-model.number="form.sort" placeholder="请输入排序" />
+        </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button type="primary" @click="submitForm">确 定</el-button>
@@ -114,6 +126,9 @@ export default {
   name: "GaugeClass",
   data() {
     return {
+      extraData: {
+        module: 'gauge'
+      },
       // 遮罩层
       loading: true,
       // 选中数组
@@ -142,6 +157,12 @@ export default {
       form: {},
       // 表单校验
       rules: {
+        name: [
+          { required: true, message: "类型名称不能为空", trigger: "change" }
+        ],
+        sort: [
+          { type: 'number', message: "类型编号请输入数值"}
+        ]
       }
     };
   },
@@ -167,7 +188,9 @@ export default {
     reset() {
       this.form = {
         id: null,
-        name: null
+        name: null,
+        url: null,
+        sort: null
       };
       this.resetForm("form");
     },

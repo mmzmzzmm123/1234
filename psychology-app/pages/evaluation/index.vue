@@ -13,9 +13,9 @@
       </swiper>
     </view>
     <view class="class-box index-margin">
-      <view class="item" v-for="item in classList">
-        <img class="class-img" :src="item.classPic" />
-        <view>{{ item.className }}</view>
+      <view class="item" v-for="item in classList" @tap="toClass(item.id)">
+        <img class="class-img" :src="item.url" />
+        <view>{{ item.name }}</view>
       </view>
     </view>
     <view class="banner-box banner-box1 index-margin">
@@ -101,6 +101,7 @@ import loginServer from "@/server/login"
 		uniPopupDialog
 	} from '@dcloudio/uni-ui'
 import utils from "@/utils/common";
+import classServer from '@/server/evaluation/class'
 export default {
   components: { productListCom, uniPopup, uniPopupDialog },
   data() {
@@ -109,27 +110,7 @@ export default {
       bannerList1: [],
       bannerList2: [],
       bannerList3: [],
-      classList: [
-        {
-          classPic: "/static/evaluation/index/1.png",
-          className: "智商测试",
-          id: 16,
-        },
-        {
-          classPic: "/static/evaluation/index/2.png",
-          className: "情感测试",
-          id: 36,
-        },
-        {
-          classPic: "/static/evaluation/index/3.png",
-          className: "专业测评",
-          id: 72,
-        }, {
-          classPic: "/static/evaluation/index/4.png",
-          className: "倾诉聆听",
-          id: 72,
-        },
-      ],
+      classList: [],
       hotList: [],
       productList: [],
       userInfo: {}
@@ -143,6 +124,8 @@ export default {
     this.bannerList3 = await this.getBanner(3);
     this.productList = await this.getProduct(0);
     this.hotList = await this.getProduct(1);
+    const classData = await classServer.getClassList()
+    this.classList = classData.slice(0, 6) // 取前6个类别
   },
   async mounted() {      
     if (!this.userInfo && await utils.loginCallback(this.redirectUri)) {
@@ -158,6 +141,16 @@ export default {
     },
     async getProduct(type) {
       return await indexServer.getProductByLabel(type);
+    },
+    toClass(classId) {
+      // 判断是否已经登录
+      if (!this.userInfo) {
+      	this.openLoginConfirm()
+      	return
+      }
+      uni.navigateTo({
+      	url: "/pages/evaluation/class?classId=" + classId
+      });
     },
     toProduct(url) {
     	// 判断是否已经登录
@@ -254,16 +247,22 @@ page {
   .class-box {
     display: flex;
     flex-direction: row;
+    flex-wrap: wrap;
     justify-content: space-around;
     text-align: center;
     font-size: 24upx;
     margin-bottom: 32upx;
     margin-top: 21upx;
-
-    .class-img {
-      width: 88upx;
-      height: 88upx;
+    
+    .item {
+      width: 25%;      
+      margin: 10px;
+      .class-img {
+        width: 88upx;
+        height: 88upx;
+      }
     }
+    
   }
 
   .hot-box {

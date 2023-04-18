@@ -40,6 +40,7 @@
 <script>
 import productListCom from '@/components/evaluation/productList'
 import classServer from '@/server/evaluation/class'
+import utils from "@/utils/common";
 export default {
   components: { productListCom },
   data() {
@@ -54,6 +55,12 @@ export default {
   async created() {
     this.classList = [...[{ name: '全部', id: null }], ...await classServer.getClassList()];
     this.productList = await classServer.getProductByClassId(this.classSelectedIndex);
+    
+    const classId = parseInt(utils.getParam(location.href, "classId") || 0)
+    if (classId != 0) {
+      this.classSelectedIndex = this.classList.findIndex(item => item.id === classId)
+      this.productClassSelected(this.classList[this.classSelectedIndex])
+    }
   },
   methods: {
     toSearch() {

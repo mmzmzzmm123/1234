@@ -127,7 +127,7 @@
 					return
 				}
 				uni.navigateTo({
-					url: "/pages/course/courseDetail"
+					url
 				});
 			},
       toClass(classId) {

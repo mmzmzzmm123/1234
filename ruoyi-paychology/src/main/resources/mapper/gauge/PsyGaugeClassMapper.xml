@@ -7,12 +7,13 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <resultMap type="com.ruoyi.gauge.domain.PsyGaugeClass" id="PsyGaugeClassResult">
         <result property="id"    column="id"    />
         <result property="name"    column="name"    />
+        <result property="url"    column="url"    />
         <result property="sort"    column="sort"    />
 
     </resultMap>
 
     <sql id="selectPsyGaugeClassVo">
-        select id, name, sort from psy_gauge_class
+        select id, name, url, sort from psy_gauge_class
     </sql>
 
     <select id="selectPsyGaugeClassList" parameterType="com.ruoyi.gauge.domain.PsyGaugeClass" resultMap="PsyGaugeClassResult">
@@ -32,11 +33,13 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="id != null">id,</if>
             <if test="name != null">name,</if>
+            <if test="url != null">url,</if>
             <if test="sort != null">sort,</if>
          </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="id != null">#{id},</if>
             <if test="name != null">#{name},</if>
+            <if test="url != null">#{url},</if>
             <if test="sort != null">#{sort},</if>
          </trim>
     </insert>
@@ -45,7 +48,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         update psy_gauge_class
         <trim prefix="SET" suffixOverrides=",">
             <if test="name != null">name = #{name},</if>
-            <if test="sort != null">name = #{sort},</if>
+            <if test="url != null">url = #{url},</if>
+            <if test="sort != null">sort = #{sort},</if>
         </trim>
         where id = #{id}
     </update>

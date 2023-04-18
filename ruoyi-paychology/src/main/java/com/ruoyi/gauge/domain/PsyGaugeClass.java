@@ -22,6 +22,9 @@ public class PsyGaugeClass extends BaseEntity
 
     /** 排序 */
     @Excel(name = "排序")
-    private String sort;
+    private Integer sort;
+
+    @Excel(name = "图标路径")
+    private String url;
 
 }

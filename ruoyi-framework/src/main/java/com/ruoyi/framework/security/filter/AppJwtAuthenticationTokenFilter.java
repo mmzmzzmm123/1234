@@ -35,7 +35,7 @@ public class AppJwtAuthenticationTokenFilter extends OncePerRequestFilter {
     @Autowired
     private AppTokenService appTokenService;
 
-    private static final String[] WHITELIST_URLS = {"/app/home/gauge/label/list"};
+    private static final String[] WHITELIST_URLS = {"/app/home/gauge/label/list", "/app/home/gauge/class/list"};
 
     @Value("${app.filter.urls}")
     private String filterUrls;
