@@ -182,7 +182,7 @@ public class AppCourCourseController extends BaseController
         courseVO.setSectionList(sectionVOList);
 
         // 查询用户有没有购买该订单
-        if (userId == 0) { // 没有给出用户标识
+        if (userId == 0 || courseVO.getPayType() == CourConstant.COURSE_FREE) { // 没有给出用户标识
             return AjaxResult.success(courseVO);
         }
         List<CourOrder> courOrderList = courOrderService.selectCourOrderByUser(userId, courseId);

@@ -36,13 +36,14 @@
       >
         <view class="status-box">
           <span class="try-txt">
-            <span v-if="courseInfo.isBuy === 1">已购</span>
-            <span v-if="courseInfo.isBuy === 0 && courseItem.type === 1">试听</span>
+            <span v-if="courseInfo.payType === 0 && courseInfo.isBuy === 1">已购</span>
+            <span v-if="courseInfo.payType === 0 && courseInfo.isBuy === 0 && courseItem.type === 1">试听</span>            
             <image
               class="lock-img"
-              v-if="courseInfo.isBuy === 0 && courseItem.type === 0"
+              v-if="courseInfo.payType === 0 && courseInfo.isBuy === 0 && courseItem.type === 0"
               src="/static/course/course/lock-white.png"
             ></image>
+            <span v-if="courseInfo.payType === 1">免费</span>
           </span>
           <span class="time-txt">{{
             courseItem.playing ? "正在播放" : formatDuration(courseItem.duration)
@@ -74,6 +75,7 @@
         </view>
         <customCatalogueList
           :catalogueList="catalogueList"
+          :payType="this.courseInfo.payType"
           :isBuy="courseInfo.isBuy"
           @catalogueItemClick="(item, index) => chooseCatalogue(item, index)"
         ></customCatalogueList> </view
@@ -177,11 +179,17 @@ export default {
       // 选中章节
       this.currentIndex = index;
       this.currentCatalogue = this.catalogueList[index] || {}		
+      this.scrollMove()
+      this.moreListShow = !this.moreListShow
       this.$nextTick(() => {
         this.videoContext.seek(this.currentCatalogue.endTime)
         console.log('chooseCatalogue endTime: ' + this.currentCatalogue.endTime)
       })
       
+    },
+    scrollMove() {
+      let scrollElement = document.querySelector(".list-box")
+      scrollElement.scrollLeft = 160 * this.currentIndex
     },
     async recordEndTime(endTime, finishStatus) {
       const params = {

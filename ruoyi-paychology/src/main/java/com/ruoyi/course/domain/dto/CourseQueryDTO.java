@@ -9,6 +9,7 @@ import java.math.BigDecimal;
 public class CourseQueryDTO extends BaseEntity {
     private String nameValue;
     private Integer typeValue;
+    private Integer payTypeValue;
     private String authorValue;
     private BigDecimal lowPrice;
     private BigDecimal highPrice;

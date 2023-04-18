@@ -8,13 +8,16 @@
       <image class="index-icon" src="/static/course/menu/index.png"></image>
       <text>首页</text>
     </navigator>
-    <view class="start-test" @tap="cartShow" v-if="!isBuy">立即购买</view>
-	<view class="start-test" v-else>已购买</view>
+    <view v-if="payType === 0">
+      <view class="start-test" @tap="cartShow" v-if="!isBuy">立即购买</view>
+      <view class="start-test" v-else>已购买</view>
+    </view>
+    <view class="start-test" v-else>限时免费</view>
   </view>
 </template>
 <script>
 export default {
-  props: ['isBuy'],
+  props: ['payType', 'isBuy'],
   methods: {
     cartShow() {
       this.$emit("cartShow");

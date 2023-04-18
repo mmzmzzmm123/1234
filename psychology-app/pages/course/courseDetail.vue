@@ -29,7 +29,7 @@
     <view class="img-box" v-show="currentItemIndex == 0" v-html="courseInfo.detail">
     </view>
     <view class="img-box" v-if="currentItemIndex == 1">
-      <customCatalogueList :catalogueList="catalogueList" :isBuy="this.courseInfo.isBuy" @catalogueItemClick="catalogueItemClick"></customCatalogueList>
+      <customCatalogueList :catalogueList="catalogueList" :payType="this.courseInfo.payType" :isBuy="this.courseInfo.isBuy" @catalogueItemClick="catalogueItemClick"></customCatalogueList>
     </view>
     <view class="more-box">
       <navigator url="/pages/course/class" open-type="redirect" class="more"
@@ -37,7 +37,7 @@
       </navigator>
     </view>
     <!-- 底部操作菜单 -->
-    <cartTabBar @cartShow="cartShow" :isBuy="this.courseInfo.isBuy"></cartTabBar>
+    <cartTabBar @cartShow="cartShow" :payType="this.courseInfo.payType" :isBuy="this.courseInfo.isBuy"></cartTabBar>
     <cartBox @closeCart="cartShow" v-if="cartBoxShow && this.courseInfo.isBuy == 0" :courseInfo="courseInfo" 
       :redirectUri="redirectUri"></cartBox>
   </view>
@@ -77,7 +77,7 @@ export default {
   },
   methods: {
     catalogueItemClick(item) {
-      if (this.courseInfo.isBuy || item.type==1) {
+      if (this.courseInfo.payType === 1 || this.courseInfo.isBuy || item.type==1) {
         uni.navigateTo({
           url: "/pages/course/learningCourse?courseId=" + this.courseId,
         });

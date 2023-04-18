@@ -111,7 +111,7 @@
           <el-row>
             <el-col :span="12">
               <el-form-item label="章节类型" prop="type">
-                <el-select v-model="form.type" placeholder="请选择章节类型">
+                <el-select v-model="form.type" placeholder="请选择章节类型" :disabled="course.payType === 1">
                   <el-option
                     v-for="dict in dict.type.course_section_type"
                     :key="dict.value"
@@ -167,7 +167,7 @@ import { listSection, getSection, delSection, addSection, updateSection } from "
 export default {
   name: "SectionDrawer",
   dicts: ['course_section_type', 'course_section_content_type'],
-  props: ['drawOpen', 'drawCourseId'],
+  props: ['drawOpen', 'drawCourse'],
   data() {
     return {
       fileTypes: ["mp4", "avi", "rmvb", "mp3", "wma", "rm", "rmvb", "flv", "mpg", "mov", "mkv"],
@@ -175,7 +175,7 @@ export default {
         module: 'course'
       },
       drawerOpenLocal: false,
-      courseId: null, // 关联的课程ID
+      course: null, // 关联的课程
       // 遮罩层
       loading: true,
       // 选中数组
@@ -237,6 +237,10 @@ export default {
       this.reset();
       // 章节类型默认值
       this.form.type = parseInt(this.dict.type.course_section_type && this.dict.type.course_section_type[0].value)
+      if (this.course.payType === 1) {
+        // 免费课所有章节免费
+        this.form.type = 2
+      }
       // 内容类型默认值
       this.form.contentType = parseInt(this.dict.type.course_section_content_type && this.dict.type.course_section_content_type[0].value)
 
@@ -305,7 +309,7 @@ export default {
     },
     /** 提交按钮 */
     submitForm() {
-      this.form.courseId = this.courseId
+      this.form.courseId = this.course.id
 
       this.$refs["form"].validate(valid => {
         if (valid) {
@@ -350,9 +354,9 @@ export default {
     drawOpen() {
       this.drawerOpenLocal = this.drawOpen
       if (this.drawerOpenLocal) {
-        this.courseId = this.drawCourseId
-        this.queryParams.courseId = this.courseId
-        this.form.courseId = this.courseId
+        this.course = this.drawCourse
+        this.queryParams.courseId = this.course.id
+        this.form.courseId = this.course.id
         console.log('this.form.courseId: ' + this.form.courseId)
         this.getList();
       }

@@ -100,9 +100,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         select end_time
         from cour_user_course_section
         <where>
-            <if test="userId != null  and userId != ''"> and user_id = #{userId}</if>
-            <if test="courseId != null  and courseId != ''"> and course_id = #{courseId}</if>
-            <if test="sectionId != null  and sectionId != ''"> and section_id = #{sectionId}</if>
+            <if test="userId != null"> and user_id = #{userId}</if>
+            <if test="courseId != null"> and course_id = #{courseId}</if>
+            <if test="sectionId != null"> and section_id = #{sectionId}</if>
         </where>
+        limit 1
     </select>
 </mapper>

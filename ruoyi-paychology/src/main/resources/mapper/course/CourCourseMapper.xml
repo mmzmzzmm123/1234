@@ -9,6 +9,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="courseId"    column="course_id"    />
         <result property="name"    column="name"    />
         <result property="type"    column="type"    />
+        <result property="payType"    column="pay_type"    />
         <result property="author"    column="author"    />
         <result property="url"    column="url"    />
         <result property="iconUrl"    column="icon_url"    />
@@ -21,7 +22,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </resultMap>
 
     <sql id="selectCourCourseVo">
-        select id, course_id, name, type, author, url, icon_url, price, detail, create_by, create_time, update_time, update_by from cour_course
+        select id, course_id, name, type, pay_type, author, url, icon_url, price, detail, create_by, create_time, update_time, update_by from cour_course
     </sql>
 
     <select id="selectCourCourseList" parameterType="CourCourse" resultMap="CourCourseResult">
@@ -30,6 +31,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="courseId != null  and courseId != ''"> and course_id = #{courseId}</if>
             <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
             <if test="type != null "> and type = #{type}</if>
+            <if test="payType != null "> and pay_type = #{payType}</if>
             <if test="author != null  and author != ''"> and author = #{author}</if>
             <if test="url != null  and url != ''"> and url = #{url}</if>
             <if test="iconUrl != null  and iconUrl != ''"> and icon_url = #{iconUrl}</if>
@@ -43,6 +45,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <where>
             <if test="nameValue != null  and nameValue != ''"> and name like concat('%', #{nameValue}, '%')</if>
             <if test="typeValue != null "> and type = #{typeValue}</if>
+            <if test="payTypeValue != null "> and pay_type = #{payTypeValue}</if>
             <if test="authorValue != null  and authorValue != ''"> and author like concat('%', #{authorValue}, '%')</if>
         </where>
     </select>
@@ -74,6 +77,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="courseId != null and courseId != ''">course_id,</if>
             <if test="name != null and name != ''">name,</if>
             <if test="type != null">type,</if>
+            <if test="payType != null">pay_type,</if>
             <if test="author != null">author,</if>
             <if test="url != null">url,</if>
             <if test="iconUrl != null">icon_url,</if>
@@ -88,6 +92,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="courseId != null and courseId != ''">#{courseId},</if>
             <if test="name != null and name != ''">#{name},</if>
             <if test="type != null">#{type},</if>
+            <if test="payType != null">#{payType},</if>
             <if test="author != null">#{author},</if>
             <if test="url != null">#{url},</if>
             <if test="iconUrl != null">#{iconUrl},</if>
@@ -106,6 +111,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="courseId != null and courseId != ''">course_id = #{courseId},</if>
             <if test="name != null and name != ''">name = #{name},</if>
             <if test="type != null">type = #{type},</if>
+            <if test="payType != null">pay_type = #{payType},</if>
             <if test="author != null">author = #{author},</if>
             <if test="url != null">url = #{url},</if>
             <if test="iconUrl != null">icon_url = #{iconUrl},</if>
@@ -140,7 +146,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </select>
 
     <select id="getCourseListByUserId" parameterType="Integer" resultMap="CourCourseResult">
-        select distinct c.id, c.course_id, c.name, c.type, c.author, c.url, c.icon_url, c.price, c.detail
+        select distinct c.id, c.course_id, c.name, c.type, c.pay_type, c.author, c.url, c.icon_url, c.price, c.detail
         from cour_course c
         left join cour_user_course_section cucs
         on c.id = cucs.course_id

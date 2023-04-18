@@ -36,4 +36,7 @@ public class CourConstant {
 
     public static final int COURSE_NOT_BUY = 0;
     public static final int COURSE_BUY = 1;
+
+    public static final int COURSE_NEED_PAY = 0;
+    public static final int COURSE_FREE = 1;
 }

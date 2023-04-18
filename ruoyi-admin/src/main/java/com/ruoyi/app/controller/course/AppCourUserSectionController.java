@@ -48,7 +48,11 @@ public class AppCourUserSectionController extends BaseController {
             userCourseSection.setFinishStatus(CourConstant.SECTION_UNFINISHED);
         }
         // 根据用户、课程、章节查询是否已有学习完成记录
-        List<CourUserCourseSection> userCourseSectionList =  courUserCourseSectionService.selectCourUserCourseSectionList(userCourseSection);
+        CourUserCourseSection queryParams = new CourUserCourseSection();
+        queryParams.setUserId(userCourseSection.getUserId());
+        queryParams.setCourseId(userCourseSection.getCourseId());
+        queryParams.setSectionId(userCourseSection.getSectionId());
+        List<CourUserCourseSection> userCourseSectionList =  courUserCourseSectionService.selectCourUserCourseSectionList(queryParams);
         if (userCourseSectionList.size() == 0) {
             // 新增
             return AjaxResult.success(courUserCourseSectionService.insertCourUserCourseSection(userCourseSection));

@@ -19,6 +19,16 @@
           />
         </el-select>
       </el-form-item>
+      <el-form-item label="付费类型" prop="payTypeValue">
+        <el-select v-model="queryParams.payTypeValue" placeholder="请选择课程付费方式" clearable>
+          <el-option
+            v-for="item in coursePayTypeList"
+            :key="item.id"
+            :label="item.name"
+            :value="item.id"
+          />
+        </el-select>
+      </el-form-item>
       <el-form-item label="课程作者" prop="authorValue">
         <el-input
           v-model="queryParams.authorValue"
@@ -102,6 +112,11 @@
           {{ getCourseClassName(scope.row.type) }}
         </template>
       </el-table-column>
+      <el-table-column label="付费类型" align="center" prop="payType">
+        <template slot-scope="scope">
+          {{ getCoursePayType(scope.row.payType) }}
+        </template>
+      </el-table-column>
       <el-table-column label="课程图片" align="center" prop="url" width="100">
         <template slot-scope="scope">
           <image-preview :src="scope.row.url" :width="50" :height="50"/>
@@ -134,7 +149,7 @@
             type="text"
             icon="el-icon-plus"
             size="mini"
-            @click="handleSectionDrawer(scope.row.id)"
+            @click="handleSectionDrawer(scope.row)"
             v-hasPermi="['course:section:list']">
             章节管理
           </el-button>
@@ -169,6 +184,9 @@
             </el-form-item>
           </el-col>
         </el-row>
+
+
+
         <el-row>
           <el-col :span="12">
             <el-form-item label="课程类型" prop="type">
@@ -183,8 +201,23 @@
             </el-form-item>
           </el-col>
           <el-col :span="12">
+            <el-form-item label="付费类型" prop="payType">
+              <el-select v-model="form.payType" placeholder="请选择课程付费类型" @change="handlePayTypeChange">
+                <el-option
+                  v-for="item in coursePayTypeList"
+                  :key="item.id"
+                  :label="item.name"
+                  :value="item.id"
+                ></el-option>
+              </el-select>
+            </el-form-item>
+          </el-col>
+        </el-row>
+
+        <el-row>
+          <el-col :span="24">
             <el-form-item label="课程价格" prop="price">
-              <el-input v-model="form.price" placeholder="请输入课程价格" />
+              <el-input v-model="form.price" placeholder="请输入课程价格" :disabled="form.payType === 1" />
             </el-form-item>
           </el-col>
         </el-row>
@@ -208,7 +241,7 @@
     </el-dialog>
 
     <!-- 新增关联章节侧边栏 -->
-    <SectionDrawer :drawOpen="drawOpen" :drawCourseId="drawCourseId" @close="drawOpen = !drawOpen"></SectionDrawer>
+    <SectionDrawer :drawOpen="drawOpen" :drawCourse="drawCourse" @close="drawOpen = !drawOpen"></SectionDrawer>
   </div>
 </template>
 
@@ -257,6 +290,7 @@ export default {
         pageSize: 10,
         nameValue: null,
         typeValue: null,
+        payTypeValue: null,
         authorValue: null,
         lowPrice: null,
         highPrice: null,
@@ -275,14 +309,27 @@ export default {
         type: [
           { required: true, message: "课程类型不能为空", trigger: "change" }
         ],
+        payType: [
+          { required: true, message: "付费类型不能为空", trigger: "change" }
+        ],
         price: [
           { required: true, message: "课程价格不能为空", trigger: "blur" },
           { validator: validatePrice, trigger: "blur" }
         ],
       },
       drawOpen: false,
-      drawCourseId: null,
-      courseClassList: []
+      drawCourse: null,
+      courseClassList: [],
+      coursePayTypeList: [
+        {
+          id: 0,
+          name: '付费课'
+        },
+        {
+          id: 1,
+          name: '免费课'
+        },
+      ]
     };
   },
   components: {
@@ -294,6 +341,9 @@ export default {
     this.getList();
   },
   methods: {
+    getCoursePayType(payType) {
+      return this.coursePayTypeList.filter(item => item.id === payType)[0].name
+    },
     getCourseClassName(type) {
       return this.courseClassList.filter(item => item.id === type)[0].name
     },
@@ -323,6 +373,7 @@ export default {
         courseId: null,
         name: null,
         type: null,
+        payType: null,
         author: null,
         url: null,
         iconUrl: null,
@@ -355,7 +406,9 @@ export default {
     handleAdd() {
       this.reset();
       // 课程类型默认值
-      this.form.type = this.courseClassList[0].value
+      this.form.type = this.courseClassList[0].id
+      // 付费类型默认值
+      this.form.payType = this.coursePayTypeList[0].id
 
       this.open = true;
       this.title = "添加课程";
@@ -393,7 +446,7 @@ export default {
     /** 删除按钮操作 */
     handleDelete(row) {
       const ids = row.id || this.ids;
-      this.$modal.confirm('是否确认删除课程编号为"' + ids + '"的数据项？').then(function() {
+      this.$modal.confirm('是否确认删除课程？').then(function() {
         return delCourse(ids);
       }).then(() => {
         this.getList();
@@ -406,9 +459,15 @@ export default {
         ...this.queryParams
       }, `course_${new Date().getTime()}.xlsx`)
     },
-    handleSectionDrawer(courseId) {
-      this.drawCourseId = courseId
+    handleSectionDrawer(course) {
+      this.drawCourse = course
       this.drawOpen = !this.drawOpen
+    },
+    handlePayTypeChange(value) {
+      if (value === 1) {
+        // 付费类型为免费课， 价格为0，输入框禁止输入
+        this.form.price = 0
+      }
     }
   }
 };

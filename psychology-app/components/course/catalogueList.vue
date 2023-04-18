@@ -8,7 +8,7 @@
     >
       <view class="item-content">
         <view class="content-title"
-          ><span v-if="isBuy==0 && catalogueItem.type==1" class="try">试听</span
+          ><span v-if="payType === 0 && isBuy == 0 && catalogueItem.type == 1" class="try">试听</span
           ><span class="text txt-overflow"
             >{{ index + 1 }}、{{ catalogueItem.topic }}</span
           ></view
@@ -25,7 +25,7 @@
         <image
           class="play-icon"
           :src="
-            isBuy==1 || catalogueItem.type==1
+            payType === 1 || isBuy == 1 || catalogueItem.type == 1
               ? '/static/course/product/play.png'
               : '/static/course/product/lock.png'
           "
@@ -37,7 +37,7 @@
 <script>
 import formatTime from "@/utils/formatTime.js"
 export default {
-  props: ["catalogueList", "isBuy"],
+  props: ["catalogueList", "isBuy", "payType"],
   methods: {
     catalogueItemClick(item, index) {		
       this.$emit("catalogueItemClick", item, index);

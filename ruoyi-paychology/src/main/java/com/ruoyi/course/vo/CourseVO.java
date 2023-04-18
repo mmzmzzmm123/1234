@@ -29,6 +29,10 @@ public class CourseVO implements Serializable {
     @ApiModelProperty("课程类型")
     private Integer type;
 
+    /** 付费方式 */
+    @ApiModelProperty("付费方式")
+    private Integer payType;
+
     /** 课程作者 */
     @ApiModelProperty("课程作者")
     private String author;
