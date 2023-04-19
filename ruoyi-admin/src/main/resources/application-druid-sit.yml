@@ -93,25 +93,25 @@ api:
 #    appId: b392q1IW
 #    code: 1111
 
-# 金融产品的相关api接口
-bankapi:
-    domain: http://qzh.58.56.115.134.nip.io:5222/qzh-xyd/business/api/interfaces/openApi/
-    appKey: 6c2544dcad39441c8e81c790bf9009f1
-    appSecret: cb8135c8442843909cf47d4c359b31a0
+# 金融产品的相关api接口（测试环境，经常出问题）
+#bankapi:
+#    domain: http://qzh.58.56.115.134.nip.io:5222/qzh-xyd/business/api/interfaces/openApi/
+#    appKey: 6c2544dcad39441c8e81c790bf9009f1
+#    appSecret: cb8135c8442843909cf47d4c359b31a0
 
-# 信用三期的相关api接口
+# 信用三期的相关api接口（正式环境）
 credit:
-    domain: http://credit.quanzhou.gov.cn:8086
+    domain: https://credit.quanzhou.gov.cn/
     account: service_XYPT_DJ
     password: e7f19f36ee1b4e73916934a533f020e6
     appId: b392q1IW
     code: 1111
 #
-## 金融产品的相关api接口
-#bankapi:
-#    domain: http://credit.quanzhou.gov.cn:9081/api/interfaces/openApi/
-#    appKey: a67234c358304cfb9f699e98a2f83f86
-#    appSecret: 3965fcce83c64d9d87b02a7a9517bfa7
+## 金融产品的相关api接口（正式环境）
+bankapi:
+    domain: http://credit.quanzhou.gov.cn:9081/api/interfaces/openApi/
+    appKey: a67234c358304cfb9f699e98a2f83f86
+    appSecret: 3965fcce83c64d9d87b02a7a9517bfa7
     
 # 信用三期短信接口配置
 creditsms:

@@ -109,7 +109,7 @@ api:
 #    code: 1111
 
 credit:
-    domain: http://credit.quanzhou.gov.cn:8086
+    domain: https://credit.quanzhou.gov.cn/
     account: service_XYPT_DJ
     password: e7f19f36ee1b4e73916934a533f020e6
     appId: b392q1IW
