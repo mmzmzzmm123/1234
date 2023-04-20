@@ -234,12 +234,12 @@
 			margin-bottom: 32upx;
 			margin-top: 21upx;
       .item {        
-        margin: 20upx;
-      }
-			.class-img {
-				width: 88upx;
-				height: 88upx;
-			}
+        width: 25%;
+        .class-img {
+        	width: 88upx;
+        	height: 88upx;
+        }
+      }			
 		}
 
 		.hot-box {

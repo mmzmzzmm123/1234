@@ -255,8 +255,8 @@ page {
     margin-top: 21upx;
     
     .item {
-      width: 25%;      
-      margin: 10px;
+      width: 33%;      
+      margin-bottom: 10px;
       .class-img {
         width: 88upx;
         height: 88upx;
