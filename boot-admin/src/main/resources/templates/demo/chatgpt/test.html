@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>
+        前置语料匹配测试
+    </title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.7.2/styles/default.min.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js">
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.7.2/highlight.min.js">
+    </script>
+    <style>
+        body {
+            background-color: #1c1c1c;
+            color: #fff;
+            font-family: Arial, sans-serif;
+            font-size: 16px;
+            line-height: 1.5;
+            padding: 20px;
+        }
+
+        h1 {
+            font-size: 32px;
+            margin-bottom: 20px;
+        }
+
+        form {
+            margin: 0 auto; 
+            width: 28%; 
+            margin-bottom: 20px ;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 10px;
+        }
+
+        input[type="text"] {
+            padding: 10px;
+            font-size: 16px;
+            border-radius: 5px;
+            border: none;
+            background-color: #333;
+            color: #fff;
+            margin-bottom: 10px;
+        }
+
+        input[type="submit"] {
+            padding: 10px 20px;
+            font-size: 16px;
+            border-radius: 5px;
+            border: none;
+            background-color: #4CAF50;
+            color: #fff;
+            cursor: pointer;
+        }
+
+        pre {
+            /*background-color: #ffffff;*/
+            padding: 20px;
+            border-radius: 5px;
+            overflow-x: auto;
+        }
+
+        .json-key {
+            color: #f92672;
+        }
+
+        .json-string {
+            color: #e6db74;
+        }
+
+        .json-number {
+            color: #66d9ef;
+        }
+
+        .json-boolean {
+            color: #ae81ff;
+        }
+
+        .json-null {
+            color: #75715e;
+        }
+    </style>
+</head>
+<body>
+
+<form>
+    <h1>
+        前置语料匹配测试
+    </h1>
+    <label for="chat">
+        问题:
+    </label>
+    <input type="text" id="chat" name="chat" value="">
+    <label for="topk">
+        匹配语料条数:
+    </label>
+    <input type="text" id="topk" name="topk" value="10">
+    <input type="submit" value="Submit">
+</form>
+<div id="output">
+</div>
+<script>
+    const form = document.querySelector('form');
+    const output = document.querySelector('#output');
+    form.addEventListener('submit', async (event) => {
+        event.preventDefault();
+        const chat = document.querySelector('#chat').value;
+        const topk = document.querySelector('#topk').value;
+        const response = await fetch(`/demo/api/document/testPython?chat=${chat}&topk=${topk}`);
+        const data = await response.json();
+        var json = JSON.stringify(data, null, 4); $("#output").html("<pre><code>" + json + "</code></pre>"); 
+        hljs.highlightBlock($("#output").get(0));
+        // output.innerHTML = JSON.stringify(data, null, 4).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '<span class="json-string">"$1"</span>').replace(/(\d+)/g, '<span class="json-number">$1</span>').replace(/true|false/g, '<span class="json-boolean">$&</span>').replace(/null/g, '<span class="json-null">$&</span>').replace(/(\s*)([^\{\}\[\]\:\,]*)(\s*)(\:\s)/g, '$1<span class="json-key">$2</span>$3$4');
+    });
+</script>
+</body>
+</html>

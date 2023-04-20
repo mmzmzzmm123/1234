@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>上传语料python版</title>
+    <link rel="stylesheet" href="./sweetalert2.min.css" >
+    <script src="./sweetalert2.all.min.js"></script>
+
+    <style>
+        #download-button {
+            cursor: pointer;
+        }
+        #download-button:active {
+            background-color: #ccc;
+        }
+        body {
+            background: #1d1d1d;
+            font-family: Arial, sans-serif;
+            color: #fff;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 50px 20px;
+            text-align: center;
+        }
+
+        h1 {
+            font-size: 3em;
+            margin-bottom: 50px;
+        }
+
+        .upload-box {
+            border: 2px dashed #aaa;
+            padding: 20px;
+            cursor: pointer;
+        }
+
+        .upload-box p {
+            margin: 0;
+        }
+
+        .upload-box label {
+            display: inline-block;
+            background: #55c500;
+            color: #fff;
+            padding: 10px 20px;
+            border-radius: 5px;
+            margin-top: 10px;
+            cursor: pointer;
+        }
+
+        .upload-box label:hover {
+            background: #46b000;
+        }
+
+        .upload-box input[type="file"] {
+            display: none;
+        }
+
+        ::-webkit-file-upload-button {
+            display: none;
+        }
+
+        input[type="file"] {
+            cursor: pointer;
+        }
+
+        /* 悬停效果 */
+
+        .upload-box.dragover {
+            border-color: #55c500;
+        }
+
+        .upload-box.dragover p {
+            color: #55c500;
+        }
+
+        .upload-box.dragover label {
+            background: #46b000;
+        }
+
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>上传文档</h1>
+    <button id="download-button" onclick="downloadTemplate()">下载语料模板</button>
+    <h4 style="color: #ea5455">文件名称格式修改为：场景名称#内容概况.xlsx（例如：低代码#搭建部署.xlsx),如果属于通用语料不需要#号</h4>
+<!--    <h1>纯文字word，1000以内</h1>-->
+    <div class="upload-box">
+        <p>拖拽文件到此处</p>
+        <p>或者</p>
+        <label for="file-input">选择文件</label>
+        <input type="file" id="file-input" multiple>
+    </div>
+</div>
+<script >
+    function downloadTemplate(){
+        window.location.href = "/demo/api/document/downloadTemplate";
+    }
+    
+    const uploadBox = document.querySelector('.upload-box');
+
+    // 防止默认行为和事件冒泡
+    ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+        uploadBox.addEventListener(eventName, preventDefaults, false)
+    });
+
+    function preventDefaults (e) {
+        e.preventDefault();
+        e.stopPropagation();
+    }
+
+    // 高亮拖拽区域
+    ['dragenter', 'dragover'].forEach(eventName => {
+        uploadBox.addEventListener(eventName, highlight, false)
+    });
+
+    ['dragleave', 'drop'].forEach(eventName => {
+        uploadBox.addEventListener(eventName, unhighlight, false)
+    });
+
+    function highlight(e) {
+        uploadBox.classList.add('dragover');
+    }
+
+    function unhighlight(e) {
+        uploadBox.classList.remove('dragover');
+    }
+    // 处理文件
+    uploadBox.addEventListener('drop', handleDrop, false);
+
+    function handleDrop(e) {
+        const files = e.dataTransfer.files;
+        handleFiles(files);
+    }
+
+    // 处理选择的文件
+    const fileInput = document.querySelector('#file-input');
+
+    fileInput.addEventListener('change', handleInput, false);
+
+    function handleInput(e) {
+        const files = e.target.files;
+        handleFiles(files);
+    }
+
+    // 处理文件的逻辑
+    function handleFiles(files) {
+        const formData = new FormData();
+        for (let i = 0; i < files.length; i++) {
+            const file = files[i];
+            console.log(file.name);
+            formData.append('files', file, file.name);
+        }
+        uploadFiles(formData);
+    }
+
+    // 上传文件
+    function uploadFiles(formData) {
+        const xhr = new XMLHttpRequest();
+        xhr.open('POST', '/demo/api/document/uploadToPython', true);
+
+        xhr.upload.onprogress = function (e) {
+            if (e.lengthComputable) {
+                const percentComplete = (e.loaded / e.total) * 100;
+                console.log(percentComplete.toFixed(2) + '%');
+            }
+        };
+
+        xhr.onload = function () {
+            if (xhr.status === 200) {
+                Swal.fire({
+                    icon: 'success',
+                    title: '上传成功',
+                    showConfirmButton: false,
+                    timer: 1500
+                });
+            }else if (xhr.status === 400){
+                Swal.fire({
+                    icon: 'error',
+                    title: '上传失败',
+                    text: "文档内容不能超过2000字",
+                    showConfirmButton: false,
+                    timer: 2000
+                });
+            }else {
+                Swal.fire({
+                    icon: 'error',
+                    title: '上传失败',
+                    text: "系统异常，请联系开发人员",
+                    showConfirmButton: false,
+                    timer: 2000
+                });
+            }
+        };
+
+        xhr.send(formData);
+    }
+</script>
+</body>
+</html>

@@ -1,0 +1,190 @@
+boot:
+  # 名称
+  name: boot
+  # 版本
+  version: 3.8.5
+  # 版权年份
+  copyrightYear: 2023
+  # 实例演示开关
+  demoEnabled: true
+  # 文件路径 示例（ Windows配置D:/boot/uploadPath，Linux配置 /home/boot/uploadPath）
+  profile: /Users/wangke/Downloads
+  # 获取ip地址开关
+  addressEnabled: true
+  # 验证码类型 math 数组计算 char 字符验证
+  captchaType: math
+
+# 开发环境配置
+server:
+  # 服务器的HTTP端口，默认为8080
+  port: 7070
+  servlet:
+    # 应用的访问路径
+    context-path: /
+  tomcat:
+    # tomcat的URI编码
+    uri-encoding: UTF-8
+    # 连接数满后的排队数，默认为100
+    accept-count: 1000
+    threads:
+      # tomcat最大线程数，默认为200
+      max: 800
+      # Tomcat启动初始化的线程数，默认值10
+      min-spare: 100
+
+# 日志配置
+logging:
+  level:
+    com.boot: debug
+    org.springframework: warn
+
+# 用户配置
+user:
+  password:
+    # 密码最大错误次数
+    maxRetryCount: 5
+    # 密码锁定时间（默认10分钟）
+    lockTime: 10
+
+# Spring配置
+spring:
+  thymeleaf:
+    prefix: classpath:/templates/
+    suffix: .html
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher
+    static-path-pattern: /**
+  mandatory-file-encoding: utf-8
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQL5InnoDBDialect
+  # 资源信息
+  messages:
+    # 国际化资源文件路径
+    basename: i18n/messages
+  profiles: 
+    active: druid
+  # 文件上传
+  servlet:
+     multipart:
+       # 单个文件大小
+       max-file-size:  10MB
+       # 设置总上传的文件大小
+       max-request-size:  20MB
+  # 服务模块
+  devtools:
+    livereload:
+      enabled: true
+    restart:
+      # 热部署开关
+      enabled: true
+  # redis 配置
+  redis:
+    # 地址
+    host: 192.168.120.12
+    # 端口，默认为6379
+    port: 6379
+    # 数据库索引
+    database: 0
+    # 密码
+    password: Wk199149
+    # 连接超时时间
+    timeout: 10s
+    lettuce:
+      pool:
+        # 连接池中的最小空闲连接
+        min-idle: 0
+        # 连接池中的最大空闲连接
+        max-idle: 8
+        # 连接池的最大数据库连接数
+        max-active: 8
+        # #连接池最大阻塞等待时间（使用负值表示没有限制）
+        max-wait: -1ms
+#  web:
+#    resources:
+#      static-locations: classpath:/META-INF/resources/,classpath:/resources/,classpath:/static/,classpath:/public/,classpath:/templates/
+# token配置
+token:
+    # 令牌自定义标识
+    header: Authorization
+    # 令牌密钥
+    secret: abcdefghijklmnopqrstuvwxyz
+    # 令牌有效期（默认30分钟）
+    expireTime: 30
+  
+# MyBatis配置
+mybatis:
+    # 搜索指定包别名
+    typeAliasesPackage: com.boot.**.domain
+    # 配置mapper的扫描，找到所有的mapper.xml映射文件
+    mapperLocations: classpath*:mapper/**/*Mapper.xml
+    # 加载全局的配置文件
+    configLocation: classpath:mybatis/mybatis-config.xml
+
+# PageHelper分页插件
+pagehelper: 
+  helperDialect: mysql
+  supportMethodsArguments: true
+  params: count=countSql 
+
+# Swagger配置
+swagger:
+  # 是否开启swagger
+  enabled: true
+  # 请求前缀
+  pathMapping: /dev-api
+
+# 防止XSS攻击
+xss: 
+  # 过滤开关
+  enabled: true
+  # 排除链接（多个用逗号分隔）
+  excludes: /system/notice
+  # 匹配链接
+  urlPatterns: /system/*,/monitor/*,/tool/*
+  
+  
+sys:
+  config:
+    templatePath: /Users/wangke/Desktop/gpt语料.xlsx
+    filePath: /Users/wangke/Downloads/gpttest/java
+    pythonFilePath: /Users/wangke/Downloads/gpttest/python
+    #    filePath: /home/webwar/doc
+    #    公司plus
+    apiKey: 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
+    #    apiKey: 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
+    #    527key
+    #    apiKey: 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
+    collectionName: open_ai
+    #    pythonUrl: http://192.168.120.12:8080
+    pythonUrl: http://192.168.120.12:8080
+    pythonToken: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IndhbmdrZSIsImlhdCI6MTUxNjIzOTAyMn0.9tXyaenf0TrM0aoSnqMO2_brWH4qMkxyI_SJYWbBw8o
+    proxyIp: 192.168.120.13
+    proxyPort: 7890
+    milvusIp: 192.168.120.12
+#    milvusIp: 127.0.0.1
+    milvusPort: 19530
+    vecModelPath: /Users/wangke/Downloads/sgns.merge.word
+    #    vecModelPath: /home/webapp/sgns.merge.word
+    staticPath: classpath:/static/
+    #    staticPath: file:/home/webapp/static/
+    topk: 5
+    maxTokens: 500
+    maxFileLength: 500
+    overTime: 3
+    userPromptBefore: 对于查询：
+    userPromptAfter: 结合资料进行回答
+    sysPrompt: 现在你是蓝凌公司的产品咨询顾问，使用我提供的资料来形成你的答案，但避免从文章中逐字复制。尽可能使用你自己的话，要紧扣问题作答！如果我提供的资料和问题没有关联，不要提示我问题和资料没有关联！直接给出根据自己的知识回答！将答案保持在 5 句话以内。准确、有用、简洁、清晰
+    score: 0.5
+
+# 项目相关配置
+wx:
+  applet:
+    configs:
+      #      个人小程序
+      - appId: wxce78b06b677771b3
+        secret: 84e36135c0b353c48fe19f93d2742b68

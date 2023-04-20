@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>
+        ChatGPTPrompt配置
+    </title>
+    <style>
+        body {
+            background-color: #f2f2f2;
+            font-family: Arial, sans-serif;
+        }
+
+        h1 {
+            color: #333;
+            text-align: center;
+            margin-top: 50px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #fff;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+            border-radius: 5px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+
+        input[type="text"], input[type="number"] {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            box-sizing: border-box;
+            font-size: 16px;
+        }
+        textarea{
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            box-sizing: border-box;
+            font-size: 16px;
+        }
+        button {
+            background-color: #4CAF50;
+            color: #fff;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        button:hover {
+            background-color: #3e8e41;
+        }
+
+        .alert {
+            padding: 20px;
+            background-color: #f44336;
+            color: #fff;
+            margin-bottom: 20px;
+            border-radius: 5px;
+        }
+
+        .success {
+            background-color: #4CAF50;
+        }
+
+        .hidden {
+            display: none;
+        }
+    </style>
+    <script>
+        function saveConfig() {
+            var sysPrompt = document.getElementById("sysPrompt").value;
+            var topk = document.getElementById("topk").value;
+            var overTime = document.getElementById("overTime").value;
+            var id = document.getElementById("id").value;
+            var maxTokens = document.getElementById("maxTokens").value;
+            var userPromptAfter = document.getElementById("userPromptAfter").value;
+            var userPromptBefore = document.getElementById("userPromptBefore").value;
+            var score = document.getElementById("score").value;
+            var xhr = new XMLHttpRequest();
+            xhr.open("POST", "/chatgpt/prompt/save");
+            xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState === 4) {
+                    if (xhr.status === 200) {
+                        showAlert("保存成功！", "success");
+                    } else {
+                        showAlert("保存失败，请重试。", "error");
+                    }
+                }
+            };
+            xhr.send(JSON.stringify({sysPrompt: sysPrompt, topk: topk, maxTokens: maxTokens,id:id,overTime:overTime,userPromptAfter:userPromptAfter,userPromptBefore:userPromptBefore,score:score}));
+        }
+
+        function showAlert(message, type) {
+            var alert = document.getElementById("alert");
+            alert.innerHTML = message;
+            alert.classList.remove("hidden");
+            alert.classList.remove("success");
+            alert.classList.remove("error");
+            alert.classList.add(type);
+            setTimeout(function () {
+                alert.classList.add("hidden");
+            }, 3000);
+        }
+
+        function loadConfig() {
+            var xhr = new XMLHttpRequest();
+            xhr.open("GET", "/chatgpt/prompt/view");
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState === 4) {
+                    if (xhr.status === 200) {
+                        var result = JSON.parse(xhr.responseText);
+                        var config = result.data;
+                        document.getElementById("sysPrompt").value = config.sysPrompt;
+                        document.getElementById("topk").value = config.topk;
+                        document.getElementById("maxTokens").value = config.maxTokens;
+                        document.getElementById("id").value = config.id;
+                        document.getElementById("overTime").value = config.overTime;
+                        document.getElementById("userPromptBefore").value = config.userPromptBefore;
+                        document.getElementById("userPromptAfter").value = config.userPromptAfter;
+                        document.getElementById("score").value = config.score;
+                    } else {
+                        showAlert("加载配置失败，请重试。", "error");
+                    }
+                }
+            };
+            xhr.send();
+        }
+
+        window.onload = function () {
+            loadConfig();
+        };
+    </script>
+</head>
+<body>
+<h1>
+    ChatGPTPrompt配置
+</h1>
+<div class="container">
+    <div id="alert" class="alert hidden">
+    </div>
+    <label for="sysPrompt">
+        系统提示语：
+    </label>
+    <textarea type="textarea" id="sysPrompt" name="sysPrompt" rows="5">
+    </textarea>
+    <label for="userPromptBefore">
+        提问拼装前缀（例如:对于查询：)：
+    </label>
+    <textarea type="textarea" id="userPromptBefore" name="sysPrompt" rows="1">
+    </textarea>
+    <label for="userPromptBefore">
+        低代码的优势是什么？
+    </label>
+    <label for="userPromptAfter">
+        提问拼装后缀（例如：结合资料进行回答：)：
+    </label>
+    <textarea type="textarea" id="userPromptAfter" name="sysPrompt" rows="1">
+    </textarea>
+    <label for="userPromptAfter">
+        语料1;
+        语料2;
+        语料3;
+    </label>
+    <label for="topk">
+        语料投喂条数：
+    </label>
+    <input type="number" id="topk" name="topk">
+    <label for="score">
+        相关度评分要求：
+    </label>
+    <input type="number" id="score" name="topk">
+    <label for="maxTokens">
+        最大回答字数数：
+    </label>
+    <input type="number" id="maxTokens" name="maxTokens">
+    <label for="overTime">
+        会话超时分钟数：
+    </label>
+    <input type="number" id="overTime" name="overTime">
+    <input type="hidden" id="id" name="id">
+    <button onclick="saveConfig()">
+        保存
+    </button>
+</div>
+</body>
+</html>

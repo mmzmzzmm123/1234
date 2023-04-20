@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Demo助手-官方-python版</title>
+    <style>
+        /* 聊天窗口样式 */
+        .chat-window {
+            border: 1px solid #ccc;
+            border-radius: 10px;
+            margin: 20px;
+            padding: 10px;
+            height: 300px;
+            overflow-y: scroll;
+        }
+
+        .chat-bubble {
+            white-space: pre-line;
+            display: inline-block;
+            max-width: 80%;
+            margin-bottom: 10px;
+            padding: 10px;
+            border-radius: 10px;
+            font-size: 16px;
+        }
+
+        .received {
+            background-color: #f0f0f0;
+        }
+
+        .sent {
+            background-color: #aee0ff;
+            text-align: right;
+        }
+
+        /* 输入框样式 */
+        .chat-input {
+            margin: 20px;
+            display: flex;
+            align-items: center;
+        }
+
+        .chat-input input[type="text"] {
+            flex: 1;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 10px;
+            font-size: 16px;
+            outline: none;
+        }
+
+        .chat-input button {
+            width: 18%;
+            padding: 10px;
+            margin-left: 2%;
+            border: none;
+            border-radius: 10px;
+            background-color: #aee0ff;
+            color: #fff;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        .chat-input button:hover {
+            background-color: #82c0ff;
+        }
+
+        .chat-window {
+            display: flex;
+            flex-direction: column;
+            overflow-y: auto;
+            height: 500px;
+        }
+
+        .chat-bubble {
+            display: flex;
+            flex-direction: column;
+            max-width: 70%;
+            margin: 10px;
+            padding: 10px;
+            border-radius: 10px;
+            font-size: 0.8em;
+        }
+
+        .sent {
+            align-self: flex-end;
+            background-color: #4CAF50;
+            color: white;
+        }
+
+        .received {
+            align-self: flex-start;
+            background-color: #f1f0f0;
+            color: black;
+        }
+
+        /* 修改样式，使其更有科技感 */
+        .chat-window {
+            background-color: #1c1c1c;
+            border: none;
+            box-shadow: 0 0 10px #fff;
+        }
+
+        .chat-bubble {
+            background-color: #2d2d2d;
+            color: #fff;
+            font-size: 0.8em;
+            box-shadow: 0 0 10px #fff;
+        }
+
+        .sent {
+            background-color: #4CAF50;
+            color: white;
+        }
+
+        .received {
+            background-color: #f0f0f0;
+            color: black;
+        }
+
+        .chat-input input[type="text"] {
+            border: none;
+            border-radius: 10px;
+            font-size: 0.8em;
+            outline: none;
+            background-color: #2d2d2d;
+            color: #fff;
+            box-shadow: 0 0 10px #fff;
+        }
+
+        .chat-input button {
+            border: none;
+            border-radius: 10px;
+            background-color: #4CAF50;
+            color: #fff;
+            font-size: 0.8em;
+            cursor: pointer;
+            box-shadow: 0 0 10px #fff;
+        }
+
+        .chat-input button:hover {
+            background-color: #82c0ff;
+        }
+        .uploadFile button {
+            margin: auto;
+            width: 50%;
+        }
+
+        /* 移动端样式 */
+        @media screen and (max-width: 480px) {
+            .chat-window {
+                height: 60vh;
+            }
+
+            .chat-bubble {
+                white-space: pre-line;
+                max-width: 90%;
+                font-size: 0.8em;
+            }
+
+            .chat-input {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                margin: 10px;
+                height: 60px;
+            }
+
+            .chat-input input[type="text"] {
+                width: 70%;
+                height: 100%;
+                margin-right: 10px;
+                font-size: 0.8em;
+                border-radius: 10px;
+                border: 1px solid #ccc;
+                padding: 0 10px;
+                box-sizing: border-box;
+                outline: none;
+            }
+
+            .chat-input button {
+                width: 30%;
+                height: 100%;
+                margin-left: 10px;
+                font-size: 0.8em;
+                border-radius: 10px;
+                border: none;
+                background-color: #4CAF50;
+                color: #fff;
+                cursor: pointer;
+            }
+
+            .chat-input button:hover {
+                background-color: #82c0ff;
+            }
+
+            .uploadFile button {
+                margin: auto;
+                width: 50%;
+            }
+
+            .sent {
+                align-self: flex-end;
+                background-color: #4caf50;
+                color: white;
+            }
+
+            .received {
+                align-self: flex-start;
+                background-color: #f1f0f0;
+                color: black;
+            }
+        }
+
+    </style>
+</head>
+<body style="background-color: rgba(19,18,18,0.87)">
+<div class="chat-window">
+    <div class="chat-bubble received">
+        <p>现在可以开始对蓝凌产品进行咨询了！</p>
+    </div>
+</div>
+
+<div class="chat-input">
+    <input type="text" placeholder="请输入消息">
+    <button>发送</button>
+</div>
+<div class="chat-input uploadFile">
+    <button onclick="jumpUpload()">上传语料</button>
+<!--    <button onclick="jumpLandray()">回答不准试试这个(需要重新上传语料)</button>-->
+<!--    <button onclick="jumpChat()">无限制畅聊版</button>-->
+</div>
+
+</body>
+<script>
+    const input = document.querySelector("input[type='text']");
+    const button = document.querySelector("button");
+    const chatWindow = document.querySelector(".chat-window");
+    const url = new URL("/chatGPT/websocketChat.do", window.location.href);
+    // const ws = new WebSocket("ws://" + url.host + url.pathname);
+    const ws = new WebSocket("ws://localhost:7070/ws/chatGPT/websocketChat.do");
+    var now = new Date();
+    console.log("连接时间==="+now.getHours() + ":" + now.getMinutes() + ":" + now.getSeconds());
+
+
+    button.addEventListener("click", () => {
+        let flag = 0;
+        if (input.value) {
+            const bubble = document.createElement("div");
+            bubble.classList.add("chat-bubble", "sent");
+            bubble.textContent = input.value;
+            chatWindow.appendChild(bubble);
+            input.value = "";
+            chatWindow.scrollTop = chatWindow.scrollHeight;
+            ws.send(bubble.textContent);
+            const typingBubble = document.createElement("div");
+            typingBubble.classList.add("chat-bubble", "received");
+            typingBubble.textContent = "正在输入...";
+            chatWindow.appendChild(typingBubble);
+            chatWindow.scrollTop = chatWindow.scrollHeight;
+            const timeout = setTimeout(() => {
+                if (typingBubble.textContent === "正在输入...") {
+                    typingBubble.textContent = "连接超时，请重试！";
+                }
+            }, 10000);
+            ws.onmessage = function (event) {
+                if(flag === 0){
+                    typingBubble.textContent = "";
+                }
+                if(event.data==="END_OF_ANSWER"){
+                    // typingBubble.innerHTML = marked.parse(typingBubble.textContent);
+                    // hljs.highlightBlock(typingBubble);
+                }else {
+                    typingBubble.textContent += event.data;
+                }
+                flag = 1;
+                clearTimeout(timeout);
+                chatWindow.scrollTop = chatWindow.scrollHeight;
+            };
+            ws.onerror = function (event) {
+                console.error(event)
+                const bubble = document.createElement("div");
+                bubble.classList.add("chat-bubble", "received");
+                bubble.textContent = "连接不太稳定，刷新一下页面试试";
+                chatWindow.appendChild(bubble);
+                chatWindow.scrollTop = chatWindow.scrollHeight;
+                clearTimeout(timeout);
+            };
+            ws.onclose = function (e) {
+                const bubble = document.createElement("div");
+                bubble.classList.add("chat-bubble", "received");
+                bubble.textContent = "连接已断开，刷新一下页面试试";
+                var now = new Date();
+                console.log("断开时间==="+now.getHours() + ":" + now.getMinutes() + ":" + now.getSeconds());
+                chatWindow.appendChild(bubble);
+                chatWindow.scrollTop = chatWindow.scrollHeight;
+                clearTimeout(timeout);
+            }
+        }
+    });
+
+    input.addEventListener("keydown", (event) => {
+        // 按下 Enter 键也可以发送消息
+        if (event.key === "Enter" && !event.isComposing) {
+            event.preventDefault();
+            button.click();
+        }
+    });
+    function jumpLandray(){
+        window.open("/demo/chatgpt/chatjava.html")
+    }
+    function jumpUpload(){
+        window.open("/demo/chatgpt/uploadFile.html")
+    }
+    function jumpChat(){
+        window.open("/demo/chatgpt/chat1.html","_self")
+    }
+
+</script>
+</html>
