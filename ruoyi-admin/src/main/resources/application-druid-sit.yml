@@ -108,16 +108,11 @@ credit:
     code: 1111
 #
 ## 金融产品的相关api接口（正式环境）
-#bankapi:
-#    domain: http://credit.quanzhou.gov.cn:9081/api/interfaces/openApi/
-#    appKey: a67234c358304cfb9f699e98a2f83f86
-#    appSecret: 3965fcce83c64d9d87b02a7a9517bfa7
-
-# 金融产品的相关api接口
 bankapi:
-    domain: http://172.29.137.5:9080/api/interfaces/openApi/
+    domain: http://credit.quanzhou.gov.cn:9081/api/interfaces/openApi/
     appKey: a67234c358304cfb9f699e98a2f83f86
     appSecret: 3965fcce83c64d9d87b02a7a9517bfa7
+
     
 # 信用三期短信接口配置
 creditsms:
