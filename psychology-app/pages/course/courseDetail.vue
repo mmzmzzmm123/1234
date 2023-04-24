@@ -40,6 +40,13 @@
     <cartTabBar @cartShow="cartShow" :payType="this.courseInfo.payType" :isBuy="this.courseInfo.isBuy"></cartTabBar>
     <cartBox @closeCart="cartShow" v-if="cartBoxShow && this.courseInfo.isBuy == 0" :courseInfo="courseInfo" 
       :redirectUri="redirectUri"></cartBox>
+      
+    <uni-popup ref="popup" type="dialog">
+    	<uni-popup-dialog mode="base" content="您尚未登录, 是否使用微信静默登录" :duration="2000" :before-close="true"
+    		@close="close" @confirm="confirm"></uni-popup-dialog>
+    </uni-popup>  
+    
+    <video-box ref="videoRef" :courseId="courseId" :currentCatalogue="currentCatalogue"></video-box>
   </view>
 </template>
 
@@ -49,8 +56,14 @@ import courseServer from "@/server/course/course";
 import cartTabBar from "@/components/course/cartTabBar";
 import cartBox from "@/components/course/cartBox";
 import customCatalogueList from "@/components/course/catalogueList";
+import {
+  uniPopup,
+  uniPopupDialog
+} from '@dcloudio/uni-ui'
+import loginServer from '@/server/login'
+import videoBox from "@/components/course/videoBox.vue"
 export default {
-  components: { cartTabBar,cartBox,customCatalogueList },
+  components: { cartTabBar,cartBox,customCatalogueList, videoBox },
   data() {
     return {
 	  userInfo: {},
@@ -59,12 +72,16 @@ export default {
       courseId: 0,
       currentItemIndex: 0,
       catalogueList: [],
-      redirectUri:location.href
+      redirectUri:location.href,
+      currentCatalogue: {},
     };
   },
   async created() {
     this.userInfo = uni.getStorageSync("userInfo");
-
+    if (!this.userInfo) {
+      this.openLoginConfirm()
+      return
+    }
     this.courseId = parseInt(utils.getParam(location.href, "courseId")||utils.getParam(location.href, "id"));
 
     this.courseInfo = await courseServer.getCourseInfo(this.userInfo.userId, this.courseId)||{};
@@ -78,14 +95,28 @@ export default {
   methods: {
     catalogueItemClick(item) {
       if (this.courseInfo.payType === 1 || this.courseInfo.isBuy || item.type==1) {
-        uni.navigateTo({
-          url: "/pages/course/learningCourse?courseId=" + this.courseId,
-        });
+        // TODO: 跳转到课程学习界面
+        //uni.navigateTo({
+        //  url: "/pages/course/learningCourse?courseId=" + this.courseId,
+        //}); 
+        
+        this.currentCatalogue = item
+        this.$refs.videoRef.play()
       }
     },
     cartShow() {		
       this.cartBoxShow = !this.cartBoxShow;
     },
+    close() {
+    	this.$refs.popup.close()
+    },
+    async confirm() {
+    	await loginServer.login();
+    	this.$refs.popup.close()
+    },
+    openLoginConfirm() {
+    	this.$refs.popup.open();
+    }
   },
 };
 </script>

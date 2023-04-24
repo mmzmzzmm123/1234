@@ -38,7 +38,7 @@
 				<view class="date" v-if="item.finishStatus == 0 && item.studyDuration">已学习{{ item.studyDuration }}
 				</view>
 				<view class="date" v-if="item.finishStatus == 0 && !item.studyDuration">未开始学习</view>
-				<view class="btn" @tap="toLearningCourse(item.id)">{{item.studyDuration ? '继续学习' : '进入学习'}}</view>
+				<view class="btn" @tap="toCourse(item.id)">{{item.studyDuration ? '继续学习' : '进入学习'}}</view>
 			</view>
 			<no-data v-if="courseList.length == 0" :showToLogin="true"></no-data>
 			<view class="footer" v-else>已经到底了</view>
@@ -77,7 +77,7 @@
 						classPic: "/static/course/user/course.png",
 						className: "我的课程",
 						id: 16,
-						callback: this.toCourse,
+						callback: this.toCourseList,
 					},
 					{
 						classPic: "/static/course/user/order.png",
@@ -128,7 +128,7 @@
 				//添加登录标志,为callback做返回判断
 				uni.setStorageSync("wxLogining", true);
 			},
-			toCourse() {
+			toCourseList() {
         // 判断是否已经登录
         if (!this.userInfo) {
         	this.openLoginConfirm()
@@ -150,6 +150,11 @@
 						url: "/pages/course/order"
 					});
 			},
+      toCourse(courseId) {
+        uni.navigateTo({
+          url: `/pages/course/courseDetail?courseId=${courseId}`,
+        });
+      },
 			toLearningCourse(courseId) {
         // 判断是否已经登录
         if (!this.userInfo) {

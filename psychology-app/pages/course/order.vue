@@ -42,7 +42,7 @@
         <view
           class="btn"
           v-show="order.status == 1"
-          @tap.stop.prevent="toLearningCourse(order)"
+          @tap.stop.prevent="toCourse(order)"
           >去学习</view
         >
         <view class="btn cancel" v-show="order.status == 0" @tap.stop.prevent="toCancel(order)"
@@ -126,6 +126,11 @@ export default {
     async toCancel(order) {
       await orderServer.cancelOrder(order.id);     
 	  this.changeTab(0)
+    },
+    toCourse(order) {
+      uni.navigateTo({
+        url: "/pages/course/courseDetail?courseId=" + order.courseInfo.id,
+      });
     },
     toLearningCourse(order) {
       uni.navigateTo({
