@@ -29,11 +29,6 @@
       // initial-time属性不生效，需要直接设置
       this.videoContext.seek(this.currentCatalogue.endTime)
     },
-    beforeDestroy() {
-      // 记录当前章节学习的结束时间点, 用戶直接关闭页面感知不到，不可靠
-      console.log('beforeDestroy')
-      this.recordEndTime(this.currentCatalogue.endTime)
-    },
     methods: {
       videoTimeUpdateEvent(e) { // 播放进度改变
         // e.detail.currentTime为每次触发时,视频的当前播放时间

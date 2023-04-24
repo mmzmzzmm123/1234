@@ -27,7 +27,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
     <select id="selectCourCourseList" parameterType="CourCourse" resultMap="CourCourseResult">
         <include refid="selectCourCourseVo"/>
-        <where>  
+        <where>
+            delete_flag = 0
             <if test="courseId != null  and courseId != ''"> and course_id = #{courseId}</if>
             <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
             <if test="type != null "> and type = #{type}</if>
@@ -43,6 +44,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <select id="queryCourCourseList" parameterType="com.ruoyi.course.domain.dto.CourseQueryDTO" resultMap="CourCourseResult">
         <include refid="selectCourCourseVo"/>
         <where>
+            delete_flag = 0
             <if test="nameValue != null  and nameValue != ''"> and name like concat('%', #{nameValue}, '%')</if>
             <if test="typeValue != null "> and type = #{typeValue}</if>
             <if test="payTypeValue != null "> and pay_type = #{payTypeValue}</if>
@@ -53,20 +55,21 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <select id="selectCourCourseByCourseId" parameterType="String" resultMap="CourCourseResult">
         <include refid="selectCourCourseVo"/>
 
-        where course_id = #{courseId}
+        where course_id = #{courseId} and delete_flag = 0
 
     </select>
 
     
     <select id="selectCourCourseById" parameterType="Integer" resultMap="CourCourseResult">
         <include refid="selectCourCourseVo"/>
-        where id = #{id}
+        where id = #{id} and delete_flag = 0
     </select>
 
     <select id="selectCourCourseByType" parameterType="CourCourse" resultMap="CourCourseResult">
         <include refid="selectCourCourseVo"/>
         <where>
-            <if test="type != null ">  type = #{typeId}</if>
+            <if test="type != null ">  type = #{typeId},</if>
+            and delete_flag = 0
         </where>
     </select>
 
@@ -126,11 +129,12 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </update>
 
     <delete id="deleteCourCourseById" parameterType="Integer">
-        delete from cour_course where id = #{id}
+        update cour_course set delete_flag = 1 where id = #{id}
     </delete>
 
     <delete id="deleteCourCourseByIds" parameterType="String">
-        delete from cour_course where id in 
+        update cour_course set delete_flag = 1
+        where id in
         <foreach item="id" collection="array" open="(" separator="," close=")">
             #{id}
         </foreach>
@@ -150,6 +154,6 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         from cour_course c
         left join cour_user_course_section cucs
         on c.id = cucs.course_id
-        where cucs.user_id = #{userId}
+        where cucs.user_id = #{userId} and c.delete_flag = 0
     </select>
 </mapper>

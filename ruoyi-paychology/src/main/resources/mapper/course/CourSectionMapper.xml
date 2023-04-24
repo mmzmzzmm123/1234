@@ -22,7 +22,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
     <select id="selectCourSectionList" parameterType="CourSection" resultMap="CourSectionResult">
         <include refid="selectCourSectionVo"/>
-        <where>  
+        <where>
+            delete_flag = 0
             <if test="sectionId != null  and sectionId != ''"> and section_id = #{sectionId}</if>
             <if test="topic != null  and topic != ''"> and topic = #{topic}</if>
             <if test="duration != null "> and duration = #{duration}</if>
@@ -36,7 +37,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     
     <select id="selectCourSectionById" parameterType="Integer" resultMap="CourSectionResult">
         <include refid="selectCourSectionVo"/>
-        where id = #{id}
+        where id = #{id} and delete_flag = 0
     </select>
         
     <insert id="insertCourSection" parameterType="CourSection" useGeneratedKeys="true" keyProperty="id">
@@ -79,11 +80,12 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </update>
 
     <delete id="deleteCourSectionById" parameterType="Integer">
-        delete from cour_section where id = #{id}
+        update cour_section set delete_flag = 1 where id = #{id}
     </delete>
 
     <delete id="deleteCourSectionByIds" parameterType="String">
-        delete from cour_section where id in 
+        update cour_section set delete_flag = 1
+        where id in
         <foreach item="id" collection="array" open="(" separator="," close=")">
             #{id}
         </foreach>
