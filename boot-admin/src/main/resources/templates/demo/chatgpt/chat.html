@@ -263,7 +263,8 @@
             input.value = "";
             chatWindow.scrollTop = chatWindow.scrollHeight;
             // ws.send(bubble.textContent);
-            ws.send(bubble.textContent+"#"+module);
+            // ws.send(bubble.textContent+"#"+module);
+            ws.send(bubble.textContent);
             const typingBubble = document.createElement("div");
             typingBubble.classList.add("chat-bubble", "received");
             typingBubble.textContent = "正在输入...";
