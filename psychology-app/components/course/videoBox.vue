@@ -3,7 +3,7 @@
     <video id="myVideo" ref="video1" :src="currentCatalogue.contentUrl" loop="false"
       :initial-time="currentCatalogue.endTime" :duration="currentCatalogue.duration" controls
       enable-play-gesture="true" play-btn-position="center" style="width: 100%" @timeupdate="videoTimeUpdateEvent" @play="play" @pause="pause"
-      @ended="stop" @fullscreenchange="fullscreenchange"></video>
+      @ended="end" @fullscreenchange="fullscreenchange"></video>
   </view>
 </template>
 
@@ -16,7 +16,6 @@
       return {
         userInfo: {},
         videoContext: {}, // 用于绑定视频标签
-        videoUrl: "",
         startTime: "",
       
         secondCount: 0,
@@ -82,6 +81,7 @@
       fullscreenchange(e) {
       	if (!e.detail.fullScreen) {
       		this.videoContext.pause();
+          this.$emit('fullscreenchange')
       	} 
       },
       async recordEndTime(endTime, finishStatus) {

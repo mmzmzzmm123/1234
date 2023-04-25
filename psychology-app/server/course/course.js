@@ -51,7 +51,6 @@ export default {
 	recordEndTime: async (data) => {
       let res = await httprequest.post("/app/course/userSection/saveUserSectionInfo", data);
       if (res.code == 200) {
-        console.log(res);
         return res.data;
       } else {
         uni.showToast({

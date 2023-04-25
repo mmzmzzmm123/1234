@@ -46,7 +46,8 @@
     		@close="close" @confirm="confirm"></uni-popup-dialog>
     </uni-popup>  
     
-    <video-box ref="videoRef" :courseId="courseId" :currentCatalogue="currentCatalogue"></video-box>
+    <audio-box ref="audioRef" :courseId="courseId" :currentCatalogue="currentCatalogue" v-show="currentCatalogue.contentType == 1 && currentCatalogue.playing"></audio-box>
+    <video-box ref="videoRef" :courseId="courseId" :currentCatalogue="currentCatalogue" @fullscreenchange="currentCatalogue.playing = !currentCatalogue.playing" v-show="currentCatalogue.contentType == 0 && currentCatalogue.playing"></video-box>
   </view>
 </template>
 
@@ -62,8 +63,9 @@ import {
 } from '@dcloudio/uni-ui'
 import loginServer from '@/server/login'
 import videoBox from "@/components/course/videoBox.vue"
+import audioBox from "@/components/course/audioBox.vue"
 export default {
-  components: { cartTabBar,cartBox,customCatalogueList, videoBox },
+  components: { cartTabBar,cartBox,customCatalogueList, videoBox, audioBox },
   data() {
     return {
 	  userInfo: {},
@@ -99,9 +101,15 @@ export default {
         //uni.navigateTo({
         //  url: "/pages/course/learningCourse?courseId=" + this.courseId,
         //}); 
-        
+        item.playing = true
+        item.author = this.courseInfo.author
         this.currentCatalogue = item
-        this.$refs.videoRef.chooseCatalogue(item, )
+        if (this.currentCatalogue.contentType === 0) {
+          this.$refs.videoRef.chooseCatalogue(item)
+        } else {          
+          this.$refs.audioRef.chooseCatalogue(item)
+        }
+        
       }
     },
     cartShow() {		
