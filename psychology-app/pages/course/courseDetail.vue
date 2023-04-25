@@ -101,7 +101,7 @@ export default {
         //}); 
         
         this.currentCatalogue = item
-        this.$refs.videoRef.play()
+        this.$refs.videoRef.chooseCatalogue(item, )
       }
     },
     cartShow() {		
@@ -217,6 +217,10 @@ page {
 
     .img-box {
       padding: 30upx 24upx;
+      
+      ::v-deep img {
+        width: 100%;
+      }
     }
 
     .img-item {
