@@ -19,6 +19,8 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Objects;
 
 @Service
@@ -47,6 +49,14 @@ public class MasterplateServiceImpl implements IMasterplateService {
     @Value("${bankapi.appSecret}")
     private String appSecret;
 
+    private static final String KUAIQIAN = "qysmrz";
+    private static final Map<String, String> PATH_MAP;
+
+    static {
+        PATH_MAP = new HashMap<>();
+        PATH_MAP.put(KUAIQIAN, "electronicSeal/qysmrz");
+    }
+
 
     @Override
     public AjaxResult sendMasterplate(Object body) {
@@ -55,6 +65,9 @@ public class MasterplateServiceImpl implements IMasterplateService {
         HttpServletRequest request = servletRequestAttributes.getRequest();
         String masterplateType = request.getHeader("masterplate_type");
         String method = request.getHeader("method");
+        if (method == null || method.isEmpty()) {
+            method = "POST";
+        }
         String url = getUrl(masterplateType);
         HttpHeaders headers = OpenApiAuthUtil.generateAuthHeaders(appKey, appSecret);
         HttpEntity<AjaxResult> httpEntity = new HttpEntity<>(null, headers);
@@ -72,16 +85,10 @@ public class MasterplateServiceImpl implements IMasterplateService {
      * @return
      */
     private String getUrl(String masterplateType) {
-        String path = "";
-        switch (masterplateType) {
-            case "1":
-                path = "";
-                break;
-            case "2":
-                break;
-            default:
-                break;
+        if (masterplateType == null || masterplateType.isEmpty()) {
+            masterplateType = KUAIQIAN;
         }
+        String path = PATH_MAP.getOrDefault(masterplateType, "electronicSeal/qysmrz");
         return domain + path;
     }
 
