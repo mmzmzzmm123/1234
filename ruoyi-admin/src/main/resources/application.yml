@@ -43,8 +43,8 @@ spring:
     # 国际化资源文件路径
     basename: i18n/messages
   profiles:
-    active: druid-dev #信贷直通车服务-开发环境
-#    active: druid-sit #信贷直通车服务-测试环境
+#    active: druid-dev #信贷直通车服务-开发环境
+    active: druid-sit #信贷直通车服务-测试环境
 #    active: druid-prod #信贷直通车服务-生产环境
 #    active: druid-in-dev #内网征信报告服务-开发环境
 #    active: druid-in #内网征信报告服务-生产环境
@@ -126,7 +126,9 @@ appToken:
   expireTime: 43200
 
 wechat:
-  appId: wxe4157e4e07fc9fbf
-  appSecret: beff214699fb5b473f742752061ad491
+#  appId: wxe4157e4e07fc9fbf
+#  appSecret: beff214699fb5b473f742752061ad491
+  appId: wx89d8e86fc403a945
+  appSecret: b917fe84d1b3319b3f39b187828fc6dd
 
 
