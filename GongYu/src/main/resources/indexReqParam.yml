@@ -23,7 +23,7 @@ companyHotTrdriCNURL: https://open.lixinger.com/api/cn/company/hot/tr_dri
 macroNationalDebtURL: https://open.lixinger.com/api/macro/national-debt
 macroMoneySupplyURL: https://open.lixinger.com/api/macro/money-supply
 macroPriceIndexCNURL: https://open.lixinger.com/api/macro/price-index
-token: eef5968f-a77b-4f04-9dc6-e29cd753fd71
+token: 03d76de7-1e58-4d5f-be30-77be37b7b8d8
 #startdate: 2022-01-03
 #enddate: 2022-07
 stockCodes:

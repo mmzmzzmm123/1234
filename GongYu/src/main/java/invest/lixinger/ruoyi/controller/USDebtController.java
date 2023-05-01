@@ -13,10 +13,7 @@ import java.io.FileNotFoundException;
 import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.GregorianCalendar;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static invest.lixinger.macro.nationalDebt.request_nationDebt.*;
 
@@ -34,9 +31,26 @@ public class USDebtController extends mybatisNoSpringUtils {
     public void USDebt() throws Exception {
 //        String startDate ="1962-01-02";
         String startDate = nearestDateInDB();
-        nationalDebtResult_RootVO resultObj = requestUSDebt(startDate);
-        calculateNationalDebtUS(resultObj);
-        USDebtDBPOS();
+        if (Objects.equals(startDate, "1900-01-01")) {
+            ArrayList<String>list=new ArrayList<>();
+            list.add("1962-01-02");
+            list.add("1972-01-03");
+            list.add("1982-01-04");
+            list.add("1992-01-05");
+            list.add("2002-01-06");
+            list.add("2012-01-07");
+            list.add("2022-01-08");
+            for (String s : list) {
+                nationalDebtResult_RootVO resultObj = requestUSDebt(s);
+                calculateNationalDebtUS(resultObj);
+                USDebtDBPOS();
+            }
+        } else {
+            nationalDebtResult_RootVO resultObj = requestUSDebt(startDate);
+            calculateNationalDebtUS(resultObj);
+            USDebtDBPOS();
+        }
+
     }
 
     /**
@@ -59,7 +73,7 @@ public class USDebtController extends mybatisNoSpringUtils {
             List<USDebtVO> usDebtDataRangeVOList = hsagmapper.dateRangeInDB(startDate, endDate);
             Map<String, String> mapCalculteDBPos = calculteDBPosUS(usDebtDataRangeVOList);
             double tempAveragePos = Double.parseDouble(mapCalculteDBPos.get("averagePos"));
-            String y23510pos = new DecimalFormat("0.0000").format(tempAveragePos);
+            String y23510pos = new DecimalFormat("0.0000").format(1 - tempAveragePos);
             vo.setY2_3_5_10pos(y23510pos);
             hsagmapper.updateById(vo);
 
@@ -106,10 +120,15 @@ public class USDebtController extends mybatisNoSpringUtils {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         USDebtMapper hsagmapper = session.getMapper(USDebtMapper.class);
         USDebtVO vo = hsagmapper.nearestDateInDB();
-        String date = vo.getRq();
         Calendar calendar = new GregorianCalendar();
-        calendar.setTime(sdf.parse(date));
-        calendar.add(Calendar.DATE, 1);
+        if (vo == null) {
+            calendar.setTime(sdf.parse("1900-01-01"));
+        } else {
+            String date = vo.getRq();
+            calendar.setTime(sdf.parse(date));
+            calendar.add(Calendar.DATE, 1);
+        }
+
         return sdf.format(calendar.getTime());
     }
 

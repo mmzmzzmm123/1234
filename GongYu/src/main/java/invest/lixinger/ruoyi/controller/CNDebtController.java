@@ -17,10 +17,7 @@ import java.io.FileNotFoundException;
 import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.GregorianCalendar;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutionException;
 
@@ -38,11 +35,26 @@ public class CNDebtController extends mybatisNoSpringUtils {
 //    @GetMapping("/CNDebt")
     @Test
     public void CNDebt() throws Exception {
-//        String startDate="2006-03-01";
+//        String startDate = "2006-03-01";
         String startDate = nearestDateInDB();
-        nationalDebtResult_RootVO resultObj = requestCNDebt(startDate);
-        calculateNationalDebtCN(resultObj);
-        CNDebtDBPOS();
+        if (Objects.equals(startDate, "1900-01-01")) {
+            ArrayList<String>list=new ArrayList<>();
+            list.add("2006-03-01");
+            for (String s : list) {
+                nationalDebtResult_RootVO resultObj = requestCNDebt(s);
+                calculateNationalDebtCN(resultObj);
+                CNDebtDBPOS();
+            }
+
+            nationalDebtResult_RootVO resultObj = requestCNDebt(startDate);
+            calculateNationalDebtCN(resultObj);
+            CNDebtDBPOS();
+        }else{
+            nationalDebtResult_RootVO resultObj = requestCNDebt(startDate);
+            calculateNationalDebtCN(resultObj);
+            CNDebtDBPOS();
+        }
+
     }
 
     /**
@@ -65,7 +77,7 @@ public class CNDebtController extends mybatisNoSpringUtils {
             List<CNDebtVO> cnDebtDataRangeVOList = hsagmapper.dateRangeInDB(startDate, endDate);
             Map<String, String> mapCalculteDBPos = calculteDBPosCN(cnDebtDataRangeVOList);
             double tempAveragePos = Double.parseDouble(mapCalculteDBPos.get("averagePos"));
-            String y23510pos = new DecimalFormat("0.0000").format(tempAveragePos);
+            String y23510pos = new DecimalFormat("0.0000").format(1 - tempAveragePos);
 
             vo.setY2_3_5_10pos(y23510pos);
             hsagmapper.updateById(vo);
@@ -112,10 +124,14 @@ public class CNDebtController extends mybatisNoSpringUtils {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         CNDebtMapper hsagmapper = session.getMapper(CNDebtMapper.class);
         CNDebtVO vo = hsagmapper.nearestDateInDB();
-        String date = vo.getRq();
         Calendar calendar = new GregorianCalendar();
-        calendar.setTime(sdf.parse(date));
-        calendar.add(Calendar.DATE, 1);
+        if (vo == null) {
+            calendar.setTime(sdf.parse("1900-01-01"));
+        } else {
+            String date = vo.getRq();
+            calendar.setTime(sdf.parse(date));
+            calendar.add(Calendar.DATE, 1);
+        }
         return sdf.format(calendar.getTime());
     }
 
