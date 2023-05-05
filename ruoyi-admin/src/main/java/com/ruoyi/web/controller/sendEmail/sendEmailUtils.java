@@ -194,7 +194,7 @@ public class sendEmailUtils {
                 Map<String, Object> mapCPIandCNDebtPOS = calculateCPIandCNDebt(cnDebtMap, mapCNCPI, CNDebtWeight, CPIWeight);
                 String CPIandCNDebtPos = (String) mapCPIandCNDebtPOS.get("CPIandCNDebtPos");
                 Text += "▶综合" + CNDebtWeight + "的国债权重和" + CPIWeight + "的反转cpi权重，现在国债和反转cpi的综合信号值为：" + CPIandCNDebtPos + "\n";
-                Text += "  ◆ 计算公式为：1-" + CNDebtWeight + "*" + mapCPIandCNDebtPOS.get("CNDebtAvgPos") + " + " + CPIWeight + "*" + mapCPIandCNDebtPOS.get("CPIPosInverted") + "\n\n";
+                Text += "  ◆ 计算公式为：1-(" + CNDebtWeight + "*" + mapCPIandCNDebtPOS.get("CNDebtAvgPos") + " + " + CPIWeight + "*" + mapCPIandCNDebtPOS.get("CPIPosInverted") + ")\n\n";
                 // ----------------------------------
                 Text += "▶货币基金优选兴业银行，偏债类基金优选兴业银行、易方达、华夏，股票基金优选易方达 > 广发 > 天弘 > 华夏 > 博时 > 南方 > 富国\n\n";
                 // ------------------------------------
