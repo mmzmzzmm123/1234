@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.*;
+import org.springframework.http.client.SimpleClientHttpRequestFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
@@ -27,6 +28,7 @@ import java.util.Objects;
 public class MasterplateServiceImpl implements IMasterplateService {
 
     private static final Logger log = LoggerFactory.getLogger(MasterplateServiceImpl.class);
+
 
     @Autowired
     private RestTemplate restTemplate;
@@ -54,12 +56,12 @@ public class MasterplateServiceImpl implements IMasterplateService {
 
     static {
         PATH_MAP = new HashMap<>();
-        PATH_MAP.put(KUAIQIAN, "electronicSeal/qysmrz");
+        PATH_MAP.put(KUAIQIAN, "electronicSeal/startElectronicSeal");
     }
 
 
     @Override
-    public AjaxResult sendMasterplate(Object body) {
+    public Object sendMasterplate(AjaxResult body) {
         ServletRequestAttributes servletRequestAttributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
         assert servletRequestAttributes != null;
         HttpServletRequest request = servletRequestAttributes.getRequest();
@@ -70,13 +72,12 @@ public class MasterplateServiceImpl implements IMasterplateService {
         }
         String url = getUrl(masterplateType);
         HttpHeaders headers = OpenApiAuthUtil.generateAuthHeaders(appKey, appSecret);
-        HttpEntity<AjaxResult> httpEntity = new HttpEntity<>(null, headers);
-        ParameterizedTypeReference<AjaxResult> reference =
-                new ParameterizedTypeReference<AjaxResult>() {
-                };
-        ResponseEntity<AjaxResult> responseEntity = restTemplate.exchange(url,
-                Objects.requireNonNull(HttpMethod.resolve(method)), httpEntity, reference);
-        return responseEntity.getBody();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        HttpEntity<AjaxResult> httpEntity = new HttpEntity<>(body, headers);
+        ResponseEntity<String> responseEntity = restTemplate.exchange(url,
+                Objects.requireNonNull(HttpMethod.resolve(method)), httpEntity, String.class);
+        log.info(responseEntity.getBody());
+        return JSONObject.parseObject(responseEntity.getBody());
     }
 
     /**

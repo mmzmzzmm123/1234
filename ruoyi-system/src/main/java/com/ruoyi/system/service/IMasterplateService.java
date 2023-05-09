@@ -11,7 +11,7 @@ public interface IMasterplateService
      * @param body
      * @return
      */
-    public AjaxResult sendMasterplate(Object body);
+    public Object sendMasterplate(AjaxResult body);
 
     /**
      * 获取ocr信息
