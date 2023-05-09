@@ -26,7 +26,7 @@ public class AppMasterplateController extends BaseController {
 
     @PostMapping("/route")
     @ApiOperation(value = "5g快签路由转发")
-    //@TokenValidation
+    @TokenValidation
     public AjaxResult sendMasterplate(@RequestBody AjaxResult body) {
         log.info("5g快签路由转发 param:{}",body);
         return AjaxResult.success(masterplateService.sendMasterplate(body));
