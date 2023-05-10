@@ -126,9 +126,7 @@ appToken:
   expireTime: 43200
 
 wechat:
-#  appId: wxe4157e4e07fc9fbf
-#  appSecret: beff214699fb5b473f742752061ad491
-  appId: wx89d8e86fc403a945
-  appSecret: b917fe84d1b3319b3f39b187828fc6dd
+  appId: wx3237809915b078b8
+  appSecret: e954d45544109f1b3499693daf67e144
 
 
