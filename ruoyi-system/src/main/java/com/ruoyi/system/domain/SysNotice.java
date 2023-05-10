@@ -26,7 +26,10 @@ public class SysNotice extends BaseEntity
     private String noticeType;
 
     /** 公告内容 */
-    private String noticeContent;
+    private byte[] noticeContent;
+
+    /** 公告内容 */
+    private String noticeContents;
 
     /** 公告状态（0正常 1关闭） */
     private String status;
@@ -64,14 +67,20 @@ public class SysNotice extends BaseEntity
         return noticeType;
     }
 
-    public void setNoticeContent(String noticeContent)
-    {
+    public void setNoticeContent(byte[] noticeContent) {
         this.noticeContent = noticeContent;
     }
 
-    public String getNoticeContent()
-    {
+    public String getNoticeContents() {
+        return noticeContents;
+    }
+
+    public byte[] getNoticeContent() {
         return noticeContent;
+    }
+
+    public void setNoticeContents(String noticeContents) {
+        this.noticeContents = noticeContents;
     }
 
     public void setStatus(String status)
@@ -90,7 +99,7 @@ public class SysNotice extends BaseEntity
             .append("noticeId", getNoticeId())
             .append("noticeTitle", getNoticeTitle())
             .append("noticeType", getNoticeType())
-            .append("noticeContent", getNoticeContent())
+            .append("noticeContent", getNoticeContents())
             .append("status", getStatus())
             .append("createBy", getCreateBy())
             .append("createTime", getCreateTime())
