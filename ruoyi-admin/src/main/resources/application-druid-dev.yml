@@ -45,7 +45,7 @@ spring:
 #                url: jdbc:oracle:thin:@39.129.163.118:1521/XE
 #                username: XY_FGWXYD
 #                password: XY_FGWXYD_123456
-                
+
 #            api:
 #                enabled: true
 #                url: jdbc:mysql://localhost:3307/xdztc-report?useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=true&serverTimezone=GMT%2B8
@@ -120,6 +120,12 @@ bankapi:
     domain: http://qzh.58.56.115.134.nip.io:5222/qzh-xyd/business/api/interfaces/openApi/
     appKey: 6c2544dcad39441c8e81c790bf9009f1
     appSecret: cb8135c8442843909cf47d4c359b31a0
+
+# ocr相关api接口
+ocr:
+    host: https://bizlicense.market.alicloudapi.com
+    path: /rest/160601/ocr/ocr_business_license.json
+    appcode: a731eaeea66742e9b9cef56f9fa17bd6
 
 # 信用三期短信接口配置
 creditsms:
