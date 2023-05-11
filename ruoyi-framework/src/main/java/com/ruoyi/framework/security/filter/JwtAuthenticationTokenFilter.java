@@ -32,6 +32,7 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter
             throws ServletException, IOException
     {
         LoginUser loginUser = tokenService.getLoginUser(request);
+        //token能拿到对应的用户信息   且  对应的认证上下文信息为空
         if (StringUtils.isNotNull(loginUser) && StringUtils.isNull(SecurityUtils.getAuthentication()))
         {
             tokenService.verifyToken(loginUser);
