@@ -51,6 +51,22 @@ public class MasterplateServiceImpl implements IMasterplateService {
     @Value("${bankapi.appSecret}")
     private String appSecret;
 
+
+    @Value("${ocr.host}")
+    private String host;
+
+    /**
+     * path
+     */
+    @Value("${ocr.path}")
+    private String path;
+
+    /**
+     * appSecret
+     */
+    @Value("${ocr.appcode}")
+    private String appcode;
+
     private static final String KUAIQIAN = "qysmrz";
     private static final Map<String, String> PATH_MAP;
 
@@ -97,10 +113,6 @@ public class MasterplateServiceImpl implements IMasterplateService {
 
     @Override
     public Object ocr(String img) {
-        String host = "https://bizlicense.market.alicloudapi.com";
-        String path = "/rest/160601/ocr/ocr_business_license.json";
-        String appcode = "a731eaeea66742e9b9cef56f9fa17bd6";
-
         HttpHeaders headers = new HttpHeaders();
         headers.set("Authorization", "APPCODE " + appcode);
         headers.setContentType(MediaType.APPLICATION_JSON_UTF8);
