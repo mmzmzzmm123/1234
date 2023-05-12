@@ -47,6 +47,8 @@ public interface IDataCompanyLoanService
      */
     public int insertDataCompanyLoan(DataCompanyLoanBody dataCompanyLoan);
 
+    boolean checkSMSCode(String mobile, String code);
+
     /**
      * 修改企业贷款信息
      * 

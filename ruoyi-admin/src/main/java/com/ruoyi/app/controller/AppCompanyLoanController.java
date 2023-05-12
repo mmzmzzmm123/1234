@@ -10,6 +10,7 @@ import com.ruoyi.framework.interceptor.impl.AppInterceptor;
 import com.ruoyi.system.domain.DataCompanyLoan;
 import com.ruoyi.system.domain.model.DataCompanyLoanBody;
 import com.ruoyi.system.domain.model.DataMatchCompany;
+import com.ruoyi.system.domain.model.PhoneAndCode;
 import com.ruoyi.system.service.IDataCompanyLoanOracleService;
 import com.ruoyi.system.service.IDataCompanyLoanService;
 import io.swagger.annotations.Api;
@@ -65,6 +66,16 @@ public class AppCompanyLoanController extends BaseController
     public AjaxResult getCode(@RequestParam String phone){
         dataCompanyLoanService.senSmsCode(phone);
         return AjaxResult.success("操作成功");
+    }
+
+    /**
+     * 验证手机验证码
+     */
+    @PostMapping("/checkVerifyCode")
+    @ApiOperation(value = "校验验证码接口")
+    public AjaxResult checkVerifyCode(@RequestBody PhoneAndCode phoneAndCode){
+        dataCompanyLoanService.checkSMSCode(phoneAndCode.getPhone(),phoneAndCode.getCode());
+        return AjaxResult.success("验证成功");
     }
 
     /**

@@ -126,15 +126,9 @@ public class DataCompanyLoanServiceImpl implements IDataCompanyLoanService
 
         // 校验手机号码
         String verifyKey = Constants.SMS_CODE_KEY + mobile;
-        String realCode = redisCache.getCacheObject(verifyKey);
-
-        if ("druid-prod".equals(active) || "druid-sit".equals(active)){ // 生产环境校验短信正确性
-            if (!StringUtils.equals(code,realCode)){
-                throw new SmsException();
-            }
+        if (checkSMSCode(mobile, code)){
+            redisCache.deleteObject(verifyKey);
         }
-
-        redisCache.deleteObject(verifyKey);
 
         String companyNameFromRequest = dataCompanyLoanBody.getCompanyName();
 
@@ -160,35 +154,12 @@ public class DataCompanyLoanServiceImpl implements IDataCompanyLoanService
         String loanObjectType = Constants.COMPANY_TYPE_MAP.get(loanObjectTypeRequest.toUpperCase());
         dataCompanyLoan.setLoanObjectType(loanObjectType);
 
-        // 不再调用共享云接口
-      /*  // 查询企业或个体工商户详细信息
-        if (StringUtils.equals(loanObjectTypeRequest,Constants.TYPE_GTGSH)){// 个体工商户
-            JSONObject jsonObject = interfaceService.queryGTGSHByXydm(dataCompanyLoanBody.getXydm(),companyNameFromRequest);
-            if (jsonObject != null){
-                String name = jsonObject.getString("traname");
-                if (StringUtils.isNotEmpty(name)){
-                    dataCompanyLoan.setCompanyBusiness(jsonObject.getString("jyfw"));
-                    dataCompanyLoan.setCompanyAddress(jsonObject.getString("jycsdz"));
-                }
-            }
-        }else{// 法人账号
-            Map<String, String> map = interfaceService.queryCompanyInfo(companyNameFromRequest);
-            String xydm = map.get("tyshxydm");
-            if (!StringUtils.isEmpty(xydm)){
-                dataCompanyLoan.setCompanyType(map.get("companytype"));
-                dataCompanyLoan.setCompanyIndustry(map.get("indurstryname"));
-                dataCompanyLoan.setCompanyBusiness(map.get("managerange"));
-                dataCompanyLoan.setCompanyAddress(map.get("regaddress"));
-            }
-        }*/
-
         //同一企业，在3天内多次提交信贷直通车需求，且银行、金额完全一致
         String xydmCacheKey = generateXydmCacheKey(dataCompanyLoan.getCompanyCreditCode(), dataCompanyLoan.getLoanBand(), dataCompanyLoan.getLoanAmount() + "");
         log.info("验证是否重复贷款:"+xydmCacheKey);
         Object cacheObject = redisCache.getCacheObject(xydmCacheKey);
         if (cacheObject != null){
             throw new UserException(null, null, "近" + Constants.LOAN_TIME_EXPIRATION + "天内，您已提交贷款需求，请勿重复提交");
-
         }
 
         // 保存数据到本系统数据库中（方便数据校对）
@@ -218,6 +189,20 @@ public class DataCompanyLoanServiceImpl implements IDataCompanyLoanService
         redisCache.setCacheObject(xydmCacheKey, true, Constants.LOAN_TIME_EXPIRATION, TimeUnit.DAYS);
 
         return result;
+    }
+
+    @Override
+    public boolean checkSMSCode(String mobile, String code) {
+        // 校验手机号码
+        String verifyKey = Constants.SMS_CODE_KEY + mobile;
+        String realCode = redisCache.getCacheObject(verifyKey);
+
+        if ("druid-prod".equals(active) || "druid-sit".equals(active)){ // 生产环境校验短信正确性
+            if (!StringUtils.equals(code,realCode)){
+                throw new SmsException();
+            }
+        }
+        return true;
     }
 
     private String generateXydmCacheKey(String xydm, String bannerIds, String amount){
