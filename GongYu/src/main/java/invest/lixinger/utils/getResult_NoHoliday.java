@@ -11,7 +11,7 @@ import static invest.lixinger.utils.HolidayUtils.isBefore3Pm;
 
 public class getResult_NoHoliday {
     public static void main(String[] args) throws ParseException {
-        getResult_NoHoliday(2022);
+        getResult_NoHoliday(2023);
     }
 
     public static String getResult_NoHoliday(int year) throws ParseException {

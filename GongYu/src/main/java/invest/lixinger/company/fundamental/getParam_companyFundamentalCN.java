@@ -25,8 +25,8 @@ public class getParam_companyFundamentalCN {
         String token = (String) indexReqParam.get("token");
         List<String> companyFundamentalMetricsList = (List<String>) indexReqParam.get("companyFundamentalMetricsList");
 
-        String dateYml = (String) indexReqParam.get("enddate");
-        String date = getResult_NoHoliday.getResult_NoHoliday(Integer.parseInt(dateYml.substring(0, 4)));
+        Integer dateYml = (Integer) indexReqParam.get("timorYear");
+        String date = getResult_NoHoliday.getResult_NoHoliday(Integer.parseInt(String.valueOf(dateYml)));
 
         companyFundamentalCNParam_RootVO companyFundamentalCNParam_rootVO = new companyFundamentalCNParam_RootVO();
         companyFundamentalCNParam_rootVO.setToken(token);

@@ -107,9 +107,9 @@ public class request_nationDebt {
         double averagePos = totalPos / 4;
         map.put("averagePos", String.valueOf(averagePos));
         // ----------------------------
-        System.out.println("10年期债券数值：" + new DecimalFormat("0.00%").format(Double.valueOf(map.get("10debtValue"))));
-        System.out.println("10年期债券百分位：" + new DecimalFormat("0.00%").format(Double.valueOf(map.get("10debtPos"))));
-        System.out.println("平均后的债券百分位为：" + new DecimalFormat("0.00%").format(Double.valueOf(map.get("averagePos"))));
+//        System.out.println("10年期债券数值：" + new DecimalFormat("0.00%").format(Double.valueOf(map.get("10debtValue"))));
+//        System.out.println("10年期债券百分位：" + new DecimalFormat("0.00%").format(Double.valueOf(map.get("10debtPos"))));
+//        System.out.println("平均后的债券百分位为：" + new DecimalFormat("0.00%").format(Double.valueOf(map.get("averagePos"))));
 
         return map;
     }

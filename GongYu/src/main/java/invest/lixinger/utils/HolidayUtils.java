@@ -36,7 +36,7 @@ public class HolidayUtils {
         // 获取所有的周末
         Set<String> monthWekDay = getMonthWekDay(year, month);
         // http://timor.tech/api/holiday     api文档地址
-        Map jjr = getJjr(year, month + 1);
+        Map jjr = getJjr(year);
         Integer code = (Integer) jjr.get("code");
         if (code != 0) {
             return monthWekDay;
@@ -62,7 +62,7 @@ public class HolidayUtils {
     /**
      * 获取节假日不含周末
      */
-    private static Map getJjr(int year, int month) {
+    private static Map getJjr(int year) {
         String url = "http://timor.tech/api/holiday/year/" + year + "/";
         OkHttpClient client = new OkHttpClient();
         Response response;
@@ -79,6 +79,7 @@ public class HolidayUtils {
                 .build();
         try {
             response = client.newCall(request).execute();
+//            System.out.println(response);
             rsa = response.body().string();
         } catch (IOException e) {
             e.printStackTrace();

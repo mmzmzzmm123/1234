@@ -1,3 +1,9 @@
+token: 743a42d7-9ddd-47c6-9cf2-7355c8c1dd62
+timorYear: 2023
+fsType: bank # insurance/security/bank
+stockCodes:
+  - "1000002"
+
 allIndexURLCN: https://open.lixinger.com/api/cn/index
 allIndexURLHK: https://open.lixinger.com/api/hk/index
 
@@ -23,11 +29,9 @@ companyHotTrdriCNURL: https://open.lixinger.com/api/cn/company/hot/tr_dri
 macroNationalDebtURL: https://open.lixinger.com/api/macro/national-debt
 macroMoneySupplyURL: https://open.lixinger.com/api/macro/money-supply
 macroPriceIndexCNURL: https://open.lixinger.com/api/macro/price-index
-token: 4e9cc035-2596-4feb-a6df-272a581b3034
-#startdate: 2022-01-03
-#enddate: 2022-07
-stockCodes:
-  - "1000002"
+
+
+
 indexFundamentalMetricsList:
   - pe_ttm.y20.median
   - pe_ttm.y10.median
@@ -53,7 +57,6 @@ companyFsMetricsList:
   - q.ps.oi.t_y2y
   - q.ps.npadnrpatoshaopc.t_y2y
 
-fsType: security # insurance/security/bank
 removeCode:
   - "1000009"
   - "1000008"

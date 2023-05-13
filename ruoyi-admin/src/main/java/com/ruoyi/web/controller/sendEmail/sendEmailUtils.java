@@ -66,53 +66,25 @@ public class sendEmailUtils {
     @Autowired
     JavaMailSender javaMailSender;
 
+    static double cpiandCNDebtPosDouble;
+    static double usDebtPosDouble;
+
     /**
      * 产生文本
      */
     public static Map<String, String> getText() throws IOException, ParseException {
+
         Map<String, String> map = new HashMap<>();
         try {
-            String Text = "▶现阶段：\n";
+            String Text = null;
             String subject = null;
-            // 基本面判断----------------------
-            try {
-                Map<String, String> fundamentalMap = getTextFundamentalCN();
-                double resultFundamental = Double.parseDouble(fundamentalMap.get("resultFundamental"));
-                double result100 = resultFundamental * 100;
-                String Textzhaiquan = "  ◆将资产投资债券、货币基金，利率高则买债券、黄金，利率低则买货币基金\n\n";
-                String Textgupiao = "  ◆基金备选池：科创信息、科创创业50、科创50、创业板全指、全指信息、TMT、中创400、中证500、中证军工、国证2000、全指医疗、中小企业300、中概互联网\n";
-                Textgupiao += "  ◆股票备选池：证券 > 银行\n\n";
-
-                if (result100 > 45) {
-                    Text += Textzhaiquan;
-                } else if (35 < result100 && result100 < 45) {
-                    Text += Textzhaiquan;
-                } else if (25 < result100 && result100 < 35) {
-                    Text += "  ◆定投总资金 通过 197 个周定投，其中定投总资金 = 总资金 - 已投入\n";
-                    Text += "  ◆股票基金以大公司、主动型基金为主\n\n";
-                } else if (15 < result100 && result100 < 25) {
-                    Text += "  ◆定投总资金 通过 96 个周定投，其中定投总资金 = 总资金 - 已投入\n";
-                    Text += "  ◆股票基金以中型公司、主动型基金为主\n\n";
-                } else if (10 < result100 && result100 < 15) {
-                    Text += "  ◆定投总资金 通过 18 个周定投，其中定投总资金 = 总资金 - 已投入\n";
-                    Text += Textgupiao;
-                } else if (5 < result100 && result100 < 10) {
-                    Text += "  ◆梭哈梭哈梭哈梭哈梭哈梭哈梭哈梭哈梭哈梭哈梭哈梭哈梭哈\n";
-                    Text += "  ◆现在离最低点可能还有10~20%的幅度，但为不错过机会，我将永远相信历史会简单的重复\n\n";
-                    Text += Textgupiao;
-                }
-                String resultFormat = new DecimalFormat("0.00%").format(resultFundamental);
-                subject = fundamentalMap.get("fundamentalDate") + "，当日信号为" + resultFormat;
-            } catch (Exception e) {
-                System.out.println(e.getMessage() + "基本面判断 出错");
-            }
-
             // ----------------国债----------------------------------
             Map<String, String> cnDebtMap = null;
             try {
                 cnDebtMap = getTextCNDebt();
                 Text += "▶国债最新数据日期为：" + cnDebtMap.get("date") + "\n";
                 Text += "  ◆最近十年：2、3、5、10年期的反转平均信号为：" + (new DecimalFormat("0.00%").format(1 - Double.parseDouble(cnDebtMap.get("averagePos")))) + "\n";
+
                 if (cnDebtMap.containsKey("latestDayDebtCNInverted")) {
                     Text += "  ◆最近日期国债倒挂比例：" + cnDebtMap.get("latestDayDebtCNInverted") + "，一个月前国债倒挂比例：" + cnDebtMap.get("oneMonthAgoDebtCNInverted") + "\n\n";
                 } else {
@@ -123,11 +95,13 @@ public class sendEmailUtils {
             }
 
             // --------------------美债-------------------------------
-            Map<String, String> usDebtMap;
+            Map<String, String> usDebtMap = null;
             try {
                 usDebtMap = getTextUSDebt();
                 Text += "▶美债最新数据日期为：" + usDebtMap.get("date") + "\n";
-                Text += "  ◆最近十年：2、3、5、10年期的反转平均信号为：" + new DecimalFormat("0.00%").format(1 - Double.parseDouble(usDebtMap.get("averagePos"))) + "\n";
+                String usDebtPosString = new DecimalFormat("0.00%").format(1 - Double.parseDouble(usDebtMap.get("averagePos")));
+                usDebtPosDouble = (double) new DecimalFormat("0.00%").parse(usDebtPosString);
+                Text += "  ◆最近十年：2、3、5、10年期的反转平均信号为：" + usDebtPosString + "\n";
                 if (usDebtMap.containsKey("latestDayDebtUSInverted")) {
                     Text += "  ◆美债倒挂比例为：" + usDebtMap.get("latestDayDebtUSInverted") + "。一个月前美债倒挂比例为：" + usDebtMap.get("oneMonthAgoDebtUSInverted") + "\n\n";
                 } else {
@@ -192,8 +166,9 @@ public class sendEmailUtils {
                 double CNDebtWeight = 0.75;
                 double CPIWeight = 0.25;
                 Map<String, Object> mapCPIandCNDebtPOS = calculateCPIandCNDebt(cnDebtMap, mapCNCPI, CNDebtWeight, CPIWeight);
-                String CPIandCNDebtPos = (String) mapCPIandCNDebtPOS.get("CPIandCNDebtPos");
-                Text += "▶综合" + CNDebtWeight + "的国债权重和" + CPIWeight + "的反转cpi权重，现在国债和反转cpi的综合信号值为：" + CPIandCNDebtPos + "\n";
+                String CPIandCNDebtPosString = (String) mapCPIandCNDebtPOS.get("CPIandCNDebtPos");
+                cpiandCNDebtPosDouble = (double) new DecimalFormat("0.0000").parse(CPIandCNDebtPosString);
+                Text += "▶综合" + CNDebtWeight + "的国债权重和" + CPIWeight + "的反转cpi权重，现在国债和反转cpi的综合信号值为：" + CPIandCNDebtPosString + "\n";
                 Text += "  ◆ 计算公式为：1-(" + CNDebtWeight + "*" + mapCPIandCNDebtPOS.get("CNDebtAvgPos") + " + " + CPIWeight + "*" + mapCPIandCNDebtPOS.get("CPIPosInverted") + ")\n\n";
                 // ----------------------------------
                 Text += "▶货币基金优选兴业银行，偏债类基金优选兴业银行、易方达、华夏，股票基金优选易方达 > 广发 > 天弘 > 华夏 > 博时 > 南方 > 富国\n\n";
@@ -221,7 +196,71 @@ public class sendEmailUtils {
             } catch (Exception e) {
                 System.out.println(e.getMessage() + "cpi和国债共同计算百分位 出错");
             }
+            // 基本面判断----------------------
+            try {
+                Text += "▶总结：\n";
+                Map<String, String> fundamentalMap = getTextFundamentalCN();
+                double resultFundamental = Double.parseDouble(fundamentalMap.get("resultFundamental"));
+                double result100 = resultFundamental * 100;
+                String Textzhaiquan = "";
+                // -------国债总结-----------
+                try {
+                    if (cpiandCNDebtPosDouble < 0.33) {
+                        Textzhaiquan += "  ◆中国：将资产投资债券\n";
+                    } else if (0.33 < cpiandCNDebtPosDouble && cpiandCNDebtPosDouble < 0.66) {
+                        Textzhaiquan += "  ◆中国：将资产均配债券、货币基金\n";
+                    } else if (0.66 < cpiandCNDebtPosDouble) {
+                        Textzhaiquan += "  ◆中国：将资产投资货币基金\n";
+                    }
+                } catch (Exception e) {
+                    System.out.println(e.getMessage() + "国债总结 出错");
+                }
 
+                // -------美债总结_分位数-----------
+                try {
+                    if (usDebtPosDouble < 0.33) {
+                        Textzhaiquan += "  ◆美国：在美债倒挂结束时，将资产投资债券，黄金\n";
+                    } else if (0.33 < usDebtPosDouble && usDebtPosDouble < 0.66) {
+                        Textzhaiquan += "  ◆美国：将资产均配债券、货币基金\n";
+                    } else if (0.66 < usDebtPosDouble) {
+                        Textzhaiquan += "  ◆美国：在仔细考虑汇率风险之后，将资产投资货币基金，\n";
+                    }
+                } catch (Exception e) {
+                    System.out.println(e.getMessage() + "美债总结_分位数 出错");
+                }
+                // -------美债总结_倒挂-----------
+                try {
+                    if (usDebtMap.containsKey("latestDayDebtUSInverted")) {
+                        Text += "  ◆美国：美债已经倒挂，警惕出现全球金融危机\n";
+                    }
+                } catch (Exception e) {
+                    System.out.println(e.getMessage() + "美债总结_倒挂 出错");
+                }
+                // -------基本面总结----------
+                String Textgupiao = "  ◆基金备选池：科创信息、科创创业50、科创50、创业板全指、全指信息、TMT、中创400、中证500、中证军工、国证2000、全指医疗、中小企业300、中概互联网\n  ◆股票备选池：证券 > 银行\n\n";
+                if (result100 > 45) {
+                    Text += Textzhaiquan;
+                } else if (35 < result100 && result100 < 45) {
+                    Text += Textzhaiquan;
+                } else if (25 < result100 && result100 < 35) {
+                    Text += "  ◆定投总资金 通过 197 个周定投，其中定投总资金 = 总资金 - 已投入\n";
+                    Text += "  ◆股票基金以大公司、主动型基金为主\n\n";
+                } else if (15 < result100 && result100 < 25) {
+                    Text += "  ◆定投总资金 通过 96 个周定投，其中定投总资金 = 总资金 - 已投入\n";
+                    Text += "  ◆股票基金以中型公司、主动型基金为主\n\n";
+                } else if (10 < result100 && result100 < 15) {
+                    Text += "  ◆定投总资金 通过 18 个周定投，其中定投总资金 = 总资金 - 已投入\n";
+                    Text += Textgupiao;
+                } else if (5 < result100 && result100 < 10) {
+                    Text += "  ◆梭哈梭哈梭哈梭哈梭哈梭哈梭哈梭哈梭哈梭哈梭哈梭哈梭哈\n";
+                    Text += "  ◆现在离最低点可能还有10~20%的幅度，但为不错过机会，我将永远相信历史会简单的重复\n\n";
+                    Text += Textgupiao;
+                }
+                String resultFormat = new DecimalFormat("0.00%").format(resultFundamental);
+                subject = fundamentalMap.get("fundamentalDate") + "，当日信号为" + resultFormat;
+            } catch (Exception e) {
+                System.out.println(e.getMessage() + "基本面判断 出错");
+            }
 
             // -------------------
             map.put("subject", subject);
