@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.stu.mapper.StuInfoMaterialMapper">
+
+    <resultMap type="StuInfoMaterial" id="StuInfoMaterialResult">
+        <id property="id"    column="id"    />
+        <result property="flag" column="flag"/>
+        <result property="url" column="url"/>
+        <result property="createBy" column="create_by"/>
+        <result property="createTime" column="createTime"/>
+        <result property="updateBy" column="updateBy"/>
+        <result property="updateTime" column="update_time"/>
+        <association property="stuInfo" javaType="StuInfo" resultMap="com.ruoyi.stu.mapper.StuInfoMapper.StuInfoResult"/>
+        <collection property="stuMaterialList"  ofType="StuMaterial" resultMap="com.ruoyi.stu.mapper.StuMaterialMapper.StuMaterialResult"/>
+
+    </resultMap>
+
+    <sql id="selectStuInfoMaterialVo">
+        select sim.id as 'id' ,sim.stu_id as 'stuId' ,sim.flag,sim.url,
+               create_by,create_time,update_by,update_time,
+               m.id , m.name,
+               info.stu_name ,info.stu_cls , info.stu_cls_year ,info.stu_tel
+        from stu_info_material sim ,stu_info info ,stu_material m
+    </sql>
+
+    <select id="selectStuMaterialList" parameterType="StuInfoMaterial" resultMap="StuInfoMaterialResult">
+        <include refid="selectStuInfoMaterialVo"/>
+        <where>  
+           <if test="stuName != null and stuName != '' "> info.stu_name like concat('%',#{stuName},'%')</if>
+           <if test="stuCls != null and stuCls != '' "> info.stu_cls like concat('%',#{stuCls},'%')</if>
+           <if test="stuClsYear != null and stuClsYear != '' "> info.stu_cls_year like concat('%',#{stuClsYear},'%')</if>
+           <if test="stuClsYear != null and stuClsYear != '' "> sim.flag = #{flag}</if>
+        </where>
+    </select>
+    
+        
+    <insert id="insertStuMaterial" useGeneratedKeys="true" keyProperty="id">
+        insert into stu_info_material
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="stuId != null">stu_id,</if>
+            <if test="materialId != null">material_id,</if>
+            <if test="flag != null">flag,</if>
+            <if test="url != null">url,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="stuId != null">#{stuId},</if>
+            <if test="materialId != null">#{materialId},</if>
+            <if test="flag != null">#{flag},</if>
+            <if test="url != null">#{url},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateStuMaterial" parameterType="StuInfoMaterial">
+        update stu_info_material
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="stuId != null">stu_id = #{stuId},</if>
+            <if test="materialId != null"> material_id =  #{materialId},</if>
+            <if test="flag != null">flag = #{flag},</if>
+            <if test="url != null">url = #{url},</if>
+            <if test="createBy != null"> create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+        </trim>
+        where stu_id = #{stuId}
+    </update>
+
+    <delete id="deleteStuInfoMaterialById">
+        delete from stu_info_material where id = #{id}
+    </delete>
+
+    <delete id="deleteStuInfoMaterialByIds" >
+        delete from stu_info_material where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>
