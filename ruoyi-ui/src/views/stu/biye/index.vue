@@ -2,17 +2,17 @@
   <div class="app-container">
     <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch" label-width="68px">
 
-      <el-form-item label="姓名" prop="stuInfo.stuName">
+      <el-form-item label="姓名" prop=".stuName">
         <el-input
-          v-model="queryParams.stuInfo.stuName"
+          v-model="queryParams.stuName"
           placeholder="请输入姓名"
           clearable
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="班级" prop="stuInfo.stuCls">
+      <el-form-item label="班级" prop="stuCls">
         <el-input
-          v-model="queryParams.stuInfo.stuCls"
+          v-model="queryParams.stuCls"
           placeholder="请输入班级"
           clearable
           @keyup.enter.native="handleQuery"
@@ -20,13 +20,12 @@
       </el-form-item>
       <el-form-item label="年级" prop="stuClsYear">
         <el-input
-          v-model="queryParams.stuInfo.stuClsYear"
+          v-model="queryParams.stuClsYear"
           placeholder="请输入年级"
           clearable
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-
       <el-form-item label="提交状态" prop="flag">
         <el-input
           v-model="queryParams.flag"
@@ -35,10 +34,9 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-
-      <el-form-item label="材料名" prop="stuMaterial.name">
+      <el-form-item label="材料名" prop="materialName">
         <el-input
-          v-model="queryParams.flag"
+          v-model="queryParams.materialName"
           placeholder="请输入材料名"
           clearable
           @keyup.enter.native="handleQuery"
@@ -98,17 +96,19 @@
     </el-row>
 
     <el-table v-loading="loading" :data="infoList" @selection-change="handleSelectionChange">
+<!--    <el-table v-loading="loading" :data="infoList" >-->
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="主键id" align="center" prop="stuId" />
-      <el-table-column label="学号" align="center" prop="stuNo" />
-      <el-table-column label="姓名" align="center" prop="stuName" />
-      <el-table-column label="班级" align="center" prop="stuCls" />
-      <el-table-column label="年级" align="center" prop="stuClsYear" />
-      <el-table-column label="性别" align="center" prop="stuSex" />
-      <el-table-column label="学生类型" align="center" prop="stuType" />
-      <el-table-column label="录取专业" align="center" prop="stuMajor" />
-      <el-table-column label="家庭住址" align="center" prop="stuAddress" />
-      <el-table-column label="联系电话" align="center" prop="stuTel" />
+      <el-table-column label="主键id" align="center" prop="id" />
+      <el-table-column label="姓名" align="center" prop="stuInfo.stuName" />
+      <el-table-column label="班级" align="center" prop="stuInfo.stuCls" />
+      <el-table-column label="年级" align="center" prop="stuInfo.stuClsYear" />
+
+<!--      <div v-for="item in infoList.materials" >-->
+<!--        <el-table-column label="{{item.name}}" align="center" prop="{{material.name}}" />-->
+<!--        <el-table-column label="是否提交" align="center" prop="{{flag}}" />-->
+<!--        <el-table-column label="URL" align="center" prop="{{url}}" />-->
+<!--      </div>-->
+
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button
@@ -138,40 +138,40 @@
     />
 
     <!-- 添加或修改学生信息对话框 -->
-    <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
-      <el-form ref="form" :model="form" :rules="rules" label-width="80px">
-        <el-form-item label="学号" prop="stuNo">
-          <el-input v-model="form.stuNo" placeholder="请输入学号" />
-        </el-form-item>
-        <el-form-item label="姓名" prop="stuName">
-          <el-input v-model="form.stuName" placeholder="请输入姓名" />
-        </el-form-item>
-        <el-form-item label="班级" prop="stuCls">
-          <el-input v-model="form.stuCls" placeholder="请输入班级" />
-        </el-form-item>
-        <el-form-item label="年级" prop="stuClsYear">
-          <el-input v-model="form.stuClsYear" placeholder="请输入年级" />
-        </el-form-item>
-        <el-form-item label="录取专业" prop="stuMajor">
-          <el-input v-model="form.stuMajor" placeholder="请输入录取专业" />
-        </el-form-item>
-        <el-form-item label="家庭住址" prop="stuAddress">
-          <el-input v-model="form.stuAddress" placeholder="请输入家庭住址" />
-        </el-form-item>
-        <el-form-item label="联系电话" prop="stuTel">
-          <el-input v-model="form.stuTel" placeholder="请输入联系电话" />
-        </el-form-item>
-      </el-form>
-      <div slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="submitForm">确 定</el-button>
-        <el-button @click="cancel">取 消</el-button>
-      </div>
-    </el-dialog>
+<!--    <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>-->
+<!--      <el-form ref="form" :model="form" :rules="rules" label-width="80px">-->
+<!--        <el-form-item label="学号" prop="stuNo">-->
+<!--          <el-input v-model="form.stuNo" placeholder="请输入学号" />-->
+<!--        </el-form-item>-->
+<!--        <el-form-item label="姓名" prop="stuName">-->
+<!--          <el-input v-model="form.stuName" placeholder="请输入姓名" />-->
+<!--        </el-form-item>-->
+<!--        <el-form-item label="班级" prop="stuCls">-->
+<!--          <el-input v-model="form.stuCls" placeholder="请输入班级" />-->
+<!--        </el-form-item>-->
+<!--        <el-form-item label="年级" prop="stuClsYear">-->
+<!--          <el-input v-model="form.stuClsYear" placeholder="请输入年级" />-->
+<!--        </el-form-item>-->
+<!--        <el-form-item label="录取专业" prop="stuMajor">-->
+<!--          <el-input v-model="form.stuMajor" placeholder="请输入录取专业" />-->
+<!--        </el-form-item>-->
+<!--        <el-form-item label="家庭住址" prop="stuAddress">-->
+<!--          <el-input v-model="form.stuAddress" placeholder="请输入家庭住址" />-->
+<!--        </el-form-item>-->
+<!--        <el-form-item label="联系电话" prop="stuTel">-->
+<!--          <el-input v-model="form.stuTel" placeholder="请输入联系电话" />-->
+<!--        </el-form-item>-->
+<!--      </el-form>-->
+<!--      <div slot="footer" class="dialog-footer">-->
+<!--        <el-button type="primary" @click="submitForm">确 定</el-button>-->
+<!--        <el-button @click="cancel">取 消</el-button>-->
+<!--      </div>-->
+<!--    </el-dialog>-->
   </div>
 </template>
 
 <script>
-import { listBiye, getBiye, addBiye, updateBiye, delBiye } from "@/api/stu/biye";
+import { getList, getBiye, addBiye, updateBiye, delBiye } from "@/api/stu/biye";
 
 export default {
   name: "biye",
@@ -199,9 +199,11 @@ export default {
       queryParams: {
         pageNum: 1,
         pageSize: 10,
-        stuInfo:{
-
-        }
+        flag:0,
+        stuName:'',
+        stuCls:'',
+        stuClsYear: '',
+        materialName:''
       },
       // 表单参数
       form: {},
@@ -217,7 +219,7 @@ export default {
     /** 查询学生信息列表 */
     getList() {
       this.loading = true;
-      listInfo(this.queryParams).then(response => {
+      getList(this.queryParams).then(response => {
         this.infoList = response.rows;
         this.total = response.total;
         this.loading = false;
@@ -231,16 +233,15 @@ export default {
     // 表单重置
     reset() {
       this.form = {
-        stuId: null,
-        stuNo: null,
-        stuName: null,
-        stuCls: null,
-        stuClsYear: null,
-        stuSex: null,
-        stuType: null,
-        stuMajor: null,
-        stuAddress: null,
-        stuTel: null
+        flag:0,
+        stuInfo:{
+          stuName:'',
+          stuCls:'',
+          stuClsYear: '',
+        },
+        StuMaterial:{
+          name:''
+        }
       };
       this.resetForm("form");
     },

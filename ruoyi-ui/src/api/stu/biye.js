@@ -1,7 +1,7 @@
 import request from '@/utils/request'
 
 // 查询毕业实践列表
-export function listBiye(query) {
+export function getList(query) {
   return request({
     url: '/stu/biye/list',
     method: 'get',

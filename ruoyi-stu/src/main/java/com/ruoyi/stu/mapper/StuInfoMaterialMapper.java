@@ -1,6 +1,8 @@
 package com.ruoyi.stu.mapper;
 
+import com.ruoyi.stu.vo.BiyeForm;
 import com.ruoyi.stu.vo.StuInfoMaterial;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -19,7 +21,8 @@ import java.util.List;
      * @param stuInfoMaterial 毕业实践
      * @return 提交材料参数集合
      */
-     List<StuInfoMaterial> selectStuMaterialList(StuInfoMaterial stuInfoMaterial);
+     List<StuInfoMaterial> selectStuMaterialList(@Param("biye") BiyeForm form);
+
 
     /**
      * 新增提交材料参数
@@ -52,4 +55,6 @@ import java.util.List;
      * @return 结果
      */
      int deleteStuInfoMaterialByIds(Long[] ids);
+
+    StuInfoMaterial selectStuInfMaterialoById(Long id);
 }

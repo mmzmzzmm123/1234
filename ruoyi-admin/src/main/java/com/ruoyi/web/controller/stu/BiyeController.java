@@ -1,11 +1,14 @@
-package com.ruoyi.stu.controller;
+package com.ruoyi.web.controller.stu;
 
+import com.github.pagehelper.PageInfo;
 import com.ruoyi.common.annotation.Log;
+import com.ruoyi.common.constant.HttpStatus;
 import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.core.page.TableDataInfo;
 import com.ruoyi.common.enums.BusinessType;
 import com.ruoyi.common.utils.poi.ExcelUtil;
+import com.ruoyi.stu.vo.BiyeForm;
 import com.ruoyi.stu.service.IStuInfoMaterialService;
 import com.ruoyi.stu.vo.StuInfoMaterial;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,7 +16,9 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 提交材料参数Controller
@@ -28,16 +33,29 @@ public class BiyeController extends BaseController
     @Autowired
     private IStuInfoMaterialService stuInfoMaterialService;
 
+    @PreAuthorize("@ss.hasPermi('stu:info:query')")
+    @GetMapping(value = "/{id}")
+    public AjaxResult getInfo(@PathVariable("id") Long id)
+    {
+        return success(stuInfoMaterialService.selectStuInfMaterialoById(id));
+    }
+
     /**
      * 查询提交材料参数列表
      */
     @PreAuthorize("@ss.hasPermi('stu:biye:list')")
     @GetMapping("/list")
-    public TableDataInfo list(StuInfoMaterial stuInfoMaterial)
+    public TableDataInfo list(BiyeForm stuInfoMaterial)
     {
         startPage();
-        List<StuInfoMaterial> list = stuInfoMaterialService.selectStuMaterialList(stuInfoMaterial);
-        return getDataTable(list);
+        Map<String, List<StuInfoMaterial>> list = stuInfoMaterialService.selectStuMaterialList(stuInfoMaterial);
+        TableDataInfo rspData = new TableDataInfo();
+        rspData.setCode(HttpStatus.SUCCESS);
+        rspData.setMsg("查询成功");
+        List<Object> objects = Arrays.asList(list.values().toArray());
+        rspData.setRows(objects);
+        rspData.setTotal(new PageInfo(objects).getTotal());
+        return rspData;
     }
 
     /**
@@ -46,11 +64,11 @@ public class BiyeController extends BaseController
     @PreAuthorize("@ss.hasPermi('stu:biye:export')")
     @Log(title = "提交材料参数", businessType = BusinessType.EXPORT)
     @PostMapping("/export")
-    public void export(HttpServletResponse response, StuInfoMaterial stuInfoMaterial)
+    public void export(HttpServletResponse response, BiyeForm stuInfoMaterial)
     {
-        List<StuInfoMaterial> list = stuInfoMaterialService.selectStuMaterialList(stuInfoMaterial);
-        ExcelUtil<StuInfoMaterial> util = new ExcelUtil<StuInfoMaterial>(StuInfoMaterial.class);
-        util.exportExcel(response, list, "提交材料参数数据");
+//        Map<String, List<StuInfoMaterial>> list = stuInfoMaterialService.selectStuMaterialList(stuInfoMaterial);
+//        ExcelUtil<StuInfoMaterial> util = new ExcelUtil<>(StuInfoMaterial.class);
+//        util.exportExcel(response, list, "提交材料参数数据");
     }
 
 

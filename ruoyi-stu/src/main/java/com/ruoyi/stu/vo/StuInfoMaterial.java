@@ -14,7 +14,7 @@ public class StuInfoMaterial extends BaseEntity {
     private StuInfo stuInfo;
     private Integer flag ;
     private String url ;
-    private List<StuMaterial> stuMaterialList;
+    private StuMaterial stuMaterial;
 
 
     /** 创建者 */

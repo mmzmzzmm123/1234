@@ -1,8 +1,10 @@
 package com.ruoyi.stu.service;
 
+import com.ruoyi.stu.vo.BiyeForm;
 import com.ruoyi.stu.vo.StuInfoMaterial;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * 提交材料参数Service接口
@@ -19,7 +21,7 @@ public interface IStuInfoMaterialService
      * @param stuInfoMaterial 毕业实践
      * @return 提交材料参数集合
      */
-    List<StuInfoMaterial> selectStuMaterialList(StuInfoMaterial stuInfoMaterial);
+    Map<String, List<StuInfoMaterial>> selectStuMaterialList(BiyeForm stuInfoMaterial);
 
     /**
      * 新增提交材料参数
@@ -52,4 +54,6 @@ public interface IStuInfoMaterialService
      * @return 结果
      */
     int deleteStuInfoMaterialByIds(Long[] ids);
+
+    StuInfoMaterial selectStuInfMaterialoById(Long id);
 }

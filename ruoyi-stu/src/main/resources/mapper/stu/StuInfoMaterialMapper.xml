@@ -4,38 +4,55 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.ruoyi.stu.mapper.StuInfoMaterialMapper">
 
-    <resultMap type="StuInfoMaterial" id="StuInfoMaterialResult">
-        <id property="id"    column="id"    />
-        <result property="flag" column="flag"/>
-        <result property="url" column="url"/>
-        <result property="createBy" column="create_by"/>
-        <result property="createTime" column="createTime"/>
-        <result property="updateBy" column="updateBy"/>
-        <result property="updateTime" column="update_time"/>
-        <association property="stuInfo" javaType="StuInfo" resultMap="com.ruoyi.stu.mapper.StuInfoMapper.StuInfoResult"/>
-        <collection property="stuMaterialList"  ofType="StuMaterial" resultMap="com.ruoyi.stu.mapper.StuMaterialMapper.StuMaterialResult"/>
+    <resultMap type="StuInfoMaterial"    id="StuInfoMaterialResult">
+        <id property="id"                   column="id"    />
+        <result property="flag"             column="flag"/>
+        <result property="url"              column="url" />
+        <result property="createBy"         column="create_by"/>
+        <result property="createTime"       column="createTime"/>
+        <result property="updateBy"         column="updateBy"/>
+        <result property="updateTime"       column="update_time"/>
+        <association property="stuInfo"  javaType="StuInfo" >
+            <id     property="stuId"        column="stuId"/>
+            <result property="stuName"      column="stuName"    />
+            <result property="stuCls"       column="stu_cls"    />
+            <result property="stuClsYear"   column="stu_cls_year"    />
+        </association>
+        <association property="stuMaterial"  javaType="StuMaterial">
+            <id     property="id"     column="materiaId"/>
+            <result property="name"   column="name"/>
+        </association>
 
     </resultMap>
 
     <sql id="selectStuInfoMaterialVo">
         select sim.id as 'id' ,sim.stu_id as 'stuId' ,sim.flag,sim.url,
                create_by,create_time,update_by,update_time,
-               m.id , m.name,
-               info.stu_name ,info.stu_cls , info.stu_cls_year ,info.stu_tel
-        from stu_info_material sim ,stu_info info ,stu_material m
+               materia.id as 'materiaId', materia.name,
+               stuInfo.stu_name as 'stuName',stuInfo.stu_cls , stuInfo.stu_cls_year ,stuInfo.stu_tel
+        from stu_info_material sim
+                 LEFT JOIN  stu_info stuInfo  on sim.stu_id = stuInfo.stu_id
+                 LEFT JOIN  stu_material materia on sim.material_id = materia.id
     </sql>
 
-    <select id="selectStuMaterialList" parameterType="StuInfoMaterial" resultMap="StuInfoMaterialResult">
+    <select id="selectStuMaterialList" parameterType="BiyeForm" resultMap="StuInfoMaterialResult">
         <include refid="selectStuInfoMaterialVo"/>
-        <where>  
-           <if test="stuName != null and stuName != '' "> info.stu_name like concat('%',#{stuName},'%')</if>
-           <if test="stuCls != null and stuCls != '' "> info.stu_cls like concat('%',#{stuCls},'%')</if>
-           <if test="stuClsYear != null and stuClsYear != '' "> info.stu_cls_year like concat('%',#{stuClsYear},'%')</if>
-           <if test="stuClsYear != null and stuClsYear != '' "> sim.flag = #{flag}</if>
+        <where>
+            <if test="biye.flag != null and biye.flag != '' "> sim.flag #{biye.flag}</if>
+            <if test="biye.materialName != null and biye.materialName != '' "> materia.name #{biye.materialName}</if>
+            <if test="biye.stuName != null and biye.stuName != '' "> stuInfo.stu_name like concat('%',#{biye.stuName},'%')</if>
+            <if test="biye.stuCls != null and biye.stuCls != '' "> stuInfo.stu_cls like concat('%',#{biye.stuCls},'%')</if>
+            <if test="biye.stuClsYear != null and biye.stuClsYear != '' "> stuInfo.stu_cls_year like concat('%',#{biye.stuClsYear},'%')</if>
         </where>
     </select>
-    
-        
+    <select id="selectStuInfMaterialoById" resultType="com.ruoyi.stu.vo.StuInfoMaterial">
+        <include refid="selectStuInfoMaterialVo"/>
+        <where>
+            sim.id = #{id}
+        </where>
+    </select>
+
+
     <insert id="insertStuMaterial" useGeneratedKeys="true" keyProperty="id">
         insert into stu_info_material
         <trim prefix="(" suffix=")" suffixOverrides=",">
