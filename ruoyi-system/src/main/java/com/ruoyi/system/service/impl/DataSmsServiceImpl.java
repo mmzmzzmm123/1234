@@ -1,6 +1,7 @@
 package com.ruoyi.system.service.impl;
 
 import com.alibaba.fastjson.JSON;
+import com.ruoyi.common.constant.Constants;
 import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.utils.sign.Md5Utils;
 import com.ruoyi.system.domain.model.CreditSmsResponse;
@@ -171,7 +172,7 @@ public class DataSmsServiceImpl implements IDataSmsService {
     public AjaxResult sendVerifyCodeByCredit(String phone, String code) {
         String url = creditsmsDomain + creditsmsUrl;
 
-        String content = "尊敬的信贷直通车用户，您本次验证码为" + code + "，请在2分钟内使用。";
+        String content = "尊敬的信贷直通车用户，您本次验证码为" + code + "，请在" + Constants.SMS_CODE_EXPIRATION + "分钟内使用。";
 
         Map<String, Object> map = new HashMap<>();
         map.put("messageContent", content);
