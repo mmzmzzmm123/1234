@@ -60,38 +60,6 @@
           v-hasPermi="['stu:biye:add']"
         >新增</el-button>
       </el-col>
-      <el-col :span="1.5">
-        <el-button
-          type="success"
-          plain
-          icon="el-icon-edit"
-          size="mini"
-          :disabled="single"
-          @click="handleUpdate"
-          v-hasPermi="['stu:biye:edit']"
-        >修改</el-button>
-      </el-col>
-      <el-col :span="1.5">
-        <el-button
-          type="danger"
-          plain
-          icon="el-icon-delete"
-          size="mini"
-          :disabled="multiple"
-          @click="handleDelete"
-          v-hasPermi="['stu:biye:remove']"
-        >删除</el-button>
-      </el-col>
-      <el-col :span="1.5">
-        <el-button
-          type="warning"
-          plain
-          icon="el-icon-download"
-          size="mini"
-          @click="handleExport"
-          v-hasPermi="['stu:biye:export']"
-        >导出</el-button>
-      </el-col>
       <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
     </el-row>
 
@@ -100,14 +68,43 @@
 <!--      <el-table-column type="selection" width="55" align="center" />-->
       <el-table-column type="expand"  >
         <template slot-scope="props">
-          <el-form label-position="left"  class="demo-table-expand">
-              <el-form-item inline  v-for=" k in props.row.material" :key="k.stuMaterial.id" :label="k.stuMaterial.name">
-                <el-input  type="hidden" name="k.stuMaterial.id" :value="k.stuMaterial.id"></el-input>
-                <el-switch
-                  v-model="k.stuMaterial.flag"
-                  active-color="#13ce66"
-                  inactive-color="#ff4949">
-                </el-switch>
+          <el-form   class="demo-table-expand">
+              <el-form-item  v-for=" k in props.row.material" :key="k.stuMaterial.id" :label="k.stuMaterial.name"  label-width="135px">
+                <el-input  type="hidden" name="materialId" :value="k.stuMaterial.id"></el-input>
+                  <el-switch
+                    v-model="k.flag"
+                    active-color="#13ce66"
+                    inactive-color="#ff4949"
+                    :active-value=0
+                    :inactive-value=1
+                    @change="changeSwitch($event,k)">
+                  </el-switch>
+
+                <el-form-item>
+                  <el-upload
+                    class="upload-demo"
+                    drag
+                    accept="image/jpeg,image/jpg,image/png"
+                    :action="upload.url"
+                    :headers="upload.headers"
+                    :data="{'id':k.id}"
+                    :on-success="uploadSuccess"
+                  >
+                    <el-image
+                      style="width: 500px; height: 500px"
+                      v-if="k.url"
+                      :src="k.url"
+                      >
+
+                    </el-image>
+
+<!--                    <img v-if="k.url" :src="k.url" class="avatar">-->
+                    <i class="el-icon-upload"></i>
+                    <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
+                    <div class="el-upload__tip" slot="tip">只能上传jpg/png文件，且不超过500kb</div>
+                  </el-upload>
+
+                </el-form-item>
               </el-form-item>
 
           </el-form>
@@ -119,80 +116,50 @@
       <el-table-column label="班级" align="center" prop="stuCls" />
       <el-table-column label="年级" align="center" prop="stuClsYear" />
 
-<!--      <div v-for="item in infoList.materials" >-->
-<!--        <el-table-column label="{{item.name}}" align="center" prop="{{material.name}}" />-->
-<!--        <el-table-column label="是否提交" align="center" prop="{{flag}}" />-->
-<!--        <el-table-column label="URL" align="center" prop="{{url}}" />-->
-<!--      </div>-->
 
-      <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
-        <template slot-scope="scope">
-          <el-button
-            size="mini"
-            type="text"
-            icon="el-icon-edit"
-            @click="handleUpdate(scope.row)"
-            v-hasPermi="['stu:biye:edit']"
-          >修改</el-button>
-          <el-button
-            size="mini"
-            type="text"
-            icon="el-icon-delete"
-            @click="handleDelete(scope.row)"
-            v-hasPermi="['stu:biye:remove']"
-          >删除</el-button>
-        </template>
-      </el-table-column>
+<!--      <el-table-column label="操作" align="center" class-name="small-padding fixed-width">-->
+<!--        <template slot-scope="scope">-->
+<!--          <el-button-->
+<!--            size="mini"-->
+<!--            type="text"-->
+<!--            icon="el-icon-edit"-->
+<!--            @click="handleUpdate(scope.row)"-->
+<!--            v-hasPermi="['stu:biye:edit']"-->
+<!--          >修改</el-button>-->
+<!--          <el-button-->
+<!--            size="mini"-->
+<!--            type="text"-->
+<!--            icon="el-icon-delete"-->
+<!--            @click="handleDelete(scope.row)"-->
+<!--            v-hasPermi="['stu:biye:remove']"-->
+<!--          >删除</el-button>-->
+<!--        </template>-->
+<!--      </el-table-column>-->
     </el-table>
 
-<!--    <pagination-->
-<!--      v-show="total>0"-->
-<!--      :total="total"-->
-<!--      :page.sync="queryParams.pageNum"-->
-<!--      :limit.sync="queryParams.pageSize"-->
-<!--      @pagination="getList"-->
-<!--    />-->
-
-    <!-- 添加或修改学生信息对话框 -->
-<!--    <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>-->
-<!--      <el-form ref="form" :model="form" :rules="rules" label-width="80px">-->
-<!--        <el-form-item label="学号" prop="stuNo">-->
-<!--          <el-input v-model="form.stuNo" placeholder="请输入学号" />-->
-<!--        </el-form-item>-->
-<!--        <el-form-item label="姓名" prop="stuName">-->
-<!--          <el-input v-model="form.stuName" placeholder="请输入姓名" />-->
-<!--        </el-form-item>-->
-<!--        <el-form-item label="班级" prop="stuCls">-->
-<!--          <el-input v-model="form.stuCls" placeholder="请输入班级" />-->
-<!--        </el-form-item>-->
-<!--        <el-form-item label="年级" prop="stuClsYear">-->
-<!--          <el-input v-model="form.stuClsYear" placeholder="请输入年级" />-->
-<!--        </el-form-item>-->
-<!--        <el-form-item label="录取专业" prop="stuMajor">-->
-<!--          <el-input v-model="form.stuMajor" placeholder="请输入录取专业" />-->
-<!--        </el-form-item>-->
-<!--        <el-form-item label="家庭住址" prop="stuAddress">-->
-<!--          <el-input v-model="form.stuAddress" placeholder="请输入家庭住址" />-->
-<!--        </el-form-item>-->
-<!--        <el-form-item label="联系电话" prop="stuTel">-->
-<!--          <el-input v-model="form.stuTel" placeholder="请输入联系电话" />-->
-<!--        </el-form-item>-->
-<!--      </el-form>-->
-<!--      <div slot="footer" class="dialog-footer">-->
-<!--        <el-button type="primary" @click="submitForm">确 定</el-button>-->
-<!--        <el-button @click="cancel">取 消</el-button>-->
-<!--      </div>-->
-<!--    </el-dialog>-->
   </div>
 </template>
 
 <script>
-import {getList} from "@/api/stu/biye";
+import {getList,updateMaterialFlag} from "@/api/stu/biye";
+import {getToken} from "@/utils/auth";
 
 export default {
   name: "biye",
   data() {
     return {
+    // 上传参数
+      upload: {
+        // 是否禁用上传
+        isUploading: false,
+        // 设置上传的请求头部
+        headers: { Authorization: "Bearer " + getToken() },
+        // 上传的地址
+        url: process.env.VUE_APP_BASE_API + "/stu/biye/upload",
+        // 上传的文件列表
+        fileList: []
+      },
+
       // 遮罩层
       loading: true,
       // 选中数组
@@ -225,13 +192,46 @@ export default {
       rules: {
       },
       oneList:[],
-
+      dialogImageUrl: '',
+      dialogVisible: false,
+      disabled: false
     };
   },
   created() {
     this.getList();
   },
   methods: {
+
+    uploadSuccess(response, file, fileList){
+      this.getList();
+    },
+
+    /*提交照片后修改材料状态*/
+    changeSwitch(flag,row){
+      console.log(flag);
+      console.log(row);
+      const data = {
+        "id":row.id,
+        "flag":flag,
+        "stuId":row.stuId,
+        "materialId":row.materialId
+      };
+      updateMaterialFlag(data).then(response=>{
+        if(response.code===200){
+          this.$message({
+            message: '提交成功',
+            type: 'success'
+          });
+        }else{
+          this.$message({
+            message: '网络繁忙，提交失败',
+            type: 'warning'
+          });
+
+        }
+      })
+    },
+
     /** 查询学生信息列表 */
     getList() {
       this.oneList = []
@@ -247,7 +247,7 @@ export default {
           this.oneList.push(key);
         }
         this.loading = false;
-        console.log(this.oneList)
+        console.log("oneList",this.oneList)
       });
     },
     // 取消按钮
@@ -275,69 +275,22 @@ export default {
       this.queryParams.pageNum = 1;
       this.getList();
     },
-    /** 重置按钮操作 */
+    // /** 重置按钮操作 */
     resetQuery() {
       this.resetForm("queryForm");
       this.handleQuery();
     },
-    // 多选框选中数据
-    handleSelectionChange(selection) {
-      this.ids = selection.map(item => item.stuId)
-      this.single = selection.length!==1
-      this.multiple = !selection.length
-    },
+
     /** 新增按钮操作 */
     handleAdd() {
       this.reset();
       this.open = true;
       this.title = "添加学生信息";
     },
-    /** 修改按钮操作 */
-    handleUpdate(row) {
-      this.reset();
-      const stuId = row.stuId || this.ids
-      getInfo(stuId).then(response => {
-        this.form = response.data;
-        this.open = true;
-        this.title = "修改学生信息";
-      });
-    },
-    /** 提交按钮 */
-    submitForm() {
-      this.$refs["form"].validate(valid => {
-        if (valid) {
-          if (this.form.stuId != null) {
-            updateInfo(this.form).then(response => {
-              this.$modal.msgSuccess("修改成功");
-              this.open = false;
-              this.getList();
-            });
-          } else {
-            addInfo(this.form).then(response => {
-              this.$modal.msgSuccess("新增成功");
-              this.open = false;
-              this.getList();
-            });
-          }
-        }
-      });
-    },
-    /** 删除按钮操作 */
-    handleDelete(row) {
-      const stuIds = row.stuId || this.ids;
-      this.$modal.confirm('是否确认删除学生信息编号为"' + stuIds + '"的数据项？').then(function() {
-        return delInfo(stuIds);
-      }).then(() => {
-        this.getList();
-        this.$modal.msgSuccess("删除成功");
-      }).catch(() => {});
-    },
-    /** 导出按钮操作 */
-    handleExport() {
-      this.download('stu/biye/export', {
-        ...this.queryParams
-      }, `info_${new Date().getTime()}.xlsx`)
-    }
+
   }
 };
 </script>
+<style>
+
+</style>

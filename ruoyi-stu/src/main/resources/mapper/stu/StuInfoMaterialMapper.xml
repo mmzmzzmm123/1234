@@ -77,7 +77,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
          </trim>
     </insert>
 
-    <update id="updateStuMaterial" parameterType="StuInfoMaterial">
+    <update id="updateStuMaterial" >
         update stu_info_material
         <trim prefix="SET" suffixOverrides=",">
             <if test="stuId != null">stu_id = #{stuId},</if>
@@ -89,7 +89,16 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="updateBy != null">update_by = #{updateBy},</if>
             <if test="updateTime != null">update_time = #{updateTime},</if>
         </trim>
-        where stu_id = #{stuId}
+        where id = #{id}
+    </update>
+    <update id="updateImgUrl">
+        update stu_info_material
+        set
+            url = #{url},
+            update_by = #{updateBy},
+            update_time = #{updateTime}
+        where
+           id = #{id}
     </update>
 
     <delete id="deleteStuInfoMaterialById">

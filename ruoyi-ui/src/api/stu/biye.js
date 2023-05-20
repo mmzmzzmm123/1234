@@ -1,5 +1,14 @@
 import request from '@/utils/request'
 
+// 修改材料提交状态
+export function updateMaterialFlag(data){
+  return request({
+    url:'/stu/biye/updateMateriaFlag',
+    method:'post',
+    data:data
+  })
+}
+
 // 查询毕业实践列表
 export function getList(query) {
   return request({

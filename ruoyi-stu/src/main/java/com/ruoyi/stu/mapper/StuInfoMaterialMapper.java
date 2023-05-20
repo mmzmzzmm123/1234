@@ -35,10 +35,10 @@ import java.util.List;
     /**
      * 修改提交材料参数
      * 
-     * @param stuInfoMaterial 毕业实践
+     * @param biyeForm 毕业实践
      * @return 结果
      */
-     int updateStuMaterial(StuInfoMaterial stuInfoMaterial);
+     int updateStuMaterial(BiyeForm biyeForm);
 
     /**
      * 删除提交材料参数
@@ -57,4 +57,6 @@ import java.util.List;
      int deleteStuInfoMaterialByIds(Long[] ids);
 
     StuInfoMaterial selectStuInfMaterialoById(Long id);
+
+    void updateImgUrl(BiyeForm form);
 }

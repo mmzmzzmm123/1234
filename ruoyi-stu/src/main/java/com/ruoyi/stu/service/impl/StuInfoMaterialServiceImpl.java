@@ -52,8 +52,8 @@ public class StuInfoMaterialServiceImpl implements IStuInfoMaterialService
     }
 
     @Override
-    public int updateStuMaterial(StuInfoMaterial stuInfoMaterial) {
-        return stuInfoMaterialMapper.updateStuMaterial(stuInfoMaterial);
+    public int updateStuMaterial(BiyeForm biyeForm) {
+        return stuInfoMaterialMapper.updateStuMaterial(biyeForm);
     }
 
     @Override
@@ -69,5 +69,10 @@ public class StuInfoMaterialServiceImpl implements IStuInfoMaterialService
     @Override
     public StuInfoMaterial selectStuInfMaterialoById(Long id) {
         return  stuInfoMaterialMapper.selectStuInfMaterialoById(id);
+    }
+
+    @Override
+    public void updateImgUrl(BiyeForm form) {
+        stuInfoMaterialMapper.updateImgUrl(form);
     }
 }
