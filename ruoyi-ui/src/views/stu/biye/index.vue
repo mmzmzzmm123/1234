@@ -95,13 +95,29 @@
       <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
     </el-row>
 
-    <el-table v-loading="loading" :data="infoList" @selection-change="handleSelectionChange">
+    <el-table v-loading="loading" :data="oneList">
 <!--    <el-table v-loading="loading" :data="infoList" >-->
-      <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="主键id" align="center" prop="id" />
-      <el-table-column label="姓名" align="center" prop="stuInfo.stuName" />
-      <el-table-column label="班级" align="center" prop="stuInfo.stuCls" />
-      <el-table-column label="年级" align="center" prop="stuInfo.stuClsYear" />
+<!--      <el-table-column type="selection" width="55" align="center" />-->
+      <el-table-column type="expand"  >
+        <template slot-scope="props">
+          <el-form label-position="left"  class="demo-table-expand">
+              <el-form-item inline  v-for=" k in props.row.material" :key="k.stuMaterial.id" :label="k.stuMaterial.name">
+                <el-input  type="hidden" name="k.stuMaterial.id" :value="k.stuMaterial.id"></el-input>
+                <el-switch
+                  v-model="k.stuMaterial.flag"
+                  active-color="#13ce66"
+                  inactive-color="#ff4949">
+                </el-switch>
+              </el-form-item>
+
+          </el-form>
+
+        </template>
+      </el-table-column>
+      <el-table-column label="Id" align="center" prop="stuId"  />
+      <el-table-column label="姓名" align="center" prop="stuName"  />
+      <el-table-column label="班级" align="center" prop="stuCls" />
+      <el-table-column label="年级" align="center" prop="stuClsYear" />
 
 <!--      <div v-for="item in infoList.materials" >-->
 <!--        <el-table-column label="{{item.name}}" align="center" prop="{{material.name}}" />-->
@@ -129,13 +145,13 @@
       </el-table-column>
     </el-table>
 
-    <pagination
-      v-show="total>0"
-      :total="total"
-      :page.sync="queryParams.pageNum"
-      :limit.sync="queryParams.pageSize"
-      @pagination="getList"
-    />
+<!--    <pagination-->
+<!--      v-show="total>0"-->
+<!--      :total="total"-->
+<!--      :page.sync="queryParams.pageNum"-->
+<!--      :limit.sync="queryParams.pageSize"-->
+<!--      @pagination="getList"-->
+<!--    />-->
 
     <!-- 添加或修改学生信息对话框 -->
 <!--    <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>-->
@@ -171,7 +187,7 @@
 </template>
 
 <script>
-import { getList, getBiye, addBiye, updateBiye, delBiye } from "@/api/stu/biye";
+import {getList} from "@/api/stu/biye";
 
 export default {
   name: "biye",
@@ -189,8 +205,6 @@ export default {
       showSearch: true,
       // 总条数
       total: 0,
-      // 学生信息表格数据
-      infoList: [],
       // 弹出层标题
       title: "",
       // 是否显示弹出层
@@ -209,7 +223,9 @@ export default {
       form: {},
       // 表单校验
       rules: {
-      }
+      },
+      oneList:[],
+
     };
   },
   created() {
@@ -218,11 +234,20 @@ export default {
   methods: {
     /** 查询学生信息列表 */
     getList() {
+      this.oneList = []
       this.loading = true;
       getList(this.queryParams).then(response => {
-        this.infoList = response.rows;
-        this.total = response.total;
+        console.log("response.data",response.data)
+        for (const dataKey in response.data) {
+          console.log("dataKey",dataKey)
+          const key = JSON.parse(dataKey);
+          console.log("key",key)
+          console.log('response.data[key]',response.data[key]);
+          key.material = response.data[dataKey]
+          this.oneList.push(key);
+        }
         this.loading = false;
+        console.log(this.oneList)
       });
     },
     // 取消按钮

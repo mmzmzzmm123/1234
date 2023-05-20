@@ -1,5 +1,6 @@
 package com.ruoyi.stu.service;
 
+import com.ruoyi.stu.domain.StuInfo;
 import com.ruoyi.stu.vo.BiyeForm;
 import com.ruoyi.stu.vo.StuInfoMaterial;
 
@@ -21,7 +22,7 @@ public interface IStuInfoMaterialService
      * @param stuInfoMaterial 毕业实践
      * @return 提交材料参数集合
      */
-    Map<String, List<StuInfoMaterial>> selectStuMaterialList(BiyeForm stuInfoMaterial);
+    Map<String,List<StuInfoMaterial>> selectStuMaterialList(BiyeForm stuInfoMaterial);
 
     /**
      * 新增提交材料参数

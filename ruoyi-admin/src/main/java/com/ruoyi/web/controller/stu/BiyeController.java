@@ -1,13 +1,11 @@
 package com.ruoyi.web.controller.stu;
 
-import com.github.pagehelper.PageInfo;
 import com.ruoyi.common.annotation.Log;
 import com.ruoyi.common.constant.HttpStatus;
 import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.domain.AjaxResult;
-import com.ruoyi.common.core.page.TableDataInfo;
 import com.ruoyi.common.enums.BusinessType;
-import com.ruoyi.common.utils.poi.ExcelUtil;
+import com.ruoyi.stu.domain.StuInfo;
 import com.ruoyi.stu.vo.BiyeForm;
 import com.ruoyi.stu.service.IStuInfoMaterialService;
 import com.ruoyi.stu.vo.StuInfoMaterial;
@@ -16,7 +14,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
-import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -45,16 +43,14 @@ public class BiyeController extends BaseController
      */
     @PreAuthorize("@ss.hasPermi('stu:biye:list')")
     @GetMapping("/list")
-    public TableDataInfo list(BiyeForm stuInfoMaterial)
+    public Map list(BiyeForm stuInfoMaterial)
     {
         startPage();
-        Map<String, List<StuInfoMaterial>> list = stuInfoMaterialService.selectStuMaterialList(stuInfoMaterial);
-        TableDataInfo rspData = new TableDataInfo();
-        rspData.setCode(HttpStatus.SUCCESS);
-        rspData.setMsg("查询成功");
-        List<Object> objects = Arrays.asList(list.values().toArray());
-        rspData.setRows(objects);
-        rspData.setTotal(new PageInfo(objects).getTotal());
+        Map<String, List<StuInfoMaterial>> map = stuInfoMaterialService.selectStuMaterialList(stuInfoMaterial);
+        Map rspData = new HashMap();
+        rspData.put("code",HttpStatus.SUCCESS);
+        rspData.put("msg","查询成功");
+        rspData.put("data",map);
         return rspData;
     }
 

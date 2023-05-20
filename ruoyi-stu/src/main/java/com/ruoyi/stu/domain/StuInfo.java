@@ -1,5 +1,7 @@
 package com.ruoyi.stu.domain;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import lombok.Data;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import com.ruoyi.common.annotation.Excel;
@@ -11,8 +13,10 @@ import com.ruoyi.common.core.domain.BaseEntity;
  * @author ruoyi
  * @date 2023-05-19
  */
+@Data
 public class StuInfo extends BaseEntity
 {
+
     private static final long serialVersionUID = 1L;
 
     /** 主键id */
@@ -54,110 +58,5 @@ public class StuInfo extends BaseEntity
     @Excel(name = "联系电话")
     private String stuTel;
 
-    public void setStuId(Long stuId) 
-    {
-        this.stuId = stuId;
-    }
 
-    public Long getStuId() 
-    {
-        return stuId;
-    }
-    public void setStuNo(String stuNo) 
-    {
-        this.stuNo = stuNo;
-    }
-
-    public String getStuNo() 
-    {
-        return stuNo;
-    }
-    public void setStuName(String stuName) 
-    {
-        this.stuName = stuName;
-    }
-
-    public String getStuName() 
-    {
-        return stuName;
-    }
-    public void setStuCls(String stuCls) 
-    {
-        this.stuCls = stuCls;
-    }
-
-    public String getStuCls() 
-    {
-        return stuCls;
-    }
-    public void setStuClsYear(String stuClsYear) 
-    {
-        this.stuClsYear = stuClsYear;
-    }
-
-    public String getStuClsYear() 
-    {
-        return stuClsYear;
-    }
-    public void setStuSex(String stuSex) 
-    {
-        this.stuSex = stuSex;
-    }
-
-    public String getStuSex() 
-    {
-        return stuSex;
-    }
-    public void setStuType(String stuType) 
-    {
-        this.stuType = stuType;
-    }
-
-    public String getStuType() 
-    {
-        return stuType;
-    }
-    public void setStuMajor(String stuMajor) 
-    {
-        this.stuMajor = stuMajor;
-    }
-
-    public String getStuMajor() 
-    {
-        return stuMajor;
-    }
-    public void setStuAddress(String stuAddress) 
-    {
-        this.stuAddress = stuAddress;
-    }
-
-    public String getStuAddress() 
-    {
-        return stuAddress;
-    }
-    public void setStuTel(String stuTel) 
-    {
-        this.stuTel = stuTel;
-    }
-
-    public String getStuTel() 
-    {
-        return stuTel;
-    }
-
-    @Override
-    public String toString() {
-        return new ToStringBuilder(this,ToStringStyle.MULTI_LINE_STYLE)
-            .append("stuId", getStuId())
-            .append("stuNo", getStuNo())
-            .append("stuName", getStuName())
-            .append("stuCls", getStuCls())
-            .append("stuClsYear", getStuClsYear())
-            .append("stuSex", getStuSex())
-            .append("stuType", getStuType())
-            .append("stuMajor", getStuMajor())
-            .append("stuAddress", getStuAddress())
-            .append("stuTel", getStuTel())
-            .toString();
-    }
 }

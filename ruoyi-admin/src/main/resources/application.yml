@@ -49,6 +49,8 @@ user:
 
 # Spring配置
 spring:
+  jackson:
+    default-property-inclusion: non_null
   # 资源信息
   messages:
     # 国际化资源文件路径
