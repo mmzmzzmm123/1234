@@ -33,6 +33,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         from stu_info_material sim
                  LEFT JOIN  stu_info stuInfo  on sim.stu_id = stuInfo.stu_id
                  LEFT JOIN  stu_material materia on sim.material_id = materia.id
+
     </sql>
 
     <select id="selectStuMaterialList" parameterType="BiyeForm" resultMap="StuInfoMaterialResult">
@@ -45,6 +46,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="biye.stuClsYear != null and biye.stuClsYear != '' "> stuInfo.stu_cls_year like concat('%',#{biye.stuClsYear},'%')</if>
         </where>
     </select>
+
+
+
     <select id="selectStuInfMaterialoById" resultType="com.ruoyi.stu.vo.StuInfoMaterial">
         <include refid="selectStuInfoMaterialVo"/>
         <where>

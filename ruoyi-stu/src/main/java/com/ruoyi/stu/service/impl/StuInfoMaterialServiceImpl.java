@@ -3,6 +3,8 @@ package com.ruoyi.stu.service.impl;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
+import com.ruoyi.common.core.domain.entity.SysUser;
+import com.ruoyi.common.utils.SecurityUtils;
 import com.ruoyi.stu.domain.StuInfo;
 import com.ruoyi.stu.vo.BiyeForm;
 import com.ruoyi.stu.mapper.StuInfoMaterialMapper;
@@ -12,10 +14,8 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 /**
@@ -25,26 +25,41 @@ import java.util.stream.Collectors;
  * @date 2023-05-19
  */
 @Service
-public class StuInfoMaterialServiceImpl implements IStuInfoMaterialService
-{
+public class StuInfoMaterialServiceImpl implements IStuInfoMaterialService {
     @Autowired
     private StuInfoMaterialMapper stuInfoMaterialMapper;
-
 
     @Override
     public Map<String,List<StuInfoMaterial>> selectStuMaterialList(BiyeForm stuInfoMaterial) {
         List<StuInfoMaterial> stuInfoMaterials = stuInfoMaterialMapper.selectStuMaterialList(stuInfoMaterial);
-        Map<StuInfo, List<StuInfoMaterial>> collect = stuInfoMaterials.stream().collect(Collectors.groupingBy(StuInfoMaterial::getStuInfo));
+        SysUser user = SecurityUtils.getLoginUser().getUser();
+        return  transer(stuInfoMaterials,user );
+    }
+
+
+    private Map<String,List<StuInfoMaterial>> transer(List<StuInfoMaterial>  stuInfoMaterials ,SysUser sysUser){
+        Map<StuInfo, List<StuInfoMaterial>> collect = stuInfoMaterials.stream()
+                    .filter(e-> {
+                        if(sysUser.isAdmin()){
+                            return  true;
+                        }else{
+                            return e.getStuInfo().getStuName().equals(sysUser.getUserName());
+                        }
+                    })
+                    .collect(Collectors.groupingBy(StuInfoMaterial::getStuInfo));
         Set<Map.Entry<StuInfo, List<StuInfoMaterial>>> entries = collect.entrySet();
         Map<String,List<StuInfoMaterial>> map  = new HashMap<>();
         Gson gson = new Gson();
         for (Map.Entry<StuInfo, List<StuInfoMaterial>> entry : entries) {
             StuInfo key = entry.getKey();
-                String s = gson.toJson(key);
-                map.put(s,entry.getValue());
+            String s = gson.toJson(key);
+            map.put(s,entry.getValue());
         }
         return map;
     }
+
+
+
 
     @Override
     public int insertStuMaterial(StuInfoMaterial stuInfoMaterial) {

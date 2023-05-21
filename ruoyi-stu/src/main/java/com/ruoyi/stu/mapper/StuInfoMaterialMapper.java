@@ -18,10 +18,10 @@ import java.util.List;
     /**
      * 查询提交材料参数列表
      * 
-     * @param stuInfoMaterial 毕业实践
+     * @param form 毕业实践
      * @return 提交材料参数集合
      */
-     List<StuInfoMaterial> selectStuMaterialList(@Param("biye") BiyeForm form);
+    List<StuInfoMaterial> selectStuMaterialList(@Param("biye") BiyeForm form);
 
 
     /**

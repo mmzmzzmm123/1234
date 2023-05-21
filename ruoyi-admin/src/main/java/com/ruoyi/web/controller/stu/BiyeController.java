@@ -8,6 +8,8 @@ import com.ruoyi.common.config.RuoYiConfig;
 import com.ruoyi.common.constant.HttpStatus;
 import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.domain.AjaxResult;
+import com.ruoyi.common.core.domain.entity.SysUser;
+import com.ruoyi.common.core.domain.model.LoginUser;
 import com.ruoyi.common.enums.BusinessType;
 import com.ruoyi.common.utils.SecurityUtils;
 import com.ruoyi.common.utils.file.FileUploadUtils;
@@ -44,7 +46,6 @@ public class BiyeController extends BaseController
     @Autowired
     private ServerConfig serverConfig;
 
-    @PreAuthorize("@ss.hasPermi('stu:biye:upload')")
     @PostMapping("upload")
     public AjaxResult uploadFile(MultipartFile file, String id ){
         try {
@@ -82,12 +83,12 @@ public class BiyeController extends BaseController
     /**
      * 查询提交材料参数列表
      */
-    @PreAuthorize("@ss.hasPermi('stu:biye:list')")
     @GetMapping("/list")
     public AjaxResult list(BiyeForm stuInfoMaterial) {
         startPage();
-        Map<String, List<StuInfoMaterial>> map = stuInfoMaterialService.selectStuMaterialList(stuInfoMaterial);
+        Map<String, List<StuInfoMaterial>> map  = stuInfoMaterialService.selectStuMaterialList(stuInfoMaterial);
         return AjaxResult.success(map);
+
     }
 
     /**
