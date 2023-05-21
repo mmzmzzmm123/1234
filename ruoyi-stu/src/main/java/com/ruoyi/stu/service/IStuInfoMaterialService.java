@@ -1,6 +1,5 @@
 package com.ruoyi.stu.service;
 
-import com.ruoyi.stu.domain.StuInfo;
 import com.ruoyi.stu.vo.BiyeForm;
 import com.ruoyi.stu.vo.StuInfoMaterial;
 
@@ -13,8 +12,10 @@ import java.util.Map;
  * @author ruoyi
  * @date 2023-05-19
  */
-public interface IStuInfoMaterialService 
-{
+public interface IStuInfoMaterialService {
+
+
+
 
     /**
      * 查询提交材料参数列表
@@ -59,4 +60,11 @@ public interface IStuInfoMaterialService
     StuInfoMaterial selectStuInfMaterialoById(Long id);
 
     void updateImgUrl(BiyeForm form);
+
+
+
+
+    int batchAddBiye(Long stuId);
+
+    int selectIsCreatedMaterialId(Long userId);
 }

@@ -55,6 +55,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             sim.id = #{id}
         </where>
     </select>
+    <select id="selectStuInfMaterialoByUserId" resultType="java.lang.Integer">
+        select count(material_id) from stu_info_material
+            where stu_id = #{stuId}
+    </select>
 
 
     <insert id="insertStuMaterial" useGeneratedKeys="true" keyProperty="id">
@@ -80,6 +84,14 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="updateTime != null">#{updateTime},</if>
          </trim>
     </insert>
+    <insert id="batchAddBiye">
+        insert into stu_info_material
+        values
+            <foreach collection="list" item="biye" separator=",">
+                (null,#{biye.stuId},#{biye.materialId},#{biye.flag},#{biye.url},
+                 #{biye.createBy},#{biye.createTime},#{biye.updateBy},#{biye.updateTime})
+            </foreach>
+    </insert>
 
     <update id="updateStuMaterial" >
         update stu_info_material
@@ -99,8 +111,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         update stu_info_material
         set
             url = #{url},
+            flag = #{flag},
             update_by = #{updateBy},
             update_time = #{updateTime}
+
         where
            id = #{id}
     </update>

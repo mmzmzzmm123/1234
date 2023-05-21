@@ -5,6 +5,9 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+
+import com.ruoyi.stu.service.IStuInfoMaterialService;
+import com.ruoyi.system.service.ISysUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -399,6 +402,10 @@ public class SysRoleServiceImpl implements ISysRoleService
     {
         return userRoleMapper.deleteUserRoleInfos(roleId, userIds);
     }
+    @Autowired
+    private IStuInfoMaterialService stuInfoMaterialService;
+    @Autowired
+    private ISysUserService userService ;
 
     /**
      * 批量选择授权用户角色
@@ -418,6 +425,8 @@ public class SysRoleServiceImpl implements ISysRoleService
             ur.setUserId(userId);
             ur.setRoleId(roleId);
             list.add(ur);
+            SysUser sysUser = userService.selectUserById(userId);
+            stuInfoMaterialService.batchAddBiye(sysUser.getStuId());
         }
         return userRoleMapper.batchUserRole(list);
     }

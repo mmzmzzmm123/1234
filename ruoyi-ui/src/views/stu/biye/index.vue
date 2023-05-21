@@ -64,14 +64,12 @@
     </el-row>
 
     <el-table v-loading="loading" :data="oneList">
-<!--    <el-table v-loading="loading" :data="infoList" >-->
-<!--      <el-table-column type="selection" width="55" align="center" />-->
       <el-table-column type="expand"  >
         <template slot-scope="props">
           <el-form   class="demo-table-expand">
               <el-form-item  v-for=" k in props.row.material" :key="k.stuMaterial.id" :label="k.stuMaterial.name"  label-width="135px">
                 <el-input  type="hidden" name="materialId" :value="k.stuMaterial.id"></el-input>
-                  <el-switch
+                  <el-switch v-if="checkRole(['admin'])"
                     v-model="k.flag"
                     active-color="#13ce66"
                     inactive-color="#ff4949"
@@ -79,7 +77,15 @@
                     :inactive-value=1
                     @change="changeSwitch($event,k)">
                   </el-switch>
-
+                <el-switch v-if="checkRole(['common'])"
+                           v-model="k.flag"
+                           active-color="#13ce66"
+                           inactive-color="#ff4949"
+                           :active-value=0
+                           :inactive-value=1
+                           :disabled=true
+                           @change="changeSwitch($event,k)">
+                </el-switch>
                 <el-form-item>
                   <el-upload
                     class="upload-demo"
@@ -87,62 +93,35 @@
                     accept="image/jpeg,image/jpg,image/png"
                     :action="upload.url"
                     :headers="upload.headers"
-                    :data="{'id':k.id}"
+                    :data="{'id':k.id,'flag':0}"
                     :on-success="uploadSuccess"
                   >
                     <el-image
-                      style="width: 500px; height: 500px"
-                      v-if="k.url"
+                      style="width: 750px; height: 750px"
                       :src="k.url"
-                      >
-
+                    >
                     </el-image>
-
-<!--                    <img v-if="k.url" :src="k.url" class="avatar">-->
                     <i class="el-icon-upload"></i>
                     <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
                     <div class="el-upload__tip" slot="tip">只能上传jpg/png文件，且不超过500kb</div>
                   </el-upload>
-
                 </el-form-item>
               </el-form-item>
-
           </el-form>
-
         </template>
       </el-table-column>
       <el-table-column label="Id" align="center" prop="stuId"  />
       <el-table-column label="姓名" align="center" prop="stuName"  />
       <el-table-column label="班级" align="center" prop="stuCls" />
       <el-table-column label="年级" align="center" prop="stuClsYear" />
-
-
-<!--      <el-table-column label="操作" align="center" class-name="small-padding fixed-width">-->
-<!--        <template slot-scope="scope">-->
-<!--          <el-button-->
-<!--            size="mini"-->
-<!--            type="text"-->
-<!--            icon="el-icon-edit"-->
-<!--            @click="handleUpdate(scope.row)"-->
-<!--            v-hasPermi="['stu:biye:edit']"-->
-<!--          >修改</el-button>-->
-<!--          <el-button-->
-<!--            size="mini"-->
-<!--            type="text"-->
-<!--            icon="el-icon-delete"-->
-<!--            @click="handleDelete(scope.row)"-->
-<!--            v-hasPermi="['stu:biye:remove']"-->
-<!--          >删除</el-button>-->
-<!--        </template>-->
-<!--      </el-table-column>-->
     </el-table>
-
   </div>
 </template>
 
 <script>
 import {getList,updateMaterialFlag} from "@/api/stu/biye";
 import {getToken} from "@/utils/auth";
+import { checkPermi, checkRole } from "@/utils/permission"; // 权限判断函数
 
 export default {
   name: "biye",
@@ -202,14 +181,14 @@ export default {
   },
   methods: {
 
+    checkRole,
     uploadSuccess(response, file, fileList){
+      console.log(response)
       this.getList();
     },
 
     /*提交照片后修改材料状态*/
     changeSwitch(flag,row){
-      console.log(flag);
-      console.log(row);
       const data = {
         "id":row.id,
         "flag":flag,
@@ -227,7 +206,6 @@ export default {
             message: '网络繁忙，提交失败',
             type: 'warning'
           });
-
         }
       })
     },
@@ -237,17 +215,12 @@ export default {
       this.oneList = []
       this.loading = true;
       getList(this.queryParams).then(response => {
-        console.log("response.data",response.data)
         for (const dataKey in response.data) {
-          console.log("dataKey",dataKey)
           const key = JSON.parse(dataKey);
-          console.log("key",key)
-          console.log('response.data[key]',response.data[key]);
           key.material = response.data[dataKey]
           this.oneList.push(key);
         }
         this.loading = false;
-        console.log("oneList",this.oneList)
       });
     },
     // 取消按钮
@@ -287,7 +260,6 @@ export default {
       this.open = true;
       this.title = "添加学生信息";
     },
-
   }
 };
 </script>

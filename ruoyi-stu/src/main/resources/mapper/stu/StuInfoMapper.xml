@@ -40,7 +40,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <include refid="selectStuInfoVo"/>
         where stu_id = #{stuId}
     </select>
-        
+    <select id="selectStuInfoByStuNo" resultType="java.lang.Integer">
+        select count(stu_name) from stu_info where stu_no = #{stuNo}
+    </select>
+
     <insert id="insertStuInfo" parameterType="StuInfo" useGeneratedKeys="true" keyProperty="stuId">
         insert into stu_info
         <trim prefix="(" suffix=")" suffixOverrides=",">

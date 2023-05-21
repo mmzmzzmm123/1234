@@ -7,6 +7,11 @@
           <svg-icon slot="prefix" icon-class="user" class="el-input__icon input-icon" />
         </el-input>
       </el-form-item>
+      <el-form-item prop="stuNo">
+        <el-input v-model="registerForm.stuNo" type="text" auto-complete="off" placeholder="学号">
+          <svg-icon slot="prefix" icon-class="user" class="el-input__icon input-icon" />
+        </el-input>
+      </el-form-item>
       <el-form-item prop="password">
         <el-input
           v-model="registerForm.password"
@@ -83,6 +88,7 @@ export default {
       codeUrl: "",
       registerForm: {
         username: "",
+        stuNO: "",
         password: "",
         confirmPassword: "",
         code: "",
@@ -92,6 +98,10 @@ export default {
         username: [
           { required: true, trigger: "blur", message: "请输入您的账号" },
           { min: 2, max: 20, message: '用户账号长度必须介于 2 和 20 之间', trigger: 'blur' }
+        ],
+        stuNo: [
+          { required: true, trigger: "blur", message: "请输入您的账号" },
+          { min: 12, max: 20, message: '用户账号长度必须介于 2 和 20 之间', trigger: 'blur' }
         ],
         password: [
           { required: true, trigger: "blur", message: "请输入您的密码" },

@@ -58,4 +58,6 @@ public interface IStuInfoService
      * @return 结果
      */
     public int deleteStuInfoByStuId(Long stuId);
+
+    int selectStuInfoByStuNo(String stuNo);
 }

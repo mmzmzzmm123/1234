@@ -90,4 +90,29 @@ public class StuInfoMaterialServiceImpl implements IStuInfoMaterialService {
     public void updateImgUrl(BiyeForm form) {
         stuInfoMaterialMapper.updateImgUrl(form);
     }
+
+    @Override
+    public int batchAddBiye(Long stuId) {
+        int rows = selectIsCreatedMaterialId(stuId);
+        List<BiyeForm> forms = new ArrayList<>();
+        if(rows!=6){
+            for(int i = 5 ; i<=10;i++){
+                String userName = SecurityUtils.getLoginUser().getUser().getUserName();
+                BiyeForm form = new BiyeForm();
+                form.setFlag(1);
+                form.setCreateBy(userName);
+                form.setCreateTime(new Date());
+                form.setMaterialId(i);
+                form.setStuId(Math.toIntExact(stuId));
+                forms.add(form);
+            }
+            stuInfoMaterialMapper.batchAddBiye(forms);
+        }
+        return 1;
+    }
+
+    @Override
+    public int selectIsCreatedMaterialId(Long userId) {
+        return stuInfoMaterialMapper.selectStuInfMaterialoByUserId(userId);
+    }
 }

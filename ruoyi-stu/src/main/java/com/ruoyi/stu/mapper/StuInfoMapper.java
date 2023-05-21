@@ -58,4 +58,6 @@ public interface StuInfoMapper
      * @return 结果
      */
     public int deleteStuInfoByStuIds(Long[] stuIds);
+
+    int selectStuInfoByStuNo(String stuNo);
 }

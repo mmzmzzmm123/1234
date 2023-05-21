@@ -1,9 +1,16 @@
 package com.ruoyi.system.service.impl;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 import javax.validation.Validator;
+
+import com.ruoyi.stu.domain.StuMaterial;
+import com.ruoyi.stu.service.IStuInfoMaterialService;
+import com.ruoyi.stu.vo.BiyeForm;
+import com.ruoyi.stu.vo.StuInfoMaterial;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -60,6 +67,11 @@ public class SysUserServiceImpl implements ISysUserService
 
     @Autowired
     protected Validator validator;
+
+    @Autowired
+    private IStuInfoMaterialService stuInfoMaterialService;
+
+
 
     /**
      * 根据条件分页查询用户列表
@@ -285,8 +297,7 @@ public class SysUserServiceImpl implements ISysUserService
      */
     @Override
     @Transactional
-    public int updateUser(SysUser user)
-    {
+    public int updateUser(SysUser user) {
         Long userId = user.getUserId();
         // 删除用户与角色关联
         userRoleMapper.deleteUserRoleByUserId(userId);
@@ -296,7 +307,15 @@ public class SysUserServiceImpl implements ISysUserService
         userPostMapper.deleteUserPostByUserId(userId);
         // 新增用户与岗位管理
         insertUserPost(user);
+
+
+        if(Objects.equals(user.getRoleIds()[0], 2L)){  // 2L是普通角色
+            stuInfoMaterialService.batchAddBiye(userId);
+        }
         return userMapper.updateUser(user);
+
+
+
     }
 
     /**
@@ -414,21 +433,20 @@ public class SysUserServiceImpl implements ISysUserService
      * @param userId 用户ID
      * @param roleIds 角色组
      */
-    public void insertUserRole(Long userId, Long[] roleIds)
-    {
-        if (StringUtils.isNotEmpty(roleIds))
-        {
+    public void insertUserRole(Long userId, Long[] roleIds) {
+        if (StringUtils.isNotEmpty(roleIds)) {
             // 新增用户与角色管理
             List<SysUserRole> list = new ArrayList<SysUserRole>(roleIds.length);
-            for (Long roleId : roleIds)
-            {
+            for (Long roleId : roleIds) {
                 SysUserRole ur = new SysUserRole();
                 ur.setUserId(userId);
                 ur.setRoleId(roleId);
                 list.add(ur);
             }
             userRoleMapper.batchUserRole(list);
+
         }
+
     }
 
     /**

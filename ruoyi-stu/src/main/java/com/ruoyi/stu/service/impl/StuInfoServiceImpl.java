@@ -90,4 +90,9 @@ public class StuInfoServiceImpl implements IStuInfoService
     {
         return stuInfoMapper.deleteStuInfoByStuId(stuId);
     }
+
+    @Override
+    public int selectStuInfoByStuNo(String stuNo) {
+        return stuInfoMapper.selectStuInfoByStuNo(stuNo);
+    }
 }

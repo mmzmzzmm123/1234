@@ -59,4 +59,8 @@ import java.util.List;
     StuInfoMaterial selectStuInfMaterialoById(Long id);
 
     void updateImgUrl(BiyeForm form);
+
+    int batchAddBiye(List<BiyeForm> list);
+
+    int selectStuInfMaterialoByUserId(Long userId);
 }

@@ -47,7 +47,7 @@ public class BiyeController extends BaseController
     private ServerConfig serverConfig;
 
     @PostMapping("upload")
-    public AjaxResult uploadFile(MultipartFile file, String id ){
+    public AjaxResult uploadFile(MultipartFile file, String id ,Integer flag){
         try {
             // 上传文件路径
             String filePath = RuoYiConfig.getUploadPath();
@@ -58,6 +58,7 @@ public class BiyeController extends BaseController
             form.setUpdateTime(new Date());
             form.setUrl(url);
             form.setId(Integer.valueOf(id));
+            form.setFlag(flag);
             String userName = SecurityUtils.getUsername();
             form.setUpdateBy(userName);
             stuInfoMaterialService.updateImgUrl(form);
