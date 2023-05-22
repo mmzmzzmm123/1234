@@ -47,7 +47,14 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         </where>
     </select>
 
-
+    <insert id="batchAddBiye">
+        insert into stu_info_material
+        values
+        <foreach collection="list" item="biye" separator=",">
+            (null,#{biye.stuId},#{biye.materialId},#{biye.flag},#{biye.url},
+            #{biye.createBy},#{biye.createTime},#{biye.updateBy},#{biye.updateTime})
+        </foreach>
+    </insert>
 
     <select id="selectStuInfMaterialoById" resultType="com.ruoyi.stu.vo.StuInfoMaterial">
         <include refid="selectStuInfoMaterialVo"/>
@@ -84,14 +91,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="updateTime != null">#{updateTime},</if>
          </trim>
     </insert>
-    <insert id="batchAddBiye">
-        insert into stu_info_material
-        values
-            <foreach collection="list" item="biye" separator=",">
-                (null,#{biye.stuId},#{biye.materialId},#{biye.flag},#{biye.url},
-                 #{biye.createBy},#{biye.createTime},#{biye.updateBy},#{biye.updateTime})
-            </foreach>
-    </insert>
+
 
     <update id="updateStuMaterial" >
         update stu_info_material

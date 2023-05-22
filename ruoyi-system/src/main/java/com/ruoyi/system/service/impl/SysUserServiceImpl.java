@@ -311,14 +311,13 @@ public class SysUserServiceImpl implements ISysUserService
         // 新增用户与岗位管理
         insertUserPost(user);
 
-
-        if(Objects.equals(user.getRoleIds()[0], 2L)){  // 2L是普通角色
-            stuInfoMaterialService.batchAddBiye(userId);
+        Long[] roleIds = user.getRoleIds();
+        if(roleIds.length!=0){
+            if(Objects.equals(roleIds[0], 2L)){  // 2L是普通角色
+                stuInfoMaterialService.batchAddBiye(user.getStuId());
+            }
         }
         return userMapper.updateUser(user);
-
-
-
     }
 
     /**
