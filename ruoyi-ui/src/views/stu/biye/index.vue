@@ -69,7 +69,7 @@
           <el-form   class="demo-table-expand">
               <el-form-item  v-for=" k in props.row.material" :key="k.stuMaterial.id" :label="k.stuMaterial.name"  label-width="135px">
                 <el-input  type="hidden" name="materialId" :value="k.stuMaterial.id"></el-input>
-                  <el-switch v-if="checkRole(['admin'])"
+                  <el-switch
                     v-model="k.flag"
                     active-color="#13ce66"
                     inactive-color="#ff4949"
@@ -77,15 +77,7 @@
                     :inactive-value=1
                     @change="changeSwitch($event,k)">
                   </el-switch>
-                <el-switch v-if="checkRole(['common'])"
-                           v-model="k.flag"
-                           active-color="#13ce66"
-                           inactive-color="#ff4949"
-                           :active-value=0
-                           :inactive-value=1
-                           :disabled=true
-                           @change="changeSwitch($event,k)">
-                </el-switch>
+
                 <el-form-item>
                   <el-upload
                     class="upload-demo"

@@ -97,10 +97,9 @@ public class StuInfoMaterialServiceImpl implements IStuInfoMaterialService {
         List<BiyeForm> forms = new ArrayList<>();
         if(rows!=6){
             for(int i = 5 ; i<=10;i++){
-                String userName = SecurityUtils.getLoginUser().getUser().getUserName();
                 BiyeForm form = new BiyeForm();
                 form.setFlag(1);
-                form.setCreateBy(userName);
+                form.setCreateBy("admin");
                 form.setCreateTime(new Date());
                 form.setMaterialId(i);
                 form.setStuId(Math.toIntExact(stuId));

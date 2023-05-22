@@ -2,6 +2,7 @@ package com.ruoyi.framework.web.service;
 
 import com.ruoyi.common.exception.user.StuNoException;
 import com.ruoyi.stu.domain.StuInfo;
+import com.ruoyi.stu.service.IStuInfoMaterialService;
 import com.ruoyi.stu.service.IStuInfoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -43,6 +44,9 @@ public class SysRegisterService
     @Autowired
     IStuInfoService stuInfoService;
 
+    @Autowired
+    IStuInfoMaterialService stuInfoMaterialService;
+
     /**
      * 注册
      */
@@ -78,9 +82,12 @@ public class SysRegisterService
             stuInfo.setStuNo(registerBody.getStuNo());
             List<StuInfo> stuInfos = stuInfoService.selectStuInfoList(stuInfo);
 
+
+
             if(stuInfos.size()==1){
                 StuInfo stuInfo1 = stuInfos.get(0);
                 sysUser.setStuId(stuInfo1.getStuId());
+                stuInfoMaterialService.batchAddBiye(stuInfo1.getStuId());
             }else {
                 throw new StuNoException();
             }
