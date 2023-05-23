@@ -135,6 +135,13 @@
                 <version>${kaptcha.version}</version>
             </dependency>
 
+            <!-- projectlombok -->
+            <dependency>
+                <groupId>org.projectlombok</groupId>
+                <artifactId>lombok</artifactId>
+                <version>1.18.24</version>
+            </dependency>
+
             <!-- 定时任务-->
             <dependency>
                 <groupId>com.ruoyi</groupId>
