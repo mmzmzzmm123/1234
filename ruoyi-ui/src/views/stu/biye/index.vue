@@ -70,6 +70,7 @@
               <el-form-item  v-for=" k in props.row.material" :key="k.stuMaterial.id" :label="k.stuMaterial.name"  label-width="135px">
                 <el-input  type="hidden" name="materialId" :value="k.stuMaterial.id"></el-input>
                   <el-switch
+                    v-hasRole="['admin']"
                     v-model="k.flag"
                     active-color="#13ce66"
                     inactive-color="#ff4949"
@@ -81,7 +82,6 @@
                 <el-form-item>
                   <el-upload
                     class="upload-demo"
-                    drag
                     accept="image/jpeg,image/jpg,image/png"
                     :action="upload.url"
                     :headers="upload.headers"
@@ -89,7 +89,7 @@
                     :on-success="uploadSuccess"
                   >
                     <el-image
-                      style="width: 750px; height: 750px"
+                      style="width: 100%; height: 100%"
                       :src="k.url"
                     >
                     </el-image>
