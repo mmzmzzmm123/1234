@@ -43,6 +43,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <select id="selectStuInfoByStuNo" resultType="java.lang.Integer">
         select count(stu_name) from stu_info where stu_no = #{stuNo}
     </select>
+    <select id="clsAndClsYear" resultType="com.ruoyi.stu.domain.StuInfo">
+        select  stu_cls, stu_cls_year from stu_info
+
+    </select>
 
     <insert id="insertStuInfo" parameterType="StuInfo" useGeneratedKeys="true" keyProperty="stuId">
         insert into stu_info

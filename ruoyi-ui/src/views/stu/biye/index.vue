@@ -10,21 +10,25 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
+
       <el-form-item label="班级" prop="stuCls">
-        <el-input
-          v-model="queryParams.stuCls"
-          placeholder="请输入班级"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
+        <el-select v-model="queryParams.stuCls" placeholder="请选择班级">
+          <el-option
+            v-for="item in infoList"
+            :label="item.cls"
+            :value="item.cls">
+          </el-option>
+        </el-select>
       </el-form-item>
+
       <el-form-item label="年级" prop="stuClsYear">
-        <el-input
-          v-model="queryParams.stuClsYear"
-          placeholder="请输入年级"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
+        <el-select v-model="queryParams.stuCls" placeholder="请选择年级">
+          <el-option
+            v-for="item in yearList"
+            :label="item"
+            :value="item">
+          </el-option>
+        </el-select>
       </el-form-item>
       <el-form-item label="提交状态" prop="flag">
         <el-input
@@ -113,10 +117,11 @@
 <script>
 import {getList,updateMaterialFlag} from "@/api/stu/biye";
 import {getToken} from "@/utils/auth";
-import { checkPermi, checkRole } from "@/utils/permission"; // 权限判断函数
-
+import { checkPermi, checkRole } from "@/utils/permission";
+import { listBaseAll} from "@/api/stu/base"; // 权限判断函数
 export default {
   name: "biye",
+
   data() {
     return {
     // 上传参数
@@ -130,7 +135,12 @@ export default {
         // 上传的文件列表
         fileList: []
       },
+      form:{},
 
+      //学生年级信息
+      infoList:[],
+      //学生年段信息
+      yearList:[],
       // 遮罩层
       loading: true,
       // 选中数组
@@ -157,19 +167,15 @@ export default {
         stuClsYear: '',
         materialName:''
       },
-      // 表单参数
-      form: {},
-      // 表单校验
-      rules: {
-      },
+      //学生材料信息
       oneList:[],
-      dialogImageUrl: '',
-      dialogVisible: false,
-      disabled: false
+
     };
   },
   created() {
+    this.listBase();
     this.getList();
+
   },
   methods: {
 
@@ -200,6 +206,20 @@ export default {
           });
         }
       })
+    },
+
+    //得到所有班级，年级
+    listBase(){
+      this.infoList = []
+      this.loading = true;
+       listBaseAll(this.queryParams).then(response => {
+         for (const dataKey in response.data) {
+           this.yearList.push(dataKey);
+           this.infoList.push(response.data[dataKey]);
+         }
+         this.loading = false;
+      });
+      console.log(this.infoList)
     },
 
     /** 查询学生信息列表 */

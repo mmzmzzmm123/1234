@@ -1,7 +1,7 @@
 <template>
   <div class="app-container home">
     <el-row :gutter="20">
-      <el-col :xs="24" :sm="24" :md="12" :lg="12">
+      <el-col :xs="24" :sm="24" :md="12" :lg="8">
         <el-card class="update-log">
           <div slot="header" class="clearfix">
             <span>企业实习报告</span>
@@ -11,10 +11,10 @@
           </div>
         </el-card>
       </el-col>
-      <el-col :xs="24" :sm="24" :md="12" :lg="12">
+      <el-col :xs="24" :sm="24" :md="12" :lg="8">
         <el-card class="update-log">
           <div slot="header" class="clearfix">
-            <span>更新日志</span>
+            <span>顶岗实习承诺书</span>
           </div>
           <el-collapse accordion>
 
@@ -22,15 +22,46 @@
         </el-card>
       </el-col>
 
-    </el-row>
+      <el-col :xs="24" :sm="24" :md="12" :lg="8">
+        <el-card class="update-log">
+          <div slot="header" class="clearfix">
+            <span>顶岗实习申请表</span>
+          </div>
+          <el-collapse accordion>
 
+          </el-collapse>
+        </el-card>
+      </el-col>
+
+      <el-col :xs="24" :sm="24" :md="12" :lg="8">
+        <el-card class="update-log">
+          <div slot="header" class="clearfix">
+            <span>顶岗实习承诺书</span>
+          </div>
+          <el-collapse accordion>
+
+          </el-collapse>
+        </el-card>
+      </el-col>
+
+      <el-col :xs="24" :sm="24" :md="12" :lg="8">
+        <el-card class="update-log">
+          <div slot="header" class="clearfix">
+            <span>实习三方协议</span>
+          </div>
+          <el-collapse accordion>
+
+          </el-collapse>
+        </el-card>
+      </el-col>
+    </el-row>
 
     <el-divider />
     <el-row :gutter="20">
       <el-col :xs="24" :sm="24" :md="12" :lg="8">
         <el-card class="update-log">
           <div slot="header" class="clearfix">
-            <span>联系信息</span>
+            <span>在实习单位公司的照片</span>
           </div>
           <div class="body">
 

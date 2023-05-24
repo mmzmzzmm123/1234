@@ -9,6 +9,15 @@ export function listInfo(query) {
   })
 }
 
+export function listClsAndClsYear(query) {
+  return request({
+    url: '/stu/info/clsAndClsYear/',
+    method: 'get',
+    params: query
+  })
+}
+
+
 // 查询学生信息详细
 export function getInfo(stuId) {
   return request({

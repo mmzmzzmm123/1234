@@ -8,12 +8,14 @@ import com.ruoyi.common.enums.BusinessType;
 import com.ruoyi.common.utils.poi.ExcelUtil;
 import com.ruoyi.stu.domain.StuInfo;
 import com.ruoyi.stu.service.IStuInfoService;
+import com.ruoyi.stu.vo.StuInfoMaterial;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * 学生信息Controller
@@ -27,6 +29,7 @@ public class StuInfoController extends BaseController
 {
     @Autowired
     private IStuInfoService stuInfoService;
+
 
     /**
      * 查询学生信息列表

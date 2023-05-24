@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.stu.mapper.StuClsMapper">
+    
+    <resultMap type="StuCls" id="StuClsResult">
+        <result property="id"    column="id"    />
+        <result property="cls"    column="cls"    />
+        <result property="clsYear"    column="cls_year"    />
+    </resultMap>
+
+    <sql id="selectStuClsVo">
+        select id, cls, cls_year from stu_cls
+    </sql>
+
+    <select id="selectStuClsList" parameterType="StuCls" resultMap="StuClsResult">
+        <include refid="selectStuClsVo"/>
+        <where>  
+            <if test="cls != null  and cls != ''"> and cls = #{cls}</if>
+            <if test="clsYear != null  and clsYear != ''"> and cls_year = #{clsYear}</if>
+        </where>
+    </select>
+    
+    <select id="selectStuClsById" parameterType="Long" resultMap="StuClsResult">
+        <include refid="selectStuClsVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertStuCls" parameterType="StuCls" useGeneratedKeys="true" keyProperty="id">
+        insert into stu_cls
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="cls != null">cls,</if>
+            <if test="clsYear != null">cls_year,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="cls != null">#{cls},</if>
+            <if test="clsYear != null">#{clsYear},</if>
+         </trim>
+    </insert>
+
+    <update id="updateStuCls" parameterType="StuCls">
+        update stu_cls
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="cls != null">cls = #{cls},</if>
+            <if test="clsYear != null">cls_year = #{clsYear},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteStuClsById" parameterType="Long">
+        delete from stu_cls where id = #{id}
+    </delete>
+
+    <delete id="deleteStuClsByIds" parameterType="String">
+        delete from stu_cls where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

@@ -60,4 +60,6 @@ public interface IStuInfoService
     public int deleteStuInfoByStuId(Long stuId);
 
     int selectStuInfoByStuNo(String stuNo);
+
+    List<StuInfo> clsAndClsYear();
 }

@@ -60,4 +60,6 @@ public interface StuInfoMapper
     public int deleteStuInfoByStuIds(Long[] stuIds);
 
     int selectStuInfoByStuNo(String stuNo);
+
+    List<StuInfo> clsAndClsYear();
 }
