@@ -62,4 +62,12 @@ public interface IStuInfoService
     int selectStuInfoByStuNo(String stuNo);
 
     List<StuInfo> clsAndClsYear();
+
+    /**
+     * 查询某个年级学生总人数
+     *
+     * @param clsYear 需要查询的年级
+     */
+
+    int selectStuNumByYear(String clsYear);
 }

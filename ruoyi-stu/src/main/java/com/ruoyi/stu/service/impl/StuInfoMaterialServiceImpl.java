@@ -6,9 +6,11 @@ import com.google.gson.Gson;
 import com.ruoyi.common.core.domain.entity.SysUser;
 import com.ruoyi.common.utils.SecurityUtils;
 import com.ruoyi.stu.domain.StuInfo;
+import com.ruoyi.stu.mapper.StuInfoMapper;
 import com.ruoyi.stu.vo.BiyeForm;
 import com.ruoyi.stu.mapper.StuInfoMaterialMapper;
 import com.ruoyi.stu.service.IStuInfoMaterialService;
+import com.ruoyi.stu.vo.DataVO;
 import com.ruoyi.stu.vo.StuInfoMaterial;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +28,10 @@ import java.util.stream.Collectors;
  */
 @Service
 public class StuInfoMaterialServiceImpl implements IStuInfoMaterialService {
+
+    @Autowired
+    private StuInfoMapper stuInfoMapper;
+
     @Autowired
     private StuInfoMaterialMapper stuInfoMaterialMapper;
 
@@ -52,6 +58,23 @@ public class StuInfoMaterialServiceImpl implements IStuInfoMaterialService {
     public int selectIsCreatedMaterialId(Long userId) {
         return stuInfoMaterialMapper.selectStuInfMaterialoByUserId(userId);
     }
+
+    @Override
+    public int selectStuFinishedMaterials(String clsYear,String clsYear2) {
+        return stuInfoMaterialMapper.selectStuFinishedMaterials(clsYear,clsYear2);
+    }
+
+    @Override
+    public DataVO showTopData(String clsYear) {
+        DataVO dataVO = new DataVO();
+        String clsYear2 = (Integer.parseInt(clsYear.substring(0,2))+1)+"级";
+        int total = stuInfoMapper.selectBiYeStuNumByYear(clsYear,clsYear2);
+        dataVO.setStuNum(total);
+        dataVO.setTotalEnMaterial(total*5);
+        dataVO.setFinshedEnMaterial(selectStuFinishedMaterials(clsYear,clsYear2));
+        return dataVO;
+    }
+
     @Override
     public Map<String,List<StuInfoMaterial>> selectStuMaterialList(BiyeForm stuInfoMaterial) {
         List<StuInfoMaterial> stuInfoMaterials = stuInfoMaterialMapper.selectStuMaterialList(stuInfoMaterial);

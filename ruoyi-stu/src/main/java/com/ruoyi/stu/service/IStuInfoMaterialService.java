@@ -1,7 +1,9 @@
 package com.ruoyi.stu.service;
 
 import com.ruoyi.stu.vo.BiyeForm;
+import com.ruoyi.stu.vo.DataVO;
 import com.ruoyi.stu.vo.StuInfoMaterial;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 import java.util.Map;
@@ -61,10 +63,15 @@ public interface IStuInfoMaterialService {
 
     void updateImgUrl(BiyeForm form);
 
-
-
-
     int batchAddBiye(Long stuId);
 
     int selectIsCreatedMaterialId(Long userId);
+    /**
+     * 通过年级以及材料id查询各种材料的提交情况
+     */
+    int selectStuFinishedMaterials(String clsYear,String clsYear2);
+    /**
+     * 数据展示上半部分,展示毕业学生总数,届别,总体需要提交材料以及已经提交材料
+     */
+    DataVO showTopData(String clsYear);
 }

@@ -100,4 +100,9 @@ public class StuInfoServiceImpl implements IStuInfoService
     public List<StuInfo> clsAndClsYear() {
         return stuInfoMapper.clsAndClsYear();
     }
+
+    @Override
+    public int selectStuNumByYear(String clsYear) {
+        return stuInfoMapper.selectStuNumByYear(clsYear);
+    }
 }

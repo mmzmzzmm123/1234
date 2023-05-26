@@ -63,4 +63,8 @@ import java.util.List;
     int batchAddBiye(List<BiyeForm> list);
 
     int selectStuInfMaterialoByUserId(Long userId);
+    /**
+     * 查询企业实习材料以及照片以及视频提交情况总数量
+     */
+    int selectStuFinishedMaterials(@Param("clsYear")String clsYear,@Param("clsYear2")String clsYear2);
 }

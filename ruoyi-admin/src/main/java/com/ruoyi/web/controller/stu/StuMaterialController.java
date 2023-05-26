@@ -7,6 +7,7 @@ import com.ruoyi.common.core.page.TableDataInfo;
 import com.ruoyi.common.enums.BusinessType;
 import com.ruoyi.common.utils.poi.ExcelUtil;
 import com.ruoyi.stu.domain.StuMaterial;
+import com.ruoyi.stu.service.IStuInfoMaterialService;
 import com.ruoyi.stu.service.IStuMaterialService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -27,6 +28,9 @@ public class StuMaterialController extends BaseController
 {
     @Autowired
     private IStuMaterialService stuMaterialService;
+
+    @Autowired
+    private IStuInfoMaterialService iStuInfoMaterialService;
 
     /**
      * 查询提交材料参数列表
@@ -64,6 +68,18 @@ public class StuMaterialController extends BaseController
     }
 
     /**
+     * 获取某个年级的不同材料的提交情况
+     */
+//    @PreAuthorize("@ss.hasPermi('stu:material:query')")
+//    @GetMapping(value = "/materProcess/{clsYear}")
+//    public AjaxResult materProcess(@PathVariable("clsYear") String clsYear)
+//    {
+//        return success(iStuInfoMaterialService.selectStuFinishedMaterials(clsYear));
+//    }
+
+
+
+    /**
      * 新增提交材料参数
      */
     @PreAuthorize("@ss.hasPermi('stu:material:add')")
@@ -95,4 +111,5 @@ public class StuMaterialController extends BaseController
     {
         return toAjax(stuMaterialService.deleteStuMaterialByIds(ids));
     }
+
 }

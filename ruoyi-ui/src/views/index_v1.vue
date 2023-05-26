@@ -1,11 +1,11 @@
 <template>
   <div class="dashboard-editor-container">
 
-    <panel-group @handleSetLineChartData="handleSetLineChartData" />
+    <student-panel-group @handleSetLineChartData="handleSetLineChartData" />
 
-    <el-row style="background:#fff;padding:16px 16px 0;margin-bottom:32px;">
-      <line-chart :chart-data="lineChartData" />
-    </el-row>
+<!--    <el-row style="background:#fff;padding:16px 16px 0;margin-bottom:32px;">-->
+<!--      <line-chart :chart-data="lineChartData" />-->
+<!--    </el-row>-->
 
     <el-row :gutter="32">
       <el-col :xs="24" :sm="24" :lg="8">
@@ -25,12 +25,12 @@
       </el-col>
     </el-row>
 
-    
+
   </div>
 </template>
 
 <script>
-import PanelGroup from './dashboard/PanelGroup'
+import StudentPanelGroup from './dashboard/StudentPanelGroup'
 import LineChart from './dashboard/LineChart'
 import RaddarChart from './dashboard/RaddarChart'
 import PieChart from './dashboard/PieChart'
@@ -58,7 +58,7 @@ const lineChartData = {
 export default {
   name: 'Index',
   components: {
-    PanelGroup,
+    StudentPanelGroup,
     LineChart,
     RaddarChart,
     PieChart,

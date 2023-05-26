@@ -17,6 +17,13 @@ export function listClsAndClsYear(query) {
   })
 }
 
+// 查询年级学生信息数量
+export function getTopData(clsYear) {
+  return request({
+    url: '/data/topData/' + clsYear,
+    method: 'get'
+  })
+}
 
 // 查询学生信息详细
 export function getInfo(stuId) {

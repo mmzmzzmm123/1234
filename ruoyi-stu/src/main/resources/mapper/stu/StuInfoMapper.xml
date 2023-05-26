@@ -100,4 +100,12 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             #{stuId}
         </foreach>
     </delete>
+
+    <select id="selectStuNumByYear" resultType="Integer">
+        select count(*) from stu_info where stu_cls_year = #{clsYear}
+    </select>
+
+    <select id="selectBiYeStuNumByYear" resultType="Integer">
+        select count(*) from stu_info where (stu_cls_year = #{clsYear} and stu_type != '3+2') or (stu_cls_year = #{clsYear2} and stu_type = '3+2')
+    </select>
 </mapper>

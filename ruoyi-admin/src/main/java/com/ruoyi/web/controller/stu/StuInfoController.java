@@ -44,6 +44,16 @@ public class StuInfoController extends BaseController
     }
 
     /**
+     * 查询年级学生总数
+     */
+//    @PreAuthorize("@ss.hasPermi('stu:info:list')")
+//    @GetMapping("/num/{clsYear}")
+//    public AjaxResult stuNum(@PathVariable("clsYear")Integer clsYear)
+//    {
+//        return success(stuInfoService.selectStuNumByYear((clsYear-2002)+"级"));
+//    }
+
+    /**
      * 导出学生信息列表
      */
     @PreAuthorize("@ss.hasPermi('stu:info:export')")

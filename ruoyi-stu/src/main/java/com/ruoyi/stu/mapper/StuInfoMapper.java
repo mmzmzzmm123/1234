@@ -2,6 +2,7 @@ package com.ruoyi.stu.mapper;
 
 import java.util.List;
 import com.ruoyi.stu.domain.StuInfo;
+import org.apache.ibatis.annotations.Param;
 
 /**
  * 学生信息Mapper接口
@@ -62,4 +63,23 @@ public interface StuInfoMapper
     int selectStuInfoByStuNo(String stuNo);
 
     List<StuInfo> clsAndClsYear();
+    /**
+     * 查询某个年级学生总人数
+     *
+     * @param clsYear 需要查询的年级
+     */
+
+    int selectStuNumByYear(String clsYear);
+
+    /**
+     * 查询某个毕业届别学生总人数
+     *
+     * @param clsYear 需要查询的年级
+     */
+
+    int selectBiYeStuNumByYear(@Param("clsYear") String clsYear,@Param("clsYear2") String clsYear2);
+
+
+
+
 }
