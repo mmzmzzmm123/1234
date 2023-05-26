@@ -14,9 +14,9 @@
       <el-form-item label="班级" prop="stuCls">
         <el-select v-model="queryParams.stuCls" placeholder="请选择班级">
           <el-option
-            v-for="item in infoList"
-            :label="item.cls"
-            :value="item.cls">
+            v-for="item in infoList.cls"
+            :label="item"
+            :value="item">
           </el-option>
         </el-select>
       </el-form-item>
