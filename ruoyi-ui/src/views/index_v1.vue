@@ -1,7 +1,7 @@
 <template>
   <div class="dashboard-editor-container">
 
-    <student-panel-group @handleSetLineChartData="handleSetLineChartData" />
+    <student-panel-group :biyeInfo="biyeInfo" :level="level" @handleSetLineChartData="handleSetLineChartData" />
 
 <!--    <el-row style="background:#fff;padding:16px 16px 0;margin-bottom:32px;">-->
 <!--      <line-chart :chart-data="lineChartData" />-->
@@ -15,12 +15,12 @@
       </el-col>
       <el-col :xs="24" :sm="24" :lg="8">
         <div class="chart-wrapper">
-          <pie-chart />
+          <student-pie-chart :clsInfo="biyeInfo.clsInfo"/>
         </div>
       </el-col>
       <el-col :xs="24" :sm="24" :lg="8">
         <div class="chart-wrapper">
-          <bar-chart />
+          <student-bar-chart :clsInfo="biyeInfo.clsInfo" />
         </div>
       </el-col>
     </el-row>
@@ -33,8 +33,9 @@
 import StudentPanelGroup from './dashboard/StudentPanelGroup'
 import LineChart from './dashboard/LineChart'
 import RaddarChart from './dashboard/RaddarChart'
-import PieChart from './dashboard/PieChart'
-import BarChart from './dashboard/BarChart'
+import StudentPieChart from './dashboard/StudentPieChart'
+import StudentBarChart from './dashboard/StudentBarChart'
+import {getTopData} from '@/api/stu/info'
 
 const lineChartData = {
   newVisitis: {
@@ -61,18 +62,36 @@ export default {
     StudentPanelGroup,
     LineChart,
     RaddarChart,
-    PieChart,
-    BarChart
+    StudentPieChart,
+    StudentBarChart
   },
   data() {
     return {
-      lineChartData: lineChartData.newVisitis
+      lineChartData: lineChartData.newVisitis,
+      level:0,
+      biyeInfo:{
+        stuNum:0,
+        finshedEnMaterial:0,
+        totalEnMaterial:0,
+        clsInfo:[]
+      }
     }
   },
   methods: {
     handleSetLineChartData(type) {
       this.lineChartData = lineChartData[type]
+    },
+    getLevel(){
+      let now = new Date();
+      now.getMonth()>10 ? this.level = now.getFullYear()+1 : this.level = now.getFullYear()
     }
+  },
+  mounted() {
+    this.getLevel();
+    getTopData(this.level).then(res=>{
+      this.biyeInfo = res.data
+      console.log(this.biyeInfo)
+    })
   }
 }
 </script>

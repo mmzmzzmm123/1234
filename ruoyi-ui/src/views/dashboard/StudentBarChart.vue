@@ -3,11 +3,12 @@
 </template>
 
 <script>
+// import {getTopData} from '@/api/stu/info'
 import * as echarts from 'echarts';
 require('echarts/theme/macarons') // echarts theme
 import resize from './mixins/resize'
 
-const animationDuration = 6000
+const animationDuration = 2000
 
 export default {
   mixins: [resize],
@@ -23,11 +24,26 @@ export default {
     height: {
       type: String,
       default: '300px'
+    },
+    clsInfo: {
+      type: Array,
+      default: []
     }
   },
   data() {
     return {
-      chart: null
+      chart: null,
+      heads: [],
+      stuNums: []
+    }
+  },
+  watch:{
+    clsInfo(newData,oldData){
+      newData.forEach((item)=>{
+        this.heads.push(item.cls)
+        this.stuNums.push(item.stuNum)
+      })
+      this.initChart()
     }
   },
   mounted() {
@@ -61,7 +77,7 @@ export default {
         },
         xAxis: [{
           type: 'category',
-          data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+          data: this.heads,
           axisTick: {
             alignWithLabel: true
           }
@@ -73,29 +89,31 @@ export default {
           }
         }],
         series: [{
-          name: 'pageA',
+          name: '人员数量',
           type: 'bar',
           stack: 'vistors',
           barWidth: '60%',
-          data: [79, 52, 200, 334, 390, 330, 220],
+          data: this.stuNums,
           animationDuration
-        }, {
-          name: 'pageB',
-          type: 'bar',
-          stack: 'vistors',
-          barWidth: '60%',
-          data: [80, 52, 200, 334, 390, 330, 220],
-          animationDuration
-        }, {
-          name: 'pageC',
-          type: 'bar',
-          stack: 'vistors',
-          barWidth: '60%',
-          data: [30, 52, 200, 334, 390, 330, 220],
-          animationDuration
-        }]
+        },
+        //   {
+        //   name: 'pageB',
+        //   type: 'bar',
+        //   stack: 'vistors',
+        //   barWidth: '60%',
+        //   data: [80, 52, 200, 334, 390, 330, 220],
+        //   animationDuration
+        // }, {
+        //   name: 'pageC',
+        //   type: 'bar',
+        //   stack: 'vistors',
+        //   barWidth: '60%',
+        //   data: [30, 52, 200, 334, 390, 330, 220],
+        //   animationDuration
+        // }
+        ]
       })
-    }
+    },
   }
 }
 </script>

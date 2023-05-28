@@ -1,9 +1,12 @@
 package com.ruoyi.stu.domain;
 
+import lombok.Data;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import com.ruoyi.common.annotation.Excel;
 import com.ruoyi.common.core.domain.BaseEntity;
+
+import java.util.List;
 
 /**
  * 班级年级参数对象 stu_cls
@@ -25,41 +28,87 @@ public class StuCls extends BaseEntity
     /** 年级 */
     @Excel(name = "年级")
     private String clsYear;
+    /**
+     * 班级人数
+     */
+    private int stuNum;
+    /*
+    已完成提交材料数量
+     */
+    private int mNum;
 
-    public void setId(Long id) 
+    @Override
+    public String toString() {
+        return "StuCls{" +
+                "id=" + id +
+                ", cls='" + cls + '\'' +
+                ", clsYear='" + clsYear + '\'' +
+                ", stuNum=" + stuNum +
+                ", mNum=" + mNum +
+                '}';
+    }
+
+    public StuCls(Long id, String cls, String clsYear, int stuNum, int mNum) {
+        this.id = id;
+        this.cls = cls;
+        this.clsYear = clsYear;
+        this.stuNum = stuNum;
+        this.mNum = mNum;
+    }
+
+    public int getmNum() {
+        return mNum;
+    }
+
+    public void setmNum(int mNum) {
+        this.mNum = mNum;
+    }
+
+    public  StuCls(){
+
+    }
+
+    public StuCls(Long id, String cls, String clsYear, int stuNum) {
+        this.id = id;
+        this.cls = cls;
+        this.clsYear = clsYear;
+        this.stuNum = stuNum;
+    }
+
+    public int getStuNum() {
+        return stuNum;
+    }
+
+    public void setStuNum(int stuNum) {
+        this.stuNum = stuNum;
+    }
+
+    public void setId(Long id)
     {
         this.id = id;
     }
 
-    public Long getId() 
+    public Long getId()
     {
         return id;
     }
-    public void setCls(String cls) 
+    public void setCls(String cls)
     {
         this.cls = cls;
     }
 
-    public String getCls() 
+    public String getCls()
     {
         return cls;
     }
-    public void setClsYear(String clsYear) 
+    public void setClsYear(String clsYear)
     {
         this.clsYear = clsYear;
     }
 
-    public String getClsYear() 
+    public String getClsYear()
     {
         return clsYear;
     }
 
-    @Override
-    public String toString() {
-        return new ToStringBuilder(this,ToStringStyle.MULTI_LINE_STYLE)
-            .append("id", getId())
-            .append("cls", getCls())
-            .append("clsYear", getClsYear())
-            .toString();
-    }
 }

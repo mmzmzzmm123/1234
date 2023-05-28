@@ -8,6 +8,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="id"    column="id"    />
         <result property="cls"    column="cls"    />
         <result property="clsYear"    column="cls_year"    />
+        <result property="stuNum"    column="stuNum"    />
     </resultMap>
 
     <sql id="selectStuClsVo">
@@ -58,4 +59,13 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             #{id}
         </foreach>
     </delete>
+
+    <select id="selectBiYeStuNumByYearAndCls" resultMap="StuClsResult">
+        select sc.stu_cls `cls`,IFNULL(num,0) `mNum`, stunum `stuNum` from
+            (select stu_cls,count(*) `stuNum` from stu_info where (stu_cls_year = #{clsYear} and stu_type != '3+2') or (stu_cls_year = #{clsYear2} and stu_type = '3+2') GROUP BY stu_cls )
+                sc
+                LEFT JOIN
+            (select stu_cls,count(stu_info.stu_id) `num` from stu_info_material RIGHT join stu_info on stu_info_material.stu_id = stu_info.stu_id where ( (stu_cls_year = #{clsYear} and stu_type != '3+2') or (stu_cls_year = #{clsYear2} and stu_type = '3+2') ) AND flag = 1 AND material_id between 5 AND 10 GROUP BY stu_cls)
+                ts on sc.stu_cls = ts.stu_cls
+    </select>
 </mapper>

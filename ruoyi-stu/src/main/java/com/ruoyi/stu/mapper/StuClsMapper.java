@@ -2,6 +2,7 @@ package com.ruoyi.stu.mapper;
 
 import java.util.List;
 import com.ruoyi.stu.domain.StuCls;
+import org.apache.ibatis.annotations.Param;
 
 /**
  * 班级年级参数Mapper接口
@@ -58,4 +59,13 @@ public interface StuClsMapper
      * @return 结果
      */
     public int deleteStuClsByIds(Long[] ids);
+
+    /**
+     * 查询某个毕业届别班级以及学生人数
+     *
+     * @param clsYear 需要查询的年级
+     */
+
+    List<StuCls> selectBiYeStuNumByYearAndCls(@Param("clsYear") String clsYear, @Param("clsYear2") String clsYear2);
+
 }

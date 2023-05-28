@@ -57,7 +57,6 @@
 
 <script>
 import CountTo from 'vue-count-to'
-import {getTopData} from '@/api/stu/info'
 
 export default {
   components: {
@@ -67,29 +66,8 @@ export default {
     handleSetLineChartData(type) {
       this.$emit('handleSetLineChartData', type)
     },
-    getLevel(){
-      let now = new Date();
-      now.getMonth()>10 ? this.level = now.getFullYear()+1 : this.level = now.getFullYear()
-    }
   },
-  data(){
-    return{
-      level:0,
-      biyeInfo:{
-        stuNum:0,
-        finshedEnMaterial:0,
-        totalEnMaterial:0
-      }
-    }
-  },
-  mounted() {
-    this.getLevel();
-    console.log('level:',this.level)
-    getTopData(this.level).then(res=>{
-      // this.num = res.data
-      this.biyeInfo = res.data
-    })
-  }
+  props:['biyeInfo','level']
 }
 </script>
 

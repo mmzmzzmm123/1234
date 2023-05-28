@@ -5,7 +5,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 import com.ruoyi.common.core.domain.entity.SysUser;
 import com.ruoyi.common.utils.SecurityUtils;
+import com.ruoyi.stu.domain.StuCls;
 import com.ruoyi.stu.domain.StuInfo;
+import com.ruoyi.stu.mapper.StuClsMapper;
 import com.ruoyi.stu.mapper.StuInfoMapper;
 import com.ruoyi.stu.vo.BiyeForm;
 import com.ruoyi.stu.mapper.StuInfoMaterialMapper;
@@ -34,6 +36,9 @@ public class StuInfoMaterialServiceImpl implements IStuInfoMaterialService {
 
     @Autowired
     private StuInfoMaterialMapper stuInfoMaterialMapper;
+
+    @Autowired
+    private StuClsMapper stuClsMapper;
 
     @Override
     public int batchAddBiye(Long stuId) {
@@ -72,6 +77,8 @@ public class StuInfoMaterialServiceImpl implements IStuInfoMaterialService {
         dataVO.setStuNum(total);
         dataVO.setTotalEnMaterial(total*5);
         dataVO.setFinshedEnMaterial(selectStuFinishedMaterials(clsYear,clsYear2));
+        List<StuCls> clsList = stuClsMapper.selectBiYeStuNumByYearAndCls(clsYear,clsYear2);
+        dataVO.setClsInfo(clsList);
         return dataVO;
     }
 
