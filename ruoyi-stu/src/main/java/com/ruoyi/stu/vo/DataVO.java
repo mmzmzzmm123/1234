@@ -2,6 +2,8 @@ package com.ruoyi.stu.vo;
 
 import com.ruoyi.common.core.domain.BaseEntity;
 import com.ruoyi.stu.domain.StuCls;
+import com.ruoyi.stu.domain.StuClsCountData;
+import com.ruoyi.stu.domain.StuMaterial;
 import lombok.Data;
 
 import java.util.List;
@@ -29,6 +31,12 @@ public class DataVO extends BaseEntity {
     班级信息-人数
      */
     private List<StuCls> clsInfo;
-
-
+   /*
+   不同班级不同材料数量
+    */
+    private List<StuClsCountData> clsCountData;
+    /*
+    不同班级不同材料数量
+     */
+    private List<StuMaterial> stuMaterials;
 }

@@ -58,4 +58,9 @@ public interface StuMaterialMapper
      * @return 结果
      */
     public int deleteStuMaterialByIds(Long[] ids);
+
+    /*
+查询需要提交材料列表
+ */
+    public List<StuMaterial> selectAllMaterial();
 }

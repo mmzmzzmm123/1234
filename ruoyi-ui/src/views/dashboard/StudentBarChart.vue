@@ -25,28 +25,113 @@ export default {
       type: String,
       default: '300px'
     },
-    clsInfo: {
-      type: Array,
-      default: []
+    biyeInfo: {
+      type: Object,
+      default: null
     }
   },
   data() {
     return {
       chart: null,
       heads: [],
-      stuNums: []
+      series:[],
+      labelOption : {}
     }
   },
   watch:{
-    clsInfo(newData,oldData){
-      newData.forEach((item)=>{
+    biyeInfo(newData,oldData){
+      let numArray = []
+      newData.clsInfo.forEach((item)=>{
         this.heads.push(item.cls)
-        this.stuNums.push(item.stuNum)
+        numArray.push(item.stuNum)
+      })
+      this.series.push({
+        name: '班级人数',
+        type: 'bar',
+        barGap: 0,
+        label: this.labelOption,
+        emphasis: {
+          focus: 'series'
+        },
+        data: numArray
+      })
+      newData.stuMaterials.forEach((item,index)=>{
+        let numsArray = []
+        newData.clsInfo.forEach((cls)=>{
+          let count = 0;
+          newData.clsCountData.forEach((csd)=>{
+            if(csd.stuCls == cls.cls) {
+              count = csd.num
+            }
+          })
+          numsArray.push(count)
+        })
+        this.series.push({
+          name: item.name,
+          type: 'bar',
+          barGap: 0,
+          label: this.labelOption,
+          emphasis: {
+            focus: 'series'
+          },
+          data: numsArray
+        })
       })
       this.initChart()
     }
   },
   mounted() {
+    app.config = {
+      rotate: 90,
+      align: 'left',
+      verticalAlign: 'middle',
+      position: 'insideBottom',
+      distance: 15,
+      onChange: function () {
+        const labelOption = {
+          rotate: app.config.rotate,
+          align: app.config.align,
+          verticalAlign: app.config.verticalAlign,
+          position: app.config.position,
+          distance: app.config.distance
+        };
+        myChart.setOption({
+          series: [
+            {
+              label: labelOption
+            },
+            {
+              label: labelOption
+            },
+            {
+              label: labelOption
+            },
+            {
+              label: labelOption
+            },
+            {
+              label: labelOption
+            },
+            {
+              label: labelOption
+            }
+          ]
+        });
+      }
+    };
+    this.labelOption = {
+      show: true,
+      position: app.config.position,
+      distance: app.config.distance,
+      align: app.config.align,
+      verticalAlign: app.config.verticalAlign,
+      rotate: app.config.rotate,
+      formatter: '{c}  {name|{a}}',
+      fontSize: 16,
+      rich: {
+        name: {}
+      }
+    }
     this.$nextTick(() => {
       this.initChart()
     })
@@ -61,57 +146,82 @@ export default {
   methods: {
     initChart() {
       this.chart = echarts.init(this.$el, 'macarons')
+      const posList = [
+        'left',
+        'right',
+        'top',
+        'bottom',
+        'inside',
+        'insideTop',
+        'insideLeft',
+        'insideRight',
+        'insideBottom',
+        'insideTopLeft',
+        'insideTopRight',
+        'insideBottomLeft',
+        'insideBottomRight'
+      ];
+      app.configParameters = {
+        rotate: {
+          min: -90,
+          max: 90
+        },
+        align: {
+          options: {
+            left: 'left',
+            center: 'center',
+            right: 'right'
+          }
+        },
+        verticalAlign: {
+          options: {
+            top: 'top',
+            middle: 'middle',
+            bottom: 'bottom'
+          }
+        },
+        position: {
+          options: posList.reduce(function (map, pos) {
+            map[pos] = pos;
+            return map;
+          }, {})
+        },
+        distance: {
+          min: 0,
+          max: 100
+        }
+      };
+
       this.chart.setOption({
+        title: [
+          {
+            text: '各班级进度',
+            left: 'center',
+            textStyle:{
+              color:'#350080',
+              fontWeight: 'bold'
+            }
+          }
+        ],
         tooltip: {
           trigger: 'axis',
-          axisPointer: { // 坐标轴指示器，坐标轴触发有效
-            type: 'shadow' // 默认为直线，可选为：'line' | 'shadow'
+          axisPointer: {
+            type: 'shadow'
           }
         },
-        grid: {
-          top: 10,
-          left: '2%',
-          right: '2%',
-          bottom: '3%',
-          containLabel: true
-        },
-        xAxis: [{
-          type: 'category',
-          data: this.heads,
-          axisTick: {
-            alignWithLabel: true
+        xAxis: [
+          {
+            type: 'category',
+            axisTick: { show: false },
+            data: this.heads
           }
-        }],
-        yAxis: [{
-          type: 'value',
-          axisTick: {
-            show: false
+        ],
+        yAxis: [
+          {
+            type: 'value'
           }
-        }],
-        series: [{
-          name: '人员数量',
-          type: 'bar',
-          stack: 'vistors',
-          barWidth: '60%',
-          data: this.stuNums,
-          animationDuration
-        },
-        //   {
-        //   name: 'pageB',
-        //   type: 'bar',
-        //   stack: 'vistors',
-        //   barWidth: '60%',
-        //   data: [80, 52, 200, 334, 390, 330, 220],
-        //   animationDuration
-        // }, {
-        //   name: 'pageC',
-        //   type: 'bar',
-        //   stack: 'vistors',
-        //   barWidth: '60%',
-        //   data: [30, 52, 200, 334, 390, 330, 220],
-        //   animationDuration
-        // }
-        ]
+        ],
+        series: this.series
       })
     },
   }

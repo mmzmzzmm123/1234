@@ -3,24 +3,28 @@
 
     <student-panel-group :biyeInfo="biyeInfo" :level="level" @handleSetLineChartData="handleSetLineChartData" />
 
-<!--    <el-row style="background:#fff;padding:16px 16px 0;margin-bottom:32px;">-->
-<!--      <line-chart :chart-data="lineChartData" />-->
-<!--    </el-row>-->
-
-    <el-row :gutter="32">
-      <el-col :xs="24" :sm="24" :lg="8">
+    <el-row style="background:#fff;padding:16px 16px 0;margin-bottom:32px;">
+      <el-col :xs="24" :sm="24" :lg="24">
         <div class="chart-wrapper">
-          <raddar-chart />
+          <BiYeProcessChart :materials="biyeInfo.stuMaterials"/>
         </div>
       </el-col>
+    </el-row>
+
+    <el-row :gutter="32">
+<!--      <el-col :xs="24" :sm="24" :lg="8">-->
+<!--        <div class="chart-wrapper">-->
+<!--          <raddar-chart />-->
+<!--        </div>-->
+<!--      </el-col>-->
       <el-col :xs="24" :sm="24" :lg="8">
         <div class="chart-wrapper">
           <student-pie-chart :clsInfo="biyeInfo.clsInfo"/>
         </div>
       </el-col>
-      <el-col :xs="24" :sm="24" :lg="8">
+      <el-col :xs="24" :sm="24" :lg="16">
         <div class="chart-wrapper">
-          <student-bar-chart :clsInfo="biyeInfo.clsInfo" />
+          <student-bar-chart :biyeInfo="biyeInfo" />
         </div>
       </el-col>
     </el-row>
@@ -35,6 +39,7 @@ import LineChart from './dashboard/LineChart'
 import RaddarChart from './dashboard/RaddarChart'
 import StudentPieChart from './dashboard/StudentPieChart'
 import StudentBarChart from './dashboard/StudentBarChart'
+import BiYeProcessChart from './dashboard/BiYeProcessChart'
 import {getTopData} from '@/api/stu/info'
 
 const lineChartData = {
@@ -63,7 +68,8 @@ export default {
     LineChart,
     RaddarChart,
     StudentPieChart,
-    StudentBarChart
+    StudentBarChart,
+    BiYeProcessChart
   },
   data() {
     return {
@@ -73,7 +79,8 @@ export default {
         stuNum:0,
         finshedEnMaterial:0,
         totalEnMaterial:0,
-        clsInfo:[]
+        clsInfo:[],
+        clsDataInfo:[]
       }
     }
   },

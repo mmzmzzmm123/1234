@@ -6,9 +6,12 @@ import com.google.gson.Gson;
 import com.ruoyi.common.core.domain.entity.SysUser;
 import com.ruoyi.common.utils.SecurityUtils;
 import com.ruoyi.stu.domain.StuCls;
+import com.ruoyi.stu.domain.StuClsCountData;
 import com.ruoyi.stu.domain.StuInfo;
+import com.ruoyi.stu.domain.StuMaterial;
 import com.ruoyi.stu.mapper.StuClsMapper;
 import com.ruoyi.stu.mapper.StuInfoMapper;
+import com.ruoyi.stu.mapper.StuMaterialMapper;
 import com.ruoyi.stu.vo.BiyeForm;
 import com.ruoyi.stu.mapper.StuInfoMaterialMapper;
 import com.ruoyi.stu.service.IStuInfoMaterialService;
@@ -39,6 +42,9 @@ public class StuInfoMaterialServiceImpl implements IStuInfoMaterialService {
 
     @Autowired
     private StuClsMapper stuClsMapper;
+
+    @Autowired
+    private StuMaterialMapper stuMaterialMapper;
 
     @Override
     public int batchAddBiye(Long stuId) {
@@ -79,6 +85,10 @@ public class StuInfoMaterialServiceImpl implements IStuInfoMaterialService {
         dataVO.setFinshedEnMaterial(selectStuFinishedMaterials(clsYear,clsYear2));
         List<StuCls> clsList = stuClsMapper.selectBiYeStuNumByYearAndCls(clsYear,clsYear2);
         dataVO.setClsInfo(clsList);
+        List<StuClsCountData> clsData = stuInfoMaterialMapper.selectClsData(clsYear, clsYear2);
+        dataVO.setClsCountData(clsData);
+        List<StuMaterial> stuMaterials = stuMaterialMapper.selectAllMaterial();
+        dataVO.setStuMaterials(stuMaterials);
         return dataVO;
     }
 

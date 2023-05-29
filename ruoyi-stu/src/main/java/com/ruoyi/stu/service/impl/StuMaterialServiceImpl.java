@@ -90,4 +90,5 @@ public class StuMaterialServiceImpl implements IStuMaterialService
     {
         return stuMaterialMapper.deleteStuMaterialById(id);
     }
+
 }

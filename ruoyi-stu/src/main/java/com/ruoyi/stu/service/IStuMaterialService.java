@@ -58,4 +58,5 @@ public interface IStuMaterialService
      * @return 结果
      */
     public int deleteStuMaterialById(Long id);
+
 }

@@ -57,12 +57,12 @@ export default {
   },
   methods: {
     initChart() {
-      this.chart = echarts.init(this.$el, 'macarons')
 
+      this.chart = echarts.init(this.$el, 'macarons')
       this.chart.setOption({
         title: [
           {
-            text: '材料提交进度'
+            text: '总体进度',
           }
         ],
         polar: {

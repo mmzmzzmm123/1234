@@ -1,5 +1,6 @@
 package com.ruoyi.stu.mapper;
 
+import com.ruoyi.stu.domain.StuClsCountData;
 import com.ruoyi.stu.vo.BiyeForm;
 import com.ruoyi.stu.vo.StuInfoMaterial;
 import org.apache.ibatis.annotations.Param;
@@ -67,4 +68,8 @@ import java.util.List;
      * 查询企业实习材料以及照片以及视频提交情况总数量
      */
     int selectStuFinishedMaterials(@Param("clsYear")String clsYear,@Param("clsYear2")String clsYear2);
+    /**
+     * 查询不同班级不同材料的提交数量
+     */
+    List<StuClsCountData> selectClsData(@Param("clsYear")String clsYear,@Param("clsYear2")String clsYear2);
 }

@@ -135,4 +135,14 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         ( (stu_cls_year = #{clsYear} and stu_type != '3+2') or (stu_cls_year = #{clsYear2} and stu_type = '3+2') )
         AND flag = 1 AND material_id between 5 AND 10
     </select>
+
+    <select id="selectClsData" resultType="com.ruoyi.stu.domain.StuClsCountData">
+        SELECT stu_cls `stuCls`,stu_material.`name` `materialName`,count(stu_info_material.flag) `num` FROM stu_info_material
+        RIGHT JOIN stu_info ON stu_info.stu_id = stu_info_material.stu_id
+        LEFT JOIN stu_material ON stu_info_material.material_id = stu_material.id
+        where
+            ( (stu_cls_year = #{clsYear} and stu_type != '3+2') or (stu_cls_year = #{clsYear2} and stu_type = '3+2') )
+        GROUP BY stu_cls,stu_info_material.material_id
+
+    </select>
 </mapper>
