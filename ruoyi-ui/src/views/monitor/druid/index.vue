@@ -2,7 +2,7 @@
   <i-frame :src="url" />
 </template>
 <script>
-import iFrame from "@/components/iFrame/index";
+import iFrame from "@/components/iFrame/index.vue";
 export default {
   name: "Druid",
   components: { iFrame },

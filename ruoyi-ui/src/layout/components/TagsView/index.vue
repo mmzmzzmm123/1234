@@ -29,7 +29,7 @@
 </template>
 
 <script>
-import ScrollPane from './ScrollPane'
+import ScrollPane from './ScrollPane.vue'
 import path from 'path'
 
 export default {

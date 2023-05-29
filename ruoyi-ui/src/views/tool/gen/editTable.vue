@@ -130,8 +130,8 @@
 import { getGenTable, updateGenTable } from "@/api/tool/gen";
 import { optionselect as getDictOptionselect } from "@/api/system/dict/type";
 import { listMenu as getMenuTreeselect } from "@/api/system/menu";
-import basicInfoForm from "./basicInfoForm";
-import genInfoForm from "./genInfoForm";
+import basicInfoForm from "./basicInfoForm.vue";
+import genInfoForm from "./genInfoForm.vue";
 import Sortable from 'sortablejs'
 
 export default {
