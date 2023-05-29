@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.office.mapper.WxUserStoreMapper">
+    
+    <resultMap type="WxUserStore" id="WxUserStoreResult">
+        <result property="id"    column="id"    />
+        <result property="wxId"    column="wx_id"    />
+        <result property="storeId"    column="store_id"    />
+        <result property="isMember"    column="is_member"    />
+        <result property="phone"    column="phone"    />
+        <result property="amount"    column="amount"    />
+        <result property="point"    column="point"    />
+        <result property="status"    column="status"    />
+        <result property="remark"    column="remark"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+    </resultMap>
+
+    <sql id="selectWxUserStoreVo">
+        select id, wx_id, store_id, is_member, phone, amount, point, status, remark, create_by, create_time, update_by, update_time from t_wx_user_store
+    </sql>
+
+    <select id="selectWxUserStoreList" parameterType="WxUserStore" resultMap="WxUserStoreResult">
+        <include refid="selectWxUserStoreVo"/>
+        <where>  
+            <if test="wxId != null  and wxId != ''"> and wx_id = #{wxId}</if>
+            <if test="storeId != null "> and store_id = #{storeId}</if>
+            <if test="isMember != null  and isMember != ''"> and is_member = #{isMember}</if>
+            <if test="phone != null  and phone != ''"> and phone = #{phone}</if>
+            <if test="amount != null "> and amount = #{amount}</if>
+            <if test="point != null "> and point = #{point}</if>
+            <if test="status != null "> and status = #{status}</if>
+        </where>
+    </select>
+    
+    <select id="selectWxUserStoreById" parameterType="Long" resultMap="WxUserStoreResult">
+        <include refid="selectWxUserStoreVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertWxUserStore" parameterType="WxUserStore">
+        insert into t_wx_user_store
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="wxId != null">wx_id,</if>
+            <if test="storeId != null">store_id,</if>
+            <if test="isMember != null">is_member,</if>
+            <if test="phone != null">phone,</if>
+            <if test="amount != null">amount,</if>
+            <if test="point != null">point,</if>
+            <if test="status != null">status,</if>
+            <if test="remark != null">remark,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="wxId != null">#{wxId},</if>
+            <if test="storeId != null">#{storeId},</if>
+            <if test="isMember != null">#{isMember},</if>
+            <if test="phone != null">#{phone},</if>
+            <if test="amount != null">#{amount},</if>
+            <if test="point != null">#{point},</if>
+            <if test="status != null">#{status},</if>
+            <if test="remark != null">#{remark},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateWxUserStore" parameterType="WxUserStore">
+        update t_wx_user_store
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="wxId != null">wx_id = #{wxId},</if>
+            <if test="storeId != null">store_id = #{storeId},</if>
+            <if test="isMember != null">is_member = #{isMember},</if>
+            <if test="phone != null">phone = #{phone},</if>
+            <if test="amount != null">amount = #{amount},</if>
+            <if test="point != null">point = #{point},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="remark != null">remark = #{remark},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteWxUserStoreById" parameterType="Long">
+        delete from t_wx_user_store where id = #{id}
+    </delete>
+
+    <delete id="deleteWxUserStoreByIds" parameterType="String">
+        delete from t_wx_user_store where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>
