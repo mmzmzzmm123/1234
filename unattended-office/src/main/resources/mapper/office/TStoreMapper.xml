@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.office.mapper.TStoreMapper">
+    
+    <resultMap type="TStore" id="TStoreResult">
+        <result property="id"    column="id"    />
+        <result property="userId"    column="user_id"    />
+        <result property="name"    column="name"    />
+        <result property="address"    column="address"    />
+        <result property="phone"    column="phone"    />
+        <result property="startTime"    column="start_time"    />
+        <result property="stopTime"    column="stop_time"    />
+        <result property="preDays"    column="pre_days"    />
+        <result property="wifi"    column="wifi"    />
+        <result property="equipId"    column="equip_id"    />
+        <result property="busiDistrict"    column="busi_district"    />
+        <result property="subway"    column="subway"    />
+        <result property="latitude"    column="latitude"    />
+        <result property="longitude"    column="longitude"    />
+        <result property="logo"    column="logo"    />
+        <result property="status"    column="status"    />
+        <result property="remark"    column="remark"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+    </resultMap>
+
+    <sql id="selectTStoreVo">
+        select id, user_id, name, address, phone, start_time, stop_time, pre_days, wifi, equip_id, busi_district, subway, latitude, longitude, logo, status, remark, create_by, create_time, update_by, update_time from t_store
+    </sql>
+
+    <select id="selectTStoreList" parameterType="TStore" resultMap="TStoreResult">
+        <include refid="selectTStoreVo"/>
+        <where>  
+            <if test="userId != null "> and user_id = #{userId}</if>
+            <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
+            <if test="address != null  and address != ''"> and address = #{address}</if>
+            <if test="phone != null  and phone != ''"> and phone = #{phone}</if>
+            <if test="startTime != null "> and start_time = #{startTime}</if>
+            <if test="stopTime != null "> and stop_time = #{stopTime}</if>
+            <if test="preDays != null "> and pre_days = #{preDays}</if>
+            <if test="wifi != null  and wifi != ''"> and wifi = #{wifi}</if>
+            <if test="equipId != null "> and equip_id = #{equipId}</if>
+            <if test="busiDistrict != null  and busiDistrict != ''"> and busi_district = #{busiDistrict}</if>
+            <if test="subway != null  and subway != ''"> and subway = #{subway}</if>
+            <if test="latitude != null  and latitude != ''"> and latitude = #{latitude}</if>
+            <if test="longitude != null  and longitude != ''"> and longitude = #{longitude}</if>
+            <if test="logo != null  and logo != ''"> and logo = #{logo}</if>
+            <if test="status != null "> and status = #{status}</if>
+            <if test="createBy != null  and createBy != ''"> and create_by = #{createBy}</if>
+        </where>
+    </select>
+    
+    <select id="selectTStoreById" parameterType="Long" resultMap="TStoreResult">
+        <include refid="selectTStoreVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertTStore" parameterType="TStore" useGeneratedKeys="true" keyProperty="id">
+        insert into t_store
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="userId != null">user_id,</if>
+            <if test="name != null and name != ''">name,</if>
+            <if test="address != null and address != ''">address,</if>
+            <if test="phone != null">phone,</if>
+            <if test="startTime != null">start_time,</if>
+            <if test="stopTime != null">stop_time,</if>
+            <if test="preDays != null">pre_days,</if>
+            <if test="wifi != null">wifi,</if>
+            <if test="equipId != null">equip_id,</if>
+            <if test="busiDistrict != null">busi_district,</if>
+            <if test="subway != null">subway,</if>
+            <if test="latitude != null and latitude != ''">latitude,</if>
+            <if test="longitude != null">longitude,</if>
+            <if test="logo != null and logo != ''">logo,</if>
+            <if test="status != null">status,</if>
+            <if test="remark != null">remark,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="userId != null">#{userId},</if>
+            <if test="name != null and name != ''">#{name},</if>
+            <if test="address != null and address != ''">#{address},</if>
+            <if test="phone != null">#{phone},</if>
+            <if test="startTime != null">#{startTime},</if>
+            <if test="stopTime != null">#{stopTime},</if>
+            <if test="preDays != null">#{preDays},</if>
+            <if test="wifi != null">#{wifi},</if>
+            <if test="equipId != null">#{equipId},</if>
+            <if test="busiDistrict != null">#{busiDistrict},</if>
+            <if test="subway != null">#{subway},</if>
+            <if test="latitude != null and latitude != ''">#{latitude},</if>
+            <if test="longitude != null">#{longitude},</if>
+            <if test="logo != null and logo != ''">#{logo},</if>
+            <if test="status != null">#{status},</if>
+            <if test="remark != null">#{remark},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateTStore" parameterType="TStore">
+        update t_store
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="userId != null">user_id = #{userId},</if>
+            <if test="name != null and name != ''">name = #{name},</if>
+            <if test="address != null and address != ''">address = #{address},</if>
+            <if test="phone != null">phone = #{phone},</if>
+            <if test="startTime != null">start_time = #{startTime},</if>
+            <if test="stopTime != null">stop_time = #{stopTime},</if>
+            <if test="preDays != null">pre_days = #{preDays},</if>
+            <if test="wifi != null">wifi = #{wifi},</if>
+            <if test="equipId != null">equip_id = #{equipId},</if>
+            <if test="busiDistrict != null">busi_district = #{busiDistrict},</if>
+            <if test="subway != null">subway = #{subway},</if>
+            <if test="latitude != null and latitude != ''">latitude = #{latitude},</if>
+            <if test="longitude != null">longitude = #{longitude},</if>
+            <if test="logo != null and logo != ''">logo = #{logo},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="remark != null">remark = #{remark},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteTStoreById" parameterType="Long">
+        delete from t_store where id = #{id}
+    </delete>
+
+    <delete id="deleteTStoreByIds" parameterType="String">
+        delete from t_store where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>
