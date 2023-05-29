@@ -59,6 +59,20 @@
             <artifactId>ruoyi-system</artifactId>
         </dependency>
 
+        <!-- unattended-office模块-->
+        <dependency>
+            <groupId>com.ruoyi</groupId>
+            <artifactId>unattended-office</artifactId>
+            <version>3.8.5</version>
+        </dependency>
+
+        <!-- 微信小程序 -->
+        <dependency>
+            <groupId>com.github.binarywang</groupId>
+            <artifactId>weixin-java-miniapp</artifactId>
+            <version>4.3.0</version>
+        </dependency>
+
     </dependencies>
 
 </project>

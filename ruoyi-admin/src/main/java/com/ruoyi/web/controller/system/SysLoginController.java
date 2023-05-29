@@ -2,6 +2,10 @@ package com.ruoyi.web.controller.system;
 
 import java.util.List;
 import java.util.Set;
+
+import com.ruoyi.common.annotation.Log;
+import com.ruoyi.common.core.domain.model.WxLoginBody;
+import com.ruoyi.common.enums.BusinessType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -47,6 +51,20 @@ public class SysLoginController
         // 生成令牌
         String token = loginService.login(loginBody.getUsername(), loginBody.getPassword(), loginBody.getCode(),
                 loginBody.getUuid());
+        ajax.put(Constants.TOKEN, token);
+        return ajax;
+    }
+
+
+    /**
+     * 微信用户登录
+     */
+    @Log(title = "微信用户信息", businessType = BusinessType.INSERT)
+    @PostMapping("/wxlogin")
+    public AjaxResult wxlogin(@RequestBody WxLoginBody loginBody)
+    {
+        String token = loginService.wxMaLogin(loginBody);
+        AjaxResult ajax = AjaxResult.success();
         ajax.put(Constants.TOKEN, token);
         return ajax;
     }

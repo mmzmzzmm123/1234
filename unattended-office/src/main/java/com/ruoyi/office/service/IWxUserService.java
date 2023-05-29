@@ -1,7 +1,7 @@
 package com.ruoyi.office.service;
 
 import java.util.List;
-import com.ruoyi.office.domain.WxUser;
+import com.ruoyi.common.core.domain.entity.WxUser;
 
 /**
  * 微信用户信息Service接口
@@ -58,4 +58,6 @@ public interface IWxUserService
      * @return 结果
      */
     public int deleteWxUserById(Long id);
+
+    void updateLogInfo(WxUser wxUser);
 }

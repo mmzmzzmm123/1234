@@ -1,9 +1,11 @@
-package com.ruoyi.office.domain;
+package com.ruoyi.common.core.domain.entity;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import com.ruoyi.common.annotation.Excel;
 import com.ruoyi.common.core.domain.BaseEntity;
+
+import java.util.Date;
 
 /**
  * 微信用户信息对象 t_wx_user
@@ -37,6 +39,14 @@ public class WxUser extends BaseEntity
     /** 性别 */
     @Excel(name = "性别")
     private String sex;
+
+    /** 最后登录IP */
+    @Excel(name = "最后登录IP", type = Excel.Type.EXPORT)
+    private String loginIp;
+
+    /** 最后登录时间 */
+    @Excel(name = "最后登录时间", width = 30, dateFormat = "yyyy-MM-dd HH:mm:ss", type = Excel.Type.EXPORT)
+    private Date loginDate;
 
     /** 状态 */
     @Excel(name = "状态")
@@ -105,6 +115,27 @@ public class WxUser extends BaseEntity
     {
         return status;
     }
+
+    public String getLoginIp()
+    {
+        return loginIp;
+    }
+
+    public void setLoginIp(String loginIp)
+    {
+        this.loginIp = loginIp;
+    }
+
+    public Date getLoginDate()
+    {
+        return loginDate;
+    }
+
+    public void setLoginDate(Date loginDate)
+    {
+        this.loginDate = loginDate;
+    }
+
 
     @Override
     public String toString() {

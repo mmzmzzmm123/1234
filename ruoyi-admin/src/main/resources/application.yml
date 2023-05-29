@@ -137,3 +137,14 @@ xss:
   excludes: /system/notice
   # 匹配链接
   urlPatterns: /system/*,/monitor/*,/tool/*
+
+wx:
+  miniapp:
+    configs:
+      - name: dingcang
+        appid: wxdffc59bfd94f575b
+        secret: f7d2f0a838c6d30e9dc0b58fdf1c5fe0
+        # 小程序消息服务器配置
+        token: 1
+        aesKey: 1
+        msgDataFormat: xml

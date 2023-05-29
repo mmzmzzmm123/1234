@@ -1,98 +1,104 @@
 package com.ruoyi.office.service.impl;
 
+import java.util.Date;
 import java.util.List;
 
+import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.ruoyi.common.utils.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.ruoyi.office.mapper.WxUserMapper;
-import com.ruoyi.office.domain.WxUser;
+import com.ruoyi.common.core.domain.entity.WxUser;
 import com.ruoyi.office.service.IWxUserService;
 
 /**
  * 微信用户信息Service业务层处理
- * 
+ *
  * @author ruoyi
  * @date 2023-05-29
  */
 @Service
-public class WxUserServiceImpl extends ServiceImpl<WxUserMapper, WxUser> implements IWxUserService
-{
+public class WxUserServiceImpl extends ServiceImpl<WxUserMapper, WxUser> implements IWxUserService {
     @Autowired
     private WxUserMapper wxUserMapper;
 
     /**
      * 查询微信用户信息
-     * 
+     *
      * @param id 微信用户信息主键
      * @return 微信用户信息
      */
     @Override
-    public WxUser selectWxUserById(Long id)
-    {
+    public WxUser selectWxUserById(Long id) {
         return wxUserMapper.selectWxUserById(id);
     }
 
     /**
      * 查询微信用户信息列表
-     * 
+     *
      * @param wxUser 微信用户信息
      * @return 微信用户信息
      */
     @Override
-    public List<WxUser> selectWxUserList(WxUser wxUser)
-    {
+    public List<WxUser> selectWxUserList(WxUser wxUser) {
         return wxUserMapper.selectWxUserList(wxUser);
     }
 
     /**
      * 新增微信用户信息
-     * 
+     *
      * @param wxUser 微信用户信息
      * @return 结果
      */
     @Override
-    public int insertWxUser(WxUser wxUser)
-    {
+    public int insertWxUser(WxUser wxUser) {
         wxUser.setCreateTime(DateUtils.getNowDate());
         return wxUserMapper.insertWxUser(wxUser);
     }
 
     /**
      * 修改微信用户信息
-     * 
+     *
      * @param wxUser 微信用户信息
      * @return 结果
      */
     @Override
-    public int updateWxUser(WxUser wxUser)
-    {
+    public int updateWxUser(WxUser wxUser) {
         wxUser.setUpdateTime(DateUtils.getNowDate());
         return wxUserMapper.updateWxUser(wxUser);
     }
 
     /**
      * 批量删除微信用户信息
-     * 
+     *
      * @param ids 需要删除的微信用户信息主键
      * @return 结果
      */
     @Override
-    public int deleteWxUserByIds(Long[] ids)
-    {
+    public int deleteWxUserByIds(Long[] ids) {
         return wxUserMapper.deleteWxUserByIds(ids);
     }
 
     /**
      * 删除微信用户信息信息
-     * 
+     *
      * @param id 微信用户信息主键
      * @return 结果
      */
     @Override
-    public int deleteWxUserById(Long id)
-    {
+    public int deleteWxUserById(Long id) {
         return wxUserMapper.deleteWxUserById(id);
+    }
+
+    @Override
+    public void updateLogInfo(WxUser wxUser) {
+        UpdateWrapper<WxUser> updateWrapper = new UpdateWrapper<>();
+        updateWrapper.lambda().eq(WxUser::getAppId, wxUser.getAppId());
+        updateWrapper.lambda().set(WxUser::getLoginIp, wxUser.getLoginIp())
+                .set(WxUser::getLoginDate, wxUser.getLoginDate())
+                .set(WxUser::getUpdateTime, new Date());
+        baseMapper.update(null, updateWrapper);
+
     }
 }

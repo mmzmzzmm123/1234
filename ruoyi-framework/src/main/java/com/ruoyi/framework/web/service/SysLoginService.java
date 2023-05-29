@@ -1,6 +1,12 @@
 package com.ruoyi.framework.web.service;
 
 import javax.annotation.Resource;
+
+import com.ruoyi.common.core.domain.entity.WxUser;
+import com.ruoyi.common.core.domain.model.WxLoginBody;
+import com.ruoyi.common.core.domain.model.WxLoginUser;
+import com.ruoyi.framework.security.authentication.WxAuthenticationToken;
+import com.ruoyi.office.service.IWxUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -48,6 +54,9 @@ public class SysLoginService
     
     @Autowired
     private ISysUserService userService;
+
+    @Autowired
+    private IWxUserService wxUserService;
 
     @Autowired
     private ISysConfigService configService;
@@ -98,6 +107,13 @@ public class SysLoginService
         recordLoginInfo(loginUser.getUserId());
         // 生成token
         return tokenService.createToken(loginUser);
+    }
+
+    public String wxMaLogin(WxLoginBody loginBody){
+        Authentication authentication = authenticationManager.authenticate(new WxAuthenticationToken(loginBody));
+        WxLoginUser loginUser = (WxLoginUser) authentication.getPrincipal();
+        recordWxLoginInfo(loginUser.getAppid());
+        return tokenService.createWxToken(loginUser);
     }
 
     /**
@@ -177,5 +193,19 @@ public class SysLoginService
         sysUser.setLoginIp(IpUtils.getIpAddr());
         sysUser.setLoginDate(DateUtils.getNowDate());
         userService.updateUserProfile(sysUser);
+    }
+
+    /**
+     * 记录登录信息
+     *
+     * @param userId 用户ID
+     */
+    public void recordWxLoginInfo(String userId)
+    {
+        WxUser wxUser = new WxUser();
+        wxUser.setAppId(userId);
+        wxUser.setLoginIp(IpUtils.getIpAddr());
+        wxUser.setLoginDate(DateUtils.getNowDate());
+        wxUserService.updateLogInfo(wxUser);
     }
 }

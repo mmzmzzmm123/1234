@@ -3,7 +3,7 @@ package com.ruoyi.office.mapper;
 import java.util.List;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.ruoyi.office.domain.WxUser;
+import com.ruoyi.common.core.domain.entity.WxUser;
 
 /**
  * 微信用户信息Mapper接口
@@ -60,4 +60,6 @@ public interface WxUserMapper  extends BaseMapper<WxUser>
      * @return 结果
      */
     public int deleteWxUserByIds(Long[] ids);
+
+    WxUser selectUserByOpenId(String openid);
 }

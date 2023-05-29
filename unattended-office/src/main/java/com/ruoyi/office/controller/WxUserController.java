@@ -2,6 +2,7 @@ package com.ruoyi.office.controller;
 
 import java.util.List;
 import javax.servlet.http.HttpServletResponse;
+
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,7 +17,7 @@ import com.ruoyi.common.annotation.Log;
 import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.enums.BusinessType;
-import com.ruoyi.office.domain.WxUser;
+import com.ruoyi.common.core.domain.entity.WxUser;
 import com.ruoyi.office.service.IWxUserService;
 import com.ruoyi.common.utils.poi.ExcelUtil;
 import com.ruoyi.common.core.page.TableDataInfo;
@@ -101,4 +102,6 @@ public class WxUserController extends BaseController
     {
         return toAjax(wxUserService.deleteWxUserByIds(ids));
     }
+
+
 }
