@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.office.mapper.TWxUserMapper">
+    
+    <resultMap type="TWxUser" id="TWxUserResult">
+        <result property="id"    column="id"    />
+        <result property="nickName"    column="nick_name"    />
+        <result property="appId"    column="app_id"    />
+        <result property="unionId"    column="union_id"    />
+        <result property="phone"    column="phone"    />
+        <result property="shareCode"    column="share_code"    />
+        <result property="wxCode"    column="wx_code"    />
+        <result property="inviterPhone"    column="inviter_phone"    />
+        <result property="isMember"    column="is_member"    />
+        <result property="sex"    column="sex"    />
+        <result property="loginIp"    column="login_ip"    />
+        <result property="loginDate"    column="login_date"    />
+        <result property="status"    column="status"    />
+        <result property="remark"    column="remark"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+    </resultMap>
+
+    <sql id="selectTWxUserVo">
+        select id, nick_name, app_id, union_id, phone, share_code, wx_code, inviter_phone, is_member, sex, login_ip, login_date, status, remark, create_by, create_time, update_by, update_time from t_wx_user
+    </sql>
+
+    <select id="selectTWxUserList" parameterType="TWxUser" resultMap="TWxUserResult">
+        <include refid="selectTWxUserVo"/>
+        <where>  
+            <if test="nickName != null  and nickName != ''"> and nick_name like concat('%', #{nickName}, '%')</if>
+            <if test="appId != null  and appId != ''"> and app_id = #{appId}</if>
+            <if test="unionId != null  and unionId != ''"> and union_id = #{unionId}</if>
+            <if test="phone != null  and phone != ''"> and phone = #{phone}</if>
+            <if test="shareCode != null  and shareCode != ''"> and share_code = #{shareCode}</if>
+            <if test="wxCode != null  and wxCode != ''"> and wx_code = #{wxCode}</if>
+            <if test="inviterPhone != null  and inviterPhone != ''"> and inviter_phone = #{inviterPhone}</if>
+            <if test="isMember != null  and isMember != ''"> and is_member = #{isMember}</if>
+            <if test="sex != null  and sex != ''"> and sex = #{sex}</if>
+            <if test="loginIp != null  and loginIp != ''"> and login_ip = #{loginIp}</if>
+            <if test="loginDate != null "> and login_date = #{loginDate}</if>
+            <if test="status != null "> and status = #{status}</if>
+        </where>
+    </select>
+    
+    <select id="selectTWxUserById" parameterType="Long" resultMap="TWxUserResult">
+        <include refid="selectTWxUserVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertTWxUser" parameterType="TWxUser" useGeneratedKeys="true" keyProperty="id">
+        insert into t_wx_user
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="nickName != null">nick_name,</if>
+            <if test="appId != null">app_id,</if>
+            <if test="unionId != null">union_id,</if>
+            <if test="phone != null">phone,</if>
+            <if test="shareCode != null">share_code,</if>
+            <if test="wxCode != null">wx_code,</if>
+            <if test="inviterPhone != null">inviter_phone,</if>
+            <if test="isMember != null">is_member,</if>
+            <if test="sex != null">sex,</if>
+            <if test="loginIp != null">login_ip,</if>
+            <if test="loginDate != null">login_date,</if>
+            <if test="status != null">status,</if>
+            <if test="remark != null">remark,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="nickName != null">#{nickName},</if>
+            <if test="appId != null">#{appId},</if>
+            <if test="unionId != null">#{unionId},</if>
+            <if test="phone != null">#{phone},</if>
+            <if test="shareCode != null">#{shareCode},</if>
+            <if test="wxCode != null">#{wxCode},</if>
+            <if test="inviterPhone != null">#{inviterPhone},</if>
+            <if test="isMember != null">#{isMember},</if>
+            <if test="sex != null">#{sex},</if>
+            <if test="loginIp != null">#{loginIp},</if>
+            <if test="loginDate != null">#{loginDate},</if>
+            <if test="status != null">#{status},</if>
+            <if test="remark != null">#{remark},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateTWxUser" parameterType="TWxUser">
+        update t_wx_user
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="nickName != null">nick_name = #{nickName},</if>
+            <if test="appId != null">app_id = #{appId},</if>
+            <if test="unionId != null">union_id = #{unionId},</if>
+            <if test="phone != null">phone = #{phone},</if>
+            <if test="shareCode != null">share_code = #{shareCode},</if>
+            <if test="wxCode != null">wx_code = #{wxCode},</if>
+            <if test="inviterPhone != null">inviter_phone = #{inviterPhone},</if>
+            <if test="isMember != null">is_member = #{isMember},</if>
+            <if test="sex != null">sex = #{sex},</if>
+            <if test="loginIp != null">login_ip = #{loginIp},</if>
+            <if test="loginDate != null">login_date = #{loginDate},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="remark != null">remark = #{remark},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteTWxUserById" parameterType="Long">
+        delete from t_wx_user where id = #{id}
+    </delete>
+
+    <delete id="deleteTWxUserByIds" parameterType="String">
+        delete from t_wx_user where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

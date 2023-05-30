@@ -1,5 +1,7 @@
 package com.ruoyi.common.core.domain.entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import lombok.Data;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import com.ruoyi.common.annotation.Excel;
@@ -13,12 +15,18 @@ import java.util.Date;
  * @author ruoyi
  * @date 2023-05-29
  */
+@Data
 public class WxUser extends BaseEntity
 {
     private static final long serialVersionUID = 1L;
 
     /** id */
     private Long id;
+
+
+    /** 昵称 */
+    @Excel(name = "昵称")
+    private String nickName;
 
     /** 微信app id */
     @Excel(name = "微信app id")
@@ -28,130 +36,41 @@ public class WxUser extends BaseEntity
     @Excel(name = "uinion id")
     private String unionId;
 
+    /** 手机号 */
+    @Excel(name = "手机号")
+    private String phone;
+
+    /** 分享码 */
+    @Excel(name = "分享码")
+    private String shareCode;
+
     /** 微信code */
     @Excel(name = "微信code")
     private String wxCode;
 
-    /** 昵称 */
-    @Excel(name = "昵称")
-    private String nickName;
+    /** 邀请人手机号 */
+    @Excel(name = "邀请人手机号")
+    private String inviterPhone;
+
+    /** 是否会员 */
+    @Excel(name = "是否会员")
+    private String isMember;
 
     /** 性别 */
     @Excel(name = "性别")
     private String sex;
 
-    /** 最后登录IP */
-    @Excel(name = "最后登录IP", type = Excel.Type.EXPORT)
+    /** 登录ip */
+    @Excel(name = "登录ip")
     private String loginIp;
 
-    /** 最后登录时间 */
-    @Excel(name = "最后登录时间", width = 30, dateFormat = "yyyy-MM-dd HH:mm:ss", type = Excel.Type.EXPORT)
+    /** 登录时间 */
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    @Excel(name = "登录时间", width = 30, dateFormat = "yyyy-MM-dd")
     private Date loginDate;
-
     /** 状态 */
     @Excel(name = "状态")
     private Long status;
 
-    public void setId(Long id) 
-    {
-        this.id = id;
-    }
 
-    public Long getId() 
-    {
-        return id;
-    }
-    public void setAppId(String appId) 
-    {
-        this.appId = appId;
-    }
-
-    public String getAppId() 
-    {
-        return appId;
-    }
-    public void setUnionId(String unionId) 
-    {
-        this.unionId = unionId;
-    }
-
-    public String getUnionId() 
-    {
-        return unionId;
-    }
-    public void setWxCode(String wxCode) 
-    {
-        this.wxCode = wxCode;
-    }
-
-    public String getWxCode() 
-    {
-        return wxCode;
-    }
-    public void setNickName(String nickName) 
-    {
-        this.nickName = nickName;
-    }
-
-    public String getNickName() 
-    {
-        return nickName;
-    }
-    public void setSex(String sex) 
-    {
-        this.sex = sex;
-    }
-
-    public String getSex() 
-    {
-        return sex;
-    }
-    public void setStatus(Long status) 
-    {
-        this.status = status;
-    }
-
-    public Long getStatus() 
-    {
-        return status;
-    }
-
-    public String getLoginIp()
-    {
-        return loginIp;
-    }
-
-    public void setLoginIp(String loginIp)
-    {
-        this.loginIp = loginIp;
-    }
-
-    public Date getLoginDate()
-    {
-        return loginDate;
-    }
-
-    public void setLoginDate(Date loginDate)
-    {
-        this.loginDate = loginDate;
-    }
-
-
-    @Override
-    public String toString() {
-        return new ToStringBuilder(this,ToStringStyle.MULTI_LINE_STYLE)
-            .append("id", getId())
-            .append("appId", getAppId())
-            .append("unionId", getUnionId())
-            .append("wxCode", getWxCode())
-            .append("nickName", getNickName())
-            .append("sex", getSex())
-            .append("status", getStatus())
-            .append("remark", getRemark())
-            .append("createBy", getCreateBy())
-            .append("createTime", getCreateTime())
-            .append("updateBy", getUpdateBy())
-            .append("updateTime", getUpdateTime())
-            .toString();
-    }
 }
