@@ -6,7 +6,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     
     <resultMap type="TRoom" id="TRoomResult">
         <result property="id"    column="id"    />
-        <result property="userId"    column="user_id"    />
+        <result property="storeId"    column="store_id"    />
         <result property="name"    column="name"    />
         <result property="wifi"    column="wifi"    />
         <result property="equipCode"    column="equip_code"    />
@@ -22,12 +22,13 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </resultMap>
 
     <sql id="selectTRoomVo">
-        select id, user_id, name, wifi, equip_code, table_code, start_time, stop_time, status, remark, create_by, create_time, update_by, update_time from t_room
+        select id, store_id, name, wifi, equip_code, table_code, start_time, stop_time, status, remark, create_by, create_time, update_by, update_time from t_room
     </sql>
 
     <select id="selectTRoomList" parameterType="TRoom" resultMap="TRoomResult">
         <include refid="selectTRoomVo"/>
-        <where>  
+        <where>
+            <if test="storeId != null  and storeId != ''"> and store_id = #{storeId}</if>
             <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
             <if test="wifi != null  and wifi != ''"> and wifi = #{wifi}</if>
             <if test="equipCode != null  and equipCode != ''"> and equip_code = #{equipCode}</if>
@@ -47,7 +48,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <insert id="insertTRoom" parameterType="TRoom" useGeneratedKeys="true" keyProperty="id">
         insert into t_room
         <trim prefix="(" suffix=")" suffixOverrides=",">
-            <if test="userId != null">user_id,</if>
+            <if test="storeId != null">store_id,</if>
             <if test="name != null and name != ''">name,</if>
             <if test="wifi != null">wifi,</if>
             <if test="equipCode != null">equip_code,</if>
@@ -62,7 +63,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="updateTime != null">update_time,</if>
          </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
-            <if test="userId != null">#{userId},</if>
+            <if test="storeId != null">#{storeId},</if>
             <if test="name != null and name != ''">#{name},</if>
             <if test="wifi != null">#{wifi},</if>
             <if test="equipCode != null">#{equipCode},</if>
@@ -81,7 +82,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <update id="updateTRoom" parameterType="TRoom">
         update t_room
         <trim prefix="SET" suffixOverrides=",">
-            <if test="userId != null">user_id = #{userId},</if>
+            <if test="storeId != null">store_id = #{storeId},</if>
             <if test="name != null and name != ''">name = #{name},</if>
             <if test="wifi != null">wifi = #{wifi},</if>
             <if test="equipCode != null">equip_code = #{equipCode},</if>
@@ -94,6 +95,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="createTime != null">create_time = #{createTime},</if>
             <if test="updateBy != null">update_by = #{updateBy},</if>
             <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="status != null">status = #{status},</if>
         </trim>
         where id = #{id}
     </update>

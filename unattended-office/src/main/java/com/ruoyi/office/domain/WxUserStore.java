@@ -35,12 +35,12 @@ public class WxUserStore extends BaseEntity
     @Excel(name = "是否会员")
     private String isMember;
 
-    /** 机号 */
-    @Excel(name = "机号")
+    /** 电话 */
+    @Excel(name = "电话")
     private String phone;
 
-    /** 发生地? */
-    @Excel(name = "发生地?")
+    /** 余额 */
+    @Excel(name = "余额")
     private BigDecimal amount;
 
     /** 积分 */

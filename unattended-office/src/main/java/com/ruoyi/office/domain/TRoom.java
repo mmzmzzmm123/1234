@@ -21,7 +21,7 @@ public class TRoom extends BaseEntity
     private Long id;
 
     /** 用户id */
-    private Long userId;
+    private Long storeId;
 
     /** 名称 */
     @Excel(name = "名称")
@@ -51,7 +51,7 @@ public class TRoom extends BaseEntity
 
     /** 状态(空闲/已预约/使用中/预约超时未使用/不可用) */
     @Excel(name = "状态(空闲/已预约/使用中/预约超时未使用/不可用)")
-    private Long status;
+    private String status;
 
     public void setId(Long id) 
     {
@@ -62,14 +62,14 @@ public class TRoom extends BaseEntity
     {
         return id;
     }
-    public void setUserId(Long userId) 
+    public void setStoreId(Long storeId)
     {
-        this.userId = userId;
+        this.storeId = storeId;
     }
 
-    public Long getUserId() 
+    public Long getStoreId()
     {
-        return userId;
+        return storeId;
     }
     public void setName(String name) 
     {
@@ -125,12 +125,12 @@ public class TRoom extends BaseEntity
     {
         return stopTime;
     }
-    public void setStatus(Long status) 
+    public void setStatus(String status)
     {
         this.status = status;
     }
 
-    public Long getStatus() 
+    public String getStatus()
     {
         return status;
     }
@@ -139,7 +139,7 @@ public class TRoom extends BaseEntity
     public String toString() {
         return new ToStringBuilder(this,ToStringStyle.MULTI_LINE_STYLE)
             .append("id", getId())
-            .append("userId", getUserId())
+            .append("storeId", getStoreId())
             .append("name", getName())
             .append("wifi", getWifi())
             .append("equipCode", getEquipCode())

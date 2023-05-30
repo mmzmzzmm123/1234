@@ -58,7 +58,7 @@
           v-hasPermi="['office:roomprice:add']"
         >新增</el-button>
       </el-col>
-      <el-col :span="1.5">
+     <!-- <el-col :span="1.5">
         <el-button
           type="success"
           plain
@@ -79,7 +79,7 @@
           @click="handleDelete"
           v-hasPermi="['office:roomprice:remove']"
         >删除</el-button>
-      </el-col>
+      </el-col> -->
       <el-col :span="1.5">
         <el-button
           type="warning"

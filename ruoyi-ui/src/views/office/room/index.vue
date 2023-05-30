@@ -76,7 +76,7 @@
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button size="mini" type="text" icon="el-icon-edit" @click="handleSet(scope.row)"
-            v-hasPermi="['office:room:edit']">设置</el-button>
+            v-hasPermi="['office:room:edit']">设置时间段价格</el-button>
           <el-button size="mini" type="text" icon="el-icon-edit" @click="handleUpdate(scope.row)"
             v-hasPermi="['office:room:edit']">修改</el-button>
           <el-button size="mini" type="text" icon="el-icon-delete" @click="handleDelete(scope.row)"
@@ -91,8 +91,8 @@
     <!-- 添加或修改店铺房间对话框 -->
     <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
-        <el-form-item label="用户id" prop="userId">
-          <el-input v-model="form.userId" placeholder="请输入用户id" />
+        <el-form-item label="门店id" prop="storeId">
+          <el-input v-model="form.storeId" placeholder="请输入门店id" />
         </el-form-item>
         <el-form-item label="名称" prop="name">
           <el-input v-model="form.name" placeholder="请输入名称" />
@@ -106,15 +106,15 @@
         <el-form-item label="桌台控制" prop="tableCode">
           <el-input v-model="form.tableCode" placeholder="请输入桌台控制" />
         </el-form-item>
-        <el-form-item label="开始时间" prop="startTime">
+      <!--  <el-form-item label="开始时间" prop="startTime">
           <el-date-picker clearable v-model="form.startTime" type="date" value-format="yyyy-MM-dd"
             placeholder="请选择开始时间">
           </el-date-picker>
         </el-form-item>
-        <el-form-item label="技术时间" prop="stopTime">
-          <el-date-picker clearable v-model="form.stopTime" type="date" value-format="yyyy-MM-dd" placeholder="请选择技术时间">
+        <el-form-item label="结束时间" prop="stopTime">
+          <el-date-picker clearable v-model="form.stopTime" type="date" value-format="yyyy-MM-dd" placeholder="请选择结束时间">
           </el-date-picker>
-        </el-form-item>
+        </el-form-item> -->
         <el-form-item label="备注" prop="remark">
           <el-input v-model="form.remark" placeholder="请输入备注" />
         </el-form-item>
@@ -175,7 +175,7 @@
         form: {},
         // 表单校验
         rules: {
-          userId: [{
+          storeId: [{
             required: true,
             message: "用户id不能为空",
             trigger: "blur"
@@ -210,7 +210,7 @@
       reset() {
         this.form = {
           id: null,
-          userId: null,
+          storeId: null,
           name: null,
           wifi: null,
           equipCode: null,
