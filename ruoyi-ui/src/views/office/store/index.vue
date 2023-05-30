@@ -130,7 +130,7 @@
               <el-time-select placeholder="营业开始时间" v-model="form.startTime" :picker-options="{
                   start: '00:00',
                   step: '00:30',
-                  end: '23:30'
+                  end: '24:00'
                 }">
               </el-time-select>
             </el-form-item>
@@ -140,7 +140,7 @@
               <el-time-select placeholder="营业结束时间" v-model="form.stopTime" :picker-options="{
                   start: '00:00',
                   step: '00:30',
-                  end: '23:30',
+                  end: '24:00',
                   minTime: form.startTime
                 }">
               </el-time-select>
@@ -231,7 +231,7 @@
         <el-table-column label="操作" align="center" width="200" class-name="small-padding fixed-width">
           <template slot-scope="scope">
             <el-button size="mini" type="text" icon="el-icon-edit" @click="setRoomPrice(scope.row)"
-              v-hasPermi="['office:room:edit']">价格设置</el-button>
+              v-hasPermi="['office:room:edit']">添加收费规则</el-button>
             <el-button size="mini" type="text" icon="el-icon-edit" @click="handleRoomUpdate(scope.row)"
               v-hasPermi="['office:room:edit']">修改</el-button>
             <el-button size="mini" type="text" icon="el-icon-delete" @click="handleRoomDelete(scope.row)"
@@ -274,18 +274,10 @@
 
     <div style="float: left;width: 50%;border: 0.2rem solid #aaaaaa;padding: 1rem;">
       <el-table v-loading="priceLoading" :data="priceList">
-        <el-table-column label="开始时间" align="center" prop="startTime" width="180">
-          <template slot-scope="scope">
-            <span>{{ parseTime(scope.row.startTime, '{y}-{m}-{d}') }}</span>
-          </template>
-        </el-table-column>
-        <el-table-column label="结束时间" align="center" prop="stopTime" width="180">
-          <template slot-scope="scope">
-            <span>{{ parseTime(scope.row.stopTime, '{y}-{m}-{d}') }}</span>
-          </template>
-        </el-table-column>
-        <el-table-column label="单价" align="center" prop="price" />
-        <el-table-column label="会员单价" align="center" prop="memberPrice" />
+        <el-table-column label="开始时间" align="center" prop="startTime" width="180"/>
+        <el-table-column label="结束时间" align="center" prop="stopTime" width="180"/>
+        <el-table-column label="单价(元/每小时)" align="center" prop="price" />
+        <el-table-column label="会员单价(元/每小时)" align="center" prop="memberPrice" />
         <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
           <template slot-scope="scope">
             <el-button size="mini" type="text" icon="el-icon-edit" @click="handlePriceUpdate(scope.row)"
@@ -301,26 +293,33 @@
     </div>
     <!-- 添加或修改房间价格对话框 -->
     <el-dialog :title="title" :visible.sync="priceOpen" width="500px" append-to-body>
-      <el-form ref="priceForm" :model="priceForm" :rules="rules" label-width="80px">
+      <el-form ref="priceForm" :model="priceForm" :rules="priceRules" label-width="150px">
         <el-form-item label="开始时间" prop="startTime">
-          <el-date-picker clearable v-model="priceForm.startTime" type="date" value-format="yyyy-MM-dd"
-            placeholder="请选择开始时间">
-          </el-date-picker>
+          <el-time-select placeholder="开始时间" v-model="priceForm.startTime" :picker-options="{
+                start: '00:00',
+                step: '00:30',
+                end: '24:00'
+              }" >
+          </el-time-select>
         </el-form-item>
-        <el-form-item label="结束时间" prop="stopTime">
-          <el-date-picker clearable v-model="priceForm.stopTime" type="date" value-format="yyyy-MM-dd"
-            placeholder="请选择结束时间">
-          </el-date-picker>
+        <el-form-item label="营业结束时间" prop="stopTime">
+          <el-time-select placeholder="营业结束时间" v-model="priceForm.stopTime" :picker-options="{
+                start: '00:00',
+                step: '00:30',
+                end: '24:00',
+                minTime: priceForm.startTime
+              }">
+          </el-time-select>
         </el-form-item>
-        <el-form-item label="单价" prop="price">
+        <el-form-item label="单价(元/每小时)" prop="price">
           <el-input v-model="priceForm.price" placeholder="请输入单价" />
         </el-form-item>
-        <el-form-item label="会员单价" prop="memberPrice">
+        <el-form-item label="会员单价(元/每小时)" prop="memberPrice">
           <el-input v-model="priceForm.memberPrice" placeholder="请输入会员单价" />
         </el-form-item>
-        <el-form-item label="备注" prop="remark">
+        <!-- <el-form-item label="备注" prop="remark">
           <el-input v-model="priceForm.remark" placeholder="请输入备注" />
-        </el-form-item>
+        </el-form-item> -->
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button type="primary" @click="submitPriceForm">确 定</el-button>
@@ -366,6 +365,7 @@
     dicts: ["room_status"],
     data() {
       return {
+        defaultTimeSt: null,
         // 遮罩层
         loading: true,
         roomLoading: false,
@@ -436,16 +436,16 @@
             message: "店铺地址不能为空",
             trigger: "blur"
           }],
-          startTime: [{
-            required: true,
-            message: "营业开始时间不能为空",
-            trigger: "blur"
-          }],
-          stopTime: [{
-            required: true,
-            message: "营业结束时间不能为空",
-            trigger: "blur"
-          }],
+          // startTime: [{
+          //   required: true,
+          //   message: "营业开始时间不能为空",
+          //   trigger: "blur"
+          // }],
+          // stopTime: [{
+          //   required: true,
+          //   message: "营业结束时间不能为空",
+          //   trigger: "blur"
+          // }],
           preDays: [{
             required: true,
             message: "提前预约天数不能为空",
@@ -466,6 +466,18 @@
           name: [{
             required: true,
             message: "名称不能为空",
+            trigger: "blur"
+          }],
+        },
+        priceRules: {
+          price: [{
+            required: true,
+            message: "单价不能为空",
+            trigger: "blur"
+          }],
+          memberPrice:  [{
+            required: true,
+            message: "会员单价不能为空",
             trigger: "blur"
           }],
         },
