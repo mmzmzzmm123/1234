@@ -63,18 +63,18 @@
       <el-table-column type="selection" width="25" align="center" />
       <el-table-column label="id" align="center" width="35" prop="id" />
       <!-- <el-table-column label="用户id" align="center" prop="userId" /> -->
-      <el-table-column label="店铺名称" align="center" prop="name" />
-      <el-table-column label="店铺地址" align="center" prop="address" />
-      <el-table-column label="电话" align="center" prop="phone" />
-      <el-table-column label="营业开始时间" align="center" prop="startTime" width="180" />
-      <el-table-column label="营业结束时间" align="center" prop="stopTime" width="180" />
+      <el-table-column label="店铺名称" align="center" width="150" prop="name" />
+      <el-table-column label="店铺地址" align="center" width="150" prop="address" />
+      <el-table-column label="电话" align="center" width="110" prop="phone" />
+      <el-table-column label="营业开始时间" align="center" width="90" prop="startTime" />
+      <el-table-column label="营业结束时间" align="center" prop="stopTime" width="90" />
       <el-table-column label="提前预约天数" align="center" prop="preDays" />
       <el-table-column label="wifi" align="center" prop="wifi" />
-      <el-table-column label="设备控制" align="center" prop="equipId" />
-      <el-table-column label="所属商圈" align="center" prop="busiDistrict" />
-      <el-table-column label="地铁线路" align="center" prop="subway" />
-      <el-table-column label="纬度" align="center" prop="latitude" />
-      <el-table-column label="经度" align="center" prop="longitude" />
+      <el-table-column label="绑定设备" align="center" prop="equipId" width="160" :formatter="equipFormatter" />
+      <el-table-column label="所属商圈" align="center" prop="busiDistrict" width="100" />
+      <el-table-column label="地铁线路" align="center" prop="subway" width="100" />
+      <!--  <el-table-column label="纬度" align="center" prop="latitude" />
+      <el-table-column label="经度" align="center" prop="longitude" /> -->
       <el-table-column label="logo" align="center" prop="logo">
         <template slot-scope="scope">
           <el-image style="width: 50px; height: 20px" placeholder :src="scope.row.logo"
@@ -84,10 +84,12 @@
       </el-table-column>
       <!--  <el-table-column label="状态" align="center" prop="status" />
       <el-table-column label="备注" align="center" prop="remark" /> -->
-      <el-table-column label="操作" align="center" width="220" class-name="small-padding fixed-width">
+      <el-table-column label="操作" align="center" width="250" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button size="mini" type="text" icon="el-icon-edit" @click="addStoreRoom(scope.row)"
             v-hasPermi="['office:room:add']">添加房间</el-button>
+          <el-button size="mini" type="text" icon="el-icon-edit" @click="bindEquipment(scope.row,'store')"
+            v-hasPermi="['office:store:edit']">设备绑定</el-button>
           <el-button size="mini" type="text" icon="el-icon-edit" @click="handleUpdate(scope.row)"
             v-hasPermi="['office:store:edit']">修改</el-button>
           <el-button size="mini" type="text" icon="el-icon-delete" @click="handleDelete(scope.row)"
@@ -214,24 +216,27 @@
     </el-dialog>
 
     <el-divider></el-divider>
-    <div style="float: left; width: 50%;border: 0.2rem solid #aaaaaa; padding: 1rem;">
+    <div style="float: left; width: 60%;border-right: 0.2rem solid #aaaaaa; padding: 1rem;">
       <!-- 房间列表 -->
+      <span> 房间列表({{selectedStore}}) </span>
       <el-table v-loading="roomLoading" :data="roomList" @row-click="roomChange">
-        <el-table-column type="selection" width="55" align="center" />
-        <el-table-column label="id" align="center" prop="id" />
-        <el-table-column label="名称" align="center" prop="name" />
-        <el-table-column label="wifi" align="center" prop="wifi" />
-        <!-- <el-table-column label="包厢控制" align="center" prop="equipCode" />
-        <el-table-column label="桌台控制" align="center" prop="tableCode" /> -->
-        <el-table-column label="状态" align="center" prop="status">
+        <el-table-column type="selection" width="30" align="center" />
+        <el-table-column label="id" align="center" width="40" prop="id" />
+        <el-table-column label="名称" align="center" width="160" prop="name" />
+        <el-table-column label="wifi" align="center" width="85" prop="wifi" />
+        <el-table-column label="绑定设备" align="center" width="200" prop="equipId" :formatter="equipFormatter" />
+        <!-- <el-table-column label="桌台控制" align="center" prop="tableCode" /> -->
+        <el-table-column label="状态" align="center" width="85" prop="status">
           <template slot-scope="scope">
             <dict-tag :options="dict.type.room_status" :value="scope.row.status" />
           </template>
         </el-table-column>
-        <el-table-column label="操作" align="center" width="200" class-name="small-padding fixed-width">
+        <el-table-column label="操作" align="center" width="270" class-name="small-padding fixed-width">
           <template slot-scope="scope">
             <el-button size="mini" type="text" icon="el-icon-edit" @click="setRoomPrice(scope.row)"
               v-hasPermi="['office:room:edit']">添加收费规则</el-button>
+            <el-button size="mini" type="text" icon="el-icon-edit" @click="bindEquipment(scope.row,'room')"
+              v-hasPermi="['office:room:edit']">设备绑定</el-button>
             <el-button size="mini" type="text" icon="el-icon-edit" @click="handleRoomUpdate(scope.row)"
               v-hasPermi="['office:room:edit']">修改</el-button>
             <el-button size="mini" type="text" icon="el-icon-delete" @click="handleRoomDelete(scope.row)"
@@ -272,12 +277,14 @@
       </el-dialog>
     </div>
 
-    <div style="float: left;width: 50%;border: 0.2rem solid #aaaaaa;padding: 1rem;">
+    <span>&nbsp; 时段收费规则({{selectedRoom}}) </span>
+
+    <div style="float: left;width: 40%;border: 0.2rem solid solid none solid #aaaaaa;padding: 1rem;">
       <el-table v-loading="priceLoading" :data="priceList">
-        <el-table-column label="开始时间" align="center" prop="startTime" width="180"/>
-        <el-table-column label="结束时间" align="center" prop="stopTime" width="180"/>
-        <el-table-column label="单价(元/每小时)" align="center" prop="price" />
-        <el-table-column label="会员单价(元/每小时)" align="center" prop="memberPrice" />
+        <el-table-column label="开始时间" align="center" prop="startTime" width="90" />
+        <el-table-column label="结束时间" align="center" prop="stopTime" width="90" />
+        <el-table-column label="单价(元/每小时)" align="center" prop="price" width="120" />
+        <el-table-column label="会员单价(元/每小时)" align="center" prop="memberPrice" width="140" />
         <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
           <template slot-scope="scope">
             <el-button size="mini" type="text" icon="el-icon-edit" @click="handlePriceUpdate(scope.row)"
@@ -299,7 +306,7 @@
                 start: '00:00',
                 step: '00:30',
                 end: '24:00'
-              }" >
+              }">
           </el-time-select>
         </el-form-item>
         <el-form-item label="营业结束时间" prop="stopTime">
@@ -323,6 +330,20 @@
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button type="primary" @click="submitPriceForm">确 定</el-button>
+        <el-button @click="cancel">取 消</el-button>
+      </div>
+    </el-dialog>
+
+    <el-dialog title="绑定设备" :visible.sync="bindOpen" width="500px" append-to-body>
+      <el-form ref="bindForm" :model="bindForm" :rules="priceRules" label-width="150px">
+        <el-form-item label="选择绑定设备" prop="price">
+          <el-select v-model="bindForm.name" filterable>
+            <el-option v-for="option in equipOptions" :key="option.id" :label="option.name" :value="option.id" />
+          </el-select>
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button type="primary" @click="submitBindForm">确 定</el-button>
         <el-button @click="cancel">取 消</el-button>
       </div>
     </el-dialog>
@@ -359,12 +380,18 @@
     updateRoomprice
   } from "@/api/office/roomprice";
 
+  import {
+    listEquipment
+  } from "@/api/office/equipment";
+
 
   export default {
     name: "Store",
     dicts: ["room_status"],
     data() {
       return {
+        selectedStore: '',
+        selectedRoom: '',
         defaultTimeSt: null,
         // 遮罩层
         loading: true,
@@ -386,12 +413,14 @@
         storeList: [],
         roomList: [],
         priceList: [],
+        equipOptions: [],
         // 弹出层标题
         title: "",
         // 是否显示弹出层
         open: false,
         roomOpen: false,
         priceOpen: false,
+        bindOpen: false,
         // 查询参数
         queryParams: {
           pageNum: 1,
@@ -424,6 +453,8 @@
         form: {},
         roomForm: {},
         priceForm: {},
+        bindForm: {},
+        bindType: '',
         // 表单校验
         rules: {
           name: [{
@@ -475,7 +506,7 @@
             message: "单价不能为空",
             trigger: "blur"
           }],
-          memberPrice:  [{
+          memberPrice: [{
             required: true,
             message: "会员单价不能为空",
             trigger: "blur"
@@ -498,6 +529,7 @@
     },
     created() {
       this.getList();
+      this.getEquipOptions();
     },
     methods: {
       /** 查询商家用户店铺列表 */
@@ -509,11 +541,20 @@
           this.loading = false;
         });
       },
+      getEquipOptions() {
+        var param = {};
+        param.pageNum = 1;
+        param.pageSize = 1000;
+        listEquipment(param).then(response => {
+          this.equipOptions = response.rows;
+        });
+      },
       // 取消按钮
       cancel() {
         this.open = false;
         this.roomOpen = false;
         this.priceOpen = false;
+        this.bindOpen = false;
         this.reset();
       },
       // 表单重置
@@ -562,7 +603,9 @@
       storeChange(row, column, event) {
         this.roomLoading = true;
         this.roomQueryParam.storeId = row.id;
+        this.selectedStore = row.name;
         this.listStoreRoom();
+        this.getEquipOptions();
       },
       listStoreRoom() {
         listRoom(this.roomQueryParam).then(response => {
@@ -574,6 +617,7 @@
       roomChange(row, column, event) {
         this.priceLoading = true;
         this.roomQueryParam.roomId = row.id;
+        this.selectedRoom = row.name;
         this.getPrice();
       },
       /** 查询房间价格列表 */
@@ -619,6 +663,30 @@
         this.priceForm = {};
         this.priceForm.roomId = row.id
         this.priceOpen = true;
+      },
+      bindEquipment(row, type) {
+        // type = "store/room";
+        this.bindOpen = true;
+        this.bindType = type;
+        this.bindForm.id = row.id;
+      },
+      submitBindForm() {
+        var subForm = {};
+        subForm.id = this.bindForm.id;
+        subForm.equipId = this.bindForm.name;
+        if (this.bindType == "store") {
+          updateStore(subForm).then(response => {
+            this.$modal.msgSuccess("修改成功");
+            this.bindOpen = false;
+            this.getList();
+          });
+        } else if (this.bindType == "room") {
+          updateRoom(subForm).then(response => {
+            this.$modal.msgSuccess("修改成功");
+            this.bindOpen = false;
+            this.listStoreRoom();
+          });
+        }
       },
       /** 提交按钮 */
       submitForm() {
@@ -761,6 +829,22 @@
           this.getPrice();
           this.$modal.msgSuccess("删除成功");
         }).catch(() => {});
+      },
+      equipFormatter(row) {
+        var res = "";
+        // this.equipOptions.forEach(function(e) {
+        //   if (e.id == row.equipId) {
+        //     res = e.name;
+        //   }
+        // });
+        for (var i = 0; i < this.equipOptions.length; i++) {
+          if (this.equipOptions[i].id == row.equipId) {
+            res = this.equipOptions[i].name;
+            break;
+          }
+        }
+
+        return res;
       },
     }
   };
