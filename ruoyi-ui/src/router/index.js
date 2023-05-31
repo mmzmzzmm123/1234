@@ -75,19 +75,6 @@ export const constantRoutes = [
     ]
   },
   {
-    path: '/datas',
-    component: Layout,
-    redirect: 'index',
-    children: [
-      {
-        path: 'index_v1',
-        component: () => import('@/views/index_v1'),
-        name: 'index_v1',
-        meta: { title: '数据展示', icon: 'build', affix: true }
-      }
-    ]
-  },
-  {
     path: '/user',
     component: Layout,
     hidden: true,

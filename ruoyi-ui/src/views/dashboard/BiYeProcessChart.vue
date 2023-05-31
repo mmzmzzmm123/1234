@@ -39,6 +39,7 @@ export default {
       newData.forEach((item)=>{
         this.yHeads.push(item.name)
       })
+      this.initChart()
     }
   },
   mounted() {
@@ -115,7 +116,7 @@ export default {
         },
         yAxis: {
           type: 'category',
-          data: ['企业实习报告','顶岗实习承诺书','顶岗实习考核表','顶岗实习申请书','实习三方协议','公司照片&视频']
+          data: this.yHeads
         },
         series: [
           {
