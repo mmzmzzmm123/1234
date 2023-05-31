@@ -5,11 +5,11 @@
         <el-input v-model="queryParams.userId" placeholder="只查询当前用户得store" clearable
           @keyup.enter.native="handleQuery" />
       </el-form-item> -->
-      <el-form-item label="店铺名称" prop="name">
-        <el-input v-model="queryParams.name" placeholder="请输入店铺名称" clearable @keyup.enter.native="handleQuery" />
+      <el-form-item label="门店名称" prop="name">
+        <el-input v-model="queryParams.name" placeholder="请输入门店名称" clearable @keyup.enter.native="handleQuery" />
       </el-form-item>
-      <el-form-item label="店铺地址" prop="address">
-        <el-input v-model="queryParams.address" placeholder="请输入店铺地址" clearable @keyup.enter.native="handleQuery" />
+      <el-form-item label="门店地址" prop="address">
+        <el-input v-model="queryParams.address" placeholder="请输入门店地址" clearable @keyup.enter.native="handleQuery" />
       </el-form-item>
 
       <el-form-item label="所属商圈" prop="busiDistrict">
@@ -63,8 +63,8 @@
       <el-table-column type="selection" width="25" align="center" />
       <el-table-column label="id" align="center" width="35" prop="id" />
       <!-- <el-table-column label="用户id" align="center" prop="userId" /> -->
-      <el-table-column label="店铺名称" align="center" width="150" prop="name" />
-      <el-table-column label="店铺地址" align="center" width="150" prop="address" />
+      <el-table-column label="门店名称" align="center" width="150" prop="name" />
+      <el-table-column label="门店地址" align="center" width="150" prop="address" />
       <el-table-column label="电话" align="center" width="110" prop="phone" />
       <el-table-column label="营业开始时间" align="center" width="90" prop="startTime" />
       <el-table-column label="营业结束时间" align="center" prop="stopTime" width="90" />
@@ -101,7 +101,7 @@
     <pagination v-show="total>0" :total="total" :page.sync="queryParams.pageNum" :limit.sync="queryParams.pageSize"
       @pagination="getList" />
 
-    <!-- 添加或修改商家用户店铺对话框 -->
+    <!-- 添加或修改商家用户门店对话框 -->
     <el-dialog :title="title" :visible.sync="open" width="700px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
         <!-- <el-form-item label="用户id" prop="userId">
@@ -109,8 +109,8 @@
         </el-form-item> -->
         <el-row>
           <el-col :span=12>
-            <el-form-item label="店铺名称" prop="name">
-              <el-input v-model="form.name" placeholder="请输入店铺名称" />
+            <el-form-item label="门店名称" prop="name">
+              <el-input v-model="form.name" placeholder="请输入门店名称" />
             </el-form-item>
           </el-col>
           <el-col :span=12>
@@ -121,8 +121,8 @@
         </el-row>
         <el-row>
           <el-col :span=24>
-            <el-form-item label="店铺地址" prop="address">
-              <el-input v-model="form.address" placeholder="请输入店铺地址" />
+            <el-form-item label="门店地址" prop="address">
+              <el-input v-model="form.address" placeholder="请输入门店地址" />
             </el-form-item>
           </el-col>
         </el-row>
@@ -409,7 +409,7 @@
         total: 0,
         roomTotal: 0,
         priceTotal: 0,
-        // 商家用户店铺表格数据
+        // 商家用户门店表格数据
         storeList: [],
         roomList: [],
         priceList: [],
@@ -459,12 +459,12 @@
         rules: {
           name: [{
             required: true,
-            message: "店铺名称不能为空",
+            message: "门店名称不能为空",
             trigger: "blur"
           }],
           address: [{
             required: true,
-            message: "店铺地址不能为空",
+            message: "门店地址不能为空",
             trigger: "blur"
           }],
           // startTime: [{
@@ -532,7 +532,7 @@
       this.getEquipOptions();
     },
     methods: {
-      /** 查询商家用户店铺列表 */
+      /** 查询商家用户门店列表 */
       getList() {
         this.loading = true;
         listStore(this.queryParams).then(response => {
@@ -751,7 +751,7 @@
       /** 删除按钮操作 */
       handleDelete(row) {
         const ids = row.id || this.ids;
-        this.$modal.confirm('是否确认删除商家用户店铺编号为"' + ids + '"的数据项？').then(function() {
+        this.$modal.confirm('是否确认删除商家用户门店编号为"' + ids + '"的数据项？').then(function() {
           return delStore(ids);
         }).then(() => {
           this.getList();
