@@ -5,6 +5,7 @@ import java.util.List;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 
 import com.ruoyi.office.domain.TWxUser;
+import com.ruoyi.office.domain.vo.MerchantUserVo;
 
 /**
  * 微信用户信息 t_wx_userMapper接口
@@ -60,4 +61,6 @@ public interface TWxUserMapper extends BaseMapper<TWxUser> {
      * @return 结果
      */
     public int deleteTWxUserByIds(Long[] ids);
+
+    List<MerchantUserVo> listStoreWxuser(TWxUser tWxUser);
 }

@@ -2,6 +2,8 @@ package com.ruoyi.office.controller;
 
 import java.util.List;
 import javax.servlet.http.HttpServletResponse;
+
+import com.ruoyi.common.utils.SecurityUtils;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -29,8 +31,7 @@ import com.ruoyi.common.core.page.TableDataInfo;
  */
 @RestController
 @RequestMapping("/office/wxuserpackage")
-public class TWxUserPackageController extends BaseController
-{
+public class TWxUserPackageController extends BaseController {
     @Autowired
     private ITWxUserPackageService tWxUserPackageService;
 
@@ -39,8 +40,9 @@ public class TWxUserPackageController extends BaseController
      */
     @PreAuthorize("@ss.hasPermi('office:wxuserpackage:list')")
     @GetMapping("/list")
-    public TableDataInfo list(TWxUserPackage tWxUserPackage)
-    {
+    public TableDataInfo list(TWxUserPackage tWxUserPackage) {
+        if (!SecurityUtils.getUsername().equalsIgnoreCase("admin"))
+            tWxUserPackage.setMerchant(SecurityUtils.getUserId());
         startPage();
         List<TWxUserPackage> list = tWxUserPackageService.selectTWxUserPackageList(tWxUserPackage);
         return getDataTable(list);
@@ -50,10 +52,9 @@ public class TWxUserPackageController extends BaseController
      * 导出用户套餐购买记录列表
      */
     @PreAuthorize("@ss.hasPermi('office:wxuserpackage:export')")
-    @Log(title = "用户套餐购买记录", businessType = BusinessType.EXPORT)
+    @Log(title = "用户套餐购买记录" , businessType = BusinessType.EXPORT)
     @PostMapping("/export")
-    public void export(HttpServletResponse response, TWxUserPackage tWxUserPackage)
-    {
+    public void export(HttpServletResponse response, TWxUserPackage tWxUserPackage) {
         List<TWxUserPackage> list = tWxUserPackageService.selectTWxUserPackageList(tWxUserPackage);
         ExcelUtil<TWxUserPackage> util = new ExcelUtil<TWxUserPackage>(TWxUserPackage.class);
         util.exportExcel(response, list, "用户套餐购买记录数据");
@@ -64,8 +65,7 @@ public class TWxUserPackageController extends BaseController
      */
     @PreAuthorize("@ss.hasPermi('office:wxuserpackage:query')")
     @GetMapping(value = "/{id}")
-    public AjaxResult getInfo(@PathVariable("id") Long id)
-    {
+    public AjaxResult getInfo(@PathVariable("id") Long id) {
         return success(tWxUserPackageService.selectTWxUserPackageById(id));
     }
 
@@ -73,10 +73,10 @@ public class TWxUserPackageController extends BaseController
      * 新增用户套餐购买记录
      */
     @PreAuthorize("@ss.hasPermi('office:wxuserpackage:add')")
-    @Log(title = "用户套餐购买记录", businessType = BusinessType.INSERT)
+    @Log(title = "用户套餐购买记录" , businessType = BusinessType.INSERT)
     @PostMapping
-    public AjaxResult add(@RequestBody TWxUserPackage tWxUserPackage)
-    {
+    public AjaxResult add(@RequestBody TWxUserPackage tWxUserPackage) {
+        tWxUserPackage.setMerchant(SecurityUtils.getUserId());
         return toAjax(tWxUserPackageService.insertTWxUserPackage(tWxUserPackage));
     }
 
@@ -84,10 +84,9 @@ public class TWxUserPackageController extends BaseController
      * 修改用户套餐购买记录
      */
     @PreAuthorize("@ss.hasPermi('office:wxuserpackage:edit')")
-    @Log(title = "用户套餐购买记录", businessType = BusinessType.UPDATE)
+    @Log(title = "用户套餐购买记录" , businessType = BusinessType.UPDATE)
     @PutMapping
-    public AjaxResult edit(@RequestBody TWxUserPackage tWxUserPackage)
-    {
+    public AjaxResult edit(@RequestBody TWxUserPackage tWxUserPackage) {
         return toAjax(tWxUserPackageService.updateTWxUserPackage(tWxUserPackage));
     }
 
@@ -95,10 +94,9 @@ public class TWxUserPackageController extends BaseController
      * 删除用户套餐购买记录
      */
     @PreAuthorize("@ss.hasPermi('office:wxuserpackage:remove')")
-    @Log(title = "用户套餐购买记录", businessType = BusinessType.DELETE)
+    @Log(title = "用户套餐购买记录" , businessType = BusinessType.DELETE)
     @DeleteMapping("/{ids}")
-    public AjaxResult remove(@PathVariable Long[] ids)
-    {
+    public AjaxResult remove(@PathVariable Long[] ids) {
         return toAjax(tWxUserPackageService.deleteTWxUserPackageByIds(ids));
     }
 }

@@ -1,7 +1,10 @@
 package com.ruoyi.office.service.impl;
 
 import java.util.List;
+
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.ruoyi.common.utils.DateUtils;
+import com.ruoyi.office.domain.vo.MerchantUserVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -93,5 +96,10 @@ public class TWxUserServiceImpl extends ServiceImpl<TWxUserMapper, TWxUser> impl
     public int deleteTWxUserById(Long id)
     {
         return tWxUserMapper.deleteTWxUserById(id);
+    }
+
+    @Override
+    public List<MerchantUserVo> listStoreWxuser(TWxUser tWxUser) {
+        return baseMapper.listStoreWxuser(tWxUser);
     }
 }

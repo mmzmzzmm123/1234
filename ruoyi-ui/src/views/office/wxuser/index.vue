@@ -163,7 +163,8 @@
     getWxuser,
     delWxuser,
     addWxuser,
-    updateWxuser
+    updateWxuser,
+    listStoreWxuser
   } from "@/api/office/wxuser";
 
   export default {
@@ -218,7 +219,12 @@
       /** 查询微信用户信息 t_wx_user列表 */
       getList() {
         this.loading = true;
-        listWxuser(this.queryParams).then(response => {
+        // listWxuser(this.queryParams).then(response => {
+        //   this.wxuserList = response.rows;
+        //   this.total = response.total;
+        //   this.loading = false;
+        // });
+        listStoreWxuser(this.queryParams).then(response => {
           this.wxuserList = response.rows;
           this.total = response.total;
           this.loading = false;

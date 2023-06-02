@@ -2,6 +2,7 @@ package com.ruoyi.office.service;
 
 import java.util.List;
 import com.ruoyi.office.domain.TWxUser;
+import com.ruoyi.office.domain.vo.MerchantUserVo;
 
 /**
  * 微信用户信息 t_wx_userService接口
@@ -58,4 +59,6 @@ public interface ITWxUserService
      * @return 结果
      */
     public int deleteTWxUserById(Long id);
+
+    List<MerchantUserVo> listStoreWxuser(TWxUser tWxUser);
 }

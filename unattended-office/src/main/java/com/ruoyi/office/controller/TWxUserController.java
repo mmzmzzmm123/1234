@@ -2,6 +2,8 @@ package com.ruoyi.office.controller;
 
 import java.util.List;
 import javax.servlet.http.HttpServletResponse;
+
+import com.ruoyi.office.domain.vo.MerchantUserVo;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -43,6 +45,19 @@ public class TWxUserController extends BaseController
     {
         startPage();
         List<TWxUser> list = tWxUserService.selectTWxUserList(tWxUser);
+        return getDataTable(list);
+    }
+
+
+    /**
+     * 查询微信用户信息 t_wx_user列表
+     */
+    @PreAuthorize("@ss.hasPermi('office:wxuser:list')")
+    @GetMapping("/listStoreWxuser")
+    public TableDataInfo listStoreWxuser(TWxUser tWxUser)
+    {
+        startPage();
+        List<MerchantUserVo> list = tWxUserService.listStoreWxuser(tWxUser);
         return getDataTable(list);
     }
 

@@ -3,6 +3,7 @@ package com.ruoyi.office.domain;
 import java.math.BigDecimal;
 import java.util.Date;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import lombok.Data;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import com.ruoyi.common.annotation.Excel;
@@ -14,12 +15,17 @@ import com.ruoyi.common.core.domain.BaseEntity;
  * @author ruoyi
  * @date 2023-05-29
  */
+@Data
 public class TRoomOrder extends BaseEntity
 {
     private static final long serialVersionUID = 1L;
 
     /** id */
     private Long id;
+
+    /** 订单号 */
+    @Excel(name = "订单号")
+    private Long orderNo;
 
     /** 房间id */
     @Excel(name = "房间id")

@@ -9,6 +9,15 @@ export function listWxuser(query) {
   })
 }
 
+// 查询在对应商户下购买过充值套餐的人
+export function listStoreWxuser(query) {
+  return request({
+    url: '/office/wxuser/listStoreWxuser',
+    method: 'get',
+    params: query,
+  })
+}
+
 // 查询微信用户信息 t_wx_user详细
 export function getWxuser(id) {
   return request({

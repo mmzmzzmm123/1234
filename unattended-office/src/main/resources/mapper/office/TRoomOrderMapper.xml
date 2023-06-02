@@ -6,6 +6,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     
     <resultMap type="TRoomOrder" id="TRoomOrderResult">
         <result property="id"    column="id"    />
+        <result property="orderNo"    column="order_no"    />
         <result property="roomId"    column="room_id"    />
         <result property="userId"    column="user_id"    />
         <result property="startTime"    column="start_time"    />
@@ -23,13 +24,14 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </resultMap>
 
     <sql id="selectTRoomOrderVo">
-        select id, room_id, user_id, start_time, end_time, total_amount, pay_amount, coupon_amount, coupon_id, status, remark, create_by, create_time, update_by, update_time from t_room_order
+        select id, order_no, room_id, user_id, start_time, end_time, total_amount, pay_amount, coupon_amount, coupon_id, status, remark, create_by, create_time, update_by, update_time from t_room_order
     </sql>
 
     <select id="selectTRoomOrderList" parameterType="TRoomOrder" resultMap="TRoomOrderResult">
         <include refid="selectTRoomOrderVo"/>
         <where>  
             <if test="roomId != null "> and room_id = #{roomId}</if>
+            <if test="orderNo != null "> and order_no = #{orderNo}</if>
             <if test="userId != null "> and user_id = #{userId}</if>
             <if test="startTime != null "> and start_time = #{startTime}</if>
             <if test="endTime != null "> and end_time = #{endTime}</if>
@@ -51,6 +53,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         insert into t_room_order
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="roomId != null">room_id,</if>
+            <if test="orderNo != null ">order_no,</if>
             <if test="userId != null">user_id,</if>
             <if test="startTime != null">start_time,</if>
             <if test="endTime != null">end_time,</if>
@@ -67,6 +70,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
          </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="roomId != null">#{roomId},</if>
+            <if test="orderNo != null ">#{orderNo},</if>
             <if test="userId != null">#{userId},</if>
             <if test="startTime != null">#{startTime},</if>
             <if test="endTime != null">#{endTime},</if>
@@ -87,6 +91,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         update t_room_order
         <trim prefix="SET" suffixOverrides=",">
             <if test="roomId != null">room_id = #{roomId},</if>
+            <if test="orderNo != null ">order_no = #{orderNo},</if>
             <if test="userId != null">user_id = #{userId},</if>
             <if test="startTime != null">start_time = #{startTime},</if>
             <if test="endTime != null">end_time = #{endTime},</if>
