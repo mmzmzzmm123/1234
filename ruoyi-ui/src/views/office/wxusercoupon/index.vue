@@ -88,10 +88,9 @@
       <el-table-column label="名称" align="center" prop="couponName" />
       <el-table-column label="原价" align="center" prop="originalPrice" />
       <el-table-column label="当前价格" align="center" prop="price" />
-      <el-table-column label="卡券类型(时长卡、次数卡)" align="center" prop="cardType" />
-      <el-table-column label="可使用次数(针对次数卡)" align="center" prop="numCanUse" />
-      <el-table-column label="单日只扣一次次数(针对次数卡)" align="center" prop="oneTimeOneDay" />
-      <el-table-column label="每次最多抵扣时长(针对时长卡)" align="center" prop="maxMinuteOnce" />
+      <el-table-column label="卡券类型" align="center" prop="cardType" />
+      <el-table-column label="可使用次数" align="center" prop="numCanUse" />
+      <!-- <el-table-column label="单日只扣一次次数" align="center" prop="oneTimeOneDay" /> -->
       <el-table-column label="剩余时长" align="center" prop="minuteLeft" />
       <el-table-column label="开始日期" align="center" prop="startDate" width="180">
         <template slot-scope="scope">
@@ -103,9 +102,9 @@
           <span>{{ parseTime(scope.row.endDate, '{y}-{m}-{d}') }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="周内可用日期(1,3,4,7)" align="center" prop="weekDays" />
-      <el-table-column label="状态" align="center" prop="status" />
-      <el-table-column label="备注" align="center" prop="remark" />
+      <el-table-column label="周内可用日期" align="center" prop="weekDays" />
+     <!-- <el-table-column label="状态" align="center" prop="status" />
+      <el-table-column label="备注" align="center" prop="remark" /> -->
      <!-- <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button
