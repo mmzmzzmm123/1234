@@ -1,7 +1,9 @@
 package com.ruoyi.office.service;
 
+import java.math.BigDecimal;
 import java.util.List;
 import com.ruoyi.office.domain.TRoomOrder;
+import com.ruoyi.office.domain.vo.GetRoomPriceVo;
 
 /**
  * 房间占用（点支付时再次校验可用性并改变状态，支付失败回滚）Service接口
@@ -58,4 +60,6 @@ public interface ITRoomOrderService
      * @return 结果
      */
     public int deleteTRoomOrderById(Long id);
+
+    BigDecimal getPeriodPrice(GetRoomPriceVo vo);
 }

@@ -60,4 +60,6 @@ public interface TWxUserAmountMapper extends BaseMapper<TWxUserAmount> {
      * @return 结果
      */
     public int deleteTWxUserAmountByIds(Long[] ids);
+
+    int minusCardValue(TWxUserAmount wxUserAmount);
 }

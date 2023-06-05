@@ -70,7 +70,7 @@ public class TWxUserAmountController extends BaseController
     }
 
     /**
-     * 新增微信用户余额
+     * 新增/充值 微信用户余额
      */
     @PreAuthorize("@ss.hasPermi('office:wxuseramount:add')")
     @Log(title = "微信用户余额", businessType = BusinessType.INSERT)

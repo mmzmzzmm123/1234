@@ -60,4 +60,6 @@ public interface TRoomOrderMapper extends BaseMapper<TRoomOrder> {
      * @return 结果
      */
     public int deleteTRoomOrderByIds(Long[] ids);
+
+    List<TRoomOrder> selectConflictRoomPeriod(TRoomOrder tRoomOrder);
 }

@@ -131,7 +131,7 @@
             <el-form-item label="营业开始时间" prop="startTime">
               <el-time-select placeholder="营业开始时间" v-model="form.startTime" :picker-options="{
                   start: '00:00',
-                  step: '00:30',
+                   step: '01:00',
                   end: '24:00'
                 }">
               </el-time-select>
@@ -141,7 +141,7 @@
             <el-form-item label="营业结束时间" prop="stopTime">
               <el-time-select placeholder="营业结束时间" v-model="form.stopTime" :picker-options="{
                   start: '00:00',
-                  step: '00:30',
+                   step: '01:00',
                   end: '24:00',
                   minTime: form.startTime
                 }">
@@ -304,7 +304,7 @@
         <el-form-item label="开始时间" prop="startTime">
           <el-time-select placeholder="开始时间" v-model="priceForm.startTime" :picker-options="{
                 start: '00:00',
-                step: '00:30',
+                step: '01:00',
                 end: '24:00'
               }">
           </el-time-select>
@@ -312,7 +312,7 @@
         <el-form-item label="营业结束时间" prop="stopTime">
           <el-time-select placeholder="营业结束时间" v-model="priceForm.stopTime" :picker-options="{
                 start: '00:00',
-                step: '00:30',
+                 step: '01:00',
                 end: '24:00',
                 minTime: priceForm.startTime
               }">

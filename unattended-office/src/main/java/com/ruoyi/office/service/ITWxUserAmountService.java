@@ -58,4 +58,6 @@ public interface ITWxUserAmountService
      * @return 结果
      */
     public int deleteTWxUserAmountById(Long id);
+
+    void minusCardValue(TWxUserAmount wxUserAmount);
 }

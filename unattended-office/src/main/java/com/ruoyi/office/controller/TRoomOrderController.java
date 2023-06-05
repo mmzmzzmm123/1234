@@ -4,6 +4,7 @@ import java.util.List;
 import javax.servlet.http.HttpServletResponse;
 
 import com.ruoyi.common.utils.SecurityUtils;
+import com.ruoyi.office.domain.vo.GetRoomPriceVo;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -69,6 +70,16 @@ public class TRoomOrderController extends BaseController {
         return success(tRoomOrderService.selectTRoomOrderById(id));
     }
 
+
+    /**
+     * 获取房间占用（点支付时再次校验可用性并改变状态，支付失败回滚）详细信息
+     */
+    @PreAuthorize("@ss.hasPermi('office:roomorder:query')")
+    @GetMapping(value = "/getPrice")
+    public AjaxResult getPeriodPrice(GetRoomPriceVo vo) {
+        return success(tRoomOrderService.getPeriodPrice(vo));
+    }
+
     /**
      * 新增房间占用（点支付时再次校验可用性并改变状态，支付失败回滚）
      */
@@ -77,6 +88,7 @@ public class TRoomOrderController extends BaseController {
     @PostMapping
     public AjaxResult add(@RequestBody TRoomOrder tRoomOrder) {
         tRoomOrder.setCreateBy(SecurityUtils.getUserId() + "");
+        tRoomOrder.setUserId(SecurityUtils.getUserId());
         return toAjax(tRoomOrderService.insertTRoomOrder(tRoomOrder));
     }
 

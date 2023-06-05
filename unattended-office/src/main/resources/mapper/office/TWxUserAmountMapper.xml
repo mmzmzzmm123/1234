@@ -84,6 +84,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         </trim>
         where id = #{id}
     </update>
+    <update id="minusCardValue" parameterType="TWxUserAmount">
+        update t_wx_user_amount set amount = amount - #{amount} where wx_user_id = #{wxUserId} and user_id = #{userId}
+    </update>
 
     <delete id="deleteTWxUserAmountById" parameterType="Long">
         delete from t_wx_user_amount where id = #{id}

@@ -77,24 +77,26 @@
       <el-table-column label="适用门店" align="center" prop="storeId" :formatter="storeFormatter" />
       <el-table-column label="原价" align="center" prop="originalPrice" />
       <el-table-column label="当前价格" align="center" prop="price" />
-      <el-table-column label="卡券类型" align="center" prop="cardType" :formatter="cardTypeFormatter"/>
+      <el-table-column label="卡券类型" align="center" prop="cardType" :formatter="cardTypeFormatter" />
       <el-table-column label="可使用次数" align="center" prop="numCanUse" />
       <!-- <el-table-column label="单日只扣一次次数(针对次数卡)" align="center" prop="oneTimeOneDay" /> -->
-      <el-table-column label="每次最多抵扣(小时)" align="center" prop="maxMinuteOnce" />
+      <el-table-column label="抵扣时长(小时)" align="center" prop="maxMinuteOnce" />
       <!-- <el-table-column label="购买限制(余额/积分)" align="center" prop="payType" /> -->
       <el-table-column label="可购买次数" align="center" prop="maxHold" />
-      <el-table-column label="开始日期" align="center" prop="startDate" width="180">
+       <el-table-column label="有效期类型" align="center" prop="validType" :formatter="validTypeFormatter"/>
+        <el-table-column label="自购买日期起天数" align="center" prop="validDays" />
+      <el-table-column label="开始日期" align="center" prop="startDate" width="100">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.startDate, '{y}-{m}-{d}') }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="结束日期" align="center" prop="endDate" width="180">
+      <el-table-column label="结束日期" align="center" prop="endDate" width="100">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.endDate, '{y}-{m}-{d}') }}</span>
         </template>
       </el-table-column>
       <el-table-column label="周内可用日期" align="center" prop="weekDays" />
-   <!--   <el-table-column label="状态" align="center" prop="status" />
+      <!--   <el-table-column label="状态" align="center" prop="status" />
       <el-table-column label="备注" align="center" prop="remark" /> -->
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
@@ -126,7 +128,7 @@
         </el-row>
         <el-row>
           <el-col :span=12>
-            <el-form-item label="适用门店" prop="storeId">
+            <el-form-item label="适用门店(不选默认全适用)" prop="storeId">
               <el-select v-model="form.storeId" filterable>
                 <el-option v-for="option in storeOptions" :key="option.id" :label="option.name" :value="option.id" />
               </el-select>
@@ -165,7 +167,7 @@
             <!--   <el-form-item label="单日只扣一次次数" prop="oneTimeOneDay">
               <el-input v-model="form.oneTimeOneDay" placeholder="请输入单日只扣一次次数" :disabled='form.cardType==2' />
             </el-form-item> -->
-            <el-form-item label="每次最多抵扣(小时)" prop="maxMinuteOnce">
+            <el-form-item label="抵扣时长(小时)" prop="maxMinuteOnce">
               <el-input-number v-model="form.maxMinuteOnce" :step="1" step-strictly :min="1"
                 :disabled='form.cardType==1' />
             </el-form-item>
@@ -187,16 +189,32 @@
         </el-row>
         <el-row>
           <el-col :span=12>
+            <el-form-item label="有效期类型" prop="validType">
+              <el-select v-model="form.validType">
+                  <el-option v-for="option in dict.type.valid_type" :label="option.label" :key="option.value"
+                    :value="option.value"></el-option>
+              </el-select>
+            </el-form-item>
+          </el-col>
+          <el-col :span=12>
+            <el-form-item label="自购买日起天数" prop="validDays" >
+              <el-input-number v-model="form.validDays" :step="1" step-strictly :min="1" :disabled='form.validType!=1' />
+            </el-form-item>
+          </el-col>
+        </el-row>
+
+        <el-row>
+          <el-col :span=12>
             <el-form-item label="开始日期" prop="startDate">
               <el-date-picker clearable v-model="form.startDate" type="date" value-format="yyyy-MM-dd"
-                placeholder="请选择开始日期">
+                placeholder="请选择开始日期" :disabled='form.validType!=2'>
               </el-date-picker>
             </el-form-item>
           </el-col>
           <el-col :span=12>
             <el-form-item label="结束日期" prop="endDate">
               <el-date-picker clearable v-model="form.endDate" type="date" value-format="yyyy-MM-dd"
-                placeholder="请选择结束日期">
+                placeholder="请选择结束日期" :disabled='form.validType!=2'>
               </el-date-picker>
             </el-form-item>
           </el-col>
@@ -229,7 +247,7 @@
 
   export default {
     name: "Storecoupon",
-    dicts: ["coupon_type"],
+    dicts: ["coupon_type", "valid_type"],
     data() {
       return {
         // 遮罩层
@@ -279,11 +297,11 @@
             message: "名称不能为空",
             trigger: "blur"
           }],
-          storeId: [{
-            required: true,
-            message: "适用门店不能为空",
-            trigger: "blur"
-          }],
+          // storeId: [{
+          //   required: true,
+          //   message: "适用门店不能为空",
+          //   trigger: "blur"
+          // }],
           price: [{
             required: true,
             message: "当前价格不能为空",
@@ -299,16 +317,16 @@
             message: "可购买次数不能为空",
             trigger: "blur"
           }],
-          startDate:[{
-            required: true,
-            message: "开始日期不可为空",
-            trigger: "blur"
-          }],
-          endDate:[{
-            required: true,
-            message: "结束日期不能为空",
-            trigger: "blur"
-          }]
+          // startDate: [{
+          //   required: true,
+          //   message: "开始日期不可为空",
+          //   trigger: "blur"
+          // }],
+          // endDate: [{
+          //   required: true,
+          //   message: "结束日期不能为空",
+          //   trigger: "blur"
+          // }]
         },
         storeOptions: [],
         weekOptions: [{
@@ -470,6 +488,9 @@
       cardTypeFormatter(row, index) {
         // debugger
         return this.selectDictLabel(this.dict.type.coupon_type, row.cardType);
+      },
+      validTypeFormatter(row, index) {
+        return this.selectDictLabel(this.dict.type.valid_type, row.validType);
       },
 
     }
