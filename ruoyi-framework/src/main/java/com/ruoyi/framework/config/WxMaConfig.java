@@ -46,18 +46,17 @@ public class WxMaConfig {
         }
     }
 
-    public static WxMaService getMaServiceByName(String name){
+    public static WxMaService getMaServiceByName(String name) {
         WxMaService wxService = maServices.get(name);
         if (wxService == null) {
             throw new IllegalArgumentException(String.format("未找到对应name=[%s]的微信小程序配置，请核实！", name));
         }
         return wxService;
     }
-    
+
     public static WxMaService getMaServiceById(String appid) {
-        for (WxMaService service :
-                maServices.values()) {
-            if(service.getWxMaConfig().getAppid().equals(appid)){
+        for (WxMaService service : maServices.values()) {
+            if (service.getWxMaConfig().getAppid().equals(appid)) {
                 return service;
             }
         }

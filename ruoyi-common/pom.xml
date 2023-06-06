@@ -137,6 +137,14 @@
             <artifactId>lombok</artifactId>
         </dependency>
 
+        <!-- 微信小程序 -->
+        <dependency>
+            <groupId>com.github.binarywang</groupId>
+            <artifactId>weixin-java-miniapp</artifactId>
+            <version>4.3.0</version>
+        </dependency>
+
+
     </dependencies>
 
 </project>

@@ -141,10 +141,15 @@ xss:
 wx:
   miniapp:
     configs:
-      - name: dingcang
+      - name: office
         appid: wxdffc59bfd94f575b
         secret: f7d2f0a838c6d30e9dc0b58fdf1c5fe0
         # 小程序消息服务器配置
         token: 1
         aesKey: 1
         msgDataFormat: xml
+    pay:
+      appid: wxdffc59bfd94f575b
+      mchid: wxdffc59bfd94f575b
+      notify_url: http://xxx.xxx
+      postUrl: https://api.mch.weixin.qq.com/v3/pay/transactions/jsapi

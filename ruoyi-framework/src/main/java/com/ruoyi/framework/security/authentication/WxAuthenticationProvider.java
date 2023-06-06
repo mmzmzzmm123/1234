@@ -10,7 +10,6 @@ import com.ruoyi.framework.config.WxMaConfig;
 import com.ruoyi.framework.web.service.UserDetailsServiceImpl;
 import com.ruoyi.common.core.domain.entity.WxUser;
 import com.ruoyi.office.mapper.WxUserMapper;
-import com.ruoyi.system.mapper.SysUserMapper;
 import me.chanjar.weixin.common.error.WxErrorException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

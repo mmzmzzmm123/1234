@@ -10,5 +10,5 @@ public class GetRoomPriceVo {
     private Long roomId;
     private Date startTime;
     private Date endTime;
-    private BigDecimal totalPrice;
+    private BigDecimal totalAmount;
 }

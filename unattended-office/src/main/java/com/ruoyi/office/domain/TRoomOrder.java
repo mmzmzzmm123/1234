@@ -87,6 +87,8 @@ public class TRoomOrder extends BaseEntity {
     @Excel(name = "使用卡券")
     private Long couponId;
 
+    private String prepayId;
+
     /**
      * 状态(空闲/已预约/使用中/预约超时未使用)
      */
