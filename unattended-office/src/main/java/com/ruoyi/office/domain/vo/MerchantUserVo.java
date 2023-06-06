@@ -19,8 +19,8 @@ public class MerchantUserVo {
     private String nickName;
 
     /** 微信app id */
-    @Excel(name = "微信app id")
-    private String appId;
+    @Excel(name = "微信openId")
+    private String openId;
 
     /** uinion id */
     @Excel(name = "uinion id")

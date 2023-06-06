@@ -42,15 +42,15 @@ public class WxAuthenticationProvider implements AuthenticationProvider {
             if (wxUser == null) {
                 wxUser = new WxUser();
                 wxUser.setNickName("微信用户");
-                wxUser.setAppId(result.getOpenid());
+                wxUser.setOpenId(result.getOpenid());
                 wxUser.setUnionId(result.getUnionid());
                 wxUser.setCreateBy("admin");
                 wxUser.setCreateTime(new Date());
                 userMapper.insertWxUser(wxUser);
             } else {
                 if (UserStatus.DISABLE.getCode().equals(wxUser.getStatus())) {
-                    log.info("登录用户：{} 已被停用." , wxUser.getAppId());
-                    throw new ServiceException("对不起，您的账号：" + wxUser.getAppId() + " 已停用");
+                    log.info("登录用户：{} 已被停用." , wxUser.getUnionId());
+                    throw new ServiceException("对不起，您的账号：" + wxUser.getUnionId() + " 已停用");
                 }
             }
             UserDetails userDetails = userDetailsService.createWxLoginUser(wxUser);

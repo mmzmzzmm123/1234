@@ -17,7 +17,7 @@ public class WxLoginUser extends LoginUser implements UserDetails {
     /**
      * 用户ID
      */
-    private String appid;
+    private String openId;
 
 
     private String unionId;
@@ -35,68 +35,16 @@ public class WxLoginUser extends LoginUser implements UserDetails {
         super.setPermissions(permissions);
     }
 
-    public WxLoginUser(String appid, String unionId, WxUser user, Set<String> permissions) {
-        this.appid = appid;
+    public WxLoginUser(String openId, String unionId, WxUser user, Set<String> permissions) {
+        this.openId = openId;
         this.unionId = unionId;
         this.wxUser = user;
         super.setPermissions(permissions);
     }
 
-    /**
-     * 账户是否未过期,过期无法验证
-     */
-    @JSONField(serialize = false)
     @Override
-    public boolean isAccountNonExpired() {
-        return true;
+    public WxUser getWxUser() {
+        return this.wxUser;
     }
 
-    /**
-     * 指定用户是否解锁,锁定的用户无法进行身份验证
-     *
-     * @return
-     */
-    @JSONField(serialize = false)
-    @Override
-    public boolean isAccountNonLocked() {
-        return true;
-    }
-
-    /**
-     * 指示是否已过期的用户的凭据(密码),过期的凭据防止认证
-     *
-     * @return
-     */
-    @JSONField(serialize = false)
-    @Override
-    public boolean isCredentialsNonExpired() {
-        return true;
-    }
-
-    /**
-     * 是否可用 ,禁用的用户不能身份验证
-     *
-     * @return
-     */
-    @JSONField(serialize = false)
-    @Override
-    public boolean isEnabled() {
-        return true;
-    }
-
-    @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        return null;
-    }
-
-    @JSONField(serialize = false)
-    @Override
-    public String getPassword() {
-        return wxUser.getAppId();
-    }
-
-    @Override
-    public String getUsername() {
-        return wxUser.getAppId();
-    }
 }

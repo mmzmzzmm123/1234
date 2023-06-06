@@ -7,7 +7,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <resultMap type="TWxUser" id="TWxUserResult">
         <result property="id"    column="id"    />
         <result property="nickName"    column="nick_name"    />
-        <result property="appId"    column="app_id"    />
+        <result property="openId"    column="open_id"    />
         <result property="unionId"    column="union_id"    />
         <result property="phone"    column="phone"    />
         <result property="shareCode"    column="share_code"    />
@@ -26,14 +26,14 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </resultMap>
 
     <sql id="selectTWxUserVo">
-        select id, nick_name, app_id, union_id, phone, share_code, wx_code, inviter_phone, is_member, sex, login_ip, login_date, status, remark, create_by, create_time, update_by, update_time from t_wx_user
+        select id, nick_name, open_id, union_id, phone, share_code, wx_code, inviter_phone, is_member, sex, login_ip, login_date, status, remark, create_by, create_time, update_by, update_time from t_wx_user
     </sql>
 
     <select id="selectTWxUserList" parameterType="TWxUser" resultMap="TWxUserResult">
         <include refid="selectTWxUserVo"/>
         <where>  
             <if test="nickName != null  and nickName != ''"> and nick_name like concat('%', #{nickName}, '%')</if>
-            <if test="appId != null  and appId != ''"> and app_id = #{appId}</if>
+            <if test="openId != null  and openId != ''"> and open_id = #{openId}</if>
             <if test="unionId != null  and unionId != ''"> and union_id = #{unionId}</if>
             <if test="phone != null  and phone != ''"> and phone = #{phone}</if>
             <if test="shareCode != null  and shareCode != ''"> and share_code = #{shareCode}</if>
@@ -55,7 +55,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         select a.wx_user_id ,a.user_id , a.amount ,a.`point` ,u.* from t_wx_user_amount a left join t_wx_user u on a.wx_user_id =u.id
         <where>
             <if test="nickName != null  and nickName != ''"> and nick_name like concat('%', #{nickName}, '%')</if>
-            <if test="appId != null  and appId != ''"> and app_id = #{appId}</if>
+            <if test="openId != null  and openId != ''"> and open_id = #{openId}</if>
             <if test="unionId != null  and unionId != ''"> and union_id = #{unionId}</if>
             <if test="phone != null  and phone != ''"> and phone = #{phone}</if>
             <if test="shareCode != null  and shareCode != ''"> and share_code = #{shareCode}</if>
@@ -73,7 +73,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         insert into t_wx_user
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="nickName != null">nick_name,</if>
-            <if test="appId != null">app_id,</if>
+            <if test="openId != null">open_id,</if>
             <if test="unionId != null">union_id,</if>
             <if test="phone != null">phone,</if>
             <if test="shareCode != null">share_code,</if>
@@ -92,7 +92,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
          </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="nickName != null">#{nickName},</if>
-            <if test="appId != null">#{appId},</if>
+            <if test="openId != null">#{openId},</if>
             <if test="unionId != null">#{unionId},</if>
             <if test="phone != null">#{phone},</if>
             <if test="shareCode != null">#{shareCode},</if>
@@ -115,7 +115,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         update t_wx_user
         <trim prefix="SET" suffixOverrides=",">
             <if test="nickName != null">nick_name = #{nickName},</if>
-            <if test="appId != null">app_id = #{appId},</if>
+            <if test="openId != null">open_id = #{openId},</if>
             <if test="unionId != null">union_id = #{unionId},</if>
             <if test="phone != null">phone = #{phone},</if>
             <if test="shareCode != null">share_code = #{shareCode},</if>

@@ -2,6 +2,8 @@ package com.ruoyi.common.core.domain.model;
 
 import java.util.Collection;
 import java.util.Set;
+
+import com.ruoyi.common.core.domain.entity.WxUser;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import com.alibaba.fastjson2.annotation.JSONField;
@@ -251,6 +253,10 @@ public class LoginUser implements UserDetails
     public SysUser getUser()
     {
         return user;
+    }
+
+    public WxUser getWxUser(){
+        return null;
     }
 
     public void setUser(SysUser user)

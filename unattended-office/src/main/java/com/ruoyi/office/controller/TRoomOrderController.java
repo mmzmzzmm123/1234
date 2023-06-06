@@ -111,7 +111,7 @@ public class TRoomOrderController extends BaseController {
     @Log(title = "预定", businessType = BusinessType.INSERT)
     @PostMapping("/order")
     public AjaxResult order(@RequestBody GetRoomPriceVo vo) {
-        return AjaxResult.success(tRoomOrderService.orderRoom(vo, SecurityUtils.getUserId()));
+        return AjaxResult.success(tRoomOrderService.orderRoom(vo, SecurityUtils.getLoginUser().getWxUser().getId()));
     }
 
     /**

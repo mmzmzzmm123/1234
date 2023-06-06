@@ -59,6 +59,6 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
     public UserDetails createWxLoginUser(WxUser user) {
 //        return new WxLoginUser(user.getAppId(), user.getUnionId(), user, permissionService.getMenuPermission(user));
-        return new WxLoginUser(user.getAppId(), user.getUnionId(), user, null);
+        return new WxLoginUser(user.getOpenId(), user.getUnionId(), user, null);
     }
 }
