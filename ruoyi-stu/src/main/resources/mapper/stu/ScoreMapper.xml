@@ -3,7 +3,29 @@
 PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.ruoyi.stu.mapper.ScoreMapper">
-    
+<!--    <resultMap id="StuCoursePlan" type="StuCoursePlanResult">-->
+<!--        <id column="plan_id" property="planId"/>-->
+<!--        <result property="status" column="status"/>-->
+<!--        <association property="semester" javaType="com.ruoyi.stu.domain.StuSemester">-->
+<!--            <id column="semester_id" property="semesterId"/>-->
+<!--            <result column="semester_name" property="semesterName"/>-->
+<!--        </association>-->
+<!--        <association property="stuCls" javaType="com.ruoyi.stu.domain.StuCls">-->
+<!--            <result property="id"    column="id"    />-->
+<!--            <result property="cls"    column="cls"    />-->
+<!--            <result property="clsYear"    column="cls_year"    />-->
+<!--            <result property="stuNum"    column="stuNum"    />-->
+<!--        </association>-->
+<!--        <association property="course" javaType="com.ruoyi.stu.domain.Course">-->
+<!--            <result property="courseId"    column="course_id"    />-->
+<!--            <result property="courseNo"    column="course_no"    />-->
+<!--            <result property="courseName"    column="course_name"    />-->
+<!--            <result property="courseType"    column="course_type"    />-->
+<!--            <result property="coursePlan"    column="course_plan"    />-->
+<!--            <result property="courseExec"    column="course_exec"    />-->
+<!--            <result property="courseScore"    column="course_score"    />-->
+<!--        </association>-->
+<!--    </resultMap>-->
     <resultMap type="Score" id="ScoreResult">
         <id column="id" property="id"/>
         <result property="dailyScore" column="daily_score"/>
@@ -72,6 +94,4 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 <!--            <if test="stuTel != null  and stuTel != ''"> and stu_tel = #{stuTel}</if>-->
 <!--        </where>-->
 <!--    </select>-->
-
-
 </mapper>

@@ -37,6 +37,29 @@ public class StuCls extends BaseEntity
      */
     private int mNum;
 
+    /**
+     * tea
+     * @return
+     */
+    private Teacher teacher;
+
+    /**
+     *
+     * status
+     * @return
+     */
+    private int type;
+
+    public StuCls(Long id, String cls, String clsYear, int stuNum, int mNum, Teacher teacher, int type) {
+        this.id = id;
+        this.cls = cls;
+        this.clsYear = clsYear;
+        this.stuNum = stuNum;
+        this.mNum = mNum;
+        this.teacher = teacher;
+        this.type = type;
+    }
+
     @Override
     public String toString() {
         return "StuCls{" +
@@ -45,7 +68,34 @@ public class StuCls extends BaseEntity
                 ", clsYear='" + clsYear + '\'' +
                 ", stuNum=" + stuNum +
                 ", mNum=" + mNum +
+                ", teacher=" + teacher +
+                ", status=" + type +
                 '}';
+    }
+
+    public int getStatus() {
+        return type;
+    }
+
+    public void setStatus(int status) {
+        this.type = status;
+    }
+
+    public StuCls(Long id, String cls, String clsYear, int stuNum, int mNum, Teacher teacher) {
+        this.id = id;
+        this.cls = cls;
+        this.clsYear = clsYear;
+        this.stuNum = stuNum;
+        this.mNum = mNum;
+        this.teacher = teacher;
+    }
+
+    public Teacher getTeacher() {
+        return teacher;
+    }
+
+    public void setTeacher(Teacher teacher) {
+        this.teacher = teacher;
     }
 
     public StuCls(Long id, String cls, String clsYear, int stuNum, int mNum) {

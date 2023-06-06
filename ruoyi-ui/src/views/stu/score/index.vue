@@ -84,9 +84,17 @@
           {{queryParams.pageSize * (queryParams.pageNum - 1) + (scope.$index + 1)}}
         </template>
       </el-table-column>
-      <el-table-column label="老师名" align="center" prop="teacher.teaName" />
+      <el-table-column label="老师名" align="center" prop="stuCls.teacher.teaName" />
       <el-table-column label="课程名" align="center" prop="course.courseName" />
-      <el-table-column label="班级名" align="center" prop="stu.stuCls" />
+      <el-table-column label="班级名" align="center" prop="stuCls.cls" />
+      <el-table-column label="学期" align="center" prop="semester.semesterName" />
+      <el-table-column label="状态" align="center" prop="status" >
+        <template slot-scope="scope">
+          <span v-if="scope.row.status === 0">未开始</span>
+          <span v-if="scope.row.status === 1">已开始未录入</span>
+          <span v-if="scope.row.status === 2">已录入</span>
+        </template>
+      </el-table-column>
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button
