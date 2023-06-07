@@ -5,8 +5,8 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.ruoyi.common.utils.SecurityUtils;
 import com.ruoyi.office.domain.vo.GetRoomPriceVo;
-import com.ruoyi.office.domain.vo.RoomOrderReq;
-import io.swagger.annotations.Api;
+import com.ruoyi.office.domain.vo.PrepayReq;
+import com.ruoyi.office.domain.vo.PrepayResp;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -106,14 +106,21 @@ public class TRoomOrderController extends BaseController {
     }
 
     /**
-     * 新增房间占用（点支付时再次校验可用性并改变状态，支付失败回滚）
+     * 小程序使用微信使用prepayId支付成功后，回调通知
      */
+    @ApiOperation("支付成功")
+    @Log(title = "支付成功", businessType = BusinessType.INSERT)
+    @PostMapping("/finish")
+    public AjaxResult finish(@RequestBody PrepayResp vo) {
+        return AjaxResult.success(tRoomOrderService.finish(vo, SecurityUtils.getLoginUser().getWxUser().getId()));
+    }
+
     @ApiOperation("预定")
     @Log(title = "预定", businessType = BusinessType.INSERT)
     @PostMapping("/order")
-    public AjaxResult order(@RequestBody RoomOrderReq vo) {
-        vo.setUserId(SecurityUtils.getLoginUser().getWxUser().getId());
-        return AjaxResult.success(tRoomOrderService.orderRoom(vo, SecurityUtils.getLoginUser().getWxUser().getId()));
+    public AjaxResult order(@RequestBody PrepayReq order) {
+        order.setUserId(SecurityUtils.getLoginUser().getWxUser().getId());
+        return AjaxResult.success(tRoomOrderService.orderRoom(order, SecurityUtils.getLoginUser().getWxUser().getId()));
     }
 
     /**

@@ -5,6 +5,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.ruoyi.common.utils.SecurityUtils;
 import com.ruoyi.common.utils.ServletUtils;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -39,6 +40,7 @@ public class TStoreController extends BaseController {
     /**
      * 查询商家用户店铺列表
      */
+    @ApiOperation("门店列表")
     @PreAuthorize("@ss.hasPermi('office:store:list')")
     @GetMapping("/list")
     public TableDataInfo list(TStore tStore) {
@@ -53,7 +55,7 @@ public class TStoreController extends BaseController {
      * 导出商家用户店铺列表
      */
     @PreAuthorize("@ss.hasPermi('office:store:export')")
-    @Log(title = "商家用户店铺" , businessType = BusinessType.EXPORT)
+    @Log(title = "商家用户店铺", businessType = BusinessType.EXPORT)
     @PostMapping("/export")
     public void export(HttpServletResponse response, TStore tStore) {
         List<TStore> list = tStoreService.selectTStoreList(tStore);
@@ -64,6 +66,7 @@ public class TStoreController extends BaseController {
     /**
      * 获取商家用户店铺详细信息
      */
+    @ApiOperation("门店详情")
     @PreAuthorize("@ss.hasPermi('office:store:query')")
     @GetMapping(value = "/{id}")
     public AjaxResult getInfo(@PathVariable("id") Long id) {
@@ -74,7 +77,7 @@ public class TStoreController extends BaseController {
      * 新增商家用户店铺
      */
     @PreAuthorize("@ss.hasPermi('office:store:add')")
-    @Log(title = "商家用户店铺" , businessType = BusinessType.INSERT)
+    @Log(title = "商家用户店铺", businessType = BusinessType.INSERT)
     @PostMapping
     public AjaxResult add(@RequestBody TStore tStore) {
         tStore.setCreateBy(SecurityUtils.getUserId() + "");
@@ -85,7 +88,7 @@ public class TStoreController extends BaseController {
      * 修改商家用户店铺
      */
     @PreAuthorize("@ss.hasPermi('office:store:edit')")
-    @Log(title = "商家用户店铺" , businessType = BusinessType.UPDATE)
+    @Log(title = "商家用户店铺", businessType = BusinessType.UPDATE)
     @PutMapping
     public AjaxResult edit(@RequestBody TStore tStore) {
         return toAjax(tStoreService.updateTStore(tStore));
@@ -95,7 +98,7 @@ public class TStoreController extends BaseController {
      * 删除商家用户店铺
      */
     @PreAuthorize("@ss.hasPermi('office:store:remove')")
-    @Log(title = "商家用户店铺" , businessType = BusinessType.DELETE)
+    @Log(title = "商家用户店铺", businessType = BusinessType.DELETE)
     @DeleteMapping("/{ids}")
     public AjaxResult remove(@PathVariable Long[] ids) {
         return toAjax(tStoreService.deleteTStoreByIds(ids));

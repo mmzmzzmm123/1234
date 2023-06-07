@@ -67,12 +67,15 @@
         <include refid="selectTRoomOrderVo"/>
         where id = #{id}
     </select>
-    <select id="selectConflictRoomPeriod" parameterType="TRoomOrder" resultType="com.ruoyi.office.domain.TRoomOrder">
+    <select id="selectConflictRoomPeriod" parameterType="RoomOrderReq" resultType="com.ruoyi.office.domain.TRoomOrder">
         <include refid="selectTRoomOrderVo"/>
         where status =0
             and room_id =#{roomId}
             and ( (start_time &lt;= #{startTime} and end_time &gt;= #{startTime})
                 or (start_time &lt; #{endTime} and end_time &gt; #{endTime}) )
+    </select>
+    <select id="getHourMaxOrder" parameterType="String" resultType="java.lang.Long">
+        select max(order_no)  from t_room_order where order_no like concat( #{id},'%')
     </select>
 
     <insert id="insertTRoomOrder" parameterType="TRoomOrder" useGeneratedKeys="true" keyProperty="id">

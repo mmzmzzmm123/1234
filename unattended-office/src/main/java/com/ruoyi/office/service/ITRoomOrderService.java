@@ -6,7 +6,8 @@ import java.util.List;
 import com.ruoyi.common.core.domain.entity.WxUser;
 import com.ruoyi.office.domain.TRoomOrder;
 import com.ruoyi.office.domain.vo.GetRoomPriceVo;
-import com.ruoyi.office.domain.vo.RoomOrderReq;
+import com.ruoyi.office.domain.vo.PrepayReq;
+import com.ruoyi.office.domain.vo.PrepayResp;
 import com.ruoyi.office.domain.vo.WxPayCallback;
 
 /**
@@ -66,9 +67,11 @@ public interface ITRoomOrderService {
 
     BigDecimal getPeriodPrice(GetRoomPriceVo vo);
 
-    String orderRoom(RoomOrderReq vo, Long userId);
+    PrepayResp orderRoom(PrepayReq vo, Long userId);
 
-    boolean checkCoupon(RoomOrderReq vo, Long userId);
+    boolean checkCoupon(PrepayReq vo, Long userId);
 
     String orderRoomWxCallback(WxPayCallback callback, WxUser wxUser);
+
+    String finish(PrepayResp vo, Long id);
 }

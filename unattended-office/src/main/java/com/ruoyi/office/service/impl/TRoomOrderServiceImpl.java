@@ -11,14 +11,12 @@ import com.ruoyi.common.config.WxPayConfig;
 import com.ruoyi.common.core.domain.entity.WxUser;
 import com.ruoyi.common.exception.ServiceException;
 import com.ruoyi.common.utils.DateUtils;
+import com.ruoyi.common.utils.bean.BeanUtils;
 import com.ruoyi.common.utils.http.HttpUtils;
 import com.ruoyi.office.domain.*;
 import com.ruoyi.office.domain.enums.OfficeEnum;
 import com.ruoyi.office.domain.vo.*;
 import com.ruoyi.office.service.*;
-import org.apache.commons.lang3.time.DateFormatUtils;
-import org.checkerframework.checker.units.qual.A;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -122,29 +120,57 @@ public class TRoomOrderServiceImpl extends ServiceImpl<TRoomOrderMapper, TRoomOr
     ITStoreCouponService storeCouponService;
 
     @Override
+    public String finish(PrepayResp vo, Long id) {
+
+        //查询支付状态；
+
+
+        // 更新订单状态
+        return "";
+    }
+
+    @Autowired
+    ITWxUserService wxUserService;
+
+    @Override
     @Transactional
-    public synchronized String orderRoom(RoomOrderReq vo, Long userId) {
+    public synchronized PrepayResp orderRoom(PrepayReq prepayReq, Long userId) {
+        PrepayResp resp = new PrepayResp();
+
         TRoomOrder tRoomOrder = new TRoomOrder();
-        BeanUtils.copyProperties(vo, tRoomOrder);
-        List<TRoomOrder> roomOrders = tRoomOrderMapper.selectConflictRoomPeriod(tRoomOrder);
+        BeanUtils.copyProperties(prepayReq, tRoomOrder);
+        List<TRoomOrder> roomOrders = tRoomOrderMapper.selectConflictRoomPeriod(prepayReq);
         if (roomOrders.size() > 0) {
             throw new ServiceException("预定时间段冲突，请刷新预定情况后重试");
         }
         // 计算总金额
-        BigDecimal totalPrice = calcPrice(tRoomOrder.getRoomId(), tRoomOrder.getStartTime(), tRoomOrder.getEndTime());
+        BigDecimal totalPrice = calcPrice(prepayReq.getRoomId(), prepayReq.getStartTime(), prepayReq.getEndTime());
+        // 计算订单号
+        long orderNo = 0l;
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
+        final String prefix = prepayReq.getRoomId() + sdf.format(new Date());
+        Long maxId = tRoomOrderMapper.getHourMaxOrder(prefix);
+        if (maxId == null)
+            orderNo = Long.parseLong(prefix + "00");
+        else {
+            orderNo = maxId + 1;
+        }
 
-        if (tRoomOrder.getPayType() == 1) { // 直接支付 发起微信支付 预支付交易单，返回微信支付返回的标识.
+        if (tRoomOrder.getPayType() == OfficeEnum.PayType.WX_PAY.getCode()) { // 直接支付 发起微信支付 预支付交易单，返回微信支付返回的标识.
             WxPayReq payReq = new WxPayReq();
             payReq.setAppid(wxPayConfig.getAppid());
             payReq.setMchid(wxPayConfig.getMchid());
-            payReq.setDescription("商品描述");
-            payReq.setOut_trade_no("out_trad_no");
+            payReq.setDescription("roomId: " + prepayReq.getRoomId());
+            payReq.setOut_trade_no(String.valueOf(orderNo));
             payReq.setNotify_url(wxPayConfig.getNotify_url());
+
             WxPayAmount wxCallbackAmount = new WxPayAmount();
             wxCallbackAmount.setTotal(totalPrice.intValue() * 100);
             payReq.setAmount(wxCallbackAmount);
+
             WxPayPayer wxCallbackPayer = new WxPayPayer();
-            wxCallbackPayer.setOpenid("xxxxx");
+            TWxUser wxUser = wxUserService.selectTWxUserById(userId);
+            wxCallbackPayer.setOpenid(wxUser.getOpenId());
             payReq.setPayer(wxCallbackPayer);
             String prepayId = HttpUtils.sendPost(wxPayConfig.getPostUrl(), JSON.toJSONString(payReq));
 
@@ -155,9 +181,10 @@ public class TRoomOrderServiceImpl extends ServiceImpl<TRoomOrderMapper, TRoomOr
             tRoomOrder.setCreateTime(DateUtils.getNowDate());
             tRoomOrderMapper.insertTRoomOrder(tRoomOrder);
 
-            return prepayId;
+            resp.setPrepayId(prepayId);
+            resp.setOrderId(tRoomOrder.getId());
 
-        } else if (tRoomOrder.getPayType() == 2) {  // 储值卡余额支付
+        } else if (tRoomOrder.getPayType() == OfficeEnum.PayType.CARD_BALANCE_PAY.getCode()) {  // 储值卡余额支付
             TWxUserAmount wxUserAmount = new TWxUserAmount();
             // 判断用户在商户下的余额是否足够；
             long roomId = roomOrders.get(0).getRoomId();
@@ -170,6 +197,7 @@ public class TRoomOrderServiceImpl extends ServiceImpl<TRoomOrderMapper, TRoomOr
                 throw new ServiceException("储值卡余额不够，请充值后使用");
 
             wxUserAmount.setAmount(totalPrice);
+            // 扣除余额
             wxUserAmountService.minusCardValue(wxUserAmount);
 
             tRoomOrder.setTotalAmount(totalPrice);
@@ -178,8 +206,8 @@ public class TRoomOrderServiceImpl extends ServiceImpl<TRoomOrderMapper, TRoomOr
             tRoomOrder.setCreateTime(DateUtils.getNowDate());
             tRoomOrderMapper.insertTRoomOrder(tRoomOrder);
 
-        } else if (tRoomOrder.getPayType() == 4) { // 优惠券支付
-            validCoupon(vo, userId);// 校验可用性
+        } else if (tRoomOrder.getPayType() == OfficeEnum.PayType.COUPON_PAY.getCode()) { // 优惠券支付
+            validCoupon(prepayReq, userId);// 校验可用性
 
             BigDecimal payAmt = new BigDecimal(0);
             tRoomOrder.setTotalAmount(totalPrice);
@@ -190,11 +218,11 @@ public class TRoomOrderServiceImpl extends ServiceImpl<TRoomOrderMapper, TRoomOr
             tRoomOrderMapper.insertTRoomOrder(tRoomOrder);
 
         }
-        return "";
+        return resp;
     }
 
     @Override
-    public boolean checkCoupon(RoomOrderReq vo, Long userId) {
+    public boolean checkCoupon(PrepayReq vo, Long userId) {
         try {
             validCoupon(vo, userId);
         } catch (Exception e) {
@@ -203,7 +231,7 @@ public class TRoomOrderServiceImpl extends ServiceImpl<TRoomOrderMapper, TRoomOr
         return true;
     }
 
-    private boolean validCoupon(RoomOrderReq vo, Long userId) {
+    private boolean validCoupon(PrepayReq vo, Long userId) {
         if (vo.getCouponId() == 0) {
             throw new ServiceException("请选择卡券");
         }

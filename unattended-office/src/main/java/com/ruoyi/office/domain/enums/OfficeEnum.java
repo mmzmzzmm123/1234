@@ -90,4 +90,34 @@ public class OfficeEnum {
         }
     }
 
+    public enum PayType {
+        WX_PAY(1, "微信支付"), CARD_BALANCE_PAY(2, "储值卡余额支付"), COUPON_PAY(4, "优惠券支付");
+
+        private final Integer code;
+        private final String info;
+
+        PayType(Integer code, String info) {
+            this.code = code;
+            this.info = info;
+        }
+
+        public Integer getCode() {
+            return code;
+        }
+
+        public String getInfo() {
+            return info;
+        }
+
+        public static PayType GetValueByCode(Integer code) {
+            for (PayType e : PayType.values()) {
+                if (e.getCode().equals(code)) {
+                    return e;
+                }
+            }
+            throw new RuntimeException("枚举值错误");
+        }
+    }
+
+
 }

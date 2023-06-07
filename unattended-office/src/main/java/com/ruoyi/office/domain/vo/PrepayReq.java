@@ -7,7 +7,7 @@ import lombok.Data;
 import java.util.Date;
 
 @Data
-public class RoomOrderReq {
+public class PrepayReq {
 
     /**
      * 房间id

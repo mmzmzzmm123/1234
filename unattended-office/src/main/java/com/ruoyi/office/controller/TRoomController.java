@@ -4,6 +4,7 @@ import java.util.List;
 import javax.servlet.http.HttpServletResponse;
 
 import com.ruoyi.common.utils.SecurityUtils;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -38,6 +39,7 @@ public class TRoomController extends BaseController {
     /**
      * 查询店铺房间列表
      */
+    @ApiOperation("房间列表")
     @PreAuthorize("@ss.hasPermi('office:room:list')")
     @GetMapping("/list")
     public TableDataInfo list(TRoom tRoom) {
@@ -52,7 +54,7 @@ public class TRoomController extends BaseController {
      * 导出店铺房间列表
      */
     @PreAuthorize("@ss.hasPermi('office:room:export')")
-    @Log(title = "店铺房间" , businessType = BusinessType.EXPORT)
+    @Log(title = "店铺房间", businessType = BusinessType.EXPORT)
     @PostMapping("/export")
     public void export(HttpServletResponse response, TRoom tRoom) {
         List<TRoom> list = tRoomService.selectTRoomList(tRoom);
@@ -63,6 +65,7 @@ public class TRoomController extends BaseController {
     /**
      * 获取店铺房间详细信息
      */
+    @ApiOperation("房间详情")
     @PreAuthorize("@ss.hasPermi('office:room:query')")
     @GetMapping(value = "/{id}")
     public AjaxResult getInfo(@PathVariable("id") Long id) {
@@ -73,7 +76,7 @@ public class TRoomController extends BaseController {
      * 新增店铺房间
      */
     @PreAuthorize("@ss.hasPermi('office:room:add')")
-    @Log(title = "店铺房间" , businessType = BusinessType.INSERT)
+    @Log(title = "店铺房间", businessType = BusinessType.INSERT)
     @PostMapping
     public AjaxResult add(@RequestBody TRoom tRoom) {
         tRoom.setCreateBy(SecurityUtils.getUserId() + "");
@@ -84,7 +87,7 @@ public class TRoomController extends BaseController {
      * 修改店铺房间
      */
     @PreAuthorize("@ss.hasPermi('office:room:edit')")
-    @Log(title = "店铺房间" , businessType = BusinessType.UPDATE)
+    @Log(title = "店铺房间", businessType = BusinessType.UPDATE)
     @PutMapping
     public AjaxResult edit(@RequestBody TRoom tRoom) {
         return toAjax(tRoomService.updateTRoom(tRoom));
@@ -94,7 +97,7 @@ public class TRoomController extends BaseController {
      * 删除店铺房间
      */
     @PreAuthorize("@ss.hasPermi('office:room:remove')")
-    @Log(title = "店铺房间" , businessType = BusinessType.DELETE)
+    @Log(title = "店铺房间", businessType = BusinessType.DELETE)
     @DeleteMapping("/{ids}")
     public AjaxResult remove(@PathVariable Long[] ids) {
         return toAjax(tRoomService.deleteTRoomByIds(ids));
