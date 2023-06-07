@@ -31,4 +31,63 @@ public class OfficeEnum {
         }
     }
 
+    public enum RoomOrderStatus {
+        IDEAL(0, "空闲"), TO_PAY(1, "待支付"), ORDERED(2, "已预约"), USING(3, "使用中"),
+        OVER_TIME(4, "超时未使用"),USED(5, "已完成"),CANCEL(9, "取消");
+
+        private final Integer code;
+        private final String info;
+
+        RoomOrderStatus(Integer code, String info) {
+            this.code = code;
+            this.info = info;
+        }
+
+        public Integer getCode() {
+            return code;
+        }
+
+        public String getInfo() {
+            return info;
+        }
+
+        public static RoomOrderStatus GetValueByCode(Integer code) {
+            for (RoomOrderStatus e : RoomOrderStatus.values()) {
+                if (e.getCode().equals(code)) {
+                    return e;
+                }
+            }
+            throw new RuntimeException("枚举值错误");
+        }
+    }
+
+    public enum CouponType {
+        TIMES_CARD(1, "次数卡"), HOUR_CARD(2, "时长卡");
+
+        private final Integer code;
+        private final String info;
+
+        CouponType(Integer code, String info) {
+            this.code = code;
+            this.info = info;
+        }
+
+        public Integer getCode() {
+            return code;
+        }
+
+        public String getInfo() {
+            return info;
+        }
+
+        public static CouponType GetValueByCode(Integer code) {
+            for (CouponType e : CouponType.values()) {
+                if (e.getCode().equals(code)) {
+                    return e;
+                }
+            }
+            throw new RuntimeException("枚举值错误");
+        }
+    }
+
 }

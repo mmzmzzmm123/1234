@@ -5,6 +5,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.ruoyi.common.utils.SecurityUtils;
 import com.ruoyi.office.domain.vo.GetRoomPriceVo;
+import com.ruoyi.office.domain.vo.RoomOrderReq;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -110,7 +111,8 @@ public class TRoomOrderController extends BaseController {
     @ApiOperation("预定")
     @Log(title = "预定", businessType = BusinessType.INSERT)
     @PostMapping("/order")
-    public AjaxResult order(@RequestBody GetRoomPriceVo vo) {
+    public AjaxResult order(@RequestBody RoomOrderReq vo) {
+        vo.setUserId(SecurityUtils.getLoginUser().getWxUser().getId());
         return AjaxResult.success(tRoomOrderService.orderRoom(vo, SecurityUtils.getLoginUser().getWxUser().getId()));
     }
 

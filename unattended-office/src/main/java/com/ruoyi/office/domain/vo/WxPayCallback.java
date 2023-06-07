@@ -1,5 +1,8 @@
 package com.ruoyi.office.domain.vo;
 
+import lombok.Data;
+
+@Data
 public class WxPayCallback {
     //通知的唯一ID 示例值：EV-2018022511223320873
     private String id;

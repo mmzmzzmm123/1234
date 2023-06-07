@@ -67,10 +67,12 @@
         <include refid="selectTRoomOrderVo"/>
         where id = #{id}
     </select>
-    <select id="selectConflictRoomPeriod"  parameterType="TRoomOrder" resultType="com.ruoyi.office.domain.TRoomOrder">
+    <select id="selectConflictRoomPeriod" parameterType="TRoomOrder" resultType="com.ruoyi.office.domain.TRoomOrder">
         <include refid="selectTRoomOrderVo"/>
-        where room_id =#{roomId} and ( (start_time &lt;= #{startTime} and end_time &gt;= #{startTime}) or (start_time
-        &lt; #{endTime} and end_time &gt; #{endTime}) )
+        where status =0
+            and room_id =#{roomId}
+            and ( (start_time &lt;= #{startTime} and end_time &gt;= #{startTime})
+                or (start_time &lt; #{endTime} and end_time &gt; #{endTime}) )
     </select>
 
     <insert id="insertTRoomOrder" parameterType="TRoomOrder" useGeneratedKeys="true" keyProperty="id">

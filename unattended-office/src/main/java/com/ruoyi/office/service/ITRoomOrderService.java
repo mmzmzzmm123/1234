@@ -2,21 +2,23 @@ package com.ruoyi.office.service;
 
 import java.math.BigDecimal;
 import java.util.List;
+
+import com.ruoyi.common.core.domain.entity.WxUser;
 import com.ruoyi.office.domain.TRoomOrder;
 import com.ruoyi.office.domain.vo.GetRoomPriceVo;
+import com.ruoyi.office.domain.vo.RoomOrderReq;
 import com.ruoyi.office.domain.vo.WxPayCallback;
 
 /**
  * 房间占用（点支付时再次校验可用性并改变状态，支付失败回滚）Service接口
- * 
+ *
  * @author ruoyi
  * @date 2023-05-29
  */
-public interface ITRoomOrderService 
-{
+public interface ITRoomOrderService {
     /**
      * 查询房间占用（点支付时再次校验可用性并改变状态，支付失败回滚）
-     * 
+     *
      * @param id 房间占用（点支付时再次校验可用性并改变状态，支付失败回滚）主键
      * @return 房间占用（点支付时再次校验可用性并改变状态，支付失败回滚）
      */
@@ -24,7 +26,7 @@ public interface ITRoomOrderService
 
     /**
      * 查询房间占用（点支付时再次校验可用性并改变状态，支付失败回滚）列表
-     * 
+     *
      * @param tRoomOrder 房间占用（点支付时再次校验可用性并改变状态，支付失败回滚）
      * @return 房间占用（点支付时再次校验可用性并改变状态，支付失败回滚）集合
      */
@@ -32,7 +34,7 @@ public interface ITRoomOrderService
 
     /**
      * 新增房间占用（点支付时再次校验可用性并改变状态，支付失败回滚）
-     * 
+     *
      * @param tRoomOrder 房间占用（点支付时再次校验可用性并改变状态，支付失败回滚）
      * @return 结果
      */
@@ -40,7 +42,7 @@ public interface ITRoomOrderService
 
     /**
      * 修改房间占用（点支付时再次校验可用性并改变状态，支付失败回滚）
-     * 
+     *
      * @param tRoomOrder 房间占用（点支付时再次校验可用性并改变状态，支付失败回滚）
      * @return 结果
      */
@@ -48,7 +50,7 @@ public interface ITRoomOrderService
 
     /**
      * 批量删除房间占用（点支付时再次校验可用性并改变状态，支付失败回滚）
-     * 
+     *
      * @param ids 需要删除的房间占用（点支付时再次校验可用性并改变状态，支付失败回滚）主键集合
      * @return 结果
      */
@@ -56,7 +58,7 @@ public interface ITRoomOrderService
 
     /**
      * 删除房间占用（点支付时再次校验可用性并改变状态，支付失败回滚）信息
-     * 
+     *
      * @param id 房间占用（点支付时再次校验可用性并改变状态，支付失败回滚）主键
      * @return 结果
      */
@@ -64,7 +66,9 @@ public interface ITRoomOrderService
 
     BigDecimal getPeriodPrice(GetRoomPriceVo vo);
 
-    String orderRoom(GetRoomPriceVo vo, Long userId);
+    String orderRoom(RoomOrderReq vo, Long userId);
 
-    String orderRoomWxCallback(WxPayCallback callback);
+    boolean checkCoupon(RoomOrderReq vo, Long userId);
+
+    String orderRoomWxCallback(WxPayCallback callback, WxUser wxUser);
 }

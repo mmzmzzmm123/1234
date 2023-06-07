@@ -35,7 +35,7 @@ public class TStoreCoupon extends BaseEntity {
      * 适用门店
      */
     @Excel(name = "适用门店")
-    private String storeId;
+    private Long storeId;
 
     /**
      * 原价

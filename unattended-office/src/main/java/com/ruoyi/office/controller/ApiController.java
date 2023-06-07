@@ -28,10 +28,17 @@ public class ApiController {
      * 预定成功 api 回调
      */
     @ApiOperation("预定成功 api 回调")
-    @Log(title = "预定成功 api 回调", businessType = BusinessType.INSERT)
+    @Log(title = "预定成功 api 回调")
     @PostMapping("/order")
     public AjaxResult order(@RequestBody WxPayCallback callback) {
-        return AjaxResult.success(roomOrderService.orderRoomWxCallback(callback));
+        AjaxResult result = null;
+        String res = roomOrderService.orderRoomWxCallback(callback, SecurityUtils.getLoginUser().getWxUser());
+        if(res!="SUCCESS"){
+            String[] errs = res.split(":");
+            result.put("message",errs[1]);
+            result.error(errs[0]);
+        }
+        return AjaxResult.success(res);
     }
 
 

@@ -2,7 +2,7 @@ package com.ruoyi.office.domain;
 
 import java.math.BigDecimal;
 import java.util.Date;
-import com.fasterxml.jackson.annotation.JsonFormat;
+
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import com.ruoyi.common.annotation.Excel;
@@ -27,7 +27,7 @@ public class TWxUserCoupon extends BaseEntity
 
     /** 适用门店 */
     @Excel(name = "适用门店")
-    private String storeId;
+    private Long storeId;
 
     /** 卡券id */
     @Excel(name = "卡券id")
@@ -99,12 +99,12 @@ public class TWxUserCoupon extends BaseEntity
     {
         return userId;
     }
-    public void setStoreId(String storeId) 
+    public void setStoreId(Long storeId)
     {
         this.storeId = storeId;
     }
 
-    public String getStoreId() 
+    public Long getStoreId()
     {
         return storeId;
     }
