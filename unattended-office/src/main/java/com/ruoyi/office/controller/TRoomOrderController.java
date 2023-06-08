@@ -110,17 +110,26 @@ public class TRoomOrderController extends BaseController {
      */
     @ApiOperation("支付成功")
     @Log(title = "支付成功", businessType = BusinessType.INSERT)
-    @PostMapping("/finish")
-    public AjaxResult finish(@RequestBody PrepayResp vo) {
-        return AjaxResult.success(tRoomOrderService.finish(vo, SecurityUtils.getLoginUser().getWxUser().getId()));
+    @PostMapping("/payquery")
+    public AjaxResult wxPayQuery(@RequestBody PrepayResp vo) {
+        try {
+            tRoomOrderService.finish(vo, SecurityUtils.getLoginUser().getWxUser().getId());
+            return AjaxResult.success();
+        } catch (Exception e) {
+            return AjaxResult.error(e.getMessage());
+        }
     }
 
-    @ApiOperation("预定")
     @Log(title = "预定", businessType = BusinessType.INSERT)
     @PostMapping("/order")
     public AjaxResult order(@RequestBody PrepayReq order) {
         order.setUserId(SecurityUtils.getLoginUser().getWxUser().getId());
-        return AjaxResult.success(tRoomOrderService.orderRoom(order, SecurityUtils.getLoginUser().getWxUser().getId()));
+        try {
+            tRoomOrderService.prepay(order, SecurityUtils.getLoginUser().getWxUser().getId());
+            return AjaxResult.success();
+        } catch (Exception e) {
+            return AjaxResult.error(e.getMessage());
+        }
     }
 
     /**

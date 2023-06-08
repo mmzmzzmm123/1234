@@ -67,11 +67,11 @@ public interface ITRoomOrderService {
 
     BigDecimal getPeriodPrice(GetRoomPriceVo vo);
 
-    PrepayResp orderRoom(PrepayReq vo, Long userId);
+    PrepayResp prepay(PrepayReq vo, Long userId);
 
     boolean checkCoupon(PrepayReq vo, Long userId);
 
-    String orderRoomWxCallback(WxPayCallback callback, WxUser wxUser);
+    void wxnotify(String orderNo, String openId, int centTotal);
 
-    String finish(PrepayResp vo, Long id);
+    void finish(PrepayResp vo, Long id);
 }

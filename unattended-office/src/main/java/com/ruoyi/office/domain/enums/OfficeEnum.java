@@ -33,7 +33,7 @@ public class OfficeEnum {
 
     public enum RoomOrderStatus {
         IDEAL(0, "空闲"), TO_PAY(1, "待支付"), ORDERED(2, "已预约"), USING(3, "使用中"),
-        OVER_TIME(4, "超时未使用"),USED(5, "已完成"),CANCEL(9, "取消");
+        OVER_TIME(4, "超时未使用"), USED(5, "已完成"), CANCEL(9, "取消");
 
         private final Integer code;
         private final String info;
@@ -119,5 +119,33 @@ public class OfficeEnum {
         }
     }
 
+    public enum WxPayState {
+        SUCCESS("SUCCESS", "支付成功"), REFUND("REFUND", "转入退款"), NOTPAY("NOTPAY", "未支付"), CLOSED("CLOSED", "已关闭"), REVOKED("REVOKED", "已撤销（仅付款码支付会返回）"), USERPAYING("USERPAYING", "用户支付中（仅付款码支付会返回）"), PAYERROR("PAYERROR", "支付失败（仅付款码支付会返回）");
+
+        private final String code;
+        private final String info;
+
+        WxPayState(String code, String info) {
+            this.code = code;
+            this.info = info;
+        }
+
+        public String getCode() {
+            return code;
+        }
+
+        public String getInfo() {
+            return info;
+        }
+
+        public static WxPayState GetValueByCode(Integer code) {
+            for (WxPayState e : WxPayState.values()) {
+                if (e.getCode().equals(code)) {
+                    return e;
+                }
+            }
+            throw new RuntimeException("枚举值错误");
+        }
+    }
 
 }

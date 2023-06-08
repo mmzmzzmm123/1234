@@ -3,12 +3,18 @@ package com.ruoyi.office.service.impl;
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.time.LocalTime;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 import com.alibaba.fastjson2.JSON;
-import com.ruoyi.common.config.WxPayConfig;
-import com.ruoyi.common.core.domain.entity.WxUser;
+import com.github.binarywang.wxpay.bean.request.WxPayUnifiedOrderV3Request;
+import com.github.binarywang.wxpay.bean.result.WxPayOrderQueryV3Result;
+import com.github.binarywang.wxpay.bean.result.WxPayUnifiedOrderV3Result;
+import com.github.binarywang.wxpay.bean.result.enums.TradeTypeEnum;
+import com.github.binarywang.wxpay.config.WxPayConfig;
+import com.github.binarywang.wxpay.exception.WxPayException;
+import com.github.binarywang.wxpay.service.WxPayService;
 import com.ruoyi.common.exception.ServiceException;
 import com.ruoyi.common.utils.DateUtils;
 import com.ruoyi.common.utils.bean.BeanUtils;
@@ -33,6 +39,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class TRoomOrderServiceImpl extends ServiceImpl<TRoomOrderMapper, TRoomOrder> implements ITRoomOrderService {
     @Autowired
     private TRoomOrderMapper tRoomOrderMapper;
+
 
     /**
      * 查询房间占用（点支付时再次校验可用性并改变状态，支付失败回滚）
@@ -111,30 +118,65 @@ public class TRoomOrderServiceImpl extends ServiceImpl<TRoomOrderMapper, TRoomOr
     }
 
     @Autowired
-    WxPayConfig wxPayConfig;
-
-    @Autowired
     ITWxUserCouponService wxUserCouponService;
 
     @Autowired
     ITStoreCouponService storeCouponService;
 
     @Override
-    public String finish(PrepayResp vo, Long id) {
-
+    public void finish(PrepayResp vo, Long wxuserid) {
+        TRoomOrder order = tRoomOrderMapper.selectTRoomOrderById(vo.getOrderId());
+        if (order.getStatus().equals(OfficeEnum.RoomOrderStatus.ORDERED.getCode()))
+            return;
         //查询支付状态；
-
-
-        // 更新订单状态
-        return "";
+        WxPayOrderQueryV3Result v3Result = null;
+        try {
+            v3Result = wxPayService.queryOrderV3("", String.valueOf(order.getOrderNo()));
+        } catch (WxPayException e) {
+            log.error("查询微信后台订单失败： " + e.getMessage());
+            throw new ServiceException("查询微信后台订单失败");
+        }
+        // 根据业务需要，更新商户平台订单状态
+        String tradState = v3Result.getTradeState();
+        if (tradState.equalsIgnoreCase("SUCCES")) {
+            // 业务需求
+            TRoomOrder updateOrder = new TRoomOrder();
+            updateOrder.setId(order.getId());
+            updateOrder.setStatus(OfficeEnum.RoomOrderStatus.ORDERED.getCode());
+            tRoomOrderMapper.updateTRoomOrder(updateOrder);
+        } else if (tradState.equalsIgnoreCase(OfficeEnum.WxPayState.REFUND.getCode())) {
+            throw new ServiceException("订单转入退款");
+        } else if (tradState.equalsIgnoreCase(OfficeEnum.WxPayState.NOTPAY.getCode())) {
+            throw new ServiceException("订单未支付或已支付未收到微信通知");
+        } else if (tradState.equalsIgnoreCase(OfficeEnum.WxPayState.CLOSED.getCode())) {
+            // 关闭订单API
+            //最新更新时间：2020.05.26 版本说明
+            //
+            //以下情况需要调用关单接口：
+            //1、商户订单支付失败需要生成新单号重新发起支付，要对原订单号调用关单，避免重复支付；
+            //2、系统下单后，用户支付超时，系统退出不再受理，避免用户继续，请调用关单接口。
+            //
+            //注意：
+            //• 关单没有时间限制，建议在订单生成后间隔几分钟（最短5分钟）再调用关单接口，避免出现订单状态同步不及时导致关单失败。
+            throw new ServiceException("支付订单已关闭");
+        } else if (tradState.equalsIgnoreCase(OfficeEnum.WxPayState.REVOKED.getCode())) {
+            throw new ServiceException("已撤销（仅付款码支付会返回）");
+        } else if (tradState.equalsIgnoreCase(OfficeEnum.WxPayState.USERPAYING.getCode())) {
+            throw new ServiceException("用户支付中（仅付款码支付会返回）");
+        } else if (tradState.equalsIgnoreCase(OfficeEnum.WxPayState.PAYERROR.getCode())) {
+            throw new ServiceException("支付失败（仅付款码支付会返回）");
+        }
     }
 
     @Autowired
     ITWxUserService wxUserService;
 
+    @Autowired
+    private WxPayService wxPayService;
+
     @Override
     @Transactional
-    public synchronized PrepayResp orderRoom(PrepayReq prepayReq, Long userId) {
+    public synchronized PrepayResp prepay(PrepayReq prepayReq, Long userId) {
         PrepayResp resp = new PrepayResp();
 
         TRoomOrder tRoomOrder = new TRoomOrder();
@@ -156,32 +198,39 @@ public class TRoomOrderServiceImpl extends ServiceImpl<TRoomOrderMapper, TRoomOr
             orderNo = maxId + 1;
         }
 
+        TWxUser wxUser = wxUserService.selectTWxUserById(userId);
+
         if (tRoomOrder.getPayType() == OfficeEnum.PayType.WX_PAY.getCode()) { // 直接支付 发起微信支付 预支付交易单，返回微信支付返回的标识.
-            WxPayReq payReq = new WxPayReq();
-            payReq.setAppid(wxPayConfig.getAppid());
-            payReq.setMchid(wxPayConfig.getMchid());
-            payReq.setDescription("roomId: " + prepayReq.getRoomId());
-            payReq.setOut_trade_no(String.valueOf(orderNo));
-            payReq.setNotify_url(wxPayConfig.getNotify_url());
 
-            WxPayAmount wxCallbackAmount = new WxPayAmount();
-            wxCallbackAmount.setTotal(totalPrice.intValue() * 100);
-            payReq.setAmount(wxCallbackAmount);
+            WxPayUnifiedOrderV3Request v3Request = new WxPayUnifiedOrderV3Request();
+            final WxPayConfig config = wxPayService.getConfig();
 
-            WxPayPayer wxCallbackPayer = new WxPayPayer();
-            TWxUser wxUser = wxUserService.selectTWxUserById(userId);
-            wxCallbackPayer.setOpenid(wxUser.getOpenId());
-            payReq.setPayer(wxCallbackPayer);
-            String prepayId = HttpUtils.sendPost(wxPayConfig.getPostUrl(), JSON.toJSONString(payReq));
+            ArrayList<WxPayUnifiedOrderV3Request.GoodsDetail> goodsDetails = new ArrayList<>();
+            goodsDetails.add(new WxPayUnifiedOrderV3Request.GoodsDetail() {
+            }.setMerchantGoodsId("").setUnitPrice(0).setQuantity(0));
 
-            tRoomOrder.setPrepayId(prepayId);
-            tRoomOrder.setTotalAmount(totalPrice);
-            tRoomOrder.setPayAmount(totalPrice);
-            tRoomOrder.setStatus(OfficeEnum.RoomOrderStatus.TO_PAY.getCode());// 待支付
-            tRoomOrder.setCreateTime(DateUtils.getNowDate());
-            tRoomOrderMapper.insertTRoomOrder(tRoomOrder);
+            v3Request.setAppid(config.getAppId()).setMchid(config.getMchId()).setNotifyUrl(config.getNotifyUrl())
+                    .setDescription("roomId: " + prepayReq.getRoomId()).setOutTradeNo(String.valueOf(orderNo))
+                    .setAmount(new WxPayUnifiedOrderV3Request.Amount() {
+                    }.setTotal(totalPrice.intValue() * 100))
+                    .setPayer(new WxPayUnifiedOrderV3Request.Payer() {
+                    }.setOpenid(wxUser.getOpenId()));
 
-            resp.setPrepayId(prepayId);
+            WxPayUnifiedOrderV3Result.JsapiResult jsapiResult = null;
+            try {
+                jsapiResult = this.wxPayService.createOrderV3(TradeTypeEnum.valueOf("JSAPI"), v3Request);
+
+                tRoomOrder.setOrderNo(orderNo);
+                tRoomOrder.setTotalAmount(totalPrice);
+                tRoomOrder.setPayAmount(totalPrice);
+                tRoomOrder.setStatus(OfficeEnum.RoomOrderStatus.TO_PAY.getCode());// 待支付
+                tRoomOrder.setCreateTime(DateUtils.getNowDate());
+                tRoomOrderMapper.insertTRoomOrder(tRoomOrder);
+            } catch (WxPayException e) {
+                e.printStackTrace();
+                log.error("JSAPI 下单：" + e.getLocalizedMessage());
+            }
+            resp.setJsapiResult(jsapiResult);
             resp.setOrderId(tRoomOrder.getId());
 
         } else if (tRoomOrder.getPayType() == OfficeEnum.PayType.CARD_BALANCE_PAY.getCode()) {  // 储值卡余额支付
@@ -274,31 +323,29 @@ public class TRoomOrderServiceImpl extends ServiceImpl<TRoomOrderMapper, TRoomOr
 
     // 处理微信支付回调
     @Override
-    public String orderRoomWxCallback(WxPayCallback callback, WxUser wxUser) {
-        // https://blog.csdn.net/wnn654321/article/details/123298162?spm=1001.2101.3001.6650.1&utm_medium=distribute.pc_relevant.none-task-blog-2%7Edefault%7ECTRLIST%7ERate-1-123298162-blog-127161225.235%5Ev38%5Epc_relevant_default_base&depth_1-utm_source=distribute.pc_relevant.none-task-blog-2%7Edefault%7ECTRLIST%7ERate-1-123298162-blog-127161225.235%5Ev38%5Epc_relevant_default_base&utm_relevant_index=2
-        // 解密返回数据
-        if (!callback.getEvent_type().equalsIgnoreCase("TRANSACTION.SUCCESS"))
-            return "SUCCESS";
-        WxPayCallbackEncryptResource encryptResource = callback.getResource();
+    public void wxnotify(String orderNo, String openId, int centTotal) {
 
-        String totalAmt = "";
-        String openId = "";
-        long orderNo = 0l;
         // 处理订单状态
         TRoomOrder roomOrder = new TRoomOrder();
-        roomOrder.setOrderNo(orderNo);
+        roomOrder.setOrderNo(Long.parseLong(orderNo));
         final List<TRoomOrder> roomOrders = tRoomOrderMapper.selectTRoomOrderList(roomOrder);
         if (roomOrders.size() > 0)
             roomOrder = roomOrders.get(0);
-        // 验证金额和 openid
-        if (!openId.equalsIgnoreCase(wxUser.getOpenId()) || roomOrder.getPayAmount().compareTo(new BigDecimal(totalAmt)) != 0) {
-            return "FAIL:金额或用户不匹配";
-        }
 
-        roomOrder.setStatus(OfficeEnum.RoomOrderStatus.ORDERED.getCode());// 已预约
+        TWxUser wxUser = wxUserService.selectTWxUserById(roomOrder.getUserId());
+        // 验证金额和 openid
+        if (!openId.equalsIgnoreCase(wxUser.getOpenId()) || roomOrder.getPayAmount().multiply(new BigDecimal(100)).compareTo(new BigDecimal(centTotal)) != 0) {
+            throw new ServiceException("FAIL:金额或用户不匹配");
+        }
+        // 注意：微信会通知多次，因此需判断此订单
+        if (roomOrder.getStatus().equals(OfficeEnum.RoomOrderStatus.ORDERED.getCode()))
+            return;
+
+        TRoomOrder update = new TRoomOrder();
+        update.setId(roomOrder.getId());
+        update.setStatus(OfficeEnum.RoomOrderStatus.ORDERED.getCode());// 已预约
         tRoomOrderMapper.updateTRoomOrder(roomOrder);
 
-        return "SUCCESS";
     }
 
     /**
