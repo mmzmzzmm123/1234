@@ -61,4 +61,6 @@ public interface ITWxUserCouponService
     public int deleteTWxUserCouponById(Long id);
 
     String buy(BuyCouponReq tWxUserCoupon);
+
+    List<TWxUserCoupon> validlist(Long roomId, Long id);
 }

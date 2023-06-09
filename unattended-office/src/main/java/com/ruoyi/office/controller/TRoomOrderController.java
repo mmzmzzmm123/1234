@@ -7,6 +7,7 @@ import com.ruoyi.common.utils.SecurityUtils;
 import com.ruoyi.office.domain.vo.GetRoomPriceVo;
 import com.ruoyi.office.domain.vo.PrepayReq;
 import com.ruoyi.office.domain.vo.PrepayResp;
+import com.ruoyi.office.domain.vo.RoomAvailablePeriod;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -139,5 +140,15 @@ public class TRoomOrderController extends BaseController {
     @GetMapping(value = "/price")
     public AjaxResult getPeriodPrice(GetRoomPriceVo vo) {
         return success(tRoomOrderService.getPeriodPrice(vo));
+    }
+
+    /**
+     * 获取房间时间段价格
+     */
+    @ApiOperation(value = "获取房间时间段可用时段")
+    @GetMapping(value = "/available")
+    public AjaxResult getAvailablePeriod(RoomAvailablePeriod vo) {
+        final RoomAvailablePeriod availablePeriod = tRoomOrderService.getAvailablePeriod(vo);
+        return success(availablePeriod);
     }
 }

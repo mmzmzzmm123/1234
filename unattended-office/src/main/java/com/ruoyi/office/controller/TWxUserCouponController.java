@@ -5,6 +5,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.ruoyi.common.utils.SecurityUtils;
 import com.ruoyi.office.domain.vo.BuyCouponReq;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -109,4 +110,17 @@ public class TWxUserCouponController extends BaseController {
     public AjaxResult remove(@PathVariable Long[] ids) {
         return toAjax(tWxUserCouponService.deleteTWxUserCouponByIds(ids));
     }
+
+    /**
+     * 查询可用优惠券
+     */
+    @ApiOperation("可用优惠券")
+    @GetMapping("/validlist")
+    public TableDataInfo validlist(@PathVariable Long storeId) {
+        startPage();
+        List<TWxUserCoupon> list = tWxUserCouponService.validlist(storeId, SecurityUtils.getLoginUser().getWxUser().getId());
+        return getDataTable(list);
+    }
+
+
 }

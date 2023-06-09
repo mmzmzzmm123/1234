@@ -5,10 +5,7 @@ import java.util.List;
 
 import com.ruoyi.common.core.domain.entity.WxUser;
 import com.ruoyi.office.domain.TRoomOrder;
-import com.ruoyi.office.domain.vo.GetRoomPriceVo;
-import com.ruoyi.office.domain.vo.PrepayReq;
-import com.ruoyi.office.domain.vo.PrepayResp;
-import com.ruoyi.office.domain.vo.WxPayCallback;
+import com.ruoyi.office.domain.vo.*;
 
 /**
  * 房间占用（点支付时再次校验可用性并改变状态，支付失败回滚）Service接口
@@ -74,4 +71,6 @@ public interface ITRoomOrderService {
     void wxnotify(String orderNo, String openId, int centTotal);
 
     void finish(PrepayResp vo, Long id);
+
+    RoomAvailablePeriod getAvailablePeriod(RoomAvailablePeriod vo);
 }

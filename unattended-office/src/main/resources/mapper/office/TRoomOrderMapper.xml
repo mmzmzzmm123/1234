@@ -51,7 +51,7 @@
             <if test="roomId != null ">and room_id = #{roomId}</if>
             <if test="orderNo != null ">and order_no = #{orderNo}</if>
             <if test="userId != null ">and user_id = #{userId}</if>
-            <if test="startTime != null ">and start_time = #{startTime}</if>
+            <if test="startTime != null ">and start_time &gt; #{startTime}</if>
             <if test="endTime != null ">and end_time = #{endTime}</if>
             <if test="totalAmount != null ">and total_amount = #{totalAmount}</if>
             <if test="payAmount != null ">and pay_amount = #{payAmount}</if>

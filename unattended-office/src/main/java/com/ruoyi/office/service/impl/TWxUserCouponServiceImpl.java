@@ -117,4 +117,17 @@ public class TWxUserCouponServiceImpl extends ServiceImpl<TWxUserCouponMapper, T
         }
         return wxPayReturn;
     }
+
+    @Override
+    public List<TWxUserCoupon> validlist(Long storeId, Long id) {
+        TWxUserCoupon qry = new TWxUserCoupon();
+        qry.setStoreId(0l);
+        qry.setUserId(id);
+        List<TWxUserCoupon> userCoupons = tWxUserCouponMapper.selectTWxUserCouponList(qry);
+
+        qry.setStoreId(storeId);
+        List<TWxUserCoupon> userStoreCoupons = tWxUserCouponMapper.selectTWxUserCouponList(qry);
+
+        return null;
+    }
 }
