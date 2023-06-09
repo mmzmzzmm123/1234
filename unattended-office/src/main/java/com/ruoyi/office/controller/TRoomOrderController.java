@@ -145,7 +145,7 @@ public class TRoomOrderController extends BaseController {
     /**
      * 获取房间时间段价格
      */
-    @ApiOperation(value = "获取房间时间段可用时段")
+    @ApiOperation(value = "获取房间已占用时间段")
     @GetMapping(value = "/available")
     public AjaxResult getAvailablePeriod(RoomAvailablePeriod vo) {
         final RoomAvailablePeriod availablePeriod = tRoomOrderService.getAvailablePeriod(vo);
