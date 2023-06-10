@@ -100,28 +100,36 @@ public class TRoomOrderServiceImpl extends ServiceImpl<TRoomOrderMapper, TRoomOr
             throw new ServiceException("预定时间段冲突，请刷新预定情况后重试");
         }
 
-        LocalTime startTime = LocalTime.of(st.getHours(), st.getMinutes());
-        LocalTime endTime = LocalTime.of(et.getHours(), et.getMinutes());
+        BigDecimal totalPrice = new BigDecimal(0);
 
         TRoomPrice priceQry = new TRoomPrice();
         priceQry.setRoomId(roomId);
         priceQry.setStatus(0l);
         final List<TRoomPrice> tRoomPrices = priceService.selectTRoomPriceList(priceQry);
-        BigDecimal totalPrice = new BigDecimal(0);
-        for (TRoomPrice roomPrice : tRoomPrices) {
-            if (roomPrice.getStopTime().isBefore(startTime) || endTime.isBefore(roomPrice.getStartTime()))
-                continue;
 
-            if (roomPrice.getStartTime().isAfter(startTime))
-                startTime = roomPrice.getStartTime();
-            if (!roomPrice.getStopTime().isBefore(endTime)) {
-                endTime = roomPrice.getStopTime();
-            }
-            int minuts = (endTime.getHour() - startTime.getHour()) * 60
-                    + (endTime.getMinute() - startTime.getMinute());
-            totalPrice = totalPrice.add(roomPrice.getPrice().multiply(new BigDecimal(minuts).divide(new BigDecimal(60))));
+        if (st.getDate() != et.getDate()) {
+            totalPrice = totalPrice.add(getPeriodPrice(st.getHours(), 24, tRoomPrices)).add(getPeriodPrice(0, et.getHours(), tRoomPrices));
+        } else {
+            totalPrice = totalPrice.add((getPeriodPrice(st.getHours(), et.getHours(), tRoomPrices)));
         }
 
+        return totalPrice;
+    }
+
+    private BigDecimal getPeriodPrice(int stHour, int endHour, List<TRoomPrice> tRoomPrices) {
+        BigDecimal totalPrice = new BigDecimal(0);
+        for (TRoomPrice roomPrice : tRoomPrices) {
+            if (roomPrice.getStopTime() < stHour || endHour < roomPrice.getStartTime())
+                continue;
+
+            if (roomPrice.getStartTime() > stHour)
+                stHour = roomPrice.getStartTime();
+            if (roomPrice.getStopTime() <= endHour)
+                endHour = roomPrice.getStopTime();
+
+            int minuts = endHour - stHour;
+            totalPrice = totalPrice.add(roomPrice.getPrice().multiply(new BigDecimal(minuts)));
+        }
         return totalPrice;
     }
 

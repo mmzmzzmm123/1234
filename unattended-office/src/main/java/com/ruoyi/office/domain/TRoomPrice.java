@@ -36,15 +36,15 @@ public class TRoomPrice extends BaseEntity {
      * 开始时间
      */
     @JsonFormat(pattern = "HH:mm")
-    @Excel(name = "开始时间" , width = 30, dateFormat = "HH:mm")
-    private LocalTime startTime;
+    @Excel(name = "开始时间" , width = 30)
+    private Integer startTime;
 
     /**
      * 结束时间
      */
     @JsonFormat(pattern = "HH:mm")
-    @Excel(name = "结束时间" , width = 30, dateFormat = "HH:mm")
-    private LocalTime stopTime;
+    @Excel(name = "结束时间" , width = 30)
+    private Integer stopTime;
 
     /**
      * 单价

@@ -67,7 +67,7 @@
         <include refid="selectTRoomOrderVo"/>
         where id = #{id}
     </select>
-    <select id="selectConflictRoomPeriod" parameterType="RoomOrderReq" resultType="com.ruoyi.office.domain.TRoomOrder">
+    <select id="selectConflictRoomPeriod" parameterType="PrepayReq" resultType="com.ruoyi.office.domain.TRoomOrder">
         <include refid="selectTRoomOrderVo"/>
         where status =0
             and room_id =#{roomId}

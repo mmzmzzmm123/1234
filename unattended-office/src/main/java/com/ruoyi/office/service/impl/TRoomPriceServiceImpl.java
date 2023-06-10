@@ -60,7 +60,7 @@ public class TRoomPriceServiceImpl extends ServiceImpl<TRoomPriceMapper, TRoomPr
         queryWrapper.lambda().eq(TRoomPrice::getRoomId, tRoomPrice.getRoomId());
         final List<TRoomPrice> tRoomPrices = baseMapper.selectList(queryWrapper);
         for (TRoomPrice roomPrice : tRoomPrices) {
-            if (roomPrice.getStartTime().isBefore(tRoomPrice.getStopTime()) || roomPrice.getStopTime().isAfter(tRoomPrice.getStartTime()))
+            if ((roomPrice.getStartTime() < tRoomPrice.getStartTime() && roomPrice.getStopTime() > tRoomPrice.getStartTime()) || (roomPrice.getStartTime() < tRoomPrice.getStopTime() && roomPrice.getStopTime() > tRoomPrice.getStopTime()))
                 throw new ServiceException("收费标准时间段交叉");
         }
         return tRoomPriceMapper.insertTRoomPrice(tRoomPrice);

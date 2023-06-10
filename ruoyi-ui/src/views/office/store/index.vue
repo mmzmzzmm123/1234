@@ -302,21 +302,23 @@
     <el-dialog :title="title" :visible.sync="priceOpen" width="500px" append-to-body>
       <el-form ref="priceForm" :model="priceForm" :rules="priceRules" label-width="150px">
         <el-form-item label="开始时间" prop="startTime">
-          <el-time-select placeholder="开始时间" v-model="priceForm.startTime" :picker-options="{
-                start: '00:00',
-                step: '01:00',
-                end: '24:00'
+          <el-input-number v-model="priceForm.startTime" :min="1" :max="24" :step="1" label="描述文字"></el-input-number>
+         <!-- <el-time-select placeholder="开始时间" v-model="" :picker-options="{
+                start: '00',
+                step: '01',
+                end: '24'
               }">
-          </el-time-select>
+          </el-time-select> -->
         </el-form-item>
         <el-form-item label="营业结束时间" prop="stopTime">
-          <el-time-select placeholder="营业结束时间" v-model="priceForm.stopTime" :picker-options="{
-                start: '00:00',
-                 step: '01:00',
-                end: '24:00',
+          <el-input-number v-model="priceForm.stopTime" :min="1" :max="24" label="描述文字"></el-input-number>
+          <!-- <el-time-select placeholder="营业结束时间" v-model="priceForm.stopTime" :picker-options="{
+                start: '00',
+                 step: '01',
+                end: '24',
                 minTime: priceForm.startTime
               }">
-          </el-time-select>
+          </el-time-select> -->
         </el-form-item>
         <el-form-item label="单价(元/每小时)" prop="price">
           <el-input v-model="priceForm.price" placeholder="请输入单价" />
