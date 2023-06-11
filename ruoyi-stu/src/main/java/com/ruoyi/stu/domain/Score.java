@@ -10,4 +10,5 @@ public class Score {
     private Course course;
     private Integer dailyScore;
     private Integer finallyScore;
+    private Integer avgScore;
 }

@@ -36,10 +36,16 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         </association>
     </resultMap>
    <select id="findAll" resultMap="StuCoursePlanResult">
-       select semester_name,`status`,cls,tea_name,course_name from stu_course_plan
+       SELECT semester_name,`status`,cls,tea_name,course_name FROM stu_course_plan
        NATURAL JOIN stu_course
        NATURAL JOIN stu_semester
        JOIN stu_cls ON stu_course_plan.cls_id = stu_cls.id
        NATURAL JOIN tea_info
+       <where>
+           <if test="stuCls!=null and stuCls!=''">AND cls LIKE CONCAT('%',#{stuCls},'%')</if>
+           <if test="teaName!=null and teaName!=''">AND tea_name LIKE CONCAT('%',#{teaName},'%')</if>
+           <if test="courseName!=null and courseName!=''">AND course_name LIKE CONCAT('%',#{courseName},'%')</if>
+       </where>
+       ORDER BY semester_id DESC
    </select>
 </mapper>

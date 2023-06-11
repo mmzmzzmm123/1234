@@ -87,11 +87,25 @@ export const constantRoutes = [
         meta: { title: '个人中心', icon: 'user' }
       }
     ]
-  }
+  },
 ]
 
 // 动态路由，基于用户权限动态去加载
 export const dynamicRoutes = [
+  {
+    path: '/stu/scoreInfo',
+    component: Layout,
+    hidden: true,
+    permissions: ['stu:score:list'],
+    children: [
+      {
+        path: 'infos',
+        component: () => import('@/views/stu/score/infos'),
+        name:'stuScoreInfos',
+        meta: { title: '成绩详情',icon:'user' }
+      }
+    ]
+  },
   {
     path: '/system/user-auth',
     component: Layout,

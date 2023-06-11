@@ -30,6 +30,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <id column="id" property="id"/>
         <result property="dailyScore" column="daily_score"/>
         <result property="finallyScore" column="finally_score"/>
+        <result property="avgScore" column="avgScore"/>
         <association property="stu" javaType="com.ruoyi.stu.domain.StuInfo">
             <result property="stuId"    column="stu_id"    />
             <result property="stuNo"    column="stu_no"    />
@@ -73,6 +74,30 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="courseName!=null and  courseName !=''">and course_name like concat('%', #{courseName}, '%')</if>
         </where>
     </select>
+    <select id="selectCourseScore" resultMap="ScoreResult">
+        SELECT stu_info.stu_id `stu_id`,stu_no,stu_name,IFNULL(daily_score,0) `daily_score`,stu_cls,finally_score,stu_course.course_id `course_id` FROM stu_score
+        JOIN stu_course ON stu_course.course_id=stu_score.course_id
+        JOIN stu_info ON stu_score.stu_id = stu_info.stu_id
+        WHERE
+        stu_cls LIKE concat('%', #{stuCls}, '%')
+        AND course_name LIKE concat('%', #{courseName}, '%')
+    </select>
+    <select id="selectHistoryScore" resultMap="ScoreResult">
+        SELECT stu_no,ROUND(AVG(finally_score)) `avgScore` FROM stu_score ss
+        JOIN stu_info si ON ss.stu_id=si.stu_id
+        WHERE stu_cls = #{stuCls}
+        GROUP BY ss.stu_id
+    </select>
+    <update id="updateClassDailyScore"  parameterType="java.util.List">
+        <foreach collection="snos" item="item" index="index" open="" close="" separator=";">
+            update stu_score
+            <set>
+                daily_score = ${item.dailyScore},
+                finally_score = ${item.finallyScore}
+            </set>
+            where stu_id = ${item.stu.stuId} and course_id = ${item.course.courseId}
+        </foreach>
+    </update>
 <!--    <sql id="selectStuInfoVo">-->
 <!--        SELECT * FROM stu_score-->
 <!--        NATURAL JOIN stu_course-->

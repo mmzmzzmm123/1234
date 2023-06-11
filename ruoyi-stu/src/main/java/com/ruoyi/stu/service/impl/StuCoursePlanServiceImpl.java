@@ -13,7 +13,7 @@ public class StuCoursePlanServiceImpl implements IStuCoursePlanService{
     @Autowired
     private StuCoursePlanMapper stuCoursePlanMapper;
     
-    public List<StuCoursePlan> findAll(){
-        return stuCoursePlanMapper.findAll();
+    public List<StuCoursePlan> findAll(String stuCls,String teaName, String courseName){
+        return stuCoursePlanMapper.findAll( stuCls, teaName,  courseName);
     }
 }

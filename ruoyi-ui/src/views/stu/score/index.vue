@@ -97,20 +97,20 @@
       </el-table-column>
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
-          <el-button
+          <el-button v-if="scope.row.status === 2"
             size="mini"
             type="text"
             icon="el-icon-edit"
-            @click="handleUpdate(scope.row)"
+            @click="handleScoreCheck(scope.row)"
             v-hasPermi="['stu:score:list']"
           >点击查看</el-button>
-          <el-button
+          <el-button v-if="scope.row.status === 1"
             size="mini"
             type="text"
             icon="el-icon-delete"
             @click="handleDelete(scope.row)"
             v-hasPermi="['stu:score:remove']"
-          >删除</el-button>
+          >成绩录入</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -233,6 +233,18 @@ export default {
       this.reset();
       this.open = true;
       this.title = "添加提交材料参数";
+    },
+    /** 点击查看  **/
+    handleScoreCheck(row){
+      console.log('row',row)
+      /** 设计路由 **/
+      this.$router.push({
+        name:'stuScoreInfos',
+        params:{
+          courseName:row.course.courseName,
+          stuCls:row.stuCls.cls
+        }
+      })
     },
     /** 修改按钮操作 */
     handleUpdate(row) {

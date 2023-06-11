@@ -18,4 +18,19 @@ public class StuScoreServiceImpl implements IStuScoreService {
     public List<Score> selectFinshedCourse(String stuCls,String teacherName,String courseName) {
         return scoreMapper.selectFinshedCourse(stuCls,teacherName,courseName);
     }
+
+    @Override
+    public List<Score> selectCourseScore(String stuCls, String courseName) {
+        return scoreMapper.selectCourseScore(stuCls,courseName);
+    }
+
+    @Override
+    public List<Score> selectHistoryScore(String stuCls) {
+        return scoreMapper.selectHistoryScore(stuCls);
+    }
+
+    @Override
+    public Integer updateClassDailyScore(List<Score> snos) {
+        return scoreMapper.updateClassDailyScore(snos);
+    }
 }

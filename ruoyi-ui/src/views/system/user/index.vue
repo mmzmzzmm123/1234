@@ -347,7 +347,7 @@ import Treeselect from "@riophae/vue-treeselect";
 import "@riophae/vue-treeselect/dist/vue-treeselect.css";
 
 export default {
-  name: "User",
+  name: "stuScore",
   dicts: ['sys_normal_disable', 'sys_user_sex'],
   components: { Treeselect },
   data() {
