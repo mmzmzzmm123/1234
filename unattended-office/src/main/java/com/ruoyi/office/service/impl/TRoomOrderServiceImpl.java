@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.github.binarywang.wxpay.bean.request.WxPayUnifiedOrderV3Request;
 import com.github.binarywang.wxpay.bean.result.WxPayOrderQueryV3Result;
 import com.github.binarywang.wxpay.bean.result.WxPayUnifiedOrderV3Result;
@@ -439,4 +440,16 @@ public class TRoomOrderServiceImpl extends ServiceImpl<TRoomOrderMapper, TRoomOr
 
         return vo;
     }
+
+    @Override
+    public TRoomOrder continueOrder(Long userId) {
+        QueryWrapper<TRoomOrder> qw = new QueryWrapper<>();
+        Date now = new Date();
+        qw.lambda().lt(TRoomOrder::getStartTime, now).gt(TRoomOrder::getEndTime, now).eq(TRoomOrder::getStatus, OfficeEnum.RoomOrderStatus.USING.getCode());
+        List<TRoomOrder> orderList = tRoomOrderMapper.selectList(qw);
+        if (orderList == null || orderList.size() == 0)
+            throw new ServiceException("没有找到进行中的订单，请直接预约");
+        return orderList.get(0);
+    }
+
 }

@@ -73,4 +73,6 @@ public interface ITRoomOrderService {
     void finish(PrepayResp vo, Long id);
 
     RoomAvailablePeriod getAvailablePeriod(RoomAvailablePeriod vo);
+
+    TRoomOrder continueOrder(Long userId);
 }

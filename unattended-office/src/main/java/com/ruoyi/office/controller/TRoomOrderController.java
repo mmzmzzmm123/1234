@@ -4,11 +4,9 @@ import java.util.List;
 import javax.servlet.http.HttpServletResponse;
 
 import com.ruoyi.common.utils.SecurityUtils;
-import com.ruoyi.office.domain.vo.GetRoomPriceVo;
-import com.ruoyi.office.domain.vo.PrepayReq;
-import com.ruoyi.office.domain.vo.PrepayResp;
-import com.ruoyi.office.domain.vo.RoomAvailablePeriod;
+import com.ruoyi.office.domain.vo.*;
 import io.swagger.annotations.ApiOperation;
+import org.checkerframework.checker.units.qual.A;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -121,6 +119,7 @@ public class TRoomOrderController extends BaseController {
         }
     }
 
+    @ApiOperation("预约支付")
     @Log(title = "预定", businessType = BusinessType.INSERT)
     @PostMapping("/order")
     public AjaxResult order(@RequestBody PrepayReq order) {
@@ -151,4 +150,17 @@ public class TRoomOrderController extends BaseController {
         final RoomAvailablePeriod availablePeriod = tRoomOrderService.getAvailablePeriod(vo);
         return success(availablePeriod);
     }
+
+    /**
+     * 续单,校验是否有进行中的订单，并返回
+     *
+     * @return
+     */
+    @ApiOperation("续单,校验是否有进行中的订单，并返回")
+    @PostMapping("/continue")
+    public AjaxResult continueOrder() {
+        TRoomOrder order = tRoomOrderService.continueOrder(SecurityUtils.getLoginUser().getWxUser().getId());
+        return AjaxResult.success(order);
+    }
+
 }
