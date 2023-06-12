@@ -173,7 +173,7 @@ public class TWxUserPackageServiceImpl extends ServiceImpl<TWxUserPackageMapper,
     }
 
     @Override
-    public void wxNotify(String outTradeNo, String openId, Integer total) {
+    public void wxNotify(String outTradeNo, String openId, Integer total, String wxCallback) {
 
         // 处理订单状态
         TWxUserPackage userPackage = new TWxUserPackage();
@@ -194,7 +194,8 @@ public class TWxUserPackageServiceImpl extends ServiceImpl<TWxUserPackageMapper,
         TWxUserPackage update = new TWxUserPackage();
         update.setId(userPackage.getId());
         update.setStatus(OfficeEnum.RoomOrderStatus.ORDERED.getCode());// 已预约
+        update.setRemark(wxCallback);
         tWxUserPackageMapper.updateTWxUserPackage(update);
-
     }
+
 }

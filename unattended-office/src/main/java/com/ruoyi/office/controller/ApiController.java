@@ -66,9 +66,9 @@ public class ApiController {
 
                 if (result.getTradeState().equalsIgnoreCase(WxPayConstants.WxpayTradeStatus.SUCCESS)) {
                     if (result.getAttach().equalsIgnoreCase(OfficeEnum.WxTradeType.ROOM_ORDER.getCode()))
-                        roomOrderService.wxnotify(result.getOutTradeNo(), result.getPayer().getOpenid(), result.getAmount().getTotal());
+                        roomOrderService.wxnotify(result.getOutTradeNo(), result.getPayer().getOpenid(), result.getAmount().getTotal(), result.toString());
                     if (result.getAttach().equalsIgnoreCase(OfficeEnum.WxTradeType.PACK.getCode()))
-                        userPackageService.wxNotify(result.getOutTradeNo(), result.getPayer().getOpenid(), result.getAmount().getTotal());
+                        userPackageService.wxNotify(result.getOutTradeNo(), result.getPayer().getOpenid(), result.getAmount().getTotal(), result.toString());
                 }
 
                 //通知应答：接收成功：HTTP应答状态码需返回200或204，无需返回应答报文。

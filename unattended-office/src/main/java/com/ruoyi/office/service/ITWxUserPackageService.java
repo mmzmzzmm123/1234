@@ -63,5 +63,5 @@ public interface ITWxUserPackageService
 
     PrepayResp buy(BuyStorePackReq tWxUserPackage, Long id);
 
-    void wxNotify(String outTradeNo, String openid, Integer total);
+    void wxNotify(String outTradeNo, String openid, Integer total, String s);
 }

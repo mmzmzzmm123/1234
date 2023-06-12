@@ -2,7 +2,6 @@ package com.ruoyi.office.service.impl;
 
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
-import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -341,7 +340,7 @@ public class TRoomOrderServiceImpl extends ServiceImpl<TRoomOrderMapper, TRoomOr
 
     // 处理微信支付回调
     @Override
-    public void wxnotify(String orderNo, String openId, int centTotal) {
+    public void wxnotify(String orderNo, String openId, int centTotal, String wxCallback) {
 
         // 处理订单状态
         TRoomOrder roomOrder = new TRoomOrder();
@@ -362,6 +361,7 @@ public class TRoomOrderServiceImpl extends ServiceImpl<TRoomOrderMapper, TRoomOr
         TRoomOrder update = new TRoomOrder();
         update.setId(roomOrder.getId());
         update.setStatus(OfficeEnum.RoomOrderStatus.ORDERED.getCode());// 已预约
+        update.setRemark(wxCallback);
         tRoomOrderMapper.updateTRoomOrder(update);
 
     }
