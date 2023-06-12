@@ -102,7 +102,7 @@
         </template>
       </el-table-column>
     </el-table>
-    
+
     <pagination
       v-show="total>0"
       :total="total"
@@ -264,6 +264,7 @@ export default {
     },
     /** 导出按钮操作 */
     handleExport() {
+
       this.download('stu/material/export', {
         ...this.queryParams
       }, `material_${new Date().getTime()}.xlsx`)

@@ -289,9 +289,10 @@ export default {
     },
     /** 导出按钮操作 */
     handleExport() {
-      this.download('stu/material/export', {
+      console.log('成绩导出')
+      this.download('stu/score/export', {
         ...this.queryParams
-      }, `material_${new Date().getTime()}.xlsx`)
+      }, `${this.queryParams.stuCls}_${this.queryParams.courseName}成绩.xlsx`)
     }
   }
 };

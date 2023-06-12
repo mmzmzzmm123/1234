@@ -5,9 +5,11 @@ import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.core.page.TableDataInfo;
 import com.ruoyi.common.enums.BusinessType;
+import com.ruoyi.common.utils.poi.ExcelUtil;
 import com.ruoyi.stu.domain.Score;
 import com.ruoyi.stu.domain.StuCoursePlan;
 import com.ruoyi.stu.domain.StuInfo;
+import com.ruoyi.stu.domain.StuMaterial;
 import com.ruoyi.stu.service.IStuCoursePlanService;
 import com.ruoyi.stu.service.IStuScoreService;
 import com.ruoyi.stu.vo.BiyeForm;
@@ -16,6 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 import java.util.Map;
 
@@ -72,5 +75,18 @@ public class ScoreController extends BaseController {
     public AjaxResult edit(@RequestBody List<Score> scores)
     {
         return toAjax(stuScoreService.updateClassDailyScore(scores));
+    }
+
+    /**
+     * 学生成绩导出
+     */
+    @PreAuthorize("@ss.hasPermi('score:info:export')")
+    @Log(title = "成绩导出", businessType = BusinessType.UPDATE)
+    @PostMapping("/export")
+    public void export(HttpServletResponse response,String stuCls, String courseName)
+    {
+        List<Score> list = stuScoreService.selectCourseScore(stuCls,courseName);
+        ExcelUtil<Score> util = new ExcelUtil<Score>(Score.class);
+        util.exportExcel(response, list, "提交材料参数数据");
     }
 }

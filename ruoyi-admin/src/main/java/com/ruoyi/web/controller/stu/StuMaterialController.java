@@ -67,16 +67,6 @@ public class StuMaterialController extends BaseController
         return success(stuMaterialService.selectStuMaterialById(id));
     }
 
-    /**
-     * 获取某个年级的不同材料的提交情况
-     */
-//    @PreAuthorize("@ss.hasPermi('stu:material:query')")
-//    @GetMapping(value = "/materProcess/{clsYear}")
-//    public AjaxResult materProcess(@PathVariable("clsYear") String clsYear)
-//    {
-//        return success(iStuInfoMaterialService.selectStuFinishedMaterials(clsYear));
-//    }
-
 
 
     /**

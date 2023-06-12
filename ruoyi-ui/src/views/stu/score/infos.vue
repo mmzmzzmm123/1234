@@ -1,6 +1,14 @@
 <template>
   <div class="app-container">
     <el-row :gutter="10" class="mb8">
+      <el-col :span="6" class="scoreInfo">
+        课程:{{this.queryParams.courseName}}
+      </el-col>
+      <el-col :span="6" class="scoreInfo">
+        班级:{{this.queryParams.stuCls}}
+      </el-col>
+    </el-row>
+    <el-row :gutter="10" class="mb8">
       <el-col :span="1.5">
         <el-button
           type="primary"
@@ -35,10 +43,20 @@
         <el-button
           type="warning"
           plain
+          icon="el-icon-upload2"
+          size="mini"
+          @click="handleImport"
+          v-hasPermi="['stu:score:import']"
+        >导入</el-button>
+      </el-col>
+      <el-col :span="1.5">
+        <el-button
+          type="warning"
+          plain
           icon="el-icon-download"
           size="mini"
           @click="handleExport"
-          v-hasPermi="['stu:material:export']"
+          v-hasPermi="['stu:score:export']"
         >导出</el-button>
       </el-col>
       <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
@@ -67,24 +85,24 @@
             {{getTotalScore(scope.row.dailyScore,scope.row.finallyScore)}}
           </template>
       </el-table-column>
-      <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
-        <template slot-scope="scope">
-          <el-button
-            size="mini"
-            type="text"
-            icon="el-icon-edit"
-            @click="handleScoreCheck(scope.row)"
-            v-hasPermi="['stu:score:list']"
-          >编辑</el-button>
-          <el-button v-if="scope.row.status === 1"
-            size="mini"
-            type="text"
-            icon="el-icon-delete"
-            @click="handleDelete(scope.row)"
-            v-hasPermi="['stu:score:remove']"
-          >成绩录入</el-button>
-        </template>
-      </el-table-column>
+<!--      <el-table-column label="操作" align="center" class-name="small-padding fixed-width">-->
+<!--        <template slot-scope="scope">-->
+<!--          <el-button-->
+<!--            size="mini"-->
+<!--            type="text"-->
+<!--            icon="el-icon-edit"-->
+<!--            @click="handleScoreCheck(scope.row)"-->
+<!--            v-hasPermi="['stu:score:list']"-->
+<!--          >编辑</el-button>-->
+<!--          <el-button v-if="scope.row.status === 1"-->
+<!--            size="mini"-->
+<!--            type="text"-->
+<!--            icon="el-icon-delete"-->
+<!--            @click="handleDelete(scope.row)"-->
+<!--            v-hasPermi="['stu:score:remove']"-->
+<!--          >成绩录入</el-button>-->
+<!--        </template>-->
+<!--      </el-table-column>-->
     </el-table>
 
     <pagination
@@ -205,9 +223,12 @@ export default {
     },
     /** 导出按钮操作 */
     handleExport() {
-      this.download('stu/material/export', {
+      this.download('stu/score/export', {
         ...this.queryParams
-      }, `material_${new Date().getTime()}.xlsx`)
+      }, `${this.queryParams.stuCls}_${this.queryParams.courseName}成绩.xlsx`)
+    },
+    handleImport(){
+
     }
   }
 };
@@ -225,5 +246,8 @@ export default {
   line-height: 24px;
   padding: 0 9px;
   box-sizing: border-box;
+}
+.scoreInfo{
+  font-size: 20px;
 }
 </style>
