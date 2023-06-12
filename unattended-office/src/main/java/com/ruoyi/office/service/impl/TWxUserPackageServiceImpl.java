@@ -156,7 +156,7 @@ public class TWxUserPackageServiceImpl extends ServiceImpl<TWxUserPackageMapper,
         try {
             jsapiResult = wxPayService.createOrderV3(TradeTypeEnum.valueOf("JSAPI"), v3Request);
 
-            userPackage.setOrderNo(String.valueOf(orderNo));
+            userPackage.setOrderNo(orderNo);
             userPackage.setPackId(storePackage.getId());
             userPackage.setPackageName(storePackage.getPackageName());
             userPackage.setPayAmount(storePackage.getPayAmount());
