@@ -31,10 +31,14 @@
             <version>1.6.2</version>
             <scope>compile</scope>
         </dependency>
-<!--         <dependency>-->
-<!--              <groupId>com.ruoyi</groupId>-->
-<!--              <artifactId>ruoyi-framework</artifactId>-->
-<!--          </dependency>-->
+
+        <!-- 微信支付 -->
+        <dependency>
+            <groupId>com.github.binarywang</groupId>
+            <artifactId>weixin-java-pay</artifactId>
+            <version>4.3.0</version>
+        </dependency>
+
     </dependencies>
 
 </project>

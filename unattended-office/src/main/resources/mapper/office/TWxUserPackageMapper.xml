@@ -11,6 +11,7 @@
         <result property="giftAmont"    column="gift_amont"    />
         <result property="packId"    column="pack_id"    />
         <result property="merchant"    column="merchant"    />
+        <result property="orderNo"    column="order_no"    />
         <result property="status"    column="status"    />
         <result property="remark"    column="remark"    />
         <result property="createBy"    column="create_by"    />
@@ -20,7 +21,7 @@
     </resultMap>
 
     <sql id="selectTWxUserPackageVo">
-        select id, package_name, pay_amount, gift_amont, pack_id, merchant, status, remark, create_by, create_time, update_by, update_time from t_wx_user_package
+        select id, package_name, pay_amount, gift_amont, pack_id, merchant,order_no, status, remark, create_by, create_time, update_by, update_time from t_wx_user_package
     </sql>
 
     <select id="selectTWxUserPackageList" parameterType="TWxUserPackage" resultMap="TWxUserPackageResult">
@@ -31,6 +32,7 @@
             <if test="giftAmont != null "> and gift_amont = #{giftAmont}</if>
             <if test="packId != null "> and pack_id = #{packId}</if>
             <if test="merchant != null "> and merchant = #{merchant}</if>
+            <if test="orderNo != null "> and order_no = #{orderNo}</if>
             <if test="status != null "> and status = #{status}</if>
         </where>
     </select>
@@ -38,6 +40,9 @@
     <select id="selectTWxUserPackageById" parameterType="Long" resultMap="TWxUserPackageResult">
         <include refid="selectTWxUserPackageVo"/>
         where id = #{id}
+    </select>
+    <select id="getMaxOrder"  parameterType="String" resultType="java.lang.Long">
+        select max(order_no)  from t_wx_user_package where order_no like concat( #{id},'%')
     </select>
 
     <insert id="insertTWxUserPackage" parameterType="TWxUserPackage" useGeneratedKeys="true" keyProperty="id">
@@ -48,6 +53,7 @@
             <if test="giftAmont != null">gift_amont,</if>
             <if test="packId != null">pack_id,</if>
             <if test="merchant != null">merchant,</if>
+            <if test="orderNo != null ">order_no ,</if>
             <if test="status != null">status,</if>
             <if test="remark != null">remark,</if>
             <if test="createBy != null">create_by,</if>
@@ -61,6 +67,7 @@
             <if test="giftAmont != null">#{giftAmont},</if>
             <if test="packId != null">#{packId},</if>
             <if test="merchant != null">#{merchant},</if>
+            <if test="orderNo != null ">  #{orderNo},</if>
             <if test="status != null">#{status},</if>
             <if test="remark != null">#{remark},</if>
             <if test="createBy != null">#{createBy},</if>
@@ -78,6 +85,7 @@
             <if test="giftAmont != null">gift_amont = #{giftAmont},</if>
             <if test="packId != null">pack_id = #{packId},</if>
             <if test="merchant != null">merchant = #{merchant},</if>
+            <if test="orderNo != null "> order_no = #{orderNo},</if>
             <if test="status != null">status = #{status},</if>
             <if test="remark != null">remark = #{remark},</if>
             <if test="createBy != null">create_by = #{createBy},</if>

@@ -148,4 +148,33 @@ public class OfficeEnum {
         }
     }
 
+    public enum WxTradeType {
+        PACK("PACK", "套餐订单"), ROOM_ORDER("ROOM_ORDER", "房间订单");
+
+        private final String code;
+        private final String info;
+
+        WxTradeType(String code, String info) {
+            this.code = code;
+            this.info = info;
+        }
+
+        public String getCode() {
+            return code;
+        }
+
+        public String getInfo() {
+            return info;
+        }
+
+        public static WxTradeType GetValueByCode(String code) {
+            for (WxTradeType e : WxTradeType.values()) {
+                if (e.getCode().equals(code)) {
+                    return e;
+                }
+            }
+            throw new RuntimeException("枚举值错误");
+        }
+    }
+
 }

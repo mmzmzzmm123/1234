@@ -60,4 +60,6 @@ public interface TWxUserPackageMapper extends BaseMapper<TWxUserPackage> {
      * @return 结果
      */
     public int deleteTWxUserPackageByIds(Long[] ids);
+
+    Long getMaxOrder(String prefix);
 }

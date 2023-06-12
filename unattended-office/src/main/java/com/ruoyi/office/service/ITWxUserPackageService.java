@@ -2,6 +2,8 @@ package com.ruoyi.office.service;
 
 import java.util.List;
 import com.ruoyi.office.domain.TWxUserPackage;
+import com.ruoyi.office.domain.vo.BuyStorePackReq;
+import com.ruoyi.office.domain.vo.PrepayResp;
 
 /**
  * 用户套餐购买记录Service接口
@@ -58,4 +60,8 @@ public interface ITWxUserPackageService
      * @return 结果
      */
     public int deleteTWxUserPackageById(Long id);
+
+    PrepayResp buy(BuyStorePackReq tWxUserPackage, Long id);
+
+    void wxNotify(String outTradeNo, String openid, Integer total);
 }

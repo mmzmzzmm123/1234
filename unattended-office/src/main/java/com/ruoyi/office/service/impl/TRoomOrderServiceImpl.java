@@ -198,10 +198,7 @@ public class TRoomOrderServiceImpl extends ServiceImpl<TRoomOrderMapper, TRoomOr
 
         TRoomOrder tRoomOrder = new TRoomOrder();
         BeanUtils.copyProperties(prepayReq, tRoomOrder);
-         /*List<TRoomOrder> roomOrders = tRoomOrderMapper.selectConflictRoomPeriod(prepayReq);
-        if (roomOrders.size() > 0) {
-            throw new ServiceException("预定时间段冲突，请刷新预定情况后重试");
-        }*/
+
         // 计算总金额
         BigDecimal totalPrice = calcPrice(prepayReq.getRoomId(), prepayReq.getStartTime(), prepayReq.getEndTime());
         // 计算订单号
@@ -223,15 +220,19 @@ public class TRoomOrderServiceImpl extends ServiceImpl<TRoomOrderMapper, TRoomOr
             final WxPayConfig config = wxPayService.getConfig();
 
             ArrayList<WxPayUnifiedOrderV3Request.GoodsDetail> goodsDetails = new ArrayList<>();
-            goodsDetails.add(new WxPayUnifiedOrderV3Request.GoodsDetail() {
-            }.setMerchantGoodsId("").setUnitPrice(0).setQuantity(0));
+            goodsDetails.add(
+                    new WxPayUnifiedOrderV3Request.GoodsDetail() {
+                    }.setMerchantGoodsId("").setUnitPrice(0).setQuantity(0));
 
             v3Request.setAppid(config.getAppId()).setMchid(config.getMchId()).setNotifyUrl(config.getNotifyUrl())
                     .setDescription("roomId: " + prepayReq.getRoomId()).setOutTradeNo(String.valueOf(orderNo))
-                    .setAmount(new WxPayUnifiedOrderV3Request.Amount() {
-                    }.setTotal(totalPrice.intValue() * 100))
-                    .setPayer(new WxPayUnifiedOrderV3Request.Payer() {
-                    }.setOpenid(wxUser.getOpenId()));
+                    .setAmount(
+                            new WxPayUnifiedOrderV3Request.Amount() {
+                            }.setTotal(totalPrice.intValue() * 100))
+                    .setPayer(
+                            new WxPayUnifiedOrderV3Request.Payer() {
+                            }.setOpenid(wxUser.getOpenId()))
+                    .setAttach(OfficeEnum.WxTradeType.ROOM_ORDER.getCode());
 
             WxPayUnifiedOrderV3Result.JsapiResult jsapiResult = null;
             try {
@@ -361,7 +362,7 @@ public class TRoomOrderServiceImpl extends ServiceImpl<TRoomOrderMapper, TRoomOr
         TRoomOrder update = new TRoomOrder();
         update.setId(roomOrder.getId());
         update.setStatus(OfficeEnum.RoomOrderStatus.ORDERED.getCode());// 已预约
-        tRoomOrderMapper.updateTRoomOrder(roomOrder);
+        tRoomOrderMapper.updateTRoomOrder(update);
 
     }
 

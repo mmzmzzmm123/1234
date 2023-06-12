@@ -66,4 +66,6 @@ public interface ITWxUserService
     List<MerchantUserVo> listStoreWxuser(TWxUser tWxUser);
 
     void updateLogInfo(WxUser wxUser);
+
+    void regWithShare(String unionId, String inviteCode);
 }

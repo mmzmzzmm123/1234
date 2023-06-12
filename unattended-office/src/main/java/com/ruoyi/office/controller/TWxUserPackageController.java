@@ -4,6 +4,8 @@ import java.util.List;
 import javax.servlet.http.HttpServletResponse;
 
 import com.ruoyi.common.utils.SecurityUtils;
+import com.ruoyi.office.domain.vo.BuyStorePackReq;
+import com.ruoyi.office.domain.vo.PrepayResp;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -98,5 +100,16 @@ public class TWxUserPackageController extends BaseController {
     @DeleteMapping("/{ids}")
     public AjaxResult remove(@PathVariable Long[] ids) {
         return toAjax(tWxUserPackageService.deleteTWxUserPackageByIds(ids));
+    }
+
+
+    /**
+     * 新增用户套餐购买记录
+     */
+    @Log(title = "用户套餐购买" , businessType = BusinessType.INSERT)
+    @PostMapping("/buy")
+    public AjaxResult buy(@RequestBody BuyStorePackReq tWxUserPackage) {
+        final PrepayResp pre = tWxUserPackageService.buy(tWxUserPackage, SecurityUtils.getLoginUser().getWxUser().getId());
+        return AjaxResult.success(pre);
     }
 }

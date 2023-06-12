@@ -16,4 +16,6 @@ public class WxLoginBody {
      * 登录凭据
      */
     private String code;
+
+    private String inviteCode;
 }

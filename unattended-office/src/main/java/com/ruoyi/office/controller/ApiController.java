@@ -1,24 +1,28 @@
 package com.ruoyi.office.controller;
 
+import cn.hutool.extra.qrcode.QrCodeUtil;
+import cn.hutool.extra.qrcode.QrConfig;
 import com.alibaba.fastjson2.JSON;
 import com.alibaba.fastjson2.JSONObject;
-import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.github.binarywang.wxpay.bean.notify.*;
+import com.github.binarywang.wxpay.bean.notify.OriginNotifyResponse;
+import com.github.binarywang.wxpay.bean.notify.SignatureHeader;
+import com.github.binarywang.wxpay.bean.notify.WxPayOrderNotifyV3Result;
 import com.github.binarywang.wxpay.constant.WxPayConstants;
 import com.github.binarywang.wxpay.exception.WxPayException;
 import com.github.binarywang.wxpay.service.WxPayService;
 import com.ruoyi.common.annotation.Log;
 import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.utils.SecurityUtils;
+import com.ruoyi.office.domain.enums.OfficeEnum;
 import com.ruoyi.office.domain.vo.WxPayCallback;
 import com.ruoyi.office.service.ITRoomOrderService;
+import com.ruoyi.office.service.ITWxUserPackageService;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.logging.LogFactory;
+import org.aspectj.weaver.loadtime.Aj;
+import org.checkerframework.checker.units.qual.A;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -36,7 +40,10 @@ public class ApiController {
     ITRoomOrderService roomOrderService;
 
     @Autowired
-    private WxPayService wxPayService;
+    WxPayService wxPayService;
+
+    @Autowired
+    ITWxUserPackageService userPackageService;
 
     /**
      * 预定成功 api 回调
@@ -58,7 +65,10 @@ public class ApiController {
                 WxPayOrderNotifyV3Result.DecryptNotifyResult result = v3Result.getResult();
 
                 if (result.getTradeState().equalsIgnoreCase(WxPayConstants.WxpayTradeStatus.SUCCESS)) {
-                    roomOrderService.wxnotify(result.getOutTradeNo(), result.getPayer().getOpenid(), result.getAmount().getTotal());
+                    if (result.getAttach().equalsIgnoreCase(OfficeEnum.WxTradeType.ROOM_ORDER.getCode()))
+                        roomOrderService.wxnotify(result.getOutTradeNo(), result.getPayer().getOpenid(), result.getAmount().getTotal());
+                    if (result.getAttach().equalsIgnoreCase(OfficeEnum.WxTradeType.PACK.getCode()))
+                        userPackageService.wxNotify(result.getOutTradeNo(), result.getPayer().getOpenid(), result.getAmount().getTotal());
                 }
 
                 //通知应答：接收成功：HTTP应答状态码需返回200或204，无需返回应答报文。
@@ -132,4 +142,29 @@ public class ApiController {
         return signatureHeader;
     }
 
+    /**
+     * 获取分享码
+     *
+     * @return
+     */
+    @ApiOperation("获取分享码")
+    @GetMapping("share")
+    public AjaxResult getShareCode() {
+        String unionId = SecurityUtils.getLoginUser().getWxUser().getUnionId();
+
+        String url = null;
+
+        url = "https://www.btjingling.com/#/pages/login/signup/signup?data=" + java.net.URLEncoder.encode(unionId);// new String(account.getBytes("UTF-8"), "ISO-8859-1");
+//        result.setReCode(unionId);
+//        result.setUrl(url);
+////        result.setQRCode(QrCodeUtil.getQRCodePicBase64(url));
+//        result.setQRCode(new String(QrCodeUtil.generatePng(url, new QrConfig())));
+
+        return AjaxResult.success(new String(QrCodeUtil.generatePng(url, new QrConfig())));
+    }
+
+    public static void main(String[] args) {
+        System.out.println(230 % 100);
+        System.out.println(230 / 100 * 100);
+    }
 }

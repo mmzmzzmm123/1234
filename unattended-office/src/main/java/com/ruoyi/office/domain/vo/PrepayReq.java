@@ -1,7 +1,9 @@
 package com.ruoyi.office.domain.vo;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.github.binarywang.wxpay.constant.WxPayConstants;
 import com.ruoyi.common.annotation.Excel;
+import com.ruoyi.office.domain.enums.OfficeEnum;
 import lombok.Data;
 
 import java.util.Date;
@@ -40,4 +42,5 @@ public class PrepayReq {
      * 使用卡券
      */
     private Long couponId;
+
 }
