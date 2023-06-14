@@ -30,10 +30,6 @@ public class CourCourse extends BaseEntity
     /** 课程ID */
     private Integer id;
 
-    /** 课程编号 */
-    @Excel(name = "课程编号")
-    private String courseId;
-
     /** 课程名称 */
     @Excel(name = "课程名称")
     private String name;
@@ -66,17 +62,21 @@ public class CourCourse extends BaseEntity
     @Excel(name = "课程详情，富文本内容")
     private String detail;
 
+    /** 是否上架（0-未上架，1-已上架）*/
+    @Excel(name = "是否上架")
+    private Integer onSale;
+
     @Override
     public String toString() {
         return new ToStringBuilder(this,ToStringStyle.MULTI_LINE_STYLE)
             .append("id", getId())
-            .append("courseId", getCourseId())
             .append("name", getName())
             .append("type", getType())
             .append("author", getAuthor())
             .append("url", getUrl())
             .append("price", getPrice())
             .append("detail", getDetail())
+            .append("onSale", getOnSale())
             .append("createBy", getCreateBy())
             .append("createTime", getCreateTime())
             .append("updateTime", getUpdateTime())

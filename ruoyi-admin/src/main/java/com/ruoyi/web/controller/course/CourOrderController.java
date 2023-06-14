@@ -105,7 +105,12 @@ public class CourOrderController extends BaseController
     @PostMapping
     public AjaxResult add(@RequestBody CourOrder courOrder)
     {
-        return toAjax(courOrderService.insertCourOrder(courOrder));
+        try {
+            int res = courOrderService.insertCourOrder(courOrder);
+            return AjaxResult.success(res);
+        } catch (Exception e) {
+            return AjaxResult.error(500, "新增课程订单失败");
+        }
     }
 
     /**
@@ -116,7 +121,12 @@ public class CourOrderController extends BaseController
     @PutMapping
     public AjaxResult edit(@RequestBody CourOrder courOrder)
     {
-        return toAjax(courOrderService.updateCourOrder(courOrder));
+        try {
+            int res = courOrderService.updateCourOrder(courOrder);
+            return AjaxResult.success(res);
+        } catch (Exception e) {
+            return AjaxResult.error(500, "修改课程订单失败");
+        }
     }
 
     /**
@@ -127,6 +137,11 @@ public class CourOrderController extends BaseController
 	@DeleteMapping("/{ids}")
     public AjaxResult remove(@PathVariable Integer[] ids)
     {
-        return toAjax(courOrderService.deleteCourOrderByIds(ids));
+        try {
+            int res = courOrderService.deleteCourOrderByIds(ids);
+            return AjaxResult.success(res);
+        } catch (Exception e) {
+            return AjaxResult.error(500, "删除课程订单失败");
+        }
     }
 }

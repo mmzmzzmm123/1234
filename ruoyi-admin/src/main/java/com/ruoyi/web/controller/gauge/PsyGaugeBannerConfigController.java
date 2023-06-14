@@ -78,7 +78,12 @@ public class PsyGaugeBannerConfigController extends BaseController
     public AjaxResult add(@RequestBody PsyGaugeBannerConfig psyGaugeBannerConfig)
     {
         psyGaugeBannerConfig.setCreateBy(getUsername());
-        return toAjax(psyGaugeBannerConfigService.insertPsyGaugeBannerConfig(psyGaugeBannerConfig));
+        try {
+            int res = psyGaugeBannerConfigService.insertPsyGaugeBannerConfig(psyGaugeBannerConfig);
+            return AjaxResult.success(res);
+        } catch (Exception e) {
+            return AjaxResult.error(500, "新增测评banner配置失败");
+        }
     }
 
     /**
@@ -89,7 +94,12 @@ public class PsyGaugeBannerConfigController extends BaseController
     @PutMapping
     public AjaxResult edit(@RequestBody PsyGaugeBannerConfig psyGaugeBannerConfig)
     {
-        return toAjax(psyGaugeBannerConfigService.updatePsyGaugeBannerConfig(psyGaugeBannerConfig));
+        try {
+            int res = psyGaugeBannerConfigService.updatePsyGaugeBannerConfig(psyGaugeBannerConfig);
+            return AjaxResult.success(res);
+        } catch (Exception e) {
+            return AjaxResult.error(500, "修改测评banner配置失败");
+        }
     }
 
     /**
@@ -100,6 +110,11 @@ public class PsyGaugeBannerConfigController extends BaseController
 	@DeleteMapping("/{ids}")
     public AjaxResult remove(@PathVariable Integer[] ids)
     {
-        return toAjax(psyGaugeBannerConfigService.deletePsyGaugeBannerConfigByIds(ids));
+        try {
+            int res = psyGaugeBannerConfigService.deletePsyGaugeBannerConfigByIds(ids);
+            return AjaxResult.success(res);
+        } catch (Exception e) {
+            return AjaxResult.error(500, "删除测评banner配置失败");
+        }
     }
 }

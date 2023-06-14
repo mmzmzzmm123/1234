@@ -68,9 +68,6 @@ public class CourCourseServiceImpl implements ICourCourseService
         return courCourseMapper.selectCourCourseList(courCourse);
     }
 
-    public CourCourse selectCourCourseByCourseId(String courseId){
-        return courCourseMapper.selectCourCourseByCourseId(courseId);
-    }
     /**
      * 新增课程
      * 

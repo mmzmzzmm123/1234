@@ -52,6 +52,16 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
+      <el-form-item label="是否上架" prop="onSaleValue">
+        <el-select v-model="queryParams.onSaleValue" placeholder="请选择课程是否上架" clearable>
+          <el-option
+            v-for="item in onSaleList"
+            :key="item.id"
+            :label="item.name"
+            :value="item.id"
+          />
+        </el-select>
+      </el-form-item>
       <el-form-item>
         <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
         <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
@@ -153,6 +163,22 @@
             v-hasPermi="['course:section:list']">
             章节管理
           </el-button>
+          <el-button
+            type="text"
+            size="mini"
+            @click="handleOnSale(scope.row)"
+            v-show="scope.row.onSale === 0"
+            v-hasPermi="['course:section:edit']">
+            上架
+          </el-button>
+          <el-button
+            type="text"
+            size="mini"
+            @click="handleOffSale(scope.row)"
+            v-show="scope.row.onSale === 1"
+            v-hasPermi="['course:section:edit']">
+            下架
+          </el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -169,22 +195,18 @@
     <el-dialog :title="title" :visible.sync="open" width="800px"  append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
 
-        <el-form-item label="课程名称" prop="name">
-          <el-input v-model="form.name" placeholder="请输入课程名称" />
-        </el-form-item>
         <el-row>
+          <el-col :span="12">
+            <el-form-item label="课程名称" prop="name">
+              <el-input class="author_input" v-model="form.name" placeholder="请输入课程名称" />
+            </el-form-item>
+          </el-col>
           <el-col :span="12">
             <el-form-item label="课程作者" prop="author" >
               <el-input class="author_input" v-model="form.author" placeholder="请输入课程作者" />
             </el-form-item>
           </el-col>
-          <el-col :span="12">
-            <el-form-item label="课程编号" prop="courseId">
-              <el-input v-model="form.courseId" placeholder="请输入课程编号" />
-            </el-form-item>
-          </el-col>
         </el-row>
-
 
 
         <el-row>
@@ -294,15 +316,13 @@ export default {
         authorValue: null,
         lowPrice: null,
         highPrice: null,
+        onSaleValue: null,
       },
       // 表单参数
       form: {
       },
       // 表单校验
       rules: {
-        courseId: [
-          { required: true, message: "课程编号不能为空", trigger: "blur" }
-        ],
         name: [
           { required: true, message: "课程名称不能为空", trigger: "blur" }
         ],
@@ -328,6 +348,16 @@ export default {
         {
           id: 1,
           name: '免费课'
+        },
+      ],
+      onSaleList: [
+        {
+          id: 0,
+          name: '未上架'
+        },
+        {
+          id: 1,
+          name: '已上架'
         },
       ]
     };
@@ -370,7 +400,6 @@ export default {
     reset() {
       this.form = {
         id: null,
-        courseId: null,
         name: null,
         type: null,
         payType: null,
@@ -468,6 +497,28 @@ export default {
         // 付费类型为免费课， 价格为0，输入框禁止输入
         this.form.price = 0
       }
+    },
+    handleOnSale(course) {
+      updateCourse({
+        ...course,
+        onSale: 1
+      }).then(res => {
+        if (res.code == 200) {
+          this.$modal.msgSuccess("上架课程成功");
+          this.getList();
+        }
+      });
+    },
+    handleOffSale(course) {
+      updateCourse({
+        ...course,
+        onSale: 0
+      }).then(res => {
+        if (res.code == 200) {
+          this.$modal.msgSuccess("下架课程成功");
+          this.getList();
+        }
+      });
     }
   }
 };

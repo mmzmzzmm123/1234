@@ -198,7 +198,6 @@ export default {
 
 page {
   background-color: #F8F8F8;
-  padding-left: 24upx;
 
   .search-box {
     margin: 32upx 24upx;

@@ -106,7 +106,12 @@ public class CourCourseLabelController extends BaseController
     @PostMapping
     public AjaxResult add(@RequestBody CourCourseLabel courCourseLabel)
     {
-        return toAjax(courCourseLabelService.insertCourCourseLabel(courCourseLabel));
+        try {
+            int res = courCourseLabelService.insertCourCourseLabel(courCourseLabel);
+            return AjaxResult.success(res);
+        } catch (Exception e) {
+            return AjaxResult.error(500, "新增课程标签失败");
+        }
     }
 
     /**
@@ -117,7 +122,12 @@ public class CourCourseLabelController extends BaseController
     @PutMapping
     public AjaxResult edit(@RequestBody CourCourseLabel courCourseLabel)
     {
-        return toAjax(courCourseLabelService.updateCourCourseLabel(courCourseLabel));
+        try {
+            int res = courCourseLabelService.updateCourCourseLabel(courCourseLabel);
+            return AjaxResult.success(res);
+        } catch (Exception e) {
+            return AjaxResult.error(500, "修改课程标签失败");
+        }
     }
 
     /**
@@ -128,6 +138,11 @@ public class CourCourseLabelController extends BaseController
 	@DeleteMapping("/{ids}")
     public AjaxResult remove(@PathVariable Integer[] ids)
     {
-        return toAjax(courCourseLabelService.deleteCourCourseLabelByIds(ids));
+        try {
+            int res = courCourseLabelService.deleteCourCourseLabelByIds(ids);
+            return AjaxResult.success(res);
+        } catch (Exception e) {
+            return AjaxResult.error(500, "删除课程标签失败");
+        }
     }
 }

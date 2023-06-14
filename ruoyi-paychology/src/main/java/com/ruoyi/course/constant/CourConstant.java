@@ -39,4 +39,7 @@ public class CourConstant {
 
     public static final int COURSE_NEED_PAY = 0;
     public static final int COURSE_FREE = 1;
+
+    public static final int COUR_COURSE_OFF_SALE = 0; // 未上架
+    public static final int COUR_COURSE_ON_SALE = 1; // 已上架
 }

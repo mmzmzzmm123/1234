@@ -78,7 +78,12 @@ public class CourSectionController extends BaseController
     @PostMapping
     public AjaxResult add(@RequestBody CourSection courSection)
     {
-        return toAjax(courSectionService.insertCourSection(courSection));
+        try {
+            int res = courSectionService.insertCourSection(courSection);
+            return AjaxResult.success(res);
+        } catch (Exception e) {
+            return AjaxResult.error(500, "新增章节失败");
+        }
     }
 
     /**
@@ -89,7 +94,12 @@ public class CourSectionController extends BaseController
     @PutMapping
     public AjaxResult edit(@RequestBody CourSection courSection)
     {
-        return toAjax(courSectionService.updateCourSection(courSection));
+        try {
+            int res = courSectionService.updateCourSection(courSection);
+            return AjaxResult.success(res);
+        } catch (Exception e) {
+            return AjaxResult.error(500, "修改章节失败");
+        }
     }
 
     /**
@@ -100,6 +110,11 @@ public class CourSectionController extends BaseController
 	@DeleteMapping("/{ids}")
     public AjaxResult remove(@PathVariable Integer[] ids)
     {
-        return toAjax(courSectionService.deleteCourSectionByIds(ids));
+        try {
+            int res = courSectionService.deleteCourSectionByIds(ids);
+            return AjaxResult.success(res);
+        } catch (Exception e) {
+            return AjaxResult.error(500, "删除章节失败");
+        }
     }
 }

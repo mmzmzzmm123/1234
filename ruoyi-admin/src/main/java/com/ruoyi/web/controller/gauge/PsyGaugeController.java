@@ -84,7 +84,12 @@ public class PsyGaugeController extends BaseController
     {
 
         psyGauge.setCreateBy(getUsername());
-        return toAjax(psyGaugeService.insertPsyGauge(psyGauge));
+        try {
+            int res = psyGaugeService.insertPsyGauge(psyGauge);
+            return AjaxResult.success(res);
+        } catch (Exception e) {
+            return AjaxResult.error(500, "新增心理测评失败");
+        }
     }
 
     /**
@@ -96,7 +101,12 @@ public class PsyGaugeController extends BaseController
     public AjaxResult edit(@RequestBody PsyGauge psyGauge)
     {
         psyGauge.setUpdateBy(getUsername());
-        return toAjax(psyGaugeService.updatePsyGauge(psyGauge));
+        try {
+            int res = psyGaugeService.updatePsyGauge(psyGauge);
+            return AjaxResult.success(res);
+        } catch (Exception e) {
+            return AjaxResult.error(500, "新增心理测评失败");
+        }
     }
 
     /**
@@ -107,6 +117,11 @@ public class PsyGaugeController extends BaseController
 	@DeleteMapping("/{ids}")
     public AjaxResult remove(@PathVariable Integer[] ids)
     {
-        return toAjax(psyGaugeService.deletePsyGaugeByIds(ids));
+        try {
+            int res = psyGaugeService.deletePsyGaugeByIds(ids);
+            return AjaxResult.success(res);
+        } catch (Exception e) {
+            return AjaxResult.error(500, "新增心理测评失败");
+        }
     }
 }

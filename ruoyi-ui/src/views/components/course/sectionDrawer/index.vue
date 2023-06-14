@@ -98,11 +98,11 @@
       <!-- 添加或修改章节对话框 -->
       <el-dialog :title="title" :visible.sync="open" width="800px" append-to-body>
         <el-form ref="form" :model="form" :rules="rules" label-width="80px">
-          <el-form-item label="章节编号" prop="sectionId">
-            <el-input v-model="form.sectionId" placeholder="请输入章节编号" />
-          </el-form-item>
           <el-form-item label="章节题目" prop="topic">
             <el-input v-model="form.topic" placeholder="请输入章节题目" />
+          </el-form-item>
+          <el-form-item label="章节编号" prop="sectionId">
+            <el-input v-model="form.sectionId" placeholder="请输入章节编号" />
           </el-form-item>
           <el-form-item label="章节时长" prop="duration">
             <el-input v-model.number="form.duration" placeholder="请输入章节时长（以秒为单位的数字）" />
@@ -111,7 +111,7 @@
           <el-row>
             <el-col :span="12">
               <el-form-item label="章节类型" prop="type">
-                <el-select v-model="form.type" placeholder="请选择章节类型" :disabled="course.payType === 1">
+                <el-select v-model="form.type" placeholder="请选择章节类型" :disabled="course && course.payType === 1">
                   <el-option
                     v-for="dict in dict.type.course_section_type"
                     :key="dict.value"
@@ -210,7 +210,6 @@ export default {
       // 表单校验
       rules: {
         sectionId: [
-          { required: true, message: "章节编号不能为空", trigger: "blur" }
         ],
         topic: [
           { required: true, message: "章节题目不能为空", trigger: "blur" }

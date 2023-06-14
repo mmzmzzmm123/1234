@@ -78,7 +78,12 @@ public class CourCourseBannerConfigController extends BaseController
     @PostMapping
     public AjaxResult add(@RequestBody CourCourseBannerConfig courCourseBannerConfig)
     {
-        return toAjax(courCourseBannerConfigService.insertCourCourseBannerConfig(courCourseBannerConfig));
+        try {
+            int res = courCourseBannerConfigService.insertCourCourseBannerConfig(courCourseBannerConfig);
+            return AjaxResult.success(res);
+        } catch (Exception e) {
+            return AjaxResult.error(500, "新增课程banner配置失败");
+        }
     }
 
     /**
@@ -89,7 +94,12 @@ public class CourCourseBannerConfigController extends BaseController
     @PutMapping
     public AjaxResult edit(@RequestBody CourCourseBannerConfig courCourseBannerConfig)
     {
-        return toAjax(courCourseBannerConfigService.updateCourCourseBannerConfig(courCourseBannerConfig));
+        try {
+            int res = courCourseBannerConfigService.updateCourCourseBannerConfig(courCourseBannerConfig);
+            return AjaxResult.success(res);
+        } catch (Exception e) {
+            return AjaxResult.error(500, "修改课程banner配置失败");
+        }
     }
 
     /**
@@ -100,6 +110,11 @@ public class CourCourseBannerConfigController extends BaseController
 	@DeleteMapping("/{ids}")
     public AjaxResult remove(@PathVariable Integer[] ids)
     {
-        return toAjax(courCourseBannerConfigService.deleteCourCourseBannerConfigByIds(ids));
+        try {
+            int res = courCourseBannerConfigService.deleteCourCourseBannerConfigByIds(ids);
+            return AjaxResult.success(res);
+        } catch (Exception e) {
+            return AjaxResult.error(500, "删除课程banner配置失败");
+        }
     }
 }

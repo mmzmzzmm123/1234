@@ -77,7 +77,12 @@ public class CourCourseClassController extends BaseController
     @PostMapping
     public AjaxResult add(@RequestBody CourCourseClass courCourseClass)
     {
-        return toAjax(courCourseClassService.insertCourCourseClass(courCourseClass));
+        try {
+            int res = courCourseClassService.insertCourCourseClass(courCourseClass);
+            return AjaxResult.success(res);
+        } catch (Exception e) {
+            return AjaxResult.error(500, "新增课程类型失败");
+        }
     }
 
     /**
@@ -88,7 +93,12 @@ public class CourCourseClassController extends BaseController
     @PutMapping
     public AjaxResult edit(@RequestBody CourCourseClass courCourseClass)
     {
-        return toAjax(courCourseClassService.updateCourCourseClass(courCourseClass));
+        try {
+            int res = courCourseClassService.updateCourCourseClass(courCourseClass);
+            return AjaxResult.success(res);
+        } catch (Exception e) {
+            return AjaxResult.error(500, "修改课程类型失败");
+        }
     }
 
     /**
@@ -99,6 +109,11 @@ public class CourCourseClassController extends BaseController
 	@DeleteMapping("/{ids}")
     public AjaxResult remove(@PathVariable Integer[] ids)
     {
-        return toAjax(courCourseClassService.deleteCourCourseClassByIds(ids));
+        try {
+            int res = courCourseClassService.deleteCourCourseClassByIds(ids);
+            return AjaxResult.success(res);
+        } catch (Exception e) {
+            return AjaxResult.error(500, "删除课程类型失败");
+        }
     }
 }

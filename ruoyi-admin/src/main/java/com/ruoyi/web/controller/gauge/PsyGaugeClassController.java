@@ -77,7 +77,12 @@ public class PsyGaugeClassController extends BaseController
     @PostMapping
     public AjaxResult add(@RequestBody PsyGaugeClass psyGaugeClass)
     {
-        return toAjax(psyGaugeClassService.insertPsyGaugeClass(psyGaugeClass));
+        try {
+            int res = psyGaugeClassService.insertPsyGaugeClass(psyGaugeClass);
+            return AjaxResult.success(res);
+        } catch (Exception e) {
+            return AjaxResult.error(500, "新增测评分类失败");
+        }
     }
 
     /**
@@ -88,7 +93,12 @@ public class PsyGaugeClassController extends BaseController
     @PutMapping
     public AjaxResult edit(@RequestBody PsyGaugeClass psyGaugeClass)
     {
-        return toAjax(psyGaugeClassService.updatePsyGaugeClass(psyGaugeClass));
+        try {
+            int res = psyGaugeClassService.updatePsyGaugeClass(psyGaugeClass);
+            return AjaxResult.success(res);
+        } catch (Exception e) {
+            return AjaxResult.error(500, "修改测评分类失败");
+        }
     }
 
     /**
@@ -99,6 +109,11 @@ public class PsyGaugeClassController extends BaseController
 	@DeleteMapping("/{ids}")
     public AjaxResult remove(@PathVariable Integer[] ids)
     {
-        return toAjax(psyGaugeClassService.deletePsyGaugeClassByIds(ids));
+        try {
+            int res = psyGaugeClassService.deletePsyGaugeClassByIds(ids);
+            return AjaxResult.success(res);
+        } catch (Exception e) {
+            return AjaxResult.error(500, "删除测评分类失败");
+        }
     }
 }

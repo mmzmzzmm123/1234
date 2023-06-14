@@ -77,7 +77,12 @@ public class CourUserCourseSectionController extends BaseController
     @PostMapping
     public AjaxResult add(@RequestBody CourUserCourseSection courUserCourseSection)
     {
-        return toAjax(courUserCourseSectionService.insertCourUserCourseSection(courUserCourseSection));
+        try {
+            int res = courUserCourseSectionService.insertCourUserCourseSection(courUserCourseSection);
+            return AjaxResult.success(res);
+        } catch (Exception e) {
+            return AjaxResult.error(500, "新增用户-课程-章节关系失败");
+        }
     }
 
     /**
@@ -88,7 +93,12 @@ public class CourUserCourseSectionController extends BaseController
     @PutMapping
     public AjaxResult edit(@RequestBody CourUserCourseSection courUserCourseSection)
     {
-        return toAjax(courUserCourseSectionService.updateCourUserCourseSection(courUserCourseSection));
+        try {
+            int res = courUserCourseSectionService.updateCourUserCourseSection(courUserCourseSection);
+            return AjaxResult.success(res);
+        } catch (Exception e) {
+            return AjaxResult.error(500, "修改用户-课程-章节关系失败");
+        }
     }
 
     /**
@@ -99,6 +109,11 @@ public class CourUserCourseSectionController extends BaseController
 	@DeleteMapping("/{ids}")
     public AjaxResult remove(@PathVariable Integer[] ids)
     {
-        return toAjax(courUserCourseSectionService.deleteCourUserCourseSectionByIds(ids));
+        try {
+            int res = courUserCourseSectionService.deleteCourUserCourseSectionByIds(ids);
+            return AjaxResult.success(res);
+        } catch (Exception e) {
+            return AjaxResult.error(500, "删除用户-课程-章节关系失败");
+        }
     }
 }

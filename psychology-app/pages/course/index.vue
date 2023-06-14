@@ -4,13 +4,10 @@
 			<img class="icon" src="/static/icon/search.png" />
 			<span class="txt">搜索</span>
 		</view>
-		<view class="banner-box index-margin">
-			<swiper class="ad-swiper" indicator-dots circular indicator-color="rgb(255, 255, 255, .5)"
-       indicator-active-color="#FFFFFF">
-				<swiper-item v-for="(item, index) in bannerList" :key="index">
-					<image class="banner-img" :src="item.bannerUrl" @tap="tocourse(item.linkUrl)" />
-				</swiper-item>
-			</swiper>
+		<view class="banner-box index-margin">			
+      <view v-for="(item, index) in bannerList" :key="index">
+        <image class="banner-img" :src="item.bannerUrl" @tap="tocourse(item.linkUrl)" />
+      </view>			
 		</view>
 		<view class="class-box index-margin">
 			<view class="item" v-for="item in classList" @tap="toClass(item.id)">
@@ -18,14 +15,7 @@
 				<view>{{ item.name }}</view>
 			</view>
 		</view>
-		<!-- <view class="banner-box banner-box1 index-margin">
-			<swiper class="ad-swiper" indicator-dots circular indicator-color="rgb(255, 255, 255, .5)"
-       indicator-active-color="#FFFFFF">
-				<swiper-item v-for="(item, index) in bannerList1" :key="index">
-					<image class="banner-img" :src="item.bannerUrl" @tap="tocourse(item.linkUrl)" />
-				</swiper-item>
-			</swiper>
-		</view> -->
+    
 		<view class="img-box index-margin">
 			<view class="index-title">
 				限时福利
@@ -178,7 +168,6 @@
 
 	page {
 		background-color: #F8F8F8;
-		padding-left: 24upx;
 
 		.search-box {
 			margin: 32upx 24upx;
@@ -206,7 +195,7 @@
 		.banner-box {
 			.banner-img {
 				width: 100%;
-				height: 260upx;
+				height: 320upx;
 			}
 
 			uni-swiper {

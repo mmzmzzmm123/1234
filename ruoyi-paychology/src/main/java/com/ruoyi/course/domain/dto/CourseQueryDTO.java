@@ -13,4 +13,6 @@ public class CourseQueryDTO extends BaseEntity {
     private String authorValue;
     private BigDecimal lowPrice;
     private BigDecimal highPrice;
+
+    private Integer onSaleValue;
 }

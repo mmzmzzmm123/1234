@@ -86,17 +86,17 @@
             "https" : false,
             "proxy" : {
                 "/app" : {
-                    "target" : "http://192.168.137.1:8080",
+                    "target" : "http://localhost:8080",
                     "changeOrigin" : true,
                     "secure" : false
                 },
                 "/profile" : {
-                    "target" : "http://192.168.137.1:8080",
+                    "target" : "http://localhost:8080",
                     "changeOrigin" : true,
                     "secure" : false
                 },
                 "/weixin" : {
-                    "target" : "http://192.168.137.1:8080",
+                    "target" : "http://localhost:8080",
                     "changeOrigin" : true,
                     "secure" : false,
                     "pathRewirte" : {

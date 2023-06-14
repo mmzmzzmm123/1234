@@ -154,6 +154,48 @@
         "navigationBarTitleText": "三束光"
 			}
 		},
+    {
+    	"path": "pages/consult/index",
+    	"style": {
+    		"navigationStyle": "custom",
+        "navigationBarTitleText": "知我咨询"
+    	}
+    },
+    {
+    	"path": "pages/consult/consultant",
+    	"style": {
+    		"navigationStyle": "custom",
+        "navigationBarTitleText": "知我咨询"
+    	}
+    },
+    {
+    	"path": "pages/consult/orderConfirm",
+    	"style": {
+    		"navigationStyle": "custom",
+        "navigationBarTitleText": "知我咨询"
+    	}
+    },
+    {
+    	"path": "pages/consult/order",
+    	"style": {
+    		"navigationStyle": "custom",
+        "navigationBarTitleText": "知我咨询"
+    	}
+    },
+    {
+    	"path": "pages/consult/orderInfo",
+    	"style": {
+    		"navigationStyle": "custom",
+        "navigationBarTitleText": "知我咨询"
+    	}
+    },
+    {
+    	"path": "pages/consult/user",
+    	"style": {
+    		"navigationStyle": "custom",
+        "navigationBarTitleText": "知我咨询"
+    	}
+    },
 		{
 			"path": "pages/logincallback",
 			"style": {

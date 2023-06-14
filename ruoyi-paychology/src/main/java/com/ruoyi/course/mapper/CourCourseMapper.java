@@ -29,7 +29,6 @@ public interface CourCourseMapper
      */
     public CourCourse selectCourCourseByType(Integer typeId);
 
-    public CourCourse selectCourCourseByCourseId(String courseId);
 
     /**
      * 查询课程列表

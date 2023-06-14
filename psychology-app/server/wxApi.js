@@ -120,3 +120,22 @@ export function wxPay(wxParam, successCallback) {
 	    onBridgeReady(wxParam, successCallback);
 	}
 }
+
+
+export function wxJSConfig(url) {
+  let params = {
+    url
+  }
+  return new Promise((resolve, reject) => {
+    httprequest
+    .post(
+      `/app/wxJS/config`, params
+    )
+    .then((res) => {
+      resolve(res);
+    })
+    .catch((err) => {
+      reject(err);
+    });
+  })
+}

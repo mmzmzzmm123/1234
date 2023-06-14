@@ -1,6 +1,8 @@
 ######################################################################
 # Build Tools
-
+.DS_Store
+node_modules
+/dist
 .gradle
 /build/
 !gradle/wrapper/gradle-wrapper.jar
@@ -38,9 +40,18 @@ nbdist/
 
 ######################################################################
 # Others
+.hbuilderx
 *.log
 *.xml.versionsBackup
 *.swp
+.vscode
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw*
+package-lock.json
+yarn.lock
 
 !*/build/*.java
 !*/build/*.html

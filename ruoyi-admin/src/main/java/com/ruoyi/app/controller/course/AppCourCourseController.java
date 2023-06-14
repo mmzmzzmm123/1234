@@ -59,6 +59,7 @@ public class AppCourCourseController extends BaseController
     public TableDataInfo list(@RequestBody CourCourse courCourse)
     {
         startPage();
+        courCourse.setOnSale(CourConstant.COUR_COURSE_ON_SALE);
         List<CourCourse> list = courCourseService.selectCourCourseList(courCourse);
         return getDataTable(list);
     }
@@ -69,7 +70,11 @@ public class AppCourCourseController extends BaseController
     @PostMapping("/search")
     @ApiOperation("查询课程列表")
     public AjaxResult getList(@RequestParam String searchValue)    {
-        List<CourCourse> list = courCourseService.selectCourCourseList(null);
+        // 只查询已上架的课程
+        CourCourse course = new CourCourse();
+        course.setOnSale(CourConstant.COUR_COURSE_ON_SALE);
+        List<CourCourse> list = courCourseService.selectCourCourseList(course);
+
         list = list.stream()
                 .filter(item -> item.getName().contains(searchValue) || item.getAuthor().contains(searchValue))
                 .collect(Collectors.toList());
@@ -122,14 +127,41 @@ public class AppCourCourseController extends BaseController
     }
 
     /**
-     * 查询课程信息
+     * 查询课程信息，与用户无关的信息
      */
 //    @PreAuthorize("@ss.hasPermi('course:course:query')")
     @PostMapping(value = "/getInfo")
     @ApiOperation("查询课程信息")
-    public AjaxResult getInfo(@RequestParam(value = "id") Integer id)
+    public AjaxResult getInfo(@RequestParam(value = "id") Integer courseId)
     {
-        return AjaxResult.success(courCourseService.selectCourCourseById(id));
+        CourCourse course = courCourseService.selectCourCourseById(courseId);
+        if (course == null) {
+            return AjaxResult.error("查询课程详情失败");
+        }
+        // 查询课程的学习人数
+        CourUserCourseSection courUserCourseSection = new CourUserCourseSection();
+        courUserCourseSection.setCourseId(courseId);
+        List<CourUserCourseSection> courUserCourseSectionList = courUserCourseSectionService.selectCourUserCourseSectionList(courUserCourseSection);
+
+        CourseVO courseVO = new CourseVO();
+        BeanUtils.copyProperties(course, courseVO);
+        courseVO.setStudyNum(courUserCourseSectionList.size());
+
+        // 增加章节列表
+        CourSection courSection = CourSection.builder()
+                .courseId(courseId)
+                .build();
+        List<CourSection> sectionList = courSectionService.selectCourSectionList(courSection);
+        // 查询章节的学习情况
+        List<SectionVO> sectionVOList = new ArrayList<>();
+        for (CourSection section: sectionList) {
+            SectionVO sectionVO = new SectionVO();
+            BeanUtils.copyProperties(section, sectionVO);
+            sectionVOList.add(sectionVO);
+        }
+        courseVO.setSectionList(sectionVOList);
+
+        return AjaxResult.success(courseVO);
     }
 
     /**

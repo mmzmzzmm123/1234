@@ -9,6 +9,18 @@ export default {
 	    return [];
 	  }
 	},
+  //获取与用户无法的课程基本信息
+  getCourseBaseInfo: async (courseId) => {
+    let res = await httprequest.post(`/app/course/getInfo?id=${courseId}`);
+    if (res.code == 200) {
+      return res.data;
+    } else {
+      uni.showToast({
+        icon: "error",
+        title: "获取课程基本信出错",
+      });
+    }
+  },
     //获取课程详情
     getCourseInfo: async (userId, courseId) => {
       let res = await httprequest.post(`/app/course/detail?userId=${userId}&courseId=${courseId}`);

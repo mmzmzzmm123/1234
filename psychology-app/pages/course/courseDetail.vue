@@ -64,6 +64,7 @@ import {
 import loginServer from '@/server/login'
 import videoBox from "@/components/course/videoBox.vue"
 import audioBox from "@/components/course/audioBox.vue"
+import wxJS from "@/server/wxJS.js"
 export default {
   components: { cartTabBar,cartBox,customCatalogueList, videoBox, audioBox },
   data() {
@@ -80,11 +81,18 @@ export default {
   },
   async created() {
     this.userInfo = uni.getStorageSync("userInfo");
+    this.courseId = parseInt(utils.getParam(location.href, "courseId")||utils.getParam(location.href, "id"));
     if (!this.userInfo) {
+      this.courseInfo = await courseServer.getCourseBaseInfo(this.courseId)||{};
+      this.catalogueList = this.courseInfo.sectionList;
+      this.courseInfo.totalDuration = 0;
+      this.catalogueList.forEach(item => {
+        this.courseInfo.totalDuration+= item.duration||0;
+      });
+      
       this.openLoginConfirm()
       return
-    }
-    this.courseId = parseInt(utils.getParam(location.href, "courseId")||utils.getParam(location.href, "id"));
+    }    
 
     this.courseInfo = await courseServer.getCourseInfo(this.userInfo.userId, this.courseId)||{};
     this.catalogueList = this.courseInfo.sectionList;
@@ -93,6 +101,8 @@ export default {
       this.courseInfo.totalDuration+= item.duration||0;
     });
     this.cartBoxShow = utils.getParam(location.href, "payOrder") == 1;
+    
+    this.share()
   },
   methods: {
     catalogueItemClick(item) {
@@ -124,6 +134,15 @@ export default {
     },
     openLoginConfirm() {
     	this.$refs.popup.open();
+    },
+    share() {
+      const title = this.courseInfo.name
+      const desc = this.courseInfo.detail
+      const link = window.location.href
+      const img = this.courseInfo.iconUrl
+      const url = window.location.href
+      console.log('courseInfo: ', this.courseInfo)
+      wxJS.getConfig(title, desc, link, img, url);
     }
   },
 };

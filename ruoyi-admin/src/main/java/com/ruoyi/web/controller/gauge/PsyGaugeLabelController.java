@@ -77,7 +77,12 @@ public class PsyGaugeLabelController extends BaseController
     @PostMapping
     public AjaxResult add(@RequestBody PsyGaugeLabel psyGaugeLabel)
     {
-        return toAjax(psyGaugeLabelService.insertPsyGaugeLabel(psyGaugeLabel));
+        try {
+            int res = psyGaugeLabelService.insertPsyGaugeLabel(psyGaugeLabel);
+            return AjaxResult.success(res);
+        } catch (Exception e) {
+            return AjaxResult.error(500, "新增测评标签失败");
+        }
     }
 
     /**
@@ -88,7 +93,12 @@ public class PsyGaugeLabelController extends BaseController
     @PutMapping
     public AjaxResult edit(@RequestBody PsyGaugeLabel psyGaugeLabel)
     {
-        return toAjax(psyGaugeLabelService.updatePsyGaugeLabel(psyGaugeLabel));
+        try {
+            int res = psyGaugeLabelService.updatePsyGaugeLabel(psyGaugeLabel);
+            return AjaxResult.success(res);
+        } catch (Exception e) {
+            return AjaxResult.error(500, "修改测评标签失败");
+        }
     }
 
     /**
@@ -99,6 +109,11 @@ public class PsyGaugeLabelController extends BaseController
 	@DeleteMapping("/{ids}")
     public AjaxResult remove(@PathVariable Integer[] ids)
     {
-        return toAjax(psyGaugeLabelService.deletePsyGaugeLabelByIds(ids));
+        try {
+            int res = psyGaugeLabelService.deletePsyGaugeLabelByIds(ids);
+            return AjaxResult.success(res);
+        } catch (Exception e) {
+            return AjaxResult.error(500, "删除测评标签失败");
+        }
     }
 }

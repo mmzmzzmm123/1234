@@ -71,7 +71,7 @@ export default {
 				  title: "支付成功",
 				});
 				uni.navigateTo({
-					url: "/pages/course/learningCourse?id=" + this.courseInfo.id,
+					url: "/pages/course/courseDetail?id=" + this.courseInfo.id,
 				});
 			})
 		}	  
