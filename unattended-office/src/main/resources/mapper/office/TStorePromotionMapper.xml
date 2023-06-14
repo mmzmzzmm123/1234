@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.office.mapper.TStorePromotionMapper">
+    
+    <resultMap type="TStorePromotion" id="TStorePromotionResult">
+        <result property="id"    column="id"    />
+        <result property="name"    column="name"    />
+        <result property="couponType"    column="coupon_type"    />
+        <result property="merchantId"    column="merchant_id"    />
+        <result property="storeId"    column="store_id"    />
+        <result property="standardPrice"    column="standard_price"    />
+        <result property="discountPrice"    column="discount_price"    />
+        <result property="maxMinute"    column="max_minute"    />
+        <result property="maxHold"    column="max_hold"    />
+        <result property="validType"    column="valid_type"    />
+        <result property="validDays"    column="valid_days"    />
+        <result property="startDate"    column="start_date"    />
+        <result property="endDate"    column="end_date"    />
+        <result property="weekDays"    column="week_days"    />
+        <result property="status"    column="status"    />
+        <result property="remark"    column="remark"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+    </resultMap>
+
+    <sql id="selectTStorePromotionVo">
+        select id, name, coupon_type, merchant_id, store_id, standard_price, discount_price, max_minute, max_hold, valid_type, valid_days, start_date, end_date, week_days, status, remark, create_by, create_time, update_by, update_time from t_store_promotion
+    </sql>
+
+    <select id="selectTStorePromotionList" parameterType="TStorePromotion" resultMap="TStorePromotionResult">
+        <include refid="selectTStorePromotionVo"/>
+        <where>  
+            <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
+            <if test="couponType != null  and couponType != ''"> and coupon_type = #{couponType}</if>
+        </where>
+    </select>
+    
+    <select id="selectTStorePromotionById" parameterType="Long" resultMap="TStorePromotionResult">
+        <include refid="selectTStorePromotionVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertTStorePromotion" parameterType="TStorePromotion" useGeneratedKeys="true" keyProperty="id">
+        insert into t_store_promotion
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="name != null and name != ''">name,</if>
+            <if test="couponType != null and couponType != ''">coupon_type,</if>
+            <if test="merchantId != null">merchant_id,</if>
+            <if test="storeId != null and storeId != ''">store_id,</if>
+            <if test="standardPrice != null">standard_price,</if>
+            <if test="discountPrice != null">discount_price,</if>
+            <if test="maxMinute != null">max_minute,</if>
+            <if test="maxHold != null">max_hold,</if>
+            <if test="validType != null">valid_type,</if>
+            <if test="validDays != null">valid_days,</if>
+            <if test="startDate != null">start_date,</if>
+            <if test="endDate != null">end_date,</if>
+            <if test="weekDays != null">week_days,</if>
+            <if test="status != null">status,</if>
+            <if test="remark != null">remark,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="name != null and name != ''">#{name},</if>
+            <if test="couponType != null and couponType != ''">#{couponType},</if>
+            <if test="merchantId != null">#{merchantId},</if>
+            <if test="storeId != null and storeId != ''">#{storeId},</if>
+            <if test="standardPrice != null">#{standardPrice},</if>
+            <if test="discountPrice != null">#{discountPrice},</if>
+            <if test="maxMinute != null">#{maxMinute},</if>
+            <if test="maxHold != null">#{maxHold},</if>
+            <if test="validType != null">#{validType},</if>
+            <if test="validDays != null">#{validDays},</if>
+            <if test="startDate != null">#{startDate},</if>
+            <if test="endDate != null">#{endDate},</if>
+            <if test="weekDays != null">#{weekDays},</if>
+            <if test="status != null">#{status},</if>
+            <if test="remark != null">#{remark},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateTStorePromotion" parameterType="TStorePromotion">
+        update t_store_promotion
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="name != null and name != ''">name = #{name},</if>
+            <if test="couponType != null and couponType != ''">coupon_type = #{couponType},</if>
+            <if test="merchantId != null">merchant_id = #{merchantId},</if>
+            <if test="storeId != null and storeId != ''">store_id = #{storeId},</if>
+            <if test="standardPrice != null">standard_price = #{standardPrice},</if>
+            <if test="discountPrice != null">discount_price = #{discountPrice},</if>
+            <if test="maxMinute != null">max_minute = #{maxMinute},</if>
+            <if test="maxHold != null">max_hold = #{maxHold},</if>
+            <if test="validType != null">valid_type = #{validType},</if>
+            <if test="validDays != null">valid_days = #{validDays},</if>
+            <if test="startDate != null">start_date = #{startDate},</if>
+            <if test="endDate != null">end_date = #{endDate},</if>
+            <if test="weekDays != null">week_days = #{weekDays},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="remark != null">remark = #{remark},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteTStorePromotionById" parameterType="Long">
+        delete from t_store_promotion where id = #{id}
+    </delete>
+
+    <delete id="deleteTStorePromotionByIds" parameterType="String">
+        delete from t_store_promotion where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

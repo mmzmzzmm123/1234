@@ -14,11 +14,15 @@ import com.ruoyi.common.annotation.Log;
 import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.utils.SecurityUtils;
 import com.ruoyi.office.domain.TRoomOrder;
+import com.ruoyi.office.domain.TStorePromotion;
 import com.ruoyi.office.domain.TWxUserPackage;
+import com.ruoyi.office.domain.TWxUserPromotion;
 import com.ruoyi.office.domain.enums.OfficeEnum;
 import com.ruoyi.office.domain.vo.WxPayCallback;
 import com.ruoyi.office.service.ITRoomOrderService;
+import com.ruoyi.office.service.ITStorePromotionService;
 import com.ruoyi.office.service.ITWxUserPackageService;
+import com.ruoyi.office.service.ITWxUserPromotionService;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.logging.LogFactory;
 import org.aspectj.weaver.loadtime.Aj;
@@ -28,11 +32,13 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/office/api")
@@ -171,24 +177,52 @@ public class ApiController {
         System.out.println(230 / 100 * 100);
     }
 
+    @Autowired
+    ITWxUserPromotionService userPromotionService;
+
+    @Autowired
+    ITStorePromotionService storePromotionService;
+
     /**
-     * 获取分享码
+     * 获取可用优惠券
+     */
+    @ApiOperation("获取可用优惠券")
+    @GetMapping("/promotion")
+    public AjaxResult availablePromotion() {
+        long userId = SecurityUtils.getLoginUser().getWxUser().getId();
+
+        List<TStorePromotion> res = new ArrayList<>();
+
+        List<TStorePromotion> storePromotions = storePromotionService.selectTStorePromotionList(new TStorePromotion());
+        List<TWxUserPromotion> userPromotions = userPromotionService.selectTWxUserPromotionList(new TWxUserPromotion());
+        for (TStorePromotion storePromotion : storePromotions) {
+            boolean ex = false;
+            for (TWxUserPromotion userPromotion : userPromotions) {
+                if (storePromotion.getId() == userPromotion.getCouponId()) {
+                    ex = true;
+                    break;
+                }
+            }
+            if (!ex)
+                res.add(storePromotion);
+        }
+        
+        return AjaxResult.success(res);
+    }
+
+    /**
+     * 领取优惠券
      *
      * @return
      */
-   /* @ApiOperation("获取我的订单")
-    @GetMapping("/order")
-    public AjaxResult getMineOrder() {
+    @ApiOperation("领取优惠券")
+    @PostMapping("/promotion")
+    public AjaxResult promotion(@RequestBody TStorePromotion tStorePromotion) {
         long userId = SecurityUtils.getLoginUser().getWxUser().getId();
+        long promotionId = tStorePromotion.getId();
 
-        TRoomOrder roomOrderQry = new TRoomOrder();
-        roomOrderQry.setUserId(userId);
-        List<TRoomOrder> roomOrderList = roomOrderService.selectTRoomOrderList(roomOrderQry);
+        userPromotionService.receivePromotion(userId, promotionId);
 
-        TWxUserPackage userPackage = new TWxUserPackage();
-        userPackage.setCreateBy(userId + "");
-        final List<TWxUserPackage> tWxUserPackages = userPackageService.selectTWxUserPackageList(userPackage);
-
-        return AjaxResult.success(new String(QrCodeUtil.generatePng(url, new QrConfig())));
-    }*/
+        return AjaxResult.success();
+    }
 }
