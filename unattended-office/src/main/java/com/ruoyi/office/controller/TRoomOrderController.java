@@ -3,6 +3,8 @@ package com.ruoyi.office.controller;
 import java.util.List;
 import javax.servlet.http.HttpServletResponse;
 
+import cn.hutool.extra.qrcode.QrCodeUtil;
+import cn.hutool.extra.qrcode.QrConfig;
 import com.ruoyi.common.utils.SecurityUtils;
 import com.ruoyi.office.domain.vo.*;
 import io.swagger.annotations.ApiOperation;
@@ -41,10 +43,11 @@ public class TRoomOrderController extends BaseController {
     /**
      * 查询房间占用（点支付时再次校验可用性并改变状态，支付失败回滚）列表
      */
-    @PreAuthorize("@ss.hasPermi('office:roomorder:list')")
+//    @PreAuthorize("@ss.hasPermi('office:roomorder:list')")
+    @ApiOperation("预约订单、记录")
     @GetMapping("/list")
     public TableDataInfo list(TRoomOrder tRoomOrder) {
-        if (!SecurityUtils.getUsername().equalsIgnoreCase("admin"))
+//        if (!SecurityUtils.getUsername().equalsIgnoreCase("admin"))
             tRoomOrder.setCreateBy(SecurityUtils.getUserId() + "");
         startPage();
         List<TRoomOrder> list = tRoomOrderService.selectTRoomOrderList(tRoomOrder);
@@ -66,7 +69,8 @@ public class TRoomOrderController extends BaseController {
     /**
      * 获取房间占用（点支付时再次校验可用性并改变状态，支付失败回滚）详细信息
      */
-    @PreAuthorize("@ss.hasPermi('office:roomorder:query')")
+    @ApiOperation("根据id获取订单")
+//    @PreAuthorize("@ss.hasPermi('office:roomorder:query')")
     @GetMapping(value = "/{id}")
     public AjaxResult getInfo(@PathVariable("id") Long id) {
         return success(tRoomOrderService.selectTRoomOrderById(id));
@@ -157,10 +161,21 @@ public class TRoomOrderController extends BaseController {
      * @return
      */
     @ApiOperation("续单,校验是否有进行中的订单，并返回")
-    @PostMapping("/continue")
+    @GetMapping("/continue")
     public AjaxResult continueOrder() {
         TRoomOrder order = tRoomOrderService.continueOrder(SecurityUtils.getLoginUser().getWxUser().getId());
         return AjaxResult.success(order);
     }
+
+    @ApiOperation("订单分享")
+    @GetMapping("/share/{id}")
+    public AjaxResult shareOrder(@PathVariable Long orderId) {
+        String unionId = SecurityUtils.getLoginUser().getWxUser().getUnionId();
+
+        String url = "https://www.btjingling.com/#/pages/login/signup/signup?data=" + java.net.URLEncoder.encode(unionId) + ";" + orderId;
+
+        return AjaxResult.success(new String(QrCodeUtil.generatePng(url, new QrConfig())));
+    }
+
 
 }

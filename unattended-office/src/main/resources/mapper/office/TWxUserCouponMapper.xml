@@ -7,6 +7,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <resultMap type="TWxUserCoupon" id="TWxUserCouponResult">
         <result property="id"    column="id"    />
         <result property="userId"    column="user_id"    />
+        <result property="merchantId"    column="merchant_id"    />
         <result property="storeId"    column="store_id"    />
         <result property="couponId"    column="coupon_id"    />
         <result property="couponName"    column="coupon_name"    />
@@ -29,13 +30,14 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </resultMap>
 
     <sql id="selectTWxUserCouponVo">
-        select id, user_id, store_id, coupon_id, coupon_name, original_price, price, card_type, num_can_use, one_time_one_day, max_minute_once, minute_left, start_date, end_date, week_days, status, remark, create_by, create_time, update_by, update_time from t_wx_user_coupon
+        select id, user_id, merchant_id, store_id, coupon_id, coupon_name, original_price, price, card_type, num_can_use, one_time_one_day, max_minute_once, minute_left, start_date, end_date, week_days, status, remark, create_by, create_time, update_by, update_time from t_wx_user_coupon
     </sql>
 
     <select id="selectTWxUserCouponList" parameterType="TWxUserCoupon" resultMap="TWxUserCouponResult">
         <include refid="selectTWxUserCouponVo"/>
         <where>  
             <if test="userId != null "> and user_id = #{userId}</if>
+            <if test="merchantId != null "> and merchant_id = #{merchantId}</if>
             <if test="storeId != null  "> and store_id = #{storeId}</if>
             <if test="couponId != null "> and coupon_id = #{couponId}</if>
             <if test="couponName != null  and couponName != ''"> and coupon_name like concat('%', #{couponName}, '%')</if>
@@ -62,6 +64,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         insert into t_wx_user_coupon
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="userId != null">user_id,</if>
+            <if test="merchantId != null "> merchant_id,</if>
             <if test="storeId != null">store_id,</if>
             <if test="couponId != null">coupon_id,</if>
             <if test="couponName != null">coupon_name,</if>
@@ -84,6 +87,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
          </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="userId != null">#{userId},</if>
+            <if test="merchantId != null "> #{merchantId},</if>
             <if test="storeId != null">#{storeId},</if>
             <if test="couponId != null">#{couponId},</if>
             <if test="couponName != null">#{couponName},</if>
@@ -110,6 +114,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         update t_wx_user_coupon
         <trim prefix="SET" suffixOverrides=",">
             <if test="userId != null">user_id = #{userId},</if>
+            <if test="merchantId != null "> merchant_id = #{merchantId},</if>
             <if test="storeId != null">store_id = #{storeId},</if>
             <if test="couponId != null">coupon_id = #{couponId},</if>
             <if test="couponName != null">coupon_name = #{couponName},</if>

@@ -13,6 +13,7 @@ import com.ruoyi.common.exception.ServiceException;
 import com.ruoyi.common.exception.user.UserPasswordNotMatchException;
 import com.ruoyi.common.utils.DateUtils;
 import com.ruoyi.common.utils.MessageUtils;
+import com.ruoyi.common.utils.ip.IpUtils;
 import com.ruoyi.office.domain.vo.MerchantUserVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -124,8 +125,20 @@ public class TWxUserServiceImpl extends ServiceImpl<TWxUserMapper, TWxUser> impl
     public void regWithShare(String unionId, String inviteCode) {
         UpdateWrapper<TWxUser> updateWrapper = new UpdateWrapper<>();
         updateWrapper.lambda().eq(TWxUser::getUnionId, unionId);
-        updateWrapper.lambda().set(TWxUser::getShareCode, inviteCode);
-        baseMapper.update(null, updateWrapper);
+        final TWxUser wxUser = baseMapper.selectOne(updateWrapper);
+        if (wxUser != null) {
+            updateWrapper.lambda().set(TWxUser::getShareCode, inviteCode)
+                    .set(TWxUser::getLoginIp, IpUtils.getIpAddr())
+                    .set(TWxUser::getLoginDate, DateUtils.getNowDate());
+            tWxUserMapper.update(null, updateWrapper);
+        } else {
+            TWxUser newUser = new TWxUser();
+            newUser.setUnionId(unionId);
+            newUser.setShareCode(inviteCode);
+            newUser.setLoginIp(IpUtils.getIpAddr());
+            newUser.setLoginDate(DateUtils.getNowDate());
+            tWxUserMapper.insertTWxUser(newUser);
+        }
         throw new ServiceException("只更新了分享码,奖励操作暂未执行");
     }
 

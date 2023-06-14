@@ -44,7 +44,7 @@ public class TStoreController extends BaseController {
     @PreAuthorize("@ss.hasPermi('office:store:list')")
     @GetMapping("/list")
     public TableDataInfo list(TStore tStore) {
-        if (!SecurityUtils.getUsername().equalsIgnoreCase("admin"))
+//        if (!SecurityUtils.getUsername().equalsIgnoreCase("admin"))
             tStore.setCreateBy(SecurityUtils.getUserId() + "");
         startPage();
         List<TStore> list = tStoreService.selectTStoreList(tStore);
@@ -91,6 +91,7 @@ public class TStoreController extends BaseController {
     @Log(title = "商家用户店铺", businessType = BusinessType.UPDATE)
     @PutMapping
     public AjaxResult edit(@RequestBody TStore tStore) {
+        tStore.setUpdateBy(SecurityUtils.getUserId() + "");
         return toAjax(tStoreService.updateTStore(tStore));
     }
 

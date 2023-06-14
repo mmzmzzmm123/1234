@@ -2,6 +2,8 @@ package com.ruoyi.office.controller;
 
 import java.util.List;
 import javax.servlet.http.HttpServletResponse;
+
+import com.ruoyi.common.utils.SecurityUtils;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -77,6 +79,7 @@ public class TWxUserAmountController extends BaseController
     @PostMapping
     public AjaxResult add(@RequestBody TWxUserAmount tWxUserAmount)
     {
+        tWxUserAmount.setCreateBy(SecurityUtils.getUserId()+"");
         return toAjax(tWxUserAmountService.insertTWxUserAmount(tWxUserAmount));
     }
 
@@ -88,6 +91,7 @@ public class TWxUserAmountController extends BaseController
     @PutMapping
     public AjaxResult edit(@RequestBody TWxUserAmount tWxUserAmount)
     {
+        tWxUserAmount.setUpdateBy(SecurityUtils.getUserId()+"");
         return toAjax(tWxUserAmountService.updateTWxUserAmount(tWxUserAmount));
     }
 

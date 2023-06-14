@@ -41,7 +41,7 @@ public class TEquipmentController extends BaseController {
     @PreAuthorize("@ss.hasPermi('office:equipment:list')")
     @GetMapping("/list")
     public TableDataInfo list(TEquipment tEquipment) {
-        if (!SecurityUtils.getUsername().equalsIgnoreCase("admin"))
+//        if (!SecurityUtils.getUsername().equalsIgnoreCase("admin"))
             tEquipment.setCreateBy(SecurityUtils.getUserId() + "");
         startPage();
         List<TEquipment> list = tEquipmentService.selectTEquipmentList(tEquipment);
@@ -87,6 +87,7 @@ public class TEquipmentController extends BaseController {
     @Log(title = "设备列表" , businessType = BusinessType.UPDATE)
     @PutMapping
     public AjaxResult edit(@RequestBody TEquipment tEquipment) {
+        tEquipment.setUpdateBy(SecurityUtils.getUserId() + "");
         return toAjax(tEquipmentService.updateTEquipment(tEquipment));
     }
 

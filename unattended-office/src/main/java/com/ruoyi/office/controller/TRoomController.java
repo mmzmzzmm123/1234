@@ -43,7 +43,7 @@ public class TRoomController extends BaseController {
     @PreAuthorize("@ss.hasPermi('office:room:list')")
     @GetMapping("/list")
     public TableDataInfo list(TRoom tRoom) {
-        if (!SecurityUtils.getUsername().equalsIgnoreCase("admin"))
+//        if (!SecurityUtils.getUsername().equalsIgnoreCase("admin"))
             tRoom.setCreateBy(SecurityUtils.getUserId() + "");
         startPage();
         List<TRoom> list = tRoomService.selectTRoomList(tRoom);
@@ -90,6 +90,7 @@ public class TRoomController extends BaseController {
     @Log(title = "店铺房间", businessType = BusinessType.UPDATE)
     @PutMapping
     public AjaxResult edit(@RequestBody TRoom tRoom) {
+        tRoom.setUpdateBy(SecurityUtils.getUserId() + "");
         return toAjax(tRoomService.updateTRoom(tRoom));
     }
 

@@ -34,6 +34,7 @@
             <if test="merchant != null "> and merchant = #{merchant}</if>
             <if test="orderNo != null "> and order_no = #{orderNo}</if>
             <if test="status != null "> and status = #{status}</if>
+            <if test="createBy != null "> and create_by = #{createBy}</if>
         </where>
     </select>
 

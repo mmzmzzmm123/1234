@@ -100,7 +100,6 @@ public class SysLoginService {
     public String wxMaLogin(WxLoginBody loginBody) {
         Authentication authentication = authenticationManager.authenticate(new WxAuthenticationToken(loginBody));
         WxLoginUser loginUser = (WxLoginUser) authentication.getPrincipal();
-        recordWxLoginInfo(loginUser.getUnionId());
         regWithShare(loginUser.getUnionId(), loginBody.getInviteCode());
         return tokenService.createWxToken(loginUser);
     }
@@ -183,14 +182,6 @@ public class SysLoginService {
      *
      * @param unionId 用户unionId
      */
-    public void recordWxLoginInfo(String unionId) {
-        WxUser wxUser = new WxUser();
-        wxUser.setUnionId(unionId);
-        wxUser.setLoginIp(IpUtils.getIpAddr());
-        wxUser.setLoginDate(DateUtils.getNowDate());
-        wxUserService.updateLogInfo(wxUser);
-    }
-
     private void regWithShare(String unionId, String inviteCode) {
         wxUserService.regWithShare(unionId, inviteCode);
     }

@@ -13,6 +13,8 @@ import com.github.binarywang.wxpay.service.WxPayService;
 import com.ruoyi.common.annotation.Log;
 import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.utils.SecurityUtils;
+import com.ruoyi.office.domain.TRoomOrder;
+import com.ruoyi.office.domain.TWxUserPackage;
 import com.ruoyi.office.domain.enums.OfficeEnum;
 import com.ruoyi.office.domain.vo.WxPayCallback;
 import com.ruoyi.office.service.ITRoomOrderService;
@@ -27,6 +29,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
@@ -148,7 +151,7 @@ public class ApiController {
      * @return
      */
     @ApiOperation("获取分享码")
-    @GetMapping("share")
+    @GetMapping("/share")
     public AjaxResult getShareCode() {
         String unionId = SecurityUtils.getLoginUser().getWxUser().getUnionId();
 
@@ -167,4 +170,25 @@ public class ApiController {
         System.out.println(230 % 100);
         System.out.println(230 / 100 * 100);
     }
+
+    /**
+     * 获取分享码
+     *
+     * @return
+     */
+   /* @ApiOperation("获取我的订单")
+    @GetMapping("/order")
+    public AjaxResult getMineOrder() {
+        long userId = SecurityUtils.getLoginUser().getWxUser().getId();
+
+        TRoomOrder roomOrderQry = new TRoomOrder();
+        roomOrderQry.setUserId(userId);
+        List<TRoomOrder> roomOrderList = roomOrderService.selectTRoomOrderList(roomOrderQry);
+
+        TWxUserPackage userPackage = new TWxUserPackage();
+        userPackage.setCreateBy(userId + "");
+        final List<TWxUserPackage> tWxUserPackages = userPackageService.selectTWxUserPackageList(userPackage);
+
+        return AjaxResult.success(new String(QrCodeUtil.generatePng(url, new QrConfig())));
+    }*/
 }

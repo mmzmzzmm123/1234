@@ -53,6 +53,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="endDate != null "> and end_date = #{endDate}</if>
             <if test="weekDays != null  and weekDays != ''"> and week_days = #{weekDays}</if>
             <if test="status != null "> and status = #{status}</if>
+            <if test="createBy != null "> and create_by = #{createBy}</if>
         </where>
     </select>
     

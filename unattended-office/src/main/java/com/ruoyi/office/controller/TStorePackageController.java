@@ -43,7 +43,7 @@ public class TStorePackageController extends BaseController
     @GetMapping("/list")
     public TableDataInfo list(TStorePackage tStorePackage)
     {
-        if (!SecurityUtils.getUsername().equalsIgnoreCase("admin"))
+//        if (!SecurityUtils.getUsername().equalsIgnoreCase("admin"))
             tStorePackage.setCreateBy(SecurityUtils.getUserId() + "");
         startPage();
         List<TStorePackage> list = tStorePackageService.selectTStorePackageList(tStorePackage);
@@ -93,6 +93,7 @@ public class TStorePackageController extends BaseController
     @PutMapping
     public AjaxResult edit(@RequestBody TStorePackage tStorePackage)
     {
+        tStorePackage.setUpdateBy(SecurityUtils.getUserId() + "");
         return toAjax(tStorePackageService.updateTStorePackage(tStorePackage));
     }
 

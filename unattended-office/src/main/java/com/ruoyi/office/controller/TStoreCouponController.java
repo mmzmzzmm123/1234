@@ -2,6 +2,8 @@ package com.ruoyi.office.controller;
 
 import java.util.List;
 import javax.servlet.http.HttpServletResponse;
+
+import com.ruoyi.common.utils.SecurityUtils;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -23,14 +25,13 @@ import com.ruoyi.common.core.page.TableDataInfo;
 
 /**
  * 卡券Controller
- * 
+ *
  * @author ruoyi
  * @date 2023-05-31
  */
 @RestController
 @RequestMapping("/office/storecoupon")
-public class TStoreCouponController extends BaseController
-{
+public class TStoreCouponController extends BaseController {
     @Autowired
     private ITStoreCouponService tStoreCouponService;
 
@@ -39,8 +40,8 @@ public class TStoreCouponController extends BaseController
      */
     @PreAuthorize("@ss.hasPermi('office:storecoupon:list')")
     @GetMapping("/list")
-    public TableDataInfo list(TStoreCoupon tStoreCoupon)
-    {
+    public TableDataInfo list(TStoreCoupon tStoreCoupon) {
+        tStoreCoupon.setCreateBy(SecurityUtils.getUserId() + "");
         startPage();
         List<TStoreCoupon> list = tStoreCouponService.selectTStoreCouponList(tStoreCoupon);
         return getDataTable(list);
@@ -52,8 +53,7 @@ public class TStoreCouponController extends BaseController
     @PreAuthorize("@ss.hasPermi('office:storecoupon:export')")
     @Log(title = "卡券", businessType = BusinessType.EXPORT)
     @PostMapping("/export")
-    public void export(HttpServletResponse response, TStoreCoupon tStoreCoupon)
-    {
+    public void export(HttpServletResponse response, TStoreCoupon tStoreCoupon) {
         List<TStoreCoupon> list = tStoreCouponService.selectTStoreCouponList(tStoreCoupon);
         ExcelUtil<TStoreCoupon> util = new ExcelUtil<TStoreCoupon>(TStoreCoupon.class);
         util.exportExcel(response, list, "卡券数据");
@@ -64,8 +64,7 @@ public class TStoreCouponController extends BaseController
      */
     @PreAuthorize("@ss.hasPermi('office:storecoupon:query')")
     @GetMapping(value = "/{id}")
-    public AjaxResult getInfo(@PathVariable("id") Long id)
-    {
+    public AjaxResult getInfo(@PathVariable("id") Long id) {
         return success(tStoreCouponService.selectTStoreCouponById(id));
     }
 
@@ -75,8 +74,8 @@ public class TStoreCouponController extends BaseController
     @PreAuthorize("@ss.hasPermi('office:storecoupon:add')")
     @Log(title = "卡券", businessType = BusinessType.INSERT)
     @PostMapping
-    public AjaxResult add(@RequestBody TStoreCoupon tStoreCoupon)
-    {
+    public AjaxResult add(@RequestBody TStoreCoupon tStoreCoupon) {
+        tStoreCoupon.setCreateBy(SecurityUtils.getUserId() + "");
         return toAjax(tStoreCouponService.insertTStoreCoupon(tStoreCoupon));
     }
 
@@ -86,8 +85,8 @@ public class TStoreCouponController extends BaseController
     @PreAuthorize("@ss.hasPermi('office:storecoupon:edit')")
     @Log(title = "卡券", businessType = BusinessType.UPDATE)
     @PutMapping
-    public AjaxResult edit(@RequestBody TStoreCoupon tStoreCoupon)
-    {
+    public AjaxResult edit(@RequestBody TStoreCoupon tStoreCoupon) {
+        tStoreCoupon.setUpdateBy(SecurityUtils.getUserId() + "");
         return toAjax(tStoreCouponService.updateTStoreCoupon(tStoreCoupon));
     }
 
@@ -96,9 +95,8 @@ public class TStoreCouponController extends BaseController
      */
     @PreAuthorize("@ss.hasPermi('office:storecoupon:remove')")
     @Log(title = "卡券", businessType = BusinessType.DELETE)
-	@DeleteMapping("/{ids}")
-    public AjaxResult remove(@PathVariable Long[] ids)
-    {
+    @DeleteMapping("/{ids}")
+    public AjaxResult remove(@PathVariable Long[] ids) {
         return toAjax(tStoreCouponService.deleteTStoreCouponByIds(ids));
     }
 }

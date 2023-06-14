@@ -6,6 +6,7 @@ import javax.servlet.http.HttpServletResponse;
 import com.ruoyi.common.utils.SecurityUtils;
 import com.ruoyi.office.domain.vo.BuyStorePackReq;
 import com.ruoyi.office.domain.vo.PrepayResp;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -40,10 +41,11 @@ public class TWxUserPackageController extends BaseController {
     /**
      * 查询用户套餐购买记录列表
      */
-    @PreAuthorize("@ss.hasPermi('office:wxuserpackage:list')")
+//    @PreAuthorize("@ss.hasPermi('office:wxuserpackage:list')")
+    @ApiOperation("套餐购买记录")
     @GetMapping("/list")
     public TableDataInfo list(TWxUserPackage tWxUserPackage) {
-        if (!SecurityUtils.getUsername().equalsIgnoreCase("admin"))
+//        if (!SecurityUtils.getUsername().equalsIgnoreCase("admin"))
             tWxUserPackage.setMerchant(SecurityUtils.getUserId());
         startPage();
         List<TWxUserPackage> list = tWxUserPackageService.selectTWxUserPackageList(tWxUserPackage);
