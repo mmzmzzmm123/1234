@@ -39,6 +39,10 @@
             <version>4.3.0</version>
         </dependency>
 
+        <dependency>
+            <groupId>com.dianping.dzopen</groupId>
+            <artifactId>dianping-openapi-java-sdk</artifactId>
+        </dependency>
     </dependencies>
 
 </project>
