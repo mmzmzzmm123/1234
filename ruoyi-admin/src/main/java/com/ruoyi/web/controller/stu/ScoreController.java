@@ -44,6 +44,17 @@ public class ScoreController extends BaseController {
         return getDataTable(list);
     }
     /**
+     *  查询各个年级的课程
+     */
+    @PreAuthorize("@ss.hasPermi('courseplan:info:courseplanList')")
+    @GetMapping("/coursePlanList")
+    public TableDataInfo courseplanlist(String clsYear,String courseName)
+    {
+        startPage();
+        List<StuCoursePlan> list = stuCoursePlanService.findAllLevelCourse(clsYear,courseName);
+        return getDataTable(list);
+    }
+    /**
      * 查询某个班级的成绩
      */
     @PreAuthorize("@ss.hasPermi('score:info:courseList')")

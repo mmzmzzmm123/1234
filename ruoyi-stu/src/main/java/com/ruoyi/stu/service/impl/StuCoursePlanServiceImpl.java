@@ -16,4 +16,9 @@ public class StuCoursePlanServiceImpl implements IStuCoursePlanService{
     public List<StuCoursePlan> findAll(String stuCls,String teaName, String courseName){
         return stuCoursePlanMapper.findAll( stuCls, teaName,  courseName);
     }
+
+    @Override
+    public List<StuCoursePlan> findAllLevelCourse(String clsYear, String courseName) {
+        return stuCoursePlanMapper.findAllLevelCourse(clsYear,courseName);
+    }
 }

@@ -46,6 +46,20 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
            <if test="teaName!=null and teaName!=''">AND tea_name LIKE CONCAT('%',#{teaName},'%')</if>
            <if test="courseName!=null and courseName!=''">AND course_name LIKE CONCAT('%',#{courseName},'%')</if>
        </where>
-       ORDER BY semester_id DESC
+       ORDER BY semester_id DESC,cls
    </select>
+
+    <select id="findAllLevelCourse" resultMap="StuCoursePlanResult">
+        SELECT DISTINCT semester_name,cls_year,course_name FROM stu_course_plan
+        NATURAL JOIN stu_course
+        NATURAL JOIN stu_semester
+        JOIN stu_cls ON stu_course_plan.cls_id = stu_cls.id
+        <where>
+            <if test="clsYear!=null and clsYear!=''">AND cls_year = #{clsYear}</if>
+            <if test="courseName!=null and courseName!=''">AND course_name LIKE CONCAT('%',#{courseName},'%')</if>
+        </where>
+        ORDER BY semester_id DESC
+    </select>
+
+
 </mapper>

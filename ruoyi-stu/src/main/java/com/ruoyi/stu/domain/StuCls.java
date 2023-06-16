@@ -50,6 +50,14 @@ public class StuCls extends BaseEntity
      */
     private int type;
 
+    public int getType() {
+        return type;
+    }
+
+    public void setType(int type) {
+        this.type = type;
+    }
+
     public StuCls(Long id, String cls, String clsYear, int stuNum, int mNum, Teacher teacher, int type) {
         this.id = id;
         this.cls = cls;

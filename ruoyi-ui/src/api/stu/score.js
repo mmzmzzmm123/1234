@@ -1,9 +1,18 @@
 import request from '@/utils/request'
 
-// 查询课程计划信息列表
+// 查询各个班级课程计划信息列表
 export function listInfo(query) {
   return request({
     url: '/stu/score/list',
+    method: 'get',
+    params: query
+  })
+}
+
+// 查询各个班级课程计划信息列表
+export function coursePlanInfo(query) {
+  return request({
+    url: '/stu/score/coursePlanList',
     method: 'get',
     params: query
   })
