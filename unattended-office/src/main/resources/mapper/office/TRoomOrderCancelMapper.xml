@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.office.mapper.TRoomOrderCancelMapper">
+    
+    <resultMap type="TRoomOrderCancel" id="TRoomOrderCancelResult">
+        <result property="id"    column="id"    />
+        <result property="cancelMinutes"    column="cancel_minutes"    />
+        <result property="refundRate"    column="refund_rate"    />
+        <result property="status"    column="status"    />
+        <result property="remark"    column="remark"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+    </resultMap>
+
+    <sql id="selectTRoomOrderCancelVo">
+        select id, cancel_minutes, refund_rate, status, remark, create_by, create_time, update_by, update_time from t_room_order_cancel
+    </sql>
+
+    <select id="selectTRoomOrderCancelList" parameterType="TRoomOrderCancel" resultMap="TRoomOrderCancelResult">
+        <include refid="selectTRoomOrderCancelVo"/>
+        <where>  
+            <if test="cancelMinutes != null "> and cancel_minutes = #{cancelMinutes}</if>
+            <if test="refundRate != null "> and refund_rate = #{refundRate}</if>
+            <if test="status != null "> and status = #{status}</if>
+        </where>
+    </select>
+    
+    <select id="selectTRoomOrderCancelById" parameterType="Long" resultMap="TRoomOrderCancelResult">
+        <include refid="selectTRoomOrderCancelVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertTRoomOrderCancel" parameterType="TRoomOrderCancel" useGeneratedKeys="true" keyProperty="id">
+        insert into t_room_order_cancel
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="cancelMinutes != null">cancel_minutes,</if>
+            <if test="refundRate != null">refund_rate,</if>
+            <if test="status != null">status,</if>
+            <if test="remark != null">remark,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="cancelMinutes != null">#{cancelMinutes},</if>
+            <if test="refundRate != null">#{refundRate},</if>
+            <if test="status != null">#{status},</if>
+            <if test="remark != null">#{remark},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateTRoomOrderCancel" parameterType="TRoomOrderCancel">
+        update t_room_order_cancel
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="cancelMinutes != null">cancel_minutes = #{cancelMinutes},</if>
+            <if test="refundRate != null">refund_rate = #{refundRate},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="remark != null">remark = #{remark},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteTRoomOrderCancelById" parameterType="Long">
+        delete from t_room_order_cancel where id = #{id}
+    </delete>
+
+    <delete id="deleteTRoomOrderCancelByIds" parameterType="String">
+        delete from t_room_order_cancel where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

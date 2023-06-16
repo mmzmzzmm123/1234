@@ -302,7 +302,7 @@
     <el-dialog :title="title" :visible.sync="priceOpen" width="500px" append-to-body>
       <el-form ref="priceForm" :model="priceForm" :rules="priceRules" label-width="150px">
         <el-form-item label="开始时间" prop="startTime">
-          <el-input-number v-model="priceForm.startTime" :min="1" :max="24" :step="1" label="描述文字"></el-input-number>
+          <el-input-number v-model="priceForm.startTime" :min="0" :max="24" :step="1" label="描述文字"></el-input-number>
          <!-- <el-time-select placeholder="开始时间" v-model="" :picker-options="{
                 start: '00',
                 step: '01',

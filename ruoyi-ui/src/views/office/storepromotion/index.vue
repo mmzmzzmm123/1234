@@ -104,8 +104,10 @@
             </el-form-item>
           </el-col>
           <el-col :span=12>
-            <el-form-item label="抵扣时长" prop="maxMinute">
-              <el-input v-model="form.maxMinute" placeholder="请输入抵扣时长" :disabled="form.couponType==1" />
+            <el-form-item label="抵扣时长(小时)" prop="maxMinute">
+              <!-- <el-input v-model="form.maxMinute" placeholder="请输入抵扣时长" :disabled="form.couponType==1" /> -->
+              <el-input-number v-model="form.maxMinute" :step="1" step-strictly :min="1" :disabled='form.cardType==1'>
+              </el-input-number>
             </el-form-item>
           </el-col>
         </el-row>

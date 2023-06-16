@@ -60,4 +60,6 @@ public interface TWxUserPromotionMapper extends BaseMapper<TWxUserPromotion> {
      * @return 结果
      */
     public int deleteTWxUserPromotionByIds(Long[] ids);
+
+    List<TWxUserPromotion> selectPayAvailableList(TWxUserPromotion promotion);
 }

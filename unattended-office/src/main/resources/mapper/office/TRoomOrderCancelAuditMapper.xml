@@ -1,0 +1,196 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.office.mapper.TRoomOrderCancelAuditMapper">
+    
+    <resultMap type="TRoomOrderCancelAudit" id="TRoomOrderCancelAuditResult">
+        <result property="id"    column="id"    />
+        <result property="orderNo"    column="order_no"    />
+        <result property="refundOrderNo"    column="refund_order_no"    />
+        <result property="refundAmount"    column="refund_amount"    />
+        <result property="status"    column="status"    />
+        <result property="remark"    column="remark"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="refundId"    column="refund_id"    />
+        <result property="outRefundNo"    column="out_refund_no"    />
+        <result property="transactionId"    column="transaction_id"    />
+        <result property="outTradeNo"    column="out_trade_no"    />
+        <result property="channel"    column="channel"    />
+        <result property="userReceivedAccount"    column="user_received_account"    />
+        <result property="successTime"    column="success_time"    />
+        <result property="refundCreateTime"    column="refund_create_time"    />
+        <result property="refundStatus"    column="refund_status"    />
+        <result property="total"    column="total"    />
+        <result property="refund"    column="refund"    />
+        <result property="payerTotal"    column="payer_total"    />
+        <result property="payerRefund"    column="payer_refund"    />
+        <result property="settlementRefund"    column="settlement_refund"    />
+        <result property="settlementTotal"    column="settlement_total"    />
+        <result property="discountRefund"    column="discount_refund"    />
+        <result property="currency"    column="currency"    />
+        <result property="refundFee"    column="refund_fee"    />
+    </resultMap>
+
+    <sql id="selectTRoomOrderCancelAuditVo">
+        select id, order_no, refund_order_no, refund_amount, status, remark, create_by, create_time, update_by, update_time, refund_id, out_refund_no, transaction_id, out_trade_no, channel, user_received_account, success_time, refund_create_time, refund_status, total, refund, payer_total, payer_refund, settlement_refund, settlement_total, discount_refund, currency, refund_fee from t_room_order_cancel_audit
+    </sql>
+
+    <select id="selectTRoomOrderCancelAuditList" parameterType="TRoomOrderCancelAudit" resultMap="TRoomOrderCancelAuditResult">
+        <include refid="selectTRoomOrderCancelAuditVo"/>
+        <where>  
+            <if test="orderNo != null "> and order_no = #{orderNo}</if>
+            <if test="refundOrderNo != null "> and refund_order_no = #{refundOrderNo}</if>
+            <if test="refundAmount != null "> and refund_amount = #{refundAmount}</if>
+            <if test="status != null "> and status = #{status}</if>
+            <if test="refundId != null  and refundId != ''"> and refund_id = #{refundId}</if>
+            <if test="outRefundNo != null  and outRefundNo != ''"> and out_refund_no = #{outRefundNo}</if>
+            <if test="transactionId != null  and transactionId != ''"> and transaction_id = #{transactionId}</if>
+            <if test="outTradeNo != null  and outTradeNo != ''"> and out_trade_no = #{outTradeNo}</if>
+            <if test="channel != null  and channel != ''"> and channel = #{channel}</if>
+            <if test="userReceivedAccount != null  and userReceivedAccount != ''"> and user_received_account = #{userReceivedAccount}</if>
+            <if test="successTime != null  and successTime != ''"> and success_time = #{successTime}</if>
+            <if test="refundCreateTime != null  and refundCreateTime != ''"> and refund_create_time = #{refundCreateTime}</if>
+            <if test="refundStatus != null  and refundStatus != ''"> and refund_status = #{refundStatus}</if>
+            <if test="total != null "> and total = #{total}</if>
+            <if test="refund != null "> and refund = #{refund}</if>
+            <if test="payerTotal != null "> and payer_total = #{payerTotal}</if>
+            <if test="payerRefund != null "> and payer_refund = #{payerRefund}</if>
+            <if test="settlementRefund != null "> and settlement_refund = #{settlementRefund}</if>
+            <if test="settlementTotal != null "> and settlement_total = #{settlementTotal}</if>
+            <if test="discountRefund != null "> and discount_refund = #{discountRefund}</if>
+            <if test="currency != null  and currency != ''"> and currency = #{currency}</if>
+            <if test="refundFee != null "> and refund_fee = #{refundFee}</if>
+        </where>
+    </select>
+    
+    <select id="selectTRoomOrderCancelAuditById" parameterType="Long" resultMap="TRoomOrderCancelAuditResult">
+        <include refid="selectTRoomOrderCancelAuditVo"/>
+        where id = #{id}
+    </select>
+
+    <select id="selectCancelAuditInfoList" parameterType="com.ruoyi.office.domain.vo.RefundAuditVo" resultType="com.ruoyi.office.domain.vo.RefundAuditVo">
+        select a.id, a.order_no orderNo,s.name storeName,r.name roomName,o.start_time startTime,o.end_time endTime,
+               u.union_id unionId,u.nick_name nickName, refund_order_no refundOrderNo, refund_amount refundAmount, a.status
+        from t_room_order_cancel_audit a
+                 left join t_room_order o on a.order_no = o.order_no
+                 left join t_room r on o.room_id = r.id
+                 left join t_store s on r.store_id =s.id
+                 left join t_wx_user u on o.user_id =u.id
+    </select>
+
+    <select id="getDayMaxOrder" parameterType="String" resultType="java.lang.Long">
+        select max(order_no)  from t_room_order_cancel_audit where refund_order_no like concat( #{id},'%')
+    </select>
+        
+    <insert id="insertTRoomOrderCancelAudit" parameterType="TRoomOrderCancelAudit" useGeneratedKeys="true" keyProperty="id">
+        insert into t_room_order_cancel_audit
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="orderNo != null">order_no,</if>
+            <if test="refundOrderNo != null">refund_order_no,</if>
+            <if test="refundAmount != null">refund_amount,</if>
+            <if test="status != null">status,</if>
+            <if test="remark != null">remark,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="refundId != null">refund_id,</if>
+            <if test="outRefundNo != null">out_refund_no,</if>
+            <if test="transactionId != null">transaction_id,</if>
+            <if test="outTradeNo != null">out_trade_no,</if>
+            <if test="channel != null">channel,</if>
+            <if test="userReceivedAccount != null">user_received_account,</if>
+            <if test="successTime != null">success_time,</if>
+            <if test="refundCreateTime != null">refund_create_time,</if>
+            <if test="refundStatus != null">refund_status,</if>
+            <if test="total != null">total,</if>
+            <if test="refund != null">refund,</if>
+            <if test="payerTotal != null">payer_total,</if>
+            <if test="payerRefund != null">payer_refund,</if>
+            <if test="settlementRefund != null">settlement_refund,</if>
+            <if test="settlementTotal != null">settlement_total,</if>
+            <if test="discountRefund != null">discount_refund,</if>
+            <if test="currency != null">currency,</if>
+            <if test="refundFee != null">refund_fee,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="orderNo != null">#{orderNo},</if>
+            <if test="refundOrderNo != null">#{refundOrderNo},</if>
+            <if test="refundAmount != null">#{refundAmount},</if>
+            <if test="status != null">#{status},</if>
+            <if test="remark != null">#{remark},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="refundId != null">#{refundId},</if>
+            <if test="outRefundNo != null">#{outRefundNo},</if>
+            <if test="transactionId != null">#{transactionId},</if>
+            <if test="outTradeNo != null">#{outTradeNo},</if>
+            <if test="channel != null">#{channel},</if>
+            <if test="userReceivedAccount != null">#{userReceivedAccount},</if>
+            <if test="successTime != null">#{successTime},</if>
+            <if test="refundCreateTime != null">#{refundCreateTime},</if>
+            <if test="refundStatus != null">#{refundStatus},</if>
+            <if test="total != null">#{total},</if>
+            <if test="refund != null">#{refund},</if>
+            <if test="payerTotal != null">#{payerTotal},</if>
+            <if test="payerRefund != null">#{payerRefund},</if>
+            <if test="settlementRefund != null">#{settlementRefund},</if>
+            <if test="settlementTotal != null">#{settlementTotal},</if>
+            <if test="discountRefund != null">#{discountRefund},</if>
+            <if test="currency != null">#{currency},</if>
+            <if test="refundFee != null">#{refundFee},</if>
+         </trim>
+    </insert>
+
+    <update id="updateTRoomOrderCancelAudit" parameterType="TRoomOrderCancelAudit">
+        update t_room_order_cancel_audit
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="orderNo != null">order_no = #{orderNo},</if>
+            <if test="refundOrderNo != null">refund_order_no = #{refundOrderNo},</if>
+            <if test="refundAmount != null">refund_amount = #{refundAmount},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="remark != null">remark = #{remark},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="refundId != null">refund_id = #{refundId},</if>
+            <if test="outRefundNo != null">out_refund_no = #{outRefundNo},</if>
+            <if test="transactionId != null">transaction_id = #{transactionId},</if>
+            <if test="outTradeNo != null">out_trade_no = #{outTradeNo},</if>
+            <if test="channel != null">channel = #{channel},</if>
+            <if test="userReceivedAccount != null">user_received_account = #{userReceivedAccount},</if>
+            <if test="successTime != null">success_time = #{successTime},</if>
+            <if test="refundCreateTime != null">refund_create_time = #{refundCreateTime},</if>
+            <if test="refundStatus != null">refund_status = #{refundStatus},</if>
+            <if test="total != null">total = #{total},</if>
+            <if test="refund != null">refund = #{refund},</if>
+            <if test="payerTotal != null">payer_total = #{payerTotal},</if>
+            <if test="payerRefund != null">payer_refund = #{payerRefund},</if>
+            <if test="settlementRefund != null">settlement_refund = #{settlementRefund},</if>
+            <if test="settlementTotal != null">settlement_total = #{settlementTotal},</if>
+            <if test="discountRefund != null">discount_refund = #{discountRefund},</if>
+            <if test="currency != null">currency = #{currency},</if>
+            <if test="refundFee != null">refund_fee = #{refundFee},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteTRoomOrderCancelAuditById" parameterType="Long">
+        delete from t_room_order_cancel_audit where id = #{id}
+    </delete>
+
+    <delete id="deleteTRoomOrderCancelAuditByIds" parameterType="String">
+        delete from t_room_order_cancel_audit where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+</mapper>

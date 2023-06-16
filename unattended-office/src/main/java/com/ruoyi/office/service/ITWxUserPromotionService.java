@@ -60,4 +60,6 @@ public interface ITWxUserPromotionService
     public int deleteTWxUserPromotionById(Long id);
 
     void receivePromotion(long userId, long promotionId);
+
+    List<TWxUserPromotion> selectPayAvailableList(TWxUserPromotion promotion);
 }

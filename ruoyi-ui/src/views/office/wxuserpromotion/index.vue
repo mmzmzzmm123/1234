@@ -1,11 +1,11 @@
 <template>
   <div class="app-container">
     <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch" label-width="68px">
-      <el-form-item label="wx用户" prop="wxId">
+      <el-form-item label="用户" prop="wxId">
         <el-input v-model="queryParams.wxId" placeholder="请输入wx用户" clearable @keyup.enter.native="handleQuery" />
       </el-form-item>
 
-      <el-form-item label="名称" prop="name">
+      <el-form-item label="优惠券名称" prop="name">
         <el-input v-model="queryParams.name" placeholder="请输入名称" clearable @keyup.enter.native="handleQuery" />
       </el-form-item>
 
@@ -17,7 +17,7 @@
     </el-form>
 
     <el-row :gutter="10" class="mb8">
-      <el-col :span="1.5">
+  <!--    <el-col :span="1.5">
         <el-button type="primary" plain icon="el-icon-plus" size="mini" @click="handleAdd"
           v-hasPermi="['office:wxuserpromotion:add']">新增</el-button>
       </el-col>
@@ -28,7 +28,7 @@
       <el-col :span="1.5">
         <el-button type="danger" plain icon="el-icon-delete" size="mini" :disabled="multiple" @click="handleDelete"
           v-hasPermi="['office:wxuserpromotion:remove']">删除</el-button>
-      </el-col>
+      </el-col> -->
       <el-col :span="1.5">
         <el-button type="warning" plain icon="el-icon-download" size="mini" @click="handleExport"
           v-hasPermi="['office:wxuserpromotion:export']">导出</el-button>
@@ -39,9 +39,9 @@
     <el-table v-loading="loading" :data="wxuserpromotionList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
       <el-table-column label="id" align="center" prop="id" />
-      <el-table-column label="wx用户" align="center" prop="wxId" />
-      <el-table-column label="优惠券id" align="center" prop="couponId" />
-      <el-table-column label="名称" align="center" prop="name" />
+      <el-table-column label="用户" align="center" prop="wxId" />
+      <!-- <el-table-column label="优惠券名称" align="center" prop="couponId" /> -->
+      <el-table-column label="优惠券名称" align="center" prop="name" />
       <el-table-column label="优惠券类型" align="center" prop="couponType" :formatter="couponTypeFormatter" />
       <el-table-column label="适用商户" align="center" prop="merchantId" />
       <el-table-column label="适用门店" align="center" prop="storeId" :formatter="storeFormatter" />
@@ -60,15 +60,15 @@
       </el-table-column>
       <el-table-column label="周内可用日期" align="center" prop="weekDays" />
       <!-- <el-table-column label="状态" align="center" prop="status" /> -->
-      <el-table-column label="备注" align="center" prop="remark" />
-      <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
+      <!-- <el-table-column label="备注" align="center" prop="remark" /> -->
+      <!-- <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button size="mini" type="text" icon="el-icon-edit" @click="handleUpdate(scope.row)"
             v-hasPermi="['office:wxuserpromotion:edit']">修改</el-button>
           <el-button size="mini" type="text" icon="el-icon-delete" @click="handleDelete(scope.row)"
             v-hasPermi="['office:wxuserpromotion:remove']">删除</el-button>
         </template>
-      </el-table-column>
+      </el-table-column> -->
     </el-table>
 
     <pagination v-show="total>0" :total="total" :page.sync="queryParams.pageNum" :limit.sync="queryParams.pageSize"

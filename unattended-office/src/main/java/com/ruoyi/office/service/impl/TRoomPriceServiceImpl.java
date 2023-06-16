@@ -54,13 +54,16 @@ public class TRoomPriceServiceImpl extends ServiceImpl<TRoomPriceMapper, TRoomPr
      */
     @Override
     public int insertTRoomPrice(TRoomPrice tRoomPrice) {
+        if(tRoomPrice.getStartTime()>tRoomPrice.getStopTime())
+            throw new ServiceException("开始时间必须小于等于结束时间");
+
         tRoomPrice.setCreateTime(DateUtils.getNowDate());
 
         QueryWrapper<TRoomPrice> queryWrapper = new QueryWrapper<>();
         queryWrapper.lambda().eq(TRoomPrice::getRoomId, tRoomPrice.getRoomId());
         final List<TRoomPrice> tRoomPrices = baseMapper.selectList(queryWrapper);
         for (TRoomPrice roomPrice : tRoomPrices) {
-            if ((roomPrice.getStartTime() < tRoomPrice.getStartTime() && roomPrice.getStopTime() > tRoomPrice.getStartTime()) || (roomPrice.getStartTime() < tRoomPrice.getStopTime() && roomPrice.getStopTime() > tRoomPrice.getStopTime()))
+            if ((roomPrice.getStartTime() <= tRoomPrice.getStartTime() && roomPrice.getStopTime() >= tRoomPrice.getStartTime()) || (roomPrice.getStartTime() <= tRoomPrice.getStopTime() && roomPrice.getStopTime() >= tRoomPrice.getStopTime()))
                 throw new ServiceException("收费标准时间段交叉");
         }
         return tRoomPriceMapper.insertTRoomPrice(tRoomPrice);
@@ -74,7 +77,22 @@ public class TRoomPriceServiceImpl extends ServiceImpl<TRoomPriceMapper, TRoomPr
      */
     @Override
     public int updateTRoomPrice(TRoomPrice tRoomPrice) {
+        if(tRoomPrice.getStartTime()>tRoomPrice.getStopTime())
+            throw new ServiceException("开始时间必须小于等于结束时间");
+
         tRoomPrice.setUpdateTime(DateUtils.getNowDate());
+
+        QueryWrapper<TRoomPrice> queryWrapper = new QueryWrapper<>();
+        queryWrapper.lambda().eq(TRoomPrice::getRoomId, tRoomPrice.getRoomId());
+        final List<TRoomPrice> tRoomPrices = baseMapper.selectList(queryWrapper);
+        for (TRoomPrice roomPrice : tRoomPrices) {
+            if (roomPrice.getId() == tRoomPrice.getId())
+                continue;
+
+            if ((roomPrice.getStartTime() <= tRoomPrice.getStartTime() && roomPrice.getStopTime() >= tRoomPrice.getStartTime()) || (roomPrice.getStartTime() <= tRoomPrice.getStopTime() && roomPrice.getStopTime() >= tRoomPrice.getStopTime()))
+                throw new ServiceException("收费标准时间段交叉");
+        }
+
         return tRoomPriceMapper.updateTRoomPrice(tRoomPrice);
     }
 

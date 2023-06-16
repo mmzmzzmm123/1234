@@ -190,6 +190,9 @@ public class TRoomOrderServiceImpl extends ServiceImpl<TRoomOrderMapper, TRoomOr
     @Autowired
     private WxPayService wxPayService;
 
+    @Autowired
+    ITWxUserPromotionService userPromotionService;
+
     @Override
     @Transactional
     public synchronized PrepayResp prepay(PrepayReq prepayReq, Long userId) {
@@ -215,19 +218,34 @@ public class TRoomOrderServiceImpl extends ServiceImpl<TRoomOrderMapper, TRoomOr
 
         if (prepayReq.getPayType() == OfficeEnum.PayType.WX_PAY.getCode()) { // 直接支付 发起微信支付 预支付交易单，返回微信支付返回的标识.
 
+            // 满减券
+            BigDecimal payAMT = totalPrice;
+            if (prepayReq.getCouponId() != 0) {
+                TWxUserPromotion qry = new TWxUserPromotion();
+                qry.setCouponId(prepayReq.getCouponId());
+                qry.setWxId(userId);
+                final List<TWxUserPromotion> userPromotions = userPromotionService.selectTWxUserPromotionList(qry);
+                if (userPromotions.size() == 0) {
+                    throw new ServiceException("满减券不存在");
+                }
+                TWxUserPromotion userPromotion = userPromotions.get(0);
+                if (validPromotion(prepayReq, userPromotion, userId)) {
+                    if (totalPrice.compareTo(userPromotion.getStandardPrice()) == -1) {
+                        throw new ServiceException("未达到满减金额");
+                    }else {
+                        payAMT = totalPrice.subtract(userPromotion.getDiscountPrice());
+                    }
+                }
+            }
+
             WxPayUnifiedOrderV3Request v3Request = new WxPayUnifiedOrderV3Request();
             final WxPayConfig config = wxPayService.getConfig();
-
-            ArrayList<WxPayUnifiedOrderV3Request.GoodsDetail> goodsDetails = new ArrayList<>();
-            goodsDetails.add(
-                    new WxPayUnifiedOrderV3Request.GoodsDetail() {
-                    }.setMerchantGoodsId("").setUnitPrice(0).setQuantity(0));
 
             v3Request.setAppid(config.getAppId()).setMchid(config.getMchId()).setNotifyUrl(config.getNotifyUrl())
                     .setDescription("roomId: " + prepayReq.getRoomId()).setOutTradeNo(String.valueOf(orderNo))
                     .setAmount(
                             new WxPayUnifiedOrderV3Request.Amount() {
-                            }.setTotal(totalPrice.intValue() * 100))
+                            }.setTotal(payAMT.intValue() * 100))
                     .setPayer(
                             new WxPayUnifiedOrderV3Request.Payer() {
                             }.setOpenid(wxUser.getOpenId()))
@@ -272,7 +290,7 @@ public class TRoomOrderServiceImpl extends ServiceImpl<TRoomOrderMapper, TRoomOr
             tRoomOrder.setCreateTime(DateUtils.getNowDate());
             tRoomOrderMapper.insertTRoomOrder(tRoomOrder);
 
-        } else if (prepayReq.getPayType() == OfficeEnum.PayType.COUPON_PAY.getCode()) { // 优惠券支付
+        } else if (prepayReq.getPayType() == OfficeEnum.PayType.COUPON_PAY.getCode()) { // 美团券券支付
             validCoupon(prepayReq, userId);// 校验可用性
 
             BigDecimal payAmt = new BigDecimal(0);
@@ -286,6 +304,9 @@ public class TRoomOrderServiceImpl extends ServiceImpl<TRoomOrderMapper, TRoomOr
         }
         return resp;
     }
+
+    @Autowired
+    ITStoreService storeService;
 
     @Override
     public boolean checkCoupon(PrepayReq vo, Long userId) {
@@ -335,6 +356,45 @@ public class TRoomOrderServiceImpl extends ServiceImpl<TRoomOrderMapper, TRoomOr
             if (hours < orderHours)
                 throw new ServiceException("预约时间段超出优惠券可用小时数");
         }
+        return true;
+    }
+
+    private boolean validPromotion(PrepayReq vo, TWxUserPromotion userPromotion, Long userId) {
+        if (userPromotion.getCouponType() != 1) {
+            throw new ServiceException("优惠券类型不适用");
+        }
+        // 1. 适用优惠券的时间（当前日期）是否在有效期
+        if (DateUtils.getNowDate().before(userPromotion.getStartDate()) || DateUtils.getNowDate().after(userPromotion.getEndDate())) {
+            throw new ServiceException("当前时间段不可用");
+        }
+
+        if (userPromotion.getWxId() != userId) {
+            throw new ServiceException("非本人优惠券");
+        }
+
+        TRoom room = roomService.selectTRoomById(vo.getRoomId());
+        if (userPromotion.getStoreId() != 0) {
+            if (room.getStoreId() != userPromotion.getStoreId()) {
+                throw new ServiceException("当前门店不可用");
+            }
+        } else {
+            if (userPromotion.getMerchantId() != 0) {
+                TStore storeQry = new TStore();
+                storeQry.setId(room.getStoreId());
+                TStore store = storeService.selectTStoreList(storeQry).get(0);
+                if (!store.getCreateBy().equalsIgnoreCase(String.valueOf(userPromotion.getMerchantId()))) {
+                    throw new ServiceException("当前商户不可适用");
+                }
+            }
+        }
+
+        // 2. 是否在可用日期 周一 周二 周三...
+        Date today = DateUtils.parseDate(DateUtils.getDate());
+        int weekDay = today.getDay();
+        if (weekDay == 0) weekDay = 7;
+        if (!userPromotion.getWeekDays().contains(weekDay + ""))
+            throw new ServiceException("当前日期不可用");
+
         return true;
     }
 
