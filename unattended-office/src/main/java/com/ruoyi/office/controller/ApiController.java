@@ -7,42 +7,43 @@ import com.alibaba.fastjson2.JSONObject;
 import com.github.binarywang.wxpay.bean.notify.OriginNotifyResponse;
 import com.github.binarywang.wxpay.bean.notify.SignatureHeader;
 import com.github.binarywang.wxpay.bean.notify.WxPayOrderNotifyV3Result;
+import com.github.binarywang.wxpay.bean.notify.WxPayRefundNotifyV3Result;
 import com.github.binarywang.wxpay.constant.WxPayConstants;
 import com.github.binarywang.wxpay.exception.WxPayException;
 import com.github.binarywang.wxpay.service.WxPayService;
 import com.ruoyi.common.annotation.Log;
+import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.domain.AjaxResult;
+import com.ruoyi.common.core.page.TableDataInfo;
 import com.ruoyi.common.utils.SecurityUtils;
+import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.office.domain.TRoomOrder;
 import com.ruoyi.office.domain.TStorePromotion;
 import com.ruoyi.office.domain.TWxUserPackage;
 import com.ruoyi.office.domain.TWxUserPromotion;
 import com.ruoyi.office.domain.enums.OfficeEnum;
 import com.ruoyi.office.domain.vo.WxPayCallback;
-import com.ruoyi.office.service.ITRoomOrderService;
-import com.ruoyi.office.service.ITStorePromotionService;
-import com.ruoyi.office.service.ITWxUserPackageService;
-import com.ruoyi.office.service.ITWxUserPromotionService;
+import com.ruoyi.office.service.*;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.logging.LogFactory;
 import org.aspectj.weaver.loadtime.Aj;
 import org.checkerframework.checker.units.qual.A;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 import java.util.stream.Collectors;
 
+import static com.ruoyi.common.utils.PageUtils.startPage;
+
 @RestController
 @RequestMapping("/office/api")
-public class ApiController {
+public class ApiController extends BaseController {
     protected org.apache.commons.logging.Log log = LogFactory.getLog(getClass());
 
     @Autowired
@@ -100,6 +101,55 @@ public class ApiController {
         wxPayResult.fluentPut("code", "FAIL");
         wxPayResult.fluentPut("message", "失败");
         return wxPayResult;
+    }
+
+    @Autowired
+    ITRoomOrderCancelAuditService cancelAuditService;
+
+    /**
+     * 预定成功 api 回调
+     */
+    @ApiOperation("退款申请 api 回调")
+    @Log(title = "退款申请 api 回调")
+    @PostMapping("/wxnotify/refund")
+    public Object wxRefundNotify(@RequestBody String jsonData, HttpServletRequest request, HttpServletResponse response) throws WxPayException {
+        JSONObject wxPayResult = new JSONObject();
+        Lock lock = new ReentrantLock();
+        if (lock.tryLock()) {
+            // 支付成功结果通知
+            OriginNotifyResponse notifyResponse = JSON.parseObject(jsonData, OriginNotifyResponse.class);
+            WxPayRefundNotifyV3Result v3Result = null;
+            try {
+                v3Result = wxPayService.parseRefundNotifyV3Result(jsonStrSort(notifyResponse), getRequestHeader(request));
+
+                //解密后的数据
+                WxPayRefundNotifyV3Result.DecryptNotifyResult result = v3Result.getResult();
+
+                if (result.getRefundStatus().equalsIgnoreCase(WxPayConstants.WxpayTradeStatus.SUCCESS)) {
+                    cancelAuditService.refundApproveNotify(result);
+                }
+
+                //通知应答：接收成功：HTTP应答状态码需返回200或204，无需返回应答报文。
+                response.setStatus(HttpServletResponse.SC_OK);
+                return null;
+            } catch (WxPayException e) {
+                e.printStackTrace();
+                log.error("支付回调失败：" + e.getLocalizedMessage());
+                // 通知应答：HTTP应答状态码需返回5XX或4XX，同时需返回应答报文
+                response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+                wxPayResult.fluentPut("code", "FAIL");
+                wxPayResult.fluentPut("message", e.getMessage());
+                return wxPayResult;
+            } finally {
+                lock.unlock();
+            }
+        }
+        // 通知应答码：HTTP应答状态码需返回5XX或4XX，同时需返回应答报文
+        response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+        wxPayResult.fluentPut("code", "FAIL");
+        wxPayResult.fluentPut("message", "失败");
+        return wxPayResult;
+
     }
 
     /**
@@ -186,14 +236,14 @@ public class ApiController {
     /**
      * 获取可用优惠券
      */
-    @ApiOperation("获取可用优惠券")
+    @ApiOperation("获取可领取优惠券 不传店铺id所有，传店铺id查看店铺")
     @GetMapping("/promotion")
-    public AjaxResult availablePromotion() {
+    public AjaxResult availableGetPromotion(TStorePromotion store) {
         long userId = SecurityUtils.getLoginUser().getWxUser().getId();
 
         List<TStorePromotion> res = new ArrayList<>();
 
-        List<TStorePromotion> storePromotions = storePromotionService.selectTStorePromotionList(new TStorePromotion());
+        List<TStorePromotion> storePromotions = storePromotionService.selectTStorePromotionList(store);
         List<TWxUserPromotion> userPromotions = userPromotionService.selectTWxUserPromotionList(new TWxUserPromotion());
         for (TStorePromotion storePromotion : storePromotions) {
             boolean ex = false;
@@ -206,7 +256,7 @@ public class ApiController {
             if (!ex)
                 res.add(storePromotion);
         }
-        
+
         return AjaxResult.success(res);
     }
 
@@ -225,4 +275,19 @@ public class ApiController {
 
         return AjaxResult.success();
     }
+
+    /**
+     * 支付可用优惠券列表
+     */
+    @ApiOperation("支付可用优惠券列表")
+    @GetMapping("/promotion/list")
+    public TableDataInfo payAvailable(TWxUserPromotion tWxUserPromotion) {
+        TWxUserPromotion promotion = new TWxUserPromotion();
+        promotion.setWxId(SecurityUtils.getUserId());
+        promotion.setStatus(0l);
+        startPage();
+        List<TWxUserPromotion> list = userPromotionService.selectPayAvailableList(promotion);
+        return getDataTable(list);
+    }
+
 }

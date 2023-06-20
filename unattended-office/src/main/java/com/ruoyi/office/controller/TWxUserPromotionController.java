@@ -2,6 +2,9 @@ package com.ruoyi.office.controller;
 
 import java.util.List;
 import javax.servlet.http.HttpServletResponse;
+
+import com.ruoyi.common.utils.SecurityUtils;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -23,14 +26,13 @@ import com.ruoyi.common.core.page.TableDataInfo;
 
 /**
  * 用户优惠券 t_wx_user_promotionController
- * 
+ *
  * @author ruoyi
  * @date 2023-06-14
  */
 @RestController
 @RequestMapping("/office/wxuserpromotion")
-public class TWxUserPromotionController extends BaseController
-{
+public class TWxUserPromotionController extends BaseController {
     @Autowired
     private ITWxUserPromotionService tWxUserPromotionService;
 
@@ -39,8 +41,7 @@ public class TWxUserPromotionController extends BaseController
      */
     @PreAuthorize("@ss.hasPermi('office:wxuserpromotion:list')")
     @GetMapping("/list")
-    public TableDataInfo list(TWxUserPromotion tWxUserPromotion)
-    {
+    public TableDataInfo list(TWxUserPromotion tWxUserPromotion) {
         startPage();
         List<TWxUserPromotion> list = tWxUserPromotionService.selectTWxUserPromotionList(tWxUserPromotion);
         return getDataTable(list);
@@ -52,8 +53,7 @@ public class TWxUserPromotionController extends BaseController
     @PreAuthorize("@ss.hasPermi('office:wxuserpromotion:export')")
     @Log(title = "用户优惠券 t_wx_user_promotion", businessType = BusinessType.EXPORT)
     @PostMapping("/export")
-    public void export(HttpServletResponse response, TWxUserPromotion tWxUserPromotion)
-    {
+    public void export(HttpServletResponse response, TWxUserPromotion tWxUserPromotion) {
         List<TWxUserPromotion> list = tWxUserPromotionService.selectTWxUserPromotionList(tWxUserPromotion);
         ExcelUtil<TWxUserPromotion> util = new ExcelUtil<TWxUserPromotion>(TWxUserPromotion.class);
         util.exportExcel(response, list, "用户优惠券 t_wx_user_promotion数据");
@@ -64,8 +64,7 @@ public class TWxUserPromotionController extends BaseController
      */
     @PreAuthorize("@ss.hasPermi('office:wxuserpromotion:query')")
     @GetMapping(value = "/{id}")
-    public AjaxResult getInfo(@PathVariable("id") Long id)
-    {
+    public AjaxResult getInfo(@PathVariable("id") Long id) {
         return success(tWxUserPromotionService.selectTWxUserPromotionById(id));
     }
 
@@ -75,8 +74,7 @@ public class TWxUserPromotionController extends BaseController
     @PreAuthorize("@ss.hasPermi('office:wxuserpromotion:add')")
     @Log(title = "用户优惠券 t_wx_user_promotion", businessType = BusinessType.INSERT)
     @PostMapping
-    public AjaxResult add(@RequestBody TWxUserPromotion tWxUserPromotion)
-    {
+    public AjaxResult add(@RequestBody TWxUserPromotion tWxUserPromotion) {
         return toAjax(tWxUserPromotionService.insertTWxUserPromotion(tWxUserPromotion));
     }
 
@@ -86,8 +84,7 @@ public class TWxUserPromotionController extends BaseController
     @PreAuthorize("@ss.hasPermi('office:wxuserpromotion:edit')")
     @Log(title = "用户优惠券 t_wx_user_promotion", businessType = BusinessType.UPDATE)
     @PutMapping
-    public AjaxResult edit(@RequestBody TWxUserPromotion tWxUserPromotion)
-    {
+    public AjaxResult edit(@RequestBody TWxUserPromotion tWxUserPromotion) {
         return toAjax(tWxUserPromotionService.updateTWxUserPromotion(tWxUserPromotion));
     }
 
@@ -96,9 +93,8 @@ public class TWxUserPromotionController extends BaseController
      */
     @PreAuthorize("@ss.hasPermi('office:wxuserpromotion:remove')")
     @Log(title = "用户优惠券 t_wx_user_promotion", businessType = BusinessType.DELETE)
-	@DeleteMapping("/{ids}")
-    public AjaxResult remove(@PathVariable Long[] ids)
-    {
+    @DeleteMapping("/{ids}")
+    public AjaxResult remove(@PathVariable Long[] ids) {
         return toAjax(tWxUserPromotionService.deleteTWxUserPromotionByIds(ids));
     }
 

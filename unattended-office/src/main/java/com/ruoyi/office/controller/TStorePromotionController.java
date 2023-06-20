@@ -2,6 +2,8 @@ package com.ruoyi.office.controller;
 
 import java.util.List;
 import javax.servlet.http.HttpServletResponse;
+
+import com.ruoyi.common.utils.SecurityUtils;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -41,6 +43,7 @@ public class TStorePromotionController extends BaseController
     @GetMapping("/list")
     public TableDataInfo list(TStorePromotion tStorePromotion)
     {
+        tStorePromotion.setMerchantId(SecurityUtils.getUserId());
         startPage();
         List<TStorePromotion> list = tStorePromotionService.selectTStorePromotionList(tStorePromotion);
         return getDataTable(list);

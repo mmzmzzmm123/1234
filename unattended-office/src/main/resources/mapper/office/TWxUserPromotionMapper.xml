@@ -37,7 +37,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="couponId != null "> and coupon_id = #{couponId}</if>
             <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
             <if test="couponType != null  and couponType != ''"> and coupon_type = #{couponType}</if>
-            <if test="merchantId != null "> and merchant_id = #{merchantId}</if>
+            <if test="merchantId != null "> and merchant_id = #{merchantId} </if>
             <if test="storeId != null  and storeId != ''"> and store_id = #{storeId}</if>
             <if test="standardPrice != null "> and standard_price = #{standardPrice}</if>
             <if test="discountPrice != null "> and discount_price = #{discountPrice}</if>
@@ -53,7 +53,25 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <include refid="selectTWxUserPromotionVo"/>
         where id = #{id}
     </select>
-        
+    <select id="selectPayAvailableList" parameterType="TWxUserPromotion" resultType="com.ruoyi.office.domain.TWxUserPromotion">
+        <include refid="selectTWxUserPromotionVo"/>
+        <where>
+            <if test="wxId != null "> and wx_id = #{wxId}</if>
+            <if test="couponId != null "> and coupon_id = #{couponId}</if>
+            <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
+            <if test="couponType != null  and couponType != ''"> and coupon_type = #{couponType}</if>
+            <if test="merchantId != null "> and ( merchant_id = #{merchantId} or merchant_id = 0 )</if>
+            <if test="storeId != null  and storeId != ''"> and ( store_id = #{storeId} or store_id = 0 )</if>
+            <if test="standardPrice != null "> and standard_price = #{standardPrice}</if>
+            <if test="discountPrice != null "> and discount_price = #{discountPrice}</if>
+            <if test="maxMinute != null "> and max_minute = #{maxMinute}</if>
+            <if test="startDate != null "> and start_date = #{startDate}</if>
+            <if test="endDate != null "> and end_date = #{endDate}</if>
+            <if test="weekDays != null  and weekDays != ''"> and week_days = #{weekDays}</if>
+            <if test="status != null "> and status = #{status}</if>
+        </where>
+    </select>
+
     <insert id="insertTWxUserPromotion" parameterType="TWxUserPromotion" useGeneratedKeys="true" keyProperty="id">
         insert into t_wx_user_promotion
         <trim prefix="(" suffix=")" suffixOverrides=",">

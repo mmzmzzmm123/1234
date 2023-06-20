@@ -35,6 +35,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <include refid="selectTStorePromotionVo"/>
         <where>  
             <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
+            <if test="merchantId != null "> and merchant_id = #{merchantId}</if>
+            <if test="storeId != null "> and store_id = #{storeId}</if>
             <if test="couponType != null  and couponType != ''"> and coupon_type = #{couponType}</if>
         </where>
     </select>
