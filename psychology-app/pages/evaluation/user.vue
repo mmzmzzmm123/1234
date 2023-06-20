@@ -136,19 +136,20 @@ export default {
     }
   },
   async created() {
-    this.userInfo = uni.getStorageSync("userInfo")
-	
+    // this.userInfo = uni.getStorageSync("userInfo")
+    this.userInfo = uni.getStorageSync("userInfo") ? JSON.parse(uni.getStorageSync("userInfo")) : undefined;
   },
   async mounted() {
     if (!this.userInfo && await utils.loginCallback(this.redirectUri)) {
-      this.userInfo = uni.getStorageSync("userInfo")
+      // this.userInfo = uni.getStorageSync("userInfo")
+      this.userInfo = uni.getStorageSync("userInfo") ? JSON.parse(uni.getStorageSync("userInfo")) : undefined;
     }
     if (!this.userInfo) {
       this.openLoginConfirm()
     }
     if (this.userInfo) {
       this.orderList = await userServer.getOrderList({
-        userId: this.userInfo.userId, 
+        userId: this.userInfo.userId,
         gaugeStatus: 2
       });
       this.orderList.forEach(async (item, index) => {

@@ -101,7 +101,8 @@ export default {
   	},	  
   },
    created() {
-	this.userInfo = uni.getStorageSync("userInfo")
+	// this.userInfo = uni.getStorageSync("userInfo")
+     this.userInfo = uni.getStorageSync("userInfo") ? JSON.parse(uni.getStorageSync("userInfo")) : undefined;
     if (this.userInfo && this.userInfo.userId) {
       this.getOrderList()
     }
@@ -139,7 +140,8 @@ export default {
     },
     async changeTab(status) {
       this.currentStatus = status;
-      this.userInfo = uni.getStorageSync("userInfo")
+      // this.userInfo = uni.getStorageSync("userInfo")
+      this.userInfo = uni.getStorageSync("userInfo") ? JSON.parse(uni.getStorageSync("userInfo")) : undefined;
       if (this.userInfo && this.userInfo.userId) {
 		if (status === "") {//全部订单 			
 			this.orderList = await orderServer.getOrderList(this.userInfo.userId);

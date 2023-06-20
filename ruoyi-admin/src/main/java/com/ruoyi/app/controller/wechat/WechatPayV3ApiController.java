@@ -1,5 +1,6 @@
 package com.ruoyi.app.controller.wechat;
 
+import cn.hutool.core.bean.BeanUtil;
 import com.alibaba.fastjson2.JSONObject;
 import com.ruoyi.app.controller.wechat.constant.WechatConstants;
 import com.ruoyi.app.controller.wechat.constant.WechatUrlConstants;
@@ -8,22 +9,16 @@ import com.ruoyi.app.controller.wechat.utils.WechatPayV3Utils;
 import com.ruoyi.common.constant.RespMessageConstants;
 import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.domain.AjaxResult;
-import com.ruoyi.common.enums.GaugeStatus;
-import com.ruoyi.common.enums.OrderPayStatus;
-import com.ruoyi.common.enums.OrderStatus;
 import com.ruoyi.course.constant.CourConstant;
-import com.ruoyi.course.domain.CourOrder;
-import com.ruoyi.course.domain.CourUserCourseSection;
-import com.ruoyi.course.service.ICourOrderService;
-import com.ruoyi.course.service.ICourUserCourseSectionService;
-import com.ruoyi.course.task.OrderCancelTask;
+import com.ruoyi.course.domain.CourCourse;
+import com.ruoyi.course.service.ICourCourseService;
 import com.ruoyi.gauge.constant.GaugeConstant;
-import com.ruoyi.gauge.domain.PsyOrder;
-import com.ruoyi.gauge.domain.PsyOrderPay;
-import com.ruoyi.gauge.service.IPsyOrderPayService;
-import com.ruoyi.gauge.service.IPsyOrderService;
+import com.ruoyi.gauge.domain.PsyGauge;
+import com.ruoyi.gauge.service.IPsyGaugeService;
 import com.ruoyi.psychology.domain.PsyUser;
 import com.ruoyi.psychology.service.IPsyUserService;
+import com.ruoyi.wechat.service.WechatPayV3ApiService;
+import com.ruoyi.wechat.vo.WechatPayVO;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -34,11 +29,15 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * 微信支付相关接口demo v3版本
@@ -49,8 +48,6 @@ import java.util.*;
 public class WechatPayV3ApiController extends BaseController {
  
     protected final Logger logger = LoggerFactory.getLogger(this.getClass());
-
-    private static final Integer ORDER_CANCEL_TIME = 30 * 60 * 1000;
  
     @Autowired
     public WechatPayV3Utils wechatPayV3Utils;
@@ -58,20 +55,14 @@ public class WechatPayV3ApiController extends BaseController {
     @Autowired
     private IPsyUserService psyUserService;
 
-    @Autowired
-    private ICourOrderService courOrderService;
+    @Resource
+    private WechatPayV3ApiService wechatPayV3ApiService;
 
-    @Autowired
-    private IPsyOrderPayService orderPayService;
+    @Resource
+    private ICourCourseService iCourCourseService;
 
-    @Autowired
-    private ICourUserCourseSectionService userCourseSectionService;
-
-    @Autowired
-    private IPsyOrderService psyOrderService;
-
-    @Autowired
-    private IPsyOrderPayService psyOrderPayService;
+    @Resource
+    private IPsyGaugeService iPsyGaugeService;
  
     /**
      * 发起微信小程序支付
@@ -84,87 +75,34 @@ public class WechatPayV3ApiController extends BaseController {
 
         //@TODO demo中先写死的一些参数
         Integer userId = wechatPayDTO.getUserId(); //用户id
-        Integer courseId = null;
-        Integer gaugeId = null;
         String out_trade_no = null;
-        if (wechatPayDTO.getCourseId() != null) {
-            courseId = wechatPayDTO.getCourseId(); //课程ID
-        }
-        if (wechatPayDTO.getGaugeId() != null) {
-            gaugeId = wechatPayDTO.getGaugeId(); //测评ID
-        }
 
         BigDecimal amount = wechatPayDTO.getAmount(); //单位：元
-        String module = wechatPayDTO.getModule();
+        String content = "支付demo-课程金"; //先写死一个商品描述
 
-        OrderCancelTask orderCancelTask = new OrderCancelTask();
+        switch (wechatPayDTO.getModule()) {
+            case CourConstant.MODULE_COURSE:
+                out_trade_no = createOrderNo("COU_DJ", userId); //创建商户订单号
+                CourCourse courCourse = iCourCourseService.selectCourCourseById(wechatPayDTO.getCourseId());
+                content = courCourse.getName() + "-" + courCourse.getAuthor();
 
-        if (CourConstant.MODULE_COURSE.equals(module)) {
-            out_trade_no = createOrderNo("COU_DJ", userId); //创建商户订单号
-
-            // TODO: 内部生成订单
-            CourOrder courOrder = new CourOrder();
-            courOrder.setOrderId(out_trade_no);
-            courOrder.setStatus(CourConstant.COUR_ORDER_STATUE_CREATED);
-            courOrder.setAmount(amount);
-            courOrder.setUserId(wechatPayDTO.getUserId());
-            courOrder.setCourseId(courseId);
-            CourOrder newCourOrder = courOrderService.generateCourOrder(courOrder);
-
-            // TODO: 定时将未支付的订单取消任务
-            orderCancelTask.setOrderId(newCourOrder.getId());
-            orderCancelTask.setModule(module);
-
-            // TODO: 内部生成支付对象
-            PsyOrderPay orderPay = new PsyOrderPay();
-            orderPay.setOrderId(newCourOrder.getId());
-            orderPay.setPayType(CourConstant.PAY_WAY_WEIXIN); // 微信
-            orderPay.setPayStatus(CourConstant.PAY_STATUE_PENDING);
-            orderPay.setAmount(amount);
-            orderPay.setPayId(UUID.randomUUID().toString()); // 当前使用随机生成的支付ID，后续使用第三方支付平台返回的
-            orderPayService.insertPsyOrderPay(orderPay);
-        } else if (GaugeConstant.MODULE_GAUGE.equals(module)) {
-            out_trade_no = createOrderNo("GAU_DJ", userId); //创建商户订单号
-
-            // TODO: 内部生成订单
-            PsyOrder psyOrder = PsyOrder.builder()
-                    .orderId(out_trade_no)
-                    .amount(amount)
-                    .orderStatus(OrderStatus.CREATE.getValue())
-                    .gaugeStatus(GaugeStatus.UNFINISHED.getValue())
-                    .gaugeId(gaugeId)
-                    .userId(wechatPayDTO.getUserId())
-                    .build();
-            psyOrder.setCreateBy(psyUserService.selectPsyUserById(wechatPayDTO.getUserId()).getName());
-
-            PsyOrder newPsyOrder = psyOrderService.generatePsyOrder(psyOrder);
-
-            // TODO: 定时将未支付的订单取消任务
-            orderCancelTask.setOrderId(newPsyOrder.getId());
-            orderCancelTask.setModule(module);
-
-            // TODO: 内部生成支付对象
-            PsyOrderPay psyOrderPay = PsyOrderPay.builder()
-                    .orderId(newPsyOrder.getId())
-                    .amount(amount)
-                    .payStatus(OrderPayStatus.NEED_PAY.getValue())
-                    .payId(UUID.randomUUID().toString())
-                    .build();
-            psyOrderPay.setCreateBy(psyUserService.selectPsyUserById(wechatPayDTO.getUserId()).getName());
-            psyOrderPayService.insertPsyOrderPay(psyOrderPay);
+                break;
+            case GaugeConstant.MODULE_GAUGE:
+                out_trade_no = createOrderNo("GAU_DJ", userId); //创建商户订单号
+                PsyGauge psyGauge = iPsyGaugeService.selectPsyGaugeById(wechatPayDTO.getGaugeId());
+                content = psyGauge.getTitle();
+                break;
         }
 
-        Timer timer = new Timer();
-        timer.schedule(orderCancelTask, ORDER_CANCEL_TIME);
-
+        // 将订单、支付单放入事务中
+        String attach = "订单号: " + out_trade_no; //先写死一个附加数据 这是可选的 可以用来判断支付内容做支付成功后的处理
+        WechatPayVO vo = BeanUtil.toBean(wechatPayDTO, WechatPayVO.class);
+        vo.setOutTradeNo(out_trade_no);
+        wechatPayV3ApiService.wechatPay(vo);
 
         // 根据用户ID从用户表中查询openid
         PsyUser user = psyUserService.selectPsyUserById(Integer.parseInt(userId.toString()));
         String openid = user.getWxOpenid();
-
-
-        String content = "支付demo-课程金"; //先写死一个商品描述
-        String attach = "我是附加数据"; //先写死一个附加数据 这是可选的 可以用来判断支付内容做支付成功后的处理
  
         Calendar calendar = Calendar.getInstance();
         calendar.set(Calendar.MINUTE, calendar.get(Calendar.MINUTE) + 15);
@@ -280,41 +218,7 @@ public class WechatPayV3ApiController extends BaseController {
         logger.info("最终拿到的微信支付通知数据：" + res);
         //@TODO 处理支付成功后的业务 例如 将订单状态修改为已支付 具体参数键值可参考文档 注意！！！ 微信可能会多次发送重复的通知 因此要判断业务是否已经处理过了 避免重复处理
 
-        String out_trade_no = res.getString("out_trade_no");
-
-        if (out_trade_no.startsWith("COU")) {
-            // TODO: 修改订单状态为已完成
-            CourOrder courOrder = courOrderService.selectCourOrderByOrderId(out_trade_no);
-            courOrder.setStatus(CourConstant.COUR_ORDER_STATUE_FINISHED);
-            courOrderService.updateCourOrder(courOrder);
-
-            // TODO: 将用户-课程-章节关系初始化
-
-            userCourseSectionService.initCourUserCourseSection(courOrder.getUserId(), courOrder.getCourseId());
-
-            // TODO: 修改支付对象状态为已支付
-            String payId = res.getString("transaction_id"); // 微信支付系统生成的订单号
-            PsyOrderPay orderPay = new PsyOrderPay();
-            orderPay.setOrderId(courOrder.getId()); // 订单ID
-            orderPay.setPayStatus(CourConstant.PAY_STATUE_PAID);
-            orderPay.setPayId(payId);
-            orderPayService.updatePsyOrderPayByOrderId(orderPay);
-        } else if (out_trade_no.startsWith("GAU")) {
-            // TODO: 修改订单状态为已完成
-            PsyOrder psyOrder = psyOrderService.selectPsyOrderByOrderId(out_trade_no);
-            psyOrder.setOrderStatus(OrderStatus.FINISHED.getValue());
-            psyOrderService.updatePsyOrder(psyOrder);
-
-            // TODO: 修改支付对象状态为已支付
-            String payId = res.getString("transaction_id"); // 微信支付系统生成的订单号
-            PsyOrderPay orderPay = new PsyOrderPay();
-            orderPay.setOrderId(psyOrder.getId()); // 订单ID
-            orderPay.setPayStatus(CourConstant.PAY_STATUE_PAID);
-            orderPay.setPayId(payId);
-            orderPayService.updatePsyOrderPayByOrderId(orderPay);
-        }
-
-
+        wechatPayV3ApiService.wechatPayNotify(res.getString("out_trade_no"), res.getString("transaction_id"));
         result.put("code", "SUCCESS");
         result.put("message", "OK");
         return result;

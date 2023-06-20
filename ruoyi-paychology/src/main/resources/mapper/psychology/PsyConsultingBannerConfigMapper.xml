@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.psychology.mapper.PsyConsultingBannerConfigMapper">
+
+    <resultMap type="PsyConsultingBannerConfig" id="PsyConsultingBannerConfigResult">
+        <result property="id"    column="id"    />
+        <result property="url"    column="url"    />
+        <result property="linkUrl"    column="link_url"    />
+        <result property="type"    column="type"    />
+        <result property="delFlag"    column="del_flag"    />
+        <result property="status"    column="status"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+    </resultMap>
+
+    <sql id="selectPsyConsultingBannerConfigVo">
+        select id, name, url, link_url, type, del_flag, status, create_by, create_time, update_by, update_time from psy_consulting_banner_config
+    </sql>
+
+    <select id="getList" resultType="com.ruoyi.psychology.domain.PsyConsultingBannerConfig">
+        <include refid="selectPsyConsultingBannerConfigVo"/>
+        <where>
+            <if test="name != null  and name != ''"> and name = #{name}</if>
+            <if test="url != null  and url != ''"> and url = #{url}</if>
+            <if test="linkUrl != null  and linkUrl != ''"> and link_url = #{linkUrl}</if>
+            <if test="type != null "> and type = #{type}</if>
+            <if test="status != null  and status != ''"> and status = #{status}</if>
+            <if test="delFlag != null  and delFlag != ''"> and del_flag = #{delFlag}</if>
+        </where>
+    </select>
+
+</mapper>

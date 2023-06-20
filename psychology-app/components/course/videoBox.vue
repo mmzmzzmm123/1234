@@ -22,8 +22,8 @@
       };
     },
     async mounted() {
-      this.userInfo = uni.getStorageSync("userInfo")
-
+      // this.userInfo = uni.getStorageSync("userInfo")
+      this.userInfo = uni.getStorageSync("userInfo") ? JSON.parse(uni.getStorageSync("userInfo")) : undefined;
       this.videoContext = uni.createVideoContext('myVideo');
       // initial-time属性不生效，需要直接设置
       this.videoContext.seek(this.currentCatalogue.endTime)

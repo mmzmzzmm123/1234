@@ -36,10 +36,10 @@
           status: ''
         }, {
           title: '未完成',
-          status: 1
+          status: 2
         }, {
           title: '已完成',
-          status: 2
+          status: 1
         }],
         orderList: []
       }
@@ -48,7 +48,7 @@
       this.userInfo = uni.getStorageSync('userInfo')
       this.orderList = await userServer.getOrderList({
         userId: this.userInfo.userId,
-        orderStatus: ""
+        gaugeStatus: ""
       });
     },
     methods: {
@@ -62,7 +62,7 @@
         this.currentStatus = status;
         this.orderList = await userServer.getOrderList({
           userId: this.userInfo.userId,
-          orderStatus: status
+          gaugeStatus: status
         });
       },
       async toResult(order) {

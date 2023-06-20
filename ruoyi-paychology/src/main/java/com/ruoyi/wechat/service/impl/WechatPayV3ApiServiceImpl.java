@@ -1,0 +1,148 @@
+package com.ruoyi.wechat.service.impl;
+
+import com.ruoyi.common.enums.GaugeStatus;
+import com.ruoyi.common.enums.OrderPayStatus;
+import com.ruoyi.common.enums.OrderStatus;
+import com.ruoyi.course.constant.CourConstant;
+import com.ruoyi.course.domain.CourOrder;
+import com.ruoyi.course.service.ICourOrderService;
+import com.ruoyi.course.service.ICourUserCourseSectionService;
+import com.ruoyi.course.task.OrderCancelTask;
+import com.ruoyi.gauge.constant.GaugeConstant;
+import com.ruoyi.gauge.domain.PsyOrder;
+import com.ruoyi.gauge.domain.PsyOrderPay;
+import com.ruoyi.gauge.service.IPsyOrderPayService;
+import com.ruoyi.gauge.service.IPsyOrderService;
+import com.ruoyi.psychology.service.IPsyUserService;
+import com.ruoyi.wechat.service.WechatPayV3ApiService;
+import com.ruoyi.wechat.vo.WechatPayVO;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import javax.annotation.Resource;
+import java.util.Timer;
+import java.util.UUID;
+
+@Service
+@Slf4j
+public class WechatPayV3ApiServiceImpl implements WechatPayV3ApiService {
+
+    private static final Integer ORDER_CANCEL_TIME = 30 * 60 * 1000;
+
+    @Resource
+    private IPsyUserService psyUserService;
+
+    @Resource
+    private ICourOrderService courOrderService;
+
+    @Resource
+    private IPsyOrderPayService orderPayService;
+
+    @Resource
+    private IPsyOrderService psyOrderService;
+
+    @Resource
+    private IPsyOrderPayService psyOrderPayService;
+
+    @Resource
+    private ICourUserCourseSectionService userCourseSectionService;
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void wechatPay(WechatPayVO wechatPay) {
+        OrderCancelTask orderCancelTask = new OrderCancelTask();
+
+        if (CourConstant.MODULE_COURSE.equals(wechatPay.getModule())) {
+
+            // TODO: 内部生成订单
+            CourOrder courOrder = new CourOrder();
+            courOrder.setOrderId(wechatPay.getOutTradeNo());
+            courOrder.setStatus(CourConstant.COUR_ORDER_STATUE_CREATED);
+            courOrder.setAmount(wechatPay.getAmount());
+            courOrder.setUserId(wechatPay.getUserId());
+            courOrder.setCourseId(wechatPay.getCourseId());
+            CourOrder newCourOrder = courOrderService.generateCourOrder(courOrder);
+
+            // TODO: 定时将未支付的订单取消任务
+            orderCancelTask.setOrderId(newCourOrder.getId());
+            orderCancelTask.setModule(wechatPay.getModule());
+
+            // TODO: 内部生成支付对象
+            PsyOrderPay orderPay = new PsyOrderPay();
+            orderPay.setOrderId(newCourOrder.getId());
+            orderPay.setPayType(CourConstant.PAY_WAY_WEIXIN); // 微信
+            orderPay.setPayStatus(CourConstant.PAY_STATUE_PENDING);
+            orderPay.setAmount(wechatPay.getAmount());
+            orderPay.setPayId(UUID.randomUUID().toString()); // 当前使用随机生成的支付ID，后续使用第三方支付平台返回的
+            orderPayService.insertPsyOrderPay(orderPay);
+        } else if (GaugeConstant.MODULE_GAUGE.equals(wechatPay.getModule())) {
+
+            // TODO: 内部生成订单
+            PsyOrder psyOrder = PsyOrder.builder()
+                    .orderId(wechatPay.getOutTradeNo())
+                    .amount(wechatPay.getAmount())
+                    .orderStatus(OrderStatus.CREATE.getValue())
+                    .gaugeStatus(GaugeStatus.UNFINISHED.getValue())
+                    .gaugeId(wechatPay.getGaugeId())
+                    .userId(wechatPay.getUserId())
+                    .build();
+            psyOrder.setCreateBy(psyUserService.selectPsyUserById(wechatPay.getUserId()).getName());
+
+            PsyOrder newPsyOrder = psyOrderService.generatePsyOrder(psyOrder);
+
+            // TODO: 定时将未支付的订单取消任务
+            orderCancelTask.setOrderId(newPsyOrder.getId());
+            orderCancelTask.setModule(wechatPay.getModule());
+
+            // TODO: 内部生成支付对象
+            PsyOrderPay psyOrderPay = PsyOrderPay.builder()
+                    .orderId(newPsyOrder.getId())
+                    .amount(wechatPay.getAmount())
+                    .payStatus(OrderPayStatus.NEED_PAY.getValue())
+                    .payId(UUID.randomUUID().toString())
+                    .build();
+            psyOrderPay.setCreateBy(psyUserService.selectPsyUserById(wechatPay.getUserId()).getName());
+            psyOrderPayService.insertPsyOrderPay(psyOrderPay);
+        }
+
+        Timer timer = new Timer();
+        timer.schedule(orderCancelTask, ORDER_CANCEL_TIME);
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void wechatPayNotify(String outTradeNo, String payId) {
+        if (outTradeNo.startsWith("COU")) {
+            // TODO: 修改订单状态为已完成
+            CourOrder courOrder = courOrderService.selectCourOrderByOrderId(outTradeNo);
+            courOrder.setStatus(CourConstant.COUR_ORDER_STATUE_FINISHED);
+            courOrderService.updateCourOrder(courOrder);
+
+            // TODO: 将用户-课程-章节关系初始化
+
+            userCourseSectionService.initCourUserCourseSection(courOrder.getUserId(), courOrder.getCourseId());
+
+            // TODO: 修改支付对象状态为已支付
+//            String payId = res.getString("transaction_id"); // 微信支付系统生成的订单号
+            PsyOrderPay orderPay = new PsyOrderPay();
+            orderPay.setOrderId(courOrder.getId()); // 订单ID
+            orderPay.setPayStatus(CourConstant.PAY_STATUE_PAID);
+            orderPay.setPayId(payId);
+            orderPayService.updatePsyOrderPayByOrderId(orderPay);
+        } else if (outTradeNo.startsWith("GAU")) {
+            // TODO: 修改订单状态为已完成
+            PsyOrder psyOrder = psyOrderService.selectPsyOrderByOrderId(outTradeNo);
+            psyOrder.setOrderStatus(OrderStatus.FINISHED.getValue());
+            psyOrderService.updatePsyOrder(psyOrder);
+
+            // TODO: 修改支付对象状态为已支付
+//            String payId = res.getString("transaction_id"); // 微信支付系统生成的订单号
+            PsyOrderPay orderPay = new PsyOrderPay();
+            orderPay.setOrderId(psyOrder.getId()); // 订单ID
+            orderPay.setPayStatus(CourConstant.PAY_STATUE_PAID);
+            orderPay.setPayId(payId);
+            orderPayService.updatePsyOrderPayByOrderId(orderPay);
+        }
+    }
+}

@@ -83,7 +83,8 @@ export default {
 	},
 	methods: {
 		async submitPay() {
-		  this.userInfo = uni.getStorageSync("userInfo")
+		  // this.userInfo = uni.getStorageSync("userInfo")
+      this.userInfo = uni.getStorageSync("userInfo") ? JSON.parse(uni.getStorageSync("userInfo")) : undefined;
 		  if (this.userInfo && this.userInfo.userId) {
 			let res = await getPaySign(
 				this.userInfo.userId, 
@@ -102,11 +103,12 @@ export default {
 					  title: "支付成功",
 					});					
 					uni.navigateTo({
-						url: "/pages/evaluation/product?id=" + this.productId,
+						// url: "/pages/evaluation/product?id=" + this.productId,
+						url: "/pages/evaluation/order",
 					});
 					location.reload()
 				})
-			}	  
+			}
 		
 		  } else {
 		    utils.loginWx(this.redirectUri);

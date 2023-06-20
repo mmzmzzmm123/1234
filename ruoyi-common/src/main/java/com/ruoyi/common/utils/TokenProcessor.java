@@ -1,6 +1,8 @@
 package com.ruoyi.common.utils;
 
-import sun.misc.BASE64Encoder;
+//import sun.misc.BASE64Encoder;
+import org.apache.commons.codec.binary.Base64;
+
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -31,8 +33,9 @@ public class TokenProcessor {
         try {
             MessageDigest md = MessageDigest.getInstance("md5");
             byte md5[] = md.digest(token.getBytes());
-            BASE64Encoder encoder = new BASE64Encoder();
-            return encoder.encode(md5);
+//            BASE64Encoder encoder = new BASE64Encoder();
+//            return encoder.encode(md5);
+            return Base64.encodeBase64String(md5);
         } catch (NoSuchAlgorithmException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();

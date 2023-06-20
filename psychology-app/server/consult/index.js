@@ -1,9 +1,9 @@
 import httprequest from "../httpRequest";
 export default {
   //根据字典类型获取banner图
-  getBannerList: async (bannerType) => {
-    let res = await httprequest.get("/app/course/banner/config/list", {
-      bannerType,
+  getBannerList: async (type) => {
+    let res = await httprequest.get("/app/consultant/banner/list", {
+      type,
     });
     if (res.code == 200) {
       return res.rows;
@@ -13,7 +13,7 @@ export default {
   },
   //获取热门推荐/精选测评
   getcourseByLabel: async (courseLabel) => {
-    let res = await httprequest.post("/app/course/label/list", {
+    let res = await httprequest.post("/app/consultant/class/list", {
       courseLabel,
     });
     if (res.code == 200) {

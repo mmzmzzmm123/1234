@@ -108,7 +108,8 @@ export default {
     };
   },
   async created() {
-    this.userInfo = uni.getStorageSync("userInfo")
+    // this.userInfo = uni.getStorageSync("userInfo")
+    this.userInfo = uni.getStorageSync("userInfo") ? JSON.parse(uni.getStorageSync("userInfo")) : undefined;
     this.courseId =
       utils.getParam(location.href, "courseId") ||
       utils.getParam(location.href, "id");

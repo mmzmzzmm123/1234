@@ -5,7 +5,7 @@ import com.ruoyi.common.core.domain.BaseEntity;
 import lombok.Data;
 
 /**
- * 心理测评普通设置对象 psy_gauge_Score_setting
+ * 心理测评普通设置对象 psy_gauge_score_setting
  * 
  * @author ruoyi
  * @date 2022-09-10

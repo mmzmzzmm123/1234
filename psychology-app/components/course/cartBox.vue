@@ -52,7 +52,8 @@ export default {
       this.$emit("closeCart");
     },
     async submitPay() {
-      this.userInfo = uni.getStorageSync("userInfo")
+      // this.userInfo = uni.getStorageSync("userInfo")
+      this.userInfo = uni.getStorageSync("userInfo") ? JSON.parse(uni.getStorageSync("userInfo")) : undefined;
       if (this.userInfo && this.userInfo.userId) {
 		let res = await getPaySign(
       this.userInfo.userId, 
@@ -71,7 +72,8 @@ export default {
 				  title: "支付成功",
 				});
 				uni.navigateTo({
-					url: "/pages/course/courseDetail?id=" + this.courseInfo.id,
+					// url: "/pages/course/courseDetail?id=" + this.courseInfo.id,
+					url: "/pages/course/order",
 				});
 			})
 		}	  

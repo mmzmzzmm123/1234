@@ -7,6 +7,7 @@ import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.core.domain.dto.LoginDTO;
 import com.ruoyi.common.core.page.TableDataInfo;
 import com.ruoyi.common.enums.BusinessType;
+import com.ruoyi.common.enums.OrderStatus;
 import com.ruoyi.common.utils.poi.ExcelUtil;
 import com.ruoyi.framework.web.service.AppTokenService;
 import com.ruoyi.gauge.constant.GaugeConstant;
@@ -47,23 +48,15 @@ public class AppPsyOrderController extends BaseController {
     @PostMapping("/list")
     @ApiOperation("获取订单分页列表")
     public TableDataInfo list(@RequestBody PsyOrder psyOrder, HttpServletRequest request) {
-        if (psyOrder == null) {
-            psyOrder = new PsyOrder();
-        }
-
-        Integer userId;
-        if (psyOrder.getUserId() != null) {
-            userId = psyOrder.getUserId();
-        } else {
+        if (psyOrder.getUserId() == null) {
             LoginDTO loginUser = appTokenService.getLoginUser(request);
-            userId = loginUser.getUserId();
+            psyOrder.setUserId(loginUser.getUserId());
         }
-        startPage();
-        List<PsyOrder> list = psyOrderService.queryOrderInfo(psyOrder ,userId);
 
-        // 过滤已取消的订单
-        list = list.stream().filter(item -> item.getOrderStatus() != GaugeConstant.GAUGE_ORDER_STATUE_CANCELED)
-                .collect(Collectors.toList());
+        // 必须是已支付的订单
+        psyOrder.setOrderStatus(OrderStatus.FINISHED.getValue());
+        startPage();
+        List<PsyOrder> list = psyOrderService.queryOrderInfo(psyOrder);
         return getDataTable(list);
     }
 

@@ -80,7 +80,7 @@ export default {
     };
   },
   async created() {
-    this.userInfo = uni.getStorageSync("userInfo");
+    this.userInfo = uni.getStorageSync("userInfo") ? JSON.parse(uni.getStorageSync("userInfo")) : undefined;
     this.courseId = parseInt(utils.getParam(location.href, "courseId")||utils.getParam(location.href, "id"));
     if (!this.userInfo) {
       this.courseInfo = await courseServer.getCourseBaseInfo(this.courseId)||{};
@@ -92,7 +92,7 @@ export default {
       
       this.openLoginConfirm()
       return
-    }    
+    }
 
     this.courseInfo = await courseServer.getCourseInfo(this.userInfo.userId, this.courseId)||{};
     this.catalogueList = this.courseInfo.sectionList;

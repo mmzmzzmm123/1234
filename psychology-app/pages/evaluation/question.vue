@@ -45,6 +45,7 @@ export default {
             checkNull: false,
             indexArr: ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'],
             questionList: [],
+            addInterceptorList: ["navigateTo", "redirectTo", "reLaunch", "switchTab"],
             currentIndex: 1,
             currentQuestion: {},
             currentAnswer: null,
@@ -89,39 +90,50 @@ export default {
         if (this.lastIndex == 1) {
             callTimeLoad(document.getElementById("timerBox"), true);
         }
-        /*
+        this.addInterceptor()
+    },
+  onHide: function () {
+    console.log('onHide')
+    this.rmInterceptor()
+  },
+  onUnload: function () {
+    console.log('onUnload')
+    this.rmInterceptor()
+  },
+    methods: {
+      /*
           页面跳转拦截器
         */
-        let list = ["navigateTo", "redirectTo", "reLaunch", "switchTab"];
-        list.forEach(item => { 
-         
-        //遍历的方式,navigateTo,redirectTo,reLaunch,switchTab这4个路由方法添加拦截器      
-        let that = this
-        uni.addInterceptor(item, {
+      addInterceptor () {
+        this.addInterceptorList.forEach(item => {
+          //遍历的方式,navigateTo,redirectTo,reLaunch,switchTab这4个路由方法添加拦截器
+          let that = this
+          uni.addInterceptor(item, {
             invoke(e) {
-                // 调用前拦截
-                /* 获取用户的token，自己在登录接口中保存的。 */
- 
-                // const token = uni.getStorageSync('userToken')
- 
-                // 获取要跳转的页面路径（url去掉"?"和"?"后的参数）
-                that.showDailog()
-                return false
- 
+              // 调用前拦截
+              /* 获取用户的token，自己在登录接口中保存的。 */
+              // const token = uni.getStorageSync('userToken')
+              // 获取要跳转的页面路径（url去掉"?"和"?"后的参数）
+              that.showDailog()
+              return false
             },
-            fail(err) { // 失败回调拦截 
-                console.log(err);
-                if (Debug) {
-                    uni.showModal({
-                        content: JSON.stringify(err),
-                        showCancel: false
-                    });
-                }
+            fail(err) { // 失败回调拦截
+              console.log(err);
+              if (Debug) {
+                uni.showModal({
+                  content: JSON.stringify(err),
+                  showCancel: false
+                });
+              }
             }
+          })
         })
-    })
-    },    
-    methods: {
+      },
+      rmInterceptor () {
+        this.addInterceptorList.forEach(item => {
+          uni.removeInterceptor(item)
+        })
+      },
       showDailog() {
           this.confirmMessage = {
               title: '提示',
@@ -129,7 +141,7 @@ export default {
               cancelBtn: {
                   text: '狠心退出',
                   callback: async () => {                    
-                      uni.removeInterceptor("navigateTo");
+                      this.rmInterceptor()
                       uni.navigateTo({
                           url: `/pages/evaluation/index`,
                       });                    
@@ -194,6 +206,7 @@ export default {
         toPrev() {
             this.currentIndex--;
             this.currentQuestion = this.questionList[this.currentIndex - 1];
+            this.checkNull = (this.currentQuestion.options || []).filter(i => i.selectedFlag).length === 0
         },
         //下一题
         async toNext() {

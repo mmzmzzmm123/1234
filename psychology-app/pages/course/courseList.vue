@@ -26,7 +26,8 @@ export default {
         }
     },
     async created() {
-		this.userInfo = uni.getStorageSync("userInfo")
+		// this.userInfo = uni.getStorageSync("userInfo")
+      this.userInfo = uni.getStorageSync("userInfo") ? JSON.parse(uni.getStorageSync("userInfo")) : undefined;
 		if (this.userInfo && this.userInfo.userId) {			
 			this.courseList = await userServer.getCourseList(this.userInfo.userId);
 			this.courseList.map(item => {

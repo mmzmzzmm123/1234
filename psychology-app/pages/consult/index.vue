@@ -8,7 +8,7 @@
       <swiper class="ad-swiper" indicator-dots circular indicator-color="rgb(255, 255, 255, .5)"
         indicator-active-color="#FFFFFF">
         <swiper-item v-for="(item, index) in bannerList" :key="index">
-          <image class="banner-img" :src="item.bannerUrl" @tap="tocourse(item.linkUrl)" />
+          <image class="banner-img" :src="item.url" @tap="tocourse(item.linkUrl)" />
         </swiper-item>
       </swiper>
     </view>
@@ -28,7 +28,7 @@
       </view>
       <consultant-list :consultantList="consultantList"></consultant-list>
     </view>
-    <course-tab-bar :currentIndex="0"></course-tab-bar>
+    <consult-tab-bar :currentIndex="0"></consult-tab-bar>
 
     <!-- 筛选组件 -->
     
@@ -47,14 +47,14 @@
 <script>
   import consultantList from '@/components/consult/consultantList.vue'
   import filterCom from '@/components/consult/filter.vue'
-  import indexServer from '@/server/course/index'
+  import indexServer from '@/server/consult/index'
   import loginServer from '@/server/login'
   import {
     uniPopup,
     uniPopupDialog
   } from '@dcloudio/uni-ui'
   import utils from "@/utils/common";
-  import classServer from '@/server/course/class'
+  import classServer from '@/server/consult/class'
   export default {
     components: {
       consultantList,
@@ -97,15 +97,17 @@
       }
     },
     async created() {
-      this.userInfo = uni.getStorageSync("userInfo")
-      this.bannerList = await this.getBanner(0);
+      // this.userInfo = uni.getStorageSync("userInfo")
+      this.userInfo = uni.getStorageSync("userInfo") ? JSON.parse(uni.getStorageSync("userInfo")) : undefined;
+      this.bannerList = await this.getBanner(1);
 
       const classData = await classServer.getClassList()
       this.classList = classData.slice(0, 8) // 取前8个类别
     },
     async mounted() {
       if (!this.userInfo && await utils.loginCallback(this.redirectUri)) {
-        this.userInfo = uni.getStorageSync("userInfo")
+        // this.userInfo = uni.getStorageSync("userInfo")
+        this.userInfo = uni.getStorageSync("userInfo") ? JSON.parse(uni.getStorageSync("userInfo")) : undefined;
       }
       if (!this.userInfo) {
         this.openLoginConfirm()
@@ -116,8 +118,8 @@
       async getBanner(type) {
         return await indexServer.getBannerList(type);
       },
-      async getcourse(type) {
-        return await indexServer.getcourseByLabel(type);
+      async getConsult(type) {
+        return await indexServer.getConsultByLabel(type);
       },
       async tocourse(url) {
         // 判断是否已经登录
@@ -136,7 +138,7 @@
           return
         }
         uni.navigateTo({
-          url: "/pages/course/class?classId=" + classId
+          url: "/pages/consult/class?classId=" + classId
         });
       },
       toSearch() {
@@ -146,7 +148,7 @@
           return
         }
         uni.navigateTo({
-          url: "/pages/course/search",
+          url: "/pages/consult/search",
         });
       },
       doFilter(type) {

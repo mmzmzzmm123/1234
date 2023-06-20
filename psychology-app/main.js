@@ -2,6 +2,7 @@ import App from "./App";
 
 import evaluationTabBar from '@/components/evaluation/tabBar.vue'
 import courseTabBar from '@/components/course/tabBar.vue'
+import consultTabBar from '@/components/consult/tabBar.vue'
 // #ifndef VUE3
 import Vue from "vue";
 Vue.config.productionTip = false;
@@ -17,6 +18,7 @@ const app = new Vue({
 app.$mount();
 Vue.component('evaluationTabBar',evaluationTabBar);
 Vue.component('courseTabBar',courseTabBar);
+Vue.component('consultTabBar',consultTabBar);
 // #endif
 
 // #ifdef VUE3

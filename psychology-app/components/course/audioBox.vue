@@ -39,8 +39,9 @@
       };
     },
     async mounted() {
-      this.userInfo = uni.getStorageSync("userInfo")     
-      this.player1 = this.$refs.player1; 
+      // this.userInfo = uni.getStorageSync("userInfo")
+      this.userInfo = uni.getStorageSync("userInfo") ? JSON.parse(uni.getStorageSync("userInfo")) : undefined;
+      this.player1 = this.$refs.player1;
     },
     methods: {
       audioTimeUpdateEvent(detail) { // 播放进度改变
