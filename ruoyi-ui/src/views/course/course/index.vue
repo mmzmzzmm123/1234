@@ -365,17 +365,20 @@ export default {
   components: {
     SectionDrawer,
   },
-  activated() {
-    console.log('activated')
+  created() {
+    console.log('created')
     this.getCourseClassList()
     this.getList();
   },
   methods: {
     getCoursePayType(payType) {
-      return this.coursePayTypeList.filter(item => item.id === payType)[0].name
+      const list = this.coursePayTypeList.filter(item => item.id === payType)
+      return list.length > 0 ? list[0].name : undefined
+      // return this.coursePayTypeList.filter(item => item.id === payType)[0].name
     },
     getCourseClassName(type) {
-      return this.courseClassList.filter(item => item.id === type)[0].name
+      const list = this.courseClassList.filter(item => item.id === type)
+      return list.length > 0 ? list[0].name : undefined
     },
     getCourseClassList() {
       listClass({}).then(response => {

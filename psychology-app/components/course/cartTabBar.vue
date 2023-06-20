@@ -12,7 +12,7 @@
       <view class="start-test" @tap="cartShow" v-if="!isBuy">立即购买</view>
       <view class="start-test" v-else>已购买</view>
     </view>
-    <view class="start-test" v-else>限时免费</view>
+    <view class="start-test" @tap="courseShow" v-else>限时免费</view>
   </view>
 </template>
 <script>
@@ -22,6 +22,9 @@ export default {
     cartShow() {
       this.$emit("cartShow");
     },
+    courseShow() {
+      this.$emit("courseShow");
+    }
   },
 };
 </script>

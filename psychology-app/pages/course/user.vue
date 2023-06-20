@@ -329,7 +329,7 @@
 			padding: 0 40upx 36upx;
 			box-sizing: border-box;
 
-			.box-title {
+      .box-title {
 				line-height: 102upx;
 				font-size: 30upx;
 				font-weight: 600;
@@ -407,6 +407,7 @@
 		}
 
 		.footer {
+      margin: 80upx auto;
 
 			&::before,
 			&::after {

@@ -37,7 +37,7 @@
       </navigator>
     </view>
     <!-- 底部操作菜单 -->
-    <cartTabBar @cartShow="cartShow" :payType="this.courseInfo.payType" :isBuy="this.courseInfo.isBuy"></cartTabBar>
+    <cartTabBar @cartShow="cartShow" @courseShow="courseShow" :payType="this.courseInfo.payType" :isBuy="this.courseInfo.isBuy"></cartTabBar>
     <cartBox @closeCart="cartShow" v-if="cartBoxShow && this.courseInfo.isBuy == 0" :courseInfo="courseInfo" 
       :redirectUri="redirectUri"></cartBox>
       
@@ -102,7 +102,7 @@ export default {
     });
     this.cartBoxShow = utils.getParam(location.href, "payOrder") == 1;
     
-    this.share()
+    // this.share()
   },
   methods: {
     catalogueItemClick(item) {
@@ -121,6 +121,9 @@ export default {
         }
         
       }
+    },
+    courseShow() {
+      this.currentItemIndex = 1;
     },
     cartShow() {		
       this.cartBoxShow = !this.cartBoxShow;

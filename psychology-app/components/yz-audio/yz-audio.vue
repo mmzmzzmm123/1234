@@ -139,7 +139,7 @@
 				// uni.showToast({
 				// 	title:"播放出错"+e
 				// });	
-        console.error(e)
+        // console.error(e)
 				this.playState="pause";
 				this.$emit("error",e);				
 			},

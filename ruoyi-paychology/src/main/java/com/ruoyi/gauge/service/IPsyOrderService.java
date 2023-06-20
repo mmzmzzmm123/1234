@@ -2,6 +2,7 @@ package com.ruoyi.gauge.service;
 
 import com.ruoyi.common.core.domain.dto.LoginDTO;
 import com.ruoyi.gauge.domain.PsyOrder;
+import com.ruoyi.gauge.dto.OrderQueryDTO;
 
 import java.util.List;
 
@@ -28,6 +29,8 @@ public interface IPsyOrderService
      * @return 心理测评订单信息集合
      */
     public List<PsyOrder> selectPsyOrderList(PsyOrder psyOrder);
+
+    public List<PsyOrder> queryOrderList(OrderQueryDTO psyOrder);
 
     /**
      * 新增心理测评订单信息

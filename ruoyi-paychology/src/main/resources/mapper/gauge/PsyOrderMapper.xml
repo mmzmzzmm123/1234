@@ -136,6 +136,20 @@
           and gauge_status = 1
     </select>
 
+    <select id="queryOrderList" resultType="com.ruoyi.gauge.domain.PsyOrder">
+        select po.id,po.order_id,po.gauge_id,po.order_status,po.amount,po.gauge_status,po.create_time,po.create_by,po.user_id,
+               gauge.title as gaugeTitle,pu.name as userName
+        from psy_order po inner join psy_gauge gauge ON po.gauge_id = gauge.id
+        left join psy_user pu ON po.user_id = pu.id
+        <where>
+            <if test="orderId != null  and orderId != ''"> and po.order_id like concat('%', #{orderId}, '%')</if>
+            <if test="status != null "> and po.order_status = #{status}</if>
+            <if test="userName != null  and userName != '' "> and pu.name like concat('%', #{userName}, '%')</if>
+            <if test="lowAmount != null  and lowAmount != '' "> and po.amount <![CDATA[>=]]> #{lowAmount}</if>
+            <if test="highAmount != null  and highAmount != '' "> and po.amount <![CDATA[<=]]> #{highAmount}</if>
+        </where>
+    </select>
+
     <update id="updatePsyOrderByOrderId"  parameterType="java.util.Map">
         update psy_order
         <trim prefix="SET" suffixOverrides=",">

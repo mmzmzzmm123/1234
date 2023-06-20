@@ -154,7 +154,7 @@ public class CourCourseServiceImpl implements ICourCourseService
 
         for (CourUserCourseSection userCourseSection: courUserCourseSectionList) {
             if (userCourseSection.getFinishStatus() == CourConstant.SECTION_UNFINISHED) { // 用户未学习完成过当前章节
-                studyDuration += userCourseSection.getEndTime();
+                studyDuration += userCourseSection.getEndTime() == null ? 0 : userCourseSection.getEndTime();
             } else {
                 studyDuration += courSectionService.selectCourSectionById(userCourseSection.getSectionId()).getDuration();
             }

@@ -50,9 +50,14 @@ public class PsyOrder extends BaseEntity
     @Excel(name = "用户id")
     private Integer userId;
 
+    /** 用户id */
+    @Excel(name = "用户名")
+    private String userName;
+
     /**
      * 量表标题
      */
+    @Excel(name = "量表标题")
     private String gaugeTitle;
 
     /**
