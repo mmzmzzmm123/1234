@@ -1,6 +1,9 @@
 <template>
 	<view>
-		
+		<ad-swiper></ad-swiper>
+		<view class="u-p-h-20">
+			<shop-cell></shop-cell>
+		</view>
 		<!-- <yto-authorize></yto-authorize> -->
 	</view>
 </template>
@@ -36,21 +39,7 @@
 </script>
 
 <style lang="scss">
-	.header{
-		font-size: $y-font-m;
-		border-bottom: 1rpx solid $u-border-color;
-		padding: 10rpx 0;
-	}
-	.content{
-		font-size: $y-font-s;
-		margin: 10rpx 0;
-		line-height: 1.5em;
-	}
-	.bar{
-		padding-top: 20rpx;
-		border-top: 1rpx solid $u-border-color;
-		.u-button{
-			width: 150rpx;
-		}
+	page{
+		background-color: $u-bg-color;
 	}
 </style>
