@@ -51,3 +51,10 @@ export function delBase(id) {
     method: 'delete'
   })
 }
+// 查询所有学生届别
+export function allClsYear() {
+  return request({
+    url: '/stu/base/allClsYear',
+    method: 'get'
+  })
+}

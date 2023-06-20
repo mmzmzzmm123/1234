@@ -33,6 +33,7 @@ export function getInfo(stuId) {
   })
 }
 
+
 // 新增学生信息
 export function addInfo(data) {
   return request({

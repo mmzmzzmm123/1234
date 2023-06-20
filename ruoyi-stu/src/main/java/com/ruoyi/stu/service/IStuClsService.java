@@ -58,4 +58,8 @@ public interface IStuClsService
      * @return 结果
      */
     public int deleteStuClsById(Long id);
+    /**
+     * 查询所有届别
+     */
+    List<StuCls> selectAllClsYear();
 }

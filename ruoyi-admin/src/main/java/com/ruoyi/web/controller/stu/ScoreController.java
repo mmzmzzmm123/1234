@@ -48,11 +48,20 @@ public class ScoreController extends BaseController {
      */
     @PreAuthorize("@ss.hasPermi('courseplan:info:courseplanList')")
     @GetMapping("/coursePlanList")
-    public TableDataInfo courseplanlist(String clsYear,String courseName)
+    public TableDataInfo courseplanlist(String clsYear,String courseName,String semesterName)
     {
         startPage();
-        List<StuCoursePlan> list = stuCoursePlanService.findAllLevelCourse(clsYear,courseName);
+        List<StuCoursePlan> list = stuCoursePlanService.findAllLevelCourse(clsYear,courseName,semesterName);
         return getDataTable(list);
+    }
+    /**
+     *  添加课程计划
+     */
+    @PreAuthorize("@ss.hasPermi('courseplan:info:courseplanList')")
+    @PostMapping("/addCoursePlans")
+    public AjaxResult addCoursePlans(Integer semesterId,String clsYear,Integer courseId)
+    {
+        return toAjax(stuCoursePlanService.addCoursePlans( semesterId, clsYear, courseId));
     }
     /**
      * 查询某个班级的成绩
@@ -78,6 +87,24 @@ public class ScoreController extends BaseController {
     }
 
     /**
+     * 查询所有学期
+     */
+    @PreAuthorize("@ss.hasPermi('semester:info:semesterList')")
+    @GetMapping("/allSemester")
+    public AjaxResult allSemester()
+    {
+        return success(stuCoursePlanService.findAllSemester());
+    }
+    /**
+     * 查询所有课程
+     */
+    @PreAuthorize("@ss.hasPermi('semester:info:semesterList')")
+    @GetMapping("/allCourses")
+    public AjaxResult allCourse()
+    {
+        return success(stuCoursePlanService.findAllCourses());
+    }
+    /**
      * 查询某个班级学生的平均成绩
      */
     @PreAuthorize("@ss.hasPermi('score:info:courseList')")
@@ -100,4 +127,5 @@ public class ScoreController extends BaseController {
         ExcelUtil<Score> util = new ExcelUtil<Score>(Score.class);
         util.exportExcel(response, list, "提交材料参数数据");
     }
+
 }

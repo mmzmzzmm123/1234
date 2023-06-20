@@ -90,4 +90,9 @@ public class StuClsServiceImpl implements IStuClsService
     {
         return stuClsMapper.deleteStuClsById(id);
     }
+
+    @Override
+    public List<StuCls> selectAllClsYear() {
+        return stuClsMapper.selectAllClsYear();
+    }
 }

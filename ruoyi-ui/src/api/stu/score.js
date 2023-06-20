@@ -18,6 +18,22 @@ export function coursePlanInfo(query) {
   })
 }
 
+// 查询所有学期
+export function allSemester() {
+  return request({
+    url: '/stu/score/allSemester',
+    method: 'get',
+  })
+}
+
+// 查询所有课程
+export function allCourses() {
+  return request({
+    url: '/stu/score/allCourses',
+    method: 'get',
+  })
+}
+
 // 查询某班某门课程成绩列表
 export function scoreInfo(query) {
   return request({
@@ -40,5 +56,13 @@ export function setScore(query) {
     url: '/stu/score/setScore',
     method: 'post',
     data: query
+  })
+}
+// 添加课程
+export function addCoursePlan(query) {
+  return request({
+    url: '/stu/score/addCoursePlans',
+    method: 'post',
+    params: query
   })
 }

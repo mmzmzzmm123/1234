@@ -67,5 +67,9 @@ public interface StuClsMapper
      */
 
     List<StuCls> selectBiYeStuNumByYearAndCls(@Param("clsYear") String clsYear, @Param("clsYear2") String clsYear2);
+    /**
+     * 查询所有届别
+     */
+    List<StuCls> selectAllClsYear();
 
 }

@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.stu.mapper.StuExamConstructMapper">
+    <resultMap type="com.ruoyi.stu.domain.StuExamConstruct" id="StuExamConstructResult">
+        <id column="exam_id" property="examId"/>
+        <result column="exam_titles" property="examTitles"/>
+        <result column="exam_points" property="examPoints"/>
+        <result column="exam_priorities" property="examPriorities"/>
+        <association property="semester" javaType="com.ruoyi.stu.domain.StuSemester">
+            <id column="semester_id" property="semesterId"/>
+            <result column="semester_name" property="semesterName"/>
+        </association>
+        <association property="course" javaType="com.ruoyi.stu.domain.Course">
+            <result property="courseId"    column="course_id"    />
+            <result property="courseNo"    column="course_no"    />
+            <result property="courseName"    column="course_name"    />
+            <result property="courseType"    column="course_type"    />
+            <result property="coursePlan"    column="course_plan"    />
+            <result property="courseExec"    column="course_exec"    />
+            <result property="courseScore"    column="course_score"    />
+        </association>
+    </resultMap>
+   <select id="findCon" resultMap="StuExamConstructResult">
+       SELECT * FROM stu_exam_construct
+       WHERE course_id = #{courseId} AND semester_id = #{semesterId}
+   </select>
+    <insert id="addExamConstruct">
+        INSERT stu_exam_construct(semester_id,course_id,exam_titles,exam_points)
+        VALUES (#{construct.semester.semesterId},#{construct.course.courseId},#{construct.examTitles},#{construct.examPotins})
+    </insert>
+    <update id="updateExamConstruct">
+        UPDATE stu_exam_construct SET
+          exam_titles = #{construct.examTitles},exam_points = #{construct.examPotins}
+        WHERE semester_id = #{construct.semester.semesterId}
+          AND exam_points = #{construct.examPotins}
+    </update>
+</mapper>

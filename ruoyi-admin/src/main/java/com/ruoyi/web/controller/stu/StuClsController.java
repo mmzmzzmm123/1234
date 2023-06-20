@@ -112,4 +112,14 @@ public class StuClsController extends BaseController
     {
         return toAjax(stuClsService.deleteStuClsByIds(ids));
     }
+
+    /**
+     * 查询所有届别
+     */
+    @PreAuthorize("@ss.hasPermi('stu:base:remove')")
+    @GetMapping("/allClsYear")
+    public AjaxResult allClsYear()
+    {
+        return success(stuClsService.selectAllClsYear());
+    }
 }

@@ -68,4 +68,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             (select stu_cls,count(stu_info.stu_id) `num` from stu_info_material RIGHT join stu_info on stu_info_material.stu_id = stu_info.stu_id where ( (stu_cls_year = #{clsYear} and stu_type != '3+2') or (stu_cls_year = #{clsYear2} and stu_type = '3+2') ) AND flag = 1 AND material_id between 5 AND 10 GROUP BY stu_cls)
                 ts on sc.stu_cls = ts.stu_cls
     </select>
+
+    <select id="selectAllClsYear" resultMap="StuClsResult">
+        select distinct cls_year from stu_cls
+    </select>
 </mapper>

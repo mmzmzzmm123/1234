@@ -1,25 +1,16 @@
 <template>
   <div class="app-container">
     <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch" label-width="68px">
-<!--      <el-form-item label="班级名字" prop="teaName">-->
-<!--        <el-input-->
-<!--          v-model="queryParams.stuCls"-->
-<!--          placeholder="请输入班级名字"-->
-<!--          clearable-->
-<!--          @keyup.enter.native="handleQuery"-->
-<!--        />-->
-<!--      </el-form-item>-->
       <el-form-item  label="年级" prop="clsYear">
         <el-select v-model="queryParams.clsYear" placeholder="请选择年级">
-          <el-option label="21级" value="21级"></el-option>
-          <el-option label="22级" value="22级"></el-option>
+          <el-option  v-for="(item,index) in clsYears" :key="index" :label="item" :value="item"></el-option>
         </el-select>
-<!--        <el-input-->
-<!--          v-model="queryParams.clsYear"-->
-<!--          placeholder="请选择年级"-->
-<!--          clearable-->
-<!--          @keyup.enter.native="handleQuery"-->
-<!--        />-->
+      </el-form-item>
+      <el-form-item  label="学期" prop="semesterName">
+        <el-select v-model="queryParams.semesterName" placeholder="请选择学期" >
+          <el-option  v-for="(item,index) in semesters" :key="index" :label="item.semesterName" :value="item.semesterId"></el-option>
+<!--          <el-option label="22级" value="22级"></el-option>-->
+        </el-select>
       </el-form-item>
       <el-form-item label="课程名字" prop="stuCls">
         <el-input
@@ -92,13 +83,6 @@
       <el-table-column label="年级" align="center" prop="stuCls.clsYear" />
 <!--      <el-table-column label="班级类型" align="center" prop="stuCls.cls" />-->
       <el-table-column label="学期" align="center" prop="semester.semesterName" />
-<!--      <el-table-column label="状态" align="center" prop="status" >-->
-<!--        <template slot-scope="scope">-->
-<!--          <span v-if="scope.row.status === 0">未开始</span>-->
-<!--          <span v-if="scope.row.status === 1">已开始未录入</span>-->
-<!--          <span v-if="scope.row.status === 2">已录入</span>-->
-<!--        </template>-->
-<!--      </el-table-column>-->
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button
@@ -127,7 +111,7 @@
       @pagination="getList"
     />
 
-    <!-- 添加或修改提交材料参数对话框 -->
+    <!-- 设置试卷结构对话框 -->
     <el-dialog :title="title" :visible.sync="open" width="600px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
         <el-row v-for="(item,index) in this.examConstruction" :key="index">
@@ -138,7 +122,7 @@
           </el-col>
           <el-col :span="8">
             <el-form-item label="分数" >
-              <el-input placeholder="分数" v-model="item.point" />
+              <el-input placeholder="分数" v-model.number="item.point" />
             </el-form-item>
           </el-col>
           <el-col :span="8">
@@ -148,22 +132,65 @@
           </el-col>
         </el-row>
       </el-form>
+      <el-row>
+        <el-col :span="8" :offset="18">
+          <span><b>总分：{{this.totalPoint}}</b></span>
+        </el-col>
+      </el-row>
       <div slot="footer" class="dialog-footer">
         <el-button type="primary" @click="addRow">添 加</el-button>
         <el-button type="primary" @click="submitForm">确 定</el-button>
         <el-button @click="cancel">取 消</el-button>
       </div>
     </el-dialog>
+    <!-- 添加课程对话框 -->
+    <el-dialog title="添加课程" :visible.sync="courseOpen" width="600px" append-to-body>
+      <el-form ref="form" :model="form" :rules="rules" label-width="80px">
+        <el-row>
+          <el-col :offset="4" :span="18">
+            <el-form-item  label="学期" prop="semesterName">
+              <el-select v-model="queryParams.semesterId" placeholder="请选择学期" >
+                <el-option  v-for="(item,index) in semesters" :key="index" :label="item.semesterName" :value="item.semesterId"></el-option>
+                <!--          <el-option label="22级" value="22级"></el-option>-->
+              </el-select>
+            </el-form-item>
+          </el-col>
+          <el-col :offset="4" :span="18">
+            <el-form-item label="年级">
+              <el-select v-model="queryParams.clsYear" placeholder="请选择年级">
+                <el-option  v-for="(item,index) in clsYears" :key="index" :label="item" :value="item"></el-option>
+              </el-select>
+            </el-form-item>
+          </el-col>
+          <el-col :offset="4" :span="18">
+            <el-form-item label="课程">
+              <el-select v-model="queryParams.courseId" placeholder="请选择课程">
+                <el-option  v-for="(item,index) in courses" :key="index" :label="item.courseName" :value="item.courseId"></el-option>
+              </el-select>
+            </el-form-item>
+          </el-col>
+        </el-row>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button type="primary" @click="submitForm">确 定</el-button>
+        <el-button @click="courseCancel">取 消</el-button>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
 <script>
-import { coursePlanInfo } from "@/api/stu/score";
+import { coursePlanInfo,addCoursePlan,allSemester,allCourses } from "@/api/stu/score";
+import { allClsYear } from "@/api/stu/base"
+import { construct,addConstruct,updateConstruct } from "@/api/stu/exam"
 
 export default {
   name: "exam",
   data() {
     return {
+      checked1:false,
+      //添加对话框可视
+      courseOpen:false,
       // 遮罩层
       loading: true,
       // 选中数组
@@ -187,31 +214,63 @@ export default {
         pageNum: 1,
         pageSize: 10,
         courseName: null,
-        clsYear: null
+        courseId:null,
+        clsYear: null,
+        semesterName:null,
+        semesterId:null,
       },
       // 表单参数
       form: {},
       // 表单校验
       rules: {
       },
-      examConstruction:[{title:'选择题',point:0,priority:0}]
+      examConstruction:[{title:'选择题',point:0,priority:0}],
+      clsYears:[],
+      semesters:[],
+      courses:[]
     };
   },
   created() {
     this.getList();
+    this.init();
+  },
+  computed:{
+    totalPoint(){
+      let total = 0
+      this.examConstruction.forEach((e)=>{
+        total+=e.point
+      })
+      return total
+    }
   },
   methods: {
+    init(){
+      allClsYear().then(response => {
+        response.data.forEach((cls)=>{
+          this.clsYears.push(cls.clsYear)
+        })
+      })
+      allSemester().then(response => {
+        this.semesters = response.data
+      })
+      allCourses().then(response => {
+        this.courses = response.data
+      })
+    },
     /** 查询提交材料参数列表 */
     getList() {
       this.loading = true;
       coursePlanInfo(this.queryParams).then(response => {
-        console.log(response)
         this.scoreCourseList = response.rows
         this.total = response.total
         this.loading = false
       });
     },
     // 取消按钮
+    courseCancel(){
+      this.courseOpen = false;
+      this.reset();
+    },
     cancel() {
       this.open = false;
       this.reset();
@@ -248,22 +307,34 @@ export default {
     /** 新增按钮操作 */
     handleAdd() {
       this.reset();
-      this.open = true;
-      this.title = "添加提交材料参数";
+      this.courseOpen = true;
+
     },
     /** 设置试卷结构  **/
     handleSetExamConstruction(row){
-      this.open = true
       this.title = '试卷结构设置'
-      // console.log('row',row)
-      // /** 设计路由 **/
-      // this.$router.push({
-      //   name:'stuScoreInfos',
-      //   params:{
-      //     courseName:row.course.courseName,
-      //     stuCls:row.stuCls.cls
-      //   }
-      // })
+      construct({
+        'semesterId':row.semester.semesterId,
+        'courseId':row.course.courseId
+      }).then(response=>{console.log(response)
+        if(response.data.length>0){
+          let examTitles = response.data[0].examTitles.split(',')
+          let examPoints = response.data[0].examPoints.split(',')
+          let examPriorities = response.data[0].examPriorities.split(',')
+          this.examConstruction = []
+          for (let i = 0; i < examTitles.length; i++) {
+            this.examConstruction.push({
+              title: examTitles[i],
+              point: Number.parseInt(examPoints[i]),
+              priority: Number.parseInt(examPriorities[i])
+            })
+          }
+        }else{
+          this.examConstruction = [{title:'选择题',point:0,priority:0}]
+        }
+        this.open = true
+      })
+
     },
     /** 修改按钮操作 */
     handleUpdate(row) {
@@ -280,19 +351,18 @@ export default {
     submitForm() {
       this.$refs["form"].validate(valid => {
         if (valid) {
-          if (this.form.id != null) {
-            updateMaterial(this.form).then(response => {
-              this.$modal.msgSuccess("修改成功");
-              this.open = false;
-              this.getList();
-            });
-          } else {
-            addMaterial(this.form).then(response => {
-              this.$modal.msgSuccess("新增成功");
-              this.open = false;
-              this.getList();
-            });
-          }
+          addCoursePlan({
+            semesterId: this.queryParams.semesterId,
+            clsYear: this.queryParams.clsYear,
+            courseId: this.queryParams.courseId
+          }).then(()=>{
+              this.$message({
+                type: "success",
+                message:"添加成功"
+              })
+              this.getList()
+            }
+          )
         }
       });
     },
