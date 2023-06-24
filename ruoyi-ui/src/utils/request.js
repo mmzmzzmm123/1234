@@ -43,7 +43,7 @@ service.interceptors.request.use(config => {
       time: new Date().getTime()
     }
     const sessionObj = cache.session.getJSON('sessionObj')
-    if (sessionObj === undefined || sessionObj === null || sessionObj === '') {
+    if (typeof(sessionObj) === "undefined" || sessionObj === null || sessionObj === '') {
       cache.session.setJSON('sessionObj', requestObj)
     } else {
       const s_url = sessionObj.url;                  // 请求地址
