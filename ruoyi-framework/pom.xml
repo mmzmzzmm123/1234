@@ -53,6 +53,13 @@
             <artifactId>oshi-core</artifactId>
         </dependency>
 
+        <!--检查密码是否符合自定义规则集的库-->
+        <dependency>
+            <groupId>org.passay</groupId>
+            <artifactId>passay</artifactId>
+            <version>${passay.version}</version>
+        </dependency>
+
         <!-- 系统模块-->
         <dependency>
             <groupId>com.ruoyi</groupId>

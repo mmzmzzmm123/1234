@@ -46,6 +46,18 @@ user:
     maxRetryCount: 5
     # 密码锁定时间（默认10分钟）
     lockTime: 10
+    # 密码最小长度（默认8个字符）
+    minLength: 8
+    # 密码最大长度（默认20个字符）
+    maxLength: 20
+    # 最少大写字符数（默认0个字符）
+    minUppercaseLetters: 0
+    # 最少小写字符数（默认1个字符）
+    minLowercaseLetters: 1
+    # 最少数字字符数（默认1个字符）
+    minDigits: 1
+    # 最少特殊字符数（默认0个字符）
+    minSpecialChars: 0
 
 # Spring配置
 spring:
@@ -53,7 +65,7 @@ spring:
   messages:
     # 国际化资源文件路径
     basename: i18n/messages
-  profiles: 
+  profiles:
     active: druid
   # 文件上传
   servlet:
@@ -76,7 +88,7 @@ spring:
     # 数据库索引
     database: 0
     # 密码
-    password: 
+    password:
     # 连接超时时间
     timeout: 10s
     lettuce:
@@ -98,7 +110,7 @@ token:
     secret: abcdefghijklmnopqrstuvwxyz
     # 令牌有效期（默认30分钟）
     expireTime: 30
-  
+
 # MyBatis配置
 mybatis:
     # 搜索指定包别名
@@ -109,10 +121,10 @@ mybatis:
     configLocation: classpath:mybatis/mybatis-config.xml
 
 # PageHelper分页插件
-pagehelper: 
+pagehelper:
   helperDialect: mysql
   supportMethodsArguments: true
-  params: count=countSql 
+  params: count=countSql
 
 # Swagger配置
 swagger:
@@ -122,7 +134,7 @@ swagger:
   pathMapping: /dev-api
 
 # 防止XSS攻击
-xss: 
+xss:
   # 过滤开关
   enabled: true
   # 排除链接（多个用逗号分隔）
