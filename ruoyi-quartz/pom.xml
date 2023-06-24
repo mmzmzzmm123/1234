@@ -16,7 +16,12 @@
     </description>
 
     <dependencies>
-
+        <dependency>
+            <groupId>jakarta.servlet</groupId>
+            <artifactId>jakarta.servlet-api</artifactId>
+            <version>${jakarta.servlet.version}</version>
+            <scope>provided</scope>
+        </dependency>
         <!-- 定时任务 -->
         <dependency>
             <groupId>org.quartz-scheduler</groupId>
