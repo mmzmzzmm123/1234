@@ -68,7 +68,7 @@ export default {
         this.value.forEach(item => {
           if (!this.options.some(v=> v.value == item )) this.unmatchArray.push(item)
         });
-        return true;
+        return unmatchArray.value.length > 0;
       }
       // 没有value不显示
       return false;
