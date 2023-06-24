@@ -17,6 +17,11 @@
 
     <dependencies>
 
+        <!-- Spring框架基本的核心工具 -->
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-context-support</artifactId>
+        </dependency>
         <!-- SpringBoot Web容器 -->
          <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -28,6 +33,8 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-aop</artifactId>
         </dependency>
+
+
 
         <!-- 阿里数据库连接池 -->
         <dependency>
