@@ -1,5 +1,7 @@
 package com.ruoyi.framework.web.service;
 
+import com.ruoyi.system.domain.SysConfig;
+import com.ruoyi.system.mapper.SysConfigMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,6 +35,9 @@ public class UserDetailsServiceImpl implements UserDetailsService
     @Autowired
     private SysPermissionService permissionService;
 
+    @Autowired
+    private SysConfigMapper sysConfigMapper;
+
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException
     {
@@ -51,6 +56,23 @@ public class UserDetailsServiceImpl implements UserDetailsService
         {
             log.info("登录用户：{} 已被停用.", username);
             throw new ServiceException("对不起，您的账号：" + username + " 已停用");
+        }
+
+        // 用户信息没有密码最后修改日期，则直接强制修改密码
+        if (user.getPassTime() == null) {
+            user.setConstraint(true);
+        } else {
+            // 有最后修改日期则再进行判断
+            // 获取最大密码修改时间间隔（毫秒值）
+            // 若依已经写好的方法，直接拿来用就行
+            SysConfig sysConfig = sysConfigMapper.checkConfigKeyUnique("sys.user.pass.interval");
+            long interval = Long.parseLong(sysConfig.getConfigValue()) * 24 * 60 * 60 * 1000;
+            // 获取用户密码修改间隔
+            long userInterval = System.currentTimeMillis() - user.getPassTime().getTime();
+            // 如果用户间隔超过间隔上限则要求强制修改密码
+            if (userInterval >= interval) {
+                user.setConstraint(true);
+            }
         }
 
         passwordService.validate(user);

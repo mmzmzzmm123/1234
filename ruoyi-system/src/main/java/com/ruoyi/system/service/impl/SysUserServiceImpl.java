@@ -2,8 +2,13 @@ package com.ruoyi.system.service.impl;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import javax.validation.Validator;
+
+import com.ruoyi.common.core.domain.AjaxResult;
+import com.ruoyi.system.domain.SysConfig;
+import com.ruoyi.system.mapper.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,11 +27,6 @@ import com.ruoyi.common.utils.spring.SpringUtils;
 import com.ruoyi.system.domain.SysPost;
 import com.ruoyi.system.domain.SysUserPost;
 import com.ruoyi.system.domain.SysUserRole;
-import com.ruoyi.system.mapper.SysPostMapper;
-import com.ruoyi.system.mapper.SysRoleMapper;
-import com.ruoyi.system.mapper.SysUserMapper;
-import com.ruoyi.system.mapper.SysUserPostMapper;
-import com.ruoyi.system.mapper.SysUserRoleMapper;
 import com.ruoyi.system.service.ISysConfigService;
 import com.ruoyi.system.service.ISysUserService;
 
@@ -60,6 +60,9 @@ public class SysUserServiceImpl implements ISysUserService
 
     @Autowired
     protected Validator validator;
+
+    @Autowired
+    private SysConfigMapper configMapper;
 
     /**
      * 根据条件分页查询用户列表
@@ -540,5 +543,30 @@ public class SysUserServiceImpl implements ISysUserService
             successMsg.insert(0, "恭喜您，数据已全部导入成功！共 " + successNum + " 条，数据如下：");
         }
         return successMsg.toString();
+    }
+
+    @Override
+    public AjaxResult checkPassword(Boolean constraint, String password, String oldPassword, String newPassword) {
+        constraint = constraint ? constraint : false;
+        //强制修改密码时不用判断旧密码
+        if (!constraint && !SecurityUtils.matchesPassword(oldPassword, newPassword)) {
+
+            return AjaxResult.error("修改密码失败：旧密码错误");
+        }
+        if (SecurityUtils.matchesPassword(newPassword, password)) {
+            return AjaxResult.error("新密码不能与旧密码相同");
+        }
+
+        //获取密码强度
+        SysConfig sysConfig = configMapper.checkConfigKeyUnique("sys.user.pass.strength");
+        boolean strength = Boolean.parseBoolean(sysConfig.getConfigValue());
+        if (strength) {
+            Pattern p;
+            p = Pattern.compile("^[a-zA-Z][a-zA-Z0-9!@#$%^&*()_+]{6,18}$");
+            if (!p.matcher(newPassword).find()) {
+                return AjaxResult.error("新密码以字母开头，长度在6~18之间，允许字母数字特殊字符");
+            }
+        }
+        return null;
     }
 }

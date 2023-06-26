@@ -59,6 +59,8 @@ create table sys_user (
   update_by         varchar(64)     default ''                 comment '更新者',
   update_time       datetime                                   comment '更新时间',
   remark            varchar(500)    default null               comment '备注',
+  pass_time         datetime        default null               comment '最后修改密码时间',
+  `constraint`      int             default '1'                comment '0:正常登录，1:强制修改密码',
   primary key (user_id)
 ) engine=innodb auto_increment=100 comment = '用户信息表';
 
@@ -549,7 +551,8 @@ insert into sys_config values(3, '主框架页-侧边栏主题',           'sys.
 insert into sys_config values(4, '账号自助-验证码开关',           'sys.account.captchaEnabled',    'true',          'Y', 'admin', sysdate(), '', null, '是否开启验证码功能（true开启，false关闭）');
 insert into sys_config values(5, '账号自助-是否开启用户注册功能', 'sys.account.registerUser',      'false',         'Y', 'admin', sysdate(), '', null, '是否开启注册用户功能（true开启，false关闭）');
 insert into sys_config values(6, '用户登录-黑名单列表',           'sys.login.blackIPList',         '',              'Y', 'admin', sysdate(), '', null, '设置登录IP黑名单限制，多个匹配项以;分隔，支持匹配（*通配、网段）');
-
+INSERT INTO `sys_config` VALUES (7, '密码修改时间间隔', 'sys.user.pass.interval', '90', 'Y', 'admin', '2022-09-14 16:22:55', 'admin', '2022-09-14 16:23:09', '90天强制修改密码');
+INSERT INTO `sys_config` VALUES (8, '密码强度校验', 'sys.user.pass.strength', 'true', 'Y', 'admin', '2022-09-14 17:25:45', 'admin', '2022-09-15 18:38:32', '密码包含大小写字母、数字、特殊字符且长度不低于8位');
 
 -- ----------------------------
 -- 14、系统访问记录

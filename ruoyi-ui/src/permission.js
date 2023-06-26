@@ -3,7 +3,7 @@ import store from './store'
 import { Message } from 'element-ui'
 import NProgress from 'nprogress'
 import 'nprogress/nprogress.css'
-import { getToken } from '@/utils/auth'
+import {getToken, setToken} from '@/utils/auth'
 import { isRelogin } from '@/utils/request'
 
 NProgress.configure({ showSpinner: false })
@@ -15,7 +15,14 @@ router.beforeEach((to, from, next) => {
   if (getToken()) {
     to.meta.title && store.dispatch('settings/setTitle', to.meta.title)
     /* has token*/
+    // localStorage.setItem('constraint',false)
     if (to.path === '/login') {
+      // 新增判断——当前位置未登录页面时：如果constraint值为true
+      if(localStorage.getItem("constraint") == 'true') {
+        // 去掉token
+        setToken("")
+      }
+      // 不为true时不变
       next({ path: '/' })
       NProgress.done()
     } else {
