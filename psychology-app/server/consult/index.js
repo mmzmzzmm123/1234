@@ -22,4 +22,22 @@ export default {
       return [];
     }
   },
+  //获取配置
+  getConfigByType: async (dictType) => {
+    let res = await httprequest.get("/app/consultant/config/getConfigByType/" + dictType);
+    if (res.code == 200) {
+      return res.data;
+    } else {
+      return [];
+    }
+  },
+  getAttrs: async (dictTypes) => {
+    console.log(dictTypes)
+    let res = await httprequest.get("/app/consultant/config/getConfigByTypes/" + dictTypes);
+    if (res.code == 200) {
+      return res.data;
+    } else {
+      return [];
+    }
+  },
 };

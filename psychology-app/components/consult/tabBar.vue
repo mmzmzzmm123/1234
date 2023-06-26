@@ -27,7 +27,6 @@ export default {
                     selectedIconPath: "/static/course/menu/class-active.png",
                     text: "分类"
                 },
-
                 {
                     pagePath: "/pages/consult/user",
                     iconPath: "/static/course/menu/user.png",

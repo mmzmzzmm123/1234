@@ -7,14 +7,14 @@ import lombok.EqualsAndHashCode;
 import java.io.Serializable;
 
 /**
- * 咨询banner配置对象 psy_consulting_banner_config
+ * 咨询banner配置对象 psy_consult_banner_config
  * 
  * @author ruoyi
  * @date 2023-06-16
  */
 @EqualsAndHashCode(callSuper = true)
 @Data
-public class PsyConsultingBannerConfigVO extends BaseValObj implements Serializable
+public class PsyConsultBannerConfigVO extends BaseValObj implements Serializable
 {
 
     private static final long serialVersionUID = 4435332839250909273L;

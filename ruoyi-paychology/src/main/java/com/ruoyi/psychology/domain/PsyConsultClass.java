@@ -1,19 +1,16 @@
 package com.ruoyi.psychology.domain;
 
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.ruoyi.common.annotation.Excel;
 import com.ruoyi.common.core.domain.BasePlusEntity;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
-import com.ruoyi.common.annotation.Excel;
-import com.ruoyi.common.core.domain.BaseEntity;
 
 import java.io.Serializable;
 
 /**
- * 咨询类型对象 psy_consulting_class
+ * 咨询类型对象 psy_consult_class
  * 
  * @author ruoyi
  * @date 2023-06-16
@@ -21,8 +18,8 @@ import java.io.Serializable;
 @Getter
 @Setter
 @NoArgsConstructor
-@TableName("psy_consulting_class")
-public class PsyConsultingClass extends BasePlusEntity implements Serializable
+@TableName("psy_consult_class")
+public class PsyConsultClass extends BasePlusEntity implements Serializable
 {
 
     private static final long serialVersionUID = -7533197580699098875L;

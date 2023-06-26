@@ -2,9 +2,16 @@
 <!DOCTYPE mapper
 PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.ruoyi.psychology.mapper.PsyConsultingBannerConfigMapper">
+<mapper namespace="com.ruoyi.psychology.mapper.PsyConsultBannerConfigMapper">
 
-    <resultMap type="PsyConsultingBannerConfig" id="PsyConsultingBannerConfigResult">
+    <update id="tombstonedByIds">
+        update psy_consult_banner_config set del_flag = 1 where id in
+        <foreach collection="array" item="item" open="(" separator="," close=")">
+            #{item,jdbcType=BIGINT}
+        </foreach>
+    </update>
+
+    <resultMap type="PsyConsultBannerConfig" id="PsyConsultBannerConfigResult">
         <result property="id"    column="id"    />
         <result property="url"    column="url"    />
         <result property="linkUrl"    column="link_url"    />
@@ -17,12 +24,12 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="updateTime"    column="update_time"    />
     </resultMap>
 
-    <sql id="selectPsyConsultingBannerConfigVo">
-        select id, name, url, link_url, type, del_flag, status, create_by, create_time, update_by, update_time from psy_consulting_banner_config
+    <sql id="selectPsyConsultBannerConfigVo">
+        select id, name, url, link_url, type, del_flag, status, create_by, create_time, update_by, update_time from psy_consult_banner_config
     </sql>
 
-    <select id="getList" resultType="com.ruoyi.psychology.domain.PsyConsultingBannerConfig">
-        <include refid="selectPsyConsultingBannerConfigVo"/>
+    <select id="getList" resultType="com.ruoyi.psychology.domain.PsyConsultBannerConfig">
+        <include refid="selectPsyConsultBannerConfigVo"/>
         <where>
             <if test="name != null  and name != ''"> and name = #{name}</if>
             <if test="url != null  and url != ''"> and url = #{url}</if>

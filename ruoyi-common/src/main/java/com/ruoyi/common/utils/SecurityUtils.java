@@ -117,4 +117,14 @@ public class SecurityUtils
     {
         return userId != null && 1L == userId;
     }
+
+    /**
+     * 是否为管理员,管理员返回0L
+     * @return 结果
+     */
+    public static Long getUserIdByNotAdmin()
+    {
+        Long userId = getLoginUser().getUserId();
+        return userId == null || 1L == userId ? 0L : userId;
+    }
 }

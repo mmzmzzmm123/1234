@@ -16,6 +16,8 @@ import java.util.Date;
 @ToString
 public class BaseValObj implements Serializable {
 
+    private static final long serialVersionUID = -3128541479478566110L;
+
     private Long id;
 
     private String createBy;

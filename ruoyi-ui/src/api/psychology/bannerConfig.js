@@ -38,7 +38,7 @@ export function updatePsyBannerConfig(data) {
 // 删除咨询banner配置
 export function delPsyBannerConfig(ids) {
   return request({
-    url: '/psychology/psyBannerConfig/deleteAll',
+    url: '/psychology/psyBannerConfig/' + ids,
     method: 'delete',
     data: ids
   })

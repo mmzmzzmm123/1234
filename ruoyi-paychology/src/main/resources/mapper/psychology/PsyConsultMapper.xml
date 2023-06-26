@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.psychology.mapper.PsyConsultMapper">
+
+    <update id="tombstonedByIds">
+        update psy_consult set del_flag = 1 where id in
+        <foreach collection="array" item="item" open="(" separator="," close=")">
+            #{item,jdbcType=BIGINT}
+        </foreach>
+    </update>
+    
+    <resultMap type="PsyConsult" id="PsyConsultResult">
+        <result property="id"    column="id"    />
+        <result property="catId"    column="cat_id"    />
+        <result property="userName"    column="user_name"    />
+        <result property="avatar"    column="avatar"    />
+        <result property="email"    column="email"    />
+        <result property="phonenumber"    column="phonenumber"    />
+        <result property="sex"    column="sex"    />
+        <result property="tabs"    column="tabs"    />
+        <result property="way"    column="way"    />
+        <result property="info"    column="info"    />
+        <result property="detail"    column="detail"    />
+        <result property="workNum"    column="work_num"    />
+        <result property="workTime"    column="work_time"    />
+        <result property="workHours"    column="work_hours"    />
+        <result property="delFlag"    column="del_flag"    />
+        <result property="status"    column="status"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+    </resultMap>
+
+    <sql id="selectPsyConsultVo">
+        select id, cat_id, user_name, avatar, email, phonenumber, sex, tabs, way, info, detail, work_num, work_time, work_hours, del_flag, status, create_by, create_time, update_by, update_time from psy_consult
+    </sql>
+
+    <select id="getList" parameterType="PsyConsult" resultMap="PsyConsultResult">
+        <include refid="selectPsyConsultVo"/>
+        <where>
+            <if test="userName != null  and userName != ''"> and user_name like concat('%', #{userName}, '%')</if>
+            <if test="id != null  and id != ''"> and id = #{id}</if>
+            <if test="catId != null  and catId != ''"> and cat_id = #{catId}</if>
+            <if test="tabs != null  and tabs != ''"> and tabs = #{tabs}</if>
+            <if test="way != null  and way != ''"> and way = #{way}</if>
+            <if test="sex != null  and sex != ''"> and sex = #{sex}</if>
+            <if test="status != null  and status != ''"> and status = #{status}</if>
+            <if test="delFlag != null  and delFlag != ''"> and del_flag = #{delFlag}</if>
+        </where>
+    </select>
+</mapper>

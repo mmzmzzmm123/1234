@@ -10,6 +10,16 @@
             @keyup.enter.native="handleQuery"
           />
         </el-form-item>
+        <el-form-item label="分类" prop="type" label-width="100px">
+          <el-select v-model="queryParams.type" placeholder="请选择banner分类" clearable>
+            <el-option
+              v-for="dict in dict.type.consult_banner"
+              :key="dict.value"
+              :label="dict.label"
+              :value="dict.value"
+            />
+          </el-select>
+        </el-form-item>
         <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
         <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
       </el-form-item>
@@ -70,7 +80,11 @@
         </template>
       </el-table-column>
       <el-table-column label="跳转url" align="center" prop="linkUrl" />
-      <el-table-column label="分类" align="center" prop="type" />
+      <el-table-column label="分类" align="center" prop="type">
+        <template slot-scope="scope">
+          <dict-tag :options="dict.type.consult_banner" :value="scope.row.type"/>
+        </template>
+      </el-table-column>
       <el-table-column label="状态" align="center" prop="status">
         <template slot-scope="scope">
           <el-tag :type="scope.row.status === '0' ? 'success' : 'info'" effect="plain">
@@ -118,6 +132,16 @@
         <el-form-item label="跳转url" prop="linkUrl">
           <el-input v-model="form.linkUrl" type="textarea" placeholder="跳转url" />
         </el-form-item>
+        <el-form-item label="banner分类" prop="bannerType">
+          <el-select v-model="form.type" placeholder="请选择banner分类">
+            <el-option
+              v-for="dict in dict.type.consult_banner"
+              :key="dict.value"
+              :label="dict.label"
+              :value="parseInt(dict.value)"
+            ></el-option>
+          </el-select>
+        </el-form-item>
         <el-form-item label="启用" prop="status">
           <el-switch v-model="form.status" active-value="0" inactive-value="1"/>
         </el-form-item>
@@ -135,6 +159,7 @@ import { listPsyBannerConfig, getPsyBannerConfig, delPsyBannerConfig, addPsyBann
 
 export default {
   name: "PsyBannerConfig",
+  dicts: ['consult_banner'],
   data() {
     return {
       // 遮罩层
@@ -180,6 +205,7 @@ export default {
   },
   created() {
     this.getList();
+    console.log(this.dict)
   },
   methods: {
     /** 查询咨询banner配置列表 */

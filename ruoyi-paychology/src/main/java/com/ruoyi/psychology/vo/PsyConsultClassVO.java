@@ -9,14 +9,14 @@ import lombok.*;
 import java.io.Serializable;
 
 /**
- * 咨询类型对象 psy_consulting_class
+ * 咨询类型对象 psy_consult_class
  * 
  * @author ruoyi
  * @date 2023-06-16
  */
 @EqualsAndHashCode(callSuper = true)
 @Data
-public class PsyConsultingClassVO extends BaseValObj implements Serializable
+public class PsyConsultClassVO extends BaseValObj implements Serializable
 {
 
     private static final long serialVersionUID = 2656547953531703124L;

@@ -2,9 +2,9 @@ package com.ruoyi.app.controller.psychology;
 
 import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.page.TableDataInfo;
-import com.ruoyi.psychology.domain.PsyConsultingBannerConfig;
-import com.ruoyi.psychology.service.IPsyConsultingBannerConfigService;
-import com.ruoyi.psychology.vo.PsyConsultingBannerConfigVO;
+import com.ruoyi.psychology.domain.PsyConsultBannerConfig;
+import com.ruoyi.psychology.service.IPsyConsultBannerConfigService;
+import com.ruoyi.psychology.vo.PsyConsultBannerConfigVO;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -23,16 +23,16 @@ import java.util.List;
 public class AppPsyBannerController extends BaseController
 {
     @Resource
-    private IPsyConsultingBannerConfigService psyConsultingBannerConfigService;
+    private IPsyConsultBannerConfigService PsyConsultBannerConfigService;
 
     /**
      * 查询banner列表
      */
     @GetMapping("/list")
-    public TableDataInfo list(PsyConsultingBannerConfigVO req)
+    public TableDataInfo list(PsyConsultBannerConfigVO req)
     {
         startPage();
-        List<PsyConsultingBannerConfig> list = psyConsultingBannerConfigService.getList(req);
+        List<PsyConsultBannerConfig> list = PsyConsultBannerConfigService.getList(req);
         return getDataTable(list);
     }
 

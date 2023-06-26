@@ -6,9 +6,9 @@ import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.core.page.TableDataInfo;
 import com.ruoyi.common.enums.BusinessType;
 import com.ruoyi.common.utils.poi.ExcelUtil;
-import com.ruoyi.psychology.domain.PsyConsultingClass;
-import com.ruoyi.psychology.service.IPsyConsultingClassService;
-import com.ruoyi.psychology.vo.PsyConsultingClassVO;
+import com.ruoyi.psychology.domain.PsyConsultClass;
+import com.ruoyi.psychology.service.IPsyConsultClassService;
+import com.ruoyi.psychology.vo.PsyConsultClassVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -24,21 +24,32 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("/psychology/psyClass")
-public class PsyConsultingClassController extends BaseController
+public class PsyConsultClassController extends BaseController
 {
     @Autowired
-    private IPsyConsultingClassService psyConsultingClassService;
+    private IPsyConsultClassService psyConsultClassService;
 
     /**
      * 查询咨询类型列表
      */
     @PreAuthorize("@ss.hasPermi('psychology:class:list')")
     @GetMapping("/list")
-    public TableDataInfo list(PsyConsultingClassVO req)
+    public TableDataInfo list(PsyConsultClassVO req)
     {
         startPage();
-        List<PsyConsultingClass> list = psyConsultingClassService.getList(req);
+        List<PsyConsultClass> list = psyConsultClassService.getList(req);
         return getDataTable(list);
+    }
+
+    /**
+     * 查询咨询类型列表
+     */
+    @PreAuthorize("@ss.hasPermi('psychology:class:list')")
+    @GetMapping("/getAll")
+    public AjaxResult getAll(PsyConsultClassVO req)
+    {
+        List<PsyConsultClass> list = psyConsultClassService.getList(req);
+        return AjaxResult.success(list);
     }
 
     /**
@@ -47,10 +58,10 @@ public class PsyConsultingClassController extends BaseController
     @PreAuthorize("@ss.hasPermi('psychology:class:export')")
     @Log(title = "咨询类型", businessType = BusinessType.EXPORT)
     @PostMapping("/export")
-    public void export(HttpServletResponse response, PsyConsultingClassVO req)
+    public void export(HttpServletResponse response, PsyConsultClassVO req)
     {
-        List<PsyConsultingClass> list = psyConsultingClassService.getList(req);
-        ExcelUtil<PsyConsultingClass> util = new ExcelUtil<PsyConsultingClass>(PsyConsultingClass.class);
+        List<PsyConsultClass> list = psyConsultClassService.getList(req);
+        ExcelUtil<PsyConsultClass> util = new ExcelUtil<PsyConsultClass>(PsyConsultClass.class);
         util.exportExcel(response, list, "咨询类型数据");
     }
 
@@ -61,7 +72,7 @@ public class PsyConsultingClassController extends BaseController
     @GetMapping(value = "/{id}")
     public AjaxResult getInfo(@PathVariable("id") Long id)
     {
-        return AjaxResult.success(psyConsultingClassService.getOne(id));
+        return AjaxResult.success(psyConsultClassService.getOne(id));
     }
 
     /**
@@ -70,9 +81,9 @@ public class PsyConsultingClassController extends BaseController
     @PreAuthorize("@ss.hasPermi('psychology:class:add')")
     @Log(title = "咨询类型", businessType = BusinessType.INSERT)
     @PostMapping
-    public AjaxResult add(@RequestBody PsyConsultingClassVO req)
+    public AjaxResult add(@RequestBody PsyConsultClassVO req)
     {
-        return toAjax(psyConsultingClassService.add(req));
+        return toAjax(psyConsultClassService.add(req));
     }
 
     /**
@@ -81,9 +92,9 @@ public class PsyConsultingClassController extends BaseController
     @PreAuthorize("@ss.hasPermi('psychology:class:edit')")
     @Log(title = "咨询类型", businessType = BusinessType.UPDATE)
     @PutMapping
-    public AjaxResult edit(@RequestBody PsyConsultingClassVO req)
+    public AjaxResult edit(@RequestBody PsyConsultClassVO req)
     {
-        return toAjax(psyConsultingClassService.update(req));
+        return toAjax(psyConsultClassService.update(req));
     }
 
     /**
@@ -91,17 +102,12 @@ public class PsyConsultingClassController extends BaseController
      */
     @PreAuthorize("@ss.hasPermi('psychology:class:remove')")
     @Log(title = "咨询类型", businessType = BusinessType.DELETE)
-	@DeleteMapping("/deleteAll")
-    public AjaxResult remove(@RequestBody List<Long> ids)
+    @DeleteMapping("/{ids}")
+    public AjaxResult remove(@PathVariable Long[] ids)
     {
-        return toAjax(psyConsultingClassService.deleteAll(ids));
-    }
-
-    @PreAuthorize("@ss.hasPermi('psychology:banner:remove')")
-    @Log(title = "咨询类型", businessType = BusinessType.DELETE)
-    @DeleteMapping("/delete")
-    public AjaxResult delete(@RequestBody Long id)
-    {
-        return toAjax(psyConsultingClassService.delete(id));
+        if (ids == null || ids.length == 0) {
+            return error("请选择数据进行删除");
+        }
+        return toAjax(psyConsultClassService.deleteAll(ids));
     }
 }

@@ -2,9 +2,16 @@
 <!DOCTYPE mapper
 PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.ruoyi.psychology.mapper.PsyConsultingClassMapper">
+<mapper namespace="com.ruoyi.psychology.mapper.PsyConsultClassMapper">
+
+    <update id="tombstonedByIds">
+        update psy_consult_class set del_flag = 1 where id in
+        <foreach collection="array" item="item" open="(" separator="," close=")">
+            #{item,jdbcType=BIGINT}
+        </foreach>
+    </update>
     
-    <resultMap type="PsyConsultingClass" id="PsyConsultingClassResult">
+    <resultMap type="PsyConsultClass" id="PsyConsultClassResult">
         <result property="id"    column="id"    />
         <result property="name"    column="name"    />
         <result property="sort"    column="sort"    />
@@ -17,12 +24,12 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="updateTime"    column="update_time"    />
     </resultMap>
 
-    <sql id="selectPsyConsultingClassVo">
-        select id, name, sort, url, del_flag, status, create_by, create_time, update_by, update_time from psy_consulting_class
+    <sql id="selectPsyConsultClassVo">
+        select id, name, sort, url, del_flag, status, create_by, create_time, update_by, update_time from psy_consult_class
     </sql>
 
-    <select id="getList" parameterType="PsyConsultingClass" resultMap="PsyConsultingClassResult">
-        <include refid="selectPsyConsultingClassVo"/>
+    <select id="getList" parameterType="PsyConsultClass" resultMap="PsyConsultClassResult">
+        <include refid="selectPsyConsultClassVo"/>
         <where>  
             <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
             <if test="sort != null "> and sort = #{sort}</if>

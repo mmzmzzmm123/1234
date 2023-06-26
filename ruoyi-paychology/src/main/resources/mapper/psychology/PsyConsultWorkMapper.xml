@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.psychology.mapper.PsyConsultWorkMapper">
+
+    <select id="checkDataUnique" resultType="com.ruoyi.psychology.domain.PsyConsultWork">
+        <include refid="selectPsyConsultWorkVo"/>
+        where consult_id = #{consultId} and del_flag = 0
+        and (time_start <![CDATA[ <= ]]> #{timeEnd} and time_end <![CDATA[ >= ]]> #{timeStart})
+        <if test="id != null "> and id != #{id}</if>
+    </select>
+
+    <update id="tombstonedByIds">
+        update psy_consult_work set del_flag = 1 where id in
+        <foreach collection="array" item="item" open="(" separator="," close=")">
+            #{item,jdbcType=BIGINT}
+        </foreach>
+    </update>
+
+    <resultMap type="PsyConsultWork" id="PsyConsultWorkResult">
+        <result property="id"    column="id"    />
+        <result property="consultId"    column="consult_id"    />
+        <result property="consultName"    column="consult_name"    />
+        <result property="serveId"    column="serve_id"    />
+        <result property="serveName"    column="serve_name"    />
+        <result property="type"    column="type"    />
+        <result property="timeStart"    column="time_start"    />
+        <result property="timeEnd"    column="time_end"    />
+        <result property="time"    column="time"    />
+        <result property="num"    column="num"    />
+        <result property="delFlag"    column="del_flag"    />
+        <result property="status"    column="status"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+    </resultMap>
+
+    <sql id="selectPsyConsultWorkVo">
+        select id, consult_id, consult_name, serve_id, serve_name, type, time_start, time_end, time, num, del_flag, status, create_by, create_time, update_by, update_time from psy_consult_work
+    </sql>
+
+    <select id="getList" parameterType="PsyConsultWork" resultMap="PsyConsultWorkResult">
+        <include refid="selectPsyConsultWorkVo"/>
+        <where>
+            <if test="consultId != null "> and consult_id = #{consultId}</if>
+            <if test="serveId != null "> and serve_id = #{serveId}</if>
+            <if test="serveName != null  and serveName != ''"> and serve_name like concat('%', #{serveName}, '%')</if>
+            <if test="consultName != null  and consultName != ''"> and consult_name like concat('%', #{consultName}, '%')</if>
+            <if test="type != null  and type != ''"> and type = #{type}</if>
+            <if test="timeStart != null "> and time_start <![CDATA[ >= ]]> #{timeStart}</if>
+            <if test="timeEnd != null "> and time_end <![CDATA[ <= ]]> #{timeEnd}</if>
+            <if test="status != null  and status != ''"> and status = #{status}</if>
+            <if test="delFlag != null  and delFlag != ''"> and del_flag = #{delFlag}</if>
+        </where>
+    </select>
+</mapper>

@@ -31,10 +31,9 @@
     <consult-tab-bar :currentIndex="0"></consult-tab-bar>
 
     <!-- 筛选组件 -->
-    
     <uni-popup ref="popupFilter" type="top" background-color="#fff">
-      <filter-com :filterParams="filterParams" @close="doFilterClose">
-      
+      <filter-com :filterParams="filterParams"  :attrList="attrList" :sexList="sexList" :typeList="typeList" :priceList="priceList" @close="doFilterClose">
+
       </filter-com>
     </uni-popup>
           
@@ -64,6 +63,10 @@
     },
     data() {
       return {
+        attrList: [],
+        sexList: [],
+        typeList: [],
+        priceList: [],
         bannerList: [],
         classList: [],
         consultantList: [{
@@ -99,10 +102,14 @@
     async created() {
       // this.userInfo = uni.getStorageSync("userInfo")
       this.userInfo = uni.getStorageSync("userInfo") ? JSON.parse(uni.getStorageSync("userInfo")) : undefined;
-      this.bannerList = await this.getBanner(1);
+      this.bannerList = await this.getBanner(0);
 
       const classData = await classServer.getClassList()
       this.classList = classData.slice(0, 8) // 取前8个类别
+      await this.getTypes()
+      await this.getAttrs()
+      await this.getPrice()
+      await this.getSex()
     },
     async mounted() {
       if (!this.userInfo && await utils.loginCallback(this.redirectUri)) {
@@ -115,6 +122,18 @@
 
     },
     methods: {
+      async getTypes() {
+        this.typeList = await indexServer.getConfigByType('consult_type');
+      },
+      async getAttrs() {
+        this.attrList = await indexServer.getAttrs(['consult_direction_one','consult_direction_two','consult_direction_three']);
+      },
+      async getPrice() {
+        this.priceList = await indexServer.getConfigByType('consult_price');
+      },
+      async getSex() {
+        this.sexList = await indexServer.getConfigByType('consult_sex');
+      },
       async getBanner(type) {
         return await indexServer.getBannerList(type);
       },

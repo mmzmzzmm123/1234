@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.psychology.mapper.PsyConsultConfigMapper">
+
+    <resultMap id="quesDictByGroup" type="com.ruoyi.psychology.vo.PsyConsultConfigByGroupVO">
+        <result property="title" column="title"></result>
+        <collection property="child" ofType="com.ruoyi.psychology.vo.PsyConsultConfigVO">
+            <result property="title" column="title"></result>
+            <result property="code" column="code"></result>
+            <result property="name" column="name"></result>
+            <result property="value" column="value"></result>
+        </collection>
+    </resultMap>
+
+    <select id="getConfigByTypes" resultMap="quesDictByGroup">
+        SELECT
+            a.dict_name as `title`,
+            a.dict_type as `code`,
+            b.dict_label as `name`,
+            b.dict_value as `value`
+        FROM
+            sys_dict_type a
+                INNER JOIN sys_dict_data b ON a.dict_type = b.dict_type
+        <where>
+            a.dict_type IN
+            <foreach collection="types" item="item" open="(" separator="," close=")">
+                #{item,jdbcType=VARCHAR}
+            </foreach>
+        </where>
+        ORDER BY b.dict_sort asc
+    </select>
+
+</mapper>
