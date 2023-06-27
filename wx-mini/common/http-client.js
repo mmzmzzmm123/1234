@@ -106,7 +106,7 @@ HttpClient.prototype.request = function(url, data, showLoading, method, hideErro
 
 HttpClient.prototype.getToken = function(code){
 	this.token = ''
-	this.tokenTask = this.request('wxLogin', {code}).then((auth)=>{
+	this.tokenTask = this.request('wxLogin', {code, appName: this.appName}).then((auth)=>{
 		this.token = 'Bearer ' + auth.token
 		uni.setStorage({
 			key: 'token',

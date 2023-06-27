@@ -121,25 +121,4 @@ public class TWxUserServiceImpl extends ServiceImpl<TWxUserMapper, TWxUser> impl
         baseMapper.update(null, updateWrapper);
     }
 
-    @Override
-    public void regWithShare(String unionId, String inviteCode) {
-        UpdateWrapper<TWxUser> updateWrapper = new UpdateWrapper<>();
-        updateWrapper.lambda().eq(TWxUser::getUnionId, unionId);
-        final TWxUser wxUser = baseMapper.selectOne(updateWrapper);
-        if (wxUser != null) {
-            updateWrapper.lambda().set(TWxUser::getShareCode, inviteCode)
-                    .set(TWxUser::getLoginIp, IpUtils.getIpAddr())
-                    .set(TWxUser::getLoginDate, DateUtils.getNowDate());
-            tWxUserMapper.update(null, updateWrapper);
-        } else {
-            TWxUser newUser = new TWxUser();
-            newUser.setUnionId(unionId);
-            newUser.setShareCode(inviteCode);
-            newUser.setLoginIp(IpUtils.getIpAddr());
-            newUser.setLoginDate(DateUtils.getNowDate());
-            tWxUserMapper.insertTWxUser(newUser);
-        }
-        throw new ServiceException("只更新了分享码,奖励操作暂未执行");
-    }
-
 }

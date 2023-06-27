@@ -59,8 +59,8 @@ public class SysLoginController
     /**
      * 微信用户登录
      */
-    @Log(title = "微信用户信息", businessType = BusinessType.INSERT)
-    @PostMapping("/wxlogin")
+//    @Log(title = "微信用户信息", businessType = BusinessType.INSERT)
+    @PostMapping("/wxLogin")
     public AjaxResult wxlogin(@RequestBody WxLoginBody loginBody)
     {
         String token = loginService.wxMaLogin(loginBody);

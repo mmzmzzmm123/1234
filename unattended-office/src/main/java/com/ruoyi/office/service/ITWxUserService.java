@@ -67,5 +67,4 @@ public interface ITWxUserService
 
     void updateLogInfo(WxUser wxUser);
 
-    void regWithShare(String unionId, String inviteCode);
 }

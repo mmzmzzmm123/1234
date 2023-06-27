@@ -5,10 +5,13 @@ import cn.binarywang.wx.miniapp.bean.WxMaJscode2SessionResult;
 import com.ruoyi.common.core.domain.model.WxLoginBody;
 import com.ruoyi.common.enums.UserStatus;
 import com.ruoyi.common.exception.ServiceException;
+import com.ruoyi.common.utils.DateUtils;
 import com.ruoyi.common.utils.StringUtils;
+import com.ruoyi.common.utils.ip.IpUtils;
 import com.ruoyi.framework.config.WxMaConfig;
 import com.ruoyi.framework.web.service.UserDetailsServiceImpl;
 import com.ruoyi.common.core.domain.entity.WxUser;
+import com.ruoyi.office.domain.TWxUser;
 import com.ruoyi.office.mapper.WxUserMapper;
 import me.chanjar.weixin.common.error.WxErrorException;
 import org.slf4j.Logger;
@@ -46,6 +49,13 @@ public class WxAuthenticationProvider implements AuthenticationProvider {
                 wxUser.setUnionId(result.getUnionid());
                 wxUser.setCreateBy("admin");
                 wxUser.setCreateTime(new Date());
+                wxUser.setLoginDate(DateUtils.getNowDate());
+                wxUser.setLoginIp(IpUtils.getIpAddr());
+                if(StringUtils.isNotEmpty(loginBody.getInviteCode())){
+                    wxUser.setShareCode(loginBody.getInviteCode());
+                    // 新用户奖励 待补充
+
+                }
                 userMapper.insertWxUser(wxUser);
             } else {
                 if (UserStatus.DISABLE.getCode().equals(wxUser.getStatus())) {

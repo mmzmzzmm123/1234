@@ -4,7 +4,7 @@ var i18n
 
 const client = new HttpClient({
 	baseApiUrl: BaseApiUrl,
-	appName: 'mrs-tool',
+	appName: 'office',
 	loginHandler(){
 		return new Promise((resolve, reject)=>{
 			uni.login({

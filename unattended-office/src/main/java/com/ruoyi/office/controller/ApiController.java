@@ -26,8 +26,6 @@ import com.ruoyi.office.domain.vo.WxPayCallback;
 import com.ruoyi.office.service.*;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.logging.LogFactory;
-import org.aspectj.weaver.loadtime.Aj;
-import org.checkerframework.checker.units.qual.A;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;

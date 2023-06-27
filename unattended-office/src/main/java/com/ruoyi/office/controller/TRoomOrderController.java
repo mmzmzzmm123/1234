@@ -8,7 +8,6 @@ import cn.hutool.extra.qrcode.QrConfig;
 import com.ruoyi.common.utils.SecurityUtils;
 import com.ruoyi.office.domain.vo.*;
 import io.swagger.annotations.ApiOperation;
-import org.checkerframework.checker.units.qual.A;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
