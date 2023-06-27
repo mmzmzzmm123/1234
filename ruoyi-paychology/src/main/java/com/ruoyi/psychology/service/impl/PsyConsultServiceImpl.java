@@ -52,7 +52,7 @@ public class PsyConsultServiceImpl implements IPsyConsultService {
     @Override
     public List<PsyConsult> getList(PsyConsultVO req) {
         if (SecurityUtils.getUserIdByNotAdmin() != 0L) {
-            req.setId(SecurityUtils.getUserIdByNotAdmin());
+            req.setUserId(SecurityUtils.getUserIdByNotAdmin());
         }
         req.setDelFlag("0");
         return psyConsultMapper.getList(req);
@@ -86,6 +86,7 @@ public class PsyConsultServiceImpl implements IPsyConsultService {
 
         // 新增用户
         userService.insertUser(user);
+        req.setUserId(user.getUserId());
 
         // 默认初始化所有服务
         List<PsyConsultServe> serves = new ArrayList<>();

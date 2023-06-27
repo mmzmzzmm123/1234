@@ -10,6 +10,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -37,14 +39,14 @@ public class PsyConsultWorkServiceImpl implements IPsyConsultWorkService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public int add(PsyConsultWorkVO req) {
-        req.setTime(DateUtils.differentMinByMillisecond(req.getTimeStart(), req.getTimeEnd()));
+        converTime(req);
         return psyConsultWorkMapper.insert(BeanUtil.toBean(req, PsyConsultWork.class));
     }
 
     @Override
     @Transactional(rollbackFor = Exception.class)
     public int update(PsyConsultWorkVO req) {
-        req.setTime(DateUtils.differentMinByMillisecond(req.getTimeStart(), req.getTimeEnd()));
+        converTime(req);
         return psyConsultWorkMapper.updateById(BeanUtil.toBean(req, PsyConsultWork.class));
     }
 
@@ -58,5 +60,27 @@ public class PsyConsultWorkServiceImpl implements IPsyConsultWorkService {
     @Transactional(rollbackFor = Exception.class)
     public int delete(Long id) {
         return psyConsultWorkMapper.deleteById(id);
+    }
+
+    private void converTime(PsyConsultWorkVO req) {
+        req.setTime(DateUtils.differentMinByMillisecond(req.getTimeStart(), req.getTimeEnd()));
+        req.setDay(DateUtils.parseDateToStr(DateUtils.YYYY_MM_DD, req.getTimeStart()));
+        req.setWeek(getWeekOfDate(req.getTimeStart()));
+    }
+
+    /**
+     * 获取当前日期是星期几
+     *
+     * @param date
+     * @return 当前日期是星期几
+     */
+    private String getWeekOfDate(Date date) {
+        String[] weekDays = { "星期日", "星期一", "星期二", "星期三", "星期四", "星期五", "星期六" };
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(date);
+        int w = cal.get(Calendar.DAY_OF_WEEK) - 1;
+        if (w < 0)
+            w = 0;
+        return weekDays[w];
     }
 }

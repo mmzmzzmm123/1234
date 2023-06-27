@@ -22,6 +22,9 @@ public class PsyConsultVO extends BaseValObj implements Serializable
     private Long catId;
 
     /** 登录名 */
+    private Long userId;
+
+    /** 登录名 */
     private String userName;
 
     /** 头像 */

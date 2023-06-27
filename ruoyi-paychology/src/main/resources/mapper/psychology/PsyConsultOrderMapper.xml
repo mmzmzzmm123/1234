@@ -2,14 +2,7 @@
 <!DOCTYPE mapper
 PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.ruoyi.psychology.mapper.PsyConsultWorkMapper">
-
-    <select id="checkDataUnique" resultType="com.ruoyi.psychology.domain.PsyConsultWork">
-        <include refid="selectPsyConsultWorkVo"/>
-        where consult_id = #{consultId} and del_flag = 0
-        and (time_start <![CDATA[ <= ]]> #{timeEnd} and time_end <![CDATA[ >= ]]> #{timeStart})
-        <if test="id != null "> and id != #{id}</if>
-    </select>
+<mapper namespace="com.ruoyi.psychology.mapper.PsyConsultOrderMapper">
 
     <update id="tombstonedByIds">
         update psy_consult_work set del_flag = 1 where id in
@@ -18,12 +11,15 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         </foreach>
     </update>
 
-    <resultMap type="PsyConsultWork" id="PsyConsultWorkResult">
+    <resultMap type="PsyConsultOrder" id="PsyConsultOrderResult">
         <result property="id"    column="id"    />
+        <result property="orderNo"    column="order_no"    />
         <result property="consultId"    column="consult_id"    />
         <result property="consultName"    column="consult_name"    />
         <result property="serveId"    column="serve_id"    />
         <result property="serveName"    column="serve_name"    />
+        <result property="userId"    column="user_id"    />
+        <result property="workId"    column="work_id"    />
         <result property="type"    column="type"    />
         <result property="day"    column="day"    />
         <result property="week"    column="week"    />
@@ -31,6 +27,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="timeEnd"    column="time_end"    />
         <result property="time"    column="time"    />
         <result property="num"    column="num"    />
+        <result property="buyNum"    column="buy_num"    />
+        <result property="amount"    column="amount"    />
         <result property="delFlag"    column="del_flag"    />
         <result property="status"    column="status"    />
         <result property="createBy"    column="create_by"    />
@@ -39,22 +37,29 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="updateTime"    column="update_time"    />
     </resultMap>
 
-    <sql id="selectPsyConsultWorkVo">
-        select id, consult_id, consult_name, serve_id, serve_name, type, day, week, time_start, time_end, time, num, del_flag, status, create_by, create_time, update_by, update_time from psy_consult_work
+    <sql id="selectPsyConsultOrderVo">
+        select id, order_no, consult_id, consult_name, serve_id, serve_name, user_id, work_id, type, day, week, time_start, time_end, time, num, buy_num, amount, del_flag, status, create_by, create_time, update_by, update_time from psy_consult_order
     </sql>
 
-    <select id="getList" parameterType="PsyConsultWork" resultMap="PsyConsultWorkResult">
-        <include refid="selectPsyConsultWorkVo"/>
+    <select id="getList" parameterType="PsyConsultOrder" resultMap="PsyConsultOrderResult">
+        <include refid="selectPsyConsultOrderVo"/>
         <where>
+            <if test="orderNo != null  and orderNo != ''"> and order_no = #{orderNo}</if>
             <if test="consultId != null "> and consult_id = #{consultId}</if>
+            <if test="consultName != null  and consultName != ''"> and consult_name like concat('%', #{consultName}, '%')</if>
             <if test="serveId != null "> and serve_id = #{serveId}</if>
             <if test="serveName != null  and serveName != ''"> and serve_name like concat('%', #{serveName}, '%')</if>
-            <if test="consultName != null  and consultName != ''"> and consult_name like concat('%', #{consultName}, '%')</if>
+            <if test="userId != null "> and user_id = #{userId}</if>
+            <if test="workId != null "> and work_id = #{workId}</if>
             <if test="type != null  and type != ''"> and type = #{type}</if>
-            <if test="timeStart != null "> and time_start <![CDATA[ >= ]]> #{timeStart}</if>
-            <if test="timeEnd != null "> and time_end <![CDATA[ <= ]]> #{timeEnd}</if>
+            <if test="timeStart != null "> and time_start = #{timeStart}</if>
+            <if test="timeEnd != null "> and time_end = #{timeEnd}</if>
+            <if test="time != null  and time != ''"> and time = #{time}</if>
+            <if test="num != null  and num != ''"> and num = #{num}</if>
+            <if test="buyNum != null  and buyNum != ''"> and buy_num = #{buyNum}</if>
+            <if test="amount != null "> and amount = #{amount}</if>
             <if test="status != null  and status != ''"> and status = #{status}</if>
-            <if test="delFlag != null  and delFlag != ''"> and del_flag = #{delFlag}</if>
         </where>
     </select>
+
 </mapper>

@@ -42,8 +42,16 @@ public class PsyConsultWork extends BasePlusEntity implements Serializable
     private String serveName;
 
     /** 可选班次0全天 1上午 2下午 3晚上 */
-    @Excel(name = "可选班次0全天 1上午 2下午 3晚上")
+    @Excel(name = "可选班次")
     private String type;
+
+    /** 天 */
+    @Excel(name = "日期")
+    private String day;
+
+    /** 周 */
+    @Excel(name = "星期")
+    private String week;
 
     /** 咨询时段 */
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")

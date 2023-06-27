@@ -31,6 +31,9 @@ public class PsyConsult extends BasePlusEntity implements Serializable
     private Long catId;
 
     /** 登录名 */
+    private Long userId;
+
+    /** 登录名 */
     @Excel(name = "登录名")
     private String userName;
 

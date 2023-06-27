@@ -14,6 +14,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <resultMap type="PsyConsult" id="PsyConsultResult">
         <result property="id"    column="id"    />
         <result property="catId"    column="cat_id"    />
+        <result property="userId"    column="user_id"    />
         <result property="userName"    column="user_name"    />
         <result property="avatar"    column="avatar"    />
         <result property="email"    column="email"    />
@@ -35,13 +36,14 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </resultMap>
 
     <sql id="selectPsyConsultVo">
-        select id, cat_id, user_name, avatar, email, phonenumber, sex, tabs, way, info, detail, work_num, work_time, work_hours, del_flag, status, create_by, create_time, update_by, update_time from psy_consult
+        select id, cat_id, user_id, user_name, avatar, email, phonenumber, sex, tabs, way, info, detail, work_num, work_time, work_hours, del_flag, status, create_by, create_time, update_by, update_time from psy_consult
     </sql>
 
     <select id="getList" parameterType="PsyConsult" resultMap="PsyConsultResult">
         <include refid="selectPsyConsultVo"/>
         <where>
             <if test="userName != null  and userName != ''"> and user_name like concat('%', #{userName}, '%')</if>
+            <if test="userId != null  and userId != ''"> and user_id = #{userId}</if>
             <if test="id != null  and id != ''"> and id = #{id}</if>
             <if test="catId != null  and catId != ''"> and cat_id = #{catId}</if>
             <if test="tabs != null  and tabs != ''"> and tabs = #{tabs}</if>
