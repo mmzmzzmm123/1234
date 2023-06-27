@@ -14,7 +14,9 @@ services:
       - net-1
     healthcheck:
       test: [ "CMD", "curl","-f","http://localhost:80" ]
-      interval: 5s
+      interval: 10s
+      timeout: 5s
+      retries: 3
     depends_on:
       backend:
         condition: service_healthy
@@ -34,17 +36,20 @@ services:
       - 8080:8080
     volumes:
       - data-upload:/home/ruoyi/uploadPath
+      - ~/.m2:/root/.m2
     networks:
       - net-1
     healthcheck:
       test: [ "CMD", "curl", "-f", "http://localhost:8080" ]
-      interval: 5s
+      interval: 20s
+      timeout: 5s
+      retries: 3
     depends_on:
       mysql:
         condition: service_healthy
 
   mysql:
-    image: mysql:5.7
+    image: mysql:8.0
     environment:
       - MYSQL_ROOT_PASSWORD=123456
       - MYSQL_DATABASE=ry-vue
@@ -63,13 +68,15 @@ services:
     healthcheck:
       #test: [ "CMD", 'mysqladmin', 'ping', '-h', 'localhost', '-u', 'root', '-p123456' ]
       test: [ "CMD-SHELL", 'mysqladmin ping -h localhost -u root -p$$MYSQL_ROOT_PASSWORD || exit 1' ]
-      interval: 5s
+      interval: 10s
+      timeout: 5s
+      retries: 3
     depends_on:
       redis:
         condition: service_healthy
 
   redis:
-    image: redis:6.0
+    image: redis:7.0
     ports:
       - 6379:6379
     volumes:
@@ -78,7 +85,9 @@ services:
       - net-1
     healthcheck:
       test: [ "CMD", 'redis-cli',"ping" ]
-      interval: 5s
+      interval: 10s
+      timeout: 5s
+      retries: 3
 
 volumes:
   data-mysql:
