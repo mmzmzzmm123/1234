@@ -2,6 +2,7 @@ package com.ruoyi.psychology.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.ruoyi.psychology.domain.PsyConsult;
+import com.ruoyi.psychology.request.PsyConsultReq;
 import com.ruoyi.psychology.vo.PsyConsultVO;
 
 import java.util.List;
@@ -14,6 +15,8 @@ import java.util.List;
  */
 public interface PsyConsultMapper extends BaseMapper<PsyConsult>
 {
+
+    List<PsyConsult> search(PsyConsultReq req);
 
     List<PsyConsult> getList(PsyConsultVO req);
 

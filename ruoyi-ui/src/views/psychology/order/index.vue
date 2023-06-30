@@ -1,82 +1,43 @@
 <template>
   <div class="app-container">
     <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch" label-width="68px">
-      <el-form-item label="订单号" prop="orderNo">
+      <el-form-item label="订单编号" prop="orderId">
         <el-input
           v-model="queryParams.orderNo"
-          placeholder="请输入订单号"
+          placeholder="请输入订单编号"
           clearable
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="咨询师" prop="consultId">
+      <el-form-item label="订单状态" prop="status">
+        <el-select v-model="queryParams.status" placeholder="请选择订单状态" clearable>
+          <el-option
+            v-for="dict in dict.type.consult_order"
+            :key="dict.value"
+            :label="dict.label"
+            :value="dict.value"
+          />
+        </el-select>
+      </el-form-item>
+      <el-form-item label="用户名称" prop="userName">
         <el-input
-          v-model="queryParams.consultId"
-          placeholder="请输入咨询师"
+          v-model="queryParams.userName"
+          placeholder="请输入用户名称"
           clearable
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="咨询师" prop="consultName">
+      <el-form-item label="应付金额" class="amount">
         <el-input
-          v-model="queryParams.consultName"
-          placeholder="请输入咨询师"
+          v-model="queryParams.lowAmount"
+          placeholder="请输入最低应付金额"
           clearable
           @keyup.enter.native="handleQuery"
         />
-      </el-form-item>
-      <el-form-item label="服务" prop="serveId">
+        <div style="margin: 0 10px">~</div>
         <el-input
-          v-model="queryParams.serveId"
-          placeholder="请输入服务"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="服务" prop="serveName">
-        <el-input
-          v-model="queryParams.serveName"
-          placeholder="请输入服务"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="客户id" prop="userId">
-        <el-input
-          v-model="queryParams.userId"
-          placeholder="请输入客户id"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="排班" prop="workId">
-        <el-input
-          v-model="queryParams.workId"
-          placeholder="请输入排班"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="咨询时段开始" prop="timeStart">
-        <el-date-picker clearable
-          v-model="queryParams.timeStart"
-          type="date"
-          value-format="yyyy-MM-dd"
-          placeholder="请选择咨询时段开始">
-        </el-date-picker>
-      </el-form-item>
-      <el-form-item label="咨询时段结束" prop="timeEnd">
-        <el-date-picker clearable
-          v-model="queryParams.timeEnd"
-          type="date"
-          value-format="yyyy-MM-dd"
-          placeholder="请选择咨询时段结束">
-        </el-date-picker>
-      </el-form-item>
-      <el-form-item label="应付费用" prop="amount">
-        <el-input
-          v-model="queryParams.amount"
-          placeholder="请输入应付费用"
+          v-model="queryParams.highAmount"
+          placeholder="请输入最高应付金额"
           clearable
           @keyup.enter.native="handleQuery"
         />
@@ -135,15 +96,11 @@
 
     <el-table v-loading="loading" :data="orderList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="主键" align="center" prop="id" />
       <el-table-column label="订单号" align="center" prop="orderNo" />
-      <el-table-column label="咨询师" align="center" prop="consultId" />
       <el-table-column label="咨询师" align="center" prop="consultName" />
-      <el-table-column label="服务" align="center" prop="serveId" />
       <el-table-column label="服务" align="center" prop="serveName" />
-      <el-table-column label="客户id" align="center" prop="userId" />
-      <el-table-column label="排班" align="center" prop="workId" />
-      <el-table-column label="可选班次0全天 1上午 2下午 3晚上" align="center" prop="type" />
+      <el-table-column label="客户" align="center" prop="userName" />
+      <el-table-column label="班次" align="center" prop="type" />
       <el-table-column label="咨询时段开始" align="center" prop="timeStart" width="180">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.timeStart, '{y}-{m}-{d}') }}</span>
@@ -154,11 +111,11 @@
           <span>{{ parseTime(scope.row.timeEnd, '{y}-{m}-{d}') }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="咨询时长(分钟)" align="center" prop="time" />
-      <el-table-column label="可预约数量" align="center" prop="num" />
-      <el-table-column label="已预约数量" align="center" prop="buyNum" />
+      <el-table-column label="咨询时长" align="center" prop="time" />
+      <el-table-column label="可预约" align="center" prop="num" />
+      <el-table-column label="已预约" align="center" prop="buyNum" />
       <el-table-column label="应付费用" align="center" prop="amount" />
-      <el-table-column label="订单状态0-待付款 1-待预约 2-待咨询 3-已完成 4-已取消" align="center" prop="status" />
+      <el-table-column label="订单状态" align="center" prop="status" />
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button
@@ -178,7 +135,7 @@
         </template>
       </el-table-column>
     </el-table>
-    
+
     <pagination
       v-show="total>0"
       :total="total"
@@ -247,6 +204,7 @@ import { listOrder, getOrder, delOrder, addOrder, updateOrder } from "@/api/psyc
 
 export default {
   name: "Order",
+  dicts: ['consult_order'],
   data() {
     return {
       // 遮罩层
@@ -272,19 +230,12 @@ export default {
         pageNum: 1,
         pageSize: 10,
         orderNo: null,
-        consultId: null,
         consultName: null,
-        serveId: null,
         serveName: null,
-        userId: null,
-        workId: null,
-        type: null,
-        timeStart: null,
-        timeEnd: null,
-        time: null,
-        num: null,
-        buyNum: null,
+        userName: null,
         amount: null,
+        lowAmount: null,
+        highAmount: null,
         status: null,
       },
       // 表单参数
@@ -434,3 +385,16 @@ export default {
   }
 };
 </script>
+<style lang="scss" scoped>
+.amount {
+  ::v-deep {
+    .el-form-item__content {
+      display: inline-flex;
+      align-items: center;
+    }
+    .el-input__inner {
+      width: 150px;
+    }
+  }
+}
+</style>

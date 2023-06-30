@@ -15,15 +15,17 @@ import com.ruoyi.course.service.ICourCourseService;
 import com.ruoyi.gauge.constant.GaugeConstant;
 import com.ruoyi.gauge.domain.PsyGauge;
 import com.ruoyi.gauge.service.IPsyGaugeService;
+import com.ruoyi.psychology.constant.ConsultConstant;
 import com.ruoyi.psychology.domain.PsyUser;
+import com.ruoyi.psychology.service.IPsyConsultWorkService;
 import com.ruoyi.psychology.service.IPsyUserService;
+import com.ruoyi.psychology.vo.PsyConsultWorkVO;
 import com.ruoyi.wechat.service.WechatPayV3ApiService;
 import com.ruoyi.wechat.vo.WechatPayVO;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -49,11 +51,14 @@ public class WechatPayV3ApiController extends BaseController {
  
     protected final Logger logger = LoggerFactory.getLogger(this.getClass());
  
-    @Autowired
+    @Resource
     public WechatPayV3Utils wechatPayV3Utils;
 
-    @Autowired
+    @Resource
     private IPsyUserService psyUserService;
+
+    @Resource
+    private IPsyConsultWorkService workService;
 
     @Resource
     private WechatPayV3ApiService wechatPayV3ApiService;
@@ -91,6 +96,20 @@ public class WechatPayV3ApiController extends BaseController {
                 out_trade_no = createOrderNo("GAU_DJ", userId); //创建商户订单号
                 PsyGauge psyGauge = iPsyGaugeService.selectPsyGaugeById(wechatPayDTO.getGaugeId());
                 content = psyGauge.getTitle();
+                break;
+            case ConsultConstant.MODULE_CONSULT:
+                out_trade_no = createOrderNo("CON_DJ", userId); //创建商户订单号
+                content = "预约心理咨询服务";
+
+                if (wechatPayDTO.getWorkId() > 0) {
+                    PsyConsultWorkVO work = workService.getOne(wechatPayDTO.getWorkId());
+                    if ("1".equals(work.getStatus())) {
+                        return error("排班状态异常");
+                    }
+                    if (work.getNum() == 0) {
+                        return error("当前班次已经约满");
+                    }
+                }
                 break;
         }
 

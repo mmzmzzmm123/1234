@@ -7,9 +7,10 @@
     </view>
     
     <view class="consult-direction" v-if="filterParams.type === 1">
-      <view class="consult-direction-content" v-for="item in attrList">
+      <view class="consult-direction-content" v-for="item in attrParams.attrList">
         <view class="consult-direction-title">
           {{ item.title }}
+          <view class="consult-direction-tab-more">可多选</view>
         </view>
         <view class="consult-direction-tabs">
           <view class="consult-direction-tab" @tap="selectAttr(item.title, 'all')">
@@ -22,8 +23,8 @@
       </view>
     </view>
     <view class="price-filter" v-else-if="filterParams.type === 2">
-      <view v-for="price in priceList" class="price-list">
-        <view class="price-item" :class="{ selected: selectedPriceId === price.value }" @tap="selectPrice(price)">{{ price.name }}</view>
+      <view v-for="item in attrParams.priceList" class="price-list">
+        <view class="price-item" :class="{ selected: filterParams.price !== null && filterParams.price === item.name }" @tap="selectType(item.name, 'price')">{{ item.name }}</view>
       </view>
     </view>
     <view class="consult-filter" v-else="filterParams.type === 3">
@@ -32,10 +33,10 @@
           咨询师性别
         </view>
         <view class="consult-filter-tabs">
-          <view class="consult-filter-tab" @tap="selectSex(0)">
+          <view class="consult-filter-tab" @tap="selectType('不限', 'sex')">
             不限
           </view>
-          <view class="consult-filter-tab" :class="{ selected: item.flag }" v-for="item in sexList" @tap="selectSex(item.value)">
+          <view class="consult-filter-tab" :class="{ selected: filterParams.sex !== null && item.name === filterParams.sex }" v-for="item in attrParams.sexList" @tap="selectType(item.name, 'sex')">
             {{ item.name }}性咨询师
           </view>
         </view>
@@ -46,10 +47,41 @@
           咨询师方式
         </view>
         <view class="consult-filter-tabs">
-          <view class="consult-filter-tab" @tap="selectSex(0)">
+          <view class="consult-filter-tab" @tap="selectType('不限', 'serve')">
             不限
           </view>
-          <view class="consult-filter-tab" :class="{ selected: item.flag }" v-for="item in typeList" @tap="selectType(item.value)">
+          <view class="consult-filter-tab" :class="{ selected: filterParams.serve !== null && item.name === filterParams.serve }" v-for="item in attrParams.typeList" @tap="selectType(item.name, 'serve')">
+            {{ item.name }}
+          </view>
+        </view>
+      </view>
+
+      <view class="consult-filter-tab-content">
+        <view class="consult-filter-tab-title">
+          咨询时段
+          <view class="consult-filter-tab-more">可多选</view>
+        </view>
+        <view>
+          <uni-grid :column="7" borderColor="#fff">
+            <uni-grid-item v-for="item in attrParams.dateList">
+              <view class="grid-item-box" @tap="selectType(item.date, 'days')">
+                <view class="grid-item-box-month">{{ item.month }}</view>
+                <view class="grid-item-box-item" :class="{ selected: filterParams.days.includes(item.date) }">
+                  <view class="grid-item-box-item-day" :class="{ selected: filterParams.days.includes(item.date) }">{{ item.day }}</view>
+                  <view class="grid-item-box-item-week" :class="{ selected: filterParams.days.includes(item.date) }">{{ item.week }}</view>
+                </view>
+              </view>
+            </uni-grid-item>
+          </uni-grid>
+        </view>
+      </view>
+
+      <view class="consult-filter-tab-content">
+        <view class="consult-filter-tab-title">
+          咨询时段
+        </view>
+        <view class="consult-filter-tabs">
+          <view class="consult-filter-tab" :class="{ selected: filterParams.time !== null && item.name === filterParams.time }" v-for="item in attrParams.timeList" @tap="selectType(item.name, 'time')">
             {{ item.name }}
           </view>
         </view>
@@ -65,29 +97,22 @@
 
 <script>
   export default {
-    props: ['filterParams','attrList','sexList','typeList','priceList'],
+    props: ['filterParams','attrParams'],
     data() {
       return {
-        sexAll: false,
-        typeAll: false,
-        selectedPriceId: 0,
-        selectedPriceName: '',
       }
     },
     created() {
-      this.selectedPriceId = this.filterParams.price.id
-      this.selectedPriceName = this.filterParams.price.name
-      this.sexAll = this.sexList.length > 0 && this.sexList.length === this.sexList.filter(i => i.flag).length
-      this.typeAll = this.typeList.length > 0 && this.typeList.length === this.typeList.filter(i => i.flag).length
-      console.log(this.sexList)
-      console.log(this.typeList)
+      console.log(this.attrParams.sexList)
+      console.log(this.attrParams.typeList)
     },
     methods: {
       doFilter(type) {
         this.filterParams.type = type
+        this.reset()
       },
       selectAttr(title, val) {
-        this.attrList.forEach(node => {
+        this.attrParams.attrList.forEach(node => {
           if (node.title === title) {
             if (val === 'all') {
               node.flag = !node.flag
@@ -107,60 +132,54 @@
           }
         })
       },
-      selectSex(val) {
-        this.sexList.forEach(i => {
-          if (val === 0) {
-            i.flag = !this.sexAll
-          } else if (i.value === val) {
-            i.flag = !i.flag
+      selectType(val, type) {
+        if (type === 'days') {
+          if (this.filterParams.days.includes(val)) {
+            this.filterParams.days.splice(this.filterParams.days.findIndex(a => a === val), 1)
+          } else {
+            this.filterParams.days.push(val)
           }
-        })
-        if (val !== 0) {
-          this.sexAll = this.sexList.length > 0 && this.sexList.length === this.sexList.filter(i => i.flag).length
+        } else {
+          this.filterParams[type] = this.filterParams[type] === val ? undefined : val
         }
-      },
-      selectType(val) {
-        this.typeList.forEach(i => {
-          if (val === 0) {
-            i.flag = !this.typeAll
-          } else if (i.value === val) {
-            i.flag = !i.flag
-          }
-        })
-        this.typeAll = this.typeList.length > 0 && this.typeList.length === this.typeList.filter(i => i.flag).length
-      },
-      selectPrice(price) {
-        this.selectedPriceId = price.value
-        this.selectedPriceName = price.name
       },
       reset() {
-        switch(this.filterParams.type) {
-          case 1: 
-          
-          break;
-          case 2:
-          this.selectedPriceId = 0
-          this.selectedPriceName = ''
-          break;
-          case 3:
-          
-          break;
-        }
+        this.attrParams.attrList.forEach(a => {
+          if (a.child && a.child.length > 0) {
+            a.child.forEach(b => {
+              b.flag = false
+            })
+          }
+        })
+        this.filterParams.way = []
+        this.filterParams.days = []
+        this.filterParams.sex = null
+        this.filterParams.time = null
+        this.filterParams.serve = null
+        this.filterParams.price = null
+        this.filterParams.dayType = null
       },
       confirm() {
         switch(this.filterParams.type) {
-          case 1: 
-          
+          case 1:
+            const attr = []
+            this.attrParams.attrList.forEach(a => {
+              if (a.child && a.child.length > 0) {
+                a.child.filter(it => it.flag).forEach(b => {
+                  attr.push(b.name)
+                })
+              }
+            })
+
+            console.log(attr)
+            this.filterParams.way = attr
           break;
           case 2:
-          this.filterParams.price.id = this.selectedPriceId
-          this.filterParams.price.name = this.selectedPriceName
-          break;
           case 3:
-          
+            console.log(this.filterParams)
           break;
         }
-        this.$emit('close')
+        this.$emit('submit')
       }
     }
   }
@@ -168,7 +187,6 @@
 
 <style lang="scss" scoped>
   .filter-container {
-    width: 100%;
     padding: 26upx;
     .index-title {
       display: flex;
@@ -202,9 +220,7 @@
 
     .consult-direction {
       .consult-filter-tab-content {
-        padding-top: 18upx;
-        padding-top: 18upx;
-
+        margin-top: 26upx;
       }
       .consult-direction-title {
         height: 42upx;
@@ -212,6 +228,16 @@
         font-weight: 600;
         color: #333333;
         line-height: 42upx;
+        position: relative;
+        margin-bottom: 6upx;
+        margin-top: 6upx;
+      }
+      .consult-direction-tab-more {
+        position: absolute;
+        top: 10upx;
+        right: 10upx;
+        color: #777777;
+        font-size: 24upx;
       }
       .consult-direction-tabs {
         display: flex;
@@ -252,10 +278,8 @@
     }
 
     .consult-filter {
-      .consult-filter-content {
-        padding-top: 18upx;
-        padding-top: 18upx;
-
+      .consult-filter-tab-content {
+        margin-top: 26upx;
       }
       .consult-filter-tab-title {
         height: 42upx;
@@ -263,6 +287,15 @@
         font-weight: 600;
         color: #333333;
         line-height: 42upx;
+        position: relative;
+        margin-bottom: 20upx;
+      }
+      .consult-filter-tab-more {
+        position: absolute;
+        top: 10upx;
+        right: 10upx;
+        color: #777777;
+        font-size: 24upx;
       }
       .consult-filter-tabs {
         display: flex;
@@ -283,6 +316,43 @@
       .selected {
         background: #FF703F;
         color: #FFFFFF;
+      }
+      .grid-item-box {
+        background-color: #fff;
+        display: flex;
+        justify-content: center;
+        text-align: center;
+        flex-wrap: wrap;
+      }
+      .grid-item-box-month {
+        color: #AAAAAA;
+        font-size: 24upx;
+      }
+      .grid-item-box-item {
+        width: 72rpx;
+        height: 86rpx;
+        border-radius: 4rpx;
+        margin-top: 6upx;
+        .grid-item-box-item-day {
+          font-size: 30upx;
+          font-weight: 600;
+          color: #333333;
+          .selected {
+            color: #FFFFFF;
+          }
+        }
+        .grid-item-box-item-week {
+          font-size: 24upx;
+          font-weight: 400;
+          color: #777777;
+          .selected {
+            color: #FFFFFF;
+          }
+        }
+        .selected {
+          background: #FF703F;
+          color: #FFFFFF;
+        }
       }
     }
     

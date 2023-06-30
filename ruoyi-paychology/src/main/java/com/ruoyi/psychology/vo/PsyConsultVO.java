@@ -44,6 +44,7 @@ public class PsyConsultVO extends BaseValObj implements Serializable
 
     /** 咨询方向 */
     private String way;
+    private String wayStr;
 
     /** 介绍文案 */
     private String info;
@@ -52,7 +53,7 @@ public class PsyConsultVO extends BaseValObj implements Serializable
     private String detail;
 
     /** 咨询人数 */
-    private String workNum;
+    private Integer workNum;
 
     /** 服务时长 */
     private Integer workTime;

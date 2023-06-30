@@ -3,6 +3,7 @@ package com.ruoyi.wechat.service.impl;
 import com.ruoyi.common.enums.GaugeStatus;
 import com.ruoyi.common.enums.OrderPayStatus;
 import com.ruoyi.common.enums.OrderStatus;
+import com.ruoyi.common.utils.IDhelper;
 import com.ruoyi.course.constant.CourConstant;
 import com.ruoyi.course.domain.CourOrder;
 import com.ruoyi.course.service.ICourOrderService;
@@ -13,7 +14,12 @@ import com.ruoyi.gauge.domain.PsyOrder;
 import com.ruoyi.gauge.domain.PsyOrderPay;
 import com.ruoyi.gauge.service.IPsyOrderPayService;
 import com.ruoyi.gauge.service.IPsyOrderService;
+import com.ruoyi.psychology.constant.ConsultConstant;
+import com.ruoyi.psychology.domain.PsyConsultPay;
+import com.ruoyi.psychology.service.IPsyConsultOrderService;
+import com.ruoyi.psychology.service.IPsyConsultPayService;
 import com.ruoyi.psychology.service.IPsyUserService;
+import com.ruoyi.psychology.vo.PsyConsultOrderVO;
 import com.ruoyi.wechat.service.WechatPayV3ApiService;
 import com.ruoyi.wechat.vo.WechatPayVO;
 import lombok.extern.slf4j.Slf4j;
@@ -41,6 +47,12 @@ public class WechatPayV3ApiServiceImpl implements WechatPayV3ApiService {
 
     @Resource
     private IPsyOrderService psyOrderService;
+
+    @Resource
+    private IPsyConsultPayService psyConsultPayService;
+
+    @Resource
+    private IPsyConsultOrderService psyConsultOrderService;
 
     @Resource
     private IPsyOrderPayService psyOrderPayService;
@@ -104,6 +116,30 @@ public class WechatPayV3ApiServiceImpl implements WechatPayV3ApiService {
                     .build();
             psyOrderPay.setCreateBy(psyUserService.selectPsyUserById(wechatPay.getUserId()).getName());
             psyOrderPayService.insertPsyOrderPay(psyOrderPay);
+        } else if (ConsultConstant.MODULE_CONSULT.equals(wechatPay.getModule())) {
+            // 心理咨询服务
+            Long id = IDhelper.getNextId();
+            PsyConsultOrderVO psyConsultOrderVO = new PsyConsultOrderVO();
+            psyConsultOrderVO.setId(id);
+            psyConsultOrderVO.setOrderNo(wechatPay.getOutTradeNo());
+            psyConsultOrderVO.setAmount(wechatPay.getAmount());
+            psyConsultOrderVO.setWorkId(wechatPay.getWorkId());
+            psyConsultOrderVO.setServeId(wechatPay.getServeId());
+            psyConsultOrderVO.setUserId(Long.valueOf(wechatPay.getUserId()));
+            psyConsultOrderService.add(psyConsultOrderVO);
+
+            // TODO: 定时将未支付的订单取消任务
+            orderCancelTask.setId(id);
+            orderCancelTask.setModule(wechatPay.getModule());
+
+            // TODO: 内部生成支付对象
+            PsyConsultPay pay = new PsyConsultPay();
+            pay.setOrderId(id);
+            pay.setAmount(wechatPay.getAmount());
+            pay.setPayType(CourConstant.PAY_WAY_WEIXIN); // 微信
+            pay.setDelFlag("0");
+            pay.setStatus(ConsultConstant.PAY_STATUE_PENDING);
+            psyConsultPayService.add(pay);
         }
 
         Timer timer = new Timer();
@@ -143,6 +179,23 @@ public class WechatPayV3ApiServiceImpl implements WechatPayV3ApiService {
             orderPay.setPayStatus(CourConstant.PAY_STATUE_PAID);
             orderPay.setPayId(payId);
             orderPayService.updatePsyOrderPayByOrderId(orderPay);
+        } else if (outTradeNo.startsWith("CON")) {
+            // TODO: 修改订单状态为已完成
+            PsyConsultOrderVO psyOrder = psyConsultOrderService.getOneByOrderId(outTradeNo);
+            psyOrder.setStatus(ConsultConstant.CONSULT_ORDER_STATUE_PENDING);
+
+            if (psyOrder.getWorkId() > 0) {
+                psyOrder.setNum(0);
+                psyOrder.setBuyNum(1);
+                psyOrder.setStatus(ConsultConstant.CONSULT_ORDER_STATUE_UNCONSULT);
+            }
+
+            psyConsultOrderService.update(psyOrder);
+
+            // TODO: 修改支付对象状态为已支付
+            PsyConsultPay pay = psyConsultPayService.getOneByOrder(psyOrder.getId());
+            pay.setStatus(ConsultConstant.PAY_STATUE_PAID);
+            psyConsultPayService.update(pay);
         }
     }
 }

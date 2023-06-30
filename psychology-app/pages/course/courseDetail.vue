@@ -57,10 +57,6 @@ import courseServer from "@/server/course/course";
 import cartTabBar from "@/components/course/cartTabBar";
 import cartBox from "@/components/course/cartBox";
 import customCatalogueList from "@/components/course/catalogueList";
-import {
-  uniPopup,
-  uniPopupDialog
-} from '@dcloudio/uni-ui'
 import loginServer from '@/server/login'
 import videoBox from "@/components/course/videoBox.vue"
 import audioBox from "@/components/course/audioBox.vue"

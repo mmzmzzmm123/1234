@@ -19,6 +19,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="serveId"    column="serve_id"    />
         <result property="serveName"    column="serve_name"    />
         <result property="userId"    column="user_id"    />
+        <result property="userName"    column="user_name"    />
         <result property="workId"    column="work_id"    />
         <result property="type"    column="type"    />
         <result property="day"    column="day"    />
@@ -38,7 +39,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </resultMap>
 
     <sql id="selectPsyConsultOrderVo">
-        select id, order_no, consult_id, consult_name, serve_id, serve_name, user_id, work_id, type, day, week, time_start, time_end, time, num, buy_num, amount, del_flag, status, create_by, create_time, update_by, update_time from psy_consult_order
+        select id, order_no, consult_id, consult_name, serve_id, serve_name, user_id, user_name, work_id, type, day, week, time_start, time_end, time, num, buy_num, amount, del_flag, status, create_by, create_time, update_by, update_time from psy_consult_order
     </sql>
 
     <select id="getList" parameterType="PsyConsultOrder" resultMap="PsyConsultOrderResult">
@@ -47,6 +48,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="orderNo != null  and orderNo != ''"> and order_no = #{orderNo}</if>
             <if test="consultId != null "> and consult_id = #{consultId}</if>
             <if test="consultName != null  and consultName != ''"> and consult_name like concat('%', #{consultName}, '%')</if>
+            <if test="userName != null  and userName != ''"> and user_name like concat('%', #{userName}, '%')</if>
             <if test="serveId != null "> and serve_id = #{serveId}</if>
             <if test="serveName != null  and serveName != ''"> and serve_name like concat('%', #{serveName}, '%')</if>
             <if test="userId != null "> and user_id = #{userId}</if>

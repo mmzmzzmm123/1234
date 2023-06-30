@@ -19,7 +19,7 @@ import java.util.List;
  * @date 2022-08-26
  */
 @RestController
-@RequestMapping("/app/consultant/class")
+@RequestMapping("/app/consult/class")
 public class AppPsyClassController extends BaseController
 {
     @Resource

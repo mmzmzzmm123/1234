@@ -9,8 +9,8 @@ Vue.config.productionTip = false;
 App.mpType = "app";
 
 // vconsole调试工具
-var VConsole = require('vconsole')
-const vConsole = new VConsole()
+// var VConsole = require('vconsole')
+// const vConsole = new VConsole()
 
 const app = new Vue({
   ...App,

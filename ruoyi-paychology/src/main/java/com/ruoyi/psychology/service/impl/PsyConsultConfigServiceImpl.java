@@ -2,14 +2,20 @@ package com.ruoyi.psychology.service.impl;
 
 import com.ruoyi.common.core.domain.entity.SysDictData;
 import com.ruoyi.common.core.domain.entity.SysDictType;
+import com.ruoyi.psychology.dto.DateNumDTO;
 import com.ruoyi.psychology.mapper.PsyConsultConfigMapper;
 import com.ruoyi.psychology.service.IPsyConsultConfigService;
 import com.ruoyi.psychology.vo.PsyConsultConfigByGroupVO;
 import com.ruoyi.psychology.vo.PsyConsultConfigVO;
 import com.ruoyi.system.service.ISysDictTypeService;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -28,6 +34,43 @@ public class PsyConsultConfigServiceImpl implements IPsyConsultConfigService
 
     @Resource
     private ISysDictTypeService iSysDictTypeService;
+
+    @Override
+    public List<DateNumDTO> getDateNum(Integer num) {
+        List<DateNumDTO> list = new ArrayList<>();
+        if (num == 0) {
+            return list;
+        }
+        String[] weekDays = { "周日", "周一", "周二", "周三", "周四", "周五", "周六" };
+        Date date = new Date();
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+
+        for (int i = 1; i <= num; i++) {
+            if (i > 1) {
+                calendar.add(Calendar.DATE, 1);
+            }
+
+            int w = calendar.get(Calendar.DAY_OF_WEEK) - 1;
+            if (w < 0) {
+                w = 0;
+            }
+
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+            String fm = sdf.format(calendar.getTime());
+            String[] format = StringUtils.split(fm, "-");
+
+            DateNumDTO dto = new DateNumDTO();
+            dto.setDate(fm);
+            dto.setYear(format[0]);
+            dto.setMonth(format[1] + "月");
+            dto.setWeek(weekDays[w]);
+            dto.setDay(format[2]);
+            list.add(dto);
+        }
+
+        return list;
+    }
 
     @Override
     public List<PsyConsultConfigVO> getConfigByType(String dictType) {

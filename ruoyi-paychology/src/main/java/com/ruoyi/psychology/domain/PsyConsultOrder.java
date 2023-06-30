@@ -32,7 +32,7 @@ public class PsyConsultOrder extends BasePlusEntity implements Serializable
     private String orderNo;
 
     /** 咨询师 */
-    @Excel(name = "咨询师")
+//    @Excel(name = "咨询师")
     private Long consultId;
 
     /** 咨询师 */
@@ -48,15 +48,18 @@ public class PsyConsultOrder extends BasePlusEntity implements Serializable
     private String serveName;
 
     /** 客户id */
-    @Excel(name = "客户id")
+//    @Excel(name = "客户id")
     private Long userId;
 
+    @Excel(name = "客户")
+    private String userName;
+
     /** 排班 */
-    @Excel(name = "排班")
+//    @Excel(name = "排班")
     private Long workId;
 
     /** 可选班次0全天 1上午 2下午 3晚上 */
-    @Excel(name = "可选班次0全天 1上午 2下午 3晚上")
+    @Excel(name = "可选班次")
     private String type;
 
     /** 天 */
@@ -79,15 +82,15 @@ public class PsyConsultOrder extends BasePlusEntity implements Serializable
 
     /** 咨询时长(分钟) */
     @Excel(name = "咨询时长(分钟)")
-    private String time;
+    private Integer time;
 
     /** 可预约数量 */
     @Excel(name = "可预约数量")
-    private String num;
+    private Integer num;
 
     /** 已预约数量 */
     @Excel(name = "已预约数量")
-    private String buyNum;
+    private Integer buyNum;
 
     /** 应付费用 */
     @Excel(name = "应付费用")
@@ -98,5 +101,5 @@ public class PsyConsultOrder extends BasePlusEntity implements Serializable
 
     /** 订单状态0-待付款 1-待预约 2-待咨询 3-已完成 4-已取消 */
     @Excel(name = "订单状态0-待付款 1-待预约 2-待咨询 3-已完成 4-已取消")
-    private String status;
+    private Integer status;
 }

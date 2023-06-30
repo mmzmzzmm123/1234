@@ -14,7 +14,11 @@ public interface IPsyConsultOrderService
 {
     PsyConsultOrderVO getOne(Long id);
 
+    PsyConsultOrderVO getOneByOrderId(String orderId);
+
     List<PsyConsultOrder> getList(PsyConsultOrderVO req);
+
+    void updatePsyOrder(PsyConsultOrderVO req);
 
     int add(PsyConsultOrderVO req);
 

@@ -4,6 +4,41 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.ruoyi.psychology.mapper.PsyConsultMapper">
 
+    <select id="search" resultType="com.ruoyi.psychology.domain.PsyConsult">
+        <include refid="selectPsyConsultVo"/>
+        <where>
+            and status = 0 and del_flag = 0
+            <if test="userName != null  and userName != ''"> and user_name like concat('%', #{userName}, '%')</if>
+            <if test="catId != null  and catId != ''"> and cat_id = #{catId}</if>
+            <if test="sex != null  and sex != ''"> and sex = #{sex}</if>
+            <if test="(serve != null  and serve != '') or (lowPrice != null and highPrice != null)">
+                and exists (
+                    SELECT consult_id FROM psy_consult_serve WHERE del_flag = 0 and `status` = 0 and consult_id = psy_consult.id
+                    <if test="serve != null  and serve != ''"> and `name` = #{serve}</if>
+                    <if test="lowPrice != null and highPrice != null">
+                        and price <![CDATA[>=]]> #{lowPrice} and price <![CDATA[<=]]> #{highPrice}
+                    </if>
+                    GROUP BY consult_id
+                )
+             </if>
+            <if test="(type != null  and type != '') or (days != null and days.size() > 0)">
+                and exists (
+                    SELECT consult_id FROM psy_consult_work WHERE del_flag = 0 and `status` = 0 and consult_id = psy_consult.id
+                    <if test="type != null  and type != ''"> and `type` = #{type}</if>
+                    <if test="days != null and days.size() > 0">
+                        and `day` in
+                        <foreach collection="days" index="index" item="item" open="(" separator="," close=")">
+                            #{item,jdbcType=VARCHAR}
+                        </foreach>
+                    </if>
+                    GROUP BY consult_id
+                )
+             </if>
+        </where>
+
+
+    </select>
+
     <update id="tombstonedByIds">
         update psy_consult set del_flag = 1 where id in
         <foreach collection="array" item="item" open="(" separator="," close=")">
@@ -22,6 +57,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="sex"    column="sex"    />
         <result property="tabs"    column="tabs"    />
         <result property="way"    column="way"    />
+        <result property="wayStr"    column="way_str"    />
         <result property="info"    column="info"    />
         <result property="detail"    column="detail"    />
         <result property="workNum"    column="work_num"    />
@@ -36,7 +72,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </resultMap>
 
     <sql id="selectPsyConsultVo">
-        select id, cat_id, user_id, user_name, avatar, email, phonenumber, sex, tabs, way, info, detail, work_num, work_time, work_hours, del_flag, status, create_by, create_time, update_by, update_time from psy_consult
+        select id, cat_id, user_id, user_name, avatar, email, phonenumber, sex, tabs, way, way_str, info, detail, work_num, work_time, work_hours, del_flag, status, create_by, create_time, update_by, update_time from psy_consult
     </sql>
 
     <select id="getList" parameterType="PsyConsult" resultMap="PsyConsultResult">

@@ -58,8 +58,10 @@ public class PsyConsult extends BasePlusEntity implements Serializable
     private String tabs;
 
     /** 咨询方向 */
-    @Excel(name = "咨询方向")
     private String way;
+
+    @Excel(name = "咨询方向")
+    private String wayStr;
 
     /** 介绍文案 */
     @Excel(name = "介绍文案")

@@ -6,11 +6,15 @@ import com.ruoyi.course.service.ICourOrderService;
 import com.ruoyi.gauge.constant.GaugeConstant;
 import com.ruoyi.gauge.domain.PsyOrder;
 import com.ruoyi.gauge.service.IPsyOrderService;
+import com.ruoyi.psychology.constant.ConsultConstant;
+import com.ruoyi.psychology.service.IPsyConsultOrderService;
+import com.ruoyi.psychology.vo.PsyConsultOrderVO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import javax.annotation.Resource;
 import java.util.TimerTask;
 
 /**
@@ -25,8 +29,14 @@ public class OrderCancelTask extends TimerTask {
 
     private String module;
 
+    private Long id;
+
     public void setOrderId(Integer orderId) {
         this.orderId = orderId;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public void setModule(String module) {
@@ -45,6 +55,10 @@ public class OrderCancelTask extends TimerTask {
     public void setIPsyOrderService(IPsyOrderService psyOrderService) {
         OrderCancelTask.psyOrderService = psyOrderService;
     }
+
+    @Resource
+    private IPsyConsultOrderService psyConsultOrderService;
+
     @Override
     public void run() {
         log.info("30分钟未支付，自动修改订单状态为已取消");
@@ -60,7 +74,13 @@ public class OrderCancelTask extends TimerTask {
                 psyOrder.setOrderStatus(GaugeConstant.GAUGE_ORDER_STATUE_CANCELED);
                 psyOrderService.updatePsyOrder(psyOrder);
             }
+        } else if (ConsultConstant.MODULE_CONSULT.equals(module)) {
+            PsyConsultOrderVO psyOrder = psyConsultOrderService.getOne(id);
+            if (psyOrder.getStatus() == ConsultConstant.CONSULT_ORDER_STATUE_CREATED) {
+                psyOrder.setStatus(ConsultConstant.CONSULT_ORDER_STATUE_CANCELED);
+                psyConsultOrderService.updatePsyOrder(psyOrder);
+            }
         }
-        log.info("{}订单id={} 自动修改订单状态为已取消，操作已完成", module, orderId);
+        log.info("{}订单id={} 自动修改订单状态为已取消，操作已完成", module, ConsultConstant.MODULE_CONSULT.equals(module) ? id : orderId);
     }
 }

@@ -1,5 +1,6 @@
 package com.ruoyi.psychology.service;
 
+import com.ruoyi.psychology.dto.DateNumDTO;
 import com.ruoyi.psychology.vo.PsyConsultConfigByGroupVO;
 import com.ruoyi.psychology.vo.PsyConsultConfigVO;
 
@@ -13,6 +14,8 @@ import java.util.List;
  */
 public interface IPsyConsultConfigService
 {
+
+    List<DateNumDTO> getDateNum(Integer num);
 
     List<PsyConsultConfigVO> getConfigByType(String dictType);
 

@@ -1,24 +1,24 @@
 <template>
     <view class="consultant-list-box">
-        <view class="consultant-item" v-for="consultant in (consultantList || [])" @tap="toConsultant(consultant)">
+        <view class="consultant-item" v-if="consultantList.length > 0" v-for="consultant in consultantList">
           <view class="upper-box">
             <view class="img-box">
                 <img :src="consultant.avatar" />
             </view>
             <view class="txt-box">
                 <view class="title">
-                  <view class="name">{{ consultant.name }}</view>
-                  <view v-for="tag in consultant.tagList" class="tag-list">
-                    <view class="tag-item">{{ tag.name }}</view>
+                  <view class="name">{{ consultant.userName }}</view>
+                  <view v-for="tag in consultant.tabs.split(',')" class="tag-list">
+                    <view class="tag-item">{{ tag }}</view>
                   </view>
                 </view>
-                <view class="introduce txt-overflow txt-overflow-line2">{{ consultant.introduce }}</view>                    
+                <view class="introduce txt-overflow txt-overflow-line2">{{ consultant.info }}</view>
             </view>
           </view>            
             
             
           <view class="bottom-box">
-            <view class="consult-button">咨询TA</view>
+            <view class="consult-button" @tap="toConsultant(consultant)">咨询TA</view>
           </view>            
         </view>
         <view class="footer" v-show="consultantList.length > 0">已经到底了</view>

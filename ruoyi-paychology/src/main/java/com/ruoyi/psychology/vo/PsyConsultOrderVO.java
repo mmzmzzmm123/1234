@@ -39,6 +39,7 @@ public class PsyConsultOrderVO extends BaseValObj implements Serializable
 
     /** 客户id */
     private Long userId;
+    private String userName;
 
     /** 排班 */
     private Long workId;
@@ -61,13 +62,13 @@ public class PsyConsultOrderVO extends BaseValObj implements Serializable
     private Date timeEnd;
 
     /** 咨询时长(分钟) */
-    private String time;
+    private Integer time;
 
     /** 可预约数量 */
-    private String num;
+    private Integer num;
 
     /** 已预约数量 */
-    private String buyNum;
+    private Integer buyNum;
 
     /** 应付费用 */
     private BigDecimal amount;
@@ -76,6 +77,6 @@ public class PsyConsultOrderVO extends BaseValObj implements Serializable
     private String delFlag;
 
     /** 订单状态0-待付款 1-待预约 2-待咨询 3-已完成 4-已取消 */
-    private String status;
+    private Integer status;
 
 }

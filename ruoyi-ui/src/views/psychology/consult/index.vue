@@ -107,8 +107,8 @@
 <!--      <el-table-column v-if="columns[7].visible" label="咨询方向" align="center" prop="way" />-->
       <el-table-column v-if="columns[8].visible" label="介绍文案" align="center" prop="info" />
       <el-table-column v-if="columns[10].visible" label="咨询人数" align="center" prop="workNum" />
-      <el-table-column v-if="columns[11].visible" label="服务时长" align="center" prop="workTime" />
-      <el-table-column v-if="columns[12].visible" label="从业时间" align="center" prop="workHours" />
+      <el-table-column v-if="columns[11].visible" label="服务时长(小时)" align="center" prop="workTime" />
+      <el-table-column v-if="columns[12].visible" label="从业时间(年)" align="center" prop="workHours" />
       <el-table-column v-if="columns[13].visible" label="状态" align="center" prop="status" />
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
@@ -147,7 +147,7 @@
 
     <!-- 添加或修改心理咨询师对话框 -->
     <el-dialog :title="title" :visible.sync="open" width="800px" append-to-body>
-      <el-form ref="form" :model="form" :rules="rules" label-width="80px">
+      <el-form ref="form" :model="form" :rules="rules" label-width="110px">
 
         <el-row>
           <el-col :span="12">
@@ -215,14 +215,14 @@
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item label="服务时长" prop="workTime">
+            <el-form-item label="服务时长(小时)" prop="workTime">
               <el-input-number v-model="form.workTime" :min="0" placeholder="请输入服务时长" />
             </el-form-item>
           </el-col>
         </el-row>
         <el-row>
           <el-col :span="12">
-            <el-form-item label="从业时间" prop="workHours">
+            <el-form-item label="从业时间(年)" prop="workHours">
               <el-input-number v-model="form.workHours" :min="0" placeholder="请输入咨询人数" />
             </el-form-item>
           </el-col>

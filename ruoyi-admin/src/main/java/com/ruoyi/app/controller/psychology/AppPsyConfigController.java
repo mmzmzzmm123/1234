@@ -17,11 +17,17 @@ import javax.annotation.Resource;
  * @date 2022-08-26
  */
 @RestController
-@RequestMapping("/app/consultant/config")
+@RequestMapping("/app/consult/config")
 public class AppPsyConfigController extends BaseController
 {
     @Resource
     private IPsyConsultConfigService psyConsultConfigService;
+
+    @GetMapping("/getDateNum/{num}")
+    public AjaxResult getConfigByType(@PathVariable("num") Integer num)
+    {
+        return AjaxResult.success(psyConsultConfigService.getDateNum(num));
+    }
 
     /**
      * 根据类型查询字典

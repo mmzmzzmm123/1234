@@ -1,6 +1,7 @@
 package com.ruoyi.psychology.service.impl;
 
 import cn.hutool.core.bean.BeanUtil;
+import com.alibaba.fastjson2.JSON;
 import com.ruoyi.common.constant.UserConstants;
 import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.core.domain.entity.SysDictData;
@@ -11,20 +12,28 @@ import com.ruoyi.common.utils.SecurityUtils;
 import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.psychology.domain.PsyConsult;
 import com.ruoyi.psychology.domain.PsyConsultServe;
+import com.ruoyi.psychology.domain.PsyConsultWork;
 import com.ruoyi.psychology.mapper.PsyConsultMapper;
+import com.ruoyi.psychology.request.PsyConsultReq;
 import com.ruoyi.psychology.service.IPsyConsultServeService;
 import com.ruoyi.psychology.service.IPsyConsultService;
+import com.ruoyi.psychology.service.IPsyConsultWorkService;
+import com.ruoyi.psychology.dto.PsyConsultInfoDTO;
+import com.ruoyi.psychology.vo.PsyConsultServeVO;
 import com.ruoyi.psychology.vo.PsyConsultVO;
+import com.ruoyi.psychology.vo.PsyConsultWorkVO;
 import com.ruoyi.system.service.ISysConfigService;
 import com.ruoyi.system.service.ISysDictTypeService;
 import com.ruoyi.system.service.ISysUserService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 
 import javax.annotation.Resource;
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Service
 public class PsyConsultServiceImpl implements IPsyConsultService {
@@ -39,10 +48,63 @@ public class PsyConsultServiceImpl implements IPsyConsultService {
     private IPsyConsultServeService psyConsultServeService;
 
     @Resource
+    private IPsyConsultWorkService psyConsultWorkService;
+
+    @Resource
     private ISysUserService userService;
 
     @Resource
     private ISysConfigService configService;
+
+
+    @Override
+    public PsyConsultInfoDTO getConsultInfoByServe(Long id) {
+        PsyConsultInfoDTO vo = new PsyConsultInfoDTO();
+        PsyConsultServeVO serve = psyConsultServeService.getOne(id);
+        PsyConsultVO consult = getOne(serve.getConsultId());
+
+        PsyConsultWorkVO req = new PsyConsultWorkVO();
+        req.setServeId(id);
+        req.setConsultId(serve.getConsultId());
+        req.setStatus("0");
+        // t+6
+        Date now = new Date();
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(now);
+        calendar.set(Calendar.HOUR_OF_DAY, 0);
+        calendar.set(Calendar.MINUTE, 0);
+        calendar.set(Calendar.SECOND, 0);
+        Date start = calendar.getTime();
+        calendar.add(Calendar.DATE, 7);
+        Date end = calendar.getTime();
+        req.setTimeStart(start);
+        req.setTimeEnd(end);
+        List<PsyConsultWork> works = psyConsultWorkService.getList(req);
+        List<PsyConsultWork> collect = works.stream().filter(i -> i.getNum() > 0).collect(Collectors.toList());
+
+        vo.setWorks(collect);
+        vo.setServe(serve);
+        vo.setConsult(consult);
+        return vo;
+    }
+
+    @Override
+    public List<PsyConsult> search(PsyConsultReq req) {
+        List<PsyConsult> list = psyConsultMapper.search(req);
+        // 处理way
+        if (!CollectionUtils.isEmpty(req.getWay()) && !CollectionUtils.isEmpty(list)) {
+            list = list.stream().filter(i -> {
+                if (StringUtils.isNotEmpty(i.getWayStr())) {
+                    Set<String> now = Stream.of(StringUtils.split(i.getWayStr().trim(), ",")).collect(Collectors.toSet());
+                    now.retainAll(req.getWay());
+                    return !now.isEmpty();
+                }
+                return true;
+            }).collect(Collectors.toList());
+        }
+
+        return list;
+    }
 
     @Override
     public PsyConsultVO getOne(Long id) {
@@ -103,7 +165,22 @@ public class PsyConsultServiceImpl implements IPsyConsultService {
         });
         psyConsultServeService.save(serves);
 
+        converToStr(req);
         return AjaxResult.success(psyConsultMapper.insert(BeanUtil.toBean(req, PsyConsult.class)));
+    }
+
+    @Override
+    public void updateNum(Long id, int num) {
+        PsyConsultVO one = getOne(id);
+        int i = one.getWorkNum() + num;
+        one.setWorkNum(Math.max(i, 0));
+        updateByApp(one);
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void updateByApp(PsyConsultVO req) {
+        psyConsultMapper.updateById(BeanUtil.toBean(req, PsyConsult.class));
     }
 
     @Override
@@ -128,6 +205,7 @@ public class PsyConsultServiceImpl implements IPsyConsultService {
         sysUser.setAvatar(req.getAvatar());
         sysUser.setUpdateBy(SecurityUtils.getUsername());
 
+        converToStr(req);
         return AjaxResult.success(psyConsultMapper.updateById(BeanUtil.toBean(req, PsyConsult.class)));
     }
 
@@ -143,6 +221,21 @@ public class PsyConsultServiceImpl implements IPsyConsultService {
         user.setCreateBy(SecurityUtils.getUsername());
         user.setUpdateBy(SecurityUtils.getUsername());
         return user;
+    }
+
+    private void converToStr(PsyConsultVO req) {
+        HashSet<String> tab = new HashSet<>();
+        HashSet<String> way = new HashSet<>();
+        if (StringUtils.isNotEmpty(req.getWay())) {
+            List<String> jsonArray = JSON.parseArray(req.getWay(), String.class);
+            jsonArray.forEach(a -> {
+                List<String> json = JSON.parseArray(a, String.class);
+                tab.add(json.get(0));
+                way.add(json.get(1));
+            });
+        }
+        req.setTabs(String.join(",", tab));
+        req.setWayStr(String.join(",", way));
     }
 
     @Override

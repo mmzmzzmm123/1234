@@ -1,14 +1,18 @@
 <template>
   <view class="index">
     <view class="search-box index-margin" @tap="toSearch">
-      <img class="icon" src="/static/icon/search.png" />
-      <span class="txt">搜索</span>
+<!--      <img class="icon" src="/static/icon/search.png" />-->
+<!--      <span class="txt">搜索</span>-->
+      <view class="uni-input-wrapper">
+        <uni-easyinput prefixIcon="search" :styles="styles" :placeholderStyle="placeholderStyle" v-model="queryData.userName" @confirm="inputConfirm" placeholder="请输入咨询师名称">
+        </uni-easyinput>
+      </view>
     </view>
     <view class="banner-box index-margin">
       <swiper class="ad-swiper" indicator-dots circular indicator-color="rgb(255, 255, 255, .5)"
         indicator-active-color="#FFFFFF">
         <swiper-item v-for="(item, index) in bannerList" :key="index">
-          <image class="banner-img" :src="item.url" @tap="tocourse(item.linkUrl)" />
+          <image class="banner-img" :src="item.url"/>
         </swiper-item>
       </swiper>
     </view>
@@ -32,7 +36,7 @@
 
     <!-- 筛选组件 -->
     <uni-popup ref="popupFilter" type="top" background-color="#fff">
-      <filter-com :filterParams="filterParams"  :attrList="attrList" :sexList="sexList" :typeList="typeList" :priceList="priceList" @close="doFilterClose">
+      <filter-com :filterParams="filterParams"  :attrParams="attrParams" @close="doFilterClose" @submit="submit">
 
       </filter-com>
     </uni-popup>
@@ -63,53 +67,65 @@
     },
     data() {
       return {
-        attrList: [],
-        sexList: [],
-        typeList: [],
-        priceList: [],
+        inputValue: '',
+        placeholderStyle: "color:#AAAAAA;",
+        styles: {
+          borderColor: '#fff'
+        },
+        queryData: {
+          catId: null,
+          userName: null,
+          sex: null,
+          lowPrice: null,
+          highPrice: null,
+          serve: null,
+          type: null,
+          days: [],
+          way: []
+        },
         bannerList: [],
         classList: [],
-        consultantList: [{
-          avatar: '../../static/course/1.png',
-          name: '张三',
-          tagList: [{
-              id: 1,
-              name: '职场心理'
-            },
-            {
-              id: 2,
-              name: '亲子关系'
-            },
-          ],
-          introduce: '咨询师介绍咨询师介绍咨询师介绍咨询师介绍咨询师介绍咨询师介绍咨询师介绍',
-        }],
+        consultantList: [],
         userInfo: {},
         filterParams: {
           type: 0,
-          price: {
-            id: 0,
-            name: ''
-          }
+          way: [],
+          days: [],
+          sex: null,
+          time: null,
+          serve: null,
+          price: null,
+          dayType: null
+        },
+        attrParams: {
+          dateList: [],
+          timeList: [],
+          attrList: [],
+          sexList: [],
+          typeList: [],
+          priceList: []
         },
         showFilter: false
       };
     },
     computed: {
       calPrice() {
-        return this.filterParams.price.name ? this.filterParams.price.name : '价格'
+        return this.filterParams.price ? this.filterParams.price : '价格'
       }
     },
-    async created() {
+    created() {
       // this.userInfo = uni.getStorageSync("userInfo")
       this.userInfo = uni.getStorageSync("userInfo") ? JSON.parse(uni.getStorageSync("userInfo")) : undefined;
-      this.bannerList = await this.getBanner(0);
+      this.getCat()
+      this.getBanner(0)
+      this.getConsult()
 
-      const classData = await classServer.getClassList()
-      this.classList = classData.slice(0, 8) // 取前8个类别
-      await this.getTypes()
-      await this.getAttrs()
-      await this.getPrice()
-      await this.getSex()
+      this.getTypes()
+      this.getAttrs()
+      this.getDates()
+      this.getPrice()
+      this.getSex()
+      this.getConsultTime()
     },
     async mounted() {
       if (!this.userInfo && await utils.loginCallback(this.redirectUri)) {
@@ -122,23 +138,61 @@
 
     },
     methods: {
+      resetQuery() {
+        this.queryData.catId = null
+        this.queryData.userName = null
+        this.queryData.sex = null
+        this.queryData.lowPrice = null
+        this.queryData.highPrice = null
+        this.queryData.serve = null
+        this.queryData.days = []
+        this.queryData.way = []
+      },
+      inputConfirm(val) {
+        if (val && val !== '') {
+          this.resetQuery()
+          this.queryData.userName = val
+          this.getConsult()
+        }
+      },
+      async getCat() {
+        const classData = await classServer.getClassList()
+        this.classList = classData.slice(0, 4) // 取前8个类别
+      },
       async getTypes() {
-        this.typeList = await indexServer.getConfigByType('consult_type');
+        this.attrParams.typeList = await indexServer.getConfigByType('consult_type');
       },
       async getAttrs() {
-        this.attrList = await indexServer.getAttrs(['consult_direction_one','consult_direction_two','consult_direction_three']);
+        this.attrParams.attrList = await indexServer.getAttrs(['consult_direction_one','consult_direction_two','consult_direction_three']);
       },
       async getPrice() {
-        this.priceList = await indexServer.getConfigByType('consult_price');
+        this.attrParams.priceList = await indexServer.getConfigByType('consult_price');
+      },
+      async getDates() {
+        this.attrParams.dateList = await indexServer.getDates(7);
       },
       async getSex() {
-        this.sexList = await indexServer.getConfigByType('consult_sex');
+        this.attrParams.sexList = await indexServer.getConfigByType('consult_sex');
+      },
+      async getConsultTime() {
+        this.attrParams.timeList = await indexServer.getConfigByType('consult_time');
       },
       async getBanner(type) {
-        return await indexServer.getBannerList(type);
+        this.bannerList = await indexServer.getBannerList(type);
       },
-      async getConsult(type) {
-        return await indexServer.getConsultByLabel(type);
+      async getConsult() {
+        // const data = {
+        //   catId: 1,
+        //   userName: 'hello123',
+        //   sex: '男',
+        //   lowPrice: 0,
+        //   highPrice: 107,
+        //   serve: '面对面咨询',
+        //   type: '上午',
+        //   days: ['2023-06-27', '2023-06-28'],
+        //   way: ['原生家庭关系a','育儿b','易怒c','成长b']
+        // }
+        this.consultantList = await indexServer.getConsult(this.queryData)
       },
       async tocourse(url) {
         // 判断是否已经登录
@@ -156,9 +210,9 @@
           this.openLoginConfirm()
           return
         }
-        uni.navigateTo({
-          url: "/pages/consult/class?classId=" + classId
-        });
+        this.resetQuery()
+        this.queryData.catId = classId
+        this.getConsult()
       },
       toSearch() {
         // 判断是否已经登录
@@ -171,9 +225,54 @@
         });
       },
       doFilter(type) {
+        this.resetQuery()
         this.$set(this.filterParams, 'type', type)
         // this.showFilter = true
         this.$refs.popupFilter.open()
+      },
+      submit() {
+        // console.log('submit')
+        // console.log(this.filterParams)
+        // console.log(this.queryData)
+        this.queryData.catId = null
+        this.queryData.userName = null
+        switch (this.filterParams.type) {
+          case 1:
+            this.queryData.way = this.filterParams.way
+            break
+          case 2:
+            if (this.filterParams.price) {
+              switch (this.filterParams.price) {
+                case '500元以下':
+                  this.queryData.lowPrice = 0
+                  this.queryData.highPrice = 499
+                  break
+                case '500-700元':
+                  this.queryData.lowPrice = 500
+                  this.queryData.highPrice = 699
+                  break
+                case '700-900元':
+                  this.queryData.lowPrice = 700
+                  this.queryData.highPrice = 899
+                  break
+                case '900元以上':
+                  this.queryData.lowPrice = 900
+                  this.queryData.highPrice = 99999
+                  break
+              }
+            }
+            break
+          case 3:
+            this.queryData.days = this.filterParams.days
+            this.queryData.sex = this.filterParams.sex
+            this.queryData.time = this.filterParams.time
+            this.queryData.serve = this.filterParams.serve
+            this.queryData.way = this.filterParams.way
+            this.queryData.dayType = this.filterParams.dayType
+            break
+        }
+        this.getConsult()
+        this.doFilterClose()
       },
       doFilterClose() {
         this.$refs.popupFilter.close()

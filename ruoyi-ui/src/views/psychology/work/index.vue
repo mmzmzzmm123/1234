@@ -92,6 +92,7 @@
       <el-table-column label="咨询师" align="center" prop="consultName" />
       <el-table-column label="服务" align="center" prop="serveName" />
       <el-table-column label="班次" align="center" prop="type" />
+      <el-table-column label="星期" align="center" prop="week" />
       <el-table-column label="咨询时段开始时间" align="center" prop="timeStart" width="180">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.timeStart, '{y}-{m}-{d} {h}:{i}') }}</span>

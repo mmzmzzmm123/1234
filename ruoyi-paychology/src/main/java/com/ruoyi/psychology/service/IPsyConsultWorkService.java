@@ -17,6 +17,8 @@ public interface IPsyConsultWorkService {
 
     int update(PsyConsultWorkVO req);
 
+    void updateNum(Long id, int num);
+
     int deleteAll(Long[] ids);
 
     int delete(Long id);

@@ -75,7 +75,15 @@ export function getPaySign(userId, produteId, amount, extra) {
 			  module: extra.module,
         amount: amount
 		  }
-	  }
+	  } else if (extra.module === 'consult') {
+          params = {
+              userId: userId,
+              serveId: produteId,
+              workId: extra.workId,
+              module: extra.module,
+              amount: amount
+          }
+      }
 	  httprequest
 		.post(
 		  `/app/api/wechatPay/v3/wechatPay`, params
