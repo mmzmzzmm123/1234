@@ -16,17 +16,17 @@ import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.core.page.TableDataInfo;
 import com.ruoyi.common.utils.SecurityUtils;
-import com.ruoyi.common.utils.StringUtils;
-import com.ruoyi.office.domain.TRoomOrder;
-import com.ruoyi.office.domain.TStorePromotion;
-import com.ruoyi.office.domain.TWxUserPackage;
-import com.ruoyi.office.domain.TWxUserPromotion;
+import com.ruoyi.common.utils.mqtt.MqttSendClient;
+import com.ruoyi.office.domain.*;
 import com.ruoyi.office.domain.enums.OfficeEnum;
 import com.ruoyi.office.domain.vo.WxPayCallback;
 import com.ruoyi.office.service.*;
 import io.swagger.annotations.ApiOperation;
+import org.apache.activemq.command.ActiveMQQueue;
+import org.apache.activemq.command.ActiveMQTopic;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jms.core.JmsMessagingTemplate;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
@@ -287,5 +287,19 @@ public class ApiController extends BaseController {
         List<TWxUserPromotion> list = userPromotionService.selectPayAvailableList(promotion);
         return getDataTable(list);
     }
+
+    /**
+     * topic 模式
+     *
+     * @param msg 消息
+     * @return
+     */
+    @PostMapping("/topic/{msg}")
+    public String sendTopic(@PathVariable("msg") String msg) {
+        MqttSendClient sendClient = new MqttSendClient();
+        sendClient.publish("test_queue", msg);
+        return "success";
+    }
+
 
 }

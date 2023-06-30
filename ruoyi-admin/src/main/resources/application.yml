@@ -89,6 +89,17 @@ spring:
         max-active: 8
         # #连接池最大阻塞等待时间（使用负值表示没有限制）
         max-wait: -1ms
+  jms:
+    pub-sub-domain: true
+  activemq:
+    broker-url: failover:tcp://106.55.186.174:1883
+    in-memory: true
+    pool:
+      enabled: false
+    packages:
+      trust-all: true
+    user: admin
+    password: 1234@qwer
 
 # token配置
 token:
@@ -159,4 +170,22 @@ wx:
 tuangou:
   appKey: da13dfa2e5461f04
   appSecret: 055c3d639c6804b7609659da361ac0bc257f25bd
+
+
+#mqtt属性配置
+mqtt:
+  hostUrl: tcp://106.55.186.174:1883
+  username: admin
+  password: 1234@qwer
+  clientid: mqtt_send_client
+  cleanSession: true
+  reconnect: true
+  #连接超时
+  timeout: 1000
+  #设置会话心跳时间
+  keepalive: 100
+  defaultTopic: client:report:1
+  isOpen: true
+  qos: 1
+
 
