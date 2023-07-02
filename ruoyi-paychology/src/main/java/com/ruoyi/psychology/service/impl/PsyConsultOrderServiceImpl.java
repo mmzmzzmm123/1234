@@ -61,6 +61,12 @@ public class PsyConsultOrderServiceImpl implements IPsyConsultOrderService
     }
 
     @Override
+    public List<PsyConsultOrderVO> getOrderList(PsyConsultOrderVO req) {
+        req.setDelFlag("0");
+        return psyConsultOrderMapper.getOrderList(req);
+    }
+
+    @Override
     @Transactional(rollbackFor = Exception.class)
     public int add(PsyConsultOrderVO req) {
         PsyConsultServeVO serve = psyConsultServeService.getOne(req.getServeId());

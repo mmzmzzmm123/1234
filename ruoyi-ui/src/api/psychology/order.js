@@ -27,6 +27,14 @@ export function addOrder(data) {
 }
 
 // 修改咨询订单
+export function finish(id) {
+  return request({
+    url: '/psychology/order/finish/' + id,
+    method: 'get'
+  })
+}
+
+// 修改咨询订单
 export function updateOrder(data) {
   return request({
     url: '/psychology/order',

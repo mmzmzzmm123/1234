@@ -18,6 +18,8 @@ public interface IPsyConsultOrderService
 
     List<PsyConsultOrder> getList(PsyConsultOrderVO req);
 
+    List<PsyConsultOrderVO> getOrderList(PsyConsultOrderVO req);
+
     void updatePsyOrder(PsyConsultOrderVO req);
 
     int add(PsyConsultOrderVO req);

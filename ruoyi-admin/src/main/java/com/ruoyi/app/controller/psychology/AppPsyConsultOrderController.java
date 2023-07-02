@@ -2,12 +2,12 @@ package com.ruoyi.app.controller.psychology;
 
 import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.domain.AjaxResult;
+import com.ruoyi.psychology.constant.ConsultConstant;
+import com.ruoyi.psychology.service.IPsyConsultOrderService;
 import com.ruoyi.psychology.service.IPsyConsultServeService;
 import com.ruoyi.psychology.service.IPsyConsultService;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import com.ruoyi.psychology.vo.PsyConsultOrderVO;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 
@@ -27,6 +27,35 @@ public class AppPsyConsultOrderController extends BaseController
     @Resource
     private IPsyConsultServeService psyConsultServeService;
 
+    @Resource
+    private IPsyConsultOrderService psyConsultOrderService;
+
+    @GetMapping(value = "/getOrderInfo/{id}")
+    public AjaxResult getOrderInfo(@PathVariable("id") Long id)
+    {
+        return AjaxResult.success(psyConsultOrderService.getOne(id));
+    }
+
+    /**
+     * 获取订单列表
+     */
+    @PostMapping(value = "/getOrderList")
+    public AjaxResult getOrderList(@RequestBody PsyConsultOrderVO req)
+    {
+        return AjaxResult.success(psyConsultOrderService.getOrderList(req));
+    }
+
+    /**
+     * 取消
+     */
+    @GetMapping(value = "/cancel/{id}")
+    public AjaxResult cancel(@PathVariable("id") Long id)
+    {
+        PsyConsultOrderVO one = psyConsultOrderService.getOne(id);
+        one.setStatus(ConsultConstant.CONSULT_ORDER_STATUE_CANCELED);
+        return AjaxResult.success(psyConsultOrderService.update(one));
+    }
+
     /**
      * 获取心理咨询师详细信息
      */
@@ -35,6 +64,5 @@ public class AppPsyConsultOrderController extends BaseController
     {
         return AjaxResult.success(psyConsultService.getConsultInfoByServe(id));
     }
-
 
 }

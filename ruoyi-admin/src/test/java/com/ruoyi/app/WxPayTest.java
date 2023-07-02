@@ -55,7 +55,7 @@ public class WxPayTest {
         WechatPayDTO dto = new WechatPayDTO();
         dto.setUserId(84);
         dto.setServeId(1673151921080299521L);
-        dto.setWorkId(1673254703544238081L);
+        dto.setWorkId(0L);
         dto.setAmount(new BigDecimal("106.00"));
         dto.setModule("consult");
         Integer userId = dto.getUserId(); //用户id
@@ -102,7 +102,7 @@ public class WxPayTest {
 
     @Test
     public void notifyTest() {
-        String trade = "CON_DJ20230630165629000000847627";
+        String trade = "CON_DJ20230630170811000000842714";
         String order = "1222";
         wechatPayV3ApiService.wechatPayNotify(trade, order);
     }

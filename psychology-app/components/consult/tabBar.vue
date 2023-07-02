@@ -21,12 +21,12 @@ export default {
                     selectedIconPath: "/static/course/menu/index-active.png",
                     text: "首页"
                 },
-                {
-                    pagePath: "/pages/consult/class",
-                    iconPath: "/static/course/menu/class.png",
-                    selectedIconPath: "/static/course/menu/class-active.png",
-                    text: "分类"
-                },
+                // {
+                //     pagePath: "/pages/consult/class",
+                //     iconPath: "/static/course/menu/class.png",
+                //     selectedIconPath: "/static/course/menu/class-active.png",
+                //     text: "分类"
+                // },
                 {
                     pagePath: "/pages/consult/user",
                     iconPath: "/static/course/menu/user.png",

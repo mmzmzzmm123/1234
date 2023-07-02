@@ -6,6 +6,7 @@ import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.core.page.TableDataInfo;
 import com.ruoyi.common.enums.BusinessType;
 import com.ruoyi.common.utils.poi.ExcelUtil;
+import com.ruoyi.psychology.constant.ConsultConstant;
 import com.ruoyi.psychology.domain.PsyConsultOrder;
 import com.ruoyi.psychology.service.IPsyConsultOrderService;
 import com.ruoyi.psychology.vo.PsyConsultOrderVO;
@@ -85,6 +86,18 @@ public class PsyConsultOrderController extends BaseController
     {
         return toAjax(psyConsultOrderService.update(req));
     }
+
+    // finish
+    @PreAuthorize("@ss.hasPermi('psychology:order:edit')")
+    @Log(title = "咨询订单", businessType = BusinessType.UPDATE)
+    @GetMapping(value = "/finish/{id}")
+    public AjaxResult finish(@PathVariable Long id)
+    {
+        PsyConsultOrderVO order = psyConsultOrderService.getOne(id);
+        order.setStatus(ConsultConstant.CONSULT_ORDER_STATUE_FINISHED);
+        return toAjax(psyConsultOrderService.update(order));
+    }
+
 
     /**
      * 删除咨询订单

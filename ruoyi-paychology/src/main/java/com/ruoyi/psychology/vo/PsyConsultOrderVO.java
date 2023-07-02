@@ -79,4 +79,8 @@ public class PsyConsultOrderVO extends BaseValObj implements Serializable
     /** 订单状态0-待付款 1-待预约 2-待咨询 3-已完成 4-已取消 */
     private Integer status;
 
+    // 咨询师头像
+    private String avatar;
+    private String statusName;
+
 }

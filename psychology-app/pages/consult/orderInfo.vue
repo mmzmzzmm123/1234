@@ -1,253 +1,203 @@
 <template>
-  <view >
-    <view class="order-info-header">
-      <image 
-      src="/static/course/menu/arrow_left.png"
-      class="order-back-icon"
-      @tap="back"
-      >
-      </image>
-      <view class="title">订单详情</view>
+  <view class="page">
+    <view class="header-main">
+      <view class="header-nav">
+        <uni-nav-bar left-icon="closeempty" right-icon="more-filled" :border="false" title="订单详情" @clickLeft="back"/>
+      </view>
+      <view class="header-time">
+        <image src="/static/consult/order/time.png" class="header-icon"></image>
+        <view class="title">订单待支付，剩余<uni-countdown class="countdown" color="#FF703F" splitorColor="#FF703F" :show-day="false" :minute="14" :second="59"/></view>
+      </view>
     </view>
-    <view class="order-info-box">
-      
-    
-      <view class="order-status">
-        <image
-          :src="
-            orderInfo.status == 1
-              ? '/static/course/user/success.png'
-              : '/static/course/user/time.png'
-          "
-          class="order-status-icon"
-        ></image>
-        <span class="order-status-txt">{{
-          orderInfo.status == 1 ? "订单已完成" : remainTime(orderInfo.createTime)
-        }}</span>
+    <view class="info">
+      <view class="info-content">
+        <text class="info-title">订单编号</text>
+        <text class="info-col">{{ order.orderNo }}</text>
       </view>
-      <view class="course-info info-box">
-        <view class="title">课程信息</view>
-        <view class="course-content">
-          <view class="course-img">
-        <image :src="orderInfo.courseInfo && orderInfo.courseInfo.url"></image>
+      <view class="info-content">
+        <text class="info-title">下单时间</text>
+        <text class="info-col">{{ order.createTime }}</text>
       </view>
-          <view class="txt-box">
-            <view class="course-title">{{ orderInfo.courseInfo && orderInfo.courseInfo.name }}</view>
-            <view class="course-author">{{ orderInfo.courseInfo && orderInfo.courseInfo.author }}</view>
-          </view>
-        </view>
-        <view class="course-price">
-            <span class="txt">课程总价</span
-            ><span class="price"
-              ><span class="icon">￥</span>{{ orderInfo.amount }}</span
-            >
-          </view>
-          <view class="order-price">
-            <span class="txt">需付款</span
-            ><span class="price">
-              <span class="icon">￥</span>{{ orderInfo.amount }}
-            </span>
-          </view>
+      <view class="info-content">
+        <text class="info-title">咨询师姓名</text>
+        <text class="info-col">{{ order.userName }}</text>
       </view>
-      <view class="order-info info-box">
-        <view class="title">订单信息</view>
-        <view class="order-info-txt"
-          ><span class="label">订单编号</span
-          ><span class="value">{{ orderInfo.orderId }}</span></view
-        >
-        <view class="order-info-txt"
-          ><span class="label">下单时间</span
-          ><span class="value">{{ orderInfo.createTime }}</span></view>
+      <view class="info-content">
+        <text class="info-title">咨询次数</text>
+        <text class="info-col">1</text>
       </view>
+      <view class="info-content">
+        <text class="info-title">价格</text>
+        <text class="info-col">¥{{ order.amount }}</text>
+      </view>
+      <view class="info-content">
+        <text class="info-title">需付款</text>
+        <text class="info-col">¥{{ order.amount }}</text>
+      </view>
+      <view class="info-content">
+        <text class="info-title">咨询时长</text>
+        <text class="info-col">{{ order.time }}分钟</text>
+      </view>
+      <view class="info-content">
+        <text class="info-title">咨询方式</text>
+        <text class="info-col">{{ order.serveName }}</text>
+      </view>
+      <view class="info-content">
+        <text class="info-title">预约记录</text>
+        <text class="info-col">{{ order.timeStart ? order.timeStart.substr(0, 16) + '-' + order.timeEnd.substr(11, 5) : '-'}}</text>
+      </view>
+    </view>
+    <view class="footer">
+      <button @tap="toBuy" class="button-buy">
+        <text class="button-text">立即支付</text>
+        <text class="button-price">
+          <text class="button-price-unit">¥</text>
+          <text class="button-price-num">{{ order.amount }}</text>
+        </text>
+      </button>
     </view>
   </view>
 </template>
 <script>
 import utils from "@/utils/common";
-import orderServer from "@/server/course/order";
-import formatTime from '@/utils/formatTime.js'
+import loginServer from '@/server/login'
+import orderServer from "@/server/consult/order";
 export default {
-  data: () => {
+  data() {
     return {
+      orderId: 0,
       orderPayTime: "00:00",
-      orderInfo: {},
+      order: {},
     };
   },
-  computed: {
-  	remainTime() {
-  		return (orderTime) => {
-  			if (new Date().getTime() < new Date(orderTime).getTime() + 30 * 60 * 1000) {
-  				// 下单不超过30分钟
-  				const remainSeconds = parseInt((new Date(orderTime).getTime() + 30 * 60 * 1000 -  new Date().getTime()) / 1000)
-  				
-  				return "剩余" + formatTime.formatSecondsCH(remainSeconds)
-  			} else {
-  				return "订单已过期"
-  			}
-  		} 
-  	},	  
-  },
   async created() {
-    this.orderInfo = await orderServer.getOrderDetail(utils.getParam(location.href, "orderId"));
-	console.log(this.orderInfo)
+    this.orderId = utils.getParam(location.href, "id")
+    await this.getOrderInfo()
+  },
+  async mounted() {
+    this.userInfo = uni.getStorageSync("userInfo") ? JSON.parse(uni.getStorageSync("userInfo")) : undefined;
+
+    if (!this.userInfo && await utils.loginCallback(this.redirectUri)) {
+      this.userInfo = uni.getStorageSync("userInfo") ? JSON.parse(uni.getStorageSync("userInfo")) : undefined;
+    }
+    if (!this.userInfo) {
+      this.openLoginConfirm()
+    }
   },
   methods: {
   	back() {
   		uni.navigateTo({
-  		  url: "/pages/course/order",
+  		  url: "/pages/consult/order?status=" + 0,
   		});
   	},
+    // 登录
+    async confirmLogin () {
+      await loginServer.login();
+      this.$refs.popup.close()
+    },
+    closeLoginConfirm() {
+      this.$refs.popup.close()
+    },
+    openLoginConfirm() {
+      this.$refs.popup.open()
+    },
+    // order
+    async getOrderInfo() {
+      this.order = await orderServer.getOrderInfo(this.orderId);
+    },
+    toBuy(serveId) {
+      uni.navigateTo({
+        url: "/pages/consult/orderConfirm?id=" + serveId,
+      });
+    },
   },
 };
 </script>
 <style lang="scss">
-@import "@/style/common.scss";
-page {
-  background: #f8f8f8;
-  .order-info-header {
-  	display: flex;	
-  	font-size: 48upx;
-  	margin-bottom: 20upx;
-    background: #FFFFFF;
-    align-items: center;
-  	.order-back-icon {
-  		width: 30upx;
-  		height: 30upx;
-      position: absolute;
-      left: 20px;
-  	}
-  	.title {
-      margin-top: 22upx;
-      margin-bottom: 18upx;
-  		width: 100%;
-  		text-align: center;
-      height: 48rpx;
-      font-size: 34rpx;
-      font-weight: 600;
-      color: #333333;
-      line-height: 48rpx;
-  	}
-  }
-  
-  .order-info-box {
-    padding: 20upx 32upx;
-	
-    .order-status {
-      display: flex;		
-      align-items: center;
-      background-color: #fff;
-      margin-bottom: 32upx;
-      .order-status-icon {
-        width: 30upx;
-        height: 30upx;
-        margin-left: 16upx;
-        margin-right: 16upx;
-        vertical-align: middle;
-      }
-      .order-status-txt {
-        height: 50upx;
-        font-size: 30upx;
-        font-weight: 500;
-        color: #333333;
-        line-height: 50upx;
-      }
-    }
-    .course-info {
-      margin-bottom: 16upx;
-      .course-content {
-        display: flex;
-        flex-direction: row;
-        margin-bottom: 14upx;
-        .course-img {
-          width: 130upx;
-          height: 130upx;
-          border-radius: 7upx;
-          margin-right: 24upx;
-          image {
-            width: 100%;
-            height: 100%;
-          }
-        }
-        .txt-box {
-          flex: 1;
-          .course-title {
-            font-size: 30upx;
-            font-weight: 600;
-            color: #333333;
-            line-height: 42upx;
-            margin-bottom: 50upx;
-          }
-          .course-author {
-            font-size: 26upx;
-            font-weight: 400;
-            color: #777777;
-            line-height: 37upx;
-          }
-        }
-      }
-      .course-price,
-      .order-price {
-        line-height: 75upx;
-        display: flex;
-        flex-direction: row;
-        justify-content: space-between;
-        .txt {
-          font-size: 26upx;
-          font-weight: 400;
-          color: #777777;
-        }
-        .price{
-          line-height: 75upx;
-        }
-      }
-      .course-price {
-        border-bottom: 1px solid #E6E6E6;
-
-        .price {
-          font-size: 22upx;
-          font-weight: 400;
-          color: #333333;
-        }
-      }
-      .order-price {
-        .price {
-          font-size: 32upx;
-        }
-        .icon{
-          font-size: 22upx;
-        }
-      }
-    }
-    .order-info {
-      .order-info-txt {
-        height: 37upx;
-        font-size: 26upx;
-        font-weight: 400;
-        color: #777777;
-        line-height: 37upx;
-        margin-bottom: 24upx;
-        display: flex;
-        flex-direction: row;
-        justify-content: space-between;
-        .value {
-          color: #333333;
-        }
-      }
-    }
-    .info-box {
-      padding: 24upx 32upx;
-      background: #ffffff;
-      box-shadow: 0px 4upx 28upx 0px rgba(119, 119, 119, 0.06);
-      border-radius: 12upx;
-      .title {
-        height: 45upx;
-        font-size: 32upx;
-        font-weight: 600;
-        color: #333333;
-        line-height: 45upx;
-        margin-bottom: 32upx;
-      }
-    }
-  }
+.page {
+  background-color: rgba(248,248,248,1.000000);
+  height: 1624upx;
+  position: relative;
+}
+.header-main {
+  display: flex;
+  flex-direction: column;
+}
+.header-nav {
+  height: 88upx;
+}
+.header-time {
+  margin: 32upx 32upx 16upx 32upx;
+  height: 50upx;
+  display: flex;
+}
+.header-icon {
+  width: 36upx;
+  height: 36upx;
+  margin-top: 7upx;
+  margin-right: 14upx;
+}
+.title {
+  display: flex;
+  color: rgba(51,51,51,1);
+  font-size: 36upx;
+  font-weight: 500;
+}
+.countdown {
+  margin-left: 20upx;
+}
+.info {
+  box-shadow: 0px 4px 28px 0px rgba(119,119,119,0.060000);
+  background-color: rgba(255,255,255,1.000000);
+  border-radius: 12upx;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  margin: 16upx;
+  padding: 32upx;
+}
+.info-content {
+  height: 60upx;
+  display: flex;
+  justify-content: space-between;
+}
+.info-title {
+  color: rgba(119,119,119,1);
+  font-size: 26upx;
+}
+.info-col {
+  color: rgba(51,51,51,1);
+  font-size: 26upx;
+}
+.footer {
+  text-align: center;
+  width: 100%;
+  bottom: 20upx;
+  position: fixed;
+}
+.button-buy {
+  background-color: rgba(255,112,63,1.000000);
+  color: rgba(255,255,255,1.000000);
+  font-weight: 600;
+  border-radius: 40upx;
+  height: 80upx;
+  width: 598upx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.button-text {
+  color: rgba(255,255,255,1);
+  font-size: 28upx;
+}
+.button-price {
+  margin-left: 16upx;
+}
+.button-price-unit {
+  font-size: 22upx;
+}
+.button-price-num {
+  color: rgba(255,255,255,1.000000);
+  font-size: 32upx;
 }
 </style>

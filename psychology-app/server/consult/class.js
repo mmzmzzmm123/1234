@@ -8,21 +8,5 @@ export default {
     } else {
       return [];
     }
-  },
-  getcourseByClassId: async (type) => {
-    let res = await httprequest.post("/app/course/list", { type });
-    if (res.code == 200) {
-      return res.rows;
-    } else {
-      return [];
-    }
-  },
-  getcourseByTitle: async (title) => {
-    let res = await httprequest.get("/app/home/gauge/list", { title });
-    if (res.code == 200) {
-      return res.rows;
-    } else {
-      return [];
-    }
-  },
+  }
 };

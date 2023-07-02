@@ -61,6 +61,30 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="buyNum != null  and buyNum != ''"> and buy_num = #{buyNum}</if>
             <if test="amount != null "> and amount = #{amount}</if>
             <if test="status != null  and status != ''"> and status = #{status}</if>
+            <if test="delFlag != null  and delFlag != ''"> and del_flag = #{delFlag}</if>
+        </where>
+    </select>
+
+    <select id="getOrderList" resultType="com.ruoyi.psychology.vo.PsyConsultOrderVO">
+        select a.id, a.order_no, a.consult_id, a.consult_name, a.serve_id, a.serve_name, a.user_id, a.user_name, a.work_id, a.type, a.day, a.week, a.time_start, a.time_end, a.time, a.num, a.buy_num, a.amount, a.del_flag, a.status, a.create_by, a.create_time, a.update_by, a.update_time
+        , b.avatar,
+        CASE
+            WHEN a.STATUS = '0' THEN
+            '待付款'
+            WHEN a.STATUS = '1' THEN
+            '待预约'
+            WHEN a.STATUS = '2' THEN
+            '待咨询'
+            WHEN a.STATUS = '3' THEN
+            '已完成' ELSE '已取消'
+            END as status_name
+        from psy_consult_order a inner join psy_consult b on a.consult_id = b.id
+
+        <where>
+            <if test="orderNo != null  and orderNo != ''"> and a.order_no = #{orderNo}</if>
+            <if test="userId != null "> and a.user_id = #{userId}</if>
+            <if test="status != null"> and a.status = #{status}</if>
+            <if test="delFlag != null  and delFlag != ''"> and a.del_flag = #{delFlag}</if>
         </where>
     </select>
 

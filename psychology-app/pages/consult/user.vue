@@ -13,17 +13,16 @@
           >{{ userInfo.name
             }}<img
                 class="img"
-                src="/static/icon/refresh.png"
+                src="/static/consult/my/load.png"
                 v-show="userInfo.name"
                 @tap="refreshUser"
             />
           </view>
-          <view class="num"
-          ><img
-              v-show="userInfo.phone"
+          <view class="num">
+            <img
               class="img"
-              src="/static/evaluation/user/phone.png"
-          />{{ userInfo.phone }}
+              src="/static/consult/my/phone.png"
+            />{{ userInfo.phone }}
           </view>
         </view>
       </view>
@@ -31,39 +30,37 @@
     <view class="un-test-box">
       <view class="box-title">
         我的咨询
-        <view class="box-more">查看全部 ></view>
+        <view class="box-more" @tap="toPage(0)">查看全部 ></view>
       </view>
-      <view class="class-box">
-        <view
-            class="item"
-            v-for="item in classList"
-            @tap="
-          () => {
-            item.callback && item.callback();
-          }
-        "
-        >
+      <uni-row class="class-box">
+        <uni-col :span="6" v-for="item in classList" class="item" @tap="toPage(item.id)">
           <img class="class-img" :src="item.classPic" />
           <view>{{ item.className }}</view>
-        </view>
-      </view>
+        </uni-col>
+      </uni-row>
     </view>
     <view class="un-test-box">
       <view class="box-title">其他服务</view>
-      <view class="class-box">
-        <view
-            class="item"
-            v-for="item in classList"
-            @tap="
-          () => {
-            item.callback && item.callback();
-          }
-        "
-        >
+      <uni-row class="class-box">
+        <uni-col :span="6" v-for="item in serveList" class="item" @tap="toPage(item.id)">
           <img class="class-img" :src="item.classPic" />
           <view>{{ item.className }}</view>
-        </view>
-      </view>
+        </uni-col>
+      </uni-row>
+<!--      <view class="class-box">-->
+<!--        <view-->
+<!--            class="item"-->
+<!--            v-for="item in serveList"-->
+<!--            @tap="-->
+<!--          () => {-->
+<!--            item.callback && item.callback();-->
+<!--          }-->
+<!--        "-->
+<!--        >-->
+<!--          <img class="class-img" :src="item.classPic" />-->
+<!--          <view>{{ item.className }}</view>-->
+<!--        </view>-->
+<!--      </view>-->
     </view>
     <consult-tab-bar :currentIndex="2"></consult-tab-bar>
     <uni-popup ref="popup" type="dialog">
@@ -89,25 +86,36 @@ export default {
       userInfo: {},
       classList: [
         {
-          classPic: "/static/evaluation/user/order.png",
+          classPic: "/static/consult/my/pay.png",
           className: "待付款",
-          id: 16,
-          callback: this.toOrder,
+          id: 1,
         },
         {
-          classPic: "/static/evaluation/user/coupon.png",
+          classPic: "/static/consult/my/yy.png",
           className: "待预约",
-          id: 36,
+          id: 2,
         },
         {
-          classPic: "/static/evaluation/user/customer-service.png",
+          classPic: "/static/consult/my/dzx.png",
           className: "待咨询",
-          id: 72,
+          id: 3,
         },
         {
-          classPic: "/static/evaluation/user/customer-service.png",
+          classPic: "/static/consult/my/finish.png",
           className: "已完成",
-          id: 73,
+          id: 4,
+        }
+      ],
+      serveList: [
+        {
+          classPic: "/static/consult/my/cp.png",
+          className: "测评中心",
+          id: 5,
+        },
+        {
+          classPic: "/static/consult/my/kf.png",
+          className: "客服帮助",
+          id: 6,
         }
       ],
       reportNum: 0,
@@ -154,6 +162,24 @@ export default {
     }
   },
   methods: {
+    toPage(id) {
+      switch (id) {
+        case 0:
+        case 1:
+        case 2:
+        case 3:
+        case 4:
+          uni.navigateTo({ url: "/pages/consult/order?status=" + id });
+          break
+        case 5:
+          uni.redirect({ url: "/pages/evaluation/index" })
+          break
+        case 6:
+          console.log('客服帮助')
+          break
+      }
+
+    },
     refreshUser(){
       uni.setStorageSync("userInfo", null);
       utils.loginWx(this.redirectUri);
@@ -301,10 +327,7 @@ page {
       .item {
         width: 336upx;
         height: 164upx;
-        background-image: url("/static/evaluation/user/consulting-service.png");
-        background-size: 100% 100%;
         padding: 30upx 32upx;
-        box-sizing: border-box;
         font-size: 32upx;
         font-weight: 500;
         line-height: 45upx;
@@ -312,7 +335,6 @@ page {
 
         &:first-child {
           margin-right: 26upx;
-          background-image: url("/static/evaluation/user/report.png");
           color: #e2724c;
         }
 
@@ -326,13 +348,13 @@ page {
   }
 
   .class-box {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-around;
+    //display: flex;
+    //flex-direction: row;
+    //justify-content: space-around;
     text-align: center;
     font-size: 26upx;
-    background: #ffffff;
-    border-radius: 16upx;
+    //background: #ffffff;
+    //border-radius: 16upx;
     padding: 32upx 0;
 
     .class-img {
@@ -374,7 +396,7 @@ page {
       position: absolute;
       right: 10upx;
       top: 0upx;
-      color: rgba(145, 145, 145, 1);
+      color: #777777;
       font-size: 24upx;
       text-align: left;
     }

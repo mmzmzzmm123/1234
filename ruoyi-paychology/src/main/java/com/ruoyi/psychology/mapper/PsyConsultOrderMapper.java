@@ -16,5 +16,7 @@ public interface PsyConsultOrderMapper extends BaseMapper<PsyConsultOrder>
 {
     List<PsyConsultOrder> getList(PsyConsultOrderVO req);
 
+    List<PsyConsultOrderVO> getOrderList(PsyConsultOrderVO req);
+
     int tombstonedByIds(Long[] ids);
 }

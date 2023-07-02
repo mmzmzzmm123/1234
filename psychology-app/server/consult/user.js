@@ -16,7 +16,7 @@ export default {
     } else {
       uni.showToast({
         icon: "error",
-        title: "获取数量出错",
+        title: "获取数据出错",
       });
     }
   },
