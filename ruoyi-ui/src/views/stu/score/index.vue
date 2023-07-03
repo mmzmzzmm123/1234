@@ -242,7 +242,9 @@ export default {
         name:'stuScoreInfos',
         params:{
           courseName:row.course.courseName,
-          stuCls:row.stuCls.cls
+          courseId:row.course.courseId,
+          stuCls:row.stuCls.cls,
+          semesterId:row.semester.semesterId
         }
       })
     },

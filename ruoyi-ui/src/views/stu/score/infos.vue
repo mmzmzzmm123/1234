@@ -57,7 +57,17 @@
           size="mini"
           @click="handleExport"
           v-hasPermi="['stu:score:export']"
-        >导出</el-button>
+        >成绩导出</el-button>
+      </el-col>
+      <el-col :span="1.5">
+        <el-button
+          type="warning"
+          plain
+          icon="el-icon-download"
+          size="mini"
+          @click="handleShiJianExport"
+          v-hasPermi="['stu:score:export']"
+        >实践评分表</el-button>
       </el-col>
 <!--      <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>-->
     </el-row>
@@ -145,7 +155,9 @@ export default {
         pageNum: 1,
         pageSize: 50,
         courseName: this.$route.params.courseName,
-        stuCls: this.$route.params.stuCls
+        courseId: this.$route.params.courseId,
+        stuCls: this.$route.params.stuCls,
+        semesterId: this.$route.params.semesterId
       },
       isConfirm:false
     };
@@ -226,6 +238,12 @@ export default {
       this.download('stu/score/export', {
         ...this.queryParams
       }, `${this.queryParams.stuCls}_${this.queryParams.courseName}成绩.xlsx`)
+    },
+    /** 导出按钮操作 */
+    handleShiJianExport() {
+      this.download('stu/score/shijianExport', {
+        ...this.queryParams
+      }, `${this.queryParams.stuCls}_${this.queryParams.courseName}_实践评分表.xlsx`)
     },
     handleImport(){
 

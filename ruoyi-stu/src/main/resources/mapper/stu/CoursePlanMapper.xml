@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.stu.mapper.CoursePlanMapper">
+    <resultMap id="BaseMap" type="com.ruoyi.stu.domain.CoursePlan">
+        <id property="planId" column="plan_id"/>
+        <result property="status" column="status"/>
+        <result property="clsId" column="cls_id"/>
+        <result property="courseId" column="course_id"/>
+        <result property="semesterId" column="semester_id"/>
+    </resultMap>
+    <resultMap id="CoursePlanMap" type="com.ruoyi.stu.domain.CoursePlan" extends="BaseMap">
+        <association property="course" resultMap="com.ruoyi.stu.mapper.CourseMapper.CourseMap"/>
+        <association property="semester" resultMap="com.ruoyi.stu.mapper.SemesterMapper.SemesterMap"/>
+        <association property="stuCls" resultMap="com.ruoyi.stu.mapper.StuClsMapper.StuClsResult"/>
+    </resultMap>
+    <sql id="baseSelect">
+        SELECT plan_id,status,cls_id,p.course_id `course_id`,p.semester_id `semester_id`,cls,course_name,semester_name FROM course_plan p
+        JOIN course c ON p.course_id = c.course_id
+        JOIN semester s ON p.semester_id = s.semester_id
+        JOIN stu_cls sc ON p.cls_id = sc.id
+    </sql>
+    <select id="selectCoursePlan" resultMap="CoursePlanMap">
+        <include refid="baseSelect"/>
+        <where>
+            <if test="course !=null and course.courseName != '' and course.courseName != null">
+                AND course_name LIKE CONCAT('%',#{course.courseName},'%')
+            </if>
+            <if test="semesterId != null and semesterId != 0">
+                AND p.semester_id = #{semesterId}
+            </if>
+        </where>
+        ORDER BY p.semester_id DESC
+    </select>
+<!--    <select id="selectAllCourses" resultMap="CourseMap">-->
+<!--        SELECT course_id,course_no,course_name,course_type,course_plan,course_exec,course_score FROM course-->
+<!--        <where>-->
+<!--            <if test="courseName != null and courseName != ''">-->
+<!--                AND course_name LIKE CONCAT('%',#{courseName},'%')-->
+<!--            </if>-->
+<!--        </where>-->
+<!--    </select>-->
+<!--    <update id="updateCourse">-->
+<!--        UPDATE course-->
+<!--        <set>-->
+<!--            <if test="courseNo!=null and courseNo!=''">-->
+<!--                course_no = #{courseNo},-->
+<!--            </if>-->
+<!--            <if test="courseName!=null and courseName!=''">-->
+<!--                course_name = #{courseName},-->
+<!--            </if>-->
+<!--            <if test="courseType!=null and courseType!=''">-->
+<!--                course_type = #{courseType},-->
+<!--            </if>-->
+<!--            <if test="coursePlan!=null and coursePlan!=''">-->
+<!--                course_plan = #{coursePlan},-->
+<!--            </if>-->
+<!--            <if test="courseExec!=null and courseExec!=''">-->
+<!--                course_exec = #{courseExec},-->
+<!--            </if>-->
+<!--            <if test="courseScore!=null and courseScore!=''">-->
+<!--                course_score = #{courseScore},-->
+<!--            </if>-->
+<!--        </set>-->
+<!--        WHERE course_id = #{courseId}-->
+<!--    </update>-->
+<!--    <insert id="addCourse">-->
+<!--        INSERT course(course_no,course_name,course_type,course_plan,course_exec,course_score)-->
+<!--        VALUES (#{courseNo},#{courseName},#{courseType},#{coursePlan},#{courseExec},#{courseScore})-->
+<!--    </insert>-->
+<!--    <delete id="delCourse">-->
+<!--        DELETE FROM course-->
+<!--        WHERE course_id IN-->
+<!--        <foreach item="id" collection="array" open="(" separator="," close=")">-->
+<!--            #{id}-->
+<!--        </foreach>-->
+<!--    </delete>-->
+</mapper>

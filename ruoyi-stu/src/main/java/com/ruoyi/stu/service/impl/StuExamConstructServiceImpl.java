@@ -15,7 +15,7 @@ public class StuExamConstructServiceImpl implements IStuExamConstructService {
     private StuExamConstructMapper constructMapper;
 
     @Override
-    public List<StuExamConstructMapper> findByIds(Integer courseId, Integer semesterId) {
+    public StuExamConstruct findByIds(Integer courseId, Integer semesterId) {
         return constructMapper.findCon(courseId,semesterId);
     }
 

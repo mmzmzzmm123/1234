@@ -8,6 +8,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result column="exam_titles" property="examTitles"/>
         <result column="exam_points" property="examPoints"/>
         <result column="exam_priorities" property="examPriorities"/>
+        <result column="semester_id" property="semesterId"/>
+        <result column="course_id" property="courseId"/>
         <association property="semester" javaType="com.ruoyi.stu.domain.StuSemester">
             <id column="semester_id" property="semesterId"/>
             <result column="semester_name" property="semesterName"/>
@@ -24,16 +26,17 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </resultMap>
    <select id="findCon" resultMap="StuExamConstructResult">
        SELECT * FROM stu_exam_construct
+       NATURAL JOIN stu_semester
        WHERE course_id = #{courseId} AND semester_id = #{semesterId}
    </select>
     <insert id="addExamConstruct">
-        INSERT stu_exam_construct(semester_id,course_id,exam_titles,exam_points)
-        VALUES (#{construct.semester.semesterId},#{construct.course.courseId},#{construct.examTitles},#{construct.examPotins})
+        INSERT stu_exam_construct(semester_id,course_id,exam_titles,exam_points,exam_priorities)
+        VALUES (#{construct.semesterId},#{construct.courseId},#{construct.examTitles},#{construct.examPoints},#{construct.examPriorities})
     </insert>
     <update id="updateExamConstruct">
         UPDATE stu_exam_construct SET
-          exam_titles = #{construct.examTitles},exam_points = #{construct.examPotins}
-        WHERE semester_id = #{construct.semester.semesterId}
-          AND exam_points = #{construct.examPotins}
+          exam_titles = #{construct.examTitles},exam_points = #{construct.examPoints},exam_priorities=#{construct.examPriorities}
+        WHERE semester_id = #{construct.semesterId}
+          AND exam_points = #{construct.examPoints}
     </update>
 </mapper>

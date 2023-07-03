@@ -8,7 +8,7 @@
       </el-form-item>
       <el-form-item  label="学期" prop="semesterName">
         <el-select v-model="queryParams.semesterName" placeholder="请选择学期" >
-          <el-option  v-for="(item,index) in semesters" :key="index" :label="item.semesterName" :value="item.semesterId"></el-option>
+          <el-option  v-for="(item,index) in semesters" :key="index" :label="item.semesterName" :value="item.semesterName"></el-option>
 <!--          <el-option label="22级" value="22级"></el-option>-->
         </el-select>
       </el-form-item>
@@ -112,24 +112,28 @@
     />
 
     <!-- 设置试卷结构对话框 -->
-    <el-dialog :title="title" :visible.sync="open" width="600px" append-to-body>
+    <el-dialog :title="title" :visible.sync="open" width="800px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
         <el-row v-for="(item,index) in this.examConstruction" :key="index">
-          <el-col :span="8">
+          <el-col :span="7">
             <el-form-item label="题型">
               <el-input placeholder="题型" v-model="item.title" />
             </el-form-item>
           </el-col>
-          <el-col :span="8">
+          <el-col :span="7">
             <el-form-item label="分数" >
               <el-input placeholder="分数" v-model.number="item.point" />
             </el-form-item>
           </el-col>
-          <el-col :span="8">
+          <el-col :span="7">
             <el-form-item label="优先级" >
               <el-input placeholder="优先级" v-model="item.priority" />
             </el-form-item>
           </el-col>
+          <el-col :offset="1" :span="2">
+            <el-button icon="el-icon-remove" @click="removeRow(index)"></el-button>
+          </el-col>
+
         </el-row>
       </el-form>
       <el-row>
@@ -157,22 +161,23 @@
           </el-col>
           <el-col :offset="4" :span="18">
             <el-form-item label="年级">
-              <el-select v-model="queryParams.clsYear" placeholder="请选择年级">
+              <el-select v-model="queryParams.addClsYear" placeholder="请选择年级">
                 <el-option  v-for="(item,index) in clsYears" :key="index" :label="item" :value="item"></el-option>
               </el-select>
             </el-form-item>
           </el-col>
           <el-col :offset="4" :span="18">
             <el-form-item label="课程">
-              <el-select v-model="queryParams.courseId" placeholder="请选择课程">
+              <el-select v-model="queryParams.addCourseId" placeholder="请选择课程">
                 <el-option  v-for="(item,index) in courses" :key="index" :label="item.courseName" :value="item.courseId"></el-option>
               </el-select>
             </el-form-item>
           </el-col>
+
         </el-row>
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="submitForm">确 定</el-button>
+        <el-button type="primary" @click="addCoursePlanSubmit">确 定</el-button>
         <el-button @click="courseCancel">取 消</el-button>
       </div>
     </el-dialog>
@@ -218,6 +223,8 @@ export default {
         clsYear: null,
         semesterName:null,
         semesterId:null,
+        addCourseId:null,
+        addClsYear:null,
       },
       // 表单参数
       form: {},
@@ -227,7 +234,8 @@ export default {
       examConstruction:[{title:'选择题',point:0,priority:0}],
       clsYears:[],
       semesters:[],
-      courses:[]
+      courses:[],
+      isAdd:null
     };
   },
   created() {
@@ -279,13 +287,17 @@ export default {
     addRow(){
       this.examConstruction.push({title:'',point:0,priority: 0})
     },
+    //删除一行
+    removeRow(index){
+      if(this.examConstruction.length>1){
+        this.examConstruction.splice(index,1)
+      }else{
+        this.$message.warning("至少保留一行数据！")
+      }
+    },
     // 表单重置
     reset() {
-      this.form = {
-        stu:null,
-        teacher:null,
-        course:null
-      };
+      this.form = {};
       this.resetForm("form");
     },
     /** 搜索按钮操作 */
@@ -308,19 +320,20 @@ export default {
     handleAdd() {
       this.reset();
       this.courseOpen = true;
-
     },
     /** 设置试卷结构  **/
     handleSetExamConstruction(row){
       this.title = '试卷结构设置'
+      this.queryParams.semesterId = row.semester.semesterId
+      this.queryParams.courseId = row.course.courseId
       construct({
         'semesterId':row.semester.semesterId,
         'courseId':row.course.courseId
       }).then(response=>{console.log(response)
-        if(response.data.length>0){
-          let examTitles = response.data[0].examTitles.split(',')
-          let examPoints = response.data[0].examPoints.split(',')
-          let examPriorities = response.data[0].examPriorities.split(',')
+        if(response.data){
+          let examTitles = response.data.examTitles.split(',')
+          let examPoints = response.data.examPoints.split(',')
+          let examPriorities = response.data.examPriorities.split(',')
           this.examConstruction = []
           for (let i = 0; i < examTitles.length; i++) {
             this.examConstruction.push({
@@ -329,8 +342,10 @@ export default {
               priority: Number.parseInt(examPriorities[i])
             })
           }
+          this.isAdd = false
         }else{
           this.examConstruction = [{title:'选择题',point:0,priority:0}]
+          this.isAdd = true
         }
         this.open = true
       })
@@ -351,20 +366,76 @@ export default {
     submitForm() {
       this.$refs["form"].validate(valid => {
         if (valid) {
+          let examTitles = ''
+          let examPoints = ''
+          let examPriorities =''
+          this.examConstruction.map((item,index)=>{
+            if(index<this.examConstruction.length-1){
+              examTitles+=(item.title+',')
+              examPoints+=(item.point+',')
+              examPriorities+=(item.priority+',')
+            }else{
+              examTitles+=item.title
+              examPoints+=item.point
+              examPriorities+=item.priority
+            }
+          })
+          if(this.isAdd){
+            addConstruct({
+              semesterId: this.queryParams.semesterId,
+              courseId: this.queryParams.courseId,
+              examPriorities: examPriorities,
+              examPoints:examPoints,
+              examTitles:examTitles,
+              // clsYear: this.queryParams.clsYear,
+            }).then(()=>{
+                this.$message({
+                  type: "success",
+                  message:"添加成功"
+                })
+                this.reset()
+                this.getList()
+              }
+            )
+          }else{
+            updateConstruct({
+              semesterId: this.queryParams.semesterId,
+              // clsYear: this.queryParams.clsYear,
+              examPriorities: examPriorities,
+              examPoints:examPoints,
+              examTitles:examTitles,
+              courseId: this.queryParams.courseId
+            }).then(()=>{
+                this.$message({
+                  type: "success",
+                  message:"修改成功"
+                })
+                this.reset()
+                this.getList()
+              }
+            )
+          }
+        }
+      });
+    },
+    addCoursePlanSubmit(){
+      this.$refs["form"].validate(valid => {
+        if (valid) {
           addCoursePlan({
-            semesterId: this.queryParams.semesterId,
-            clsYear: this.queryParams.clsYear,
-            courseId: this.queryParams.courseId
+            courseId : this.queryParams.addCourseId,
+            clsYear : this.queryParams.addClsYear,
+            semesterId : this.queryParams.semesterId
           }).then(()=>{
-              this.$message({
-                type: "success",
-                message:"添加成功"
-              })
-              this.getList()
+            this.$message({
+              type: "success",
+              message:"添加成功"
+            })
+            this.reset()
+            this.getList()
             }
           )
         }
-      });
+      })
     },
     /** 删除按钮操作 */
     handleDelete(row) {

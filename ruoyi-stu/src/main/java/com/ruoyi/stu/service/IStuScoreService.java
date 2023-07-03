@@ -12,4 +12,5 @@ public interface IStuScoreService {
     List<Score> selectHistoryScore(String stuCls);
     //批量更新某班学生平时成绩
     Integer updateClassDailyScore(@Param("snos") List<Score> snos);
+
 }

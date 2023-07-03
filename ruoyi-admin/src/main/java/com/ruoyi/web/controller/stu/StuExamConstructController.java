@@ -9,6 +9,7 @@ import com.ruoyi.stu.service.IStuExamConstructService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -34,7 +35,7 @@ public class StuExamConstructController extends BaseController {
      * 添加某个学期某门课程的试卷结构
      */
     @PreAuthorize("@ss.hasPermi('exam:info:construct')")
-    @GetMapping("/addConstruct")
+    @PostMapping("/addConstruct")
     public AjaxResult addConstruct(StuExamConstruct construct)
     {
         return toAjax(constructService.addExamConstruct(construct));
@@ -45,7 +46,7 @@ public class StuExamConstructController extends BaseController {
      * 修改某个学期某门课程的试卷结构
      */
     @PreAuthorize("@ss.hasPermi('exam:info:construct')")
-    @GetMapping("/updateConstruct")
+    @PostMapping("/updateConstruct")
     public AjaxResult updateConstruct(StuExamConstruct construct)
     {
         return toAjax(constructService.updateExamConstruct(construct));

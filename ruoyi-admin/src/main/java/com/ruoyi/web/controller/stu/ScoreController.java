@@ -6,19 +6,20 @@ import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.core.page.TableDataInfo;
 import com.ruoyi.common.enums.BusinessType;
 import com.ruoyi.common.utils.poi.ExcelUtil;
-import com.ruoyi.stu.domain.Score;
-import com.ruoyi.stu.domain.StuCoursePlan;
-import com.ruoyi.stu.domain.StuInfo;
-import com.ruoyi.stu.domain.StuMaterial;
+import com.ruoyi.stu.domain.*;
+import com.ruoyi.stu.mapper.StuExamConstructMapper;
 import com.ruoyi.stu.service.IStuCoursePlanService;
+import com.ruoyi.stu.service.IStuExamConstructService;
 import com.ruoyi.stu.service.IStuScoreService;
 import com.ruoyi.stu.vo.BiyeForm;
 import com.ruoyi.stu.vo.StuInfoMaterial;
+import org.apache.poi.ss.formula.functions.T;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -31,6 +32,9 @@ public class ScoreController extends BaseController {
 
     @Autowired
     private IStuCoursePlanService stuCoursePlanService;
+
+    @Autowired
+    private IStuExamConstructService examConstructService;
 
     /**
      * 查询已录入成绩的班级&老师&课程信息
@@ -128,4 +132,29 @@ public class ScoreController extends BaseController {
         util.exportExcel(response, list, "提交材料参数数据");
     }
 
+    /**
+     * 导出实践评分表
+     */
+//    @PreAuthorize("@ss.hasPermi('score:info:export')")
+    @Log(title = "实践评分表导出", businessType = BusinessType.UPDATE)
+    @PostMapping("/shijianExport")
+    public void shijianExport(HttpServletResponse response,String stuCls, Integer courseId,Integer semesterId,String courseName)
+    {
+
+        //结构
+        StuExamConstruct construct = examConstructService.findByIds(courseId, semesterId);
+        //分数
+        List<Score> scores = stuScoreService.selectCourseScore(stuCls, courseName);
+        List<String> fields = new ArrayList<>();
+        for (int i = 0; i < 100; i++) {
+            fields.add(i+"");
+        }
+        ExcelUtil util = new ExcelUtil(Score.class);
+//        util.exportDIYExcel(response,construct);
+//        util.exportDIYExcel(response,null,"s1","123",null);
+//        util.exportExcel(response,scores,"s1","123");
+//        List<Score> list = stuScoreService.selectCourseScore(stuCls,courseName);
+//        ExcelUtil<Score> util = new ExcelUtil<Score>(Score.class);
+//        util.exportExcel(response, list, "提交材料参数数据");
+    }
 }

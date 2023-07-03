@@ -24,15 +24,11 @@ import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
 import javax.servlet.http.HttpServletResponse;
+
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.RegExUtils;
 import org.apache.commons.lang3.reflect.FieldUtils;
-import org.apache.poi.hssf.usermodel.HSSFClientAnchor;
-import org.apache.poi.hssf.usermodel.HSSFPicture;
-import org.apache.poi.hssf.usermodel.HSSFPictureData;
-import org.apache.poi.hssf.usermodel.HSSFShape;
-import org.apache.poi.hssf.usermodel.HSSFSheet;
-import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.hssf.usermodel.*;
 import org.apache.poi.ooxml.POIXMLDocumentPart;
 import org.apache.poi.ss.usermodel.BorderStyle;
 import org.apache.poi.ss.usermodel.Cell;
@@ -59,13 +55,7 @@ import org.apache.poi.ss.util.CellRangeAddress;
 import org.apache.poi.ss.util.CellRangeAddressList;
 import org.apache.poi.util.IOUtils;
 import org.apache.poi.xssf.streaming.SXSSFWorkbook;
-import org.apache.poi.xssf.usermodel.XSSFClientAnchor;
-import org.apache.poi.xssf.usermodel.XSSFDataValidation;
-import org.apache.poi.xssf.usermodel.XSSFDrawing;
-import org.apache.poi.xssf.usermodel.XSSFPicture;
-import org.apache.poi.xssf.usermodel.XSSFShape;
-import org.apache.poi.xssf.usermodel.XSSFSheet;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.apache.poi.xssf.usermodel.*;
 import org.openxmlformats.schemas.drawingml.x2006.spreadsheetDrawing.CTMarker;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -1742,4 +1732,51 @@ public class ExcelUtil<T>
         }
         return method;
     }
+
+    /**
+     * 自定义excel表导出
+     * 对list数据源将其里面的数据导入到excel表单
+     *
+     */
+//    public void exportDIYExcel(HttpServletResponse response, StuExamConstruct construct)
+//    {
+//        response.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+//        response.setCharacterEncoding("utf-8");
+//        XSSFWorkbook workbook = new XSSFWorkbook();
+//        XSSFSheet spreadsheet = workbook.createSheet(sheetName);
+//        //数据
+//        String semesterName = construct.getSemester().getSemesterName();
+//        String examTitles = construct.getExamTitles();
+//        String[] titles = examTitles.split(",");
+//        //主标题
+//        XSSFRow row0 = spreadsheet.createRow(0);
+//        XSSFCell cell_00 = row0.createCell(0);
+//        XSSFCellStyle style = workbook.createCellStyle();
+//        cell_00.setCellValue("温州科技职业学院"+semesterName+"实践评分表");
+//        cell_00.setCellStyle(style);
+//        //列名
+//        XSSFRow row1 = spreadsheet.createRow(1);
+//        XSSFCell cell_10 = row1.createCell(0);
+//        cell_10.setCellValue("序号");
+//        XSSFCell cell_11 = row1.createCell(1);
+//        cell_11.setCellValue("学号");
+//        XSSFCell cell_12 = row1.createCell(2);
+//        cell_12.setCellValue("姓名");
+//        for (int i=3;i<titles.length;i++){
+//            XSSFCell cell_title = row1.createCell(i);
+//            cell_title.setCellValue(titles[i]);
+//        }
+//        //数据
+//        try {
+//            workbook.write(response.getOutputStream());
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        } finally {
+//            try {
+//                workbook.close();
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            }
+//        }
+//    }
 }

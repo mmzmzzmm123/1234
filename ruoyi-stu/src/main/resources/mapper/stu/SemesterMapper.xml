@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.stu.mapper.SemesterMapper">
+    <resultMap id="SemesterMap" type="com.ruoyi.stu.domain.Semester">
+        <id column="semester_id" property="semesterId"/>
+        <result column="semester_name" property="semesterName"/>
+    </resultMap>
+    <select id="selectSemester" resultMap="SemesterMap">
+        SELECT semester_id,semester_name FROM semester
+        <where>
+            <if test="semesterId != null and semesterId != 0">
+                AND semester_id = #{semesterId}
+            </if>
+            <if test="semesterName != null and semesterName != ''">
+                AND semesterName LIKE CONCAT('%',#{semesterName},'%')
+            </if>
+        </where>
+    </select>
+    <insert id="addSemester">
+        INSERT semester(semseter_name) VALUES (#{semesterName})
+    </insert>
+</mapper>

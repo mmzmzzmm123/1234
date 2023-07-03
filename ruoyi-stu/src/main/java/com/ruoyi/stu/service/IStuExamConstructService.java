@@ -8,7 +8,7 @@ import java.util.List;
 
 public interface IStuExamConstructService {
     //查询试卷结构
-    List<StuExamConstructMapper> findByIds(Integer courseId, Integer semesterId);
+    StuExamConstruct findByIds(Integer courseId, Integer semesterId);
     //添加试卷结构
     Integer addExamConstruct(StuExamConstruct construct);
     //修改试卷结构
