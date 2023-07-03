@@ -296,7 +296,7 @@ export default {
     },
     /** 查询咨询师服务列表 */
     getConsultServeList(consultId) {
-      getServeAll({ consultId: consultId }).then(response => {
+      getServeAll({ consultId: consultId, status: 0 }).then(response => {
         this.serveList = response.data;
       });
     },

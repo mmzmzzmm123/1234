@@ -53,8 +53,8 @@ export default {
         display: flex;
         align-items: center;
         .img-box {
-            width: 172rpx;
-            height: 172rpx;
+            width: 172upx;
+            height: 172upx;
             img {
               border-radius: 50%;
             }
@@ -78,23 +78,22 @@ export default {
             .tag-list {
               .tag-item {
                 background: rgba(255,112,63,0.1);
-                border-radius: 4rpx;
+                border-radius: 4upx;
                 margin-right: 8upx;
-                font-size: 22rpx;
-                font-family: PingFangSC-Regular, PingFang SC;
+                font-size: 22upx;
                 font-weight: 400;
                 color: #FF703F;
-                line-height: 30rpx;
-                padding: 2upx 16upx;
+                line-height: 30upx;
+                padding: 2upx 10upx;
               }
             }
           }  
           .introduce {
-            font-size: 26rpx;
+            font-size: 26upx;
             font-family: PingFangSC-Regular, PingFang SC;
             font-weight: 400;
             color: #777777;
-            line-height: 37rpx;
+            line-height: 37upx;
           }
         }
       }
@@ -105,10 +104,10 @@ export default {
         .consult-button {
           width: fit-content;
           height: fit-content;
-          border-radius: 25rpx;
-          border: 1rpx solid #FF703F;
+          border-radius: 25upx;
+          border: 1upx solid #FF703F;
           padding: 8upx 20upx;
-          font-size: 24rpx;
+          font-size: 24upx;
           font-family: PingFangSC-Regular, PingFang SC;
           font-weight: 400;
           color: #FF703F;

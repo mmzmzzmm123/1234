@@ -272,6 +272,11 @@
             <el-input-number v-model="scope.row.price" :precision="2" :step="1" :max="99999" size="mini"></el-input-number>
           </template>
         </el-table-column>
+        <el-table-column label="服务时长" align="center" prop="price" width="150px">
+          <template slot-scope="scope">
+            50
+          </template>
+        </el-table-column>
         <el-table-column label="状态" align="center" prop="status" width="100px">
           <template slot-scope="scope">
             <el-switch v-model="scope.row.status" active-value="0" inactive-value="1"/>

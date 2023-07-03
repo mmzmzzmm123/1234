@@ -54,6 +54,7 @@ public class AppPsyConsultController extends BaseController
     {
         PsyConsultServeVO req = new PsyConsultServeVO();
         req.setConsultId(id);
+        req.setStatus("0");
         return AjaxResult.success(psyConsultServeService.getList(req));
     }
 

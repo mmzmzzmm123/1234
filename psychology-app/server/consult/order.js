@@ -31,7 +31,7 @@ export default {
   doConsult: async (id, workId) => {
     let res = await httprequest.get(`/app/consult/order/doConsult/` + id + '/' + workId);
     if (res.code == 200) {
-      return res.data;
+      return 1;
     } else {
       uni.showToast({
         icon: "error",

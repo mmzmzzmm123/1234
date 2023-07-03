@@ -121,9 +121,15 @@ export default {
   },
   methods: {
     back() {
-      uni.navigateTo({
-        url: "/pages/consult/order?status=" + 0,
-      });
+      if (this.orderId > 0) {
+        uni.navigateTo({
+          url: "/pages/consult/order?status=" + 0,
+        });
+      } else {
+        uni.navigateTo({
+          url: "/pages/consult/index",
+        });
+      }
     },
     async getDates() {
       this.dateList = await indexServer.getDates(7);

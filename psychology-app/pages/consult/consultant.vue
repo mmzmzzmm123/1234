@@ -422,7 +422,7 @@ export default {
 }
 .serve-conten {
   width: 702upx;
-  height: 536upx;
+  max-height: 536upx;
   display: flex;
   flex-direction: column;
   justify-content: space-between;

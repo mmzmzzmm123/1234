@@ -23,7 +23,7 @@
           <view class="item-info">
             <image :src="item.avatar" class="item-info-avatar"></image>
             <view class="item-info-group" @tap="toDetail(item.id)">
-              <text class="item-name">{{ item.userName }}</text>
+              <text class="item-name">{{ item.consultName }}</text>
               <text class="item-desc">{{ item.serveName }} X1</text>
             </view>
             <view class="item-price">

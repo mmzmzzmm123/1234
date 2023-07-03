@@ -4,7 +4,7 @@ export default {
     getConsultInfo: async (consultId) => {
       let res = await httprequest.get(`/app/consult/` + consultId);
       if (res.code == 200) {
-        return 1;
+        return res.data;
       } else {
         uni.showToast({
           icon: "error",
