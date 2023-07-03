@@ -270,7 +270,7 @@
         <el-row>
           <el-col :span="12">
             <el-form-item label="岗位">
-              <el-select v-model="form.postIds" multiple placeholder="请选择岗位">
+              <el-select v-model="form.postIds" multiple placeholder="请选择岗位" @change="$forceUpdate()">
                 <el-option
                   v-for="item in postOptions"
                   :key="item.postId"
@@ -283,7 +283,7 @@
           </el-col>
           <el-col :span="12">
             <el-form-item label="角色">
-              <el-select v-model="form.roleIds" multiple placeholder="请选择角色">
+              <el-select v-model="form.roleIds" multiple placeholder="请选择角色" @change="$forceUpdate()">
                 <el-option
                   v-for="item in roleOptions"
                   :key="item.roleId"
