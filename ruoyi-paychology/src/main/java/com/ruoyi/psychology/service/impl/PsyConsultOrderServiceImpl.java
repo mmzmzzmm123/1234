@@ -68,6 +68,26 @@ public class PsyConsultOrderServiceImpl implements IPsyConsultOrderService
 
     @Override
     @Transactional(rollbackFor = Exception.class)
+    public int doConsult(Long id, Long workId) {
+        PsyConsultWorkVO work = psyConsultWorkService.getOne(workId);
+        PsyConsultOrderVO order = getOne(id);
+
+        order.setStatus(ConsultConstant.CONSULT_ORDER_STATUE_UNCONSULT);
+        order.setType(work.getType());
+        order.setDay(work.getDay());
+        order.setWeek(work.getWeek());
+        order.setTimeStart(work.getTimeStart());
+        order.setTimeEnd(work.getTimeEnd());
+        order.setTime(work.getTime());
+        order.setNum(0);
+        order.setBuyNum(1);
+        // 更新预约数量
+        psyConsultWorkService.updateNum(workId, -1);
+        return update(order);
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
     public int add(PsyConsultOrderVO req) {
         PsyConsultServeVO serve = psyConsultServeService.getOne(req.getServeId());
         PsyConsultVO consult = psyConsultService.getOne(serve.getConsultId());

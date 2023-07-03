@@ -48,6 +48,15 @@ public class AppPsyConsultOrderController extends BaseController
     /**
      * 取消
      */
+    @GetMapping(value = "/doConsult/{id}/{workId}")
+    public AjaxResult doConsult(@PathVariable("id") Long id, @PathVariable("workId") Long workId)
+    {
+        return AjaxResult.success(psyConsultOrderService.doConsult(id, workId));
+    }
+
+    /**
+     * 取消
+     */
     @GetMapping(value = "/cancel/{id}")
     public AjaxResult cancel(@PathVariable("id") Long id)
     {

@@ -165,7 +165,7 @@ export default {
       console.log(item)
       this.confirmServe()
       uni.navigateTo({
-        url: "/pages/consult/orderConfirm?id=" + item.id,
+        url: "/pages/consult/orderConfirm?type=0&id=" + item.id,
       });
     },
     closeServe() {

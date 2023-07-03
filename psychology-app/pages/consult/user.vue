@@ -33,34 +33,24 @@
         <view class="box-more" @tap="toPage(0)">查看全部 ></view>
       </view>
       <uni-row class="class-box">
-        <uni-col :span="6" v-for="item in classList" class="item" @tap="toPage(item.id)">
-          <img class="class-img" :src="item.classPic" />
-          <view>{{ item.className }}</view>
+        <uni-col :span="6" v-for="item in classList" class="item">
+          <view @tap="toPage(item.id)">
+            <img class="class-img" :src="item.classPic" />
+            <view>{{ item.className }}</view>
+          </view>
         </uni-col>
       </uni-row>
     </view>
     <view class="un-test-box">
       <view class="box-title">其他服务</view>
       <uni-row class="class-box">
-        <uni-col :span="6" v-for="item in serveList" class="item" @tap="toPage(item.id)">
-          <img class="class-img" :src="item.classPic" />
-          <view>{{ item.className }}</view>
+        <uni-col :span="6" v-for="item in serveList" class="item">
+          <view @tap="toPage(item.id)">
+            <img class="class-img" :src="item.classPic" />
+            <view>{{ item.className }}</view>
+          </view>
         </uni-col>
       </uni-row>
-<!--      <view class="class-box">-->
-<!--        <view-->
-<!--            class="item"-->
-<!--            v-for="item in serveList"-->
-<!--            @tap="-->
-<!--          () => {-->
-<!--            item.callback && item.callback();-->
-<!--          }-->
-<!--        "-->
-<!--        >-->
-<!--          <img class="class-img" :src="item.classPic" />-->
-<!--          <view>{{ item.className }}</view>-->
-<!--        </view>-->
-<!--      </view>-->
     </view>
     <consult-tab-bar :currentIndex="2"></consult-tab-bar>
     <uni-popup ref="popup" type="dialog">
@@ -118,8 +108,6 @@ export default {
           id: 6,
         }
       ],
-      reportNum: 0,
-      orderList: [],
       clientTypeObj: clientTypeObj,
       redirectUri:location.href+"?t="+new Date().getTime()
     };
@@ -134,35 +122,18 @@ export default {
       }
     }
   },
-  async created() {
-    // this.userInfo = uni.getStorageSync("userInfo")
-    this.userInfo = uni.getStorageSync("userInfo") ? JSON.parse(uni.getStorageSync("userInfo")) : undefined;
-  },
   async mounted() {
+    this.userInfo = uni.getStorageSync("userInfo") ? JSON.parse(uni.getStorageSync("userInfo")) : undefined;
     if (!this.userInfo && await utils.loginCallback(this.redirectUri)) {
-      // this.userInfo = uni.getStorageSync("userInfo")
       this.userInfo = uni.getStorageSync("userInfo") ? JSON.parse(uni.getStorageSync("userInfo")) : undefined;
     }
     if (!this.userInfo) {
       this.openLoginConfirm()
     }
-    if (this.userInfo) {
-      this.orderList = await userServer.getOrderList({
-        userId: this.userInfo.userId,
-        gaugeStatus: 2
-      });
-      this.orderList.forEach(async (item, index) => {
-        let { gaugeNum, finishedNum } = await productServer.getProductInfo(item.gaugeId)
-        item.gaugeNum = gaugeNum
-        item.finishedNum = finishedNum
-        this.$set(this.orderList, index, item);
-      })
-      console.log(this.orderList)
-      this.reportNum = await userServer.getOrderListNum(this.userInfo.userId);
-    }
   },
   methods: {
     toPage(id) {
+      console.log(id)
       switch (id) {
         case 0:
         case 1:
@@ -172,7 +143,7 @@ export default {
           uni.navigateTo({ url: "/pages/consult/order?status=" + id });
           break
         case 5:
-          uni.redirect({ url: "/pages/evaluation/index" })
+          uni.redirectTo({ url: "/pages/evaluation/index" })
           break
         case 6:
           console.log('客服帮助')
@@ -319,42 +290,11 @@ page {
         }
       }
     }
-
-    .link-box {
-      display: flex;
-      flex-direction: row;
-
-      .item {
-        width: 336upx;
-        height: 164upx;
-        padding: 30upx 32upx;
-        font-size: 32upx;
-        font-weight: 500;
-        line-height: 45upx;
-        color: #40c2b7;
-
-        &:first-child {
-          margin-right: 26upx;
-          color: #e2724c;
-        }
-
-        .num {
-          font-size: 30upx;
-          font-weight: 400;
-          line-height: 42upx;
-        }
-      }
-    }
   }
 
   .class-box {
-    //display: flex;
-    //flex-direction: row;
-    //justify-content: space-around;
     text-align: center;
     font-size: 26upx;
-    //background: #ffffff;
-    //border-radius: 16upx;
     padding: 32upx 0;
 
     .class-img {

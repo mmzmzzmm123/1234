@@ -27,8 +27,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
-import java.util.Timer;
-import java.util.UUID;
+import java.util.*;
 
 @Service
 @Slf4j
@@ -118,6 +117,13 @@ public class WechatPayV3ApiServiceImpl implements WechatPayV3ApiService {
             psyOrderPayService.insertPsyOrderPay(psyOrderPay);
         } else if (ConsultConstant.MODULE_CONSULT.equals(wechatPay.getModule())) {
             // 心理咨询服务
+            if (wechatPay.getOrderId() != null && wechatPay.getOrderId() > 0) {
+                // 作废之前订单   时间紧张,后续再优化
+                List<Long> list = new ArrayList<>();
+                list.add(wechatPay.getOrderId());
+                Long[] ids = list.toArray(new Long[0]);
+                psyConsultOrderService.deleteAll(ids);
+            }
             Long id = IDhelper.getNextId();
             PsyConsultOrderVO psyConsultOrderVO = new PsyConsultOrderVO();
             psyConsultOrderVO.setId(id);

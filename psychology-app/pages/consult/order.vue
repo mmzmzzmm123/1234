@@ -39,7 +39,7 @@
             <button bindtap="onClick" class="button_1" v-if="item.status === 0">
               取消
             </button>
-            <button @tap="toBuy(item.serveId)" class="button_2" v-if="item.status === 0 || item.status === 1">
+            <button @tap="toBuy(item)" class="button_2" v-if="item.status === 0 || item.status === 1">
               <text class="text_16">{{ item.status === 0 ? '支付' : '去预约'}}</text>
             </button>
             <view class="bottom-time" v-if="item.timeStart && (item.status === 2 || item.status === 3)">{{ item.timeStart.substr(0, 16) + '-' + item.timeEnd.substr(11, 5) }}</view>
@@ -139,9 +139,9 @@ export default {
       }
       this.orderList = await orderServer.getOrderList(data);
     },
-    toBuy(serveId) {
+    toBuy(item) {
       uni.navigateTo({
-        url: "/pages/consult/orderConfirm?id=" + serveId,
+        url: "/pages/consult/orderConfirm?id=" + item.serveId + "&orderId=" + item.id + "&type=" + item.status,
       });
     },
     toDetail(id) {

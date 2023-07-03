@@ -28,6 +28,17 @@ export default {
       });
     }
   },
+  doConsult: async (id, workId) => {
+    let res = await httprequest.get(`/app/consult/order/doConsult/` + id + '/' + workId);
+    if (res.code == 200) {
+      return res.data;
+    } else {
+      uni.showToast({
+        icon: "error",
+        title: "取消失败",
+      });
+    }
+  },
   cancel: async (id) => {
     let res = await httprequest.get(`/app/consult/order/cancel/` + id);
     if (res.code == 200) {

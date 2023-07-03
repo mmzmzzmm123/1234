@@ -17,6 +17,7 @@ public class WechatPayVO implements Serializable {
     // 咨询服务
     private Long serveId;
     private Long workId;
+    private Long orderId;
 
     private String module;
 

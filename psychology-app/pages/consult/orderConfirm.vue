@@ -44,7 +44,7 @@
       </view>
       <view class="section-reader">
         <checkbox-group @change="checkboxChange">
-          <checkbox class="section-reader-box" :value="checkBox" />
+          <checkbox class="section-reader-box" value="ok" :checked="checkBox"/>
         </checkbox-group>
         <view class="section-reader-group">
           <text class="section-reader-group-text1">我同意</text>
@@ -55,8 +55,8 @@
     </view>
     <view class="bottom-view">
       <button @tap="toBuy" class="bottom-btn" :disabled="flag">
-        <text class="bottom-text">立即支付</text>
-        <view class="bottom-text-wrapper">
+        <text class="bottom-text">{{ type === '1' ? '预约' : '立即支付' }}</text>
+        <view class="bottom-text-wrapper" v-if="type !== '1'">
           <text class="bottom-text-wrapper-1">¥</text>
           <text class="bottom-text-wrapper-2">{{ serve.price }}</text>
         </view>
@@ -87,7 +87,7 @@ export default {
       workId: 0,
       workName: '',
       flag: false,
-      checkBox: 'ok',
+      checkBox: false,
       userInfo: {},
       tabs: [],
       works: [],
@@ -95,17 +95,23 @@ export default {
       workList: [],
       serve: {},
       consult: {},
+      type: '0',// 0,支付 1,预约
       serveId: 0,
+      orderId: 0,
       redirectUri: location.href,
       currentCatalogue: {},
     };
   },
   created() {
     this.serveId = utils.getParam(location.href, "id")
+    this.orderId = utils.getParam(location.href, "orderId") ? utils.getParam(location.href, "orderId") : 0
+    this.type = utils.getParam(location.href, "type") ? utils.getParam(location.href, "type") : 0
+    console.log(this.serveId)
+    console.log(this.orderId)
+    console.log(this.type)
   },
   async mounted() {
     this.userInfo = uni.getStorageSync("userInfo") ? JSON.parse(uni.getStorageSync("userInfo")) : undefined;
-    console.log(this.serveId)
     if (!this.userInfo) {
       return this.openLoginConfirm()
     }
@@ -204,8 +210,20 @@ export default {
       console.log(e.detail.value)
       this.checkBox = e.detail.value[0]
     },
+    async doConsult() {
+      const res = await orderServer.doConsult(this.orderId, this.workId)
+      console.log(res)
+      if (res === 1) {
+        uni.showToast({
+          icon: "success",
+          title: "预约成功",
+        });
+        uni.navigateTo({
+          url: "/pages/consult/order",
+        });
+      }
+    },
     async toBuy() {
-      console.log(this.checkBox)
       if (!this.checkBox) {
         return uni.showToast({
           icon: 'none',
@@ -223,13 +241,26 @@ export default {
       console.log(this.serve.id)
       console.log(this.workId)
 
+      if (this.type === '1' && this.orderId !== '') {
+        if (this.workId === 0) {
+          return uni.showToast({
+            icon: 'none',
+            title: '请选择时间进行预约',
+            duration: 2000
+          })
+        }
+        await this.doConsult(this.orderId, this.workId)
+        return true
+      }
+
       let res = await getPaySign(
           this.userInfo.userId,
           this.serve.id,
           this.serve.price,
           {
             module: 'consult',
-            workId: this.workId
+            workId: this.workId,
+            orderId: this.orderId
           }
       )
 

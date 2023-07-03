@@ -80,6 +80,7 @@ export function getPaySign(userId, produteId, amount, extra) {
               userId: userId,
               serveId: produteId,
               workId: extra.workId,
+              orderId: extra.orderId,
               module: extra.module,
               amount: amount
           }

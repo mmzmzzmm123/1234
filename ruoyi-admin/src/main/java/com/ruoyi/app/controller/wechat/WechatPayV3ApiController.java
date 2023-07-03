@@ -17,8 +17,10 @@ import com.ruoyi.gauge.domain.PsyGauge;
 import com.ruoyi.gauge.service.IPsyGaugeService;
 import com.ruoyi.psychology.constant.ConsultConstant;
 import com.ruoyi.psychology.domain.PsyUser;
+import com.ruoyi.psychology.service.IPsyConsultOrderService;
 import com.ruoyi.psychology.service.IPsyConsultWorkService;
 import com.ruoyi.psychology.service.IPsyUserService;
+import com.ruoyi.psychology.vo.PsyConsultOrderVO;
 import com.ruoyi.psychology.vo.PsyConsultWorkVO;
 import com.ruoyi.wechat.service.WechatPayV3ApiService;
 import com.ruoyi.wechat.vo.WechatPayVO;
@@ -59,6 +61,9 @@ public class WechatPayV3ApiController extends BaseController {
 
     @Resource
     private IPsyConsultWorkService workService;
+
+    @Resource
+    private IPsyConsultOrderService psyConsultOrderService;
 
     @Resource
     private WechatPayV3ApiService wechatPayV3ApiService;
@@ -108,6 +113,14 @@ public class WechatPayV3ApiController extends BaseController {
                     }
                     if (work.getNum() == 0) {
                         return error("当前班次已经约满");
+                    }
+                }
+
+                if (wechatPayDTO.getOrderId() != null && wechatPayDTO.getOrderId() > 0) {
+                    // 作废之前订单   时间紧张,后续再优化
+                    PsyConsultOrderVO one = psyConsultOrderService.getOne(wechatPayDTO.getOrderId());
+                    if (ConsultConstant.CONSULT_ORDER_STATUE_CREATED != one.getStatus()) {
+                        return error("订单状态异常,无法支付");
                     }
                 }
                 break;

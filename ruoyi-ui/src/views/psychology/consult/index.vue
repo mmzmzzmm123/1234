@@ -152,7 +152,7 @@
         <el-row>
           <el-col :span="12">
             <el-form-item label="登录名" prop="userName">
-              <el-input v-model="form.userName" placeholder="请输入登录名" />
+              <el-input v-model="form.userName" :disabled="form.id" placeholder="请输入登录名" />
             </el-form-item>
           </el-col>
           <el-col :span="12">

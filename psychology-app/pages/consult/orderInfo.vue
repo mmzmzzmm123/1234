@@ -4,9 +4,13 @@
       <view class="header-nav">
         <uni-nav-bar left-icon="closeempty" right-icon="more-filled" :border="false" title="订单详情" @clickLeft="back"/>
       </view>
-      <view class="header-time">
-        <image src="/static/consult/order/time.png" class="header-icon"></image>
+      <view class="header-time" v-if="order.status === 0">
+        <image src="/static/consult/order/time.png" class="header-icon"/>
         <view class="title">订单待支付，剩余<uni-countdown class="countdown" color="#FF703F" splitorColor="#FF703F" :show-day="false" :minute="14" :second="59"/></view>
+      </view>
+      <view class="header-time" v-else-if="order.status === 1">
+        <image src="/static/consult/order/dzx.png" class="header-icon"/>
+        <view class="title">订单待咨询</view>
       </view>
     </view>
     <view class="info">
@@ -47,10 +51,10 @@
         <text class="info-col">{{ order.timeStart ? order.timeStart.substr(0, 16) + '-' + order.timeEnd.substr(11, 5) : '-'}}</text>
       </view>
     </view>
-    <view class="footer">
+    <view class="footer" v-if="order.status === 0 || order.status === 1">
       <button @tap="toBuy" class="button-buy">
-        <text class="button-text">立即支付</text>
-        <text class="button-price">
+        <text class="button-text">{{ order.status === 0 ? '立即支付' : '去预约'}}</text>
+        <text class="button-price" v-if="order.status === 0">
           <text class="button-price-unit">¥</text>
           <text class="button-price-num">{{ order.amount }}</text>
         </text>
@@ -105,9 +109,9 @@ export default {
     async getOrderInfo() {
       this.order = await orderServer.getOrderInfo(this.orderId);
     },
-    toBuy(serveId) {
+    toBuy() {
       uni.navigateTo({
-        url: "/pages/consult/orderConfirm?id=" + serveId,
+        url: "/pages/consult/orderConfirm?id=" + this.order.serveId + "&orderId=" + this.order.id + "&type=" + this.order.status,
       });
     },
   },
