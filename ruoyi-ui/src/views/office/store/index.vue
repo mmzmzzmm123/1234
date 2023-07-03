@@ -70,7 +70,7 @@
       <el-table-column label="营业结束时间" align="center" prop="stopTime" width="90" />
       <el-table-column label="提前预约天数" align="center" prop="preDays" />
       <el-table-column label="wifi" align="center" prop="wifi" />
-      <el-table-column label="绑定设备" align="center" prop="equipId" width="160" :formatter="equipFormatter" />
+      <el-table-column label="绑定设备" align="center" prop="equipId" width="160" :formatter="equipStoreFormatter" />
       <el-table-column label="所属商圈" align="center" prop="busiDistrict" width="100" />
       <el-table-column label="地铁线路" align="center" prop="subway" width="100" />
       <!--  <el-table-column label="纬度" align="center" prop="latitude" />
@@ -88,7 +88,7 @@
         <template slot-scope="scope">
           <el-button size="mini" type="text" icon="el-icon-edit" @click="addStoreRoom(scope.row)"
             v-hasPermi="['office:room:add']">添加房间</el-button>
-          <el-button size="mini" type="text" icon="el-icon-edit" @click="bindEquipment(scope.row,'store')"
+          <el-button size="mini" type="text" icon="el-icon-edit" @click="bindStoreEquipment(scope.row,'store')"
             v-hasPermi="['office:store:edit']">设备绑定</el-button>
           <el-button size="mini" type="text" icon="el-icon-edit" @click="handleUpdate(scope.row)"
             v-hasPermi="['office:store:edit']">修改</el-button>
@@ -224,7 +224,7 @@
         <el-table-column label="id" align="center" width="40" prop="id" />
         <el-table-column label="名称" align="center" width="160" prop="name" />
         <el-table-column label="wifi" align="center" width="85" prop="wifi" />
-        <el-table-column label="绑定设备" align="center" width="200" prop="equipId" :formatter="equipFormatter" />
+        <el-table-column label="绑定设备" align="center" width="200" prop="equipCode" :formatter="equipFormatter" />
         <!-- <el-table-column label="桌台控制" align="center" prop="tableCode" /> -->
         <el-table-column label="状态" align="center" width="85" prop="status">
           <template slot-scope="scope">
@@ -257,9 +257,9 @@
           <el-form-item label="wifi" prop="wifi">
             <el-input v-model="roomForm.wifi" placeholder="请输入wifi" />
           </el-form-item>
-          <el-form-item label="包厢控制" prop="equipCode">
+          <!--  <el-form-item label="包厢控制" prop="equipCode">
             <el-input v-model="roomForm.equipCode" placeholder="请输入包厢控制" />
-          </el-form-item>
+          </el-form-item> -->
           <el-form-item label="桌台控制" prop="tableCode">
             <el-input v-model="roomForm.tableCode" placeholder="请输入桌台控制" />
           </el-form-item>
@@ -303,7 +303,7 @@
       <el-form ref="priceForm" :model="priceForm" :rules="priceRules" label-width="150px">
         <el-form-item label="开始时间" prop="startTime">
           <el-input-number v-model="priceForm.startTime" :min="0" :max="24" :step="1" label="描述文字"></el-input-number>
-         <!-- <el-time-select placeholder="开始时间" v-model="" :picker-options="{
+          <!-- <el-time-select placeholder="开始时间" v-model="" :picker-options="{
                 start: '00',
                 step: '01',
                 end: '24'
@@ -336,11 +336,25 @@
       </div>
     </el-dialog>
 
-    <el-dialog title="绑定设备" :visible.sync="bindOpen" width="500px" append-to-body>
-      <el-form ref="bindForm" :model="bindForm" :rules="priceRules" label-width="150px">
-        <el-form-item label="选择绑定设备" prop="price">
-          <el-select v-model="bindForm.name" filterable>
+    <el-dialog title="绑定房间设备" :visible.sync="bindOpen" width="500px" append-to-body>
+      <el-form ref="bindForm" :model="bindForm" label-width="150px">
+        <el-form-item label="选择绑定设备" prop="tableCode">
+          <el-select v-model="bindForm.tableCode" multiple filterable @change="$forceUpdate()">
             <el-option v-for="option in equipOptions" :key="option.id" :label="option.name" :value="option.id" />
+          </el-select>
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button type="primary" @click="submitBindForm">确 定</el-button>
+        <el-button @click="cancel">取 消</el-button>
+      </div>
+    </el-dialog>
+
+   <el-dialog title="绑定门店设备" :visible.sync="bindStoreOpen" width="500px" append-to-body>
+      <el-form ref="bindStoreForm" :model="bindStoreForm" label-width="150px">
+        <el-form-item label="选择绑定设备" prop="equipId">
+          <el-select v-model="bindStoreForm.equipId" filterable clearable @change="$forceUpdate()">
+            <el-option v-for="option in equipOptions" :key="option.id+'123'" :label="option.name" :value="option.id" />
           </el-select>
         </el-form-item>
       </el-form>
@@ -423,6 +437,7 @@
         roomOpen: false,
         priceOpen: false,
         bindOpen: false,
+        bindStoreOpen: false,
         // 查询参数
         queryParams: {
           pageNum: 1,
@@ -456,6 +471,7 @@
         roomForm: {},
         priceForm: {},
         bindForm: {},
+        bindStoreForm: {},
         bindType: '',
         // 表单校验
         rules: {
@@ -557,6 +573,7 @@
         this.roomOpen = false;
         this.priceOpen = false;
         this.bindOpen = false;
+        this.bindStoreOpen = false;
         this.reset();
       },
       // 表单重置
@@ -607,7 +624,7 @@
         this.roomQueryParam.storeId = row.id;
         this.selectedStore = row.name;
         this.listStoreRoom();
-        this.getEquipOptions();
+        // this.getEquipOptions();
       },
       listStoreRoom() {
         listRoom(this.roomQueryParam).then(response => {
@@ -671,18 +688,30 @@
         this.bindOpen = true;
         this.bindType = type;
         this.bindForm.id = row.id;
+        this.bindForm.tableCode = row.tableCode
+      },
+      bindStoreEquipment(row, type) {
+        // type = "store/room";
+        this.bindStoreOpen = true;
+        this.bindType = type;
+        this.bindStoreForm.id = row.id;
+        this.bindStoreForm.equipId = row.equipId
+
       },
       submitBindForm() {
         var subForm = {};
-        subForm.id = this.bindForm.id;
-        subForm.equipId = this.bindForm.name;
+
         if (this.bindType == "store") {
+          subForm.id = this.bindStoreForm.id;
+          subForm.equipId = this.bindStoreForm.equipId;
           updateStore(subForm).then(response => {
             this.$modal.msgSuccess("修改成功");
-            this.bindOpen = false;
+            this.bindStoreOpen = false;
             this.getList();
           });
         } else if (this.bindType == "room") {
+          subForm.id = this.bindForm.id;
+          subForm.tableCode = this.bindForm.tableCode.join(',');
           updateRoom(subForm).then(response => {
             this.$modal.msgSuccess("修改成功");
             this.bindOpen = false;
@@ -834,11 +863,23 @@
       },
       equipFormatter(row) {
         var res = "";
-        // this.equipOptions.forEach(function(e) {
-        //   if (e.id == row.equipId) {
-        //     res = e.name;
-        //   }
-        // });
+
+        debugger
+        if (row.tableCode != null) {
+          var equips = row.tableCode.split(',');
+          for (var l = 0; l < equips.length; l++) {
+            for (var i = 0; i < this.equipOptions.length; i++) {
+              if (this.equipOptions[i].id + '' == equips[l]) {
+                res += ','+this.equipOptions[i].name;
+              }
+            }
+          }
+        }
+
+        return res.substring(1);
+      },
+      equipStoreFormatter(row) {
+        var res = "";
         for (var i = 0; i < this.equipOptions.length; i++) {
           if (this.equipOptions[i].id == row.equipId) {
             res = this.equipOptions[i].name;

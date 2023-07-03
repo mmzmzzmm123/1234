@@ -24,10 +24,12 @@ import com.ruoyi.tuangou.entity.TuangouProductQueryProductRequest;
 import com.ruoyi.tuangou.entity.TuangouProductQueryProductResponse;
 import com.ruoyi.tuangou.entity.TuangouProductQueryProductResponseEntity;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
 import java.util.List;
 
+@Service
 public class TuangouService implements ITuangouService{
     @Autowired
     private TuangouConfig config;
@@ -36,9 +38,11 @@ public class TuangouService implements ITuangouService{
 
     @PostConstruct
     public void test(){
-        TuangouDealQueryShopDealRequest request = new TuangouDealQueryShopDealRequest(config.getAppKey(), config.getAppSecret(), "3657a0656e454e537eddf139b07d5b2ee4a51ab2", "", 1, 100, "b13c044414484ce4a3a4ffdb1f2e912b");
-        TuangouDealQueryShopDeal tuangouDealQueryShopDeal = new TuangouDealQueryShopDeal(request);
-        TuangouDealQueryShopDealResponse response = dianpingClient.invoke(tuangouDealQueryShopDeal);
+//        TuangouDealQueryShopDealRequest request = new TuangouDealQueryShopDealRequest(config.getAppKey(), config.getAppSecret(), "3657a0656e454e537eddf139b07d5b2ee4a51ab2", "", 1, 100, "b13c044414484ce4a3a4ffdb1f2e912b");
+//        TuangouDealQueryShopDeal tuangouDealQueryShopDeal = new TuangouDealQueryShopDeal(request);
+//        TuangouDealQueryShopDealResponse response = dianpingClient.invoke(tuangouDealQueryShopDeal);
+//        List<TuangouDealQueryShopDealResponseEntity> list = tuangouDealQueryShopDeal("b13c044414484ce4a3a4ffdb1f2e912b");
+//        tuangouReceiptConsume("123", "56105 714 53".replaceAll(" ",""), 1, "b13c044414484ce4a3a4ffdb1f2e912b", "userid", "username");
     }
 
     /**

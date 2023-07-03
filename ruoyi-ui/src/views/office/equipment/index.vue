@@ -65,12 +65,12 @@
       <el-table-column type="selection" width="55" align="center" />
       <el-table-column label="id" align="center" prop="id" />
       <el-table-column label="名称" align="center" prop="name" />
-      <el-table-column label="设备类型" align="center" prop="equipType" />
-      <el-table-column label="在线状态" align="center" prop="online">
+      <el-table-column label="设备类型" align="center" prop="equipType" :formatter="equipTypeFormatter" />
+     <!-- <el-table-column label="在线状态" align="center" prop="online">
         <template slot-scope="scope">
           <dict-tag :options="dict.type.sys_yes_no" :value="scope.row.online" />
         </template>
-      </el-table-column>
+      </el-table-column> -->
       <el-table-column label="开关状态" align="center" prop="onOff">
         <template slot-scope="scope">
           <dict-tag :options="dict.type.on_off" :value="scope.row.onOff" />
@@ -100,18 +100,19 @@
         <el-form-item label="名称" prop="name">
           <el-input v-model="form.name" placeholder="请输入名称" />
         </el-form-item>
-        <el-form-item label="在线状态" prop="online">
-          <el-select v-model="form.online">
-            <el-option v-for="dict in dict.type.sys_yes_no" :key="dict.value" :label="dict.label" :value="dict.value" />
+        <el-form-item label="设备类型" prop="equipType">
+          <el-select v-model="form.equipType">
+            <el-option v-for="dict in dict.type.equipment_type" :key="dict.value" :label="dict.label"
+              :value="dict.value" />
           </el-select>
         </el-form-item>
-        <el-form-item label="开关状态" prop="onOff">
+        <!-- <el-form-item label="开关状态" prop="onOff">
           <el-select v-model="form.onOff">
             <el-option v-for="dict in dict.type.on_off" :key="dict.value" :label="dict.label" :value="dict.value" />
           </el-select>
-        </el-form-item>
+        </el-form-item> -->
         <el-form-item label="设备控制" prop="equipControl">
-          <el-input v-model="form.equipControl" placeholder="请输入设备控制" />
+          <el-input v-model="form.equipControl" placeholder="请输入设备控制代码" />
         </el-form-item>
         <!-- <el-form-item label="备注" prop="remark">
           <el-input v-model="form.remark" placeholder="请输入备注" />
@@ -136,7 +137,7 @@
 
   export default {
     name: "Equipment",
-    dicts: ['sys_yes_no', 'on_off'],
+    dicts: ['equipment_type', 'on_off'],
     data() {
       return {
         // 遮罩层
@@ -174,18 +175,13 @@
         rules: {
           name: [{
             required: true,
-            message: "发生地?不能为空",
+            message: "名称不能为空",
             trigger: "blur"
           }],
           equipType: [{
             required: true,
-            message: "事发阶段不能为空",
+            message: "设备类型不能为空",
             trigger: "change"
-          }],
-          online: [{
-            required: true,
-            message: "标题不能为空",
-            trigger: "blur"
           }],
         }
       };
@@ -293,6 +289,9 @@
         this.download('office/equipment/export', {
           ...this.queryParams
         }, `equipment_${new Date().getTime()}.xlsx`)
+      },
+      equipTypeFormatter(row) {
+        return this.selectDictLabel(this.dict.type.equipment_type, row.equipType);
       }
     }
   };

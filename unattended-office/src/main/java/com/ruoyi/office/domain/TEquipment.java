@@ -19,11 +19,11 @@ public class TEquipment extends BaseEntity
     private Long id;
 
     /** 发生地? */
-    @Excel(name = "发生地?")
+    @Excel(name = "名称")
     private String name;
 
-    /** 事发阶段 */
-    @Excel(name = "事发阶段")
+    /** 设备类型 */
+    @Excel(name = "设备类型")
     private String equipType;
 
     /** 标题 */
