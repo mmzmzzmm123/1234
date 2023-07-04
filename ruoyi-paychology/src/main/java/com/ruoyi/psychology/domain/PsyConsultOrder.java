@@ -1,5 +1,7 @@
 package com.ruoyi.psychology.domain;
 
+import com.baomidou.mybatisplus.annotation.FieldStrategy;
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.ruoyi.common.annotation.Excel;
@@ -60,28 +62,34 @@ public class PsyConsultOrder extends BasePlusEntity implements Serializable
 
     /** 可选班次0全天 1上午 2下午 3晚上 */
     @Excel(name = "可选班次")
+    @TableField(value = "type", updateStrategy = FieldStrategy.IGNORED)
     private String type;
 
     /** 天 */
     @Excel(name = "日期")
+    @TableField(value = "day", updateStrategy = FieldStrategy.IGNORED)
     private String day;
 
     /** 周 */
     @Excel(name = "星期")
+    @TableField(value = "week", updateStrategy = FieldStrategy.IGNORED)
     private String week;
 
     /** 咨询时段开始 */
     @JsonFormat(pattern = "yyyy-MM-dd")
     @Excel(name = "咨询时段开始", width = 30, dateFormat = "yyyy-MM-dd")
+    @TableField(value = "time_start", updateStrategy = FieldStrategy.IGNORED)
     private Date timeStart;
 
     /** 咨询时段结束 */
     @JsonFormat(pattern = "yyyy-MM-dd")
     @Excel(name = "咨询时段结束", width = 30, dateFormat = "yyyy-MM-dd")
+    @TableField(value = "time_end", updateStrategy = FieldStrategy.IGNORED)
     private Date timeEnd;
 
     /** 咨询时长(分钟) */
     @Excel(name = "咨询时长(分钟)")
+    @TableField(value = "time", updateStrategy = FieldStrategy.IGNORED)
     private Integer time;
 
     /** 可预约数量 */

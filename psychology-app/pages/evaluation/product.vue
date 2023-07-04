@@ -107,7 +107,13 @@ export default {
 						url: "/pages/evaluation/order",
 					});
 					location.reload()
-				})
+				}, (msg) => {
+          console.log(msg)
+          uni.showToast({
+            icon: "error",
+            title: "支付失败",
+          });
+        })
 			}
 		
 		  } else {

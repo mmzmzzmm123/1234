@@ -99,7 +99,7 @@ export function getPaySign(userId, produteId, amount, extra) {
 }
 
 
-function onBridgeReady(wxParam, successCallback) {
+function onBridgeReady(wxParam, successCallback, errCallback) {
     WeixinJSBridge.invoke('getBrandWCPayRequest', {
         "appId": wxParam.appId,     //公众号ID，由商户传入     
         "timeStamp": wxParam.timeStamp,     //时间戳，自1970年以来的秒数     
@@ -114,19 +114,22 @@ function onBridgeReady(wxParam, successCallback) {
             //res.err_msg将在用户支付成功后返回ok，但并不保证它绝对可靠。
 			successCallback()
 			
+        } else {
+            // console.log(res)
+            errCallback(res)
         }
     });
 }
-export function wxPay(wxParam, successCallback) {
+export function wxPay(wxParam, successCallback, errCallback) {
 	if (typeof WeixinJSBridge == "undefined") {
 	    if (document.addEventListener) {
-	        document.addEventListener('WeixinJSBridgeReady', onBridgeReady(wxParam, successCallback), false);
+	        document.addEventListener('WeixinJSBridgeReady', onBridgeReady(wxParam, successCallback, errCallback), false);
 	    } else if (document.attachEvent) {
-	        document.attachEvent('WeixinJSBridgeReady', onBridgeReady(wxParam, successCallback));
-	        document.attachEvent('onWeixinJSBridgeReady', onBridgeReady(wxParam, successCallback));
+	        document.attachEvent('WeixinJSBridgeReady', onBridgeReady(wxParam, successCallback, errCallback));
+	        document.attachEvent('onWeixinJSBridgeReady', onBridgeReady(wxParam, successCallback, errCallback));
 	    }
 	} else {
-	    onBridgeReady(wxParam, successCallback);
+	    onBridgeReady(wxParam, successCallback, errCallback);
 	}
 }
 

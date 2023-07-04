@@ -71,6 +71,10 @@ public class PsyConsultWork extends BasePlusEntity implements Serializable
     @Excel(name = "可预约数量")
     private Integer num;
 
+    /** 已预约数量 */
+    @Excel(name = "已预约数量")
+    private Integer buyNum;
+
     /** 删除标志（0代表存在 1代表删除） */
     private String delFlag;
 

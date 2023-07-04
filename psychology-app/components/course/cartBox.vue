@@ -75,7 +75,13 @@ export default {
 					// url: "/pages/course/courseDetail?id=" + this.courseInfo.id,
 					url: "/pages/course/order",
 				});
-			})
+			}, (msg) => {
+			  console.log(msg)
+        uni.showToast({
+          icon: "error",
+          title: "支付失败",
+        });
+      })
 		}	  
 
       } else {

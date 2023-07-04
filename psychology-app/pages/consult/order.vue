@@ -16,7 +16,8 @@
           <view class="item-header">
             <view class="item-header-block"></view>
             <text class="item-header-timer">{{ item.createTime }}</text>
-            <view class="item-header-countdown" v-if="item.status === 0">剩余<uni-countdown color="#FF703F" splitorColor="#FF703F" :show-day="false" :minute="14" :second="59"/>
+<!--            <view class="item-header-countdown" v-if="item.status === 0">剩余<uni-countdown color="#FF703F" splitorColor="#FF703F" :show-day="false" :minute="14" :second="59"/>-->
+            <view class="item-header-countdown" v-if="item.status === 0">{{ item.end }}
             </view>
             <text class="item-header-status">{{ item.statusName }}</text>
           </view>
@@ -36,10 +37,10 @@
           </view>
           <view class="item-info-bottom">
             <view class="bottom-title" v-if="item.status === 2 || item.status === 3">咨询时间</view>
-            <button bindtap="onClick" class="button_1" v-if="item.status === 0">
+            <button bindtap="onClick" class="button_1" v-if="item.status === 0 && item.end !== '订单已过期'">
               取消
             </button>
-            <button @tap="toBuy(item)" class="button_2" v-if="item.status === 0 || item.status === 1">
+            <button @tap="toBuy(item)" class="button_2" v-if="(item.status === 0 || item.status === 1) && item.end !== '订单已过期'">
               <text class="text_16">{{ item.status === 0 ? '支付' : '去预约'}}</text>
             </button>
             <view class="bottom-time" v-if="item.timeStart && (item.status === 2 || item.status === 3)">{{ item.timeStart.substr(0, 16) + '-' + item.timeEnd.substr(11, 5) }}</view>
@@ -62,6 +63,7 @@
 import utils, { clientTypeObj } from "@/utils/common";
 import orderServer from "@/server/consult/order";
 import loginServer from "@/server/login"
+import formatTime from '@/utils/formatTime.js'
 export default {
   data() {
     return {
@@ -137,7 +139,26 @@ export default {
         status: status,
         userId: this.userInfo.userId
       }
-      this.orderList = await orderServer.getOrderList(data);
+      const list = await orderServer.getOrderList(data);
+      if (list && list.length > 0) {
+        list.forEach(i => {
+          i.end = ''
+          if (i.status === 0) {
+            i.end = this.remainTime(i.updateTime)
+          }
+        })
+      }
+      this.orderList = list
+    },
+    remainTime(orderTime) {
+      if (new Date().getTime() < new Date(orderTime).getTime() + 15 * 60 * 1000) {
+        // 下单不超过30分钟
+        const remainSeconds = parseInt((new Date(orderTime).getTime() + 15 * 60 * 1000 -  new Date().getTime()) / 1000)
+
+        return "剩余" + formatTime.formatSecondsCH(remainSeconds)
+      } else {
+        return "订单已过期"
+      }
     },
     toBuy(item) {
       uni.navigateTo({
@@ -225,10 +246,10 @@ page {
     margin-left: 26upx;
   }
   .item-header-countdown {
-    display: flex;
+    position: absolute;
+    right: 126upx;
     color: #FF703F;
     font-size: 24upx;
-    margin-left: 106upx;
   }
   .item-header-status {
     position: absolute;

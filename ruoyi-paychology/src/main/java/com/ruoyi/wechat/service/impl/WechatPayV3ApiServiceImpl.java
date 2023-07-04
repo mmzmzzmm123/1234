@@ -87,6 +87,9 @@ public class WechatPayV3ApiServiceImpl implements WechatPayV3ApiService {
             orderPay.setAmount(wechatPay.getAmount());
             orderPay.setPayId(UUID.randomUUID().toString()); // 当前使用随机生成的支付ID，后续使用第三方支付平台返回的
             orderPayService.insertPsyOrderPay(orderPay);
+
+            Timer timer = new Timer();
+            timer.schedule(orderCancelTask, ORDER_CANCEL_TIME);
         } else if (GaugeConstant.MODULE_GAUGE.equals(wechatPay.getModule())) {
 
             // TODO: 内部生成订单
@@ -115,6 +118,9 @@ public class WechatPayV3ApiServiceImpl implements WechatPayV3ApiService {
                     .build();
             psyOrderPay.setCreateBy(psyUserService.selectPsyUserById(wechatPay.getUserId()).getName());
             psyOrderPayService.insertPsyOrderPay(psyOrderPay);
+
+            Timer timer = new Timer();
+            timer.schedule(orderCancelTask, ORDER_CANCEL_TIME);
         } else if (ConsultConstant.MODULE_CONSULT.equals(wechatPay.getModule())) {
             // 心理咨询服务
             Long id = wechatPay.getOrderId() != null && wechatPay.getOrderId() > 0 ? wechatPay.getOrderId() : IDhelper.getNextId();
@@ -134,8 +140,8 @@ public class WechatPayV3ApiServiceImpl implements WechatPayV3ApiService {
             }
 
             // TODO: 定时将未支付的订单取消任务
-            orderCancelTask.setId(id);
-            orderCancelTask.setModule(wechatPay.getModule());
+//            orderCancelTask.setId(id);
+//            orderCancelTask.setModule(wechatPay.getModule());
 
             // TODO: 内部生成支付对象
             PsyConsultPay pay = new PsyConsultPay();
@@ -147,9 +153,6 @@ public class WechatPayV3ApiServiceImpl implements WechatPayV3ApiService {
             pay.setStatus(ConsultConstant.PAY_STATUE_PENDING);
             psyConsultPayService.add(pay);
         }
-
-        Timer timer = new Timer();
-        timer.schedule(orderCancelTask, ORDER_CANCEL_TIME);
     }
 
     @Override

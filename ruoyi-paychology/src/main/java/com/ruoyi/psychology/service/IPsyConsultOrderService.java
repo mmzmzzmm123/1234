@@ -18,6 +18,8 @@ public interface IPsyConsultOrderService
 
     List<PsyConsultOrder> getList(PsyConsultOrderVO req);
 
+    List<PsyConsultOrder> getCancelList();
+
     List<PsyConsultOrderVO> getOrderList(PsyConsultOrderVO req);
 
     void updatePsyOrder(PsyConsultOrderVO req);
@@ -27,6 +29,8 @@ public interface IPsyConsultOrderService
     int doConsult(Long id, Long workId);
 
     int add(PsyConsultOrderVO req);
+
+    void cancel(PsyConsultOrder order);
 
     int update(PsyConsultOrderVO req);
 

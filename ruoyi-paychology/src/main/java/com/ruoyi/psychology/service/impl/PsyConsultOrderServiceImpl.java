@@ -15,6 +15,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -61,6 +63,35 @@ public class PsyConsultOrderServiceImpl implements IPsyConsultOrderService
     }
 
     @Override
+    public List<PsyConsultOrder> getCancelList() {
+        Date date = new Date();
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+        calendar.add(Calendar.MINUTE, 15);
+        Date time = calendar.getTime();
+        LambdaQueryWrapper<PsyConsultOrder> wp = new LambdaQueryWrapper<>();
+        wp.eq(PsyConsultOrder::getStatus, 0);
+        wp.le(PsyConsultOrder::getUpdateTime, time);
+        wp.eq(PsyConsultOrder::getDelFlag, "0");
+
+        return psyConsultOrderMapper.selectList(wp);
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void cancel(PsyConsultOrder order) {
+        order.setStatus(ConsultConstant.CONSULT_ORDER_STATUE_CANCELED);
+        // 咨询人数减1
+        psyConsultService.updateNum(order.getConsultId(), -1);
+        // 排班释放
+        if (order.getWorkId() != null && order.getWorkId() > 0) {
+            psyConsultWorkService.updateNum(order.getWorkId(), 1, 0);
+        }
+
+        psyConsultOrderMapper.updateById(order);
+    }
+
+    @Override
     public List<PsyConsultOrderVO> getOrderList(PsyConsultOrderVO req) {
         req.setDelFlag("0");
         return psyConsultOrderMapper.getOrderList(req);
@@ -82,7 +113,7 @@ public class PsyConsultOrderServiceImpl implements IPsyConsultOrderService
         order.setNum(0);
         order.setBuyNum(1);
         // 更新预约数量
-        psyConsultWorkService.updateNum(workId, -1);
+        psyConsultWorkService.updateNum(workId, 0, 1);
         return update(order);
     }
 
@@ -122,7 +153,7 @@ public class PsyConsultOrderServiceImpl implements IPsyConsultOrderService
         req.setTime(work.getTime());
 
         // 更新预约数量
-        psyConsultWorkService.updateNum(req.getWorkId(), -1);
+        psyConsultWorkService.updateNum(req.getWorkId(), 0, 1);
     }
 
     @Override
@@ -136,22 +167,24 @@ public class PsyConsultOrderServiceImpl implements IPsyConsultOrderService
     public void updatePayOrder(PsyConsultOrderVO req) {
         PsyConsultOrderVO orderVO = getOne(req.getId());
 
-        if (req.getWorkId() != null && req.getWorkId() > 0) {
-            if (orderVO.getWorkId() == null) {
-                // 加库存
-                handleWork(req);
-            }
-            else if (!req.getWorkId().equals(orderVO.getWorkId())) {
-                // 加库存,释放库存
-                handleWork(req);
-                psyConsultService.updateNum(orderVO.getConsultId(), -1);
-                psyConsultWorkService.updateNum(orderVO.getWorkId(), 1);
-            }
-        } else if (orderVO.getWorkId() != null && orderVO.getWorkId() > 0){
-            // 释放库存
-            psyConsultService.updateNum(orderVO.getConsultId(), -1);
-            psyConsultWorkService.updateNum(orderVO.getWorkId(), 1);
+        // 释放库存
+        if (orderVO.getWorkId() != null && orderVO.getWorkId() > 0) {
+            req.setType(null);
+            req.setDay(null);
+            req.setWeek(null);
+            req.setTimeStart(null);
+            req.setTimeEnd(null);
+            req.setTime(null);
+            req.setNum(1);
+            req.setBuyNum(0);
+            psyConsultWorkService.updateNum(orderVO.getWorkId(), 1, 0);
         }
+
+        // 加库存
+        if (req.getWorkId() != null && req.getWorkId() > 0) {
+            handleWork(req);
+        }
+
         update(req);
     }
 
@@ -162,7 +195,9 @@ public class PsyConsultOrderServiceImpl implements IPsyConsultOrderService
         // 咨询人数减1
         psyConsultService.updateNum(req.getConsultId(), -1);
         // 排班释放
-        psyConsultWorkService.updateNum(req.getWorkId(), 1);
+        if (req.getWorkId() != null && req.getWorkId() > 0) {
+            psyConsultWorkService.updateNum(req.getWorkId(), 1, 0);
+        }
         // 订单状态变更
         update(req);
     }

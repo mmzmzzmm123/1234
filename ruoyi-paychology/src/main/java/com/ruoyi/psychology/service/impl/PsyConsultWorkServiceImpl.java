@@ -51,10 +51,10 @@ public class PsyConsultWorkServiceImpl implements IPsyConsultWorkService {
     }
 
     @Override
-    public void updateNum(Long id, int num) {
+    public void updateNum(Long id, int num, int buyNum) {
         PsyConsultWorkVO one = getOne(id);
-        int i = one.getNum() + num;
-        one.setNum(Math.max(i, 0));
+        one.setNum(num);
+        one.setBuyNum(buyNum);
         update(one);
     }
 

@@ -10,6 +10,8 @@ import com.ruoyi.psychology.vo.PsyConsultOrderVO;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * 心理咨询师Controller
@@ -42,7 +44,8 @@ public class AppPsyConsultOrderController extends BaseController
     @PostMapping(value = "/getOrderList")
     public AjaxResult getOrderList(@RequestBody PsyConsultOrderVO req)
     {
-        return AjaxResult.success(psyConsultOrderService.getOrderList(req));
+        List<PsyConsultOrderVO> collect = psyConsultOrderService.getOrderList(req).stream().filter(i -> ConsultConstant.CONSULT_ORDER_STATUE_CANCELED != i.getStatus()).collect(Collectors.toList());
+        return AjaxResult.success(collect);
     }
 
     /**
