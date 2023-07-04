@@ -22,6 +22,8 @@ public interface IPsyConsultOrderService
 
     void updatePsyOrder(PsyConsultOrderVO req);
 
+    void updatePayOrder(PsyConsultOrderVO req);
+
     int doConsult(Long id, Long workId);
 
     int add(PsyConsultOrderVO req);

@@ -106,7 +106,8 @@ public class WechatPayV3ApiController extends BaseController {
                 out_trade_no = createOrderNo("CON_DJ", userId); //创建商户订单号
                 content = "预约心理咨询服务";
 
-                if (wechatPayDTO.getWorkId() > 0) {
+                // 新增支付单时需要校验服务库存
+                if (wechatPayDTO.getOrderId() == null && wechatPayDTO.getWorkId() != null) {
                     PsyConsultWorkVO work = workService.getOne(wechatPayDTO.getWorkId());
                     if ("1".equals(work.getStatus())) {
                         return error("排班状态异常");

@@ -12,7 +12,7 @@ import com.ruoyi.psychology.domain.PsyConsultPay;
 public interface IPsyConsultPayService 
 {
 
-    PsyConsultPay getOneByOrder(Long id);
+    PsyConsultPay getOneByOrder(String outTradeNo);
 
     void add(PsyConsultPay req);
 

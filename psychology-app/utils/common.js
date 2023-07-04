@@ -1,6 +1,11 @@
-import { wxLoginCallBack, wxLogin } from "@/server/wxApi";
+import {wxLogin, wxLoginCallBack} from "@/server/wxApi";
+
 export const clientTypeObj = { wx: "JSAPI", zfb: "FWC", no: "unknow" };
 export default {
+  getUserInfo() {
+    const user = uni.getStorageSync("userInfo");
+    return user ? user.userId ? user : JSON.parse(user) : {}
+  },
   getParam(path, name) {
     var reg = new RegExp("(^|\\?|&)" + name + "=([^&]*)(\\s|&|$)", "i");
     if (reg.test(path)) return unescape(RegExp.$2.replace(/\+/g, " "));

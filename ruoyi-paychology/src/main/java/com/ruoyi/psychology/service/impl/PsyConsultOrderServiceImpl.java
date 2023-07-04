@@ -102,23 +102,27 @@ public class PsyConsultOrderServiceImpl implements IPsyConsultOrderService
         req.setBuyNum(0);
         req.setStatus(ConsultConstant.CONSULT_ORDER_STATUE_CREATED);
 
-        if (req.getWorkId() > 0) {
-            PsyConsultWorkVO work = psyConsultWorkService.getOne(req.getWorkId());
-            req.setType(work.getType());
-            req.setDay(work.getDay());
-            req.setWeek(work.getWeek());
-            req.setTimeStart(work.getTimeStart());
-            req.setTimeEnd(work.getTimeEnd());
-            req.setTime(work.getTime());
-
-            // 更新预约数量
-            psyConsultWorkService.updateNum(req.getWorkId(), -1);
+        if (req.getWorkId() != null && req.getWorkId() > 0) {
+            handleWork(req);
         }
 
         // 增加预约人数
         psyConsultService.updateNum(consult.getId(), 1);
 
         return psyConsultOrderMapper.insert(BeanUtil.toBean(req, PsyConsultOrder.class));
+    }
+
+    private void handleWork(PsyConsultOrderVO req) {
+        PsyConsultWorkVO work = psyConsultWorkService.getOne(req.getWorkId());
+        req.setType(work.getType());
+        req.setDay(work.getDay());
+        req.setWeek(work.getWeek());
+        req.setTimeStart(work.getTimeStart());
+        req.setTimeEnd(work.getTimeEnd());
+        req.setTime(work.getTime());
+
+        // 更新预约数量
+        psyConsultWorkService.updateNum(req.getWorkId(), -1);
     }
 
     @Override
@@ -129,11 +133,36 @@ public class PsyConsultOrderServiceImpl implements IPsyConsultOrderService
 
     @Override
     @Transactional(rollbackFor = Exception.class)
+    public void updatePayOrder(PsyConsultOrderVO req) {
+        PsyConsultOrderVO orderVO = getOne(req.getId());
+
+        if (req.getWorkId() != null && req.getWorkId() > 0) {
+            if (orderVO.getWorkId() == null) {
+                // 加库存
+                handleWork(req);
+            }
+            else if (!req.getWorkId().equals(orderVO.getWorkId())) {
+                // 加库存,释放库存
+                handleWork(req);
+                psyConsultService.updateNum(orderVO.getConsultId(), -1);
+                psyConsultWorkService.updateNum(orderVO.getWorkId(), 1);
+            }
+        } else if (orderVO.getWorkId() != null && orderVO.getWorkId() > 0){
+            // 释放库存
+            psyConsultService.updateNum(orderVO.getConsultId(), -1);
+            psyConsultWorkService.updateNum(orderVO.getWorkId(), 1);
+        }
+        update(req);
+    }
+
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
     public void updatePsyOrder(PsyConsultOrderVO req) {
-        // 咨询人数
+        // 咨询人数减1
         psyConsultService.updateNum(req.getConsultId(), -1);
         // 排班释放
-        psyConsultWorkService.updateNum(req.getWorkId(), -1);
+        psyConsultWorkService.updateNum(req.getWorkId(), 1);
         // 订单状态变更
         update(req);
     }

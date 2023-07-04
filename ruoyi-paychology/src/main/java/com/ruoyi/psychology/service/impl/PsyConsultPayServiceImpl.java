@@ -26,9 +26,9 @@ public class PsyConsultPayServiceImpl implements IPsyConsultPayService
     private PsyConsultPayMapper psyConsultPayMapper;
 
     @Override
-    public PsyConsultPay getOneByOrder(Long id) {
+    public PsyConsultPay getOneByOrder(String outTradeNo) {
         LambdaQueryWrapper<PsyConsultPay> wp = new LambdaQueryWrapper<>();
-        wp.eq(PsyConsultPay::getOrderId, id);
+        wp.eq(PsyConsultPay::getOutTradeNo, outTradeNo);
         return psyConsultPayMapper.selectOne(wp);
     }
 

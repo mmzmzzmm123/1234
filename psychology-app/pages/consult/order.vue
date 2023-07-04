@@ -98,7 +98,8 @@ export default {
     this.status = parseInt(utils.getParam(location.href, "status"))
   },
   async mounted() {
-    this.userInfo = uni.getStorageSync("userInfo")
+    // this.userInfo = uni.getStorageSync("userInfo")
+    this.userInfo = utils.getUserInfo()
     if (!this.userInfo && await utils.loginCallback(this.redirectUri)) {
       this.userInfo = uni.getStorageSync("userInfo")
     }

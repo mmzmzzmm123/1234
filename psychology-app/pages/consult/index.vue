@@ -112,11 +112,8 @@
       }
     },
     async mounted() {
-      try {
-        this.userInfo = uni.getStorageSync("userInfo")
-      } catch (e) {
-        console.log(e)
-      }
+      this.userInfo = utils.getUserInfo()
+
       this.getCat()
       this.getBanner(0)
       this.getConsult()
@@ -127,7 +124,6 @@
       this.getPrice()
       this.getSex()
       this.getConsultTime()
-
       if (!this.userInfo && await utils.loginCallback(this.redirectUri)) {
         // this.userInfo = uni.getStorageSync("userInfo")
         this.userInfo = uni.getStorageSync("userInfo")

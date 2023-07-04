@@ -142,7 +142,8 @@ export default {
     // this.share()
   },
   mounted() {
-    this.userInfo = uni.getStorageSync("userInfo")
+    // this.userInfo = uni.getStorageSync("userInfo")
+    this.userInfo = utils.getUserInfo()
     console.log(this.consultId)
     if (!this.userInfo) {
       return this.openLoginConfirm()

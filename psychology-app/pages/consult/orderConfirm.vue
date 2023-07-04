@@ -111,7 +111,8 @@ export default {
     console.log(this.type)
   },
   async mounted() {
-    this.userInfo = uni.getStorageSync("userInfo")
+    // this.userInfo = uni.getStorageSync("userInfo")
+    this.userInfo = utils.getUserInfo()
     if (!this.userInfo) {
       return this.openLoginConfirm()
     }

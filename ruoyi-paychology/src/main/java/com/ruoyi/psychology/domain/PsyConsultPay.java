@@ -34,6 +34,10 @@ public class PsyConsultPay extends BasePlusEntity implements Serializable
     @Excel(name = "订单号")
     private Long orderId;
 
+    /** 订单号 */
+    @Excel(name = "订单号")
+    private String outTradeNo;
+
     /** 支付金额 */
     @Excel(name = "支付金额")
     private BigDecimal amount;

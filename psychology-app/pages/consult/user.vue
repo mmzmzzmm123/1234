@@ -61,8 +61,6 @@
 <script>
 import utils, { clientTypeObj } from "@/utils/common";
 import noData from "@/components/evaluation/noData";
-import userServer from "@/server/evaluation/user";
-import productServer from "@/server/evaluation/product.js"
 import {
   uniPopup,
   uniPopupDialog
@@ -112,7 +110,8 @@ export default {
     };
   },
   async mounted() {
-    this.userInfo = uni.getStorageSync("userInfo")
+    // this.userInfo = uni.getStorageSync("userInfo") ? JSON.parse(uni.getStorageSync("userInfo")) : {}
+    this.userInfo = utils.getUserInfo()
     if (!this.userInfo && await utils.loginCallback(this.redirectUri)) {
       this.userInfo = uni.getStorageSync("userInfo")
     }

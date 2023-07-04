@@ -12,5 +12,4 @@ import com.ruoyi.psychology.domain.PsyConsultPay;
 public interface PsyConsultPayMapper extends BaseMapper<PsyConsultPay>
 {
 
-    void selectOne();
 }

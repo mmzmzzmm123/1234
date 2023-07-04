@@ -117,14 +117,7 @@ public class WechatPayV3ApiServiceImpl implements WechatPayV3ApiService {
             psyOrderPayService.insertPsyOrderPay(psyOrderPay);
         } else if (ConsultConstant.MODULE_CONSULT.equals(wechatPay.getModule())) {
             // 心理咨询服务
-            if (wechatPay.getOrderId() != null && wechatPay.getOrderId() > 0) {
-                // 作废之前订单   时间紧张,后续再优化
-                List<Long> list = new ArrayList<>();
-                list.add(wechatPay.getOrderId());
-                Long[] ids = list.toArray(new Long[0]);
-                psyConsultOrderService.deleteAll(ids);
-            }
-            Long id = IDhelper.getNextId();
+            Long id = wechatPay.getOrderId() != null && wechatPay.getOrderId() > 0 ? wechatPay.getOrderId() : IDhelper.getNextId();
             PsyConsultOrderVO psyConsultOrderVO = new PsyConsultOrderVO();
             psyConsultOrderVO.setId(id);
             psyConsultOrderVO.setOrderNo(wechatPay.getOutTradeNo());
@@ -132,7 +125,13 @@ public class WechatPayV3ApiServiceImpl implements WechatPayV3ApiService {
             psyConsultOrderVO.setWorkId(wechatPay.getWorkId());
             psyConsultOrderVO.setServeId(wechatPay.getServeId());
             psyConsultOrderVO.setUserId(Long.valueOf(wechatPay.getUserId()));
-            psyConsultOrderService.add(psyConsultOrderVO);
+
+            // 更新原订单
+            if (wechatPay.getOrderId() != null && wechatPay.getOrderId() > 0) {
+                psyConsultOrderService.updatePayOrder(psyConsultOrderVO);
+            } else {
+                psyConsultOrderService.add(psyConsultOrderVO);
+            }
 
             // TODO: 定时将未支付的订单取消任务
             orderCancelTask.setId(id);
@@ -142,6 +141,7 @@ public class WechatPayV3ApiServiceImpl implements WechatPayV3ApiService {
             PsyConsultPay pay = new PsyConsultPay();
             pay.setOrderId(id);
             pay.setAmount(wechatPay.getAmount());
+            pay.setOutTradeNo(wechatPay.getOutTradeNo());
             pay.setPayType(CourConstant.PAY_WAY_WEIXIN); // 微信
             pay.setDelFlag("0");
             pay.setStatus(ConsultConstant.PAY_STATUE_PENDING);
@@ -187,7 +187,10 @@ public class WechatPayV3ApiServiceImpl implements WechatPayV3ApiService {
             orderPayService.updatePsyOrderPayByOrderId(orderPay);
         } else if (outTradeNo.startsWith("CON")) {
             // TODO: 修改订单状态为已完成
-            PsyConsultOrderVO psyOrder = psyConsultOrderService.getOneByOrderId(outTradeNo);
+            PsyConsultPay pay = psyConsultPayService.getOneByOrder(outTradeNo);
+            pay.setStatus(ConsultConstant.PAY_STATUE_PAID);
+
+            PsyConsultOrderVO psyOrder = psyConsultOrderService.getOne(pay.getOrderId());
             psyOrder.setStatus(ConsultConstant.CONSULT_ORDER_STATUE_PENDING);
 
             if (psyOrder.getWorkId() > 0) {
@@ -196,12 +199,8 @@ public class WechatPayV3ApiServiceImpl implements WechatPayV3ApiService {
                 psyOrder.setStatus(ConsultConstant.CONSULT_ORDER_STATUE_UNCONSULT);
             }
 
-            psyConsultOrderService.update(psyOrder);
-
-            // TODO: 修改支付对象状态为已支付
-            PsyConsultPay pay = psyConsultPayService.getOneByOrder(psyOrder.getId());
-            pay.setStatus(ConsultConstant.PAY_STATUE_PAID);
             psyConsultPayService.update(pay);
+            psyConsultOrderService.update(psyOrder);
         }
     }
 }
