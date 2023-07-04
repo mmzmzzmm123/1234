@@ -2,6 +2,8 @@ package com.ruoyi.office.service.impl;
 
 import java.util.List;
 import com.ruoyi.common.utils.DateUtils;
+import com.ruoyi.office.domain.vo.WxStoreListQryVo;
+import com.ruoyi.office.domain.vo.WxStoreListRspVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -93,5 +95,10 @@ public class TStoreServiceImpl extends ServiceImpl<TStoreMapper, TStore> impleme
     public int deleteTStoreById(Long id)
     {
         return tStoreMapper.deleteTStoreById(id);
+    }
+
+    @Override
+    public List<WxStoreListRspVo> selectWxStoreList(WxStoreListQryVo wxStoreListQryVo) {
+        return tStoreMapper.selectWxStoreList(wxStoreListQryVo);
     }
 }

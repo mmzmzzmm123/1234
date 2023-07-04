@@ -20,6 +20,8 @@ import com.ruoyi.common.utils.mqtt.MqttSendClient;
 import com.ruoyi.office.domain.*;
 import com.ruoyi.office.domain.enums.OfficeEnum;
 import com.ruoyi.office.domain.vo.WxPayCallback;
+import com.ruoyi.office.domain.vo.WxStoreListQryVo;
+import com.ruoyi.office.domain.vo.WxStoreListRspVo;
 import com.ruoyi.office.service.*;
 import io.swagger.annotations.ApiOperation;
 import org.apache.activemq.command.ActiveMQQueue;
@@ -300,5 +302,19 @@ public class ApiController extends BaseController {
         sendClient.publish("test_queue", msg);
         return "success";
     }
+
+    @Autowired
+    ITStoreService storeService;
+    /**
+     * wx店铺列表
+     */
+    @ApiOperation("wx店铺列表")
+    @GetMapping("/store/list")
+    public TableDataInfo wxStoreList(@RequestBody WxStoreListQryVo wxStoreListQryVo) {
+        startPage();
+        List<WxStoreListRspVo> list = storeService.selectWxStoreList(wxStoreListQryVo);
+        return getDataTable(list);
+    }
+
 
 }

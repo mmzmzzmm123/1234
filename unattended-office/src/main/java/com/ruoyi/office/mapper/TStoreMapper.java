@@ -5,6 +5,8 @@ import java.util.List;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 
 import com.ruoyi.office.domain.TStore;
+import com.ruoyi.office.domain.vo.WxStoreListQryVo;
+import com.ruoyi.office.domain.vo.WxStoreListRspVo;
 
 /**
  * 商家用户店铺Mapper接口
@@ -60,4 +62,6 @@ public interface TStoreMapper extends BaseMapper<TStore> {
      * @return 结果
      */
     public int deleteTStoreByIds(Long[] ids);
+
+    List<WxStoreListRspVo> selectWxStoreList(WxStoreListQryVo wxStoreListQryVo);
 }

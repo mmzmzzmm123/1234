@@ -2,6 +2,8 @@ package com.ruoyi.office.service;
 
 import java.util.List;
 import com.ruoyi.office.domain.TStore;
+import com.ruoyi.office.domain.vo.WxStoreListQryVo;
+import com.ruoyi.office.domain.vo.WxStoreListRspVo;
 
 /**
  * 商家用户店铺Service接口
@@ -58,4 +60,6 @@ public interface ITStoreService
      * @return 结果
      */
     public int deleteTStoreById(Long id);
+
+    List<WxStoreListRspVo> selectWxStoreList(WxStoreListQryVo wxStoreListQryVo);
 }

@@ -82,6 +82,11 @@
         where id = #{id}
     </select>
 
+    <select id="selectWxStoreList" parameterType="com.ruoyi.office.domain.vo.WxStoreListQryVo" resultType="com.ruoyi.office.domain.vo.WxStoreListRspVo">
+        select st_distance (point (#{lat},#{lon}),point(s.latitude ,s.longitude) ) * 111195 as meters, s.*
+        from t_store s order by  st_distance (point (#{lat},#{lon}),point(s.latitude ,s.longitude))
+    </select>
+
     <insert id="insertTStore" parameterType="TStore" useGeneratedKeys="true" keyProperty="id">
         insert into t_store
         <trim prefix="(" suffix=")" suffixOverrides=",">
