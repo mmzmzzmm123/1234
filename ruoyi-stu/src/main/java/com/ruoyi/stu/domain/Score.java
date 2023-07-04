@@ -11,7 +11,7 @@ public class Score {
            @Excel(name = "学号",targetAttr = "stuNo"),
            @Excel(name = "姓名",targetAttr = "stuName")
     })
-    private StuInfo stu;
+    private StuInfo student;
     private Teacher teacher;
     private Course course;
     @Excel(name = "平时成绩")

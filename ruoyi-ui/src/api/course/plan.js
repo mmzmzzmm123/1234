@@ -8,3 +8,12 @@ export function planList(query) {
     params: query
   })
 }
+
+// 批量添加课程安排
+export function addPlans(query) {
+  return request({
+    url: '/course/plan/adds',
+    method: 'post',
+    data: query
+  })
+}

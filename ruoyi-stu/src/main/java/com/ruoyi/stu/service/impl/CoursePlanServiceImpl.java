@@ -7,6 +7,7 @@ import com.ruoyi.stu.service.ICoursePlanService;
 import com.ruoyi.stu.vo.CoursePlanVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -47,6 +48,11 @@ public class CoursePlanServiceImpl implements ICoursePlanService {
             }
         }
         return resultList;
+    }
+    //批量添加
+    @Override
+    public Integer insertCoursePlans(CoursePlan coursePlan) {
+        return coursePlanMapper.selectForInsert(coursePlan)>0 ? 0 : coursePlanMapper.insertCoursePlans(coursePlan);
     }
 
     @Override

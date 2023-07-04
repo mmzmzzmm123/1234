@@ -38,25 +38,10 @@ public class CoursePlanController extends BaseController{
     }
 
 
-//    @Anonymous
-//    @Log(title = "修改课程信息", businessType = BusinessType.UPDATE)
-//    @PostMapping("update")
-//    public AjaxResult update(@RequestBody Course course){
-//        return toAjax(courseService.updateCourse(course));
-//    }
-//
-//    @Anonymous
-//    @Log(title = "添加课程信息", businessType = BusinessType.UPDATE)
-//    @PostMapping("add")
-//    public AjaxResult add(@RequestBody Course course){
-//        return toAjax(courseService.addCourse(course));
-//    }
-//
-//    @Anonymous
-//    @Log(title = "修改课程信息", businessType = BusinessType.UPDATE)
-//    @PostMapping("del")
-//    public AjaxResult del(@RequestBody int[] ids){
-//        System.err.println(ids);
-//        return toAjax(courseService.delCourse(ids));
-//    }
+    @Anonymous
+    @Log(title = "添加课程安排", businessType = BusinessType.UPDATE)
+    @PostMapping("adds")
+    public AjaxResult adds(@RequestBody CoursePlan plan){
+        return success(planService.insertCoursePlans(plan)>0?"添加成功！":"添加失败！");
+    }
 }

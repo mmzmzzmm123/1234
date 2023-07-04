@@ -33,47 +33,17 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         </where>
         ORDER BY p.semester_id DESC
     </select>
-<!--    <select id="selectAllCourses" resultMap="CourseMap">-->
-<!--        SELECT course_id,course_no,course_name,course_type,course_plan,course_exec,course_score FROM course-->
-<!--        <where>-->
-<!--            <if test="courseName != null and courseName != ''">-->
-<!--                AND course_name LIKE CONCAT('%',#{courseName},'%')-->
-<!--            </if>-->
-<!--        </where>-->
-<!--    </select>-->
-<!--    <update id="updateCourse">-->
-<!--        UPDATE course-->
-<!--        <set>-->
-<!--            <if test="courseNo!=null and courseNo!=''">-->
-<!--                course_no = #{courseNo},-->
-<!--            </if>-->
-<!--            <if test="courseName!=null and courseName!=''">-->
-<!--                course_name = #{courseName},-->
-<!--            </if>-->
-<!--            <if test="courseType!=null and courseType!=''">-->
-<!--                course_type = #{courseType},-->
-<!--            </if>-->
-<!--            <if test="coursePlan!=null and coursePlan!=''">-->
-<!--                course_plan = #{coursePlan},-->
-<!--            </if>-->
-<!--            <if test="courseExec!=null and courseExec!=''">-->
-<!--                course_exec = #{courseExec},-->
-<!--            </if>-->
-<!--            <if test="courseScore!=null and courseScore!=''">-->
-<!--                course_score = #{courseScore},-->
-<!--            </if>-->
-<!--        </set>-->
-<!--        WHERE course_id = #{courseId}-->
-<!--    </update>-->
-<!--    <insert id="addCourse">-->
-<!--        INSERT course(course_no,course_name,course_type,course_plan,course_exec,course_score)-->
-<!--        VALUES (#{courseNo},#{courseName},#{courseType},#{coursePlan},#{courseExec},#{courseScore})-->
-<!--    </insert>-->
-<!--    <delete id="delCourse">-->
-<!--        DELETE FROM course-->
-<!--        WHERE course_id IN-->
-<!--        <foreach item="id" collection="array" open="(" separator="," close=")">-->
-<!--            #{id}-->
-<!--        </foreach>-->
-<!--    </delete>-->
+    <select id="selectForInsert" resultType="java.lang.Integer">
+        SELECT COUNT(*) FROM course_plan 
+        WHERE course_id = #{courseId} And cls_id IN
+        <foreach collection="stuClss" open="(" close=")" separator="," item="id">
+            #{id}
+        </foreach>
+    </select>
+    <insert id="insertCoursePlans">
+        INSERT stu_course_plan(cls_id,course_id,semester_id,status) VALUES
+        <foreach collection ="stuClss" item="id" separator =",">
+            (#{id},#{courseId},#{semesterId},0)
+        </foreach>
+    </insert>
 </mapper>

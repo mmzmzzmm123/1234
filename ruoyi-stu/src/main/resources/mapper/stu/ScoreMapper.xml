@@ -3,46 +3,26 @@
 PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.ruoyi.stu.mapper.ScoreMapper">
-<!--    <resultMap id="StuCoursePlan" type="StuCoursePlanResult">-->
-<!--        <id column="plan_id" property="planId"/>-->
-<!--        <result property="status" column="status"/>-->
-<!--        <association property="semester" javaType="com.ruoyi.stu.domain.StuSemester">-->
-<!--            <id column="semester_id" property="semesterId"/>-->
-<!--            <result column="semester_name" property="semesterName"/>-->
-<!--        </association>-->
-<!--        <association property="stuCls" javaType="com.ruoyi.stu.domain.StuCls">-->
-<!--            <result property="id"    column="id"    />-->
-<!--            <result property="cls"    column="cls"    />-->
-<!--            <result property="clsYear"    column="cls_year"    />-->
-<!--            <result property="stuNum"    column="stuNum"    />-->
-<!--        </association>-->
-<!--        <association property="course" javaType="com.ruoyi.stu.domain.Course">-->
-<!--            <result property="courseId"    column="course_id"    />-->
-<!--            <result property="courseNo"    column="course_no"    />-->
-<!--            <result property="courseName"    column="course_name"    />-->
-<!--            <result property="courseType"    column="course_type"    />-->
-<!--            <result property="coursePlan"    column="course_plan"    />-->
-<!--            <result property="courseExec"    column="course_exec"    />-->
-<!--            <result property="courseScore"    column="course_score"    />-->
-<!--        </association>-->
-<!--    </resultMap>-->
-    <resultMap type="Score" id="ScoreResult">
+    <resultMap id="BaseMap" type="com.ruoyi.stu.domain.Score">
         <id column="id" property="id"/>
         <result property="dailyScore" column="daily_score"/>
         <result property="finallyScore" column="finally_score"/>
         <result property="avgScore" column="avgScore"/>
-        <association property="stu" javaType="com.ruoyi.stu.domain.StuInfo">
-            <result property="stuId"    column="stu_id"    />
-            <result property="stuNo"    column="stu_no"    />
-            <result property="stuName"    column="stu_name"    />
-            <result property="stuCls"    column="stu_cls"    />
-            <result property="stuClsYear"    column="stu_cls_year"    />
-            <result property="stuSex"    column="stu_sex"    />
-            <result property="stuType"    column="stu_type"    />
-            <result property="stuMajor"    column="stu_major"    />
-            <result property="stuAddress"    column="stu_address"    />
-            <result property="stuTel"    column="stu_tel"    />
-        </association>
+    </resultMap>
+
+    <resultMap type="Score" id="ScoreResult" extends="BaseMap">
+<!--        <association property="student" javaType="com.ruoyi.stu.domain.StuInfo">-->
+<!--            <result property="stuId"    column="stu_id"    />-->
+<!--            <result property="stuNo"    column="stu_no"    />-->
+<!--            <result property="stuName"    column="stu_name"    />-->
+<!--            <result property="stuCls"    column="stu_cls"    />-->
+<!--            <result property="stuClsYear"    column="stu_cls_year"    />-->
+<!--            <result property="stuSex"    column="stu_sex"    />-->
+<!--            <result property="stuType"    column="stu_type"    />-->
+<!--            <result property="stuMajor"    column="stu_major"    />-->
+<!--            <result property="stuAddress"    column="stu_address"    />-->
+<!--            <result property="stuTel"    column="stu_tel"    />-->
+<!--        </association>-->
         <association property="teacher" javaType="com.ruoyi.stu.domain.Teacher">
             <result property="teaId"    column="tea_id"    />
             <result property="teaName"    column="tea_name"    />
@@ -51,15 +31,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <result property="teaAddress"    column="tea_address"    />
             <result property="teaType"    column="tea_type"    />
         </association>
-        <association property="course" javaType="com.ruoyi.stu.domain.Course">
-            <result property="courseId"    column="course_id"    />
-            <result property="courseNo"    column="course_no"    />
-            <result property="courseName"    column="course_name"    />
-            <result property="courseType"    column="course_type"    />
-            <result property="coursePlan"    column="course_plan"    />
-            <result property="courseExec"    column="course_exec"    />
-            <result property="courseScore"    column="course_score"    />
-        </association>
+        <association property="course" resultMap="com.ruoyi.stu.mapper.CourseMapper.CourseMap"/>
+        <association property="student" resultMap="com.ruoyi.stu.mapper.StuInfoMapper.StuInfoResult"/>
     </resultMap>
     <select id="selectFinshedCourse" resultMap="ScoreResult">
          SELECT DISTINCT stu_cls,tea_name,course_name,stu_course.course_id,tea_id
@@ -98,25 +71,5 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             where stu_id = ${item.stu.stuId} and course_id = ${item.course.courseId}
         </foreach>
     </update>
-<!--    <sql id="selectStuInfoVo">-->
-<!--        SELECT * FROM stu_score-->
-<!--        NATURAL JOIN stu_course-->
-<!--        NATURAL JOIN stu_info-->
-<!--        NATURAL JOIN tea_info-->
-<!--    </sql>-->
 
-<!--    <select id="selectStuInfoList" parameterType="StuInfo" resultMap="StuInfoResult">-->
-<!--        <include refid="selectStuInfoVo"/>-->
-<!--        <where>  -->
-<!--            <if test="stuNo != null  and stuNo != ''"> and stu_no like concat('%', #{stuNo}, '%')</if>-->
-<!--            <if test="stuName != null  and stuName != ''"> and stu_name like concat('%', #{stuName}, '%')</if>-->
-<!--            <if test="stuCls != null  and stuCls != ''"> and stu_cls = #{stuCls}</if>-->
-<!--            <if test="stuClsYear != null  and stuClsYear != ''"> and stu_cls_year = #{stuClsYear}</if>-->
-<!--            <if test="stuSex != null  and stuSex != ''"> and stu_sex = #{stuSex}</if>-->
-<!--            <if test="stuType != null  and stuType != ''"> and stu_type = #{stuType}</if>-->
-<!--            <if test="stuMajor != null  and stuMajor != ''"> and stu_major = #{stuMajor}</if>-->
-<!--            <if test="stuAddress != null  and stuAddress != ''"> and stu_address like concat('%', #{stuAddress}, '%')</if>-->
-<!--            <if test="stuTel != null  and stuTel != ''"> and stu_tel = #{stuTel}</if>-->
-<!--        </where>-->
-<!--    </select>-->
 </mapper>

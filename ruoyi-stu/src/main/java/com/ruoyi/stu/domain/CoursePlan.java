@@ -5,7 +5,6 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.List;
 
 @Data
 @AllArgsConstructor
@@ -16,6 +15,7 @@ public class CoursePlan {
     private Integer courseId;
     private Integer semesterId;
     private int status;
+    private Integer[] stuClss;
     private Course course;
     private StuCls stuCls;
     private Semester semester;

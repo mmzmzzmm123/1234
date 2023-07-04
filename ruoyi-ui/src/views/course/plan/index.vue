@@ -93,19 +93,17 @@
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
         <el-form-item  label="学期" prop="semesterId">
           <el-select v-model="queryParams.semesterId" placeholder="请选择学期" >
-            <el-option  v-for="(item,index) in semesters" :key="index" :label="item.semesterName" :value="item.semesterId"></el-option>
+            <el-option  v-for="item in semesters" :key="item.semesterId" :label="item.semesterName" :value="item.semesterId"/>
           </el-select>
         </el-form-item>
         <el-form-item  label="课程名" prop="courseId">
           <el-select v-model="queryParams.courseId" placeholder="请选择课程" >
-            <el-option  v-for="(item,index) in courses" :key="item.courseId" :label="item.courseName" :value="item.courseId"></el-option>
+            <el-option  v-for="item in courses" :key="item.courseId" :label="item.courseName" :value="item.courseId"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="班级" prop="stuCls">
-          <el-checkbox-group v-model="stuclsListSelected" v-for="(item,index) in stuclsList" :key="index"  @change="getAllLevel">
-            <el-checkbox :label="index" :value="index"/>
-            <br>
-            <el-checkbox v-for="cls in item" :key="cls.id" :label="cls.cls" :value="cls.id"/>
+          <el-checkbox-group v-model="queryParams.stuClss">
+            <el-checkbox v-for="cls in stuclsList" :key="cls.id" :label="cls.id">{{cls.cls}}</el-checkbox>
           </el-checkbox-group>
         </el-form-item>
       </el-form>
@@ -119,7 +117,7 @@
 </template>
 
 <script>
-import { planList } from "@/api/course/plan"
+import { planList,addPlans } from "@/api/course/plan"
 import { semesterList } from "@/api/semester/semester"
 import { allCourse } from "@/api/course/base"
 import { clsList } from  "@/api/stu/cls"
@@ -155,7 +153,8 @@ export default {
         pageSize: 10,
         courseName: null,
         semesterId: null,
-        courseId: null
+        courseId: null,
+        stuClss:[],
       },
       // 表单参数
       form: {},
@@ -169,8 +168,7 @@ export default {
       courses:[],
       //所有班级
       stuclsList:[],
-      stuclsListSelected:[],
-      isAdd: false
+      levelList:[]
     };
   },
   created() {
@@ -194,7 +192,11 @@ export default {
         this.courses = response.data
       })
       clsList().then(response=>{
-        this.stuclsList = response.data
+        let data = response.data
+        for(let index in data){
+          this.levelList.push(index)
+          this.stuclsList.push(...data[index])
+        }
       })
       this.getList()
     },
@@ -242,7 +244,6 @@ export default {
       this.title = "添加课程安排"
       this.isAdd = true
       this.reset();
-
       this.open = true
     },
     /** 修改按钮操作 */
@@ -257,27 +258,9 @@ export default {
     submitForm() {
       this.$refs["form"].validate(valid => {
         if (valid) {
-          if(this.form.courseId > 0){
-            update(this.form).then(()=>{
-              this.$message({
-                type: "success",
-                message:"修改成功"
-              })
-              this.reset()
-              this.open = false
-              this.getList()
-            })
-          }else{
-            add(this.form).then(()=>{
-              this.$message({
-                type: "success",
-                message:"添加成功"
-              })
-              this.reset()
-              this.open = false
-              this.getList()
-            })
-          }
+          addPlans(this.queryParams).then((response)=>{
+            this.$message.success(response.msg)
+          })
         }
       });
     },
@@ -294,17 +277,6 @@ export default {
         })
       })
     },
-    getAllLevel(value){
-      let newValue = this.stuclsListSelected[value.length-1]
-      if(newValue.endsWith("级")){
-
-        // let level = newValue.substring(0,2)
-        // this.stuclsListSelected = value.filter((item)=>{
-        //   return !item.startsWith(level)
-        // })
-
-      }
-    }
   }
 };
 </script>

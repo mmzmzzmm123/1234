@@ -16,7 +16,6 @@ public class CoursePlanVO {
     private int planId;
     private Course course;
     private List<StuCls> stuCls;
-//    private String[] stuCls;
     private Semester semester;
     private int status;
 }
