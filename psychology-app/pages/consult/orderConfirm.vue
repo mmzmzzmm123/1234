@@ -111,7 +111,7 @@ export default {
     console.log(this.type)
   },
   async mounted() {
-    this.userInfo = uni.getStorageSync("userInfo") ? JSON.parse(uni.getStorageSync("userInfo")) : undefined;
+    this.userInfo = uni.getStorageSync("userInfo")
     if (!this.userInfo) {
       return this.openLoginConfirm()
     }

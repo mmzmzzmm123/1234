@@ -54,8 +54,7 @@
     </view>
     <consult-tab-bar :currentIndex="2"></consult-tab-bar>
     <uni-popup ref="popup" type="dialog">
-      <uni-popup-dialog mode="base" content="您尚未登录, 是否使用微信静默登录" :duration="2000" :before-close="true"
-                        @close="close" @confirm="confirm"></uni-popup-dialog>
+      <uni-popup-dialog mode="base" content="您尚未登录, 是否使用微信静默登录" :duration="2000" :before-close="true" @close="closeLoginConfirm" @confirm="confirmLogin"/>
     </uni-popup>
   </view>
 </template>
@@ -112,26 +111,27 @@ export default {
       redirectUri:location.href+"?t="+new Date().getTime()
     };
   },
-  computed: {
-    finishStatus() {
-      return (order) => {
-        if (!order.finishedNum || !order.gaugeNum) {
-          return "0%"
-        }
-        return (order.finishedNum / order.gaugeNum).toFixed(2) * 100 + "%"
-      }
-    }
-  },
   async mounted() {
-    this.userInfo = uni.getStorageSync("userInfo") ? JSON.parse(uni.getStorageSync("userInfo")) : undefined;
+    this.userInfo = uni.getStorageSync("userInfo")
     if (!this.userInfo && await utils.loginCallback(this.redirectUri)) {
-      this.userInfo = uni.getStorageSync("userInfo") ? JSON.parse(uni.getStorageSync("userInfo")) : undefined;
+      this.userInfo = uni.getStorageSync("userInfo")
     }
     if (!this.userInfo) {
       this.openLoginConfirm()
     }
   },
   methods: {
+    // 登录
+    async confirmLogin () {
+      await loginServer.login();
+      this.$refs.popup.close()
+    },
+    closeLoginConfirm() {
+      this.$refs.popup.close()
+    },
+    openLoginConfirm() {
+      this.$refs.popup.open()
+    },
     toPage(id) {
       console.log(id)
       switch (id) {
@@ -208,16 +208,6 @@ export default {
         return false;
       }
       return true;
-    },
-    close() {
-      this.$refs.popup.close()
-    },
-    async confirm() {
-      await loginServer.login();
-      this.$refs.popup.close()
-    },
-    openLoginConfirm() {
-      this.$refs.popup.open();
     }
   },
 };

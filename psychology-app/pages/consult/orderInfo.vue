@@ -2,7 +2,7 @@
   <view class="page">
     <view class="header-main">
       <view class="header-nav">
-        <uni-nav-bar left-icon="closeempty" right-icon="more-filled" :border="false" title="订单详情" @clickLeft="back"/>
+        <uni-nav-bar fixed="true" left-icon="closeempty" right-icon="more-filled" :border="false" title="订单详情" @clickLeft="back"/>
       </view>
       <view class="header-time" v-if="order.status === 0">
         <image src="/static/consult/order/time.png" class="header-icon"/>
@@ -24,7 +24,7 @@
       </view>
       <view class="info-content">
         <text class="info-title">咨询师姓名</text>
-        <text class="info-col">{{ order.userName }}</text>
+        <text class="info-col">{{ order.consultName }}</text>
       </view>
       <view class="info-content">
         <text class="info-title">咨询次数</text>
@@ -60,6 +60,10 @@
         </text>
       </button>
     </view>
+
+    <uni-popup ref="popup" type="dialog">
+      <uni-popup-dialog mode="base" content="您尚未登录, 是否使用微信静默登录" :duration="2000" :before-close="true" @close="closeLoginConfirm" @confirm="confirmLogin"/>
+    </uni-popup>
   </view>
 </template>
 <script>
@@ -79,10 +83,10 @@ export default {
     await this.getOrderInfo()
   },
   async mounted() {
-    this.userInfo = uni.getStorageSync("userInfo") ? JSON.parse(uni.getStorageSync("userInfo")) : undefined;
+    this.userInfo = uni.getStorageSync("userInfo")
 
     if (!this.userInfo && await utils.loginCallback(this.redirectUri)) {
-      this.userInfo = uni.getStorageSync("userInfo") ? JSON.parse(uni.getStorageSync("userInfo")) : undefined;
+      this.userInfo = uni.getStorageSync("userInfo")
     }
     if (!this.userInfo) {
       this.openLoginConfirm()

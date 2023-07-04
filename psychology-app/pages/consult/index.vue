@@ -36,14 +36,12 @@
 
     <!-- 筛选组件 -->
     <uni-popup ref="popupFilter" type="top" background-color="#fff">
-      <filter-com :filterParams="filterParams"  :attrParams="attrParams" @close="doFilterClose" @submit="submit">
-
-      </filter-com>
+      <filter-com :filterParams="filterParams"  :attrParams="attrParams" @close="doFilterClose" @submit="submit"/>
     </uni-popup>
           
     <uni-popup ref="popup" type="dialog">
       <uni-popup-dialog mode="base" content="您尚未登录, 是否使用微信静默登录" :duration="2000" :before-close="true" @close="close"
-        @confirm="confirm"></uni-popup-dialog>
+        @confirm="confirm"/>
     </uni-popup>
   </view>
 </template>
@@ -113,9 +111,12 @@
         return this.filterParams.price ? this.filterParams.price : '价格'
       }
     },
-    created() {
-      // this.userInfo = uni.getStorageSync("userInfo")
-      this.userInfo = uni.getStorageSync("userInfo") ? JSON.parse(uni.getStorageSync("userInfo")) : undefined;
+    async mounted() {
+      try {
+        this.userInfo = uni.getStorageSync("userInfo")
+      } catch (e) {
+        console.log(e)
+      }
       this.getCat()
       this.getBanner(0)
       this.getConsult()
@@ -126,11 +127,10 @@
       this.getPrice()
       this.getSex()
       this.getConsultTime()
-    },
-    async mounted() {
+
       if (!this.userInfo && await utils.loginCallback(this.redirectUri)) {
         // this.userInfo = uni.getStorageSync("userInfo")
-        this.userInfo = uni.getStorageSync("userInfo") ? JSON.parse(uni.getStorageSync("userInfo")) : undefined;
+        this.userInfo = uni.getStorageSync("userInfo")
       }
       if (!this.userInfo) {
         this.openLoginConfirm()

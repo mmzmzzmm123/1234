@@ -77,9 +77,11 @@
           <text class="text_26">立即预约</text>
         </button>
       </view>
+
       <uni-popup ref="popup" type="dialog">
-        <uni-popup-dialog mode="base" content="您尚未登录, 是否使用微信静默登录" :duration="2000" :before-close="true" @close="closeLoginConfirm" @confirm="confirmLogin"></uni-popup-dialog>
+        <uni-popup-dialog mode="base" content="您尚未登录, 是否使用微信静默登录" :duration="2000" :before-close="true" @close="closeLoginConfirm" @confirm="confirmLogin"/>
       </uni-popup>
+
       <uni-popup ref="selectServe" type="bottom">
         <view class="serve serve-model">
           <uni-icons type="closeempty" size="24" class="serve-title-ext" @tap="closeServe"/>
@@ -140,7 +142,7 @@ export default {
     // this.share()
   },
   mounted() {
-    this.userInfo = uni.getStorageSync("userInfo") ? JSON.parse(uni.getStorageSync("userInfo")) : undefined;
+    this.userInfo = uni.getStorageSync("userInfo")
     console.log(this.consultId)
     if (!this.userInfo) {
       return this.openLoginConfirm()

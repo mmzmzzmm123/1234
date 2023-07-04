@@ -2,7 +2,7 @@
   <view class="page">
     <view class="page-content">
       <view class="nav-bar">
-        <uni-nav-bar left-icon="closeempty" right-icon="more-filled" :border="false" title="我的咨询" @clickLeft="back"/>
+        <uni-nav-bar fixed="true" left-icon="closeempty" right-icon="more-filled" :border="false" title="我的咨询" @clickLeft="back"/>
       </view>
       <view class="tabs">
         <view class="tabs-list">
@@ -54,8 +54,7 @@
     </view>
 
     <uni-popup ref="popup" type="dialog">
-      <uni-popup-dialog mode="base" content="您尚未登录, 是否使用微信静默登录" :duration="2000" :before-close="true"
-                        @close="close" @confirm="confirm"></uni-popup-dialog>
+      <uni-popup-dialog mode="base" content="您尚未登录, 是否使用微信静默登录" :duration="2000" :before-close="true" @close="closeLoginConfirm" @confirm="confirmLogin"/>
     </uni-popup>
   </view>
 </template>
@@ -95,24 +94,13 @@ export default {
       redirectUri:location.href+"?t="+new Date().getTime()
     };
   },
-  computed: {
-    finishStatus() {
-      return (order) => {
-        if (!order.finishedNum || !order.gaugeNum) {
-          return "0%"
-        }
-        return (order.finishedNum / order.gaugeNum).toFixed(2) * 100 + "%"
-      }
-    }
-  },
   async created() {
     this.status = parseInt(utils.getParam(location.href, "status"))
-    console.log(this.status)
-    this.userInfo = uni.getStorageSync("userInfo") ? JSON.parse(uni.getStorageSync("userInfo")) : undefined;
   },
   async mounted() {
+    this.userInfo = uni.getStorageSync("userInfo")
     if (!this.userInfo && await utils.loginCallback(this.redirectUri)) {
-      this.userInfo = uni.getStorageSync("userInfo") ? JSON.parse(uni.getStorageSync("userInfo")) : undefined;
+      this.userInfo = uni.getStorageSync("userInfo")
     }
     if (!this.userInfo) {
       this.openLoginConfirm()
@@ -121,6 +109,17 @@ export default {
     await this.getOrderList()
   },
   methods: {
+    // 登录
+    async confirmLogin () {
+      await loginServer.login();
+      this.$refs.popup.close()
+    },
+    closeLoginConfirm() {
+      this.$refs.popup.close()
+    },
+    openLoginConfirm() {
+      this.$refs.popup.open()
+    },
     back() {
       uni.navigateTo({
         url: "/pages/consult/user",
@@ -154,17 +153,14 @@ export default {
 </script>
 <style lang="scss">
 page {
-  background-color: #FFFFFF;
+  background-color: rgba(248,248,248,1.000000);
   position: relative;
-  width: 100%;
-  height: 1942upx;
-  overflow: hidden;
+  //width: 100%;
+  //height: 100%;
   display: flex;
   flex-direction: column;
   .page-content {
     background-color: rgba(248,248,248,1.000000);
-    width: 100%;
-    height: 1942upx;
     display: flex;
     flex-direction: column;
   }
@@ -172,25 +168,26 @@ page {
     height: 88upx;
   }
   .tabs {
+    margin-top: 6upx;
     height: 88upx;
     display: flex;
     flex-direction: column;
     justify-content: flex-end;
     background-color: #FFFFFF;
-  }
-  .tabs-list {
-    height: 60upx;
-    display: flex;
-    justify-content: space-between;
-    margin: 0upx 51upx;
-  }
-  .tab {
-    color: rgba(51,51,51,1);
-    font-size: 32upx;
-    &.selected {
-      border-bottom: 8upx solid;
-      font-weight: 600;
-      color: #FF703F;
+    .tabs-list {
+      height: 60upx;
+      display: flex;
+      justify-content: space-between;
+      margin: 0upx 51upx;
+      .tab {
+        color: rgba(51,51,51,1);
+        font-size: 32upx;
+        &.selected {
+          border-bottom: 8upx solid;
+          font-weight: 600;
+          color: #FF703F;
+        }
+      }
     }
   }
   .order-list {
@@ -348,12 +345,13 @@ page {
     }
   }
   .footer-main {
-    width: 236upx;
-    height: 28upx;
-    flex-direction: row;
+    //width: 236upx;
+    //height: 28upx;
+    //flex-direction: row;
     display: flex;
-    justify-content: space-between;
-    margin: 40upx 0 41upx 257upx;
+    justify-content: center;
+    //margin: 40upx 0 41upx 257upx;
+    padding: 40upx;
   }
   .box_7 {
     background-color: rgba(204,204,204,1.000000);

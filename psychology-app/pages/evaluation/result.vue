@@ -55,7 +55,7 @@ export default {
     },
     created() {
 		// this.userInfo = uni.getStorageSync("userInfo");
-      this.userInfo = uni.getStorageSync("userInfo") ? JSON.parse(uni.getStorageSync("userInfo")) : undefined;
+      this.userInfo = uni.getStorageSync("userInfo")
       this.result = uni.getStorageSync("result");
     },
     methods: {

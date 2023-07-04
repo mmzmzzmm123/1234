@@ -137,12 +137,12 @@ export default {
   },
   async created() {
     // this.userInfo = uni.getStorageSync("userInfo")
-    this.userInfo = uni.getStorageSync("userInfo") ? JSON.parse(uni.getStorageSync("userInfo")) : undefined;
+    this.userInfo = uni.getStorageSync("userInfo")
   },
   async mounted() {
     if (!this.userInfo && await utils.loginCallback(this.redirectUri)) {
       // this.userInfo = uni.getStorageSync("userInfo")
-      this.userInfo = uni.getStorageSync("userInfo") ? JSON.parse(uni.getStorageSync("userInfo")) : undefined;
+      this.userInfo = uni.getStorageSync("userInfo")
     }
     if (!this.userInfo) {
       this.openLoginConfirm()
