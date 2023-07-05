@@ -50,9 +50,25 @@ public class CoursePlanServiceImpl implements ICoursePlanService {
         return resultList;
     }
     //批量添加
+    @Transactional
     @Override
     public Integer insertCoursePlans(CoursePlan coursePlan) {
         return coursePlanMapper.selectForInsert(coursePlan)>0 ? 0 : coursePlanMapper.insertCoursePlans(coursePlan);
+    }
+
+    @Override
+    public Integer deleteCoursePlans(List<CoursePlanVO> planVOs) {
+        return coursePlanMapper.deleteCoursePlans(planVOs);
+    }
+
+    @Override
+    public List<CoursePlan> selectScoreCoursePlans(String clsName, String teaName, String courseName) {
+        return coursePlanMapper.selectScoreCoursePlans(clsName,teaName,courseName);
+    }
+
+    @Override
+    public Integer updateCourseStatusBySemesterId(Integer semesterId) {
+        return coursePlanMapper.updateCourseStatusBySemesterId(semesterId);
     }
 
     @Override

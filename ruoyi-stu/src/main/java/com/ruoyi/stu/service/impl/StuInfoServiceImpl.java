@@ -1,10 +1,11 @@
 package com.ruoyi.stu.service.impl;
 
 import java.util.List;
+
+import com.ruoyi.stu.domain.StuInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.ruoyi.stu.mapper.StuInfoMapper;
-import com.ruoyi.stu.domain.StuInfo;
 import com.ruoyi.stu.service.IStuInfoService;
 
 /**

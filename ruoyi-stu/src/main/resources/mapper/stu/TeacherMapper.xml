@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.stu.mapper.TeacherMapper">
+    <resultMap id="BaseMap" type="com.ruoyi.stu.domain.Teacher">
+        <id column="tea_id" property="teaId"/>
+        <result column="tea_name" property="teaName"/>
+        <result column="tea_sex" property="teaSex"/>
+        <result column="tea_phone" property="teaPhone"/>
+        <result column="tea_address" property="teaAddress"/>
+        <result column="tea_type" property="teaType"/>
+    </resultMap>
+</mapper>

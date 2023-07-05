@@ -42,7 +42,7 @@ public class StuCoursePlanServiceImpl implements IStuCoursePlanService{
             StuCoursePlan stuCoursePlan = new StuCoursePlan();
             stuCoursePlan.setCourseId(courseId);
             stuCoursePlan.setSemesterId(semesterId);
-            stuCoursePlan.setClsId(cls.getId());
+            stuCoursePlan.setClsId(cls.getClsId());
             stuCoursePlans.add(stuCoursePlan);
         }
         return stuCoursePlanMapper.addCoursePlans(stuCoursePlans);

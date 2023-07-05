@@ -16,19 +16,26 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <association property="stuCls" resultMap="com.ruoyi.stu.mapper.StuClsMapper.StuClsResult"/>
     </resultMap>
     <sql id="baseSelect">
-        SELECT plan_id,status,cls_id,p.course_id `course_id`,p.semester_id `semester_id`,cls,course_name,semester_name FROM course_plan p
+        SELECT plan_id,status,sc.cls_id `cls_id`,p.course_id `course_id`,p.semester_id `semester_id`,cls_name,course_name,semester_name,tea_name,t.tea_id FROM course_plan p
         JOIN course c ON p.course_id = c.course_id
         JOIN semester s ON p.semester_id = s.semester_id
-        JOIN stu_cls sc ON p.cls_id = sc.id
+        JOIN stu_cls sc ON p.cls_id = sc.cls_id
+        JOIN tea_info t ON t.tea_id = sc.tea_id
     </sql>
     <select id="selectCoursePlan" resultMap="CoursePlanMap">
         <include refid="baseSelect"/>
         <where>
-            <if test="course !=null and course.courseName != '' and course.courseName != null">
+            <if test="course !=null and course.courseName != null and course.courseName != '' ">
                 AND course_name LIKE CONCAT('%',#{course.courseName},'%')
             </if>
             <if test="semesterId != null and semesterId != 0">
                 AND p.semester_id = #{semesterId}
+            </if>
+            <if test="stuCls!=null and stuCls.teacher !=null and stuCls.teacher.teaName != null and stuCls.teacher.teaName != ''">
+                AND tea_name LIKE CONCAT('%',#{course.teacher.teaName},'%')
+            </if>
+            <if test="stuCls !=null and stuCls.clsName != '' and stuCls.clsName != null">
+                AND cls_name LIKE CONCAT('%',#{stuCls.clsName},'%')
             </if>
         </where>
         ORDER BY p.semester_id DESC
@@ -37,13 +44,35 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         SELECT COUNT(*) FROM course_plan 
         WHERE course_id = #{courseId} And cls_id IN
         <foreach collection="stuClss" open="(" close=")" separator="," item="id">
-            #{id}
+            ${id}
         </foreach>
     </select>
     <insert id="insertCoursePlans">
-        INSERT stu_course_plan(cls_id,course_id,semester_id,status) VALUES
+        INSERT course_plan(cls_id,course_id,semester_id,status) VALUES
         <foreach collection ="stuClss" item="id" separator =",">
-            (#{id},#{courseId},#{semesterId},0)
+            (${id},${courseId},${semesterId},0)
         </foreach>
     </insert>
+    <delete id="deleteCoursePlans">
+        <foreach item="cp" collection="planVOs" separator=";">
+            DELETE FROM course_plan WHERE course_id = #{cp.course.courseId} AND semester_id = #{cp.semester.semesterId}
+            AND cls_id IN
+            <foreach collection="cp.stuCls" open="(" close=")" separator="," item="cls">
+                ${cls.clsId}
+            </foreach>
+        </foreach>
+    </delete>
+    <select id="selectScoreCoursePlans" resultMap="CoursePlanMap">
+       <include refid="baseSelect"/>
+       <where>
+           <if test="clsName!=null and clsName!=''">AND cls_name LIKE CONCAT('%',#{clsName},'%')</if>
+           <if test="teaName!=null and teaName!=''">AND tea_name LIKE CONCAT('%',#{teaName},'%')</if>
+           <if test="courseName!=null and courseName!=''">AND course_name LIKE CONCAT('%',#{courseName},'%')</if>
+       </where>
+       ORDER BY semester_id DESC,cls_name
+   </select>
+    <update id="updateCourseStatusBySemesterId">
+        UPDATE course_plan SET status = 2 WHERE semester_id &lt; #{semesterId};
+        UPDATE course_plan SET status = 1 WHERE semester_id = #{semesterId};
+    </update>
 </mapper>

@@ -1,24 +1,11 @@
 package com.ruoyi.stu.domain;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
-import lombok.Data;
-import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
 import com.ruoyi.common.annotation.Excel;
 import com.ruoyi.common.core.domain.BaseEntity;
+import lombok.Data;
 
-/**
- * 学生信息对象 stu_info
- * 
- * @author ruoyi
- * @date 2023-05-19
- */
 @Data
-public class StuInfo extends BaseEntity
-{
-
-    private static final long serialVersionUID = 1L;
-
+public class StuInfo extends BaseEntity {
     /** 主键id */
     private Long stuId;
 
@@ -30,9 +17,9 @@ public class StuInfo extends BaseEntity
     @Excel(name = "姓名")
     private String stuName;
 
-    /** 班级 */
+    /** 班级id */
     @Excel(name = "班级")
-    private String stuCls;
+    private Integer clsId;
 
     /** 年级 */
     @Excel(name = "年级")
@@ -58,5 +45,5 @@ public class StuInfo extends BaseEntity
     @Excel(name = "联系电话")
     private String stuTel;
 
-
+//    private StuCls stuCls;
 }

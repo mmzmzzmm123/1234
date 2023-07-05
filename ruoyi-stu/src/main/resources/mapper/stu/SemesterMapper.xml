@@ -14,11 +14,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
                 AND semester_id = #{semesterId}
             </if>
             <if test="semesterName != null and semesterName != ''">
-                AND semesterName LIKE CONCAT('%',#{semesterName},'%')
+                AND semester_name LIKE CONCAT('%',#{semesterName},'%')
             </if>
         </where>
     </select>
-    <insert id="addSemester">
+    <insert id="addSemester" useGeneratedKeys="true" keyProperty="semesterId">
         INSERT semester(semseter_name) VALUES (#{semesterName})
     </insert>
 </mapper>

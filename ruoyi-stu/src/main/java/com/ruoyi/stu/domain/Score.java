@@ -7,6 +7,8 @@ import lombok.Data;
 @Data
 public class Score {
     private Integer id;
+    private Integer stuId;
+    private Integer courseId;
     @Excels({
            @Excel(name = "学号",targetAttr = "stuNo"),
            @Excel(name = "姓名",targetAttr = "stuName")

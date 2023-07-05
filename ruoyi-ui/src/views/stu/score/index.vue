@@ -86,7 +86,7 @@
       </el-table-column>
       <el-table-column label="老师名" align="center" prop="stuCls.teacher.teaName" />
       <el-table-column label="课程名" align="center" prop="course.courseName" />
-      <el-table-column label="班级名" align="center" prop="stuCls.cls" />
+      <el-table-column label="班级名" align="center" prop="stuCls.clsName" />
       <el-table-column label="学期" align="center" prop="semester.semesterName" />
       <el-table-column label="状态" align="center" prop="status" >
         <template slot-scope="scope">

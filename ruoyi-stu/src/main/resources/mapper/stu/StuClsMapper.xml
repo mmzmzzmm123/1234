@@ -4,21 +4,25 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.ruoyi.stu.mapper.StuClsMapper">
     
-    <resultMap type="StuCls" id="StuClsResult">
-        <result property="id"    column="id"    />
-        <result property="cls"    column="cls"    />
+    <resultMap type="StuCls" id="BaseMap">
+        <result property="clsId"    column="cls_id"    />
+        <result property="clsName"    column="cls_name"    />
         <result property="clsYear"    column="cls_year"    />
         <result property="stuNum"    column="stuNum"    />
+
+    </resultMap>
+    <resultMap id="StuClsResult" type="StuCls" extends="BaseMap">
+        <association property="teacher" resultMap="com.ruoyi.stu.mapper.TeacherMapper.BaseMap"/>
     </resultMap>
 
     <sql id="selectStuClsVo">
-        select id, cls, cls_year from stu_cls
+        select cls_id, cls_name, cls_year from stu_cls
     </sql>
 
     <select id="selectStuClsList" parameterType="StuCls" resultMap="StuClsResult">
         <include refid="selectStuClsVo"/>
         <where>  
-            <if test="cls != null  and cls != ''"> and cls = #{cls}</if>
+            <if test="clsName != null  and clsName != ''"> and cls_name = #{clsName}</if>
             <if test="clsYear != null  and clsYear != ''"> and cls_year = #{clsYear}</if>
         </where>
     </select>
@@ -31,11 +35,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <insert id="insertStuCls" parameterType="StuCls" useGeneratedKeys="true" keyProperty="id">
         insert into stu_cls
         <trim prefix="(" suffix=")" suffixOverrides=",">
-            <if test="cls != null">cls,</if>
+            <if test="clsName != null">clsName,</if>
             <if test="clsYear != null">cls_year,</if>
          </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
-            <if test="cls != null">#{cls},</if>
+            <if test="clsName != null">#{clsName},</if>
             <if test="clsYear != null">#{clsYear},</if>
          </trim>
     </insert>
@@ -43,25 +47,25 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <update id="updateStuCls" parameterType="StuCls">
         update stu_cls
         <trim prefix="SET" suffixOverrides=",">
-            <if test="cls != null">cls = #{cls},</if>
-            <if test="clsYear != null">cls_year = #{clsYear},</if>
+            <if test="clsName != null and clsName != ''">cls_name = #{clsName},</if>
+            <if test="clsYear != null and clsYear != ''">cls_year = #{clsYear},</if>
         </trim>
-        where id = #{id}
+        where cls_id = #{clsId}
     </update>
 
     <delete id="deleteStuClsById" parameterType="Long">
-        delete from stu_cls where id = #{id}
+        delete from stu_cls where cls_id = #{id}
     </delete>
 
     <delete id="deleteStuClsByIds" parameterType="String">
-        delete from stu_cls where id in 
+        delete from stu_cls where cls_id in
         <foreach item="id" collection="array" open="(" separator="," close=")">
             #{id}
         </foreach>
     </delete>
 
     <select id="selectBiYeStuNumByYearAndCls" resultMap="StuClsResult">
-        select sc.stu_cls `cls`,IFNULL(num,0) `mNum`, stunum `stuNum` from
+        select clsName,IFNULL(num,0) `mNum`, stunum `stuNum` from
             (select stu_cls,count(*) `stuNum` from stu_info where (stu_cls_year = #{clsYear} and stu_type != '3+2') or (stu_cls_year = #{clsYear2} and stu_type = '3+2') GROUP BY stu_cls )
                 sc
                 LEFT JOIN

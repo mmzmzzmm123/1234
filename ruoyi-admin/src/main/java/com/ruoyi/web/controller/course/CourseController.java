@@ -57,7 +57,6 @@ public class CourseController extends BaseController{
     @Log(title = "修改课程信息", businessType = BusinessType.UPDATE)
     @PostMapping("del")
     public AjaxResult del(@RequestBody int[] ids){
-        System.err.println(ids);
         return toAjax(courseService.delCourse(ids));
     }
 }

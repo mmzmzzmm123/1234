@@ -3,7 +3,7 @@
     <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch" label-width="68px">
       <el-form-item label="班级名字" prop="teaName">
         <el-input
-          v-model="queryParams.stuCls"
+          v-model="queryParams.clsName"
           placeholder="请输入班级名字"
           clearable
           @keyup.enter.native="handleQuery"
@@ -86,7 +86,7 @@
       </el-table-column>
       <el-table-column label="老师名" align="center" prop="stuCls.teacher.teaName" />
       <el-table-column label="课程名" align="center" prop="course.courseName" />
-      <el-table-column label="班级名" align="center" prop="stuCls.cls" />
+      <el-table-column label="班级名" align="center" prop="stuCls.clsName" />
       <el-table-column label="学期" align="center" prop="semester.semesterName" />
       <el-table-column label="状态" align="center" prop="status" >
         <template slot-scope="scope">
@@ -111,6 +111,14 @@
             @click="handleDelete(scope.row)"
             v-hasPermi="['stu:score:remove']"
           >成绩录入</el-button>
+          <el-button v-if="scope.row.status === 0"
+             size="mini"
+             type="text"
+             icon="el-icon-error"
+             @click="handleDelete(scope.row)"
+             v-hasPermi="['stu:score:remove']"
+             disabled="true"
+          >课程未开始</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -145,7 +153,7 @@
 </template>
 
 <script>
-import { listInfo } from "@/api/stu/score";
+import { scorePlanList } from "@/api/course/plan";
 
 export default {
   name: "score",
@@ -175,7 +183,7 @@ export default {
         pageSize: 10,
         teaName: null,
         courseName: null,
-        stuCls: null
+        clsName: null
       },
       // 表单参数
       form: {},
@@ -191,8 +199,7 @@ export default {
     /** 查询提交材料参数列表 */
     getList() {
       this.loading = true;
-      listInfo(this.queryParams).then(response => {
-        console.log(response)
+      scorePlanList(this.queryParams).then(response => {
         this.scoreCourseList = response.rows
         this.total = response.total
         this.loading = false
@@ -206,7 +213,7 @@ export default {
     // 表单重置
     reset() {
       this.form = {
-        stu:null,
+        stuCls:null,
         teacher:null,
         course:null
       };

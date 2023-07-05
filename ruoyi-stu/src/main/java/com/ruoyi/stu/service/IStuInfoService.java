@@ -1,7 +1,8 @@
 package com.ruoyi.stu.service;
 
-import java.util.List;
 import com.ruoyi.stu.domain.StuInfo;
+
+import java.util.List;
 
 /**
  * 学生信息Service接口

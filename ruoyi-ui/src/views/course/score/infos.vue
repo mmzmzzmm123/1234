@@ -170,6 +170,7 @@ export default {
     getList() {
       this.loading = true;
       scoreInfo(this.queryParams).then(response => {
+        console.log(response)
         response.rows.forEach((e)=>{
           e.isEdit = false
         })

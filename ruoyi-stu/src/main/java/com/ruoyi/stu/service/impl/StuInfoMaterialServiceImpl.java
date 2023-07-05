@@ -1,7 +1,5 @@
 package com.ruoyi.stu.service.impl;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 import com.ruoyi.common.core.domain.entity.SysUser;
 import com.ruoyi.common.utils.SecurityUtils;
@@ -17,12 +15,10 @@ import com.ruoyi.stu.mapper.StuInfoMaterialMapper;
 import com.ruoyi.stu.service.IStuInfoMaterialService;
 import com.ruoyi.stu.vo.DataVO;
 import com.ruoyi.stu.vo.StuInfoMaterial;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 
 /**

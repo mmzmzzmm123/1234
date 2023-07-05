@@ -3,90 +3,90 @@
 PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.ruoyi.stu.mapper.StuCoursePlanMapper">
-    <resultMap type="com.ruoyi.stu.domain.StuCoursePlan" id="StuCoursePlanResult">
-        <id column="plan_id" property="planId"/>
-        <result property="status" column="status"/>
-        <association property="semester" javaType="com.ruoyi.stu.domain.StuSemester">
-            <id column="semester_id" property="semesterId"/>
-            <result column="semester_name" property="semesterName"/>
-        </association>
-        <association property="stuCls" javaType="com.ruoyi.stu.domain.StuCls">
-            <result property="id"    column="id"    />
-            <result property="cls"    column="cls"    />
-            <result property="clsYear"    column="cls_year"    />
-            <result property="stuNum"    column="stuNum"    />
-            <result property="type" column="type"/>
-            <association property="teacher" javaType="com.ruoyi.stu.domain.Teacher">
-                <result property="teaId" column="tea_id"/>
-                <result property="teaName" column="tea_name"/>
-                <result property="teaSex" column="tea_sex"/>
-                <result property="teaPhone" column="tea_phone"/>
-                <result property="teaAddress" column="tea_address"/>
-                <result property="teaType" column="tea_type"/>
-            </association>
-        </association>
-        <association property="course" javaType="com.ruoyi.stu.domain.Course">
-            <result property="courseId"    column="course_id"    />
-            <result property="courseNo"    column="course_no"    />
-            <result property="courseName"    column="course_name"    />
-            <result property="courseType"    column="course_type"    />
-            <result property="coursePlan"    column="course_plan"    />
-            <result property="courseExec"    column="course_exec"    />
-            <result property="courseScore"    column="course_score"    />
-        </association>
-    </resultMap>
-    <resultMap id="courseMap" type="com.ruoyi.stu.domain.Course">
-        <id property="courseId"    column="course_id"    />
-        <result property="courseNo"    column="course_no"    />
-        <result property="courseName"    column="course_name"    />
-        <result property="courseType"    column="course_type"    />
-        <result property="coursePlan"    column="course_plan"    />
-        <result property="courseExec"    column="course_exec"    />
-        <result property="courseScore"    column="course_score"    />
-    </resultMap>
-    <resultMap id="semesterMap" type="com.ruoyi.stu.domain.StuSemester">
-        <id column="semester_id" property="semesterId"/>
-        <result column="semester_name" property="semesterName"/>
-    </resultMap>
-   <select id="findAll" resultMap="StuCoursePlanResult">
-       SELECT semester_id,semester_name,`status`,cls,tea_name,course_name,course_id FROM stu_course_plan
-       NATURAL JOIN stu_course
-       NATURAL JOIN stu_semester
-       JOIN stu_cls ON stu_course_plan.cls_id = stu_cls.id
-       NATURAL JOIN tea_info
-       <where>
-           <if test="stuCls!=null and stuCls!=''">AND cls LIKE CONCAT('%',#{stuCls},'%')</if>
-           <if test="teaName!=null and teaName!=''">AND tea_name LIKE CONCAT('%',#{teaName},'%')</if>
-           <if test="courseName!=null and courseName!=''">AND course_name LIKE CONCAT('%',#{courseName},'%')</if>
-       </where>
-       ORDER BY semester_id DESC,cls
-   </select>
+<!--    <resultMap type="com.ruoyi.stu.domain.StuCoursePlan" id="StuCoursePlanResult">-->
+<!--        <id column="plan_id" property="planId"/>-->
+<!--        <result property="status" column="status"/>-->
+<!--        <association property="semester" javaType="com.ruoyi.stu.domain.StuSemester">-->
+<!--            <id column="semester_id" property="semesterId"/>-->
+<!--            <result column="semester_name" property="semesterName"/>-->
+<!--        </association>-->
+<!--        <association property="stuCls" javaType="com.ruoyi.stu.domain.StuCls">-->
+<!--            <result property="id"    column="id"    />-->
+<!--            <result property="cls"    column="cls"    />-->
+<!--            <result property="clsYear"    column="cls_year"    />-->
+<!--            <result property="stuNum"    column="stuNum"    />-->
+<!--            <result property="type" column="type"/>-->
+<!--            <association property="teacher" javaType="com.ruoyi.stu.domain.Teacher">-->
+<!--                <result property="teaId" column="tea_id"/>-->
+<!--                <result property="teaName" column="tea_name"/>-->
+<!--                <result property="teaSex" column="tea_sex"/>-->
+<!--                <result property="teaPhone" column="tea_phone"/>-->
+<!--                <result property="teaAddress" column="tea_address"/>-->
+<!--                <result property="teaType" column="tea_type"/>-->
+<!--            </association>-->
+<!--        </association>-->
+<!--        <association property="course" javaType="com.ruoyi.stu.domain.Course">-->
+<!--            <result property="courseId"    column="course_id"    />-->
+<!--            <result property="courseNo"    column="course_no"    />-->
+<!--            <result property="courseName"    column="course_name"    />-->
+<!--            <result property="courseType"    column="course_type"    />-->
+<!--            <result property="coursePlan"    column="course_plan"    />-->
+<!--            <result property="courseExec"    column="course_exec"    />-->
+<!--            <result property="courseScore"    column="course_score"    />-->
+<!--        </association>-->
+<!--    </resultMap>-->
+<!--    <resultMap id="courseMap" type="com.ruoyi.stu.domain.Course">-->
+<!--        <id property="courseId"    column="course_id"    />-->
+<!--        <result property="courseNo"    column="course_no"    />-->
+<!--        <result property="courseName"    column="course_name"    />-->
+<!--        <result property="courseType"    column="course_type"    />-->
+<!--        <result property="coursePlan"    column="course_plan"    />-->
+<!--        <result property="courseExec"    column="course_exec"    />-->
+<!--        <result property="courseScore"    column="course_score"    />-->
+<!--    </resultMap>-->
+<!--    <resultMap id="semesterMap" type="com.ruoyi.stu.domain.StuSemester">-->
+<!--        <id column="semester_id" property="semesterId"/>-->
+<!--        <result column="semester_name" property="semesterName"/>-->
+<!--    </resultMap>-->
+<!--   <select id="findAll" resultMap="StuCoursePlanResult">-->
+<!--       SELECT semester_id,semester_name,`status`,cls,tea_name,course_name,course_id FROM stu_course_plan-->
+<!--       NATURAL JOIN stu_course-->
+<!--       NATURAL JOIN stu_semester-->
+<!--       JOIN stu_cls ON stu_course_plan.cls_id = stu_cls.id-->
+<!--       NATURAL JOIN tea_info-->
+<!--       <where>-->
+<!--           <if test="stuCls!=null and stuCls!=''">AND cls LIKE CONCAT('%',#{stuCls},'%')</if>-->
+<!--           <if test="teaName!=null and teaName!=''">AND tea_name LIKE CONCAT('%',#{teaName},'%')</if>-->
+<!--           <if test="courseName!=null and courseName!=''">AND course_name LIKE CONCAT('%',#{courseName},'%')</if>-->
+<!--       </where>-->
+<!--       ORDER BY semester_id DESC,cls-->
+<!--   </select>-->
 
-    <select id="findAllLevelCourse" resultMap="StuCoursePlanResult">
-        SELECT DISTINCT semester_id,semester_name,cls_year,course_name,course_id FROM stu_course_plan
-        NATURAL JOIN stu_course
-        NATURAL JOIN stu_semester
-        JOIN stu_cls ON stu_course_plan.cls_id = stu_cls.id
-        <where>
-            <if test="clsYear!=null and clsYear!=''">AND cls_year = #{clsYear}</if>
-            <if test="courseName!=null and courseName!=''">AND course_name LIKE CONCAT('%',#{courseName},'%')</if>
-            <if test="semesterName!=null and semesterName!=''">AND semester_name LIKE CONCAT('%',#{semesterName},'%')</if>
-        </where>
-        ORDER BY semester_id DESC
-    </select>
+<!--    <select id="findAllLevelCourse" resultMap="StuCoursePlanResult">-->
+<!--        SELECT DISTINCT semester_id,semester_name,cls_year,course_name,course_id FROM stu_course_plan-->
+<!--        NATURAL JOIN stu_course-->
+<!--        NATURAL JOIN stu_semester-->
+<!--        JOIN stu_cls ON stu_course_plan.cls_id = stu_cls.id-->
+<!--        <where>-->
+<!--            <if test="clsYear!=null and clsYear!=''">AND cls_year = #{clsYear}</if>-->
+<!--            <if test="courseName!=null and courseName!=''">AND course_name LIKE CONCAT('%',#{courseName},'%')</if>-->
+<!--            <if test="semesterName!=null and semesterName!=''">AND semester_name LIKE CONCAT('%',#{semesterName},'%')</if>-->
+<!--        </where>-->
+<!--        ORDER BY semester_id DESC-->
+<!--    </select>-->
 
-    <insert id="addCoursePlans">
-        INSERT stu_course_plan(cls_id,course_id,semester_id,status) VALUES
-        <foreach collection ="coursePlans" item="cp" separator =",">
-            (#{cp.clsId},#{cp.courseId},#{cp.semesterId},0)
-        </foreach>
-    </insert>
+<!--    <insert id="addCoursePlans">-->
+<!--        INSERT stu_course_plan(cls_id,course_id,semester_id,status) VALUES-->
+<!--        <foreach collection ="coursePlans" item="cp" separator =",">-->
+<!--            (#{cp.clsId},#{cp.courseId},#{cp.semesterId},0)-->
+<!--        </foreach>-->
+<!--    </insert>-->
 
-    <select id="findAllSemester" resultMap="semesterMap">
-        SELECT * FROM stu_semester
-    </select>
+<!--    <select id="findAllSemester" resultMap="semesterMap">-->
+<!--        SELECT * FROM stu_semester-->
+<!--    </select>-->
 
-    <select id="findAllCourses" resultMap="courseMap">
-        SELECT course_id,course_name FROM stu_course
-    </select>
+<!--    <select id="findAllCourses" resultMap="courseMap">-->
+<!--        SELECT course_id,course_name FROM stu_course-->
+<!--    </select>-->
 </mapper>

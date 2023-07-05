@@ -8,7 +8,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="stuId"    column="stu_id"    />
         <result property="stuNo"    column="stu_no"    />
         <result property="stuName"    column="stu_name"    />
-        <result property="stuCls"    column="stu_cls"    />
+        <result property="clsId"    column="cls_id"    />
         <result property="stuClsYear"    column="stu_cls_year"    />
         <result property="stuSex"    column="stu_sex"    />
         <result property="stuType"    column="stu_type"    />
@@ -16,9 +16,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="stuAddress"    column="stu_address"    />
         <result property="stuTel"    column="stu_tel"    />
     </resultMap>
-
+<!--    <resultMap id="StuInfoResult" type="StuInfo" extends="BaseMap">-->
+<!--        <association property="stuCls" resultMap="com.ruoyi.stu.mapper.StuClsMapper.StuClsResult"/>-->
+<!--    </resultMap>-->
     <sql id="selectStuInfoVo">
-        select stu_id, stu_no, stu_name, stu_cls, stu_cls_year, stu_sex, stu_type, stu_major, stu_address, stu_tel from stu_info
+        select stu_id, stu_no, stu_name, cls_id, stu_cls_year, stu_sex, stu_type, stu_major, stu_address, stu_tel from stu_info
     </sql>
 
     <select id="selectStuInfoList" parameterType="StuInfo" resultMap="StuInfoResult">
@@ -26,7 +28,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <where>  
             <if test="stuNo != null  and stuNo != ''"> and stu_no like concat('%', #{stuNo}, '%')</if>
             <if test="stuName != null  and stuName != ''"> and stu_name like concat('%', #{stuName}, '%')</if>
-            <if test="stuCls != null  and stuCls != ''"> and stu_cls = #{stuCls}</if>
+            <if test="clsId != null  and clsId != ''"> and cls_id = #{clsId}</if>
             <if test="stuClsYear != null  and stuClsYear != ''"> and stu_cls_year = #{stuClsYear}</if>
             <if test="stuSex != null  and stuSex != ''"> and stu_sex = #{stuSex}</if>
             <if test="stuType != null  and stuType != ''"> and stu_type = #{stuType}</if>
@@ -44,7 +46,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         select count(stu_name) from stu_info where stu_no = #{stuNo}
     </select>
     <select id="clsAndClsYear" resultType="com.ruoyi.stu.domain.StuInfo">
-        select  stu_cls, stu_cls_year from stu_info
+        SELECT  cls_name,cls_id, stu_cls_year FROM stu_info NATURAL JOIN stu_cls
 
     </select>
 
@@ -53,7 +55,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="stuNo != null">stu_no,</if>
             <if test="stuName != null">stu_name,</if>
-            <if test="stuCls != null">stu_cls,</if>
+            <if test="clsId != null">clsId,</if>
             <if test="stuClsYear != null">stu_cls_year,</if>
             <if test="stuSex != null">stu_sex,</if>
             <if test="stuType != null">stu_type,</if>
@@ -64,7 +66,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="stuNo != null">#{stuNo},</if>
             <if test="stuName != null">#{stuName},</if>
-            <if test="stuCls != null">#{stuCls},</if>
+            <if test="clsId != null">#{clsId},</if>
             <if test="stuClsYear != null">#{stuClsYear},</if>
             <if test="stuSex != null">#{stuSex},</if>
             <if test="stuType != null">#{stuType},</if>
@@ -79,7 +81,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <trim prefix="SET" suffixOverrides=",">
             <if test="stuNo != null">stu_no = #{stuNo},</if>
             <if test="stuName != null">stu_name = #{stuName},</if>
-            <if test="stuCls != null">stu_cls = #{stuCls},</if>
+            <if test="clsId != null">cls_id = #{clsId},</if>
             <if test="stuClsYear != null">stu_cls_year = #{stuClsYear},</if>
             <if test="stuSex != null">stu_sex = #{stuSex},</if>
             <if test="stuType != null">stu_type = #{stuType},</if>

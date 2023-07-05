@@ -7,7 +7,7 @@ import com.ruoyi.stu.domain.StuMaterial;
 import lombok.Data;
 
 import java.util.Date;
-import java.util.List;
+
 @Data
 public class StuInfoMaterial extends BaseEntity {
     private Integer id ;

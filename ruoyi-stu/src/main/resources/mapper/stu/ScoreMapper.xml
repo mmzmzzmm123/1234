@@ -9,28 +9,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="finallyScore" column="finally_score"/>
         <result property="avgScore" column="avgScore"/>
     </resultMap>
-
     <resultMap type="Score" id="ScoreResult" extends="BaseMap">
-<!--        <association property="student" javaType="com.ruoyi.stu.domain.StuInfo">-->
-<!--            <result property="stuId"    column="stu_id"    />-->
-<!--            <result property="stuNo"    column="stu_no"    />-->
-<!--            <result property="stuName"    column="stu_name"    />-->
-<!--            <result property="stuCls"    column="stu_cls"    />-->
-<!--            <result property="stuClsYear"    column="stu_cls_year"    />-->
-<!--            <result property="stuSex"    column="stu_sex"    />-->
-<!--            <result property="stuType"    column="stu_type"    />-->
-<!--            <result property="stuMajor"    column="stu_major"    />-->
-<!--            <result property="stuAddress"    column="stu_address"    />-->
-<!--            <result property="stuTel"    column="stu_tel"    />-->
-<!--        </association>-->
-        <association property="teacher" javaType="com.ruoyi.stu.domain.Teacher">
-            <result property="teaId"    column="tea_id"    />
-            <result property="teaName"    column="tea_name"    />
-            <result property="teaSex"    column="tea_sex"    />
-            <result property="teaPhone"    column="tea_phone"    />
-            <result property="teaAddress"    column="tea_address"    />
-            <result property="teaType"    column="tea_type"    />
-        </association>
+        <association property="teacher" resultMap="com.ruoyi.stu.domain.Teacher.BaseMap"/>
         <association property="course" resultMap="com.ruoyi.stu.mapper.CourseMapper.CourseMap"/>
         <association property="student" resultMap="com.ruoyi.stu.mapper.StuInfoMapper.StuInfoResult"/>
     </resultMap>
@@ -42,7 +22,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
          JOIN stu_score ON stu_score.stu_id = stu_info.stu_id
          JOIN stu_course ON stu_score.course_id = stu_course.course_id
         <where>
-            <if test="stuCls!=null and stuCls !=''">and stu_cls like concat('%', #{stuCls}, '%')</if>
+            <if test="stuCls!=null and stuCls !=''">and cls_name like concat('%', #{stuCls}, '%')</if>
             <if test="teacherName!=null and  teacherName !=''">and tea_name like concat('%', #{teacherName}, '%')</if>
             <if test="courseName!=null and  courseName !=''">and course_name like concat('%', #{courseName}, '%')</if>
         </where>
@@ -52,8 +32,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         JOIN stu_course ON stu_course.course_id=stu_score.course_id
         JOIN stu_info ON stu_score.stu_id = stu_info.stu_id
         WHERE
-        stu_cls LIKE concat('%', #{stuCls}, '%')
-        AND course_name LIKE concat('%', #{courseName}, '%')
+        stu_cls = #{stuCls}
+        AND course_name = #{courseName}
     </select>
     <select id="selectHistoryScore" resultMap="ScoreResult">
         SELECT stu_no,ROUND(AVG(finally_score)) `avgScore` FROM stu_score ss

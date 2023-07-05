@@ -56,7 +56,7 @@
       <el-table-column label="学期" align="center" prop="semester.semesterName" />
       <el-table-column label="班级" align="center" prop="stus">
         <template slot-scope="scope">
-            <el-tag size="medium" v-for="(item,index) in scope.row.stuCls" :key="item.planId">{{ item.cls }}</el-tag>
+            <el-tag size="medium" v-for="item in scope.row.stuCls" :key="item.clsId">{{ item.clsName }}</el-tag>
         </template>
       </el-table-column>
       <el-table-column label="状态" align="center" prop="status" >
@@ -67,17 +67,17 @@
           <el-tag type="success" v-if="scope.row.status == 2">已完成</el-tag>
         </template>
       </el-table-column>
-      <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
-        <template slot-scope="scope">
-          <el-button
-            size="mini"
-            type="text"
-            icon="el-icon-edit"
-            @click="handleUpdate(scope.row)"
-            v-hasPermi="['stu:score:list']"
-          >修改</el-button>
-        </template>
-      </el-table-column>
+<!--      <el-table-column label="操作" align="center" class-name="small-padding fixed-width">-->
+<!--        <template slot-scope="scope">-->
+<!--          <el-button-->
+<!--            size="mini"-->
+<!--            type="text"-->
+<!--            icon="el-icon-edit"-->
+<!--            @click="handleUpdate(scope.row)"-->
+<!--            v-hasPermi="['stu:score:list']"-->
+<!--          >修改</el-button>-->
+<!--        </template>-->
+<!--      </el-table-column>-->
     </el-table>
 
     <pagination
@@ -103,7 +103,7 @@
         </el-form-item>
         <el-form-item label="班级" prop="stuCls">
           <el-checkbox-group v-model="queryParams.stuClss">
-            <el-checkbox v-for="cls in stuclsList" :key="cls.id" :label="cls.id">{{cls.cls}}</el-checkbox>
+            <el-checkbox v-for="cls in stuclsList" :key="cls.clsId" :label="cls.clsId">{{cls.clsName}}</el-checkbox>
           </el-checkbox-group>
         </el-form-item>
       </el-form>
@@ -117,7 +117,7 @@
 </template>
 
 <script>
-import { planList,addPlans } from "@/api/course/plan"
+import { planList,addPlans,delPlans } from "@/api/course/plan"
 import { semesterList } from "@/api/semester/semester"
 import { allCourse } from "@/api/course/base"
 import { clsList } from  "@/api/stu/cls"
@@ -131,8 +131,8 @@ export default {
       courseOpen:false,
       // 遮罩层
       loading: true,
-      // 选中数组
-      ids: [],
+      // 选中的数据
+      items: [],
       // 非单个禁用
       single: true,
       // 非多个禁用
@@ -168,7 +168,8 @@ export default {
       courses:[],
       //所有班级
       stuclsList:[],
-      levelList:[]
+      //所有年级
+      // levelList:[]
     };
   },
   created() {
@@ -194,7 +195,6 @@ export default {
       clsList().then(response=>{
         let data = response.data
         for(let index in data){
-          this.levelList.push(index)
           this.stuclsList.push(...data[index])
         }
       })
@@ -205,6 +205,9 @@ export default {
       this.loading = true;
       planList(this.queryParams).then(response => {
         this.coursePlanList = response.rows
+        this.coursePlanList.forEach((item)=>{
+          item.stuCls.sort(this.sortBy('clsId',1))
+        })
         this.total = response.total
         this.loading = false
       })
@@ -216,8 +219,11 @@ export default {
       this.reset();
     },
     cancel() {
-      this.open = false;
-      this.reset();
+      this.queryParams.semesterId = null
+      this.queryParams.courseId = null
+      this.queryParams.courseName = null
+      this.open = false
+      this.reset()
     },
     // 表单重置
     reset() {
@@ -235,7 +241,7 @@ export default {
     },
     // 多选框选中数据
     handleSelectionChange(selection) {
-      this.ids = selection.map(item => item.courseId)
+      this.items = selection
       this.single = selection.length!==1
       this.multiple = !selection.length
     },
@@ -259,24 +265,42 @@ export default {
       this.$refs["form"].validate(valid => {
         if (valid) {
           addPlans(this.queryParams).then((response)=>{
-            this.$message.success(response.msg)
+            if(response.msg == '添加成功！'){
+              this.$message.success(response.msg)
+              this.cancel()
+              this.getList()
+            }else{
+              this.$message.warning(response.msg)
+            }
           })
         }
       });
     },
     /** 删除按钮操作 */
     handleDelete(row) {
-      this.$confirm('是否确认删除编号为"' + this.ids + '"的数据项？','删除提示',{
+      this.$confirm('是否确认删除被选中的数据项？','删除提示',{
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning',
       }).then(()=>{
-        del(this.ids).then(()=>{
+        delPlans(this.items).then(()=>{
           this.getList();
           this.$modal.msgSuccess("删除成功");
         })
       })
     },
+    //attr：根据该属性排序；rev：升序1或降序-1，不填则默认为1
+    sortBy(attr,rev){
+      if( rev==undefined ){ rev=1 }else{ (rev)?1:-1; }
+      return function (a,b){
+        a=a[attr];
+        b=b[attr];
+        if(a<b){ return rev*-1}
+        if(a>b){ return rev* 1 }
+        return 0;
+      }
+    },
+
   }
 };
 </script>
