@@ -115,7 +115,11 @@
       <el-table-column label="可预约" align="center" prop="num" />
       <el-table-column label="已预约" align="center" prop="buyNum" />
       <el-table-column label="应付费用" align="center" prop="amount" />
-      <el-table-column label="订单状态" align="center" prop="status" />
+      <el-table-column label="订单状态" align="center" prop="status">
+        <template slot-scope="scope">
+          <dict-tag :options="dict.type.consult_order" :value="scope.row.status"/>
+        </template>
+      </el-table-column>
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width" width="130">
         <template slot-scope="scope">
           <el-button

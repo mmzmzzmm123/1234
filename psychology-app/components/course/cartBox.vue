@@ -53,7 +53,7 @@ export default {
     },
     async submitPay() {
       // this.userInfo = uni.getStorageSync("userInfo")
-      this.userInfo = uni.getStorageSync("userInfo")
+      this.userInfo = utils.getUserInfo()
       if (this.userInfo && this.userInfo.userId) {
 		let res = await getPaySign(
       this.userInfo.userId, 

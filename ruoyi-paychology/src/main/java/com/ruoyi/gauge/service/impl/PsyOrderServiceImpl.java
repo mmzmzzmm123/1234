@@ -1,5 +1,7 @@
 package com.ruoyi.gauge.service.impl;
 
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import com.ruoyi.common.core.domain.dto.LoginDTO;
@@ -10,6 +12,7 @@ import org.springframework.stereotype.Service;
 import com.ruoyi.gauge.mapper.PsyOrderMapper;
 import com.ruoyi.gauge.domain.PsyOrder;
 import com.ruoyi.gauge.service.IPsyOrderService;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 
@@ -51,6 +54,16 @@ public class PsyOrderServiceImpl implements IPsyOrderService {
         return psyOrderMapper.queryOrderList(psyOrder);
     }
 
+    @Override
+    public List<PsyOrder> getOrderByCancel(int num) {
+        Date date = new Date();
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+        calendar.add(Calendar.MINUTE, num);
+        Date time = calendar.getTime();
+        return psyOrderMapper.getOrderByCancel(GaugeConstant.GAUGE_ORDER_STATUE_CREATED, time);
+    }
+
     /**
      * 新增心理测评订单信息
      *
@@ -58,6 +71,7 @@ public class PsyOrderServiceImpl implements IPsyOrderService {
      * @return 结果
      */
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public int insertPsyOrder(PsyOrder psyOrder) {
         psyOrder.setCreateTime(DateUtils.getNowDate());
         return psyOrderMapper.insertPsyOrder(psyOrder);
@@ -70,6 +84,7 @@ public class PsyOrderServiceImpl implements IPsyOrderService {
      * @return 结果
      */
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public int updatePsyOrder(PsyOrder psyOrder) {
         return psyOrderMapper.updatePsyOrder(psyOrder);
     }
@@ -80,6 +95,7 @@ public class PsyOrderServiceImpl implements IPsyOrderService {
      * @return 结果
      */
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public int updatePsyOrderByOrderId(PsyOrder psyOrder){
         return psyOrderMapper.updatePsyOrderByOrder(psyOrder);
     }
@@ -90,6 +106,7 @@ public class PsyOrderServiceImpl implements IPsyOrderService {
      * @return 结果
      */
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public int deletePsyOrderByIds(Integer[] ids) {
         return psyOrderMapper.deletePsyOrderByIds(ids);
     }
@@ -101,6 +118,7 @@ public class PsyOrderServiceImpl implements IPsyOrderService {
      * @return 结果
      */
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public int deletePsyOrderById(Integer id) {
         return psyOrderMapper.deletePsyOrderById(id);
     }

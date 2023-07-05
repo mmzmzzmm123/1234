@@ -110,4 +110,12 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="userName != null  and userName != '' "> and pu.name like concat('%', #{userName}, '%')</if>
         </where>
     </select>
+
+    <select id="getOrderByCancel" parameterType="Integer" resultMap="CourOrderResult">
+        <include refid="selectCourOrderVo"/>
+        <where>
+            <if test="status != null">and status = #{status}</if>
+            <if test="time != null ">and create_time <![CDATA[<=]]> #{time}</if>
+        </where>
+    </select>
 </mapper>

@@ -18,7 +18,7 @@ public interface IPsyConsultOrderService
 
     List<PsyConsultOrder> getList(PsyConsultOrderVO req);
 
-    List<PsyConsultOrder> getCancelList();
+    List<PsyConsultOrder> getCancelList(int num);
 
     List<PsyConsultOrderVO> getOrderList(PsyConsultOrderVO req);
 

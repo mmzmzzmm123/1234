@@ -87,7 +87,7 @@
 		},
 		async created() {
       // this.userInfo = uni.getStorageSync("userInfo")
-      this.userInfo = uni.getStorageSync("userInfo")
+      this.userInfo = utils.getUserInfo()
 			this.bannerList = await this.getBanner(0);
 			this.bannerList1 = await this.getBanner(2);
 			this.bannerList2 = await this.getBanner(1);
@@ -98,7 +98,7 @@
 		async mounted() {      
 			if (!this.userInfo && await utils.loginCallback(this.redirectUri)) {
 				// this.userInfo = uni.getStorageSync("userInfo")
-        this.userInfo = uni.getStorageSync("userInfo")
+        this.userInfo = utils.getUserInfo()
 			}
       if (!this.userInfo) {
         this.openLoginConfirm()

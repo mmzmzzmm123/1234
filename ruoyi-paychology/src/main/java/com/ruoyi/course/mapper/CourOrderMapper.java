@@ -4,7 +4,9 @@ import com.ruoyi.course.domain.CourOrder;
 import com.ruoyi.course.domain.dto.OrderQueryDTO;
 import com.ruoyi.course.vo.OrderQueryVO;
 import com.ruoyi.course.vo.OrderVO;
+import org.apache.ibatis.annotations.Param;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -38,6 +40,8 @@ public interface CourOrderMapper
      * @return 课程订单集合
      */
     public List<CourOrder> selectCourOrderList(CourOrder courOrder);
+
+    List<CourOrder> getOrderByCancel(@Param("status") Integer status, @Param("time") Date time);
 
     /**
      * 新增课程订单

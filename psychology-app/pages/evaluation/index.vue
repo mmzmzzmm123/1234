@@ -8,7 +8,7 @@
 			<swiper class="ad-swiper" indicator-dots circular indicator-color="rgb(255, 255, 255, .5)"
        indicator-active-color="#FFFFFF">
         <swiper-item v-for="(item, index) in bannerList" :key="index">
-          <image class="banner-img" :src="item.bannerUrl" @tap="toProduct(item.linkUrl)" />
+          <image class="banner-img" :src="item.bannerUrl" @tap="toProduct(item.linkUrl)"/>
         </swiper-item>
       </swiper>
     </view>
@@ -118,7 +118,7 @@ export default {
   },
   async created() {
     // this.userInfo = uni.getStorageSync("userInfo")
-    this.userInfo = uni.getStorageSync("userInfo")
+    this.userInfo = utils.getUserInfo()
     this.bannerList = await this.getBanner(0);
     this.bannerList1 = await this.getBanner(1);
     this.bannerList2 = await this.getBanner(2);
@@ -131,7 +131,7 @@ export default {
   async mounted() {      
     if (!this.userInfo && await utils.loginCallback(this.redirectUri)) {
       // this.userInfo = uni.getStorageSync("userInfo")
-      this.userInfo = uni.getStorageSync("userInfo")
+      this.userInfo = utils.getUserInfo()
     }
     if (!this.userInfo) {
       this.openLoginConfirm()

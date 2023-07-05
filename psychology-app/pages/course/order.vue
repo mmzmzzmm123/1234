@@ -65,6 +65,7 @@
   </view>
 </template>
 <script>
+import utils from "@/utils/common";
 import noData from "@/components/course/noData";
 import cartBox from "@/components/course/cartBox.vue";
 import orderServer from "@/server/course/order";
@@ -102,7 +103,7 @@ export default {
   },
    created() {
 	// this.userInfo = uni.getStorageSync("userInfo")
-     this.userInfo = uni.getStorageSync("userInfo")
+     this.userInfo = utils.getUserInfo()
     if (this.userInfo && this.userInfo.userId) {
       this.getOrderList()
     }
@@ -141,7 +142,7 @@ export default {
     async changeTab(status) {
       this.currentStatus = status;
       // this.userInfo = uni.getStorageSync("userInfo")
-      this.userInfo = uni.getStorageSync("userInfo")
+      this.userInfo = utils.getUserInfo()
       if (this.userInfo && this.userInfo.userId) {
 		if (status === "") {//全部订单 			
 			this.orderList = await orderServer.getOrderList(this.userInfo.userId);

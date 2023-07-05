@@ -137,12 +137,12 @@ export default {
   },
   async created() {
     // this.userInfo = uni.getStorageSync("userInfo")
-    this.userInfo = uni.getStorageSync("userInfo")
+    this.userInfo = utils.getUserInfo()
   },
   async mounted() {
     if (!this.userInfo && await utils.loginCallback(this.redirectUri)) {
       // this.userInfo = uni.getStorageSync("userInfo")
-      this.userInfo = uni.getStorageSync("userInfo")
+      this.userInfo = utils.getUserInfo()
     }
     if (!this.userInfo) {
       this.openLoginConfirm()

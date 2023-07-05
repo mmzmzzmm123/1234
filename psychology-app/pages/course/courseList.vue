@@ -17,6 +17,7 @@
 import noData from '@/components/course/noData'
 import userServer from '@/server/course/user'
 import formatTime from '@/utils/formatTime.js'
+import utils from "@/utils/common";
 export default {
     components: { noData },
     data() {
@@ -27,7 +28,7 @@ export default {
     },
     async created() {
 		// this.userInfo = uni.getStorageSync("userInfo")
-      this.userInfo = uni.getStorageSync("userInfo")
+      this.userInfo = utils.getUserInfo()
 		if (this.userInfo && this.userInfo.userId) {			
 			this.courseList = await userServer.getCourseList(this.userInfo.userId);
 			this.courseList.map(item => {

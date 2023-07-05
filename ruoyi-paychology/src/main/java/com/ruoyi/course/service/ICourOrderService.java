@@ -39,6 +39,8 @@ public interface ICourOrderService
      */
     public List<CourOrder> selectCourOrderList(CourOrder courOrder);
 
+    public List<CourOrder> getCancelList(int num);
+
     /**
      * 新增课程订单
      * 

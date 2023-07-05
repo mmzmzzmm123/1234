@@ -119,8 +119,8 @@ public class WechatPayV3ApiServiceImpl implements WechatPayV3ApiService {
             psyOrderPay.setCreateBy(psyUserService.selectPsyUserById(wechatPay.getUserId()).getName());
             psyOrderPayService.insertPsyOrderPay(psyOrderPay);
 
-            Timer timer = new Timer();
-            timer.schedule(orderCancelTask, ORDER_CANCEL_TIME);
+//            Timer timer = new Timer();
+//            timer.schedule(orderCancelTask, ORDER_CANCEL_TIME);
         } else if (ConsultConstant.MODULE_CONSULT.equals(wechatPay.getModule())) {
             // 心理咨询服务
             Long id = wechatPay.getOrderId() != null && wechatPay.getOrderId() > 0 ? wechatPay.getOrderId() : IDhelper.getNextId();

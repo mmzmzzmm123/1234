@@ -150,6 +150,14 @@
         </where>
     </select>
 
+    <select id="getOrderByCancel" parameterType="com.ruoyi.gauge.domain.PsyOrder" resultMap="PsyOrderResult">
+        <include refid="selectPsyOrderVo"/>
+        <where>
+            <if test="status != null">and order_status = #{status}</if>
+            <if test="time != null ">and create_time <![CDATA[<=]]> #{time}</if>
+        </where>
+    </select>
+
     <update id="updatePsyOrderByOrderId"  parameterType="java.util.Map">
         update psy_order
         <trim prefix="SET" suffixOverrides=",">

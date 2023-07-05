@@ -32,6 +32,8 @@ public interface IPsyOrderService
 
     public List<PsyOrder> queryOrderList(OrderQueryDTO psyOrder);
 
+    public List<PsyOrder> getOrderByCancel(int num);
+
     /**
      * 新增心理测评订单信息
      * 

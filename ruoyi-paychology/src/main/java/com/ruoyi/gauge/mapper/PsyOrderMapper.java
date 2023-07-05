@@ -1,9 +1,13 @@
 package com.ruoyi.gauge.mapper;
 
 import com.ruoyi.common.core.domain.dto.LoginDTO;
+import com.ruoyi.gauge.constant.GaugeConstant;
 import com.ruoyi.gauge.domain.PsyOrder;
 import com.ruoyi.gauge.dto.OrderQueryDTO;
+import org.apache.ibatis.annotations.Param;
 
+import javax.xml.crypto.Data;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
@@ -32,6 +36,8 @@ public interface PsyOrderMapper
     public List<PsyOrder> selectPsyOrderList(PsyOrder psyOrder);
 
     public List<PsyOrder> queryOrderList(OrderQueryDTO psyOrder);
+
+    List<PsyOrder> getOrderByCancel(@Param("status") Integer status, @Param("time") Date time);
 
     /**
      * 新增心理测评订单信息

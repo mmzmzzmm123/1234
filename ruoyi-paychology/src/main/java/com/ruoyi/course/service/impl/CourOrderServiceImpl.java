@@ -1,6 +1,8 @@
 package com.ruoyi.course.service.impl;
 
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -14,6 +16,7 @@ import com.ruoyi.course.vo.OrderQueryVO;
 import com.ruoyi.course.vo.OrderVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * 课程订单Service业务层处理
@@ -66,6 +69,16 @@ public class CourOrderServiceImpl implements ICourOrderService
         return courOrderMapper.selectCourOrderList(courOrder);
     }
 
+    @Override
+    public List<CourOrder> getCancelList(int num) {
+        Date date = new Date();
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+        calendar.add(Calendar.MINUTE, num);
+        Date time = calendar.getTime();
+        return courOrderMapper.getOrderByCancel(CourConstant.COUR_ORDER_STATUE_CREATED, time);
+    }
+
     /**
      * 新增课程订单
      * 
@@ -73,6 +86,7 @@ public class CourOrderServiceImpl implements ICourOrderService
      * @return 结果
      */
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public int insertCourOrder(CourOrder courOrder)
     {
         courOrder.setCreateTime(DateUtils.getNowDate());
@@ -86,6 +100,7 @@ public class CourOrderServiceImpl implements ICourOrderService
      * @return 结果
      */
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public int updateCourOrder(CourOrder courOrder)
     {
         return courOrderMapper.updateCourOrder(courOrder);
@@ -98,6 +113,7 @@ public class CourOrderServiceImpl implements ICourOrderService
      * @return 结果
      */
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public int deleteCourOrderByIds(Integer[] ids)
     {
         return courOrderMapper.deleteCourOrderByIds(ids);
@@ -110,6 +126,7 @@ public class CourOrderServiceImpl implements ICourOrderService
      * @return 结果
      */
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public int deleteCourOrderById(Integer id)
     {
         return courOrderMapper.deleteCourOrderById(id);
@@ -152,6 +169,7 @@ public class CourOrderServiceImpl implements ICourOrderService
      * @return 生成的订单对象
      */
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public CourOrder generateCourOrder(CourOrder courOrder) {
         // TODO 根据课程查询之前未支付的订单，并取消历史的未支付的订单
         CourOrder orderWithCourseId = new CourOrder();
