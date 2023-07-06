@@ -76,7 +76,8 @@ export default {
     };
   },
   async created() {
-    this.userInfo = uni.getStorageSync("userInfo")
+    // this.userInfo = uni.getStorageSync("userInfo")
+    this.userInfo = utils.getUserInfo()
     this.courseId = parseInt(utils.getParam(location.href, "courseId")||utils.getParam(location.href, "id"));
     if (!this.userInfo) {
       this.courseInfo = await courseServer.getCourseBaseInfo(this.courseId)||{};

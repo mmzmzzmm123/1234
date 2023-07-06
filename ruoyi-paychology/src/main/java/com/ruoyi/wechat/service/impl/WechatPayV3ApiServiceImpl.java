@@ -8,7 +8,7 @@ import com.ruoyi.course.constant.CourConstant;
 import com.ruoyi.course.domain.CourOrder;
 import com.ruoyi.course.service.ICourOrderService;
 import com.ruoyi.course.service.ICourUserCourseSectionService;
-import com.ruoyi.course.task.OrderCancelTask;
+//import com.ruoyi.course.task.OrderCancelTask;
 import com.ruoyi.gauge.constant.GaugeConstant;
 import com.ruoyi.gauge.domain.PsyOrder;
 import com.ruoyi.gauge.domain.PsyOrderPay;
@@ -62,7 +62,7 @@ public class WechatPayV3ApiServiceImpl implements WechatPayV3ApiService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void wechatPay(WechatPayVO wechatPay) {
-        OrderCancelTask orderCancelTask = new OrderCancelTask();
+//        OrderCancelTask orderCancelTask = new OrderCancelTask();
 
         if (CourConstant.MODULE_COURSE.equals(wechatPay.getModule())) {
 
@@ -76,8 +76,8 @@ public class WechatPayV3ApiServiceImpl implements WechatPayV3ApiService {
             CourOrder newCourOrder = courOrderService.generateCourOrder(courOrder);
 
             // TODO: 定时将未支付的订单取消任务
-            orderCancelTask.setOrderId(newCourOrder.getId());
-            orderCancelTask.setModule(wechatPay.getModule());
+//            orderCancelTask.setOrderId(newCourOrder.getId());
+//            orderCancelTask.setModule(wechatPay.getModule());
 
             // TODO: 内部生成支付对象
             PsyOrderPay orderPay = new PsyOrderPay();
@@ -88,8 +88,8 @@ public class WechatPayV3ApiServiceImpl implements WechatPayV3ApiService {
             orderPay.setPayId(UUID.randomUUID().toString()); // 当前使用随机生成的支付ID，后续使用第三方支付平台返回的
             orderPayService.insertPsyOrderPay(orderPay);
 
-            Timer timer = new Timer();
-            timer.schedule(orderCancelTask, ORDER_CANCEL_TIME);
+//            Timer timer = new Timer();
+//            timer.schedule(orderCancelTask, ORDER_CANCEL_TIME);
         } else if (GaugeConstant.MODULE_GAUGE.equals(wechatPay.getModule())) {
 
             // TODO: 内部生成订单
@@ -106,8 +106,8 @@ public class WechatPayV3ApiServiceImpl implements WechatPayV3ApiService {
             PsyOrder newPsyOrder = psyOrderService.generatePsyOrder(psyOrder);
 
             // TODO: 定时将未支付的订单取消任务
-            orderCancelTask.setOrderId(newPsyOrder.getId());
-            orderCancelTask.setModule(wechatPay.getModule());
+//            orderCancelTask.setOrderId(newPsyOrder.getId());
+//            orderCancelTask.setModule(wechatPay.getModule());
 
             // TODO: 内部生成支付对象
             PsyOrderPay psyOrderPay = PsyOrderPay.builder()

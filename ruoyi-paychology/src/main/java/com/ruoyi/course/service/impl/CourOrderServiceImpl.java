@@ -174,6 +174,7 @@ public class CourOrderServiceImpl implements ICourOrderService
         // TODO 根据课程查询之前未支付的订单，并取消历史的未支付的订单
         CourOrder orderWithCourseId = new CourOrder();
         orderWithCourseId.setCourseId(courOrder.getCourseId());
+        orderWithCourseId.setUserId(courOrder.getUserId());// 只取消本用户的课程
         List<CourOrder> historyCreatedOrderList = courOrderService.selectCourOrderList(orderWithCourseId)
                 .stream()
                 .filter(item -> item.getStatus() == CourConstant.COUR_ORDER_STATUE_CREATED)
