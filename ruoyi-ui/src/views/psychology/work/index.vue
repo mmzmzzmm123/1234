@@ -173,6 +173,7 @@
         </el-form-item>
         <el-form-item label="咨询时间" prop="timeRange">
           <el-date-picker
+            @change="$forceUpdate()"
             clearable
             v-model="form.timeRange"
             :picker-options="{
@@ -181,7 +182,7 @@
               end: '18:30'
             }"
             format="yyyy-MM-dd HH:mm"
-            value-format="yyyy-MM-dd HH:mm:ss"
+            value-format="yyyy-MM-dd HH:mm"
             type="datetimerange"
             range-separator="至"
             start-placeholder="开始日期"
@@ -329,6 +330,7 @@ export default {
         type: null,
         timeStart: null,
         timeEnd: null,
+        timeRange: [],
         time: null,
         num: 1,
         delFlag: null,
@@ -338,7 +340,7 @@ export default {
         updateBy: null,
         updateTime: null
       };
-      this.resetForm("form");
+      // this.resetForm("form");
     },
     /** 搜索按钮操作 */
     handleQuery() {
@@ -368,7 +370,8 @@ export default {
     /** 修改按钮操作 */
     handleUpdate(row) {
       this.reset();
-      const id = row.id || this.ids
+      const id = row.id
+      this.getConsultServeList(row.consultId)
       getWork(id).then(response => {
         this.form = response.data;
         this.form.timeRange = [this.form.timeStart, this.form.timeEnd]

@@ -8,6 +8,15 @@ export function formatSecondsCH(seconds) {
 	return hour + "小时" + minute + "分钟"
 }
 
+export function getMinutes(orderTime) {
+	const seconds = parseInt((new Date(orderTime).getTime() + 15 * 60 * 1000 -  new Date().getTime()) / 1000)
+	const hour = Math.floor(seconds / 3600)
+	if (hour === 0) {
+		return Math.floor((seconds - hour * 3600) / 60)
+	}
+	return Math.floor((seconds - hour * 3600) / 60) + hour * 60
+}
+
 
 export function formatTime(time) {
 	let date = new Date(time);
@@ -39,6 +48,7 @@ export function formatDuration(seconds) {
 }
     
 export default {
+	getMinutes,
 	formatSecondsCH,
 	formatTime,
   formatDuration

@@ -56,10 +56,8 @@ public class PsyOrderServiceImpl implements IPsyOrderService {
 
     @Override
     public List<PsyOrder> getOrderByCancel(int num) {
-        Date date = new Date();
         Calendar calendar = Calendar.getInstance();
-        calendar.setTime(date);
-        calendar.add(Calendar.MINUTE, num);
+        calendar.add(Calendar.MINUTE, -num);
         Date time = calendar.getTime();
         return psyOrderMapper.getOrderByCancel(GaugeConstant.GAUGE_ORDER_STATUE_CREATED, time);
     }

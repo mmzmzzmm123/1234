@@ -55,8 +55,8 @@
     </view>
     <view class="bottom-view">
       <button @tap="toBuy" class="bottom-btn" :disabled="flag">
-        <text class="bottom-text">{{ type === '1' ? '预约' : '立即支付' }}</text>
-        <view class="bottom-text-wrapper" v-if="type !== '1'">
+        <text class="bottom-text">立即支付</text>
+        <view class="bottom-text-wrapper">
           <text class="bottom-text-wrapper-1">¥</text>
           <text class="bottom-text-wrapper-2">{{ serve.price }}</text>
         </view>
@@ -66,7 +66,7 @@
       <uni-popup-dialog mode="base" content="您尚未登录, 是否使用微信静默登录" :duration="2000" :before-close="true" @close="closeLoginConfirm" @confirm="confirmLogin"/>
     </uni-popup>
 
-    <cart-box ref="cartBox" :workList="workList" :workId="workId" @selectDay="selectDay" @doOk="doOk" @cancel="cancel"/>
+    <cart-box ref="cartBox" :dateList="dateList" :works="works" @doOk="doOk" @cancel="cancel"/>
 
   </view>
 </template>
@@ -92,23 +92,16 @@ export default {
       tabs: [],
       works: [],
       dateList: [],
-      workList: [],
       serve: {},
       consult: {},
-      type: '0',// 0,支付 1,预约
       serveId: 0,
-      orderId: 0,
       redirectUri: location.href,
       currentCatalogue: {},
     };
   },
   created() {
     this.serveId = utils.getParam(location.href, "id")
-    this.orderId = utils.getParam(location.href, "orderId") ? utils.getParam(location.href, "orderId") : 0
-    this.type = utils.getParam(location.href, "type") ? utils.getParam(location.href, "type") : 0
     console.log(this.serveId)
-    console.log(this.orderId)
-    console.log(this.type)
   },
   async mounted() {
     // this.userInfo = uni.getStorageSync("userInfo")
@@ -118,22 +111,12 @@ export default {
     }
     await this.getDates()
     await this.getConsultInfoByServe()
-    this.getWorkList()
   },
   methods: {
     back() {
-      if (this.orderId > 0) {
-        uni.navigateTo({
-          url: "/pages/consult/order?status=" + 0,
-        });
-      } else {
-        uni.navigateTo({
-          url: "/pages/consult/index",
-        });
-      }
-    },
-    async getDates() {
-      this.dateList = await indexServer.getDates(7);
+      uni.navigateTo({
+        url: "/pages/consult/index",
+      });
     },
     async getConsultInfoByServe() {
       const res = await orderServer.getConsultInfoByServe(this.serveId)
@@ -141,62 +124,23 @@ export default {
       this.serve = res.serve
       this.works = res.works
     },
-    getWorkList() {
-      const arr = []
-      this.dateList.forEach(a => {
-        const item = {
-          week: a.week,
-          day:  a.date.substr(5, 10),
-          flag: false,
-          child: []
-        }
-        this.works.filter(b => a.date === b.day).forEach(c => {
-          item.child.push({
-            flag: false,
-            id: c.id,
-            s: c.timeStart.substr(11, 5),
-            e: c.timeEnd.substr(11, 5)
-          })
-        })
-        arr.push(item)
-      })
-      console.log(arr)
-      this.workList = arr
+    async getDates() {
+      this.dateList = await indexServer.getDates(7);
     },
-    // async getConsultServe() {
-    //   this.serveList = await orderServer.getConsultServeById(this.serveId)
-    // },
-    confirmServe() {
-      this.close()
-    },
+    // cartBox start
     open() {
       this.$refs.cartBox.open()
     },
-    selectDay(id, day) {
-      // 多选时候处理
-      // const item = this.workList.find(a => a.day === day)
-      // const cl = item.child.find(a => a.id === id)
-      // cl.flag = !cl.flag
-      // item.flag = item.child.filter(a => a.flag).length > 0
-
-      this.workList.forEach(a => a.flag = false)
-
-      if (this.workId === id) {
-        this.workId = 0
-      } else {
-        this.workId = id
-        this.workList.find(a => a.day === day).flag = true
-      }
-    },
-    doOk() {
-      const item = this.works.find(a => a.id === this.workId)
-      this.workName = item.timeStart.substr(0, 16) + '-' + item.timeEnd.substr(11, 5)
+    doOk(workId, workName) {
+      this.workId = workId
+      this.workName = workName
+      this.$refs.cartBox.close()
     },
     cancel() {
       this.workId = 0
-      this.workList.forEach(a => a.flag = false)
       this.workName = ''
     },
+    // cartBox end
     // 登录
     async confirmLogin () {
       await loginServer.login();
@@ -217,19 +161,6 @@ export default {
       console.log(e.detail.value)
       this.checkBox = e.detail.value[0]
     },
-    async doConsult() {
-      const res = await orderServer.doConsult(this.orderId, this.workId)
-      console.log(res)
-      if (res === 1) {
-        uni.showToast({
-          icon: "success",
-          title: "预约成功",
-        });
-        uni.navigateTo({
-          url: "/pages/consult/order",
-        });
-      }
-    },
     async toBuy() {
       if (!this.checkBox) {
         return uni.showToast({
@@ -248,18 +179,6 @@ export default {
       console.log(this.serve.id)
       console.log(this.workId)
 
-      if (this.type === '1' && this.orderId !== '') {
-        if (this.workId === 0) {
-          return uni.showToast({
-            icon: 'none',
-            title: '请选择时间进行预约',
-            duration: 2000
-          })
-        }
-        await this.doConsult(this.orderId, this.workId)
-        return true
-      }
-
       let res = await getPaySign(
           this.userInfo.userId,
           this.serve.id,
@@ -267,7 +186,7 @@ export default {
           {
             module: 'consult',
             workId: this.workId,
-            orderId: this.orderId
+            orderId: 0
           }
       )
 
@@ -280,7 +199,6 @@ export default {
             title: "支付成功",
           });
           uni.navigateTo({
-            // url: "/pages/course/courseDetail?id=" + this.courseInfo.id,
             url: "/pages/consult/order",
           });
         }, (msg) => {

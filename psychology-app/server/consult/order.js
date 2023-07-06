@@ -42,7 +42,7 @@ export default {
   cancel: async (id) => {
     let res = await httprequest.get(`/app/consult/order/cancel/` + id);
     if (res.code == 200) {
-      return res.data;
+      return 1;
     } else {
       uni.showToast({
         icon: "error",

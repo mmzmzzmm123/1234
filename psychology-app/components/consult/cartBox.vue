@@ -47,27 +47,73 @@
 <script>
 
 export default {
-  props: ["workList","workId"],
+  props: ["works", "dateList"],
   data() {
     return {
+      workId: 0,
+      workList: [],
       userInfo: {},
     };
   },
   methods: {
-    selectDay(id, day) {
-      this.$emit("selectDay", id, day);
+    getWorkList() {
+      const arr = []
+      this.dateList.forEach(a => {
+        const item = {
+          week: a.week,
+          day:  a.date.substr(5, 10),
+          flag: false,
+          child: []
+        }
+        this.works.filter(b => a.date === b.day).forEach(c => {
+          item.child.push({
+            flag: false,
+            id: c.id,
+            s: c.timeStart.substr(11, 5),
+            e: c.timeEnd.substr(11, 5)
+          })
+        })
+        arr.push(item)
+      })
+      console.log(arr)
+      this.workList = arr
     },
-    open() {
+    selectDay(id, day) {
+      // 多选时候处理
+      // const item = this.workList.find(a => a.day === day)
+      // const cl = item.child.find(a => a.id === id)
+      // cl.flag = !cl.flag
+      // item.flag = item.child.filter(a => a.flag).length > 0
+
+      this.workList.forEach(a => a.flag = false)
+
+      if (this.workId === id) {
+        this.workId = 0
+      } else {
+        this.workId = id
+        this.workList.find(a => a.day === day).flag = true
+      }
+    },
+    async open() {
+      this.getWorkList()
       this.$refs.selectTime.open('bottom')
     },
     close() {
       this.$refs.selectTime.close()
     },
     ok() {
-      this.$emit('doOk')
-      this.close()
+      let workName = ''
+      if (this.workId > 0) {
+        const item = this.works.find(a => a.id === this.workId)
+        workName = item.timeStart.substr(0, 16) + '-' + item.timeEnd.substr(11, 5)
+      }
+
+      this.$emit('doOk', this.workId, workName)
+      // this.close()
     },
     cancel() {
+      this.workId = 0
+      this.workList.forEach(a => a.flag = false)
       this.$emit('cancel')
       this.close()
     }

@@ -64,10 +64,8 @@ public class PsyConsultOrderServiceImpl implements IPsyConsultOrderService
 
     @Override
     public List<PsyConsultOrder> getCancelList(int num) {
-        Date date = new Date();
         Calendar calendar = Calendar.getInstance();
-        calendar.setTime(date);
-        calendar.add(Calendar.MINUTE, num);
+        calendar.add(Calendar.MINUTE, -num);
         Date time = calendar.getTime();
         LambdaQueryWrapper<PsyConsultOrder> wp = new LambdaQueryWrapper<>();
         wp.eq(PsyConsultOrder::getStatus, 0);

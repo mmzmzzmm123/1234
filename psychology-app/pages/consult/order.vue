@@ -16,8 +16,10 @@
           <view class="item-header">
             <view class="item-header-block"></view>
             <text class="item-header-timer">{{ item.createTime }}</text>
-<!--            <view class="item-header-countdown" v-if="item.status === 0">剩余<uni-countdown color="#FF703F" splitorColor="#FF703F" :show-day="false" :minute="14" :second="59"/>-->
-            <view class="item-header-countdown" v-if="item.status === 0">{{ item.end }}
+            <view class="item-header-countdown" v-if="item.status === 0 && item.end > 0">
+              <view>剩余</view>
+              <uni-countdown @timeup="toCancel(item.id)" color="#FF703F" splitorColor="#FF703F" :show-day="false" :minute="item.end" :second="0"/>
+<!--            <view class="item-header-countdown" v-if="item.status === 0">{{ item.end }}-->
             </view>
             <text class="item-header-status">{{ item.statusName }}</text>
           </view>
@@ -37,10 +39,10 @@
           </view>
           <view class="item-info-bottom">
             <view class="bottom-title" v-if="item.status === 2 || item.status === 3">咨询时间</view>
-            <button bindtap="onClick" class="button_1" v-if="item.status === 0 && item.end !== '订单已过期'">
+            <button @tap="toCancel(item.id)" class="button_1" v-if="item.status === 0">
               取消
             </button>
-            <button @tap="toBuy(item)" class="button_2" v-if="(item.status === 0 || item.status === 1) && item.end !== '订单已过期'">
+            <button @tap="open(item)" class="button_2" v-if="item.status === 0 || item.status === 1">
               <text class="text_16">{{ item.status === 0 ? '支付' : '去预约'}}</text>
             </button>
             <view class="bottom-time" v-if="item.timeStart && (item.status === 2 || item.status === 3)">{{ item.timeStart.substr(0, 16) + '-' + item.timeEnd.substr(11, 5) }}</view>
@@ -54,6 +56,8 @@
       </view>
     </view>
 
+    <cart-box ref="cartBox" :dateList="dateList" :works="works" @doOk="doOk" @cancel="cancel"/>
+
     <uni-popup ref="popup" type="dialog">
       <uni-popup-dialog mode="base" content="您尚未登录, 是否使用微信静默登录" :duration="2000" :before-close="true" @close="closeLoginConfirm" @confirm="confirmLogin"/>
     </uni-popup>
@@ -61,15 +65,26 @@
 </template>
 <script>
 import utils, { clientTypeObj } from "@/utils/common";
+import indexServer from '@/server/consult/index'
 import orderServer from "@/server/consult/order";
 import loginServer from "@/server/login"
 import formatTime from '@/utils/formatTime.js'
+import cartBox from '@/components/consult/cartBox'
+import { getPaySign, wxPay } from "@/server/wxApi"
+
 export default {
+  components: { cartBox },
   data() {
     return {
       status: 0,
       userInfo: {},
       orderList: [],
+      // car
+      workId: 0,
+      order: {},
+      works: [],
+      dateList: [],
+      // car end
       classList: [
         {
           name: "全部",
@@ -108,7 +123,7 @@ export default {
     if (!this.userInfo) {
       this.openLoginConfirm()
     }
-
+    await this.getDates()
     await this.getOrderList()
   },
   methods: {
@@ -123,6 +138,96 @@ export default {
     openLoginConfirm() {
       this.$refs.popup.open()
     },
+    async getDates() {
+      this.dateList = await indexServer.getDates(7);
+    },
+    // cartBox start
+    async getConsultInfoByServe() {
+      const res = await orderServer.getConsultInfoByServe(this.order.serveId)
+      this.consult = res.consult
+      this.serve = res.serve
+      this.works = res.works
+    },
+    async open(order) {
+      this.order = order
+      await this.getConsultInfoByServe()
+      this.$refs.cartBox.open()
+    },
+    cancel() {
+      this.workId = 0
+    },
+    // cartBox end
+    async doOk(workId, workName) {
+      if (!this.userInfo) {
+        return this.openLoginConfirm()
+      }
+
+      console.log(workName)
+      this.workId = workId
+      if (this.order.status === 1) { // 去预约
+        if (workId === 0) {
+          return uni.showToast({
+            icon: "none",
+            title: "请选择时间进行预约",
+          })
+        } else {
+          // 去预约
+          await this.doConsult()
+        }
+      }
+
+      if (this.order.status === 0) {
+        // 支付
+        await this.doPay()
+      }
+
+      await this.getOrderList()
+      this.$refs.cartBox.close()
+    },
+    async doConsult() {
+      const res = await orderServer.doConsult(this.order.id, this.workId)
+      console.log(res)
+      if (res === 1) {
+        uni.showToast({
+          icon: "success",
+          title: "预约成功",
+        });
+      }
+    },
+    async doPay() {
+      let res = await getPaySign(
+          this.userInfo.userId,
+          this.serve.id,
+          this.serve.price,
+          {
+            module: 'consult',
+            workId: this.workId,
+            orderId: this.order.id
+          }
+      )
+
+      console.log(res)
+      if (res.code == 200) {
+        const { appId, timeStamp, nonceStr, packageInfo, paySign, signType } = res.data
+        wxPay(res.data, () => {
+          uni.showToast({
+            icon: "success",
+            title: "支付成功",
+          });
+          uni.navigateTo({
+            // url: "/pages/course/courseDetail?id=" + this.courseInfo.id,
+            url: "/pages/consult/order",
+          });
+        }, (msg) => {
+          console.log(msg)
+          uni.showToast({
+            icon: "error",
+            title: "支付失败",
+          });
+        })
+      }
+    },
+    // car end
     back() {
       uni.navigateTo({
         url: "/pages/consult/user",
@@ -148,22 +253,26 @@ export default {
           }
         })
       }
+      console.log(list)
       this.orderList = list
     },
     remainTime(orderTime) {
       if (new Date().getTime() < new Date(orderTime).getTime() + 15 * 60 * 1000) {
-        // 下单不超过30分钟
-        const remainSeconds = parseInt((new Date(orderTime).getTime() + 15 * 60 * 1000 -  new Date().getTime()) / 1000)
-
-        return "剩余" + formatTime.formatSecondsCH(remainSeconds)
+        // 下单不超过15分钟
+        return formatTime.getMinutes(orderTime)
       } else {
-        return "订单已过期"
+        return 0
       }
     },
-    toBuy(item) {
-      uni.navigateTo({
-        url: "/pages/consult/orderConfirm?id=" + item.serveId + "&orderId=" + item.id + "&type=" + item.status,
-      });
+    async toCancel(id) {
+      const res = await orderServer.cancel(id);
+      if (res === 1) {
+        uni.showToast({
+          icon: "success",
+          title: "操作成功",
+        });
+      }
+      await this.getOrderList()
     },
     toDetail(id) {
       uni.navigateTo({
@@ -232,6 +341,7 @@ page {
     height: 33upx;
     margin-top: 24upx;
     flex-direction: row;
+    align-items: center;
     display: flex;
   }
   .item-header-block {
@@ -246,6 +356,8 @@ page {
     margin-left: 26upx;
   }
   .item-header-countdown {
+    display: flex;
+    align-items: center;
     position: absolute;
     right: 126upx;
     color: #FF703F;
