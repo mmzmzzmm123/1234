@@ -177,4 +177,33 @@ public class OfficeEnum {
         }
     }
 
+    public enum EquipType {
+        HORN("horn", "喇叭"), MACHINE("machine", "机器"), AIR_CONDITION("aircondition", "空调"), LIGHT("light", "电灯"), DOOR("door", "门禁");
+
+        private final String code;
+        private final String info;
+
+        EquipType(String code, String info) {
+            this.code = code;
+            this.info = info;
+        }
+
+        public String getCode() {
+            return code;
+        }
+
+        public String getInfo() {
+            return info;
+        }
+
+        public static EquipType GetValueByCode(String code) {
+            for (EquipType e : EquipType.values()) {
+                if (e.getCode().equals(code)) {
+                    return e;
+                }
+            }
+            throw new RuntimeException("枚举值错误");
+        }
+    }
+
 }

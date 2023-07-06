@@ -27,6 +27,7 @@ import io.swagger.annotations.ApiOperation;
 import org.apache.activemq.command.ActiveMQQueue;
 import org.apache.activemq.command.ActiveMQTopic;
 import org.apache.commons.logging.LogFactory;
+import org.aspectj.weaver.loadtime.Aj;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jms.core.JmsMessagingTemplate;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -305,6 +306,7 @@ public class ApiController extends BaseController {
 
     @Autowired
     ITStoreService storeService;
+
     /**
      * wx店铺列表
      */
@@ -316,5 +318,59 @@ public class ApiController extends BaseController {
         return getDataTable(list);
     }
 
+    @Autowired
+    ITEquipmentService equipmentService;
+
+    /**
+     * 开门禁
+     *
+     * @param id
+     * @return
+     */
+    @ApiOperation("开门禁")
+    @PostMapping("/store/{id}")
+    public AjaxResult openStore(@PathVariable("id") Long id) {
+        TStore store = storeService.selectTStoreById(id);
+        TEquipment equipment = equipmentService.selectTEquipmentById(store.getEquipId());
+        MqttSendClient sendClient = new MqttSendClient();
+        sendClient.publish(equipment.getEquipControl(), "a1");
+        equipment.setOnOff("Y");
+        equipmentService.updateTEquipment(equipment);
+        return AjaxResult.success();
+    }
+
+    @Autowired
+    ITRoomService roomService;
+
+    /**
+     * 开门禁
+     *
+     * @param id
+     * @return
+     */
+    @ApiOperation("开房间设备")
+    @PostMapping("/room/{id}")
+    public AjaxResult openRoom(@PathVariable("id") Long id) {
+        TRoom room = roomService.selectTRoomById(id);
+        List<TEquipment> equipments = equipmentService.selectTEquipmentList(new TEquipment());
+        MqttSendClient sendClient = new MqttSendClient();
+        String equips = room.getTableCode();
+        for (String equip : equips.split(",")) {
+            for (TEquipment e : equipments) {
+                if (OfficeEnum.EquipType.HORN.getCode().equalsIgnoreCase(e.getEquipType()))
+                    continue;
+
+                if (e.getId() == Long.parseLong(equip)) {
+
+                    sendClient.publish(e.getEquipControl(), "a1");
+                    e.setOnOff("Y");
+                    equipmentService.updateTEquipment(e);
+                    break;
+                }
+            }
+        }
+
+        return AjaxResult.success();
+    }
 
 }

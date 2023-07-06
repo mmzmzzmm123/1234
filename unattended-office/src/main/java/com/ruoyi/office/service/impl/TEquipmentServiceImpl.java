@@ -9,6 +9,7 @@ import com.alibaba.fastjson2.JSONObject;
 import com.ruoyi.common.core.domain.entity.SysDictData;
 import com.ruoyi.common.utils.DateUtils;
 import com.ruoyi.common.utils.http.HttpUtils;
+import com.ruoyi.office.domain.enums.OfficeEnum;
 import com.ruoyi.office.domain.vo.CloudHornRegResponse;
 import com.ruoyi.system.service.ISysDictDataService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -63,7 +64,7 @@ public class TEquipmentServiceImpl extends ServiceImpl<TEquipmentMapper, TEquipm
     @Override
     public int insertTEquipment(TEquipment tEquipment) {
         tEquipment.setCreateTime(DateUtils.getNowDate());
-        if ("horn".equalsIgnoreCase(tEquipment.getEquipType())) {
+        if (OfficeEnum.EquipType.HORN.getCode().equalsIgnoreCase(tEquipment.getEquipType())) {
             // 发送 喇叭 注册 并记录注册结果
             SysDictData dictData = new SysDictData();
             dictData.setDictType("horn");
@@ -72,7 +73,7 @@ public class TEquipmentServiceImpl extends ServiceImpl<TEquipmentMapper, TEquipm
             param.put("app_id", hornConfig.get("app_id"));
             param.put("app_secret", hornConfig.get("app_secret"));
             param.put("device_sn", tEquipment.getEquipControl());
-            String response = HttpUtils.sendPost(hornConfig.get("url"), "");
+            String response = HttpUtils.sendPost(hornConfig.get("url")+"/register", "");
             CloudHornRegResponse resp = JSONObject.parseObject(response, CloudHornRegResponse.class);
 
             tEquipment.setRemark(resp.getMsg()); // 设备注册返回
