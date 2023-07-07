@@ -113,7 +113,7 @@ export default {
     // this.userInfo = uni.getStorageSync("userInfo") ? JSON.parse(uni.getStorageSync("userInfo")) : {}
     this.userInfo = utils.getUserInfo()
     if (!this.userInfo && await utils.loginCallback(this.redirectUri)) {
-      this.userInfo = uni.getStorageSync("userInfo")
+      this.userInfo = utils.getUserInfo()
     }
     if (!utils.checkLogin()) {
       return this.openLoginConfirm()
@@ -199,7 +199,7 @@ export default {
     },
     // 点击头像
     getUserInfo() {
-      if (!uni.getStorageSync("userInfo")) {
+      if (!utils.checkLogin()) {
         utils.loginWx(this.redirectUri);
         return false;
       }

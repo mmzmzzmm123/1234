@@ -128,6 +128,7 @@
         // this.userInfo = uni.getStorageSync("userInfo")
         this.userInfo = utils.getUserInfo()
       }
+
       if (!utils.checkLogin()) {
         return this.openLoginConfirm()
       }

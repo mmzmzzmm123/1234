@@ -59,7 +59,7 @@ export default {
     const classId = parseInt(utils.getParam(location.href, "classId") || 0)
     if (classId != 0) {
       this.classSelectedIndex = this.classList.findIndex(item => item.id === classId)
-      this.productClassSelected(this.classList[this.classSelectedIndex])
+      await this.productClassSelected(this.classList[this.classSelectedIndex])
     }
   },
   methods: {

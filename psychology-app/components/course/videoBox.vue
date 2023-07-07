@@ -8,6 +8,7 @@
 </template>
 
 <script>
+  import utils from "@/utils/common";
   import courseServer from "@/server/course/course";
 
   export default {
@@ -23,7 +24,7 @@
     },
     async mounted() {
       // this.userInfo = uni.getStorageSync("userInfo")
-      this.userInfo = uni.getStorageSync("userInfo")
+      this.userInfo = utils.getUserInfo()
       this.videoContext = uni.createVideoContext('myVideo');
       // initial-time属性不生效，需要直接设置
       this.videoContext.seek(this.currentCatalogue.endTime)

@@ -37,7 +37,6 @@
   </view>
 </template>
 <script>
-import orderServer from "@/server/course/order";
 import utils from "@/utils/common";
 import { getPaySign, wxPay } from "@/server/wxApi";
 export default {

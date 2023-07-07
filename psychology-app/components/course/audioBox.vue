@@ -14,6 +14,7 @@
 </template>
 
 <script>
+  import utils from "@/utils/common";
   import courseServer from "@/server/course/course";
   import YZAudio from '@/components/yz-audio/yz-audio.vue'
 
@@ -40,7 +41,7 @@
     },
     async mounted() {
       // this.userInfo = uni.getStorageSync("userInfo")
-      this.userInfo = uni.getStorageSync("userInfo")
+      this.userInfo = utils.getUserInfo()
       this.player1 = this.$refs.player1;
     },
     methods: {
@@ -67,7 +68,7 @@
         }
       },
       play() {
-        this.current.playing = true        
+        this.current.playing = true
       },
       pause() {
         this.current.playing = false

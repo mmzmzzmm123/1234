@@ -1,7 +1,55 @@
 import {wxLogin, wxLoginCallBack} from "@/server/wxApi";
 
+const redis = "psy";
 export const clientTypeObj = { wx: "JSAPI", zfb: "FWC", no: "unknow" };
 export default {
+  /**
+   * 设置
+   * k 键key
+   * v 值value
+   * t 秒
+   */
+  put(k, v, t) {
+    uni.setStorageSync(k, v)
+    const seconds = parseInt(t);
+    if (seconds > 0) {
+      let newtime = Date.parse(new Date());
+      newtime = newtime / 1000 + seconds;
+      uni.setStorageSync(k + redis, newtime + "")
+    } else {
+      uni.removeStorageSync(k + redis)
+    }
+  },
+  /**
+   * 获取
+   * k 键key
+   */
+  get(k) {
+    const deadtime = parseInt(wx.getStorageSync(k + redis));
+    if (deadtime) {
+      if (parseInt(deadtime) < Date.parse(new Date()) / 1000) {
+        uni.removeStorageSync(k);
+        console.log("过期了")
+        return null
+      }
+    }
+    const res = uni.getStorageSync(k);
+    if (res) {
+      return res
+    } else {
+      return null
+    }
+  },
+  //清除所有key
+  clear() {
+    uni.clearStorageSync()
+  },
+  //删除key
+  remove(k) {
+    uni.removeStorageSync(k)
+    uni.removeStorageSync(k + redis)
+  },
+
   getUserInfo() {
     const user = uni.getStorageSync("userInfo");
     if (this.getClientType() === 'JSAPI') {
@@ -10,7 +58,7 @@ export default {
     return user ? user.userId ? user : JSON.parse(user) : {}
   },
   checkLogin() {
-    const user = uni.getStorageSync("userInfo")
+    const user = this.getUserInfo()
     return user && user !== {} && user.userId
   },
   getParam(path, name) {

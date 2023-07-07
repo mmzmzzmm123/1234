@@ -181,7 +181,7 @@
 			},
 			// 点击头像
 			getUserInfo() {
-				if (!uni.getStorageSync("userInfo")) {
+				if (!utils.checkLogin()) {
 					utils.loginWx(this.redirectUri);
 					return false;
 				}

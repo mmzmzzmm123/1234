@@ -2,7 +2,8 @@ import utils from "@/utils/common";
 
 async function login() {
 	let redirectUri = location.origin + location.pathname + "?t=" + new Date().getTime()
-	let userInfo = uni.getStorageSync("userInfo")
+	// let userInfo = uni.getStorageSync("userInfo")
+	let userInfo = utils.getUserInfo()
 	//从微信登录返回会有code
 	let code = utils.getParam(window.location.href, "code");
 	if (!userInfo && !code) {
