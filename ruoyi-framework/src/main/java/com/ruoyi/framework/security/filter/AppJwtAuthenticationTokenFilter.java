@@ -59,10 +59,13 @@ public class AppJwtAuthenticationTokenFilter extends OncePerRequestFilter {
                 JSONObject json = new JSONObject();
                 json.put("code", 401);
                 json.put("msg", "用户未登录");
-                this.output(json, request, response);
                 log.error("用户未登录 code: {}" , RespMessageConstants.ACCESS_TOKEN_EXPIRED_CODE);
+                response.setContentType("application/json;charset=UTF-8");
+                response.getWriter().write(JSONObject.toJSONString(json));
+                return;
+            } else {
+                appTokenService.verifyToken(loginUser);
             }
-            appTokenService.verifyToken(loginUser);
         }
 
         chain.doFilter(request, response);
