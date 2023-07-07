@@ -14,32 +14,56 @@
   color: #606266;
 }
 
-.icon-dingdan:before {
-  content: "\e897";
+.icon-fuwuxieyi:before {
+  content: "\e628";
 }
 
-.icon-shop:before {
+.icon-yinsixieyi:before {
+  content: "\e627";
+}
+
+.icon-liwu:before {
+  content: "\e626";
+}
+
+.icon-vip:before {
+  content: "\e625";
+}
+
+.icon-huiyuan:before {
+  content: "\e624";
+}
+
+.icon-meituan:before {
   content: "\e623";
 }
 
+.icon-dingdan:before {
+  content: "\e622";
+}
+
+.icon-shop:before {
+  content: "\e621";
+}
+
 .icon-geren:before {
-  content: "\e72a";
+  content: "\e620";
 }
 
 .icon-fuli:before {
-  content: "\e643";
+  content: "\e619";
 }
 
 .icon-call:before {
-  content: "\e744";
+  content: "\e618";
 }
 
 .icon-kaimen:before {
-  content: "\e652";
+  content: "\e617";
 }
 
 .icon-zhuo:before {
-  content: "\e625";
+  content: "\e616";
 }
 
 .icon-daohang:before {

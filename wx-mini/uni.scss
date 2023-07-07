@@ -5,16 +5,16 @@
  * uView自定义的css类名和scss变量，均以"u-"开头，不会造成冲突，请放心使用 
  */
 // 定义内外边距，历遍10-40
-@for $i from 10 through 50 {
+@for $i from 10 through 40 {
 	// 只要双数和能被5除尽的数
-	@if $i % 2 == 0 or $i % 5 == 0 {
-		// 得出：u-margin-30或者u-m-30
-		.u-margin-#{$i}, .u-m-#{$i} {
+	@if $i % 10 == 0 {
+		// 得出：u-m-30
+		.u-m-#{$i} {
 			margin: $i + rpx!important;
 		}
 		
-		// 得出：u-padding-30或者u-p-30
-		.u-padding-#{$i}, .u-p-#{$i} {
+		// 得出：u-p-30
+		.u-p-#{$i} {
 			padding: $i + rpx!important;
 		}
 		
@@ -35,17 +35,6 @@
 			
 			// 定义内边距
 			.u-p-#{$short}-#{$i} {
-				padding-#{$long}: $i + rpx!important;
-			}
-			
-			// 完整版，结果如：u-margin-left-30
-			// 定义外边距
-			.u-margin-#{$long}-#{$i} {
-				margin-#{$long}: $i + rpx!important;
-			}
-			
-			// 定义内边距
-			.u-padding-#{$long}-#{$i} {
 				padding-#{$long}: $i + rpx!important;
 			}
 		}

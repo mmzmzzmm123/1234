@@ -50,7 +50,7 @@ uni.getSystemInfo({
 		}
 	}
 })
-store.dispatch("login")
+//store.dispatch("login")
 const app = new Vue({
 	i18n,
 	store,
