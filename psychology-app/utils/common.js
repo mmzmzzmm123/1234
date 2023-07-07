@@ -4,7 +4,14 @@ export const clientTypeObj = { wx: "JSAPI", zfb: "FWC", no: "unknow" };
 export default {
   getUserInfo() {
     const user = uni.getStorageSync("userInfo");
+    if (this.getClientType() === 'JSAPI') {
+      return user
+    }
     return user ? user.userId ? user : JSON.parse(user) : {}
+  },
+  checkLogin() {
+    const user = uni.getStorageSync("userInfo")
+    return user && user !== {} && user.userId
   },
   getParam(path, name) {
     var reg = new RegExp("(^|\\?|&)" + name + "=([^&]*)(\\s|&|$)", "i");

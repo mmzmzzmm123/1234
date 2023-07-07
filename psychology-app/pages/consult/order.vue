@@ -120,8 +120,8 @@ export default {
     if (!this.userInfo && await utils.loginCallback(this.redirectUri)) {
       this.userInfo = uni.getStorageSync("userInfo")
     }
-    if (!this.userInfo) {
-      this.openLoginConfirm()
+    if (!utils.checkLogin()) {
+      return this.openLoginConfirm()
     }
     await this.getDates()
     await this.getOrderList()
@@ -158,7 +158,7 @@ export default {
     },
     // cartBox end
     async doOk(workId, workName) {
-      if (!this.userInfo) {
+      if (!utils.checkLogin()) {
         return this.openLoginConfirm()
       }
 

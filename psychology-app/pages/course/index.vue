@@ -100,8 +100,8 @@
 				// this.userInfo = uni.getStorageSync("userInfo")
         this.userInfo = utils.getUserInfo()
 			}
-      if (!this.userInfo) {
-        this.openLoginConfirm()
+      if (!utils.checkLogin()) {
+        return this.openLoginConfirm()
       }
      
 		},
@@ -114,19 +114,17 @@
 			},
 			async tocourse(url) {
 				// 判断是否已经登录
-				if (!this.userInfo) {
-					this.openLoginConfirm()
-					return
-				}
+        if (!utils.checkLogin()) {
+          return this.openLoginConfirm()
+        }
 				uni.navigateTo({
 					url
 				});
 			},
       toClass(classId) {
         // 判断是否已经登录
-        if (!this.userInfo) {
-        	this.openLoginConfirm()
-        	return
+        if (!utils.checkLogin()) {
+          return this.openLoginConfirm()
         }
         uni.navigateTo({
         	url: "/pages/course/class?classId=" + classId
@@ -134,9 +132,8 @@
       },
 			toSearch() {
         // 判断是否已经登录
-        if (!this.userInfo) {
-        	this.openLoginConfirm()
-        	return
+        if (!utils.checkLogin()) {
+          return this.openLoginConfirm()
         }
 				uni.navigateTo({
 					url: "/pages/course/search",
@@ -144,9 +141,8 @@
 			},
 			toMore() {
         // 判断是否已经登录
-        if (!this.userInfo) {
-        	this.openLoginConfirm()
-        	return
+        if (!utils.checkLogin()) {
+          return this.openLoginConfirm()
         }
 				uni.navigateTo({
 					url: "/pages/course/class",

@@ -145,7 +145,7 @@ export default {
     // this.userInfo = uni.getStorageSync("userInfo")
     this.userInfo = utils.getUserInfo()
     console.log(this.consultId)
-    if (!this.userInfo) {
+    if (!utils.checkLogin()) {
       return this.openLoginConfirm()
     }
   },

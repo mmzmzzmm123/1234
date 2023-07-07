@@ -133,8 +133,8 @@ export default {
       // this.userInfo = uni.getStorageSync("userInfo")
       this.userInfo = utils.getUserInfo()
     }
-    if (!this.userInfo) {
-      this.openLoginConfirm()
+    if (!utils.checkLogin()) {
+      return this.openLoginConfirm()
     }
   },
   methods: {
@@ -146,9 +146,8 @@ export default {
     },
     toClass(classId) {
       // 判断是否已经登录
-      if (!this.userInfo) {
-      	this.openLoginConfirm()
-      	return
+      if (!utils.checkLogin()) {
+        return this.openLoginConfirm()
       }
       uni.navigateTo({
       	url: "/pages/evaluation/class?classId=" + classId
@@ -156,17 +155,15 @@ export default {
     },
     toProduct(url) {
     	// 判断是否已经登录
-      if (!this.userInfo) {
-        this.openLoginConfirm()
-        return
+      if (!utils.checkLogin()) {
+        return this.openLoginConfirm()
       }
       uni.navigateTo({ url });
     },
     toSearch() {
       // 判断是否已经登录
-      if (!this.userInfo) {
-        this.openLoginConfirm()
-        return
+      if (!utils.checkLogin()) {
+        return this.openLoginConfirm()
       }
       uni.navigateTo({
         url: "/pages/evaluation/search",
@@ -174,9 +171,8 @@ export default {
     },
     toMore() {
       // 判断是否已经登录
-      if (!this.userInfo) {
-        this.openLoginConfirm()
-        return
+      if (!utils.checkLogin()) {
+        return this.openLoginConfirm()
       }
       uni.navigateTo({
         url: "/pages/evaluation/class",

@@ -144,8 +144,8 @@ export default {
       // this.userInfo = uni.getStorageSync("userInfo")
       this.userInfo = utils.getUserInfo()
     }
-    if (!this.userInfo) {
-      this.openLoginConfirm()
+    if (!utils.checkLogin()) {
+      return this.openLoginConfirm()
     }
     if (this.userInfo) {
       this.orderList = await userServer.getOrderList({
@@ -171,27 +171,24 @@ export default {
     },
     toReport() {
       // 判断是否已经登录
-      if (!this.userInfo) {
-        this.openLoginConfirm()
-        return
+      if (!utils.checkLogin()) {
+        return this.openLoginConfirm()
       }
       if (this.getUserInfo())
         uni.navigateTo({ url: "/pages/evaluation/report" });
     },
     toOrder() {
       // 判断是否已经登录
-      if (!this.userInfo) {
-        this.openLoginConfirm()
-        return
+      if (!utils.checkLogin()) {
+        return this.openLoginConfirm()
       }
       if (this.getUserInfo())
         uni.navigateTo({ url: "/pages/evaluation/order" });
     },
     toTest(order) {
      	// 判断是否已经登录
-      if (!this.userInfo) {
-        this.openLoginConfirm()
-        return
+      if (!utils.checkLogin()) {
+        return this.openLoginConfirm()
       }
       uni.setStorageSync("gaugeDes", order.gaugeDes);
       uni.navigateTo({

@@ -106,7 +106,7 @@ export default {
   async mounted() {
     // this.userInfo = uni.getStorageSync("userInfo")
     this.userInfo = utils.getUserInfo()
-    if (!this.userInfo) {
+    if (!utils.checkLogin()) {
       return this.openLoginConfirm()
     }
     await this.getDates()
@@ -170,7 +170,7 @@ export default {
         })
       }
 
-      if (!this.userInfo) {
+      if (!utils.checkLogin()) {
         return this.openLoginConfirm()
       }
 

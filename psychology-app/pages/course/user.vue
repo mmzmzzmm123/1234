@@ -109,8 +109,8 @@
 				// this.userInfo = uni.getStorageSync("userInfo")
         this.userInfo = utils.getUserInfo()
 			}
-      if (!this.userInfo) {
-        this.openLoginConfirm()
+      if (!utils.checkLogin()) {
+        return this.openLoginConfirm()
       }
 
 			if (this.userInfo) {
@@ -132,9 +132,8 @@
 			},
 			toCourseList() {
         // 判断是否已经登录
-        if (!this.userInfo) {
-        	this.openLoginConfirm()
-        	return
+        if (!utils.checkLogin()) {
+          return this.openLoginConfirm()
         }
 				if (this.getUserInfo())
 					uni.navigateTo({
@@ -143,9 +142,8 @@
 			},
 			toOrder() {
         // 判断是否已经登录
-        if (!this.userInfo) {
-        	this.openLoginConfirm()
-        	return
+        if (!utils.checkLogin()) {
+          return this.openLoginConfirm()
         }
 				if (this.getUserInfo())
 					uni.navigateTo({
@@ -159,9 +157,8 @@
       },
 			toLearningCourse(courseId) {
         // 判断是否已经登录
-        if (!this.userInfo) {
-        	this.openLoginConfirm()
-        	return
+        if (!utils.checkLogin()) {
+          return this.openLoginConfirm()
         }
 				uni.navigateTo({
 					url: `/pages/course/learningCourse?courseId=${courseId}`,
