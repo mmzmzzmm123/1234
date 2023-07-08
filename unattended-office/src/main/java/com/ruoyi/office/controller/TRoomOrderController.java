@@ -126,9 +126,11 @@ public class TRoomOrderController extends BaseController {
     @Log(title = "预定", businessType = BusinessType.INSERT)
     @PostMapping("/order")
     public AjaxResult order(@RequestBody PrepayReq order) {
-        order.setUserId(SecurityUtils.getLoginUser().getWxUser().getId());
+//        long wxUserId = SecurityUtils.getLoginUser().getWxUser().getId();
+        long wxUserId = 9l;
+        order.setUserId(wxUserId);
         try {
-            tRoomOrderService.prepay(order, SecurityUtils.getLoginUser().getWxUser().getId());
+            tRoomOrderService.prepay(order, wxUserId);
             return AjaxResult.success();
         } catch (Exception e) {
             return AjaxResult.error(e.getMessage());

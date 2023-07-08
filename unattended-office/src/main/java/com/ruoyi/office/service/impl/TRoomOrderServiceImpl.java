@@ -284,6 +284,8 @@ public class TRoomOrderServiceImpl extends ServiceImpl<TRoomOrderMapper, TRoomOr
             // 扣除余额
             wxUserAmountService.minusCardValue(wxUserAmount);
 
+            tRoomOrder.setPayType(OfficeEnum.PayType.CARD_BALANCE_PAY.getCode());
+            tRoomOrder.setOrderNo(orderNo);
             tRoomOrder.setTotalAmount(totalPrice);
             tRoomOrder.setPayAmount(totalPrice);
             tRoomOrder.setStatus(OfficeEnum.RoomOrderStatus.ORDERED.getCode());// 已预约
