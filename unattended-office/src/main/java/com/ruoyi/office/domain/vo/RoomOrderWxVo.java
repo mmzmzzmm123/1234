@@ -9,5 +9,8 @@ public class RoomOrderWxVo extends TRoomOrder {
     private String storeName;
     private String roomName;
     private String storeAdress;
+    private String phone;
+    private String lat;
+    private String lon;
 
 }

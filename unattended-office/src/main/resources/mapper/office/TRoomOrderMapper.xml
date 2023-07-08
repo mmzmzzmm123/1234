@@ -93,7 +93,7 @@
         coupon_amount,
         coupon_id,
         prepay_id,
-        s.name ,s.address ,r.name
+        s.name ,s.address,s.phone,r.name, s.latitude lat, s.longitude lon
         from t_room_order o
         left join t_wx_user u on o.create_by = u.id
         left join t_room r on o.room_id = r.id
@@ -105,7 +105,7 @@
             <if test="storeId != null ">and s.id = #{storeId}</if>
             <if test="roomId != null ">and room_id = #{roomId}</if>
             <if test="createBy != null  and createBy != ''">and u.open_id = #{createBy}</if>
-            <if test="status != null ">and o.status = #{status}</if>
+            <if test="status != null and status != -1">and o.status = #{status}</if>
         </where>
 
     </select>
