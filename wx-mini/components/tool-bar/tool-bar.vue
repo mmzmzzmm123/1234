@@ -8,10 +8,10 @@
 			<text class="iconfont icon-kaimen"></text>
 			<view>开包厢</view>
 		</view>
-		<view class="tool-bar_item">
+		<!-- <view class="tool-bar_item">
 			<text class="iconfont icon-zhuo"></text>
 			<view>开台</view>
-		</view>
+		</view> -->
 		<view class="tool-bar_item tool-bar_item--light">
 			<text class="iconfont icon-xushi"></text>
 			<view>续单</view>

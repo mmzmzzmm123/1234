@@ -20,54 +20,29 @@
 				</view>
 			</view>
 			<view style="border-radius: 20rpx;overflow: hidden;">
-				<ad-swiper></ad-swiper>
+				<ad-swiper :imgList="[shopInfo.logo]"></ad-swiper>
 			</view>
 		</view>
 		<view class="shop">
-			<view class="shop-info shop-name">店铺名称</view>
+			<view class="shop-info shop-name">{{shopInfo.name}}</view>
 			<view class="shop-desc">
-				海客谈瀛洲 烟涛微茫信难求
-				越人语天姥 云霞明灭或可睹
-				天姥连天向天横 势拔五岳掩赤城
-				天台四万八千丈 对此欲倒东南倾
-				我欲因之梦吴越 一夜飞渡镜湖月
-				湖月照我影 送我至剡溪
-				谢工宿处今尚在 绿水荡漾清猿啼
-				脚着谢工屐 身登青云梯
-				半壁见海日 空中闻天鸡
-				千岩万转路不定 迷花倚石忽已瞑
-				熊咆龙吟殷岩泉 栗深林兮惊层巅
-				云清清兮欲语 水澹澹兮生烟
-				列缺霹雳 丘峦崩摧
-				洞天石扉 訇然中开
-				青冥浩荡不见底 日月照耀金银台
-				霓为衣兮风为马 云之君兮纷纷而来下
-				虎鼓瑟兮鸾回车 仙之人兮列如麻
-				忽魂悸以魄动 恍惊起而长嗟
-				为觉时之枕席 失向来之烟霞
-				世间行乐亦如此 古来万事东流水
-				别君去兮何时还 且放白鹿青崖间 需行即骑访名山
-				安能摧眉折腰事权贵 使我不得开心颜
+				{{shopInfo.remark}}
 			</view>
 			<view class="shop-info">
 				<u-icon name="map" custom-style="margin-right:10rpx" size="40rpx"></u-icon>
-				地址
+				{{shopInfo.address}}
 			</view>
 			<view class="shop-info">
 				<u-icon name="clock" custom-style="margin-right:10rpx" size="36rpx"></u-icon>
-				营业时间
+				{{shopInfo.startTime + ' - ' + shopInfo.stopTime}}
 			</view>
 			<view class="shop-info" @click="makePhoneCall">
 				<u-icon name="phone-fill" custom-style="margin-right:10rpx" size="36rpx"></u-icon>
-				18814887553
+				{{shopInfo.phone}}
 			</view>
 		</view>
 		<view class="u-p-h-20">
-			<room-cell></room-cell>
-			<room-cell></room-cell>
-			<room-cell></room-cell>
-			<room-cell></room-cell>
-			<room-cell></room-cell>
+			<room-cell v-for="room in roomList" :key="room.id" :roomInfo="room"></room-cell>
 		</view>
 		<view style="height: 100rpx;"></view>
 	</view>
@@ -77,16 +52,26 @@
 	export default {
 		data() {
 			return {
-				
+				shopInfo: {},
+				roomList: []
 			}
 		},
 		onLoad() {
-	
+			this.getOpenerEventChannel().on('acceptShop', shopInfo => {
+				this.shopInfo = shopInfo
+				this.refresh()
+			})
 		},
 		methods: {
 			makePhoneCall(){
 				uni.makePhoneCall({
-					phoneNumber: "18814887553"
+					phoneNumber: this.shopInfo.phone
+				})
+			},
+			refresh(){
+				this.$api.getRoomList({storeId: this.shopInfo.id}).then(res=>{
+					this.roomList = res.rows
+					// console.log(res)
 				})
 			}
 		}
@@ -126,6 +111,8 @@
 	}
 	.shop-desc{
 		font-size: 28rpx;
+		overflow: hidden;
+		word-break: break-word;
 	}
 	.shop-info{
 		display: flex;
