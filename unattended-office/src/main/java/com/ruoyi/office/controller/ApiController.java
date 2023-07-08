@@ -397,7 +397,7 @@ public class ApiController extends BaseController {
     @ApiOperation("房间列表")
     @GetMapping("/room/list")
     public TableDataInfo room(TRoom tRoom) {
-        tRoom.setCreateBy(SecurityUtils.getUserId() + "");
+//        tRoom.setCreateBy(SecurityUtils.getUserId() + "");
         startPage();
         List<TRoom> list = tRoomService.selectTRoomList(tRoom);
         return getDataTable(list);
