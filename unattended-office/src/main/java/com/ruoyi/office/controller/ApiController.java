@@ -426,7 +426,7 @@ public class ApiController extends BaseController {
      * 查询房间价格列表
      */
     @ApiOperation("wx房间价格列表")
-    @GetMapping("/list")
+    @GetMapping("/price/list")
     public TableDataInfo list(TRoomPrice tRoomPrice) {
         if (tRoomPrice.getRoomId() == null || tRoomPrice.getRoomId() == 0) {
             throw new ServiceException("请补充房间编号");
