@@ -132,7 +132,7 @@
               <el-time-select placeholder="营业开始时间" v-model="form.startTime" :picker-options="{
                   start: '00:00',
                    step: '01:00',
-                  end: '24:00'
+                  end: '22:00'
                 }">
               </el-time-select>
             </el-form-item>
@@ -142,7 +142,7 @@
               <el-time-select placeholder="营业结束时间" v-model="form.stopTime" :picker-options="{
                   start: '00:00',
                    step: '01:00',
-                  end: '24:00',
+                  end: '23:00',
                   minTime: form.startTime
                 }">
               </el-time-select>
@@ -337,7 +337,7 @@
     <el-dialog :title="title" :visible.sync="priceOpen" width="500px" append-to-body>
       <el-form ref="priceForm" :model="priceForm" :rules="priceRules" label-width="150px">
         <el-form-item label="开始时间" prop="startTime">
-          <el-input-number v-model="priceForm.startTime" :min="0" :max="24" :step="1" label="描述文字"></el-input-number>
+          <el-input-number v-model="priceForm.startTime" :min="0" :max="22" :step="1" label="描述文字"></el-input-number>
           <!-- <el-time-select placeholder="开始时间" v-model="" :picker-options="{
                 start: '00',
                 step: '01',
@@ -346,7 +346,7 @@
           </el-time-select> -->
         </el-form-item>
         <el-form-item label="营业结束时间" prop="stopTime">
-          <el-input-number v-model="priceForm.stopTime" :min="1" :max="24" label="描述文字"></el-input-number>
+          <el-input-number v-model="priceForm.stopTime" :min="1" :max="23" label="描述文字"></el-input-number>
           <!-- <el-time-select placeholder="营业结束时间" v-model="priceForm.stopTime" :picker-options="{
                 start: '00',
                  step: '01',
