@@ -44,6 +44,20 @@ const api = {
 			 res.rows.forEach(x=>x.logo = BaseApiUrl + x.logo)
 			 return res
 		})
+	},
+	getRoomList(param){
+		return get('office/api/room/list', param).then(res=>{
+			res.rows.forEach(x=>{
+				x.logo = BaseApiUrl + x.logo
+				if(x.remark){
+					x.labelList = x.remark.split(',')
+				}
+			})
+			return res
+		})
+	},
+	getOrderList(param){
+		return get('office/api/room/order', param)
 	}
 }
 const install = (Vue, options) => {

@@ -70,12 +70,43 @@
     <select id="selectConflictRoomPeriod" parameterType="PrepayReq" resultType="com.ruoyi.office.domain.TRoomOrder">
         <include refid="selectTRoomOrderVo"/>
         where status =0
-            and room_id =#{roomId}
-            and ( (start_time &lt;= #{startTime} and end_time &gt;= #{startTime})
-                or (start_time &lt; #{endTime} and end_time &gt; #{endTime}) )
+        and room_id =#{roomId}
+        and ( (start_time &lt;= #{startTime} and end_time &gt;= #{startTime})
+        or (start_time &lt; #{endTime} and end_time &gt; #{endTime}) )
     </select>
+
     <select id="getHourMaxOrder" parameterType="String" resultType="java.lang.Long">
-        select max(order_no)  from t_room_order where order_no like concat( #{id},'%')
+        select max(order_no)
+        from t_room_order
+        where order_no like concat(#{id}, '%')
+    </select>
+
+    <select id="getWxRoomOrder" parameterType="RoomOrderWxReqVo" resultType="com.ruoyi.office.domain.vo.RoomOrderWxVo">
+        select o.id,
+        order_no,
+        room_id,
+        o.user_id,
+        o.start_time,
+        o.end_time,
+        total_amount,
+        pay_amount,
+        coupon_amount,
+        coupon_id,
+        prepay_id,
+        s.name ,s.address,s.phone,r.name, s.latitude lat, s.longitude lon
+        from t_room_order o
+        left join t_room r on o.room_id = r.id
+        left join t_store s on r.store_id =s.id
+        <where>
+            <if test="keyword != null ">and (s.name like concat('%',#{keyword},'%') or s.address like
+                concat('%',#{keyword},'%') or r.name like concat('%',#{keyword},'%'))
+            </if>
+            <if test="storeId != null ">and s.id = #{storeId}</if>
+            <if test="roomId != null ">and room_id = #{roomId}</if>
+            <if test="createBy != null  and createBy != ''">and o.create_by = #{createBy}</if>
+            <if test="status != null and status != -1">and o.status = #{status}</if>
+        </where>
+
     </select>
 
     <insert id="insertTRoomOrder" parameterType="TRoomOrder" useGeneratedKeys="true" keyProperty="id">
@@ -153,4 +184,5 @@
             #{id}
         </foreach>
     </delete>
+
 </mapper>

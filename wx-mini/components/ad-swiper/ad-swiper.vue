@@ -11,6 +11,10 @@
 			shopId: {
 				type: [Number,String],
 				default: null
+			},
+			imgList: {
+				type: Array,
+				default: null
 			}
 		},
 		data() {
@@ -28,7 +32,13 @@
 			// }
 		},
 		created() {
-			
+			if(this.imgList){
+				this.adList = this.imgList.map(x=>{
+					return {
+						img: x
+					}
+				})
+			}
 		},
 		methods: {
 			// onAdClick(index){

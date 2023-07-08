@@ -58,12 +58,12 @@
 		methods: {
 			makePhoneCall(){
 				uni.makePhoneCall({
-					phoneNumber: '18814887553'
+					phoneNumber: this.shopInfo.phone
 				})
 			},
 			onPreviewImage(){
 				uni.previewImage({
-					urls: ['https://www.baidu.com/img/flexible/logo/pc/result@2.png','https://cdn.uviewui.com/uview/resources/127901018.jpg']
+					urls: [this.shopInfo.logo]
 				})
 			},
 			toOrderRoom(){

@@ -513,4 +513,9 @@ public class TRoomOrderServiceImpl extends ServiceImpl<TRoomOrderMapper, TRoomOr
         return orderList.get(0);
     }
 
+    @Override
+    public List<RoomOrderWxVo> getWxRoomOrder(RoomOrderWxReqVo tRoomOrder) {
+
+        return tRoomOrderMapper.getWxRoomOrder(tRoomOrder);
+    }
 }

@@ -2,33 +2,25 @@
 	<view class="room-cell-wrapper">
 		<view class="room-cell">
 			<view class="room-cell_img">
-				<u-image mode="aspectFill" width="200rpx" radius="10rpx" height="200rpx" src="https://cdn.uviewui.com/uview/resources/127901018.jpg" @click="onPreviewImage"></u-image>
-				<view class="room-cell_status">空闲中</view>
+				<u-image mode="aspectFill" width="200rpx" radius="10rpx" height="200rpx" :src="roomInfo.logo" @click="onPreviewImage"></u-image>
+				<view class="room-cell_status">{{roomInfo.status == '0' ? '可用' : roomInfo.status == '1' ? '不可用' : '清洁中'}}</view>
 				<view class="room-cell_img_count">
-					<u-icon name="photo-fill" color="#fff" size="30rpx"></u-icon>2
+					<u-icon name="photo-fill" color="#fff" size="30rpx"></u-icon>1
 				</view>
 			</view>
 			<view style="flex: 1;">
-				<view class="room-cell_name">包厢名称</view>
-				<view class="room-cell_package">
-					<text>套餐名称</text>
-					<text style="float: right;">套餐价格</text>
+				<view class="room-cell_name">{{roomInfo.name}}</view>
+				<view v-for="price in roomInfo.priceList" :key="price.id" class="room-cell_package">
+					<text>时段：{{price.startTime + ':00-' + price.stopTime+':00'}}</text>
+					<text style="float: right;">{{price.price}}元/小时</text>
 				</view>
 				<view class="label-list">
-					<view class="label-list_item">标签</view>
-					<view class="label-list_item">标签一</view>
-					<view class="label-list_item">标签一二</view>
-					<view class="label-list_item">标签</view>
-					<view class="label-list_item">标签一</view>
-					<view class="label-list_item">标签一二</view>
-					<view class="label-list_item">标签</view>
-					<view class="label-list_item">标签一</view>
-					<view class="label-list_item">标签一二</view>
+					<view v-for="label in roomInfo.labelList" :key="label" class="label-list_item">{{label}}</view>
 				</view>
 			</view>
 		</view>
 		<view style="margin-top: 20rpx;">
-			<hour-status-bar></hour-status-bar>
+			<hour-status-bar :hours="hourList"></hour-status-bar>
 			<view style="display: flex;align-items: center;margin-top: 20rpx;justify-content: space-between;">
 				<hour-status-legend></hour-status-legend>
 				<view class="order-btn">立即预定</view>
@@ -40,14 +32,41 @@
 <script>
 	import HourStatusLegend from "../hour-status-bar/hour-status-legend.vue"
 	export default {
-		name: '',
+		name: 'room-cell',
 		components: {HourStatusLegend},
 		props: {
-			
+			roomInfo: {
+				type: Object,
+				default: ()=>{
+					return {}
+				}
+			}
 		},
 		data() {
 			return {
 				
+			}
+		},
+		computed:{
+			hourList(){
+				debugger
+				if(this.roomInfo && this.roomInfo.period){
+					const period = this.roomInfo.period
+					const now = new Date()
+					const hour = now.getHours()
+					const hourList = []
+					for(let i = hour; i < 24; i++){
+						hourList.push({name: i, status: period.canNotUseList.indexOf(i) >= 0})
+					}
+					if(hourList.length < 24){
+						hourList.push({name: '次日', status: period.canNotUseList2.indexOf(0) >= 0})
+					}
+					for(let i = 1; i < hour; i++){
+						hourList.push({name: i, status: period.canNotUseList2.indexOf(i) >= 0})
+					}
+					return hourList
+				}
+				return []
 			}
 		},
 		created() {
@@ -56,7 +75,7 @@
 		methods: {
 			onPreviewImage(){
 				uni.previewImage({
-					urls: ['https://www.baidu.com/img/flexible/logo/pc/result@2.png','https://cdn.uviewui.com/uview/resources/127901018.jpg']
+					urls: [this.roomInfo.logo]
 				})
 			}
 		}

@@ -48,7 +48,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <insert id="insertWxUser" parameterType="WxUser">
         insert into t_wx_user
         <trim prefix="(" suffix=")" suffixOverrides=",">
-            <if test="id != null">id,</if>
+<!--            <if test="id != null">id,</if>-->
             <if test="openId != null">open_id,</if>
             <if test="unionId != null">union_id,</if>
             <if test="wxCode != null">wx_code,</if>
@@ -62,7 +62,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="updateTime != null">update_time,</if>
          </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
-            <if test="id != null">#{id},</if>
+<!--            <if test="id != null">#{id},</if>-->
             <if test="openId != null">#{openId},</if>
             <if test="unionId != null">#{unionId},</if>
             <if test="wxCode != null">#{wxCode},</if>
