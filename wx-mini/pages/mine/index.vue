@@ -15,7 +15,7 @@
 			充值有礼
 		</view>
 		<view class="bottom">
-			<u-cell title="美团验券" is-link>
+			<u-cell title="美团验券" is-link url="/pages/receipt-consume/index">
 				<text slot="icon" class="iconfont icon-meituan"></text>
 			</u-cell>
 			<u-cell title="全部门店" is-link>
@@ -56,7 +56,7 @@
 	}
 	.bottom{
 		.iconfont{
-			color: $u-success;
+			color: $u-primary;
 		}
 	}
 	.mine-card{
