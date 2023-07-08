@@ -29,6 +29,7 @@ import com.ruoyi.office.domain.vo.WxStoreListQryVo;
 import com.ruoyi.office.domain.vo.WxStoreListRspVo;
 import com.ruoyi.office.service.*;
 import com.ruoyi.system.service.ISysDictDataService;
+import com.ruoyi.tuangou.service.TuangouService;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.BeanUtils;
@@ -58,6 +59,9 @@ public class ApiController extends BaseController {
 
     @Autowired
     ITWxUserPackageService userPackageService;
+
+    @Autowired
+    TuangouService tuangouService;
 
     /**
      * 预定成功 api 回调
@@ -463,6 +467,18 @@ public class ApiController extends BaseController {
     public AjaxResult getAvailablePeriod(RoomAvailablePeriod vo) {
         final RoomAvailablePeriod availablePeriod = tRoomOrderService.getAvailablePeriod(vo);
         return success(availablePeriod);
+    }
+
+    /**
+     * @param code
+     * @return
+     */
+    @ApiOperation("美团验券")
+    @GetMapping("/meiTuanConsume/{code}")
+    public Boolean MeituanConsume(String code) throws ServiceException {
+        Long userId = SecurityUtils.getLoginUser().getWxUser().getId();
+        tuangouService.test(code, userId);
+        return true;
     }
 
 }
