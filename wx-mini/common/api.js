@@ -3,7 +3,7 @@ import { BaseApiUrl } from "@/common/config.js"
 var i18n
 
 const client = new HttpClient({
-	baseApiUrl: BaseApiUrl,
+	baseApiUrl: BaseApiUrl + '/',
 	appName: 'office',
 	loginHandler(){
 		return new Promise((resolve, reject)=>{
@@ -38,6 +38,12 @@ const api = {
 	},
 	getUserInfo(){
 		return request('getInfo', null, true, 'GET')
+	},
+	getStoreList(param){
+		return get("office/api/store/list", param).then(res=>{
+			 res.rows.forEach(x=>x.logo = BaseApiUrl + x.logo)
+			 return res
+		})
 	}
 }
 const install = (Vue, options) => {

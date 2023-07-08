@@ -60,7 +60,7 @@
 		}
 	}
 	.mine-card{
-		background: linear-gradient($u-primary-dark,$u-primary-disabled);
+		background: linear-gradient($u-primary-dark,$u-primary-light);
 		padding: 30rpx;
 		border-radius: 20rpx;
 		margin: 30rpx;

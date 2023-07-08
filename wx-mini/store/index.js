@@ -36,9 +36,14 @@ const store = new Vuex.Store({
 		// 如果上面从本地获取的lifeData对象下有对应的属性，就赋值给state中对应的变量
 		hasLogin: false,
 		loginUser: lifeData.loginUser ? lifeData.loginUser : {},
-		roles: lifeData.roles ? lifeData.roles : []
+		roles: lifeData.roles ? lifeData.roles : [],
+		location: null,
+		canLocation: false
 	},
 	mutations: {
+		setCanLocation(state, value){
+			state.canLocation = value
+		},
 		$uStore(state, payload) {
 			// 判断是否多层级调用，state中为对象存在的情况，诸如user.info.score = 1
 			let nameArr = payload.name.split('.');
@@ -76,6 +81,20 @@ const store = new Vuex.Store({
 				uni.setStorage({
 					key: 'lifeData',
 					data: lifeData
+				})
+			})
+		},
+		getLocation({state}){
+			return new Promise((resolve, reject)=>{
+				uni.getFuzzyLocation({
+					type: 'gcj02',
+					success: res=>{
+						state.location = res
+						resolve(res)
+					},
+					fail: res=>{
+						resolve(state.location)
+					}
 				})
 			})
 		}

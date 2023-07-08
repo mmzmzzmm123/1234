@@ -8,7 +8,10 @@
 <script>
 	export default {
 		props: {
-			
+			shopId: {
+				type: [Number,String],
+				default: null
+			}
 		},
 		data() {
 			return {
