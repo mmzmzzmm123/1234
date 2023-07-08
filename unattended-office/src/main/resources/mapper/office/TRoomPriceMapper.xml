@@ -33,6 +33,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="memberPrice != null "> and member_price = #{memberPrice}</if>
             <if test="status != null "> and status = #{status}</if>
         </where>
+        order by room_id,start_time
     </select>
     
     <select id="selectTRoomPriceById" parameterType="Long" resultMap="TRoomPriceResult">
