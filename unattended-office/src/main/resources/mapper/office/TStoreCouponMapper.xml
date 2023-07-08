@@ -7,6 +7,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <resultMap type="TStoreCoupon" id="TStoreCouponResult">
         <result property="id"    column="id"    />
         <result property="couponName"    column="coupon_name"    />
+        <result property="dianpingId"    column="dianping_id"    />
         <result property="storeId"    column="store_id"    />
         <result property="originalPrice"    column="original_price"    />
         <result property="price"    column="price"    />
@@ -30,7 +31,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </resultMap>
 
     <sql id="selectTStoreCouponVo">
-        select id, coupon_name, store_id, original_price, price, card_type, num_can_use, one_time_one_day, max_minute_once, pay_type, max_hold,
+        select id, dianping_id, coupon_name, store_id, original_price, price, card_type, num_can_use, one_time_one_day, max_minute_once, pay_type, max_hold,
                valid_type, valid_days, start_date, end_date, week_days, status, remark, create_by, create_time, update_by, update_time from t_store_coupon
     </sql>
 
@@ -39,6 +40,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <where>  
             <if test="couponName != null  and couponName != ''"> and coupon_name like concat('%', #{couponName}, '%')</if>
             <if test="storeId != null  and storeId != ''"> and store_id = #{storeId}</if>
+            <if test="dianpingId != null  and dianpingId != ''"> and dianping_id = #{dianpingId}</if>
             <if test="originalPrice != null "> and original_price = #{originalPrice}</if>
             <if test="price != null "> and price = #{price}</if>
             <if test="cardType != null  and cardType != ''"> and card_type = #{cardType}</if>
@@ -67,6 +69,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="couponName != null and couponName != ''">coupon_name,</if>
             <if test="storeId != null and storeId != ''">store_id,</if>
+            <if test="dianpingId != null  and dianpingId != ''">dianping_id,</if>
             <if test="originalPrice != null">original_price,</if>
             <if test="price != null">price,</if>
             <if test="cardType != null and cardType != ''">card_type,</if>
@@ -90,6 +93,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="couponName != null and couponName != ''">#{couponName},</if>
             <if test="storeId != null and storeId != ''">#{storeId},</if>
+            <if test="dianpingId != null  and dianpingId != ''"> #{dianpingId},</if>
             <if test="originalPrice != null">#{originalPrice},</if>
             <if test="price != null">#{price},</if>
             <if test="cardType != null and cardType != ''">#{cardType},</if>
@@ -117,6 +121,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <trim prefix="SET" suffixOverrides=",">
             <if test="couponName != null and couponName != ''">coupon_name = #{couponName},</if>
             <if test="storeId != null and storeId != ''">store_id = #{storeId},</if>
+            <if test="dianpingId != null  and dianpingId != ''"> dianping_id = #{dianpingId},</if>
             <if test="originalPrice != null">original_price = #{originalPrice},</if>
             <if test="price != null">price = #{price},</if>
             <if test="cardType != null and cardType != ''">card_type = #{cardType},</if>

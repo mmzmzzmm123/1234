@@ -32,6 +32,11 @@ public class TStoreCoupon extends BaseEntity {
     private String couponName;
 
     /**
+     * 团购接口店铺id
+     */
+    private String dianpingId;
+
+    /**
      * 适用门店
      */
     @Excel(name = "适用门店")
