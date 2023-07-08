@@ -93,7 +93,7 @@
     },
     "quickapp" : {},
     "mp-weixin" : {
-        "appid" : "wxf0bfdd47ca6bbb77",
+        "appid" : "wx2171fc93eaed8be1",
         "setting" : {
             "urlCheck" : true,
             "es6" : false,
@@ -103,7 +103,16 @@
         "optimization" : {
             "subPackages" : true
         },
-        "usingComponents" : true
+        "usingComponents" : true,
+        "permission" : {
+            "scope.userLocation" : {
+                "desc" : "你的位置信息将用于搜索附近的门店"
+            },
+            "scope.userFuzzyLocation" : {
+                "desc" : "你的位置信息将用于搜索附近的门店"
+            }
+        },
+        "requiredPrivateInfos" : [ "getFuzzyLocation" ]
     },
     "mp-alipay" : {
         "usingComponents" : true,
