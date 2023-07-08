@@ -6,6 +6,8 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 
 import com.ruoyi.office.domain.TRoomOrder;
 import com.ruoyi.office.domain.vo.PrepayReq;
+import com.ruoyi.office.domain.vo.RoomOrderWxReqVo;
+import com.ruoyi.office.domain.vo.RoomOrderWxVo;
 
 /**
  * 房间占用（点支付时再次校验可用性并改变状态，支付失败回滚）Mapper接口
@@ -65,4 +67,6 @@ public interface TRoomOrderMapper extends BaseMapper<TRoomOrder> {
     List<TRoomOrder> selectConflictRoomPeriod(PrepayReq tRoomOrder);
 
     Long getHourMaxOrder(String nowHour);
+
+    List<RoomOrderWxVo> getWxRoomOrder(RoomOrderWxReqVo tRoomOrder);
 }

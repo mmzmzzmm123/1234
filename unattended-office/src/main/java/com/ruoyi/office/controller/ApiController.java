@@ -20,13 +20,10 @@ import com.ruoyi.common.exception.ServiceException;
 import com.ruoyi.common.utils.DateUtils;
 import com.ruoyi.common.utils.SecurityUtils;
 import com.ruoyi.common.utils.StringUtils;
-import com.ruoyi.office.domain.vo.RoomAvailablePeriod;
-import com.ruoyi.office.domain.vo.RoomWxVo;
+import com.ruoyi.office.domain.vo.*;
 import com.ruoyi.office.mqtt.MqttSendClient;
 import com.ruoyi.office.domain.*;
 import com.ruoyi.office.domain.enums.OfficeEnum;
-import com.ruoyi.office.domain.vo.WxStoreListQryVo;
-import com.ruoyi.office.domain.vo.WxStoreListRspVo;
 import com.ruoyi.office.service.*;
 import com.ruoyi.system.service.ISysDictDataService;
 import io.swagger.annotations.ApiOperation;
@@ -384,10 +381,10 @@ public class ApiController extends BaseController {
      */
     @ApiOperation("wx订单记录")
     @GetMapping("/room/order")
-    public TableDataInfo order(TRoomOrder tRoomOrder) {
-        tRoomOrder.setCreateBy(SecurityUtils.getUserId() + "");
+    public TableDataInfo order(RoomOrderWxReqVo tRoomOrder) {
+        tRoomOrder.setCreateBy(SecurityUtils.getLoginUser().getWxUser().getOpenId() + "");
         startPage();
-        List<TRoomOrder> list = tRoomOrderService.selectTRoomOrderList(tRoomOrder);
+        List<RoomOrderWxVo> list = tRoomOrderService.getWxRoomOrder(tRoomOrder);
         return getDataTable(list);
     }
 

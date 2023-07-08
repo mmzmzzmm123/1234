@@ -74,4 +74,6 @@ public interface ITRoomOrderService {
     RoomAvailablePeriod getAvailablePeriod(RoomAvailablePeriod vo);
 
     TRoomOrder continueOrder(Long userId);
+
+    List<RoomOrderWxVo> getWxRoomOrder(RoomOrderWxReqVo tRoomOrder);
 }
