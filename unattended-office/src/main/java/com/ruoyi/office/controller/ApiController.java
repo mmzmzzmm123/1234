@@ -15,7 +15,9 @@ import com.ruoyi.common.annotation.Log;
 import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.core.page.TableDataInfo;
+import com.ruoyi.common.exception.ServiceException;
 import com.ruoyi.common.utils.SecurityUtils;
+import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.office.mqtt.MqttSendClient;
 import com.ruoyi.office.domain.*;
 import com.ruoyi.office.domain.enums.OfficeEnum;
@@ -25,6 +27,7 @@ import com.ruoyi.office.service.*;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -393,6 +396,24 @@ public class ApiController extends BaseController {
 //        tRoom.setCreateBy(SecurityUtils.getUserId() + "");
         startPage();
         List<TRoom> list = tRoomService.selectTRoomList(tRoom);
+        return getDataTable(list);
+    }
+
+
+    @Autowired
+    private ITRoomPriceService tRoomPriceService;
+
+    /**
+     * 查询房间价格列表
+     */
+    @ApiOperation("wx房间价格列表")
+    @GetMapping("/list")
+    public TableDataInfo list(TRoomPrice tRoomPrice) {
+        if (tRoomPrice.getRoomId() == null || tRoomPrice.getRoomId() == 0) {
+            throw new ServiceException("请补充房间编号");
+        }
+        startPage();
+        List<TRoomPrice> list = tRoomPriceService.selectTRoomPriceList(tRoomPrice);
         return getDataTable(list);
     }
 
