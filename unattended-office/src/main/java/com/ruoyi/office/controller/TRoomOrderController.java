@@ -42,7 +42,7 @@ public class TRoomOrderController extends BaseController {
     /**
      * 查询房间占用（点支付时再次校验可用性并改变状态，支付失败回滚）列表
      */
-//    @PreAuthorize("@ss.hasPermi('office:roomorder:list')")
+    @PreAuthorize("@ss.hasPermi('office:roomorder:list')")
     @ApiOperation("预约订单、记录")
     @GetMapping("/list")
     public TableDataInfo list(TRoomOrder tRoomOrder) {

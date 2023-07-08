@@ -279,6 +279,7 @@
       },
       openClose(row, onoff) {
         row.onOff = onoff;
+        // form.equipType
         setEquipment(row).then(response => {
           this.$modal.msgSuccess("操作成功");
           this.getList();

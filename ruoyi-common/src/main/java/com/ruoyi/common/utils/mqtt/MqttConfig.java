@@ -21,8 +21,8 @@ public class MqttConfig {
     @Autowired
     private MqttAcceptClient mqttAcceptClient;
 
-//    @Conditional(MqttCondition.class)
-//    @Bean
+    @Conditional(MqttCondition.class)
+    @Bean
     public MqttAcceptClient getMqttAcceptClient() {
         mqttAcceptClient.connect();
         //mqttAcceptClient.subscribe("test_queue",0);

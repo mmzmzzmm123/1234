@@ -33,6 +33,8 @@ public class MqttSendCallBack implements MqttCallbackExtended {
         log.error("【MQTT-发送端】链接断开！");
     }
 
+
+
     @Override
     public void messageArrived(String topic, MqttMessage message) throws Exception {
         log.info("【MQTT-发送端】接收消息主题 : " + topic);

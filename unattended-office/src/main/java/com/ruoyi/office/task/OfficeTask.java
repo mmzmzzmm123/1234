@@ -5,6 +5,7 @@ import com.alibaba.fastjson2.JSONObject;
 import com.ruoyi.common.core.domain.entity.SysDictData;
 import com.ruoyi.common.utils.DateUtils;
 import com.ruoyi.common.utils.http.HttpUtils;
+import com.ruoyi.common.utils.mqtt.MqttAcceptClient;
 import com.ruoyi.office.domain.TEquipment;
 import com.ruoyi.office.domain.TRoom;
 import com.ruoyi.office.domain.TRoomOrder;
@@ -86,4 +87,9 @@ public class OfficeTask {
         }
         System.out.println("订单结束提醒完成");
     }
+
+
+
+
+
 }

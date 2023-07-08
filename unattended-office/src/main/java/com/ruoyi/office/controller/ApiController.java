@@ -373,4 +373,34 @@ public class ApiController extends BaseController {
         return AjaxResult.success();
     }
 
+    @Autowired
+    private ITRoomOrderService tRoomOrderService;
+
+    /**
+     * 查询房间占用（点支付时再次校验可用性并改变状态，支付失败回滚）列表
+     */
+    @ApiOperation("预约订单、记录")
+    @GetMapping("/room/order")
+    public TableDataInfo order(TRoomOrder tRoomOrder) {
+        tRoomOrder.setCreateBy(SecurityUtils.getUserId() + "");
+        startPage();
+        List<TRoomOrder> list = tRoomOrderService.selectTRoomOrderList(tRoomOrder);
+        return getDataTable(list);
+    }
+
+    @Autowired
+    private ITRoomService tRoomService;
+
+    /**
+     * 查询店铺房间列表
+     */
+    @ApiOperation("房间列表")
+    @GetMapping("/room/list")
+    public TableDataInfo room(TRoom tRoom) {
+        tRoom.setCreateBy(SecurityUtils.getUserId() + "");
+        startPage();
+        List<TRoom> list = tRoomService.selectTRoomList(tRoom);
+        return getDataTable(list);
+    }
+
 }

@@ -1,9 +1,13 @@
 package com.ruoyi.office.controller;
 
 import java.util.List;
+import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletResponse;
 
+import com.ruoyi.common.exception.ServiceException;
 import com.ruoyi.common.utils.SecurityUtils;
+import com.ruoyi.common.utils.StringUtils;
+import com.ruoyi.common.utils.mqtt.MqttAcceptClient;
 import com.ruoyi.common.utils.mqtt.MqttSendClient;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -107,13 +111,31 @@ public class TEquipmentController extends BaseController {
     public AjaxResult setDevice(@RequestBody TEquipment tEquipment) {
         MqttSendClient sendClient = new MqttSendClient();
         TEquipment qry = tEquipmentService.selectTEquipmentById(tEquipment.getId());
-        if ("Y".equalsIgnoreCase(tEquipment.getOnOff())) {
-            sendClient.publish(qry.getEquipControl(), "a1");
-        } else if ("N".equalsIgnoreCase(tEquipment.getOnOff())) {
-            sendClient.publish(qry.getEquipControl(), "b1");
+        try {
+            if ("Y".equalsIgnoreCase(tEquipment.getOnOff())) {
+                sendClient.publish(qry.getEquipControl(), "a1");
+            } else if ("N".equalsIgnoreCase(tEquipment.getOnOff())) {
+                sendClient.publish(qry.getEquipControl(), "b1");
+            }
+        } catch (Exception e) {
+            throw new ServiceException("操作失败");
         }
-
+        // messageArrived 里面处理 消息发送到接收端时触发；
         tEquipment.setUpdateBy(SecurityUtils.getUserId() + "");
         return toAjax(tEquipmentService.updateTEquipment(tEquipment));
     }
+
+    @PostConstruct
+    /**
+     * 扫描所有设备返回
+     */
+    public void scanEquipStatus() {
+        MqttAcceptClient subClient = new MqttAcceptClient();
+        List<TEquipment> equipments = tEquipmentService.selectTEquipmentList(new TEquipment());
+//        for (TEquipment equipment : equipments) {
+//            if (StringUtils.isNotEmpty(equipment.getEquipControl()))
+//                subClient.subscribe(equipment.getEquipControl(), 0);
+//        }
+    }
+
 }
