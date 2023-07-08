@@ -17,18 +17,15 @@ import com.github.binarywang.wxpay.exception.WxPayException;
 import com.github.binarywang.wxpay.service.WxPayService;
 import com.ruoyi.common.exception.ServiceException;
 import com.ruoyi.common.utils.DateUtils;
-import com.ruoyi.office.domain.TRoomOrder;
-import com.ruoyi.office.domain.TWxUser;
+import com.ruoyi.office.domain.*;
 import com.ruoyi.office.domain.enums.OfficeEnum;
 import com.ruoyi.office.domain.vo.RefundAuditVo;
-import com.ruoyi.office.service.ITRoomOrderService;
+import com.ruoyi.office.service.*;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.ruoyi.office.mapper.TRoomOrderCancelAuditMapper;
-import com.ruoyi.office.domain.TRoomOrderCancelAudit;
-import com.ruoyi.office.service.ITRoomOrderCancelAuditService;
 
 /**
  * 预约取消审核Service业务层处理
@@ -120,68 +117,122 @@ public class TRoomOrderCancelAuditServiceImpl extends ServiceImpl<TRoomOrderCanc
     @Autowired
     ITRoomOrderService roomOrderService;
 
+    @Autowired
+    ITWxUserCouponService wxUserCouponService;
+
+    @Autowired
+    ITWxUserAmountService wxUserAmountService;
+
+    @Autowired
+    ITRoomService roomService;
+
     @Override
     public String approve(TRoomOrderCancelAudit cancelAudit) {
 
         TRoomOrderCancelAudit tRoomOrderCancelAudit = tRoomOrderCancelAuditMapper.selectTRoomOrderCancelAuditById(cancelAudit.getId());
-        int amt = tRoomOrderCancelAudit.getRefundAmount().multiply(new BigDecimal(1000)).intValue();
-        // 计算订单号
-        long orderNo = 0l;
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
-        final String prefix = sdf.format(new Date());
-        Long maxId = tRoomOrderCancelAuditMapper.getDayMaxOrder(prefix);
-        if (maxId == null)
-            orderNo = Long.parseLong(prefix + "0000");
-        else {
-            orderNo = maxId + 1;
-        }
 
-        WxPayRefundV3Request v3Request = new WxPayRefundV3Request();
-        final WxPayConfig config = wxPayService.getConfig();
+        long roomOrderNo = tRoomOrderCancelAudit.getOrderNo();
+        TRoomOrder qry = new TRoomOrder();
+        qry.setOrderNo(roomOrderNo);
+        final List<TRoomOrder> roomOrders = roomOrderService.selectTRoomOrderList(qry);
+        if (roomOrders.size() == 0)
+            throw new ServiceException("原支付订单不存在");
+        int payType = roomOrders.get(0).getPayType();
+        if (payType == OfficeEnum.PayType.CARD_BALANCE_PAY.getCode()) {
 
-        v3Request.setOutTradeNo(String.valueOf(tRoomOrderCancelAudit.getOrderNo())).setOutRefundNo(String.valueOf(orderNo))
-                .setNotifyUrl(config.getNotifyUrl() + "/refund")
-                .setReason("用户申请")
-                .setAmount(
-                        new WxPayRefundV3Request.Amount() {
-                        }.setRefund(amt).setTotal(amt).setCurrency("CNY"));
-
-        WxPayRefundV3Result apiResult = null;
-        try {
-            apiResult = this.wxPayService.refundV3(v3Request);
-            BeanUtils.copyProperties(apiResult, tRoomOrderCancelAudit);
-            tRoomOrderCancelAudit.setRefundCreateTime(apiResult.getCreateTime());
-            tRoomOrderCancelAudit.setRefundStatus(apiResult.getStatus());
-            if (apiResult.getStatus().equalsIgnoreCase("success"))
-                tRoomOrderCancelAudit.setStatus(3l);
-            else
-                tRoomOrderCancelAudit.setStatus(1l); // 1 通过 2 退回 3 退款成功
-            tRoomOrderCancelAuditMapper.updateTRoomOrderCancelAudit(tRoomOrderCancelAudit);
-
-            TRoomOrder roomOrder = new TRoomOrder();
-            roomOrder.setOrderNo(tRoomOrderCancelAudit.getOrderNo());
-            roomOrder = roomOrderService.selectTRoomOrderList(roomOrder).get(0);
             TRoomOrder updateOrder = new TRoomOrder();
-            updateOrder.setId(roomOrder.getId());
+            updateOrder.setId(roomOrders.get(0).getId());
             updateOrder.setStatus(9); // 已取消
+            roomOrderService.updateTRoomOrder(updateOrder);
 
-        } catch (WxPayException e) {
-            log.error("JSAPI 申请退款：" + e.getLocalizedMessage());
-            throw new ServiceException("微信退款申请失败");
-        }
+            //  退还余额账户
+            TWxUserAmount wxUserAmount = new TWxUserAmount();
+            // 判断用户在商户下的余额是否足够；
+            long roomId = roomOrders.get(0).getRoomId();
+            TRoom room = roomService.selectTRoomById(roomId);
 
-        if (apiResult != null) {
-            switch (apiResult.getStatus()) {
-                case "SUCCESS":
-                    return "退款成功";
-                case "CLOSED":
-                    return "退款关闭";
-                case "PROCESSING":
-                    return "退款处理中";
-                case "ABNORMAL":
-                    return "退款异常";
+            wxUserAmount.setUserId(Long.parseLong(room.getCreateBy()));
+            wxUserAmount.setWxUserId(roomOrders.get(0).getUserId());
+            wxUserAmount.setAmount(roomOrders.get(0).getPayAmount().negate());
+            // 扣除余额
+            wxUserAmountService.minusCardValue(wxUserAmount);
+
+        } else if (payType == OfficeEnum.PayType.COUPON_PAY.getCode()) {
+            TRoomOrder updateOrder = new TRoomOrder();
+            updateOrder.setId(roomOrders.get(0).getId());
+            updateOrder.setStatus(OfficeEnum.RoomOrderStatus.CANCEL.getCode()); // 已取消
+            roomOrderService.updateTRoomOrder(updateOrder);
+
+            //  退还优惠券 状态改为未使用
+            TWxUserCoupon wxUserCoupon = new TWxUserCoupon();
+            wxUserCoupon.setCouponId(roomOrders.get(0).getCouponId());
+            wxUserCoupon.setStatus(0l);
+            wxUserCouponService.updateTWxUserCoupon(wxUserCoupon);
+
+
+        } else if (payType == OfficeEnum.PayType.WX_PAY.getCode()) {
+            int amt = tRoomOrderCancelAudit.getRefundAmount().multiply(new BigDecimal(1000)).intValue();
+            // 计算订单号
+            long orderNo = 0l;
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
+            final String prefix = sdf.format(new Date());
+            Long maxId = tRoomOrderCancelAuditMapper.getDayMaxOrder(prefix);
+            if (maxId == null)
+                orderNo = Long.parseLong(prefix + "0000");
+            else {
+                orderNo = maxId + 1;
+            }
+
+            WxPayRefundV3Request v3Request = new WxPayRefundV3Request();
+            final WxPayConfig config = wxPayService.getConfig();
+
+            v3Request.setOutTradeNo(String.valueOf(tRoomOrderCancelAudit.getOrderNo())).setOutRefundNo(String.valueOf(orderNo))
+                    .setNotifyUrl(config.getNotifyUrl() + "/refund")
+                    .setReason("用户申请")
+                    .setAmount(
+                            new WxPayRefundV3Request.Amount() {
+                            }.setRefund(amt).setTotal(amt).setCurrency("CNY"));
+
+            WxPayRefundV3Result apiResult = null;
+            try {
+                apiResult = this.wxPayService.refundV3(v3Request);
+                BeanUtils.copyProperties(apiResult, tRoomOrderCancelAudit);
+                tRoomOrderCancelAudit.setRefundCreateTime(apiResult.getCreateTime());
+                tRoomOrderCancelAudit.setRefundStatus(apiResult.getStatus());
+                if (apiResult.getStatus().equalsIgnoreCase("success"))
+                    tRoomOrderCancelAudit.setStatus(3l);
+                else
+                    tRoomOrderCancelAudit.setStatus(1l); // 1 通过 2 退回 3 退款成功
+                tRoomOrderCancelAuditMapper.updateTRoomOrderCancelAudit(tRoomOrderCancelAudit);
+
+                TRoomOrder roomOrder = new TRoomOrder();
+                roomOrder.setOrderNo(tRoomOrderCancelAudit.getOrderNo());
+                roomOrder = roomOrderService.selectTRoomOrderList(roomOrder).get(0);
+                TRoomOrder updateOrder = new TRoomOrder();
+                updateOrder.setId(roomOrder.getId());
+                updateOrder.setStatus(9); // 已取消
+                roomOrderService.updateTRoomOrder(updateOrder);
+
+            } catch (WxPayException e) {
+                log.error("JSAPI 申请退款：" + e.getLocalizedMessage());
+                throw new ServiceException("微信退款申请失败");
+            }
+
+            if (apiResult != null) {
+                switch (apiResult.getStatus()) {
+                    case "SUCCESS":
+                        return "退款成功";
+                    case "CLOSED":
+                        return "退款关闭";
+                    case "PROCESSING":
+                        return "退款处理中";
+                    case "ABNORMAL":
+                        return "退款异常";
+                }
             }
         }
+
+
         return "操作失败";
     }
 

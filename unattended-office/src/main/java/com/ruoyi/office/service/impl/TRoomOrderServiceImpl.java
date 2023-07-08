@@ -232,7 +232,7 @@ public class TRoomOrderServiceImpl extends ServiceImpl<TRoomOrderMapper, TRoomOr
                 if (validPromotion(prepayReq, userPromotion, userId)) {
                     if (totalPrice.compareTo(userPromotion.getStandardPrice()) == -1) {
                         throw new ServiceException("未达到满减金额");
-                    }else {
+                    } else {
                         payAMT = totalPrice.subtract(userPromotion.getDiscountPrice());
                     }
                 }
@@ -295,7 +295,16 @@ public class TRoomOrderServiceImpl extends ServiceImpl<TRoomOrderMapper, TRoomOr
         } else if (prepayReq.getPayType() == OfficeEnum.PayType.COUPON_PAY.getCode()) { // 美团券券支付
             validCoupon(prepayReq, userId);// 校验可用性
 
+            //  优惠券置为已使用
+            TWxUserCoupon wxUserCoupon = new TWxUserCoupon();
+            wxUserCoupon.setCouponId(prepayReq.getCouponId());
+            wxUserCoupon.setStatus(1l);
+            wxUserCouponService.updateTWxUserCoupon(wxUserCoupon);
+
             BigDecimal payAmt = new BigDecimal(0);
+            tRoomOrder.setPayType(OfficeEnum.PayType.CARD_BALANCE_PAY.getCode());
+            tRoomOrder.setOrderNo(orderNo);
+            tRoomOrder.setCouponId(prepayReq.getCouponId());
             tRoomOrder.setTotalAmount(totalPrice);
             tRoomOrder.setCouponAmount(totalPrice);
             tRoomOrder.setPayAmount(payAmt);
