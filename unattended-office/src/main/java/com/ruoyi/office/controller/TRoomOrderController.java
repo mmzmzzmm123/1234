@@ -144,15 +144,7 @@ public class TRoomOrderController extends BaseController {
         return success(tRoomOrderService.getPeriodPrice(vo));
     }
 
-    /**
-     * 获取房间时间段价格
-     */
-    @ApiOperation(value = "获取房间已占用时间段")
-    @GetMapping(value = "/available")
-    public AjaxResult getAvailablePeriod(RoomAvailablePeriod vo) {
-        final RoomAvailablePeriod availablePeriod = tRoomOrderService.getAvailablePeriod(vo);
-        return success(availablePeriod);
-    }
+
 
     /**
      * 续单,校验是否有进行中的订单，并返回

@@ -17,8 +17,11 @@ import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.core.domain.entity.SysDictData;
 import com.ruoyi.common.core.page.TableDataInfo;
 import com.ruoyi.common.exception.ServiceException;
+import com.ruoyi.common.utils.DateUtils;
 import com.ruoyi.common.utils.SecurityUtils;
 import com.ruoyi.common.utils.StringUtils;
+import com.ruoyi.office.domain.vo.RoomAvailablePeriod;
+import com.ruoyi.office.domain.vo.RoomWxVo;
 import com.ruoyi.office.mqtt.MqttSendClient;
 import com.ruoyi.office.domain.*;
 import com.ruoyi.office.domain.enums.OfficeEnum;
@@ -28,6 +31,7 @@ import com.ruoyi.office.service.*;
 import com.ruoyi.system.service.ISysDictDataService;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.logging.LogFactory;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -399,23 +403,38 @@ public class ApiController extends BaseController {
     @ApiOperation("wx房间列表")
     @GetMapping("/room/list")
     public TableDataInfo room(TRoom tRoom) {
-//        tRoom.setCreateBy(SecurityUtils.getUserId() + "");
+        List<RoomWxVo> res = new ArrayList<>();
         startPage();
         List<TRoom> list = tRoomService.selectTRoomList(tRoom);
 
         SysDictData dict = new SysDictData();
         dict.setDictType("room_mark");
         Map<String, String> dictMap = dictDataService.selectDictDataList(dict).stream().collect(Collectors.toMap(SysDictData::getDictValue, SysDictData::getDictLabel));
+
+        final Map<Long, List<TRoomPrice>> roomPriceGroup = tRoomPriceService.selectTRoomPriceList(new TRoomPrice()).stream().collect(Collectors.groupingBy(TRoomPrice::getRoomId));
+
         for (TRoom room : list) {
+            RoomWxVo vo = new RoomWxVo();
+            BeanUtils.copyProperties(room, vo);
             String roomMark = "";
             if (StringUtils.isEmpty(room.getRemark()))
                 continue;
             for (String mark : room.getRemark().split(",")) {
                 roomMark += "," + dictMap.get(mark);
             }
-            room.setRemark(roomMark.substring(1));
+
+            vo.setRemark(roomMark.substring(1));
+            vo.setPriceList(roomPriceGroup.get(room.getId()));
+
+            RoomAvailablePeriod qry = new RoomAvailablePeriod();
+            qry.setRoomId(room.getId());
+            qry.setDate(DateUtils.parseDate(DateUtils.getDate()));
+            final RoomAvailablePeriod availablePeriod = tRoomOrderService.getAvailablePeriod(qry);
+
+            vo.setPeriod(availablePeriod);
+            res.add(vo);
         }
-        return getDataTable(list);
+        return getDataTable(res);
     }
 
 
@@ -434,6 +453,16 @@ public class ApiController extends BaseController {
         startPage();
         List<TRoomPrice> list = tRoomPriceService.selectTRoomPriceList(tRoomPrice);
         return getDataTable(list);
+    }
+
+    /**
+     * 获取房间时间段价格
+     */
+    @ApiOperation(value = "获取房间已占用时间段")
+    @GetMapping(value = "/room/available")
+    public AjaxResult getAvailablePeriod(RoomAvailablePeriod vo) {
+        final RoomAvailablePeriod availablePeriod = tRoomOrderService.getAvailablePeriod(vo);
+        return success(availablePeriod);
     }
 
 }
