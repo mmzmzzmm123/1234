@@ -69,7 +69,9 @@ public class TRoomController extends BaseController {
     @PreAuthorize("@ss.hasPermi('office:room:query')")
     @GetMapping(value = "/{id}")
     public AjaxResult getInfo(@PathVariable("id") Long id) {
-        return success(tRoomService.selectTRoomById(id));
+        final TRoom room = tRoomService.selectTRoomById(id);
+
+        return success(room);
     }
 
     /**

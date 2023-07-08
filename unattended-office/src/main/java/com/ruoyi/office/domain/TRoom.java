@@ -41,6 +41,9 @@ public class TRoom extends BaseEntity
     @Excel(name = "桌台控制")
     private String tableCode;
 
+    /** logo */
+    private String logo;
+
     /** 开始时间 */
     @JsonFormat(pattern = "yyyy-MM-dd")
     @Excel(name = "开始时间", width = 30, dateFormat = "yyyy-MM-dd")

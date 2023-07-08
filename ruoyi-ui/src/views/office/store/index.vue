@@ -122,7 +122,7 @@
         <el-row>
           <el-col :span=24>
             <el-form-item label="门店详情" prop="remark">
-              <el-input  type="textarea" v-model="form.remark" placeholder="请输入门店详情" />
+              <el-input type="textarea" v-model="form.remark" placeholder="请输入门店详情" />
             </el-form-item>
           </el-col>
         </el-row>
@@ -185,7 +185,7 @@
             </el-form-item>
           </el-col>
         </el-row>
-       <!-- <el-row>
+        <!-- <el-row>
           <el-col :span=12>
             <el-form-item label="logo" prop="logo">
               <el-upload v-model="form.logo" ref="upload" :limit="1" accept=".jpg, .png" :action="upload.url"
@@ -264,12 +264,15 @@
           <el-form-item label="名称" prop="name">
             <el-input v-model="roomForm.name" placeholder="请输入名称" />
           </el-form-item>
+          <el-form-item label="房间标签" prop="remark">
+            <el-select v-model="roomForm.remark" multiple>
+              <el-option v-for="dict in dict.type.room_mark" :key="dict.value" :label="dict.label"
+                :value="dict.value" />
+            </el-select>
+          </el-form-item>
           <el-form-item label="wifi" prop="wifi">
             <el-input v-model="roomForm.wifi" placeholder="请输入wifi" />
           </el-form-item>
-          <!--  <el-form-item label="包厢控制" prop="equipCode">
-            <el-input v-model="roomForm.equipCode" placeholder="请输入包厢控制" />
-          </el-form-item> -->
           <el-form-item label="桌台控制" prop="tableCode">
             <el-input v-model="roomForm.tableCode" placeholder="请输入桌台控制" />
           </el-form-item>
@@ -279,6 +282,28 @@
                 :value="dict.value" />
             </el-select>
           </el-form-item>
+          <el-form-item label="logo" prop="logo">
+            <el-upload v-model="roomForm.logo" multiple :action="uploadImgUrl" list-type="picture-card"
+              :on-success="handleUploadSuccess" :before-upload="handleBeforeUpload" :limit="limit"
+              :on-error="handleUploadError" :on-exceed="handleExceed" ref="imageUpload" :on-remove="handleDelete"
+              :show-file-list="true" :headers="headers" :file-list="fileList" :on-preview="handlePictureCardPreview"
+              :class="{hide: this.fileList.length >= this.limit}">
+              <i class="el-icon-plus"></i>
+            </el-upload>
+
+            <!-- 上传提示 -->
+            <div class="el-upload__tip" slot="tip" v-if="showTip">
+              请上传
+              <template v-if="fileSize"> 大小不超过 <b style="color: #f56c6c">{{ fileSize }}MB</b> </template>
+              <template v-if="fileType"> 格式为 <b style="color: #f56c6c">{{ fileType.join("/") }}</b> </template>
+              的文件
+            </div>
+
+            <el-dialog :visible.sync="dialogVisible" title="预览" width="800" append-to-body>
+              <img :src="dialogImageUrl" style="display: block; max-width: 100%; margin: 0 auto" />
+            </el-dialog>
+          </el-form-item>
+        </el-form>
         </el-form>
         <div slot="footer" class="dialog-footer">
           <el-button type="primary" @click="submitRoomForm">确 定</el-button>
@@ -413,7 +438,7 @@
 
   export default {
     name: "Store",
-    dicts: ["room_status"],
+    dicts: ["room_status", "room_mark"],
     props: {
       value: [String, Object, Array],
       // 图片数量限制
@@ -769,9 +794,33 @@
         });
       },
       handleRoomUpdate(row) {
+        this.fileList = [];
         const id = row.id
         getRoom(id).then(response => {
           this.roomForm = response.data;
+
+          if (response.data.remark != null && response.data.remark.length > 0)
+            this.roomForm.remark = response.data.remark.split(',');
+          debugger
+          if (response.data.logo != null && response.data.logo.length > 0) {
+            var list = response.data.logo.split(',');
+            this.fileList = list.map(item => {
+              if (typeof item === "string") {
+                if (item.indexOf(this.baseUrl) === -1) {
+                  item = {
+                    name: this.baseUrl + item,
+                    url: this.baseUrl + item
+                  };
+                } else {
+                  item = {
+                    name: item,
+                    url: item
+                  };
+                }
+              }
+              return item;
+            });
+          }
           this.roomOpen = true;
           this.title = "修改房间";
         });
@@ -846,6 +895,8 @@
       },
       /** 提交门店包厢 **/
       submitRoomForm() {
+
+        this.roomForm.remark = this.roomForm.remark.join(",");
         this.$refs["roomForm"].validate(valid => {
           if (valid) {
             if (this.roomForm.id != null) {
@@ -931,6 +982,7 @@
           .indexOf("profile") - 1, url.length);
 
         this.form.logo = hostPort + suffix;
+        this.roomForm.logo = hostPort + suffix;
         this.form.fileName = response.fileName;
         this.$modal.msgSuccess(response.msg);
       },
@@ -940,7 +992,7 @@
         // var hostPort = window.location.origin;
         var url = row.img;
         // var suffix = url.substring(hostPort.length, url.length);
-        debugger
+        // debugger
         const a = document.createElement('a')
         a.setAttribute('target', '_blank')
         a.setAttribute('href', url)
@@ -1060,7 +1112,7 @@
       // 上传结束处理
       uploadedSuccessfully() {
         if (this.number > 0 && this.uploadList.length === this.number) {
-          debugger
+          // debugger
           for (let i in this.uploadList) {
             if (this.uploadList[i].url && this.uploadList[i].url.indexOf(this.baseUrl) < 0) {
               this.uploadList[i].url = this.baseUrl + this.uploadList[i].url;
@@ -1091,6 +1143,7 @@
         }
         var fileNames = strs != '' ? strs.substr(0, strs.length - 1) : '';
         this.form.logo = fileNames; // 绑定对象属性
+        this.roomForm.logo = fileNames;
         return fileNames;
       }
     }
