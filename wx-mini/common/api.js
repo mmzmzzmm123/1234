@@ -58,6 +58,15 @@ const api = {
 	},
 	getOrderList(param){
 		return get('office/api/room/order', param)
+	},
+	meiTuanConsume(code){
+		return get('office/api/meiTuanConsume/'+code)
+	},
+	openStore(storeId){
+		return post('office/api/store/' + storeId)
+	},
+	openRoom(roomId){
+		return post('office/api/room/' + roomId)
 	}
 }
 const install = (Vue, options) => {

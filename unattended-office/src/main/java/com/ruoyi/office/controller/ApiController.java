@@ -472,7 +472,7 @@ public class ApiController extends BaseController {
      */
     @ApiOperation("美团验券")
     @GetMapping("/meiTuanConsume/{code}")
-    public Boolean MeituanConsume(String code) throws ServiceException {
+    public Boolean MeituanConsume(@PathVariable("code") String code) throws ServiceException {
         Long userId = SecurityUtils.getLoginUser().getWxUser().getId();
         tuangouService.test(code, userId);
         return true;

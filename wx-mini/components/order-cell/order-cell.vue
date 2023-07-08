@@ -17,8 +17,8 @@
 			{{orderInfo.storeAdress}}
 		</view>
 		<view class="btn-bar">
-			<view class="btn-bar_btn">开大门</view>
-			<view class="btn-bar_btn">开包厢</view>
+			<view class="btn-bar_btn" @click="onOpenStore">开大门</view>
+			<view class="btn-bar_btn" @click="onOpenRoom">开包厢</view>
 		</view>
 	</view>
 </template>
@@ -36,7 +36,7 @@
 		},
 		data() {
 			return {
-				
+				payTypeList:[null, "微信支付", "储值卡余额支付", null, "优惠券支付"]
 			}
 		},
 		created() {
@@ -56,6 +56,22 @@
 					fail(res) {
 						console.log(res)
 					}
+				})
+			},
+			onOpenStore(){
+				this.$api.openStore(this.orderInfo.storeId).then(()=>{
+					uni.showToast({
+						icon: "none",
+						title: "已发送开大门请求"
+					})
+				})
+			},
+			onOpenRoom(){
+				this.$api.openRoom(this.orderInfo.roomId).then(()=>{
+					uni.showToast({
+						icon: "none",
+						title: "已发送开包厢请求"
+					})
 				})
 			}
 		}

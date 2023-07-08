@@ -60,10 +60,9 @@ public class TuangouService implements ITuangouService {
         String shopId = "b13c044414484ce4a3a4ffdb1f2e912b";
         List<TuangouReceiptConsumeResponseEntity> list =
                 tuangouReceiptConsume("123", code.replaceAll(" ", ""), 1, shopId, "userid", "username");
-        String appShopId = list.get(0).getApp_shop_id();
         String dealId = list.get(0).getDeal_id().toString();
         //撤销
-        TuangouReceiptReverseConsumeRequest tuangouReceiptReverseConsumeRequest = new TuangouReceiptReverseConsumeRequest(config.getAppKey(), config.getAppSecret(), dealId, code, appShopId, "userid", "username", shopId);
+        TuangouReceiptReverseConsumeRequest tuangouReceiptReverseConsumeRequest = new TuangouReceiptReverseConsumeRequest(config.getAppKey(), config.getAppSecret(), getShopSession(shopId), dealId, code, null, "userid", "username", shopId);
         DefaultOpenAPIClient openAPIClient = new DefaultOpenAPIClient();
         TuangouReceiptReverseConsume tuangouReceiptReverseConsume = new TuangouReceiptReverseConsume(tuangouReceiptReverseConsumeRequest);
         TuangouReceiptReverseConsumeResponse response = openAPIClient.invoke(tuangouReceiptReverseConsume);
@@ -71,7 +70,7 @@ public class TuangouService implements ITuangouService {
         //生成订单
 
         TStoreCoupon query = new TStoreCoupon();
-        query.setDianpingId(appShopId);
+        query.setDianpingId("");
         List<TStoreCoupon> tStoreCouponList = itStoreCouponService.selectTStoreCouponList(query);
         if (tStoreCouponList.size() > 0) {
             TStoreCoupon tStoreCoupon = tStoreCouponList.get(0);
@@ -199,12 +198,12 @@ public class TuangouService implements ITuangouService {
     private String getShopSession(String openShopUuid) {
         // todo...
         // 判断session是否过期，刷新session
-        return "3657a0656e454e537eddf139b07d5b2ee4a51ab2";
+        return "169e804081c8aefb54330194c8512992fe1c3c1e";
     }
 
     private String getBidSession(String bid) {
         // todo...
         // 判断session是否过期，刷新session
-        return "3657a0656e454e537eddf139b07d5b2ee4a51ab2";
+        return "169e804081c8aefb54330194c8512992fe1c3c1e";
     }
 }
