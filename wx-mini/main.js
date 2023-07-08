@@ -41,16 +41,31 @@ Vue.use(uView);
 
 import store from '@/store';
 
-uni.getSystemInfo({
-	success(res) {
-		if(res.language.indexOf('zh') >= 0){
-			i18n.locale = 'zh'
+// uni.getSystemInfo({
+// 	success(res) {
+// 		if(res.language.indexOf('zh') >= 0){
+// 			i18n.locale = 'zh'
+// 		}else{
+// 			i18n.locale = 'en'
+// 		}
+// 	}
+// })
+uni.getSetting({
+	success(res){
+		// scope.userLocation
+		if(res.authSetting['scope.userFuzzyLocation']){
+			store.commit('setCanLocation', true)
 		}else{
-			i18n.locale = 'en'
+			// uni.authorize({
+			// 	scope: 'scope.userFuzzyLocation',
+			// 	success(){
+			// 		store.commit('setCanLocation', true)
+			// 	}
+			// })
 		}
 	}
 })
-//store.dispatch("login")
+store.dispatch("login")
 const app = new Vue({
 	i18n,
 	store,

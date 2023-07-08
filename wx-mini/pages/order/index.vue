@@ -1,6 +1,6 @@
 <template>
 	<view>
-		<u-subsection :list="typeList"></u-subsection>
+		<!-- <u-subsection :list="typeList"></u-subsection> -->
 		<u-input prefix-icon="search" placeholder="请输入门店名称"></u-input>
 		<u-tabs :list="statusList"></u-tabs>
 	</view>

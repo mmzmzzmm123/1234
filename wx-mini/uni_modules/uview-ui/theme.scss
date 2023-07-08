@@ -10,10 +10,10 @@ $u-border-color: #dadbde;
 $u-bg-color: #f3f4f6;
 $u-disabled-color: #c8c9cc;
 
-$u-primary: #3c9cff;
-$u-primary-dark: #398ade;
-$u-primary-disabled: #9acafc;
-$u-primary-light: #ecf5ff;
+$u-primary: #9D7C6D; //#3c9cff;
+$u-primary-dark: #7a6157; //#398ade;
+$u-primary-disabled: #8da778; //#9acafc;
+$u-primary-light: #b6b19d; //#ecf5ff;
 
 $u-warning: #f9ae3d;
 $u-warning-dark: #f1a532;
@@ -35,6 +35,7 @@ $u-info-dark: #767a82;
 $u-info-disabled: #c4c6c9;
 $u-info-light: #f4f4f5;
 
+$u-bright: #fcfcfc;
 // scss混入，为了少写几行#ifndef
 @mixin flex($direction: row) {
 	/* #ifndef APP-NVUE */

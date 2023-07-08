@@ -35,12 +35,36 @@
 				"navigationBarTitleText": "个人中心",
 				"enablePullDownRefresh": false
 			}
+		},
+		{
+			"path": "pages/shop/index",
+			"style": {
+				"navigationBarTitleText": "预约"
+			}
+		},
+		{
+			"path": "pages/receipt-consume/index",
+			"style": {
+				"navigationBarTitleText": "验券"
+			}
+		},
+		{
+			"path": "pages/recharge/shop-list/index",
+			"style": {
+				"navigationBarTitleText": "会员充值"
+			}
+		},
+		{
+			"path": "pages/recharge/shop/index",
+			"style": {
+				"navigationBarTitleText": "会员充值"
+			}
 		}
 	],
 	"globalStyle": {
 		"navigationBarTextStyle": "black",
 		"navigationBarTitleText": "棋牌",
-		"navigationBarBackgroundColor": "#007aff",
+		"navigationBarBackgroundColor": "#9D7C6D",
 		"backgroundColor": "#f3f4f6"
 	},
 	"tabBar": {

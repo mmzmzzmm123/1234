@@ -1,33 +1,33 @@
 <template>
 	<view class="shop-cell">
 		<view class="shop-cell_img">
-			<u-image mode="aspectFill" width="200rpx" height="200rpx" src="https://www.baidu.com/img/flexible/logo/pc/result@2.png"></u-image>
-			<view class="shop-cell_status">营业中</view>
+			<u-image mode="aspectFill" width="200rpx" height="200rpx" radius="10rpx" :src="shopInfo.logo" @click="onPreviewImage"></u-image>
+			<!-- <view class="shop-cell_status">营业中</view> -->
 		</view>
-		<view style="flex: 1;">
+		<view style="flex: 1;" @click="toOrderRoom">
 			<view class="shop-cell_title">
-				<view class="shop-cell_name">店铺名称</view>
+				<view class="shop-cell_name">{{shopInfo.name}}</view>
 				<view class="shop-cell_tag-wrapper">
 					<view class="shop-cell_tag">棋牌</view>
-					<view class="shop-cell_tag">台球</view>
+					<!-- <view class="shop-cell_tag">台球</view> -->
 				</view>
 			</view>
-			<view class="shop-cell_info">
+			<view class="shop-cell_info" @click.stop="toMap">
 				<u-icon name="map" custom-style="margin-right:10rpx" size="32rpx"></u-icon>
-				地址
+				{{shopInfo.address}}
 			</view>
 			<view class="shop-cell_info">
 				<u-icon name="clock" custom-style="margin-right:10rpx" size="30rpx"></u-icon>
-				营业时间
+				营业时间: {{shopInfo.startTime + ' - ' + shopInfo.stopTime}}
 			</view>
-			<view class="shop-cell_info">
+			<view class="shop-cell_info" @click.stop="makePhoneCall">
 				<u-icon name="phone-fill" custom-style="margin-right:10rpx" size="32rpx"></u-icon>
-				18814887553
+				{{shopInfo.phone}}
 			</view>
 			<view class="shop-cell_info">
-				<view class="shop-cell_distance">
+				<view class="shop-cell_distance" @click.stop="toMap">
 					<text class="iconfont icon-daohang"></text>
-					距我500m
+					{{shopInfo.meters ? (shopInfo.meters > 1000 ? (shopInfo.meters / 1000).toFixed(1) + 'km' : shopInfo.meters + 'm') : '未授权'}}
 				</view>
 			</view>
 		</view>
@@ -56,7 +56,34 @@
 	
 		},
 		methods: {
-			
+			makePhoneCall(){
+				uni.makePhoneCall({
+					phoneNumber: '18814887553'
+				})
+			},
+			onPreviewImage(){
+				uni.previewImage({
+					urls: ['https://www.baidu.com/img/flexible/logo/pc/result@2.png','https://cdn.uviewui.com/uview/resources/127901018.jpg']
+				})
+			},
+			toOrderRoom(){
+				uni.navigateTo({
+					url: "/pages/shop/index",
+					success: res=>{
+						res.eventChannel.emit('acceptShop', this.shopInfo)
+					}
+				})
+			},
+			toMap(){
+				uni.openLocation({
+					latitude: new Number(this.shopInfo.latitude),
+					longitude: new Number(this.shopInfo.longitude),
+					address: this.shopInfo.address,
+					fail(res) {
+						console.log(res)
+					}
+				})
+			}
 		}
 	}
 </script>
@@ -64,8 +91,7 @@
 <style lang="scss">
 	.shop-cell{
 		display: flex;
-		position: relative;
-		padding: 0 10rpx;
+		padding: 0 20rpx;
 		margin: 20rpx 0;
 		background-color: #fff;
 		border-radius: 10rpx;
@@ -118,7 +144,8 @@
 		}
 		&_tag{
 			display: inline-block;
-			background: #ff3999;
+			background: $u-primary;
+			color: $u-bright;
 			line-height: 40rpx;
 			height: 40rpx;
 			width: 60rpx;
@@ -127,6 +154,7 @@
 			text-align: center;
 			font-size: 16rpx;
 			vertical-align: text-top;
+			box-shadow: 2rpx 2rpx 6rpx #000;
 		}
 		&_distance{
 			height: 40rpx;
