@@ -10,5 +10,6 @@ public class RoomOrderWxReqVo  extends BaseEntity {
     private Long storeId;
     private Long roomId;
     private String keyword;
+    private Integer status;
 
 }
