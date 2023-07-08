@@ -122,12 +122,17 @@ public class TRoomOrderServiceImpl extends ServiceImpl<TRoomOrderMapper, TRoomOr
             if (roomPrice.getStopTime() < stHour || endHour < roomPrice.getStartTime())
                 continue;
 
+            int tempSt = 0, tempEnd = 0;
             if (roomPrice.getStartTime() > stHour)
-                stHour = roomPrice.getStartTime();
-            if (roomPrice.getStopTime() <= endHour)
-                endHour = roomPrice.getStopTime();
+                tempSt = roomPrice.getStartTime();
+            else
+                tempSt = stHour;
 
-            int minuts = endHour - stHour;
+            if (roomPrice.getStopTime() <= endHour)
+                tempEnd = roomPrice.getStopTime() + 1;
+            else tempEnd = endHour;
+
+            int minuts = tempEnd - tempSt;
             totalPrice = totalPrice.add(roomPrice.getPrice().multiply(new BigDecimal(minuts)));
         }
         return totalPrice;

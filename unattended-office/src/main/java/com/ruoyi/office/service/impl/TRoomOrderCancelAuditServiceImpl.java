@@ -26,6 +26,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.ruoyi.office.mapper.TRoomOrderCancelAuditMapper;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * 预约取消审核Service业务层处理
@@ -127,6 +128,7 @@ public class TRoomOrderCancelAuditServiceImpl extends ServiceImpl<TRoomOrderCanc
     ITRoomService roomService;
 
     @Override
+    @Transactional
     public String approve(TRoomOrderCancelAudit cancelAudit) {
 
         TRoomOrderCancelAudit tRoomOrderCancelAudit = tRoomOrderCancelAuditMapper.selectTRoomOrderCancelAuditById(cancelAudit.getId());

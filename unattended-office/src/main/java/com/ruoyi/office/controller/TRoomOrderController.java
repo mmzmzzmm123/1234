@@ -126,8 +126,8 @@ public class TRoomOrderController extends BaseController {
     @Log(title = "预定", businessType = BusinessType.INSERT)
     @PostMapping("/order")
     public AjaxResult order(@RequestBody PrepayReq order) {
-//        long wxUserId = SecurityUtils.getLoginUser().getWxUser().getId();
-        long wxUserId = 9l;
+        long wxUserId = SecurityUtils.getLoginUser().getWxUser().getId();
+//        long wxUserId = 9l;
         order.setUserId(wxUserId);
         try {
             tRoomOrderService.prepay(order, wxUserId);
