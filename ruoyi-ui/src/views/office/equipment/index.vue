@@ -66,7 +66,7 @@
       <el-table-column label="id" align="center" prop="id" />
       <el-table-column label="名称" align="center" prop="name" />
       <el-table-column label="设备类型" align="center" prop="equipType" :formatter="equipTypeFormatter" />
-     <!-- <el-table-column label="在线状态" align="center" prop="online">
+      <!-- <el-table-column label="在线状态" align="center" prop="online">
         <template slot-scope="scope">
           <dict-tag :options="dict.type.sys_yes_no" :value="scope.row.online" />
         </template>
@@ -81,8 +81,10 @@
       <!-- <el-table-column label="备注" align="center" prop="remark" /> -->
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
-          <el-button size="mini" type="text" icon="el-icon-edit" @click="$modal.msgError('设备接口待打通');"
-            v-hasPermi="['office:equipment:edit']">开启/关闭</el-button>
+          <el-button v-if="scope.row.onOff=='Y'" size="mini" type="text" icon="el-icon-edit"
+            @click="openClose(scope.row, 'N')" v-hasPermi="['office:equipment:onoff']">关闭</el-button>
+          <el-button v-else-if="scope.row.onOff=='N'" size="mini" type="text" icon="el-icon-edit"
+            @click="openClose(scope.row, 'Y')" v-hasPermi="['office:equipment:onoff']">开启</el-button>
           <el-button size="mini" type="text" icon="el-icon-edit" @click="handleUpdate(scope.row)"
             v-hasPermi="['office:equipment:edit']">修改</el-button>
           <el-button size="mini" type="text" icon="el-icon-delete" @click="handleDelete(scope.row)"
@@ -132,7 +134,8 @@
     getEquipment,
     delEquipment,
     addEquipment,
-    updateEquipment
+    updateEquipment,
+    setEquipment
   } from "@/api/office/equipment";
 
   export default {
@@ -272,6 +275,13 @@
               });
             }
           }
+        });
+      },
+      openClose(row, onoff) {
+        row.onOff = onoff;
+        setEquipment(row).then(response => {
+          this.$modal.msgSuccess("操作成功");
+          this.getList();
         });
       },
       /** 删除按钮操作 */

@@ -42,3 +42,13 @@ export function delEquipment(id) {
     method: 'delete'
   })
 }
+
+
+// 开关设备
+export function setEquipment(data){
+  return request({
+    url: '/office/equipment/setting',
+    method: 'put',
+    data: data
+  })
+}

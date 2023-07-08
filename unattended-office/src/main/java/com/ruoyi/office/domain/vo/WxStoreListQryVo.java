@@ -7,4 +7,5 @@ public class WxStoreListQryVo {
     private String province;
     private String lon;
     private String lat;
+    private String keyword;
 }

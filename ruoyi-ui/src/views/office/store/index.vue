@@ -73,9 +73,7 @@
       <el-table-column label="绑定设备" align="center" prop="equipId" width="160" :formatter="equipStoreFormatter" />
       <el-table-column label="所属商圈" align="center" prop="busiDistrict" width="100" />
       <el-table-column label="地铁线路" align="center" prop="subway" width="100" />
-      <!--  <el-table-column label="纬度" align="center" prop="latitude" />
-      <el-table-column label="经度" align="center" prop="longitude" /> -->
-      <el-table-column label="logo" align="center" prop="logo">
+      <!-- <el-table-column label="设备状态" align="center" prop="logo"> -->
         <template slot-scope="scope">
        <!--   <el-image style="width: 50px; height: 20px" placeholder :src="scope.row.logo"
             @click="handlePictureCardPreview(scope.row)">

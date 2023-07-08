@@ -104,7 +104,7 @@ public class TEquipmentController extends BaseController {
     }
 
     @PutMapping("/setting")
-    public String setDevice(@RequestBody TEquipment tEquipment) {
+    public AjaxResult setDevice(@RequestBody TEquipment tEquipment) {
         MqttSendClient sendClient = new MqttSendClient();
         TEquipment qry = tEquipmentService.selectTEquipmentById(tEquipment.getId());
         if ("Y".equalsIgnoreCase(tEquipment.getOnOff())) {
@@ -113,6 +113,7 @@ public class TEquipmentController extends BaseController {
             sendClient.publish(qry.getEquipControl(), "b1");
         }
 
-        return "success";
+        tEquipment.setUpdateBy(SecurityUtils.getUserId() + "");
+        return toAjax(tEquipmentService.updateTEquipment(tEquipment));
     }
 }

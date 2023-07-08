@@ -58,7 +58,7 @@
         <where>
             <if test="userId != null ">and user_id = #{userId}</if>
             <if test="name != null  and name != ''">and name like concat('%', #{name}, '%')</if>
-            <if test="address != null  and address != ''">and address like concat('%', #{address},'%') </if>
+            <if test="address != null  and address != ''">and address like concat('%', #{address},'%')</if>
             <if test="phone != null  and phone != ''">and phone = #{phone}</if>
             <if test="startTime != null ">and start_time = #{startTime}</if>
             <if test="stopTime != null ">and stop_time = #{stopTime}</if>
@@ -82,9 +82,16 @@
         where id = #{id}
     </select>
 
-    <select id="selectWxStoreList" parameterType="com.ruoyi.office.domain.vo.WxStoreListQryVo" resultType="com.ruoyi.office.domain.vo.WxStoreListRspVo">
+    <select id="selectWxStoreList" parameterType="com.ruoyi.office.domain.vo.WxStoreListQryVo"
+            resultType="com.ruoyi.office.domain.vo.WxStoreListRspVo">
         select st_distance (point (#{lat},#{lon}),point(s.latitude ,s.longitude) ) * 111195 as meters, s.*
-        from t_store s order by  st_distance (point (#{lat},#{lon}),point(s.latitude ,s.longitude))
+        from t_store s
+        <where>
+            <if test="keyword != null and keyword != ''">and (name like concat('%', #{keyword}, '%') or address like
+                concat('%', #{keyword}, '%'))
+            </if>
+        </where>
+        order by st_distance (point (#{lat},#{lon}),point(s.latitude ,s.longitude))
     </select>
 
     <insert id="insertTStore" parameterType="TStore" useGeneratedKeys="true" keyProperty="id">

@@ -31,7 +31,7 @@ import java.util.stream.Collectors;
  *
  * @author ruoyi
  */
-@Component("ryTask")
+@Component("officeTask")
 public class OfficeTask {
 
     @Autowired

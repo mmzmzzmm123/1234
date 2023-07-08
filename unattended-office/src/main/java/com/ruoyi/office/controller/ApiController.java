@@ -312,7 +312,7 @@ public class ApiController extends BaseController {
      */
     @ApiOperation("wx店铺列表")
     @GetMapping("/store/list")
-    public TableDataInfo wxStoreList(@RequestBody WxStoreListQryVo wxStoreListQryVo) {
+    public TableDataInfo wxStoreList(WxStoreListQryVo wxStoreListQryVo) {
         startPage();
         List<WxStoreListRspVo> list = storeService.selectWxStoreList(wxStoreListQryVo);
         return getDataTable(list);
