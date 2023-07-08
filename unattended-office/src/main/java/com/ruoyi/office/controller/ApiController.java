@@ -14,6 +14,7 @@ import com.github.binarywang.wxpay.service.WxPayService;
 import com.ruoyi.common.annotation.Log;
 import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.domain.AjaxResult;
+import com.ruoyi.common.core.domain.entity.SysDictData;
 import com.ruoyi.common.core.page.TableDataInfo;
 import com.ruoyi.common.exception.ServiceException;
 import com.ruoyi.common.utils.SecurityUtils;
@@ -24,6 +25,7 @@ import com.ruoyi.office.domain.enums.OfficeEnum;
 import com.ruoyi.office.domain.vo.WxStoreListQryVo;
 import com.ruoyi.office.domain.vo.WxStoreListRspVo;
 import com.ruoyi.office.service.*;
+import com.ruoyi.system.service.ISysDictDataService;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,6 +37,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.util.*;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
+import java.util.stream.Collectors;
 
 import static com.ruoyi.common.utils.PageUtils.startPage;
 
@@ -387,6 +390,9 @@ public class ApiController extends BaseController {
     @Autowired
     private ITRoomService tRoomService;
 
+    @Autowired
+    private ISysDictDataService dictDataService;
+
     /**
      * 查询店铺房间列表
      */
@@ -396,6 +402,19 @@ public class ApiController extends BaseController {
 //        tRoom.setCreateBy(SecurityUtils.getUserId() + "");
         startPage();
         List<TRoom> list = tRoomService.selectTRoomList(tRoom);
+
+        SysDictData dict = new SysDictData();
+        dict.setDictType("room_mark");
+        Map<String, String> dictMap = dictDataService.selectDictDataList(dict).stream().collect(Collectors.toMap(SysDictData::getDictValue, SysDictData::getDictLabel));
+        for (TRoom room : list) {
+            String roomMark = "";
+            if (StringUtils.isEmpty(room.getRemark()))
+                continue;
+            for (String mark : room.getRemark().split(",")) {
+                roomMark += "," + dictMap.get(mark);
+            }
+            room.setRemark(roomMark.substring(1));
+        }
         return getDataTable(list);
     }
 
