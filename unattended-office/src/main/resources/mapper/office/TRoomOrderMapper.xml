@@ -94,7 +94,9 @@
         coupon_id couponId,
         prepay_id prepayId,
         o.pay_type payType,
-        s.name ,s.address,s.phone,r.name, s.latitude lat, s.longitude lon
+        s.name ,s.address,s.phone,r.name,
+        s.latitude lat, s.longitude lon,
+        s.id storeId
         from t_room_order o
         left join t_room r on o.room_id = r.id
         left join t_store s on r.store_id =s.id

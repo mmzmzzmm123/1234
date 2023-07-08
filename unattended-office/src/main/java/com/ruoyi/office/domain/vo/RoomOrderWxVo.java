@@ -6,6 +6,7 @@ import lombok.Data;
 @Data
 public class RoomOrderWxVo extends TRoomOrder {
 
+    private String storeId;
     private String storeName;
     private String roomName;
     private String storeAdress;
