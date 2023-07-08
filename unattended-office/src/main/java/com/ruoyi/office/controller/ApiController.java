@@ -386,7 +386,7 @@ public class ApiController extends BaseController {
     @ApiOperation("wx订单记录")
     @GetMapping("/room/order")
     public TableDataInfo order(RoomOrderWxReqVo tRoomOrder) {
-        tRoomOrder.setCreateBy(SecurityUtils.getLoginUser().getWxUser().getOpenId() + "");
+        tRoomOrder.setCreateBy(SecurityUtils.getLoginUser().getWxUser().getId() + "");
         startPage();
         List<RoomOrderWxVo> list = tRoomOrderService.getWxRoomOrder(tRoomOrder);
         return getDataTable(list);

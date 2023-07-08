@@ -51,15 +51,17 @@ public class WxAuthenticationProvider implements AuthenticationProvider {
                 wxUser.setCreateTime(new Date());
                 wxUser.setLoginDate(DateUtils.getNowDate());
                 wxUser.setLoginIp(IpUtils.getIpAddr());
-                if(StringUtils.isNotEmpty(loginBody.getInviteCode())){
+                if (StringUtils.isNotEmpty(loginBody.getInviteCode())) {
                     wxUser.setShareCode(loginBody.getInviteCode());
                     // 新用户奖励 待补充
 
                 }
                 userMapper.insertWxUser(wxUser);
+                WxUser insertUser = userMapper.selectUserByOpenId(result.getOpenid());
+                wxUser.setId(insertUser.getId());
             } else {
                 if (UserStatus.DISABLE.getCode().equals(wxUser.getStatus())) {
-                    log.info("登录用户：{} 已被停用." , wxUser.getUnionId());
+                    log.info("登录用户：{} 已被停用.", wxUser.getUnionId());
                     throw new ServiceException("对不起，您的账号：" + wxUser.getUnionId() + " 已停用");
                 }
             }
