@@ -105,7 +105,7 @@
             <if test="storeId != null ">and s.id = #{storeId}</if>
             <if test="roomId != null ">and room_id = #{roomId}</if>
             <if test="createBy != null  and createBy != ''">and u.open_id = #{createBy}</if>
-            <if test="status != null ">and o.status = #{status}</if>
+            <if test="status != null and status != -1">and o.status = #{status}</if>
         </where>
 
     </select>
