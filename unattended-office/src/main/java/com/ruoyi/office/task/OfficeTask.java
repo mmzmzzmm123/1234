@@ -1,11 +1,8 @@
 package com.ruoyi.office.task;
 
-import ch.qos.logback.core.util.TimeUtil;
 import com.alibaba.fastjson2.JSONObject;
 import com.ruoyi.common.core.domain.entity.SysDictData;
-import com.ruoyi.common.utils.DateUtils;
 import com.ruoyi.common.utils.http.HttpUtils;
-import com.ruoyi.common.utils.mqtt.MqttAcceptClient;
 import com.ruoyi.office.domain.TEquipment;
 import com.ruoyi.office.domain.TRoom;
 import com.ruoyi.office.domain.TRoomOrder;
@@ -15,8 +12,6 @@ import com.ruoyi.office.service.ITEquipmentService;
 import com.ruoyi.office.service.ITRoomOrderService;
 import com.ruoyi.office.service.ITRoomService;
 import com.ruoyi.system.service.ISysDictDataService;
-import io.swagger.annotations.ApiOperation;
-import org.apache.commons.math3.analysis.function.Identity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 

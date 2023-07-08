@@ -16,21 +16,15 @@ import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.core.page.TableDataInfo;
 import com.ruoyi.common.utils.SecurityUtils;
-import com.ruoyi.common.utils.mqtt.MqttSendClient;
+import com.ruoyi.office.mqtt.MqttSendClient;
 import com.ruoyi.office.domain.*;
 import com.ruoyi.office.domain.enums.OfficeEnum;
-import com.ruoyi.office.domain.vo.WxPayCallback;
 import com.ruoyi.office.domain.vo.WxStoreListQryVo;
 import com.ruoyi.office.domain.vo.WxStoreListRspVo;
 import com.ruoyi.office.service.*;
 import io.swagger.annotations.ApiOperation;
-import org.apache.activemq.command.ActiveMQQueue;
-import org.apache.activemq.command.ActiveMQTopic;
 import org.apache.commons.logging.LogFactory;
-import org.aspectj.weaver.loadtime.Aj;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jms.core.JmsMessagingTemplate;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -38,7 +32,6 @@ import javax.servlet.http.HttpServletResponse;
 import java.util.*;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
-import java.util.stream.Collectors;
 
 import static com.ruoyi.common.utils.PageUtils.startPage;
 
@@ -379,7 +372,7 @@ public class ApiController extends BaseController {
     /**
      * 查询房间占用（点支付时再次校验可用性并改变状态，支付失败回滚）列表
      */
-    @ApiOperation("预约订单、记录")
+    @ApiOperation("wx订单记录")
     @GetMapping("/room/order")
     public TableDataInfo order(TRoomOrder tRoomOrder) {
         tRoomOrder.setCreateBy(SecurityUtils.getUserId() + "");
@@ -394,7 +387,7 @@ public class ApiController extends BaseController {
     /**
      * 查询店铺房间列表
      */
-    @ApiOperation("房间列表")
+    @ApiOperation("wx房间列表")
     @GetMapping("/room/list")
     public TableDataInfo room(TRoom tRoom) {
 //        tRoom.setCreateBy(SecurityUtils.getUserId() + "");

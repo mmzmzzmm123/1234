@@ -1,5 +1,6 @@
-package com.ruoyi.common.utils.mqtt;
+package com.ruoyi.office.mqtt;
 
+import com.ruoyi.common.exception.ServiceException;
 import lombok.extern.slf4j.Slf4j;
 import org.eclipse.paho.client.mqttv3.MqttClient;
 import org.eclipse.paho.client.mqttv3.MqttConnectOptions;
@@ -98,6 +99,7 @@ public class MqttSendClient {
             log.info("消息发送成功");
         } catch (Exception e) {
             log.error("mqtt发送消息异常:", e);
+            throw new ServiceException(e.getMessage());
         }
     }
 

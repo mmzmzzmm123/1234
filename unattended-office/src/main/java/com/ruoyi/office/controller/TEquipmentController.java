@@ -6,9 +6,8 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.ruoyi.common.exception.ServiceException;
 import com.ruoyi.common.utils.SecurityUtils;
-import com.ruoyi.common.utils.StringUtils;
-import com.ruoyi.common.utils.mqtt.MqttAcceptClient;
-import com.ruoyi.common.utils.mqtt.MqttSendClient;
+import com.ruoyi.office.mqtt.MqttAcceptClient;
+import com.ruoyi.office.mqtt.MqttSendClient;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;

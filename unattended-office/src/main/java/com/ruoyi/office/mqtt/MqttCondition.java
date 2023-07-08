@@ -1,4 +1,4 @@
-package com.ruoyi.common.utils.mqtt;
+package com.ruoyi.office.mqtt;
 
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.context.annotation.Condition;

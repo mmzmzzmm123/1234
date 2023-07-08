@@ -1,10 +1,11 @@
-package com.ruoyi.common.utils.mqtt;
+package com.ruoyi.office.mqtt;
 
 import lombok.extern.slf4j.Slf4j;
 import org.eclipse.paho.client.mqttv3.IMqttDeliveryToken;
 import org.eclipse.paho.client.mqttv3.MqttCallbackExtended;
 import org.eclipse.paho.client.mqttv3.MqttException;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.io.UnsupportedEncodingException;
@@ -32,7 +33,6 @@ public class MqttSendCallBack implements MqttCallbackExtended {
     public void connectionLost(Throwable cause) {
         log.error("【MQTT-发送端】链接断开！");
     }
-
 
 
     @Override

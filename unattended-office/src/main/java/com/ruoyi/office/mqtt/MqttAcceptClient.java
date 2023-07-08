@@ -1,4 +1,4 @@
-package com.ruoyi.common.utils.mqtt;
+package com.ruoyi.office.mqtt;
 
 import lombok.extern.slf4j.Slf4j;
 import org.eclipse.paho.client.mqttv3.MqttClient;
@@ -36,7 +36,7 @@ public class MqttAcceptClient {
         MqttClient client;
         try {
 
-            client = new MqttClient(mqttProperties.getHostUrl(), "xxx", new MemoryPersistence());
+            client = new MqttClient(mqttProperties.getHostUrl(), "MqttAcceptClient", new MemoryPersistence());
             MqttConnectOptions options = new MqttConnectOptions();
             options.setUserName(mqttProperties.getUsername());
             options.setPassword(mqttProperties.getPassword().toCharArray());

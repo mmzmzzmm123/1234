@@ -73,14 +73,13 @@
       <el-table-column label="绑定设备" align="center" prop="equipId" width="160" :formatter="equipStoreFormatter" />
       <el-table-column label="所属商圈" align="center" prop="busiDistrict" width="100" />
       <el-table-column label="地铁线路" align="center" prop="subway" width="100" />
-      <!-- <el-table-column label="设备状态" align="center" prop="logo"> -->
+      <!-- <el-table-column label="设备状态" align="center" prop="logo">
         <template slot-scope="scope">
-       <!--   <el-image style="width: 50px; height: 20px" placeholder :src="scope.row.logo"
-            @click="handlePictureCardPreview(scope.row)">
-          </el-image> -->
+
           <el-image :src="baseUrl + scope.row.logo" style="width: 50px;height: 50px"  :preview-src-list="baseUrl + scope.row.logo"/>
         </template>
-      </el-table-column>
+      </el-table-column> -->
+
       <el-table-column label="操作" align="center" width="250" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button size="mini" type="text" icon="el-icon-edit" @click="addStoreRoom(scope.row)"
@@ -117,6 +116,13 @@
           <el-col :span=24>
             <el-form-item label="门店地址" prop="address">
               <el-input v-model="form.address" placeholder="请输入门店地址" />
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col :span=24>
+            <el-form-item label="门店详情" prop="remark">
+              <el-input  type="textarea" v-model="form.remark" placeholder="请输入门店详情" />
             </el-form-item>
           </el-col>
         </el-row>

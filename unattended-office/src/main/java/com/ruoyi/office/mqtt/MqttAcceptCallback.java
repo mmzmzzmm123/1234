@@ -1,4 +1,4 @@
-package com.ruoyi.common.utils.mqtt;
+package com.ruoyi.office.mqtt;
 
 import lombok.extern.slf4j.Slf4j;
 import org.eclipse.paho.client.mqttv3.IMqttDeliveryToken;
@@ -89,7 +89,7 @@ public class MqttAcceptCallback implements MqttCallbackExtended {
         log.info("--------------------【MQTT-消费端】连接成功！--------------------");
         // 以/#结尾表示订阅所有以test开头的主题
         // 订阅所有机构主题
-        mqttAcceptClient.subscribe("test_queue", 0);
+        mqttAcceptClient.subscribe("123456789012", 0);
     }
 
 }
