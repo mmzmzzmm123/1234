@@ -68,14 +68,14 @@ public class TuangouService implements ITuangouService {
         TuangouReceiptReverseConsumeResponse response = openAPIClient.invoke(tuangouReceiptReverseConsume);
 
         //生成订单
-
         TStoreCoupon query = new TStoreCoupon();
-        query.setDianpingId("");
+        query.setDianpingId(dealId);
         List<TStoreCoupon> tStoreCouponList = itStoreCouponService.selectTStoreCouponList(query);
         if (tStoreCouponList.size() > 0) {
             TStoreCoupon tStoreCoupon = tStoreCouponList.get(0);
             TWxUserCoupon tWxUserCoupon = new TWxUserCoupon();
             BeanUtils.copyBeanProp(tWxUserCoupon, tStoreCoupon);
+            tWxUserCoupon.setUserId(userId);
             itWxUserCouponService.insertTWxUserCoupon(tWxUserCoupon);
         }
         return true;
