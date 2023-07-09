@@ -52,3 +52,13 @@ export function setEquipment(data){
     data: data
   })
 }
+
+
+// 查询没有绑定的设备列表列表
+export function listAvailableEquipment(query) {
+  return request({
+    url: '/office/equipment/listAvailable',
+    method: 'get',
+    params: query
+  })
+}

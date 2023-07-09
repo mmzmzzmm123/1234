@@ -58,4 +58,6 @@ public interface ITEquipmentService
      * @return 结果
      */
     public int deleteTEquipmentById(Long id);
+
+    List<TEquipment> selectAvailableEquipmentList(TEquipment tEquipment);
 }

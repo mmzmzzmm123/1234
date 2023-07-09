@@ -137,4 +137,15 @@ public class TEquipmentController extends BaseController {
 //        }
     }
 
+    /**
+     * 查询设备列表列表
+     */
+    @PreAuthorize("@ss.hasPermi('office:equipment:list')")
+    @GetMapping("/listAvailable")
+    public TableDataInfo listAvailable(TEquipment tEquipment) {
+        tEquipment.setCreateBy(SecurityUtils.getUserId() + "");
+        List<TEquipment> list = tEquipmentService.selectAvailableEquipmentList(tEquipment);
+        return getDataTable(list);
+    }
+
 }

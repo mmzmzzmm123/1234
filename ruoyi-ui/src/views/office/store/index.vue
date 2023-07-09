@@ -436,7 +436,7 @@
   } from "@/api/office/roomprice";
 
   import {
-    listEquipment
+    listAvailableEquipment
   } from "@/api/office/equipment";
 
 
@@ -542,6 +542,7 @@
         roomList: [],
         priceList: [],
         equipOptions: [],
+        storeEquipOptions: [],
         // 弹出层标题
         title: "",
         // 是否显示弹出层

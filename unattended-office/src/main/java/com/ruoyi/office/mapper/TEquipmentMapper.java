@@ -59,4 +59,5 @@ public interface TEquipmentMapper extends BaseMapper<TEquipment> {
      * @return 结果
      */
     public int deleteTEquipmentByIds(Long[] ids);
+
 }

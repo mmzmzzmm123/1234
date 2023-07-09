@@ -40,7 +40,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <include refid="selectTEquipmentVo"/>
         where id = #{id}
     </select>
-        
+    <select id="selectAvailableEquipmentList" parameterType="TEquipment" resultMap="TEquipmentResult">
+
+    </select>
+
     <insert id="insertTEquipment" parameterType="TEquipment" useGeneratedKeys="true" keyProperty="id">
         insert into t_equipment
         <trim prefix="(" suffix=")" suffixOverrides=",">

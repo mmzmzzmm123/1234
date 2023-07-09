@@ -9,8 +9,12 @@ import com.alibaba.fastjson2.JSONObject;
 import com.ruoyi.common.core.domain.entity.SysDictData;
 import com.ruoyi.common.utils.DateUtils;
 import com.ruoyi.common.utils.http.HttpUtils;
+import com.ruoyi.office.domain.TRoom;
+import com.ruoyi.office.domain.TStore;
 import com.ruoyi.office.domain.enums.OfficeEnum;
 import com.ruoyi.office.domain.vo.CloudHornRegResponse;
+import com.ruoyi.office.service.ITRoomService;
+import com.ruoyi.office.service.ITStoreService;
 import com.ruoyi.system.service.ISysDictDataService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -113,5 +117,27 @@ public class TEquipmentServiceImpl extends ServiceImpl<TEquipmentMapper, TEquipm
     @Override
     public int deleteTEquipmentById(Long id) {
         return tEquipmentMapper.deleteTEquipmentById(id);
+    }
+
+    @Autowired
+    ITStoreService storeService;
+    @Autowired
+    ITRoomService roomService;
+
+    @Override
+    public List<TEquipment> selectAvailableEquipmentList(TEquipment tEquipment) {
+
+        List<TEquipment> equipments = tEquipmentMapper.selectTEquipmentList(tEquipment);
+
+        TStore store = new TStore();
+        store.setCreateBy(tEquipment.getCreateBy());
+        final List<TStore> tStores = storeService.selectTStoreList(store);
+
+        TRoom room = new TRoom();
+        room.setCreateBy(tEquipment.getCreateBy());
+        final List<TRoom> tRooms = roomService.selectTRoomList(room);
+
+
+        return equipments;
     }
 }
