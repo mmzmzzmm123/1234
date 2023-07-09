@@ -478,4 +478,24 @@ public class ApiController extends BaseController {
         return true;
     }
 
+
+    @Autowired
+    private ITWxUserAmountService tWxUserAmountService;
+
+    /**
+     * 查询微信用户余额
+     */
+    @ApiOperation("微信用户余额,merchant=0时，用户所有商户的余额列表")
+    @GetMapping("/wxuser/{merchant}")
+    public TableDataInfo wxuser(@PathVariable("merchant") long merchant) {
+        TWxUserAmount wxUserAmount = new TWxUserAmount();
+        wxUserAmount.setWxUserId(SecurityUtils.getLoginUser().getWxUser().getId());
+        if (merchant != 0) {
+            wxUserAmount.setUserId(merchant);
+        }
+        startPage();
+        List<TWxUserAmount> userAmount = tWxUserAmountService.selectTWxUserAmountList(wxUserAmount);
+        return getDataTable(userAmount);
+    }
+
 }

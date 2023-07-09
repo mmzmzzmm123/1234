@@ -56,6 +56,10 @@
         <el-button type="warning" plain icon="el-icon-download" size="mini" @click="handleExport"
           v-hasPermi="['office:store:export']">导出</el-button>
       </el-col>
+      <el-col :span="1.5">
+        <el-button type="danger" plain icon="el-icon-edit" size="mini" :disabled="multiple" @click="">一键绑定
+        </el-button>
+      </el-col>
       <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
     </el-row>
 

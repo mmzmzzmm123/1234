@@ -265,6 +265,7 @@ public class TRoomOrderServiceImpl extends ServiceImpl<TRoomOrderMapper, TRoomOr
                 tRoomOrder.setPayAmount(totalPrice);
                 tRoomOrder.setStatus(OfficeEnum.RoomOrderStatus.TO_PAY.getCode());// 待支付
                 tRoomOrder.setCreateTime(DateUtils.getNowDate());
+                tRoomOrder.setCreateBy(prepayReq.getUserId() + "");
                 tRoomOrderMapper.insertTRoomOrder(tRoomOrder);
             } catch (WxPayException e) {
                 e.printStackTrace();
@@ -295,6 +296,7 @@ public class TRoomOrderServiceImpl extends ServiceImpl<TRoomOrderMapper, TRoomOr
             tRoomOrder.setPayAmount(totalPrice);
             tRoomOrder.setStatus(OfficeEnum.RoomOrderStatus.ORDERED.getCode());// 已预约
             tRoomOrder.setCreateTime(DateUtils.getNowDate());
+            tRoomOrder.setCreateBy(prepayReq.getUserId() + "");
             tRoomOrderMapper.insertTRoomOrder(tRoomOrder);
 
         } else if (prepayReq.getPayType() == OfficeEnum.PayType.COUPON_PAY.getCode()) { // 美团券券支付
@@ -315,6 +317,7 @@ public class TRoomOrderServiceImpl extends ServiceImpl<TRoomOrderMapper, TRoomOr
             tRoomOrder.setPayAmount(payAmt);
             tRoomOrder.setStatus(OfficeEnum.RoomOrderStatus.ORDERED.getCode());// 已预约
             tRoomOrder.setCreateTime(DateUtils.getNowDate());
+            tRoomOrder.setCreateBy(prepayReq.getUserId() + "");
             tRoomOrderMapper.insertTRoomOrder(tRoomOrder);
 
         }
