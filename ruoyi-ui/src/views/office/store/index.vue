@@ -436,6 +436,7 @@
   } from "@/api/office/roomprice";
 
   import {
+    listEquipment,
     listAvailableEquipment
   } from "@/api/office/equipment";
 
@@ -677,6 +678,7 @@
         var param = {};
         param.pageNum = 1;
         param.pageSize = 1000;
+        // listAvailableEquipment(param).then(response => {
         listEquipment(param).then(response => {
           this.equipOptions = response.rows;
         });
@@ -848,6 +850,7 @@
         this.bindType = type;
         this.bindForm.id = row.id;
         this.bindForm.tableCode = row.tableCode
+        this.getEquipOptions()
       },
       bindStoreEquipment(row, type) {
         // type = "store/room";
@@ -855,6 +858,7 @@
         this.bindType = type;
         this.bindStoreForm.id = row.id;
         this.bindStoreForm.equipId = row.equipId
+        this.getEquipOptions()
 
       },
       submitBindForm() {

@@ -1,13 +1,12 @@
 package com.ruoyi.office.service.impl;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import com.alibaba.fastjson2.JSONObject;
 import com.ruoyi.common.core.domain.entity.SysDictData;
 import com.ruoyi.common.utils.DateUtils;
+import com.ruoyi.common.utils.SecurityUtils;
 import com.ruoyi.common.utils.http.HttpUtils;
 import com.ruoyi.office.domain.TRoom;
 import com.ruoyi.office.domain.TStore;
@@ -53,6 +52,7 @@ public class TEquipmentServiceImpl extends ServiceImpl<TEquipmentMapper, TEquipm
      */
     @Override
     public List<TEquipment> selectTEquipmentList(TEquipment tEquipment) {
+
         return tEquipmentMapper.selectTEquipmentList(tEquipment);
     }
 
@@ -77,7 +77,7 @@ public class TEquipmentServiceImpl extends ServiceImpl<TEquipmentMapper, TEquipm
             param.put("app_id", hornConfig.get("app_id"));
             param.put("app_secret", hornConfig.get("app_secret"));
             param.put("device_sn", tEquipment.getEquipControl());
-            String response = HttpUtils.sendPost(hornConfig.get("url")+"/register", "");
+            String response = HttpUtils.sendPost(hornConfig.get("url") + "/register", "");
             CloudHornRegResponse resp = JSONObject.parseObject(response, CloudHornRegResponse.class);
 
             tEquipment.setRemark(resp.getMsg()); // 设备注册返回
@@ -131,13 +131,25 @@ public class TEquipmentServiceImpl extends ServiceImpl<TEquipmentMapper, TEquipm
 
         TStore store = new TStore();
         store.setCreateBy(tEquipment.getCreateBy());
-        final List<TStore> tStores = storeService.selectTStoreList(store);
+        final Set<Long> storeSet = storeService.selectTStoreList(store).stream().map(TStore::getEquipId).collect(Collectors.toSet());
 
         TRoom room = new TRoom();
         room.setCreateBy(tEquipment.getCreateBy());
-        final List<TRoom> tRooms = roomService.selectTRoomList(room);
+        final Set<String> roomSet = roomService.selectTRoomList(room).stream().map(TRoom::getTableCode).collect(Collectors.toSet());
+        for (String roomSe : roomSet) {
+            String[] roomEquips = roomSe.split(",");
+            for (String roomEquip : roomEquips)
+                storeSet.add(Long.parseLong(roomEquip));
+        }
 
+        List<TEquipment> res = new ArrayList<>();
+        for (TEquipment equipment : equipments) {
+            if (storeSet.contains(equipment.getId()))
+                continue;
+            else
+                res.add(equipment);
+        }
 
-        return equipments;
+        return res;
     }
 }
