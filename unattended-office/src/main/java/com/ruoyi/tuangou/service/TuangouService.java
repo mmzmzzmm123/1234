@@ -21,6 +21,7 @@ import com.dianping.openapi.sdk.httpclient.DefaultOpenAPIClient;
 import com.fasterxml.jackson.databind.util.BeanUtil;
 import com.ruoyi.common.config.TuangouConfig;
 import com.ruoyi.common.exception.TuangouApiException;
+import com.ruoyi.common.utils.SecurityUtils;
 import com.ruoyi.common.utils.bean.BeanUtils;
 import com.ruoyi.office.domain.TStoreCoupon;
 import com.ruoyi.office.domain.TWxUserCoupon;
@@ -73,9 +74,12 @@ public class TuangouService implements ITuangouService {
         List<TStoreCoupon> tStoreCouponList = itStoreCouponService.selectTStoreCouponList(query);
         if (tStoreCouponList.size() > 0) {
             TStoreCoupon tStoreCoupon = tStoreCouponList.get(0);
+
             TWxUserCoupon tWxUserCoupon = new TWxUserCoupon();
             BeanUtils.copyBeanProp(tWxUserCoupon, tStoreCoupon);
             tWxUserCoupon.setUserId(userId);
+            tWxUserCoupon.setMerchantId(SecurityUtils.getLoginUser().getUserId());
+            tWxUserCoupon.setCouponId(tStoreCoupon.getId());
             itWxUserCouponService.insertTWxUserCoupon(tWxUserCoupon);
         }
         return true;
