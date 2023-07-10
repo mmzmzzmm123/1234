@@ -1,5 +1,6 @@
 package com.ruoyi.office.controller;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -147,7 +148,7 @@ public class TEquipmentController extends BaseController {
                     throw new ServiceException("未知类型设备");
 
                 sendClient.publish(qry.getEquipControl(), JSONObject.toJSONString(msg));
-
+                tEquipment.setRecentOpenTime(new Date());
             } else if ("N".equalsIgnoreCase(tEquipment.getOnOff())) {
                 Map<String, String> msg = new HashMap<>();
                 if (OfficeEnum.EquipType.DOOR.getCode().equalsIgnoreCase(tEquipment.getEquipType())) {
@@ -175,6 +176,7 @@ public class TEquipmentController extends BaseController {
         }
         // messageArrived 里面处理 消息发送到接收端时触发；
         tEquipment.setUpdateBy(SecurityUtils.getUserId() + "");
+
         return toAjax(tEquipmentService.updateTEquipment(tEquipment));
     }
 

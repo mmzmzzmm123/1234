@@ -2,12 +2,15 @@ package com.ruoyi.office.task;
 
 import com.alibaba.fastjson2.JSONObject;
 import com.ruoyi.common.core.domain.entity.SysDictData;
+import com.ruoyi.common.exception.ServiceException;
+import com.ruoyi.common.utils.DateUtils;
 import com.ruoyi.common.utils.http.HttpUtils;
 import com.ruoyi.office.domain.TEquipment;
 import com.ruoyi.office.domain.TRoom;
 import com.ruoyi.office.domain.TRoomOrder;
 import com.ruoyi.office.domain.enums.OfficeEnum;
 import com.ruoyi.office.domain.vo.CloudHornRegResponse;
+import com.ruoyi.office.mqtt.MqttSendClient;
 import com.ruoyi.office.service.ITEquipmentService;
 import com.ruoyi.office.service.ITRoomOrderService;
 import com.ruoyi.office.service.ITRoomService;
@@ -84,7 +87,41 @@ public class OfficeTask {
     }
 
 
+    /**
+     * 扫描最近打开设备，进行关闭操作
+     * 5-10秒
+     */
+    public void scanOpenEquipment() {
+        TEquipment equipment = new TEquipment();
+        equipment.setOnOff("Y");
+        final List<TEquipment> equipments = equipmentService.selectTEquipmentList(equipment);
 
+        if (equipments.size() == 0)
+            return;
+
+        SysDictData dictData = new SysDictData();
+        dictData.setDictType("equipment_type");
+        Map<String, String> equipDict = dictDataService.selectDictDataList(dictData).stream().collect(Collectors.toMap(SysDictData::getDictValue, SysDictData::getRemark));
+
+        MqttSendClient sendClient = new MqttSendClient();
+        for (TEquipment eq : equipments) {
+            if (OfficeEnum.EquipType.DOOR.getCode().equalsIgnoreCase(eq.getEquipType())) {
+                if (DateUtils.differentDaysByMillisecond(eq.getRecentOpenTime(), new Date()) > 15 * 1000) {
+                    Map<String, String> msg = new HashMap<>();
+                    String[] command = equipDict.get(OfficeEnum.EquipType.DOOR.getCode()).split(",")[1].split(":");
+                    msg.put(command[0], command[1]);
+
+                    sendClient.publish(eq.getEquipControl(), JSONObject.toJSONString(msg));
+
+                    TEquipment up = new TEquipment();
+                    up.setId(eq.getId());
+                    up.setOnOff("N");
+                    equipmentService.updateTEquipment(eq);
+                }
+            }
+
+        }
+    }
 
 
 }

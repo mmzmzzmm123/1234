@@ -1,5 +1,6 @@
 package com.ruoyi.office.service.impl;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -140,6 +141,8 @@ public class TStoreServiceImpl extends ServiceImpl<TStoreMapper, TStore> impleme
 
         MqttSendClient sendClient = new MqttSendClient();
         sendClient.publish(equipment.getEquipControl(), JSONObject.toJSONString(msg));
+
+        equipment.setRecentOpenTime(new Date());
         equipment.setOnOff("Y");
         equipmentService.updateTEquipment(equipment);
     }

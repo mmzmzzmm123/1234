@@ -1,5 +1,6 @@
 package com.ruoyi.office.service.impl;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -116,7 +117,6 @@ public class TRoomServiceImpl extends ServiceImpl<TRoomMapper, TRoom> implements
         dictData.setDictType("equipment_type");
         Map<String, SysDictData> equipDict = dictDataService.selectDictDataList(dictData).stream().collect(Collectors.toMap(SysDictData::getDictValue, Function.identity()));
 
-
         MqttSendClient sendClient = new MqttSendClient();
         String equips = room.getTableCode();
         for (String equip : equips.split(",")) {
@@ -136,6 +136,8 @@ public class TRoomServiceImpl extends ServiceImpl<TRoomMapper, TRoom> implements
                     }
 
                     sendClient.publish(eq.getEquipControl(), JSONObject.toJSONString(msg));
+
+                    eq.setRecentOpenTime(new Date());
                     eq.setOnOff("Y");
                     equipmentService.updateTEquipment(eq);
                     break;
