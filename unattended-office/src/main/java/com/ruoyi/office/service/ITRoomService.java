@@ -58,4 +58,6 @@ public interface ITRoomService
      * @return 结果
      */
     public int deleteTRoomById(Long id);
+
+    void openRoom(Long id);
 }

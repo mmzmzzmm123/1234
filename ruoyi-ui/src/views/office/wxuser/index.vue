@@ -78,7 +78,7 @@
     <el-table v-loading="loading" :data="wxuserList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
       <el-table-column label="id" align="center" prop="id" />
-      <el-table-column label="昵称" align="center" prop="nickName" />
+      <el-table-column label="昵称" align="center" prop="openId" />
       <el-table-column label="微信id" align="center" prop="appId" />
       <!-- <el-table-column label="uinion id" align="center" prop="unionId" /> -->
       <el-table-column label="手机号" align="center" prop="phone" />

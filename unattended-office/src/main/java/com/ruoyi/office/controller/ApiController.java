@@ -39,6 +39,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.util.*;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import static com.ruoyi.common.utils.PageUtils.startPage;
@@ -334,12 +335,13 @@ public class ApiController extends BaseController {
     @ApiOperation("开门禁")
     @PostMapping("/store/{id}")
     public AjaxResult openStore(@PathVariable("id") Long id) {
-        TStore store = storeService.selectTStoreById(id);
-        TEquipment equipment = equipmentService.selectTEquipmentById(store.getEquipId());
-        MqttSendClient sendClient = new MqttSendClient();
-        sendClient.publish(equipment.getEquipControl(), "a1");
-        equipment.setOnOff("Y");
-        equipmentService.updateTEquipment(equipment);
+
+        try {
+            storeService.openStore(id);
+        } catch (Exception e) {
+            throw new ServiceException("操作异常，请联系管理员");
+        }
+
         return AjaxResult.success();
     }
 
@@ -355,23 +357,11 @@ public class ApiController extends BaseController {
     @ApiOperation("开房间设备")
     @PostMapping("/room/{id}")
     public AjaxResult openRoom(@PathVariable("id") Long id) {
-        TRoom room = roomService.selectTRoomById(id);
-        List<TEquipment> equipments = equipmentService.selectTEquipmentList(new TEquipment());
-        MqttSendClient sendClient = new MqttSendClient();
-        String equips = room.getTableCode();
-        for (String equip : equips.split(",")) {
-            for (TEquipment e : equipments) {
-                if (OfficeEnum.EquipType.HORN.getCode().equalsIgnoreCase(e.getEquipType()))
-                    continue;
 
-                if (e.getId() == Long.parseLong(equip)) {
-
-                    sendClient.publish(e.getEquipControl(), "a1");
-                    e.setOnOff("Y");
-                    equipmentService.updateTEquipment(e);
-                    break;
-                }
-            }
+        try{
+            roomService.openRoom(id);
+        }catch (Exception e) {
+            throw new ServiceException("操作异常，请联系管理员");
         }
 
         return AjaxResult.success();

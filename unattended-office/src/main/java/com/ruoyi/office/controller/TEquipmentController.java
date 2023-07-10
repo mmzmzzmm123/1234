@@ -1,13 +1,20 @@
 package com.ruoyi.office.controller;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletResponse;
 
+import com.alibaba.fastjson2.JSONObject;
+import com.ruoyi.common.core.domain.entity.SysDictData;
 import com.ruoyi.common.exception.ServiceException;
 import com.ruoyi.common.utils.SecurityUtils;
+import com.ruoyi.office.domain.enums.OfficeEnum;
 import com.ruoyi.office.mqtt.MqttAcceptClient;
 import com.ruoyi.office.mqtt.MqttSendClient;
+import com.ruoyi.system.service.ISysDictDataService;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -106,15 +113,62 @@ public class TEquipmentController extends BaseController {
         return toAjax(tEquipmentService.deleteTEquipmentByIds(ids));
     }
 
+    @Autowired
+    ISysDictDataService dictDataService;
+
     @PutMapping("/setting")
     public AjaxResult setDevice(@RequestBody TEquipment tEquipment) {
         MqttSendClient sendClient = new MqttSendClient();
         TEquipment qry = tEquipmentService.selectTEquipmentById(tEquipment.getId());
+
+        SysDictData dictData = new SysDictData();
+        dictData.setDictType("equipment_type");
+        Map<String, String> equipDict = dictDataService.selectDictDataList(dictData).stream().collect(Collectors.toMap(SysDictData::getDictValue, SysDictData::getRemark));
         try {
             if ("Y".equalsIgnoreCase(tEquipment.getOnOff())) {
-                sendClient.publish(qry.getEquipControl(), "a1");
+                Map<String, String> msg = new HashMap<>();
+                if (OfficeEnum.EquipType.DOOR.getCode().equalsIgnoreCase(tEquipment.getEquipType())) {
+                    String[] command = equipDict.get(OfficeEnum.EquipType.DOOR.getCode()).split(",")[0].split(":");
+                    msg.put(command[0], command[1]);
+                }
+                if (OfficeEnum.EquipType.LIGHT.getCode().equalsIgnoreCase(tEquipment.getEquipType())) {
+                    String[] command = equipDict.get(OfficeEnum.EquipType.LIGHT.getCode()).split(",")[0].split(":");
+                    msg.put(command[0], command[1]);
+                }
+                if (OfficeEnum.EquipType.AIR_CONDITION.getCode().equalsIgnoreCase(tEquipment.getEquipType())){
+                    String[] command = equipDict.get(OfficeEnum.EquipType.AIR_CONDITION.getCode()).split(",")[0].split(":");
+                    msg.put(command[0], command[1]);
+                }
+                if (OfficeEnum.EquipType.MACHINE.getCode().equalsIgnoreCase(tEquipment.getEquipType())){
+                    String[] command = equipDict.get(OfficeEnum.EquipType.MACHINE.getCode()).split(",")[0].split(":");
+                    msg.put(command[0], command[1]);
+                }
+                else
+                    throw new ServiceException("未知类型设备");
+
+                sendClient.publish(qry.getEquipControl(), JSONObject.toJSONString(msg));
+
             } else if ("N".equalsIgnoreCase(tEquipment.getOnOff())) {
-                sendClient.publish(qry.getEquipControl(), "b1");
+                Map<String, String> msg = new HashMap<>();
+                if (OfficeEnum.EquipType.DOOR.getCode().equalsIgnoreCase(tEquipment.getEquipType())) {
+                    String[] command = equipDict.get(OfficeEnum.EquipType.DOOR.getCode()).split(",")[1].split(":");
+                    msg.put(command[0], command[1]);
+                }
+                if (OfficeEnum.EquipType.LIGHT.getCode().equalsIgnoreCase(tEquipment.getEquipType())) {
+                    String[] command = equipDict.get(OfficeEnum.EquipType.LIGHT.getCode()).split(",")[1].split(":");
+                    msg.put(command[0], command[1]);
+                }
+                if (OfficeEnum.EquipType.AIR_CONDITION.getCode().equalsIgnoreCase(tEquipment.getEquipType())){
+                    String[] command = equipDict.get(OfficeEnum.EquipType.AIR_CONDITION.getCode()).split(",")[1].split(":");
+                    msg.put(command[0], command[1]);
+                }
+                if (OfficeEnum.EquipType.MACHINE.getCode().equalsIgnoreCase(tEquipment.getEquipType())){
+                    String[] command = equipDict.get(OfficeEnum.EquipType.MACHINE.getCode()).split(",")[1].split(":");
+                    msg.put(command[0], command[1]);
+                } else
+                    throw new ServiceException("未知类型设备");
+
+                sendClient.publish(qry.getEquipControl(), JSONObject.toJSONString(msg));
             }
         } catch (Exception e) {
             throw new ServiceException("操作失败");
