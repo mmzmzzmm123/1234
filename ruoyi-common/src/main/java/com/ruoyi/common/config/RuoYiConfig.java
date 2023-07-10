@@ -5,7 +5,7 @@ import org.springframework.stereotype.Component;
 
 /**
  * 读取项目相关配置
- * 
+ *
  * @author ruoyi
  */
 @Component
@@ -32,6 +32,9 @@ public class RuoYiConfig
 
     /** 验证码类型 */
     private static String captchaType;
+
+    /** redis前缀 */
+    private static String keyPrefix;
 
     public String getName()
     {
@@ -99,6 +102,14 @@ public class RuoYiConfig
 
     public void setCaptchaType(String captchaType) {
         RuoYiConfig.captchaType = captchaType;
+    }
+
+    public static String getKeyPrefix() {
+        return keyPrefix;
+    }
+
+    public void setKeyPrefix(String keyPrefix) {
+        RuoYiConfig.keyPrefix = keyPrefix;
     }
 
     /**
