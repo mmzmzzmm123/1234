@@ -139,7 +139,7 @@ export function mergeRecursive(source, target) {
   for (var p in target) {
     try {
       if (target[p].constructor == Object) {
-        source[p] = mergeRecursive(source[p], target[p]);
+        source[p] = mergeRecursive(source[p] || {}, target[p]);
       } else {
         source[p] = target[p];
       }
