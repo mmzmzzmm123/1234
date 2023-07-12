@@ -2,6 +2,7 @@ package com.ruoyi.office.service;
 
 import java.util.List;
 import com.ruoyi.office.domain.TEquipment;
+import com.ruoyi.office.domain.vo.EquipeAvailableQryVo;
 
 /**
  * 设备列表Service接口
@@ -59,5 +60,5 @@ public interface ITEquipmentService
      */
     public int deleteTEquipmentById(Long id);
 
-    List<TEquipment> selectAvailableEquipmentList(TEquipment tEquipment);
+    List<TEquipment> selectAvailableEquipmentList(EquipeAvailableQryVo tEquipment);
 }

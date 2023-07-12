@@ -13,6 +13,7 @@ import com.ruoyi.common.core.domain.entity.SysDictData;
 import com.ruoyi.common.exception.ServiceException;
 import com.ruoyi.common.utils.SecurityUtils;
 import com.ruoyi.office.domain.enums.OfficeEnum;
+import com.ruoyi.office.domain.vo.EquipeAvailableQryVo;
 import com.ruoyi.office.mqtt.MqttAcceptClient;
 import com.ruoyi.office.mqtt.MqttSendClient;
 import com.ruoyi.system.service.ISysDictDataService;
@@ -198,7 +199,7 @@ public class TEquipmentController extends BaseController {
      */
     @PreAuthorize("@ss.hasPermi('office:equipment:list')")
     @GetMapping("/listAvailable")
-    public TableDataInfo listAvailable(TEquipment tEquipment) {
+    public TableDataInfo listAvailable(EquipeAvailableQryVo tEquipment) {
         tEquipment.setCreateBy(SecurityUtils.getUserId() + "");
         List<TEquipment> list = tEquipmentService.selectAvailableEquipmentList(tEquipment);
         return getDataTable(list);

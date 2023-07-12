@@ -41,11 +41,11 @@ public class TWxUserPackageController extends BaseController {
     /**
      * 查询用户套餐购买记录列表
      */
-//    @PreAuthorize("@ss.hasPermi('office:wxuserpackage:list')")
-    @ApiOperation("套餐购买记录")
+    @PreAuthorize("@ss.hasPermi('office:wxuserpackage:list')")
+    @ApiOperation("商户查询套餐购买记录")
     @GetMapping("/list")
     public TableDataInfo list(TWxUserPackage tWxUserPackage) {
-//        if (!SecurityUtils.getUsername().equalsIgnoreCase("admin"))
+        if (!SecurityUtils.getUsername().equalsIgnoreCase("admin"))
             tWxUserPackage.setMerchant(SecurityUtils.getUserId());
         startPage();
         List<TWxUserPackage> list = tWxUserPackageService.selectTWxUserPackageList(tWxUserPackage);

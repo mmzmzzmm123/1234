@@ -57,7 +57,7 @@
         <include refid="selectTStoreVo"/>
         <where>
             <if test="userId != null ">and user_id = #{userId}</if>
-            <if test="name != null  and name != ''">and name like concat('%', #{name}, '%')</if>
+            <if test="name != null  and name != ''">and (name like concat('%', #{name}, '%') or address like concat('%', #{name},'%'))</if>
             <if test="address != null  and address != ''">and address like concat('%', #{address},'%')</if>
             <if test="phone != null  and phone != ''">and phone = #{phone}</if>
             <if test="startTime != null ">and start_time = #{startTime}</if>

@@ -36,6 +36,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.math.BigDecimal;
 import java.util.*;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
@@ -358,9 +359,9 @@ public class ApiController extends BaseController {
     @PostMapping("/room/{id}")
     public AjaxResult openRoom(@PathVariable("id") Long id) {
 
-        try{
+        try {
             roomService.openRoom(id);
-        }catch (Exception e) {
+        } catch (Exception e) {
             throw new ServiceException("操作异常，请联系管理员");
         }
 
@@ -481,11 +482,115 @@ public class ApiController extends BaseController {
         TWxUserAmount wxUserAmount = new TWxUserAmount();
         wxUserAmount.setWxUserId(SecurityUtils.getLoginUser().getWxUser().getId());
         if (merchant != 0) {
-            wxUserAmount.setUserId(merchant);
+            final TStore store = storeService.selectTStoreById(merchant);
+            wxUserAmount.setUserId(Long.parseLong(store.getCreateBy()));
         }
         startPage();
         List<TWxUserAmount> userAmount = tWxUserAmountService.selectTWxUserAmountList(wxUserAmount);
         return getDataTable(userAmount);
     }
+
+    /**
+     * 查询用户余额
+     */
+    @ApiOperation("查询用户余额")
+    @GetMapping("/amount")
+    public AjaxResult getTotalAmount() {
+        long wxid = SecurityUtils.getLoginUser().getWxUser().getId();
+        BigDecimal total = new BigDecimal(0);
+        // 获取所有商户的余额进行汇总；
+
+        return AjaxResult.success(total);
+    }
+
+    /**
+     * 根据门店id查询用户在该商户余额
+     */
+    @ApiOperation("根据门店id查询用户在该商户余额")
+    @GetMapping("/amount/{storeId}")
+    public AjaxResult getStoreAmount(@PathVariable("storeId") Long storeId) {
+        BigDecimal total = new BigDecimal(0);
+        // 根据storeId获取对应商户，查询商户余额
+        final TStore store = storeService.selectTStoreById(storeId);
+
+        TWxUserAmount qry = new TWxUserAmount();
+        qry.setUserId(Long.parseLong(store.getCreateBy()));
+        qry.setWxUserId(SecurityUtils.getLoginUser().getWxUser().getId());
+        final List<TWxUserAmount> wxUserAmounts = tWxUserAmountService.selectTWxUserAmountList(qry);
+
+        return AjaxResult.success(wxUserAmounts.get(0).getAmount());
+    }
+
+    @Autowired
+    ITStorePackageService storePackageService;
+
+    /**
+     * 地址、门店名称查询
+     */
+    @ApiOperation("地址、门店名称查询: 商户余额、店铺列表、充值套餐列表")
+    @GetMapping("/store/{name}")
+    public TableDataInfo getStoreAmount(@PathVariable("name") String name) {
+        List<WxUserStoreInfo> userStoreInfo = new ArrayList<>();
+        long wxuserid = SecurityUtils.getLoginUser().getWxUser().getId();
+
+        startPage();
+
+        TStore storeQry = new TStore();
+        storeQry.setName(name);
+        final List<TStore> storeList = storeService.selectTStoreList(storeQry);
+
+        for (TStore store : storeList) {
+            WxUserStoreInfo wxUserStoreInfo = new WxUserStoreInfo();
+            BeanUtils.copyProperties(store, wxUserStoreInfo);
+
+            long userId = Long.parseLong(store.getCreateBy());
+            TStorePackage qry = new TStorePackage();
+            qry.setCreateBy(store.getCreateBy());
+            final List<TStorePackage> tStorePackages = storePackageService.selectTStorePackageList(qry);
+            wxUserStoreInfo.setPackageList(tStorePackages);
+
+            TWxUserAmount userAmountQry = new TWxUserAmount();
+            userAmountQry.setWxUserId(wxuserid);
+            userAmountQry.setUserId(userId);
+            final List<TWxUserAmount> wxUserAmounts = tWxUserAmountService.selectTWxUserAmountList(userAmountQry);
+            if (wxUserAmounts.size() > 0) {
+                wxUserStoreInfo.setAmount(wxUserAmounts.get(0).getAmount());
+            }
+
+            userStoreInfo.add(wxUserStoreInfo);
+        }
+
+        return getDataTable(userStoreInfo);
+    }
+
+    @Autowired
+    private ITWxUserPackageService tWxUserPackageService;
+
+    /**
+     * 用户充值记录
+     */
+    @ApiOperation("用户充值记录")
+    @GetMapping("/user/package/list")
+    public TableDataInfo userPackageList(TWxUserPackage tWxUserPackage) {
+        tWxUserPackage.setCreateBy(SecurityUtils.getLoginUser().getWxUser().getId() + "");
+        startPage();
+        List<TWxUserPackage> list = tWxUserPackageService.selectTWxUserPackageList(tWxUserPackage);
+        return getDataTable(list);
+    }
+
+    /**
+     * 查询房间占用（点支付时再次校验可用性并改变状态，支付失败回滚）列表
+     */
+    @ApiOperation("微信用户订单列表：payType： WX_PAY(1, \"微信支付\"), CARD_BALANCE_PAY(2, \"储值卡余额支付\"), COUPON_PAY(4, \"优惠券支付\")" +
+            "status：状态： IDEAL(0, \"空闲\"), TO_PAY(1, \"待支付\"), ORDERED(2, \"已预约\"), USING(3, \"使用中\"),\n" +
+            "        OVER_TIME(4, \"超时未使用\"), USED(5, \"已完成\"), CANCEL(9, \"取消\");")
+    @GetMapping("/order/list")
+    public TableDataInfo orderList(TRoomOrder tRoomOrder) {
+        tRoomOrder.setCreateBy(SecurityUtils.getLoginUser().getWxUser().getId() + "");
+        startPage();
+        List<TRoomOrder> list = tRoomOrderService.selectTRoomOrderList(tRoomOrder);
+        return getDataTable(list);
+    }
+
 
 }

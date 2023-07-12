@@ -12,6 +12,7 @@ import com.ruoyi.office.domain.TRoom;
 import com.ruoyi.office.domain.TStore;
 import com.ruoyi.office.domain.enums.OfficeEnum;
 import com.ruoyi.office.domain.vo.CloudHornRegResponse;
+import com.ruoyi.office.domain.vo.EquipeAvailableQryVo;
 import com.ruoyi.office.service.ITRoomService;
 import com.ruoyi.office.service.ITStoreService;
 import com.ruoyi.system.service.ISysDictDataService;
@@ -125,7 +126,9 @@ public class TEquipmentServiceImpl extends ServiceImpl<TEquipmentMapper, TEquipm
     ITRoomService roomService;
 
     @Override
-    public List<TEquipment> selectAvailableEquipmentList(TEquipment tEquipment) {
+    public List<TEquipment> selectAvailableEquipmentList(EquipeAvailableQryVo tEquipment) {
+
+        String ids = tEquipment.getIds() + ",";
 
         List<TEquipment> equipments = tEquipmentMapper.selectTEquipmentList(tEquipment);
 
@@ -137,6 +140,9 @@ public class TEquipmentServiceImpl extends ServiceImpl<TEquipmentMapper, TEquipm
         room.setCreateBy(tEquipment.getCreateBy());
         final Set<String> roomSet = roomService.selectTRoomList(room).stream().map(TRoom::getTableCode).collect(Collectors.toSet());
         for (String roomSe : roomSet) {
+            if (roomSe == null)
+                continue;
+
             String[] roomEquips = roomSe.split(",");
             for (String roomEquip : roomEquips)
                 storeSet.add(Long.parseLong(roomEquip));
@@ -144,7 +150,9 @@ public class TEquipmentServiceImpl extends ServiceImpl<TEquipmentMapper, TEquipm
 
         List<TEquipment> res = new ArrayList<>();
         for (TEquipment equipment : equipments) {
-            if (storeSet.contains(equipment.getId()))
+            if (ids.contains(equipment.getId() + ","))
+                res.add(equipment);
+            else if (storeSet.contains(equipment.getId()))
                 continue;
             else
                 res.add(equipment);

@@ -46,7 +46,7 @@ public class TRoomOrderController extends BaseController {
     @ApiOperation("预约订单、记录")
     @GetMapping("/list")
     public TableDataInfo list(TRoomOrder tRoomOrder) {
-//        if (!SecurityUtils.getUsername().equalsIgnoreCase("admin"))
+        if (!SecurityUtils.getUsername().equalsIgnoreCase("admin"))
             tRoomOrder.setCreateBy(SecurityUtils.getUserId() + "");
         startPage();
         List<TRoomOrder> list = tRoomOrderService.selectTRoomOrderList(tRoomOrder);

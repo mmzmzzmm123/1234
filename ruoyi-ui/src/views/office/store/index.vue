@@ -379,7 +379,7 @@
       <el-form ref="bindForm" :model="bindForm" label-width="150px">
         <el-form-item label="选择绑定设备" prop="tableCode">
           <el-select v-model="bindForm.tableCode" multiple filterable @change="$forceUpdate()">
-            <el-option v-for="option in equipOptions" :key="option.id" :label="option.name" :value="option.id" />
+            <el-option v-for="option in equipOptions" :key="option.id+'456'" :label="option.name" :value="option.id" />
           </el-select>
         </el-form-item>
       </el-form>
@@ -542,6 +542,7 @@
         storeList: [],
         roomList: [],
         priceList: [],
+        equipAllOptions: [],
         equipOptions: [],
         storeEquipOptions: [],
         // 弹出层标题
@@ -680,7 +681,7 @@
         param.pageSize = 1000;
         // listAvailableEquipment(param).then(response => {
         listEquipment(param).then(response => {
-          this.equipOptions = response.rows;
+          this.equipAllOptions = response.rows;
         });
       },
       // 取消按钮
@@ -740,7 +741,6 @@
         this.roomQueryParam.storeId = row.id;
         this.selectedStore = row.name;
         this.listStoreRoom();
-        // this.getEquipOptions();
       },
       listStoreRoom() {
         listRoom(this.roomQueryParam).then(response => {
@@ -849,16 +849,31 @@
         this.bindOpen = true;
         this.bindType = type;
         this.bindForm.id = row.id;
-        this.bindForm.tableCode = row.tableCode
-        this.getEquipOptions()
+
+
+        var param = {};
+        param.ids = row.tableCode;
+        listAvailableEquipment(param).then(response => {
+          this.equipOptions = response.rows;
+        });
+
+
+         this.bindForm.tableCode = row.tableCode;
       },
       bindStoreEquipment(row, type) {
         // type = "store/room";
         this.bindStoreOpen = true;
         this.bindType = type;
         this.bindStoreForm.id = row.id;
-        this.bindStoreForm.equipId = row.equipId
-        this.getEquipOptions()
+
+
+        var param = {};
+        param.ids = row.equipId;
+        listAvailableEquipment(param).then(response => {
+          this.equipOptions = response.rows;
+        });
+
+         this.bindStoreForm.equipId = row.equipId
 
       },
       submitBindForm() {
@@ -1033,9 +1048,9 @@
         if (row.tableCode != null) {
           var equips = row.tableCode.split(',');
           for (var l = 0; l < equips.length; l++) {
-            for (var i = 0; i < this.equipOptions.length; i++) {
-              if (this.equipOptions[i].id + '' == equips[l]) {
-                res += ',' + this.equipOptions[i].name;
+            for (var i = 0; i < this.equipAllOptions.length; i++) {
+              if (this.equipAllOptions[i].id + '' == equips[l]) {
+                res += ',' + this.equipAllOptions[i].name;
               }
             }
           }
@@ -1045,9 +1060,9 @@
       },
       equipStoreFormatter(row) {
         var res = "";
-        for (var i = 0; i < this.equipOptions.length; i++) {
-          if (this.equipOptions[i].id == row.equipId) {
-            res = this.equipOptions[i].name;
+        for (var i = 0; i < this.equipAllOptions.length; i++) {
+          if (this.equipAllOptions[i].id == row.equipId) {
+            res = this.equipAllOptions[i].name;
             break;
           }
         }

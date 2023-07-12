@@ -398,9 +398,7 @@ public class TRoomOrderServiceImpl extends ServiceImpl<TRoomOrderMapper, TRoomOr
             }
         } else {
             if (userPromotion.getMerchantId() != 0) {
-                TStore storeQry = new TStore();
-                storeQry.setId(room.getStoreId());
-                TStore store = storeService.selectTStoreList(storeQry).get(0);
+                TStore store = storeService.selectTStoreById(room.getStoreId());
                 if (!store.getCreateBy().equalsIgnoreCase(String.valueOf(userPromotion.getMerchantId()))) {
                     throw new ServiceException("当前商户不可适用");
                 }
