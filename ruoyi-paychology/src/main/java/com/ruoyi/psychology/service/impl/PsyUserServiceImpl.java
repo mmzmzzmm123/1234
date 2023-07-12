@@ -1,16 +1,22 @@
 package com.ruoyi.psychology.service.impl;
 
+import cn.hutool.core.util.StrUtil;
 import com.alibaba.fastjson2.JSONObject;
+import com.ruoyi.common.constant.IntegralRecordConstants;
 import com.ruoyi.common.core.domain.dto.LoginDTO;
 import com.ruoyi.common.core.domain.vo.LoginVO;
+import com.ruoyi.common.event.publish.IntegralPublisher;
 import com.ruoyi.common.utils.DateUtils;
 import com.ruoyi.psychology.domain.PsyUser;
 import com.ruoyi.psychology.mapper.PsyUserMapper;
 import com.ruoyi.psychology.service.IPsyUserService;
+import com.ruoyi.user.domain.PsyUserIntegralRecord;
+import com.ruoyi.user.service.IPsyUserIntegralRecordService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
+import java.math.BigDecimal;
 import java.util.List;
 
 /**
@@ -23,6 +29,12 @@ import java.util.List;
 public class PsyUserServiceImpl implements IPsyUserService {
     @Resource
     private PsyUserMapper psyUserMapper;
+
+    @Resource
+    private IntegralPublisher integralPublisher;
+
+    @Resource
+    private IPsyUserIntegralRecordService psyUserIntegralRecordService;
 
     /**
      * 查询用户
@@ -111,6 +123,22 @@ public class PsyUserServiceImpl implements IPsyUserService {
                 System.out.println("用户信息插入失败");
             }
             user = psyUserMapper.queryUserByAccount(openId);
+            // 注册送积分
+            int integral = psyUserIntegralRecordService.getIntegral(new BigDecimal("0"), IntegralRecordConstants.INTEGRAL_RECORD_LINK_TYPE_REGISTER);
+            if (integral > 0) {
+                PsyUserIntegralRecord record = new PsyUserIntegralRecord();
+                record.setIntegral(integral);
+                record.setLinkId(String.valueOf(user.getId()));
+                record.setUid(user.getId());
+                record.setDelFlag(0);
+                record.setFrozenTime(0);
+                record.setMark(StrUtil.format("用户付款成功,订单增加{}积分", record.getIntegral()));
+                record.setType(IntegralRecordConstants.INTEGRAL_RECORD_TYPE_ADD);
+                record.setLinkType(IntegralRecordConstants.INTEGRAL_RECORD_LINK_TYPE_REGISTER);
+                record.setTitle(IntegralRecordConstants.BROKERAGE_RECORD_TITLE_REGISTER);
+                record.setStatus(IntegralRecordConstants.INTEGRAL_RECORD_STATUS_COMPLETE);
+                integralPublisher.publish(record);
+            }
         }
 
         return LoginVO.builder().userId(user.getId()).name(nickname).avatar(headImgUrl).build();

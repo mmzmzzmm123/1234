@@ -38,7 +38,7 @@ public class PsyConsultOrderVO extends BaseValObj implements Serializable
     private String serveName;
 
     /** 客户id */
-    private Long userId;
+    private Integer userId;
     private String userName;
 
     /** 排班 */

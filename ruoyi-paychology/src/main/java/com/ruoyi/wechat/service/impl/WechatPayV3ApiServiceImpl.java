@@ -1,14 +1,16 @@
 package com.ruoyi.wechat.service.impl;
 
+import cn.hutool.core.util.StrUtil;
+import com.ruoyi.common.constant.IntegralRecordConstants;
 import com.ruoyi.common.enums.GaugeStatus;
 import com.ruoyi.common.enums.OrderPayStatus;
 import com.ruoyi.common.enums.OrderStatus;
+import com.ruoyi.common.event.publish.IntegralPublisher;
 import com.ruoyi.common.utils.IDhelper;
 import com.ruoyi.course.constant.CourConstant;
 import com.ruoyi.course.domain.CourOrder;
 import com.ruoyi.course.service.ICourOrderService;
 import com.ruoyi.course.service.ICourUserCourseSectionService;
-//import com.ruoyi.course.task.OrderCancelTask;
 import com.ruoyi.gauge.constant.GaugeConstant;
 import com.ruoyi.gauge.domain.PsyOrder;
 import com.ruoyi.gauge.domain.PsyOrderPay;
@@ -20,14 +22,20 @@ import com.ruoyi.psychology.service.IPsyConsultOrderService;
 import com.ruoyi.psychology.service.IPsyConsultPayService;
 import com.ruoyi.psychology.service.IPsyUserService;
 import com.ruoyi.psychology.vo.PsyConsultOrderVO;
+import com.ruoyi.user.domain.PsyUserIntegralRecord;
+import com.ruoyi.user.service.IPsyUserIntegralRecordService;
 import com.ruoyi.wechat.service.WechatPayV3ApiService;
 import com.ruoyi.wechat.vo.WechatPayVO;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
-import java.util.*;
+import java.math.BigDecimal;
+import java.util.UUID;
+
+//import com.ruoyi.course.task.OrderCancelTask;
 
 @Service
 @Slf4j
@@ -37,6 +45,9 @@ public class WechatPayV3ApiServiceImpl implements WechatPayV3ApiService {
 
     @Resource
     private IPsyUserService psyUserService;
+
+    @Resource
+    private IntegralPublisher integralPublisher;
 
     @Resource
     private ICourOrderService courOrderService;
@@ -49,6 +60,9 @@ public class WechatPayV3ApiServiceImpl implements WechatPayV3ApiService {
 
     @Resource
     private IPsyConsultPayService psyConsultPayService;
+
+    @Resource
+    private IPsyUserIntegralRecordService psyUserIntegralRecordService;
 
     @Resource
     private IPsyConsultOrderService psyConsultOrderService;
@@ -130,7 +144,7 @@ public class WechatPayV3ApiServiceImpl implements WechatPayV3ApiService {
             psyConsultOrderVO.setAmount(wechatPay.getAmount());
             psyConsultOrderVO.setWorkId(wechatPay.getWorkId());
             psyConsultOrderVO.setServeId(wechatPay.getServeId());
-            psyConsultOrderVO.setUserId(Long.valueOf(wechatPay.getUserId()));
+            psyConsultOrderVO.setUserId(wechatPay.getUserId());
 
             // 更新原订单
             if (wechatPay.getOrderId() != null && wechatPay.getOrderId() > 0) {
@@ -158,52 +172,92 @@ public class WechatPayV3ApiServiceImpl implements WechatPayV3ApiService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void wechatPayNotify(String outTradeNo, String payId) {
+        PsyUserIntegralRecord record = new PsyUserIntegralRecord();
+        record.setIntegral(0);
+
         if (outTradeNo.startsWith("COU")) {
             // TODO: 修改订单状态为已完成
             CourOrder courOrder = courOrderService.selectCourOrderByOrderId(outTradeNo);
-            courOrder.setStatus(CourConstant.COUR_ORDER_STATUE_FINISHED);
-            courOrderService.updateCourOrder(courOrder);
+            // 判断状态，防止重复更新
+            if (CourConstant.COUR_ORDER_STATUE_CREATED == courOrder.getStatus()) {
+                courOrder.setStatus(CourConstant.COUR_ORDER_STATUE_FINISHED);
+                courOrderService.updateCourOrder(courOrder);
 
-            // TODO: 将用户-课程-章节关系初始化
+                // TODO: 将用户-课程-章节关系初始化
 
-            userCourseSectionService.initCourUserCourseSection(courOrder.getUserId(), courOrder.getCourseId());
+                userCourseSectionService.initCourUserCourseSection(courOrder.getUserId(), courOrder.getCourseId());
 
-            // TODO: 修改支付对象状态为已支付
-//            String payId = res.getString("transaction_id"); // 微信支付系统生成的订单号
-            PsyOrderPay orderPay = new PsyOrderPay();
-            orderPay.setOrderId(courOrder.getId()); // 订单ID
-            orderPay.setPayStatus(CourConstant.PAY_STATUE_PAID);
-            orderPay.setPayId(payId);
-            orderPayService.updatePsyOrderPayByOrderId(orderPay);
+                // TODO: 修改支付对象状态为已支付
+                PsyOrderPay orderPay = new PsyOrderPay();
+                orderPay.setOrderId(courOrder.getId()); // 订单ID
+                orderPay.setPayStatus(CourConstant.PAY_STATUE_PAID);
+                orderPay.setPayId(payId);
+                orderPayService.updatePsyOrderPayByOrderId(orderPay);
+
+                if (courOrder.getAmount().compareTo(BigDecimal.ZERO) > 0) {
+                    record.setLinkId(String.valueOf(courOrder.getId()));
+                    record.setLinkType(IntegralRecordConstants.INTEGRAL_RECORD_LINK_TYPE_COURSE);
+                    record.setUid(courOrder.getUserId());
+                    record.setIntegral(psyUserIntegralRecordService.getIntegral(courOrder.getAmount(), IntegralRecordConstants.INTEGRAL_RECORD_LINK_TYPE_COURSE));
+                }
+            }
         } else if (outTradeNo.startsWith("GAU")) {
             // TODO: 修改订单状态为已完成
             PsyOrder psyOrder = psyOrderService.selectPsyOrderByOrderId(outTradeNo);
-            psyOrder.setOrderStatus(OrderStatus.FINISHED.getValue());
-            psyOrderService.updatePsyOrder(psyOrder);
+            if (OrderStatus.CREATE.getValue() == psyOrder.getOrderStatus()) {
+                psyOrder.setOrderStatus(OrderStatus.FINISHED.getValue());
+                psyOrderService.updatePsyOrder(psyOrder);
 
-            // TODO: 修改支付对象状态为已支付
-//            String payId = res.getString("transaction_id"); // 微信支付系统生成的订单号
-            PsyOrderPay orderPay = new PsyOrderPay();
-            orderPay.setOrderId(psyOrder.getId()); // 订单ID
-            orderPay.setPayStatus(CourConstant.PAY_STATUE_PAID);
-            orderPay.setPayId(payId);
-            orderPayService.updatePsyOrderPayByOrderId(orderPay);
+                // TODO: 修改支付对象状态为已支付
+                PsyOrderPay orderPay = new PsyOrderPay();
+                orderPay.setOrderId(psyOrder.getId()); // 订单ID
+                orderPay.setPayStatus(CourConstant.PAY_STATUE_PAID);
+                orderPay.setPayId(payId);
+                orderPayService.updatePsyOrderPayByOrderId(orderPay);
+
+                if (psyOrder.getAmount().compareTo(BigDecimal.ZERO) > 0) {
+                    record.setLinkId(String.valueOf(psyOrder.getId()));
+                    record.setLinkType(IntegralRecordConstants.INTEGRAL_RECORD_LINK_TYPE_COURSE);
+                    record.setUid(psyOrder.getUserId());
+                    record.setIntegral(psyUserIntegralRecordService.getIntegral(psyOrder.getAmount(), IntegralRecordConstants.INTEGRAL_RECORD_LINK_TYPE_COURSE));
+                }
+            }
         } else if (outTradeNo.startsWith("CON")) {
             // TODO: 修改订单状态为已完成
             PsyConsultPay pay = psyConsultPayService.getOneByOrder(outTradeNo);
-            pay.setStatus(ConsultConstant.PAY_STATUE_PAID);
-
             PsyConsultOrderVO psyOrder = psyConsultOrderService.getOne(pay.getOrderId());
-            psyOrder.setStatus(ConsultConstant.CONSULT_ORDER_STATUE_PENDING);
 
-            if (psyOrder.getWorkId() > 0) {
-                psyOrder.setNum(0);
-                psyOrder.setBuyNum(1);
-                psyOrder.setStatus(ConsultConstant.CONSULT_ORDER_STATUE_UNCONSULT);
+            if (ConsultConstant.CONSULT_ORDER_STATUE_CREATED == psyOrder.getStatus()) {
+                pay.setPayId(payId);
+                pay.setStatus(ConsultConstant.PAY_STATUE_PAID);
+                psyOrder.setStatus(ConsultConstant.CONSULT_ORDER_STATUE_PENDING);
+
+                if (psyOrder.getWorkId() > 0) {
+                    psyOrder.setNum(0);
+                    psyOrder.setBuyNum(1);
+                    psyOrder.setStatus(ConsultConstant.CONSULT_ORDER_STATUE_UNCONSULT);
+                }
+
+                psyConsultPayService.update(pay);
+                psyConsultOrderService.update(psyOrder);
+
+                if (psyOrder.getAmount().compareTo(BigDecimal.ZERO) > 0) {
+                    record.setLinkId(String.valueOf(psyOrder.getId()));
+                    record.setLinkType(IntegralRecordConstants.INTEGRAL_RECORD_LINK_TYPE_ORDER);
+                    record.setUid(psyOrder.getUserId());
+                    record.setIntegral(psyUserIntegralRecordService.getIntegral(psyOrder.getAmount(), IntegralRecordConstants.INTEGRAL_RECORD_LINK_TYPE_ORDER));
+                }
             }
-
-            psyConsultPayService.update(pay);
-            psyConsultOrderService.update(psyOrder);
+        }
+        // 有积分时候,才赠送积分
+        if (record.getIntegral() > 0 && StringUtils.isNotBlank(record.getLinkId())) {
+            record.setDelFlag(0);
+            record.setFrozenTime(0);
+            record.setMark(StrUtil.format("用户付款成功,订单增加{}积分", record.getIntegral()));
+            record.setType(IntegralRecordConstants.INTEGRAL_RECORD_TYPE_ADD);
+            record.setTitle(IntegralRecordConstants.BROKERAGE_RECORD_TITLE_ORDER);
+            record.setStatus(IntegralRecordConstants.INTEGRAL_RECORD_STATUS_COMPLETE);
+            integralPublisher.publish(record);
         }
     }
 }

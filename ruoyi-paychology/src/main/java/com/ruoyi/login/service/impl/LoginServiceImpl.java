@@ -1,7 +1,5 @@
 package com.ruoyi.login.service.impl;
 
-import com.aliyuncs.dysmsapi.model.v20170525.SendSmsResponse;
-import com.aliyuncs.exceptions.ClientException;
 import com.ruoyi.common.constant.RespMessageConstants;
 import com.ruoyi.common.constant.UserConstants;
 import com.ruoyi.common.core.domain.AjaxResult;
@@ -18,7 +16,6 @@ import com.ruoyi.psychology.mapper.PsyUserMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.core.token.TokenService;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;

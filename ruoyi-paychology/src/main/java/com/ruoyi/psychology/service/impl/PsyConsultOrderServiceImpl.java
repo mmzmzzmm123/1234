@@ -120,7 +120,7 @@ public class PsyConsultOrderServiceImpl implements IPsyConsultOrderService
     public int add(PsyConsultOrderVO req) {
         PsyConsultServeVO serve = psyConsultServeService.getOne(req.getServeId());
         PsyConsultVO consult = psyConsultService.getOne(serve.getConsultId());
-        PsyUser psyUser = psyUserService.selectPsyUserById(req.getUserId().intValue());
+        PsyUser psyUser = psyUserService.selectPsyUserById(req.getUserId());
 
         req.setConsultId(serve.getConsultId());
         req.setConsultName(consult.getUserName());

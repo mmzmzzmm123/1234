@@ -10,8 +10,6 @@ import com.aliyuncs.profile.IClientProfile;
 import com.ruoyi.common.constant.NumConstant;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
-import org.springframework.mail.SimpleMailMessage;
 import org.springframework.stereotype.Component;
 
 import java.util.Random;

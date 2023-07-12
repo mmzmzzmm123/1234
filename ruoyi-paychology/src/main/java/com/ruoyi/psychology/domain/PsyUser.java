@@ -1,9 +1,9 @@
 package com.ruoyi.psychology.domain;
 
+import com.baomidou.mybatisplus.annotation.TableName;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.ruoyi.common.annotation.Excel;
-import lombok.Builder;
-import lombok.Data;
+import lombok.*;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
@@ -18,6 +18,8 @@ import java.util.Date;
  */
 @Data
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class PsyUser
 {
     private static final long serialVersionUID = 1L;
@@ -41,6 +43,9 @@ public class PsyUser
     @Excel(name = "帐号状态", readConverterExp = "0=正常,1=停用")
     private String status;
 
+    @Excel(name = "用户剩余积分")
+    private Integer integral;
+
     /**  */
     @Excel(name = "微信openId")
     private String wxOpenid;
@@ -60,6 +65,7 @@ public class PsyUser
             .append("status", getStatus())
             .append("wxOpenid", getWxOpenid())
             .append("createTime", getCreateTime())
+            .append("integral", getIntegral())
             .toString();
     }
 

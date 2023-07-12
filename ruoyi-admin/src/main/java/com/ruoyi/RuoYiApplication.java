@@ -4,12 +4,15 @@ import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
+import org.springframework.scheduling.annotation.EnableAsync;
 
 /**
  * 启动程序
  * 
  * @author ruoyi
  */
+
+@EnableAsync(proxyTargetClass = true)
 @SpringBootApplication(exclude = { DataSourceAutoConfiguration.class })
 @MapperScan("com.ruoyi.**.mapper")
 public class RuoYiApplication
