@@ -3,18 +3,25 @@ package com.ruoyi.user.service.impl;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.ruoyi.common.constant.Constants;
 import com.ruoyi.common.constant.IntegralRecordConstants;
+import com.ruoyi.common.constant.NewConstants;
+import com.ruoyi.common.exception.UtilException;
+import com.ruoyi.common.utils.NewDateUtil;
+import com.ruoyi.common.vo.DateLimitUtilVo;
 import com.ruoyi.psychology.domain.PsyUser;
 import com.ruoyi.psychology.service.IPsyUserService;
 import com.ruoyi.system.service.ISysConfigService;
 import com.ruoyi.user.domain.PsyUserIntegralRecord;
 import com.ruoyi.user.mapper.PsyUserIntegralRecordMapper;
+import com.ruoyi.user.request.IntegralSearchReq;
 import com.ruoyi.user.service.IPsyUserIntegralRecordService;
+import com.ruoyi.user.vo.PsyUserIntegralRecordVO;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.math.BigDecimal;
+import java.util.List;
 
 /**
  * 用户积分记录Service业务层处理
@@ -34,6 +41,23 @@ public class PsyUserIntegralRecordServiceImpl extends ServiceImpl<PsyUserIntegra
 
     @Resource
     private PsyUserIntegralRecordMapper psyUserIntegralRecordMapper;
+
+    @Override
+    public List<PsyUserIntegralRecordVO> getList(IntegralSearchReq req) {
+        if (StringUtils.isNotBlank(req.getDateLimit())) {
+            DateLimitUtilVo dateLimit = NewDateUtil.getDateLimit(req.getDateLimit());
+            int compareDateResult = NewDateUtil.compareDate(dateLimit.getEndTime(), dateLimit.getStartTime(), NewConstants.DATE_FORMAT);
+            if (compareDateResult == -1) {
+                throw new UtilException("开始时间不能大于结束时间！");
+            }
+            req.setStartTime(dateLimit.getStartTime());
+            req.setEndTime(dateLimit.getEndTime());
+        }
+
+        req.setDelFlag(0);
+        req.setStatus(IntegralRecordConstants.INTEGRAL_RECORD_STATUS_COMPLETE);
+        return psyUserIntegralRecordMapper.getList(req);
+    }
 
     @Override
     public int getIntegral(BigDecimal amount, Integer type) {

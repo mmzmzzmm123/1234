@@ -1,8 +1,11 @@
 package com.ruoyi.user.service;
 
 import com.ruoyi.user.domain.PsyUserIntegralRecord;
+import com.ruoyi.user.request.IntegralSearchReq;
+import com.ruoyi.user.vo.PsyUserIntegralRecordVO;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 /**
  * 用户积分记录Service接口
@@ -12,6 +15,8 @@ import java.math.BigDecimal;
  */
 public interface IPsyUserIntegralRecordService
 {
+
+    List<PsyUserIntegralRecordVO> getList(IntegralSearchReq req);
 
     int getIntegral(BigDecimal amount, Integer type);
 

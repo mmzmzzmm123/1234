@@ -15,10 +15,6 @@
         framework框架核心
     </description>
 
-    <properties>
-        <hutool.version>5.6.3</hutool.version>
-    </properties>
-
     <dependencies>
 
         <!-- SpringBoot Web容器 -->
@@ -61,18 +57,6 @@
         <dependency>
             <groupId>com.ruoyi</groupId>
             <artifactId>ruoyi-system</artifactId>
-        </dependency>
-
-        <!--<dependency>
-            <groupId>com.ruoyi</groupId>
-            <artifactId>ruoyi-paychology</artifactId>
-        </dependency>-->
-
-        <!-- hutool 工具包 -->
-        <dependency>
-            <groupId>cn.hutool</groupId>
-            <artifactId>hutool-all</artifactId>
-            <version>${hutool.version}</version>
         </dependency>
 
     </dependencies>

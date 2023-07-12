@@ -26,6 +26,7 @@
         <mybatis-plus.version>3.4.2</mybatis-plus.version>
         <pagehelper.boot.version>1.4.3</pagehelper.boot.version>
         <fastjson.version>2.0.12</fastjson.version>
+        <hutool.version>5.6.3</hutool.version>
         <oshi.version>6.2.2</oshi.version>
         <commons.io.version>2.11.0</commons.io.version>
         <commons.fileupload.version>1.4</commons.fileupload.version>
@@ -143,6 +144,12 @@
                 <groupId>com.alibaba.fastjson2</groupId>
                 <artifactId>fastjson2</artifactId>
                 <version>${fastjson.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>cn.hutool</groupId>
+                <artifactId>hutool-all</artifactId>
+                <version>${hutool.version}</version>
             </dependency>
 
             <!-- Token生成与解析-->
