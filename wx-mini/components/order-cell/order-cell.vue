@@ -5,16 +5,23 @@
 			<view>{{orderInfo.roomName}}</view>
 		</view>
 		<view class="order-cell_info">
+			<u-icon name="rmb-circle" custom-style="margin-right:10rpx" size="30rpx"></u-icon>
+			<text>{{orderInfo.payAmount}}</text>
+			<view style="flex: 1;text-align: right;">
+				<text class="pay-type-label">{{payTypeList[orderInfo.payType]}}</text>
+			</view>
+		</view>
+		<view class="order-cell_info">
 			<u-icon name="clock" custom-style="margin-right:10rpx" size="30rpx"></u-icon>
 			时间: {{orderInfo.startTime}} - {{orderInfo.endTime}}
 		</view>
 		<view class="order-cell_info" @click.stop="makePhoneCall">
 			<u-icon name="phone-fill" custom-style="margin-right:10rpx" size="32rpx"></u-icon>
-			{{orderInfo.phone}}
+			<text>{{orderInfo.phone}}</text>
 		</view>
 		<view class="order-cell_info" @click="toMap">
 			<u-icon name="map" custom-style="margin-right:10rpx" size="32rpx"></u-icon>
-			{{orderInfo.storeAdress}}
+			<text>{{orderInfo.storeAdress}}</text>
 		</view>
 		<view class="btn-bar">
 			<view class="btn-bar_btn" @click="onOpenStore">开大门</view>
@@ -36,7 +43,7 @@
 		},
 		data() {
 			return {
-				payTypeList:[null, "微信支付", "储值卡余额支付", null, "优惠券支付"]
+				payTypeList:[null, "微信支付", "余额支付", null, "优惠券支付"]
 			}
 		},
 		created() {
@@ -110,6 +117,12 @@
 				height: 60rpx;
 				line-height: 60rpx;
 			}
+		}
+		.pay-type-label{
+			padding: 5rpx 10rpx;
+			border-radius: 5rpx;
+			border: 1rpx solid $u-success;
+			color: $u-success;
 		}
 	}
 </style>

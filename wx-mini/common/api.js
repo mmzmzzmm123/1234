@@ -37,7 +37,7 @@ const api = {
 		})
 	},
 	getUserInfo(){
-		return request('getInfo', null, true, 'GET')
+		return request('getUserInfo', null, true, 'GET')
 	},
 	getStoreList(param){
 		return get("office/api/store/list", param).then(res=>{
@@ -67,6 +67,15 @@ const api = {
 	},
 	openRoom(roomId){
 		return post('office/api/room/' + roomId)
+	},
+	addOrder(param){
+		return post('office/roomorder/order', param)
+	},
+	getRoomAvailable(param){
+		return get('office/api/room/available', param)
+	},
+	getCouponList(param){
+		return get()
 	}
 }
 const install = (Vue, options) => {

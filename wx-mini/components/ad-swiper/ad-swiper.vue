@@ -17,6 +17,15 @@
 				default: null
 			}
 		},
+		watch: {
+			imgList(newVal){
+				this.adList = newVal.map(x=>{
+					return {
+						img: x
+					}
+				})
+			}
+		},
 		data() {
 			return {
 				adList: [

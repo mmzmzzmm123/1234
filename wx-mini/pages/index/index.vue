@@ -9,7 +9,7 @@
 					</view>
 					<view class="menu-item_title">美团验券</view>
 				</navigator>
-				<navigator class="menu-item" url="../recharge/shop-list/index">
+				<navigator class="menu-item" >
 					<view class="menu-item_icon">
 						<text class="iconfont icon-huiyuan"></text>
 					</view>
@@ -18,10 +18,10 @@
 			</view>
 			<view class="search-bar">
 				<u-input prefix-icon="search" placeholder="搜索门店" v-model="queryParam.keyword" @input="onKeywordInput"></u-input>
-				<!-- <view class="search-bar_more">
+				<view class="search-bar_more" @click="onToShopList">
 					更多门店
 				</view>
-				<u-icon name="arrow-right" size="26rpx"></u-icon> -->
+				<u-icon name="arrow-right" size="26rpx" @click="onToShopList"></u-icon>
 			</view>
 			<view>
 				<shop-cell v-for="store in storeList" :key="store.id" :shopInfo="store"></shop-cell>
@@ -144,6 +144,11 @@
 			},
 			onKeywordInput(keyword){
 				this.$u.debounce(this.refresh, 400)
+			},
+			onToShopList(){
+				uni.navigateTo({
+					url: '/pages/shop/shop-list'
+				})
 			}
 		}
 	}

@@ -11,7 +11,7 @@
 			<view style="flex: 1;">
 				<view class="room-cell_name">{{roomInfo.name}}</view>
 				<view v-for="price in roomInfo.priceList" :key="price.id" class="room-cell_package">
-					<text>时段：{{price.startTime + ':00-' + price.stopTime+':00'}}</text>
+					<text>时段：{{price.startTime + ':00-' + (price.stopTime==24?0:price.stopTime+1) +':00'}}</text>
 					<text style="float: right;">{{price.price}}元/小时</text>
 				</view>
 				<view class="label-list">
@@ -23,7 +23,7 @@
 			<hour-status-bar :hours="hourList"></hour-status-bar>
 			<view style="display: flex;align-items: center;margin-top: 20rpx;justify-content: space-between;">
 				<hour-status-legend></hour-status-legend>
-				<view class="order-btn">立即预定</view>
+				<view class="order-btn" @click="onToAddOrder">立即预定</view>
 			</view>
 		</view>
 	</view>
@@ -49,7 +49,6 @@
 		},
 		computed:{
 			hourList(){
-				debugger
 				if(this.roomInfo && this.roomInfo.period){
 					const period = this.roomInfo.period
 					const now = new Date()
@@ -76,6 +75,14 @@
 			onPreviewImage(){
 				uni.previewImage({
 					urls: [this.roomInfo.logo]
+				})
+			},
+			onToAddOrder(){
+				uni.navigateTo({
+					url: "/pages/order/add/index",
+					success: res=>{
+						res.eventChannel.emit('acceptRoom', this.roomInfo)
+					}
 				})
 			}
 		}

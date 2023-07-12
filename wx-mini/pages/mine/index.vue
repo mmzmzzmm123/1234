@@ -18,7 +18,7 @@
 			<u-cell title="美团验券" is-link url="/pages/receipt-consume/index">
 				<text slot="icon" class="iconfont icon-meituan"></text>
 			</u-cell>
-			<u-cell title="全部门店" is-link>
+			<u-cell title="全部门店" is-link url="/pages/shop/shop-list">
 				<text slot="icon" class="iconfont icon-shop"></text>
 			</u-cell>
 			<u-cell title="服务协议" is-link>
