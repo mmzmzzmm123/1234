@@ -76,4 +76,6 @@ public interface ITRoomOrderService {
     TRoomOrder continueOrder(Long userId);
 
     List<RoomOrderWxVo> getWxRoomOrder(RoomOrderWxReqVo tRoomOrder);
+
+    void scanOrder();
 }

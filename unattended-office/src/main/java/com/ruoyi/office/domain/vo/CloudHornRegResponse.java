@@ -6,4 +6,5 @@ import lombok.Data;
 public class CloudHornRegResponse {
     String code;
     String msg;
+    String data;
 }

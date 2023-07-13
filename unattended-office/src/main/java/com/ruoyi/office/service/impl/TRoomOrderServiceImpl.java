@@ -2,10 +2,11 @@ package com.ruoyi.office.service.impl;
 
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
+import com.alibaba.fastjson2.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.github.binarywang.wxpay.bean.request.WxPayUnifiedOrderV3Request;
 import com.github.binarywang.wxpay.bean.result.WxPayOrderQueryV3Result;
@@ -16,10 +17,13 @@ import com.github.binarywang.wxpay.exception.WxPayException;
 import com.github.binarywang.wxpay.service.WxPayService;
 import com.ruoyi.common.exception.ServiceException;
 import com.ruoyi.common.utils.DateUtils;
+import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.common.utils.bean.BeanUtils;
+import com.ruoyi.common.utils.http.HttpUtils;
 import com.ruoyi.office.domain.*;
 import com.ruoyi.office.domain.enums.OfficeEnum;
 import com.ruoyi.office.domain.vo.*;
+import com.ruoyi.office.horn.HornConfig;
 import com.ruoyi.office.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -535,4 +539,78 @@ public class TRoomOrderServiceImpl extends ServiceImpl<TRoomOrderMapper, TRoomOr
 
         return tRoomOrderMapper.getWxRoomOrder(tRoomOrder);
     }
+
+
+    @Autowired
+    HornConfig hornConfig;
+
+    @Override
+    public void scanOrder() {
+
+        Map<Long, TEquipment> equipments = equipmentService.selectTEquipmentList(new TEquipment()).stream().collect(Collectors.toMap(TEquipment::getId, Function.identity()));
+
+        // 发送 喇叭 注册 并记录注册结果
+        /*SysDictData dictData = new SysDictData();
+        dictData.setDictType(OfficeEnum.EquipType.HORN.getCode());
+        final Map<String, String> hornConfig = dictDataService.selectDictDataList(dictData).stream().collect(Collectors.toMap(SysDictData::getDictLabel, SysDictData::getDictValue));
+        Map<String, String> param = new HashMap<>();
+        param.put("app_id", hornConfig.get("app_id"));
+        param.put("app_secret", hornConfig.get("app_secret"));
+        int minutes = Integer.parseInt(hornConfig.get("minute"));*/
+
+        Map<String, String> param = new HashMap<>();
+        param.put("app_id", hornConfig.getAppId());
+        param.put("app_secret", hornConfig.getAppSecret());
+        String[] minuteStrs = hornConfig.getMinutes().split(",");
+
+        List<Integer> alertList = new ArrayList<>();
+        for (String m : minuteStrs) {
+            alertList.add(Integer.parseInt(m));
+        }
+        Collections.sort(alertList);
+//        Collections.reverse(alertList);
+
+        TRoomOrder roomOrder = new TRoomOrder();
+        roomOrder.setStatus(OfficeEnum.RoomOrderStatus.USING.getCode());
+        List<TRoomOrder> roomOrderList = tRoomOrderMapper.selectTRoomOrderList(roomOrder);
+        for (TRoomOrder order : roomOrderList) {
+
+            int diff = Math.abs((int) ((new Date().getTime() - order.getEndTime().getTime()) / (1000 * 60)));
+            for (int min : alertList) {
+                if (diff > min)
+                    continue;
+                if (StringUtils.isEmpty(order.getRemark())) {
+                    TRoom room = roomService.selectTRoomById(order.getRoomId());
+                    for (String s : room.getTableCode().split(",")) {
+                        TEquipment equipment = equipments.get(Long.parseLong(s));
+                        if (OfficeEnum.EquipType.HORN.getCode().equalsIgnoreCase(equipment.getEquipType())) {
+                            param.put("device_sn", equipment.getEquipControl());
+//                        String response = HttpUtils.sendPost(hornConfig.get("url") + "/send", "您的订单还有" + minutes + "分钟结束，请及时续费，以免断电影响使用，谢谢");
+                            String response = HttpUtils.sendPost(hornConfig.getUrl() + "/send", "您的订单还有" + minutes + "分钟结束，请及时续费，以免断电影响使用，谢谢");
+                            CloudHornRegResponse resp = JSONObject.parseObject(response, CloudHornRegResponse.class);
+                            order.setRemark(min + "");// 标识已经通知
+                            tRoomOrderMapper.updateTRoomOrder(order);
+                        }
+                    }
+                } else {
+                    if (min != Integer.parseInt(order.getRemark())) {
+                        TRoom room = roomService.selectTRoomById(order.getRoomId());
+                        for (String s : room.getTableCode().split(",")) {
+                            TEquipment equipment = equipments.get(Long.parseLong(s));
+                            if (OfficeEnum.EquipType.HORN.getCode().equalsIgnoreCase(equipment.getEquipType())) {
+                                param.put("device_sn", equipment.getEquipControl());
+//                        String response = HttpUtils.sendPost(hornConfig.get("url") + "/send", "您的订单还有" + minutes + "分钟结束，请及时续费，以免断电影响使用，谢谢");
+                                String response = HttpUtils.sendPost(hornConfig.getUrl() + "/send", "您的订单还有" + diff + "分钟结束，请及时续费，以免断电影响使用，谢谢");
+                                CloudHornRegResponse resp = JSONObject.parseObject(response, CloudHornRegResponse.class);
+                                order.setRemark(min + "");// 标识已经通知
+                                tRoomOrderMapper.updateTRoomOrder(order);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+//        System.out.println("订单结束提醒完成");
+    }
+
 }

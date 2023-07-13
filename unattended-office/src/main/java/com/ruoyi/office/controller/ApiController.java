@@ -352,24 +352,34 @@ public class ApiController extends BaseController {
     /**
      * 开门禁
      *
-     * @param id
+     * @param orderId
      * @return
      */
     @ApiOperation("开房间设备")
-    @PostMapping("/room/{id}")
-    public AjaxResult openRoom(@PathVariable("id") Long id) {
+    @PostMapping("/room/{orderId}")
+    public AjaxResult openRoom(@PathVariable("orderId") Long orderId) {
 
         try {
-            roomService.openRoom(id);
+            // 判断是否到达开门允许的事件范围
+            SysDictData dictData = new SysDictData();
+            dictData.setDictLabel("open_room");
+            final List<SysDictData> sysDictData = dictDataService.selectDictDataList(dictData);
+            int minutes = 15;
+            if (sysDictData.size() > 0) {
+                minutes = Integer.parseInt(sysDictData.get(0).getDictValue());
+            }
+            TRoomOrder roomOrder = roomOrderService.selectTRoomOrderById(orderId);
+            long diff = (roomOrder.getStartTime().getTime() - new Date().getTime()) / 60000;
+            if (diff > minutes)
+                return AjaxResult.error("订单开始前" + minutes + "分钟才可以开门");
+
+            roomService.openRoom(roomOrder.getRoomId());
         } catch (Exception e) {
-            throw new ServiceException("操作异常，请联系管理员");
+            AjaxResult.error("操作异常，请联系管理员");
         }
 
         return AjaxResult.success();
     }
-
-    @Autowired
-    private ITRoomOrderService tRoomOrderService;
 
     /**
      * 查询房间占用（点支付时再次校验可用性并改变状态，支付失败回滚）列表
@@ -379,7 +389,7 @@ public class ApiController extends BaseController {
     public TableDataInfo order(RoomOrderWxReqVo tRoomOrder) {
         tRoomOrder.setCreateBy(SecurityUtils.getLoginUser().getWxUser().getId() + "");
         startPage();
-        List<RoomOrderWxVo> list = tRoomOrderService.getWxRoomOrder(tRoomOrder);
+        List<RoomOrderWxVo> list = roomOrderService.getWxRoomOrder(tRoomOrder);
         return getDataTable(list);
     }
 
@@ -421,7 +431,7 @@ public class ApiController extends BaseController {
             RoomAvailablePeriod qry = new RoomAvailablePeriod();
             qry.setRoomId(room.getId());
             qry.setDate(DateUtils.parseDate(DateUtils.getDate()));
-            final RoomAvailablePeriod availablePeriod = tRoomOrderService.getAvailablePeriod(qry);
+            final RoomAvailablePeriod availablePeriod = roomOrderService.getAvailablePeriod(qry);
 
             vo.setPeriod(availablePeriod);
             res.add(vo);
@@ -453,7 +463,7 @@ public class ApiController extends BaseController {
     @ApiOperation(value = "获取房间已占用时间段")
     @GetMapping(value = "/room/available")
     public AjaxResult getAvailablePeriod(RoomAvailablePeriod vo) {
-        final RoomAvailablePeriod availablePeriod = tRoomOrderService.getAvailablePeriod(vo);
+        final RoomAvailablePeriod availablePeriod = roomOrderService.getAvailablePeriod(vo);
         return success(availablePeriod);
     }
 
@@ -588,7 +598,7 @@ public class ApiController extends BaseController {
     public TableDataInfo orderList(TRoomOrder tRoomOrder) {
         tRoomOrder.setCreateBy(SecurityUtils.getLoginUser().getWxUser().getId() + "");
         startPage();
-        List<TRoomOrder> list = tRoomOrderService.selectTRoomOrderList(tRoomOrder);
+        List<TRoomOrder> list = roomOrderService.selectTRoomOrderList(tRoomOrder);
         return getDataTable(list);
     }
 
