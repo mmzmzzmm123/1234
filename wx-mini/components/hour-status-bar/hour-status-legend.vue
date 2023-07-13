@@ -7,6 +7,8 @@
 		<template v-if="showCurrent">
 			<view class="rect rect--current"></view>
 			<text>当前预定</text>
+			<view class="rect rect--error"></view>
+			<text>重复预定</text>
 		</template>
 	</view>
 </template>
@@ -43,8 +45,5 @@
 			margin: 0 30rpx 0 10rpx;
 			font-size: 28rpx;
 		}
-	}
-	.rect--current{
-		background: $u-success;
 	}
 </style>

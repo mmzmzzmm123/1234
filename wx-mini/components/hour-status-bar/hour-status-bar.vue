@@ -1,7 +1,7 @@
 <template>
 	<view class="hour-status-bar">
 		<view class="hour-status-bar_item" v-for="item in hours" :key="item.name">
-			<view :class="item.status?'rect rect--fill':'rect'"></view>
+			<view :class="item.error?'rect rect--error':item.current?'rect rect--current':item.status?'rect rect--fill':'rect'"></view>
 			<view>{{item.name}}</view>
 		</view>
 	</view>

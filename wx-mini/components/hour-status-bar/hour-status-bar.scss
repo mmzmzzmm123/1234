@@ -7,3 +7,9 @@
 .rect--fill{
 	background: $u-primary-dark;
 }
+.rect--current{
+	background: $u-success;
+}
+.rect--error{
+	background: $u-error;
+}

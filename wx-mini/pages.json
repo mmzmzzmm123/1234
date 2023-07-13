@@ -59,6 +59,25 @@
 			"style": {
 				"navigationBarTitleText": "会员充值"
 			}
+		},
+		{
+			"path": "pages/coupon/list/index",
+			"style": {
+				"navigationBarTitleText": "我的卡券"
+			}
+		},
+		{
+			"path": "pages/order/add/index",
+			"style": {
+				"navigationBarTitleText": "预定"
+			}
+		},
+		{
+			"path": "pages/shop/shop-list",
+			"style": {
+				"navigationBarTitleText": "全部门店",
+				"enablePullDownRefresh": true
+			}
 		}
 	],
 	"globalStyle": {
@@ -69,7 +88,7 @@
 	},
 	"tabBar": {
 		"color": "#909399",
-		"selectedColor": "#303133",
+		"selectedColor": "#9D7C6D",
 		"backgroundColor": "#FFFFFF",
 		"borderStyle": "black",
 		"list": [
