@@ -540,6 +540,8 @@ public class TRoomOrderServiceImpl extends ServiceImpl<TRoomOrderMapper, TRoomOr
         return tRoomOrderMapper.getWxRoomOrder(tRoomOrder);
     }
 
+    @Autowired
+    ITEquipmentService equipmentService;
 
     @Autowired
     HornConfig hornConfig;
@@ -586,7 +588,7 @@ public class TRoomOrderServiceImpl extends ServiceImpl<TRoomOrderMapper, TRoomOr
                         if (OfficeEnum.EquipType.HORN.getCode().equalsIgnoreCase(equipment.getEquipType())) {
                             param.put("device_sn", equipment.getEquipControl());
 //                        String response = HttpUtils.sendPost(hornConfig.get("url") + "/send", "您的订单还有" + minutes + "分钟结束，请及时续费，以免断电影响使用，谢谢");
-                            String response = HttpUtils.sendPost(hornConfig.getUrl() + "/send", "您的订单还有" + minutes + "分钟结束，请及时续费，以免断电影响使用，谢谢");
+                            String response = HttpUtils.sendPost(hornConfig.getUrl() + "/send", "您的订单还有" + diff + "分钟结束，请及时续费，以免断电影响使用，谢谢");
                             CloudHornRegResponse resp = JSONObject.parseObject(response, CloudHornRegResponse.class);
                             order.setRemark(min + "");// 标识已经通知
                             tRoomOrderMapper.updateTRoomOrder(order);
