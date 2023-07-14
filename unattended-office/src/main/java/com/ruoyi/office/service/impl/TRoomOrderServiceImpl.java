@@ -250,14 +250,15 @@ public class TRoomOrderServiceImpl extends ServiceImpl<TRoomOrderMapper, TRoomOr
             WxPayUnifiedOrderV3Request v3Request = new WxPayUnifiedOrderV3Request();
             final WxPayConfig config = wxPayService.getConfig();
 
+            WxPayUnifiedOrderV3Request.Amount v3Amount = new WxPayUnifiedOrderV3Request.Amount();
+            v3Amount.setTotal(payAMT.intValue() * 100);
+            WxPayUnifiedOrderV3Request.Payer v3payer = new WxPayUnifiedOrderV3Request.Payer();
+            v3payer.setOpenid(wxUser.getOpenId());
+
             v3Request.setAppid(config.getAppId()).setMchid(config.getMchId()).setNotifyUrl(config.getPayScoreNotifyUrl())
                     .setDescription("roomId: " + prepayReq.getRoomId()).setOutTradeNo(String.valueOf(orderNo))
-                    .setAmount(
-                            new WxPayUnifiedOrderV3Request.Amount() {
-                            }.setTotal(payAMT.intValue() * 100).setCurrency("CNY"))
-                    .setPayer(
-                            new WxPayUnifiedOrderV3Request.Payer() {
-                            }.setOpenid(wxUser.getOpenId()))
+                    .setAmount(v3Amount)
+                    .setPayer(v3payer)
                     .setAttach(OfficeEnum.WxTradeType.ROOM_ORDER.getCode());
 
             WxPayUnifiedOrderV3Result.JsapiResult jsapiResult = null;
