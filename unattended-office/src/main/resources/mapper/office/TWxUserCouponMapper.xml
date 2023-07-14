@@ -38,7 +38,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <where>  
             <if test="userId != null "> and user_id = #{userId}</if>
             <if test="merchantId != null "> and merchant_id = #{merchantId}</if>
-            <if test="storeId != null  "> and store_id = #{storeId}</if>
+            <if test="storeId != null and storeId != 0 "> and store_id = #{storeId}</if>
             <if test="couponId != null "> and coupon_id = #{couponId}</if>
             <if test="couponName != null  and couponName != ''"> and coupon_name like concat('%', #{couponName}, '%')</if>
             <if test="originalPrice != null "> and original_price = #{originalPrice}</if>

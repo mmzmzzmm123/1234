@@ -229,7 +229,7 @@ public class TRoomOrderServiceImpl extends ServiceImpl<TRoomOrderMapper, TRoomOr
 
             // 满减券
             BigDecimal payAMT = totalPrice;
-            if (prepayReq.getCouponId() != 0) {
+            if (prepayReq.getCouponId() != null && prepayReq.getCouponId() != 0) {
                 TWxUserPromotion qry = new TWxUserPromotion();
                 qry.setCouponId(prepayReq.getCouponId());
                 qry.setWxId(userId);
@@ -250,11 +250,11 @@ public class TRoomOrderServiceImpl extends ServiceImpl<TRoomOrderMapper, TRoomOr
             WxPayUnifiedOrderV3Request v3Request = new WxPayUnifiedOrderV3Request();
             final WxPayConfig config = wxPayService.getConfig();
 
-            v3Request.setAppid(config.getAppId()).setMchid(config.getMchId()).setNotifyUrl(config.getNotifyUrl())
+            v3Request.setAppid(config.getAppId()).setMchid(config.getMchId()).setNotifyUrl(config.getPayScoreNotifyUrl())
                     .setDescription("roomId: " + prepayReq.getRoomId()).setOutTradeNo(String.valueOf(orderNo))
                     .setAmount(
                             new WxPayUnifiedOrderV3Request.Amount() {
-                            }.setTotal(payAMT.intValue() * 100))
+                            }.setTotal(payAMT.intValue() * 100).setCurrency("CNY"))
                     .setPayer(
                             new WxPayUnifiedOrderV3Request.Payer() {
                             }.setOpenid(wxUser.getOpenId()))

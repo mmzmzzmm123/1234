@@ -115,8 +115,8 @@ public class TWxUserCouponController extends BaseController {
      * 查询可用优惠券
      */
     @ApiOperation("可用优惠券")
-    @GetMapping("/validlist")
-    public TableDataInfo validlist(@PathVariable Long storeId) {
+    @GetMapping("/validlist/{storeId}")
+    public TableDataInfo validlist(@PathVariable("storeId") Long storeId) {
         startPage();
         List<TWxUserCoupon> list = tWxUserCouponService.validlist(storeId, SecurityUtils.getLoginUser().getWxUser().getId());
         return getDataTable(list);
