@@ -160,10 +160,10 @@ wx:
         aesKey: 1
         msgDataFormat: xml
   pay:
-    appId: xxxxxxxxxxx
-    mchId: 15xxxxxxxxx #商户id
-    apiV3Key: Dc1DBwSc094jACxxxxxxxxxxxxxxx #V3密钥
-    certSerialNo: 62C6CEAA360BCxxxxxxxxxxxxxxx
+    appId: wx2171fc93eaed8be1
+    mchId: 1648735517 #商户id
+    apiV3Key: 4dTefbD2ZJzr3SyL9815fJqa7etdkz8Z #V3密钥
+    certSerialNo: 62558ec2489895381df13cfd07f2cc1ea53304d5
     privateKeyPath: classpath:cert/apiclient_key.pem #apiclient_key.pem证书文件的绝对路径或者以classpath:开头的类路径
     privateCertPath: classpath:cert/apiclient_cert.pem #apiclient_cert.pem证书文件的绝对路径或者以classpath:开头的类路径
     payScoreNotifyUrl: http://xxx.xxx
