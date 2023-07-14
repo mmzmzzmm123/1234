@@ -5,6 +5,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.ruoyi.common.utils.SecurityUtils;
 import com.ruoyi.office.domain.vo.BuyCouponReq;
+import com.ruoyi.office.domain.vo.WxUserCouponResp;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -118,7 +119,18 @@ public class TWxUserCouponController extends BaseController {
     @GetMapping("/validlist/{storeId}")
     public TableDataInfo validlist(@PathVariable("storeId") Long storeId) {
         startPage();
-        List<TWxUserCoupon> list = tWxUserCouponService.validlist(storeId, SecurityUtils.getLoginUser().getWxUser().getId());
+        List<WxUserCouponResp> list = tWxUserCouponService.validlist(storeId, SecurityUtils.getLoginUser().getWxUser().getId());
+        return getDataTable(list);
+    }
+
+    /**
+     * 查询可用优惠券
+     */
+    @ApiOperation("可用优惠券")
+    @GetMapping("/usedlist/{storeId}")
+    public TableDataInfo usedlist(@PathVariable("storeId") Long storeId) {
+        startPage();
+        List<WxUserCouponResp> list = tWxUserCouponService.usedlist(storeId, SecurityUtils.getLoginUser().getWxUser().getId());
         return getDataTable(list);
     }
 
