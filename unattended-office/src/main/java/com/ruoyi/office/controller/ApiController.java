@@ -526,8 +526,11 @@ public class ApiController extends BaseController {
         TWxUserAmount qry = new TWxUserAmount();
         qry.setUserId(Long.parseLong(store.getCreateBy()));
         qry.setWxUserId(SecurityUtils.getLoginUser().getWxUser().getId());
+//        qry.setWxUserId(9l);
         final List<TWxUserAmount> wxUserAmounts = tWxUserAmountService.selectTWxUserAmountList(qry);
 
+        if(wxUserAmounts.size()==0)
+            return AjaxResult.success(0);
         return AjaxResult.success(wxUserAmounts.get(0).getAmount());
     }
 

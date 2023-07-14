@@ -122,22 +122,31 @@ public class TRoomOrderServiceImpl extends ServiceImpl<TRoomOrderMapper, TRoomOr
 
     private BigDecimal getPeriodPrice(int stHour, int endHour, List<TRoomPrice> tRoomPrices) {
         BigDecimal totalPrice = new BigDecimal(0);
-        for (TRoomPrice roomPrice : tRoomPrices) {
+      /*  for (TRoomPrice roomPrice : tRoomPrices) {
             if (roomPrice.getStopTime() < stHour || endHour < roomPrice.getStartTime())
                 continue;
 
             int tempSt = 0, tempEnd = 0;
-            if (roomPrice.getStartTime() > stHour)
+            if (roomPrice.getStartTime() >= stHour)
                 tempSt = roomPrice.getStartTime();
             else
                 tempSt = stHour;
 
             if (roomPrice.getStopTime() <= endHour)
-                tempEnd = roomPrice.getStopTime() + 1;
+                tempEnd = roomPrice.getStopTime() ;
             else tempEnd = endHour;
 
             int minuts = tempEnd - tempSt;
             totalPrice = totalPrice.add(roomPrice.getPrice().multiply(new BigDecimal(minuts)));
+        }*/
+
+        for (TRoomPrice roomPrice : tRoomPrices) {
+            // endHour 不计数订单时间； roomPrice.getStopTime()计入价格时间
+            while(stHour<endHour && stHour<=roomPrice.getStopTime()){
+                if(stHour>=roomPrice.getStartTime())
+                    totalPrice = totalPrice.add(roomPrice.getPrice());
+                stHour++;
+            }
         }
         return totalPrice;
     }
@@ -212,6 +221,7 @@ public class TRoomOrderServiceImpl extends ServiceImpl<TRoomOrderMapper, TRoomOr
 
         // 计算总金额
         BigDecimal totalPrice = calcPrice(prepayReq.getRoomId(), prepayReq.getStartTime(), prepayReq.getEndTime());
+
         // 计算订单号
         long orderNo = 0l;
         SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
@@ -547,6 +557,9 @@ public class TRoomOrderServiceImpl extends ServiceImpl<TRoomOrderMapper, TRoomOr
     @Autowired
     HornConfig hornConfig;
 
+    /**
+     * 订单结束提醒
+     */
     @Override
     public void scanOrder() {
 
