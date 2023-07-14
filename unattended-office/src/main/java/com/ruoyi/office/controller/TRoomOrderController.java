@@ -130,8 +130,8 @@ public class TRoomOrderController extends BaseController {
 //        long wxUserId = 9l;
         order.setUserId(wxUserId);
         try {
-            tRoomOrderService.prepay(order, wxUserId);
-            return AjaxResult.success();
+            final PrepayResp prepay = tRoomOrderService.prepay(order, wxUserId);
+            return AjaxResult.success(prepay);
         } catch (Exception e) {
             return AjaxResult.error(e.getMessage());
         }
