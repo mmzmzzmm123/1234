@@ -26,7 +26,9 @@ import com.ruoyi.office.mqtt.MqttSendClient;
 import com.ruoyi.office.domain.*;
 import com.ruoyi.office.domain.enums.OfficeEnum;
 import com.ruoyi.office.service.*;
+import com.ruoyi.system.domain.SysNotice;
 import com.ruoyi.system.service.ISysDictDataService;
+import com.ruoyi.system.service.ISysNoticeService;
 import com.ruoyi.tuangou.service.TuangouService;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.logging.LogFactory;
@@ -636,5 +638,17 @@ public class ApiController extends BaseController {
         return getDataTable(res);
     }
 
+    @Autowired
+    private ISysNoticeService noticeService;
+
+    /**
+     * 获取banner通知公告列表
+     */
+    @GetMapping("/notice/list")
+    public TableDataInfo list(SysNotice notice)
+    {
+        List<SysNotice> list = noticeService.selectNoticeList(notice);
+        return getDataTable(list);
+    }
 
 }

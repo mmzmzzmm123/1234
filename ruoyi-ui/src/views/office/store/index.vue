@@ -204,7 +204,7 @@
         <el-form-item label="logo" prop="logo">
           <el-upload v-model="form.logo" multiple :action="uploadImgUrl" list-type="picture-card"
             :on-success="handleUploadSuccess" :before-upload="handleBeforeUpload" :limit="limit"
-            :on-error="handleUploadError" :on-exceed="handleExceed" ref="imageUpload" :on-remove="handleDelete"
+            :on-error="handleUploadError" :on-exceed="handleExceed" ref="imageUpload" :on-remove="handleDeletePic"
             :show-file-list="true" :headers="headers" :file-list="fileList" :on-preview="handlePictureCardPreview"
             :class="{hide: this.fileList.length >= this.limit}">
             <i class="el-icon-plus"></i>
@@ -289,7 +289,7 @@
           <el-form-item label="logo" prop="logo">
             <el-upload v-model="roomForm.logo" multiple :action="uploadImgUrl" list-type="picture-card"
               :on-success="handleUploadSuccess" :before-upload="handleBeforeUpload" :limit="limit"
-              :on-error="handleUploadError" :on-exceed="handleExceed" ref="imageUpload" :on-remove="handleDelete"
+              :on-error="handleUploadError" :on-exceed="handleExceed" ref="imageUpload" :on-remove="handleDeletePic"
               :show-file-list="true" :headers="headers" :file-list="fileList" :on-preview="handlePictureCardPreview"
               :class="{hide: this.fileList.length >= this.limit}">
               <i class="el-icon-plus"></i>
@@ -1121,7 +1121,7 @@
         }
       },
       // 删除图片
-      handleDelete(file) {
+      handleDeletePic(file) {
         const findex = this.fileList.map(f => f.name).indexOf(file.name);
         if (findex > -1) {
           this.fileList.splice(findex, 1);
@@ -1142,7 +1142,7 @@
               this.uploadList[i].url = this.baseUrl + this.uploadList[i].url;
             }
           }
-
+debugger
           this.fileList = this.fileList.concat(this.uploadList);
           this.uploadList = [];
           this.number = 0;
