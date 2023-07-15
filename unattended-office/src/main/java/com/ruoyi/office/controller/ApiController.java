@@ -16,6 +16,7 @@ import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.core.domain.entity.SysDictData;
 import com.ruoyi.common.core.page.TableDataInfo;
+import com.ruoyi.common.enums.BusinessType;
 import com.ruoyi.common.exception.ServiceException;
 import com.ruoyi.common.utils.DateUtils;
 import com.ruoyi.common.utils.SecurityUtils;
@@ -529,7 +530,7 @@ public class ApiController extends BaseController {
 //        qry.setWxUserId(9l);
         final List<TWxUserAmount> wxUserAmounts = tWxUserAmountService.selectTWxUserAmountList(qry);
 
-        if(wxUserAmounts.size()==0)
+        if (wxUserAmounts.size() == 0)
             return AjaxResult.success(0);
         return AjaxResult.success(wxUserAmounts.get(0).getAmount());
     }
@@ -603,6 +604,20 @@ public class ApiController extends BaseController {
         startPage();
         List<TRoomOrder> list = roomOrderService.selectTRoomOrderList(tRoomOrder);
         return getDataTable(list);
+    }
+
+    @ApiOperation("待支付订单支付")
+    @Log(title = "待支付订单支付", businessType = BusinessType.INSERT)
+    @PostMapping("/reorder")
+    public AjaxResult reorder(@RequestBody ReorderPayReq prepayReq) {
+        long wxUserId = SecurityUtils.getLoginUser().getWxUser().getId();
+//        long wxUserId = 9l;
+        try {
+            final PrepayResp prepay = roomOrderService.reOrder(prepayReq, wxUserId);
+            return AjaxResult.success(prepay);
+        } catch (Exception e) {
+            return AjaxResult.error(e.getMessage());
+        }
     }
 
 

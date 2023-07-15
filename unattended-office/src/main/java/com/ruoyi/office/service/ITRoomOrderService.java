@@ -78,4 +78,6 @@ public interface ITRoomOrderService {
     List<RoomOrderWxVo> getWxRoomOrder(RoomOrderWxReqVo tRoomOrder);
 
     void scanOrder();
+
+    PrepayResp reOrder(ReorderPayReq orderId, long wxUserId);
 }
