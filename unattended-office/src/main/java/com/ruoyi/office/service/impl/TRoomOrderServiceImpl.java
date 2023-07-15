@@ -648,10 +648,8 @@ public class TRoomOrderServiceImpl extends ServiceImpl<TRoomOrderMapper, TRoomOr
 
             do {
                 if (orderSt.before(orderDate)) {
-                    orderSt = DateUtils.addHours(orderSt, 1);
-                    continue;
-                }
-                else {
+//                    continue;
+                } else {
                     if (orderSt.before(orderDateAfter))
                         orderDateHourList.add(orderSt.getHours());
                     else
@@ -767,6 +765,6 @@ public class TRoomOrderServiceImpl extends ServiceImpl<TRoomOrderMapper, TRoomOr
     @Override
     public List<RoomOrderWxVo> getOrderCanOpen(OrderCanOpenReq wxUserId) {
 //        tRoomOrderMapper.getWxRoomOrder(tRoomOrder);
-        return  tRoomOrderMapper.getOrderCanOpen(wxUserId);
+        return tRoomOrderMapper.getOrderCanOpen(wxUserId);
     }
 }
