@@ -620,5 +620,15 @@ public class ApiController extends BaseController {
         }
     }
 
+    @ApiOperation("查询可以开门的订单,status不用")
+    @GetMapping("/order/open")
+    public TableDataInfo orderCanOpen(OrderCanOpenReq tRoomOrder){
+        long wxUserId = SecurityUtils.getLoginUser().getWxUser().getId();
+        tRoomOrder.setCreateBy(wxUserId+"");
+        startPage();
+        List<RoomOrderWxVo>  res = roomOrderService.getOrderCanOpen(tRoomOrder);
+        return getDataTable(res);
+    }
+
 
 }

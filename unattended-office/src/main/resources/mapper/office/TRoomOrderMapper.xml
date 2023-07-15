@@ -108,6 +108,37 @@
             <if test="roomId != null ">and room_id = #{roomId}</if>
             <if test="createBy != null  and createBy != ''">and o.create_by = #{createBy}</if>
             <if test="status != null and status != -1">and o.status = #{status}</if>
+
+        </where>
+    </select>
+    <select id="getOrderCanOpen" parameterType="OrderCanOpenReq" resultType="com.ruoyi.office.domain.vo.RoomOrderWxVo">
+        select o.id,
+        order_no orderNo,
+        room_id roomId,
+        o.user_id userId,
+        o.start_time startTime,
+        o.end_time endTime,
+        total_amount totalAmount,
+        pay_amount payAmount,
+        coupon_amount couponAmount,
+        coupon_id couponId,
+        prepay_id prepayId,
+        o.pay_type payType,
+        s.name storeName ,s.address storeAdress,s.phone phone,r.name roomName,
+        s.latitude lat, s.longitude lon,
+        s.id storeId
+        from t_room_order o
+        left join t_room r on o.room_id = r.id
+        left join t_store s on r.store_id =s.id
+        <where>
+            <if test="keyword != null ">and (s.name like concat('%',#{keyword},'%') or s.address like
+                concat('%',#{keyword},'%') or r.name like concat('%',#{keyword},'%'))
+            </if>
+            <if test="storeId != null ">and s.id = #{storeId}</if>
+            <if test="roomId != null ">and room_id = #{roomId}</if>
+            <if test="createBy != null  and createBy != ''">and o.create_by = #{createBy}</if>
+            <if test="1==1">and o.status in (2,3,4)</if>
+
         </where>
     </select>
 

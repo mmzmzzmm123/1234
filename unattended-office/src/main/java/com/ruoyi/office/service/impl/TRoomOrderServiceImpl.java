@@ -762,4 +762,9 @@ public class TRoomOrderServiceImpl extends ServiceImpl<TRoomOrderMapper, TRoomOr
 //        System.out.println("订单结束提醒完成");
     }
 
+    @Override
+    public List<RoomOrderWxVo> getOrderCanOpen(OrderCanOpenReq wxUserId) {
+//        tRoomOrderMapper.getWxRoomOrder(tRoomOrder);
+        return  tRoomOrderMapper.getOrderCanOpen(wxUserId);;
+    }
 }

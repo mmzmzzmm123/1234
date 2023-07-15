@@ -5,6 +5,7 @@ import java.util.List;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 
 import com.ruoyi.office.domain.TRoomOrder;
+import com.ruoyi.office.domain.vo.OrderCanOpenReq;
 import com.ruoyi.office.domain.vo.PrepayReq;
 import com.ruoyi.office.domain.vo.RoomOrderWxReqVo;
 import com.ruoyi.office.domain.vo.RoomOrderWxVo;
@@ -69,4 +70,6 @@ public interface TRoomOrderMapper extends BaseMapper<TRoomOrder> {
     Long getHourMaxOrder(String nowHour);
 
     List<RoomOrderWxVo> getWxRoomOrder(RoomOrderWxReqVo tRoomOrder);
+
+    List<RoomOrderWxVo> getOrderCanOpen(OrderCanOpenReq wxUserId);
 }
