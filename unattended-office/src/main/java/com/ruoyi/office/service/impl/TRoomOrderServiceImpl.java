@@ -647,8 +647,10 @@ public class TRoomOrderServiceImpl extends ServiceImpl<TRoomOrderMapper, TRoomOr
                 continue;
 
             do {
-                if (orderSt.before(orderDate))
+                if (orderSt.before(orderDate)) {
+                    orderSt = DateUtils.addHours(orderSt, 1);
                     continue;
+                }
                 else {
                     if (orderSt.before(orderDateAfter))
                         orderDateHourList.add(orderSt.getHours());

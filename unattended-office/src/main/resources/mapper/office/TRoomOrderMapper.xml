@@ -96,7 +96,7 @@
         o.pay_type payType,
         s.name storeName ,s.address storeAdress,s.phone phone,r.name roomName,
         s.latitude lat, s.longitude lon,
-        s.id storeId
+        s.id storeId,o.status
         from t_room_order o
         left join t_room r on o.room_id = r.id
         left join t_store s on r.store_id =s.id
