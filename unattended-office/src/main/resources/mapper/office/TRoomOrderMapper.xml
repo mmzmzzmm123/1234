@@ -138,8 +138,8 @@
             <if test="roomId != null ">and room_id = #{roomId}</if>
             <if test="createBy != null  and createBy != ''">and o.create_by = #{createBy}</if>
             <if test="1==1">and o.status in (2,3,4)</if>
-
         </where>
+        order by o.create_time
     </select>
 
     <insert id="insertTRoomOrder" parameterType="TRoomOrder" useGeneratedKeys="true" keyProperty="id">

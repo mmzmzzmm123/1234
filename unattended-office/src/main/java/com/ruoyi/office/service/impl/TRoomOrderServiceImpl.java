@@ -765,6 +765,6 @@ public class TRoomOrderServiceImpl extends ServiceImpl<TRoomOrderMapper, TRoomOr
     @Override
     public List<RoomOrderWxVo> getOrderCanOpen(OrderCanOpenReq wxUserId) {
 //        tRoomOrderMapper.getWxRoomOrder(tRoomOrder);
-        return  tRoomOrderMapper.getOrderCanOpen(wxUserId);;
+        return  tRoomOrderMapper.getOrderCanOpen(wxUserId);
     }
 }
