@@ -122,6 +122,8 @@ public class TRoomServiceImpl extends ServiceImpl<TRoomMapper, TRoom> implements
         TRoom room = tRoomMapper.selectTRoomById(id);
         List<TEquipment> equipments = equipmentService.selectTEquipmentList(new TEquipment());
 
+        final Map<Long, TEquipment> equipmentMap = equipments.stream().collect(Collectors.toMap(TEquipment::getId, Function.identity()));
+
         SysDictData dictData = new SysDictData();
         dictData.setDictType("equipment_type");
         Map<String, SysDictData> equipDict = dictDataService.selectDictDataList(dictData).stream().collect(Collectors.toMap(SysDictData::getDictValue, Function.identity()));
@@ -129,62 +131,125 @@ public class TRoomServiceImpl extends ServiceImpl<TRoomMapper, TRoom> implements
         MqttSendClient sendClient = new MqttSendClient();
         String equips = room.getTableCode();
         for (String equip : equips.split(",")) {
-            for (TEquipment eq : equipments) {
-
-                // 开房间的时候，如果设备是喇叭，提醒已开门，如果是其他设备，发送打开命令，并记录打开时间
-                if (OfficeEnum.EquipType.HORN.getCode().equalsIgnoreCase(eq.getEquipType())) {
-
+            TEquipment currentEq = equipmentMap.get(Long.parseLong(equip));
+            if (OfficeEnum.EquipType.HORN.getCode().equalsIgnoreCase(currentEq.getEquipType())) {
                   /*  SysDictData dictDataQry = new SysDictData();
                     dictDataQry.setDictType("horn");
                     final Map<String, String> hornConfig = dictDataService.selectDictDataList(dictDataQry).stream().collect(Collectors.toMap(SysDictData::getDictLabel, SysDictData::getDictValue));*/
 
-                    HornSendMsg hornMsg = new HornSendMsg();
+                HornSendMsg hornMsg = new HornSendMsg();
                   /*  hornMsg.setAppId(hornConfig.get("app_id"));
                     hornMsg.setAppSecret(hornConfig.get("app_secret"));*/
-                    hornMsg.setAppId(hornConfig.getAppId());
-                    hornMsg.setAppSecret(hornConfig.getAppSecret());
-                    hornMsg.setDeviceSn(eq.getEquipControl());
-                    hornMsg.setType(1);
+                hornMsg.setAppId(hornConfig.getAppId());
+                hornMsg.setAppSecret(hornConfig.getAppSecret());
+                hornMsg.setDeviceSn(currentEq.getEquipControl());
+                hornMsg.setType(1);
 
-                    HornSendMsgData hornData = new HornSendMsgData();
-                    hornData.setCmdType("play");
+                HornSendMsgData hornData = new HornSendMsgData();
+                hornData.setCmdType("play");
 
-                    HornSendMsgDataInfo hornDataInfo = new HornSendMsgDataInfo();
-                    hornDataInfo.setInner(10);
-                    hornDataInfo.setTts("已开门，欢迎使用雀行无人麻将机");
+                HornSendMsgDataInfo hornDataInfo = new HornSendMsgDataInfo();
+                hornDataInfo.setInner(10);
+                hornDataInfo.setTts("已开门，欢迎使用雀行无人麻将机");
 
-                    hornData.setInfo(hornDataInfo);
-                    hornMsg.setData(hornData);
+                hornData.setInfo(hornDataInfo);
+                hornMsg.setData(hornData);
 
 //                    String response = HttpUtils.sendPost(hornConfig.get("url") + "/send", JSONObject.toJSONString(hornMsg));
-                    String response = HttpUtils.sendPost(hornConfig.getUrl() + "/send", JSONObject.toJSONString(hornMsg));
-                    CloudHornRegResponse resp = JSONObject.parseObject(response, CloudHornRegResponse.class);
+                String response = HttpUtils.sendPost(hornConfig.getUrl() + "/send", JSONObject.toJSONString(hornMsg));
+                CloudHornRegResponse resp = JSONObject.parseObject(response, CloudHornRegResponse.class);
 
-                    eq.setRemark(resp.getData()); // 设备注册返回
-                    equipmentService.updateTEquipment(eq);
+                TEquipment up = new TEquipment();
+                up.setId(currentEq.getId());
+                up.setRemark(resp.getData()); // 设备发送信息返回
+                equipmentService.updateTEquipment(up);
+            } else {
+                Map<String, String> msg = new HashMap<>();
+
+                if (equipDict.containsKey(currentEq.getEquipType())) {
+                    String[] command = equipDict.get(currentEq.getEquipType()).getRemark().split(",")[0].split(":");
+                    msg.put(command[0], command[1]);
                 } else {
-                    if (eq.getId() == Long.parseLong(equip)) {
-                        Map<String, String> msg = new HashMap<>();
-
-                        if (equipDict.containsKey(eq.getEquipType())) {
-                            String[] command = equipDict.get(eq.getEquipType()).getRemark().split(",")[0].split(":");
-                            msg.put(command[0], command[1]);
-                        } else {
-                            throw new ServiceException(eq.getEquipType() + "类型的设备未设置");
-                        }
-
-                        sendClient.publish(eq.getEquipControl(), JSONObject.toJSONString(msg));
-
-                        eq.setRecentOpenTime(new Date());
-                        eq.setOnOff("Y");
-                        equipmentService.updateTEquipment(eq);
-                        break;
-                    }
+                    throw new ServiceException(currentEq.getEquipType() + "类型的设备未设置");
                 }
 
+                sendClient.publish(currentEq.getEquipControl(), JSONObject.toJSONString(msg));
 
+                currentEq.setRecentOpenTime(new Date());
+                currentEq.setOnOff("Y");
+                equipmentService.updateTEquipment(currentEq);
+                break;
             }
         }
 
     }
+
+    @Override
+    public void closeRoom(Long id) {
+
+        TRoom room = tRoomMapper.selectTRoomById(id);
+        List<TEquipment> equipments = equipmentService.selectTEquipmentList(new TEquipment());
+
+        final Map<Long, TEquipment> equipmentMap = equipments.stream().collect(Collectors.toMap(TEquipment::getId, Function.identity()));
+
+        SysDictData dictData = new SysDictData();
+        dictData.setDictType("equipment_type");
+        Map<String, SysDictData> equipDict = dictDataService.selectDictDataList(dictData).stream().collect(Collectors.toMap(SysDictData::getDictValue, Function.identity()));
+
+        MqttSendClient sendClient = new MqttSendClient();
+        String equips = room.getTableCode();
+        for (String equip : equips.split(",")) {
+            TEquipment currentEq = equipmentMap.get(Long.parseLong(equip));
+            if (OfficeEnum.EquipType.HORN.getCode().equalsIgnoreCase(currentEq.getEquipType())) {
+                  /*  SysDictData dictDataQry = new SysDictData();
+                    dictDataQry.setDictType("horn");
+                    final Map<String, String> hornConfig = dictDataService.selectDictDataList(dictDataQry).stream().collect(Collectors.toMap(SysDictData::getDictLabel, SysDictData::getDictValue));*/
+
+               /* HornSendMsg hornMsg = new HornSendMsg();
+                  hornMsg.setAppId(hornConfig.get("app_id"));
+                    hornMsg.setAppSecret(hornConfig.get("app_secret"));
+                hornMsg.setAppId(hornConfig.getAppId());
+                hornMsg.setAppSecret(hornConfig.getAppSecret());
+                hornMsg.setDeviceSn(currentEq.getEquipControl());
+                hornMsg.setType(1);
+
+                HornSendMsgData hornData = new HornSendMsgData();
+                hornData.setCmdType("play");
+
+                HornSendMsgDataInfo hornDataInfo = new HornSendMsgDataInfo();
+                hornDataInfo.setInner(10);
+                hornDataInfo.setTts("已开门，欢迎使用雀行无人麻将机");
+
+                hornData.setInfo(hornDataInfo);
+                hornMsg.setData(hornData);
+
+//                    String response = HttpUtils.sendPost(hornConfig.get("url") + "/send", JSONObject.toJSONString(hornMsg));
+                String response = HttpUtils.sendPost(hornConfig.getUrl() + "/send", JSONObject.toJSONString(hornMsg));
+                CloudHornRegResponse resp = JSONObject.parseObject(response, CloudHornRegResponse.class);
+
+                TEquipment up = new TEquipment();
+                up.setId(currentEq.getId());
+                up.setRemark(resp.getData()); // 设备发送信息返回
+                equipmentService.updateTEquipment(up);*/
+            } else {
+                Map<String, String> msg = new HashMap<>();
+
+                if (equipDict.containsKey(currentEq.getEquipType())) {
+                    String[] command = equipDict.get(currentEq.getEquipType()).getRemark().split(",")[1].split(":");
+                    msg.put(command[0], command[1]);
+                } else {
+                    throw new ServiceException(currentEq.getEquipType() + "类型的设备未设置");
+                }
+
+                sendClient.publish(currentEq.getEquipControl(), JSONObject.toJSONString(msg));
+
+                currentEq.setUpdateTime(new Date());
+                currentEq.setOnOff("N");
+                equipmentService.updateTEquipment(currentEq);
+                break;
+            }
+        }
+    }
+
+
 }

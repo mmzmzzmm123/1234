@@ -45,7 +45,7 @@ public class OfficeTask {
     ISysDictDataService dictDataService;
 
     /**
-     * 扫描快到期的订单
+     * 扫描快到期的订单,进行语音提醒到期时间
      */
     public void scanOrder() {
         roomOrderService.scanOrder();
@@ -69,7 +69,7 @@ public class OfficeTask {
         Map<String, String> equipDict = dictDataService.selectDictDataList(dictData).stream().collect(Collectors.toMap(SysDictData::getDictValue, SysDictData::getRemark));
 
         SysDictData clooseDoorQry = new SysDictData();
-        clooseDoorQry.setDictLabel("cloose_door");
+        clooseDoorQry.setDictLabel("close_door");
         final List<SysDictData> clooseDoor = dictDataService.selectDictDataList(clooseDoorQry);
         int clooseDoorMinute = 15; // 秒
         if (clooseDoor.size() > 0) {
@@ -96,5 +96,12 @@ public class OfficeTask {
         }
     }
 
+
+    /**
+     * 扫描未支付订单进行取消操作
+     */
+    public void scanToPayOrder(){
+        roomOrderService.scanToPayOrder();
+    }
 
 }

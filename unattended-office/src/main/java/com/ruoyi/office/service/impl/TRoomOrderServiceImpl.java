@@ -15,6 +15,7 @@ import com.github.binarywang.wxpay.bean.result.enums.TradeTypeEnum;
 import com.github.binarywang.wxpay.config.WxPayConfig;
 import com.github.binarywang.wxpay.exception.WxPayException;
 import com.github.binarywang.wxpay.service.WxPayService;
+import com.ruoyi.common.core.domain.entity.SysDictData;
 import com.ruoyi.common.exception.ServiceException;
 import com.ruoyi.common.utils.DateUtils;
 import com.ruoyi.common.utils.StringUtils;
@@ -25,6 +26,7 @@ import com.ruoyi.office.domain.enums.OfficeEnum;
 import com.ruoyi.office.domain.vo.*;
 import com.ruoyi.office.horn.HornConfig;
 import com.ruoyi.office.service.*;
+import com.ruoyi.system.service.ISysDictDataService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -724,6 +726,20 @@ public class TRoomOrderServiceImpl extends ServiceImpl<TRoomOrderMapper, TRoomOr
         List<TRoomOrder> roomOrderList = tRoomOrderMapper.selectTRoomOrderList(roomOrder);
         for (TRoomOrder order : roomOrderList) {
 
+            if (order.getEndTime().before(new Date())) {
+                // 超期发送关闭
+                roomService.closeRoom(order.getRoomId());
+
+                // 更新订单为关闭;
+                TRoomOrder up = new TRoomOrder();
+                up.setId(order.getId());
+                up.setStatus(4); //  待支付	1 已预约	2 使用中	3 超时未使用	4 已完成	5 取消	9
+                tRoomOrderMapper.updateTRoomOrder(up);
+
+                continue;
+            }
+
+            // 未超期订单 判断是否发送提醒;
             int diff = Math.abs((int) ((new Date().getTime() - order.getEndTime().getTime()) / (1000 * 60)));
             for (int min : alertList) {
                 if (diff > min)
@@ -766,5 +782,33 @@ public class TRoomOrderServiceImpl extends ServiceImpl<TRoomOrderMapper, TRoomOr
     public List<RoomOrderWxVo> getOrderCanOpen(OrderCanOpenReq wxUserId) {
 //        tRoomOrderMapper.getWxRoomOrder(tRoomOrder);
         return tRoomOrderMapper.getOrderCanOpen(wxUserId);
+    }
+
+    @Autowired
+    private ISysDictDataService dictDataService;
+
+    @Override
+    public void scanToPayOrder() {
+        TRoomOrder qry = new TRoomOrder();
+        qry.setStatus(1);//  待支付	1 已预约	2 使用中	3 超时未使用	4 已完成	5 取消	9
+        final List<TRoomOrder> roomOrders = tRoomOrderMapper.selectTRoomOrderList(qry);
+
+        int closeOrderMinute = 30;
+        SysDictData dictData = new SysDictData();
+        dictData.setDictLabel("close_order");
+        final List<SysDictData> dictDataList = dictDataService.selectDictDataList(dictData);
+        if (dictDataList.size() > 0)
+            closeOrderMinute = Integer.parseInt(dictDataList.get(0).getDictValue());
+
+
+        for (TRoomOrder roomOrder : roomOrders) {
+            Date cancelTime = DateUtils.addMinutes(roomOrder.getCreateTime(), closeOrderMinute);
+            if (cancelTime.after(new Date())) {
+                TRoomOrder up = new TRoomOrder();
+                up.setId(roomOrder.getId());
+                up.setStatus(9);
+                tRoomOrderMapper.updateTRoomOrder(up);
+            }
+        }
     }
 }

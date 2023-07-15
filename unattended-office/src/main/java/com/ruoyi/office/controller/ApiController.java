@@ -510,6 +510,12 @@ public class ApiController extends BaseController {
         long wxid = SecurityUtils.getLoginUser().getWxUser().getId();
         BigDecimal total = new BigDecimal(0);
         // 获取所有商户的余额进行汇总；
+        TWxUserAmount qry  = new TWxUserAmount();
+        qry.setWxUserId(wxid);
+        final List<TWxUserAmount> wxUserAmounts = tWxUserAmountService.selectTWxUserAmountList(qry);
+        for(TWxUserAmount userAmount: wxUserAmounts){
+            total = total.add(userAmount.getAmount());
+        }
 
         return AjaxResult.success(total);
     }

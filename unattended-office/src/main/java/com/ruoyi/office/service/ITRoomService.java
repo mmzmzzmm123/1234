@@ -60,4 +60,6 @@ public interface ITRoomService
     public int deleteTRoomById(Long id);
 
     void openRoom(Long id);
+
+    void closeRoom(Long id);
 }
