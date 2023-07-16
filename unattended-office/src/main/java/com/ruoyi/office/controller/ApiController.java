@@ -512,10 +512,10 @@ public class ApiController extends BaseController {
         long wxid = SecurityUtils.getLoginUser().getWxUser().getId();
         BigDecimal total = new BigDecimal(0);
         // 获取所有商户的余额进行汇总；
-        TWxUserAmount qry  = new TWxUserAmount();
+        TWxUserAmount qry = new TWxUserAmount();
         qry.setWxUserId(wxid);
         final List<TWxUserAmount> wxUserAmounts = tWxUserAmountService.selectTWxUserAmountList(qry);
-        for(TWxUserAmount userAmount: wxUserAmounts){
+        for (TWxUserAmount userAmount : wxUserAmounts) {
             total = total.add(userAmount.getAmount());
         }
 
@@ -630,11 +630,11 @@ public class ApiController extends BaseController {
 
     @ApiOperation("查询可以开门的订单,status不用")
     @GetMapping("/order/open")
-    public TableDataInfo orderCanOpen(OrderCanOpenReq tRoomOrder){
+    public TableDataInfo orderCanOpen(OrderCanOpenReq tRoomOrder) {
         long wxUserId = SecurityUtils.getLoginUser().getWxUser().getId();
-        tRoomOrder.setCreateBy(wxUserId+"");
+        tRoomOrder.setCreateBy(wxUserId + "");
         startPage();
-        List<RoomOrderWxVo>  res = roomOrderService.getOrderCanOpen(tRoomOrder);
+        List<RoomOrderWxVo> res = roomOrderService.getOrderCanOpen(tRoomOrder);
         return getDataTable(res);
     }
 
@@ -645,8 +645,7 @@ public class ApiController extends BaseController {
      * 获取banner通知公告列表
      */
     @GetMapping("/notice/list")
-    public TableDataInfo list(SysNotice notice)
-    {
+    public TableDataInfo list(SysNotice notice) {
         List<SysNotice> list = noticeService.selectNoticeList(notice);
         return getDataTable(list);
     }
@@ -674,6 +673,16 @@ public class ApiController extends BaseController {
         startPage();
         List<WxUserCouponResp> list = wxUserCouponService.validlist(req, SecurityUtils.getLoginUser().getWxUser().getId());
         return getDataTable(list);
+    }
+
+    /**
+     * 查询可用优惠券
+     */
+    @ApiOperation("可用优惠券数量")
+    @GetMapping("/validCount")
+    public AjaxResult validCount(WxUserCouponReq req) {
+        List<WxUserCouponResp> list = wxUserCouponService.validlist(req, SecurityUtils.getLoginUser().getWxUser().getId());
+        return AjaxResult.success(list.size());
     }
 
     /**
