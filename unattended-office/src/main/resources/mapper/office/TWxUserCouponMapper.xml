@@ -79,7 +79,7 @@
                c.update_time      updateTime,
                s.name             storeName
         from t_wx_user_coupon c
-                 left join t_store s on c.store_id = c.id
+                 left join t_store s on c.store_id = s.id
     </sql>
 
     <select id="selectTWxUserCouponList" parameterType="TWxUserCoupon" resultMap="TWxUserCouponResult">
