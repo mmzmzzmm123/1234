@@ -81,7 +81,7 @@
 						param.package = param.packageValue
 						delete param.packageValue
 						param.success = ()=>{
-							this.$api.wxPaySuccess(param).then((payRes)=>{
+							this.$api.wxPaySuccess(res).then((payRes)=>{
 								this.$emit("success")
 							})
 						}
