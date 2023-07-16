@@ -2,18 +2,18 @@
 	<view>
 		<view class="top">
 			<view class="mine-card">
-				<view class="mine-card_value">0</view>
+				<view class="mine-card_value">¥{{amount}}</view>
 				<view>我的余额</view>
 			</view>
-			<view class="mine-card">
+			<navigator class="mine-card" url="../coupon/list/index">
 				<view class="mine-card_value">1</view>
 				<view>我的卡券</view>
-			</view>
+			</navigator>
 		</view>
-		<view class="recharge">
+		<navigator class="recharge" @click="$toast('该功能即将上线')">
 			<text class="iconfont icon-liwu"></text>
 			充值有礼
-		</view>
+		</navigator>
 		<view class="bottom">
 			<u-cell title="美团验券" is-link url="/pages/receipt-consume/index">
 				<text slot="icon" class="iconfont icon-meituan"></text>
@@ -21,12 +21,12 @@
 			<u-cell title="全部门店" is-link url="/pages/shop/shop-list">
 				<text slot="icon" class="iconfont icon-shop"></text>
 			</u-cell>
-			<u-cell title="服务协议" is-link>
+			<!-- <u-cell title="服务协议" is-link>
 				<text slot="icon" class="iconfont icon-fuwuxieyi"></text>
 			</u-cell>
 			<u-cell title="隐私声明" is-link>
 				<text slot="icon" class="iconfont icon-yinsixieyi"></text>
-			</u-cell>
+			</u-cell> -->
 		</view>
 	</view>
 </template>
@@ -38,8 +38,17 @@
 				
 			}
 		},
+		computed: {
+			amount(){
+				return this.$store.state.amount
+			},
+			validConponCount(){
+				return this.$store.state.validConponCount
+			}
+		},
 		onLoad() {
-	
+			this.$store.dispatch("getAmount")
+			this.$store.dispatch("getValidConponCount")
 		},
 		methods: {
 			

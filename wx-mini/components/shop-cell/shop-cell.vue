@@ -12,17 +12,17 @@
 					<!-- <view class="shop-cell_tag">台球</view> -->
 				</view>
 			</view>
-			<view class="shop-cell_info" @click.stop="toMap">
+			<view class="shop-cell_info">
 				<u-icon name="map" custom-style="margin-right:10rpx" size="32rpx"></u-icon>
-				{{shopInfo.address}}
+				<text @click.stop="toMap">{{shopInfo.address}}</text>
 			</view>
 			<view class="shop-cell_info">
 				<u-icon name="clock" custom-style="margin-right:10rpx" size="30rpx"></u-icon>
 				营业时间: {{shopInfo.startTime + ' - ' + shopInfo.stopTime}}
 			</view>
-			<view class="shop-cell_info" @click.stop="makePhoneCall">
+			<view class="shop-cell_info">
 				<u-icon name="phone-fill" custom-style="margin-right:10rpx" size="32rpx"></u-icon>
-				{{shopInfo.phone}}
+				<text @click.stop="makePhoneCall">{{shopInfo.phone}}</text>
 			</view>
 			<view class="shop-cell_info">
 				<view class="shop-cell_distance" @click.stop="toMap">

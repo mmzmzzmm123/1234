@@ -38,7 +38,9 @@ const store = new Vuex.Store({
 		loginUser: lifeData.loginUser ? lifeData.loginUser : {},
 		roles: lifeData.roles ? lifeData.roles : [],
 		location: null,
-		canLocation: false
+		canLocation: false,
+		amount: 0,
+		validConponCount: 0
 	},
 	mutations: {
 		setCanLocation(state, value){
@@ -68,7 +70,8 @@ const store = new Vuex.Store({
 	actions: {
 		login({state, dispatch}, para){
 			return Api.api.login(para).then(()=>{
-				return dispatch("getUserInfo")
+				state.hasLogin = true
+				//return dispatch("getUserInfo")
 			})
 		},
 		getUserInfo({state}){
@@ -96,6 +99,16 @@ const store = new Vuex.Store({
 						resolve(state.location)
 					}
 				})
+			})
+		},
+		getAmount({state}){
+			Api.api.getAmount().then(res=>{
+				state.amount = res
+			})
+		},
+		getValidCouponCount({state}){
+			Api.api.getValidCouponCount().then(res=>{
+				state.validConponCount = res
 			})
 		}
 	}

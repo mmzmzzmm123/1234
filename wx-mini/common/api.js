@@ -59,6 +59,12 @@ const api = {
 	getOrderList(param){
 		return get('office/api/room/order', param)
 	},
+	getOpenOrderList(param){
+		return get('office/api/order/open', param)
+	},
+	getCurrentOrder(){
+		return get('office/roomorder/continue')
+	},
 	meiTuanConsume(code){
 		return get('office/api/meiTuanConsume/'+code)
 	},
@@ -71,15 +77,44 @@ const api = {
 	addOrder(param){
 		return post('office/roomorder/order', param)
 	},
+	reOrder(param){
+		return post('office/api/reorder', param)
+	},
 	getRoomAvailable(param){
 		return get('office/api/room/available', param)
 	},
-	getCouponList(param){
-		return get()
+	getValidCouponList(param){
+		return get('office/api/validlist', param)
+	},
+	getValidCouponCount(){
+		return get('office/api/validCount')
+	},
+	wxPaySuccess(param){
+		return post('office/roomorder/payquery', param)
+	},
+	getStoreAmount(storeId){
+		return get('office/api/amount/' + storeId)
+	},
+	getAmount(){
+		return get('office/api/amount')
+	},
+	getNoticeList(){
+		return get('office/api/notice/list').then(res=>{
+			res.rows.forEach(x=>{
+				x.remark = BaseApiUrl + x.remark
+			})
+			return res
+		})
 	}
 }
 const install = (Vue, options) => {
 	Vue.prototype.$api = api
+	Vue.prototype.$toast = function(title){
+		uni.showToast({
+			icon: 'none',
+			title
+		})
+	}
 	i18n = options.i18n
 }
 

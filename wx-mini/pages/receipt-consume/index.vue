@@ -56,12 +56,13 @@
 						content: "兑换成功是否前往使用",
 						success: res=>{
 							if(res.confirm){
-								// uni.reLaunch({
-								// 	url: ""
-								// })
+								uni.redirectTo({
+									url: "/pages/coupon/list/index"
+								})
 							}
 						}
 					})
+					this.$store.dispatch("getValidConponCount")
 				})
 			}
 		}

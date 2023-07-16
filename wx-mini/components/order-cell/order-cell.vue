@@ -15,17 +15,20 @@
 			<u-icon name="clock" custom-style="margin-right:10rpx" size="30rpx"></u-icon>
 			时间: {{orderInfo.startTime}} - {{orderInfo.endTime}}
 		</view>
-		<view class="order-cell_info" @click.stop="makePhoneCall">
+		<view class="order-cell_info">
 			<u-icon name="phone-fill" custom-style="margin-right:10rpx" size="32rpx"></u-icon>
-			<text>{{orderInfo.phone}}</text>
+			<text @click.stop="makePhoneCall">{{orderInfo.phone}}</text>
 		</view>
-		<view class="order-cell_info" @click="toMap">
+		<view class="order-cell_info">
 			<u-icon name="map" custom-style="margin-right:10rpx" size="32rpx"></u-icon>
-			<text>{{orderInfo.storeAdress}}</text>
+			<text @click="toMap">{{orderInfo.storeAdress}}</text>
 		</view>
-		<view class="btn-bar">
-			<view class="btn-bar_btn" @click="onOpenStore">开大门</view>
-			<view class="btn-bar_btn" @click="onOpenRoom">开包厢</view>
+		<view v-if="showBtn" class="btn-bar">
+			<block v-if="orderInfo.status == 2 || orderInfo.status == 3">
+				<view class="btn-bar_btn" @click="onOpenStore">开大门</view>
+				<view class="btn-bar_btn" @click="onOpenRoom">开包厢</view>
+			</block>
+			<view class="btn-bar_btn" v-if="orderInfo.status == 1" @click="onPayOrder">支付</view>
 		</view>
 	</view>
 </template>
@@ -39,6 +42,10 @@
 				default(){
 					return {}
 				}
+			},
+			showBtn: {
+				type: Boolean,
+				default: true
 			}
 		},
 		data() {
@@ -80,6 +87,9 @@
 						title: "已发送开包厢请求"
 					})
 				})
+			},
+			onPayOrder(){
+				this.$emit('payOrder', this.orderInfo)
 			}
 		}
 	}
@@ -105,7 +115,7 @@
 		}
 		.btn-bar{
 			display: flex;
-			justify-content: space-around;
+			justify-content: flex-end;
 			border-top: 1rpx solid $u-border-color;
 			padding-top: 20rpx;
 			&_btn{
@@ -116,6 +126,7 @@
 				border-radius: 10rpx;
 				height: 60rpx;
 				line-height: 60rpx;
+				margin-left: 20rpx;
 			}
 		}
 		.pay-type-label{

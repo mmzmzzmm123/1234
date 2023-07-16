@@ -53,7 +53,7 @@ HttpClient.prototype.request = function(url, data, showLoading, method, hideErro
 			success: res => {
 				const response = res.data
 				const code = response.code
-				const responseData = response.data ? response.data : response
+				const responseData = response.data === undefined ? response : response.data
 				if(response.code == ReturnCode.SUCCESS){
 					resolve(responseData)
 				}else if(response.code == ReturnCode.NOT_LOGIN){

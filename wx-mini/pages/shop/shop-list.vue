@@ -1,33 +1,18 @@
 <template>
 	<view>
-		<ad-swiper></ad-swiper>
 		<view class="u-p-h-20">
-			<view class="menu">
-				<navigator class="menu-item" url="../receipt-consume/index">
-					<view class="menu-item_icon">
-						<text class="iconfont icon-meituan"></text>
-					</view>
-					<view class="menu-item_title">美团验券</view>
-				</navigator>
-				<navigator class="menu-item" @click="$toast('该功能即将上线')">
-					<view class="menu-item_icon">
-						<text class="iconfont icon-huiyuan"></text>
-					</view>
-					<view class="menu-item_title">会员充值</view> 
-				</navigator>
-			</view>
 			<view class="search-bar">
 				<u-input prefix-icon="search" placeholder="搜索门店" v-model="queryParam.keyword" @input="onKeywordInput"></u-input>
-				<view class="search-bar_more" @click="onToShopList">
+				<!-- <view class="search-bar_more">
 					更多门店
 				</view>
-				<u-icon name="arrow-right" size="26rpx" @click="onToShopList"></u-icon>
+				<u-icon name="arrow-right" size="26rpx"></u-icon> -->
 			</view>
 			<view>
 				<shop-cell v-for="store in storeList" :key="store.id" :shopInfo="store"></shop-cell>
 			</view>
 		</view>
-		<tool-bar :hidden="hiddenToolBar"></tool-bar>
+		<!-- <tool-bar :hidden="hiddenToolBar"></tool-bar> -->
 		<!-- <yto-authorize></yto-authorize> -->
 	</view>
 </template>
@@ -144,11 +129,6 @@
 			},
 			onKeywordInput(keyword){
 				this.$u.debounce(this.refresh, 400)
-			},
-			onToShopList(){
-				uni.navigateTo({
-					url: '/pages/shop/shop-list'
-				})
 			}
 		}
 	}
@@ -157,35 +137,6 @@
 <style lang="scss">
 	page{
 		background-color: $u-bg-color;
-	}
-	.menu{
-		display: flex;
-		justify-content: space-between;
-		&-item{
-			display: flex;
-			width: 340rpx;
-			align-items: center;
-			background: #fff;
-			border-radius: 20rpx;
-			margin-top: 20rpx;
-			&_icon{
-				margin: 20rpx;
-				height: 100rpx;
-				width: 100rpx;
-				text-align: center;
-				line-height: 100rpx;
-				background: $u-primary-light;
-				border-radius: 10rpx;
-				.iconfont{
-					font-size: 60rpx;
-					color: $u-bright;
-				}
-			}
-			&_title{
-				flex: 1;
-				color: $u-content-color;
-			}
-		}
 	}
 	.search-bar{
 		display: flex;

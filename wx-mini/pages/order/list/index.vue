@@ -4,8 +4,10 @@
 		<u-input prefix-icon="search" placeholder="请输入门店名称" v-model="queryParam.keyword" @input="onKeywordInput"></u-input>
 		<u-tabs :list="statusList" @change="onStatusChange"></u-tabs>
 		<view class="u-p-h-20">
-			<order-cell v-for="order in orderList" :key="order.id" :orderInfo="order"></order-cell>
+			<order-cell v-for="order in orderList" :key="order.id" :orderInfo="order" @payOrder="onPayOrder"></order-cell>
 		</view>
+		<pay-bar v-model="showPay" :amount="currentOrder.payAmount" :storeId="currentOrder.storeId" @prepareOrder="onPrepareOrder" @success="onPaySuccess"></pay-bar>
+		<u-empty custom-style="padding-top: 400rpx;" v-if="!orderList || !orderList.length" text="暂无订单"></u-empty>
 	</view>
 </template>
 
@@ -17,9 +19,6 @@
 				statusList: [{
 					name: '全部',
 					status: -1
-				},{
-					name: '空闲',
-					status: 0
 				},{
 					name: '待支付',
 					status: 1
@@ -43,7 +42,9 @@
 					pageNum: 1,
 					pageSize: 10
 				},
-				total: 0
+				total: 0,
+				showPay: false,
+				currentOrder: null
 			}
 		},
 		onPullDownRefresh() {
@@ -72,15 +73,32 @@
 					}
 					this.total = res.total
 					uni.stopPullDownRefresh()
-					console.log(res)
 				})
 			},
-			onStatusChange(index){
-				this.queryParam.status = this.statusList[index].status
+			onStatusChange(e){
+				this.queryParam.status = e.status
 				this.refresh()
 			},
 			onKeywordInput(){
 				this.$u.debounce(this.refresh, 400)
+			},
+			onPayOrder(order){
+				this.currentOrder = order
+				this.showPay = true
+			},
+			onPrepareOrder(e){
+				e.order = {
+					orderId: this.currentOrder.id,
+					payType: e.payType
+				}
+			},
+			onPaySuccess(){
+				uni.showToast({
+					icon: "none",
+					title: "支付成功"
+				})
+				this.refresh()
+				this.showPay = false
 			}
 		}
 	}

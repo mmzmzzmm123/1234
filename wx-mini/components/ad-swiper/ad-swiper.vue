@@ -19,20 +19,12 @@
 		},
 		watch: {
 			imgList(newVal){
-				this.adList = newVal.map(x=>{
-					return {
-						img: x
-					}
-				})
+				this.refresh()
 			}
 		},
 		data() {
 			return {
-				adList: [
-					{img: "https://cdn.uviewui.com/uview/swiper/swiper1.png"},
-					// {img: "https://cdn.uviewui.com/uview/swiper/swiper2.png"},
-					// {img: "https://cdn.uviewui.com/uview/swiper/swiper3.png"}
-				]
+				adList: null
 			}
 		},
 		computed: {
@@ -41,28 +33,26 @@
 			// }
 		},
 		created() {
-			if(this.imgList){
-				this.adList = this.imgList.map(x=>{
-					return {
-						img: x
-					}
-				})
-			}
+			this.refresh()
 		},
 		methods: {
-			// onAdClick(index){
-			// 	const ad = this.adList[index]
-			// 	if(ad.content){
-			// 		this.$store.commit("$uStore", {name: 'currentHtml', value: ad.content})
-			// 		uni.navigateTo({
-			// 			url: '/pages/common/html'
-			// 		})
-			// 	}else{
-			// 		uni.previewImage({
-			// 			urls: [ad.img]
-			// 		})
-			// 	}
-			// }
+			refresh(){
+				if(this.imgList){
+					this.adList = this.imgList.map(x=>{
+						return {
+							img: x
+						}
+					})
+				}else{
+					this.$api.getNoticeList().then(res=>{
+						this.adList = res.rows.map(x=>{
+							return {
+								img:  x.remark
+							}
+						})
+					})
+				}
+			}
 		}
 	}
 </script>
