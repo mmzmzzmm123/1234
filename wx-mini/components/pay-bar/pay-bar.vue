@@ -81,15 +81,12 @@
 						param.package = param.packageValue
 						delete param.packageValue
 						param.success = ()=>{
-							this.$api.wxPaySuccess(payRes).then(()=>{
+							this.$api.wxPaySuccess(param).then((payRes)=>{
 								this.$emit("success")
 							})
 						}
 						param.fail = function(){
-							uni.showToast({
-								icon: "none",
-								title: "支付失败"
-							})
+							this.$toast('支付失败')
 						}
 						uni.requestPayment(param)
 					}else{
