@@ -108,8 +108,8 @@
             <if test="roomId != null ">and room_id = #{roomId}</if>
             <if test="createBy != null  and createBy != ''">and o.create_by = #{createBy}</if>
             <if test="status != null and status != -1">and o.status = #{status}</if>
-
         </where>
+        order by o.id desc
     </select>
     <select id="getOrderCanOpen" parameterType="OrderCanOpenReq" resultType="com.ruoyi.office.domain.vo.RoomOrderWxVo">
         select o.id,

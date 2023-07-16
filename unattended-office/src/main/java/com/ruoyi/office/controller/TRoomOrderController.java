@@ -5,6 +5,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import cn.hutool.extra.qrcode.QrCodeUtil;
 import cn.hutool.extra.qrcode.QrConfig;
+import com.github.binarywang.wxpay.bean.result.WxPayOrderQueryV3Result;
 import com.ruoyi.common.utils.SecurityUtils;
 import com.ruoyi.office.domain.vo.*;
 import io.swagger.annotations.ApiOperation;
@@ -115,7 +116,12 @@ public class TRoomOrderController extends BaseController {
     @PostMapping("/payquery")
     public AjaxResult wxPayQuery(@RequestBody PrepayResp vo) {
         try {
-            tRoomOrderService.finish(vo, SecurityUtils.getLoginUser().getWxUser().getId());
+            logger.info("/payquery:" + vo.toString());
+            WxPayOrderQueryV3Result v3Result = tRoomOrderService.finish(vo, SecurityUtils.getLoginUser().getWxUser().getId());
+            if (v3Result == null)
+                logger.info("支付成功,微信已经回调");
+            else
+                logger.info("/payquery:" + v3Result.toString());
             return AjaxResult.success();
         } catch (Exception e) {
             return AjaxResult.error(e.getMessage());
@@ -130,7 +136,9 @@ public class TRoomOrderController extends BaseController {
 //        long wxUserId = 9l;
         order.setUserId(wxUserId);
         try {
+            logger.info("/order:" + order.toString());
             final PrepayResp prepay = tRoomOrderService.prepay(order, wxUserId);
+            logger.info("/order: return:" + prepay.getOrderId() + prepay.getJsapiResult().toString());
             return AjaxResult.success(prepay);
         } catch (Exception e) {
             return AjaxResult.error(e.getMessage());
@@ -145,7 +153,6 @@ public class TRoomOrderController extends BaseController {
     public AjaxResult getPeriodPrice(GetRoomPriceVo vo) {
         return success(tRoomOrderService.getPeriodPrice(vo));
     }
-
 
 
     /**

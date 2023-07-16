@@ -160,10 +160,10 @@ public class TRoomOrderServiceImpl extends ServiceImpl<TRoomOrderMapper, TRoomOr
     ITStoreCouponService storeCouponService;
 
     @Override
-    public void finish(PrepayResp vo, Long wxuserid) {
+    public WxPayOrderQueryV3Result finish(PrepayResp vo, Long wxuserid) {
         TRoomOrder order = tRoomOrderMapper.selectTRoomOrderById(vo.getOrderId());
         if (order.getStatus().equals(OfficeEnum.RoomOrderStatus.ORDERED.getCode()))
-            return;
+            return null;
         //查询支付状态；
         WxPayOrderQueryV3Result v3Result = null;
         try {
@@ -202,6 +202,8 @@ public class TRoomOrderServiceImpl extends ServiceImpl<TRoomOrderMapper, TRoomOr
         } else if (tradState.equalsIgnoreCase(OfficeEnum.WxPayState.PAYERROR.getCode())) {
             throw new ServiceException("支付失败（仅付款码支付会返回）");
         }
+
+        return v3Result;
     }
 
     @Autowired
@@ -287,6 +289,7 @@ public class TRoomOrderServiceImpl extends ServiceImpl<TRoomOrderMapper, TRoomOr
             } catch (WxPayException e) {
                 e.printStackTrace();
                 log.error("JSAPI 下单：" + e.getLocalizedMessage());
+                throw new ServiceException(e.getLocalizedMessage());
             }
             resp.setJsapiResult(jsapiResult);
             resp.setOrderId(tRoomOrder.getId());
