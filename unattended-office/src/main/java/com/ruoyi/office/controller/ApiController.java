@@ -651,4 +651,51 @@ public class ApiController extends BaseController {
         return getDataTable(list);
     }
 
+    @Autowired
+    private ITWxUserCouponService wxUserCouponService;
+
+    /**
+     * 查询用户优惠券列表
+     */
+    @GetMapping("/user/coupon/list")
+    public TableDataInfo list(TWxUserCoupon tWxUserCoupon) {
+        startPage();
+        List<TWxUserCoupon> list = wxUserCouponService.selectTWxUserCouponList(tWxUserCoupon);
+        return getDataTable(list);
+    }
+
+
+    /**
+     * 查询可用优惠券
+     */
+    @ApiOperation("可用优惠券")
+    @GetMapping("/validlist")
+    public TableDataInfo validlist(WxUserCouponReq req) {
+        startPage();
+        List<WxUserCouponResp> list = wxUserCouponService.validlist(req, SecurityUtils.getLoginUser().getWxUser().getId());
+        return getDataTable(list);
+    }
+
+    /**
+     * 查询可用优惠券
+     */
+    @ApiOperation("已使用优惠券")
+    @GetMapping("/usedlist")
+    public TableDataInfo usedlist(WxUserCouponReq req) {
+        startPage();
+        List<WxUserCouponResp> list = wxUserCouponService.usedlist(req, SecurityUtils.getLoginUser().getWxUser().getId());
+        return getDataTable(list);
+    }
+
+    /**
+     * 查询可用优惠券
+     */
+    @ApiOperation("不可用优惠券")
+    @GetMapping("/invalid")
+    public TableDataInfo invalid(WxUserCouponReq req) {
+        startPage();
+        List<WxUserCouponResp> list = wxUserCouponService.invalid(req, SecurityUtils.getLoginUser().getWxUser().getId());
+        return getDataTable(list);
+    }
+
 }

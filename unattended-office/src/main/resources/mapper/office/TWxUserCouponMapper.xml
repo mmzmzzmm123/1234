@@ -1,70 +1,142 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper
-PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
-"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.ruoyi.office.mapper.TWxUserCouponMapper">
-    
+
     <resultMap type="TWxUserCoupon" id="TWxUserCouponResult">
-        <result property="id"    column="id"    />
-        <result property="userId"    column="user_id"    />
-        <result property="merchantId"    column="merchant_id"    />
-        <result property="storeId"    column="store_id"    />
-        <result property="couponId"    column="coupon_id"    />
-        <result property="couponName"    column="coupon_name"    />
-        <result property="originalPrice"    column="original_price"    />
-        <result property="price"    column="price"    />
-        <result property="cardType"    column="card_type"    />
-        <result property="numCanUse"    column="num_can_use"    />
-        <result property="oneTimeOneDay"    column="one_time_one_day"    />
-        <result property="maxMinuteOnce"    column="max_minute_once"    />
-        <result property="minuteLeft"    column="minute_left"    />
-        <result property="startDate"    column="start_date"    />
-        <result property="endDate"    column="end_date"    />
-        <result property="weekDays"    column="week_days"    />
-        <result property="status"    column="status"    />
-        <result property="remark"    column="remark"    />
-        <result property="createBy"    column="create_by"    />
-        <result property="createTime"    column="create_time"    />
-        <result property="updateBy"    column="update_by"    />
-        <result property="updateTime"    column="update_time"    />
+        <result property="id" column="id"/>
+        <result property="userId" column="user_id"/>
+        <result property="merchantId" column="merchant_id"/>
+        <result property="storeId" column="store_id"/>
+        <result property="couponId" column="coupon_id"/>
+        <result property="couponName" column="coupon_name"/>
+        <result property="originalPrice" column="original_price"/>
+        <result property="price" column="price"/>
+        <result property="cardType" column="card_type"/>
+        <result property="numCanUse" column="num_can_use"/>
+        <result property="oneTimeOneDay" column="one_time_one_day"/>
+        <result property="maxMinuteOnce" column="max_minute_once"/>
+        <result property="minuteLeft" column="minute_left"/>
+        <result property="startDate" column="start_date"/>
+        <result property="endDate" column="end_date"/>
+        <result property="weekDays" column="week_days"/>
+        <result property="status" column="status"/>
+        <result property="remark" column="remark"/>
+        <result property="createBy" column="create_by"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateBy" column="update_by"/>
+        <result property="updateTime" column="update_time"/>
     </resultMap>
 
     <sql id="selectTWxUserCouponVo">
-        select id, user_id, merchant_id, store_id, coupon_id, coupon_name, original_price, price, card_type, num_can_use, one_time_one_day, max_minute_once, minute_left, start_date, end_date, week_days, status, remark, create_by, create_time, update_by, update_time from t_wx_user_coupon
+        select id,
+               user_id,
+               merchant_id,
+               store_id,
+               coupon_id,
+               coupon_name,
+               original_price,
+               price,
+               card_type,
+               num_can_use,
+               one_time_one_day,
+               max_minute_once,
+               minute_left,
+               start_date,
+               end_date,
+               week_days,
+               status,
+               remark,
+               create_by,
+               create_time,
+               update_by,
+               update_time
+        from t_wx_user_coupon
+    </sql>
+    <sql id="validInvalidVo">
+        select c.id               id,
+               c.user_id          userId,
+               c.merchant_id      merchantId,
+               c.store_id         storeId,
+               c.coupon_id        couponId,
+               c.coupon_name      couponName,
+               c.original_price   originalPrice,
+               c.price            price,
+               c.card_type        cardType,
+               c.num_can_use      numCanUse,
+               c.one_time_one_day oneTimeOneDay,
+               c.max_minute_once  maxMinuteOnce,
+               c.minute_left      minuteLeft,
+               c.start_date       startDate,
+               c.end_date         endDate,
+               c.week_days        weekDays,
+               c.status           status,
+               c.remark           remark,
+               c.create_by        createBy,
+               c.create_time      createTime,
+               c.update_by        updateBy,
+               c.update_time      updateTime,
+               s.name             storeName
+        from t_wx_user_coupon c
+                 left join t_store s on c.store_id = c.id
     </sql>
 
     <select id="selectTWxUserCouponList" parameterType="TWxUserCoupon" resultMap="TWxUserCouponResult">
         <include refid="selectTWxUserCouponVo"/>
-        <where>  
-            <if test="userId != null "> and user_id = #{userId}</if>
-            <if test="merchantId != null "> and merchant_id = #{merchantId}</if>
-            <if test="storeId != null and storeId != 0 "> and store_id = #{storeId}</if>
-            <if test="couponId != null "> and coupon_id = #{couponId}</if>
-            <if test="couponName != null  and couponName != ''"> and coupon_name like concat('%', #{couponName}, '%')</if>
-            <if test="originalPrice != null "> and original_price = #{originalPrice}</if>
-            <if test="price != null "> and price = #{price}</if>
-            <if test="cardType != null  and cardType != ''"> and card_type = #{cardType}</if>
-            <if test="numCanUse != null "> and num_can_use = #{numCanUse}</if>
-            <if test="oneTimeOneDay != null  and oneTimeOneDay != ''"> and one_time_one_day = #{oneTimeOneDay}</if>
-            <if test="maxMinuteOnce != null "> and max_minute_once = #{maxMinuteOnce}</if>
-            <if test="minuteLeft != null "> and minute_left = #{minuteLeft}</if>
-            <if test="startDate != null "> and start_date = #{startDate}</if>
-            <if test="endDate != null "> and end_date = #{endDate}</if>
-            <if test="weekDays != null  and weekDays != ''"> and week_days = #{weekDays}</if>
-            <if test="status != null "> and status = #{status}</if>
+        <where>
+            <if test="userId != null ">and user_id = #{userId}</if>
+            <if test="merchantId != null ">and merchant_id = #{merchantId}</if>
+            <if test="storeId != null and storeId != 0 ">and store_id = #{storeId}</if>
+            <if test="couponId != null ">and coupon_id = #{couponId}</if>
+            <if test="couponName != null  and couponName != ''">and coupon_name like concat('%', #{couponName}, '%')
+            </if>
+            <if test="originalPrice != null ">and original_price = #{originalPrice}</if>
+            <if test="price != null ">and price = #{price}</if>
+            <if test="cardType != null  and cardType != ''">and card_type = #{cardType}</if>
+            <if test="numCanUse != null ">and num_can_use = #{numCanUse}</if>
+            <if test="oneTimeOneDay != null  and oneTimeOneDay != ''">and one_time_one_day = #{oneTimeOneDay}</if>
+            <if test="maxMinuteOnce != null ">and max_minute_once = #{maxMinuteOnce}</if>
+            <if test="minuteLeft != null ">and minute_left = #{minuteLeft}</if>
+            <if test="startDate != null ">and start_date = #{startDate}</if>
+            <if test="endDate != null ">and end_date &gt;= #{endDate}</if>
+            <if test="weekDays != null  and weekDays != ''">and week_days = #{weekDays}</if>
+            <if test="status != null ">and status = #{status}</if>
         </where>
     </select>
-    
+
     <select id="selectTWxUserCouponById" parameterType="Long" resultMap="TWxUserCouponResult">
         <include refid="selectTWxUserCouponVo"/>
         where id = #{id}
     </select>
-        
+    <select id="selectWxUserValidCouponList" parameterType="com.ruoyi.office.domain.vo.WxUserCouponQryReq"
+            resultType="com.ruoyi.office.domain.vo.WxUserCouponResp">
+        <include refid="validInvalidVo"/>
+        <where>
+            <if test="userId != null ">and c.user_id = #{userId}</if>
+            <if test="storeId != null and storeId != 0 ">and c.store_id = #{storeId}</if>
+            <if test="couponType != null  and couponType != ''">and card_type = #{couponType}</if>
+            <if test="storeName != null  and storeName != ''">and s.name = #{storeName}</if>
+            <if test="1==1 ">and (c.status = 0 and c.end_date &gt;= #{endDate})</if>
+        </where>
+    </select>
+    <select id="selectWxUserInvalidCouponList" parameterType="com.ruoyi.office.domain.vo.WxUserCouponQryReq"
+            resultType="com.ruoyi.office.domain.vo.WxUserCouponResp">
+        <include refid="validInvalidVo"/>
+        <where>
+            <if test="userId != null ">and c.user_id = #{userId}</if>
+            <if test="storeId != null and storeId != 0 ">and c.store_id = #{storeId}</if>
+            <if test="couponType != null  and couponType != ''">and card_type = #{couponType}</if>
+            <if test="storeName != null  and storeName != ''">and s.name = #{storeName}</if>
+            <if test="1==1 ">and (c.status = 1 or c.end_date &lt; #{endDate})</if>
+        </where>
+    </select>
+
     <insert id="insertTWxUserCoupon" parameterType="TWxUserCoupon" useGeneratedKeys="true" keyProperty="id">
         insert into t_wx_user_coupon
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="userId != null">user_id,</if>
-            <if test="merchantId != null "> merchant_id,</if>
+            <if test="merchantId != null ">merchant_id,</if>
             <if test="storeId != null">store_id,</if>
             <if test="couponId != null">coupon_id,</if>
             <if test="couponName != null">coupon_name,</if>
@@ -84,10 +156,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="createTime != null">create_time,</if>
             <if test="updateBy != null">update_by,</if>
             <if test="updateTime != null">update_time,</if>
-         </trim>
+        </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="userId != null">#{userId},</if>
-            <if test="merchantId != null "> #{merchantId},</if>
+            <if test="merchantId != null ">#{merchantId},</if>
             <if test="storeId != null">#{storeId},</if>
             <if test="couponId != null">#{couponId},</if>
             <if test="couponName != null">#{couponName},</if>
@@ -107,14 +179,14 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="createTime != null">#{createTime},</if>
             <if test="updateBy != null">#{updateBy},</if>
             <if test="updateTime != null">#{updateTime},</if>
-         </trim>
+        </trim>
     </insert>
 
     <update id="updateTWxUserCoupon" parameterType="TWxUserCoupon">
         update t_wx_user_coupon
         <trim prefix="SET" suffixOverrides=",">
             <if test="userId != null">user_id = #{userId},</if>
-            <if test="merchantId != null "> merchant_id = #{merchantId},</if>
+            <if test="merchantId != null ">merchant_id = #{merchantId},</if>
             <if test="storeId != null">store_id = #{storeId},</if>
             <if test="couponId != null">coupon_id = #{couponId},</if>
             <if test="couponName != null">coupon_name = #{couponName},</if>
@@ -139,11 +211,13 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </update>
 
     <delete id="deleteTWxUserCouponById" parameterType="Long">
-        delete from t_wx_user_coupon where id = #{id}
+        delete
+        from t_wx_user_coupon
+        where id = #{id}
     </delete>
 
     <delete id="deleteTWxUserCouponByIds" parameterType="String">
-        delete from t_wx_user_coupon where id in 
+        delete from t_wx_user_coupon where id in
         <foreach item="id" collection="array" open="(" separator="," close=")">
             #{id}
         </foreach>

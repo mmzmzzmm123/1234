@@ -11,11 +11,14 @@ import com.ruoyi.common.utils.DateUtils;
 import com.ruoyi.office.domain.TStore;
 import com.ruoyi.office.domain.TStoreCoupon;
 import com.ruoyi.office.domain.vo.BuyCouponReq;
+import com.ruoyi.office.domain.vo.WxUserCouponQryReq;
+import com.ruoyi.office.domain.vo.WxUserCouponReq;
 import com.ruoyi.office.domain.vo.WxUserCouponResp;
 import com.ruoyi.office.service.ITStoreCouponService;
 import com.ruoyi.office.service.ITStoreService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Service;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.ruoyi.office.mapper.TWxUserCouponMapper;
@@ -128,12 +131,25 @@ public class TWxUserCouponServiceImpl extends ServiceImpl<TWxUserCouponMapper, T
     ITStoreService storeService;
 
     @Override
-    public List<WxUserCouponResp> validlist(Long storeId, Long id) {
+    public List<WxUserCouponResp> validlist(WxUserCouponReq req, Long id) {
+
+        WxUserCouponQryReq qry = new WxUserCouponQryReq();
+        BeanUtils.copyProperties(req, qry);
+        qry.setUserId(id);
+        qry.setEndDate(DateUtils.getTodayDate());
+        List<WxUserCouponResp> userCoupons = tWxUserCouponMapper.selectWxUserValidCouponList(qry);
+
+        return userCoupons;
+    }
+
+    @Override
+    public List<WxUserCouponResp> usedlist(WxUserCouponReq req, Long id) {
         List<WxUserCouponResp> respList = new ArrayList<>();
 
         TWxUserCoupon qry = new TWxUserCoupon();
-        qry.setStoreId(storeId);
+        qry.setStoreId(req.getStoreId());
         qry.setUserId(id);
+        qry.setStatus(1l);
         List<TWxUserCoupon> userCoupons = tWxUserCouponMapper.selectTWxUserCouponList(qry);
         final Map<Long, String> storeMap = storeService.selectTStoreList(new TStore()).stream().collect(Collectors.toMap(TStore::getId, TStore::getName));
         for (TWxUserCoupon userCoupon : userCoupons) {
@@ -146,21 +162,14 @@ public class TWxUserCouponServiceImpl extends ServiceImpl<TWxUserCouponMapper, T
     }
 
     @Override
-    public List<WxUserCouponResp> usedlist(Long storeId, Long id) {
-        List<WxUserCouponResp> respList = new ArrayList<>();
+    public List<WxUserCouponResp> invalid(WxUserCouponReq req, Long id) {
 
-        TWxUserCoupon qry = new TWxUserCoupon();
-        qry.setStoreId(storeId);
+        WxUserCouponQryReq qry = new WxUserCouponQryReq();
+        BeanUtils.copyProperties(req, qry);
         qry.setUserId(id);
-        qry.setStatus(1l);
-        List<TWxUserCoupon> userCoupons = tWxUserCouponMapper.selectTWxUserCouponList(qry);
-        final Map<Long, String> storeMap = storeService.selectTStoreList(new TStore()).stream().collect(Collectors.toMap(TStore::getId, TStore::getName));
-        for (TWxUserCoupon userCoupon : userCoupons) {
-            WxUserCouponResp temp = new WxUserCouponResp();
-            BeanUtils.copyProperties(userCoupon, temp);
-            temp.setStoreName(storeMap.get(userCoupon.getStoreId()));
-            respList.add(temp);
-        }
-        return respList;
+        qry.setEndDate(DateUtils.getTodayDate());
+        List<WxUserCouponResp> userCoupons = tWxUserCouponMapper.selectWxUserInvalidCouponList(qry);
+
+        return userCoupons;
     }
 }

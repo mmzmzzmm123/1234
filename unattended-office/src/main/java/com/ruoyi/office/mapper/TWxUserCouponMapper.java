@@ -5,6 +5,8 @@ import java.util.List;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 
 import com.ruoyi.office.domain.TWxUserCoupon;
+import com.ruoyi.office.domain.vo.WxUserCouponQryReq;
+import com.ruoyi.office.domain.vo.WxUserCouponResp;
 
 /**
  * 用户优惠券Mapper接口
@@ -60,4 +62,7 @@ public interface TWxUserCouponMapper extends BaseMapper<TWxUserCoupon> {
      * @return 结果
      */
     public int deleteTWxUserCouponByIds(Long[] ids);
+
+    List<WxUserCouponResp> selectWxUserInvalidCouponList(WxUserCouponQryReq qry);
+    List<WxUserCouponResp> selectWxUserValidCouponList(WxUserCouponQryReq qry);
 }

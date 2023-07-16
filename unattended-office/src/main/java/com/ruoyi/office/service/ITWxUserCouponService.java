@@ -3,6 +3,7 @@ package com.ruoyi.office.service;
 import java.util.List;
 import com.ruoyi.office.domain.TWxUserCoupon;
 import com.ruoyi.office.domain.vo.BuyCouponReq;
+import com.ruoyi.office.domain.vo.WxUserCouponReq;
 import com.ruoyi.office.domain.vo.WxUserCouponResp;
 
 /**
@@ -63,7 +64,9 @@ public interface ITWxUserCouponService
 
     String buy(BuyCouponReq tWxUserCoupon);
 
-    List<WxUserCouponResp> validlist(Long roomId, Long id);
+    List<WxUserCouponResp> validlist(WxUserCouponReq roomId, Long id);
 
-    List<WxUserCouponResp> usedlist(Long roomId, Long id);
+    List<WxUserCouponResp> usedlist(WxUserCouponReq roomId, Long id);
+
+    List<WxUserCouponResp> invalid(WxUserCouponReq req, Long id);
 }
