@@ -9,15 +9,15 @@
     <view class="consult-direction" v-if="filterParams.type === 1">
       <view class="consult-direction-content" v-for="item in attrParams.attrList">
         <view class="consult-direction-title">
-          {{ item.title }}
+          {{ item.label }}
           <view class="consult-direction-tab-more">可多选</view>
         </view>
         <view class="consult-direction-tabs">
-          <view class="consult-direction-tab" @tap="selectAttr(item.title, 'all')">
+          <view class="consult-direction-tab" @tap="selectAttr(item.value, 'all')">
             全部
           </view>
-          <view class="consult-direction-tab" :class="{ selected: tab.flag }" v-for="tab in item.child" @tap="selectAttr(item.title, tab.value)">
-            {{ tab.name }}
+          <view class="consult-direction-tab" :class="{ selected: tab.flag }" v-for="tab in item.children" @tap="selectAttr(item.value, tab.value)">
+            {{ tab.label }}
           </view>
         </view>
       </view>
@@ -50,7 +50,7 @@
           <view class="consult-filter-tab" @tap="selectType('不限', 'serve')">
             不限
           </view>
-          <view class="consult-filter-tab" :class="{ selected: filterParams.serve !== null && item.name === filterParams.serve }" v-for="item in attrParams.typeList" @tap="selectType(item.name, 'serve')">
+          <view class="consult-filter-tab" :class="{ selected: filterParams.serve !== null && item.value === filterParams.serve }" v-for="item in attrParams.typeList" @tap="selectType(item.value, 'serve')">
             {{ item.name }}
           </view>
         </view>
@@ -111,21 +111,21 @@
         this.filterParams.type = type
         this.reset()
       },
-      selectAttr(title, val) {
+      selectAttr(value, val) {
         this.attrParams.attrList.forEach(node => {
-          if (node.title === title) {
+          if (node.value === value) {
             if (val === 'all') {
               node.flag = !node.flag
-              node.child.forEach(item => {
+              node.children.forEach(item => {
                 item.flag = node.flag
               })
             } else {
-              node.child.forEach(item => {
+              node.children.forEach(item => {
                 if (item.value === val) {
                   item.flag = !item.flag
                 }
               })
-              if (node.child.filter(i => i.flag).length === node.child.length) {
+              if (node.children.filter(i => i.flag).length === node.children.length) {
                 node.flag = true
               }
             }
@@ -145,8 +145,9 @@
       },
       reset() {
         this.attrParams.attrList.forEach(a => {
-          if (a.child && a.child.length > 0) {
-            a.child.forEach(b => {
+          a.flag = false
+          if (a.children && a.children.length > 0) {
+            a.children.forEach(b => {
               b.flag = false
             })
           }
@@ -164,9 +165,9 @@
           case 1:
             const attr = []
             this.attrParams.attrList.forEach(a => {
-              if (a.child && a.child.length > 0) {
-                a.child.filter(it => it.flag).forEach(b => {
-                  attr.push(b.name)
+              if (a.children && a.children.length > 0) {
+                a.children.filter(it => it.flag).forEach(b => {
+                  attr.push(b.value)
                 })
               }
             })

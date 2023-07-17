@@ -3,9 +3,9 @@ package com.ruoyi.common.vo;
 import lombok.Data;
 
 @Data
-public class DateLimitUtilVo {
-    public DateLimitUtilVo() {}
-    public DateLimitUtilVo(String startTime, String endTime) {
+public class DateLimitUtilVO {
+    public DateLimitUtilVO() {}
+    public DateLimitUtilVO(String startTime, String endTime) {
         this.startTime = startTime;
         this.endTime = endTime;
     }

@@ -203,7 +203,15 @@
           </el-col>
           <el-col :span="12">
             <el-form-item label="课程作者" prop="author" >
-              <el-input class="author_input" v-model="form.author" placeholder="请输入课程作者" />
+              <el-select v-model="form.author" filterable placeholder="请选择">
+                <el-option
+                  v-for="item in consultList"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value">
+                </el-option>
+              </el-select>
+<!--              <el-input class="author_input" v-model="form.author" placeholder="请输入课程作者" />-->
             </el-form-item>
           </el-col>
         </el-row>
@@ -268,6 +276,7 @@
 </template>
 
 <script>
+import { adminListConsult } from "@/api/psychology/consult";
 import { listCourse, getCourse, delCourse, addCourse, updateCourse } from "@/api/course/course";
 import { listClass } from "@/api/course/class"
 import SectionDrawer from '@/views/components/course/sectionDrawer/index.vue'
@@ -340,6 +349,7 @@ export default {
       drawOpen: false,
       drawCourse: null,
       courseClassList: [],
+      consultList: [],
       coursePayTypeList: [
         {
           id: 0,
@@ -368,9 +378,31 @@ export default {
   created() {
     console.log('created')
     this.getCourseClassList()
-    this.getList();
+    this.getList()
+    this.getConsult()
   },
   methods: {
+    async getConsult() {
+      // consultList
+      const req = {
+          pageNum: 1,
+          pageSize: 999,
+      }
+      const res = await adminListConsult(req)
+      if (res.code === 200) {
+        this.consultList = res.rows
+        const list = []
+        this.consultList.forEach(a => {
+          list.push({
+            value: a.nickName,
+            label: a.nickName,
+            userName: a.userName
+          })
+        })
+
+        this.consultList = list
+      }
+    },
     getCoursePayType(payType) {
       const list = this.coursePayTypeList.filter(item => item.id === payType)
       return list.length > 0 ? list[0].name : undefined
@@ -407,6 +439,7 @@ export default {
         type: null,
         payType: null,
         author: null,
+        userName: null,
         url: null,
         iconUrl: null,
         price: null,
@@ -459,6 +492,11 @@ export default {
     submitForm() {
       this.$refs["form"].validate(valid => {
         if (valid) {
+          if (this.form.author) {
+            const item = this.consultList.find(a => a.value === this.form.author)
+            this.form.userName = item ? item.userName : ''
+          }
+
           if (this.form.id != null) {
             updateCourse(this.form).then(response => {
               this.$modal.msgSuccess("修改成功");

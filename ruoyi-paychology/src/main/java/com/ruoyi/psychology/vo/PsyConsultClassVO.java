@@ -29,6 +29,9 @@ public class PsyConsultClassVO extends BaseValObj implements Serializable
     /** 图标路径 */
     private String url;
 
+    /** 跳转url */
+    private String linkUrl;
+
     /** 删除标志（0代表存在 1代表删除） */
     private String delFlag;
 

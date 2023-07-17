@@ -1,25 +1,24 @@
 package com.ruoyi.psychology.service;
 
 import com.ruoyi.psychology.domain.PsyConsultServe;
+import com.ruoyi.psychology.request.PsyRefConsultServeReq;
 import com.ruoyi.psychology.vo.PsyConsultServeVO;
 
 import java.util.List;
 
 public interface IPsyConsultServeService {
 
-    PsyConsultServeVO getOne(Long id);
+    List<PsyConsultServe> getList(PsyConsultServe req);
 
-    List<PsyConsultServe> getList(PsyConsultServeVO req);
+    PsyConsultServe getOne(PsyConsultServe serveId);
 
-    boolean save(List<PsyConsultServe> entities);
+    int getRefCountByConsultId(Long id);
 
-    boolean updateBatch(List<PsyConsultServe> entities);
+    int batchServeRef(PsyRefConsultServeReq req);
 
-    int add(PsyConsultServeVO req);
+    List<PsyConsultServeVO> getServeRef(PsyConsultServe req);
 
-    int update(PsyConsultServeVO req);
+    List<PsyConsultServeVO> getConsultServeRef(PsyConsultServe req);
 
     int deleteAll(Long[] ids);
-
-    int delete(Long id);
 }

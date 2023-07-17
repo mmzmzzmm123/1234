@@ -1,0 +1,74 @@
+<template>
+  <div>
+    <el-table v-loading="loading" :data="list">
+      <el-table-column label="服务名称" align="center" prop="name"/>
+      <el-table-column label="咨询形式" align="center" prop="mode">
+        <template slot-scope="scope">
+          {{ modeList.find(i => i.value === scope.row.mode).label }}
+        </template>
+      </el-table-column>
+      <el-table-column label="服务类型" align="center" prop="type">
+        <template slot-scope="scope">
+          {{ typeList.find(i => i.value === scope.row.type).label }}
+        </template>
+      </el-table-column>
+      <el-table-column label="销量" align="center" prop="sales"/>
+    </el-table>
+    <pagination
+      v-show="total>0"
+      :total="total"
+      :page.sync="queryParams.pageNum"
+      :limit.sync="queryParams.pageSize"
+      @pagination="getList"
+    />
+  </div>
+</template>
+
+<script>
+import { listServeConfig } from "@/api/psychology/serveConfig";
+export default {
+  props: {
+    id: {
+      type: String
+    },
+  },
+  data() {
+    return {
+      ids: [],
+      list: [],
+      total: 0,
+      loading: false,
+      modeList: this.$constants.modeList,
+      typeList: this.$constants.typeList,
+      // 查询参数
+      queryParams: {
+        pageNum: 1,
+        pageSize: 10,
+        orderByColumn: 'z_index',
+        isAsc: 'descending',
+        cId: ''
+      },
+    }
+  },
+  created() {
+    console.log(this.id)
+    this.getList()
+  },
+  methods: {
+    /** 查询咨询服务配置列表 */
+    getList() {
+      this.loading = true;
+      this.queryParams.cId = this.id
+      listServeConfig(this.queryParams).then(response => {
+        this.list = response.rows;
+        this.total = response.total;
+        this.loading = false;
+      });
+    }
+  }
+}
+</script>
+
+<style scoped>
+
+</style>

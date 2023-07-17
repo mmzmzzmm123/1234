@@ -46,6 +46,10 @@ public class CourCourse extends BaseEntity
     @Excel(name = "课程作者")
     private String author;
 
+    /** 咨询师账号 */
+    @Excel(name = "咨询师账号")
+    private String userName;
+
     /** 课程图片 */
     @Excel(name = "课程图片")
     private String url;
@@ -73,6 +77,7 @@ public class CourCourse extends BaseEntity
             .append("name", getName())
             .append("type", getType())
             .append("author", getAuthor())
+            .append("userName", getUserName())
             .append("url", getUrl())
             .append("price", getPrice())
             .append("detail", getDetail())

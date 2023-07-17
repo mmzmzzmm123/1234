@@ -8,7 +8,7 @@ import com.ruoyi.psychology.domain.PsyUser;
 import com.ruoyi.psychology.mapper.PsyConsultOrderMapper;
 import com.ruoyi.psychology.service.*;
 import com.ruoyi.psychology.vo.PsyConsultOrderVO;
-import com.ruoyi.psychology.vo.PsyConsultServeVO;
+import com.ruoyi.psychology.vo.PsyConsultServeConfigVO;
 import com.ruoyi.psychology.vo.PsyConsultVO;
 import com.ruoyi.psychology.vo.PsyConsultWorkVO;
 import org.springframework.stereotype.Service;
@@ -38,7 +38,7 @@ public class PsyConsultOrderServiceImpl implements IPsyConsultOrderService
     private IPsyConsultService psyConsultService;
 
     @Resource
-    private IPsyConsultServeService psyConsultServeService;
+    private IPsyConsultServeConfigService psyConsultServeConfigService;
 
     @Resource
     private IPsyConsultWorkService psyConsultWorkService;
@@ -118,11 +118,11 @@ public class PsyConsultOrderServiceImpl implements IPsyConsultOrderService
     @Override
     @Transactional(rollbackFor = Exception.class)
     public int add(PsyConsultOrderVO req) {
-        PsyConsultServeVO serve = psyConsultServeService.getOne(req.getServeId());
-        PsyConsultVO consult = psyConsultService.getOne(serve.getConsultId());
+        PsyConsultServeConfigVO serve = psyConsultServeConfigService.getOne(req.getServeId());
+        PsyConsultVO consult = psyConsultService.getOne(req.getConsultId());
         PsyUser psyUser = psyUserService.selectPsyUserById(req.getUserId());
 
-        req.setConsultId(serve.getConsultId());
+        req.setConsultId(req.getConsultId());
         req.setConsultName(consult.getUserName());
         req.setServeName(serve.getName());
         req.setUserName(psyUser.getName());

@@ -6,7 +6,7 @@ import com.ruoyi.common.constant.IntegralRecordConstants;
 import com.ruoyi.common.constant.NewConstants;
 import com.ruoyi.common.exception.UtilException;
 import com.ruoyi.common.utils.NewDateUtil;
-import com.ruoyi.common.vo.DateLimitUtilVo;
+import com.ruoyi.common.vo.DateLimitUtilVO;
 import com.ruoyi.psychology.domain.PsyUser;
 import com.ruoyi.psychology.service.IPsyUserService;
 import com.ruoyi.system.service.ISysConfigService;
@@ -45,7 +45,7 @@ public class PsyUserIntegralRecordServiceImpl extends ServiceImpl<PsyUserIntegra
     @Override
     public List<PsyUserIntegralRecordVO> getList(IntegralSearchReq req) {
         if (StringUtils.isNotBlank(req.getDateLimit())) {
-            DateLimitUtilVo dateLimit = NewDateUtil.getDateLimit(req.getDateLimit());
+            DateLimitUtilVO dateLimit = NewDateUtil.getDateLimit(req.getDateLimit());
             int compareDateResult = NewDateUtil.compareDate(dateLimit.getEndTime(), dateLimit.getStartTime(), NewConstants.DATE_FORMAT);
             if (compareDateResult == -1) {
                 throw new UtilException("开始时间不能大于结束时间！");

@@ -25,6 +25,7 @@
             <text class="info-content-info">{{ consultInfo.info }}</text>
           </view>
         </view>
+
         <view class="info-nums">
           <view class="info-nums-item">
             <view class="info-nums-item-num">{{ consultInfo.workNum }}人</view>
@@ -40,34 +41,56 @@
           </view>
         </view>
       </view>
-      <view class="serve">
-        <text class="serve-title">咨询服务</text>
-        <view class="serve-conten">
-          <view class="serve-conten-item" v-for="item in serveList">
-            <view class="serve-conten-item-header">
-              <image v-if="item.name === '面对面咨询'" src="/static/consult/detail/serve1.png" class="serve-conten-item-icon"/>
-              <image v-else-if="item.name === '视频咨询'" src="/static/consult/detail/serve2.png" class="serve-conten-item-icon"/>
-              <image v-else-if="item.name === '语音咨询'" src="/static/consult/detail/serve3.png" class="serve-conten-item-icon"/>
-              <text class="serve-conten-item-name">{{ item.name }}</text>
-              <view class="serve-conten-item-price">
-                <text class="serve-conten-item-price-text">¥</text>
-                <text class="serve-conten-item-price-text">{{ item.price }}</text>
-                <text class="serve-conten-item-price-text">元/次</text>
+
+      <view class="segmented-main">
+        <view class="uni-padding-wrap uni-common-mt">
+          <uni-segmented-control :current="current" :values="items" style-type="text" active-color="#ff703f" @clickItem="onClickItem" />
+        </view>
+        <view class="content">
+          <view >
+            <view v-if="current === 0" class="serve">
+              <text class="serve-title">咨询服务</text>
+              <view class="serve-conten">
+                <view class="serve-conten-item" v-for="item in serveList">
+                  <view class="serve-conten-item-header">
+                    <image v-if="item.name === '面对面咨询'" src="/static/consult/detail/serve1.png" class="serve-conten-item-icon"/>
+                    <image v-else-if="item.name === '视频咨询'" src="/static/consult/detail/serve2.png" class="serve-conten-item-icon"/>
+                    <image v-else-if="item.name === '语音咨询'" src="/static/consult/detail/serve3.png" class="serve-conten-item-icon"/>
+                    <text class="serve-conten-item-name">{{ item.name }}</text>
+                    <view class="serve-conten-item-price">
+                      <text class="serve-conten-item-price-text">¥</text>
+                      <text class="serve-conten-item-price-text">{{ item.price }}</text>
+                      <text class="serve-conten-item-price-text">元/次</text>
+                    </view>
+                  </view>
+                  <view class="serve-info">
+                    <text class="serve-info-text">{{ item.info }}</text>
+                    <button @tap="toBuy(item)" class="serve-info-btn">
+                      立即预约
+                    </button>
+                  </view>
+                </view>
+              </view>
+              <view class="serve-more">
+                <text class="serve-more-title" @tap="goHome">更多服务 > </text>
               </view>
             </view>
-            <view class="serve-info">
-              <text class="serve-info-text">{{ item.info }}</text>
-              <button @tap="toBuy(item)" class="serve-info-btn">
-                立即预约
-              </button>
-            </view>
+          </view>
+
+          <view v-if="current === 1">
+            <text class="content-text">选项卡2的内容</text>
+          </view>
+
+          <view v-if="current === 2">
+            <view class="consult-desc" v-html="consultInfo.detail"/>
+          </view>
+
+          <view v-if="current === 3">
+            <text class="content-text">选项卡4的内容</text>
           </view>
         </view>
-        <view class="serve-more">
-          <text class="serve-more-title" @tap="goHome">更多服务 > </text>
-        </view>
       </view>
-      <view class="consult-desc" v-html="consultInfo.detail"/>
+
       <view class="page-bottom">
         <view class="page-bottom-image" @tap="goHome">
           <image src="/static/course/menu/index.png" class="page-bottom-icon"/>
@@ -123,6 +146,9 @@ import wxJS from "@/server/wxJS.js"
 export default {
   data() {
     return {
+      items: ['服务套餐', 'TA的心理课', '老师介绍', '可约时间'],
+      current: 0,
+
       userInfo: {},
       tabs: [],
       serveList: [],
@@ -150,6 +176,11 @@ export default {
     }
   },
   methods: {
+    onClickItem(e) {
+      if (this.current !== e.currentIndex) {
+        this.current = e.currentIndex
+      }
+    },
     async getConsultInfo() {
       this.consultInfo = await consultServer.getConsultInfo(this.consultId)
     },
@@ -393,6 +424,15 @@ export default {
   line-height: 30upx;
   margin-top: 8upx;
 }
+.segmented-main {
+  background-color: #fff;
+  margin-top: 20upx;
+  margin-bottom: 20upx;
+  padding: 10upx;
+  position: sticky;
+  top: 88upx;
+  z-index: 99;
+}
 .serve {
   background-color: #FFFFFF;
   width: 750upx;
@@ -539,8 +579,9 @@ export default {
 .page-bottom {
   position: fixed;
   bottom: 0upx;
+  z-index: 99;
   background-color: #FFFFFF;
-  width: 750upx;
+  //width: 750upx;
   height: 120upx;
   margin-top: 40upx;
   display: flex;

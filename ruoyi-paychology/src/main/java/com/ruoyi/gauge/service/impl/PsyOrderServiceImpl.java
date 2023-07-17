@@ -167,7 +167,7 @@ public class PsyOrderServiceImpl implements IPsyOrderService {
         psyOrder.setGaugeId(gaugeId);
         psyOrder.setOrderStatus(GaugeConstant.GAUGE_ORDER_STATUE_FINISHED);
         List<PsyOrder> psyOrderList = psyOrderMapper.selectPsyOrderList(psyOrder);
-        if (psyOrderList.size() == 1) {
+        if (psyOrderList.size() >= 1) {
             return GaugeConstant.GAUGE_IS_BUY;
         }
         return GaugeConstant.GAUGE_NOT_BUY;
@@ -178,8 +178,9 @@ public class PsyOrderServiceImpl implements IPsyOrderService {
         PsyOrder psyOrder = new PsyOrder();
         psyOrder.setUserId(useId);
         psyOrder.setGaugeId(gaugeId);
+        psyOrder.setOrderStatus(GaugeConstant.GAUGE_ORDER_STATUE_FINISHED);
         List<PsyOrder> psyOrderList = psyOrderMapper.selectPsyOrderList(psyOrder);
-        if (psyOrderList.size() == 1) {
+        if (psyOrderList.size() >= 1) {
             return psyOrderList.get(0);
         }
         return null;

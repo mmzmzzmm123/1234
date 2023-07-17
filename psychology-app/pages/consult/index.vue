@@ -17,7 +17,7 @@
       </swiper>
     </view>
     <view class="class-box index-margin">
-      <view class="item" v-for="item in classList" @tap="toClass(item.id)">
+      <view class="item" v-for="item in classList" @tap="toClass(item)">
         <img class="class-img" :src="item.url" />
         <view>{{ item.name }}</view>
       </view>
@@ -160,7 +160,8 @@
         this.attrParams.typeList = await indexServer.getConfigByType('consult_type');
       },
       async getAttrs() {
-        this.attrParams.attrList = await indexServer.getAttrs(['consult_direction_one','consult_direction_two','consult_direction_three']);
+        // this.attrParams.attrList = await indexServer.getAttrs(['consult_direction_one','consult_direction_two','consult_direction_three']);
+        this.attrParams.attrList = await indexServer.getTypes();
       },
       async getPrice() {
         this.attrParams.priceList = await indexServer.getConfigByType('consult_price');
@@ -200,14 +201,20 @@
           url
         });
       },
-      toClass(classId) {
+      toClass(item) {
         // 判断是否已经登录
         if (!utils.checkLogin()) {
           return this.openLoginConfirm()
         }
-        this.resetQuery()
-        this.queryData.catId = classId
-        this.getConsult()
+        if (item.linkUrl) {
+          uni.navigateTo({
+            url: item.linkUrl,
+          });
+        }
+
+        // this.resetQuery()
+        // this.queryData.catId = classId
+        // this.getConsult()
       },
       toSearch() {
         // 判断是否已经登录

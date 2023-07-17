@@ -1,36 +1,38 @@
 package com.ruoyi.psychology.service.impl;
 
 import cn.hutool.core.bean.BeanUtil;
+import cn.hutool.core.util.StrUtil;
 import com.alibaba.fastjson2.JSON;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.ruoyi.common.constant.UserConstants;
 import com.ruoyi.common.core.domain.AjaxResult;
-import com.ruoyi.common.core.domain.entity.SysDictData;
 import com.ruoyi.common.core.domain.entity.SysUser;
-import com.ruoyi.common.utils.DateUtils;
-import com.ruoyi.common.utils.IDhelper;
-import com.ruoyi.common.utils.SecurityUtils;
-import com.ruoyi.common.utils.StringUtils;
+import com.ruoyi.common.event.publish.ConsultServePublisher;
+import com.ruoyi.common.utils.*;
+import com.ruoyi.common.vo.DateLimitUtilVO;
 import com.ruoyi.psychology.domain.PsyConsult;
-import com.ruoyi.psychology.domain.PsyConsultServe;
 import com.ruoyi.psychology.domain.PsyConsultWork;
+import com.ruoyi.psychology.dto.PsyConsultInfoDTO;
 import com.ruoyi.psychology.mapper.PsyConsultMapper;
+import com.ruoyi.psychology.request.PsyAdminConsultReq;
 import com.ruoyi.psychology.request.PsyConsultReq;
+import com.ruoyi.psychology.request.PsyRefConsultServeReq;
+import com.ruoyi.psychology.service.IPsyConsultServeConfigService;
 import com.ruoyi.psychology.service.IPsyConsultServeService;
 import com.ruoyi.psychology.service.IPsyConsultService;
 import com.ruoyi.psychology.service.IPsyConsultWorkService;
-import com.ruoyi.psychology.dto.PsyConsultInfoDTO;
-import com.ruoyi.psychology.vo.PsyConsultServeVO;
+import com.ruoyi.psychology.vo.PsyConsultServeConfigVO;
 import com.ruoyi.psychology.vo.PsyConsultVO;
 import com.ruoyi.psychology.vo.PsyConsultWorkVO;
 import com.ruoyi.system.service.ISysConfigService;
-import com.ruoyi.system.service.ISysDictTypeService;
 import com.ruoyi.system.service.ISysUserService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.support.TransactionTemplate;
 import org.springframework.util.CollectionUtils;
 
 import javax.annotation.Resource;
-import java.math.BigDecimal;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -42,10 +44,16 @@ public class PsyConsultServiceImpl implements IPsyConsultService {
     private PsyConsultMapper psyConsultMapper;
 
     @Resource
-    private ISysDictTypeService sysDictTypeService;
+    private TransactionTemplate transactionTemplate;
+
+    @Resource
+    private ConsultServePublisher consultServePublisher;
 
     @Resource
     private IPsyConsultServeService psyConsultServeService;
+
+    @Resource
+    private IPsyConsultServeConfigService psyConsultServeConfigService;
 
     @Resource
     private IPsyConsultWorkService psyConsultWorkService;
@@ -58,14 +66,14 @@ public class PsyConsultServiceImpl implements IPsyConsultService {
 
 
     @Override
-    public PsyConsultInfoDTO getConsultInfoByServe(Long id) {
+    public PsyConsultInfoDTO getConsultInfoByServe(Long cId, Long sId) {
         PsyConsultInfoDTO vo = new PsyConsultInfoDTO();
-        PsyConsultServeVO serve = psyConsultServeService.getOne(id);
-        PsyConsultVO consult = getOne(serve.getConsultId());
+        PsyConsultServeConfigVO serve = psyConsultServeConfigService.getOne(sId);
+        PsyConsultVO consult = getOne(cId);
 
         PsyConsultWorkVO req = new PsyConsultWorkVO();
-        req.setServeId(id);
-        req.setConsultId(serve.getConsultId());
+        req.setServeId(sId);
+        req.setConsultId(cId);
         req.setStatus("0");
         // t+6
         Date now = new Date();
@@ -121,6 +129,51 @@ public class PsyConsultServiceImpl implements IPsyConsultService {
     }
 
     @Override
+    public List<PsyConsult> getList(PsyAdminConsultReq req) {
+        LambdaQueryWrapper<PsyConsult> wp = Wrappers.lambdaQuery();
+        wp.eq(PsyConsult::getDelFlag, "0");
+        if (StringUtils.isNotEmpty(req.getUserName())) {
+            wp.eq(PsyConsult::getUserName, req.getUserName());
+        }
+
+        if (StringUtils.isNotEmpty(req.getStatus())) {
+            wp.eq(PsyConsult::getStatus, req.getStatus());
+        }
+
+        if (StrUtil.isNotBlank(req.getDateLimit())) {
+            DateLimitUtilVO dateLimit = NewDateUtil.getDateLimit(req.getDateLimit());
+            wp.between(PsyConsult::getCreateTime, dateLimit.getStartTime(), dateLimit.getEndTime());
+        }
+
+        return psyConsultMapper.selectList(wp);
+    }
+
+    @Override
+    public AjaxResult refConsultServe(PsyRefConsultServeReq req) {
+        PsyConsult consult = psyConsultMapper.selectById(req.getConsultId());
+        if (consult == null) {
+            return AjaxResult.error("关联服务失败,咨询师信息异常");
+        }
+
+        Boolean execute = transactionTemplate.execute(e -> {
+            if (psyConsultServeConfigService.refConsultServe(req) == 0 || psyConsultServeService.batchServeRef(req) == 0) {
+                return Boolean.FALSE;
+            }
+
+            int count = psyConsultServeService.getRefCountByConsultId(req.getConsultId());
+            consult.setServe(count);
+            psyConsultMapper.updateById(consult);
+            return Boolean.TRUE;
+        });
+        if (!execute) {
+            return AjaxResult.error("关联服务失败,服务信息异常");
+        }
+
+        consultServePublisher.publish(req);
+        return AjaxResult.success();
+    }
+
+    @Override
     @Transactional(rollbackFor = Exception.class)
     public AjaxResult add(PsyConsultVO req) {
         // 新增用户
@@ -149,21 +202,6 @@ public class PsyConsultServiceImpl implements IPsyConsultService {
         // 新增用户
         userService.insertUser(user);
         req.setUserId(user.getUserId());
-
-        // 默认初始化所有服务
-        List<PsyConsultServe> serves = new ArrayList<>();
-        List<SysDictData> dictData = sysDictTypeService.selectDictDataByType("consult_type");
-        dictData.forEach(i -> {
-            PsyConsultServe serve = new PsyConsultServe();
-            serve.setConsultId(id);
-            serve.setName(i.getDictLabel());
-            serve.setInfo(i.getRemark());
-            serve.setPrice(new BigDecimal("100"));
-            serve.setDelFlag("0");
-            serve.setStatus("1");
-            serves.add(serve);
-        });
-        psyConsultServeService.save(serves);
 
         converToStr(req);
         return AjaxResult.success(psyConsultMapper.insert(BeanUtil.toBean(req, PsyConsult.class)));

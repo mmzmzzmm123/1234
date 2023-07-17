@@ -25,11 +25,28 @@ export function listConsult(query) {
   })
 }
 
+export function adminListConsult(query) {
+  return request({
+    url: '/psychology/consult/adminList',
+    method: 'get',
+    params: query
+  })
+}
+
 // 查询咨询类型详细
 export function getConsult(id) {
   return request({
     url: '/psychology/consult/' + id,
     method: 'get'
+  })
+}
+
+// 新增咨询服务配置
+export function refConsultServe(data) {
+  return request({
+    url: '/psychology/consult/refConsultServe',
+    method: 'post',
+    data: data
   })
 }
 

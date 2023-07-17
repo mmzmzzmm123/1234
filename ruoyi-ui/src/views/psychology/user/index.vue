@@ -90,7 +90,11 @@
       <el-table-column label="用户id" align="center" prop="id" />
       <el-table-column label="用户名" align="center" prop="name" />
       <el-table-column label="手机号码" align="center" prop="phone" />
-      <el-table-column label="头像地址" align="center" prop="avatar" />
+      <el-table-column label="头像地址" align="center" prop="avatar">
+        <template slot-scope="scope">
+          <image-preview :src="scope.row.avatar" :width="50" :height="50"/>
+        </template>
+      </el-table-column>
       <el-table-column label="帐号状态" align="center" prop="status" >
         <template slot-scope="scope">
           {{scope.row.status==1?'停用':'正常'}}

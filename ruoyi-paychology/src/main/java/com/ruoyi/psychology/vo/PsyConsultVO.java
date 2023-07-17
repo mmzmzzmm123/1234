@@ -18,14 +18,12 @@ public class PsyConsultVO extends BaseValObj implements Serializable
 {
     private static final long serialVersionUID = 5172540262606370812L;
 
-    /** 分类 */
-    private Long catId;
-
     /** 登录名 */
     private Long userId;
 
     /** 登录名 */
     private String userName;
+    private String nickName;
 
     /** 头像 */
     private String avatar;
@@ -52,6 +50,9 @@ public class PsyConsultVO extends BaseValObj implements Serializable
     /** 图文详情 */
     private String detail;
 
+    /** 服务数量 */
+    private Integer serve;
+
     /** 咨询人数 */
     private Integer workNum;
 
@@ -60,6 +61,21 @@ public class PsyConsultVO extends BaseValObj implements Serializable
 
     /** 从业时间 */
     private Integer workHours;
+
+    /** 企业微信名片 */
+    private String wxCard;
+
+    /** 咨询寄语 */
+    private String zxWord;
+
+    /** 咨询风格 */
+    private String zxStyle;
+
+    /** 咨询须知 */
+    private String notice;
+
+    /** 受训经历 */
+    private String experience;
 
     /** 删除标志（0代表存在 1代表删除） */
     private String delFlag;

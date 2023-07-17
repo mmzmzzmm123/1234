@@ -15,8 +15,12 @@ import java.util.List;
 public interface PsyConsultServeMapper extends BaseMapper<PsyConsultServe>
 {
 
-    List<PsyConsultServe> getList(PsyConsultServeVO req);
+    int batchServeRef(List<PsyConsultServe> refs);
 
     int tombstonedByIds(Long[] ids);
+
+    List<PsyConsultServeVO> getServeRef(PsyConsultServe req);
+
+    List<PsyConsultServeVO> getConsultServeRef(PsyConsultServe req);
 
 }

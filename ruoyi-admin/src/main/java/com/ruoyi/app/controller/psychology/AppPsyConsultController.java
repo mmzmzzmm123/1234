@@ -5,9 +5,9 @@ import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.core.page.TableDataInfo;
 import com.ruoyi.psychology.domain.PsyConsult;
 import com.ruoyi.psychology.request.PsyConsultReq;
-import com.ruoyi.psychology.service.IPsyConsultServeService;
+import com.ruoyi.psychology.request.PsyConsultServeConfigReq;
+import com.ruoyi.psychology.service.IPsyConsultServeConfigService;
 import com.ruoyi.psychology.service.IPsyConsultService;
-import com.ruoyi.psychology.vo.PsyConsultServeVO;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
@@ -27,7 +27,7 @@ public class AppPsyConsultController extends BaseController
     private IPsyConsultService psyConsultService;
 
     @Resource
-    private IPsyConsultServeService psyConsultServeService;
+    private IPsyConsultServeConfigService psyConsultServeConfigService;
 
     /**
      * 查询心理咨询师列表
@@ -52,10 +52,10 @@ public class AppPsyConsultController extends BaseController
     @GetMapping(value = "/serve/{id}")
     public AjaxResult getServe(@PathVariable("id") Long id)
     {
-        PsyConsultServeVO req = new PsyConsultServeVO();
-        req.setConsultId(id);
+        PsyConsultServeConfigReq req = new PsyConsultServeConfigReq();
+        req.setCId(id);
         req.setStatus("0");
-        return AjaxResult.success(psyConsultServeService.getList(req));
+        return AjaxResult.success(psyConsultServeConfigService.getList(req));
     }
 
 

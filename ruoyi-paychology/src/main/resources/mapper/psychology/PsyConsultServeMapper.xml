@@ -11,32 +11,30 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         </foreach>
     </update>
 
-    <resultMap type="PsyConsultServe" id="PsyConsultServeResult">
-        <result property="id"    column="id"    />
-        <result property="consultId"    column="consult_id"    />
-        <result property="name"    column="name"    />
-        <result property="info"    column="info"    />
-        <result property="price"    column="price"    />
-        <result property="delFlag"    column="del_flag"    />
-        <result property="status"    column="status"    />
-        <result property="createBy"    column="create_by"    />
-        <result property="createTime"    column="create_time"    />
-        <result property="updateBy"    column="update_by"    />
-        <result property="updateTime"    column="update_time"    />
-    </resultMap>
-
-    <sql id="selectPsyConsultServeVo">
-        select id, consult_id, name, info, price, del_flag, status, create_by, create_time, update_by, update_time from psy_consult_serve
-    </sql>
-
-    <select id="getList" parameterType="PsyConsultServe" resultMap="PsyConsultServeResult">
-        <include refid="selectPsyConsultServeVo"/>
+    <select id="getServeRef" resultType="com.ruoyi.psychology.vo.PsyConsultServeVO">
+        select a.serve_id,a.consult_id, b.nick_name, b.user_name, a.num,a.del_flag,a.status from psy_consult_serve a inner join psy_consult b on a.consult_id = b.id
         <where>
-            <if test="consultId != null "> and consult_id = #{consultId}</if>
-            <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
-            <if test="info != null  and info != ''"> and info = #{info}</if>
-            <if test="price != null "> and price = #{price}</if>
-            <if test="status != null  and status != ''"> and status = #{status}</if>
+            <if test="consultId != null  and consultId != ''"> and a.consult_id = #{consultId}</if>
+            <if test="serveId != null  and serveId != ''"> and a.serve_id = #{serveId}</if>
+            <if test="delFlag != null  and delFlag != ''"> and a.del_flag = #{delFlag}</if>
+            <if test="status != null  and status != ''"> and a.status = #{status}</if>
         </where>
     </select>
+
+    <select id="getConsultServeRef" resultType="com.ruoyi.psychology.vo.PsyConsultServeVO">
+        select distinct a.consult_id,b.nick_name, b.user_name from psy_consult_serve a inner join psy_consult b on a.consult_id = b.id
+        <where>
+            <if test="consultId != null  and consultId != ''"> and a.consult_id = #{consultId}</if>
+            <if test="serveId != null  and serveId != ''"> and a.serve_id = #{serveId}</if>
+            <if test="delFlag != null  and delFlag != ''"> and a.del_flag = #{delFlag}</if>
+            <if test="status != null  and status != ''"> and a.status = #{status}</if>
+        </where>
+    </select>
+
+    <insert id="batchServeRef">
+        insert into psy_consult_serve(serve_id, consult_id, num, del_flag, status) values
+        <foreach item="item" index="index" collection="list" separator=",">
+            (#{item.serveId},#{item.consultId},#{item.num},#{item.delFlag},#{item.status})
+        </foreach>
+    </insert>
 </mapper>

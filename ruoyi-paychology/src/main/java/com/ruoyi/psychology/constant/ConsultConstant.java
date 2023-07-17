@@ -16,4 +16,18 @@ public class ConsultConstant {
     public static final Integer CONSULT_NOT_BUY= 0;
 
     public static final Integer CONSULT_IS_BUY= 1;
+
+    // 咨询形式 语音咨询、视频咨询、面对面咨询
+    public static final Integer CONSULT_MODE_SOUND= 1;
+    public static final Integer CONSULT_MODE_VOICE= 2;
+    public static final Integer CONSULT_MODE_FACE= 3;
+
+    // 服务类型 单次咨询 套餐咨询
+    public static final Integer CONSULT_TYPE_ONCE = 1;
+    public static final Integer CONSULT_TYPE_PACKAGE = 2;
+
+    // 限购 0-不限制 1-限制
+    public static final Integer CONSULT_LIMIT = 1;
+    public static final Integer CONSULT_NO_LIMIT = 2;
+
 }

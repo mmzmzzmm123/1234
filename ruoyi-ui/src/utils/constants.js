@@ -18,6 +18,30 @@ export const categoryType = [ // 1 产品分类，2 附件分类，3 文章分�
   { name: '秒杀配置', value: 7, shortName: '秒杀' }
 ]
 
+export const limitStatus = [
+  { label: '不限制', value: 0 },
+  { label: '限制', value: 1 }
+]
+
+export const modeList = [
+  { label: '全部', value: '' },
+  { label: '语音咨询', value: 1 },
+  { label: '视频咨询', value: 2 },
+  { label: '面对面咨询', value: 3 },
+]
+
+export const typeList = [
+  { label: '全部', value: '' },
+  { label: '单次', value: 1 },
+  { label: '套餐', value: 2 }
+]
+
+export const comListStatus = [
+  { label: '全部', value: '' },
+  { label: '启用', value: '0' },
+  { label: '禁用', value: '1' }
+]
+
 export const roleListStatus = [
   { label: '全部', value: '' },
   { label: '显示', value: 1 },

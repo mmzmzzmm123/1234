@@ -10,6 +10,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="type"    column="type"    />
         <result property="payType"    column="pay_type"    />
         <result property="author"    column="author"    />
+        <result property="userName"    column="user_name"    />
         <result property="url"    column="url"    />
         <result property="iconUrl"    column="icon_url"    />
         <result property="price"    column="price"    />
@@ -22,7 +23,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </resultMap>
 
     <sql id="selectCourCourseVo">
-        select id, name, type, pay_type, author, url, icon_url, price, detail, on_sale, create_by, create_time, update_time, update_by from cour_course
+        select id, name, type, pay_type, author, user_name, url, icon_url, price, detail, on_sale, create_by, create_time, update_time, update_by from cour_course
     </sql>
 
     <select id="selectCourCourseList" parameterType="CourCourse" resultMap="CourCourseResult">
@@ -74,6 +75,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="type != null">type,</if>
             <if test="payType != null">pay_type,</if>
             <if test="author != null">author,</if>
+            <if test="userName != null">user_name,</if>
             <if test="url != null">url,</if>
             <if test="iconUrl != null">icon_url,</if>
             <if test="price != null">price,</if>
@@ -89,6 +91,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="type != null">#{type},</if>
             <if test="payType != null">#{payType},</if>
             <if test="author != null">#{author},</if>
+            <if test="userName != null">#{userName},</if>
             <if test="url != null">#{url},</if>
             <if test="iconUrl != null">#{iconUrl},</if>
             <if test="price != null">#{price},</if>
@@ -108,6 +111,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="type != null">type = #{type},</if>
             <if test="payType != null">pay_type = #{payType},</if>
             <if test="author != null">author = #{author},</if>
+            <if test="userName != null">user_name = #{userName},</if>
             <if test="url != null">url = #{url},</if>
             <if test="iconUrl != null">icon_url = #{iconUrl},</if>
             <if test="price != null">price = #{price},</if>

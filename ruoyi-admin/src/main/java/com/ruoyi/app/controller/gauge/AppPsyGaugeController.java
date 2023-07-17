@@ -5,6 +5,7 @@ import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.core.domain.dto.LoginDTO;
 import com.ruoyi.common.core.page.TableDataInfo;
 import com.ruoyi.framework.web.service.AppTokenService;
+import com.ruoyi.gauge.constant.GaugeConstant;
 import com.ruoyi.gauge.domain.PsyGauge;
 import com.ruoyi.gauge.domain.PsyGaugeQuestionsResult;
 import com.ruoyi.gauge.domain.PsyOrder;
@@ -72,11 +73,12 @@ public class AppPsyGaugeController extends BaseController
         PsyGauge psyGauge = psyGaugeService.selectPsyGaugeById(id);
         GaugeVO gaugeVO = new GaugeVO();
         BeanUtils.copyProperties(psyGauge, gaugeVO);
-        Integer isBuy = psyOrderService.getGaugeIsBuy(userId, id);
-        gaugeVO.setIsBuy(isBuy);
         PsyOrder psyOrder = psyOrderService.getPsyOrder(userId, id);
         if (psyOrder != null) { // 用户已经下单
             gaugeVO.setOrderId(psyOrder.getId());
+            gaugeVO.setIsBuy(GaugeConstant.GAUGE_IS_BUY);
+        } else {
+            gaugeVO.setIsBuy(GaugeConstant.GAUGE_NOT_BUY);
         }
         PsyGaugeQuestionsResult psyGaugeQuestionsResult = new PsyGaugeQuestionsResult();
         psyGaugeQuestionsResult.setUserId(userId);

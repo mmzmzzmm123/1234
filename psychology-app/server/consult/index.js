@@ -29,6 +29,14 @@ export default {
       return [];
     }
   },
+  getTypes: async () => {
+    let res = await httprequest.get("/app/consult/config/getTrees");
+    if (res.code == 200) {
+      return res.data;
+    } else {
+      return [];
+    }
+  },
   getAttrs: async (dictTypes) => {
     let res = await httprequest.get("/app/consult/config/getConfigByTypes/" + dictTypes);
     if (res.code == 200) {

@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.psychology.mapper.PsyConsultServeConfigMapper">
+    
+    <resultMap type="PsyConsultServeConfig" id="PsyConsultServeConfigResult">
+        <result property="id"    column="id"    />
+        <result property="mode"    column="mode"    />
+        <result property="type"    column="type"    />
+        <result property="name"    column="name"    />
+        <result property="info"    column="info"    />
+        <result property="price"    column="price"    />
+        <result property="time"    column="time"    />
+        <result property="num"    column="num"    />
+        <result property="ref"    column="ref"    />
+        <result property="sales"    column="sales"    />
+        <result property="zIndex"    column="z_index"    />
+        <result property="bound"    column="bound"    />
+        <result property="end"    column="end"    />
+        <result property="delFlag"    column="del_flag"    />
+        <result property="status"    column="status"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+    </resultMap>
+
+    <sql id="selectPsyConsultServeConfigVo">
+        select id, mode, type, name, info, price, time, num, sales, ref, z_index, bound, end, del_flag, status, create_by, create_time, update_by, update_time from psy_consult_serve_config
+    </sql>
+
+    <select id="getList" parameterType="PsyConsultServe" resultMap="PsyConsultServeConfigResult">
+        <include refid="selectPsyConsultServeConfigVo"/>
+        <where>
+            <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
+            <if test="status != null  and status != ''"> and status = #{status}</if>
+            <if test="type != null  and type != ''"> and type = #{type}</if>
+            <if test="delFlag != null  and delFlag != ''"> and del_flag = #{delFlag}</if>
+            <if test="startTime != null "> and create_time <![CDATA[ >= ]]> #{startTime}</if>
+            <if test="endTime != null "> and create_time <![CDATA[ <= ]]> #{endTime}</if>
+            <if test="cId != null  and cId != ''">
+                and id in (select distinct serve_id from psy_consult_serve where del_flag = '0' and consult_id = #{cId})
+            </if>
+            <if test="nId != null  and nId != ''">
+                and id not in (select distinct serve_id from psy_consult_serve where del_flag = '0' and consult_id = #{nId})
+            </if>
+        </where>
+    </select>
+
+    <update id="tombstonedByIds">
+        update psy_consult_serve_config set del_flag = 1 where id in
+        <foreach collection="array" item="item" open="(" separator="," close=")">
+            #{item,jdbcType=BIGINT}
+        </foreach>
+    </update>
+
+</mapper>

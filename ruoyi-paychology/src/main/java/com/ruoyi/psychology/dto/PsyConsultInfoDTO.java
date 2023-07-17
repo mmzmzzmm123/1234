@@ -1,7 +1,7 @@
 package com.ruoyi.psychology.dto;
 
 import com.ruoyi.psychology.domain.PsyConsultWork;
-import com.ruoyi.psychology.vo.PsyConsultServeVO;
+import com.ruoyi.psychology.vo.PsyConsultServeConfigVO;
 import com.ruoyi.psychology.vo.PsyConsultVO;
 import lombok.Data;
 
@@ -21,7 +21,7 @@ public class PsyConsultInfoDTO implements Serializable
 
     private PsyConsultVO consult;
 
-    private PsyConsultServeVO serve;
+    private PsyConsultServeConfigVO serve;
 
     private List<PsyConsultWork> works;
 

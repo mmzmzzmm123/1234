@@ -8,6 +8,8 @@ import com.ruoyi.common.enums.BusinessType;
 import com.ruoyi.common.utils.SecurityUtils;
 import com.ruoyi.common.utils.poi.ExcelUtil;
 import com.ruoyi.psychology.domain.PsyConsult;
+import com.ruoyi.psychology.request.PsyAdminConsultReq;
+import com.ruoyi.psychology.request.PsyRefConsultServeReq;
 import com.ruoyi.psychology.service.IPsyConsultConfigService;
 import com.ruoyi.psychology.service.IPsyConsultService;
 import com.ruoyi.psychology.vo.PsyConsultVO;
@@ -52,6 +54,15 @@ public class PsyConsultController extends BaseController
         return getDataTable(list);
     }
 
+    @PreAuthorize("@ss.hasPermi('psychology:consult:list')")
+    @GetMapping("/adminList")
+    public TableDataInfo list(PsyAdminConsultReq psyConsult)
+    {
+        startPage();
+        List<PsyConsult> list = psyConsultService.getList(psyConsult);
+        return getDataTable(list);
+    }
+
     /**
      * 查询所有心理咨询师
      */
@@ -83,6 +94,17 @@ public class PsyConsultController extends BaseController
     public AjaxResult getInfo(@PathVariable("id") Long id)
     {
         return AjaxResult.success(psyConsultService.getOne(id));
+    }
+
+    /**
+     * 新增咨询服务配置
+     */
+    @PreAuthorize("@ss.hasPermi('psychology:consult:edit')")
+    @Log(title = "咨询服务配置", businessType = BusinessType.INSERT)
+    @PostMapping("/refConsultServe")
+    public AjaxResult refConsultServe(@RequestBody PsyRefConsultServeReq req)
+    {
+        return psyConsultService.refConsultServe(req);
     }
 
     /**

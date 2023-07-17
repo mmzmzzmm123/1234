@@ -5,7 +5,7 @@ import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
 import com.ruoyi.common.constant.NewConstants;
 import com.ruoyi.common.exception.UtilException;
-import com.ruoyi.common.vo.DateLimitUtilVo;
+import com.ruoyi.common.vo.DateLimitUtilVO;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -435,7 +435,7 @@ public final class NewDateUtil {
      * @since 2020-05-06
      * @return DateLimitUtilVo
      */
-    public static DateLimitUtilVo getDateLimit(String data){
+    public static DateLimitUtilVO getDateLimit(String data){
         //时间计算
         String startTime = null;
         String endTime = NewDateUtil.nowDateTime(NewConstants.DATE_FORMAT);
@@ -502,7 +502,7 @@ public final class NewDateUtil {
                     break;
             }
         }
-        return new DateLimitUtilVo(startTime, endTime);
+        return new DateLimitUtilVO(startTime, endTime);
     }
 
     /**
@@ -515,7 +515,7 @@ public final class NewDateUtil {
     public static List<String> getListDate(String data) {
 
         //获取30天的开始结束日期
-        DateLimitUtilVo dateLimit = NewDateUtil.getDateLimit(data);
+        DateLimitUtilVO dateLimit = NewDateUtil.getDateLimit(data);
 
         //定义日期集合
         List<String> date = new ArrayList<>();
@@ -615,7 +615,7 @@ public final class NewDateUtil {
     }
 
     public static void main(String[] args) {
-        DateLimitUtilVo dateLimit = getDateLimit(NewConstants.SEARCH_DATE_LATELY_7);
+        DateLimitUtilVO dateLimit = getDateLimit(NewConstants.SEARCH_DATE_LATELY_7);
         System.out.println(dateLimit.getStartTime());
         System.out.println(dateLimit.getEndTime());
     }

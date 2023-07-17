@@ -35,6 +35,10 @@ public class PsyConsultClass extends BasePlusEntity implements Serializable
     @Excel(name = "图标路径")
     private String url;
 
+    /** 跳转url */
+    @Excel(name = "跳转url")
+    private String linkUrl;
+
     /** 删除标志（0代表存在 1代表删除） */
     private String delFlag;
 

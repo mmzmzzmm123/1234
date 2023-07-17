@@ -65,6 +65,7 @@
       <el-table-column type="selection" width="55" align="center" />
       <el-table-column label="名称" align="center" prop="name" />
       <el-table-column label="排序" align="center" prop="sort" />
+      <el-table-column label="跳转url" align="center" prop="linkUrl" />
       <el-table-column label="图标路径" align="center" prop="url">
         <template slot-scope="scope">
           <image-preview :src="scope.row.url" :width="50" :height="50"/>
@@ -116,6 +117,9 @@
         </el-form-item>
         <el-form-item label="图标路径" prop="url">
           <image-upload v-model="form.url" :extraData="{}"/>
+        </el-form-item>
+        <el-form-item label="跳转url" prop="linkUrl">
+          <el-input v-model="form.linkUrl" type="textarea" placeholder="跳转url" />
         </el-form-item>
         <el-form-item label="启用" prop="status">
           <el-switch v-model="form.status" active-value="0" inactive-value="1"/>
@@ -195,6 +199,7 @@ export default {
         name: null,
         sort: 1,
         url: null,
+        linkUrl: null,
         delFlag: null,
         status: "0",
         createBy: null,
