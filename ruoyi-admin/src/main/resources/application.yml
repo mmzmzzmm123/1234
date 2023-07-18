@@ -166,7 +166,7 @@ wx:
     certSerialNo: 62558ec2489895381df13cfd07f2cc1ea53304d5
     privateKeyPath: classpath:cert/apiclient_key.pem #apiclient_key.pem证书文件的绝对路径或者以classpath:开头的类路径
     privateCertPath: classpath:cert/apiclient_cert.pem #apiclient_cert.pem证书文件的绝对路径或者以classpath:开头的类路径
-    payScoreNotifyUrl: http://xxx.xxx
+    payScoreNotifyUrl: https://foreverjade.cn/office/api/wxnotify
 tuangou:
   appKey: da13dfa2e5461f04
   appSecret: 055c3d639c6804b7609659da361ac0bc257f25bd

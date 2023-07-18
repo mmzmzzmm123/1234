@@ -1,6 +1,8 @@
 package com.ruoyi.office.service;
 
 import java.util.List;
+
+import com.github.binarywang.wxpay.bean.result.WxPayOrderQueryV3Result;
 import com.ruoyi.office.domain.TWxUserPackage;
 import com.ruoyi.office.domain.vo.BuyStorePackReq;
 import com.ruoyi.office.domain.vo.PrepayResp;
@@ -62,6 +64,8 @@ public interface ITWxUserPackageService
     public int deleteTWxUserPackageById(Long id);
 
     PrepayResp buy(BuyStorePackReq tWxUserPackage, Long id);
+
+    WxPayOrderQueryV3Result finish(PrepayResp vo, Long wxuserid);
 
     void wxNotify(String outTradeNo, String openid, Integer total, String s);
 }

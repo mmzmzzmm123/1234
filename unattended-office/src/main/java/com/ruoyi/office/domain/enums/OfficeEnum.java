@@ -61,6 +61,38 @@ public class OfficeEnum {
         }
     }
 
+    /**
+     * 购买套餐订单状态
+     */
+    public enum PackageOrderStatus {
+        TO_PAY(0, "待支付"), PAYED(1, "已支付");
+
+        private final Integer code;
+        private final String info;
+
+        PackageOrderStatus(Integer code, String info) {
+            this.code = code;
+            this.info = info;
+        }
+
+        public Integer getCode() {
+            return code;
+        }
+
+        public String getInfo() {
+            return info;
+        }
+
+        public static PackageOrderStatus GetValueByCode(Integer code) {
+            for (PackageOrderStatus e : PackageOrderStatus.values()) {
+                if (e.getCode().equals(code)) {
+                    return e;
+                }
+            }
+            throw new RuntimeException("枚举值错误");
+        }
+    }
+
     public enum CouponType {
         TIMES_CARD(1, "次数卡"), HOUR_CARD(2, "时长卡");
 

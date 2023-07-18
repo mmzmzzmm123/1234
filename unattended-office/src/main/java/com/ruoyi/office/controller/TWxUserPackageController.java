@@ -105,13 +105,5 @@ public class TWxUserPackageController extends BaseController {
     }
 
 
-    /**
-     * 新增用户套餐购买记录
-     */
-    @Log(title = "用户套餐购买" , businessType = BusinessType.INSERT)
-    @PostMapping("/buy")
-    public AjaxResult buy(@RequestBody BuyStorePackReq tWxUserPackage) {
-        final PrepayResp pre = tWxUserPackageService.buy(tWxUserPackage, SecurityUtils.getLoginUser().getWxUser().getId());
-        return AjaxResult.success(pre);
-    }
+
 }

@@ -8,6 +8,7 @@ import com.github.binarywang.wxpay.bean.notify.OriginNotifyResponse;
 import com.github.binarywang.wxpay.bean.notify.SignatureHeader;
 import com.github.binarywang.wxpay.bean.notify.WxPayOrderNotifyV3Result;
 import com.github.binarywang.wxpay.bean.notify.WxPayRefundNotifyV3Result;
+import com.github.binarywang.wxpay.bean.result.WxPayOrderQueryV3Result;
 import com.github.binarywang.wxpay.constant.WxPayConstants;
 import com.github.binarywang.wxpay.exception.WxPayException;
 import com.github.binarywang.wxpay.service.WxPayService;
@@ -708,6 +709,38 @@ public class ApiController extends BaseController {
         startPage();
         List<WxUserCouponResp> list = wxUserCouponService.invalid(req, SecurityUtils.getLoginUser().getWxUser().getId());
         return getDataTable(list);
+    }
+
+    /**
+     * 新增用户套餐购买记录
+     */
+    @Log(title = "用户套餐购买" , businessType = BusinessType.INSERT)
+    @PostMapping("/package/buy")
+    public AjaxResult buy(@RequestBody BuyStorePackReq tWxUserPackage) {
+//        long userWxId = SecurityUtils.getLoginUser().getWxUser().getId();
+        long userWxId = 9l;
+        final PrepayResp pre = tWxUserPackageService.buy(tWxUserPackage, userWxId);
+        return AjaxResult.success(pre);
+    }
+
+    /**
+     * 小程序使用微信使用prepayId支付成功后，回调通知
+     */
+    @ApiOperation("套餐支付查询")
+    @Log(title = "套餐支付查询", businessType = BusinessType.INSERT)
+    @PostMapping("/package/payquery")
+    public AjaxResult wxPayQuery(@RequestBody PrepayResp vo) {
+        try {
+            logger.info("/payquery:" + vo.toString());
+            WxPayOrderQueryV3Result v3Result = tWxUserPackageService.finish(vo, SecurityUtils.getLoginUser().getWxUser().getId());
+            if (v3Result == null)
+                logger.info("支付成功,微信已经回调");
+            else
+                logger.info("套餐购买查询 /package/payquery:" + v3Result.toString());
+            return AjaxResult.success();
+        } catch (Exception e) {
+            return AjaxResult.error(e.getMessage());
+        }
     }
 
 }

@@ -121,7 +121,7 @@ public class TRoomOrderController extends BaseController {
             if (v3Result == null)
                 logger.info("支付成功,微信已经回调");
             else
-                logger.info("/payquery:" + v3Result.toString());
+                logger.info("套餐购买查询 /roomOrder/payquery:" + v3Result.toString());
             return AjaxResult.success();
         } catch (Exception e) {
             return AjaxResult.error(e.getMessage());
