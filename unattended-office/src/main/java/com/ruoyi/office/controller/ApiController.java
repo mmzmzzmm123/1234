@@ -717,8 +717,8 @@ public class ApiController extends BaseController {
     @Log(title = "用户套餐购买" , businessType = BusinessType.INSERT)
     @PostMapping("/package/buy")
     public AjaxResult buy(@RequestBody BuyStorePackReq tWxUserPackage) {
-//        long userWxId = SecurityUtils.getLoginUser().getWxUser().getId();
-        long userWxId = 9l;
+        long userWxId = SecurityUtils.getLoginUser().getWxUser().getId();
+//        long userWxId = 9l;
         final PrepayResp pre = tWxUserPackageService.buy(tWxUserPackage, userWxId);
         return AjaxResult.success(pre);
     }
