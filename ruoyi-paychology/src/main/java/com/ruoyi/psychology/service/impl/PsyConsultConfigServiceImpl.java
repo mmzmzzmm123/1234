@@ -2,6 +2,7 @@ package com.ruoyi.psychology.service.impl;
 
 import com.ruoyi.common.core.domain.entity.SysDictData;
 import com.ruoyi.common.core.domain.entity.SysDictType;
+import com.ruoyi.common.utils.NewDateUtil;
 import com.ruoyi.psychology.dto.DateNumDTO;
 import com.ruoyi.psychology.mapper.PsyConsultConfigMapper;
 import com.ruoyi.psychology.service.IPsyConsultConfigService;
@@ -41,7 +42,6 @@ public class PsyConsultConfigServiceImpl implements IPsyConsultConfigService
         if (num == 0) {
             return list;
         }
-        String[] weekDays = { "周日", "周一", "周二", "周三", "周四", "周五", "周六" };
         Date date = new Date();
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(date);
@@ -49,11 +49,6 @@ public class PsyConsultConfigServiceImpl implements IPsyConsultConfigService
         for (int i = 1; i <= num; i++) {
             if (i > 1) {
                 calendar.add(Calendar.DATE, 1);
-            }
-
-            int w = calendar.get(Calendar.DAY_OF_WEEK) - 1;
-            if (w < 0) {
-                w = 0;
             }
 
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
@@ -64,7 +59,7 @@ public class PsyConsultConfigServiceImpl implements IPsyConsultConfigService
             dto.setDate(fm);
             dto.setYear(format[0]);
             dto.setMonth(format[1] + "月");
-            dto.setWeek(weekDays[w]);
+            dto.setWeek(NewDateUtil.getWeekOfDate(calendar));
             dto.setDay(format[2]);
             list.add(dto);
         }

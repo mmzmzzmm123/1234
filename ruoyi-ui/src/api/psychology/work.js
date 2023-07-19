@@ -9,6 +9,14 @@ export function listWork(query) {
   })
 }
 
+export function getWorks(query) {
+  return request({
+    url: '/psychology/work/getWorks',
+    method: 'get',
+    params: query
+  })
+}
+
 // 查询咨询服务详细
 export function getWork(id) {
   return request({

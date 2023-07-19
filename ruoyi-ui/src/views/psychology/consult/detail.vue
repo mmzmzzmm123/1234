@@ -6,23 +6,35 @@
       </div>
 
       <el-row>
-        <el-col :span="12">
+        <el-col :span="8">
           <el-form-item label="系统账号" prop="userName">
             <el-input maxlength="20" show-word-limit v-model="form.userName" :disabled="!!form.id" placeholder="请输入系统账号" />
           </el-form-item>
         </el-col>
-      </el-row>
-
-      <el-row>
-        <el-col :span="12">
+        <el-col :span="8">
           <el-form-item label="咨询师姓名" prop="nickName">
             <el-input maxlength="20" show-word-limit v-model="form.userName" :disabled="!!form.id" placeholder="请输入咨询师姓名" />
+          </el-form-item>
+        </el-col>
+        <el-col :span="8">
+          <el-form-item label="手机号码" prop="phonenumber">
+            <el-input maxlength="11" show-word-limit v-model="form.phonenumber" placeholder="请输入手机号码" />
           </el-form-item>
         </el-col>
       </el-row>
 
       <el-row>
-        <el-col :span="12">
+        <el-col :span="8">
+          <el-form-item label="邮箱" prop="email">
+            <el-input v-model="form.email" placeholder="请输入邮箱" />
+          </el-form-item>
+        </el-col>
+        <el-col :span="8">
+          <el-form-item label="简介" prop="info">
+            <el-input maxlength="100" show-word-limit v-model="form.info" placeholder="简介" />
+          </el-form-item>
+        </el-col>
+        <el-col :span="8">
           <el-form-item label="性别" prop="sex">
             <el-radio-group v-model="form.sex">
               <el-radio v-for="item in dict.type.consult_sex" :label="item.label">{{ item.label }}</el-radio>
@@ -32,43 +44,17 @@
       </el-row>
 
       <el-row>
-        <el-col :span="12">
-          <el-form-item label="手机号码" prop="phonenumber">
-            <el-input maxlength="11" show-word-limit v-model="form.phonenumber" placeholder="请输入手机号码" />
-          </el-form-item>
-        </el-col>
-      </el-row>
-      <el-row>
-        <el-col :span="12">
-          <el-form-item label="邮箱" prop="email">
-            <el-input v-model="form.email" placeholder="请输入邮箱" />
-          </el-form-item>
-        </el-col>
-      </el-row>
-      <el-row>
-        <el-col :span="12">
-          <el-form-item label="简介" prop="info">
-            <el-input maxlength="100" show-word-limit v-model="form.info" placeholder="简介" />
-          </el-form-item>
-        </el-col>
-      </el-row>
-      <el-row>
-        <el-col :span="12">
+        <el-col :span="8">
           <el-form-item label="咨询人数" prop="workNum">
             <el-input-number v-model="form.workNum" :min="0" placeholder="请输入咨询人数" />
           </el-form-item>
         </el-col>
-      </el-row>
-      <el-row>
-        <el-col :span="12">
+        <el-col :span="8">
           <el-form-item label="服务时长" prop="workTime">
             <el-input-number v-model="form.workTime" :min="0" placeholder="请输入服务时长" />
           </el-form-item>
         </el-col>
-      </el-row>
-
-      <el-row>
-        <el-col :span="12">
+        <el-col :span="8">
           <el-form-item label="从业年限" prop="workHours">
             <el-input-number v-model="form.workHours" :min="0" placeholder="请输入从业年限" />
           </el-form-item>
@@ -82,14 +68,12 @@
 <!--        </el-col>-->
 <!--      </el-row>-->
       <el-row>
-        <el-col :span="12">
+        <el-col :span="8">
           <el-form-item label="头像" prop="avatar">
             <image-upload v-model="form.avatar" :extraData="extraData"/>
           </el-form-item>
         </el-col>
-      </el-row>
-      <el-row>
-        <el-col :span="12">
+        <el-col :span="8">
           <el-form-item label="企业微信名片" prop="wxCard">
             <image-upload v-model="form.wxCard" :extraData="extraData"/>
           </el-form-item>
@@ -112,21 +96,17 @@
         </el-col>
       </el-row>
       <el-row>
-        <el-col :span="12">
+        <el-col :span="8">
           <el-form-item label="咨询寄语" prop="zxWord">
             <el-input maxlength="100" show-word-limit v-model="form.zxWord" placeholder="请输入咨询寄语" />
           </el-form-item>
         </el-col>
-      </el-row>
-      <el-row>
-        <el-col :span="12">
+        <el-col :span="8">
           <el-form-item label="咨询风格" prop="zxStyle">
             <el-input maxlength="100" show-word-limit v-model="form.zxStyle" placeholder="请输入咨询风格" />
           </el-form-item>
         </el-col>
-      </el-row>
-      <el-row>
-        <el-col :span="12">
+        <el-col :span="8">
           <el-form-item label="咨询须知" prop="notice">
             <el-input maxlength="100" show-word-limit v-model="form.notice" placeholder="请输入咨询须知" />
           </el-form-item>
@@ -183,7 +163,7 @@
       <el-row>
         <el-col :span="18">
           <el-form-item label="图文详情" prop="detail">
-            <editor v-model="form.detail" :min-height="192" :extraData="extraData"/>
+            <editor v-model="form.detail" :min-height="192" :height="240" :extraData="extraData"/>
           </el-form-item>
         </el-col>
       </el-row>

@@ -53,6 +53,7 @@ public class PsyConsultServeServiceImpl implements IPsyConsultServeService {
 
     @Override
     public List<PsyConsultServeVO> getConsultServeRef(PsyConsultServe req) {
+        // 咨询师过滤
         req.setStatus("0");
         req.setDelFlag("0");
         return psyConsultServeMapper.getConsultServeRef(req);

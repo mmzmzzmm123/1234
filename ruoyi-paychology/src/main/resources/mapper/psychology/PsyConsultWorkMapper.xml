@@ -11,28 +11,13 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <if test="id != null "> and id != #{id}</if>
     </select>
 
-    <update id="tombstonedByIds">
-        update psy_consult_work set del_flag = 1 where id in
-        <foreach collection="array" item="item" open="(" separator="," close=")">
-            #{item,jdbcType=BIGINT}
-        </foreach>
-    </update>
-
     <resultMap type="PsyConsultWork" id="PsyConsultWorkResult">
         <result property="id"    column="id"    />
         <result property="consultId"    column="consult_id"    />
-        <result property="consultName"    column="consult_name"    />
-        <result property="serveId"    column="serve_id"    />
-        <result property="serveName"    column="serve_name"    />
-        <result property="type"    column="type"    />
         <result property="day"    column="day"    />
         <result property="week"    column="week"    />
         <result property="timeStart"    column="time_start"    />
         <result property="timeEnd"    column="time_end"    />
-        <result property="time"    column="time"    />
-        <result property="num"    column="num"    />
-        <result property="buyNum"    column="buy_num"    />
-        <result property="delFlag"    column="del_flag"    />
         <result property="status"    column="status"    />
         <result property="createBy"    column="create_by"    />
         <result property="createTime"    column="create_time"    />
@@ -41,22 +26,33 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </resultMap>
 
     <sql id="selectPsyConsultWorkVo">
-        select id, consult_id, consult_name, serve_id, serve_name, type, day, week, time_start, time_end, time, num, buy_num, del_flag, status, create_by, create_time, update_by, update_time from psy_consult_work
+        select id, consult_id, day, week, time_start, time_end, status, create_by, create_time, update_by, update_time from psy_consult_work
     </sql>
 
     <select id="getList" parameterType="PsyConsultWork" resultMap="PsyConsultWorkResult">
         <include refid="selectPsyConsultWorkVo"/>
         <where>
             <if test="consultId != null "> and consult_id = #{consultId}</if>
-            <if test="serveId != null "> and serve_id = #{serveId}</if>
-            <if test="serveName != null  and serveName != ''"> and serve_name like concat('%', #{serveName}, '%')</if>
-            <if test="consultName != null  and consultName != ''"> and consult_name like concat('%', #{consultName}, '%')</if>
-            <if test="type != null  and type != ''"> and type = #{type}</if>
             <if test="timeStart != null "> and time_start <![CDATA[ >= ]]> #{timeStart}</if>
             <if test="timeEnd != null "> and time_end <![CDATA[ <= ]]> #{timeEnd}</if>
             <if test="status != null  and status != ''"> and status = #{status}</if>
-            <if test="delFlag != null  and delFlag != ''"> and del_flag = #{delFlag}</if>
         </where>
         order by time_start asc
+    </select>
+
+    <select id="getWorks" resultType="com.ruoyi.psychology.vo.PsyConsultWorkVO">
+        select b.nick_name, b.user_name, a.id, a.consult_id, a.day, a.week, a.time_start, a.time_end, a.status from psy_consult_work a inner join psy_consult b on a.consult_id = b.id
+        <where>
+            <if test="ids != null and ids.size() > 0">
+                and a.consult_id in
+                <foreach collection="ids" item="item" open="(" separator="," close=")">
+                    #{item,jdbcType=BIGINT}
+                </foreach>
+            </if>
+            <if test="start != null "> and a.day <![CDATA[ >= ]]> #{start}</if>
+            <if test="end != null "> and a.day <![CDATA[ <= ]]> #{end}</if>
+            <if test="status != null  and status != ''"> and a.status = #{status}</if>
+        </where>
+        order by a.day asc
     </select>
 </mapper>

@@ -29,9 +29,9 @@
             <el-select v-model="queryParams.cId" clearable>
               <el-option
                 v-for="item in consultList"
-                :key="item.consultId"
+                :key="item.id"
                 :label="item.nickName"
-                :value="item.consultId"
+                :value="item.id"
               />
             </el-select>
           </el-form-item>
@@ -232,7 +232,9 @@
 </template>
 
 <script>
-import { listServeConfig, getServeConfig, getServeRef, getConsultServeRef, delServeConfig, addServeConfig, updateServeConfig } from "@/api/psychology/serveConfig";
+import { listServeConfig, getServeConfig, getServeRef, delServeConfig, addServeConfig, updateServeConfig } from "@/api/psychology/serveConfig";
+import { getConsultAll } from "@/api/psychology/consult";
+
 import consult from "./consult";
 
 export default {
@@ -317,7 +319,7 @@ export default {
   },
   methods: {
     async getConsultServeRef() {
-      const res = await getConsultServeRef()
+      const res = await getConsultAll({ status: '0' })
       this.consultList = res.data
     },
     getRef(row) {

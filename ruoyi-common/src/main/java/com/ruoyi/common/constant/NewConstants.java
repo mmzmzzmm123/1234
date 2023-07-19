@@ -19,6 +19,8 @@ public class NewConstants {
     //验证码redis key前缀
     public static final String VALIDATE_REDIS_KEY_PREFIX = "validate_code_";
 
+    public static final String[] WEEK_DAYS = { "周日", "周一", "周二", "周三", "周四", "周五", "周六" };
+
 
     public static final String DATE_FORMAT = "yyyy-MM-dd HH:mm:ss";
     public static final String DATE_FORMAT_UTC = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'";

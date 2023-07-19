@@ -72,7 +72,6 @@ public class PsyConsultServiceImpl implements IPsyConsultService {
         PsyConsultVO consult = getOne(cId);
 
         PsyConsultWorkVO req = new PsyConsultWorkVO();
-        req.setServeId(sId);
         req.setConsultId(cId);
         req.setStatus("0");
         // t+6
@@ -85,12 +84,12 @@ public class PsyConsultServiceImpl implements IPsyConsultService {
         Date start = calendar.getTime();
         calendar.add(Calendar.DATE, 7);
         Date end = calendar.getTime();
-        req.setTimeStart(start);
-        req.setTimeEnd(end);
+//        req.setTimeStart(start);
+//        req.setTimeEnd(end);
         List<PsyConsultWork> works = psyConsultWorkService.getList(req);
-        List<PsyConsultWork> collect = works.stream().filter(i -> i.getNum() > 0).collect(Collectors.toList());
+//        List<PsyConsultWork> collect = works.stream().filter(i -> i.getNum() > 0).collect(Collectors.toList());
 
-        vo.setWorks(collect);
+//        vo.setWorks(collect);
         vo.setServe(serve);
         vo.setConsult(consult);
         return vo;

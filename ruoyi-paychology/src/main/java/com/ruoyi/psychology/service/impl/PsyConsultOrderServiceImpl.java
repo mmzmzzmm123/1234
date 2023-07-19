@@ -102,12 +102,10 @@ public class PsyConsultOrderServiceImpl implements IPsyConsultOrderService
         PsyConsultOrderVO order = getOne(id);
 
         order.setStatus(ConsultConstant.CONSULT_ORDER_STATUE_UNCONSULT);
-        order.setType(work.getType());
         order.setDay(work.getDay());
         order.setWeek(work.getWeek());
-        order.setTimeStart(work.getTimeStart());
-        order.setTimeEnd(work.getTimeEnd());
-        order.setTime(work.getTime());
+//        order.setTimeStart(work.getTimeStart());
+//        order.setTimeEnd(work.getTimeEnd());
         order.setNum(0);
         order.setBuyNum(1);
         // 更新预约数量
@@ -143,12 +141,10 @@ public class PsyConsultOrderServiceImpl implements IPsyConsultOrderService
 
     private void handleWork(PsyConsultOrderVO req) {
         PsyConsultWorkVO work = psyConsultWorkService.getOne(req.getWorkId());
-        req.setType(work.getType());
         req.setDay(work.getDay());
         req.setWeek(work.getWeek());
-        req.setTimeStart(work.getTimeStart());
-        req.setTimeEnd(work.getTimeEnd());
-        req.setTime(work.getTime());
+//        req.setTimeStart(work.getTimeStart());
+//        req.setTimeEnd(work.getTimeEnd());
 
         // 更新预约数量
         psyConsultWorkService.updateNum(req.getWorkId(), 0, 1);

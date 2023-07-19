@@ -295,6 +295,22 @@ public final class NewDateUtil {
     }
 
     /**
+     * 获取当前日期是星期几
+     *
+     * @param Calendar
+     * @return 当前日期是星期几
+     */
+    public static String getWeekOfDate(Calendar cal) {
+        if (cal == null) {
+            cal = Calendar.getInstance();
+        }
+        int w = cal.get(Calendar.DAY_OF_WEEK) - 1;
+        if (w < 0)
+            w = 0;
+        return NewConstants.WEEK_DAYS[w];
+    }
+
+    /**
      * 计算两个时间之间的天数差
      * @param beforeDay 开始时间
      * @param afterDay  结束时间

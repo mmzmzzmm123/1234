@@ -112,9 +112,9 @@ public class WechatPayV3ApiController extends BaseController {
                     if ("1".equals(work.getStatus())) {
                         return error("排班状态异常");
                     }
-                    if (work.getNum() == 0) {
-                        return error("当前班次已经约满");
-                    }
+//                    if (work.getNum() == 0) {
+//                        return error("当前班次已经约满");
+//                    }
                 }
 
                 if (wechatPayDTO.getOrderId() != null && wechatPayDTO.getOrderId() > 0) {

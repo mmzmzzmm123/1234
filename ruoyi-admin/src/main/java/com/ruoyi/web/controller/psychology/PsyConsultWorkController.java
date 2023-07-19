@@ -7,6 +7,8 @@ import com.ruoyi.common.core.page.TableDataInfo;
 import com.ruoyi.common.enums.BusinessType;
 import com.ruoyi.common.utils.poi.ExcelUtil;
 import com.ruoyi.psychology.domain.PsyConsultWork;
+import com.ruoyi.psychology.request.PsyConsultWorkReq;
+import com.ruoyi.psychology.request.PsyWorkReq;
 import com.ruoyi.psychology.service.IPsyConsultWorkService;
 import com.ruoyi.psychology.vo.PsyConsultWorkVO;
 import org.apache.commons.collections4.CollectionUtils;
@@ -29,6 +31,16 @@ public class PsyConsultWorkController extends BaseController
 {
     @Resource
     private IPsyConsultWorkService psyConsultWorkService;
+
+    /**
+     * 查询咨询服务列表
+     */
+    @PreAuthorize("@ss.hasPermi('psychology:work:list')")
+    @GetMapping("/getWorks")
+    public AjaxResult getWorks(PsyWorkReq req)
+    {
+        return AjaxResult.success(psyConsultWorkService.getWorks(req));
+    }
 
     /**
      * 查询咨询服务列表
@@ -71,13 +83,10 @@ public class PsyConsultWorkController extends BaseController
     @PreAuthorize("@ss.hasPermi('psychology:work:add')")
     @Log(title = "咨询服务", businessType = BusinessType.INSERT)
     @PostMapping
-    public AjaxResult add(@RequestBody PsyConsultWorkVO req)
+    public AjaxResult add(@RequestBody PsyConsultWorkReq req)
     {
-        List<PsyConsultWork> works = psyConsultWorkService.checkDataUnique(req);
-        if (!CollectionUtils.isEmpty(works)) {
-            return error("所选时段已存在排班，请修改时段后重试");
-        }
-        return toAjax(psyConsultWorkService.add(req));
+        psyConsultWorkService.doSave(req);
+        return AjaxResult.success();
     }
 
     /**
@@ -93,19 +102,5 @@ public class PsyConsultWorkController extends BaseController
             return error("所选时段已存在排班，请修改时段后重试");
         }
         return toAjax(psyConsultWorkService.update(req));
-    }
-
-    /**
-     * 删除咨询服务
-     */
-    @PreAuthorize("@ss.hasPermi('psychology:work:remove')")
-    @Log(title = "咨询服务", businessType = BusinessType.DELETE)
-    @DeleteMapping("/{ids}")
-    public AjaxResult remove(@PathVariable Long[] ids)
-    {
-        if (ids == null || ids.length == 0) {
-            return error("请选择数据进行删除");
-        }
-        return toAjax(psyConsultWorkService.deleteAll(ids));
     }
 }
