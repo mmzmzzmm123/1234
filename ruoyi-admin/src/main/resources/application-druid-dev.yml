@@ -125,7 +125,7 @@ bankapi:
 ocr:
     host: https://bizlicense.market.alicloudapi.com
     path: /rest/160601/ocr/ocr_business_license.json
-    appcode: a731eaeea66742e9b9cef56f9fa17bd6
+    appcode: dd9ab56a56694f85af0857f40e6ef221
 
 # 信用三期短信接口配置
 creditsms:
