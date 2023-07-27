@@ -86,8 +86,6 @@ public class SysUser extends BaseEntity
     /** 岗位组 */
     private Long[] postIds;
 
-    /** 角色ID */
-    private Long roleId;
 
     public SysUser()
     {
@@ -287,15 +285,6 @@ public class SysUser extends BaseEntity
         this.postIds = postIds;
     }
 
-    public Long getRoleId()
-    {
-        return roleId;
-    }
-
-    public void setRoleId(Long roleId)
-    {
-        this.roleId = roleId;
-    }
 
     @Override
     public String toString() {
