@@ -670,6 +670,20 @@ export default {
   display: block;
   z-index: 0;
 }
+.cu-item:not(:last-child)::after {
+  content: "";
+  display: block;
+  position: absolute;
+  left: 14upx;
+  top: 0;
+  z-index: 8;
+  width: 1upx;
+  height: 100%;
+  //border: 1upx dashed #AAAAAA;
+  background: linear-gradient(to bottom, #AAAAAA 0%, #AAAAAA 50%,transparent 50%);
+  background-size: 2upx 12upx;
+  background-repeat: repeat-y;
+}
 .cu-item-content {
   position: relative;
   //width: 638upx;

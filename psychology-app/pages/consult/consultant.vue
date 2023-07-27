@@ -36,6 +36,7 @@
             <view>{{ i.name }}</view>
           </view>
         </view>
+        <view v-if="opcity >= 1" class="tabs-bg"></view>
       </view>
     </view>
 
@@ -168,8 +169,8 @@ export default {
   },
   onPageScroll(e) {
     let scroll = e.scrollTop <= 0 ? 0 : e.scrollTop;
-    console.log(scroll)
-    console.log(this.opcity)
+    // console.log(scroll)
+    // console.log(this.opcity)
     let opcity = scroll / this.scrollH;
     if (this.opcity >= 1 && opcity >= 1) {
       return;
@@ -281,7 +282,7 @@ export default {
 
 <style lang="scss">
 .page {
-  background-color: rgba(248,248,248,1.000000);
+  background-color: #F8F8F8;
   position: relative;
   //width: 750upx;
   //height: 1800upx;
@@ -295,10 +296,10 @@ export default {
   background: linear-gradient(133deg, #FF8C65 0%, #FF6C39 100%);
 }
 .info {
-  z-index: 1;
+  //z-index: 1;
   margin-top: -86upx;
   width: 100%;
-  //height: 364upx;
+  height: 364upx;
   background: #FFFFFF;
   border-radius: 32upx 32upx 0upx 0upx;
 }
@@ -418,8 +419,8 @@ export default {
       color: #777777;
       font-size: 28upx;
       &.selected {
-        border-bottom: 8upx solid;
-        border-bottom-width: thin;
+        border-bottom: 6upx solid;
+        //border-bottom-width: thin;
         font-weight: 600;
         color: #FF703F;
       }
@@ -432,6 +433,11 @@ export default {
   position: sticky;
   top: 90upx;
   z-index: 998;
+}
+.tabs-bg {
+  background: #F8F8F8;
+  height: 10upx;
+  width: 100%;
 }
 .content-y {
   height: 1500upx;

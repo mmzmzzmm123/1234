@@ -105,8 +105,34 @@ export default {
   position: relative;
   height: 78upx;
   width: 100%;
-  padding-left: 100upx;
-  margin-bottom: 16upx;
+  padding-left: 64upx;
+  padding-bottom: 16upx;
+}
+.experience-item-icon {
+  background-color: rgba(255,255,255,1.000000);
+  border-radius: 100%;
+  position: absolute;
+  left: 20upx;
+  top: 0upx;
+  width: 20upx;
+  height: 20upx;
+  border: 2px solid rgba(255,112,63,1);
+  display: block;
+  z-index: 9;
+  text-align: center;
+}
+.experience-item:not(:last-child)::after {
+  content: "";
+  display: block;
+  position: absolute;
+  left: 34upx;
+  top: 0;
+  z-index: 8;
+  height: 100%;
+  width: 1upx;
+  background: linear-gradient(to bottom, #AAAAAA 0%, #AAAAAA 50%,transparent 50%);
+  background-size: 2upx 12upx;
+  background-repeat: repeat-y;
 }
 .experience-item-tiem {
   overflow-wrap: break-word;
@@ -122,18 +148,6 @@ export default {
   font-family: PingFangSC-Regular;
   text-align: left;
   margin-top: 8upx;
-}
-.experience-item-icon {
-  background-color: rgba(255,255,255,1.000000);
-  border-radius: 50%;
-  position: absolute;
-  left: 24upx;
-  top: 10upx;
-  width: 20upx;
-  height: 20upx;
-  border: 2px solid rgba(255,112,63,1);
-  display: flex;
-  flex-direction: column;
 }
 .tabs {
   background-color: rgba(255,255,255,1.000000);
