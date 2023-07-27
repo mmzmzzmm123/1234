@@ -19,6 +19,7 @@ ruoyi:
 server:
   # 服务器的HTTP端口，默认为8080
   port: 8080
+  # connectionTimeout: 180000000
   servlet:
     # 应用的访问路径
     context-path: /
@@ -58,6 +59,7 @@ spring:
   # 文件上传
   servlet:
      multipart:
+       # location: /tmp/undertow
        # 单个文件大小
        max-file-size:  1024MB
        # 设置总上传的文件大小
