@@ -126,7 +126,7 @@
           <el-button
             size="mini"
             type="text"
-            @click="handleDetail(scope.row.id)"
+            @click="handleDetail(scope.row.id, '1')"
             v-hasPermi="['psychology:order:edit']"
           >详情</el-button>
           <el-button
@@ -300,7 +300,7 @@ export default {
       this.multiple = !selection.length
     },
     /** 新增按钮操作 */
-    handleDetail(id) {
+    handleDetail(id, type) {
       getOrder(id).then(response => {
         this.open = true;
         this.order = response.data
@@ -332,6 +332,10 @@ export default {
 
         this.items = items
       });
+
+      if (type === '2') {
+        this.getList()
+      }
     },
     /** 修改按钮操作 */
     handleHx(id) {

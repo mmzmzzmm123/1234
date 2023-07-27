@@ -9,7 +9,7 @@
         </el-col>
         <el-col :span="8">
           <el-form-item label="咨询师姓名" prop="nickName">
-            <el-input size="mini" maxlength="20" show-word-limit v-model="form.userName" :disabled="!!form.id" placeholder="请输入咨询师姓名" />
+            <el-input size="mini" maxlength="20" show-word-limit v-model="form.nickName" :disabled="!!form.id" placeholder="请输入咨询师姓名" />
           </el-form-item>
         </el-col>
         <el-col :span="8">
@@ -185,7 +185,9 @@ export default {
       },
       eList: [],
       wayList: [],
-      form: {},
+      form: {
+        experience: []
+      },
       // 表单校验
       rules: {
         catId: [
@@ -246,6 +248,7 @@ export default {
       });
     },
     addItem(items) {
+      console.log(items)
       items.push(Object.assign({}, {
         time: '',
         info: ''

@@ -19,7 +19,7 @@
     <el-divider/>
     <template v-if="['1', '2'].includes(this.order.status)">
       <div style="font-size: 16px;font-weight: bold;color: #303133;margin-bottom: 20px">
-        咨询明细 <el-button  icon="el-icon-circle-plus-outline" type="text" @click="handleHx">核销</el-button>
+        咨询明细 <el-button :disabled="order.num === 0 || ['0', '3'].includes(order.status)" icon="el-icon-circle-plus-outline" type="text" @click="handleHx">核销</el-button>
       </div>
       <el-table :data="items" size="mini">
         <el-table-column label="咨询次数" align="center" prop="num" />
@@ -70,7 +70,7 @@ export default {
       this.$refs.formHx.setForm(this.order)
     },
     hxOk() {
-      this.$emit('handleDetail', this.order.id)
+      this.$emit('handleDetail', this.order.id, '2')
     }
   }
 }
