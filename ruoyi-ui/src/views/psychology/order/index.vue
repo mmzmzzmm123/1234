@@ -97,6 +97,12 @@
         </template>
       </el-table-column>
       <el-table-column label="服务次数" width="130" align="center" prop="num">
+        <template slot="header" slot-scope="{ column, $index }">
+          <span>服务次数</span>
+          <el-tooltip class="item" effect="dark" content="剩余次数/用户购买次数" placement="top-start">
+            <i class="el-icon-question"/>
+          </el-tooltip>
+        </template>
         <template slot-scope="scope">
           {{ scope.row.num }} / {{ scope.row.num + scope.row.buyNum }}
         </template>
