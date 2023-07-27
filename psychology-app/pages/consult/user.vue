@@ -138,6 +138,10 @@ export default {
     },
     toPage(id) {
       console.log(id)
+      if (!utils.checkLogin()) {
+        return this.openLoginConfirm()
+      }
+
       switch (id) {
         case 0:
         case 1:

@@ -18,7 +18,7 @@
             <text class="item-header-timer">{{ item.createTime }}</text>
             <view class="item-header-countdown" v-if="item.status === '0' && item.endPay > 0">
               <view>剩余</view>
-              <uni-countdown @timeup="toCancel(item.id)" color="#FF703F" splitorColor="#FF703F" :show-day="false" :minute="item.endPay" :second="0"/>
+              <uni-countdown color="#FF703F" splitorColor="#FF703F" :show-day="false" :minute="item.endPay" :second="0"/>
 <!--            <view class="item-header-countdown" v-if="item.status === 0">{{ item.endPay }}-->
             </view>
             <text class="item-header-status">{{ item.statusName }}</text>
@@ -281,6 +281,10 @@ export default {
       await this.getOrderList()
     },
     toDetail(id) {
+      if (!utils.checkLogin()) {
+        return this.openLoginConfirm()
+      }
+
       uni.navigateTo({
         url: "/pages/consult/orderInfo?id=" + id,
       });

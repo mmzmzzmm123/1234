@@ -30,7 +30,7 @@
         <view class="price-filter" @tap="doFilter(2)">{{ calPrice }}</view>
         <view class="filter" @tap="doFilter(3)">筛选</view>
       </view>
-      <consultant-list :consultantList="consultantList"></consultant-list>
+      <consultant-list :consultantList="consultantList" @toConsultant="toConsultant"></consultant-list>
     </view>
     <consult-tab-bar :currentIndex="0"></consult-tab-bar>
 
@@ -135,6 +135,14 @@
 
     },
     methods: {
+      toConsultant(id) {
+        if (!utils.checkLogin()) {
+          return this.openLoginConfirm()
+        }
+        uni.navigateTo({
+          url: "/pages/consult/consultant?id=" + id,
+        });
+      },
       resetQuery() {
         this.queryData.catId = null
         this.queryData.userName = null

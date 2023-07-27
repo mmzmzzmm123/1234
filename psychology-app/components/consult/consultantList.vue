@@ -36,9 +36,7 @@ export default {
     },
     methods: {
         toConsultant(consultant) {
-            uni.navigateTo({
-                url: "/pages/consult/consultant?id=" + consultant.id,
-            });
+          this.$emit('toConsultant', consultant.id)
         }
     }
 }

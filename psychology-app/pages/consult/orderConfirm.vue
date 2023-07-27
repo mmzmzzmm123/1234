@@ -188,6 +188,10 @@ export default {
       this.checkBox = e.detail.value[0]
     },
     async toBuy() {
+      if (!utils.checkLogin()) {
+        return this.openLoginConfirm()
+      }
+
       if (!this.checkBox) {
         return uni.showToast({
           icon: 'none',

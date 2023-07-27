@@ -82,11 +82,11 @@
       </button>
     </view>
 
-    <uni-popup ref="popup" type="dialog">
+    <uni-popup ref="popup" type="dialog" class="uni-popup-ok">
       <uni-popup-dialog mode="base" content="您尚未登录, 是否使用微信静默登录" :duration="2000" :before-close="true" @close="closeLoginConfirm" @confirm="confirmLogin"/>
     </uni-popup>
 
-    <uni-popup ref="selectServe" type="bottom">
+    <uni-popup ref="selectServe" type="bottom" class="uni-popup-ok">
       <view class="bottom-serve">
         <view class="bottom-serve-header">
           服务套餐
@@ -153,12 +153,13 @@ export default {
     };
   },
   created() {
+
+  },
+  async mounted() {
     this.userInfo = utils.getUserInfo()
     if (!utils.checkLogin()) {
       return this.openLoginConfirm()
     }
-  },
-  async mounted() {
     this.consultId = utils.getParam(location.href, "id")
     this.getConsultServe()
     this.getConsultWorks()
@@ -245,7 +246,10 @@ export default {
       this.$refs.selectServe.open('bottom')
     },
     toBuy(sId) {
-      this.confirmServe()
+      if (!utils.checkLogin()) {
+        this.confirmServe()
+        return this.openLoginConfirm()
+      }
       uni.navigateTo({
         url: "/pages/consult/orderConfirm?cId=" + this.consultId + '&sId=' + sId,
       });
@@ -572,6 +576,9 @@ export default {
     margin: 9upx 24upx 0 40upx;
     text-align: center;
   }
+}
+.uni-popup-ok {
+  z-index: 1000;
 }
 .bottom-serve {
   background-color: #fff;
