@@ -12,12 +12,12 @@ import com.ruoyi.common.event.publish.ConsultServePublisher;
 import com.ruoyi.common.utils.*;
 import com.ruoyi.common.vo.DateLimitUtilVO;
 import com.ruoyi.psychology.domain.PsyConsult;
-import com.ruoyi.psychology.domain.PsyConsultWork;
 import com.ruoyi.psychology.dto.PsyConsultInfoDTO;
 import com.ruoyi.psychology.mapper.PsyConsultMapper;
 import com.ruoyi.psychology.request.PsyAdminConsultReq;
 import com.ruoyi.psychology.request.PsyConsultReq;
 import com.ruoyi.psychology.request.PsyRefConsultServeReq;
+import com.ruoyi.psychology.request.PsyWorkReq;
 import com.ruoyi.psychology.service.IPsyConsultServeConfigService;
 import com.ruoyi.psychology.service.IPsyConsultServeService;
 import com.ruoyi.psychology.service.IPsyConsultService;
@@ -33,6 +33,7 @@ import org.springframework.transaction.support.TransactionTemplate;
 import org.springframework.util.CollectionUtils;
 
 import javax.annotation.Resource;
+import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -64,6 +65,27 @@ public class PsyConsultServiceImpl implements IPsyConsultService {
     @Resource
     private ISysConfigService configService;
 
+    @Override
+    public List<PsyConsultWorkVO> getConsultWorksById(Long id) {
+        PsyWorkReq req = new PsyWorkReq();
+        List<Long> ids = new ArrayList<>();
+        ids.add(id);
+        req.setIds(ids);
+        req.setStatus("0");
+
+        // t+6
+        Calendar calendar = Calendar.getInstance();
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        calendar.set(Calendar.HOUR_OF_DAY, 0);
+        calendar.set(Calendar.MINUTE, 0);
+        calendar.set(Calendar.SECOND, 0);
+        req.setStart(sdf.format(calendar.getTime()));
+        calendar.add(Calendar.DATE, 7);
+        req.setEnd(sdf.format(calendar.getTime()));
+
+        return psyConsultWorkService.getConsultWorks(req);
+    }
+
 
     @Override
     public PsyConsultInfoDTO getConsultInfoByServe(Long cId, Long sId) {
@@ -71,25 +93,7 @@ public class PsyConsultServiceImpl implements IPsyConsultService {
         PsyConsultServeConfigVO serve = psyConsultServeConfigService.getOne(sId);
         PsyConsultVO consult = getOne(cId);
 
-        PsyConsultWorkVO req = new PsyConsultWorkVO();
-        req.setConsultId(cId);
-        req.setStatus("0");
-        // t+6
-        Date now = new Date();
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTime(now);
-        calendar.set(Calendar.HOUR_OF_DAY, 0);
-        calendar.set(Calendar.MINUTE, 0);
-        calendar.set(Calendar.SECOND, 0);
-        Date start = calendar.getTime();
-        calendar.add(Calendar.DATE, 7);
-        Date end = calendar.getTime();
-//        req.setTimeStart(start);
-//        req.setTimeEnd(end);
-        List<PsyConsultWork> works = psyConsultWorkService.getList(req);
-//        List<PsyConsultWork> collect = works.stream().filter(i -> i.getNum() > 0).collect(Collectors.toList());
-
-//        vo.setWorks(collect);
+        vo.setWorks(getConsultWorksById(cId));
         vo.setServe(serve);
         vo.setConsult(consult);
         return vo;

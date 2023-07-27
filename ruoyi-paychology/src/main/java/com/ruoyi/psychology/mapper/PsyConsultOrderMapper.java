@@ -2,6 +2,9 @@ package com.ruoyi.psychology.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.ruoyi.psychology.domain.PsyConsultOrder;
+import com.ruoyi.psychology.dto.OrderDTO;
+import com.ruoyi.psychology.dto.OrderListDTO;
+import com.ruoyi.psychology.request.PsyAdminOrderReq;
 import com.ruoyi.psychology.vo.PsyConsultOrderVO;
 
 import java.util.List;
@@ -14,9 +17,11 @@ import java.util.List;
  */
 public interface PsyConsultOrderMapper extends BaseMapper<PsyConsultOrder>
 {
-    List<PsyConsultOrder> getList(PsyConsultOrderVO req);
+    List<PsyConsultOrder> getList(PsyAdminOrderReq req);
 
-    List<PsyConsultOrderVO> getOrderList(PsyConsultOrderVO req);
+    List<OrderListDTO> getOrderList(PsyConsultOrderVO req);
+
+    OrderDTO getOrderDetail(Long id);
 
     int tombstonedByIds(Long[] ids);
 }

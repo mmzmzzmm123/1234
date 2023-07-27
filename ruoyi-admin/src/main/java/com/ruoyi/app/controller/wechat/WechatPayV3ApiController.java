@@ -107,20 +107,15 @@ public class WechatPayV3ApiController extends BaseController {
                 content = "预约心理咨询服务";
 
                 // 新增支付单时需要校验服务库存
-                if (wechatPayDTO.getOrderId() == null && wechatPayDTO.getWorkId() != null) {
-                    PsyConsultWorkVO work = workService.getOne(wechatPayDTO.getWorkId());
-                    if ("1".equals(work.getStatus())) {
-                        return error("排班状态异常");
+                if (wechatPayDTO.getOrderId() == null && wechatPayDTO.getWorkId() > 0) {
+                    if (!workService.checkWork(wechatPayDTO.getWorkId(), wechatPayDTO.getConsultId(), wechatPayDTO.getTime())) {
+                        return error("当前班次已经约满");
                     }
-//                    if (work.getNum() == 0) {
-//                        return error("当前班次已经约满");
-//                    }
                 }
 
-                if (wechatPayDTO.getOrderId() != null && wechatPayDTO.getOrderId() > 0) {
-                    // 作废之前订单   时间紧张,后续再优化
+                if (wechatPayDTO.getOrderId() != null) {
                     PsyConsultOrderVO one = psyConsultOrderService.getOne(wechatPayDTO.getOrderId());
-                    if (ConsultConstant.CONSULT_ORDER_STATUE_CREATED != one.getStatus()) {
+                    if (!ConsultConstant.CONSULT_ORDER_STATUE_CREATED.equals(one.getStatus())) {
                         return error("订单状态异常,无法支付");
                     }
                 }

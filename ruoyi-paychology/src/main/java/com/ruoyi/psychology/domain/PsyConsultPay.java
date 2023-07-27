@@ -55,6 +55,6 @@ public class PsyConsultPay extends BasePlusEntity implements Serializable
 
     /** 支付状态(1-待支付,2-已支付，3-取消支付) */
     @Excel(name = "支付状态(1-待支付,2-已支付，3-取消支付)")
-    private Integer status;
+    private String status;
 
 }

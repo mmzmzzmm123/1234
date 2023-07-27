@@ -3,6 +3,8 @@ package com.ruoyi.app.controller.psychology;
 import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.psychology.constant.ConsultConstant;
+import com.ruoyi.psychology.dto.OrderDTO;
+import com.ruoyi.psychology.dto.OrderListDTO;
 import com.ruoyi.psychology.service.IPsyConsultOrderService;
 import com.ruoyi.psychology.service.IPsyConsultServeService;
 import com.ruoyi.psychology.service.IPsyConsultService;
@@ -38,23 +40,28 @@ public class AppPsyConsultOrderController extends BaseController
         return AjaxResult.success(psyConsultOrderService.getOne(id));
     }
 
+    @GetMapping(value = "/getOrderDetail/{id}")
+    public AjaxResult getOrderDetail(@PathVariable("id") Long id)
+    {
+        return AjaxResult.success(psyConsultOrderService.getOrderDetail(id));
+    }
+
     /**
      * 获取订单列表
      */
     @PostMapping(value = "/getOrderList")
     public AjaxResult getOrderList(@RequestBody PsyConsultOrderVO req)
     {
-        List<PsyConsultOrderVO> collect = psyConsultOrderService.getOrderList(req).stream().filter(i -> ConsultConstant.CONSULT_ORDER_STATUE_CANCELED != i.getStatus()).collect(Collectors.toList());
-        return AjaxResult.success(collect);
+        return AjaxResult.success(psyConsultOrderService.getOrderList(req));
     }
 
     /**
-     * 取消
+     * 咨询
      */
-    @GetMapping(value = "/doConsult/{id}/{workId}")
-    public AjaxResult doConsult(@PathVariable("id") Long id, @PathVariable("workId") Long workId)
+    @PostMapping(value = "/doConsult/{id}/{workId}/{time}")
+    public AjaxResult doConsult(@PathVariable("id") Long id, @PathVariable("workId") Long workId, @PathVariable("time") Integer time)
     {
-        return AjaxResult.success(psyConsultOrderService.doConsult(id, workId));
+        return AjaxResult.success(psyConsultOrderService.doConsult(id, workId, time));
     }
 
     /**

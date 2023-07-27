@@ -12,8 +12,24 @@ export function listOrder(query) {
 // 查询咨询订单详细
 export function getOrder(id) {
   return request({
+    url: '/psychology/order/getDetail/' + id,
+    method: 'get'
+  })
+}
+
+export function getInfo(id) {
+  return request({
     url: '/psychology/order/' + id,
     method: 'get'
+  })
+}
+
+// 核销
+export function hx(data) {
+  return request({
+    url: '/psychology/order/hx',
+    method: 'post',
+    data: data
   })
 }
 

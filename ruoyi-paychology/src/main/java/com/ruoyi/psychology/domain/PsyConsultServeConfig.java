@@ -1,5 +1,6 @@
 package com.ruoyi.psychology.domain;
 
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.ruoyi.common.annotation.Excel;
 import com.ruoyi.common.core.domain.BasePlusEntity;
@@ -28,9 +29,15 @@ public class PsyConsultServeConfig extends BasePlusEntity implements Serializabl
     @Excel(name = "咨询形式 语音咨询、视频咨询、面对面咨询")
     private Integer mode;
 
+    @TableField(exist = false)
+    private String modeName;
+
     /** 服务类型 单次咨询 套餐咨询 */
     @Excel(name = "服务类型 单次咨询 套餐咨询")
     private Integer type;
+
+    @TableField(exist = false)
+    private String typeName;
 
     /** 服务名称 */
     @Excel(name = "服务名称")

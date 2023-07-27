@@ -68,6 +68,24 @@ export const deletedOrNormal = [
   { label: '已删除', value: 1 }
 ]
 
+export const orderStatus = [
+  { label: '全部', value: '' },
+  { label: '待付款', value: '0' },
+  { label: '进行中', value: '1' },
+  { label: '已完成', value: '2' },
+  { label: '已取消', value: '3' }
+]
+
+export const payStatus = [
+  { label: '全部', value: '' },
+  { label: '未支付', value: '1' },
+  { label: '支付成功', value: '2' },
+  { label: '退款中', value: '3' },
+  { label: '部分退', value: '4' },
+  { label: '全单退', value: '5' },
+  { label: '退款失败', value: '6' },
+]
+
 /**
  * 暂时弃用
  * @type {*[]}

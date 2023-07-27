@@ -7,12 +7,15 @@ import com.ruoyi.psychology.request.PsyConsultReq;
 import com.ruoyi.psychology.dto.PsyConsultInfoDTO;
 import com.ruoyi.psychology.request.PsyRefConsultServeReq;
 import com.ruoyi.psychology.vo.PsyConsultVO;
+import com.ruoyi.psychology.vo.PsyConsultWorkVO;
 
 import java.util.List;
 
 public interface IPsyConsultService {
 
     PsyConsultInfoDTO getConsultInfoByServe(Long cId, Long sId);
+
+    List<PsyConsultWorkVO> getConsultWorksById(Long id);
 
     PsyConsultVO getOne(Long id);
 

@@ -41,7 +41,7 @@ public class PsyConsultWork extends BasePlusEntity implements Serializable
     private String live;
 
     /** 已预约时间 */
-    private String death;
+    private String used;
 
     /** 咨询时段 */
     private String timeEnd;

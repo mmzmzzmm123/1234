@@ -15,9 +15,11 @@ public class WechatPayVO implements Serializable {
     private BigDecimal amount;
 
     // 咨询服务
+    private Long consultId;
     private Long serveId;
     private Long workId;
     private Long orderId;
+    private Integer time;
 
     private String module;
 

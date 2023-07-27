@@ -1,12 +1,10 @@
 package com.ruoyi.psychology.vo;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import com.ruoyi.common.core.domain.BaseValObj;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 import java.io.Serializable;
-import java.util.Date;
 
 /**
  * 咨询服务对象 psy_consult_work
@@ -37,6 +35,10 @@ public class PsyConsultWorkVO extends BaseValObj implements Serializable
     /** 咨询时段 */
     private String timeEnd;
 
-    /** 状态（0正常 1停用） */
+    /** 状态（0正常 1休息） */
     private String status;
+
+    private String live;
+    private String used;
+
 }

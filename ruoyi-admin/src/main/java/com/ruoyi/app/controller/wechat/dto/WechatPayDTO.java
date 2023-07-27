@@ -13,9 +13,11 @@ public class WechatPayDTO implements Serializable {
     private Integer gaugeId;
 
     // 咨询服务
+    private Long consultId;
     private Long serveId;
     private Long workId;
     private Long orderId;
+    private Integer time;
 
     private BigDecimal amount;
 

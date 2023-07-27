@@ -85,9 +85,9 @@ public class WxPayTest {
                     if ("1".equals(work.getStatus())) {
                         System.out.println("排班状态异常");
                     }
-                    if (work.getNum() == 0) {
-                        System.out.println("当前班次已经约满");
-                    }
+//                    if (work.getNum() == 0) {
+//                        System.out.println("当前班次已经约满");
+//                    }
                 }
                 break;
         }
@@ -102,7 +102,7 @@ public class WxPayTest {
 
     @Test
     public void notifyTest() {
-        String trade = "CON_DJ20230630170811000000842714";
+        String trade = "CON_DJ20230726173236000000847088";
         String order = "1222";
         wechatPayV3ApiService.wechatPayNotify(trade, order);
     }

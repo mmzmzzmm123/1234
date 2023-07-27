@@ -9,6 +9,14 @@ export default {
       return [];
     }
   },
+  getOrderDetail: async (id) => {
+    let res = await httprequest.get(`/app/consult/order/getOrderDetail/` + id);
+    if (res.code == 200) {
+      return res.data;
+    } else {
+      return [];
+    }
+  },
   getOrderInfo: async (id) => {
     let res = await httprequest.get(`/app/consult/order/getOrderInfo/` + id);
     if (res.code == 200) {
@@ -17,8 +25,8 @@ export default {
       return [];
     }
   },
-  getConsultInfoByServe: async (id) => {
-    let res = await httprequest.get(`/app/consult/order/getConsultInfoByServe/` + id);
+  getConsultInfoByServe: async (cId, sId) => {
+    let res = await httprequest.get(`/app/consult/order/getConsultInfoByServe/` + cId + '/' + sId);
     if (res.code == 200) {
       return res.data;
     } else {
@@ -28,14 +36,14 @@ export default {
       });
     }
   },
-  doConsult: async (id, workId) => {
-    let res = await httprequest.get(`/app/consult/order/doConsult/` + id + '/' + workId);
-    if (res.code == 200) {
+  doConsult: async (id, workId, time) => {
+    let res = await httprequest.post(`/app/consult/order/doConsult/` + id + '/' + workId + '/' + time);
+    if (res.code == 200 && res.data !== -1) {
       return 1;
     } else {
       uni.showToast({
         icon: "error",
-        title: "取消失败",
+        title: "操作失败",
       });
     }
   },

@@ -1,5 +1,6 @@
 package com.ruoyi.psychology.domain;
 
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.ruoyi.common.annotation.Excel;
 import com.ruoyi.common.core.domain.BasePlusEntity;
@@ -113,6 +114,9 @@ public class PsyConsult extends BasePlusEntity implements Serializable
     @Excel(name = "状态", readConverterExp = "0=正常,1=停用")
     private String status;
 
+    // 今日可约
+    @TableField(exist = false)
+    private Integer buy;
 
     
 }

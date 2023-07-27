@@ -34,6 +34,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="type != null "> and type = #{type}</if>
             <if test="payType != null "> and pay_type = #{payType}</if>
             <if test="author != null  and author != ''"> and author = #{author}</if>
+            <if test="userName != null  and userName != ''"> and user_name = #{userName}</if>
             <if test="url != null  and url != ''"> and url = #{url}</if>
             <if test="iconUrl != null  and iconUrl != ''"> and icon_url = #{iconUrl}</if>
             <if test="price != null "> and price = #{price}</if>

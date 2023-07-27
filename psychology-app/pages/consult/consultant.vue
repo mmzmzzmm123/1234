@@ -1,205 +1,252 @@
 <template>
-  <view class="course">
-    <view class="page">
-      <view class="header">
-        <uni-icons type="closeempty" size="24" class="header-icon-left" @tap="goHome"/>
-        <text class="header-title">咨询师详情</text>
-        <uni-icons  type="more-filled" size="24" class="header-icon-right"/>
-      </view>
-      <view class="info">
-        <view class="info-avatar">
-          <image :src="consultInfo.avatar" class="info-avatar-img"/>
-          <view class="info-content">
-            <view class="info-content-view">
-              <text class="info-content-userName">{{ consultInfo.userName }}</text>
-              <view class="info-content-image">
-                <uni-icons  type="location" size="14" class="icon_location"/>
-                <text class="info-content-gps">四川-成都</text>
-              </view>
-            </view>
-            <view class="info-content-tags">
-              <view class="info-content-tag" v-for="tag in tabs">
-                <text class="info-content-tag-text">{{ tag }}</text>
-              </view>
-            </view>
-            <text class="info-content-info">{{ consultInfo.info }}</text>
-          </view>
-        </view>
-
-        <view class="info-nums">
-          <view class="info-nums-item">
-            <view class="info-nums-item-num">{{ consultInfo.workNum }}人</view>
-            <view class="info-nums-item-title">咨询人数</view>
-          </view>
-          <view class="info-nums-item">
-            <text class="info-nums-item-num">{{ consultInfo.workTime }}小时</text>
-            <text class="info-nums-item-title">服务时长</text>
-          </view>
-          <view class="info-nums-item">
-            <text class="info-nums-item-num">{{ consultInfo.workHours }}小时</text>
-            <text class="info-nums-item-title">服务时长</text>
-          </view>
-        </view>
-      </view>
-
-      <view class="segmented-main">
-        <view class="uni-padding-wrap uni-common-mt">
-          <uni-segmented-control :current="current" :values="items" style-type="text" active-color="#ff703f" @clickItem="onClickItem" />
-        </view>
-        <view class="content">
-          <view >
-            <view v-if="current === 0" class="serve">
-              <text class="serve-title">咨询服务</text>
-              <view class="serve-conten">
-                <view class="serve-conten-item" v-for="item in serveList">
-                  <view class="serve-conten-item-header">
-                    <image v-if="item.name === '面对面咨询'" src="/static/consult/detail/serve1.png" class="serve-conten-item-icon"/>
-                    <image v-else-if="item.name === '视频咨询'" src="/static/consult/detail/serve2.png" class="serve-conten-item-icon"/>
-                    <image v-else-if="item.name === '语音咨询'" src="/static/consult/detail/serve3.png" class="serve-conten-item-icon"/>
-                    <text class="serve-conten-item-name">{{ item.name }}</text>
-                    <view class="serve-conten-item-price">
-                      <text class="serve-conten-item-price-text">¥</text>
-                      <text class="serve-conten-item-price-text">{{ item.price }}</text>
-                      <text class="serve-conten-item-price-text">元/次</text>
-                    </view>
-                  </view>
-                  <view class="serve-info">
-                    <text class="serve-info-text">{{ item.info }}</text>
-                    <button @tap="toBuy(item)" class="serve-info-btn">
-                      立即预约
-                    </button>
-                  </view>
-                </view>
-              </view>
-              <view class="serve-more">
-                <text class="serve-more-title" @tap="goHome">更多服务 > </text>
-              </view>
-            </view>
-          </view>
-
-          <view v-if="current === 1">
-            <text class="content-text">选项卡2的内容</text>
-          </view>
-
-          <view v-if="current === 2">
-            <view class="consult-desc" v-html="consultInfo.detail"/>
-          </view>
-
-          <view v-if="current === 3">
-            <text class="content-text">选项卡4的内容</text>
-          </view>
-        </view>
-      </view>
-
-      <view class="page-bottom">
-        <view class="page-bottom-image" @tap="goHome">
-          <image src="/static/course/menu/index.png" class="page-bottom-icon"/>
-          <text class="page-bottom-home">首页</text>
-        </view>
-        <button @tap="buy" class="page-bottom-btn">
-          <text class="text_26">立即预约</text>
-        </button>
-      </view>
-
-      <uni-popup ref="popup" type="dialog">
-        <uni-popup-dialog mode="base" content="您尚未登录, 是否使用微信静默登录" :duration="2000" :before-close="true" @close="closeLoginConfirm" @confirm="confirmLogin"/>
-      </uni-popup>
-
-      <uni-popup ref="selectServe" type="bottom">
-        <view class="serve serve-model">
-          <uni-icons type="closeempty" size="24" class="serve-title-ext" @tap="closeServe"/>
-          <view class="serve-conten">
-            <view class="serve-conten-item" v-for="item in serveList">
-              <view class="serve-conten-item-header">
-                <image v-if="item.name === '面对面咨询'" src="/static/consult/detail/serve1.png" class="serve-conten-item-icon"/>
-                <image v-else-if="item.name === '视频咨询'" src="/static/consult/detail/serve2.png" class="serve-conten-item-icon"/>
-                <image v-else-if="item.name === '语音咨询'" src="/static/consult/detail/serve3.png" class="serve-conten-item-icon"/>
-                <text class="serve-conten-item-name">{{ item.name }}</text>
-                <view class="serve-conten-item-price">
-                  <text class="serve-conten-item-price-text">¥</text>
-                  <text class="serve-conten-item-price-text">{{ item.price }}</text>
-                  <text class="serve-conten-item-price-text">元/次</text>
-                </view>
-              </view>
-              <view class="serve-info">
-                <text class="serve-info-text">{{ item.info }}</text>
-                <button @tap="toBuy(item)" class="serve-info-btn">
-                  立即预约
-                </button>
-              </view>
-            </view>
-          </view>
-          <view class="serve-more">
-            <text class="serve-more-title" @tap="goHome">更多服务 > </text>
-          </view>
-        </view>
-      </uni-popup>
+  <view class="page">
+    <view class="header">
+      <uni-nav-bar  height="88upx" :backgroundColor="`rgba(255,255,255,${opcity})`" fixed left-icon="closeempty" right-icon="more-filled" :border="false" title="咨询师详情" @clickLeft="goHome"/>
     </view>
+
+    <view class="info">
+      <view class="info-header">
+        <image :src="consultInfo.avatar" class="info-avatar-img"/>
+        <view class="info-content">
+          <view class="info-content-userName">
+            <text>{{ consultInfo.userName }}</text>
+          </view>
+          <view class="info-content-info">{{ consultInfo.info }}</view>
+        </view>
+      </view>
+
+      <view class="info-nums">
+        <view class="info-nums-item">
+          <view class="info-nums-item-num">{{ consultInfo.workNum }}人</view>
+          <view class="info-nums-item-title">咨询人数</view>
+        </view>
+        <view class="info-nums-item">
+          <text class="info-nums-item-num">{{ consultInfo.workTime }}小时</text>
+          <text class="info-nums-item-title">服务时长</text>
+        </view>
+        <view class="info-nums-item">
+          <text class="info-nums-item-num">{{ consultInfo.workHours }}小时</text>
+          <text class="info-nums-item-title">服务时长</text>
+        </view>
+      </view>
+
+      <view class="tabs segmented-main" :style="{marginTop: opcity >= 0.9 ? '88upx' : '24upx'}">
+        <view class="tabs-list">
+          <view v-for="i in items" class="tab" :class="{ selected: mainCur === i.id }" @tap="tabSelect(i.id)">
+            <view>{{ i.name }}</view>
+          </view>
+        </view>
+      </view>
+    </view>
+
+    <view>
+      <scroll-view class="content-y" scroll-y scroll-with-animation :scroll-into-view="'main-'+mainCur" @scroll="scroll">
+        <view class="serve" key="0" id="main-0">
+          <text class="serve-title">服务套餐</text>
+          <serve-list :serveList="serveList" :num="3" @toBuy="toBuy"/>
+          <view class="serve-more" @tap="openMore">
+            更多服务 >
+          </view>
+        </view>
+
+        <view key="1" id="main-1" class="course">
+          <view class="course-header">
+            <text class="course-title">TA的心理课</text>
+            <view class="course-more" @tap="toCourseMore">
+              查看更多 >
+            </view>
+          </view>
+          <course :courseList="courseList"/>
+        </view>
+
+        <view key="2" id="main-2" class="consult-desc">
+          <consult-desc :info="consultInfo"/>
+<!--          <view class="consult-detail" v-html="consultInfo.detail"></view>-->
+        </view>
+
+        <view  key="3" id="main-3" class="content-time">
+          <view class="content-time-title">可约时间</view>
+          <time-box ref="timeBox" @doOk="setWorkData"/>
+        </view>
+      </scroll-view>
+    </view>
+
+    <view class="page-bottom">
+      <view class="page-bottom-image" @tap="goHome">
+        <image src="/static/course/menu/index.png" class="page-bottom-icon"/>
+        <text class="page-bottom-home">首页</text>
+      </view>
+      <button @tap="buy" class="page-bottom-btn">
+        <text class="text_26">立即预约</text>
+      </button>
+    </view>
+
+    <uni-popup ref="popup" type="dialog">
+      <uni-popup-dialog mode="base" content="您尚未登录, 是否使用微信静默登录" :duration="2000" :before-close="true" @close="closeLoginConfirm" @confirm="confirmLogin"/>
+    </uni-popup>
+
+    <uni-popup ref="selectServe" type="bottom">
+      <view class="bottom-serve">
+        <view class="bottom-serve-header">
+          服务套餐
+        </view>
+        <uni-icons type="closeempty" size="16" class="bottom-close" @tap="closeServe"/>
+        <serve-list :serveList="serveList" :num="99" @toBuy="toBuy"/>
+      </view>
+    </uni-popup>
   </view>
 </template>
 
 <script>
+import timeBox from '@/components/consult/detail/timeBox.vue'
+import course from '@/components/consult/detail/course.vue'
+import consultDesc from '@/components/consult/detail/consultDesc.vue'
+import serveList from '@/components/consult/detail/serveList.vue'
 import utils from "@/utils/common";
+import indexServer from '@/server/consult/index'
 import consultServer from "@/server/consult/consult";
 import loginServer from '@/server/login'
 import wxJS from "@/server/wxJS.js"
 export default {
+  components: {timeBox, serveList, course, consultDesc },
   data() {
     return {
-      items: ['服务套餐', 'TA的心理课', '老师介绍', '可约时间'],
-      current: 0,
-
-      userInfo: {},
+      mainCur: 0,
+      verticalNavTop: 0,
+      height: 64, //header高度
+      top: 0, //标题图标距离顶部距离
+      scrollH: 200, //滚动总高度
+      opcity: 0,
+      dateList: [],
+      works: [],
       tabs: [],
       serveList: [],
+      courseList: [],
+      items: [
+        {
+          id: 0,
+          name: '服务套餐'
+        },
+        {
+          id: 1,
+          name: 'TA的心理课'
+        },
+        {
+          id: 2,
+          name: '老师介绍'
+        },
+        {
+          id: 3,
+          name: '可约时间'
+        }],
+      current: 0,
+      userInfo: {},
       consultInfo: {},
       consultId: 0,
       redirectUri:location.href,
       currentCatalogue: {},
+      scrollTop: 0,
+      old: {
+        scrollTop: 0
+      }
     };
   },
-  async created() {
-    this.consultId = utils.getParam(location.href, "id")
-    await this.getConsultInfo()
-    await this.getConsultServe()
-    if (this.consultInfo.tabs) {
-      this.tabs = this.consultInfo.tabs.split(',')
-    }
-    // this.share()
-  },
-  mounted() {
-    // this.userInfo = uni.getStorageSync("userInfo")
+  created() {
     this.userInfo = utils.getUserInfo()
-    console.log(this.consultId)
     if (!utils.checkLogin()) {
       return this.openLoginConfirm()
     }
   },
+  async mounted() {
+    this.consultId = utils.getParam(location.href, "id")
+    this.getConsultServe()
+    this.getConsultWorks()
+    this.getDates()
+    await this.getConsultInfo()
+    await this.getConsultCourseByName()
+    this.openTime()
+  },
+  onPageScroll(e) {
+    let scroll = e.scrollTop <= 0 ? 0 : e.scrollTop;
+    console.log(scroll)
+    console.log(this.opcity)
+    let opcity = scroll / this.scrollH;
+    if (this.opcity >= 1 && opcity >= 1) {
+      return;
+    }
+    this.opcity = opcity
+  },
   methods: {
-    onClickItem(e) {
-      if (this.current !== e.currentIndex) {
-        this.current = e.currentIndex
-      }
+    toCourseMore () {
+      uni.navigateTo({
+        url: "/pages/course/class",
+      })
+    },
+    tabSelect(id) {
+      this.mainCur = id
+    },
+    scroll(e) {
+      // console.log(e.detail.scrollTop)
     },
     async getConsultInfo() {
       this.consultInfo = await consultServer.getConsultInfo(this.consultId)
+      if (this.consultInfo.tabs) {
+        const list = []
+        const tabs = this.consultInfo.tabs.split(',')
+        const items = JSON.parse(this.consultInfo.way)
+        console.log(items)
+        tabs.forEach(a => {
+          const it = {
+            name: a,
+            child: []
+          }
+          items.filter(b => b[0] === a).forEach(c => {
+            it.child.push(c[1])
+          })
+          list.push(it)
+        })
+
+        this.consultInfo.tabList = list
+      }
+
+      this.consultInfo.experiences = this.consultInfo.experience && this.consultInfo.experience !== '[]' ? JSON.parse(this.consultInfo.experience) : []
+    },
+    async getConsultCourseByName() {
+      this.courseList = await consultServer.getConsultCourseByName(this.consultInfo.userName)
     },
     async getConsultServe() {
       this.serveList = await consultServer.getConsultServe(this.consultId)
+    },
+    async getConsultWorks() {
+      this.works = await consultServer.getConsultWorksById(this.consultId)
+    },
+    async getDates() {
+      this.dateList = await indexServer.getDates(7);
+    },
+    openTime() {
+      this.$refs.timeBox.getWorkList(this.works, this.dateList)
+    },
+    setWorkData(workId, time, workName) {
+      // 缓存一小时
+      utils.put('time', time, 3600)
+      utils.put('workId', workId, 3600)
+      utils.put('workName', workName, 3600)
     },
     goHome() {
       uni.redirectTo({
         url: "/pages/consult/index",
       })
     },
+    openMore() {
+      this.$refs.selectServe.open('bottom')
+    },
     buy() {
       this.$refs.selectServe.open('bottom')
     },
-    toBuy(item) {
-      console.log(item)
+    toBuy(sId) {
       this.confirmServe()
       uni.navigateTo({
-        url: "/pages/consult/orderConfirm?type=0&id=" + item.id,
+        url: "/pages/consult/orderConfirm?cId=" + this.consultId + '&sId=' + sId,
       });
     },
     closeServe() {
@@ -236,92 +283,46 @@ export default {
 .page {
   background-color: rgba(248,248,248,1.000000);
   position: relative;
-  width: 750upx;
-  height: 2692upx;
+  //width: 750upx;
+  //height: 1800upx;
   //overflow: hidden;
   display: flex;
   flex-direction: column;
 }
 .header {
-  position: fixed;
-  top: 0upx;
-  background-color: #FFFFFF;
-  width: 750upx;
-  height: 88upx;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 999;
-}
-.header-icon-left {
-  position: absolute;
-  left: 16upx;
-}
-.header-title {
-  color: rgba(51,51,51,1);
-  font-size: 34upx;
-  font-weight: 500;
-}
-.header-icon-right {
-  position: absolute;
-  right: 16upx;
+  width: 100%;
+  height: 292upx;
+  background: linear-gradient(133deg, #FF8C65 0%, #FF6C39 100%);
 }
 .info {
-  margin-top: 98upx;
-  background-color: #fff;
-  width: 750upx;
-  height: 402upx;
-  display: flex;
-  flex-direction: column;
+  z-index: 1;
+  margin-top: -86upx;
+  width: 100%;
+  //height: 364upx;
+  background: #FFFFFF;
+  border-radius: 32upx 32upx 0upx 0upx;
 }
-.info-avatar {
-  width: 702upx;
-  height: 174upx;
-  flex-direction: row;
+.info-header {
   display: flex;
-  justify-content: space-between;
-  margin: 32upx 0 0 24upx;
 }
 .info-avatar-img {
   width: 172upx;
   height: 172upx;
+  border-radius: 86upx;
+  margin-top: -86upx;
+  margin-left: 24upx;
 }
 .info-content {
-  width: 498upx;
-  height: 174upx;
-  display: flex;
-  flex-direction: column;
-}
-.info-content-view {
-  width: 498upx;
-  height: 42upx;
-  flex-direction: row;
-  display: flex;
-  justify-content: space-between;
+  width: 554upx;
+  margin-left: 32upx;
 }
 .info-content-userName {
-  height: 42upx;
-  color: rgba(51,51,51,1);
+  margin-top: -52upx;
+  color: #FFFFFF;
   font-size: 30upx;
   font-weight: 600;
   text-align: left;
   white-space: nowrap;
-  line-height: 42upx;
-}
-.info-content-image {
-  margin-top: 10upx;
-  display: flex;
-}
-.icon_location {
-  width: 16upx;
-  height: 18upx;
-  margin-right: 12upx;
-}
-.info-content-gps {
-  color: rgba(119,119,119,1);
-  font-size: 22upx;
-  height: 30upx;
-  line-height: 30upx;
 }
 .info-content-tags {
   width: 248upx;
@@ -352,45 +353,22 @@ export default {
   line-height: 30upx;
   margin: 2upx 0 0 16upx;
 }
-.tag_2 {
-  background-color: rgba(255,112,63,0.100000);
-  border-radius: 4upx;
-  height: 34upx;
-  display: flex;
-  flex-direction: column;
-  width: 120upx;
-}
-.text_5 {
-  width: 88upx;
-  height: 30upx;
-  overflow-wrap: break-word;
-  color: rgba(255,112,63,1);
-  font-size: 22upx;
-  
-  font-weight: normal;
-  text-align: left;
-  white-space: nowrap;
-  line-height: 30upx;
-  margin: 2upx 0 0 16upx;
-}
 .info-content-info {
   width: 498upx;
-  height: 74upx;
   overflow-wrap: break-word;
-  color: rgba(119,119,119,1);
+  color: #777777;
   font-size: 26upx;
-  
-  font-weight: normal;
-  text-align: left;
-  line-height: 37upx;
   margin-top: 16upx;
 }
 .info-nums {
-  line-height: 76upx;
-  height: 76upx;
+  width: 702upx;
+  height: 124upx;
+  background: #FFFFFF;
+  box-shadow: 0upx 2upx 10upx 0upx rgba(175,45,0,0.1);
+  border-radius: 12upx;
+  margin: 32upx;
   display: flex;
-  margin-top: 20upx;
-  margin-bottom: 20upx;
+  align-items: center;
   justify-content: space-evenly;
 }
 .info-nums-item {
@@ -417,165 +395,134 @@ export default {
   overflow-wrap: break-word;
   color: rgba(119,119,119,1);
   font-size: 22upx;
-  
+
   font-weight: normal;
   text-align: left;
   white-space: nowrap;
   line-height: 30upx;
   margin-top: 8upx;
 }
+.tabs {
+  margin-top: 24upx;
+  height: 72upx;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  background-color: #FFFFFF;
+  .tabs-list {
+    height: 60upx;
+    display: flex;
+    justify-content: space-between;
+    margin: 0upx 51upx;
+    .tab {
+      color: #777777;
+      font-size: 28upx;
+      &.selected {
+        border-bottom: 8upx solid;
+        border-bottom-width: thin;
+        font-weight: 600;
+        color: #FF703F;
+      }
+    }
+  }
+}
 .segmented-main {
-  background-color: #fff;
-  margin-top: 20upx;
-  margin-bottom: 20upx;
-  padding: 10upx;
+  //margin-bottom: 20upx;
+  //padding: 10upx;
   position: sticky;
-  top: 88upx;
-  z-index: 99;
+  top: 90upx;
+  z-index: 998;
+}
+.content-y {
+  height: 1500upx;
+  margin-top: 16upx;
 }
 .serve {
   background-color: #FFFFFF;
-  width: 750upx;
-  //height: 751upx;
-  margin-top: 16upx;
   display: flex;
   flex-direction: column;
   justify-content: flex-center;
-}
-.serve-model {
-  position: relative;
-  padding-top: 80upx;
-}
-.serve-title {
-  width: 120upx;
-  height: 42upx;
-  overflow-wrap: break-word;
-  color: rgba(51,51,51,1);
-  font-size: 30upx;
-  font-weight: 500;
-  text-align: center;
-  white-space: nowrap;
-  line-height: 42upx;
-  margin: 32upx 0 0 24upx;
-}
-.serve-title-ext {
-  position: absolute;
-  right: 24upx;
-  top: 24upx;
-}
-.serve-conten {
-  width: 702upx;
-  max-height: 536upx;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  margin: 32upx 0 0 24upx;
-}
-.serve-conten-item {
-  box-shadow: 0px 2px 10px 0px rgba(175,45,0,0.100000);
-  background-color: #FFFFFF;
-  border-radius: 12upx;
-  height: 188upx;
-  margin-bottom: 16upx;
-}
-.serve-conten-item-header {
-  width: 654upx;
-  height: 40upx;
-  flex-direction: row;
-  display: flex;
-  margin: 23upx 0 0 24upx;
-}
-.serve-conten-item-icon {
-  width: 38upx;
-  height: 38upx;
-  margin-top: 1upx;
-}
-.serve-conten-item-name {
-  width: 130upx;
-  height: 38upx;
-  overflow-wrap: break-word;
-  color: rgba(51,51,51,1);
-  font-size: 26upx;
-  
-  font-weight: 500;
-  text-align: center;
-  white-space: nowrap;
-  line-height: 37upx;
-  margin: 1upx 0 0 16upx;
-}
-.serve-conten-item-price {
-  width: 119upx;
-  height: 40upx;
-  overflow-wrap: break-word;
-  font-size: 0upx;
-  font-weight: 500;
-  text-align: right;
-  white-space: nowrap;
-  line-height: 30upx;
-  margin-left: 377upx;
-}
-.serve-conten-item-price-text {
-  color: rgba(255,63,100,1.000000);
-  font-size: 22upx;
-  text-align: left;
-  white-space: nowrap;
-}
-.serve-info {
-  margin-top: 6upx;
-  height: 66upx;
-  position: relative;
-}
-.serve-info-text {
-  width: 446upx;
-  overflow-wrap: break-word;
-  color: rgba(119,119,119,1);
-  font-size: 24upx;
-  position: absolute;
-  left: 10px;
-}
-.serve-info-btn {
-  border-radius: 25upx;
-  height: 50upx;
-  line-height: 50upx;
-  border: 1px solid rgba(255,112,63,1);
-  color: rgba(255,112,63,1);
-  font-size: 24upx;
-  text-align: center;
-  position: absolute;
-  right: 10px;
-}
-
-.serve-more {
-  width: 136upx;
-  height: 37upx;
-  flex-direction: row;
-  display: flex;
-  justify-content: space-between;
-  margin: 40upx 0 32upx 307upx;
-}
-.serve-more-title {
-  width: 104upx;
-  height: 37upx;
-  overflow-wrap: break-word;
-  color: rgba(51,51,51,1);
-  font-size: 26upx;
-  font-weight: normal;
-  text-align: right;
-  white-space: nowrap;
-  line-height: 37upx;
-}
-.consult-desc {
-  background-color: #FFFFFF;
-  margin-top: 16upx;
-  margin-bottom: 16upx;
-  width: calc(100% - 48upx);
-  padding-left: 24upx;
-  padding-right: 24upx;
-  padding-bottom: 150upx;
-  ::v-deep img {
-    width: 100%;
+  padding: 24upx;
+  .serve-title {
+    width: 120upx;
+    height: 42upx;
+    overflow-wrap: break-word;
+    color: rgba(51,51,51,1);
+    font-size: 30upx;
+    font-weight: 500;
+    text-align: center;
+    white-space: nowrap;
+    line-height: 42upx;
+    margin-left: 24upx;
+  }
+  .serve-more {
+    height: 60upx;
+    color: rgba(51,51,51,1);
+    font-size: 26upx;
+    text-align: center;
+    line-height: 60upx;
   }
 }
+
+.course {
+  background-color: rgba(255,255,255,1.000000);
+  max-height: 432upx;
+  margin-top: 16upx;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  .course-header {
+    padding: 24upx 24upx 0 24upx;
+    height: 42upx;
+    display: flex;
+    justify-content: space-between;
+  }
+  .course-title {
+    height: 42upx;
+    color: rgba(51,51,51,1);
+    font-size: 30upx;
+    font-weight: 500;
+    font-family: PingFangSC-Medium, PingFang SC;
+    line-height: 42upx;
+  }
+  .course-more {
+    height: 37upx;
+    margin-top: 2upx;
+    color: rgba(51,51,51,1);
+    font-size: 26upx;
+    line-height: 37upx;
+  }
+}
+
+.content-time {
+  //height: 200upx;
+  margin-top: 16upx;
+  background-color: #FFFFFF;
+  padding-top: 32upx;
+  .content-time-title {
+    color: rgba(51,51,51,1);
+    font-size: 36rpx;
+    font-family: PingFangSC-Medium;
+    font-weight: 500;
+    margin-left: 24upx;
+    margin-bottom: 32upx;
+  }
+}
+.consult-desc {
+  .consult-detail {
+    background-color: #FFFFFF;
+    margin-top: 16upx;
+    margin-bottom: 16upx;
+    width: calc(100% - 48upx);
+    padding-left: 24upx;
+    padding-right: 24upx;
+    padding-bottom: 150upx;
+    ::v-deep img {
+      width: 100%;
+    }
+  }
+}
+
 .page-bottom {
   position: fixed;
   bottom: 0upx;
@@ -586,38 +533,56 @@ export default {
   margin-top: 40upx;
   display: flex;
   align-items: center;
+  .page-bottom-image {
+    width: 48upx;
+    height: 80upx;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    margin: 10upx 0 0 40upx;
+  }
+  .page-bottom-icon {
+    width: 48upx;
+    height: 48upx;
+  }
+  .page-bottom-home {
+    color: rgba(51,51,51,1);
+    font-size: 20upx;
+    font-weight: normal;
+    text-align: left;
+    white-space: nowrap;
+    line-height: 28upx;
+    margin: 4upx 0 0 4upx;
+  }
+  .page-bottom-btn {
+    background-color: rgba(255,112,63,1.000000);
+    color: rgba(255,255,255,1);
+    border-radius: 40upx;
+    font-size: 28upx;
+    font-weight: 600;
+    height: 80upx;
+    line-height: 80upx;
+    width: 598upx;
+    margin: 9upx 24upx 0 40upx;
+    text-align: center;
+  }
 }
-.page-bottom-image {
-  width: 48upx;
-  height: 80upx;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  margin: 10upx 0 0 40upx;
-}
-.page-bottom-icon {
-  width: 48upx;
-  height: 48upx;
-}
-.page-bottom-home {
-  color: rgba(51,51,51,1);
-  font-size: 20upx;
-  font-weight: normal;
-  text-align: left;
-  white-space: nowrap;
-  line-height: 28upx;
-  margin: 4upx 0 0 4upx;
-}
-.page-bottom-btn {
-  background-color: rgba(255,112,63,1.000000);
-  color: rgba(255,255,255,1);
-  border-radius: 40upx;
-  font-size: 28upx;
-  font-weight: 600;
-  height: 80upx;
-  line-height: 80upx;
-  width: 598upx;
-  margin: 9upx 24upx 0 40upx;
-  text-align: center;
+.bottom-serve {
+  background-color: #fff;
+  position: relative;
+  padding: 24upx;
+  .bottom-serve-header {
+    height: 80upx;
+    line-height: 80upx;
+    text-align: center;
+    color: rgba(51,51,51,1);
+    font-size: 30upx;
+    font-weight: 500;
+  }
+  .bottom-close {
+    position: absolute;
+    right: 24upx;
+    top: 24upx;
+  }
 }
 </style>

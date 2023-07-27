@@ -16,10 +16,10 @@
           <view class="item-header">
             <view class="item-header-block"></view>
             <text class="item-header-timer">{{ item.createTime }}</text>
-            <view class="item-header-countdown" v-if="item.status === 0 && item.end > 0">
+            <view class="item-header-countdown" v-if="item.status === '0' && item.endPay > 0">
               <view>剩余</view>
-              <uni-countdown @timeup="toCancel(item.id)" color="#FF703F" splitorColor="#FF703F" :show-day="false" :minute="item.end" :second="0"/>
-<!--            <view class="item-header-countdown" v-if="item.status === 0">{{ item.end }}-->
+              <uni-countdown @timeup="toCancel(item.id)" color="#FF703F" splitorColor="#FF703F" :show-day="false" :minute="item.endPay" :second="0"/>
+<!--            <view class="item-header-countdown" v-if="item.status === 0">{{ item.endPay }}-->
             </view>
             <text class="item-header-status">{{ item.statusName }}</text>
           </view>
@@ -27,25 +27,29 @@
             <image :src="item.avatar" class="item-info-avatar"></image>
             <view class="item-info-group" @tap="toDetail(item.id)">
               <text class="item-name">{{ item.consultName }}</text>
-              <text class="item-desc">{{ item.serveName }} X1</text>
+              <text class="item-desc">{{ item.serveName }}</text>
+              <text class="item-desc">有效期至：{{ item.end === 0 ? '永久有效' : item.endTime}}</text>
             </view>
             <view class="item-price">
               <text class="item-price-unit">¥</text>
-              <text class="item-price-num">{{ item.amount }}</text>
+              <text class="item-price-num">{{ item.amount}}/</text>
+              <text class="item-price-time">{{ item.num + item.buyNum }}次</text>
             </view>
           </view>
           <view class="item-info-box">
             <view class="box_2"></view>
           </view>
           <view class="item-info-bottom">
-            <view class="bottom-title" v-if="item.status === 2 || item.status === 3">咨询时间</view>
-            <button @tap="toCancel(item.id)" class="button_1" v-if="item.status === 0">
+            <view class="bottom-info">
+              <view class="bottom-title" v-if="item.status === '1' || item.status === '2'">剩余咨询次数：<text class="bottom-title-val">{{ item.num + ' 次' }}</text></view>
+              <view class="bottom-title" v-if="item.status === '1' && item.orderTime">下次咨询时间：<text class="bottom-title-val">{{ item.orderTime }}</text></view>
+            </view>
+            <button @tap="toCancel(item.id)" class="button_1" v-if="item.status === '0'">
               取消
             </button>
-            <button @tap="open(item)" class="button_2" v-if="item.status === 0 || item.status === 1">
-              <text class="text_16">{{ item.status === 0 ? '支付' : '去预约'}}</text>
+            <button @tap="open(item)" class="button_2" v-if="item.status === '0' || (item.status === '1' && item.num > 0 && !item.orderTime)">
+              <text class="text_16">{{ item.status === '0' ? '支付' : '去预约'}}</text>
             </button>
-            <view class="bottom-time" v-if="item.timeStart && (item.status === 2 || item.status === 3)">{{ item.timeStart.substr(0, 16) + '-' + item.timeEnd.substr(11, 5) }}</view>
           </view>
         </view>
       </view>
@@ -80,7 +84,9 @@ export default {
       userInfo: {},
       orderList: [],
       // car
+      time: -1,
       workId: 0,
+      workName: '',
       order: {},
       works: [],
       dateList: [],
@@ -95,16 +101,12 @@ export default {
           id: 1,
         },
         {
-          name: "待预约",
+          name: "进行中",
           id: 2,
         },
         {
-          name: "待咨询",
-          id: 3,
-        },
-        {
           name: "已完成",
-          id: 4,
+          id: 3,
         }
       ],
       clientTypeObj: clientTypeObj,
@@ -143,7 +145,7 @@ export default {
     },
     // cartBox start
     async getConsultInfoByServe() {
-      const res = await orderServer.getConsultInfoByServe(this.order.serveId)
+      const res = await orderServer.getConsultInfoByServe(this.order.consultId, this.order.serveId)
       this.consult = res.consult
       this.serve = res.serve
       this.works = res.works
@@ -157,14 +159,16 @@ export default {
       this.workId = 0
     },
     // cartBox end
-    async doOk(workId, workName) {
+    async doOk(workId, time, workName) {
       if (!utils.checkLogin()) {
         return this.openLoginConfirm()
       }
 
       console.log(workName)
+      this.time = time
       this.workId = workId
-      if (this.order.status === 1) { // 去预约
+      this.workName = workName
+      if (this.order.status === '1') { // 去预约
         if (workId === 0) {
           return uni.showToast({
             icon: "none",
@@ -176,7 +180,7 @@ export default {
         }
       }
 
-      if (this.order.status === 0) {
+      if (this.order.status === '0') {
         // 支付
         await this.doPay()
       }
@@ -185,7 +189,7 @@ export default {
       this.$refs.cartBox.close()
     },
     async doConsult() {
-      const res = await orderServer.doConsult(this.order.id, this.workId)
+      const res = await orderServer.doConsult(this.order.id, this.workId, this.time)
       console.log(res)
       if (res === 1) {
         uni.showToast({
@@ -202,6 +206,8 @@ export default {
           {
             module: 'consult',
             workId: this.workId,
+            time: this.time,
+            consultId: this.consultId,
             orderId: this.order.id
           }
       )
@@ -247,9 +253,9 @@ export default {
       const list = await orderServer.getOrderList(data);
       if (list && list.length > 0) {
         list.forEach(i => {
-          i.end = ''
-          if (i.status === 0) {
-            i.end = this.remainTime(i.updateTime)
+          i.endPay = 0
+          if (i.status === '0') {
+            i.endPay = this.remainTime(i.updateTime)
           }
         })
       }
@@ -332,9 +338,9 @@ page {
     background-color: rgba(255,255,255,1.000000);
     border-radius: 16upx;
     margin-bottom: 16upx;
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-center;
+    //display: flex;
+    //flex-direction: column;
+    //justify-content: flex-center;
   }
   .item-header {
     position: relative;
@@ -371,7 +377,7 @@ page {
   }
   .item-info {
     position: relative;
-    width: 622upx;
+    //width: 622upx;
     height: 130upx;
     flex-direction: row;
     display: flex;
@@ -383,12 +389,12 @@ page {
     border-radius: 100%;
   }
   .item-info-group {
-    width: 201upx;
-    height: 82upx;
+    //width: 201upx;
+    height: 130upx;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    margin: 24upx 0 0 24upx;
+    margin-left: 24upx;
   }
   .item-name {
     color: rgba(51,51,51,1);
@@ -403,20 +409,18 @@ page {
   .item-price {
     position: absolute;
     right: 32upx;
-    bottom: 32upx;
-    font-size: 0upx;
-    font-weight: 600;
-    text-align: right;
-  }
-  .item-price-unit {
-    color: rgba(255,63,100,1.000000);
+    top: 22upx;
     font-size: 22upx;
-    font-weight: 600;
-  }
-  .item-price-num {
-    color: rgba(255,63,100,1.000000);
-    font-size: 32upx;
-    font-weight: 600;
+    text-align: right;
+    color: #777777;
+    .item-price-unit {
+      color: rgba(255,63,100,1.000000);
+    }
+    .item-price-num {
+      color: rgba(255,63,100,1.000000);
+      font-size: 32upx;
+      font-weight: 600;
+    }
   }
   .item-info-box {
     height: 1upx;
@@ -432,25 +436,19 @@ page {
     flex-direction: column;
   }
   .item-info-bottom {
+    height: 120upx;
+    display: flex;
+    align-items: center;
     position: relative;
-    height: 72upx;
-    line-height: 72upx;
-    //display: flex;
-    //flex-direction: row;
-    //text-align: right;
-    //justify-content: flex-end;
-    padding: 24upx;
-    .bottom-title {
-      font-size: 26rpx;
-      color: #333333;
-      position: absolute;
-      left: 32upx;
-    }
-    .bottom-time {
-      font-size: 26rpx;
-      color: #FF703F;
-      position: absolute;
-      right: 32upx;
+    .bottom-info {
+      margin-left: 32upx;
+      font-size: 24upx;
+      .bottom-title {
+        color: #333333;
+      }
+      .bottom-title-val {
+        color: #FF703F;
+      }
     }
     .button_1 {
       text-align: center;

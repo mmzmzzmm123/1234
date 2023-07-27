@@ -79,7 +79,9 @@ export function getPaySign(userId, produteId, amount, extra) {
           params = {
               userId: userId,
               serveId: produteId,
+              time: extra.time,
               workId: extra.workId,
+              consultId: extra.consultId,
               orderId: extra.orderId,
               module: extra.module,
               amount: amount

@@ -1,7 +1,7 @@
 <template>
   <view class="filter-container">
     <view class="index-title">
-      <view class="filter-item" :class="{ active: filterParams.type === 1 }" @tap="doFilter(1)">咨询方向</view>
+      <view class="filter-item" :class="{ active: filterParams.type === 1 }" @tap="doFilter(1)">擅长领域</view>
       <view class="filter-item" :class="{ active: filterParams.type === 2 }" @tap="doFilter(2)">价格</view>
       <view class="filter-item" :class="{ active: filterParams.type === 3 }" @tap="doFilter(3)">筛选</view>
     </view>

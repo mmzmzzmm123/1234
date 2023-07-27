@@ -8,6 +8,8 @@ import com.ruoyi.common.enums.BusinessType;
 import com.ruoyi.common.utils.poi.ExcelUtil;
 import com.ruoyi.psychology.constant.ConsultConstant;
 import com.ruoyi.psychology.domain.PsyConsultOrder;
+import com.ruoyi.psychology.request.PsyAdminOrderReq;
+import com.ruoyi.psychology.request.PsyHxOrderReq;
 import com.ruoyi.psychology.service.IPsyConsultOrderService;
 import com.ruoyi.psychology.vo.PsyConsultOrderVO;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -30,12 +32,19 @@ public class PsyConsultOrderController extends BaseController
     @Resource
     private IPsyConsultOrderService psyConsultOrderService;
 
+    @PreAuthorize("@ss.hasPermi('psychology:order:list')")
+    @GetMapping(value = "/getDetail/{id}")
+    public AjaxResult getDetail(@PathVariable("id") Long id)
+    {
+        return AjaxResult.success(psyConsultOrderService.getOrderDetail(id));
+    }
+
     /**
      * 查询咨询订单列表
      */
     @PreAuthorize("@ss.hasPermi('psychology:order:list')")
     @GetMapping("/list")
-    public TableDataInfo list(PsyConsultOrderVO req)
+    public TableDataInfo list(PsyAdminOrderReq req)
     {
         startPage();
         List<PsyConsultOrder> list = psyConsultOrderService.getList(req);
@@ -48,7 +57,7 @@ public class PsyConsultOrderController extends BaseController
     @PreAuthorize("@ss.hasPermi('psychology:order:export')")
     @Log(title = "咨询订单", businessType = BusinessType.EXPORT)
     @PostMapping("/export")
-    public void export(HttpServletResponse response, PsyConsultOrderVO req)
+    public void export(HttpServletResponse response, PsyAdminOrderReq req)
     {
         List<PsyConsultOrder> list = psyConsultOrderService.getList(req);
         ExcelUtil<PsyConsultOrder> util = new ExcelUtil<PsyConsultOrder>(PsyConsultOrder.class);
@@ -63,6 +72,19 @@ public class PsyConsultOrderController extends BaseController
     public AjaxResult getInfo(@PathVariable("id") Long id)
     {
         return AjaxResult.success(psyConsultOrderService.getOne(id));
+    }
+
+
+    /**
+     * 修改咨询订单
+     */
+    @PreAuthorize("@ss.hasPermi('psychology:order:edit')")
+    @Log(title = "咨询订单", businessType = BusinessType.UPDATE)
+    @PostMapping("/hx")
+    public AjaxResult hx(@RequestBody PsyHxOrderReq req)
+    {
+        String hx = psyConsultOrderService.hx(req);
+        return "ok".equals(hx) ? AjaxResult.success() : AjaxResult.error(hx);
     }
 
     /**

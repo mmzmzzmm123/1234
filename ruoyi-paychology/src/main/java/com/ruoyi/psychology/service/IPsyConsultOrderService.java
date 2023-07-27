@@ -2,6 +2,10 @@ package com.ruoyi.psychology.service;
 
 import java.util.List;
 import com.ruoyi.psychology.domain.PsyConsultOrder;
+import com.ruoyi.psychology.dto.OrderDTO;
+import com.ruoyi.psychology.dto.OrderListDTO;
+import com.ruoyi.psychology.request.PsyAdminOrderReq;
+import com.ruoyi.psychology.request.PsyHxOrderReq;
 import com.ruoyi.psychology.vo.PsyConsultOrderVO;
 
 /**
@@ -12,21 +16,24 @@ import com.ruoyi.psychology.vo.PsyConsultOrderVO;
  */
 public interface IPsyConsultOrderService 
 {
+
+    OrderDTO getOrderDetail(Long id);
+
     PsyConsultOrderVO getOne(Long id);
 
-    PsyConsultOrderVO getOneByOrderId(String orderId);
-
-    List<PsyConsultOrder> getList(PsyConsultOrderVO req);
+    List<PsyConsultOrder> getList(PsyAdminOrderReq req);
 
     List<PsyConsultOrder> getCancelList(int num);
 
-    List<PsyConsultOrderVO> getOrderList(PsyConsultOrderVO req);
+    List<OrderListDTO> getOrderList(PsyConsultOrderVO req);
 
-    void updatePsyOrder(PsyConsultOrderVO req);
+    String hx(PsyHxOrderReq req);
 
     void updatePayOrder(PsyConsultOrderVO req);
 
-    int doConsult(Long id, Long workId);
+    void wechatPayNotify(PsyConsultOrderVO req);
+
+    int doConsult(Long id, Long workId, Integer time);
 
     int add(PsyConsultOrderVO req);
 

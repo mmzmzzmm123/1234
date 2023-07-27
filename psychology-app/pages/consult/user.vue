@@ -33,7 +33,7 @@
         <view class="box-more" @tap="toPage(0)">查看全部 ></view>
       </view>
       <uni-row class="class-box">
-        <uni-col :span="6" v-for="item in classList" class="item">
+        <uni-col :span="8" v-for="item in classList" class="item">
           <view @tap="toPage(item.id)">
             <img class="class-img" :src="item.classPic" />
             <view>{{ item.className }}</view>
@@ -79,30 +79,35 @@ export default {
         },
         {
           classPic: "/static/consult/my/yy.png",
-          className: "待预约",
+          className: "进行中",
           id: 2,
-        },
-        {
-          classPic: "/static/consult/my/dzx.png",
-          className: "待咨询",
-          id: 3,
         },
         {
           classPic: "/static/consult/my/finish.png",
           className: "已完成",
-          id: 4,
+          id: 3,
         }
       ],
       serveList: [
         {
           classPic: "/static/consult/my/cp.png",
           className: "测评中心",
-          id: 5,
+          id: 10,
+        },
+        {
+          classPic: "/static/consult/my/integral.png",
+          className: "我的积分",
+          id: 11,
+        },
+        {
+          classPic: "/static/consult/my/coupon.png",
+          className: "我的卡券",
+          id: 12,
         },
         {
           classPic: "/static/consult/my/kf.png",
           className: "客服帮助",
-          id: 6,
+          id: 13,
         }
       ],
       clientTypeObj: clientTypeObj,
@@ -138,13 +143,20 @@ export default {
         case 1:
         case 2:
         case 3:
-        case 4:
           uni.navigateTo({ url: "/pages/consult/order?status=" + id });
           break
-        case 5:
+        case 10:
           uni.redirectTo({ url: "/pages/evaluation/index" })
           break
-        case 6:
+        case 11:
+          // uni.redirectTo({ url: "/pages/evaluation/index" })
+          console.log('我的积分')
+          break
+        case 12:
+          // uni.redirectTo({ url: "/pages/evaluation/index" })
+          console.log('我的卡劵')
+          break
+        case 13:
           console.log('客服帮助')
           break
       }
@@ -294,7 +306,7 @@ page {
     margin: 24upx auto;
     background: #ffffff;
     border-radius: 16px;
-    padding: 0 40upx 36upx;
+    padding: 0 36upx;
     box-sizing: border-box;
 
     .box-title {

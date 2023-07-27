@@ -2,10 +2,12 @@ package com.ruoyi.psychology.service.impl;
 
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.util.StrUtil;
+import com.alibaba.fastjson2.JSON;
 import com.alibaba.fastjson2.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.ruoyi.common.utils.NewDateUtil;
+import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.psychology.domain.PsyConsultWork;
 import com.ruoyi.psychology.dto.HeaderDTO;
 import com.ruoyi.psychology.dto.WorkDTO;
@@ -30,15 +32,20 @@ public class PsyConsultWorkServiceImpl extends ServiceImpl<PsyConsultWorkMapper,
     private PsyConsultWorkMapper psyConsultWorkMapper;
 
     @Override
+    public List<PsyConsultWorkVO> getConsultWorks(PsyWorkReq req) {
+        return psyConsultWorkMapper.getWorks(req);
+    }
+
+    @Override
     public void doSave(PsyConsultWorkReq req) {
         long num = NewDateUtil.getTwoDateDays(req.getStartDay(), req.getEndDay()) + 1;
+
         List<Integer> days = new ArrayList<>();
         for (int i = 1; i <= num; i++) {
             days.add(i);
         }
 
         List<PsyConsultWork> list = new ArrayList<>();
-        List<String> dayDelt = new ArrayList<>();
         req.getIds().forEach(p -> {
             Calendar calendar = Calendar.getInstance();
             calendar.setTime(req.getStartDay());
@@ -50,12 +57,18 @@ public class PsyConsultWorkServiceImpl extends ServiceImpl<PsyConsultWorkMapper,
                 }
 
                 String fm = sdf.format(calendar.getTime());
-                dayDelt.add(fm);
+                LambdaQueryWrapper<PsyConsultWork> wp = new LambdaQueryWrapper<>();
+                wp.eq(PsyConsultWork::getConsultId, p);
+                wp.eq(PsyConsultWork::getDay, fm);
 
-                PsyConsultWork work = new PsyConsultWork();
-                work.setConsultId(p);
-                work.setDay(fm);
-                work.setWeek(NewDateUtil.getWeekOfDate(calendar));
+                PsyConsultWork work = this.getOne(wp, false);
+                if (work == null) {
+                    work = new PsyConsultWork();
+                    work.setConsultId(p);
+                    work.setDay(fm);
+                    work.setWeek(NewDateUtil.getWeekOfDate(calendar));
+                }
+
                 work.setTimeStart(req.getTimeStart());
                 work.setTimeEnd(req.getTimeEnd());
                 work.setStatus(req.getStatus());
@@ -65,12 +78,12 @@ public class PsyConsultWorkServiceImpl extends ServiceImpl<PsyConsultWorkMapper,
         });
 
         // 先删除,后新增
-        LambdaQueryWrapper<PsyConsultWork> wp = new LambdaQueryWrapper<>();
-        wp.in(PsyConsultWork::getConsultId, req.getIds());
-        wp.in(PsyConsultWork::getDay, dayDelt);
-        this.remove(wp);
+//        LambdaQueryWrapper<PsyConsultWork> wp = new LambdaQueryWrapper<>();
+//        wp.in(PsyConsultWork::getConsultId, req.getIds());
+//        wp.in(PsyConsultWork::getDay, dayDelt);
+//        this.remove(wp);
 
-        this.saveBatch(list);
+        this.saveOrUpdateBatch(list);
     }
 
     private void makeTime(PsyConsultWork req) {
@@ -83,8 +96,9 @@ public class PsyConsultWorkServiceImpl extends ServiceImpl<PsyConsultWorkMapper,
             }
         }
 
+        Collections.sort(num);
         req.setLive(JSONObject.toJSONString(num));
-        req.setDeath(JSONObject.toJSONString(new ArrayList<>()));
+        req.setUsed(JSONObject.toJSONString(new ArrayList<>()));
     }
 
     @Override
@@ -126,7 +140,7 @@ public class PsyConsultWorkServiceImpl extends ServiceImpl<PsyConsultWorkMapper,
         }
         res.setHeaders(headers);
 
-        List<PsyConsultWorkVO> works = psyConsultWorkMapper.getWorks(req);
+        List<PsyConsultWorkVO> works = getConsultWorks(req);
         if (CollectionUtils.isEmpty(works)) {
             return res;
         }
@@ -168,6 +182,53 @@ public class PsyConsultWorkServiceImpl extends ServiceImpl<PsyConsultWorkMapper,
         return BeanUtil.toBean(psyConsultWorkMapper.selectById(id), PsyConsultWorkVO.class);
     }
 
+    private LambdaQueryWrapper<PsyConsultWork> getWorkWrapper(Long id, Long consultId, Integer time) {
+        LambdaQueryWrapper<PsyConsultWork> wp = new LambdaQueryWrapper<>();
+        wp.eq(PsyConsultWork::getConsultId, consultId);
+        wp.eq(PsyConsultWork::getId, id);
+        wp.eq(PsyConsultWork::getStatus, "0");
+        return wp;
+    }
+
+    @Override
+    public Boolean checkWork(Long id, Long consultId, Integer time) {
+        List<PsyConsultWork> works = psyConsultWorkMapper.selectList(getWorkWrapper(id, consultId, time));
+        if (CollectionUtils.isEmpty(works)) {
+            return Boolean.FALSE;
+        }
+        PsyConsultWork work = works.get(0);
+        if (StringUtils.isBlank(work.getLive())) {
+            return Boolean.FALSE;
+        }
+
+        List<Integer> lives = JSON.parseArray(work.getLive(), Integer.class);
+        return lives.contains(time);
+    }
+
+    @Override
+    public PsyConsultWork handleWork(Long id, Long consultId, Integer time, int type) {
+        List<PsyConsultWork> works = psyConsultWorkMapper.selectList(getWorkWrapper(id, consultId, time));
+        PsyConsultWork work = works.get(0);
+
+        List<Integer> lives = JSON.parseArray(work.getLive(), Integer.class);
+        List<Integer> uesd = JSON.parseArray(work.getUsed(), Integer.class);
+
+        if (1 == type) {
+            lives.remove(time);
+            uesd.add(time);
+        } else {
+            lives.add(time);
+            uesd.remove(time);
+        }
+
+        Collections.sort(lives);
+        Collections.sort(uesd);
+        work.setLive(JSONObject.toJSONString(lives));
+        work.setUsed(JSONObject.toJSONString(uesd));
+        psyConsultWorkMapper.updateById(work);
+        return work;
+    }
+
     @Override
     public List<PsyConsultWork> getList(PsyConsultWorkVO req) {
         return psyConsultWorkMapper.getList(req);
@@ -185,12 +246,6 @@ public class PsyConsultWorkServiceImpl extends ServiceImpl<PsyConsultWorkMapper,
     public int update(PsyConsultWorkVO req) {
         converTime(req);
         return psyConsultWorkMapper.updateById(BeanUtil.toBean(req, PsyConsultWork.class));
-    }
-
-    @Override
-    public void updateNum(Long id, int num, int buyNum) {
-        PsyConsultWorkVO one = getOne(id);
-        update(one);
     }
 
     @Override

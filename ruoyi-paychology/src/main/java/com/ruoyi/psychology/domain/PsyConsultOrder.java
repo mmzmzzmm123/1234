@@ -34,7 +34,7 @@ public class PsyConsultOrder extends BasePlusEntity implements Serializable
     private String orderNo;
 
     /** 咨询师 */
-//    @Excel(name = "咨询师")
+    @Excel(name = "咨询师")
     private Long consultId;
 
     /** 咨询师 */
@@ -50,47 +50,27 @@ public class PsyConsultOrder extends BasePlusEntity implements Serializable
     private String serveName;
 
     /** 客户id */
-//    @Excel(name = "客户id")
+    @Excel(name = "客户id")
     private Integer userId;
 
+    /** 客户 */
     @Excel(name = "客户")
-    private String userName;
+    private String nickName;
 
-    /** 排班 */
-//    @Excel(name = "排班")
-    private Long workId;
+    /** 应付费用 */
+    @Excel(name = "应付费用")
+    private BigDecimal amount;
 
-    /** 可选班次0全天 1上午 2下午 3晚上 */
-    @Excel(name = "可选班次")
-    @TableField(value = "type", updateStrategy = FieldStrategy.IGNORED)
-    private String type;
+    /** 实际支付 */
+    @Excel(name = "实际支付")
+    private BigDecimal pay;
 
-    /** 天 */
-    @Excel(name = "日期")
-    @TableField(value = "day", updateStrategy = FieldStrategy.IGNORED)
-    private String day;
+    /** 付款时间 */
+    @Excel(name = "付款时间")
+    private Date payTime;
 
-    /** 周 */
-    @Excel(name = "星期")
-    @TableField(value = "week", updateStrategy = FieldStrategy.IGNORED)
-    private String week;
-
-    /** 咨询时段开始 */
-    @JsonFormat(pattern = "yyyy-MM-dd")
-    @Excel(name = "咨询时段开始", width = 30, dateFormat = "yyyy-MM-dd")
-    @TableField(value = "time_start", updateStrategy = FieldStrategy.IGNORED)
-    private Date timeStart;
-
-    /** 咨询时段结束 */
-    @JsonFormat(pattern = "yyyy-MM-dd")
-    @Excel(name = "咨询时段结束", width = 30, dateFormat = "yyyy-MM-dd")
-    @TableField(value = "time_end", updateStrategy = FieldStrategy.IGNORED)
-    private Date timeEnd;
-
-    /** 咨询时长(分钟) */
-    @Excel(name = "咨询时长(分钟)")
-    @TableField(value = "time", updateStrategy = FieldStrategy.IGNORED)
-    private Integer time;
+    @Excel(name = "下次预约时间")
+    private String orderTime;
 
     /** 可预约数量 */
     @Excel(name = "可预约数量")
@@ -100,14 +80,26 @@ public class PsyConsultOrder extends BasePlusEntity implements Serializable
     @Excel(name = "已预约数量")
     private Integer buyNum;
 
-    /** 应付费用 */
-    @Excel(name = "应付费用")
-    private BigDecimal amount;
-
     /** 删除标志（0代表存在 1代表删除） */
     private String delFlag;
 
-    /** 订单状态0-待付款 1-待预约 2-待咨询 3-已完成 4-已取消 */
-    @Excel(name = "订单状态0-待付款 1-待预约 2-待咨询 3-已完成 4-已取消")
-    private Integer status;
+    /** 订单状态0-待付款 1-进行中 2-已完成 3-已取消 */
+    @Excel(name = "订单状态0-待付款 1-进行中 2-已完成 3-已取消")
+    private String status;
+
+    /** 支付状态1,未支付 2,支付成功 3,退款中 4,部分退 5,全单退 6,退款失败 */
+    @Excel(name = "支付状态1,未支付 2,支付成功 3,退款中 4,部分退 5,全单退 6,退款失败")
+    private String payStatus;
+
+    @Excel(name = "备注")
+    private String remark;
+
+    @TableField(exist = false)
+    private String phone;
+
+    @TableField(exist = false)
+    private String statusName;
+
+    @TableField(exist = false)
+    private String payStatusName;
 }

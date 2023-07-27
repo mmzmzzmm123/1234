@@ -3,6 +3,7 @@ package com.ruoyi.psychology.dto;
 import com.ruoyi.psychology.domain.PsyConsultWork;
 import com.ruoyi.psychology.vo.PsyConsultServeConfigVO;
 import com.ruoyi.psychology.vo.PsyConsultVO;
+import com.ruoyi.psychology.vo.PsyConsultWorkVO;
 import lombok.Data;
 
 import java.io.Serializable;
@@ -23,6 +24,6 @@ public class PsyConsultInfoDTO implements Serializable
 
     private PsyConsultServeConfigVO serve;
 
-    private List<PsyConsultWork> works;
+    private List<PsyConsultWorkVO> works;
 
 }

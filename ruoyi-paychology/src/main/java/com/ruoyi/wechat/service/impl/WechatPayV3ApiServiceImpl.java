@@ -77,6 +77,7 @@ public class WechatPayV3ApiServiceImpl implements WechatPayV3ApiService {
     @Transactional(rollbackFor = Exception.class)
     public void wechatPay(WechatPayVO wechatPay) {
 //        OrderCancelTask orderCancelTask = new OrderCancelTask();
+        String nickName = psyUserService.selectPsyUserById(wechatPay.getUserId()).getName();
 
         if (CourConstant.MODULE_COURSE.equals(wechatPay.getModule())) {
 
@@ -115,7 +116,7 @@ public class WechatPayV3ApiServiceImpl implements WechatPayV3ApiService {
                     .gaugeId(wechatPay.getGaugeId())
                     .userId(wechatPay.getUserId())
                     .build();
-            psyOrder.setCreateBy(psyUserService.selectPsyUserById(wechatPay.getUserId()).getName());
+            psyOrder.setCreateBy(nickName);
 
             PsyOrder newPsyOrder = psyOrderService.generatePsyOrder(psyOrder);
 
@@ -137,17 +138,21 @@ public class WechatPayV3ApiServiceImpl implements WechatPayV3ApiService {
 //            timer.schedule(orderCancelTask, ORDER_CANCEL_TIME);
         } else if (ConsultConstant.MODULE_CONSULT.equals(wechatPay.getModule())) {
             // 心理咨询服务
-            Long id = wechatPay.getOrderId() != null && wechatPay.getOrderId() > 0 ? wechatPay.getOrderId() : IDhelper.getNextId();
+            Long id = wechatPay.getOrderId() != null ? wechatPay.getOrderId() : IDhelper.getNextId();
             PsyConsultOrderVO psyConsultOrderVO = new PsyConsultOrderVO();
             psyConsultOrderVO.setId(id);
+            psyConsultOrderVO.setConsultId(wechatPay.getConsultId());
             psyConsultOrderVO.setOrderNo(wechatPay.getOutTradeNo());
             psyConsultOrderVO.setAmount(wechatPay.getAmount());
-            psyConsultOrderVO.setWorkId(wechatPay.getWorkId());
+            psyConsultOrderVO.setPay(wechatPay.getAmount());
             psyConsultOrderVO.setServeId(wechatPay.getServeId());
             psyConsultOrderVO.setUserId(wechatPay.getUserId());
+            psyConsultOrderVO.setNickName(nickName);
+            psyConsultOrderVO.setWorkId(wechatPay.getWorkId());
+            psyConsultOrderVO.setTime(wechatPay.getTime());
 
             // 更新原订单
-            if (wechatPay.getOrderId() != null && wechatPay.getOrderId() > 0) {
+            if (wechatPay.getOrderId() != null) {
                 psyConsultOrderService.updatePayOrder(psyConsultOrderVO);
             } else {
                 psyConsultOrderService.add(psyConsultOrderVO);
@@ -227,19 +232,14 @@ public class WechatPayV3ApiServiceImpl implements WechatPayV3ApiService {
             PsyConsultPay pay = psyConsultPayService.getOneByOrder(outTradeNo);
             PsyConsultOrderVO psyOrder = psyConsultOrderService.getOne(pay.getOrderId());
 
-            if (ConsultConstant.CONSULT_ORDER_STATUE_CREATED == psyOrder.getStatus()) {
+            if (ConsultConstant.CONSULT_ORDER_STATUE_CREATED.equals(psyOrder.getStatus())) {
                 pay.setPayId(payId);
                 pay.setStatus(ConsultConstant.PAY_STATUE_PAID);
                 psyOrder.setStatus(ConsultConstant.CONSULT_ORDER_STATUE_PENDING);
-
-                if (psyOrder.getWorkId() > 0) {
-                    psyOrder.setNum(0);
-                    psyOrder.setBuyNum(1);
-                    psyOrder.setStatus(ConsultConstant.CONSULT_ORDER_STATUE_UNCONSULT);
-                }
+                psyOrder.setPayStatus(ConsultConstant.PAY_STATUE_PAID);
 
                 psyConsultPayService.update(pay);
-                psyConsultOrderService.update(psyOrder);
+                psyConsultOrderService.wechatPayNotify(psyOrder);
 
                 if (psyOrder.getAmount().compareTo(BigDecimal.ZERO) > 0) {
                     record.setLinkId(String.valueOf(psyOrder.getId()));

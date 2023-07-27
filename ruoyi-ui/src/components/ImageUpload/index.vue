@@ -48,7 +48,7 @@ import { getToken } from "@/utils/auth";
 export default {
   props: {
     value: [String, Object, Array],
-    // 图片数量限制
+    // 文件数量限制
     limit: {
       type: Number,
       default: 1,
@@ -139,17 +139,17 @@ export default {
       }
 
       if (!isImg) {
-        this.$modal.msgError(`文件格式不正确, 请上传${this.fileType.join("/")}图片格式文件!`);
+        this.$modal.msgError(`文件格式不正确, 请上传${this.fileType.join("/")}文件格式文件!`);
         return false;
       }
       if (this.fileSize) {
         const isLt = file.size / 1024 / 1024 < this.fileSize;
         if (!isLt) {
-          this.$modal.msgError(`上传头像图片大小不能超过 ${this.fileSize} MB!`);
+          this.$modal.msgError(`上传头像文件大小不能超过 ${this.fileSize} MB!`);
           return false;
         }
       }
-      this.$modal.loading("正在上传图片，请稍候...");
+      this.$modal.loading("正在上传文件，请稍候...");
       this.number++;
     },
     // 文件个数超出
@@ -179,7 +179,7 @@ export default {
     },
     // 上传失败
     handleUploadError() {
-      this.$modal.msgError("上传图片失败，请重试");
+      this.$modal.msgError("上传文件失败，请重试");
       this.$modal.closeLoading();
     },
     // 上传结束处理

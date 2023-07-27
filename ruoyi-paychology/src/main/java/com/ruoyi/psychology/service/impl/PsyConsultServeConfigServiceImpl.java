@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.ruoyi.common.exception.UtilException;
 import com.ruoyi.common.utils.NewDateUtil;
 import com.ruoyi.common.vo.DateLimitUtilVO;
+import com.ruoyi.psychology.constant.ConsultConstant;
 import com.ruoyi.psychology.domain.PsyConsultServe;
 import com.ruoyi.psychology.domain.PsyConsultServeConfig;
 import com.ruoyi.psychology.mapper.PsyConsultServeConfigMapper;
@@ -52,7 +53,24 @@ public class PsyConsultServeConfigServiceImpl extends ServiceImpl<PsyConsultServ
             req.setEndTime(dateLimit.getEndTime());
         }
 
-        return psyConsultServeConfigMapper.getList(req);
+        List<PsyConsultServeConfig> list = psyConsultServeConfigMapper.getList(req);
+        list.forEach(this::setNames);
+        return list;
+    }
+
+    private void setNames(PsyConsultServeConfig entity) {
+        String modeName = "";
+        String typeName = ConsultConstant.CONSULT_TYPE_ONCE.equals(entity.getType()) ? "单次咨询" : "套餐咨询";
+        if (ConsultConstant.CONSULT_MODE_SOUND.equals(entity.getMode())) {
+            modeName = "语音咨询";
+        } else if (ConsultConstant.CONSULT_MODE_VOICE.equals(entity.getMode())) {
+            modeName = "视频咨询";
+        } else if (ConsultConstant.CONSULT_MODE_FACE.equals(entity.getMode())) {
+            modeName = "面对面咨询";
+        }
+
+        entity.setModeName(modeName);
+        entity.setTypeName(typeName);
     }
 
     private int checkName(String name) {
@@ -119,6 +137,14 @@ public class PsyConsultServeConfigServiceImpl extends ServiceImpl<PsyConsultServ
         });
 
         return this.updateBatch(ids);
+    }
+
+    @Override
+    public void updateNum(Long id) {
+        PsyConsultServeConfig one = psyConsultServeConfigMapper.selectById(id);
+        int i = one.getSales() + 1;
+        one.setSales(Math.max(i, 0));
+        psyConsultServeConfigMapper.updateById(one);
     }
 
     @Override

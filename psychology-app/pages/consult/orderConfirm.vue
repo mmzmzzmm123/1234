@@ -23,23 +23,23 @@
       </view>
       <view class="info-text-wrapper-group2"></view>
       <view class="info-text-wrapper-3">
-        <text class="info-text-3">咨询次数</text>
-        <text class="info-text-4">{{ consult.workNum }}</text>
+        <text class="info-text-3">服务数量({{ serve.num }}次咨询)</text>
+        <text class="info-text-4">1次</text>
       </view>
     </view>
     <view class="section-time">
       <view class="section-time-group">
         <text class="section-time-group-text1">预约</text>
+        <view class="section-time-group3">
+          <text class="section-time-text4">咨询方式</text>
+          <text class="section-time-text5">{{ serve.name }}</text>
+        </view>
+        <view class="group_5"></view>
         <view class="section-time-group2">
           <text class="section-time-group-text2">预约时间</text>
           <view class="image-text_1">
             <text class="section-time-group-text3" @tap="open">{{ workName !== '' ? workName : '点击选择预约时间' }} ></text>
           </view>
-        </view>
-        <view class="group_5"></view>
-        <view class="section-time-group3">
-          <text class="section-time-text4">咨询方式</text>
-          <text class="section-time-text5">{{ serve.name }}</text>
         </view>
       </view>
       <view class="section-reader">
@@ -52,6 +52,17 @@
           <text class="section-reader-group-text3" />
         </view>
       </view>
+      <view class="notice">
+        <view>预约须知：</view>
+        <view>·变更预约说明</view>
+        <view>预约人一旦确定预约后，咨询前24小时内不可修改或取消，请预约人提前24小时做好时间安排。咨询师确认咨询后，若有时间变动，同样需提前24小时与预约人沟通确认。</view>
+        <view>·爽约/迟到说明</view>
+        <view>确定预约后，预约人需准时赴约。若迟到或爽约，将正常收取本咨询费用，咨询服务按原定时间开始，原定时间结束。若咨询师迟到或爽约，咨询师在完成原定时长心理咨询服务基础上，赔偿预约人同等时长的心理咨询服。</view>
+        <view>·知情同意</view>
+        <view>咨询师为来访者提供的仅为心理健康咨询服务，非医疗服务。如您需要专业医生的诊断，请前往当地精神卫生中心寻求精神科医生的帮助；如果您已在精神卫生医疗机构被诊断精神疾病，您需要知晓心理咨询不能替代药物治疗，您支付的咨询费用是为咨询师在和您咨询过程中所投入的时间和精力付费，并不是为保证疾病治疗效果付费。</view>
+
+      </view>
+      
     </view>
     <view class="bottom-view">
       <button @tap="toBuy" class="bottom-btn" :disabled="flag">
@@ -67,7 +78,6 @@
     </uni-popup>
 
     <cart-box ref="cartBox" :dateList="dateList" :works="works" @doOk="doOk" @cancel="cancel"/>
-
   </view>
 </template>
 
@@ -84,6 +94,7 @@ export default {
   components: { cartBox },
   data() {
     return {
+      time: -1,
       workId: 0,
       workName: '',
       flag: false,
@@ -95,13 +106,14 @@ export default {
       serve: {},
       consult: {},
       serveId: 0,
+      consultId: 0,
       redirectUri: location.href,
       currentCatalogue: {},
     };
   },
   created() {
-    this.serveId = utils.getParam(location.href, "id")
-    console.log(this.serveId)
+    this.serveId = utils.getParam(location.href, "sId")
+    this.consultId = utils.getParam(location.href, "cId")
   },
   async mounted() {
     // this.userInfo = uni.getStorageSync("userInfo")
@@ -109,6 +121,19 @@ export default {
     if (!utils.checkLogin()) {
       return this.openLoginConfirm()
     }
+
+    if (utils.get('time') && utils.get('workId') && utils.get('workName')) {
+      this.time = utils.get('time')
+      this.workId = utils.get('workId')
+      this.workName = utils.get('workName')
+      this.$refs.cartBox.time = this.time
+      this.$refs.cartBox.workId = this.workId
+      // cartBox
+      utils.remove('time')
+      utils.remove('workId')
+      utils.remove('workName')
+    }
+
     await this.getDates()
     await this.getConsultInfoByServe()
   },
@@ -119,7 +144,7 @@ export default {
       });
     },
     async getConsultInfoByServe() {
-      const res = await orderServer.getConsultInfoByServe(this.serveId)
+      const res = await orderServer.getConsultInfoByServe(this.consultId, this.serveId)
       this.consult = res.consult
       this.serve = res.serve
       this.works = res.works
@@ -131,7 +156,8 @@ export default {
     open() {
       this.$refs.cartBox.open()
     },
-    doOk(workId, workName) {
+    doOk(workId, time, workName) {
+      this.time = time
       this.workId = workId
       this.workName = workName
       this.$refs.cartBox.close()
@@ -185,8 +211,9 @@ export default {
           this.serve.price,
           {
             module: 'consult',
+            time: this.time,
             workId: this.workId,
-            orderId: 0
+            consultId: this.consultId
           }
       )
 
@@ -420,7 +447,7 @@ export default {
     flex-direction: row;
     display: flex;
     justify-content: space-between;
-    margin: 32upx 0 0 32upx;
+    margin: 24upx 0 32upx 32upx;
   }
   .section-time-group-text2 {
     width: 104upx;
@@ -451,7 +478,7 @@ export default {
     height: 1upx;
     display: flex;
     flex-direction: column;
-    margin: 24upx 0 0 32upx;
+    margin-left: 32upx;
   }
   .section-time-group3 {
     width: 622upx;
@@ -482,7 +509,7 @@ export default {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    margin: 32upx 0 493upx 32upx;
+    margin: 32upx 0 16upx 32upx;
   }
   .section-reader-box {
     transform:scale(0.7);
@@ -517,6 +544,12 @@ export default {
     color: rgba(51,51,51,1.000000);
     font-size: 24upx;
     line-height: 44upx;
+  }
+  .notice {
+    margin: 0 64upx 16upx 80upx;
+    font-size: 22rpx;
+    font-family: PingFangSC-Regular, PingFang SC;
+    color: #777777;
   }
   .bottom-view {
     padding: 10upx;

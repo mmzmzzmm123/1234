@@ -19,73 +19,87 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="serveId"    column="serve_id"    />
         <result property="serveName"    column="serve_name"    />
         <result property="userId"    column="user_id"    />
-        <result property="userName"    column="user_name"    />
-        <result property="workId"    column="work_id"    />
-        <result property="type"    column="type"    />
-        <result property="day"    column="day"    />
-        <result property="week"    column="week"    />
-        <result property="timeStart"    column="time_start"    />
-        <result property="timeEnd"    column="time_end"    />
-        <result property="time"    column="time"    />
+        <result property="nickName"    column="nick_name"    />
+        <result property="amount"    column="amount"    />
         <result property="num"    column="num"    />
         <result property="buyNum"    column="buy_num"    />
-        <result property="amount"    column="amount"    />
         <result property="delFlag"    column="del_flag"    />
         <result property="status"    column="status"    />
         <result property="createBy"    column="create_by"    />
         <result property="createTime"    column="create_time"    />
         <result property="updateBy"    column="update_by"    />
         <result property="updateTime"    column="update_time"    />
+        <result property="pay"    column="pay"    />
+        <result property="payTime"    column="pay_time"    />
+        <result property="payStatus"    column="pay_status"    />
+        <result property="orderTime"    column="order_time"    />
+        <result property="remark"    column="remark"    />
+        <result property="phone"    column="phone"    />
     </resultMap>
 
     <sql id="selectPsyConsultOrderVo">
-        select id, order_no, consult_id, consult_name, serve_id, serve_name, user_id, user_name, work_id, type, day, week, time_start, time_end, time, num, buy_num, amount, del_flag, status, create_by, create_time, update_by, update_time from psy_consult_order
+        select a.id, a.order_no, a.consult_id, a.consult_name, a.serve_id, a.serve_name, a.user_id, a.nick_name, a.amount, num, a.buy_num, a.del_flag,
+               a.status, a.create_by, a.create_time, a.update_by, a.update_time, a.pay, a.pay_time, a.pay_status, a.order_time, b.phone, a.remark
+        from psy_consult_order a
+            left join psy_user b on a.user_id = b.id
     </sql>
 
     <select id="getList" parameterType="PsyConsultOrder" resultMap="PsyConsultOrderResult">
         <include refid="selectPsyConsultOrderVo"/>
         <where>
-            <if test="orderNo != null  and orderNo != ''"> and order_no = #{orderNo}</if>
-            <if test="consultId != null "> and consult_id = #{consultId}</if>
-            <if test="consultName != null  and consultName != ''"> and consult_name like concat('%', #{consultName}, '%')</if>
-            <if test="userName != null  and userName != ''"> and user_name like concat('%', #{userName}, '%')</if>
-            <if test="serveId != null "> and serve_id = #{serveId}</if>
-            <if test="serveName != null  and serveName != ''"> and serve_name like concat('%', #{serveName}, '%')</if>
-            <if test="userId != null "> and user_id = #{userId}</if>
-            <if test="workId != null "> and work_id = #{workId}</if>
-            <if test="type != null  and type != ''"> and type = #{type}</if>
-            <if test="timeStart != null "> and time_start = #{timeStart}</if>
-            <if test="timeEnd != null "> and time_end = #{timeEnd}</if>
-            <if test="time != null  and time != ''"> and time = #{time}</if>
-            <if test="num != null  and num != ''"> and num = #{num}</if>
-            <if test="buyNum != null  and buyNum != ''"> and buy_num = #{buyNum}</if>
-            <if test="amount != null "> and amount = #{amount}</if>
-            <if test="status != null  and status != ''"> and status = #{status}</if>
-            <if test="delFlag != null  and delFlag != ''"> and del_flag = #{delFlag}</if>
+            <if test="orderNo != null  and orderNo != ''"> and a.order_no = #{orderNo}</if>
+            <if test="consultId != null "> and a.consult_id = #{consultId}</if>
+            <if test="serveName != null  and serveName != ''"> and a.serve_name like concat('%', #{serveName}, '%')</if>
+            <if test="nickName != null "> and a.nick_name like concat('%', #{nickName}, '%')</if>
+            <if test="pay != null  and pay != ''"> and a.pay_status = #{pay}</if>
+            <if test="status != null  and status != ''"> and a.status = #{status}</if>
+            <if test="delFlag != null  and delFlag != ''"> and a.del_flag = #{delFlag}</if>
+            <if test="startTime != null "> and a.create_time <![CDATA[ >= ]]> #{startTime}</if>
+            <if test="endTime != null "> and a.create_time <![CDATA[ <= ]]> #{endTime}</if>
         </where>
     </select>
 
-    <select id="getOrderList" resultType="com.ruoyi.psychology.vo.PsyConsultOrderVO">
-        select a.id, a.order_no, a.consult_id, a.consult_name, a.serve_id, a.serve_name, a.user_id, a.user_name, a.work_id, a.type, a.day, a.week, a.time_start, a.time_end, a.time, a.num, a.buy_num, a.amount, a.del_flag, a.status, a.create_by, a.create_time, a.update_by, a.update_time
-        , b.avatar,
+    <select id="getOrderList" resultType="com.ruoyi.psychology.dto.OrderListDTO">
+        select a.id, a.order_no, a.consult_id, a.consult_name, a.serve_id, a.serve_name, a.user_id,a.remark,
+               a.nick_name, a.amount, a.num, a.buy_num, a.del_flag, a.status, a.create_by, a.order_time,
+               a.create_time, a.update_by, a.update_time, a.pay, a.pay_time, b.avatar,
+               s.mode, s.type, s.info, s.price, s.time, s.bound, s.end,
         CASE
             WHEN a.STATUS = '0' THEN
             '待付款'
             WHEN a.STATUS = '1' THEN
-            '待预约'
+            '进行中'
             WHEN a.STATUS = '2' THEN
-            '待咨询'
-            WHEN a.STATUS = '3' THEN
             '已完成' ELSE '已取消'
             END as status_name
-        from psy_consult_order a inner join psy_consult b on a.consult_id = b.id
-
+        FROM psy_consult_order a
+            INNER JOIN psy_consult b on a.consult_id = b.id
+            INNER JOIN psy_consult_serve_config s on a.serve_id = s.id
         <where>
+            and a.status != '3'
             <if test="orderNo != null  and orderNo != ''"> and a.order_no = #{orderNo}</if>
             <if test="userId != null "> and a.user_id = #{userId}</if>
             <if test="status != null"> and a.status = #{status}</if>
             <if test="delFlag != null  and delFlag != ''"> and a.del_flag = #{delFlag}</if>
         </where>
+    </select>
+
+    <select id="getOrderDetail" resultType="com.ruoyi.psychology.dto.OrderDTO">
+        select a.id, a.order_no, a.consult_id, a.consult_name, a.serve_id, a.serve_name, a.user_id,a.remark,
+               a.nick_name, a.amount, a.num, a.buy_num, a.del_flag, a.status, a.create_by, a.order_time,
+               a.create_time, a.update_by, a.update_time, b.avatar,a.pay, a.pay_time,a.pay_status,c.phone,
+               CASE
+                   WHEN a.STATUS = '0' THEN
+                       '待付款'
+                   WHEN a.STATUS = '1' THEN
+                       '进行中'
+                   WHEN a.STATUS = '2' THEN
+                       '已完成' ELSE '已取消'
+                   END as status_name
+        FROM psy_consult_order a
+                 INNER JOIN psy_consult b on a.consult_id = b.id
+                 LEFT JOIN psy_user c on a.user_id = c.id
+        where a.id = #{id}
     </select>
 
 </mapper>

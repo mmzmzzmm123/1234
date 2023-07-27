@@ -21,7 +21,7 @@
             </view>
             <view v-if="a.child.length > 0" class="time-content-list">
               <view v-for="i in a.child">
-                <view class="time-item-tag" :class="{ selected: i.id === workId }" @tap="selectDay(i.id, a.day)">
+                <view class="time-item-tag" :class="{ selected: i.id === workId && i.time === time }" @tap="selectDay(i.id, a.day, i.time)">
                   <text class="time-item-tag-text">{{ i.s }}</text>
                   <view class="time-item-tag-block"></view>
                   <text class="time-item-tag-text2">{{ i.e }}</text>
@@ -50,6 +50,7 @@ export default {
   props: ["works", "dateList"],
   data() {
     return {
+      time: -1,
       workId: 0,
       workList: [],
       userInfo: {},
@@ -58,6 +59,9 @@ export default {
   methods: {
     getWorkList() {
       const arr = []
+      const today = this.dateList[0].date
+      const curTime =  new Date().getHours()
+
       this.dateList.forEach(a => {
         const item = {
           week: a.week,
@@ -65,12 +69,16 @@ export default {
           flag: false,
           child: []
         }
-        this.works.filter(b => a.date === b.day).forEach(c => {
-          item.child.push({
-            flag: false,
-            id: c.id,
-            s: c.timeStart.substr(11, 5),
-            e: c.timeEnd.substr(11, 5)
+        this.works.filter(b => a.date === b.day && b.live !== '[]').forEach(c => {
+          const live = JSON.parse(c.live)
+          live.filter(d => (a.date === today && d > curTime) || a.date !== today).forEach(it => {
+            item.child.push({
+              flag: false,
+              id: c.id,
+              time: it,
+              s: it + ':00',
+              e: it + ':50'
+            })
           })
         })
         arr.push(item)
@@ -78,7 +86,7 @@ export default {
       console.log(arr)
       this.workList = arr
     },
-    selectDay(id, day) {
+    selectDay(id, day, time) {
       // 多选时候处理
       // const item = this.workList.find(a => a.day === day)
       // const cl = item.child.find(a => a.id === id)
@@ -87,10 +95,12 @@ export default {
 
       this.workList.forEach(a => a.flag = false)
 
-      if (this.workId === id) {
+      if (this.workId === id && this.time === time) {
         this.workId = 0
+        this.time = -1
       } else {
         this.workId = id
+        this.time = time
         this.workList.find(a => a.day === day).flag = true
       }
     },
@@ -103,12 +113,11 @@ export default {
     },
     ok() {
       let workName = ''
-      if (this.workId > 0) {
-        const item = this.works.find(a => a.id === this.workId)
-        workName = item.timeStart.substr(0, 16) + '-' + item.timeEnd.substr(11, 5)
+      if (this.workId > 0 && this.time > 0) {
+        workName = this.time + ':00-' + this.time + ':50'
       }
 
-      this.$emit('doOk', this.workId, workName)
+      this.$emit('doOk', this.workId, this.time, workName)
       // this.close()
     },
     cancel() {

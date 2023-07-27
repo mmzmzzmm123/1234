@@ -5,7 +5,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 <mapper namespace="com.ruoyi.psychology.mapper.PsyConsultMapper">
 
     <select id="search" resultType="com.ruoyi.psychology.domain.PsyConsult">
-        <include refid="selectPsyConsultVo"/>
+        select id, user_id, user_name, nicK_name, avatar, email, phonenumber, sex, tabs, way, way_str, wx_card, zx_word, zx_style, notice, experience, info, detail, serve, work_num, work_time, work_hours, del_flag, status, create_by, create_time, update_by, update_time,
+        (SELECT count(id) FROM psy_consult_work WHERE `live` != '[]' and consult_id = psy_consult.id and `day` = DATE_FORMAT(NOW(),'%Y-%m-%d')) buy
+        from psy_consult
         <where>
             and status = 0 and del_flag = 0
             <if test="userName != null  and userName != ''"> and user_name like concat('%', #{userName}, '%')</if>
@@ -22,8 +24,19 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
              </if>
             <if test="(type != null  and type != '') or (days != null and days.size() > 0)">
                 and id in (
-                    SELECT consult_id FROM psy_consult_work WHERE del_flag = 0 and `status` = 0 and consult_id = psy_consult.id
-                    <if test="type != null  and type != ''"> and `type` = #{type}</if>
+                    SELECT consult_id FROM psy_consult_work WHERE `status` = 0 and consult_id = psy_consult.id
+                    <choose>
+                        <when test="type != null and type == '上午'">
+                            and `time_start` =<![CDATA[>=]]> '6:00' and `time_end` <![CDATA[<=]]> '12:00'
+                        </when>
+                        <when test="type != null and type == '下午'">
+                            and `time_start` <![CDATA[>=]]> '12:00' and `time_end` <![CDATA[<=]]> '6:00'
+                        </when>
+                        <when test="type != null and type == '晚上'">
+                            and `time_start` <![CDATA[>=]]> '6:00' and `time_end` <![CDATA[<=]]> '24:00'
+                        </when>
+                        <otherwise/>
+                    </choose>
                     <if test="days != null and days.size() > 0">
                         and `day` in
                         <foreach collection="days" index="index" item="item" open="(" separator="," close=")">

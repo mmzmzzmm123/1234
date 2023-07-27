@@ -4,15 +4,18 @@
           <view class="upper-box">
             <view class="img-box">
                 <img :src="consultant.avatar" />
+                <view v-if="consultant.buy > 0" class="img-tab">今日可约</view>
             </view>
             <view class="txt-box">
                 <view class="title">
                   <view class="name">{{ consultant.userName }}</view>
+                </view>
+                <view class="introduce txt-overflow txt-overflow-line2">{{ consultant.info }}</view>
+                <view class="title">
                   <view v-for="tag in consultant.tabs.split(',')" class="tag-list">
                     <view class="tag-item">{{ tag }}</view>
                   </view>
                 </view>
-                <view class="introduce txt-overflow txt-overflow-line2">{{ consultant.info }}</view>
             </view>
           </view>            
             
@@ -44,24 +47,40 @@ export default {
 @import "@/style/common.scss";
 .consultant-list-box {
   .consultant-item {
-      width: calc(100% -48upx);
-      padding: 24upx;
+      position: relative;
       background: #ffffff;
       border-radius: 12upx;
       margin-bottom: 16upx;
+      padding: 24upx;
       .upper-box {
         display: flex;
-        align-items: center;
         .img-box {
-            width: 172upx;
-            height: 172upx;
+            position: relative;
+            width: 162upx;
+            height: 212upx;
             img {
-              border-radius: 50%;
-            }
+                border-radius: 10%;
+              }
+          .img-tab {
+            text-align: center;
+            position: absolute;
+            border-radius: 0 0 12upx 12upx;
+            bottom: 0;
+            color: #fff;
+            width: 162upx;
+            height: 48upx;
+            line-height: 48upx;
+            font-size: 24upx;
+            background: rgba(0,0,0,0.3);
+            backdrop-filter: blur(6px);
+          }
         }
         .txt-box {
-          width: calc(100% - 198upx);
-          margin-left: 32upx;
+          width: 450upx;
+          height: 202upx;
+          display: flex;
+          flex-direction: column;
+          margin-left: 24upx;
           .title {
             display: flex;
             align-items: center;
@@ -75,32 +94,32 @@ export default {
               margin-right: 14upx;
               
             }
-            .tag-list {
-              .tag-item {
-                background: rgba(255,112,63,0.1);
-                border-radius: 4upx;
-                margin-right: 8upx;
-                font-size: 22upx;
-                font-weight: 400;
-                color: #FF703F;
-                line-height: 30upx;
-                padding: 2upx 10upx;
-              }
-            }
           }  
           .introduce {
             font-size: 26upx;
-            font-family: PingFangSC-Regular, PingFang SC;
             font-weight: 400;
             color: #777777;
-            line-height: 37upx;
+            margin-bottom: 10upx;
+          }
+          .tag-list {
+            .tag-item {
+              background: rgba(255,112,63,0.1);
+              border-radius: 4upx;
+              margin-right: 8upx;
+              font-size: 22upx;
+              font-weight: 400;
+              color: #FF703F;
+              line-height: 30upx;
+              padding: 2upx 10upx;
+            }
           }
         }
       }
       
       .bottom-box {
-        display: flex;
-        flex-direction: row-reverse;
+        position: absolute;
+        bottom: 16upx;
+        right: 16upx;
         .consult-button {
           width: fit-content;
           height: fit-content;

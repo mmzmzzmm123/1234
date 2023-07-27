@@ -1,6 +1,5 @@
 package com.ruoyi.psychology.vo;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import com.ruoyi.common.core.domain.BaseValObj;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -39,30 +38,16 @@ public class PsyConsultOrderVO extends BaseValObj implements Serializable
 
     /** 客户id */
     private Integer userId;
-    private String userName;
 
-    /** 排班 */
-    private Long workId;
+    /** 客户 */
+    private String nickName;
 
-    /** 可选班次0全天 1上午 2下午 3晚上 */
-    private String type;
+    /** 应付费用 */
+    private BigDecimal amount;
 
-    /** 天 */
-    private String day;
+    private BigDecimal pay;
 
-    /** 周 */
-    private String week;
-
-    /** 咨询时段 */
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    private Date timeStart;
-
-    /** 咨询时段 */
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    private Date timeEnd;
-
-    /** 咨询时长(分钟) */
-    private Integer time;
+    private Date payTime;
 
     /** 可预约数量 */
     private Integer num;
@@ -70,17 +55,19 @@ public class PsyConsultOrderVO extends BaseValObj implements Serializable
     /** 已预约数量 */
     private Integer buyNum;
 
-    /** 应付费用 */
-    private BigDecimal amount;
-
     /** 删除标志（0代表存在 1代表删除） */
     private String delFlag;
 
-    /** 订单状态0-待付款 1-待预约 2-待咨询 3-已完成 4-已取消 */
-    private Integer status;
+    /** 订单状态0-待付款 1-进行中 2-已完成 3-已取消 */
+    private String status;
 
-    // 咨询师头像
-    private String avatar;
-    private String statusName;
+    private String payStatus;
+
+    private String orderTime;
+
+    private String remark;
+
+    private Integer time;
+    private Long workId;
 
 }

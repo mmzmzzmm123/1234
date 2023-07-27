@@ -26,7 +26,7 @@
 
     <view class="consult-box index-margin">
       <view class="index-title">
-        <view class="consult-direction" @tap="doFilter(1)">咨询方向</view>
+        <view class="consult-direction" @tap="doFilter(1)">擅长领域</view>
         <view class="price-filter" @tap="doFilter(2)">{{ calPrice }}</view>
         <view class="filter" @tap="doFilter(3)">筛选</view>
       </view>

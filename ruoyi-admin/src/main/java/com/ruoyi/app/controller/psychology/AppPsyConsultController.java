@@ -40,6 +40,13 @@ public class AppPsyConsultController extends BaseController
         return getDataTable(list);
     }
 
+    @GetMapping(value = "/getConsultWorksById/{id}")
+    public AjaxResult getConsultWorksById(@PathVariable("id") Long id)
+    {
+        return AjaxResult.success(psyConsultService.getConsultWorksById(id));
+    }
+
+
     /**
      * 获取心理咨询师详细信息
      */
