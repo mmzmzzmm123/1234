@@ -30,6 +30,10 @@ export default {
       default: ""
     }
   },
+
+
+
+  
   computed: {
     realSrc() {
       if (!this.src) {
