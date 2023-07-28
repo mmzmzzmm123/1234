@@ -40,7 +40,7 @@ public class SysLoginService
     @Autowired
     private TokenService tokenService;
 
-    @Resource
+    @Autowired
     private AuthenticationManager authenticationManager;
 
     @Autowired
