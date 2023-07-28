@@ -1,5 +1,13 @@
 import httprequest from "../httpRequest";
 export default {
+  getNotice: async (id) => {
+    let res = await httprequest.get(`/app/system/notice/` + id);
+    if (res.code == 200) {
+      return res.data;
+    } else {
+      return [];
+    }
+  },
   //获取订单列表
   getOrderList: async (data) => {
     let res = await httprequest.post(`/app/consult/order/getOrderList`, data);

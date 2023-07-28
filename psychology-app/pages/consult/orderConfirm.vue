@@ -48,7 +48,7 @@
         </checkbox-group>
         <view class="section-reader-group">
           <text class="section-reader-group-text1">我同意</text>
-          <text class="section-reader-group-text2">《心理咨询服务协议》</text>
+          <text class="section-reader-group-text2" @tap="openNotice">《心理咨询服务协议》</text>
           <text class="section-reader-group-text3" />
         </view>
       </view>
@@ -73,6 +73,16 @@
         </view>
       </button>
     </view>
+
+    <uni-popup ref="popupNotice" :mask-click="false">
+      <view class="popup-notice">
+        <scroll-view class="popup-notice-desc" scroll-y scroll-with-animation>
+          <view v-html="notice.noticeContent"></view>
+        </scroll-view>
+        <button class="popup-notice-close" @tap="closeNotice">我已阅读并同意上述协议</button>
+      </view>
+    </uni-popup>
+
     <uni-popup ref="popup" type="dialog">
       <uni-popup-dialog mode="base" content="您尚未登录, 是否使用微信静默登录" :duration="2000" :before-close="true" @close="closeLoginConfirm" @confirm="confirmLogin"/>
     </uni-popup>
@@ -99,6 +109,7 @@ export default {
       workName: '',
       flag: false,
       checkBox: false,
+      notice: {},
       userInfo: {},
       tabs: [],
       works: [],
@@ -134,6 +145,7 @@ export default {
       utils.remove('workName')
     }
 
+    this.getNotice()
     await this.getDates()
     await this.getConsultInfoByServe()
   },
@@ -149,8 +161,18 @@ export default {
       this.serve = res.serve
       this.works = res.works
     },
+    async getNotice() {
+      this.notice = await orderServer.getNotice(3);
+    },
     async getDates() {
       this.dateList = await indexServer.getDates(7);
+    },
+    openNotice() {
+      this.$refs.popupNotice.open()
+    },
+    closeNotice() {
+      this.checkBox = 'ok'
+      this.$refs.popupNotice.close()
     },
     // cartBox start
     open() {
@@ -589,5 +611,37 @@ export default {
     font-size: 32upx;
   }
   // sss
+  .popup-notice {
+    background-color: #FFFFFF;
+    width: 700upx;
+    border-radius: 12upx;
+    margin-left: 16upx;
+    margin-right: 16upx;
+    position: relative;
+    display: flex;
+    justify-content: center;
+    padding-bottom: 80upx;
+    .popup-notice-desc {
+      /deep/ .ql-align-center {
+        text-align: center;
+        margin-bottom: 10upx;
+      }
+      height: 1000upx;
+      padding: 24upx;
+      ::v-deep img {
+        width: 100%;
+      }
+    }
+    .popup-notice-close {
+      border-radius: 20px;
+      height: 41px;
+      width: 260px;
+      line-height: 41px;
+      position: absolute;
+      bottom: 10upx;
+      color: #fff;
+      background-color: #ff703f;
+    }
+  }
 }
 </style>
