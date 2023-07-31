@@ -6,6 +6,7 @@ import com.alibaba.fastjson2.JSON;
 import com.alibaba.fastjson2.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.ruoyi.common.constant.NewConstants;
 import com.ruoyi.common.utils.NewDateUtil;
 import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.psychology.domain.PsyConsultWork;
@@ -106,17 +107,20 @@ public class PsyConsultWorkServiceImpl extends ServiceImpl<PsyConsultWorkMapper,
         WorkDTO res = new WorkDTO();
         Calendar c = Calendar.getInstance();
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+
+        if (StringUtils.isNotEmpty(req.getMonth())) {
+            Date date = NewDateUtil.strToDate(req.getMonth(), NewConstants.DATE_FORMAT_MONTH);
+            if (date == null) {
+                date = new Date();
+            }
+            c.setTime(date);
+        }
+
         List<HeaderDTO> headers = new ArrayList<>();
         HeaderDTO header1 = new HeaderDTO();
         header1.setLabel("咨询师");
         header1.setProp("nickName");
         headers.add(header1);
-
-        if ("1".equals(req.getMonth())) {
-            c.add(Calendar.MONTH, -1);
-        } else if ("3".equals(req.getMonth())) {
-            c.add(Calendar.MONTH, 1);
-        }
 
         int max_day_of_month = c.getActualMaximum(Calendar.DAY_OF_MONTH);
         c.set(Calendar.DAY_OF_MONTH, 1);

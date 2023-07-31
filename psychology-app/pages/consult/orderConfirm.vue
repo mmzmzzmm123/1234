@@ -544,7 +544,7 @@ export default {
     //margin-top: 6upx;
   }
   .section-reader-group {
-    width: 320upx;
+    width: 580upx;
     height: 44upx;
     font-size: 0upx;
     text-align: justify;

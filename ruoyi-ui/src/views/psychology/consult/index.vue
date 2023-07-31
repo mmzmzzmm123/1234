@@ -150,7 +150,7 @@
     <el-dialog title="关联服务" :visible.sync="openServeRef" width="900px" append-to-body>
       <serve-ref v-if="openServeRef" :id="consultId" @setServe="setServe"/>
       <div slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="updateServeForm">确 定</el-button>
+        <el-button :disabled="cIds.length === 0" type="primary" @click="updateServeForm">确定关联</el-button>
         <el-button @click="cancelServe">取 消</el-button>
       </div>
     </el-dialog>
@@ -254,6 +254,7 @@ export default {
     cancelServe() {
       this.openServeRef = false;
       this.consultId = ''
+      this.cIds = []
     },
     setServe (ids) {
       this.cIds = ids

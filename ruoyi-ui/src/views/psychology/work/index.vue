@@ -11,10 +11,18 @@
           />
         </el-select>
       </el-form-item>
-      <el-form-item label="时间选择">
-        <el-radio-group v-model="queryParams.month" type="button" class="mr20" size="small" @input="getList">
-          <el-radio-button v-for="(item,i) in fromTxt" :key="i" :label="item.val">{{ item.text }}</el-radio-button>
-        </el-radio-group>
+      <el-form-item label="时间选择" prop="month">
+<!--        <el-radio-group v-model="queryParams.month" type="button" class="mr20" size="small" @input="getList">-->
+<!--          <el-radio-button v-for="(item,i) in fromTxt" :key="i" :label="item.val">{{ item.text }}</el-radio-button>-->
+<!--        </el-radio-group>-->
+        <el-date-picker
+          :clearable="false"
+          v-model="queryParams.month"
+          type="month"
+          value-format="yyyy-MM"
+          format="yyyy-MM"
+          placeholder="选择月份">
+        </el-date-picker>
       </el-form-item>
       <el-form-item>
         <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
@@ -36,7 +44,13 @@
       <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
     </el-row>
 
-    <el-table ref="myTable" border size="mini" v-if="headerList.length > 0" v-loading="loading" :data="workList">
+    <el-table ref="myTable"
+              :header-cell-style="headerStyle"
+              :cell-style="cellStyle"
+              border size="mini"
+              v-if="headerList.length > 0"
+              v-loading="loading"
+              :data="workList">
 <!--      <el-table-column label="咨询师" align="center" prop="consultName" />-->
       <el-table-column v-for="(th, key) in headerList" :key="key" :fixed="th.prop === 'nickName'" :prop="th.prop" :label="th.label" :align="th.align" :width="th.prop === 'nickName' ? '120px' : '60px'">
         <template slot-scope="scope">
@@ -48,7 +62,7 @@
             >{{ scope.row[th.prop] }}</el-button>
             <div>{{ scope.row.userName }}</div>
           </div>
-          <div v-else-if="!scope.row[th.prop]">
+          <div v-else-if="!scope.row[th.prop]" style="color: #BEBEBE">
             未排班
           </div>
           <div v-else>
@@ -132,6 +146,8 @@ export default {
   name: "ConsultWork",
   data() {
     return {
+      today: '',
+      fullToday: '',
       // 遮罩层
       loading: true,
       // 选中数组
@@ -160,7 +176,7 @@ export default {
       // 查询参数
       queryParams: {
         ids: null,
-        month: '2'
+        month: ''
       },
       // 表单参数
       form: {
@@ -237,13 +253,33 @@ export default {
     // isAdmin() {
     //   return this.userName === 'admin'
     // },
+    cellStyle({column}) {
+      if (column.property < this.fullToday) {
+        return {
+          backgroundColor: '#EFEFEF'
+        }
+      }
+    },
+    headerStyle({column}) {
+      // console.log(column)
+      const s = {}
+      if (column && column.label.includes(this.today)) {
+        s.color = '#FA8C16'
+      }
+      if (column && (column.label.includes('周六') || column.label.includes('周日'))) {
+        s.backgroundColor = '#E6FFFB'
+      }
+      return s
+    },
     setScroll() {
       this.$nextTick(()=>{
         this.$refs.myTable.bodyWrapper.scrollLeft = 0
+        const ym = this.fullToday.substr(0, 7)
+        const d = this.fullToday.substr(8)
 
-        if (this.queryParams.month === '2') {
-          const day = new Date().getDate()
-          this.$refs.myTable.bodyWrapper.scrollLeft = 150 + this.scrollLeft * day
+        if (this.queryParams.month === ym) {
+          // const day = new Date().getDate()
+          this.$refs.myTable.bodyWrapper.scrollLeft = 150 + this.scrollLeft * d
         }
         this.$refs.myTable.doLayout()
       })
@@ -253,11 +289,15 @@ export default {
       const date = new Date()
       const year = date.getFullYear()
       const month = date.getMonth() + 1 < 10 ? '0' + (date.getMonth() + 1) : date.getMonth() + 1
-      this.fromTxt = [
-        { text: '上个月', val: '1' },
-        { text: year+month, val: '2' },
-        { text: '下个月', val: '3' }
-      ]
+      this.today = month + '-' + date.getDate()
+      this.fullToday = year + '-' + month + '-' + date.getDate()
+      this.queryParams.month = year + '-' + month
+      // this.fromTxt = [
+      //   { text: '上个月', val: '1' },
+      //   { text: year+month, val: '2' },
+      //   { text: '下个月', val: '3' }
+      // ]
+
     },
     /** 查询咨询师列表 */
     async getConsultList() {
@@ -299,11 +339,9 @@ export default {
     },
     /** 重置按钮操作 */
     resetQuery() {
-      this.queryParams = {
-        ids: null,
-        month: '2',
-      }
-      this.handleQuery();
+      this.setTime()
+      this.queryParams.ids = null
+      // this.handleQuery();
     },
     /** 新增按钮操作 */
     handleAdd() {

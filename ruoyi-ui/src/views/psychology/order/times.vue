@@ -111,29 +111,32 @@ export default {
     },
     submit() {
       console.log(this.formHx)
-      if (!this.formHx.id) {
-        return this.$modal.msgError("请选择订单");
+      const that = this
+      if (!that.formHx.id) {
+        return that.$modal.msgError("请选择订单");
       }
-      if (this.formHx.times.length === 0) {
-        return this.$modal.msgError("请选择用户实际咨询时间");
+      if (that.formHx.times.length === 0) {
+        return that.$modal.msgError("请选择用户实际咨询时间");
       }
       const arr = []
-      this.formHx.times.filter(a => !a.value || a.value === '').forEach(b => {
+      that.formHx.times.filter(a => !a.value || a.value === '').forEach(b => {
         arr.push(b.label)
       })
       if (arr.length > 0) {
-        return this.$modal.msgError(arr.join(',')  + " 不能为空");
+        return that.$modal.msgError(arr.join(',')  + " 不能为空");
       }
-
-      const data = {
-        id: this.formHx.id,
-        times: this.formHx.times.map(a => a.value)
-      }
-      hx(data).then(response => {
-        this.$modal.msgSuccess("修改成功");
-        this.$emit('hxOk');
-        this.cancel()
-      });
+      that.$modal.confirm('你确定核销咨询次数吗？').then(function() {
+        const data = {
+          id: that.formHx.id,
+          times: that.formHx.times.map(a => a.value)
+        }
+        hx(data).then(response => {
+          that.$modal.msgSuccess("修改成功");
+          that.$emit('hxOk');
+        });
+      }).then(() => {
+        that.cancel()
+      }).catch(() => {});
     },
     cancel() {
       this.openHx = false

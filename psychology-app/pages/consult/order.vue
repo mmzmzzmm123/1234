@@ -33,7 +33,7 @@
             <view class="item-price">
               <text class="item-price-unit">¥</text>
               <text class="item-price-num">{{ item.amount}}/</text>
-              <text class="item-price-time">{{ item.num + item.buyNum }}次</text>
+              <text class="item-price-time">{{ item.serveNum }}次</text>
             </view>
           </view>
           <view class="item-info-box">

@@ -82,6 +82,9 @@ public class OrderListDTO extends BaseValObj implements Serializable
     /** 时长 */
     private Integer time;
 
+    /** 服务次数 */
+    private Integer serveNum;
+
     /** 限购 0-不限制 1-限制 */
     private Integer bound;
     private String boundName;

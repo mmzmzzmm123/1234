@@ -116,11 +116,7 @@
           <el-tag v-else>{{ scope.row.statusName }}</el-tag>
         </template>
       </el-table-column>
-      <el-table-column label="下单时间" align="center" prop="createTime" width="180">
-        <template slot-scope="scope">
-          <span>{{ parseTime(scope.row.createTime, '{y}-{m}-{d}') }}</span>
-        </template>
-      </el-table-column>
+      <el-table-column label="下单时间" align="center" prop="createTime" width="180"/>
       <el-table-column fixed="right" label="操作" align="center" class-name="small-padding fixed-width" width="150">
         <template slot-scope="scope">
           <el-button
@@ -306,27 +302,31 @@ export default {
         this.order = response.data
         const items = []
 
-        if (["1", "2"].includes(this.order.status) && this.order.items && this.order.items.length > 0) {
-          this.order.items.forEach((i, idx) => {
-            const it = {
-              num: idx + 1,
-              time: i.day + ' ' + i.timeStart + '-' + i.timeEnd,
-              realTime: i.realTime,
-              status: i.status,
-              updateBy: i.updateBy
+        if (["1", "2"].includes(this.order.status) ) {
+          if (this.order.items && this.order.items.length > 0) {
+            this.order.items.forEach((i, idx) => {
+              const it = {
+                num: idx + 1,
+                time: i.day + ' ' + i.timeStart + '-' + i.timeEnd,
+                realTime: i.realTime,
+                status: i.status,
+                updateBy: i.updateBy
+              }
+              items.push(it)
+            })
+          }
+
+          if (this.order.num > 0) {
+            for (let i = 1; i <= this.order.num; i++) {
+              const tt = {
+                num: items.length + i,
+                time: '用户未预约',
+                realTime: '',
+                status: '',
+                updateBy: ''
+              }
+              items.push(tt)
             }
-            items.push(it)
-          })
-        } else if (["1", "2"].includes(this.order.status) && this.order.num > 0) {
-          for (let i = 1; i <= this.order.num; i++) {
-            const tt = {
-              num: this.order.buyNum + i,
-              time: '',
-              realTime: '',
-              status: '',
-              updateBy: ''
-            }
-            items.push(tt)
           }
         }
 
