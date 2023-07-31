@@ -158,44 +158,51 @@
     	"path": "pages/consult/index",
     	"style": {
     		"navigationStyle": "custom",
-        "navigationBarTitleText": "知我咨询"
+        "navigationBarTitleText": "三束光心理"
     	}
     },
     {
     	"path": "pages/consult/consultant",
     	"style": {
     		"navigationStyle": "custom",
-        "navigationBarTitleText": "知我咨询"
+        "navigationBarTitleText": "三束光心理"
     	}
     },
     {
     	"path": "pages/consult/orderConfirm",
     	"style": {
     		"navigationStyle": "custom",
-        "navigationBarTitleText": "知我咨询"
+        "navigationBarTitleText": "三束光心理"
     	}
     },
     {
     	"path": "pages/consult/order",
     	"style": {
     		"navigationStyle": "custom",
-        "navigationBarTitleText": "知我咨询"
+        "navigationBarTitleText": "三束光心理"
     	}
     },
     {
     	"path": "pages/consult/orderInfo",
     	"style": {
     		"navigationStyle": "custom",
-        "navigationBarTitleText": "知我咨询"
+        "navigationBarTitleText": "三束光心理"
     	}
     },
     {
     	"path": "pages/consult/user",
     	"style": {
     		"navigationStyle": "custom",
-        "navigationBarTitleText": "知我咨询"
+        "navigationBarTitleText": "三束光心理"
     	}
     },
+	{
+		"path": "pages/consult/integral",
+		"style": {
+			"navigationStyle": "custom",
+			"navigationBarTitleText": "我的积分"
+		}
+	},
 		{
 			"path": "pages/logincallback",
 			"style": {

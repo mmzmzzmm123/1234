@@ -10,6 +10,7 @@ import com.ruoyi.common.vo.DateLimitUtilVO;
 import com.ruoyi.psychology.constant.ConsultConstant;
 import com.ruoyi.psychology.domain.PsyConsultOrder;
 import com.ruoyi.psychology.domain.PsyConsultOrderItem;
+import com.ruoyi.psychology.domain.PsyConsultOrderServe;
 import com.ruoyi.psychology.domain.PsyConsultWork;
 import com.ruoyi.psychology.dto.OrderDTO;
 import com.ruoyi.psychology.dto.OrderListDTO;
@@ -52,6 +53,9 @@ public class PsyConsultOrderServiceImpl implements IPsyConsultOrderService
     private IPsyConsultWorkService psyConsultWorkService;
 
     @Resource
+    private IPsyConsultOrderServeService psyConsultOrderServeService;
+
+    @Resource
     private IPsyConsultOrderItemService psyConsultOrderItemService;
 
     @Resource
@@ -67,13 +71,9 @@ public class PsyConsultOrderServiceImpl implements IPsyConsultOrderService
         detail.setStatusName(order.getStatusName());
         detail.setPayStatusName(order.getPayStatusName());
 
-        PsyConsultServeConfigVO serve = psyConsultServeConfigService.getOne(detail.getServeId());
         List<PsyConsultOrderItem> items = psyConsultOrderItemService.getList(id);
-        serve.setModeName(ConsultConstant.CONSULT_MODE_SOUND.equals(serve.getMode()) ? "语音" : ConsultConstant.CONSULT_MODE_VOICE.equals(serve.getMode()) ? "视频" : "面对面");
-        serve.setTypeName(ConsultConstant.CONSULT_TYPE_ONCE.equals(serve.getType()) ? "单次" : "套餐");
-        serve.setBoundName(ConsultConstant.CONSULT_NO_LIMIT.equals(serve.getBound()) ? "不限制" : "限制");
 
-        detail.setServe(serve);
+        detail.setServe(psyConsultOrderServeService.getOneByOrder(id, detail.getServeId()));
         detail.setItems(items);
         return detail;
     }
@@ -152,18 +152,7 @@ public class PsyConsultOrderServiceImpl implements IPsyConsultOrderService
     @Override
     public List<OrderListDTO> getOrderList(PsyConsultOrderVO req) {
         req.setDelFlag("0");
-        Calendar cal = Calendar.getInstance();
-        List<OrderListDTO> orderList = psyConsultOrderMapper.getOrderList(req);
-
-        orderList.forEach(a -> {
-            if (a.getEnd() > 0) {
-                cal.setTime(a.getCreateTime());
-                cal.add(Calendar.DATE, a.getEnd());
-                a.setEndTime(cal.getTime());
-            }
-        });
-
-        return orderList;
+        return psyConsultOrderMapper.getOrderList(req);
     }
 
     @Override
@@ -300,6 +289,9 @@ public class PsyConsultOrderServiceImpl implements IPsyConsultOrderService
     public int add(PsyConsultOrderVO req) {
         PsyConsultServeConfigVO serve = psyConsultServeConfigService.getOne(req.getServeId());
         PsyConsultVO consult = psyConsultService.getOne(req.getConsultId());
+
+        // 新增服务
+        psyConsultOrderServeService.add(serve, req.getId());
 
         req.setConsultName(consult.getUserName());
         req.setServeName(serve.getName());

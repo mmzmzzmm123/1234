@@ -26,6 +26,9 @@ public class IntegralSearchReq implements Serializable
     @ApiModelProperty(value = "用户id")
     private Integer uid;
 
+    @ApiModelProperty(value = "收入,支出")
+    private Integer type;
+
     private String startTime; //开始时间
 
     private String endTime; //结束时间

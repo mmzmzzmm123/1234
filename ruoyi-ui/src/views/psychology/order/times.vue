@@ -58,7 +58,7 @@ export default {
       order: {},
       pickerOptions: {
         disabledDate(time) {
-          return time.getTime() < new Date().getTime() - 86400000
+          return time.getTime() > new Date().getTime()
         },
       },
     }

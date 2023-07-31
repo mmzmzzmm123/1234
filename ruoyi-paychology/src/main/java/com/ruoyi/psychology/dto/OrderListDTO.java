@@ -65,9 +65,11 @@ public class OrderListDTO extends BaseValObj implements Serializable
 
     /** 咨询形式 语音咨询、视频咨询、面对面咨询 */
     private Integer mode;
+    private String modeName;
 
     /** 服务类型 单次咨询 套餐咨询 */
     private Integer type;
+    private String typeName;
 
     /** 服务介绍 */
     private String info;
@@ -82,9 +84,9 @@ public class OrderListDTO extends BaseValObj implements Serializable
 
     /** 限购 0-不限制 1-限制 */
     private Integer bound;
+    private String boundName;
 
     /** 有效期 */
-    private Integer end;
-    private Date endTime;
+    private Date end;
 
 }

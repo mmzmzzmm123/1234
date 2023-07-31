@@ -32,6 +32,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="type != null  and type != ''"> and type = #{type}</if>
             <if test="sort != null "> and sort = #{sort}</if>
             <if test="status != null  and status != ''"> and status = #{status}</if>
+            <if test="delFlag != null  and delFlag != ''"> and del_flag = #{delFlag}</if>
         </where>
         order by sort desc
     </select>
@@ -42,7 +43,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </select>
 
     <update id="tombstonedByIds">
-        update psy_consult_serve_config set del_flag = 1 where id in
+        update psy_consult_type set del_flag = 1 where id in
         <foreach collection="array" item="item" open="(" separator="," close=")">
             #{item,jdbcType=BIGINT}
         </foreach>

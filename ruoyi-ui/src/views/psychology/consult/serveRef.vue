@@ -11,6 +11,11 @@
       </el-table-column>
       <el-table-column label="服务次数" align="center" prop="num"/>
       <el-table-column label="服务时长(分)" align="center" prop="time"/>
+      <el-table-column label="状态" align="center" prop="status">
+        <template slot-scope="scope">
+          {{ scope.row.status === '0' ? '上架' : '下架'}}
+        </template>
+      </el-table-column>
     </el-table>
     <pagination
       v-show="total>0"

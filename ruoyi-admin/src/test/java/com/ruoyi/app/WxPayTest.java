@@ -102,7 +102,7 @@ public class WxPayTest {
 
     @Test
     public void notifyTest() {
-        String trade = "CON_DJ20230726173236000000847088";
+        String trade = "CON_DJ20230728171934000000846897";
         String order = "1222";
         wechatPayV3ApiService.wechatPayNotify(trade, order);
     }

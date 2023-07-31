@@ -76,7 +76,7 @@
     </el-row>
 
     <el-table v-loading="loading" :data="consultList" @selection-change="handleSelectionChange">
-      <el-table-column type="selection" width="55" align="center" />
+<!--      <el-table-column type="selection" width="55" align="center" />-->
       <el-table-column v-if="columns[1].visible" label="登录名" align="center" prop="userName" />
       <el-table-column v-if="columns[2].visible" label="头像" align="center" prop="avatar">
         <template slot-scope="scope">
@@ -114,7 +114,7 @@
             icon="el-icon-edit"
             @click="handleServeUpdate(scope.row)"
             v-hasPermi="['system:consult:edit']"
-          >编辑服务</el-button>
+          >关联服务</el-button>
           <el-button
             size="mini"
             type="text"

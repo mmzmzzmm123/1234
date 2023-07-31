@@ -36,4 +36,6 @@ public class WxAuthorizeControllerTest {
 
     }
 
+    // 08:44:10.377 [main] INFO  c.r.a.WxAuthorizeControllerTest - [deGet,33] - 用户登录模拟::::::userInfo::{"avatar":"https://thirdwx.qlogo.cn/mmopen/vi_32/3SMCDnLMChqt0Flb0icHvwPQmxnrMEtM7jxV6VMLRibY5oA8BhicqCR3RSwvjdZia2ERA2broS7XLOqSmNfpXolbPw/132","name":"进","openIdFlag":false,"token":"eyJhbGciOiJIUzUxMiJ9.eyJhcHBfbG9naW5fdXNlcl9rZXkiOiJlN2YyMDJmNy1jMmYwLTRkZjAtYmYyMi05ZDc1MmQ5NjZkNTcifQ.6uXAQn1x2X9fM-pTbpCDZQ2h8-T18ALN_xKIEjePo3uIhvPjB-q5byp99xo-OfQYoGdP936b2eOaQ4pPtJR8JA","userId":84}
+
 }

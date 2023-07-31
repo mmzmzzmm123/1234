@@ -289,7 +289,7 @@ export default {
     },
     /** 删除按钮操作 */
     handleDelete(row) {
-      this.$modal.confirm('是否确认删除咨询类型编号为"' + row.id + '"的数据项？').then(function() {
+      this.$modal.confirm('是否确认删除咨询类型为"' + row.name + '"的数据项？').then(function() {
         return delType(row.id);
       }).then(() => {
         this.getList();

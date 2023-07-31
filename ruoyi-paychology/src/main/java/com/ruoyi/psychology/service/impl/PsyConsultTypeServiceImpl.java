@@ -49,6 +49,7 @@ public class PsyConsultTypeServiceImpl implements IPsyConsultTypeService
     @Override
     public List<PsyConsultType> selectPsyConsultTypeList(PsyConsultType psyConsultType)
     {
+        psyConsultType.setDelFlag("0");
         return psyConsultTypeMapper.selectPsyConsultTypeList(psyConsultType);
     }
 

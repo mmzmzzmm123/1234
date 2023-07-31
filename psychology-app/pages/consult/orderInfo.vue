@@ -37,7 +37,7 @@
               <text v-if="order.status !== '0'" @tap="openWx" class="info-card">名片</text>
             </view>
             <text class="info-serve">{{ order.serveName }}</text>
-            <text class="info-end">有效期至：2025-12-21&nbsp;23:59</text>
+            <text class="info-end">有效期至：{{ order.serve.end ? order.serve.end : '永久有效'}}</text>
           </view>
           <view class="info-box-2">
             <text class="info-unit">¥</text>
@@ -224,7 +224,6 @@ export default {
     async getConsultInfoByServe() {
       const res = await orderServer.getConsultInfoByServe(this.order.consultId, this.order.serveId)
       this.consult = res.consult
-      this.serve = res.serve
       this.works = res.works
     },
     toBuy() {
@@ -277,8 +276,8 @@ export default {
     async doPay() {
       let res = await getPaySign(
           this.userInfo.userId,
-          this.serve.id,
-          this.serve.price,
+          this.order.serve.id,
+          this.order.serve.price,
           {
             module: 'consult',
             workId: this.workId,

@@ -63,7 +63,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         select a.id, a.order_no, a.consult_id, a.consult_name, a.serve_id, a.serve_name, a.user_id,a.remark,
                a.nick_name, a.amount, a.num, a.buy_num, a.del_flag, a.status, a.create_by, a.order_time,
                a.create_time, a.update_by, a.update_time, a.pay, a.pay_time, b.avatar,
-               s.mode, s.type, s.info, s.price, s.time, s.bound, s.end,
+               s.mode, s.mode_name, s.type, s.type_name, s.info, s.price, s.time, s.bound, s.bound_name, s.end,
         CASE
             WHEN a.STATUS = '0' THEN
             '待付款'
@@ -74,7 +74,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             END as status_name
         FROM psy_consult_order a
             INNER JOIN psy_consult b on a.consult_id = b.id
-            INNER JOIN psy_consult_serve_config s on a.serve_id = s.id
+            INNER JOIN psy_consult_order_serve s on a.id = s.order_id and a.serve_id= s.serve_id
         <where>
             and a.status != '3'
             <if test="orderNo != null  and orderNo != ''"> and a.order_no = #{orderNo}</if>

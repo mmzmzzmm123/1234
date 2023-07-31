@@ -2,6 +2,7 @@ package com.ruoyi.psychology.dto;
 
 import com.ruoyi.common.core.domain.BaseValObj;
 import com.ruoyi.psychology.domain.PsyConsultOrderItem;
+import com.ruoyi.psychology.domain.PsyConsultOrderServe;
 import com.ruoyi.psychology.vo.PsyConsultServeConfigVO;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -76,6 +77,6 @@ public class OrderDTO extends BaseValObj implements Serializable
 
     private List<PsyConsultOrderItem> items;
 
-    private PsyConsultServeConfigVO serve;
+    private PsyConsultOrderServe serve;
 
 }

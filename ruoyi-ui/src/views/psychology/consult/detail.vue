@@ -46,12 +46,12 @@
           </el-form-item>
         </el-col>
         <el-col :span="8">
-          <el-form-item label="服务时长" prop="workTime">
+          <el-form-item label="服务时长(小时)" prop="workTime">
             <el-input-number size="mini" v-model="form.workTime" :min="0" placeholder="请输入服务时长" />
           </el-form-item>
         </el-col>
         <el-col :span="8">
-          <el-form-item label="从业年限" prop="workHours">
+          <el-form-item label="从业年限(年)" prop="workHours">
             <el-input-number size="mini" v-model="form.workHours" :min="0" placeholder="请输入从业年限" />
           </el-form-item>
         </el-col>
@@ -92,17 +92,17 @@
       <el-row>
         <el-col :span="8">
           <el-form-item label="咨询寄语" prop="zxWord">
-            <el-input size="mini" maxlength="100" show-word-limit v-model="form.zxWord" placeholder="请输入咨询寄语" />
+            <el-input type="textarea" :rows="4" size="mini" maxlength="100" show-word-limit v-model="form.zxWord" placeholder="请输入咨询寄语" />
           </el-form-item>
         </el-col>
         <el-col :span="8">
           <el-form-item label="咨询风格" prop="zxStyle">
-            <el-input size="mini" maxlength="100" show-word-limit v-model="form.zxStyle" placeholder="请输入咨询风格" />
+            <el-input type="textarea" :rows="4" size="mini" maxlength="100" show-word-limit v-model="form.zxStyle" placeholder="请输入咨询风格" />
           </el-form-item>
         </el-col>
         <el-col :span="8">
           <el-form-item label="咨询须知" prop="notice">
-            <el-input size="mini" maxlength="100" show-word-limit v-model="form.notice" placeholder="请输入咨询须知" />
+            <el-input type="textarea" :rows="4" size="mini" maxlength="100" show-word-limit v-model="form.notice" placeholder="请输入咨询须知" />
           </el-form-item>
         </el-col>
       </el-row>

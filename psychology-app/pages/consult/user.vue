@@ -153,8 +153,7 @@ export default {
           uni.redirectTo({ url: "/pages/evaluation/index" })
           break
         case 11:
-          // uni.redirectTo({ url: "/pages/evaluation/index" })
-          console.log('我的积分')
+          // uni.navigateTo({ url: "/pages/consult/integral" })
           break
         case 12:
           // uni.redirectTo({ url: "/pages/evaluation/index" })

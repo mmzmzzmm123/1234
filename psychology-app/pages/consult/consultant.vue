@@ -25,8 +25,8 @@
           <text class="info-nums-item-title">服务时长</text>
         </view>
         <view class="info-nums-item">
-          <text class="info-nums-item-num">{{ consultInfo.workHours }}小时</text>
-          <text class="info-nums-item-title">服务时长</text>
+          <text class="info-nums-item-num">{{ consultInfo.workHours }}年</text>
+          <text class="info-nums-item-title">从业年限</text>
         </view>
       </view>
 

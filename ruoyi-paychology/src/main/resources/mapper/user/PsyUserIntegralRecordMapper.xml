@@ -11,6 +11,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         inner join psy_user b on a.uid = b.id
         <where>
             <if test="uid != null "> and a.uid = #{uid}</if>
+            <if test="type != null and type > 0"> and a.type = #{type}</if>
             <if test="keywords != null  and keywords != ''"> and b.name like concat('%', #{keywords}, '%')</if>
             <if test="startTime != null "> and a.create_time <![CDATA[ >= ]]> #{startTime}</if>
             <if test="endTime != null "> and a.create_time <![CDATA[ <= ]]> #{endTime}</if>

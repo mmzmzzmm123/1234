@@ -28,7 +28,7 @@
             <view class="item-info-group" @tap="toDetail(item.id)">
               <text class="item-name">{{ item.consultName }}</text>
               <text class="item-desc">{{ item.serveName }}</text>
-              <text class="item-desc">有效期至：{{ item.end === 0 ? '永久有效' : item.endTime}}</text>
+              <text class="item-desc">有效期至：{{ item.end ? item.end : '永久有效'}}</text>
             </view>
             <view class="item-price">
               <text class="item-price-unit">¥</text>
@@ -147,7 +147,6 @@ export default {
     async getConsultInfoByServe() {
       const res = await orderServer.getConsultInfoByServe(this.order.consultId, this.order.serveId)
       this.consult = res.consult
-      this.serve = res.serve
       this.works = res.works
     },
     async open(order) {
@@ -201,8 +200,8 @@ export default {
     async doPay() {
       let res = await getPaySign(
           this.userInfo.userId,
-          this.serve.id,
-          this.serve.price,
+          this.order.serve.id,
+          this.order.serve.price,
           {
             module: 'consult',
             workId: this.workId,
