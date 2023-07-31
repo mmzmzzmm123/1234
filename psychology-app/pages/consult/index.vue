@@ -187,17 +187,6 @@
         this.bannerList = await indexServer.getBannerList(type);
       },
       async getConsult() {
-        // const data = {
-        //   catId: 1,
-        //   userName: 'hello123',
-        //   sex: '男',
-        //   lowPrice: 0,
-        //   highPrice: 107,
-        //   serve: '面对面咨询',
-        //   type: '上午',
-        //   days: ['2023-06-27', '2023-06-28'],
-        //   way: ['原生家庭关系a','育儿b','易怒c','成长b']
-        // }
         this.consultantList = await indexServer.getConsult(this.queryData)
       },
       async tocourse(url) {
@@ -214,15 +203,16 @@
         if (!utils.checkLogin()) {
           return this.openLoginConfirm()
         }
+        if (item.name === '低价咨询') {
+          this.filterParams.price = '200元以下'
+          this.filterParams.type = 2
+          return this.submit()
+        }
         if (item.linkUrl) {
           uni.navigateTo({
             url: item.linkUrl,
           });
         }
-
-        // this.resetQuery()
-        // this.queryData.catId = classId
-        // this.getConsult()
       },
       toSearch() {
         // 判断是否已经登录
@@ -252,20 +242,24 @@
           case 2:
             if (this.filterParams.price) {
               switch (this.filterParams.price) {
-                case '500元以下':
+                case '200元以下':
                   this.queryData.lowPrice = 0
+                  this.queryData.highPrice = 199
+                  break
+                case '200-300元':
+                  this.queryData.lowPrice = 200
+                  this.queryData.highPrice = 299
+                  break
+                case '300-400元':
+                  this.queryData.lowPrice = 300
+                  this.queryData.highPrice = 399
+                  break
+                case '400-500元':
+                  this.queryData.lowPrice = 400
                   this.queryData.highPrice = 499
                   break
-                case '500-700元':
+                case '500元以上':
                   this.queryData.lowPrice = 500
-                  this.queryData.highPrice = 699
-                  break
-                case '700-900元':
-                  this.queryData.lowPrice = 700
-                  this.queryData.highPrice = 899
-                  break
-                case '900元以上':
-                  this.queryData.lowPrice = 900
                   this.queryData.highPrice = 99999
                   break
               }

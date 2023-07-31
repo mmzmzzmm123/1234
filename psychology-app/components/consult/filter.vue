@@ -1,11 +1,11 @@
 <template>
-  <view class="filter-container">
+    <scroll-view scroll-y scroll-with-animation class="filter-container">
     <view class="index-title">
       <view class="filter-item" :class="{ active: filterParams.type === 1 }" @tap="doFilter(1)">擅长领域</view>
       <view class="filter-item" :class="{ active: filterParams.type === 2 }" @tap="doFilter(2)">价格</view>
       <view class="filter-item" :class="{ active: filterParams.type === 3 }" @tap="doFilter(3)">筛选</view>
     </view>
-    
+
     <view class="consult-direction" v-if="filterParams.type === 1">
       <view class="consult-direction-content" v-for="item in attrParams.attrList">
         <view class="consult-direction-title">
@@ -27,7 +27,7 @@
         <view class="price-item" :class="{ selected: filterParams.price !== null && filterParams.price === item.name }" @tap="selectType(item.name, 'price')">{{ item.name }}</view>
       </view>
     </view>
-    <view class="consult-filter" v-else="filterParams.type === 3">
+    <view class="consult-filter" v-else-if="filterParams.type === 3">
       <view class="consult-filter-tab-content">
         <view class="consult-filter-tab-title">
           咨询师性别
@@ -92,7 +92,7 @@
       <view class="reset" @tap="reset">重置</view>
       <view class="confirm" @tap="confirm">确定</view>
     </view>
-  </view>
+    </scroll-view>
 </template>
 
 <script>
@@ -189,9 +189,17 @@
 <style lang="scss" scoped>
   .filter-container {
     padding: 26upx;
+    padding-bottom: 100upx;
+    height: 740upx;
     .index-title {
       display: flex;
-      margin-bottom: 32upx;
+      position: fixed;
+      z-index: 9;
+      top: 0;
+      height: 88upx;
+      width: 100%;
+      background-color: #FFFFFF;
+      align-items: center;
       .filter-item {
         position: relative;
         margin-right: 84upx;
@@ -220,9 +228,7 @@
     }
 
     .consult-direction {
-      .consult-filter-tab-content {
-        margin-top: 26upx;
-      }
+      margin-top: 60upx;
       .consult-direction-title {
         height: 42upx;
         font-size: 30upx;
@@ -236,7 +242,7 @@
       .consult-direction-tab-more {
         position: absolute;
         top: 10upx;
-        right: 10upx;
+        right: 80upx;
         color: #777777;
         font-size: 24upx;
       }
@@ -263,6 +269,7 @@
     }
     
     .price-filter {
+      margin-top: 60upx;
       .price-list {
         .price-item {
           margin-bottom: 32upx;
@@ -279,6 +286,7 @@
     }
 
     .consult-filter {
+      margin-top: 60upx;
       .consult-filter-tab-content {
         margin-top: 26upx;
       }
@@ -294,7 +302,7 @@
       .consult-filter-tab-more {
         position: absolute;
         top: 10upx;
-        right: 10upx;
+        right: 60upx;
         color: #777777;
         font-size: 24upx;
       }
@@ -359,7 +367,12 @@
     
     .footer {
       display: flex;
-      margin-top: 100px;
+      position: fixed;
+      z-index: 9;
+      bottom: 0;
+      height: 92upx;
+      width: 100%;
+      background-color: #FFFFFF;
       .reset {
         height: fit-content;
         border-radius: 40upx;

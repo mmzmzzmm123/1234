@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 
 /**
  * 咨询服务对象 psy_consult
@@ -117,6 +118,9 @@ public class PsyConsult extends BasePlusEntity implements Serializable
     // 今日可约
     @TableField(exist = false)
     private Integer buy;
+
+    @TableField(exist = false)
+    private BigDecimal price;
 
     
 }

@@ -57,12 +57,12 @@
             <text class="info-last-title">下次咨询时间：</text>
             <text class="info-last-val">{{ order.orderTime }}</text>
           </view>
-          <!--        <button class="pay-btn" v-if="order.status === '0' || (order.status === '1' && order.num > 0 && !order.day)">-->
-          <!--          去预约-->
-          <!--        </button>-->
+          <button @tap="toBuy" class="pay-btn" v-if="order.status === '1' && order.num > 0 && !order.orderTime">
+            去预约
+          </button>
         </view>
       </view>
-      <view class="serve">
+      <view class="serve" v-if="order.status !== '0'">
         <view class="serve-header">
           <view class="block-icon"></view>
           <text class="serve-header-title">服务详情</text>
@@ -118,10 +118,10 @@
         </view>
       </view>
 
-      <view class="footer" v-if="order.status === '0' || (order.status === '1' && order.num > 0 && !order.orderTime)">
+      <view class="footer" v-if="order.status === '0'">
         <button @tap="toBuy" class="button-buy">
-          <text class="button-text">{{ order.status === '0' ? '立即支付' : '去预约'}}</text>
-          <text class="button-price" v-if="order.status === '0'">
+          <text class="button-text">立即支付</text>
+          <text class="button-price">
             <text class="button-price-unit">¥</text>
             <text class="button-price-num">{{ order.amount && order.amount.toFixed(2) }}</text>
           </text>

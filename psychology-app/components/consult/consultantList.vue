@@ -21,7 +21,7 @@
             
             
           <view class="bottom-box">
-            <view class="consult-button" @tap="toConsultant(consultant)">咨询TA</view>
+            <view class="consult-button" @tap="toConsultant(consultant)">{{ consultant.price ? '¥' + consultant.price.toFixed(2) : '咨询TA' }}</view>
           </view>            
         </view>
         <view class="footer" v-show="consultantList.length > 0">已经到底了</view>
