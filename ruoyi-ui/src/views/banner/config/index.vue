@@ -114,10 +114,10 @@
     />
 
     <!-- 添加或修改测评banner配置对话框 -->
-    <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
-      <el-form ref="form" :model="form" :rules="rules" label-width="100px">
+    <el-dialog :title="title" :visible.sync="open" width="700px" append-to-body>
+      <el-form ref="form" :model="form" :rules="rules" label-width="120px">
         <el-form-item label="图片地址">
-          <image-upload v-model="form.bannerUrl" :extraData="extraData"/>
+          <image-upload v-model="form.bannerUrl" :sizeTip="sizeTips[form.bannerType]" :extraData="extraData"/>
         </el-form-item>
         <el-form-item label="跳转url" prop="linkUrl">
           <el-input v-model="form.linkUrl" placeholder="请输入跳转url" />
@@ -152,6 +152,12 @@ export default {
       extraData: {
         module: 'course'
       },
+      sizeTips: [
+        '宽702px 高260px',
+        '宽702px 高200px',
+        '宽343px 高344px',
+        '宽343px 高344px/164px',
+      ],
       // 遮罩层
       loading: true,
       // 选中数组

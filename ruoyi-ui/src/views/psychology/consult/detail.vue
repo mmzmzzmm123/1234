@@ -66,7 +66,7 @@
       <el-row>
         <el-col :span="8">
           <el-form-item label="头像" prop="avatar">
-            <image-upload v-model="form.avatar" :extraData="extraData"/>
+            <image-upload v-model="form.avatar" sizeTip="宽172px 高172px" :extraData="extraData"/>
           </el-form-item>
         </el-col>
         <el-col :span="8">
@@ -80,10 +80,11 @@
         <el-col :span="12">
           <el-form-item label="擅长领域" prop="way">
             <el-cascader
-              size="mini"
+              size="small"
               v-model="form.way"
               :options="wayList"
               :props="{ multiple: true }"
+              collapse-tags
               clearable>
             </el-cascader>
           </el-form-item>
@@ -111,7 +112,7 @@
         <el-col :span="18">
           <el-form-item label="受训经历" prop="experience">
             <el-table :data="form.experience" border fit highlight-current-row style="width: 100%" size="mini" >
-              <el-table-column min-width="130px" label="时间" align="center" prop="time">
+              <el-table-column label="时间" align="center" prop="time">
                 <template slot-scope="scope">
                   <el-form-item :rules="rules.time" :prop="'experience.'+scope.$index+'.time'">
                     <el-date-picker
@@ -127,14 +128,14 @@
                   </el-form-item>
                 </template>
               </el-table-column>
-              <el-table-column min-width="130px" label="描述" align="center" prop="info">
+              <el-table-column label="描述" align="center" prop="info">
                 <template slot-scope="scope">
                   <el-form-item :rules="rules.info" :prop="'experience.'+scope.$index+'.info'">
                     <el-input size="mini" v-model="scope.row.info" />
                   </el-form-item>
                 </template>
               </el-table-column>
-              <el-table-column align="center" label="操作" min-width="60">
+              <el-table-column align="center" label="操作" width="100">
                 <template slot-scope="scope">
                   <el-button
                     v-if="scope.$index >= 0"

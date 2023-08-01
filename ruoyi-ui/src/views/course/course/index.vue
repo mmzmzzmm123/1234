@@ -253,11 +253,11 @@
         </el-row>
 
         <el-form-item label="课程图片">
-          <image-upload v-model="form.url" :limit="1" :extraData="extraData"/>
+          <image-upload v-model="form.url" sizeTip="宽750px 高422px" :limit="1" :extraData="extraData"/>
         </el-form-item>
 
         <el-form-item label="列表图片">
-          <image-upload v-model="form.iconUrl" :limit="1" :extraData="extraData"/>
+          <image-upload v-model="form.iconUrl" sizeTip="宽172px 高172px" :limit="1" :extraData="extraData"/>
         </el-form-item>
 
         <el-form-item label="课程详情">

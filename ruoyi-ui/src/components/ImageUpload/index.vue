@@ -23,7 +23,8 @@
     <!-- 上传提示 -->
     <div class="el-upload__tip" slot="tip" v-if="showTip">
       请上传
-      <template v-if="fileSize"> 大小不超过 <b style="color: #f56c6c">{{ fileSize }}MB</b> </template>
+      <template v-if="sizeTip"> <b style="color: #f56c6c">{{ sizeTip }}</b>, </template>
+      <template v-if="fileSize"> 大小不超过 <b style="color: #f56c6c">{{ fileSize }}MB</b>, </template>
       <template v-if="fileType"> 格式为 <b style="color: #f56c6c">{{ fileType.join("/") }}</b> </template>
       的文件
     </div>
@@ -52,6 +53,10 @@ export default {
     limit: {
       type: Number,
       default: 1,
+    },
+    // 大小限制(MB)
+    sizeTip: {
+      type: String,
     },
     // 大小限制(MB)
     fileSize: {

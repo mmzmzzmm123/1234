@@ -127,7 +127,7 @@
           <el-input v-model="form.name" placeholder="请输入名称" />
         </el-form-item>
         <el-form-item label="图片地址" prop="url">
-          <image-upload v-model="form.url" :extraData="{}"/>
+          <image-upload v-model="form.url" sizeTip="宽702px 高261px" :extraData="{}"/>
         </el-form-item>
         <el-form-item label="跳转url" prop="linkUrl">
           <el-input v-model="form.linkUrl" type="textarea" placeholder="跳转url" />

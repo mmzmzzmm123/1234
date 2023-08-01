@@ -2,16 +2,16 @@
     <view class="consultant-list-box">
         <view class="consultant-item" v-if="consultantList.length > 0" v-for="consultant in consultantList">
           <view class="upper-box">
-            <view class="img-box">
+            <view class="img-box" @tap="toConsultant(consultant)">
                 <img :src="consultant.avatar" />
                 <view v-if="consultant.buy > 0" class="img-tab">今日可约</view>
             </view>
             <view class="txt-box">
-                <view class="title">
+                <view class="title" @tap="toConsultant(consultant)">
                   <view class="name">{{ consultant.userName }}</view>
                 </view>
-                <view class="introduce txt-overflow txt-overflow-line2">{{ consultant.info }}</view>
-                <view class="title">
+                <view @tap="toConsultant(consultant)" class="introduce txt-overflow txt-overflow-line2">{{ consultant.info }}</view>
+                <view @tap="toConsultant(consultant)" class="title">
                   <view v-for="tag in consultant.tabs.split(',')" class="tag-list">
                     <view class="tag-item">{{ tag }}</view>
                   </view>
