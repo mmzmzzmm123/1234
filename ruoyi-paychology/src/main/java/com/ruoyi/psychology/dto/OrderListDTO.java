@@ -59,6 +59,7 @@ public class OrderListDTO extends BaseValObj implements Serializable
 
     /** 订单状态0-待付款 1-进行中 2-已完成 3-已取消 */
     private String status;
+    private String payStatus;
     private String statusName;
 
     private String avatar;

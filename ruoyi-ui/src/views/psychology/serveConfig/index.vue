@@ -411,6 +411,9 @@ export default {
       const id = row.id || this.ids
       getServeConfig(id).then(response => {
         this.form = response.data;
+        if (this.form.end && this.form.end > 0) {
+          this.end = 1
+        }
         this.open = true;
         this.title = "修改咨询服务配置";
       });
@@ -429,6 +432,9 @@ export default {
     submitForm() {
       this.$refs["form"].validate(valid => {
         if (valid) {
+          if (this.end === 0) {
+            this.form.end = 0
+          }
           if (this.form.id != null) {
             updateServeConfig(this.form).then(response => {
               this.$modal.msgSuccess("修改成功");

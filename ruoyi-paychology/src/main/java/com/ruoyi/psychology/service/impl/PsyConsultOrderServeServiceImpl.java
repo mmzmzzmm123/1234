@@ -30,7 +30,7 @@ public class PsyConsultOrderServeServiceImpl implements IPsyConsultOrderServeSer
         orderServe.setOrderId(orderId);
         orderServe.setServeId(serve.getId());
         orderServe.setBound(serve.getBound());
-        orderServe.setBoundName(ConsultConstant.CONSULT_NO_LIMIT.equals(serve.getBound()) ? "不限时" : "限时");
+        orderServe.setBoundName(ConsultConstant.CONSULT_NO_LIMIT.equals(serve.getBound()) ? "不限制" : "限制");
         orderServe.setMode(serve.getMode());
         orderServe.setModeName(ConsultConstant.CONSULT_MODE_SOUND.equals(serve.getMode()) ? "语音咨询"  : ConsultConstant.CONSULT_MODE_VOICE.equals(serve.getMode()) ? "视频咨询" : "面对面咨询");
         orderServe.setType(serve.getType());
@@ -41,7 +41,7 @@ public class PsyConsultOrderServeServiceImpl implements IPsyConsultOrderServeSer
         orderServe.setPrice(serve.getPrice());
         orderServe.setNum(serve.getNum());
 
-        if (ConsultConstant.CONSULT_LIMIT.equals(serve.getBound()) && serve.getEnd() > 0) {
+        if (serve.getEnd() > 0) {
             Calendar calendar = Calendar.getInstance();
             calendar.add(Calendar.DATE, serve.getEnd());
             orderServe.setEnd(calendar.getTime());

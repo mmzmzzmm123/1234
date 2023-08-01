@@ -106,6 +106,7 @@ import serveList from '@/components/consult/detail/serveList.vue'
 import utils from "@/utils/common";
 import indexServer from '@/server/consult/index'
 import consultServer from "@/server/consult/consult";
+import orderServer from "@/server/consult/order";
 import loginServer from '@/server/login'
 import wxJS from "@/server/wxJS.js"
 export default {
@@ -245,13 +246,30 @@ export default {
     buy() {
       this.$refs.selectServe.open('bottom')
     },
-    toBuy(sId) {
+    async toBuy(item) {
       if (!utils.checkLogin()) {
         this.confirmServe()
         return this.openLoginConfirm()
       }
+      const data = {
+        payStatus: 2,
+        userId: this.userInfo.userId
+      }
+      // 是否未下单用户校验
+      console.log(item)
+      if (item.bound === 1) {
+        const list = await orderServer.getOrderList(data)
+        if (list && list.length > 0) {
+          return uni.showToast({
+            icon: 'none',
+            title: '仅新用户可购买',
+            duration: 2000
+          })
+        }
+      }
+
       uni.navigateTo({
-        url: "/pages/consult/orderConfirm?cId=" + this.consultId + '&sId=' + sId,
+        url: "/pages/consult/orderConfirm?cId=" + this.consultId + '&sId=' + item.id,
       });
     },
     closeServe() {

@@ -8,7 +8,7 @@
         <template v-if="order.status === '0'">
           <image src="/static/consult/order/countdown.png" class="status-img"></image>
           <text class="status-text">订单待支付，剩余</text>
-          <uni-countdown @timeup="toCancel" :font-size="20" class="countdown" color="#FF703F" splitorColor="#FF703F" :show-day="false" :minute="order.endPay" :second="59"/>
+          <uni-countdown :font-size="20" class="countdown" color="#FF703F" splitorColor="#FF703F" :show-day="false" :minute="order.endPay" :second="59"/>
         </template>
         <template v-if="order.status === '1'">
           <image src="/static/consult/order/padding.png" class="status-img"></image>
@@ -227,6 +227,13 @@ export default {
       this.works = res.works
     },
     toBuy() {
+      console.log(this.order)
+      if (this.order.payStatus === '2' && this.order.serve.end && new Date(this.order.serve.end) < new Date()) {
+        return uni.showToast({
+          icon: "none",
+          title: '订单已超时',
+        });
+      }
       this.$refs.cartBox.open()
     },
     cancel() {
@@ -274,9 +281,11 @@ export default {
       }
     },
     async doPay() {
+      console.log(this.order)
+      console.log(2222)
       let res = await getPaySign(
           this.userInfo.userId,
-          this.order.serve.id,
+          this.order.serve.serveId,
           this.order.serve.price,
           {
             module: 'consult',
@@ -302,6 +311,11 @@ export default {
             title: "支付失败",
           });
         })
+      } else {
+        uni.showToast({
+          icon: "none",
+          title: res.msg,
+        });
       }
     },
     async toCancel() {

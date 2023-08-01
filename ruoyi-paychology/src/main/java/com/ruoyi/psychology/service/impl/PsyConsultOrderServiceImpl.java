@@ -79,6 +79,28 @@ public class PsyConsultOrderServiceImpl implements IPsyConsultOrderService
     }
 
     @Override
+    public boolean checkNewByServe(Long orderId, Long serveId, Integer userId) {
+        Integer bound;
+        if (orderId == null) {
+            PsyConsultServeConfigVO one = psyConsultServeConfigService.getOne(serveId);
+            bound = one.getBound();
+        } else {
+            PsyConsultOrderServe oneByOrder = psyConsultOrderServeService.getOneByOrder(orderId, serveId);
+            bound = oneByOrder.getBound();
+        }
+
+        if (ConsultConstant.CONSULT_LIMIT.equals(bound)) {
+            PsyConsultOrderVO req = new PsyConsultOrderVO();
+            req.setUserId(userId);
+            req.setPayStatus(ConsultConstant.PAY_STATUE_PAID);
+            List<OrderListDTO> orderList = getOrderList(req);
+            return orderList != null && orderList.size() > 0;
+        }
+
+        return false;
+    }
+
+    @Override
     public PsyConsultOrderVO getOne(Long id) {
         return BeanUtil.toBean(psyConsultOrderMapper.selectById(id), PsyConsultOrderVO.class);
     }

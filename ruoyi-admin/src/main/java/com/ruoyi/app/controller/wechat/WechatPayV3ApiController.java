@@ -119,6 +119,10 @@ public class WechatPayV3ApiController extends BaseController {
                         return error("订单状态异常,无法支付");
                     }
                 }
+
+                if (psyConsultOrderService.checkNewByServe(wechatPayDTO.getOrderId(), wechatPayDTO.getServeId(), wechatPayDTO.getUserId())) {
+                    return error("仅新用户可购买");
+                }
                 break;
         }
 

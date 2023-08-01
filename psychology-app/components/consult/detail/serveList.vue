@@ -34,7 +34,7 @@ export default {
   },
   methods: {
     toBuy(item) {
-      this.$emit('toBuy', item.id)
+      this.$emit('toBuy', item)
     }
   }
 }

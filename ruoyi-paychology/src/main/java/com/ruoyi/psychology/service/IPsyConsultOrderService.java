@@ -19,6 +19,8 @@ public interface IPsyConsultOrderService
 
     OrderDTO getOrderDetail(Long id);
 
+    boolean checkNewByServe(Long orderId, Long serveId, Integer userId);
+
     PsyConsultOrderVO getOne(Long id);
 
     List<PsyConsultOrder> getList(PsyAdminOrderReq req);

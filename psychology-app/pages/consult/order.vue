@@ -151,6 +151,13 @@ export default {
     },
     async open(order) {
       this.order = order
+      if (order.payStatus === '2' && order.end && new Date(order.end) < new Date()) {
+        return uni.showToast({
+          icon: "none",
+          title: '订单已超时',
+        });
+      }
+
       await this.getConsultInfoByServe()
       this.$refs.cartBox.open()
     },
@@ -198,10 +205,11 @@ export default {
       }
     },
     async doPay() {
+      console.log(this.order)
       let res = await getPaySign(
           this.userInfo.userId,
-          this.order.serve.id,
-          this.order.serve.price,
+          this.order.serveId,
+          this.order.price,
           {
             module: 'consult',
             workId: this.workId,
@@ -230,6 +238,11 @@ export default {
             title: "支付失败",
           });
         })
+      } else {
+        uni.showToast({
+          icon: "none",
+          title: res.msg,
+        });
       }
     },
     // car end
