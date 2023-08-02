@@ -32,7 +32,10 @@ export default {
 </script>
 <style lang="scss">
 @import "@/style/common.scss";
-
+.product-list-box {
+  padding-bottom: constant(safe-area-inset-bottom); /* 兼容 iOS 设备 */
+  padding-bottom: env(safe-area-inset-bottom); /* 兼容 iPhone X 及以上设备 */
+}
 .product-item {
     display: flex;
     flex-direction: row;

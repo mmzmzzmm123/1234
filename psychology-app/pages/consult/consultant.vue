@@ -1,7 +1,7 @@
 <template>
   <view class="page">
     <view class="header">
-      <uni-nav-bar  height="88upx" :backgroundColor="`rgba(255,255,255,${opcity})`" fixed left-icon="closeempty" right-icon="more-filled" :border="false" title="咨询师详情" @clickLeft="goHome"/>
+<!--      <uni-nav-bar v-if="false" height="88upx" :backgroundColor="`rgba(255,255,255,${opcity})`" fixed left-icon="closeempty" right-icon="more-filled" :border="false" title="咨询师详情" @clickLeft="goHome"/>-->
     </view>
 
     <view class="info">
@@ -29,48 +29,46 @@
           <text class="info-nums-item-title">从业年限</text>
         </view>
       </view>
+    </view>
 
-      <view class="tabs segmented-main" :style="{marginTop: opcity >= 0.9 ? '88upx' : '24upx'}">
-        <view class="tabs-list">
-          <view v-for="i in items" class="tab" :class="{ selected: mainCur === i.id }" @tap="tabSelect(i.id)">
-            <view>{{ i.name }}</view>
-          </view>
+    <view class="tabs segmented-main">
+      <view class="tabs-list">
+        <view v-for="i in items" class="tab" :class="{ selected: mainCur === i.id }" @tap="tabSelect(i.id)">
+          <view>{{ i.name }}</view>
         </view>
-        <view v-if="opcity >= 1" class="tabs-bg"></view>
       </view>
+      <view class="tabs-bg"></view>
     </view>
 
-    <view>
-      <scroll-view class="content-y" scroll-y scroll-with-animation :scroll-into-view="'main-'+mainCur" @scroll="scroll">
-        <view class="serve" key="0" id="main-0">
-          <text class="serve-title">服务套餐</text>
-          <serve-list :serveList="serveList" :num="3" @toBuy="toBuy"/>
-          <view class="serve-more" @tap="openMore">
-            更多服务 >
+    <scroll-view class="content-y" scroll-y scroll-with-animation :scroll-into-view="'main-'+mainCur" @scroll="scroll">
+      <view class="serve" key="0" id="main-0">
+        <text class="serve-title">服务套餐</text>
+        <serve-list :serveList="serveList" :num="3" @toBuy="toBuy"/>
+        <view class="serve-more" @tap="openMore">
+          更多服务 >
+        </view>
+      </view>
+
+      <view key="1" id="main-1" class="course">
+        <view class="course-header">
+          <text class="course-title">TA的心理课</text>
+          <view class="course-more" @tap="toCourseMore">
+            查看更多 >
           </view>
         </view>
+        <course :courseList="courseList"/>
+      </view>
 
-        <view key="1" id="main-1" class="course">
-          <view class="course-header">
-            <text class="course-title">TA的心理课</text>
-            <view class="course-more" @tap="toCourseMore">
-              查看更多 >
-            </view>
-          </view>
-          <course :courseList="courseList"/>
-        </view>
+      <view key="2" id="main-2" class="consult-desc">
+        <consult-desc :info="consultInfo"/>
+        <!--          <view class="consult-detail" v-html="consultInfo.detail"></view>-->
+      </view>
 
-        <view key="2" id="main-2" class="consult-desc">
-          <consult-desc :info="consultInfo"/>
-<!--          <view class="consult-detail" v-html="consultInfo.detail"></view>-->
-        </view>
-
-        <view  key="3" id="main-3" class="content-time">
-          <view class="content-time-title">可约时间</view>
-          <time-box ref="timeBox" @doOk="setWorkData"/>
-        </view>
-      </scroll-view>
-    </view>
+      <view  key="3" id="main-3" class="content-time">
+        <view class="content-time-title">可约时间</view>
+        <time-box ref="timeBox" @doOk="setWorkData"/>
+      </view>
+    </scroll-view>
 
     <view class="page-bottom">
       <view class="page-bottom-image" @tap="goHome">
@@ -154,7 +152,6 @@ export default {
     };
   },
   created() {
-
   },
   async mounted() {
     this.userInfo = utils.getUserInfo()
@@ -169,16 +166,16 @@ export default {
     await this.getConsultCourseByName()
     this.openTime()
   },
-  onPageScroll(e) {
-    let scroll = e.scrollTop <= 0 ? 0 : e.scrollTop;
-    // console.log(scroll)
-    // console.log(this.opcity)
-    let opcity = scroll / this.scrollH;
-    if (this.opcity >= 1 && opcity >= 1) {
-      return;
-    }
-    this.opcity = opcity
-  },
+  // onPageScroll(e) {
+  //   let scroll = e.scrollTop <= 0 ? 0 : e.scrollTop;
+  //   // console.log(scroll)
+  //   // console.log(this.opcity)
+  //   let opcity = scroll / this.scrollH;
+  //   if (this.opcity >= 1 && opcity >= 1) {
+  //     return;
+  //   }
+  //   this.opcity = opcity
+  // },
   methods: {
     toCourseMore () {
       uni.navigateTo({
@@ -311,17 +308,18 @@ export default {
   //overflow: hidden;
   display: flex;
   flex-direction: column;
+  //padding-bottom: calc(24rpx + env(safe-area-inset-bottom));
 }
 .header {
   width: 100%;
-  height: 292upx;
+  height: 252upx;
   background: linear-gradient(133deg, #FF8C65 0%, #FF6C39 100%);
 }
 .info {
   //z-index: 1;
   margin-top: -86upx;
   width: 100%;
-  height: 364upx;
+  //height: 258upx;
   background: #FFFFFF;
   border-radius: 32upx 32upx 0upx 0upx;
 }
@@ -426,15 +424,17 @@ export default {
   margin-top: 8upx;
 }
 .tabs {
-  margin-top: 24upx;
+  //margin-top: 24upx;
   height: 72upx;
+  width: 100%;
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
   background-color: #FFFFFF;
   .tabs-list {
-    height: 60upx;
+    height: 72upx;
     display: flex;
+    align-items: center;
     justify-content: space-between;
     margin: 0upx 51upx;
     .tab {
@@ -453,7 +453,7 @@ export default {
   //margin-bottom: 20upx;
   //padding: 10upx;
   position: sticky;
-  top: 90upx;
+  top: 0;
   z-index: 998;
 }
 .tabs-bg {
@@ -552,8 +552,11 @@ export default {
 }
 
 .page-bottom {
+  //padding-bottom: calc(env(safe-area-inset-bottom));
+  padding-bottom: constant(safe-area-inset-bottom); /* 兼容 iOS 设备 */
+  padding-bottom: env(safe-area-inset-bottom); /* 兼容 iPhone X 及以上设备 */
   position: fixed;
-  bottom: 0upx;
+  bottom: 0;
   z-index: 99;
   background-color: #FFFFFF;
   //width: 750upx;

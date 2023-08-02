@@ -1,7 +1,7 @@
 <template>
   <view class="page">
     <view class="page-content">
-      <view class="nav-bar">
+      <view class="nav-bar" v-if="false">
         <uni-nav-bar fixed="true" left-icon="closeempty" right-icon="more-filled" :border="false" title="我的咨询" @clickLeft="back"/>
       </view>
       <view class="tabs">
@@ -321,7 +321,11 @@ page {
     height: 88upx;
   }
   .tabs {
-    margin-top: 6upx;
+    position: fixed;
+    top: 0;
+    z-index: 99;
+    //margin-top: 6upx;
+    width: 100%;
     height: 88upx;
     display: flex;
     flex-direction: column;
@@ -347,7 +351,7 @@ page {
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    margin: 30upx 32upx 0 32upx;
+    margin: 118upx 32upx 0 32upx;
   }
   .order-item {
     box-shadow: 0px 4px 28px 0px rgba(119,119,119,0.060000);

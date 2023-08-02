@@ -39,6 +39,8 @@ export default {
   width: 750upx;
   height: 100upx;
   background-color: #fff;
+  padding-bottom: constant(safe-area-inset-bottom); /* 兼容 iOS 设备 */
+  padding-bottom: env(safe-area-inset-bottom); /* 兼容 iPhone X 及以上设备 */
 
   .p-b-btn {
     width: 128upx;

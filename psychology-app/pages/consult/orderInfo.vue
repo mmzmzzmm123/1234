@@ -1,7 +1,7 @@
 <template>
   <view class="page">
     <view class="header">
-      <view class="nav">
+      <view class="nav" v-if="false">
         <uni-nav-bar fixed="true" left-icon="closeempty" right-icon="more-filled" :border="false" title="订单详情" @clickLeft="back"/>
       </view>
       <view class="status-icon">

@@ -134,8 +134,10 @@ export default {
   overflow-y: auto;
   position: relative;
   background-color: #FFFFFF;
-  padding-bottom: 138upx;
+  //padding-bottom: 138upx;
   max-height: 1000upx;
+  padding-bottom: calc(constant(safe-area-inset-bottom) + 50px); /* 兼容 iOS 设备 */
+  padding-bottom: calc(env(safe-area-inset-bottom) + 50px); /* 兼容 iPhone X 及以上设备 */
 
   .time-list {
     position: relative;
@@ -268,6 +270,8 @@ export default {
       display: flex;
       align-items: center;
       justify-content: space-between;
+      padding-bottom: constant(safe-area-inset-bottom); /* 兼容 iOS 设备 */
+      padding-bottom: env(safe-area-inset-bottom); /* 兼容 iPhone X 及以上设备 */
     }
     .button_1 {
       border-radius: 40upx;

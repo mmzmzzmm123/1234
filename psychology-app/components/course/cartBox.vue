@@ -99,7 +99,9 @@ export default {
   position: fixed;
   left: 0;
   top: 0;
-  z-index: 10001;	
+  z-index: 10001;
+  padding-bottom: constant(safe-area-inset-bottom); /* 兼容 iOS 设备 */
+  padding-bottom: env(safe-area-inset-bottom); /* 兼容 iPhone X 及以上设备 */
   .order-info {
     position: absolute;
     bottom: 0;
@@ -108,6 +110,8 @@ export default {
     width: 100vw;
     background-color: #fff;	
     padding: 0 24upx;
+    padding-bottom: constant(safe-area-inset-bottom); /* 兼容 iOS 设备 */
+    padding-bottom: env(safe-area-inset-bottom); /* 兼容 iPhone X 及以上设备 */
 
     .close-icon {
       background-image: url("/static/icon/close.png");

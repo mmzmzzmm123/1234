@@ -22,5 +22,7 @@ export default {
 <style>
 page {
   font-family: Source Han Sans CN, PingFangSC-Regular, PingFang SC;
+  padding-bottom: calc(constant(safe-area-inset-bottom) + 10px); /* 兼容 iOS 设备 */
+  padding-bottom: calc(env(safe-area-inset-bottom) + 10px); /* 兼容 iPhone X 及以上设备 */
 }
 </style>

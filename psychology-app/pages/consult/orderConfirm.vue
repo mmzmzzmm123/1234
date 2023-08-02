@@ -1,6 +1,6 @@
 <template>
   <view class="page">
-    <view class="box-bg">
+    <view class="box-bg" v-if="false">
       <uni-nav-bar left-icon="closeempty" right-icon="more-filled" :border="false" title="确认订单" @clickLeft="back"/>
     </view>
     <view class="consult-info">
@@ -529,7 +529,7 @@ export default {
     line-height: 37upx;
   }
   .section-reader {
-    width: 368upx;
+    width: 568upx;
     height: 44upx;
     flex-direction: row;
     display: flex;
@@ -584,6 +584,8 @@ export default {
     height: 98upx;
     width: 100%;
     background: #fff;
+    padding-bottom: constant(safe-area-inset-bottom); /* 兼容 iOS 设备 */
+    padding-bottom: env(safe-area-inset-bottom); /* 兼容 iPhone X 及以上设备 */
   }
   .bottom-btn {
     background-color: #ff703f;

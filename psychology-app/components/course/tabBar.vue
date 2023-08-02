@@ -59,7 +59,9 @@ export default {
     display: flex;
     flex-direction: row;
     padding: 10upx;
-    box-sizing: border-box;
+    //box-sizing: border-box;
+    padding-bottom: constant(safe-area-inset-bottom); /* 兼容 iOS 设备 */
+    padding-bottom: env(safe-area-inset-bottom); /* 兼容 iPhone X 及以上设备 */
 
     .tab-item {
         flex: 1;

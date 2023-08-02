@@ -90,6 +90,8 @@ export default {
 
 page {
   background-color: #f8f8f8;
+  padding-bottom: constant(safe-area-inset-bottom); /* 兼容 iOS 设备 */
+  padding-bottom: env(safe-area-inset-bottom); /* 兼容 iPhone X 及以上设备 */
 
   .search-box {
     margin: 32upx 24upx;

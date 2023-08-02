@@ -52,7 +52,7 @@
         </uni-col>
       </uni-row>
     </view>
-    <consult-tab-bar :currentIndex="2"></consult-tab-bar>
+    <consult-tab-bar :currentIndex="1"></consult-tab-bar>
     <uni-popup ref="popup" type="dialog">
       <uni-popup-dialog mode="base" content="您尚未登录, 是否使用微信静默登录" :duration="2000" :before-close="true" @close="closeLoginConfirm" @confirm="confirmLogin"/>
     </uni-popup>
@@ -153,7 +153,7 @@ export default {
           uni.redirectTo({ url: "/pages/evaluation/index" })
           break
         case 11:
-          // uni.navigateTo({ url: "/pages/consult/integral" })
+          uni.navigateTo({ url: "/pages/consult/integral" })
           break
         case 12:
           // uni.redirectTo({ url: "/pages/evaluation/index" })

@@ -1,7 +1,7 @@
 <template>
   <view class="page">
     <view class="header">
-      <view class="nav">
+      <view class="nav" v-if="false">
         <uni-nav-bar fixed="true" left-icon="closeempty" :border="false" title="我的积分" @clickLeft="back"/>
       </view>
       <view class="info">
@@ -149,7 +149,7 @@ export default {
 }
 .header {
   width: 750upx;
-  height: 330upx;
+  height: 242upx;
   display: flex;
   flex-direction: column;
   position: fixed;
@@ -275,7 +275,7 @@ export default {
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
-  margin-top: 330upx;
+  margin-top: 242upx;
   padding-bottom: 40upx;
 }
 .item {

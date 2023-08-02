@@ -1,98 +1,100 @@
 <template>
-    <scroll-view scroll-y scroll-with-animation class="filter-container">
-    <view class="index-title">
-      <view class="filter-item" :class="{ active: filterParams.type === 1 }" @tap="doFilter(1)">擅长领域</view>
-      <view class="filter-item" :class="{ active: filterParams.type === 2 }" @tap="doFilter(2)">价格</view>
-      <view class="filter-item" :class="{ active: filterParams.type === 3 }" @tap="doFilter(3)">筛选</view>
-    </view>
-
-    <view class="consult-direction" v-if="filterParams.type === 1">
-      <view class="consult-direction-content" v-for="item in attrParams.attrList">
-        <view class="consult-direction-title">
-          {{ item.label }}
-          <view class="consult-direction-tab-more">可多选</view>
-        </view>
-        <view class="consult-direction-tabs">
-          <view class="consult-direction-tab" @tap="selectAttr(item.value, 'all')">
-            全部
-          </view>
-          <view class="consult-direction-tab" :class="{ selected: tab.flag }" v-for="tab in item.children" @tap="selectAttr(item.value, tab.value)">
-            {{ tab.label }}
-          </view>
-        </view>
-      </view>
-    </view>
-    <view class="price-filter" v-else-if="filterParams.type === 2">
-      <view v-for="item in attrParams.priceList" class="price-list">
-        <view class="price-item" :class="{ selected: filterParams.price !== null && filterParams.price === item.name }" @tap="selectType(item.name, 'price')">{{ item.name }}</view>
-      </view>
-    </view>
-    <view class="consult-filter" v-else-if="filterParams.type === 3">
-      <view class="consult-filter-tab-content">
-        <view class="consult-filter-tab-title">
-          咨询师性别
-        </view>
-        <view class="consult-filter-tabs">
-          <view class="consult-filter-tab" @tap="selectType('不限', 'sex')">
-            不限
-          </view>
-          <view class="consult-filter-tab" :class="{ selected: filterParams.sex !== null && item.name === filterParams.sex }" v-for="item in attrParams.sexList" @tap="selectType(item.name, 'sex')">
-            {{ item.name }}性咨询师
-          </view>
-        </view>
+    <view class="filter-container">
+      <view class="index-title">
+        <view class="filter-item" :class="{ active: filterParams.type === 1 }" @tap="doFilter(1)">擅长领域</view>
+        <view class="filter-item" :class="{ active: filterParams.type === 2 }" @tap="doFilter(2)">价格</view>
+        <view class="filter-item" :class="{ active: filterParams.type === 3 }" @tap="doFilter(3)">筛选</view>
       </view>
 
-      <view class="consult-filter-tab-content">
-        <view class="consult-filter-tab-title">
-          咨询师方式
-        </view>
-        <view class="consult-filter-tabs">
-          <view class="consult-filter-tab" @tap="selectType('不限', 'serve')">
-            不限
-          </view>
-          <view class="consult-filter-tab" :class="{ selected: filterParams.serve !== null && item.value === filterParams.serve }" v-for="item in attrParams.typeList" @tap="selectType(item.value, 'serve')">
-            {{ item.name }}
-          </view>
-        </view>
-      </view>
-
-      <view class="consult-filter-tab-content">
-        <view class="consult-filter-tab-title">
-          咨询时段
-          <view class="consult-filter-tab-more">可多选</view>
-        </view>
-        <view>
-          <uni-grid :column="7" borderColor="#fff">
-            <uni-grid-item v-for="item in attrParams.dateList">
-              <view class="grid-item-box" @tap="selectType(item.date, 'days')">
-                <view class="grid-item-box-month">{{ item.month }}</view>
-                <view class="grid-item-box-item" :class="{ selected: filterParams.days.includes(item.date) }">
-                  <view class="grid-item-box-item-day" :class="{ selected: filterParams.days.includes(item.date) }">{{ item.day }}</view>
-                  <view class="grid-item-box-item-week" :class="{ selected: filterParams.days.includes(item.date) }">{{ item.week }}</view>
-                </view>
+      <scroll-view scroll-y scroll-with-animation class="filter-container-sroll">
+        <view class="consult-direction" v-if="filterParams.type === 1">
+          <view class="consult-direction-content" v-for="item in attrParams.attrList">
+            <view class="consult-direction-title">
+              {{ item.label }}
+              <view class="consult-direction-tab-more">可多选</view>
+            </view>
+            <view class="consult-direction-tabs">
+              <view class="consult-direction-tab" @tap="selectAttr(item.value, 'all')">
+                全部
               </view>
-            </uni-grid-item>
-          </uni-grid>
-        </view>
-      </view>
-
-      <view class="consult-filter-tab-content">
-        <view class="consult-filter-tab-title">
-          咨询时段
-        </view>
-        <view class="consult-filter-tabs">
-          <view class="consult-filter-tab" :class="{ selected: filterParams.time !== null && item.name === filterParams.time }" v-for="item in attrParams.timeList" @tap="selectType(item.name, 'time')">
-            {{ item.name }}
+              <view class="consult-direction-tab" :class="{ selected: tab.flag }" v-for="tab in item.children" @tap="selectAttr(item.value, tab.value)">
+                {{ tab.label }}
+              </view>
+            </view>
           </view>
         </view>
+        <view class="price-filter" v-else-if="filterParams.type === 2">
+          <view v-for="item in attrParams.priceList" class="price-list">
+            <view class="price-item" :class="{ selected: filterParams.price !== null && filterParams.price === item.name }" @tap="selectType(item.name, 'price')">{{ item.name }}</view>
+          </view>
+        </view>
+        <view class="consult-filter" v-else-if="filterParams.type === 3">
+          <view class="consult-filter-tab-content">
+            <view class="consult-filter-tab-title">
+              咨询师性别
+            </view>
+            <view class="consult-filter-tabs">
+              <view class="consult-filter-tab" @tap="selectType('不限', 'sex')">
+                不限
+              </view>
+              <view class="consult-filter-tab" :class="{ selected: filterParams.sex !== null && item.name === filterParams.sex }" v-for="item in attrParams.sexList" @tap="selectType(item.name, 'sex')">
+                {{ item.name }}性咨询师
+              </view>
+            </view>
+          </view>
+
+          <view class="consult-filter-tab-content">
+            <view class="consult-filter-tab-title">
+              咨询师方式
+            </view>
+            <view class="consult-filter-tabs">
+              <view class="consult-filter-tab" @tap="selectType('不限', 'serve')">
+                不限
+              </view>
+              <view class="consult-filter-tab" :class="{ selected: filterParams.serve !== null && item.value === filterParams.serve }" v-for="item in attrParams.typeList" @tap="selectType(item.value, 'serve')">
+                {{ item.name }}
+              </view>
+            </view>
+          </view>
+
+          <view class="consult-filter-tab-content">
+            <view class="consult-filter-tab-title">
+              咨询时段
+              <view class="consult-filter-tab-more">可多选</view>
+            </view>
+            <view>
+              <uni-grid :column="7" borderColor="#fff">
+                <uni-grid-item v-for="item in attrParams.dateList">
+                  <view class="grid-item-box" @tap="selectType(item.date, 'days')">
+                    <view class="grid-item-box-month">{{ item.month }}</view>
+                    <view class="grid-item-box-item" :class="{ selected: filterParams.days.includes(item.date) }">
+                      <view class="grid-item-box-item-day" :class="{ selected: filterParams.days.includes(item.date) }">{{ item.day }}</view>
+                      <view class="grid-item-box-item-week" :class="{ selected: filterParams.days.includes(item.date) }">{{ item.week }}</view>
+                    </view>
+                  </view>
+                </uni-grid-item>
+              </uni-grid>
+            </view>
+          </view>
+
+          <view class="consult-filter-tab-content">
+            <view class="consult-filter-tab-title">
+              咨询时段
+            </view>
+            <view class="consult-filter-tabs">
+              <view class="consult-filter-tab" :class="{ selected: filterParams.time !== null && item.name === filterParams.time }" v-for="item in attrParams.timeList" @tap="selectType(item.name, 'time')">
+                {{ item.name }}
+              </view>
+            </view>
+          </view>
+        </view>
+      </scroll-view>
+
+      <view class="footer">
+        <view class="reset" @tap="reset">重置</view>
+        <view class="confirm" @tap="confirm">确定</view>
       </view>
     </view>
-    
-    <view class="footer">
-      <view class="reset" @tap="reset">重置</view>
-      <view class="confirm" @tap="confirm">确定</view>
-    </view>
-    </scroll-view>
 </template>
 
 <script>
@@ -188,9 +190,9 @@
 
 <style lang="scss" scoped>
   .filter-container {
-    padding: 26upx;
-    padding-bottom: 100upx;
-    height: 740upx;
+    padding: 26upx 26upx 100upx;
+    position: relative;
+    //height: 740upx;
     .index-title {
       display: flex;
       position: fixed;
@@ -207,7 +209,7 @@
         font-weight: 400;
         color: #777777;
         line-height: 37upx;
-        
+
         &::after {
           content: "";
           position: absolute;
@@ -227,6 +229,9 @@
       }
     }
 
+    .filter-container-sroll {
+      height: 740upx;
+    }
     .consult-direction {
       margin-top: 60upx;
       .consult-direction-title {
@@ -242,7 +247,7 @@
       .consult-direction-tab-more {
         position: absolute;
         top: 10upx;
-        right: 80upx;
+        right: 24upx;
         color: #777777;
         font-size: 24upx;
       }

@@ -32,7 +32,7 @@
           <view>我的报告</view>
           <view class="num">{{ reportNum }}</view>
         </view>
-        <view class="item">
+        <view class="item" @tap="toConsult">
           <view>我的咨询</view>
           <view class="num"></view>
         </view>
@@ -176,6 +176,14 @@ export default {
       }
       if (this.getUserInfo())
         uni.navigateTo({ url: "/pages/evaluation/report" });
+    },
+    toConsult() {
+      // 判断是否已经登录
+      if (!utils.checkLogin()) {
+        return this.openLoginConfirm()
+      }
+      if (this.getUserInfo())
+        uni.navigateTo({ url: "/pages/consult/index" });
     },
     toOrder() {
       // 判断是否已经登录

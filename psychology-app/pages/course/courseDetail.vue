@@ -153,6 +153,8 @@ export default {
 
 page {
   background: #fff;
+  padding-bottom: constant(safe-area-inset-bottom); /* 兼容 iOS 设备 */
+  padding-bottom: env(safe-area-inset-bottom); /* 兼容 iPhone X 及以上设备 */
 
   .course {
     padding-bottom: 100upx;
