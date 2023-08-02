@@ -2,7 +2,7 @@
   <div class="app-container">
     <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch" label-width="68px">
       <el-form-item label="咨询师" prop="ids">
-        <el-select v-model="queryParams.ids" multiple clearable>
+        <el-select v-model="queryParams.ids" multiple clearable :disabled="consultList.length === 1">
           <el-option
             v-for="item in consultList"
             :key="item.id"
@@ -238,11 +238,11 @@ export default {
       }
     };
   },
-  created() {
+  async created() {
     console.log(this.userName)
     this.setTime()
-    this.getConsultList()
-    this.getList();
+    await this.getConsultList()
+    await this.getList();
   },
   computed: {
   ...mapState({
@@ -278,8 +278,8 @@ export default {
         const d = this.fullToday.substr(8)
 
         if (this.queryParams.month === ym) {
-          // const day = new Date().getDate()
-          this.$refs.myTable.bodyWrapper.scrollLeft = 150 + this.scrollLeft * d
+          console.log(this.scrollLeft)
+          this.$refs.myTable.bodyWrapper.scrollLeft = this.scrollLeft * (d - 1)
         }
         this.$refs.myTable.doLayout()
       })
@@ -289,7 +289,7 @@ export default {
       const date = new Date()
       const year = date.getFullYear()
       const month = date.getMonth() + 1 < 10 ? '0' + (date.getMonth() + 1) : date.getMonth() + 1
-      this.today = month + '-' + date.getDate()
+      this.today = date.getDate() < 10 ? month + '-0' + date.getDate() : month + '-' + date.getDate()
       this.fullToday = year + '-' + month + '-' + date.getDate()
       this.queryParams.month = year + '-' + month
       // this.fromTxt = [
@@ -303,6 +303,9 @@ export default {
     async getConsultList() {
       const res = await getConsultAll({ status: '0' })
       this.consultList = res.data
+      if (this.consultList.length === 1) {
+        this.queryParams.ids.push(this.consultList[0])
+      }
     },
     /** 查询咨询服务列表 */
     getList() {
@@ -340,7 +343,11 @@ export default {
     /** 重置按钮操作 */
     resetQuery() {
       this.setTime()
-      this.queryParams.ids = null
+      if (this.consultList.length === 1) {
+        this.queryParams.ids.push(this.consultList[0])
+      } else {
+        this.queryParams.ids = []
+      }
       // this.handleQuery();
     },
     /** 新增按钮操作 */

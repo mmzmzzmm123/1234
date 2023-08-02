@@ -50,7 +50,7 @@
         />
       </el-form-item>
       <el-form-item label="所属咨询师" prop="consultId">
-        <el-select v-model="queryParams.consultId" clearable>
+        <el-select v-model="queryParams.consultId" clearable :disabled="consultList.length === 1">
           <el-option
             v-for="item in consultList"
             :key="item.id"
@@ -242,9 +242,9 @@ export default {
       }
     };
   },
-  created() {
+  async created() {
+    await this.getConsultServeRef();
     this.getList();
-    this.getConsultServeRef();
   },
   methods: {
     onchangeTime (e) {
@@ -256,6 +256,9 @@ export default {
     async getConsultServeRef() {
       const res = await getConsultAll({ status: '0' })
       this.consultList = res.data
+      if (this.consultList.length === 1) {
+        this.queryParams.consultId = this.consultList[0]
+      }
     },
     /** 查询咨询订单列表 */
     getList() {
@@ -280,12 +283,13 @@ export default {
       this.queryParams = {
           orderNo: null,
           nickName: null,
-          consultId: null,
+          consultId: this.consultList.length === 1 ? this.consultList[0] : null ,
           serveName: null,
           dateLimit: null,
           status: null,
           pay: null,
       }
+
       this.timeVal = []
       this.handleQuery();
     },

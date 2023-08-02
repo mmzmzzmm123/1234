@@ -1,7 +1,7 @@
 <template>
     <view class="login-page">
         <img class="logo" src="/static/evaluation/logo.png" />
-        <view class="system-title">知我测评</view>
+        <view class="system-title">三束光心理</view>
         <view class="title">验证码登录</view>
         <view class="ipt-box">
             <input class="uni-input" placeholder="请输入手机号" v-model="phone" maxlength="11" minlength="11" type="number"

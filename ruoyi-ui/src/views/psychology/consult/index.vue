@@ -103,7 +103,7 @@
       <!--      <el-table-column v-if="columns[12].visible" label="从业时间(年)" align="center" prop="workHours" />-->
       <el-table-column v-if="columns[13].visible" label="状态" align="center" prop="status">
         <template slot-scope="scope">
-          <el-switch v-model="scope.row.status" active-value="0" inactive-value="1" active-text="启用" inactive-text="禁用"/>
+          <el-switch v-model="scope.row.status" @change="handleStatus(scope.row)" active-value="0" inactive-value="1" active-text="启用" inactive-text="禁用"/>
         </template>
       </el-table-column>
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
@@ -158,7 +158,7 @@
 </template>
 
 <script>
-import { refConsultServe, adminListConsult, delConsult } from "@/api/psychology/consult";
+import { refConsultServe, adminListConsult, delConsult, updateConsult } from "@/api/psychology/consult";
 
 import serve from "./serve";
 import serveRef from "./serveRef";
@@ -304,6 +304,23 @@ export default {
       this.single = selection.length!==1
       this.multiple = !selection.length
     },
+    /** 修改状态操作 */
+    handleStatus(row) {
+      const that = this
+      const content = row.status === '0' ? '确定要启用该咨询师吗？' : '确认禁用该咨询师吗？'
+      const type = row.status === '0' ? 'success' : 'warning'
+
+      this.$confirm(content, '提示', {
+        type: type
+      }).then(() => {
+        updateConsult(row).then(response => {
+          that.$modal.msgSuccess("修改成功");
+          that.getList();
+        });
+      }).catch(() => {
+        row.status = row.status === '0' ? '1' : '0'
+      });
+    },
     /** 修改按钮操作 */
     handleUpdate(row) {
       const id = row.id
@@ -321,7 +338,7 @@ export default {
     },
     /** 导出按钮操作 */
     handleExport() {
-      this.download('system/consult/export', {
+      this.download('psychology/consult/export', {
         ...this.queryParams
       }, `consult_${new Date().getTime()}.xlsx`)
     }

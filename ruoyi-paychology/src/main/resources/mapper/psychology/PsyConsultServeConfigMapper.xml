@@ -46,6 +46,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
                 and id not in (select distinct serve_id from psy_consult_serve where del_flag = '0' and consult_id = #{nId})
             </if>
         </where>
+        order by z_index desc
     </select>
 
     <update id="tombstonedByIds">

@@ -84,7 +84,7 @@
       <uni-popup-dialog mode="base" content="您尚未登录, 是否使用微信静默登录" :duration="2000" :before-close="true" @close="closeLoginConfirm" @confirm="confirmLogin"/>
     </uni-popup>
 
-    <uni-popup ref="selectServe" type="bottom" class="uni-popup-ok">
+    <uni-popup ref="selectServe" type="bottom" class="uni-popup-ok" background-color="#fff">
       <view class="bottom-serve">
         <view class="bottom-serve-header">
           服务套餐
@@ -552,7 +552,6 @@ export default {
 }
 
 .page-bottom {
-  //padding-bottom: calc(env(safe-area-inset-bottom));
   padding-bottom: constant(safe-area-inset-bottom); /* 兼容 iOS 设备 */
   padding-bottom: env(safe-area-inset-bottom); /* 兼容 iPhone X 及以上设备 */
   position: fixed;

@@ -79,7 +79,7 @@ public class PsyConsultController extends BaseController
     @PreAuthorize("@ss.hasPermi('psychology:consult:export')")
     @Log(title = "心理咨询师", businessType = BusinessType.EXPORT)
     @PostMapping("/export")
-    public void export(HttpServletResponse response, PsyConsultVO psyConsult)
+    public void export(HttpServletResponse response, PsyAdminConsultReq psyConsult)
     {
         List<PsyConsult> list = psyConsultService.getList(psyConsult);
         ExcelUtil<PsyConsult> util = new ExcelUtil<PsyConsult>(PsyConsult.class);

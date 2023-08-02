@@ -12,7 +12,7 @@
 			"path": "pages/evaluation/index",
 			"style": {
 				"navigationStyle": "custom",
-        "navigationBarTitleText": "知我测评"
+        "navigationBarTitleText": "三束光心理"
 			}
 		},
 		{
@@ -33,14 +33,14 @@
 			"path": "pages/evaluation/product",
 			"style": {
 				"navigationStyle": "custom",
-        "navigationBarTitleText": "知我测评"
+        "navigationBarTitleText": "三束光心理"
 			}
 		},
 		{
 			"path": "pages/evaluation/search",
 			"style": {
 				"navigationStyle": "custom",
-        "navigationBarTitleText": "知我测评",
+        "navigationBarTitleText": "三束光心理",
 				"enablePullDownRefresh": false
 			}
 		},
@@ -48,21 +48,21 @@
 			"path": "pages/evaluation/testBefore",
 			"style": {
 				"navigationStyle": "custom",
-        "navigationBarTitleText": "知我测评"
+        "navigationBarTitleText": "三束光心理"
 			}
 		},
 		{
 			"path": "pages/evaluation/question",
 			"style": {
 				"navigationStyle": "custom",
-        "navigationBarTitleText": "知我测评"
+        "navigationBarTitleText": "三束光心理"
 			}
 		},
 		{
 			"path": "pages/evaluation/result",
 			"style": {
 				"navigationStyle": "custom",
-        "navigationBarTitleText": "知我测评"
+        "navigationBarTitleText": "三束光心理"
 			}
 		},
 		{

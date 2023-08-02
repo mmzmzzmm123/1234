@@ -16,6 +16,9 @@ public class PsyAdminConsultReq implements Serializable
 
     private static final long serialVersionUID = -8791334840022479201L;
 
+    /** 登录名 */
+    private Long userId;
+
     @ApiModelProperty(value = "添加时间")
     private String dateLimit;
 

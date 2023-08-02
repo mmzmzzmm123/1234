@@ -60,7 +60,7 @@
       <el-table-column label="排序" prop="sort" />
       <el-table-column label="状态" prop="status">
         <template slot-scope="scope">
-          <el-switch v-model="scope.row.status" active-value="0" inactive-value="1" active-text="显示" inactive-text="隐藏"/>
+          <el-switch v-model="scope.row.status" @change="handleStatus(scope.row)" active-value="0" inactive-value="1" active-text="显示" inactive-text="隐藏"/>
         </template>
       </el-table-column>
       <el-table-column label="操作" class-name="small-padding fixed-width">
@@ -233,6 +233,22 @@ export default {
     resetQuery() {
       this.resetForm("queryForm");
       this.handleQuery();
+    },
+    handleStatus(row) {
+      const that = this
+      const content = row.status === '0' ? '确认要显示该咨询分类吗？' : '确认要隐藏该咨询分类吗？'
+      const type = row.status === '0' ? 'success' : 'warning'
+
+      this.$confirm(content, '提示', {
+        type: type
+      }).then(() => {
+        updateType(row).then(response => {
+          that.$modal.msgSuccess("修改成功");
+          that.getList();
+        });
+      }).catch(() => {
+        row.status = row.status === '0' ? '1' : '0'
+      });
     },
     /** 新增按钮操作 */
     handleAdd(row) {

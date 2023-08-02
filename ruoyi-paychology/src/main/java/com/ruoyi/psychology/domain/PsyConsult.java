@@ -40,7 +40,7 @@ public class PsyConsult extends BasePlusEntity implements Serializable
     private String nickName;
 
     /** 头像 */
-    @Excel(name = "头像")
+//    @Excel(name = "头像")
     private String avatar;
 
     /** 用户邮箱 */
@@ -70,7 +70,7 @@ public class PsyConsult extends BasePlusEntity implements Serializable
     private String info;
 
     /** 图文详情 */
-    @Excel(name = "图文详情")
+//    @Excel(name = "图文详情")
     private String detail;
 
     /** 服务数量 */
@@ -89,7 +89,7 @@ public class PsyConsult extends BasePlusEntity implements Serializable
     private Integer workHours;
 
     /** 企业微信名片 */
-    @Excel(name = "企业微信名片")
+//    @Excel(name = "企业微信名片")
     private String wxCard;
 
     /** 咨询寄语 */
@@ -105,7 +105,7 @@ public class PsyConsult extends BasePlusEntity implements Serializable
     private String notice;
 
     /** 受训经历 */
-    @Excel(name = "受训经历")
+//    @Excel(name = "受训经历")
     private String experience;
 
     /** 删除标志（0代表存在 1代表删除） */
