@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 import java.io.Serializable;
+import java.util.List;
 
 /**
  * 咨询服务对象 psy_consult_work
@@ -40,5 +41,7 @@ public class PsyConsultWorkVO extends BaseValObj implements Serializable
 
     private String live;
     private String used;
+
+    private List<PsyConsultOrderItemVO> items;
 
 }

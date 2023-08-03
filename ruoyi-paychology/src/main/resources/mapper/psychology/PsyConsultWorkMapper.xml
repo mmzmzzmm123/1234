@@ -57,4 +57,14 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         </where>
         order by a.day asc
     </select>
+
+    <select id="getOrderItems" resultType="com.ruoyi.psychology.vo.PsyConsultOrderItemVO">
+        select b.order_id, b.day, b.time_start, b.time_end, a.nick_name create_by from psy_consult_order a
+        INNER JOIN psy_consult_order_item b on a.id = b.order_id
+        <where>
+            <if test="start != null "> and b.day <![CDATA[ >= ]]> #{start}</if>
+            <if test="end != null "> and b.day <![CDATA[ <= ]]> #{end}</if>
+            <if test="consultId != null "> and a.consult_id = #{consultId}</if>
+        </where>
+    </select>
 </mapper>

@@ -66,7 +66,24 @@
             未排班
           </div>
           <div v-else>
-            <span>{{ scope.row[th.prop] }}</span>
+            <span v-if="noItems(scope.row, th.prop)">{{ scope.row[th.prop] }}</span>
+            <el-popover v-else
+                        placement="top-start"
+                        title="预约咨询用户"
+                        width="200"
+                        trigger="hover">
+              <el-table :data="getItems(scope.row, th.prop)" size="mini" border>
+                <el-table-column width="100" property="day" label="时间">
+                  <template slot-scope="scope2">
+                    {{ scope2.row.timeStart + '-' + scope2.row.timeEnd  }}
+                  </template>
+                </el-table-column>
+                <el-table-column width="100" property="createBy" label="用户"></el-table-column>
+              </el-table>
+              <el-badge slot="reference" :value="getItems(scope.row, th.prop).length"  class="item">
+                <span>{{ scope.row[th.prop] }}</span>
+              </el-badge>
+            </el-popover>
           </div>
         </template>
       </el-table-column>
@@ -148,6 +165,7 @@ export default {
     return {
       today: '',
       fullToday: '',
+      fullToday2: '',
       // 遮罩层
       loading: true,
       // 选中数组
@@ -254,7 +272,7 @@ export default {
     //   return this.userName === 'admin'
     // },
     cellStyle({column}) {
-      if (column.property < this.fullToday) {
+      if (column.property < this.fullToday2) {
         return {
           backgroundColor: '#EFEFEF'
         }
@@ -277,7 +295,7 @@ export default {
         const ym = this.fullToday.substr(0, 7)
         const d = this.fullToday.substr(8)
 
-        if (this.queryParams.month === ym) {
+        if (this.queryParams.month === ym && d > 15) {
           console.log(this.scrollLeft)
           this.$refs.myTable.bodyWrapper.scrollLeft = this.scrollLeft * (d - 1)
         }
@@ -291,6 +309,7 @@ export default {
       const month = date.getMonth() + 1 < 10 ? '0' + (date.getMonth() + 1) : date.getMonth() + 1
       this.today = date.getDate() < 10 ? month + '-0' + date.getDate() : month + '-' + date.getDate()
       this.fullToday = year + '-' + month + '-' + date.getDate()
+      this.fullToday2 = year + '-' + this.today
       this.queryParams.month = year + '-' + month
       // this.fromTxt = [
       //   { text: '上个月', val: '1' },
@@ -307,14 +326,34 @@ export default {
         this.queryParams.ids.push(this.consultList[0])
       }
     },
+    noItems(row, th) {
+      if (row.items) {
+        if (row.items.length === 0) {
+          return true
+        }
+
+        return !row.items.find(a => a.day && a.day === th)
+      }
+    },
+    getItems(row, th) {
+      return row.items.filter(a => a.day && a.day === th)
+    },
     /** 查询咨询服务列表 */
     getList() {
       this.loading = true;
       getWorks(this.queryParams).then(response => {
         const data =  response.data
+        if (data && data.items) {
+          data.items.forEach(a => {
+            a.items = JSON.parse(a.items)
+          })
+        }
+
         this.workList = data.items
         this.headerList = data.headers;
         this.loading = false;
+
+        console.log(this.workList)
         this.setScroll()
       });
     },
@@ -418,3 +457,10 @@ export default {
   }
 };
 </script>
+<style lang="scss" scoped>
+::v-deep {
+  .el-table .cell {
+    overflow: visible;
+  }
+}
+</style>

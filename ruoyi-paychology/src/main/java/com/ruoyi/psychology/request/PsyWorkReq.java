@@ -22,6 +22,7 @@ public class PsyWorkReq implements Serializable
     private String start;
     private String end;
     private String status;
+    private Long consultId;
 
     /** 咨询师 */
     private List<Long> ids;

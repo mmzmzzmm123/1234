@@ -2,9 +2,9 @@
   <scroll-view scroll-x scroll-with-animation>
     <view class="list">
       <view class="item" v-for="item in courseList">
-        <view class="item-content">
+        <view class="item-content" @tap="toDetail(item.id)">
           <image :src="item.iconUrl" class="item-imgage"></image>
-          <text class="item-name" @tap="toDetail(item.id)">{{ item.name }}</text>
+          <text class="item-name">{{ item.name }}</text>
         </view>
       </view>
     </view>

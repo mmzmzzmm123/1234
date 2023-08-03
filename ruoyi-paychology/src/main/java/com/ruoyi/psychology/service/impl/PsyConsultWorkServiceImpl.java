@@ -16,6 +16,7 @@ import com.ruoyi.psychology.mapper.PsyConsultWorkMapper;
 import com.ruoyi.psychology.request.PsyConsultWorkReq;
 import com.ruoyi.psychology.request.PsyWorkReq;
 import com.ruoyi.psychology.service.IPsyConsultWorkService;
+import com.ruoyi.psychology.vo.PsyConsultOrderItemVO;
 import com.ruoyi.psychology.vo.PsyConsultWorkVO;
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.stereotype.Service;
@@ -158,6 +159,9 @@ public class PsyConsultWorkServiceImpl extends ServiceImpl<PsyConsultWorkMapper,
             node.put("id", String.valueOf(value.get(0).getConsultId()));
             node.put("nickName", value.get(0).getNickName());
             node.put("userName", StrUtil.format("(系统账号:{})", value.get(0).getUserName()));
+            req.setConsultId(value.get(0).getConsultId());
+            List<PsyConsultOrderItemVO> orderItems = psyConsultWorkMapper.getOrderItems(req);
+            node.put("items", JSONObject.toJSONString(orderItems));
 
             value.forEach(a -> {
                 String v = "未排班";
