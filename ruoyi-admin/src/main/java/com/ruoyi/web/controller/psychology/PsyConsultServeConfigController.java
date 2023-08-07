@@ -60,6 +60,16 @@ public class PsyConsultServeConfigController extends BaseController
         return AjaxResult.success(psyConsultServeService.getConsultServeRef(req));
     }
 
+    @PreAuthorize("@ss.hasPermi('psychology:serveConfig:remove')")
+    @PostMapping("/delConsultServeRef")
+    public AjaxResult delConsultServeRef(@RequestBody PsyConsultServe req)
+    {
+        if (req.getServeId() == null || req.getConsultId() == null) {
+            return AjaxResult.error();
+        }
+        return toAjax(psyConsultServeConfigService.delConsultServeRef(req));
+    }
+
     /**
      * 导出咨询服务配置列表
      */

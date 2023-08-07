@@ -18,6 +18,18 @@
           {{ scope.row.status === '0' ? '上架' : '下架'}}
         </template>
       </el-table-column>
+      <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
+        <template slot-scope="scope">
+          <el-button
+            style="color: red"
+            size="mini"
+            type="text"
+            @click="handleDelete(scope.row)"
+            v-hasPermi="['system:consult:edit']">
+            解绑
+          </el-button>
+        </template>
+      </el-table-column>
     </el-table>
     <pagination
       v-show="total>0"
@@ -30,7 +42,7 @@
 </template>
 
 <script>
-import { listServeConfig } from "@/api/psychology/serveConfig";
+import { delConsultServeRef, listServeConfig } from "@/api/psychology/serveConfig";
 export default {
   props: {
     id: {
@@ -69,7 +81,20 @@ export default {
         this.total = response.total;
         this.loading = false;
       });
-    }
+    },
+    /** 删除按钮操作 */
+    handleDelete(row) {
+      const data = {
+        serveId: row.id,
+        consultId: this.id
+      }
+      this.$modal.confirm('确认要解绑服务"' + row.name + '"吗？').then(function() {
+        return delConsultServeRef(data);
+      }).then(() => {
+        this.getList();
+        this.$modal.msgSuccess("解绑成功");
+      }).catch(() => {});
+    },
   }
 }
 </script>

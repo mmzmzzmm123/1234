@@ -104,6 +104,26 @@ public class PsyConsult extends BasePlusEntity implements Serializable
     @Excel(name = "咨询须知")
     private String notice;
 
+    /** 执业资格 */
+    @Excel(name = "执业资格")
+    private String qualification;
+
+    /** 首页展示的执业资格 */
+    @Excel(name = "首页展示的执业资格")
+    private String indexQualification;
+
+    /** 咨询方式 */
+    @Excel(name = "咨询方式")
+    private String mode;
+
+    /** 城市 */
+    @Excel(name = "城市")
+    private String city;
+
+    /** 省份 */
+    @Excel(name = "省份")
+    private String province;
+
     /** 受训经历 */
 //    @Excel(name = "受训经历")
     private String experience;

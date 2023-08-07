@@ -27,7 +27,8 @@
     <view class="consult-box index-margin">
       <view class="index-title">
         <view class="consult-direction" @tap="doFilter(1)">擅长领域</view>
-        <view class="price-filter" @tap="doFilter(2)">{{ calPrice }}</view>
+        <view class="price-filter" @tap="doFilter(2)">{{ filterParams.price || '价格' }}</view>
+        <view class="price-filter" @tap="doFilter(4)">{{ filterParams.city || '城市' }}</view>
         <view class="filter" @tap="doFilter(3)">筛选</view>
       </view>
       <consultant-list :consultantList="consultantList" @toConsultant="toConsultant"></consultant-list>
@@ -78,6 +79,8 @@
           highPrice: null,
           serve: null,
           type: null,
+          city: null,
+          province: null,
           days: [],
           way: []
         },
@@ -93,6 +96,8 @@
           time: null,
           serve: null,
           price: null,
+          city: null,
+          province: '不限',
           dayType: null
         },
         attrParams: {
@@ -105,11 +110,6 @@
         },
         showFilter: false
       };
-    },
-    computed: {
-      calPrice() {
-        return this.filterParams.price ? this.filterParams.price : '价格'
-      }
     },
     async mounted() {
       this.userInfo = utils.getUserInfo()
@@ -272,6 +272,16 @@
             this.queryData.serve = this.filterParams.serve
             this.queryData.way = this.filterParams.way
             this.queryData.dayType = this.filterParams.dayType
+            break
+          case 4:
+            if (this.filterParams.province && this.filterParams.province !== '不限') {
+              this.queryData.province = this.filterParams.province
+
+              if (this.filterParams.city && this.filterParams.city !== '不限') {
+                this.queryData.city = this.filterParams.city
+              }
+            }
+
             break
         }
         this.getConsult()

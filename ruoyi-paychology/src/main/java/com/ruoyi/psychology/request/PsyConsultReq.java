@@ -30,6 +30,12 @@ public class PsyConsultReq extends BaseValObj implements Serializable
     /** 用户性别（0男 1女 2未知） */
     private String sex;
 
+    /** 城市 */
+    private String city;
+
+    /** 省份 */
+    private String province;
+
     /** 咨询方向 */
     private Set<String> way;
 

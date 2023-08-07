@@ -77,6 +77,15 @@ public class PsyConsultServeServiceImpl implements IPsyConsultServeService {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
+    public int delete(PsyConsultServe serve) {
+        LambdaQueryWrapper<PsyConsultServe> wp = new LambdaQueryWrapper<>();
+        wp.eq(PsyConsultServe::getServeId, serve.getServeId());
+        wp.eq(PsyConsultServe::getConsultId, serve.getConsultId());
+        return psyConsultServeMapper.delete(wp);
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
     public int deleteAll(Long[] ids) {
         return psyConsultServeMapper.tombstonedByIds(ids);
     }

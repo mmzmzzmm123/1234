@@ -1,9 +1,13 @@
 <template>
     <view class="consultant-list-box">
-        <view class="consultant-item" v-if="consultantList.length > 0" v-for="consultant in consultantList">
+        <view class="consultant-item" v-if="consultantList.length > 0" v-for="consultant in consultantList" :style="consultant.indexQualification ? { background: 'url(/static/consult/bg.png) 100% no-repeat', backgroundSize: '100% 100%'} : {}">
+          <view class="header-icon" v-if="consultant.indexQualification">
+            <image src="/static/consult/crown.png" class="header-icon-img"/>
+            <text class="header-icon-text">{{ consultant.indexQualification }}</text>
+          </view>
           <view class="upper-box">
             <view class="img-box" @tap="toConsultant(consultant)">
-                <img :src="consultant.avatar" />
+                <image :src="consultant.avatar" />
                 <view v-if="consultant.buy > 0" class="img-tab">今日可约</view>
             </view>
             <view class="txt-box">
@@ -50,6 +54,23 @@ export default {
       border-radius: 12upx;
       margin-bottom: 16upx;
       padding: 24upx;
+      .header-icon {
+        position: absolute;
+        top: 16upx;
+        left: 420upx;
+        height: 20upx;
+        line-height: 20upx;
+        .header-icon-img {
+          width: 21upx;
+          height: 20upx;
+        }
+        .header-icon-text {
+          margin-left: 10upx;
+          font-size: 22upx;
+          font-weight: 500;
+          color: #CA7C00;
+        }
+      }
       .upper-box {
         display: flex;
         .img-box {

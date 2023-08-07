@@ -166,7 +166,7 @@ import serveRef from "./serveRef";
 export default {
   name: "Consult",
   components: { serve, serveRef },
-  dicts: ['consult_sex','consult_type'],
+  // dicts: ['consult_sex','consult_type'],
   data() {
     return {
       extraData: {

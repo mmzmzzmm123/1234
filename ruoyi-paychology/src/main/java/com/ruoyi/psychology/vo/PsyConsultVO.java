@@ -77,6 +77,21 @@ public class PsyConsultVO extends BaseValObj implements Serializable
     /** 受训经历 */
     private String experience;
 
+    /** 执业资格 */
+    private String qualification;
+
+    /** 咨询方式 */
+    private String mode;
+
+    /** 城市 */
+    private String city;
+
+    /** 省份 */
+    private String province;
+
+    /** 首页展示的执业资格 */
+    private String indexQualification;
+
     /** 删除标志（0代表存在 1代表删除） */
     private String delFlag;
 

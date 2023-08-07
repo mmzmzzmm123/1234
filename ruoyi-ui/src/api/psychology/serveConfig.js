@@ -32,6 +32,14 @@ export function getConsultServeRef() {
   })
 }
 
+export function delConsultServeRef(query) {
+  return request({
+    url: '/psychology/serveConfig/delConsultServeRef',
+    method: 'post',
+    data: query
+  })
+}
+
 // 新增咨询服务配置
 export function addServeConfig(data) {
   return request({

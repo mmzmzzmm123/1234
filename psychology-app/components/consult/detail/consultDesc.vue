@@ -1,9 +1,10 @@
 <template>
   <view>
     <view class="info-first">
-      <view class="zxWord">
-        <text class="zxWord-title">咨询寄语</text>
-        <text class="zxWord-info">{{ info.zxWord }}</text>
+
+      <view class="qualification">
+        <text class="qualification-title">执业资格</text>
+        <view class="qualification-val" v-for="item in info.qualification">{{ item }}</view>
       </view>
 
       <view class="experience" v-if="info.experiences && info.experiences.length > 0">
@@ -34,6 +35,12 @@
       <text class="text-wrapper-title">咨询风格</text>
       <text class="text-wrapper-info">{{ info.zxStyle || '用客观和真诚来共情来访，用积极和热情关注来访的闪光点，尊重来访的感受客观中立的帮助来访找到问题。' }}</text>
     </view>
+
+    <view class="zxWord">
+      <text class="zxWord-title">咨询寄语</text>
+      <text class="zxWord-info">{{ info.zxWord }}</text>
+    </view>
+
     <view class="text-wrapper">
       <text class="text-wrapper-title">咨询须知</text>
       <text class="text-wrapper-info">{{ info.notice || '咨询中请勿擅自录音或者是摄像，做到有效的保护好来访的利益。' }}</text>
@@ -51,12 +58,35 @@ export default {
   flex-direction: column;
   margin-top: 16upx;
 }
+.qualification {
+  background-color: rgba(255,255,255,1.000000);
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-center;
+  padding: 32upx;
+  .qualification-title {
+    overflow-wrap: break-word;
+    color: rgba(51,51,51,1);
+    font-size: 30upx;
+    font-family: PingFangSC-Medium;
+    font-weight: 500;
+    text-align: left;
+    margin-bottom: 32upx;
+  }
+  .qualification-val {
+    font-size: 26upx;
+    font-weight: 400;
+    color: #333333;
+  }
+}
+
 .zxWord {
   background-color: rgba(255,255,255,1.000000);
   display: flex;
   flex-direction: column;
   justify-content: flex-center;
   padding: 32upx;
+  margin-top: 16upx;
 }
 .zxWord-title {
   overflow-wrap: break-word;

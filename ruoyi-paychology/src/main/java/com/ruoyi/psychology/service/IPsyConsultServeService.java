@@ -21,4 +21,6 @@ public interface IPsyConsultServeService {
     List<PsyConsultServeVO> getConsultServeRef(PsyConsultServe req);
 
     int deleteAll(Long[] ids);
+
+    int delete(PsyConsultServe serve);
 }

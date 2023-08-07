@@ -1,5 +1,6 @@
 package com.ruoyi.psychology.service;
 
+import com.ruoyi.psychology.domain.PsyConsultServe;
 import com.ruoyi.psychology.domain.PsyConsultServeConfig;
 import com.ruoyi.psychology.request.PsyConsultServeConfigReq;
 import com.ruoyi.psychology.request.PsyRefConsultServeReq;
@@ -38,4 +39,6 @@ public interface IPsyConsultServeConfigService
     int deleteAll(Long[] ids);
 
     int delete(Long id);
+
+    int delConsultServeRef(PsyConsultServe req);
 }

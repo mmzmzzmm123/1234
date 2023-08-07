@@ -10,8 +10,13 @@
         <view class="info-content">
           <view class="info-content-userName">
             <text>{{ consultInfo.userName }}</text>
+            <view class="info-content-gps">
+              <image src="/static/consult/gps.png" />
+              <text>{{ consultInfo.province + '-' + consultInfo.city }}</text>
+            </view>
           </view>
           <view class="info-content-info">{{ consultInfo.info }}</view>
+          <view class="info-content-mode">当面/视频/语音咨询</view>
         </view>
       </view>
 
@@ -165,6 +170,7 @@ export default {
     await this.getConsultInfo()
     await this.getConsultCourseByName()
     this.openTime()
+    this.share()
   },
   // onPageScroll(e) {
   //   let scroll = e.scrollTop <= 0 ? 0 : e.scrollTop;
@@ -208,6 +214,10 @@ export default {
 
         this.consultInfo.tabList = list
       }
+      if (this.consultInfo.mode) {
+        this.consultInfo.mode = this.consultInfo.mode.split(',').join('/');
+      }
+      this.consultInfo.qualification = this.consultInfo.qualification ? this.consultInfo.qualification.split(',') : []
 
       this.consultInfo.experiences = this.consultInfo.experience && this.consultInfo.experience !== '[]' ? JSON.parse(this.consultInfo.experience) : []
     },
@@ -287,10 +297,10 @@ export default {
       this.$refs.popup.open()
     },
     share() {
-      const title = this.consultInfo.name
-      const desc = this.consultInfo.detail
+      const title = this.consultInfo.nickName
+      const desc = this.consultInfo.info
       const link = window.location.href
-      const img = this.consultInfo.iconUrl
+      const img = this.consultInfo.avatar
       const url = window.location.href
       console.log('consultInfo: ', this.consultInfo)
       wxJS.getConfig(title, desc, link, img, url);
@@ -304,7 +314,7 @@ export default {
   background-color: #F8F8F8;
   position: relative;
   //width: 750upx;
-  //height: 1800upx;
+  //height: 2800upx;
   //overflow: hidden;
   display: flex;
   flex-direction: column;
@@ -338,12 +348,28 @@ export default {
   margin-left: 32upx;
 }
 .info-content-userName {
+  position: relative;
   margin-top: -52upx;
   color: #FFFFFF;
   font-size: 30upx;
   font-weight: 600;
   text-align: left;
   white-space: nowrap;
+  .info-content-gps {
+    position: absolute;
+    right: 30upx;
+    top: 6upx;
+    image {
+      width: 16upx;
+      height: 18upx;
+    }
+    text {
+      margin-left: 6upx;
+      font-size: 22upx;
+      font-weight: 400;
+      color: #FFFFFF;
+    }
+  }
 }
 .info-content-tags {
   width: 248upx;
@@ -376,10 +402,16 @@ export default {
 }
 .info-content-info {
   width: 498upx;
+  height: 74upx;
   overflow-wrap: break-word;
   color: #777777;
   font-size: 26upx;
   margin-top: 16upx;
+}
+.info-content-mode {
+  font-size: 24upx;
+  font-weight: 400;
+  color: #AAAAAA;
 }
 .info-nums {
   width: 702upx;

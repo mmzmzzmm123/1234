@@ -30,11 +30,33 @@
             <el-input size="mini" maxlength="100" show-word-limit v-model="form.info" placeholder="简介" />
           </el-form-item>
         </el-col>
+      </el-row>
+
+      <el-row>
         <el-col :span="8">
           <el-form-item label="性别" prop="sex">
             <el-radio-group v-model="form.sex">
               <el-radio v-for="item in dict.type.consult_sex" :label="item.label">{{ item.label }}</el-radio>
             </el-radio-group>
+          </el-form-item>
+        </el-col>
+        <el-col :span="8" >
+          <el-form-item label="可咨询形式" prop="mode">
+            <el-checkbox-group v-model="form.mode">
+              <el-checkbox v-for="item in dict.type.consult_type" :label="item.label">{{ item.label }}</el-checkbox>
+            </el-checkbox-group>
+          </el-form-item>
+        </el-col>
+        <el-col :span="8">
+          <el-form-item label="所在地区" prop="city">
+            <el-cascader
+              size="small"
+              filterable
+              v-model="form.city"
+              :options="city"
+              collapse-tags
+              clearable>
+            </el-cascader>
           </el-form-item>
         </el-col>
       </el-row>
@@ -77,7 +99,7 @@
       </el-row>
 
       <el-row>
-        <el-col :span="12">
+        <el-col :span="8">
           <el-form-item label="擅长领域" prop="way">
             <el-cascader
               size="small"
@@ -85,8 +107,33 @@
               :options="wayList"
               :props="{ multiple: true }"
               collapse-tags
+              filterable
               clearable>
             </el-cascader>
+          </el-form-item>
+        </el-col>
+        <el-col :span="8">
+          <el-form-item label="执业资格" prop="qualification">
+            <el-select style="width: 100%" v-model="form.qualification" multiple placeholder="请选择执业资格" clearable @change="changeQualification">
+              <el-option
+                v-for="item in dict.type.consult_qualification"
+                :key="item.label"
+                :label="item.label"
+                :value="item.label"
+              />
+            </el-select>
+          </el-form-item>
+        </el-col>
+        <el-col :span="8">
+          <el-form-item label="执业资格" prop="qualification">
+            <el-select style="width: 100%" v-model="form.indexQualification" placeholder="请选择执业资格" clearable>
+              <el-option
+                v-for="item in form.qualification"
+                :key="item"
+                :label="item"
+                :value="item"
+              />
+            </el-select>
           </el-form-item>
         </el-col>
       </el-row>
@@ -141,7 +188,7 @@
                     v-if="scope.$index >= 0"
                     size="mini"
                     type="text"
-                    icon="el-icon-edit"
+                    style="color: red"
                     @click="delItem(form.experience, scope.$index)"
                   >删除</el-button>
                 </template>
@@ -173,12 +220,13 @@
 </template>
 
 <script>
-import { getAttrs, getConsult, addConsult, updateConsult } from "@/api/psychology/consult";
+import { getConsult, addConsult, updateConsult } from "@/api/psychology/consult";
 import { getTree } from "@/api/psychology/type";
+import { getCascaderData } from "@/utils/pc-city";
 
 export default {
   name: "ConsultDetail",
-  dicts: ['consult_sex','consult_type'],
+  dicts: ['consult_sex', 'consult_type', 'consult_qualification'],
   data() {
     return {
       extraData: {
@@ -186,7 +234,14 @@ export default {
       },
       eList: [],
       wayList: [],
+      city: [],
+      qualifications: [],
       form: {
+        way: [],
+        city: [],
+        mode: [],
+        qualification: [],
+        indexQualification: '',
         experience: []
       },
       // 表单校验
@@ -235,6 +290,7 @@ export default {
     // 获取标签
     // 获取性别
     // 获取咨询方向
+    this.city = getCascaderData()
     this.getAttr()
     if (this.$route.query && this.$route.query.id) {
       this.form.id = this.$route.query.id
@@ -242,6 +298,11 @@ export default {
     }
   },
   methods: {
+    changeQualification() {
+      if (this.form.indexQualification && !this.form.qualification.includes(this.form.indexQualification)) {
+        this.form.indexQualification = ''
+      }
+    },
     changeTime() {
       // console.log(this.form.experience)
       this.form.experience = this.form.experience.sort((a, b) => {
@@ -265,7 +326,10 @@ export default {
     getInfo() {
       getConsult(this.form.id).then(response => {
         response.data.experience = response.data.experience ? JSON.parse(response.data.experience) : []
-        response.data.way = response.data.way && JSON.parse(response.data.way)
+        response.data.qualification = response.data.qualification ? response.data.qualification.split(',') : []
+        response.data.way = response.data.way ? JSON.parse(response.data.way) : []
+        response.data.mode = response.data.mode ? response.data.mode.split(',') : []
+        response.data.city = response.data.city && response.data.province ? [response.data.province, response.data.city] : []
 
         this.form = response.data
       })
@@ -276,6 +340,13 @@ export default {
         const form = JSON.parse(JSON.stringify(this.form))
         form.way = JSON.stringify(form.way)
         form.experience = JSON.stringify(form.experience)
+        form.mode = form.mode.join(',')
+        const city = form.city
+        form.province = city[0]
+        form.city = city[1]
+
+        form.qualification = form.qualification.join(',')
+
         if (valid) {
           if (this.form.id != null) {
             updateConsult(form).then(response => {

@@ -3,6 +3,7 @@
       <view class="index-title">
         <view class="filter-item" :class="{ active: filterParams.type === 1 }" @tap="doFilter(1)">擅长领域</view>
         <view class="filter-item" :class="{ active: filterParams.type === 2 }" @tap="doFilter(2)">价格</view>
+        <view class="filter-item" :class="{ active: filterParams.type === 4 }" @tap="doFilter(4)">城市</view>
         <view class="filter-item" :class="{ active: filterParams.type === 3 }" @tap="doFilter(3)">筛选</view>
       </view>
 
@@ -28,6 +29,27 @@
             <view class="price-item" :class="{ selected: filterParams.price !== null && filterParams.price === item.name }" @tap="selectType(item.name, 'price')">{{ item.name }}</view>
           </view>
         </view>
+
+        <view class="city-filter" v-else-if="filterParams.type === 4">
+          <scroll-view scroll-y scroll-with-animation class="city-left" :scroll-into-view="'city-'+p">
+            <view id="city-0" class="city-left-item" :class="{ selected: filterParams.province === '不限'}" @tap="selectCity('不限')">
+              不限
+            </view>
+            <view class="city-left-item" v-for="item in city" @tap="selectCity(item.name)" :class="{ selected: filterParams.province === item.name}" :id="'city-'+item.code">
+              {{ item.name }}
+            </view>
+          </scroll-view>
+
+          <scroll-view scroll-y scroll-with-animation class="city-right" v-if="cityItems.length > 0">
+            <view class="city-right-item" :class="{ selected: filterParams.city === '不限'}"@tap="selectType('不限', 'city')">
+              不限
+            </view>
+            <view v-for="it in cityItems" class="city-right-item" :class="{ selected: filterParams.city !== null && it.name === filterParams.city}" @tap="selectType(it.name, 'city')">
+              {{ it.name }}
+            </view>
+          </scroll-view>
+        </view>
+
         <view class="consult-filter" v-else-if="filterParams.type === 3">
           <view class="consult-filter-tab-content">
             <view class="consult-filter-tab-title">
@@ -98,15 +120,25 @@
 </template>
 
 <script>
+import cityUtil from "@/utils/pc-city";
   export default {
     props: ['filterParams','attrParams'],
     data() {
       return {
+        p: 0,
+        c: 0,
+        city: cityUtil.getCascaderData(),
+        cityItems: [],
       }
     },
     created() {
       console.log(this.attrParams.sexList)
       console.log(this.attrParams.typeList)
+      if (this.filterParams.province && this.filterParams.province !== '不限') {
+        const item = this.city.find(a => a.name === this.filterParams.province)
+        this.p = item.code
+        this.cityItems = item.children
+      }
     },
     methods: {
       doFilter(type) {
@@ -133,6 +165,18 @@
             }
           }
         })
+      },
+      selectCity(val) {
+        this.filterParams.province = val
+        if (val && val !== '不限') {
+          const item = this.city.find(a => a.name === val)
+          this.p = item.code
+          this.cityItems = item.children
+        } else {
+          this.p = 0
+          this.filterParams.city = undefined
+          this.cityItems = []
+        }
       },
       selectType(val, type) {
         if (type === 'days') {
@@ -161,6 +205,9 @@
         this.filterParams.serve = null
         this.filterParams.price = null
         this.filterParams.dayType = null
+        this.filterParams.city = null
+        this.filterParams.province = null
+        this.p = 0
       },
       confirm() {
         switch(this.filterParams.type) {
@@ -179,6 +226,7 @@
           break;
           case 2:
           case 3:
+          case 4:
             console.log(this.filterParams)
           break;
         }
@@ -190,7 +238,7 @@
 
 <style lang="scss" scoped>
   .filter-container {
-    padding: 26upx 26upx 100upx;
+    padding-bottom: 100upx;
     position: relative;
     //height: 740upx;
     .index-title {
@@ -202,6 +250,7 @@
       width: 100%;
       background-color: #FFFFFF;
       align-items: center;
+      padding-left: 26upx;
       .filter-item {
         position: relative;
         margin-right: 84upx;
@@ -231,9 +280,11 @@
 
     .filter-container-sroll {
       height: 740upx;
+      margin-top: 60upx;
     }
     .consult-direction {
-      margin-top: 60upx;
+      margin-top: 46upx;
+      margin-left: 26upx;
       .consult-direction-title {
         height: 42upx;
         font-size: 30upx;
@@ -274,7 +325,8 @@
     }
     
     .price-filter {
-      margin-top: 60upx;
+      margin-top: 46upx;
+      margin-left: 26upx;
       .price-list {
         .price-item {
           margin-bottom: 32upx;
@@ -290,8 +342,43 @@
       }
     }
 
+    .city-filter {
+      margin-top: 46upx;
+      width: 100%;
+      display: flex;
+      .city-left {
+        //width: 256upx;
+        height: 740upx;
+        .city-left-item {
+          background: #F8F8F8;
+          height: 80upx;
+          width: 256upx;
+          line-height: 80upx;
+          padding-left: 26upx;
+        }
+        .selected {
+          color: #FF703F;
+          background: #FFF;
+        }
+      }
+      .city-right{
+        margin-left: 32upx;
+        height: 740upx;
+        .city-right-item {
+          width: 494upx;
+          height: 70upx;
+          line-height: 70upx;
+        }
+        .selected {
+          color: #FF703F;
+          background: #FFF;
+        }
+      }
+    }
+
     .consult-filter {
-      margin-top: 60upx;
+      margin-top: 46upx;
+      margin-left: 26upx;
       .consult-filter-tab-content {
         margin-top: 26upx;
       }

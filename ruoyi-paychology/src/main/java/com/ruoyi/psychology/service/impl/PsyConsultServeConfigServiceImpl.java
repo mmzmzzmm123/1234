@@ -121,6 +121,12 @@ public class PsyConsultServeConfigServiceImpl extends ServiceImpl<PsyConsultServ
 
     @Override
     @Transactional(rollbackFor = Exception.class)
+    public int delConsultServeRef(PsyConsultServe req) {
+        return psyConsultServeService.delete(req);
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
     public boolean setRefNum(PsyRefConsultServeReq req) {
         // 找出咨询师相关服务,更新服务关联咨询师数量
         PsyConsultServe serve = new PsyConsultServe();

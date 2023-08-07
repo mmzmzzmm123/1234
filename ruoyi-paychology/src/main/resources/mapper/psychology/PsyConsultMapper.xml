@@ -5,7 +5,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 <mapper namespace="com.ruoyi.psychology.mapper.PsyConsultMapper">
 
     <select id="search" resultType="com.ruoyi.psychology.domain.PsyConsult">
-        select id, user_id, user_name, nicK_name, avatar, email, phonenumber, sex, tabs, way, way_str, wx_card, zx_word, zx_style, notice, experience, info, detail, serve, work_num, work_time, work_hours, del_flag, status, create_by, create_time, update_by, update_time,
+        select id, user_id, user_name, nicK_name, avatar, email, phonenumber, sex, tabs, way, way_str, wx_card, zx_word, zx_style, notice, experience, info, detail, serve, work_num, work_time, work_hours, del_flag, status, qualification, index_qualification, create_by, create_time, update_by, update_time,
+        qualification, index_qualification, mode, city, province,
         (SELECT count(id) FROM psy_consult_work WHERE `live` != '[]' and consult_id = psy_consult.id and `day` = DATE_FORMAT(NOW(),'%Y-%m-%d')) buy,
         (SELECT b.price FROM psy_consult_serve a INNER JOIN psy_consult_serve_config b ON a.serve_id=b.id AND a.consult_id=psy_consult.id ORDER BY b.price ASC LIMIT 1) price
         from psy_consult
@@ -13,6 +14,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             and status = 0 and del_flag = 0
             <if test="userName != null  and userName != ''"> and user_name like concat('%', #{userName}, '%')</if>
             <if test="sex != null  and sex != ''"> and sex = #{sex}</if>
+            <if test="city != null  and city != ''"> and city = #{city}</if>
+            <if test="province != null  and province != ''"> and province = #{province}</if>
             <if test="(serve != null  and serve != '') or (lowPrice != null and highPrice != null)">
                 and id in (
                     SELECT a.consult_id FROM psy_consult_serve a INNER JOIN psy_consult_serve_config b on a.serve_id = b.id WHERE a.del_flag = 0 and a.`status` = 0 and a.consult_id = psy_consult.id
@@ -84,6 +87,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="experience"    column="experience"    />
         <result property="delFlag"    column="del_flag"    />
         <result property="status"    column="status"    />
+        <result property="qualification"    column="qualification"    />
+        <result property="indexQualification"    column="index_qualification"    />
+        <result property="mode"    column="mode"    />
+        <result property="city"    column="city"    />
+        <result property="province"    column="province"    />
         <result property="createBy"    column="create_by"    />
         <result property="createTime"    column="create_time"    />
         <result property="updateBy"    column="update_by"    />
@@ -91,7 +99,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </resultMap>
 
     <sql id="selectPsyConsultVo">
-        select id, user_id, user_name, nicK_name, avatar, email, phonenumber, sex, tabs, way, way_str, wx_card, zx_word, zx_style, notice, experience, info, detail, serve, work_num, work_time, work_hours, del_flag, status, create_by, create_time, update_by, update_time from psy_consult
+        select id, user_id, user_name, nicK_name, mode, city, province, avatar, email, phonenumber, sex, tabs, way, way_str, wx_card, zx_word, zx_style, notice, experience, info, detail, serve, work_num, work_time, work_hours, del_flag, status, qualification, index_qualification, create_by, create_time, update_by, update_time from psy_consult
     </sql>
 
     <select id="getList" parameterType="PsyConsult" resultMap="PsyConsultResult">
