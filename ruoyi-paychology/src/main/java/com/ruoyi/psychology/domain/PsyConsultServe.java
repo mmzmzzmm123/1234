@@ -27,12 +27,4 @@ public class PsyConsultServe implements Serializable
     /** 咨询师 */
     private Long consultId;
 
-    /** 销量 */
-    private Integer num;
-
-    /** 删除标志（0代表存在 1代表删除） */
-    private String delFlag;
-
-    /** 状态（0正常 1停用） */
-    private String status;
 }

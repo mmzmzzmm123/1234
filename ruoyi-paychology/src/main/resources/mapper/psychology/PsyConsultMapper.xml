@@ -18,7 +18,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="province != null  and province != ''"> and province = #{province}</if>
             <if test="(serve != null  and serve != '') or (lowPrice != null and highPrice != null)">
                 and id in (
-                    SELECT a.consult_id FROM psy_consult_serve a INNER JOIN psy_consult_serve_config b on a.serve_id = b.id WHERE a.del_flag = 0 and a.`status` = 0 and a.consult_id = psy_consult.id
+                    SELECT a.consult_id FROM psy_consult_serve a INNER JOIN psy_consult_serve_config b on a.serve_id = b.id WHERE a.consult_id = psy_consult.id
                     <if test="serve != null  and serve != ''"> and b.`mode` = #{serve}</if>
                     <if test="lowPrice != null and highPrice != null">
                         and b.price <![CDATA[>=]]> #{lowPrice} and b.price <![CDATA[<=]]> #{highPrice}

@@ -274,12 +274,12 @@
             this.queryData.dayType = this.filterParams.dayType
             break
           case 4:
+            this.queryData.city = null
+            this.queryData.province = null
+
             if (this.filterParams.province && this.filterParams.province !== '不限') {
               this.queryData.province = this.filterParams.province
-
-              if (this.filterParams.city && this.filterParams.city !== '不限') {
-                this.queryData.city = this.filterParams.city
-              }
+              this.queryData.city = this.filterParams.city && this.filterParams.city !== '不限' ? this.filterParams.city : null
             }
 
             break

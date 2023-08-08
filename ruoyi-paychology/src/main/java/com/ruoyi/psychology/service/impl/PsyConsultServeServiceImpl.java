@@ -25,8 +25,6 @@ public class PsyConsultServeServiceImpl implements IPsyConsultServeService {
         LambdaQueryWrapper<PsyConsultServe> wp = new LambdaQueryWrapper<>();
         wp.eq((req.getConsultId() != null && req.getConsultId() > 0), PsyConsultServe::getConsultId, req.getConsultId());
         wp.eq((req.getServeId() != null && req.getServeId() > 0), PsyConsultServe::getServeId, req.getServeId());
-        wp.eq(PsyConsultServe::getDelFlag, "0");
-        wp.eq(PsyConsultServe::getStatus, "0");
         return psyConsultServeMapper.selectList(wp);
     }
 
@@ -46,16 +44,12 @@ public class PsyConsultServeServiceImpl implements IPsyConsultServeService {
 
     @Override
     public List<PsyConsultServeVO> getServeRef(PsyConsultServe req) {
-        req.setDelFlag("0");
-        req.setStatus("0");
         return psyConsultServeMapper.getServeRef(req);
     }
 
     @Override
     public List<PsyConsultServeVO> getConsultServeRef(PsyConsultServe req) {
         // 咨询师过滤
-        req.setStatus("0");
-        req.setDelFlag("0");
         return psyConsultServeMapper.getConsultServeRef(req);
     }
 
@@ -66,9 +60,6 @@ public class PsyConsultServeServiceImpl implements IPsyConsultServeService {
             PsyConsultServe ref = new PsyConsultServe();
             ref.setConsultId(req.getConsultId());
             ref.setServeId(a);
-            ref.setNum(0);
-            ref.setDelFlag("0");
-            ref.setStatus("0");
             refs.add(ref);
         });
 

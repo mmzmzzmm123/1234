@@ -40,10 +40,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="startTime != null "> and create_time <![CDATA[ >= ]]> #{startTime}</if>
             <if test="endTime != null "> and create_time <![CDATA[ <= ]]> #{endTime}</if>
             <if test="cId != null  and cId != ''">
-                and id in (select distinct serve_id from psy_consult_serve where del_flag = '0' and consult_id = #{cId})
+                and id in (select distinct serve_id from psy_consult_serve where consult_id = #{cId})
             </if>
             <if test="nId != null  and nId != ''">
-                and id not in (select distinct serve_id from psy_consult_serve where del_flag = '0' and consult_id = #{nId})
+                and id not in (select distinct serve_id from psy_consult_serve where consult_id = #{nId})
             </if>
         </where>
         order by z_index desc

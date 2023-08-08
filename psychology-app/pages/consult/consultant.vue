@@ -12,7 +12,7 @@
             <text>{{ consultInfo.userName }}</text>
             <view class="info-content-gps">
               <image src="/static/consult/gps.png" />
-              <text>{{ consultInfo.province + '-' + consultInfo.city }}</text>
+              <text v-if="consultInfo.province">{{ consultInfo.province + '-' + consultInfo.city }}</text>
             </view>
           </view>
           <view class="info-content-info">{{ consultInfo.info }}</view>

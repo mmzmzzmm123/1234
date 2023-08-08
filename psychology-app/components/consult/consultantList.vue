@@ -75,11 +75,13 @@ export default {
         display: flex;
         .img-box {
             position: relative;
-            width: 162upx;
-            height: 212upx;
-            img {
+            //width: 162upx;
+            //height: 212upx;
+            image {
+                width: 162upx;
+                height: 212upx;
                 border-radius: 10%;
-              }
+            }
           .img-tab {
             text-align: center;
             position: absolute;

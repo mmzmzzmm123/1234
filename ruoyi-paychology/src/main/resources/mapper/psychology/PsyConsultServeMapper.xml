@@ -16,8 +16,6 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <where>
             <if test="consultId != null  and consultId != ''"> and a.consult_id = #{consultId}</if>
             <if test="serveId != null  and serveId != ''"> and a.serve_id = #{serveId}</if>
-            <if test="delFlag != null  and delFlag != ''"> and a.del_flag = #{delFlag}</if>
-            <if test="status != null  and status != ''"> and a.status = #{status}</if>
         </where>
     </select>
 
@@ -26,15 +24,13 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <where>
             <if test="consultId != null  and consultId != ''"> and a.consult_id = #{consultId}</if>
             <if test="serveId != null  and serveId != ''"> and a.serve_id = #{serveId}</if>
-            <if test="delFlag != null  and delFlag != ''"> and a.del_flag = #{delFlag}</if>
-            <if test="status != null  and status != ''"> and a.status = #{status}</if>
         </where>
     </select>
 
     <insert id="batchServeRef">
-        insert into psy_consult_serve(serve_id, consult_id, num, del_flag, status) values
+        insert into psy_consult_serve(serve_id, consult_id) values
         <foreach item="item" index="index" collection="list" separator=",">
-            (#{item.serveId},#{item.consultId},#{item.num},#{item.delFlag},#{item.status})
+            (#{item.serveId},#{item.consultId})
         </foreach>
     </insert>
 </mapper>

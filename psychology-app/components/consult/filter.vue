@@ -206,7 +206,7 @@ import cityUtil from "@/utils/pc-city";
         this.filterParams.price = null
         this.filterParams.dayType = null
         this.filterParams.city = null
-        this.filterParams.province = null
+        this.filterParams.province = '不限'
         this.p = 0
       },
       confirm() {
