@@ -106,6 +106,12 @@ public class PsyConsultOrderServiceImpl implements IPsyConsultOrderService
     }
 
     @Override
+    public String getOpenId(Long cId) {
+        PsyConsultVO one = psyConsultService.getOne(cId);
+        return one.getOpenId();
+    }
+
+    @Override
     public List<PsyConsultOrder> getList(PsyAdminOrderReq req) {
         req.setDelFlag("0");
         if (StringUtils.isNotBlank(req.getDateLimit())) {

@@ -7,10 +7,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.redis.core.BoundSetOperations;
-import org.springframework.data.redis.core.HashOperations;
-import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.data.redis.core.ValueOperations;
+import org.springframework.data.redis.core.*;
 import org.springframework.stereotype.Component;
 
 /**
@@ -127,6 +124,46 @@ public class RedisCache
     public boolean deleteObject(final Collection collection)
     {
         return redisTemplate.delete(collection) > 0;
+    }
+
+    /**
+     * 列表添加左边添加
+     * @param k string key
+     * @param v Object v
+     */
+    public void lPush(String k, Object v) {
+        ListOperations<String, Object> list = redisTemplate.opsForList();
+        list.leftPush(k, v);
+    }
+
+    /**
+     * 从右边拿出来一个
+     * @param k string key
+     * @param t Long 超时秒数
+     */
+    public Object getRightPop(String k, Long t){
+        return redisTemplate.opsForList().rightPop(k, t, TimeUnit.SECONDS);
+    }
+
+    /**
+     * 列表获取数量
+     * @param k string key
+     * @return Long
+     */
+    public Long getListSize(String k) {
+        return redisTemplate.opsForList().size(k);
+    }
+
+    /**
+     * 列表获取
+     * @param k string key
+     * @param l long l
+     * @param l1 long l1
+     * @return List<Object>
+     */
+    public List<Object> lRange(String k, long l, long l1) {
+        ListOperations<String, Object> list = redisTemplate.opsForList();
+        return list.range(k, l, l1);
     }
 
     /**

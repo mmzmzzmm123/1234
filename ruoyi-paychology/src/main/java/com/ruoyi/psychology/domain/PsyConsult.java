@@ -124,6 +124,8 @@ public class PsyConsult extends BasePlusEntity implements Serializable
     @Excel(name = "省份")
     private String province;
 
+    private String openId;
+
     /** 受训经历 */
 //    @Excel(name = "受训经历")
     private String experience;

@@ -23,6 +23,8 @@ public interface IPsyConsultOrderService
 
     PsyConsultOrderVO getOne(Long id);
 
+    String getOpenId(Long cId);
+
     List<PsyConsultOrder> getList(PsyAdminOrderReq req);
 
     List<PsyConsultOrder> getCancelList(int num);

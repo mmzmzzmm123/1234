@@ -89,6 +89,8 @@ public class PsyConsultVO extends BaseValObj implements Serializable
     /** 省份 */
     private String province;
 
+    private String openId;
+
     /** 首页展示的执业资格 */
     private String indexQualification;
 
