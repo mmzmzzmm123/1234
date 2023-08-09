@@ -339,6 +339,7 @@
       .banner-img {
         width: 100%;
         height: 260upx;
+        border-radius: 12upx;
       }
 
       uni-swiper {

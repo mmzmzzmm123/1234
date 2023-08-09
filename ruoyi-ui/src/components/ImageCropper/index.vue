@@ -1,226 +1,292 @@
 <template>
-   <div class="cropper_model">
-    <el-dialog
-     title="图片剪裁"
-     width="800px"
-     class="cropper_model_dlg"
-     :visible.sync="dialogVisible"
-     append-to-body
-     :close-on-click-modal="false"
-     :close-on-press-escape="false"
+  <div class="component-upload-image">
+    <el-upload
+      multiple
+      :action="uploadImgUrl"
+      list-type="picture-card"
+      :on-success="handleUploadSuccess"
+      :before-upload="handleBeforeUpload"
+      :limit="limit"
+      :on-error="handleUploadError"
+      :on-exceed="handleExceed"
+      ref="imageUpload"
+      :on-remove="handleDelete"
+      :on-change="changePhotoFile"
+      :headers="headers"
+      :show-file-list="true"
+      :file-list="fileList"
+      :on-preview="handlePictureCardPreview"
+      :class="{hide: this.fileList.length >= this.limit}"
+      :auto-upload="false"
     >
-     <div class="cropper_content">
-      <div class="cropper" style="text-align: center;">
-       <vueCropper
-        ref="cropper"
-        :img="options.img"
-        :outputSize="options.outputSize"
-        :outputType="options.outputType"
-        :info="options.info"
-        :canScale="options.canScale"
-        :autoCrop="options.autoCrop"
-        :autoCropWidth="options.autoCropWidth"
-        :autoCropHeight="options.autoCropHeight"
-        :fixed="options.fixed"
-        :fixedBox="options.fixedBox"
-        :fixedNumber="options.fixedNumber"
-        @realTime="previewImg"
-       >
-       </vueCropper>
-       <div class="cropper_btns">
-        <el-button type="primary" @click="goUpload" size="mini">
-         重新上传
-        </el-button>
-        <el-button
-         @click="rotateLeft"
-         icon="el-icon-refresh-left"
-         size="mini"
-         title="左旋转"
-        >
-        </el-button>
-        <el-button
-         @click="rotateRight"
-         icon="el-icon-refresh-right"
-         size="mini"
-         title="右旋转"
-        >
-        </el-button>
-        <el-button @click="changeScale(1)" size="mini" title="放大">
-         +
-        </el-button>
-        <el-button @click="changeScale(-1)" size="mini" title="缩小">
-         -
-        </el-button>
-       </div>
-      </div>
-      <div class="cropper_right">
-       <h3>预览</h3>
-       <!-- 预览 -->
-       <div
-        class="cropper_preview"
-        :style="{
-       width: preview.w + 'px',
-       height: preview.h + 'px',
-       overflow: 'hidden',
-       margin: '5px'
-      }"
-       >
-        <div :style="preview.div">
-         <img :src="preview.url" :style="preview.img" alt="" />
-        </div>
-       </div>
-       <div style="margin-top: 100px;">
-        <el-button type="primary" @click="uploadImg" :loading="loading">
-         确定上传
-        </el-button>
-       </div>
-      </div>
-     </div>
-     <!-- <div slot="footer" class="dialog-footer">
-    <el-button @click="downLoad('blob')">下载</el-button>
-    <el-button @click="dialogVisible = false">取消</el-button>
-    <el-button type="primary" @click="uploadImg" :loading="loading">
-     确认
-    </el-button>
-   </div> -->
+      <i class="el-icon-plus"></i>
+    </el-upload>
+
+    <cropper ref="myCropper" @getFile="getFile" @upAgain="upAgain"></cropper>
+
+    <!-- 上传提示 -->
+    <div class="el-upload__tip" slot="tip" v-if="showTip">
+      请上传
+      <template v-if="sizeTip"> <b style="color: #f56c6c">{{ sizeTip }}</b>, </template>
+      <template v-if="fileSize"> 大小不超过 <b style="color: #f56c6c">{{ fileSize }}MB</b>, </template>
+      <template v-if="fileType"> 格式为 <b style="color: #f56c6c">{{ fileType.join("/") }}</b> </template>
+      的文件
+    </div>
+
+    <el-dialog
+      :visible.sync="dialogVisible"
+      title="预览"
+      width="800"
+      append-to-body
+    >
+      <img
+        :src="dialogImageUrl"
+        style="display: block; max-width: 100%; margin: 0 auto"
+      />
     </el-dialog>
-   </div>
+  </div>
 </template>
 
 <script>
-import { VueCropper } from "vue-cropper";
+import { uploadFile } from "@/api/upload";
+import { getToken } from "@/utils/auth";
+import Cropper from "./cropper";
+
 export default {
-  components: { VueCropper },
+  components:{ Cropper },
+  props: {
+    value: [String, Object, Array],
+    // 文件数量限制
+    limit: {
+      type: Number,
+      default: 1,
+    },
+    // 大小限制(MB)
+    sizeTip: {
+      type: String,
+    },
+    width: {
+      type: Number,
+      default: 84,
+    },
+    height: {
+      type: Number,
+      default: 110,
+    },
+    // 大小限制(MB)
+    fileSize: {
+      type: Number,
+      default: 5,
+    },
+    // 文件类型, 例如['png', 'jpg', 'jpeg']
+    fileType: {
+      type: Array,
+      default: () => ["png", "jpg", "jpeg"],
+    },
+    // 是否显示提示
+    isShowTip: {
+      type: Boolean,
+      default: true
+    },
+    extraData: {
+      type: Object
+    }
+  },
   data() {
     return {
+      number: 0,
+      uploadList: [],
+      dialogImageUrl: "",
       dialogVisible: false,
-      loading: false,
-      options: {
-        img: "", // 裁剪图片的地址
-        outputSize: 1, // 裁剪生成图片的质量
-        outputType: "png", // 裁剪生成图片的格式
-        info: true, // 裁剪框的大小信息
-        canScale: true, // 图片是否允许滚动缩放
-        autoCrop: true, // 是否默认生成截图狂
-        autoCropWidth: 84, // 默认生成截图框宽度
-        autoCropHeight: 110, // 默认生成截图框高度
-        // fixed: true, // 是否开启截图框宽高固定比例
-        // fixedNumber: [1, 1], // 截图框的宽高比例
-        full: true, // 是否输出原图比例的截图
-        fixedBox: true, // 固定截图框大小 不允许改变
-        canMove: true, // 上传图片是否可以移动
-        canMoveBox: true, // 截图框能否拖动
-        original: true, // 上传图片按照原始比例渲染
-        centerBox: true, // 截图框是否被限制在图片里面
-        high: false, // 是否按照设备的dpr输出等比例图片
-        infoTrue: true, // true为展示真实输出图片宽高false展示看到的截图框宽高
-        maximgSize: 100, // 限制图片最大宽度和高度
-        enlarge: 1, // 图片根据截图框输出比例倍数
-        mode: "contain" // 图片默认渲染方式(contain, cover, 100px, 100% auto)
+      hideUpload: false,
+      baseUrl: process.env.VUE_APP_BASE_API,
+      uploadImgUrl: process.env.VUE_APP_BASE_API + "/common/upload", // 上传的图片服务器地址
+      headers: {
+        Authorization: "Bearer " + getToken(),
+        module: this.extraData.module
       },
-      preview: {}
+      fileList: []
     };
   },
+  watch: {
+    value: {
+      handler(val) {
+        if (val) {
+          // 首先将值转为数组
+          const list = Array.isArray(val) ? val : this.value.split(',');
+          // 然后将数组转为对象数组
+          this.fileList = list.map(item => {
+            if (typeof item === "string") {
+              if (item.indexOf(this.baseUrl) === -1 && item.indexOf('http') === -1) {
+                item = { name: this.baseUrl + item, url: this.baseUrl + item };
+              } else {
+                item = { name: item, url: item };
+              }
+            }
+            return item;
+          });
+        } else {
+          this.fileList = [];
+          return [];
+        }
+      },
+      deep: true,
+      immediate: true
+    }
+  },
+  computed: {
+    // 是否显示提示
+    showTip() {
+      return this.isShowTip && (this.fileType || this.fileSize);
+    },
+  },
   methods: {
-    open(data) {
-      this.options.img = window.URL.createObjectURL(data);
-      this.dialogVisible = true;
-    },
-    close(){
-      this.dialogVisible = false;
-    },
-    // base64转图片文件
-    dataURLtoFile(dataurl, filename) {
-      let arr = dataurl.split(",");
-      let mime = arr[0].match(/:(.*?);/)[1];
-      let bstr = atob(arr[1]);
-      let len = bstr.length;
-      let u8arr = new Uint8Array(len);
-      while (len--) {
-        u8arr[len] = bstr.charCodeAt(len);
-      }
-      return new File([u8arr], filename, { type: mime });
-    },
-    downLoad(type) {
-      event.preventDefault();
-      const aLink = document.createElement("a");
-      if (type === "blob") {
-        this.$refs.cropper.getCropBlob(data => {
-          let downImg = window.URL.createObjectURL(data);
-          aLink.download = "photo.png";
-          aLink.href = downImg;
-          aLink.click();
+    // 上传前loading加载
+    handleBeforeUpload(file) {
+      console.log('handleBeforeUpload')
+      let isImg = false;
+      if (this.fileType.length) {
+        let fileExtension = "";
+        if (file.name.lastIndexOf(".") > -1) {
+          fileExtension = file.name.slice(file.name.lastIndexOf(".") + 1);
+        }
+        isImg = this.fileType.some(type => {
+          if (file.type.indexOf(type) > -1) return true;
+          if (fileExtension && fileExtension.indexOf(type) > -1) return true;
+          return false;
         });
       } else {
-        this.$refs.cropper.getCropData(data => {
-          let file = this.dataURLtoFile(data, "test");
-          aLink.href = file;
-          aLink.click();
-        });
+        isImg = file.type.indexOf("image") > -1;
+      }
+
+      if (!isImg) {
+        this.$modal.msgError(`文件格式不正确, 请上传${this.fileType.join("/")}文件格式文件!`);
+        return false;
+      }
+      if (this.fileSize) {
+        const isLt = file.size / 1024 / 1024 < this.fileSize;
+        if (!isLt) {
+          this.$modal.msgError(`上传文件大小不能超过 ${this.fileSize} MB!`);
+          return false;
+        }
+      }
+      this.$modal.loading("正在上传文件，请稍候...");
+      this.number++;
+    },
+    // 文件个数超出
+    handleExceed() {
+      this.$modal.msgError(`上传文件数量不能超过 ${this.limit} 个!`);
+    },
+    // 上传成功回调
+    handleUploadSuccess(res, file) {
+      console.log("handleUploadSuccess")
+      if (res.code === 200) {
+        this.uploadList.push({ name: res.originalFilename, url: res.url });
+        this.uploadedSuccessfully();
+      } else {
+        this.number--;
+        this.$modal.closeLoading();
+        this.$modal.msgError(res.msg);
+        this.$refs.imageUpload.handleRemove(file);
+        this.uploadedSuccessfully();
       }
     },
-    // 左旋转
-    rotateLeft() {
-      this.$refs.cropper.rotateLeft();
+    // 删除图片
+    handleDelete(file) {
+      const findex = this.fileList.map(f => f.name).indexOf(file.name);
+      if(findex > -1) {
+        this.fileList.splice(findex, 1);
+        this.$emit("input", this.listToString(this.fileList));
+      }
     },
-    // 右旋转
-    rotateRight() {
-      this.$refs.cropper.rotateRight();
+    // 上传失败
+    handleUploadError() {
+      this.$modal.msgError("上传文件失败，请重试");
+      this.$modal.closeLoading();
     },
-    // 放大缩小
-    changeScale(num) {
-      num = num || 1;
-      this.$refs.cropper.changeScale(num);
+    // 上传结束处理
+    uploadedSuccessfully() {
+      if (this.number > 0 && this.uploadList.length === this.number) {
+        this.fileList = this.fileList.concat(this.uploadList);
+        this.uploadList = [];
+        this.number = 0;
+        this.$emit("input", this.listToString(this.fileList));
+        this.$modal.closeLoading();
+        console.log(this.fileList)
+        console.log(this.uploadList)
+      }
+      this.$refs.myCropper.close()
     },
-    // 实时预览
-    previewImg(data) {
-      this.preview = data;
+    // 预览
+    handlePictureCardPreview(file) {
+      this.dialogImageUrl = file.url;
+      this.dialogVisible = true;
     },
-    goUpload() {
-      this.$emit("upAgain");
+
+    // 对象转成指定字符串分隔
+    listToString(list, separator) {
+      let strs = "";
+      separator = separator || ",";
+      for (let i in list) {
+        if (list[i].url) {
+          strs += list[i].url.replace(this.baseUrl, "") + separator;
+        }
+      }
+      return strs != '' ? strs.substr(0, strs.length - 1) : '';
     },
-    // 上传图片
-    uploadImg() {
-      let self = this;
-      self.loading = true;
-      this.$refs.cropper.getCropData(data => {
-        let file = this.dataURLtoFile(data, "photo.png");
-        // 生成文件类型
-        self.loading = false;
-        this.$emit("getFile",file)
-      });
+    //上传图片时会被调用
+    changePhotoFile(file, fileList){
+      if (fileList.length > 0) {
+        // this.uploadList = [fileList[fileList.length - 1]]
+        fileList.splice(fileList.length-1, 1)
+      }
+      this.handleCrop(file);
     },
-    //自定义上传，裁剪后调用
+    handleCrop(file){
+      this.$nextTick(()=>{
+        this.$refs.myCropper.open(file.raw || file, this.width, this.height)
+      })
+    },
+    // 点击弹框重新时触发
+    upAgain(){
+      this.$refs['imageUpload'].$refs["upload-inner"].handleClick();
+    },
+    getFile(file){
+      this.handleBeforeUpload(file)
+      const formData = new FormData()
+      formData.append("file",file)
+      // 测试
+      // const res = {
+      //   "msg": "操作成功",
+      //   "fileName": "/profile/upload/2023/08/09/测评_20230703152837A005_20230809103454A003.png",
+      //   "code": 200,
+      //   "newFileName": "测评_20230703152837A005_20230809103454A003.png",
+      //   "url": "https://gauge-1316267898.cos.ap-beijing.myqcloud.com/%E6%B5%8B%E8%AF%84_20230703152837A005_20230809103454A003.png",
+      //   "originalFilename": "测评_20230703152837A005.png"
+      // }
+      // this.handleUploadSuccess(res, file)
+
+      uploadFile(formData, this.extraData.module).then(res => {
+        this.handleUploadSuccess(res, file)
+      })
+    },
+
   }
 };
 </script>
-
 <style scoped lang="scss">
-.cropper_model_dlg {
-   .cropper_content {
-      margin: 0 auto;
-      width: 700px;
-      height: 450px;
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-start;
-     }
-   .cropper {
-      width: 400px;
-      height: 400px;
-      background: yellow;
-     }
-   .cropper_right {
-      width: 300px;
-      text-align: center;
-     }
-   .cropper_preview {
-      margin: 0 auto;
-      display: inline-block;
-      border: 1px solid #ddd;
-     }
-   .cropper_btns {
-      margin-top: 20px;
-     }
+// .el-upload--picture-card 控制加号部分
+::v-deep.hide .el-upload--picture-card {
+  display: none;
+}
+// 去掉动画效果
+::v-deep .el-list-enter-active,
+::v-deep .el-list-leave-active {
+  transition: all 0s;
+}
+
+::v-deep .el-list-enter, .el-list-leave-active {
+  opacity: 0;
+  transform: translateY(0);
 }
 </style>

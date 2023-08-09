@@ -420,26 +420,26 @@ export default {
   font-size: 12px !important;
 }
 ::v-deep .el-upload--picture-card {
-  width: 50px;
-  height: 50px;
+  width: 80px;
+  height: 80px;
 }
 ::v-deep .el-upload {
-  width: 50px;
-  height: 50px;
-  line-height: 50px;
+  width: 80px;
+  height: 80px;
+  line-height: 80px;
 }
 ::v-deep .el-upload-list--picture-card .el-upload-list__item {
-  width: 50px;
-  height: 50px;
+  width: 80px;
+  height: 80px;
 }
 ::v-deep .el-upload-list--picture-card .el-upload-list__item-thumbnail {
-  width: 50px;
-  height: 50px;
-  line-height: 50px;
+  width: 80px;
+  height: 80px;
+  line-height: 80px;
 }
 ::v-deep .avatar {
-  width: 50px;
-  height: 50px;
+  width: 80px;
+  height: 80px;
 }
 ::v-deep .el-upload__tip {
   margin: 0;

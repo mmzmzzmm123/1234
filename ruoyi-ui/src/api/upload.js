@@ -7,3 +7,15 @@ export function deleteFile(fileName, module) {
     method: 'post'
   })
 }
+
+// 上传图片
+export function uploadFile(data, module) {
+  return request({
+    url: '/common/upload',
+    method: 'post',
+    headers: {
+      'module': module
+    },
+    data: data
+  })
+}

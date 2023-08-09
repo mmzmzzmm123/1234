@@ -53,7 +53,7 @@ export default {
   getUserInfo() {
     const user = uni.getStorageSync("userInfo");
     if (this.getClientType() === 'JSAPI') {
-      // return user
+      return user
     }
     return user ? user.userId ? user : JSON.parse(user) : {}
   },
