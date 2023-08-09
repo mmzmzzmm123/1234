@@ -27,6 +27,7 @@ public class PsyConsultVO extends BaseValObj implements Serializable
 
     /** 头像 */
     private String avatar;
+    private String img;
 
     /** 用户邮箱 */
     private String email;
@@ -90,6 +91,9 @@ public class PsyConsultVO extends BaseValObj implements Serializable
     private String province;
 
     private String openId;
+
+    /** 咨询流派 */
+    private String genre;
 
     /** 首页展示的执业资格 */
     private String indexQualification;

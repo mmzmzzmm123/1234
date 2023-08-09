@@ -28,7 +28,7 @@
       <view class="index-title">
         <view class="consult-direction" @tap="doFilter(1)">擅长领域</view>
         <view class="price-filter" @tap="doFilter(2)">{{ filterParams.price || '价格' }}</view>
-        <view class="price-filter" @tap="doFilter(4)">{{ filterParams.city || '城市' }}</view>
+<!--        <view class="price-filter" @tap="doFilter(4)">{{ filterParams.city || '城市' }}</view>-->
         <view class="filter" @tap="doFilter(3)">筛选</view>
       </view>
       <consultant-list :consultantList="consultantList" @toConsultant="toConsultant"></consultant-list>

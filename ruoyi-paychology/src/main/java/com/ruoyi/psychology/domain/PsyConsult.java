@@ -43,6 +43,8 @@ public class PsyConsult extends BasePlusEntity implements Serializable
 //    @Excel(name = "头像")
     private String avatar;
 
+    private String img;
+
     /** 用户邮箱 */
     @Excel(name = "用户邮箱")
     private String email;
@@ -123,6 +125,10 @@ public class PsyConsult extends BasePlusEntity implements Serializable
     /** 省份 */
     @Excel(name = "省份")
     private String province;
+
+    /** 咨询流派 */
+    @Excel(name = "咨询流派")
+    private String genre;
 
     private String openId;
 

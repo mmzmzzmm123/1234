@@ -241,7 +241,7 @@ public class PsyConsultServiceImpl implements IPsyConsultService {
         }
         else if (StringUtils.isNotEmpty(req.getEmail()) && !req.getEmail().equals(sysUser.getEmail()))
         {
-            sysUser.setEmail(req.getUserName());
+            sysUser.setEmail(req.getEmail());
             if (UserConstants.NOT_UNIQUE.equals(userService.checkEmailUnique(sysUser))) {
                 return AjaxResult.error("修改用户'" + req.getUserName() + "'失败，邮箱账号已存在");
             }
@@ -249,6 +249,7 @@ public class PsyConsultServiceImpl implements IPsyConsultService {
         sysUser.setSex(req.getSex());
         sysUser.setAvatar(req.getAvatar());
         sysUser.setUpdateBy(SecurityUtils.getUsername());
+        userService.updateUser(sysUser);
 
         converToStr(req);
         return AjaxResult.success(psyConsultMapper.updateById(BeanUtil.toBean(req, PsyConsult.class)));

@@ -87,13 +87,21 @@
 <!--      </el-row>-->
       <el-row>
         <el-col :span="8">
+          <el-form-item label="列表图片" prop="img">
+<!--            <image-upload v-model="form.img" :extraData="extraData"/>-->
+            <my-cropper v-model="form.img" sizeTip="宽172px 高264px" :extraData="extraData" :width="172" :height="264"/>
+          </el-form-item>
+        </el-col>
+        <el-col :span="8">
           <el-form-item label="头像" prop="avatar">
-            <image-upload v-model="form.avatar" sizeTip="宽172px 高172px" :extraData="extraData"/>
+<!--            <image-upload v-model="form.avatar" sizeTip="宽172px 高172px" :extraData="extraData"/>-->
+            <my-cropper v-model="form.avatar" sizeTip="宽172px 高172px" :extraData="extraData" :width="172" :height="172"/>
           </el-form-item>
         </el-col>
         <el-col :span="8">
           <el-form-item label="企业微信名片" prop="wxCard">
-            <image-upload v-model="form.wxCard" :extraData="extraData"/>
+<!--            <image-upload v-model="form.wxCard" :extraData="extraData"/>-->
+            <my-cropper v-model="form.wxCard" sizeTip="宽100px 高100px" :extraData="extraData" :width="100" :height="100"/>
           </el-form-item>
         </el-col>
       </el-row>
@@ -125,7 +133,7 @@
           </el-form-item>
         </el-col>
         <el-col :span="8">
-          <el-form-item label="执业资格" prop="qualification">
+          <el-form-item label="首页展示资格" prop="qualification">
             <el-select style="width: 100%" v-model="form.indexQualification" placeholder="请选择执业资格" clearable>
               <el-option
                 v-for="item in form.qualification"
@@ -151,6 +159,13 @@
         <el-col :span="8">
           <el-form-item label="咨询须知" prop="notice">
             <el-input type="textarea" :rows="4" size="mini" maxlength="100" show-word-limit v-model="form.notice" placeholder="请输入咨询须知" />
+          </el-form-item>
+        </el-col>
+      </el-row>
+      <el-row>
+        <el-col :span="8">
+          <el-form-item label="咨询流派" prop="genre">
+            <el-input type="textarea" :rows="4" size="mini" maxlength="100" show-word-limit v-model="form.genre" placeholder="请输入咨询流派" />
           </el-form-item>
         </el-col>
       </el-row>
@@ -328,7 +343,7 @@ export default {
         response.data.experience = response.data.experience ? JSON.parse(response.data.experience) : []
         response.data.qualification = response.data.qualification ? response.data.qualification.split(',') : []
         response.data.way = response.data.way ? JSON.parse(response.data.way) : []
-        response.data.mode = response.data.mode ? response.data.mode.split(',') : []
+        response.data.mode = response.data.mode ? response.data.mode.split('/') : []
         response.data.city = response.data.city && response.data.province ? [response.data.province, response.data.city] : []
 
         this.form = response.data
@@ -340,7 +355,7 @@ export default {
         const form = JSON.parse(JSON.stringify(this.form))
         form.way = JSON.stringify(form.way)
         form.experience = JSON.stringify(form.experience)
-        form.mode = form.mode.join(',')
+        form.mode = form.mode.join('/')
         const city = form.city
         form.province = city[0]
         form.city = city[1]

@@ -7,19 +7,24 @@
           </view>
           <view class="upper-box">
             <view class="img-box" @tap="toConsultant(consultant)">
-                <image :src="consultant.avatar" />
+                <image :src="consultant.img" />
                 <view v-if="consultant.buy > 0" class="img-tab">今日可约</view>
             </view>
             <view class="txt-box">
-                <view class="title" @tap="toConsultant(consultant)">
-                  <view class="name">{{ consultant.userName }}</view>
+              <view class="title" @tap="toConsultant(consultant)">
+                <view class="name">{{ consultant.userName }}</view>
+              </view>
+              <view class="gps" v-if="consultant.province">
+                <image src="/static/consult/gps-black.png" />
+                <text>{{ consultant.province + '-' + consultant.city }}</text>
+              </view>
+              <view @tap="toConsultant(consultant)" class="introduce txt-overflow txt-overflow-line2">{{ consultant.info }}</view>
+              <view @tap="toConsultant(consultant)" class="title">
+                <view v-for="tag in consultant.tabs.split(',')" class="tag-list">
+                  <view class="tag-item">{{ tag }}</view>
                 </view>
-                <view @tap="toConsultant(consultant)" class="introduce txt-overflow txt-overflow-line2">{{ consultant.info }}</view>
-                <view @tap="toConsultant(consultant)" class="title">
-                  <view v-for="tag in consultant.tabs.split(',')" class="tag-list">
-                    <view class="tag-item">{{ tag }}</view>
-                  </view>
-                </view>
+              </view>
+              <view v-if="consultant.mode" class="info-mode">{{ consultant.mode }}</view>
             </view>
           </view>            
             
@@ -54,9 +59,10 @@ export default {
       border-radius: 12upx;
       margin-bottom: 16upx;
       padding: 24upx;
+      height: 264upx;
       .header-icon {
         position: absolute;
-        top: 16upx;
+        top: 18upx;
         left: 420upx;
         height: 20upx;
         line-height: 20upx;
@@ -78,9 +84,9 @@ export default {
             //width: 162upx;
             //height: 212upx;
             image {
-                width: 162upx;
-                height: 212upx;
-                border-radius: 10%;
+              width: 172upx;
+              height: 264upx;
+              border-radius: 10%;
             }
           .img-tab {
             text-align: center;
@@ -88,7 +94,7 @@ export default {
             border-radius: 0 0 12upx 12upx;
             bottom: 0;
             color: #fff;
-            width: 162upx;
+            width: 172upx;
             height: 48upx;
             line-height: 48upx;
             font-size: 24upx;
@@ -98,14 +104,14 @@ export default {
         }
         .txt-box {
           width: 450upx;
-          height: 202upx;
+          height: 248upx;
           display: flex;
           flex-direction: column;
           margin-left: 24upx;
           .title {
             display: flex;
             align-items: center;
-            margin-bottom: 8upx;
+            //margin-bottom: 8upx;
             .name {
               font-size: 30upx;
               font-family: PingFangSC-Semibold, PingFang SC;
@@ -115,7 +121,22 @@ export default {
               margin-right: 14upx;
               
             }
-          }  
+          }
+          .gps {
+            height: 30upx;
+            line-height: 30upx;
+            margin: 8upx 0;
+            image {
+              width: 16upx;
+              height: 18upx;
+            }
+            text {
+              margin-left: 6upx;
+              font-size: 22upx;
+              font-weight: 400;
+              color: #777777;
+            }
+          }
           .introduce {
             font-size: 26upx;
             font-weight: 400;
@@ -133,6 +154,14 @@ export default {
               line-height: 30upx;
               padding: 2upx 10upx;
             }
+          }
+          .info-mode {
+            margin: 8upx 0;
+            height: 33upx;
+            font-size: 24upx;
+            font-weight: 400;
+            color: #AAAAAA;
+            line-height: 33upx;
           }
         }
       }

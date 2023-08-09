@@ -133,7 +133,7 @@
         <el-form-item label="跳转url" prop="linkUrl">
           <el-input v-model="form.linkUrl" type="textarea" placeholder="跳转url" />
         </el-form-item>
-        <el-form-item label="banner分类" prop="bannerType">
+        <el-form-item label="分类" prop="bannerType">
           <el-select v-model="form.type" placeholder="请选择banner分类">
             <el-option
               v-for="dict in dict.type.consult_banner"
@@ -231,7 +231,7 @@ export default {
         name: null,
         url: null,
         linkUrl: null,
-        type: "0",
+        type: 0,
         delFlag: "0",
         status: "0",
         createBy: null,

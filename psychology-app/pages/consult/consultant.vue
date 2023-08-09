@@ -10,13 +10,13 @@
         <view class="info-content">
           <view class="info-content-userName">
             <text>{{ consultInfo.userName }}</text>
-            <view class="info-content-gps">
+            <view class="info-content-gps" v-if="consultInfo.province">
               <image src="/static/consult/gps.png" />
               <text v-if="consultInfo.province">{{ consultInfo.province + '-' + consultInfo.city }}</text>
             </view>
           </view>
           <view class="info-content-info">{{ consultInfo.info }}</view>
-          <view class="info-content-mode">当面/视频/语音咨询</view>
+          <view class="info-content-mode">{{ consultInfo.mode }}</view>
         </view>
       </view>
 
@@ -214,9 +214,9 @@ export default {
 
         this.consultInfo.tabList = list
       }
-      if (this.consultInfo.mode) {
-        this.consultInfo.mode = this.consultInfo.mode.split(',').join('/');
-      }
+      // if (this.consultInfo.mode) {
+      //   this.consultInfo.mode = this.consultInfo.mode.split(',').join('/');
+      // }
       this.consultInfo.qualification = this.consultInfo.qualification ? this.consultInfo.qualification.split(',') : []
 
       this.consultInfo.experiences = this.consultInfo.experience && this.consultInfo.experience !== '[]' ? JSON.parse(this.consultInfo.experience) : []

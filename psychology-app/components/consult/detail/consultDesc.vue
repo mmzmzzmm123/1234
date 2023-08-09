@@ -7,6 +7,11 @@
         <view class="qualification-val" v-for="item in info.qualification">{{ item }}</view>
       </view>
 
+      <view class="qualification">
+        <text class="qualification-title">咨询流派</text>
+        <view class="qualification-val">{{ info.genre }}</view>
+      </view>
+
       <view class="experience" v-if="info.experiences && info.experiences.length > 0">
         <text class="experience-title">受训经历</text>
         <view class="experience-content">
@@ -64,6 +69,7 @@ export default {
   flex-direction: column;
   justify-content: flex-center;
   padding: 32upx;
+  margin-bottom: 16upx;
   .qualification-title {
     overflow-wrap: break-word;
     color: rgba(51,51,51,1);
@@ -110,7 +116,7 @@ export default {
   //display: flex;
   //flex-direction: column;
   //justify-content: flex-center;
-  margin-top: 16upx;
+  //margin-top: 16upx;
   padding: 32upx;
 }
 .experience-title {

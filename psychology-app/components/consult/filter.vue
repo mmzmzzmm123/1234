@@ -3,7 +3,7 @@
       <view class="index-title">
         <view class="filter-item" :class="{ active: filterParams.type === 1 }" @tap="doFilter(1)">擅长领域</view>
         <view class="filter-item" :class="{ active: filterParams.type === 2 }" @tap="doFilter(2)">价格</view>
-        <view class="filter-item" :class="{ active: filterParams.type === 4 }" @tap="doFilter(4)">城市</view>
+<!--        <view class="filter-item" :class="{ active: filterParams.type === 4 }" @tap="doFilter(4)">城市</view>-->
         <view class="filter-item" :class="{ active: filterParams.type === 3 }" @tap="doFilter(3)">筛选</view>
       </view>
 
@@ -459,6 +459,7 @@ import cityUtil from "@/utils/pc-city";
     
     .footer {
       display: flex;
+      justify-content: center;
       position: fixed;
       z-index: 9;
       bottom: 0;
