@@ -6,8 +6,7 @@
             <text class="header-icon-text">{{ consultant.indexQualification }}</text>
           </view>
           <view class="upper-box">
-            <view class="img-box" @tap="toConsultant(consultant)">
-                <image :src="consultant.img" />
+            <view class="img-box" @tap="toConsultant(consultant)" :style="{ background: `url(${consultant.img}) 100% no-repeat`, backgroundSize: '100% 100%'}">
                 <view v-if="consultant.buy > 0" class="img-tab">今日可约</view>
             </view>
             <view class="txt-box">
@@ -81,13 +80,9 @@ export default {
         display: flex;
         .img-box {
             position: relative;
-            //width: 162upx;
-            //height: 212upx;
-            image {
-              width: 172upx;
-              height: 264upx;
-              border-radius: 10%;
-            }
+            width: 172upx;
+            height: 264upx;
+            border-radius: 12upx;
           .img-tab {
             text-align: center;
             position: absolute;
@@ -99,7 +94,7 @@ export default {
             line-height: 48upx;
             font-size: 24upx;
             background: rgba(0,0,0,0.3);
-            backdrop-filter: blur(6px);
+            backdrop-filter: blur(6upx);
           }
         }
         .txt-box {
