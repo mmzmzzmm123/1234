@@ -1,5 +1,5 @@
 <template>
-    <scroll-view scroll-y scroll-with-animation class="consultant-list-box" @scrolltolower="loadMore">
+    <scroll-view scroll-y class="consultant-list-box" @scrolltolower="loadMore">
         <view class="consultant-item" v-if="consultantList.length > 0" v-for="consultant in consultantList" :style="consultant.indexQualification ? { background: 'url(/static/consult/bg.png) 100% no-repeat', backgroundSize: '100% 100%'} : {}">
           <view class="header-icon" v-if="consultant.indexQualification">
             <image src="/static/consult/crown.png" class="header-icon-img"/>

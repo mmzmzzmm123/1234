@@ -45,7 +45,7 @@
       <view class="tabs-bg"></view>
     </view>
 
-    <scroll-view class="content-y" scroll-y scroll-with-animation :scroll-into-view="'main-'+mainCur" @scroll="scroll">
+    <scroll-view class="content-y" scroll-y :scroll-into-view="'main-'+mainCur" @scroll="scroll">
       <view class="serve" key="0" id="main-0">
         <text class="serve-title">服务套餐</text>
         <serve-list :serveList="serveList" :num="3" @toBuy="toBuy"/>
