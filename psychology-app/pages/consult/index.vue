@@ -31,7 +31,7 @@
 <!--        <view class="price-filter" @tap="doFilter(4)">{{ filterParams.city || '城市' }}</view>-->
         <view class="filter" @tap="doFilter(3)">筛选</view>
       </view>
-      <consultant-list :consultantList="consultantList" @toConsultant="toConsultant"></consultant-list>
+      <consultant-list :consultantList="consultantList" @toConsultant="toConsultant" @loadMore="loadMore"></consultant-list>
     </view>
     <consult-tab-bar :currentIndex="0"></consult-tab-bar>
 
@@ -71,6 +71,9 @@
         styles: {
           borderColor: '#fff'
         },
+        total: 0,
+        pageNum: 1,
+        pageSize: 10,
         queryData: {
           catId: null,
           userName: null,
@@ -144,6 +147,7 @@
         });
       },
       resetQuery() {
+        this.pageNum = 1
         this.queryData.catId = null
         this.queryData.userName = null
         this.queryData.sex = null
@@ -187,7 +191,21 @@
         this.bannerList = await indexServer.getBannerList(type);
       },
       async getConsult() {
-        this.consultantList = await indexServer.getConsult(this.queryData)
+        if (this.pageNum === 1) {
+          this.consultantList = []
+        }
+
+        const res = await indexServer.getConsult(this.queryData, this.pageNum, this.pageSize)
+        if (res.code === 200) {
+          this.total = res.total
+          this.consultantList = [...this.consultantList, ...res.rows]
+        }
+      },
+      async loadMore() {
+        if (this.consultantList.length < this.total) {
+          this.pageNum += 1
+          await this.getConsult()
+        }
       },
       async tocourse(url) {
         // 判断是否已经登录
@@ -230,9 +248,7 @@
         this.$refs.popupFilter.open()
       },
       submit() {
-        // console.log('submit')
-        // console.log(this.filterParams)
-        // console.log(this.queryData)
+        this.pageNum = 1
         this.queryData.catId = null
         this.queryData.userName = null
         switch (this.filterParams.type) {

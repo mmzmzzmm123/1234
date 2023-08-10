@@ -12,13 +12,9 @@ export default {
     }
   },
   //获取咨询师
-  getConsult: async (data) => {
-    let res = await httprequest.post("/app/consult/search", data);
-    if (res.code == 200) {
-      return res.rows;
-    } else {
-      return [];
-    }
+  getConsult: async (data, pageNum, pageSize) => {
+    let res = await httprequest.post(`/app/consult/search?pageNum=${pageNum}&pageSize=${pageSize}`, data);
+    return res
   },
   //获取配置
   getConfigByType: async (dictType) => {

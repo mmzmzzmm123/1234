@@ -127,6 +127,7 @@ export default {
       tabs: [],
       serveList: [],
       courseList: [],
+      sroHeight: [],
       items: [
         {
           id: 0,
@@ -192,7 +193,27 @@ export default {
       this.mainCur = id
     },
     scroll(e) {
-      // console.log(e.detail.scrollTop)
+      let tabHeight = 0
+      for (let i = 0; i < 4; i++) {
+        uni.createSelectorQuery().select("#main-"+i).boundingClientRect((rect) => {
+          const top = tabHeight
+          tabHeight = tabHeight + rect.height;
+          this.sroHeight.push({
+            id: i,
+            top: top,
+            bottom: tabHeight
+          })
+        }).exec()
+      }
+
+      let scrollTop = e.detail.scrollTop + 10;
+      for (let i = 0; i < this.sroHeight.length; i++) {
+        if (scrollTop > this.sroHeight[i].top && scrollTop < this.sroHeight[i].bottom) {
+          this.mainCur = this.sroHeight[i].id
+          // console.log(scrollTop)
+          return false
+        }
+      }
     },
     async getConsultInfo() {
       this.consultInfo = await consultServer.getConsultInfo(this.consultId)

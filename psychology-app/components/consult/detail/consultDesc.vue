@@ -139,7 +139,7 @@ export default {
 }
 .experience-item {
   position: relative;
-  height: 78upx;
+  height: 100%;
   width: 100%;
   padding-left: 64upx;
   padding-bottom: 16upx;
@@ -184,6 +184,7 @@ export default {
   font-family: PingFangSC-Regular;
   text-align: left;
   margin-top: 8upx;
+  width: 650upx;
 }
 .tabs {
   background-color: rgba(255,255,255,1.000000);
