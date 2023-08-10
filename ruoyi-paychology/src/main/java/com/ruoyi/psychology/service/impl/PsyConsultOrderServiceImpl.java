@@ -226,7 +226,7 @@ public class PsyConsultOrderServiceImpl implements IPsyConsultOrderService
             // 更新下次预约时间
             if (num > now) {
                 PsyConsultOrderItem orderItem = items.get(now);
-                order.setOrderTime(StrUtil.format("{} {}-{}", orderItem.getDay(), orderItem.getTimeStart(), orderItem.getTimeEnd()));
+                order.setOrderTime(StrUtil.format("{} {}~{}", orderItem.getDay(), orderItem.getTimeStart(), orderItem.getTimeEnd()));
             }
         }
 
@@ -317,7 +317,7 @@ public class PsyConsultOrderServiceImpl implements IPsyConsultOrderService
         orderItem.setTimeStart(req.getTime() + ":00");
         orderItem.setTimeEnd(req.getTime() + ":50");
 
-        req.setOrderTime(StrUtil.format("{} {}-{}", work.getDay(), orderItem.getTimeStart(), orderItem.getTimeEnd()));
+        req.setOrderTime(StrUtil.format("{} {}~{}", work.getDay(), orderItem.getTimeStart(), orderItem.getTimeEnd()));
         psyConsultOrderItemService.add(orderItem);
     }
 
@@ -379,11 +379,11 @@ public class PsyConsultOrderServiceImpl implements IPsyConsultOrderService
         msg.setTemplate_id(PsyConstants.CONSULT_TEMPLATE_ID);
 
         HashMap<String, TemplateMessageItemVo> hashMap = new HashMap<>();
-        hashMap.put("thing1.DATA", new TemplateMessageItemVo(psyOrder.getNickName()));
-        hashMap.put("thing2.DATA", new TemplateMessageItemVo(psyOrder.getConsultName()));
-        hashMap.put("thing3.DATA", new TemplateMessageItemVo(psyOrder.getServeName()));
-        hashMap.put("thing4.DATA", new TemplateMessageItemVo(psyOrder.getOrderTime()));
-        hashMap.put("thing5.DATA", new TemplateMessageItemVo(psyOrder.getOrderNo()));
+        hashMap.put("thing1", new TemplateMessageItemVo(psyOrder.getNickName()));
+        hashMap.put("thing2", new TemplateMessageItemVo(psyOrder.getConsultName()));
+        hashMap.put("thing3", new TemplateMessageItemVo(psyOrder.getServeName()));
+        hashMap.put("time4", new TemplateMessageItemVo(psyOrder.getOrderTime()));
+        hashMap.put("thing5", new TemplateMessageItemVo(psyOrder.getOrderNo()));
         msg.setData(hashMap);
         msg.setTouser(getOpenId(psyOrder.getConsultId()));
         return wechatService.sendPublicMsg(msg);
@@ -397,7 +397,7 @@ public class PsyConsultOrderServiceImpl implements IPsyConsultOrderService
             // 消息推送
             sendPublicMsg(req);
         }
-
+//        {"errcode":47003,"errmsg":"argument invalid! data.thing5.value invalid rid: 64d4912a-5e4f2ce4-13323c1a"}
         // 增加预约人数 支付成功后+1
         psyConsultService.updateNum(req.getConsultId(), 1);
         // 增加服务销量

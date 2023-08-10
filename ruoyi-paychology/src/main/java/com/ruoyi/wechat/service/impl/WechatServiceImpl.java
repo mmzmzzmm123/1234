@@ -75,6 +75,7 @@ public class WechatServiceImpl implements WechatService {
         }
 
         if (!"ok".equals(err)) {
+            err = err + "==" + accessToken;
             wxExceptionDispose(jsonData, data, err);
         }
 
