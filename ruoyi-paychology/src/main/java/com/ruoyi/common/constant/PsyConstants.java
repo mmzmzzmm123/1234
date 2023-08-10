@@ -1,6 +1,12 @@
 package com.ruoyi.common.constant;
 
-public class Constants {
+public class PsyConstants {
+
+    //订单类型
+    public static final String ORDER_COURSE = "KC"; //课程
+    public static final String ORDER_GAUGE = "CP"; //测评
+    public static final String ORDER_CONSULT = "ZX"; //咨询
+    public static final String ORDER_REFUND = "TK"; //咨询
 
     //积分
     public static final String INTEGRAL_RATE = "0.1"; //积分抵用比例(1积分抵多少金额

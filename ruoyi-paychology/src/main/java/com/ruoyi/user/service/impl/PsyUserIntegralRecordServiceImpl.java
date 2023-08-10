@@ -1,7 +1,7 @@
 package com.ruoyi.user.service.impl;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.ruoyi.common.constant.Constants;
+import com.ruoyi.common.constant.PsyConstants;
 import com.ruoyi.common.constant.IntegralRecordConstants;
 import com.ruoyi.common.constant.NewConstants;
 import com.ruoyi.common.exception.UtilException;
@@ -82,7 +82,7 @@ public class PsyUserIntegralRecordServiceImpl extends ServiceImpl<PsyUserIntegra
         }
 
         BigDecimal config = new BigDecimal(order);
-        BigDecimal rate = new BigDecimal(Constants.INTEGRAL_RATE_ORDER_GIVE);
+        BigDecimal rate = new BigDecimal(PsyConstants.INTEGRAL_RATE_ORDER_GIVE);
         rate = config.compareTo(rate) >= 0 ? rate : config;
 
         integral = rate.multiply(amount).setScale(0, BigDecimal.ROUND_DOWN).intValue();

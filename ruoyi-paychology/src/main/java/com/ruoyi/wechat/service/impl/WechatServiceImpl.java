@@ -4,7 +4,7 @@ import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
 import com.alibaba.fastjson2.JSONObject;
 import com.ruoyi.common.config.WxLoginConfig;
-import com.ruoyi.common.constant.Constants;
+import com.ruoyi.common.constant.PsyConstants;
 import com.ruoyi.common.core.redis.RedisCache;
 import com.ruoyi.common.utils.RestTemplateUtil;
 import com.ruoyi.common.utils.spring.SpringUtils;
@@ -61,7 +61,7 @@ public class WechatServiceImpl implements WechatService {
         }
 
         String accessToken = getPublicAccessToken();
-        String url = StrUtil.format(Constants.WECHAT_PUBLIC_SEND_TEMPLATE_URL, accessToken);
+        String url = StrUtil.format(PsyConstants.WECHAT_PUBLIC_SEND_TEMPLATE_URL, accessToken);
         String result = restTemplateUtil.postJsonData(url, jsonData);
         JSONObject data = JSONObject.parseObject(result);
         String err = "ok";
@@ -87,9 +87,9 @@ public class WechatServiceImpl implements WechatService {
         String token = null;
 
         // 从Redis中获取缓存数据
-        boolean isTokenExist = redisCache.hasKey(Constants.WECHAT_PUBLIC_KEY_WXJS_TOKEN);
+        boolean isTokenExist = redisCache.hasKey(PsyConstants.WECHAT_PUBLIC_KEY_WXJS_TOKEN);
         if (isTokenExist) {
-            token = redisCache.getCacheObject(Constants.WECHAT_PUBLIC_KEY_WXJS_TOKEN);
+            token = redisCache.getCacheObject(PsyConstants.WECHAT_PUBLIC_KEY_WXJS_TOKEN);
             log.info("redis get token: {}", token);
             return token;
         }
@@ -99,7 +99,7 @@ public class WechatServiceImpl implements WechatService {
         CloseableHttpResponse response = null;
         HttpEntity resEntity = null;
         String result = null;
-        String url = StrUtil.format(Constants.WECHAT_PUBLIC_ACCESS_TOKEN_URL, appId, appSecret);
+        String url = StrUtil.format(PsyConstants.WECHAT_PUBLIC_ACCESS_TOKEN_URL, appId, appSecret);
         try {
             httpGet = new HttpGet(url);
             response = httpClient.execute(httpGet);
@@ -112,7 +112,7 @@ public class WechatServiceImpl implements WechatService {
             if (res.containsKey("access_token")) {
                 token = res.getString("access_token");
                 log.info("redis set token: {}", token);
-                redisCache.setCacheObject(Constants.WECHAT_PUBLIC_KEY_WXJS_TOKEN, token, Constants.WECHAT_PUBLIC_EXPIRE_TIME, TimeUnit.SECONDS);
+                redisCache.setCacheObject(PsyConstants.WECHAT_PUBLIC_KEY_WXJS_TOKEN, token, PsyConstants.WECHAT_PUBLIC_EXPIRE_TIME, TimeUnit.SECONDS);
                 return res.getString("access_token");
             }
             return null;
@@ -128,9 +128,9 @@ public class WechatServiceImpl implements WechatService {
         String ticket = null;
 
         // 从Redis中获取缓存数据
-        boolean isTicketExist = redisCache.hasKey(Constants.WECHAT_PUBLIC_KEY_WXJS_TICKET);
+        boolean isTicketExist = redisCache.hasKey(PsyConstants.WECHAT_PUBLIC_KEY_WXJS_TICKET);
         if (isTicketExist) {
-            ticket = redisCache.getCacheObject(Constants.WECHAT_PUBLIC_KEY_WXJS_TICKET);
+            ticket = redisCache.getCacheObject(PsyConstants.WECHAT_PUBLIC_KEY_WXJS_TICKET);
             log.info("redis get ticket: {}", ticket);
             return ticket;
         }
@@ -140,7 +140,7 @@ public class WechatServiceImpl implements WechatService {
         CloseableHttpResponse response = null;
         HttpEntity resEntity = null;
         String result = null;
-        String url = StrUtil.format(Constants.WECHAT_PUBLIC_TICKET_URL, token);
+        String url = StrUtil.format(PsyConstants.WECHAT_PUBLIC_TICKET_URL, token);
         try {
             httpGet = new HttpGet(url);
             response = httpClient.execute(httpGet);
@@ -153,7 +153,7 @@ public class WechatServiceImpl implements WechatService {
             if (res.containsKey("ticket")) {
                 ticket = res.getString("ticket");
                 log.info("redis set ticket: {}", ticket);
-                redisCache.setCacheObject(Constants.WECHAT_PUBLIC_KEY_WXJS_TICKET, ticket, Constants.WECHAT_PUBLIC_EXPIRE_TIME, TimeUnit.SECONDS);
+                redisCache.setCacheObject(PsyConstants.WECHAT_PUBLIC_KEY_WXJS_TICKET, ticket, PsyConstants.WECHAT_PUBLIC_EXPIRE_TIME, TimeUnit.SECONDS);
                 return res.getString("ticket");
             }
             return null;

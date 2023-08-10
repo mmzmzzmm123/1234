@@ -5,6 +5,7 @@ import com.ruoyi.RuoYiApplication;
 import com.ruoyi.app.controller.wechat.WechatPayV3ApiController;
 import com.ruoyi.app.controller.wechat.dto.WechatPayDTO;
 import com.ruoyi.app.controller.wechat.utils.WechatPayV3Utils;
+import com.ruoyi.common.constant.PsyConstants;
 import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.course.constant.CourConstant;
 import com.ruoyi.course.domain.CourCourse;
@@ -66,18 +67,18 @@ public class WxPayTest {
 
         switch (dto.getModule()) {
             case CourConstant.MODULE_COURSE:
-                out_trade_no = createOrderNo("COU_DJ", userId); //创建商户订单号
+                out_trade_no = createOrderNo(PsyConstants.ORDER_COURSE, userId); //创建商户订单号
                 CourCourse courCourse = iCourCourseService.selectCourCourseById(dto.getCourseId());
                 content = courCourse.getName() + "-" + courCourse.getAuthor();
 
                 break;
             case GaugeConstant.MODULE_GAUGE:
-                out_trade_no = createOrderNo("GAU_DJ", userId); //创建商户订单号
+                out_trade_no = createOrderNo(PsyConstants.ORDER_GAUGE, userId); //创建商户订单号
                 PsyGauge psyGauge = iPsyGaugeService.selectPsyGaugeById(dto.getGaugeId());
                 content = psyGauge.getTitle();
                 break;
             case ConsultConstant.MODULE_CONSULT:
-                out_trade_no = createOrderNo("CON_DJ", userId); //创建商户订单号
+                out_trade_no = createOrderNo(PsyConstants.ORDER_CONSULT, userId); //创建商户订单号
                 content = "预约心理咨询服务";
 
                 if (dto.getWorkId() > 0) {
@@ -107,15 +108,23 @@ public class WxPayTest {
         wechatPayV3ApiService.wechatPayNotify(trade, order);
     }
 
+    @Test
+    public void testOrderNo() {
+        System.out.println(createOrderNo(PsyConstants.ORDER_CONSULT, 84));
+    }
+
     private String  createOrderNo(String head, Integer id) {
-        StringBuilder uid = new StringBuilder(id.toString());
         Date date = new Date();
         SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmss");
-        int length = uid.length();
-        for (int i = 0; i < 8 - length; i++) {
-            uid.insert(0, "0");
-        }
-        return head + sdf.format(date) + uid + (int) ((Math.random() * 9 + 1) * 1000);
+//        int length = uid.length();
+//        for (int i = 0; i < 8 - length; i++) {
+//            uid.insert(0, "0");
+//        }
+        // KC20230810101928
+        // KC202308101020489990
+        // KC202308101019596022
+//        return head + sdf.format(date);
+        return head + sdf.format(date) + (int) ((Math.random() * 9 + 1) * 1000);
     }
 
 }

@@ -6,6 +6,7 @@ import com.ruoyi.app.controller.wechat.constant.WechatConstants;
 import com.ruoyi.app.controller.wechat.constant.WechatUrlConstants;
 import com.ruoyi.app.controller.wechat.dto.WechatPayDTO;
 import com.ruoyi.app.controller.wechat.utils.WechatPayV3Utils;
+import com.ruoyi.common.constant.PsyConstants;
 import com.ruoyi.common.constant.RespMessageConstants;
 import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.domain.AjaxResult;
@@ -21,7 +22,6 @@ import com.ruoyi.psychology.service.IPsyConsultOrderService;
 import com.ruoyi.psychology.service.IPsyConsultWorkService;
 import com.ruoyi.psychology.service.IPsyUserService;
 import com.ruoyi.psychology.vo.PsyConsultOrderVO;
-import com.ruoyi.psychology.vo.PsyConsultWorkVO;
 import com.ruoyi.wechat.service.WechatPayV3ApiService;
 import com.ruoyi.wechat.vo.WechatPayVO;
 import org.apache.commons.lang3.RandomStringUtils;
@@ -92,18 +92,18 @@ public class WechatPayV3ApiController extends BaseController {
 
         switch (wechatPayDTO.getModule()) {
             case CourConstant.MODULE_COURSE:
-                out_trade_no = createOrderNo("COU_DJ", userId); //创建商户订单号
+                out_trade_no = createOrderNo(PsyConstants.ORDER_COURSE, userId); //创建商户订单号
                 CourCourse courCourse = iCourCourseService.selectCourCourseById(wechatPayDTO.getCourseId());
                 content = courCourse.getName() + "-" + courCourse.getAuthor();
 
                 break;
             case GaugeConstant.MODULE_GAUGE:
-                out_trade_no = createOrderNo("GAU_DJ", userId); //创建商户订单号
+                out_trade_no = createOrderNo(PsyConstants.ORDER_GAUGE, userId); //创建商户订单号
                 PsyGauge psyGauge = iPsyGaugeService.selectPsyGaugeById(wechatPayDTO.getGaugeId());
                 content = psyGauge.getTitle();
                 break;
             case ConsultConstant.MODULE_CONSULT:
-                out_trade_no = createOrderNo("CON_DJ", userId); //创建商户订单号
+                out_trade_no = createOrderNo(PsyConstants.ORDER_CONSULT, userId); //创建商户订单号
                 content = "预约心理咨询服务";
 
                 // 新增支付单时需要校验服务库存
@@ -210,7 +210,7 @@ public class WechatPayV3ApiController extends BaseController {
  
         //@TODO 先查询订单是否可退款 将订单修改为退款中等业务处理
  
-        String out_refund_no = createOrderNo("TK", userId); //创建商户退款单号
+        String out_refund_no = createOrderNo(PsyConstants.ORDER_REFUND, userId); //创建商户退款单号
         JSONObject params = new JSONObject();
         params.put("transaction_id", transaction_id); //微信支付订单号 也可以传out_trade_no 即发起支付时创建的商户订单号 二选一 transaction_id>out_trade_no
         params.put("out_refund_no", out_refund_no); //商户退款单号
@@ -309,14 +309,14 @@ public class WechatPayV3ApiController extends BaseController {
      * @return
      */
     public String  createOrderNo(String head, Integer id) {
-        StringBuilder uid = new StringBuilder(id.toString());
+//        StringBuilder uid = new StringBuilder(id.toString());
         Date date = new Date();
         SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmss");
-        int length = uid.length();
-        for (int i = 0; i < 8 - length; i++) {
-            uid.insert(0, "0");
-        }
-        return head + sdf.format(date) + uid + (int) ((Math.random() * 9 + 1) * 1000);
+//        int length = uid.length();
+//        for (int i = 0; i < 8 - length; i++) {
+//            uid.insert(0, "0");
+//        }
+        return head + sdf.format(date) + (int) ((Math.random() * 9 + 1) * 1000);
     }
  
     /**

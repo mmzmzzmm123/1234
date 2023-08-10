@@ -1,7 +1,7 @@
 package com.ruoyi.wechat.service.impl;
 
 import cn.hutool.core.util.StrUtil;
-import com.ruoyi.common.constant.Constants;
+import com.ruoyi.common.constant.PsyConstants;
 import com.ruoyi.common.constant.IntegralRecordConstants;
 import com.ruoyi.common.enums.GaugeStatus;
 import com.ruoyi.common.enums.OrderPayStatus;
@@ -38,7 +38,6 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.annotation.Resource;
 import java.math.BigDecimal;
 import java.util.HashMap;
-import java.util.Map;
 import java.util.UUID;
 
 //import com.ruoyi.course.task.OrderCancelTask;
@@ -189,7 +188,7 @@ public class WechatPayV3ApiServiceImpl implements WechatPayV3ApiService {
         PsyUserIntegralRecord record = new PsyUserIntegralRecord();
         record.setIntegral(0);
 
-        if (outTradeNo.startsWith("COU")) {
+        if (outTradeNo.startsWith(PsyConstants.ORDER_COURSE)) {
             // TODO: 修改订单状态为已完成
             CourOrder courOrder = courOrderService.selectCourOrderByOrderId(outTradeNo);
             // 判断状态，防止重复更新
@@ -215,7 +214,7 @@ public class WechatPayV3ApiServiceImpl implements WechatPayV3ApiService {
                     record.setIntegral(psyUserIntegralRecordService.getIntegral(courOrder.getAmount(), IntegralRecordConstants.INTEGRAL_RECORD_LINK_TYPE_COURSE));
                 }
             }
-        } else if (outTradeNo.startsWith("GAU")) {
+        } else if (outTradeNo.startsWith(PsyConstants.ORDER_GAUGE)) {
             // TODO: 修改订单状态为已完成
             PsyOrder psyOrder = psyOrderService.selectPsyOrderByOrderId(outTradeNo);
             if (OrderStatus.CREATE.getValue() == psyOrder.getOrderStatus()) {
@@ -236,7 +235,7 @@ public class WechatPayV3ApiServiceImpl implements WechatPayV3ApiService {
                     record.setIntegral(psyUserIntegralRecordService.getIntegral(psyOrder.getAmount(), IntegralRecordConstants.INTEGRAL_RECORD_LINK_TYPE_COURSE));
                 }
             }
-        } else if (outTradeNo.startsWith("CON")) {
+        } else if (outTradeNo.startsWith(PsyConstants.ORDER_CONSULT)) {
             // TODO: 修改订单状态为已完成
             PsyConsultPay pay = psyConsultPayService.getOneByOrder(outTradeNo);
             PsyConsultOrderVO psyOrder = psyConsultOrderService.getOne(pay.getOrderId());
@@ -251,7 +250,7 @@ public class WechatPayV3ApiServiceImpl implements WechatPayV3ApiService {
                 psyConsultOrderService.wechatPayNotify(psyOrder);
                 // 消息推送
                 TemplateMessageVo msg = new TemplateMessageVo();
-                msg.setTemplate_id(Constants.CONSULT_TEMPLATE_ID);
+                msg.setTemplate_id(PsyConstants.CONSULT_TEMPLATE_ID);
 
                 HashMap<String, TemplateMessageItemVo> hashMap = new HashMap<>();
                 hashMap.put("thing1.DATA", new TemplateMessageItemVo(psyOrder.getNickName()));
