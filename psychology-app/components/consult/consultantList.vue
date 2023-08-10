@@ -1,5 +1,5 @@
 <template>
-    <scroll-view scroll-y class="consultant-list-box" @scrolltolower="loadMore">
+    <view scroll-y class="consultant-list-box">
         <view class="consultant-item" v-if="consultantList.length > 0" v-for="consultant in consultantList" :style="consultant.indexQualification ? { background: 'url(/static/consult/bg.png) 100% no-repeat', backgroundSize: '100% 100%'} : {}">
           <view class="header-icon" v-if="consultant.indexQualification">
             <image src="/static/consult/crown.png" class="header-icon-img"/>
@@ -33,7 +33,7 @@
           </view>            
         </view>
         <view class="footer" v-show="consultantList.length > 0">已经到底了</view>
-    </scroll-view>
+    </view>
 </template>
 <script>
 export default {
@@ -47,7 +47,7 @@ export default {
           this.$emit('toConsultant', consultant.id)
         },
         loadMore() {
-          console.log(1122)
+          // console.log(1122)
           this.$emit('loadMore')
         },
     }
@@ -56,7 +56,7 @@ export default {
 <style lang="scss" scoped>
 @import "@/style/common.scss";
 .consultant-list-box {
-  height: 1000upx;
+  //height: 1000upx;
   .consultant-item {
       position: relative;
       background: #ffffff;

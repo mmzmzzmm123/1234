@@ -31,7 +31,7 @@
 <!--        <view class="price-filter" @tap="doFilter(4)">{{ filterParams.city || '城市' }}</view>-->
         <view class="filter" @tap="doFilter(3)">筛选</view>
       </view>
-      <consultant-list :consultantList="consultantList" @toConsultant="toConsultant" @loadMore="loadMore"></consultant-list>
+      <consultant-list :consultantList="consultantList" @toConsultant="toConsultant"></consultant-list>
     </view>
     <consult-tab-bar :currentIndex="0"></consult-tab-bar>
 
@@ -201,12 +201,6 @@
           this.consultantList = [...this.consultantList, ...res.rows]
         }
       },
-      async loadMore() {
-        if (this.consultantList.length < this.total) {
-          this.pageNum += 1
-          await this.getConsult()
-        }
-      },
       async tocourse(url) {
         // 判断是否已经登录
         if (!utils.checkLogin()) {
@@ -315,6 +309,15 @@
       },
       openLoginConfirm() {
         this.$refs.popup.open();
+      },
+      async loadMore() {
+        if (this.consultantList.length < this.total) {
+          this.pageNum += 1
+          await this.getConsult()
+        }
+      },
+      onReachBottom() {
+        this.loadMore()
       }
     },
   };
