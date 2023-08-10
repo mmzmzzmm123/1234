@@ -35,6 +35,8 @@ public interface IPsyConsultOrderService
 
     void updatePayOrder(PsyConsultOrderVO req);
 
+    Boolean sendPublicMsg(PsyConsultOrderVO psyOrder);
+
     void wechatPayNotify(PsyConsultOrderVO req);
 
     int doConsult(Long id, Long workId, Integer time);

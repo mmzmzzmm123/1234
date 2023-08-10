@@ -1,8 +1,8 @@
 package com.ruoyi.wechat.service.impl;
 
 import cn.hutool.core.util.StrUtil;
-import com.ruoyi.common.constant.PsyConstants;
 import com.ruoyi.common.constant.IntegralRecordConstants;
+import com.ruoyi.common.constant.PsyConstants;
 import com.ruoyi.common.enums.GaugeStatus;
 import com.ruoyi.common.enums.OrderPayStatus;
 import com.ruoyi.common.enums.OrderStatus;
@@ -26,9 +26,6 @@ import com.ruoyi.psychology.vo.PsyConsultOrderVO;
 import com.ruoyi.user.domain.PsyUserIntegralRecord;
 import com.ruoyi.user.service.IPsyUserIntegralRecordService;
 import com.ruoyi.wechat.service.WechatPayV3ApiService;
-import com.ruoyi.wechat.service.WechatService;
-import com.ruoyi.wechat.vo.TemplateMessageItemVo;
-import com.ruoyi.wechat.vo.TemplateMessageVo;
 import com.ruoyi.wechat.vo.WechatPayVO;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -37,7 +34,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.math.BigDecimal;
-import java.util.HashMap;
 import java.util.UUID;
 
 //import com.ruoyi.course.task.OrderCancelTask;
@@ -47,9 +43,6 @@ import java.util.UUID;
 public class WechatPayV3ApiServiceImpl implements WechatPayV3ApiService {
 
     private static final Integer ORDER_CANCEL_TIME = 30 * 60 * 1000;
-
-    @Resource
-    private WechatService wechatService;
 
     @Resource
     private IPsyUserService psyUserService;
@@ -248,19 +241,6 @@ public class WechatPayV3ApiServiceImpl implements WechatPayV3ApiService {
 
                 psyConsultPayService.update(pay);
                 psyConsultOrderService.wechatPayNotify(psyOrder);
-                // 消息推送
-                TemplateMessageVo msg = new TemplateMessageVo();
-                msg.setTemplate_id(PsyConstants.CONSULT_TEMPLATE_ID);
-
-                HashMap<String, TemplateMessageItemVo> hashMap = new HashMap<>();
-                hashMap.put("thing1.DATA", new TemplateMessageItemVo(psyOrder.getNickName()));
-                hashMap.put("thing2.DATA", new TemplateMessageItemVo(psyOrder.getConsultName()));
-                hashMap.put("thing3.DATA", new TemplateMessageItemVo(psyOrder.getServeName()));
-                hashMap.put("thing4.DATA", new TemplateMessageItemVo(psyOrder.getOrderTime()));
-                hashMap.put("thing5.DATA", new TemplateMessageItemVo(psyOrder.getOrderNo()));
-                msg.setData(hashMap);
-                msg.setTouser(psyConsultOrderService.getOpenId(psyOrder.getConsultId()));
-                wechatService.sendPublicMsg(msg);
 
                 if (psyOrder.getAmount().compareTo(BigDecimal.ZERO) > 0) {
                     record.setLinkId(String.valueOf(psyOrder.getId()));

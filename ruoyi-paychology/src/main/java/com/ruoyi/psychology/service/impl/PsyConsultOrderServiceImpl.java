@@ -4,6 +4,7 @@ import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.ruoyi.common.constant.NewConstants;
+import com.ruoyi.common.constant.PsyConstants;
 import com.ruoyi.common.utils.NewDateUtil;
 import com.ruoyi.common.utils.SecurityUtils;
 import com.ruoyi.common.vo.DateLimitUtilVO;
@@ -21,16 +22,16 @@ import com.ruoyi.psychology.service.*;
 import com.ruoyi.psychology.vo.PsyConsultOrderVO;
 import com.ruoyi.psychology.vo.PsyConsultServeConfigVO;
 import com.ruoyi.psychology.vo.PsyConsultVO;
+import com.ruoyi.wechat.service.WechatService;
+import com.ruoyi.wechat.vo.TemplateMessageItemVo;
+import com.ruoyi.wechat.vo.TemplateMessageVo;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -42,6 +43,9 @@ import java.util.stream.Collectors;
 @Service
 public class PsyConsultOrderServiceImpl implements IPsyConsultOrderService 
 {
+
+    @Resource
+    private WechatService wechatService;
 
     @Resource
     private IPsyConsultService psyConsultService;
@@ -287,6 +291,11 @@ public class PsyConsultOrderServiceImpl implements IPsyConsultOrderService
         order.setWorkId(workId);
         handleItem(order);
 
+        if (StringUtils.isNotBlank(order.getOrderTime())) {
+            // 消息推送
+            sendPublicMsg(order);
+        }
+
         // 核销完成,才算完成
 //        if (order.getNum() == 0) {
 //            order.setStatus(ConsultConstant.CONSULT_ORDER_STATUE_FINISHED);
@@ -365,10 +374,29 @@ public class PsyConsultOrderServiceImpl implements IPsyConsultOrderService
         req.setBuyNum(Math.max(req.getBuyNum() + 1, 0));
     }
 
+    public Boolean sendPublicMsg(PsyConsultOrderVO psyOrder) {
+        TemplateMessageVo msg = new TemplateMessageVo();
+        msg.setTemplate_id(PsyConstants.CONSULT_TEMPLATE_ID);
+
+        HashMap<String, TemplateMessageItemVo> hashMap = new HashMap<>();
+        hashMap.put("thing1.DATA", new TemplateMessageItemVo(psyOrder.getNickName()));
+        hashMap.put("thing2.DATA", new TemplateMessageItemVo(psyOrder.getConsultName()));
+        hashMap.put("thing3.DATA", new TemplateMessageItemVo(psyOrder.getServeName()));
+        hashMap.put("thing4.DATA", new TemplateMessageItemVo(psyOrder.getOrderTime()));
+        hashMap.put("thing5.DATA", new TemplateMessageItemVo(psyOrder.getOrderNo()));
+        msg.setData(hashMap);
+        msg.setTouser(getOpenId(psyOrder.getConsultId()));
+        return wechatService.sendPublicMsg(msg);
+    }
+
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void wechatPayNotify(PsyConsultOrderVO req) {
         req.setPayTime(new Date());
+        if (StringUtils.isNotBlank(req.getOrderTime())) {
+            // 消息推送
+            sendPublicMsg(req);
+        }
 
         // 增加预约人数 支付成功后+1
         psyConsultService.updateNum(req.getConsultId(), 1);
