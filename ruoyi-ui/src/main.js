@@ -37,7 +37,9 @@ import DictTag from '@/components/DictTag'
 import VueMeta from 'vue-meta'
 // 字典数据组件
 import DictData from '@/components/DictData'
-
+// 文件分片、断点续传组件
+import uploader from 'vue-simple-uploader'
+import $ from 'jquery'
 // 全局方法挂载
 Vue.prototype.getDicts = getDicts
 Vue.prototype.getConfigKey = getConfigKey
@@ -61,6 +63,7 @@ Vue.component('ImagePreview', ImagePreview)
 Vue.use(directive)
 Vue.use(plugins)
 Vue.use(VueMeta)
+Vue.use(uploader)
 DictData.install()
 
 /**
@@ -82,5 +85,6 @@ new Vue({
   el: '#app',
   router,
   store,
+  $,
   render: h => h(App)
 })

@@ -2,15 +2,16 @@
   <div id="app">
     <router-view />
     <theme-picker />
+    <global-uploader></global-uploader>
   </div>
 </template>
 
 <script>
 import ThemePicker from "@/components/ThemePicker";
-
+import globalUploader from '@/views/system/file/fileuploader/globalUploader';
 export default {
   name: "App",
-  components: { ThemePicker },
+  components: { ThemePicker,globalUploader },
     metaInfo() {
         return {
             title: this.$store.state.settings.dynamicTitle && this.$store.state.settings.title,
