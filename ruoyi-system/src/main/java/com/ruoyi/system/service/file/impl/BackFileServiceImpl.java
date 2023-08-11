@@ -110,7 +110,7 @@ public class BackFileServiceImpl implements IBackFileService {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public int mergeFile(BackFilelist fileInfo) {
+    public String mergeFile(BackFilelist fileInfo) {
         String filename = fileInfo.getFilename();
         String file = filePath + folderPath + "/" + fileInfo.getIdentifier() + "/" + filename;
         String folder = filePath + folderPath + "/" + fileInfo.getIdentifier();
@@ -118,7 +118,7 @@ public class BackFileServiceImpl implements IBackFileService {
         merge(file, folder, filename);
         //当前文件已存在数据库中时,返回已存在标识
         if (backFilelistMapper.selectSingleBackFilelist(fileInfo) > 0) {
-            return CommonConstant.UPDATE_EXISTS;
+            return url;
         }
         fileInfo.setLocation(file);
         fileInfo.setUrl(url);
@@ -130,16 +130,12 @@ public class BackFileServiceImpl implements IBackFileService {
             backChunk.setFilename(fileInfo.getFilename());
             backChunkMapper.deleteBackChunkByIdentifier(backChunk);
         }
-        return i;
+        return url;
     }
 
     /**
      * 功能描述:生成块文件所在地址
      *
-     * @param:
-     * @return:
-     * @author: xjd
-     * @date: 2020/7/28 16:10
      */
     private String generatePath(String uploadFolder, BackChunk chunk) {
         StringBuilder sb = new StringBuilder();

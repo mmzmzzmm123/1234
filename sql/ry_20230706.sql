@@ -257,7 +257,13 @@ insert into sys_menu values('1057', '生成删除', '116', '3', '#', '', '', 1, 
 insert into sys_menu values('1058', '导入代码', '116', '4', '#', '', '', 1, 0, 'F', '0', '0', 'tool:gen:import',            '#', 'admin', sysdate(), '', null, '');
 insert into sys_menu values('1059', '预览代码', '116', '5', '#', '', '', 1, 0, 'F', '0', '0', 'tool:gen:preview',           '#', 'admin', sysdate(), '', null, '');
 insert into sys_menu values('1060', '生成代码', '116', '6', '#', '', '', 1, 0, 'F', '0', '0', 'tool:gen:code',              '#', 'admin', sysdate(), '', null, '');
-
+-- 文件管理
+INSERT INTO sys_menu  VALUES (2000, '文件管理', 1, 10, 'file', 'system/file/filelist/index', null, 1, 0, 'C', '0', '0', 'system:file:list', 'documentation', 'admin', '2023-08-10 14:44:33', 'admin', '2023-08-10 14:59:36', '');
+INSERT INTO sys_menu  VALUES (2001, '上传文件', 2000, 1, '', null, null, 1, 0, 'F', '0', '0', 'system:file:upload', '#', 'admin', '2023-08-10 17:58:46', '', null, '');
+INSERT INTO sys_menu  VALUES (2002, '检查文件分片信息', 2000, 2, '', null, null, 1, 0, 'F', '0', '0', 'system:file:check', '#', 'admin', '2023-08-10 17:59:11', '', null, '');
+INSERT INTO sys_menu  VALUES (2003, '合并文件', 2000, 6, '', null, null, 1, 0, 'F', '0', '0', 'system:file:merge', '#', 'admin', '2023-08-10 17:59:34', '', null, '');
+INSERT INTO sys_menu  VALUES (2004, '已上传文件列表查询', 2000, 5, '', null, null, 1, 0, 'F', '0', '0', 'system:filelist:query', '#', 'admin', '2023-08-10 17:59:53', '', null, '');
+INSERT INTO sys_menu  VALUES (2007, '已上传文件列表删除', 2000, 7, '', null, null, 1, 0, 'F', '0', '0', 'system:filelist:remove', '#', 'admin', '2023-08-10 18:00:46', '', null, '');
 
 
 -- ----------------------------
@@ -701,7 +707,8 @@ create table gen_table_column (
 -- ----------------------------
 -- 20、文件列表
 -- ----------------------------
-create table `ry-vue`.sys_filelist
+drop table if exists sys_filelist;
+create table sys_filelist
 (
     id         bigint auto_increment comment '主键ID'
         primary key,
@@ -712,8 +719,11 @@ create table `ry-vue`.sys_filelist
     total_size bigint       null comment '文件总大小',
     constraint FILE_UNIQUE_KEY
         unique (filename, identifier)
-);
-
+) engine=innodb auto_increment=1 comment = '文件列表';
+-- ----------------------------
+-- 21、文件分片记录表
+-- ----------------------------
+drop table if exists sys_chunk;
 create table sys_chunk
 (
     id                 bigint auto_increment comment '主键ID'
@@ -726,12 +736,6 @@ create table sys_chunk
     relative_path      varchar(255) not null comment '相对路径',
     total_chunks       int          not null comment '总块数',
     total_size         bigint       not null comment '总大小'
-);
+) engine=innodb auto_increment=1 comment = '文件分片记录表';
 
 
-INSERT INTO `ry-vue`.sys_menu (menu_id, menu_name, parent_id, order_num, path, component, query, is_frame, is_cache, menu_type, visible, status, perms, icon, create_by, create_time, update_by, update_time, remark) VALUES (2000, '文件管理', 1, 10, 'file', 'system/file/filelist/index', null, 1, 0, 'C', '0', '0', 'system:file:list', 'documentation', 'admin', '2023-08-10 14:44:33', 'admin', '2023-08-10 14:59:36', '');
-INSERT INTO `ry-vue`.sys_menu (menu_id, menu_name, parent_id, order_num, path, component, query, is_frame, is_cache, menu_type, visible, status, perms, icon, create_by, create_time, update_by, update_time, remark) VALUES (2001, '上传文件', 2000, 1, '', null, null, 1, 0, 'F', '0', '0', 'system:file:upload', '#', 'admin', '2023-08-10 17:58:46', '', null, '');
-INSERT INTO `ry-vue`.sys_menu (menu_id, menu_name, parent_id, order_num, path, component, query, is_frame, is_cache, menu_type, visible, status, perms, icon, create_by, create_time, update_by, update_time, remark) VALUES (2002, '检查文件分片信息', 2000, 2, '', null, null, 1, 0, 'F', '0', '0', 'system:file:check', '#', 'admin', '2023-08-10 17:59:11', '', null, '');
-INSERT INTO `ry-vue`.sys_menu (menu_id, menu_name, parent_id, order_num, path, component, query, is_frame, is_cache, menu_type, visible, status, perms, icon, create_by, create_time, update_by, update_time, remark) VALUES (2003, '合并文件', 2000, 6, '', null, null, 1, 0, 'F', '0', '0', 'system:file:merge', '#', 'admin', '2023-08-10 17:59:34', '', null, '');
-INSERT INTO `ry-vue`.sys_menu (menu_id, menu_name, parent_id, order_num, path, component, query, is_frame, is_cache, menu_type, visible, status, perms, icon, create_by, create_time, update_by, update_time, remark) VALUES (2004, '已上传文件列表查询', 2000, 5, '', null, null, 1, 0, 'F', '0', '0', 'system:filelist:query', '#', 'admin', '2023-08-10 17:59:53', '', null, '');
-INSERT INTO `ry-vue`.sys_menu (menu_id, menu_name, parent_id, order_num, path, component, query, is_frame, is_cache, menu_type, visible, status, perms, icon, create_by, create_time, update_by, update_time, remark) VALUES (2007, '已上传文件列表删除', 2000, 7, '', null, null, 1, 0, 'F', '0', '0', 'system:filelist:remove', '#', 'admin', '2023-08-10 18:00:46', '', null, '');

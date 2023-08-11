@@ -58,7 +58,7 @@ public class BackFilelistController extends BaseController
      * 获取已上传文件列表详细信息
      */
     @ApiOperation("获取已上传文件列表详细信息")
-    @PreAuthorize("@ss.hasPermi('system:filelist:query-detail')")
+    @PreAuthorize("@ss.hasPermi('system:filelist:detail')")
     @GetMapping(value = "/{id}")
     public AjaxResult getInfo(@PathVariable("id") Long id)
     {

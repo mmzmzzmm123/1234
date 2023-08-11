@@ -14,8 +14,8 @@
         <div>
 
         </div>
-        <el-button type="primary" icon="el-icon-upload" size="mini" @click="upload">上传</el-button>
-        <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
+        <el-button type="primary" icon="el-icon-upload" size="mini" @click="upload" v-hasPermi="['system:file:upload']">上传</el-button>
+        <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery" v-hasPermi="['system:filelist:query']">搜索</el-button>
         <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
       </el-form-item>
     </el-form>

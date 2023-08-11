@@ -74,15 +74,11 @@ public class BackFileController extends BaseController
      * 检查文件上传状态
      */
     @ApiOperation("合并文件")
-    @PreAuthorize("@ss.hasPermi('system:file:merge')")
+    //@PreAuthorize("@ss.hasPermi('system:file:merge')")
     @PostMapping("/merge")
     public AjaxResult merge(BackFilelist fileInfo)
     {
-        int i = backFileService.mergeFile(fileInfo);
-        if(i == CommonConstant.UPDATE_EXISTS.intValue()){
-            //应对合并时断线导致的无法重新申请合并的问题
-            return new AjaxResult(200,"已合并,无需再次提交");
-        }
-        return toAjax(i);
+        String path = backFileService.mergeFile(fileInfo);
+        return AjaxResult.success("操作成功", path);
     }
 }

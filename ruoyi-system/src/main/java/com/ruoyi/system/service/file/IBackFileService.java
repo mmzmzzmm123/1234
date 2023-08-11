@@ -15,5 +15,5 @@ public interface IBackFileService {
 
     int deleteBackFileByIds(Long id);
 
-    int mergeFile(BackFilelist fileInfo);
+    String mergeFile(BackFilelist fileInfo);
 }
