@@ -111,7 +111,6 @@ import indexServer from '@/server/consult/index'
 import consultServer from "@/server/consult/consult";
 import orderServer from "@/server/consult/order";
 import loginServer from '@/server/login'
-import wxJS from "@/server/wxJS.js"
 export default {
   components: {timeBox, serveList, course, consultDesc },
   data() {
@@ -171,7 +170,6 @@ export default {
     await this.getConsultInfo()
     await this.getConsultCourseByName()
     this.openTime()
-    this.share()
   },
   // onPageScroll(e) {
   //   let scroll = e.scrollTop <= 0 ? 0 : e.scrollTop;
@@ -241,6 +239,10 @@ export default {
       this.consultInfo.qualification = this.consultInfo.qualification ? this.consultInfo.qualification.split(',') : []
 
       this.consultInfo.experiences = this.consultInfo.experience && this.consultInfo.experience !== '[]' ? JSON.parse(this.consultInfo.experience) : []
+      // #ifdef H5
+      console.log('consultInfo: ', this.consultInfo)
+      utils.share(this.consultInfo.nickName, this.consultInfo.info, this.consultInfo.avatar)
+      // #endif
     },
     async getConsultCourseByName() {
       this.courseList = await consultServer.getConsultCourseByName(this.consultInfo.userName)
@@ -316,15 +318,6 @@ export default {
     },
     openLoginConfirm() {
       this.$refs.popup.open()
-    },
-    share() {
-      const title = this.consultInfo.nickName
-      const desc = this.consultInfo.info
-      const link = window.location.href
-      const img = this.consultInfo.avatar
-      const url = window.location.href
-      console.log('consultInfo: ', this.consultInfo)
-      wxJS.getConfig(title, desc, link, img, url);
     }
   },
 };

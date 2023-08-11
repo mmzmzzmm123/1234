@@ -1,4 +1,5 @@
 import {wxLogin, wxLoginCallBack} from "@/server/wxApi";
+import wxJS from "@/server/wxJS.js"
 
 const redis = "psy";
 export const clientTypeObj = { wx: "JSAPI", zfb: "FWC", no: "unknow" };
@@ -60,6 +61,11 @@ export default {
   checkLogin() {
     const user = this.getUserInfo()
     return user && user !== {} && user.userId
+  },
+  share(title, desc, img, link = window.location.href, url = window.location.href) {
+    img = img ? img : 'http://wx.qlogo.cn/mmopen/ajNVdqHZLLBdcuPMEJGv3jwqibIiaNhD5nBfVL28Aw5mos8bL2z5olibLr7reMfp9OewJwzpAEibiamiaoWVklnXG3qlq7LczurGB2n9jtRcdlO8E/64'
+
+    wxJS.getConfig(title, desc, link, img, url);
   },
   getParam(path, name) {
     var reg = new RegExp("(^|\\?|&)" + name + "=([^&]*)(\\s|&|$)", "i");

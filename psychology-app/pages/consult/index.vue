@@ -115,6 +115,10 @@
       };
     },
     async mounted() {
+      // #ifdef H5
+      utils.share('三束光心理', '三束光心理课堂')
+      // #endif
+
       this.userInfo = utils.getUserInfo()
 
       this.getCat()
@@ -135,6 +139,7 @@
       if (!utils.checkLogin()) {
         return this.openLoginConfirm()
       }
+
 
     },
     methods: {
