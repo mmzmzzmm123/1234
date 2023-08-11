@@ -26,8 +26,8 @@
           </el-form-item>
         </el-col>
         <el-col :span="8">
-          <el-form-item label="学历" prop="info">
-            <el-input size="mini" maxlength="100" show-word-limit v-model="form.info" placeholder="学历" />
+          <el-form-item label="学历/简介" prop="info">
+            <el-input size="mini" maxlength="100" show-word-limit v-model="form.info" placeholder="学历/简介" />
           </el-form-item>
         </el-col>
       </el-row>

@@ -120,9 +120,9 @@ export default {
     if (!this.userInfo && await utils.loginCallback(this.redirectUri)) {
       this.userInfo = utils.getUserInfo()
     }
-    if (!utils.checkLogin()) {
-      return this.openLoginConfirm()
-    }
+    // if (!utils.checkLogin()) {
+    //   return this.openLoginConfirm()
+    // }
   },
   methods: {
     // 登录

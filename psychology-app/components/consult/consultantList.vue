@@ -111,7 +111,7 @@ export default {
           .title {
             display: flex;
             align-items: center;
-            //margin-bottom: 8upx;
+            flex-wrap: wrap;
             .name {
               font-size: 30upx;
               font-family: PingFangSC-Semibold, PingFang SC;
@@ -119,7 +119,6 @@ export default {
               color: #333333;
               line-height: 42upx;
               margin-right: 14upx;
-              
             }
           }
           .gps {
@@ -148,6 +147,7 @@ export default {
               background: rgba(255,112,63,0.1);
               border-radius: 4upx;
               margin-right: 8upx;
+              margin-bottom: 8upx;
               font-size: 22upx;
               font-weight: 400;
               color: #FF703F;

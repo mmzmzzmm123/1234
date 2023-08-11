@@ -159,10 +159,10 @@ export default {
   created() {
   },
   async mounted() {
-    this.userInfo = utils.getUserInfo()
-    if (!utils.checkLogin()) {
-      return this.openLoginConfirm()
-    }
+    // this.userInfo = utils.getUserInfo()
+    // if (!utils.checkLogin()) {
+    //   return this.openLoginConfirm()
+    // }
     this.consultId = utils.getParam(location.href, "id")
     this.getConsultServe()
     this.getConsultWorks()
