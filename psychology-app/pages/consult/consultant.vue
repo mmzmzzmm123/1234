@@ -241,7 +241,7 @@ export default {
       this.consultInfo.experiences = this.consultInfo.experience && this.consultInfo.experience !== '[]' ? JSON.parse(this.consultInfo.experience) : []
       // #ifdef H5
       console.log('consultInfo: ', this.consultInfo)
-      utils.share(this.consultInfo.nickName, this.consultInfo.share ? this.consultInfo.share : '', this.consultInfo.avatar)
+      utils.share('三束光心理咨询师：' + this.consultInfo.nickName, this.consultInfo.share ? this.consultInfo.share : '', this.consultInfo.avatar)
       // #endif
     },
     async getConsultCourseByName() {
