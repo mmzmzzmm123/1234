@@ -92,6 +92,8 @@ public class PsyConsultVO extends BaseValObj implements Serializable
 
     private String openId;
 
+    private String share;
+
     /** 咨询流派 */
     private String genre;
 

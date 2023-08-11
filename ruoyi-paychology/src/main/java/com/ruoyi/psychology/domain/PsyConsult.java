@@ -132,6 +132,8 @@ public class PsyConsult extends BasePlusEntity implements Serializable
 
     private String openId;
 
+    private String share;
+
     /** 受训经历 */
 //    @Excel(name = "受训经历")
     private String experience;

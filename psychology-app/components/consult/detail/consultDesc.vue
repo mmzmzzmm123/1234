@@ -18,7 +18,7 @@
           <view class="experience-list">
             <view class="experience-item" v-for="item in info.experiences">
               <view class="experience-item-icon"></view>
-              <view class="experience-item-tiem">{{ item.time[0] + '-' + item.time[1] }}</view>
+              <view class="experience-item-tiem">{{ item.time[0] + ' ~ ' + item.time[1] }}</view>
               <view class="experience-item-info">{{ item.info }}</view>
             </view>
           </view>

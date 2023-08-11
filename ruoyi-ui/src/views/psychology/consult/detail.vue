@@ -26,8 +26,8 @@
           </el-form-item>
         </el-col>
         <el-col :span="8">
-          <el-form-item label="简介" prop="info">
-            <el-input size="mini" maxlength="100" show-word-limit v-model="form.info" placeholder="简介" />
+          <el-form-item label="学历" prop="info">
+            <el-input size="mini" maxlength="100" show-word-limit v-model="form.info" placeholder="学历" />
           </el-form-item>
         </el-col>
       </el-row>
@@ -168,6 +168,11 @@
             <el-input type="textarea" :rows="4" size="mini" maxlength="100" show-word-limit v-model="form.genre" placeholder="请输入咨询流派" />
           </el-form-item>
         </el-col>
+        <el-col :span="8">
+          <el-form-item label="分享推荐" prop="share">
+            <el-input type="textarea" :rows="4" size="mini" maxlength="100" show-word-limit v-model="form.share" placeholder="请输入分享推荐" />
+          </el-form-item>
+        </el-col>
       </el-row>
 
       <el-row>
@@ -181,8 +186,8 @@
                       size="mini"
                       v-model="scope.row.time"
                       @change="changeTime"
-                      value-format="yyyy-MM-dd"
-                      type="daterange"
+                      value-format="yyyy-MM"
+                      type="monthrange"
                       range-separator="至"
                       start-placeholder="开始日期"
                       end-placeholder="结束日期">
@@ -295,7 +300,7 @@ export default {
           { required: true, message: '请选择受训时间', trigger: 'blur' }
         ],
         info: [
-          { required: true, message: '请输入受训经理', trigger: 'blur' }
+          { message: '请输入学历', trigger: 'blur' }
         ]
       }
     }
