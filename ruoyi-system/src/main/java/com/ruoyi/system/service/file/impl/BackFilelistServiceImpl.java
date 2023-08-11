@@ -1,11 +1,19 @@
 package com.ruoyi.system.service.file.impl;
 
+import com.ruoyi.common.utils.file.FileUtils;
 import com.ruoyi.system.domain.BackFilelist;
 import com.ruoyi.system.mapper.BackFilelistMapper;
 import com.ruoyi.system.service.file.IBackFilelistService;
+import org.apache.commons.compress.utils.Lists;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -17,6 +25,10 @@ public class BackFilelistServiceImpl implements IBackFilelistService
     @Autowired
     private BackFilelistMapper backFilelistMapper;
 
+    @Value("${ruoyi.profile}")
+    private String filePath;
+
+    private final static String folderPath = "/file";
     /**
      * 查询已上传文件列表
      * 
@@ -74,6 +86,13 @@ public class BackFilelistServiceImpl implements IBackFilelistService
     @Override
     public int deleteBackFilelistByIds(Long[] ids)
     {
+        ArrayList<Boolean> objects = Lists.newArrayList();
+        //先删除文件再删除对应的表记录
+        for (Long id : ids) {
+            BackFilelist backFilelist = backFilelistMapper.selectBackFilelistById(id);
+            String fileFolder = filePath + folderPath + "/" + backFilelist.getIdentifier();
+            FileUtils.deleteFolder(new File(fileFolder));
+        }
         return backFilelistMapper.deleteBackFilelistByIds(ids);
     }
 
@@ -88,4 +107,6 @@ public class BackFilelistServiceImpl implements IBackFilelistService
     {
         return backFilelistMapper.deleteBackFilelistById(id);
     }
+
+
 }

@@ -44,7 +44,7 @@ public class BackChunkController extends BaseController
      * 导出文件分片管理列表
      */
     @ApiOperation("导出文件分片管理列表")
-    @PreAuthorize("@ss.hasPermi('file:chunk:export')")
+    @PreAuthorize("@ss.hasPermi('system:filelist:export')")
     @Log(title = "文件分片管理", businessType = BusinessType.EXPORT)
     @GetMapping("/export")
     public AjaxResult export(BackChunk backChunk)

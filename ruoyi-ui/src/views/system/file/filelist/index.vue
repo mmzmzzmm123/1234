@@ -23,19 +23,32 @@
     <el-row :gutter="10" class="mb8">
       <el-col :span="1.5">
         <el-button
+          type="danger"
+          plain
+          icon="el-icon-delete"
+          size="mini"
+          :disabled="multiple"
+          @click="handleDelete"
+          v-hasPermi="['system:filelist:remove']"
+        >删除</el-button>
+      </el-col>
+<!--      <el-col :span="1.5">
+        <el-button
           type="warning"
           icon="el-icon-download"
           size="mini"
           @click="handleExport"
           v-hasPermi="['background:filelist:export']"
         >导出</el-button>
-      </el-col>
+      </el-col>-->
     </el-row>
 
     <el-table v-loading="loading" :data="filelistList" @selection-change="handleSelectionChange">
+      <el-table-column type="selection" width="50" align="center" />
+      <el-table-column label="编号" align="center" prop="id" />
       <el-table-column label="文件名" align="center" prop="filename" />
       <el-table-column label="本地地址" align="center" prop="location" />
-      <el-table-column label="文件总大小" align="center" prop="totalSize" />
+      <el-table-column label="文件总大小" align="center" prop="totalSize" :formatter="storageFormatter"/>
     </el-table>
 
     <pagination
@@ -128,6 +141,17 @@ export default {
     this.getList();
   },
   methods: {
+    storageFormatter(row, column){
+      let totalSize= row.totalSize;
+      //1073741824为1G
+      if(totalSize>=1073741824){
+        return Math.round((row.totalSize/1073741824)*100)/100+"G"
+      }else if(totalSize>=1048576){ //1048576为1M
+        return  Math.round((row.totalSize/1048576)*100)/100+"M"
+      }else{
+        return  Math.round((row.totalSize/1024)*100)/100+"K"
+      }
+    },
     upload() {
       // 打开文件选择框
       Bus.$emit('openUploader', {
@@ -171,9 +195,15 @@ export default {
       this.handleQuery();
     },
     // 多选框选中数据
+    // handleSelectionChange(selection) {
+    //   this.ids = selection.map(item => item.id)
+    //   this.single = selection.length!=1
+    //   this.multiple = !selection.length
+    // },
+
+    /** 多选框选中数据 */
     handleSelectionChange(selection) {
       this.ids = selection.map(item => item.id)
-      this.single = selection.length!=1
       this.multiple = !selection.length
     },
     /** 新增按钮操作 */

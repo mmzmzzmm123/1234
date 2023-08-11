@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletResponse;
 
 /**
- * 用户报告申请记录Controller
+ * 文件管理Controller
  */
 @Api("文件管理")
 @RestController
@@ -29,35 +29,27 @@ public class BackFileController extends BaseController
     private IBackFileService backFileService;
 
     /**
-     * 查询用户报告申请记录列表
-     */
-//    @ApiOperation("查询用户报告申请记录列表")
-//    @PreAuthorize("@ss.hasPermi('file:report:list')")
-//    @GetMapping("/list")
-//    public TableDataInfo list(BackFileVO backUserReportVO)
-//    {
-//        startPage();
-//        List<BackFileVO> list = backFileService.selectBackFileList(backUserReportVO);
-//        return getDataTable(list);
-//    }
-
-    /**
      * 上传文件
      */
     @ApiOperation("上传文件")
-    @PreAuthorize("@ss.hasPermi('file:file:upload')")
+    @PreAuthorize("@ss.hasPermi('system:file:upload')")
     @PostMapping("/upload")
     public AjaxResult postFileUpload(@ModelAttribute BackChunk chunk, HttpServletResponse response)
     {
         int i = backFileService.postFileUpload(chunk, response);
-        return toAjax(i);
+        AjaxResult aR = toAjax(i);
+        if(aR.isSuccess()) {
+            aR.put("needMerge", true);
+            aR.put("result", true);
+        }
+        return aR;
     }
 
     /**
      * 检查文件上传状态
      */
     @ApiOperation("检查文件上传状态")
-    @PreAuthorize("@ss.hasPermi('file:file:check')")
+    @PreAuthorize("@ss.hasPermi('system:file:check')")
     @GetMapping("/upload")
     public CheckChunkVO getFileUpload(@ModelAttribute BackChunk chunk, HttpServletResponse response)
     {
@@ -67,22 +59,22 @@ public class BackFileController extends BaseController
     }
 
     /**
-     * 删除用户报告申请记录
+     *
      */
-    @ApiOperation("删除文件")
-    @PreAuthorize("@ss.hasPermi('file:file:remove')")
-    @Log(title = "用户删除文件", businessType = BusinessType.DELETE)
-	@DeleteMapping("/{id}")
-    public AjaxResult remove(@PathVariable("id") Long id)
-    {
-        return toAjax(backFileService.deleteBackFileByIds(id));
-    }
+//    @ApiOperation("删除文件")
+//    @PreAuthorize("@ss.hasPermi('system:file:remove')")
+//    @Log(title = "用户删除文件", businessType = BusinessType.DELETE)
+//	@DeleteMapping("/{id}")
+//    public AjaxResult remove(@PathVariable("id") Long id)
+//    {
+//        return toAjax(backFileService.deleteBackFileByIds(id));
+//    }
 
     /**
      * 检查文件上传状态
      */
     @ApiOperation("合并文件")
-    @PreAuthorize("@ss.hasPermi('file:file:merge')")
+    @PreAuthorize("@ss.hasPermi('system:file:merge')")
     @PostMapping("/merge")
     public AjaxResult merge(BackFilelist fileInfo)
     {

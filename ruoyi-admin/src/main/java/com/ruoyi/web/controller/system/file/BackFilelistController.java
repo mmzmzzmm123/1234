@@ -31,7 +31,7 @@ public class BackFilelistController extends BaseController
      * 查询已上传文件列表列表
      */
     @ApiOperation("查询已上传文件列表列表")
-    @PreAuthorize("@ss.hasPermi('file:filelist:list')")
+    @PreAuthorize("@ss.hasPermi('system:filelist:query')")
     @GetMapping("/list")
     public TableDataInfo list(BackFilelist backFilelist)
     {
@@ -44,7 +44,7 @@ public class BackFilelistController extends BaseController
      * 导出已上传文件列表列表
      */
     @ApiOperation("导出已上传文件列表列表")
-    @PreAuthorize("@ss.hasPermi('file:filelist:export')")
+    @PreAuthorize("@ss.hasPermi('system:filelist:export')")
     @Log(title = "已上传文件列表", businessType = BusinessType.EXPORT)
     @GetMapping("/export")
     public AjaxResult export(BackFilelist backFilelist)
@@ -58,7 +58,7 @@ public class BackFilelistController extends BaseController
      * 获取已上传文件列表详细信息
      */
     @ApiOperation("获取已上传文件列表详细信息")
-    @PreAuthorize("@ss.hasPermi('file:filelist:query')")
+    @PreAuthorize("@ss.hasPermi('system:filelist:query-detail')")
     @GetMapping(value = "/{id}")
     public AjaxResult getInfo(@PathVariable("id") Long id)
     {
@@ -69,7 +69,7 @@ public class BackFilelistController extends BaseController
      * 新增已上传文件列表
      */
     @ApiOperation("新增已上传文件列表")
-    @PreAuthorize("@ss.hasPermi('file:filelist:add')")
+    @PreAuthorize("@ss.hasPermi('system:filelist:add')")
     @Log(title = "已上传文件列表", businessType = BusinessType.INSERT)
     @PostMapping
     public AjaxResult add(@RequestBody BackFilelist backFilelist)
@@ -81,7 +81,7 @@ public class BackFilelistController extends BaseController
      * 修改已上传文件列表
      */
     @ApiOperation("修改已上传文件列表")
-    @PreAuthorize("@ss.hasPermi('file:filelist:edit')")
+    @PreAuthorize("@ss.hasPermi('system:filelist:edit')")
     @Log(title = "已上传文件列表", businessType = BusinessType.UPDATE)
     @PutMapping
     public AjaxResult edit(@RequestBody BackFilelist backFilelist)
@@ -93,7 +93,7 @@ public class BackFilelistController extends BaseController
      * 删除已上传文件列表
      */
     @ApiOperation("删除已上传文件列表")
-    @PreAuthorize("@ss.hasPermi('file:filelist:remove')")
+    @PreAuthorize("@ss.hasPermi('system:filelist:remove')")
     @Log(title = "已上传文件列表", businessType = BusinessType.DELETE)
 	@DeleteMapping("/{ids}")
     public AjaxResult remove(@PathVariable Long[] ids)

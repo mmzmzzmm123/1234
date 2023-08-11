@@ -62,7 +62,7 @@
       return {
         options: {
           // 目标上传 URL
-          target: '/csixframework/background/file/upload',
+          target: process.env.VUE_APP_BASE_API +'/system/file/upload',
           //分块大小
           chunkSize: 5 * 1024 * 1000,
           //上传文件时文件的参数名，默认file
