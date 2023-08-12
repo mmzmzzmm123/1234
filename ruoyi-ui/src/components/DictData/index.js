@@ -11,7 +11,7 @@ function searchDictByKey(dict, key) {
     for (let i = 0; i < dict.length; i++) {
       if (dict[i].key == key) {
         return dict[i].value
-      }
+      }7
     }
   } catch (e) {
     return null
