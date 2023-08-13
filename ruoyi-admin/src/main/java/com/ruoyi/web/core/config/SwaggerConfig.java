@@ -1,32 +1,29 @@
 package com.ruoyi.web.core.config;
 
-import java.util.ArrayList;
-import java.util.List;
+import com.ruoyi.common.config.RuoYiConfig;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import com.ruoyi.common.config.RuoYiConfig;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.models.auth.In;
 import springfox.documentation.builders.ApiInfoBuilder;
 import springfox.documentation.builders.PathSelectors;
 import springfox.documentation.builders.RequestHandlerSelectors;
-import springfox.documentation.service.ApiInfo;
-import springfox.documentation.service.ApiKey;
-import springfox.documentation.service.AuthorizationScope;
-import springfox.documentation.service.Contact;
-import springfox.documentation.service.SecurityReference;
-import springfox.documentation.service.SecurityScheme;
+import springfox.documentation.service.*;
 import springfox.documentation.spi.DocumentationType;
 import springfox.documentation.spi.service.contexts.SecurityContext;
 import springfox.documentation.spring.web.plugins.Docket;
+import springfox.documentation.swagger2.annotations.EnableSwagger2;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Swagger2的接口配置
- * 
+ *
  * @author ruoyi
  */
+@EnableSwagger2
 @Configuration
 public class SwaggerConfig
 {
@@ -46,11 +43,11 @@ public class SwaggerConfig
      * 创建API
      */
     @Bean
-    public Docket createRestApi()
-    {
-        return new Docket(DocumentationType.OAS_30)
+    public Docket ruoyiApi() {
+        return new Docket(DocumentationType.SWAGGER_2)
                 // 是否启用Swagger
                 .enable(enabled)
+                .groupName("ruoyiApi")
                 // 用来创建该API的基本信息，展示在文档的页面中（自定义展示的信息）
                 .apiInfo(apiInfo())
                 // 设置哪些接口暴露给Swagger展示
@@ -71,29 +68,31 @@ public class SwaggerConfig
     /**
      * 安全模式，这里指定token通过Authorization头请求头传递
      */
-    private List<SecurityScheme> securitySchemes()
-    {
-        List<SecurityScheme> apiKeyList = new ArrayList<SecurityScheme>();
-        apiKeyList.add(new ApiKey("Authorization", "Authorization", In.HEADER.toValue()));
-        return apiKeyList;
+    private List<ApiKey> securitySchemes() {
+        //设置请求头信息
+        List<ApiKey> result = new ArrayList<>();
+        result.add(new ApiKey("Authorization", "Authorization", "Header"));
+        return result;
     }
 
-    /**
-     * 安全上下文
-     */
-    private List<SecurityContext> securityContexts()
-    {
-        List<SecurityContext> securityContexts = new ArrayList<>();
-        securityContexts.add(
-                SecurityContext.builder()
-                        .securityReferences(defaultAuth())
-                        .operationSelector(o -> o.requestMappingPattern().matches("/.*"))
-                        .build());
-        return securityContexts;
+    // 设置需要登录认证的路径
+    private List<SecurityContext> securityContexts() {
+        List<SecurityContext> result = new ArrayList<>();
+        result.add(getContextByPath("/.*"));
+        return result;
+    }
+
+    // 创建一个基于路径正则表达式的（SecurityContext）对象
+    private SecurityContext getContextByPath(String pathRegex) {
+        return SecurityContext.builder()
+                .securityReferences(defaultAuth())
+                .forPaths(PathSelectors.regex(pathRegex))
+                .build();
     }
 
     /**
      * 默认的安全上引用
+     * 用于创建默认的SecurityReference列表
      */
     private List<SecurityReference> defaultAuth()
     {
