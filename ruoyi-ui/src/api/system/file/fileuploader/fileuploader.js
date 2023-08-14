@@ -1,6 +1,6 @@
 import request from '@/utils/request'
 
-// 查询公告列表
+// 合并文件
 export function fileMerge(param) {
   return request({
     url: '/system/file/merge',
