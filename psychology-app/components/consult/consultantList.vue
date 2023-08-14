@@ -11,7 +11,7 @@
             </view>
             <view class="txt-box">
               <view class="title" @tap="toConsultant(consultant)">
-                <view class="name">{{ consultant.userName }}</view>
+                <view class="name">{{ consultant.nickName }}</view>
               </view>
               <view class="gps" v-if="consultant.province">
                 <image src="/static/consult/gps-black.png" />
@@ -104,7 +104,7 @@ export default {
         }
         .txt-box {
           width: 450upx;
-          height: 248upx;
+          //height: 248upx;
           display: flex;
           flex-direction: column;
           margin-left: 24upx;

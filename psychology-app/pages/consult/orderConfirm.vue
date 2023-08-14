@@ -8,7 +8,7 @@
       <view class="consult-info-group">
         <image :src="consult.avatar" class="consult-info-avatar"></image>
         <view class="consult-info-right">
-          <text class="consult-name">{{ consult.userName }}</text>
+          <text class="consult-name">{{ consult.nickName }}</text>
           <text class="consult-work">{{ consult.workNum }}人次咨询 | {{ consult.workHours }}年从业经验</text>
           <view class="consult-price">
             <text class="consult-price-ant">¥</text>
@@ -163,6 +163,9 @@ export default {
     },
     async getNotice() {
       this.notice = await orderServer.getNotice(3);
+      if (this.notice.noticeContent) {
+        this.notice.noticeContent = this.notice.noticeContent.replace('乙方（服务使用方）：', '乙方（服务使用方）：' + this.userInfo.name);
+      }
     },
     async getDates() {
       this.dateList = await indexServer.getDates(7);
@@ -222,14 +225,14 @@ export default {
         })
       }
 
-      if (!utils.checkLogin()) {
-        return this.openLoginConfirm()
-      }
-
       // serverId,workId,consultId
       console.log(this.consult.id)
       console.log(this.serve.id)
       console.log(this.workId)
+
+      uni.showLoading({
+        title: '支付中...'
+      });
 
       let res = await getPaySign(
           this.userInfo.userId,
@@ -246,19 +249,19 @@ export default {
       console.log(res)
       if (res.code == 200) {
         const { appId, timeStamp, nonceStr, packageInfo, paySign, signType } = res.data
-        wxPay(res.data, () => {
-          uni.showToast({
-            icon: "success",
-            title: "支付成功",
-          });
+        wxPay(res.data, (respone) => {
+          console.log(respone)
+          uni.hideLoading()
+
           uni.navigateTo({
-            url: "/pages/consult/order",
+            url: "/pages/consult/payResultOk?orderNo=" + respone.data.out_trade_no,
           });
         }, (msg) => {
           console.log(msg)
-          uni.showToast({
-            icon: "error",
-            title: "支付失败",
+          uni.hideLoading()
+
+          uni.navigateTo({
+            url: "/pages/consult/payResultFail"
           });
         })
       }
@@ -632,6 +635,9 @@ export default {
       padding: 24upx;
       ::v-deep img {
         width: 100%;
+      }
+      /deep/ .ql-align-justify {
+        color: #333333;
       }
     }
     .popup-notice-close {

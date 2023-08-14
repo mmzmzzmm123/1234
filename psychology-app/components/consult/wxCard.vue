@@ -6,7 +6,7 @@
     <view class="group_9">
       <image src="/static/consult/order/bg.png"  class="group_10"></image>
       <text class="text_29">{{ data.nickName }}</text>
-      <text class="text_30">{{ data.info }}</text>
+      <text class="text_30">{{ data.qualification }}</text>
       <image :src="data.avatar" class="image_2"></image>
     </view>
     <view class="group_11">
@@ -57,7 +57,7 @@ export default {
   left: 0upx;
   top: 0upx;
   width: 750upx;
-  height: 1624upx;
+  /*height: 1624upx;*/
   display: flex;
   flex-direction: column;
   z-index: 99999;
@@ -82,6 +82,7 @@ export default {
   display: flex;
   flex-direction: column;
   margin: -1upx 0 0 65upx;
+  text-align: center;
 }
 .group_10 {
   border-radius: 16upx 16upx 0 0;
@@ -90,17 +91,12 @@ export default {
   height: 240upx;
 }
 .text_29 {
-  width: 60upx;
   height: 42upx;
-  overflow-wrap: break-word;
   color: rgba(51,51,51,1);
   font-size: 30upx;
-  font-family: PingFangSC-Semibold;
   font-weight: 600;
-  text-align: left;
-  white-space: nowrap;
   line-height: 42upx;
-  margin: 97upx 0 0 280upx;
+  margin-top: 97upx;
 }
 .text_30 {
   width: 524upx;
@@ -120,7 +116,8 @@ export default {
   top: 175upx;
   width: 130upx;
   height: 130upx;
-  border-radius: 100%;
+  border-radius: 84upx;
+  border: 4upx solid #FFFFFF;
 }
 .group_11 {
   height: 40upx;
@@ -143,7 +140,7 @@ export default {
   background-color: rgba(255,255,255,1.000000);
   border-radius: 0 0 16upx 16upx;
   width: 620upx;
-  height: 470upx;
+  /*height: 470upx;*/
   margin-left: 65upx;
   display: flex;
   flex-direction: column;
@@ -163,14 +160,13 @@ export default {
 }
 .paragraph_1 {
   width: 524upx;
-  height: 66upx;
+  /*height: 66upx;*/
   overflow-wrap: break-word;
   color: rgba(119,119,119,1);
   font-size: 24upx;
-  font-family: PingFangSC-Regular;
   font-weight: normal;
   text-align: left;
-  line-height: 33upx;
+  /*line-height: 33upx;*/
   margin: 11upx 0 0 48upx;
 }
 .text_32 {
@@ -207,6 +203,7 @@ export default {
   margin: 24upx 0 40upx 191upx;
 }
 .box_9 {
+  border-radius: 6upx;
   width: 100upx;
   height: 100upx;
   display: flex;

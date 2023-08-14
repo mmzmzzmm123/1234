@@ -176,6 +176,20 @@
     	}
     },
     {
+    	"path": "pages/consult/payResultOk",
+    	"style": {
+    		"navigationStyle": "custom",
+        "navigationBarTitleText": "三束光心理"
+    	}
+    },
+    {
+    	"path": "pages/consult/payResultFail",
+    	"style": {
+    		"navigationStyle": "custom",
+        "navigationBarTitleText": "三束光心理"
+    	}
+    },
+    {
     	"path": "pages/consult/order",
     	"style": {
     		"navigationStyle": "custom",

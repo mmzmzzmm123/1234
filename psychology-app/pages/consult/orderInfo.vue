@@ -65,7 +65,7 @@
       <view class="serve" v-if="order.status !== '0'">
         <view class="serve-header">
           <view class="block-icon"></view>
-          <text class="serve-header-title">服务详情</text>
+          <text class="serve-header-title">预约详情</text>
         </view>
         <view class="serve-item" v-if="order.items && order.items.length > 0">
           <view class="cu-timeline">

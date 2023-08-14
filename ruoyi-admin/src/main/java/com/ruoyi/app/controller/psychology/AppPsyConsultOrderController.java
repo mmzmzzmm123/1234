@@ -46,6 +46,12 @@ public class AppPsyConsultOrderController extends BaseController
         return AjaxResult.success(psyConsultOrderService.getOrderDetail(id));
     }
 
+    @GetMapping(value = "/getOrderDetailByNo/{orderNo}")
+    public AjaxResult getOrderDetailByNo(@PathVariable("orderNo") String orderNo)
+    {
+        return AjaxResult.success(psyConsultOrderService.getOrderDetailByNo(orderNo));
+    }
+
     /**
      * 获取订单列表
      */

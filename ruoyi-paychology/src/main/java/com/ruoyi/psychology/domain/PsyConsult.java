@@ -152,5 +152,8 @@ public class PsyConsult extends BasePlusEntity implements Serializable
     @TableField(exist = false)
     private BigDecimal price;
 
+    @TableField(exist = false)
+    private BigDecimal newPrice;
+
     
 }

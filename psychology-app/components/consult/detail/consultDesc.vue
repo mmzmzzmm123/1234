@@ -12,6 +12,11 @@
         <view class="qualification-val">{{ info.genre }}</view>
       </view>
 
+      <view class="qualification">
+        <text class="qualification-title">咨询方式</text>
+        <view class="qualification-val">{{ info.mode }}</view>
+      </view>
+
       <view class="experience" v-if="info.experiences && info.experiences.length > 0">
         <text class="experience-title">受训经历</text>
         <view class="experience-content">

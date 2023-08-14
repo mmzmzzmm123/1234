@@ -19,6 +19,8 @@ public interface IPsyConsultOrderService
 
     OrderDTO getOrderDetail(Long id);
 
+    OrderDTO getOrderDetailByNo(String orderNo);
+
     boolean checkNewByServe(Long orderId, Long serveId, Integer userId);
 
     PsyConsultOrderVO getOne(Long id);

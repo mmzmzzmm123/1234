@@ -83,6 +83,14 @@ public class PsyConsultOrderServiceImpl implements IPsyConsultOrderService
     }
 
     @Override
+    public OrderDTO getOrderDetailByNo(String orderNo) {
+        LambdaQueryWrapper<PsyConsultOrder> wp = new LambdaQueryWrapper<>();
+        wp.eq(PsyConsultOrder::getOrderNo, orderNo);
+        PsyConsultOrder order = psyConsultOrderMapper.selectOne(wp);
+        return getOrderDetail(order.getId());
+    }
+
+    @Override
     public boolean checkNewByServe(Long orderId, Long serveId, Integer userId) {
         Integer bound;
         if (orderId == null) {
@@ -330,7 +338,7 @@ public class PsyConsultOrderServiceImpl implements IPsyConsultOrderService
         // 新增服务
         psyConsultOrderServeService.add(serve, req.getId());
 
-        req.setConsultName(consult.getUserName());
+        req.setConsultName(consult.getNickName());
         req.setServeName(serve.getName());
         req.setDelFlag("0");
         req.setNum(serve.getNum());

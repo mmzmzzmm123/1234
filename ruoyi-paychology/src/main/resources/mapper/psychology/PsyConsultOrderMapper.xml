@@ -88,7 +88,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <select id="getOrderDetail" resultType="com.ruoyi.psychology.dto.OrderDTO">
         select a.id, a.order_no, a.consult_id, a.consult_name, a.serve_id, a.serve_name, a.user_id,a.remark,
                a.nick_name, a.amount, a.num, a.buy_num, a.del_flag, a.status, a.create_by, a.order_time,
-               a.create_time, a.update_by, a.update_time, b.avatar,a.pay, a.pay_time,a.pay_status,c.phone,
+               a.create_time, a.update_by, a.update_time, b.avatar,b.wx_card, a.pay, a.pay_time,a.pay_status,c.phone,
                CASE
                    WHEN a.STATUS = '0' THEN
                        '待付款'

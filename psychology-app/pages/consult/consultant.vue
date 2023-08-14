@@ -9,14 +9,14 @@
         <image :src="consultInfo.avatar" class="info-avatar-img"/>
         <view class="info-content">
           <view class="info-content-userName">
-            <text>{{ consultInfo.userName }}</text>
+            <text>{{ consultInfo.nickName }}</text>
             <view class="info-content-gps" v-if="consultInfo.province">
               <image src="/static/consult/gps.png" />
               <text v-if="consultInfo.province">{{ consultInfo.province + '-' + consultInfo.city }}</text>
             </view>
           </view>
           <view class="info-content-info">{{ consultInfo.info }}</view>
-          <view class="info-content-mode">{{ consultInfo.mode }}</view>
+<!--          <view class="info-content-mode">{{ consultInfo.mode }}</view>-->
         </view>
       </view>
 
@@ -423,6 +423,7 @@ export default {
   margin-top: 16upx;
 }
 .info-content-mode {
+  margin-top: 8upx;
   font-size: 24upx;
   font-weight: 400;
   color: #AAAAAA;

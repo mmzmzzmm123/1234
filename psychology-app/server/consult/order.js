@@ -25,6 +25,14 @@ export default {
       return [];
     }
   },
+  getOrderDetailByNo: async (id) => {
+    let res = await httprequest.get(`/app/consult/order/getOrderDetailByNo/` + id);
+    if (res.code == 200) {
+      return res.data;
+    } else {
+      return [];
+    }
+  },
   getOrderInfo: async (id) => {
     let res = await httprequest.get(`/app/consult/order/getOrderInfo/` + id);
     if (res.code == 200) {

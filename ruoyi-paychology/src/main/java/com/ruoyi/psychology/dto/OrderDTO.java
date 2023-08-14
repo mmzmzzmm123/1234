@@ -70,6 +70,7 @@ public class OrderDTO extends BaseValObj implements Serializable
     private String payStatusName;
 
     private String avatar;
+    private String wxCard;
     private String remark;
 
     /** 下次咨询时间 */

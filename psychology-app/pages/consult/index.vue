@@ -4,7 +4,7 @@
 <!--      <img class="icon" src="/static/icon/search.png" />-->
 <!--      <span class="txt">搜索</span>-->
       <view class="uni-input-wrapper">
-        <uni-easyinput prefixIcon="search" :styles="styles" :placeholderStyle="placeholderStyle" v-model="queryData.userName" @confirm="inputConfirm" placeholder="请输入咨询师名称">
+        <uni-easyinput :inputBorder="false" prefixIcon="search" :styles="styles" :placeholderStyle="placeholderStyle" v-model="queryData.userName" @confirm="inputConfirm" placeholder="请输入咨询师名称">
         </uni-easyinput>
       </view>
     </view>

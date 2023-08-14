@@ -63,7 +63,7 @@ export default {
   //display: flex;
 }
 .serve-name {
-  width: 398upx;
+  //width: 398upx;
   height: 37upx;
   font-size: 26upx;
   overflow-wrap: break-word;
