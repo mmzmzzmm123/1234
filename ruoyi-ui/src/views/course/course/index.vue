@@ -254,7 +254,7 @@
 
         <el-form-item label="课程图片">
 <!--          <image-upload v-model="form.url" sizeTip="宽750px 高422px" :limit="1" :extraData="extraData"/>-->
-          <my-cropper v-model="form.url" sizeTip="宽750px 高422px" :extraData="extraData" :width="350" :height="211"/>
+          <my-cropper v-model="form.url" sizeTip="宽750px 高394px" :extraData="extraData" :width="350" :height="197"/>
         </el-form-item>
 
         <el-form-item label="列表图片">
