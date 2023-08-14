@@ -161,7 +161,7 @@ page {
 
     .cover {
       width: 100%;
-      height: 422upx;
+      height: 394upx;
     }
 
     .title {

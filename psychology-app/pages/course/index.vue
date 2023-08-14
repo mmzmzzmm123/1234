@@ -302,26 +302,26 @@
 			min-height: 344upx;
 
 			.img-item-box {
-				width: 682upx;
+				//width: 682upx;
 				display: flex;
 				flex-direction: row;
 				flex-wrap: wrap;
 
 				.left-img {
-					width: 333upx;
+					width: 343upx;
 					height: 344upx;
 					margin-right: 16upx;
 				}
 
 				.right-img {
-					width: 333upx;
+					width: 343upx;
 					height: 164upx;
 					margin-bottom: 16upx;
 				}
 
 				.img {
-					width: 333upx;
-					height: 334upx;
+					width: 343upx;
+					height: 344upx;
 					margin-right: 16upx;
 					margin-bottom: 16upx;
 				}

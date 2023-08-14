@@ -362,12 +362,12 @@
     .banner-box {
       .banner-img {
         width: 100%;
-        height: 260upx;
+        height: 300upx;
         border-radius: 12upx;
       }
 
       uni-swiper {
-        height: 260upx;
+        height: 300upx;
       }
     }
 
