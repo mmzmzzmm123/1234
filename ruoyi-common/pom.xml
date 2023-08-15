@@ -116,8 +116,9 @@
 
         <!-- 解析客户端操作系统、浏览器等 -->
         <dependency>
-            <groupId>eu.bitwalker</groupId>
-            <artifactId>UserAgentUtils</artifactId>
+            <groupId>io.github.mngsk</groupId>
+            <artifactId>device-detector</artifactId>
+            <version>1.0.10</version>
         </dependency>
 
         <!-- servlet包 -->
