@@ -52,7 +52,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
                 )
              </if>
         </where>
-        order by IF(isnull(new_price),1,0), new_price asc, IF(isnull(price),1,0), price asc
+        order by IF(isnull(new_price),1,0), new_price asc, IF(isnull(price),1,0), price asc, id asc
     </select>
 
     <update id="tombstonedByIds">
