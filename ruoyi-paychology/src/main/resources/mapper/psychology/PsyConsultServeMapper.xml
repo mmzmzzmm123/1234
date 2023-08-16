@@ -12,7 +12,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </update>
 
     <select id="getServeRef" resultType="com.ruoyi.psychology.vo.PsyConsultServeVO">
-        select a.serve_id,a.consult_id, b.nick_name, b.user_name, a.num,a.del_flag,a.status from psy_consult_serve a inner join psy_consult b on a.consult_id = b.id
+        select a.serve_id,a.consult_id, b.nick_name, b.user_name,
+        (SELECT count(id) FROM psy_consult_order WHERE consult_id = a.consult_id and pay_status = '2') num
+        from psy_consult_serve a inner join psy_consult b on a.consult_id = b.id
         <where>
             <if test="consultId != null  and consultId != ''"> and a.consult_id = #{consultId}</if>
             <if test="serveId != null  and serveId != ''"> and a.serve_id = #{serveId}</if>

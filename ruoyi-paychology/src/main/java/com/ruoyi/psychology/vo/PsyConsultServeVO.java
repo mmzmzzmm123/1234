@@ -26,7 +26,4 @@ public class PsyConsultServeVO implements Serializable
 
     private String nickName;
     private String userName;
-
-    private String delFlag;
-    private String status;
 }

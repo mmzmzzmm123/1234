@@ -19,7 +19,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="province != null  and province != ''"> and province = #{province}</if>
             <choose>
                 <when test="nand != null and nand = '0'">
-                    <if test="buy != null and buy = '0'">
+                    <if test="buy != null and buy != '1'">
                         and (SELECT count(id) FROM psy_consult_work WHERE `live` != '[]' and consult_id = psy_consult.id and `day` = DATE_FORMAT(NOW(),'%Y-%m-%d')) <![CDATA[>]]> 0
                     </if>
                     and id in (
@@ -46,7 +46,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
                             GROUP BY a.consult_id
                             )
                         </if>
-                        <if test="buy != null  and buy = '0'">
+                        <if test="buy != null  and buy != '1'">
                             or (SELECT count(id) FROM psy_consult_work WHERE `live` != '[]' and consult_id = psy_consult.id and `day` = DATE_FORMAT(NOW(),'%Y-%m-%d')) <![CDATA[>]]> 0
                         </if>
                     )
