@@ -48,6 +48,16 @@ public class PsyConsultServeConfigController extends BaseController
         return getDataTable(list);
     }
 
+    /**
+     * 查询咨询服务配置列表
+     */
+    @GetMapping("/getList")
+    public AjaxResult getList(PsyConsultServeConfigReq req)
+    {
+        req.setStatus("0");
+        return AjaxResult.success(psyConsultServeConfigService.getList(req));
+    }
+
     @PreAuthorize("@ss.hasPermi('psychology:serveConfig:list')")
     @GetMapping("/getServeRef")
     public AjaxResult getServeRef(PsyConsultServe req) {

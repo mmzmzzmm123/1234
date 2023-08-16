@@ -39,17 +39,6 @@
       </el-col>
       <el-col :span="1.5">
         <el-button
-          type="danger"
-          plain
-          icon="el-icon-delete"
-          size="mini"
-          :disabled="multiple"
-          @click="handleDelete"
-          v-hasPermi="['psychology:class:remove']"
-        >删除</el-button>
-      </el-col>
-      <el-col :span="1.5">
-        <el-button
           type="warning"
           plain
           icon="el-icon-download"
@@ -62,7 +51,6 @@
     </el-row>
 
     <el-table v-loading="loading" :data="PsyClassList" @selection-change="handleSelectionChange">
-      <el-table-column type="selection" width="55" align="center" />
       <el-table-column label="名称" align="center" prop="name" />
       <el-table-column label="排序" align="center" prop="sort" />
       <el-table-column label="跳转url" align="center" prop="linkUrl" />
@@ -107,8 +95,8 @@
     />
 
     <!-- 添加或修改咨询类型对话框 -->
-    <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
-      <el-form ref="form" :model="form" :rules="rules" label-width="80px">
+    <el-dialog :title="title" :visible.sync="open" width="600px" append-to-body>
+      <el-form ref="form" :model="form" :rules="rules" label-width="90px">
         <el-form-item label="名称" prop="name">
           <el-input v-model="form.name" placeholder="请输入名称" />
         </el-form-item>
@@ -118,13 +106,52 @@
         <el-form-item label="图标路径" prop="url">
           <image-upload v-model="form.url" :extraData="{}"/>
         </el-form-item>
-        <el-form-item label="跳转url" prop="linkUrl">
+        <el-form-item label="类型" prop="type">
+          <el-radio-group v-model="form.type">
+            <el-radio label="0">跳转URL</el-radio>
+            <el-radio label="1">快捷筛选</el-radio>
+          </el-radio-group>
+        </el-form-item>
+        <el-form-item label="跳转url" prop="linkUrl" v-if="form.type === '0'">
           <el-input v-model="form.linkUrl" type="textarea" placeholder="跳转url" />
         </el-form-item>
+        <template v-if="form.type === '1'">
+          <el-form-item label="满足条件" prop="nand">
+            <el-radio-group v-model="form.nand">
+              <el-radio label="0">必须满足所有被选中的条件</el-radio>
+              <el-radio label="1">满足任意一个被选中的条件</el-radio>
+            </el-radio-group>
+          </el-form-item>
+
+          <el-form-item label="服务条件" prop="serve">
+            <el-checkbox true-label="0" false-label="1" v-model="form.serve">指定服务</el-checkbox>
+            <el-select style="width: 240px;margin-left: 10px" v-model="form.serveId" placeholder="请选择服务" clearable>
+              <el-option
+                v-for="item in serves"
+                :key="item.id"
+                :label="item.name"
+                :value="item.id"
+              />
+            </el-select>
+          </el-form-item>
+
+          <el-form-item label="价格条件" prop="price">
+            <el-checkbox true-label="0" false-label="1" v-model="form.price">服务价格区间</el-checkbox>
+            <el-input-number style="margin-left: 10px" size="mini" v-model="form.lowPrice" :min="0"/>
+            <span style="margin: 0 10px">-</span>
+            <el-input-number size="mini" v-model="form.highPrice" :min="0"/>
+          </el-form-item>
+
+          <el-form-item label="咨询师条件" prop="buy">
+            <el-checkbox true-label="0" false-label="1" v-model="form.buy">当日可约</el-checkbox>
+          </el-form-item>
+        </template>
+
         <el-form-item label="启用" prop="status">
           <el-switch v-model="form.status" active-value="0" inactive-value="1"/>
         </el-form-item>
       </el-form>
+
       <div slot="footer" class="dialog-footer">
         <el-button type="primary" @click="submitForm">确 定</el-button>
         <el-button @click="cancel">取 消</el-button>
@@ -135,6 +162,7 @@
 
 <script>
 import { listPsyClass, getPsyClass, delPsyClass, addPsyClass, updatePsyClass } from "@/api/psychology/psyClass";
+import { getList } from "@/api/psychology/serveConfig";
 
 export default {
   name: "PsyClass",
@@ -153,6 +181,7 @@ export default {
       // 总条数
       total: 0,
       // 咨询类型表格数据
+      serves: [],
       PsyClassList: [],
       // 弹出层标题
       title: "",
@@ -171,13 +200,36 @@ export default {
       form: {},
       // 表单校验
       rules: {
+        name: [
+          { required: true, message: "名称不能为空", trigger: "blur" }
+        ],
+        url: [
+          { required: true, message: "图标不能为空", trigger: "change" }
+        ],
+        type: [
+          { required: true, message: "类型不能为空", trigger: "change" }
+        ],
+        linkUrl: [
+          { required: true, message: "URL不能为空", trigger: "blur" }
+        ],
+        status: [
+          { required: true, message: "下班时间不能为空", trigger: "change" }
+        ]
       }
     };
   },
   created() {
+    this.getServes();
     this.getList();
   },
   methods: {
+    getServes() {
+      getList({}).then(response => {
+        if (response && response.code === 200) {
+          this.serves = response.data
+        }
+      })
+    },
     /** 查询咨询类型列表 */
     getList() {
       this.loading = true;
@@ -205,7 +257,15 @@ export default {
         createBy: null,
         createTime: null,
         updateBy: null,
-        updateTime: null
+        updateTime: null,
+        type: "0",
+        nand: "1",
+        serveId: null,
+        lowPrice: null,
+        highPrice: null,
+        buy: "1",
+        price: "1",
+        serve: "1"
       };
       this.resetForm("form");
     },
@@ -229,7 +289,7 @@ export default {
     handleAdd() {
       this.reset();
       this.open = true;
-      this.title = "添加咨询类型";
+      this.title = "添加首页tab";
     },
     /** 修改按钮操作 */
     handleUpdate(row) {
@@ -238,7 +298,7 @@ export default {
       getPsyClass(id).then(response => {
         this.form = response.data;
         this.open = true;
-        this.title = "修改咨询类型";
+        this.title = "修改首页tab";
       });
     },
     /** 提交按钮 */
@@ -264,7 +324,7 @@ export default {
     /** 删除按钮操作 */
     handleDelete(row) {
       const ids = row.id || this.ids;
-      this.$modal.confirm('是否确认删除咨询类型编号为"' + ids + '"的数据项？').then(function() {
+      this.$modal.confirm('是否确认删除名称为"' + row.name + '"的数据项？').then(function() {
         return delPsyClass(ids);
       }).then(() => {
         this.getList();

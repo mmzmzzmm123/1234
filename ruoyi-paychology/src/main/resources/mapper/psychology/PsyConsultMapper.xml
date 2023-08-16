@@ -17,28 +17,65 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="sex != null  and sex != ''"> and sex = #{sex}</if>
             <if test="city != null  and city != ''"> and city = #{city}</if>
             <if test="province != null  and province != ''"> and province = #{province}</if>
-            <if test="(serve != null  and serve != '') or (lowPrice != null and highPrice != null)">
-                and id in (
+            <choose>
+                <when test="nand != null and nand = '0'">
+                    <if test="buy != null and buy = '0'">
+                        and (SELECT count(id) FROM psy_consult_work WHERE `live` != '[]' and consult_id = psy_consult.id and `day` = DATE_FORMAT(NOW(),'%Y-%m-%d')) <![CDATA[>]]> 0
+                    </if>
+                    and id in (
                     SELECT a.consult_id FROM psy_consult_serve a INNER JOIN psy_consult_serve_config b on a.serve_id = b.id WHERE a.consult_id = psy_consult.id
-                    <if test="serve != null  and serve != ''"> and b.`mode` = #{serve}</if>
+                    <if test="serveId != null  and serveId != ''"> and b.id = #{serveId}</if>
                     <if test="lowPrice != null and highPrice != null">
                         and b.price <![CDATA[>=]]> #{lowPrice} and b.price <![CDATA[<=]]> #{highPrice}
                     </if>
                     GROUP BY a.consult_id
-                )
-             </if>
-            <if test="(type != null  and type != '') or (days != null and days.size() > 0)">
+                    )
+                </when>
+                <when test="nand != null and nand = '1'">
+                    and (1=1
+                        <if test="(serveId != null  and serveId != '') or lowPrice != null or highPrice != null">
+                            or id in (
+                            SELECT a.consult_id FROM psy_consult_serve a INNER JOIN psy_consult_serve_config b on a.serve_id = b.id WHERE a.consult_id = psy_consult.id
+                            <if test="serveId != null  and serveId != ''"> or b.id = #{serveId}</if>
+                            <if test="lowPrice != null and lowPrice > 0">
+                                or b.price <![CDATA[>=]]> #{lowPrice}
+                            </if>
+                            <if test="highPrice != null and highPrice > 0">
+                                or b.price <![CDATA[<=]]> #{highPrice}
+                            </if>
+                            GROUP BY a.consult_id
+                            )
+                        </if>
+                        <if test="buy != null  and buy = '0'">
+                            or (SELECT count(id) FROM psy_consult_work WHERE `live` != '[]' and consult_id = psy_consult.id and `day` = DATE_FORMAT(NOW(),'%Y-%m-%d')) <![CDATA[>]]> 0
+                        </if>
+                    )
+                </when>
+                <otherwise>
+                    <if test="(serve != null  and serve != '') or (lowPrice != null and highPrice != null)">
+                        and id in (
+                        SELECT a.consult_id FROM psy_consult_serve a INNER JOIN psy_consult_serve_config b on a.serve_id = b.id WHERE a.consult_id = psy_consult.id
+                        <if test="serve != null  and serve != ''"> and b.`mode` = #{serve}</if>
+                        <if test="lowPrice != null and highPrice != null">
+                            and b.price <![CDATA[>=]]> #{lowPrice} and b.price <![CDATA[<=]]> #{highPrice}
+                        </if>
+                        GROUP BY a.consult_id
+                        )
+                    </if>
+                </otherwise>
+            </choose>
+            <if test="(time != null  and time != '') or (days != null and days.size() > 0)">
                 and id in (
                     SELECT consult_id FROM psy_consult_work WHERE `status` = 0 and consult_id = psy_consult.id
                     <choose>
-                        <when test="type != null and type == '上午'">
-                            and `time_start` =<![CDATA[>=]]> '6:00' and `time_end` <![CDATA[<=]]> '12:00'
+                        <when test="time != null and time = '上午'">
+                            and `time_start` <![CDATA[>=]]> '06:00' and `time_end` <![CDATA[<=]]> '12:00'
                         </when>
-                        <when test="type != null and type == '下午'">
-                            and `time_start` <![CDATA[>=]]> '12:00' and `time_end` <![CDATA[<=]]> '6:00'
+                        <when test="time != null and time = '下午'">
+                            and `time_start` <![CDATA[>=]]> '12:00' and `time_end` <![CDATA[<=]]> '18:00'
                         </when>
-                        <when test="type != null and type == '晚上'">
-                            and `time_start` <![CDATA[>=]]> '6:00' and `time_end` <![CDATA[<=]]> '24:00'
+                        <when test="time != null and time = '晚上'">
+                            and `time_start` <![CDATA[>=]]> '18:00' and `time_end` <![CDATA[<=]]> '24:00'
                         </when>
                         <otherwise/>
                     </choose>

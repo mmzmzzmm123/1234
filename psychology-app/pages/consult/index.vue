@@ -11,7 +11,7 @@
     <view class="banner-box index-margin">
       <swiper class="ad-swiper" indicator-dots circular indicator-color="rgb(255, 255, 255, .5)"
         indicator-active-color="#FFFFFF">
-        <swiper-item v-for="(item, index) in bannerList" :key="index">
+        <swiper-item v-for="(item, index) in bannerList" :key="index" @tap="toClass(item)">
           <image class="banner-img" :src="item.url"/>
         </swiper-item>
       </swiper>
@@ -83,9 +83,13 @@
           serve: null,
           type: null,
           city: null,
+          time: null,
           province: null,
           days: [],
-          way: []
+          way: [],
+          nand: null,
+          serveId: null,
+          buy: null
         },
         bannerList: [],
         classList: [],
@@ -159,6 +163,10 @@
         this.queryData.lowPrice = null
         this.queryData.highPrice = null
         this.queryData.serve = null
+        this.queryData.time = null
+        this.queryData.nand = null
+        this.queryData.serveId = null
+        this.queryData.buy = null
         this.queryData.days = []
         this.queryData.way = []
       },
@@ -216,14 +224,20 @@
         });
       },
       toClass(item) {
+        if (item.type === '1' || item.cat === '1') {
+          this.resetQuery()
+          this.queryData.buy = item.buy
+          this.queryData.nand = item.nand
+
+          if (item.serve && item.serve === '0') {
+            this.queryData.serveId = item.serveId
+          }
+          return this.submit()
+        }
+
         // 判断是否已经登录
         if (!utils.checkLogin()) {
           return this.openLoginConfirm()
-        }
-        if (item.name === '低价咨询') {
-          this.filterParams.price = '200元以下'
-          this.filterParams.type = 2
-          return this.submit()
         }
         if (item.linkUrl) {
           uni.navigateTo({

@@ -52,4 +52,15 @@ public class PsyConsultReq extends BaseValObj implements Serializable
     /** 可选时段 */
     private String type;
 
+    private String time;
+
+    /** 服务 */
+    private Long serveId;
+
+    /** 今日可约 */
+    private String buy;
+
+    /** 0-and 1-or */
+    private String nand;
+
 }

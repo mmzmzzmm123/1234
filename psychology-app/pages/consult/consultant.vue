@@ -159,7 +159,7 @@ export default {
   created() {
   },
   async mounted() {
-    // this.userInfo = utils.getUserInfo()
+    this.userInfo = utils.getUserInfo()
     // if (!utils.checkLogin()) {
     //   return this.openLoginConfirm()
     // }
@@ -287,8 +287,11 @@ export default {
       }
       // 是否未下单用户校验
       console.log(item)
+      console.log(data)
       if (item.bound === 1) {
         const list = await orderServer.getOrderList(data)
+        console.log(list)
+        console.log(2222)
         if (list && list.length > 0) {
           return uni.showToast({
             icon: 'none',

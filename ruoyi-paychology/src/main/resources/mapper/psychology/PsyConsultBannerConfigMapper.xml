@@ -22,10 +22,18 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="createTime"    column="create_time"    />
         <result property="updateBy"    column="update_by"    />
         <result property="updateTime"    column="update_time"    />
+        <result property="cat"    column="cat"    />
+        <result property="nand"    column="nand"    />
+        <result property="serve"    column="serve"    />
+        <result property="serveId"    column="serve_id"    />
+        <result property="price"    column="price"    />
+        <result property="buy"    column="buy"    />
+        <result property="lowPrice"    column="low_price"    />
+        <result property="highPrice"    column="high_price"    />
     </resultMap>
 
     <sql id="selectPsyConsultBannerConfigVo">
-        select id, name, url, link_url, type, del_flag, status, create_by, create_time, update_by, update_time from psy_consult_banner_config
+        select id, name, url, link_url, type, cat, nand, serve, serve_id, price, buy, low_price, high_price, del_flag, status, create_by, create_time, update_by, update_time from psy_consult_banner_config
     </sql>
 
     <select id="getList" resultType="com.ruoyi.psychology.domain.PsyConsultBannerConfig">

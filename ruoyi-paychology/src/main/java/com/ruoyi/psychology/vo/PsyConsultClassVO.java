@@ -7,6 +7,7 @@ import com.ruoyi.common.core.domain.BaseValObj;
 import lombok.*;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 
 /**
  * 咨询类型对象 psy_consult_class
@@ -37,5 +38,29 @@ public class PsyConsultClassVO extends BaseValObj implements Serializable
 
     /** 状态（0正常 1停用） */
     private String status;
+
+    /** 0-跳转 1-筛选 */
+    private String type;
+
+    /** 满足条件 0-and 1-or */
+    private String nand;
+
+    /** 服务（0开启 1禁用） */
+    private String serve;
+
+    /** 服务 */
+    private Long serveId;
+
+    /** 价格 */
+    private String price;
+
+    /** 当日可约（0可约 1不可约） */
+    private String buy;
+
+    /** 价格 */
+    private BigDecimal lowPrice;
+
+    /** 价格 */
+    private BigDecimal highPrice;
 
 }

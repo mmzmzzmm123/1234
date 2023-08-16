@@ -49,17 +49,6 @@
       </el-col>
       <el-col :span="1.5">
         <el-button
-          type="danger"
-          plain
-          icon="el-icon-delete"
-          size="mini"
-          :disabled="multiple"
-          @click="handleDelete"
-          v-hasPermi="['psychology:banner:remove']"
-        >删除</el-button>
-      </el-col>
-      <el-col :span="1.5">
-        <el-button
           type="warning"
           plain
           icon="el-icon-download"
@@ -72,7 +61,6 @@
     </el-row>
 
     <el-table v-loading="loading" :data="bannerList" @selection-change="handleSelectionChange">
-      <el-table-column type="selection" width="55" align="center" />
       <el-table-column label="名称" align="center" prop="name" />
       <el-table-column label="图片地址" align="center" prop="url">
         <template slot-scope="scope">
@@ -121,17 +109,14 @@
     />
 
     <!-- 添加或修改咨询banner配置对话框 -->
-    <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
-      <el-form ref="form" :model="form" :rules="rules" label-width="80px">
+    <el-dialog :title="title" :visible.sync="open" width="600px" append-to-body>
+      <el-form ref="form" :model="form" :rules="rules" label-width="90px">
         <el-form-item label="名称" prop="name">
           <el-input v-model="form.name" placeholder="请输入名称" />
         </el-form-item>
         <el-form-item label="图片地址" prop="url">
           <image-upload v-model="form.url" sizeTip="宽702px 高300px" :extraData="{}"/>
 <!--          <my-cropper v-model="form.url" sizeTip="宽702px 高300px" :extraData="{}" :width="350" :height="150"/>-->
-        </el-form-item>
-        <el-form-item label="跳转url" prop="linkUrl">
-          <el-input v-model="form.linkUrl" type="textarea" placeholder="跳转url" />
         </el-form-item>
         <el-form-item label="分类" prop="bannerType">
           <el-select v-model="form.type" placeholder="请选择banner分类">
@@ -143,6 +128,47 @@
             ></el-option>
           </el-select>
         </el-form-item>
+        <el-form-item label="类型" prop="cat">
+          <el-radio-group v-model="form.cat">
+            <el-radio label="0">跳转URL</el-radio>
+            <el-radio label="1">快捷筛选</el-radio>
+          </el-radio-group>
+        </el-form-item>
+        <el-form-item label="跳转url" prop="linkUrl" v-if="form.cat === '0'">
+          <el-input v-model="form.linkUrl" type="textarea" placeholder="跳转url" />
+        </el-form-item>
+        <template v-if="form.cat === '1'">
+          <el-form-item label="满足条件" prop="nand">
+            <el-radio-group v-model="form.nand">
+              <el-radio label="0">必须满足所有被选中的条件</el-radio>
+              <el-radio label="1">满足任意一个被选中的条件</el-radio>
+            </el-radio-group>
+          </el-form-item>
+
+          <el-form-item label="服务条件" prop="serve">
+            <el-checkbox true-label="0" false-label="1" v-model="form.serve">指定服务</el-checkbox>
+            <el-select style="width: 240px;margin-left: 10px" v-model="form.serveId" placeholder="请选择服务" clearable>
+              <el-option
+                v-for="item in serves"
+                :key="item.id"
+                :label="item.name"
+                :value="item.id"
+              />
+            </el-select>
+          </el-form-item>
+
+          <el-form-item label="价格条件" prop="price">
+            <el-checkbox true-label="0" false-label="1" v-model="form.price">服务价格区间</el-checkbox>
+            <el-input-number style="margin-left: 10px" size="mini" v-model="form.lowPrice" :min="0"/>
+            <span style="margin: 0 10px">-</span>
+            <el-input-number size="mini" v-model="form.highPrice" :min="0"/>
+          </el-form-item>
+
+          <el-form-item label="咨询师条件" prop="buy">
+            <el-checkbox true-label="0" false-label="1" v-model="form.buy">当日可约</el-checkbox>
+          </el-form-item>
+        </template>
+
         <el-form-item label="启用" prop="status">
           <el-switch v-model="form.status" active-value="0" inactive-value="1"/>
         </el-form-item>
@@ -157,6 +183,7 @@
 
 <script>
 import { listPsyBannerConfig, getPsyBannerConfig, delPsyBannerConfig, addPsyBannerConfig, updatePsyBannerConfig } from "@/api/psychology/bannerConfig";
+import { getList } from "@/api/psychology/serveConfig";
 
 export default {
   name: "PsyBannerConfig",
@@ -175,6 +202,8 @@ export default {
       showSearch: true,
       // 总条数
       total: 0,
+      // 咨询类型表格数据
+      serves: [],
       // 咨询banner配置表格数据
       bannerList: [],
       // 弹出层标题
@@ -195,20 +224,37 @@ export default {
       form: {},
       // 表单校验
       rules: {
-        // url: [
-        //   { required: true, message: "banner图片地址不能为空", trigger: "blur" }
-        // ],
-        // type: [
-        //   { required: true, message: "banner分类不能为空", trigger: "change" }
-        // ],
+        name: [
+          { required: true, message: "名称不能为空", trigger: "blur" }
+        ],
+        url: [
+          { required: true, message: "图片不能为空", trigger: "change" }
+        ],
+        type: [
+          { required: true, message: "类型不能为空", trigger: "change" }
+        ],
+        linkUrl: [
+          { required: true, message: "URL不能为空", trigger: "blur" }
+        ],
+        status: [
+          { required: true, message: "下班时间不能为空", trigger: "change" }
+        ]
       }
     };
   },
   created() {
+    this.getServes();
     this.getList();
     console.log(this.dict)
   },
   methods: {
+    getServes() {
+      getList({}).then(response => {
+        if (response && response.code === 200) {
+          this.serves = response.data
+        }
+      })
+    },
     /** 查询咨询banner配置列表 */
     getList() {
       this.loading = true;
@@ -237,7 +283,15 @@ export default {
         createBy: null,
         createTime: null,
         updateBy: null,
-        updateTime: null
+        updateTime: null,
+        cat: "0",
+        nand: "1",
+        serveId: null,
+        lowPrice: null,
+        highPrice: null,
+        buy: "1",
+        price: "1",
+        serve: "1"
       };
       this.resetForm("form");
     },

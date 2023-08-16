@@ -9,6 +9,15 @@ export function listServeConfig(query) {
   })
 }
 
+// 查询咨询服务配置列表
+export function getList(query) {
+  return request({
+    url: '/psychology/serveConfig/getList',
+    method: 'get',
+    params: query
+  })
+}
+
 // 查询咨询服务配置详细
 export function getServeConfig(id) {
   return request({
