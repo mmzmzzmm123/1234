@@ -101,6 +101,9 @@ public class PsyConsultServiceImpl implements IPsyConsultService {
 
     @Override
     public List<PsyConsult> search(PsyConsultReq req) {
+        if ("1".equals(req.getBuy())) {
+            req.setBuy(null);
+        }
         List<PsyConsult> list = psyConsultMapper.search(req);
         // 处理way
         if (!CollectionUtils.isEmpty(req.getWay()) && !CollectionUtils.isEmpty(list)) {

@@ -232,6 +232,11 @@
           if (item.serve && item.serve === '0') {
             this.queryData.serveId = item.serveId
           }
+          if (item.price && item.price === '0') {
+            this.queryData.lowPrice = item.lowPrice
+            this.queryData.highPrice = item.highPrice
+          }
+
           return this.submit()
         }
 

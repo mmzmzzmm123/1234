@@ -18,8 +18,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="city != null  and city != ''"> and city = #{city}</if>
             <if test="province != null  and province != ''"> and province = #{province}</if>
             <choose>
-                <when test="nand != null and nand = '0'">
-                    <if test="buy != null and buy != '1'">
+                <when test="nand != null and nand lt 1">
+                    <if test="buy != null">
                         and (SELECT count(id) FROM psy_consult_work WHERE `live` != '[]' and consult_id = psy_consult.id and `day` = DATE_FORMAT(NOW(),'%Y-%m-%d')) <![CDATA[>]]> 0
                     </if>
                     and id in (
@@ -31,23 +31,28 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
                     GROUP BY a.consult_id
                     )
                 </when>
-                <when test="nand != null and nand = '1'">
-                    and (1=1
+                <when test="nand != null and nand gt 0">
+                    and (
                         <if test="(serveId != null  and serveId != '') or lowPrice != null or highPrice != null">
-                            or id in (
-                            SELECT a.consult_id FROM psy_consult_serve a INNER JOIN psy_consult_serve_config b on a.serve_id = b.id WHERE a.consult_id = psy_consult.id
-                            <if test="serveId != null  and serveId != ''"> or b.id = #{serveId}</if>
-                            <if test="lowPrice != null and lowPrice > 0">
-                                or b.price <![CDATA[>=]]> #{lowPrice}
-                            </if>
-                            <if test="highPrice != null and highPrice > 0">
-                                or b.price <![CDATA[<=]]> #{highPrice}
-                            </if>
+                            id in (
+                            SELECT a.consult_id FROM psy_consult_serve a INNER JOIN psy_consult_serve_config b on a.serve_id = b.id and a.consult_id = psy_consult.id
+                            <where>
+                                <if test="serveId != null  and serveId != ''"> or b.id = #{serveId}</if>
+                                <if test="lowPrice != null and lowPrice > 0">
+                                    or b.price <![CDATA[>=]]> #{lowPrice}
+                                </if>
+                                <if test="highPrice != null and highPrice > 0">
+                                    or b.price <![CDATA[<=]]> #{highPrice}
+                                </if>
+                            </where>
                             GROUP BY a.consult_id
                             )
+                            <if test="buy != null">
+                                or
+                            </if>
                         </if>
-                        <if test="buy != null  and buy != '1'">
-                            or (SELECT count(id) FROM psy_consult_work WHERE `live` != '[]' and consult_id = psy_consult.id and `day` = DATE_FORMAT(NOW(),'%Y-%m-%d')) <![CDATA[>]]> 0
+                        <if test="buy != null">
+                            (SELECT count(id) FROM psy_consult_work WHERE `live` != '[]' and consult_id = psy_consult.id and `day` = DATE_FORMAT(NOW(),'%Y-%m-%d')) <![CDATA[>]]> 0
                         </if>
                     )
                 </when>

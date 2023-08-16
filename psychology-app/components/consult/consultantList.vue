@@ -17,7 +17,7 @@
                 <image src="/static/consult/gps-black.png" />
                 <text>{{ consultant.province + '-' + consultant.city }}</text>
               </view>
-              <view @tap="toConsultant(consultant)" class="introduce txt-overflow txt-overflow-line2">{{ consultant.info }}</view>
+              <view @tap="toConsultant(consultant)" class="introduce txt-overflow txt-overflow-line1">{{ consultant.info }}</view>
               <view @tap="toConsultant(consultant)" class="title">
                 <view v-for="tag in consultant.tabs.split(',')" class="tag-list">
                   <view class="tag-item">{{ tag }}</view>
