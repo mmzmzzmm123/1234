@@ -2,9 +2,6 @@ package com.ruoyi.app.controller.psychology;
 
 import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.domain.AjaxResult;
-import com.ruoyi.psychology.constant.ConsultConstant;
-import com.ruoyi.psychology.dto.OrderDTO;
-import com.ruoyi.psychology.dto.OrderListDTO;
 import com.ruoyi.psychology.service.IPsyConsultOrderService;
 import com.ruoyi.psychology.service.IPsyConsultServeService;
 import com.ruoyi.psychology.service.IPsyConsultService;
@@ -12,8 +9,6 @@ import com.ruoyi.psychology.vo.PsyConsultOrderVO;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
-import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * 心理咨询师Controller
@@ -76,9 +71,8 @@ public class AppPsyConsultOrderController extends BaseController
     @GetMapping(value = "/cancel/{id}")
     public AjaxResult cancel(@PathVariable("id") Long id)
     {
-        PsyConsultOrderVO one = psyConsultOrderService.getOne(id);
-        one.setStatus(ConsultConstant.CONSULT_ORDER_STATUE_CANCELED);
-        return AjaxResult.success(psyConsultOrderService.update(one));
+        psyConsultOrderService.cancel(psyConsultOrderService.getOrderById(id));
+        return AjaxResult.success();
     }
 
     /**

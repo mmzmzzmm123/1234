@@ -214,7 +214,7 @@ export default {
             module: 'consult',
             workId: this.workId,
             time: this.time,
-            consultId: this.consultId,
+            consultId: this.order.consultId,
             orderId: this.order.id
           }
       )

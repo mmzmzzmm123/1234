@@ -36,6 +36,9 @@ public class PsyConsultWorkVO extends BaseValObj implements Serializable
     /** 咨询时段 */
     private String timeEnd;
 
+    /** 咨询时段 凌晨,上午,下午,晚上 */
+    private String times;
+
     /** 状态（0正常 1休息） */
     private String status;
 

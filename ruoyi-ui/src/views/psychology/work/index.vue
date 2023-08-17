@@ -52,7 +52,7 @@
               v-loading="loading"
               :data="workList">
 <!--      <el-table-column label="咨询师" align="center" prop="consultName" />-->
-      <el-table-column v-for="(th, key) in headerList" :key="key" :fixed="th.prop === 'nickName'" :prop="th.prop" :label="th.label" :align="th.align" :width="th.prop === 'nickName' ? '120px' : '60px'">
+      <el-table-column v-for="(th, key) in headerList" :key="key" :fixed="th.prop === 'nickName'" :prop="th.prop" :label="th.label" :align="th.align" :width="th.prop === 'nickName' ? '120px' : '90px'">
         <template slot-scope="scope">
           <div v-if="th.prop === 'nickName'">
             <el-button
@@ -66,12 +66,21 @@
             未排班
           </div>
           <div v-else>
-            <span v-if="noItems(scope.row, th.prop)">{{ scope.row[th.prop] }}</span>
+            <span v-if="noItems(scope.row, th.prop)">
+              <el-tooltip placement="top" effect="light" :disabled="getRows(scope.row[th.prop]).length <= 3">
+                <div slot="content">
+                  <template v-for="i in getRows(scope.row[th.prop])">
+                    {{ i }}<br/>
+                  </template>
+                </div>
+                <span>{{ getRow(scope.row[th.prop]) }}</span>
+              </el-tooltip>
+            </span>
             <el-popover v-else
                         placement="top-start"
                         title="预约咨询用户"
                         width="200"
-                        trigger="hover">
+                        trigger="click">
               <el-table :data="getItems(scope.row, th.prop)" size="mini" border>
                 <el-table-column width="100" property="day" label="时间">
                   <template slot-scope="scope2">
@@ -81,7 +90,16 @@
                 <el-table-column width="100" property="createBy" label="用户"></el-table-column>
               </el-table>
               <el-badge slot="reference" :value="getItems(scope.row, th.prop).length"  class="item">
-                <span>{{ scope.row[th.prop] }}</span>
+                <span>
+                  <el-tooltip placement="top" effect="light" :disabled="getRows(scope.row[th.prop]).length <= 3">
+                    <div slot="content">
+                      <template v-for="i in getRows(scope.row[th.prop])">
+                        {{ i }}<br/>
+                      </template>
+                    </div>
+                    <span>{{ getRow(scope.row[th.prop]) }}</span>
+                  </el-tooltip>
+                </span>
               </el-badge>
             </el-popover>
           </div>
@@ -90,7 +108,7 @@
     </el-table>
 
     <!-- 添加或修改咨询服务对话框 -->
-    <el-dialog title="排班设置" :visible.sync="open" width="600px" append-to-body>
+    <el-dialog title="排班设置" :visible.sync="open" width="800px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="120px">
         <el-form-item label="咨询师姓名" prop="ids">
           <el-select v-model="form.ids" :disabled="edit" multiple placeholder="请选择咨询师" clearable>
@@ -115,34 +133,44 @@
             end-placeholder="结束日期"/>
         </el-form-item>
         <el-form-item label="状态" prop="status">
-          <el-radio-group v-model="form.status">
+          <el-radio-group v-model="form.status" @input="statusChange">
             <el-radio v-for="item in wList" :label="item.value">{{ item.label }}</el-radio>
           </el-radio-group>
         </el-form-item>
-        <el-form-item label="上班时间" prop="timeStart" v-if="form.status === '0'">
-          <el-time-select
-            placeholder="上班时间"
-            v-model="form.timeStart"
-            :picker-options="{
-              start: '06:00',
-              step: '01:00',
-              end: '24:00',
-              maxTime: form.timeEnd ? form.timeEnd : null
-            }">
-          </el-time-select>
+        <el-form-item label="时间段" prop="times">
+          <el-checkbox-group v-model="form.times">
+            <el-checkbox style="width: 130px;margin: 5px" border v-for="t in time1List" :label="t.val" :key="t.val" @change="timeListChange($event, t)">{{ t.val }}</el-checkbox>
+          </el-checkbox-group>
         </el-form-item>
-        <el-form-item label="下班时间" prop="timeEnd" v-if="form.status === '0'">
-          <el-time-select
-            placeholder="上班时间"
-            v-model="form.timeEnd"
-            :picker-options="{
-              start: '06:00',
-              step: '01:00',
-              end: '24:00',
-              minTime: form.timeStart
-            }">
-          </el-time-select>
+        <el-form-item label="时间" prop="live">
+          <el-checkbox-group v-model="form.live" @change="timesChange">
+            <el-checkbox style="width: 130px;margin: 5px" border v-for="t in timeList" :label="t.val" :key="t.val">{{ t.label }}</el-checkbox>
+          </el-checkbox-group>
         </el-form-item>
+<!--        <el-form-item label="上班时间" prop="timeStart" v-if="form.status === '0'">-->
+<!--          <el-time-select-->
+<!--            placeholder="上班时间"-->
+<!--            v-model="form.timeStart"-->
+<!--            :picker-options="{-->
+<!--              start: '06:00',-->
+<!--              step: '01:00',-->
+<!--              end: '24:00',-->
+<!--              maxTime: form.timeEnd ? form.timeEnd : null-->
+<!--            }">-->
+<!--          </el-time-select>-->
+<!--        </el-form-item>-->
+<!--        <el-form-item label="下班时间" prop="timeEnd" v-if="form.status === '0'">-->
+<!--          <el-time-select-->
+<!--            placeholder="上班时间"-->
+<!--            v-model="form.timeEnd"-->
+<!--            :picker-options="{-->
+<!--              start: '06:00',-->
+<!--              step: '01:00',-->
+<!--              end: '24:00',-->
+<!--              minTime: form.timeStart-->
+<!--            }">-->
+<!--          </el-time-select>-->
+<!--        </el-form-item>-->
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button type="primary" @click="submitForm">确 定</el-button>
@@ -153,10 +181,9 @@
 </template>
 
 <script>
-import { mapState } from "vuex";
-import { getServeAll } from "@/api/psychology/serve";
-import { getConsultAll } from "@/api/psychology/consult";
-import { listWork, getWorks, getWork, delWork, addWork, updateWork } from "@/api/psychology/work";
+import {mapState} from "vuex";
+import {getConsultAll} from "@/api/psychology/consult";
+import {addWork, delWork, getWorks, updateWork} from "@/api/psychology/work";
 
 export default {
   dicts: ['consult_time'],
@@ -178,13 +205,33 @@ export default {
       showSearch: true,
       // 总条数
       total: 0,
-      scrollLeft: 60,
+      scrollLeft: 90,
       wList: this.$constants.wList,
       consultList: [],
       serveList: [],
       // 咨询服务表格数据
       workList: [],
       headerList: [],
+      timeList: [],
+      time1List: [
+        {
+          val: '凌晨',
+          arr: [0,1,2,3,4,5]
+        },
+        {
+          val: '上午',
+          arr: [6,7,8,9,10,11]
+        },
+        {
+          val: '下午',
+          arr: [12,13,14,15,16,17]
+        },
+        {
+          val: '晚上',
+          arr: [18,19,20,21,22,23]
+        }
+      ],
+      // '凌晨','上午','下午','晚上'
       // 弹出层标题
       title: "",
       // 是否显示弹出层
@@ -200,6 +247,8 @@ export default {
       form: {
         ids: [],
         timeRange: [],
+        live: [],
+        times: [],
         status: '0',
         timeStart: null,
         startDay: null,
@@ -304,6 +353,15 @@ export default {
 
     },
     setTime() {
+      const arr =  []
+      for (let i = 0; i <= 23; i++) {
+        arr.push({
+          val: i,
+          label: i < 10 ? '0' + i + ':00~0' + i + ':50' : i + ':00~' + i + ':50'
+        })
+      }
+      this.timeList = arr
+
       const date = new Date()
       const year = date.getFullYear()
       const month = date.getMonth() + 1 < 10 ? '0' + (date.getMonth() + 1) : date.getMonth() + 1
@@ -317,6 +375,42 @@ export default {
       //   { text: '下个月', val: '3' }
       // ]
 
+    },
+    // 排班时间,时间段处理
+    statusChange(val) {
+      console.log(val)
+      if (val === '1') {
+        this.form.live = []
+        this.form.times = []
+      }
+    },
+    timeListChange(val, obj) {
+      if (val) {
+        obj.arr.forEach(a => {
+          this.form.live.push(a)
+        })
+      } else {
+        this.form.live = this.form.live.filter(a => !obj.arr.includes(a))
+      }
+      this.handleTimes()
+    },
+    timesChange() {
+      this.handleTimes()
+      this.form.times = []
+      this.time1List.forEach(a => {
+        if (this.arrHasOtherArr(this.form.live, a.arr)) {
+          this.form.times.push(a.val)
+        }
+      })
+    },
+    handleTimes() {
+      this.form.live = this.form.live.filter((item, index) => {
+        return this.form.live.indexOf(item, 0) === index;
+      }).sort((a,b) => parseInt(a) - parseInt(b))
+    },
+    arrHasOtherArr(arr, arr1) {
+      // return arr1.every(item => arr.includes(item))
+      return arr1.some(item => arr.includes(item))
     },
     /** 查询咨询师列表 */
     async getConsultList() {
@@ -337,6 +431,33 @@ export default {
     },
     getItems(row, th) {
       return row.items.filter(a => a.day && a.day === th)
+    },
+    getRow(val) {
+      if (val === '休息') {
+        return val
+      }
+      const arr = JSON.parse(val)
+      const list = []
+      for (let i = 0; i < 3; i++) {
+        list.push(arr[i] < 10 ? '0' + arr[i] + ':00~0' + arr[i] + ':50' : arr[i] + ':00~' + arr[i] + ':50')
+      }
+      if (arr.length > 3) {
+        list.push('...')
+      }
+
+      return list.join(' ')
+    },
+    getRows(val) {
+      if (val === '休息') {
+        return []
+      }
+      const arr = JSON.parse(val)
+      const list = []
+      for (let i = 0; i < arr.length; i++) {
+        list.push(arr[i] < 10 ? '0' + arr[i] + ':00~0' + arr[i] + ':50' : arr[i] + ':00~' + arr[i] + ':50')
+      }
+
+      return list
     },
     /** 查询咨询服务列表 */
     getList() {
@@ -367,6 +488,8 @@ export default {
     reset() {
       this.form = {
         ids: [],
+        live: [],
+        times: [],
         timeRange: [],
         status: '0',
         timeStart: null,
@@ -422,14 +545,22 @@ export default {
         if (valid) {
           this.form.startDay = this.form.timeRange[0]
           this.form.endDay = this.form.timeRange[1]
-          if (this.form.id != null) {
-            updateWork(this.form).then(response => {
+          const form = JSON.parse(JSON.stringify(this.form))
+
+          if (form.status === '0' && form.live.length === 0) {
+            return this.$modal.msgError("请选择时间");
+          }
+          form.live = JSON.stringify(form.live)
+          form.times = form.times.join(',')
+
+          if (form.id != null) {
+            updateWork(form).then(response => {
               this.$modal.msgSuccess("修改成功");
               this.open = false;
               this.getList();
             });
           } else {
-            addWork(this.form).then(response => {
+            addWork(form).then(response => {
               this.$modal.msgSuccess("新增成功");
               this.open = false;
               this.getList();
@@ -461,6 +592,10 @@ export default {
 ::v-deep {
   .el-table .cell {
     overflow: visible;
+    line-height: 14px;
+  }
+  .el-table .el-table__cell {
+    position: relative;
   }
 }
 </style>

@@ -71,10 +71,12 @@ public class PsyConsultWorkServiceImpl extends ServiceImpl<PsyConsultWorkMapper,
                     work.setWeek(NewDateUtil.getWeekOfDate(calendar));
                 }
 
-                work.setTimeStart(req.getTimeStart());
-                work.setTimeEnd(req.getTimeEnd());
-                work.setStatus(req.getStatus());
+//                work.setTimeStart(req.getTimeStart());
+//                work.setTimeEnd(req.getTimeEnd());
                 makeTime(work);
+                work.setLive(req.getLive());
+                work.setTimes(req.getTimes());
+                work.setStatus(req.getStatus());
                 list.add(work);
             });
         });
@@ -88,19 +90,21 @@ public class PsyConsultWorkServiceImpl extends ServiceImpl<PsyConsultWorkMapper,
         this.saveOrUpdateBatch(list);
     }
 
-    private void makeTime(PsyConsultWork req) {
-        List<Integer> num = new ArrayList<>();
-        if ("0".equals(req.getStatus())) {
-            int s = Integer.parseInt(req.getTimeStart().substring(0, 2));
-            int e = Integer.parseInt(req.getTimeEnd().substring(0, 2));
-            for (int i = s; i <= e; i++) {
-                num.add(i);
-            }
+    private void makeTime(PsyConsultWork work) {
+//        List<Integer> num = new ArrayList<>();
+//        if ("0".equals(req.getStatus())) {
+//            int s = Integer.parseInt(req.getTimeStart().substring(0, 2));
+//            int e = Integer.parseInt(req.getTimeEnd().substring(0, 2));
+//            for (int i = s; i <= e; i++) {
+//                num.add(i);
+//            }
+//        }
+//
+//        Collections.sort(num);
+//        req.setLive(JSONObject.toJSONString(num));
+        if (work.getId() == null) {// 保留历史记录
+            work.setUsed(JSONObject.toJSONString(new ArrayList<>()));
         }
-
-        Collections.sort(num);
-        req.setLive(JSONObject.toJSONString(num));
-        req.setUsed(JSONObject.toJSONString(new ArrayList<>()));
     }
 
     @Override
@@ -166,7 +170,8 @@ public class PsyConsultWorkServiceImpl extends ServiceImpl<PsyConsultWorkMapper,
             value.forEach(a -> {
                 String v = "未排班";
                 if ("0".equals(a.getStatus())) {
-                    v = StrUtil.format("{}-{}", a.getTimeStart(), a.getTimeEnd());
+//                    v = StrUtil.format("{}-{}", a.getTimeStart(), a.getTimeEnd());
+                    v = a.getLive();
                 } else if ("1".equals(a.getStatus())) {
                     v = "休息";
                 }
@@ -210,28 +215,32 @@ public class PsyConsultWorkServiceImpl extends ServiceImpl<PsyConsultWorkMapper,
         }
 
         List<Integer> lives = JSON.parseArray(work.getLive(), Integer.class);
-        return lives.contains(time);
+        List<Integer> used = JSON.parseArray(work.getUsed(), Integer.class);
+        return lives.contains(time) && !used.contains(time);
     }
 
+    /**
+     *
+     * @param id    排班id
+     * @param consultId 咨询师
+     * @param time  时间
+     * @param type  1-加库存 2-释放
+     * @return  排班
+     */
     @Override
     public PsyConsultWork handleWork(Long id, Long consultId, Integer time, int type) {
         List<PsyConsultWork> works = psyConsultWorkMapper.selectList(getWorkWrapper(id, consultId, time));
         PsyConsultWork work = works.get(0);
 
-        List<Integer> lives = JSON.parseArray(work.getLive(), Integer.class);
         List<Integer> uesd = JSON.parseArray(work.getUsed(), Integer.class);
 
         if (1 == type) {
-            lives.remove(time);
             uesd.add(time);
         } else {
-            lives.add(time);
             uesd.remove(time);
         }
 
-        Collections.sort(lives);
         Collections.sort(uesd);
-        work.setLive(JSONObject.toJSONString(lives));
         work.setUsed(JSONObject.toJSONString(uesd));
         psyConsultWorkMapper.updateById(work);
         return work;

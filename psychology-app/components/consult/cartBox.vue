@@ -21,7 +21,13 @@
             </view>
             <view v-if="a.child.length > 0" class="time-content-list">
               <view v-for="i in a.child">
-                <view class="time-item-tag" :class="{ selected: i.id === workId && i.time === time }" @tap="selectDay(i.id, a.day, i.time)">
+                <view class="time-item-full-tag" v-if="i.disable">
+                  <text class="time-item-full-tag-text">{{ i.s }}</text>
+                  <view class="time-item-full-tag-text"></view>
+                  <text class="time-item-full-tag-text">{{ i.e }}</text>
+                </view>
+
+                <view v-else class="time-item-tag" :class="{ selected: i.id === workId && i.time === time }" @tap="selectDay(i.id, a.day, i.time)">
                   <text class="time-item-tag-text">{{ i.s }}</text>
                   <view class="time-item-tag-block"></view>
                   <text class="time-item-tag-text2">{{ i.e }}</text>
@@ -71,8 +77,10 @@ export default {
         }
         this.works.filter(b => a.date === b.day && b.live !== '[]').forEach(c => {
           const live = JSON.parse(c.live)
+          const used = JSON.parse(c.used)
           live.filter(d => (a.date === today && d > curTime) || a.date !== today).forEach(it => {
             item.child.push({
+              disable: used.includes(it),
               flag: false,
               id: c.id,
               time: it,
@@ -136,8 +144,8 @@ export default {
   background-color: #FFFFFF;
   //padding-bottom: 138upx;
   max-height: 1000upx;
-  padding-bottom: calc(constant(safe-area-inset-bottom) + 50px); /* 兼容 iOS 设备 */
-  padding-bottom: calc(env(safe-area-inset-bottom) + 50px); /* 兼容 iPhone X 及以上设备 */
+  padding-bottom: calc(constant(safe-area-inset-bottom) + 80px); /* 兼容 iOS 设备 */
+  padding-bottom: calc(env(safe-area-inset-bottom) + 80px); /* 兼容 iPhone X 及以上设备 */
 
   .time-list {
     position: relative;

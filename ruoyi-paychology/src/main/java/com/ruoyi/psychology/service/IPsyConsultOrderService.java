@@ -23,6 +23,8 @@ public interface IPsyConsultOrderService
 
     boolean checkNewByServe(Long orderId, Long serveId, Integer userId);
 
+    PsyConsultOrder getOrderById(Long id);
+
     PsyConsultOrderVO getOne(Long id);
 
     String getOpenId(Long cId);

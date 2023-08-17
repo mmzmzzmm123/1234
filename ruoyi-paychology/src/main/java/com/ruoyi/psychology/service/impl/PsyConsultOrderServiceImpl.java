@@ -113,6 +113,11 @@ public class PsyConsultOrderServiceImpl implements IPsyConsultOrderService
     }
 
     @Override
+    public PsyConsultOrder getOrderById(Long id) {
+        return psyConsultOrderMapper.selectById(id);
+    }
+
+    @Override
     public PsyConsultOrderVO getOne(Long id) {
         return BeanUtil.toBean(psyConsultOrderMapper.selectById(id), PsyConsultOrderVO.class);
     }
