@@ -549,14 +549,13 @@ public class SysUserServiceImpl implements ISysUserService
     public AjaxResult checkPassword(Boolean constraint, String password, String oldPassword, String newPassword) {
         constraint = constraint ? constraint : false;
         //强制修改密码时不用判断旧密码
-        if (!constraint && !SecurityUtils.matchesPassword(oldPassword, newPassword)) {
+        if (!constraint && !SecurityUtils.matchesPassword(oldPassword, password)) {
 
             return AjaxResult.error("修改密码失败：旧密码错误");
         }
         if (SecurityUtils.matchesPassword(newPassword, password)) {
             return AjaxResult.error("新密码不能与旧密码相同");
         }
-
         //获取密码强度
         SysConfig sysConfig = configMapper.checkConfigKeyUnique("sys.user.pass.strength");
         boolean strength = Boolean.parseBoolean(sysConfig.getConfigValue());
