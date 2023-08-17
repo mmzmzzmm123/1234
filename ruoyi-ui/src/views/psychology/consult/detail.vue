@@ -26,8 +26,8 @@
           </el-form-item>
         </el-col>
         <el-col :span="8">
-          <el-form-item label="学历/简介" prop="info">
-            <el-input size="mini" maxlength="100" show-word-limit v-model="form.info" placeholder="学历/简介" />
+          <el-form-item label="咨询语种" prop="lang">
+            <el-input size="mini" maxlength="50" show-word-limit v-model="form.lang" placeholder="咨询语种" />
           </el-form-item>
         </el-col>
       </el-row>
@@ -147,6 +147,11 @@
       </el-row>
       <el-row>
         <el-col :span="8">
+          <el-form-item label="学历/简介" prop="info">
+            <el-input type="textarea" :rows="4" size="mini" maxlength="100" show-word-limit v-model="form.info" placeholder="学历/简介" />
+          </el-form-item>
+        </el-col>
+        <el-col :span="8">
           <el-form-item label="咨询寄语" prop="zxWord">
             <el-input type="textarea" :rows="4" size="mini" maxlength="100" show-word-limit v-model="form.zxWord" placeholder="请输入咨询寄语" />
           </el-form-item>
@@ -156,13 +161,13 @@
             <el-input type="textarea" :rows="4" size="mini" maxlength="100" show-word-limit v-model="form.zxStyle" placeholder="请输入咨询风格" />
           </el-form-item>
         </el-col>
+      </el-row>
+      <el-row>
         <el-col :span="8">
           <el-form-item label="咨询须知" prop="notice">
             <el-input type="textarea" :rows="4" size="mini" maxlength="100" show-word-limit v-model="form.notice" placeholder="请输入咨询须知" />
           </el-form-item>
         </el-col>
-      </el-row>
-      <el-row>
         <el-col :span="8">
           <el-form-item label="咨询流派" prop="genre">
             <el-input type="textarea" :rows="4" size="mini" maxlength="100" show-word-limit v-model="form.genre" placeholder="请输入咨询流派" />
@@ -279,6 +284,7 @@ export default {
         ],
         sex: [ { required: true, message: "请选择性别", trigger: "change" } ],
         way: [ { required: true, message: "请选择擅长领域", trigger: "change" } ],
+        mode: [ { required: true, message: "请选择咨询形式", trigger: "change" } ],
         workNum: [ { required: true, message: "请输入咨询人数", trigger: "blur" } ],
         workTime: [ { required: true, message: "请输入服务时长", trigger: "blur" } ],
         workHours: [ { required: true, message: "请输入从业时间", trigger: "blur" } ],

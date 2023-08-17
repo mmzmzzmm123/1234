@@ -143,6 +143,15 @@ public class PsyConsultOrderServiceImpl implements IPsyConsultOrderService
         return list;
     }
 
+    @Override
+    public List<PsyConsultOrder> getListForNotice(String last) {
+        LambdaQueryWrapper<PsyConsultOrder> wp = new LambdaQueryWrapper<>();
+        wp.eq(PsyConsultOrder::getDelFlag, "0");
+        wp.eq(PsyConsultOrder::getPayStatus, "2");
+        wp.last(last);
+        return psyConsultOrderMapper.selectList(wp);
+    }
+
     private void setNames(PsyConsultOrder entity) {
         switch (entity.getStatus()) {
             case ConsultConstant.CONSULT_ORDER_STATUE_CREATED:

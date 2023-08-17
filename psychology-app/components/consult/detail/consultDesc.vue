@@ -17,6 +17,11 @@
         <view class="qualification-val">{{ info.mode }}</view>
       </view>
 
+      <view class="qualification" v-if="info.lang">
+        <text class="qualification-title">咨询语种</text>
+        <view class="qualification-val">{{ info.lang }}</view>
+      </view>
+
       <view class="experience" v-if="info.experiences && info.experiences.length > 0">
         <text class="experience-title">受训经历</text>
         <view class="experience-content">

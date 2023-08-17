@@ -21,4 +21,6 @@ public interface IPsyConsultConfigService
 
     List<PsyConsultConfigByGroupVO> getConfigByTypes(String[] dictTypes);
 
+    List<String> getNotices();
+
 }

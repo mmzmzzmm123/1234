@@ -6,7 +6,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
     <select id="search" resultType="com.ruoyi.psychology.domain.PsyConsult">
         select id, user_id, user_name, nicK_name, avatar, email, phonenumber, sex, tabs, way, way_str, wx_card, zx_word, zx_style, notice, experience, info, detail, serve, work_num, work_time, work_hours, del_flag, status, qualification, index_qualification, create_by, create_time, update_by, update_time,
-        qualification, index_qualification, mode, city, province, genre, img, share,
+        qualification, index_qualification, mode, city, province, genre, img, share, lang,
         (SELECT count(id) FROM psy_consult_work WHERE `live` != '[]' and `live` != `used` and consult_id = psy_consult.id and `day` = DATE_FORMAT(NOW(),'%Y-%m-%d')) buy,
         (SELECT b.price FROM psy_consult_serve a INNER JOIN psy_consult_serve_config b ON a.serve_id=b.id AND a.consult_id=psy_consult.id ORDER BY b.price ASC LIMIT 1) price,
         (SELECT b.price FROM psy_consult_serve a INNER JOIN psy_consult_serve_config b ON a.serve_id=b.id AND a.consult_id=psy_consult.id WHERE b.bound = 1 ORDER BY b.price ASC LIMIT 1) new_price
@@ -138,6 +138,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="genre"    column="genre"    />
         <result property="openId"    column="open_id"    />
         <result property="share"    column="share"    />
+        <result property="lang"    column="lang"    />
         <result property="createBy"    column="create_by"    />
         <result property="createTime"    column="create_time"    />
         <result property="updateBy"    column="update_by"    />
@@ -145,7 +146,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </resultMap>
 
     <sql id="selectPsyConsultVo">
-        select id, user_id, user_name, nicK_name, mode, city, province, open_id, share, genre, avatar, img, email, phonenumber, sex, tabs, way, way_str, wx_card, zx_word, zx_style, notice, experience, info, detail, serve, work_num, work_time, work_hours, del_flag, status, qualification, index_qualification, create_by, create_time, update_by, update_time from psy_consult
+        select id, user_id, user_name, nicK_name, mode, city, province, open_id, lang, language, genre, avatar, img, email, phonenumber, sex, tabs, way, way_str, wx_card, zx_word, zx_style, notice, experience, info, detail, serve, work_num, work_time, work_hours, del_flag, status, qualification, index_qualification, create_by, create_time, update_by, update_time from psy_consult
     </sql>
 
     <select id="getList" parameterType="PsyConsult" resultMap="PsyConsultResult">

@@ -22,6 +22,14 @@
         <view>{{ item.name }}</view>
       </view>
     </view>
+    <view class="notice-box index-margin" v-if="notices.length > 0">
+      <image src="/static/consult/notice.png" class="notice-icon"/>
+      <swiper class="notice-swiper" autoplay vertical circular>
+        <swiper-item v-for="(item, index) in notices" :key="index">
+          <div class="notice-swiper-item">{{ item }}</div>
+        </swiper-item>
+      </swiper>
+    </view>
 
 
     <view class="consult-box index-margin">
@@ -91,6 +99,7 @@
           serveId: null,
           buy: null
         },
+        notices: [],
         bannerList: [],
         classList: [],
         consultantList: [],
@@ -120,7 +129,7 @@
     },
     async mounted() {
       // #ifdef H5
-      utils.share('三束光心理', '三束光心理课堂')
+      utils.share('壹加壹心理', '壹加壹心理')
       // #endif
 
       this.userInfo = utils.getUserInfo()
@@ -128,6 +137,7 @@
       this.getCat()
       this.getBanner(0)
       this.getConsult()
+      this.getNotices()
 
       this.getTypes()
       this.getAttrs()
@@ -147,6 +157,24 @@
 
     },
     methods: {
+      async onPullDownRefresh() {
+        console.log("我要刷新了");
+        this.resetQuery()
+        this.filterParams = {
+          type: 0,
+          way: [],
+          days: [],
+          sex: null,
+          time: null,
+          serve: null,
+          price: null,
+          city: null,
+          province: '不限',
+          dayType: null
+        }
+        await this.getConsult()
+        uni.stopPullDownRefresh();
+      },
       toConsultant(id) {
         if (!utils.checkLogin()) {
           return this.openLoginConfirm()
@@ -176,6 +204,9 @@
           this.queryData.userName = val
           this.getConsult()
         }
+      },
+      async getNotices() {
+        this.notices = await indexServer.getNotices();
       },
       async getCat() {
         const classData = await classServer.getClassList()
@@ -407,6 +438,34 @@
           width: 88upx;
           height: 88upx;
         }
+      }
+    }
+
+    .notice-box {
+      display: flex;
+      align-items: center;
+      width: 702upx;
+      height: 80upx;
+      background: #FFFFFF;
+      border-radius: 12upx;
+      margin: 32upx 24upx;
+      position: relative;
+      .notice-icon {
+        height: 44upx;
+        width: 44upx;
+        margin-left: 24upx;
+        margin-right: 24upx;
+      }
+      .notice-swiper {
+        width: 586upx;
+        height: 37upx;
+        color: rgba(51,51,51,1);
+        font-size: 26upx;
+      }
+      .notice-swiper-item{
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
       }
     }
 

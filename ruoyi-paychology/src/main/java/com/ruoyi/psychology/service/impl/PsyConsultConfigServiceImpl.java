@@ -1,11 +1,14 @@
 package com.ruoyi.psychology.service.impl;
 
+import cn.hutool.core.util.StrUtil;
 import com.ruoyi.common.core.domain.entity.SysDictData;
 import com.ruoyi.common.core.domain.entity.SysDictType;
 import com.ruoyi.common.utils.NewDateUtil;
+import com.ruoyi.psychology.domain.PsyConsultOrder;
 import com.ruoyi.psychology.dto.DateNumDTO;
 import com.ruoyi.psychology.mapper.PsyConsultConfigMapper;
 import com.ruoyi.psychology.service.IPsyConsultConfigService;
+import com.ruoyi.psychology.service.IPsyConsultOrderService;
 import com.ruoyi.psychology.vo.PsyConsultConfigByGroupVO;
 import com.ruoyi.psychology.vo.PsyConsultConfigVO;
 import com.ruoyi.system.service.ISysDictTypeService;
@@ -14,10 +17,7 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -35,6 +35,9 @@ public class PsyConsultConfigServiceImpl implements IPsyConsultConfigService
 
     @Resource
     private ISysDictTypeService iSysDictTypeService;
+
+    @Resource
+    private IPsyConsultOrderService orderService;
 
     @Override
     public List<DateNumDTO> getDateNum(Integer num) {
@@ -87,6 +90,20 @@ public class PsyConsultConfigServiceImpl implements IPsyConsultConfigService
     @Override
     public List<PsyConsultConfigByGroupVO> getConfigByTypes(String[] dictTypes) {
         return psyConsultConfigMapper.getConfigByTypes(dictTypes);
+    }
+
+    @Override
+    public List<String> getNotices() {
+        List<SysDictData> dictData = iSysDictTypeService.selectDictDataByType("consult_notice");
+        List<String> list = dictData.stream().map(SysDictData::getDictLabel).collect(Collectors.toList());
+
+        List<PsyConsultOrder> orders = orderService.getListForNotice("ORDER BY create_time DESC LIMIT 10");
+        orders.forEach(a -> {
+            list.add(StrUtil.format("{}** 下单了{}老师的{}!", a.getNickName().substring(0,1), a.getConsultName(), a.getServeName()));
+        });
+
+        Collections.shuffle(list);
+        return list;
     }
 
 }

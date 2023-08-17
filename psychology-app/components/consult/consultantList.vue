@@ -13,9 +13,9 @@
               <view class="title" @tap="toConsultant(consultant)">
                 <view class="name">{{ consultant.nickName }}</view>
               </view>
-              <view class="gps" v-if="consultant.province">
-                <image src="/static/consult/gps-black.png" />
-                <text>{{ consultant.province + '-' + consultant.city }}</text>
+              <view v-if="consultant.mode" class="info-mode">
+                <text>{{ consultant.mode }}</text>
+                <text class="info-mode-work">已有<text class="info-mode-work-val">{{ consultant.workNum }}人</text>预约</text>
               </view>
               <view @tap="toConsultant(consultant)" class="introduce txt-overflow txt-overflow-line1">{{ consultant.info }}</view>
               <view @tap="toConsultant(consultant)" class="title">
@@ -23,14 +23,17 @@
                   <view class="tag-item">{{ tag }}</view>
                 </view>
               </view>
-              <view v-if="consultant.mode" class="info-mode">{{ consultant.mode }}</view>
+
+              <view class="bottom-box">
+                <view class="gps" v-if="consultant.province">
+                  <image src="/static/consult/gps-black.png" />
+                  <text>{{ consultant.province + '-' + consultant.city }}</text>
+                </view>
+
+                <view class="consult-button" @tap="toConsultant(consultant)">{{ consultant.price ? '¥' + consultant.price.toFixed(2) : '咨询TA' }}</view>
+              </view>
             </view>
-          </view>            
-            
-            
-          <view class="bottom-box">
-            <view class="consult-button" @tap="toConsultant(consultant)">{{ consultant.price ? '¥' + consultant.price.toFixed(2) : '咨询TA' }}</view>
-          </view>            
+          </view>
         </view>
         <view class="footer" v-show="consultantList.length > 0">已经到底了</view>
     </view>
@@ -121,24 +124,9 @@ export default {
               margin-right: 14upx;
             }
           }
-          .gps {
-            height: 30upx;
-            line-height: 30upx;
-            margin: 8upx 0;
-            image {
-              width: 16upx;
-              height: 18upx;
-            }
-            text {
-              margin-left: 6upx;
-              font-size: 22upx;
-              font-weight: 400;
-              color: #777777;
-            }
-          }
           .introduce {
             font-size: 26upx;
-            font-weight: 400;
+            //font-weight: 400;
             color: #777777;
             margin-bottom: 10upx;
           }
@@ -162,29 +150,53 @@ export default {
             font-weight: 400;
             color: #AAAAAA;
             line-height: 33upx;
+            position: relative;
+            .info-mode-work {
+              font-size: 22upx;
+              position: absolute;
+              right: 0;
+            }
+            .info-mode-work-val {
+              color: #FF703F;
+            }
+          }
+          .bottom-box {
+            .gps {
+              height: 30upx;
+              line-height: 30upx;
+              margin: 8upx 0;
+              position: absolute;
+              bottom: 33upx;
+              image {
+                width: 16upx;
+                height: 18upx;
+              }
+              text {
+                margin-left: 6upx;
+                font-size: 22upx;
+                font-weight: 400;
+                color: #777777;
+              }
+            }
+
+            .consult-button {
+              position: absolute;
+              bottom: 24upx;
+              right: 24upx;
+              width: fit-content;
+              height: fit-content;
+              border-radius: 25upx;
+              border: 1upx solid #FF703F;
+              padding: 8upx 20upx;
+              font-size: 24upx;
+              font-family: PingFangSC-Regular, PingFang SC;
+              font-weight: 400;
+              color: #FF703F;
+              text-align: center;
+            }
           }
         }
       }
-      
-      .bottom-box {
-        position: absolute;
-        bottom: 16upx;
-        right: 16upx;
-        .consult-button {
-          width: fit-content;
-          height: fit-content;
-          border-radius: 25upx;
-          border: 1upx solid #FF703F;
-          padding: 8upx 20upx;
-          font-size: 24upx;
-          font-family: PingFangSC-Regular, PingFang SC;
-          font-weight: 400;
-          color: #FF703F;
-          text-align: center;
-        }
-      }
-  
-      
   }
 }
 

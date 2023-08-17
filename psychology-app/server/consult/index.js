@@ -49,4 +49,12 @@ export default {
       return [];
     }
   },
+  getNotices: async () => {
+    let res = await httprequest.get("/app/consult/config/getNotices");
+    if (res.code == 200) {
+      return res.data;
+    } else {
+      return [];
+    }
+  },
 };

@@ -54,5 +54,11 @@ public class AppPsyConfigController extends BaseController
         return AjaxResult.success(psyConsultTypeService.getTrees());
     }
 
+    @GetMapping("/getNotices")
+    public AjaxResult getNotices()
+    {
+        return AjaxResult.success(psyConsultConfigService.getNotices());
+    }
+
 
 }

@@ -105,5 +105,7 @@ public class PsyConsultVO extends BaseValObj implements Serializable
 
     /** 状态（0正常 1停用） */
     private String status;
+
+    private String lang;
     
 }

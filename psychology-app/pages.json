@@ -12,7 +12,7 @@
 			"path": "pages/evaluation/index",
 			"style": {
 				"navigationStyle": "custom",
-        "navigationBarTitleText": "三束光心理"
+        "navigationBarTitleText": "壹加壹心理"
 			}
 		},
 		{
@@ -33,14 +33,14 @@
 			"path": "pages/evaluation/product",
 			"style": {
 				"navigationStyle": "custom",
-        "navigationBarTitleText": "三束光心理"
+        "navigationBarTitleText": "壹加壹心理"
 			}
 		},
 		{
 			"path": "pages/evaluation/search",
 			"style": {
 				"navigationStyle": "custom",
-        "navigationBarTitleText": "三束光心理",
+        "navigationBarTitleText": "壹加壹心理",
 				"enablePullDownRefresh": false
 			}
 		},
@@ -48,21 +48,21 @@
 			"path": "pages/evaluation/testBefore",
 			"style": {
 				"navigationStyle": "custom",
-        "navigationBarTitleText": "三束光心理"
+        "navigationBarTitleText": "壹加壹心理"
 			}
 		},
 		{
 			"path": "pages/evaluation/question",
 			"style": {
 				"navigationStyle": "custom",
-        "navigationBarTitleText": "三束光心理"
+        "navigationBarTitleText": "壹加壹心理"
 			}
 		},
 		{
 			"path": "pages/evaluation/result",
 			"style": {
 				"navigationStyle": "custom",
-        "navigationBarTitleText": "三束光心理"
+        "navigationBarTitleText": "壹加壹心理"
 			}
 		},
 		{
@@ -89,7 +89,7 @@
 			"path": "pages/course/index",
 			"style": {
 				"navigationStyle": "custom",
-        "navigationBarTitleText": "三束光"
+        "navigationBarTitleText": "壹加壹心理"
 			}
 		},
 		{
@@ -151,63 +151,64 @@
 			"path": "pages/course/orderInfo",
 			"style": {
 				"navigationStyle": "custom",
-        "navigationBarTitleText": "三束光"
+        "navigationBarTitleText": "壹加壹心理"
 			}
 		},
     {
     	"path": "pages/consult/index",
     	"style": {
     		"navigationStyle": "custom",
-        "navigationBarTitleText": "三束光心理"
+        "navigationBarTitleText": "壹加壹心理",
+			"enablePullDownRefresh": true
     	}
     },
     {
     	"path": "pages/consult/consultant",
     	"style": {
     		"navigationStyle": "custom",
-        "navigationBarTitleText": "三束光心理"
+        "navigationBarTitleText": "壹加壹心理"
     	}
     },
     {
     	"path": "pages/consult/orderConfirm",
     	"style": {
     		"navigationStyle": "custom",
-        "navigationBarTitleText": "三束光心理"
+        "navigationBarTitleText": "壹加壹心理"
     	}
     },
     {
     	"path": "pages/consult/payResultOk",
     	"style": {
     		"navigationStyle": "custom",
-        "navigationBarTitleText": "三束光心理"
+        "navigationBarTitleText": "壹加壹心理"
     	}
     },
     {
     	"path": "pages/consult/payResultFail",
     	"style": {
     		"navigationStyle": "custom",
-        "navigationBarTitleText": "三束光心理"
+        "navigationBarTitleText": "壹加壹心理"
     	}
     },
     {
     	"path": "pages/consult/order",
     	"style": {
     		"navigationStyle": "custom",
-        "navigationBarTitleText": "三束光心理"
+        "navigationBarTitleText": "壹加壹心理"
     	}
     },
     {
     	"path": "pages/consult/orderInfo",
     	"style": {
     		"navigationStyle": "custom",
-        "navigationBarTitleText": "三束光心理"
+        "navigationBarTitleText": "壹加壹心理"
     	}
     },
     {
     	"path": "pages/consult/user",
     	"style": {
     		"navigationStyle": "custom",
-        "navigationBarTitleText": "三束光心理"
+        "navigationBarTitleText": "壹加壹心理"
     	}
     },
 	{
@@ -253,7 +254,7 @@
 	},
 	"globalStyle": {
 		"navigationBarTextStyle": "black",
-		"navigationBarTitleText": "三束光",
+		"navigationBarTitleText": "壹加壹心理",
 		"navigationBarBackgroundColor": "#fff",
 		"backgroundColor": "#F8F8F8"
 	},

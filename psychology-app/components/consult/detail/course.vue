@@ -3,7 +3,7 @@
     <view class="list">
       <view class="item" v-for="item in courseList">
         <view class="item-content" @tap="toDetail(item.id)">
-          <image :src="item.iconUrl" class="item-imgage"></image>
+          <image :src="item.url" mode="widthFix" class="item-imgage"></image>
           <text class="item-name">{{ item.name }}</text>
         </view>
       </view>
