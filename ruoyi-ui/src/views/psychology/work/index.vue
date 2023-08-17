@@ -414,10 +414,10 @@ export default {
     },
     /** 查询咨询师列表 */
     async getConsultList() {
-      const res = await getConsultAll({ status: '0' })
+      const res = await getConsultAll()
       this.consultList = res.data
       if (this.consultList.length === 1) {
-        this.queryParams.ids.push(this.consultList[0])
+        this.queryParams.ids.push(this.consultList[0].id)
       }
     },
     noItems(row, th) {

@@ -254,10 +254,10 @@ export default {
       // this.getList();
     },
     async getConsultServeRef() {
-      const res = await getConsultAll({ status: '0' })
+      const res = await getConsultAll()
       this.consultList = res.data
       if (this.consultList.length === 1) {
-        this.queryParams.consultId = this.consultList[0]
+        this.queryParams.consultId = this.consultList[0].id
       }
     },
     /** 查询咨询订单列表 */
