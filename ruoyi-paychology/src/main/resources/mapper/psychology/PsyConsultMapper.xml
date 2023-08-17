@@ -146,7 +146,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </resultMap>
 
     <sql id="selectPsyConsultVo">
-        select id, user_id, user_name, nicK_name, mode, city, province, open_id, lang, language, genre, avatar, img, email, phonenumber, sex, tabs, way, way_str, wx_card, zx_word, zx_style, notice, experience, info, detail, serve, work_num, work_time, work_hours, del_flag, status, qualification, index_qualification, create_by, create_time, update_by, update_time from psy_consult
+        select id, user_id, user_name, nicK_name, mode, city, province, open_id, lang, genre, avatar, img, email, phonenumber, sex, tabs, way, way_str, wx_card, zx_word, zx_style, notice, experience, info, detail, serve, work_num, work_time, work_hours, del_flag, status, qualification, index_qualification, create_by, create_time, update_by, update_time from psy_consult
     </sql>
 
     <select id="getList" parameterType="PsyConsult" resultMap="PsyConsultResult">
