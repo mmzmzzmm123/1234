@@ -157,6 +157,10 @@
             </el-select>
           </el-form-item>
 
+          <el-form-item label="服务条件" prop="single">
+            <el-checkbox true-label="0" false-label="1" v-model="form.single">是否单次</el-checkbox>
+          </el-form-item>
+
           <el-form-item label="价格条件" prop="price">
             <el-checkbox true-label="0" false-label="1" v-model="form.price">服务价格区间</el-checkbox>
             <el-input-number style="margin-left: 10px" size="mini" v-model="form.lowPrice" :min="0"/>
@@ -291,6 +295,7 @@ export default {
         highPrice: null,
         buy: "1",
         price: "1",
+        single: "1",
         serve: "1"
       };
       this.resetForm("form");

@@ -104,6 +104,9 @@ public class PsyConsultServiceImpl implements IPsyConsultService {
         if ("1".equals(req.getBuy())) {
             req.setBuy(null);
         }
+        if ("1".equals(req.getSingle())) {
+            req.setSingle(null);
+        }
         List<PsyConsult> list = psyConsultMapper.search(req);
         // 处理way
         if (!CollectionUtils.isEmpty(req.getWay()) && !CollectionUtils.isEmpty(list)) {

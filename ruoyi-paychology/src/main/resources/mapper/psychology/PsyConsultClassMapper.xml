@@ -25,6 +25,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="serveId"    column="serve_id"    />
         <result property="price"    column="price"    />
         <result property="buy"    column="buy"    />
+        <result property="single"    column="single"    />
         <result property="lowPrice"    column="low_price"    />
         <result property="highPrice"    column="high_price"    />
         <result property="createBy"    column="create_by"    />
@@ -34,7 +35,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </resultMap>
 
     <sql id="selectPsyConsultClassVo">
-        select id, name, sort, url, link_url, del_flag, status, type, nand, serve, serve_id, price, buy, low_price, high_price, create_by, create_time, update_by, update_time from psy_consult_class
+        select id, name, sort, url, link_url, del_flag, status, type, single, nand, serve, serve_id, price, buy, low_price, high_price, create_by, create_time, update_by, update_time from psy_consult_class
     </sql>
 
     <select id="getList" parameterType="PsyConsultClass" resultMap="PsyConsultClassResult">

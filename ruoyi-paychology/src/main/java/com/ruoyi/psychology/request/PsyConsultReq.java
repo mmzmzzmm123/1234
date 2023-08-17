@@ -60,6 +60,8 @@ public class PsyConsultReq extends BaseValObj implements Serializable
     /** 今日可约 */
     private String buy;
 
+    private String single;
+
     /** 0-and 1-or */
     private String nand;
 

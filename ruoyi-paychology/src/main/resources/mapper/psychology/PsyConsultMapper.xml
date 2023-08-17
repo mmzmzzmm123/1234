@@ -24,6 +24,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
                     </if>
                     and id in (
                     SELECT a.consult_id FROM psy_consult_serve a INNER JOIN psy_consult_serve_config b on a.serve_id = b.id WHERE a.consult_id = psy_consult.id
+                    <if test="single != null"> and b.type = 1</if>
                     <if test="serveId != null  and serveId != ''"> and b.id = #{serveId}</if>
                     <if test="lowPrice != null and highPrice != null">
                         and b.price <![CDATA[>=]]> #{lowPrice} and b.price <![CDATA[<=]]> #{highPrice}
@@ -37,6 +38,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
                             id in (
                             SELECT a.consult_id FROM psy_consult_serve a INNER JOIN psy_consult_serve_config b on a.serve_id = b.id and a.consult_id = psy_consult.id
                             <where>
+                                <if test="single != null"> or b.type = 1</if>
                                 <if test="serveId != null  and serveId != ''"> or b.id = #{serveId}</if>
                                 <if test="lowPrice != null and lowPrice > 0">
                                     or b.price <![CDATA[>=]]> #{lowPrice}

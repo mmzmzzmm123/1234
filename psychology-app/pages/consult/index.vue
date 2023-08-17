@@ -97,7 +97,8 @@
           way: [],
           nand: null,
           serveId: null,
-          buy: null
+          buy: null,
+          single: null
         },
         notices: [],
         bannerList: [],
@@ -195,6 +196,7 @@
         this.queryData.nand = null
         this.queryData.serveId = null
         this.queryData.buy = null
+        this.queryData.single = null
         this.queryData.days = []
         this.queryData.way = []
       },
@@ -258,6 +260,7 @@
         if (item.type === '1' || item.cat === '1') {
           this.resetQuery()
           this.queryData.buy = item.buy
+          this.queryData.single = item.single
           this.queryData.nand = item.nand
 
           if (item.serve && item.serve === '0') {

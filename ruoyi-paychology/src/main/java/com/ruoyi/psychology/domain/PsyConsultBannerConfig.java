@@ -66,6 +66,9 @@ public class PsyConsultBannerConfig extends BasePlusEntity implements Serializab
     /** 当日可约（0可约 1不可约） */
     private String buy;
 
+    /** 是否单次（0是 1否） */
+    private String single;
+
     /** 价格 */
     private BigDecimal lowPrice;
 

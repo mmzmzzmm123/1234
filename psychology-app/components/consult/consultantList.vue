@@ -30,7 +30,9 @@
                   <text>{{ consultant.province + '-' + consultant.city }}</text>
                 </view>
 
-                <view class="consult-button" @tap="toConsultant(consultant)">{{ consultant.price ? '¥' + consultant.price.toFixed(2) : '咨询TA' }}</view>
+                <view class="consult-button" @tap="toConsultant(consultant)">
+                  {{ consultant.newPrice ? '¥' + consultant.newPrice.toFixed(2) : consultant.price ? '¥' + consultant.price.toFixed(2) : '咨询TA' }}
+                </view>
               </view>
             </view>
           </view>
