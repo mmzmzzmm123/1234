@@ -8,6 +8,7 @@ import com.ruoyi.common.enums.BusinessType;
 import com.ruoyi.common.utils.SecurityUtils;
 import com.ruoyi.common.utils.poi.ExcelUtil;
 import com.ruoyi.psychology.domain.PsyConsult;
+import com.ruoyi.psychology.domain.PsyConsultServe;
 import com.ruoyi.psychology.request.PsyAdminConsultReq;
 import com.ruoyi.psychology.request.PsyRefConsultServeReq;
 import com.ruoyi.psychology.service.IPsyConsultConfigService;
@@ -105,6 +106,16 @@ public class PsyConsultController extends BaseController
     public AjaxResult refConsultServe(@RequestBody PsyRefConsultServeReq req)
     {
         return psyConsultService.refConsultServe(req);
+    }
+
+    @PreAuthorize("@ss.hasPermi('psychology:consult:edit')")
+    @PostMapping("/delConsultServeRef")
+    public AjaxResult delConsultServeRef(@RequestBody PsyConsultServe req)
+    {
+        if (req.getServeId() == null || req.getConsultId() == null) {
+            return AjaxResult.error();
+        }
+        return toAjax(psyConsultService.delConsultServeRef(req));
     }
 
     /**

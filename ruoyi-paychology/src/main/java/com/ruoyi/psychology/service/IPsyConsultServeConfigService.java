@@ -40,5 +40,4 @@ public interface IPsyConsultServeConfigService
 
     int delete(Long id);
 
-    int delConsultServeRef(PsyConsultServe req);
 }

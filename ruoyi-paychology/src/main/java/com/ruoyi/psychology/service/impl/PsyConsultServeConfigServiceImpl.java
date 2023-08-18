@@ -21,6 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
 import javax.annotation.Resource;
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -73,9 +74,11 @@ public class PsyConsultServeConfigServiceImpl extends ServiceImpl<PsyConsultServ
         entity.setTypeName(typeName);
     }
 
-    private int checkName(String name) {
+    private int checkName(String name, BigDecimal price, Long id) {
         LambdaQueryWrapper<PsyConsultServeConfig> wp = new LambdaQueryWrapper<>();
         wp.eq(PsyConsultServeConfig::getName, name);
+        wp.eq(PsyConsultServeConfig::getPrice, price);
+        wp.ne(id != null, PsyConsultServeConfig::getId, id);
         return psyConsultServeConfigMapper.selectCount(wp);
     }
 
@@ -94,7 +97,7 @@ public class PsyConsultServeConfigServiceImpl extends ServiceImpl<PsyConsultServ
     @Override
     @Transactional(rollbackFor = Exception.class)
     public int add(PsyConsultServeConfigVO req) {
-        if (checkName(req.getName()) > 0) {
+        if (checkName(req.getName(), req.getPrice(), null) > 0) {
             throw new UtilException("服务已存在");
         }
         return psyConsultServeConfigMapper.insert(BeanUtil.toBean(req, PsyConsultServeConfig.class));
@@ -117,12 +120,6 @@ public class PsyConsultServeConfigServiceImpl extends ServiceImpl<PsyConsultServ
         }
 
         return 1;
-    }
-
-    @Override
-    @Transactional(rollbackFor = Exception.class)
-    public int delConsultServeRef(PsyConsultServe req) {
-        return psyConsultServeService.delete(req);
     }
 
     @Override
@@ -156,6 +153,9 @@ public class PsyConsultServeConfigServiceImpl extends ServiceImpl<PsyConsultServ
     @Override
     @Transactional(rollbackFor = Exception.class)
     public int update(PsyConsultServeConfigVO req) {
+        if (checkName(req.getName(), req.getPrice(), req.getId()) > 0) {
+            throw new UtilException("服务已存在");
+        }
         return psyConsultServeConfigMapper.updateById(BeanUtil.toBean(req, PsyConsultServeConfig.class));
     }
 

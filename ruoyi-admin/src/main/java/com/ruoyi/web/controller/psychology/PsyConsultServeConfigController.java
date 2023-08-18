@@ -39,7 +39,7 @@ public class PsyConsultServeConfigController extends BaseController
     /**
      * 查询咨询服务配置列表
      */
-    @PreAuthorize("@ss.hasPermi('psychology:serveConfig:list')")
+//    @PreAuthorize("@ss.hasPermi('psychology:serveConfig:list')")
     @GetMapping("/list")
     public TableDataInfo list(PsyConsultServeConfigReq req)
     {
@@ -68,16 +68,6 @@ public class PsyConsultServeConfigController extends BaseController
     @GetMapping("/getConsultServeRef")
     public AjaxResult getConsultServeRef(PsyConsultServe req) {
         return AjaxResult.success(psyConsultServeService.getConsultServeRef(req));
-    }
-
-    @PreAuthorize("@ss.hasPermi('psychology:serveConfig:remove')")
-    @PostMapping("/delConsultServeRef")
-    public AjaxResult delConsultServeRef(@RequestBody PsyConsultServe req)
-    {
-        if (req.getServeId() == null || req.getConsultId() == null) {
-            return AjaxResult.error();
-        }
-        return toAjax(psyConsultServeConfigService.delConsultServeRef(req));
     }
 
     /**

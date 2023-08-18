@@ -1,6 +1,7 @@
 <template>
   <div>
     <el-table v-loading="loading" :data="list">
+      <el-table-column label="序号" type="index" align="center"/>
       <el-table-column label="服务名称" align="center" prop="name"/>
       <el-table-column label="咨询形式" align="center" prop="mode">
         <template slot-scope="scope">
@@ -25,7 +26,7 @@
             size="mini"
             type="text"
             @click="handleDelete(scope.row)"
-            v-hasPermi="['system:consult:edit']">
+            v-hasPermi="['psychology:consult:edit']">
             解绑
           </el-button>
         </template>
@@ -92,6 +93,7 @@ export default {
         return delConsultServeRef(data);
       }).then(() => {
         this.getList();
+        this.$emit('setServe')
         this.$modal.msgSuccess("解绑成功");
       }).catch(() => {});
     },

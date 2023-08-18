@@ -155,14 +155,14 @@
             type="text"
             icon="el-icon-edit"
             @click="handleUpdate(scope.row)"
-            v-hasPermi="['system:consult:edit']"
+            v-hasPermi="['psychology:consult:edit']"
           >编辑服务</el-button>
           <el-button
             size="mini"
             type="text"
             icon="el-icon-edit"
             @click="changeStatus(scope.row)"
-            v-hasPermi="['system:consult:edit']"
+            v-hasPermi="['psychology:consult:edit']"
           >{{ scope.row.status === '0' ? '下架' : '上架' }}</el-button>
         </template>
       </el-table-column>

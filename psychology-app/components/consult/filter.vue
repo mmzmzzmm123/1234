@@ -459,7 +459,7 @@ import cityUtil from "@/utils/pc-city";
     
     .footer {
       display: flex;
-      justify-content: center;
+      justify-content: space-around;
       position: fixed;
       z-index: 9;
       bottom: 0;
@@ -476,7 +476,7 @@ import cityUtil from "@/utils/pc-city";
         font-weight: 400;
         color: #333333;
         line-height: 40upx;
-        margin-right: 24upx;
+        //margin-right: 24upx;
       }
       .confirm {
         height: fit-content;

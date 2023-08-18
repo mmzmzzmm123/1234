@@ -1,6 +1,6 @@
 <template>
   <div class="app-container">
-    <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch" label-width="68px">
+    <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch" label-width="78px">
       <el-form-item label="姓名" prop="userId">
         <el-input
           v-model="queryParams.userName"
@@ -113,21 +113,21 @@
             type="text"
             icon="el-icon-edit"
             @click="handleServeUpdate(scope.row)"
-            v-hasPermi="['system:consult:edit']"
+            v-hasPermi="['psychology:consult:edit']"
           >关联服务</el-button>
           <el-button
             size="mini"
             type="text"
             icon="el-icon-edit"
             @click="handleUpdate(scope.row)"
-            v-hasPermi="['system:consult:edit']"
+            v-hasPermi="['psychology:consult:edit']"
           >修改</el-button>
 <!--          <el-button-->
 <!--            size="mini"-->
 <!--            type="text"-->
 <!--            icon="el-icon-delete"-->
 <!--            @click="handleDelete(scope.row)"-->
-<!--            v-hasPermi="['system:consult:remove']"-->
+<!--            v-hasPermi="['psychology:consult:remove']"-->
 <!--          >删除</el-button>-->
         </template>
       </el-table-column>
@@ -143,7 +143,7 @@
 
     <!-- 服务列表 -->
     <el-dialog :title="titleServe" :visible.sync="openServe" width="900px" append-to-body>
-      <serve v-if="openServe" :id="consultId" />
+      <serve v-if="openServe" :id="consultId" @setServe="getList"/>
     </el-dialog>
 
     <!-- 修改心理咨询师服务对话框 -->

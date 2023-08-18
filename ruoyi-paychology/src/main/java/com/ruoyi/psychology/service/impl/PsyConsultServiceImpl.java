@@ -12,6 +12,7 @@ import com.ruoyi.common.event.publish.ConsultServePublisher;
 import com.ruoyi.common.utils.*;
 import com.ruoyi.common.vo.DateLimitUtilVO;
 import com.ruoyi.psychology.domain.PsyConsult;
+import com.ruoyi.psychology.domain.PsyConsultServe;
 import com.ruoyi.psychology.dto.PsyConsultInfoDTO;
 import com.ruoyi.psychology.mapper.PsyConsultMapper;
 import com.ruoyi.psychology.request.PsyAdminConsultReq;
@@ -162,6 +163,20 @@ public class PsyConsultServiceImpl implements IPsyConsultService {
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
+    public int delConsultServeRef(PsyConsultServe req) {
+        psyConsultServeService.delete(req);
+        PsyConsultServe serve = new PsyConsultServe();
+        serve.setConsultId(req.getConsultId());
+        List<PsyConsultServe> serveList = psyConsultServeService.getList(serve);
+
+        PsyConsultVO entity = getOne(req.getConsultId());
+        entity.setServe(serveList.size());
+
+        return psyConsultMapper.updateById(BeanUtil.toBean(entity, PsyConsult.class));
+    }
+
+    @Override
     public AjaxResult refConsultServe(PsyRefConsultServeReq req) {
         PsyConsult consult = psyConsultMapper.selectById(req.getConsultId());
         if (consult == null) {
@@ -255,6 +270,7 @@ public class PsyConsultServiceImpl implements IPsyConsultService {
         sysUser.setSex(req.getSex());
         sysUser.setAvatar(req.getAvatar());
         sysUser.setUpdateBy(SecurityUtils.getUsername());
+        sysUser.setStatus(req.getStatus());
         userService.updateUser(sysUser);
 
         converToStr(req);
@@ -272,6 +288,8 @@ public class PsyConsultServiceImpl implements IPsyConsultService {
         user.setUpdateTime(DateUtils.getNowDate());
         user.setCreateBy(SecurityUtils.getUsername());
         user.setUpdateBy(SecurityUtils.getUsername());
+        Long[] roleIds = { 3L };
+        user.setRoleIds(roleIds);
         return user;
     }
 

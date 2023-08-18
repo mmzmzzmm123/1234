@@ -43,7 +43,7 @@ export function getConsultServeRef() {
 
 export function delConsultServeRef(query) {
   return request({
-    url: '/psychology/serveConfig/delConsultServeRef',
+    url: '/psychology/consult/delConsultServeRef',
     method: 'post',
     data: query
   })

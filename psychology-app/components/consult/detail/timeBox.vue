@@ -19,7 +19,7 @@
               <view class="time-item-tag" :class="{ selected: i.id === workId && i.time === time }" @tap="selectDay(i.id, a.day, i.time)">
                 <text class="time-item-tag-text">{{ i.s }}</text>
                 <view class="time-item-tag-block"></view>
-                <text class="time-item-tag-text2">{{ i.e }}</text>
+                <text class="time-item-tag-text">{{ i.e }}</text>
               </view>
             </view>
           </view>
@@ -123,7 +123,7 @@ export default {
       margin-left: 24upx;
     }
     .time-content-day {
-      width: 44upx;
+      width: 68upx;
       height: 78upx;
       margin: 10upx;
       display: flex;
@@ -156,53 +156,50 @@ export default {
     }
 
     .time-item-full-tag {
-      margin: 10rpx;
+      margin: 10upx;
       background-color: rgba(248,248,248,1.000000);
-      border-radius: 8rpx;
-      height: 96rpx;
+      border-radius: 8upx;
+      height: 96upx;
       display: flex;
       flex-direction: column;
       justify-content: center;
       align-items: center;
-      width: 96rpx;
+      width: 96upx;
 
       .time-item-full-tag-text {
         color: rgba(119,119,119,1);
-        font-size: 26rpx;
+        font-size: 26upx;
       }
     }
 
     .time-item-tag {
-      border-radius: 8rpx;
-      width: 96rpx;
-      height: 96rpx;
+      border-radius: 8upx;
+      width: 96upx;
+      height: 96upx;
       border: 1px solid rgba(119,119,119,1);
-      margin: 10rpx;
+      margin: 10upx;
       display: flex;
+      text-align: center;
       flex-direction: column;
+      align-items: center;
+      justify-content: center;
 
       .time-item-tag-text {
         color: rgba(51,51,51,1);
-        font-size: 26rpx;
-        margin: 8rpx 0 0 16rpx;
+        font-size: 26upx;
       }
       .time-item-tag-block {
         background-color: rgba(51,51,51,1.000000);
-        width: 12rpx;
-        height: 2rpx;
-        margin: 1rpx 0 0 42rpx;
-      }
-      .time-item-tag-text2 {
-        color: rgba(51,51,51,1);
-        font-size: 26rpx;
-        margin: 1rpx 0 8rpx 16rpx;
+        width: 12upx;
+        height: 2upx;
+        //margin: 1upx 0 0 42upx;
+        margin: 1upx auto;
       }
       &.selected {
         background-color: rgba(255,112,63,1.000000);
         color: #FFFFFF;
         border: none;
-        .time-item-tag-text,
-        .time-item-tag-text2 {
+        .time-item-tag-text {
           color: #FFFFFF;
         }
         .time-item-tag-block {
@@ -227,7 +224,7 @@ export default {
       border-radius: 40upx;
       height: 80upx;
       line-height: 80upx;
-      border: 1rpx solid #777777;
+      border: 1upx solid #777777;
       background: #FFFFFF;
       color: rgba(51,51,51,1);
       font-size: 28upx;

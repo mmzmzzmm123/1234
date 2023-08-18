@@ -57,6 +57,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="startTime != null "> and a.create_time <![CDATA[ >= ]]> #{startTime}</if>
             <if test="endTime != null "> and a.create_time <![CDATA[ <= ]]> #{endTime}</if>
         </where>
+        order by a.create_time desc
     </select>
 
     <select id="getOrderList" resultType="com.ruoyi.psychology.dto.OrderListDTO">
