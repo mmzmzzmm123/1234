@@ -257,6 +257,13 @@ insert into sys_menu values('1057', '生成删除', '116', '3', '#', '', '', 1, 
 insert into sys_menu values('1058', '导入代码', '116', '4', '#', '', '', 1, 0, 'F', '0', '0', 'tool:gen:import',            '#', 'admin', sysdate(), '', null, '');
 insert into sys_menu values('1059', '预览代码', '116', '5', '#', '', '', 1, 0, 'F', '0', '0', 'tool:gen:preview',           '#', 'admin', sysdate(), '', null, '');
 insert into sys_menu values('1060', '生成代码', '116', '6', '#', '', '', 1, 0, 'F', '0', '0', 'tool:gen:code',              '#', 'admin', sysdate(), '', null, '');
+-- 文件管理
+INSERT INTO sys_menu  VALUES (2000, '文件管理', 1, 10, 'file', 'system/file/filelist/index', null, 1, 0, 'C', '0', '0', 'system:file:list', 'documentation', 'admin', '2023-08-10 14:44:33', 'admin', '2023-08-10 14:59:36', '');
+INSERT INTO sys_menu  VALUES (2001, '上传文件', 2000, 1, '', null, null, 1, 0, 'F', '0', '0', 'system:file:upload', '#', 'admin', '2023-08-10 17:58:46', '', null, '');
+INSERT INTO sys_menu  VALUES (2002, '检查文件分片信息', 2000, 2, '', null, null, 1, 0, 'F', '0', '0', 'system:file:check', '#', 'admin', '2023-08-10 17:59:11', '', null, '');
+INSERT INTO sys_menu  VALUES (2003, '合并文件', 2000, 6, '', null, null, 1, 0, 'F', '0', '0', 'system:file:merge', '#', 'admin', '2023-08-10 17:59:34', '', null, '');
+INSERT INTO sys_menu  VALUES (2004, '已上传文件列表查询', 2000, 5, '', null, null, 1, 0, 'F', '0', '0', 'system:filelist:query', '#', 'admin', '2023-08-10 17:59:53', '', null, '');
+INSERT INTO sys_menu  VALUES (2007, '已上传文件列表删除', 2000, 7, '', null, null, 1, 0, 'F', '0', '0', 'system:filelist:remove', '#', 'admin', '2023-08-10 18:00:46', '', null, '');
 
 
 -- ----------------------------
@@ -697,3 +704,38 @@ create table gen_table_column (
   update_time       datetime                                   comment '更新时间',
   primary key (column_id)
 ) engine=innodb auto_increment=1 comment = '代码生成业务表字段';
+-- ----------------------------
+-- 20、文件列表
+-- ----------------------------
+drop table if exists sys_filelist;
+create table sys_filelist
+(
+    id         bigint auto_increment comment '主键ID'
+        primary key,
+    filename   varchar(200) not null comment '文件名',
+    identifier varchar(50)  not null comment '唯一标识,MD5',
+    url        varchar(200) not null comment '链接',
+    location   varchar(200) null comment '本地地址',
+    total_size bigint       null comment '文件总大小',
+    constraint FILE_UNIQUE_KEY
+        unique (filename, identifier)
+) engine=innodb auto_increment=1 comment = '文件列表';
+-- ----------------------------
+-- 21、文件分片记录表
+-- ----------------------------
+drop table if exists sys_chunk;
+create table sys_chunk
+(
+    id                 bigint auto_increment comment '主键ID'
+        primary key,
+    chunk_number       int          not null comment '文件块编号',
+    chunk_size         bigint       not null comment '分块大小',
+    current_chunk_size bigint       not null comment '当前分块大小',
+    filename           varchar(255) not null comment '文件名',
+    identifier         varchar(255) not null comment '文件标识,MD5',
+    relative_path      varchar(255) not null comment '相对路径',
+    total_chunks       int          not null comment '总块数',
+    total_size         bigint       not null comment '总大小'
+) engine=innodb auto_increment=1 comment = '文件分片记录表';
+
+
