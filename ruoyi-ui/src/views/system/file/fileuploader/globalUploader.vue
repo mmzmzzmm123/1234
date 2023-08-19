@@ -68,11 +68,11 @@
           //上传文件时文件的参数名，默认file
           fileParameterName: 'file',
           //并发上传数
-          simultaneousUploads: 1,
+          //simultaneousUploads: 1,
           //最大自动失败重试上传次数
           maxChunkRetries: 2,
           //重试间隔 单位毫秒
-          chunkRetryInterval: 1500,
+          //chunkRetryInterval: 5000,
           //是否开启服务器分片校验
           testChunks: true,
           // 服务器分片校验函数，秒传及断点续传基础
