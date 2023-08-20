@@ -34,13 +34,13 @@ public class XssHttpServletRequestWrapper extends HttpServletRequestWrapper
         if (values != null)
         {
             int length = values.length;
-            String[] escapseValues = new String[length];
+            String[] escapesValues = new String[length];
             for (int i = 0; i < length; i++)
             {
                 // 防xss攻击和过滤前后空格
-                escapseValues[i] = EscapeUtil.clean(values[i]).trim();
+                escapesValues[i] = EscapeUtil.clean(values[i]).trim();
             }
-            return escapseValues;
+            return escapesValues;
         }
         return super.getParameterValues(name);
     }
@@ -63,7 +63,8 @@ public class XssHttpServletRequestWrapper extends HttpServletRequestWrapper
 
         // xss过滤
         json = EscapeUtil.clean(json).trim();
-        final ByteArrayInputStream bis = new ByteArrayInputStream(json.getBytes("utf-8"));
+        byte[] jsonBytes = json.getBytes("utf-8");
+        final ByteArrayInputStream bis = new ByteArrayInputStream(jsonBytes);
         return new ServletInputStream()
         {
             @Override
@@ -76,6 +77,12 @@ public class XssHttpServletRequestWrapper extends HttpServletRequestWrapper
             public boolean isReady()
             {
                 return true;
+            }
+
+            @Override
+            public int available() throws IOException
+            {
+                return jsonBytes.length;
             }
 
             @Override

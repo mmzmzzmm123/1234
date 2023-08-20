@@ -70,9 +70,11 @@ export default {
       this.show = false
     },
     change(val) {
+      const path = val.path;
       if(this.ishttp(val.path)) {
         // http(s):// 路径新窗口打开
-        window.open(val.path, "_blank");
+        const pindex = path.indexOf("http");
+        window.open(path.substr(pindex, path.length), "_blank");
       } else {
         this.$router.push(val.path)
       }
@@ -88,7 +90,6 @@ export default {
         threshold: 0.4,
         location: 0,
         distance: 100,
-        maxPatternLength: 32,
         minMatchCharLength: 1,
         keys: [{
           name: 'title',

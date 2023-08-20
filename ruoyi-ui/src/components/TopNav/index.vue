@@ -12,7 +12,7 @@
     </template>
 
     <!-- 顶部菜单超出数量折叠 -->
-    <el-submenu index="more" v-if="topMenus.length > visibleNumber">
+    <el-submenu :style="{'--theme': theme}" index="more" v-if="topMenus.length > visibleNumber">
       <template slot="title">更多菜单</template>
       <template v-for="(item, index) in topMenus">
         <el-menu-item
@@ -30,13 +30,14 @@
 <script>
 import { constantRoutes } from "@/router";
 
+// 隐藏侧边栏路由
+const hideList = ['/index', '/user/profile'];
+
 export default {
   data() {
     return {
       // 顶部栏初始数
       visibleNumber: 5,
-      // 是否为首次加载
-      isFrist: false,
       // 当前激活菜单的 index
       currentIndex: undefined
     };
@@ -71,11 +72,11 @@ export default {
         for (var item in router.children) {
           if (router.children[item].parentPath === undefined) {
             if(router.path === "/") {
-              router.children[item].path = "/redirect/" + router.children[item].path;
+              router.children[item].path = "/" + router.children[item].path;
             } else {
-			  if(!this.ishttp(router.children[item].path)) {
+              if(!this.ishttp(router.children[item].path)) {
                 router.children[item].path = router.path + "/" + router.children[item].path;
-			  }
+              }
             }
             router.children[item].parentPath = router.path;
           }
@@ -87,22 +88,18 @@ export default {
     // 默认激活的菜单
     activeMenu() {
       const path = this.$route.path;
-      let activePath = this.routers[0].path;
-      if (path.lastIndexOf("/") > 0) {
+      let activePath = path;
+      if (path !== undefined && path.lastIndexOf("/") > 0 && hideList.indexOf(path) === -1) {
         const tmpPath = path.substring(1, path.length);
         activePath = "/" + tmpPath.substring(0, tmpPath.indexOf("/"));
-      } else if ("/index" == path || "" == path) {
-        if (!this.isFrist) {
-          this.isFrist = true;
-        } else {
-          activePath = "index";
+        if (!this.$route.meta.link) {
+          this.$store.dispatch('app/toggleSideBarHide', false);
         }
+      } else if(!this.$route.children) {
+        activePath = path;
+        this.$store.dispatch('app/toggleSideBarHide', true);
       }
-      var routes = this.activeRoutes(activePath);
-      if (routes.length === 0) {
-        activePath = this.currentIndex || this.routers[0].path
-        this.activeRoutes(activePath);
-      }
+      this.activeRoutes(activePath);
       return activePath;
     },
   },
@@ -124,15 +121,24 @@ export default {
     // 菜单选择事件
     handleSelect(key, keyPath) {
       this.currentIndex = key;
+      const route = this.routers.find(item => item.path === key);
       if (this.ishttp(key)) {
         // http(s):// 路径新窗口打开
         window.open(key, "_blank");
-      } else if (key.indexOf("/redirect") !== -1) {
-        // /redirect 路径内部打开
-        this.$router.push({ path: key.replace("/redirect", "") });
+      } else if (!route || !route.children) {
+        // 没有子路由路径内部打开
+        const routeMenu = this.childrenMenus.find(item => item.path === key);
+        if (routeMenu && routeMenu.query) {
+          let query = JSON.parse(routeMenu.query);
+          this.$router.push({ path: key, query: query });
+        } else {
+          this.$router.push({ path: key });
+        }
+        this.$store.dispatch('app/toggleSideBarHide', true);
       } else {
         // 显示左侧联动菜单
         this.activeRoutes(key);
+        this.$store.dispatch('app/toggleSideBarHide', false);
       }
     },
     // 当前激活的路由
@@ -147,10 +153,11 @@ export default {
       }
       if(routes.length > 0) {
         this.$store.commit("SET_SIDEBAR_ROUTERS", routes);
+      } else {
+        this.$store.dispatch('app/toggleSideBarHide', true);
       }
-      return routes;
     },
-	ishttp(url) {
+    ishttp(url) {
       return url.indexOf('http://') !== -1 || url.indexOf('https://') !== -1
     }
   },
@@ -158,25 +165,27 @@ export default {
 </script>
 
 <style lang="scss">
-.el-menu--horizontal > .el-menu-item {
+.topmenu-container.el-menu--horizontal > .el-menu-item {
   float: left;
-  height: 50px;
-  line-height: 50px;
-  margin: 0;
-  border-bottom: 3px solid transparent;
-  color: #999093;
-  padding: 0 5px;
-  margin: 0 10px;
+  height: 50px !important;
+  line-height: 50px !important;
+  color: #999093 !important;
+  padding: 0 5px !important;
+  margin: 0 10px !important;
 }
 
-.el-menu--horizontal > .el-menu-item.is-active {
-  border-bottom: 3px solid #{'var(--theme)'};
+.topmenu-container.el-menu--horizontal > .el-menu-item.is-active, .el-menu--horizontal > .el-submenu.is-active .el-submenu__title {
+  border-bottom: 2px solid #{'var(--theme)'} !important;
   color: #303133;
 }
 
 /* submenu item */
-.el-menu--horizontal > .el-submenu .el-submenu__title {
-	height: 50px !important;
-	line-height: 50px !important;
+.topmenu-container.el-menu--horizontal > .el-submenu .el-submenu__title {
+  float: left;
+  height: 50px !important;
+  line-height: 50px !important;
+  color: #999093 !important;
+  padding: 0 5px !important;
+  margin: 0 10px !important;
 }
 </style>

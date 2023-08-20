@@ -1,6 +1,7 @@
 package com.ruoyi.web.controller.system;
 
 import java.util.List;
+import javax.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
@@ -13,13 +14,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import com.ruoyi.common.annotation.Log;
-import com.ruoyi.common.constant.UserConstants;
 import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.core.domain.entity.SysDictType;
 import com.ruoyi.common.core.page.TableDataInfo;
 import com.ruoyi.common.enums.BusinessType;
-import com.ruoyi.common.utils.SecurityUtils;
 import com.ruoyi.common.utils.poi.ExcelUtil;
 import com.ruoyi.system.service.ISysDictTypeService;
 
@@ -46,12 +45,12 @@ public class SysDictTypeController extends BaseController
 
     @Log(title = "字典类型", businessType = BusinessType.EXPORT)
     @PreAuthorize("@ss.hasPermi('system:dict:export')")
-    @GetMapping("/export")
-    public AjaxResult export(SysDictType dictType)
+    @PostMapping("/export")
+    public void export(HttpServletResponse response, SysDictType dictType)
     {
         List<SysDictType> list = dictTypeService.selectDictTypeList(dictType);
         ExcelUtil<SysDictType> util = new ExcelUtil<SysDictType>(SysDictType.class);
-        return util.exportExcel(list, "字典类型");
+        util.exportExcel(response, list, "字典类型");
     }
 
     /**
@@ -61,7 +60,7 @@ public class SysDictTypeController extends BaseController
     @GetMapping(value = "/{dictId}")
     public AjaxResult getInfo(@PathVariable Long dictId)
     {
-        return AjaxResult.success(dictTypeService.selectDictTypeById(dictId));
+        return success(dictTypeService.selectDictTypeById(dictId));
     }
 
     /**
@@ -72,11 +71,11 @@ public class SysDictTypeController extends BaseController
     @PostMapping
     public AjaxResult add(@Validated @RequestBody SysDictType dict)
     {
-        if (UserConstants.NOT_UNIQUE.equals(dictTypeService.checkDictTypeUnique(dict)))
+        if (!dictTypeService.checkDictTypeUnique(dict))
         {
-            return AjaxResult.error("新增字典'" + dict.getDictName() + "'失败，字典类型已存在");
+            return error("新增字典'" + dict.getDictName() + "'失败，字典类型已存在");
         }
-        dict.setCreateBy(SecurityUtils.getUsername());
+        dict.setCreateBy(getUsername());
         return toAjax(dictTypeService.insertDictType(dict));
     }
 
@@ -88,11 +87,11 @@ public class SysDictTypeController extends BaseController
     @PutMapping
     public AjaxResult edit(@Validated @RequestBody SysDictType dict)
     {
-        if (UserConstants.NOT_UNIQUE.equals(dictTypeService.checkDictTypeUnique(dict)))
+        if (!dictTypeService.checkDictTypeUnique(dict))
         {
-            return AjaxResult.error("修改字典'" + dict.getDictName() + "'失败，字典类型已存在");
+            return error("修改字典'" + dict.getDictName() + "'失败，字典类型已存在");
         }
-        dict.setUpdateBy(SecurityUtils.getUsername());
+        dict.setUpdateBy(getUsername());
         return toAjax(dictTypeService.updateDictType(dict));
     }
 
@@ -117,7 +116,7 @@ public class SysDictTypeController extends BaseController
     public AjaxResult refreshCache()
     {
         dictTypeService.resetDictCache();
-        return AjaxResult.success();
+        return success();
     }
 
     /**
@@ -127,6 +126,6 @@ public class SysDictTypeController extends BaseController
     public AjaxResult optionselect()
     {
         List<SysDictType> dictTypes = dictTypeService.selectDictTypeAll();
-        return AjaxResult.success(dictTypes);
+        return success(dictTypes);
     }
 }
