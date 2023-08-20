@@ -1,6 +1,6 @@
-token: 743a42d7-9ddd-47c6-9cf2-7355c8c1dd62
+token: ad2589e9-d85c-4bb2-9c98-dac0a20f8a1c
 timorYear: 2023
-fsType: bank # insurance/security/bank
+fsType: security # insurance/security/bank
 stockCodes:
   - "1000002"
 

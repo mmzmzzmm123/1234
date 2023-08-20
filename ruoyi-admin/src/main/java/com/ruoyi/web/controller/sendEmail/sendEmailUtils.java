@@ -76,7 +76,7 @@ public class sendEmailUtils {
 
         Map<String, String> map = new HashMap<>();
         try {
-            String Text = null;
+            String Text = "";
             String subject = null;
             // ----------------国债----------------------------------
             Map<String, String> cnDebtMap = null;
@@ -130,13 +130,14 @@ public class sendEmailUtils {
             }
 
             // ----------------HSI信号值----------------
+            double posHSI = 0;
             try {
                 Map<String, Object> mapHSI = getTextHSI();
-                double posHSI = (double) mapHSI.get("posHSI");
+                posHSI = (double) mapHSI.get("posHSI");
                 String dateHSI = (String) mapHSI.get("dateHSI");
                 Text += "▶港股最新数据日期为：" + dateHSI + "\n";
                 Text += "  ◆信号为：" + new DecimalFormat("0.00%").format(posHSI) + "\n";
-                if (posSPX < 0.3) {
+                if (posHSI < 0.3) {
                     Text += "  ◆结论：可考虑港股现在出现的机会\n\n";
                 } else {
                     Text += "  ◆结论：港股暂无机会\n\n";
@@ -196,64 +197,81 @@ public class sendEmailUtils {
             } catch (Exception e) {
                 System.out.println(e.getMessage() + "cpi和国债共同计算百分位 出错");
             }
-            // 基本面判断----------------------
+            // ————————————————————————————————————总结————————————————————————————————————
             try {
                 Text += "▶总结：\n";
                 Map<String, String> fundamentalMap = getTextFundamentalCN();
                 double resultFundamental = Double.parseDouble(fundamentalMap.get("resultFundamental"));
                 double result100 = resultFundamental * 100;
                 String Textzhaiquan = "";
-                // -------国债总结-----------
-                try {
-                    if (cpiandCNDebtPosDouble < 0.33) {
-                        Textzhaiquan += "  ◆中国：将资产投资债券\n";
-                    } else if (0.33 < cpiandCNDebtPosDouble && cpiandCNDebtPosDouble < 0.66) {
-                        Textzhaiquan += "  ◆中国：将资产均配债券、货币基金\n";
-                    } else if (0.66 < cpiandCNDebtPosDouble) {
-                        Textzhaiquan += "  ◆中国：将资产投资货币基金\n";
-                    }
-                } catch (Exception e) {
-                    System.out.println(e.getMessage() + "国债总结 出错");
-                }
+
 
                 // -------美债总结_分位数-----------
                 try {
                     if (usDebtPosDouble < 0.33) {
-                        Textzhaiquan += "  ◆美国：在美债倒挂结束时，将资产投资债券，黄金\n";
+                        Textzhaiquan += "  ◆美国债券：在美债倒挂结束时，将资产投资债券，黄金\n";
                     } else if (0.33 < usDebtPosDouble && usDebtPosDouble < 0.66) {
-                        Textzhaiquan += "  ◆美国：将资产均配债券、货币基金\n";
+                        Textzhaiquan += "  ◆美国债券：将资产均配债券、货币基金\n";
                     } else if (0.66 < usDebtPosDouble) {
-                        Textzhaiquan += "  ◆美国：在仔细考虑汇率风险之后，将资产投资货币基金，\n";
+                        Textzhaiquan += "  ◆美国债券：在仔细考虑汇率风险之后，将资产投资货币基金，\n";
                     }
                 } catch (Exception e) {
                     System.out.println(e.getMessage() + "美债总结_分位数 出错");
                 }
                 // -------美债总结_倒挂-----------
                 try {
+                    assert usDebtMap != null;
                     if (usDebtMap.containsKey("latestDayDebtUSInverted")) {
-                        Text += "  ◆美国：美债已经倒挂，警惕出现全球金融危机\n";
+                        Text += "  ◆美国债券：美债已经倒挂，警惕出现全球金融危机\n";
                     }
                 } catch (Exception e) {
                     System.out.println(e.getMessage() + "美债总结_倒挂 出错");
                 }
-                // -------基本面总结----------
+                // -------美股总结----------
+                if (posSPX < 0.3) {
+                    Text += "  ◆美国股市：可考虑美股现在出现的机会\n";
+                } else {
+                    Text += "  ◆美国股市：美股暂无机会\n";
+                }
+                // -------港股总结----------
+                if (posHSI < 0.3) {
+                    Text += "  ◆香港股市：可考虑港股现在出现的机会\n";
+                } else {
+                    Text += "  ◆香港股市：港股暂无机会\n";
+                }
+                // -------国债总结-----------
+                try {
+                    if (cpiandCNDebtPosDouble < 0.33) {
+                        Textzhaiquan += "  ◆中国债券：将资产投资债券\n";
+                    } else if (0.33 < cpiandCNDebtPosDouble && cpiandCNDebtPosDouble < 0.66) {
+                        Textzhaiquan += "  ◆中国债券：将资产均配债券、货币基金\n";
+                    } else if (0.66 < cpiandCNDebtPosDouble) {
+                        Textzhaiquan += "  ◆中国债券：将资产投资货币基金\n";
+                    }
+                } catch (Exception e) {
+                    System.out.println(e.getMessage() + "国债总结 出错");
+                }
+                // -------中国 基本面总结----------
                 String Textgupiao = "  ◆基金备选池：科创信息、科创创业50、科创50、创业板全指、全指信息、TMT、中创400、中证500、中证军工、国证2000、全指医疗、中小企业300、中概互联网\n  ◆股票备选池：证券 > 银行\n\n";
                 if (result100 > 45) {
                     Text += Textzhaiquan;
+                    Text += "  ◆中国股市：暂无机会";
                 } else if (35 < result100 && result100 < 45) {
                     Text += Textzhaiquan;
+                    Text += "  ◆中国股市：暂无机会";
                 } else if (25 < result100 && result100 < 35) {
-                    Text += "  ◆定投总资金 通过 197 个周定投，其中定投总资金 = 总资金 - 已投入\n";
-                    Text += "  ◆股票基金以大公司、主动型基金为主\n\n";
+                    Text += "  ◆中国股市：将资金全部投资于固收+\n";
+                    Text += "  ◆中国股市：投总资金 通过 197 个周定投，其中定投总资金 = 总资金 - 已投入\n";
+                    Text += "  ◆中国股市：股票基金以大公司、主动型基金为主\n\n";
                 } else if (15 < result100 && result100 < 25) {
-                    Text += "  ◆定投总资金 通过 96 个周定投，其中定投总资金 = 总资金 - 已投入\n";
-                    Text += "  ◆股票基金以中型公司、主动型基金为主\n\n";
+                    Text += "  ◆中国股市：定投总资金 通过 96 个周定投，其中定投总资金 = 总资金 - 已投入\n";
+                    Text += "  ◆中国股市：股票基金以中型公司、主动型基金为主\n\n";
                 } else if (10 < result100 && result100 < 15) {
-                    Text += "  ◆定投总资金 通过 18 个周定投，其中定投总资金 = 总资金 - 已投入\n";
+                    Text += "  ◆中国股市：定投总资金 通过 18 个周定投，其中定投总资金 = 总资金 - 已投入\n";
                     Text += Textgupiao;
                 } else if (5 < result100 && result100 < 10) {
-                    Text += "  ◆梭哈梭哈梭哈梭哈梭哈梭哈梭哈梭哈梭哈梭哈梭哈梭哈梭哈\n";
-                    Text += "  ◆现在离最低点可能还有10~20%的幅度，但为不错过机会，我将永远相信历史会简单的重复\n\n";
+                    Text += "  ◆中国股市：梭哈梭哈梭哈梭哈梭哈梭哈梭哈梭哈梭哈梭哈梭哈梭哈梭哈\n";
+                    Text += "  ◆中国股市：现在离最低点可能还有10~20%的幅度，但为不错过机会，我将永远相信历史会简单的重复\n\n";
                     Text += Textgupiao;
                 }
                 String resultFormat = new DecimalFormat("0.00%").format(resultFundamental);
@@ -392,19 +410,19 @@ public class sendEmailUtils {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         PriceIndexCNResult_RootVO resultObj = (PriceIndexCNResult_RootVO) getResult_PriceIndexCN.getResultPriceIndexCNObj(resultJson);
         Map<String, Object> map = new HashMap<>();
-        map.put("CNCPI0", new DecimalFormat("0.00%").format(resultObj.getData().get(0).getM().getCpi().getC_y2y()));
-        map.put("CNCPI1", new DecimalFormat("0.00%").format(resultObj.getData().get(1).getM().getCpi().getC_y2y()));
-        map.put("CNCPI2", new DecimalFormat("0.00%").format(resultObj.getData().get(2).getM().getCpi().getC_y2y()));
-        map.put("CNCPI3", new DecimalFormat("0.00%").format(resultObj.getData().get(3).getM().getCpi().getC_y2y()));
+        map.put("CNCPI0", new DecimalFormat("0.00%").format(resultObj.getData().get(0).getM().getCpi().getT()));
+        map.put("CNCPI1", new DecimalFormat("0.00%").format(resultObj.getData().get(1).getM().getCpi().getT()));
+        map.put("CNCPI2", new DecimalFormat("0.00%").format(resultObj.getData().get(2).getM().getCpi().getT()));
+        map.put("CNCPI3", new DecimalFormat("0.00%").format(resultObj.getData().get(3).getM().getCpi().getT()));
         map.put("CNCPIDate", sdf.format(sdf.parse(resultObj.getData().get(0).getDate())));
 
         List<PriceIndexCNResult_DataVO> dataVOList = resultObj.getData();
         List<Double> tempList = new ArrayList<>();
         for (int i = 0; i < dataVOList.size(); i++) {
-            tempList.add(dataVOList.get(i).getM().getCpi().getC_y2y());
+            tempList.add(dataVOList.get(i).getM().getCpi().getT());
         }
         Collections.sort(tempList);
-        double nearestCpi = dataVOList.get(0).getM().getCpi().getC_y2y();
+        double nearestCpi = dataVOList.get(0).getM().getCpi().getT();
         double cpiPos = tempList.indexOf(nearestCpi) / (double) tempList.size();
         map.put("CPIPos", new DecimalFormat("0.00%").format(cpiPos));
         return map;

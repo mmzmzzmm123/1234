@@ -38,7 +38,7 @@ public class calculate_BestCompanyCN extends mybatisNoSpringUtils {
         // 权重数组，总和不要超过10，分别表示roe、估值、估值百分位
         // 当经济处于低谷时，应该调大roe
         // 当经济处于中位数，应该调小roe
-        double[] weight = {5, 4, 1};
+        double[] weight = {6, 3, 1};
         List<Map.Entry<String, Map<String, String>>> listDoubleFundMap = calculateFundFs(doubleTrDriMap, weight);
         // 按key排序
         List<Map.Entry<String, Map<String, String>>> sortedListDoubleFundMap = sortListDoubleFundMapByKey(listDoubleFundMap);

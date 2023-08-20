@@ -27,7 +27,7 @@ public class getParam_PriceIndexCN {
         paramvo.setStartDate(tenYearAgo);
         paramvo.setEndDate(today);
         paramvo.setAreaCode("cn");
-        String[] metricsArray = {"m.cpi.c_y2y"};
+        String[] metricsArray = {"m.cpi.t"};
         ArrayList<String> metricsList = new ArrayList<>(Arrays.asList(metricsArray));
         paramvo.setMetricsList(metricsList);
 
