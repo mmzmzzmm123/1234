@@ -14,7 +14,8 @@ const mutations = {
     try {
       for (let i = 0; i < state.dict.length; i++) {
         if (state.dict[i].key == key) {
-          state.dict.splice(i, i)
+          //修复bug:修改数据字典后，此处可能误删已经通过Vuex缓存的其它字典数据
+          state.dict.splice(i, 1)
           return true
         }
       }
