@@ -72,9 +72,8 @@ export default {
 }
 .header {
   width: 750upx;
-  height: 232upx;
-  background: url(https://lanhu.oss-cn-beijing.aliyuncs.com/SketchPngf11697c30c16890ccc7b85465ec486b5272483ba63a5553b06df2423c8f8da5d) 100% no-repeat;
-  background-size: 100% 100%;
+  height: 90upx;
+  background: linear-gradient(133deg, #FF8C65 0%, #FF6C39 100%);
   display: flex;
   flex-direction: column;
 }
@@ -85,12 +84,12 @@ export default {
   height: 20upx;
   display: flex;
   flex-direction: column;
-  margin: 192upx 0 20upx 32upx;
+  margin: 50upx 0 20upx 32upx;
 }
 .content {
   position: absolute;
   left: 0upx;
-  top: 232upx;
+  top: 90upx;
   width: 750upx;
   height: 1325upx;
   display: flex;
@@ -126,7 +125,7 @@ export default {
   margin-top: 80upx;
 }
 .status-text {
-  width: 460upx;
+  width: 480upx;
   height: 111upx;
   display: flex;
   flex-direction: column;

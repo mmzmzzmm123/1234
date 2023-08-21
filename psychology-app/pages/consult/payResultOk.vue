@@ -120,7 +120,7 @@ export default {
 }
 .header {
   width: 750upx;
-  height: 232upx;
+  height: 90upx;
   background: linear-gradient(133deg, #FF8C65 0%, #FF6C39 100%);
   display: flex;
   flex-direction: column;
@@ -132,7 +132,7 @@ export default {
   height: 20upx;
   display: flex;
   flex-direction: column;
-  margin: 192upx 0 20upx 32upx;
+  margin: 50upx 0 20upx 32upx;
 }
 .info {
   background-color: rgba(255,255,255,1.000000);
@@ -170,7 +170,7 @@ export default {
   margin-left: 4upx;
 }
 .info-desc {
-  width: 270upx;
+  width: 300upx;
   height: 37upx;
   overflow-wrap: break-word;
   color: rgba(119,119,119,1);
@@ -178,7 +178,7 @@ export default {
   margin-top: 8upx;
 }
 .info-mode {
-  width: 223upx;
+  width: 300upx;
   height: 37upx;
   overflow-wrap: break-word;
   color: rgba(119,119,119,1);
@@ -211,7 +211,6 @@ export default {
 .info-image {
 }
 .info-section {
-  background-image: url(https://lanhu-dds-backend.oss-cn-beijing.aliyuncs.com/merge_image/imgs/9c30e4574f62476c8adf3eb929b6662b_mergeImage.png);
   width: 226upx;
   height: 226upx;
 }
@@ -282,13 +281,13 @@ export default {
 .status-bg {
   width: 654upx;
   height: 40upx;
-  margin-top: 266upx;
+  margin-top: 126upx;
 }
 .status-view {
   background-color: rgba(255,255,255,1.000000);
   position: absolute;
   left: 48upx;
-  top: -30upx;
+  top: -170upx;
   width: 654upx;
   height: 296upx;
   display: flex;
@@ -300,7 +299,7 @@ export default {
   margin: 80upx 0 0 277upx;
 }
 .status-text {
-  width: 216upx;
+  width: 230upx;
   height: 50upx;
   overflow-wrap: break-word;
   color: rgba(51,51,51,1);

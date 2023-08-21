@@ -206,6 +206,10 @@ export default {
     },
     async doPay() {
       console.log(this.order)
+      uni.showLoading({
+        title: '支付中...'
+      });
+
       let res = await getPaySign(
           this.userInfo.userId,
           this.order.serveId,
@@ -220,16 +224,17 @@ export default {
       )
 
       console.log(res)
+      uni.hideLoading()
       if (res.code == 200) {
-        const { appId, timeStamp, nonceStr, packageInfo, paySign, signType } = res.data
+        const { appId, timeStamp, nonceStr, packageInfo, paySign, signType, out_trade_no } = res.data
         wxPay(res.data, () => {
           uni.showToast({
             icon: "success",
             title: "支付成功",
           });
+
           uni.navigateTo({
-            // url: "/pages/course/courseDetail?id=" + this.courseInfo.id,
-            url: "/pages/consult/order",
+            url: "/pages/consult/payResultOk?orderNo=" + out_trade_no,
           });
         }, (msg) => {
           console.log(msg)
@@ -237,11 +242,19 @@ export default {
             icon: "error",
             title: "支付失败",
           });
+
+          uni.navigateTo({
+            url: "/pages/consult/payResultFail"
+          });
         })
       } else {
         uni.showToast({
           icon: "none",
           title: res.msg,
+        });
+
+        uni.navigateTo({
+          url: "/pages/consult/payResultFail"
         });
       }
     },

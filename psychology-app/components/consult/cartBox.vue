@@ -12,14 +12,14 @@
               <text class="time-content-week">{{ a.week }}</text>
               <text class="time-content-date">{{ a.day }}</text>
             </view>
-            <view v-if="a.child.length === 0" class="time-content-list">
+            <view v-if="a.child.length === 0 || a.child.filter(b => b.disable).length === a.child.length" class="time-content-list">
               <view>
                 <view class="time-item-full-tag">
                   <text class="time-item-full-tag-text">已满</text>
                 </view>
               </view>
             </view>
-            <view v-if="a.child.length > 0" class="time-content-list">
+            <view v-else-if="a.child.length > 0" class="time-content-list">
               <view v-for="i in a.child">
                 <view class="time-item-full-tag" v-if="i.disable">
                   <text class="time-item-full-tag-text">{{ i.s }}</text>
@@ -75,7 +75,7 @@ export default {
           flag: false,
           child: []
         }
-        this.works.filter(b => a.date === b.day && b.live !== '[]').forEach(c => {
+        this.works.filter(b => a.date === b.day && b.live !== '[]' && b.live !== b.used).forEach(c => {
           const live = JSON.parse(c.live)
           const used = JSON.parse(c.used)
           live.filter(d => (a.date === today && d > curTime) || a.date !== today).forEach(it => {
@@ -179,13 +179,13 @@ export default {
       margin-left: 24upx;
     }
     .time-content-day {
-      width: 44upx;
+      width: 80upx;
       height: 78upx;
-      margin: 10upx;
+      margin: 10upx 48upx 10upx 10upx;
       display: flex;
       flex-direction: column;
       justify-content: space-between;
-      margin-right: 58upx;
+      text-align: center;
       &.selected {
         .time-content-week,
         .time-content-date {
@@ -193,14 +193,13 @@ export default {
         }
       }
       .time-content-week {
-        width: 60upx;
+        width: 80upx;
         color: rgba(51,51,51,1);
         font-size: 30upx;
         font-weight: 600;
-        margin-left: 4upx;
       }
       .time-content-date {
-        width: 76upx;
+        width: 80upx;
         color: rgba(119,119,119,1);
         font-size: 24upx;
         margin-top: 2upx;
@@ -213,7 +212,8 @@ export default {
 
     .time-item-full-tag {
       margin: 10rpx;
-      background-color: rgba(248,248,248,1.000000);
+      background-color: rgba(248,248,248,1);
+      border: 1px solid rgba(248,248,248,1);
       border-radius: 8rpx;
       height: 96rpx;
       display: flex;
@@ -243,7 +243,7 @@ export default {
         margin: 8rpx 0 0 16rpx;
       }
       .time-item-tag-block {
-        background-color: rgba(51,51,51,1.000000);
+        background-color: rgba(51,51,51,1);
         width: 12rpx;
         height: 2rpx;
         margin: 1rpx 0 0 42rpx;
@@ -254,9 +254,9 @@ export default {
         margin: 1rpx 0 8rpx 16rpx;
       }
       &.selected {
-        background-color: rgba(255,112,63,1.000000);
+        background-color: rgba(255,112,63,1);
         color: #FFFFFF;
-        border: none;
+        border: 1px solid rgba(255,112,63,1);
         .time-item-tag-text,
         .time-item-tag-text2 {
           color: #FFFFFF;
@@ -293,7 +293,7 @@ export default {
       width: 339upx;
     }
     .button_2 {
-      background-color: rgba(255,112,63,1.000000);
+      background-color: rgba(255,112,63,1);
       border-radius: 40upx;
       height: 80upx;
       line-height: 80upx;

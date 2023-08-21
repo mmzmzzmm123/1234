@@ -34,7 +34,7 @@
             <view class="info-box-1">
               <text class="info-name">{{ order.consultName }}</text>
               <image v-if="order.status !== '0'" @tap="openWx" src="/static/consult/order/wx.png" class="info-wx"></image>
-              <text v-if="order.status !== '0'" @tap="openWx" class="info-card">名片</text>
+              <text v-if="order.status !== '0'" @tap="openWx" class="info-card">查看名片</text>
             </view>
             <text class="info-serve">{{ order.serveName }}</text>
             <text class="info-end">有效期至：{{ order.serve.end ? order.serve.end : '永久有效'}}</text>
@@ -93,7 +93,7 @@
           <text class="order-info-label">订单编号</text>
           <view class="order-info-wapper">
             <text>{{ order.orderNo }}</text>
-            <image @tap="copy" src="https://lanhu.oss-cn-beijing.aliyuncs.com/SketchPngfe34227c184a7a0a93487a4e8799ddb4ba3ae96b8725b0a6a59e1676a99644b3" class="order-copy"></image>
+            <image @tap="copy" src="/static/consult/order/copy.png" class="order-copy"></image>
           </view>
         </view>
         <view class="order-info">
@@ -297,12 +297,17 @@ export default {
       )
 
       console.log(res)
+      uni.hideLoading()
       if (res.code == 200) {
-        const { appId, timeStamp, nonceStr, packageInfo, paySign, signType } = res.data
+        const { appId, timeStamp, nonceStr, packageInfo, paySign, signType, out_trade_no } = res.data
         wxPay(res.data, () => {
           uni.showToast({
             icon: "success",
             title: "支付成功",
+          });
+
+          uni.navigateTo({
+            url: "/pages/consult/payResultOk?orderNo=" + out_trade_no,
           });
         }, (msg) => {
           console.log(msg)
@@ -310,11 +315,19 @@ export default {
             icon: "error",
             title: "支付失败",
           });
+
+          uni.navigateTo({
+            url: "/pages/consult/payResultFail"
+          });
         })
       } else {
         uni.showToast({
           icon: "none",
           title: res.msg,
+        });
+
+        uni.navigateTo({
+          url: "/pages/consult/payResultFail"
         });
       }
     },
@@ -445,31 +458,28 @@ export default {
 .info-box-1 {
   flex-direction: row;
   display: flex;
+  align-items: center;
 }
 .info-name {
   color: rgba(51,51,51,1);
   font-size: 26upx;
   font-family: PingFangSC-Semibold;
   font-weight: 600;
-  margin-top: 4upx;
+  //margin-top: 4upx;
 }
 .info-wx {
   width: 28upx;
   height: 28upx;
-  margin: 9upx 0 0 20upx;
+  margin-left: 20upx;
 }
 .info-card {
-  width: 44upx;
+  width: 100upx;
   height: 30upx;
-  overflow-wrap: break-word;
-  color: rgba(170,170,170,1);
+  color: #FF703F;
   font-size: 22upx;
-  font-family: PingFangSC-Regular;
-  font-weight: normal;
   text-align: left;
-  white-space: nowrap;
   line-height: 30upx;
-  margin-top: 8upx;
+  //margin-top: 8upx;
 }
 .info-box-2 {
   position: absolute;
@@ -496,7 +506,7 @@ export default {
   margin-top: 11upx;
 }
 .info-serve {
-  width: 270upx;
+  width: 300upx;
   height: 37upx;
   overflow-wrap: break-word;
   color: rgba(119,119,119,1);
@@ -509,7 +519,7 @@ export default {
   margin-top: 4upx;
 }
 .info-end {
-  width: 354upx;
+  width: 360upx;
   height: 37upx;
   overflow-wrap: break-word;
   color: rgba(119,119,119,1);
@@ -552,21 +562,15 @@ export default {
     justify-content: space-between;
   }
   .info-last-title {
-    width: 168upx;
+    min-width: 168upx;
     color: rgba(51,51,51,1);
     font-size: 24upx;
-    font-family: PingFangSC-Regular;
   }
   .info-last-val {
-    width: 47upx;
-    overflow-wrap: break-word;
+    width: 300upx;
     color: rgba(255,112,63,1);
     font-size: 24upx;
-    font-family: PingFangSC-Regular;
-    font-weight: normal;
     text-align: left;
-    white-space: nowrap;
-    line-height: 33upx;
   }
   .pay-btn {
     position: absolute;
@@ -578,7 +582,6 @@ export default {
     background: #FF703F;
     border-radius: 36rpx;
     font-size: 28rpx;
-    font-family: PingFangSC-Semibold, PingFang SC;
     font-weight: 600;
   }
 }

@@ -247,18 +247,24 @@ export default {
       )
 
       console.log(res)
+      uni.hideLoading()
       if (res.code == 200) {
-        const { appId, timeStamp, nonceStr, packageInfo, paySign, signType } = res.data
-        wxPay(res.data, (respone) => {
-          console.log(respone)
-          uni.hideLoading()
+        const { appId, timeStamp, nonceStr, packageInfo, paySign, signType, out_trade_no } = res.data
+        wxPay(res.data, () => {
+          uni.showToast({
+            icon: "success",
+            title: "支付成功",
+          });
 
           uni.navigateTo({
-            url: "/pages/consult/payResultOk?orderNo=" + respone.data.out_trade_no,
+            url: "/pages/consult/payResultOk?orderNo=" + out_trade_no,
           });
         }, (msg) => {
           console.log(msg)
-          uni.hideLoading()
+          uni.showToast({
+            icon: "error",
+            title: "支付失败",
+          });
 
           uni.navigateTo({
             url: "/pages/consult/payResultFail"
