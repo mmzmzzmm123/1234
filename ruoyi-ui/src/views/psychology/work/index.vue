@@ -438,7 +438,8 @@ export default {
       }
       const arr = JSON.parse(val)
       const list = []
-      for (let i = 0; i < 3; i++) {
+      const len = arr.length > 3 ? 3 : arr.length
+      for (let i = 0; i < len; i++) {
         list.push(arr[i] < 10 ? '0' + arr[i] + ':00~0' + arr[i] + ':50' : arr[i] + ':00~' + arr[i] + ':50')
       }
       if (arr.length > 3) {

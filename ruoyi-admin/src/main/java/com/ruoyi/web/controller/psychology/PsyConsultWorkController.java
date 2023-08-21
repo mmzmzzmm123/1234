@@ -35,7 +35,7 @@ public class PsyConsultWorkController extends BaseController
     /**
      * 查询咨询服务列表
      */
-    @PreAuthorize("@ss.hasPermi('psychology:work:list')")
+    @PreAuthorize("@ss.hasPermi('psychology:work:query')")
     @GetMapping("/getWorks")
     public AjaxResult getWorks(PsyWorkReq req)
     {
@@ -45,7 +45,7 @@ public class PsyConsultWorkController extends BaseController
     /**
      * 查询咨询服务列表
      */
-    @PreAuthorize("@ss.hasPermi('psychology:work:list')")
+    @PreAuthorize("@ss.hasPermi('psychology:work:query')")
     @GetMapping("/list")
     public TableDataInfo list(PsyConsultWorkVO req)
     {

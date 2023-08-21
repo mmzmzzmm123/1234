@@ -271,7 +271,7 @@ public class PsyConsultServiceImpl implements IPsyConsultService {
         sysUser.setAvatar(req.getAvatar());
         sysUser.setUpdateBy(SecurityUtils.getUsername());
         sysUser.setStatus(req.getStatus());
-        userService.updateUser(sysUser);
+        userService.updateUserProfile(sysUser);
 
         converToStr(req);
         return AjaxResult.success(psyConsultMapper.updateById(BeanUtil.toBean(req, PsyConsult.class)));

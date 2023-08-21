@@ -123,7 +123,7 @@ export default {
       margin-left: 24upx;
     }
     .time-content-day {
-      width: 68upx;
+      //width: 70upx;
       height: 78upx;
       margin: 10upx;
       display: flex;
@@ -144,7 +144,7 @@ export default {
         margin-left: 4upx;
       }
       .time-content-date {
-        width: 76upx;
+        //width: 68upx;
         color: rgba(119,119,119,1);
         font-size: 24upx;
         margin-top: 2upx;

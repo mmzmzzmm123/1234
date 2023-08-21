@@ -32,7 +32,7 @@ public class PsyConsultOrderController extends BaseController
     @Resource
     private IPsyConsultOrderService psyConsultOrderService;
 
-    @PreAuthorize("@ss.hasPermi('psychology:order:list')")
+    @PreAuthorize("@ss.hasPermi('psychology:order:query')")
     @GetMapping(value = "/getDetail/{id}")
     public AjaxResult getDetail(@PathVariable("id") Long id)
     {
@@ -42,7 +42,7 @@ public class PsyConsultOrderController extends BaseController
     /**
      * 查询咨询订单列表
      */
-    @PreAuthorize("@ss.hasPermi('psychology:order:list')")
+    @PreAuthorize("@ss.hasPermi('psychology:order:query')")
     @GetMapping("/list")
     public TableDataInfo list(PsyAdminOrderReq req)
     {

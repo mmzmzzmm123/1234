@@ -46,7 +46,7 @@ public class PsyConsultController extends BaseController
     /**
      * 查询心理咨询师列表
      */
-    @PreAuthorize("@ss.hasPermi('psychology:consult:list')")
+    @PreAuthorize("@ss.hasPermi('psychology:consult:query')")
     @GetMapping("/list")
     public TableDataInfo list(PsyConsultVO psyConsult)
     {
@@ -55,7 +55,7 @@ public class PsyConsultController extends BaseController
         return getDataTable(list);
     }
 
-    @PreAuthorize("@ss.hasPermi('psychology:consult:list')")
+    @PreAuthorize("@ss.hasPermi('psychology:consult:query')")
     @GetMapping("/adminList")
     public TableDataInfo list(PsyAdminConsultReq psyConsult)
     {
@@ -67,7 +67,7 @@ public class PsyConsultController extends BaseController
     /**
      * 查询所有心理咨询师
      */
-    @PreAuthorize("@ss.hasPermi('psychology:consult:list')")
+    @PreAuthorize("@ss.hasPermi('psychology:consult:query')")
     @GetMapping("/getAll")
     public AjaxResult getAll(PsyConsultVO psyConsult)
     {

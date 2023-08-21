@@ -26,7 +26,7 @@
             size="mini"
             type="text"
             @click="handleDelete(scope.row)"
-            v-hasPermi="['psychology:consult:edit']">
+            v-hasPermi="['psychology:consult:serveDelete']">
             解绑
           </el-button>
         </template>
