@@ -1,5 +1,7 @@
 package com.ruoyi.app.controller.gauge;
 
+import com.ruoyi.common.annotation.RateLimiter;
+import com.ruoyi.common.enums.LimitType;
 import com.ruoyi.gauge.dto.GaugeLabelQueryDTO;
 import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.page.TableDataInfo;
@@ -27,6 +29,7 @@ public class AppPsyGaugeLabelController extends BaseController {
 
     @GetMapping("/list")
     @ApiOperation("查询测评标签列表")
+    @RateLimiter(limitType = LimitType.IP)
     public TableDataInfo list(GaugeLabelQueryDTO gaugeLabelQueryDTO)
     {
         startPage();

@@ -4,6 +4,8 @@ package com.ruoyi.app.controller.course;
 
 import java.util.List;
 
+import com.ruoyi.common.annotation.RateLimiter;
+import com.ruoyi.common.enums.LimitType;
 import com.ruoyi.course.domain.CourCourseClass;
 import com.ruoyi.course.service.ICourCourseClassService;
 import com.ruoyi.course.service.ICourCourseService;
@@ -32,6 +34,7 @@ public class AppCurriculumClassify extends BaseController {
 
     @GetMapping("/list")
     @ApiOperation("查询课程分类列表")
+    @RateLimiter(limitType = LimitType.IP)
     public TableDataInfo list(CourCourseClass courCourseType)
     {
         startPage();

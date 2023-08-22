@@ -1,9 +1,11 @@
 package com.ruoyi.app.controller.gauge;
 
+import com.ruoyi.common.annotation.RateLimiter;
 import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.core.domain.dto.LoginDTO;
 import com.ruoyi.common.core.page.TableDataInfo;
+import com.ruoyi.common.enums.LimitType;
 import com.ruoyi.framework.web.service.AppTokenService;
 import com.ruoyi.gauge.constant.GaugeConstant;
 import com.ruoyi.gauge.domain.PsyGauge;
@@ -53,6 +55,7 @@ public class AppPsyGaugeController extends BaseController
 //    @PreAuthorize("@ss.hasPermi('psychology:gauge:list')")
     @GetMapping("/list")
     @ApiOperation("查询量表数据列表")
+    @RateLimiter(limitType = LimitType.IP)
     public TableDataInfo list(PsyGauge psyGauge)
     {
         startPage();
@@ -66,6 +69,7 @@ public class AppPsyGaugeController extends BaseController
 //    @PreAuthorize("@ss.hasPermi('psychology:gauge:query')")
     @PostMapping(value = "/getInfo")
     @ApiOperation("查询量表详细信息")
+    @RateLimiter(limitType = LimitType.IP)
     public AjaxResult getInfo(@RequestParam(value = "id") Integer id, HttpServletRequest request)
     {
         LoginDTO loginUser = appTokenService.getLoginUser(request);
@@ -99,6 +103,7 @@ public class AppPsyGaugeController extends BaseController
      */
     @PostMapping("/search")
     @ApiOperation("查询课程列表")
+    @RateLimiter(limitType = LimitType.IP)
     public AjaxResult getList(@RequestParam String searchValue)    {
         List<PsyGauge> list = psyGaugeService.selectPsyGaugeList(null);
         list = list.stream()

@@ -1,7 +1,9 @@
 package com.ruoyi.app.controller.gauge;
 
+import com.ruoyi.common.annotation.RateLimiter;
 import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.page.TableDataInfo;
+import com.ruoyi.common.enums.LimitType;
 import com.ruoyi.gauge.domain.PsyGaugeClass;
 import com.ruoyi.gauge.service.IPsyGaugeClassService;
 import io.swagger.annotations.Api;
@@ -32,6 +34,7 @@ public class AppPsyGaugeClassController extends BaseController
 //    @PreAuthorize("@ss.hasPermi('psychology:gaugeClass:list')")
     @GetMapping("/list")
     @ApiOperation("查询测评分类列表")
+    @RateLimiter(limitType = LimitType.IP)
     public TableDataInfo list(PsyGaugeClass psyGaugeClass)
     {
         startPage();

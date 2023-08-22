@@ -6,13 +6,17 @@ import com.ruoyi.app.controller.wechat.constant.WechatConstants;
 import com.ruoyi.app.controller.wechat.constant.WechatUrlConstants;
 import com.ruoyi.app.controller.wechat.dto.WechatPayDTO;
 import com.ruoyi.app.controller.wechat.utils.WechatPayV3Utils;
+import com.ruoyi.common.annotation.RateLimiter;
+import com.ruoyi.common.annotation.RepeatSubmit;
 import com.ruoyi.common.constant.PsyConstants;
 import com.ruoyi.common.constant.RespMessageConstants;
 import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.domain.AjaxResult;
+import com.ruoyi.common.enums.LimitType;
 import com.ruoyi.course.constant.CourConstant;
 import com.ruoyi.course.domain.CourCourse;
 import com.ruoyi.course.service.ICourCourseService;
+import com.ruoyi.framework.web.service.AppTokenService;
 import com.ruoyi.gauge.constant.GaugeConstant;
 import com.ruoyi.gauge.domain.PsyGauge;
 import com.ruoyi.gauge.service.IPsyGaugeService;
@@ -57,6 +61,9 @@ public class WechatPayV3ApiController extends BaseController {
     public WechatPayV3Utils wechatPayV3Utils;
 
     @Resource
+    private AppTokenService appTokenService;
+
+    @Resource
     private IPsyUserService psyUserService;
 
     @Resource
@@ -81,10 +88,15 @@ public class WechatPayV3ApiController extends BaseController {
      * @return 小程序支付所需参数
      */
     @PostMapping("/wechatPay")
-    public AjaxResult wechatPay(@RequestBody WechatPayDTO wechatPayDTO) {
-
+    @RateLimiter(limitType = LimitType.IP)
+    public AjaxResult wechatPay(@RequestBody WechatPayDTO wechatPayDTO, HttpServletRequest request) {
         //@TODO demo中先写死的一些参数
         Integer userId = wechatPayDTO.getUserId(); //用户id
+        Integer id = appTokenService.getUserId(request);
+        if (id == -1 || !id.equals(userId)) {
+            return error("用户信息异常,请登录后重试");
+        }
+
         String out_trade_no = null;
 
         BigDecimal amount = wechatPayDTO.getAmount(); //单位：元

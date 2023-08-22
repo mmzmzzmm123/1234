@@ -1,7 +1,10 @@
 package com.ruoyi.app.controller.psychology;
 
+import com.ruoyi.common.annotation.RateLimiter;
+import com.ruoyi.common.annotation.RepeatSubmit;
 import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.page.TableDataInfo;
+import com.ruoyi.common.enums.LimitType;
 import com.ruoyi.psychology.domain.PsyConsultBannerConfig;
 import com.ruoyi.psychology.service.IPsyConsultBannerConfigService;
 import com.ruoyi.psychology.vo.PsyConsultBannerConfigVO;
@@ -29,6 +32,7 @@ public class AppPsyBannerController extends BaseController
      * 查询banner列表
      */
     @GetMapping("/list")
+    @RateLimiter(count = 50, limitType = LimitType.IP)
     public TableDataInfo list(PsyConsultBannerConfigVO req)
     {
         startPage();

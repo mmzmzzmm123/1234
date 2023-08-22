@@ -1,7 +1,9 @@
 package com.ruoyi.app.controller.gauge;
 
+import com.ruoyi.common.annotation.RateLimiter;
 import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.page.TableDataInfo;
+import com.ruoyi.common.enums.LimitType;
 import com.ruoyi.gauge.domain.PsyGaugeBannerConfig;
 import com.ruoyi.gauge.service.IPsyGaugeBannerConfigService;
 import io.swagger.annotations.Api;
@@ -32,6 +34,7 @@ public class AppPsyGaugeBannerConfigController extends BaseController
 //    @PreAuthorize("@ss.hasPermi('banner:config:list')")
     @GetMapping("/list")
     @ApiOperation("查询测评banner配置列表")
+    @RateLimiter(limitType = LimitType.IP)
     public TableDataInfo list(PsyGaugeBannerConfig psyGaugeBannerConfig)
     {
         startPage();

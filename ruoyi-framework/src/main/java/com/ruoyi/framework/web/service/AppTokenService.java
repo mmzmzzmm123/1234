@@ -53,6 +53,15 @@ public class AppTokenService {
     private RedisCache redisCache;
 
     /**
+     *
+     * @return 用户id
+     */
+    public Integer getUserId(HttpServletRequest request) {
+        LoginDTO loginUser = getLoginUser(request);
+        return loginUser != null && loginUser.getUserId() != null ? loginUser.getUserId() : -1;
+    }
+
+    /**
      * 获取用户身份信息
      *
      * @return 用户信息

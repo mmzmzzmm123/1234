@@ -1,8 +1,10 @@
 package com.ruoyi.app.controller.course;
 
+import com.ruoyi.common.annotation.RateLimiter;
 import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.core.page.TableDataInfo;
+import com.ruoyi.common.enums.LimitType;
 import com.ruoyi.course.constant.CourConstant;
 import com.ruoyi.course.domain.CourUserCourseSection;
 import com.ruoyi.course.service.ICourUserCourseSectionService;
@@ -30,6 +32,7 @@ public class AppCourUserSectionController extends BaseController {
 //    @PreAuthorize("@ss.hasPermi('course:userSection:list')")
     @PostMapping("/list")
     @ApiOperation("查询课程章节列表")
+    @RateLimiter(limitType = LimitType.IP)
     public TableDataInfo list(@RequestBody CourUserCourseSection courUserCourseSection)
     {
         startPage();
@@ -42,6 +45,7 @@ public class AppCourUserSectionController extends BaseController {
      */
     @PostMapping("/saveUserSectionInfo")
     @ApiOperation("记录课程章节完成情况，新增或更新用户-课程-章节关系")
+    @RateLimiter(limitType = LimitType.IP)
     public AjaxResult saveUserSectionInfo(@RequestBody CourUserCourseSection userCourseSection)
     {
         if (userCourseSection.getFinishStatus() == null) {

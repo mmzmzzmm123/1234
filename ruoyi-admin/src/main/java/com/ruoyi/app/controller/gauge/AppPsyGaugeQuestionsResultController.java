@@ -1,11 +1,13 @@
 package com.ruoyi.app.controller.gauge;
 
+import com.ruoyi.common.annotation.RateLimiter;
 import com.ruoyi.common.constant.RespMessageConstants;
 import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.core.domain.dto.GaugeCommitResultDTO;
 import com.ruoyi.common.core.domain.dto.LoginDTO;
 import com.ruoyi.common.enums.GaugeStatus;
+import com.ruoyi.common.enums.LimitType;
 import com.ruoyi.framework.web.service.AppTokenService;
 import com.ruoyi.gauge.domain.PsyGaugeQuestionsResult;
 import com.ruoyi.gauge.domain.PsyGaugeQuestionsResultAll;
@@ -49,6 +51,7 @@ public class AppPsyGaugeQuestionsResultController extends BaseController
      */
     @PostMapping
     @ApiOperation("答题")
+    @RateLimiter(limitType = LimitType.IP)
     public AjaxResult add(@RequestBody @Validated PsyGaugeQuestionsResult psyGaugeQuestionsResult, HttpServletRequest request)
     {
         LoginDTO loginUser = appTokenService.getLoginUser(request);
@@ -63,6 +66,7 @@ public class AppPsyGaugeQuestionsResultController extends BaseController
      */
     @PostMapping("/commit")
     @ApiOperation("普通计算提交测评并生成结果")
+    @RateLimiter(limitType = LimitType.IP)
     public AjaxResult commitResult(@RequestBody @Validated GaugeCommitResultDTO gaugeCommitResultDTO, HttpServletRequest request)
     {
         LoginDTO loginUser = appTokenService.getLoginUser(request);
@@ -83,6 +87,7 @@ public class AppPsyGaugeQuestionsResultController extends BaseController
      */
     @PostMapping("/addList")
     @ApiOperation("测评结果保存")
+    @RateLimiter(limitType = LimitType.IP)
     public AjaxResult addList(@RequestBody @Validated List<PsyGaugeQuestionsResultAll> psyGaugeQuestionsResultAlls)
     {
         return toAjax(psyGaugeQuestionsResultService.addList(psyGaugeQuestionsResultAlls));

@@ -1,7 +1,9 @@
 package com.ruoyi.app.controller.course;
 
+import com.ruoyi.common.annotation.RateLimiter;
 import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.domain.AjaxResult;
+import com.ruoyi.common.enums.LimitType;
 import com.ruoyi.common.utils.OrderIdUtils;
 import com.ruoyi.course.constant.CourConstant;
 import com.ruoyi.course.domain.CourCourse;
@@ -42,6 +44,7 @@ public class AppCourOrderController extends BaseController
 //    @PreAuthorize("@ss.hasPermi('course:course:list')")
     @PostMapping("/list")
     @ApiOperation("查询课程订单列表")
+    @RateLimiter(limitType = LimitType.IP)
     public AjaxResult list(@RequestBody CourOrder courOrder)
     {
         List<CourOrder> list = courOrderService.selectCourOrderList(courOrder);
@@ -67,6 +70,7 @@ public class AppCourOrderController extends BaseController
 //    @PreAuthorize("@ss.hasPermi('course:course:list')")
     @PostMapping("/detail")
     @ApiOperation("根据订单ID查询课程订单详情")
+    @RateLimiter(limitType = LimitType.IP)
     public AjaxResult detail(@RequestParam(value = "orderId") Integer id)
     {
         CourOrder courOrder = courOrderService.selectCourOrderById(id);
@@ -81,6 +85,7 @@ public class AppCourOrderController extends BaseController
      */
     @PutMapping("/add")
     @ApiOperation("根据订单信息生成课程订单")
+    @RateLimiter(limitType = LimitType.IP)
     public AjaxResult generateOrder(@RequestBody CourOrder courOrder)
     {
 
@@ -96,6 +101,7 @@ public class AppCourOrderController extends BaseController
      */
     @PostMapping("/cancel")
     @ApiOperation("取消订单")
+    @RateLimiter(limitType = LimitType.IP)
     public AjaxResult cancelOrder(@RequestParam Integer orderId)    {
 
         CourOrder courOrder = new CourOrder();

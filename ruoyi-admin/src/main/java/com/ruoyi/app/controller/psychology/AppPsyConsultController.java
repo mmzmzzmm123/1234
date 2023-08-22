@@ -1,8 +1,10 @@
 package com.ruoyi.app.controller.psychology;
 
+import com.ruoyi.common.annotation.RateLimiter;
 import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.core.page.TableDataInfo;
+import com.ruoyi.common.enums.LimitType;
 import com.ruoyi.psychology.domain.PsyConsult;
 import com.ruoyi.psychology.request.PsyConsultReq;
 import com.ruoyi.psychology.request.PsyConsultServeConfigReq;
@@ -33,6 +35,7 @@ public class AppPsyConsultController extends BaseController
      * 查询心理咨询师列表
      */
     @PostMapping("/search")
+    @RateLimiter(limitType = LimitType.IP)
     public TableDataInfo list(@RequestBody PsyConsultReq req)
     {
         startPage();
@@ -41,6 +44,7 @@ public class AppPsyConsultController extends BaseController
     }
 
     @GetMapping(value = "/getConsultWorksById/{id}")
+    @RateLimiter(limitType = LimitType.IP)
     public AjaxResult getConsultWorksById(@PathVariable("id") Long id)
     {
         return AjaxResult.success(psyConsultService.getConsultWorksById(id));
@@ -51,12 +55,14 @@ public class AppPsyConsultController extends BaseController
      * 获取心理咨询师详细信息
      */
     @GetMapping(value = "/{id}")
+    @RateLimiter(limitType = LimitType.IP)
     public AjaxResult getInfo(@PathVariable("id") Long id)
     {
         return AjaxResult.success(psyConsultService.getOne(id));
     }
 
     @GetMapping(value = "/serve/{id}")
+    @RateLimiter(limitType = LimitType.IP)
     public AjaxResult getServe(@PathVariable("id") Long id)
     {
         PsyConsultServeConfigReq req = new PsyConsultServeConfigReq();

@@ -1,12 +1,14 @@
 package com.ruoyi.app.controller.order;
 
 import com.ruoyi.common.annotation.Log;
+import com.ruoyi.common.annotation.RateLimiter;
 import com.ruoyi.common.constant.RespMessageConstants;
 import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.core.domain.dto.LoginDTO;
 import com.ruoyi.common.core.page.TableDataInfo;
 import com.ruoyi.common.enums.BusinessType;
+import com.ruoyi.common.enums.LimitType;
 import com.ruoyi.common.enums.OrderStatus;
 import com.ruoyi.common.utils.poi.ExcelUtil;
 import com.ruoyi.framework.web.service.AppTokenService;
@@ -44,6 +46,7 @@ public class AppPsyOrderController extends BaseController {
 //    @PreAuthorize("@ss.hasPermi('system:order:list')")
     @PostMapping("/list")
     @ApiOperation("获取订单分页列表")
+    @RateLimiter(limitType = LimitType.IP)
     public TableDataInfo list(@RequestBody PsyOrder psyOrder, HttpServletRequest request) {
         if (psyOrder.getUserId() == null) {
             LoginDTO loginUser = appTokenService.getLoginUser(request);
@@ -64,6 +67,7 @@ public class AppPsyOrderController extends BaseController {
     @Log(title = "心理测评订单信息", businessType = BusinessType.EXPORT)
     @PostMapping("/export")
     @ApiIgnore
+    @RateLimiter(limitType = LimitType.IP)
     public void export(HttpServletResponse response, PsyOrder psyOrder) {
         List<PsyOrder> list = psyOrderService.selectPsyOrderList(psyOrder);
         ExcelUtil<PsyOrder> util = new ExcelUtil<PsyOrder>(PsyOrder.class);
@@ -76,6 +80,7 @@ public class AppPsyOrderController extends BaseController {
 //    @PreAuthorize("@ss.hasPermi('system:order:query')")
     @GetMapping(value = "/{id}")
     @ApiOperation("获取订单详细信息")
+    @RateLimiter(limitType = LimitType.IP)
     public AjaxResult getInfo(@PathVariable("id") Integer id) {
         return AjaxResult.success(psyOrderService.selectPsyOrderById(id));
     }
@@ -86,6 +91,7 @@ public class AppPsyOrderController extends BaseController {
      */
     @PostMapping(value = "/getMyReportNum")
     @ApiOperation("获取我的报告数量")
+    @RateLimiter(limitType = LimitType.IP)
     public AjaxResult getMyReportNum(HttpServletRequest request) {
         LoginDTO loginUser = appTokenService.getLoginUser(request);
         return AjaxResult.success(RespMessageConstants.OPERATION_SUCCESS ,psyOrderService.getMyReportNum(loginUser));
