@@ -1,11 +1,12 @@
 package com.ruoyi.psychology.service;
 
 import com.ruoyi.psychology.domain.PsyConsultWork;
-import com.ruoyi.psychology.dto.WorkDTO;
+import com.ruoyi.psychology.dto.HeaderDTO;
 import com.ruoyi.psychology.request.PsyConsultWorkReq;
 import com.ruoyi.psychology.request.PsyWorkReq;
 import com.ruoyi.psychology.vo.PsyConsultWorkVO;
 
+import java.util.HashMap;
 import java.util.List;
 
 public interface IPsyConsultWorkService {
@@ -17,7 +18,11 @@ public interface IPsyConsultWorkService {
 
     List<PsyConsultWork> checkDataUnique(PsyConsultWorkVO req);
 
-    WorkDTO getWorks(PsyWorkReq req);
+    List<Long> getConsultIds(PsyWorkReq req);
+
+    List<HashMap<String, String>> getWorks(PsyWorkReq req, List<Long> ids);
+
+    List<HeaderDTO> getWorkHeader(String month);
 
     PsyConsultWorkVO getOne(Long id);
 

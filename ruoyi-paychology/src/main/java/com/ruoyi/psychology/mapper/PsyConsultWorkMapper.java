@@ -22,6 +22,8 @@ public interface PsyConsultWorkMapper extends BaseMapper<PsyConsultWork>
 
     List<PsyConsultWork> getList(PsyConsultWorkVO req);
 
+    List<Long> getConsultIds(PsyWorkReq req);
+
     List<PsyConsultWorkVO> getWorks(PsyWorkReq req);
 
     List<PsyConsultOrderItemVO> getOrderItems(PsyWorkReq req);

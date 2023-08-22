@@ -43,6 +43,27 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         order by time_start asc
     </select>
 
+    <select id="getConsultIds" resultType="java.lang.Long">
+        SELECT
+        a.id
+        FROM
+        psy_consult a
+        INNER JOIN psy_consult_work b ON a.id = b.consult_id
+        <where>
+            <if test="ids != null and ids.size() > 0">
+                and b.consult_id in
+                <foreach collection="ids" item="item" open="(" separator="," close=")">
+                    #{item,jdbcType=BIGINT}
+                </foreach>
+            </if>
+            <if test="start != null "> and b.day <![CDATA[ >= ]]> #{start}</if>
+            <if test="end != null "> and b.day <![CDATA[ <= ]]> #{end}</if>
+            <if test="status != null  and status != ''"> and b.status = #{status}</if>
+        </where>
+        GROUP BY a.id
+        order by a.id
+    </select>
+
     <select id="getWorks" resultType="com.ruoyi.psychology.vo.PsyConsultWorkVO">
         select b.nick_name, b.user_name, a.id, a.consult_id, a.day, a.week, a.time_start, a.time_end, a.status, a.live, a.used from psy_consult_work a inner join psy_consult b on a.consult_id = b.id
         <where>
@@ -52,6 +73,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
                     #{item,jdbcType=BIGINT}
                 </foreach>
             </if>
+            <if test="consultId != null "> and a.consult_id = #{consultId}</if>
             <if test="start != null "> and a.day <![CDATA[ >= ]]> #{start}</if>
             <if test="end != null "> and a.day <![CDATA[ <= ]]> #{end}</if>
             <if test="status != null  and status != ''"> and a.status = #{status}</if>

@@ -11,7 +11,6 @@ import com.ruoyi.common.utils.NewDateUtil;
 import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.psychology.domain.PsyConsultWork;
 import com.ruoyi.psychology.dto.HeaderDTO;
-import com.ruoyi.psychology.dto.WorkDTO;
 import com.ruoyi.psychology.mapper.PsyConsultWorkMapper;
 import com.ruoyi.psychology.request.PsyConsultWorkReq;
 import com.ruoyi.psychology.request.PsyWorkReq;
@@ -25,7 +24,6 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.annotation.Resource;
 import java.text.SimpleDateFormat;
 import java.util.*;
-import java.util.stream.Collectors;
 
 @Service
 public class PsyConsultWorkServiceImpl extends ServiceImpl<PsyConsultWorkMapper, PsyConsultWork> implements IPsyConsultWorkService {
@@ -108,13 +106,12 @@ public class PsyConsultWorkServiceImpl extends ServiceImpl<PsyConsultWorkMapper,
     }
 
     @Override
-    public WorkDTO getWorks(PsyWorkReq req) {
-        WorkDTO res = new WorkDTO();
+    public List<HeaderDTO> getWorkHeader(String month) {
         Calendar c = Calendar.getInstance();
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 
-        if (StringUtils.isNotEmpty(req.getMonth())) {
-            Date date = NewDateUtil.strToDate(req.getMonth(), NewConstants.DATE_FORMAT_MONTH);
+        if (StringUtils.isNotEmpty(month)) {
+            Date date = NewDateUtil.strToDate(month, NewConstants.DATE_FORMAT_MONTH);
             if (date == null) {
                 date = new Date();
             }
@@ -135,39 +132,59 @@ public class PsyConsultWorkServiceImpl extends ServiceImpl<PsyConsultWorkMapper,
             }
 
             String fm = sdf.format(c.getTime());
-            if (i == 1) {
-                req.setStart(fm);
-            }
-            if (i == max_day_of_month) {
-                req.setEnd(fm);
-            }
-
             HeaderDTO headerItem = new HeaderDTO();
             headerItem.setLabel(StrUtil.format("{}({})", fm.substring(5, 10), NewDateUtil.getWeekOfDate(c)));
             headerItem.setProp(fm);
             headers.add(headerItem);
         }
-        res.setHeaders(headers);
 
-        List<PsyConsultWorkVO> works = getConsultWorks(req);
-        if (CollectionUtils.isEmpty(works)) {
-            return res;
+        return headers;
+    }
+
+    @Override
+    public List<Long> getConsultIds(PsyWorkReq req) {
+        Calendar calendar = Calendar.getInstance();
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+
+        if (StringUtils.isNotEmpty(req.getMonth())) {
+            Date date = NewDateUtil.strToDate(req.getMonth(), NewConstants.DATE_FORMAT_MONTH);
+            if (date == null) {
+                date = new Date();
+            }
+            calendar.setTime(date);
         }
 
-        List<HashMap<String, String>> items = new ArrayList<>();
+        int max_day_of_month = calendar.getActualMaximum(Calendar.DAY_OF_MONTH);
+        calendar.set(Calendar.DAY_OF_MONTH, 1);
+        req.setStart(sdf.format(calendar.getTime()));
+        calendar.add(Calendar.DATE, max_day_of_month);
+        req.setEnd(sdf.format(calendar.getTime()));
 
-        Map<Long, List<PsyConsultWorkVO>> collect = works.stream().collect(Collectors.groupingBy(PsyConsultWorkVO::getConsultId));
-        for (Map.Entry<Long, List<PsyConsultWorkVO>> item: collect.entrySet()) {
-            List<PsyConsultWorkVO> value = item.getValue();
+        return psyConsultWorkMapper.getConsultIds(req);
+    }
+
+    @Override
+    public List<HashMap<String, String>> getWorks(PsyWorkReq req, List<Long> ids) {
+        List<HashMap<String, String>> items = new ArrayList<>();
+        if (CollectionUtils.isEmpty(ids)) {
+            return items;
+        }
+
+        ids.forEach(consultId -> {
+            PsyWorkReq req1 = new PsyWorkReq();
+            req1.setConsultId(consultId);
+            req1.setStart(req.getStart());
+            req1.setEnd(req.getEnd());
+            req1.setStatus(req.getStatus());
+            List<PsyConsultWorkVO> works = getConsultWorks(req1);
             HashMap<String, String> node = new HashMap<>();
-            node.put("id", String.valueOf(value.get(0).getConsultId()));
-            node.put("nickName", value.get(0).getNickName());
-            node.put("userName", StrUtil.format("(系统账号:{})", value.get(0).getUserName()));
-            req.setConsultId(value.get(0).getConsultId());
-            List<PsyConsultOrderItemVO> orderItems = psyConsultWorkMapper.getOrderItems(req);
+            node.put("id", String.valueOf(consultId));
+            node.put("nickName", works.get(0).getNickName());
+            node.put("userName", StrUtil.format("(系统账号:{})", works.get(0).getUserName()));
+            List<PsyConsultOrderItemVO> orderItems = psyConsultWorkMapper.getOrderItems(req1);
             node.put("items", JSONObject.toJSONString(orderItems));
 
-            value.forEach(a -> {
+            works.forEach(a -> {
                 String v = "未排班";
                 if ("0".equals(a.getStatus())) {
 //                    v = StrUtil.format("{}-{}", a.getTimeStart(), a.getTimeEnd());
@@ -179,10 +196,9 @@ public class PsyConsultWorkServiceImpl extends ServiceImpl<PsyConsultWorkMapper,
             });
 
             items.add(node);
-        }
-        res.setItems(items);
+        });
 
-        return res;
+        return items;
     }
 
     @Override

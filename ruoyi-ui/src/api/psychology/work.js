@@ -17,6 +17,13 @@ export function getWorks(query) {
   })
 }
 
+export function getWorkHeader(month) {
+  return request({
+    url: '/psychology/work/getWorkHeader/' + month,
+    method: 'get'
+  })
+}
+
 // 查询咨询服务详细
 export function getWork(id) {
   return request({

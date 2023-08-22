@@ -107,6 +107,14 @@
       </el-table-column>
     </el-table>
 
+    <pagination
+      v-show="total>0"
+      :total="total"
+      :page.sync="queryParams.pageNum"
+      :limit.sync="queryParams.pageSize"
+      @pagination="getList"
+    />
+
     <!-- 添加或修改咨询服务对话框 -->
     <el-dialog title="排班设置" :visible.sync="open" width="800px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="120px">
@@ -183,7 +191,7 @@
 <script>
 import {mapState} from "vuex";
 import {getConsultAll} from "@/api/psychology/consult";
-import {addWork, delWork, getWorks, updateWork} from "@/api/psychology/work";
+import {addWork, delWork, getWorks, getWorkHeader, updateWork} from "@/api/psychology/work";
 
 export default {
   dicts: ['consult_time'],
@@ -240,6 +248,8 @@ export default {
       fromTxt: [],
       // 查询参数
       queryParams: {
+        pageNum: 1,
+        pageSize: 10,
         ids: null,
         month: ''
       },
@@ -309,7 +319,7 @@ export default {
     console.log(this.userName)
     this.setTime()
     await this.getConsultList()
-    await this.getList();
+    this.handleQuery()
   },
   computed: {
   ...mapState({
@@ -461,18 +471,26 @@ export default {
       return list
     },
     /** 查询咨询服务列表 */
+    getHeaders() {
+      getWorkHeader(this.queryParams.month).then(response => {
+        if (response && response.data) {
+          this.headerList = response.data
+        }
+      })
+    },
     getList() {
       this.loading = true;
+
       getWorks(this.queryParams).then(response => {
-        const data =  response.data
-        if (data && data.items) {
-          data.items.forEach(a => {
+        const data =  response.rows
+        this.total = response.total;
+        if (data) {
+          data.forEach(a => {
             a.items = JSON.parse(a.items)
           })
         }
 
-        this.workList = data.items
-        this.headerList = data.headers;
+        this.workList = data
         this.loading = false;
 
         console.log(this.workList)
@@ -501,6 +519,8 @@ export default {
     },
     /** 搜索按钮操作 */
     handleQuery() {
+      this.queryParams.pageNum = 1
+      this.getHeaders();
       this.getList();
     },
     /** 重置按钮操作 */
@@ -511,7 +531,7 @@ export default {
       } else {
         this.queryParams.ids = []
       }
-      // this.handleQuery();
+      this.handleQuery();
     },
     /** 新增按钮操作 */
     handleAdd() {

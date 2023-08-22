@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -37,9 +38,20 @@ public class PsyConsultWorkController extends BaseController
      */
     @PreAuthorize("@ss.hasPermi('psychology:work:query')")
     @GetMapping("/getWorks")
-    public AjaxResult getWorks(PsyWorkReq req)
+    public TableDataInfo getWorks(PsyWorkReq req)
     {
-        return AjaxResult.success(psyConsultWorkService.getWorks(req));
+        startPage();
+        List<Long> ids = psyConsultWorkService.getConsultIds(req);
+        TableDataInfo dataInfo = getDataTable(ids);
+        List<HashMap<String, String>> list = psyConsultWorkService.getWorks(req, ids);
+        dataInfo.setRows(list);
+        return dataInfo;
+    }
+
+    @GetMapping("/getWorkHeader/{month}")
+    public AjaxResult getWorkHeader(@PathVariable("month") String month)
+    {
+        return AjaxResult.success(psyConsultWorkService.getWorkHeader(month));
     }
 
     /**
