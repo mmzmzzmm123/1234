@@ -7,12 +7,10 @@ import com.ruoyi.app.controller.wechat.constant.WechatUrlConstants;
 import com.ruoyi.app.controller.wechat.dto.WechatPayDTO;
 import com.ruoyi.app.controller.wechat.utils.WechatPayV3Utils;
 import com.ruoyi.common.annotation.RateLimiter;
-import com.ruoyi.common.annotation.RepeatSubmit;
 import com.ruoyi.common.constant.PsyConstants;
 import com.ruoyi.common.constant.RespMessageConstants;
 import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.domain.AjaxResult;
-import com.ruoyi.common.enums.LimitType;
 import com.ruoyi.course.constant.CourConstant;
 import com.ruoyi.course.domain.CourCourse;
 import com.ruoyi.course.service.ICourCourseService;
@@ -88,7 +86,7 @@ public class WechatPayV3ApiController extends BaseController {
      * @return 小程序支付所需参数
      */
     @PostMapping("/wechatPay")
-    @RateLimiter(limitType = LimitType.IP)
+    @RateLimiter
     public AjaxResult wechatPay(@RequestBody WechatPayDTO wechatPayDTO, HttpServletRequest request) {
         //@TODO demo中先写死的一些参数
         Integer userId = wechatPayDTO.getUserId(); //用户id

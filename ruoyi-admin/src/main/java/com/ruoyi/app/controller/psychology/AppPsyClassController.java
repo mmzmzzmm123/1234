@@ -3,7 +3,6 @@ package com.ruoyi.app.controller.psychology;
 import com.ruoyi.common.annotation.RateLimiter;
 import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.page.TableDataInfo;
-import com.ruoyi.common.enums.LimitType;
 import com.ruoyi.psychology.domain.PsyConsultClass;
 import com.ruoyi.psychology.service.IPsyConsultClassService;
 import com.ruoyi.psychology.vo.PsyConsultClassVO;
@@ -31,7 +30,7 @@ public class AppPsyClassController extends BaseController
      * 查询class列表
      */
     @GetMapping("/list")
-    @RateLimiter(count = 50, limitType = LimitType.IP)
+    @RateLimiter
     public TableDataInfo list(PsyConsultClassVO req)
     {
         startPage();

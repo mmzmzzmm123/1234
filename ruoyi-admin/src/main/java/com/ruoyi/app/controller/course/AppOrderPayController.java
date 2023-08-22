@@ -3,7 +3,6 @@ package com.ruoyi.app.controller.course;
 import com.ruoyi.common.annotation.RateLimiter;
 import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.domain.AjaxResult;
-import com.ruoyi.common.enums.LimitType;
 import com.ruoyi.course.domain.CourOrder;
 import com.ruoyi.course.service.ICourOrderService;
 import com.ruoyi.gauge.domain.PsyOrderPay;
@@ -32,7 +31,7 @@ public class AppOrderPayController extends BaseController {
      */
     @PutMapping("/add")
     @ApiOperation("根据支付信息生成支付对象")
-    @RateLimiter(limitType = LimitType.IP)
+    @RateLimiter
     public AjaxResult generateOrderPay(@RequestBody PsyOrderPay orderPay)
     {
 
@@ -48,7 +47,7 @@ public class AppOrderPayController extends BaseController {
      */
     @PostMapping ("/finish")
     @ApiOperation("完成支付")
-    @RateLimiter(limitType = LimitType.IP)
+    @RateLimiter
     public AjaxResult finishPay(@RequestBody PsyOrderPay orderPay)
     {
 
@@ -69,7 +68,7 @@ public class AppOrderPayController extends BaseController {
      */
     @PostMapping ("/cancel")
     @ApiOperation("取消支付")
-    @RateLimiter(limitType = LimitType.IP)
+    @RateLimiter
     public AjaxResult cancelPay(@RequestBody PsyOrderPay orderPay)
     {
         // 修改订单表的订单状态

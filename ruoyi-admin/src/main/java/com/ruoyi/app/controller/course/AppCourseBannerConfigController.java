@@ -3,7 +3,6 @@ package com.ruoyi.app.controller.course;
 import com.ruoyi.common.annotation.RateLimiter;
 import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.page.TableDataInfo;
-import com.ruoyi.common.enums.LimitType;
 import com.ruoyi.course.domain.CourCourseBannerConfig;
 import com.ruoyi.course.service.ICourCourseBannerConfigService;
 import io.swagger.annotations.Api;
@@ -35,7 +34,7 @@ public class AppCourseBannerConfigController extends BaseController
 //    @PreAuthorize("@ss.hasPermi('banner:config:list')")
     @GetMapping("/list")
     @ApiOperation("查询课程banner配置列表")
-    @RateLimiter(limitType = LimitType.IP)
+    @RateLimiter
     public TableDataInfo list(CourCourseBannerConfig courCourseBannerConfig)
     {
         startPage();

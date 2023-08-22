@@ -39,7 +39,7 @@ public class AppPsyOrderPayController extends BaseController {
 //    @PreAuthorize("@ss.hasPermi('system:pay:list')")
     @GetMapping("/list")
     @ApiIgnore
-    @RateLimiter(limitType = LimitType.IP)
+    @RateLimiter
     public TableDataInfo list(PsyOrderPay psyOrderPay) {
         startPage();
         List<PsyOrderPay> list = psyOrderPayService.selectPsyOrderPayList(psyOrderPay);
@@ -53,7 +53,7 @@ public class AppPsyOrderPayController extends BaseController {
     @Log(title = "心理咨询订单支付信息", businessType = BusinessType.EXPORT)
     @PostMapping("/export")
     @ApiIgnore
-    @RateLimiter(limitType = LimitType.IP)
+    @RateLimiter
     public void export(HttpServletResponse response, PsyOrderPay psyOrderPay) {
         List<PsyOrderPay> list = psyOrderPayService.selectPsyOrderPayList(psyOrderPay);
         ExcelUtil<PsyOrderPay> util = new ExcelUtil<PsyOrderPay>(PsyOrderPay.class);
@@ -66,7 +66,7 @@ public class AppPsyOrderPayController extends BaseController {
 //    @PreAuthorize("@ss.hasPermi('system:pay:query')")
     @GetMapping(value = "/{id}")
     @ApiOperation("获取支付信息")
-    @RateLimiter(limitType = LimitType.IP)
+    @RateLimiter
     public AjaxResult getInfo(@PathVariable("id") Integer id) {
         return AjaxResult.success(psyOrderPayService.selectPsyOrderPayById(id));
     }

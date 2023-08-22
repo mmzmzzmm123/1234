@@ -3,14 +3,14 @@ package com.ruoyi.app.controller.gauge;
 import com.ruoyi.common.annotation.RateLimiter;
 import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.page.TableDataInfo;
-import com.ruoyi.common.enums.LimitType;
 import com.ruoyi.gauge.domain.PsyGaugeClass;
 import com.ruoyi.gauge.service.IPsyGaugeClassService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
@@ -34,7 +34,7 @@ public class AppPsyGaugeClassController extends BaseController
 //    @PreAuthorize("@ss.hasPermi('psychology:gaugeClass:list')")
     @GetMapping("/list")
     @ApiOperation("查询测评分类列表")
-    @RateLimiter(limitType = LimitType.IP)
+    @RateLimiter
     public TableDataInfo list(PsyGaugeClass psyGaugeClass)
     {
         startPage();

@@ -3,7 +3,6 @@ package com.ruoyi.app.controller.marketing;
 import com.ruoyi.common.annotation.RateLimiter;
 import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.page.TableDataInfo;
-import com.ruoyi.common.enums.LimitType;
 import com.ruoyi.user.request.IntegralSearchReq;
 import com.ruoyi.user.service.IPsyUserIntegralRecordService;
 import com.ruoyi.user.vo.PsyUserIntegralRecordVO;
@@ -26,7 +25,7 @@ public class AppPsyUserIntegralController extends BaseController {
      * @param req 搜索条件
      */
     @GetMapping("/list")
-    @RateLimiter(limitType = LimitType.IP)
+    @RateLimiter
     public TableDataInfo getList(IntegralSearchReq req) {
         startPage();
 //        req.setUid(getUserId().intValue());

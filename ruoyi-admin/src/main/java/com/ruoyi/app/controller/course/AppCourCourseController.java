@@ -4,7 +4,6 @@ import com.ruoyi.common.annotation.RateLimiter;
 import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.core.page.TableDataInfo;
-import com.ruoyi.common.enums.LimitType;
 import com.ruoyi.course.constant.CourConstant;
 import com.ruoyi.course.domain.CourCourse;
 import com.ruoyi.course.domain.CourOrder;
@@ -58,7 +57,7 @@ public class AppCourCourseController extends BaseController
 //    @PreAuthorize("@ss.hasPermi('course:course:list')")
     @PostMapping("/list")
     @ApiOperation("查询课程列表")
-    @RateLimiter(limitType = LimitType.IP)
+    @RateLimiter
     public TableDataInfo list(@RequestBody CourCourse courCourse)
     {
         startPage();
@@ -72,7 +71,7 @@ public class AppCourCourseController extends BaseController
      */
     @PostMapping("/search")
     @ApiOperation("查询课程列表")
-    @RateLimiter(limitType = LimitType.IP)
+    @RateLimiter
     public AjaxResult getList(@RequestParam String searchValue)    {
         // 只查询已上架的课程
         CourCourse course = new CourCourse();
@@ -91,7 +90,7 @@ public class AppCourCourseController extends BaseController
 //    @PreAuthorize("@ss.hasPermi('course:userSection:list')")
     @PostMapping("/getCourseListByUserId")
     @ApiOperation("根据用户ID查询课程列表")
-    @RateLimiter(limitType = LimitType.IP)
+    @RateLimiter
     public TableDataInfo getCourseListByUserId(@RequestParam Integer userId)
     {
         startPage();
@@ -137,7 +136,7 @@ public class AppCourCourseController extends BaseController
 //    @PreAuthorize("@ss.hasPermi('course:course:query')")
     @PostMapping(value = "/getInfo")
     @ApiOperation("查询课程信息")
-    @RateLimiter(limitType = LimitType.IP)
+    @RateLimiter
     public AjaxResult getInfo(@RequestParam(value = "id") Integer courseId)
     {
         CourCourse course = courCourseService.selectCourCourseById(courseId);
@@ -176,7 +175,7 @@ public class AppCourCourseController extends BaseController
 //    @PreAuthorize("@ss.hasPermi('course:course:query')")
     @PostMapping(value = "/detail")
     @ApiOperation("查询课程详情")
-    @RateLimiter(limitType = LimitType.IP)
+    @RateLimiter
     public AjaxResult detail(@RequestParam Integer userId, @RequestParam Integer courseId)
     {
         CourCourse course = courCourseService.selectCourCourseById(courseId);

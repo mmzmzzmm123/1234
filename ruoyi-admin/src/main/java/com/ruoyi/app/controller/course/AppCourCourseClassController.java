@@ -3,7 +3,6 @@ package com.ruoyi.app.controller.course;
 import com.ruoyi.common.annotation.RateLimiter;
 import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.page.TableDataInfo;
-import com.ruoyi.common.enums.LimitType;
 import com.ruoyi.course.domain.CourCourseClass;
 import com.ruoyi.course.service.ICourCourseClassService;
 import io.swagger.annotations.Api;
@@ -29,7 +28,7 @@ public class AppCourCourseClassController extends BaseController
 //    @PreAuthorize("@ss.hasPermi('course:type:list')")
     @GetMapping("/list")
     @ApiOperation("查询课程类型列表")
-    @RateLimiter(limitType = LimitType.IP)
+    @RateLimiter
     public TableDataInfo list(CourCourseClass courCourseClass)
     {
         startPage();

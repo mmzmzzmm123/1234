@@ -3,7 +3,6 @@ package com.ruoyi.app.controller.psychology;
 import com.ruoyi.common.annotation.RateLimiter;
 import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.domain.AjaxResult;
-import com.ruoyi.common.enums.LimitType;
 import com.ruoyi.psychology.service.IPsyConsultOrderService;
 import com.ruoyi.psychology.service.IPsyConsultService;
 import com.ruoyi.psychology.vo.PsyConsultOrderVO;
@@ -28,21 +27,21 @@ public class AppPsyConsultOrderController extends BaseController
     private IPsyConsultOrderService psyConsultOrderService;
 
     @GetMapping(value = "/getOrderInfo/{id}")
-    @RateLimiter(limitType = LimitType.IP)
+    @RateLimiter
     public AjaxResult getOrderInfo(@PathVariable("id") Long id)
     {
         return AjaxResult.success(psyConsultOrderService.getOne(id));
     }
 
     @GetMapping(value = "/getOrderDetail/{id}")
-    @RateLimiter(limitType = LimitType.IP)
+    @RateLimiter
     public AjaxResult getOrderDetail(@PathVariable("id") Long id)
     {
         return AjaxResult.success(psyConsultOrderService.getOrderDetail(id));
     }
 
     @GetMapping(value = "/getOrderDetailByNo/{orderNo}")
-    @RateLimiter(limitType = LimitType.IP)
+    @RateLimiter
     public AjaxResult getOrderDetailByNo(@PathVariable("orderNo") String orderNo)
     {
         return AjaxResult.success(psyConsultOrderService.getOrderDetailByNo(orderNo));
@@ -52,7 +51,7 @@ public class AppPsyConsultOrderController extends BaseController
      * 获取订单列表
      */
     @PostMapping(value = "/getOrderList")
-    @RateLimiter(limitType = LimitType.IP)
+    @RateLimiter
     public AjaxResult getOrderList(@RequestBody PsyConsultOrderVO req)
     {
         return AjaxResult.success(psyConsultOrderService.getOrderList(req));
@@ -62,7 +61,7 @@ public class AppPsyConsultOrderController extends BaseController
      * 咨询
      */
     @PostMapping(value = "/doConsult/{id}/{workId}/{time}")
-    @RateLimiter(limitType = LimitType.IP)
+    @RateLimiter
     public AjaxResult doConsult(@PathVariable("id") Long id, @PathVariable("workId") Long workId, @PathVariable("time") Integer time)
     {
         return AjaxResult.success(psyConsultOrderService.doConsult(id, workId, time));
@@ -72,7 +71,7 @@ public class AppPsyConsultOrderController extends BaseController
      * 取消
      */
     @GetMapping(value = "/cancel/{id}")
-    @RateLimiter(limitType = LimitType.IP)
+    @RateLimiter
     public AjaxResult cancel(@PathVariable("id") Long id)
     {
         psyConsultOrderService.cancel(psyConsultOrderService.getOrderById(id));
@@ -83,7 +82,7 @@ public class AppPsyConsultOrderController extends BaseController
      * 获取心理咨询师详细信息
      */
     @GetMapping(value = "/getConsultInfoByServe/{cId}/{sId}")
-    @RateLimiter(limitType = LimitType.IP)
+    @RateLimiter
     public AjaxResult getConsultInfoByServe(@PathVariable("cId") Long cId, @PathVariable("sId") Long sId)
     {
         return AjaxResult.success(psyConsultService.getConsultInfoByServe(cId, sId));

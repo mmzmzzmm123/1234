@@ -1,23 +1,21 @@
 package com.ruoyi.app.controller.course;
 
 
-
-import java.util.List;
-
 import com.ruoyi.common.annotation.RateLimiter;
-import com.ruoyi.common.enums.LimitType;
-import com.ruoyi.course.domain.CourCourseClass;
-import com.ruoyi.course.service.ICourCourseClassService;
-import com.ruoyi.course.service.ICourCourseService;
-import io.swagger.annotations.ApiOperation;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
 import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.page.TableDataInfo;
+import com.ruoyi.course.domain.CourCourseClass;
+import com.ruoyi.course.service.ICourCourseClassService;
 import com.ruoyi.web.controller.common.CommonCosController;
+import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
 
 
 @RestController
@@ -28,13 +26,10 @@ public class AppCurriculumClassify extends BaseController {
     @Autowired
     private ICourCourseClassService courCourseClassService;
 
-    @Autowired
-    private ICourCourseService courCourseService;
-
 
     @GetMapping("/list")
     @ApiOperation("查询课程分类列表")
-    @RateLimiter(limitType = LimitType.IP)
+    @RateLimiter
     public TableDataInfo list(CourCourseClass courCourseType)
     {
         startPage();

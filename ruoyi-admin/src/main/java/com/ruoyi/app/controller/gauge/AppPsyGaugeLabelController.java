@@ -29,7 +29,7 @@ public class AppPsyGaugeLabelController extends BaseController {
 
     @GetMapping("/list")
     @ApiOperation("查询测评标签列表")
-    @RateLimiter(limitType = LimitType.IP)
+    @RateLimiter
     public TableDataInfo list(GaugeLabelQueryDTO gaugeLabelQueryDTO)
     {
         startPage();

@@ -4,7 +4,6 @@ import com.ruoyi.common.annotation.RateLimiter;
 import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.core.page.TableDataInfo;
-import com.ruoyi.common.enums.LimitType;
 import com.ruoyi.course.domain.CourSection;
 import com.ruoyi.course.service.ICourCourseService;
 import com.ruoyi.course.service.ICourSectionService;
@@ -32,7 +31,7 @@ public class AppCourSectionController extends BaseController
 //    @PreAuthorize("@ss.hasPermi('course:section:list')")
     @PostMapping("/list")
     @ApiOperation("查询课程章节列表")
-    @RateLimiter(limitType = LimitType.IP)
+    @RateLimiter
     public TableDataInfo list(@RequestBody CourSection courSection)
     {
         startPage();
@@ -56,7 +55,7 @@ public class AppCourSectionController extends BaseController
 //    @PreAuthorize("@ss.hasPermi('course:section:query')")
     @PostMapping(value = "/getInfo")
     @ApiOperation("查询章节详情")
-    @RateLimiter(limitType = LimitType.IP)
+    @RateLimiter
     public AjaxResult getInfo(@RequestParam(value = "id") Integer id)
     {
         return AjaxResult.success(courSectionService.selectCourSectionById(id));

@@ -31,7 +31,7 @@ public @interface RateLimiter
     /**
      * 限流次数
      */
-    public int count() default 100;
+    public int count() default 200;
 
     /**
      * 限流类型
