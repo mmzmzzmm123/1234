@@ -359,6 +359,7 @@ export default {
   border-radius: 86upx;
   margin-top: -86upx;
   margin-left: 24upx;
+  background-color: #EFEFF9;
 }
 .info-content {
   width: 554upx;

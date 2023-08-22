@@ -230,6 +230,7 @@ export default {
       console.log(this.serve.id)
       console.log(this.workId)
 
+      this.flag = true
       uni.showLoading({
         title: '支付中...'
       });
@@ -248,6 +249,7 @@ export default {
 
       console.log(res)
       uni.hideLoading()
+      this.flag = false
       if (res.code == 200) {
         const { appId, timeStamp, nonceStr, packageInfo, paySign, signType, out_trade_no } = res.data
         wxPay(res.data, () => {

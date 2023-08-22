@@ -118,6 +118,7 @@ export default {
   height: 130upx;
   border-radius: 84upx;
   border: 4upx solid #FFFFFF;
+  background-color: #EFEFF9;
 }
 .group_11 {
   height: 40upx;
@@ -184,7 +185,7 @@ export default {
 }
 .text_33 {
   width: 524upx;
-  height: 99upx;
+  /*height: 99upx;*/
   overflow-wrap: break-word;
   color: rgba(119,119,119,1);
   font-size: 24upx;
@@ -211,8 +212,8 @@ export default {
 }
 .box_10 {
   border-radius: 6upx;
-  width: 99upx;
-  height: 99upx;
+  width: 100upx;
+  height: 100upx;
   display: flex;
   flex-direction: column;
 }

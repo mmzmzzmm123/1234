@@ -420,6 +420,7 @@ page {
     width: 130upx;
     height: 130upx;
     border-radius: 100%;
+    background-color: #EFEFF9;
   }
   .item-info-group {
     //width: 201upx;

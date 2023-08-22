@@ -447,6 +447,7 @@ export default {
   height: 130upx;
   margin-top: 2upx;
   border-radius: 100%;
+  background-color: #EFEFF9;
 }
 .info-box {
   width: 432upx;
