@@ -218,6 +218,7 @@ cos:
   secretKey: sXHo43lDQN7amjPE0dBpHWWIsDJAsMba
   appId: 1316267898
   bucket: ssg-1316267898
+  zxBucket: zx-1316267898
   gaugeBucket: gauge-1316267898
 
 # 正式
