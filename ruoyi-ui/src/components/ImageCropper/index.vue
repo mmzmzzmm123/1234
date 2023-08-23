@@ -265,8 +265,9 @@ export default {
       //   "originalFilename": "测评_20230703152837A005.png"
       // }
       // this.handleUploadSuccess(res, file)
-
-      uploadFile(formData, this.extraData.module).then(res => {
+      const module = this.extraData.module || 'zx'
+      const type = this.extraData.type || 'other'
+      uploadFile(formData, module, type).then(res => {
         this.handleUploadSuccess(res, file)
       })
     },

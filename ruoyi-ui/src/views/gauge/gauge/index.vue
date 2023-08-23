@@ -194,8 +194,10 @@ export default {
       }
     }
     return {
+      // 上传
       extraData: {
-        module: 'gauge'
+        module: this.$constants['picModules'][1],
+        type: this.$constants['picTypes'][2]
       },
       activeTab: "questions",
       // 遮罩层

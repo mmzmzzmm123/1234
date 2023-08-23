@@ -115,7 +115,7 @@
           <el-input v-model="form.name" placeholder="请输入名称" />
         </el-form-item>
         <el-form-item label="图片地址" prop="url">
-          <image-upload v-model="form.url" dialogStyle="width: 350px;height: 150px;" sizeTip="宽702px 高300px" :extraData="{}"/>
+          <image-upload v-model="form.url" dialogStyle="width: 350px;height: 150px;" sizeTip="宽702px 高300px" :extraData="extraData"/>
 <!--          <my-cropper v-model="form.url" sizeTip="宽702px 高300px" :extraData="{}" :width="350" :height="150"/>-->
         </el-form-item>
         <el-form-item label="分类" prop="bannerType">
@@ -214,6 +214,11 @@ export default {
       title: "",
       // 是否显示弹出层
       open: false,
+      // 上传
+      extraData: {
+        module: this.$constants['picModules'][2],
+        type: this.$constants['picTypes'][1]
+      },
       // 查询参数
       queryParams: {
         pageNum: 1,

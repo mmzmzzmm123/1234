@@ -9,6 +9,8 @@ import org.springframework.security.core.parameters.P;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -76,5 +78,13 @@ public class demo1 {
             System.out.println(calendar.get(Calendar.DATE));
             System.out.println(calendar.get(Calendar.MONTH));
         }
+    }
+
+    @Test
+    public void validatePassword() {
+        String password = "YJYxl@2023!";
+        Pattern pattern = Pattern.compile("^.*(?=.{8,})(?=.*\\d)(?=.*[A-Z])(?=.*[a-z])(?=.*[!@#$%^&*? ]).*$");
+        Matcher matcher = pattern.matcher(password);
+        System.out.println(matcher.matches());
     }
 }

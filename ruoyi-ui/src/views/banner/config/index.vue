@@ -149,8 +149,10 @@ export default {
   dicts: ['psy_home_banner_type'],
   data() {
     return {
+      // 上传
       extraData: {
-        module: 'course'
+        module: this.$constants['picModules'][1],
+        type: this.$constants['picTypes'][1]
       },
       sizeTips: [
         '宽702px 高260px',

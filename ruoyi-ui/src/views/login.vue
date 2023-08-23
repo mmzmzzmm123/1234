@@ -56,7 +56,9 @@
     </el-form>
     <!--  底部  -->
     <div class="el-login-footer">
-      <span>Copyright © 2018-2022 ruoyi.vip All Rights Reserved.</span>
+      <span>Copyright © 2022-2023 武汉仁心网络科技有限公司 版权所有
+      <a style="text-decoration:none" href="https://beian.miit.gov.cn/#/Integrated/recordQuery" target="_blank">鄂ICP备2023000600号-1</a>
+      </span>
     </div>
   </div>
 </template>

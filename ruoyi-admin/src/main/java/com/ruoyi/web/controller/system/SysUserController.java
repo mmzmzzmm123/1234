@@ -3,6 +3,8 @@ package com.ruoyi.web.controller.system;
 import java.util.List;
 import java.util.stream.Collectors;
 import javax.servlet.http.HttpServletResponse;
+
+import com.ruoyi.common.utils.ComUtil;
 import org.apache.commons.lang3.ArrayUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -139,6 +141,9 @@ public class SysUserController extends BaseController
         {
             return AjaxResult.error("新增用户'" + user.getUserName() + "'失败，邮箱账号已存在");
         }
+        else if (!ComUtil.validatePassword(user.getPassword())) {
+            return AjaxResult.error("新增用户'" + user.getUserName() + "'失败，密码必须最小长度为8个字符，1个大写字母、1个小写字母、1个数字和1个特殊字符");
+        }
         user.setCreateBy(getUsername());
         user.setPassword(SecurityUtils.encryptPassword(user.getPassword()));
         return toAjax(userService.insertUser(user));
@@ -191,6 +196,9 @@ public class SysUserController extends BaseController
     @PutMapping("/resetPwd")
     public AjaxResult resetPwd(@RequestBody SysUser user)
     {
+        if (!ComUtil.validatePassword(user.getPassword())) {
+            return AjaxResult.error("密码必须最小长度为8个字符，1个大写字母、1个小写字母、1个数字和1个特殊字符");
+        }
         userService.checkUserAllowed(user);
         userService.checkUserDataScope(user.getUserId());
         user.setPassword(SecurityUtils.encryptPassword(user.getPassword()));

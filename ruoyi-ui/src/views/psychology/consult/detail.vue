@@ -254,8 +254,10 @@ export default {
   dicts: ['consult_sex', 'consult_type', 'consult_qualification'],
   data() {
     return {
+      // 上传
       extraData: {
-        module: 'consult'
+        module: this.$constants['picModules'][2],
+        type: this.$constants['picTypes'][2]
       },
       eList: [],
       wayList: [],

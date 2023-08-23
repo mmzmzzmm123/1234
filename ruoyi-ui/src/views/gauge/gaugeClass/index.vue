@@ -126,8 +126,10 @@ export default {
   name: "GaugeClass",
   data() {
     return {
+      // 上传
       extraData: {
-        module: 'gauge'
+        module: this.$constants['picModules'][1],
+        type: this.$constants['picTypes'][0]
       },
       // 遮罩层
       loading: true,

@@ -104,7 +104,7 @@
           <el-input-number :min="1" :max="999" v-model="form.sort" placeholder="请输入排序" />
         </el-form-item>
         <el-form-item label="图标路径" prop="url">
-          <image-upload v-model="form.url" :extraData="{}"/>
+          <image-upload v-model="form.url" :extraData="extraData"/>
         </el-form-item>
         <el-form-item label="类型" prop="type">
           <el-radio-group v-model="form.type">
@@ -191,6 +191,11 @@ export default {
       title: "",
       // 是否显示弹出层
       open: false,
+      // 上传
+      extraData: {
+        module: this.$constants['picModules'][2],
+        type: this.$constants['picTypes'][0]
+      },
       // 查询参数
       queryParams: {
         pageNum: 1,

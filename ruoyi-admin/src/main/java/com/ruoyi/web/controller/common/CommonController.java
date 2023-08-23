@@ -7,7 +7,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.constraints.NotNull;
 
+import cn.hutool.core.util.StrUtil;
 import com.qcloud.cos.model.UploadResult;
+import com.ruoyi.common.annotation.RateLimiter;
+import com.ruoyi.common.utils.IDhelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,6 +49,7 @@ public class CommonController
      * @param delete 是否删除
      */
     @GetMapping("/download")
+    @RateLimiter
     public void fileDownload(String fileName, Boolean delete, HttpServletResponse response, HttpServletRequest request)
     {
         try
@@ -75,26 +79,25 @@ public class CommonController
      * 通用上传请求（单个）
      */
     @PostMapping("/upload")
+    @RateLimiter
     public AjaxResult uploadFile(MultipartFile file, HttpServletRequest request) throws Exception
     {
-        String module;
-        if (request.getHeader("module") == null) {
-            module = "";
-        } else {
-            module = request.getHeader("module");
-        }
+        String module = request.getHeader("module");
+        String type = request.getHeader("type");
+
         UploadResult upload = null;
         InputStream inputStream = null;
         try
         {
             // 上传文件路径
-            String filePath = RuoYiConfig.getUploadPath();
+//            String filePath = RuoYiConfig.getUploadPath();
             // 上传并返回新文件名称
-            String fileName = FileUploadUtils.upload(filePath, file);
+//            String fileName = FileUploadUtils.upload(filePath, file);
+            String fileName = StrUtil.format("{}_{}_{}", type, IDhelper.getNextId(), file.getOriginalFilename());
 //            String url = serverConfig.getUrl() + fileName;
             //  调用文件服务器方法，实现文件上传改写
             inputStream = file.getInputStream();
-            upload = COSClientFactory.upload(inputStream, FileUtils.getName(fileName), module);
+            upload = COSClientFactory.upload(inputStream, fileName, module);
             String key = upload.getKey();
             String url = COSClientFactory.getObjUrl(key, module);
             AjaxResult ajax = AjaxResult.success();
@@ -117,6 +120,7 @@ public class CommonController
      * 通用上传文件删除
      */
     @PostMapping("/upload/delete")
+    @RateLimiter
     public AjaxResult deleteFile(@RequestParam @NotNull String fileKey, @RequestParam @NotNull String module) throws Exception {
         try {
             COSClientFactory.deleteObject(module, fileKey);
@@ -132,19 +136,16 @@ public class CommonController
      * 通用上传请求（多个）
      */
     @PostMapping("/uploads")
+    @RateLimiter
     public AjaxResult uploadFiles(List<MultipartFile> files, HttpServletRequest request) throws Exception
     {
         try
         {
-            String module;
-            if (request.getHeader("module") == null) {
-                module = "";
-            } else {
-                module = request.getHeader("module");
-            }
+            String module = request.getHeader("module");
+            String type = request.getHeader("type");
 
             // 上传文件路径
-            String filePath = RuoYiConfig.getUploadPath();
+//            String filePath = RuoYiConfig.getUploadPath();
             List<String> urls = new ArrayList<String>();
             List<String> fileNames = new ArrayList<String>();
             List<String> newFileNames = new ArrayList<String>();
@@ -152,11 +153,12 @@ public class CommonController
             for (MultipartFile file : files)
             {
                 // 上传并返回新文件名称
-                String fileName = FileUploadUtils.upload(filePath, file);
+//                String fileName = FileUploadUtils.upload(filePath, file);
+                String fileName = StrUtil.format("{}_{}_{}", type, IDhelper.getNextId(), file.getOriginalFilename());
 //                String url = serverConfig.getUrl() + fileName;
                 //  调用ods接口
                 InputStream inputStream = file.getInputStream();
-                UploadResult upload = COSClientFactory.upload(inputStream, FileUtils.getName(fileName), module);
+                UploadResult upload = COSClientFactory.upload(inputStream, fileName, module);
                 String key = upload.getKey();
                 String url = COSClientFactory.getObjUrl(key, module);
                 urls.add(url);
@@ -181,6 +183,7 @@ public class CommonController
      * 本地资源通用下载
      */
     @GetMapping("/download/resource")
+    @RateLimiter
     public void resourceDownload(String resource, HttpServletRequest request, HttpServletResponse response)
             throws Exception
     {

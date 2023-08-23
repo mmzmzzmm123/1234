@@ -9,12 +9,13 @@ export function deleteFile(fileName, module) {
 }
 
 // 上传图片
-export function uploadFile(data, module) {
+export function uploadFile(data, module, type) {
   return request({
     url: '/common/upload',
     method: 'post',
     headers: {
-      'module': module
+      'module': module,
+      'type': type,
     },
     data: data
   })

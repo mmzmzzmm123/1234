@@ -217,8 +217,10 @@ export default {
     }
     return {
       fileTypes: ["mp4", "avi", "rmvb", "mp3", "wma", "rm", "rmvb", "flv", "mpg", "mov", "mkv"],
+      // 上传
       extraData: {
-        module: 'course'
+        module: this.$constants['picModules'][0],
+        type: this.$constants['picTypes'][3]
       },
       // 遮罩层
       loading: true,

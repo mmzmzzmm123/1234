@@ -112,8 +112,10 @@ export default {
   dicts: ['course_type'],
   data() {
     return {
+      // 上传
       extraData: {
-        module: 'course'
+        module: this.$constants['picModules'][0],
+        type: this.$constants['picTypes'][0]
       },
       // 遮罩层
       loading: true,

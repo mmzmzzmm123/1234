@@ -18,6 +18,10 @@ export const categoryType = [ // 1 产品分类，2 附件分类，3 文章分�
   { name: '秒杀配置', value: 7, shortName: '秒杀' }
 ]
 
+export const picModules = ['course','gauge','zx']
+
+export const picTypes = ['class','banner','item','section','avatar','other']
+
 export const wList = [
   { label: '上班', value: '0' },
   { label: '休息', value: '1' }

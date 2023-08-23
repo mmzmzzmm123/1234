@@ -56,6 +56,22 @@ public class COSClientFactory {
         return cosClient;
     }
 
+    public static String getBucketName(String module) {
+        String bucketName = "zx";
+        switch (module) {
+            case "course":
+                bucketName = cosConfig.getBucket();
+                break;
+            case "gauge":
+                bucketName = cosConfig.getGaugeBucket();
+                break;
+            case "zx":
+                bucketName = cosConfig.getZxBucket();
+                break;
+        }
+        return bucketName;
+    }
+
     public static Bucket createBucket(String bucket) {
         //存储桶名称，格式：BucketName-APPID
 //        String bucket = new StringBuilder().append(cosConfig.getBucket()).append("-").append(cosConfig.getAppId()).toString();
@@ -99,9 +115,8 @@ public class COSClientFactory {
     }
 
     public static UploadResult upload(InputStream inputStream ,String key, String module) throws IOException {
-        String bucket = null;
-        if (module.equals("course")){bucket = cosConfig.getBucket();}
-        else {bucket = cosConfig.getGaugeBucket();}
+        String bucket = getBucketName(module);
+
         // 使用高级接口必须先保证本进程存在一个 TransferManager 实例，如果没有则创建
         // 详细代码参见本页：高级接口 -> 创建 TransferManager
         TransferManager transferManager = createTransferManager();
@@ -134,9 +149,7 @@ public class COSClientFactory {
     }
 
     public static String getObjUrl(String key, String module){
-        String bucket = null;
-        if (module.equals("course")){bucket = cosConfig.getBucket();}
-        else {bucket = cosConfig.getGaugeBucket();}
+        String bucket = getBucketName(module);
         return cosClient.getObjectUrl(bucket, key).toString();
 //        return cosClient.getObjectUrl(cosConfig.getBucket(), key).toString();
     }
@@ -145,12 +158,7 @@ public class COSClientFactory {
         // 调用 COS 接口之前必须保证本进程存在一个 COSClient 实例，如果没有则创建
         // 详细代码参见本页：简单操作 -> 创建 COSClient
         COSClient cosClient = getCosClient();
-        String bucket;
-        if (module.equals("course")) {
-            bucket = cosConfig.getBucket();
-        } else {
-            bucket = cosConfig.getGaugeBucket();
-        }
+        String bucket = getBucketName(module);
 
         // 存储桶的命名格式为 BucketName-APPID，此处填写的存储桶名称必须为此格式
         // 对象键(Key)是对象在存储桶中的唯一标识。详情请参见 [对象键](https://cloud.tencent.com/document/product/436/13324)

@@ -694,6 +694,17 @@ public class ComUtil {
         return matcher.matches();
     }
 
+    /**
+     * 检查密码是否符合规则
+     * @param password
+     * @return
+     */
+    public static boolean validatePassword(String password) {
+        Pattern pattern = Pattern.compile("^.*(?=.{8,})(?=.*\\d)(?=.*[A-Z])(?=.*[a-z])(?=.*[!@#$%^&*? ]).*$");
+        Matcher matcher = pattern.matcher(password);
+        return matcher.matches();
+    }
+
     //数组去重
     public static List<Integer> arrayUnique(Integer[] arr){
         List<Integer> list = new ArrayList<>();

@@ -22,5 +22,7 @@ public class COSConfig
 
     private String bucket;
 
+    private String zxBucket;
+
     private String gaugeBucket;
 }
