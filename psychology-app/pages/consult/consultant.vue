@@ -1,7 +1,7 @@
 <template>
   <view class="page">
     <view class="header">
-<!--      <uni-nav-bar v-if="false" height="88upx" :backgroundColor="`rgba(255,255,255,${opcity})`" fixed left-icon="closeempty" right-icon="more-filled" :border="false" title="咨询师详情" @clickLeft="goHome"/>-->
+      <!--      <uni-nav-bar v-if="false" height="88upx" :backgroundColor="`rgba(255,255,255,${opcity})`" fixed left-icon="closeempty" right-icon="more-filled" :border="false" title="咨询师详情" @clickLeft="goHome"/>-->
     </view>
 
     <view class="info">
@@ -16,7 +16,7 @@
             </view>
           </view>
           <view class="info-content-info">{{ consultInfo.info }}</view>
-<!--          <view class="info-content-mode">{{ consultInfo.mode }}</view>-->
+          <!--          <view class="info-content-mode">{{ consultInfo.mode }}</view>-->
         </view>
       </view>
 
@@ -36,7 +36,7 @@
       </view>
     </view>
 
-    <view class="tabs segmented-main">
+    <view class="tabs">
       <view class="tabs-list">
         <view v-for="i in items" class="tab" :class="{ selected: mainCur === i.id }" @tap="tabSelect(i.id)">
           <view>{{ i.name }}</view>
@@ -329,12 +329,9 @@ export default {
 <style lang="scss">
 .page {
   background-color: #F8F8F8;
-  position: relative;
-  //width: 750upx;
-  //height: 2800upx;
-  //overflow: hidden;
   display: flex;
   flex-direction: column;
+  overflow: hidden;
   //padding-bottom: calc(24rpx + env(safe-area-inset-bottom));
 }
 .header {
@@ -420,7 +417,7 @@ export default {
 }
 .info-content-info {
   width: 498upx;
-  height: 74upx;
+  //height: 74upx;
   overflow-wrap: break-word;
   color: #777777;
   font-size: 26upx;
@@ -513,7 +510,7 @@ export default {
   width: 100%;
 }
 .content-y {
-  height: 1500upx;
+  height: 900upx;
   margin-top: 16upx;
 }
 .serve {
