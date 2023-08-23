@@ -32,7 +32,7 @@ public class PsyConsultOrderServeServiceImpl implements IPsyConsultOrderServeSer
         orderServe.setBound(serve.getBound());
         orderServe.setBoundName(ConsultConstant.CONSULT_NO_LIMIT.equals(serve.getBound()) ? "不限制" : "限制");
         orderServe.setMode(serve.getMode());
-        orderServe.setModeName(ConsultConstant.CONSULT_MODE_SOUND.equals(serve.getMode()) ? "语音咨询"  : ConsultConstant.CONSULT_MODE_VOICE.equals(serve.getMode()) ? "视频咨询" : "面对面咨询");
+        orderServe.setModeName(ConsultConstant.CONSULT_MODE_SOUND.equals(serve.getMode()) ? "语音咨询"  : ConsultConstant.CONSULT_MODE_VOICE.equals(serve.getMode()) ? "视频咨询" : "当面咨询");
         orderServe.setType(serve.getType());
         orderServe.setTypeName(ConsultConstant.CONSULT_TYPE_ONCE.equals(serve.getType()) ? "单次咨询" : "套餐咨询");
         orderServe.setTime(serve.getTime());

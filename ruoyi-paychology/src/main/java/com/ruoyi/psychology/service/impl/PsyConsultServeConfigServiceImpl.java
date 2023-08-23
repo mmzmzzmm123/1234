@@ -67,7 +67,7 @@ public class PsyConsultServeConfigServiceImpl extends ServiceImpl<PsyConsultServ
         } else if (ConsultConstant.CONSULT_MODE_VOICE.equals(entity.getMode())) {
             modeName = "视频咨询";
         } else if (ConsultConstant.CONSULT_MODE_FACE.equals(entity.getMode())) {
-            modeName = "面对面咨询";
+            modeName = "当面咨询";
         }
 
         entity.setModeName(modeName);

@@ -32,8 +32,8 @@ public class PsyConsultOrderServe extends BasePlusEntity implements Serializable
     /** 服务 */
     @Excel(name = "服务")
     private Long serveId;
-    /** 咨询形式 语音咨询、视频咨询、面对面咨询 */
-//    @Excel(name = "咨询形式 语音咨询、视频咨询、面对面咨询")
+    /** 咨询形式 语音咨询、视频咨询、当面咨询 */
+//    @Excel(name = "咨询形式 语音咨询、视频咨询、当面咨询")
     private Integer mode;
 
     @Excel(name = "咨询形式")

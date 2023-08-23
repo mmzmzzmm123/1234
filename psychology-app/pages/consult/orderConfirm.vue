@@ -13,7 +13,7 @@
           <view class="consult-price">
             <text class="consult-price-ant">¥</text>
             <text class="consult-price-num">{{ serve.price }}</text>
-            <text class="consult-price-ext">/1次</text>
+            <text class="consult-price-ext">/{{ serve.num }}次</text>
           </view>
         </view>
       </view>
@@ -23,7 +23,7 @@
       </view>
       <view class="info-text-wrapper-group2"></view>
       <view class="info-text-wrapper-3">
-        <text class="info-text-3">服务数量({{ serve.num }}次咨询)</text>
+        <text class="info-text-3">服务数量(共{{ serve.num }}次咨询)</text>
         <text class="info-text-4">1次</text>
       </view>
     </view>
@@ -32,7 +32,7 @@
         <text class="section-time-group-text1">预约</text>
         <view class="section-time-group3">
           <text class="section-time-text4">咨询方式</text>
-          <text class="section-time-text5">{{ serve.name }}</text>
+          <text class="section-time-text5">{{ serve.modeName }}</text>
         </view>
         <view class="group_5"></view>
         <view class="section-time-group2">

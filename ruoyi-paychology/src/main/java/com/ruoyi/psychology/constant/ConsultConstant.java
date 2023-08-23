@@ -20,7 +20,7 @@ public class ConsultConstant {
     public static final String ONSULT_ORDER_ITEM_CREATED = "0";
     public static final String ONSULT_ORDER_ITEM_FINISHED = "1";
 
-    // 咨询形式 语音咨询、视频咨询、面对面咨询
+    // 咨询形式 语音咨询、视频咨询、当面咨询
     public static final Integer CONSULT_MODE_SOUND= 1;
     public static final Integer CONSULT_MODE_VOICE= 2;
     public static final Integer CONSULT_MODE_FACE= 3;

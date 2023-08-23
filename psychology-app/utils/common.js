@@ -63,7 +63,7 @@ export default {
     return user && user !== {} && user.userId
   },
   share(title, desc, img, link = window.location.href, url = window.location.href) {
-    img = img ? img : 'http://wx.qlogo.cn/mmopen/ajNVdqHZLLBdcuPMEJGv3jwqibIiaNhD5nBfVL28Aw5mos8bL2z5olibLr7reMfp9OewJwzpAEibiamiaoWVklnXG3qlq7LczurGB2n9jtRcdlO8E/64'
+    img = img ? img : 'http://wx.qlogo.cn/mmopen/Q3auHgzwzM7ibjK0zgMSEgozDR40A2CgKLqZxEmcDI9HlQsVD27pM38F5KCDHTEaGeTfh3yWnHVgKPfzf8oKPLLITtib7xWLyMicAd1C3icfE1Q/64'
 
     wxJS.getConfig(title, desc, link, img, url);
   },

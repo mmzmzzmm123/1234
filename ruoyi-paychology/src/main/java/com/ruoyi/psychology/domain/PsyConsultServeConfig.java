@@ -25,8 +25,8 @@ public class PsyConsultServeConfig extends BasePlusEntity implements Serializabl
 {
     private static final long serialVersionUID = 1L;
 
-    /** 咨询形式 语音咨询、视频咨询、面对面咨询 */
-    @Excel(name = "咨询形式 语音咨询、视频咨询、面对面咨询")
+    /** 咨询形式 语音咨询、视频咨询、当面咨询 */
+    @Excel(name = "咨询形式 语音咨询、视频咨询、当面咨询")
     private Integer mode;
 
     @TableField(exist = false)

@@ -22,7 +22,7 @@ public class PsyConsultServeConfigVO extends BaseValObj implements Serializable
 
     private String name;
 
-    /** 咨询形式 语音咨询、视频咨询、面对面咨询 */
+    /** 咨询形式 语音咨询、视频咨询、当面咨询 */
     private Integer mode;
     private String modeName;
 

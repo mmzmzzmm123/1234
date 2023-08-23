@@ -11,6 +11,7 @@ import com.ruoyi.common.core.domain.entity.SysUser;
 import com.ruoyi.common.event.publish.ConsultServePublisher;
 import com.ruoyi.common.utils.*;
 import com.ruoyi.common.vo.DateLimitUtilVO;
+import com.ruoyi.psychology.constant.ConsultConstant;
 import com.ruoyi.psychology.domain.PsyConsult;
 import com.ruoyi.psychology.domain.PsyConsultServe;
 import com.ruoyi.psychology.dto.PsyConsultInfoDTO;
@@ -95,6 +96,14 @@ public class PsyConsultServiceImpl implements IPsyConsultService {
         PsyConsultVO consult = getOne(cId);
 
         vo.setWorks(getConsultWorksById(cId));
+        if (ConsultConstant.CONSULT_MODE_SOUND.equals(serve.getMode())) {
+            serve.setModeName("语音咨询");
+        } else if (ConsultConstant.CONSULT_MODE_VOICE.equals(serve.getMode())) {
+            serve.setModeName("视频咨询");
+        } else if (ConsultConstant.CONSULT_MODE_FACE.equals(serve.getMode())) {
+            serve.setModeName("当面咨询");
+        }
+
         vo.setServe(serve);
         vo.setConsult(consult);
         return vo;
