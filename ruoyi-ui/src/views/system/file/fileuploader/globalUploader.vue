@@ -18,7 +18,7 @@
       <uploader-list v-show="panelShow">
         <div class="file-panel" slot-scope="props" :class="{'collapse': collapse}">
           <div class="file-title">
-            <h2>文件列表</h2>
+            <h3>文件列表</h3>
             <div class="operate">
               <el-button @click="fileListShow" type="text" :title="collapse ? '展开':'折叠' ">
                 <i class="el-icon-d-caret" style="color:black;font-size: 18px"

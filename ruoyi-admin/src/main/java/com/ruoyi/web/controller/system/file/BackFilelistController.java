@@ -6,14 +6,21 @@ import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.core.page.TableDataInfo;
 import com.ruoyi.common.enums.BusinessType;
 import com.ruoyi.common.utils.poi.ExcelUtil;
+import com.ruoyi.quartz.domain.SysJobLog;
 import com.ruoyi.system.domain.BackFilelist;
 import com.ruoyi.system.service.file.IBackFilelistService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.util.FileCopyUtils;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletResponse;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.List;
 
 /**
@@ -99,5 +106,18 @@ public class BackFilelistController extends BaseController
     public AjaxResult remove(@PathVariable Long[] ids)
     {
         return toAjax(backFilelistService.deleteBackFilelistByIds(ids));
+    }
+
+    @ApiOperation("文件列表页下载文件")
+    //@PreAuthorize("@ss.hasPermi('system:filelist:download')")
+    @Log(title = "下载文件", businessType = BusinessType.DELETE)
+    @PostMapping("/download")
+    public void downloadFile(HttpServletResponse response, BackFilelist file)
+    {
+        try {
+            response.getOutputStream().write(FileCopyUtils.copyToByteArray(new File(file.getLocation())));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }

@@ -49,6 +49,18 @@
       <el-table-column label="文件名" align="center" prop="filename" />
       <el-table-column label="本地地址" align="center" prop="location" />
       <el-table-column label="文件总大小" align="center" prop="totalSize" :formatter="storageFormatter"/>
+      <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
+        <template slot-scope="scope">
+          <el-button
+            size="mini"
+            type="text"
+            icon="el-icon-edit"
+            @click="handleDownload(scope.row)"
+
+          >下载</el-button>
+        </template>
+<!--        v-hasPermi="['system:filelist:download']"-->
+      </el-table-column>
     </el-table>
 
     <pagination
@@ -276,6 +288,14 @@ export default {
         }).then(response => {
           this.download(response.msg);
         }).catch(function() {});
+    },
+    /** 下载操作 */
+    handleDownload(row) {
+      //const queryParams = this.queryParams;
+      const loca=row.location;
+      this.download('system/filelist/download', {
+        'location':loca
+      }, row.filename)
     }
   },
   mounted() {
