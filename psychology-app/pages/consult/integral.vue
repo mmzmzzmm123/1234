@@ -79,15 +79,15 @@ export default {
           val: 2,
         }
       ],
-      list: []
+      list: [],
     }
   },
   async mounted() {
     this.userInfo = utils.getUserInfo()
-    if (!this.userInfo && await utils.loginCallback(this.redirectUri)) {
+    if (!this.userInfo && await utils.loginCallback()) {
       this.userInfo = utils.getUserInfo()
     }
-    if (!utils.checkLogin()) {
+    if (!await utils.checkLogin()) {
       return this.openLoginConfirm()
     }
     this.queryParams.uid = this.userInfo.userId

@@ -65,13 +65,12 @@ export default {
     await this.getOrderDetail()
   },
   async mounted() {
-    // this.userInfo = uni.getStorageSync("userInfo")
     this.userInfo = utils.getUserInfo()
-
-    if (!this.userInfo && await utils.loginCallback(this.redirectUri)) {
+    if (!this.userInfo && await utils.loginCallback()) {
       this.userInfo = utils.getUserInfo()
     }
-    if (!utils.checkLogin()) {
+
+    if (!await utils.checkLogin()) {
       return this.openLoginConfirm()
     }
   },
@@ -80,8 +79,8 @@ export default {
       this.order = await orderServer.getOrderDetailByNo(this.orderNo);
       console.log(this.order)
     },
-    toDetail() {
-      if (!utils.checkLogin()) {
+    async toDetail() {
+      if (!await utils.checkLogin()) {
         return this.openLoginConfirm()
       }
 

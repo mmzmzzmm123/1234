@@ -110,19 +110,17 @@ export default {
         }
       ],
       clientTypeObj: clientTypeObj,
-      redirectUri:location.href+"?t="+new Date().getTime()
     };
   },
   async created() {
     this.status = parseInt(utils.getParam(location.href, "status"))
   },
   async mounted() {
-    // this.userInfo = uni.getStorageSync("userInfo")
     this.userInfo = utils.getUserInfo()
-    if (!this.userInfo && await utils.loginCallback(this.redirectUri)) {
+    if (!this.userInfo && await utils.loginCallback()) {
       this.userInfo = utils.getUserInfo()
     }
-    if (!utils.checkLogin()) {
+    if (!await utils.checkLogin()) {
       return this.openLoginConfirm()
     }
     await this.getDates()
@@ -166,7 +164,7 @@ export default {
     },
     // cartBox end
     async doOk(workId, time, workName) {
-      if (!utils.checkLogin()) {
+      if (!await utils.checkLogin()) {
         return this.openLoginConfirm()
       }
 
@@ -305,8 +303,8 @@ export default {
       }
       await this.getOrderList()
     },
-    toDetail(id) {
-      if (!utils.checkLogin()) {
+    async toDetail(id) {
+      if (!await utils.checkLogin()) {
         return this.openLoginConfirm()
       }
 

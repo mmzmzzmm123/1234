@@ -98,18 +98,12 @@
 				redirectUri: location.origin + location.pathname + "?t=" + new Date().getTime(),
 			};
 		},
-		async created() {
-			//  this.clientType = utils.getClientType();
-			// this.userInfo = uni.getStorageSync("userInfo")
+		async mounted() {
       this.userInfo = utils.getUserInfo()
-
-		},
-		async mounted() {      
 			if (!this.userInfo && await utils.loginCallback(this.redirectUri)) {
-				// this.userInfo = uni.getStorageSync("userInfo")
         this.userInfo = utils.getUserInfo()
 			}
-      if (!utils.checkLogin()) {
+      if (!await utils.checkLogin()) {
         return this.openLoginConfirm()
       }
 
@@ -130,40 +124,40 @@
 				//添加登录标志,为callback做返回判断
 				uni.setStorageSync("wxLogining", true);
 			},
-			toCourseList() {
+			async toCourseList() {
         // 判断是否已经登录
-        if (!utils.checkLogin()) {
+        if (!await utils.checkLogin()) {
           return this.openLoginConfirm()
         }
-				if (this.getUserInfo())
-					uni.navigateTo({
-						url: "/pages/course/courseList"
-					});
-			},
-			toOrder() {
+        if (this.getUserInfo())
+          uni.navigateTo({
+            url: "/pages/course/courseList"
+          });
+      },
+			async toOrder() {
         // 判断是否已经登录
-        if (!utils.checkLogin()) {
+        if (!await utils.checkLogin()) {
           return this.openLoginConfirm()
         }
-				if (this.getUserInfo())
-					uni.navigateTo({
-						url: "/pages/course/order"
-					});
-			},
+        if (this.getUserInfo())
+          uni.navigateTo({
+            url: "/pages/course/order"
+          });
+      },
       toCourse(courseId) {
         uni.navigateTo({
           url: `/pages/course/courseDetail?courseId=${courseId}`,
         });
       },
-			toLearningCourse(courseId) {
+			async toLearningCourse(courseId) {
         // 判断是否已经登录
-        if (!utils.checkLogin()) {
+        if (!await utils.checkLogin()) {
           return this.openLoginConfirm()
         }
-				uni.navigateTo({
-					url: `/pages/course/learningCourse?courseId=${courseId}`,
-				});
-			},
+        uni.navigateTo({
+          url: `/pages/course/learningCourse?courseId=${courseId}`,
+        });
+      },
 			copyOrderNo(orderNo) {
 				var input = document.createElement("input");
 				document.body.appendChild(input);
@@ -180,13 +174,13 @@
 				document.body.removeChild(input);
 			},
 			// 点击头像
-			getUserInfo() {
-				if (!utils.checkLogin()) {
-					utils.loginWx(this.redirectUri);
-					return false;
-				}
-				return true;
-			},
+			async getUserInfo() {
+        if (!await utils.checkLogin()) {
+          await utils.loginWx(this.redirectUri);
+          return false;
+        }
+        return true;
+      },
 			close() {
 				this.$refs.popup.close()
 			},

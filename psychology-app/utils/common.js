@@ -58,14 +58,13 @@ export default {
     }
     return user ? user.userId ? user : JSON.parse(user) : {}
   },
-  checkLogin() {
+  async checkLogin() {
     const user = this.getUserInfo()
     if (user && user !== {} && user.userId) {
-      checkUserLogin().then(res => {
-        if (res.code === 200) {
-          return true
-        }
-      })
+      const res = await checkUserLogin()
+      if (res.code === 200) {
+        return true
+      }
     }
     return false
   },
@@ -92,18 +91,21 @@ export default {
       return clientTypeObj.no;
     }
   },
+  // 调用后端接口,返回 微信登录url,重定向发起登录
   async loginWx(redirectUri) {
 	uni.setStorageSync("redirectUri", redirectUri);
 	if (this.getClientType() !== clientTypeObj.wx) return;
 	//未绑定微信
 	const res = await wxLogin({
-		redirectUri: location.origin + location.pathname
+        redirectState: uni.getStorageSync('redirectState') || 'ok',
+		redirectUri: location.origin + location.pathname // 回调地址
 	})
 	if (res.code == 200) {
 		window.location.href = res.data;
 	}
     
   },
+  // 登录后,页面内调用回调,保存登录状态
   async loginCallback(redirectUri) {
     //是否登录返回
     if (!uni.getStorageSync("wxLogining")) {

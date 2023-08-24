@@ -135,16 +135,12 @@ export default {
       }
     }
   },
-  async created() {
-    // this.userInfo = uni.getStorageSync("userInfo")
-    this.userInfo = utils.getUserInfo()
-  },
   async mounted() {
+    this.userInfo = utils.getUserInfo()
     if (!this.userInfo && await utils.loginCallback(this.redirectUri)) {
-      // this.userInfo = uni.getStorageSync("userInfo")
       this.userInfo = utils.getUserInfo()
     }
-    if (!utils.checkLogin()) {
+    if (!await utils.checkLogin()) {
       return this.openLoginConfirm()
     }
     if (this.userInfo) {
@@ -169,33 +165,18 @@ export default {
       //添加登录标志,为callback做返回判断
       uni.setStorageSync("wxLogining", true);
     },
-    toReport() {
-      // 判断是否已经登录
-      if (!utils.checkLogin()) {
-        return this.openLoginConfirm()
-      }
-      if (this.getUserInfo())
-        uni.navigateTo({ url: "/pages/evaluation/report" });
+    async toReport() {
+      uni.navigateTo({url: "/pages/evaluation/report"});
     },
-    toConsult() {
-      // 判断是否已经登录
-      if (!utils.checkLogin()) {
-        return this.openLoginConfirm()
-      }
-      if (this.getUserInfo())
-        uni.navigateTo({ url: "/pages/consult/index" });
+    async toConsult() {
+      uni.navigateTo({url: "/pages/consult/index"});
     },
-    toOrder() {
-      // 判断是否已经登录
-      if (!utils.checkLogin()) {
-        return this.openLoginConfirm()
-      }
-      if (this.getUserInfo())
-        uni.navigateTo({ url: "/pages/evaluation/order" });
+    async toOrder() {
+      uni.navigateTo({url: "/pages/evaluation/order"});
     },
-    toTest(order) {
-     	// 判断是否已经登录
-      if (!utils.checkLogin()) {
+    async toTest(order) {
+      // 判断是否已经登录
+      if (!await utils.checkLogin()) {
         return this.openLoginConfirm()
       }
       uni.setStorageSync("gaugeDes", order.gaugeDes);
@@ -219,9 +200,9 @@ export default {
       document.body.removeChild(input);
     },
     // 点击头像
-    getUserInfo() {
-      if (!utils.checkLogin()) {
-        utils.loginWx(this.redirectUri);
+    async getUserInfo() {
+      if (!await utils.checkLogin()) {
+        await utils.loginWx(this.redirectUri);
         return false;
       }
       return true;

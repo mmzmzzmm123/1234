@@ -2,16 +2,12 @@
   <view class="user-page">
     <view class="user-info">
       <view class="info">
-        <view class="header" @tap="getUserInfo"
-        ><img
-            class="img"
-            :src="userInfo.avatar || '/static/evaluation/header.png'"
-        />
+        <view class="header" @tap="getUserInfo">
+          <img class="img" :src="userInfo.avatar || '/static/evaluation/header.png'"/>
         </view>
         <view class="txt">
-          <view class="name"
-          >{{ userInfo.name
-            }}<img
+          <view class="name">{{ userInfo.name }}
+            <img
                 class="img"
                 src="/static/consult/my/load.png"
                 v-show="userInfo.name"
@@ -115,14 +111,13 @@ export default {
     };
   },
   async mounted() {
-    // this.userInfo = uni.getStorageSync("userInfo") ? JSON.parse(uni.getStorageSync("userInfo")) : {}
     this.userInfo = utils.getUserInfo()
-    if (!this.userInfo && await utils.loginCallback(this.redirectUri)) {
+    if (!this.userInfo && await utils.loginCallback()) {
       this.userInfo = utils.getUserInfo()
     }
-    // if (!utils.checkLogin()) {
-    //   return this.openLoginConfirm()
-    // }
+    if (!await utils.checkLogin()) {
+      return this.openLoginConfirm()
+    }
   },
   methods: {
     // 登录
@@ -136,9 +131,9 @@ export default {
     openLoginConfirm() {
       this.$refs.popup.open()
     },
-    toPage(id) {
+    async toPage(id) {
       console.log(id)
-      if (!utils.checkLogin()) {
+      if (!await utils.checkLogin()) {
         return this.openLoginConfirm()
       }
 
@@ -171,25 +166,25 @@ export default {
       //添加登录标志,为callback做返回判断
       uni.setStorageSync("wxLogining", true);
     },
-    toReport() {
+    async toReport() {
       // 判断是否已经登录
-      if (!utils.checkLogin()) {
+      if (!await utils.checkLogin()) {
         return this.openLoginConfirm()
       }
       if (this.getUserInfo())
-        uni.navigateTo({ url: "/pages/evaluation/report" });
+        uni.navigateTo({url: "/pages/evaluation/report"});
     },
-    toOrder() {
+    async toOrder() {
       // 判断是否已经登录
-      if (!utils.checkLogin()) {
+      if (!await utils.checkLogin()) {
         return this.openLoginConfirm()
       }
       if (this.getUserInfo())
-        uni.navigateTo({ url: "/pages/evaluation/order" });
+        uni.navigateTo({url: "/pages/evaluation/order"});
     },
-    toTest(order) {
+    async toTest(order) {
       // 判断是否已经登录
-      if (!utils.checkLogin()) {
+      if (!await utils.checkLogin()) {
         return this.openLoginConfirm()
       }
       uni.setStorageSync("gaugeDes", order.gaugeDes);
@@ -213,8 +208,8 @@ export default {
       document.body.removeChild(input);
     },
     // 点击头像
-    getUserInfo() {
-      if (!utils.checkLogin()) {
+    async getUserInfo() {
+      if (!await utils.checkLogin()) {
         utils.loginWx(this.redirectUri);
         return false;
       }

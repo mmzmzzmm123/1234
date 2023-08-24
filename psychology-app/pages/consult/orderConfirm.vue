@@ -9,7 +9,8 @@
         <image :src="consult.avatar" class="consult-info-avatar"></image>
         <view class="consult-info-right">
           <text class="consult-name">{{ consult.nickName }}</text>
-          <text class="consult-work">{{ consult.workNum }}人次咨询 | {{ consult.workHours }}年从业经验</text>
+<!--          <text class="consult-work">{{ consult.workNum }}人次咨询 | {{ consult.workHours }}年从业经验</text>-->
+          <text class="consult-work">{{ serve.name }}</text>
           <view class="consult-price">
             <text class="consult-price-ant">¥</text>
             <text class="consult-price-num">{{ serve.price }}</text>
@@ -23,8 +24,8 @@
       </view>
       <view class="info-text-wrapper-group2"></view>
       <view class="info-text-wrapper-3">
-        <text class="info-text-3">服务数量(共{{ serve.num }}次咨询)</text>
-        <text class="info-text-4">1次</text>
+        <text class="info-text-3">服务数量</text>
+        <text class="info-text-4">{{ serve.num }}次咨询</text>
       </view>
     </view>
     <view class="section-time">
@@ -118,21 +119,17 @@ export default {
       consult: {},
       serveId: 0,
       consultId: 0,
-      redirectUri: location.href,
       currentCatalogue: {},
     };
   },
-  created() {
-    this.serveId = utils.getParam(location.href, "sId")
-    this.consultId = utils.getParam(location.href, "cId")
-  },
   async mounted() {
-    // this.userInfo = uni.getStorageSync("userInfo")
     this.userInfo = utils.getUserInfo()
-    if (!utils.checkLogin()) {
-      return this.openLoginConfirm()
+    if (!this.userInfo && await utils.loginCallback()) {
+      this.userInfo = utils.getUserInfo()
     }
 
+    this.serveId = utils.getParam(location.href, "sId")
+    this.consultId = utils.getParam(location.href, "cId")
     if (utils.get('time') && utils.get('workId') && utils.get('workName')) {
       this.time = utils.get('time')
       this.workId = utils.get('workId')
@@ -164,6 +161,7 @@ export default {
     async getNotice() {
       this.notice = await orderServer.getNotice(3);
       if (this.notice.noticeContent) {
+        // this.notice.noticeContent = this.notice.noticeContent.replace('乙方（服务使用方）：', '乙方（服务使用方）：秋天的童话');
         this.notice.noticeContent = this.notice.noticeContent.replace('乙方（服务使用方）：', '乙方（服务使用方）：' + this.userInfo.name);
       }
     },
@@ -213,7 +211,7 @@ export default {
       this.checkBox = e.detail.value[0]
     },
     async toBuy() {
-      if (!utils.checkLogin()) {
+      if (!await utils.checkLogin()) {
         return this.openLoginConfirm()
       }
 

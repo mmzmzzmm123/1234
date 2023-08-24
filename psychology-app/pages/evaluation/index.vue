@@ -133,7 +133,7 @@ export default {
       // this.userInfo = uni.getStorageSync("userInfo")
       this.userInfo = utils.getUserInfo()
     }
-    if (!utils.checkLogin()) {
+    if (!await utils.checkLogin()) {
       return this.openLoginConfirm()
     }
   },
@@ -144,34 +144,34 @@ export default {
     async getProduct(type) {
       return await indexServer.getProductByLabel(type);
     },
-    toClass(classId) {
+    async toClass(classId) {
       // 判断是否已经登录
-      if (!utils.checkLogin()) {
+      if (!await utils.checkLogin()) {
         return this.openLoginConfirm()
       }
       uni.navigateTo({
-      	url: "/pages/evaluation/class?classId=" + classId
+        url: "/pages/evaluation/class?classId=" + classId
       });
     },
-    toProduct(url) {
-    	// 判断是否已经登录
-      if (!utils.checkLogin()) {
+    async toProduct(url) {
+      // 判断是否已经登录
+      if (!await utils.checkLogin()) {
         return this.openLoginConfirm()
       }
-      uni.navigateTo({ url });
+      uni.navigateTo({url});
     },
-    toSearch() {
+    async toSearch() {
       // 判断是否已经登录
-      if (!utils.checkLogin()) {
+      if (!await utils.checkLogin()) {
         return this.openLoginConfirm()
       }
       uni.navigateTo({
         url: "/pages/evaluation/search",
       });
     },
-    toMore() {
+    async toMore() {
       // 判断是否已经登录
-      if (!utils.checkLogin()) {
+      if (!await utils.checkLogin()) {
         return this.openLoginConfirm()
       }
       uni.navigateTo({

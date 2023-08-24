@@ -148,7 +148,6 @@ export default {
       userInfo: {},
       consultInfo: {},
       consultId: 0,
-      redirectUri:location.href,
       currentCatalogue: {},
       scrollTop: 0,
       old: {
@@ -156,14 +155,19 @@ export default {
       }
     };
   },
-  created() {
-  },
   async mounted() {
     this.userInfo = utils.getUserInfo()
-    // if (!utils.checkLogin()) {
-    //   return this.openLoginConfirm()
-    // }
-    this.consultId = utils.getParam(location.href, "id")
+    if (!this.userInfo && utils.getParam(window.location.href, "code") && await utils.loginCallback()) {
+      this.consultId = utils.getParam(location.href, "state")
+      this.userInfo = utils.getUserInfo()
+    } else {
+      this.consultId = utils.getParam(location.href, "id")
+    }
+
+    if (!this.consultId) {
+      return this.goHome()
+    }
+
     this.getConsultServe()
     this.getConsultWorks()
     this.getDates()
@@ -277,7 +281,7 @@ export default {
       this.$refs.selectServe.open('bottom')
     },
     async toBuy(item) {
-      if (!utils.checkLogin()) {
+      if (!await utils.checkLogin()) {
         this.confirmServe()
         return this.openLoginConfirm()
       }
@@ -290,8 +294,6 @@ export default {
       console.log(data)
       if (item.bound === 1) {
         const list = await orderServer.getOrderList(data)
-        console.log(list)
-        console.log(2222)
         if (list && list.length > 0) {
           return uni.showToast({
             icon: 'none',
@@ -313,6 +315,7 @@ export default {
     },
     // 登录
     async confirmLogin () {
+      uni.setStorageSync('redirectState', this.consultId)
       await loginServer.login();
       this.$refs.popup.close()
     },

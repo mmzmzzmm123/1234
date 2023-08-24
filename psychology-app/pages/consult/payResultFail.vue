@@ -26,17 +26,16 @@ export default {
   async mounted() {
     // this.userInfo = uni.getStorageSync("userInfo")
     this.userInfo = utils.getUserInfo()
-
-    if (!this.userInfo && await utils.loginCallback(this.redirectUri)) {
+    if (!this.userInfo && await utils.loginCallback()) {
       this.userInfo = utils.getUserInfo()
     }
-    if (!utils.checkLogin()) {
+    if (!await utils.checkLogin()) {
       return this.openLoginConfirm()
     }
   },
   methods: {
-    toOrder() {
-      if (!utils.checkLogin()) {
+    async toOrder() {
+      if (!await utils.checkLogin()) {
         return this.openLoginConfirm()
       }
 

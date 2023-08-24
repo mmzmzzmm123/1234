@@ -76,9 +76,22 @@ export default {
     };
   },
   async created() {
+
     this.userInfo = utils.getUserInfo()
-    this.courseId = parseInt(utils.getParam(location.href, "courseId")||utils.getParam(location.href, "id"));
-    if (!utils.checkLogin()) {
+    if (!this.userInfo && await utils.loginCallback()) {
+      this.userInfo = utils.getUserInfo()
+      this.courseId = parseInt(utils.getParam(location.href, "state"));
+    } else {
+      this.courseId = parseInt(utils.getParam(location.href, "courseId") || utils.getParam(location.href, "id"));
+    }
+
+    if (!this.courseId) {
+      return uni.redirectTo({
+        url: "/pages/course/index",
+      })
+    }
+
+    if (!await utils.checkLogin()) {
       this.courseInfo = await courseServer.getCourseBaseInfo(this.courseId)||{};
       this.catalogueList = this.courseInfo.sectionList;
       this.courseInfo.totalDuration = 0;
@@ -121,8 +134,8 @@ export default {
     courseShow() {
       this.currentItemIndex = 1;
     },
-    cartShow() {
-      if (!utils.checkLogin()) {
+    async cartShow() {
+      if (!await utils.checkLogin()) {
         return this.openLoginConfirm()
       }
       this.cartBoxShow = !this.cartBoxShow;
@@ -131,6 +144,7 @@ export default {
     	this.$refs.popup.close()
     },
     async confirm() {
+      uni.setStorageSync('redirectState', this.courseId)
     	await loginServer.login();
     	this.$refs.popup.close()
     },

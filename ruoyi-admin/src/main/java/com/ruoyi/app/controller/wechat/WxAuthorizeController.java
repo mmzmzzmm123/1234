@@ -55,6 +55,7 @@ public class WxAuthorizeController {
     public AjaxResult wxLogin(@RequestBody Map<String, Object> map) {
         //这里是回调的url
         String redirect_uri = map.get("redirectUri").toString();
+        String state = map.get("redirectState").toString();
         try {
             redirect_uri = URLEncoder.encode(map.get("redirectUri").toString(), "utf-8");
         } catch (UnsupportedEncodingException e) {
@@ -68,7 +69,7 @@ public class WxAuthorizeController {
                 "&scope=SCOPE" +
                 "&state=STATE#wechat_redirect";
 
-        url = url.replace("APPID", APP_ID).replace("REDIRECT_URI", redirect_uri).replace("SCOPE", "snsapi_userinfo");
+        url = url.replace("APPID", APP_ID).replace("REDIRECT_URI", redirect_uri).replace("SCOPE", "snsapi_userinfo").replace("STATE", state);
         log.info("wxLogin_url:{}", url);
         return AjaxResult.success(RespMessageConstants.OPERATION_SUCCESS, url);
     }

@@ -57,11 +57,16 @@
 				<view class="cue-txt">该款项仅供当次测试；可重复购买，购买成功后不予退款</view>
 			</view>
 		</view>
+
+    <uni-popup ref="popup" type="dialog" class="uni-popup-ok">
+      <uni-popup-dialog mode="base" content="您尚未登录, 是否使用微信静默登录" :duration="2000" :before-close="true" @close="closeLoginConfirm" @confirm="confirmLogin"/>
+    </uni-popup>
 	</view>
 </template>
 
 <script>
 import utils from '@/utils/common'
+import loginServer from '@/server/login'
 import productServer from '@/server/evaluation/product'
 import { getPaySign, wxPay } from "@/server/wxApi";
 export default {
@@ -73,7 +78,20 @@ export default {
 		}
 	},
 	async created() {
-		this.productId = parseInt(utils.getParam(location.href, "id"));
+    this.userInfo = utils.getUserInfo()
+    if (!this.userInfo && utils.getParam(window.location.href, "code") && await utils.loginCallback()) {
+      this.userInfo = utils.getUserInfo()
+      this.productId = parseInt(utils.getParam(location.href, "state"));
+    } else {
+      this.productId = parseInt(utils.getParam(location.href, "id"));
+    }
+
+    if (!this.productId) {
+      return uni.redirectTo({
+        url: "/pages/evaluation/index",
+      })
+    }
+
 		this.productInfo = await productServer.getProductInfo(this.productId);
 		this.payBoxShow = utils.getParam(location.href, "payOrder") == 1;
     
@@ -83,7 +101,10 @@ export default {
 	},
 	methods: {
 		async submitPay() {
-		  // this.userInfo = uni.getStorageSync("userInfo")
+      if (!await utils.checkLogin()) {
+        return this.openLoginConfirm()
+      }
+
       this.userInfo = utils.getUserInfo()
 		  if (this.userInfo && this.userInfo.userId) {
 			let res = await getPaySign(
@@ -115,9 +136,6 @@ export default {
           });
         })
 			}
-		
-		  } else {
-		    utils.loginWx(this.redirectUri);
 		  }
 		},
 		startTest() {
@@ -134,8 +152,19 @@ export default {
 			uni.navigateTo({
 				url: "/pages/evaluation",
 			});
-		}
-
+		},
+    // 登录
+    async confirmLogin () {
+      uni.setStorageSync('redirectState', this.productId)
+      await loginServer.login();
+      this.$refs.popup.close()
+    },
+    closeLoginConfirm() {
+      this.$refs.popup.close()
+    },
+    openLoginConfirm() {
+      this.$refs.popup.open()
+    }
 	}
 }
 </script>
