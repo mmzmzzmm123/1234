@@ -42,7 +42,7 @@ export default {
     }
   },
   getConsultInfoByServe: async (cId, sId) => {
-    let res = await httprequest.get(`/app/consult/order/getConsultInfoByServe/` + cId + '/' + sId);
+    let res = await httprequest.get(`/app/consult/getConsultInfoByServe/` + cId + '/' + sId);
     if (res.code == 200) {
       return res.data;
     } else {

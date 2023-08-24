@@ -9,6 +9,14 @@
 	"pages": [
 		//pages数组中第一项表示应用启动页，参考：https://uniapp.dcloud.io/collocation/pages
 		{
+			"path": "pages/consult/index",
+			"style": {
+				"navigationStyle": "custom",
+				"navigationBarTitleText": "壹加壹心理",
+				"enablePullDownRefresh": true
+			}
+		},
+		{
 			"path": "pages/evaluation/index",
 			"style": {
 				"navigationStyle": "custom",
@@ -154,14 +162,6 @@
         "navigationBarTitleText": "壹加壹心理"
 			}
 		},
-    {
-    	"path": "pages/consult/index",
-    	"style": {
-    		"navigationStyle": "custom",
-        "navigationBarTitleText": "壹加壹心理",
-			"enablePullDownRefresh": true
-    	}
-    },
     {
     	"path": "pages/consult/consultant",
     	"style": {

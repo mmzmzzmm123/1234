@@ -147,19 +147,15 @@
       this.getSex()
       this.getConsultTime()
       if (!this.userInfo && await utils.loginCallback(this.redirectUri)) {
-        // this.userInfo = uni.getStorageSync("userInfo")
         this.userInfo = utils.getUserInfo()
       }
 
-      if (!utils.checkLogin()) {
-        return this.openLoginConfirm()
-      }
-
-
+      // if (!utils.checkLogin()) {
+      //   return this.openLoginConfirm()
+      // }
     },
     methods: {
       async onPullDownRefresh() {
-        console.log("我要刷新了");
         this.resetQuery()
         this.filterParams = {
           type: 0,
@@ -177,9 +173,6 @@
         uni.stopPullDownRefresh();
       },
       toConsultant(id) {
-        if (!utils.checkLogin()) {
-          return this.openLoginConfirm()
-        }
         uni.navigateTo({
           url: "/pages/consult/consultant?id=" + id,
         });
@@ -247,15 +240,6 @@
           this.consultantList = [...this.consultantList, ...res.rows]
         }
       },
-      async tocourse(url) {
-        // 判断是否已经登录
-        if (!utils.checkLogin()) {
-          return this.openLoginConfirm()
-        }
-        uni.navigateTo({
-          url
-        });
-      },
       toClass(item) {
         if (item.type === '1' || item.cat === '1') {
           this.resetQuery()
@@ -274,10 +258,6 @@
           return this.submit()
         }
 
-        // 判断是否已经登录
-        if (!utils.checkLogin()) {
-          return this.openLoginConfirm()
-        }
         if (item.linkUrl) {
           uni.navigateTo({
             url: item.linkUrl,
@@ -285,10 +265,6 @@
         }
       },
       toSearch() {
-        // 判断是否已经登录
-        if (!utils.checkLogin()) {
-          return this.openLoginConfirm()
-        }
         uni.navigateTo({
           url: "/pages/consult/search",
         });

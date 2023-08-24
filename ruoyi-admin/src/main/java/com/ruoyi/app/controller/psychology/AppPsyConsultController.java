@@ -70,6 +70,15 @@ public class AppPsyConsultController extends BaseController
         return AjaxResult.success(psyConsultServeConfigService.getList(req));
     }
 
+    /**
+     * 获取心理咨询师详细信息
+     */
+    @GetMapping(value = "/getConsultInfoByServe/{cId}/{sId}")
+    @RateLimiter
+    public AjaxResult getConsultInfoByServe(@PathVariable("cId") Long cId, @PathVariable("sId") Long sId)
+    {
+        return AjaxResult.success(psyConsultService.getConsultInfoByServe(cId, sId));
+    }
 
 
 }

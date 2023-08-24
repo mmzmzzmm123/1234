@@ -76,7 +76,6 @@ export default {
     };
   },
   async created() {
-    // this.userInfo = uni.getStorageSync("userInfo")
     this.userInfo = utils.getUserInfo()
     this.courseId = parseInt(utils.getParam(location.href, "courseId")||utils.getParam(location.href, "id"));
     if (!utils.checkLogin()) {
@@ -86,7 +85,7 @@ export default {
       this.catalogueList.forEach(item => {
         this.courseInfo.totalDuration+= item.duration||0;
       });
-      
+
       this.openLoginConfirm()
       return
     }
@@ -122,7 +121,10 @@ export default {
     courseShow() {
       this.currentItemIndex = 1;
     },
-    cartShow() {		
+    cartShow() {
+      if (!utils.checkLogin()) {
+        return this.openLoginConfirm()
+      }
       this.cartBoxShow = !this.cartBoxShow;
     },
     close() {

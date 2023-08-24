@@ -2,6 +2,19 @@ import httprequest from "./httpRequest";
 const APPID = "wx8604d98104f67e66";
 const APPSECRET = "98dca366602a0806da390ed138e4a7ea";
 
+// check
+export const checkUserLogin = () => {
+    return new Promise((resolve, reject) => {
+        httprequest
+            .post(`/app/login/check`)
+            .then((res) => {
+                resolve(res);
+            })
+            .catch((err) => {
+                reject(err);
+            });
+    });
+};
 // 更新tonken
 function updateToken() {
   return new Promise((resolve, reject) => {

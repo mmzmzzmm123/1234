@@ -4,7 +4,6 @@ import com.ruoyi.common.annotation.RateLimiter;
 import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.psychology.service.IPsyConsultOrderService;
-import com.ruoyi.psychology.service.IPsyConsultService;
 import com.ruoyi.psychology.vo.PsyConsultOrderVO;
 import org.springframework.web.bind.annotation.*;
 
@@ -20,8 +19,6 @@ import javax.annotation.Resource;
 @RequestMapping("/app/consult/order")
 public class AppPsyConsultOrderController extends BaseController
 {
-    @Resource
-    private IPsyConsultService psyConsultService;
 
     @Resource
     private IPsyConsultOrderService psyConsultOrderService;
@@ -76,16 +73,6 @@ public class AppPsyConsultOrderController extends BaseController
     {
         psyConsultOrderService.cancel(psyConsultOrderService.getOrderById(id));
         return AjaxResult.success();
-    }
-
-    /**
-     * 获取心理咨询师详细信息
-     */
-    @GetMapping(value = "/getConsultInfoByServe/{cId}/{sId}")
-    @RateLimiter
-    public AjaxResult getConsultInfoByServe(@PathVariable("cId") Long cId, @PathVariable("sId") Long sId)
-    {
-        return AjaxResult.success(psyConsultService.getConsultInfoByServe(cId, sId));
     }
 
 }

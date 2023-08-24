@@ -2,10 +2,10 @@ import configdata from "../common/config";
 import cache from "../common/cache";
 
 function tokenExpired(result) {    
-    let userInfo = uni.getStorageSync('userInfo')
-    if (!userInfo) {
-      return
-    }
+    // let userInfo = uni.getStorageSync('userInfo')
+    // if (!userInfo) {
+    //   return
+    // }
     uni.showModal({
       title: '提示',
       content: '由于长时间未使用token已过期，请重新登录',
@@ -14,15 +14,21 @@ function tokenExpired(result) {
         // 清除本地缓存的userInfo 和 token
         uni.setStorageSync('userInfo', null)
         uni.setStorageSync('token', null)
-        
+        let url = '/pages/consult/index'
+        if (location.href.includes('course')) {
+          url = '/pages/course/index'
+        } else if (location.href.includes('gauge')) {
+          url = '/pages/evaluation/index'
+        }
+
         uni.redirectTo({
-          url: '/pages/evaluation/index',
+          url: url,
           success() {
             location.reload(true)
           }
         })        
       }
-    });    
+    });
   
 }
 

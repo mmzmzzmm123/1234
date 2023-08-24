@@ -1,4 +1,4 @@
-import {wxLogin, wxLoginCallBack} from "@/server/wxApi";
+import {wxLogin, wxLoginCallBack, checkUserLogin} from "@/server/wxApi";
 import wxJS from "@/server/wxJS.js"
 
 const redis = "psy";
@@ -60,7 +60,14 @@ export default {
   },
   checkLogin() {
     const user = this.getUserInfo()
-    return user && user !== {} && user.userId
+    if (user && user !== {} && user.userId) {
+      checkUserLogin().then(res => {
+        if (res.code === 200) {
+          return true
+        }
+      })
+    }
+    return false
   },
   share(title, desc, img, link = window.location.href, url = window.location.href) {
     img = img ? img : 'http://wx.qlogo.cn/mmopen/Q3auHgzwzM7ibjK0zgMSEgozDR40A2CgKLqZxEmcDI9HlQsVD27pM38F5KCDHTEaGeTfh3yWnHVgKPfzf8oKPLLITtib7xWLyMicAd1C3icfE1Q/64'

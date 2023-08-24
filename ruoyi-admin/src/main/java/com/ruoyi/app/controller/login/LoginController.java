@@ -4,6 +4,7 @@ import com.ruoyi.common.annotation.RateLimiter;
 import com.ruoyi.common.annotation.RepeatSubmit;
 import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.core.domain.dto.LoginDTO;
+import com.ruoyi.framework.web.service.AppTokenService;
 import com.ruoyi.login.service.ILoginService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 
 /**
  * @User hogan
@@ -27,6 +29,9 @@ public class LoginController {
 
     @Resource
     private ILoginService loginService;
+
+    @Resource
+    private AppTokenService appTokenService;
 
     @ApiOperation(value = "获取验证码", notes = "根据手机号获取验证码")
     @PostMapping("/code/get")
@@ -42,6 +47,17 @@ public class LoginController {
     @RateLimiter
     public AjaxResult verify(@RequestBody @Validated LoginDTO loginDTO) {
         return loginService.verifyCode(loginDTO);
+    }
+
+    @PostMapping("/check")
+    @RateLimiter
+    public AjaxResult check(HttpServletRequest request) {
+        Integer id = appTokenService.getUserId(request);
+        if (id == -1) {
+            return AjaxResult.error("用户信息异常,请登录后重试");
+        }
+
+        return AjaxResult.success("已登录");
     }
 
 
