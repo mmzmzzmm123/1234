@@ -7,6 +7,7 @@ import com.ruoyi.common.constant.NewConstants;
 import com.ruoyi.common.exception.UtilException;
 import com.ruoyi.common.utils.NewDateUtil;
 import com.ruoyi.common.vo.DateLimitUtilVO;
+import com.ruoyi.framework.web.service.AppTokenService;
 import com.ruoyi.psychology.domain.PsyUser;
 import com.ruoyi.psychology.service.IPsyUserService;
 import com.ruoyi.system.service.ISysConfigService;
@@ -20,6 +21,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 import java.math.BigDecimal;
 import java.util.List;
 
@@ -32,6 +34,9 @@ import java.util.List;
 @Service
 public class PsyUserIntegralRecordServiceImpl extends ServiceImpl<PsyUserIntegralRecordMapper, PsyUserIntegralRecord> implements IPsyUserIntegralRecordService
 {
+
+    @Resource
+    private AppTokenService appTokenService;
 
     @Resource
     private ISysConfigService configService;
@@ -57,6 +62,17 @@ public class PsyUserIntegralRecordServiceImpl extends ServiceImpl<PsyUserIntegra
         req.setDelFlag(0);
         req.setStatus(IntegralRecordConstants.INTEGRAL_RECORD_STATUS_COMPLETE);
         return psyUserIntegralRecordMapper.getList(req);
+    }
+
+    @Override
+    public Integer getUserIntegral(HttpServletRequest request) {
+        Integer id = appTokenService.getUserId(request);
+        if (id == -1) {
+            return 0;
+        }
+
+        PsyUser psyUser = psyUserService.selectPsyUserById(id);
+        return psyUser.getIntegral();
     }
 
     @Override

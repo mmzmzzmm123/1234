@@ -8,5 +8,14 @@ export default {
             return [];
         }
     },
+
+    getUserIntegral: async () => {
+        let res = await httprequest.get(`/app/user/integral/getUserIntegral`);
+        if (res.code == 200) {
+            return res;
+        } else {
+            return [];
+        }
+    },
  
 };

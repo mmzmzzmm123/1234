@@ -63,7 +63,7 @@ export default {
         pageNum: 1,
         pageSize: 10,
       },
-      balance: 1000,
+      balance: 0,
       tabCur: 0,
       tabList: [
         {
@@ -92,6 +92,7 @@ export default {
     }
     this.queryParams.uid = this.userInfo.userId
     await this.getIntegral()
+    await this.getUserIntegral()
   },
   methods: {
     // 登录
@@ -104,6 +105,12 @@ export default {
     },
     openLoginConfirm() {
       this.$refs.popup.open()
+    },
+    async getUserIntegral() {
+      const res = await server.getUserIntegral()
+      if (res.code === 200) {
+        this.balance = res.data
+      }
     },
     async getIntegral() {
       const res = await server.getIntegral(this.queryParams)
@@ -246,7 +253,7 @@ export default {
   font-size: 32upx;
 }
 .tab-active {
-  width: 64upx;
+  /*width: 64upx;*/
   height: 45upx;
   color: rgba(255,112,63,1);
   font-size: 32upx;
@@ -255,7 +262,7 @@ export default {
   text-align: center;
 }
 .tab-default {
-  width: 64upx;
+  /*width: 64upx;*/
   height: 45upx;
   color: rgba(51,51,51,1);
   font-family: PingFangSC-Regular;
