@@ -50,6 +50,13 @@
 			<uni-popup-dialog mode="base" content="您尚未登录, 是否使用微信静默登录" :duration="2000" :before-close="true"
 				@close="close" @confirm="confirm"></uni-popup-dialog>
 		</uni-popup>
+
+    <uni-popup ref="popupKf" type="center">
+      <view class="box_9">
+        <image src="/static/consult/order/card.png" class="box_10"></image>
+        <view class="box_11">———— 长按图片保存图片 ————</view>
+      </view>
+    </uni-popup>
 	</view>
 </template>
 <script>
@@ -89,6 +96,7 @@
 						classPic: "/static/course/user/customer-service.png",
 						className: "客服帮助",
 						id: 72,
+            callback: this.toKf,
 					},
 				],
 				courseList: [],
@@ -143,6 +151,9 @@
           uni.navigateTo({
             url: "/pages/course/order"
           });
+      },
+      toKf() {
+        this.$refs.popupKf.open()
       },
       toCourse(courseId) {
         uni.navigateTo({
@@ -410,5 +421,17 @@
 				right: 177upx;
 			}
 		}
+    .box_9 {
+      text-align: center;
+      .box_10 {
+        width: 200px;
+        height: 200px;
+      }
+      .box_11 {
+        margin-top: 20upx;
+        font-size: 28rpx;
+        color: #FFFFFF;
+      }
+    }
 	}
 </style>
