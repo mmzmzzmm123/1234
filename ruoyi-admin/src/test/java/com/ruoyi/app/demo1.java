@@ -6,6 +6,10 @@ import com.alibaba.fastjson2.JSONObject;
 import org.junit.Test;
 import org.springframework.security.core.parameters.P;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
@@ -15,6 +19,26 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class demo1 {
+
+    @Test
+    public void listFile() {
+        String directoryPath = "/Users/qinjin/isoft/psychology/D:/ruoyi/uploadPath/backup";
+
+        try {
+            // 获取目录下的所有文件
+            Path directory = Paths.get(directoryPath);
+            java.util.List<Path> files = Files.list(directory).collect(java.util.stream.Collectors.toList());
+
+            // 遍历并打印文件名
+            for (Path file : files) {
+                if (file.getFileName().toString().contains(".gz")) {
+                    System.out.println(file.getFileName());
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
     @Test
     public void t1() {

@@ -68,8 +68,19 @@ public class COSClientFactory {
             case "zx":
                 bucketName = cosConfig.getZxBucket();
                 break;
+            case "backup":
+                bucketName = "backup-1316267898";
+                break;
         }
         return bucketName;
+    }
+
+    public static void deleteBucket(String bucketName) {
+        try {
+            cosClient.deleteBucket(bucketName);
+        } catch (CosClientException serverException) {
+            serverException.printStackTrace();
+        }
     }
 
     public static Bucket createBucket(String bucket) {

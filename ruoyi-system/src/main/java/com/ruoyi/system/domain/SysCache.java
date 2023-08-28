@@ -18,6 +18,9 @@ public class SysCache
     /** 缓存内容 */
     private String cacheValue = "";
 
+    /** 过期时间 */
+    private Long expire = 0L;
+
     /** 备注 */
     private String remark = "";
 
@@ -37,6 +40,14 @@ public class SysCache
         this.cacheName = StringUtils.replace(cacheName, ":", "");
         this.cacheKey = StringUtils.replace(cacheKey, cacheName, "");
         this.cacheValue = cacheValue;
+    }
+
+    public SysCache(String cacheName, String cacheKey, String cacheValue, Long expire)
+    {
+        this.cacheName = StringUtils.replace(cacheName, ":", "");
+        this.cacheKey = StringUtils.replace(cacheKey, cacheName, "");
+        this.cacheValue = cacheValue;
+        this.expire = expire;
     }
 
     public String getCacheName()
@@ -67,6 +78,14 @@ public class SysCache
     public void setCacheValue(String cacheValue)
     {
         this.cacheValue = cacheValue;
+    }
+
+    public Long getExpire() {
+        return expire;
+    }
+
+    public void setExpire(Long expire) {
+        this.expire = expire;
     }
 
     public String getRemark()

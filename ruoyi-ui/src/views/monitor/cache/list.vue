@@ -133,6 +133,11 @@
                   <el-input v-model="cacheForm.cacheKey" :readOnly="true" />
                 </el-form-item>
               </el-col>
+              <el-col :offset="1" :span="22" v-if="cacheForm.expire">
+                <el-form-item label="缓存有效期(秒):" prop="expire">
+                  <el-input v-model="cacheForm.expire" :readOnly="true" />
+                </el-form-item>
+              </el-col>
               <el-col :offset="1" :span="22">
                 <el-form-item label="缓存内容:" prop="cacheValue">
                   <el-input

@@ -126,6 +126,14 @@ public class RuoYiConfig
     }
 
     /**
+     * 获取下载路径
+     */
+    public static String getBackupPath()
+    {
+        return getProfile() + "/backup/";
+    }
+
+    /**
      * 获取上传路径
      */
     public static String getUploadPath()
