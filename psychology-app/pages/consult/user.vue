@@ -152,7 +152,11 @@ export default {
           uni.navigateTo({ url: "/pages/consult/order?status=" + id });
           break
         case 10:
-          uni.redirectTo({ url: "/pages/evaluation/index" })
+          // uni.redirectTo({ url: "/pages/evaluation/index" })
+          uni.showToast({
+            icon: "none",
+            title: "功能开发中",
+          });
           break
         case 11:
           uni.navigateTo({ url: "/pages/consult/integral" })
