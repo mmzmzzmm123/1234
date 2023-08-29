@@ -66,6 +66,8 @@ export default {
         return true
       }
     }
+    uni.setStorageSync("userInfo", null);
+    uni.setStorageSync("token", null);
     return false
   },
   share(title, desc, img, link = window.location.href, url = window.location.href) {

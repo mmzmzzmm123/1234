@@ -4,6 +4,7 @@ import com.ruoyi.common.annotation.RateLimiter;
 import com.ruoyi.common.annotation.RepeatSubmit;
 import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.core.domain.dto.LoginDTO;
+import com.ruoyi.common.enums.LimitType;
 import com.ruoyi.framework.web.service.AppTokenService;
 import com.ruoyi.login.service.ILoginService;
 import io.swagger.annotations.Api;
@@ -50,7 +51,7 @@ public class LoginController {
     }
 
     @PostMapping("/check")
-    @RateLimiter
+    @RateLimiter(limitType = LimitType.IP)
     public AjaxResult check(HttpServletRequest request) {
         Integer id = appTokenService.getUserId(request);
         if (id == -1) {
