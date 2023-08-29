@@ -18,6 +18,8 @@ import org.springframework.stereotype.Service;
 import javax.annotation.Resource;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 /**
@@ -99,11 +101,24 @@ public class PsyConsultConfigServiceImpl implements IPsyConsultConfigService
 
         List<PsyConsultOrder> orders = orderService.getListForNotice("ORDER BY create_time DESC LIMIT 10");
         orders.forEach(a -> {
-            list.add(StrUtil.format("{}** 下单了{}老师的{}!", a.getNickName().substring(0,1), a.getConsultName(), a.getServeName()));
+            list.add(StrUtil.format("{}** 下单了{}老师的{}!", getFirstEmoji(a.getNickName()), a.getConsultName(), a.getServeName()));
         });
 
         Collections.shuffle(list);
         return list;
+    }
+
+    private String getFirstEmoji(String name) {
+        if (name == null || name.isEmpty()) {
+            return "";
+        }
+        String regex = "[\ud83c\udc00-\ud83c\udfff]|[\ud83d\udc00-\ud83d\udfff]|[\u2600-\u27ff]";
+        Pattern pattern = Pattern.compile(regex, Pattern.CASE_INSENSITIVE);
+        Matcher matcher = pattern.matcher(name);
+        if (matcher.find() && matcher.start() == 0) {
+            return matcher.group();
+        }
+        return name.substring(0, 1);
     }
 
 }

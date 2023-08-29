@@ -70,9 +70,7 @@ public class PsyConsultServiceImpl implements IPsyConsultService {
     @Override
     public List<PsyConsultWorkVO> getConsultWorksById(Long id) {
         PsyWorkReq req = new PsyWorkReq();
-        List<Long> ids = new ArrayList<>();
-        ids.add(id);
-        req.setIds(ids);
+        req.setConsultId(id);
         req.setStatus("0");
 
         // t+6
@@ -116,6 +114,12 @@ public class PsyConsultServiceImpl implements IPsyConsultService {
         }
         if ("1".equals(req.getSingle())) {
             req.setSingle(null);
+        }
+        if ("不限".equals(req.getSex())) {
+            req.setSex(null);
+        }
+        if ("不限".equals(req.getServe())) {
+            req.setServe(null);
         }
         List<PsyConsult> list = psyConsultMapper.search(req);
         // 处理way

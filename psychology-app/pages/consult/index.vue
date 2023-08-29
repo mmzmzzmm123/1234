@@ -4,7 +4,7 @@
 <!--      <img class="icon" src="/static/icon/search.png" />-->
 <!--      <span class="txt">搜索</span>-->
       <view class="uni-input-wrapper">
-        <uni-easyinput :inputBorder="false" prefixIcon="search" :styles="styles" :placeholderStyle="placeholderStyle" v-model="queryData.userName" @confirm="inputConfirm" placeholder="请输入咨询师名称">
+        <uni-easyinput :inputBorder="false" prefixIcon="search" :styles="styles" :placeholderStyle="placeholderStyle" v-model="queryData.userName" @confirm="inputConfirm" @clear="inputConfirm" placeholder="请输入咨询师名称">
         </uni-easyinput>
       </view>
     </view>
@@ -18,7 +18,7 @@
     </view>
     <view class="class-box index-margin">
       <view class="item" v-for="item in classList" @tap="toClass(item)">
-        <img class="class-img" :src="item.url" />
+        <image class="class-img" :src="item.url" />
         <view>{{ item.name }}</view>
       </view>
     </view>
@@ -157,6 +157,17 @@
     methods: {
       async onPullDownRefresh() {
         this.resetQuery()
+        this.resetFilterParams()
+
+        await this.getConsult()
+        uni.stopPullDownRefresh();
+      },
+      toConsultant(id) {
+        uni.navigateTo({
+          url: "/pages/consult/consultant?id=" + id,
+        });
+      },
+      resetFilterParams() {
         this.filterParams = {
           type: 0,
           way: [],
@@ -169,13 +180,6 @@
           province: '不限',
           dayType: null
         }
-        await this.getConsult()
-        uni.stopPullDownRefresh();
-      },
-      toConsultant(id) {
-        uni.navigateTo({
-          url: "/pages/consult/consultant?id=" + id,
-        });
       },
       resetQuery() {
         this.pageNum = 1
@@ -194,11 +198,11 @@
         this.queryData.way = []
       },
       inputConfirm(val) {
-        if (val && val !== '') {
-          this.resetQuery()
-          this.queryData.userName = val
-          this.getConsult()
-        }
+        this.resetQuery()
+        this.resetFilterParams()
+
+        this.queryData.userName = val
+        this.getConsult()
       },
       async getNotices() {
         this.notices = await indexServer.getNotices();
@@ -243,6 +247,8 @@
       toClass(item) {
         if (item.type === '1' || item.cat === '1') {
           this.resetQuery()
+          this.resetFilterParams()
+
           this.queryData.buy = item.buy
           this.queryData.single = item.single
           this.queryData.nand = item.nand

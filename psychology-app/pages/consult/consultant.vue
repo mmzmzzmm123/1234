@@ -9,14 +9,14 @@
         <image :src="consultInfo.avatar" class="info-avatar-img"/>
         <view class="info-content">
           <view class="info-content-userName">
-            <text>{{ consultInfo.nickName }}</text>
+            <view>{{ consultInfo.nickName }}</view>
             <view class="info-content-gps" v-if="consultInfo.province">
               <image src="/static/consult/gps.png" />
               <text v-if="consultInfo.province">{{ consultInfo.province + '-' + consultInfo.city }}</text>
             </view>
           </view>
           <view class="info-content-info">{{ consultInfo.info }}</view>
-          <!--          <view class="info-content-mode">{{ consultInfo.mode }}</view>-->
+          <view class="info-content-mode">{{ consultInfo.mode }}</view>
         </view>
       </view>
 
@@ -25,10 +25,12 @@
           <view class="info-nums-item-num">{{ consultInfo.workNum }}人</view>
           <view class="info-nums-item-title">咨询人数</view>
         </view>
+        <view class="info-nums-block"></view>
         <view class="info-nums-item">
           <text class="info-nums-item-num">{{ consultInfo.workTime }}小时</text>
           <text class="info-nums-item-title">服务时长</text>
         </view>
+        <view class="info-nums-block"></view>
         <view class="info-nums-item">
           <text class="info-nums-item-num">{{ consultInfo.workHours }}年</text>
           <text class="info-nums-item-title">从业年限</text>
@@ -38,8 +40,9 @@
 
     <view class="tabs">
       <view class="tabs-list">
-        <view v-for="i in items" class="tab" :class="{ selected: mainCur === i.id }" @tap="tabSelect(i.id)">
+        <view v-for="i in items" class="tab" @tap="tabSelect(i.id)">
           <view>{{ i.name }}</view>
+          <view class="tab-selected" v-if="mainCur === i.id "></view>
         </view>
       </view>
       <view class="tabs-bg"></view>
@@ -89,7 +92,7 @@
       <uni-popup-dialog mode="base" content="您尚未登录, 是否使用微信静默登录" :duration="2000" :before-close="true" @close="closeLoginConfirm" @confirm="confirmLogin"/>
     </uni-popup>
 
-    <uni-popup ref="selectServe" type="bottom" class="uni-popup-ok" background-color="#fff">
+    <uni-popup ref="selectServe" type="bottom" class="uni-popup-serve" background-color="#fff">
       <view class="bottom-serve">
         <view class="bottom-serve-header">
           服务套餐
@@ -343,10 +346,9 @@ export default {
   background: linear-gradient(133deg, #FF8C65 0%, #FF6C39 100%);
 }
 .info {
-  //z-index: 1;
   margin-top: -86upx;
   width: 100%;
-  //height: 258upx;
+  height: 295upx;
   background: #FFFFFF;
   border-radius: 32upx 32upx 0upx 0upx;
 }
@@ -357,7 +359,7 @@ export default {
   width: 172upx;
   height: 172upx;
   border-radius: 86upx;
-  margin-top: -86upx;
+  margin-top: -70upx;
   margin-left: 24upx;
   background-color: #EFEFF9;
 }
@@ -371,12 +373,12 @@ export default {
   color: #FFFFFF;
   font-size: 30upx;
   font-weight: 600;
-  text-align: left;
+  display: flex;
+  align-items: center;
   white-space: nowrap;
   .info-content-gps {
     position: absolute;
     right: 30upx;
-    top: 6upx;
     image {
       width: 16upx;
       height: 18upx;
@@ -420,8 +422,12 @@ export default {
 }
 .info-content-info {
   width: 498upx;
-  //height: 74upx;
-  overflow-wrap: break-word;
+  height: 74upx;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  -webkit-line-clamp: 2;
+  text-overflow: ellipsis;
   color: #777777;
   font-size: 26upx;
   margin-top: 16upx;
@@ -438,10 +444,15 @@ export default {
   background: #FFFFFF;
   box-shadow: 0upx 2upx 10upx 0upx rgba(175,45,0,0.1);
   border-radius: 12upx;
-  margin: 32upx;
+  margin: 24upx;
   display: flex;
   align-items: center;
   justify-content: space-evenly;
+}
+.info-nums-block {
+  width: 1upx;
+  height: 48upx;
+  background: #E6E6E6;
 }
 .info-nums-item {
   width: 96upx;
@@ -452,25 +463,16 @@ export default {
 }
 .info-nums-item-num {
   height: 37upx;
-  overflow-wrap: break-word;
   color: rgba(51,51,51,1);
   font-size: 26upx;
-  
   font-weight: 500;
-  text-align: left;
-  white-space: nowrap;
   line-height: 37upx;
   margin-left: 2upx;
 }
 .info-nums-item-title {
-  height: 31upx;
-  overflow-wrap: break-word;
+  height: 30upx;
   color: rgba(119,119,119,1);
   font-size: 22upx;
-
-  font-weight: normal;
-  text-align: left;
-  white-space: nowrap;
   line-height: 30upx;
   margin-top: 8upx;
 }
@@ -483,7 +485,7 @@ export default {
   justify-content: flex-end;
   background-color: #FFFFFF;
   .tabs-list {
-    height: 72upx;
+    //height: 72upx;
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -491,11 +493,20 @@ export default {
     .tab {
       color: #777777;
       font-size: 28upx;
-      &.selected {
-        border-bottom: 6upx solid;
-        //border-bottom-width: thin;
-        font-weight: 600;
-        color: #FF703F;
+      width: 150upx;
+      text-align: center;
+      position: relative;
+      height: 72upx;
+      line-height: 72upx;
+      .tab-selected {
+        position: absolute;
+        bottom: 0;
+        width: 68upx;
+        height: 4upx;
+        background: #FF703F;
+        border-radius: 2rpx;
+        left: 50%;
+        transform: translate(-50%, -50%);
       }
     }
   }
@@ -615,12 +626,13 @@ export default {
   display: flex;
   align-items: center;
   .page-bottom-image {
-    width: 48upx;
+    width: 56upx;
     height: 80upx;
     display: flex;
     flex-direction: column;
     justify-content: center;
-    margin: 10upx 0 0 40upx;
+    margin-left: 40upx;
+    //margin: 10upx 0 0 40upx;
   }
   .page-bottom-icon {
     width: 48upx;
@@ -629,11 +641,8 @@ export default {
   .page-bottom-home {
     color: rgba(51,51,51,1);
     font-size: 20upx;
-    font-weight: normal;
-    text-align: left;
-    white-space: nowrap;
-    line-height: 28upx;
-    margin: 4upx 0 0 4upx;
+    //margin: 4upx 0 0 4upx;
+    margin-top: 4upx;
   }
   .page-bottom-btn {
     background-color: rgba(255,112,63,1.000000);
@@ -650,6 +659,9 @@ export default {
 }
 .uni-popup-ok {
   z-index: 1000;
+}
+.uni-popup-serve {
+  z-index: 119;
 }
 .bottom-serve {
   background-color: #fff;

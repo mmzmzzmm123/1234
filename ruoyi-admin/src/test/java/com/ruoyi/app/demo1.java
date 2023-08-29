@@ -20,6 +20,33 @@ import java.util.stream.Stream;
 
 public class demo1 {
 
+    private String getFirstEmoji(String input) {
+        if (input == null || input.isEmpty()) {
+            return "";
+        }
+        String regex = "[\ud83c\udc00-\ud83c\udfff]|[\ud83d\udc00-\ud83d\udfff]|[\u2600-\u27ff]";
+        Pattern pattern = Pattern.compile(regex, Pattern.CASE_INSENSITIVE);
+        Matcher matcher = pattern.matcher(input);
+        if (matcher.find() && matcher.start() == 0) {
+            return matcher.group();
+        }
+        return input.substring(0, 1);
+    }
+
+    @Test
+    public void test1() {
+        String input1 = "Hello World";
+        String input2 = "😀😀Hello";
+        String input3 = "1😀😀2345";
+        String input4 = "\uD83C\uDF44\uD83C\uDF44哈哈😀哈";
+        System.out.println(getFirstEmoji(input1)); // false
+        System.out.println(getFirstEmoji(input2)); // true
+        System.out.println(getFirstEmoji(input3)); // false
+        System.out.println(getFirstEmoji(input4)); // true
+    }
+
+
+
     @Test
     public void listFile() {
         String directoryPath = "/Users/qinjin/isoft/psychology/D:/ruoyi/uploadPath/backup";
