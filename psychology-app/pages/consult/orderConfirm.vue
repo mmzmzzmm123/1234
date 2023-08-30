@@ -45,26 +45,26 @@
       </view>
       <view class="section-reader">
         <checkbox-group @change="checkboxChange">
-          <checkbox class="section-reader-box" value="ok" :checked="checkBox"/>
+          <checkbox class="section-reader-box" color="#FF703F" value="ok" :checked="checkBox">
+            <text class="section-reader-group-text1">我同意</text>
+          </checkbox>
         </checkbox-group>
         <view class="section-reader-group">
-          <text class="section-reader-group-text1">我同意</text>
           <text class="section-reader-group-text2" @tap="openNotice">《心理咨询服务协议》</text>
-          <text class="section-reader-group-text3" />
         </view>
       </view>
-      <view class="notice">
-        <view>预约须知：</view>
-        <view>·变更预约说明</view>
-        <view>预约人一旦确定预约后，咨询前24小时内不可修改或取消，请预约人提前24小时做好时间安排。咨询师确认咨询后，若有时间变动，同样需提前24小时与预约人沟通确认。</view>
-        <view>·爽约/迟到说明</view>
-        <view>确定预约后，预约人需准时赴约。若迟到或爽约，将正常收取本咨询费用，咨询服务按原定时间开始，原定时间结束。若咨询师迟到或爽约，咨询师在完成原定时长心理咨询服务基础上，赔偿预约人同等时长的心理咨询服。</view>
-        <view>·知情同意</view>
-        <view>咨询师为来访者提供的仅为心理健康咨询服务，非医疗服务。如您需要专业医生的诊断，请前往当地精神卫生中心寻求精神科医生的帮助；如果您已在精神卫生医疗机构被诊断精神疾病，您需要知晓心理咨询不能替代药物治疗，您支付的咨询费用是为咨询师在和您咨询过程中所投入的时间和精力付费，并不是为保证疾病治疗效果付费。</view>
-
-      </view>
-      
     </view>
+
+    <view class="notice">
+      <view>预约须知：</view>
+      <view>·变更预约说明</view>
+      <view>预约人一旦确定预约后，咨询前24小时内不可修改或取消，请预约人提前24小时做好时间安排。咨询师确认咨询后，若有时间变动，同样需提前24小时与预约人沟通确认。</view>
+      <view>·爽约/迟到说明</view>
+      <view>确定预约后，预约人需准时赴约。若迟到或爽约，将正常收取本咨询费用，咨询服务按原定时间开始，原定时间结束。若咨询师迟到或爽约，咨询师在完成原定时长心理咨询服务基础上，赔偿预约人同等时长的心理咨询服。</view>
+      <view>·知情同意</view>
+      <view>咨询师为来访者提供的仅为心理健康咨询服务，非医疗服务。如您需要专业医生的诊断，请前往当地精神卫生中心寻求精神科医生的帮助；如果您已在精神卫生医疗机构被诊断精神疾病，您需要知晓心理咨询不能替代药物治疗，您支付的咨询费用是为咨询师在和您咨询过程中所投入的时间和精力付费，并不是为保证疾病治疗效果付费。</view>
+    </view>
+
     <view class="bottom-view">
       <button @tap="toBuy" class="bottom-btn" :disabled="flag">
         <text class="bottom-text">立即支付</text>
@@ -447,17 +447,17 @@ export default {
     font-size: 26upx;
   }
   .section-time {
-    width: 100%;
-    height: 833upx;
-    display: flex;
-    flex-direction: column;
+    //width: 100%;
+    //height: 833upx;
+    //display: flex;
+    //flex-direction: column;
   }
   .section-time-group {
     box-shadow: 0px 4px 28px 0px rgba(119,119,119,0.060000);
     background-color: #FFFFFF;
     border-radius: 12upx;
     width: 686upx;
-    height: 248upx;
+    //height: 248upx;
     display: flex;
     flex-direction: column;
     justify-content: flex-center;
@@ -482,7 +482,7 @@ export default {
     flex-direction: row;
     display: flex;
     justify-content: space-between;
-    margin: 24upx 0 32upx 32upx;
+    margin: 24upx 0 24upx 32upx;
   }
   .section-time-group-text2 {
     width: 104upx;
@@ -543,27 +543,31 @@ export default {
     flex-direction: row;
     display: flex;
     align-items: center;
-    justify-content: space-between;
+    //justify-content: space-between;
     margin: 32upx 0 16upx 32upx;
   }
   .section-reader-box {
     transform:scale(0.7);
-    //width: 32upx;
-    //height: 32upx;
-    //margin-top: 6upx;
-  }
-  .section-reader-group {
-    width: 580upx;
+    color: #FF703F;
     height: 44upx;
-    font-size: 0upx;
-    text-align: justify;
     line-height: 44upx;
+    //width: 180upx;
+    //margin-top: 6upx;
+    ::v-deep .uni-checkbox-input {
+      border-color: #777777;
+      border-radius: 100%;
+    }
   }
   .section-reader-group-text1 {
-    width: 320upx;
+    //width: 320upx;
+    color: #333333;
+    font-size: 20px;
+    //line-height: 44upx;
+  }
+  .section-reader-group {
+    //width: 580upx;
     height: 44upx;
-    color: rgba(51,51,51,1.000000);
-    font-size: 24upx;
+    text-align: justify;
     line-height: 44upx;
   }
   .section-reader-group-text2 {
@@ -573,21 +577,16 @@ export default {
     font-size: 24upx;
     line-height: 44upx;
   }
-  .section-reader-group-text3 {
-    width: 320upx;
-    height: 44upx;
-    color: rgba(51,51,51,1.000000);
-    font-size: 24upx;
-    line-height: 44upx;
-  }
   .notice {
     margin: 0 64upx 16upx 80upx;
     font-size: 22rpx;
+    height: 534upx;
     font-family: PingFangSC-Regular, PingFang SC;
     color: #777777;
   }
   .bottom-view {
     padding: 10upx;
+    text-align: center;
     position: fixed;
     bottom: 0;
     height: 98upx;
@@ -604,7 +603,8 @@ export default {
     width: 310px;
     display: flex;
     justify-content: center;
-    margin: 4px 0 0 39px;
+    margin-top: 4upx;
+    //margin: 4px 0 0 39px;
   }
   .bottom-text {
     color: rgba(255,255,255,1);

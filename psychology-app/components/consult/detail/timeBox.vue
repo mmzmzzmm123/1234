@@ -105,10 +105,9 @@ export default {
       // this.close()
     },
     cancel() {
+      this.time = -1
       this.workId = 0
       this.workList.forEach(a => a.flag = false)
-      this.$emit('cancel')
-      this.close()
     }
   }
 };

@@ -306,6 +306,7 @@ export default {
         }
       }
 
+      this.$refs.timeBox.cancel()
       uni.navigateTo({
         url: "/pages/consult/orderConfirm?cId=" + this.consultId + '&sId=' + item.id,
       });
