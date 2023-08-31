@@ -1,6 +1,8 @@
 package com.ruoyi.system.service;
 
 import java.util.List;
+
+import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.core.domain.entity.SysUser;
 
 /**
@@ -203,4 +205,14 @@ public interface ISysUserService
      * @return 结果
      */
     public String importUser(List<SysUser> userList, Boolean isUpdateSupport, String operName);
+
+    /**
+     * 强制更新密码
+     * @param constraint 0:正常登录,1:强制修改密码
+     * @param password 密码
+     * @param oldPassword 旧密码
+     * @param newPassword 新密码
+     * @return 登录界面密码修改校验
+     */
+    AjaxResult checkPassword(Boolean constraint, String password, String oldPassword, String newPassword);
 }

@@ -54,7 +54,9 @@ export default {
     submit() {
       this.$refs["form"].validate(valid => {
         if (valid) {
-          updateUserPwd(this.user.oldPassword, this.user.newPassword).then(response => {
+          // 修改updateUserPwd方法的入参
+          // constraint值为true时不校验旧密码，传入false校验，不影响功能
+          updateUserPwd(this.user.oldPassword, this.user.newPassword, false).then(response => {
             this.$modal.msgSuccess("修改成功");
           });
         }

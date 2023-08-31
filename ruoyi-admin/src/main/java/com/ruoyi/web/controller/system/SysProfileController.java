@@ -23,6 +23,8 @@ import com.ruoyi.common.utils.file.MimeTypeUtils;
 import com.ruoyi.framework.web.service.TokenService;
 import com.ruoyi.system.service.ISysUserService;
 
+import java.util.Map;
+
 /**
  * 个人信息 业务处理
  * 
@@ -87,21 +89,22 @@ public class SysProfileController extends BaseController
      */
     @Log(title = "个人信息", businessType = BusinessType.UPDATE)
     @PutMapping("/updatePwd")
-    public AjaxResult updatePwd(String oldPassword, String newPassword)
-    {
+    public AjaxResult updatePwd(@RequestBody Map<String, Object> user) {
+        //获取constraint
+        Boolean constraint = (Boolean) user.get("constraint");
         LoginUser loginUser = getLoginUser();
         String userName = loginUser.getUsername();
         String password = loginUser.getPassword();
-        if (!SecurityUtils.matchesPassword(oldPassword, password))
-        {
-            return error("修改密码失败，旧密码错误");
+        //获取旧密码（为了不影响若依中原有的密码修改）
+        String oldPassword = (String) user.get("oldPassword");
+        //获取新密码
+        String newPassword = (String) user.get("newPassword");
+        //密码相关校验--密码强度相等
+        AjaxResult ajaxResult = userService.checkPassword(constraint,password,oldPassword,newPassword);
+        if (ajaxResult != null){
+            return ajaxResult;
         }
-        if (SecurityUtils.matchesPassword(newPassword, password))
-        {
-            return error("新密码不能与旧密码相同");
-        }
-        if (userService.resetUserPwd(userName, SecurityUtils.encryptPassword(newPassword)) > 0)
-        {
+        if (userService.resetUserPwd(userName, SecurityUtils.encryptPassword(newPassword)) > 0) {
             // 更新缓存用户密码
             loginUser.getUser().setPassword(SecurityUtils.encryptPassword(newPassword));
             tokenService.setLoginUser(loginUser);

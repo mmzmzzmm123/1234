@@ -3,6 +3,7 @@ package com.ruoyi.common.core.domain.entity;
 import java.util.Date;
 import java.util.List;
 import javax.validation.constraints.*;
+
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import com.ruoyi.common.annotation.Excel;
@@ -89,8 +90,17 @@ public class SysUser extends BaseEntity
     /** 角色ID */
     private Long roleId;
 
-    public SysUser()
-    {
+    /**
+     * 密码最后更新时间
+     */
+    private Date passTime;
+
+    /**
+     * 0：正常登录，1：强制修改密码
+     */
+    private Boolean constraint;
+
+    public SysUser() {
 
     }
 
@@ -297,28 +307,46 @@ public class SysUser extends BaseEntity
         this.roleId = roleId;
     }
 
+    public Date getPassTime() {
+        return passTime;
+    }
+
+    public void setPassTime(Date passTime) {
+        this.passTime = passTime;
+    }
+
+    public Boolean getConstraint() {
+        return constraint;
+    }
+
+    public void setConstraint(Boolean constraint) {
+        this.constraint = constraint;
+    }
+
     @Override
     public String toString() {
-        return new ToStringBuilder(this,ToStringStyle.MULTI_LINE_STYLE)
-            .append("userId", getUserId())
-            .append("deptId", getDeptId())
-            .append("userName", getUserName())
-            .append("nickName", getNickName())
-            .append("email", getEmail())
-            .append("phonenumber", getPhonenumber())
-            .append("sex", getSex())
-            .append("avatar", getAvatar())
-            .append("password", getPassword())
-            .append("status", getStatus())
-            .append("delFlag", getDelFlag())
-            .append("loginIp", getLoginIp())
-            .append("loginDate", getLoginDate())
-            .append("createBy", getCreateBy())
-            .append("createTime", getCreateTime())
-            .append("updateBy", getUpdateBy())
-            .append("updateTime", getUpdateTime())
-            .append("remark", getRemark())
-            .append("dept", getDept())
-            .toString();
+        return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE)
+                .append("userId", getUserId())
+                .append("deptId", getDeptId())
+                .append("userName", getUserName())
+                .append("nickName", getNickName())
+                .append("email", getEmail())
+                .append("phonenumber", getPhonenumber())
+                .append("sex", getSex())
+                .append("avatar", getAvatar())
+                .append("password", getPassword())
+                .append("status", getStatus())
+                .append("delFlag", getDelFlag())
+                .append("loginIp", getLoginIp())
+                .append("loginDate", getLoginDate())
+                .append("createBy", getCreateBy())
+                .append("createTime", getCreateTime())
+                .append("updateBy", getUpdateBy())
+                .append("updateTime", getUpdateTime())
+                .append("remark", getRemark())
+                .append("dept", getDept())
+                .append("passTime", getPassTime())
+                .append("constraint", getConstraint())
+                .toString();
     }
 }
