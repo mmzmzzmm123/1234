@@ -26,7 +26,7 @@
     <view class="group_13">
       <view class="box_11">
         <view class="box_12"></view>
-        <text class="text_34">长按图片保存图片</text>
+        <text class="text_34">长按二维码预约咨询</text>
         <view class="box_13"></view>
       </view>
     </view>
@@ -57,6 +57,7 @@ export default {
   left: 0upx;
   top: 0upx;
   width: 750upx;
+  height: 100%;
   /*height: 1624upx;*/
   display: flex;
   flex-direction: column;
@@ -64,14 +65,14 @@ export default {
 }
 .image-wrapper_1 {
   width: 750upx;
-  height: 319upx;
+  height: 200rpx;
   display: flex;
   flex-direction: column;
 }
 .label_8 {
   width: 40upx;
   height: 40upx;
-  margin: 265upx 0 0 686upx;
+  margin: 145upx 0 0 686upx;
 }
 .group_9 {
   border-radius: 16upx 16upx 0 0;
@@ -86,7 +87,6 @@ export default {
 }
 .group_10 {
   border-radius: 16upx 16upx 0 0;
-  background-image: url('/static/consult/order/bg.png');
   width: 620upx;
   height: 240upx;
 }
@@ -240,7 +240,7 @@ export default {
   flex-direction: column;
 }
 .text_34 {
-  width: 224upx;
+  /*width: 224upx;*/
   height: 40upx;
   overflow-wrap: break-word;
   color: rgba(255,255,255,1);

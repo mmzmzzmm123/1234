@@ -17,6 +17,9 @@ export function getMinutes(orderTime) {
 	return Math.floor((seconds - hour * 3600) / 60) + hour * 60
 }
 
+export function getSeconds(orderTime) {
+	return parseInt((new Date(orderTime).getTime() + 15 * 60 * 1000 -  new Date().getTime()) / 1000)
+}
 
 export function formatTime(time) {
 	let date = new Date(time);
@@ -48,6 +51,7 @@ export function formatDuration(seconds) {
 }
     
 export default {
+	getSeconds,
 	getMinutes,
 	formatSecondsCH,
 	formatTime,

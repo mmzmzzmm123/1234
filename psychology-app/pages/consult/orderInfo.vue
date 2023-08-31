@@ -7,8 +7,9 @@
       <view class="status-icon">
         <template v-if="order.status === '0'">
           <image src="/static/consult/order/countdown.png" class="status-img"></image>
-          <text class="status-text">订单待支付，剩余</text>
-          <uni-countdown :font-size="20" class="countdown" color="#FF703F" splitorColor="#FF703F" :show-day="false" :minute="order.endPay" :second="59"/>
+          <text class="status-text">订单待支付<text v-if="order.endPay > 0">，剩余</text></text>
+          <countdown :time="order.endPay" :size="36" color="rgba(51,51,51,1)" fontWeight="500"/>
+<!--          <uni-countdown :font-size="20" class="countdown" color="#FF703F" splitorColor="#FF703F" :show-day="false" :minute="order.endPay" :second="59"/>-->
         </template>
         <template v-if="order.status === '1'">
           <image src="/static/consult/order/padding.png" class="status-img"></image>
@@ -25,7 +26,7 @@
       <view class="info">
         <view class="info-header">
           <view class="block-icon"></view>
-          <text class="info-header-desc">{{ order.serve.modeName }}&nbsp;|&nbsp;{{ order.serve.time }}分钟</text>
+          <text class="info-header-desc">{{ order.serve.modeName }}&nbsp;|&nbsp;{{ order.serve.time }}分钟/每次</text>
           <text class="info-header-title">服务详情</text>
         </view>
         <view class="info-content">
@@ -145,11 +146,13 @@ import formatTime from '@/utils/formatTime.js'
 import indexServer from '@/server/consult/index'
 import orderServer from "@/server/consult/order";
 import cartBox from '@/components/consult/cartBox'
+import countdown from "../../components/consult/countdown";
 import wxCard from '@/components/consult/wxCard'
+// import wxCard from '@/components/consult/wCard'
 import { getPaySign, wxPay } from "@/server/wxApi"
 
 export default {
-  components: { cartBox, wxCard },
+  components: { cartBox, wxCard, countdown },
   data() {
     return {
       showCard: false,
@@ -208,12 +211,13 @@ export default {
       }
     },
     remainTime(orderTime) {
-      if (new Date().getTime() < new Date(orderTime).getTime() + 15 * 60 * 1000) {
-        // 下单不超过15分钟
-        return formatTime.getMinutes(orderTime)
-      } else {
-        return 0
-      }
+      // if (new Date().getTime() < new Date(orderTime).getTime() + 15 * 60 * 1000) {
+      //   // 下单不超过15分钟
+      //   return formatTime.getMinutes(orderTime)
+      // } else {
+      //   return 0
+      // }
+      return formatTime.getSeconds(orderTime)
     },
     async getDates() {
       this.dateList = await indexServer.getDates(7);

@@ -17,8 +17,8 @@
             <view class="item-header-block"></view>
             <text class="item-header-timer">{{ item.createTime }}</text>
             <view class="item-header-countdown" v-if="item.status === '0' && item.endPay > 0">
-              <view>剩余</view>
-              <uni-countdown color="#FF703F" splitorColor="#FF703F" :show-day="false" :minute="item.endPay" :second="0"/>
+              <text style="margin-right: 4upx">剩余</text>
+              <countdown :time="item.endPay"/>
 <!--            <view class="item-header-countdown" v-if="item.status === 0">{{ item.endPay }}-->
             </view>
             <text class="item-header-status">{{ item.statusName }}</text>
@@ -69,15 +69,17 @@
 </template>
 <script>
 import utils, { clientTypeObj } from "@/utils/common";
+import countdown from "../../components/consult/countdown";
 import indexServer from '@/server/consult/index'
 import orderServer from "@/server/consult/order";
 import loginServer from "@/server/login"
 import formatTime from '@/utils/formatTime.js'
 import cartBox from '@/components/consult/cartBox'
 import { getPaySign, wxPay } from "@/server/wxApi"
+import {getSeconds} from "../../utils/formatTime";
 
 export default {
-  components: { cartBox },
+  components: { cartBox, countdown },
   data() {
     return {
       status: 0,
@@ -286,12 +288,13 @@ export default {
       this.orderList = list
     },
     remainTime(orderTime) {
-      if (new Date().getTime() < new Date(orderTime).getTime() + 15 * 60 * 1000) {
-        // 下单不超过15分钟
-        return formatTime.getMinutes(orderTime)
-      } else {
-        return 0
-      }
+      // if (new Date().getTime() < new Date(orderTime).getTime() + 15 * 60 * 1000) {
+      //   // 下单不超过15分钟
+      //   return formatTime.getSeconds(orderTime)
+      // } else {
+      //   return 0
+      // }
+      return formatTime.getSeconds(orderTime)
     },
     async toCancel(id) {
       const res = await orderServer.cancel(id);
@@ -351,7 +354,7 @@ page {
         color: rgba(51,51,51,1);
         font-size: 32upx;
         &.selected {
-          border-bottom: 8upx solid;
+          border-bottom: 4upx solid;
           font-weight: 600;
           color: #FF703F;
         }

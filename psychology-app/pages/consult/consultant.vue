@@ -456,14 +456,16 @@ export default {
   background: #E6E6E6;
 }
 .info-nums-item {
-  width: 96upx;
+  width: 200upx;
   height: 76upx;
   display: flex;
   justify-content: center;
   flex-wrap: wrap;
 }
 .info-nums-item-num {
+  text-align: center;
   height: 37upx;
+  width: 200upx;
   color: rgba(51,51,51,1);
   font-size: 26upx;
   font-weight: 500;
@@ -471,6 +473,7 @@ export default {
   margin-left: 2upx;
 }
 .info-nums-item-title {
+  text-align: center;
   height: 30upx;
   color: rgba(119,119,119,1);
   font-size: 22upx;
