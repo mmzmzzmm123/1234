@@ -36,5 +36,5 @@ public @interface RateLimiter
     /**
      * 限流类型
      */
-    public LimitType limitType() default LimitType.DEFAULT;
+    public LimitType limitType() default LimitType.IP;
 }

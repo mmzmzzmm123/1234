@@ -314,7 +314,7 @@ export default {
                 time: i.day + ' ' + i.timeStart + '-' + i.timeEnd,
                 realTime: i.realTime,
                 status: i.status,
-                updateBy: i.updateBy
+                updateBy: i.realTime ? i.updateBy : null
               }
               items.push(it)
             })
