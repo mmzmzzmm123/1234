@@ -3,6 +3,7 @@ package com.ruoyi.office.service;
 import java.math.BigDecimal;
 import java.util.List;
 
+import com.github.binarywang.wxpay.bean.result.WxPayOrderQueryV3Result;
 import com.ruoyi.office.domain.TRoomOrder;
 import com.ruoyi.office.domain.vo.*;
 
@@ -69,7 +70,7 @@ public interface ITRoomOrderService {
 
     void wxnotify(String orderNo, String openId, int centTotal, String s);
 
-    void finish(PrepayResp vo, Long id);
+    WxPayOrderQueryV3Result finish(PrepayResp vo, Long id);
 
     RoomAvailablePeriod getAvailablePeriod(RoomAvailablePeriod vo);
 

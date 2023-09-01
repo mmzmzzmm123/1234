@@ -7,9 +7,11 @@ import java.util.Date;
 import java.util.List;
 
 import com.github.binarywang.wxpay.bean.request.WxPayUnifiedOrderV3Request;
+import com.github.binarywang.wxpay.bean.result.WxPayOrderQueryV3Result;
 import com.github.binarywang.wxpay.bean.result.WxPayUnifiedOrderV3Result;
 import com.github.binarywang.wxpay.bean.result.enums.TradeTypeEnum;
 import com.github.binarywang.wxpay.config.WxPayConfig;
+import com.github.binarywang.wxpay.constant.WxPayConstants;
 import com.github.binarywang.wxpay.exception.WxPayException;
 import com.github.binarywang.wxpay.service.WxPayService;
 import com.ruoyi.common.exception.ServiceException;
@@ -136,19 +138,15 @@ public class TWxUserPackageServiceImpl extends ServiceImpl<TWxUserPackageMapper,
         WxPayUnifiedOrderV3Request v3Request = new WxPayUnifiedOrderV3Request();
         final WxPayConfig config = wxPayService.getConfig();
 
-        ArrayList<WxPayUnifiedOrderV3Request.GoodsDetail> goodsDetails = new ArrayList<>();
-        goodsDetails.add(
-                new WxPayUnifiedOrderV3Request.GoodsDetail() {
-                }.setMerchantGoodsId("").setUnitPrice(0).setQuantity(0));
+        WxPayUnifiedOrderV3Request.Amount v3Amount = new WxPayUnifiedOrderV3Request.Amount();
+        v3Amount.setTotal(totalPrice.multiply(new BigDecimal(100)).intValue());
+        WxPayUnifiedOrderV3Request.Payer v3payer = new WxPayUnifiedOrderV3Request.Payer();
+        v3payer.setOpenid(wxUser.getOpenId());
 
-        v3Request.setAppid(config.getAppId()).setMchid(config.getMchId()).setNotifyUrl(config.getNotifyUrl())
+        v3Request.setAppid(config.getAppId()).setMchid(config.getMchId()).setNotifyUrl(config.getPayScoreNotifyUrl())
                 .setDescription("packId: " + storePack.getPackId()).setOutTradeNo(String.valueOf(orderNo))
-                .setAmount(
-                        new WxPayUnifiedOrderV3Request.Amount() {
-                        }.setTotal(totalPrice.intValue() * 100))
-                .setPayer(
-                        new WxPayUnifiedOrderV3Request.Payer() {
-                        }.setOpenid(wxUser.getOpenId()))
+                .setAmount(v3Amount)
+                .setPayer(v3payer)
                 .setAttach(OfficeEnum.WxTradeType.PACK.getCode());
 
         WxPayUnifiedOrderV3Result.JsapiResult jsapiResult = null;
@@ -161,14 +159,70 @@ public class TWxUserPackageServiceImpl extends ServiceImpl<TWxUserPackageMapper,
             userPackage.setPayAmount(storePackage.getPayAmount());
             userPackage.setGiftAmont(storePackage.getGiftAmont());
             userPackage.setMerchant(Long.parseLong(storePackage.getCreateBy()));
+            userPackage.setStatus(OfficeEnum.PackageOrderStatus.TO_PAY.getCode());
+            userPackage.setRemark(jsapiResult.toString());
+            userPackage.setCreateBy(userId + "");
+            userPackage.setCreateTime(new Date());
             tWxUserPackageMapper.insertTWxUserPackage(userPackage);
         } catch (WxPayException e) {
             e.printStackTrace();
             log.error("JSAPI 下单：" + e.getLocalizedMessage());
+            throw new ServiceException(e.getLocalizedMessage());
+        } catch (Exception ex) {
+            throw new ServiceException(ex.getLocalizedMessage());
         }
         resp.setJsapiResult(jsapiResult);
         resp.setOrderId(userPackage.getId());
         return resp;
+    }
+
+    @Override
+    public WxPayOrderQueryV3Result finish(PrepayResp vo, Long wxuserid) {
+        TWxUserPackage order = tWxUserPackageMapper.selectTWxUserPackageById(vo.getOrderId());
+        if (order.getStatus().equals(OfficeEnum.PackageOrderStatus.PAYED.getCode()))
+            throw new ServiceException("订单已支付");
+        //查询支付状态；
+        WxPayOrderQueryV3Result v3Result = null;
+        try {
+            v3Result = wxPayService.queryOrderV3("", String.valueOf(order.getOrderNo()));
+        } catch (WxPayException e) {
+            log.error("查询微信后台订单失败： " + e.getMessage());
+            throw new ServiceException("查询微信后台订单失败");
+        }
+        // 根据业务需要，更新商户平台订单状态
+        String tradState = v3Result.getTradeState();
+        if (tradState.equalsIgnoreCase(WxPayConstants.WxpayTradeStatus.SUCCESS)) {
+            // 业务需求
+            TWxUserPackage updateOrder = new TWxUserPackage();
+            updateOrder.setId(order.getId());
+            updateOrder.setStatus(OfficeEnum.PackageOrderStatus.PAYED.getCode());
+            tWxUserPackageMapper.updateTWxUserPackage(updateOrder);
+        } else if (tradState.equalsIgnoreCase(WxPayConstants.WxpayTradeStatus.REFUND)) {
+            throw new ServiceException("订单转入退款");
+        } else if (tradState.equalsIgnoreCase(WxPayConstants.WxpayTradeStatus.NOTPAY)) {
+            throw new ServiceException("订单未支付或已支付未收到微信通知");
+        } else if (tradState.equalsIgnoreCase(WxPayConstants.WxpayTradeStatus.CLOSED)) {
+            // 关闭订单API
+            //最新更新时间：2020.05.26 版本说明
+            //
+            //以下情况需要调用关单接口：
+            //1、商户订单支付失败需要生成新单号重新发起支付，要对原订单号调用关单，避免重复支付；
+            //2、系统下单后，用户支付超时，系统退出不再受理，避免用户继续，请调用关单接口。
+            //
+            //注意：
+            //• 关单没有时间限制，建议在订单生成后间隔几分钟（最短5分钟）再调用关单接口，避免出现订单状态同步不及时导致关单失败。
+            throw new ServiceException("支付订单已关闭");
+        } else if (tradState.equalsIgnoreCase(WxPayConstants.WxpayTradeStatus.REVOKED)) {
+            throw new ServiceException("已撤销（仅付款码支付会返回）");
+        } else if (tradState.equalsIgnoreCase(WxPayConstants.WxpayTradeStatus.USER_PAYING)) {
+            throw new ServiceException("用户支付中（仅付款码支付会返回）");
+        } else if (tradState.equalsIgnoreCase(WxPayConstants.WxpayTradeStatus.PAY_ERROR)) {
+            throw new ServiceException("支付失败（仅付款码支付会返回）");
+        }/*else{
+            throw new ServiceException(v3Result.getTradeStateDesc());
+        }*/
+
+        return v3Result;
     }
 
     @Override

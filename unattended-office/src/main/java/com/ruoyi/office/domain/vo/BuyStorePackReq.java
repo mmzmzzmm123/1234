@@ -5,5 +5,4 @@ import lombok.Data;
 @Data
 public class BuyStorePackReq {
     private Long packId;
-    private Long userId;
 }
