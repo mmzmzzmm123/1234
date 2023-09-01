@@ -28,20 +28,20 @@
 		data() {
 			return {
 				tools: [
-					{
-						name: '开大门',
-						icon: 'icon-kaimen',
-						style: 'tool-bar_item--dark',
-						showList: true,
-						onChoseOrder: order=>{
-							this.$api.openStore(order.storeId).then(res=>{
-								this.showToast("开门成功")
-								this.show = false
-							}).finally(res=>{
-								this.show = false
-							})
-						}
-					},
+					// {
+					// 	name: '开大门',
+					// 	icon: 'icon-kaimen',
+					// 	style: 'tool-bar_item--dark',
+					// 	showList: true,
+					// 	onChoseOrder: order=>{
+					// 		this.$api.openStore(order.storeId).then(res=>{
+					// 			this.showToast("开门成功")
+					// 			this.show = false
+					// 		}).finally(res=>{
+					// 			this.show = false
+					// 		})
+					// 	}
+					// },
 					{
 						name: '开包厢',
 						icon: 'icon-kaimen',

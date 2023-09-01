@@ -6,7 +6,7 @@
 				<view>我的余额</view>
 			</view>
 			<navigator class="mine-card" url="../coupon/list/index">
-				<view class="mine-card_value">1</view>
+				<view class="mine-card_value">0</view>
 				<view>我的卡券</view>
 			</navigator>
 		</view>

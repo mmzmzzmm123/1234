@@ -29,6 +29,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <select id="selectTRoomList" parameterType="TRoom" resultMap="TRoomResult">
         <include refid="selectTRoomVo"/>
         <where>
+            <if test="id != null and id != 0"> and id = #{id}</if>
             <if test="storeId != null  and storeId != ''"> and store_id = #{storeId}</if>
             <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
             <if test="wifi != null  and wifi != ''"> and wifi = #{wifi}</if>

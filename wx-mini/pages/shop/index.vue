@@ -1,7 +1,7 @@
 <template>
 	<view>
 		<view class="top">
-			<view class="top_bar">
+			<!-- <view class="top_bar">
 				<view>
 					<text class="iconfont icon-fuli"></text>
 					<view>优惠券</view>
@@ -18,7 +18,7 @@
 					<text class="iconfont icon-huiyuan"></text>
 					<view>会员充值</view>
 				</view>
-			</view>
+			</view> -->
 			<view style="border-radius: 20rpx;overflow: hidden;">
 				<ad-swiper :imgList="[shopInfo.logo]"></ad-swiper>
 			</view>
