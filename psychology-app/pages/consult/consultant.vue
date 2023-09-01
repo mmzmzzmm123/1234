@@ -48,7 +48,7 @@
       <view class="tabs-bg"></view>
     </view>
 
-    <scroll-view class="content-y" scroll-y :scroll-into-view="'main-'+mainCur" @scroll="scroll">
+    <scroll-view :style="{height: srollHeight}" class="content-y" scroll-y :scroll-into-view="'main-'+mainCur" @scroll="scroll">
       <view class="serve" key="0" id="main-0">
         <text class="serve-title">服务套餐</text>
         <serve-list :serveList="serveList" :num="3" @toBuy="toBuy"/>
@@ -114,12 +114,15 @@ import indexServer from '@/server/consult/index'
 import consultServer from "@/server/consult/consult";
 import orderServer from "@/server/consult/order";
 import loginServer from '@/server/login'
+let app = getApp();
 export default {
   components: {timeBox, serveList, course, consultDesc },
   data() {
     return {
       mainCur: 0,
       verticalNavTop: 0,
+      pageHeight: app.globalData.windowHeight,
+      srollHeight: '', //header高度
       height: 64, //header高度
       top: 0, //标题图标距离顶部距离
       scrollH: 200, //滚动总高度
@@ -157,6 +160,13 @@ export default {
         scrollTop: 0
       }
     };
+  },
+  onLoad() {
+    setTimeout(() => {
+      this.srollHeight = (this.pageHeight - uni.upx2px(549) - 50) + 'px'
+      // console.log(this.pageHeight)
+      // console.log(this.srollHeight)
+    }, 50);
   },
   async mounted() {
     this.userInfo = utils.getUserInfo()
@@ -199,6 +209,7 @@ export default {
     },
     scroll(e) {
       let tabHeight = 0
+      this.sroHeight = []
       for (let i = 0; i < 4; i++) {
         uni.createSelectorQuery().select("#main-"+i).boundingClientRect((rect) => {
           const top = tabHeight
@@ -339,7 +350,8 @@ export default {
   display: flex;
   flex-direction: column;
   overflow: hidden;
-  //padding-bottom: calc(24rpx + env(safe-area-inset-bottom));
+  box-sizing: border-box;
+  height: 100%;
 }
 .header {
   width: 100%;
@@ -528,7 +540,6 @@ export default {
   width: 100%;
 }
 .content-y {
-  height: 900upx;
   margin-top: 16upx;
 }
 .serve {
@@ -621,7 +632,7 @@ export default {
   padding-bottom: constant(safe-area-inset-bottom); /* 兼容 iOS 设备 */
   padding-bottom: env(safe-area-inset-bottom); /* 兼容 iPhone X 及以上设备 */
   position: fixed;
-  bottom: 0;
+  bottom: var(--window-bottom);
   z-index: 99;
   background-color: #FFFFFF;
   //width: 750upx;

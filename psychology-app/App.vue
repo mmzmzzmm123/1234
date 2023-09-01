@@ -1,8 +1,28 @@
 <script>
 
 export default {
+  globalData: {
+    spid: 0,
+    code: 0,
+    isLogin: false,
+    userInfo: {},
+    MyMenus: [],
+    windowHeight: 0,
+  },
   onLaunch: function () {
-    console.log("App Launch");	
+    let that = this;
+    // #ifdef H5
+    uni.getSystemInfo({
+      success: function(res) {
+        // 首页没有title获取的整个页面的高度，里面的页面有原生标题要减掉就是视口的高度
+        // 状态栏是动态的可以拿到 标题栏是固定写死的是44px
+        // #ifdef H5
+        that.globalData.windowHeight = res.windowHeight
+        // #endif
+        console.log(that.globalData.windowHeight)
+      }
+    });
+    // #endif
   },
   mounted() {
 	
