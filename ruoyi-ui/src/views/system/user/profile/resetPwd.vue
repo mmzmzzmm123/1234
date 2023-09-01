@@ -41,7 +41,7 @@ export default {
         ],
         newPassword: [
           { required: true, message: "新密码不能为空", trigger: "blur" },
-          { pattern: '^.*(?=.{8,})(?=.*\\d)(?=.*[A-Z])(?=.*[a-z])(?=.*[!@#$%^&*? ]).*$', message: '最小长度为8个字符，1个大写字母、1个小写字母、1个数字和1个特殊字符' }
+          { pattern: '^.*(?=.{8,})(?=.*\\d)(?=.*[A-Z])(?=.*[a-z])(?=.*[!@#$%^&*? ]).*$', message: '最小长度为8个字符，1个大写字母、1个小写字母、1个数字和1个特殊字符(!@#$%^&*? )' }
         ],
         confirmPassword: [
           { required: true, message: "确认密码不能为空", trigger: "blur" },

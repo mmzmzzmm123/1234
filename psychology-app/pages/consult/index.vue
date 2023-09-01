@@ -182,6 +182,7 @@
         }
       },
       resetQuery() {
+        this.total = 0
         this.pageNum = 1
         this.queryData.catId = null
         this.queryData.userName = null

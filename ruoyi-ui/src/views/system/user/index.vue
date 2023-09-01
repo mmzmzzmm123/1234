@@ -434,7 +434,7 @@ export default {
         ],
         password: [
           { required: true, message: "用户密码不能为空", trigger: "change" },
-          { pattern: '^.*(?=.{8,})(?=.*\\d)(?=.*[A-Z])(?=.*[a-z])(?=.*[!@#$%^&*? ]).*$', message: '最小长度为8个字符，1个大写字母、1个小写字母、1个数字和1个特殊字符' }
+          { pattern: '^.*(?=.{8,})(?=.*\\d)(?=.*[A-Z])(?=.*[a-z])(?=.*[!@#$%^&*? ]).*$', message: '最小长度为8个字符，1个大写字母、1个小写字母、1个数字和1个特殊字符(!@#$%^&*? )' }
         ],
         email: [
           {
@@ -592,7 +592,7 @@ export default {
         // inputPattern: /^.{5,20}$/,
         // inputErrorMessage: "用户密码长度必须介于 5 和 20 之间"
         inputPattern: /^.*(?=.{8,})(?=.*\d)(?=.*[A-Z])(?=.*[a-z])(?=.*[!@#$%^&*? ]).*$/,
-        inputErrorMessage: "最小长度为8个字符，1个大写字母、1个小写字母、1个数字和1个特殊字符"
+        inputErrorMessage: "最小长度为8个字符，1个大写字母、1个小写字母、1个数字和1个特殊字符(!@#$%^&*? )"
       }).then(({ value }) => {
           resetUserPwd(row.userId, value).then(response => {
             this.$modal.msgSuccess("修改成功，新密码是：" + value);
