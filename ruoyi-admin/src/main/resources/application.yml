@@ -17,8 +17,8 @@ ruoyi:
 
 # 开发环境配置
 server:
-  # 服务器的HTTP端口，默认为8080 正式18080
-  port: 18080
+  # 服务器的HTTP端口，默认为 8080 正式18080
+  port: 8080
   servlet:
     # 应用的访问路径
     context-path: /
@@ -162,8 +162,8 @@ wx:
   pay:
     appId: wx2171fc93eaed8be1
     mchId: 1648735517 #商户id
-    apiV3Key: 4dTefbD2ZJzr3SyL9815fJqa7etdkz8Z #V3密钥
-    certSerialNo: 62558ec2489895381df13cfd07f2cc1ea53304d5
+    apiV3Key: SyL9815fJqa7etdkz8Z4dTefbD2ZJzr3 #V3密钥
+    certSerialNo: 6FBD52B6265965E025F5B6B0DF7557B0F73D34B6
     privateKeyPath: classpath:cert/apiclient_key.pem #apiclient_key.pem证书文件的绝对路径或者以classpath:开头的类路径
     privateCertPath: classpath:cert/apiclient_cert.pem #apiclient_cert.pem证书文件的绝对路径或者以classpath:开头的类路径
     payScoreNotifyUrl: https://foreverjade.cn/office/api/wxnotify

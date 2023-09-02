@@ -132,20 +132,16 @@ public class TEquipmentController extends BaseController {
                 if (OfficeEnum.EquipType.DOOR.getCode().equalsIgnoreCase(tEquipment.getEquipType())) {
                     String[] command = equipDict.get(OfficeEnum.EquipType.DOOR.getCode()).split(",")[0].split(":");
                     msg.put(command[0], command[1]);
-                }
-                if (OfficeEnum.EquipType.LIGHT.getCode().equalsIgnoreCase(tEquipment.getEquipType())) {
+                } else if (OfficeEnum.EquipType.LIGHT.getCode().equalsIgnoreCase(tEquipment.getEquipType())) {
                     String[] command = equipDict.get(OfficeEnum.EquipType.LIGHT.getCode()).split(",")[0].split(":");
                     msg.put(command[0], command[1]);
-                }
-                if (OfficeEnum.EquipType.AIR_CONDITION.getCode().equalsIgnoreCase(tEquipment.getEquipType())){
+                } else if (OfficeEnum.EquipType.AIR_CONDITION.getCode().equalsIgnoreCase(tEquipment.getEquipType())) {
                     String[] command = equipDict.get(OfficeEnum.EquipType.AIR_CONDITION.getCode()).split(",")[0].split(":");
                     msg.put(command[0], command[1]);
-                }
-                if (OfficeEnum.EquipType.MACHINE.getCode().equalsIgnoreCase(tEquipment.getEquipType())){
+                } else if (OfficeEnum.EquipType.MACHINE.getCode().equalsIgnoreCase(tEquipment.getEquipType())) {
                     String[] command = equipDict.get(OfficeEnum.EquipType.MACHINE.getCode()).split(",")[0].split(":");
                     msg.put(command[0], command[1]);
-                }
-                else
+                } else
                     throw new ServiceException("未知类型设备");
 
                 sendClient.publish(qry.getEquipControl(), JSONObject.toJSONString(msg));
@@ -155,16 +151,13 @@ public class TEquipmentController extends BaseController {
                 if (OfficeEnum.EquipType.DOOR.getCode().equalsIgnoreCase(tEquipment.getEquipType())) {
                     String[] command = equipDict.get(OfficeEnum.EquipType.DOOR.getCode()).split(",")[1].split(":");
                     msg.put(command[0], command[1]);
-                }
-                if (OfficeEnum.EquipType.LIGHT.getCode().equalsIgnoreCase(tEquipment.getEquipType())) {
+                } else if (OfficeEnum.EquipType.LIGHT.getCode().equalsIgnoreCase(tEquipment.getEquipType())) {
                     String[] command = equipDict.get(OfficeEnum.EquipType.LIGHT.getCode()).split(",")[1].split(":");
                     msg.put(command[0], command[1]);
-                }
-                if (OfficeEnum.EquipType.AIR_CONDITION.getCode().equalsIgnoreCase(tEquipment.getEquipType())){
+                } else if (OfficeEnum.EquipType.AIR_CONDITION.getCode().equalsIgnoreCase(tEquipment.getEquipType())) {
                     String[] command = equipDict.get(OfficeEnum.EquipType.AIR_CONDITION.getCode()).split(",")[1].split(":");
                     msg.put(command[0], command[1]);
-                }
-                if (OfficeEnum.EquipType.MACHINE.getCode().equalsIgnoreCase(tEquipment.getEquipType())){
+                } else if (OfficeEnum.EquipType.MACHINE.getCode().equalsIgnoreCase(tEquipment.getEquipType())) {
                     String[] command = equipDict.get(OfficeEnum.EquipType.MACHINE.getCode()).split(",")[1].split(":");
                     msg.put(command[0], command[1]);
                 } else
@@ -173,7 +166,7 @@ public class TEquipmentController extends BaseController {
                 sendClient.publish(qry.getEquipControl(), JSONObject.toJSONString(msg));
             }
         } catch (Exception e) {
-            throw new ServiceException("操作失败");
+            throw new ServiceException("操作失败" + e.getMessage());
         }
         // messageArrived 里面处理 消息发送到接收端时触发；
         tEquipment.setUpdateBy(SecurityUtils.getUserId() + "");

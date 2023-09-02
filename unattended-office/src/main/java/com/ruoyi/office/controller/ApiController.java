@@ -1,5 +1,9 @@
 package com.ruoyi.office.controller;
 
+import cn.binarywang.wx.miniapp.api.WxMaService;
+import cn.binarywang.wx.miniapp.api.impl.WxMaServiceImpl;
+import cn.binarywang.wx.miniapp.bean.WxMaCodeLineColor;
+import cn.binarywang.wx.miniapp.config.impl.WxMaDefaultConfigImpl;
 import cn.hutool.extra.qrcode.QrCodeUtil;
 import cn.hutool.extra.qrcode.QrConfig;
 import com.alibaba.fastjson2.JSON;
@@ -9,6 +13,7 @@ import com.github.binarywang.wxpay.bean.notify.SignatureHeader;
 import com.github.binarywang.wxpay.bean.notify.WxPayOrderNotifyV3Result;
 import com.github.binarywang.wxpay.bean.notify.WxPayRefundNotifyV3Result;
 import com.github.binarywang.wxpay.bean.result.WxPayOrderQueryV3Result;
+import com.github.binarywang.wxpay.config.WxPayConfig;
 import com.github.binarywang.wxpay.constant.WxPayConstants;
 import com.github.binarywang.wxpay.exception.WxPayException;
 import com.github.binarywang.wxpay.service.WxPayService;
@@ -31,7 +36,10 @@ import com.ruoyi.system.domain.SysNotice;
 import com.ruoyi.system.service.ISysDictDataService;
 import com.ruoyi.system.service.ISysNoticeService;
 import com.ruoyi.tuangou.service.TuangouService;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
+import me.chanjar.weixin.common.error.WxErrorException;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,7 +48,9 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.math.BigDecimal;
+import java.rmi.ServerError;
 import java.util.*;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
@@ -427,7 +437,7 @@ public class ApiController extends BaseController {
             BeanUtils.copyProperties(room, vo);
             String roomMark = "";
             if (StringUtils.isEmpty(room.getRemark()))
-                continue;
+                roomMark = ", ";
             for (String mark : room.getRemark().split(",")) {
                 roomMark += "," + dictMap.get(mark);
             }
@@ -714,7 +724,7 @@ public class ApiController extends BaseController {
     /**
      * 新增用户套餐购买记录
      */
-    @Log(title = "用户套餐购买" , businessType = BusinessType.INSERT)
+    @Log(title = "用户套餐购买", businessType = BusinessType.INSERT)
     @PostMapping("/package/buy")
     public AjaxResult buy(@RequestBody BuyStorePackReq tWxUserPackage) {
         long userWxId = SecurityUtils.getLoginUser().getWxUser().getId();
@@ -741,6 +751,51 @@ public class ApiController extends BaseController {
         } catch (Exception e) {
             return AjaxResult.error(e.getMessage());
         }
+    }
+
+  /*  @ApiOperation("生成二维码")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "codeType", value = "类型", dataType = "String", required = true, paramType = "query"),
+            @ApiImplicitParam(name = "parameterValue", value = "参数值", dataType = "String", required = true, paramType = "query")
+    })
+    @GetMapping(value = "/createQrCode/{roomId}")
+    public String createQrCode(@RequestParam("codeType") String codeType,
+                               @RequestParam("parameterValue") String parameterValue) {*/
+
+    @ApiOperation("生成二维码")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "codeType", value = "类型", dataType = "String", required = true, paramType = "query"),
+            @ApiImplicitParam(name = "parameterValue", value = "参数值", dataType = "String", required = true, paramType = "query")
+    })
+    @GetMapping(value = "/createQrCode/{roomId}")
+    public String createQrCode(@PathVariable("roomId") Long roomId) {
+        final WxPayConfig config = wxPayService.getConfig();
+
+        TRoom room = roomService.selectTRoomById(roomId);
+        String codeType = "scene";
+        String parameterValue = "" + roomId;
+
+        //调用工具包的服务
+        WxMaService wxMaService = new WxMaServiceImpl();
+        WxMaDefaultConfigImpl wxMaDefaultConfigImpl = new WxMaDefaultConfigImpl();
+        wxMaDefaultConfigImpl.setAppid(config.getAppId());        //小程序appId
+//        wxMaDefaultConfigImpl.setSecret(config.getApiV3Key());    //小程序secret
+        wxMaDefaultConfigImpl.setSecret("421cfe703214d0a3688916edff0c2933");
+        wxMaService.setWxMaConfig(wxMaDefaultConfigImpl);
+
+        // 设置小程序二维码线条颜色为黑色
+        WxMaCodeLineColor lineColor = new WxMaCodeLineColor("0", "0", "0");
+        byte[] qrCodeBytes = null;
+        try {
+            //其中codeType以及parameterValue为前端页面所需要接收的参数。
+            qrCodeBytes = wxMaService.getQrcodeService().createWxaCodeUnlimitBytes(roomId + "", "pages/order/add/index", false, "release", 30, false, lineColor, false);
+        } catch (WxErrorException e) {
+//            e.printStackTrace();
+            logger.error(e.getMessage());
+            throw new ServiceException("打印二维码错误" + e.getMessage());
+        }
+        String qrCodeStr = Base64.getEncoder().encodeToString(qrCodeBytes);//.encodeBase64String(qrCodeBytes);
+        return qrCodeStr;
     }
 
 }

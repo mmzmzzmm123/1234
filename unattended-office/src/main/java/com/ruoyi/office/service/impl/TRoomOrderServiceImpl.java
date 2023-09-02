@@ -296,7 +296,7 @@ public class TRoomOrderServiceImpl extends ServiceImpl<TRoomOrderMapper, TRoomOr
             }
             resp.setJsapiResult(jsapiResult);
             resp.setOrderId(tRoomOrder.getId());
-
+            log.debug("/order: return:" + resp.getOrderId() + jsapiResult.toString());
         } else if (prepayReq.getPayType() == OfficeEnum.PayType.CARD_BALANCE_PAY.getCode()) {  // 储值卡余额支付
             TWxUserAmount wxUserAmount = new TWxUserAmount();
             // 判断用户在商户下的余额是否足够；
@@ -418,7 +418,7 @@ public class TRoomOrderServiceImpl extends ServiceImpl<TRoomOrderMapper, TRoomOr
             } catch (WxPayException e) {
                 e.printStackTrace();
                 log.error("JSAPI 下单：" + e.getLocalizedMessage());
-                if(e.getLocalizedMessage().contains("该订单已支付")){
+                if (e.getLocalizedMessage().contains("该订单已支付")) {
                     // 微信支付是不是要换个订单号?
                     roomOrder.setPayType(OfficeEnum.PayType.WX_PAY.getCode());
                     roomOrder.setStatus(OfficeEnum.RoomOrderStatus.ORDERED.getCode());// 已支付
@@ -701,8 +701,8 @@ public class TRoomOrderServiceImpl extends ServiceImpl<TRoomOrderMapper, TRoomOr
     @Autowired
     ITEquipmentService equipmentService;
 
-    @Autowired
-    HornConfig hornConfig;
+   /* @Autowired
+    HornConfig hornConfig;*/
 
     /**
      * 订单结束提醒
@@ -721,10 +721,20 @@ public class TRoomOrderServiceImpl extends ServiceImpl<TRoomOrderMapper, TRoomOr
         param.put("app_secret", hornConfig.get("app_secret"));
         int minutes = Integer.parseInt(hornConfig.get("minute"));*/
 
+        HornConfig sender = new HornConfig();
+        SysDictData dictData = new SysDictData();
+        dictData.setDictType("horn");
+        final Map<String, String> hornConfig = dictDataService.selectDictDataList(dictData).stream().collect(Collectors.toMap(SysDictData::getDictLabel, SysDictData::getDictValue));
+
+        sender.setAppId(hornConfig.get("app_id"));
+        sender.setAppSecret(hornConfig.get("app_secret"));
+        sender.setUrl(hornConfig.get("url"));
+        sender.setMinutes(hornConfig.get("minute"));
+
         Map<String, String> param = new HashMap<>();
-        param.put("app_id", hornConfig.getAppId());
-        param.put("app_secret", hornConfig.getAppSecret());
-        String[] minuteStrs = hornConfig.getMinutes().split(",");
+        param.put("app_id", sender.getAppId());
+        param.put("app_secret", sender.getAppSecret());
+        String[] minuteStrs = sender.getMinutes().split(",");
 
         List<Integer> alertList = new ArrayList<>();
         for (String m : minuteStrs) {
@@ -763,7 +773,7 @@ public class TRoomOrderServiceImpl extends ServiceImpl<TRoomOrderMapper, TRoomOr
                         if (OfficeEnum.EquipType.HORN.getCode().equalsIgnoreCase(equipment.getEquipType())) {
                             param.put("device_sn", equipment.getEquipControl());
 //                        String response = HttpUtils.sendPost(hornConfig.get("url") + "/send", "您的订单还有" + minutes + "分钟结束，请及时续费，以免断电影响使用，谢谢");
-                            String response = HttpUtils.sendPost(hornConfig.getUrl() + "/send", "您的订单还有" + diff + "分钟结束，请及时续费，以免断电影响使用，谢谢");
+                            String response = HttpUtils.sendPost(sender.getUrl() + "/send", "您的订单还有" + diff + "分钟结束，请及时续费，以免断电影响使用，谢谢");
                             CloudHornRegResponse resp = JSONObject.parseObject(response, CloudHornRegResponse.class);
                             order.setRemark(min + "");// 标识已经通知
                             tRoomOrderMapper.updateTRoomOrder(order);
@@ -777,7 +787,7 @@ public class TRoomOrderServiceImpl extends ServiceImpl<TRoomOrderMapper, TRoomOr
                             if (OfficeEnum.EquipType.HORN.getCode().equalsIgnoreCase(equipment.getEquipType())) {
                                 param.put("device_sn", equipment.getEquipControl());
 //                        String response = HttpUtils.sendPost(hornConfig.get("url") + "/send", "您的订单还有" + minutes + "分钟结束，请及时续费，以免断电影响使用，谢谢");
-                                String response = HttpUtils.sendPost(hornConfig.getUrl() + "/send", "您的订单还有" + diff + "分钟结束，请及时续费，以免断电影响使用，谢谢");
+                                String response = HttpUtils.sendPost(sender.getUrl() + "/send", "您的订单还有" + diff + "分钟结束，请及时续费，以免断电影响使用，谢谢");
                                 CloudHornRegResponse resp = JSONObject.parseObject(response, CloudHornRegResponse.class);
                                 order.setRemark(min + "");// 标识已经通知
                                 tRoomOrderMapper.updateTRoomOrder(order);
@@ -792,8 +802,16 @@ public class TRoomOrderServiceImpl extends ServiceImpl<TRoomOrderMapper, TRoomOr
 
     @Override
     public List<RoomOrderWxVo> getOrderCanOpen(OrderCanOpenReq wxUserId) {
-//        tRoomOrderMapper.getWxRoomOrder(tRoomOrder);
-        return tRoomOrderMapper.getOrderCanOpen(wxUserId);
+        List<RoomOrderWxVo> resList = new ArrayList<>();
+        final List<RoomOrderWxVo> orderCanOpen = tRoomOrderMapper.getOrderCanOpen(wxUserId);
+        for (RoomOrderWxVo vo : orderCanOpen) {
+            if (vo.getStatus() == 4 && vo.getEndTime().before(new Date())) {
+                continue;
+            }
+            resList.add(vo);
+
+        }
+        return resList;
     }
 
     @Autowired

@@ -29,7 +29,8 @@ public class HornConfig {
     @Autowired
     ISysDictDataService dictDataService;
 
-    @PostConstruct
+//    @PostConstruct
+//    @Bean
     public HornConfig intHornConfig() {
         HornConfig sender = new HornConfig();
         SysDictData dictData = new SysDictData();

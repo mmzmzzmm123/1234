@@ -138,7 +138,7 @@ public class TRoomOrderController extends BaseController {
         try {
             logger.info("/order:" + order.toString());
             final PrepayResp prepay = tRoomOrderService.prepay(order, wxUserId);
-            logger.info("/order: return:" + prepay.getOrderId() + prepay.getJsapiResult().toString());
+//            logger.info("/order: return:" + prepay.getOrderId() + prepay.getJsapiResult().toString());
             return AjaxResult.success(prepay);
         } catch (Exception e) {
             return AjaxResult.error(e.getMessage());

@@ -236,7 +236,13 @@
       <el-table v-loading="roomLoading" :data="roomList" @row-click="roomChange">
         <el-table-column type="selection" width="30" align="center" />
         <el-table-column label="id" align="center" width="40" prop="id" />
-        <el-table-column label="名称" align="center" width="160" prop="name" />
+        <!-- <el-table-column label="名称" align="center" width="160" prop="name"></el-table-column> -->
+        <el-table-column label="名称" width="160">
+          <template slot-scope="scope">
+            <el-button size="mini" type="text" @click="viewQrcode(scope.row)">{{ scope.row.name }}</el-button>
+            <!-- <a target="_blank" href="qrcode" @click="viewQrcode(scope.row)">{{ scope.row.name }}</a> -->
+          </template>
+        </el-table-column>
         <el-table-column label="wifi" align="center" width="85" prop="wifi" />
         <el-table-column label="绑定设备" align="center" width="200" prop="equipCode" :formatter="equipFormatter" />
         <!-- <el-table-column label="桌台控制" align="center" prop="tableCode" /> -->
@@ -424,7 +430,8 @@
     getRoom,
     delRoom,
     addRoom,
-    updateRoom
+    updateRoom,
+    getQrcode
   } from "@/api/office/room";
 
   import {
@@ -858,7 +865,7 @@
         });
 
 
-         this.bindForm.tableCode = row.tableCode;
+        this.bindForm.tableCode = row.tableCode;
       },
       bindStoreEquipment(row, type) {
         // type = "store/room";
@@ -873,7 +880,7 @@
           this.equipOptions = response.rows;
         });
 
-         this.bindStoreForm.equipId = row.equipId
+        this.bindStoreForm.equipId = row.equipId
 
       },
       submitBindForm() {
@@ -1142,7 +1149,7 @@
               this.uploadList[i].url = this.baseUrl + this.uploadList[i].url;
             }
           }
-debugger
+          debugger
           this.fileList = this.fileList.concat(this.uploadList);
           this.uploadList = [];
           this.number = 0;
@@ -1169,8 +1176,16 @@ debugger
         this.form.logo = fileNames; // 绑定对象属性
         this.roomForm.logo = fileNames;
         return fileNames;
-      }
+      },
+      viewQrcode(row) {
+        getQrcode(row.id).then(response => {
+            console.log(response)
+            this.$alert('<img src="data:image/png;base64,' + response + '"/>', row.name, {
+              dangerouslyUseHTMLString: true
+            });
+        });
     }
+  }
   };
 </script>
 <style scoped lang="scss">

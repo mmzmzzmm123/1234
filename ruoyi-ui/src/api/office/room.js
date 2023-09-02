@@ -17,6 +17,13 @@ export function getRoom(id) {
   })
 }
 
+export function getQrcode(roomid){
+  return request({
+    url: '/office/api/createQrCode/' + roomid,
+    method: 'get'
+  })
+}
+
 // 新增店铺房间
 export function addRoom(data) {
   return request({

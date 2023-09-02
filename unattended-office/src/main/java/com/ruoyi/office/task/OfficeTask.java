@@ -79,7 +79,7 @@ public class OfficeTask {
         MqttSendClient sendClient = new MqttSendClient();
         for (TEquipment eq : equipments) {
             if (OfficeEnum.EquipType.DOOR.getCode().equalsIgnoreCase(eq.getEquipType())) {
-                if (DateUtils.differentDaysByMillisecond(eq.getRecentOpenTime(), new Date()) > (clooseDoorMinute * 1000)) {
+                if (eq.getRecentOpenTime()!=null && DateUtils.differentDaysByMillisecond(eq.getRecentOpenTime(), new Date()) > (clooseDoorMinute * 1000)) {
                     Map<String, String> msg = new HashMap<>();
                     String[] command = equipDict.get(OfficeEnum.EquipType.DOOR.getCode()).split(",")[1].split(":");
                     msg.put(command[0], command[1]);
@@ -103,5 +103,12 @@ public class OfficeTask {
     public void scanToPayOrder(){
         roomOrderService.scanToPayOrder();
     }
+
+    /**
+     * 扫描超时订单进行取消操作
+     */
+//    public void scanOvertimeOrder(){
+//        roomOrderService.scanOvertimeOrder();
+//    }
 
 }

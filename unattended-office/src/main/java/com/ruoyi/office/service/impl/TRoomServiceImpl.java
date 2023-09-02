@@ -114,8 +114,8 @@ public class TRoomServiceImpl extends ServiceImpl<TRoomMapper, TRoom> implements
     @Autowired
     private ISysDictDataService dictDataService;
 
-    @Autowired
-    HornConfig hornConfig;
+   /* @Autowired
+    HornConfig hornConfig;*/
 
     @Override
     public void openRoom(Long id) {
@@ -133,15 +133,15 @@ public class TRoomServiceImpl extends ServiceImpl<TRoomMapper, TRoom> implements
         for (String equip : equips.split(",")) {
             TEquipment currentEq = equipmentMap.get(Long.parseLong(equip));
             if (OfficeEnum.EquipType.HORN.getCode().equalsIgnoreCase(currentEq.getEquipType())) {
-                  /*  SysDictData dictDataQry = new SysDictData();
-                    dictDataQry.setDictType("horn");
-                    final Map<String, String> hornConfig = dictDataService.selectDictDataList(dictDataQry).stream().collect(Collectors.toMap(SysDictData::getDictLabel, SysDictData::getDictValue));*/
+                SysDictData dictDataQry = new SysDictData();
+                dictDataQry.setDictType("horn");
+                final Map<String, String> hornConfig = dictDataService.selectDictDataList(dictDataQry).stream().collect(Collectors.toMap(SysDictData::getDictLabel, SysDictData::getDictValue));
 
                 HornSendMsg hornMsg = new HornSendMsg();
-                  /*  hornMsg.setAppId(hornConfig.get("app_id"));
-                    hornMsg.setAppSecret(hornConfig.get("app_secret"));*/
-                hornMsg.setAppId(hornConfig.getAppId());
-                hornMsg.setAppSecret(hornConfig.getAppSecret());
+                hornMsg.setAppId(hornConfig.get("app_id"));
+                hornMsg.setAppSecret(hornConfig.get("app_secret"));
+              /*  hornMsg.setAppId(hornConfig.getAppId());
+                hornMsg.setAppSecret(hornConfig.getAppSecret());*/
                 hornMsg.setDeviceSn(currentEq.getEquipControl());
                 hornMsg.setType(1);
 
@@ -155,8 +155,8 @@ public class TRoomServiceImpl extends ServiceImpl<TRoomMapper, TRoom> implements
                 hornData.setInfo(hornDataInfo);
                 hornMsg.setData(hornData);
 
-//                    String response = HttpUtils.sendPost(hornConfig.get("url") + "/send", JSONObject.toJSONString(hornMsg));
-                String response = HttpUtils.sendPost(hornConfig.getUrl() + "/send", JSONObject.toJSONString(hornMsg));
+                    String response = HttpUtils.sendPost(hornConfig.get("url") + "/send", JSONObject.toJSONString(hornMsg));
+//                String response = HttpUtils.sendPost(hornConfig.getUrl() + "/send", JSONObject.toJSONString(hornMsg));
                 CloudHornRegResponse resp = JSONObject.parseObject(response, CloudHornRegResponse.class);
 
                 TEquipment up = new TEquipment();
