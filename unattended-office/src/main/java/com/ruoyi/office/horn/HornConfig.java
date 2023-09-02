@@ -17,30 +17,27 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-@Data
 @Configuration
 public class HornConfig {
 
-    private String appId;
-    private String appSecret;
-    private String url;
-    private String minutes;
+    public static String appId;
+    public static String appSecret;
+    public static String url;
+    public static String minutes;
 
     @Autowired
     ISysDictDataService dictDataService;
 
-//    @PostConstruct
-//    @Bean
-    public HornConfig intHornConfig() {
+    @PostConstruct
+    public void intHornConfig() {
         HornConfig sender = new HornConfig();
         SysDictData dictData = new SysDictData();
         dictData.setDictType("horn");
         final Map<String, String> hornConfig = dictDataService.selectDictDataList(dictData).stream().collect(Collectors.toMap(SysDictData::getDictLabel, SysDictData::getDictValue));
 
-        sender.setAppId(hornConfig.get("app_id"));
-        sender.setAppSecret(hornConfig.get("app_secret"));
-        sender.setUrl(hornConfig.get("url"));
-        sender.setMinutes(hornConfig.get("minute"));
-        return sender;
+        appId = hornConfig.get("app_id");
+        appSecret = hornConfig.get("app_secret");
+        url = hornConfig.get("url");
+        minutes = hornConfig.get("minute");
     }
 }

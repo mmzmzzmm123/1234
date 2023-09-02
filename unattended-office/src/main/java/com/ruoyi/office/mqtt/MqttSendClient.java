@@ -2,10 +2,7 @@ package com.ruoyi.office.mqtt;
 
 import com.ruoyi.common.exception.ServiceException;
 import lombok.extern.slf4j.Slf4j;
-import org.eclipse.paho.client.mqttv3.MqttClient;
-import org.eclipse.paho.client.mqttv3.MqttConnectOptions;
-import org.eclipse.paho.client.mqttv3.MqttMessage;
-import org.eclipse.paho.client.mqttv3.MqttTopic;
+import org.eclipse.paho.client.mqttv3.*;
 import org.eclipse.paho.client.mqttv3.persist.MemoryPersistence;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -50,7 +47,8 @@ public class MqttSendClient {
             options.setConnectionTimeout(mqttProperties.getTimeout());
             options.setKeepAliveInterval(mqttProperties.getKeepAlive());
             options.setCleanSession(true);
-            options.setAutomaticReconnect(false);
+            // 自动重连
+            options.setAutomaticReconnect(true);
 
             MqttSendClient.setClient(client);
             try {
@@ -97,7 +95,12 @@ public class MqttSendClient {
         try {
             mTopic.publish(message);
             log.info("消息发送成功");
-        } catch (Exception e) {
+        }catch (MqttException mqttException){
+            if(mqttException.getMessage().equalsIgnoreCase("Client is not connected")){
+                connect();
+            }
+        }
+        catch (Exception e) {
             log.error("mqtt发送消息异常:", e);
             throw new ServiceException(e.getMessage());
         }

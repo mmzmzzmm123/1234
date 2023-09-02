@@ -32,6 +32,8 @@ public class MqttSendCallBack implements MqttCallbackExtended {
     @Override
     public void connectionLost(Throwable cause) {
         log.error("【MQTT-发送端】链接断开！");
+        /*MqttSendClient sendClient = new MqttSendClient();
+        sendClient.connect();*/
     }
 
 
